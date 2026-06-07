@@ -7,7 +7,7 @@
         <div class="space-y-5">
             @if ($section->eyebrow)
                 <p
-                    class="text-xs font-semibold tracking-[0.16em] text-[var(--theme-primary)] uppercase"
+                    class="text-xs font-semibold tracking-[0.12em] text-[var(--theme-primary)] uppercase"
                 >
                     {{ $section->eyebrow }}
                 </p>
@@ -48,6 +48,12 @@
                 <img
                     src="{{ $section->mediaUrl }}"
                     alt="{{ $section->mediaAlt ?? '' }}"
+                    width="1200"
+                    height="750"
+                    loading="eager"
+                    decoding="async"
+                    fetchpriority="high"
+                    sizes="(min-width: 1024px) 50vw, 100vw"
                     class="aspect-[16/10] w-full object-cover"
                 />
             </figure>

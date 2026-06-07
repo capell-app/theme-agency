@@ -16,7 +16,7 @@ final class AIOrchestratorImageDoctorAction
     }
 
     /**
-     * @return array{successful: bool, message: string}
+     * @return array{successful: bool, message: string, alt_text: string, caption: string}
      */
     public static function run(AIOrchestratorRunData $run): array
     {
@@ -25,6 +25,8 @@ final class AIOrchestratorImageDoctorAction
         return [
             'successful' => true,
             'message' => 'Doctor finished through AI Orchestrator',
+            'alt_text' => 'Restored archival portrait.',
+            'caption' => 'Archival portrait restored while preserving the original crop.',
         ];
     }
 }

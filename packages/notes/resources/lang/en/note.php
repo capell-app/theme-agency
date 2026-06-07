@@ -16,6 +16,9 @@ return [
         'assignees' => 'Assign to',
         'body' => 'Note',
         'mentions' => 'Mention',
+        'reminder_due_at' => 'Reminder due',
+        'reminder_recurrence' => 'Reminder repeats',
+        'reminder_timezone' => 'Reminder timezone',
         'visibility' => 'Visibility',
     ],
     'filters' => [
@@ -36,8 +39,29 @@ return [
     'notifications' => [
         'created' => 'Note added.',
     ],
+    'notification_mail' => [
+        'assigned' => [
+            'line' => 'You have been assigned a Capell note.',
+            'subject' => 'You have a new Capell note assignment',
+        ],
+        'mentioned' => [
+            'line' => 'You have been mentioned in a Capell note.',
+            'subject' => 'You were mentioned in a Capell note',
+        ],
+        'reminder' => [
+            'line' => 'A Capell note reminder is due.',
+            'subject' => 'A Capell note reminder is due',
+        ],
+    ],
     'overdue' => 'Overdue',
     'recent_notes' => 'Recent notes',
+    'recurrence' => [
+        'daily' => 'Daily',
+        'monthly' => 'Monthly',
+        'none' => 'None',
+        'weekly' => 'Weekly',
+        'yearly' => 'Yearly',
+    ],
     'status' => [
         'archived' => 'Archived',
         'dismissed' => 'Dismissed',

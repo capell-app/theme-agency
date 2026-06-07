@@ -88,7 +88,7 @@ it('declares committed marketplace gallery assets for every required screenshot 
 
         $marketplaceScreenshotPaths[] = $path;
 
-        expect($path)->toStartWith('docs/assets/marketplace/')
+        expect($path)->toMatch('/^docs\\/(assets\\/marketplace|screenshots)\\//')
             ->and(File::exists($packagePath . '/' . $path))->toBeTrue()
             ->and(strlen(trim($alt)))->toBeGreaterThanOrEqual(12)
             ->and(strlen(trim($caption)))->toBeGreaterThanOrEqual(12);
@@ -105,11 +105,11 @@ it('declares committed marketplace gallery assets for every required screenshot 
             continue;
         }
 
-        $id = $contractEntry['id'] ?? null;
+        $screenshotPath = $contractEntry['screenshotPath'] ?? null;
 
-        throw_unless(is_string($id), RuntimeException::class, 'Required comments screenshot contract entries must have string ids.');
+        throw_unless(is_string($screenshotPath), RuntimeException::class, 'Required comments screenshot contract entries must have screenshot paths.');
 
-        $requiredMarketplaceAssetPaths[] = 'docs/assets/marketplace/' . $id . '.svg';
+        $requiredMarketplaceAssetPaths[] = str_replace('packages/comments/', '', $screenshotPath);
     }
 
     expect($marketplaceScreenshotPaths)

@@ -1,5 +1,5 @@
 <section
-    class="healthcare-proof border-y border-stone-200 bg-[#14323a] text-white"
+    class="healthcare-proof border-y border-stone-200 bg-[var(--healthcare-ink)] text-white"
 >
     <div class="px-6">
         <div
@@ -7,7 +7,7 @@
         >
             <div class="min-w-0">
                 <p
-                    class="text-xs font-black tracking-[0.18em] text-[#f59e0b] uppercase"
+                    class="text-xs font-black tracking-[0.18em] text-[var(--healthcare-accent)] uppercase"
                 >
                     {{ __('capell-theme-healthcare::generic.clinical_trust_label') }}
                 </p>
@@ -37,7 +37,7 @@
                         >
                             <div class="p-6">
                                 <p
-                                    class="text-xs font-black tracking-[0.18em] text-[#8de4db] uppercase"
+                                    class="text-xs font-black tracking-[0.18em] text-[var(--healthcare-primary-bright)] uppercase"
                                 >
                                     {{ $item['name'] ?? $item['logo'] ?? __('capell-theme-healthcare::generic.clinical_review') }}
                                 </p>
@@ -64,12 +64,12 @@
                                     class="mt-5 flex flex-wrap gap-2 text-xs font-black"
                                 >
                                     <span
-                                        class="rounded-full bg-white px-3 py-1 text-[#0f766e]"
+                                        class="rounded-full bg-white px-3 py-1 text-[var(--healthcare-primary)]"
                                     >
                                         {{ __('capell-theme-healthcare::generic.safety_review_signal') }}
                                     </span>
                                     <span
-                                        class="rounded-full bg-[#f59e0b] px-3 py-1 text-[#14323a]"
+                                        class="rounded-full bg-[var(--healthcare-accent)] px-3 py-1 text-[var(--healthcare-ink)]"
                                     >
                                         {{ __('capell-theme-healthcare::generic.outcome_signal') }}
                                     </span>
@@ -78,18 +78,18 @@
 
                             @if ($loop->first)
                                 <div
-                                    class="border-t border-white/10 bg-[#0e2730] p-6 md:border-t-0 md:border-l"
+                                    class="border-t border-white/10 bg-[var(--healthcare-ink-strong)] p-6 md:border-t-0 md:border-l"
                                 >
                                     <div
                                         class="flex items-center justify-between gap-4"
                                     >
                                         <p
-                                            class="text-xs font-black text-[#8de4db] uppercase"
+                                            class="text-xs font-black text-[var(--healthcare-primary-bright)] uppercase"
                                         >
                                             {{ __('capell-theme-healthcare::generic.care_pathway') }}
                                         </p>
                                         <span
-                                            class="rounded-full bg-[#f59e0b] px-2 py-1 text-xs font-black text-[#14323a]"
+                                            class="rounded-full bg-[var(--healthcare-accent)] px-2 py-1 text-xs font-black text-[var(--healthcare-ink)]"
                                         >
                                             {{ str_pad((string) ($index + 1), 2, '0', STR_PAD_LEFT) }}
                                         </span>
@@ -100,10 +100,10 @@
                                         aria-hidden="true"
                                     >
                                         <span
-                                            class="h-4 rounded-full bg-[#8de4db]"
+                                            class="h-4 rounded-full bg-[var(--healthcare-primary-bright)]"
                                         ></span>
                                         <span
-                                            class="h-4 rounded-full bg-[#f59e0b]"
+                                            class="h-4 rounded-full bg-[var(--healthcare-accent)]"
                                         ></span>
                                         <span
                                             class="h-4 rounded-full bg-white/20"
@@ -126,7 +126,7 @@
                                     </div>
 
                                     <p
-                                        class="mt-5 text-xs font-black text-[#f59e0b] uppercase"
+                                        class="mt-5 text-xs font-black text-[var(--healthcare-accent)] uppercase"
                                     >
                                         {{ __('capell-theme-healthcare::generic.escalation_signal') }}
                                     </p>

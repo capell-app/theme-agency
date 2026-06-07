@@ -46,6 +46,7 @@ final class UpdateLastSeenForActorAction
         }
 
         $audit->last_seen_at = $trackedAt;
+        $audit->last_activity_at = $trackedAt;
         $audit->save();
 
         return $audit;

@@ -1,10 +1,10 @@
 <section class="theme-section theme-section-cta bg-white">
     <div class="mx-auto max-w-5xl px-6 py-14">
         <div
-            class="relative overflow-hidden bg-[#052e16] p-8 text-white md:p-10"
+            class="nonprofit-bg-primary-deep relative overflow-hidden p-8 text-white md:p-10"
         >
             <div
-                class="absolute -top-10 -right-10 h-36 w-36 rounded-full border-[28px] border-[#facc15]"
+                class="nonprofit-border-accent absolute -top-10 -right-10 h-36 w-36 rounded-full border-[28px]"
                 aria-hidden="true"
             ></div>
             <div
@@ -12,7 +12,7 @@
             >
                 <div>
                     <p
-                        class="text-xs font-black tracking-[0.18em] text-[#fde047] uppercase"
+                        class="nonprofit-text-accent text-xs font-black tracking-[0.18em] uppercase"
                     >
                         {{ __('capell-theme-nonprofit::generic.supporter_cta_label') }}
                     </p>
@@ -22,7 +22,9 @@
                 </div>
 
                 <div>
-                    <p class="max-w-2xl text-base leading-7 text-emerald-100">
+                    <p
+                        class="nonprofit-text-on-dark-muted max-w-2xl text-base leading-7"
+                    >
                         {{ $section->summary ?? __('capell-theme-nonprofit::generic.cta_copy') }}
                     </p>
 
@@ -31,7 +33,7 @@
                             @foreach ($section->actions as $action)
                                 <a
                                     href="{{ $action['url'] }}"
-                                    class="{{ ($action['style'] ?? 'secondary') === 'primary' ? 'bg-white text-[#052e16]' : 'border border-white/30 text-white' }} px-5 py-3 text-sm font-black"
+                                    class="{{ ($action['style'] ?? 'secondary') === 'primary' ? 'nonprofit-text-ink bg-white' : 'border border-white/30 text-white' }} px-5 py-3 text-sm font-black"
                                 >
                                     {{ $action['label'] }}
                                 </a>

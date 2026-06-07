@@ -1,10 +1,10 @@
-<section class="theme-section theme-section-services bg-[#f8fafc]">
+<section class="theme-section theme-section-services portfolio-bg-card-soft">
     @isset($heading)
         <div class="mx-auto flex max-w-5xl flex-col gap-4 px-6 py-14">
             <p class="text-xs font-black tracking-[0.16em] text-slate-500">
                 {{ __('capell-theme-portfolio::generic.services_heading_label') }}
             </p>
-            <h2 class="text-4xl font-black tracking-tight text-[#0f172a]">
+            <h2 class="portfolio-text-ink text-4xl font-black tracking-tight">
                 {{ $heading }}
             </h2>
             <p class="max-w-2xl text-lg text-stone-600">
@@ -18,58 +18,31 @@
             $services = $section->items ?? [];
         @endphp
 
-        @if ($services !== [])
-            @foreach ($services as $item)
-                <article
-                    class="rounded-xl border border-slate-200 bg-white p-5"
+        @forelse ($services as $item)
+            <article class="rounded-xl border border-slate-200 bg-white p-5">
+                <p
+                    class="portfolio-text-ink text-xs font-black tracking-[0.16em]"
                 >
-                    <p
-                        class="text-xs font-black tracking-[0.16em] text-[#0f172a]"
-                    >
-                        {{ $item['type'] ?? __('capell-theme-portfolio::generic.service_type_label') }}
-                    </p>
-                    <h3 class="mt-3 text-lg font-black text-[#0f172a]">
-                        {{ $item['title'] ?? '' }}
-                    </h3>
-                    <p class="mt-3 text-sm text-stone-600">
-                        {{ $item['summary'] ?? $item['description'] ?? '' }}
-                    </p>
-                </article>
-            @endforeach
-        @else
-            <article class="rounded-xl border border-slate-200 bg-white p-5">
-                <p class="text-xs font-black tracking-[0.16em] text-[#0f172a]">
-                    {{ __('capell-theme-portfolio::generic.service_discovery_label') }}
+                    {{ $item['type'] ?? __('capell-theme-portfolio::generic.service_type_label') }}
                 </p>
-                <h3 class="mt-3 text-lg font-black text-[#0f172a]">
-                    {{ __('capell-theme-portfolio::generic.service_discovery_title') }}
+                <h3 class="portfolio-text-ink mt-3 text-lg font-black">
+                    {{ $item['title'] ?? '' }}
                 </h3>
                 <p class="mt-3 text-sm text-stone-600">
-                    {{ __('capell-theme-portfolio::generic.service_discovery_summary') }}
+                    {{ $item['summary'] ?? $item['description'] ?? '' }}
                 </p>
             </article>
-            <article class="rounded-xl border border-slate-200 bg-white p-5">
-                <p class="text-xs font-black tracking-[0.16em] text-[#0f172a]">
-                    {{ __('capell-theme-portfolio::generic.service_design_label') }}
-                </p>
-                <h3 class="mt-3 text-lg font-black text-[#0f172a]">
-                    {{ __('capell-theme-portfolio::generic.service_design_title') }}
+        @empty
+            <article
+                class="rounded-xl border border-dashed border-slate-300 bg-white p-6 md:col-span-3"
+            >
+                <h3 class="portfolio-text-ink text-lg font-black">
+                    {{ __('capell-theme-portfolio::generic.premium_layout_ready') }}
                 </h3>
-                <p class="mt-3 text-sm text-stone-600">
-                    {{ __('capell-theme-portfolio::generic.service_design_summary') }}
+                <p class="mt-2 text-sm text-slate-600">
+                    {{ __('capell-theme-portfolio::generic.premium_layout_empty') }}
                 </p>
             </article>
-            <article class="rounded-xl border border-slate-200 bg-white p-5">
-                <p class="text-xs font-black tracking-[0.16em] text-[#0f172a]">
-                    {{ __('capell-theme-portfolio::generic.service_launch_label') }}
-                </p>
-                <h3 class="mt-3 text-lg font-black text-[#0f172a]">
-                    {{ __('capell-theme-portfolio::generic.service_launch_title') }}
-                </h3>
-                <p class="mt-3 text-sm text-stone-600">
-                    {{ __('capell-theme-portfolio::generic.service_launch_summary') }}
-                </p>
-            </article>
-        @endif
+        @endforelse
     </div>
 </section>

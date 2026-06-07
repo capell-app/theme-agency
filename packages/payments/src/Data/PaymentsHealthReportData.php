@@ -18,6 +18,7 @@ final class PaymentsHealthReportData extends Data
         public readonly bool $stripeWebhookSecretConfigured,
         public readonly int $recordedWebhookEvents,
         public readonly int $failedWebhookEvents,
+        public readonly int $failedFulfillmentResults,
         public readonly int $unresolvedDisputes,
         public readonly ?CarbonInterface $latestWebhookReceivedAt,
         public readonly bool $webhooksFresh,

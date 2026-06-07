@@ -64,6 +64,7 @@ class EventsServiceProvider extends AbstractPackageServiceProvider
     {
         $package
             ->name(self::$name)
+            ->hasConfigFile()
             ->hasViews(self::$name)
             ->hasTranslations()
             ->hasCommands([
@@ -77,6 +78,7 @@ class EventsServiceProvider extends AbstractPackageServiceProvider
                 '2026_05_10_190848_04_create_event_registrations_table',
                 '2026_05_10_190848_05_create_event_notification_logs_table',
                 '2026_05_31_070000_06_add_unique_event_notification_logs_identity_index',
+                '2026_06_07_000000_07_add_notification_keys_to_event_notification_logs_table',
             ]);
     }
 

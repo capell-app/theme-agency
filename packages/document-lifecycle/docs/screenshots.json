@@ -15,7 +15,11 @@
             "required": true,
             "notes": "Capture with at least one active document and one draft or archived document so status badges and publication counts are visible.",
             "screenshotPath": "packages/document-lifecycle/docs/screenshots/controlled-documents-index.png",
-            "useCase": "An administrator reviews controlled documents and sees which policy or legal records have published versions."
+            "useCase": "An administrator reviews controlled documents and sees which policy or legal records have published versions.",
+            "scenario": "admin-index",
+            "url": "/screenshot-fixtures/document-lifecycle/controlled-documents-index",
+            "waitFor": ".document-lifecycle",
+            "colorSchemes": ["light"]
         },
         {
             "id": "controlled-document-edit",
@@ -27,7 +31,11 @@
             "required": true,
             "notes": "Requires a seeded Document record. The key field is disabled; title, status, metadata, and relation manager tabs should be visible.",
             "screenshotPath": "packages/document-lifecycle/docs/screenshots/controlled-document-edit.png",
-            "useCase": "An administrator updates the title, lifecycle status, or metadata for a controlled document."
+            "useCase": "An administrator updates the title, lifecycle status, or metadata for a controlled document.",
+            "scenario": "admin-index",
+            "url": "/screenshot-fixtures/document-lifecycle/controlled-document-edit",
+            "waitFor": ".document-lifecycle",
+            "colorSchemes": ["light"]
         },
         {
             "id": "controlled-document-publications",
@@ -39,7 +47,11 @@
             "required": true,
             "notes": "Requires at least one DocumentPublication, ideally one created from a Publishing Studio revision so published_revision_id is populated.",
             "screenshotPath": "packages/document-lifecycle/docs/screenshots/controlled-document-publications.png",
-            "useCase": "A compliance reviewer checks immutable publication versions, hashes, revision IDs, and publish timestamps for a document."
+            "useCase": "A compliance reviewer checks immutable publication versions, hashes, revision IDs, and publish timestamps for a document.",
+            "scenario": "admin-index",
+            "url": "/screenshot-fixtures/document-lifecycle/controlled-document-publications",
+            "waitFor": ".document-lifecycle",
+            "colorSchemes": ["light"]
         },
         {
             "id": "controlled-document-acceptances",
@@ -51,7 +63,11 @@
             "required": true,
             "notes": "Requires seeded DocumentAcceptance rows linked to the controlled document. Include at least one context such as registration or account_update.",
             "screenshotPath": "packages/document-lifecycle/docs/screenshots/controlled-document-acceptances.png",
-            "useCase": "A compliance reviewer confirms which version a user or workflow accepted and when that acceptance was recorded."
+            "useCase": "A compliance reviewer confirms which version a user or workflow accepted and when that acceptance was recorded.",
+            "scenario": "admin-index",
+            "url": "/screenshot-fixtures/document-lifecycle/controlled-document-acceptances",
+            "waitFor": ".document-lifecycle",
+            "colorSchemes": ["light"]
         }
     ]
 }

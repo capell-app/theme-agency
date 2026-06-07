@@ -4,6 +4,10 @@ All notable changes to `capell-app/email-studio` will be documented in this file
 
 ## Unreleased
 
+### Changed - 2026-06-07
+
+- Added tokenized provider-event webhook ingestion that normalizes adapter payloads, writes `email_events`, updates matching recipient delivery status/timestamps idempotently, and automatically suppresses hard-bounced or complained recipients.
+
 ### Changed - 2026-06-03
 
 - Reworded the marketplace summary, manifest description, and composer description to describe only the currently shipped functionality (site-scoped templates, safe placeholder rendering, delivery profiles and provider adapters, suppression enforcement, and the queued auditable send pipeline). Removed claims that inbound replies and provider-event ingestion already ship; these are now framed as roadmap.

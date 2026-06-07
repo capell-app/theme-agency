@@ -6,7 +6,7 @@
     "kind": "package",
     "capellApiVersion": "^4.0",
     "version": "4.x-dev",
-    "description": "Email Studio gives every Capell site a reliable transactional-email core. Define reusable, locale- and site-scoped templates that render through a deliberately safe placeholder engine (HTML-escaped, missing-variable-strict in production), then send through delivery profiles backed by pluggable provider adapters (SMTP today, with a clean contract for Postmark and others). Every send is rendered to an immutable snapshot, screened against site and global suppression lists, and delivered via a queue job that records per-recipient outcomes for support and audit. Roadmap slices add provider webhook ingestion, open/click tracking, one-click unsubscribe, and an in-panel template and send-log studio.",
+    "description": "Email Studio gives every Capell site a reliable transactional-email core. Define reusable, locale- and site-scoped templates that render through a deliberately safe placeholder engine (HTML-escaped, missing-variable-strict in production), then send through delivery profiles backed by pluggable provider adapters. Every send is rendered to an immutable snapshot, screened against site and global suppression lists, and delivered via a queue job that records per-recipient outcomes for support and audit. Provider event webhooks can now write delivery events back into the audit trail; roadmap slices add open/click tracking, one-click unsubscribe, inbound replies, and an in-panel template studio.",
     "product": {
         "group": "Capell Communications",
         "tier": "premium",
@@ -18,8 +18,7 @@
         "requires": [
             "capell-app/admin",
             "capell-app/core",
-            "capell-app/frontend",
-            "jdavidbakr/mail-tracker"
+            "capell-app/frontend"
         ],
         "supports": [
             "capell-app/campaign-studio",
@@ -76,7 +75,9 @@
     },
     "actions": {
         "applyMailTrackerSettings": "Capell\\EmailStudio\\Actions\\ApplyMailTrackerSettingsAction",
-        "purgeTrackedEmails": "Capell\\EmailStudio\\Actions\\PurgeTrackedEmailsAction"
+        "purgeTrackedEmails": "Capell\\EmailStudio\\Actions\\PurgeTrackedEmailsAction",
+        "recordProviderEvent": "Capell\\EmailStudio\\Actions\\RecordProviderEventAction",
+        "validateProviderWebhookSignature": "Capell\\EmailStudio\\Actions\\ValidateProviderWebhookSignatureAction"
     },
     "settings": ["Capell\\EmailStudio\\Settings\\EmailStudioSettings"],
     "permissions": [],
@@ -84,6 +85,7 @@
         "delivery-audit",
         "mail-tracker-admin",
         "mail-tracker-retention",
+        "provider-event-ingestion",
         "provider-normalization-foundation",
         "provider-adapters",
         "suppressions",
@@ -143,8 +145,8 @@
         "screenshots": [
             {
                 "path": "docs/assets/marketplace/extension-card.jpg",
-                "alt": "Email Studio extension preview image",
-                "caption": "Email Studio extension preview"
+                "alt": "Email Studio sent email index captured from the Capell screenshot runner",
+                "caption": "Runner-captured sent email activity in Capell admin"
             },
             {
                 "path": "docs/screenshots/sent-emails-index.png",
@@ -152,14 +154,19 @@
                 "caption": "Sent email activity table"
             },
             {
+                "path": "docs/screenshots/sent-emails-index-dark.png",
+                "alt": "Email Studio sent emails table with MailTracker opens and clicks in dark mode",
+                "caption": "Sent email activity table in dark mode"
+            },
+            {
                 "path": "docs/screenshots/sent-email-view.png",
                 "alt": "Email Studio sent email detail page with headers and sandboxed HTML preview",
                 "caption": "Sent email detail view"
             },
             {
-                "path": "docs/screenshots/email-studio-settings.png",
-                "alt": "Email Studio MailTracker settings for tracking and retention",
-                "caption": "Mail tracking settings"
+                "path": "docs/screenshots/sent-email-view-dark.png",
+                "alt": "Email Studio sent email detail page with headers and sandboxed HTML preview in dark mode",
+                "caption": "Sent email detail view in dark mode"
             }
         ],
         "categories": ["admin", "communications", "console", "frontend"]

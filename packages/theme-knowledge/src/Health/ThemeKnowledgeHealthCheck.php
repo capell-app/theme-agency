@@ -36,6 +36,9 @@ final class ThemeKnowledgeHealthCheck implements ChecksExtensionHealth
         'capell-theme-knowledge::sections.authors',
         'capell-theme-knowledge::sections.cta',
         'capell-theme-knowledge::sections.footer',
+        'capell-theme-knowledge::knowledge-base.index',
+        'capell-theme-knowledge::knowledge-base.article',
+        'capell-theme-knowledge::knowledge-base.partials.collection-card',
     ];
 
     public static function compatibleCapellApiVersion(): string

@@ -13,14 +13,17 @@
         "bundle": "operations"
     },
     "namespace": "Capell\\WordPressImporter",
-    "surfaces": ["admin", "console"],
+    "surfaces": [
+        "admin",
+        "console"
+    ],
     "dependencies": {
         "requires": [
             "capell-app/admin",
             "capell-app/core",
             "capell-app/migration-assistant"
         ],
-        "supports": [],
+        "supports": ["capell-app/url-manager"],
         "conflicts": []
     },
     "providers": {
@@ -52,8 +55,12 @@
         "wordpress-wxr-preview",
         "wordpress-wxr-media-references",
         "wordpress-permalink-metadata",
+        "wordpress-permalink-redirects",
+        "wordpress-idempotent-preview",
+        "wordpress-wxr-item-isolation",
         "wordpress-gutenberg-detection",
         "wordpress-shortcode-detection",
+        "wordpress-wxr-streaming-reader",
         "wordpress-headless-preview"
     ],
     "performance": {
@@ -93,16 +100,6 @@
                 "caption": "WordPress Importer extension preview"
             },
             {
-                "path": "docs/assets/marketplace/hero-desktop.jpg",
-                "alt": "WordPress Importer desktop marketplace hero",
-                "caption": "Desktop overview of the WordPress migration workflow"
-            },
-            {
-                "path": "docs/assets/marketplace/hero-mobile.jpg",
-                "alt": "WordPress Importer mobile marketplace hero",
-                "caption": "Mobile overview of the WordPress migration workflow"
-            },
-            {
                 "path": "docs/screenshots/wordpress-wxr-source-selection.png",
                 "alt": "Migration Assistant source selection with WordPress WXR available",
                 "caption": "Select WordPress WXR as a Migration Assistant source"
@@ -118,6 +115,10 @@
                 "caption": "Review the Migration Assistant session handoff"
             }
         ],
-        "categories": ["admin", "console", "operations"]
+        "categories": [
+            "admin",
+            "console",
+            "operations"
+        ]
     }
 }

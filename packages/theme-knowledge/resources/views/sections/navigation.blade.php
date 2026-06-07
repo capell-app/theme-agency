@@ -2,7 +2,7 @@
     @isset($heading)
         <div class="mx-auto max-w-5xl px-6 py-14">
             <h2
-                class="text-sm font-black tracking-[0.16em] text-[#4b5563] uppercase"
+                class="text-sm font-black tracking-[0.16em] text-[var(--site-theme-muted)] uppercase"
             >
                 {{ $heading }}
             </h2>

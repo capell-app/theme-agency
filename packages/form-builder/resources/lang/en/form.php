@@ -6,6 +6,8 @@ return [
     'admin' => [
         'fields' => [
             'accepted_file_types' => 'Accepted file types',
+            'autoresponder_body' => 'Autoresponder body',
+            'autoresponder_subject' => 'Autoresponder subject',
             'calculation_expression' => 'Calculation expression',
             'collect_ip_address' => 'Collect IP address',
             'collect_user_agent' => 'Collect user agent',
@@ -31,11 +33,13 @@ return [
             'schema' => 'Fields',
             'step_key' => 'Step key',
             'store_submissions' => 'Store submissions',
+            'success_redirect_url' => 'Success redirect URL',
             'submissions_count' => 'Submissions',
             'success_message' => 'Success message',
             'updated_at' => 'Updated',
             'validation_rules' => 'Validation rules',
             'visibility_conditions' => 'Visibility conditions',
+            'webhook_url' => 'Submission webhook URL',
         ],
         'placeholders' => [
             'accepted_file_types' => 'pdf, docx',
@@ -71,7 +75,11 @@ return [
     ],
     'default_step' => 'Form',
     'errors_heading' => 'Please check the highlighted fields.',
+    'next_step' => 'Continue',
+    'previous_step' => 'Back',
     'select_placeholder' => 'Select an option',
+    'step_progress' => 'Step :current of :total',
+    'steps_label' => 'Form steps',
     'submit' => 'Submit',
     'submitting' => 'Submitting...',
 ];

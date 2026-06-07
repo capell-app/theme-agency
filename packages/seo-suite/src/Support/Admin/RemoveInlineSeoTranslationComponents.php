@@ -16,6 +16,10 @@ final class RemoveInlineSeoTranslationComponents
      */
     public function __invoke(Schema $schema, array $components): array
     {
+        if (! in_array($schema->getOperation(), ['edit', 'editOption'], true)) {
+            return $components;
+        }
+
         return array_values(array_filter(
             $components,
             fn (mixed $component): bool => ! $this->isInlineSeoComponent($component),

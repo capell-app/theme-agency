@@ -331,6 +331,55 @@ it('keeps scheduled reminders idempotent for repeated registration scheduling', 
         ->count())->toBe(1);
 });
 
+it('schedules configured reminder cadence and honors per-event opt out', function (): void {
+    Notification::fake();
+
+    $occurrence = EventOccurrence::factory()->create([
+        'starts_at' => CarbonImmutable::parse('2026-06-10 10:00:00', 'UTC'),
+    ]);
+    $occurrence->event->forceFill([
+        'notification_settings' => [
+            'reminder_offsets_minutes' => [10080, 1440, 60],
+        ],
+    ])->save();
+    $registration = EventRegistration::factory()->for($occurrence, 'occurrence')->create([
+        'email' => 'cadence-attendee@example.com',
+    ]);
+
+    ScheduleEventNotificationsAction::run($registration);
+
+    expect(EventNotificationLog::query()
+        ->where('event_registration_id', $registration->getKey())
+        ->where('type', EventNotificationTypeEnum::Reminder)
+        ->orderBy('scheduled_for')
+        ->pluck('notification_key')
+        ->all())->toBe([
+            'reminder:10080',
+            'reminder:1440',
+            'reminder:60',
+        ]);
+
+    $optedOutOccurrence = EventOccurrence::factory()->create([
+        'starts_at' => CarbonImmutable::parse('2026-06-10 10:00:00', 'UTC'),
+    ]);
+    $optedOutOccurrence->event->forceFill([
+        'notification_settings' => [
+            'reminders_enabled' => false,
+            'reminder_offsets_minutes' => [60],
+        ],
+    ])->save();
+    $optedOutRegistration = EventRegistration::factory()->for($optedOutOccurrence, 'occurrence')->create([
+        'email' => 'quiet-attendee@example.com',
+    ]);
+
+    ScheduleEventNotificationsAction::run($optedOutRegistration);
+
+    expect(EventNotificationLog::query()
+        ->where('event_registration_id', $optedOutRegistration->getKey())
+        ->where('type', EventNotificationTypeEnum::Reminder)
+        ->count())->toBe(0);
+});
+
 it('processes due queued reminder notifications without sending future reminders', function (): void {
     Notification::fake();
 

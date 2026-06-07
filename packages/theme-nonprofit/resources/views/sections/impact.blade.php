@@ -1,8 +1,28 @@
-<section class="theme-section theme-section-impact bg-[#12351f] text-white">
+@php
+    $heading ??= $section->heading ?? null;
+    $impactItems = $section->items ?? [
+        [
+            'metric' => '12k',
+            'summary' => __('capell-theme-nonprofit::generic.impact_metric_people'),
+        ],
+        [
+            'metric' => '84%',
+            'summary' => __('capell-theme-nonprofit::generic.impact_metric_progress'),
+        ],
+        [
+            'metric' => '31',
+            'summary' => __('capell-theme-nonprofit::generic.impact_metric_partners'),
+        ],
+    ];
+@endphp
+
+<section
+    class="theme-section theme-section-impact nonprofit-bg-primary-deep text-white"
+>
     <div class="mx-auto max-w-5xl px-6 py-14">
         @isset($heading)
             <p
-                class="text-xs font-black tracking-[0.18em] text-[#fde047] uppercase"
+                class="nonprofit-text-accent text-xs font-black tracking-[0.18em] uppercase"
             >
                 {{ __('capell-theme-nonprofit::generic.impact_label') }}
             </p>
@@ -12,13 +32,15 @@
         @endisset
 
         <div class="mt-10 grid gap-4 md:grid-cols-3">
-            @foreach ([['metric' => '12k', 'label' => __('capell-theme-nonprofit::generic.impact_metric_people')], ['metric' => '84%', 'label' => __('capell-theme-nonprofit::generic.impact_metric_progress')], ['metric' => '31', 'label' => __('capell-theme-nonprofit::generic.impact_metric_partners')]] as $item)
+            @foreach ($impactItems as $item)
                 <article class="border border-white/15 bg-white/10 p-6">
-                    <p class="text-4xl font-black text-[#fde047]">
+                    <p class="nonprofit-text-accent text-4xl font-black">
                         {{ $item['metric'] }}
                     </p>
-                    <p class="mt-3 text-sm leading-6 font-bold text-emerald-50">
-                        {{ $item['label'] }}
+                    <p
+                        class="nonprofit-text-on-dark-muted mt-3 text-sm leading-6 font-bold"
+                    >
+                        {{ $item['summary'] ?? $item['label'] ?? __('capell-theme-nonprofit::generic.impact_label') }}
                     </p>
                 </article>
             @endforeach

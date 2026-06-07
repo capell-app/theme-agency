@@ -5,14 +5,14 @@
         <div>
             @if ($section->eyebrow)
                 <p
-                    class="mb-5 inline-flex rounded-full border border-cyan-200 bg-cyan-50 px-3 py-1 text-xs font-black tracking-widest text-cyan-700 uppercase"
+                    class="mb-5 inline-flex rounded-full border border-cyan-200 bg-cyan-50 px-3 py-1 text-xs font-semibold tracking-[0.12em] text-cyan-700 uppercase"
                 >
                     {{ $section->eyebrow }}
                 </p>
             @endif
 
             <h1
-                class="max-w-2xl text-4xl font-black tracking-tight text-slate-950 lg:text-5xl"
+                class="max-w-2xl text-4xl leading-tight font-extrabold tracking-tight text-slate-950 lg:text-5xl"
             >
                 {{ $section->heading }}
             </h1>
@@ -59,6 +59,12 @@
                     <img
                         src="{{ $section->mediaUrl }}"
                         alt="{{ $section->mediaAlt ?? '' }}"
+                        width="1200"
+                        height="900"
+                        loading="eager"
+                        decoding="async"
+                        fetchpriority="high"
+                        sizes="(min-width: 1024px) 48vw, 100vw"
                         class="aspect-[4/3] w-full object-cover"
                     />
                     <div

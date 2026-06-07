@@ -40,7 +40,7 @@ Install the core baseline plus `capell-app/frontend-optimizer`, run migrations t
 
 The package needs screenshot coverage for asset output, not for admin navigation. Captures should include the public page and enough response/source inspection to prove the expected profile assets were emitted.
 
-The screenshot runner contract is defined in [screenshots.json](screenshots.json). The two required captures and their dark-mode variants are committed under `docs/screenshots/` and listed in `capell.json` marketplace media alongside the extension card.
+The screenshot runner contract is defined in [screenshots.json](screenshots.json). The two required captures and their dark-mode variants are committed under `docs/screenshots/`, but they are not promoted in `capell.json` marketplace media until they show optimizer-specific profile asset and critical CSS output.
 
 ## Known Risks
 

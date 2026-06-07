@@ -2,11 +2,13 @@
     $items = $section->items ?? [];
 @endphp
 
-<section class="theme-section theme-section-proof bg-[#070b1a] text-white">
+<section class="theme-section theme-section-proof portfolio-bg-deep text-white">
     <div class="mx-auto max-w-6xl px-6 py-16 lg:py-20">
         <div class="grid gap-10 lg:grid-cols-[0.64fr_1.36fr] lg:items-start">
             <div>
-                <p class="text-xs font-black text-[#fb923c] uppercase">
+                <p
+                    class="portfolio-text-highlight text-xs font-black uppercase"
+                >
                     {{ __('capell-theme-portfolio::generic.evidence_label') }}
                 </p>
                 <h2 class="mt-4 text-4xl font-black tracking-tight">
@@ -27,9 +29,9 @@
                         <div
                             class="{{ $loop->first ? 'md:grid-cols-[0.48fr_1fr_0.42fr]' : 'md:grid-cols-[0.72fr_1fr]' }} grid min-h-full"
                         >
-                            <div class="bg-[#10162b] p-5">
+                            <div class="portfolio-bg-deep-soft p-5">
                                 <p
-                                    class="text-xs font-black text-[#fb923c] uppercase"
+                                    class="portfolio-text-highlight text-xs font-black uppercase"
                                 >
                                     {{ __('capell-theme-portfolio::generic.outcome_label') }}
                                 </p>
@@ -42,7 +44,7 @@
 
                             <figcaption class="p-5 sm:p-6">
                                 <p
-                                    class="text-xs font-black text-[#fb923c] uppercase"
+                                    class="portfolio-text-highlight text-xs font-black uppercase"
                                 >
                                     {{ $item['title'] ?? $item['name'] ?? $item['logo'] ?? __('capell-theme-portfolio::generic.proof_signal') }}
                                 </p>
@@ -60,18 +62,20 @@
                                 >
                                     <div class="space-y-3">
                                         <span
-                                            class="block h-2 w-20 bg-[#fb923c]"
+                                            class="portfolio-bg-highlight block h-2 w-20"
                                         ></span>
                                         <span
                                             class="block h-2 w-28 bg-white/25"
                                         ></span>
                                         <span
-                                            class="block h-2 w-16 bg-[#1f3173]"
+                                            class="portfolio-bg-secondary block h-2 w-16"
                                         ></span>
                                     </div>
                                     <div class="mt-8 grid grid-cols-3 gap-2">
                                         <span class="h-9 bg-white/20"></span>
-                                        <span class="h-9 bg-[#1f3173]"></span>
+                                        <span
+                                            class="portfolio-bg-secondary h-9"
+                                        ></span>
                                         <span class="h-9 bg-white/10"></span>
                                     </div>
                                 </div>

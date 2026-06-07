@@ -33,6 +33,17 @@ Provides the baseline Laravel view and asset pipeline that child themes and fron
 - BladeDirectives and CapellUrlGenerator support rendering.
 - The beacon client is generic. It must not ship authoring controls or authoring metadata in theme HTML; `capell-app/frontend-authoring` owns the admin-only response that decorates the page.
 
+## Child Theme Override Contract
+
+Child themes extend the Foundation package in `capell.json` and use runtime `extends: 'default'` in `ThemeDefinitionData`. The supported override surface is intentionally small:
+
+- Section keys: `navigation`, `hero`, `features`, `proof`, `content-listing`, `cta`, `footer`.
+- Shared component views: `capell::theme.page`, `capell::theme.sections.*`, `capell::header.index`, `capell::footer`, `capell::layout.index`, `capell::layout.main`, `capell::layout.area`, `capell::content`, `capell::button.index`, `capell::media.background`, `capell::media.svg`.
+- Runtime CSS tokens: `--color-brand`, `--color-link`, `--color-link-active`, `--color-divider`, `--foundation-page-bg`, `--foundation-surface-bg`, `--foundation-muted-bg`, `--foundation-header-bg`, `--foundation-border`, `--foundation-border-strong`, `--foundation-card-bg`, `--foundation-primary-action`, `--foundation-band-bg`, `--foundation-band-alt-bg`, `--foundation-band-accent-bg`, `--foundation-band-border`, `--foundation-image-border`, `--foundation-image-radius`, `--foundation-section-spacing`, `--foundation-widget-gap`, and `--foundation-radius`.
+- Theme chrome areas: `header` is the supported Layout Builder area for editable chrome.
+
+Child themes should override presentation in package-owned page wrappers and section views. They must not add authoring controls, signed URLs, admin routes, package internals, database queries, or lazy-loading to public output.
+
 ## Operational Notes
 
 Gives each Capell installation a standard frontend foundation before a custom or theme renderer is added.
@@ -52,8 +63,8 @@ Gives each Capell installation a standard frontend foundation before a custom or
 ## Screenshot Plan
 
 - `docs/screenshots.json` defines 12 deployment capture targets across admin and frontend surfaces.
-- `capell.json` ships 15 marketplace media entries: one extension card image, six committed generated PNG captures, and eight visibly labelled layout mockups.
-- `docs/screenshots` contains 6 generated PNG screenshots for settings, frontend, and Tailwind output review in light and dark variants.
+- `capell.json` ships 11 marketplace media entries: one extension card image, settings light/dark, and eight route-backed layout captures.
+- `docs/screenshots` contains generated PNG screenshots for settings, frontend, Tailwind output review, and eight route-backed layout workflows; Tailwind output review now shows the generated-assets report and remains developer evidence outside buyer-facing marketplace media.
 
 ## Pitfalls
 
@@ -117,4 +128,4 @@ This package has no committed ERD excerpt. Use implementation notes and extensio
 Deployment should read [screenshots.json](screenshots.json), install the package with demo data, resolve each listed admin surface or frontend URL, and write images to `packages/foundation-theme/docs/screenshots`.
 
 - Required captures include the Foundation settings screen, generated Tailwind output review, a frontend page using the default theme, the Foundation header Layout Builder area, and the marketplace layout captures listed in `docs/screenshots.json`.
-- Marketplace media includes committed generated PNG captures for settings, frontend, and Tailwind output review plus labelled mockup assets under `docs/assets/marketplace` for the remaining layout targets.
+- Marketplace media includes committed generated PNG captures for settings and route-backed layout targets; Tailwind output review is captured as a developer report artifact and intentionally kept out of buyer-facing marketplace media.

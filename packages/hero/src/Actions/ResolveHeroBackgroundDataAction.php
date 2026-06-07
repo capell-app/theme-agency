@@ -19,9 +19,27 @@ final class ResolveHeroBackgroundDataAction
 
     public function handle(?Theme $theme = null, ?Widget $widget = null, ?WidgetAsset $asset = null): HeroBackgroundData
     {
-        $background = HeroBackgroundData::defaults();
+        return $this->forAsset($this->base($theme, $widget), $asset);
+    }
 
-        foreach ($this->layers($theme, $widget, $asset) as $layer) {
+    public function base(?Theme $theme = null, ?Widget $widget = null): HeroBackgroundData
+    {
+        return $this->resolveLayers($this->layers($theme, $widget));
+    }
+
+    public function forAsset(HeroBackgroundData $base, ?WidgetAsset $asset = null): HeroBackgroundData
+    {
+        return $this->resolveLayers($this->layers(asset: $asset), $base);
+    }
+
+    /**
+     * @param  list<array<string, mixed>>  $layers
+     */
+    private function resolveLayers(array $layers, ?HeroBackgroundData $base = null): HeroBackgroundData
+    {
+        $background = $base ?? HeroBackgroundData::defaults();
+
+        foreach ($layers as $layer) {
             $mode = $this->stringValue($layer['mode'] ?? null);
 
             if ($mode === HeroBackgroundData::ModeOff) {
@@ -43,7 +61,7 @@ final class ResolveHeroBackgroundDataAction
     /**
      * @return list<array<string, mixed>>
      */
-    private function layers(?Theme $theme, ?Widget $widget, ?WidgetAsset $asset): array
+    private function layers(?Theme $theme = null, ?Widget $widget = null, ?WidgetAsset $asset = null): array
     {
         return array_values(array_filter([
             $this->settings($theme?->getMeta('hero_background', [])),

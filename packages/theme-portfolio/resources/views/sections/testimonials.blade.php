@@ -1,17 +1,14 @@
 @php
-    $testimonialItems = $section->items ?? [];
-    $testimonials = $testimonialItems !== []
-        ? $testimonialItems
-        : __('capell-theme-portfolio::generic.testimonial_defaults');
+    $testimonials = $section->items ?? [];
     $summary ??= $section->summary ?? __('capell-theme-portfolio::generic.testimonials_summary');
 @endphp
 
 <section
-    class="theme-section theme-section-testimonials bg-[#f4f6f8] px-6 py-16"
+    class="theme-section theme-section-testimonials portfolio-bg-card-soft px-6 py-16"
 >
     <div class="mx-auto max-w-5xl">
         @isset($heading)
-            <h2 class="text-4xl font-black tracking-tight text-[#0f172a]">
+            <h2 class="portfolio-text-ink text-4xl font-black tracking-tight">
                 {{ $heading }}
             </h2>
         @endisset
@@ -31,7 +28,7 @@
             class="mx-auto flex max-w-5xl snap-x snap-mandatory [scrollbar-width:none] gap-4 overflow-x-auto pr-6 pb-2 md:grid md:grid-cols-3 [&::-webkit-scrollbar]:hidden"
             data-carousel-track
         >
-            @foreach ($testimonials as $testimonial)
+            @forelse ($testimonials as $testimonial)
                 <article
                     class="min-w-[280px] snap-start rounded-2xl border border-slate-200 bg-white p-5 md:min-w-0"
                 >
@@ -44,7 +41,18 @@
                         {{ $testimonial['attribution'] ?? $testimonial['name'] ?? $testimonial['title'] ?? __('capell-theme-portfolio::generic.testimonial_attribution_label') }}
                     </p>
                 </article>
-            @endforeach
+            @empty
+                <article
+                    class="min-w-[280px] snap-start rounded-2xl border border-dashed border-slate-300 bg-white p-6 md:col-span-3 md:min-w-0"
+                >
+                    <h3 class="portfolio-text-ink text-lg font-black">
+                        {{ __('capell-theme-portfolio::generic.premium_layout_ready') }}
+                    </h3>
+                    <p class="mt-2 text-sm text-slate-600">
+                        {{ __('capell-theme-portfolio::generic.premium_layout_empty') }}
+                    </p>
+                </article>
+            @endforelse
         </div>
 
         <button

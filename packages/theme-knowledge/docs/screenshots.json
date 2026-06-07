@@ -6,28 +6,21 @@
     "outputDirectory": "packages/theme-knowledge/docs/screenshots",
     "entries": [
         {
-            "id": "theme-admin-list-showing-knowledge",
-            "title": "Theme admin list showing Knowledge.",
-            "package": "theme-knowledge",
-            "surface": "admin",
-            "targetType": "filament-resource",
-            "target": "ThemeResource:index",
-            "required": true,
-            "notes": "Capture with Foundation Theme, Layout Builder, and capell-app/theme-knowledge installed in the isolated demo harness.",
-            "useCase": "An administrator confirms the Knowledge theme is available for an editorial, research, or resource site.",
-            "screenshotPath": "packages/theme-knowledge/docs/screenshots/theme-admin-list-showing-knowledge.png"
-        },
-        {
             "id": "frontend-page-rendered-with-knowledge-theme",
             "title": "Frontend page rendered with Knowledge theme.",
             "package": "theme-knowledge",
             "surface": "frontend",
             "targetType": "frontend-url",
-            "target": "/theme-knowledge-demo",
-            "required": true,
-            "notes": "Capture a seeded resource hub with search-led hero, topic hubs, featured content, resource library, newsletter, authors, proof, and footer.",
+            "target": "/theme-knowledge",
+            "required": false,
+            "notes": "Capture the seeded package theme route instead of the shared theme-gallery route. Optional until the Capell runner can browser-capture seeded package theme routes without navigation failures.",
             "useCase": "A publisher sees how the theme turns a content archive into a searchable reader journey.",
-            "screenshotPath": "packages/theme-knowledge/docs/screenshots/frontend-page-rendered-with-knowledge-theme.png"
+            "screenshotPath": "packages/theme-knowledge/docs/screenshots/frontend-page-rendered-with-knowledge-theme.png",
+            "darkScreenshotPath": "packages/theme-knowledge/docs/screenshots/frontend-page-rendered-with-knowledge-theme-dark.png",
+            "scenario": "frontend-page",
+            "url": "/theme-knowledge",
+            "waitFor": ".knowledge-shell",
+            "user": false
         },
         {
             "id": "knowledge-homepage-layout",
@@ -35,11 +28,16 @@
             "package": "theme-knowledge",
             "surface": "frontend",
             "targetType": "frontend-url",
-            "target": "/knowledge-homepage-layout",
-            "required": true,
-            "notes": "Capture the editorial command-centre hero, search box, queue cards, proof, and topic routing.",
+            "target": "/theme-knowledge",
+            "required": false,
+            "notes": "Capture the seeded package theme route instead of the shared theme-gallery route. Optional until the Capell runner can browser-capture seeded package theme routes without navigation failures.",
             "useCase": "A resource-site buyer checks whether the first viewport feels like a serious library rather than a blog skin.",
-            "screenshotPath": "packages/theme-knowledge/docs/screenshots/knowledge-homepage-layout.png"
+            "screenshotPath": "packages/theme-knowledge/docs/screenshots/knowledge-homepage-layout.png",
+            "darkScreenshotPath": "packages/theme-knowledge/docs/screenshots/knowledge-homepage-layout-dark.png",
+            "scenario": "frontend-page",
+            "url": "/theme-knowledge",
+            "waitFor": ".knowledge-shell",
+            "user": false
         },
         {
             "id": "knowledge-search-layout",
@@ -47,11 +45,18 @@
             "package": "theme-knowledge",
             "surface": "frontend",
             "targetType": "frontend-url",
-            "target": "/knowledge-search-layout",
-            "required": true,
-            "notes": "Capture search results with relevance scoring, source-map indicators, facets, and no-results recovery.",
+            "target": "/theme-knowledge-directory",
+            "required": false,
+            "notes": "Capture the seeded package theme route instead of the shared theme-gallery route. Optional until the Capell runner can browser-capture seeded package theme routes without navigation failures.",
             "useCase": "A reader can find guides, research notes, and templates without the page collapsing into a plain listing.",
-            "screenshotPath": "packages/theme-knowledge/docs/screenshots/knowledge-search-layout.png"
+            "screenshotPath": "packages/theme-knowledge/docs/screenshots/knowledge-search-layout.png",
+            "scenario": "frontend-page",
+            "url": "/theme-knowledge-directory",
+            "waitFor": ".knowledge-shell",
+            "colorSchemes": [
+                "light"
+            ],
+            "user": false
         },
         {
             "id": "knowledge-topic-hubs-layout",
@@ -59,11 +64,18 @@
             "package": "theme-knowledge",
             "surface": "frontend",
             "targetType": "frontend-url",
-            "target": "/knowledge-topic-hubs-layout",
-            "required": true,
-            "notes": "Capture topic hub cards, guide/research/template groupings, and editorial pathway copy.",
+            "target": "/theme-knowledge-directory",
+            "required": false,
+            "notes": "Capture the seeded package theme route instead of the shared theme-gallery route. Optional until the Capell runner can browser-capture seeded package theme routes without navigation failures.",
             "useCase": "An editorial team reviews how the theme makes deep archives browseable by subject.",
-            "screenshotPath": "packages/theme-knowledge/docs/screenshots/knowledge-topic-hubs-layout.png"
+            "screenshotPath": "packages/theme-knowledge/docs/screenshots/knowledge-topic-hubs-layout.png",
+            "scenario": "frontend-page",
+            "url": "/theme-knowledge-directory",
+            "waitFor": ".knowledge-shell",
+            "colorSchemes": [
+                "light"
+            ],
+            "user": false
         },
         {
             "id": "knowledge-featured-content-layout",
@@ -71,11 +83,18 @@
             "package": "theme-knowledge",
             "surface": "frontend",
             "targetType": "frontend-url",
-            "target": "/knowledge-featured-content-layout",
-            "required": true,
-            "notes": "Capture featured content with evidence labels, reading queue, author metadata, and related resources.",
+            "target": "/theme-knowledge-directory",
+            "required": false,
+            "notes": "Capture the seeded package theme route instead of the shared theme-gallery route. Optional until the Capell runner can browser-capture seeded package theme routes without navigation failures.",
             "useCase": "A publisher checks that high-value research can be promoted without looking like a standard news card.",
-            "screenshotPath": "packages/theme-knowledge/docs/screenshots/knowledge-featured-content-layout.png"
+            "screenshotPath": "packages/theme-knowledge/docs/screenshots/knowledge-featured-content-layout.png",
+            "scenario": "frontend-page",
+            "url": "/theme-knowledge-directory",
+            "waitFor": ".knowledge-shell",
+            "colorSchemes": [
+                "light"
+            ],
+            "user": false
         },
         {
             "id": "knowledge-newsletter-layout",
@@ -83,11 +102,18 @@
             "package": "theme-knowledge",
             "surface": "frontend",
             "targetType": "frontend-url",
-            "target": "/knowledge-newsletter-layout",
-            "required": true,
-            "notes": "Capture newsletter CTA with digest copy, static fallback, and optional newsletter package state.",
+            "target": "/theme-knowledge-cta",
+            "required": false,
+            "notes": "Capture the seeded package theme route instead of the shared theme-gallery route. Optional until the Capell runner can browser-capture seeded package theme routes without navigation failures.",
             "useCase": "A publisher checks how the theme turns reading intent into an owned-audience signup.",
-            "screenshotPath": "packages/theme-knowledge/docs/screenshots/knowledge-newsletter-layout.png"
+            "screenshotPath": "packages/theme-knowledge/docs/screenshots/knowledge-newsletter-layout.png",
+            "scenario": "frontend-page",
+            "url": "/theme-knowledge-cta",
+            "waitFor": ".knowledge-shell",
+            "colorSchemes": [
+                "light"
+            ],
+            "user": false
         },
         {
             "id": "knowledge-author-bench-layout",
@@ -95,23 +121,18 @@
             "package": "theme-knowledge",
             "surface": "frontend",
             "targetType": "frontend-url",
-            "target": "/knowledge-author-bench-layout",
-            "required": true,
-            "notes": "Capture editor and author cards with credibility signals and publication routes.",
+            "target": "/theme-knowledge-directory",
+            "required": false,
+            "notes": "Capture the seeded package theme route instead of the shared theme-gallery route. Optional until the Capell runner can browser-capture seeded package theme routes without navigation failures.",
             "useCase": "A research site can prove expertise without moving into portfolio or agency territory.",
-            "screenshotPath": "packages/theme-knowledge/docs/screenshots/knowledge-author-bench-layout.png"
-        },
-        {
-            "id": "theme-preview-url-output",
-            "title": "Signed admin preview route.",
-            "package": "theme-knowledge",
-            "surface": "admin",
-            "targetType": "admin-url",
-            "target": "capell.admin.theme-preview",
-            "required": true,
-            "notes": "Capture a signed preview URL generated for the seeded Knowledge theme, site, and page.",
-            "useCase": "An administrator previews a resource page with the Knowledge theme applied before publishing the theme choice.",
-            "screenshotPath": "packages/theme-knowledge/docs/screenshots/theme-preview-url-output.png"
+            "screenshotPath": "packages/theme-knowledge/docs/screenshots/knowledge-author-bench-layout.png",
+            "scenario": "frontend-page",
+            "url": "/theme-knowledge-directory",
+            "waitFor": ".knowledge-shell",
+            "colorSchemes": [
+                "light"
+            ],
+            "user": false
         }
     ]
 }

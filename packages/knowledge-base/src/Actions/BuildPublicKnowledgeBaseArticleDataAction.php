@@ -40,6 +40,9 @@ final class BuildPublicKnowledgeBaseArticleDataAction
             return null;
         }
 
+        $feedbackCount = $this->feedbackCount($article);
+        $helpfulFeedbackCount = $this->helpfulFeedbackCount($article);
+
         return new PublicKnowledgeBaseArticleData(
             title: $currentVersion->title,
             slug: $article->slug,
@@ -50,6 +53,9 @@ final class BuildPublicKnowledgeBaseArticleDataAction
             body: SanitizeKnowledgeBaseArticleHtmlAction::run($currentVersion->body),
             version: $currentVersion->version,
             lastModified: $currentVersion->published_at ?? $article->published_at,
+            feedbackCount: $feedbackCount,
+            helpfulFeedbackCount: $helpfulFeedbackCount,
+            helpfulFeedbackPercentage: $this->helpfulFeedbackPercentage($feedbackCount, $helpfulFeedbackCount),
             relatedArticles: $this->relatedArticles($article),
         );
     }
@@ -95,5 +101,24 @@ final class BuildPublicKnowledgeBaseArticleDataAction
             ->filter(static fn (?PublicKnowledgeBaseArticleData $articleData): bool => $articleData instanceof PublicKnowledgeBaseArticleData)
             ->values()
             ->all());
+    }
+
+    private function feedbackCount(KnowledgeBaseArticle $article): int
+    {
+        return $article->feedback()->count();
+    }
+
+    private function helpfulFeedbackCount(KnowledgeBaseArticle $article): int
+    {
+        return $article->feedback()->where('helpful', true)->count();
+    }
+
+    private function helpfulFeedbackPercentage(int $feedbackCount, int $helpfulFeedbackCount): ?int
+    {
+        if ($feedbackCount === 0) {
+            return null;
+        }
+
+        return (int) round(($helpfulFeedbackCount / $feedbackCount) * 100);
     }
 }

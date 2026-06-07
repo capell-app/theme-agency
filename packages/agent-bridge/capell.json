@@ -13,9 +13,15 @@
         "bundle": "operations"
     },
     "namespace": "Capell\\AgentBridge",
-    "surfaces": ["admin", "frontend"],
+    "surfaces": [
+        "admin",
+        "frontend"
+    ],
     "dependencies": {
-        "requires": ["capell-app/admin", "capell-app/core"],
+        "requires": [
+            "capell-app/admin",
+            "capell-app/core"
+        ],
         "supports": [],
         "conflicts": []
     },
@@ -40,9 +46,17 @@
         "demo": null,
         "doctor": null
     },
-    "settings": ["Capell\\AgentBridge\\Settings\\AgentBridgeSettings"],
-    "permissions": ["agent-bridge.manage-tokens", "agent-bridge.view-audit"],
-    "capabilities": ["agent-bridge", "agent-bridge-admin"],
+    "settings": [
+        "Capell\\AgentBridge\\Settings\\AgentBridgeSettings"
+    ],
+    "permissions": [
+        "agent-bridge.manage-tokens",
+        "agent-bridge.view-audit"
+    ],
+    "capabilities": [
+        "agent-bridge",
+        "agent-bridge-admin"
+    ],
     "performance": {
         "frontendRenderBudgetMs": 0,
         "adminQueryBudget": 40,
@@ -82,49 +96,12 @@
                 "path": "docs/screenshots/agent-bridge-prompt-builder-page-dark.png",
                 "alt": "Agent Bridge prompt builder page in dark mode with package context and scoped instructions.",
                 "caption": "Build scoped prompts in dark mode while keeping agent instructions tied to installed package context."
-            },
-            {
-                "path": "docs/screenshots/token-management-or-setup-surface.png",
-                "alt": "Agent Bridge token management surface showing trusted client token setup and review.",
-                "caption": "Create and review tokens used by trusted Agent Bridge clients."
-            },
-            {
-                "path": "docs/screenshots/token-management-or-setup-surface-dark.png",
-                "alt": "Agent Bridge token management surface in dark mode showing trusted client token setup.",
-                "caption": "Review trusted client token setup in dark mode before handing access to an external agent."
-            },
-            {
-                "path": "docs/screenshots/capability-preview-and-confirmation-flow.png",
-                "alt": "Agent Bridge capability preview and confirmation flow showing a proposed site operation.",
-                "caption": "Review a proposed capability run before confirming agent execution."
-            },
-            {
-                "path": "docs/screenshots/capability-preview-and-confirmation-flow-dark.png",
-                "alt": "Agent Bridge capability preview and confirmation flow in dark mode for a proposed site operation.",
-                "caption": "Confirm an agent capability from dark mode only after reviewing the proposed site change."
-            },
-            {
-                "path": "docs/screenshots/audit-entry-review.png",
-                "alt": "Agent Bridge audit entry review showing preview, confirmation, and capability run history.",
-                "caption": "Review what an Agent Bridge client previewed, confirmed, or ran."
-            },
-            {
-                "path": "docs/screenshots/audit-entry-review-dark.png",
-                "alt": "Agent Bridge audit entry review in dark mode showing capability history and outcomes.",
-                "caption": "Inspect preview, confirmation, and run history in dark mode for operational audit trails."
-            },
-            {
-                "path": "docs/screenshots/agent-bridge-server-health-output.png",
-                "alt": "Agent Bridge server health output showing enabled MCP routes and package checks.",
-                "caption": "Confirm which Agent Bridge endpoints are enabled and reachable."
-            },
-            {
-                "path": "docs/screenshots/agent-bridge-server-health-output-dark.png",
-                "alt": "Agent Bridge server health output in dark mode showing enabled MCP routes and checks.",
-                "caption": "Confirm enabled MCP routes and package checks in dark mode during operational review."
             }
         ],
-        "categories": ["admin", "operations"]
+        "categories": [
+            "admin",
+            "operations"
+        ]
     },
     "contributionTraceability": {
         "deferredContributions": [

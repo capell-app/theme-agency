@@ -53,7 +53,7 @@ That is the part clients pay for. Sending an email is easy; proving what happene
 - `EmailProviderRegistry` isolates provider adapters from the send pipeline.
 - `SendEmailAction` creates the message and recipient records, renders the selected variant, applies suppression state, and queues delivery.
 - `DeliverEmailMessageAction` rechecks suppressions, calls the provider adapter, and records recipient/message outcomes.
-- Provider adapters can normalize webhook event and inbound reply payloads for later ingestion slices; no webhook or reply ingestion route/action ships yet.
+- Provider adapters normalize webhook event payloads through a tokenized public route with optional profile-level HMAC verification, recording `email_events` and updating matching recipient delivery status. Inbound reply ingestion remains a later slice.
 - MailTracker tracking routes stay active for pixel/link tracking, but its bundled Blade admin routes are disabled in favour of Capell Filament.
 
 ## Code Map
@@ -75,7 +75,7 @@ That is the part clients pay for. Sending an email is easy; proving what happene
 
 ## Runtime Surface
 
-- Routes: `packages/email-studio/routes/web.php` plus MailTracker's tracking routes.
+- Routes: `packages/email-studio/routes/web.php` exposes tokenized provider-event ingestion, plus MailTracker's tracking routes.
 - Admin resource: `SentEmailResource`.
 - Jobs: `SendEmailJob`.
 - Commands: `capell-email-studio:prune-bodies`, `capell-email-studio:purge-tracked-emails`.

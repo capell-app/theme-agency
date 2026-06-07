@@ -14,6 +14,8 @@ use Capell\FrontendAuthoring\Actions\ClearAffectedCachedUrlsAction;
 use Capell\FrontendAuthoring\Actions\CollectAffectedCachedUrlsAction;
 use Capell\FrontendAuthoring\Actions\UpdateEditableRegionAction;
 use Capell\FrontendAuthoring\Data\EditableRegionPayloadData;
+use Capell\FrontendAuthoring\Enums\EditableRegionInputType;
+use Capell\FrontendAuthoring\Enums\EditableRegionSurface;
 use Capell\FrontendAuthoring\Http\Controllers\EditRegionController;
 use Capell\FrontendAuthoring\Support\EditableRegionSigner;
 use Capell\HtmlCache\Models\CachedModelUrl;
@@ -126,7 +128,11 @@ function editableRegionPayload(Translation $translation, string $field = 'title'
         recordKey: (int) $translation->getKey(),
         field: $field,
         label: $field === 'content' ? 'Page content' : ($field === 'title' ? 'Page title' : 'Page description'),
-        type: $field === 'content' ? 'html' : ($field === 'title' ? 'text' : 'textarea'),
+        type: match ($field) {
+            'content' => EditableRegionInputType::Html,
+            'title' => EditableRegionInputType::Text,
+            default => EditableRegionInputType::Textarea,
+        },
         selector: $field === 'content'
             ? config('capell-frontend-authoring.selectors.page_content', '#main .content-component:first-of-type')
             : config('capell-frontend-authoring.selectors.page_title', '#main h1:first-of-type'),
@@ -342,6 +348,20 @@ it('saves text rich html and meta edits while clearing every affected cached pag
         },
     ],
 ]);
+
+it('stores admin-authored content html exactly according to the trusted admin policy', function (): void {
+    $user = User::factory()->create();
+    actingAs($user);
+    allowEditableRegionEdits();
+
+    $translation = createEditableRegionTranslation();
+    $html = '<section data-test="trusted"><script>window.__adminHtml = true;</script><p>Admin-authored HTML</p></section>';
+
+    UpdateEditableRegionAction::run(editableRegionPayload($translation, 'content'), $html, $user);
+
+    expect($translation->refresh()->content)->toBe($html)
+        ->and(config('capell-frontend-authoring.html_policy'))->toBe('trusted_admin_raw');
+});
 
 it('saves inline edits into an approval workspace and returns a preview redirect when approval is required', function (): void {
     Config::set('capell-frontend-authoring.workflow.require_approval', true);
@@ -568,4 +588,72 @@ it('protects the edit region route with authentication admin access and signed u
 
     $tamperedUrl = str_replace('signature=', 'signature=invalid', $signedUrl);
     getJson($tamperedUrl)->assertForbidden();
+});
+
+it('renders package media editor regions through the registered media surface', function (): void {
+    $translation = createEditableRegionTranslation();
+    $page = $translation->translatable;
+    assert($page instanceof Page);
+
+    $pageUrl = PageUrl::query()
+        ->where('pageable_type', $page->getMorphClass())
+        ->where('pageable_id', $page->getKey())
+        ->firstOrFail();
+
+    app()->bind('frontend-authoring-test.media-region', fn (): callable => fn (PageUrl $resolvedPageUrl): array => [
+        new EditableRegionPayloadData(
+            model: Translation::class,
+            recordKey: (int) $translation->getKey(),
+            field: 'meta.hero_image',
+            label: 'Hero image',
+            type: EditableRegionInputType::Text,
+            selector: '[data-edit-hero-image]',
+            currentUrl: $resolvedPageUrl->full_url,
+            pageUrlId: (int) $resolvedPageUrl->getKey(),
+            siteId: (int) $resolvedPageUrl->site_id,
+            languageId: (int) $resolvedPageUrl->language_id,
+            regionKey: 'test.hero-image',
+            surface: EditableRegionSurface::Media,
+            target: 'hero-image',
+            description: 'Replace the hero image.',
+            context: ['collection' => 'hero'],
+        ),
+    ]);
+    app()->tag('frontend-authoring-test.media-region', 'capell-frontend-authoring:editable-regions');
+
+    $encodedPayload = resolve(EditableRegionSigner::class)->encode(
+        new EditableRegionPayloadData(
+            model: Translation::class,
+            recordKey: (int) $translation->getKey(),
+            field: 'meta.hero_image',
+            label: 'Hero image',
+            type: EditableRegionInputType::Text,
+            selector: '[data-edit-hero-image]',
+            currentUrl: $pageUrl->full_url,
+            pageUrlId: (int) $pageUrl->getKey(),
+            siteId: (int) $pageUrl->site_id,
+            languageId: (int) $pageUrl->language_id,
+            regionKey: 'test.hero-image',
+            surface: EditableRegionSurface::Media,
+            target: 'hero-image',
+            description: 'Replace the hero image.',
+            context: ['collection' => 'hero'],
+        ),
+    );
+    $user = User::factory()->create();
+
+    bindEditableRegionAdminAccess(true);
+    allowEditableRegionEdits();
+
+    $request = Request::create('/authoring/regions/' . $encodedPayload);
+    $request->setUserResolver(fn (): User => $user);
+
+    $view = resolve(EditRegionController::class)->__invoke($request, $encodedPayload);
+
+    expect($view->name())->toBe('capell::editor.region')
+        ->and($view->getData())->toMatchArray([
+            'payload' => $encodedPayload,
+            'title' => 'Hero image',
+            'description' => 'Replace the hero image.',
+        ]);
 });

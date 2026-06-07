@@ -4,9 +4,9 @@ Shopify Commerce connects a site-scoped Shopify store to Capell, stores the admi
 
 ## Boundary
 
-This package owns Shopify app credentials, authenticated OAuth routes, site-scoped connection records, local product/customer cache tables, catalog/customer sync Actions, and the Filament page used by admins to connect or disconnect a store.
+This package owns Shopify app credentials, authenticated OAuth routes, Shopify webhook ingestion, site-scoped connection records, local product/customer cache tables, catalog/customer sync Actions, and the Filament page used by admins to connect or disconnect a store.
 
-It does not own public storefront rendering, checkout, carts, orders, webhooks, or product merchandising components. It may cache Shopify customer records for CRM integrations, but public frontend packages must not expose `shopify_connections.access_token`, OAuth state, GraphQL errors, internal product/customer snapshots, admin URLs, or site assignment metadata in rendered HTML.
+It does not own public storefront rendering, checkout, carts, orders, or product merchandising components. It may cache Shopify customer records for CRM integrations, but public frontend packages must not expose `shopify_connections.access_token`, OAuth state, GraphQL errors, internal product/customer snapshots, admin URLs, or site assignment metadata in rendered HTML.
 
 ## Runtime Surfaces
 
@@ -16,9 +16,9 @@ It does not own public storefront rendering, checkout, carts, orders, webhooks, 
 | Config      | `capell-shopify-commerce.enabled`, `client_id`, `client_secret`, `default_api_version`, `default_scopes`, `state_ttl_seconds`, `default_currency` |
 | Env vars    | `CAPELL_SHOPIFY_COMMERCE_ENABLED`, `SHOPIFY_APP_CLIENT_ID`, `SHOPIFY_APP_CLIENT_SECRET`                                                           |
 | Settings    | `shopify_commerce.api_version`, `shopify_commerce.default_scopes`, `shopify_commerce.search_cache_ttl_minutes`                                    |
-| Routes      | `GET capell/oauth/shopify/install`, `GET capell/oauth/shopify/callback`                                                                           |
-| Route names | `capell-shopify-commerce.oauth.install`, `capell-shopify-commerce.oauth.callback`                                                                 |
-| Commands    | `capell-shopify-commerce:install`, `capell-shopify-commerce:sync {connection?}`, `capell-shopify-commerce:sync-customers {connection?}`           |
+| Routes      | `GET capell/oauth/shopify/install`, `GET capell/oauth/shopify/callback`, `POST capell/webhooks/shopify`                                          |
+| Route names | `capell-shopify-commerce.oauth.install`, `capell-shopify-commerce.oauth.callback`, `capell-shopify-commerce.webhooks.shopify`                    |
+| Commands    | `capell-shopify-commerce:install`, `capell-shopify-commerce:sync {connection?}`, `capell-shopify-commerce:sync-customers {connection?}`, `capell-shopify-commerce:prune-oauth-states` |
 | Admin page  | `filament.admin.pages.shopify-commerce` backed by `ShopifyConnectionPage`                                                                         |
 | Permission  | `manage_shopify_commerce`                                                                                                                         |
 | Models      | `ShopifyConnection`, `ShopifyOAuthState`, `ShopifyProduct`, `ShopifyProductVariant`, `ShopifyCustomer`                                            |
@@ -39,6 +39,7 @@ flowchart TD
     G -->|false| H["Skip Capell model/settings/protected table registration"]
     G -->|true| I["Register models and protected tables with CapellCore"]
     I --> J["Register shopify_commerce settings schema"]
+    I --> L["Schedule OAuth state pruning hourly"]
     F --> K["Install permissions, extension page, console commands"]
 ```
 
@@ -87,8 +88,10 @@ Shopify Commerce does not currently expose a formal provider contract for third-
 | Need                          | Use                                                            | Register or call from                                     | Test shape                                                                                      |
 | ----------------------------- | -------------------------------------------------------------- | --------------------------------------------------------- | ----------------------------------------------------------------------------------------------- |
 | Connect or disconnect a store | `ConnectShopifyStoreAction`, `DisconnectShopifyStoreAction`    | Admin UI or a trusted internal Action                     | Action test with fake token data and asserted `shopify_connections` changes.                    |
+| Prune expired OAuth state     | `PruneExpiredShopifyOAuthStatesAction`                         | Scheduled maintenance or trusted console command          | Action test with expired and future OAuth state rows.                                           |
 | Trigger sync                  | `SyncShopifyProductsAction::run()` or `::dispatch()`           | Trusted admin command, job, or internal integration       | Fake HTTP or mock Actions; assert status transitions and `bulk_operation_id`.                   |
 | Sync customer cache           | `SyncShopifyCustomersAction::run()`                            | Trusted admin command, job, or internal integration       | Fake paginated Admin GraphQL customer responses; assert encrypted local customer rows.          |
+| Receive Shopify webhooks      | `IngestShopifyWebhookAction::run()`                            | Shopify webhook route after header HMAC validation        | Signed feature request; assert product/customer cache mutation or app-uninstall revocation.     |
 | Search cached products        | `SearchShopifyProductsAction::run($term, $limit, $connection)` | Admin-facing product picker or internal commerce workflow | Seed products; assert connection-scoped results and cache behavior.                             |
 | Expose safe frontend behavior | A separate package-owned public Action                         | Public Actions or a package controller                    | Frontend safety test proving no token, OAuth state, admin URL, or raw snapshot leaks.           |
 | Report package health         | `ShopifyCommerceHealthCheck`                                   | Diagnostics package discovery                             | Provider or manifest test asserting health class exists and implements `ChecksExtensionHealth`. |

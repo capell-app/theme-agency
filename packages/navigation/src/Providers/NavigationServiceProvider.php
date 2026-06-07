@@ -164,6 +164,7 @@ class NavigationServiceProvider extends ServiceProvider
         $this->loadTranslationsFrom(__DIR__ . '/../../resources/lang', 'capell-navigation');
         $this->loadViewsFrom(__DIR__ . '/../../resources/views', 'capell-navigation');
         View::composer([
+            'capell-navigation::components.breadcrumbs',
             'capell-navigation::components.header.navigation',
             'capell-navigation::components.menu',
         ], NavigationRenderModelComposer::class);
@@ -247,6 +248,7 @@ class NavigationServiceProvider extends ServiceProvider
     private function handlePageUrlChanged(PageUrlChanged $event): void
     {
         BuildNavigationRenderModelAction::flushPageCache();
+        BuildNavigationRenderModelAction::flushSharedRenderModelCache();
 
         CapellCore::removeCacheKey(FrontendCacheEnum::Navigations->value);
         CapellCore::removeCacheKey(FrontendCacheEnum::siteNavigations($event->site_id));

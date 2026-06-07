@@ -10,7 +10,9 @@ use Capell\ShopifyCommerce\Actions\Catalog\SearchShopifyProductsAction;
 use Capell\ShopifyCommerce\Actions\Catalog\SyncShopifyProductsAction;
 use Capell\ShopifyCommerce\Actions\OAuth\DisconnectShopifyStoreAction;
 use Capell\ShopifyCommerce\Actions\OAuth\ValidateShopifyShopDomainAction;
+use Capell\ShopifyCommerce\Actions\OAuth\VerifyShopifyConnectionTokenAction;
 use Capell\ShopifyCommerce\Enums\ShopifyConnectionStatus;
+use Capell\ShopifyCommerce\Enums\ShopifySyncStatus;
 use Capell\ShopifyCommerce\Models\ShopifyConnection;
 use Capell\ShopifyCommerce\Models\ShopifyProduct;
 use Capell\ShopifyCommerce\Support\Permissions\ShopifyCommercePermission;
@@ -38,6 +40,11 @@ final class ShopifyConnectionPage extends Page
 
     /** @var EloquentCollection<int, ShopifyProduct> */
     public EloquentCollection $searchResults;
+
+    private ?ShopifyConnection $manageableConnection = null;
+
+    /** @var array<int, string>|null */
+    private ?array $siteOptions = null;
 
     protected string $view = 'capell-shopify-commerce::filament.pages.connection';
 
@@ -85,6 +92,7 @@ final class ShopifyConnectionPage extends Page
     {
         $this->searchResults = new EloquentCollection;
         $this->selectedSiteId = ShopifySiteContext::selectedSiteId(auth()->user());
+        $this->loadCachedProductPreview();
     }
 
     #[Override]
@@ -96,6 +104,8 @@ final class ShopifyConnectionPage extends Page
     public function connect(): ?RedirectResponse
     {
         throw_unless(self::canAccess(), HttpException::class, 403);
+
+        $this->resetResolvedConnectionState();
 
         if (ValidateShopifyShopDomainAction::run($this->shop) !== true) {
             $this->addError('shop', __('capell-shopify-commerce::capell-shopify-commerce.connection.invalid_shop'));
@@ -123,18 +133,20 @@ final class ShopifyConnectionPage extends Page
     {
         throw_unless(self::canAccess(), HttpException::class, 403);
 
+        $this->resetResolvedConnectionState();
+
         $connection = $this->getManageableConnection();
 
         if (! $connection instanceof ShopifyConnection) {
             return;
         }
 
-        if (in_array($connection->sync_status, ['queued', 'running', 'importing'], true)) {
+        if (in_array($connection->sync_status, ShopifySyncStatus::busyValues(), true)) {
             return;
         }
 
         $connection->forceFill([
-            'sync_status' => 'queued',
+            'sync_status' => ShopifySyncStatus::Queued->value,
             'last_sync_queued_at' => now(),
         ])->save();
 
@@ -150,6 +162,8 @@ final class ShopifyConnectionPage extends Page
     {
         throw_unless(self::canAccess(), HttpException::class, 403);
 
+        $this->resetResolvedConnectionState();
+
         $connection = $this->getManageableConnection();
 
         if (! $connection instanceof ShopifyConnection) {
@@ -157,6 +171,7 @@ final class ShopifyConnectionPage extends Page
         }
 
         DisconnectShopifyStoreAction::run($connection);
+        $this->resetResolvedConnectionState();
 
         Notification::make()
             ->title(__('capell-shopify-commerce::capell-shopify-commerce.connection.disconnected'))
@@ -164,9 +179,37 @@ final class ShopifyConnectionPage extends Page
             ->send();
     }
 
+    public function verifyToken(): void
+    {
+        throw_unless(self::canAccess(), HttpException::class, 403);
+
+        $this->resetResolvedConnectionState();
+
+        $connection = $this->getManageableConnection();
+
+        if (! $connection instanceof ShopifyConnection) {
+            return;
+        }
+
+        $verified = VerifyShopifyConnectionTokenAction::run($connection);
+
+        $notification = Notification::make()
+            ->title(__('capell-shopify-commerce::capell-shopify-commerce.connection.' . ($verified ? 'token_verified' : 'token_failed')));
+
+        if ($verified) {
+            $notification->success()->send();
+
+            return;
+        }
+
+        $notification->danger()->send();
+    }
+
     public function search(): void
     {
         throw_unless(self::canAccess(), HttpException::class, 403);
+
+        $this->resetResolvedConnectionState();
 
         $connection = $this->getManageableConnection();
 
@@ -199,6 +242,10 @@ final class ShopifyConnectionPage extends Page
 
     public function getManageableConnection(): ?ShopifyConnection
     {
+        if ($this->manageableConnection instanceof ShopifyConnection) {
+            return $this->manageableConnection;
+        }
+
         if (! Schema::hasTable('shopify_connections')) {
             return null;
         }
@@ -227,7 +274,9 @@ final class ShopifyConnectionPage extends Page
             ->latest('id')
             ->first();
 
-        return $connection instanceof ShopifyConnection ? $connection : null;
+        $this->manageableConnection = $connection instanceof ShopifyConnection ? $connection : null;
+
+        return $this->manageableConnection;
     }
 
     /**
@@ -235,12 +284,18 @@ final class ShopifyConnectionPage extends Page
      */
     public function siteOptions(): array
     {
-        return ShopifySiteContext::options(auth()->user());
+        if (is_array($this->siteOptions)) {
+            return $this->siteOptions;
+        }
+
+        $this->siteOptions = ShopifySiteContext::options(auth()->user());
+
+        return $this->siteOptions;
     }
 
     public function isSyncBusy(?ShopifyConnection $connection): bool
     {
-        return $connection instanceof ShopifyConnection && in_array($connection->sync_status, ['queued', 'running', 'importing'], true);
+        return $connection instanceof ShopifyConnection && in_array($connection->sync_status, ShopifySyncStatus::busyValues(), true);
     }
 
     public function getActiveConnection(): ?ShopifyConnection
@@ -248,5 +303,36 @@ final class ShopifyConnectionPage extends Page
         $connection = $this->getManageableConnection();
 
         return $connection?->status === ShopifyConnectionStatus::Active ? $connection : null;
+    }
+
+    public function updatedSelectedSiteId(): void
+    {
+        $this->resetResolvedConnectionState();
+        $this->loadCachedProductPreview();
+    }
+
+    private function loadCachedProductPreview(): void
+    {
+        $this->searchResults = new EloquentCollection;
+
+        $connection = $this->getManageableConnection();
+
+        if (! $connection instanceof ShopifyConnection) {
+            return;
+        }
+
+        $this->searchResults = ShopifyProduct::query()
+            ->withCount('variants')
+            ->where('connection_id', $connection->getKey())
+            ->latest('synced_at')
+            ->latest('id')
+            ->limit(20)
+            ->get();
+    }
+
+    private function resetResolvedConnectionState(): void
+    {
+        $this->manageableConnection = null;
+        $this->siteOptions = null;
     }
 }

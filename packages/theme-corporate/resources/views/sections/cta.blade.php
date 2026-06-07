@@ -29,7 +29,7 @@
                 <div class="mt-5 grid gap-2 sm:grid-cols-3">
                     @foreach ([__('capell-theme-corporate::generic.cta_step_brief'), __('capell-theme-corporate::generic.cta_step_review'), __('capell-theme-corporate::generic.cta_step_decide')] as $step)
                         <div
-                            class="border border-slate-200 bg-[#f7f8f6] px-3 py-3 dark:border-white/10 dark:bg-white/[0.03]"
+                            class="corporate-card-muted px-3 py-3 dark:bg-white/[0.03]"
                         >
                             <p
                                 class="text-xs font-semibold tracking-[0.14em] text-slate-600 uppercase dark:text-slate-300"

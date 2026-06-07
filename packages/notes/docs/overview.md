@@ -16,8 +16,8 @@ The package requires `capell-app/admin`.
 
 - `NotesInboxPage` at `/admin/notes`.
 - Admin user-menu item with attention badge.
-- Package models for notes, assignments, mentions, and dormant reminder records.
-- Actions for creating notes, assigning users, marking mentions read, and calculating attention counts.
+- Package models for notes, assignments, mentions, and scheduled reminder records.
+- Actions for creating notes, assigning users, marking mentions read, calculating attention counts, and sending due reminder notifications.
 
 ## Frontend Surfaces
 
@@ -37,5 +37,6 @@ This package has no public frontend routes or Blade output. It should not add an
 
 ## Known Risks
 
-- Screenshots need seeded assigned notes, mentions, and lifecycle states to show the real collaboration workflow.
+- Marketplace screenshots include Capell runner captures for the populated inbox, attention counts, empty state, and dark-mode workflow.
+- The user-menu badge capture contract still targets `/admin/notes`; promote a dedicated menu-open capture once the runner supports that state.
 - The package has no public frontend surface; future render hooks should include public-safety tests before documentation screenshots are added.

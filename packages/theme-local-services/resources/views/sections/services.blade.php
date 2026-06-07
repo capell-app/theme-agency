@@ -1,17 +1,12 @@
 @php
-    $services = $section->items ?? [
-        ['category' => 'Core', 'title' => 'Emergency Repair'],
-        ['category' => 'Growth', 'title' => 'Preventive Care'],
-        ['category' => 'Delivery', 'title' => 'Maintenance'],
-        ['category' => 'Support', 'title' => 'Support Plans'],
-    ];
+    $services = $section->items ?? __('capell-theme-local-services::generic.services_defaults');
 @endphp
 
 <section class="theme-section theme-section-services">
     <div class="mx-auto max-w-5xl px-6 py-14">
         @isset($heading)
             <p class="text-xs font-black tracking-[0.2em] text-slate-500">
-                Services
+                {{ __('capell-theme-local-services::generic.services_label') }}
             </p>
             <h2 class="mt-3 text-4xl font-black tracking-tight text-[#17211c]">
                 {{ $heading }}
@@ -34,15 +29,15 @@
                         class="min-w-[220px] snap-start rounded-xl border border-stone-200 bg-white p-4 transition hover:-translate-y-1 hover:border-[#17211c] hover:bg-stone-950 hover:text-white"
                     >
                         <p
-                            class="text-xs font-black tracking-widest text-[#17211c] sm:text-stone-500 dark:text-white"
+                            class="text-xs font-black tracking-widest text-[#17211c] sm:text-stone-500"
                         >
-                            {{ $service['category'] ?? 'Service' }}
+                            {{ $service['category'] ?? __('capell-theme-local-services::generic.service_label') }}
                         </p>
                         <h3 class="mt-2 text-lg font-black">
                             {{ $service['title'] }}
                         </h3>
                         <p
-                            class="mt-2 text-sm text-stone-600 dark:text-stone-300"
+                            class="mt-2 text-sm text-stone-600"
                         >
                             {{ $service['summary'] ?? '' }}
                         </p>

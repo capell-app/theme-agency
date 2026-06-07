@@ -21,11 +21,19 @@ final class ConvertNotFoundOpportunityToRedirectAction
         /** @var NotFoundOpportunity|null $opportunity */
         $opportunity = NotFoundOpportunity::query()->find($data->opportunityId);
 
-        throw_unless($opportunity instanceof NotFoundOpportunity, InvalidArgumentException::class, '404 opportunity was not found.');
+        throw_unless(
+            $opportunity instanceof NotFoundOpportunity,
+            InvalidArgumentException::class,
+            __('capell-url-manager::validation.not_found_opportunity_missing'),
+        );
 
         $targetUrl = $data->targetUrl ?? $opportunity->suggested_target_url;
 
-        throw_if(! is_string($targetUrl) || trim($targetUrl) === '', InvalidArgumentException::class, 'A target URL is required to convert a 404 opportunity.');
+        throw_if(
+            ! is_string($targetUrl) || trim($targetUrl) === '',
+            InvalidArgumentException::class,
+            __('capell-url-manager::validation.not_found_opportunity_target_required'),
+        );
 
         $redirectRule = UpsertRedirectRuleAction::run(new RedirectRuleData(
             sourceUrl: $opportunity->source_url,

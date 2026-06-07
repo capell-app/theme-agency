@@ -2,6 +2,8 @@
     $items ??= $section->items ?? [];
     $heading ??= $section->heading ?? __('capell-theme-saas::generic.demo_request_label');
     $summary ??= $section->summary ?? null;
+    $formHandle = $section->form_handle ?? $section->handle ?? null;
+    $formAction = $section->form_action ?? $section->url ?? '#';
 @endphp
 
 <section
@@ -27,7 +29,7 @@
                 </p>
             </div>
 
-            <div class="grid gap-3">
+            <div class="grid gap-4">
                 @forelse ($items as $item)
                     <article
                         class="grid gap-2 rounded-xl border border-white/10 bg-white/[0.04] p-5"
@@ -51,6 +53,63 @@
                         </h3>
                     </article>
                 @endforelse
+
+                <div class="rounded-2xl border border-white/10 bg-white p-5 text-slate-950 shadow-2xl shadow-black/20">
+                    @if (($formBuilderAvailable ?? false) && ($formHandle !== null && $formHandle !== ''))
+                        @livewire('capell-form-builder::form', [
+                            'handle' => $formHandle,
+                            'instanceId' => 'theme-saas-demo-request',
+                        ])
+                    @else
+                        <form action="{{ $formAction }}" method="get" class="grid gap-4">
+                            <div class="grid gap-1">
+                                <label for="theme-saas-demo-name" class="text-sm font-black text-slate-800">
+                                    {{ __('capell-theme-saas::generic.demo_request_name_label') }}
+                                </label>
+                                <input
+                                    id="theme-saas-demo-name"
+                                    name="name"
+                                    type="text"
+                                    autocomplete="name"
+                                    class="min-h-12 rounded-lg border border-slate-300 px-3 text-sm"
+                                >
+                            </div>
+
+                            <div class="grid gap-1">
+                                <label for="theme-saas-demo-email" class="text-sm font-black text-slate-800">
+                                    {{ __('capell-theme-saas::generic.demo_request_email_label') }}
+                                </label>
+                                <input
+                                    id="theme-saas-demo-email"
+                                    name="email"
+                                    type="email"
+                                    autocomplete="email"
+                                    class="min-h-12 rounded-lg border border-slate-300 px-3 text-sm"
+                                >
+                            </div>
+
+                            <div class="grid gap-1">
+                                <label for="theme-saas-demo-company" class="text-sm font-black text-slate-800">
+                                    {{ __('capell-theme-saas::generic.demo_request_company_label') }}
+                                </label>
+                                <input
+                                    id="theme-saas-demo-company"
+                                    name="company"
+                                    type="text"
+                                    autocomplete="organization"
+                                    class="min-h-12 rounded-lg border border-slate-300 px-3 text-sm"
+                                >
+                            </div>
+
+                            <button
+                                type="submit"
+                                class="inline-flex min-h-12 items-center justify-center rounded-lg bg-slate-950 px-4 text-sm font-black text-white"
+                            >
+                                {{ __('capell-theme-saas::generic.demo_request_submit_label') }}
+                            </button>
+                        </form>
+                    @endif
+                </div>
             </div>
         </div>
     </div>

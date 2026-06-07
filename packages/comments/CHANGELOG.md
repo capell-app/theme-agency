@@ -4,6 +4,8 @@ All notable changes to `capell-app/comments` will be documented in this file.
 
 ## Unreleased
 
+- Declared HTML Cache as an explicit supported package pairing and reconciled the completed improvement plan around optional future digest, author edit-window, and GIF media upsells.
+
 ### 2026-06-04
 
 - Added public Like reactions, aggregate reaction counts in public comment DTOs, approved-reply author notifications, and tokenized reply-notification opt-out handling.

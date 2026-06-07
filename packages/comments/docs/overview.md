@@ -97,21 +97,17 @@ thread DTOs.
 ## Marketplace Gallery
 
 `capell.json` lists a committed marketplace gallery for the extension card plus
-four illustrated SVG previews for the required screenshot-contract surfaces:
+four route-backed PNG captures for the required screenshot-contract surfaces:
 
 - moderation inbox
 - comments admin resource
 - comment authors admin resource
 - public comment thread
 
-Those gallery files live under `docs/assets/marketplace/` so marketplace
-validation only references committed assets. They are gallery illustrations, not
-live runtime captures.
-
-The runtime capture contract remains open in `docs/screenshots.json`; deployment
-screenshot runs should use that file to produce full PNG captures for QA and
-marketing artifacts before the screenshot-capture roadmap item is considered
-complete.
+The extension card lives under `docs/assets/marketplace/`, while the runtime
+captures live under `docs/screenshots/`. The screenshot contract in
+`docs/screenshots.json` now declares concrete admin and frontend URLs so the
+deployment screenshot runner can regenerate the same Capell admin/public views.
 
 ## Commands And Routes
 

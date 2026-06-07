@@ -13,9 +13,14 @@
         "bundle": "themes"
     },
     "namespace": "Capell\\ThemeStudio\\Nonprofit",
-    "surfaces": ["frontend"],
+    "surfaces": [
+        "frontend"
+    ],
     "dependencies": {
-        "requires": ["capell-app/core", "capell-app/foundation-theme"],
+        "requires": [
+            "capell-app/core",
+            "capell-app/foundation-theme"
+        ],
         "supports": [
             "capell-app/layout-builder",
             "capell-app/frontend-authoring",
@@ -54,19 +59,31 @@
         "install": null,
         "setup": null,
         "demo": "capell:theme-nonprofit-demo",
-        "demoParams": ["url", "languages", "sites"],
+        "demoParams": [
+            "url",
+            "languages",
+            "sites"
+        ],
         "doctor": null
     },
     "settings": [],
     "permissions": [],
-    "capabilities": ["theme-nonprofit", "theme-nonprofit-frontend"],
+    "capabilities": [
+        "theme-nonprofit",
+        "theme-nonprofit-frontend"
+    ],
     "performance": {
         "frontendRenderBudgetMs": 20,
         "adminQueryBudget": 0,
-        "cacheTags": ["theme-nonprofit"],
+        "cacheTags": [
+            "theme-nonprofit"
+        ],
         "cacheSafety": {
             "cacheable": false,
-            "variesBy": ["site", "locale"],
+            "variesBy": [
+                "site",
+                "locale"
+            ],
             "sensitiveOutput": false,
             "invalidationSources": [],
             "queueInvalidation": true
@@ -91,32 +108,25 @@
                 "caption": "Theme Nonprofit extension preview"
             },
             {
-                "path": "docs/assets/marketplace/nonprofit-donation-layout.svg",
-                "alt": "Theme Nonprofit Donation Layout image",
-                "caption": "Theme Nonprofit Donation Layout"
+                "path": "docs/screenshots/nonprofit-volunteer-donate-layout.png",
+                "alt": "Theme Nonprofit volunteer and donation support paths rendered in the Capell nonprofit theme",
+                "caption": "Volunteer and donate layout"
             },
             {
-                "path": "docs/assets/marketplace/nonprofit-homepage-layout.svg",
-                "alt": "Theme Nonprofit Homepage Layout image",
-                "caption": "Theme Nonprofit Homepage Layout"
+                "path": "docs/screenshots/nonprofit-homepage-layout.png",
+                "alt": "Theme Nonprofit homepage with campaign hero, donation progress, impact proof, and support paths",
+                "caption": "Nonprofit homepage"
             },
             {
-                "path": "docs/assets/marketplace/nonprofit-impact-layout.svg",
-                "alt": "Theme Nonprofit Impact Layout image",
-                "caption": "Theme Nonprofit Impact Layout"
-            },
-            {
-                "path": "docs/assets/marketplace/hero-desktop.jpg",
-                "alt": "Theme Nonprofit Hero Desktop image",
-                "caption": "Theme Nonprofit Hero Desktop"
-            },
-            {
-                "path": "docs/assets/marketplace/hero-mobile.jpg",
-                "alt": "Theme Nonprofit Hero Mobile image",
-                "caption": "Theme Nonprofit Hero Mobile"
+                "path": "docs/screenshots/nonprofit-impact-layout.png",
+                "alt": "Theme Nonprofit impact evidence page with metrics, campaign cards, and supporter stories",
+                "caption": "Impact evidence layout"
             }
         ],
-        "categories": ["frontend", "themes"]
+        "categories": [
+            "frontend",
+            "themes"
+        ]
     },
     "extends": "capell-app/foundation-theme",
     "themeKey": "nonprofit",

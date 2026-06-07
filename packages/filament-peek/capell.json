@@ -86,29 +86,14 @@
                 "caption": "Filament Peek extension preview"
             },
             {
-                "path": "docs/assets/marketplace/hero-desktop.jpg",
-                "alt": "Filament Peek unsaved page preview on desktop",
-                "caption": "Preview unsaved edits rendered through your live theme on desktop"
+                "path": "docs/screenshots/page-edit-preview-actions.png",
+                "alt": "Capell Page edit screen with the Filament Peek preview action group",
+                "caption": "Open the Preview action group from a real Capell Page edit screen before reviewing unsaved changes"
             },
             {
-                "path": "docs/assets/marketplace/hero-mobile.jpg",
-                "alt": "Filament Peek unsaved page preview on mobile",
-                "caption": "Review in-flight changes before publishing on mobile"
-            },
-            {
-                "path": "docs/screenshots/page-or-workspace-edit-screen-with-preview-action.png",
-                "alt": "Page edit header showing the Changes preview action",
-                "caption": "Launch a private preview of unsaved changes from the Page edit header"
-            },
-            {
-                "path": "docs/screenshots/peek-iframe-preview-panel.png",
-                "alt": "Filament Peek iframe preview panel",
-                "caption": "Unsaved edits render in the preview panel without touching saved content"
-            },
-            {
-                "path": "docs/screenshots/workspace-draft-review-screen-with-preview-action.png",
-                "alt": "Workspace draft review screen with a preview action",
-                "caption": "Review workspace drafts before they go live"
+                "path": "docs/screenshots/page-edit-preview-actions-dark.png",
+                "alt": "Capell Page edit screen in dark mode with the Filament Peek preview action group",
+                "caption": "Use the same unsaved preview action from Capell's dark admin theme"
             }
         ],
         "categories": ["admin", "editorial"]

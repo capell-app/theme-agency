@@ -7,6 +7,7 @@ namespace Capell\CustomerPortal\Filament\Resources\PortalSupportRequests;
 use BackedEnum;
 use Capell\Admin\Support\SiteScope;
 use Capell\Core\Facades\CapellCore;
+use Capell\CustomerPortal\Actions\AddSupportRequestReplyAction;
 use Capell\CustomerPortal\Actions\UpdateSupportRequestStatusAction;
 use Capell\CustomerPortal\Enums\SupportRequestPriority;
 use Capell\CustomerPortal\Enums\SupportRequestStatus;
@@ -25,6 +26,8 @@ use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 use Override;
 
 final class PortalSupportRequestResource extends Resource
@@ -83,6 +86,23 @@ final class PortalSupportRequestResource extends Resource
                 TextColumn::make('resolved_at')->label(__('capell-customer-portal::generic.fields.resolved_at'))->dateTime()->sortable()->toggleable(),
             ])
             ->recordActions([
+                Action::make('reply')
+                    ->label(__('capell-customer-portal::generic.actions.reply'))
+                    ->schema([
+                        Textarea::make('message')
+                            ->label(__('capell-customer-portal::generic.fields.reply'))
+                            ->required()
+                            ->maxLength(5000)
+                            ->rows(5),
+                    ])
+                    ->action(function (PortalSupportRequest $record, array $data): void {
+                        AddSupportRequestReplyAction::run(
+                            supportRequest: $record,
+                            message: (string) $data['message'],
+                            senderType: 'team',
+                            author: self::authenticatedModel(),
+                        );
+                    }),
                 Action::make('mark_waiting_on_customer')
                     ->label(__('capell-customer-portal::generic.actions.mark_waiting_on_customer'))
                     ->action(fn (PortalSupportRequest $record): PortalSupportRequest => UpdateSupportRequestStatusAction::run($record, SupportRequestStatus::WaitingOnCustomer)),
@@ -159,5 +179,12 @@ final class PortalSupportRequestResource extends Resource
         return collect(SupportRequestPriority::cases())
             ->mapWithKeys(fn (SupportRequestPriority $priority): array => [$priority->value => $priority->getLabel()])
             ->all();
+    }
+
+    private static function authenticatedModel(): ?Model
+    {
+        $user = Auth::user();
+
+        return $user instanceof Model ? $user : null;
     }
 }

@@ -40,6 +40,8 @@ it('declares the contacts package manifest contract', function (): void {
         ->and($manifest['database']['migrations'])->toBeTrue()
         ->and($manifest['database']['requiredTables'])->toBe([
             'contacts',
+            'contact_tag_memberships',
+            'contact_tags',
             'contact_organisations',
             'contact_organisation_memberships',
             'contact_leads',
@@ -89,6 +91,7 @@ it('declares the contacts package manifest contract', function (): void {
             'contacts-dashboard-widget',
             'contacts-privacy-export',
             'contacts-privacy-anonymization',
+            'contacts-tags',
         )
         ->and($manifest['capabilities'])->not->toContain('contacts-deduplication-rules')
         ->and($manifest['contributionTraceability']['deferredContributions'])->toBe([])

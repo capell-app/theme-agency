@@ -2,15 +2,19 @@
     $items = $section->items ?? [];
 @endphp
 
-<section class="theme-section theme-section-content-listing bg-[#f8fafc]">
+<section
+    class="theme-section theme-section-content-listing portfolio-bg-card-soft"
+>
     <div class="mx-auto max-w-6xl px-6 py-16 lg:py-20">
         <div class="grid gap-5 md:grid-cols-[0.7fr_1fr] md:items-end">
             <div>
-                <p class="text-xs font-black text-[#1f3173] uppercase">
+                <p
+                    class="portfolio-text-secondary text-xs font-black uppercase"
+                >
                     {{ __('capell-theme-portfolio::generic.work_index_label') }}
                 </p>
                 <h2
-                    class="mt-4 text-4xl font-black tracking-tight text-[#0f172a]"
+                    class="portfolio-text-ink mt-4 text-4xl font-black tracking-tight"
                 >
                     {{ $section->heading }}
                 </h2>
@@ -28,30 +32,37 @@
                 @foreach ($items as $item)
                     @php
                         $image = $item['image'] ?? $item['imageUrl'] ?? $item['mediaUrl'] ?? null;
+                        $imageAlt = $item['imageAlt'] ?? $item['mediaAlt'] ?? $item['alt'] ?? $item['title'] ?? $item['name'] ?? __('capell-theme-portfolio::generic.project_image_alt');
                     @endphp
 
                     <a
                         href="{{ $item['url'] ?? '#' }}"
-                        class="{{ $loop->first ? 'md:col-span-4 md:row-span-2' : 'md:col-span-2' }} group grid min-h-full overflow-hidden border border-slate-200 bg-white shadow-sm transition hover:-translate-y-1 hover:border-[#1f3173] hover:shadow-xl"
+                        class="{{ $loop->first ? 'md:col-span-4 md:row-span-2' : 'md:col-span-2' }} group portfolio-hover-border-secondary grid min-h-full overflow-hidden border border-slate-200 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-xl"
                     >
                         @if (is_string($image) && $image !== '')
                             <img
                                 src="{{ $image }}"
-                                alt=""
+                                alt="{{ $imageAlt }}"
+                                width="{{ $loop->first ? 1280 : 640 }}"
+                                height="{{ $loop->first ? 640 : 432 }}"
+                                loading="lazy"
+                                decoding="async"
                                 class="{{ $loop->first ? 'aspect-[16/8]' : 'aspect-[4/2.7]' }} w-full object-cover transition duration-300 group-hover:scale-[1.025]"
                             />
                         @else
                             <span
-                                class="{{ $loop->first ? 'aspect-[16/8]' : 'aspect-[4/2.7]' }} flex items-end bg-[#070b1a] p-5"
+                                class="{{ $loop->first ? 'aspect-[16/8]' : 'aspect-[4/2.7]' }} portfolio-bg-deep flex items-end p-5"
                                 aria-hidden="true"
                             >
                                 <span class="block w-full">
                                     <span
-                                        class="block h-2 w-24 bg-[#fb923c]"
+                                        class="portfolio-bg-highlight block h-2 w-24"
                                     ></span>
                                     <span class="mt-10 grid grid-cols-3 gap-2">
                                         <span class="h-9 bg-white/20"></span>
-                                        <span class="h-9 bg-[#1f3173]"></span>
+                                        <span
+                                            class="portfolio-bg-secondary h-9"
+                                        ></span>
                                         <span class="h-9 bg-white/10"></span>
                                     </span>
                                 </span>
@@ -63,7 +74,7 @@
                                 class="flex items-start justify-between gap-3"
                             >
                                 <span
-                                    class="text-xs font-black text-[#1f3173] uppercase"
+                                    class="portfolio-text-secondary text-xs font-black uppercase"
                                 >
                                     {{ $item['type'] ?? __('capell-theme-portfolio::generic.project_label') }}
                                 </span>
@@ -75,7 +86,7 @@
                             </span>
 
                             <span
-                                class="{{ $loop->first ? 'text-2xl' : 'text-xl' }} block font-black text-[#0f172a]"
+                                class="{{ $loop->first ? 'text-2xl' : 'text-xl' }} portfolio-text-ink block font-black"
                             >
                                 {{ $item['title'] ?? $item['name'] ?? '' }}
                             </span>
@@ -93,18 +104,18 @@
                             >
                                 <span>
                                     <span
-                                        class="block text-xs font-black text-[#9a3412] uppercase"
+                                        class="portfolio-text-primary-strong block text-xs font-black uppercase"
                                     >
                                         {{ __('capell-theme-portfolio::generic.outcome_label') }}
                                     </span>
                                     <span
-                                        class="mt-1 block text-sm font-black text-[#0f172a]"
+                                        class="portfolio-text-ink mt-1 block text-sm font-black"
                                     >
                                         {{ __('capell-theme-portfolio::generic.case_file_summary') }}
                                     </span>
                                 </span>
                                 <span
-                                    class="inline-flex bg-[#0f172a] px-3 py-1.5 text-xs font-black text-white"
+                                    class="portfolio-bg-ink inline-flex px-3 py-1.5 text-xs font-black text-white"
                                 >
                                     {{ __('capell-theme-portfolio::generic.view_case_label') }}
                                 </span>

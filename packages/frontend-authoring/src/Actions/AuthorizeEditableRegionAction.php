@@ -21,6 +21,12 @@ class AuthorizeEditableRegionAction
             return false;
         }
 
+        foreach ($payload->permissions as $permission) {
+            if (! Gate::forUser($user)->allows($permission, [$pageUrl, $payload])) {
+                return false;
+            }
+        }
+
         if (Gate::forUser($user)->allows('frontend-authoring.edit', [$pageUrl, $payload])) {
             return true;
         }

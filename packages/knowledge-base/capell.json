@@ -15,7 +15,7 @@
     "namespace": "Capell\\KnowledgeBase",
     "surfaces": ["frontend", "admin"],
     "dependencies": {
-        "requires": ["capell-app/admin", "capell-app/core"],
+        "requires": ["capell-app/admin", "capell-app/core", "capell-app/frontend"],
         "supports": [
             "capell-app/search",
             "capell-app/seo-suite",
@@ -71,12 +71,13 @@
     "commands": {
         "install": null,
         "setup": null,
-        "demo": null,
+        "demo": "capell:knowledge-base-demo",
         "doctor": null
     },
     "settings": [],
     "actions": {
         "buildAiReadableKnowledgeBaseOutput": "Capell\\KnowledgeBase\\Actions\\BuildAiReadableKnowledgeBaseOutputAction",
+        "buildKnowledgeBaseArticleSchema": "Capell\\KnowledgeBase\\Actions\\BuildKnowledgeBaseArticleSchemaAction",
         "buildKnowledgeBaseSearchDocuments": "Capell\\KnowledgeBase\\Actions\\BuildKnowledgeBaseSearchDocumentsAction",
         "buildPublicKnowledgeBaseArticleData": "Capell\\KnowledgeBase\\Actions\\BuildPublicKnowledgeBaseArticleDataAction",
         "buildPublicKnowledgeBaseNavigation": "Capell\\KnowledgeBase\\Actions\\BuildPublicKnowledgeBaseNavigationAction",
@@ -107,9 +108,19 @@
         "cacheTags": ["knowledge-base"],
         "cacheSafety": {
             "cacheable": true,
-            "variesBy": ["site", "locale"],
+            "variesBy": [],
             "sensitiveOutput": false,
             "invalidationSources": [
+                {
+                    "model": "Capell\\KnowledgeBase\\Models\\KnowledgeBaseCollection",
+                    "events": [
+                        "created",
+                        "updated",
+                        "deleted",
+                        "restored",
+                        "forceDeleted"
+                    ]
+                },
                 {
                     "model": "Capell\\KnowledgeBase\\Models\\KnowledgeBaseArticle",
                     "events": [
@@ -151,7 +162,20 @@
     },
     "marketplace": {
         "summary": "A self-hosted help centre for Capell: organise docs into public collections, capture reader feedback, and serve a fast, theme-agnostic /docs site backed by typed public and AI-readable payloads.",
-        "screenshots": [],
+        "screenshots": [
+            {
+                "path": "docs/screenshots/knowledge-base-articles-index.png",
+                "label": "Knowledge Base articles",
+                "alt": "Capell admin Knowledge Base Articles table showing published and draft articles, collection, AI readable status, search weight, and publish date.",
+                "caption": "Review published and draft help articles with collection, AI-readability, search weight, and publish status."
+            },
+            {
+                "path": "docs/screenshots/knowledge-base-article-edit-version-history.png",
+                "label": "Article edit flow",
+                "alt": "Capell admin edit form for the Installing Capell article showing collection, status, title, slug, body, version, search weight, and AI readable fields.",
+                "caption": "Edit an article through the shipped Capell admin form while preparing the next version for publication."
+            }
+        ],
         "categories": ["content", "frontend", "search-seo"]
     },
     "contributionTraceability": {

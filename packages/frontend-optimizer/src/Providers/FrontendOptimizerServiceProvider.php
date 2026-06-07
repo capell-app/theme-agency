@@ -15,6 +15,7 @@ use Capell\Frontend\Contracts\FrontendAssetManifestRenderer;
 use Capell\Frontend\Events\FrontendContextResolved;
 use Capell\Frontend\Support\Cache\CacheInvalidationRegistry;
 use Capell\FrontendOptimizer\Actions\RenderProfileAssetsAction;
+use Capell\FrontendOptimizer\Console\Commands\PruneRenderProfilesCommand;
 use Capell\FrontendOptimizer\Contracts\CriticalCssGenerator;
 use Capell\FrontendOptimizer\Filament\Configurators\Types\FrontendOptimizerPageTypeConfigurator;
 use Capell\FrontendOptimizer\Filament\Settings\FrontendOptimizerSettingsSchema;
@@ -41,6 +42,7 @@ final class FrontendOptimizerServiceProvider extends AbstractPackageServiceProvi
             ->name(self::$name)
             ->hasConfigFile('capell-frontend-optimizer')
             ->hasTranslations()
+            ->hasCommand(PruneRenderProfilesCommand::class)
             ->hasMigration('2026_05_10_190851_01_create_frontend_optimizer_tables');
     }
 

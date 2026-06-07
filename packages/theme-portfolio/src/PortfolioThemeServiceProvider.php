@@ -32,7 +32,7 @@ final class PortfolioThemeServiceProvider extends ServiceProvider
             previewImage: '/vendor/capell/themes/portfolio.jpg',
             tags: ['Portfolio', 'Case studies', 'Personal brand'],
             bestFit: ['Creators', 'Consultants', 'Independent studios'],
-            includedSections: ['navigation', 'hero', 'features', 'proof', 'content-listing', 'work-grid', 'case-studies', 'case-study-detail', 'process', 'services', 'testimonials', 'speaking-media-kit', 'availability', 'newsletter', 'cta', 'footer'],
+            includedSections: ['navigation', 'hero', 'about-bio', 'features', 'proof', 'content-listing', 'work-grid', 'gallery-lightbox', 'case-studies', 'case-study-detail', 'process', 'services', 'resume-cv', 'client-logos', 'testimonials', 'speaking-media-kit', 'availability', 'newsletter', 'cta', 'footer'],
             presets: [
                 new ThemePresetData(
                     key: 'portfolio',
@@ -56,6 +56,31 @@ final class PortfolioThemeServiceProvider extends ServiceProvider
                         'radius' => 'md',
                         'headingScale' => 'balanced',
                         'cardDensity' => 'compact',
+                    ],
+                ),
+                new ThemePresetData(
+                    key: 'portfolio-dark',
+                    name: 'Portfolio Dark',
+                    description: 'Dark creator portfolio preset for media-led case studies and premium consulting proof.',
+                    previewImage: '/vendor/capell/themes/portfolio.jpg',
+                    values: [
+                        'primaryColor' => '#fb923c',
+                        'accentColor' => '#f43f5e',
+                        'neutralColor' => '#f8fafc',
+                        'surfaceColor' => '#070b1a',
+                        'foregroundColor' => '#f8fafc',
+                        'headingFont' => 'sora',
+                        'bodyFont' => 'inter',
+                        'spacing' => 'balanced',
+                        'cardStyle' => 'bordered',
+                        'navigationStyle' => 'prominent',
+                        'layoutPresentation' => 'structured',
+                        'motionIntensity' => 'subtle',
+                        'mediaTreatment' => 'framed',
+                        'radius' => 'md',
+                        'headingScale' => 'balanced',
+                        'cardDensity' => 'compact',
+                        'colorScheme' => 'dark',
                     ],
                 ),
             ],
@@ -113,7 +138,7 @@ final class PortfolioThemeServiceProvider extends ServiceProvider
     }
 
     /**
-     * @param  array<string, array<string, bool>>  $optionalIntegrations
+     * @param  array<string, array<string, bool|string|null>>  $optionalIntegrations
      */
     private function sectionRenderer(string $sectionKey, array $optionalIntegrations): ?ViewSectionRenderer
     {
@@ -151,7 +176,7 @@ final class PortfolioThemeServiceProvider extends ServiceProvider
     }
 
     /**
-     * @return array<string, array<string, bool>>
+     * @return array<string, array<string, bool|string|null>>
      */
     private function optionalSectionIntegrations(bool $contentSectionsAvailable, bool $mediaLibraryAvailable, bool $newsletterAvailable): array
     {
@@ -159,7 +184,11 @@ final class PortfolioThemeServiceProvider extends ServiceProvider
             'case-studies' => ['contentSectionsAvailable' => $contentSectionsAvailable],
             'work-grid' => ['mediaLibraryAvailable' => $mediaLibraryAvailable],
             'availability' => ['newsletterAvailable' => $newsletterAvailable],
-            'newsletter' => ['newsletterAvailable' => $newsletterAvailable],
+            'newsletter' => [
+                'newsletterAvailable' => $newsletterAvailable,
+                'newsletterFormRoute' => $newsletterAvailable ? 'capell-newsletter.subscribe' : null,
+                'newsletterFormMethod' => 'POST',
+            ],
         ];
     }
 }

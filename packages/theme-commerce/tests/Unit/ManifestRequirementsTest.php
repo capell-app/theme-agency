@@ -31,8 +31,7 @@ describe('theme commerce capell.json manifest', function (): void {
             ->and($manifest['marketplace']['description'])->toBe('Editorial Commerce is a premium Capell theme built for retail and e-commerce storefronts that need to feel like a buying journey, not a styled brochure. It ships an image-led hero, product finder, collection and product grids, comparison and proof sections, buying-guide editorial, and conversion CTAs — all driven by hydrated render data with zero database access in public Blade. Pair it with Capell Shopify Commerce to light up connected-catalog merchandising panels, and with Blog for buying-guide content that supports purchase decisions. Warm editorial direction (deep ink, forest-green merchandising, coral action accents) and a token-driven design system keep every store on-brand while staying fast and accessible.')
             ->and($screenshotPaths)->toBe([
                 'docs/assets/marketplace/extension-card.jpg',
-                'docs/assets/marketplace/hero-desktop.jpg',
-                'docs/assets/marketplace/hero-mobile.jpg',
+                'docs/screenshots/commerce-homepage-layout.png',
             ]);
 
         foreach ($screenshotPaths as $screenshotPath) {

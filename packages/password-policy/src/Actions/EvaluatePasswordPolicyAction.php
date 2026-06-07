@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace Capell\PasswordPolicy\Actions;
 
+use Capell\Core\Support\Database\RuntimeSchemaState;
 use Capell\PasswordPolicy\Data\PasswordPolicyStatusData;
+use Capell\PasswordPolicy\Enums\PasswordPolicyLifecycleEvent;
+use Capell\PasswordPolicy\Events\PasswordExpired;
 use Capell\PasswordPolicy\Support\PasswordPolicySettingsResolver;
 use Carbon\CarbonImmutable;
 use Carbon\CarbonInterface;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Schema;
 use Lorisleiva\Actions\Concerns\AsObject;
 
 class EvaluatePasswordPolicyAction
@@ -19,8 +21,9 @@ class EvaluatePasswordPolicyAction
     public function handle(Model $user): PasswordPolicyStatusData
     {
         $settings = resolve(PasswordPolicySettingsResolver::class)->settings();
+        $schema = resolve(RuntimeSchemaState::class);
 
-        if ($settings->forceChangeEnabled && Schema::hasColumn($user->getTable(), 'must_change_password') && (bool) $user->getAttribute('must_change_password')) {
+        if ($settings->forceChangeEnabled && $schema->hasColumn($user->getTable(), 'must_change_password') && (bool) $user->getAttribute('must_change_password')) {
             return new PasswordPolicyStatusData(
                 mustChangePassword: true,
                 passwordExpired: false,
@@ -28,7 +31,7 @@ class EvaluatePasswordPolicyAction
             );
         }
 
-        if (! $settings->passwordExpiryEnabled || ! Schema::hasColumn($user->getTable(), 'password_changed_at')) {
+        if (! $settings->passwordExpiryEnabled || ! $schema->hasColumn($user->getTable(), 'password_changed_at')) {
             return new PasswordPolicyStatusData(false, false);
         }
 
@@ -42,11 +45,19 @@ class EvaluatePasswordPolicyAction
         }
 
         $expiresAt = $changedAt->addDays(max(1, $settings->passwordExpiryDays));
+        $passwordExpired = $expiresAt->isPast();
+
+        if ($passwordExpired) {
+            NotifyPasswordPolicyLifecycleEventAction::run(
+                PasswordPolicyLifecycleEvent::PasswordExpired,
+                new PasswordExpired($user, $expiresAt),
+            );
+        }
 
         return new PasswordPolicyStatusData(
             mustChangePassword: false,
-            passwordExpired: $expiresAt->isPast(),
-            reason: $expiresAt->isPast() ? 'expired' : null,
+            passwordExpired: $passwordExpired,
+            reason: $passwordExpired ? 'expired' : null,
         );
     }
 

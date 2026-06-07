@@ -123,7 +123,7 @@
                                 <input
                                     type="checkbox"
                                     name="segments[]"
-                                    value="{{ $segment->id }}"
+                                    value="{{ $segment->handle }}"
                                     @checked($segment->selected)
                                 />
                                 <span>{{ $segment->name }}</span>

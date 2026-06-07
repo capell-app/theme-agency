@@ -9,9 +9,9 @@ use Spatie\LaravelData\Data;
 class PreferenceCenterUpdateData extends Data
 {
     /**
-     * @param  list<int>  $segmentIds
+     * @param  list<string>  $segmentHandles
      */
     public function __construct(
-        public array $segmentIds = [],
+        public array $segmentHandles = [],
     ) {}
 }

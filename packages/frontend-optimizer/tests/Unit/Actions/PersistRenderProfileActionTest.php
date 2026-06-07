@@ -28,3 +28,17 @@ it('preserves generated critical css state when the same profile is persisted ag
         ->and($persistedProfile->status)->toBe(OptimizationStatus::Generated->value)
         ->and($persistedProfile->manifest)->toBe(['path' => 'capell/frontend-optimizer/manifests/new.json']);
 });
+
+it('preserves an existing manifest path when persistence does not store a new manifest', function (): void {
+    $profileData = ResolveRenderProfileAction::run(
+        scope: OptimizationScope::Layout,
+        context: ['layout' => 'landing'],
+        assetSets: [FrontendAssetSet::make()->css('base', '/build/base.css')],
+    );
+
+    PersistRenderProfileAction::run($profileData, 'capell/frontend-optimizer/manifests/profile.json');
+
+    $persistedProfile = PersistRenderProfileAction::run($profileData);
+
+    expect($persistedProfile->manifest)->toBe(['path' => 'capell/frontend-optimizer/manifests/profile.json']);
+});

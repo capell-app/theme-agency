@@ -14,5 +14,7 @@ final class PublishComposerChangeResultData extends Data
         public ?string $pullRequestUrl = null,
         public ?string $commitSha = null,
         public ?int $pullRequestId = null,
+        public bool $dryRun = false,
+        public ?string $branchName = null,
     ) {}
 }

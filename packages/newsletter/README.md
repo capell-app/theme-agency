@@ -24,7 +24,7 @@ Newsletter captures, confirms, segments, and syncs subscribers for Capell sites,
 
 ## What It Adds
 
-- Newsletter manages audiences, subscriptions, consent state, imports, segmentation, scheduled send records, preference center updates, UTM attribution, automation hooks, and public subscription routes.
+- Newsletter manages audiences, subscriptions, consent state, imports, segmentation, scheduled send records, external delivery handoff payloads, preference center updates, UTM attribution, automation hooks, and public subscription routes.
 - Admin resources: `FormMappingResource`, `ImportBatchResource`, `NewsletterSendResource`, `NewsletterTagResource`, `ProviderAudienceResource`, `ProviderConnectionResource`, `ProviderInterestMappingResource`, `SegmentResource`, `SubscriberResource`, `SyncAttemptResource`.
 - Package setup or maintenance commands.
 
@@ -61,7 +61,7 @@ Newsletter captures, confirms, segments, and syncs subscribers for Capell sites,
 
 ## Runtime Surface
 
-- Controllers: `ConfirmSubscriptionController`, `ProviderWebhookController`, `ShowPreferenceCenterController`, `UnsubscribeController`, `UpdatePreferenceCenterController`.
+- Controllers: `SubscribeController`, `ConfirmSubscriptionController`, `ProviderWebhookController`, `ShowPreferenceCenterController`, `UnsubscribeController`, `UpdatePreferenceCenterController`.
 - Routes: `packages/newsletter/routes/web.php`.
 - Jobs: `SyncSubscriberToProviderJob`.
 
@@ -72,6 +72,7 @@ Newsletter captures, confirms, segments, and syncs subscribers for Capell sites,
 ## Data And Persistence
 
 - Models: `ConsentEvent`, `FormMapping`, `ImportBatch`, `NewsletterSend`, `ProviderAudience`, `ProviderConnection`, `ProviderInterestMapping`, `ProviderSubscriber`, `PublicToken`, `Segment`, `Subscriber`, `SyncAttempt`.
+- Send strategy: Newsletter records scheduled campaign sends and exposes `BuildNewsletterSendHandoffPayloadAction` for Email Studio, Campaign Studio, Automation Studio, or ESP-specific workers to deliver them. It does not ship a standalone in-house email delivery worker.
 - Migrations: `2026_05_10_190861_01_create_newsletter_provider_connections_table.php`, `2026_05_10_190861_02_create_newsletter_subscribers_table.php`, `2026_05_10_190861_03_create_newsletter_provider_audiences_table.php`, `2026_05_10_190861_04_create_newsletter_consent_events_table.php`, `2026_05_10_190861_05_create_newsletter_provider_interest_mappings_table.php`, `2026_05_10_190861_06_create_newsletter_provider_subscribers_table.php`, `2026_05_10_190861_07_create_newsletter_public_tokens_table.php`, `2026_05_10_190861_08_create_newsletter_segments_table.php`, `2026_05_10_190861_09_create_newsletter_sync_attempts_table.php`, `2026_05_10_190861_10_create_newsletter_form_mappings_table.php`, `2026_05_10_190861_11_create_newsletter_import_batches_table.php`, `2026_05_10_190861_12_create_newsletter_processed_webhook_events_table.php`, `2026_05_31_120000_13_create_newsletter_sends_table.php`.
 - Config: `packages/newsletter/config/capell-newsletter.php`.
 - Data objects live in `src/Data/`; use them for payloads, form state, and view models.

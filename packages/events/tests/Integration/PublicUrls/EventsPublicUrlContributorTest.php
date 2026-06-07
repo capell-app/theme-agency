@@ -44,7 +44,8 @@ it('contributes public event occurrence URLs to the public URL registry contract
 
     expect($urls->first())->toBeInstanceOf(PublicUrlData::class)
         ->and($urls->pluck('canonicalUrl')->all())->toContain($expectedUrl)
-        ->and($urls->first()?->sourcePackage)->toBe(EventsServiceProvider::$packageName);
+        ->and($urls->first()?->sourcePackage)->toBe(EventsServiceProvider::$packageName)
+        ->and($urls->first()?->title)->toBe($event->name);
 });
 
 it('registers the events public URL contributor when Site Discovery is available', function (): void {

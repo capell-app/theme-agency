@@ -49,6 +49,8 @@
             "page-count",
             "theme",
             "seed",
+            "quick",
+            "reset",
             "allow-production",
             "force"
         ],
@@ -72,7 +74,7 @@
     "healthChecks": [
         {
             "key": "demo-kit.package-health",
-            "label": "Demo Kit declares the Capell API version it is compatible with so Diagnostics can flag version mismatches.",
+            "label": "Demo Kit validates the default demo homepage, showcase widgets, media, runtime assets, package capabilities, cache eligibility, and public render contract.",
             "class": "Capell\\DemoKit\\Health\\DemoKitHealthCheck",
             "severity": "critical",
             "surface": "admin"
@@ -91,6 +93,16 @@
                 "path": "docs/assets/marketplace/extension-card.jpg",
                 "alt": "Demo Kit extension preview image",
                 "caption": "Demo Kit extension preview"
+            },
+            {
+                "path": "docs/screenshots/demo-kit-admin-page.png",
+                "alt": "Demo Kit admin page for deterministic content generation",
+                "caption": "Start repeatable demo generation from Capell Admin"
+            },
+            {
+                "path": "docs/screenshots/demo-kit-admin-page-dark.png",
+                "alt": "Demo Kit admin page in dark mode",
+                "caption": "Dark-mode admin capture for demo generation"
             }
         ],
         "categories": ["admin", "foundation", "frontend"]

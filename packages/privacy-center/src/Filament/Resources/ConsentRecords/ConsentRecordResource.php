@@ -19,6 +19,7 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Override;
 
@@ -47,14 +48,26 @@ final class ConsentRecordResource extends Resource
     #[Override]
     public static function table(Table $table): Table
     {
-        return $table->columns([
-            TextColumn::make('category')->label(__('capell-privacy-center::privacy.admin.fields.category'))->badge()->sortable(),
-            TextColumn::make('decision')->label(__('capell-privacy-center::privacy.admin.fields.decision'))->badge()->sortable(),
-            TextColumn::make('policy_version')->label(__('capell-privacy-center::privacy.admin.fields.policy_version'))->toggleable(),
-            TextColumn::make('jurisdiction')->label(__('capell-privacy-center::privacy.admin.fields.jurisdiction'))->toggleable(),
-            TextColumn::make('decided_at')->label(__('capell-privacy-center::privacy.admin.fields.decided_at'))->dateTime()->sortable(),
-            TextColumn::make('expires_at')->label(__('capell-privacy-center::privacy.admin.fields.expires_at'))->dateTime()->toggleable(),
-        ]);
+        return $table
+            ->columns([
+                TextColumn::make('category')->label(__('capell-privacy-center::privacy.admin.fields.category'))->badge()->sortable(),
+                TextColumn::make('decision')->label(__('capell-privacy-center::privacy.admin.fields.decision'))->badge()->sortable(),
+                TextColumn::make('policy_version')->label(__('capell-privacy-center::privacy.admin.fields.policy_version'))->toggleable(),
+                TextColumn::make('jurisdiction')->label(__('capell-privacy-center::privacy.admin.fields.jurisdiction'))->toggleable(),
+                TextColumn::make('decided_at')->label(__('capell-privacy-center::privacy.admin.fields.decided_at'))->dateTime()->sortable(),
+                TextColumn::make('expires_at')->label(__('capell-privacy-center::privacy.admin.fields.expires_at'))->dateTime()->toggleable(),
+            ])
+            ->filters([
+                SelectFilter::make('category')
+                    ->label(__('capell-privacy-center::privacy.admin.fields.category'))
+                    ->options(self::categoryOptions()),
+                SelectFilter::make('decision')
+                    ->label(__('capell-privacy-center::privacy.admin.fields.decision'))
+                    ->options(self::decisionOptions()),
+                SelectFilter::make('jurisdiction')
+                    ->label(__('capell-privacy-center::privacy.admin.fields.jurisdiction'))
+                    ->options(fn (): array => self::jurisdictionOptions()),
+            ]);
     }
 
     #[Override]
@@ -104,5 +117,22 @@ final class ConsentRecordResource extends Resource
     private static function decisionOptions(): array
     {
         return collect(ConsentDecision::cases())->mapWithKeys(fn (ConsentDecision $decision): array => [$decision->value => $decision->getLabel()])->all();
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    private static function jurisdictionOptions(): array
+    {
+        /** @var array<string, string> $options */
+        $options = ConsentRecord::query()
+            ->whereNotNull('jurisdiction')
+            ->where('jurisdiction', '!=', '')
+            ->distinct()
+            ->orderBy('jurisdiction')
+            ->pluck('jurisdiction', 'jurisdiction')
+            ->all();
+
+        return $options;
     }
 }

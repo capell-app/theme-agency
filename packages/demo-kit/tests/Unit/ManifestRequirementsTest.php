@@ -22,6 +22,8 @@ describe('demo kit capell.json manifest', function (): void {
                 'page-count',
                 'theme',
                 'seed',
+                'quick',
+                'reset',
                 'allow-production',
                 'force',
             ]);

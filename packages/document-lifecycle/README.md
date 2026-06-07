@@ -27,7 +27,10 @@ Controlled document registration, publication history, and acceptance tracking f
 - A Controlled documents admin resource.
 - Document registration and publication actions.
 - Publication records linked to Publishing Studio revisions.
+- Stored publication content snapshots with JSON diff downloads between versions.
 - Acceptance records stored in or extending the `legal_acceptances` table.
+- Signed JSON certificate downloads for individual acceptance records.
+- Review-due and expiry dates for controlled documents, with a daily archive-expired command.
 - Protected table registration for document and acceptance audit data.
 
 Use this package when a site needs evidence that a controlled document was published and accepted. It is not a general file manager; media and downloadable assets stay in the media packages.
@@ -42,7 +45,8 @@ Use this package when a site needs evidence that a controlled document was publi
 
 - Models: `Document`, `DocumentPublication`, `DocumentAcceptance`.
 - Migrations: `document_lifecycle_documents`, `document_lifecycle_publications`, and `legal_acceptances` extension.
-- Actions: register, publish, resolve latest publication, compute content hash, record acceptance.
+- Actions: register, publish, resolve latest publication, compute content hash, record acceptance, archive expired documents.
+- Command: `capell:document-lifecycle:archive-expired`.
 
 ## Install And Setup
 

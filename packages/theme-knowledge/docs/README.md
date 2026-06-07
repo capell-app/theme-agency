@@ -3,6 +3,12 @@
 Theme Knowledge is the first-party Capell theme for knowledge bases, publishers,
 resource hubs, and content-led teams.
 
+It also includes standalone Knowledge Base index/article templates. When
+`capell-app/knowledge-base` is installed, the Knowledge Base public controllers
+can render through `capell-theme-knowledge::knowledge-base.index` and
+`capell-theme-knowledge::knowledge-base.article` while preserving the default
+package views as fallback.
+
 ## Read Next
 
 - [Overview](overview.md)

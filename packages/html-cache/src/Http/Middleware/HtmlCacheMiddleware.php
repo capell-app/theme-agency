@@ -13,6 +13,8 @@ use Capell\Frontend\Support\Cache\SurrogateKeyNormalizer;
 use Capell\Frontend\Support\Context\FrontendContext;
 use Capell\Frontend\Support\Security\PublicHtmlSafetyInspector;
 use Capell\HtmlCache\Actions\BuildHtmlCacheEligibilityReportAction;
+use Capell\HtmlCache\Actions\RecordHtmlCacheHitAction;
+use Capell\HtmlCache\Actions\RefreshOriginStaleCachedUrlAction;
 use Capell\HtmlCache\Data\HtmlCacheEligibilityReportData;
 use Capell\HtmlCache\Enums\HtmlCacheEligibilityReason;
 use Capell\HtmlCache\Support\AccessGate\ActiveAccessGateAreaResolver;
@@ -82,12 +84,18 @@ final class HtmlCacheMiddleware
             $cachedPage = $pageCache->getCachePage($request);
 
             if (is_string($cachedPage)) {
+                RecordHtmlCacheHitAction::run($request, strlen($cachedPage));
+                $this->refreshStaleCachedUrlAfterResponse($request);
+
                 return $this->cacheHitResponse($cachedPage, 200);
             }
 
             $cachedErrorPage = $pageCache->getCacheErrorPage($request);
 
             if (is_string($cachedErrorPage)) {
+                RecordHtmlCacheHitAction::run($request, strlen($cachedErrorPage));
+                $this->refreshStaleCachedUrlAfterResponse($request);
+
                 return $this->cacheHitResponse($cachedErrorPage, 404);
             }
         }
@@ -264,6 +272,21 @@ final class HtmlCacheMiddleware
         $response->headers->set('X-Frontend-Cache', 'HIT');
 
         return $this->applyCacheHeaders(request(), $response, applySurrogateKey: false, forcePublic: true);
+    }
+
+    private function refreshStaleCachedUrlAfterResponse(Request $request): void
+    {
+        if (config('capell-html-cache.origin_stale_while_revalidate.enabled', true) !== true) {
+            return;
+        }
+
+        if (app()->runningUnitTests() || app()->runningInConsole()) {
+            RefreshOriginStaleCachedUrlAction::dispatchSync($request->fullUrl());
+
+            return;
+        }
+
+        RefreshOriginStaleCachedUrlAction::dispatchAfterResponse($request->fullUrl());
     }
 
     private function applyCacheHeaders(

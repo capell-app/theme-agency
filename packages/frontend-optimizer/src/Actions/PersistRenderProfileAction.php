@@ -33,12 +33,17 @@ class PersistRenderProfileAction
             return $renderProfile;
         }
 
-        $renderProfile->fill([
+        $values = [
             'label' => $profile->label,
-            'manifest' => $manifestPath === null ? null : ['path' => $manifestPath],
             'scope' => $profile->scope->value,
             'signature' => $profile->signature,
-        ]);
+        ];
+
+        if ($manifestPath !== null) {
+            $values['manifest'] = ['path' => $manifestPath];
+        }
+
+        $renderProfile->fill($values);
 
         $renderProfile->save();
 

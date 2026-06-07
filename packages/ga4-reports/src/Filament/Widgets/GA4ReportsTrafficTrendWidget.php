@@ -38,7 +38,11 @@ final class GA4ReportsTrafficTrendWidget extends ChartWidget implements CapellWi
     #[Override]
     protected function getData(): array
     {
-        $points = BuildGA4ReportsTrendAction::run($this->getGA4ReportsWindow());
+        $window = $this->getGA4ReportsWindow();
+        $points = BuildGA4ReportsTrendAction::run($window);
+        $previousPoints = $window === null
+            ? []
+            : BuildGA4ReportsTrendAction::run($this->getPreviousGA4ReportsWindow($window));
 
         return [
             'datasets' => [
@@ -53,6 +57,17 @@ final class GA4ReportsTrafficTrendWidget extends ChartWidget implements CapellWi
                     'tension' => 0.35,
                 ],
                 [
+                    'label' => __('capell-ga4-reports::widgets.previous_screen_page_views'),
+                    'data' => array_map(
+                        fn (GA4ReportsTrendPointData $point): int => $point->screenPageViews,
+                        $previousPoints,
+                    ),
+                    'borderColor' => 'rgba(37, 99, 235, 0.45)',
+                    'backgroundColor' => 'rgba(37, 99, 235, 0.05)',
+                    'borderDash' => [6, 4],
+                    'tension' => 0.35,
+                ],
+                [
                     'label' => __('capell-ga4-reports::widgets.sessions'),
                     'data' => array_map(
                         fn (GA4ReportsTrendPointData $point): int => $point->sessions,
@@ -60,6 +75,17 @@ final class GA4ReportsTrafficTrendWidget extends ChartWidget implements CapellWi
                     ),
                     'borderColor' => '#16a34a',
                     'backgroundColor' => 'rgba(22, 163, 74, 0.12)',
+                    'tension' => 0.35,
+                ],
+                [
+                    'label' => __('capell-ga4-reports::widgets.previous_sessions'),
+                    'data' => array_map(
+                        fn (GA4ReportsTrendPointData $point): int => $point->sessions,
+                        $previousPoints,
+                    ),
+                    'borderColor' => 'rgba(22, 163, 74, 0.45)',
+                    'backgroundColor' => 'rgba(22, 163, 74, 0.05)',
+                    'borderDash' => [6, 4],
                     'tension' => 0.35,
                 ],
             ],

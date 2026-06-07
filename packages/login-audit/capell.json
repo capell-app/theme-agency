@@ -16,7 +16,12 @@
     "surfaces": ["admin"],
     "dependencies": {
         "requires": ["capell-app/admin"],
-        "supports": [],
+        "supports": [
+            "capell-app/password-policy",
+            "capell-app/privacy-center",
+            "capell-app/diagnostics",
+            "capell-app/access-gate"
+        ],
         "conflicts": []
     },
     "providers": {
@@ -41,7 +46,7 @@
     },
     "settings": [],
     "permissions": [],
-    "capabilities": ["login-audit", "login-audit-admin"],
+    "capabilities": ["login-audit", "login-audit-admin", "login-audit-device-activity", "login-audit-csv-export", "login-audit-detection", "login-audit-admin-alerts"],
     "performance": {
         "frontendRenderBudgetMs": 0,
         "adminQueryBudget": 40,
@@ -112,12 +117,22 @@
                 "alt": "Login Audit settings for retention, IP tracking, and visibility",
                 "caption": "Configure retention, IP tracking, and visibility from Capell settings"
             },
-            {
-                "path": "docs/screenshots/login-audit-settings-screen-dark.png",
-                "alt": "Login Audit settings screen in dark mode",
-                "caption": "The access log settings screen in dark mode"
-            }
-        ],
+        {
+            "path": "docs/screenshots/login-audit-settings-screen-dark.png",
+            "alt": "Login Audit settings screen in dark mode",
+            "caption": "The access log settings screen in dark mode"
+        },
+        {
+            "path": "docs/screenshots/user-edit-access-summary.png",
+            "alt": "Login Audit user edit access summary",
+            "caption": "Review recent logins, failed attempts, devices, and active sessions while editing a user"
+        },
+        {
+            "path": "docs/screenshots/user-login-audits-relation-manager.png",
+            "alt": "Login Audit user authentication history relation manager",
+            "caption": "Open user-owned authentication history with device and trusted-state context"
+        }
+    ],
         "categories": ["admin", "operations"]
     },
     "contributionTraceability": {

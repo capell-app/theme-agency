@@ -8,6 +8,7 @@ use Capell\Core\Facades\CapellCore;
 use Capell\Core\Support\Packages\AbstractPackageServiceProvider;
 use Capell\CustomerPortal\Models\PortalAccount;
 use Capell\CustomerPortal\Models\PortalSupportRequest;
+use Capell\CustomerPortal\Models\PortalSupportRequestReply;
 use Capell\CustomerPortal\Support\PortalDashboardItemRegistry;
 use Capell\CustomerPortal\Support\PortalPreferencesProviderRegistry;
 use Capell\CustomerPortal\Support\PortalProfileProviderRegistry;
@@ -33,6 +34,7 @@ final class CustomerPortalServiceProvider extends AbstractPackageServiceProvider
             ->hasMigrations([
                 '2026_05_31_150000_01_create_portal_accounts_table',
                 '2026_05_31_150000_02_create_portal_support_requests_table',
+                '2026_06_06_000001_create_portal_support_request_replies_table',
             ]);
     }
 
@@ -65,6 +67,7 @@ final class CustomerPortalServiceProvider extends AbstractPackageServiceProvider
         Relation::morphMap([
             'portal_account' => PortalAccount::class,
             'portal_support_request' => PortalSupportRequest::class,
+            'portal_support_request_reply' => PortalSupportRequestReply::class,
         ], merge: true);
     }
 
@@ -79,6 +82,7 @@ final class CustomerPortalServiceProvider extends AbstractPackageServiceProvider
         CapellCore::registerModels([
             PortalAccount::class,
             PortalSupportRequest::class,
+            PortalSupportRequestReply::class,
         ]);
 
         return $this;

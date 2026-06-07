@@ -6,6 +6,7 @@ namespace Capell\CampaignStudio\Providers;
 
 use Capell\Admin\Contracts\Extenders\PageSchemaExtender;
 use Capell\CampaignStudio\Console\Commands\InstallCampaignLayoutsCommand;
+use Capell\CampaignStudio\Console\Commands\SyncCampaignStatusesCommand;
 use Capell\CampaignStudio\Enums\CampaignWidgetComponentEnum;
 use Capell\CampaignStudio\Filament\Extenders\Page\CampaignPageSchemaExtender;
 use Capell\CampaignStudio\Listeners\RecordFormSubmissionConversion;
@@ -27,6 +28,7 @@ use Capell\Core\Facades\CapellCore;
 use Capell\Core\Support\Packages\AbstractPackageServiceProvider;
 use Capell\PublishingStudio\Contracts\EditorialCalendarEventContributor;
 use Capell\SiteDiscovery\Contracts\PublicUrlContributor;
+use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Gate;
@@ -46,7 +48,10 @@ final class CampaignStudioServiceProvider extends AbstractPackageServiceProvider
             ->hasConfigFile('capell-campaign-studio')
             ->hasTranslations()
             ->hasViews(self::$name)
-            ->hasCommand(InstallCampaignLayoutsCommand::class)
+            ->hasCommands([
+                InstallCampaignLayoutsCommand::class,
+                SyncCampaignStatusesCommand::class,
+            ])
             ->hasMigrations([
                 '2026_05_10_190843_01_create_campaign_groups_table',
                 '2026_05_10_190843_03_create_campaign_landing_pages_table',
@@ -86,7 +91,8 @@ final class CampaignStudioServiceProvider extends AbstractPackageServiceProvider
             ->registerProtectedTables()
             ->registerPublicUrlContributors()
             ->registerEditorialCalendarContributors()
-            ->registerListeners();
+            ->registerListeners()
+            ->registerSchedule();
     }
 
     private function registerPackageAssets(): self
@@ -190,6 +196,18 @@ final class CampaignStudioServiceProvider extends AbstractPackageServiceProvider
         if (class_exists($formSubmittedEvent)) {
             Event::listen($formSubmittedEvent, RecordFormSubmissionConversion::class);
         }
+
+        return $this;
+    }
+
+    private function registerSchedule(): self
+    {
+        $this->callAfterResolving(Schedule::class, function (Schedule $schedule): void {
+            $schedule->command('capell:campaign-studio-sync-statuses')
+                ->everyFiveMinutes()
+                ->withoutOverlapping()
+                ->onOneServer();
+        });
 
         return $this;
     }

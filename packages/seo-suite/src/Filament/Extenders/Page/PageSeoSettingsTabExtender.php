@@ -13,6 +13,7 @@ use Capell\Admin\Filament\Support\HelperText;
 use Capell\Core\Models\Page;
 use Capell\SeoSuite\Enums\RobotsDirectiveEnum;
 use Capell\SeoSuite\Filament\Components\Forms\Page\PageSeoPanel;
+use Capell\SeoSuite\Settings\SeoSuiteSettings;
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\CheckboxList;
 use Filament\Forms\Components\Select;
@@ -110,14 +111,31 @@ class PageSeoSettingsTabExtender implements PageSchemaExtender
                     ->maxLength(255),
                 Textarea::make('description')
                     ->label(__('capell-admin::form.meta_description.label'))
-                    ->helperText(__('capell-admin::form.meta_description.helper'))
+                    ->helperText(fn (): string => $this->metaDescriptionHelperText())
                     ->rows(3)
-                    ->maxLength(320),
+                    ->maxLength(fn (): int => resolve(SeoSuiteSettings::class)->metaDescriptionMaximumLength())
+                    ->helperCountText(),
                 TextInput::make('keywords')
                     ->label(__('capell-admin::form.meta_keywords.label'))
                     ->helperText(__('capell-admin::form.meta_keywords.helper'))
                     ->maxLength(255),
             ]);
+    }
+
+    private function metaDescriptionHelperText(): string
+    {
+        $settings = resolve(SeoSuiteSettings::class);
+        $helper = __('capell-admin::form.meta_description.helper');
+        $range = __('capell-seo-suite::generic.seo_authoring_meta_description_range_helper', [
+            'min' => $settings->metaDescriptionMinimumLength(),
+            'max' => $settings->metaDescriptionMaximumLength(),
+        ]);
+
+        if (! $settings->seo_authoring_require_title_in_description) {
+            return $helper . ' ' . $range;
+        }
+
+        return $helper . ' ' . $range . ' ' . __('capell-seo-suite::generic.seo_authoring_meta_description_title_helper');
     }
 
     private function getSeoSettingsSection(): Section

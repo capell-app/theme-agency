@@ -57,17 +57,8 @@ it('declares all committed marketplace screenshots', function (): void {
         $marketplaceScreenshots,
     );
 
-    $committedScreenshotPaths = array_map(
-        static fn (string $path): string => str_replace($packagePath . '/', '', $path),
-        glob($packagePath . '/docs/screenshots/*.png') ?: [],
-    );
-    sort($committedScreenshotPaths);
-
     $requiredPaths = [
         'docs/assets/marketplace/extension-card.jpg',
-        'docs/assets/marketplace/hero-desktop.jpg',
-        'docs/assets/marketplace/hero-mobile.jpg',
-        ...$committedScreenshotPaths,
     ];
 
     expect($declaredPaths)->toContain(...$requiredPaths);
@@ -75,4 +66,11 @@ it('declares all committed marketplace screenshots', function (): void {
     foreach ($declaredPaths as $declaredPath) {
         expect(file_exists($packagePath . '/' . $declaredPath))->toBeTrue();
     }
+});
+
+it('declares the measured admin wizard query budget', function (): void {
+    $packagePath = dirname(__DIR__, 3);
+    $manifest = capell_json_file_array($packagePath . '/capell.json');
+
+    expect(data_get($manifest, 'performance.adminQueryBudget'))->toBe(120);
 });

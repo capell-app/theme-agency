@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Capell\FrontendOptimizer\Actions;
 
 use Capell\FrontendOptimizer\Data\FrontendAssetDefinitionData;
+use Capell\FrontendOptimizer\Data\FrontendResourceHintData;
 use Capell\FrontendOptimizer\Data\RenderProfileData;
 use Capell\FrontendOptimizer\Enums\OptimizationScope;
 use Capell\FrontendOptimizer\Support\CriticalCssSettings;
@@ -20,11 +21,13 @@ class ResolveRenderProfileAction
     /**
      * @param  array<string, mixed>  $context
      * @param  array<int, FrontendAssetSet>  $assetSets
+     * @param  array<int, FrontendResourceHintData>  $resourceHints
      */
     public function handle(
         OptimizationScope $scope,
         array $context,
         array $assetSets,
+        array $resourceHints = [],
         ?string $label = null,
     ): RenderProfileData {
         $assets = collect($assetSets)
@@ -39,6 +42,7 @@ class ResolveRenderProfileAction
             'assets' => array_map(static fn (FrontendAssetDefinitionData $asset): array => $asset->signature(), $assets),
             'context' => $this->normalize($context),
             'critical_css' => $this->criticalCssSettings->signature(),
+            'resource_hints' => array_map(static fn (FrontendResourceHintData $hint): array => $hint->signature(), $resourceHints),
             'scope' => $scope->value,
         ];
 
@@ -49,6 +53,7 @@ class ResolveRenderProfileAction
             scope: $scope,
             signature: $signature,
             assets: $assets,
+            resourceHints: $resourceHints,
             label: $label,
         );
     }

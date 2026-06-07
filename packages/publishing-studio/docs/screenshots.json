@@ -13,8 +13,7 @@
             "targetType": "admin-surface",
             "target": "WorkspaceResource",
             "required": true,
-            "capturedFile": "docs/images/screenshots/10-workflow-dashboard.png",
-            "notes": "Show the flagship timeline entry point with active drafts, review status, publish readiness, and recent workflow activity. Existing documentation image: docs/images/screenshots/10-workflow-dashboard.png.",
+            "notes": "Show the flagship timeline entry point with active drafts, review status, publish readiness, and recent workflow activity.",
             "useCase": "An editor reviews active drafts, review status, publish readiness, and recent workflow activity.",
             "screenshotPath": "packages/publishing-studio/docs/screenshots/editorial-timeline-dashboard.png"
         },
@@ -26,8 +25,7 @@
             "targetType": "admin-surface",
             "target": "WorkspaceResource",
             "required": true,
-            "capturedFile": "docs/images/screenshots/11-workspaces-editor-submit.png",
-            "notes": "Show editors managing draft changes while content remains isolated from the live page until a release action runs. Existing documentation image: docs/images/screenshots/11-workspaces-editor-submit.png.",
+            "notes": "Show editors managing draft changes while content remains isolated from the live page until a release action runs.",
             "useCase": "An editor manages draft changes while live content remains isolated until release.",
             "screenshotPath": "packages/publishing-studio/docs/screenshots/editor-responsibility.png"
         },
@@ -39,8 +37,7 @@
             "targetType": "admin-surface",
             "target": "WorkspaceResource",
             "required": true,
-            "capturedFile": "docs/images/screenshots/12-review-approval.png",
-            "notes": "Show reviewers approving, rejecting, or requesting changes before publish controls become available. Existing documentation image: docs/images/screenshots/12-review-approval.png.",
+            "notes": "Show reviewers approving, rejecting, or requesting changes before publish controls become available.",
             "useCase": "A reviewer approves, rejects, or requests changes before publish controls become available.",
             "screenshotPath": "packages/publishing-studio/docs/screenshots/reviewer-responsibility.png"
         },
@@ -64,8 +61,7 @@
             "targetType": "admin-surface",
             "target": "PreviewLinkResource",
             "required": true,
-            "capturedFile": "docs/images/screenshots/13-preview-links.png",
-            "notes": "Show issued preview links with expiry, revocation, last accessed time, and access count. Existing documentation image: docs/images/screenshots/13-preview-links.png.",
+            "notes": "Show issued preview links with expiry, revocation, last accessed time, and access count.",
             "useCase": "An editor manages issued preview links, expiry, revocation, last access, and access count.",
             "screenshotPath": "packages/publishing-studio/docs/screenshots/preview-link-management.png"
         },
@@ -101,8 +97,7 @@
             "targetType": "admin-surface",
             "target": "ScheduledPublishingPage",
             "required": true,
-            "capturedFile": "docs/images/screenshots/14-scheduled-publishing.png",
-            "notes": "Show release timing, scheduled publishing-studio, embargo-aware publishing windows, and queue state. Existing documentation image: docs/images/screenshots/14-scheduled-publishing.png.",
+            "notes": "Show release timing, scheduled publishing-studio, embargo-aware publishing windows, and queue state.",
             "useCase": "An editor schedules release timing and reviews queue state for future publication.",
             "screenshotPath": "packages/publishing-studio/docs/screenshots/scheduled-publishing.png"
         },
@@ -126,8 +121,7 @@
             "targetType": "admin-surface",
             "target": "StaleDraftsPage",
             "required": true,
-            "capturedFile": "docs/images/screenshots/15-stale-drafts.png",
-            "notes": "Show stale workspace detection, review nudges, and cleanup actions for unfinished draft work. Existing documentation image: docs/images/screenshots/15-stale-drafts.png.",
+            "notes": "Show stale workspace detection, review nudges, and cleanup actions for unfinished draft work.",
             "useCase": "An editor identifies stale workspaces and uses review nudges or cleanup actions.",
             "screenshotPath": "packages/publishing-studio/docs/screenshots/stale-drafts.png"
         },

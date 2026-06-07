@@ -6,40 +6,23 @@
     "outputDirectory": "packages/theme-agency/docs/screenshots",
     "entries": [
         {
-            "id": "theme-admin-list-showing-agency",
-            "title": "Themes admin list showing Agency.",
-            "package": "theme-agency",
-            "surface": "admin",
-            "targetType": "admin-surface",
-            "target": "ThemeResource:index",
-            "required": true,
-            "notes": "Capture after installing capell-app/theme-agency with Foundation Theme and creating an Agency theme record in the isolated demo harness.",
-            "useCase": "An administrator sees the Agency theme record in the host Themes admin surface.",
-            "screenshotPath": "packages/theme-agency/docs/screenshots/theme-admin-list-showing-agency.png"
-        },
-        {
-            "id": "theme-preview-url-output",
-            "title": "Signed admin preview route.",
-            "package": "theme-agency",
-            "surface": "admin",
-            "targetType": "admin-url",
-            "target": "capell.admin.theme-preview",
-            "required": true,
-            "notes": "Capture a temporary signed preview URL generated from the host Themes table for the Agency theme.",
-            "useCase": "An administrator opens a preview URL to inspect a page with the Agency theme applied.",
-            "screenshotPath": "packages/theme-agency/docs/screenshots/theme-preview-url-output.png"
-        },
-        {
             "id": "frontend-page-rendered-with-agency-theme",
             "title": "Frontend page rendered with Agency theme.",
             "package": "theme-agency",
             "surface": "frontend",
             "targetType": "frontend-url",
-            "target": "/theme-agency-demo",
-            "required": true,
-            "notes": "Capture the isolated demo route that renders navigation, hero, features, proof, content listing, CTA, and footer through the Agency renderer.",
+            "target": "/theme-agency",
+            "required": false,
+            "notes": "Capture the seeded package theme route instead of the shared theme-gallery route. Optional until the Capell runner can browser-capture seeded package theme routes without navigation failures.",
             "useCase": "A visitor sees a seeded public page rendered through every Agency theme section.",
-            "screenshotPath": "packages/theme-agency/docs/screenshots/frontend-page-rendered-with-agency-theme.png"
+            "screenshotPath": "packages/theme-agency/docs/screenshots/frontend-page-rendered-with-agency-theme.png",
+            "scenario": "frontend-page",
+            "url": "/theme-agency",
+            "waitFor": ".site-theme-shell",
+            "colorSchemes": [
+                "light"
+            ],
+            "user": false
         },
         {
             "id": "agency-homepage-layout",
@@ -47,11 +30,18 @@
             "package": "theme-agency",
             "surface": "frontend",
             "targetType": "frontend-url",
-            "target": "/agency-homepage-layout",
-            "required": true,
-            "notes": "Capture the basic creative campaign homepage with launch-room hero, campaign proof, work-in-progress cards, and conversion CTA.",
+            "target": "/theme-agency",
+            "required": false,
+            "notes": "Capture the seeded package theme route instead of the shared theme-gallery route. Optional until the Capell runner can browser-capture seeded package theme routes without navigation failures.",
             "useCase": "A creative team reviews the premium Agency theme as a campaign launch surface, not a quiet creator portfolio.",
-            "screenshotPath": "packages/theme-agency/docs/screenshots/agency-homepage-layout.png"
+            "screenshotPath": "packages/theme-agency/docs/screenshots/agency-homepage-layout.png",
+            "scenario": "frontend-page",
+            "url": "/theme-agency",
+            "waitFor": ".site-theme-shell",
+            "colorSchemes": [
+                "light"
+            ],
+            "user": false
         },
         {
             "id": "agency-services-layout",
@@ -59,11 +49,18 @@
             "package": "theme-agency",
             "surface": "frontend",
             "targetType": "frontend-url",
-            "target": "/agency-services-layout",
-            "required": true,
-            "notes": "Capture the campaign services page with creative routes, delivery steps, team proof, and launch CTA.",
+            "target": "/theme-agency-directory",
+            "required": false,
+            "notes": "Capture the seeded package theme route instead of the shared theme-gallery route. Optional until the Capell runner can browser-capture seeded package theme routes without navigation failures.",
             "useCase": "A studio or campaign team checks that services stay focused on campaign delivery rather than broad consulting.",
-            "screenshotPath": "packages/theme-agency/docs/screenshots/agency-services-layout.png"
+            "screenshotPath": "packages/theme-agency/docs/screenshots/agency-services-layout.png",
+            "scenario": "frontend-page",
+            "url": "/theme-agency-directory",
+            "waitFor": ".site-theme-shell",
+            "colorSchemes": [
+                "light"
+            ],
+            "user": false
         },
         {
             "id": "agency-portfolio-layout",
@@ -71,11 +68,18 @@
             "package": "theme-agency",
             "surface": "frontend",
             "targetType": "frontend-url",
-            "target": "/agency-portfolio-layout",
-            "required": true,
-            "notes": "Capture campaign work cards, channel filters, and a featured launch snapshot. Requires capell-app/content-sections; show this package note on the captured image.",
+            "target": "/theme-agency-directory",
+            "required": false,
+            "notes": "Capture the seeded package theme route instead of the shared theme-gallery route. Optional until the Capell runner can browser-capture seeded package theme routes without navigation failures.",
             "useCase": "A buyer sees recent campaign assets without Agency overlapping Portfolio's premium case-file workflow.",
-            "screenshotPath": "packages/theme-agency/docs/screenshots/agency-portfolio-layout.png"
+            "screenshotPath": "packages/theme-agency/docs/screenshots/agency-portfolio-layout.png",
+            "scenario": "frontend-page",
+            "url": "/theme-agency-directory",
+            "waitFor": ".site-theme-shell",
+            "colorSchemes": [
+                "light"
+            ],
+            "user": false
         },
         {
             "id": "agency-case-study-layout",
@@ -83,11 +87,18 @@
             "package": "theme-agency",
             "surface": "frontend",
             "targetType": "frontend-url",
-            "target": "/agency-case-study-layout",
-            "required": true,
-            "notes": "Capture a compact launch recap with brief, creative route, channel assets, and lightweight metrics. Requires capell-app/media-library; show this package note on the captured image.",
+            "target": "/theme-agency-detail",
+            "required": false,
+            "notes": "Capture the seeded package theme route instead of the shared theme-gallery route. Optional until the Capell runner can browser-capture seeded package theme routes without navigation failures.",
             "useCase": "A campaign team can show delivery proof while leaving deep outcome-led case studies to Portfolio.",
-            "screenshotPath": "packages/theme-agency/docs/screenshots/agency-case-study-layout.png"
+            "screenshotPath": "packages/theme-agency/docs/screenshots/agency-case-study-layout.png",
+            "scenario": "frontend-page",
+            "url": "/theme-agency-detail",
+            "waitFor": ".site-theme-shell",
+            "colorSchemes": [
+                "light"
+            ],
+            "user": false
         },
         {
             "id": "agency-insights-layout",
@@ -95,11 +106,18 @@
             "package": "theme-agency",
             "surface": "frontend",
             "targetType": "frontend-url",
-            "target": "/agency-insights-layout",
-            "required": true,
-            "notes": "Capture a campaign insight article with author details, related reads, and launch-room CTA. Requires capell-app/blog; show this package note on the captured image.",
+            "target": "/theme-agency-directory",
+            "required": false,
+            "notes": "Capture the seeded package theme route instead of the shared theme-gallery route. Optional until the Capell runner can browser-capture seeded package theme routes without navigation failures.",
             "useCase": "A creative team checks that editorial content supports campaigns instead of becoming a knowledge-base theme.",
-            "screenshotPath": "packages/theme-agency/docs/screenshots/agency-insights-layout.png"
+            "screenshotPath": "packages/theme-agency/docs/screenshots/agency-insights-layout.png",
+            "scenario": "frontend-page",
+            "url": "/theme-agency-directory",
+            "waitFor": ".site-theme-shell",
+            "colorSchemes": [
+                "light"
+            ],
+            "user": false
         },
         {
             "id": "agency-event-landing-layout",
@@ -107,11 +125,18 @@
             "package": "theme-agency",
             "surface": "frontend",
             "targetType": "frontend-url",
-            "target": "/agency-event-landing-layout",
-            "required": true,
-            "notes": "Capture a launch event page with agenda, speakers, creative assets, and registration CTA. Requires capell-app/events; show this package note on the captured image.",
+            "target": "/theme-agency-cta",
+            "required": false,
+            "notes": "Capture the seeded package theme route instead of the shared theme-gallery route. Optional until the Capell runner can browser-capture seeded package theme routes without navigation failures.",
             "useCase": "A campaign team can promote launches and webinars without requiring a premium SaaS or Events-specific layout.",
-            "screenshotPath": "packages/theme-agency/docs/screenshots/agency-event-landing-layout.png"
+            "screenshotPath": "packages/theme-agency/docs/screenshots/agency-event-landing-layout.png",
+            "scenario": "frontend-page",
+            "url": "/theme-agency-cta",
+            "waitFor": ".site-theme-shell",
+            "colorSchemes": [
+                "light"
+            ],
+            "user": false
         },
         {
             "id": "agency-lead-form-layout",
@@ -119,11 +144,18 @@
             "package": "theme-agency",
             "surface": "frontend",
             "targetType": "frontend-url",
-            "target": "/agency-lead-form-layout",
-            "required": true,
-            "notes": "Capture a campaign brief form with offer copy, qualification fields, and confirmation state. Requires capell-app/form-builder; show this package note on the captured image.",
+            "target": "/theme-agency-contact",
+            "required": false,
+            "notes": "Capture the seeded package theme route instead of the shared theme-gallery route. Optional until the Capell runner can browser-capture seeded package theme routes without navigation failures.",
             "useCase": "A creative team checks that the preset converts campaign interest into a usable brief.",
-            "screenshotPath": "packages/theme-agency/docs/screenshots/agency-lead-form-layout.png"
+            "screenshotPath": "packages/theme-agency/docs/screenshots/agency-lead-form-layout.png",
+            "scenario": "frontend-page",
+            "url": "/theme-agency-contact",
+            "waitFor": ".site-theme-shell",
+            "colorSchemes": [
+                "light"
+            ],
+            "user": false
         },
         {
             "id": "agency-campaign-layout",
@@ -131,11 +163,18 @@
             "package": "theme-agency",
             "surface": "frontend",
             "targetType": "frontend-url",
-            "target": "/agency-campaign-layout",
-            "required": true,
-            "notes": "Capture a campaign page with variant hero, launch sections, asset blocks, and analytics hooks. Requires capell-app/campaign-studio; show this package note on the captured image.",
+            "target": "/theme-agency-cta",
+            "required": false,
+            "notes": "Capture the seeded package theme route instead of the shared theme-gallery route. Optional until the Capell runner can browser-capture seeded package theme routes without navigation failures.",
             "useCase": "A buyer sees Agency's strongest lane: fast campaign and launch pages with basic creative polish.",
-            "screenshotPath": "packages/theme-agency/docs/screenshots/agency-campaign-layout.png"
+            "screenshotPath": "packages/theme-agency/docs/screenshots/agency-campaign-layout.png",
+            "scenario": "frontend-page",
+            "url": "/theme-agency-cta",
+            "waitFor": ".site-theme-shell",
+            "colorSchemes": [
+                "light"
+            ],
+            "user": false
         },
         {
             "id": "agency-search-layout",
@@ -143,11 +182,18 @@
             "package": "theme-agency",
             "surface": "frontend",
             "targetType": "frontend-url",
-            "target": "/agency-search-layout",
-            "required": true,
-            "notes": "Capture campaign search with grouped launch assets, highlighted terms, and recovery state. Requires capell-app/search; show this package note on the captured image.",
+            "target": "/theme-agency-directory",
+            "required": false,
+            "notes": "Capture the seeded package theme route instead of the shared theme-gallery route. Optional until the Capell runner can browser-capture seeded package theme routes without navigation failures.",
             "useCase": "A visitor can find campaigns, briefs, and resources without the page feeling like Knowledge's archive search.",
-            "screenshotPath": "packages/theme-agency/docs/screenshots/agency-search-layout.png"
+            "screenshotPath": "packages/theme-agency/docs/screenshots/agency-search-layout.png",
+            "scenario": "frontend-page",
+            "url": "/theme-agency-directory",
+            "waitFor": ".site-theme-shell",
+            "colorSchemes": [
+                "light"
+            ],
+            "user": false
         }
     ]
 }

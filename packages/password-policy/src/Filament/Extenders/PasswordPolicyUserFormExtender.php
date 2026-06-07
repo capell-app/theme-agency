@@ -5,12 +5,15 @@ declare(strict_types=1);
 namespace Capell\PasswordPolicy\Filament\Extenders;
 
 use Capell\Admin\Contracts\Extenders\UserFormExtender;
+use Capell\Core\Support\Database\RuntimeSchemaState;
+use Capell\PasswordPolicy\Actions\NotifyPasswordPolicyLifecycleEventAction;
 use Capell\PasswordPolicy\Actions\RecordPasswordHistoryAction;
 use Capell\PasswordPolicy\Actions\ValidatePasswordChangeAction;
 use Capell\PasswordPolicy\Data\PasswordChangeData;
+use Capell\PasswordPolicy\Enums\PasswordPolicyLifecycleEvent;
+use Capell\PasswordPolicy\Events\PasswordChanged;
 use Capell\PasswordPolicy\Support\PasswordPolicySettingsResolver;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Schema;
 
 class PasswordPolicyUserFormExtender implements UserFormExtender
 {
@@ -75,6 +78,11 @@ class PasswordPolicyUserFormExtender implements UserFormExtender
         }
 
         $this->persistPasswordPolicyAttributes($record);
+
+        NotifyPasswordPolicyLifecycleEventAction::run(
+            PasswordPolicyLifecycleEvent::PasswordChanged,
+            new PasswordChanged($record, 'password-policy.admin-user-form'),
+        );
     }
 
     /**
@@ -102,12 +110,13 @@ class PasswordPolicyUserFormExtender implements UserFormExtender
     private function persistPasswordPolicyAttributes(Model $record): void
     {
         $values = [];
+        $schema = resolve(RuntimeSchemaState::class);
 
-        if (Schema::hasColumn($record->getTable(), 'password_changed_at')) {
+        if ($schema->hasColumn($record->getTable(), 'password_changed_at')) {
             $values['password_changed_at'] = now();
         }
 
-        if (Schema::hasColumn($record->getTable(), 'must_change_password')) {
+        if ($schema->hasColumn($record->getTable(), 'must_change_password')) {
             $values['must_change_password'] = false;
         }
 

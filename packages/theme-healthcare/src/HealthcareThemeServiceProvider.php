@@ -36,7 +36,7 @@ class HealthcareThemeServiceProvider extends ServiceProvider
             previewImage: '/vendor/capell/themes/healthcare.jpg',
             tags: ['Healthcare', 'Appointments', 'Services'],
             bestFit: ['Private clinics', 'Healthcare groups', 'Specialist care providers'],
-            includedSections: ['utility-bar', 'navigation', 'hero', 'features', 'content-listing', 'service-finder', 'services', 'care-pathway', 'clinicians', 'booking', 'locations', 'insurance-trust', 'events', 'proof', 'comparison', 'blog-teaser', 'contact', 'cta', 'footer'],
+            includedSections: ['utility-bar', 'navigation', 'hero', 'features', 'content-listing', 'service-finder', 'services', 'care-pathway', 'clinicians', 'clinician-profile', 'conditions-directory', 'booking', 'emergency-escalation', 'locations', 'insurance-trust', 'events', 'proof', 'comparison', 'blog-teaser', 'contact', 'cta', 'footer'],
             presets: [
                 new ThemePresetData(
                     key: 'healthcare',
@@ -130,7 +130,10 @@ class HealthcareThemeServiceProvider extends ServiceProvider
             'services' => new ViewSectionRenderer(self::THEME_KEY, 'services', 'capell-theme-healthcare::sections.services', failLoudly: true),
             'care-pathway' => new ViewSectionRenderer(self::THEME_KEY, 'care-pathway', 'capell-theme-healthcare::sections.care-pathway', true, ['formBuilderAvailable' => $formBuilderAvailable]),
             'clinicians' => new ViewSectionRenderer(self::THEME_KEY, 'clinicians', 'capell-theme-healthcare::sections.clinicians', failLoudly: true),
+            'clinician-profile' => new ViewSectionRenderer(self::THEME_KEY, 'clinician-profile', 'capell-theme-healthcare::sections.clinician-profile', failLoudly: true),
+            'conditions-directory' => new ViewSectionRenderer(self::THEME_KEY, 'conditions-directory', 'capell-theme-healthcare::sections.conditions-directory', failLoudly: true),
             'booking' => new BookingSectionRenderer(self::THEME_KEY, $formBuilderAvailable, failLoudly: true),
+            'emergency-escalation' => new ViewSectionRenderer(self::THEME_KEY, 'emergency-escalation', 'capell-theme-healthcare::sections.emergency-escalation', failLoudly: true),
             'locations' => new ViewSectionRenderer(self::THEME_KEY, 'locations', 'capell-theme-healthcare::sections.locations', true, ['eventsAvailable' => $eventsAvailable]),
             'insurance-trust' => new ViewSectionRenderer(self::THEME_KEY, 'insurance-trust', 'capell-theme-healthcare::sections.insurance-trust', failLoudly: true),
             'events' => new EventPanelSectionRenderer(self::THEME_KEY, $eventsAvailable, failLoudly: true),

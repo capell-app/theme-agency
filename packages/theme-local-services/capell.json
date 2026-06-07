@@ -13,9 +13,15 @@
         "bundle": "themes"
     },
     "namespace": "Capell\\ThemeStudio\\LocalServices",
-    "surfaces": ["frontend", "console"],
+    "surfaces": [
+        "frontend",
+        "console"
+    ],
     "dependencies": {
-        "requires": ["capell-app/core", "capell-app/foundation-theme"],
+        "requires": [
+            "capell-app/core",
+            "capell-app/foundation-theme"
+        ],
         "supports": [
             "capell-app/layout-builder",
             "capell-app/frontend-authoring",
@@ -54,19 +60,31 @@
         "install": null,
         "setup": null,
         "demo": "capell:theme-local-services-demo",
-        "demoParams": ["url", "languages", "sites"],
+        "demoParams": [
+            "url",
+            "languages",
+            "sites"
+        ],
         "doctor": null
     },
     "settings": [],
     "permissions": [],
-    "capabilities": ["theme-local-services", "theme-local-services-frontend"],
+    "capabilities": [
+        "theme-local-services",
+        "theme-local-services-frontend"
+    ],
     "performance": {
         "frontendRenderBudgetMs": 20,
         "adminQueryBudget": 0,
-        "cacheTags": ["theme-local-services"],
+        "cacheTags": [
+            "theme-local-services"
+        ],
         "cacheSafety": {
             "cacheable": false,
-            "variesBy": ["site", "locale"],
+            "variesBy": [
+                "site",
+                "locale"
+            ],
             "sensitiveOutput": false,
             "invalidationSources": [],
             "queueInvalidation": true
@@ -91,32 +109,25 @@
                 "caption": "Theme Local Services extension preview"
             },
             {
-                "path": "docs/assets/marketplace/local-services-booking-layout.svg",
-                "alt": "Theme Local Services Booking Layout image",
-                "caption": "Theme Local Services Booking Layout"
+                "path": "docs/screenshots/local-services-quote-form-layout.png",
+                "alt": "Theme Local Services quote request form rendered in the Capell local services theme",
+                "caption": "Quote request form"
             },
             {
-                "path": "docs/assets/marketplace/local-services-homepage-layout.svg",
-                "alt": "Theme Local Services Homepage Layout image",
-                "caption": "Theme Local Services Homepage Layout"
+                "path": "docs/screenshots/local-services-homepage-layout.png",
+                "alt": "Theme Local Services homepage with local proof, services, areas, and quote path",
+                "caption": "Local services homepage"
             },
             {
-                "path": "docs/assets/marketplace/local-services-location-layout.svg",
-                "alt": "Theme Local Services Location Layout image",
-                "caption": "Theme Local Services Location Layout"
-            },
-            {
-                "path": "docs/assets/marketplace/hero-desktop.jpg",
-                "alt": "Theme Local Services Hero Desktop image",
-                "caption": "Theme Local Services Hero Desktop"
-            },
-            {
-                "path": "docs/assets/marketplace/hero-mobile.jpg",
-                "alt": "Theme Local Services Hero Mobile image",
-                "caption": "Theme Local Services Hero Mobile"
+                "path": "docs/screenshots/local-services-service-areas-layout.png",
+                "alt": "Theme Local Services service areas page with postcode coverage and local proof",
+                "caption": "Service areas layout"
             }
         ],
-        "categories": ["frontend", "themes"]
+        "categories": [
+            "frontend",
+            "themes"
+        ]
     },
     "extends": "capell-app/foundation-theme",
     "themeKey": "local-services",

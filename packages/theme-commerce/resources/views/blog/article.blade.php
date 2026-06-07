@@ -5,11 +5,13 @@
     $body ??= ($article['body'] ?? null);
 @endphp
 
-<main class="retail-article bg-[#fffaf3] px-6 py-20 text-[#17211c]">
+<main
+    class="retail-article bg-[var(--retail-surface)] px-6 py-20 text-[var(--retail-ink)]"
+>
     <article class="mx-auto max-w-3xl">
         <header>
             <p
-                class="text-xs font-black tracking-widest text-[#1f5f4a] uppercase"
+                class="text-xs font-black tracking-widest text-[var(--retail-primary)] uppercase"
             >
                 {{ $blogAvailable ? __('capell-theme-commerce::generic.article_label') : __('capell-theme-commerce::generic.resource') }}
             </p>
@@ -17,7 +19,7 @@
                 {{ $title }}
             </h1>
             @if ($summary)
-                <p class="mt-6 text-xl leading-8 text-[#5f6b61]">
+                <p class="mt-6 text-xl leading-8 text-[var(--retail-muted)]">
                     {{ $summary }}
                 </p>
             @endif
@@ -25,7 +27,7 @@
 
         @if ($body)
             <div
-                class="mt-12 rounded-xl border border-stone-200 bg-white p-7 text-lg leading-8 text-[#17211c]"
+                class="mt-12 rounded-xl border border-stone-200 bg-white p-7 text-lg leading-8 text-[var(--retail-ink)]"
             >
                 {{ $body }}
             </div>

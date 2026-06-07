@@ -16,7 +16,9 @@ use Capell\DocumentLifecycle\Models\DocumentPublication;
 use Capell\Tests\Support\Concerns\CreatesAdminUser;
 use Filament\Actions\Testing\TestAction;
 use Filament\Facades\Filament;
+use Illuminate\Database\Events\QueryExecuted;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Date;
 
 use function Pest\Laravel\assertDatabaseHas;
@@ -48,6 +50,36 @@ it('exposes controlled documents in the admin surface', function (): void {
     get(DocumentResource::getUrl('edit', ['record' => $document]))
         ->assertOk()
         ->assertSee('terms');
+});
+
+it('keeps the controlled document index within the manifest query budget', function (): void {
+    test()->actingAsAdmin();
+
+    Document::factory()
+        ->count(5)
+        ->active()
+        ->create()
+        ->each(static function (Document $document): void {
+            DocumentPublication::factory()->document($document)->create();
+        });
+
+    $queries = 0;
+
+    DB::listen(static function (QueryExecuted $query) use (&$queries): void {
+        if (str_starts_with(strtolower($query->sql), 'select')) {
+            $queries++;
+        }
+    });
+
+    livewire(ListDocuments::class)->assertSuccessful();
+
+    $manifest = json_decode(
+        (string) file_get_contents(dirname(__DIR__, 2) . '/capell.json'),
+        true,
+        flags: JSON_THROW_ON_ERROR,
+    );
+
+    expect($queries)->toBeLessThanOrEqual((int) data_get($manifest, 'performance.adminQueryBudget', 40));
 });
 
 it('shows controlled document publication and acceptance audit trails', function (): void {
@@ -213,7 +245,9 @@ it('publishes controlled document versions from table actions', function (): voi
         ->and($publication->content_hash)->toBe(ComputeDocumentContentHashAction::run('Terms updated for June 2026.'))
         ->and($publication->published_actor_type)->toBe($admin->getMorphClass())
         ->and($publication->published_actor_id)->toBe($admin->getKey())
-        ->and($publication->metadata)->toBe(['admin_note' => 'Approved by legal.']);
+        ->and($publication->metadata['admin_note'] ?? null)->toBe('Approved by legal.')
+        ->and($publication->metadata['content_snapshot'] ?? null)->toBe('Terms updated for June 2026.')
+        ->and($publication->metadata['content_snapshot_format'] ?? null)->toBe('text');
 });
 
 it('records admin acceptances from table actions', function (): void {

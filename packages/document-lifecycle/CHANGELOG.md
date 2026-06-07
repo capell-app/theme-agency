@@ -4,6 +4,12 @@ All notable changes to `capell-app/document-lifecycle` will be documented in thi
 
 ## Unreleased
 
+- Added review-due and expiry dates for controlled documents, plus a daily `capell:document-lifecycle:archive-expired` command that archives active expired records.
+- Added signed JSON certificate downloads for individual acceptance records.
+- Stored content snapshots on new document publications and added JSON diff downloads from the publications relation manager.
+- Added Spanish package translations and admin index query-budget regression coverage.
+- Added re-acceptance detection and an outstanding acceptances CSV report for subjects whose latest known acceptance is stale.
+- Added CSV export for document acceptance evidence, including optional per-publication/version filtering from the acceptances relation manager.
 - Prepared package metadata and documentation for ongoing Capell 4.x package work.
 - Added real factories for documents, document publications, and document acceptances so tests, demos, and screenshot seeders can use `Model::factory()` without broken autoload promises.
 - Reconciled the manifest frontend surface by declaring only admin and console surfaces; the Customer Portal feed remains an authenticated supported integration, not package-owned public frontend output.

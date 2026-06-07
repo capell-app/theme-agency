@@ -13,7 +13,11 @@
         "bundle": "search-seo"
     },
     "namespace": "Capell\\SeoSuite",
-    "surfaces": ["admin", "frontend", "console"],
+    "surfaces": [
+        "admin",
+        "frontend",
+        "console"
+    ],
     "dependencies": {
         "requires": [
             "capell-app/admin",
@@ -31,7 +35,9 @@
     "providers": {
         "metadata": [],
         "install": [],
-        "runtime": ["Capell\\SeoSuite\\Providers\\SeoSuiteServiceProvider"],
+        "runtime": [
+            "Capell\\SeoSuite\\Providers\\SeoSuiteServiceProvider"
+        ],
         "admin": [],
         "frontend": []
     },
@@ -160,27 +166,44 @@
     "performance": {
         "frontendRenderBudgetMs": 20,
         "adminQueryBudget": 40,
-        "cacheTags": ["seo-suite"],
+        "cacheTags": [
+            "seo-suite"
+        ],
         "cacheSafety": {
             "cacheable": true,
-            "variesBy": ["site", "locale"],
+            "variesBy": [
+                "site",
+                "locale"
+            ],
             "sensitiveOutput": false,
             "invalidationSources": [
                 {
                     "model": "Capell\\Core\\Models\\Page",
-                    "events": ["saved", "deleted"]
+                    "events": [
+                        "saved",
+                        "deleted"
+                    ]
                 },
                 {
                     "model": "Capell\\SeoSuite\\Models\\AiDiscoverySiteProfile",
-                    "events": ["saved", "deleted"]
+                    "events": [
+                        "saved",
+                        "deleted"
+                    ]
                 },
                 {
                     "model": "Capell\\SeoSuite\\Models\\AiDiscoveryPageProfile",
-                    "events": ["saved", "deleted"]
+                    "events": [
+                        "saved",
+                        "deleted"
+                    ]
                 },
                 {
                     "model": "Capell\\SeoSuite\\Models\\AiDiscoveryCrawlerRule",
-                    "events": ["saved", "deleted"]
+                    "events": [
+                        "saved",
+                        "deleted"
+                    ]
                 }
             ],
             "queueInvalidation": true
@@ -227,16 +250,6 @@
         "description": "SEO Suite turns Capell into a search-and-AI optimisation platform. Editors get an in-context SEO panel that scores every page, previews Google and social results, and suggests internal links and metadata with optional AI assistance, while operators get broken-link tracking, redirect opportunities, Search Console dashboards, and PageSpeed audits. It is the only Capell package built for the AI-search era: generate and govern `llms.txt`, `llms-full.txt`, and per-page Markdown, and control exactly which AI crawlers (GPTBot, ClaudeBot, PerplexityBot, Google-Extended, CCBot) may train on or surface your content. A built-in doctor verifies route ownership, content types, cache headers, sitemap parity, and public-output safety so generated SEO output never leaks admin internals.",
         "screenshots": [
             {
-                "path": "docs/screenshots/page-seo-panel.png",
-                "alt": "SEO Suite page SEO panel in light mode",
-                "caption": "Page SEO panel"
-            },
-            {
-                "path": "docs/screenshots/page-seo-panel-dark.png",
-                "alt": "SEO Suite page SEO panel in dark mode",
-                "caption": "Page SEO panel dark mode"
-            },
-            {
                 "path": "docs/screenshots/seo-audit-page.png",
                 "alt": "SEO Suite audit page in light mode",
                 "caption": "SEO audit dashboard"
@@ -247,57 +260,17 @@
                 "caption": "SEO audit dashboard dark mode"
             },
             {
-                "path": "docs/screenshots/search-console-insights-panel.png",
-                "alt": "SEO Suite Search Console insights panel in light mode",
-                "caption": "Search Console insights"
-            },
-            {
-                "path": "docs/screenshots/search-console-insights-panel-dark.png",
-                "alt": "SEO Suite Search Console insights panel in dark mode",
-                "caption": "Search Console insights dark mode"
-            },
-            {
-                "path": "docs/screenshots/broken-links-page.png",
-                "alt": "SEO Suite broken links page in light mode",
-                "caption": "Broken links dashboard"
-            },
-            {
-                "path": "docs/screenshots/broken-links-page-dark.png",
-                "alt": "SEO Suite broken links page in dark mode",
-                "caption": "Broken links dashboard dark mode"
-            },
-            {
-                "path": "docs/screenshots/ai-creator-action-modal.png",
-                "alt": "SEO Suite AI Creator action modal in light mode",
-                "caption": "AI Creator action"
-            },
-            {
-                "path": "docs/screenshots/ai-creator-action-modal-dark.png",
-                "alt": "SEO Suite AI Creator action modal in dark mode",
-                "caption": "AI Creator action dark mode"
-            },
-            {
                 "path": "docs/screenshots/sitemap-page.png",
                 "alt": "SEO Suite sitemap page in light mode",
                 "caption": "Sitemap coverage"
-            },
-            {
-                "path": "docs/screenshots/sitemap-page-dark.png",
-                "alt": "SEO Suite sitemap page in dark mode",
-                "caption": "Sitemap coverage dark mode"
-            },
-            {
-                "path": "docs/screenshots/translation-coverage-page.png",
-                "alt": "SEO Suite translation coverage page in light mode",
-                "caption": "Translation coverage"
-            },
-            {
-                "path": "docs/screenshots/translation-coverage-page-dark.png",
-                "alt": "SEO Suite translation coverage page in dark mode",
-                "caption": "Translation coverage dark mode"
             }
         ],
-        "categories": ["admin", "console", "frontend", "search-seo"]
+        "categories": [
+            "admin",
+            "console",
+            "frontend",
+            "search-seo"
+        ]
     },
     "contributionTraceability": {
         "deferredContributions": []

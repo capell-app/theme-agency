@@ -14,6 +14,7 @@ use Capell\FrontendAuthoring\Support\EditableRegionRegistry;
 use Capell\FrontendAuthoring\Support\EditableRegionSigner;
 use Capell\FrontendAuthoring\Support\EditorSurfaceRegistry;
 use Capell\FrontendAuthoring\Support\EditorSurfaces\FieldEditorSurface;
+use Capell\FrontendAuthoring\Support\EditorSurfaces\MediaEditorSurface;
 use Capell\FrontendAuthoring\Support\FrontendAuthoringRuntimeManifestContributor;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Support\Facades\Gate;
@@ -49,6 +50,7 @@ class FrontendAuthoringServiceProvider extends ServiceProvider
         $this->app->singleton(EditorSurfaceRegistry::class, function (): EditorSurfaceRegistry {
             $registry = new EditorSurfaceRegistry;
             $registry->register(new FieldEditorSurface);
+            $registry->register(new MediaEditorSurface);
 
             return $registry;
         });

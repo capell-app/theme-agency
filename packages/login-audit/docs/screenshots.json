@@ -15,7 +15,8 @@
             "required": true,
             "notes": "Captured in the Laravel 13 demo harness after publishing the package migration and seeding three login audit rows.",
             "screenshotPath": "packages/login-audit/docs/screenshots/login-audits-admin-index.png",
-            "useCase": "An administrator reviews successful and failed authentication events for the demo admin user."
+            "useCase": "An administrator reviews successful and failed authentication events for the demo admin user.",
+            "darkScreenshotPath": "packages/login-audit/docs/screenshots/login-audits-admin-index-dark.png"
         },
         {
             "id": "login-audit-table-filters",
@@ -27,7 +28,8 @@
             "required": true,
             "notes": "Captured with the table filter panel open on the Login Audit resource.",
             "screenshotPath": "packages/login-audit/docs/screenshots/login-audit-table-filters.png",
-            "useCase": "An administrator filters authentication events by success state, login date range, or cleared-by-user state."
+            "useCase": "An administrator filters authentication events by success state, login date range, or cleared-by-user state.",
+            "darkScreenshotPath": "packages/login-audit/docs/screenshots/login-audit-table-filters-dark.png"
         },
         {
             "id": "dashboard-widget",
@@ -39,7 +41,8 @@
             "required": true,
             "notes": "The widget is registered through the Capell dashboard contribution system and is surfaced in dashboard configuration; it does not appear on the default main dashboard layout in the core-only harness.",
             "screenshotPath": "packages/login-audit/docs/screenshots/dashboard-widget.png",
-            "useCase": "A site owner confirms that Access Logs is available in dashboard/widget configuration after the package is installed."
+            "useCase": "A site owner confirms that Access Logs is available in dashboard/widget configuration after the package is installed.",
+            "darkScreenshotPath": "packages/login-audit/docs/screenshots/dashboard-widget-dark.png"
         },
         {
             "id": "login-audit-settings-screen",
@@ -51,17 +54,22 @@
             "required": true,
             "notes": "Captured on the shared Capell settings page after the Login Audit settings schema was registered.",
             "screenshotPath": "packages/login-audit/docs/screenshots/login-audit-settings-screen.png",
-            "useCase": "A site owner configures retention, IP tracking, visibility, and the user-resource bridge for login audit data."
+            "useCase": "A site owner configures retention, IP tracking, visibility, and the user-resource bridge for login audit data.",
+            "darkScreenshotPath": "packages/login-audit/docs/screenshots/login-audit-settings-screen-dark.png"
         },
         {
             "id": "user-edit-access-summary",
             "title": "User edit access summary.",
             "package": "login-audit",
-            "surface": "admin",
+            "surface": "frontend",
+            "user": false,
             "targetType": "admin-surface",
             "target": "LoginAuditUserSchemaExtender",
+            "scenario": "frontend-page",
+            "url": "/screenshot-fixtures/login-audit/user-edit-access-summary",
+            "waitFor": ".stats",
             "required": true,
-            "notes": "Captured after adding Rappasoft AuthenticationLoggable to the disposable demo app user model and seeding audit rows.",
+            "notes": "Route-backed Capell fixture for the user edit access summary, used when the disposable demo user model does not expose the vendor authentication relation.",
             "screenshotPath": "packages/login-audit/docs/screenshots/user-edit-access-summary.png",
             "useCase": "An administrator checks recent login counts, failed attempts, devices, and active sessions while editing a user."
         },
@@ -69,11 +77,15 @@
             "id": "user-login-audits-relation-manager",
             "title": "User authentication logs relation manager.",
             "package": "login-audit",
-            "surface": "admin",
+            "surface": "frontend",
+            "user": false,
             "targetType": "admin-surface",
             "target": "LoginAuditsRelationManager",
+            "scenario": "frontend-page",
+            "url": "/screenshot-fixtures/login-audit/user-login-audits-relation-manager",
+            "waitFor": "table",
             "required": true,
-            "notes": "Requires the host user model to expose authentications(); the default Laravel demo user model needs Rappasoft AuthenticationLoggable for this surface.",
+            "notes": "Route-backed Capell fixture for the user-owned authentication history relation manager, including trusted-device and last-activity columns.",
             "screenshotPath": "packages/login-audit/docs/screenshots/user-login-audits-relation-manager.png",
             "useCase": "An administrator opens the user-owned authentication history when the host user model supports the authentication log relation."
         }

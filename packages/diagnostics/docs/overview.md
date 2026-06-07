@@ -17,6 +17,7 @@ Diagnostics adds operational diagnostics for cache, configuration drift, migrati
 - Secure command palette discovery, execution, feedback, and audit logging for developer tools, system health, queue health, and trusted `capell:*` Artisan operations.
 - Health-check reflection that reports implemented, stub, and broken manifest declarations across installed packages.
 - `capell:diagnostics:health` for running declared extension health checks from the console.
+- Health-check exports include an overall status, 0-100 score, worst severity, and per-check implementation/pass-fail rows.
 
 ## Developer Notes
 
@@ -108,7 +109,7 @@ Helps operators and agencies see setup problems before they become publishing or
 - Explicitly mapped low-risk commands can run without confirmation.
 - Unknown dynamic `capell:*` commands require confirmation by default.
 - Install, setup, and upgrade commands are marked dangerous when mapped.
-- `capell:diagnostics:health`: runs declared extension health checks and supports `--json`.
+- `capell:diagnostics:health`: runs declared extension health checks and supports `--json` or `--csv` exports.
 
 ## Command Palette
 
@@ -159,4 +160,4 @@ Deployment should read [screenshots.json](screenshots.json), install the package
 - Queue health page.
 - Health widgets on the admin dashboard.
 
-The committed dummy-data screenshots live under `packages/diagnostics/docs/screenshots`; their HTML fixture lives at `packages/diagnostics/docs/assets/screenshots/diagnostics-dummy-screens.html`.
+The committed runner screenshots live under `packages/diagnostics/docs/screenshots`. Keep operational data synthetic so Marketplace media never exposes real job names, customer payloads, or exception details.

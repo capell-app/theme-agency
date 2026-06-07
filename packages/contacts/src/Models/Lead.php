@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Capell\Contacts\Models;
 
 use Capell\Contacts\Enums\LeadStatus;
+use Capell\Contacts\Support\ContactsOverviewStatsCache;
 use Capell\Core\Models\Site;
 use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -93,6 +94,20 @@ class Lead extends Model
     public function activities(): HasMany
     {
         return $this->hasMany(ContactActivity::class);
+    }
+
+    #[Override]
+    protected static function booted(): void
+    {
+        static::saved(fn (Lead $lead): null => self::flushOverviewStats($lead));
+        static::deleted(fn (Lead $lead): null => self::flushOverviewStats($lead));
+    }
+
+    private static function flushOverviewStats(Lead $lead): null
+    {
+        ContactsOverviewStatsCache::flushForSite(is_int($lead->site_id) ? $lead->site_id : null);
+
+        return null;
     }
 
     /**

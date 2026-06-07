@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Capell\Diagnostics\Actions\DashboardReports;
 
 use Capell\Diagnostics\Data\InfrastructureStatusData;
+use Capell\Diagnostics\Support\DiagnosticsSnapshotCache;
 use Illuminate\Support\Facades\File;
 use Lorisleiva\Actions\Concerns\AsAction;
 
@@ -22,6 +23,17 @@ final class BuildPublicOutputSafetyReportAction
     {
         $packagesPath ??= base_path('packages');
 
+        return DiagnosticsSnapshotCache::remember(
+            'public-output-safety:' . sha1($packagesPath),
+            fn (): array => $this->build($packagesPath),
+        );
+    }
+
+    /**
+     * @return array<int, InfrastructureStatusData>
+     */
+    private function build(string $packagesPath): array
+    {
         if (! File::isDirectory($packagesPath)) {
             return [
                 $this->status(

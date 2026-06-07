@@ -21,7 +21,9 @@ class InsightsBeaconController
 {
     public function __invoke(Request $request): JsonResponse|HttpResponse
     {
-        ValidateInsightsBeaconRequestAction::run($request);
+        if (ValidateInsightsBeaconRequestAction::run($request) === false) {
+            return response()->noContent();
+        }
 
         $validated = $request->validate([
             'visit_id' => ['nullable', 'string', 'max:80'],
@@ -38,8 +40,11 @@ class InsightsBeaconController
             'events.*.viewport_y' => ['nullable', 'integer'],
             'events.*.document_x' => ['nullable', 'integer'],
             'events.*.document_y' => ['nullable', 'integer'],
-            'events.*.metadata' => ['nullable', 'array:nearest_landmark'],
+            'events.*.metadata' => ['nullable', 'array:nearest_landmark,source_package,conversion_value,conversion_currency'],
             'events.*.metadata.nearest_landmark' => ['nullable', 'string', 'max:255'],
+            'events.*.metadata.source_package' => ['nullable', 'string', 'max:120'],
+            'events.*.metadata.conversion_value' => ['nullable', 'numeric'],
+            'events.*.metadata.conversion_currency' => ['nullable', 'string', 'size:3'],
         ]);
 
         $visitUuid = isset($validated['visit_id']) && is_string($validated['visit_id'])

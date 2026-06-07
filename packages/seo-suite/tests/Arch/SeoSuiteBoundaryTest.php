@@ -2,8 +2,6 @@
 
 declare(strict_types=1);
 
-use Capell\SeoSuite\Contracts\SeoPublishReportProvider;
-use Capell\SeoSuite\Support\Publishing\SeoPublishReportProviderAdapter;
 use Capell\SiteDiscovery\Actions\DiscoverPublicPagesAction;
 use Capell\SiteDiscovery\Actions\DiscoverPublicUrlsAction;
 use Capell\SiteDiscovery\Contracts\DiscoverableUrlSource;
@@ -17,24 +15,49 @@ use Capell\SiteDiscovery\Providers\SiteDiscoveryServiceProvider;
 use Capell\SiteDiscovery\Support\DiscoveryOutputRegistry;
 use Symfony\Component\Finder\Finder;
 
-arch('seo-suite does not import packages that depend on it')
-    ->expect('Capell\SeoSuite')
-    ->not->toUse([
-        'Capell\Address',
-        'Capell\Blog',
-        'Capell\FormBuilder',
-        'Capell\Media',
-        'Capell\LayoutBuilder',
-        'Capell\Navigation',
-        'Capell\Marketplace',
-        'Capell\Tags',
-        'Capell\Themes',
-        'Capell\PublishingStudio',
-    ])
-    ->ignoring([
-        SeoPublishReportProvider::class,
-        SeoPublishReportProviderAdapter::class,
-    ]);
+it('does not import packages that depend on it', function (): void {
+    $packagePath = dirname(__DIR__, 2);
+    $allowedPaths = [
+        'src/Contracts/SeoPublishReportProvider.php',
+        'src/Support/Publishing/SeoPublishReportProviderAdapter.php',
+    ];
+    $forbiddenNamespaces = [
+        'Capell\\Address',
+        'Capell\\Blog',
+        'Capell\\FormBuilder',
+        'Capell\\Media',
+        'Capell\\LayoutBuilder',
+        'Capell\\Navigation',
+        'Capell\\Marketplace',
+        'Capell\\Tags',
+        'Capell\\Themes',
+        'Capell\\PublishingStudio',
+    ];
+    $violations = [];
+
+    $files = (new Finder)
+        ->files()
+        ->in($packagePath . '/src')
+        ->name('*.php');
+
+    foreach ($files as $file) {
+        $relativePath = str_replace($packagePath . '/', '', $file->getPathname());
+
+        if (in_array($relativePath, $allowedPaths, true)) {
+            continue;
+        }
+
+        foreach ($forbiddenNamespaces as $namespace) {
+            if (! str_contains($file->getContents(), $namespace)) {
+                continue;
+            }
+
+            $violations[] = sprintf('%s imports %s', $relativePath, $namespace);
+        }
+    }
+
+    expect($violations)->toBeEmpty();
+});
 
 it('keeps publishing-studio references inside the publish report bridge', function (): void {
     $packagePath = dirname(__DIR__, 2);

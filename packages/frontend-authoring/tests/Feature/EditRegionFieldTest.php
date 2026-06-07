@@ -215,7 +215,7 @@ function editableRegionFieldPayload(Translation $translation, string $field, str
         ->first(fn (EditableRegionPayloadData $region): bool => $region->field === $field);
 
     assert($region instanceof EditableRegionPayloadData);
-    assert($region->type === $type);
+    assert($region->type->value === $type);
 
     return resolve(EditableRegionSigner::class)->encode($region);
 }

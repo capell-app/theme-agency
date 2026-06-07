@@ -6,24 +6,16 @@ namespace Capell\ShopifyCommerce\Health;
 
 use Capell\Core\Contracts\Extensions\ChecksExtensionHealth;
 use Capell\Core\Data\Diagnostics\DoctorCheckResultData;
-use Capell\ShopifyCommerce\Actions\Graphql\ExecuteShopifyAdminGraphqlAction;
+use Capell\ShopifyCommerce\Actions\OAuth\VerifyShopifyConnectionTokenAction;
 use Capell\ShopifyCommerce\Enums\ShopifyConnectionStatus;
+use Capell\ShopifyCommerce\Enums\ShopifySyncStatus;
 use Capell\ShopifyCommerce\Models\ShopifyConnection;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Schema;
-use Throwable;
 
 final class ShopifyCommerceHealthCheck implements ChecksExtensionHealth
 {
-    private const string TOKEN_PROBE_QUERY = <<<'GRAPHQL'
-query capellShopifyCommerceHealthProbe {
-  shop {
-    name
-  }
-}
-GRAPHQL;
-
     public static function compatibleCapellApiVersion(): string
     {
         return '^4.0';
@@ -253,7 +245,7 @@ GRAPHQL;
                 $query
                     ->where(static function (Builder $runningQuery) use ($staleBefore): void {
                         $runningQuery
-                            ->whereIn('sync_status', ['running', 'importing'])
+                            ->whereIn('sync_status', [ShopifySyncStatus::Running->value, ShopifySyncStatus::Importing->value])
                             ->where(function (Builder $timestampQuery) use ($staleBefore): void {
                                 $timestampQuery
                                     ->whereNull('last_sync_started_at')
@@ -262,7 +254,7 @@ GRAPHQL;
                     })
                     ->orWhere(static function (Builder $queuedQuery) use ($staleBefore): void {
                         $queuedQuery
-                            ->where('sync_status', 'queued')
+                            ->where('sync_status', ShopifySyncStatus::Queued->value)
                             ->where(function (Builder $timestampQuery) use ($staleBefore): void {
                                 $timestampQuery
                                     ->whereNull('last_sync_queued_at')
@@ -286,7 +278,7 @@ GRAPHQL;
             ->where(static function (Builder $query): void {
                 $query
                     ->whereNull('sync_status')
-                    ->orWhereNotIn('sync_status', ['queued', 'running', 'importing']);
+                    ->orWhereNotIn('sync_status', ShopifySyncStatus::busyValues());
             })
             ->where(static function (Builder $query) use ($staleBefore): void {
                 $query
@@ -312,13 +304,7 @@ GRAPHQL;
 
     private function tokenProbePassed(ShopifyConnection $connection): bool
     {
-        try {
-            $payload = ExecuteShopifyAdminGraphqlAction::run($connection, self::TOKEN_PROBE_QUERY);
-        } catch (Throwable) {
-            return false;
-        }
-
-        return is_string(data_get($payload, 'data.shop.name'));
+        return VerifyShopifyConnectionTokenAction::run($connection);
     }
 
     private function maxCatalogSyncAgeHours(): int

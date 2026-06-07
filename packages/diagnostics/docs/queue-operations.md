@@ -63,9 +63,9 @@ The Diagnostics config is the Capell source of truth:
 
 ## Screenshots
 
-The screenshot contract lives in [screenshots.json](screenshots.json). Queue Operations screenshots should use dummy operational data so the page is useful in the Capell app and marketplace without exposing real job names, customer payloads, or exception details.
+The screenshot contract lives in [screenshots.json](screenshots.json). Queue Operations screenshots should use seeded synthetic operational data so the page is useful in the Capell app and marketplace without exposing real job names, customer payloads, or exception details.
 
-Generated dummy-data screenshots are stored under:
+Generated runner screenshots are stored under:
 
 - `packages/diagnostics/docs/assets/screenshots/queue-health-page.png`
 - `packages/diagnostics/docs/assets/screenshots/queue-health-page-dark.png`

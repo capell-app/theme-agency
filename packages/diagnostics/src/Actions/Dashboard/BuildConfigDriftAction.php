@@ -7,6 +7,7 @@ namespace Capell\Diagnostics\Actions\Dashboard;
 use Capell\Core\Facades\CapellCore;
 use Capell\Diagnostics\Data\Dashboard\ConfigDriftData;
 use Capell\Diagnostics\Data\Dashboard\ConfigDriftEntryData;
+use Capell\Diagnostics\Support\DiagnosticsSnapshotCache;
 use Composer\InstalledVersions;
 use Illuminate\Support\Facades\File;
 use Lorisleiva\Actions\Concerns\AsAction;
@@ -21,6 +22,11 @@ class BuildConfigDriftAction
     use AsAction;
 
     public function handle(): ConfigDriftData
+    {
+        return DiagnosticsSnapshotCache::remember('config-drift', fn (): ConfigDriftData => $this->build());
+    }
+
+    private function build(): ConfigDriftData
     {
         $allDrifts = [];
         $packagesChecked = 0;

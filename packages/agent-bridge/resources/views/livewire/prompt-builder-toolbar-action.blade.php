@@ -2,12 +2,12 @@
     <button
         type="button"
         wire:click="openBuilder"
-        class="hover:text-primary-600 focus:text-primary-600 dark:hover:text-primary-400 dark:focus:text-primary-400 flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-md text-gray-600 transition-colors focus:outline-none dark:text-gray-300"
+        class="hover:text-primary-600 focus:text-primary-600 dark:hover:text-primary-400 dark:focus:text-primary-400 flex h-8 flex-shrink-0 items-center gap-1.5 rounded-md px-2 text-sm font-medium text-gray-600 transition-colors focus:outline-none dark:text-gray-300"
         title="{{ __('capell-agent-bridge::admin.prompt_builder_tooltip') }}"
         aria-label="{{ __('capell-agent-bridge::admin.prompt_builder_tooltip') }}"
     >
         <svg
-            class="h-5 w-5"
+            class="h-5 w-5 flex-shrink-0"
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
@@ -17,9 +17,12 @@
             <path
                 stroke-linecap="round"
                 stroke-linejoin="round"
-                d="M9.8 4.2 8.6 7.6a2 2 0 0 1-1.2 1.2L4 10l3.4 1.2a2 2 0 0 1 1.2 1.2l1.2 3.4 1.2-3.4a2 2 0 0 1 1.2-1.2L15.6 10l-3.4-1.2A2 2 0 0 1 11 7.6L9.8 4.2ZM17.5 13l-.7 2a1.2 1.2 0 0 1-.8.8l-2 .7 2 .7c.4.1.7.4.8.8l.7 2 .7-2c.1-.4.4-.7.8-.8l2-.7-2-.7a1.2 1.2 0 0 1-.8-.8l-.7-2Z"
+                d="M7.5 8.25h9M7.5 12h5.25M21 12c0 4.142-4.03 7.5-9 7.5a10.4 10.4 0 0 1-3.226-.504L3 20.25l1.816-4.238C3.667 14.836 3 13.455 3 12c0-4.142 4.03-7.5 9-7.5s9 3.358 9 7.5Z"
             />
         </svg>
+        <span class="whitespace-nowrap">
+            {{ __('capell-agent-bridge::admin.prompt_builder_tool') }}
+        </span>
     </button>
 
     @if ($isOpen)

@@ -13,7 +13,7 @@
         "bundle": "operations"
     },
     "namespace": "Capell\\PrivacyCenter",
-    "surfaces": ["admin", "console"],
+    "surfaces": ["admin", "console", "frontend"],
     "dependencies": {
         "requires": ["capell-app/admin", "capell-app/core"],
         "supports": [
@@ -111,16 +111,18 @@
     "capabilities": [
         "privacy-center",
         "privacy-center-consent",
+        "privacy-center-cookie-categories",
         "privacy-center-insights-consent-mirror",
         "privacy-center-retention",
         "privacy-center-retention-execution",
+        "privacy-center-retention-admin-run",
         "privacy-center-privacy-exports",
         "privacy-center-delete-workflows",
         "privacy-center-policy-acceptance",
         "privacy-center-subject-requests"
     ],
     "performance": {
-        "frontendRenderBudgetMs": 0,
+        "frontendRenderBudgetMs": 40,
         "adminQueryBudget": 40,
         "cacheTags": ["privacy-center"],
         "cacheSafety": {
@@ -165,7 +167,23 @@
     },
     "marketplace": {
         "summary": "The compliance backbone for Capell — one auditable ledger for cookie consent, policy acceptances, retention rules, and GDPR/CCPA subject requests, with Actions your other packages plug straight into.",
-        "screenshots": [],
+        "screenshots": [
+            {
+                "path": "docs/screenshots/privacy-requests-index.png",
+                "alt": "Privacy Center request queue showing a submitted data-subject access request.",
+                "caption": "Triage access, export, rectification, and deletion requests from a single compliance queue."
+            },
+            {
+                "path": "docs/screenshots/privacy-request-edit-actions.png",
+                "alt": "Privacy Center request edit screen with verification and rejection workflow actions.",
+                "caption": "Verify, fulfil, or reject data-subject requests with audited workflow payload and metadata."
+            },
+            {
+                "path": "docs/screenshots/retention-rules-index.png",
+                "alt": "Privacy Center retention rules table showing an active marketing consent ledger rule.",
+                "caption": "Review active data retention rules, retention windows, and minimisation actions in Capell admin."
+            }
+        ],
         "categories": ["admin", "compliance", "operations"]
     },
     "contributionTraceability": {

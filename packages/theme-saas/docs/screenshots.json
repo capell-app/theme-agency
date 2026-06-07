@@ -6,16 +6,17 @@
     "outputDirectory": "packages/theme-saas/docs/screenshots",
     "entries": [
         {
-            "id": "theme-admin-list-showing-saas",
-            "title": "Theme admin list showing SaaS.",
+            "id": "theme-preset-selection-showing-saas",
+            "title": "Theme preset selection showing SaaS.",
             "package": "theme-saas",
             "surface": "admin",
             "targetType": "filament-resource",
             "target": "ThemeResource:index",
             "required": true,
             "notes": "Capture with only the core Capell stack, Foundation Theme, Layout Builder, and capell-app/theme-saas installed in the isolated demo harness.",
-            "useCase": "An administrator confirms the SaaS theme is available through the core Themes resource without installing another theme package.",
-            "screenshotPath": "packages/theme-saas/docs/screenshots/theme-admin-list-showing-saas.png"
+            "useCase": "An administrator confirms the SaaS preset is available through the core Themes resource without installing another theme package.",
+            "screenshotPath": "packages/theme-saas/docs/screenshots/theme-preset-selection-showing-saas.png",
+            "darkScreenshotPath": "packages/theme-saas/docs/screenshots/theme-preset-selection-showing-saas-dark.png"
         },
         {
             "id": "theme-preview-url-output",
@@ -27,7 +28,8 @@
             "required": true,
             "notes": "Capture a signed preview URL generated with CreateThemePreviewUrlAction for the seeded SaaS theme, site, and page.",
             "useCase": "An administrator opens a signed preview URL to inspect a page with the SaaS theme applied before publishing the theme choice.",
-            "screenshotPath": "packages/theme-saas/docs/screenshots/theme-preview-url-output.png"
+            "screenshotPath": "packages/theme-saas/docs/screenshots/theme-preview-url-output.png",
+            "darkScreenshotPath": "packages/theme-saas/docs/screenshots/theme-preview-url-output-dark.png"
         },
         {
             "id": "frontend-page-rendered-with-saas-theme",
@@ -35,119 +37,98 @@
             "package": "theme-saas",
             "surface": "frontend",
             "targetType": "frontend-url",
-            "target": "/theme-saas-demo",
+            "target": "/theme-saas",
             "required": true,
             "notes": "Capture the seeded Launchdeck page after installing capell-app/theme-saas and building the Foundation Theme/frontend assets.",
             "useCase": "A visitor sees a seeded product page rendered through the SaaS navigation, hero, features, proof, content listing, CTA, and footer sections.",
-            "screenshotPath": "packages/theme-saas/docs/screenshots/frontend-page-rendered-with-saas-theme.png"
+            "screenshotPath": "packages/theme-saas/docs/screenshots/frontend-page-rendered-with-saas-theme.png",
+            "darkScreenshotPath": "packages/theme-saas/docs/screenshots/frontend-page-rendered-with-saas-theme-dark.png",
+            "user": false,
+            "url": "/theme-saas"
         },
         {
             "id": "saas-homepage-layout",
             "title": "SaaS homepage.",
-            "package": "theme-saas",
-            "surface": "frontend",
-            "targetType": "frontend-url",
-            "target": "/saas-homepage-layout",
-            "required": true,
-            "notes": "Capture the product homepage with activation hero, feature proof, dashboard panels, workflow cards, and trial CTA.",
+            "target": "/theme-saas",
+            "notes": "Capture the seeded SaaS homepage with activation hero, feature proof, dashboard panels, workflow cards, and CTA.",
             "useCase": "A SaaS team checks that the theme sells product workflow and activation rather than broad startup marketing.",
-            "screenshotPath": "packages/theme-saas/docs/screenshots/saas-homepage-layout.png"
-        },
-        {
-            "id": "saas-feature-layout",
-            "title": "Feature page.",
+            "screenshotPath": "packages/theme-saas/docs/screenshots/saas-homepage-layout.png",
             "package": "theme-saas",
             "surface": "frontend",
             "targetType": "frontend-url",
-            "target": "/saas-feature-layout",
             "required": true,
-            "notes": "Capture feature narrative, workflow steps, comparison blocks, proof, and demo CTA.",
-            "useCase": "A product team reviews whether feature pages explain jobs-to-be-done instead of becoming a services grid.",
-            "screenshotPath": "packages/theme-saas/docs/screenshots/saas-feature-layout.png"
+            "user": false,
+            "url": "/theme-saas"
         },
         {
-            "id": "saas-pricing-layout",
-            "title": "Pricing page.",
+            "id": "saas-directory-layout",
+            "title": "SaaS directory page.",
+            "target": "/theme-saas-directory",
+            "notes": "Capture the seeded SaaS directory surface with product pathways and resource cards.",
+            "useCase": "A product team reviews whether listing pages keep SaaS evaluation paths clear.",
+            "screenshotPath": "packages/theme-saas/docs/screenshots/saas-directory-layout.png",
             "package": "theme-saas",
             "surface": "frontend",
             "targetType": "frontend-url",
-            "target": "/saas-pricing-layout",
             "required": true,
-            "notes": "Capture pricing plan cards, feature comparison, FAQ, trial risk reducers, and CTA. Requires capell-app/content-sections; show this package note on the captured image.",
-            "useCase": "A SaaS buyer can compare plans and move toward a trial without the page feeling like Commerce merchandising.",
-            "screenshotPath": "packages/theme-saas/docs/screenshots/saas-pricing-layout.png"
+            "user": false,
+            "url": "/theme-saas-directory"
         },
         {
-            "id": "saas-docs-layout",
-            "title": "Documentation page.",
+            "id": "saas-detail-layout",
+            "title": "SaaS detail page.",
+            "target": "/theme-saas-detail",
+            "notes": "Capture the seeded SaaS detail surface with article-style product story content.",
+            "useCase": "A SaaS team can publish product stories or feature narratives inside the theme-owned product layout.",
+            "screenshotPath": "packages/theme-saas/docs/screenshots/saas-detail-layout.png",
             "package": "theme-saas",
             "surface": "frontend",
             "targetType": "frontend-url",
-            "target": "/saas-docs-layout",
             "required": true,
-            "notes": "Capture docs navigation, article content, related links, and product onboarding CTA. Requires capell-app/document-lifecycle; show this package note on the captured image.",
-            "useCase": "A product team checks that docs support activation without overlapping Knowledge's editorial archive.",
-            "screenshotPath": "packages/theme-saas/docs/screenshots/saas-docs-layout.png"
+            "user": false,
+            "url": "/theme-saas-detail"
         },
         {
-            "id": "saas-blog-layout",
-            "title": "Product blog article.",
+            "id": "saas-contact-layout",
+            "title": "SaaS contact page.",
+            "target": "/theme-saas-contact",
+            "notes": "Capture the seeded SaaS contact surface with enquiry routing and conversion copy.",
+            "useCase": "A sales team checks that demo/contact conversion stays tied to product workflow.",
+            "screenshotPath": "packages/theme-saas/docs/screenshots/saas-contact-layout.png",
             "package": "theme-saas",
             "surface": "frontend",
             "targetType": "frontend-url",
-            "target": "/saas-blog-layout",
             "required": true,
-            "notes": "Capture a product article with hero, author, related resources, feature links, and demo CTA. Requires capell-app/blog; show this package note on the captured image.",
-            "useCase": "A SaaS team can publish launches and education while keeping product activation visible.",
-            "screenshotPath": "packages/theme-saas/docs/screenshots/saas-blog-layout.png"
+            "user": false,
+            "url": "/theme-saas-contact"
         },
         {
-            "id": "saas-demo-request-layout",
-            "title": "Demo request page.",
+            "id": "saas-empty-state-layout",
+            "title": "SaaS empty state page.",
+            "target": "/theme-saas-empty",
+            "notes": "Capture the seeded SaaS empty-state surface for no-results and recovery flows.",
+            "useCase": "A user sees a useful recovery page when a product search or listing has no results.",
+            "screenshotPath": "packages/theme-saas/docs/screenshots/saas-empty-state-layout.png",
             "package": "theme-saas",
             "surface": "frontend",
             "targetType": "frontend-url",
-            "target": "/saas-demo-request-layout",
             "required": true,
-            "notes": "Capture demo request qualification, routing, success state, and product proof. Requires capell-app/form-builder; show this package note on the captured image.",
-            "useCase": "A sales team checks that demo conversion stays tied to product workflow rather than broad contact.",
-            "screenshotPath": "packages/theme-saas/docs/screenshots/saas-demo-request-layout.png"
+            "user": false,
+            "url": "/theme-saas-empty"
         },
         {
-            "id": "saas-webinar-layout",
-            "title": "Webinar landing page.",
+            "id": "saas-cta-layout",
+            "title": "SaaS CTA page.",
+            "target": "/theme-saas-cta",
+            "notes": "Capture the seeded SaaS CTA surface for focused conversion moments.",
+            "useCase": "A product team can direct high-intent visitors toward the next sales or trial action.",
+            "screenshotPath": "packages/theme-saas/docs/screenshots/saas-cta-layout.png",
             "package": "theme-saas",
             "surface": "frontend",
             "targetType": "frontend-url",
-            "target": "/saas-webinar-layout",
             "required": true,
-            "notes": "Capture webinar agenda, speakers, product takeaways, and registration CTA. Requires capell-app/events; show this package note on the captured image.",
-            "useCase": "A SaaS team can run product education events without drifting into Agency campaign pages.",
-            "screenshotPath": "packages/theme-saas/docs/screenshots/saas-webinar-layout.png"
-        },
-        {
-            "id": "saas-search-layout",
-            "title": "Knowledge search page.",
-            "package": "theme-saas",
-            "surface": "frontend",
-            "targetType": "frontend-url",
-            "target": "/saas-search-layout",
-            "required": true,
-            "notes": "Capture product knowledge search with docs/blog results, snippets, and onboarding recovery. Requires capell-app/search; show this package note on the captured image.",
-            "useCase": "A user can find product help without the page becoming a general Knowledge theme search experience.",
-            "screenshotPath": "packages/theme-saas/docs/screenshots/saas-search-layout.png"
-        },
-        {
-            "id": "saas-campaign-layout",
-            "title": "Launch campaign page.",
-            "package": "theme-saas",
-            "surface": "frontend",
-            "targetType": "frontend-url",
-            "target": "/saas-campaign-layout",
-            "required": true,
-            "notes": "Capture product launch campaign with variant hero, audience segments, activation proof, and campaign analytics. Requires capell-app/campaign-studio; show this package note on the captured image.",
-            "useCase": "A SaaS team can announce launches while keeping the page centred on product activation, not Agency creative delivery.",
-            "screenshotPath": "packages/theme-saas/docs/screenshots/saas-campaign-layout.png"
+            "user": false,
+            "url": "/theme-saas-cta"
         }
     ]
 }

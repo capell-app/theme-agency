@@ -32,7 +32,7 @@
     "database": {
         "migrations": true,
         "settings": false,
-        "requiredTables": []
+        "requiredTables": ["deployment_connections", "deployment_publications"]
     },
     "commands": {
         "install": null,
@@ -45,7 +45,7 @@
         "View:DeploymentConnectionPage",
         "Manage:DeploymentConnectionPage"
     ],
-    "capabilities": ["deployments", "deployments-admin"],
+    "capabilities": ["deployments", "deployments-admin", "deployments-install-policy", "deployments-publish-history", "deployments-publish-idempotency", "deployments-token-refresh"],
     "performance": {
         "frontendRenderBudgetMs": 0,
         "adminQueryBudget": 40,

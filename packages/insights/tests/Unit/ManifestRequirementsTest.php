@@ -40,7 +40,12 @@ it('declares installed settings and page permission surfaces', function (): void
         InsightsSettings::class,
     ])->and($manifest['permissions'] ?? [])->toContain('View:InsightsPage')
         ->and($manifest['capabilities'] ?? [])->toContain('insights-consent-banner')
-        ->and($manifest['capabilities'] ?? [])->toContain('insights-acquisition-reports');
+        ->and($manifest['capabilities'] ?? [])->toContain('insights-acquisition-reports')
+        ->and($manifest['capabilities'] ?? [])->toContain('insights-conversion-funnels')
+        ->and($manifest['capabilities'] ?? [])->toContain('insights-daily-rollups')
+        ->and($manifest['capabilities'] ?? [])->toContain('insights-privacy-signals')
+        ->and($manifest['commands']['maintenance'] ?? [])->toContain('insights:rollups:rebuild')
+        ->and($manifest['database']['requiredTables'] ?? [])->toContain('insights_daily_rollups');
 });
 
 it('keeps marketplace screenshots backed by committed assets', function (): void {
@@ -53,7 +58,7 @@ it('keeps marketplace screenshots backed by committed assets', function (): void
 
     throw_unless(is_array($screenshots), RuntimeException::class, 'Expected Insights marketplace screenshots to be an array.');
 
-    expect($screenshots)->toHaveCount(6);
+    expect($screenshots)->toHaveCount(4);
 
     foreach ($screenshots as $screenshot) {
         throw_unless(is_array($screenshot), RuntimeException::class, 'Expected Insights screenshot entries to be arrays.');

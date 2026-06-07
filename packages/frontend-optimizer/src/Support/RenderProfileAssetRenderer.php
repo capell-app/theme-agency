@@ -30,6 +30,10 @@ class RenderProfileAssetRenderer
         $html = [];
         $hasInlineCriticalCss = false;
 
+        foreach ($this->resourceHintsFromProfile($profile) as $hint) {
+            $html[] = $this->renderResourceHint($hint);
+        }
+
         if ($this->shouldInlineCriticalCss($profile)) {
             $hasInlineCriticalCss = true;
             $html[] = '<style data-critical-css>' . $this->escapeStyleContents($this->criticalCssContents($profile)) . '</style>';
@@ -40,6 +44,45 @@ class RenderProfileAssetRenderer
         }
 
         return new HtmlString(implode(PHP_EOL, array_filter($html, static fn (string $tag): bool => $tag !== '')));
+    }
+
+    /**
+     * @return array<int, array<string, mixed>>
+     */
+    private function resourceHintsFromProfile(FrontendRenderProfile $profile): array
+    {
+        $resourceHints = $profile->signature['resource_hints'] ?? [];
+
+        if (! is_array($resourceHints)) {
+            return [];
+        }
+
+        return array_values(array_filter($resourceHints, is_array(...)));
+    }
+
+    /** @param array<string, mixed> $hint */
+    private function renderResourceHint(array $hint): string
+    {
+        $rel = $this->escape((string) ($hint['rel'] ?? ''));
+        $href = $this->escape((string) ($hint['href'] ?? ''));
+
+        if ($rel === '' || $href === '') {
+            return '';
+        }
+
+        $attributes = [
+            'rel' => $rel,
+            'href' => $href,
+            'as' => $this->escape((string) ($hint['as'] ?? '')),
+            'type' => $this->escape((string) ($hint['type'] ?? '')),
+            'crossorigin' => $this->escape((string) ($hint['crossorigin'] ?? '')),
+            'fetchpriority' => $this->escape((string) ($hint['fetchpriority'] ?? '')),
+        ];
+
+        return '<link ' . collect($attributes)
+            ->filter(static fn (string $value): bool => $value !== '')
+            ->map(static fn (string $value, string $key): string => sprintf('%s="%s"', $key, $value))
+            ->implode(' ') . '>';
     }
 
     private function shouldInlineCriticalCss(FrontendRenderProfile $profile): bool

@@ -44,14 +44,12 @@ can be tested as a package.
 This package owns no database tables, settings, models, or routes. It reads
 Foundation Theme runtime data and Capell page content.
 
-## Screenshot Plan
+## Screenshot Coverage
 
-`docs/screenshots.json` describes deployment captures for the admin theme list,
+`docs/screenshots.json` describes committed deployment captures for the admin theme list,
 seeded frontend demo, homepage, course catalogue, instructors, events,
-enrolment, learning resources, and signed preview output. The committed
-marketplace manifest currently uses the three real preview assets under
-`docs/assets/marketplace`; the fuller route-backed PNG capture set still needs
-to be generated.
+enrolment, learning resources, and signed preview output. The marketplace
+manifest promotes the same route-backed PNG capture set under `docs/screenshots`.
 
 ## Verification
 

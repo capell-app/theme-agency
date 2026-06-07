@@ -6,11 +6,17 @@ namespace Capell\KnowledgeBase\Providers;
 
 use Capell\Core\Facades\CapellCore;
 use Capell\Core\Support\Packages\AbstractPackageServiceProvider;
+use Capell\Frontend\Support\Cache\CacheInvalidationRegistry;
+use Capell\KnowledgeBase\Console\Commands\DemoCommand;
 use Capell\KnowledgeBase\Models\KnowledgeBaseArticle;
 use Capell\KnowledgeBase\Models\KnowledgeBaseArticleFeedback;
 use Capell\KnowledgeBase\Models\KnowledgeBaseArticleVersion;
 use Capell\KnowledgeBase\Models\KnowledgeBaseCollection;
 use Capell\KnowledgeBase\Models\KnowledgeBaseRelatedArticle;
+use Capell\KnowledgeBase\Support\PublicUrls\KnowledgeBasePublicUrlContributor;
+use Capell\Search\Data\SearchableSourceData;
+use Capell\Search\Support\SearchableSourceRegistry;
+use Capell\SiteDiscovery\Contracts\PublicUrlContributor;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Override;
 use Spatie\LaravelPackageTools\Package;
@@ -29,6 +35,7 @@ final class KnowledgeBaseServiceProvider extends AbstractPackageServiceProvider
             ->hasTranslations()
             ->hasViews()
             ->hasRoute('web')
+            ->hasCommand(DemoCommand::class)
             ->hasMigrations([
                 '2026_05_31_000001_create_knowledge_base_tables',
             ]);
@@ -46,6 +53,9 @@ final class KnowledgeBaseServiceProvider extends AbstractPackageServiceProvider
             $this
                 ->registerModels()
                 ->registerMorphMap()
+                ->registerCacheInvalidationDependencies()
+                ->registerSearchableSource()
+                ->registerPublicUrlContributors()
                 ->registerProtectedTables();
         });
     }
@@ -87,6 +97,66 @@ final class KnowledgeBaseServiceProvider extends AbstractPackageServiceProvider
         CapellCore::registerProtectedTable('knowledge_base_article_versions');
         CapellCore::registerProtectedTable('knowledge_base_article_feedback');
         CapellCore::registerProtectedTable('knowledge_base_related_articles');
+
+        return $this;
+    }
+
+    private function registerCacheInvalidationDependencies(): self
+    {
+        $cacheInvalidationRegistryClass = CacheInvalidationRegistry::class;
+
+        if (! class_exists($cacheInvalidationRegistryClass) || ! $this->app->bound($cacheInvalidationRegistryClass)) {
+            return $this;
+        }
+
+        $registry = resolve($cacheInvalidationRegistryClass);
+
+        if (! is_object($registry) || ! method_exists($registry, 'registerDependency')) {
+            return $this;
+        }
+
+        $registry->registerDependency(KnowledgeBaseArticle::class, 'knowledge-base-*');
+        $registry->registerDependency(KnowledgeBaseArticleVersion::class, 'knowledge-base-*');
+        $registry->registerDependency(KnowledgeBaseCollection::class, 'knowledge-base-*');
+
+        return $this;
+    }
+
+    private function registerSearchableSource(): self
+    {
+        if (! class_exists(SearchableSourceRegistry::class) || ! class_exists(SearchableSourceData::class)) {
+            return $this;
+        }
+
+        $registerSource = function (SearchableSourceRegistry $registry): void {
+            $registry->register(new SearchableSourceData(
+                key: 'knowledge-base',
+                label: __('capell-knowledge-base::generic.search.source_label'),
+                modelClass: KnowledgeBaseArticle::class,
+                type: 'knowledge-base',
+                enabledSettingKey: 'sources.knowledge-base.enabled',
+                enabledByDefault: true,
+                weight: (float) config('capell-knowledge-base.default_search_weight', 50),
+            ));
+        };
+
+        $this->app->afterResolving(SearchableSourceRegistry::class, $registerSource);
+
+        if ($this->app->bound(SearchableSourceRegistry::class)) {
+            $registerSource($this->app->make(SearchableSourceRegistry::class));
+        }
+
+        return $this;
+    }
+
+    private function registerPublicUrlContributors(): self
+    {
+        if (! interface_exists(PublicUrlContributor::class)) {
+            return $this;
+        }
+
+        $this->app->singleton(KnowledgeBasePublicUrlContributor::class);
+        $this->app->tag([KnowledgeBasePublicUrlContributor::class], PublicUrlContributor::TAG);
 
         return $this;
     }

@@ -19,6 +19,7 @@ use Capell\GA4Reports\Models\GA4ReportsDailyMetric;
 use Capell\GA4Reports\Models\GA4ReportsPageMetric;
 use Capell\GA4Reports\Settings\GA4ReportsSettings;
 use Capell\GA4Reports\Tests\GA4ReportsTestCase;
+use Carbon\CarbonImmutable;
 use Livewire\Livewire;
 
 uses(GA4ReportsTestCase::class);
@@ -30,6 +31,7 @@ function configureGA4ReportsFilamentSettings(): void
     $settings->property_id = '123456789';
     $settings->credentials_path = '/tmp/ga4-reports.json';
     $settings->sync_days = 30;
+    $settings->sync_cron = '0 2 * * *';
     $settings->route_slug = 'ga4-reports';
 
     app()->instance(GA4ReportsSettings::class, $settings);
@@ -71,6 +73,48 @@ it('registers GA4 dashboard widgets and settings contributor', function (): void
         ->toContain('ga4_reports_overview')
         ->toContain('ga4_reports_overview.sessions')
         ->toContain('ga4_reports_overview.engagement_rate');
+});
+
+it('uses the configurable cron expression for scheduled syncs', function (): void {
+    $providerSource = (string) file_get_contents(__DIR__ . '/../../../src/Providers/AdminServiceProvider.php');
+
+    expect($providerSource)
+        ->toContain('->cron($this->syncCronExpression())')
+        ->not->toContain('->daily()');
+});
+
+it('resolves registered overview stats against the dashboard default date range', function (): void {
+    configureGA4ReportsFilamentSettings();
+    CarbonImmutable::setTestNow(CarbonImmutable::parse('2026-05-06 12:00:00'));
+
+    GA4ReportsDailyMetric::query()->create([
+        'property_id' => '123456789',
+        'metric_date' => '2026-05-05',
+        'total_users' => 8,
+        'sessions' => 12,
+        'screen_page_views' => 30,
+        'engaged_sessions' => 9,
+        'average_session_duration' => 40,
+        'event_count' => 60,
+        'conversions' => 2,
+    ]);
+
+    GA4ReportsDailyMetric::query()->create([
+        'property_id' => '123456789',
+        'metric_date' => '2026-04-21',
+        'total_users' => 800,
+        'sessions' => 1200,
+        'screen_page_views' => 3000,
+        'engaged_sessions' => 900,
+        'average_session_duration' => 40,
+        'event_count' => 6000,
+        'conversions' => 200,
+    ]);
+
+    $sessions = collect(CapellAdmin::getOverviewStats(false))
+        ->firstWhere('key', 'ga4_reports_overview.sessions');
+
+    expect($sessions?->value)->toBe('12');
 });
 
 it('registers GA4 extension pages and settings schema metadata', function (): void {

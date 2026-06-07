@@ -97,6 +97,10 @@ Screenshots are generated from [docs/screenshots.json](docs/screenshots.json) du
 - Settings: `LoginAuditSettingsSchema`.
 - User resource bridge: `LoginAuditUserSchemaExtender` adds access summary state and `LoginAuditsRelationManager` when the host user model supports authentication logs.
 
+## Session Boundary
+
+Login Audit reports active sessions and device context from authentication-log rows. It does not terminate sessions directly: logout-other-devices and per-device revocation depend on the host app's session driver, guard setup, and remember-token policy. Pair this package with the host auth stack, Password Policy, Access Gate, or a session-management package when destructive session controls are required.
+
 ## Data And Persistence
 
 - login_audit stores authenticatable type/id, IP address, user agent, login time, and logout time.
@@ -105,6 +109,7 @@ Screenshots are generated from [docs/screenshots.json](docs/screenshots.json) du
 - `ApplyLoginAuditSettingsAction` applies retention and IP tracking settings before the scheduled purge runs.
 - `last_purged_at` records the last successful scheduled purge callback for operator visibility.
 - `ResolveLoginAuditIpAddressAction` reads the configured CDN header when `login-audit.behind_cdn` is enabled; otherwise it uses the request IP.
+- `enable_geo_location` controls the vendor geo lookup for new-device and failed-login events. Keep it disabled unless the host app has a configured geo provider and a lawful basis for storing location data.
 
 - Models: `LoginAudit`.
 - Migrations: `2026_05_10_190857_01_create_login_audit_table.php`.

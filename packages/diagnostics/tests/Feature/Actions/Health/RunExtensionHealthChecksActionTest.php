@@ -166,3 +166,15 @@ it('rolls up implemented, stub and broken counts across declared checks', functi
         ->and($report->stubCount)->toBe(1)
         ->and($report->brokenCount)->toBe(1);
 });
+
+it('calculates a severity rollup and score for failed and incomplete checks', function (): void {
+    $report = runFixtureHealthChecks([
+        ['key' => 'fixture.passing', 'label' => 'Passing', 'class' => PassingFixtureHealthCheck::class, 'severity' => 'warning'],
+        ['key' => 'fixture.failing', 'label' => 'Failing', 'class' => FailingFixtureHealthCheck::class, 'severity' => 'critical'],
+        ['key' => 'fixture.stub', 'label' => 'Stub', 'class' => StubFixtureHealthCheck::class, 'severity' => 'warning'],
+    ]);
+
+    expect($report->overallStatus)->toBe('critical')
+        ->and($report->worstSeverity)->toBe('critical')
+        ->and($report->healthScore)->toBe(65);
+});

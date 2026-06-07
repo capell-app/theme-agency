@@ -20,6 +20,11 @@ return [
     'edit_region' => 'Edit content',
     'editing_visible' => 'Edit areas shown',
     'hide_edit_areas' => 'Hide edit areas',
+    'input_types' => [
+        'html' => 'HTML',
+        'text' => 'Text',
+        'textarea' => 'Textarea',
+    ],
     'health' => [
         'beacon_route' => [
             'failed' => 'The admin beacon route is not registered.',
@@ -47,6 +52,7 @@ return [
         ],
     ],
     'inline_editor' => 'Inline editor',
+    'media_editor_description' => 'Review or replace the selected media field without leaving the current page.',
     'meta_description' => 'Page description',
     'page_content' => 'Page content',
     'page_title' => 'Page title',
@@ -58,8 +64,16 @@ return [
     'saved_draft_status' => 'Draft saved for approval. Refreshing preview.',
     'saved_published_status' => 'Saved live. Refreshing page.',
     'saved' => 'Saved',
+    'save_statuses' => [
+        'pending_approval' => 'Pending approval',
+        'published' => 'Published',
+    ],
     'saving' => 'Saving...',
     'show_edit_areas' => 'Show edit areas',
+    'surfaces' => [
+        'field' => 'Field',
+        'media' => 'Media',
+    ],
     'toggle_edit_mode' => 'Toggle edit mode',
     'updated' => 'Updated',
     'updated_by' => 'by',

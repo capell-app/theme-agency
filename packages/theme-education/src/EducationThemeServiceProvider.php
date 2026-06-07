@@ -40,7 +40,7 @@ final class EducationThemeServiceProvider extends ServiceProvider
             previewImage: self::PUBLIC_PREVIEW_IMAGE,
             tags: ['Education', 'Courses', 'Enrolment'],
             bestFit: ['Schools', 'Course providers', 'Training teams'],
-            includedSections: ['navigation', 'hero', 'features', 'proof', 'content-listing', 'course-catalog', 'pathway-comparison', 'outcomes', 'instructors', 'events', 'admissions-checklist', 'enrolment-cta', 'resources', 'faq', 'cta', 'footer'],
+            includedSections: ['navigation', 'hero', 'features', 'proof', 'content-listing', 'course-catalog', 'course-detail', 'pathway-comparison', 'outcomes', 'instructors', 'faculty-directory', 'events', 'admissions-checklist', 'admissions-funnel', 'enrolment-cta', 'resources', 'faq', 'cta', 'footer'],
             presets: [
                 new ThemePresetData(
                     key: 'education',

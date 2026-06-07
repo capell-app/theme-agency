@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Capell\KnowledgeBase\Actions\BuildAiReadableKnowledgeBaseOutputAction;
+use Capell\KnowledgeBase\Actions\BuildKnowledgeBaseArticleSchemaAction;
 use Capell\KnowledgeBase\Actions\BuildKnowledgeBaseSearchDocumentsAction;
 use Capell\KnowledgeBase\Actions\BuildPublicKnowledgeBaseArticleDataAction;
 use Capell\KnowledgeBase\Actions\BuildPublicKnowledgeBaseNavigationAction;
@@ -80,6 +81,11 @@ it('publishes new versions and keeps navigation, search, and ai output public on
         title: 'Private Docs',
         isPublic: false,
     ));
+    $childCollection = CreateKnowledgeBaseCollectionAction::run(new CreateKnowledgeBaseCollectionData(
+        title: 'Child Docs',
+        parent: $publicCollection,
+        sortOrder: 2,
+    ));
 
     $publicArticle = CreateKnowledgeBaseArticleAction::run(new CreateKnowledgeBaseArticleData(
         collection: $publicCollection,
@@ -93,6 +99,12 @@ it('publishes new versions and keeps navigation, search, and ai output public on
         collection: $privateCollection,
         title: 'Hidden Article',
         body: '<p>Hidden body.</p>',
+        status: KnowledgeBaseArticleStatus::Published,
+    ));
+    CreateKnowledgeBaseArticleAction::run(new CreateKnowledgeBaseArticleData(
+        collection: $childCollection,
+        title: 'Child Article',
+        body: '<p>Child body.</p>',
         status: KnowledgeBaseArticleStatus::Published,
     ));
 
@@ -116,6 +128,9 @@ it('publishes new versions and keeps navigation, search, and ai output public on
     expect($navigation)->toHaveCount(1)
         ->and($navigation->first()->articles)->toHaveCount(1)
         ->and($navigation->first()->articles[0]['title'])->toBe('Public Article Updated')
+        ->and($navigation->first()->children)->toHaveCount(1)
+        ->and($navigation->first()->children[0]->title)->toBe('Child Docs')
+        ->and($navigation->first()->children[0]->articles[0]['title'])->toBe('Child Article')
         ->and($searchDocuments)->toHaveCount(1)
         ->and($searchDocuments->first()->weight)->toBe(90)
         ->and($searchDocuments->first()->title)->toBe('Public Article Updated')
@@ -123,6 +138,68 @@ it('publishes new versions and keeps navigation, search, and ai output public on
         ->and($aiOutput->first()->content)->toBe('Updated Public body for visitors and AI.')
         ->and($aiOutput->first()->publicPath)->toBe('/docs/public-docs/public-article')
         ->and($aiOutput->pluck('title')->all())->not->toContain($hiddenArticle->title);
+});
+
+it('exposes a public-safe search payload for the search package', function (): void {
+    $collection = CreateKnowledgeBaseCollectionAction::run(new CreateKnowledgeBaseCollectionData(
+        title: 'Getting Started',
+    ));
+
+    $article = CreateKnowledgeBaseArticleAction::run(new CreateKnowledgeBaseArticleData(
+        collection: $collection,
+        title: 'Install Capell',
+        body: '<p>Run the installer.</p>',
+        summary: 'Install safely.',
+        status: KnowledgeBaseArticleStatus::Published,
+        searchWeight: 80,
+    ));
+
+    $payload = $article->refresh()->toSearchableArray();
+
+    expect($payload)->toMatchArray([
+        'title' => 'Install Capell',
+        'url' => '/docs/getting-started/install-capell',
+        'excerpt' => 'Install safely.',
+        'body' => 'Run the installer.',
+        'type' => 'knowledge-base',
+        'status' => 'published',
+        'is_public' => true,
+    ])
+        ->and($payload['meta'])->toMatchArray([
+            'collection' => 'Getting Started',
+            'version' => 'v1',
+            'weight' => 80,
+        ])
+        ->and($payload)->not->toHaveKey('author_id')
+        ->and($payload)->not->toHaveKey('field_path');
+});
+
+it('builds article schema data for public knowledge base articles', function (): void {
+    $collection = CreateKnowledgeBaseCollectionAction::run(new CreateKnowledgeBaseCollectionData(
+        title: 'Getting Started',
+    ));
+
+    $article = CreateKnowledgeBaseArticleAction::run(new CreateKnowledgeBaseArticleData(
+        collection: $collection,
+        title: 'Install Capell',
+        body: '<h2>Install</h2><p>Run the installer.</p>',
+        summary: 'Install safely.',
+        status: KnowledgeBaseArticleStatus::Published,
+    ));
+
+    $schema = BuildKnowledgeBaseArticleSchemaAction::run($article, 'https://example.test/docs/getting-started/install-capell');
+
+    expect($schema)->toMatchArray([
+        '@context' => 'https://schema.org',
+        '@type' => 'Article',
+        '@id' => 'https://example.test/docs/getting-started/install-capell#article',
+        'url' => 'https://example.test/docs/getting-started/install-capell',
+        'headline' => 'Install Capell',
+        'description' => 'Install safely.',
+        'articleBody' => 'Install Run the installer.',
+    ])
+        ->and($schema)->not->toHaveKey('author_id')
+        ->and($schema)->not->toHaveKey('field_path');
 });
 
 it('updates an article by publishing a new version through the article update action', function (): void {
@@ -282,6 +359,9 @@ it('records redacted feedback and related article links', function (): void {
         ->and($feedback->user_agent_hash)->not->toBe('Example Browser')
         ->and($feedback->visitor_hash)->toHaveLength(64)
         ->and($feedback->user_agent_hash)->toHaveLength(64)
+        ->and($publicArticle?->feedbackCount)->toBe(1)
+        ->and($publicArticle?->helpfulFeedbackCount)->toBe(0)
+        ->and($publicArticle?->helpfulFeedbackPercentage)->toBe(0)
         ->and($publicArticle?->relatedArticles)->toHaveCount(1)
         ->and($publicArticle?->relatedArticles[0]->title)->toBe('Check Logs')
         ->and($publicArticle?->relatedArticles[0]->body)->toBe('');

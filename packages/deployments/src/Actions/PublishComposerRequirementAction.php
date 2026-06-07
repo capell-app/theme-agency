@@ -6,10 +6,10 @@ namespace Capell\Deployments\Actions;
 
 use Capell\Deployments\Data\ComposerRequirementData;
 use Capell\Deployments\Data\PublishComposerChangeResultData;
+use Capell\Deployments\Contracts\GitProviderContract;
 use Capell\Deployments\Enums\InstallPolicy;
 use Capell\Deployments\Models\DeploymentConnection;
 use Capell\Deployments\Services\GitProvider\GitProviderFactory;
-use Illuminate\Support\Str;
 use Lorisleiva\Actions\Concerns\AsAction;
 
 final class PublishComposerRequirementAction
@@ -18,7 +18,11 @@ final class PublishComposerRequirementAction
 
     public function __construct(private readonly GitProviderFactory $factory) {}
 
-    public function handle(ComposerRequirementData $requirement, DeploymentConnection $connection): PublishComposerChangeResultData
+    public function handle(
+        ComposerRequirementData $requirement,
+        DeploymentConnection $connection,
+        bool $dryRun = false,
+    ): PublishComposerChangeResultData
     {
         $provider = $this->factory->for($connection);
         $slug = str($requirement->label ?? $requirement->composerName)->afterLast('/')->slug()->toString();
@@ -27,6 +31,14 @@ final class PublishComposerRequirementAction
         $patched = PrepareComposerRequirementCommitAction::run($requirement, $composerJson);
 
         if ($connection->install_policy === InstallPolicy::DirectCommit) {
+            if ($dryRun) {
+                $result = new PublishComposerChangeResultData(provider: $connection->provider, dryRun: true);
+
+                RecordDeploymentPublicationAction::run($connection, $requirement, $result);
+
+                return $result;
+            }
+
             $sha = $provider->commitFiles(
                 $connection,
                 $connection->default_branch,
@@ -34,13 +46,41 @@ final class PublishComposerRequirementAction
                 [$patched],
             );
 
-            return new PublishComposerChangeResultData(provider: $connection->provider, commitSha: $sha);
+            $result = new PublishComposerChangeResultData(provider: $connection->provider, commitSha: $sha);
+            $status = $provider->getDeployStatus($connection, $sha);
+
+            RecordDeploymentPublicationAction::run($connection, $requirement, $result, $status);
+
+            return $result;
         }
 
-        $branchName = 'capell/add-extension-' . $slug . '-' . Str::random(6);
+        $branchName = 'capell/add-extension-' . $slug;
+        $existingPullRequest = $provider->findOpenPullRequestForBranch($connection, $branchName);
 
-        $provider->createBranch($connection, $branchName, $provider->getBranchCommitSha($connection, $connection->default_branch));
-        $provider->commitFiles($connection, $branchName, 'Add extension ' . $requirement->composerName, [$patched]);
+        if ($existingPullRequest !== null) {
+            $result = new PublishComposerChangeResultData(
+                provider: $connection->provider,
+                pullRequestUrl: $existingPullRequest->url,
+                pullRequestId: is_int($existingPullRequest->id) ? $existingPullRequest->id : null,
+                dryRun: $dryRun,
+                branchName: $branchName,
+            );
+
+            RecordDeploymentPublicationAction::run($connection, $requirement, $result);
+
+            return $result;
+        }
+
+        if ($dryRun) {
+            $result = new PublishComposerChangeResultData(provider: $connection->provider, dryRun: true, branchName: $branchName);
+
+            RecordDeploymentPublicationAction::run($connection, $requirement, $result);
+
+            return $result;
+        }
+
+        $this->ensureBranchExists($provider, $connection, $branchName);
+        $commitSha = $provider->commitFiles($connection, $branchName, 'Add extension ' . $requirement->composerName, [$patched]);
 
         $pr = $provider->openPullRequest(
             $connection,
@@ -53,10 +93,29 @@ final class PublishComposerRequirementAction
             $provider->enableAutoMerge($connection, $pr->id);
         }
 
-        return new PublishComposerChangeResultData(
+        $result = new PublishComposerChangeResultData(
             provider: $connection->provider,
             pullRequestUrl: $pr->url,
+            commitSha: $commitSha,
             pullRequestId: is_int($pr->id) ? $pr->id : null,
+            branchName: $branchName,
         );
+
+        RecordDeploymentPublicationAction::run($connection, $requirement, $result, $provider->getDeployStatus($connection, $commitSha));
+
+        return $result;
+    }
+
+    private function ensureBranchExists(GitProviderContract $provider, DeploymentConnection $connection, string $branchName): void
+    {
+        try {
+            $provider->getBranchCommitSha($connection, $branchName);
+
+            return;
+        } catch (\Throwable) {
+            //
+        }
+
+        $provider->createBranch($connection, $branchName, $provider->getBranchCommitSha($connection, $connection->default_branch));
     }
 }

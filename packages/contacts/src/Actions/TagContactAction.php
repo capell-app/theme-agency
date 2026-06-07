@@ -5,8 +5,9 @@ declare(strict_types=1);
 namespace Capell\Contacts\Actions;
 
 use Capell\Contacts\Models\Contact;
+use Capell\Contacts\Models\ContactTag;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
 use Lorisleiva\Actions\Concerns\AsAction;
 
 final class TagContactAction
@@ -18,21 +19,42 @@ final class TagContactAction
      */
     public function handle(Contact $contact, string|array $tags): Contact
     {
-        $profile = $contact->profile ?? [];
-        $existingTags = Arr::wrap($profile['tags'] ?? []);
-        $nextTags = collect([...$existingTags, ...Arr::wrap($tags)])
-            ->filter(static fn (mixed $tag): bool => is_string($tag) && trim($tag) !== '')
-            ->map(static fn (string $tag): string => Str::of($tag)->trim()->lower()->toString())
-            ->unique()
-            ->values()
-            ->all();
+        return DB::transaction(function () use ($contact, $tags): Contact {
+            $profile = $contact->profile ?? [];
+            $existingTags = Arr::wrap($profile['tags'] ?? []);
+            $nextTags = collect([...$existingTags, ...Arr::wrap($tags)])
+                ->filter(static fn (mixed $tag): bool => is_string($tag) && trim($tag) !== '')
+                ->map(static fn (string $tag): string => ContactTag::slugFor($tag))
+                ->filter(static fn (string $tag): bool => $tag !== '')
+                ->unique()
+                ->values()
+                ->all();
 
-        $contact->profile = [
-            ...$profile,
-            'tags' => $nextTags,
-        ];
-        $contact->save();
+            $contact->profile = [
+                ...$profile,
+                'tags' => $nextTags,
+            ];
+            $contact->save();
 
-        return $contact;
+            $tagIds = collect($nextTags)
+                ->map(fn (string $tag): int => $this->resolveTagId($contact, $tag))
+                ->all();
+
+            $contact->tags()->syncWithoutDetaching($tagIds);
+
+            return $contact->fresh(['tags']) ?? $contact;
+        });
+    }
+
+    private function resolveTagId(Contact $contact, string $tag): int
+    {
+        $contactTag = ContactTag::query()->firstOrCreate([
+            'site_id' => $contact->site_id,
+            'slug' => $tag,
+        ], [
+            'name' => $tag,
+        ]);
+
+        return (int) $contactTag->getKey();
     }
 }

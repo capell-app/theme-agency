@@ -170,6 +170,15 @@ it('builds privacy center resource tables with expected columns', function (
     ],
 ]);
 
+it('mounts retention rule table actions for dry-run and execution interactions', function (): void {
+    $table = RetentionRuleResource::table(privacyCenterAdminTableForCoverage());
+
+    expect(privacyCenterAdminActionNames($table->getRecordActions()))->toBe([
+        'dry_run_retention',
+        'run_retention',
+    ]);
+});
+
 it('exposes privacy request edit workflow actions', function (): void {
     $page = new EditPrivacyRequest;
 

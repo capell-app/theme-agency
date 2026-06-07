@@ -12,8 +12,11 @@ return [
     'import_too_many_rows' => 'The import file contains more than the allowed :max rows.',
     'invalid_token' => 'This newsletter link is invalid or has expired.',
     'missing_consent_basis' => 'A consent basis is required before importing subscribers.',
+    'one_click_unsubscribed' => 'Newsletter unsubscribe request accepted.',
     'preferences_saved' => 'Your newsletter preferences have been saved.',
+    'public_subscribe_consent' => 'Submitted the public newsletter signup form.',
     'send_transition_final' => 'This newsletter send is already final.',
     'send_transition_requires_sending' => 'A newsletter send must be sending before it can be marked sent.',
+    'subscribed' => 'Thanks — check your inbox to confirm your subscription.',
     'unsubscribed' => 'You have been unsubscribed.',
 ];

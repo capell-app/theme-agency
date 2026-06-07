@@ -56,9 +56,10 @@ media-kit, and newsletter ideas into the stronger theme.
 
 ## Screenshot Plan
 
-`docs/screenshots.json` describes the intended route-backed capture set. The
-current marketplace manifest still includes committed JPG previews plus SVG
-layout diagrams; replacing those diagrams with real captures remains open.
+`docs/screenshots.json` describes the committed route-backed capture set. The
+marketplace manifest keeps the extension-card and hero JPG previews, and now
+uses real PNG captures for the homepage, case-study, and services/enquiry
+workflows instead of the earlier SVG layout diagrams.
 
 ## Verification
 

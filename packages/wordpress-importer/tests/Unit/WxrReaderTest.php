@@ -12,9 +12,12 @@ use Capell\MigrationAssistant\Enums\ImportSessionStatus;
 use Capell\MigrationAssistant\Models\ImportRollbackReport;
 use Capell\MigrationAssistant\Services\Import\XmlReader;
 use Capell\MigrationAssistant\Support\ImportSourceRegistry;
+use Capell\MigrationAssistant\Support\Xml\SafeXmlLoader;
 use Capell\WordPressImporter\Actions\BuildWordPressImportPreviewAction;
 use Capell\WordPressImporter\Services\WxrReader;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Storage;
 
 it('registers the WordPress WXR reader ahead of migration-assistant XML readers', function (): void {
     $readers = resolve(ImportSourceRegistry::class)->readers();
@@ -119,6 +122,59 @@ XML);
         ->and($result->rows[1]['parent_id'])->toBe('10')
         ->and($result->rows[1]['contains_gutenberg_blocks'])->toBeTrue()
         ->and($result->rows[1]['shortcodes'])->toBe(['gallery']);
+});
+
+it('streams WordPress WXR exports larger than the migration assistant DOM safety cap', function (): void {
+    $path = tempnam(sys_get_temp_dir(), 'capell-wxr-large-');
+    throw_unless(is_string($path), RuntimeException::class, 'Expected large WXR fixture path.');
+
+    try {
+        $handle = fopen($path, 'wb');
+        throw_unless(is_resource($handle), RuntimeException::class, 'Expected large WXR fixture handle.');
+
+        fwrite($handle, <<<'XML'
+<?xml version="1.0" encoding="UTF-8" ?>
+<rss version="2.0"
+    xmlns:content="http://purl.org/rss/1.0/modules/content/"
+    xmlns:wp="http://wordpress.org/export/1.2/">
+    <channel>
+        <title>Large WordPress Site</title>
+        <wp:wxr_version>1.2</wp:wxr_version>
+XML);
+
+        $commentChunk = '<!-- ' . str_repeat('x', 1024 * 1024) . ' -->';
+
+        for ($chunk = 0; $chunk < 52; $chunk++) {
+            fwrite($handle, $commentChunk);
+        }
+
+        fwrite($handle, <<<'XML'
+        <item>
+            <title>Large export page</title>
+            <content:encoded><![CDATA[<p>Large body</p>]]></content:encoded>
+            <wp:post_id>501</wp:post_id>
+            <wp:post_name>large-export-page</wp:post_name>
+            <wp:post_type>page</wp:post_type>
+            <wp:status>publish</wp:status>
+            <wp:post_parent>0</wp:post_parent>
+        </item>
+    </channel>
+</rss>
+XML);
+        fclose($handle);
+
+        expect(filesize($path))->toBeGreaterThan(SafeXmlLoader::DEFAULT_MAX_BYTES);
+
+        $result = (new WxrReader)->read($path);
+
+        expect($result->metadata['site_title'])->toBe('Large WordPress Site')
+            ->and($result->metadata['post_count'])->toBe(1)
+            ->and($result->rows[0]['post_title'])->toBe('Large export page');
+    } finally {
+        if (file_exists($path)) {
+            unlink($path);
+        }
+    }
 });
 
 it('does not claim generic XML paths during direct path-aware probes', function (): void {
@@ -283,6 +339,11 @@ XML);
 });
 
 it('executes a WordPress WXR preview through migration-assistant into a page session', function (): void {
+    Storage::fake('public');
+    Http::fake([
+        'https://example.test/uploads/executable.jpg' => Http::response('fake image bytes', 200, ['Content-Type' => 'image/jpeg']),
+    ]);
+
     $layout = Layout::factory()->create();
     $type = Blueprint::factory()->page()->create();
     $site = Site::factory()->create();
@@ -299,7 +360,7 @@ it('executes a WordPress WXR preview through migration-assistant into a page ses
         <item>
             <title>Executable WP page</title>
             <link>https://example.test/executable-wp-page/</link>
-            <content:encoded><![CDATA[<p>Executable body</p>]]></content:encoded>
+            <content:encoded><![CDATA[<p>Executable body <img src="https://example.test/uploads/executable.jpg" alt="Imported"></p>]]></content:encoded>
             <category domain="category"><![CDATA[Migration]]></category>
             <wp:post_id>141</wp:post_id>
             <wp:post_name>executable-wp-page</wp:post_name>
@@ -307,6 +368,13 @@ it('executes a WordPress WXR preview through migration-assistant into a page ses
             <wp:status>publish</wp:status>
             <wp:post_date>2026-05-01 12:00:00</wp:post_date>
             <dc:creator>ben</dc:creator>
+        </item>
+        <item>
+            <title>Executable image</title>
+            <wp:post_id>143</wp:post_id>
+            <wp:post_type>attachment</wp:post_type>
+            <wp:post_parent>141</wp:post_parent>
+            <wp:attachment_url>https://example.test/uploads/executable.jpg</wp:attachment_url>
         </item>
         <item>
             <title>Executable WP child page</title>
@@ -353,9 +421,13 @@ XML);
         ->and($result->report->pagesCreated)->toBe(2)
         ->and($result->report->pageUrlsCreated)->toBe(2)
         ->and($parentPage->name)->toBe('Executable WP page')
-        ->and($parentMeta['content'] ?? null)->toBe('<p>Executable body</p>')
+        ->and($parentMeta['content'] ?? null)->not->toContain('https://example.test/uploads/executable.jpg')
+        ->and($parentMeta['content'] ?? null)->toContain('/storage/')
         ->and($parentWordPressMeta['source_identity'] ?? null)->toBe('wordpress:141')
         ->and($parentWordPressMeta['categories'] ?? null)->toBe(['Migration'])
+        ->and($parentWordPressMeta['imported_media'] ?? null)->toHaveCount(1)
+        ->and($parentWordPressMeta['imported_media'][0]['source_url'] ?? null)->toBe('https://example.test/uploads/executable.jpg')
+        ->and($parentPage->getMedia('wordpress-import'))->toHaveCount(1)
         ->and(wxrIntValue($childPage->getAttribute('parent_id')))->toBe(wxrIntValue($parentPage->getKey()))
         ->and(PageUrl::query()->where('url', '/executable-wp-page')->exists())->toBeTrue()
         ->and(PageUrl::query()->where('url', '/executable-wp-child-page')->exists())->toBeTrue()

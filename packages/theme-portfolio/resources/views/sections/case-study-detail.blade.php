@@ -5,13 +5,13 @@
 @endphp
 
 <section
-    class="theme-section theme-section-case-study-detail bg-[#070b1a] text-white"
+    class="theme-section theme-section-case-study-detail portfolio-bg-deep text-white"
 >
     <div class="mx-auto max-w-6xl px-6 py-16">
         <div class="grid gap-8 md:grid-cols-[0.78fr_1.22fr]">
             <div>
                 <p
-                    class="text-xs font-black tracking-[0.16em] text-[#fb923c] uppercase"
+                    class="portfolio-text-highlight text-xs font-black tracking-[0.16em] uppercase"
                 >
                     {{ __('capell-theme-portfolio::generic.case_study_detail_label') }}
                 </p>
@@ -25,7 +25,9 @@
             <div class="grid gap-3">
                 @forelse ($items as $item)
                     <article class="border border-white/10 bg-white/[0.06] p-5">
-                        <p class="text-xs font-black text-[#fb923c] uppercase">
+                        <p
+                            class="portfolio-text-highlight text-xs font-black uppercase"
+                        >
                             {{ $item['type'] ?? __('capell-theme-portfolio::generic.outcome_label') }}
                         </p>
                         <h3 class="mt-2 text-lg font-black">

@@ -9,6 +9,7 @@ Start at the [package README](../README.md) when deciding whether to install thi
 | Doc                                                             | Use it for                                                                         |
 | --------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
 | [Credits And Acknowledgements](credits-and-acknowledgements.md) | Upstream services, dependencies, and acknowledgements.                             |
+| [Fortify Integration](fortify.md)                               | Opting host registration and password-reset actions into Password Policy rules.    |
 | [Overview](overview.md)                                         | Package boundary, runtime surfaces, install notes, and first troubleshooting path. |
 
 ## Read Next

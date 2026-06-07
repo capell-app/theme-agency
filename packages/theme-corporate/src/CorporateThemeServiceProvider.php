@@ -32,7 +32,7 @@ class CorporateThemeServiceProvider extends ServiceProvider
             previewImage: '/vendor/capell/themes/corporate-boardroom.jpg',
             tags: ['Trust', 'Clarity', 'B2B'],
             bestFit: ['Professional services', 'Public sector', 'Established businesses'],
-            includedSections: ['navigation', 'hero', 'features', 'proof', 'content-listing', 'cta', 'footer'],
+            includedSections: ['navigation', 'hero', 'features', 'proof', 'content-listing', 'locations', 'investor-relations', 'careers', 'cta', 'footer'],
             presets: [
                 new ThemePresetData(
                     key: 'boardroom',
@@ -189,6 +189,14 @@ class CorporateThemeServiceProvider extends ServiceProvider
     private function registerVendorCssAssets(): void
     {
         CapellCore::registerVendorAsset(
+            VendorAssetData::buildAsset(
+                path: 'vendor/capell-theme-corporate',
+                file: 'resources/js/theme-corporate.js',
+                packageName: self::$packageName,
+            ),
+        );
+
+        CapellCore::registerVendorAsset(
             VendorAssetData::tailwindImport('resources/css/theme-corporate.css', self::$packageName),
         );
 
@@ -208,6 +216,9 @@ class CorporateThemeServiceProvider extends ServiceProvider
             'features' => new ViewSectionRenderer(self::THEME_KEY, 'features', 'capell-theme-corporate::sections.features', failLoudly: true),
             'proof' => new ViewSectionRenderer(self::THEME_KEY, 'proof', 'capell-theme-corporate::sections.proof', failLoudly: true),
             'content-listing' => new ViewSectionRenderer(self::THEME_KEY, 'content-listing', 'capell-theme-corporate::sections.content-listing', failLoudly: true),
+            'locations' => new ViewSectionRenderer(self::THEME_KEY, 'locations', 'capell-theme-corporate::sections.locations', failLoudly: true),
+            'investor-relations' => new ViewSectionRenderer(self::THEME_KEY, 'investor-relations', 'capell-theme-corporate::sections.investor-relations', failLoudly: true),
+            'careers' => new ViewSectionRenderer(self::THEME_KEY, 'careers', 'capell-theme-corporate::sections.careers', failLoudly: true),
             'cta' => new ViewSectionRenderer(self::THEME_KEY, 'cta', 'capell-theme-corporate::sections.cta', failLoudly: true),
             'footer' => new ViewSectionRenderer(self::THEME_KEY, 'footer', 'capell-theme-corporate::sections.footer', failLoudly: true),
         ];

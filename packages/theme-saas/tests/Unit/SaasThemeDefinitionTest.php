@@ -44,6 +44,9 @@ it('defines the saas premium renderer contract', function (): void {
             'hero',
             'features',
             'proof',
+            'logos',
+            'testimonials',
+            'faq',
             'content-listing',
             'comparison',
             'calculator',
@@ -54,7 +57,7 @@ it('defines the saas premium renderer contract', function (): void {
             'footer',
             'blog',
         ])
-        ->and($definition->includedSections)->toContain('content-listing', 'comparison', 'calculator', 'blog')
+        ->and($definition->includedSections)->toContain('logos', 'testimonials', 'faq', 'content-listing', 'comparison', 'calculator', 'blog')
         ->and($definition->presets)->toHaveCount(1)
         ->and($definition->presets[0]->key)->toBe('saas')
         ->and($definition->runtime->value)->toBe('blade')
@@ -95,6 +98,9 @@ it('declares renderers for every included saas section', function (): void {
         'hero',
         'features',
         'proof',
+        'logos',
+        'testimonials',
+        'faq',
         'content-listing',
         'comparison',
         'calculator',
@@ -128,19 +134,35 @@ it('renders new premium saas layouts through the registry', function (): void {
     $pricingHtml = $pricingRenderer->render(saasThemeSection('pricing', [
         'heading' => 'Choose a growth plan',
         'items' => [
-            ['title' => 'Scale', 'summary' => 'Plan comparison for growing teams.'],
+            [
+                'title' => 'Scale',
+                'summary' => 'Plan comparison for growing teams.',
+                'price' => '$249',
+                'popular' => true,
+                'features' => [
+                    'Seats' => '25',
+                    'Lifecycle analytics' => true,
+                ],
+            ],
         ],
     ]));
 
     $docsHtml = $docsRenderer->render(saasThemeSection('docs-onboarding', [
         'heading' => 'Ship with guided docs',
         'items' => [
-            ['title' => 'Activation checklist', 'summary' => 'Documentation route for product activation.'],
+            [
+                'title' => 'Activation checklist',
+                'summary' => 'Documentation route for product activation.',
+                'url' => '/docs/activation',
+                'version' => 'v2.1',
+                'duration' => '6 min',
+            ],
         ],
     ]));
 
     $demoHtml = $demoRenderer->render(saasThemeSection('demo-request', [
         'heading' => 'Route the right demo',
+        'form_action' => '/contact',
         'items' => [
             ['title' => 'Product-led qualification', 'summary' => 'Conversion path for sales conversations.'],
         ],
@@ -149,17 +171,46 @@ it('renders new premium saas layouts through the registry', function (): void {
     expect($pricingHtml)
         ->toContain('Choose a growth plan')
         ->toContain('Scale')
+        ->toContain('Plan comparison')
+        ->toContain('Lifecycle analytics')
         ->not->toContain('capell-app/theme-saas');
 
     expect($docsHtml)
         ->toContain('Ship with guided docs')
         ->toContain('Activation checklist')
+        ->toContain('/docs/activation')
+        ->toContain('v2.1')
         ->not->toContain('capell-app/theme-saas');
 
     expect($demoHtml)
         ->toContain('Route the right demo')
         ->toContain('Product-led qualification')
+        ->toContain('Request demo')
         ->not->toContain('capell-app/theme-saas');
+});
+
+it('renders saas hero media with LCP image attributes', function (): void {
+    View::addNamespace('capell-theme-saas', __DIR__ . '/../../resources/views');
+    resolve(Translator::class)->addNamespace('capell-theme-saas', __DIR__ . '/../../resources/lang');
+
+    $html = view('capell-theme-saas::sections.hero', [
+        'section' => new HeroSectionData(
+            heading: 'Activate the product-led journey',
+            summary: 'A proof-first hero for SaaS teams.',
+            mediaUrl: '/images/saas-hero.jpg',
+            mediaAlt: 'Product activation workspace',
+        ),
+    ])->render();
+
+    expect($html)
+        ->toContain('src="/images/saas-hero.jpg"')
+        ->toContain('alt="Product activation workspace"')
+        ->toContain('width="1200"')
+        ->toContain('height="900"')
+        ->toContain('loading="eager"')
+        ->toContain('decoding="async"')
+        ->toContain('fetchpriority="high"')
+        ->toContain('sizes="(min-width: 1024px) 48vw, 100vw"');
 });
 
 it('passes optional availability flags into saas conversion sections', function (string $package, string $sectionKey, string $connectedCopy, string $staticCopy): void {
@@ -418,16 +469,16 @@ it('renders public theme markup without package identifiers', function (): void 
 
     expect($html)
         ->toContain('Launchdeck')
-        ->toContain('Growth ledger')
-        ->toContain('Resource pipeline')
-        ->toContain('Conversion command')
-        ->toContain('Product signal')
-        ->toContain('Workflow signal')
+        ->toContain('Growth plan')
+        ->toContain('Customer journey')
+        ->toContain('Model the lift')
+        ->toContain('Product')
+        ->toContain('Workflow')
         ->toContain('Activation flow')
         ->toContain('Live workspace')
-        ->toContain('Activation stage')
+        ->toContain('First value')
         ->toContain('Activation')
-        ->toContain('Cohort')
+        ->toContain('Additional accounts')
         ->not->toContain('data-capell-theme')
         ->not->toContain('capell-theme')
         ->not->toContain('capell-app/theme-saas')
@@ -528,7 +579,7 @@ it('renders marketing-safe blog fallbacks when Blog is not installed', function 
         ->toContain('saas-insights-index')
         ->toContain('Growth resources')
         ->toContain('Activation forecast')
-        ->toContain('Resource brief')
+        ->toContain('Resource summary')
         ->not->toContain('href="/blog/activation-forecast"')
         ->not->toContain('capell-app/theme-saas')
         ->not->toContain('capell-theme-saas')
@@ -674,6 +725,26 @@ function renderSaasThemeAllSections(ThemeRegistry $registry): string
                     ['metric' => '2.4x', 'name' => 'Expansion signal', 'quote' => 'Stronger qualified pipeline.'],
                 ],
             ),
+            saasThemeSection('logos', [
+                'heading' => 'Trusted by product teams',
+                'items' => [
+                    ['name' => 'Northstar'],
+                    ['name' => 'SignalDesk'],
+                    ['name' => 'LaunchOps'],
+                ],
+            ]),
+            saasThemeSection('testimonials', [
+                'heading' => 'Teams launch faster',
+                'items' => [
+                    ['name' => 'Ava, Product Lead', 'quote' => 'The launch path stayed clear from first visit to demo.', 'metric' => '38%'],
+                ],
+            ]),
+            saasThemeSection('faq', [
+                'heading' => 'Launch questions',
+                'items' => [
+                    ['question' => 'Can we connect demo capture?', 'answer' => 'Yes, connect a Form Builder handle or use the static fallback.'],
+                ],
+            ]),
             new ContentListingSectionData(
                 heading: 'Resource pipeline',
                 summary: 'Guides and playbooks for SaaS teams.',
@@ -693,27 +764,59 @@ function renderSaasThemeAllSections(ThemeRegistry $registry): string
             saasThemeSection('calculator', [
                 'heading' => 'Model the lift',
                 'summary' => 'Estimate the compounding effect of activation improvements.',
+                'defaults' => [
+                    'visitors' => 12000,
+                    'conversion' => 3.2,
+                    'lift' => 18,
+                ],
                 'items' => [
                     ['title' => 'Trial conversion', 'summary' => 'Turn more trials into qualified accounts.', 'metric' => '+18%'],
                 ],
             ]),
             saasThemeSection('pricing', [
                 'heading' => 'Choose a plan',
-                'summary' => 'Simple public pricing cards.',
+                'summary' => 'Compare plan fit by buyer motion, activation needs, and support model.',
                 'items' => [
-                    ['title' => 'Scale', 'summary' => 'Plan comparison for growing teams.', 'price' => '$249'],
+                    [
+                        'title' => 'Launch',
+                        'summary' => 'For small teams validating a product-led site.',
+                        'price' => '$149',
+                        'features' => [
+                            'Seats' => '10',
+                            'Activation playbooks' => true,
+                            'Dedicated success review' => false,
+                        ],
+                    ],
+                    [
+                        'title' => 'Scale',
+                        'summary' => 'Plan comparison for growing teams.',
+                        'price' => '$249',
+                        'popular' => true,
+                        'features' => [
+                            'Seats' => '25',
+                            'Activation playbooks' => true,
+                            'Dedicated success review' => true,
+                        ],
+                    ],
                 ],
             ]),
             saasThemeSection('docs-onboarding', [
                 'heading' => 'Ship with guided docs',
                 'summary' => 'Help new accounts activate faster.',
                 'items' => [
-                    ['title' => 'Activation checklist', 'summary' => 'Documentation route for product activation.'],
+                    [
+                        'title' => 'Activation checklist',
+                        'summary' => 'Documentation route for product activation.',
+                        'url' => '/docs/activation',
+                        'version' => 'v2.1',
+                        'duration' => '6 min',
+                    ],
                 ],
             ]),
             saasThemeSection('demo-request', [
                 'heading' => 'Route the right demo',
                 'summary' => 'Qualify high-intent accounts.',
+                'form_action' => '/contact',
                 'items' => [
                     ['title' => 'Product-led qualification', 'summary' => 'Conversion path for sales conversations.'],
                 ],

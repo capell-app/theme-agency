@@ -29,6 +29,7 @@ final class DiagnosticsServiceProvider extends AbstractPackageServiceProvider
             ->hasMigrations([
                 '2026_05_10_190846_01_create_command_palette_runs_table',
                 '2026_05_29_000001_create_queue_monitors_table',
+                '2026_06_07_000001_create_diagnostics_health_snapshots_table',
             ]);
     }
 

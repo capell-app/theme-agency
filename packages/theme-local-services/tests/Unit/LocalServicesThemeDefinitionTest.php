@@ -13,6 +13,8 @@ use Capell\Core\ThemeStudio\Data\ProofSectionData;
 use Capell\Core\ThemeStudio\Theme\ThemeRegistry;
 use Capell\Tests\Packages\PackagesTestCase;
 use Capell\ThemeStudio\LocalServices\LocalServicesThemeServiceProvider;
+use Illuminate\Database\Events\QueryExecuted;
+use Illuminate\Support\Facades\DB;
 
 uses(PackagesTestCase::class);
 
@@ -25,10 +27,136 @@ it('defines the Local Services theme contract', function (): void {
         ->and($definition->includedSections)->toContain('hero')
         ->and($definition->includedSections)->toContain('features')
         ->and($definition->includedSections)->toContain('proof')
+        ->and($definition->includedSections)->toContain('reviews-testimonials')
+        ->and($definition->includedSections)->toContain('trust-badges')
+        ->and($definition->includedSections)->toContain('opening-hours')
+        ->and($definition->includedSections)->toContain('structured-data')
         ->and($definition->includedSections)->toContain('content-listing')
+        ->and($definition->includedSections)->toContain('before-after-gallery')
         ->and($definition->includedSections)->toContain('cta')
         ->and($definition->includedSections)->toContain('footer')
         ->and($definition->presets)->toHaveCount(1);
+});
+
+it('renders local SEO structured data reviews and opening hours sections', function (): void {
+    CapellCore::clearPackages();
+    CapellCore::forcePackageInstalled(LocalServicesThemeServiceProvider::$packageName);
+
+    $registry = new ThemeRegistry;
+    (new LocalServicesThemeServiceProvider($this->app))->boot($registry);
+
+    $structuredDataRenderer = $registry->sectionRenderer('local-services', 'structured-data');
+    $reviewsRenderer = $registry->sectionRenderer('local-services', 'reviews-testimonials');
+    $openingHoursRenderer = $registry->sectionRenderer('local-services', 'opening-hours');
+
+    assert($structuredDataRenderer instanceof SectionRenderer);
+    assert($reviewsRenderer instanceof SectionRenderer);
+    assert($openingHoursRenderer instanceof SectionRenderer);
+
+    $structuredDataHtml = $structuredDataRenderer->render(localServicesThemeSection('structured-data', [
+        'business' => [
+            'name' => 'Cardiff Boiler Care',
+            'url' => 'https://local.example.test',
+            'phone' => '+44 29 2000 1234',
+            'address' => '12 High Street, Cardiff CF10 1AA',
+        ],
+        'serviceName' => 'Emergency boiler repair',
+        'areaServed' => 'Cardiff',
+        'services' => [
+            ['title' => 'Boiler repair', 'summary' => 'Emergency heating repairs.'],
+        ],
+        'faqs' => [
+            ['question' => 'Do you offer same-day repairs?', 'answer' => 'Yes, where local route capacity allows.'],
+        ],
+        'openingHours' => [
+            ['dayOfWeek' => 'Monday', 'opens' => '08:00', 'closes' => '18:00'],
+        ],
+    ]));
+
+    $reviewsHtml = $reviewsRenderer->render(localServicesThemeSection('reviews-testimonials', [
+        'heading' => 'What local customers say',
+        'items' => [
+            ['quote' => 'Arrived inside the promised slot.', 'name' => 'Pontcanna homeowner', 'rating' => 5],
+        ],
+    ]));
+
+    $hoursHtml = $openingHoursRenderer->render(localServicesThemeSection('opening-hours', [
+        'heading' => 'When the quote desk is open',
+        'openNow' => true,
+        'items' => [
+            ['day' => 'Monday to Friday', 'opens' => '08:00', 'closes' => '18:00'],
+            ['day' => 'Saturday', 'hours' => 'Emergency callouts'],
+        ],
+    ]));
+
+    expect($structuredDataHtml)
+        ->toContain('application/ld+json')
+        ->toContain('"@context":"https://schema.org"')
+        ->toContain('"@type":"LocalBusiness"')
+        ->toContain('"@type":"Service"')
+        ->toContain('"@type":"FAQPage"')
+        ->toContain('Cardiff Boiler Care')
+        ->toContain('Emergency boiler repair')
+        ->toContain('Do you offer same-day repairs?')
+        ->not->toContain('capell-app/theme-local-services')
+        ->not->toContain('Filament');
+
+    expect($reviewsHtml)
+        ->toContain('What local customers say')
+        ->toContain('Arrived inside the promised slot.')
+        ->toContain('Pontcanna homeowner')
+        ->toContain('5 out of 5 stars')
+        ->not->toContain('capell-app/theme-local-services');
+
+    expect($hoursHtml)
+        ->toContain('When the quote desk is open')
+        ->toContain('Open now')
+        ->toContain('Monday to Friday')
+        ->toContain('08:00–18:00')
+        ->toContain('Saturday')
+        ->toContain('Emergency callouts')
+        ->not->toContain('capell-app/theme-local-services');
+});
+
+it('renders every Local Services-owned section anonymously inside the budget without database queries', function (): void {
+    CapellCore::clearPackages();
+    CapellCore::forcePackageInstalled(LocalServicesThemeServiceProvider::$packageName);
+    CapellCore::forcePackageInstalled('capell-app/form-builder', false);
+    CapellCore::forcePackageInstalled('capell-app/blog', false);
+
+    $registry = new ThemeRegistry;
+    (new LocalServicesThemeServiceProvider($this->app))->boot($registry);
+
+    $manifest = localServicesThemeTestManifest();
+    $budgetMilliseconds = (float) data_get($manifest, 'performance.frontendRenderBudgetMs', 20);
+    $queryCount = 0;
+
+    DB::listen(static function (QueryExecuted $query) use (&$queryCount): void {
+        if (str_starts_with(strtolower($query->sql), 'select')) {
+            $queryCount++;
+        }
+    });
+
+    foreach (localServicesOwnedSectionKeys() as $sectionKey) {
+        $renderer = $registry->sectionRenderer('local-services', $sectionKey);
+
+        assert($renderer instanceof SectionRenderer);
+
+        $section = localServicesThemeSection($sectionKey, localServicesRenderPayload($sectionKey));
+
+        $renderer->render($section);
+
+        $startedAt = hrtime(true);
+        $html = $renderer->render($section);
+        $elapsedMilliseconds = (hrtime(true) - $startedAt) / 1_000_000;
+
+        expect($elapsedMilliseconds)->toBeLessThanOrEqual($budgetMilliseconds)
+            ->and($html)->not->toContain('capell-app/theme-local-services')
+            ->and($html)->not->toContain('Filament')
+            ->and($html)->not->toContain('wire:');
+    }
+
+    expect($queryCount)->toBe(0);
 });
 
 it('renders standard sections through Local Services views', function (): void {
@@ -122,6 +250,8 @@ it('renders hydrated hero data through the Local Services hero view', function (
     $html = $renderer->render(HeroSectionData::from([
         'heading' => 'Book a service team this week',
         'summary' => 'Hydrated local services hero summary.',
+        'mediaUrl' => '/images/local-services-hero.jpg',
+        'mediaAlt' => 'Service team planning local routes',
         'actions' => [
             ['label' => 'Request a quote', 'url' => '#quote'],
             ['label' => 'View service areas', 'url' => '#areas'],
@@ -132,6 +262,13 @@ it('renders hydrated hero data through the Local Services hero view', function (
         ->toContain('Quote desk')
         ->toContain('Book a service team this week')
         ->toContain('Hydrated local services hero summary.')
+        ->toContain('src="/images/local-services-hero.jpg"')
+        ->toContain('alt="Service team planning local routes"')
+        ->toContain('width="1600"')
+        ->toContain('height="1000"')
+        ->toContain('loading="eager"')
+        ->toContain('fetchpriority="high"')
+        ->toContain('sizes="(min-width: 1024px) 50vw, 100vw"')
         ->toContain('Request a quote')
         ->toContain('View service areas')
         ->toContain('Live route board')
@@ -187,6 +324,104 @@ it('renders new premium local services layouts through the registry', function (
     expect($localityProofHtml)
         ->toContain('Local response proof')
         ->toContain('Central district')
+        ->not->toContain('capell-app/theme-local-services');
+});
+
+it('renders trust badges and before-after project evidence through the registry', function (): void {
+    CapellCore::clearPackages();
+    CapellCore::forcePackageInstalled(LocalServicesThemeServiceProvider::$packageName);
+
+    $registry = new ThemeRegistry;
+    (new LocalServicesThemeServiceProvider($this->app))->boot($registry);
+
+    $trustRenderer = $registry->sectionRenderer('local-services', 'trust-badges');
+    $galleryRenderer = $registry->sectionRenderer('local-services', 'before-after-gallery');
+
+    assert($trustRenderer instanceof SectionRenderer);
+    assert($galleryRenderer instanceof SectionRenderer);
+
+    $trustHtml = $trustRenderer->render(localServicesThemeSection('trust-badges', [
+        'heading' => 'Checked credentials',
+        'summary' => 'Proof before the quote request.',
+        'items' => [
+            [
+                'title' => 'Gas Safe registered',
+                'summary' => 'Verified engineer status for heating work.',
+                'issuer' => 'Gas Safe Register',
+                'reference' => '123456',
+                'url' => 'https://example.test/accreditations/gas-safe',
+                'imageUrl' => 'https://cdn.example.test/gas-safe.svg',
+                'imageAlt' => 'Gas Safe badge',
+            ],
+        ],
+    ]));
+
+    $emptyTrustHtml = $trustRenderer->render(localServicesThemeSection('trust-badges', [
+        'heading' => 'Empty credentials',
+        'items' => [],
+    ]));
+
+    $galleryHtml = $galleryRenderer->render(localServicesThemeSection('before-after-gallery', [
+        'heading' => 'Visible job outcomes',
+        'summary' => 'Before and after work by service route.',
+        'items' => [
+            [
+                'title' => 'Bathroom leak repair',
+                'summary' => 'Resolved damp damage and restored the finish.',
+                'service' => 'Plumbing',
+                'location' => 'Cardiff',
+                'url' => '/case-studies/bathroom-leak',
+                'beforeImage' => 'https://cdn.example.test/before.jpg',
+                'afterImage' => 'https://cdn.example.test/after.jpg',
+                'beforeAlt' => 'Damaged bathroom before repair',
+                'afterAlt' => 'Bathroom after repair',
+            ],
+        ],
+    ]));
+
+    $emptyGalleryHtml = $galleryRenderer->render(localServicesThemeSection('before-after-gallery', [
+        'heading' => 'Empty gallery',
+        'items' => [],
+    ]));
+
+    expect($trustHtml)
+        ->toContain('Checked credentials')
+        ->toContain('Proof before the quote request.')
+        ->toContain('Gas Safe registered')
+        ->toContain('Verified engineer status for heating work.')
+        ->toContain('Gas Safe Register · 123456')
+        ->toContain('href="https://example.test/accreditations/gas-safe"')
+        ->toContain('src="https://cdn.example.test/gas-safe.svg"')
+        ->toContain('alt="Gas Safe badge"')
+        ->toContain('loading="lazy"')
+        ->not->toContain('capell-app/theme-local-services')
+        ->not->toContain('Filament')
+        ->not->toContain('wire:');
+
+    expect($emptyTrustHtml)
+        ->toContain('No trust badges yet')
+        ->toContain('Add accreditations, memberships, insurance notes, or review credentials.')
+        ->not->toContain('capell-app/theme-local-services');
+
+    expect($galleryHtml)
+        ->toContain('Visible job outcomes')
+        ->toContain('Before and after work by service route.')
+        ->toContain('Bathroom leak repair')
+        ->toContain('Resolved damp damage and restored the finish.')
+        ->toContain('Plumbing · Cardiff')
+        ->toContain('href="/case-studies/bathroom-leak"')
+        ->toContain('src="https://cdn.example.test/before.jpg"')
+        ->toContain('src="https://cdn.example.test/after.jpg"')
+        ->toContain('alt="Damaged bathroom before repair"')
+        ->toContain('alt="Bathroom after repair"')
+        ->toContain('loading="lazy"')
+        ->not->toContain('capell-app/theme-local-services')
+        ->not->toContain('Filament')
+        ->not->toContain('wire:');
+
+    expect($emptyGalleryHtml)
+        ->toContain('No project gallery yet')
+        ->toContain('Add before and after project pairs to show visible job outcomes.')
         ->not->toContain('capell-app/theme-local-services');
 });
 
@@ -393,4 +628,86 @@ function localServicesThemeSection(string $key, array $viewData): ThemeSection
             return ['section' => (object) $this->viewData];
         }
     };
+}
+
+/**
+ * @return array<int, string>
+ */
+function localServicesOwnedSectionKeys(): array
+{
+    return array_values(array_filter(
+        LocalServicesThemeServiceProvider::definition()->includedSections,
+        static fn (string $sectionKey): bool => ! in_array($sectionKey, ['navigation', 'footer'], true),
+    ));
+}
+
+/**
+ * @return array<string, mixed>
+ */
+function localServicesRenderPayload(string $sectionKey): array
+{
+    $payload = [
+        'heading' => 'Anonymous ' . $sectionKey,
+        'summary' => 'Anonymous public render summary.',
+        'items' => [],
+        'actions' => [],
+        'features' => [],
+    ];
+
+    if ($sectionKey === 'structured-data') {
+        return [
+            ...$payload,
+            'business' => ['name' => 'Anonymous Local Business'],
+            'services' => [['title' => 'Anonymous service']],
+            'faqs' => [['question' => 'Anonymous question?', 'answer' => 'Anonymous answer.']],
+            'openingHours' => [['dayOfWeek' => 'Monday', 'opens' => '09:00', 'closes' => '17:00']],
+        ];
+    }
+
+    if ($sectionKey === 'opening-hours') {
+        return [
+            ...$payload,
+            'openNow' => false,
+            'items' => [['day' => 'Monday', 'opens' => '09:00', 'closes' => '17:00']],
+        ];
+    }
+
+    if ($sectionKey === 'reviews-testimonials') {
+        return [
+            ...$payload,
+            'items' => [['quote' => 'Anonymous review.', 'name' => 'Local customer']],
+        ];
+    }
+
+    if ($sectionKey === 'trust-badges') {
+        return [
+            ...$payload,
+            'items' => [['title' => 'Anonymous accreditation', 'summary' => 'Anonymous credential proof.']],
+        ];
+    }
+
+    if ($sectionKey === 'before-after-gallery') {
+        return [
+            ...$payload,
+            'items' => [['title' => 'Anonymous project', 'summary' => 'Anonymous project proof.']],
+        ];
+    }
+
+    return $payload;
+}
+
+/**
+ * @return array<string, mixed>
+ */
+function localServicesThemeTestManifest(): array
+{
+    $manifest = json_decode(
+        (string) file_get_contents(dirname(__DIR__, 2) . '/capell.json'),
+        true,
+        flags: JSON_THROW_ON_ERROR,
+    );
+
+    throw_unless(is_array($manifest), RuntimeException::class, 'Theme Local Services manifest must decode to an array.');
+
+    return $manifest;
 }

@@ -10,6 +10,7 @@ use Capell\FormBuilder\Enums\SubmissionStatus;
 use Capell\FormBuilder\Events\FormSubmitted;
 use Capell\FormBuilder\Livewire\FormComponent;
 use Capell\FormBuilder\Livewire\FormElementComponent;
+use Capell\FormBuilder\Mail\FormSubmissionAutoresponderMail;
 use Capell\FormBuilder\Mail\FormSubmissionNotificationMail;
 use Capell\FormBuilder\Models\Form;
 use Capell\FormBuilder\Models\Submission;
@@ -21,6 +22,7 @@ use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Storage;
 
 use function Pest\Livewire\livewire;
 
@@ -251,6 +253,55 @@ it('renders accessible public form states', function (): void {
         ->assertElementExists('[x-init]', fn (AssertElement $element): BaseAssert => $element->has('x-init', '$nextTick(() => $el.focus())'));
 });
 
+it('renders multi-step forms with step navigation and validates before advancing', function (): void {
+    $form = Form::factory()->create([
+        'name' => 'Project enquiry',
+        'handle' => 'project-enquiry',
+        'schema' => [
+            [
+                'key' => 'email',
+                'label' => 'Email',
+                'type' => FormFieldType::Email->value,
+                'required' => true,
+                'step_key' => 'Contact',
+            ],
+            [
+                'key' => 'budget',
+                'label' => 'Budget',
+                'type' => FormFieldType::Number->value,
+                'required' => true,
+                'step_key' => 'Project',
+            ],
+        ],
+    ]);
+    bindFormBuilderFrontendSite($form->site);
+
+    livewire(FormComponent::class, ['handle' => 'project-enquiry', 'instanceId' => 'project-enquiry'])
+        ->assertSee(__('capell-form-builder::form.step_progress', ['current' => 1, 'total' => 2]))
+        ->assertSee('Contact')
+        ->assertSee('Email')
+        ->assertDontSee('Budget')
+        ->call('nextStep')
+        ->assertHasErrors(['data.email' => 'required'])
+        ->assertSet('currentStepKey', 'contact')
+        ->set('data.email', 'ben@example.com')
+        ->call('nextStep')
+        ->assertHasNoErrors()
+        ->assertSet('currentStepKey', 'project')
+        ->assertSee(__('capell-form-builder::form.step_progress', ['current' => 2, 'total' => 2]))
+        ->assertSee('Budget')
+        ->assertDontSee('Email')
+        ->set('data.budget', 5000)
+        ->call('submit')
+        ->assertHasNoErrors()
+        ->assertSet('submitted', true);
+
+    expect(formComponentSubmissionPayload(Submission::query()->firstOrFail())->values)->toBe([
+        'email' => 'ben@example.com',
+        'budget' => 5000,
+    ]);
+});
+
 it('renders a form element component from widget data for the current frontend site', function (): void {
     resolve(RecordExtensionRenderContributionAction::class)->clear();
 
@@ -377,7 +428,70 @@ it('stores submissions and sends notification mail when configured', function ()
         ->toContain(__('capell-form-builder::generic.boolean.yes'));
 });
 
+it('queues submitter autoresponder mail when configured', function (): void {
+    Mail::fake();
+
+    $form = Form::factory()->create([
+        'name' => 'Contact',
+        'handle' => 'autoresponder-contact',
+        'settings' => [
+            'store_submissions' => true,
+            'autoresponder_subject' => 'We received your enquiry',
+            'autoresponder_body' => "Thanks for getting in touch.\nWe will reply soon.",
+        ],
+        'schema' => [
+            [
+                'key' => 'email',
+                'label' => 'Email',
+                'type' => FormFieldType::Email->value,
+                'required' => true,
+            ],
+        ],
+    ]);
+    bindFormBuilderFrontendSite($form->site);
+
+    livewire(FormComponent::class, ['handle' => 'autoresponder-contact'])
+        ->set('data.email', 'ben@example.com')
+        ->call('submit')
+        ->assertSet('submitted', true);
+
+    Mail::assertQueued(
+        FormSubmissionAutoresponderMail::class,
+        fn (FormSubmissionAutoresponderMail $mail): bool => $mail->hasTo('ben@example.com')
+            && $mail->subjectLine === 'We received your enquiry'
+            && $mail->messageBody === "Thanks for getting in touch.\nWe will reply soon.",
+    );
+});
+
+it('redirects after successful public submission when configured', function (): void {
+    $form = Form::factory()->create([
+        'name' => 'Contact',
+        'handle' => 'redirect-contact',
+        'settings' => [
+            'store_submissions' => true,
+            'success_redirect_url' => '/thanks',
+        ],
+        'schema' => [
+            [
+                'key' => 'email',
+                'label' => 'Email',
+                'type' => FormFieldType::Email->value,
+                'required' => true,
+            ],
+        ],
+    ]);
+    bindFormBuilderFrontendSite($form->site);
+
+    livewire(FormComponent::class, ['handle' => 'redirect-contact'])
+        ->set('data.email', 'ben@example.com')
+        ->call('submit')
+        ->assertRedirect('/thanks');
+});
+
 it('stores file upload metadata through the Livewire form path', function (): void {
+    Storage::fake('form-builder-test');
+    config()->set('capell-form-builder.uploads.disk', 'form-builder-test');
+
     $form = Form::factory()->create([
         'name' => 'Upload form',
         'handle' => 'upload-form',
@@ -404,7 +518,11 @@ it('stores file upload metadata through the Livewire form path', function (): vo
 
     expect($payload->values['brief']['original_name'] ?? null)->toBe('brief.pdf')
         ->and($payload->values['brief']['mime_type'] ?? null)->toBeString()
-        ->and($payload->values['brief']['size'] ?? null)->toBeInt();
+        ->and($payload->values['brief']['size'] ?? null)->toBeInt()
+        ->and($payload->values['brief']['disk'] ?? null)->toBe('form-builder-test')
+        ->and($payload->values['brief']['path'] ?? null)->toBeString();
+
+    Storage::disk('form-builder-test')->assertExists($payload->values['brief']['path']);
 });
 
 it('stores payment field values through the Livewire form path', function (): void {
@@ -758,7 +876,7 @@ it('silently swallows honeypot submissions when submissions are not stored', fun
     expect(Submission::query()->count())->toBe(0);
 });
 
-it('throttles repeated public form submissions for the same form email and ip address', function (): void {
+it('throttles repeated public form submissions for the configured email field key and ip address', function (): void {
     config()->set('capell-form-builder.throttle.max_attempts', 2);
     config()->set('capell-form-builder.throttle.decay_seconds', 60);
 
@@ -767,7 +885,7 @@ it('throttles repeated public form submissions for the same form email and ip ad
         'handle' => 'lead-form',
         'schema' => [
             [
-                'key' => 'email',
+                'key' => 'contact_email',
                 'label' => 'Email',
                 'type' => FormFieldType::Email->value,
                 'required' => true,
@@ -778,14 +896,14 @@ it('throttles repeated public form submissions for the same form email and ip ad
 
     foreach (range(1, 2) as $attempt) {
         livewire(FormComponent::class, ['handle' => 'lead-form'])
-            ->set('data.email', 'ben@example.com')
+            ->set('data.contact_email', 'ben@example.com')
             ->call('submit')
             ->assertHasNoErrors()
             ->assertSet('submitted', true);
     }
 
     livewire(FormComponent::class, ['handle' => 'lead-form'])
-        ->set('data.email', 'ben@example.com')
+        ->set('data.contact_email', 'ben@example.com')
         ->call('submit')
         ->assertHasErrors(['data'])
         ->assertSee(__('capell-form-builder::message.too_many_submissions'));

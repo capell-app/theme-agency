@@ -6,13 +6,17 @@ namespace Capell\LoginAudit\Filament\Resources\Users\RelationManagers;
 
 use BackedEnum;
 use Capell\Admin\Filament\Components\Tables\Columns\DateColumn;
+use Capell\LoginAudit\Actions\BuildLoginAuditsCsvAction;
 use Filament\Resources\RelationManagers\RelationManager;
+use Filament\Tables\Actions\Action;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Override;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 final class LoginAuditsRelationManager extends RelationManager
 {
@@ -67,14 +71,32 @@ final class LoginAuditsRelationManager extends RelationManager
                     ->label(__('capell-login-audit::settings.device'))
                     ->placeholder(__('capell-admin::generic.missing'))
                     ->toggleable(isToggledHiddenByDefault: true),
+                IconColumn::make('is_trusted')
+                    ->label(__('capell-login-audit::settings.trusted_device'))
+                    ->boolean()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 DateColumn::make('login_at')
                     ->label(trans('filament-authentication-log::filament-authentication-log.column.login_at'))
                     ->sortable(),
+                DateColumn::make('last_activity_at')
+                    ->label(__('capell-login-audit::settings.last_activity_at'))
+                    ->toggleable(isToggledHiddenByDefault: true),
                 IconColumn::make('cleared_by_user')
                     ->label(trans('filament-authentication-log::filament-authentication-log.column.cleared_by_user'))
                     ->boolean()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
+            ])
+            ->filters([
+                TernaryFilter::make('is_trusted')
+                    ->label(__('capell-login-audit::settings.trusted_device')),
+            ])
+            ->headerActions([
+                Action::make('exportLoginAuditsCsv')
+                    ->label(__('capell-login-audit::settings.export_csv'))
+                    ->icon('heroicon-o-arrow-down-tray')
+                    ->action(fn (): StreamedResponse => $this->downloadCsv()),
             ]);
     }
 
@@ -99,5 +121,18 @@ final class LoginAuditsRelationManager extends RelationManager
     private function loginSuccessful(mixed $state): bool
     {
         return in_array($state, [true, 1, '1'], true);
+    }
+
+    private function downloadCsv(): StreamedResponse
+    {
+        $ownerRecord = $this->getOwnerRecord();
+
+        return response()->streamDownload(
+            function () use ($ownerRecord): void {
+                echo BuildLoginAuditsCsvAction::run($ownerRecord);
+            },
+            'login-audits-' . $ownerRecord->getKey() . '-' . now()->format('Y-m-d-His') . '.csv',
+            ['Content-Type' => 'text/csv'],
+        );
     }
 }

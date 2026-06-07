@@ -16,6 +16,7 @@ use Capell\Events\Enums\ResourceEnum;
 use Capell\Events\Models\EventVenue;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
@@ -95,6 +96,13 @@ class EventForm implements FormConfigurator
                         Toggle::make('waitlist_enabled')
                             ->label(__('capell-events::form.waitlist_enabled'))
                             ->default(true),
+                        Toggle::make('notification_settings.reminders_enabled')
+                            ->label(__('capell-events::form.reminders_enabled'))
+                            ->default(true),
+                        TagsInput::make('notification_settings.reminder_offsets_minutes')
+                            ->label(__('capell-events::form.reminder_offsets_minutes'))
+                            ->placeholder(__('capell-events::form.reminder_offsets_minutes_placeholder'))
+                            ->helperText(__('capell-events::form.reminder_offsets_minutes_help')),
                     ])
                     ->columns(),
             ])

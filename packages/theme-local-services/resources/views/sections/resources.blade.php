@@ -1,9 +1,5 @@
 @php
-    $resources = $section->items ?? [
-        ['title' => 'Starter playbook', 'summary' => 'Guide to structuring your service catalog.', 'url' => '#'],
-        ['title' => 'Workflow templates', 'summary' => 'Prebuilt automation workflows for local teams.', 'url' => '#'],
-        ['title' => 'Field operations checklist', 'summary' => 'Simple checks for every site visit.', 'url' => '#'],
-    ];
+    $resources = $section->items ?? __('capell-theme-local-services::generic.resources_defaults');
     $blogAvailable ??= false;
 @endphp
 
@@ -36,7 +32,7 @@
                             <p
                                 class="text-xs font-black tracking-[0.2em] text-[#17211c] uppercase"
                             >
-                                Resource
+                                {{ __('capell-theme-local-services::generic.resource_label') }}
                             </p>
                             <h3 class="mt-2 text-lg font-black">
                                 {{ $resource['title'] }}
@@ -52,7 +48,7 @@
                             <p
                                 class="text-xs font-black tracking-[0.2em] text-[#17211c] uppercase"
                             >
-                                Resource
+                                {{ __('capell-theme-local-services::generic.resource_label') }}
                             </p>
                             <h3 class="mt-2 text-lg font-black">
                                 {{ $resource['title'] }}

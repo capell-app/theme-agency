@@ -9,6 +9,10 @@
     $siteMeta = $site?->meta ?? [];
     $metaSchema = data_get($siteMeta, 'meta_schema');
     $customMetaSchema = data_get($siteMeta, 'custom_meta_schema');
+    $language = Frontend::language();
+    $languageCode = $language?->code ?: app()->getLocale();
+    $languageRoot = strtolower(strtok(str_replace('_', '-', (string) $languageCode), '-') ?: (string) $languageCode);
+    $textDirection = in_array($languageRoot, ['ar', 'arc', 'ckb', 'dv', 'fa', 'he', 'ks', 'ku', 'ps', 'sd', 'ug', 'ur', 'yi'], true) ? 'rtl' : 'ltr';
     $runtimeManifest ??= null;
     $usesLivewire = $runtimeManifest?->usesLivewire ?? ($livewireEnabled ?? false);
     $beaconRouteName = config('capell-page.frontend.route_name', 'capell-frontend.beacon');
@@ -22,7 +26,8 @@
 <!DOCTYPE html>
 <html
     class="h-full"
-    lang="{{ str_replace('_', '-', app()->getLocale()) }}"
+    lang="{{ str_replace('_', '-', (string) $languageCode) }}"
+    dir="{{ $textDirection }}"
 >
     <x-capell::app.head
         :livewire-enabled="$usesLivewire"

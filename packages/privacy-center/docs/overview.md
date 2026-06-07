@@ -17,8 +17,9 @@ It intentionally does not replace package-specific consent capture in packages s
 - Retention execution Actions and the `privacy:apply-retention` console command for delete, anonymize, and review workflows.
 - Export and anonymization Actions that operate on Privacy Center records first.
 - A daily retention schedule contribution so installers can discover and run the package-owned retention execution hook.
+- A public cookie consent preference center that records category decisions through `RecordConsentAction`.
 
-Privacy Center currently ships admin and console surfaces. It does not ship a public cookie banner, public DSAR intake form, public preference centre, or cross-package subject-data export/erasure registry.
+Privacy Center currently ships admin and console surfaces plus a public cookie consent preference center. It does not ship a public DSAR intake form or cross-package subject-data export/erasure registry.
 
 ## Integration Contract
 
@@ -36,6 +37,8 @@ Integrating packages should call Actions instead of writing Privacy Center table
 `RecordConsentAction` can infer a subject from a source model with a loaded `subject` or `visit` relation. That keeps mirrored records from integrations such as Insights discoverable by Privacy Center's package-owned export and anonymization Actions.
 
 Public frontend output must not expose Privacy Center internals, package names, model identifiers, admin URLs, or editor state.
+
+The public preference center lives at `/privacy/consent`. It renders category handles and translated explanatory copy only, grants essential cookies automatically, writes optional category decisions through the same Action used by integrations, and keeps policy model IDs plus hashed evidence out of anonymous HTML.
 
 ## Console
 
@@ -69,4 +72,4 @@ The form keeps status, workflow timestamps, and rejection reason read-only so op
 
 The package stores hashed request evidence for consent and policy acceptance workflows. `CAPELL_PRIVACY_CENTER_HASH_SECRET` should be set explicitly in production; if no package hash secret and no `app.key` are available, hashing fails instead of falling back to a predictable salt.
 
-The manifest marks the package as non-cacheable with sensitive output and `frontendRenderBudgetMs: 0` because there is no public frontend render surface today. Future public DSAR or cookie-consent UI must keep Privacy Center internals, package names, model identifiers, admin URLs, hashed identifiers, and editor state out of anonymous and non-admin output.
+The manifest marks the package as non-cacheable with sensitive output and a 40ms frontend render budget because consent decisions vary by subject and request evidence is sensitive. The cache-safe public preference center must keep Privacy Center internals, package names, model identifiers, admin URLs, hashed identifiers, and editor state out of anonymous and non-admin output. Future public DSAR UI must preserve the same boundary.

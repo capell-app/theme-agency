@@ -44,7 +44,10 @@ it('defines the healthcare premium renderer contract', function (): void {
             'services',
             'care-pathway',
             'clinicians',
+            'clinician-profile',
+            'conditions-directory',
             'booking',
+            'emergency-escalation',
             'locations',
             'insurance-trust',
             'events',
@@ -83,7 +86,10 @@ it('declares renderers for every healthcare and fallback section', function (): 
         'services',
         'care-pathway',
         'clinicians',
+        'clinician-profile',
+        'conditions-directory',
         'booking',
+        'emergency-escalation',
         'locations',
         'insurance-trust',
         'events',
@@ -173,9 +179,39 @@ it('renders public healthcare markup without forbidden package or authoring toke
                 'heading' => 'Meet the clinicians',
                 'items' => [['title' => 'Dr Amara Patel', 'summary' => 'Consultant physician.', 'image' => '/images/clinician.jpg', 'imageAlt' => 'Dr Amara Patel']],
             ]),
+            healthcareThemeSection('clinician-profile', [
+                'clinician' => [
+                    'name' => 'Dr Amara Patel',
+                    'summary' => 'Consultant physician focused on complex diagnostics.',
+                    'credentials' => ['GMC registered', 'FRCP'],
+                    'specialties' => ['Diagnostics', 'Cardiology'],
+                    'languages' => ['English', 'Gujarati'],
+                    'acceptingPatients' => true,
+                ],
+            ]),
+            healthcareThemeSection('conditions-directory', [
+                'heading' => 'Conditions and treatments',
+                'items' => [
+                    [
+                        'title' => 'Chest pain assessment',
+                        'summary' => 'Rapid triage routes for urgent symptoms.',
+                        'services' => [['label' => 'Cardiology', 'url' => '/services/cardiology']],
+                    ],
+                ],
+            ]),
             healthcareThemeSection('booking', [
                 'heading' => 'Request an appointment',
                 'items' => [['title' => 'Same-week triage']],
+            ]),
+            healthcareThemeSection('emergency-escalation', [
+                'heading' => 'Urgent symptoms need urgent help',
+                'summary' => 'Call emergency services for chest pain, stroke symptoms, or breathing difficulty.',
+                'emergencyPhone' => '999',
+                'urgentCareUrl' => '/urgent-care',
+                'items' => [
+                    ['title' => 'Call 999', 'summary' => 'Use emergency services for life-threatening symptoms.'],
+                    ['title' => 'Use urgent care', 'summary' => 'Use clinic routes for non-emergency escalation.'],
+                ],
             ]),
             healthcareThemeSection('events', [
                 'heading' => 'Care sessions',
@@ -195,7 +231,7 @@ it('renders public healthcare markup without forbidden package or authoring toke
             ]),
             healthcareThemeSection('contact', [
                 'heading' => 'Locations',
-                'items' => [['title' => 'Cardiff clinic', 'address' => 'Central Cardiff', 'phone' => '02920 000000']],
+                'items' => [['title' => 'Cardiff clinic', 'address' => 'Central Cardiff', 'phone' => '02920 000000', 'hours' => 'Mon-Fri 08:00-18:00', 'mapUrl' => 'https://maps.example/cardiff']],
             ]),
             new CtaSectionData(
                 heading: 'Start with the right appointment',
@@ -222,11 +258,24 @@ it('renders public healthcare markup without forbidden package or authoring toke
         ->toContain('id="main-content"')
         ->toContain('fetchpriority="high"')
         ->toContain('decoding="async"')
+        ->toContain('loading="eager"')
         ->toContain('loading="lazy"')
         ->toContain('width="1200"')
+        ->toContain('height="900"')
+        ->toContain('sizes="(min-width: 1024px) 48vw, 100vw"')
         ->toContain('width="800"')
         ->toContain('Previous items')
         ->toContain('Next items')
+        ->toContain('GMC registered')
+        ->toContain('Accepting new patients')
+        ->toContain('Chest pain assessment')
+        ->toContain('href="/services/cardiology"')
+        ->toContain('href="tel:02920000000"')
+        ->toContain('Mon-Fri 08:00-18:00')
+        ->toContain('https://maps.example/cardiff')
+        ->toContain('Urgent symptoms need urgent help')
+        ->toContain('href="tel:999"')
+        ->toContain('Use emergency services for life-threatening symptoms.')
         ->toContain('Clinical trust')
         ->toContain('Safety review')
         ->toContain('Escalation route')
@@ -249,6 +298,58 @@ it('keeps healthcare typography defaults low specificity so utility colors can w
         ->toContain(':where(.healthcare-shell p)')
         ->not->toContain('.healthcare-shell :where(')
         ->not->toMatch('/(?:^|\n)\s*\.healthcare-shell\s+(?:h1|h2|h3|p)\b/');
+});
+
+it('routes healthcare section colours through theme tokens', function (): void {
+    $views = healthcareThemeTokenBladeViews(
+        __DIR__ . '/../../resources/views/sections',
+        __DIR__ . '/../../resources/views/blog',
+    );
+    $css = file_get_contents(__DIR__ . '/../../resources/css/theme-healthcare.css') ?: '';
+
+    expect($views)
+        ->toContain('var(--healthcare-ink)')
+        ->toContain('var(--healthcare-primary)')
+        ->toContain('var(--healthcare-surface)')
+        ->toContain('var(--healthcare-line)')
+        ->not->toMatch('/#[0-9a-fA-F]{3,6}/');
+
+    expect($css)
+        ->toContain('--healthcare-primary-soft')
+        ->toContain('--healthcare-primary-bright')
+        ->toContain('--healthcare-ink-strong')
+        ->toContain('--healthcare-link: var(--theme-link, #1d4ed8)')
+        ->toContain('font-weight: 780')
+        ->toContain('font-weight: 760');
+});
+
+it('ships dark-mode healthcare tokens through class and media strategies', function (): void {
+    $css = file_get_contents(__DIR__ . '/../../resources/css/theme-healthcare.css') ?: '';
+
+    expect($css)
+        ->toContain(':where(.dark .healthcare-shell, .healthcare-shell.dark)')
+        ->toContain('@media (prefers-color-scheme: dark)')
+        ->toContain('--healthcare-ink: var(--theme-foreground-dark, #e5f3f2)')
+        ->toContain('--healthcare-surface: var(--theme-surface-dark, #0f1f24)')
+        ->toContain('--healthcare-primary: var(--theme-primary-dark, #5eead4)')
+        ->toContain('--healthcare-accent: var(--theme-accent-dark, #fbbf24)')
+        ->toContain('.bg-white')
+        ->toContain('.text-stone-600')
+        ->toContain('box-shadow: 0 24px 70px rgb(0 0 0 / 32%)');
+});
+
+it('keeps default healthcare token contrast at WCAG AA levels', function (): void {
+    expect(healthcareContrastRatio('#14323a', '#f6fbfd'))->toBeGreaterThanOrEqual(9.0)
+        ->and(healthcareContrastRatio('#425866', '#f6fbfd'))->toBeGreaterThanOrEqual(6.0)
+        ->and(healthcareContrastRatio('#0f766e', '#ffffff'))->toBeGreaterThanOrEqual(4.5)
+        ->and(healthcareContrastRatio('#1d4ed8', '#ffffff'))->toBeGreaterThanOrEqual(4.5)
+        ->and(healthcareContrastRatio('#f59e0b', '#14323a'))->toBeGreaterThanOrEqual(4.5)
+        ->and(healthcareContrastRatio('#ffffff', '#14323a'))->toBeGreaterThanOrEqual(9.0)
+        ->and(healthcareContrastRatio('#e5f3f2', '#0f1f24'))->toBeGreaterThanOrEqual(9.0)
+        ->and(healthcareContrastRatio('#b8c8cf', '#0f1f24'))->toBeGreaterThanOrEqual(6.0)
+        ->and(healthcareContrastRatio('#5eead4', '#0f1f24'))->toBeGreaterThanOrEqual(7.0)
+        ->and(healthcareContrastRatio('#fbbf24', '#0f1f24'))->toBeGreaterThanOrEqual(8.0)
+        ->and(healthcareContrastRatio('#93c5fd', '#0f1f24'))->toBeGreaterThanOrEqual(7.0);
 });
 
 it('renders standard feature and content listing sections through healthcare registry fallbacks', function (): void {
@@ -349,6 +450,139 @@ it('renders new premium healthcare layouts through the registry', function (): v
         ->not->toContain('capell-app/theme-healthcare');
 });
 
+it('renders the healthcare emergency escalation section with safe urgent contact data', function (): void {
+    View::addNamespace('capell-theme-healthcare', __DIR__ . '/../../resources/views');
+    resolve(Translator::class)->addNamespace('capell-theme-healthcare', __DIR__ . '/../../resources/lang');
+    CapellCore::clearPackages();
+    CapellCore::forcePackageInstalled(HealthcareThemeServiceProvider::$packageName);
+
+    $registry = new ThemeRegistry;
+    $provider = new HealthcareThemeServiceProvider($this->app);
+    $provider->boot($registry);
+
+    $renderer = $registry->sectionRenderer('healthcare', 'emergency-escalation');
+
+    expect($renderer)->not->toBeNull();
+    assert($renderer instanceof SectionRenderer);
+
+    $html = $renderer->render(healthcareThemeSection('emergency-escalation', [
+        'heading' => 'Urgent symptoms need urgent help',
+        'summary' => 'If symptoms are severe, use emergency services before contacting the clinic.',
+        'emergencyPhone' => '0300 123 456',
+        'primaryAction' => ['label' => 'Read urgent-care guidance', 'url' => '/urgent-care'],
+        'items' => [
+            ['title' => 'Call emergency services', 'summary' => 'Use emergency routes for chest pain or stroke symptoms.'],
+            ['title' => 'Contact urgent care', 'summary' => 'Use clinic routes for non-life-threatening escalation.'],
+        ],
+    ]));
+
+    $emptyHtml = $renderer->render(healthcareThemeSection('emergency-escalation', [
+        'heading' => null,
+        'summary' => null,
+        'items' => [],
+    ]));
+
+    expect($html)
+        ->toContain('Urgent care notice')
+        ->toContain('Urgent symptoms need urgent help')
+        ->toContain('href="tel:0300123456"')
+        ->toContain('Call 0300 123 456')
+        ->toContain('Read urgent-care guidance')
+        ->toContain('Use emergency routes for chest pain or stroke symptoms.')
+        ->not->toContain('capell-app/theme-healthcare')
+        ->not->toContain('theme-healthcare')
+        ->not->toContain('model_id')
+        ->not->toContain('field_path')
+        ->and($emptyHtml)
+        ->toContain('Know when to seek urgent help')
+        ->toContain('Call emergency services')
+        ->not->toContain('data-field')
+        ->not->toContain('model_id');
+});
+
+it('renders healthcare clinician detail and conditions directory surfaces', function (): void {
+    View::addNamespace('capell-theme-healthcare', __DIR__ . '/../../resources/views');
+    resolve(Translator::class)->addNamespace('capell-theme-healthcare', __DIR__ . '/../../resources/lang');
+    CapellCore::clearPackages();
+    CapellCore::forcePackageInstalled(HealthcareThemeServiceProvider::$packageName);
+
+    $registry = new ThemeRegistry;
+    $provider = new HealthcareThemeServiceProvider($this->app);
+    $provider->boot($registry);
+
+    $clinicianRenderer = $registry->sectionRenderer('healthcare', 'clinician-profile');
+    $conditionsRenderer = $registry->sectionRenderer('healthcare', 'conditions-directory');
+
+    expect($clinicianRenderer)->not->toBeNull()
+        ->and($conditionsRenderer)->not->toBeNull();
+    assert($clinicianRenderer instanceof SectionRenderer);
+    assert($conditionsRenderer instanceof SectionRenderer);
+
+    $clinicianHtml = $clinicianRenderer->render(healthcareThemeSection('clinician-profile', [
+        'clinician' => [
+            'name' => 'Dr Lena Morris',
+            'bio' => 'Consultant dermatologist supporting complex skin pathways.',
+            'image' => '/images/dr-lena.jpg',
+            'imageAlt' => 'Dr Lena Morris',
+            'credentials' => ['GMC registered', 'FRCP'],
+            'specialties' => ['Dermatology', 'Skin cancer screening'],
+            'languages' => ['English', 'Welsh'],
+            'accepting_new_patients' => true,
+        ],
+    ]));
+
+    $conditionsHtml = $conditionsRenderer->render(healthcareThemeSection('conditions-directory', [
+        'heading' => 'Conditions and treatments',
+        'summary' => 'Find the right clinical route.',
+        'items' => [
+            [
+                'type' => 'Treatment',
+                'title' => 'Mole assessment',
+                'summary' => 'Rapid dermatology checks and onward care.',
+                'services' => [
+                    ['label' => 'Dermatology', 'url' => '/services/dermatology'],
+                    ['label' => 'Skin screening', 'url' => '/services/skin-screening'],
+                ],
+            ],
+        ],
+    ]));
+
+    $emptyConditionsHtml = $conditionsRenderer->render(healthcareThemeSection('conditions-directory', [
+        'heading' => null,
+        'summary' => null,
+        'items' => [],
+    ]));
+
+    expect($clinicianHtml)
+        ->toContain('Dr Lena Morris')
+        ->toContain('Consultant dermatologist supporting complex skin pathways.')
+        ->toContain('src="/images/dr-lena.jpg"')
+        ->toContain('alt="Dr Lena Morris"')
+        ->toContain('GMC registered')
+        ->toContain('Skin cancer screening')
+        ->toContain('English, Welsh')
+        ->toContain('Accepting new patients')
+        ->not->toContain('capell-app/theme-healthcare')
+        ->not->toContain('theme-healthcare')
+        ->not->toContain('model_id')
+        ->not->toContain('field_path')
+        ->and($conditionsHtml)
+        ->toContain('Conditions and treatments')
+        ->toContain('Find the right clinical route.')
+        ->toContain('Mole assessment')
+        ->toContain('href="/services/dermatology"')
+        ->toContain('Skin screening')
+        ->not->toContain('capell-app/theme-healthcare')
+        ->not->toContain('theme-healthcare')
+        ->not->toContain('model_id')
+        ->not->toContain('field_path')
+        ->and($emptyConditionsHtml)
+        ->toContain('Add condition and treatment entries')
+        ->toContain('Add conditions, treatments')
+        ->not->toContain('data-field')
+        ->not->toContain('model_id');
+});
+
 it('passes optional Form Builder availability through the registered booking renderer', function (bool $formBuilderInstalled, string $expectedMarkup, string $missingMarkup): void {
     View::addNamespace('capell-theme-healthcare', __DIR__ . '/../../resources/views');
     resolve(Translator::class)->addNamespace('capell-theme-healthcare', __DIR__ . '/../../resources/lang');
@@ -368,6 +602,8 @@ it('passes optional Form Builder availability through the registered booking ren
     $html = $renderer->render(healthcareThemeSection('booking', [
         'heading' => 'Request an appointment',
         'items' => [['title' => 'Same-week triage']],
+        'formHtml' => '<form action="/appointments" method="post"><button type="submit">Send request</button></form>',
+        'phone' => '02920 000000',
     ]));
 
     expect($html)
@@ -377,8 +613,8 @@ it('passes optional Form Builder availability through the registered booking ren
         ->not->toContain('form-builder')
         ->not->toContain('capell-app/');
 })->with([
-    'form builder installed' => [true, 'Appointment request ready', 'Contact route ready'],
-    'form builder not installed' => [false, 'Contact route ready', 'Appointment request ready'],
+    'form builder installed' => [true, '<form action="/appointments" method="post">', 'Call the clinic'],
+    'form builder not installed' => [false, 'Call the clinic', '<form action="/appointments" method="post">'],
 ]);
 
 it('passes optional Events availability through the registered events renderer', function (bool $eventsInstalled, string $expectedMarkup, string $missingMarkup): void {
@@ -404,11 +640,58 @@ it('passes optional Events availability through the registered events renderer',
 
     expect($html)
         ->toContain($expectedMarkup)
+        ->toContain('data-carousel="healthcare-events"')
+        ->toContain('data-carousel-track')
+        ->not->toContain('<script>')
         ->not->toContain($missingMarkup);
 })->with([
-    'events installed' => [true, 'href="/events/heart-health"', 'grid gap-4 rounded-lg border border-[#d9e8ee] bg-[#f6fbfd] p-5 md:grid-cols-[8rem_1fr]"'],
-    'events not installed' => [false, 'grid gap-4 rounded-lg border border-[#d9e8ee] bg-[#f6fbfd] p-5 md:grid-cols-[8rem_1fr]"', 'href="/events/heart-health"'],
+    'events installed' => [true, 'href="/events/heart-health"', '<article'],
+    'events not installed' => [false, '<article', 'href="/events/heart-health"'],
 ]);
+
+it('renders healthcare item-driven empty states and location contact fields', function (): void {
+    View::addNamespace('capell-theme-healthcare', __DIR__ . '/../../resources/views');
+    resolve(Translator::class)->addNamespace('capell-theme-healthcare', __DIR__ . '/../../resources/lang');
+
+    $serviceFinderHtml = view('capell-theme-healthcare::sections.service-finder', [
+        'section' => (object) ['heading' => 'Find care', 'items' => []],
+    ])->render();
+
+    $servicesHtml = view('capell-theme-healthcare::sections.services', [
+        'section' => (object) ['heading' => 'Services', 'items' => []],
+    ])->render();
+
+    $cliniciansHtml = view('capell-theme-healthcare::sections.clinicians', [
+        'section' => (object) ['heading' => 'Clinicians', 'items' => []],
+    ])->render();
+
+    $contactHtml = view('capell-theme-healthcare::sections.contact', [
+        'section' => (object) ['heading' => 'Contact', 'items' => []],
+    ])->render();
+
+    $locationsHtml = view('capell-theme-healthcare::sections.locations', [
+        'section' => (object) [
+            'heading' => 'Locations',
+            'items' => [[
+                'title' => 'North clinic',
+                'address' => '12 High Street',
+                'hours' => 'Mon-Fri 08:00-18:00',
+                'phone' => '02920 000000',
+                'mapUrl' => 'https://maps.example/north',
+            ]],
+        ],
+    ])->render();
+
+    expect($serviceFinderHtml)
+        ->toContain('Service finder filters are ready for patient pathway planning.')
+        ->and($servicesHtml)->toContain('Clinical service cards are ready for publication.')
+        ->and($cliniciansHtml)->toContain('Clinician profiles are ready for publication.')
+        ->and($contactHtml)->toContain('Clinic access details are ready for contact and visit planning.')
+        ->and($locationsHtml)->toContain('12 High Street')
+        ->and($locationsHtml)->toContain('Mon-Fri 08:00-18:00')
+        ->and($locationsHtml)->toContain('href="tel:02920000000"')
+        ->and($locationsHtml)->toContain('https://maps.example/north');
+});
 
 it('passes optional Blog availability through the registered blog teaser renderer', function (bool $blogInstalled, string $expectedMarkup, string $missingMarkup): void {
     View::addNamespace('capell-theme-healthcare', __DIR__ . '/../../resources/views');
@@ -480,6 +763,69 @@ it('renders optional healthcare section views without database queries', functio
         ->and($queries)->toBe([]);
 });
 
+it('renders the healthcare page inside the declared frontend budget without database queries', function (): void {
+    CapellCore::clearPackages();
+    CapellCore::forcePackageInstalled(HealthcareThemeServiceProvider::$packageName);
+
+    $manifest = capell_json_file_array(__DIR__ . '/../../capell.json');
+    $queryCount = 0;
+
+    DB::listen(static function (QueryExecuted $query) use (&$queryCount): void {
+        $queryCount++;
+    });
+
+    $registry = new ThemeRegistry;
+    $provider = new HealthcareThemeServiceProvider($this->app);
+    $provider->boot($registry);
+
+    $queryCount = 0;
+    $startedAt = hrtime(true);
+
+    $html = $registry->renderer('healthcare')->render(new ThemePageData(
+        title: 'Healthcare budget render',
+        brand: new BrandProfileData,
+        sections: [
+            new HeroSectionData(
+                heading: 'Specialist care with clear next steps',
+                summary: 'Appointment-led service discovery.',
+            ),
+            healthcareThemeSection('services', [
+                'heading' => 'Clinical services',
+                'items' => [['title' => 'Rapid GP', 'summary' => 'Same-week appointments.']],
+            ]),
+            healthcareThemeSection('booking', [
+                'heading' => 'Request an appointment',
+                'items' => [['title' => 'Triage call']],
+            ]),
+            healthcareThemeSection('emergency-escalation', [
+                'heading' => 'Urgent symptoms need urgent help',
+                'items' => [['title' => 'Call emergency services']],
+            ]),
+            new ProofSectionData(
+                heading: 'Trusted by patients',
+                items: [['metric' => '98%', 'name' => 'Patient satisfaction']],
+            ),
+            new CtaSectionData(
+                heading: 'Start with the right appointment',
+                actions: [['label' => 'Book appointment', 'url' => '/appointments']],
+            ),
+        ],
+        navigation: new NavigationData(
+            brandName: 'Aster Clinic',
+            items: [['label' => 'Services', 'url' => '/services']],
+        ),
+        footer: new FooterData(brandName: 'Aster Clinic'),
+    ));
+
+    $elapsedMilliseconds = (hrtime(true) - $startedAt) / 1_000_000;
+
+    expect($elapsedMilliseconds)->toBeLessThanOrEqual((float) data_get($manifest, 'performance.frontendRenderBudgetMs', 20))
+        ->and($queryCount)->toBe(0)
+        ->and($html)->toContain('Specialist care with clear next steps')
+        ->and($html)->toContain('Urgent symptoms need urgent help')
+        ->and($html)->not->toContain('capell-app/theme-healthcare');
+});
+
 /**
  * @param  array<string, mixed>  $viewData
  */
@@ -513,4 +859,54 @@ function healthcareThemeSection(string $key, array $viewData): ThemeSection
             return ['section' => (object) $this->viewData];
         }
     };
+}
+
+function healthcareThemeTokenBladeViews(string ...$directories): string
+{
+    $views = [];
+
+    foreach ($directories as $directory) {
+        $files = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($directory));
+
+        foreach ($files as $file) {
+            if (! $file instanceof SplFileInfo || ! $file->isFile() || ! str_ends_with($file->getFilename(), '.blade.php')) {
+                continue;
+            }
+
+            $views[] = file_get_contents($file->getPathname()) ?: '';
+        }
+    }
+
+    return implode("\n", $views);
+}
+
+function healthcareContrastRatio(string $foreground, string $background): float
+{
+    $foregroundLuminance = healthcareRelativeLuminance($foreground);
+    $backgroundLuminance = healthcareRelativeLuminance($background);
+
+    $lighter = max($foregroundLuminance, $backgroundLuminance);
+    $darker = min($foregroundLuminance, $backgroundLuminance);
+
+    return ($lighter + 0.05) / ($darker + 0.05);
+}
+
+function healthcareRelativeLuminance(string $hex): float
+{
+    $hex = ltrim($hex, '#');
+
+    $channels = [
+        hexdec(substr($hex, 0, 2)) / 255,
+        hexdec(substr($hex, 2, 2)) / 255,
+        hexdec(substr($hex, 4, 2)) / 255,
+    ];
+
+    [$red, $green, $blue] = array_map(
+        static fn (float $channel): float => $channel <= 0.03928
+            ? $channel / 12.92
+            : (($channel + 0.055) / 1.055) ** 2.4,
+        $channels,
+    );
+
+    return (0.2126 * $red) + (0.7152 * $green) + (0.0722 * $blue);
 }

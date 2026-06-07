@@ -7,8 +7,10 @@ return [
         'actions' => [
             'create_article' => 'Create article',
             'create_collection' => 'Create collection',
+            'relate_article' => 'Relate article',
             'save_article' => 'Save article',
             'save_collection' => 'Save collection',
+            'update_relation' => 'Update relation',
         ],
         'fields' => [
             'ai_readable' => 'AI readable',
@@ -18,18 +20,27 @@ return [
             'created_at' => 'Created at',
             'current_version' => 'Current version',
             'description' => 'Description',
+            'feedback_count' => 'Feedback',
+            'helpful_feedback_rate' => 'Helpful rate',
             'key' => 'Key',
             'parent_collection' => 'Parent collection',
             'public' => 'Public',
             'published_at' => 'Published at',
+            'related_article' => 'Related article',
+            'relation_type' => 'Relation type',
             'search_weight' => 'Search weight',
             'slug' => 'Slug',
             'sort_order' => 'Sort order',
             'status' => 'Status',
             'summary' => 'Summary',
             'title' => 'Title',
+            'updated_at' => 'Updated at',
             'version' => 'Version',
             'visibility' => 'Visibility',
+        ],
+        'feedback' => [
+            'helpful_rate' => ':percentage% of :count',
+            'no_votes' => 'No votes',
         ],
         'models' => [
             'article' => 'knowledge base article',
@@ -43,6 +54,7 @@ return [
             'collections' => 'Collections',
         ],
         'relations' => [
+            'related_articles' => 'Related articles',
             'versions' => 'Version history',
         ],
         'sections' => [
@@ -62,10 +74,12 @@ return [
         'archived' => 'Archived',
     ],
     'frontend' => [
+        'ai_output_title' => 'Knowledge base',
         'breadcrumbs' => 'Breadcrumbs',
         'feedback_comment' => 'Optional feedback',
         'feedback_helpful' => 'Helpful',
         'feedback_not_helpful' => 'Not helpful',
+        'feedback_summary' => ':percentage% of :count readers found this helpful.',
         'feedback_submitted' => 'Thanks for your feedback.',
         'feedback_title' => 'Was this article helpful?',
         'index_title' => 'Knowledge base',
@@ -105,6 +119,9 @@ return [
         'related' => 'Related',
         'prerequisite' => 'Prerequisite',
         'next_step' => 'Next step',
+    ],
+    'search' => [
+        'source_label' => 'Knowledge base articles',
     ],
     'validation' => [
         'article_body_required' => 'Article content is required.',

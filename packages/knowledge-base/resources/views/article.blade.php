@@ -40,6 +40,15 @@
                     <p>{{ session('knowledge_base_feedback_status') }}</p>
                 @endif
 
+                @if ($article['feedbackCount'] > 0 && $article['helpfulFeedbackPercentage'] !== null)
+                    <p>
+                        {{ __('capell-knowledge-base::generic.frontend.feedback_summary', [
+                            'percentage' => $article['helpfulFeedbackPercentage'],
+                            'count' => $article['feedbackCount'],
+                        ]) }}
+                    </p>
+                @endif
+
                 <form
                     method="POST"
                     action="{{ route('capell-knowledge-base.article.feedback', ['collectionSlug' => $article['collectionSlug'], 'articleSlug' => $article['slug']]) }}"

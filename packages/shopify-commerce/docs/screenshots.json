@@ -12,10 +12,13 @@
             "surface": "admin",
             "targetType": "admin-page",
             "target": "ShopifyConnectionPage",
+            "url": "/shopify-commerce",
+            "waitFor": "form",
             "required": true,
             "notes": "Capture as an authorized admin with Shopify Commerce enabled. Use safe demo credentials/state; never expose real Shopify access tokens.",
             "useCase": "An administrator connects or reviews the Shopify store connection for a Capell site.",
-            "screenshotPath": "packages/shopify-commerce/docs/screenshots/shopify-connection-page.png"
+            "screenshotPath": "packages/shopify-commerce/docs/screenshots/shopify-connection-page.png",
+            "darkScreenshotPath": "packages/shopify-commerce/docs/screenshots/shopify-connection-page-dark.png"
         },
         {
             "id": "shopify-catalog-sync-state",
@@ -24,10 +27,13 @@
             "surface": "admin",
             "targetType": "admin-page",
             "target": "ShopifyConnectionPage",
+            "url": "/shopify-commerce",
+            "waitFor": "body",
             "required": true,
             "notes": "Capture after seeding a demo connection with sync status, product count, and last sync timestamps.",
             "useCase": "An operator checks whether the local product catalog is connected and recently synced.",
-            "screenshotPath": "packages/shopify-commerce/docs/screenshots/shopify-catalog-sync-state.png"
+            "screenshotPath": "packages/shopify-commerce/docs/screenshots/shopify-catalog-sync-state.png",
+            "darkScreenshotPath": "packages/shopify-commerce/docs/screenshots/shopify-catalog-sync-state-dark.png"
         },
         {
             "id": "shopify-product-search",
@@ -36,10 +42,13 @@
             "surface": "admin",
             "targetType": "admin-page",
             "target": "ShopifyConnectionPage",
+            "url": "/shopify-commerce",
+            "waitFor": "body",
             "required": true,
             "notes": "Capture local catalog search with seeded demo products. Product data should be fake or fixture data, not a real merchant catalog.",
             "useCase": "An editor searches synced Shopify products from inside Capell Admin.",
-            "screenshotPath": "packages/shopify-commerce/docs/screenshots/shopify-product-search.png"
+            "screenshotPath": "packages/shopify-commerce/docs/screenshots/shopify-product-search.png",
+            "darkScreenshotPath": "packages/shopify-commerce/docs/screenshots/shopify-product-search-dark.png"
         }
     ]
 }

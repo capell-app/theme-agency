@@ -13,7 +13,10 @@
         "bundle": "publishing-pro"
     },
     "namespace": "Capell\\PublishingStudio",
-    "surfaces": ["admin", "console"],
+    "surfaces": [
+        "admin",
+        "console"
+    ],
     "dependencies": {
         "requires": [
             "capell-app/admin",
@@ -38,7 +41,9 @@
         "runtime": [
             "Capell\\PublishingStudio\\Providers\\PublishingStudioServiceProvider"
         ],
-        "admin": ["Capell\\PublishingStudio\\Providers\\AdminServiceProvider"],
+        "admin": [
+            "Capell\\PublishingStudio\\Providers\\AdminServiceProvider"
+        ],
         "frontend": []
     },
     "contributes": [
@@ -261,47 +266,21 @@
                 "caption": "Publishing Studio extension preview"
             },
             {
-                "path": "docs/assets/marketplace/hero-desktop.jpg",
-                "alt": "Publishing Studio editorial workflow on desktop",
-                "caption": "The Publishing Studio editorial workflow"
-            },
-            {
-                "path": "docs/assets/marketplace/hero-mobile.jpg",
-                "alt": "Publishing Studio editorial workflow on mobile",
-                "caption": "Publishing Studio on mobile"
-            },
-            {
-                "path": "docs/images/screenshots/10-workflow-dashboard.png",
-                "alt": "Editorial timeline dashboard with active drafts and review status",
-                "caption": "Editorial timeline dashboard"
-            },
-            {
-                "path": "docs/images/screenshots/11-workspaces-editor-submit.png",
+                "path": "docs/screenshots/editor-responsibility.png",
                 "alt": "Editor managing draft changes in an isolated workspace",
                 "caption": "Editing in an isolated draft workspace"
             },
             {
-                "path": "docs/images/screenshots/12-review-approval.png",
+                "path": "docs/screenshots/reviewer-responsibility.png",
                 "alt": "Reviewer approving, rejecting, or requesting changes before publish",
                 "caption": "Review and approval before publish"
-            },
-            {
-                "path": "docs/images/screenshots/13-preview-links.png",
-                "alt": "Signed preview links with expiry, revocation, and access tracking",
-                "caption": "Signed, revocable preview link management"
-            },
-            {
-                "path": "docs/images/screenshots/14-scheduled-publishing.png",
-                "alt": "Scheduled publishing with embargo-aware release windows",
-                "caption": "Scheduled and embargo-aware publishing"
-            },
-            {
-                "path": "docs/images/screenshots/15-stale-drafts.png",
-                "alt": "Stale draft detection with review nudges and cleanup actions",
-                "caption": "Stale draft management"
             }
         ],
-        "categories": ["admin", "console", "publishing-pro"]
+        "categories": [
+            "admin",
+            "console",
+            "publishing-pro"
+        ]
     },
     "contributionTraceability": {
         "deferredContributions": []

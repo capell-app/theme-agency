@@ -16,10 +16,15 @@ use Capell\Core\Support\Packages\AbstractPackageServiceProvider;
 use Capell\Core\Support\Settings\SettingsGroupMetadata;
 use Capell\Core\Support\Settings\SettingsSchemaRegistry;
 use Capell\PasswordPolicy\Bridges\PasswordPolicyAdminBridge;
+use Capell\PasswordPolicy\Console\Commands\ExpireStalePasswordsCommand;
+use Capell\PasswordPolicy\Console\Commands\PasswordPolicyDoctorCommand;
+use Capell\PasswordPolicy\Console\Commands\PrunePasswordHistoryCommand;
+use Capell\PasswordPolicy\Console\Commands\RequirePasswordChangeCommand;
 use Capell\PasswordPolicy\Filament\Extenders\PasswordPolicyPanelExtender;
 use Capell\PasswordPolicy\Filament\Extenders\PasswordPolicyUserFormExtender;
 use Capell\PasswordPolicy\Filament\Extenders\PasswordPolicyUserTableExtender;
 use Capell\PasswordPolicy\Filament\Pages\ForcedPasswordChangePage;
+use Capell\PasswordPolicy\Filament\Pages\PasswordPolicySettingsPage;
 use Capell\PasswordPolicy\Filament\Settings\PasswordPolicySettingsSchema;
 use Capell\PasswordPolicy\Settings\PasswordPolicySettings;
 use Filament\Support\Icons\Heroicon;
@@ -39,6 +44,12 @@ class PasswordPolicyServiceProvider extends AbstractPackageServiceProvider
             ->hasConfigFile()
             ->hasViews(self::$name)
             ->hasTranslations()
+            ->hasCommands([
+                ExpireStalePasswordsCommand::class,
+                PasswordPolicyDoctorCommand::class,
+                PrunePasswordHistoryCommand::class,
+                RequirePasswordChangeCommand::class,
+            ])
             ->hasMigrations([
                 '2026_05_10_190863_01_add_password_policy_columns_to_users_table',
                 '2026_05_10_190863_02_create_password_policy_password_histories_table',
@@ -94,8 +105,6 @@ class PasswordPolicyServiceProvider extends AbstractPackageServiceProvider
 
     private function registerAdminSurface(): self
     {
-        $this->registerPasswordPolicySettingsExtensionPage();
-
         if ($this->supportsAdminBridges()) {
             CapellAdmin::registerAdminBridge(static::$packageName, PasswordPolicyAdminBridge::class);
             CapellAdmin::bootAdminBridges(static::$packageName);
@@ -103,6 +112,9 @@ class PasswordPolicyServiceProvider extends AbstractPackageServiceProvider
             return $this;
         }
 
+        $this->registerPasswordPolicySettingsExtensionPage();
+
+        CapellAdmin::contributeToAdminSurface(AdminSurfaceContributionData::page(PasswordPolicySettingsPage::class));
         CapellAdmin::contributeToAdminSurface(AdminSurfaceContributionData::page(ForcedPasswordChangePage::class));
 
         $this->app->tag(PasswordPolicyPanelExtender::class, AdminPanelExtender::TAG);

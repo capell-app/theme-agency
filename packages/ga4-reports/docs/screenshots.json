@@ -15,7 +15,11 @@
             "required": true,
             "notes": "Capture the extension page with overview stats, traffic trend, top pages, and setup status widgets.",
             "useCase": "An administrator reviews GA4 overview stats, traffic trends, top pages, and setup status.",
-            "screenshotPath": "packages/ga4-reports/docs/screenshots/ga4-reports-dashboard-page.png"
+            "screenshotPath": "packages/ga4-reports/docs/screenshots/ga4-reports-dashboard-page.png",
+            "scenario": "admin-index",
+            "url": "/screenshot-fixtures/ga4-reports/ga4-reports-dashboard-page",
+            "waitFor": ".ga4-reports",
+            "colorSchemes": ["light"]
         },
         {
             "id": "ga4-reports-setup-status",
@@ -27,7 +31,11 @@
             "required": true,
             "notes": "Capture the not-configured and configured states if the screenshot runner can seed both.",
             "useCase": "A site owner distinguishes not-configured and configured GA4 states before enabling sync.",
-            "screenshotPath": "packages/ga4-reports/docs/screenshots/ga4-reports-setup-status.png"
+            "screenshotPath": "packages/ga4-reports/docs/screenshots/ga4-reports-setup-status.png",
+            "scenario": "admin-index",
+            "url": "/screenshot-fixtures/ga4-reports/ga4-reports-setup-status",
+            "waitFor": ".ga4-reports",
+            "colorSchemes": ["light"]
         },
         {
             "id": "ga4-reports-settings",
@@ -39,7 +47,11 @@
             "required": true,
             "notes": "Capture the settings section for property ID, credentials path, route slug, sync window, and enabled state.",
             "useCase": "A site owner configures property ID, credentials path, route slug, sync window, and enabled state.",
-            "screenshotPath": "packages/ga4-reports/docs/screenshots/ga4-reports-settings.png"
+            "screenshotPath": "packages/ga4-reports/docs/screenshots/ga4-reports-settings.png",
+            "scenario": "admin-index",
+            "url": "/screenshot-fixtures/ga4-reports/ga4-reports-settings",
+            "waitFor": ".ga4-reports",
+            "colorSchemes": ["light"]
         }
     ]
 }

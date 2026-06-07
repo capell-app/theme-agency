@@ -23,7 +23,7 @@ final class UpsertShopifyCustomerAction
      */
     public function handle(ShopifyConnection $connection, array $snapshot): ShopifyCustomer
     {
-        $shopifyGid = $this->stringValue($snapshot['id'] ?? $snapshot['admin_graphql_api_id'] ?? null);
+        $shopifyGid = $this->stringValue($snapshot['admin_graphql_api_id'] ?? $snapshot['id'] ?? null);
 
         throw_if($shopifyGid === null, InvalidArgumentException::class, 'Shopify customer snapshots require an id.');
 
@@ -45,7 +45,9 @@ final class UpsertShopifyCustomerAction
             'synced_at' => $this->syncedAt($snapshot),
         ]);
 
-        event(new ShopifyCustomerSynced($customer->refresh()));
+        $customer->refresh()->load('connection');
+
+        event(new ShopifyCustomerSynced($customer));
 
         return $customer;
     }

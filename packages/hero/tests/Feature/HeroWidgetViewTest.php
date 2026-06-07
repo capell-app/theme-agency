@@ -12,8 +12,10 @@ use Capell\Hero\Data\HeroMediaData;
 use Capell\Hero\View\Components\Widget\Hero;
 use Capell\LayoutBuilder\Enums\WidgetComponentEnum;
 use Capell\LayoutBuilder\Models\Widget;
+use Capell\LayoutBuilder\Models\WidgetAsset;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
+use Illuminate\Support\Facades\DB;
 
 function renderHeroWidgetHtml(Widget $widget): string
 {
@@ -81,6 +83,115 @@ it('renders page translation hero content while ignoring nested page variables',
     expect($html)
         ->toContain('Platform Architecture')
         ->toContain('Build Platform Architecture for Capell without touching :page.');
+});
+
+it('sanitizes author-provided page hero html before public rendering', function (): void {
+    $language = Language::factory()->english()->create();
+    $theme = Theme::factory()->defaultMeta()->create();
+    $site = Site::factory()
+        ->language($language)
+        ->theme($theme)
+        ->withTranslations($language, ['title' => 'Capell'])
+        ->create();
+
+    $page = Page::factory()
+        ->site($site)
+        ->withTranslations($language, [
+            'title' => 'Safe Hero',
+            'content' => '<p>Body content.</p>',
+            'meta' => [
+                'hero' => '<p>Trusted <strong>formatting</strong>.</p><script>alert("xss")</script><img src=x onerror="alert(1)"><a href="javascript:alert(2)">Unsafe link</a>',
+                'hero_title' => 'Safe Hero',
+                'slug' => 'safe-hero',
+            ],
+        ])
+        ->create();
+
+    $page->load('translation');
+    $site->load('translation');
+
+    $widget = Widget::factory()->create([
+        'key' => 'hero',
+        'meta' => [
+            'component' => WidgetComponentEnum::Hero->value,
+            'color' => 'light',
+            'content_width' => 'balanced',
+        ],
+    ]);
+    $widget->setRelation('assets', new EloquentCollection);
+
+    resolve(FrontendState::class)
+        ->withLanguage($language)
+        ->withSite($site)
+        ->withTheme($theme)
+        ->withPage($page);
+
+    $html = renderHeroWidgetHtml($widget);
+
+    expect($html)
+        ->toContain('<strong>formatting</strong>')
+        ->toContain('Safe Hero')
+        ->not->toContain('<script')
+        ->not->toContain('onerror')
+        ->not->toContain('javascript:');
+});
+
+it('renders hydrated page hero state without database queries', function (): void {
+    $language = Language::factory()->english()->create();
+    $theme = Theme::factory()->defaultMeta()->create();
+    $site = Site::factory()
+        ->language($language)
+        ->theme($theme)
+        ->withTranslations($language, ['title' => 'Capell'])
+        ->create();
+
+    $page = Page::factory()
+        ->site($site)
+        ->withTranslations($language, [
+            'title' => 'Query Safe Hero',
+            'content' => '<p>Body content.</p>',
+            'meta' => [
+                'hero' => '<p>Preloaded hero copy.</p>',
+                'hero_title' => 'Query Safe Hero',
+                'slug' => 'query-safe-hero',
+            ],
+        ])
+        ->create();
+
+    $page->load('translation');
+    $site->load('translation');
+
+    $widget = Widget::factory()->create([
+        'key' => 'hero',
+        'meta' => [
+            'component' => WidgetComponentEnum::Hero->value,
+            'color' => 'light',
+            'content_width' => 'balanced',
+        ],
+    ]);
+    $widget->setRelation('assets', new EloquentCollection);
+    $widget->setRelation('media', new EloquentCollection);
+
+    resolve(FrontendState::class)
+        ->withLanguage($language)
+        ->withSite($site)
+        ->withTheme($theme)
+        ->withPage($page);
+
+    DB::flushQueryLog();
+    DB::enableQueryLog();
+
+    try {
+        $html = renderHeroWidgetHtml($widget);
+        $queries = DB::getQueryLog();
+    } finally {
+        DB::disableQueryLog();
+    }
+
+    expect($html)
+        ->toContain('Query Safe Hero')
+        ->toContain('Preloaded hero copy')
+        ->and($queries)->toBe([]);
 });
 
 it('skips empty hero widgets before exposing public markup', function (): void {
@@ -417,4 +528,110 @@ it('marks the hero media poster as high fetch priority without exposing editor m
         ->not->toContain('hero_media')
         ->not->toContain('theme_id')
         ->not->toContain('collection_name');
+});
+
+it('renders multi-slide carousel data attributes from prepared slide state', function (): void {
+    $language = Language::factory()->english()->create();
+    $theme = Theme::factory()->defaultMeta()->create();
+    $site = Site::factory()
+        ->language($language)
+        ->theme($theme)
+        ->withTranslations($language, ['title' => 'Capell'])
+        ->create();
+
+    $page = Page::factory()
+        ->site($site)
+        ->withTranslations($language, [
+            'title' => 'Carousel Host',
+            'content' => '<p>Body content.</p>',
+            'meta' => ['slug' => 'carousel-host'],
+        ])
+        ->create();
+
+    $firstSlide = Page::factory()
+        ->site($site)
+        ->withTranslations($language, [
+            'title' => 'First feature',
+            'content' => '<p>First feature copy.</p>',
+            'meta' => ['slug' => 'first-feature'],
+        ])
+        ->create();
+
+    $secondSlide = Page::factory()
+        ->site($site)
+        ->withTranslations($language, [
+            'title' => 'Second feature',
+            'content' => '<p>Second feature copy.</p>',
+            'meta' => ['slug' => 'second-feature'],
+        ])
+        ->create();
+
+    $page->load('translation');
+    $site->load('translation');
+    $firstSlide->load('translation');
+    $secondSlide->load('translation');
+    $firstSlide->setRelation('pageUrl', null);
+    $secondSlide->setRelation('pageUrl', null);
+
+    $firstAsset = new WidgetAsset;
+    $firstAsset->setRelation('asset', $firstSlide);
+    $firstAsset->setRelation('media', new EloquentCollection);
+
+    $secondAsset = new WidgetAsset;
+    $secondAsset->setRelation('asset', $secondSlide);
+    $secondAsset->setRelation('media', new EloquentCollection);
+
+    $widget = Widget::factory()->create([
+        'key' => 'hero',
+        'meta' => [
+            'component' => WidgetComponentEnum::Hero->value,
+            'carousel_align' => 'start',
+            'carousel_arrows' => true,
+            'carousel_auto_play' => false,
+            'carousel_auto_delay' => 5000,
+            'carousel_disable_on_interaction' => false,
+            'carousel_drag' => false,
+            'carousel_effect' => 'fade',
+            'carousel_loop' => false,
+            'carousel_pagination' => true,
+            'carousel_pause_on_hover' => false,
+            'carousel_rewind' => true,
+            'carousel_speed' => 450,
+            'carousel_touch' => false,
+            'carousel_wheel' => false,
+            'color' => 'light',
+        ],
+    ]);
+    $widget->setRelation('assets', new EloquentCollection([$firstAsset, $secondAsset]));
+
+    resolve(FrontendState::class)
+        ->withLanguage($language)
+        ->withSite($site)
+        ->withTheme($theme)
+        ->withPage($page);
+
+    $html = renderHeroWidgetHtml($widget);
+
+    expect($html)
+        ->toContain('data-carousel="1"')
+        ->toContain('data-carousel-align="start"')
+        ->toContain('data-carousel-autoplay="0"')
+        ->toContain('data-carousel-autoplay-delay="5000"')
+        ->toContain('data-carousel-disable-on-interaction="0"')
+        ->toContain('data-carousel-drag="0"')
+        ->toContain('data-carousel-effect="fade"')
+        ->toContain('data-carousel-loop="0"')
+        ->toContain('data-carousel-navigation="1"')
+        ->toContain('data-carousel-pagination="1"')
+        ->toContain('data-carousel-pause-on-hover="0"')
+        ->toContain('data-carousel-rewind="1"')
+        ->toContain('data-carousel-speed="450"')
+        ->toContain('data-carousel-touch="0"')
+        ->toContain('data-carousel-wheel="0"')
+        ->toContain('swiper-button-prev')
+        ->toContain('swiper-pagination')
+        ->toContain('First feature')
+        ->toContain('Second feature')
+        ->not->toContain('capell-hero')
+        ->not->toContain('widget_id');
 });

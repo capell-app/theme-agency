@@ -3,7 +3,9 @@
 declare(strict_types=1);
 
 use Capell\Core\Contracts\Extensions\RegistersExtensionAdminResource;
+use Capell\Core\Contracts\Extensions\RunsScheduledExtensionJob;
 use Capell\DocumentLifecycle\Filament\Resources\Documents\DocumentResource;
+use Capell\DocumentLifecycle\Manifest\DocumentLifecycleRetentionScheduleContribution;
 use Capell\DocumentLifecycle\Manifest\DocumentResourceContribution;
 
 /**
@@ -67,6 +69,28 @@ it('declares only real package surfaces in the manifest', function (): void {
         ->and($manifest['providers']['frontend'] ?? null)->toBe([]);
 });
 
+it('declares the retention command as a scheduled job contribution', function (): void {
+    $manifest = documentLifecycleManifest();
+
+    $contribution = null;
+
+    foreach (($manifest['contributes'] ?? []) as $manifestContribution) {
+        if (is_array($manifestContribution) && ($manifestContribution['type'] ?? null) === 'scheduled-job') {
+            $contribution = $manifestContribution;
+
+            break;
+        }
+    }
+
+    expect($contribution)
+        ->toBeArray()
+        ->and($contribution['class'] ?? null)->toBe(DocumentLifecycleRetentionScheduleContribution::class)
+        ->and($contribution['command'] ?? null)->toBe('capell:document-lifecycle:archive-expired')
+        ->and($contribution['frequency'] ?? null)->toBe('daily')
+        ->and(DocumentLifecycleRetentionScheduleContribution::compatibleCapellApiVersion())->toBe('^4.0')
+        ->and(class_implements(DocumentLifecycleRetentionScheduleContribution::class))->toContain(RunsScheduledExtensionJob::class);
+});
+
 it('keeps manifest and composer package copy aligned with shipped capabilities', function (): void {
     $manifest = documentLifecycleManifest();
     $composerManifest = documentLifecycleComposerManifest();
@@ -82,7 +106,7 @@ it('keeps manifest and composer package copy aligned with shipped capabilities',
         ->and($summary)->not->toContain('immutable');
 });
 
-it('keeps marketplace screenshots limited to committed marketplace assets while preserving the screenshot contract', function (): void {
+it('promotes committed screenshot contract captures into marketplace media', function (): void {
     $manifest = documentLifecycleManifest();
     $screenshotContract = json_decode(
         (string) file_get_contents(dirname(__DIR__, 2) . '/docs/screenshots.json'),
@@ -134,14 +158,13 @@ it('keeps marketplace screenshots limited to committed marketplace assets while 
         }
     }
 
-    expect($manifestScreenshotPaths)->toBe(['docs/assets/marketplace/extension-card.jpg']);
+    expect($manifestScreenshotPaths)->toContain('docs/assets/marketplace/extension-card.jpg');
 
     foreach ($manifestScreenshotPaths as $manifestScreenshotPath) {
-        expect($manifestScreenshotPath)->toStartWith('docs/assets/marketplace/')
-            ->and(file_exists(dirname(__DIR__, 2) . '/' . $manifestScreenshotPath))->toBeTrue();
+        expect(file_exists(dirname(__DIR__, 2) . '/' . $manifestScreenshotPath))->toBeTrue();
     }
 
     foreach ($requiredScreenshotPaths as $requiredScreenshotPath) {
-        expect($manifestScreenshotPaths)->not->toContain($requiredScreenshotPath);
+        expect($manifestScreenshotPaths)->toContain($requiredScreenshotPath);
     }
 });

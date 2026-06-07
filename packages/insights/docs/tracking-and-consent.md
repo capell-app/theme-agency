@@ -10,6 +10,8 @@ Insights records first-party activity through two public endpoints and a fronten
 4. Controllers turn request payloads into `InsightsBeaconData`, `InsightsConsentData`, and `InsightsEventData`; consent jurisdiction is resolved server-side rather than trusted from the browser.
 5. Actions write `InsightsVisit`, `InsightsConsent`, and `InsightsEvent` rows.
 6. When Privacy Center is installed, `MirrorInsightsConsentToPrivacyCenterAction` mirrors the submitted cookie-category decisions into `privacy_consent_records` using Privacy Center's public record action. If Privacy Center is not installed, the mirror returns without side effects.
+7. When `honor_privacy_signals` is enabled, the browser tracker exits before registering listeners if Global Privacy Control or Do-Not-Track is active, and the beacon endpoint drops requests carrying `Sec-GPC: 1`, `DNT: 1`, or `X-Do-Not-Track: 1`.
+8. Server-side event recording only treats stored analytics consent as current when the saved `policy_version` matches config and `decided_at` is within `consent_expires_days`.
 
 The route prefix comes from `capell-insights.route_prefix`. Both endpoints use the `web` middleware group, skip CSRF, and apply `throttle:60,1`.
 
@@ -53,6 +55,21 @@ RecordCustomActionAction::run(
 ```
 
 Keep custom event names stable. Store identifiers and dimensions, not full request bodies.
+
+Use `RecordConversionAction` when a companion package records a commercial or campaign milestone:
+
+```php
+use Capell\Insights\Actions\RecordConversionAction;
+
+RecordConversionAction::run(
+    visitUuid: 'visit_01HXZ8QY9J2N3R4S5T6V7W8X9Y',
+    eventName: 'campaign.lead',
+    url: 'https://example.test/pricing',
+    sourcePackage: 'capell-app/campaign-studio',
+    value: 250.0,
+    currency: 'GBP',
+);
+```
 
 ## Update Consent
 

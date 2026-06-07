@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Capell\FrontendAuthoring\Data\EditableRegionPayloadData;
+use Capell\FrontendAuthoring\Enums\EditableRegionInputType;
 use Capell\FrontendAuthoring\Support\EditableRegionSigner;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
@@ -13,7 +14,7 @@ function frontendAuthoringSignerPayload(): EditableRegionPayloadData
         recordKey: 42,
         field: 'title',
         label: 'Page title',
-        type: 'text',
+        type: EditableRegionInputType::Text,
         selector: '#main h1:first-of-type',
         currentUrl: 'https://example.test/about',
         pageUrlId: 7,

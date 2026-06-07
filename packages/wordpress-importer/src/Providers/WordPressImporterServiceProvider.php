@@ -5,9 +5,13 @@ declare(strict_types=1);
 namespace Capell\WordPressImporter\Providers;
 
 use Capell\Core\Support\Packages\AbstractPackageServiceProvider;
+use Capell\MigrationAssistant\Events\ImportCompleted;
 use Capell\MigrationAssistant\Support\ImportSourceRegistry;
 use Capell\WordPressImporter\Console\Commands\ImportWordPressWxrCommand;
+use Capell\WordPressImporter\Listeners\CreateWordPressRedirectsForCompletedImport;
+use Capell\WordPressImporter\Listeners\ImportWordPressMediaForCompletedImport;
 use Capell\WordPressImporter\Services\WxrReader;
+use Illuminate\Support\Facades\Event;
 use Spatie\LaravelPackageTools\Package;
 
 class WordPressImporterServiceProvider extends AbstractPackageServiceProvider
@@ -32,5 +36,11 @@ class WordPressImporterServiceProvider extends AbstractPackageServiceProvider
                 $registry->register(new WxrReader, prepend: true);
             },
         );
+    }
+
+    public function packageBooted(): void
+    {
+        Event::listen(ImportCompleted::class, [CreateWordPressRedirectsForCompletedImport::class, 'handle']);
+        Event::listen(ImportCompleted::class, [ImportWordPressMediaForCompletedImport::class, 'handle']);
     }
 }

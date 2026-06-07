@@ -23,10 +23,13 @@ describe('theme corporate capell.json manifest', function (): void {
         foreach ($screenshots as $screenshot) {
             throw_if(! is_array($screenshot) || ! is_string($screenshot['path'] ?? null), RuntimeException::class, 'Theme Corporate marketplace screenshots must define string paths.');
 
-            expect($screenshot['path'])->toStartWith('docs/screenshots/')
-                ->toEndWith('.png')
-                ->and(File::exists(__DIR__ . '/../../' . $screenshot['path']))->toBeTrue();
+            expect(File::exists(__DIR__ . '/../../' . $screenshot['path']))->toBeTrue();
         }
+
+        expect(collect($screenshots)->pluck('path')->all())->toBe([
+            'docs/assets/marketplace/extension-card.jpg',
+            'docs/screenshots/corporate-homepage-layout.png',
+        ]);
     });
 
     it('declares its demo command for package demo installs', function (): void {

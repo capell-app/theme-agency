@@ -74,7 +74,7 @@ it('registers a Theme Studio definition that matches the manifest', function ():
         ->and($registered->extends)->toBe($manifest['extends']);
 });
 
-it('declares committed marketplace screenshots and labelled layout mockups', function (): void {
+it('declares committed marketplace screenshots', function (): void {
     $manifest = themePackageManifest('foundation-theme');
     $screenshots = data_get($manifest, 'marketplace.screenshots');
 
@@ -92,21 +92,61 @@ it('declares committed marketplace screenshots and labelled layout mockups', fun
         })
         ->values();
 
-    expect($paths)->toHaveCount(15)
-        ->and($paths->filter(fn (string $path): bool => str_starts_with($path, 'docs/screenshots/') && str_ends_with($path, '.png')))->toHaveCount(6)
-        ->and($paths->filter(fn (string $path): bool => str_starts_with($path, 'docs/assets/marketplace/') && str_ends_with($path, '.svg')))->toHaveCount(8)
+    expect($paths)->toHaveCount(11)
+        ->and($paths->filter(fn (string $path): bool => str_starts_with($path, 'docs/screenshots/') && str_ends_with($path, '.png')))->toHaveCount(10)
+        ->and($paths->filter(fn (string $path): bool => str_starts_with($path, 'docs/assets/marketplace/') && str_ends_with($path, '.svg')))->toHaveCount(0)
         ->and($paths)->toContain(
             'docs/screenshots/foundation-theme-settings-screen.png',
             'docs/screenshots/foundation-theme-settings-screen-dark.png',
-            'docs/screenshots/frontend-page-using-the-foundation-theme.png',
-            'docs/screenshots/frontend-page-using-the-foundation-theme-dark.png',
-            'docs/screenshots/generated-tailwind-asset-output-review.png',
-            'docs/screenshots/generated-tailwind-asset-output-review-dark.png',
+            'docs/screenshots/foundation-homepage-layout.png',
+            'docs/screenshots/foundation-standard-page-layout.png',
+            'docs/screenshots/foundation-blog-article-layout.png',
+            'docs/screenshots/foundation-listing-layout.png',
+            'docs/screenshots/foundation-contact-form-layout.png',
+            'docs/screenshots/foundation-search-results-layout.png',
+            'docs/screenshots/foundation-events-layout.png',
+            'docs/screenshots/foundation-membership-gate-layout.png',
         );
 
     foreach ($paths as $path) {
         expect(is_file(dirname(__DIR__, 2) . '/' . $path))->toBeTrue();
     }
+});
+
+it('declares generated Tailwind output review as a command report capture', function (): void {
+    $screenshots = foundationThemeScreenshotsContract();
+    $entry = collect($screenshots['entries'] ?? [])
+        ->firstWhere('id', 'generated-tailwind-asset-output-review');
+
+    throw_unless(is_array($entry), RuntimeException::class, 'Generated Tailwind output review screenshot entry must exist.');
+
+    expect($entry)
+        ->toMatchArray([
+            'surface' => 'developer',
+            'targetType' => 'console-command',
+            'target' => 'capell:frontend-tailwind-assets --report',
+            'reportPath' => 'packages/foundation-theme/docs/reports/generated-tailwind-asset-output-review.md',
+            'screenshotPath' => 'packages/foundation-theme/docs/screenshots/generated-tailwind-asset-output-review.png',
+            'darkScreenshotPath' => 'packages/foundation-theme/docs/screenshots/generated-tailwind-asset-output-review-dark.png',
+        ]);
+
+    $packageRoot = dirname(__DIR__, 2);
+    $reportPath = $packageRoot . '/docs/reports/generated-tailwind-asset-output-review.md';
+
+    expect($entry['notes'])
+        ->toContain('not the generic settings screen')
+        ->and(is_file($reportPath))->toBeTrue()
+        ->and(is_file($packageRoot . '/docs/screenshots/generated-tailwind-asset-output-review.png'))->toBeTrue()
+        ->and(is_file($packageRoot . '/docs/screenshots/generated-tailwind-asset-output-review-dark.png'))->toBeTrue();
+
+    $report = file_get_contents($reportPath) ?: '';
+
+    expect($report)
+        ->toContain('capell:frontend-tailwind-assets --report')
+        ->toContain('imports')
+        ->toContain('plugins')
+        ->toContain('sources')
+        ->toContain('theme_colors');
 });
 
 it('declares standalone theme packages extending foundation', function (string $packageDirectory, string $composerName, string $themeKey): void {
@@ -167,6 +207,18 @@ function themePackageManifest(string $packageDirectory): array
 {
     return json_decode(
         (string) file_get_contents(dirname(__DIR__, 3) . '/' . $packageDirectory . '/capell.json'),
+        true,
+        flags: JSON_THROW_ON_ERROR,
+    );
+}
+
+/**
+ * @return array<string, mixed>
+ */
+function foundationThemeScreenshotsContract(): array
+{
+    return json_decode(
+        (string) file_get_contents(dirname(__DIR__, 2) . '/docs/screenshots.json'),
         true,
         flags: JSON_THROW_ON_ERROR,
     );

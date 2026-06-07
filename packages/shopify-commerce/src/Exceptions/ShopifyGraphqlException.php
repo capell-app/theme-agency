@@ -13,6 +13,6 @@ final class ShopifyGraphqlException extends RuntimeException
      */
     public function __construct(public readonly array $errors = [])
     {
-        parent::__construct('Shopify Admin API request failed.');
+        parent::__construct((string) __('capell-shopify-commerce::capell-shopify-commerce.errors.graphql_failed'));
     }
 }

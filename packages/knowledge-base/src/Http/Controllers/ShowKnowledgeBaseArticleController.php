@@ -28,9 +28,16 @@ final class ShowKnowledgeBaseArticleController
 
         abort_if($articleData === null, 404);
 
-        return $this->cacheable(response()->view('capell-knowledge-base::article', [
+        return $this->cacheable(response()->view($this->viewName(), [
             'article' => $articleData->toArray(),
         ]));
+    }
+
+    private function viewName(): string
+    {
+        return view()->exists('capell-theme-knowledge::knowledge-base.article')
+            ? 'capell-theme-knowledge::knowledge-base.article'
+            : 'capell-knowledge-base::article';
     }
 
     private function cacheable(Response $response): Response

@@ -10,6 +10,8 @@ return [
     'property_id' => 'GA4 property ID',
     'property_id_helper' => 'Use the numeric GA4 property ID without the properties/ prefix.',
     'route_slug' => 'Admin page slug',
+    'sync_cron' => 'Sync schedule',
+    'sync_cron_helper' => 'Cron expression for the scheduled GA4 sync. Default is 0 2 * * * for 02:00 daily.',
     'sync_days' => 'Sync window',
     'title' => 'GA4 Reports settings',
 ];

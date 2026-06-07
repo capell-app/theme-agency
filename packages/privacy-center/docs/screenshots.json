@@ -1,0 +1,65 @@
+{
+    "package": "privacy-center",
+    "composerName": "capell-app/privacy-center",
+    "generatedFor": "deployment-screenshot-runner",
+    "requiresInstalledPackage": true,
+    "outputDirectory": "packages/privacy-center/docs/screenshots",
+    "entries": [
+        {
+            "id": "privacy-requests-index",
+            "title": "Privacy requests admin queue.",
+            "package": "privacy-center",
+            "surface": "admin",
+            "targetType": "admin-resource",
+            "target": "PrivacyRequestResource",
+            "url": "/privacy-requests",
+            "waitFor": "table",
+            "required": true,
+            "notes": "Captured from a seeded Capell admin runner app with capell-app/privacy-center installed.",
+            "useCase": "An operator triages access, export, and deletion requests from a single compliance queue.",
+            "screenshotPath": "packages/privacy-center/docs/screenshots/privacy-requests-index.png"
+        },
+        {
+            "id": "privacy-request-edit-actions",
+            "title": "Privacy request workflow actions.",
+            "package": "privacy-center",
+            "surface": "admin",
+            "targetType": "admin-resource-record",
+            "target": "PrivacyRequestResource.edit",
+            "url": "/privacy-requests/1/edit",
+            "waitFor": "body",
+            "required": true,
+            "notes": "Captured from a seeded Capell admin runner app with a stable data-subject request record.",
+            "useCase": "An operator verifies and completes a data-subject request through audited Capell Actions.",
+            "screenshotPath": "packages/privacy-center/docs/screenshots/privacy-request-edit-actions.png"
+        },
+        {
+            "id": "retention-rules-index",
+            "title": "Privacy retention rules admin list.",
+            "package": "privacy-center",
+            "surface": "admin",
+            "targetType": "admin-resource",
+            "target": "RetentionRuleResource",
+            "url": "/retention-rules",
+            "waitFor": "table",
+            "required": true,
+            "notes": "Captured from a seeded Capell admin runner app with active retention rules.",
+            "useCase": "An operator reviews automated data minimisation rules and their retention windows.",
+            "screenshotPath": "packages/privacy-center/docs/screenshots/retention-rules-index.png"
+        },
+        {
+            "id": "privacy-center-dashboard-widget",
+            "title": "Privacy Center dashboard overview.",
+            "package": "privacy-center",
+            "surface": "admin",
+            "targetType": "admin-widget",
+            "target": "PrivacyCenterOverviewWidget",
+            "url": "/",
+            "waitFor": "body",
+            "required": false,
+            "notes": "Capture the compliance overview counts once the runner app requires capell-app/privacy-center and widget targeting can frame the stats.",
+            "useCase": "An operator sees consent, policy acceptance, request, and retention volume from the Capell dashboard.",
+            "screenshotPath": "packages/privacy-center/docs/screenshots/privacy-center-dashboard-widget.png"
+        }
+    ]
+}

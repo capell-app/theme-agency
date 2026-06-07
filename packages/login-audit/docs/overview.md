@@ -13,6 +13,9 @@ Login Audit records login, failed login, logout, and last-activity metadata for 
 - Settings schema for authentication log behaviour.
 - Middleware for admin and user activity tracking.
 - User edit sidebar summary and authentication logs relation manager when the bridge is enabled.
+- CSV exports from the global authentication log and per-user authentication history.
+- Suspicious-login detection for repeated failures, failed-device success, rapid country changes, and optional unusual login hours.
+- Capell admin alerts for new-device, failed-login, and suspicious-login audit events.
 
 ## Developer Notes
 
@@ -30,6 +33,9 @@ Helps site operators review access activity and spot account behaviour that need
 - Adds login_audit table.
 - Adds settings migration.
 - Adds authentication log admin resource and widget.
+- Exports access logs as CSV for incident review and compliance handoff.
+- Marks suspicious audit rows using configurable failed-attempt and unusual-login heuristics.
+- Sends persistent Filament/database alerts to the Login Audit security alert notification group.
 - Listens to Laravel auth events configured in login-audit.php.
 - May send new-device or failed-login notifications depending on config.
 

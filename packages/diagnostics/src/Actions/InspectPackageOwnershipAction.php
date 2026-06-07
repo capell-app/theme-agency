@@ -6,6 +6,7 @@ namespace Capell\Diagnostics\Actions;
 
 use Capell\Diagnostics\Data\PackageOwnershipCandidateData;
 use Capell\Diagnostics\Data\PackageOwnershipInspectionData;
+use Capell\Diagnostics\Support\DiagnosticsSnapshotCache;
 use Illuminate\Routing\Route;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Route as RouteFacade;
@@ -29,6 +30,20 @@ final class InspectPackageOwnershipAction
     {
         $normalizedKind = $this->normalizeKind($kind);
         $normalizedName = trim($name);
+
+        return DiagnosticsSnapshotCache::remember(
+            'package-ownership:' . sha1(implode('|', [
+                $normalizedKind,
+                $normalizedName,
+                $this->customPackagesPath ?? base_path('packages'),
+                $this->customInstalledJsonPath ?? base_path('vendor/composer/installed.json'),
+            ])),
+            fn (): PackageOwnershipInspectionData => $this->inspect($normalizedKind, $normalizedName),
+        );
+    }
+
+    private function inspect(string $normalizedKind, string $normalizedName): PackageOwnershipInspectionData
+    {
         $packages = $this->packages();
 
         $candidates = match ($normalizedKind) {

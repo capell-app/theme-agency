@@ -24,4 +24,13 @@ enum SubscriberStatus: string implements HasLabel
     {
         return $this === self::Subscribed;
     }
+
+    public function isGloballySuppressed(): bool
+    {
+        return in_array($this, [
+            self::Suppressed,
+            self::Bounced,
+            self::Complained,
+        ], true);
+    }
 }

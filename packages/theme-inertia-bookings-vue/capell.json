@@ -13,7 +13,9 @@
         "bundle": "themes"
     },
     "namespace": "Capell\\ThemeStudio\\InertiaBookingsVue",
-    "surfaces": ["frontend"],
+    "surfaces": [
+        "frontend"
+    ],
     "dependencies": {
         "requires": [
             "capell-app/theme-inertia-bookings",
@@ -53,14 +55,21 @@
     },
     "settings": [],
     "permissions": [],
-    "capabilities": ["theme-inertia-bookings-vue"],
+    "capabilities": [
+        "theme-inertia-bookings-vue"
+    ],
     "performance": {
         "frontendRenderBudgetMs": 20,
         "adminQueryBudget": 0,
-        "cacheTags": ["theme-inertia-bookings-vue"],
+        "cacheTags": [
+            "theme-inertia-bookings-vue"
+        ],
         "cacheSafety": {
             "cacheable": false,
-            "variesBy": ["site", "locale"],
+            "variesBy": [
+                "site",
+                "locale"
+            ],
             "sensitiveOutput": false,
             "invalidationSources": [],
             "queueInvalidation": false
@@ -86,16 +95,24 @@
         "description": "Provides Vue source components that implement the shared Capell/Page and Capell/Bookings/Request server contract.",
         "screenshots": [
             {
-                "path": "docs/assets/marketplace/extension-card.svg",
-                "alt": "Theme Inertia Bookings Vue component pack marketplace card.",
-                "caption": "Vue component pack for the Theme Inertia Bookings page and public booking request contracts."
+                "path": "docs/screenshots/vue-booking-components.png",
+                "alt": "Vue booking component pack rendering the public request workflow.",
+                "caption": "Vue booking request workflow"
             },
             {
-                "path": "docs/assets/marketplace/vue-booking-components.svg",
-                "alt": "Vue booking components showing the page shell, widgets, and labelled request form.",
-                "caption": "The Vue pack ships a themed Inertia entrypoint plus labelled page, widget, and booking request components."
+                "path": "docs/screenshots/vue-booking-services.png",
+                "alt": "Vue booking service sections with appointment CTAs.",
+                "caption": "Vue service sections"
+            },
+            {
+                "path": "docs/screenshots/vue-booking-mobile.png",
+                "alt": "Vue booking request workflow at a mobile viewport.",
+                "caption": "Vue mobile booking request"
             }
         ],
-        "categories": ["frontend", "themes"]
+        "categories": [
+            "frontend",
+            "themes"
+        ]
     }
 }

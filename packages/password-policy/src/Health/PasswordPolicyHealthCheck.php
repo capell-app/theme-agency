@@ -6,12 +6,12 @@ namespace Capell\PasswordPolicy\Health;
 
 use Capell\Core\Contracts\Extensions\ChecksExtensionHealth;
 use Capell\Core\Data\Diagnostics\DoctorCheckResultData;
+use Capell\Core\Support\Database\RuntimeSchemaState;
 use Capell\PasswordPolicy\Actions\BuildPasswordSecurityPostureReportAction;
 use Capell\PasswordPolicy\Data\PasswordSecurityPostureReportData;
 use Capell\PasswordPolicy\Data\ResolvedPasswordPolicySettingsData;
 use Capell\PasswordPolicy\Support\PasswordPolicySettingsResolver;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Schema;
 
 final class PasswordPolicyHealthCheck implements ChecksExtensionHealth
 {
@@ -102,7 +102,7 @@ final class PasswordPolicyHealthCheck implements ChecksExtensionHealth
     public function passwordHistoryTableCheck(): DoctorCheckResultData
     {
         $settings = $this->settings();
-        $tableInstalled = Schema::hasTable('password_policy_password_histories');
+        $tableInstalled = resolve(RuntimeSchemaState::class)->hasTable('password_policy_password_histories');
         $satisfied = ! $settings->passwordHistoryEnabled || $tableInstalled;
 
         return new DoctorCheckResultData(
@@ -119,8 +119,10 @@ final class PasswordPolicyHealthCheck implements ChecksExtensionHealth
 
     private function hasUserColumn(string $columnName): bool
     {
-        return Schema::hasTable('users')
-            && Schema::hasColumn('users', $columnName);
+        $schema = resolve(RuntimeSchemaState::class);
+
+        return $schema->hasTable('users')
+            && $schema->hasColumn('users', $columnName);
     }
 
     private function settings(): ResolvedPasswordPolicySettingsData

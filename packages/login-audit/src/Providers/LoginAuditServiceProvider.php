@@ -6,16 +6,25 @@ namespace Capell\LoginAudit\Providers;
 
 use Capell\Admin\Data\Extensions\ExtensionManagementSurfaceData;
 use Capell\Admin\Facades\CapellAdmin;
+use Capell\Admin\Support\Notifications\AdminNotificationGroupRegistry;
 use Capell\Core\Facades\CapellCore;
 use Capell\Core\Support\Packages\AbstractPackageServiceProvider;
 use Capell\Core\Support\Settings\SettingsSchemaRegistry;
+use Capell\LoginAudit\Actions\ApplyLoginAuditSettingsAction;
+use Capell\LoginAudit\Actions\SendLoginAuditAdminAlertAction;
 use Capell\LoginAudit\Filament\Settings\LoginAuditSettingsSchema;
 use Capell\LoginAudit\Http\Middleware\UserActivityMiddleware;
+use Capell\LoginAudit\Listeners\DetectSuspiciousLoginFromAuthEvent;
 use Capell\LoginAudit\Models\LoginAudit;
 use Capell\LoginAudit\Observers\LoginAuditObserver;
 use Capell\LoginAudit\Policies\LoginAuditPolicy;
 use Capell\LoginAudit\Settings\LoginAuditSettings;
+use Illuminate\Auth\Events\Failed;
+use Illuminate\Auth\Events\Login;
+use Illuminate\Database\Eloquent\Collection as EloquentCollection;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Route;
 use Override;
@@ -56,6 +65,9 @@ class LoginAuditServiceProvider extends AbstractPackageServiceProvider
                 ->registerModels()
                 ->registerPolicies()
                 ->registerSettings()
+                ->syncSettings()
+                ->registerEventListeners()
+                ->registerNotificationGroups()
                 ->registerProtectedTables()
                 ->registerMiddlewareAliases();
         });
@@ -110,6 +122,60 @@ class LoginAuditServiceProvider extends AbstractPackageServiceProvider
         return $this;
     }
 
+    private function syncSettings(): self
+    {
+        ApplyLoginAuditSettingsAction::run();
+        $this->syncVendorAuthenticationLogConfiguration();
+
+        return $this;
+    }
+
+    private function registerEventListeners(): self
+    {
+        Event::listen(Login::class, DetectSuspiciousLoginFromAuthEvent::class);
+        Event::listen(Failed::class, DetectSuspiciousLoginFromAuthEvent::class);
+
+        return $this;
+    }
+
+    private function registerNotificationGroups(): self
+    {
+        $this->app->afterResolving(AdminNotificationGroupRegistry::class, function (AdminNotificationGroupRegistry $registry): void {
+            $registry->register(
+                key: SendLoginAuditAdminAlertAction::NOTIFICATION_GROUP,
+                label: (string) __('capell-login-audit::settings.alert_group_label'),
+                description: (string) __('capell-login-audit::settings.alert_group_description'),
+                defaultRecipients: fn (): EloquentCollection => $this->defaultAlertRecipients(),
+            );
+        });
+
+        return $this;
+    }
+
+    /**
+     * @return EloquentCollection<int, Model>
+     */
+    private function defaultAlertRecipients(): EloquentCollection
+    {
+        $userModel = config('auth.providers.users.model');
+
+        if (! is_string($userModel) || ! is_a($userModel, Model::class, true)) {
+            return new EloquentCollection;
+        }
+
+        return $userModel::query()
+            ->get()
+            ->filter(function (Model $user): bool {
+                if (method_exists($user, 'isGlobalAdmin') && $user->isGlobalAdmin()) {
+                    return true;
+                }
+
+                return method_exists($user, 'hasRole')
+                    && $user->hasRole(config('capell.roles.super_admin', 'super_admin'));
+            })
+            ->values();
+    }
+
     private function registerProtectedTables(): self
     {
         CapellCore::registerProtectedTable(fn (): string => config('login-audit.table_name', 'login_audit'));
@@ -131,6 +197,7 @@ class LoginAuditServiceProvider extends AbstractPackageServiceProvider
         Config::set('authentication-log.events', config('login-audit.events', []));
         Config::set('authentication-log.listeners', config('login-audit.listeners', []));
         Config::set('authentication-log.notifications', config('login-audit.notifications', []));
+        Config::set('authentication-log.suspicious', config('login-audit.suspicious', []));
         Config::set('authentication-log.purge', config('login-audit.purge', 365));
         Config::set('authentication-log.behind_cdn', config('login-audit.behind_cdn', false));
     }

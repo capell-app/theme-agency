@@ -111,6 +111,7 @@ it('connects gitlab after oauth state validation passes', function (): void {
             'https://gitlab.com/oauth/token' => Http::response([
                 'access_token' => 'gitlab-access-token',
                 'refresh_token' => 'gitlab-refresh-token',
+                'expires_in' => 7200,
             ]),
             'https://gitlab.com/api/v4/user' => Http::response([
                 'id' => 456,
@@ -126,11 +127,14 @@ it('connects gitlab after oauth state validation passes', function (): void {
     ]))
         ->assertRedirect(route('filament.admin.pages.deployment-connection'));
 
-    expect(DeploymentConnection::query()->where([
+    $connection = DeploymentConnection::query()->where([
         'provider' => GitProviderType::GitLab->value,
         'repo_owner' => 'capell-group/platform',
         'repo_name' => 'capell-app',
-    ])->exists())->toBeTrue()
+    ])->first();
+
+    expect($connection)->not->toBeNull()
+        ->and($connection?->token_expires_at)->not->toBeNull()
         ->and($timeouts)->toBe([8, 8]);
 });
 
@@ -146,6 +150,7 @@ it('connects bitbucket after oauth state validation passes', function (): void {
             'https://bitbucket.org/site/oauth2/access_token' => Http::response([
                 'access_token' => 'bitbucket-access-token',
                 'refresh_token' => 'bitbucket-refresh-token',
+                'expires_in' => 7200,
             ]),
             'https://api.bitbucket.org/2.0/user' => Http::response([
                 'account_id' => 'bitbucket-account-id',
@@ -161,11 +166,14 @@ it('connects bitbucket after oauth state validation passes', function (): void {
     ]))
         ->assertRedirect(route('filament.admin.pages.deployment-connection'));
 
-    expect(DeploymentConnection::query()->where([
+    $connection = DeploymentConnection::query()->where([
         'provider' => GitProviderType::Bitbucket->value,
         'repo_owner' => 'capell-workspace',
         'repo_name' => 'capell-app',
-    ])->exists())->toBeTrue()
+    ])->first();
+
+    expect($connection)->not->toBeNull()
+        ->and($connection?->token_expires_at)->not->toBeNull()
         ->and($timeouts)->toBe([9, 9]);
 });
 

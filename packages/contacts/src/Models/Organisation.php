@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Capell\Contacts\Models;
 
 use Capell\Contacts\Enums\OrganisationStatus;
+use Capell\Contacts\Support\ContactsOverviewStatsCache;
 use Capell\Core\Models\Site;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -108,6 +109,16 @@ class Organisation extends Model
                 $organisation->name_key = self::nameKey($organisation->name);
             }
         });
+
+        static::saved(fn (Organisation $organisation): null => self::flushOverviewStats($organisation));
+        static::deleted(fn (Organisation $organisation): null => self::flushOverviewStats($organisation));
+    }
+
+    private static function flushOverviewStats(Organisation $organisation): null
+    {
+        ContactsOverviewStatsCache::flushForSite(is_int($organisation->site_id) ? $organisation->site_id : null);
+
+        return null;
     }
 
     /**

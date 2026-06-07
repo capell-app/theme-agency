@@ -4,6 +4,13 @@ All notable changes to `capell-app/contacts` will be documented in this file.
 
 ## Unreleased
 
+### 2026-06-07
+
+- Added manual contact merging through `MergeContactsAction` and a Contact table action, moving related CRM records and recording a merge activity.
+- Added a Contact view page with an activity timeline and manual note action, plus a Lead status transition action that records qualified/closed timestamps.
+- Added queryable contact tag storage with `contact_tags` and `contact_tag_memberships`, while keeping the existing `profile.tags` mirror for source-adapter compatibility.
+- Added a Contact admin tag filter backed by the new tag relation.
+
 ### 2026-06-04
 
 - Exposed contact privacy workflows to operators through the `capell-contacts:privacy` command and Contact admin row actions.

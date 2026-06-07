@@ -7,6 +7,7 @@ namespace Capell\MediaAI\Providers;
 use Capell\Admin\Contracts\Extenders\MediaEditActionExtender;
 use Capell\Core\Enums\PackageTypeEnum;
 use Capell\Core\Support\Packages\AbstractPackageServiceProvider;
+use Capell\MediaAI\Console\Commands\QueueImageDoctorBatchCommand;
 use Capell\MediaAI\Contracts\ImageDoctor;
 use Capell\MediaAI\Filament\MediaAIEditActionExtender;
 use Capell\MediaAI\Support\AIOrchestratorImageDoctor;
@@ -26,7 +27,8 @@ final class MediaAIServiceProvider extends AbstractPackageServiceProvider
         $package
             ->name(self::$name)
             ->hasConfigFile()
-            ->hasTranslations();
+            ->hasTranslations()
+            ->hasCommand(QueueImageDoctorBatchCommand::class);
     }
 
     public function registeringPackage(): void

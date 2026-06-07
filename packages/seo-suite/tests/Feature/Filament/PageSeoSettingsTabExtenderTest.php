@@ -80,7 +80,7 @@ it('adds seo settings as a page editor tab', function (): void {
         ->and($aiDiscoveryComponents[1]->getName())->toBe('ai_discovery.section');
 });
 
-it('removes inline seo components from the main translation editor', function (): void {
+it('keeps inline seo components on create forms and removes them from edit forms', function (): void {
     $replacer = new RemoveInlineSeoTranslationComponents;
     $components = [
         TextInput::make('title'),
@@ -89,9 +89,11 @@ it('removes inline seo components from the main translation editor', function ()
         TextInput::make('body'),
     ];
 
-    $filteredComponents = $replacer(Schema::make(), $components);
+    $createComponents = $replacer(Schema::make()->operation('create'), $components);
+    $filteredComponents = $replacer(Schema::make()->operation('edit'), $components);
 
-    expect($filteredComponents)->toHaveCount(2)
+    expect($createComponents)->toHaveCount(4)
+        ->and($filteredComponents)->toHaveCount(2)
         ->and($filteredComponents[0])->toBeInstanceOf(TextInput::class)
         ->and($filteredComponents[0]->getName())->toBe('title')
         ->and($filteredComponents[1])->toBeInstanceOf(TextInput::class)

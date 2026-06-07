@@ -28,13 +28,13 @@ final class FindOrCreateContactAction
             $contact->source()->associate($source);
         }
 
-        $this->fillWhenPresent($contact, 'email', $identity->email);
-        $this->fillWhenPresent($contact, 'phone', $identity->phone);
-        $this->fillWhenPresent($contact, 'first_name', $identity->firstName);
-        $this->fillWhenPresent($contact, 'last_name', $identity->lastName);
-        $this->fillWhenPresent($contact, 'display_name', $identity->displayName);
-        $this->fillWhenPresent($contact, 'source_key', $identity->sourceKey);
-        $this->fillWhenPresent($contact, 'source_identifier', $identity->sourceIdentifier);
+        $this->fillFromSourceWhenPresent($contact, 'email', $identity->email, $seenAt);
+        $this->fillFromSourceWhenPresent($contact, 'phone', $identity->phone, $seenAt);
+        $this->fillFromSourceWhenPresent($contact, 'first_name', $identity->firstName, $seenAt);
+        $this->fillFromSourceWhenPresent($contact, 'last_name', $identity->lastName, $seenAt);
+        $this->fillFromSourceWhenPresent($contact, 'display_name', $identity->displayName, $seenAt);
+        $this->fillWhenMissing($contact, 'source_key', $identity->sourceKey);
+        $this->fillWhenMissing($contact, 'source_identifier', $identity->sourceIdentifier);
 
         if ($identity->profile !== null && $identity->profile !== []) {
             $contact->profile = array_replace($contact->profile ?? [], $identity->profile);
@@ -87,9 +87,36 @@ final class FindOrCreateContactAction
             ->first();
     }
 
-    private function fillWhenPresent(Contact $contact, string $attribute, ?string $value): void
+    private function fillFromSourceWhenPresent(
+        Contact $contact,
+        string $attribute,
+        ?string $value,
+        CarbonImmutable $seenAt,
+    ): void {
+        if ($this->blankString($value)) {
+            return;
+        }
+
+        $existingValue = $contact->getAttribute($attribute);
+
+        if (! is_string($existingValue) || trim($existingValue) === '') {
+            $contact->setAttribute($attribute, $value);
+
+            return;
+        }
+
+        $lastSeenAt = $contact->last_seen_at;
+
+        if ($lastSeenAt instanceof CarbonImmutable && $seenAt->lessThan($lastSeenAt)) {
+            return;
+        }
+
+        $contact->setAttribute($attribute, $value);
+    }
+
+    private function fillWhenMissing(Contact $contact, string $attribute, ?string $value): void
     {
-        if ($value === null || trim($value) === '') {
+        if ($this->blankString($value)) {
             return;
         }
 
@@ -98,5 +125,10 @@ final class FindOrCreateContactAction
         }
 
         $contact->setAttribute($attribute, $value);
+    }
+
+    private function blankString(?string $value): bool
+    {
+        return $value === null || trim($value) === '';
     }
 }

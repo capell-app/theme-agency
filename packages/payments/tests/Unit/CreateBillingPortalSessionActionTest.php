@@ -40,6 +40,7 @@ it('creates a native Stripe billing portal session', function (): void {
         parse_str($request->body(), $body);
 
         return $request->hasHeader('Stripe-Version', '2026-02-25.clover')
+            && $request->hasHeader('Idempotency-Key')
             && $body['customer'] === 'cus_123'
             && $body['return_url'] === 'https://example.test/account'
             && $body['configuration'] === 'bpc_test_123'

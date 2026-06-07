@@ -2,11 +2,13 @@
     $items = $section->items ?? [];
 @endphp
 
-<section class="theme-section theme-section-proof bg-[#06140c] text-white">
+<section
+    class="theme-section theme-section-proof nonprofit-bg-primary-deep text-white"
+>
     <div class="mx-auto max-w-6xl px-6 py-16 lg:py-20">
         <div class="grid gap-8 lg:grid-cols-[0.64fr_1.36fr] lg:items-start">
             <div>
-                <p class="text-xs font-black text-[#fde047] uppercase">
+                <p class="nonprofit-text-accent text-xs font-black uppercase">
                     {{ __('capell-theme-nonprofit::generic.proof_label') }}
                 </p>
                 <h2 class="mt-4 text-4xl font-black tracking-tight">
@@ -14,7 +16,7 @@
                 </h2>
                 @if ($section->summary ?? null)
                     <p
-                        class="mt-4 max-w-md text-base leading-7 text-emerald-100"
+                        class="nonprofit-text-on-dark-muted mt-4 max-w-md text-base leading-7"
                     >
                         {{ $section->summary }}
                     </p>
@@ -29,9 +31,9 @@
                         <div
                             class="{{ $loop->first ? 'md:grid-cols-[0.44fr_1fr_0.42fr]' : 'md:grid-cols-[0.72fr_1fr]' }} grid"
                         >
-                            <div class="bg-[#12351f] p-5">
+                            <div class="nonprofit-bg-primary-dark p-5">
                                 <p
-                                    class="text-xs font-black text-[#fde047] uppercase"
+                                    class="nonprofit-text-accent text-xs font-black uppercase"
                                 >
                                     {{ __('capell-theme-nonprofit::generic.supporter_metric_label') }}
                                 </p>
@@ -44,12 +46,12 @@
 
                             <div class="p-5">
                                 <p
-                                    class="text-xs font-black text-[#fde047] uppercase"
+                                    class="nonprofit-text-accent text-xs font-black uppercase"
                                 >
                                     {{ $item['name'] ?? $item['title'] ?? __('capell-theme-nonprofit::generic.impact_signal') }}
                                 </p>
                                 <p
-                                    class="mt-4 text-sm leading-7 text-emerald-50"
+                                    class="nonprofit-text-on-dark-muted mt-4 text-sm leading-7"
                                 >
                                     {{ $item['summary'] ?? $item['description'] ?? '' }}
                                 </p>
@@ -62,20 +64,22 @@
                                 >
                                     <div class="space-y-3">
                                         <span
-                                            class="block h-2 w-20 bg-[#fde047]"
+                                            class="nonprofit-bg-accent block h-2 w-20"
                                         ></span>
                                         <span
                                             class="block h-2 w-28 bg-white/25"
                                         ></span>
                                         <span
-                                            class="block h-2 w-16 bg-[#16a34a]"
+                                            class="nonprofit-bg-primary block h-2 w-16"
                                         ></span>
                                     </div>
                                     <div class="mt-8 grid grid-cols-3 gap-2">
                                         <span class="h-9 bg-white/15"></span>
-                                        <span class="h-9 bg-[#facc15]"></span>
                                         <span
-                                            class="h-9 bg-[#16a34a]/70"
+                                            class="nonprofit-bg-accent h-9"
+                                        ></span>
+                                        <span
+                                            class="nonprofit-bg-primary h-9 opacity-70"
                                         ></span>
                                     </div>
                                 </div>

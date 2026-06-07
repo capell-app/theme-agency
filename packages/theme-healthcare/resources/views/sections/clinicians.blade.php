@@ -1,7 +1,9 @@
-<section class="healthcare-care paths bg-[#f6fbfd]">
+<section class="healthcare-care paths bg-[var(--healthcare-surface)]">
     <div class="px-6">
         <div class="grid gap-4 md:grid-cols-[0.75fr_1fr] md:items-end">
-            <h2 class="text-4xl font-black tracking-tight text-[#14323a]">
+            <h2
+                class="text-4xl font-black tracking-tight text-[var(--healthcare-ink)]"
+            >
                 {{ $section->heading }}
             </h2>
             @if ($section->summary ?? null)
@@ -19,10 +21,10 @@
                 class="flex snap-x snap-mandatory [scrollbar-width:none] gap-5 overflow-x-auto pr-6 pb-2 lg:grid lg:grid-cols-4 lg:overflow-visible lg:pr-0 [&::-webkit-scrollbar]:hidden"
                 data-carousel-track
             >
-                @foreach (($section->items ?? []) as $item)
+                @forelse (($section->items ?? []) as $item)
                     <a
                         href="{{ $item['url'] ?? '#' }}"
-                        class="group min-w-[240px] snap-start overflow-hidden rounded-xl border border-stone-200 bg-white transition hover:-translate-y-1 hover:border-[#0f766e] hover:shadow-lg lg:min-w-0"
+                        class="group min-w-[240px] snap-start overflow-hidden rounded-xl border border-stone-200 bg-white transition hover:-translate-y-1 hover:border-[var(--healthcare-primary)] hover:shadow-lg lg:min-w-0"
                     >
                         @if ($item['image'] ?? $item['imageUrl'] ?? null)
                             <img
@@ -39,14 +41,14 @@
                         <div class="p-5">
                             @if ($item['type'] ?? null)
                                 <p
-                                    class="mb-4 text-xs font-black tracking-widest text-[#0f766e] uppercase"
+                                    class="mb-4 text-xs font-black tracking-widest text-[var(--healthcare-primary)] uppercase"
                                 >
                                     {{ $item['type'] }}
                                 </p>
                             @endif
 
                             <h3
-                                class="text-xl font-black group-hover:text-[#0f766e]"
+                                class="text-xl font-black group-hover:text-[var(--healthcare-primary)]"
                             >
                                 {{ $item['title'] }}
                             </h3>
@@ -55,7 +57,22 @@
                             </p>
                         </div>
                     </a>
-                @endforeach
+                @empty
+                    <article
+                        class="min-w-[240px] snap-start rounded-xl border border-dashed border-stone-200 bg-white p-6 lg:min-w-0"
+                    >
+                        <p
+                            class="text-xs font-black tracking-widest text-[var(--healthcare-primary)] uppercase"
+                        >
+                            {{ __('capell-theme-healthcare::generic.clinical_trust_label') }}
+                        </p>
+                        <h3
+                            class="mt-3 text-xl font-black text-[var(--healthcare-ink)]"
+                        >
+                            {{ __('capell-theme-healthcare::generic.team_ready') }}
+                        </h3>
+                    </article>
+                @endforelse
             </div>
 
             <button

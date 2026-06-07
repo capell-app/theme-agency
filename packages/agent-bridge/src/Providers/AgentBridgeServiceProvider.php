@@ -137,7 +137,7 @@ final class AgentBridgeServiceProvider extends ServiceProvider
         }
 
         FilamentView::registerRenderHook(
-            PanelsRenderHook::GLOBAL_SEARCH_AFTER,
+            PanelsRenderHook::GLOBAL_SEARCH_BEFORE,
             fn (): string => Blade::render('@livewire($component)', ['component' => 'capell-agent-bridge.prompt-builder-toolbar-action']),
         );
     }

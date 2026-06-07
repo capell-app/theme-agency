@@ -12,6 +12,7 @@ use Capell\Experiments\Actions\CreateExperimentAction;
 use Capell\Experiments\Actions\DeclareExperimentWinnerAction;
 use Capell\Experiments\Actions\RecordGoalEventAction;
 use Capell\Experiments\Actions\ResolveExperimentVariantForContextAction;
+use Capell\Experiments\Actions\SyncExperimentStatusesAction;
 use Capell\Experiments\Data\ExperimentAudienceRuleData;
 use Capell\Experiments\Data\ExperimentContextData;
 use Capell\Experiments\Data\ExperimentData;
@@ -26,6 +27,8 @@ use Capell\Experiments\Enums\ExperimentStatus;
 use Capell\Experiments\Enums\ExperimentSubjectType;
 use Capell\Experiments\Models\ExperimentAllocation;
 use Carbon\CarbonImmutable;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 
 it('creates an experiment aggregate with variants goals and audience rules', function (): void {
@@ -100,6 +103,97 @@ it('allocates sticky variants records goals and builds a winner report', functio
         ->and($report->winningVariantId)->toBeNull()
         ->and($report->isStatisticallySignificant)->toBeFalse()
         ->and($report->variants)->toHaveCount(2);
+});
+
+it('records keyed goal events once per allocation and goal', function (): void {
+    $experiment = CreateExperimentAction::run(new ExperimentData(
+        name: 'Idempotent goal event test',
+        status: ExperimentStatus::Active,
+        variants: [
+            new ExperimentVariantData(name: 'Control', key: 'control', isControl: true),
+        ],
+        goals: [
+            new ExperimentGoalData(name: 'Signup', key: 'signup', type: ExperimentGoalType::CustomEvent, isPrimary: true),
+        ],
+    ));
+    $allocation = ExperimentAllocation::query()->create([
+        'experiment_id' => $experiment->getKey(),
+        'experiment_variant_id' => $experiment->variants()->firstOrFail()->getKey(),
+        'allocation_key' => 'visitor-idempotent',
+        'allocation_hash' => hash('sha256', 'visitor-idempotent'),
+        'allocated_at' => now(),
+    ]);
+    $goal = $experiment->goals()->firstOrFail();
+
+    $firstEvent = RecordGoalEventAction::run(
+        allocation: $allocation,
+        goal: $goal,
+        data: new ExperimentGoalEventData(eventKey: 'signup', valueAmount: '25.00', metadata: ['source' => 'first']),
+    );
+    $secondEvent = RecordGoalEventAction::run(
+        allocation: $allocation,
+        goal: $goal,
+        data: new ExperimentGoalEventData(eventKey: 'signup', valueAmount: '99.00', metadata: ['source' => 'duplicate']),
+    );
+    $keylessEvent = RecordGoalEventAction::run(
+        allocation: $allocation,
+        goal: $goal,
+        data: new ExperimentGoalEventData(valueAmount: '50.00'),
+    );
+
+    expect($secondEvent->is($firstEvent))->toBeTrue()
+        ->and($keylessEvent->is($firstEvent))->toBeFalse()
+        ->and($goal->events()->count())->toBe(2)
+        ->and($secondEvent->value_amount)->toBe('25.00')
+        ->and($secondEvent->metadata)->toBe(['source' => 'first']);
+});
+
+it('syncs scheduled and expired experiment statuses', function (): void {
+    $now = CarbonImmutable::parse('2026-06-07 12:00:00', 'UTC');
+    $scheduled = CreateExperimentAction::run(new ExperimentData(
+        name: 'Scheduled experiment',
+        status: ExperimentStatus::Scheduled,
+        startsAt: $now->subMinute(),
+        endsAt: $now->addDay(),
+        variants: [
+            new ExperimentVariantData(name: 'Control', key: 'control', isControl: true),
+        ],
+    ));
+    $expiredActive = CreateExperimentAction::run(new ExperimentData(
+        name: 'Expired active experiment',
+        status: ExperimentStatus::Active,
+        startsAt: $now->subDays(2),
+        endsAt: $now->subMinute(),
+        variants: [
+            new ExperimentVariantData(name: 'Control', key: 'control', isControl: true),
+        ],
+    ));
+    $expiredScheduled = CreateExperimentAction::run(new ExperimentData(
+        name: 'Expired scheduled experiment',
+        status: ExperimentStatus::Scheduled,
+        startsAt: $now->subDays(2),
+        endsAt: $now->subMinute(),
+        variants: [
+            new ExperimentVariantData(name: 'Control', key: 'control', isControl: true),
+        ],
+    ));
+    $futureScheduled = CreateExperimentAction::run(new ExperimentData(
+        name: 'Future scheduled experiment',
+        status: ExperimentStatus::Scheduled,
+        startsAt: $now->addHour(),
+        variants: [
+            new ExperimentVariantData(name: 'Control', key: 'control', isControl: true),
+        ],
+    ));
+
+    $result = SyncExperimentStatusesAction::run($now);
+
+    expect($result->scheduledToActive)->toBe(1)
+        ->and($result->expiredToEnded)->toBe(2)
+        ->and($scheduled->refresh()->status)->toBe(ExperimentStatus::Active)
+        ->and($expiredActive->refresh()->status)->toBe(ExperimentStatus::Ended)
+        ->and($expiredScheduled->refresh()->status)->toBe(ExperimentStatus::Ended)
+        ->and($futureScheduled->refresh()->status)->toBe(ExperimentStatus::Scheduled);
 });
 
 it('honours weighted allocation strategy without reusing a sticky visitor row', function (): void {
@@ -348,4 +442,44 @@ it('returns no resolved variant when request context misses active experiments',
     );
 
     expect($resolution)->toBeNull();
+});
+
+it('bounds request-context candidate resolution and ignores inactive variant-only experiments', function (): void {
+    Config::set('capell-experiments.resolution_candidate_limit', 1);
+
+    CreateExperimentAction::run(new ExperimentData(
+        name: 'Inactive variant experiment',
+        status: ExperimentStatus::Active,
+        variants: [
+            new ExperimentVariantData(name: 'Control', key: 'control', weight: 0, isControl: true),
+        ],
+    ));
+    CreateExperimentAction::run(new ExperimentData(
+        name: 'First candidate experiment',
+        key: 'first-candidate',
+        status: ExperimentStatus::Active,
+        variants: [
+            new ExperimentVariantData(name: 'Control', key: 'control', isControl: true),
+        ],
+    ));
+    CreateExperimentAction::run(new ExperimentData(
+        name: 'Beyond limit experiment',
+        key: 'beyond-limit',
+        status: ExperimentStatus::Active,
+        variants: [
+            new ExperimentVariantData(name: 'Control', key: 'control', isControl: true),
+        ],
+    ));
+
+    DB::flushQueryLog();
+    DB::enableQueryLog();
+
+    $resolution = ResolveExperimentVariantForContextAction::run('visitor-bounded');
+    $queryCount = count(DB::getQueryLog());
+
+    DB::disableQueryLog();
+
+    expect($resolution)->not->toBeNull()
+        ->and($resolution?->experimentKey)->toBe('first-candidate')
+        ->and($queryCount)->toBeLessThanOrEqual(5);
 });

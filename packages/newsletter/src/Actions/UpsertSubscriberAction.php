@@ -76,6 +76,10 @@ class UpsertSubscriberAction
             return $evidence instanceof ConsentEvidenceData ? SubscriberStatus::Subscribed : SubscriberStatus::Pending;
         }
 
+        if ($existingSubscriber->status->isGloballySuppressed()) {
+            return $existingSubscriber->status;
+        }
+
         if (! in_array($existingSubscriber->status, [
             SubscriberStatus::Unsubscribed,
             SubscriberStatus::Suppressed,

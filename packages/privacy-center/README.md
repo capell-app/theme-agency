@@ -13,8 +13,9 @@ Privacy Center gives Capell packages a shared compliance ledger for consent, pol
 - Health diagnostics for required privacy tables, morph map aliases, and identity hash configuration.
 - Five Filament admin resources for policies, consent records, policy acceptances, privacy requests, and retention rules.
 - A Privacy Center overview widget with package-owned consent, request, and retention counts.
+- A public cookie consent preference center that records granular category decisions through `RecordConsentAction`.
 
-Privacy Center currently ships admin and console surfaces only. It does not ship a public cookie banner, a public DSAR intake form, a consent preference centre, or a cross-package subject-data export/erasure registry.
+Privacy Center currently ships admin and console surfaces plus a public cookie consent preference center. It does not ship a public DSAR intake form or a cross-package subject-data export/erasure registry.
 
 ## Installation And Configuration
 
@@ -39,6 +40,8 @@ Integrating packages should write Privacy Center records through Actions, not di
 - `RecordPolicyAcceptanceAction`
 
 `RecordConsentAction` stores cookie category, consent decision, jurisdiction, policy version, optional source model, optional subject model, and evidence metadata. Request IP address and user agent values are hashed before persistence. When an integration passes a source model that carries a loaded `subject` or `visit` relationship, Privacy Center mirrors that related model as the consent subject so package-owned exports and erasure can find the record.
+
+The public preference center is available at `/privacy/consent`. It renders only category labels and explanatory copy, submits category handles, grants essential cookies automatically, and records optional categories as granted or denied without exposing policy model IDs, admin URLs, hashed identifiers, package internals, or editor state.
 
 ## Retention Execution
 
@@ -73,4 +76,4 @@ The admin provider contributes these Filament surfaces when the package is insta
 
 Public output must not expose Privacy Center internals, package names, model identifiers, admin URLs, hashed identifiers, or editor state.
 
-The package manifest declares `cacheable: false`, `sensitiveOutput: true`, and `frontendRenderBudgetMs: 0` because Privacy Center currently has no public frontend render surface. Any future public cookie or DSAR UI must preserve that boundary and prove anonymous/non-admin output does not expose authoring or privacy internals.
+The package manifest declares `cacheable: false`, `sensitiveOutput: true`, and a 40ms frontend render budget because consent decisions vary by subject and request evidence is sensitive. The public preference center is deliberately cache-safe HTML plus a POST action; future public DSAR UI must preserve that boundary and prove anonymous/non-admin output does not expose authoring or privacy internals.

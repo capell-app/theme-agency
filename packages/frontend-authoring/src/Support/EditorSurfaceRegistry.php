@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Capell\FrontendAuthoring\Support;
 
 use Capell\FrontendAuthoring\Contracts\EditableRegionEditorSurface;
+use Capell\FrontendAuthoring\Enums\EditableRegionSurface;
 use InvalidArgumentException;
 
 final class EditorSurfaceRegistry
@@ -16,12 +17,12 @@ final class EditorSurfaceRegistry
 
     public function register(EditableRegionEditorSurface $surface): void
     {
-        $this->surfaces[$surface->surface()] = $surface;
+        $this->surfaces[$surface->surface()->value] = $surface;
     }
 
-    public function surface(string $key): EditableRegionEditorSurface
+    public function surface(EditableRegionSurface $surface): EditableRegionEditorSurface
     {
-        return $this->surfaces[$key]
-            ?? throw new InvalidArgumentException(sprintf('Editable region editor surface [%s] is not registered.', $key));
+        return $this->surfaces[$surface->value]
+            ?? throw new InvalidArgumentException(sprintf('Editable region editor surface [%s] is not registered.', $surface->value));
     }
 }

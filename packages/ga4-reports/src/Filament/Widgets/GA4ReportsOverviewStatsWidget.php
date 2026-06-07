@@ -7,6 +7,7 @@ namespace Capell\GA4Reports\Filament\Widgets;
 use Capell\Admin\Contracts\CapellWidgetContract;
 use Capell\Admin\Filament\Concerns\GatedByRoleAndSettings;
 use Capell\GA4Reports\Actions\BuildGA4ReportsOverviewAction;
+use Capell\GA4Reports\Data\GA4ReportsOverviewData;
 use Capell\GA4Reports\Filament\Widgets\Concerns\BuildsGA4ReportsDashboardWindow;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
@@ -43,6 +44,8 @@ final class GA4ReportsOverviewStatsWidget extends BaseWidget implements CapellWi
                     ->label(__('capell-ga4-reports::widgets.metric')),
                 TextColumn::make('value')
                     ->label(__('capell-ga4-reports::widgets.value')),
+                TextColumn::make('comparison')
+                    ->label(__('capell-ga4-reports::widgets.comparison')),
             ]);
     }
 
@@ -51,34 +54,63 @@ final class GA4ReportsOverviewStatsWidget extends BaseWidget implements CapellWi
      */
     private function getRecords(): Collection
     {
-        $overview = BuildGA4ReportsOverviewAction::run($this->getGA4ReportsWindow());
+        $window = $this->getGA4ReportsWindow();
+        $overview = BuildGA4ReportsOverviewAction::run($window);
+        $previousOverview = $window === null
+            ? new GA4ReportsOverviewData(0, 0, 0, 0, 0.0, 0.0)
+            : BuildGA4ReportsOverviewAction::run($this->getPreviousGA4ReportsWindow($window));
 
         return collect([
             [
                 'id' => 'screen-page-views',
                 'label' => (string) __('capell-ga4-reports::widgets.screen_page_views'),
                 'value' => number_format($overview->screenPageViews),
+                'comparison' => $this->formatDelta($overview->screenPageViews, $previousOverview->screenPageViews),
             ],
             [
                 'id' => 'sessions',
                 'label' => (string) __('capell-ga4-reports::widgets.sessions'),
                 'value' => number_format($overview->sessions),
+                'comparison' => $this->formatDelta($overview->sessions, $previousOverview->sessions),
             ],
             [
                 'id' => 'total-users',
                 'label' => (string) __('capell-ga4-reports::widgets.total_users'),
                 'value' => number_format($overview->totalUsers),
+                'comparison' => $this->formatDelta($overview->totalUsers, $previousOverview->totalUsers),
             ],
             [
                 'id' => 'engagement-rate',
                 'label' => (string) __('capell-ga4-reports::widgets.engagement_rate'),
                 'value' => number_format($overview->engagementRate * 100, 1) . '%',
+                'comparison' => $this->formatPercentagePointDelta($overview->engagementRate, $previousOverview->engagementRate),
             ],
             [
                 'id' => 'conversions',
                 'label' => (string) __('capell-ga4-reports::widgets.conversions'),
                 'value' => number_format($overview->conversions),
+                'comparison' => $this->formatDelta($overview->conversions, $previousOverview->conversions),
             ],
         ]);
+    }
+
+    private function formatDelta(int $current, int $previous): string
+    {
+        if ($previous === 0) {
+            return $current === 0
+                ? (string) __('capell-ga4-reports::widgets.no_change')
+                : __('capell-ga4-reports::widgets.new_since_previous', ['value' => number_format($current)]);
+        }
+
+        $change = (($current - $previous) / $previous) * 100;
+
+        return sprintf('%+0.1f%%', $change);
+    }
+
+    private function formatPercentagePointDelta(float $current, float $previous): string
+    {
+        $change = ($current - $previous) * 100;
+
+        return sprintf('%+0.1f pp', $change);
     }
 }

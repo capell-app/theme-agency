@@ -39,6 +39,7 @@ class BuildEditableRegionManifestAction
                 target: $payload->target,
                 description: $payload->description,
                 context: $payload->context,
+                permissions: $payload->permissions,
             );
 
             $manifest[$region->id] = $region->toArray();

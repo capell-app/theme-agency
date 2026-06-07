@@ -14,6 +14,7 @@ use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Http\Client\RequestException;
 use Illuminate\Http\Client\Response;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\Http;
 use JsonException;
@@ -361,14 +362,20 @@ final class GA4ReportsDataClient implements GA4ReportsDataClientInterface
         }
 
         $credentials = $this->credentials();
+        $cacheKey = $this->accessTokenCacheKey($credentials['client_email'], $credentials['token_uri'] ?? 'https://oauth2.googleapis.com/token');
+        $cachedAccessToken = $this->cachedAccessToken($cacheKey, $now);
+
+        if ($cachedAccessToken !== null) {
+            return $cachedAccessToken;
+        }
+
         $issuedAt = $now;
-        $expiresAt = $issuedAt + 3600;
         $assertion = $this->jwt([
             'iss' => $credentials['client_email'],
             'scope' => self::SCOPE,
             'aud' => $credentials['token_uri'] ?? 'https://oauth2.googleapis.com/token',
             'iat' => $issuedAt,
-            'exp' => $expiresAt,
+            'exp' => $issuedAt + 3600,
         ], $credentials['private_key']);
 
         $response = Http::asForm()
@@ -393,10 +400,66 @@ final class GA4ReportsDataClient implements GA4ReportsDataClientInterface
             return '';
         }
 
+        $expiresIn = $response->json('expires_in');
+        $expiresAt = $now + (is_numeric($expiresIn) ? max(60, (int) $expiresIn) : 3600);
+        $this->accessToken = $accessToken;
+        $this->accessTokenExpiresAt = $expiresAt;
+        $this->cacheAccessToken($cacheKey, $accessToken, $expiresAt, $now);
+
+        return $accessToken;
+    }
+
+    private function cachedAccessToken(string $cacheKey, int $now): ?string
+    {
+        $payload = Cache::store($this->tokenCacheStore())->get($cacheKey);
+
+        if (! is_array($payload)) {
+            return null;
+        }
+
+        $accessToken = $payload['access_token'] ?? null;
+        $expiresAt = $payload['expires_at'] ?? null;
+
+        if (! is_string($accessToken) || $accessToken === '') {
+            return null;
+        }
+
+        if (! is_int($expiresAt) || $expiresAt <= $now + 60) {
+            return null;
+        }
+
         $this->accessToken = $accessToken;
         $this->accessTokenExpiresAt = $expiresAt;
 
         return $accessToken;
+    }
+
+    private function cacheAccessToken(string $cacheKey, string $accessToken, int $expiresAt, int $now): void
+    {
+        Cache::store($this->tokenCacheStore())->put(
+            $cacheKey,
+            [
+                'access_token' => $accessToken,
+                'expires_at' => $expiresAt,
+            ],
+            max(60, $expiresAt - $now - 60),
+        );
+    }
+
+    private function accessTokenCacheKey(string $clientEmail, string $tokenUri): string
+    {
+        return 'capell-ga4-reports:access-token:' . hash('sha256', implode('|', [
+            $clientEmail,
+            $tokenUri,
+            self::SCOPE,
+        ]));
+    }
+
+    private function tokenCacheStore(): ?string
+    {
+        $store = $this->config['token_cache_store'] ?? config('capell-ga4-reports.token_cache_store');
+
+        return is_string($store) && $store !== '' ? $store : null;
     }
 
     /**

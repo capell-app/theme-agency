@@ -3,11 +3,16 @@
 declare(strict_types=1);
 
 use Capell\Newsletter\Actions\BuildDueNewsletterSendsAction;
+use Capell\Newsletter\Actions\BuildNewsletterSendHandoffPayloadAction;
 use Capell\Newsletter\Actions\ScheduleNewsletterSendAction;
 use Capell\Newsletter\Actions\UpdateNewsletterSendStatusAction;
+use Capell\Newsletter\Enums\AuthType;
 use Capell\Newsletter\Enums\NewsletterSendStatus;
+use Capell\Newsletter\Enums\ProviderType;
 use Capell\Newsletter\Enums\SegmentType;
 use Capell\Newsletter\Models\NewsletterSend;
+use Capell\Newsletter\Models\ProviderAudience;
+use Capell\Newsletter\Models\ProviderConnection;
 use Capell\Newsletter\Models\Segment;
 use Carbon\CarbonImmutable;
 use Illuminate\Validation\ValidationException;
@@ -95,6 +100,67 @@ it('builds due newsletter sends in schedule order', function (): void {
     expect($sends->pluck('id')->all())->toBe([
         $firstDue->getKey(),
         $secondDue->getKey(),
+    ]);
+});
+
+it('builds an explicit external handoff payload for downstream delivery workers', function (): void {
+    $site = $this->createNewsletterSite();
+    $segment = Segment::query()->create([
+        'site_id' => $site->getKey(),
+        'name' => 'Subscribed',
+        'handle' => 'subscribed',
+        'type' => SegmentType::SavedFilter,
+        'filters' => [],
+        'is_active' => true,
+    ]);
+    $connection = ProviderConnection::query()->create([
+        'site_id' => $site->getKey(),
+        'name' => 'Mailchimp',
+        'provider' => ProviderType::Mailchimp,
+        'auth_type' => AuthType::ApiKey,
+        'credentials' => ['api_key' => 'fake'],
+        'is_enabled' => true,
+    ]);
+    $audience = ProviderAudience::query()->create([
+        'provider_connection_id' => $connection->getKey(),
+        'name' => 'Product list',
+        'remote_id' => 'list-123',
+        'is_default' => true,
+        'sync_subscribed_only' => true,
+    ]);
+    $send = NewsletterSend::factory()->create([
+        'site_id' => $site->getKey(),
+        'newsletter_segment_id' => $segment->getKey(),
+        'newsletter_provider_audience_id' => $audience->getKey(),
+        'status' => NewsletterSendStatus::Scheduled,
+        'scheduled_at' => CarbonImmutable::parse('2026-05-31 12:00:00', 'UTC'),
+        'utm_campaign' => 'may-product-update',
+        'metadata' => ['template' => 'release-note'],
+    ]);
+
+    $payload = BuildNewsletterSendHandoffPayloadAction::run($send);
+
+    expect($payload)->toMatchArray([
+        'strategy' => 'external_handoff',
+        'send' => [
+            'id' => $send->getKey(),
+            'site_id' => $site->getKey(),
+            'status' => NewsletterSendStatus::Scheduled->value,
+        ],
+        'audience' => [
+            'segment_id' => $segment->getKey(),
+            'segment_handle' => 'subscribed',
+            'provider_audience_id' => $audience->getKey(),
+            'provider_connection_id' => $connection->getKey(),
+            'provider' => ProviderType::Mailchimp->value,
+            'remote_audience_id' => 'list-123',
+        ],
+        'utm' => [
+            'campaign' => 'may-product-update',
+        ],
+        'metadata' => [
+            'template' => 'release-note',
+        ],
     ]);
 });
 

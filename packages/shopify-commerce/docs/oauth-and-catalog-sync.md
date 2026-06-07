@@ -24,6 +24,8 @@ flowchart TD
 
 The install and callback routes both use `web` and `auth` middleware and both call `ShopifyConnectionPage::canAccess()`. A user without `manage_shopify_commerce` should never reach the Shopify OAuth redirect or callback handler.
 
+Expired OAuth nonce rows are removed by `capell-shopify-commerce:prune-oauth-states`, which is scheduled hourly after the package is installed. Callback validation still deletes the matched row immediately, so the scheduled pruning path only clears abandoned or already-expired connection attempts.
+
 ## OAuth Data Ownership
 
 | Data                    | Owner                              | Notes                                                                                                                               |
@@ -112,7 +114,7 @@ The TTL comes from `shopify_commerce.search_cache_ttl_minutes`, with a fallback 
 | Search returns old products           | Import did not complete or search cache still has the old version                          | Check `shopify_products.synced_at`, `shopify_connections.last_synced_at`, and cache prefix `capell-shopify-commerce.search.` | Complete import and run `InvalidateShopifyProductSearchCacheAction::run($connection)`.                                           |
 | Customer cache stays empty            | Customer sync has not run, the token is revoked, or the Shopify app lacks `read_customers` | Check `shopify_customers`, connection status/scopes, and the command output for `capell-shopify-commerce:sync-customers`.    | Grant customer-read scope, reconnect if required, then run the customer sync command for the connection.                         |
 | Site-limited admin sees no connection | Connection is scoped to a site the actor cannot access                                     | Check `shopify_connections.site_id` and the actor's assigned site ids                                                        | Reconnect under the intended site or update the actor's site assignment.                                                         |
-| GraphQL calls pause briefly           | Shopify throttle metadata reports insufficient points                                      | Inspect response `extensions.cost.throttleStatus` in a fake or captured response                                             | This is expected; `ExecuteShopifyAdminGraphqlAction` sleeps up to five seconds to pace requests.                                 |
+| GraphQL calls pause briefly           | Shopify throttle metadata reports insufficient points or Shopify returns `429 Retry-After` | Inspect response `extensions.cost.throttleStatus`, `Retry-After`, and cache key `capell-shopify-commerce.graphql.throttle.*` | This is expected; `ExecuteShopifyAdminGraphqlAction` retries 429s, carries throttle state forward, and sleeps up to five seconds before paced requests. |
 
 ## Focused Test Recipes
 

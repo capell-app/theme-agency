@@ -23,6 +23,7 @@ class EventNotificationLogFactory extends Factory
             'event_occurrence_id' => EventOccurrence::factory(),
             'event_registration_id' => EventRegistration::factory(),
             'type' => EventNotificationTypeEnum::Confirmation->value,
+            'notification_key' => EventNotificationTypeEnum::Confirmation->value,
             'recipient_email' => 'attendee@example.com',
             'status' => 'queued',
             'scheduled_for' => now(),

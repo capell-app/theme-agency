@@ -40,6 +40,7 @@
     "commands": {
         "install": null,
         "setup": "capell:hero-setup",
+        "setupParams": ["force"],
         "demo": null,
         "doctor": null
     },
@@ -57,10 +58,65 @@
         "adminQueryBudget": 0,
         "cacheTags": ["hero"],
         "cacheSafety": {
-            "cacheable": false,
+            "cacheable": true,
             "variesBy": ["site", "locale"],
             "sensitiveOutput": false,
-            "invalidationSources": [],
+            "invalidationSources": [
+                {
+                    "model": "Capell\\Core\\Models\\Media",
+                    "events": [
+                        "created",
+                        "updated",
+                        "deleted",
+                        "restored",
+                        "forceDeleted"
+                    ]
+                },
+                {
+                    "model": "Capell\\Core\\Models\\Page",
+                    "events": [
+                        "created",
+                        "updated",
+                        "deleted",
+                        "restored",
+                        "forceDeleted"
+                    ]
+                },
+                {
+                    "model": "Capell\\Core\\Models\\Theme",
+                    "events": ["updated"]
+                },
+                {
+                    "model": "Capell\\Core\\Models\\Translation",
+                    "events": [
+                        "created",
+                        "updated",
+                        "deleted",
+                        "restored",
+                        "forceDeleted"
+                    ]
+                },
+                {
+                    "model": "Capell\\LayoutBuilder\\Models\\Widget",
+                    "events": [
+                        "created",
+                        "updated",
+                        "deleted",
+                        "restored",
+                        "forceDeleted"
+                    ]
+                },
+                {
+                    "model": "Capell\\LayoutBuilder\\Models\\WidgetAsset",
+                    "events": [
+                        "created",
+                        "updated",
+                        "deleted",
+                        "restored",
+                        "forceDeleted"
+                    ]
+                }
+            ],
             "queueInvalidation": true
         }
     },
@@ -89,13 +145,8 @@
             },
             {
                 "path": "docs/screenshots/hero-home-widget.png",
-                "alt": "Hero home widget rendered with responsive media, overlay background, and inherited theme styling.",
-                "caption": "Hero home widget"
-            },
-            {
-                "path": "docs/screenshots/hero-slide-variant.png",
-                "alt": "Hero slide variant with carousel pagination and related content cards.",
-                "caption": "Hero slide and related-content variant"
+                "alt": "Capell public homepage rendering the Hero widget",
+                "caption": "Render a clean public homepage hero with inherited theme styling and deterministic setup data."
             }
         ],
         "categories": ["admin", "console", "foundation", "frontend"]

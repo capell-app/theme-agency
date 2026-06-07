@@ -3,13 +3,15 @@
     $articles = $section->items ?? [];
 @endphp
 
-<section class="retail-resources bg-[#fffaf3]">
+<section class="retail-resources bg-[var(--retail-surface)]">
     <div class="px-6">
         <div
             class="flex flex-col justify-between gap-5 md:flex-row md:items-end"
         >
             <div>
-                <h2 class="text-4xl font-black tracking-tight text-[#17211c]">
+                <h2
+                    class="text-4xl font-black tracking-tight text-[var(--retail-ink)]"
+                >
                     {{ $section->heading }}
                 </h2>
                 @if ($section->summary ?? null)
@@ -36,7 +38,7 @@
                             style="min-width: 260px"
                         >
                             <p
-                                class="text-xs font-black tracking-widest text-[#1f5f4a] uppercase"
+                                class="text-xs font-black tracking-widest text-[var(--retail-primary)] uppercase"
                             >
                                 {{ $article['type'] ?? __('capell-theme-commerce::generic.article_label') }}
                             </p>
@@ -53,7 +55,7 @@
                             style="min-width: 260px"
                         >
                             <p
-                                class="text-xs font-black tracking-widest text-[#1f5f4a] uppercase"
+                                class="text-xs font-black tracking-widest text-[var(--retail-primary)] uppercase"
                             >
                                 {{ __('capell-theme-commerce::generic.resource') }}
                             </p>

@@ -6,6 +6,19 @@
     "outputDirectory": "packages/seo-suite/docs/screenshots",
     "entries": [
         {
+            "id": "page-seo-panel",
+            "title": "Page SEO panel.",
+            "package": "seo-suite",
+            "surface": "admin",
+            "targetType": "admin-surface",
+            "target": "EditPage",
+            "required": true,
+            "notes": "Committed Capell runner capture promoted in marketplace media. Open a seeded Page edit screen and capture the SEO tab/panel added by SEO Suite.",
+            "useCase": "An editor edits page-level metadata, canonical state, social metadata, and SEO checks.",
+            "screenshotPath": "packages/seo-suite/docs/screenshots/page-seo-panel.png",
+            "darkScreenshotPath": "packages/seo-suite/docs/screenshots/page-seo-panel-dark.png"
+        },
+        {
             "id": "seo-audit-page",
             "title": "SEO audit page.",
             "package": "seo-suite",
@@ -13,9 +26,23 @@
             "targetType": "admin-surface",
             "target": "SeoAuditPage",
             "required": true,
-            "notes": "Seed at least one page_seo_snapshots row so score, severity, and status columns are visible.",
+            "notes": "Committed Capell runner capture promoted in marketplace media. Seed at least one page_seo_snapshots row so score, severity, and status columns are visible.",
             "useCase": "An administrator reviews SEO audit scores and remediation state for seeded pages.",
-            "screenshotPath": "packages/seo-suite/docs/screenshots/seo-audit-page.png"
+            "screenshotPath": "packages/seo-suite/docs/screenshots/seo-audit-page.png",
+            "darkScreenshotPath": "packages/seo-suite/docs/screenshots/seo-audit-page-dark.png"
+        },
+        {
+            "id": "search-console-insights-panel",
+            "title": "Search Console insights panel.",
+            "package": "seo-suite",
+            "surface": "admin",
+            "targetType": "admin-surface",
+            "target": "Dashboard",
+            "required": true,
+            "notes": "Committed Capell runner capture promoted in marketplace media. Seed search_console_url_metrics so dashboard widgets show clicks, impressions, movement, and opportunities.",
+            "useCase": "An administrator reviews Search Console-style performance panels when metrics are seeded.",
+            "screenshotPath": "packages/seo-suite/docs/screenshots/search-console-insights-panel.png",
+            "darkScreenshotPath": "packages/seo-suite/docs/screenshots/search-console-insights-panel-dark.png"
         },
         {
             "id": "broken-links-page",
@@ -25,21 +52,36 @@
             "targetType": "admin-surface",
             "target": "BrokenLinksPage",
             "required": true,
-            "notes": "Seed a broken_links row connected to a page so the source page, target URL, status, and redirect action are visible.",
+            "notes": "Committed Capell runner capture promoted in marketplace media. Seed a broken_links row connected to a page so the source page, target URL, status, and redirect action are visible.",
             "useCase": "An administrator reviews broken link findings and their source pages.",
-            "screenshotPath": "packages/seo-suite/docs/screenshots/broken-links-page.png"
+            "screenshotPath": "packages/seo-suite/docs/screenshots/broken-links-page.png",
+            "darkScreenshotPath": "packages/seo-suite/docs/screenshots/broken-links-page-dark.png"
         },
         {
-            "id": "not-found-urls-page",
-            "title": "Not-found URLs page.",
+            "id": "ai-creator-action-modal",
+            "title": "AI Creator action modal.",
             "package": "seo-suite",
             "surface": "admin",
             "targetType": "admin-surface",
-            "target": "NotFoundUrlsPage",
+            "target": "EditPage",
             "required": true,
-            "notes": "Install and migrate capell-app/insights, then seed at least one page_view event for a missing URL.",
-            "useCase": "An administrator reviews missing frontend URLs grouped by visitor count and latest view.",
-            "screenshotPath": "packages/seo-suite/docs/screenshots/not-found-urls-page.png"
+            "notes": "Committed Capell runner capture promoted in marketplace media. Open a seeded Page edit screen and capture the SEO Suite AI Creator action modal with safe fixture content.",
+            "useCase": "An editor reviews AI-assisted metadata creation before accepting generated copy.",
+            "screenshotPath": "packages/seo-suite/docs/screenshots/ai-creator-action-modal.png",
+            "darkScreenshotPath": "packages/seo-suite/docs/screenshots/ai-creator-action-modal-dark.png"
+        },
+        {
+            "id": "sitemap-page",
+            "title": "Sitemap page.",
+            "package": "seo-suite",
+            "surface": "admin",
+            "targetType": "admin-surface",
+            "target": "SitemapPage",
+            "required": true,
+            "notes": "Committed Capell runner capture promoted in marketplace media. Seed sitemap state through Site Discovery/SEO Suite integration so sitemap rows and status are visible.",
+            "useCase": "An administrator reviews sitemap coverage and crawler-ready URL state.",
+            "screenshotPath": "packages/seo-suite/docs/screenshots/sitemap-page.png",
+            "darkScreenshotPath": "packages/seo-suite/docs/screenshots/sitemap-page-dark.png"
         },
         {
             "id": "translation-coverage-page",
@@ -49,9 +91,22 @@
             "targetType": "admin-surface",
             "target": "TranslationCoveragePage",
             "required": true,
-            "notes": "Seed at least one site/page/language combination so translation coverage rows are visible.",
+            "notes": "Committed Capell runner capture promoted in marketplace media. Seed at least one site/page/language combination so translation coverage rows are visible.",
             "useCase": "An administrator reviews missing or stale translation coverage for SEO-relevant content.",
-            "screenshotPath": "packages/seo-suite/docs/screenshots/translation-coverage-page.png"
+            "screenshotPath": "packages/seo-suite/docs/screenshots/translation-coverage-page.png",
+            "darkScreenshotPath": "packages/seo-suite/docs/screenshots/translation-coverage-page-dark.png"
+        },
+        {
+            "id": "not-found-urls-page",
+            "title": "Not-found URLs page.",
+            "package": "seo-suite",
+            "surface": "admin",
+            "targetType": "admin-surface",
+            "target": "NotFoundUrlsPage",
+            "required": false,
+            "notes": "Optional follow-up. Requires capell-app/insights installed/migrated in the screenshot runner and a seeded missing page-view event before this can be captured.",
+            "useCase": "An administrator reviews missing frontend URLs grouped by visitor count and latest view.",
+            "screenshotPath": "packages/seo-suite/docs/screenshots/not-found-urls-page.png"
         },
         {
             "id": "ai-discovery-page",
@@ -60,8 +115,8 @@
             "surface": "admin",
             "targetType": "admin-surface",
             "target": "AiDiscoveryPage",
-            "required": true,
-            "notes": "Seed AI Discovery site and page profiles so inclusion, summary, readiness, and Markdown columns are visible.",
+            "required": false,
+            "notes": "Optional follow-up. Seed AI Discovery site and page profiles so inclusion, summary, readiness, and Markdown columns are visible before capture.",
             "useCase": "An administrator manages which public pages appear in AI-readable discovery output.",
             "screenshotPath": "packages/seo-suite/docs/screenshots/ai-discovery-page.png"
         },
@@ -72,34 +127,10 @@
             "surface": "admin",
             "targetType": "admin-surface",
             "target": "SeoSuiteSettingsPage",
-            "required": true,
-            "notes": "Capture the extension settings page after running capell:seo-suite-install so settings rows exist.",
+            "required": false,
+            "notes": "Optional follow-up. Capture the extension settings page after running capell:seo-suite-install so settings rows exist.",
             "useCase": "An administrator reviews SEO audit, AI Discovery, crawler, Search Console, and AI provider settings.",
             "screenshotPath": "packages/seo-suite/docs/screenshots/seo-settings-page.png"
-        },
-        {
-            "id": "page-seo-panel",
-            "title": "Page SEO panel.",
-            "package": "seo-suite",
-            "surface": "admin",
-            "targetType": "admin-surface",
-            "target": "EditPage",
-            "required": true,
-            "notes": "Open a seeded Page edit screen and capture the SEO tab/panel added by SEO Suite.",
-            "useCase": "An editor edits page-level metadata, canonical state, social metadata, and SEO checks.",
-            "screenshotPath": "packages/seo-suite/docs/screenshots/page-seo-panel.png"
-        },
-        {
-            "id": "search-console-insights-panel",
-            "title": "Search Console insights panel.",
-            "package": "seo-suite",
-            "surface": "admin",
-            "targetType": "admin-surface",
-            "target": "Dashboard",
-            "required": true,
-            "notes": "Seed search_console_url_metrics so dashboard widgets show clicks, impressions, movement, and opportunities.",
-            "useCase": "An administrator reviews Search Console-style performance panels when metrics are seeded.",
-            "screenshotPath": "packages/seo-suite/docs/screenshots/search-console-insights-panel.png"
         },
         {
             "id": "llms-txt-output",
@@ -108,8 +139,8 @@
             "surface": "frontend",
             "targetType": "frontend-url",
             "target": "/llms.txt",
-            "required": true,
-            "notes": "Seed AI Discovery site/page profiles and use visitor-facing summary text only.",
+            "required": false,
+            "notes": "Optional follow-up. Seed AI Discovery site/page profiles and capture visitor-safe public text output through a runner scenario that can render plain text responses.",
             "useCase": "An AI crawler reads the concise public page index for the site.",
             "screenshotPath": "packages/seo-suite/docs/screenshots/llms-txt-output.png"
         },
@@ -120,8 +151,8 @@
             "surface": "frontend",
             "targetType": "frontend-url",
             "target": "/robots.txt",
-            "required": true,
-            "notes": "Seed crawler rules or settings and capture the public crawler directives.",
+            "required": false,
+            "notes": "Optional follow-up. Seed crawler rules or settings and capture public crawler directives through a runner scenario that can render plain text responses.",
             "useCase": "A crawler or operator reviews the public robot directives generated by SEO Suite.",
             "screenshotPath": "packages/seo-suite/docs/screenshots/robots-txt-output.png"
         },
@@ -132,8 +163,8 @@
             "surface": "frontend",
             "targetType": "frontend-url",
             "target": "/index.md",
-            "required": true,
-            "notes": "Enable Markdown pages on the AI Discovery site profile and capture visitor-safe Markdown.",
+            "required": false,
+            "notes": "Optional follow-up. Enable Markdown pages on the AI Discovery site profile and capture visitor-safe Markdown through a runner scenario that can render plain text responses.",
             "useCase": "An AI crawler reads the Markdown representation of a public page.",
             "screenshotPath": "packages/seo-suite/docs/screenshots/page-markdown-output.png"
         }

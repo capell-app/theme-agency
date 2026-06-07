@@ -36,14 +36,14 @@
 @endphp
 
 <section
-    class="theme-section theme-section-search-listing knowledge-search-console bg-[#07111f]"
+    class="theme-section theme-section-search-listing knowledge-search-console bg-[var(--site-theme-ink)]"
 >
     <div class="mx-auto max-w-6xl px-6 py-14">
         @isset($heading)
             <div class="grid gap-5 lg:grid-cols-[0.72fr_1fr] lg:items-end">
                 <div>
                     <p
-                        class="text-xs font-black tracking-[0.18em] text-[#f59e0b] uppercase"
+                        class="text-xs font-black tracking-[0.18em] text-[var(--site-theme-accent)] uppercase"
                     >
                         {{ __('capell-theme-knowledge::generic.search_label') }}
                     </p>
@@ -63,10 +63,10 @@
         @endisset
 
         <div
-            class="mt-8 border border-white/10 bg-[#0f1b2f] p-4 shadow-xl shadow-black/20"
+            class="mt-8 border border-white/10 bg-[var(--site-theme-ink-panel)] p-4 shadow-xl shadow-black/20"
         >
             <div class="grid gap-4 lg:grid-cols-[1fr_0.72fr]">
-                <div class="border border-white/10 bg-[#111f36] p-4">
+                <div class="border border-white/10 bg-[var(--site-theme-ink-panel-raised)] p-4">
                     <p class="text-sm font-bold text-slate-300">
                         {{ $searchAvailable ?? false ? __('capell-theme-knowledge::generic.search_connected') : __('capell-theme-knowledge::generic.search_static') }}
                     </p>
@@ -80,7 +80,7 @@
                     >
                         <label
                             for="knowledge-search-listing-query"
-                            class="text-xs font-black tracking-[0.16em] text-[#bfdbfe] uppercase"
+                            class="text-xs font-black tracking-[0.16em] text-[var(--site-theme-primary-soft)] uppercase"
                         >
                             {{ __('capell-theme-knowledge::generic.search_query_label') }}
                         </label>
@@ -93,11 +93,11 @@
                                 value="{{ $searchQuery }}"
                                 placeholder="{{ __('capell-theme-knowledge::generic.search_placeholder') }}"
                                 autocomplete="off"
-                                class="min-h-12 border border-white/10 bg-white px-4 py-3 text-base font-bold text-[#111827] placeholder:text-slate-500 focus:border-[#f59e0b] focus:outline-2 focus:outline-offset-2 focus:outline-[#f59e0b]"
+                                class="min-h-12 border border-white/10 bg-white px-4 py-3 text-base font-bold text-[var(--site-theme-foreground)] placeholder:text-slate-500 focus:border-[var(--site-theme-accent)] focus:outline-2 focus:outline-offset-2 focus:outline-[var(--site-theme-accent)]"
                             />
                             <button
                                 type="submit"
-                                class="min-h-12 bg-[#f59e0b] px-5 py-3 text-sm font-black text-[#07111f] focus:outline-2 focus:outline-offset-2 focus:outline-[#f59e0b]"
+                                class="min-h-12 bg-[var(--site-theme-accent)] px-5 py-3 text-sm font-black text-[var(--site-theme-ink)] focus:outline-2 focus:outline-offset-2 focus:outline-[var(--site-theme-accent)]"
                             >
                                 {{ __('capell-theme-knowledge::generic.search_action') }}
                             </button>
@@ -110,7 +110,7 @@
 
                     <div class="mt-5">
                         <p
-                            class="text-xs font-black tracking-[0.16em] text-[#1d4ed8] uppercase"
+                            class="text-xs font-black tracking-[0.16em] text-[var(--site-theme-primary)] uppercase"
                         >
                             {{ __('capell-theme-knowledge::generic.search_filters_label') }}
                         </p>
@@ -118,7 +118,7 @@
                             @foreach ($filters as $filter)
                                 <button
                                     type="button"
-                                    class="border border-white/10 bg-white/5 px-3 py-2 text-xs font-black text-[#bfdbfe]"
+                                    class="border border-white/10 bg-white/5 px-3 py-2 text-xs font-black text-[var(--site-theme-primary-soft)]"
                                 >
                                     {{ $filter }}
                                 </button>
@@ -127,30 +127,33 @@
                     </div>
                 </div>
 
-                <div class="border border-[#f59e0b]/40 bg-[#f59e0b]/10 p-4">
+                <div class="border border-[var(--site-theme-accent)]/40 bg-[var(--site-theme-accent)]/10 p-4">
                     <p
-                        class="text-xs font-black tracking-[0.16em] text-[#fbbf24] uppercase"
+                        class="text-xs font-black tracking-[0.16em] text-[var(--site-theme-accent-strong)] uppercase"
                     >
                         {{ __('capell-theme-knowledge::generic.search_source_label') }}
+                    </p>
+                    <p class="mt-3 text-sm leading-6 text-slate-300">
+                        {{ __('capell-theme-knowledge::generic.search_source_summary') }}
                     </p>
                     <div
                         class="mt-4 space-y-3"
                         aria-hidden="true"
                     >
                         <div class="grid grid-cols-[0.32fr_1fr_auto] gap-3">
-                            <span class="h-3 bg-[#f59e0b]"></span>
-                            <span class="h-3 bg-[#1d4ed8]"></span>
-                            <span class="h-3 w-8 bg-[#bfdbfe]"></span>
+                            <span class="h-3 bg-[var(--site-theme-accent)]"></span>
+                            <span class="h-3 bg-[var(--site-theme-primary)]"></span>
+                            <span class="h-3 w-8 bg-[var(--site-theme-primary-soft)]"></span>
                         </div>
                         <div class="grid grid-cols-[0.45fr_1fr_auto] gap-3">
-                            <span class="h-3 bg-[#f59e0b]"></span>
-                            <span class="h-3 bg-[#93c5fd]"></span>
-                            <span class="h-3 w-8 bg-[#bfdbfe]"></span>
+                            <span class="h-3 bg-[var(--site-theme-accent)]"></span>
+                            <span class="h-3 bg-[var(--site-theme-primary-muted)]"></span>
+                            <span class="h-3 w-8 bg-[var(--site-theme-primary-soft)]"></span>
                         </div>
                         <div class="grid grid-cols-[0.24fr_1fr_auto] gap-3">
-                            <span class="h-3 bg-[#f59e0b]"></span>
-                            <span class="h-3 bg-[#bfdbfe]"></span>
-                            <span class="h-3 w-8 bg-[#dbeafe]"></span>
+                            <span class="h-3 bg-[var(--site-theme-accent)]"></span>
+                            <span class="h-3 bg-[var(--site-theme-primary-soft)]"></span>
+                            <span class="h-3 w-8 bg-[var(--site-theme-primary-border)]"></span>
                         </div>
                     </div>
                 </div>
@@ -159,22 +162,22 @@
             <div class="mt-4 grid gap-4 lg:grid-cols-3">
                 @foreach ($searchItems as $item)
                     <article
-                        class="knowledge-result-card border border-white/10 bg-[#f8fbff] p-4"
+                        class="knowledge-result-card border border-white/10 bg-[var(--site-theme-primary-canvas)] p-4"
                     >
                         <div class="flex items-start justify-between gap-4">
                             <p
-                                class="text-xs font-black tracking-[0.16em] text-[#1d4ed8] uppercase"
+                                class="text-xs font-black tracking-[0.16em] text-[var(--site-theme-primary)] uppercase"
                             >
                                 {{ $item['type'] ?? __('capell-theme-knowledge::generic.article_signal') }}
                             </p>
                             <p
-                                class="bg-[#fef3c7] px-2 py-1 text-xs font-black text-[#92400e]"
+                                class="bg-[var(--site-theme-accent-panel)] px-2 py-1 text-xs font-black text-[var(--site-theme-accent-contrast)]"
                             >
                                 {{ __('capell-theme-knowledge::generic.search_score_label') }}
                                 {{ $item['score'] ?? '92%' }}
                             </p>
                         </div>
-                        <h3 class="mt-3 text-lg font-black text-[#111827]">
+                        <h3 class="mt-3 text-lg font-black text-[var(--site-theme-foreground)]">
                             {{ $item['title'] }}
                         </h3>
                         <p class="mt-2 text-sm leading-6 text-slate-600">
@@ -185,7 +188,7 @@
                         >
                             @foreach (($item['meta'] ?? []) ?: [__('capell-theme-knowledge::generic.library_signal')] as $meta)
                                 <span
-                                    class="bg-[#dbeafe] px-3 py-1 text-[#1e40af]"
+                                    class="bg-[var(--site-theme-primary-border)] px-3 py-1 text-[var(--site-theme-primary-strong)]"
                                 >
                                     {{ $meta }}
                                 </span>

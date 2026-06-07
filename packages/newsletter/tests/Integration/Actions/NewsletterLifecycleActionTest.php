@@ -9,10 +9,13 @@ use Capell\FormBuilder\Data\SubmissionPayloadData;
 use Capell\FormBuilder\Events\FormSubmitted;
 use Capell\FormBuilder\Models\Form;
 use Capell\FormBuilder\Models\Submission;
+use Capell\Newsletter\Actions\BuildListUnsubscribeHeadersAction;
 use Capell\Newsletter\Actions\CreateUnsubscribeTokenAction;
 use Capell\Newsletter\Actions\SubscribeFromFormSubmissionAction;
 use Capell\Newsletter\Enums\PublicTokenType;
 use Capell\Newsletter\Enums\SubscriberStatus;
+use Capell\Newsletter\Events\SubscriberConfirmed;
+use Capell\Newsletter\Events\SubscriberUnsubscribed;
 use Capell\Newsletter\Listeners\SubscribeFromFormSubmission;
 use Capell\Newsletter\Models\ConsentEvent;
 use Capell\Newsletter\Models\FormMapping;
@@ -143,6 +146,11 @@ it('keeps the same email isolated per site', function (): void {
 });
 
 it('confirms and unsubscribes with one-use public tokens', function (): void {
+    Event::fake([
+        SubscriberConfirmed::class,
+        SubscriberUnsubscribed::class,
+    ]);
+
     $subscriber = Subscriber::factory()->create([
         'site_id' => $this->createNewsletterSite()->getKey(),
         'status' => SubscriberStatus::Pending,
@@ -164,6 +172,8 @@ it('confirms and unsubscribes with one-use public tokens', function (): void {
         ->firstOrFail();
 
     expect($confirmPublicToken->used_at)->not->toBeNull();
+
+    Event::assertDispatched(SubscriberConfirmed::class, fn (SubscriberConfirmed $event): bool => $event->subscriber->is($subscriber->refresh()));
 
     expect(Contact::query()->first()?->profile)->toMatchArray([
         'newsletter' => [
@@ -190,6 +200,8 @@ it('confirms and unsubscribes with one-use public tokens', function (): void {
 
     expect($unsubscribePublicToken->used_at)->not->toBeNull();
 
+    Event::assertDispatched(SubscriberUnsubscribed::class, fn (SubscriberUnsubscribed $event): bool => $event->subscriber->is($subscriber->refresh()));
+
     $this->get(route('capell-newsletter.unsubscribe', ['token' => $unsubscribeToken]))
         ->assertNotFound();
 
@@ -208,4 +220,49 @@ it('confirms and unsubscribes with one-use public tokens', function (): void {
             'subscriber_id' => $subscriber->getKey(),
             'status' => SubscriberStatus::Unsubscribed->value,
         ]);
+});
+
+it('builds RFC 8058 list unsubscribe headers with a one-click route', function (): void {
+    $subscriber = Subscriber::factory()->create([
+        'site_id' => $this->createNewsletterSite()->getKey(),
+        'status' => SubscriberStatus::Subscribed,
+    ]);
+
+    $headers = BuildListUnsubscribeHeadersAction::run($subscriber);
+
+    expect($headers)->toHaveKey('List-Unsubscribe')
+        ->and($headers['List-Unsubscribe'])->toContain('/newsletter/unsubscribe/')
+        ->and($headers['List-Unsubscribe'])->toContain('/one-click')
+        ->and($headers)->toHaveKey('List-Unsubscribe-Post', 'List-Unsubscribe=One-Click')
+        ->and($subscriber->publicTokens()->where('type', PublicTokenType::Unsubscribe)->count())->toBe(1);
+});
+
+it('accepts RFC 8058 one-click unsubscribe posts and rejects replayed tokens', function (): void {
+    Event::fake([SubscriberUnsubscribed::class]);
+
+    $subscriber = Subscriber::factory()->create([
+        'site_id' => $this->createNewsletterSite()->getKey(),
+        'status' => SubscriberStatus::Subscribed,
+    ]);
+    $unsubscribeToken = CreateUnsubscribeTokenAction::run($subscriber);
+
+    $this->post(route('capell-newsletter.unsubscribe.one-click', ['token' => $unsubscribeToken]), [
+        'List-Unsubscribe' => 'One-Click',
+    ])
+        ->assertOk()
+        ->assertSee(__('capell-newsletter::messages.one_click_unsubscribed'));
+
+    $unsubscribePublicToken = $subscriber->publicTokens()
+        ->where('type', PublicTokenType::Unsubscribe)
+        ->where('token_hash', hash('sha256', (string) $unsubscribeToken))
+        ->firstOrFail();
+
+    expect($unsubscribePublicToken->used_at)->not->toBeNull()
+        ->and($subscriber->refresh()->status)->toBe(SubscriberStatus::Unsubscribed);
+
+    Event::assertDispatched(SubscriberUnsubscribed::class, fn (SubscriberUnsubscribed $event): bool => $event->subscriber->is($subscriber));
+
+    $this->post(route('capell-newsletter.unsubscribe.one-click', ['token' => $unsubscribeToken]), [
+        'List-Unsubscribe' => 'One-Click',
+    ])->assertNotFound();
 });

@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Capell\PublicActions\Actions\ReplayPublicActionDispatchAttemptAction;
 use Capell\PublicActions\Enums\PublicActionDispatchStatus;
 use Capell\PublicActions\Enums\PublicActionStatus;
 use Capell\PublicActions\Enums\PublicActionSubmissionStatus;
@@ -63,6 +64,26 @@ it('returns json for json submissions', function (): void {
             'success' => true,
             'message' => 'download-access',
         ]);
+});
+
+it('honours per-action submit rate limit overrides', function (): void {
+    PublicAction::factory()->create([
+        'key' => 'limited-action',
+        'handler_key' => 'test.handler',
+        'settings' => [
+            'rate_limit' => [
+                'per_minute' => 1,
+            ],
+        ],
+    ]);
+
+    $this->postJson('/actions/limited-action', [
+        'email' => 'person@example.test',
+    ])->assertOk();
+
+    $this->postJson('/actions/limited-action', [
+        'email' => 'person@example.test',
+    ])->assertTooManyRequests();
 });
 
 it('replays duplicate submissions with the same idempotency key without creating another submission', function (): void {
@@ -329,6 +350,80 @@ it('queues asynchronous destination dispatches after successful submissions', fu
     ])->assertRedirect();
 
     Queue::assertPushed(DispatchPublicActionDestinationJob::class);
+
+    $attempt = PublicActionDispatchAttempt::query()->firstOrFail();
+
+    expect($attempt->status)->toBe(PublicActionDispatchStatus::Pending)
+        ->and($attempt->dispatched_at)->toBeNull()
+        ->and($attempt->submission)->toBeInstanceOf(PublicActionSubmission::class)
+        ->and($attempt->destination)->toBeInstanceOf(PublicActionDestination::class);
+});
+
+it('prunes submissions older than the configured retention window', function (): void {
+    $action = PublicAction::factory()->create();
+    $destination = PublicActionDestination::factory()->for($action, 'action')->create();
+    $oldSubmission = PublicActionSubmission::factory()->for($action, 'action')->create([
+        'submitted_at' => now()->subDays(45),
+    ]);
+    $recentSubmission = PublicActionSubmission::factory()->for($action, 'action')->create([
+        'submitted_at' => now()->subDays(5),
+    ]);
+
+    PublicActionDispatchAttempt::factory()
+        ->for($oldSubmission, 'submission')
+        ->for($destination, 'destination')
+        ->create();
+    PublicActionDispatchAttempt::factory()
+        ->for($recentSubmission, 'submission')
+        ->for($destination, 'destination')
+        ->create();
+
+    $this
+        ->artisan('capell:public-actions:prune-submissions', ['--days' => 30, '--dry-run' => true])
+        ->assertSuccessful();
+
+    expect(PublicActionSubmission::query()->count())->toBe(2)
+        ->and(PublicActionDispatchAttempt::query()->count())->toBe(2);
+
+    $this
+        ->artisan('capell:public-actions:prune-submissions', ['--days' => 30])
+        ->assertSuccessful();
+
+    expect(PublicActionSubmission::query()->pluck('id')->all())->toBe([(int) $recentSubmission->getKey()])
+        ->and(PublicActionDispatchAttempt::query()->count())->toBe(1);
+});
+
+it('replays failed dispatch attempts manually', function (): void {
+    Http::fake([
+        'https://hooks.example.test/replay' => Http::response('', 204),
+    ]);
+
+    $action = PublicAction::factory()->create();
+    $destination = PublicActionDestination::factory()->for($action, 'action')->create([
+        'endpoint_url' => 'https://hooks.example.test/replay',
+    ]);
+    $submission = PublicActionSubmission::factory()->for($action, 'action')->create();
+    $failedAttempt = PublicActionDispatchAttempt::factory()
+        ->for($submission, 'submission')
+        ->for($destination, 'destination')
+        ->create([
+            'status' => PublicActionDispatchStatus::Failed,
+        ]);
+
+    $result = ReplayPublicActionDispatchAttemptAction::run($failedAttempt);
+
+    expect($result->success)->toBeTrue()
+        ->and(PublicActionDispatchAttempt::query()->count())->toBe(2)
+        ->and(PublicActionDispatchAttempt::query()->latest('id')->first()?->status)->toBe(PublicActionDispatchStatus::Succeeded);
+});
+
+it('does not replay successful dispatch attempts', function (): void {
+    $attempt = PublicActionDispatchAttempt::factory()->create([
+        'status' => PublicActionDispatchStatus::Succeeded,
+    ]);
+
+    expect(fn (): mixed => ReplayPublicActionDispatchAttemptAction::run($attempt))
+        ->toThrow(RuntimeException::class);
 });
 
 it('marks submissions failed when no handler is registered for the action', function (): void {

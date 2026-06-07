@@ -5,13 +5,17 @@ declare(strict_types=1);
 namespace Capell\Deployments\Filament\Pages;
 
 use BackedEnum;
+use Capell\Deployments\Actions\RefreshDeploymentPublicationStatusAction;
 use Capell\Deployments\Actions\OAuth\CreateOAuthStateAction;
 use Capell\Deployments\Enums\GitProviderType;
+use Capell\Deployments\Enums\InstallPolicy;
 use Capell\Deployments\Models\DeploymentConnection;
+use Capell\Deployments\Models\DeploymentPublication;
 use Closure;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
 use Filament\Support\Icons\Heroicon;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Schema;
 use Override;
@@ -22,6 +26,11 @@ final class DeploymentConnectionPage extends Page
     public string $repoOwner = '';
 
     public string $repoName = '';
+
+    public string $installPolicy = 'pr_auto_merge';
+
+    /** @var array<int, DeploymentConnection>|null */
+    private ?array $connections = null;
 
     protected string $view = 'capell-deployments::filament.pages.deployment-connection';
 
@@ -84,11 +93,42 @@ final class DeploymentConnectionPage extends Page
     /** @return array<int, DeploymentConnection> */
     public function getConnections(): array
     {
-        if (! Schema::hasTable('deployment_connections')) {
-            return [];
+        if ($this->connections !== null) {
+            return $this->connections;
         }
 
-        return DeploymentConnection::query()->where('is_active', true)->get()->all();
+        if (! Schema::hasTable('deployment_connections')) {
+            $this->connections = [];
+
+            return $this->connections;
+        }
+
+        $this->connections = DeploymentConnection::query()->where('is_active', true)->get()->all();
+
+        return $this->connections;
+    }
+
+    /**
+     * @return Collection<int, DeploymentPublication>
+     */
+    public function getRecentPublications(DeploymentConnection $connection): Collection
+    {
+        if (! Schema::hasTable('deployment_publications')) {
+            return collect();
+        }
+
+        return DeploymentPublication::query()
+            ->where('deployment_connection_id', $connection->id)
+            ->latest()
+            ->limit(5)
+            ->get()
+            ->map(function (DeploymentPublication $publication) use ($connection): DeploymentPublication {
+                if ($publication->commit_sha === null || $publication->dry_run) {
+                    return $publication;
+                }
+
+                return RefreshDeploymentPublicationStatusAction::run($publication, $connection);
+            });
     }
 
     /**
@@ -127,7 +167,12 @@ final class DeploymentConnectionPage extends Page
             'client_id' => $clientId,
             'redirect_uri' => route('capell-deployments.oauth.github'),
             'scope' => 'repo',
-            'state' => CreateOAuthStateAction::run(GitProviderType::GitHub, $this->normalizedRepoOwner(), $this->normalizedRepoName()),
+            'state' => CreateOAuthStateAction::run(
+                GitProviderType::GitHub,
+                $this->normalizedRepoOwner(),
+                $this->normalizedRepoName(),
+                $this->selectedInstallPolicy(),
+            ),
         ]);
     }
 
@@ -144,7 +189,12 @@ final class DeploymentConnectionPage extends Page
             'redirect_uri' => route('capell-deployments.oauth.gitlab'),
             'response_type' => 'code',
             'scope' => 'api',
-            'state' => CreateOAuthStateAction::run(GitProviderType::GitLab, $this->normalizedRepoOwner(), $this->normalizedRepoName()),
+            'state' => CreateOAuthStateAction::run(
+                GitProviderType::GitLab,
+                $this->normalizedRepoOwner(),
+                $this->normalizedRepoName(),
+                $this->selectedInstallPolicy(),
+            ),
         ]);
     }
 
@@ -160,8 +210,25 @@ final class DeploymentConnectionPage extends Page
             'client_id' => $clientId,
             'redirect_uri' => route('capell-deployments.oauth.bitbucket'),
             'response_type' => 'code',
-            'state' => CreateOAuthStateAction::run(GitProviderType::Bitbucket, $this->normalizedRepoOwner(), $this->normalizedRepoName()),
+            'state' => CreateOAuthStateAction::run(
+                GitProviderType::Bitbucket,
+                $this->normalizedRepoOwner(),
+                $this->normalizedRepoName(),
+                $this->selectedInstallPolicy(),
+            ),
         ]);
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    public function getInstallPolicyOptions(): array
+    {
+        return collect(InstallPolicy::cases())
+            ->mapWithKeys(static fn (InstallPolicy $installPolicy): array => [
+                $installPolicy->value => $installPolicy->getLabel(),
+            ])
+            ->all();
     }
 
     public function disconnect(int $connectionId): void
@@ -254,5 +321,10 @@ final class DeploymentConnectionPage extends Page
     private function normalizedRepoName(): string
     {
         return trim($this->repoName, " \t\n\r\0\x0B/");
+    }
+
+    private function selectedInstallPolicy(): InstallPolicy
+    {
+        return InstallPolicy::tryFrom($this->installPolicy) ?? InstallPolicy::PullRequestAutoMerge;
     }
 }

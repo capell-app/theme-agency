@@ -13,7 +13,9 @@
         "bundle": "themes"
     },
     "namespace": "Capell\\ThemeStudio\\InertiaBookingsReact",
-    "surfaces": ["frontend"],
+    "surfaces": [
+        "frontend"
+    ],
     "dependencies": {
         "requires": [
             "capell-app/theme-inertia-bookings",
@@ -53,14 +55,21 @@
     },
     "settings": [],
     "permissions": [],
-    "capabilities": ["theme-inertia-bookings-react"],
+    "capabilities": [
+        "theme-inertia-bookings-react"
+    ],
     "performance": {
         "frontendRenderBudgetMs": 20,
         "adminQueryBudget": 0,
-        "cacheTags": ["theme-inertia-bookings-react"],
+        "cacheTags": [
+            "theme-inertia-bookings-react"
+        ],
         "cacheSafety": {
             "cacheable": false,
-            "variesBy": ["site", "locale"],
+            "variesBy": [
+                "site",
+                "locale"
+            ],
             "sensitiveOutput": false,
             "invalidationSources": [],
             "queueInvalidation": false
@@ -86,16 +95,24 @@
         "description": "Provides React source components that implement the shared Capell/Page and Capell/Bookings/Request server contract.",
         "screenshots": [
             {
-                "path": "docs/assets/marketplace/extension-card.svg",
-                "alt": "Theme Inertia Bookings React component pack marketplace card.",
-                "caption": "React component pack for the Theme Inertia Bookings page and public booking request contracts."
+                "path": "docs/screenshots/react-booking-components.png",
+                "alt": "React booking component pack rendering the public request workflow.",
+                "caption": "React booking request workflow"
             },
             {
-                "path": "docs/assets/marketplace/react-booking-components.svg",
-                "alt": "React booking components showing the page shell, widgets, and labelled request form.",
-                "caption": "The React pack ships a themed Inertia entrypoint plus labelled page, widget, and booking request components."
+                "path": "docs/screenshots/react-booking-services.png",
+                "alt": "React booking service sections with appointment CTAs.",
+                "caption": "React service sections"
+            },
+            {
+                "path": "docs/screenshots/react-booking-mobile.png",
+                "alt": "React booking request workflow at a mobile viewport.",
+                "caption": "React mobile booking request"
             }
         ],
-        "categories": ["frontend", "themes"]
+        "categories": [
+            "frontend",
+            "themes"
+        ]
     }
 }

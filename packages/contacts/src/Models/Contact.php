@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Capell\Contacts\Models;
 
 use Capell\Contacts\Enums\ContactStatus;
+use Capell\Contacts\Support\ContactsOverviewStatsCache;
 use Capell\Core\Models\Site;
 use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Builder;
@@ -171,6 +172,39 @@ class Contact extends Model
         return $this->hasMany(ContactActivity::class);
     }
 
+    /**
+     * @return BelongsToMany<ContactTag, $this>
+     */
+    public function tags(): BelongsToMany
+    {
+        $pivotTable = config('capell-contacts.tables.contact_tag_memberships');
+
+        return $this->belongsToMany(
+            ContactTag::class,
+            is_string($pivotTable) ? $pivotTable : 'contact_tag_memberships',
+            'contact_id',
+            'contact_tag_id',
+        )->withTimestamps();
+    }
+
+    /**
+     * @param  Builder<Contact>  $query
+     * @return Builder<Contact>
+     */
+    public function scopeWithTag(Builder $query, string $tag): Builder
+    {
+        $slug = ContactTag::slugFor($tag);
+
+        if ($slug === '') {
+            return $query;
+        }
+
+        return $query->whereHas(
+            'tags',
+            static fn (Builder $tagQuery): Builder => $tagQuery->where('slug', $slug),
+        );
+    }
+
     #[Override]
     protected static function booted(): void
     {
@@ -179,6 +213,9 @@ class Contact extends Model
             $contact->phone_hash = self::phoneHash($contact->phone);
             $contact->source_identifier_hash = self::sourceIdentifierHash($contact->source_identifier);
         });
+
+        static::saved(fn (Contact $contact): null => self::flushOverviewStats($contact));
+        static::deleted(fn (Contact $contact): null => self::flushOverviewStats($contact));
     }
 
     /**
@@ -210,6 +247,13 @@ class Contact extends Model
             'first_seen_at' => 'immutable_datetime',
             'last_seen_at' => 'immutable_datetime',
         ];
+    }
+
+    private static function flushOverviewStats(Contact $contact): null
+    {
+        ContactsOverviewStatsCache::flushForSite($contact->site_id);
+
+        return null;
     }
 
     private static function hashIdentity(string $value): string

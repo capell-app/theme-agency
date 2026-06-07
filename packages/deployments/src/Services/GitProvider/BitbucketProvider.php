@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Capell\Deployments\Services\GitProvider;
 
+use Capell\Deployments\Actions\RefreshProviderTokenAction;
 use Capell\Deployments\Contracts\GitProviderContract;
 use Capell\Deployments\Data\PullRequestData;
 use Capell\Deployments\Data\RepoFile;
@@ -110,6 +111,25 @@ final class BitbucketProvider implements GitProviderContract
         return $this->pullRequestDataFromResponse($response);
     }
 
+    public function findOpenPullRequestForBranch(DeploymentConnection $conn, string $headBranch): ?PullRequestData
+    {
+        $response = $this->client($conn)
+            ->retry(2, 200, throw: false)
+            ->get(sprintf('/repositories/%s/%s/pullrequests', $conn->repo_owner, $conn->repo_name), [
+                'q' => sprintf('source.branch.name="%s" AND state="OPEN"', $headBranch),
+            ])
+            ->throw()
+            ->json();
+
+        $pullRequests = $response['values'] ?? [];
+
+        if (! is_array($pullRequests) || ! isset($pullRequests[0]) || ! is_array($pullRequests[0])) {
+            return null;
+        }
+
+        return $this->pullRequestDataFromResponse($pullRequests[0]);
+    }
+
     public function enableAutoMerge(DeploymentConnection $conn, int|string $pullRequestId): void
     {
         Log::warning('BitbucketProvider: auto-merge is not natively supported by Bitbucket Cloud.', [
@@ -163,6 +183,8 @@ final class BitbucketProvider implements GitProviderContract
 
     private function client(DeploymentConnection $conn): PendingRequest
     {
+        $conn = RefreshProviderTokenAction::run($conn);
+
         return $this->http
             ->baseUrl('https://api.bitbucket.org/2.0')
             ->withToken($conn->access_token_encrypted)

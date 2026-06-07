@@ -55,6 +55,26 @@ return [
         ],
     ],
 
+    'public' => [
+        'banner' => [
+            'copy' => 'Choose which optional cookies this site can use.',
+            'manage' => 'Manage privacy preferences',
+        ],
+        'categories' => [
+            'essential' => 'Required for security and core site functionality.',
+            'analytics' => 'Helps us understand visits and improve the site.',
+            'marketing' => 'Supports campaign measurement and personalised marketing.',
+            'preferences' => 'Remembers choices such as display and language preferences.',
+            'functional' => 'Enables enhanced site features requested by visitors.',
+        ],
+        'preferences' => [
+            'intro' => 'Essential cookies are always on. You can grant or deny optional categories at any time.',
+            'save' => 'Save preferences',
+            'saved' => 'Your privacy preferences have been saved.',
+            'title' => 'Privacy preferences',
+        ],
+    ],
+
     'admin' => [
         'navigation_group' => 'Privacy center',
         'resources' => [
@@ -68,6 +88,8 @@ return [
             'mark_fulfilled' => 'Mark fulfilled',
             'mark_verified' => 'Mark verified',
             'reject' => 'Reject',
+            'dry_run_retention' => 'Dry run',
+            'run_retention' => 'Run now',
         ],
         'fields' => [
             'accepted_at' => 'Accepted',
@@ -88,6 +110,7 @@ return [
             'key' => 'Key',
             'legal_basis' => 'Legal basis',
             'metadata' => 'Metadata',
+            'overdue' => 'Overdue',
             'policy_key' => 'Policy key',
             'policy_type' => 'Policy type',
             'policy_version' => 'Policy version',
@@ -115,6 +138,9 @@ return [
             'privacy_request_fulfilled' => 'Privacy request marked fulfilled.',
             'privacy_request_rejected' => 'Privacy request rejected.',
             'privacy_request_verified' => 'Privacy request marked verified.',
+            'retention_dry_run' => 'Retention dry run complete.',
+            'retention_run' => 'Retention rule applied.',
+            'retention_result' => 'Matched :matched record(s); affected :affected record(s).',
         ],
         'widgets' => [
             'active_retention_rules' => 'Active retention rules',

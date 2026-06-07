@@ -82,7 +82,7 @@ This package makes its Composer dependencies visible because they are part of th
 
 ## Commands
 
-- `ga4-reports:sync` (packages/ga4-reports/src/Console/Commands/SyncGA4ReportsCommand.php)
+- `capell:ga4-reports-sync` (packages/ga4-reports/src/Console/Commands/SyncGA4ReportsCommand.php); `ga4-reports:sync` remains an alias for existing hosts.
 
 ## Data And Persistence
 

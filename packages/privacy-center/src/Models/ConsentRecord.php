@@ -6,6 +6,7 @@ namespace Capell\PrivacyCenter\Models;
 
 use Capell\PrivacyCenter\Enums\ConsentDecision;
 use Capell\PrivacyCenter\Enums\CookieCategory;
+use Capell\PrivacyCenter\Support\PrivacyCenterOverviewStatsCache;
 use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -72,6 +73,20 @@ class ConsentRecord extends Model
     public function policy(): BelongsTo
     {
         return $this->belongsTo(ConsentPolicy::class, 'policy_id');
+    }
+
+    #[Override]
+    protected static function booted(): void
+    {
+        static::saved(static fn (ConsentRecord $consentRecord): null => self::flushOverviewStats());
+        static::deleted(static fn (ConsentRecord $consentRecord): null => self::flushOverviewStats());
+    }
+
+    private static function flushOverviewStats(): null
+    {
+        PrivacyCenterOverviewStatsCache::flush();
+
+        return null;
     }
 
     /**

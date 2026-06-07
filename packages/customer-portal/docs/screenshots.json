@@ -1,0 +1,73 @@
+{
+    "package": "customer-portal",
+    "composerName": "capell-app/customer-portal",
+    "generatedFor": "deployment-screenshot-runner",
+    "requiresInstalledPackage": true,
+    "outputDirectory": "packages/customer-portal/docs/screenshots",
+    "entries": [
+        {
+            "id": "portal-frontend-dashboard",
+            "title": "Customer portal frontend dashboard.",
+            "package": "customer-portal",
+            "surface": "frontend",
+            "user": false,
+            "targetType": "frontend-route",
+            "target": "capell-customer-portal.dashboard",
+            "scenario": "frontend-page",
+            "url": "/screenshot-fixtures/customer-portal/frontend-dashboard",
+            "waitFor": ".hero-grid",
+            "required": true,
+            "notes": "Route-backed Capell fixture showing the authenticated customer dashboard with profile, billing, documents, events, and support summary cards.",
+            "useCase": "A signed-in customer opens one private hub for account details and package-contributed self-service items.",
+            "screenshotPath": "packages/customer-portal/docs/screenshots/portal-frontend-dashboard.png"
+        },
+        {
+            "id": "portal-preferences-support",
+            "title": "Customer portal preferences and support form.",
+            "package": "customer-portal",
+            "surface": "frontend",
+            "user": false,
+            "targetType": "frontend-route",
+            "target": "capell-customer-portal.dashboard",
+            "scenario": "frontend-page",
+            "url": "/screenshot-fixtures/customer-portal/preferences-support",
+            "waitFor": ".split",
+            "required": true,
+            "notes": "Route-backed Capell fixture showing schema-driven preferences beside the encrypted support-request form.",
+            "useCase": "A customer updates communication preferences and submits a support request without leaving the portal.",
+            "screenshotPath": "packages/customer-portal/docs/screenshots/portal-preferences-support.png"
+        },
+        {
+            "id": "portal-support-triage-list",
+            "title": "Customer portal support triage admin list.",
+            "package": "customer-portal",
+            "surface": "frontend",
+            "user": false,
+            "targetType": "admin-surface",
+            "target": "PortalSupportRequestResource",
+            "scenario": "frontend-page",
+            "url": "/screenshot-fixtures/customer-portal/admin-triage-list",
+            "waitFor": "table",
+            "required": true,
+            "notes": "Route-backed Capell admin fixture showing site-scoped support requests with status and priority indicators.",
+            "useCase": "Staff triage customer support requests from the Capell admin panel.",
+            "screenshotPath": "packages/customer-portal/docs/screenshots/portal-support-triage-list.png"
+        },
+        {
+            "id": "portal-support-triage-edit",
+            "title": "Customer portal support triage edit screen.",
+            "package": "customer-portal",
+            "surface": "frontend",
+            "user": false,
+            "targetType": "admin-surface",
+            "target": "PortalSupportRequestResource.edit",
+            "scenario": "frontend-page",
+            "url": "/screenshot-fixtures/customer-portal/admin-triage-edit",
+            "waitFor": ".split",
+            "required": true,
+            "notes": "Route-backed Capell admin fixture showing support request detail, encrypted context, status, and priority workflow controls.",
+            "useCase": "Staff review a customer request and update triage workflow fields.",
+            "screenshotPath": "packages/customer-portal/docs/screenshots/portal-support-triage-edit.png"
+        }
+    ]
+}

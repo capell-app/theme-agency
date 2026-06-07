@@ -42,9 +42,13 @@ final class CreatePagePreviewSnapshotAction
             layoutBuilderState: resolve(StoreLayoutBuilderPreviewStateAction::class)->resolve($page, $user),
         );
 
+        $payload = $snapshot->toArray();
+
+        $this->assertPreviewPayloadWithinLimit($payload, 'page_preview_snapshot');
+
         Cache::store($this->previewCacheStore())->put(
             $this->snapshotCacheKey($token),
-            $snapshot->toArray(),
+            $payload,
             now()->addMinutes($this->previewTtlMinutes()),
         );
 

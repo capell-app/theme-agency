@@ -15,12 +15,14 @@ use Capell\CustomerPortal\Enums\SupportRequestPriority;
 use Capell\CustomerPortal\Enums\SupportRequestStatus;
 use Capell\CustomerPortal\Models\PortalAccount;
 use Capell\CustomerPortal\Models\PortalSupportRequest;
+use Capell\CustomerPortal\Models\PortalSupportRequestReply;
 use Capell\CustomerPortal\Support\PortalDashboardItemRegistry;
 use Capell\CustomerPortal\Support\PortalProfileProviderRegistry;
 use Capell\CustomerPortal\Support\PortalSelfServiceItemRegistry;
 use Capell\CustomerPortal\Tests\CustomerPortalTestCase;
 use Illuminate\Foundation\Auth\User;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Route;
 
 require_once dirname(__DIR__) . '/../autoload.php';
@@ -42,7 +44,8 @@ function customerPortalUser(): User
 it('registers authenticated customer portal frontend routes', function (): void {
     expect(Route::has('capell-customer-portal.dashboard'))->toBeTrue()
         ->and(Route::has('capell-customer-portal.preferences.update'))->toBeTrue()
-        ->and(Route::has('capell-customer-portal.support.store'))->toBeTrue();
+        ->and(Route::has('capell-customer-portal.support.store'))->toBeTrue()
+        ->and(Route::has('capell-customer-portal.support.replies.store'))->toBeTrue();
 });
 
 it('requires authentication for frontend workflows', function (string $httpMethod, string $routeName): void {
@@ -314,6 +317,50 @@ it('only renders support requests for the authenticated portal account', functio
         ->assertSee('Own account support request')
         ->assertDontSee('Other account support request')
         ->assertDontSee('Confidential other account message');
+});
+
+it('lets customers reply to their own support thread', function (): void {
+    Notification::fake();
+
+    $siteId = $this->createCustomerPortalSite();
+    $user = customerPortalUser();
+    $portalAccount = PortalAccount::query()->create([
+        'site_id' => $siteId,
+        'owner_type' => $user->getMorphClass(),
+        'owner_id' => $user->getKey(),
+        'email' => 'morgan@example.test',
+        'display_name' => 'Morgan Customer',
+        'status' => PortalAccountStatus::Active->value,
+    ]);
+    $supportRequest = PortalSupportRequest::query()->create([
+        'site_id' => $siteId,
+        'portal_account_id' => $portalAccount->getKey(),
+        'status' => SupportRequestStatus::WaitingOnCustomer->value,
+        'priority' => SupportRequestPriority::Normal->value,
+        'subject' => 'Threaded support request',
+        'message' => 'Can you help?',
+        'requester_email' => 'morgan@example.test',
+        'source' => 'customer-portal',
+        'submitted_at' => now(),
+    ]);
+
+    $this->actingAs($user)
+        ->post(route('capell-customer-portal.support.replies.store', ['supportRequest' => $supportRequest]), [
+            'message' => 'Here is my reply.',
+        ])
+        ->assertRedirect(route('capell-customer-portal.dashboard'));
+
+    $reply = PortalSupportRequestReply::query()->firstOrFail();
+
+    expect($reply->message)->toBe('Here is my reply.')
+        ->and($reply->sender_type)->toBe('customer')
+        ->and($supportRequest->refresh()->status)->toBe(SupportRequestStatus::WaitingOnTeam);
+
+    $this->actingAs($user)
+        ->get(route('capell-customer-portal.dashboard'))
+        ->assertOk()
+        ->assertSee('Threaded support request')
+        ->assertSee('Here is my reply.');
 });
 
 it('blocks suspended and archived portal accounts from frontend workflows', function (PortalAccountStatus $status): void {

@@ -6,10 +6,10 @@ namespace Capell\FoundationTheme\Support\Tailwind;
 
 use Capell\Core\Contracts\RegistersTailwindAssets;
 use Capell\Core\Data\VendorAssetData;
-use Capell\Core\Enums\DefaultColorEnum;
 use Capell\Core\Enums\VendorAssetEnum;
 use Capell\Core\Facades\CapellCore;
 use Capell\Core\Support\Tailwind\TailwindAssetsRegistry;
+use Capell\FoundationTheme\Actions\ResolveFoundationThemeTokensAction;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
@@ -126,7 +126,7 @@ class TailwindAssetsGenerator
                     return;
                 }
 
-                if ($this->isNodeModuleImport($import)) {
+                if ($this->isNodeModuleImport($import, $asset)) {
                     $registry->registerImport($import, $this->originForAsset($asset));
 
                     return;
@@ -227,29 +227,10 @@ class TailwindAssetsGenerator
 
     private function registerDefaultThemeColors(TailwindAssetsRegistry $registry): void
     {
-        $colors = [];
-
-        foreach (DefaultColorEnum::getKeyValues() as $name => $value) {
-            if (! is_string($name)) {
-                continue;
-            }
-
-            if (! is_string($value)) {
-                continue;
-            }
-
-            if ($value === '') {
-                continue;
-            }
-
-            if (! $this->isSafeThemeColor($name, $value)) {
-                $this->logInvalidThemeColor($name, $value, 'default-colors');
-
-                continue;
-            }
-
-            $colors[$name] = trim($value);
-        }
+        $colors = (new ResolveFoundationThemeTokensAction)
+            ->defaultPaletteColors()
+            ->mapWithKeys(fn (array $color): array => [$color['name'] => $color['value']])
+            ->all();
 
         if ($colors === []) {
             return;
@@ -258,7 +239,7 @@ class TailwindAssetsGenerator
         $registry->registerThemeColors($colors, 'default-colors');
     }
 
-    private function isNodeModuleImport(string $import): bool
+    private function isNodeModuleImport(string $import, ?VendorAssetData $asset = null): bool
     {
         $import = ltrim($import);
 
@@ -270,17 +251,14 @@ class TailwindAssetsGenerator
             return false;
         }
 
-        // Scoped or bare package names (e.g., @scope/pkg, tippy.js, tailwindcss/base)
-        if (str_starts_with($import, '@')) {
+        if ($asset instanceof VendorAssetData && $asset->packageName !== null && $asset->packageName !== '') {
             return true;
         }
 
-        // Known packages
-        if (str_starts_with($import, 'tippy.js') || str_starts_with($import, 'tailwindcss')) {
+        if (preg_match('~^@[a-z0-9_.-]+/[a-z0-9_.-]+(?:/.*)?$~i', $import) === 1) {
             return true;
         }
 
-        // Heuristic: no leading dot or slash, first segment contains only package chars
         return preg_match('~^[a-z0-9_.-]+(?:/.*)?$~i', $import) === 1;
     }
 

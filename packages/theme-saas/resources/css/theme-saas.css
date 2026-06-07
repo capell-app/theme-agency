@@ -6,6 +6,8 @@
         --saas-primary: var(--theme-primary, #2563eb);
         --saas-accent: var(--theme-accent, #06b6d4);
         --saas-surface: var(--theme-surface, #f8fafc);
+        --saas-card: #ffffff;
+        --saas-card-ink: var(--saas-ink);
 
         background:
             linear-gradient(
@@ -28,6 +30,30 @@
             system-ui,
             sans-serif
         );
+    }
+
+    .dark .saas-shell,
+    .saas-shell.dark {
+        --saas-ink: var(--theme-dark-foreground, #e2e8f0);
+        --saas-muted: var(--theme-dark-muted, #94a3b8);
+        --saas-line: rgb(148 163 184 / 22%);
+        --saas-primary: var(--theme-primary, #60a5fa);
+        --saas-accent: var(--theme-accent, #22d3ee);
+        --saas-surface: var(--theme-dark-surface, #020617);
+        --saas-card: #0f172a;
+        --saas-card-ink: #f8fafc;
+
+        background:
+            linear-gradient(
+                180deg,
+                #020617 0%,
+                #0f172a 52%,
+                #020617 100%
+            ),
+            linear-gradient(90deg, rgb(125 211 252 / 8%) 1px, transparent 1px),
+            linear-gradient(180deg, rgb(45 212 191 / 7%) 1px, transparent 1px);
+        color: var(--saas-ink);
+        color-scheme: dark;
     }
 
     .saas-shell section {
@@ -68,6 +94,106 @@
         line-height: 1.75;
     }
 
+    .saas-shell :where(.text-slate-950, .text-slate-900, .text-slate-800) {
+        color: var(--saas-ink);
+    }
+
+    .saas-shell :where(.text-slate-700, .text-slate-600, .text-slate-500) {
+        color: var(--saas-muted);
+    }
+
+    .saas-shell :where(.text-cyan-700, .text-blue-700) {
+        color: var(--saas-primary);
+    }
+
+    .saas-shell :where(.text-cyan-800) {
+        color: color-mix(in srgb, var(--saas-primary) 74%, #020617);
+    }
+
+    .saas-shell :where(.text-cyan-100, .text-cyan-200, .text-cyan-300) {
+        color: color-mix(in srgb, var(--saas-accent) 70%, #ffffff);
+    }
+
+    .saas-shell :where(.text-blue-50, .text-blue-100) {
+        color: color-mix(in srgb, var(--saas-primary) 18%, #ffffff);
+    }
+
+    .saas-shell :where(.bg-slate-50) {
+        background-color: var(--saas-surface);
+    }
+
+    .saas-shell :where(.bg-white) {
+        background-color: var(--saas-card);
+    }
+
+    .saas-shell :where(.bg-slate-950, .bg-slate-900) {
+        background-color: var(--saas-ink);
+    }
+
+    .saas-shell :where(.bg-cyan-50) {
+        background-color: color-mix(in srgb, var(--saas-accent) 12%, #ffffff);
+    }
+
+    .saas-shell :where(.bg-cyan-300, .bg-cyan-400, .bg-cyan-500) {
+        background-color: var(--saas-accent);
+    }
+
+    .saas-shell :where(.bg-blue-500, .bg-blue-700) {
+        background-color: var(--saas-primary);
+    }
+
+    .saas-shell :where(.border-slate-200, .border-slate-300) {
+        border-color: color-mix(in srgb, var(--saas-muted) 22%, #ffffff);
+    }
+
+    .saas-shell :where(.border-cyan-200, .border-cyan-700, .border-blue-300) {
+        border-color: color-mix(in srgb, var(--saas-primary) 42%, #ffffff);
+    }
+
+    .saas-shell :where(.ring-cyan-500) {
+        --tw-ring-color: var(--saas-accent);
+    }
+
+    .dark .saas-shell :where(.text-white),
+    .saas-shell.dark :where(.text-white) {
+        color: #ffffff;
+    }
+
+    .dark .saas-shell :where(.text-slate-950, .text-slate-900, .text-slate-800),
+    .saas-shell.dark :where(.text-slate-950, .text-slate-900, .text-slate-800) {
+        color: var(--saas-card-ink);
+    }
+
+    .dark .saas-shell :where(.bg-slate-950, .bg-slate-900),
+    .saas-shell.dark :where(.bg-slate-950, .bg-slate-900) {
+        background-color: #020617;
+    }
+
+    .dark .saas-shell :where(.border-slate-200, .border-slate-300),
+    .saas-shell.dark :where(.border-slate-200, .border-slate-300) {
+        border-color: var(--saas-line);
+    }
+
+    .dark .saas-navigation,
+    .saas-shell.dark .saas-navigation {
+        background: rgb(2 6 23 / 92%);
+        border-color: var(--saas-line);
+    }
+
+    @media (prefers-color-scheme: dark) {
+        :root:not(.light) body:not(.light) .saas-shell {
+            --saas-ink: var(--theme-dark-foreground, #e2e8f0);
+            --saas-muted: var(--theme-dark-muted, #94a3b8);
+            --saas-line: rgb(148 163 184 / 22%);
+            --saas-primary: var(--theme-primary, #60a5fa);
+            --saas-accent: var(--theme-accent, #22d3ee);
+            --saas-surface: var(--theme-dark-surface, #020617);
+            --saas-card: #0f172a;
+            --saas-card-ink: #f8fafc;
+            color-scheme: dark;
+        }
+    }
+
     .saas-skip-link {
         background: #0f172a;
         color: #ffffff;
@@ -82,6 +208,18 @@
 
     .saas-skip-link:focus {
         transform: translateY(0);
+    }
+
+    .saas-navigation__links {
+        align-items: center;
+        display: none;
+        gap: 1.75rem;
+    }
+
+    @media (min-width: 48rem) {
+        .saas-navigation__links {
+            display: flex;
+        }
     }
 
     :where(
@@ -177,6 +315,12 @@
         color: var(--saas-ink);
     }
 
+    @media (min-width: 48rem) {
+        .saas-plan-matrix__row {
+            grid-template-columns: 1.2fr var(--saas-plan-columns);
+        }
+    }
+
     .saas-shell :is(.saas-proof, .saas-final-cta) h2,
     .saas-shell :is(.saas-proof, .saas-final-cta) blockquote {
         color: #ffffff;
@@ -184,6 +328,43 @@
 
     .saas-shell :is(.saas-proof, .saas-final-cta) p {
         color: #f8fafc;
+    }
+
+    .saas-final-cta__frame {
+        background: #2563eb;
+        box-shadow: 0 24px 70px rgb(30 64 175 / 20%);
+    }
+
+    .saas-final-cta__panel {
+        background:
+            radial-gradient(
+                circle at top right,
+                rgb(103 232 249 / 28%),
+                transparent 32%
+            ),
+            linear-gradient(135deg, #2563eb, #1d4ed8);
+    }
+
+    .saas-final-cta__panel,
+    .saas-final-cta__panel h2,
+    .saas-final-cta__panel p {
+        color: #ffffff;
+    }
+
+    .saas-pipeline-stage {
+        color: #0f172a;
+    }
+
+    .saas-pipeline-stage--trial {
+        background: #67e8f9;
+    }
+
+    .saas-pipeline-stage--activation {
+        background: #6ee7b7;
+    }
+
+    .saas-pipeline-stage--expansion {
+        background: #fcd34d;
     }
 
     @media (max-width: 48rem) {

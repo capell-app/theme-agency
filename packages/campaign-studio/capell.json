@@ -113,7 +113,8 @@
         "install": null,
         "setup": null,
         "demo": null,
-        "doctor": null
+        "doctor": null,
+        "statusSync": "capell:campaign-studio-sync-statuses"
     },
     "actions": {
         "applyCampaignPageDefaults": "Capell\\CampaignStudio\\Actions\\ApplyCampaignPageDefaultsAction",
@@ -134,7 +135,8 @@
         "resolveCampaignFromUrl": "Capell\\CampaignStudio\\Actions\\ResolveCampaignFromUrlAction",
         "resolveCampaignLandingPageFromUrl": "Capell\\CampaignStudio\\Actions\\ResolveCampaignLandingPageFromUrlAction",
         "resolveCampaignLandingPageVariant": "Capell\\CampaignStudio\\Actions\\ResolveCampaignLandingPageVariantAction",
-        "syncCampaignExperiment": "Capell\\CampaignStudio\\Actions\\SyncCampaignExperimentAction"
+        "syncCampaignExperiment": "Capell\\CampaignStudio\\Actions\\SyncCampaignExperimentAction",
+        "syncCampaignStatuses": "Capell\\CampaignStudio\\Actions\\SyncCampaignStatusesAction"
     },
     "settings": [],
     "permissions": [],
@@ -147,7 +149,8 @@
         "campaign-dashboard-reporting",
         "campaign-experiment-sync",
         "landing-page-variant-experiments",
-        "landing-page-variant-management"
+        "landing-page-variant-management",
+        "campaign-scheduling-automation"
     ],
     "performance": {
         "frontendRenderBudgetMs": 20,
@@ -214,11 +217,6 @@
                 "path": "docs/screenshots/campaign-dashboard-widgets.png",
                 "alt": "Campaign Studio dashboard reporting widgets",
                 "caption": "Track top campaigns and landing pages from the dashboard"
-            },
-            {
-                "path": "docs/screenshots/frontend-landing-page-with-campaign-widgets.png",
-                "alt": "Published campaign landing page rendered on the storefront",
-                "caption": "Campaign widgets render natively inside published pages"
             }
         ],
         "categories": ["admin", "frontend", "growth"]

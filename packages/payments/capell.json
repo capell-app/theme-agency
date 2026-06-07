@@ -170,7 +170,33 @@
     },
     "marketplace": {
         "summary": "Take one-off payments, donations, subscriptions, paid downloads, and gated access on any Capell site through Stripe Checkout — with a provider-neutral record layer built to add more gateways later.",
-        "screenshots": [],
+        "screenshots": [
+            {
+                "path": "docs/screenshots/payments-checkout-sessions.png",
+                "alt": "Payments checkout sessions admin table with payment and fulfillment states",
+                "caption": "Payments checkout sessions"
+            },
+            {
+                "path": "docs/screenshots/payments-webhook-events.png",
+                "alt": "Payments webhook events admin table with Stripe processing states",
+                "caption": "Payments webhook events"
+            },
+            {
+                "path": "docs/screenshots/payments-settings.png",
+                "alt": "Payments settings page for Stripe Checkout and webhook configuration",
+                "caption": "Payments settings"
+            },
+            {
+                "path": "docs/screenshots/payments-customer-portal.png",
+                "alt": "Customer portal billing view with subscriptions, payments, and paid downloads",
+                "caption": "Payments customer portal billing"
+            },
+            {
+                "path": "docs/screenshots/payments-form-builder-checkout.png",
+                "alt": "Public Form Builder payment checkout handoff view",
+                "caption": "Payments Form Builder checkout"
+            }
+        ],
         "categories": ["commerce", "integrations"]
     },
     "contributionTraceability": {

@@ -9,6 +9,7 @@ use Capell\Contacts\Models\Contact;
 use Capell\Contacts\Models\ContactActivity;
 use Capell\Contacts\Models\Lead;
 use Capell\Contacts\Models\Organisation;
+use Capell\Contacts\Support\ContactsOverviewStatsCache;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Lorisleiva\Actions\Concerns\AsAction;
@@ -22,7 +23,7 @@ final class BuildContactsOverviewStatsAction
      */
     public function handle(?int $siteId = null): array
     {
-        return [
+        return ContactsOverviewStatsCache::remember($siteId, fn (): array => [
             'contacts' => $this->forSite(Contact::query(), $siteId)->count(),
             'organisations' => $this->forSite(Organisation::query(), $siteId)->count(),
             'open_leads' => $this->forSite(Lead::query(), $siteId)
@@ -33,7 +34,7 @@ final class BuildContactsOverviewStatsAction
                 ])
                 ->count(),
             'activities' => $this->forSite(ContactActivity::query(), $siteId)->count(),
-        ];
+        ]);
     }
 
     /**

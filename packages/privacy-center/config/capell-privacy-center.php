@@ -14,4 +14,6 @@ return [
     ],
 
     'privacy_request_due_days' => 30,
+
+    'overview_stats_cache_ttl_seconds' => 300,
 ];

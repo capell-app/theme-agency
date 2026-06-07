@@ -6,6 +6,7 @@ namespace Capell\PrivacyCenter\Models;
 
 use Capell\PrivacyCenter\Enums\PrivacyRequestStatus;
 use Capell\PrivacyCenter\Enums\PrivacyRequestType;
+use Capell\PrivacyCenter\Support\PrivacyCenterOverviewStatsCache;
 use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -59,6 +60,20 @@ class PrivacyRequest extends Model
     public function subject(): MorphTo
     {
         return $this->morphTo();
+    }
+
+    #[Override]
+    protected static function booted(): void
+    {
+        static::saved(static fn (PrivacyRequest $privacyRequest): null => self::flushOverviewStats());
+        static::deleted(static fn (PrivacyRequest $privacyRequest): null => self::flushOverviewStats());
+    }
+
+    private static function flushOverviewStats(): null
+    {
+        PrivacyCenterOverviewStatsCache::flush();
+
+        return null;
     }
 
     /**

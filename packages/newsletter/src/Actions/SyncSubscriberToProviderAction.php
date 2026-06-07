@@ -36,6 +36,10 @@ class SyncSubscriberToProviderAction
             return $this->fail($syncAttempt, 'Missing subscriber, audience, or connection.');
         }
 
+        if ($subscriber->status->isGloballySuppressed()) {
+            return $this->failPermanently($syncAttempt, 'Subscriber is globally suppressed.');
+        }
+
         try {
             $adapter = resolve(ProviderAdapterRegistry::class)->resolve($connection->provider);
             $result = $adapter->syncSubscriber(
@@ -122,9 +126,20 @@ class SyncSubscriberToProviderAction
             : null;
 
         $syncAttempt->forceFill([
-            'sync_status' => $retryDelay === null ? SyncStatus::Failed : SyncStatus::RetryScheduled,
+            'sync_status' => $retryDelay === null ? SyncStatus::Exhausted : SyncStatus::RetryScheduled,
             'error_message' => $errorMessage,
             'next_retry_at' => is_numeric($retryDelay) ? now()->addMinutes((int) $retryDelay) : null,
+        ])->save();
+
+        return $syncAttempt->refresh();
+    }
+
+    private function failPermanently(SyncAttempt $syncAttempt, string $errorMessage): SyncAttempt
+    {
+        $syncAttempt->forceFill([
+            'sync_status' => SyncStatus::Failed,
+            'error_message' => $errorMessage,
+            'next_retry_at' => null,
         ])->save();
 
         return $syncAttempt->refresh();

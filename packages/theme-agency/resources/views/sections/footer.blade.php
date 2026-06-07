@@ -6,7 +6,7 @@
         <div>
             <p class="text-2xl font-black">{{ $section->brandName }}</p>
             @if ($section->summary)
-                <p class="mt-3 text-sm text-white/60">
+                <p class="mt-3 text-sm text-white/75">
                     {{ $section->summary }}
                 </p>
             @endif
@@ -17,7 +17,7 @@
                     <h3 class="text-sm font-bold text-[var(--theme-accent)]">
                         {{ $column['heading'] }}
                     </h3>
-                    <ul class="mt-3 space-y-2 text-sm text-white/65">
+                    <ul class="mt-3 space-y-2 text-sm text-white/80">
                         @foreach ($column['links'] as $link)
                             <li>
                                 <a

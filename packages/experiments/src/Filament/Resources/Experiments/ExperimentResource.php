@@ -11,9 +11,11 @@ use Capell\Experiments\Enums\ExperimentStatus;
 use Capell\Experiments\Enums\ExperimentSubjectType;
 use Capell\Experiments\Filament\Resources\Experiments\Pages\CreateExperiment;
 use Capell\Experiments\Filament\Resources\Experiments\Pages\EditExperiment;
+use Capell\Experiments\Filament\Resources\Experiments\Pages\ExperimentResultsPage;
 use Capell\Experiments\Filament\Resources\Experiments\Pages\ListExperiments;
 use Capell\Experiments\Models\Experiment;
 use Capell\Experiments\Providers\ExperimentsServiceProvider;
+use Filament\Actions\Action;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\KeyValue;
 use Filament\Forms\Components\Select;
@@ -70,6 +72,8 @@ final class ExperimentResource extends Resource
             TextColumn::make('starts_at')->label(__('capell-experiments::generic.fields.starts_at'))->dateTime()->sortable()->toggleable(isToggledHiddenByDefault: true),
             TextColumn::make('ends_at')->label(__('capell-experiments::generic.fields.ends_at'))->dateTime()->sortable()->toggleable(isToggledHiddenByDefault: true),
             TextColumn::make('updated_at')->label(__('capell-experiments::generic.fields.updated_at'))->dateTime()->sortable(),
+        ])->recordActions([
+            self::resultsAction(),
         ]);
     }
 
@@ -103,6 +107,14 @@ final class ExperimentResource extends Resource
         return CapellCore::isPackageInstalled(ExperimentsServiceProvider::$packageName);
     }
 
+    public static function resultsAction(): Action
+    {
+        return Action::make('results')
+            ->label(__('capell-experiments::generic.actions.results'))
+            ->icon('heroicon-o-chart-bar')
+            ->url(fn (Experiment $record): string => static::getUrl('results', ['record' => $record]));
+    }
+
     #[Override]
     public static function getPages(): array
     {
@@ -110,6 +122,7 @@ final class ExperimentResource extends Resource
             'index' => ListExperiments::route('/'),
             'create' => CreateExperiment::route('/create'),
             'edit' => EditExperiment::route('/{record}/edit'),
+            'results' => ExperimentResultsPage::route('/{record}/results'),
         ];
     }
 

@@ -13,9 +13,14 @@
         "bundle": "foundation"
     },
     "namespace": "Capell\\ThemeStudio\\Corporate",
-    "surfaces": ["frontend"],
+    "surfaces": [
+        "frontend"
+    ],
     "dependencies": {
-        "requires": ["capell-app/core", "capell-app/foundation-theme"],
+        "requires": [
+            "capell-app/core",
+            "capell-app/foundation-theme"
+        ],
         "supports": [],
         "conflicts": []
     },
@@ -48,19 +53,31 @@
         "install": null,
         "setup": null,
         "demo": "capell:theme-corporate-demo",
-        "demoParams": ["url", "languages", "sites"],
+        "demoParams": [
+            "url",
+            "languages",
+            "sites"
+        ],
         "doctor": null
     },
     "settings": [],
     "permissions": [],
-    "capabilities": ["theme-corporate", "theme-corporate-frontend"],
+    "capabilities": [
+        "theme-corporate",
+        "theme-corporate-frontend"
+    ],
     "performance": {
         "frontendRenderBudgetMs": 20,
         "adminQueryBudget": 0,
-        "cacheTags": ["theme-corporate"],
+        "cacheTags": [
+            "theme-corporate"
+        ],
         "cacheSafety": {
             "cacheable": false,
-            "variesBy": ["site", "locale"],
+            "variesBy": [
+                "site",
+                "locale"
+            ],
             "sensitiveOutput": false,
             "invalidationSources": [],
             "queueInvalidation": true
@@ -86,37 +103,20 @@
         "description": "Theme Corporate gives established businesses, advisory firms, and public bodies a polished, credibility-first site without a design project. Six curated presets — Boardroom, Civic, Advisory, Integrity, Enterprise Trust, and Public Ledger — span deep-navy formal through accessible civic and editorial advisory looks, each tuned for clarity and contrast. Structured proof carousels, capability bands, and a measured content hierarchy are built to read as authoritative on desktop and mobile alike, with full dark-mode support. Drop it on any Capell site, run the one-command demo, and pick a preset.",
         "screenshots": [
             {
-                "path": "docs/screenshots/frontend-page-rendered-with-corporate-theme.png",
-                "alt": "Theme Corporate frontend page rendered with the corporate theme",
-                "caption": "Theme Corporate frontend render"
+                "path": "docs/assets/marketplace/extension-card.jpg",
+                "alt": "Theme Corporate marketplace card.",
+                "caption": "Theme Corporate theme card."
             },
             {
-                "path": "docs/screenshots/frontend-page-rendered-with-corporate-theme-dark.png",
-                "alt": "Theme Corporate frontend page rendered with the corporate theme dark capture",
-                "caption": "Theme Corporate frontend render dark"
-            },
-            {
-                "path": "docs/screenshots/theme-preset-selection-showing-corporate.png",
-                "alt": "Theme Corporate preset selection showing corporate presets",
-                "caption": "Theme Corporate preset selection"
-            },
-            {
-                "path": "docs/screenshots/theme-preset-selection-showing-corporate-dark.png",
-                "alt": "Theme Corporate preset selection dark capture",
-                "caption": "Theme Corporate preset selection dark"
-            },
-            {
-                "path": "docs/screenshots/theme-preview-url-output.png",
-                "alt": "Theme Corporate preview URL output",
-                "caption": "Theme Corporate preview URL output"
-            },
-            {
-                "path": "docs/screenshots/theme-preview-url-output-dark.png",
-                "alt": "Theme Corporate preview URL output dark capture",
-                "caption": "Theme Corporate preview URL output dark"
+                "path": "docs/screenshots/corporate-homepage-layout.png",
+                "alt": "Theme Corporate homepage with formal governance headline, board-ready proof signals, and city office media.",
+                "caption": "Route-backed Corporate homepage rendered through the package theme shell."
             }
         ],
-        "categories": ["frontend", "themes"]
+        "categories": [
+            "frontend",
+            "themes"
+        ]
     },
     "extends": "capell-app/foundation-theme",
     "themeKey": "corporate"

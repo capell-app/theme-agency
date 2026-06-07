@@ -35,7 +35,7 @@ it('declares committed marketplace gallery assets for every required screenshot 
 
         $marketplaceScreenshotPaths[] = $path;
 
-        expect($path)->toStartWith('docs/assets/marketplace/')
+        expect($path)->toMatch('/^docs\\/(assets\\/marketplace|screenshots)\\//')
             ->and(File::exists($packagePath . '/' . $path))->toBeTrue()
             ->and(strlen(trim($alt)))->toBeGreaterThanOrEqual(12)
             ->and(strlen(trim($caption)))->toBeGreaterThanOrEqual(12);
@@ -52,11 +52,11 @@ it('declares committed marketplace gallery assets for every required screenshot 
             continue;
         }
 
-        $id = $contractEntry['id'] ?? null;
+        $screenshotPath = $contractEntry['screenshotPath'] ?? null;
 
-        throw_unless(is_string($id), RuntimeException::class, 'Required Dashboard Reports screenshot contract entries must have string ids.');
+        throw_unless(is_string($screenshotPath), RuntimeException::class, 'Required Dashboard Reports screenshot contract entries must have screenshot paths.');
 
-        $requiredMarketplaceAssetPaths[] = 'docs/assets/marketplace/' . $id . '.svg';
+        $requiredMarketplaceAssetPaths[] = str_replace('packages/dashboard-reports/', '', $screenshotPath);
     }
 
     expect($marketplaceScreenshotPaths)
@@ -85,4 +85,11 @@ it('keeps marketplace and package descriptions focused on shipped dashboard repo
         ->and($composer['description'] ?? null)->not->toContain('generic CMS reporting widgets')
         ->and($packageTranslations['description'] ?? null)->not->toContain('Generic CMS reporting widgets')
         ->and($docsIndex)->not->toContain('generic CMS reporting widgets');
+});
+
+it('declares the dashboard report export command', function (): void {
+    $packagePath = dirname(__DIR__, 3);
+    $manifest = capell_json_file_array($packagePath . '/capell.json');
+
+    expect(data_get($manifest, 'commands.export'))->toBe('capell:dashboard-reports:export');
 });

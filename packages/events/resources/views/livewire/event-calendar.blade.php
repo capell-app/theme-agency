@@ -1,61 +1,43 @@
 <section class="capell-event-calendar capell-events-calendar">
-    <div class="flex items-center justify-between gap-4">
-        <button
-            type="button"
-            wire:click="previousMonth"
-        >
-            {{ __('capell-events::generic.previous') }}
+    <header>
+        <button type="button" wire:click="previousMonth" aria-label="{{ __('capell-events::generic.previous_month') }}">
+            &larr;
         </button>
+
         <h2>{{ $monthDate->format('F Y') }}</h2>
-        <button
-            type="button"
-            wire:click="nextMonth"
-        >
-            {{ __('capell-events::generic.next') }}
+
+        <button type="button" wire:click="nextMonth" aria-label="{{ __('capell-events::generic.next_month') }}">
+            &rarr;
         </button>
-    </div>
+    </header>
 
-    <div
-        class="grid grid-cols-7 gap-2"
-        role="grid"
-        aria-label="{{ __('capell-events::generic.admin_calendar') }}: {{ $monthDate->format('F Y') }}"
-    >
-        <div
-            class="contents"
-            role="row"
-        >
-            @foreach ($weeks->first()?->days ?? [] as $day)
-                <div
-                    class="font-semibold"
-                    role="columnheader"
-                >
-                    {{ $day->format('D') }}
-                </div>
-            @endforeach
-        </div>
-
+    <div role="grid" aria-label="{{ __('capell-events::generic.event_calendar') }}">
         @foreach ($weeks as $week)
-            <div
-                class="contents"
-                role="row"
-            >
+            <div role="row">
                 @foreach ($week->days as $day)
-                    <div
-                        class="min-h-24 border p-2"
-                        role="gridcell"
-                        aria-label="{{ $day->format('j F Y') }}"
-                    >
-                        <div>{{ $day->day }}</div>
+                    <section role="gridcell" aria-label="{{ $day->format('j F Y') }}">
+                        <time datetime="{{ $day->toDateString() }}">{{ $day->day }}</time>
 
-                        @foreach (($occurrencesByDate[$day->toDateString()] ?? collect()) as $occurrence)
-                            <a
-                                href="{{ $occurrence->occurrenceUrl() }}"
-                                class="block"
-                            >
-                                {{ $occurrence->event->translation?->title ?? $occurrence->event->name }}
-                            </a>
+                        @foreach ($occurrences->filter(fn (\Capell\Events\Data\EventOccurrenceViewData $occurrence): bool => $occurrence->startsAt?->isSameDay($day) ?? false) as $occurrence)
+                            <article>
+                                @if ($occurrence->url)
+                                    <a href="{{ $occurrence->url }}">{{ $occurrence->title }}</a>
+                                @else
+                                    <span>{{ $occurrence->title }}</span>
+                                @endif
+
+                                <time datetime="{{ $occurrence->isoStartsAt }}">
+                                    {{ $occurrence->displayStartsAt }} {{ $occurrence->eventTimezone }}
+                                </time>
+
+                                @if ($occurrence->viewerDisplayStartsAt && $occurrence->viewerTimezone !== $occurrence->eventTimezone)
+                                    <time datetime="{{ $occurrence->isoStartsAt }}">
+                                        {{ __('capell-events::generic.your_time') }}: {{ $occurrence->viewerDisplayStartsAt }} {{ $occurrence->viewerTimezone }}
+                                    </time>
+                                @endif
+                            </article>
                         @endforeach
-                    </div>
+                    </section>
                 @endforeach
             </div>
         @endforeach

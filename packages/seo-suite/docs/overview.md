@@ -91,15 +91,15 @@ SEO Suite contributes content graph edges from page SEO snapshots and broken-lin
 
 - `seo-audit-page.png`: `SeoAuditPage` with a seeded `page_seo_snapshots` row.
 - `broken-links-page.png`: `BrokenLinksPage` with a seeded `broken_links` row.
-- `not-found-urls-page.png`: `NotFoundUrlsPage` with migrated Insights tables and a seeded missing page-view event.
 - `translation-coverage-page.png`: `TranslationCoveragePage` with seeded site/page/language data.
-- `ai-discovery-page.png`: `AiDiscoveryPage` with seeded site and page profiles.
-- `seo-settings-page.png`: `SeoSuiteSettingsPage`.
 - `page-seo-panel.png`: core Page edit screen with the SEO Suite tab/panel.
 - `search-console-insights-panel.png`: admin dashboard with seeded `search_console_url_metrics`.
-- `llms-txt-output.png`: `/llms.txt`.
-- `robots-txt-output.png`: `/robots.txt`.
-- `page-markdown-output.png`: `/index.md`.
+- `ai-creator-action-modal.png`: core Page edit screen with the SEO Suite AI Creator action modal.
+- `sitemap-page.png`: sitemap coverage surface with seeded URL state.
+
+Optional follow-up captures remain declared in `docs/screenshots.json` but are not promoted until the runner has the needed fixture support: `not-found-urls-page.png`, `ai-discovery-page.png`, `seo-settings-page.png`, `llms-txt-output.png`, `robots-txt-output.png`, and `page-markdown-output.png`.
+
+Current marketplace media promotes only the strongest SEO audit and sitemap captures. Generic dashboard/settings captures and duplicate Site Health screens were demoted back to runner evidence until recaptured as their labelled SEO Suite workflows.
 
 ## Screenshots
 
@@ -109,11 +109,11 @@ SEO Suite contributes content graph edges from page SEO snapshots and broken-lin
 
 ![Translation coverage settings](screenshots/translation-coverage-page.png)
 
-AI Discovery screenshot target: `packages/seo-suite/docs/screenshots/ai-discovery-page.png`. Keep this as text until the screenshot file is committed.
-
 ![Page SEO panel](screenshots/page-seo-panel.png)
 
-The AI creator modal still needs a dedicated interaction capture once the demo profile can open the modal without external AI credentials.
+![AI Creator action modal](screenshots/ai-creator-action-modal.png)
+
+![Sitemap coverage](screenshots/sitemap-page.png)
 
 ## Pitfalls
 
@@ -235,9 +235,8 @@ Deployment should read [screenshots.json](screenshots.json), install the package
 - Page SEO panel.
 - SEO audit page.
 - Broken links page.
-- Not-found URLs page.
+- AI Creator action modal.
+- Sitemap page.
 - Translation coverage page.
-- AI Discovery page.
-- SEO Suite settings page.
 - Search Console insights panel.
-- Public AI Discovery outputs: `/llms.txt`, `/robots.txt`, and `/index.md`.
+- Optional follow-up captures: AI Discovery page, SEO Suite settings page, not-found URLs, and public AI Discovery outputs (`/llms.txt`, `/robots.txt`, and `/index.md`).

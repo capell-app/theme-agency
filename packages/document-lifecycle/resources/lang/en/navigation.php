@@ -13,6 +13,8 @@ return [
         'metadata' => 'Metadata',
         'content' => 'Content',
         'metadata_note' => 'Admin note',
+        'review_due_at' => 'Review due',
+        'expires_at' => 'Expires',
         'publications' => 'Publications',
         'version' => 'Version',
         'hash' => 'Hash',
@@ -22,6 +24,7 @@ return [
         'acceptor' => 'Acceptor',
         'accepted_at' => 'Accepted',
         'updated_at' => 'Updated',
+        'all_versions' => 'All versions',
     ],
     'relations' => [
         'publications' => 'Publications',
@@ -33,12 +36,21 @@ return [
         'record_acceptance' => 'Record acceptance',
         'archive_document' => 'Archive document',
         'restore_document' => 'Restore document',
+        'export_acceptance_evidence' => 'Export evidence CSV',
+        'export_outstanding_acceptances' => 'Export outstanding CSV',
+        'download_acceptance_certificate' => 'Download signed JSON',
+        'download_publication_diff' => 'Download diff JSON',
     ],
     'messages' => [
         'version_published' => 'Document version published.',
         'acceptance_recorded' => 'Document acceptance recorded.',
         'document_archived' => 'Document archived.',
         'document_restored' => 'Document restored.',
+    ],
+    'commands' => [
+        'archive_expired' => [
+            'summary' => 'Archived :count expired controlled document(s).',
+        ],
     ],
     'portal' => [
         'accepted_status' => 'Accepted',

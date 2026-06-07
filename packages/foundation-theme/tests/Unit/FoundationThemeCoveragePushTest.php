@@ -159,6 +159,7 @@ it('generates tailwind assets from installed vendor assets and validates configu
 
     CapellCore::forcePackageInstalled($packageName);
     CapellCore::registerVendorAsset(VendorAssetData::tailwindImport('tippy.js', $packageName));
+    CapellCore::registerVendorAsset(VendorAssetData::tailwindImport('swiper/css', $packageName));
     CapellCore::registerVendorAsset(VendorAssetData::tailwindImport('resources/css/package.css', $packageName));
     CapellCore::registerVendorAsset(VendorAssetData::tailwindPlugin('@tailwindcss/container-queries', $packageName));
     CapellCore::registerVendorAsset(VendorAssetData::tailwindSource('resources/views/**/*.blade.php', $packageName));
@@ -172,8 +173,10 @@ it('generates tailwind assets from installed vendor assets and validates configu
 
     capell_expect($css)
         ->toContain('@import "tippy.js";')
+        ->toContain('@import "swiper/css";')
         ->toContain('@import "@tailwindcss/forms";')
         ->toContain('package.css')
+        ->not->toContain('vendor/' . $packageName . '/swiper/css')
         ->toContain('@plugin "@tailwindcss/container-queries";')
         ->toContain('@source "')
         ->toContain('--color-coverage-accent: #abcdef;')
@@ -225,20 +228,26 @@ it('declares foundation settings schema and settings migrations', function (): v
     $components = FoundationThemeSettingsSchema::make(Schema::make());
     $performanceComponents = foundationThemeCoverageChildComponents(foundationThemeCoverageChildComponents($components[0])[0]);
     $designTokenComponents = foundationThemeCoverageChildComponents(foundationThemeCoverageChildComponents($components[1])[0]);
+    $darkDesignTokenComponents = foundationThemeCoverageChildComponents(foundationThemeCoverageChildComponents($components[2])[0]);
     $provider = new FoundationThemeSettingsMigrationProvider;
 
-    capell_expect($components)->toHaveCount(2)
+    capell_expect($components)->toHaveCount(3)
         ->and($components[0])->toBeInstanceOf(Section::class)
         ->and($components[1])->toBeInstanceOf(Section::class)
+        ->and($components[2])->toBeInstanceOf(Section::class)
         ->and($performanceComponents)->toHaveCount(2)
         ->and($performanceComponents[0])->toBeInstanceOf(Checkbox::class)
         ->and($performanceComponents[1])->toBeInstanceOf(Checkbox::class)
-        ->and($designTokenComponents)->toHaveCount(16)
+        ->and($designTokenComponents)->toHaveCount(17)
         ->and($designTokenComponents[0])->toBeInstanceOf(ColorPicker::class)
         ->and($designTokenComponents[12])->toBeInstanceOf(ColorPicker::class)
         ->and($designTokenComponents[13])->toBeInstanceOf(Select::class)
         ->and($designTokenComponents[14])->toBeInstanceOf(Select::class)
         ->and($designTokenComponents[15])->toBeInstanceOf(Select::class)
+        ->and($designTokenComponents[16])->toBeInstanceOf(Select::class)
+        ->and($darkDesignTokenComponents)->toHaveCount(13)
+        ->and($darkDesignTokenComponents[0])->toBeInstanceOf(ColorPicker::class)
+        ->and($darkDesignTokenComponents[12])->toBeInstanceOf(ColorPicker::class)
         ->and($provider->getSettingMigrations())->toBe([
             '2026_05_10_190850_01_create_foundation_theme_settings',
             '2026_05_23_160819_add_foundation_theme_design_tokens',
@@ -246,6 +255,8 @@ it('declares foundation settings schema and settings migrations', function (): v
             '2026_05_23_170001_add_foundation_theme_composition_tokens',
             '2026_05_23_171201_quiet_foundation_theme_composition_palette',
             '2026_05_23_180101_add_foundation_theme_image_tokens',
+            '2026_06_07_000001_add_foundation_theme_dark_design_tokens',
+            '2026_06_07_000002_add_foundation_theme_typography_tokens',
         ])
         ->and($provider->migrations())->toBe([
             '2026_05_10_190850_01_create_foundation_theme_settings',
@@ -254,11 +265,14 @@ it('declares foundation settings schema and settings migrations', function (): v
             '2026_05_23_170001_add_foundation_theme_composition_tokens',
             '2026_05_23_171201_quiet_foundation_theme_composition_palette',
             '2026_05_23_180101_add_foundation_theme_image_tokens',
+            '2026_06_07_000001_add_foundation_theme_dark_design_tokens',
+            '2026_06_07_000002_add_foundation_theme_typography_tokens',
         ])
         ->and(FoundationThemeSettings::group())->toBe('foundation_theme')
         ->and(FoundationThemeSettings::schema())->toBe(FoundationThemeSettingsSchema::class)
         ->and(FoundationThemeSettings::sectionSpacingCssValueFor(null))->toBe(FoundationThemeSettings::SECTION_SPACING_OPTIONS['relaxed'])
-        ->and(FoundationThemeSettings::widgetGapCssValueFor(null))->toBe(FoundationThemeSettings::WIDGET_GAP_OPTIONS['balanced']);
+        ->and(FoundationThemeSettings::widgetGapCssValueFor(null))->toBe(FoundationThemeSettings::WIDGET_GAP_OPTIONS['balanced'])
+        ->and(FoundationThemeSettings::headingScaleCssValuesFor(null))->toBe(FoundationThemeSettings::HEADING_SCALE_OPTIONS['balanced']);
 
 });
 

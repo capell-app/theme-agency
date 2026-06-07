@@ -13,9 +13,15 @@
         "bundle": "foundation"
     },
     "namespace": "Capell\\FoundationTheme",
-    "surfaces": ["admin", "frontend"],
+    "surfaces": [
+        "admin",
+        "frontend"
+    ],
     "dependencies": {
-        "requires": ["capell-app/frontend", "capell-app/layout-builder"],
+        "requires": [
+            "capell-app/frontend",
+            "capell-app/layout-builder"
+        ],
         "supports": [],
         "conflicts": []
     },
@@ -46,14 +52,22 @@
     },
     "settings": [],
     "permissions": [],
-    "capabilities": ["frontend-assets", "cache-blocking"],
+    "capabilities": [
+        "frontend-assets",
+        "cache-blocking"
+    ],
     "performance": {
         "frontendRenderBudgetMs": 20,
         "adminQueryBudget": 40,
-        "cacheTags": ["foundation-theme"],
+        "cacheTags": [
+            "foundation-theme"
+        ],
         "cacheSafety": {
             "cacheable": false,
-            "variesBy": ["site", "locale"],
+            "variesBy": [
+                "site",
+                "locale"
+            ],
             "sensitiveOutput": false,
             "invalidationSources": [],
             "queueInvalidation": true
@@ -93,71 +107,57 @@
                 "caption": "Foundation Theme settings screen, dark mode"
             },
             {
-                "path": "docs/screenshots/frontend-page-using-the-foundation-theme.png",
-                "alt": "Frontend page rendered with Foundation Theme in light mode.",
-                "caption": "Frontend page using Foundation Theme"
+                "path": "docs/screenshots/foundation-homepage-layout.png",
+                "alt": "Foundation Theme homepage layout rendered as a Capell public page",
+                "caption": "Homepage layout"
             },
             {
-                "path": "docs/screenshots/frontend-page-using-the-foundation-theme-dark.png",
-                "alt": "Frontend page rendered with Foundation Theme in dark mode.",
-                "caption": "Frontend page using Foundation Theme, dark mode"
+                "path": "docs/screenshots/foundation-standard-page-layout.png",
+                "alt": "Foundation Theme standard content page with breadcrumbs and related links",
+                "caption": "Standard content page"
             },
             {
-                "path": "docs/screenshots/generated-tailwind-asset-output-review.png",
-                "alt": "Generated Tailwind asset output review in light mode.",
-                "caption": "Generated Tailwind asset output review"
+                "path": "docs/screenshots/foundation-blog-article-layout.png",
+                "alt": "Foundation Theme blog article layout with article hero and related posts",
+                "caption": "Blog article layout"
             },
             {
-                "path": "docs/screenshots/generated-tailwind-asset-output-review-dark.png",
-                "alt": "Generated Tailwind asset output review in dark mode.",
-                "caption": "Generated Tailwind asset output review, dark mode"
+                "path": "docs/screenshots/foundation-listing-layout.png",
+                "alt": "Foundation Theme listing layout with card grid, filters, and pagination rhythm",
+                "caption": "Listing page layout"
             },
             {
-                "path": "docs/assets/marketplace/foundation-homepage-layout.svg",
-                "alt": "Foundation Theme homepage layout screenshot showing hero, feature grid, content widgets, cta, footer.",
-                "caption": "Foundation Theme: Homepage layout. Hero, feature grid, content widgets, CTA, footer."
+                "path": "docs/screenshots/foundation-contact-form-layout.png",
+                "alt": "Foundation Theme contact form layout with fields, consent, and confirmation path",
+                "caption": "Contact form layout"
             },
             {
-                "path": "docs/assets/marketplace/foundation-standard-page-layout.svg",
-                "alt": "Foundation Theme standard content page screenshot showing header, breadcrumbs, rich content, related links.",
-                "caption": "Foundation Theme: Standard content page. Header, breadcrumbs, rich content, related links."
+                "path": "docs/screenshots/foundation-search-results-layout.png",
+                "alt": "Foundation Theme search results layout with query, excerpts, and metadata",
+                "caption": "Search results layout"
             },
             {
-                "path": "docs/assets/marketplace/foundation-blog-article-layout.svg",
-                "alt": "Foundation Theme blog article layout screenshot showing article hero, author row, body, related posts. Requires capell-app/blog.",
-                "caption": "Foundation Theme: Blog article layout. Article hero, author row, body, related posts. Requires capell-app/blog."
+                "path": "docs/screenshots/foundation-events-layout.png",
+                "alt": "Foundation Theme events listing layout with featured event and date cards",
+                "caption": "Events listing layout"
             },
             {
-                "path": "docs/assets/marketplace/foundation-listing-layout.svg",
-                "alt": "Foundation Theme listing page layout screenshot showing card grid, filters, pagination, empty state. Requires capell-app/tags.",
-                "caption": "Foundation Theme: Listing page layout. Card grid, filters, pagination, empty state. Requires capell-app/tags."
-            },
-            {
-                "path": "docs/assets/marketplace/foundation-contact-form-layout.svg",
-                "alt": "Foundation Theme contact form layout screenshot showing intro copy, validated form, consent, confirmation. Requires capell-app/form-builder.",
-                "caption": "Foundation Theme: Contact form layout. Intro copy, validated form, consent, confirmation. Requires capell-app/form-builder."
-            },
-            {
-                "path": "docs/assets/marketplace/foundation-search-results-layout.svg",
-                "alt": "Foundation Theme search results layout screenshot showing search box, result excerpts, highlighting, no-results state. Requires capell-app/search.",
-                "caption": "Foundation Theme: Search results layout. Search box, result excerpts, highlighting, no-results state. Requires capell-app/search."
-            },
-            {
-                "path": "docs/assets/marketplace/foundation-events-layout.svg",
-                "alt": "Foundation Theme events listing layout screenshot showing featured event, date cards, location metadata. Requires capell-app/events.",
-                "caption": "Foundation Theme: Events listing layout. Featured event, date cards, location metadata. Requires capell-app/events."
-            },
-            {
-                "path": "docs/assets/marketplace/foundation-membership-gate-layout.svg",
-                "alt": "Foundation Theme access gated page layout screenshot showing teaser content, sign-in prompt, gated sections. Requires capell-app/access-gate.",
-                "caption": "Foundation Theme: Access-gated page layout. Teaser content, sign-in prompt, gated sections. Requires capell-app/access-gate."
+                "path": "docs/screenshots/foundation-membership-gate-layout.png",
+                "alt": "Foundation Theme access-gated page layout with teaser and sign-in prompt",
+                "caption": "Access-gated page layout"
             }
         ],
-        "categories": ["admin", "foundation", "frontend"]
+        "categories": [
+            "admin",
+            "foundation",
+            "frontend"
+        ]
     },
     "extends": null,
     "themeKey": "default",
     "contributionTraceability": {
-        "deferredContributions": ["route"]
+        "deferredContributions": [
+            "route"
+        ]
     }
 }

@@ -12,12 +12,14 @@ class RenderProfileData extends Data
     /**
      * @param  array<string, mixed>  $signature
      * @param  array<int, FrontendAssetDefinitionData>  $assets
+     * @param  array<int, FrontendResourceHintData>  $resourceHints
      */
     public function __construct(
         public string $hash,
         public OptimizationScope $scope,
         public array $signature,
         public array $assets,
+        public array $resourceHints = [],
         public ?string $label = null,
     ) {}
 
@@ -31,6 +33,10 @@ class RenderProfileData extends Data
             'assets' => array_map(
                 static fn (FrontendAssetDefinitionData $asset): array => $asset->signature(),
                 $this->assets,
+            ),
+            'resource_hints' => array_map(
+                static fn (FrontendResourceHintData $hint): array => $hint->signature(),
+                $this->resourceHints,
             ),
         ];
     }

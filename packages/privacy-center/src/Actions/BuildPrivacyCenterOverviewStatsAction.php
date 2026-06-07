@@ -9,6 +9,7 @@ use Capell\PrivacyCenter\Enums\PrivacyRequestStatus;
 use Capell\PrivacyCenter\Models\ConsentRecord;
 use Capell\PrivacyCenter\Models\PrivacyRequest;
 use Capell\PrivacyCenter\Models\RetentionRule;
+use Capell\PrivacyCenter\Support\PrivacyCenterOverviewStatsCache;
 use Lorisleiva\Actions\Concerns\AsAction;
 
 final class BuildPrivacyCenterOverviewStatsAction
@@ -20,7 +21,7 @@ final class BuildPrivacyCenterOverviewStatsAction
      */
     public function handle(): array
     {
-        return [
+        return PrivacyCenterOverviewStatsCache::remember(fn (): array => [
             'consent_records' => ConsentRecord::query()->count(),
             'granted_consents' => ConsentRecord::query()->where('decision', ConsentDecision::Granted->value)->count(),
             'open_privacy_requests' => PrivacyRequest::query()
@@ -31,6 +32,6 @@ final class BuildPrivacyCenterOverviewStatsAction
                 ])
                 ->count(),
             'active_retention_rules' => RetentionRule::query()->where('is_active', true)->count(),
-        ];
+        ]);
     }
 }

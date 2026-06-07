@@ -35,7 +35,7 @@
                 {{ __('capell-foundation-theme::generic.menu') }}
             </summary>
             <div
-                class="absolute right-0 z-30 mt-3 grid min-w-48 gap-3 rounded-md border border-slate-200 bg-white p-4 text-sm text-slate-600 shadow-xl"
+                class="absolute end-0 z-30 mt-3 grid min-w-48 gap-3 rounded-md border border-slate-200 bg-white p-4 text-sm text-slate-600 shadow-xl"
             >
                 @foreach ($section->items as $item)
                     <a

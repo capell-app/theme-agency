@@ -5,19 +5,21 @@
 @endphp
 
 <section
-    class="theme-section theme-section-annual-report-proof bg-[#132016] text-white"
+    class="theme-section theme-section-annual-report-proof nonprofit-bg-primary-deep text-white"
 >
     <div class="mx-auto max-w-6xl px-6 py-16">
         <div class="grid gap-8 md:grid-cols-[0.78fr_1.22fr]">
             <div>
                 <p
-                    class="text-xs font-black tracking-[0.16em] text-[#eab308] uppercase"
+                    class="nonprofit-text-accent text-xs font-black tracking-[0.16em] uppercase"
                 >
                     {{ __('capell-theme-nonprofit::generic.annual_report_label') }}
                 </p>
                 <h2 class="mt-3 text-4xl font-black">{{ $heading }}</h2>
                 @if ($summary)
-                    <p class="mt-4 text-base leading-8 text-white/75">
+                    <p
+                        class="nonprofit-text-on-dark-muted mt-4 text-base leading-8"
+                    >
                         {{ $summary }}
                     </p>
                 @endif
@@ -25,13 +27,17 @@
             <div class="grid gap-3">
                 @forelse ($items as $item)
                     <article class="border border-white/10 bg-white/[0.06] p-5">
-                        <p class="text-xs font-black text-[#eab308] uppercase">
+                        <p
+                            class="nonprofit-text-accent text-xs font-black uppercase"
+                        >
                             {{ $item['metric'] ?? __('capell-theme-nonprofit::generic.proof_label') }}
                         </p>
                         <h3 class="mt-2 text-lg font-black">
                             {{ $item['title'] ?? __('capell-theme-nonprofit::generic.impact_label') }}
                         </h3>
-                        <p class="mt-2 text-sm leading-6 text-white/75">
+                        <p
+                            class="nonprofit-text-on-dark-muted mt-2 text-sm leading-6"
+                        >
                             {{ $item['summary'] ?? __('capell-theme-nonprofit::generic.annual_report_ready') }}
                         </p>
                     </article>

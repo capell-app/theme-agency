@@ -28,6 +28,10 @@ class AgencyThemeServiceProvider extends ServiceProvider
 
     public const string TAILWIND_SOURCE = 'resources/views/**/*.blade.php';
 
+    public const string BUILD_ASSET_PATH = 'vendor/capell-theme-agency';
+
+    public const string BUILD_ASSET_FILE = 'resources/js/theme-agency.js';
+
     public static string $packageName = 'capell-app/theme-agency';
 
     public static function definition(): ThemeDefinitionData
@@ -40,7 +44,7 @@ class AgencyThemeServiceProvider extends ServiceProvider
             previewImage: self::PUBLIC_PREVIEW_IMAGE,
             tags: ['Expressive', 'Portfolio', 'Creative'],
             bestFit: ['Studios', 'Agencies', 'Brand-led teams'],
-            includedSections: ['navigation', 'hero', 'features', 'proof', 'content-listing', 'cta', 'footer'],
+            includedSections: ['navigation', 'hero', 'features', 'proof', 'content-listing', 'project-showcase', 'case-study', 'team', 'services', 'client-logos', 'cta', 'footer'],
             presets: [
                 new ThemePresetData(
                     key: 'signal',
@@ -216,6 +220,14 @@ class AgencyThemeServiceProvider extends ServiceProvider
     private function registerVendorCssAssets(): void
     {
         CapellCore::registerVendorAsset(
+            VendorAssetData::buildAsset(
+                path: self::BUILD_ASSET_PATH,
+                file: self::BUILD_ASSET_FILE,
+                packageName: self::$packageName,
+            ),
+        );
+
+        CapellCore::registerVendorAsset(
             VendorAssetData::tailwindImport(self::TAILWIND_IMPORT, self::$packageName),
         );
 
@@ -235,6 +247,11 @@ class AgencyThemeServiceProvider extends ServiceProvider
             'features' => new ViewSectionRenderer(self::THEME_KEY, 'features', 'capell-theme-agency::sections.features', failLoudly: true),
             'proof' => new ViewSectionRenderer(self::THEME_KEY, 'proof', 'capell-theme-agency::sections.proof', failLoudly: true),
             'content-listing' => new ViewSectionRenderer(self::THEME_KEY, 'content-listing', 'capell-theme-agency::sections.content-listing', failLoudly: true),
+            'project-showcase' => new ViewSectionRenderer(self::THEME_KEY, 'project-showcase', 'capell-theme-agency::sections.project-showcase', failLoudly: true),
+            'case-study' => new ViewSectionRenderer(self::THEME_KEY, 'case-study', 'capell-theme-agency::sections.case-study', failLoudly: true),
+            'team' => new ViewSectionRenderer(self::THEME_KEY, 'team', 'capell-theme-agency::sections.team', failLoudly: true),
+            'services' => new ViewSectionRenderer(self::THEME_KEY, 'services', 'capell-theme-agency::sections.services', failLoudly: true),
+            'client-logos' => new ViewSectionRenderer(self::THEME_KEY, 'client-logos', 'capell-theme-agency::sections.client-logos', failLoudly: true),
             'cta' => new ViewSectionRenderer(self::THEME_KEY, 'cta', 'capell-theme-agency::sections.cta', failLoudly: true),
             'footer' => new ViewSectionRenderer(self::THEME_KEY, 'footer', 'capell-theme-agency::sections.footer', failLoudly: true),
         ];

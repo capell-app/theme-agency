@@ -1,10 +1,12 @@
-<footer class="healthcare-footer border-t border-stone-200 bg-[#f6fbfd]">
+<footer
+    class="healthcare-footer border-t border-stone-200 bg-[var(--healthcare-surface)]"
+>
     <h2 class="sr-only">
         {{ __('capell-theme-healthcare::generic.footer') }}
     </h2>
     <div class="grid gap-10 px-6 py-14 md:grid-cols-[1fr_2fr]">
         <div>
-            <p class="text-lg font-black text-[#14323a]">
+            <p class="text-lg font-black text-[var(--healthcare-ink)]">
                 {{ $section->brandName }}
             </p>
             @if ($section->summary ?? null)
@@ -27,7 +29,7 @@
                             <li>
                                 <a
                                     href="{{ $link['url'] }}"
-                                    class="hover:text-[#0f766e]"
+                                    class="hover:text-[var(--healthcare-primary)]"
                                 >
                                     {{ $link['label'] }}
                                 </a>

@@ -12,17 +12,20 @@ use Capell\PublicActions\Data\PublicActionPayloadData;
 use Capell\PublicActions\Data\PublicActionResultData;
 use Capell\PublicActions\Data\PublicActionSubmissionData;
 use Capell\PublicActions\Enums\PublicActionDestinationStatus;
+use Capell\PublicActions\Enums\PublicActionDispatchStatus;
 use Capell\PublicActions\Enums\PublicActionStatus;
 use Capell\PublicActions\Enums\PublicActionSubmissionStatus;
 use Capell\PublicActions\Jobs\DispatchPublicActionDestinationJob;
 use Capell\PublicActions\Models\PublicAction;
 use Capell\PublicActions\Models\PublicActionDestination;
+use Capell\PublicActions\Models\PublicActionDispatchAttempt;
 use Capell\PublicActions\Models\PublicActionSubmission;
 use Capell\PublicActions\Support\PublicActionHandlerRegistry;
 use Capell\PublicActions\Support\PublicActionSpamProtectionAdapterRegistry;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Validator;
@@ -95,19 +98,21 @@ final class SubmitPublicActionAction
             ]);
         }
 
-        $submission->forceFill([
-            'status' => $result->success ? PublicActionSubmissionStatus::Handled : PublicActionSubmissionStatus::Failed,
-            'metadata' => [
-                ...($submission->metadata ?? []),
-                'result_success' => $result->success,
-                'result_message' => $result->message,
-                'result_redirect_url' => $result->redirectUrl,
-            ],
-        ])->save();
+        $dispatches = DB::transaction(function () use ($publicAction, $submission, $result): array {
+            $submission->forceFill([
+                'status' => $result->success ? PublicActionSubmissionStatus::Handled : PublicActionSubmissionStatus::Failed,
+                'metadata' => [
+                    ...($submission->metadata ?? []),
+                    'result_success' => $result->success,
+                    'result_message' => $result->message,
+                    'result_redirect_url' => $result->redirectUrl,
+                ],
+            ])->save();
 
-        if ($result->success) {
-            $this->dispatchDestinations($publicAction, $submission);
-        }
+            return $result->success ? $this->prepareDestinationDispatches($publicAction, $submission) : [];
+        });
+
+        $this->dispatchPreparedDestinations($dispatches, $submission);
 
         return $this->resultWithActionDefaults($publicAction, $submission, $result, $request);
     }
@@ -181,6 +186,12 @@ final class SubmitPublicActionAction
      */
     private function cappedUnschemedPayload(PublicAction $action, array $input): array
     {
+        if (config('capell-public-actions.allow_schemaless_payloads', false) !== true) {
+            throw ValidationException::withMessages([
+                'payload' => __('capell-public-actions::generic.schema_required'),
+            ]);
+        }
+
         $candidate = Arr::except($input, [
             '_token',
             '_method',
@@ -449,23 +460,70 @@ final class SubmitPublicActionAction
         );
     }
 
-    private function dispatchDestinations(PublicAction $action, PublicActionSubmission $submission): void
+    /**
+     * @return list<array{destination: PublicActionDestination, attempt: PublicActionDispatchAttempt, sync: bool}>
+     */
+    private function prepareDestinationDispatches(PublicAction $action, PublicActionSubmission $submission): array
     {
         $destinations = $action->destinations()
             ->where('status', PublicActionDestinationStatus::Active)
             ->get();
+        $dispatches = [];
 
         foreach ($destinations as $destination) {
             throw_unless($destination instanceof PublicActionDestination);
 
-            if ((bool) data_get($destination->settings, 'sync', false)) {
-                DispatchPublicActionDestinationAction::run($destination, $submission);
+            $attempt = PublicActionDispatchAttempt::query()->create([
+                'public_action_submission_id' => $submission->getKey(),
+                'public_action_destination_id' => $destination->getKey(),
+                'adapter' => $destination->adapter,
+                'status' => PublicActionDispatchStatus::Pending,
+                'attempt' => $this->nextDestinationAttemptNumber($destination, $submission),
+                'request_hash' => hash('sha256', sprintf(
+                    'pending:%s:%s:%s',
+                    $submission->getKey(),
+                    $destination->getKey(),
+                    $destination->adapter,
+                )),
+                'response_status' => null,
+                'response_summary' => null,
+                'error_message' => null,
+                'dispatched_at' => null,
+            ]);
+
+            $dispatches[] = [
+                'destination' => $destination,
+                'attempt' => $attempt,
+                'sync' => (bool) data_get($destination->settings, 'sync', false),
+            ];
+        }
+
+        return $dispatches;
+    }
+
+    /**
+     * @param  list<array{destination: PublicActionDestination, attempt: PublicActionDispatchAttempt, sync: bool}>  $dispatches
+     */
+    private function dispatchPreparedDestinations(array $dispatches, PublicActionSubmission $submission): void
+    {
+        foreach ($dispatches as $dispatch) {
+            if ($dispatch['sync']) {
+                DispatchPublicActionDestinationAction::run($dispatch['destination'], $submission, $dispatch['attempt']);
 
                 continue;
             }
 
-            dispatch(new DispatchPublicActionDestinationJob($destination, $submission));
+            DispatchPublicActionDestinationJob::dispatch($dispatch['destination'], $submission, $dispatch['attempt'])
+                ->afterCommit();
         }
+    }
+
+    private function nextDestinationAttemptNumber(PublicActionDestination $destination, PublicActionSubmission $submission): int
+    {
+        return ((int) PublicActionDispatchAttempt::query()
+            ->where('public_action_submission_id', $submission->getKey())
+            ->where('public_action_destination_id', $destination->getKey())
+            ->max('attempt')) + 1;
     }
 
     private function payloadRedirectUrl(PublicActionSubmission $submission, ?Request $request): ?string

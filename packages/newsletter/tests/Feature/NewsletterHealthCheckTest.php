@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 use Capell\Core\Data\Diagnostics\DoctorCheckResultData;
 use Capell\Newsletter\Actions\BuildNewsletterHealthDiagnosticsAction;
+use Capell\Newsletter\Enums\SyncStatus;
 use Capell\Newsletter\Health\NewsletterHealthCheck;
+use Capell\Newsletter\Models\SyncAttempt;
 use Illuminate\Support\Facades\Schema;
 
 it('reports a compatible capell api version', function (): void {
@@ -62,6 +64,22 @@ it('reports the sync attempt table as missing for the provider sync retry check'
     expect($result->passed)->toBeFalse()
         ->and($result->message)->toContain('newsletter_sync_attempts')
         ->and($result->remediation)->not->toBeNull();
+});
+
+it('reports exhausted provider sync attempts in the retry health check', function (): void {
+    SyncAttempt::query()->create([
+        'operation' => 'sync_subscriber',
+        'sync_status' => SyncStatus::Exhausted,
+        'attempts' => 3,
+        'error_message' => 'Provider sync failed.',
+    ]);
+
+    $check = new BuildNewsletterHealthDiagnosticsAction;
+    $result = $check->providerSyncRetryCheck();
+
+    expect($result->passed)->toBeFalse()
+        ->and($result->message)->toContain('exhausted retries')
+        ->and($check->exhaustedSyncAttemptsCount())->toBe(1);
 });
 
 it('reports the idempotency table as missing for the provider webhook check', function (): void {

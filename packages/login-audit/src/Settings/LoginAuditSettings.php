@@ -20,6 +20,22 @@ final class LoginAuditSettings extends Settings implements SettingsContract
 
     public int $activity_update_grace_seconds = 60;
 
+    public bool $enable_suspicious_detection = true;
+
+    public bool $enable_geo_location = false;
+
+    public int $failed_login_threshold = 5;
+
+    public int $failed_login_window_minutes = 60;
+
+    public bool $check_unusual_login_times = false;
+
+    public bool $alert_new_devices = true;
+
+    public bool $alert_failed_logins = false;
+
+    public bool $alert_suspicious_logins = true;
+
     public ?string $last_purged_at = null;
 
     public bool $enable_user_resource_bridge = true;

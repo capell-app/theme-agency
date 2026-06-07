@@ -75,7 +75,7 @@ it('defines the inertia bookings theme contract', function (): void {
         ->and($definition->runtime)->toBe(FrontendRuntime::Inertia);
 });
 
-it('declares committed marketplace assets for every required screenshot capture target', function (): void {
+it('keeps marketplace media separate from unverified screenshot capture targets', function (): void {
     $packagePath = dirname(__DIR__, 2);
     $manifest = json_decode(File::get($packagePath . '/capell.json'), true, flags: JSON_THROW_ON_ERROR);
     $screenshotContract = json_decode(File::get($packagePath . '/docs/screenshots.json'), true, flags: JSON_THROW_ON_ERROR);
@@ -101,13 +101,11 @@ it('declares committed marketplace assets for every required screenshot capture 
 
         $marketplaceScreenshotPaths[] = $path;
 
-        expect($path)->toStartWith('docs/assets/marketplace/')
+        expect(str_starts_with($path, 'docs/assets/marketplace/') || str_starts_with($path, 'docs/screenshots/'))->toBeTrue()
             ->and(File::exists($packagePath . '/' . $path))->toBeTrue()
             ->and(strlen(trim($alt)))->toBeGreaterThanOrEqual(12)
             ->and(strlen(trim($caption)))->toBeGreaterThanOrEqual(12);
     }
-
-    $requiredMarketplaceAssetPaths = [];
 
     foreach ($contractEntries as $contractEntry) {
         if (! is_array($contractEntry)) {
@@ -118,16 +116,16 @@ it('declares committed marketplace assets for every required screenshot capture 
             continue;
         }
 
-        $id = $contractEntry['id'] ?? null;
+        $screenshotPath = $contractEntry['screenshotPath'] ?? null;
 
-        throw_unless(is_string($id), RuntimeException::class, 'Required Theme Inertia Bookings screenshot contract entries must have string ids.');
+        throw_unless(is_string($screenshotPath), RuntimeException::class, 'Required Theme Inertia Bookings screenshot contract entries must have screenshot paths.');
 
-        $requiredMarketplaceAssetPaths[] = 'docs/assets/marketplace/' . $id . '.svg';
+        expect(File::exists(dirname(__DIR__, 4) . '/' . $screenshotPath))->toBeTrue()
+            ->and($marketplaceScreenshotPaths)->not->toContain(str_replace('packages/theme-inertia-bookings/', '', $screenshotPath));
     }
 
     expect($marketplaceScreenshotPaths)
-        ->toContain('docs/assets/marketplace/extension-card.svg')
-        ->toContain(...$requiredMarketplaceAssetPaths);
+        ->toContain('docs/assets/marketplace/extension-card.svg');
 });
 
 it('registers the theme, booking renderer, and inertia theme assets when installed', function (): void {

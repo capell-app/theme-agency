@@ -21,19 +21,37 @@ final class ResolveHeroMediaDataAction
 
     public function handle(?Theme $theme = null, ?Widget $widget = null, ?WidgetAsset $asset = null): HeroMediaData
     {
+        return $this->forAsset($this->base($theme, $widget), $asset);
+    }
+
+    public function base(?Theme $theme = null, ?Widget $widget = null): HeroMediaData
+    {
+        return $this->resolveLayers($this->layers($theme, $widget));
+    }
+
+    public function forAsset(HeroMediaData $base, ?WidgetAsset $asset = null): HeroMediaData
+    {
+        return $this->resolveLayers($this->layers(asset: $asset), $base);
+    }
+
+    /**
+     * @param  list<array{model: Theme|Widget|WidgetAsset, settings: array<string, mixed>}>  $layers
+     */
+    private function resolveLayers(array $layers, ?HeroMediaData $base = null): HeroMediaData
+    {
         $settings = [
-            'enabled' => false,
-            'autoplay' => true,
-            'loop' => true,
-            'muted' => true,
-            'pause_when_out_of_view' => true,
-            'preload' => HeroMediaData::PreloadMetadata,
+            'enabled' => $base?->enabled ?? false,
+            'autoplay' => $base?->autoplay ?? true,
+            'loop' => $base?->loop ?? true,
+            'muted' => $base?->muted ?? true,
+            'pause_when_out_of_view' => $base?->pauseWhenOutOfView ?? true,
+            'preload' => $base?->preload ?? HeroMediaData::PreloadMetadata,
         ];
 
-        $videos = [];
-        $images = [];
+        $videos = $base?->videos ?? [];
+        $images = $base?->images ?? [];
 
-        foreach ($this->layers($theme, $widget, $asset) as $layer) {
+        foreach ($layers as $layer) {
             $mode = $this->stringValue($layer['settings']['mode'] ?? null);
 
             if ($mode === HeroMediaData::ModeOff) {
@@ -64,7 +82,7 @@ final class ResolveHeroMediaDataAction
     /**
      * @return list<array{model: Theme|Widget|WidgetAsset, settings: array<string, mixed>}>
      */
-    private function layers(?Theme $theme, ?Widget $widget, ?WidgetAsset $asset): array
+    private function layers(?Theme $theme = null, ?Widget $widget = null, ?WidgetAsset $asset = null): array
     {
         return array_values(collect([$theme, $widget, $asset])
             ->filter(fn (Theme|Widget|WidgetAsset|null $model): bool => $model !== null)

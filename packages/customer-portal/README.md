@@ -8,8 +8,9 @@ Customer Portal turns a Capell site into an authenticated self-service hub. It g
 - Site-scoped `PortalAccount` records with encrypted email, display name, profile, and preference storage.
 - A profile surface powered by `ResolvePortalProfileAction` and `PortalProfileProviderRegistry`.
 - Dashboard and self-service item registries so packages such as payments, document lifecycle, events, newsletter, and access-gate can contribute cards and feed items without Customer Portal importing their internals.
+- Configurable per-provider and global caps for dashboard and self-service item fan-out.
 - Preference updates through `UpdatePortalPreferencesAction`, with option rendering and validation driven by the package preference schema.
-- Support request submission through `SubmitSupportRequestAction`, with encrypted request details and requester email hashing.
+- Support request submission and threaded replies through Actions, with encrypted request/reply details and requester email hashing.
 - Support request submitted/status-changed events and queued requester mail notifications.
 - Admin support-request triage through a Filament resource scoped to the current actor's assigned sites.
 - Real package health diagnostics for required tables and model resolution.
@@ -20,6 +21,12 @@ Customer Portal turns a Capell site into an authenticated self-service hub. It g
 The dashboard is a private customer surface. Responses send `no-store` and `noindex` headers, and tests assert the rendered output does not expose package names, signed editor URLs, Filament internals, account ids, or unsafe profile fields. Public Blade receives hydrated arrays from controllers and Actions; it should not query models directly.
 
 `capell.json` declares a 200ms frontend render budget and a 20-query frontend budget. Provider adapters should keep expensive lookups out of Blade and return already-hydrated `PortalDashboardItemData`, `PortalSelfServiceItemData`, and `PortalProfileData` objects.
+
+Provider fan-out is bounded by `dashboard_items_per_provider_limit`, `dashboard_items_limit`, `self_service_items_per_provider_limit`, and `self_service_items_limit` in `capell-customer-portal.php`.
+
+## Authentication Boundary
+
+Customer Portal is intentionally a BYO-auth package. It mounts authenticated frontend routes behind the configured middleware stack and resolves the signed-in Laravel user into a site-scoped `PortalAccount`; it does not install login, registration, password reset, magic-link, or SSO screens. Pair it with the host app's auth stack, Fortify, Socialite, Access Gate, or another first-party auth package when a site needs a complete customer identity journey.
 
 ## Extension Points
 
@@ -32,11 +39,19 @@ Register provider adapters through the package registries:
 
 Provider output is escaped in Blade. Keep labels, descriptions, URLs, and profile values customer-facing, and do not include internal ids, tokens, admin URLs, selectors, or authoring metadata.
 
+## Suite Boundaries
+
+Customer Portal aggregates self-service links and dashboard cards; owning packages keep their domain operations. Payments should issue invoice, payment-method, checkout, and subscription URLs through its portal providers. Document Lifecycle and gated-resource packages should issue signed download or entitlement URLs through their own providers. Customer Portal renders those customer-facing items without importing billing, document, or entitlement internals.
+
 ## Support Workflow
 
-Customers can submit support requests from the dashboard. The package stores request subject, message, requester email, context, status, and priority in encrypted columns where appropriate. Submissions emit `PortalSupportRequestSubmitted`; status transitions emit `PortalSupportRequestStatusChanged` only when the status changes.
+Customers can submit support requests from the dashboard, then continue the thread from their recent-support history. Staff can reply from the admin triage table. The package stores request subject, message, requester email, context, status, priority, and threaded replies in encrypted columns where appropriate; reply attachments are represented as encrypted metadata references so file-owning packages can provide the actual storage/download surface. Submissions emit `PortalSupportRequestSubmitted`; status transitions emit `PortalSupportRequestStatusChanged` only when the status changes.
 
 Requester notifications are sent on demand through Laravel's notification system when a requester email address is available.
+
+## Marketplace Screenshots
+
+`docs/screenshots.json` defines the Capell runner capture contract for the frontend dashboard, preferences/support workflow, support triage list, and support triage detail screen. The light PNGs are promoted in `capell.json`; dark variants are committed alongside them for documentation and listing alternates.
 
 ## Testing
 

@@ -38,6 +38,7 @@ it('exposes default settings and setting migrations', function (): void {
         ->and($settings->property_id)->toBe('')
         ->and($settings->credentials_path)->toBe('')
         ->and($settings->sync_days)->toBe(30)
+        ->and($settings->sync_cron)->toBe('0 2 * * *')
         ->and($settings->route_slug)->toBe('ga4-reports')
         ->and($provider->getSettingMigrations())->toBe(['2026_05_10_190853_01_create_ga4_reports_settings']);
 });
@@ -51,6 +52,7 @@ it('binds the null GA4 client until settings are configured', function (): void 
     $settings->property_id = '123456789';
     $settings->credentials_path = '/tmp/ga4-reports.json';
     $settings->sync_days = 30;
+    $settings->sync_cron = '0 2 * * *';
     $settings->route_slug = 'ga4-reports';
 
     app()->instance(GA4ReportsSettings::class, $settings);

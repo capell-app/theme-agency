@@ -8,6 +8,7 @@ use Capell\Frontend\Contracts\AdminAccessCheckerInterface;
 use Capell\FrontendAuthoring\Actions\UpdateEditableRegionAction;
 use Capell\FrontendAuthoring\Actions\ValidateEditableRegionPayloadAction;
 use Capell\FrontendAuthoring\Data\EditableRegionPayloadData;
+use Capell\FrontendAuthoring\Enums\EditableRegionInputType;
 use Capell\FrontendAuthoring\Support\EditableRegionSigner;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
@@ -49,7 +50,7 @@ class EditRegionField extends LivewireComponent implements HasForms
         $this->payload = $payload;
         $region = $this->region($user);
         $this->label = $region->label;
-        $this->type = $region->type;
+        $this->type = $region->type->value;
 
         $this->form->fill([
             'value' => $this->currentValue($region),
@@ -90,7 +91,9 @@ class EditRegionField extends LivewireComponent implements HasForms
 
     private function field(): Component
     {
-        if ($this->type === 'text') {
+        $type = EditableRegionInputType::from($this->type);
+
+        if ($type === EditableRegionInputType::Text) {
             return TextInput::make('value')
                 ->label($this->label)
                 ->required()
@@ -100,7 +103,7 @@ class EditRegionField extends LivewireComponent implements HasForms
         return Textarea::make('value')
             ->label($this->label)
             ->required()
-            ->rows($this->type === 'html' ? 14 : 7)
+            ->rows($type->textareaRows())
             ->maxLength(65535);
     }
 
@@ -113,11 +116,11 @@ class EditRegionField extends LivewireComponent implements HasForms
         /** @var Model $record */
         $record = $modelClass::query()->findOrFail($region->recordKey);
 
-        if ($region->field === 'title' || $region->field === 'content') {
+        if ($region->fieldKind()->isDirectAttribute()) {
             return (string) $record->getAttribute($region->field);
         }
 
-        if (str_starts_with($region->field, 'meta.')) {
+        if ($region->fieldKind()->isMetaAttribute()) {
             return (string) data_get((array) $record->getAttribute('meta'), substr($region->field, 5), '');
         }
 

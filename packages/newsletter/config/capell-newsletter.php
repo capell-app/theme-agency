@@ -38,6 +38,9 @@ return [
         'queue' => null,
         'retry_minutes' => [5, 30, 120],
     ],
+    'sends' => [
+        'delivery_strategy' => 'external_handoff',
+    ],
     'imports' => [
         'max_file_kb' => 2048,
         'max_rows' => 10000,

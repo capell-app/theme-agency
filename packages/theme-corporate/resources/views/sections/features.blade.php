@@ -44,7 +44,7 @@
             <div class="grid gap-3 md:grid-cols-2 lg:gap-4">
                 @foreach ($section->features as $feature)
                     <article
-                        class="{{ $loop->first ? 'md:col-span-2 md:grid md:grid-cols-[0.75fr_1.25fr] md:items-stretch' : '' }} overflow-hidden border border-slate-200 bg-[#f7f8f6] dark:border-white/10 dark:bg-white/[0.03]"
+                        class="{{ $loop->first ? 'md:col-span-2 md:grid md:grid-cols-[0.75fr_1.25fr] md:items-stretch' : '' }} corporate-card-muted overflow-hidden p-0 dark:bg-white/[0.03]"
                     >
                         @if (! empty($feature['image']))
                             <img

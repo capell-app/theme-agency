@@ -8,9 +8,9 @@ use Capell\ShopifyCommerce\Data\ShopifyProductData;
 use Capell\ShopifyCommerce\Data\ShopifyProductOptionData;
 use Capell\ShopifyCommerce\Data\ShopifyProductVariantData;
 use Capell\ShopifyCommerce\Enums\ShopifyConnectionStatus;
+use Capell\ShopifyCommerce\Enums\ShopifySyncStatus;
 use Capell\ShopifyCommerce\Models\ShopifyConnection;
 use Capell\ShopifyCommerce\Models\ShopifyProduct;
-use Carbon\CarbonInterface;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
@@ -43,7 +43,7 @@ final class ImportShopifyProductBulkSyncAction
             throw_if(! is_string($bulkOperationUrl) || $bulkOperationUrl === '', RuntimeException::class, 'Shopify bulk operation URL is missing.');
 
             try {
-                $connection->forceFill(['sync_status' => 'importing'])->save();
+                $connection->forceFill(['sync_status' => ShopifySyncStatus::Importing->value])->save();
 
                 $products = $this->downloadProducts($bulkOperationUrl);
                 $syncedAt = now();
@@ -51,7 +51,7 @@ final class ImportShopifyProductBulkSyncAction
 
                 DB::transaction(function () use ($connection, $products, $syncedAt, &$imported): void {
                     foreach ($products as $product) {
-                        $this->persistProduct($connection, $product, $syncedAt);
+                        PersistShopifyProductAction::run($connection, $product, $syncedAt);
                         $imported++;
                     }
 
@@ -70,7 +70,7 @@ final class ImportShopifyProductBulkSyncAction
                 if ($connection->status !== ShopifyConnectionStatus::Revoked) {
                     $connection->forceFill([
                         'status' => ShopifyConnectionStatus::Active,
-                        'sync_status' => 'idle',
+                        'sync_status' => ShopifySyncStatus::Idle->value,
                         'last_synced_at' => now(),
                         'bulk_operation_id' => null,
                         'bulk_operation_url' => null,
@@ -86,7 +86,7 @@ final class ImportShopifyProductBulkSyncAction
 
                 if ($connection->status !== ShopifyConnectionStatus::Revoked) {
                     $connection->forceFill([
-                        'sync_status' => 'failed',
+                        'sync_status' => ShopifySyncStatus::Failed->value,
                         'status' => ShopifyConnectionStatus::Error,
                         'last_sync_error' => SanitizeShopifySyncErrorAction::run($throwable, $connection),
                     ])->save();
@@ -220,51 +220,5 @@ final class ImportShopifyProductBulkSyncAction
             availableForSale: ($variant['availableForSale'] ?? false) === true,
             selectedOptions: $selectedOptions,
         );
-    }
-
-    private function persistProduct(ShopifyConnection $connection, ShopifyProductData $product, CarbonInterface $syncedAt): void
-    {
-        /** @var ShopifyProduct $model */
-        $model = ShopifyProduct::query()->updateOrCreate(
-            [
-                'connection_id' => $connection->getKey(),
-                'shopify_gid' => $product->shopifyGid,
-            ],
-            [
-                'handle' => $product->handle,
-                'title' => $product->title,
-                'search_text' => ShopifyProduct::searchableText($product->title, $product->handle),
-                'status' => $product->status,
-                'options' => $product->options,
-                'featured_image' => $product->featuredImage,
-                'raw_snapshot' => $product->rawSnapshot,
-                'synced_at' => $syncedAt,
-            ],
-        );
-
-        $seenVariantGids = [];
-
-        foreach ($product->variants as $variant) {
-            $seenVariantGids[] = $variant->shopifyGid;
-
-            $model->variants()->updateOrCreate(
-                ['shopify_gid' => $variant->shopifyGid],
-                [
-                    'title' => $variant->title,
-                    'price_amount' => $variant->priceAmount,
-                    'price_currency' => $variant->priceCurrency,
-                    'available_for_sale' => $variant->availableForSale,
-                    'selected_options' => $variant->selectedOptions,
-                ],
-            );
-        }
-
-        if ($seenVariantGids === []) {
-            $model->variants()->delete();
-
-            return;
-        }
-
-        $model->variants()->whereNotIn('shopify_gid', $seenVariantGids)->delete();
     }
 }

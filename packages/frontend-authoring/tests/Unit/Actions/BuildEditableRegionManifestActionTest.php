@@ -10,8 +10,13 @@ use Capell\Core\Models\SiteDomain;
 use Capell\Core\Models\Translation;
 use Capell\FrontendAuthoring\Actions\BuildEditableRegionManifestAction;
 use Capell\FrontendAuthoring\Data\EditableRegionPayloadData;
+use Capell\FrontendAuthoring\Enums\EditableRegionInputType;
+use Capell\FrontendAuthoring\Enums\EditableRegionSurface;
 use Capell\FrontendAuthoring\Support\EditableRegionSigner;
+use Capell\Tests\Fixtures\Models\User;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Gate;
 
 beforeEach(function (): void {
     Config::set('capell-frontend-authoring.selectors.page_title', '[data-edit-title]');
@@ -110,7 +115,7 @@ it('includes package supplied editable region extenders', function (): void {
             recordKey: (int) $resolvedPageUrl->getKey(),
             field: 'meta.summary',
             label: 'Summary',
-            type: 'textarea',
+            type: EditableRegionInputType::Textarea,
             selector: '[data-edit-summary]',
             currentUrl: $resolvedPageUrl->full_url,
             pageUrlId: (int) $resolvedPageUrl->getKey(),
@@ -138,6 +143,156 @@ it('includes package supplied editable region extenders', function (): void {
             'selector' => '[data-edit-summary]',
             'surface' => 'field',
         ]);
+});
+
+it('includes package supplied media editor regions without changing field defaults', function (): void {
+    $language = Language::factory()->create();
+    $site = Site::factory()->create(['language_id' => $language->getKey()]);
+    $siteDomain = SiteDomain::factory()
+        ->for($site)
+        ->for($language)
+        ->create([
+            'scheme' => 'https',
+            'domain' => 'example.test',
+            'path' => '/',
+            'status' => true,
+        ]);
+    $page = Page::factory()->site($site)->create();
+    $translation = Translation::factory()
+        ->translatable($page)
+        ->language($language)
+        ->create();
+    $pageUrl = PageUrl::factory()
+        ->site($site)
+        ->language($language)
+        ->page($page)
+        ->create(['url' => '/media-editor-page']);
+
+    $page->setRelation('translation', $translation);
+    $pageUrl->setRelation('pageable', $page);
+    $pageUrl->setRelation('siteDomain', $siteDomain);
+
+    app()->bind('frontend-authoring-test.media-region', fn (): callable => fn (PageUrl $resolvedPageUrl): array => [
+        new EditableRegionPayloadData(
+            model: PageUrl::class,
+            recordKey: (int) $resolvedPageUrl->getKey(),
+            field: 'meta.hero_image',
+            label: 'Hero image',
+            type: EditableRegionInputType::Text,
+            selector: '[data-edit-hero-image]',
+            currentUrl: $resolvedPageUrl->full_url,
+            pageUrlId: (int) $resolvedPageUrl->getKey(),
+            siteId: (int) $resolvedPageUrl->site_id,
+            languageId: (int) $resolvedPageUrl->language_id,
+            regionKey: 'test.hero-image',
+            surface: EditableRegionSurface::Media,
+            target: 'hero-image',
+            description: 'Replace the hero image.',
+            context: ['collection' => 'hero'],
+        ),
+    ]);
+    app()->tag('frontend-authoring-test.media-region', 'capell-frontend-authoring:editable-regions');
+
+    $manifest = BuildEditableRegionManifestAction::run($pageUrl);
+
+    $defaultTitleRegion = editableRegionByField(array_values($manifest), 'title');
+    $mediaRegion = collect(array_values($manifest))
+        ->first(fn (array $editableRegion): bool => $editableRegion['label'] === 'Hero image');
+
+    expect($mediaRegion)->toBeArray();
+    assert(is_array($mediaRegion));
+
+    $payload = editableRegionPayloadFromEditUrl((string) $mediaRegion['edit_url']);
+
+    expect($defaultTitleRegion)->toMatchArray([
+        'surface' => 'field',
+    ])
+        ->and($mediaRegion)->toMatchArray([
+            'label' => 'Hero image',
+            'type' => 'text',
+            'selector' => '[data-edit-hero-image]',
+            'surface' => 'media',
+            'target' => 'hero-image',
+            'description' => 'Replace the hero image.',
+            'context' => ['collection' => 'hero'],
+        ])
+        ->and($payload->surface)->toBe(EditableRegionSurface::Media);
+});
+
+it('filters package supplied editable regions by region permissions', function (): void {
+    $language = Language::factory()->create();
+    $site = Site::factory()->create(['language_id' => $language->getKey()]);
+    $siteDomain = SiteDomain::factory()
+        ->for($site)
+        ->for($language)
+        ->create([
+            'scheme' => 'https',
+            'domain' => 'example.test',
+            'path' => '/',
+            'status' => true,
+        ]);
+    $page = Page::factory()->site($site)->create();
+    $translation = Translation::factory()
+        ->translatable($page)
+        ->language($language)
+        ->create();
+    $pageUrl = PageUrl::factory()
+        ->site($site)
+        ->language($language)
+        ->page($page)
+        ->create(['url' => '/permissioned-page']);
+    $user = User::factory()->create();
+
+    $page->setRelation('translation', $translation);
+    $pageUrl->setRelation('pageable', $page);
+    $pageUrl->setRelation('siteDomain', $siteDomain);
+
+    app()->bind('frontend-authoring-test.restricted-region', fn (): callable => fn (PageUrl $resolvedPageUrl): array => [
+        new EditableRegionPayloadData(
+            model: PageUrl::class,
+            recordKey: (int) $resolvedPageUrl->getKey(),
+            field: 'meta.editor_note',
+            label: 'Editor note',
+            type: EditableRegionInputType::Textarea,
+            selector: '[data-edit-editor-note]',
+            currentUrl: $resolvedPageUrl->full_url,
+            pageUrlId: (int) $resolvedPageUrl->getKey(),
+            siteId: (int) $resolvedPageUrl->site_id,
+            languageId: (int) $resolvedPageUrl->language_id,
+            regionKey: 'test.editor-note',
+            permissions: ['frontend-authoring.edit-editor-note'],
+        ),
+    ]);
+    app()->tag('frontend-authoring-test.restricted-region', 'capell-frontend-authoring:editable-regions');
+
+    Gate::define(
+        'frontend-authoring.edit',
+        static fn (Authenticatable $actor, ?PageUrl $resolvedPageUrl, EditableRegionPayloadData $region): bool => true,
+    );
+    $allowEditorNote = false;
+    Gate::define(
+        'frontend-authoring.edit-editor-note',
+        static function (Authenticatable $actor, ?PageUrl $resolvedPageUrl, EditableRegionPayloadData $region) use (&$allowEditorNote): bool {
+            return $allowEditorNote && $region->regionKey === 'test.editor-note';
+        },
+    );
+
+    $deniedManifest = BuildEditableRegionManifestAction::run($pageUrl, $user);
+
+    $allowEditorNote = true;
+
+    $allowedManifest = BuildEditableRegionManifestAction::run($pageUrl, $user);
+    $allowedRegion = collect(array_values($allowedManifest))
+        ->first(fn (array $editableRegion): bool => $editableRegion['label'] === 'Editor note');
+
+    expect(collect(array_values($deniedManifest))->pluck('label'))->not->toContain('Editor note')
+        ->and($allowedRegion)->toBeArray();
+    assert(is_array($allowedRegion));
+
+    expect($allowedRegion)->toMatchArray([
+        'label' => 'Editor note',
+        'permissions' => ['frontend-authoring.edit-editor-note'],
+    ]);
 });
 
 function editableRegionPayloadFromEditUrl(string $editUrl): EditableRegionPayloadData

@@ -18,6 +18,7 @@ CampaignStudio adds campaign groups, landing pages, CTA widgets, conversion goal
 - UTM landing-page variant resolution only considers linked pages that are currently public-visible under Capell's page publish-date rules.
 - Optional Experiments integration that syncs campaign landing-page variants and conversion goals into campaign-scoped experiment definitions.
 - Campaign experiment result readout from synced Experiments winner reports, including per-variant conversion rates and lift over the control variant.
+- Scheduled campaign status automation that moves campaign groups from Scheduled to Active and Active to Ended as their date windows open and close.
 
 ## Developer Notes
 
@@ -44,6 +45,7 @@ Lets marketing and editorial teams connect landing pages to goals and see which 
 - May use Insights events and FormBuilder submissions when those packages are installed.
 - May sync campaign-scoped experiments when `capell-app/experiments` is installed.
 - Registers `POST /capell/campaigns/conversions` for same-origin page-view and CTA-click conversion capture.
+- Registers `capell:campaign-studio-sync-statuses` and schedules it every five minutes so campaign group statuses follow `starts_at` and `ends_at`.
 
 ## Frontend Conversion Capture
 
@@ -96,6 +98,7 @@ The tracker is post-load and contains no admin/editor state, signed editor URLs,
 - Tune `capell-campaign-studio.attribution.lookback_days` for the marketing team's attribution policy.
 - Publish linked Capell pages before expecting Campaign Studio to serve them as UTM-targeted variants.
 - Treat UTM-targeted campaign variant pages as dynamic frontend output; do not rely on static HTML cache to personalize variant selection.
+- Ensure the host scheduler runs so scheduled campaigns automatically become active and ended campaigns close on time.
 
 ## Verification
 

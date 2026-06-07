@@ -13,9 +13,15 @@
         "bundle": "themes"
     },
     "namespace": "Capell\\ThemeStudio\\Education",
-    "surfaces": ["frontend", "console"],
+    "surfaces": [
+        "frontend",
+        "console"
+    ],
     "dependencies": {
-        "requires": ["capell-app/core", "capell-app/foundation-theme"],
+        "requires": [
+            "capell-app/core",
+            "capell-app/foundation-theme"
+        ],
         "supports": [
             "capell-app/layout-builder",
             "capell-app/frontend-authoring",
@@ -56,19 +62,31 @@
         "install": null,
         "setup": null,
         "demo": "capell:theme-education-demo",
-        "demoParams": ["url", "languages", "sites"],
+        "demoParams": [
+            "url",
+            "languages",
+            "sites"
+        ],
         "doctor": null
     },
     "settings": [],
     "permissions": [],
-    "capabilities": ["theme-education", "theme-education-frontend"],
+    "capabilities": [
+        "theme-education",
+        "theme-education-frontend"
+    ],
     "performance": {
         "frontendRenderBudgetMs": 20,
         "adminQueryBudget": 0,
-        "cacheTags": ["theme-education"],
+        "cacheTags": [
+            "theme-education"
+        ],
         "cacheSafety": {
             "cacheable": false,
-            "variesBy": ["site", "locale"],
+            "variesBy": [
+                "site",
+                "locale"
+            ],
             "sensitiveOutput": false,
             "invalidationSources": [],
             "queueInvalidation": true
@@ -89,21 +107,24 @@
         "screenshots": [
             {
                 "path": "docs/assets/marketplace/extension-card.jpg",
-                "alt": "Theme Education extension preview image",
-                "caption": "Theme Education extension preview"
+                "alt": "Theme Education marketplace card.",
+                "caption": "Theme Education theme card."
             },
-            {
-                "path": "docs/assets/marketplace/hero-desktop.jpg",
-                "alt": "Theme Education Hero Desktop image",
-                "caption": "Theme Education Hero Desktop"
-            },
-            {
-                "path": "docs/assets/marketplace/hero-mobile.jpg",
-                "alt": "Theme Education Hero Mobile image",
-                "caption": "Theme Education Hero Mobile"
-            }
-        ],
-        "categories": ["frontend", "themes"]
+        {
+            "path": "docs/screenshots/education-homepage-layout.png",
+            "alt": "Theme Education homepage with enrolment-focused headline, programme proof cards, and campus learning media.",
+            "caption": "Route-backed Education homepage rendered through the package theme shell."
+        },
+        {
+            "path": "docs/screenshots/education-enrolment-layout.png",
+            "alt": "Theme Education enrolment CTA with learner pathway steps and application actions.",
+            "caption": "Route-backed Education enrolment call-to-action."
+        }
+    ],
+        "categories": [
+            "frontend",
+            "themes"
+        ]
     },
     "extends": "capell-app/foundation-theme",
     "themeKey": "education",

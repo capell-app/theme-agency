@@ -4,29 +4,56 @@
     "generatedFor": "deployment-screenshot-runner",
     "requiresInstalledPackage": true,
     "outputDirectory": "packages/email-studio/docs/screenshots",
-    "notes": "Email Studio now ships a MailTracker-backed sent email resource and extension settings surface. Replace interim marketplace assets with fresh workbench captures once demo data is seeded.",
+    "notes": "Email Studio ships a MailTracker-backed sent email resource and extension settings surface. Capture these through the Capell screenshot runner after the runner app has MailTracker rows and Email Studio settings seeded.",
     "blockers": [],
     "entries": [
         {
-            "key": "sent-emails-index",
-            "type": "filament-resource",
-            "route": "sent-emails",
-            "output": "packages/email-studio/docs/screenshots/sent-emails-index.png",
-            "description": "Sent emails table showing subject, sender, recipient, opens, clicks, and sent timestamp."
+            "id": "sent-emails-index",
+            "title": "Sent emails admin index.",
+            "package": "email-studio",
+            "surface": "admin",
+            "targetType": "admin-resource",
+            "target": "SentEmailResource",
+            "scenario": "admin-index",
+            "url": "/sent-emails",
+            "waitFor": "table",
+            "required": true,
+            "notes": "Capture after seeding MailTracker sent email rows with subjects, sender/recipient addresses, opens, clicks, and stored content state.",
+            "useCase": "A support user reviews sent transactional emails and delivery engagement signals in the Capell admin.",
+            "screenshotPath": "packages/email-studio/docs/screenshots/sent-emails-index.png",
+            "darkScreenshotPath": "packages/email-studio/docs/screenshots/sent-emails-index-dark.png"
         },
         {
-            "key": "sent-email-view",
-            "type": "filament-resource-view",
-            "route": "sent-emails/{record}",
-            "output": "packages/email-studio/docs/screenshots/sent-email-view.png",
-            "description": "Sent email detail view with message metadata, headers, tracked URLs, and sandboxed HTML preview."
+            "id": "sent-email-view",
+            "title": "Sent email detail view.",
+            "package": "email-studio",
+            "surface": "admin",
+            "targetType": "admin-resource-page",
+            "target": "SentEmailResource/ViewSentEmail",
+            "scenario": "admin-index",
+            "url": "/sent-emails/1",
+            "waitFor": "body",
+            "required": true,
+            "notes": "Capture after seeding a MailTracker sent email record with headers, stored HTML content, and at least one tracked URL click row.",
+            "useCase": "A support user opens an immutable sent email snapshot to inspect metadata, headers, tracked URLs, and stored HTML output.",
+            "screenshotPath": "packages/email-studio/docs/screenshots/sent-email-view.png",
+            "darkScreenshotPath": "packages/email-studio/docs/screenshots/sent-email-view-dark.png"
         },
         {
-            "key": "email-studio-settings",
-            "type": "extension-settings",
-            "settingsGroup": "email_studio",
-            "output": "packages/email-studio/docs/screenshots/email-studio-settings.png",
-            "description": "Email Studio settings for MailTracker open tracking, click tracking, content storage, search window, and retention."
+            "id": "email-studio-settings",
+            "title": "Email Studio settings.",
+            "package": "email-studio",
+            "surface": "admin",
+            "targetType": "settings-group",
+            "target": "email_studio",
+            "scenario": "admin-index",
+            "url": "/settings",
+            "waitFor": "text=Mail tracking",
+            "click": "button:has-text(\"Email Studio\")",
+            "required": false,
+            "notes": "Pending until the screenshot runner app exposes the email_studio settings group on the shared settings page. Do not publish a generic Settings tab in place of this package-specific surface.",
+            "useCase": "An administrator configures Email Studio tracking, content retention, and queue behaviour from Capell settings.",
+            "screenshotPath": "packages/email-studio/docs/screenshots/email-studio-settings.png"
         }
     ]
 }

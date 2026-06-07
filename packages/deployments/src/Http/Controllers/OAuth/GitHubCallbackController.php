@@ -78,6 +78,7 @@ final class GitHubCallbackController
             repoOwner: $connectionData->repoOwner,
             repoName: $connectionData->repoName,
             accessToken: $accessToken,
+            installPolicy: $connectionData->installPolicy,
         );
 
         return to_route('filament.admin.pages.deployment-connection')

@@ -19,6 +19,7 @@ use Capell\HtmlCache\Actions\DeletePageCacheAction;
 use Capell\HtmlCache\Actions\GenerateStaticSiteAction;
 use Capell\HtmlCache\Actions\GenerateStaticSitesAction;
 use Capell\HtmlCache\Actions\NotifyClearCachedPagesAction;
+use Capell\HtmlCache\Actions\RecordCachedModelUrlsAction;
 use Capell\HtmlCache\Console\Commands\ClearHtmlCacheCommand;
 use Capell\HtmlCache\Console\Commands\StaticSiteCommand;
 use Capell\HtmlCache\Filament\Components\Tables\Columns\PageCachedIconColumn;
@@ -31,6 +32,7 @@ use Capell\HtmlCache\Http\Middleware\EnsureModelEventsRegistered;
 use Capell\HtmlCache\Http\Middleware\PreventSessionCookieOnCacheableRequests;
 use Capell\HtmlCache\Livewire\SiteHealthCacheMap;
 use Capell\HtmlCache\Models\CachedModelUrl;
+use Capell\HtmlCache\Observers\HtmlCacheModelInvalidationObserver;
 use Capell\HtmlCache\Support\Admin\HtmlCacheAdminCacheCleaner;
 use Capell\HtmlCache\Support\Admin\HtmlCacheSiteHealthReportExtender;
 use Capell\HtmlCache\Support\Admin\MaintenanceAdminTool;
@@ -475,6 +477,25 @@ it('flushes retrieved models through sync and async registration modes', functio
     expect($deferredStore->tracked($page->getMorphClass()))->toBe(0);
 });
 
+it('records cached model urls using the unique url model row', function (): void {
+    $siteDomain = htmlCacheResidualCoverageSiteDomain('recorded-model.test');
+    $page = htmlCacheResidualCoveragePage($siteDomain);
+    $pageKey = $page->getKey();
+    $url = 'https://recorded-model.test/page';
+
+    throw_unless(is_int($pageKey), RuntimeException::class, 'Expected residual coverage page to use an integer key.');
+
+    RecordCachedModelUrlsAction::run($url, [
+        $page->getMorphClass() => [$pageKey],
+    ]);
+
+    RecordCachedModelUrlsAction::run($url, [
+        $page->getMorphClass() => [$pageKey],
+    ]);
+
+    expect(CachedModelUrl::query()->where('url', $url)->count())->toBe(1);
+});
+
 it('registers model retrieval hooks once per request', function (): void {
     $request = Request::create('https://events.test/page', Symfony\Component\HttpFoundation\Request::METHOD_GET);
     app()->instance('request', $request);
@@ -486,6 +507,45 @@ it('registers model retrieval hooks once per request', function (): void {
     ModelEventRegistrar::registerModels();
 
     expect($request->attributes->get('capell.html_cache.model_events_registered'))->toBeTrue();
+});
+
+it('invalidates cached urls through a single generic model observer', function (): void {
+    $siteDomain = htmlCacheResidualCoverageSiteDomain('global-observer.test');
+    $site = $siteDomain->site;
+    $page = htmlCacheResidualCoveragePage($siteDomain);
+    CapellCore::registerModels([Site::class, Page::class]);
+
+    CachedModelUrl::query()->create([
+        'url' => 'https://global-observer.test/site',
+        'url_hash' => CachedModelUrl::hashUrl('https://global-observer.test/site'),
+        'path' => '/site',
+        'site_domain_id' => $siteDomain->id,
+        'site_id' => $siteDomain->site_id,
+        'language_id' => $siteDomain->language_id,
+        'cacheable_type' => $site->getMorphClass(),
+        'cacheable_id' => $site->getKey(),
+    ]);
+    CachedModelUrl::query()->create([
+        'url' => 'https://global-observer.test/page',
+        'url_hash' => CachedModelUrl::hashUrl('https://global-observer.test/page'),
+        'path' => '/page',
+        'site_domain_id' => $siteDomain->id,
+        'site_id' => $siteDomain->site_id,
+        'language_id' => $siteDomain->language_id,
+        'cacheable_type' => $page->getMorphClass(),
+        'cacheable_id' => $page->getKey(),
+    ]);
+
+    $observer = new HtmlCacheModelInvalidationObserver;
+    $site->forceFill(['name' => 'Updated test site']);
+    $site->syncChanges();
+    $observer->updatedFromEvent('eloquent.updated: ' . $site::class, [$site]);
+    $page->forceFill(['title' => 'Updated test page']);
+    $page->syncChanges();
+    $observer->updatedFromEvent('eloquent.updated: ' . $page::class, [$page]);
+
+    expect(CachedModelUrl::query()->where('url', 'https://global-observer.test/site')->exists())->toBeFalse()
+        ->and(CachedModelUrl::query()->where('url', 'https://global-observer.test/page')->exists())->toBeTrue();
 });
 
 it('builds admin health sections and clears html cache through admin cleaner', function (): void {

@@ -32,7 +32,7 @@ describe('agent-bridge capell.json manifest', function (): void {
             ->and($composerData['keywords'])->toContain('scoped-access');
     });
 
-    it('declares every generated screenshot for marketplace display', function () use ($manifest, $packagePath): void {
+    it('declares only buyer-facing generated screenshots for marketplace display', function () use ($manifest): void {
         $manifestData = $manifest();
         $screenshots = $manifestData['marketplace']['screenshots'] ?? [];
 
@@ -43,18 +43,10 @@ describe('agent-bridge capell.json manifest', function (): void {
             ->values()
             ->all();
 
-        $generatedScreenshotPaths = collect(File::files($packagePath . '/docs/screenshots'))
-            ->map(fn (SplFileInfo $screenshotFile): string => 'docs/screenshots/' . $screenshotFile->getFilename())
-            ->sort()
-            ->values()
-            ->all();
-
-        $declaredScreenshotPaths = collect($screenshotPaths)
-            ->sort()
-            ->values()
-            ->all();
-
-        expect($declaredScreenshotPaths)->toBe($generatedScreenshotPaths);
+        expect($screenshotPaths)->toBe([
+            'docs/screenshots/agent-bridge-prompt-builder-page.png',
+            'docs/screenshots/agent-bridge-prompt-builder-page-dark.png',
+        ]);
     });
 
     it('keeps marketplace screenshots readable and backed by files', function () use ($manifest, $packagePath): void {

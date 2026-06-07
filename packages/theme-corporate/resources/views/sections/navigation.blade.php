@@ -1,5 +1,5 @@
 <nav
-    class="theme-navigation sticky top-0 z-40 border-b border-slate-200/80 bg-[#f7f8f6]/90 backdrop-blur dark:border-white/10 dark:bg-slate-950/88"
+    class="theme-navigation corporate-surface sticky top-0 z-40 border-b border-slate-200/80 backdrop-blur dark:border-white/10"
     aria-label="{{ __('capell-theme-corporate::generic.main_navigation') }}"
 >
     <div
@@ -28,14 +28,18 @@
                 </a>
             @endforeach
         </div>
-        <details class="relative order-3 md:hidden">
+        <details
+            class="relative order-3 md:hidden"
+            data-corporate-menu
+        >
             <summary
-                class="cursor-pointer list-none rounded-[0.35rem] border border-slate-300 px-3 py-2 text-sm font-medium text-slate-800 marker:hidden dark:border-white/15 dark:text-slate-200"
+                class="cursor-pointer list-none rounded-[var(--corporate-card-radius)] border border-slate-300 px-3 py-2 text-sm font-medium text-slate-800 marker:hidden dark:border-white/15 dark:text-slate-200"
+                aria-expanded="false"
             >
                 {{ __('capell-theme-corporate::generic.menu') }}
             </summary>
             <div
-                class="absolute right-0 z-30 mt-3 grid min-w-48 gap-3 rounded-[0.35rem] border border-slate-200 bg-white p-4 text-sm text-slate-600 shadow-xl dark:border-white/10 dark:bg-slate-950 dark:text-slate-300"
+                class="corporate-card-elevated absolute right-0 z-30 mt-3 grid min-w-48 gap-3 p-4 text-sm text-slate-600 dark:text-slate-300"
             >
                 @foreach ($section->items as $item)
                     <a

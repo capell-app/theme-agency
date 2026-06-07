@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Capell\DashboardReports\Providers;
 
 use Capell\Core\Support\Packages\AbstractPackageServiceProvider;
+use Capell\DashboardReports\Console\Commands\ExportDashboardReportCommand;
 use Spatie\LaravelPackageTools\Package;
 
 final class DashboardReportsServiceProvider extends AbstractPackageServiceProvider
@@ -19,7 +20,8 @@ final class DashboardReportsServiceProvider extends AbstractPackageServiceProvid
             ->name(self::$name)
             ->hasConfigFile(self::$name)
             ->hasTranslations()
-            ->hasViews(self::$name);
+            ->hasViews(self::$name)
+            ->hasCommand(ExportDashboardReportCommand::class);
     }
 
     public function registeringPackage(): void

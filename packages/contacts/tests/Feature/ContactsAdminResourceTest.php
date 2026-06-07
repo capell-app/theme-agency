@@ -4,10 +4,13 @@ declare(strict_types=1);
 
 use Capell\Admin\Contracts\CapellWidgetContract;
 use Capell\Contacts\Actions\BuildContactsOverviewStatsAction;
+use Capell\Contacts\Actions\UpdateLeadStatusAction;
 use Capell\Contacts\Enums\ContactActivityType;
+use Capell\Contacts\Enums\LeadStatus;
 use Capell\Contacts\Enums\ResourceEnum;
 use Capell\Contacts\Filament\Resources\Activities\ContactActivityResource;
 use Capell\Contacts\Filament\Resources\Contacts\ContactResource;
+use Capell\Contacts\Filament\Resources\Contacts\Pages\ViewContact;
 use Capell\Contacts\Filament\Resources\Leads\LeadResource;
 use Capell\Contacts\Filament\Resources\Organisations\OrganisationResource;
 use Capell\Contacts\Filament\Widgets\ContactsOverviewStatsWidget;
@@ -49,7 +52,7 @@ it('exposes operator privacy actions for contact records', function (): void {
     $user = new User;
     $contact = new Contact;
 
-    expect(contactsResourceTestActionNames($actions))->toContain('privacy_export', 'privacy_anonymize')
+    expect(contactsResourceTestActionNames($actions))->toContain('view', 'merge', 'privacy_export', 'privacy_anonymize')
         ->and((new ContactPolicy)->exportPrivacy($user, $contact))->toBeTrue()
         ->and((new ContactPolicy)->anonymizePrivacy($user, $contact))->toBeTrue();
 });
@@ -63,10 +66,46 @@ it('declares read only admin resources for crm records', function (): void {
         ->and(OrganisationResource::getModel())->toBe(Organisation::class)
         ->and(LeadResource::getModel())->toBe(Lead::class)
         ->and(ContactActivityResource::getModel())->toBe(ContactActivity::class)
-        ->and(array_keys(ContactResource::getPages()))->toBe(['index'])
+        ->and(array_keys(ContactResource::getPages()))->toBe(['index', 'view'])
+        ->and(ViewContact::getResource())->toBe(ContactResource::class)
         ->and(array_keys(OrganisationResource::getPages()))->toBe(['index'])
         ->and(array_keys(LeadResource::getPages()))->toBe(['index'])
         ->and(array_keys(ContactActivityResource::getPages()))->toBe(['index']);
+});
+
+it('exposes a lead status transition action', function (): void {
+    $actions = LeadResource::table(contactsResourceTestTable())->getRecordActions();
+
+    expect(contactsResourceTestActionNames($actions))->toContain('change_status');
+});
+
+it('updates lead status transition timestamps through the action', function (): void {
+    $siteId = $this->createContactsSite();
+    $contact = Contact::query()->create([
+        'site_id' => $siteId,
+        'email' => 'lead@example.test',
+        'display_name' => 'Lead Example',
+    ]);
+    $lead = Lead::query()->create([
+        'site_id' => $siteId,
+        'contact_id' => $contact->getKey(),
+        'title' => 'Example lead',
+        'status' => LeadStatus::New,
+        'captured_at' => now(),
+    ]);
+
+    UpdateLeadStatusAction::run($lead, LeadStatus::Qualified);
+    $lead->refresh();
+
+    expect($lead->status)->toBe(LeadStatus::Qualified)
+        ->and($lead->qualified_at)->not->toBeNull()
+        ->and($lead->closed_at)->toBeNull();
+
+    UpdateLeadStatusAction::run($lead, LeadStatus::Won);
+    $lead->refresh();
+
+    expect($lead->status)->toBe(LeadStatus::Won)
+        ->and($lead->closed_at)->not->toBeNull();
 });
 
 it('keeps contacts admin policies read only by default', function (): void {

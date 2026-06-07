@@ -13,6 +13,11 @@ use Spatie\LaravelData\Transformers\DateTimeInterfaceTransformer;
 
 class SitemapUrlItemData extends Data
 {
+    /**
+     * @param  list<SitemapAlternateData>  $alternates
+     * @param  list<SitemapImageData>  $images
+     * @param  list<SitemapVideoData>  $videos
+     */
     public function __construct(
         public string $loc,
         #[WithCast(DateTimeInterfaceCast::class, DATE_ATOM)]
@@ -20,5 +25,9 @@ class SitemapUrlItemData extends Data
         public ?CarbonImmutable $lastmod = null,
         public ?string $changefreq = null,
         public ?string $priority = null,
+        public array $alternates = [],
+        public array $images = [],
+        public array $videos = [],
+        public ?SitemapNewsData $news = null,
     ) {}
 }

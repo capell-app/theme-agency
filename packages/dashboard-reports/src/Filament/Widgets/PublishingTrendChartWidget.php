@@ -29,6 +29,14 @@ final class PublishingTrendChartWidget extends ChartWidget implements CapellWidg
 
     protected static ?int $sort = 1;
 
+    private const string PUBLISHED_BORDER_COLOR = 'rgb(var(--primary-600) / 1)';
+
+    private const string PUBLISHED_BACKGROUND_COLOR = 'rgb(var(--primary-500) / 0.12)';
+
+    private const string SCHEDULED_BORDER_COLOR = 'rgb(var(--warning-600) / 1)';
+
+    private const string SCHEDULED_BACKGROUND_COLOR = 'rgb(var(--warning-500) / 0.12)';
+
     #[Override]
     public function getHeading(): string
     {
@@ -49,8 +57,8 @@ final class PublishingTrendChartWidget extends ChartWidget implements CapellWidg
                         fn (PublishingTrendPointData $point): int => $point->publishedCount,
                         $data->points,
                     ),
-                    'borderColor' => '#2563eb',
-                    'backgroundColor' => 'rgba(37, 99, 235, 0.12)',
+                    'borderColor' => self::PUBLISHED_BORDER_COLOR,
+                    'backgroundColor' => self::PUBLISHED_BACKGROUND_COLOR,
                     'tension' => 0.35,
                 ],
                 [
@@ -59,8 +67,8 @@ final class PublishingTrendChartWidget extends ChartWidget implements CapellWidg
                         fn (PublishingTrendPointData $point): int => $point->scheduledCount,
                         $data->points,
                     ),
-                    'borderColor' => '#d97706',
-                    'backgroundColor' => 'rgba(217, 119, 6, 0.12)',
+                    'borderColor' => self::SCHEDULED_BORDER_COLOR,
+                    'backgroundColor' => self::SCHEDULED_BACKGROUND_COLOR,
                     'tension' => 0.35,
                 ],
             ],

@@ -2,10 +2,12 @@
 
 declare(strict_types=1);
 
+use Capell\Core\ThemeStudio\Data\HeroSectionData;
 use Capell\FoundationTheme\View\Components\Actions;
 use Capell\Frontend\Actions\Performance\RecordExtensionRenderContributionAction;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\View;
 use Symfony\Component\Finder\Finder;
 
 test('default theme escapes site titles and plain footer text', function (): void {
@@ -98,6 +100,31 @@ test('language flag images reserve dimensions for stable public layout', functio
         'Language flag images without explicit dimensions found:' . PHP_EOL .
         json_encode($violations, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES),
     );
+});
+
+test('default theme hero media reserves LCP dimensions', function (): void {
+    $themePath = dirname(__DIR__, 2);
+
+    View::addNamespace('capell-foundation-theme', $themePath . '/resources/views');
+
+    $html = view('capell-foundation-theme::theme.sections.hero', [
+        'section' => new HeroSectionData(
+            heading: 'Foundation hero',
+            summary: 'Shared theme media should reserve layout space.',
+            mediaUrl: '/images/foundation-hero.jpg',
+            mediaAlt: 'Foundation theme layout preview',
+        ),
+    ])->render();
+
+    expect($html)
+        ->toContain('src="/images/foundation-hero.jpg"')
+        ->toContain('alt="Foundation theme layout preview"')
+        ->toContain('width="1200"')
+        ->toContain('height="750"')
+        ->toContain('loading="eager"')
+        ->toContain('decoding="async"')
+        ->toContain('fetchpriority="high"')
+        ->toContain('sizes="(min-width: 1024px) 50vw, 100vw"');
 });
 
 test('public action buttons mark their csrf output as non-cacheable', function (): void {
@@ -393,12 +420,22 @@ test('reviewed foundation chrome avoids accessibility regressions', function ():
 test('public blade style tokens use css color safety resolver', function (): void {
     $themePath = dirname(__DIR__, 2);
     $files = [
-        'resources/views/components/app/head/tokens.blade.php',
         'resources/views/components/footer/index.blade.php',
         'resources/views/components/header/index.blade.php',
         'resources/views/components/layout/main.blade.php',
     ];
     $violations = [];
+
+    $headTokens = file_get_contents($themePath . '/resources/views/components/app/head/tokens.blade.php');
+    $tokenAction = file_get_contents($themePath . '/src/Actions/ResolveFoundationThemeTokensAction.php');
+
+    if (! is_string($headTokens) || ! str_contains($headTokens, 'ResolveFoundationThemeTokensAction::run')) {
+        $violations[] = 'resources/views/components/app/head/tokens.blade.php does not use ResolveFoundationThemeTokensAction::run';
+    }
+
+    if (! is_string($tokenAction) || ! str_contains($tokenAction, 'ResolveSafeCssColorTokenAction::run')) {
+        $violations[] = 'src/Actions/ResolveFoundationThemeTokensAction.php does not use ResolveSafeCssColorTokenAction::run';
+    }
 
     foreach ($files as $file) {
         $contents = file_get_contents($themePath . '/' . $file);

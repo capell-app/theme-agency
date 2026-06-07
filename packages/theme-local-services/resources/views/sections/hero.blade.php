@@ -12,7 +12,10 @@
         'url' => '#areas',
     ];
     $imageUrl = $section->mediaUrl ?? ($imageUrl ?? ($image ?? null));
-    $imageAlt = $section->mediaAlt ?? ($imageAlt ?? '');
+    $imageAlt = $section->mediaAlt
+        ?? ($section->imageAlt ?? ($imageAlt ?? ($heading ?? __('capell-theme-local-services::generic.hero_image_alt'))));
+    $imageWidth = (int) ($section->mediaWidth ?? ($section->imageWidth ?? ($imageWidth ?? 1600)));
+    $imageHeight = (int) ($section->mediaHeight ?? ($section->imageHeight ?? ($imageHeight ?? 1000)));
 @endphp
 
 <section class="theme-section theme-section-hero overflow-hidden bg-[#ecfdf5]">
@@ -22,12 +25,12 @@
         >
             <div>
                 <p
-                    class="text-xs font-black tracking-[0.18em] text-[#f97316] uppercase"
+                    class="text-xs font-semibold tracking-[0.12em] text-[#f97316] uppercase"
                 >
                     {{ $eyebrow }}
                 </p>
                 <h2
-                    class="mt-5 max-w-3xl text-5xl leading-tight font-black tracking-normal text-[#071b17]"
+                    class="mt-5 max-w-3xl text-4xl leading-tight font-extrabold tracking-normal text-[#071b17] sm:text-5xl"
                 >
                     {{ $heading }}
                 </h2>
@@ -95,6 +98,12 @@
                             <img
                                 src="{{ $imageUrl }}"
                                 alt="{{ $imageAlt }}"
+                                width="{{ $imageWidth }}"
+                                height="{{ $imageHeight }}"
+                                loading="eager"
+                                decoding="async"
+                                fetchpriority="high"
+                                sizes="(min-width: 1024px) 50vw, 100vw"
                                 class="aspect-[16/10] w-full object-cover"
                             />
                         @else

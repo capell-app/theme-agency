@@ -15,6 +15,7 @@ use Capell\PasswordPolicy\Filament\Extenders\PasswordPolicyPanelExtender;
 use Capell\PasswordPolicy\Filament\Extenders\PasswordPolicyUserFormExtender;
 use Capell\PasswordPolicy\Filament\Extenders\PasswordPolicyUserTableExtender;
 use Capell\PasswordPolicy\Filament\Pages\ForcedPasswordChangePage;
+use Capell\PasswordPolicy\Filament\Pages\PasswordPolicySettingsPage;
 use Filament\Support\Icons\Heroicon;
 
 final class PasswordPolicyAdminBridge implements AdminBridge
@@ -27,6 +28,7 @@ final class PasswordPolicyAdminBridge implements AdminBridge
     public function register(AdminBridgeRegistrar $registrar, AdminBridgeContextData $context): void
     {
         $registrar->page(ForcedPasswordChangePage::class);
+        $registrar->page(PasswordPolicySettingsPage::class);
         $registrar->panelExtender(PasswordPolicyPanelExtender::class);
 
         CapellAdmin::registerExtensionManagementSurface(ExtensionManagementSurfaceData::settings(

@@ -4,7 +4,7 @@ Status: **available** · Kind: **package** · Tier: **free** · Bundle: **founda
 
 Media Library is Capell's Curator-backed media foundation. It replaces the default media backend with Awcodes Curator, gives packages a shared media field factory, and adds operational tools for media health and Spatie Media Library migration.
 
-It is deliberately scoped as foundation infrastructure. Advanced DAM features such as folders, galleries, generated WebP/AVIF conversions, signed private URLs, and a visual focal/crop editor remain product gaps or premium candidates.
+It is deliberately scoped as foundation infrastructure. Advanced DAM features such as folders, galleries, generated WebP/AVIF conversions, signed private URLs, and a visual focal/crop editor are explicitly deferred to a future Media Pro/DAM layer.
 
 ## Runtime Shape
 
@@ -72,7 +72,7 @@ The committed media set is:
 - `docs/screenshots/migration-command-output-or-report.png`
 - `docs/screenshots/migration-command-output-or-report-dark.png`
 
-The screenshot capture contract is [screenshots.json](screenshots.json). It defines four required scenarios: the media health page, the media health table component, a host form using the Curator media field factory, and the migration command output. The manifest lists the marketplace card plus the shipped light and dark screenshot assets.
+The screenshot capture contract is [screenshots.json](screenshots.json). It defines four required scenarios: the media health page, the media health table component, a host form using the Curator media field factory, and the migration command output. The committed screenshot captures remain runner evidence until they show populated Capell media workflows.
 
 ## Pitfalls
 

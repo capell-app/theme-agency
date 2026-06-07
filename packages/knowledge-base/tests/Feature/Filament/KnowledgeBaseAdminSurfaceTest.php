@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use Capell\Core\Contracts\Extensions\RegistersExtensionRoute;
 use Capell\KnowledgeBase\Actions\BuildAiReadableKnowledgeBaseOutputAction;
+use Capell\KnowledgeBase\Actions\BuildKnowledgeBaseArticleSchemaAction;
 use Capell\KnowledgeBase\Actions\BuildKnowledgeBaseSearchDocumentsAction;
 use Capell\KnowledgeBase\Actions\CreateKnowledgeBaseArticleAction;
 use Capell\KnowledgeBase\Data\CreateKnowledgeBaseArticleData;
@@ -14,6 +15,7 @@ use Capell\KnowledgeBase\Filament\Resources\Articles\Pages\CreateKnowledgeBaseAr
 use Capell\KnowledgeBase\Filament\Resources\Articles\Pages\EditKnowledgeBaseArticle;
 use Capell\KnowledgeBase\Filament\Resources\Articles\Pages\ListKnowledgeBaseArticles;
 use Capell\KnowledgeBase\Filament\Resources\Articles\RelationManagers\ArticleVersionsRelationManager;
+use Capell\KnowledgeBase\Filament\Resources\Articles\RelationManagers\RelatedArticlesRelationManager;
 use Capell\KnowledgeBase\Filament\Resources\Collections\KnowledgeBaseCollectionResource;
 use Capell\KnowledgeBase\Filament\Resources\Collections\Pages\CreateKnowledgeBaseCollection;
 use Capell\KnowledgeBase\Filament\Resources\Collections\Pages\EditKnowledgeBaseCollection;
@@ -23,6 +25,7 @@ use Capell\KnowledgeBase\Manifest\KnowledgeBaseCollectionResourceContribution;
 use Capell\KnowledgeBase\Manifest\KnowledgeBaseFrontendRoutesContribution;
 use Capell\KnowledgeBase\Manifest\KnowledgeBaseModelsContribution;
 use Capell\KnowledgeBase\Models\KnowledgeBaseArticle;
+use Capell\KnowledgeBase\Models\KnowledgeBaseArticleVersion;
 use Capell\KnowledgeBase\Models\KnowledgeBaseCollection;
 use Capell\KnowledgeBase\Providers\AdminServiceProvider;
 use Capell\KnowledgeBase\Tests\KnowledgeBaseTestCase;
@@ -66,7 +69,10 @@ it('exposes translated collection and article admin resources', function (): voi
         ->and($articlePages['index']->getPage())->toBe(ListKnowledgeBaseArticles::class)
         ->and($articlePages['create']->getPage())->toBe(CreateKnowledgeBaseArticle::class)
         ->and($articlePages['edit']->getPage())->toBe(EditKnowledgeBaseArticle::class)
-        ->and(KnowledgeBaseArticleResource::getRelations())->toBe([ArticleVersionsRelationManager::class])
+        ->and(KnowledgeBaseArticleResource::getRelations())->toBe([
+            ArticleVersionsRelationManager::class,
+            RelatedArticlesRelationManager::class,
+        ])
         ->and(ResourceEnum::Collections->value)->toBe(KnowledgeBaseCollectionResource::class)
         ->and(ResourceEnum::Articles->value)->toBe(KnowledgeBaseArticleResource::class);
 });
@@ -78,7 +84,7 @@ it('declares admin providers, resources, and owned tables in the manifest', func
         flags: JSON_THROW_ON_ERROR,
     );
 
-    expect($manifest['dependencies']['requires'])->toContain('capell-app/admin', 'capell-app/core')
+    expect($manifest['dependencies']['requires'])->toContain('capell-app/admin', 'capell-app/core', 'capell-app/frontend')
         ->and($manifest['providers']['admin'])->toContain(AdminServiceProvider::class)
         ->and($manifest['database']['requiredTables'])->toBe([
             'knowledge_base_collections',
@@ -114,6 +120,15 @@ it('declares admin providers, resources, and owned tables in the manifest', func
         ->toBe(BuildKnowledgeBaseSearchDocumentsAction::class)
         ->and($manifest['actions']['buildAiReadableKnowledgeBaseOutput'])
         ->toBe(BuildAiReadableKnowledgeBaseOutputAction::class)
+        ->and($manifest['actions']['buildKnowledgeBaseArticleSchema'])
+        ->toBe(BuildKnowledgeBaseArticleSchemaAction::class)
+        ->and($manifest['commands']['demo'])->toBe('capell:knowledge-base-demo')
+        ->and($manifest['performance']['cacheSafety']['variesBy'])->toBe([])
+        ->and(array_column($manifest['performance']['cacheSafety']['invalidationSources'], 'model'))->toBe([
+            KnowledgeBaseCollection::class,
+            KnowledgeBaseArticle::class,
+            KnowledgeBaseArticleVersion::class,
+        ])
         ->and($manifest['capabilities'])->toContain(
             'knowledge-base-related-articles',
             'knowledge-base-versioned-articles',
@@ -174,6 +189,8 @@ it('builds knowledge base resource forms and tables with configured controls', f
             'status',
             'is_ai_readable',
             'search_weight',
+            'feedback_count',
+            'helpful_feedback_rate',
             'published_at',
         ])
         ->and(array_keys(KnowledgeBaseArticleResource::table(knowledgeBaseAdminTableForCoverage())->getFilters()))->toBe([
@@ -207,6 +224,33 @@ it('exposes article version history in the article edit surface', function (): v
             TextColumn::class,
             TextColumn::class,
         ]);
+});
+
+it('exposes related article editing in the article edit surface', function (): void {
+    $relationManager = new RelatedArticlesRelationManager;
+    $table = $relationManager->table(knowledgeBaseAdminTableForCoverage());
+
+    expect(RelatedArticlesRelationManager::getTitle(KnowledgeBaseArticle::factory()->make(), EditKnowledgeBaseArticle::class))
+        ->toBe(__('capell-knowledge-base::generic.admin.relations.related_articles'))
+        ->and(array_keys($table->getColumns()))->toBe([
+            'relatedArticle.title',
+            'relatedArticle.collection.title',
+            'relation_type',
+            'sort_order',
+            'updated_at',
+        ])
+        ->and(array_map(
+            static fn (object $column): string => $column::class,
+            array_values($table->getColumns()),
+        ))->toBe([
+            TextColumn::class,
+            TextColumn::class,
+            TextColumn::class,
+            TextColumn::class,
+            TextColumn::class,
+        ])
+        ->and(array_keys($table->getHeaderActions()))->toBe(['relate_article'])
+        ->and(array_keys($table->getRecordActions()))->toBe(['update_relation']);
 });
 
 it('saves article edits as published versions through the edit page adapter', function (): void {

@@ -15,19 +15,21 @@
     $imageAlt = $section->mediaAlt ?? ($imageAlt ?? '');
 @endphp
 
-<section class="theme-section theme-section-hero knowledge-hero bg-[#07111f]">
+<section
+    class="theme-section theme-section-hero knowledge-hero bg-[var(--site-theme-ink)]"
+>
     @isset($heading)
         <div
             class="knowledge-hero-grid mx-auto grid max-w-6xl gap-8 px-6 py-16 lg:grid-cols-[0.88fr_1.12fr] lg:items-center lg:py-20"
         >
             <div class="space-y-5">
                 <p
-                    class="text-xs font-black tracking-[0.18em] text-[#f59e0b] uppercase"
+                    class="text-xs font-semibold tracking-[0.12em] text-[var(--site-theme-accent)] uppercase"
                 >
                     {{ $eyebrow }}
                 </p>
                 <h2
-                    class="max-w-3xl text-5xl leading-tight font-black tracking-normal text-white"
+                    class="max-w-3xl text-4xl leading-tight font-extrabold tracking-normal text-white sm:text-5xl"
                 >
                     {{ $heading }}
                 </h2>
@@ -40,7 +42,7 @@
                 <div class="flex flex-wrap gap-3">
                     <a
                         href="{{ $primaryAction['url'] ?? '#library' }}"
-                        class="inline-flex bg-[#f59e0b] px-5 py-3 text-sm font-black text-[#07111f]"
+                        class="inline-flex bg-[var(--site-theme-accent)] px-5 py-3 text-sm font-black text-[var(--site-theme-ink)]"
                     >
                         {{ $primaryAction['label'] ?? __('capell-theme-knowledge::generic.hero_primary_action') }}
                     </a>
@@ -55,7 +57,7 @@
                 <div class="grid gap-3 sm:grid-cols-3">
                     <div class="border border-white/10 bg-white/5 p-4">
                         <p
-                            class="text-xs font-black tracking-[0.15em] text-[#93c5fd] uppercase"
+                            class="text-xs font-black tracking-[0.15em] text-[var(--site-theme-primary-muted)] uppercase"
                         >
                             {{ __('capell-theme-knowledge::generic.hero_metric_guides_label') }}
                         </p>
@@ -65,7 +67,7 @@
                     </div>
                     <div class="border border-white/10 bg-white/5 p-4">
                         <p
-                            class="text-xs font-black tracking-[0.15em] text-[#93c5fd] uppercase"
+                            class="text-xs font-black tracking-[0.15em] text-[var(--site-theme-primary-muted)] uppercase"
                         >
                             {{ __('capell-theme-knowledge::generic.hero_metric_topics_label') }}
                         </p>
@@ -73,9 +75,11 @@
                             {{ __('capell-theme-knowledge::generic.hero_metric_topics_value') }}
                         </p>
                     </div>
-                    <div class="border border-[#f59e0b]/40 bg-[#f59e0b]/10 p-4">
+                    <div
+                        class="border border-[var(--site-theme-accent)]/40 bg-[var(--site-theme-accent)]/10 p-4"
+                    >
                         <p
-                            class="text-xs font-black tracking-[0.15em] text-[#fbbf24] uppercase"
+                            class="text-xs font-black tracking-[0.15em] text-[var(--site-theme-accent-strong)] uppercase"
                         >
                             {{ __('capell-theme-knowledge::generic.hero_metric_saved_label') }}
                         </p>
@@ -87,25 +91,33 @@
             </div>
 
             <div
-                class="knowledge-command-panel border border-white/10 bg-[#0f1b2f] p-3 shadow-2xl shadow-black/30"
+                class="knowledge-command-panel border border-white/10 bg-[var(--site-theme-ink-panel)] p-3 shadow-2xl shadow-black/30"
             >
-                <div class="border border-white/10 bg-[#111f36] p-4">
+                <div
+                    class="border border-white/10 bg-[var(--site-theme-ink-panel-raised)] p-4"
+                >
                     <div class="grid gap-4 lg:grid-cols-[1fr_0.75fr]">
-                        <div class="bg-[#f8fbff] p-4">
+                        <div class="bg-[var(--site-theme-primary-canvas)] p-4">
                             @if ($imageUrl)
                                 <img
                                     src="{{ $imageUrl }}"
                                     alt="{{ $imageAlt }}"
+                                    width="1200"
+                                    height="750"
+                                    loading="eager"
+                                    decoding="async"
+                                    fetchpriority="high"
+                                    sizes="(min-width: 1024px) 52vw, 100vw"
                                     class="aspect-[16/10] w-full object-cover"
                                 />
                             @else
                                 <div
-                                    class="aspect-[16/10] bg-[#172554] p-5"
+                                    class="aspect-[16/10] bg-[var(--site-theme-ink-accent)] p-5"
                                     aria-hidden="true"
                                 >
                                     <div class="grid h-full content-end gap-4">
                                         <span
-                                            class="h-4 w-24 bg-[#f59e0b]"
+                                            class="h-4 w-24 bg-[var(--site-theme-accent)]"
                                         ></span>
                                         <span
                                             class="h-3 w-3/4 bg-white/60"
@@ -118,7 +130,7 @@
                                                 class="h-12 bg-white/15"
                                             ></span>
                                             <span
-                                                class="h-12 bg-[#1d4ed8]"
+                                                class="h-12 bg-[var(--site-theme-primary)]"
                                             ></span>
                                             <span
                                                 class="h-12 bg-white/15"
@@ -130,17 +142,17 @@
 
                             <div class="mt-4 grid gap-3 sm:grid-cols-3">
                                 <span
-                                    class="border border-[#bfdbfe] bg-white px-3 py-2 text-xs font-black tracking-[0.14em] text-[#1d4ed8] uppercase"
+                                    class="border border-[var(--site-theme-primary-soft)] bg-white px-3 py-2 text-xs font-black tracking-[0.14em] text-[var(--site-theme-primary)] uppercase"
                                 >
                                     {{ __('capell-theme-knowledge::generic.cta_step_read') }}
                                 </span>
                                 <span
-                                    class="border border-[#bfdbfe] bg-white px-3 py-2 text-xs font-black tracking-[0.14em] text-[#1d4ed8] uppercase"
+                                    class="border border-[var(--site-theme-primary-soft)] bg-white px-3 py-2 text-xs font-black tracking-[0.14em] text-[var(--site-theme-primary)] uppercase"
                                 >
                                     {{ __('capell-theme-knowledge::generic.cta_step_save') }}
                                 </span>
                                 <span
-                                    class="border border-[#bfdbfe] bg-white px-3 py-2 text-xs font-black tracking-[0.14em] text-[#1d4ed8] uppercase"
+                                    class="border border-[var(--site-theme-primary-soft)] bg-white px-3 py-2 text-xs font-black tracking-[0.14em] text-[var(--site-theme-primary)] uppercase"
                                 >
                                     {{ __('capell-theme-knowledge::generic.cta_step_share') }}
                                 </span>
@@ -149,17 +161,19 @@
 
                         <div class="grid gap-3">
                             <div
-                                class="border border-white/10 bg-[#07111f] p-4"
+                                class="border border-white/10 bg-[var(--site-theme-ink)] p-4"
                             >
                                 <p
-                                    class="text-xs font-black tracking-[0.16em] text-[#93c5fd] uppercase"
+                                    class="text-xs font-black tracking-[0.16em] text-[var(--site-theme-primary-muted)] uppercase"
                                 >
                                     {{ __('capell-theme-knowledge::generic.hero_search_label') }}
                                 </p>
                                 <div
                                     class="mt-4 border border-white/10 bg-white/5 p-3"
                                 >
-                                    <div class="h-3 w-3/4 bg-[#38bdf8]"></div>
+                                    <div
+                                        class="h-3 w-3/4 bg-[var(--site-theme-code-accent)]"
+                                    ></div>
                                     <div
                                         class="mt-3 grid grid-cols-[1fr_auto] gap-3"
                                     >
@@ -167,17 +181,17 @@
                                             class="h-8 border border-white/10 bg-white/10"
                                         ></span>
                                         <span
-                                            class="h-8 w-16 bg-[#f59e0b]"
+                                            class="h-8 w-16 bg-[var(--site-theme-accent)]"
                                         ></span>
                                     </div>
                                 </div>
                             </div>
 
                             <div
-                                class="border border-[#f59e0b]/40 bg-[#f59e0b]/10 p-4"
+                                class="border border-[var(--site-theme-accent)]/40 bg-[var(--site-theme-accent)]/10 p-4"
                             >
                                 <p
-                                    class="text-xs font-black tracking-[0.16em] text-[#fbbf24] uppercase"
+                                    class="text-xs font-black tracking-[0.16em] text-[var(--site-theme-accent-strong)] uppercase"
                                 >
                                     {{ __('capell-theme-knowledge::generic.hero_queue_label') }}
                                 </p>
@@ -185,31 +199,37 @@
                                     <div
                                         class="grid grid-cols-[auto_1fr] gap-3"
                                     >
-                                        <span class="font-black text-[#f59e0b]">
+                                        <span
+                                            class="font-black text-[var(--site-theme-accent)]"
+                                        >
                                             01
                                         </span>
                                         <span
-                                            class="h-3 self-center bg-[#1d4ed8]"
+                                            class="h-3 self-center bg-[var(--site-theme-primary)]"
                                         ></span>
                                     </div>
                                     <div
                                         class="grid grid-cols-[auto_1fr] gap-3"
                                     >
-                                        <span class="font-black text-[#f59e0b]">
+                                        <span
+                                            class="font-black text-[var(--site-theme-accent)]"
+                                        >
                                             02
                                         </span>
                                         <span
-                                            class="h-3 self-center bg-[#93c5fd]"
+                                            class="h-3 self-center bg-[var(--site-theme-primary-muted)]"
                                         ></span>
                                     </div>
                                     <div
                                         class="grid grid-cols-[auto_1fr] gap-3"
                                     >
-                                        <span class="font-black text-[#f59e0b]">
+                                        <span
+                                            class="font-black text-[var(--site-theme-accent)]"
+                                        >
                                             03
                                         </span>
                                         <span
-                                            class="h-3 self-center bg-[#bfdbfe]"
+                                            class="h-3 self-center bg-[var(--site-theme-primary-soft)]"
                                         ></span>
                                     </div>
                                 </div>

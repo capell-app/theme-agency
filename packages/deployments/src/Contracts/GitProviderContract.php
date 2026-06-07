@@ -31,6 +31,8 @@ interface GitProviderContract
         string $body,
     ): PullRequestData;
 
+    public function findOpenPullRequestForBranch(DeploymentConnection $conn, string $headBranch): ?PullRequestData;
+
     public function enableAutoMerge(DeploymentConnection $conn, int|string $pullRequestId): void;
 
     public function getPullRequest(DeploymentConnection $conn, int|string $pullRequestId): PullRequestData;

@@ -10,6 +10,11 @@ return [
     'schema_required' => 'This action has no payload schema configured. Add a non-empty payload_schema.fields list before submissions can be accepted.',
     'spam_detected' => 'This submission could not be verified.',
     'submit' => 'Submit',
+    'retention' => [
+        'dry_run' => 'Dry run only. No submissions were deleted.',
+        'invalid_days' => 'The retention window must be a positive number of days.',
+        'summary' => 'Matched :matched_submissions submissions and :matched_dispatch_attempts dispatch attempts older than :days days (:cutoff). Deleted :deleted_submissions submissions.',
+    ],
     'api' => [
         'unauthorized' => 'Invalid public actions token.',
     ],

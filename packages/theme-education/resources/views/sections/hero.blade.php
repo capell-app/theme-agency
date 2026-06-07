@@ -23,14 +23,16 @@
             class="mx-auto grid max-w-6xl gap-10 lg:grid-cols-[0.86fr_1.14fr] lg:items-center"
         >
             <div>
-                <p class="text-xs font-black text-[#0f766e] uppercase">
+                <p
+                    class="text-xs font-semibold tracking-[0.1em] text-[#0f766e] uppercase"
+                >
                     {{ $eyebrow }}
                 </p>
-                <h2
-                    class="mt-5 max-w-3xl text-5xl leading-tight font-black tracking-normal text-[#020617] lg:text-6xl"
+                <h1
+                    class="mt-5 max-w-3xl text-4xl leading-tight font-extrabold tracking-normal text-[#020617] sm:text-5xl"
                 >
                     {{ $heading }}
-                </h2>
+                </h1>
                 @if ($summary)
                     <p class="mt-5 max-w-2xl text-lg leading-8 text-slate-600">
                         {{ $summary }}
@@ -89,6 +91,12 @@
                             <img
                                 src="{{ $imageUrl }}"
                                 alt="{{ $imageAlt }}"
+                                width="1200"
+                                height="750"
+                                loading="eager"
+                                decoding="async"
+                                fetchpriority="high"
+                                sizes="(min-width: 1024px) 52vw, 100vw"
                                 class="aspect-[16/10] w-full object-cover"
                             />
                         @else

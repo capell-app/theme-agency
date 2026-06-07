@@ -173,6 +173,56 @@
                 "path": "docs/assets/marketplace/extension-card.jpg",
                 "alt": "Events extension preview image",
                 "caption": "Events extension preview"
+            },
+            {
+                "path": "docs/screenshots/events-index.png",
+                "alt": "Events admin table with recurring event status and registration counts",
+                "caption": "Events index"
+            },
+            {
+                "path": "docs/screenshots/events-create.png",
+                "alt": "Create event form with schedule, recurrence, venue, and capacity settings",
+                "caption": "Create event form"
+            },
+            {
+                "path": "docs/screenshots/events-edit.png",
+                "alt": "Edit event form showing generated occurrence and registration state",
+                "caption": "Edit event form"
+            },
+            {
+                "path": "docs/screenshots/event-venues.png",
+                "alt": "Event venues admin table with reusable address and map details",
+                "caption": "Event venues management"
+            },
+            {
+                "path": "docs/screenshots/event-occurrences.png",
+                "alt": "Event occurrences admin table with generated schedule and capacity state",
+                "caption": "Event occurrences management"
+            },
+            {
+                "path": "docs/screenshots/event-registrations.png",
+                "alt": "Event registrations admin table with confirmed, pending, and waitlisted attendees",
+                "caption": "Event registrations management"
+            },
+            {
+                "path": "docs/screenshots/event-calendar-admin-page.png",
+                "alt": "Admin event calendar page showing upcoming occurrences",
+                "caption": "Admin event calendar page"
+            },
+            {
+                "path": "docs/screenshots/event-calendar-widget.png",
+                "alt": "Dashboard event calendar widget with near-term occurrence counts",
+                "caption": "Event calendar widget"
+            },
+            {
+                "path": "docs/screenshots/events-listing-page.png",
+                "alt": "Public events listing page for anonymous visitors",
+                "caption": "Frontend events listing page"
+            },
+            {
+                "path": "docs/screenshots/events-calendar-page.png",
+                "alt": "Public events calendar page showing upcoming event dates",
+                "caption": "Frontend events calendar page"
             }
         ],
         "categories": ["admin", "console", "content-product", "frontend"]

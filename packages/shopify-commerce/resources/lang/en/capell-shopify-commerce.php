@@ -17,6 +17,9 @@ return [
         'last_sync' => 'Last sync',
         'never_synced' => 'Never synced',
         'sync_now' => 'Sync now',
+        'verify_token' => 'Verify token',
+        'token_verified' => 'Shopify Admin API token verified.',
+        'token_failed' => 'Shopify Admin API token failed verification. Reconnect the store or check the Shopify app scopes.',
         'disconnect' => 'Disconnect',
         'disconnect_confirm' => 'Disconnect this Shopify store and remove its Admin API token?',
         'disconnected' => 'Shopify store disconnected.',
@@ -54,10 +57,16 @@ return [
         'search_cache_ttl_minutes' => 'Search cache TTL',
     ],
     'commands' => [
+        'oauth_state_prune' => [
+            'pruned' => '{0} No expired Shopify OAuth state rows were pruned.|{1} Pruned 1 expired Shopify OAuth state row.|[2,*] Pruned :count expired Shopify OAuth state rows.',
+        ],
         'customer_sync' => [
             'no_connection' => 'No active Shopify connection was found.',
             'synced' => '{0} No Shopify customer records were synced.|{1} Synced 1 Shopify customer record.|[2,*] Synced :count Shopify customer records.',
         ],
+    ],
+    'errors' => [
+        'graphql_failed' => 'Shopify Admin API request failed.',
     ],
     'health' => [
         'storage_tables_label' => 'Shopify Commerce storage tables',

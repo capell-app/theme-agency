@@ -13,7 +13,7 @@
         "bundle": "operations"
     },
     "namespace": "Capell\\PasswordPolicy",
-    "surfaces": ["admin"],
+    "surfaces": ["admin", "console"],
     "dependencies": {
         "requires": ["capell-app/admin", "capell-app/core"],
         "supports": [],
@@ -40,11 +40,11 @@
         "install": null,
         "setup": null,
         "demo": null,
-        "doctor": null
+        "doctor": "capell:password-policy:doctor"
     },
     "settings": ["Capell\\PasswordPolicy\\Settings\\PasswordPolicySettings"],
     "permissions": [],
-    "capabilities": ["password-policy", "password-policy-admin"],
+    "capabilities": ["password-policy", "password-policy-admin", "password-policy-console"],
     "performance": {
         "frontendRenderBudgetMs": 0,
         "adminQueryBudget": 40,
@@ -82,18 +82,33 @@
             },
             {
                 "path": "docs/screenshots/password-policy-settings.png",
-                "alt": "Password Policy settings page with expiry, forced reset, complexity, password history, and breach-check controls.",
-                "caption": "Password Policy settings"
+                "alt": "Password Policy settings page with expiry, forced-change, complexity, compromised-password, and reuse controls",
+                "caption": "Configure password expiry, complexity, breach checks, and reuse policy from one admin page"
+            },
+            {
+                "path": "docs/screenshots/password-policy-settings-dark.png",
+                "alt": "Password Policy settings page in dark mode",
+                "caption": "Password Policy settings in dark mode"
             },
             {
                 "path": "docs/screenshots/forced-password-change.png",
-                "alt": "Forced password change form shown before a flagged administrator can continue into the admin panel.",
-                "caption": "Forced password change flow"
+                "alt": "Forced password change form for flagged administrators",
+                "caption": "Require flagged administrators to change their password before continuing"
+            },
+            {
+                "path": "docs/screenshots/forced-password-change-dark.png",
+                "alt": "Forced password change form in dark mode",
+                "caption": "Forced password-change flow in dark mode"
             },
             {
                 "path": "docs/screenshots/user-password-policy-columns.png",
-                "alt": "Users table with password status columns, policy filters, and require-password-change actions.",
-                "caption": "User password status columns"
+                "alt": "Users table with Password Policy status column",
+                "caption": "Review password policy state directly from the Users table"
+            },
+            {
+                "path": "docs/screenshots/user-password-policy-columns-dark.png",
+                "alt": "Users table Password Policy status column in dark mode",
+                "caption": "Users table password policy status in dark mode"
             }
         ],
         "categories": ["admin", "operations"]

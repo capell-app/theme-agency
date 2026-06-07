@@ -138,12 +138,57 @@ it('does not rebuild tailwind assets for runtime theme color changes', function 
     $provider = file_get_contents(dirname(__DIR__, 2) . '/src/Providers/FoundationThemeServiceProvider.php');
     $command = file_get_contents(dirname(__DIR__, 2) . '/src/Console/Commands/GenerateTailwindAssetsCommand.php');
     $generator = file_get_contents(dirname(__DIR__, 2) . '/src/Support/Tailwind/TailwindAssetsGenerator.php');
-    $tokens = file_get_contents(dirname(__DIR__, 2) . '/resources/views/components/app/head/tokens.blade.php');
+    $tokenAction = file_get_contents(dirname(__DIR__, 2) . '/src/Actions/ResolveFoundationThemeTokensAction.php');
 
     expect($provider)->not->toContain('ThemeColorsUpdated')
         ->and($command)->not->toContain('--theme-key')
-        ->and($generator)->toContain('DefaultColorEnum::getKeyValues()')
-        ->and($tokens)->toContain('->merge($theme instanceof Theme && is_array($theme->colors) ? $theme->colors : [])');
+        ->and($generator)->toContain('ResolveFoundationThemeTokensAction')
+        ->and($tokenAction)->toContain('->merge($theme instanceof Theme && is_array($theme->colors) ? $theme->colors : [])');
+});
+
+it('renders the shared theme page with a matching skip link target and main landmark', function (): void {
+    $page = file_get_contents(dirname(__DIR__, 2) . '/resources/views/theme/page.blade.php');
+
+    expect($page)->toContain('href="#main-content"')
+        ->and($page)->toContain('<main')
+        ->and($page)->toContain('id="main-content"')
+        ->and($page)->toContain('id="theme-status"')
+        ->and($page)->toContain('role="status"')
+        ->and($page)->toContain('aria-live="polite"')
+        ->and($page)->toContain('aria-atomic="true"')
+        ->and($page)->not->toContain('<div' . PHP_EOL . '    style="{{ collect($brand->tokens())');
+});
+
+it('documents the stable child theme override surface', function (): void {
+    $readme = file_get_contents(dirname(__DIR__, 2) . '/README.md');
+    $overview = file_get_contents(dirname(__DIR__, 2) . '/docs/overview.md');
+    $provider = file_get_contents(dirname(__DIR__, 2) . '/src/Providers/FoundationThemeServiceProvider.php');
+    $tokens = file_get_contents(dirname(__DIR__, 2) . '/resources/views/components/app/head/tokens.blade.php');
+
+    foreach ([$readme, $overview] as $document) {
+        expect($document)
+            ->toContain('Child Theme Override Contract')
+            ->toContain("extends: 'default'")
+            ->toContain('`navigation`, `hero`, `features`, `proof`, `content-listing`, `cta`, `footer`')
+            ->toContain('`capell::theme.page`')
+            ->toContain('`capell::layout.area`')
+            ->toContain('`capell::media.svg`')
+            ->toContain('`--foundation-page-bg`')
+            ->toContain('`--foundation-section-spacing`')
+            ->toContain('`--foundation-widget-gap`')
+            ->toContain('`header`')
+            ->toContain('authoring metadata')
+            ->toContain('controls');
+    }
+
+    expect($provider)
+        ->toContain("includedSections: ['navigation', 'hero', 'features', 'proof', 'content-listing', 'cta', 'footer']")
+        ->toContain("->register('header'");
+
+    expect($tokens)
+        ->toContain('--foundation-page-bg')
+        ->toContain('--foundation-section-spacing')
+        ->toContain('--foundation-widget-gap');
 });
 
 it('delegates primary header navigation to the navigation render hook', function (): void {

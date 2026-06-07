@@ -29,6 +29,8 @@ final class FullDemoCommand extends Command
         {--packages=}
         {--theme=}
         {--seed=}
+        {--quick}
+        {--reset}
         {--allow-production}
         {--force}';
 
@@ -69,11 +71,15 @@ final class FullDemoCommand extends Command
         $siteCount = $this->resolvePositiveIntegerOption('site-count');
         if ($siteCount !== null) {
             $options['site_count'] = $siteCount;
+        } elseif ($this->option('quick') === true && $this->parseCsvOption('sites') === []) {
+            $options['site_count'] = 1;
         }
 
         $pageCount = $this->resolvePositiveIntegerOption('page-count');
         if ($pageCount !== null) {
             $options['pages'] = $pageCount;
+        } elseif ($this->option('quick') === true) {
+            $options['pages'] = 3;
         }
 
         $plan = BuildDemoGenerationPlanAction::run($options);
@@ -99,6 +105,10 @@ final class FullDemoCommand extends Command
 
         if ($plan->seed !== null) {
             $adminDemoParams['--seed'] = $plan->seed;
+        }
+
+        if ($this->option('reset') === true) {
+            $adminDemoParams['--reset'] = true;
         }
 
         if ($user !== null) {
@@ -188,6 +198,10 @@ final class FullDemoCommand extends Command
 
         if ($languages !== []) {
             return $languages;
+        }
+
+        if ($this->option('quick') === true) {
+            return ['en'];
         }
 
         return ['all'];

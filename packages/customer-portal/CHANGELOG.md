@@ -4,6 +4,12 @@ All notable changes to `capell-app/customer-portal` will be documented in this f
 
 ## Unreleased
 
+### 2026-06-06
+
+- Added threaded support replies with encrypted reply bodies, attachment metadata references, customer reply submission, and an admin reply action.
+- Added configurable per-provider and global caps for dashboard and self-service provider fan-out.
+- Added the Customer Portal screenshot runner contract, captured four route-backed Capell PNGs plus dark variants, and promoted the light gallery into Marketplace media.
+
 ### 2026-06-04
 
 - Added package model factories for `PortalAccount` and `PortalSupportRequest`, including site/account states for customer portal tests and demos.

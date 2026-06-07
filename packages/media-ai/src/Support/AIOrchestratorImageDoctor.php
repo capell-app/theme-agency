@@ -58,8 +58,11 @@ final class AIOrchestratorImageDoctor implements ImageDoctor
     private function prompt(ImageDoctorRequest $request): string
     {
         return trim(sprintf(
-            'Perform the Media AI image doctor operation [%s]. Instructions: %s',
+            'Perform the Media AI image doctor operation [%s] for locale [%s] with budget cents [%s] and model [%s]. Instructions: %s',
             $request->operation,
+            $request->locale ?? 'default',
+            $request->budgetCents === null ? 'default' : (string) $request->budgetCents,
+            $request->model ?? 'default',
             $request->instructions,
         ));
     }
@@ -72,6 +75,9 @@ final class AIOrchestratorImageDoctor implements ImageDoctor
         return [
             'operation' => $request->operation,
             'instructions' => $request->instructions,
+            'locale' => $request->locale,
+            'budget_cents' => $request->budgetCents,
+            'model' => $request->model,
             'media' => [
                 'id' => $media->getKey(),
                 'model_type' => $media->model_type,
@@ -96,10 +102,14 @@ final class AIOrchestratorImageDoctor implements ImageDoctor
         if (is_array($result)) {
             $successful = $result['successful'] ?? $result['success'] ?? true;
             $message = $result['message'] ?? null;
+            $altText = $result['alt_text'] ?? $result['altText'] ?? null;
+            $caption = $result['caption'] ?? null;
 
             return new ImageDoctorResult(
                 successful: (bool) $successful,
                 message: is_string($message) ? $message : null,
+                altText: is_string($altText) ? $altText : null,
+                caption: is_string($caption) ? $caption : null,
             );
         }
 

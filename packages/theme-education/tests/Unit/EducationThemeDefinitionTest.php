@@ -65,6 +65,28 @@ it('publishes the declared preview image and registers css through the tailwind 
         ->and(file_exists(__DIR__ . '/../../' . EducationThemeServiceProvider::TAILWIND_IMPORT))->toBeTrue();
 });
 
+it('has renderable views for every non foundation included section', function (): void {
+    CapellCore::clearPackages();
+    CapellCore::forcePackageInstalled(EducationThemeServiceProvider::$packageName);
+
+    $registry = new ThemeRegistry;
+    (new EducationThemeServiceProvider($this->app))->boot($registry);
+
+    $foundationSections = ['navigation', 'footer'];
+
+    foreach (EducationThemeServiceProvider::definition()->includedSections as $sectionKey) {
+        if (in_array($sectionKey, $foundationSections, true)) {
+            continue;
+        }
+
+        expect(view()->exists('capell-theme-education::sections.' . $sectionKey))
+            ->toBeTrue('Missing Education section view for [' . $sectionKey . '].');
+
+        expect($registry->sectionRenderer('education', $sectionKey))
+            ->toBeInstanceOf(SectionRenderer::class);
+    }
+});
+
 it('renders standard sections through Education views', function (): void {
     CapellCore::clearPackages();
     CapellCore::forcePackageInstalled(EducationThemeServiceProvider::$packageName);
@@ -156,6 +178,8 @@ it('renders hydrated hero data through the Education hero view', function (): vo
     $html = $renderer->render(HeroSectionData::from([
         'heading' => 'Launch a cohort pathway',
         'summary' => 'Hydrated education hero summary.',
+        'mediaUrl' => '/images/education-hero.jpg',
+        'mediaAlt' => 'Learners reviewing a pathway board',
         'actions' => [
             ['label' => 'View courses', 'url' => '#courses'],
             ['label' => 'Talk to admissions', 'url' => '#admissions'],
@@ -167,6 +191,13 @@ it('renders hydrated hero data through the Education hero view', function (): vo
         ->toContain('Launch a cohort pathway')
         ->toContain('Hydrated education hero summary.')
         ->toContain('education-learning-board')
+        ->toContain('src="/images/education-hero.jpg"')
+        ->toContain('alt="Learners reviewing a pathway board"')
+        ->toContain('width="1200"')
+        ->toContain('height="750"')
+        ->toContain('loading="eager"')
+        ->toContain('fetchpriority="high"')
+        ->toContain('sizes="(min-width: 1024px) 52vw, 100vw"')
         ->toContain('Interview-ready path')
         ->toContain('View courses')
         ->toContain('Talk to admissions')
@@ -273,6 +304,47 @@ it('renders translated education catalogue, event, and instructor defaults', fun
         ->toContain('Cohort mentor')
         ->toContain('Assessment coach')
         ->toContain('Named educator profile');
+});
+
+it('renders editor-provided education catalogue and event items', function (): void {
+    CapellCore::clearPackages();
+    CapellCore::forcePackageInstalled(EducationThemeServiceProvider::$packageName);
+    CapellCore::forcePackageInstalled('capell-app/events');
+
+    $registry = new ThemeRegistry;
+    (new EducationThemeServiceProvider($this->app))->boot($registry);
+
+    $catalogueRenderer = $registry->sectionRenderer('education', 'course-catalog');
+    $eventsRenderer = $registry->sectionRenderer('education', 'events');
+
+    assert($catalogueRenderer instanceof SectionRenderer);
+    assert($eventsRenderer instanceof SectionRenderer);
+
+    $catalogueHtml = $catalogueRenderer->render(educationThemeSection('course-catalog', [
+        'heading' => 'Find your course',
+        'items' => [
+            ['format' => 'Evening', 'title' => 'Laravel Academy', 'summary' => 'A practical cohort for working developers.', 'url' => '/courses/laravel-academy'],
+        ],
+    ]));
+
+    $eventsHtml = $eventsRenderer->render(educationThemeSection('events', [
+        'heading' => 'Open days',
+        'items' => [
+            ['signal' => 'Open day', 'title' => 'Campus preview', 'summary' => 'Meet mentors before applications close.', 'date' => '12 Sep', 'url' => '/events/campus-preview'],
+        ],
+    ]));
+
+    expect($catalogueHtml)
+        ->toContain('Laravel Academy')
+        ->toContain('/courses/laravel-academy')
+        ->not->toContain('Starter Path');
+
+    expect($eventsHtml)
+        ->toContain('Connected events calendar is live and ready.')
+        ->toContain('Campus preview')
+        ->toContain('12 Sep')
+        ->toContain('/events/campus-preview')
+        ->not->toContain('Live Workshops');
 });
 
 it('keeps education default card copy in translations instead of Blade literals', function (): void {

@@ -12,6 +12,7 @@ use Capell\Admin\Enums\MarketingStudioSectionEnum;
 use Capell\Admin\Facades\CapellAdmin;
 use Capell\Core\Facades\CapellCore;
 use Capell\GA4Reports\Actions\BuildGA4ReportsOverviewAction;
+use Capell\GA4Reports\Actions\BuildGA4ReportsWindowAction;
 use Capell\GA4Reports\Console\Commands\SyncGA4ReportsCommand;
 use Capell\GA4Reports\Data\GA4ReportsOverviewData;
 use Capell\GA4Reports\Filament\Pages\GA4ReportsPage;
@@ -19,8 +20,11 @@ use Capell\GA4Reports\Filament\Settings\Contributors\GA4ReportsDashboardSettings
 use Capell\GA4Reports\Filament\Widgets\GA4ReportsSetupStatusWidget;
 use Capell\GA4Reports\Filament\Widgets\GA4ReportsTopPagesWidget;
 use Capell\GA4Reports\Filament\Widgets\GA4ReportsTrafficTrendWidget;
+use Capell\GA4Reports\Settings\GA4ReportsSettings;
+use Carbon\CarbonImmutable;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Support\ServiceProvider;
+use Throwable;
 
 final class AdminServiceProvider extends ServiceProvider
 {
@@ -141,7 +145,13 @@ final class AdminServiceProvider extends ServiceProvider
             return $overview;
         }
 
-        $overview = BuildGA4ReportsOverviewAction::run();
+        $now = CarbonImmutable::now();
+        $window = BuildGA4ReportsWindowAction::run(
+            startsAt: $now->startOfWeek(),
+            endsAt: $now->endOfWeek(),
+        );
+
+        $overview = BuildGA4ReportsOverviewAction::run($window);
 
         return $overview;
     }
@@ -152,12 +162,32 @@ final class AdminServiceProvider extends ServiceProvider
             $overlapMinutes = config('capell-ga4-reports.sync_overlap_minutes', 120);
 
             $schedule
-                ->command('ga4-reports:sync')
-                ->daily()
+                ->command('capell:ga4-reports-sync')
+                ->cron($this->syncCronExpression())
                 ->withoutOverlapping(is_numeric($overlapMinutes) ? max(1, (int) $overlapMinutes) : 120)
                 ->onOneServer();
         });
 
         return $this;
+    }
+
+    private function syncCronExpression(): string
+    {
+        try {
+            /** @var GA4ReportsSettings $settings */
+            $settings = resolve(GA4ReportsSettings::class);
+            $syncCron = trim($settings->sync_cron);
+
+            if ($syncCron !== '') {
+                return $syncCron;
+            }
+        } catch (Throwable) {
+            // Fall through to config for early boot or un-migrated hosts.
+        }
+
+        $configured = config('capell-ga4-reports.sync_cron', '0 2 * * *');
+        $syncCron = is_string($configured) ? trim($configured) : '';
+
+        return $syncCron !== '' ? $syncCron : '0 2 * * *';
     }
 }

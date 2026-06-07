@@ -41,13 +41,11 @@ Use it when a site needs shared heroes, FAQs, pricing widgets, statistics, testi
 
 ## Editor Workflow
 
-The default `content_first` mode groups editable content by layout placement so editors can update titles, copy, logos, and assigned records without opening the full canvas.
+Editors create a reusable section record from a registered blueprint, fill the section translation and structured meta fields, then attach assets when the section type supports them.
 
-Use `layout_first` when the editor needs placement and structure control. Breakpoint controls let editors inspect desktop, tablet, and mobile layouts; breakpoint-specific container spans fall back to the base span when no override exists.
+Layout Builder and Block Library own placement, layout modes, breakpoints, and undo/redo behavior. Content Sections owns the reusable records, section configurators, safe public render payloads, and publishing hooks that keep attached widget assets pointed at the current published section.
 
-Undo and redo apply to unsaved changes in the current editing session. Saving establishes the new baseline and clears the undo history.
-
-Layout areas let themes expose places outside the main page body. For example, a theme can register a `header` area so editors can place normal Content Sections elements in site chrome without a separate header-content model.
+When a section is used in a layout, the public payload contributor receives preloaded widget assets and renders the matching section view without querying from Blade or exposing editor state.
 
 ## Frontend Surfaces
 
@@ -79,13 +77,18 @@ Public views should receive hydrated render data from Capell payload builders an
 
 ## Screenshot Coverage
 
-The screenshot contract is stored in [screenshots.json](screenshots.json). The first isolated audit pass found these surfaces that need final capture in an installed demo app:
+The screenshot contract is stored in [screenshots.json](screenshots.json). Marketplace media now promotes Capell runner captures for:
 
 - admin section index;
 - create section form;
-- edit section form with warnings and asset relation manager;
+- edit section form with publishing controls and the asset relation manager shell.
+
+The remaining screenshot fixture states are:
+
 - modal section/widget selector;
 - a frontend page rendering each registered section widget family.
+
+Discard Dashboard or generic demo-page fallbacks for those remaining states; they need dedicated routes or browser actions before promotion.
 
 ## Install And Verify
 
@@ -103,7 +106,7 @@ vendor/bin/pest packages/content-sections/tests --configuration=phpunit.xml
 
 ## Developer Docs
 
-- [Mutations](mutations.md)
+Package behavior is documented in this overview and the repository improvement plan. Layout editor mutations are owned by `capell-app/layout-builder`.
 
 ## Known Audit Notes
 

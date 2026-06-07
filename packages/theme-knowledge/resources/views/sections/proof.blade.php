@@ -6,12 +6,12 @@
     ];
 @endphp
 
-<section class="theme-section theme-section-proof bg-[#111827] text-white">
+<section class="theme-section theme-section-proof bg-[var(--site-theme-foreground)] text-white">
     <div class="mx-auto max-w-5xl px-6 py-14">
         <div class="grid gap-6 md:grid-cols-[0.68fr_1fr] md:items-end">
             <div>
                 <p
-                    class="text-xs font-black tracking-[0.18em] text-[#fbbf24] uppercase"
+                    class="text-xs font-black tracking-[0.18em] text-[var(--site-theme-accent-strong)] uppercase"
                 >
                     {{ __('capell-theme-knowledge::generic.library_evidence_label') }}
                 </p>
@@ -33,7 +33,7 @@
             @foreach ($proofs as $proof)
                 <article class="border border-white/15 bg-white/8 p-5">
                     <p
-                        class="text-xs font-black tracking-[0.18em] text-[#93c5fd] uppercase"
+                        class="text-xs font-black tracking-[0.18em] text-[var(--site-theme-primary-muted)] uppercase"
                     >
                         {{ $proof['label'] ?? $proof['name'] ?? __('capell-theme-knowledge::generic.proof_signal') }}
                     </p>
@@ -44,7 +44,7 @@
                         {{ $proof['summary'] ?? $proof['description'] ?? '' }}
                     </p>
                     <span
-                        class="mt-5 block h-1 bg-[#f59e0b]"
+                        class="mt-5 block h-1 bg-[var(--site-theme-accent)]"
                         aria-hidden="true"
                     ></span>
                 </article>

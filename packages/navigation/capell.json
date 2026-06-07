@@ -13,7 +13,11 @@
         "bundle": "foundation"
     },
     "namespace": "Capell\\Navigation",
-    "surfaces": ["admin", "frontend", "console"],
+    "surfaces": [
+        "admin",
+        "frontend",
+        "console"
+    ],
     "dependencies": {
         "requires": [
             "capell-app/admin",
@@ -26,7 +30,9 @@
     "providers": {
         "metadata": [],
         "install": [],
-        "runtime": ["Capell\\Navigation\\Providers\\NavigationServiceProvider"],
+        "runtime": [
+            "Capell\\Navigation\\Providers\\NavigationServiceProvider"
+        ],
         "admin": [],
         "frontend": []
     },
@@ -34,12 +40,17 @@
     "database": {
         "migrations": true,
         "settings": false,
-        "requiredTables": ["navigations", "navigation_page_references"]
+        "requiredTables": [
+            "navigations",
+            "navigation_page_references"
+        ]
     },
     "commands": {
         "install": null,
         "setup": "capell:navigation-setup",
-        "setupParams": ["sites"],
+        "setupParams": [
+            "sites"
+        ],
         "demo": "capell:navigation-demo",
         "doctor": null
     },
@@ -47,30 +58,52 @@
     "permissions": [],
     "capabilities": [
         "navigation-menu-builder",
+        "navigation-handle-registry",
+        "navigation-mega-menus",
         "navigation-page-field",
         "navigation-render-model",
-        "navigation-site-replication"
+        "navigation-site-replication",
+        "navigation-external-links",
+        "navigation-active-state-modes",
+        "navigation-breadcrumbs",
+        "navigation-conditional-visibility"
     ],
     "performance": {
         "frontendRenderBudgetMs": 20,
         "adminQueryBudget": 40,
-        "cacheTags": ["navigation"],
+        "cacheTags": [
+            "navigation"
+        ],
         "cacheSafety": {
-            "cacheable": false,
-            "variesBy": ["site", "locale"],
+            "cacheable": true,
+            "variesBy": [
+                "site",
+                "locale",
+                "page",
+                "domain",
+                "guest"
+            ],
             "sensitiveOutput": false,
             "invalidationSources": [
                 {
                     "model": "Capell\\Navigation\\Models\\Navigation",
-                    "events": ["saved", "deleted", "restored"]
+                    "events": [
+                        "saved",
+                        "deleted",
+                        "restored"
+                    ]
                 },
                 {
                     "model": "Capell\\Core\\Models\\Page",
-                    "events": ["updated"]
+                    "events": [
+                        "updated"
+                    ]
                 },
                 {
                     "model": "Capell\\Core\\Models\\Site",
-                    "events": ["replicated"]
+                    "events": [
+                        "replicated"
+                    ]
                 }
             ],
             "queueInvalidation": true
@@ -100,26 +133,6 @@
                 "caption": "Navigation gives Capell editors a visual menu builder for site and language scoped menus"
             },
             {
-                "path": "docs/assets/marketplace/hero-desktop.jpg",
-                "alt": "Navigation marketplace hero banner for desktop displays",
-                "caption": "Desktop marketplace hero for the Navigation foundation package"
-            },
-            {
-                "path": "docs/assets/marketplace/hero-mobile.jpg",
-                "alt": "Navigation marketplace hero banner for mobile displays",
-                "caption": "Mobile marketplace hero for the Navigation foundation package"
-            },
-            {
-                "path": "docs/screenshots/navigation-admin-index.png",
-                "alt": "Navigation admin index listing site navigations and their scope",
-                "caption": "Review navigation records, their site scope, language, and publication state"
-            },
-            {
-                "path": "docs/screenshots/navigation-admin-index-dark.png",
-                "alt": "Navigation admin index in dark mode",
-                "caption": "Review navigation records from the dark-mode admin index"
-            },
-            {
                 "path": "docs/screenshots/create-edit-navigation-form.png",
                 "alt": "Create and edit navigation form with links, page references, and nested items",
                 "caption": "Build nested menus from page references, links, and headings"
@@ -138,29 +151,14 @@
                 "path": "docs/screenshots/site-relation-manager-for-navigations-dark.png",
                 "alt": "Site relation manager for navigations in dark mode",
                 "caption": "Manage site-scoped navigations from the dark-mode site relation manager"
-            },
-            {
-                "path": "docs/screenshots/page-form-navigation-tab.png",
-                "alt": "Page form navigation tab showing which menus reference the page",
-                "caption": "See and manage which menus reference the page from the page form"
-            },
-            {
-                "path": "docs/screenshots/page-form-navigation-tab-dark.png",
-                "alt": "Page form navigation tab in dark mode",
-                "caption": "Review page navigation references from the dark-mode page form"
-            },
-            {
-                "path": "docs/screenshots/frontend-menu-output.png",
-                "alt": "Frontend menu output rendered for an anonymous visitor",
-                "caption": "Render the seeded menu as clean public frontend HTML"
-            },
-            {
-                "path": "docs/screenshots/frontend-menu-output-dark.png",
-                "alt": "Frontend menu output in dark mode",
-                "caption": "Render the seeded menu in dark mode without exposing editor metadata"
             }
         ],
-        "categories": ["admin", "console", "foundation", "frontend"]
+        "categories": [
+            "admin",
+            "console",
+            "foundation",
+            "frontend"
+        ]
     },
     "contributionTraceability": {
         "deferredContributions": [

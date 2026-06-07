@@ -6,9 +6,12 @@ return [
     'navigation_group' => 'Public actions',
     'actions' => [
         'create_token' => 'Create token',
+        'replay' => 'Replay',
         'revoke' => 'Revoke',
     ],
     'notifications' => [
+        'dispatch_replayed_title' => 'Dispatch replayed',
+        'dispatch_replay_failed_title' => 'Dispatch replay failed',
         'token_created_title' => 'Integration token created',
         'token_created_body' => 'Copy this token now. It will not be shown again: :token',
     ],

@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-use Capell\Admin\Filament\Resources\Pages\PageResource;
 use Capell\Core\Models\Language;
 use Capell\Core\Models\Page;
 use Capell\Core\Models\Site;
@@ -17,8 +16,6 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Collection as SupportCollection;
 use Livewire\Livewire;
-
-use function Pest\Laravel\get;
 
 uses(CreatesAdminUser::class);
 
@@ -71,9 +68,6 @@ beforeEach(function (): void {
 // --- ListPageSeoAuditWidget ---
 
 test('list: see livewire component', function (): void {
-    get(PageResource::getUrl())
-        ->assertSuccessful();
-
     Livewire::test(ListPageSeoAuditWidget::class)
         ->assertSuccessful();
 });

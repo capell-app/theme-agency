@@ -27,7 +27,10 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\Filter;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 use Override;
 
 final class PrivacyRequestResource extends Resource
@@ -58,14 +61,33 @@ final class PrivacyRequestResource extends Resource
     #[Override]
     public static function table(Table $table): Table
     {
-        return $table->columns([
-            TextColumn::make('reference')->label(__('capell-privacy-center::privacy.admin.fields.reference'))->searchable()->sortable(),
-            TextColumn::make('type')->label(__('capell-privacy-center::privacy.admin.fields.request_type'))->badge()->sortable(),
-            TextColumn::make('status')->label(__('capell-privacy-center::privacy.admin.fields.status'))->badge()->sortable(),
-            TextColumn::make('submitted_at')->label(__('capell-privacy-center::privacy.admin.fields.submitted_at'))->dateTime()->sortable(),
-            TextColumn::make('due_at')->label(__('capell-privacy-center::privacy.admin.fields.due_at'))->dateTime()->sortable(),
-            TextColumn::make('fulfilled_at')->label(__('capell-privacy-center::privacy.admin.fields.fulfilled_at'))->dateTime()->toggleable(),
-        ]);
+        return $table
+            ->columns([
+                TextColumn::make('reference')->label(__('capell-privacy-center::privacy.admin.fields.reference'))->searchable()->sortable(),
+                TextColumn::make('type')->label(__('capell-privacy-center::privacy.admin.fields.request_type'))->badge()->sortable(),
+                TextColumn::make('status')->label(__('capell-privacy-center::privacy.admin.fields.status'))->badge()->sortable(),
+                TextColumn::make('submitted_at')->label(__('capell-privacy-center::privacy.admin.fields.submitted_at'))->dateTime()->sortable(),
+                TextColumn::make('due_at')->label(__('capell-privacy-center::privacy.admin.fields.due_at'))->dateTime()->sortable(),
+                TextColumn::make('fulfilled_at')->label(__('capell-privacy-center::privacy.admin.fields.fulfilled_at'))->dateTime()->toggleable(),
+            ])
+            ->filters([
+                SelectFilter::make('type')
+                    ->label(__('capell-privacy-center::privacy.admin.fields.request_type'))
+                    ->options(self::typeOptions()),
+                SelectFilter::make('status')
+                    ->label(__('capell-privacy-center::privacy.admin.fields.status'))
+                    ->options(self::statusOptions()),
+                Filter::make('overdue')
+                    ->label(__('capell-privacy-center::privacy.admin.fields.overdue'))
+                    ->query(fn (Builder $query): Builder => $query
+                        ->whereNotNull('due_at')
+                        ->where('due_at', '<', now())
+                        ->whereNotIn('status', [
+                            PrivacyRequestStatus::Fulfilled->value,
+                            PrivacyRequestStatus::Rejected->value,
+                            PrivacyRequestStatus::Cancelled->value,
+                        ])),
+            ]);
     }
 
     #[Override]

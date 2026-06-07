@@ -7,11 +7,14 @@ use Capell\Admin\Filament\Resources\Media\Pages\EditMedia;
 use Capell\AIOrchestrator\Actions\RegisterAIOrchestratorModuleAction;
 use Capell\AIOrchestrator\Data\AIOrchestratorRunData;
 use Capell\AIOrchestrator\Support\AIOrchestratorModuleRegistry;
+use Capell\Core\Models\Language;
 use Capell\Core\Models\Media as CapellMedia;
 use Capell\Core\Models\Page;
+use Capell\MediaAI\Actions\QueueBatchImageDoctorRequestsAction;
 use Capell\MediaAI\Contracts\ImageDoctor;
 use Capell\MediaAI\Data\ImageDoctorRequest;
 use Capell\MediaAI\Data\ImageDoctorResult;
+use Capell\MediaAI\Jobs\RunImageDoctorJob;
 use Capell\MediaAI\Filament\MediaAIEditActionExtender;
 use Capell\MediaAI\Providers\MediaAIServiceProvider;
 use Capell\MediaAI\Support\AIOrchestratorImageDoctor;
@@ -194,7 +197,12 @@ it('returns a localized failure result from the null image doctor', function ():
         ->and($result->message)->toBe(__('capell-media-ai::media-ai.not_configured'));
 });
 
-it('passes image doctor requests to the configured ai-orchestrator implementation', function (): void {
+it('queues image doctor requests for the configured ai-orchestrator implementation', function (): void {
+    app()->setLocale('cy');
+    Queue::fake();
+    config()->set('capell-media-ai.image_doctor.budget_cents', 250);
+    config()->set('capell-media-ai.image_doctor.model', 'image-editor');
+
     $doctor = new RecordingImageDoctor;
     app()->instance(ImageDoctor::class, $doctor);
 
@@ -211,9 +219,74 @@ it('passes image doctor requests to the configured ai-orchestrator implementatio
         ->assertHasNoActionErrors()
         ->assertNotified();
 
-    expect($doctor->media?->is($media))->toBeTrue()
-        ->and($doctor->request?->operation)->toBe('remove_background')
-        ->and($doctor->request?->instructions)->toBe('Remove the background and keep the subject sharp.');
+    Queue::assertPushed(RunImageDoctorJob::class, fn (RunImageDoctorJob $job): bool => $job->mediaId === $media->getKey()
+        && $job->operation === 'remove_background'
+        && $job->instructions === 'Remove the background and keep the subject sharp.'
+        && $job->locale === 'cy'
+        && $job->budgetCents === 250
+        && $job->model === 'image-editor');
+
+    expect($doctor->media)->toBeNull()
+        ->and($doctor->request)->toBeNull();
+});
+
+it('queues batch doctor requests for image records missing localized alt text', function (): void {
+    $language = Language::factory()->english()->create();
+    $missingAltImage = createMediaAIImage();
+    $existingAltImage = createMediaAIImage();
+
+    $existingAltImage->translations()->create([
+        'language_id' => $language->getKey(),
+        'meta' => [
+            'alt' => 'Existing localized alt text.',
+        ],
+    ]);
+
+    $page = Page::factory()->create();
+    $page
+        ->addMedia(UploadedFile::fake()->create('document.pdf', 64, 'application/pdf'))
+        ->toMediaCollection('documents');
+
+    $queued = QueueBatchImageDoctorRequestsAction::run(
+        operation: 'improve',
+        instructions: 'Generate accessible alt text.',
+        locale: 'en',
+        limit: 10,
+        missingAltOnly: true,
+        budgetCents: 125,
+        model: 'batch-model',
+    );
+
+    expect($queued)->toBe(1);
+
+    Queue::assertPushed(RunImageDoctorJob::class, fn (RunImageDoctorJob $job): bool => $job->mediaId === $missingAltImage->getKey()
+        && $job->operation === 'improve'
+        && $job->instructions === 'Generate accessible alt text.'
+        && $job->locale === 'en'
+        && $job->budgetCents === 125
+        && $job->model === 'batch-model');
+
+    Queue::assertNotPushed(RunImageDoctorJob::class, fn (RunImageDoctorJob $job): bool => $job->mediaId === $existingAltImage->getKey());
+});
+
+it('can queue batch doctor requests for every image record when requested', function (): void {
+    $firstImage = createMediaAIImage();
+    $secondImage = createMediaAIImage();
+
+    $queued = QueueBatchImageDoctorRequestsAction::run(
+        operation: 'upscale',
+        instructions: 'Upscale catalogue images.',
+        locale: null,
+        limit: 1,
+        missingAltOnly: false,
+    );
+
+    expect($queued)->toBe(1);
+
+    Queue::assertPushed(RunImageDoctorJob::class, fn (RunImageDoctorJob $job): bool => $job->mediaId === $firstImage->getKey()
+        && $job->operation === 'upscale');
+
+    Queue::assertNotPushed(RunImageDoctorJob::class, fn (RunImageDoctorJob $job): bool => $job->mediaId === $secondImage->getKey());
 });
 
 it('runs image doctor requests through the configured ai-orchestrator capability', function (): void {
@@ -231,12 +304,17 @@ it('runs image doctor requests through the configured ai-orchestrator capability
         new ImageDoctorRequest(
             operation: 'restore',
             instructions: 'Restore scratches while preserving the original crop.',
+            locale: 'fr',
+            budgetCents: 300,
+            model: 'restore-model',
         ),
     );
     $lastRun = AIOrchestratorImageDoctorAction::lastRun();
 
     expect($result->successful)->toBeTrue()
         ->and($result->message)->toBe('Doctor finished through AI Orchestrator')
+        ->and($result->altText)->toBe('Restored archival portrait.')
+        ->and($result->caption)->toBe('Archival portrait restored while preserving the original crop.')
         ->and($lastRun)->toBeInstanceOf(AIOrchestratorRunData::class);
     throw_unless($lastRun instanceof AIOrchestratorRunData, RuntimeException::class, 'Expected AI Orchestrator run data.');
     $mediaContext = $lastRun->context['media'] ?? null;
@@ -246,6 +324,9 @@ it('runs image doctor requests through the configured ai-orchestrator capability
         ->and($lastRun->capabilityKey)->toBe('doctor-image')
         ->and($lastRun->context['operation'])->toBe('restore')
         ->and($lastRun->context['instructions'])->toBe('Restore scratches while preserving the original crop.')
+        ->and($lastRun->context['locale'])->toBe('fr')
+        ->and($lastRun->context['budget_cents'])->toBe(300)
+        ->and($lastRun->context['model'])->toBe('restore-model')
         ->and($mediaContext['id'])->toBe($media->getKey());
 });
 

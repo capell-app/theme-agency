@@ -5,13 +5,15 @@ declare(strict_types=1);
 namespace Capell\Events\Livewire;
 
 use Capell\Core\Models\Site;
+use Capell\Events\Actions\BuildEventOccurrenceViewDataAction;
 use Capell\Events\Actions\QueryPublicEventOccurrencesAction;
+use Capell\Events\Data\EventOccurrenceViewData;
 use Capell\Events\Models\EventOccurrence;
 use Capell\Events\Support\Calendar\CalendarMonth;
 use Capell\Frontend\Facades\Frontend;
 use Carbon\CarbonImmutable;
 use Carbon\Exceptions\InvalidFormatException;
-use Illuminate\Support\Collection;
+use DateTimeZone;
 use Livewire\Component;
 use RuntimeException;
 
@@ -37,12 +39,15 @@ class EventCalendar extends Component
     public function render(): mixed
     {
         $month = $this->calendarMonth();
-        $occurrences = QueryPublicEventOccurrencesAction::run($this->site(), $month->startOfMonth()->startOfWeek(), $month->endOfMonth()->endOfWeek());
+        $viewerTimezone = $this->viewerTimezone();
+        $occurrences = QueryPublicEventOccurrencesAction::run($this->site(), $month->startOfMonth()->startOfWeek(), $month->endOfMonth()->endOfWeek())
+            ->map(fn (EventOccurrence $occurrence): EventOccurrenceViewData => BuildEventOccurrenceViewDataAction::run($occurrence, $viewerTimezone))
+            ->values();
 
         return view('capell-events::livewire.event-calendar', [
             'monthDate' => $month,
             'weeks' => resolve(CalendarMonth::class)->weeks($month),
-            'occurrencesByDate' => $this->occurrencesByDate($occurrences),
+            'occurrences' => $occurrences,
         ]);
     }
 
@@ -80,22 +85,34 @@ class EventCalendar extends Component
         $site = $this->site();
 
         if (! array_key_exists('timezone', $site->getAttributes())) {
-            return 'UTC';
+            return $this->defaultTimezone();
         }
 
         $timezone = $site->getAttribute('timezone');
 
-        return is_string($timezone) && $timezone !== '' ? $timezone : 'UTC';
+        return is_string($timezone) && in_array($timezone, DateTimeZone::listIdentifiers(), true)
+            ? $timezone
+            : $this->defaultTimezone();
     }
 
-    /**
-     * @param  Collection<int, EventOccurrence>  $occurrences
-     * @return array<string, Collection<int, EventOccurrence>>
-     */
-    private function occurrencesByDate(Collection $occurrences): array
+    private function viewerTimezone(): ?string
     {
-        return $occurrences
-            ->groupBy(fn (EventOccurrence $occurrence): string => $occurrence->starts_at->setTimezone($occurrence->timezone)->toDateString())
-            ->all();
+        $timezone = request()->query('timezone');
+
+        if (! is_string($timezone) || $timezone === '') {
+            $page = Frontend::page();
+            $timezone = $page?->meta['viewer_timezone']
+                ?? $page?->meta['default_timezone']
+                ?? config('capell-events.display.default_timezone');
+        }
+
+        return is_string($timezone) && in_array($timezone, DateTimeZone::listIdentifiers(), true) ? $timezone : null;
+    }
+
+    private function defaultTimezone(): string
+    {
+        $timezone = config('capell-events.display.default_timezone', 'UTC');
+
+        return is_string($timezone) && in_array($timezone, DateTimeZone::listIdentifiers(), true) ? $timezone : 'UTC';
     }
 }

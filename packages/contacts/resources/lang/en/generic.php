@@ -8,12 +8,17 @@ return [
         'display_name' => 'Display name',
         'domain' => 'Domain',
         'email' => 'Email',
+        'first_seen_at' => 'First seen at',
         'last_seen_at' => 'Last seen at',
         'name' => 'Name',
+        'note' => 'Note',
         'occurred_at' => 'Occurred at',
         'phone' => 'Phone',
+        'reason' => 'Reason',
         'status' => 'Status',
         'summary' => 'Summary',
+        'tags' => 'Tags',
+        'target_contact' => 'Target contact',
         'title' => 'Title',
         'type' => 'Type',
         'updated_at' => 'Updated at',
@@ -21,8 +26,15 @@ return [
         'website' => 'Website',
     ],
     'actions' => [
+        'add_note' => 'Add note',
+        'change_status' => 'Change status',
+        'merge' => 'Merge',
         'privacy_anonymize' => 'Anonymize contact',
         'privacy_export' => 'Export privacy data',
+        'view' => 'View',
+    ],
+    'filters' => [
+        'tag' => 'Tag',
     ],
     'resources' => [
         'activities' => 'Activities',
@@ -32,6 +44,18 @@ return [
         'leads' => 'Leads',
         'organisation' => 'Organisation',
         'organisations' => 'Organisations',
+    ],
+    'notifications' => [
+        'lead_status_updated' => 'Lead status updated.',
+        'note_added' => 'Contact note added.',
+    ],
+    'placeholders' => [
+        'empty' => 'Not set',
+        'no_activity' => 'No activity has been recorded for this contact yet.',
+    ],
+    'sections' => [
+        'activity_timeline' => 'Activity timeline',
+        'contact_overview' => 'Contact overview',
     ],
     'form_builder' => [
         'activity_summary' => 'Submitted :form form',
@@ -99,6 +123,13 @@ return [
         'command_valid_contact' => 'The contact argument must be a positive integer ID.',
         'command_valid_email' => 'The --email option must be a valid email address.',
         'export_activity_summary' => 'Contact privacy export generated',
+    ],
+    'merge' => [
+        'activity_summary' => 'Contact merged into this record',
+        'completed_notification' => 'Contact merged.',
+        'cross_site' => 'Contacts can only be merged within the same site.',
+        'same_contact' => 'Choose two different contacts to merge.',
+        'target_not_found' => 'The selected target contact could not be found.',
     ],
     'widgets' => [
         'activities' => 'Activities',

@@ -1,9 +1,11 @@
 .education-shell {
-    --site-theme-primary: #4338ca;
-    --site-theme-accent: #14b8a6;
-    --education-ink: #020617;
-    --education-paper: #f8fbff;
-    --education-line: #c7d2fe;
+    --site-theme-primary: var(--theme-primary, #4338ca);
+    --site-theme-accent: var(--theme-accent, #14b8a6);
+    --education-accent-text: color-mix(in srgb, var(--site-theme-accent) 62%, #064e3b);
+    --education-ink: var(--theme-foreground, #020617);
+    --education-muted: #334155;
+    --education-paper: var(--theme-surface, #f8fbff);
+    --education-line: color-mix(in srgb, var(--site-theme-primary) 22%, #ffffff);
     --education-blueprint: rgb(67 56 202 / 7%);
     background:
         linear-gradient(
@@ -20,8 +22,130 @@
         2rem 2rem;
 }
 
+.dark .education-shell,
+.education-shell.dark {
+    --education-ink: var(--theme-dark-foreground, #e5e7eb);
+    --education-muted: var(--theme-dark-muted, #cbd5e1);
+    --education-paper: var(--theme-dark-surface, #020617);
+    --education-line: rgb(129 140 248 / 26%);
+    --education-accent-text: color-mix(in srgb, var(--site-theme-accent) 70%, #ffffff);
+    --education-blueprint: rgb(129 140 248 / 10%);
+
+    background:
+        linear-gradient(180deg, #020617 0%, #0f172a 52%, #020617 100%),
+        linear-gradient(90deg, var(--education-blueprint) 1px, transparent 1px),
+        linear-gradient(180deg, rgb(20 184 166 / 8%) 1px, transparent 1px);
+    color: var(--education-ink);
+    color-scheme: dark;
+}
+
 .education-shell :is(h1, h2, h3) {
     letter-spacing: 0;
+}
+
+.education-shell :where(
+    [class*='text-[#020617]'],
+    [class*='text-[#0f172a]'],
+    [class*='text-[#111827]']
+) {
+    color: var(--education-ink);
+}
+
+.education-shell :where(.text-slate-600, .text-stone-600) {
+    color: var(--education-muted);
+}
+
+.education-shell :where(
+    [class*='text-[#1d4ed8]'],
+    [class*='text-[#4338ca]']
+) {
+    color: var(--site-theme-primary);
+}
+
+.education-shell :where(
+    [class*='text-[#0f766e]'],
+    [class*='text-[#14b8a6]'],
+    [class*='text-[#5eead4]']
+) {
+    color: var(--education-accent-text);
+}
+
+.education-shell :where(
+    [class*='bg-[#f8fbff]'],
+    [class*='bg-[#eef6ff]'],
+    [class*='bg-[#eef2ff]']
+) {
+    background-color: color-mix(in srgb, var(--site-theme-primary) 8%, #ffffff);
+}
+
+.dark .education-shell :where(.bg-white),
+.education-shell.dark :where(.bg-white) {
+    background-color: #0f172a;
+}
+
+.dark .education-shell :where(
+    [class*='bg-[#f8fbff]'],
+    [class*='bg-[#eef6ff]'],
+    [class*='bg-[#eef2ff]'],
+    [class*='bg-[#ecfeff]']
+),
+.education-shell.dark :where(
+    [class*='bg-[#f8fbff]'],
+    [class*='bg-[#eef6ff]'],
+    [class*='bg-[#eef2ff]'],
+    [class*='bg-[#ecfeff]']
+) {
+    background-color: #111827;
+}
+
+.education-shell :where([class*='bg-[#ecfeff]']) {
+    background-color: color-mix(in srgb, var(--site-theme-accent) 12%, #ffffff);
+}
+
+.education-shell :where(
+    [class*='bg-[#1d4ed8]'],
+    [class*='bg-[#4338ca]']
+) {
+    background-color: var(--site-theme-primary);
+}
+
+.education-shell :where([class*='bg-[#14b8a6]']) {
+    background-color: var(--site-theme-accent);
+}
+
+.education-shell :where(
+    [class*='border-[#c7d2fe]'],
+    [class*='border-[#dbeafe]'],
+    .border-indigo-100,
+    .border-indigo-200
+) {
+    border-color: var(--education-line);
+}
+
+.dark .education-shell :where(
+    .border-slate-200,
+    .border-indigo-100,
+    .border-indigo-200,
+    [class*='border-[#c7d2fe]'],
+    [class*='border-[#dbeafe]']
+),
+.education-shell.dark :where(
+    .border-slate-200,
+    .border-indigo-100,
+    .border-indigo-200,
+    [class*='border-[#c7d2fe]'],
+    [class*='border-[#dbeafe]']
+) {
+    border-color: var(--education-line);
+}
+
+.education-shell :where(
+    [class*='hover:border-[#4338ca]']:hover,
+    [class*='hover:text-[#4338ca]']:hover,
+    [class*='hover:text-[#1d4ed8]']:hover
+) {
+    border-color: var(--site-theme-primary);
+    color: var(--site-theme-primary);
 }
 
 .education-shell section {
@@ -132,4 +256,19 @@
     border: 1px solid rgb(255 255 255 / 12%);
     border-radius: 0.5rem;
     box-shadow: 0 28px 90px rgb(15 23 42 / 16%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .education-shell *,
+    .education-shell *::before,
+    .education-shell *::after {
+        scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+    }
+
+    .education-shell :where(.transition, [class*='hover:-translate-y']):hover {
+        transform: none !important;
+    }
 }

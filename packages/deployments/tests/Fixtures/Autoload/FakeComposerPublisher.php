@@ -21,6 +21,8 @@ final class FakeComposerPublisher implements GitProviderContract
     /** @var list<int|string> */
     public array $autoMergedPullRequestIds = [];
 
+    public ?PullRequestData $existingPullRequest = null;
+
     public function getFile(DeploymentConnection $conn, string $path): RepoFile
     {
         return new RepoFile(
@@ -32,6 +34,10 @@ final class FakeComposerPublisher implements GitProviderContract
 
     public function getBranchCommitSha(DeploymentConnection $conn, string $branch): string
     {
+        if ($branch !== $conn->default_branch && collect($this->branches)->doesntContain('branch', $branch)) {
+            throw new RuntimeException('Branch does not exist.');
+        }
+
         return 'branch-commit-sha';
     }
 
@@ -65,6 +71,11 @@ final class FakeComposerPublisher implements GitProviderContract
             headSha: 'commit-sha',
             merged: false,
         );
+    }
+
+    public function findOpenPullRequestForBranch(DeploymentConnection $conn, string $headBranch): ?PullRequestData
+    {
+        return $this->existingPullRequest;
     }
 
     public function enableAutoMerge(DeploymentConnection $conn, int|string $pullRequestId): void

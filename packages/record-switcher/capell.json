@@ -13,11 +13,18 @@
         "bundle": "foundation"
     },
     "namespace": "Capell\\RecordSwitcher",
-    "surfaces": ["admin"],
+    "surfaces": [
+        "admin"
+    ],
     "dependencies": {
-        "requires": ["capell-app/admin", "capell-app/core"],
+        "requires": [
+            "capell-app/admin",
+            "capell-app/core"
+        ],
         "supports": [],
-        "conflicts": ["howdu/filament-record-switcher"]
+        "conflicts": [
+            "howdu/filament-record-switcher"
+        ]
     },
     "providers": {
         "metadata": [],
@@ -33,7 +40,9 @@
             "type": "asset",
             "class": "Capell\\RecordSwitcher\\Manifest\\RecordSwitcherAssetsContribution",
             "surface": "admin",
-            "assets": ["record-switcher"]
+            "assets": [
+                "record-switcher"
+            ]
         }
     ],
     "database": {
@@ -81,11 +90,6 @@
         "description": "Record Switcher keeps editors moving across pages, layouts, widgets, sections, and navigation records without returning to table views. It ships first-party admin assets, a Livewire heading component, and Capell-owned styling that matches the admin surface.",
         "screenshots": [
             {
-                "path": "docs/assets/marketplace/extension-card.svg",
-                "alt": "Record Switcher extension card showing searchable page suggestions",
-                "caption": "Marketplace preview for the Record Switcher admin extension."
-            },
-            {
                 "path": "docs/screenshots/admin-heading-switcher.png",
                 "alt": "Capell admin edit page with Record Switcher suggestions open",
                 "caption": "Searchable heading switcher for moving between editable records in the Capell admin."
@@ -96,6 +100,10 @@
                 "caption": "Dark mode capture of the same Record Switcher heading workflow."
             }
         ],
-        "categories": ["admin", "foundation", "editor-productivity"]
+        "categories": [
+            "admin",
+            "foundation",
+            "editor-productivity"
+        ]
     }
 }

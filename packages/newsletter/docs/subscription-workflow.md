@@ -148,11 +148,15 @@ final class RecentPurchaserSegmentProvider implements NewsletterSegmentProvider
 
 ## Public Routes
 
-| Route                                                     | Purpose                                                             |
-| --------------------------------------------------------- | ------------------------------------------------------------------- |
-| `GET /newsletter/confirm/{token}`                         | Confirms a Capell-owned double opt-in token.                        |
-| `GET /newsletter/unsubscribe/{token}`                     | Unsubscribes by public token.                                       |
-| `POST /newsletter/providers/{providerConnection}/webhook` | Receives provider webhooks and normalizes them through the adapter. |
+| Route                                                     | Purpose                                                                         |
+| --------------------------------------------------------- | ------------------------------------------------------------------------------- |
+| `POST /newsletter/subscribe`                              | Captures a public site-scoped subscriber and requests double opt-in by default. |
+| `GET /newsletter/confirm/{token}`                         | Confirms a Capell-owned double opt-in token.                                    |
+| `GET /newsletter/unsubscribe/{token}`                     | Unsubscribes by public token.                                                   |
+| `POST /newsletter/unsubscribe/{token}/one-click`          | Handles RFC 8058 one-click unsubscribe requests.                                |
+| `GET /newsletter/preferences/{token}`                     | Shows the public preference center for a subscriber token.                      |
+| `POST /newsletter/preferences/{token}`                    | Saves public preference-center updates.                                         |
+| `POST /newsletter/providers/{providerConnection}/webhook` | Receives provider webhooks and normalizes them through the adapter.             |
 
 ## Retry Command
 

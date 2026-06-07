@@ -19,6 +19,7 @@ use Capell\Contacts\Actions\AnonymizeContactWithAuditAction;
 use Capell\Contacts\Actions\AuditContactPrivacyExportAction;
 use Capell\Contacts\Actions\BuildContactPrivacyExportAction;
 use Capell\Contacts\Actions\FindOrCreateContactAction;
+use Capell\Contacts\Actions\MergeContactsAction;
 use Capell\Contacts\Actions\RecordContactActivityAction;
 use Capell\Contacts\Actions\SyncAccessGateRegistrationContactAction;
 use Capell\Contacts\Actions\SyncCampaignConversionContactAction;
@@ -35,6 +36,7 @@ use Capell\Contacts\Enums\ContactActivityType;
 use Capell\Contacts\Enums\ContactStatus;
 use Capell\Contacts\Enums\LeadStatus;
 use Capell\Contacts\Models\Contact;
+use Capell\Contacts\Models\ContactTag;
 use Capell\Contacts\Models\Lead;
 use Capell\Contacts\Models\Organisation;
 use Capell\Contacts\Tests\ContactsTestCase;
@@ -80,6 +82,8 @@ it('loads the contacts foundation tables', function (): void {
     expect(Schema::hasTable('contacts'))->toBeTrue()
         ->and(Schema::hasTable('contact_organisations'))->toBeTrue()
         ->and(Schema::hasTable('contact_organisation_memberships'))->toBeTrue()
+        ->and(Schema::hasTable('contact_tags'))->toBeTrue()
+        ->and(Schema::hasTable('contact_tag_memberships'))->toBeTrue()
         ->and(Schema::hasTable('contact_leads'))->toBeTrue()
         ->and(Schema::hasTable('contact_activities'))->toBeTrue()
         ->and(Schema::hasColumn('contacts', 'source_key'))->toBeTrue()
@@ -163,7 +167,7 @@ it('syncs source records into contacts, tags, leads, and activities', function (
         ->and($contact->source_identifier_hash)->toBe(Contact::sourceIdentifierHash('submission-1001'))
         ->and($contact->profile)->toMatchArray([
             'form' => 'Contact',
-            'tags' => ['form lead', 'vip'],
+            'tags' => ['form-lead', 'vip'],
             'sources' => [
                 'form_builder' => [
                     'identifier' => 'submission-1001',
@@ -171,6 +175,9 @@ it('syncs source records into contacts, tags, leads, and activities', function (
                 ],
             ],
         ])
+        ->and($contact->tags()->pluck('slug')->all())->toBe(['form-lead', 'vip'])
+        ->and(ContactTag::query()->where('slug', 'form-lead')->exists())->toBeTrue()
+        ->and(Contact::query()->withTag('Form Lead')->sole()->is($contact))->toBeTrue()
         ->and($result->lead)->toBeInstanceOf(Lead::class)
         ->and($result->lead?->status)->toBe(LeadStatus::Open)
         ->and($result->lead?->context)->toMatchArray([
@@ -184,6 +191,76 @@ it('syncs source records into contacts, tags, leads, and activities', function (
             'source_identifier' => 'submission-1001',
             'form_id' => 44,
         ]);
+});
+
+it('merges duplicate contacts into a retained target contact', function (): void {
+    $siteId = $this->createContactsSite();
+    $organisation = Organisation::query()->create([
+        'site_id' => $siteId,
+        'name' => 'Example Ltd',
+    ]);
+    $sourceTag = ContactTag::query()->create([
+        'site_id' => $siteId,
+        'name' => 'Source',
+        'slug' => 'source',
+    ]);
+    $targetTag = ContactTag::query()->create([
+        'site_id' => $siteId,
+        'name' => 'Target',
+        'slug' => 'target',
+    ]);
+    $source = Contact::query()->create([
+        'site_id' => $siteId,
+        'email' => 'source@example.test',
+        'phone' => '+441234567890',
+        'display_name' => 'Source Contact',
+        'profile' => ['source_only' => true, 'shared' => ['source' => true]],
+        'first_seen_at' => Date::now()->subDays(10),
+        'last_seen_at' => Date::now()->subDay(),
+    ]);
+    $target = Contact::query()->create([
+        'site_id' => $siteId,
+        'display_name' => 'Target Contact',
+        'profile' => ['target_only' => true, 'shared' => ['target' => true]],
+        'first_seen_at' => Date::now()->subDays(2),
+        'last_seen_at' => Date::now(),
+    ]);
+    $source->organisations()->attach($organisation->getKey(), ['role' => 'Buyer', 'is_primary' => true]);
+    $source->tags()->attach($sourceTag);
+    $target->tags()->attach($targetTag);
+    $lead = Lead::query()->create([
+        'site_id' => $siteId,
+        'contact_id' => $source->getKey(),
+        'title' => 'Source lead',
+        'status' => LeadStatus::Open,
+    ]);
+    $activity = RecordContactActivityAction::run($source, new ContactActivityData(
+        type: ContactActivityType::Note,
+        summary: 'Source note',
+    ));
+
+    $merged = MergeContactsAction::run($source, $target, 'duplicate email report');
+
+    expect(Contact::query()->whereKey($source->getKey())->exists())->toBeFalse()
+        ->and($merged->getKey())->toBe($target->getKey())
+        ->and($merged->email)->toBe('source@example.test')
+        ->and($merged->phone)->toBe('+441234567890')
+        ->and($merged->display_name)->toBe('Target Contact')
+        ->and($merged->profile)->toMatchArray([
+            'source_only' => true,
+            'target_only' => true,
+            'shared' => [
+                'source' => true,
+                'target' => true,
+            ],
+        ])
+        ->and($lead->refresh()->contact_id)->toBe($target->getKey())
+        ->and($activity->refresh()->contact_id)->toBe($target->getKey())
+        ->and($merged->organisations()->whereKey($organisation->getKey())->exists())->toBeTrue()
+        ->and($merged->tags()->pluck('slug')->sort()->values()->all())->toBe(['source', 'target'])
+        ->and($merged->activities()->get()->contains(
+            fn (mixed $activity): bool => ($activity->payload['source'] ?? null) === 'contact_merge',
+        ))->toBeTrue();
 });
 
 it('syncs form builder submissions into contacts through the source adapter', function (): void {

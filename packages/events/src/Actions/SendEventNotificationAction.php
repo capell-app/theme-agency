@@ -26,6 +26,7 @@ class SendEventNotificationAction
             'event_occurrence_id' => $registration->event_occurrence_id,
             'event_registration_id' => $registration->getKey(),
             'type' => $type,
+            'notification_key' => $type->value,
             'recipient_email' => $registration->email,
         ], [
             'status' => 'queued',

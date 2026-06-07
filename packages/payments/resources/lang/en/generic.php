@@ -17,7 +17,7 @@ return [
         'billing_description' => 'Manage payment methods, invoices, and billing details.',
         'billing_subscription_status' => ':status subscription billing is available.',
         'billing_subscription_period' => ':status subscription billing is available until :date.',
-        'checkout_amount_description' => 'Paid :amount :currency.',
+        'checkout_amount_description' => 'Paid :amount.',
         'checkout_description' => 'Completed payment.',
         'download_description' => 'Paid download is available.',
         'download_expired' => 'Expired',
@@ -26,6 +26,9 @@ return [
         'subscription_description' => ':status subscription.',
         'subscription_label' => 'Subscription',
         'subscription_period_description' => ':status subscription through :date.',
+    ],
+    'actions' => [
+        'issue_refund' => 'Issue refund',
     ],
     'form_payments' => [
         'no_payment_field' => 'The form does not contain a payment field.',
@@ -126,6 +129,17 @@ return [
         'failed' => 'Failed',
         'canceled' => 'Canceled',
         'unknown' => 'Unknown',
+    ],
+    'refund_reasons' => [
+        'duplicate' => 'Duplicate',
+        'fraudulent' => 'Fraudulent',
+        'requested_by_customer' => 'Requested by customer',
+    ],
+    'help' => [
+        'refund_amount_minor_units' => 'Leave blank for a full refund, or enter a minor-unit amount such as 1099 for GBP 10.99.',
+    ],
+    'notifications' => [
+        'refund_issued' => 'Refund issued.',
     ],
     'dispute_statuses' => [
         'warning_needs_response' => 'Warning needs response',

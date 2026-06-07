@@ -17,6 +17,7 @@ uses(KnowledgeBaseTestCase::class);
 
 it('registers public knowledge base routes', function (): void {
     expect(Route::has('capell-knowledge-base.index'))->toBeTrue()
+        ->and(Route::has('capell-knowledge-base.ai-output'))->toBeTrue()
         ->and(Route::has('capell-knowledge-base.article'))->toBeTrue()
         ->and(Route::has('capell-knowledge-base.article.feedback'))->toBeTrue();
 });
@@ -27,10 +28,21 @@ it('throttles the public article feedback route', function (): void {
     expect($route?->gatherMiddleware())->toContain('throttle:30,1');
 });
 
+it('can use the Capell frontend route middleware stack when frontend is available', function (): void {
+    $route = Route::getRoutes()->getByName('capell-knowledge-base.index');
+    $middleware = $route?->gatherMiddleware() ?? [];
+
+    expect($middleware)->toContain('web');
+});
+
 it('renders public navigation and articles without authoring internals', function (): void {
     $collection = CreateKnowledgeBaseCollectionAction::run(new CreateKnowledgeBaseCollectionData(
         title: 'Getting Started',
         description: 'Install and configure the product.',
+    ));
+    $childCollection = CreateKnowledgeBaseCollectionAction::run(new CreateKnowledgeBaseCollectionData(
+        title: 'Operations',
+        parent: $collection,
     ));
 
     CreateKnowledgeBaseArticleAction::run(new CreateKnowledgeBaseArticleData(
@@ -38,6 +50,12 @@ it('renders public navigation and articles without authoring internals', functio
         title: 'Install Capell',
         body: '<h2>Install</h2><p>Run the installer.</p>',
         summary: 'Install safely.',
+        status: KnowledgeBaseArticleStatus::Published,
+    ));
+    CreateKnowledgeBaseArticleAction::run(new CreateKnowledgeBaseArticleData(
+        collection: $childCollection,
+        title: 'Cache Checklist',
+        body: '<p>Review cache tags.</p>',
         status: KnowledgeBaseArticleStatus::Published,
     ));
 
@@ -50,6 +68,7 @@ it('renders public navigation and articles without authoring internals', functio
 
     $indexResponse = $this->get('/docs');
     $articleResponse = $this->get('/docs/getting-started/install-capell');
+    $aiOutputResponse = $this->get('/docs/llms.txt');
 
     $indexResponse
         ->assertOk()
@@ -57,6 +76,8 @@ it('renders public navigation and articles without authoring internals', functio
         ->assertSee('Knowledge base')
         ->assertSee('Getting Started')
         ->assertSee('Install Capell')
+        ->assertSee('Operations')
+        ->assertSee('Cache Checklist')
         ->assertDontSee('Draft Article');
 
     $articleResponse
@@ -64,6 +85,7 @@ it('renders public navigation and articles without authoring internals', functio
         ->assertHeader('Cache-Control', 'max-age=300, public, stale-while-revalidate=300')
         ->assertSee('Install Capell')
         ->assertSee('Run the installer.', false)
+        ->assertDontSee('readers found this helpful')
         ->assertDontSee('Draft Article')
         ->assertDontSee('author_type', false)
         ->assertDontSee('author_id', false)
@@ -72,6 +94,18 @@ it('renders public navigation and articles without authoring internals', functio
         ->assertDontSee('capell-app/knowledge-base', false)
         ->assertDontSee('Filament', false)
         ->assertDontSee('signed', false);
+
+    $aiOutputResponse
+        ->assertOk()
+        ->assertHeader('Content-Type', 'text/plain; charset=UTF-8')
+        ->assertSee('# Knowledge base', false)
+        ->assertSee('## Install Capell', false)
+        ->assertSee('- URL: /docs/getting-started/install-capell', false)
+        ->assertSee('Run the installer.', false)
+        ->assertDontSee('Draft Article')
+        ->assertDontSee('author_type', false)
+        ->assertDontSee('field_path', false)
+        ->assertDontSee('Filament', false);
 });
 
 it('records public article feedback without exposing raw visitor identifiers', function (): void {

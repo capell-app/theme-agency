@@ -61,6 +61,7 @@ This package makes its Composer dependencies visible because they are part of th
 | Filament  | `packages/password-policy/src/Filament`  | Admin resources, pages, widgets, and settings UI.                   |
 | HTTP      | `packages/password-policy/src/Http`      | Controllers, middleware, and request handling.                      |
 | Providers | `packages/password-policy/src/Providers` | Registration, extension hooks, routes, migrations, and resources.   |
+| Rules     | `packages/password-policy/src/Rules`     | Reusable host-auth validation rules for registration and reset flows. |
 | Resources | `packages/password-policy/resources`     | Views, translations, assets, and package resources.                 |
 | Config    | `packages/password-policy/config`        | Package configuration and publishable config.                       |
 | Database  | `packages/password-policy/database`      | Migrations, seeders, and settings migrations.                       |
@@ -93,11 +94,13 @@ This package makes its Composer dependencies visible because they are part of th
 
 - [docs index](docs/README.md)
 - [overview.md](docs/overview.md)
+- [fortify.md](docs/fortify.md)
 - [screenshots.json](docs/screenshots.json)
 - [credits-and-acknowledgements.md](docs/credits-and-acknowledgements.md)
 
-The three required marketplace captures are committed under `docs/screenshots/`
-and listed in `capell.json` with the extension card.
+The required marketplace captures are declared in `docs/screenshots.json`, and
+`capell.json` promotes the extension card plus real Capell runner captures for
+the settings page, forced-change form, and Users-table policy columns.
 
 ## Testing
 

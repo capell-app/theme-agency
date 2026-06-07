@@ -6,6 +6,7 @@ use Capell\Deployments\Actions\PrepareComposerRequirementCommitAction;
 use Capell\Deployments\Actions\PublishComposerRequirementAction;
 use Capell\Deployments\Contracts\PublishesComposerChanges;
 use Capell\Deployments\Data\ComposerRequirementData;
+use Capell\Deployments\Data\PullRequestData;
 use Capell\Deployments\Data\RepoFile;
 use Capell\Deployments\Enums\InstallPolicy;
 use Capell\Deployments\Models\DeploymentConnection;
@@ -60,6 +61,29 @@ it('publishes composer requirements directly when the connection uses direct com
         ->and($provider->commits[0]['message'])->toBe('Add extension capell/direct-extension');
 });
 
+it('dry runs direct composer requirement publishes without committing to the default branch', function (): void {
+    $provider = new FakeComposerPublisher;
+    app()->instance(GitHubProvider::class, $provider);
+    $connection = DeploymentConnection::factory()->github()->create([
+        'install_policy' => InstallPolicy::DirectCommit,
+        'default_branch' => '4.x',
+    ]);
+
+    $result = PublishComposerRequirementAction::run(
+        new ComposerRequirementData(
+            composerName: 'capell/direct-extension',
+            versionConstraint: '^2.0',
+        ),
+        $connection,
+        dryRun: true,
+    );
+
+    expect($result->dryRun)->toBeTrue()
+        ->and($result->commitSha)->toBeNull()
+        ->and($result->pullRequestUrl)->toBeNull()
+        ->and($provider->commits)->toBeEmpty();
+});
+
 it('publishes composer requirements through pull requests and enables automerge when configured', function (): void {
     $provider = new FakeComposerPublisher;
     app()->instance(GitHubProvider::class, $provider);
@@ -83,8 +107,42 @@ it('publishes composer requirements through pull requests and enables automerge 
         ->and($provider->branches)->toHaveCount(1)
         ->and($provider->branches[0]['from'])->toBe('branch-commit-sha')
         ->and($provider->commits)->toHaveCount(1)
-        ->and($provider->commits[0]['branch'])->toStartWith('capell/add-extension-pr-extension-')
+        ->and($provider->commits[0]['branch'])->toBe('capell/add-extension-pr-extension')
         ->and($provider->autoMergedPullRequestIds)->toBe([123]);
+});
+
+it('reuses an open composer requirement pull request for the same package branch', function (): void {
+    $provider = new FakeComposerPublisher;
+    $provider->existingPullRequest = new PullRequestData(
+        id: 456,
+        url: 'https://github.test/pull/456',
+        state: 'open',
+        headBranch: 'capell/add-extension-pr-extension',
+        baseBranch: 'main',
+        headSha: 'existing-sha',
+        merged: false,
+    );
+
+    app()->instance(GitHubProvider::class, $provider);
+    $connection = DeploymentConnection::factory()->github()->create([
+        'install_policy' => InstallPolicy::PullRequestAutoMerge,
+    ]);
+
+    $result = PublishComposerRequirementAction::run(
+        new ComposerRequirementData(
+            composerName: 'capell/pr-extension',
+            versionConstraint: '^3.0',
+            label: 'PR Extension',
+        ),
+        $connection,
+    );
+
+    expect($result->pullRequestUrl)->toBe('https://github.test/pull/456')
+        ->and($result->pullRequestId)->toBe(456)
+        ->and($result->branchName)->toBe('capell/add-extension-pr-extension')
+        ->and($provider->branches)->toBeEmpty()
+        ->and($provider->commits)->toBeEmpty()
+        ->and($provider->autoMergedPullRequestIds)->toBeEmpty();
 });
 
 it('bound composer publisher fails loudly when multiple active connections exist', function (): void {

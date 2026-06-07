@@ -7,6 +7,7 @@ namespace Capell\FrontendAuthoring\Support;
 use Capell\Core\Models\PageUrl;
 use Capell\Core\Models\Translation;
 use Capell\FrontendAuthoring\Data\EditableRegionPayloadData;
+use Capell\FrontendAuthoring\Enums\EditableRegionInputType;
 
 final class EditableRegionRegistry
 {
@@ -30,7 +31,7 @@ final class EditableRegionRegistry
                 recordKey: (int) $translation->getKey(),
                 field: 'title',
                 label: __('capell-frontend-authoring::authoring.page_title'),
-                type: 'text',
+                type: EditableRegionInputType::Text,
                 selector: config('capell-frontend-authoring.selectors.page_title', '#main h1:first-of-type'),
                 currentUrl: $currentUrl,
                 pageUrlId: (int) $pageUrl->getKey(),
@@ -43,7 +44,7 @@ final class EditableRegionRegistry
                 recordKey: (int) $translation->getKey(),
                 field: 'meta.description',
                 label: __('capell-frontend-authoring::authoring.meta_description'),
-                type: 'textarea',
+                type: EditableRegionInputType::Textarea,
                 selector: config('capell-frontend-authoring.selectors.page_title', '#main h1:first-of-type'),
                 currentUrl: $currentUrl,
                 pageUrlId: (int) $pageUrl->getKey(),
@@ -56,7 +57,7 @@ final class EditableRegionRegistry
                 recordKey: (int) $translation->getKey(),
                 field: 'content',
                 label: __('capell-frontend-authoring::authoring.page_content'),
-                type: 'html',
+                type: EditableRegionInputType::Html,
                 selector: config('capell-frontend-authoring.selectors.page_content', '#main .content-component:first-of-type'),
                 currentUrl: $currentUrl,
                 pageUrlId: (int) $pageUrl->getKey(),

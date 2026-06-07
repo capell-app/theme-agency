@@ -22,14 +22,14 @@
 @endphp
 
 <section
-    class="theme-hero border-b border-slate-200/80 bg-[#f7f8f6] dark:border-white/10 dark:bg-slate-950"
+    class="theme-hero corporate-surface border-b border-slate-200/80 dark:border-white/10"
 >
     <div
         class="mx-auto grid max-w-7xl items-end gap-5 px-4 py-6 sm:px-6 sm:py-10 md:py-14 lg:grid-cols-[0.88fr_1.12fr] lg:gap-10 lg:py-18"
     >
         <div class="space-y-4 sm:space-y-5">
             <div
-                class="flex flex-wrap items-center gap-2 text-[0.68rem] font-semibold tracking-[0.16em] text-slate-500 uppercase dark:text-slate-400"
+                class="flex flex-wrap items-center gap-2 text-[0.68rem] font-semibold tracking-[0.12em] text-slate-500 uppercase dark:text-slate-400"
             >
                 <span
                     class="text-[var(--theme-primary)] dark:text-[var(--theme-accent)]"
@@ -44,7 +44,7 @@
             </div>
 
             <h1
-                class="max-w-4xl text-4xl leading-none font-semibold text-slate-950 sm:text-5xl lg:text-7xl dark:text-white"
+                class="max-w-4xl text-4xl leading-tight font-semibold text-slate-950 sm:text-5xl lg:text-6xl dark:text-white"
             >
                 {{ $section->heading }}
             </h1>
@@ -80,7 +80,7 @@
                     @if ($statLabel !== '' && $statValue !== '')
                         <div>
                             <dt
-                                class="font-semibold tracking-[0.12em] text-slate-400 uppercase dark:text-slate-500"
+                                class="font-semibold tracking-[0.08em] text-slate-400 uppercase dark:text-slate-500"
                             >
                                 {{ $statLabel }}
                             </dt>
@@ -96,14 +96,18 @@
         </div>
 
         <figure class="relative">
-            <div
-                class="border border-slate-200 bg-white p-3 shadow-xl shadow-slate-950/5 dark:border-white/10 dark:bg-white/[0.04]"
-            >
+            <div class="corporate-card-elevated p-3 dark:bg-white/[0.04]">
                 @if ($section->mediaUrl)
                     <img
                         src="{{ $section->mediaUrl }}"
                         alt="{{ $section->mediaAlt ?? '' }}"
-                        class="aspect-[16/10] max-h-[18rem] w-full rounded-[0.35rem] object-cover sm:aspect-[5/4] sm:max-h-none"
+                        width="1200"
+                        height="900"
+                        loading="eager"
+                        decoding="async"
+                        fetchpriority="high"
+                        sizes="(min-width: 1024px) 52vw, 100vw"
+                        class="aspect-[16/10] max-h-[18rem] w-full rounded-[var(--corporate-card-radius)] object-cover sm:aspect-[5/4] sm:max-h-none"
                     />
                 @else
                     <div

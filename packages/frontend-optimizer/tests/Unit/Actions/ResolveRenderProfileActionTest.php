@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Capell\FrontendOptimizer\Actions\ResolveRenderProfileAction;
+use Capell\FrontendOptimizer\Data\FrontendResourceHintData;
 use Capell\FrontendOptimizer\Enums\AssetLoadingStrategy;
 use Capell\FrontendOptimizer\Enums\OptimizationScope;
 use Capell\FrontendOptimizer\Support\FrontendAssetSet;
@@ -72,4 +73,37 @@ it('changes the render profile hash when critical css fold settings change', fun
 
     expect($first->hash)->not()->toBe($second->hash)
         ->and($first->signature['critical_css'])->toHaveKey('viewports');
+});
+
+it('includes resource hints in the render profile signature', function (): void {
+    $first = ResolveRenderProfileAction::run(
+        scope: OptimizationScope::Layout,
+        context: ['layout' => 'landing'],
+        assetSets: [FrontendAssetSet::make()->css('hero', 'hero.css')],
+        resourceHints: [
+            new FrontendResourceHintData(
+                rel: 'preload',
+                href: '/fonts/inter.woff2',
+                as: 'font',
+                type: 'font/woff2',
+                crossorigin: 'anonymous',
+            ),
+        ],
+    );
+
+    $second = ResolveRenderProfileAction::run(
+        scope: OptimizationScope::Layout,
+        context: ['layout' => 'landing'],
+        assetSets: [FrontendAssetSet::make()->css('hero', 'hero.css')],
+    );
+
+    expect($first->hash)->not()->toBe($second->hash)
+        ->and($first->signature['resource_hints'])->toBe([[
+            'as' => 'font',
+            'crossorigin' => 'anonymous',
+            'href' => '/fonts/inter.woff2',
+            'rel' => 'preload',
+            'type' => 'font/woff2',
+        ]])
+        ->and($first->manifest()['resource_hints'])->toHaveCount(1);
 });

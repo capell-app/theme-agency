@@ -1,0 +1,65 @@
+{
+    "package": "experiments",
+    "composerName": "capell-app/experiments",
+    "generatedFor": "deployment-screenshot-runner",
+    "requiresInstalledPackage": true,
+    "outputDirectory": "packages/experiments/docs/screenshots",
+    "entries": [
+        {
+            "id": "experiments-index",
+            "title": "Experiments admin index.",
+            "package": "experiments",
+            "surface": "admin",
+            "targetType": "admin-resource",
+            "target": "ExperimentResource",
+            "url": "/experiments",
+            "waitFor": "table",
+            "required": true,
+            "notes": "Captured from the seeded Capell screenshot runner app after installing capell-app/experiments and migrating the package tables.",
+            "useCase": "A growth operator reviews active and scheduled experiments from the Capell admin.",
+            "screenshotPath": "packages/experiments/docs/screenshots/experiments-index.png"
+        },
+        {
+            "id": "experiment-variants-index",
+            "title": "Experiment variants admin index.",
+            "package": "experiments",
+            "surface": "admin",
+            "targetType": "admin-resource",
+            "target": "ExperimentVariantResource",
+            "url": "/experiment-variants",
+            "waitFor": "table",
+            "required": true,
+            "notes": "Captured from the seeded Capell screenshot runner app with control and challenger variants plus allocation weights.",
+            "useCase": "A growth operator compares variant weights and control state before launching a test.",
+            "screenshotPath": "packages/experiments/docs/screenshots/experiment-variants-index.png"
+        },
+        {
+            "id": "experiment-goals-index",
+            "title": "Experiment goals admin index.",
+            "package": "experiments",
+            "surface": "admin",
+            "targetType": "admin-resource",
+            "target": "ExperimentGoalResource",
+            "url": "/experiment-goals",
+            "waitFor": "table",
+            "required": true,
+            "notes": "Captured from the seeded Capell screenshot runner app with a primary demo-request conversion goal.",
+            "useCase": "A growth operator verifies the primary conversion goals used for winner reporting.",
+            "screenshotPath": "packages/experiments/docs/screenshots/experiment-goals-index.png"
+        },
+        {
+            "id": "experiment-audience-rules-index",
+            "title": "Experiment audience rules admin index.",
+            "package": "experiments",
+            "surface": "admin",
+            "targetType": "admin-resource",
+            "target": "ExperimentAudienceRuleResource",
+            "url": "/experiment-audience-rules",
+            "waitFor": "table",
+            "required": true,
+            "notes": "Captured from the seeded Capell screenshot runner app with a path-based audience rule.",
+            "useCase": "A growth operator confirms which visitors are eligible for an experiment.",
+            "screenshotPath": "packages/experiments/docs/screenshots/experiment-audience-rules-index.png"
+        }
+    ]
+}

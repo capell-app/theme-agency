@@ -361,6 +361,37 @@
                                         {{ $supportRequest['submitted_at'] }}
                                     @endif
                                 </p>
+                                <p>{{ $supportRequest['message'] }}</p>
+                                @if ($supportRequest['replies'] !== [])
+                                    <div class="stack">
+                                        @foreach ($supportRequest['replies'] as $reply)
+                                            <p class="muted">
+                                                {{ __('capell-customer-portal::generic.frontend.support_reply_meta', [
+                                                    'sender' => __('capell-customer-portal::generic.frontend.support_sender_' . $reply['sender_type']),
+                                                    'date' => $reply['submitted_at'] ?? __('capell-customer-portal::generic.frontend.support_reply_recent'),
+                                                ]) }}
+                                            </p>
+                                            <p>{{ $reply['message'] }}</p>
+                                        @endforeach
+                                    </div>
+                                @endif
+                                <form
+                                    method="post"
+                                    action="{{ route('capell-customer-portal.support.replies.store', ['supportRequest' => $supportRequest['id']]) }}"
+                                >
+                                    @csrf
+                                    <label>
+                                        {{ __('capell-customer-portal::generic.frontend.support_reply') }}
+                                        <textarea
+                                            name="message"
+                                            required
+                                            maxlength="5000"
+                                        ></textarea>
+                                    </label>
+                                    <button type="submit">
+                                        {{ __('capell-customer-portal::generic.frontend.submit_support_reply') }}
+                                    </button>
+                                </form>
                             </article>
                         @endforeach
                     </div>

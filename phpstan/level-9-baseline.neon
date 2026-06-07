@@ -12385,12 +12385,6 @@ parameters:
 			path: ../packages/insights/src/Actions/RecordInsightsEventAction.php
 
 		-
-			rawMessage: Cannot cast mixed to int.
-			identifier: cast.int
-			count: 1
-			path: ../packages/insights/src/Actions/RecordInsightsEventsAction.php
-
-		-
 			rawMessage: 'Method Capell\Insights\Actions\RecordPageViewAction::handle() should return Capell\Insights\Models\InsightsEvent|null but returns mixed.'
 			identifier: return.type
 			count: 1

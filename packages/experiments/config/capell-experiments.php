@@ -11,4 +11,6 @@ return [
         'goal_events' => 'experiment_goal_events',
         'audience_rules' => 'experiment_audience_rules',
     ],
+
+    'resolution_candidate_limit' => 25,
 ];

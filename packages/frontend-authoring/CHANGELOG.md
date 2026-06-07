@@ -4,6 +4,12 @@ All notable changes to `capell-app/frontend-authoring` will be documented in thi
 
 ## Unreleased
 
+- Added a bundled Spanish `authoring.php` locale and key-parity coverage against English strings.
+- Added optional per-region permission requirements so package-supplied editable regions can be filtered by granular Gate abilities.
+- Added a built-in `media` editor surface and registered it beside the existing field surface, with manifest/controller coverage for package-supplied media regions.
+- Documented and covered the admin-only content HTML policy: frontend authoring stores trusted admin `content` HTML exactly as submitted.
+- Replaced editable-region field/type/surface/status string comparisons with backed enums while preserving the public payload values used by signed editor URLs.
+- Extracted beacon response assembly into `BuildBeaconResponseAction` so the controller delegates admin manifest, page resolution, origin checks, and script rendering to an Action.
 - Added translated Diagnostics messages and focused failure-mode coverage for the real `FrontendAuthoringHealthCheck` probes.
 - Prepared package metadata and documentation for ongoing Capell 4.x package work.
 

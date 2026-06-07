@@ -27,13 +27,14 @@ final class HttpWebhookPublicActionAdapter implements PublicActionDestinationAda
     public function dispatch(
         PublicActionDestination $destination,
         PublicActionSubmission $submission,
+        ?PublicActionDispatchAttempt $attempt = null,
     ): PublicActionDispatchResultData {
         $body = $this->body($destination, $submission);
         $encodedBody = $this->encodedBody($body);
         $requestHash = hash('sha256', $encodedBody);
         $attemptNumber = $this->nextAttemptNumber($destination, $submission);
 
-        $attempt = PublicActionDispatchAttempt::query()->create([
+        $attempt ??= PublicActionDispatchAttempt::query()->create([
             'public_action_submission_id' => $submission->getKey(),
             'public_action_destination_id' => $destination->getKey(),
             'adapter' => $destination->adapter,
@@ -45,6 +46,17 @@ final class HttpWebhookPublicActionAdapter implements PublicActionDestinationAda
             'error_message' => null,
             'dispatched_at' => now(),
         ]);
+
+        $attempt->forceFill([
+            'adapter' => $destination->adapter,
+            'status' => PublicActionDispatchStatus::Pending,
+            'attempt' => $attempt->attempt > 0 ? $attempt->attempt : $attemptNumber,
+            'request_hash' => $requestHash,
+            'response_status' => null,
+            'response_summary' => null,
+            'error_message' => null,
+            'dispatched_at' => now(),
+        ])->save();
 
         try {
             $endpoint = $this->endpoint($destination);

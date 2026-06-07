@@ -67,8 +67,10 @@
             "type": "route",
             "class": "Capell\\Newsletter\\Manifest\\NewsletterFrontendRoutesContribution",
             "routes": [
+                "capell-newsletter.subscribe",
                 "capell-newsletter.confirm",
                 "capell-newsletter.unsubscribe",
+                "capell-newsletter.unsubscribe.one-click",
                 "capell-newsletter.preferences.show",
                 "capell-newsletter.preferences.update",
                 "capell-newsletter.provider-webhook"
@@ -128,7 +130,9 @@
     "actions": {
         "applyNewsletterTags": "Capell\\Newsletter\\Actions\\ApplyNewsletterTagsAction",
         "buildDueNewsletterSends": "Capell\\Newsletter\\Actions\\BuildDueNewsletterSendsAction",
+        "buildNewsletterSendHandoffPayload": "Capell\\Newsletter\\Actions\\BuildNewsletterSendHandoffPayloadAction",
         "confirmSubscriber": "Capell\\Newsletter\\Actions\\ConfirmSubscriberAction",
+        "buildListUnsubscribeHeaders": "Capell\\Newsletter\\Actions\\BuildListUnsubscribeHeadersAction",
         "createPreferenceCenterToken": "Capell\\Newsletter\\Actions\\CreatePreferenceCenterTokenAction",
         "createUnsubscribeToken": "Capell\\Newsletter\\Actions\\CreateUnsubscribeTokenAction",
         "evaluateNewsletterSegment": "Capell\\Newsletter\\Actions\\EvaluateNewsletterSegmentAction",
@@ -143,6 +147,7 @@
         "resolvePreferenceCenter": "Capell\\Newsletter\\Actions\\ResolvePreferenceCenterAction",
         "resolveUtmAttribution": "Capell\\Newsletter\\Actions\\ResolveUtmAttributionAction",
         "scheduleNewsletterSend": "Capell\\Newsletter\\Actions\\ScheduleNewsletterSendAction",
+        "subscribeFromPublicRequest": "Capell\\Newsletter\\Actions\\SubscribeFromPublicRequestAction",
         "subscribeFromFormSubmission": "Capell\\Newsletter\\Actions\\SubscribeFromFormSubmissionAction",
         "syncNewsletterSubscriberContact": "Capell\\Newsletter\\Actions\\SyncNewsletterSubscriberContactAction",
         "syncSubscriberToProvider": "Capell\\Newsletter\\Actions\\SyncSubscriberToProviderAction",
@@ -159,10 +164,13 @@
         "newsletter-segments",
         "newsletter-preference-center",
         "newsletter-campaign-sends",
+        "newsletter-send-handoff",
         "newsletter-send-lifecycle",
         "newsletter-utm-attribution",
         "newsletter-unsubscribe-routes",
         "newsletter-automation-hooks",
+        "newsletter-global-suppression",
+        "newsletter-sync-exhaustion",
         "newsletter-contacts-source-adapter",
         "newsletter-customer-portal-preferences-feed",
         "newsletter-public-preference-center"

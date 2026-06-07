@@ -138,7 +138,23 @@
     },
     "marketplace": {
         "summary": "Automation Studio connects Capell package events to rule-based native actions, Public Actions, and agent capability workflows.",
-        "screenshots": [],
+        "screenshots": [
+            {
+                "path": "docs/screenshots/automation-rules-index.png",
+                "alt": "Automation Studio rules index showing a seeded lead nurture workflow.",
+                "caption": "Review active workflow rules, trigger types, status, and execution counts from Capell admin."
+            },
+            {
+                "path": "docs/screenshots/automation-rule-edit.png",
+                "alt": "Automation Studio rule edit screen with conditions, actions, and settings.",
+                "caption": "Edit trigger conditions and multi-step native actions for a seeded automation workflow."
+            },
+            {
+                "path": "docs/screenshots/automation-runs-index.png",
+                "alt": "Automation Studio runs index showing a successful send email action.",
+                "caption": "Audit workflow execution history, action status, messages, and timing in Capell admin."
+            }
+        ],
         "categories": ["admin", "automation", "console"]
     },
     "contributionTraceability": {

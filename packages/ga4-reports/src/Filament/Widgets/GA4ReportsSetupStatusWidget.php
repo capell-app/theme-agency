@@ -12,6 +12,7 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Filament\Widgets\TableWidget as BaseWidget;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
 use Override;
 
 final class GA4ReportsSetupStatusWidget extends BaseWidget implements CapellWidgetContract
@@ -53,7 +54,7 @@ final class GA4ReportsSetupStatusWidget extends BaseWidget implements CapellWidg
         $config = ResolveGA4ReportsConfigAction::run();
         $latestRun = GA4ReportsSyncRun::query()->latest('started_at')->first();
 
-        return collect([
+        $records = collect([
             [
                 'id' => 'configured',
                 'label' => (string) __('capell-ga4-reports::widgets.configured'),
@@ -79,5 +80,20 @@ final class GA4ReportsSetupStatusWidget extends BaseWidget implements CapellWidg
                 'value' => $latestRun instanceof GA4ReportsSyncRun ? $latestRun->status : (string) __('capell-ga4-reports::widgets.not_available'),
             ],
         ]);
+
+        if (
+            $latestRun instanceof GA4ReportsSyncRun
+            && $latestRun->status === 'failed'
+            && is_string($latestRun->error_message)
+            && trim($latestRun->error_message) !== ''
+        ) {
+            $records->push([
+                'id' => 'last-error',
+                'label' => (string) __('capell-ga4-reports::widgets.last_error'),
+                'value' => Str::limit(trim($latestRun->error_message), 180),
+            ]);
+        }
+
+        return $records;
     }
 }

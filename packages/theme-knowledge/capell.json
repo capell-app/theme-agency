@@ -13,9 +13,14 @@
         "bundle": "themes"
     },
     "namespace": "Capell\\ThemeStudio\\Knowledge",
-    "surfaces": ["frontend"],
+    "surfaces": [
+        "frontend"
+    ],
     "dependencies": {
-        "requires": ["capell-app/core", "capell-app/foundation-theme"],
+        "requires": [
+            "capell-app/core",
+            "capell-app/foundation-theme"
+        ],
         "supports": [
             "capell-app/layout-builder",
             "capell-app/frontend-authoring",
@@ -56,19 +61,31 @@
         "install": null,
         "setup": null,
         "demo": "capell:theme-knowledge-demo",
-        "demoParams": ["url", "languages", "sites"],
+        "demoParams": [
+            "url",
+            "languages",
+            "sites"
+        ],
         "doctor": null
     },
     "settings": [],
     "permissions": [],
-    "capabilities": ["theme-knowledge", "theme-knowledge-frontend"],
+    "capabilities": [
+        "theme-knowledge",
+        "theme-knowledge-frontend"
+    ],
     "performance": {
         "frontendRenderBudgetMs": 20,
         "adminQueryBudget": 0,
-        "cacheTags": ["theme-knowledge"],
+        "cacheTags": [
+            "theme-knowledge"
+        ],
         "cacheSafety": {
             "cacheable": false,
-            "variesBy": ["site", "locale"],
+            "variesBy": [
+                "site",
+                "locale"
+            ],
             "sensitiveOutput": false,
             "invalidationSources": [],
             "queueInvalidation": true
@@ -85,25 +102,28 @@
     ],
     "marketplace": {
         "summary": "A premium knowledge-base and documentation theme for Capell — sidebar-navigated articles, in-page table of contents, prominent search, and readable long-form layouts out of the box.",
-        "description": "Theme Knowledge turns a Capell site into a polished documentation and help centre. It pairs a category sidebar, sticky table of contents, and breadcrumb trails with a prominent search experience and readable long-form typography, so visitors find answers fast. Resource libraries, author bios, topic hubs, and newsletter capture round out a full knowledge-marketing surface, with optional Blog, Search, and Newsletter integrations lighting up automatically when those packages are installed. Built on the Capell foundation theme with a configurable colour palette and accessible focus states. (Note: code-block styling remains planned follow-up work before the full technical-docs promise is complete.)",
+        "description": "Theme Knowledge turns a Capell site into a polished documentation and help centre. It pairs a category sidebar, sticky table of contents, code-friendly prose, and breadcrumb trails with a prominent search experience and readable long-form typography, so visitors find answers fast. Resource libraries, author bios, topic hubs, and newsletter capture round out a full knowledge-marketing surface, with optional Blog, Search, and Newsletter integrations lighting up automatically when those packages are installed. Built on the Capell foundation theme with configurable colour tokens, dark-mode support, and accessible focus states.",
         "screenshots": [
             {
                 "path": "docs/assets/marketplace/extension-card.jpg",
-                "alt": "Theme Knowledge extension preview image",
-                "caption": "Theme Knowledge extension preview"
+                "alt": "Theme Knowledge marketplace card.",
+                "caption": "Theme Knowledge theme card."
             },
             {
-                "path": "docs/assets/marketplace/hero-desktop.jpg",
-                "alt": "Theme Knowledge Hero Desktop image",
-                "caption": "Theme Knowledge Hero Desktop"
+                "path": "docs/screenshots/knowledge-homepage-layout.png",
+                "alt": "Theme Knowledge homepage with dark documentation shell, search console, and expertise-led hero content.",
+                "caption": "Route-backed Knowledge homepage rendered through the package theme shell."
             },
             {
-                "path": "docs/assets/marketplace/hero-mobile.jpg",
-                "alt": "Theme Knowledge Hero Mobile image",
-                "caption": "Theme Knowledge Hero Mobile"
+                "path": "docs/screenshots/knowledge-homepage-layout-dark.png",
+                "alt": "Theme Knowledge homepage rendered through the package theme shell in dark mode.",
+                "caption": "Route-backed Knowledge homepage in dark mode."
             }
         ],
-        "categories": ["frontend", "themes"]
+        "categories": [
+            "frontend",
+            "themes"
+        ]
     },
     "extends": "capell-app/foundation-theme",
     "themeKey": "knowledge",

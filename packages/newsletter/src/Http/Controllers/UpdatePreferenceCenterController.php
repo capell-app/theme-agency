@@ -15,15 +15,16 @@ final class UpdatePreferenceCenterController
     {
         $validated = $request->validate([
             'segments' => ['array'],
-            'segments.*' => ['integer'],
+            'segments.*' => ['string'],
         ]);
 
-        $segmentIds = collect($validated['segments'] ?? [])
-            ->map(static fn (mixed $segmentId): int => (int) $segmentId)
+        $segmentHandles = collect($validated['segments'] ?? [])
+            ->filter(static fn (mixed $segmentHandle): bool => is_string($segmentHandle) && $segmentHandle !== '')
+            ->map(static fn (string $segmentHandle): string => $segmentHandle)
             ->values()
             ->all();
 
-        $preferences = UpdatePreferenceCenterAction::run($token, new PreferenceCenterUpdateData($segmentIds));
+        $preferences = UpdatePreferenceCenterAction::run($token, new PreferenceCenterUpdateData($segmentHandles));
 
         abort_if($preferences === null, 404, __('capell-newsletter::messages.invalid_token'));
 

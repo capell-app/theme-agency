@@ -19,22 +19,23 @@ final class ThemeEducationHealthCheck implements ChecksExtensionHealth
      */
     private const array REQUIRED_VIEW_NAMES = [
         'capell-theme-education::page',
-        'capell-theme-education::sections.navigation',
         'capell-theme-education::sections.hero',
         'capell-theme-education::sections.features',
         'capell-theme-education::sections.proof',
         'capell-theme-education::sections.content-listing',
         'capell-theme-education::sections.course-catalog',
+        'capell-theme-education::sections.course-detail',
         'capell-theme-education::sections.pathway-comparison',
         'capell-theme-education::sections.outcomes',
         'capell-theme-education::sections.instructors',
+        'capell-theme-education::sections.faculty-directory',
         'capell-theme-education::sections.events',
         'capell-theme-education::sections.admissions-checklist',
+        'capell-theme-education::sections.admissions-funnel',
         'capell-theme-education::sections.enrolment-cta',
         'capell-theme-education::sections.resources',
         'capell-theme-education::sections.faq',
         'capell-theme-education::sections.cta',
-        'capell-theme-education::sections.footer',
     ];
 
     public static function compatibleCapellApiVersion(): string

@@ -24,6 +24,9 @@ Login Audit wraps `rappasoft/laravel-authentication-log`, stores Capell-owned au
 | `login-audit.listeners`                          | Listener classes for those events.           |
 | `login-audit.notifications.new-device.enabled`   | Sends new-device notifications.              |
 | `login-audit.notifications.failed-login.enabled` | Sends failed-login notifications.            |
+| `login-audit.admin_alerts.new_devices`           | Sends Capell admin alerts for first-seen devices. |
+| `login-audit.admin_alerts.failed_logins`         | Sends Capell admin alerts for failed logins when enabled. |
+| `login-audit.admin_alerts.suspicious_logins`     | Sends Capell admin alerts for suspicious login rows. |
 | `login-audit.purge`                              | Retention window used by cleanup.            |
 | `login-audit.behind_cdn`                         | CDN IP header config, or `false`.            |
 

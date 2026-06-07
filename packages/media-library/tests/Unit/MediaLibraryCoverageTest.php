@@ -462,12 +462,13 @@ it('declares implemented media library contributions actions and feature capabil
         ->and($capabilities)->toContain(
             'media-library-focal-points',
             'media-library-missing-alt-signal',
-            'media-library-responsive-variants',
+            'media-library-responsive-metadata',
             'media-library-rights-metadata',
             'media-library-duplicate-detection',
             'media-library-usage-reports',
             'media-library-orphan-cleanup',
         )
+        ->and($capabilities)->not->toContain('media-library-responsive-variants')
         ->and($deferredContributions)->not->toContain('admin-page', 'model');
 });
 
@@ -507,15 +508,9 @@ it('keeps media library docs and screenshots aligned with committed package asse
     );
     sort($shippedScreenshotPaths);
 
-    $marketplaceGalleryPaths = array_filter(
-        $marketplaceScreenshotPaths,
-        static fn (string $path): bool => str_starts_with($path, 'docs/screenshots/'),
-    );
-    sort($marketplaceGalleryPaths);
-
     expect($marketplaceScreenshotPaths[0])->toBe('docs/assets/marketplace/extension-card.jpg')
-        ->and($marketplaceScreenshotPaths)->toHaveCount(9)
-        ->and($marketplaceGalleryPaths)->toBe($shippedScreenshotPaths);
+        ->and($marketplaceScreenshotPaths)->toHaveCount(1)
+        ->and($shippedScreenshotPaths)->not->toBeEmpty();
 
     $contractTargets = [];
 
@@ -573,7 +568,7 @@ it('keeps media library docs and screenshots aligned with committed package asse
 
     expect($readme)->toContain('does not generate responsive conversions')
         ->and($readme)->toContain('The capture contract is [docs/screenshots.json](docs/screenshots.json)')
-        ->and($overview)->toContain('The manifest lists the marketplace card plus the shipped light and dark screenshot assets.')
+        ->and($overview)->toContain('The committed screenshot captures remain runner evidence until they show populated Capell media workflows.')
         ->and($overview)->toContain('Do not describe this package as generating responsive variants');
 });
 

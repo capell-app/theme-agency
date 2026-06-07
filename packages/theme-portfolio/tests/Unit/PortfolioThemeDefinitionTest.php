@@ -13,6 +13,8 @@ use Capell\Core\ThemeStudio\Data\ProofSectionData;
 use Capell\Core\ThemeStudio\Theme\ThemeRegistry;
 use Capell\Tests\Packages\PackagesTestCase;
 use Capell\ThemeStudio\Portfolio\PortfolioThemeServiceProvider;
+use Illuminate\Database\Events\QueryExecuted;
+use Illuminate\Support\Facades\DB;
 
 uses(PackagesTestCase::class);
 
@@ -24,8 +26,13 @@ it('defines the Portfolio theme contract', function (): void {
         ->and($definition->extends)->toBe('default')
         ->and($definition->includedSections)->toContain('hero')
         ->and($definition->includedSections)->toContain('features')
+        ->and($definition->includedSections)->toContain('gallery-lightbox')
+        ->and($definition->includedSections)->toContain('resume-cv')
+        ->and($definition->includedSections)->toContain('client-logos')
         ->and($definition->includedSections)->toContain('footer')
-        ->and($definition->presets)->toHaveCount(1);
+        ->and($definition->presets)->toHaveCount(2)
+        ->and($definition->presets[1]->key)->toBe('portfolio-dark')
+        ->and($definition->presets[1]->values)->toHaveKey('colorScheme', 'dark');
 });
 
 it('renders standard feature data through the Portfolio feature view', function (): void {
@@ -72,6 +79,8 @@ it('renders hydrated hero data through the Portfolio hero view', function (): vo
     $html = $renderer->render(HeroSectionData::from([
         'heading' => 'Editorial portfolio system',
         'summary' => 'Hydrated summary copy should shape the hero.',
+        'mediaUrl' => '/images/portfolio-hero.jpg',
+        'mediaAlt' => 'Portfolio case study wall',
         'actions' => [
             ['label' => 'Open case study', 'url' => '#case'],
             ['label' => 'Request deck', 'url' => '#deck'],
@@ -82,6 +91,13 @@ it('renders hydrated hero data through the Portfolio hero view', function (): vo
         ->toContain('Portfolio signal')
         ->toContain('Editorial portfolio system')
         ->toContain('Hydrated summary copy should shape the hero.')
+        ->toContain('src="/images/portfolio-hero.jpg"')
+        ->toContain('alt="Portfolio case study wall"')
+        ->toContain('width="960"')
+        ->toContain('height="720"')
+        ->toContain('loading="eager"')
+        ->toContain('fetchpriority="high"')
+        ->toContain('sizes="(min-width: 1024px) 48vw, 100vw"')
         ->toContain('+42%')
         ->toContain('120+')
         ->toContain('6h')
@@ -90,7 +106,7 @@ it('renders hydrated hero data through the Portfolio hero view', function (): vo
         ->not->toContain('capell-app/theme-portfolio');
 });
 
-it('renders service and work-grid defaults from translations', function (): void {
+it('renders service and work-grid empty states from the shared placeholder strategy', function (): void {
     CapellCore::clearPackages();
     CapellCore::forcePackageInstalled(PortfolioThemeServiceProvider::$packageName);
 
@@ -114,30 +130,18 @@ it('renders service and work-grid defaults from translations', function (): void
     expect($servicesHtml)
         ->toContain('What we build')
         ->toContain('A modular services layer built for portfolio storytelling that converts attention into action.')
-        ->toContain('DISCOVERY')
-        ->toContain('Brand systems')
-        ->toContain('Identity-led positioning and messaging frameworks.')
-        ->toContain('DESIGN')
-        ->toContain('Conversion storytelling')
-        ->toContain('Long-form narratives with visual hierarchy for trust.')
-        ->toContain('LAUNCH')
-        ->toContain('Performance tune-up')
-        ->toContain('Rapid iteration on headlines, UI, and conversion points.')
+        ->toContain('Premium layout ready')
+        ->toContain('Add section content to populate this premium layout.')
+        ->not->toContain('Brand systems')
         ->not->toContain('capell-app/theme-portfolio');
 
     expect($workGridHtml)
         ->toContain('30+ Projects')
         ->toContain('12+ Industries')
         ->toContain('97% Retention')
-        ->toContain('Visual Projects')
-        ->toContain('Landing suite')
-        ->toContain('Editorial and campaign modules packaged for growth.')
-        ->toContain('Brand Systems')
-        ->toContain('Portfolio refresh')
-        ->toContain('Premium visual system with section-level storytelling.')
-        ->toContain('Conversion')
-        ->toContain('Case study platform')
-        ->toContain('High-performance cards with clear next-step actions.')
+        ->toContain('Premium layout ready')
+        ->toContain('Add section content to populate this premium layout.')
+        ->not->toContain('Landing suite')
         ->not->toContain('capell-app/theme-portfolio');
 });
 
@@ -332,6 +336,260 @@ it('renders newsletter chrome from translations and avoids inert forms', functio
         ->not->toContain('capell-app/theme-portfolio');
 });
 
+it('renders footer services testimonials speaking and newsletter sections with hydrated or empty data', function (): void {
+    CapellCore::clearPackages();
+    CapellCore::forcePackageInstalled(PortfolioThemeServiceProvider::$packageName);
+
+    $registry = new ThemeRegistry;
+    (new PortfolioThemeServiceProvider($this->app))->boot($registry);
+
+    $footerRenderer = $registry->sectionRenderer('portfolio', 'footer');
+    $servicesRenderer = $registry->sectionRenderer('portfolio', 'services');
+    $testimonialsRenderer = $registry->sectionRenderer('portfolio', 'testimonials');
+    $speakingRenderer = $registry->sectionRenderer('portfolio', 'speaking-media-kit');
+    $newsletterRenderer = $registry->sectionRenderer('portfolio', 'newsletter');
+
+    assert($footerRenderer instanceof SectionRenderer);
+    assert($servicesRenderer instanceof SectionRenderer);
+    assert($testimonialsRenderer instanceof SectionRenderer);
+    assert($speakingRenderer instanceof SectionRenderer);
+    assert($newsletterRenderer instanceof SectionRenderer);
+
+    $footerHtml = $footerRenderer->render(portfolioThemeSection('footer', [
+        'heading' => 'Studio footer',
+        'summary' => 'Footer copy stays public-safe.',
+    ]));
+
+    $servicesHtml = $servicesRenderer->render(portfolioThemeSection('services', [
+        'heading' => 'Services',
+        'items' => [
+            ['type' => 'Strategy', 'title' => 'Positioning sprint', 'summary' => 'Hydrated offer card.'],
+        ],
+    ]));
+
+    $testimonialsHtml = $testimonialsRenderer->render(portfolioThemeSection('testimonials', [
+        'heading' => 'Client proof',
+        'items' => [
+            ['quote' => 'Hydrated testimonial quote.', 'attribution' => 'Studio client'],
+        ],
+    ]));
+
+    $speakingHtml = $speakingRenderer->render(portfolioThemeSection('speaking-media-kit', [
+        'heading' => 'Media kit',
+        'items' => [
+            ['title' => 'Podcast profile', 'summary' => 'Hydrated media-kit card.'],
+        ],
+    ]));
+
+    $newsletterHtml = $newsletterRenderer->render(portfolioThemeSection('newsletter', [
+        'heading' => 'Creator notes',
+        'formAction' => '/newsletter/capture',
+    ]));
+
+    expect($footerHtml)
+        ->toContain('Studio footer')
+        ->toContain('Footer copy stays public-safe.')
+        ->not->toContain('capell-app/theme-portfolio');
+
+    expect($servicesHtml)
+        ->toContain('Positioning sprint')
+        ->toContain('Hydrated offer card.')
+        ->not->toContain('Premium layout ready')
+        ->not->toContain('capell-app/theme-portfolio');
+
+    expect($testimonialsHtml)
+        ->toContain('Client proof')
+        ->toContain('Hydrated testimonial quote.')
+        ->toContain('Studio client')
+        ->not->toContain('Premium layout ready')
+        ->not->toContain('capell-app/theme-portfolio');
+
+    expect($speakingHtml)
+        ->toContain('Media kit')
+        ->toContain('Podcast profile')
+        ->toContain('Hydrated media-kit card.')
+        ->not->toContain('Premium layout ready')
+        ->not->toContain('capell-app/theme-portfolio');
+
+    expect($newsletterHtml)
+        ->toContain('Creator notes')
+        ->toContain('action="/newsletter/capture"')
+        ->toContain('Subscribe')
+        ->not->toContain('action="#"')
+        ->not->toContain('capell-app/theme-portfolio');
+});
+
+it('renders gallery resume and client-logo sections with hydrated or empty data', function (): void {
+    CapellCore::clearPackages();
+    CapellCore::forcePackageInstalled(PortfolioThemeServiceProvider::$packageName);
+
+    $registry = new ThemeRegistry;
+    (new PortfolioThemeServiceProvider($this->app))->boot($registry);
+
+    $galleryRenderer = $registry->sectionRenderer('portfolio', 'gallery-lightbox');
+    $resumeRenderer = $registry->sectionRenderer('portfolio', 'resume-cv');
+    $logosRenderer = $registry->sectionRenderer('portfolio', 'client-logos');
+
+    assert($galleryRenderer instanceof SectionRenderer);
+    assert($resumeRenderer instanceof SectionRenderer);
+    assert($logosRenderer instanceof SectionRenderer);
+
+    $galleryHtml = $galleryRenderer->render(portfolioThemeSection('gallery-lightbox', [
+        'heading' => 'Visual proof library',
+        'items' => [
+            [
+                'type' => 'Campaign image',
+                'title' => 'Launch visual system',
+                'summary' => 'Gallery item with inspectable imagery.',
+                'imageUrl' => 'https://cdn.example.test/gallery.jpg',
+                'imageAlt' => 'Launch visual system preview',
+                'url' => '/work/launch-visual-system',
+            ],
+        ],
+    ]));
+
+    $resumeHtml = $resumeRenderer->render(portfolioThemeSection('resume-cv', [
+        'heading' => 'Selected credentials',
+        'downloadAction' => ['label' => 'Download CV', 'url' => '/resume.pdf'],
+        'items' => [
+            [
+                'period' => '2022-present',
+                'title' => 'Principal consultant',
+                'organization' => 'Studio Practice',
+                'summary' => 'Led creator-positioning and case-study systems.',
+            ],
+        ],
+    ]));
+
+    $logosHtml = $logosRenderer->render(portfolioThemeSection('client-logos', [
+        'heading' => 'Trusted by focused teams',
+        'items' => [
+            [
+                'name' => 'Northstar Labs',
+                'logo' => 'https://cdn.example.test/northstar.svg',
+                'alt' => 'Northstar Labs logo',
+            ],
+            [
+                'name' => 'Plain text client',
+            ],
+        ],
+    ]));
+
+    $emptyGalleryHtml = $galleryRenderer->render(portfolioThemeSection('gallery-lightbox', [
+        'heading' => 'Empty gallery',
+        'items' => [],
+    ]));
+
+    expect($galleryHtml)
+        ->toContain('Visual proof library')
+        ->toContain('Launch visual system')
+        ->toContain('Gallery item with inspectable imagery.')
+        ->toContain('src="https://cdn.example.test/gallery.jpg"')
+        ->toContain('alt="Launch visual system preview"')
+        ->toContain('href="/work/launch-visual-system"')
+        ->toContain('loading="lazy"')
+        ->not->toContain('capell-app/theme-portfolio')
+        ->not->toContain('Filament')
+        ->not->toContain('wire:');
+
+    expect($resumeHtml)
+        ->toContain('Selected credentials')
+        ->toContain('href="/resume.pdf"')
+        ->toContain('Download CV')
+        ->toContain('2022-present')
+        ->toContain('Principal consultant')
+        ->toContain('Studio Practice')
+        ->toContain('Led creator-positioning and case-study systems.')
+        ->not->toContain('capell-app/theme-portfolio');
+
+    expect($logosHtml)
+        ->toContain('Trusted by focused teams')
+        ->toContain('src="https://cdn.example.test/northstar.svg"')
+        ->toContain('alt="Northstar Labs logo"')
+        ->toContain('Plain text client')
+        ->not->toContain('capell-app/theme-portfolio');
+
+    expect($emptyGalleryHtml)
+        ->toContain('Empty gallery')
+        ->toContain('Premium layout ready')
+        ->toContain('Add section content to populate this premium layout.')
+        ->not->toContain('capell-app/theme-portfolio');
+});
+
+it('uses the shared placeholder for empty portfolio-owned content sections', function (string $sectionKey): void {
+    CapellCore::clearPackages();
+    CapellCore::forcePackageInstalled(PortfolioThemeServiceProvider::$packageName);
+
+    $registry = new ThemeRegistry;
+    (new PortfolioThemeServiceProvider($this->app))->boot($registry);
+
+    $renderer = $registry->sectionRenderer('portfolio', $sectionKey);
+
+    assert($renderer instanceof SectionRenderer);
+
+    $html = $renderer->render(portfolioThemeSection($sectionKey, [
+        'heading' => 'Empty ' . $sectionKey,
+        'items' => [],
+    ]));
+
+    expect($html)
+        ->toContain('Empty ' . $sectionKey)
+        ->toContain('Premium layout ready')
+        ->toContain('Add section content to populate this premium layout.')
+        ->not->toContain('capell-app/theme-portfolio');
+})->with([
+    'case-studies',
+    'work-grid',
+    'services',
+    'gallery-lightbox',
+    'resume-cv',
+    'client-logos',
+    'testimonials',
+    'speaking-media-kit',
+]);
+
+it('renders every Portfolio-owned section anonymously inside the budget without database queries', function (): void {
+    CapellCore::clearPackages();
+    CapellCore::forcePackageInstalled(PortfolioThemeServiceProvider::$packageName);
+    CapellCore::forcePackageInstalled('capell-app/content-sections', false);
+    CapellCore::forcePackageInstalled('capell-app/media-library', false);
+    CapellCore::forcePackageInstalled('capell-app/newsletter', false);
+
+    $registry = new ThemeRegistry;
+    (new PortfolioThemeServiceProvider($this->app))->boot($registry);
+
+    $manifest = portfolioThemeTestManifest();
+    $budgetMilliseconds = (float) data_get($manifest, 'performance.frontendRenderBudgetMs', 20);
+    $queryCount = 0;
+
+    DB::listen(static function (QueryExecuted $query) use (&$queryCount): void {
+        if (str_starts_with(strtolower($query->sql), 'select')) {
+            $queryCount++;
+        }
+    });
+
+    foreach (portfolioOwnedSectionKeys() as $sectionKey) {
+        $renderer = $registry->sectionRenderer('portfolio', $sectionKey);
+
+        assert($renderer instanceof SectionRenderer);
+
+        $section = portfolioThemeSection($sectionKey, portfolioRenderPayload($sectionKey));
+
+        $renderer->render($section);
+
+        $startedAt = hrtime(true);
+        $html = $renderer->render($section);
+        $elapsedMilliseconds = (hrtime(true) - $startedAt) / 1_000_000;
+
+        expect($elapsedMilliseconds)->toBeLessThanOrEqual($budgetMilliseconds)
+            ->and($html)->not->toContain('capell-app/theme-portfolio')
+            ->and($html)->not->toContain('Filament')
+            ->and($html)->not->toContain('wire:');
+    }
+
+    expect($queryCount)->toBe(0);
+});
+
 /**
  * @param  array<string, mixed>  $viewData
  */
@@ -365,4 +623,66 @@ function portfolioThemeSection(string $key, array $viewData): ThemeSection
             return array_merge($this->viewData, ['section' => (object) $this->viewData]);
         }
     };
+}
+
+/**
+ * @return array<int, string>
+ */
+function portfolioOwnedSectionKeys(): array
+{
+    return array_values(array_filter(
+        PortfolioThemeServiceProvider::definition()->includedSections,
+        static fn (string $sectionKey): bool => $sectionKey !== 'navigation',
+    ));
+}
+
+/**
+ * @return array<string, mixed>
+ */
+function portfolioRenderPayload(string $sectionKey): array
+{
+    $payload = [
+        'heading' => 'Anonymous ' . $sectionKey,
+        'summary' => 'Anonymous public render summary.',
+        'items' => [
+            ['title' => 'Anonymous portfolio item', 'summary' => 'Anonymous portfolio item summary.'],
+        ],
+        'actions' => [
+            ['label' => 'Anonymous action', 'url' => '#action'],
+        ],
+    ];
+
+    if ($sectionKey === 'hero') {
+        return [
+            ...$payload,
+            'mediaUrl' => 'https://cdn.example.test/portfolio-hero.jpg',
+            'mediaAlt' => 'Anonymous portfolio hero',
+        ];
+    }
+
+    if ($sectionKey === 'newsletter') {
+        return [
+            ...$payload,
+            'formAction' => '/newsletter/subscribe',
+            'formMethod' => 'post',
+        ];
+    }
+
+    return $payload;
+}
+
+/**
+ * @return array<string, mixed>
+ */
+function portfolioThemeTestManifest(): array
+{
+    $manifest = json_decode(
+        (string) file_get_contents(dirname(__DIR__, 2) . '/capell.json'),
+        true,
+        flags: JSON_THROW_ON_ERROR,
+    );
+
+    throw_unless(is_array($manifest), RuntimeException::class, 'Theme Portfolio manifest must decode to an array.');
+
+    return $manifest;
 }

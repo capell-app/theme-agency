@@ -55,7 +55,7 @@
     "database": {
         "migrations": true,
         "settings": false,
-        "requiredTables": ["portal_accounts", "portal_support_requests"]
+        "requiredTables": ["portal_accounts", "portal_support_requests", "portal_support_request_replies"]
     },
     "commands": {
         "install": null,
@@ -65,6 +65,7 @@
     },
     "settings": [],
     "actions": {
+        "addSupportRequestReply": "Capell\\CustomerPortal\\Actions\\AddSupportRequestReplyAction",
         "findOrCreatePortalAccount": "Capell\\CustomerPortal\\Actions\\FindOrCreatePortalAccountAction",
         "resolvePortalDashboardItems": "Capell\\CustomerPortal\\Actions\\ResolvePortalDashboardItemsAction",
         "resolvePortalPreferenceOptions": "Capell\\CustomerPortal\\Actions\\ResolvePortalPreferenceOptionsAction",
@@ -89,6 +90,7 @@
         "portal-event-registration-feed",
         "portal-newsletter-preference-feed",
         "portal-support-requests",
+        "portal-support-request-threading",
         "portal-support-request-notifications",
         "portal-support-request-triage"
     ],
@@ -122,7 +124,29 @@
     },
     "marketplace": {
         "summary": "A unified, logged-in customer hub for Capell sites — payments, documents, event registrations, gated content and support requests in one secure dashboard.",
-        "screenshots": [],
+        "description": "Customer Portal turns a Capell site into an authenticated self-service experience. A single dashboard aggregates billing, documents, event registrations, gated resources and newsletter preferences contributed by your other Capell packages — no custom glue code, just install and they appear. Customers raise and track support requests; staff triage them from the admin panel with full status workflow and audit-safe, encrypted records.",
+        "screenshots": [
+            {
+                "path": "docs/screenshots/portal-frontend-dashboard.png",
+                "alt": "Customer portal frontend dashboard",
+                "caption": "Authenticated customer hub with profile, billing, documents, events, and support summary cards."
+            },
+            {
+                "path": "docs/screenshots/portal-preferences-support.png",
+                "alt": "Customer portal preferences and support form",
+                "caption": "Schema-driven preferences and encrypted support-request submission."
+            },
+            {
+                "path": "docs/screenshots/portal-support-triage-list.png",
+                "alt": "Customer portal support triage admin list",
+                "caption": "Site-scoped Capell admin triage list for customer support requests."
+            },
+            {
+                "path": "docs/screenshots/portal-support-triage-edit.png",
+                "alt": "Customer portal support triage edit screen",
+                "caption": "Support request detail with status and priority workflow controls."
+            }
+        ],
         "categories": ["admin", "frontend", "crm", "self-service"]
     },
     "contributionTraceability": {
