@@ -228,8 +228,14 @@ it('registers corporate tailwind imports and blade sources when installed', func
         ->pluck('value')
         ->all();
 
+    $packageBuildAssets = CapellCore::getVendorAssetsForType(VendorAssetEnum::BuildAsset)
+        ->filter(fn (mixed $asset): bool => $asset->packageName === CorporateThemeServiceProvider::$packageName)
+        ->map(fn (mixed $asset): string => $asset->path() . '/' . $asset->file())
+        ->all();
+
     expect($packageImports)->toContain('resources/css/theme-corporate.css')
-        ->and($packageSources)->toContain('resources/views/**/*.blade.php');
+        ->and($packageSources)->toContain('resources/views/**/*.blade.php')
+        ->and($packageBuildAssets)->toContain('vendor/capell-theme-corporate/resources/js/theme-corporate.js');
 });
 
 it('renders public theme markup without package identifiers', function (): void {
@@ -296,3 +302,41 @@ it('renders public theme markup without package identifiers', function (): void 
         ->not->toContain('filament')
         ->not->toContain('editor');
 });
+
+it('renders the corporate content listing variant matrix', function (string $variant, string $expectedMarkup): void {
+    View::addNamespace('capell-theme-corporate', __DIR__ . '/../../resources/views');
+    View::addNamespace('capell-foundation-theme', __DIR__ . '/../../../foundation-theme/resources/views');
+    Lang::addNamespace('capell-theme-corporate', __DIR__ . '/../../resources/lang');
+
+    $html = view('capell-theme-corporate::sections.content-listing', [
+        'section' => new ContentListingSectionData(
+            heading: 'Corporate resources',
+            summary: 'Structured updates for stakeholders.',
+            items: [
+                [
+                    'title' => 'Board reporting model',
+                    'summary' => 'A clearer monthly reporting model.',
+                    'url' => '/insights/board-reporting',
+                    'image' => '/images/reporting.jpg',
+                    'type' => 'Briefing',
+                    'meta' => ['Governance'],
+                ],
+            ],
+            variant: $variant,
+        ),
+    ])->render();
+
+    expect($html)
+        ->toContain('Corporate resources')
+        ->toContain($expectedMarkup)
+        ->not->toContain('capell-app/theme-corporate');
+})->with([
+    'editorial' => ['editorial', 'Register'],
+    'media' => ['media', 'Media'],
+    'faq' => ['faq', 'Question 1'],
+    'people' => ['people', 'Governance'],
+    'metrics' => ['metrics', 'Metrics'],
+    'gallery fallback' => ['gallery', 'Board reporting model'],
+    'pathways fallback' => ['pathways', 'Board reporting model'],
+    'spotlight fallback' => ['spotlight', 'Board reporting model'],
+]);

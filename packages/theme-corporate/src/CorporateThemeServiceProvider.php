@@ -189,6 +189,14 @@ class CorporateThemeServiceProvider extends ServiceProvider
     private function registerVendorCssAssets(): void
     {
         CapellCore::registerVendorAsset(
+            VendorAssetData::buildAsset(
+                path: 'vendor/capell-theme-corporate',
+                file: 'resources/js/theme-corporate.js',
+                packageName: self::$packageName,
+            ),
+        );
+
+        CapellCore::registerVendorAsset(
             VendorAssetData::tailwindImport('resources/css/theme-corporate.css', self::$packageName),
         );
 
