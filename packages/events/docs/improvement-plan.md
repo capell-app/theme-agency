@@ -24,7 +24,7 @@ Current marketplace summary (verbatim): _"Publish recurring events with venues, 
 5. **Done/Shipped: Stop sharing the admin-labelled calendar partial with the public page** — the public calendar now uses `capell-events::generic.event_calendar` instead of the admin-oriented label, with render coverage proving the public view does not emit the admin label. — `resources/views/livewire/event-calendar.blade.php`, `resources/lang/en/generic.php`, `tests/Feature/PublicEventViewDataTest.php` — S
 6. **Denormalized `registration_count` is recomputed by aggregate query anyway** — why: `PromoteWaitlistAction` and `refreshRegistrationCount` call `confirmedRegistrationQuantity()` (a `SUM(quantity)` query) then write it back to `registration_count`. The column exists to avoid that query on read, but `remainingCapacity()` recomputes the SUM live rather than reading the column — so the denormalization buys nothing on the hot path. Either trust the column on read or drop it. — `src/Models/EventOccurrence.php` — S
 7. **`occurrenceUrl()` builds the public URL by string concatenation** (`rtrim($pageUrl,'/').'/'.date`) — why: bypasses the URL registry/route layer; brittle if listing-page URL structure changes and not locale-aware for the date segment. Resolve through the page-URL contract used elsewhere. — `src/Models/EventOccurrence.php` — M
-8. **Add a per-listing-page feed scope** — why: `routes/web.php` defines `events/{listingPage}/feed.ics` but `BuildCalendarFeedAction` ignores any listing-page filter and always returns the whole site's occurrences, so both feed routes emit identical content. Honor the listing page (category/tag/venue filter). — `src/Http/Controllers/CalendarFeedController.php`, `src/Actions/BuildCalendarFeedAction.php` — M
+8. **Done/Shipped: Add a per-listing-page feed scope** — listing-specific `.ics` routes now resolve the listing page and pass it into `BuildCalendarFeedAction`; page `meta.event_venue_id` / `venue_id` and `event_id` / `event_ids` narrow the feed so scoped routes no longer emit the whole site's occurrences. — `src/Http/Controllers/CalendarFeedController.php`, `src/Actions/BuildCalendarFeedAction.php`, `tests/Integration/Actions/BuildCalendarFeedScopeTest.php` — M
 
 ## 3. Missing Features (gaps)
 
@@ -83,7 +83,7 @@ Declared `capabilities[]`: `events`, `events-admin`, `events-console`, `events-f
 | Declare `permissions[]` (and any settings) in `capell.json` to match registered policies        | Done   | S      | Med    | §4             |
 | Done/Shipped: Pass typed view data to public Blade; add anonymous-leak rendering test           | Done   | M      | Med    | §2.4, §4       |
 | Done/Shipped: Add DST-crossing recurrence test; bound recurrence horizon explicitly             | Done   | M      | Med    | §2.3, §4       |
-| Per-listing-page filtered `.ics` feed (honor `{listingPage}`)                                   | Next   | M      | Med    | §2.8, §3       |
+| Done/Shipped: Per-listing-page filtered `.ics` feed (honor `{listingPage}`)                     | Done   | M      | Med    | §2.8, §3       |
 | Viewer-timezone display + per-site default-tz setting                                           | Next   | M      | Med    | §3, §4         |
 | Configurable multi-reminder cadence + per-event opt-out                                         | Next   | M      | Low    | §3             |
 | Shipped 2026-06-07: Verify/expose `CancelOccurrenceAction`/`RescheduleOccurrenceAction` in occurrence UI | Done   | S      | Med    | §3             |
