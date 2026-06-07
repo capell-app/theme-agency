@@ -64,6 +64,7 @@ class EventsServiceProvider extends AbstractPackageServiceProvider
     {
         $package
             ->name(self::$name)
+            ->hasConfigFile()
             ->hasViews(self::$name)
             ->hasTranslations()
             ->hasCommands([

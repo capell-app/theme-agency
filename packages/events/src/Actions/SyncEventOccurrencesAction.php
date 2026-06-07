@@ -23,8 +23,8 @@ class SyncEventOccurrencesAction
      */
     public function handle(Event $event, ?CarbonImmutable $startsAt = null, ?CarbonImmutable $endsAt = null): Collection
     {
-        $startsAt ??= CarbonImmutable::now($event->timezone)->subMonth();
-        $endsAt ??= CarbonImmutable::now($event->timezone)->addYear();
+        $startsAt ??= CarbonImmutable::now($event->timezone)->subDays($this->syncPastDays());
+        $endsAt ??= CarbonImmutable::now($event->timezone)->addDays($this->syncHorizonDays());
 
         return ExpandEventRecurrenceAction::run($event, $startsAt, $endsAt)
             ->map(fn (EventOccurrenceData $occurrenceData): EventOccurrence => $this->syncOccurrence($event, $occurrenceData))
@@ -60,5 +60,18 @@ class SyncEventOccurrencesAction
         ])->save();
 
         return $occurrence;
+    }
+    private function syncPastDays(): int
+    {
+        $days = config('capell-events.recurrence.sync_past_days', 31);
+
+        return is_numeric($days) ? max(0, (int) $days) : 31;
+    }
+
+    private function syncHorizonDays(): int
+    {
+        $days = config('capell-events.recurrence.sync_horizon_days', 365);
+
+        return is_numeric($days) ? max(1, (int) $days) : 365;
     }
 }
