@@ -1,6 +1,6 @@
 # Email Studio Overview
 
-Email Studio is the transactional email layer for Capell. It gives first-party and project packages one path for template registration, site-aware rendering, provider delivery, send recording, suppressions, and later provider events.
+Email Studio is the transactional email layer for Capell. It gives first-party and project packages one path for template registration, site-aware rendering, provider delivery, send recording, suppressions, and provider delivery events.
 
 The product goal is simple: when an email matters, Capell should be able to show what was supposed to be sent, who it was sent to, which provider handled it, and why it failed when it failed.
 
@@ -15,7 +15,8 @@ Email Studio owns:
 - MailTracker-backed sent email viewing for non-Email Studio Laravel mail;
 - MailTracker tracking and retention settings;
 - provider adapter contracts;
-- future webhook events, reply capture, open/click tracking, and retention cleanup.
+- provider event webhook ingestion;
+- future reply capture, open/click tracking, and unsubscribe flows.
 
 Email Studio does not own:
 
@@ -38,6 +39,7 @@ The active runtime surfaces are:
 - `SentEmailResource` for read-only sent email inspection;
 - `EmailStudioSettings` for MailTracker open tracking, click tracking, content storage, and retention;
 - `capell-email-studio:purge-tracked-emails` for scheduled tracked-email cleanup;
+- `POST /mail/provider-events/{token}` for tokenized provider event ingestion, with `X-Capell-Email-Studio-Signature` HMAC verification when the profile defines `provider_settings.webhook_secret`;
 - provider adapter contracts and registries;
 - database records for templates, profiles, messages, recipients, events, replies, suppressions, registrations, and tracking tokens.
 
