@@ -38,6 +38,24 @@ it('rejects revoked or missing Zapier API tokens', function (): void {
         ->assertUnauthorized();
 });
 
+it('honours per-token Zapier API rate limit overrides', function (): void {
+    $created = CreatePublicActionIntegrationTokenAction::run('Limited Zapier');
+
+    config()->set('capell-public-actions.integration_token_rate_limits.tokens.' . $created->token->getKey(), [
+        'per_minute' => 1,
+    ]);
+
+    $this
+        ->withToken($created->plainTextToken)
+        ->getJson('/api/public-actions/zapier/me')
+        ->assertOk();
+
+    $this
+        ->withToken($created->plainTextToken)
+        ->getJson('/api/public-actions/zapier/me')
+        ->assertTooManyRequests();
+});
+
 it('submits public actions from Zapier and exposes sanitized submissions', function (): void {
     $created = CreatePublicActionIntegrationTokenAction::run('Zapier');
 

@@ -65,6 +65,26 @@ it('returns json for json submissions', function (): void {
         ]);
 });
 
+it('honours per-action submit rate limit overrides', function (): void {
+    PublicAction::factory()->create([
+        'key' => 'limited-action',
+        'handler_key' => 'test.handler',
+        'settings' => [
+            'rate_limit' => [
+                'per_minute' => 1,
+            ],
+        ],
+    ]);
+
+    $this->postJson('/actions/limited-action', [
+        'email' => 'person@example.test',
+    ])->assertOk();
+
+    $this->postJson('/actions/limited-action', [
+        'email' => 'person@example.test',
+    ])->assertTooManyRequests();
+});
+
 it('replays duplicate submissions with the same idempotency key without creating another submission', function (): void {
     PublicAction::factory()->create([
         'key' => 'idempotent-action',

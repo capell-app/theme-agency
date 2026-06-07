@@ -50,6 +50,7 @@
     "capabilities": [
         "automation-webhooks",
         "durable-dispatch-fanout",
+        "configurable-rate-limits",
         "submission-retention-pruning",
         "public-form",
         "public-actions",

@@ -138,6 +138,10 @@ The plain text token is returned once. Store only the hashed token in the databa
 | `capell-public-actions.route_prefix`                | Public web route prefix.                                                                      |
 | `capell-public-actions.api_route_prefix`            | API route prefix for provider integrations.                                                   |
 | `capell-public-actions.queue`                       | Queue used for destination dispatch.                                                          |
+| `capell-public-actions.submit_rate_limit_per_minute` | Default public submit requests allowed per minute.                                            |
+| `capell-public-actions.api_rate_limit_per_minute`   | Default provider API requests allowed per minute.                                             |
+| `capell-public-actions.action_rate_limits`          | Optional per-action submit rate limit overrides keyed by action key.                          |
+| `capell-public-actions.integration_token_rate_limits` | Optional provider or token-specific API rate limit overrides.                                |
 | `capell-public-actions.webhook_timeout_seconds`     | HTTP webhook timeout.                                                                         |
 | `capell-public-actions.allow_insecure_webhook_urls` | Allows `http://` webhook URLs. Keep false outside local development.                          |
 | `capell-public-actions.allow_private_webhook_urls`  | Allows private network webhook URLs. Keep false unless the deployment owns that network path. |

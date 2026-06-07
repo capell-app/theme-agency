@@ -164,12 +164,70 @@ class PublicActionsServiceProvider extends AbstractPackageServiceProvider
             $email = Str::lower((string) $request->input('email', ''));
             $key = hash('sha256', $action . '|' . $email . '|' . $request->ip());
 
-            return Limit::perMinute(12)->by($key);
+            return Limit::perMinute($this->submitRateLimitPerMinute($action))->by($key);
         });
 
-        RateLimiter::for('public-actions-api', fn (Request $request): Limit => Limit::perMinute(120)->by((string) $request->ip()));
+        RateLimiter::for('public-actions-api', function (Request $request): Limit {
+            $token = $request->attributes->get('public_action_integration_token');
+
+            if ($token instanceof PublicActionIntegrationToken) {
+                return Limit::perMinute($this->integrationTokenRateLimitPerMinute($token))
+                    ->by('token:' . $token->getKey());
+            }
+
+            return Limit::perMinute($this->positiveIntegerConfig('capell-public-actions.api_rate_limit_per_minute', 120))
+                ->by('ip:' . (string) $request->ip());
+        });
 
         return $this;
+    }
+
+    private function submitRateLimitPerMinute(string $actionKey): int
+    {
+        $configured = data_get(config('capell-public-actions.action_rate_limits', []), $actionKey . '.per_minute');
+
+        if (is_numeric($configured) && (int) $configured > 0) {
+            return (int) $configured;
+        }
+
+        $actionsTable = config('capell-public-actions.tables.actions', 'public_actions');
+
+        if ($actionKey !== '' && is_string($actionsTable) && Schema::hasTable($actionsTable)) {
+            $action = PublicAction::query()
+                ->where('key', $actionKey)
+                ->first();
+            $actionLimit = data_get($action?->settings, 'rate_limit.per_minute');
+
+            if (is_numeric($actionLimit) && (int) $actionLimit > 0) {
+                return (int) $actionLimit;
+            }
+        }
+
+        return $this->positiveIntegerConfig('capell-public-actions.submit_rate_limit_per_minute', 12);
+    }
+
+    private function integrationTokenRateLimitPerMinute(PublicActionIntegrationToken $token): int
+    {
+        $tokenLimit = data_get(config('capell-public-actions.integration_token_rate_limits.tokens', []), (string) $token->getKey() . '.per_minute');
+
+        if (is_numeric($tokenLimit) && (int) $tokenLimit > 0) {
+            return (int) $tokenLimit;
+        }
+
+        $providerLimit = data_get(config('capell-public-actions.integration_token_rate_limits.providers', []), $token->provider->value . '.per_minute');
+
+        if (is_numeric($providerLimit) && (int) $providerLimit > 0) {
+            return (int) $providerLimit;
+        }
+
+        return $this->positiveIntegerConfig('capell-public-actions.api_rate_limit_per_minute', 120);
+    }
+
+    private function positiveIntegerConfig(string $key, int $fallback): int
+    {
+        $value = config($key, $fallback);
+
+        return is_numeric($value) && (int) $value > 0 ? (int) $value : $fallback;
     }
 
     private function registerProtectedTables(): self

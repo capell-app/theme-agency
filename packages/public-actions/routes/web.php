@@ -23,7 +23,7 @@ Route::middleware(['web'])
             ->name('submit');
     });
 
-Route::middleware(['api', 'throttle:public-actions-api', PublicActionZapierAuthMiddleware::class])
+Route::middleware(['api', PublicActionZapierAuthMiddleware::class, 'throttle:public-actions-api'])
     ->prefix(config('capell-public-actions.api_route_prefix', 'api/public-actions') . '/zapier')
     ->as('capell-public-actions.zapier.')
     ->group(function (): void {
