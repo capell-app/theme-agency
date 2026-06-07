@@ -45,6 +45,7 @@ it('defines the healthcare premium renderer contract', function (): void {
             'care-pathway',
             'clinicians',
             'booking',
+            'emergency-escalation',
             'locations',
             'insurance-trust',
             'events',
@@ -84,6 +85,7 @@ it('declares renderers for every healthcare and fallback section', function (): 
         'care-pathway',
         'clinicians',
         'booking',
+        'emergency-escalation',
         'locations',
         'insurance-trust',
         'events',
@@ -177,6 +179,16 @@ it('renders public healthcare markup without forbidden package or authoring toke
                 'heading' => 'Request an appointment',
                 'items' => [['title' => 'Same-week triage']],
             ]),
+            healthcareThemeSection('emergency-escalation', [
+                'heading' => 'Urgent symptoms need urgent help',
+                'summary' => 'Call emergency services for chest pain, stroke symptoms, or breathing difficulty.',
+                'emergencyPhone' => '999',
+                'urgentCareUrl' => '/urgent-care',
+                'items' => [
+                    ['title' => 'Call 999', 'summary' => 'Use emergency services for life-threatening symptoms.'],
+                    ['title' => 'Use urgent care', 'summary' => 'Use clinic routes for non-emergency escalation.'],
+                ],
+            ]),
             healthcareThemeSection('events', [
                 'heading' => 'Care sessions',
                 'items' => [['title' => 'Heart health evening', 'summary' => 'Consultant-led Q&A.']],
@@ -230,6 +242,9 @@ it('renders public healthcare markup without forbidden package or authoring toke
         ->toContain('href="tel:02920000000"')
         ->toContain('Mon-Fri 08:00-18:00')
         ->toContain('https://maps.example/cardiff')
+        ->toContain('Urgent symptoms need urgent help')
+        ->toContain('href="tel:999"')
+        ->toContain('Use emergency services for life-threatening symptoms.')
         ->toContain('Clinical trust')
         ->toContain('Safety review')
         ->toContain('Escalation route')
@@ -382,6 +397,56 @@ it('renders new premium healthcare layouts through the registry', function (): v
         ->toContain('Cover and trust signals')
         ->toContain('Recognised providers')
         ->not->toContain('capell-app/theme-healthcare');
+});
+
+it('renders the healthcare emergency escalation section with safe urgent contact data', function (): void {
+    View::addNamespace('capell-theme-healthcare', __DIR__ . '/../../resources/views');
+    resolve(Translator::class)->addNamespace('capell-theme-healthcare', __DIR__ . '/../../resources/lang');
+    CapellCore::clearPackages();
+    CapellCore::forcePackageInstalled(HealthcareThemeServiceProvider::$packageName);
+
+    $registry = new ThemeRegistry;
+    $provider = new HealthcareThemeServiceProvider($this->app);
+    $provider->boot($registry);
+
+    $renderer = $registry->sectionRenderer('healthcare', 'emergency-escalation');
+
+    expect($renderer)->not->toBeNull();
+    assert($renderer instanceof SectionRenderer);
+
+    $html = $renderer->render(healthcareThemeSection('emergency-escalation', [
+        'heading' => 'Urgent symptoms need urgent help',
+        'summary' => 'If symptoms are severe, use emergency services before contacting the clinic.',
+        'emergencyPhone' => '0300 123 456',
+        'primaryAction' => ['label' => 'Read urgent-care guidance', 'url' => '/urgent-care'],
+        'items' => [
+            ['title' => 'Call emergency services', 'summary' => 'Use emergency routes for chest pain or stroke symptoms.'],
+            ['title' => 'Contact urgent care', 'summary' => 'Use clinic routes for non-life-threatening escalation.'],
+        ],
+    ]));
+
+    $emptyHtml = $renderer->render(healthcareThemeSection('emergency-escalation', [
+        'heading' => null,
+        'summary' => null,
+        'items' => [],
+    ]));
+
+    expect($html)
+        ->toContain('Urgent care notice')
+        ->toContain('Urgent symptoms need urgent help')
+        ->toContain('href="tel:0300123456"')
+        ->toContain('Call 0300 123 456')
+        ->toContain('Read urgent-care guidance')
+        ->toContain('Use emergency routes for chest pain or stroke symptoms.')
+        ->not->toContain('capell-app/theme-healthcare')
+        ->not->toContain('theme-healthcare')
+        ->not->toContain('model_id')
+        ->not->toContain('field_path')
+        ->and($emptyHtml)
+        ->toContain('Know when to seek urgent help')
+        ->toContain('Call emergency services')
+        ->not->toContain('data-field')
+        ->not->toContain('model_id');
 });
 
 it('passes optional Form Builder availability through the registered booking renderer', function (bool $formBuilderInstalled, string $expectedMarkup, string $missingMarkup): void {
@@ -562,6 +627,69 @@ it('renders optional healthcare section views without database queries', functio
         ->and($eventsHtml)->toContain('Heart health evening')
         ->and($blogHtml)->toContain('Preparing for a first consultation')
         ->and($queries)->toBe([]);
+});
+
+it('renders the healthcare page inside the declared frontend budget without database queries', function (): void {
+    CapellCore::clearPackages();
+    CapellCore::forcePackageInstalled(HealthcareThemeServiceProvider::$packageName);
+
+    $manifest = capell_json_file_array(__DIR__ . '/../../capell.json');
+    $queryCount = 0;
+
+    DB::listen(static function (QueryExecuted $query) use (&$queryCount): void {
+        $queryCount++;
+    });
+
+    $registry = new ThemeRegistry;
+    $provider = new HealthcareThemeServiceProvider($this->app);
+    $provider->boot($registry);
+
+    $queryCount = 0;
+    $startedAt = hrtime(true);
+
+    $html = $registry->renderer('healthcare')->render(new ThemePageData(
+        title: 'Healthcare budget render',
+        brand: new BrandProfileData,
+        sections: [
+            new HeroSectionData(
+                heading: 'Specialist care with clear next steps',
+                summary: 'Appointment-led service discovery.',
+            ),
+            healthcareThemeSection('services', [
+                'heading' => 'Clinical services',
+                'items' => [['title' => 'Rapid GP', 'summary' => 'Same-week appointments.']],
+            ]),
+            healthcareThemeSection('booking', [
+                'heading' => 'Request an appointment',
+                'items' => [['title' => 'Triage call']],
+            ]),
+            healthcareThemeSection('emergency-escalation', [
+                'heading' => 'Urgent symptoms need urgent help',
+                'items' => [['title' => 'Call emergency services']],
+            ]),
+            new ProofSectionData(
+                heading: 'Trusted by patients',
+                items: [['metric' => '98%', 'name' => 'Patient satisfaction']],
+            ),
+            new CtaSectionData(
+                heading: 'Start with the right appointment',
+                actions: [['label' => 'Book appointment', 'url' => '/appointments']],
+            ),
+        ],
+        navigation: new NavigationData(
+            brandName: 'Aster Clinic',
+            items: [['label' => 'Services', 'url' => '/services']],
+        ),
+        footer: new FooterData(brandName: 'Aster Clinic'),
+    ));
+
+    $elapsedMilliseconds = (hrtime(true) - $startedAt) / 1_000_000;
+
+    expect($elapsedMilliseconds)->toBeLessThanOrEqual((float) data_get($manifest, 'performance.frontendRenderBudgetMs', 20))
+        ->and($queryCount)->toBe(0)
+        ->and($html)->toContain('Specialist care with clear next steps')
+        ->and($html)->toContain('Urgent symptoms need urgent help')
+        ->and($html)->not->toContain('capell-app/theme-healthcare');
 });
 
 /**
