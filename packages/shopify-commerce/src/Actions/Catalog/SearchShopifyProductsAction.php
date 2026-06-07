@@ -5,6 +5,9 @@ declare(strict_types=1);
 namespace Capell\ShopifyCommerce\Actions\Catalog;
 
 use Capell\ShopifyCommerce\Actions\Graphql\ExecuteShopifyAdminGraphqlAction;
+use Capell\ShopifyCommerce\Data\ShopifyProductData;
+use Capell\ShopifyCommerce\Data\ShopifyProductOptionData;
+use Capell\ShopifyCommerce\Data\ShopifyProductVariantData;
 use Capell\ShopifyCommerce\Models\ShopifyConnection;
 use Capell\ShopifyCommerce\Models\ShopifyProduct;
 use Capell\ShopifyCommerce\Settings\ShopifyCommerceSettings;
@@ -40,7 +43,7 @@ final class SearchShopifyProductsAction
                 return $localProducts;
             }
 
-            $this->fetchAndPersistLiveResults($connection, $normalisedTerm);
+            $this->fetchAndPersistLiveResults($connection, $normalisedTerm, $limit);
 
             return $this->localResults($connection, $normalisedTerm, $limit);
         });
@@ -69,9 +72,10 @@ final class SearchShopifyProductsAction
             ->get();
     }
 
-    private function fetchAndPersistLiveResults(ShopifyConnection $connection, string $term): void
+    private function fetchAndPersistLiveResults(ShopifyConnection $connection, string $term, int $limit): void
     {
         $payload = ExecuteShopifyAdminGraphqlAction::run($connection, $this->query(), [
+            'first' => $limit,
             'query' => sprintf('title:*%s* OR handle:*%s*', addcslashes($term, '"\\'), addcslashes($term, '"\\')),
         ]);
 
@@ -81,6 +85,7 @@ final class SearchShopifyProductsAction
 
         $changed = DB::transaction(function () use ($connection, $nodes): bool {
             $changed = false;
+            $syncedAt = now();
 
             foreach ($nodes as $node) {
                 if (! is_array($node)) {
@@ -91,23 +96,7 @@ final class SearchShopifyProductsAction
                     continue;
                 }
 
-                $title = (string) ($node['title'] ?? '');
-                $handle = (string) ($node['handle'] ?? '');
-
-                ShopifyProduct::query()->updateOrCreate(
-                    [
-                        'connection_id' => $connection->getKey(),
-                        'shopify_gid' => $node['id'],
-                    ],
-                    [
-                        'handle' => $handle,
-                        'title' => $title,
-                        'search_text' => ShopifyProduct::searchableText($title, $handle),
-                        'status' => mb_strtolower((string) ($node['status'] ?? 'unknown')),
-                        'featured_image' => is_array($node['featuredImage'] ?? null) ? $node['featuredImage'] : null,
-                        'synced_at' => now(),
-                    ],
-                );
+                PersistShopifyProductAction::run($connection, $this->mapProductNode($node), $syncedAt);
 
                 $changed = true;
             }
@@ -120,19 +109,103 @@ final class SearchShopifyProductsAction
         }
     }
 
+    /**
+     * @param  array<string, mixed>  $node
+     */
+    private function mapProductNode(array $node): ShopifyProductData
+    {
+        $optionNodes = is_array($node['options'] ?? null) ? $node['options'] : [];
+        $variantNodes = is_array(data_get($node, 'variants.nodes')) ? data_get($node, 'variants.nodes') : [];
+
+        $options = collect($optionNodes)
+            ->filter(static fn (mixed $option): bool => is_array($option))
+            ->map(static fn (array $option): ShopifyProductOptionData => new ShopifyProductOptionData(
+                name: (string) ($option['name'] ?? ''),
+                values: array_values(array_filter(
+                    is_array($option['values'] ?? null) ? $option['values'] : [],
+                    static fn (mixed $value): bool => is_string($value) && $value !== '',
+                )),
+            ))
+            ->values()
+            ->all();
+
+        $variants = collect($variantNodes)
+            ->filter(static fn (mixed $variant): bool => is_array($variant) && is_string($variant['id'] ?? null))
+            ->map(fn (array $variant): ShopifyProductVariantData => $this->mapVariantNode($variant))
+            ->values()
+            ->all();
+
+        return new ShopifyProductData(
+            shopifyGid: (string) $node['id'],
+            handle: (string) ($node['handle'] ?? ''),
+            title: (string) ($node['title'] ?? ''),
+            status: mb_strtolower((string) ($node['status'] ?? 'unknown')),
+            options: $options,
+            featuredImage: is_array($node['featuredImage'] ?? null) ? $node['featuredImage'] : null,
+            variants: $variants,
+            rawSnapshot: $node,
+        );
+    }
+
+    /**
+     * @param  array<string, mixed>  $variant
+     */
+    private function mapVariantNode(array $variant): ShopifyProductVariantData
+    {
+        $priceV2 = is_array($variant['priceV2'] ?? null) ? $variant['priceV2'] : [];
+        $selectedOptionNodes = is_array($variant['selectedOptions'] ?? null) ? $variant['selectedOptions'] : [];
+
+        $selectedOptions = collect($selectedOptionNodes)
+            ->filter(static fn (mixed $option): bool => is_array($option))
+            ->map(static fn (array $option): ShopifyProductOptionData => new ShopifyProductOptionData(
+                name: (string) ($option['name'] ?? ''),
+                value: is_string($option['value'] ?? null) ? $option['value'] : null,
+            ))
+            ->values()
+            ->all();
+
+        return new ShopifyProductVariantData(
+            shopifyGid: (string) $variant['id'],
+            title: (string) ($variant['title'] ?? ''),
+            priceAmount: (string) ($priceV2['amount'] ?? $variant['price'] ?? '0'),
+            priceCurrency: (string) ($priceV2['currencyCode'] ?? config('capell-shopify-commerce.default_currency', 'USD')),
+            availableForSale: ($variant['availableForSale'] ?? false) === true,
+            selectedOptions: $selectedOptions,
+        );
+    }
+
     private function query(): string
     {
         return <<<'GRAPHQL'
-query ShopifyProductSearch($query: String!) {
-  products(first: 20, query: $query) {
+query ShopifyProductSearch($query: String!, $first: Int!) {
+  products(first: $first, query: $query) {
     nodes {
       id
       handle
       title
       status
+      options {
+        name
+        values
+      }
       featuredImage {
         url
         altText
+      }
+      variants(first: 100) {
+        nodes {
+          id
+          title
+          availableForSale
+          priceV2 {
+            amount
+            currencyCode
+          }
+          selectedOptions {
+            name
+            value
+          }
+        }
       }
     }
   }

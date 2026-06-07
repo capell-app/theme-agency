@@ -71,6 +71,7 @@
     },
     "actions": {
         "install": "Capell\\ShopifyCommerce\\Actions\\InstallShopifyCommercePackageAction",
+        "persistShopifyProduct": "Capell\\ShopifyCommerce\\Actions\\Catalog\\PersistShopifyProductAction",
         "pruneExpiredShopifyOAuthStates": "Capell\\ShopifyCommerce\\Actions\\OAuth\\PruneExpiredShopifyOAuthStatesAction",
         "syncShopifyCustomers": "Capell\\ShopifyCommerce\\Actions\\Customers\\SyncShopifyCustomersAction",
         "upsertShopifyCustomer": "Capell\\ShopifyCommerce\\Actions\\Customers\\UpsertShopifyCustomerAction"

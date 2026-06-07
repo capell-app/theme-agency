@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Capell\ShopifyCommerce\Actions\Catalog\PersistShopifyProductAction;
 use Capell\ShopifyCommerce\Actions\Customers\SyncShopifyCustomersAction;
 use Capell\ShopifyCommerce\Actions\Customers\UpsertShopifyCustomerAction;
 use Capell\ShopifyCommerce\Actions\OAuth\PruneExpiredShopifyOAuthStatesAction;
@@ -106,6 +107,7 @@ it('declares the customer sync producer in the package manifest', function (): v
 
     expect($actions['syncShopifyCustomers'] ?? null)->toBe(SyncShopifyCustomersAction::class)
         ->and($actions['upsertShopifyCustomer'] ?? null)->toBe(UpsertShopifyCustomerAction::class)
+        ->and($actions['persistShopifyProduct'] ?? null)->toBe(PersistShopifyProductAction::class)
         ->and($actions['pruneExpiredShopifyOAuthStates'] ?? null)->toBe(PruneExpiredShopifyOAuthStatesAction::class)
         ->and($commands['pruneOAuthStates'] ?? null)->toBe('capell-shopify-commerce:prune-oauth-states')
         ->and($commands['syncCustomers'] ?? null)->toBe('capell-shopify-commerce:sync-customers')
