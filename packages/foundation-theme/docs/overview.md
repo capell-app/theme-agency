@@ -64,7 +64,7 @@ Gives each Capell installation a standard frontend foundation before a custom or
 
 - `docs/screenshots.json` defines 12 deployment capture targets across admin and frontend surfaces.
 - `capell.json` ships 11 marketplace media entries: one extension card image, settings light/dark, and eight route-backed layout captures.
-- `docs/screenshots` contains generated PNG screenshots for settings, frontend, Tailwind output review, and eight route-backed layout workflows; Tailwind output review remains runner evidence until it shows an actual generated-assets report.
+- `docs/screenshots` contains generated PNG screenshots for settings, frontend, Tailwind output review, and eight route-backed layout workflows; Tailwind output review now shows the generated-assets report and remains developer evidence outside buyer-facing marketplace media.
 
 ## Pitfalls
 
@@ -128,4 +128,4 @@ This package has no committed ERD excerpt. Use implementation notes and extensio
 Deployment should read [screenshots.json](screenshots.json), install the package with demo data, resolve each listed admin surface or frontend URL, and write images to `packages/foundation-theme/docs/screenshots`.
 
 - Required captures include the Foundation settings screen, generated Tailwind output review, a frontend page using the default theme, the Foundation header Layout Builder area, and the marketplace layout captures listed in `docs/screenshots.json`.
-- Marketplace media includes committed generated PNG captures for settings and route-backed layout targets; Tailwind output review is not promoted until recaptured as an actual generated-assets report.
+- Marketplace media includes committed generated PNG captures for settings and route-backed layout targets; Tailwind output review is captured as a developer report artifact and intentionally kept out of buyer-facing marketplace media.

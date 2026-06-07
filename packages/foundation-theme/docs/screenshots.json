@@ -22,12 +22,13 @@
             "id": "generated-tailwind-asset-output-review",
             "title": "Generated Tailwind asset output review.",
             "package": "foundation-theme",
-            "surface": "admin",
-            "targetType": "admin-surface",
-            "target": null,
+            "surface": "developer",
+            "targetType": "console-command",
+            "target": "capell:frontend-tailwind-assets --report",
             "required": true,
-            "notes": "Capture after installing capell-app/foundation-theme in the isolated demo harness and seeding the data required for this use case.",
+            "notes": "Capture the generated Tailwind asset report output, not the generic settings screen. The committed report evidence lives at packages/foundation-theme/docs/reports/generated-tailwind-asset-output-review.md.",
             "useCase": "A developer verifies the generated Tailwind entrypoint after package/theme asset registration.",
+            "reportPath": "packages/foundation-theme/docs/reports/generated-tailwind-asset-output-review.md",
             "screenshotPath": "packages/foundation-theme/docs/screenshots/generated-tailwind-asset-output-review.png",
             "darkScreenshotPath": "packages/foundation-theme/docs/screenshots/generated-tailwind-asset-output-review-dark.png"
         },
@@ -70,9 +71,7 @@
             "scenario": "frontend-page",
             "url": "/screenshot-fixtures/foundation-theme/foundation-homepage-layout",
             "waitFor": ".theme-foundation",
-            "colorSchemes": [
-                "light"
-            ]
+            "colorSchemes": ["light"]
         },
         {
             "id": "foundation-standard-page-layout",
@@ -88,9 +87,7 @@
             "scenario": "frontend-page",
             "url": "/screenshot-fixtures/foundation-theme/foundation-standard-page-layout",
             "waitFor": ".theme-foundation",
-            "colorSchemes": [
-                "light"
-            ]
+            "colorSchemes": ["light"]
         },
         {
             "id": "foundation-blog-article-layout",
@@ -106,9 +103,7 @@
             "scenario": "frontend-page",
             "url": "/screenshot-fixtures/foundation-theme/foundation-blog-article-layout",
             "waitFor": ".theme-foundation",
-            "colorSchemes": [
-                "light"
-            ]
+            "colorSchemes": ["light"]
         },
         {
             "id": "foundation-listing-layout",
@@ -124,9 +119,7 @@
             "scenario": "frontend-page",
             "url": "/screenshot-fixtures/foundation-theme/foundation-listing-layout",
             "waitFor": ".theme-foundation",
-            "colorSchemes": [
-                "light"
-            ]
+            "colorSchemes": ["light"]
         },
         {
             "id": "foundation-contact-form-layout",
@@ -142,9 +135,7 @@
             "scenario": "frontend-page",
             "url": "/screenshot-fixtures/foundation-theme/foundation-contact-form-layout",
             "waitFor": ".theme-foundation",
-            "colorSchemes": [
-                "light"
-            ]
+            "colorSchemes": ["light"]
         },
         {
             "id": "foundation-search-results-layout",
@@ -160,9 +151,7 @@
             "scenario": "frontend-page",
             "url": "/screenshot-fixtures/foundation-theme/foundation-search-results-layout",
             "waitFor": ".theme-foundation",
-            "colorSchemes": [
-                "light"
-            ]
+            "colorSchemes": ["light"]
         },
         {
             "id": "foundation-events-layout",
@@ -178,9 +167,7 @@
             "scenario": "frontend-page",
             "url": "/screenshot-fixtures/foundation-theme/foundation-events-layout",
             "waitFor": ".theme-foundation",
-            "colorSchemes": [
-                "light"
-            ]
+            "colorSchemes": ["light"]
         },
         {
             "id": "foundation-membership-gate-layout",
@@ -196,9 +183,7 @@
             "scenario": "frontend-page",
             "url": "/screenshot-fixtures/foundation-theme/foundation-membership-gate-layout",
             "waitFor": ".theme-foundation",
-            "colorSchemes": [
-                "light"
-            ]
+            "colorSchemes": ["light"]
         }
     ]
 }

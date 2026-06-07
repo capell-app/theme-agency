@@ -113,6 +113,42 @@ it('declares committed marketplace screenshots', function (): void {
     }
 });
 
+it('declares generated Tailwind output review as a command report capture', function (): void {
+    $screenshots = foundationThemeScreenshotsContract();
+    $entry = collect($screenshots['entries'] ?? [])
+        ->firstWhere('id', 'generated-tailwind-asset-output-review');
+
+    throw_unless(is_array($entry), RuntimeException::class, 'Generated Tailwind output review screenshot entry must exist.');
+
+    expect($entry)
+        ->toMatchArray([
+            'surface' => 'developer',
+            'targetType' => 'console-command',
+            'target' => 'capell:frontend-tailwind-assets --report',
+            'reportPath' => 'packages/foundation-theme/docs/reports/generated-tailwind-asset-output-review.md',
+            'screenshotPath' => 'packages/foundation-theme/docs/screenshots/generated-tailwind-asset-output-review.png',
+            'darkScreenshotPath' => 'packages/foundation-theme/docs/screenshots/generated-tailwind-asset-output-review-dark.png',
+        ]);
+
+    $packageRoot = dirname(__DIR__, 2);
+    $reportPath = $packageRoot . '/docs/reports/generated-tailwind-asset-output-review.md';
+
+    expect($entry['notes'])
+        ->toContain('not the generic settings screen')
+        ->and(is_file($reportPath))->toBeTrue()
+        ->and(is_file($packageRoot . '/docs/screenshots/generated-tailwind-asset-output-review.png'))->toBeTrue()
+        ->and(is_file($packageRoot . '/docs/screenshots/generated-tailwind-asset-output-review-dark.png'))->toBeTrue();
+
+    $report = file_get_contents($reportPath) ?: '';
+
+    expect($report)
+        ->toContain('capell:frontend-tailwind-assets --report')
+        ->toContain('imports')
+        ->toContain('plugins')
+        ->toContain('sources')
+        ->toContain('theme_colors');
+});
+
 it('declares standalone theme packages extending foundation', function (string $packageDirectory, string $composerName, string $themeKey): void {
     $manifest = themePackageManifest($packageDirectory);
     $composer = themePackageComposer($packageDirectory);
@@ -171,6 +207,18 @@ function themePackageManifest(string $packageDirectory): array
 {
     return json_decode(
         (string) file_get_contents(dirname(__DIR__, 3) . '/' . $packageDirectory . '/capell.json'),
+        true,
+        flags: JSON_THROW_ON_ERROR,
+    );
+}
+
+/**
+ * @return array<string, mixed>
+ */
+function foundationThemeScreenshotsContract(): array
+{
+    return json_decode(
+        (string) file_get_contents(dirname(__DIR__, 2) . '/docs/screenshots.json'),
         true,
         flags: JSON_THROW_ON_ERROR,
     );
