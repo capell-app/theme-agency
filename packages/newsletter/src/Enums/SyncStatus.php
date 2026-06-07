@@ -12,6 +12,7 @@ enum SyncStatus: string implements HasLabel
     case Running = 'running';
     case Succeeded = 'succeeded';
     case Failed = 'failed';
+    case Exhausted = 'exhausted';
     case RetryScheduled = 'retry_scheduled';
 
     public function getLabel(): string

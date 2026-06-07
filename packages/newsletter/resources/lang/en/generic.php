@@ -29,4 +29,12 @@ return [
         'sending' => 'Sending',
         'sent' => 'Sent',
     ],
+    'sync_status' => [
+        'pending' => 'Pending',
+        'running' => 'Running',
+        'succeeded' => 'Succeeded',
+        'failed' => 'Failed',
+        'exhausted' => 'Exhausted',
+        'retry_scheduled' => 'Retry scheduled',
+    ],
 ];

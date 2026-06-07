@@ -126,6 +126,7 @@ class AdminServiceProvider extends ServiceProvider
             label: fn (): string => __('capell-newsletter::widgets.sync_failures'),
             value: fn (): int => SyncAttempt::query()
                 ->whereIn('sync_status', [
+                    SyncStatus::Exhausted,
                     SyncStatus::Failed,
                     SyncStatus::RetryScheduled,
                 ])

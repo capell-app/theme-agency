@@ -15,7 +15,8 @@ return [
         'passed' => 'Provider sync failures are persisted and the retry action can query due attempts without dispatching jobs.',
         'tables_missing' => 'Missing sync attempt table(s): :tables.',
         'pipeline_unavailable' => 'The provider sync retry action or command is unavailable.',
-        'remediation' => 'Run the newsletter migrations and ensure the retry command and action are registered.',
+        'exhausted_attempts' => ':count provider sync attempt(s) have exhausted retries and need operator review.',
+        'remediation' => 'Run the newsletter migrations, ensure the retry command and action are registered, and review exhausted provider sync attempts.',
     ],
     'provider_webhooks' => [
         'label' => 'Newsletter provider webhook idempotency',

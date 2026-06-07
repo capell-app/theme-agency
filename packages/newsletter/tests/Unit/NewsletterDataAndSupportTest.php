@@ -243,7 +243,8 @@ it('defines newsletter package metadata and enum labels', function (): void {
         ->and(NewsletterSendStatus::Scheduled->getLabel())->toBe('Scheduled')
         ->and(ResubscribePolicy::RequireDoubleOptIn->getLabel())->toBe('capell-newsletter::generic.resubscribe_policy.require_double_opt_in')
         ->and(SegmentType::SavedFilter->getLabel())->toBe('capell-newsletter::generic.segment_type.saved_filter')
-        ->and(SyncStatus::RetryScheduled->getLabel())->toBe('capell-newsletter::generic.sync_status.retry_scheduled');
+        ->and(SyncStatus::RetryScheduled->getLabel())->toBe('Retry scheduled')
+        ->and(SyncStatus::Exhausted->getLabel())->toBe('Exhausted');
 });
 
 it('resolves newsletter resubscribe policy from settings with safe fallback', function (): void {

@@ -126,7 +126,7 @@ class SyncSubscriberToProviderAction
             : null;
 
         $syncAttempt->forceFill([
-            'sync_status' => $retryDelay === null ? SyncStatus::Failed : SyncStatus::RetryScheduled,
+            'sync_status' => $retryDelay === null ? SyncStatus::Exhausted : SyncStatus::RetryScheduled,
             'error_message' => $errorMessage,
             'next_retry_at' => is_numeric($retryDelay) ? now()->addMinutes((int) $retryDelay) : null,
         ])->save();

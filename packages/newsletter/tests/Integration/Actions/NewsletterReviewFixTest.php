@@ -178,7 +178,7 @@ it('marks provider failures retryable before final failure', function (): void {
 
     SyncSubscriberToProviderAction::run($syncAttempt);
 
-    expect($syncAttempt->refresh()->sync_status)->toBe(SyncStatus::Failed);
+    expect($syncAttempt->refresh()->sync_status)->toBe(SyncStatus::Exhausted);
 });
 
 it('registers the planned newsletter admin resources', function (): void {

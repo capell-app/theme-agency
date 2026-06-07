@@ -8,8 +8,10 @@ use Capell\Core\Data\Diagnostics\DoctorCheckResultData;
 use Capell\FormBuilder\Events\FormSubmitted;
 use Capell\Newsletter\Console\Commands\RequeueDueProviderSyncAttemptsCommand;
 use Capell\Newsletter\Enums\SegmentType;
+use Capell\Newsletter\Enums\SyncStatus;
 use Capell\Newsletter\Listeners\SubscribeFromFormSubmission;
 use Capell\Newsletter\Models\Segment;
+use Capell\Newsletter\Models\SyncAttempt;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -75,18 +77,23 @@ final class BuildNewsletterHealthDiagnosticsAction
     {
         $missingTables = $this->missingTables(['newsletter_sync_attempts']);
         $pipelineQueryable = $missingTables === [] && $this->syncRetryPipelineQueryable();
-        $passed = $missingTables === [] && $pipelineQueryable;
+        $exhaustedAttempts = $missingTables === [] ? $this->exhaustedSyncAttemptsCount() : 0;
+        $passed = $missingTables === [] && $pipelineQueryable && $exhaustedAttempts === 0;
 
         $messageKey = match (true) {
             $missingTables !== [] => 'capell-newsletter::health.provider_sync_retry.tables_missing',
             ! $pipelineQueryable => 'capell-newsletter::health.provider_sync_retry.pipeline_unavailable',
+            $exhaustedAttempts > 0 => 'capell-newsletter::health.provider_sync_retry.exhausted_attempts',
             default => 'capell-newsletter::health.provider_sync_retry.passed',
         };
 
         return new DoctorCheckResultData(
             label: (string) __('capell-newsletter::health.provider_sync_retry.label'),
             passed: $passed,
-            message: (string) __($messageKey, ['tables' => implode(', ', $missingTables)]),
+            message: (string) __($messageKey, [
+                'count' => $exhaustedAttempts,
+                'tables' => implode(', ', $missingTables),
+            ]),
             remediation: $passed
                 ? null
                 : (string) __('capell-newsletter::health.provider_sync_retry.remediation'),
@@ -182,6 +189,13 @@ final class BuildNewsletterHealthDiagnosticsAction
                 DB::rollBack();
             }
         }
+    }
+
+    public function exhaustedSyncAttemptsCount(): int
+    {
+        return SyncAttempt::query()
+            ->where('sync_status', SyncStatus::Exhausted)
+            ->count();
     }
 
     public function providerWebhookActionResolvable(): bool

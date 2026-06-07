@@ -166,6 +166,7 @@
         "newsletter-unsubscribe-routes",
         "newsletter-automation-hooks",
         "newsletter-global-suppression",
+        "newsletter-sync-exhaustion",
         "newsletter-contacts-source-adapter",
         "newsletter-customer-portal-preferences-feed",
         "newsletter-public-preference-center"

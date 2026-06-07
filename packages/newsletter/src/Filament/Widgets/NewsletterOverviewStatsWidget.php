@@ -46,6 +46,7 @@ class NewsletterOverviewStatsWidget extends StatsOverviewWidget implements Capel
                 __('capell-newsletter::widgets.sync_failures'),
                 (string) SyncAttempt::query()
                     ->whereIn('sync_status', [
+                        SyncStatus::Exhausted,
                         SyncStatus::Failed,
                         SyncStatus::RetryScheduled,
                     ])
