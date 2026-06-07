@@ -17,13 +17,13 @@
     $formAction = is_string($formAction) ? trim($formAction) : '';
 @endphp
 
-<section class="theme-section theme-section-newsletter bg-[#f8fafc]">
+<section class="theme-section theme-section-newsletter portfolio-bg-card-soft">
     @if ($sectionHeading)
         <div class="mx-auto max-w-5xl px-6 py-14">
             <div class="grid gap-6 md:grid-cols-[1fr_auto] md:items-end">
                 <div>
                     <h2
-                        class="text-4xl font-black tracking-tight text-[#0f172a]"
+                        class="portfolio-text-ink text-4xl font-black tracking-tight"
                     >
                         {{ $sectionHeading }}
                     </h2>
@@ -62,7 +62,7 @@
                             />
                             <button
                                 type="submit"
-                                class="rounded-full bg-[#0f172a] px-4 py-2 text-sm font-black text-white"
+                                class="portfolio-bg-ink rounded-full px-4 py-2 text-sm font-black text-white"
                             >
                                 {{ __('capell-theme-portfolio::generic.subscribe_label') }}
                             </button>

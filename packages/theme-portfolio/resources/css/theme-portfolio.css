@@ -5,7 +5,11 @@
     --portfolio-muted: #64748b;
     --portfolio-primary: var(--theme-primary, #7c2d12);
     --portfolio-accent: var(--theme-accent, #f43f5e);
+    --portfolio-highlight: var(--theme-highlight, #fb923c);
+    --portfolio-secondary: var(--theme-secondary, #1f3173);
+    --portfolio-primary-strong: var(--theme-primary-strong, #9a3412);
     --portfolio-surface: var(--theme-surface, #f8fafc);
+    --portfolio-surface-cool: #eef2f7;
     --portfolio-card: #ffffff;
     --portfolio-card-soft: #f8fafc;
     --portfolio-border: rgb(124 45 18 / 14%);
@@ -90,6 +94,74 @@
     box-shadow: 0 20px 58px rgb(15 23 42 / 8%);
 }
 
+.portfolio-bg-surface {
+    background-color: var(--portfolio-surface);
+}
+
+.portfolio-bg-surface-cool {
+    background-color: var(--portfolio-surface-cool);
+}
+
+.portfolio-bg-card {
+    background-color: var(--portfolio-card);
+}
+
+.portfolio-bg-card-soft {
+    background-color: var(--portfolio-card-soft);
+}
+
+.portfolio-bg-warm {
+    background-color: var(--portfolio-warm);
+}
+
+.portfolio-bg-ink {
+    background-color: var(--portfolio-ink);
+}
+
+.portfolio-bg-deep {
+    background-color: var(--portfolio-deep);
+}
+
+.portfolio-bg-deep-soft {
+    background-color: var(--portfolio-deep-soft);
+}
+
+.portfolio-bg-secondary {
+    background-color: var(--portfolio-secondary);
+}
+
+.portfolio-bg-highlight {
+    background-color: var(--portfolio-highlight);
+}
+
+.portfolio-text-ink {
+    color: var(--portfolio-ink);
+}
+
+.portfolio-text-primary {
+    color: var(--portfolio-primary);
+}
+
+.portfolio-text-primary-strong {
+    color: var(--portfolio-primary-strong);
+}
+
+.portfolio-text-secondary {
+    color: var(--portfolio-secondary);
+}
+
+.portfolio-text-highlight {
+    color: var(--portfolio-highlight);
+}
+
+.portfolio-border-strong {
+    border-color: var(--portfolio-border-strong);
+}
+
+.portfolio-hover-border-secondary:hover {
+    border-color: var(--portfolio-secondary);
+}
+
 .dark .portfolio-shell,
 .portfolio-shell.portfolio-shell-dark {
     --site-theme-primary: #fb923c;
@@ -98,7 +170,15 @@
     --portfolio-muted: #cbd5e1;
     --portfolio-primary: var(--theme-primary, #fb923c);
     --portfolio-accent: var(--theme-accent, #f43f5e);
+    --portfolio-highlight: var(--theme-highlight, #fb923c);
+    --portfolio-secondary: color-mix(
+        in oklab,
+        var(--portfolio-accent) 50%,
+        var(--portfolio-deep)
+    );
+    --portfolio-primary-strong: var(--theme-primary-strong, #fb923c);
     --portfolio-surface: var(--theme-surface, #070b1a);
+    --portfolio-surface-cool: #111827;
     --portfolio-card: #111827;
     --portfolio-card-soft: #1f2937;
     --portfolio-border: rgb(255 255 255 / 14%);

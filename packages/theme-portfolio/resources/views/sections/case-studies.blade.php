@@ -6,12 +6,14 @@
 
 <section
     id="case-studies"
-    class="theme-section theme-section-case-studies bg-[#070b1a] text-white"
+    class="theme-section theme-section-case-studies portfolio-bg-deep text-white"
 >
     <div class="mx-auto max-w-6xl px-6 py-16 lg:py-20">
         <div class="grid gap-8 lg:grid-cols-[0.76fr_1fr] lg:items-end">
             <div>
-                <p class="text-xs font-black text-[#fb923c] uppercase">
+                <p
+                    class="portfolio-text-highlight text-xs font-black uppercase"
+                >
                     {{ __('capell-theme-portfolio::generic.case_studies_label') }}
                 </p>
                 @isset($heading)
@@ -29,7 +31,9 @@
                 </p>
                 <div class="grid gap-3 sm:grid-cols-3">
                     <div class="border border-white/10 bg-white/[0.06] p-4">
-                        <p class="text-xs font-black text-[#fb923c] uppercase">
+                        <p
+                            class="portfolio-text-highlight text-xs font-black uppercase"
+                        >
                             {{ __('capell-theme-portfolio::generic.case_scope_label') }}
                         </p>
                         <p class="mt-2 text-sm font-black text-white">
@@ -37,7 +41,9 @@
                         </p>
                     </div>
                     <div class="border border-white/10 bg-white/[0.06] p-4">
-                        <p class="text-xs font-black text-[#fb923c] uppercase">
+                        <p
+                            class="portfolio-text-highlight text-xs font-black uppercase"
+                        >
                             {{ __('capell-theme-portfolio::generic.case_artifacts_label') }}
                         </p>
                         <p class="mt-2 text-sm font-black text-white">
@@ -45,7 +51,9 @@
                         </p>
                     </div>
                     <div class="border border-white/10 bg-white/[0.06] p-4">
-                        <p class="text-xs font-black text-[#fb923c] uppercase">
+                        <p
+                            class="portfolio-text-highlight text-xs font-black uppercase"
+                        >
                             {{ __('capell-theme-portfolio::generic.case_role_label') }}
                         </p>
                         <p class="mt-2 text-sm font-black text-white">
@@ -68,15 +76,15 @@
                     <article
                         class="grid min-w-[82%] snap-start overflow-hidden border border-white/10 bg-white/[0.06] shadow-2xl shadow-black/20 md:min-w-[560px] lg:min-w-[640px] lg:grid-cols-[0.72fr_1fr]"
                     >
-                        <div class="bg-[#111827] p-5">
+                        <div class="portfolio-bg-deep-soft p-5">
                             <div
-                                class="flex aspect-[4/3] flex-col justify-between border border-white/10 bg-[#030712] p-5"
+                                class="portfolio-bg-deep flex aspect-[4/3] flex-col justify-between border border-white/10 p-5"
                             >
                                 <div
                                     class="flex items-start justify-between gap-4"
                                 >
                                     <p
-                                        class="text-xs font-black text-[#fb923c] uppercase"
+                                        class="portfolio-text-highlight text-xs font-black uppercase"
                                     >
                                         {{ __('capell-theme-portfolio::generic.case_slide_label') }}
                                     </p>
@@ -92,7 +100,7 @@
                                     aria-hidden="true"
                                 >
                                     <span
-                                        class="block h-2 w-28 bg-[#fb923c]"
+                                        class="portfolio-bg-highlight block h-2 w-28"
                                     ></span>
                                     <span
                                         class="block h-3 w-3/4 bg-white/35"
@@ -102,7 +110,9 @@
                                     ></span>
                                     <span class="mt-5 grid grid-cols-3 gap-3">
                                         <span class="h-12 bg-white/15"></span>
-                                        <span class="h-12 bg-[#1f3173]"></span>
+                                        <span
+                                            class="portfolio-bg-secondary h-12"
+                                        ></span>
                                         <span class="h-12 bg-white/10"></span>
                                     </span>
                                 </div>
@@ -127,12 +137,12 @@
                             <div>
                                 <div class="flex flex-wrap items-center gap-2">
                                     <span
-                                        class="bg-[#fff7ed] px-3 py-1 text-xs font-black text-[#9a3412] uppercase"
+                                        class="portfolio-bg-warm portfolio-text-primary-strong px-3 py-1 text-xs font-black uppercase"
                                     >
                                         {{ $item['type'] ?? __('capell-theme-portfolio::generic.featured_heading') }}
                                     </span>
                                     <span
-                                        class="bg-[#1f3173] px-3 py-1 text-xs font-black text-white uppercase"
+                                        class="portfolio-bg-secondary px-3 py-1 text-xs font-black text-white uppercase"
                                     >
                                         {{ __('capell-theme-portfolio::generic.outcome_label') }}
                                         {{ $item['metric'] ?? __('capell-theme-portfolio::generic.outcome_metric') }}
@@ -154,7 +164,7 @@
                             >
                                 <div>
                                     <p
-                                        class="text-xs font-black text-[#fb923c] uppercase"
+                                        class="portfolio-text-highlight text-xs font-black uppercase"
                                     >
                                         {{ __('capell-theme-portfolio::generic.case_scope_label') }}
                                     </p>
@@ -166,7 +176,7 @@
                                 </div>
                                 <div>
                                     <p
-                                        class="text-xs font-black text-[#fb923c] uppercase"
+                                        class="portfolio-text-highlight text-xs font-black uppercase"
                                     >
                                         {{ __('capell-theme-portfolio::generic.case_role_label') }}
                                     </p>
@@ -178,7 +188,7 @@
                                 </div>
                                 <div>
                                     <p
-                                        class="text-xs font-black text-[#fb923c] uppercase"
+                                        class="portfolio-text-highlight text-xs font-black uppercase"
                                     >
                                         {{ __('capell-theme-portfolio::generic.case_timeline_label') }}
                                     </p>

@@ -6,11 +6,13 @@
     <div class="mx-auto max-w-6xl px-6 py-16 lg:py-20">
         <div class="grid gap-5 md:grid-cols-[0.58fr_1fr] md:items-end">
             <div>
-                <p class="text-xs font-black text-[#1f3173] uppercase">
+                <p
+                    class="portfolio-text-secondary text-xs font-black uppercase"
+                >
                     {{ __('capell-theme-portfolio::generic.capabilities_label') }}
                 </p>
                 <h2
-                    class="mt-4 text-4xl font-black tracking-tight text-[#0f172a]"
+                    class="portfolio-text-ink mt-4 text-4xl font-black tracking-tight"
                 >
                     {{ $section->heading }}
                 </h2>
@@ -28,15 +30,15 @@
         <div class="mt-10 grid gap-4 lg:grid-cols-3">
             @foreach ($features as $feature)
                 <article
-                    class="group grid min-h-full grid-rows-[auto_1fr] border border-slate-200 bg-[#f8fafc] transition hover:-translate-y-1 hover:border-[#1f3173] hover:bg-white hover:shadow-xl"
+                    class="group portfolio-bg-card-soft portfolio-hover-border-secondary grid min-h-full grid-rows-[auto_1fr] border border-slate-200 transition hover:-translate-y-1 hover:bg-white hover:shadow-xl"
                 >
                     <div
-                        class="border-b border-slate-200 bg-[#070b1a] p-5 text-white"
+                        class="portfolio-bg-deep border-b border-slate-200 p-5 text-white"
                     >
                         <div class="flex items-start justify-between gap-4">
                             <div>
                                 <p
-                                    class="text-xs font-black text-[#fb923c] uppercase"
+                                    class="portfolio-text-highlight text-xs font-black uppercase"
                                 >
                                     {{ __('capell-theme-portfolio::generic.capability_signal') }}
                                 </p>
@@ -49,17 +51,19 @@
                                 aria-hidden="true"
                             >
                                 <span class="h-8 bg-white/20"></span>
-                                <span class="h-8 bg-[#1f3173]"></span>
+                                <span class="portfolio-bg-secondary h-8"></span>
                                 <span class="h-8 bg-white/10"></span>
                             </div>
                         </div>
                     </div>
 
                     <div class="p-5">
-                        <p class="text-xs font-black text-[#1f3173] uppercase">
+                        <p
+                            class="portfolio-text-secondary text-xs font-black uppercase"
+                        >
                             {{ $feature['metric'] ?? __('capell-theme-portfolio::generic.proof_signal') }}
                         </p>
-                        <h3 class="mt-3 text-xl font-black text-[#0f172a]">
+                        <h3 class="portfolio-text-ink mt-3 text-xl font-black">
                             {{ $feature['title'] }}
                         </h3>
                         <p class="mt-3 text-sm leading-6 text-slate-600">

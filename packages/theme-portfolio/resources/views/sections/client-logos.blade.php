@@ -9,11 +9,11 @@
         <div class="grid gap-5 md:grid-cols-[0.7fr_1fr] md:items-end">
             <div>
                 <p
-                    class="text-xs font-black tracking-[0.16em] text-[#7c2d12] uppercase"
+                    class="portfolio-text-primary text-xs font-black tracking-[0.16em] uppercase"
                 >
                     {{ __('capell-theme-portfolio::generic.client_logos_label') }}
                 </p>
-                <h2 class="mt-3 text-4xl font-black text-[#0f172a]">
+                <h2 class="portfolio-text-ink mt-3 text-4xl font-black">
                     {{ $heading }}
                 </h2>
             </div>
@@ -33,7 +33,7 @@
                 @endphp
 
                 <article
-                    class="flex min-h-28 items-center justify-center rounded-xl border border-slate-200 bg-[#f8fafc] p-5 text-center"
+                    class="portfolio-bg-card-soft flex min-h-28 items-center justify-center rounded-xl border border-slate-200 p-5 text-center"
                 >
                     @if ($logoUrl)
                         <img
@@ -55,9 +55,9 @@
                 </article>
             @empty
                 <article
-                    class="rounded-xl border border-dashed border-slate-300 bg-[#f8fafc] p-6 sm:col-span-2 lg:col-span-5"
+                    class="portfolio-bg-card-soft rounded-xl border border-dashed border-slate-300 p-6 sm:col-span-2 lg:col-span-5"
                 >
-                    <h3 class="text-lg font-black text-[#0f172a]">
+                    <h3 class="portfolio-text-ink text-lg font-black">
                         {{ __('capell-theme-portfolio::generic.premium_layout_ready') }}
                     </h3>
                     <p class="mt-2 text-sm text-slate-600">

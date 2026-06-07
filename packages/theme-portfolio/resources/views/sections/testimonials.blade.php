@@ -4,11 +4,11 @@
 @endphp
 
 <section
-    class="theme-section theme-section-testimonials bg-[#f4f6f8] px-6 py-16"
+    class="theme-section theme-section-testimonials portfolio-bg-card-soft px-6 py-16"
 >
     <div class="mx-auto max-w-5xl">
         @isset($heading)
-            <h2 class="text-4xl font-black tracking-tight text-[#0f172a]">
+            <h2 class="portfolio-text-ink text-4xl font-black tracking-tight">
                 {{ $heading }}
             </h2>
         @endisset
@@ -45,7 +45,7 @@
                 <article
                     class="min-w-[280px] snap-start rounded-2xl border border-dashed border-slate-300 bg-white p-6 md:col-span-3 md:min-w-0"
                 >
-                    <h3 class="text-lg font-black text-[#0f172a]">
+                    <h3 class="portfolio-text-ink text-lg font-black">
                         {{ __('capell-theme-portfolio::generic.premium_layout_ready') }}
                     </h3>
                     <p class="mt-2 text-sm text-slate-600">

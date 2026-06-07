@@ -5,17 +5,17 @@
     $downloadAction = $section->downloadAction ?? $section->action ?? null;
 @endphp
 
-<section class="theme-section theme-section-resume-cv bg-[#f8fafc]">
+<section class="theme-section theme-section-resume-cv portfolio-bg-card-soft">
     <div
         class="mx-auto grid max-w-6xl gap-8 px-6 py-16 lg:grid-cols-[0.75fr_1.25fr]"
     >
         <div>
             <p
-                class="text-xs font-black tracking-[0.16em] text-[#7c2d12] uppercase"
+                class="portfolio-text-primary text-xs font-black tracking-[0.16em] uppercase"
             >
                 {{ __('capell-theme-portfolio::generic.resume_cv_label') }}
             </p>
-            <h2 class="mt-3 text-4xl font-black text-[#0f172a]">
+            <h2 class="portfolio-text-ink mt-3 text-4xl font-black">
                 {{ $heading }}
             </h2>
             @if ($summary)
@@ -27,7 +27,7 @@
             @if (is_array($downloadAction) && ($downloadAction['url'] ?? null) && ($downloadAction['label'] ?? null))
                 <a
                     href="{{ $downloadAction['url'] }}"
-                    class="mt-6 inline-flex rounded-full bg-[#0f172a] px-5 py-3 text-sm font-black text-white"
+                    class="portfolio-bg-ink mt-6 inline-flex rounded-full px-5 py-3 text-sm font-black text-white"
                 >
                     {{ $downloadAction['label'] }}
                 </a>
@@ -41,12 +41,12 @@
                 >
                     <div class="grid gap-2 md:grid-cols-[0.35fr_1fr]">
                         <p
-                            class="text-xs font-black tracking-[0.14em] text-[#9a3412] uppercase"
+                            class="portfolio-text-primary-strong text-xs font-black tracking-[0.14em] uppercase"
                         >
                             {{ $item['period'] ?? $item['date'] ?? __('capell-theme-portfolio::generic.resume_period_label') }}
                         </p>
                         <div>
-                            <h3 class="text-lg font-black text-[#0f172a]">
+                            <h3 class="portfolio-text-ink text-lg font-black">
                                 {{ $item['title'] ?? __('capell-theme-portfolio::generic.resume_item_label') }}
                             </h3>
                             @if ($item['organization'] ?? $item['company'] ?? null)
@@ -67,7 +67,7 @@
                 <article
                     class="rounded-xl border border-dashed border-slate-300 bg-white p-6"
                 >
-                    <h3 class="text-lg font-black text-[#0f172a]">
+                    <h3 class="portfolio-text-ink text-lg font-black">
                         {{ __('capell-theme-portfolio::generic.premium_layout_ready') }}
                     </h3>
                     <p class="mt-2 text-sm text-slate-600">

@@ -5,14 +5,14 @@
 
 <section
     id="work-grid"
-    class="theme-section theme-section-work-grid bg-[#f8fafc]"
+    class="theme-section theme-section-work-grid portfolio-bg-card-soft"
 >
     @isset($heading)
         <div class="mx-auto max-w-5xl px-6 py-14">
             <div class="grid gap-3 lg:grid-cols-[1fr_1.35fr] lg:items-end">
                 <div>
                     <h2
-                        class="text-4xl font-black tracking-tight text-[#0f172a]"
+                        class="portfolio-text-ink text-4xl font-black tracking-tight"
                     >
                         {{ $heading }}
                     </h2>
@@ -67,7 +67,7 @@
                     >
                         {{ $project['type'] ?? __('capell-theme-portfolio::generic.projects_heading') }}
                     </p>
-                    <h3 class="mt-2 text-lg font-black text-[#0f172a]">
+                    <h3 class="portfolio-text-ink mt-2 text-lg font-black">
                         {{ $project['title'] ?? $project['name'] ?? '' }}
                     </h3>
                     <p class="mt-2 text-sm text-slate-600">
@@ -78,7 +78,7 @@
                 <article
                     class="min-w-[250px] snap-start rounded-xl border border-dashed border-slate-300 bg-white p-6 sm:col-span-3"
                 >
-                    <h3 class="text-lg font-black text-[#0f172a]">
+                    <h3 class="portfolio-text-ink text-lg font-black">
                         {{ __('capell-theme-portfolio::generic.premium_layout_ready') }}
                     </h3>
                     <p class="mt-2 text-sm text-slate-600">

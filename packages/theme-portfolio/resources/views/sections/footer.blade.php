@@ -1,5 +1,5 @@
 <footer
-    class="theme-section theme-section-footer border-t border-slate-200 bg-[#0f172a] text-white"
+    class="theme-section theme-section-footer portfolio-bg-ink border-t border-slate-200 text-white"
 >
     <div
         class="mx-auto grid max-w-5xl gap-8 px-6 py-12 md:grid-cols-[1.2fr_0.8fr_0.8fr]"
