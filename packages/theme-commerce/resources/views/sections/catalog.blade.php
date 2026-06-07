@@ -1,6 +1,14 @@
 @php
     $shopifyAvailable ??= false;
     $items = $section->items ?? [];
+    $catalog = $section->shopifySummary ?? $section->catalog ?? [];
+    $catalog = is_array($catalog) ? $catalog : [];
+    $catalogStats = [
+        __('capell-theme-commerce::generic.shopify_products_synced') => $catalog['productsSynced'] ?? $catalog['product_count'] ?? $catalog['products'] ?? null,
+        __('capell-theme-commerce::generic.shopify_variants_synced') => $catalog['variantsSynced'] ?? $catalog['variant_count'] ?? $catalog['variants'] ?? null,
+        __('capell-theme-commerce::generic.shopify_available_stock') => $catalog['availableStock'] ?? $catalog['available_stock'] ?? $catalog['available'] ?? null,
+    ];
+    $hasCatalogStats = collect($catalogStats)->filter(static fn (mixed $value): bool => $value !== null && $value !== '')->isNotEmpty();
 @endphp
 
 <section class="retail-catalog bg-white">
@@ -86,6 +94,32 @@
                 <p class="mt-3 text-stone-200">
                     {{ $shopifyAvailable ? __('capell-theme-commerce::generic.shopify_summary') : __('capell-theme-commerce::generic.catalog_summary') }}
                 </p>
+
+                @if ($hasCatalogStats)
+                    <dl class="mt-5 grid gap-3 sm:grid-cols-3">
+                        @foreach ($catalogStats as $label => $value)
+                            @if ($value !== null && $value !== '')
+                                <div>
+                                    <dt
+                                        class="text-xs font-black text-white/60 uppercase"
+                                    >
+                                        {{ $label }}
+                                    </dt>
+                                    <dd class="mt-1 text-lg font-black">
+                                        {{ $value }}
+                                    </dd>
+                                </div>
+                            @endif
+                        @endforeach
+                    </dl>
+                @endif
+
+                @if ($catalog['syncedAt'] ?? $catalog['synced_at'] ?? null)
+                    <p class="mt-4 text-xs font-bold text-white/60">
+                        {{ __('capell-theme-commerce::generic.shopify_synced_at') }}:
+                        {{ $catalog['syncedAt'] ?? $catalog['synced_at'] }}
+                    </p>
+                @endif
             </div>
         </div>
 

@@ -1,15 +1,52 @@
 @php
-    $gallery = $section->gallery ?? $section->media ?? [];
-    $variants = $section->variants ?? $section->options ?? [];
+    $product = $section->product ?? $section->shopifyProduct ?? [];
+    $product = is_array($product) ? $product : [];
+    $featuredImage = $product['featuredImage'] ?? $product['featured_image'] ?? [];
+    $gallery = $section->gallery ?? $section->media ?? $product['gallery'] ?? $product['media'] ?? $product['images'] ?? [];
+    $variants = $section->variants ?? $section->options ?? $product['variants'] ?? $product['options'] ?? [];
     $recommendations = $section->recommendations ?? $section->related ?? [];
-    $stockStatus = $section->stockStatus ?? $section->stock ?? null;
+    $firstVariant = is_countable($variants) && count($variants) > 0 && is_array($variants[0] ?? null) ? $variants[0] : [];
+    $formatShopifyPrice = static function (array $variant): ?string {
+        $amount = $variant['price'] ?? $variant['priceAmount'] ?? $variant['price_amount'] ?? null;
+        $currency = $variant['priceCurrency'] ?? $variant['price_currency'] ?? null;
+
+        if ($amount === null) {
+            return null;
+        }
+
+        return trim((string) $currency . ' ' . (string) $amount);
+    };
+    $productAvailable = $section->availableForSale ?? $section->available_for_sale ?? $product['availableForSale'] ?? $product['available_for_sale'] ?? $firstVariant['availableForSale'] ?? $firstVariant['available_for_sale'] ?? null;
+    $stockStatus = $section->stockStatus ?? $section->stock ?? (is_bool($productAvailable) ? ($productAvailable ? __('capell-theme-commerce::generic.shopify_in_stock') : __('capell-theme-commerce::generic.shopify_sold_out')) : null);
+    $heading = $section->heading ?? $product['title'] ?? null;
+    $summary = $section->summary ?? $product['description'] ?? $product['summary'] ?? null;
+    $price = $section->price ?? $section->formattedPrice ?? $product['price'] ?? $product['formattedPrice'] ?? $formatShopifyPrice($firstVariant);
+    $compareAtPrice = $section->compareAtPrice ?? $section->compareAt ?? $product['compareAtPrice'] ?? $product['compareAt'] ?? $firstVariant['compareAtPrice'] ?? $firstVariant['compare_at_price'] ?? null;
+    $productImage = $section->image ?? $section->imageUrl ?? $featuredImage['url'] ?? $featuredImage['src'] ?? null;
+    $productImageAlt = $section->imageAlt ?? $featuredImage['altText'] ?? $featuredImage['alt'] ?? $heading ?? '';
     $ctaLabel = $section->ctaLabel ?? __('capell-theme-commerce::generic.product_add_to_basket');
-    $ctaUrl = $section->ctaUrl ?? $section->url ?? '#';
+    $ctaUrl = $section->ctaUrl ?? $section->url ?? (isset($product['handle']) ? '/products/' . $product['handle'] : '#');
     $trustItems = $section->trustItems ?? [
         __('capell-theme-commerce::generic.product_shipping_label'),
         __('capell-theme-commerce::generic.product_returns_label'),
         __('capell-theme-commerce::generic.product_secure_checkout_label'),
     ];
+    $variantLabel = static function (mixed $variant): string {
+        if (! is_array($variant)) {
+            return (string) $variant;
+        }
+
+        $selectedOptions = $variant['selectedOptions'] ?? $variant['selected_options'] ?? [];
+
+        if (is_countable($selectedOptions) && count($selectedOptions) > 0) {
+            return collect($selectedOptions)
+                ->map(static fn (mixed $option): string => is_array($option) ? (string) ($option['value'] ?? $option['label'] ?? '') : (string) $option)
+                ->filter()
+                ->implode(' / ');
+        }
+
+        return (string) ($variant['label'] ?? $variant['name'] ?? $variant['title'] ?? '');
+    };
 @endphp
 
 <section class="retail-product-detail bg-[var(--retail-surface)]">
@@ -27,10 +64,10 @@
                 <div
                     class="overflow-hidden rounded-2xl border border-stone-200 bg-white"
                 >
-                    @if (($gallery[0]['url'] ?? $gallery[0]['image'] ?? null) || ($section->image ?? $section->imageUrl ?? null))
+                    @if (($gallery[0]['url'] ?? $gallery[0]['image'] ?? null) || $productImage)
                         <img
-                            src="{{ $gallery[0]['url'] ?? $gallery[0]['image'] ?? $section->image ?? $section->imageUrl }}"
-                            alt="{{ $gallery[0]['alt'] ?? $gallery[0]['imageAlt'] ?? $section->imageAlt ?? $section->heading ?? '' }}"
+                            src="{{ $gallery[0]['url'] ?? $gallery[0]['image'] ?? $productImage }}"
+                            alt="{{ $gallery[0]['alt'] ?? $gallery[0]['imageAlt'] ?? $productImageAlt }}"
                             width="1200"
                             height="1200"
                             loading="eager"
@@ -100,11 +137,11 @@
         </div>
 
         <div class="retail-frame bg-white p-6 shadow-sm">
-            @if ($section->heading ?? null)
+            @if ($heading)
                 <h2
                     class="text-4xl font-black tracking-tight text-[var(--retail-ink)]"
                 >
-                    {{ $section->heading }}
+                    {{ $heading }}
                 </h2>
             @else
                 <h2
@@ -117,25 +154,25 @@
                 </p>
             @endif
 
-            @if ($section->summary ?? null)
+            @if ($summary)
                 <p class="mt-4 text-lg text-stone-600">
-                    {{ $section->summary }}
+                    {{ $summary }}
                 </p>
             @endif
 
             <div class="mt-6 flex flex-wrap items-end gap-3">
-                @if ($section->price ?? null)
+                @if ($price)
                     <p class="text-3xl font-black text-[var(--retail-ink)]">
-                        {{ $section->price }}
+                        {{ $price }}
                     </p>
                 @endif
 
-                @if ($section->compareAtPrice ?? $section->compareAt ?? null)
+                @if ($compareAtPrice)
                     <p class="text-sm font-bold text-stone-500 line-through">
                         <span class="sr-only">
                             {{ __('capell-theme-commerce::generic.product_compare_at_label') }}
                         </span>
-                        {{ $section->compareAtPrice ?? $section->compareAt }}
+                        {{ $compareAtPrice }}
                     </p>
                 @endif
 
@@ -160,7 +197,7 @@
                             <span
                                 class="rounded-full border border-stone-200 bg-[var(--retail-surface)] px-4 py-2 text-sm font-bold text-[var(--retail-ink)]"
                             >
-                                {{ $variant['label'] ?? $variant['name'] ?? $variant }}
+                                {{ $variantLabel($variant) }}
                             </span>
                         @endforeach
                     </div>

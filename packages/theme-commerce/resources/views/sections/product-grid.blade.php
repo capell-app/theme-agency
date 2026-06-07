@@ -2,6 +2,30 @@
     $products = $section->features ?? $section->items ?? [];
     $productCount = is_countable($products) ? count($products) : 0;
     $usesCarousel = $productCount > 4;
+
+    $formatShopifyPrice = static function (array $variant): ?string {
+        $amount = $variant['price'] ?? $variant['priceAmount'] ?? $variant['price_amount'] ?? null;
+        $currency = $variant['priceCurrency'] ?? $variant['price_currency'] ?? null;
+
+        if ($amount === null) {
+            return null;
+        }
+
+        return trim((string) $currency . ' ' . (string) $amount);
+    };
+
+    $shopifyVariantLabel = static function (array $variant): string {
+        $selectedOptions = $variant['selectedOptions'] ?? $variant['selected_options'] ?? [];
+
+        if (is_countable($selectedOptions) && count($selectedOptions) > 0) {
+            return collect($selectedOptions)
+                ->map(static fn (mixed $option): string => is_array($option) ? (string) ($option['value'] ?? $option['label'] ?? '') : (string) $option)
+                ->filter()
+                ->implode(' / ');
+        }
+
+        return (string) ($variant['title'] ?? $variant['label'] ?? $variant['name'] ?? '');
+    };
 @endphp
 
 <section class="retail-products bg-white">
@@ -32,14 +56,25 @@
                 data-carousel-track
             >
                 @foreach ($products as $product)
+                    @php
+                        $featuredImage = $product['featuredImage'] ?? $product['featured_image'] ?? [];
+                        $variants = $product['variants'] ?? [];
+                        $firstVariant = is_countable($variants) && count($variants) > 0 && is_array($variants[0] ?? null) ? $variants[0] : [];
+                        $productImage = $product['image'] ?? $product['imageUrl'] ?? $featuredImage['url'] ?? $featuredImage['src'] ?? null;
+                        $productImageAlt = $product['imageAlt'] ?? $featuredImage['altText'] ?? $featuredImage['alt'] ?? '';
+                        $productPrice = $product['price'] ?? $product['formattedPrice'] ?? $product['metric'] ?? $formatShopifyPrice($firstVariant);
+                        $productAvailable = $product['availableForSale'] ?? $product['available_for_sale'] ?? $firstVariant['availableForSale'] ?? $firstVariant['available_for_sale'] ?? null;
+                        $stockStatus = $product['stockStatus'] ?? $product['stock'] ?? (is_bool($productAvailable) ? ($productAvailable ? __('capell-theme-commerce::generic.shopify_in_stock') : __('capell-theme-commerce::generic.shopify_sold_out')) : null);
+                    @endphp
+
                     <article
                         class="{{ $usesCarousel ? 'min-w-[240px] snap-start sm:min-w-[260px] lg:min-w-[280px]' : '' }} group rounded-xl border border-stone-200 bg-[var(--retail-surface)] p-3 transition hover:-translate-y-1 hover:shadow-lg"
                     >
-                        @if ($product['image'] ?? $product['imageUrl'] ?? null)
+                        @if ($productImage)
                             <div class="overflow-hidden rounded-lg">
                                 <img
-                                    src="{{ $product['image'] ?? $product['imageUrl'] }}"
-                                    alt="{{ $product['imageAlt'] ?? '' }}"
+                                    src="{{ $productImage }}"
+                                    alt="{{ $productImageAlt }}"
                                     width="800"
                                     height="800"
                                     loading="lazy"
@@ -63,7 +98,7 @@
                                     <span
                                         class="rounded-full bg-[var(--retail-accent)] px-2 py-1 text-xs font-black text-white"
                                     >
-                                        {{ $product['price'] ?? $product['metric'] ?? __('capell-theme-commerce::generic.range_label') }}
+                                        {{ $productPrice ?? __('capell-theme-commerce::generic.range_label') }}
                                     </span>
                                 </div>
                                 <div
@@ -118,12 +153,34 @@
                             <p class="mt-2 text-sm">
                                 {{ $product['description'] ?? $product['summary'] ?? '' }}
                             </p>
-                            @if ($product['price'] ?? $product['metric'] ?? null)
+                            @if ($productPrice)
                                 <p
                                     class="mt-4 text-sm font-black text-[var(--retail-primary)]"
                                 >
-                                    {{ $product['price'] ?? $product['metric'] }}
+                                    {{ $productPrice }}
                                 </p>
+                            @endif
+
+                            @if ($stockStatus)
+                                <p
+                                    class="mt-3 text-xs font-black text-[var(--retail-primary)] uppercase"
+                                >
+                                    {{ $stockStatus }}
+                                </p>
+                            @endif
+
+                            @if (is_countable($variants) && count($variants) > 0)
+                                <div class="mt-3 flex flex-wrap gap-2">
+                                    @foreach (array_slice($variants, 0, 3) as $variant)
+                                        @if (is_array($variant) && $shopifyVariantLabel($variant) !== '')
+                                            <span
+                                                class="rounded-full border border-stone-200 px-2.5 py-1 text-xs font-bold text-[var(--retail-ink)]"
+                                            >
+                                                {{ $shopifyVariantLabel($variant) }}
+                                            </span>
+                                        @endif
+                                    @endforeach
+                                </div>
                             @endif
 
                             <p

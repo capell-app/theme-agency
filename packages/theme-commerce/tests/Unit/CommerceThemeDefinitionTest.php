@@ -458,6 +458,137 @@ it('renders a dedicated commerce product detail section', function (): void {
         ->not->toContain('field_path');
 });
 
+it('renders shopify-shaped product detail data without querying public blade', function (): void {
+    View::addNamespace('capell-theme-commerce', __DIR__ . '/../../resources/views');
+    resolve(Translator::class)->addNamespace('capell-theme-commerce', __DIR__ . '/../../resources/lang');
+    CapellCore::clearPackages();
+    CapellCore::forcePackageInstalled(CommerceThemeServiceProvider::$packageName);
+
+    $registry = new ThemeRegistry;
+    $provider = new CommerceThemeServiceProvider($this->app);
+    $provider->boot($registry);
+
+    $renderer = $registry->sectionRenderer('commerce', 'product-detail');
+
+    expect($renderer)->not->toBeNull();
+    assert($renderer instanceof SectionRenderer);
+
+    $queries = [];
+    DB::listen(static function (QueryExecuted $query) use (&$queries): void {
+        $queries[] = $query->sql;
+    });
+
+    $html = $renderer->render(commerceThemeSection('product-detail', [
+        'shopifyProduct' => [
+            'handle' => 'linen-overshirt',
+            'title' => 'Linen overshirt',
+            'description' => 'A breathable overshirt for travel capsules.',
+            'featuredImage' => ['url' => '/shopify/linen-overshirt.jpg', 'altText' => 'Linen overshirt on a rail'],
+            'variants' => [
+                [
+                    'title' => 'Natural / M',
+                    'priceAmount' => '128.00',
+                    'priceCurrency' => 'GBP',
+                    'availableForSale' => true,
+                    'selectedOptions' => [
+                        ['name' => 'Color', 'value' => 'Natural'],
+                        ['name' => 'Size', 'value' => 'M'],
+                    ],
+                ],
+            ],
+        ],
+    ]));
+
+    expect($queries)->toBe([])
+        ->and($html)
+        ->toContain('Linen overshirt')
+        ->toContain('A breathable overshirt for travel capsules.')
+        ->toContain('GBP 128.00')
+        ->toContain('In stock')
+        ->toContain('href="/products/linen-overshirt"')
+        ->toContain('src="/shopify/linen-overshirt.jpg"')
+        ->toContain('alt="Linen overshirt on a rail"')
+        ->toContain('Natural / M')
+        ->not->toContain('capell-app/theme-commerce')
+        ->not->toContain('shopify_product')
+        ->not->toContain('model_id')
+        ->not->toContain('field_path');
+});
+
+it('renders shopify-shaped product cards and catalog sync summary', function (): void {
+    View::addNamespace('capell-theme-commerce', __DIR__ . '/../../resources/views');
+    resolve(Translator::class)->addNamespace('capell-theme-commerce', __DIR__ . '/../../resources/lang');
+    CapellCore::clearPackages();
+    CapellCore::forcePackageInstalled(CommerceThemeServiceProvider::$packageName);
+    CapellCore::forcePackageInstalled('capell-app/shopify-commerce');
+
+    $registry = new ThemeRegistry;
+    $provider = new CommerceThemeServiceProvider($this->app);
+    $provider->boot($registry);
+
+    $productGridRenderer = $registry->sectionRenderer('commerce', 'product-grid');
+    $catalogRenderer = $registry->sectionRenderer('commerce', 'catalog');
+
+    expect($productGridRenderer)->not->toBeNull()
+        ->and($catalogRenderer)->not->toBeNull();
+    assert($productGridRenderer instanceof SectionRenderer);
+    assert($catalogRenderer instanceof SectionRenderer);
+
+    $productGridHtml = $productGridRenderer->render(commerceThemeSection('product-grid', [
+        'heading' => 'Shopify picks',
+        'items' => [
+            [
+                'title' => 'Travel wrap',
+                'summary' => 'Warm layer for long-haul kits.',
+                'featuredImage' => ['url' => '/shopify/travel-wrap.jpg', 'altText' => 'Travel wrap folded on a bench'],
+                'variants' => [
+                    [
+                        'title' => 'Charcoal',
+                        'price_amount' => '74.50',
+                        'price_currency' => 'GBP',
+                        'available_for_sale' => false,
+                        'selected_options' => [['value' => 'Charcoal']],
+                    ],
+                ],
+            ],
+        ],
+    ]));
+
+    $catalogHtml = $catalogRenderer->render(commerceThemeSection('catalog', [
+        'heading' => 'Connected catalog',
+        'items' => [['title' => 'Travel essentials']],
+        'shopifySummary' => [
+            'productsSynced' => 124,
+            'variantsSynced' => 482,
+            'availableStock' => 413,
+            'syncedAt' => '2026-06-07 10:15',
+        ],
+    ]));
+
+    expect($productGridHtml)
+        ->toContain('Shopify picks')
+        ->toContain('Travel wrap')
+        ->toContain('GBP 74.50')
+        ->toContain('Sold out')
+        ->toContain('Charcoal')
+        ->toContain('src="/shopify/travel-wrap.jpg"')
+        ->toContain('alt="Travel wrap folded on a bench"')
+        ->and($catalogHtml)
+        ->toContain('Connected catalog panel')
+        ->toContain('Products')
+        ->toContain('124')
+        ->toContain('Variants')
+        ->toContain('482')
+        ->toContain('Available')
+        ->toContain('413')
+        ->toContain('Synced:')
+        ->toContain('2026-06-07 10:15')
+        ->not->toContain('capell-app/theme-commerce')
+        ->not->toContain('shopify_product')
+        ->not->toContain('model_id')
+        ->not->toContain('field_path');
+});
+
 it('renders commerce cart, promotion countdown, and review primitives', function (): void {
     View::addNamespace('capell-theme-commerce', __DIR__ . '/../../resources/views');
     resolve(Translator::class)->addNamespace('capell-theme-commerce', __DIR__ . '/../../resources/lang');
