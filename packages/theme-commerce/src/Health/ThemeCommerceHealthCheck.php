@@ -22,6 +22,7 @@ final class ThemeCommerceHealthCheck implements ChecksExtensionHealth
         'capell-theme-commerce::sections.navigation',
         'capell-theme-commerce::sections.hero',
         'capell-theme-commerce::sections.product-grid',
+        'capell-theme-commerce::sections.product-detail',
         'capell-theme-commerce::sections.collections',
         'capell-theme-commerce::sections.product-finder',
         'capell-theme-commerce::sections.comparison',

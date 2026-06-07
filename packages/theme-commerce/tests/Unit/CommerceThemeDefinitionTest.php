@@ -41,6 +41,7 @@ it('defines the commerce premium renderer contract', function (): void {
             'product-finder',
             'collections',
             'product-grid',
+            'product-detail',
             'comparison',
             'catalog',
             'lookbook',
@@ -73,6 +74,7 @@ it('declares renderers for every commerce section', function (): void {
         'product-finder',
         'collections',
         'product-grid',
+        'product-detail',
         'comparison',
         'catalog',
         'lookbook',
@@ -164,6 +166,13 @@ it('renders public theme markup without forbidden package or authoring tokens', 
                     ['title' => 'Canvas tote', 'description' => 'Heavy cotton with brass hardware.', 'price' => '$84'],
                 ],
             ]),
+            commerceThemeSection('product-detail', [
+                'heading' => 'Waxed canvas field tote',
+                'summary' => 'A repairable carry-all with weather-ready finish.',
+                'price' => '$148',
+                'variants' => [['label' => 'Forest'], ['label' => 'Clay']],
+                'stockStatus' => 'Ships this week',
+            ]),
             commerceThemeSection('comparison', [
                 'heading' => 'Compare materials',
                 'items' => [
@@ -210,6 +219,7 @@ it('renders public theme markup without forbidden package or authoring tokens', 
         ->toContain('Retail proof ledger')
         ->toContain('Order signal')
         ->toContain('Retail channel')
+        ->toContain('Waxed canvas field tote')
         ->not->toContain('data-capell-theme')
         ->not->toContain('capell-theme')
         ->not->toContain('capell-app/theme-commerce')
@@ -316,6 +326,74 @@ it('renders commerce product grid images with lazy loading attributes', function
         ->toContain('loading="lazy"')
         ->toContain('decoding="async"')
         ->toContain('sizes="(min-width: 1024px) 25vw, (min-width: 768px) 33vw, 80vw"');
+});
+
+it('renders a dedicated commerce product detail section', function (): void {
+    View::addNamespace('capell-theme-commerce', __DIR__ . '/../../resources/views');
+    resolve(Translator::class)->addNamespace('capell-theme-commerce', __DIR__ . '/../../resources/lang');
+    CapellCore::clearPackages();
+    CapellCore::forcePackageInstalled(CommerceThemeServiceProvider::$packageName);
+
+    $registry = new ThemeRegistry;
+    $provider = new CommerceThemeServiceProvider($this->app);
+    $provider->boot($registry);
+
+    $renderer = $registry->sectionRenderer('commerce', 'product-detail');
+
+    expect($renderer)->not->toBeNull();
+    assert($renderer instanceof SectionRenderer);
+
+    $html = $renderer->render(commerceThemeSection('product-detail', [
+        'heading' => 'Waxed canvas field tote',
+        'summary' => 'A repairable carry-all with weather-ready finish.',
+        'price' => '$148',
+        'compareAtPrice' => '$182',
+        'stockStatus' => 'Ships this week',
+        'ctaLabel' => 'Add field tote',
+        'ctaUrl' => '/products/field-tote',
+        'gallery' => [
+            ['url' => '/images/tote-main.jpg', 'alt' => 'Waxed canvas field tote on a product table'],
+            ['url' => '/images/tote-detail.jpg', 'alt' => 'Close detail of waxed canvas stitching'],
+        ],
+        'variants' => [
+            ['label' => 'Forest'],
+            ['label' => 'Clay'],
+        ],
+        'trustItems' => [
+            ['label' => 'Free shipping over $75'],
+            ['label' => 'Repair-friendly materials'],
+        ],
+        'recommendations' => [
+            ['title' => 'Brass key clip', 'price' => '$34', 'url' => '/products/key-clip'],
+            ['title' => 'Canvas care wax', 'price' => '$18', 'url' => '/products/care-wax'],
+        ],
+    ]));
+
+    expect($html)
+        ->toContain('Product detail')
+        ->toContain('Waxed canvas field tote')
+        ->toContain('A repairable carry-all with weather-ready finish.')
+        ->toContain('$148')
+        ->toContain('$182')
+        ->toContain('Ships this week')
+        ->toContain('Add field tote')
+        ->toContain('href="/products/field-tote"')
+        ->toContain('src="/images/tote-main.jpg"')
+        ->toContain('alt="Waxed canvas field tote on a product table"')
+        ->toContain('width="1200"')
+        ->toContain('height="1200"')
+        ->toContain('loading="eager"')
+        ->toContain('fetchpriority="high"')
+        ->toContain('src="/images/tote-detail.jpg"')
+        ->toContain('loading="lazy"')
+        ->toContain('Forest')
+        ->toContain('Clay')
+        ->toContain('Free shipping over $75')
+        ->toContain('Recommended next')
+        ->toContain('Brass key clip')
+        ->not->toContain('capell-app/theme-commerce')
+        ->not->toContain('model_id')
+        ->not->toContain('field_path');
 });
 
 it('renders core commerce sections directly', function (string $view, object $section, string $expectedMarkup): void {

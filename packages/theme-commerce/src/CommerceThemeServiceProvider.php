@@ -35,7 +35,7 @@ class CommerceThemeServiceProvider extends ServiceProvider
             previewImage: '/vendor/capell/themes/commerce.jpg',
             tags: ['Commerce', 'Catalog', 'Conversion'],
             bestFit: ['Retail catalogs', 'DTC brands', 'Product-led publishers'],
-            includedSections: ['navigation', 'hero', 'features', 'content-listing', 'product-finder', 'collections', 'product-grid', 'comparison', 'catalog', 'lookbook', 'promotion', 'buying-guide', 'proof', 'blog-teaser', 'cta', 'footer'],
+            includedSections: ['navigation', 'hero', 'features', 'content-listing', 'product-finder', 'collections', 'product-grid', 'product-detail', 'comparison', 'catalog', 'lookbook', 'promotion', 'buying-guide', 'proof', 'blog-teaser', 'cta', 'footer'],
             presets: [
                 new ThemePresetData(
                     key: 'commerce',
@@ -128,6 +128,7 @@ class CommerceThemeServiceProvider extends ServiceProvider
             'product-finder' => new ViewSectionRenderer(self::THEME_KEY, 'product-finder', 'capell-theme-commerce::sections.product-finder', failLoudly: true),
             'collections' => new ViewSectionRenderer(self::THEME_KEY, 'collections', 'capell-theme-commerce::sections.collections', failLoudly: true),
             'product-grid' => new ViewSectionRenderer(self::THEME_KEY, 'product-grid', 'capell-theme-commerce::sections.product-grid', failLoudly: true),
+            'product-detail' => new ViewSectionRenderer(self::THEME_KEY, 'product-detail', 'capell-theme-commerce::sections.product-detail', failLoudly: true),
             'comparison' => new ViewSectionRenderer(self::THEME_KEY, 'comparison', 'capell-theme-commerce::sections.comparison', failLoudly: true),
             'catalog' => new CatalogSectionRenderer(self::THEME_KEY, $shopifyAvailable, failLoudly: true),
             'lookbook' => new ViewSectionRenderer(self::THEME_KEY, 'lookbook', 'capell-theme-commerce::sections.lookbook', true, ['mediaLibraryAvailable' => $mediaLibraryAvailable]),
