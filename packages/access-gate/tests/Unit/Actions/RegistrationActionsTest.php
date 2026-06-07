@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use Capell\AccessGate\Actions\ApproveRegistrationAction;
 use Capell\AccessGate\Actions\CreateRegistrationAction;
+use Capell\AccessGate\Actions\ResendAccessGateClaimTokenAction;
 use Capell\AccessGate\Enums\AccessAreaStatus;
 use Capell\AccessGate\Enums\ApprovalStrategy;
 use Capell\AccessGate\Enums\EventType;
@@ -244,6 +245,36 @@ it('does not create guest claim tokens for authenticated-only access areas', fun
 
     expect(ClaimToken::query()->count())->toBe(0)
         ->and(Grant::query()->where('registration_id', $registration->getKey())->exists())->toBeTrue();
+});
+
+it('records an approval-notification-sent event each time the approval email is sent', function (): void {
+    Notification::fake();
+
+    $registration = resolve(CreateRegistrationAction::class)->handle(Area::factory()->create(), [
+        'email' => 'mona@example.test',
+    ]);
+
+    resolve(ApproveRegistrationAction::class)->handle($registration);
+
+    expect(Event::query()->where('registration_id', $registration->getKey())->where('type', EventType::ApprovalNotificationSent)->count())->toBe(1);
+
+    resolve(ResendAccessGateClaimTokenAction::class)->handle($registration->refresh());
+
+    expect(Event::query()->where('registration_id', $registration->getKey())->where('type', EventType::ApprovalNotificationSent)->count())->toBe(2);
+});
+
+it('returns null when resending a claim for a registration without an active grant', function (): void {
+    Notification::fake();
+
+    $registration = Registration::factory()->create([
+        'status' => RegistrationStatus::Approved,
+        'approved_at' => now(),
+    ]);
+
+    $grant = resolve(ResendAccessGateClaimTokenAction::class)->handle($registration);
+
+    expect($grant)->toBeNull();
+    Notification::assertNothingSent();
 });
 
 it('refuses to approve rejected registrations', function (): void {

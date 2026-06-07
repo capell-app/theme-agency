@@ -128,8 +128,25 @@ final class RegistrationResource extends Resource
                     Action::make('resendClaim')
                         ->label(__('capell-access-gate::filament.actions.resend_claim'))
                         ->authorize('update')
+                        ->requiresConfirmation()
                         ->visible(fn (Registration $record): bool => in_array($record->status, [RegistrationStatus::Approved, RegistrationStatus::Claimed], true))
-                        ->action(fn (Registration $record): mixed => ResendAccessGateClaimTokenAction::run($record)),
+                        ->action(function (Registration $record): void {
+                            $grant = ResendAccessGateClaimTokenAction::run($record);
+
+                            if ($grant === null) {
+                                Notification::make()
+                                    ->title(__('capell-access-gate::filament.messages.resend_claim_unavailable'))
+                                    ->warning()
+                                    ->send();
+
+                                return;
+                            }
+
+                            Notification::make()
+                                ->title(__('capell-access-gate::filament.messages.resend_claim_sent'))
+                                ->success()
+                                ->send();
+                        }),
                     Action::make('retryGithubInvites')
                         ->label(__('capell-access-gate::filament.actions.retry_github_invites'))
                         ->icon(Heroicon::ArrowPath)

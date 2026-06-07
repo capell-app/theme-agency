@@ -66,6 +66,8 @@ return [
     'messages' => [
         'github_invites_retried' => 'GitHub repository invites retried.',
         'github_invites_unavailable' => 'GitHub repository invites are not configured for this application.',
+        'resend_claim_sent' => 'Approval email re-sent.',
+        'resend_claim_unavailable' => 'No active grant to re-send. Re-approve this registration to issue a new claim link.',
     ],
     'navigation_group' => 'Access Gate',
     'resources' => [

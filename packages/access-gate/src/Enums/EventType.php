@@ -11,6 +11,7 @@ enum EventType: string
     case AreaApprovalLimitUpdated = 'area_approval_limit_updated';
     case RegistrationCreated = 'registration_created';
     case RegistrationApproved = 'registration_approved';
+    case ApprovalNotificationSent = 'approval_notification_sent';
     case RegistrationRejected = 'registration_rejected';
     case RegistrationExpired = 'registration_expired';
     case GrantCreated = 'grant_created';
