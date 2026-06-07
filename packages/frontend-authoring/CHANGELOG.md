@@ -4,6 +4,7 @@ All notable changes to `capell-app/frontend-authoring` will be documented in thi
 
 ## Unreleased
 
+- Added a bundled Spanish `authoring.php` locale and key-parity coverage against English strings.
 - Added optional per-region permission requirements so package-supplied editable regions can be filtered by granular Gate abilities.
 - Added a built-in `media` editor surface and registered it beside the existing field surface, with manifest/controller coverage for package-supplied media regions.
 - Documented and covered the admin-only content HTML policy: frontend authoring stores trusted admin `content` HTML exactly as submitted.
