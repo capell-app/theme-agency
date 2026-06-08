@@ -91,3 +91,48 @@ it('records form conversions with submission source and landing page attribution
 
     Event::assertDispatchedTimes(CampaignConverted::class, 1);
 });
+
+it('records form conversions from normalized non-stored submission events', function (): void {
+    Event::fake([CampaignConverted::class]);
+
+    $page = Page::factory()->create();
+    $campaignGroup = CampaignGroup::factory()->create([
+        'site_id' => $page->site_id,
+        'utm_campaign' => 'newsletter-signup',
+    ]);
+    CampaignConversionGoal::factory()
+        ->for($campaignGroup, 'campaignGroup')
+        ->create([
+            'type' => ConversionGoalType::FormSubmission,
+            'target' => 'newsletter',
+        ]);
+    $form = Form::factory()->create([
+        'site_id' => $page->site_id,
+        'name' => 'Newsletter',
+        'handle' => 'newsletter',
+    ]);
+
+    resolve(RecordFormSubmissionConversion::class)->handle(new FormSubmitted(
+        form: $form,
+        metadata: new SubmissionMetaData(
+            url: 'https://capell.test/newsletter?utm_campaign=newsletter-signup&utm_source=footer',
+            referer: 'https://example.test/',
+        ),
+        payload: [
+            'email' => 'reader@example.test',
+        ],
+    ));
+
+    $conversion = CampaignConversion::query()->firstOrFail();
+    $attribution = $conversion->attribution;
+
+    throw_if($attribution === null, RuntimeException::class, 'Expected campaign conversion attribution data.');
+
+    expect($conversion->source_type)->toBeNull()
+        ->and($conversion->source_id)->toBeNull()
+        ->and($attribution->landingUrl)->toBe('https://capell.test/newsletter?utm_campaign=newsletter-signup&utm_source=footer')
+        ->and($attribution->utmCampaign)->toBe('newsletter-signup')
+        ->and($attribution->utmSource)->toBe('footer');
+
+    Event::assertDispatchedTimes(CampaignConverted::class, 1);
+});

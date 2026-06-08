@@ -2,11 +2,12 @@
 
 declare(strict_types=1);
 
+use Capell\FormBuilder\Data\SubmissionMetaData;
+use Capell\FormBuilder\Events\FormSubmitted;
+use Capell\FormBuilder\Models\Form;
 use Capell\PublicActions\Listeners\SubmitPublicActionFromFormSubmission;
 use Capell\PublicActions\Models\PublicAction;
 use Capell\PublicActions\Models\PublicActionSubmission;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 
 it('submits form builder event payloads when submissions are not stored', function (): void {
     config()->set('capell-public-actions.form_builder.mappings', [
@@ -24,34 +25,22 @@ it('submits form builder event payloads when submissions are not stored', functi
         ],
     ]);
 
-    resolve(SubmitPublicActionFromFormSubmission::class)->handle(new class
-    {
-        public object $form;
+    $form = new Form;
+    $form->exists = true;
+    $form->forceFill([
+        'id' => 123,
+        'site_id' => 1,
+        'handle' => 'lead-form',
+    ]);
 
-        /** @var array<string, mixed> */
-        public array $payload = [
+    resolve(SubmitPublicActionFromFormSubmission::class)->handle(new FormSubmitted(
+        form: $form,
+        metadata: new SubmissionMetaData(url: 'https://example.test/contact'),
+        payload: [
             'email' => 'person@example.test',
             'name' => 'Mona',
-        ];
-
-        public function __construct()
-        {
-            $this->form = new class extends Model
-            {
-                use HasFactory;
-
-                protected $guarded = [];
-
-                public function __construct()
-                {
-                    parent::__construct([
-                        'id' => 123,
-                        'handle' => 'lead-form',
-                    ]);
-                }
-            };
-        }
-    });
+        ],
+    ));
 
     $submission = PublicActionSubmission::query()->firstOrFail();
 
