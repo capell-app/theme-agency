@@ -74,7 +74,7 @@ or volunteer calls to action.
 - [Docs index](docs/README.md)
 - [Overview](docs/overview.md)
 - [Creating a Capell theme](../../docs/creating-a-theme.md)
-- [Theme Screenshot QA Playbook](../../docs/theme-screenshot-qa-playbook.md)
+- [Package Screenshot Automation](../../docs/package-screenshot-automation.md)
 
 ## Testing
 

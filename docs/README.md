@@ -1,109 +1,134 @@
-# Capell Packages — cross-cutting docs
+# Capell Packages Documentation
 
-This directory holds **cross-cutting** documentation for the add-on packages. Per-package docs (API, Database, README) live alongside each package in `packages/<name>/`.
+This directory holds cross-package documentation for the optional Capell packages. Per-package documentation lives beside each package in `packages/<name>/`.
 
-## Per-package references
+Use [Package Documentation Standard](package-documentation-standard.md) when creating or revising package docs. Every package should have:
 
-For the commercial/free grouping, see [Package product groups](product-groups.md).
-For package-level upstream credits, services, and acknowledgements, see [Credits and acknowledgements](credits-and-acknowledgements.md).
-For the long-running package improvement burn-down, see [Improvement Plan Status](improvement-plan-status.md).
-For theme package authoring, see [Creating a Capell theme](creating-a-theme.md).
-For screenshot-led theme QA and optimization, see [Theme Screenshot QA Playbook](theme-screenshot-qa-playbook.md).
-For the long-running first-party theme improvement workflow, see [Theme Premium Improvement Runbook](theme-premium-improvement-runbook.md).
-For planned local-business premium themes, see [Local Business Premium Theme Plan](local-business-premium-theme-plan.md).
-For optional package integration rules, see [Optional Package Boundaries](optional-package-boundaries.md).
-For split repository contribution flow, see [Split PR Forwarding](split-pr-forwarding.md).
-For the package Blade view coverage ratchet, see [Blade View Coverage](blade-view-coverage.md).
+- a root `README.md` for install/value/maintenance orientation;
+- a `docs/README.md` for package-local docs navigation;
+- a `docs/overview.md` with a non-technical overview and developer deep dive.
 
-Use package `overview.md` pages for search-facing package summaries and task-level orientation. Use focused package docs for API, data, workflow, provider, and extension contracts.
+## Cross-Package References
 
-Use [Package Documentation Standard](package-documentation-standard.md) when creating or revising package READMEs and docs. It defines the required workflow value, technical surface, debugging, testing, and review checks.
+| Document | Use |
+| --- | --- |
+| [Package product groups](product-groups.md) | Commercial/free grouping and bundle context. |
+| [Credits and acknowledgements](credits-and-acknowledgements.md) | Cross-package upstream credits and acknowledgements. |
+| [Improvement Plan Status](improvement-plan-status.md) | Long-running package improvement burn-down. |
+| [Cross-Package Improvement Summary](improvement-plans-summary.md) | Systemic issues and sequencing across package audits. |
+| [Package Documentation Standard](package-documentation-standard.md) | README/overview shape, examples, safety rules, and review checklist. |
+| [Package Screenshot Automation](package-screenshot-automation.md) | Screenshot capture contract and expected output paths. |
+| [Creating a Capell theme](creating-a-theme.md) | Theme authoring guide. |
+| [Theme Scale](theme-scale.md) | Theme scale and styling conventions. |
+| [Theme Catalogue Review](theme-catalogue-review.md) | Current theme portfolio review, premium verdicts, and customisation guide. |
+| [Optional Package Boundaries](optional-package-boundaries.md) | Cross-package integration rules. |
+| [Split PR Forwarding](split-pr-forwarding.md) | Split repository contribution flow. |
+| [Blade View Coverage](blade-view-coverage.md) | Package Blade view coverage ratchet. |
+| [Writing Tests](writing-tests.md) | Package test conventions and fixtures. |
 
 ## Package Docs By Intent
 
-| Intent                                      | Package docs                                                                                                                                                                                                                                  |
-| ------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Dashboard reporting and operations signals  | [Dashboard Reports overview](../packages/dashboard-reports/docs/overview.md), [Diagnostics overview](../packages/diagnostics/docs/overview.md), [Login Audit overview](../packages/login-audit/docs/overview.md)                              |
-| Analytics, growth, and conversion reporting | [GA4 Reports overview](../packages/ga4-reports/docs/overview.md), [Insights overview](../packages/insights/docs/overview.md), [Campaign Studio overview](../packages/campaign-studio/docs/overview.md)                                        |
-| SEO, search, and public discovery           | [SEO Suite overview](../packages/seo-suite/docs/overview.md), [Search overview](../packages/search/docs/overview.md), [Site Discovery README](../packages/site-discovery/README.md)                                                           |
-| Public agent-readable content               | [Agent Delivery overview](../packages/agent-delivery/docs/overview.md), [Site Discovery overview](../packages/site-discovery/docs/overview.md), [SEO Suite overview](../packages/seo-suite/docs/overview.md)                                  |
-| Demo data and frontend presentation         | [Demo Kit overview](../packages/demo-kit/docs/overview.md), [Foundation Theme overview](../packages/foundation-theme/docs/overview.md), [Creating a Capell theme](creating-a-theme.md)                                                        |
-| Editor previews and publishing confidence   | [Capell Filament Peek overview](../packages/filament-peek/docs/overview.md), [Publishing Studio overview](../packages/publishing-studio/docs/overview.md), [Frontend Authoring overview](../packages/frontend-authoring/docs/overview.md)     |
-| Engagement and public discussion            | [Comments overview](../packages/comments/docs/overview.md), [Blog overview](../packages/blog/docs/overview.md), [Email Studio overview](../packages/email-studio/docs/overview.md)                                                            |
-| Admin access and security                   | [Password Policy overview](../packages/password-policy/docs/overview.md), [Access Gate requests](../packages/access-gate/docs/access-requests.md), [Public Actions integrations](../packages/public-actions/docs/actions-and-integrations.md) |
-| Commerce integrations                       | [Shopify Commerce overview](../packages/shopify-commerce/docs/overview.md), [Shopify OAuth and catalog sync](../packages/shopify-commerce/docs/oauth-and-catalog-sync.md)                                                                     |
+| Intent | Package docs |
+| --- | --- |
+| Dashboard reporting and operations signals | [Dashboard Reports](../packages/dashboard-reports/docs/overview.md), [Diagnostics](../packages/diagnostics/docs/overview.md), [Login Audit](../packages/login-audit/docs/overview.md) |
+| Analytics, growth, and experiments | [GA4 Reports](../packages/ga4-reports/docs/overview.md), [Insights](../packages/insights/docs/overview.md), [Campaign Studio](../packages/campaign-studio/docs/overview.md), [Experiments](../packages/experiments/docs/overview.md) |
+| Automation and public actions | [Automation Studio](../packages/automation-studio/docs/overview.md), [Public Actions](../packages/public-actions/docs/overview.md), [Agent Bridge](../packages/agent-bridge/docs/overview.md) |
+| SEO, search, and public discovery | [SEO Suite](../packages/seo-suite/docs/overview.md), [Search](../packages/search/docs/overview.md), [Site Discovery](../packages/site-discovery/docs/overview.md), [Agent Delivery](../packages/agent-delivery/docs/overview.md) |
+| Content, publishing, and authoring | [Blog](../packages/blog/docs/overview.md), [Knowledge Base](../packages/knowledge-base/docs/overview.md), [Publishing Studio](../packages/publishing-studio/docs/overview.md), [Frontend Authoring](../packages/frontend-authoring/docs/overview.md) |
+| Forms, engagement, and CRM | [Form Builder](../packages/form-builder/docs/overview.md), [Comments](../packages/comments/docs/overview.md), [Newsletter](../packages/newsletter/docs/overview.md), [Contacts](../packages/contacts/docs/overview.md) |
+| Customer operations and compliance | [Customer Portal](../packages/customer-portal/docs/overview.md), [Access Gate](../packages/access-gate/docs/overview.md), [Document Lifecycle](../packages/document-lifecycle/docs/overview.md), [Privacy Center](../packages/privacy-center/docs/overview.md), [Password Policy](../packages/password-policy/docs/overview.md) |
+| Commerce and appointments | [Payments](../packages/payments/docs/overview.md), [Shopify Commerce](../packages/shopify-commerce/docs/overview.md), [Bookings](../packages/bookings/docs/overview.md) |
+| Frontend runtime and caching | [API](../packages/api/docs/overview.md), [HTML Cache](../packages/html-cache/docs/overview.md), [Frontend Optimizer](../packages/frontend-optimizer/docs/overview.md), [Capell Inertia](../packages/inertia/docs/overview.md) |
+| Layout, media, and reusable content | [Layout Builder](../packages/layout-builder/docs/overview.md), [Block Library](../packages/block-library/docs/overview.md), [Content Sections](../packages/content-sections/docs/overview.md), [Structured Content Library](../packages/structured-content-library/docs/overview.md), [Media Library](../packages/media-library/docs/overview.md) |
+| Themes and visual presentation | [Foundation Theme](../packages/foundation-theme/docs/overview.md), [Theme Agency](../packages/theme-agency/docs/overview.md), [Theme Commerce](../packages/theme-commerce/docs/overview.md), [Theme Corporate](../packages/theme-corporate/docs/overview.md), [Theme Education](../packages/theme-education/docs/overview.md), [Theme Healthcare](../packages/theme-healthcare/docs/overview.md), [Theme Inertia Bookings](../packages/theme-inertia-bookings/docs/overview.md), [Theme Knowledge](../packages/theme-knowledge/docs/overview.md), [Theme Local Services](../packages/theme-local-services/docs/overview.md), [Theme Nonprofit](../packages/theme-nonprofit/docs/overview.md), [Theme Portfolio](../packages/theme-portfolio/docs/overview.md), [Theme SaaS](../packages/theme-saas/docs/overview.md) |
 
-| Package              | Local reference                                                                                                                                      |
-| -------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Access Gate          | [`packages/access-gate/README.md`](../packages/access-gate/README.md), [`docs`](../packages/access-gate/docs/overview.md)                            |
-| Address              | [`packages/address/README.md`](../packages/address/README.md), [`docs`](../packages/address/docs/overview.md)                                        |
-| Agent Bridge         | [`packages/agent-bridge/README.md`](../packages/agent-bridge/README.md), [`docs`](../packages/agent-bridge/docs/overview.md)                         |
-| Agent Delivery       | [`packages/agent-delivery/README.md`](../packages/agent-delivery/README.md), [`docs`](../packages/agent-delivery/docs/overview.md)                   |
-| AI Orchestrator      | [`packages/ai-orchestrator/README.md`](../packages/ai-orchestrator/README.md), [`docs`](../packages/ai-orchestrator/docs/overview.md)                |
-| API                  | [`packages/api/README.md`](../packages/api/README.md), [`docs`](../packages/api/docs/overview.md)                                                    |
-| Widget Library       | [`packages/widget-library/README.md`](../packages/widget-library/README.md), [`docs`](../packages/widget-library/docs/overview.md)                   |
-| Blog                 | [`packages/blog/README.md`](../packages/blog/README.md), [`docs`](../packages/blog/docs/overview.md)                                                 |
-| Campaign Studio      | [`packages/campaign-studio/README.md`](../packages/campaign-studio/README.md), [`docs`](../packages/campaign-studio/docs/overview.md)                |
-| Comments             | [`packages/comments/README.md`](../packages/comments/README.md), [`docs`](../packages/comments/docs/overview.md)                                     |
-| Content Sections     | [`packages/content-sections/README.md`](../packages/content-sections/README.md), [`docs`](../packages/content-sections/docs/overview.md)             |
-| Dashboard Reports    | [`packages/dashboard-reports/README.md`](../packages/dashboard-reports/README.md), [`docs`](../packages/dashboard-reports/docs/overview.md)          |
-| Demo Kit             | [`packages/demo-kit/README.md`](../packages/demo-kit/README.md), [`docs`](../packages/demo-kit/docs/overview.md)                                     |
-| Deployments          | [`packages/deployments/README.md`](../packages/deployments/README.md), [`docs`](../packages/deployments/docs/overview.md)                            |
-| Diagnostics          | [`packages/diagnostics/README.md`](../packages/diagnostics/README.md), [`docs`](../packages/diagnostics/docs/overview.md)                            |
-| Document Lifecycle   | [`packages/document-lifecycle/README.md`](../packages/document-lifecycle/README.md), [`docs`](../packages/document-lifecycle/docs/overview.md)       |
-| Email Studio         | [`packages/email-studio/README.md`](../packages/email-studio/README.md), [`docs`](../packages/email-studio/docs/overview.md)                         |
-| Events               | [`packages/events/README.md`](../packages/events/README.md), [`docs`](../packages/events/docs/overview.md)                                           |
-| Filament Peek        | [`packages/filament-peek/README.md`](../packages/filament-peek/README.md), [`docs`](../packages/filament-peek/docs/overview.md)                      |
-| Form Builder         | [`packages/form-builder/README.md`](../packages/form-builder/README.md), [`docs`](../packages/form-builder/docs/overview.md)                         |
-| Foundation Theme     | [`packages/foundation-theme/README.md`](../packages/foundation-theme/README.md), [`docs`](../packages/foundation-theme/docs/overview.md)             |
-| Frontend Authoring   | [`packages/frontend-authoring/README.md`](../packages/frontend-authoring/README.md), [`docs`](../packages/frontend-authoring/docs/overview.md)       |
-| Frontend Optimizer   | [`packages/frontend-optimizer/README.md`](../packages/frontend-optimizer/README.md), [`docs`](../packages/frontend-optimizer/docs/overview.md)       |
-| GA4 Reports          | [`packages/ga4-reports/README.md`](../packages/ga4-reports/README.md), [`docs`](../packages/ga4-reports/docs/overview.md)                            |
-| Hero                 | [`packages/hero/README.md`](../packages/hero/README.md), [`docs`](../packages/hero/docs/overview.md)                                                 |
-| HTML Cache           | [`packages/html-cache/README.md`](../packages/html-cache/README.md), [`docs`](../packages/html-cache/docs/overview.md)                               |
-| Insights             | [`packages/insights/README.md`](../packages/insights/README.md), [`docs`](../packages/insights/docs/overview.md)                                     |
-| Layout Builder       | [`packages/layout-builder/README.md`](../packages/layout-builder/README.md), [`docs`](../packages/layout-builder/docs/overview.md)                   |
-| Login Audit          | [`packages/login-audit/README.md`](../packages/login-audit/README.md), [`docs`](../packages/login-audit/docs/overview.md)                            |
-| Media AI             | [`packages/media-ai/README.md`](../packages/media-ai/README.md), [`docs`](../packages/media-ai/docs/overview.md)                                     |
-| Media Library        | [`packages/media-library/README.md`](../packages/media-library/README.md), [`docs`](../packages/media-library/docs/overview.md)                      |
-| Migration Assistant  | [`packages/migration-assistant/README.md`](../packages/migration-assistant/README.md), [`docs`](../packages/migration-assistant/docs/overview.md)    |
-| Navigation           | [`packages/navigation/README.md`](../packages/navigation/README.md), [`docs`](../packages/navigation/docs/overview.md)                               |
-| Newsletter           | [`packages/newsletter/README.md`](../packages/newsletter/README.md), [`docs`](../packages/newsletter/docs/overview.md)                               |
-| Notes                | [`packages/notes/README.md`](../packages/notes/README.md), [`docs`](../packages/notes/docs/overview.md)                                              |
-| Password Policy      | [`packages/password-policy/README.md`](../packages/password-policy/README.md), [`docs`](../packages/password-policy/docs/overview.md)                |
-| Public Actions       | [`packages/public-actions/README.md`](../packages/public-actions/README.md), [`docs`](../packages/public-actions/docs/overview.md)                   |
-| Publishing Studio    | [`packages/publishing-studio/README.md`](../packages/publishing-studio/README.md), [`docs`](../packages/publishing-studio/docs/overview.md)          |
-| Search               | [`packages/search/README.md`](../packages/search/README.md), [`docs`](../packages/search/docs/overview.md)                                           |
-| SEO Suite            | [`packages/seo-suite/README.md`](../packages/seo-suite/README.md), [`docs`](../packages/seo-suite/docs/overview.md)                                  |
-| Shopify Commerce     | [`packages/shopify-commerce/README.md`](../packages/shopify-commerce/README.md), [`docs`](../packages/shopify-commerce/docs/README.md)               |
-| Site Discovery       | [`packages/site-discovery/README.md`](../packages/site-discovery/README.md), [`docs`](../packages/site-discovery/docs/overview.md)                   |
-| Tags                 | [`packages/tags/README.md`](../packages/tags/README.md), [`docs`](../packages/tags/docs/overview.md)                                                 |
-| Theme Agency         | [`packages/theme-agency/README.md`](../packages/theme-agency/README.md), [`docs`](../packages/theme-agency/docs/overview.md)                         |
-| Theme Commerce       | [`packages/theme-commerce/README.md`](../packages/theme-commerce/README.md), [`docs`](../packages/theme-commerce/docs/overview.md)                   |
-| Theme Corporate      | [`packages/theme-corporate/README.md`](../packages/theme-corporate/README.md), [`docs`](../packages/theme-corporate/docs/overview.md)                |
-| Theme Education      | [`packages/theme-education/README.md`](../packages/theme-education/README.md), [`docs`](../packages/theme-education/docs/overview.md)                |
-| Theme Healthcare     | [`packages/theme-healthcare/README.md`](../packages/theme-healthcare/README.md), [`docs`](../packages/theme-healthcare/docs/overview.md)             |
-| Theme Knowledge      | [`packages/theme-knowledge/README.md`](../packages/theme-knowledge/README.md), [`docs`](../packages/theme-knowledge/docs/overview.md)                |
-| Theme Local Services | [`packages/theme-local-services/README.md`](../packages/theme-local-services/README.md), [`docs`](../packages/theme-local-services/docs/overview.md) |
-| Theme Nonprofit      | [`packages/theme-nonprofit/README.md`](../packages/theme-nonprofit/README.md), [`docs`](../packages/theme-nonprofit/docs/overview.md)                |
-| Theme Portfolio      | [`packages/theme-portfolio/README.md`](../packages/theme-portfolio/README.md), [`docs`](../packages/theme-portfolio/docs/overview.md)                |
-| Theme SaaS           | [`packages/theme-saas/README.md`](../packages/theme-saas/README.md), [`docs`](../packages/theme-saas/docs/overview.md)                               |
-| Translation Manager  | [`packages/translation-manager/README.md`](../packages/translation-manager/README.md), [`docs`](../packages/translation-manager/docs/overview.md)    |
-| Welcome Tour         | [`packages/welcome-tour/README.md`](../packages/welcome-tour/README.md), [`docs`](../packages/welcome-tour/docs/overview.md)                         |
-| WordPress Importer   | [`packages/wordpress-importer/README.md`](../packages/wordpress-importer/README.md), [`docs`](../packages/wordpress-importer/docs/overview.md)       |
+## Package Reference
 
-For the full documentation site, see [docs.capell.app](https://docs.capell.app). For the package overview and dependency matrix, see the [repository README](../README.md).
+| Package | Slug | Kind | Product group | Surfaces | Local docs |
+| --- | --- | --- | --- | --- | --- |
+| Access Gate | `access-gate` | package | Capell Operations | admin, frontend, console | [README](../packages/access-gate/README.md), [docs](../packages/access-gate/docs/README.md), [overview](../packages/access-gate/docs/overview.md) |
+| Address | `address` | package | Capell Foundation | admin | [README](../packages/address/README.md), [docs](../packages/address/docs/README.md), [overview](../packages/address/docs/overview.md) |
+| Agent Bridge | `agent-bridge` | package | Capell Operations | admin, frontend | [README](../packages/agent-bridge/README.md), [docs](../packages/agent-bridge/docs/README.md), [overview](../packages/agent-bridge/docs/overview.md) |
+| Agent Delivery | `agent-delivery` | package | Capell Publishing Pro | frontend | [README](../packages/agent-delivery/README.md), [docs](../packages/agent-delivery/docs/README.md), [overview](../packages/agent-delivery/docs/overview.md) |
+| AI Orchestrator | `ai-orchestrator` | package | Capell Commercial | admin | [README](../packages/ai-orchestrator/README.md), [docs](../packages/ai-orchestrator/docs/README.md), [overview](../packages/ai-orchestrator/docs/overview.md) |
+| API | `api` | package | Capell Publishing Pro | frontend | [README](../packages/api/README.md), [docs](../packages/api/docs/README.md), [overview](../packages/api/docs/overview.md) |
+| Automation Studio | `automation-studio` | package | Capell Automation | admin, console | [README](../packages/automation-studio/README.md), [docs](../packages/automation-studio/docs/README.md), [overview](../packages/automation-studio/docs/overview.md) |
+| Block Library | `block-library` | package | Capell Foundation | admin, frontend, shared | [README](../packages/block-library/README.md), [docs](../packages/block-library/docs/README.md), [overview](../packages/block-library/docs/overview.md) |
+| Blog | `blog` | package | Capell Publishing | admin, frontend, console | [README](../packages/blog/README.md), [docs](../packages/blog/docs/README.md), [overview](../packages/blog/docs/overview.md) |
+| Bookings | `bookings` | plugin | Capell Operations | admin, console, frontend | [README](../packages/bookings/README.md), [docs](../packages/bookings/docs/README.md), [overview](../packages/bookings/docs/overview.md) |
+| Campaign Studio | `campaign-studio` | package | Capell Growth | admin, frontend | [README](../packages/campaign-studio/README.md), [docs](../packages/campaign-studio/docs/README.md), [overview](../packages/campaign-studio/docs/overview.md) |
+| Comments | `comments` | package | Capell Engagement | admin, frontend | [README](../packages/comments/README.md), [docs](../packages/comments/docs/README.md), [overview](../packages/comments/docs/overview.md) |
+| Contacts | `contacts` | package | Capell Content | admin | [README](../packages/contacts/README.md), [docs](../packages/contacts/docs/README.md), [overview](../packages/contacts/docs/overview.md) |
+| Content Sections | `content-sections` | package | Capell Foundation | admin, frontend | [README](../packages/content-sections/README.md), [docs](../packages/content-sections/docs/README.md), [overview](../packages/content-sections/docs/overview.md) |
+| Customer Portal | `customer-portal` | package | Capell Content | admin, frontend | [README](../packages/customer-portal/README.md), [docs](../packages/customer-portal/docs/README.md), [overview](../packages/customer-portal/docs/overview.md) |
+| Dashboard Reports | `dashboard-reports` | package | Capell Operations | admin | [README](../packages/dashboard-reports/README.md), [docs](../packages/dashboard-reports/docs/README.md), [overview](../packages/dashboard-reports/docs/overview.md) |
+| Demo Kit | `demo-kit` | package | Capell Foundation | admin, frontend | [README](../packages/demo-kit/README.md), [docs](../packages/demo-kit/docs/README.md), [overview](../packages/demo-kit/docs/overview.md) |
+| Deployments | `deployments` | package | Capell Operations | admin | [README](../packages/deployments/README.md), [docs](../packages/deployments/docs/README.md), [overview](../packages/deployments/docs/overview.md) |
+| Diagnostics | `diagnostics` | package | Capell Operations | admin, console | [README](../packages/diagnostics/README.md), [docs](../packages/diagnostics/docs/README.md), [overview](../packages/diagnostics/docs/overview.md) |
+| Document Lifecycle | `document-lifecycle` | package | Capell Operations | admin, console | [README](../packages/document-lifecycle/README.md), [docs](../packages/document-lifecycle/docs/README.md), [overview](../packages/document-lifecycle/docs/overview.md) |
+| Email Studio | `email-studio` | package | Capell Communications | admin, frontend, console | [README](../packages/email-studio/README.md), [docs](../packages/email-studio/docs/README.md), [overview](../packages/email-studio/docs/overview.md) |
+| Events | `events` | plugin | Capell Content | admin, frontend, console | [README](../packages/events/README.md), [docs](../packages/events/docs/README.md), [overview](../packages/events/docs/overview.md) |
+| Experiments | `experiments` | package | Capell Growth | admin | [README](../packages/experiments/README.md), [docs](../packages/experiments/docs/README.md), [overview](../packages/experiments/docs/overview.md) |
+| Filament Peek | `filament-peek` | package | Capell Foundation | admin, frontend | [README](../packages/filament-peek/README.md), [docs](../packages/filament-peek/docs/README.md), [overview](../packages/filament-peek/docs/overview.md) |
+| Form Builder | `form-builder` | package | Capell FormBuilder | admin, frontend | [README](../packages/form-builder/README.md), [docs](../packages/form-builder/docs/README.md), [overview](../packages/form-builder/docs/overview.md) |
+| Foundation Theme | `foundation-theme` | theme | Capell Foundation | admin, frontend | [README](../packages/foundation-theme/README.md), [docs](../packages/foundation-theme/docs/README.md), [overview](../packages/foundation-theme/docs/overview.md) |
+| Frontend Authoring | `frontend-authoring` | package | Capell Foundation | frontend, console | [README](../packages/frontend-authoring/README.md), [docs](../packages/frontend-authoring/docs/README.md), [overview](../packages/frontend-authoring/docs/overview.md) |
+| Frontend Optimizer | `frontend-optimizer` | package | Capell Foundation | admin, console, frontend | [README](../packages/frontend-optimizer/README.md), [docs](../packages/frontend-optimizer/docs/README.md), [overview](../packages/frontend-optimizer/docs/overview.md) |
+| GA4 Reports | `ga4-reports` | package | Capell Growth | admin, console | [README](../packages/ga4-reports/README.md), [docs](../packages/ga4-reports/docs/README.md), [overview](../packages/ga4-reports/docs/overview.md) |
+| Hero | `hero` | package | Capell Foundation | admin, frontend, console | [README](../packages/hero/README.md), [docs](../packages/hero/docs/README.md), [overview](../packages/hero/docs/overview.md) |
+| HTML Cache | `html-cache` | package | Capell Foundation | admin, frontend | [README](../packages/html-cache/README.md), [docs](../packages/html-cache/docs/README.md), [overview](../packages/html-cache/docs/overview.md) |
+| Capell Inertia | `inertia` | plugin | Capell Frontend | frontend | [README](../packages/inertia/README.md), [docs](../packages/inertia/docs/README.md), [overview](../packages/inertia/docs/overview.md) |
+| Capell Inertia React Adapter | `inertia-react-adapter` | plugin | Capell Frontend | frontend | [README](../packages/inertia-react-adapter/README.md), [docs](../packages/inertia-react-adapter/docs/README.md), [overview](../packages/inertia-react-adapter/docs/overview.md) |
+| Capell Inertia Vue Adapter | `inertia-vue-adapter` | plugin | Capell Frontend | frontend | [README](../packages/inertia-vue-adapter/README.md), [docs](../packages/inertia-vue-adapter/docs/README.md), [overview](../packages/inertia-vue-adapter/docs/overview.md) |
+| Insights | `insights` | package | Capell Growth | admin, frontend | [README](../packages/insights/README.md), [docs](../packages/insights/docs/README.md), [overview](../packages/insights/docs/overview.md) |
+| Knowledge Base | `knowledge-base` | package | Capell Content | frontend, admin | [README](../packages/knowledge-base/README.md), [docs](../packages/knowledge-base/docs/README.md), [overview](../packages/knowledge-base/docs/overview.md) |
+| Layout Builder | `layout-builder` | package | Capell Foundation | admin, frontend, console | [README](../packages/layout-builder/README.md), [docs](../packages/layout-builder/docs/README.md), [overview](../packages/layout-builder/docs/overview.md) |
+| Login Audit | `login-audit` | package | Capell Operations | admin | [README](../packages/login-audit/README.md), [docs](../packages/login-audit/docs/README.md), [overview](../packages/login-audit/docs/overview.md) |
+| Media AI | `media-ai` | package | Capell Media | admin, console | [README](../packages/media-ai/README.md), [docs](../packages/media-ai/docs/README.md), [overview](../packages/media-ai/docs/overview.md) |
+| Media Library | `media-library` | package | Capell Foundation | admin | [README](../packages/media-library/README.md), [docs](../packages/media-library/docs/README.md), [overview](../packages/media-library/docs/overview.md) |
+| Migration Assistant | `migration-assistant` | package | Capell Operations | admin, console | [README](../packages/migration-assistant/README.md), [docs](../packages/migration-assistant/docs/README.md), [overview](../packages/migration-assistant/docs/overview.md) |
+| Navigation | `navigation` | package | Capell Foundation | admin, frontend, console | [README](../packages/navigation/README.md), [docs](../packages/navigation/docs/README.md), [overview](../packages/navigation/docs/overview.md) |
+| Newsletter | `newsletter` | package | Capell Marketing | admin, frontend | [README](../packages/newsletter/README.md), [docs](../packages/newsletter/docs/README.md), [overview](../packages/newsletter/docs/overview.md) |
+| Notes | `notes` | package | Capell Collaboration | admin | [README](../packages/notes/README.md), [docs](../packages/notes/docs/README.md), [overview](../packages/notes/docs/overview.md) |
+| Password Policy | `password-policy` | package | Capell Operations | admin, console | [README](../packages/password-policy/README.md), [docs](../packages/password-policy/docs/README.md), [overview](../packages/password-policy/docs/overview.md) |
+| Payments | `payments` | package | Capell Commerce | admin, frontend, console | [README](../packages/payments/README.md), [docs](../packages/payments/docs/README.md), [overview](../packages/payments/docs/overview.md) |
+| Privacy Center | `privacy-center` | package | Capell Operations | admin, console, frontend | [README](../packages/privacy-center/README.md), [docs](../packages/privacy-center/docs/README.md), [overview](../packages/privacy-center/docs/overview.md) |
+| Public Actions | `public-actions` | package | Capell Automation | admin, frontend, console | [README](../packages/public-actions/README.md), [docs](../packages/public-actions/docs/README.md), [overview](../packages/public-actions/docs/overview.md) |
+| Publishing Studio | `publishing-studio` | package | Capell Publishing Pro | admin, console | [README](../packages/publishing-studio/README.md), [docs](../packages/publishing-studio/docs/README.md), [overview](../packages/publishing-studio/docs/overview.md) |
+| Record Switcher | `record-switcher` | package | Capell Foundation | admin | [README](../packages/record-switcher/README.md), [docs](../packages/record-switcher/docs/README.md), [overview](../packages/record-switcher/docs/overview.md) |
+| Search | `search` | package | Capell Search & SEO | admin, frontend, console | [README](../packages/search/README.md), [docs](../packages/search/docs/README.md), [overview](../packages/search/docs/overview.md) |
+| SEO Suite | `seo-suite` | package | Capell Search & SEO | admin, frontend, console | [README](../packages/seo-suite/README.md), [docs](../packages/seo-suite/docs/README.md), [overview](../packages/seo-suite/docs/overview.md) |
+| Shopify Commerce | `shopify-commerce` | package | Capell Commerce | admin, console | [README](../packages/shopify-commerce/README.md), [docs](../packages/shopify-commerce/docs/README.md), [overview](../packages/shopify-commerce/docs/overview.md) |
+| Site Discovery | `site-discovery` | package | Capell Search & SEO | admin, frontend, console | [README](../packages/site-discovery/README.md), [docs](../packages/site-discovery/docs/README.md), [overview](../packages/site-discovery/docs/overview.md) |
+| Social Feeds | `social-feeds` | package | Capell Growth | admin, frontend | [README](../packages/social-feeds/README.md), [docs](../packages/social-feeds/docs/README.md), [overview](../packages/social-feeds/docs/overview.md) |
+| Structured Content Library | `structured-content-library` | package | Capell Foundation | admin, shared | [README](../packages/structured-content-library/README.md), [docs](../packages/structured-content-library/docs/README.md), [overview](../packages/structured-content-library/docs/overview.md) |
+| Tags | `tags` | package | Capell Foundation | admin, console | [README](../packages/tags/README.md), [docs](../packages/tags/docs/README.md), [overview](../packages/tags/docs/overview.md) |
+| Theme Agency | `theme-agency` | theme | Capell Themes | frontend | [README](../packages/theme-agency/README.md), [docs](../packages/theme-agency/docs/README.md), [overview](../packages/theme-agency/docs/overview.md) |
+| Theme Commerce | `theme-commerce` | theme | Capell Themes | frontend | [README](../packages/theme-commerce/README.md), [docs](../packages/theme-commerce/docs/README.md), [overview](../packages/theme-commerce/docs/overview.md) |
+| Theme Corporate | `theme-corporate` | theme | Capell Foundation | frontend | [README](../packages/theme-corporate/README.md), [docs](../packages/theme-corporate/docs/README.md), [overview](../packages/theme-corporate/docs/overview.md) |
+| Theme Education | `theme-education` | theme | Capell Themes | frontend, console | [README](../packages/theme-education/README.md), [docs](../packages/theme-education/docs/README.md), [overview](../packages/theme-education/docs/overview.md) |
+| Theme Healthcare | `theme-healthcare` | theme | Capell Themes | frontend | [README](../packages/theme-healthcare/README.md), [docs](../packages/theme-healthcare/docs/README.md), [overview](../packages/theme-healthcare/docs/overview.md) |
+| Theme Inertia Bookings | `theme-inertia-bookings` | theme | Capell Themes | frontend | [README](../packages/theme-inertia-bookings/README.md), [docs](../packages/theme-inertia-bookings/docs/README.md), [overview](../packages/theme-inertia-bookings/docs/overview.md) |
+| Theme Inertia Bookings React | `theme-inertia-bookings-react` | plugin | Capell Themes | frontend | [README](../packages/theme-inertia-bookings-react/README.md), [docs](../packages/theme-inertia-bookings-react/docs/README.md), [overview](../packages/theme-inertia-bookings-react/docs/overview.md) |
+| Theme Inertia Bookings Vue | `theme-inertia-bookings-vue` | plugin | Capell Themes | frontend | [README](../packages/theme-inertia-bookings-vue/README.md), [docs](../packages/theme-inertia-bookings-vue/docs/README.md), [overview](../packages/theme-inertia-bookings-vue/docs/overview.md) |
+| Theme Knowledge | `theme-knowledge` | theme | Capell Themes | frontend | [README](../packages/theme-knowledge/README.md), [docs](../packages/theme-knowledge/docs/README.md), [overview](../packages/theme-knowledge/docs/overview.md) |
+| Theme Local Services | `theme-local-services` | theme | Capell Themes | frontend, console | [README](../packages/theme-local-services/README.md), [docs](../packages/theme-local-services/docs/README.md), [overview](../packages/theme-local-services/docs/overview.md) |
+| Theme Nonprofit | `theme-nonprofit` | theme | Capell Themes | frontend | [README](../packages/theme-nonprofit/README.md), [docs](../packages/theme-nonprofit/docs/README.md), [overview](../packages/theme-nonprofit/docs/overview.md) |
+| Theme Portfolio | `theme-portfolio` | theme | Capell Themes | frontend | [README](../packages/theme-portfolio/README.md), [docs](../packages/theme-portfolio/docs/README.md), [overview](../packages/theme-portfolio/docs/overview.md) |
+| Theme Saas | `theme-saas` | theme | Capell Themes | frontend | [README](../packages/theme-saas/README.md), [docs](../packages/theme-saas/docs/README.md), [overview](../packages/theme-saas/docs/overview.md) |
+| Translation Manager | `translation-manager` | package | Capell Admin | admin | [README](../packages/translation-manager/README.md), [docs](../packages/translation-manager/docs/README.md), [overview](../packages/translation-manager/docs/overview.md) |
+| URL Manager | `url-manager` | package | Capell Search & SEO | admin, frontend | [README](../packages/url-manager/README.md), [docs](../packages/url-manager/docs/README.md), [overview](../packages/url-manager/docs/overview.md) |
+| Welcome Tour | `welcome-tour` | package | Capell Foundation | admin | [README](../packages/welcome-tour/README.md), [docs](../packages/welcome-tour/docs/README.md), [overview](../packages/welcome-tour/docs/overview.md) |
+| WordPress Importer | `wordpress-importer` | package | Capell Operations | admin, console | [README](../packages/wordpress-importer/README.md), [docs](../packages/wordpress-importer/docs/README.md), [overview](../packages/wordpress-importer/docs/overview.md) |
 
-## Cross-package install order
+## Cross-Package Install Order
 
 - Blog depends on Layout Builder; install `capell-app/layout-builder` before `capell-app/blog`.
-- Theme packages extend Foundation Theme; install `capell-app/layout-builder`, then `capell-app/foundation-theme`, then the theme package such as `capell-app/theme-agency`, `capell-app/theme-commerce`, `capell-app/theme-corporate`, `capell-app/theme-education`, `capell-app/theme-healthcare`, `capell-app/theme-knowledge`, `capell-app/theme-local-services`, `capell-app/theme-nonprofit`, `capell-app/theme-portfolio`, or `capell-app/theme-saas`.
+- Theme packages extend Foundation Theme; install `capell-app/layout-builder`, then `capell-app/foundation-theme`, then the selected theme package.
+- Inertia-powered themes require `capell-app/inertia`, the selected framework adapter such as `capell-app/inertia-vue-adapter` or `capell-app/inertia-react-adapter`, and any theme-specific component pack.
+- Theme Inertia Bookings also requires `capell-app/bookings`.
 - WordPress Importer registers a source for Migration Assistant; install `capell-app/migration-assistant` before `capell-app/wordpress-importer`.
 
 ## Screenshot Automation
 
-Package screenshots are generated from committed manifests during deployment.
-See [Package Screenshot Automation](package-screenshot-automation.md) for the contract
-and expected output path.
-GitHub Actions provides a `Screenshot Manifests` workflow that validates the committed
-manifests stay in sync.
+Package screenshots are generated from committed manifests during deployment. See [Package Screenshot Automation](package-screenshot-automation.md) for the capture contract and expected output path.

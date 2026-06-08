@@ -125,4 +125,4 @@ Keep generated output behind editor review. Use `ApplyAiDraftAction` only after 
 - [SEO metadata and discoverability](../packages/seo-suite/docs/seo-meta-and-discoverability.md)
 - [SEO intelligence](../packages/seo-suite/docs/seo-intelligence.md)
 - [Site Discovery](../packages/site-discovery/README.md)
-- [Test plan for actions and services](test-plan-actions-services.md)
+- [Writing package tests](writing-tests.md)

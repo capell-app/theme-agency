@@ -8,7 +8,7 @@ independent studios, case studies, services, media kits, and newsletters.
 - [Overview](overview.md)
 - [Package README](../README.md)
 - [Creating a Capell theme](../../../docs/creating-a-theme.md)
-- [Theme Screenshot QA Playbook](../../../docs/theme-screenshot-qa-playbook.md)
+- [Package Screenshot Automation](../../../docs/package-screenshot-automation.md)
 
 ## Developer Starting Points
 

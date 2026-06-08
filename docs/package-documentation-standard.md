@@ -2,6 +2,31 @@
 
 Capell package docs have two jobs: help a developer change the package safely, and help an owner understand why the package belongs in a Capell build. Keep both jobs visible.
 
+## Reader Split
+
+Every package needs both a non-technical overview and a developer deep dive. They can live in one README when the package is small, but the distinction should be obvious.
+
+| Reader | What they need |
+| --- | --- |
+| Site owner, buyer, or operator | What workflow the package unlocks, which bundle it belongs to, which screens or public routes appear, and what operational risk it reduces. |
+| Editor or admin user | What they can create, review, approve, publish, inspect, recover, or hand off without custom development. |
+| Developer | Real package boundaries: Actions, Data objects, providers, routes, models, settings, extension points, tests, and unsafe integration paths to avoid. |
+
+Use this split when writing examples:
+
+```md
+For teams: Customer Portal gives signed-in customers one dashboard for support requests, preferences, and package-contributed self-service links.
+
+For developers: Packages contribute dashboard cards through `PortalDashboardItemRegistry`; billing, document, event, and access packages keep their own domain actions.
+```
+
+Avoid examples that only restate the package name:
+
+```md
+Weak: Automation Studio automates workflows.
+Better: Automation Studio listens for package events such as form submissions and access approvals, then records each matched rule/action run in `automation_runs`.
+```
+
 ## README Shape
 
 Every package README should include these sections, in this order when practical:
