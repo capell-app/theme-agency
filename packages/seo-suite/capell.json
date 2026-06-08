@@ -23,6 +23,8 @@
         ],
         "supports": [
             "capell-app/blog",
+            "capell-app/media-ai",
+            "capell-app/media-library",
             "capell-app/publishing-studio",
             "capell-app/url-manager"
         ],
@@ -153,6 +155,7 @@
         "seo-suite-pagespeed-digest",
         "seo-suite-search-console-rankings",
         "seo-suite-ai-generation",
+        "seo-suite-media-metadata",
         "seo-suite-publishing-studio-gates",
         "seo-suite-blog-article-schema",
         "seo-suite-url-manager-redirect-opportunities"

@@ -64,7 +64,13 @@ it('declares the shipped media ai console batch command in the package manifest'
         ->and($manifest['capabilities'] ?? null)->toContain('media-ai')
         ->and($manifest['capabilities'] ?? null)->toContain('media-ai-admin')
         ->and($manifest['capabilities'] ?? null)->toContain('media-ai-console')
-        ->and($manifest['capabilities'] ?? null)->toContain('media-ai-batch');
+        ->and($manifest['capabilities'] ?? null)->toContain('media-ai-batch')
+        ->and($manifest['capabilities'] ?? null)->toContain('media-ai-alt-caption-generation')
+        ->and($manifest['capabilities'] ?? null)->toContain('media-ai-cost-controls')
+        ->and($manifest['capabilities'] ?? null)->toContain('media-ai-missing-alt-workflow')
+        ->and(data_get($manifest, 'dependencies.supports'))->toContain('capell-app/ai-orchestrator')
+        ->and(data_get($manifest, 'dependencies.supports'))->toContain('capell-app/media-library')
+        ->and(data_get($manifest, 'dependencies.supports'))->toContain('capell-app/seo-suite');
 });
 
 it('keeps marketplace screenshots backed by the committed media ai gallery assets', function (): void {
@@ -116,7 +122,6 @@ it('keeps marketplace screenshots backed by the committed media ai gallery asset
     expect($marketplaceScreenshotPaths)->toBe([
         'docs/assets/marketplace/extension-card.jpg',
     ])->and($requiredScreenshotPaths)->toBe([
-        'docs/images/screenshots/media-ai-doctor-image.png',
-        'docs/images/screenshots/media-ai-doctor-image-dark.png',
+        'docs/screenshots/media-ai-doctor-image.png',
     ]);
 });

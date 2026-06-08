@@ -44,7 +44,9 @@ it('builds image schema from loaded pageable media and tracks emitted media', fu
         'caption' => 'Primary caption',
         'description' => 'Primary description',
     ]);
-    $secondary = mediaForSchema(2, 'Secondary image');
+    $secondary = mediaForSchema(2, 'Secondary image', [
+        'alt' => 'Secondary alt text',
+    ]);
     $extra = mediaForSchema(3, 'Extra image');
     $ignored = mediaForSchema(4, 'Ignored image');
     $article = new Article;
@@ -64,6 +66,9 @@ it('builds image schema from loaded pageable media and tracks emitted media', fu
             'Primary image',
             'Secondary image',
             'Extra image',
+        ])
+        ->and($schema[1])->toMatchArray([
+            'description' => 'Secondary alt text',
         ])
         ->and($tracker->tracked)->toBe([1, 2, 3]);
 });

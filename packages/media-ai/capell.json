@@ -16,7 +16,7 @@
     "surfaces": ["admin", "console"],
     "dependencies": {
         "requires": ["capell-app/admin", "capell-app/core"],
-        "supports": [],
+        "supports": ["capell-app/ai-orchestrator", "capell-app/media-library", "capell-app/seo-suite"],
         "conflicts": []
     },
     "providers": {
@@ -44,7 +44,10 @@
         "media-ai",
         "media-ai-admin",
         "media-ai-console",
-        "media-ai-batch"
+        "media-ai-batch",
+        "media-ai-alt-caption-generation",
+        "media-ai-cost-controls",
+        "media-ai-missing-alt-workflow"
     ],
     "performance": {
         "frontendRenderBudgetMs": 0,

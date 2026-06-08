@@ -58,17 +58,24 @@ final class BuildPageImageSchemaAction
             'datePublished' => $media->created_at?->toDateString(),
         ];
 
-        $caption = $media->getCustomProperty('caption');
-        if (is_string($caption) && $caption !== '') {
+        $caption = $this->customProperty($media, 'caption');
+        if ($caption !== null) {
             $image['caption'] = $caption;
         }
 
-        $description = $media->getCustomProperty('description');
-        if (is_string($description) && $description !== '') {
+        $description = $this->customProperty($media, 'description') ?? $this->customProperty($media, 'alt');
+        if ($description !== null) {
             $image['description'] = $description;
         }
 
         return $image;
+    }
+
+    private function customProperty(Media $media, string $key): ?string
+    {
+        $value = $media->getCustomProperty($key);
+
+        return is_string($value) && $value !== '' ? $value : null;
     }
 
     private function loadedRelation(Pageable $page, string $relation): mixed
