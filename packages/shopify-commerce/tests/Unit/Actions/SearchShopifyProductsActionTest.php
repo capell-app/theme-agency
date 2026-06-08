@@ -141,8 +141,13 @@ it('falls back to live graphql when local search has no matches', function (): v
         ->and(ShopifyProductVariant::query()->where('shopify_gid', 'gid://shopify/ProductVariant/stale')->exists())->toBeFalse()
         ->and(ShopifyProductVariant::query()->where('shopify_gid', 'gid://shopify/ProductVariant/31')->value('price_amount'))->toBe('49.990000');
 
-    Http::assertSent(static fn (Request $request): bool => $request['variables']['query'] === 'title:*Gamma* OR handle:*Gamma*'
-        && $request['variables']['first'] === 7);
+    Http::assertSent(static function (Request $request): bool {
+        $variables = $request['variables'];
+
+        return is_array($variables)
+            && ($variables['query'] ?? null) === 'title:*Gamma* OR handle:*Gamma*'
+            && ($variables['first'] ?? null) === 7;
+    });
 });
 
 it('keeps cached searches scoped by connection', function (): void {

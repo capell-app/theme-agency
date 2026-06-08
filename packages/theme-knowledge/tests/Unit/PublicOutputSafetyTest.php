@@ -85,5 +85,5 @@ it('keeps visible public copy behind translations or hydrated data', function ()
 
     preg_match_all('/>\s*([A-Z][A-Za-z0-9 ,.\'"&:;!?()-]{7,})\s*</', $blade, $matches);
 
-    expect($matches[1] ?? [])->toBe([]);
+    expect($matches[1])->toBe([]);
 });

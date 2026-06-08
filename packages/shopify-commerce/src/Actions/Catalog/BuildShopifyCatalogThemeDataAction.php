@@ -14,14 +14,13 @@ use Capell\ShopifyCommerce\Models\ShopifyProductVariant;
 use Carbon\CarbonInterface;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Lorisleiva\Actions\Concerns\AsAction;
 use Spatie\LaravelData\DataCollection;
 
 /**
  * Builds a safe, local-cache-only catalog payload for hydrated theme renderers.
  *
- * @method static ShopifyCatalogThemeData run(ShopifyConnection $connection, int $limit = 12, ?string $searchTerm = null, array $handles = [], bool $includeInactive = false)
+ * @method static ShopifyCatalogThemeData run(ShopifyConnection $connection, int $limit = 12, ?string $searchTerm = null, array<array-key, mixed> $handles = [], bool $includeInactive = false)
  */
 final class BuildShopifyCatalogThemeDataAction
 {
@@ -46,10 +45,9 @@ final class BuildShopifyCatalogThemeDataAction
         $handles = $this->normalizeHandles($handles);
 
         $products = $this->products($connection, $limit, $searchTerm, $handles, $includeInactive);
-        $productData = $products
+        $productData = array_values($products
             ->map(fn (ShopifyProduct $product): ShopifyCatalogProductThemeData => $this->productData($product))
-            ->values()
-            ->all();
+            ->all());
         $summaryData = $this->summaryData($connection, $includeInactive);
 
         return new ShopifyCatalogThemeData(
@@ -70,9 +68,7 @@ final class BuildShopifyCatalogThemeDataAction
         bool $includeInactive,
     ): EloquentCollection {
         return ShopifyProduct::query()
-            ->with(['variants' => static function (HasMany $query): void {
-                $query->orderBy('id');
-            }])
+            ->with('variants')
             ->where('connection_id', $connection->getKey())
             ->when(! $includeInactive, static function (Builder $query): void {
                 $query->where('status', 'active');
@@ -95,10 +91,10 @@ final class BuildShopifyCatalogThemeDataAction
 
     private function productData(ShopifyProduct $product): ShopifyCatalogProductThemeData
     {
-        $variants = $product->variants
+        $variants = array_values($product->variants
+            ->sortBy('id')
             ->map(fn (ShopifyProductVariant $variant): ShopifyCatalogVariantThemeData => $this->variantData($variant))
-            ->values()
-            ->all();
+            ->all());
 
         $firstVariant = $variants[0] ?? null;
         $availableForSale = collect($variants)
@@ -149,13 +145,12 @@ final class BuildShopifyCatalogThemeDataAction
                     });
             });
 
-        $presentmentCurrencies = (clone $variantQuery)
+        $presentmentCurrencies = array_values((clone $variantQuery)
             ->distinct()
             ->orderBy('price_currency')
             ->pluck('price_currency')
             ->filter(static fn (mixed $currency): bool => is_string($currency) && $currency !== '')
-            ->values()
-            ->all();
+            ->all());
 
         $latestSyncedProduct = (clone $productQuery)
             ->orderByDesc('synced_at')
@@ -188,7 +183,7 @@ final class BuildShopifyCatalogThemeDataAction
 
     private function priceAmount(ShopifyProductVariant $variant): string
     {
-        $amount = (string) $variant->getAttribute('price_amount');
+        $amount = $this->stringValue($variant->getAttribute('price_amount'));
 
         if (! is_numeric($amount)) {
             return $amount;
@@ -228,19 +223,23 @@ final class BuildShopifyCatalogThemeDataAction
             ? $selectedOptions->toArray()
             : (is_array($selectedOptions) ? $selectedOptions : []);
 
-        return collect($rows)
+        return array_values(collect($rows)
             ->filter(static fn (mixed $option): bool => is_array($option))
-            ->map(static fn (array $option): array => [
-                'name' => (string) ($option['name'] ?? ''),
+            ->map(fn (array $option): array => [
+                'name' => $this->stringValue($option['name'] ?? ''),
                 'value' => is_string($option['value'] ?? null) ? $option['value'] : null,
             ])
             ->filter(static fn (array $option): bool => $option['name'] !== '' || $option['value'] !== null)
-            ->values()
-            ->all();
+            ->all());
     }
 
     private function formatDate(mixed $date): ?string
     {
         return $date instanceof CarbonInterface ? $date->toIso8601String() : null;
+    }
+
+    private function stringValue(mixed $value, string $fallback = ''): string
+    {
+        return is_scalar($value) ? (string) $value : $fallback;
     }
 }

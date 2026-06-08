@@ -10,6 +10,8 @@ use Capell\ShopifyCommerce\Models\ShopifyProduct;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Testing\TestResponse;
 
+use function Pest\Laravel\postJson;
+
 beforeEach(function (): void {
     config()->set('capell-shopify-commerce.client_secret', 'client-secret');
 });
@@ -131,7 +133,7 @@ function shopifyWebhookPost(string $topic, array $payload): TestResponse
     $body = json_encode($payload, JSON_THROW_ON_ERROR);
     $hmac = base64_encode(hash_hmac('sha256', $body, 'client-secret', binary: true));
 
-    return test()->postJson(route('capell-shopify-commerce.webhooks.shopify'), $payload, [
+    return postJson(route('capell-shopify-commerce.webhooks.shopify'), $payload, [
         'X-Shopify-Hmac-Sha256' => $hmac,
         'X-Shopify-Shop-Domain' => 'foo.myshopify.com',
         'X-Shopify-Topic' => $topic,

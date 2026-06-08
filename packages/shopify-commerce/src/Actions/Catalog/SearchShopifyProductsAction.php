@@ -17,6 +17,9 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Lorisleiva\Actions\Concerns\AsAction;
 
+/**
+ * @method static EloquentCollection<int, ShopifyProduct> run(string $term, int $limit, ShopifyConnection $connection)
+ */
 final class SearchShopifyProductsAction
 {
     use AsAction;
@@ -96,7 +99,7 @@ final class SearchShopifyProductsAction
                     continue;
                 }
 
-                PersistShopifyProductAction::run($connection, $this->mapProductNode($node), $syncedAt);
+                PersistShopifyProductAction::run($connection, $this->mapProductNode($this->stringKeyedArray($node)), $syncedAt);
 
                 $changed = true;
             }
@@ -115,33 +118,32 @@ final class SearchShopifyProductsAction
     private function mapProductNode(array $node): ShopifyProductData
     {
         $optionNodes = is_array($node['options'] ?? null) ? $node['options'] : [];
-        $variantNodes = is_array(data_get($node, 'variants.nodes')) ? data_get($node, 'variants.nodes') : [];
+        $variantNodes = data_get($node, 'variants.nodes');
+        $variantNodes = is_array($variantNodes) ? $variantNodes : [];
 
-        $options = collect($optionNodes)
+        $options = array_values(collect($optionNodes)
             ->filter(static fn (mixed $option): bool => is_array($option))
-            ->map(static fn (array $option): ShopifyProductOptionData => new ShopifyProductOptionData(
-                name: (string) ($option['name'] ?? ''),
+            ->map(fn (array $option): ShopifyProductOptionData => new ShopifyProductOptionData(
+                name: $this->stringValue($option['name'] ?? ''),
                 values: array_values(array_filter(
                     is_array($option['values'] ?? null) ? $option['values'] : [],
                     static fn (mixed $value): bool => is_string($value) && $value !== '',
                 )),
             ))
-            ->values()
-            ->all();
+            ->all());
 
-        $variants = collect($variantNodes)
+        $variants = array_values(collect($variantNodes)
             ->filter(static fn (mixed $variant): bool => is_array($variant) && is_string($variant['id'] ?? null))
-            ->map(fn (array $variant): ShopifyProductVariantData => $this->mapVariantNode($variant))
-            ->values()
-            ->all();
+            ->map(fn (array $variant): ShopifyProductVariantData => $this->mapVariantNode($this->stringKeyedArray($variant)))
+            ->all());
 
         return new ShopifyProductData(
-            shopifyGid: (string) $node['id'],
-            handle: (string) ($node['handle'] ?? ''),
-            title: (string) ($node['title'] ?? ''),
-            status: mb_strtolower((string) ($node['status'] ?? 'unknown')),
+            shopifyGid: $this->stringValue($node['id']),
+            handle: $this->stringValue($node['handle'] ?? ''),
+            title: $this->stringValue($node['title'] ?? ''),
+            status: mb_strtolower($this->stringValue($node['status'] ?? 'unknown', 'unknown')),
             options: $options,
-            featuredImage: is_array($node['featuredImage'] ?? null) ? $node['featuredImage'] : null,
+            featuredImage: is_array($node['featuredImage'] ?? null) ? $this->stringKeyedArray($node['featuredImage']) : null,
             variants: $variants,
             rawSnapshot: $node,
         );
@@ -155,20 +157,19 @@ final class SearchShopifyProductsAction
         $priceV2 = is_array($variant['priceV2'] ?? null) ? $variant['priceV2'] : [];
         $selectedOptionNodes = is_array($variant['selectedOptions'] ?? null) ? $variant['selectedOptions'] : [];
 
-        $selectedOptions = collect($selectedOptionNodes)
+        $selectedOptions = array_values(collect($selectedOptionNodes)
             ->filter(static fn (mixed $option): bool => is_array($option))
-            ->map(static fn (array $option): ShopifyProductOptionData => new ShopifyProductOptionData(
-                name: (string) ($option['name'] ?? ''),
+            ->map(fn (array $option): ShopifyProductOptionData => new ShopifyProductOptionData(
+                name: $this->stringValue($option['name'] ?? ''),
                 value: is_string($option['value'] ?? null) ? $option['value'] : null,
             ))
-            ->values()
-            ->all();
+            ->all());
 
         return new ShopifyProductVariantData(
-            shopifyGid: (string) $variant['id'],
-            title: (string) ($variant['title'] ?? ''),
-            priceAmount: (string) ($priceV2['amount'] ?? $variant['price'] ?? '0'),
-            priceCurrency: (string) ($priceV2['currencyCode'] ?? config('capell-shopify-commerce.default_currency', 'USD')),
+            shopifyGid: $this->stringValue($variant['id']),
+            title: $this->stringValue($variant['title'] ?? ''),
+            priceAmount: $this->stringValue($priceV2['amount'] ?? $variant['price'] ?? '0', '0'),
+            priceCurrency: $this->stringValue($priceV2['currencyCode'] ?? config('capell-shopify-commerce.default_currency', 'USD'), 'USD'),
             availableForSale: ($variant['availableForSale'] ?? false) === true,
             selectedOptions: $selectedOptions,
         );
@@ -222,5 +223,27 @@ GRAPHQL;
         }
 
         return 5;
+    }
+
+    private function stringValue(mixed $value, string $fallback = ''): string
+    {
+        return is_scalar($value) ? (string) $value : $fallback;
+    }
+
+    /**
+     * @param  array<array-key, mixed>  $values
+     * @return array<string, mixed>
+     */
+    private function stringKeyedArray(array $values): array
+    {
+        $result = [];
+
+        foreach ($values as $key => $value) {
+            if (is_string($key)) {
+                $result[$key] = $value;
+            }
+        }
+
+        return $result;
     }
 }

@@ -819,7 +819,7 @@ it('renders the healthcare page inside the declared frontend budget without data
 
     $elapsedMilliseconds = (hrtime(true) - $startedAt) / 1_000_000;
 
-    expect($elapsedMilliseconds)->toBeLessThanOrEqual((float) data_get($manifest, 'performance.frontendRenderBudgetMs', 20))
+    expect($elapsedMilliseconds)->toBeLessThanOrEqual(healthcareFrontendRenderBudgetMs($manifest))
         ->and($queryCount)->toBe(0)
         ->and($html)->toContain('Specialist care with clear next steps')
         ->and($html)->toContain('Urgent symptoms need urgent help')
@@ -886,6 +886,16 @@ function healthcareThemeTokenBladeViews(string ...$directories): string
     }
 
     return implode("\n", $views);
+}
+
+/**
+ * @param  array<string, mixed>  $manifest
+ */
+function healthcareFrontendRenderBudgetMs(array $manifest): float
+{
+    $budget = data_get($manifest, 'performance.frontendRenderBudgetMs', 20);
+
+    return is_numeric($budget) ? (float) $budget : 20.0;
 }
 
 function healthcareContrastRatio(string $foreground, string $background): float

@@ -84,9 +84,9 @@ final class IngestShopifyWebhookAction
 
         return new ShopifyProductData(
             shopifyGid: $productId,
-            handle: (string) ($payload['handle'] ?? ''),
-            title: (string) ($payload['title'] ?? ''),
-            status: mb_strtolower((string) ($payload['status'] ?? 'unknown')),
+            handle: $this->stringValue($payload['handle'] ?? ''),
+            title: $this->stringValue($payload['title'] ?? ''),
+            status: mb_strtolower($this->stringValue($payload['status'] ?? 'unknown', 'unknown')),
             options: $options,
             featuredImage: $this->featuredImage($payload),
             variants: $variants,
@@ -102,17 +102,16 @@ final class IngestShopifyWebhookAction
     {
         $options = is_array($payload['options'] ?? null) ? $payload['options'] : [];
 
-        return collect($options)
+        return array_values(collect($options)
             ->filter(static fn (mixed $option): bool => is_array($option))
-            ->map(static fn (array $option): ShopifyProductOptionData => new ShopifyProductOptionData(
-                name: (string) ($option['name'] ?? ''),
+            ->map(fn (array $option): ShopifyProductOptionData => new ShopifyProductOptionData(
+                name: $this->stringValue($option['name'] ?? ''),
                 values: array_values(array_filter(
                     is_array($option['values'] ?? null) ? $option['values'] : [],
                     static fn (mixed $value): bool => is_string($value) && $value !== '',
                 )),
             ))
-            ->values()
-            ->all();
+            ->all());
     }
 
     /**
@@ -123,11 +122,10 @@ final class IngestShopifyWebhookAction
     {
         $variants = is_array($payload['variants'] ?? null) ? $payload['variants'] : [];
 
-        return collect($variants)
+        return array_values(collect($variants)
             ->filter(static fn (mixed $variant): bool => is_array($variant))
-            ->map(fn (array $variant): ShopifyProductVariantData => $this->variantData($variant))
-            ->values()
-            ->all();
+            ->map(fn (array $variant): ShopifyProductVariantData => $this->variantData($this->stringKeyedArray($variant)))
+            ->all());
     }
 
     /**
@@ -154,10 +152,10 @@ final class IngestShopifyWebhookAction
 
         return new ShopifyProductVariantData(
             shopifyGid: $this->gid('ProductVariant', $variant['admin_graphql_api_id'] ?? $variant['id'] ?? null) ?? '',
-            title: (string) ($variant['title'] ?? ''),
-            priceAmount: (string) ($variant['price'] ?? '0'),
-            priceCurrency: (string) ($variant['currency'] ?? config('capell-shopify-commerce.default_currency', 'USD')),
-            availableForSale: (int) ($variant['inventory_quantity'] ?? 0) > 0,
+            title: $this->stringValue($variant['title'] ?? ''),
+            priceAmount: $this->stringValue($variant['price'] ?? '0', '0'),
+            priceCurrency: $this->stringValue($variant['currency'] ?? config('capell-shopify-commerce.default_currency', 'USD'), 'USD'),
+            availableForSale: $this->integerValue($variant['inventory_quantity'] ?? 0) > 0,
             selectedOptions: $selectedOptions,
         );
     }
@@ -170,7 +168,7 @@ final class IngestShopifyWebhookAction
     {
         $image = $payload['image'] ?? $payload['featured_image'] ?? null;
 
-        return is_array($image) ? $image : null;
+        return is_array($image) ? $this->stringKeyedArray($image) : null;
     }
 
     private function gid(string $resource, mixed $value): ?string
@@ -184,5 +182,32 @@ final class IngestShopifyWebhookAction
         }
 
         return null;
+    }
+
+    private function integerValue(mixed $value): int
+    {
+        return is_numeric($value) ? (int) $value : 0;
+    }
+
+    private function stringValue(mixed $value, string $fallback = ''): string
+    {
+        return is_scalar($value) ? (string) $value : $fallback;
+    }
+
+    /**
+     * @param  array<array-key, mixed>  $values
+     * @return array<string, mixed>
+     */
+    private function stringKeyedArray(array $values): array
+    {
+        $result = [];
+
+        foreach ($values as $key => $value) {
+            if (is_string($key)) {
+                $result[$key] = $value;
+            }
+        }
+
+        return $result;
     }
 }

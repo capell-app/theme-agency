@@ -16,11 +16,13 @@ final class ShopifyWebhookController
     {
         $rawPayload = $request->getContent();
 
-        abort_unless(ValidateShopifyWebhookHmacAction::run(
+        $signatureIsValid = ValidateShopifyWebhookHmacAction::run(
             $rawPayload,
             $request->header('X-Shopify-Hmac-Sha256'),
             config('capell-shopify-commerce.client_secret'),
-        ), 401);
+        );
+
+        abort_unless($signatureIsValid, 401);
 
         $shopDomain = $request->header('X-Shopify-Shop-Domain');
         $topic = $request->header('X-Shopify-Topic');
@@ -37,8 +39,25 @@ final class ShopifyWebhookController
         $payload = json_decode($rawPayload, true, 512, JSON_THROW_ON_ERROR);
         abort_unless(is_array($payload), 422);
 
-        IngestShopifyWebhookAction::run($connection, $topic, $payload);
+        IngestShopifyWebhookAction::run($connection, $topic, $this->stringKeyedPayload($payload));
 
         return response()->json(['ok' => true]);
+    }
+
+    /**
+     * @param  array<array-key, mixed>  $payload
+     * @return array<string, mixed>
+     */
+    private function stringKeyedPayload(array $payload): array
+    {
+        $result = [];
+
+        foreach ($payload as $key => $value) {
+            if (is_string($key)) {
+                $result[$key] = $value;
+            }
+        }
+
+        return $result;
     }
 }

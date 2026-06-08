@@ -33,7 +33,7 @@ final class BuildVisibleEditorialCalendarEventsAction
         $siteIds = null;
 
         if ($actor instanceof Authenticatable && ! SiteScope::isGlobalActor($actor)) {
-            $siteIds = $actor->getAssignedSiteIds()->all();
+            $siteIds = array_values($actor->getAssignedSiteIds()->all());
 
             if ($siteIds === []) {
                 return collect();

@@ -7,9 +7,12 @@ use Capell\ThemeStudio\Knowledge\KnowledgeThemeServiceProvider;
 it('declares the required first-party theme manifest boundaries', function (): void {
     $manifest = knowledgeThemeManifest();
     $database = $manifest['database'] ?? null;
+    $performance = $manifest['performance'] ?? null;
     $providers = $manifest['providers'] ?? null;
 
     throw_unless(is_array($database), RuntimeException::class, 'Theme Knowledge database manifest data must be an array.');
+
+    throw_unless(is_array($performance), RuntimeException::class, 'Theme Knowledge performance manifest data must be an array.');
 
     throw_unless(is_array($providers), RuntimeException::class, 'Theme Knowledge providers manifest data must be an array.');
 
@@ -19,8 +22,8 @@ it('declares the required first-party theme manifest boundaries', function (): v
 
     expect($manifest['themeKey'])->toBe('knowledge')
         ->and($manifest['extends'])->toBe('capell-app/foundation-theme')
-        ->and($manifest['performance']['frontendRenderBudgetMs'])->toBeLessThanOrEqual(20)
-        ->and($manifest['performance']['adminQueryBudget'])->toBe(0)
+        ->and(knowledgeThemePerformanceInteger($performance, 'frontendRenderBudgetMs'))->toBeLessThanOrEqual(20)
+        ->and(knowledgeThemePerformanceInteger($performance, 'adminQueryBudget'))->toBe(0)
         ->and($database['migrations'])->toBeFalse()
         ->and($runtimeProviders)->toContain(KnowledgeThemeServiceProvider::class);
 });
@@ -70,4 +73,16 @@ function knowledgeThemeManifest(): array
     throw_unless(is_array($manifest), RuntimeException::class, 'Theme Knowledge manifest must decode to an array.');
 
     return $manifest;
+}
+
+/**
+ * @param  array<array-key, mixed>  $performance
+ */
+function knowledgeThemePerformanceInteger(array $performance, string $key): int
+{
+    $value = $performance[$key] ?? null;
+
+    throw_unless(is_int($value), RuntimeException::class, sprintf('Theme Knowledge performance value [%s] must be an integer.', $key));
+
+    return $value;
 }

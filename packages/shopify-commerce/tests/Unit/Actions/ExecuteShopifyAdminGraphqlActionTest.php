@@ -47,7 +47,7 @@ it('records carry-forward throttle state from shopify cost metadata', function (
 
     ExecuteShopifyAdminGraphqlAction::run($connection, '{ shop { name } }');
 
-    expect(Cache::get(sprintf('capell-shopify-commerce.graphql.throttle.%s', $connection->getKey())))
+    expect(Cache::get(sprintf('capell-shopify-commerce.graphql.throttle.%s', shopifyGraphqlConnectionKey($connection))))
         ->toBeNumeric();
 });
 
@@ -59,4 +59,11 @@ function shopifyGraphqlConnection(): ShopifyConnection
         'access_token' => 'admin-token',
         'scopes' => ['read_products'],
     ]);
+}
+
+function shopifyGraphqlConnectionKey(ShopifyConnection $connection): string
+{
+    $key = $connection->getKey();
+
+    return is_scalar($key) ? (string) $key : '';
 }

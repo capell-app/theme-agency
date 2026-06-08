@@ -10,6 +10,7 @@ use Capell\PublishingStudio\Enums\SchedulerEventTypeEnum;
 use Capell\PublishingStudio\Models\SchedulerEvent;
 use Capell\PublishingStudio\Models\Workspace;
 use Carbon\CarbonImmutable;
+use Illuminate\Support\Collection;
 
 afterEach(function (): void {
     CarbonImmutable::setTestNow();
@@ -37,7 +38,7 @@ test('returns calendar-ready scheduler events for pages and publishing-studio', 
     $events = BuildContentSchedulerEventsAction::run();
 
     expect($events)->toHaveCount(6)
-        ->and($events->pluck('eventType')->map(fn (SchedulerEventTypeEnum $eventType): string => $eventType->value)->all())
+        ->and($events->pluck('eventType')->map(fn (mixed $eventType): string => $eventType instanceof SchedulerEventTypeEnum ? $eventType->value : '')->all())
         ->toBe([
             SchedulerEventTypeEnum::Publish->value,
             SchedulerEventTypeEnum::ReviewReminder->value,
@@ -48,7 +49,7 @@ test('returns calendar-ready scheduler events for pages and publishing-studio', 
         ])
         ->and($events->first(fn (SchedulerEventData $event): bool => $event->title === 'Summer campaign' && $event->eventType === SchedulerEventTypeEnum::Unpublish)?->description)
         ->toContain('expires automatically')
-        ->and($events->first()->title)->toBe('Spring launch page');
+        ->and(publishingStudioFirstSchedulerEvent($events)->title)->toBe('Spring launch page');
 });
 
 test('filters scheduler events by type and source', function (): void {
@@ -67,9 +68,11 @@ test('filters scheduler events by type and source', function (): void {
         sourceType: 'workspace',
     );
 
+    $event = publishingStudioFirstSchedulerEvent($events);
+
     expect($events)->toHaveCount(1)
-        ->and($events->first()->sourceType)->toBe('workspace')
-        ->and($events->first()->title)->toBe('Workspace publish');
+        ->and($event->sourceType)->toBe('workspace')
+        ->and($event->title)->toBe('Workspace publish');
 });
 
 test('state filters only return durable events in that state', function (): void {
@@ -96,7 +99,21 @@ test('state filters only return durable events in that state', function (): void
 
     $events = BuildContentSchedulerEventsAction::run(state: SchedulerEventStateEnum::Failed);
 
+    $event = publishingStudioFirstSchedulerEvent($events);
+
     expect($events)->toHaveCount(1)
-        ->and($events->first()->title)->toBe('Failed workspace')
-        ->and($events->first()->state)->toBe(SchedulerEventStateEnum::Failed);
+        ->and($event->title)->toBe('Failed workspace')
+        ->and($event->state)->toBe(SchedulerEventStateEnum::Failed);
 });
+
+/**
+ * @param  Collection<int, SchedulerEventData>  $events
+ */
+function publishingStudioFirstSchedulerEvent(Collection $events): SchedulerEventData
+{
+    $event = $events->first();
+
+    throw_unless($event instanceof SchedulerEventData);
+
+    return $event;
+}

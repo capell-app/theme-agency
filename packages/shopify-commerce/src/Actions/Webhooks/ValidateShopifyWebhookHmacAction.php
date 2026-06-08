@@ -6,6 +6,9 @@ namespace Capell\ShopifyCommerce\Actions\Webhooks;
 
 use Lorisleiva\Actions\Concerns\AsAction;
 
+/**
+ * @method static bool run(string $payload, mixed $providedHmac, mixed $clientSecret)
+ */
 final class ValidateShopifyWebhookHmacAction
 {
     use AsAction;

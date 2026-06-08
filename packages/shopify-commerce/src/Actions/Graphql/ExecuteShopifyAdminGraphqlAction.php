@@ -173,7 +173,7 @@ final class ExecuteShopifyAdminGraphqlAction
 
     private function throttleCacheKey(ShopifyConnection $connection): string
     {
-        return sprintf('capell-shopify-commerce.graphql.throttle.%s', $connection->getKey());
+        return sprintf('capell-shopify-commerce.graphql.throttle.%s', $this->modelKey($connection));
     }
 
     private function apiVersion(): string
@@ -186,11 +186,21 @@ final class ExecuteShopifyAdminGraphqlAction
             }
         }
 
-        return (string) config('capell-shopify-commerce.default_api_version', '2026-04');
+        return $this->stringValue(config('capell-shopify-commerce.default_api_version', '2026-04'), '2026-04');
     }
 
     private function httpTimeout(): int
     {
         return max(1, (int) config('capell-shopify-commerce.http_timeout', 15));
+    }
+
+    private function modelKey(ShopifyConnection $connection): string
+    {
+        return $this->stringValue($connection->getKey());
+    }
+
+    private function stringValue(mixed $value, string $fallback = ''): string
+    {
+        return is_scalar($value) ? (string) $value : $fallback;
     }
 }

@@ -14,6 +14,7 @@ use Capell\Core\ThemeStudio\Data\HeroSectionData;
 use Capell\Core\ThemeStudio\Data\NavigationData;
 use Capell\Core\ThemeStudio\Data\ProofSectionData;
 use Capell\Core\ThemeStudio\Data\ThemePageData;
+use Capell\Core\ThemeStudio\Rendering\ViewSectionRenderer;
 use Capell\Core\ThemeStudio\Theme\ThemeRegistry;
 use Capell\ThemeStudio\Corporate\CorporateThemeServiceProvider;
 use Capell\ThemeStudio\Corporate\Health\ThemeCorporateHealthCheck;
@@ -39,11 +40,7 @@ it('renders navigation from the corporate package views', function (): void {
     View::addNamespace('capell-theme-corporate', __DIR__ . '/../../resources/views');
 
     $provider = new CorporateThemeServiceProvider($this->app);
-    $method = new ReflectionMethod($provider, 'sectionRenderers');
-
-    $renderer = $method->invoke($provider)['navigation'] ?? null;
-
-    expect($renderer)->not->toBeNull();
+    $renderer = corporateThemeRenderer($provider, 'navigation');
 
     $html = $renderer->render(new NavigationData(
         brandName: 'Capell',
@@ -61,9 +58,7 @@ it('declares renderers for every included corporate section', function (): void 
     View::addNamespace('capell-theme-corporate', __DIR__ . '/../../resources/views');
 
     $provider = new CorporateThemeServiceProvider($this->app);
-    $method = new ReflectionMethod($provider, 'sectionRenderers');
-
-    $renderers = $method->invoke($provider);
+    $renderers = corporateThemeSectionRenderers($provider);
 
     expect(array_keys($renderers))->toBe([
         'navigation',
@@ -288,10 +283,7 @@ it('renders a corporate office locations section', function (): void {
     Lang::addNamespace('capell-theme-corporate', __DIR__ . '/../../resources/lang');
 
     $provider = new CorporateThemeServiceProvider($this->app);
-    $method = new ReflectionMethod($provider, 'sectionRenderers');
-    $renderer = $method->invoke($provider)['locations'] ?? null;
-
-    expect($renderer)->not->toBeNull();
+    $renderer = corporateThemeRenderer($provider, 'locations');
 
     $html = $renderer->render(corporateThemeSection('locations', [
         'heading' => 'Global advisory offices',
@@ -354,8 +346,7 @@ it('renders corporate investor relations and careers patterns', function (): voi
     Lang::addNamespace('capell-theme-corporate', __DIR__ . '/../../resources/lang');
 
     $provider = new CorporateThemeServiceProvider($this->app);
-    $method = new ReflectionMethod($provider, 'sectionRenderers');
-    $renderers = $method->invoke($provider);
+    $renderers = corporateThemeSectionRenderers($provider);
 
     expect($renderers)->toHaveKeys(['investor-relations', 'careers']);
 
@@ -574,7 +565,7 @@ it('renders the uncached corporate page inside the declared frontend budget with
     CapellCore::clearPackages();
     CapellCore::forcePackageInstalled(CorporateThemeServiceProvider::$packageName);
 
-    $manifest = json_decode((string) file_get_contents(__DIR__ . '/../../capell.json'), true, flags: JSON_THROW_ON_ERROR);
+    $manifest = corporateThemeManifest();
     $queryCount = 0;
 
     DB::listen(static function (QueryExecuted $query) use (&$queryCount): void {
@@ -607,8 +598,8 @@ it('renders the uncached corporate page inside the declared frontend budget with
             new ProofSectionData(
                 heading: 'Evidence',
                 items: [
-                    ['metric' => '24%', 'name' => 'Faster approvals', 'summary' => 'Approval cycles shortened.'],
-                    ['metric' => '12', 'name' => 'Regional boards', 'summary' => 'Governance teams aligned.'],
+                    ['metric' => '24%', 'name' => 'Faster approvals', 'role' => 'Approval cycles shortened.'],
+                    ['metric' => '12', 'name' => 'Regional boards', 'role' => 'Governance teams aligned.'],
                 ],
             ),
             new ContentListingSectionData(
@@ -636,7 +627,7 @@ it('renders the uncached corporate page inside the declared frontend budget with
 
     $elapsedMilliseconds = (hrtime(true) - $startedAt) / 1_000_000;
 
-    expect($elapsedMilliseconds)->toBeLessThanOrEqual((float) data_get($manifest, 'performance.frontendRenderBudgetMs', 20))
+    expect($elapsedMilliseconds)->toBeLessThanOrEqual(corporateThemeFrontendRenderBudgetMs($manifest))
         ->and($queryCount)->toBe(0)
         ->and($html)->toContain('Governance for growing teams')
         ->and($html)->toContain('Northbridge Advisory')
@@ -714,4 +705,68 @@ function corporateThemeSection(string $key, array $viewData): ThemeSection
             return ['section' => (object) $this->viewData];
         }
     };
+}
+
+/**
+ * @return array<string, ViewSectionRenderer>
+ */
+function corporateThemeSectionRenderers(CorporateThemeServiceProvider $provider): array
+{
+    $method = new ReflectionMethod($provider, 'sectionRenderers');
+    $renderers = $method->invoke($provider);
+
+    if (! is_array($renderers)) {
+        return [];
+    }
+
+    $typedRenderers = [];
+
+    foreach ($renderers as $key => $renderer) {
+        if (is_string($key) && $renderer instanceof ViewSectionRenderer) {
+            $typedRenderers[$key] = $renderer;
+        }
+    }
+
+    return $typedRenderers;
+}
+
+function corporateThemeRenderer(CorporateThemeServiceProvider $provider, string $key): ViewSectionRenderer
+{
+    $renderer = corporateThemeSectionRenderers($provider)[$key] ?? null;
+
+    throw_unless($renderer instanceof ViewSectionRenderer, RuntimeException::class);
+
+    return $renderer;
+}
+
+/**
+ * @param  array<string, mixed>  $manifest
+ */
+function corporateThemeFrontendRenderBudgetMs(array $manifest): float
+{
+    $budget = data_get($manifest, 'performance.frontendRenderBudgetMs', 20);
+
+    return is_numeric($budget) ? (float) $budget : 20.0;
+}
+
+/**
+ * @return array<string, mixed>
+ */
+function corporateThemeManifest(): array
+{
+    $manifest = json_decode((string) file_get_contents(__DIR__ . '/../../capell.json'), true, flags: JSON_THROW_ON_ERROR);
+
+    if (! is_array($manifest)) {
+        throw new RuntimeException('Theme manifest must decode to an array.');
+    }
+
+    $stringKeyedManifest = [];
+
+    foreach ($manifest as $key => $value) {
+        if (is_string($key)) {
+            $stringKeyedManifest[$key] = $value;
+        }
+    }
+
+    return $stringKeyedManifest;
 }

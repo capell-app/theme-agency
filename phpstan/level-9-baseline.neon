@@ -22941,12 +22941,6 @@ parameters:
 		-
 			rawMessage: Cannot cast mixed to int.
 			identifier: cast.int
-			count: 2
-			path: ../packages/seo-suite/src/Actions/Ai/RecordAiGenerationAction.php
-
-		-
-			rawMessage: Cannot cast mixed to int.
-			identifier: cast.int
 			count: 1
 			path: ../packages/seo-suite/src/Actions/BuildAiDiscoveryPageEntriesAction.php
 
@@ -27317,24 +27311,6 @@ parameters:
 			identifier: return.type
 			count: 1
 			path: ../packages/theme-corporate/src/Console/Commands/DemoCommand.php
-
-		-
-			rawMessage: Cannot access offset 'navigation' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: ../packages/theme-corporate/tests/Unit/CorporateThemeDefinitionTest.php
-
-		-
-			rawMessage: 'Cannot call method render() on mixed.'
-			identifier: method.nonObject
-			count: 1
-			path: ../packages/theme-corporate/tests/Unit/CorporateThemeDefinitionTest.php
-
-		-
-			rawMessage: 'Parameter #1 $array of function array_keys expects array, mixed given.'
-			identifier: argument.type
-			count: 1
-			path: ../packages/theme-corporate/tests/Unit/CorporateThemeDefinitionTest.php
 
 		-
 			rawMessage: Cannot access offset 'demo' on mixed.

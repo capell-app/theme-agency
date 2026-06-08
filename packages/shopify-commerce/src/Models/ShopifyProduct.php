@@ -19,7 +19,9 @@ use Spatie\LaravelData\DataCollection;
  * @property string $handle
  * @property string $title
  * @property string $status
+ * @property DataCollection<int, ShopifyProductOptionData> $options
  * @property array<string, mixed>|null $featured_image
+ * @property array<string, mixed> $raw_snapshot
  * @property string $search_text
  * @property CarbonImmutable|null $synced_at
  */

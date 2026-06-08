@@ -10,6 +10,7 @@ use Capell\PublishingStudio\Data\EditorialCalendarQueryData;
 use Capell\PublishingStudio\Enums\SchedulerEventTypeEnum;
 use Capell\PublishingStudio\Models\Workspace;
 use Carbon\CarbonImmutable;
+use Illuminate\Support\Collection;
 
 afterEach(function (): void {
     CarbonImmutable::setTestNow();
@@ -120,8 +121,22 @@ test('merges tagged package contributors and applies calendar filters', function
         state: 'scheduled',
     );
 
+    $event = publishingStudioFirstEditorialCalendarEvent($events);
+
     expect($events)->toHaveCount(1)
-        ->and($events->first()->sourcePackage)->toBe('capell-app/campaign-studio')
-        ->and($events->first()->sourceType)->toBe('campaign')
-        ->and($events->first()->title)->toBe('Campaign launch');
+        ->and($event->sourcePackage)->toBe('capell-app/campaign-studio')
+        ->and($event->sourceType)->toBe('campaign')
+        ->and($event->title)->toBe('Campaign launch');
 });
+
+/**
+ * @param  Collection<int, EditorialCalendarEventData>  $events
+ */
+function publishingStudioFirstEditorialCalendarEvent(Collection $events): EditorialCalendarEventData
+{
+    $event = $events->first();
+
+    throw_unless($event instanceof EditorialCalendarEventData);
+
+    return $event;
+}

@@ -787,7 +787,7 @@ it('renders empty states for advertised commerce layouts', function (string $vie
     View::addNamespace('capell-theme-commerce', __DIR__ . '/../../resources/views');
     resolve(Translator::class)->addNamespace('capell-theme-commerce', __DIR__ . '/../../resources/lang');
 
-    $html = view('capell-theme-commerce::sections.' . $view, [
+    $html = view(commerceThemeSectionView($view), [
         'section' => (object) [
             'heading' => 'Empty layout',
             'summary' => null,
@@ -810,7 +810,7 @@ it('renders core commerce sections directly', function (string $view, object $se
     View::addNamespace('capell-theme-commerce', __DIR__ . '/../../resources/views');
     resolve(Translator::class)->addNamespace('capell-theme-commerce', __DIR__ . '/../../resources/lang');
 
-    $html = view('capell-theme-commerce::sections.' . $view, [
+    $html = view(commerceThemeSectionView($view), [
         'section' => $section,
     ])->render();
 
@@ -845,7 +845,7 @@ it('renders core commerce sections directly', function (string $view, object $se
         'proof',
         new ProofSectionData(
             heading: 'Trusted by buyers',
-            items: [['metric' => '94%', 'name' => 'Repeat buyer rate', 'summary' => 'Built for confident repeat purchase.']],
+            items: [['metric' => '94%', 'name' => 'Repeat buyer rate', 'role' => 'Built for confident repeat purchase.']],
         ),
         'Retail proof ledger',
     ],
@@ -1072,7 +1072,7 @@ it('renders a hydrated commerce page within the declared frontend render budget'
             ]),
             new ProofSectionData(
                 heading: 'Trusted by buyers',
-                items: [['metric' => '94%', 'name' => 'Repeat buyer rate', 'summary' => 'Built for confident repeat purchase.']],
+                items: [['metric' => '94%', 'name' => 'Repeat buyer rate', 'role' => 'Built for confident repeat purchase.']],
             ),
             commerceThemeSection('blog-teaser', [
                 'heading' => 'Buying guides',
@@ -1291,5 +1291,23 @@ function commerceThemeSection(string $key, array $viewData): ThemeSection
         {
             return ['section' => (object) $this->viewData];
         }
+    };
+}
+
+/**
+ * @return view-string
+ */
+function commerceThemeSectionView(string $view): string
+{
+    return match ($view) {
+        'campaign' => 'capell-theme-commerce::sections.campaign',
+        'comparison' => 'capell-theme-commerce::sections.comparison',
+        'cta' => 'capell-theme-commerce::sections.cta',
+        'footer' => 'capell-theme-commerce::sections.footer',
+        'navigation' => 'capell-theme-commerce::sections.navigation',
+        'proof' => 'capell-theme-commerce::sections.proof',
+        'search' => 'capell-theme-commerce::sections.search',
+        'store-event' => 'capell-theme-commerce::sections.store-event',
+        default => throw new InvalidArgumentException(sprintf('Unknown commerce theme section view [%s].', $view)),
     };
 }

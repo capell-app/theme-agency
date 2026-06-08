@@ -72,8 +72,10 @@ it('builds safe theme catalog data from synced active products', function (): vo
     ]);
 
     $payload = BuildShopifyCatalogThemeDataAction::run($connection)->toThemeArray();
-    $firstProduct = $payload['items'][0] ?? [];
-    $firstVariant = is_array($firstProduct['variants'] ?? null) ? ($firstProduct['variants'][0] ?? []) : [];
+    $items = $payload['items'];
+    $firstProduct = is_array($items[0] ?? null) ? $items[0] : [];
+    $variants = is_array($firstProduct['variants'] ?? null) ? $firstProduct['variants'] : [];
+    $firstVariant = is_array($variants[0] ?? null) ? $variants[0] : [];
     $encodedPayload = json_encode($payload, JSON_THROW_ON_ERROR);
 
     expect($payload['items'])->toHaveCount(1)

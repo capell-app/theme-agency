@@ -12,6 +12,14 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Override;
 use Spatie\LaravelData\DataCollection;
 
+/**
+ * @property string $shopify_gid
+ * @property string $title
+ * @property string $price_amount
+ * @property string $price_currency
+ * @property bool $available_for_sale
+ * @property DataCollection<int, ShopifyProductOptionData> $selected_options
+ */
 final class ShopifyProductVariant extends Model
 {
     /** @use HasFactory<Factory<static>> */
