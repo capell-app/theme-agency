@@ -11,6 +11,9 @@ use Illuminate\Contracts\Filesystem\Factory as FilesystemFactory;
 use Illuminate\Database\Eloquent\Builder;
 use Lorisleiva\Actions\Concerns\AsAction;
 
+/**
+ * @method static PruneRenderProfilesResultData run(int $retentionDays = 30, ?int $limit = null, bool $dryRun = false)
+ */
 final class PruneRenderProfilesAction
 {
     use AsAction;
@@ -56,10 +59,15 @@ final class PruneRenderProfilesAction
      */
     private function profilesOlderThan(CarbonImmutable $cutoff, ?int $limit): Builder
     {
-        return FrontendRenderProfile::query()
+        $query = FrontendRenderProfile::query()
             ->where('updated_at', '<', $cutoff)
-            ->orderBy('id')
-            ->when($limit !== null, static fn (Builder $query): Builder => $query->limit($limit));
+            ->orderBy('id');
+
+        if ($limit !== null) {
+            $query->limit($limit);
+        }
+
+        return $query;
     }
 
     private function deleteProfileFiles(FrontendRenderProfile $profile): int

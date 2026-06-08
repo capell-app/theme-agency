@@ -9,6 +9,9 @@ use Capell\FrontendOptimizer\Enums\OptimizationStatus;
 use Capell\FrontendOptimizer\Models\FrontendRenderProfile;
 use Lorisleiva\Actions\Concerns\AsAction;
 
+/**
+ * @method static FrontendRenderProfile run(RenderProfileData $profile, ?string $manifestPath = null)
+ */
 class PersistRenderProfileAction
 {
     use AsAction;

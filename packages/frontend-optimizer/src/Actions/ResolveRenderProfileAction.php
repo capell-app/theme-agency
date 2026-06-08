@@ -12,6 +12,9 @@ use Capell\FrontendOptimizer\Support\CriticalCssSettings;
 use Capell\FrontendOptimizer\Support\FrontendAssetSet;
 use Lorisleiva\Actions\Concerns\AsAction;
 
+/**
+ * @method static RenderProfileData run(OptimizationScope $scope, array<string, mixed> $context, array<int, FrontendAssetSet> $assetSets, array<int, FrontendResourceHintData> $resourceHints = [], ?string $label = null)
+ */
 class ResolveRenderProfileAction
 {
     use AsAction;

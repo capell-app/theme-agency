@@ -14,6 +14,9 @@ use Capell\FrontendOptimizer\Support\FrontendAssetSet;
 use Illuminate\Contracts\Filesystem\Factory;
 use Lorisleiva\Actions\Concerns\AsAction;
 
+/**
+ * @method static FrontendRenderProfile run(OptimizationScope $scope, array<string, mixed> $context, array<int, FrontendAssetSet> $assetSets, string $url, array<int, FrontendResourceHintData> $resourceHints = [], ?string $label = null)
+ */
 class PrepareRenderProfileAction
 {
     use AsAction;
@@ -50,7 +53,7 @@ class PrepareRenderProfileAction
             $manifestPath = StoreRenderProfileManifestAction::run($profileData);
             $profile->forceFill(['manifest' => ['path' => $manifestPath]])->save();
 
-            dispatch(new GenerateCriticalCssJob((int) $profile->getKey(), $url));
+            dispatch(new GenerateCriticalCssJob($profile->id, $url));
         }
 
         return $profile;

@@ -7,6 +7,9 @@ namespace Capell\FrontendOptimizer\Actions;
 use Capell\FrontendOptimizer\Enums\OptimizationScope;
 use Lorisleiva\Actions\Concerns\AsAction;
 
+/**
+ * @method static OptimizationScope run(?OptimizationScope $layoutScope = null, ?OptimizationScope $siteScope = null)
+ */
 class ResolveOptimizationScopeAction
 {
     use AsAction;

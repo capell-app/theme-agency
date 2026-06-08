@@ -24,4 +24,14 @@ return [
             ['width' => 1440, 'height' => 900],
         ],
     ],
+
+    'images' => [
+        'enabled' => true,
+        'widths' => [320, 640, 960, 1280, 1600],
+        'formats' => ['avif', 'webp'],
+        'width_parameter' => 'w',
+        'format_parameter' => 'format',
+        'quality_parameter' => 'q',
+        'quality' => 82,
+    ],
 ];

@@ -9,9 +9,20 @@ use Capell\FrontendOptimizer\Enums\AssetLoadingStrategy;
 use Capell\FrontendOptimizer\Enums\OptimizationScope;
 use Capell\FrontendOptimizer\Enums\OptimizationStatus;
 use Capell\FrontendOptimizer\Jobs\GenerateCriticalCssJob;
+use Capell\FrontendOptimizer\Models\FrontendRenderProfile;
 use Capell\FrontendOptimizer\Support\FrontendAssetSet;
 use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Storage;
+
+function frontendOptimizerManifestPath(FrontendRenderProfile $profile): string
+{
+    $manifest = $profile->manifest;
+    $path = is_array($manifest) ? ($manifest['path'] ?? null) : null;
+
+    throw_unless(is_string($path) && $path !== '', RuntimeException::class, 'Expected frontend optimizer profile manifest path.');
+
+    return $path;
+}
 
 it('prepares a render profile and dispatches critical css generation when missing', function (): void {
     Storage::fake('local');
@@ -29,7 +40,7 @@ it('prepares a render profile and dispatches critical css generation when missin
         label: 'Landing',
     );
 
-    Storage::disk('local')->assertExists($profile->manifest['path']);
+    Storage::disk('local')->assertExists(frontendOptimizerManifestPath($profile));
     Bus::assertDispatched(
         GenerateCriticalCssJob::class,
         fn (GenerateCriticalCssJob $job): bool => $job->renderProfileId === $profile->id
@@ -55,7 +66,7 @@ it('does not dispatch duplicate critical css jobs while a profile is already que
     ];
 
     $profile = PrepareRenderProfileAction::run(...$arguments);
-    $manifestPath = $profile->manifest['path'];
+    $manifestPath = frontendOptimizerManifestPath($profile);
     Storage::disk('local')->delete($manifestPath);
 
     PrepareRenderProfileAction::run(...$arguments);

@@ -74,6 +74,13 @@ it('declares render profile cache invalidation metadata for generated critical c
     ]);
 });
 
+it('declares image optimization and media library pairings', function (): void {
+    $manifest = frontendOptimizerPackageManifest();
+
+    expect($manifest['dependencies']['supports'] ?? [])->toContain('capell-app/media-library')
+        ->and($manifest['capabilities'] ?? [])->toContain('frontend-optimizer-images');
+});
+
 /**
  * @return array<string, mixed>
  */

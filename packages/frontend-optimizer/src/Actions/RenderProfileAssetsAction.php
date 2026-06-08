@@ -8,6 +8,9 @@ use Capell\FrontendOptimizer\Support\RenderProfileAssetRenderer;
 use Illuminate\Support\HtmlString;
 use Lorisleiva\Actions\Concerns\AsAction;
 
+/**
+ * @method static HtmlString run(string $profileHash)
+ */
 class RenderProfileAssetsAction
 {
     use AsAction;

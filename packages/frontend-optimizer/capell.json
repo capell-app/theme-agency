@@ -20,7 +20,7 @@
             "capell-app/core",
             "capell-app/frontend"
         ],
-        "supports": [],
+        "supports": ["capell-app/media-library"],
         "conflicts": []
     },
     "providers": {
@@ -55,6 +55,7 @@
         "frontend-optimizer",
         "frontend-optimizer-frontend",
         "frontend-optimizer-console",
+        "frontend-optimizer-images",
         "frontend-assets",
         "cache-blocking"
     ],

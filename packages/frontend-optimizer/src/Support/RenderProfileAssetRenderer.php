@@ -47,7 +47,7 @@ class RenderProfileAssetRenderer
     }
 
     /**
-     * @return array<int, array<string, mixed>>
+     * @return list<array<string, mixed>>
      */
     private function resourceHintsFromProfile(FrontendRenderProfile $profile): array
     {
@@ -57,14 +57,22 @@ class RenderProfileAssetRenderer
             return [];
         }
 
-        return array_values(array_filter($resourceHints, is_array(...)));
+        $hints = [];
+
+        foreach ($resourceHints as $resourceHint) {
+            if (is_array($resourceHint)) {
+                $hints[] = $this->stringKeyMap($resourceHint);
+            }
+        }
+
+        return $hints;
     }
 
     /** @param array<string, mixed> $hint */
     private function renderResourceHint(array $hint): string
     {
-        $rel = $this->escape((string) ($hint['rel'] ?? ''));
-        $href = $this->escape((string) ($hint['href'] ?? ''));
+        $rel = $this->escape($this->stringValue($hint, 'rel'));
+        $href = $this->escape($this->stringValue($hint, 'href'));
 
         if ($rel === '' || $href === '') {
             return '';
@@ -73,10 +81,10 @@ class RenderProfileAssetRenderer
         $attributes = [
             'rel' => $rel,
             'href' => $href,
-            'as' => $this->escape((string) ($hint['as'] ?? '')),
-            'type' => $this->escape((string) ($hint['type'] ?? '')),
-            'crossorigin' => $this->escape((string) ($hint['crossorigin'] ?? '')),
-            'fetchpriority' => $this->escape((string) ($hint['fetchpriority'] ?? '')),
+            'as' => $this->escape($this->stringValue($hint, 'as')),
+            'type' => $this->escape($this->stringValue($hint, 'type')),
+            'crossorigin' => $this->escape($this->stringValue($hint, 'crossorigin')),
+            'fetchpriority' => $this->escape($this->stringValue($hint, 'fetchpriority')),
         ];
 
         return '<link ' . collect($attributes)
@@ -107,7 +115,7 @@ class RenderProfileAssetRenderer
     }
 
     /**
-     * @return array<int, array<string, mixed>>
+     * @return list<array<string, mixed>>
      */
     private function assetsFromProfile(FrontendRenderProfile $profile): array
     {
@@ -117,13 +125,21 @@ class RenderProfileAssetRenderer
             return [];
         }
 
-        return array_values(array_filter($assets, is_array(...)));
+        $normalizedAssets = [];
+
+        foreach ($assets as $asset) {
+            if (is_array($asset)) {
+                $normalizedAssets[] = $this->stringKeyMap($asset);
+            }
+        }
+
+        return $normalizedAssets;
     }
 
     /** @param array<string, mixed> $asset */
     private function renderAsset(array $asset, bool $hasInlineCriticalCss): string
     {
-        $kind = AssetKind::tryFrom((string) ($asset['kind'] ?? ''));
+        $kind = AssetKind::tryFrom($this->stringValue($asset, 'kind'));
 
         return match ($kind) {
             AssetKind::Css => $this->renderCss($asset, $hasInlineCriticalCss),
@@ -135,8 +151,8 @@ class RenderProfileAssetRenderer
     /** @param array<string, mixed> $asset */
     private function renderCss(array $asset, bool $hasInlineCriticalCss): string
     {
-        $href = $this->escape((string) ($asset['path'] ?? ''));
-        $strategy = AssetLoadingStrategy::tryFrom((string) ($asset['loading_strategy'] ?? '')) ?? AssetLoadingStrategy::Deferred;
+        $href = $this->escape($this->stringValue($asset, 'path'));
+        $strategy = AssetLoadingStrategy::tryFrom($this->stringValue($asset, 'loading_strategy')) ?? AssetLoadingStrategy::Deferred;
 
         if ($href === '') {
             return '';
@@ -168,7 +184,7 @@ class RenderProfileAssetRenderer
             return false;
         }
 
-        $strategy = AssetLoadingStrategy::tryFrom((string) ($asset['loading_strategy'] ?? '')) ?? AssetLoadingStrategy::Deferred;
+        $strategy = AssetLoadingStrategy::tryFrom($this->stringValue($asset, 'loading_strategy')) ?? AssetLoadingStrategy::Deferred;
 
         return $strategy === AssetLoadingStrategy::Deferred;
     }
@@ -176,8 +192,8 @@ class RenderProfileAssetRenderer
     /** @param array<string, mixed> $asset */
     private function renderJs(array $asset): string
     {
-        $src = $this->escape((string) ($asset['path'] ?? ''));
-        $strategy = AssetLoadingStrategy::tryFrom((string) ($asset['loading_strategy'] ?? '')) ?? AssetLoadingStrategy::Deferred;
+        $src = $this->escape($this->stringValue($asset, 'path'));
+        $strategy = AssetLoadingStrategy::tryFrom($this->stringValue($asset, 'loading_strategy')) ?? AssetLoadingStrategy::Deferred;
 
         if ($src === '') {
             return '';
@@ -216,6 +232,33 @@ class RenderProfileAssetRenderer
     private function escapeStyleContents(string $value): string
     {
         return str_ireplace('</style', '<\\/style', $value);
+    }
+
+    /**
+     * @param  array<array-key, mixed>  $values
+     * @return array<string, mixed>
+     */
+    private function stringKeyMap(array $values): array
+    {
+        $map = [];
+
+        foreach ($values as $key => $value) {
+            if (is_string($key)) {
+                $map[$key] = $value;
+            }
+        }
+
+        return $map;
+    }
+
+    /**
+     * @param  array<string, mixed>  $values
+     */
+    private function stringValue(array $values, string $key): string
+    {
+        $value = $values[$key] ?? null;
+
+        return is_string($value) ? $value : '';
     }
 
     private function criticalCssContents(FrontendRenderProfile $profile): string

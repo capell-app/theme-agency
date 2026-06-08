@@ -8,6 +8,9 @@ use Capell\FrontendOptimizer\Data\RenderProfileData;
 use Illuminate\Contracts\Filesystem\Factory;
 use Lorisleiva\Actions\Concerns\AsAction;
 
+/**
+ * @method static string run(RenderProfileData $profile)
+ */
 class StoreRenderProfileManifestAction
 {
     use AsAction;
@@ -34,6 +37,8 @@ class StoreRenderProfileManifestAction
 
     private function configString(string $key, string $default): string
     {
-        return config($key, $default);
+        $value = config($key, $default);
+
+        return is_string($value) ? $value : $default;
     }
 }
