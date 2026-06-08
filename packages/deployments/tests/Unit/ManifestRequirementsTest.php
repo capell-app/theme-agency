@@ -22,7 +22,14 @@ it('declares only shipped deployment surfaces and capabilities', function (): vo
     $manifest = deploymentsPackageManifest();
 
     expect($manifest['surfaces'] ?? null)->toBe(['admin'])
-        ->and($manifest['capabilities'] ?? [])->toBe(['deployments', 'deployments-admin'])
+        ->and($manifest['capabilities'] ?? [])->toBe([
+            'deployments',
+            'deployments-admin',
+            'deployments-install-policy',
+            'deployments-publish-history',
+            'deployments-publish-idempotency',
+            'deployments-token-refresh',
+        ])
         ->and($manifest['commands'] ?? [])->toBe([
             'install' => null,
             'setup' => null,
@@ -63,6 +70,12 @@ it('keeps marketplace screenshots aligned with committed deployment media', func
         throw_unless(is_string($screenshotPath), RuntimeException::class, 'Required deployments screenshot entries must declare a screenshot path.');
 
         $requiredScreenshotPaths[] = str_replace('packages/deployments/', '', $screenshotPath);
+
+        $darkScreenshotPath = $contractEntry['darkScreenshotPath'] ?? null;
+
+        if (is_string($darkScreenshotPath) && $darkScreenshotPath !== '') {
+            $requiredScreenshotPaths[] = str_replace('packages/deployments/', '', $darkScreenshotPath);
+        }
     }
 
     $marketplaceScreenshotPaths = [];
