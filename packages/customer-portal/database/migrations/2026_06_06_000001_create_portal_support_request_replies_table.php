@@ -10,8 +10,8 @@ return new class extends Migration
 {
     public function up(): void
     {
-        $tableName = config('capell-customer-portal.tables.support_request_replies', 'portal_support_request_replies');
-        $supportRequestsTableName = config('capell-customer-portal.tables.support_requests', 'portal_support_requests');
+        $tableName = $this->tableName('support_request_replies', 'portal_support_request_replies');
+        $supportRequestsTableName = $this->tableName('support_requests', 'portal_support_requests');
 
         if (Schema::hasTable($tableName)) {
             return;
@@ -33,6 +33,13 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::dropIfExists(config('capell-customer-portal.tables.support_request_replies', 'portal_support_request_replies'));
+        Schema::dropIfExists($this->tableName('support_request_replies', 'portal_support_request_replies'));
+    }
+
+    private function tableName(string $key, string $default): string
+    {
+        $tableName = config('capell-customer-portal.tables.' . $key, $default);
+
+        return is_string($tableName) && $tableName !== '' ? $tableName : $default;
     }
 };

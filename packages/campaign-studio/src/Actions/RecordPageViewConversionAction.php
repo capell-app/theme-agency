@@ -15,14 +15,18 @@ final class RecordPageViewConversionAction
 {
     use AsAction;
 
-    public function handle(CampaignLandingPage $landingPage, ?Model $visit = null, ?Model $event = null): ?CampaignConversion
-    {
+    public function handle(
+        CampaignLandingPage $landingPage,
+        ?Model $visit = null,
+        ?Model $event = null,
+        ?string $url = null,
+    ): ?CampaignConversion {
         $goal = $landingPage->primaryGoal;
 
         if (! $goal instanceof CampaignConversionGoal || $goal->type !== ConversionGoalType::PageView) {
             return null;
         }
 
-        return RecordCampaignConversionAction::run($goal, $visit, $event, $landingPage);
+        return RecordCampaignConversionAction::run($goal, $visit, $event, $landingPage, url: $url);
     }
 }

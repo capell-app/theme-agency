@@ -16,19 +16,19 @@ Login Audit wraps `rappasoft/laravel-authentication-log`, stores Capell-owned au
 
 ## Config Keys
 
-| Key                                              | Use                                          |
-| ------------------------------------------------ | -------------------------------------------- |
-| `login-audit.table_name`                         | Audit table name.                            |
-| `login-audit.db_connection`                      | Optional database connection for audit rows. |
-| `login-audit.events`                             | Auth events the package listens to.          |
-| `login-audit.listeners`                          | Listener classes for those events.           |
-| `login-audit.notifications.new-device.enabled`   | Sends new-device notifications.              |
-| `login-audit.notifications.failed-login.enabled` | Sends failed-login notifications.            |
-| `login-audit.admin_alerts.new_devices`           | Sends Capell admin alerts for first-seen devices. |
+| Key                                              | Use                                                       |
+| ------------------------------------------------ | --------------------------------------------------------- |
+| `login-audit.table_name`                         | Audit table name.                                         |
+| `login-audit.db_connection`                      | Optional database connection for audit rows.              |
+| `login-audit.events`                             | Auth events the package listens to.                       |
+| `login-audit.listeners`                          | Listener classes for those events.                        |
+| `login-audit.notifications.new-device.enabled`   | Sends new-device notifications.                           |
+| `login-audit.notifications.failed-login.enabled` | Sends failed-login notifications.                         |
+| `login-audit.admin_alerts.new_devices`           | Sends Capell admin alerts for first-seen devices.         |
 | `login-audit.admin_alerts.failed_logins`         | Sends Capell admin alerts for failed logins when enabled. |
-| `login-audit.admin_alerts.suspicious_logins`     | Sends Capell admin alerts for suspicious login rows. |
-| `login-audit.purge`                              | Retention window used by cleanup.            |
-| `login-audit.behind_cdn`                         | CDN IP header config, or `false`.            |
+| `login-audit.admin_alerts.suspicious_logins`     | Sends Capell admin alerts for suspicious login rows.      |
+| `login-audit.purge`                              | Retention window used by cleanup.                         |
+| `login-audit.behind_cdn`                         | CDN IP header config, or `false`.                         |
 
 ## CDN IP Resolution
 

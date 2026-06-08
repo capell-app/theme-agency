@@ -31,7 +31,9 @@
             <div
                 class="mt-10 border border-dashed border-[var(--site-theme-primary-soft)] bg-[var(--site-theme-primary-panel)] p-8"
             >
-                <p class="text-sm font-black text-[var(--site-theme-primary-strong)]">
+                <p
+                    class="text-sm font-black text-[var(--site-theme-primary-strong)]"
+                >
                     {{ __('capell-theme-knowledge::generic.listing_empty_title') }}
                 </p>
                 <p class="mt-2 max-w-2xl text-sm text-slate-600">
@@ -60,10 +62,14 @@
                                     class="block h-3 w-20 bg-[var(--site-theme-accent)]"
                                     aria-hidden="true"
                                 ></span>
-                                <p class="mt-8 max-w-48 text-sm font-black leading-6">
+                                <p
+                                    class="mt-8 max-w-48 text-sm leading-6 font-black"
+                                >
                                     {{ __('capell-theme-knowledge::generic.listing_image_fallback_title') }}
                                 </p>
-                                <p class="mt-2 max-w-48 text-xs leading-5 text-white/75">
+                                <p
+                                    class="mt-2 max-w-48 text-xs leading-5 text-white/75"
+                                >
                                     {{ __('capell-theme-knowledge::generic.listing_image_fallback_summary') }}
                                 </p>
                                 <div class="mt-10 space-y-2">
@@ -89,7 +95,9 @@
                             >
                                 {{ $item['type'] ?? __('capell-theme-knowledge::generic.article_signal') }}
                             </p>
-                            <h3 class="mt-3 text-xl font-black text-[var(--site-theme-foreground)]">
+                            <h3
+                                class="mt-3 text-xl font-black text-[var(--site-theme-foreground)]"
+                            >
                                 @if ($item['url'] ?? null)
                                     <a
                                         href="{{ $item['url'] }}"
@@ -130,7 +138,9 @@
                             >
                                 {{ str_pad((string) ($index + 1), 2, '0', STR_PAD_LEFT) }}
                             </p>
-                            <p class="mt-3 text-sm font-bold text-[var(--site-theme-foreground)]">
+                            <p
+                                class="mt-3 text-sm font-bold text-[var(--site-theme-foreground)]"
+                            >
                                 {{ __('capell-theme-knowledge::generic.saved_signal') }}
                             </p>
                         </div>

@@ -15,7 +15,11 @@
     "namespace": "Capell\\KnowledgeBase",
     "surfaces": ["frontend", "admin"],
     "dependencies": {
-        "requires": ["capell-app/admin", "capell-app/core", "capell-app/frontend"],
+        "requires": [
+            "capell-app/admin",
+            "capell-app/core",
+            "capell-app/frontend"
+        ],
         "supports": [
             "capell-app/search",
             "capell-app/seo-suite",

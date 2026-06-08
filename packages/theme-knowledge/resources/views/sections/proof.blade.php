@@ -6,7 +6,9 @@
     ];
 @endphp
 
-<section class="theme-section theme-section-proof bg-[var(--site-theme-foreground)] text-white">
+<section
+    class="theme-section theme-section-proof bg-[var(--site-theme-foreground)] text-white"
+>
     <div class="mx-auto max-w-5xl px-6 py-14">
         <div class="grid gap-6 md:grid-cols-[0.68fr_1fr] md:items-end">
             <div>

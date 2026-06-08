@@ -10,6 +10,10 @@ use Capell\CampaignStudio\Models\CampaignConversion;
 use Capell\CampaignStudio\Models\CampaignConversionGoal;
 use Capell\CampaignStudio\Models\CampaignGroup;
 use Capell\CampaignStudio\Models\CampaignLandingPage;
+use Capell\Core\Models\Page;
+use Capell\Core\Models\PageUrl;
+use Capell\Insights\Actions\RecordConversionAction;
+use Capell\Insights\Models\InsightsVisit;
 use Carbon\CarbonImmutable;
 use Carbon\CarbonInterface;
 use Illuminate\Database\Eloquent\Model;
@@ -28,6 +32,7 @@ final class RecordCampaignConversionAction
         ?CampaignLandingPage $landingPage = null,
         ?Model $source = null,
         ?ConversionAttributionData $attribution = null,
+        ?string $url = null,
     ): ?CampaignConversion {
         if (! $goal->is_active) {
             return null;
@@ -60,6 +65,8 @@ final class RecordCampaignConversionAction
             : CampaignConversion::query()->create([...$identity, ...$values]);
 
         if ($conversion instanceof CampaignConversion && $conversion->wasRecentlyCreated) {
+            $this->recordInsightsConversion($conversion, $goal, $campaignGroup, $visit, $event, $landingPage, $url);
+
             event(new CampaignConverted($conversion));
         }
 
@@ -141,5 +148,86 @@ final class RecordCampaignConversionAction
         } catch (Throwable) {
             return null;
         }
+    }
+
+    private function recordInsightsConversion(
+        CampaignConversion $conversion,
+        CampaignConversionGoal $goal,
+        CampaignGroup $campaignGroup,
+        ?Model $visit,
+        ?Model $event,
+        ?CampaignLandingPage $landingPage,
+        ?string $url,
+    ): void {
+        $visitUuid = $visit instanceof InsightsVisit ? $visit->uuid : null;
+
+        if ($visitUuid === null || trim($visitUuid) === '') {
+            return;
+        }
+
+        RecordConversionAction::run(
+            visitUuid: $visitUuid,
+            eventName: $this->insightsEventName($campaignGroup, $goal),
+            url: $this->conversionUrl($url, $event, $visit, $landingPage),
+            label: trim($campaignGroup->name . ': ' . $goal->name),
+            sourcePackage: 'capell-app/campaign-studio',
+            value: $this->numericValue($goal->getAttribute('value_amount')),
+            occurredAt: $conversion->converted_at instanceof CarbonInterface
+                ? $conversion->converted_at->toIso8601String()
+                : null,
+        );
+    }
+
+    private function insightsEventName(CampaignGroup $campaignGroup, CampaignConversionGoal $goal): string
+    {
+        $goalKey = $goal->getAttribute('key');
+        $normalizedGoalKey = is_string($goalKey) && trim($goalKey) !== ''
+            ? trim($goalKey)
+            : 'goal-' . $goal->getKey();
+
+        return sprintf('campaign.%s.%s', $campaignGroup->slug, $normalizedGoalKey);
+    }
+
+    private function conversionUrl(
+        ?string $url,
+        ?Model $event,
+        ?Model $visit,
+        ?CampaignLandingPage $landingPage,
+    ): string {
+        $candidates = [
+            $url,
+            $event?->getAttribute('url'),
+            $visit?->getAttribute('landing_url'),
+            $this->landingPageUrl($landingPage),
+            '/',
+        ];
+
+        foreach ($candidates as $candidate) {
+            if (is_string($candidate) && trim($candidate) !== '') {
+                return $candidate;
+            }
+        }
+
+        return '/';
+    }
+
+    private function landingPageUrl(?CampaignLandingPage $landingPage): ?string
+    {
+        if (! $landingPage instanceof CampaignLandingPage) {
+            return null;
+        }
+
+        $pageUrl = PageUrl::query()
+            ->where('pageable_type', (new Page)->getMorphClass())
+            ->where('pageable_id', $landingPage->page_id)
+            ->orderBy('id')
+            ->value('url');
+
+        return is_string($pageUrl) && trim($pageUrl) !== '' ? $pageUrl : null;
+    }
+
+    private function numericValue(mixed $value): ?float
+    {
+        return is_numeric($value) ? (float) $value : null;
     }
 }

@@ -89,21 +89,21 @@ Both are flat and describe plumbing ("setup", "rendering"), not the visitor-faci
 
 ## 6. Prioritized Roadmap
 
-| Item                                                                               | Bucket | Effort | Impact | Section ref |
-| ---------------------------------------------------------------------------------- | ------ | ------ | ------ | ----------- |
-| Declare `capell-app/admin` dependency (or guard admin registration)                | Done   | S      | High   | §4.1        |
-| Add `"admin"` to `surfaces` + fix overview "no Filament" claim                     | Done   | S      | High   | §4.2        |
-| Add responsive width/density descriptors to hero media sources (LCP)               | Done   | S      | Medium | §4.6        |
+| Item                                                                                     | Bucket | Effort | Impact | Section ref |
+| ---------------------------------------------------------------------------------------- | ------ | ------ | ------ | ----------- |
+| Declare `capell-app/admin` dependency (or guard admin registration)                      | Done   | S      | High   | §4.1        |
+| Add `"admin"` to `surfaces` + fix overview "no Filament" claim                           | Done   | S      | High   | §4.2        |
+| Add responsive width/density descriptors to hero media sources (LCP)                     | Done   | S      | Medium | §4.6        |
 | Capture real Capell runner PNGs for `hero-home-widget` and optional `hero-slide-variant` | Done   | S      | Medium | §1, §5      |
-| Rewrite marketplace `summary` + composer `description`                             | Done   | S      | Medium | §5          |
-| Populate `capabilities[]` (video, overlay, carousel, inheritance)                  | Done   | S      | Medium | §3, §5      |
-| Shipped 2026-06-06: Memoize theme/widget resolver layers across slides (render budget) | Done   | M      | High   | §2.1        |
-| Shipped 2026-06-06: Extend `HeroHealthCheck` to verify seeded default-home layout state | Done   | S      | Low    | §4.3        |
-| Shipped 2026-06-06: Resolve cacheable/invalidationSources truth (cache safety)     | Done   | M      | Medium | §4.4, §4.5  |
-| Shipped 2026-06-06: Add render budget / zero-query render test                     | Done   | S      | Medium | §2.4, §4.6  |
-| Shipped 2026-06-06: Add XSS-boundary test for author hero HTML                     | Done   | S      | Medium | §4.7        |
-| Shipped 2026-06-06: Add carousel multi-slide + `data-carousel-*` render test       | Done   | S      | Medium | §4.9        |
-| Structured CTA-button group in Data + content view                                 | Later  | M      | High   | §3          |
-| Named hero variants (split/full-bleed/minimal) in widget schema                    | Later  | L      | High   | §3          |
-| Add user pause control for autoplaying video (WCAG 2.2.2)                          | Later  | M      | Medium | §3          |
-| Move/define `AbstractWidget` default view; collapse duplicated carousel data-attrs | Later  | M      | Low    | §2.6, §2.7  |
+| Rewrite marketplace `summary` + composer `description`                                   | Done   | S      | Medium | §5          |
+| Populate `capabilities[]` (video, overlay, carousel, inheritance)                        | Done   | S      | Medium | §3, §5      |
+| Shipped 2026-06-06: Memoize theme/widget resolver layers across slides (render budget)   | Done   | M      | High   | §2.1        |
+| Shipped 2026-06-06: Extend `HeroHealthCheck` to verify seeded default-home layout state  | Done   | S      | Low    | §4.3        |
+| Shipped 2026-06-06: Resolve cacheable/invalidationSources truth (cache safety)           | Done   | M      | Medium | §4.4, §4.5  |
+| Shipped 2026-06-06: Add render budget / zero-query render test                           | Done   | S      | Medium | §2.4, §4.6  |
+| Shipped 2026-06-06: Add XSS-boundary test for author hero HTML                           | Done   | S      | Medium | §4.7        |
+| Shipped 2026-06-06: Add carousel multi-slide + `data-carousel-*` render test             | Done   | S      | Medium | §4.9        |
+| Structured CTA-button group in Data + content view                                       | Later  | M      | High   | §3          |
+| Named hero variants (split/full-bleed/minimal) in widget schema                          | Later  | L      | High   | §3          |
+| Add user pause control for autoplaying video (WCAG 2.2.2)                                | Later  | M      | Medium | §3          |
+| Move/define `AbstractWidget` default view; collapse duplicated carousel data-attrs       | Later  | M      | Low    | §2.6, §2.7  |

@@ -14,6 +14,9 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Lorisleiva\Actions\Concerns\AsAction;
 
+/**
+ * @method static DeploymentConnection run(DeploymentConnection $connection)
+ */
 final class RefreshProviderTokenAction
 {
     use AsAction;
@@ -56,6 +59,7 @@ final class RefreshProviderTokenAction
                 ])
                 ->throw()
                 ->json();
+            $tokenResponse = $this->responseMap($tokenResponse);
         } catch (ConnectionException|RequestException $connectionException) {
             Log::warning('capell-deployments: GitLab OAuth token refresh request failed', [
                 'connection_id' => $connection->getKey(),
@@ -72,8 +76,8 @@ final class RefreshProviderTokenAction
     {
         try {
             $tokenResponse = Http::withBasicAuth(
-                (string) config('capell-deployments.oauth.bitbucket.client_id'),
-                (string) config('capell-deployments.oauth.bitbucket.client_secret'),
+                $this->configString('capell-deployments.oauth.bitbucket.client_id'),
+                $this->configString('capell-deployments.oauth.bitbucket.client_secret'),
             )
                 ->asForm()
                 ->timeout($this->httpTimeout())
@@ -83,6 +87,7 @@ final class RefreshProviderTokenAction
                 ])
                 ->throw()
                 ->json();
+            $tokenResponse = $this->responseMap($tokenResponse);
         } catch (ConnectionException|RequestException $connectionException) {
             Log::warning('capell-deployments: Bitbucket OAuth token refresh request failed', [
                 'connection_id' => $connection->getKey(),
@@ -124,6 +129,39 @@ final class RefreshProviderTokenAction
 
     private function httpTimeout(): int
     {
-        return max(1, (int) config('capell-deployments.http_timeout', 10));
+        $timeout = config('capell-deployments.http_timeout', 10);
+
+        if (is_int($timeout)) {
+            return max(1, $timeout);
+        }
+
+        return is_string($timeout) && ctype_digit($timeout) ? max(1, (int) $timeout) : 10;
+    }
+
+    private function configString(string $key): string
+    {
+        $value = config($key);
+
+        return is_string($value) ? $value : '';
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function responseMap(mixed $response): array
+    {
+        if (! is_array($response)) {
+            return [];
+        }
+
+        $map = [];
+
+        foreach ($response as $key => $value) {
+            if (is_string($key)) {
+                $map[$key] = $value;
+            }
+        }
+
+        return $map;
     }
 }

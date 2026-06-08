@@ -26,6 +26,34 @@ class BuildConfigDriftAction
         return DiagnosticsSnapshotCache::remember('config-drift', fn (): ConfigDriftData => $this->build());
     }
 
+    /**
+     * Returns triples of [shortName, shippedConfigAbsPath, hostConfigAbsPath].
+     *
+     * @return list<array{0: string, 1: string, 2: string}>
+     */
+    protected function configPairs(): array
+    {
+        $packages = [
+            ['core', 'capell-app/core', 'capell.php', 'packages/core'],
+            ['admin', 'capell-app/admin', 'capell-admin.php', 'packages/admin'],
+            ['frontend', 'capell-app/frontend', 'capell-frontend.php', 'packages/frontend'],
+        ];
+
+        $pairs = [];
+
+        foreach ($packages as [$shortName, $packageName, $configFileName, $localPackagePath]) {
+            $shippedPath = $this->shippedConfigPath($packageName, $configFileName, $localPackagePath);
+
+            if ($shippedPath === null) {
+                continue;
+            }
+
+            $pairs[] = [$shortName, $shippedPath, config_path($configFileName)];
+        }
+
+        return $pairs;
+    }
+
     private function build(): ConfigDriftData
     {
         $allDrifts = [];
@@ -58,34 +86,6 @@ class BuildConfigDriftAction
             totalDriftCount: count($allDrifts),
             packagesChecked: $packagesChecked,
         );
-    }
-
-    /**
-     * Returns triples of [shortName, shippedConfigAbsPath, hostConfigAbsPath].
-     *
-     * @return list<array{0: string, 1: string, 2: string}>
-     */
-    protected function configPairs(): array
-    {
-        $packages = [
-            ['core', 'capell-app/core', 'capell.php', 'packages/core'],
-            ['admin', 'capell-app/admin', 'capell-admin.php', 'packages/admin'],
-            ['frontend', 'capell-app/frontend', 'capell-frontend.php', 'packages/frontend'],
-        ];
-
-        $pairs = [];
-
-        foreach ($packages as [$shortName, $packageName, $configFileName, $localPackagePath]) {
-            $shippedPath = $this->shippedConfigPath($packageName, $configFileName, $localPackagePath);
-
-            if ($shippedPath === null) {
-                continue;
-            }
-
-            $pairs[] = [$shortName, $shippedPath, config_path($configFileName)];
-        }
-
-        return $pairs;
     }
 
     private function shippedConfigPath(string $packageName, string $configFileName, string $localPackagePath): ?string

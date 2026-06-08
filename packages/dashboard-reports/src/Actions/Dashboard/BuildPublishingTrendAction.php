@@ -13,6 +13,9 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Query\Expression;
 use Lorisleiva\Actions\Concerns\AsObject;
 
+/**
+ * @method static PublishingTrendData run(CarbonImmutable $rangeStart, CarbonImmutable $rangeEnd)
+ */
 final class BuildPublishingTrendAction
 {
     use AsObject;

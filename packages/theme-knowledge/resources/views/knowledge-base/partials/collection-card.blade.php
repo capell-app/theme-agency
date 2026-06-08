@@ -2,7 +2,9 @@
     $offsetClass = $depth > 0 ? 'ml-6 border-l-2 border-[var(--site-theme-primary-border)] pl-5' : '';
 @endphp
 
-<section class="{{ $offsetClass }} border border-slate-200 bg-white p-5 shadow-sm">
+<section
+    class="{{ $offsetClass }} border border-slate-200 bg-white p-5 shadow-sm"
+>
     <h2 class="text-2xl font-black text-[var(--site-theme-heading)]">
         {{ $collection['title'] }}
     </h2>

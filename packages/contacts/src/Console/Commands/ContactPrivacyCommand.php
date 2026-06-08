@@ -62,11 +62,18 @@ final class ContactPrivacyCommand extends Command
 
         if ($this->option('anonymize') === true) {
             $this->components->info((string) __('capell-contacts::generic.privacy.anonymized_contact', [
-                'contact' => $contact->getKey(),
+                'contact' => $this->modelKey($contact),
             ]));
         }
 
         return self::SUCCESS;
+    }
+
+    private function modelKey(Contact $contact): int|string|null
+    {
+        $key = $contact->getKey();
+
+        return is_int($key) || is_string($key) ? $key : null;
     }
 
     private function resolveContact(): ?Contact

@@ -19,8 +19,7 @@ final class RecordDeploymentPublicationAction
         ComposerRequirementData $requirement,
         PublishComposerChangeResultData $result,
         string $status = 'pending',
-    ): DeploymentPublication
-    {
+    ): DeploymentPublication {
         return DeploymentPublication::query()->create([
             'deployment_connection_id' => $connection->id,
             'provider' => $connection->provider,

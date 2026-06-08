@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-use Capell\Events\Enums\EventRegistrationStatusEnum;
 use Capell\Events\Enums\EventOccurrenceStatusEnum;
+use Capell\Events\Enums\EventRegistrationStatusEnum;
 use Capell\Events\Filament\Resources\Occurrences\Pages\ManageEventOccurrences;
 use Capell\Events\Filament\Resources\Registrations\Pages\ManageEventRegistrations;
 use Capell\Events\Models\EventOccurrence;
 use Capell\Events\Models\EventRegistration;
-use Carbon\CarbonImmutable;
 use Capell\Tests\Support\Concerns\CreatesAdminUser;
+use Carbon\CarbonImmutable;
 use Illuminate\Support\Facades\Notification;
 use Livewire\Livewire;
 

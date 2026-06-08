@@ -12,7 +12,7 @@ return new class extends Migration
 
     public function up(): void
     {
-        $tableName = config('capell-contacts.tables.contacts', 'contacts');
+        $tableName = $this->contactsTableName();
 
         if (
             ! Schema::hasTable($tableName)
@@ -31,7 +31,7 @@ return new class extends Migration
 
     public function down(): void
     {
-        $tableName = config('capell-contacts.tables.contacts', 'contacts');
+        $tableName = $this->contactsTableName();
 
         if (! Schema::hasTable($tableName) || ! Schema::hasIndex($tableName, self::INDEX_NAME)) {
             return;
@@ -40,5 +40,12 @@ return new class extends Migration
         Schema::table($tableName, function (Blueprint $table): void {
             $table->dropIndex(self::INDEX_NAME);
         });
+    }
+
+    private function contactsTableName(): string
+    {
+        $tableName = config('capell-contacts.tables.contacts', 'contacts');
+
+        return is_string($tableName) && $tableName !== '' ? $tableName : 'contacts';
     }
 };

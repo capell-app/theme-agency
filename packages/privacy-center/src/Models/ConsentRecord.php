@@ -82,13 +82,6 @@ class ConsentRecord extends Model
         static::deleted(static fn (ConsentRecord $consentRecord): null => self::flushOverviewStats());
     }
 
-    private static function flushOverviewStats(): null
-    {
-        PrivacyCenterOverviewStatsCache::flush();
-
-        return null;
-    }
-
     /**
      * @return array<string, string>
      */
@@ -104,5 +97,12 @@ class ConsentRecord extends Model
             'revoked_at' => 'immutable_datetime',
             'metadata' => 'array',
         ];
+    }
+
+    private static function flushOverviewStats(): null
+    {
+        PrivacyCenterOverviewStatsCache::flush();
+
+        return null;
     }
 }

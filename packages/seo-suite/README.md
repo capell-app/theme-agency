@@ -73,6 +73,7 @@ Screenshots are generated from [docs/screenshots.json](docs/screenshots.json) du
 - Translation coverage page.
 
 AI Discovery, SEO settings, not-found URLs, and public text-output captures remain optional until the runner has the required seeded state and plain-text response support.
+
 - Translation coverage page.
 - AI Discovery page.
 - SEO Suite settings modal on the Extensions page.

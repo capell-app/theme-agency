@@ -62,21 +62,21 @@ Mapped to `capabilities[]` in `capell.json`:
 
 ## 6. Prioritized Roadmap
 
-| Item                                                                                        | Bucket | Effort | Impact | Section ref |
-| ------------------------------------------------------------------------------------------- | ------ | ------ | ------ | ----------- |
-| Done/Shipped: Implement real `UrlManagerHealthCheck` (tables/actions/provider discoverable) | Done   | S      | High   | §4          |
+| Item                                                                                            | Bucket | Effort | Impact | Section ref                                                                           |
+| ----------------------------------------------------------------------------------------------- | ------ | ------ | ------ | ------------------------------------------------------------------------------------- |
+| Done/Shipped: Implement real `UrlManagerHealthCheck` (tables/actions/provider discoverable)     | Done   | S      | High   | §4                                                                                    |
 | Recapture styled marketplace screenshots from the existing `docs/screenshots/*` runner contract | Next   | S      | High   | §5 — reopened 2026-06-06 after visual audit demoted the broken default-shell captures |
-| Done/Shipped: Strip query from match key; lowercase normalisation                           | Done   | M      | High   | §2          |
-| Done/Shipped: Open-redirect host allowlist for absolute targets                             | Done   | M      | High   | §3, §4      |
-| Done/Shipped: Defer hot-path hit recording (queue / terminating)                            | Done   | M      | High   | §2, §4      |
-| Done/Shipped: Validate & bound regex patterns at write time (ReDoS)                         | Done   | M      | High   | §4          |
-| Done/Shipped: Redirect loop & chain detection on save                                       | Done   | M      | High   | §3          |
-| Done/Shipped: Wire 404 capture into frontend route middleware                               | Done   | M      | High   | §3          |
-| Done/Shipped: Verify/confirm Core invokes the bound `RedirectResolver`                      | Done   | S      | High   | §3, §4      |
-| Done/Shipped: Add `priority` ordering column + resolver/form support                        | Done   | M      | Med    | §2, §3      |
-| Done/Shipped: Replace unbounded prefix/regex scans with bounded candidate resolution         | Done   | M      | Med    | §2, §4      |
-| Done/Shipped: Tests: resolver fallback, preserve_query, open-redirect, loops, SEO import    | Done   | M      | High   | §4          |
-| Done/Shipped: Add `config/` for status codes, host allowlist, regex/retention                | Done   | S      | Med    | §4          |
-| Done/Shipped: Prefix-cascade auto-redirects on page-subtree moves                           | Done   | M      | Med    | §3          |
-| Done/Shipped: Canonical URL management surface                                               | Done   | L      | Med    | §3          |
-| Done/Shipped: Translate Action exception messages                                            | Done   | S      | Low    | §4          |
+| Done/Shipped: Strip query from match key; lowercase normalisation                               | Done   | M      | High   | §2                                                                                    |
+| Done/Shipped: Open-redirect host allowlist for absolute targets                                 | Done   | M      | High   | §3, §4                                                                                |
+| Done/Shipped: Defer hot-path hit recording (queue / terminating)                                | Done   | M      | High   | §2, §4                                                                                |
+| Done/Shipped: Validate & bound regex patterns at write time (ReDoS)                             | Done   | M      | High   | §4                                                                                    |
+| Done/Shipped: Redirect loop & chain detection on save                                           | Done   | M      | High   | §3                                                                                    |
+| Done/Shipped: Wire 404 capture into frontend route middleware                                   | Done   | M      | High   | §3                                                                                    |
+| Done/Shipped: Verify/confirm Core invokes the bound `RedirectResolver`                          | Done   | S      | High   | §3, §4                                                                                |
+| Done/Shipped: Add `priority` ordering column + resolver/form support                            | Done   | M      | Med    | §2, §3                                                                                |
+| Done/Shipped: Replace unbounded prefix/regex scans with bounded candidate resolution            | Done   | M      | Med    | §2, §4                                                                                |
+| Done/Shipped: Tests: resolver fallback, preserve_query, open-redirect, loops, SEO import        | Done   | M      | High   | §4                                                                                    |
+| Done/Shipped: Add `config/` for status codes, host allowlist, regex/retention                   | Done   | S      | Med    | §4                                                                                    |
+| Done/Shipped: Prefix-cascade auto-redirects on page-subtree moves                               | Done   | M      | Med    | §3                                                                                    |
+| Done/Shipped: Canonical URL management surface                                                  | Done   | L      | Med    | §3                                                                                    |
+| Done/Shipped: Translate Action exception messages                                               | Done   | S      | Low    | §4                                                                                    |

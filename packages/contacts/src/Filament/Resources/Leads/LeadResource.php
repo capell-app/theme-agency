@@ -52,7 +52,7 @@ final class LeadResource extends Resource
                         ->required(),
                 ])
                 ->fillForm(fn (Lead $record): array => [
-                    'status' => $record->status?->value ?? LeadStatus::New->value,
+                    'status' => $record->status->value ?? LeadStatus::New->value,
                 ])
                 ->action(function (Lead $record, array $data): void {
                     $status = is_string($data['status'] ?? null)

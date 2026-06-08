@@ -24,14 +24,14 @@ The package can also emit public-safe article payloads for Search, Site Discover
 
 Use package Actions and DTOs to keep cached frontend output public-safe:
 
-| Need | Entry point |
-| --- | --- |
-| Build public article data | `BuildPublicKnowledgeBaseArticleDataAction` |
-| Build public docs navigation | `BuildPublicKnowledgeBaseNavigationAction` |
-| Record article feedback | `RecordKnowledgeBaseArticleFeedbackAction` |
-| Publish article version | `PublishKnowledgeBaseArticleVersionAction` |
-| Build search documents | `BuildKnowledgeBaseSearchDocumentsAction` |
-| Build AI-readable output | `BuildAiReadableKnowledgeBaseOutputAction` |
+| Need                         | Entry point                                 |
+| ---------------------------- | ------------------------------------------- |
+| Build public article data    | `BuildPublicKnowledgeBaseArticleDataAction` |
+| Build public docs navigation | `BuildPublicKnowledgeBaseNavigationAction`  |
+| Record article feedback      | `RecordKnowledgeBaseArticleFeedbackAction`  |
+| Publish article version      | `PublishKnowledgeBaseArticleVersionAction`  |
+| Build search documents       | `BuildKnowledgeBaseSearchDocumentsAction`   |
+| Build AI-readable output     | `BuildAiReadableKnowledgeBaseOutputAction`  |
 
 Public Blade should receive hydrated data from controllers, Actions, or view components. It should not query models directly, lazy-load relationships, or expose authoring metadata.
 

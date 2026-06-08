@@ -2,7 +2,9 @@
     $actions ??= $section->actions ?? [];
 @endphp
 
-<section class="theme-section theme-section-cta knowledge-cta bg-[var(--site-theme-ink)]">
+<section
+    class="theme-section theme-section-cta knowledge-cta bg-[var(--site-theme-ink)]"
+>
     <div class="mx-auto max-w-5xl px-6 py-14">
         <div class="grid gap-8 lg:grid-cols-[0.8fr_1fr] lg:items-center">
             <div>

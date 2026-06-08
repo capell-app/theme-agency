@@ -8,10 +8,14 @@ use Capell\Contacts\Data\ContactActivityData;
 use Capell\Contacts\Enums\ContactActivityType;
 use Capell\Contacts\Models\Contact;
 use Carbon\CarbonImmutable;
+use Illuminate\Database\Eloquent\Relations\Pivot;
 use Illuminate\Support\Facades\DB;
 use Lorisleiva\Actions\Concerns\AsAction;
 use RuntimeException;
 
+/**
+ * @method static Contact run(Contact $source, Contact $target, string $reason = 'manual')
+ */
 final class MergeContactsAction
 {
     use AsAction;
@@ -27,8 +31,8 @@ final class MergeContactsAction
         }
 
         return DB::transaction(function () use ($reason, $source, $target): Contact {
-            $source = Contact::query()->lockForUpdate()->findOrFail($source->getKey());
-            $target = Contact::query()->lockForUpdate()->findOrFail($target->getKey());
+            $source = Contact::query()->lockForUpdate()->whereKey($source->getKey())->firstOrFail();
+            $target = Contact::query()->lockForUpdate()->whereKey($target->getKey())->firstOrFail();
 
             $mergedAttributes = $this->mergedAttributes($source, $target);
 
@@ -97,9 +101,15 @@ final class MergeContactsAction
                 continue;
             }
 
+            $pivot = $organisation->pivot;
+            $role = $pivot instanceof Pivot && is_string($pivot->getAttribute('role'))
+                ? $pivot->getAttribute('role')
+                : null;
+            $isPrimary = $pivot instanceof Pivot ? (bool) $pivot->getAttribute('is_primary') : false;
+
             $target->organisations()->attach($organisation->getKey(), [
-                'role' => $organisation->pivot?->role,
-                'is_primary' => (bool) ($organisation->pivot?->is_primary ?? false),
+                'role' => $role,
+                'is_primary' => $isPrimary,
             ]);
         }
     }

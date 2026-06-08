@@ -64,7 +64,10 @@ function campaignStudioScopedUser(SupportCollection $assignedSiteIds, array $per
         'email' => fake()->unique()->safeEmail(),
         'password' => bcrypt('password'),
     ]);
-    $user->assignedSiteIds = $assignedSiteIds;
+    $user->assignedSiteIds = $assignedSiteIds
+        ->filter(fn (mixed $siteId): bool => is_int($siteId) || (is_string($siteId) && ctype_digit($siteId)))
+        ->map(fn (int|string $siteId): int => is_int($siteId) ? $siteId : (int) $siteId)
+        ->values();
     $user->permissions = $permissions;
 
     return $user;

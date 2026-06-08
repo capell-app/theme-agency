@@ -12,6 +12,9 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 use Lorisleiva\Actions\Concerns\AsAction;
 
+/**
+ * @method static PortalSupportRequestReply run(PortalSupportRequest $supportRequest, string $message, string $senderType, ?Model $author = null, array<int, array<string, mixed>> $attachments = [])
+ */
 final class AddSupportRequestReplyAction
 {
     use AsAction;

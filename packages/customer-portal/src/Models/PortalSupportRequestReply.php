@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Capell\CustomerPortal\Models;
 
 use Carbon\CarbonImmutable;
+use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -22,6 +23,7 @@ use Override;
  */
 class PortalSupportRequestReply extends Model
 {
+    /** @use HasFactory<Factory<static>> */
     use HasFactory;
 
     /** @var list<string> */

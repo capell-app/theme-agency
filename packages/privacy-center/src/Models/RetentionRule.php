@@ -45,13 +45,6 @@ class RetentionRule extends Model
         static::deleted(static fn (RetentionRule $retentionRule): null => self::flushOverviewStats());
     }
 
-    private static function flushOverviewStats(): null
-    {
-        PrivacyCenterOverviewStatsCache::flush();
-
-        return null;
-    }
-
     /**
      * @return array<string, string>
      */
@@ -64,5 +57,12 @@ class RetentionRule extends Model
             'is_active' => 'boolean',
             'metadata' => 'array',
         ];
+    }
+
+    private static function flushOverviewStats(): null
+    {
+        PrivacyCenterOverviewStatsCache::flush();
+
+        return null;
     }
 }

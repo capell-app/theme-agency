@@ -45,7 +45,14 @@
         "View:DeploymentConnectionPage",
         "Manage:DeploymentConnectionPage"
     ],
-    "capabilities": ["deployments", "deployments-admin", "deployments-install-policy", "deployments-publish-history", "deployments-publish-idempotency", "deployments-token-refresh"],
+    "capabilities": [
+        "deployments",
+        "deployments-admin",
+        "deployments-install-policy",
+        "deployments-publish-history",
+        "deployments-publish-idempotency",
+        "deployments-token-refresh"
+    ],
     "performance": {
         "frontendRenderBudgetMs": 0,
         "adminQueryBudget": 40,

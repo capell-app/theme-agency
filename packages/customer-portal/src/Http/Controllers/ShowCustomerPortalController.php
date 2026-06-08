@@ -18,7 +18,6 @@ use Capell\CustomerPortal\Enums\SupportRequestStatus;
 use Capell\CustomerPortal\Http\Controllers\Concerns\ResolvesPortalAccount;
 use Capell\CustomerPortal\Models\PortalSupportRequest;
 use Capell\CustomerPortal\Models\PortalSupportRequestReply;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Str;
@@ -38,22 +37,23 @@ final class ShowCustomerPortalController
         $selfServiceItems = ResolvePortalSelfServiceItemsAction::run($portalAccount);
         $supportRequests = $portalAccount
             ->supportRequests()
-            ->with(['replies' => fn (Builder $query): Builder => $query->oldest('submitted_at')])
+            ->with('replies')
             ->latest('submitted_at')
             ->limit(5)
             ->get()
             ->map(static fn (PortalSupportRequest $supportRequest): array => [
-                'id' => (int) $supportRequest->getKey(),
+                'id' => self::modelKey($supportRequest),
                 'subject' => $supportRequest->subject,
                 'status' => $supportRequest->status->getLabel(),
                 'priority' => $supportRequest->priority->getLabel(),
-                'submitted_at' => $supportRequest->submitted_at?->toDayDateTimeString(),
+                'submitted_at' => $supportRequest->submitted_at->toDayDateTimeString(),
                 'message' => $supportRequest->message,
                 'replies' => $supportRequest->replies
+                    ->sortBy('submitted_at')
                     ->map(static fn (PortalSupportRequestReply $reply): array => [
                         'sender_type' => $reply->sender_type,
                         'message' => $reply->message,
-                        'submitted_at' => $reply->submitted_at?->toDayDateTimeString(),
+                        'submitted_at' => $reply->submitted_at->toDayDateTimeString(),
                     ])
                     ->values()
                     ->all(),
@@ -99,6 +99,17 @@ final class ShowCustomerPortalController
                 SupportRequestStatus::cases(),
             ),
         ]));
+    }
+
+    private static function modelKey(PortalSupportRequest $supportRequest): int
+    {
+        $key = $supportRequest->getKey();
+
+        if (is_int($key)) {
+            return $key;
+        }
+
+        return is_string($key) && ctype_digit($key) ? (int) $key : 0;
     }
 
     /**

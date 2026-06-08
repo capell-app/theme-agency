@@ -278,9 +278,11 @@ it('routes commerce section palette utilities through retail tokens', function (
         if (! $viewPath instanceof SplFileInfo) {
             continue;
         }
+
         if ($viewPath->getExtension() !== 'php') {
             continue;
         }
+
         $contents = (string) file_get_contents($viewPath->getPathname());
 
         if (preg_match('/(?:bg|text|border|shadow|hover:border|hover:text|group-hover:text)-\[#(?:[0-9a-fA-F]{3}){1,2}\]/', $contents) === 1) {

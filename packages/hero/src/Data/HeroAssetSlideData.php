@@ -44,39 +44,6 @@ final readonly class HeroAssetSlideData
         public ?Collection $images,
     ) {}
 
-    public function withResolvedLayers(
-        ?HeroBackgroundData $heroBackground,
-        ?HeroMediaData $heroMedia,
-        ?string $backgroundAttachment = null,
-        ?string $backgroundColor = null,
-        ?string $backgroundPosition = null,
-        ?string $backgroundRepeat = null,
-        ?string $backgroundSize = null,
-    ): self {
-        return new self(
-            asset: $this->asset,
-            color: $this->color,
-            actions: $this->actions,
-            related: $this->related,
-            heroBackground: $heroBackground,
-            heroMedia: $heroMedia,
-            backgroundAttachment: $this->backgroundAttachment ?? $backgroundAttachment,
-            backgroundColor: $this->backgroundColor ?? $backgroundColor,
-            backgroundPosition: $this->backgroundPosition ?? $backgroundPosition,
-            backgroundRepeat: $this->backgroundRepeat ?? $backgroundRepeat,
-            backgroundSize: $this->backgroundSize ?? $backgroundSize,
-            content: $this->content,
-            contentHtml: $this->contentHtml,
-            linkText: $this->linkText,
-            title: $this->title,
-            linkedPage: $this->linkedPage,
-            url: $this->url,
-            backgroundImage: $this->backgroundImage,
-            image: $this->image,
-            images: $this->images,
-        );
-    }
-
     public static function fromWidgetAsset(
         WidgetAsset $widgetAsset,
         Widget $widget,
@@ -122,6 +89,39 @@ final readonly class HeroAssetSlideData
             backgroundImage: $backgroundImage,
             image: self::loadedRelation($asset, 'image'),
             images: $images,
+        );
+    }
+
+    public function withResolvedLayers(
+        ?HeroBackgroundData $heroBackground,
+        ?HeroMediaData $heroMedia,
+        ?string $backgroundAttachment = null,
+        ?string $backgroundColor = null,
+        ?string $backgroundPosition = null,
+        ?string $backgroundRepeat = null,
+        ?string $backgroundSize = null,
+    ): self {
+        return new self(
+            asset: $this->asset,
+            color: $this->color,
+            actions: $this->actions,
+            related: $this->related,
+            heroBackground: $heroBackground,
+            heroMedia: $heroMedia,
+            backgroundAttachment: $this->backgroundAttachment ?? $backgroundAttachment,
+            backgroundColor: $this->backgroundColor ?? $backgroundColor,
+            backgroundPosition: $this->backgroundPosition ?? $backgroundPosition,
+            backgroundRepeat: $this->backgroundRepeat ?? $backgroundRepeat,
+            backgroundSize: $this->backgroundSize ?? $backgroundSize,
+            content: $this->content,
+            contentHtml: $this->contentHtml,
+            linkText: $this->linkText,
+            title: $this->title,
+            linkedPage: $this->linkedPage,
+            url: $this->url,
+            backgroundImage: $this->backgroundImage,
+            image: $this->image,
+            images: $this->images,
         );
     }
 

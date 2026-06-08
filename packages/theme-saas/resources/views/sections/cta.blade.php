@@ -1,6 +1,8 @@
 <section class="saas-final-cta bg-white">
     <div class="px-6">
-        <div class="saas-final-cta__frame rounded-3xl p-2 text-white shadow-2xl shadow-blue-950/20">
+        <div
+            class="saas-final-cta__frame rounded-3xl p-2 text-white shadow-2xl shadow-blue-950/20"
+        >
             <div
                 class="saas-final-cta__panel grid gap-8 rounded-[1.25rem] border border-white/15 p-8 md:grid-cols-[1fr_0.9fr] md:items-center md:p-12"
             >

@@ -13,18 +13,11 @@
         "bundle": "foundation"
     },
     "namespace": "Capell\\RecordSwitcher",
-    "surfaces": [
-        "admin"
-    ],
+    "surfaces": ["admin"],
     "dependencies": {
-        "requires": [
-            "capell-app/admin",
-            "capell-app/core"
-        ],
+        "requires": ["capell-app/admin", "capell-app/core"],
         "supports": [],
-        "conflicts": [
-            "howdu/filament-record-switcher"
-        ]
+        "conflicts": ["howdu/filament-record-switcher"]
     },
     "providers": {
         "metadata": [],
@@ -40,9 +33,7 @@
             "type": "asset",
             "class": "Capell\\RecordSwitcher\\Manifest\\RecordSwitcherAssetsContribution",
             "surface": "admin",
-            "assets": [
-                "record-switcher"
-            ]
+            "assets": ["record-switcher"]
         }
     ],
     "database": {
@@ -100,10 +91,6 @@
                 "caption": "Dark mode capture of the same Record Switcher heading workflow."
             }
         ],
-        "categories": [
-            "admin",
-            "foundation",
-            "editor-productivity"
-        ]
+        "categories": ["admin", "foundation", "editor-productivity"]
     }
 }

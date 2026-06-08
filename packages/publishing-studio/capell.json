@@ -13,10 +13,7 @@
         "bundle": "publishing-pro"
     },
     "namespace": "Capell\\PublishingStudio",
-    "surfaces": [
-        "admin",
-        "console"
-    ],
+    "surfaces": ["admin", "console"],
     "dependencies": {
         "requires": [
             "capell-app/admin",
@@ -41,9 +38,7 @@
         "runtime": [
             "Capell\\PublishingStudio\\Providers\\PublishingStudioServiceProvider"
         ],
-        "admin": [
-            "Capell\\PublishingStudio\\Providers\\AdminServiceProvider"
-        ],
+        "admin": ["Capell\\PublishingStudio\\Providers\\AdminServiceProvider"],
         "frontend": []
     },
     "contributes": [
@@ -276,11 +271,7 @@
                 "caption": "Review and approval before publish"
             }
         ],
-        "categories": [
-            "admin",
-            "console",
-            "publishing-pro"
-        ]
+        "categories": ["admin", "console", "publishing-pro"]
     },
     "contributionTraceability": {
         "deferredContributions": []

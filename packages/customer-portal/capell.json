@@ -55,7 +55,11 @@
     "database": {
         "migrations": true,
         "settings": false,
-        "requiredTables": ["portal_accounts", "portal_support_requests", "portal_support_request_replies"]
+        "requiredTables": [
+            "portal_accounts",
+            "portal_support_requests",
+            "portal_support_request_replies"
+        ]
     },
     "commands": {
         "install": null,

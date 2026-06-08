@@ -13,7 +13,7 @@ use Spatie\Permission\Models\Role;
 uses(DashboardReportsTestCase::class, CreatesAdminUser::class);
 
 beforeEach(function (): void {
-    Role::findOrCreate(config('capell.roles.super_admin', 'super_admin'));
+    Role::findOrCreate(dashboardReportsCsvSuperAdminRole());
     $this->actingAsAdmin();
 });
 
@@ -59,7 +59,17 @@ function dashboardReportsCsvRows(string $csv): array
     $lines = array_values(array_filter(explode("\n", trim($csv)), static fn (string $line): bool => $line !== ''));
 
     return array_map(
-        str_getcsv(...),
+        static fn (string $line): array => array_map(
+            static fn (?string $value): string => $value ?? '',
+            str_getcsv($line),
+        ),
         $lines,
     );
+}
+
+function dashboardReportsCsvSuperAdminRole(): string
+{
+    $role = config('capell.roles.super_admin', 'super_admin');
+
+    return is_string($role) && $role !== '' ? $role : 'super_admin';
 }

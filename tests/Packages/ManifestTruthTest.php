@@ -140,7 +140,11 @@ it('keeps theme manifest parent metadata aligned with provider definitions', fun
         }
 
         foreach (manifest_truth_provider_classes($entry['manifest']) as $providerClass) {
-            if (! class_exists($providerClass) || ! method_exists($providerClass, 'definition')) {
+            if (! class_exists($providerClass)) {
+                continue;
+            }
+
+            if (! method_exists($providerClass, 'definition')) {
                 continue;
             }
 

@@ -44,12 +44,7 @@
         --saas-card-ink: #f8fafc;
 
         background:
-            linear-gradient(
-                180deg,
-                #020617 0%,
-                #0f172a 52%,
-                #020617 100%
-            ),
+            linear-gradient(180deg, #020617 0%, #0f172a 52%, #020617 100%),
             linear-gradient(90deg, rgb(125 211 252 / 8%) 1px, transparent 1px),
             linear-gradient(180deg, rgb(45 212 191 / 7%) 1px, transparent 1px);
         color: var(--saas-ink);

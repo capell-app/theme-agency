@@ -204,8 +204,7 @@ class Hero extends AbstractWidget
         string $color,
         HeroBackgroundData $baseHeroBackground,
         HeroMediaData $baseHeroMedia,
-    ): Collection
-    {
+    ): Collection {
         $assets = $this->loadedRelation($this->widget, 'assets');
 
         if (! $assets instanceof Collection) {

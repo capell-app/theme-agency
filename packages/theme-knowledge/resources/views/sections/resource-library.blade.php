@@ -1,4 +1,6 @@
-<section class="theme-section theme-section-resource-library bg-[var(--site-theme-surface)]">
+<section
+    class="theme-section theme-section-resource-library bg-[var(--site-theme-surface)]"
+>
     <div class="mx-auto max-w-5xl px-6 py-14">
         @isset($heading)
             <p
@@ -6,7 +8,9 @@
             >
                 {{ __('capell-theme-knowledge::generic.library_label') }}
             </p>
-            <h2 class="mt-4 text-4xl font-black tracking-tight text-[var(--site-theme-foreground)]">
+            <h2
+                class="mt-4 text-4xl font-black tracking-tight text-[var(--site-theme-foreground)]"
+            >
                 {{ $heading }}
             </h2>
         @endisset
@@ -27,7 +31,9 @@
                     >
                         {{ __('capell-theme-knowledge::generic.library_signal') }}
                     </p>
-                    <h3 class="mt-3 text-lg font-black text-[var(--site-theme-foreground)]">
+                    <h3
+                        class="mt-3 text-lg font-black text-[var(--site-theme-foreground)]"
+                    >
                         {{ $card[0] }}
                     </h3>
                     <p class="mt-2 text-sm leading-6 text-slate-600">

@@ -40,6 +40,7 @@ final class GitLabCallbackController
                     'redirect_uri' => route('capell-deployments.oauth.gitlab'),
                 ])
                 ->json();
+            $tokenResponse = $this->responseMap($tokenResponse);
         } catch (ConnectionException $connectionException) {
             Log::warning('capell-deployments: GitLab OAuth token request failed', [
                 'error' => $connectionException->getMessage(),
@@ -62,6 +63,7 @@ final class GitLabCallbackController
                 ->timeout($this->httpTimeout())
                 ->get('https://gitlab.com/api/v4/user')
                 ->json();
+            $userResponse = $this->responseMap($userResponse);
         } catch (ConnectionException $connectionException) {
             Log::warning('capell-deployments: GitLab OAuth user request failed', [
                 'error' => $connectionException->getMessage(),
@@ -113,6 +115,32 @@ final class GitLabCallbackController
 
     private function httpTimeout(): int
     {
-        return max(1, (int) config('capell-deployments.http_timeout', 10));
+        $timeout = config('capell-deployments.http_timeout', 10);
+
+        if (is_int($timeout)) {
+            return max(1, $timeout);
+        }
+
+        return is_string($timeout) && ctype_digit($timeout) ? max(1, (int) $timeout) : 10;
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function responseMap(mixed $response): array
+    {
+        if (! is_array($response)) {
+            return [];
+        }
+
+        $map = [];
+
+        foreach ($response as $key => $value) {
+            if (is_string($key)) {
+                $map[$key] = $value;
+            }
+        }
+
+        return $map;
     }
 }

@@ -13,6 +13,9 @@ use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Model;
 use Lorisleiva\Actions\Concerns\AsAction;
 
+/**
+ * @method static ContactActivity run(Contact $contact, ContactActivityData $activityData, ?Model $subject = null, ?Lead $lead = null, ?Organisation $organisation = null)
+ */
 final class RecordContactActivityAction
 {
     use AsAction;

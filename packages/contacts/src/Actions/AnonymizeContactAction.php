@@ -9,6 +9,9 @@ use Capell\Contacts\Models\Contact;
 use Illuminate\Support\Facades\DB;
 use Lorisleiva\Actions\Concerns\AsAction;
 
+/**
+ * @method static Contact run(Contact $contact)
+ */
 final class AnonymizeContactAction
 {
     use AsAction;

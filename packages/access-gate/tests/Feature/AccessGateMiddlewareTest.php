@@ -241,7 +241,7 @@ it('allows guest browser tokens and marks protected responses private', function
     Route::middleware('access-gate:preview')->get('/access-gate-test/guest', fn (): string => 'secret');
 
     $this
-        ->withUnencryptedCookie(config('access-gate.cookies.browser_token.name'), $issuedToken->plainTextToken)
+        ->withUnencryptedCookie(accessGateBrowserTokenCookieName(), $issuedToken->plainTextToken)
         ->get('/access-gate-test/guest')
         ->assertOk()
         ->assertSee('secret')
@@ -266,7 +266,7 @@ it('rejects revoked browser tokens', function (): void {
     Route::middleware('access-gate:preview')->get('/access-gate-test/revoked', fn (): string => 'secret');
 
     $this
-        ->withUnencryptedCookie(config('access-gate.cookies.browser_token.name'), $issuedToken->plainTextToken)
+        ->withUnencryptedCookie(accessGateBrowserTokenCookieName(), $issuedToken->plainTextToken)
         ->get('/access-gate-test/revoked')
         ->assertRedirect(route('capell-access-gate.request', [
             'area' => 'preview',
@@ -539,7 +539,7 @@ it('marks allowed protected requests so compatible frontend cache middleware can
         ->get('/access-gate-test/frontend-cache-allowed', fn (): string => 'secret');
 
     $this
-        ->withUnencryptedCookie(config('access-gate.cookies.browser_token.name'), $issuedToken->plainTextToken)
+        ->withUnencryptedCookie(accessGateBrowserTokenCookieName(), $issuedToken->plainTextToken)
         ->get('/access-gate-test/frontend-cache-allowed')
         ->assertOk()
         ->assertSee('secret')
@@ -569,7 +569,7 @@ it('claims access with a one-time token and stores the browser token cookie', fu
         ->assertOk()
         ->assertSee(__('capell-access-gate::public.claim_succeeded.title'))
         ->assertSee('href="https://example.test/preview"', false)
-        ->assertCookie(config('access-gate.cookies.browser_token.name'));
+        ->assertCookie(accessGateBrowserTokenCookieName());
 
     $browserToken = BrowserToken::query()->firstOrFail();
 
@@ -594,7 +594,7 @@ it('lands claimed users on the configured area landing url', function (): void {
     $this->get(route('capell-access-gate.claim', ['token' => $issuedClaimToken->plainTextToken]))
         ->assertOk()
         ->assertSee('href="' . url('/account') . '"', false)
-        ->assertCookie(config('access-gate.cookies.browser_token.name'));
+        ->assertCookie(accessGateBrowserTokenCookieName());
 });
 
 it('does not send claimed users to untrusted requested urls', function (): void {
@@ -643,10 +643,10 @@ it('revokes the local browser token on access gate logout', function (): void {
     $issuedToken = resolve(CreateAccessGateBrowserTokenAction::class)->handle($grant);
 
     $this
-        ->withCookie(config('access-gate.cookies.browser_token.name'), $issuedToken->plainTextToken)
+        ->withCookie(accessGateBrowserTokenCookieName(), $issuedToken->plainTextToken)
         ->post(route('capell-access-gate.logout', ['area' => $area->key]))
         ->assertRedirect(route('capell-access-gate.request', ['area' => $area->key]))
-        ->assertCookieExpired(config('access-gate.cookies.browser_token.name'));
+        ->assertCookieExpired(accessGateBrowserTokenCookieName());
 
     expect(BrowserToken::query()->firstOrFail()->status)->toBe(BrowserTokenStatus::Revoked);
 });
@@ -705,7 +705,7 @@ it('does not revoke another site access gate browser token through the current s
     $hiddenToken = resolve(CreateAccessGateBrowserTokenAction::class)->handle($hiddenGrant);
 
     $this
-        ->withCookie(config('access-gate.cookies.browser_token.name'), $hiddenToken->plainTextToken)
+        ->withCookie(accessGateBrowserTokenCookieName(), $hiddenToken->plainTextToken)
         ->post('http://localhost/access/logout/hidden-preview')
         ->assertNotFound();
 
@@ -757,4 +757,13 @@ function defineAccessGateSiteDomain(int $siteId, string $domain): void
         'created_at' => now(),
         'updated_at' => now(),
     ]);
+}
+
+function accessGateBrowserTokenCookieName(): string
+{
+    $cookieName = config('access-gate.cookies.browser_token.name');
+
+    throw_unless(is_string($cookieName) && $cookieName !== '', RuntimeException::class, 'Expected access gate browser token cookie name.');
+
+    return $cookieName;
 }

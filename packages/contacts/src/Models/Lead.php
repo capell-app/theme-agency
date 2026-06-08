@@ -17,6 +17,8 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Override;
 
 /**
+ * @property int|null $site_id
+ * @property int|null $contact_id
  * @property string|null $title
  * @property LeadStatus|null $status
  * @property string|null $value_amount
@@ -103,13 +105,6 @@ class Lead extends Model
         static::deleted(fn (Lead $lead): null => self::flushOverviewStats($lead));
     }
 
-    private static function flushOverviewStats(Lead $lead): null
-    {
-        ContactsOverviewStatsCache::flushForSite(is_int($lead->site_id) ? $lead->site_id : null);
-
-        return null;
-    }
-
     /**
      * @return array<string, string>
      */
@@ -124,5 +119,12 @@ class Lead extends Model
             'qualified_at' => 'immutable_datetime',
             'closed_at' => 'immutable_datetime',
         ];
+    }
+
+    private static function flushOverviewStats(Lead $lead): null
+    {
+        ContactsOverviewStatsCache::flushForSite(is_int($lead->site_id) ? $lead->site_id : null);
+
+        return null;
     }
 }

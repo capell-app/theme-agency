@@ -26,9 +26,15 @@ use Capell\Experiments\Enums\ExperimentGoalType;
 use Capell\Experiments\Enums\ExperimentStatus;
 use Capell\Experiments\Enums\ExperimentSubjectType;
 use Capell\Experiments\Models\ExperimentAllocation;
+use Capell\Insights\Enums\InsightsConsentRegion;
+use Capell\Insights\Enums\InsightsConsentStatus;
+use Capell\Insights\Models\InsightsEvent;
+use Capell\Insights\Models\InsightsVisit;
 use Carbon\CarbonImmutable;
+use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Validation\ValidationException;
 
 it('creates an experiment aggregate with variants goals and audience rules', function (): void {
@@ -146,6 +152,62 @@ it('records keyed goal events once per allocation and goal', function (): void {
         ->and($goal->events()->count())->toBe(2)
         ->and($secondEvent->value_amount)->toBe('25.00')
         ->and($secondEvent->metadata)->toBe(['source' => 'first']);
+});
+
+it('feeds experiment goal events into insights when an insights visit is available', function (): void {
+    createExperimentInsightsTables();
+
+    $visit = InsightsVisit::query()->create([
+        'uuid' => 'a3d8a3e5-974f-42c9-a4ad-2fc3f601a61b',
+        'consent_region' => InsightsConsentRegion::OutsideUkOrEurope,
+        'consent_status' => InsightsConsentStatus::AcceptedAll,
+        'landing_url' => 'https://example.test/pricing',
+        'started_at' => CarbonImmutable::parse('2026-06-08 10:00:00'),
+        'last_seen_at' => CarbonImmutable::parse('2026-06-08 10:00:00'),
+    ]);
+    $experiment = CreateExperimentAction::run(new ExperimentData(
+        name: 'Pricing CTA',
+        key: 'pricing-cta',
+        status: ExperimentStatus::Active,
+        variants: [
+            new ExperimentVariantData(name: 'Control', key: 'control', isControl: true),
+        ],
+        goals: [
+            new ExperimentGoalData(name: 'Signup', key: 'signup', type: ExperimentGoalType::CustomEvent, isPrimary: true),
+        ],
+    ));
+    $allocation = ExperimentAllocation::query()->create([
+        'experiment_id' => $experiment->getKey(),
+        'experiment_variant_id' => $experiment->variants()->firstOrFail()->getKey(),
+        'allocation_key' => 'visitor-with-insights',
+        'allocation_hash' => hash('sha256', 'visitor-with-insights'),
+        'source' => 'insights',
+        'external_id' => $visit->uuid,
+        'context' => ['url' => 'https://example.test/pricing?utm_campaign=pricing'],
+        'allocated_at' => CarbonImmutable::parse('2026-06-08 10:05:00'),
+    ]);
+    $goal = $experiment->goals()->firstOrFail();
+
+    RecordGoalEventAction::run(
+        allocation: $allocation,
+        goal: $goal,
+        data: new ExperimentGoalEventData(eventKey: 'signup', valueAmount: '49.00'),
+    );
+    RecordGoalEventAction::run(
+        allocation: $allocation,
+        goal: $goal,
+        data: new ExperimentGoalEventData(eventKey: 'signup', valueAmount: '99.00'),
+    );
+
+    $insightsEvent = InsightsEvent::query()->firstOrFail();
+    $metadata = $insightsEvent->metadata;
+
+    expect(InsightsEvent::query()->count())->toBe(1)
+        ->and($insightsEvent->visit_id)->toBe($visit->getKey())
+        ->and($insightsEvent->event_name)->toBe('experiment.pricing-cta.signup')
+        ->and($insightsEvent->url)->toBe('https://example.test/pricing?utm_campaign=pricing')
+        ->and($metadata?->sourcePackage)->toBe('capell-app/experiments')
+        ->and($metadata?->conversionValue)->toBe(49.0);
 });
 
 it('syncs scheduled and expired experiment statuses', function (): void {
@@ -483,3 +545,50 @@ it('bounds request-context candidate resolution and ignores inactive variant-onl
         ->and($resolution?->experimentKey)->toBe('first-candidate')
         ->and($queryCount)->toBeLessThanOrEqual(5);
 });
+
+function createExperimentInsightsTables(): void
+{
+    Schema::create('insights_visits', static function (Blueprint $table): void {
+        $table->id();
+        $table->uuid('uuid')->unique();
+        $table->unsignedBigInteger('site_id')->nullable();
+        $table->unsignedBigInteger('language_id')->nullable();
+        $table->string('consent_region');
+        $table->string('consent_status');
+        $table->text('landing_url');
+        $table->text('referrer_url')->nullable();
+        $table->string('utm_source')->nullable();
+        $table->string('utm_medium')->nullable();
+        $table->string('utm_campaign')->nullable();
+        $table->string('ip_hash')->nullable();
+        $table->string('user_agent_hash')->nullable();
+        $table->string('legacy_session_id', 64)->nullable();
+        $table->dateTime('started_at');
+        $table->dateTime('last_seen_at')->nullable();
+        $table->timestamps();
+    });
+
+    Schema::create('insights_events', static function (Blueprint $table): void {
+        $table->id();
+        $table->unsignedBigInteger('visit_id')->nullable();
+        $table->unsignedBigInteger('site_id')->nullable();
+        $table->unsignedBigInteger('language_id')->nullable();
+        $table->string('type');
+        $table->string('url', 512);
+        $table->string('path', 512);
+        $table->string('title')->nullable();
+        $table->dateTime('occurred_at');
+        $table->unsignedInteger('sequence');
+        $table->string('event_name')->nullable();
+        $table->string('label')->nullable();
+        $table->string('location')->nullable();
+        $table->string('target_selector')->nullable();
+        $table->integer('viewport_x')->nullable();
+        $table->integer('viewport_y')->nullable();
+        $table->integer('document_x')->nullable();
+        $table->integer('document_y')->nullable();
+        $table->unsignedBigInteger('legacy_page_view_id')->nullable();
+        $table->json('metadata')->nullable();
+        $table->timestamps();
+    });
+}

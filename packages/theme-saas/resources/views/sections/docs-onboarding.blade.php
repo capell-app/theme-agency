@@ -37,12 +37,18 @@
                     @endphp
 
                     <article class="border border-white/10 bg-white/[0.04] p-4">
-                        <div class="flex flex-wrap items-center justify-between gap-3">
-                            <p class="text-xs font-black text-cyan-200 uppercase">
+                        <div
+                            class="flex flex-wrap items-center justify-between gap-3"
+                        >
+                            <p
+                                class="text-xs font-black text-cyan-200 uppercase"
+                            >
                                 {{ $item['type'] ?? __('capell-theme-saas::generic.activation_stage_label') }}
                             </p>
                             @if ($tag)
-                                <span class="rounded-full border border-white/15 px-2.5 py-1 text-[0.68rem] font-black text-cyan-100 uppercase">
+                                <span
+                                    class="rounded-full border border-white/15 px-2.5 py-1 text-[0.68rem] font-black text-cyan-100 uppercase"
+                                >
                                     {{ $tag }}
                                 </span>
                             @endif
@@ -50,7 +56,10 @@
 
                         <h3 class="mt-2 text-lg font-black">
                             @if ($url)
-                                <a href="{{ $url }}" class="no-underline hover:text-cyan-200">
+                                <a
+                                    href="{{ $url }}"
+                                    class="no-underline hover:text-cyan-200"
+                                >
                                     {{ $item['title'] ?? __('capell-theme-saas::generic.activation_flow_label') }}
                                 </a>
                             @else
@@ -62,12 +71,17 @@
                             {{ $item['summary'] ?? __('capell-theme-saas::generic.docs_ready') }}
                         </p>
 
-                        <div class="mt-4 flex flex-wrap items-center gap-3 text-xs font-black text-slate-300 uppercase">
+                        <div
+                            class="mt-4 flex flex-wrap items-center gap-3 text-xs font-black text-slate-300 uppercase"
+                        >
                             @if ($item['duration'] ?? null)
                                 <span>{{ $item['duration'] }}</span>
                             @endif
+
                             @if (($documentLifecycleAvailable ?? false) && $url)
-                                <span>{{ __('capell-theme-saas::generic.open_docs_label') }}</span>
+                                <span>
+                                    {{ __('capell-theme-saas::generic.open_docs_label') }}
+                                </span>
                             @endif
                         </div>
                     </article>

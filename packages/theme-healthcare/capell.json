@@ -13,14 +13,9 @@
         "bundle": "themes"
     },
     "namespace": "Capell\\ThemeStudio\\Healthcare",
-    "surfaces": [
-        "frontend"
-    ],
+    "surfaces": ["frontend"],
     "dependencies": {
-        "requires": [
-            "capell-app/core",
-            "capell-app/foundation-theme"
-        ],
+        "requires": ["capell-app/core", "capell-app/foundation-theme"],
         "supports": [
             "capell-app/blog",
             "capell-app/bookings",
@@ -58,31 +53,19 @@
         "install": null,
         "setup": null,
         "demo": "capell:theme-healthcare-demo",
-        "demoParams": [
-            "url",
-            "languages",
-            "sites"
-        ],
+        "demoParams": ["url", "languages", "sites"],
         "doctor": null
     },
     "settings": [],
     "permissions": [],
-    "capabilities": [
-        "theme-healthcare",
-        "theme-healthcare-frontend"
-    ],
+    "capabilities": ["theme-healthcare", "theme-healthcare-frontend"],
     "performance": {
         "frontendRenderBudgetMs": 20,
         "adminQueryBudget": 0,
-        "cacheTags": [
-            "theme-healthcare"
-        ],
+        "cacheTags": ["theme-healthcare"],
         "cacheSafety": {
             "cacheable": false,
-            "variesBy": [
-                "site",
-                "locale"
-            ],
+            "variesBy": ["site", "locale"],
             "sensitiveOutput": false,
             "invalidationSources": [],
             "queueInvalidation": true
@@ -138,10 +121,7 @@
                 "caption": "Contact route with styled clinical support positioning and patient-facing imagery."
             }
         ],
-        "categories": [
-            "frontend",
-            "themes"
-        ]
+        "categories": ["frontend", "themes"]
     },
     "extends": "capell-app/foundation-theme",
     "themeKey": "healthcare"

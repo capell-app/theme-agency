@@ -74,19 +74,19 @@ Implement a custom action handler by registering an `AutomationActionHandler` wi
 
 ## Runtime Surface
 
-| Area | Path |
-| --- | --- |
-| Actions | `packages/automation-studio/src/Actions` |
-| Data | `packages/automation-studio/src/Data` |
-| Enums | `packages/automation-studio/src/Enums` |
-| Jobs | `packages/automation-studio/src/Jobs/DispatchQueuedAutomationTriggerJob.php` |
-| Listeners | `packages/automation-studio/src/Listeners` |
-| Handlers | `packages/automation-studio/src/Support/Handlers` |
-| Registries | `packages/automation-studio/src/Support` |
-| Models | `packages/automation-studio/src/Models` |
-| Filament | `packages/automation-studio/src/Filament` |
-| Migrations | `packages/automation-studio/database/migrations` |
-| Tests | `packages/automation-studio/tests` |
+| Area       | Path                                                                         |
+| ---------- | ---------------------------------------------------------------------------- |
+| Actions    | `packages/automation-studio/src/Actions`                                     |
+| Data       | `packages/automation-studio/src/Data`                                        |
+| Enums      | `packages/automation-studio/src/Enums`                                       |
+| Jobs       | `packages/automation-studio/src/Jobs/DispatchQueuedAutomationTriggerJob.php` |
+| Listeners  | `packages/automation-studio/src/Listeners`                                   |
+| Handlers   | `packages/automation-studio/src/Support/Handlers`                            |
+| Registries | `packages/automation-studio/src/Support`                                     |
+| Models     | `packages/automation-studio/src/Models`                                      |
+| Filament   | `packages/automation-studio/src/Filament`                                    |
+| Migrations | `packages/automation-studio/database/migrations`                             |
+| Tests      | `packages/automation-studio/tests`                                           |
 
 ## Boundaries
 

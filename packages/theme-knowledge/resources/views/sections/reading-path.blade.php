@@ -13,7 +13,9 @@
                 >
                     {{ __('capell-theme-knowledge::generic.reading_path_label') }}
                 </p>
-                <h2 class="mt-3 text-4xl font-black text-[var(--site-theme-heading)]">
+                <h2
+                    class="mt-3 text-4xl font-black text-[var(--site-theme-heading)]"
+                >
                     {{ $heading }}
                 </h2>
             </div>
@@ -25,11 +27,17 @@
         </div>
         <div class="mt-10 grid gap-4 md:grid-cols-3">
             @forelse ($items as $item)
-                <article class="border border-slate-200 bg-[var(--site-theme-surface)] p-5">
-                    <p class="text-xs font-black text-[var(--site-theme-accent)] uppercase">
+                <article
+                    class="border border-slate-200 bg-[var(--site-theme-surface)] p-5"
+                >
+                    <p
+                        class="text-xs font-black text-[var(--site-theme-accent)] uppercase"
+                    >
                         {{ $item['type'] ?? __('capell-theme-knowledge::generic.reading_signal') }}
                     </p>
-                    <h3 class="mt-3 text-xl font-black text-[var(--site-theme-heading)]">
+                    <h3
+                        class="mt-3 text-xl font-black text-[var(--site-theme-heading)]"
+                    >
                         {{ $item['title'] ?? __('capell-theme-knowledge::generic.library_signal') }}
                     </h3>
                     <p class="mt-3 text-sm leading-6 text-slate-600">
@@ -40,7 +48,9 @@
                 <article
                     class="border border-dashed border-slate-300 bg-[var(--site-theme-surface)] p-6"
                 >
-                    <h3 class="text-lg font-black text-[var(--site-theme-heading)]">
+                    <h3
+                        class="text-lg font-black text-[var(--site-theme-heading)]"
+                    >
                         {{ __('capell-theme-knowledge::generic.premium_layout_ready') }}
                     </h3>
                     <p class="mt-2 text-sm text-slate-600">

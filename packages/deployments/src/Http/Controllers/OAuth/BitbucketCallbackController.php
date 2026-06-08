@@ -30,11 +30,11 @@ final class BitbucketCallbackController
             return back()->withErrors([__('capell-deployments::plugins.deployment_connection.oauth_missing_code')]);
         }
 
-        $clientId = config('capell-deployments.oauth.bitbucket.client_id');
-        $clientSecret = config('capell-deployments.oauth.bitbucket.client_secret');
-
         try {
-            $tokenResponse = Http::withBasicAuth((string) $clientId, (string) $clientSecret)
+            $tokenResponse = Http::withBasicAuth(
+                $this->configString('capell-deployments.oauth.bitbucket.client_id'),
+                $this->configString('capell-deployments.oauth.bitbucket.client_secret'),
+            )
                 ->asForm()
                 ->timeout($this->httpTimeout())
                 ->post('https://bitbucket.org/site/oauth2/access_token', [
@@ -43,6 +43,7 @@ final class BitbucketCallbackController
                     'redirect_uri' => route('capell-deployments.oauth.bitbucket'),
                 ])
                 ->json();
+            $tokenResponse = $this->responseMap($tokenResponse);
         } catch (ConnectionException $connectionException) {
             Log::warning('capell-deployments: Bitbucket OAuth token request failed', [
                 'error' => $connectionException->getMessage(),
@@ -65,6 +66,7 @@ final class BitbucketCallbackController
                 ->timeout($this->httpTimeout())
                 ->get('https://api.bitbucket.org/2.0/user')
                 ->json();
+            $userResponse = $this->responseMap($userResponse);
         } catch (ConnectionException $connectionException) {
             Log::warning('capell-deployments: Bitbucket OAuth user request failed', [
                 'error' => $connectionException->getMessage(),
@@ -116,6 +118,39 @@ final class BitbucketCallbackController
 
     private function httpTimeout(): int
     {
-        return max(1, (int) config('capell-deployments.http_timeout', 10));
+        $timeout = config('capell-deployments.http_timeout', 10);
+
+        if (is_int($timeout)) {
+            return max(1, $timeout);
+        }
+
+        return is_string($timeout) && ctype_digit($timeout) ? max(1, (int) $timeout) : 10;
+    }
+
+    private function configString(string $key): string
+    {
+        $value = config($key);
+
+        return is_string($value) ? $value : '';
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function responseMap(mixed $response): array
+    {
+        if (! is_array($response)) {
+            return [];
+        }
+
+        $map = [];
+
+        foreach ($response as $key => $value) {
+            if (is_string($key)) {
+                $map[$key] = $value;
+            }
+        }
+
+        return $map;
     }
 }

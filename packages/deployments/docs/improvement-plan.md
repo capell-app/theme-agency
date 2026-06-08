@@ -70,22 +70,22 @@ Manifest `capabilities`: `["deployments", "deployments-admin", "deployments-inst
 
 ## 6. Prioritized Roadmap
 
-| Item                                                                                          | Bucket  | Effort | Impact | Section ref |
-| --------------------------------------------------------------------------------------------- | ------- | ------ | ------ | ----------- |
-| Gate `DeploymentConnectionWidget` with `canView()` (stop repo-identity leak)                  | Done    | S      | High   | §2, §4      |
-| Register the widget or delete it + its `screenshots.json` entry                               | Done    | S      | Med    | §2, §4      |
-| Resolve manifest mismatches: drop unbacked `console` surface/capability, fix screenshot count | Done    | S      | High   | §4          |
-| Confirm/wire a real consumer of `PublishesComposerChanges` (or document the external owner)   | Done    | M      | High   | §4          |
-| Fix `repo_name => 'app'` placeholder; add repo selection to the page                          | Done    | M      | High   | §2          |
-| Implement a real `DeploymentsHealthCheck` (connection storage + OAuth-config readiness)       | Done    | M      | High   | §4          |
-| Shipped 2026-06-07: OAuth token refresh (`RefreshProviderTokenAction`, persist expiry/refresh token) | Done    | M      | High   | §3, §2      |
-| Surface OAuth-misconfiguration in the page UI + test it                                       | Done    | S      | Med    | §2, §4      |
-| Make bound publisher connection-aware; handle >1 active connection                            | Done    | M      | Med    | §2, §4      |
-| Shipped 2026-06-06: Expose `InstallPolicy` choice in the UI (unlock `PullRequestManual`)      | Done    | S      | Med    | §3          |
+| Item                                                                                                    | Bucket  | Effort | Impact | Section ref |
+| ------------------------------------------------------------------------------------------------------- | ------- | ------ | ------ | ----------- |
+| Gate `DeploymentConnectionWidget` with `canView()` (stop repo-identity leak)                            | Done    | S      | High   | §2, §4      |
+| Register the widget or delete it + its `screenshots.json` entry                                         | Done    | S      | Med    | §2, §4      |
+| Resolve manifest mismatches: drop unbacked `console` surface/capability, fix screenshot count           | Done    | S      | High   | §4          |
+| Confirm/wire a real consumer of `PublishesComposerChanges` (or document the external owner)             | Done    | M      | High   | §4          |
+| Fix `repo_name => 'app'` placeholder; add repo selection to the page                                    | Done    | M      | High   | §2          |
+| Implement a real `DeploymentsHealthCheck` (connection storage + OAuth-config readiness)                 | Done    | M      | High   | §4          |
+| Shipped 2026-06-07: OAuth token refresh (`RefreshProviderTokenAction`, persist expiry/refresh token)    | Done    | M      | High   | §3, §2      |
+| Surface OAuth-misconfiguration in the page UI + test it                                                 | Done    | S      | Med    | §2, §4      |
+| Make bound publisher connection-aware; handle >1 active connection                                      | Done    | M      | Med    | §2, §4      |
+| Shipped 2026-06-06: Expose `InstallPolicy` choice in the UI (unlock `PullRequestManual`)                | Done    | S      | Med    | §3          |
 | Shipped 2026-06-07: Publish-history table + "recent publishes/status" panel (consume `getDeployStatus`) | Done    | L      | High   | §3, §4      |
-| Shipped 2026-06-06: Idempotency: dedupe open PRs for the same package; dry-run for `DirectCommit` | Done    | M      | Med    | §4          |
-| Shipped 2026-06-08: Cancel pending pull-request installs (consume `closePullRequest`)          | Done    | M      | Med    | §3, §4      |
-| Shipped 2026-06-08: Health-gated auto-merge before enabling PR auto-merge                      | Done    | M      | High   | §3          |
-| Deploy hooks + success/failure events                                                         | Later   | M      | High   | §3          |
-| Provider webhook ingestion for async deploy/PR status                                         | Later   | L      | Med    | §3          |
-| Capture active-connection + OAuth-to-PR media after real assets exist                         | Blocked | S      | High   | §5          |
+| Shipped 2026-06-06: Idempotency: dedupe open PRs for the same package; dry-run for `DirectCommit`       | Done    | M      | Med    | §4          |
+| Shipped 2026-06-08: Cancel pending pull-request installs (consume `closePullRequest`)                   | Done    | M      | Med    | §3, §4      |
+| Shipped 2026-06-08: Health-gated auto-merge before enabling PR auto-merge                               | Done    | M      | High   | §3          |
+| Deploy hooks + success/failure events                                                                   | Later   | M      | High   | §3          |
+| Provider webhook ingestion for async deploy/PR status                                                   | Later   | L      | Med    | §3          |
+| Capture active-connection + OAuth-to-PR media after real assets exist                                   | Blocked | S      | High   | §5          |

@@ -13,10 +13,7 @@
         "group": "Capell Growth"
     },
     "namespace": "Capell\\SocialFeeds",
-    "surfaces": [
-        "admin",
-        "frontend"
-    ],
+    "surfaces": ["admin", "frontend"],
     "dependencies": {
         "requires": [
             "capell-app/admin",
@@ -87,15 +84,10 @@
     "performance": {
         "frontendRenderBudgetMs": 20,
         "adminQueryBudget": 40,
-        "cacheTags": [
-            "social-feeds"
-        ],
+        "cacheTags": ["social-feeds"],
         "cacheSafety": {
             "cacheable": true,
-            "variesBy": [
-                "site",
-                "locale"
-            ],
+            "variesBy": ["site", "locale"],
             "sensitiveOutput": false,
             "invalidationSources": [
                 {
@@ -148,11 +140,7 @@
                 "caption": "Provider registry extension surface"
             }
         ],
-        "categories": [
-            "admin",
-            "frontend",
-            "growth"
-        ]
+        "categories": ["admin", "frontend", "growth"]
     },
     "contributionTraceability": {
         "deferredContributions": [

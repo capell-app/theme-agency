@@ -117,6 +117,7 @@ it('publishes composer requirements through pull requests and enables automerge 
 it('leaves auto merge disabled when pull request health gates are not passing', function (): void {
     $provider = new FakeComposerPublisher;
     $provider->deployStatus = 'pending';
+
     app()->instance(GitHubProvider::class, $provider);
     $connection = DeploymentConnection::factory()->github()->create([
         'install_policy' => InstallPolicy::PullRequestAutoMerge,

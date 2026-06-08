@@ -73,23 +73,23 @@ Tied to `capabilities[]`: `password-policy`, `password-policy-admin`.
 
 ## 6. Prioritized Roadmap
 
-| Item                                                                                         | Bucket | Effort | Impact | Section ref |
-| -------------------------------------------------------------------------------------------- | ------ | ------ | ------ | ----------- |
-| Test HIBP/`uncompromised` path with `Http::fake()` + stray-request guard                     | Done   | S      | High   | §4          |
-| Backfill `password_changed_at` on install (or treat null as non-expired)                     | Done   | M      | High   | §2, §4      |
-| Add direct middleware tests (redirect, allowed-route, compliant no-op)                       | Done   | S      | High   | §4          |
-| Reconcile manifest drift: composer↔capell.json desc, fill README, resolve console capability | Done   | S      | Medium | §4, §5      |
+| Item                                                                                                            | Bucket | Effort | Impact | Section ref |
+| --------------------------------------------------------------------------------------------------------------- | ------ | ------ | ------ | ----------- |
+| Test HIBP/`uncompromised` path with `Http::fake()` + stray-request guard                                        | Done   | S      | High   | §4          |
+| Backfill `password_changed_at` on install (or treat null as non-expired)                                        | Done   | M      | High   | §2, §4      |
+| Add direct middleware tests (redirect, allowed-route, compliant no-op)                                          | Done   | S      | High   | §4          |
+| Reconcile manifest drift: composer↔capell.json desc, fill README, resolve console capability                    | Done   | S      | Medium | §4, §5      |
 | Generate real Capell runner marketplace screenshots for settings, forced-change, and Users-table policy columns | Done   | S      | High   | §5          |
-| Shipped: rewrite marketplace summary/description                                             | Done   | S      | High   | §5          |
-| Add configurable complexity rules (length/case/number/symbol) + wire into validator          | Done   | M      | High   | §3, §2      |
-| Fix double/duplicate history write on admin edit; record once post-hash                      | Done   | M      | Medium | §2          |
-| De-duplicate extension-surface registration (bridge vs provider)                             | Done   | S      | Medium | §2          |
-| Prune `password_policy_password_histories` to configured count                               | Done   | S      | Medium | §2, §4      |
-| Ship reusable `PasswordPolicyRule` + Fortify register/reset hooks                            | Done   | M      | High   | §3          |
-| Route Action schema probes through `RuntimeSchemaState`; assert admin query budget           | Done   | M      | Medium | §2, §4      |
-| Translate core password validation failures into package i18n namespace                      | Done   | S      | Medium | §4          |
-| Emit password lifecycle events for login-audit / 2FA cross-sell                              | Done   | M      | Medium | §3, §5      |
-| Account lockout / login throttle + expiry-warning notifications                              | Later  | L      | High   | §3          |
-| Per-role / per-panel policy scoping                                                          | Later  | L      | Medium | §3          |
-| Done/Shipped: Real health-check assertions (enabled-but-not-installed → fail)                | Done   | M      | Medium | §3, §4      |
-| Done/Shipped: Add Artisan console commands (expire-stale, require-change, prune-history, doctor) | Done   | M      | Medium | §3          |
+| Shipped: rewrite marketplace summary/description                                                                | Done   | S      | High   | §5          |
+| Add configurable complexity rules (length/case/number/symbol) + wire into validator                             | Done   | M      | High   | §3, §2      |
+| Fix double/duplicate history write on admin edit; record once post-hash                                         | Done   | M      | Medium | §2          |
+| De-duplicate extension-surface registration (bridge vs provider)                                                | Done   | S      | Medium | §2          |
+| Prune `password_policy_password_histories` to configured count                                                  | Done   | S      | Medium | §2, §4      |
+| Ship reusable `PasswordPolicyRule` + Fortify register/reset hooks                                               | Done   | M      | High   | §3          |
+| Route Action schema probes through `RuntimeSchemaState`; assert admin query budget                              | Done   | M      | Medium | §2, §4      |
+| Translate core password validation failures into package i18n namespace                                         | Done   | S      | Medium | §4          |
+| Emit password lifecycle events for login-audit / 2FA cross-sell                                                 | Done   | M      | Medium | §3, §5      |
+| Account lockout / login throttle + expiry-warning notifications                                                 | Later  | L      | High   | §3          |
+| Per-role / per-panel policy scoping                                                                             | Later  | L      | Medium | §3          |
+| Done/Shipped: Real health-check assertions (enabled-but-not-installed → fail)                                   | Done   | M      | Medium | §3, §4      |
+| Done/Shipped: Add Artisan console commands (expire-stale, require-change, prune-history, doctor)                | Done   | M      | Medium | §3          |

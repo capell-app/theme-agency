@@ -18,13 +18,9 @@ final class CancelDeploymentPublicationAction
 
     public function handle(DeploymentPublication $publication, DeploymentConnection $connection): DeploymentPublication
     {
-        if ($publication->deployment_connection_id !== $connection->id) {
-            throw new LogicException('Deployment publication does not belong to the selected deployment connection.');
-        }
+        throw_if($publication->deployment_connection_id !== $connection->id, LogicException::class, 'Deployment publication does not belong to the selected deployment connection.');
 
-        if ($publication->pull_request_id === null) {
-            throw new LogicException('Only pull-request deployment publications can be cancelled.');
-        }
+        throw_if($publication->pull_request_id === null, LogicException::class, 'Only pull-request deployment publications can be cancelled.');
 
         if (in_array($publication->status, ['cancelled', 'dry_run', 'success'], true)) {
             return $publication;

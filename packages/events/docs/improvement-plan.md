@@ -72,22 +72,22 @@ Declared `capabilities[]`: `events`, `events-admin`, `events-console`, `events-f
 
 ## 6. Prioritized Roadmap
 
-| Item                                                                                            | Bucket | Effort | Impact | Section ref    |
-| ----------------------------------------------------------------------------------------------- | ------ | ------ | ------ | -------------- |
-| Wire `UpdateRegistrationStatusAction` into `EventRegistrationResource` (confirm/cancel actions) | Done   | M      | High   | §4, §3         |
-| Auto-trigger `PromoteWaitlistAction` on cancellation (listener) + scheduled reconcile           | Done   | M      | High   | §4, §3         |
-| Add package-specific `doctor` command wiring for Events diagnostics                             | Done   | S      | Med    | §4             |
-| Move RSVP mail out of locked transaction; queue `EventRegistrationNotification`                 | Done   | M      | High   | §2.1, §2.2, §4 |
-| Capture + commit the 11 `screenshots.json` targets; sync manifest `screenshots`                 | Done   | S      | Med    | §1, §5         |
-| Fix composer `description`; adopt improved summary/description                                  | Done   | S      | Med    | §5             |
-| Declare `permissions[]` (and any settings) in `capell.json` to match registered policies        | Done   | S      | Med    | §4             |
-| Done/Shipped: Pass typed view data to public Blade; add anonymous-leak rendering test           | Done   | M      | Med    | §2.4, §4       |
-| Done/Shipped: Add DST-crossing recurrence test; bound recurrence horizon explicitly             | Done   | M      | Med    | §2.3, §4       |
-| Done/Shipped: Per-listing-page filtered `.ics` feed (honor `{listingPage}`)                     | Done   | M      | Med    | §2.8, §3       |
-| Done/Shipped: Viewer-timezone display + per-site default-tz setting                             | Done   | M      | Med    | §3, §4         |
-| Done/Shipped: Configurable multi-reminder cadence + per-event opt-out                           | Done   | M      | Low    | §3             |
+| Item                                                                                                     | Bucket | Effort | Impact | Section ref    |
+| -------------------------------------------------------------------------------------------------------- | ------ | ------ | ------ | -------------- |
+| Wire `UpdateRegistrationStatusAction` into `EventRegistrationResource` (confirm/cancel actions)          | Done   | M      | High   | §4, §3         |
+| Auto-trigger `PromoteWaitlistAction` on cancellation (listener) + scheduled reconcile                    | Done   | M      | High   | §4, §3         |
+| Add package-specific `doctor` command wiring for Events diagnostics                                      | Done   | S      | Med    | §4             |
+| Move RSVP mail out of locked transaction; queue `EventRegistrationNotification`                          | Done   | M      | High   | §2.1, §2.2, §4 |
+| Capture + commit the 11 `screenshots.json` targets; sync manifest `screenshots`                          | Done   | S      | Med    | §1, §5         |
+| Fix composer `description`; adopt improved summary/description                                           | Done   | S      | Med    | §5             |
+| Declare `permissions[]` (and any settings) in `capell.json` to match registered policies                 | Done   | S      | Med    | §4             |
+| Done/Shipped: Pass typed view data to public Blade; add anonymous-leak rendering test                    | Done   | M      | Med    | §2.4, §4       |
+| Done/Shipped: Add DST-crossing recurrence test; bound recurrence horizon explicitly                      | Done   | M      | Med    | §2.3, §4       |
+| Done/Shipped: Per-listing-page filtered `.ics` feed (honor `{listingPage}`)                              | Done   | M      | Med    | §2.8, §3       |
+| Done/Shipped: Viewer-timezone display + per-site default-tz setting                                      | Done   | M      | Med    | §3, §4         |
+| Done/Shipped: Configurable multi-reminder cadence + per-event opt-out                                    | Done   | M      | Low    | §3             |
 | Shipped 2026-06-07: Verify/expose `CancelOccurrenceAction`/`RescheduleOccurrenceAction` in occurrence UI | Done   | S      | Med    | §3             |
-| Paid ticketing via `capell-app/payments` integration                                            | Later  | L      | High   | §3             |
-| Customer-portal self-service RSVP cancellation                                                  | Later  | M      | Med    | §3             |
-| Personalized per-attendee iCal feed + VALARM reminders                                          | Later  | M      | Low    | §3             |
-| Resolve `occurrenceUrl()` through URL registry; drop or trust `registration_count`              | Later  | M      | Low    | §2.6, §2.7     |
+| Paid ticketing via `capell-app/payments` integration                                                     | Later  | L      | High   | §3             |
+| Customer-portal self-service RSVP cancellation                                                           | Later  | M      | Med    | §3             |
+| Personalized per-attendee iCal feed + VALARM reminders                                                   | Later  | M      | Low    | §3             |
+| Resolve `occurrenceUrl()` through URL registry; drop or trust `registration_count`                       | Later  | M      | Low    | §2.6, §2.7     |

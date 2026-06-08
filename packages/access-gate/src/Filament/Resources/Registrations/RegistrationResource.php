@@ -174,8 +174,14 @@ final class RegistrationResource extends Resource
                     ->requiresConfirmation()
                     ->action(function (Collection $records): void {
                         $records
-                            ->filter(fn (Registration $registration): bool => $registration->status === RegistrationStatus::Pending && $registration->area?->status === AccessAreaStatus::Active)
-                            ->each(fn (Registration $registration): mixed => ApproveRegistrationAction::run($registration, approvedByUserId: auth()->id()));
+                            ->filter(fn (mixed $registration): bool => $registration instanceof Registration
+                                && $registration->status === RegistrationStatus::Pending
+                                && $registration->area?->status === AccessAreaStatus::Active)
+                            ->each(function (mixed $registration): void {
+                                if ($registration instanceof Registration) {
+                                    ApproveRegistrationAction::run($registration, approvedByUserId: auth()->id());
+                                }
+                            });
                     }),
             ]);
     }

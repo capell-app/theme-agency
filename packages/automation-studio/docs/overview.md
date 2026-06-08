@@ -28,13 +28,13 @@ The package gives admins rule and run-history screens so workflow behavior is vi
 
 Use these package entry points rather than calling handler classes directly:
 
-| Need | Entry point |
-| --- | --- |
-| Queue a package event for automation | `QueueAutomationTriggerAction::run(AutomationTriggerEventData $event)` |
-| Dispatch a trigger immediately | `DispatchAutomationTriggerAction::run(AutomationTriggerEventData $event)` |
-| Load persisted active rules into runtime matching | `LoadPersistedAutomationRulesAction::run()` |
-| Record or update run audit state | `RecordAutomationRunAction::run(...)` |
-| Register trigger/action defaults | `RegisterAutomationStudioDefaultsAction::run()` |
+| Need                                              | Entry point                                                               |
+| ------------------------------------------------- | ------------------------------------------------------------------------- |
+| Queue a package event for automation              | `QueueAutomationTriggerAction::run(AutomationTriggerEventData $event)`    |
+| Dispatch a trigger immediately                    | `DispatchAutomationTriggerAction::run(AutomationTriggerEventData $event)` |
+| Load persisted active rules into runtime matching | `LoadPersistedAutomationRulesAction::run()`                               |
+| Record or update run audit state                  | `RecordAutomationRunAction::run(...)`                                     |
+| Register trigger/action defaults                  | `RegisterAutomationStudioDefaultsAction::run()`                           |
 
 Use `AutomationTriggerRegistry`, `AutomationActionRegistry`, and `AutomationRuleRegistry` for extension work. Handler output should be an `AutomationActionResultData` object so the run history can store success, failure, message, and provider metadata consistently.
 

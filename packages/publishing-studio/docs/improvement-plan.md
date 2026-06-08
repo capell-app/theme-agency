@@ -77,7 +77,7 @@ Tied to `capabilities[]` and editorial-workflow norms.
 | Central `BuildPublishReadinessAction` returning typed Data                                                                                                            | Next   | M      | Med    | §2          |
 | Clarify/extend `broken-links` (rename or add opt-in external probe)                                                                                                   | Next   | M      | Med    | §2, §3      |
 | Profile dashboard/calendar Actions against `adminQueryBudget: 40`; assert query ceiling in tests                                                                      | Next   | M      | Med    | §4          |
-| Recapture populated Publishing Studio workflow, preview-link, scheduled-publishing, and stale-draft screenshots before promoting them as product media                 | Next   | S      | Med    | §5          |
+| Recapture populated Publishing Studio workflow, preview-link, scheduled-publishing, and stale-draft screenshots before promoting them as product media                | Next   | S      | Med    | §5          |
 | Field-level three-way merge in Rebaser (flagship differentiator)                                                                                                      | Later  | L      | High   | §3          |
 | Configurable named approval stages / per-role required approvers                                                                                                      | Later  | L      | Med    | §3          |
 | First-class multi-site coordinated release publish + correct calendar site scoping                                                                                    | Later  | L      | Med    | §3, §4      |

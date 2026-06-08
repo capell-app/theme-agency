@@ -11,6 +11,7 @@ use Capell\CampaignStudio\Models\CampaignLandingPage;
 use Capell\Core\Models\Page;
 use Capell\Core\Models\PageUrl;
 use Capell\Insights\Enums\InsightsConsentRegion;
+use Capell\Insights\Models\InsightsEvent;
 use Capell\Insights\Models\InsightsVisit;
 
 it('registers a public campaign conversion beacon route', function (): void {
@@ -22,7 +23,11 @@ it('records page view conversions through the public beacon', function (): void 
     $campaign = CampaignGroup::factory()->create();
     $goal = CampaignConversionGoal::factory()
         ->for($campaign, 'campaignGroup')
-        ->create(['type' => ConversionGoalType::PageView]);
+        ->create([
+            'key' => 'landing-view',
+            'type' => ConversionGoalType::PageView,
+            'value_amount' => '9.50',
+        ]);
     $page = Page::factory()->create();
     PageUrl::factory()
         ->page($page)
@@ -55,6 +60,16 @@ it('records page view conversions through the public beacon', function (): void 
     expect($conversion->campaign_conversion_goal_id)->toBe($goal->getKey());
     expect($conversion->campaign_landing_page_id)->toBe($landingPage->getKey());
     expect($conversion->getAttribute('insights_visit_id'))->toBe($visit->getKey());
+
+    $insightsEvent = InsightsEvent::query()->firstOrFail();
+    $metadata = $insightsEvent->metadata;
+
+    expect(InsightsEvent::query()->count())->toBe(1)
+        ->and($insightsEvent->visit_id)->toBe($visit->getKey())
+        ->and($insightsEvent->event_name)->toBe('campaign.' . $campaign->slug . '.landing-view')
+        ->and($insightsEvent->url)->toBe($payload['url'])
+        ->and($metadata?->sourcePackage)->toBe('capell-app/campaign-studio')
+        ->and($metadata?->conversionValue)->toBe(9.5);
 });
 
 it('records cta click conversions through the public beacon', function (): void {
@@ -100,6 +115,9 @@ it('records cta click conversions through the public beacon', function (): void 
     expect($conversion->campaign_landing_page_id)->toBe($landingPage->getKey());
     expect($conversion->getAttribute('insights_visit_id'))->toBe($visit->getKey());
     expect($conversion->source_id)->toBe($ctaWidget->getKey());
+
+    expect(InsightsEvent::query()->count())->toBe(1)
+        ->and(InsightsEvent::query()->firstOrFail()->event_name)->toBe('campaign.' . $campaign->slug . '.book-demo');
 });
 
 it('scopes cta click beacon goals to the campaign resolved from the submitted url', function (): void {

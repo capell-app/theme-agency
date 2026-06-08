@@ -18,6 +18,7 @@ use Illuminate\Support\Str;
 use Override;
 
 /**
+ * @property int|null $site_id
  * @property string|null $name
  * @property string|null $name_key
  * @property string|null $domain
@@ -114,13 +115,6 @@ class Organisation extends Model
         static::deleted(fn (Organisation $organisation): null => self::flushOverviewStats($organisation));
     }
 
-    private static function flushOverviewStats(Organisation $organisation): null
-    {
-        ContactsOverviewStatsCache::flushForSite(is_int($organisation->site_id) ? $organisation->site_id : null);
-
-        return null;
-    }
-
     /**
      * @return array<string, string>
      */
@@ -131,5 +125,12 @@ class Organisation extends Model
             'profile' => 'encrypted:array',
             'status' => OrganisationStatus::class,
         ];
+    }
+
+    private static function flushOverviewStats(Organisation $organisation): null
+    {
+        ContactsOverviewStatsCache::flushForSite(is_int($organisation->site_id) ? $organisation->site_id : null);
+
+        return null;
     }
 }

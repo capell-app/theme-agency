@@ -72,7 +72,7 @@ final class BuildCampaignUrlAction
             return $url;
         }
 
-        $scheme = strtolower((string) $matches[1]);
+        $scheme = strtolower($matches[1]);
 
         return in_array($scheme, ['http', 'https', 'mailto', 'tel'], true) ? $url : '#';
     }

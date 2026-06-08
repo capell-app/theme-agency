@@ -14,7 +14,9 @@
     $contentHtml = $section->contentHtml ?? $contentHtml ?? null;
 @endphp
 
-<section class="theme-section theme-section-doc-article bg-[var(--site-theme-surface)]">
+<section
+    class="theme-section theme-section-doc-article bg-[var(--site-theme-surface)]"
+>
     <div
         class="mx-auto grid max-w-7xl gap-8 px-6 lg:grid-cols-[17rem_minmax(0,1fr)_15rem]"
     >

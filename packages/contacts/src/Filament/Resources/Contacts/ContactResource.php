@@ -52,9 +52,13 @@ final class ContactResource extends Resource
                     ->orderBy('name')
                     ->pluck('name', 'slug')
                     ->all())
-                ->query(fn (Builder $query, array $data): Builder => is_string($data['value'] ?? null) && $data['value'] !== ''
-                    ? $query->withTag($data['value'])
-                    : $query),
+                ->query(function (Builder $query, array $data): Builder {
+                    $tag = is_string($data['value'] ?? null) ? ContactTag::slugFor($data['value']) : '';
+
+                    return $tag !== ''
+                        ? $query->whereHas('tags', static fn (Builder $tagQuery): Builder => $tagQuery->where('slug', $tag))
+                        : $query;
+                }),
         ])->recordActions([
             Action::make('view')
                 ->label(__('capell-contacts::generic.actions.view'))
@@ -75,7 +79,7 @@ final class ContactResource extends Resource
                             ->limit(50)
                             ->get()
                             ->mapWithKeys(fn (Contact $contact): array => [
-                                (string) $contact->getKey() => self::contactOptionLabel($contact),
+                                self::modelKey($contact) => self::contactOptionLabel($contact),
                             ])
                             ->all())
                         ->searchable()
@@ -188,15 +192,22 @@ final class ContactResource extends Resource
     {
         return response()->streamDownload(function () use ($contact): void {
             echo json_encode(AuditContactPrivacyExportAction::run($contact, 'admin'), JSON_PRETTY_PRINT | JSON_THROW_ON_ERROR);
-        }, 'contact-' . $contact->getKey() . '-privacy-export.json', [
+        }, 'contact-' . self::modelKey($contact) . '-privacy-export.json', [
             'Content-Type' => 'application/json',
         ]);
     }
 
     private static function contactOptionLabel(Contact $contact): string
     {
-        return collect([$contact->display_name, $contact->email, '#' . $contact->getKey()])
+        return collect([$contact->display_name, $contact->email, '#' . self::modelKey($contact)])
             ->filter(fn (mixed $value): bool => is_string($value) && $value !== '')
             ->join(' - ');
+    }
+
+    private static function modelKey(Contact $contact): string
+    {
+        $key = $contact->getKey();
+
+        return is_int($key) || is_string($key) ? (string) $key : '';
     }
 }

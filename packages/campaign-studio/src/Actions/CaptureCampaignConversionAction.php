@@ -24,7 +24,7 @@ final class CaptureCampaignConversionAction
         $landingPage = ResolveCampaignLandingPageFromUrlAction::run($data->url);
 
         if ($data->type === ConversionGoalType::PageView->value && $landingPage instanceof CampaignLandingPage) {
-            return RecordPageViewConversionAction::run($landingPage, $visit);
+            return RecordPageViewConversionAction::run($landingPage, $visit, url: $data->url);
         }
 
         if ($data->type !== ConversionGoalType::CtaClick->value || $data->goalKey === null || trim($data->goalKey) === '') {
@@ -51,6 +51,7 @@ final class CaptureCampaignConversionAction
             visit: $visit,
             landingPage: $landingPage,
             source: $visit instanceof InsightsVisit ? $this->resolveCtaWidget($data->ctaKey, $goal) : null,
+            url: $data->url,
         );
     }
 

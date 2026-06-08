@@ -66,7 +66,9 @@
             class="mt-8 border border-white/10 bg-[var(--site-theme-ink-panel)] p-4 shadow-xl shadow-black/20"
         >
             <div class="grid gap-4 lg:grid-cols-[1fr_0.72fr]">
-                <div class="border border-white/10 bg-[var(--site-theme-ink-panel-raised)] p-4">
+                <div
+                    class="border border-white/10 bg-[var(--site-theme-ink-panel-raised)] p-4"
+                >
                     <p class="text-sm font-bold text-slate-300">
                         {{ $searchAvailable ?? false ? __('capell-theme-knowledge::generic.search_connected') : __('capell-theme-knowledge::generic.search_static') }}
                     </p>
@@ -127,7 +129,9 @@
                     </div>
                 </div>
 
-                <div class="border border-[var(--site-theme-accent)]/40 bg-[var(--site-theme-accent)]/10 p-4">
+                <div
+                    class="border border-[var(--site-theme-accent)]/40 bg-[var(--site-theme-accent)]/10 p-4"
+                >
                     <p
                         class="text-xs font-black tracking-[0.16em] text-[var(--site-theme-accent-strong)] uppercase"
                     >
@@ -141,19 +145,37 @@
                         aria-hidden="true"
                     >
                         <div class="grid grid-cols-[0.32fr_1fr_auto] gap-3">
-                            <span class="h-3 bg-[var(--site-theme-accent)]"></span>
-                            <span class="h-3 bg-[var(--site-theme-primary)]"></span>
-                            <span class="h-3 w-8 bg-[var(--site-theme-primary-soft)]"></span>
+                            <span
+                                class="h-3 bg-[var(--site-theme-accent)]"
+                            ></span>
+                            <span
+                                class="h-3 bg-[var(--site-theme-primary)]"
+                            ></span>
+                            <span
+                                class="h-3 w-8 bg-[var(--site-theme-primary-soft)]"
+                            ></span>
                         </div>
                         <div class="grid grid-cols-[0.45fr_1fr_auto] gap-3">
-                            <span class="h-3 bg-[var(--site-theme-accent)]"></span>
-                            <span class="h-3 bg-[var(--site-theme-primary-muted)]"></span>
-                            <span class="h-3 w-8 bg-[var(--site-theme-primary-soft)]"></span>
+                            <span
+                                class="h-3 bg-[var(--site-theme-accent)]"
+                            ></span>
+                            <span
+                                class="h-3 bg-[var(--site-theme-primary-muted)]"
+                            ></span>
+                            <span
+                                class="h-3 w-8 bg-[var(--site-theme-primary-soft)]"
+                            ></span>
                         </div>
                         <div class="grid grid-cols-[0.24fr_1fr_auto] gap-3">
-                            <span class="h-3 bg-[var(--site-theme-accent)]"></span>
-                            <span class="h-3 bg-[var(--site-theme-primary-soft)]"></span>
-                            <span class="h-3 w-8 bg-[var(--site-theme-primary-border)]"></span>
+                            <span
+                                class="h-3 bg-[var(--site-theme-accent)]"
+                            ></span>
+                            <span
+                                class="h-3 bg-[var(--site-theme-primary-soft)]"
+                            ></span>
+                            <span
+                                class="h-3 w-8 bg-[var(--site-theme-primary-border)]"
+                            ></span>
                         </div>
                     </div>
                 </div>
@@ -177,7 +199,9 @@
                                 {{ $item['score'] ?? '92%' }}
                             </p>
                         </div>
-                        <h3 class="mt-3 text-lg font-black text-[var(--site-theme-foreground)]">
+                        <h3
+                            class="mt-3 text-lg font-black text-[var(--site-theme-foreground)]"
+                        >
                             {{ $item['title'] }}
                         </h3>
                         <p class="mt-2 text-sm leading-6 text-slate-600">

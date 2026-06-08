@@ -69,13 +69,6 @@ class PrivacyRequest extends Model
         static::deleted(static fn (PrivacyRequest $privacyRequest): null => self::flushOverviewStats());
     }
 
-    private static function flushOverviewStats(): null
-    {
-        PrivacyCenterOverviewStatsCache::flush();
-
-        return null;
-    }
-
     /**
      * @return array<string, string>
      */
@@ -93,5 +86,12 @@ class PrivacyRequest extends Model
             'workflow_payload' => 'array',
             'metadata' => 'array',
         ];
+    }
+
+    private static function flushOverviewStats(): null
+    {
+        PrivacyCenterOverviewStatsCache::flush();
+
+        return null;
     }
 }

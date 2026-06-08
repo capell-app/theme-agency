@@ -18,8 +18,7 @@ final class CreateOAuthStateAction
         ?string $repoOwner = null,
         ?string $repoName = null,
         InstallPolicy $installPolicy = InstallPolicy::PullRequestAutoMerge,
-    ): string
-    {
+    ): string {
         $state = Str::random(40);
 
         session()->put($this->sessionKey($provider), [

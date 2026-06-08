@@ -75,6 +75,18 @@ final class BuildDocumentAcceptanceEvidenceCsvAction
     }
 
     /**
+     * @param  array<array-key, mixed>|null  $value
+     */
+    private static function json(?array $value): string
+    {
+        if ($value === null || $value === []) {
+            return '';
+        }
+
+        return json_encode($value, JSON_THROW_ON_ERROR);
+    }
+
+    /**
      * @return Builder<DocumentAcceptance>
      */
     private function query(Document $document, ?DocumentPublication $publication): Builder
@@ -85,17 +97,5 @@ final class BuildDocumentAcceptanceEvidenceCsvAction
                 ->where('document_publication_id', $publication->getKey()))
             ->latest('accepted_at')
             ->latest('id');
-    }
-
-    /**
-     * @param  array<array-key, mixed>|null  $value
-     */
-    private static function json(?array $value): string
-    {
-        if ($value === null || $value === []) {
-            return '';
-        }
-
-        return json_encode($value, JSON_THROW_ON_ERROR);
     }
 }

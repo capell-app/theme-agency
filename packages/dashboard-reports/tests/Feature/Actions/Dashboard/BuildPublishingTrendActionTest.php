@@ -14,7 +14,7 @@ use Spatie\Permission\Models\Role;
 uses(DashboardReportsTestCase::class, CreatesAdminUser::class);
 
 beforeEach(function (): void {
-    Role::findOrCreate(config('capell.roles.super_admin', 'super_admin'));
+    Role::findOrCreate(dashboardReportsSuperAdminRole());
     $this->actingAsAdmin();
 });
 
@@ -27,6 +27,13 @@ function dashboardReportsThisWeekRange(): array
         CarbonImmutable::now()->startOfWeek(),
         CarbonImmutable::now()->endOfWeek(),
     ];
+}
+
+function dashboardReportsSuperAdminRole(): string
+{
+    $role = config('capell.roles.super_admin', 'super_admin');
+
+    return is_string($role) && $role !== '' ? $role : 'super_admin';
 }
 
 it('builds a publishing trend series for the selected dashboard period', function (): void {

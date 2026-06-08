@@ -3,8 +3,8 @@
 declare(strict_types=1);
 
 use Capell\CustomerPortal\Http\Controllers\ShowCustomerPortalController;
-use Capell\CustomerPortal\Http\Controllers\StorePortalSupportRequestReplyController;
 use Capell\CustomerPortal\Http\Controllers\StorePortalSupportRequestController;
+use Capell\CustomerPortal\Http\Controllers\StorePortalSupportRequestReplyController;
 use Capell\CustomerPortal\Http\Controllers\UpdatePortalPreferencesController;
 use Illuminate\Support\Facades\Route;
 

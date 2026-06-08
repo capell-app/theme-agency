@@ -10,9 +10,9 @@ return new class extends Migration
 {
     public function up(): void
     {
-        $tagsTableName = config('capell-contacts.tables.contact_tags', 'contact_tags');
-        $membershipsTableName = config('capell-contacts.tables.contact_tag_memberships', 'contact_tag_memberships');
-        $contactsTableName = config('capell-contacts.tables.contacts', 'contacts');
+        $tagsTableName = $this->tableName('contact_tags', 'contact_tags');
+        $membershipsTableName = $this->tableName('contact_tag_memberships', 'contact_tag_memberships');
+        $contactsTableName = $this->tableName('contacts', 'contacts');
 
         if (! Schema::hasTable($tagsTableName)) {
             Schema::create($tagsTableName, function (Blueprint $table): void {
@@ -44,7 +44,14 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::dropIfExists(config('capell-contacts.tables.contact_tag_memberships', 'contact_tag_memberships'));
-        Schema::dropIfExists(config('capell-contacts.tables.contact_tags', 'contact_tags'));
+        Schema::dropIfExists($this->tableName('contact_tag_memberships', 'contact_tag_memberships'));
+        Schema::dropIfExists($this->tableName('contact_tags', 'contact_tags'));
+    }
+
+    private function tableName(string $key, string $default): string
+    {
+        $tableName = config('capell-contacts.tables.' . $key, $default);
+
+        return is_string($tableName) && $tableName !== '' ? $tableName : $default;
     }
 };

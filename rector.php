@@ -54,9 +54,9 @@ return RectorConfig::configure()
         __DIR__ . '/tests',
     ])
     ->withParallel(
-        timeoutSeconds: 600,
-        maxNumberOfProcess: 8,
-        jobSize: 8,
+        timeoutSeconds: 1200,
+        maxNumberOfProcess: 1,
+        jobSize: 1,
     )
     ->withPreparedSets(
         deadCode: true,

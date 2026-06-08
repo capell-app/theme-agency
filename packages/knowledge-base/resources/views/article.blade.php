@@ -42,10 +42,12 @@
 
                 @if ($article['feedbackCount'] > 0 && $article['helpfulFeedbackPercentage'] !== null)
                     <p>
-                        {{ __('capell-knowledge-base::generic.frontend.feedback_summary', [
-                            'percentage' => $article['helpfulFeedbackPercentage'],
-                            'count' => $article['feedbackCount'],
-                        ]) }}
+                        {{
+                            __('capell-knowledge-base::generic.frontend.feedback_summary', [
+                                'percentage' => $article['helpfulFeedbackPercentage'],
+                                'count' => $article['feedbackCount'],
+                            ])
+                        }}
                     </p>
                 @endif
 

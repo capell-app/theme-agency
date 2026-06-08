@@ -54,18 +54,18 @@ This package makes its Composer dependencies visible because they are part of th
 
 ## Code Map
 
-| Area      | Path                                     | Purpose                                                             |
-| --------- | ---------------------------------------- | ------------------------------------------------------------------- |
-| Actions   | `packages/password-policy/src/Actions`   | Domain operations. Test these directly where possible.              |
-| Data      | `packages/password-policy/src/Data`      | Structured payloads, form state, view models, and integration data. |
-| Filament  | `packages/password-policy/src/Filament`  | Admin resources, pages, widgets, and settings UI.                   |
-| HTTP      | `packages/password-policy/src/Http`      | Controllers, middleware, and request handling.                      |
-| Providers | `packages/password-policy/src/Providers` | Registration, extension hooks, routes, migrations, and resources.   |
+| Area      | Path                                     | Purpose                                                               |
+| --------- | ---------------------------------------- | --------------------------------------------------------------------- |
+| Actions   | `packages/password-policy/src/Actions`   | Domain operations. Test these directly where possible.                |
+| Data      | `packages/password-policy/src/Data`      | Structured payloads, form state, view models, and integration data.   |
+| Filament  | `packages/password-policy/src/Filament`  | Admin resources, pages, widgets, and settings UI.                     |
+| HTTP      | `packages/password-policy/src/Http`      | Controllers, middleware, and request handling.                        |
+| Providers | `packages/password-policy/src/Providers` | Registration, extension hooks, routes, migrations, and resources.     |
 | Rules     | `packages/password-policy/src/Rules`     | Reusable host-auth validation rules for registration and reset flows. |
-| Resources | `packages/password-policy/resources`     | Views, translations, assets, and package resources.                 |
-| Config    | `packages/password-policy/config`        | Package configuration and publishable config.                       |
-| Database  | `packages/password-policy/database`      | Migrations, seeders, and settings migrations.                       |
-| Tests     | `packages/password-policy/tests`         | Package-level Pest coverage.                                        |
+| Resources | `packages/password-policy/resources`     | Views, translations, assets, and package resources.                   |
+| Config    | `packages/password-policy/config`        | Package configuration and publishable config.                         |
+| Database  | `packages/password-policy/database`      | Migrations, seeders, and settings migrations.                         |
+| Tests     | `packages/password-policy/tests`         | Package-level Pest coverage.                                          |
 
 ## Admin Surface
 

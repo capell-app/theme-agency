@@ -10,6 +10,9 @@ use Capell\Deployments\Models\DeploymentConnection;
 use Carbon\CarbonImmutable;
 use Lorisleiva\Actions\Concerns\AsAction;
 
+/**
+ * @method static DeploymentConnection run(GitProviderType $provider, string $repoOwner, string $repoName, string $accessToken, ?string $refreshToken = null, ?string $defaultBranch = 'main', InstallPolicy $installPolicy = InstallPolicy::PullRequestAutoMerge, ?int $expiresIn = null)
+ */
 final class ConnectDeploymentAction
 {
     use AsAction;

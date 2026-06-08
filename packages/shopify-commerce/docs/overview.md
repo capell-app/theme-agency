@@ -10,21 +10,21 @@ It does not own public storefront rendering, checkout, carts, orders, or product
 
 ## Runtime Surfaces
 
-| Type        | Surface                                                                                                                                           |
-| ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Providers   | `Capell\ShopifyCommerce\Providers\ShopifyCommerceServiceProvider`, `Capell\ShopifyCommerce\Providers\AdminServiceProvider`                        |
-| Config      | `capell-shopify-commerce.enabled`, `client_id`, `client_secret`, `default_api_version`, `default_scopes`, `state_ttl_seconds`, `default_currency` |
-| Env vars    | `CAPELL_SHOPIFY_COMMERCE_ENABLED`, `SHOPIFY_APP_CLIENT_ID`, `SHOPIFY_APP_CLIENT_SECRET`                                                           |
-| Settings    | `shopify_commerce.api_version`, `shopify_commerce.default_scopes`, `shopify_commerce.search_cache_ttl_minutes`                                    |
-| Routes      | `GET capell/oauth/shopify/install`, `GET capell/oauth/shopify/callback`, `POST capell/webhooks/shopify`                                          |
-| Route names | `capell-shopify-commerce.oauth.install`, `capell-shopify-commerce.oauth.callback`, `capell-shopify-commerce.webhooks.shopify`                    |
+| Type        | Surface                                                                                                                                                                               |
+| ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Providers   | `Capell\ShopifyCommerce\Providers\ShopifyCommerceServiceProvider`, `Capell\ShopifyCommerce\Providers\AdminServiceProvider`                                                            |
+| Config      | `capell-shopify-commerce.enabled`, `client_id`, `client_secret`, `default_api_version`, `default_scopes`, `state_ttl_seconds`, `default_currency`                                     |
+| Env vars    | `CAPELL_SHOPIFY_COMMERCE_ENABLED`, `SHOPIFY_APP_CLIENT_ID`, `SHOPIFY_APP_CLIENT_SECRET`                                                                                               |
+| Settings    | `shopify_commerce.api_version`, `shopify_commerce.default_scopes`, `shopify_commerce.search_cache_ttl_minutes`                                                                        |
+| Routes      | `GET capell/oauth/shopify/install`, `GET capell/oauth/shopify/callback`, `POST capell/webhooks/shopify`                                                                               |
+| Route names | `capell-shopify-commerce.oauth.install`, `capell-shopify-commerce.oauth.callback`, `capell-shopify-commerce.webhooks.shopify`                                                         |
 | Commands    | `capell-shopify-commerce:install`, `capell-shopify-commerce:sync {connection?}`, `capell-shopify-commerce:sync-customers {connection?}`, `capell-shopify-commerce:prune-oauth-states` |
-| Admin page  | `filament.admin.pages.shopify-commerce` backed by `ShopifyConnectionPage`                                                                         |
-| Permission  | `manage_shopify_commerce`                                                                                                                         |
-| Models      | `ShopifyConnection`, `ShopifyOAuthState`, `ShopifyProduct`, `ShopifyProductVariant`, `ShopifyCustomer`                                            |
-| Tables      | `shopify_connections`, `shopify_oauth_states`, `shopify_products`, `shopify_product_variants`, `shopify_customers`                                |
-| Health      | `shopify-commerce.package-health` using `ShopifyCommerceHealthCheck`                                                                              |
-| Cache keys  | `capell-shopify-commerce.sync.{connectionId}`, `capell-shopify-commerce.search.{connectionId}.{version}.{hash}.{limit}`                           |
+| Admin page  | `filament.admin.pages.shopify-commerce` backed by `ShopifyConnectionPage`                                                                                                             |
+| Permission  | `manage_shopify_commerce`                                                                                                                                                             |
+| Models      | `ShopifyConnection`, `ShopifyOAuthState`, `ShopifyProduct`, `ShopifyProductVariant`, `ShopifyCustomer`                                                                                |
+| Tables      | `shopify_connections`, `shopify_oauth_states`, `shopify_products`, `shopify_product_variants`, `shopify_customers`                                                                    |
+| Health      | `shopify-commerce.package-health` using `ShopifyCommerceHealthCheck`                                                                                                                  |
+| Cache keys  | `capell-shopify-commerce.sync.{connectionId}`, `capell-shopify-commerce.search.{connectionId}.{version}.{hash}.{limit}`                                                               |
 
 ## Boot Flow
 

@@ -12,7 +12,9 @@
             >
                 {{ __('capell-theme-knowledge::generic.topic_hubs_label') }}
             </p>
-            <h2 class="mt-4 text-4xl font-black tracking-tight text-[var(--site-theme-foreground)]">
+            <h2
+                class="mt-4 text-4xl font-black tracking-tight text-[var(--site-theme-foreground)]"
+            >
                 {{ $sectionHeading }}
             </h2>
         @endif
@@ -26,11 +28,17 @@
                 @endphp
 
                 @if ($topicTitle !== '')
-                    <article class="border border-[var(--site-theme-primary-border)] bg-[var(--site-theme-primary-panel)] p-5">
-                        <p class="font-mono text-xs font-black text-[var(--site-theme-primary)]">
+                    <article
+                        class="border border-[var(--site-theme-primary-border)] bg-[var(--site-theme-primary-panel)] p-5"
+                    >
+                        <p
+                            class="font-mono text-xs font-black text-[var(--site-theme-primary)]"
+                        >
                             {{ __('capell-theme-knowledge::generic.topic_signal') }}
                         </p>
-                        <h3 class="mt-3 text-lg font-black text-[var(--site-theme-foreground)]">
+                        <h3
+                            class="mt-3 text-lg font-black text-[var(--site-theme-foreground)]"
+                        >
                             {{ $topicTitle }}
                         </h3>
                         @if ($topicSummary !== '')

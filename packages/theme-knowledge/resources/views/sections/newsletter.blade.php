@@ -23,7 +23,9 @@
                 </p>
             </div>
 
-            <div class="border border-white/15 bg-white p-5 text-[var(--site-theme-foreground)]">
+            <div
+                class="border border-white/15 bg-white p-5 text-[var(--site-theme-foreground)]"
+            >
                 <p
                     class="text-xs font-black tracking-[0.18em] text-[var(--site-theme-primary)] uppercase"
                 >

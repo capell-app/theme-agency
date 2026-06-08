@@ -872,12 +872,15 @@ function healthcareThemeTokenBladeViews(string ...$directories): string
             if (! $file instanceof SplFileInfo) {
                 continue;
             }
+
             if (! $file->isFile()) {
                 continue;
             }
-            if (! str_ends_with((string) $file->getFilename(), '.blade.php')) {
+
+            if (! str_ends_with($file->getFilename(), '.blade.php')) {
                 continue;
             }
+
             $views[] = file_get_contents($file->getPathname()) ?: '';
         }
     }

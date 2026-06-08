@@ -141,9 +141,11 @@ final class IngestShopifyWebhookAction
             if (! is_string($variant[$optionKey] ?? null)) {
                 continue;
             }
+
             if ($variant[$optionKey] === '') {
                 continue;
             }
+
             $selectedOptions[] = new ShopifyProductOptionData(
                 name: Str::headline($optionKey),
                 value: $variant[$optionKey],

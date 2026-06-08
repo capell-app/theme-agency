@@ -19,6 +19,14 @@ final class PublishingTrendChartWidget extends ChartWidget implements CapellWidg
     use HasDashboardDateRange;
     use HasLineChartOptions;
 
+    private const string PUBLISHED_BORDER_COLOR = 'rgb(var(--primary-600) / 1)';
+
+    private const string PUBLISHED_BACKGROUND_COLOR = 'rgb(var(--primary-500) / 0.12)';
+
+    private const string SCHEDULED_BORDER_COLOR = 'rgb(var(--warning-600) / 1)';
+
+    private const string SCHEDULED_BACKGROUND_COLOR = 'rgb(var(--warning-500) / 0.12)';
+
     /** @var list<string> */
     protected static array $rolesConfigKeys = ['editor', 'admin', 'super_admin'];
 
@@ -28,14 +36,6 @@ final class PublishingTrendChartWidget extends ChartWidget implements CapellWidg
     protected int|string|array $columnSpan = ['md' => 2];
 
     protected static ?int $sort = 1;
-
-    private const string PUBLISHED_BORDER_COLOR = 'rgb(var(--primary-600) / 1)';
-
-    private const string PUBLISHED_BACKGROUND_COLOR = 'rgb(var(--primary-500) / 0.12)';
-
-    private const string SCHEDULED_BORDER_COLOR = 'rgb(var(--warning-600) / 1)';
-
-    private const string SCHEDULED_BACKGROUND_COLOR = 'rgb(var(--warning-500) / 0.12)';
 
     #[Override]
     public function getHeading(): string

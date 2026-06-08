@@ -8,6 +8,9 @@ use Carbon\CarbonImmutable;
 use Lorisleiva\Actions\Concerns\AsObject;
 use RuntimeException;
 
+/**
+ * @method static string run(CarbonImmutable $rangeStart, CarbonImmutable $rangeEnd)
+ */
 final class ExportPublishingTrendCsvAction
 {
     use AsObject;

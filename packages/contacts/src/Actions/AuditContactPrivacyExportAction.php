@@ -9,6 +9,9 @@ use Capell\Contacts\Enums\ContactActivityType;
 use Capell\Contacts\Models\Contact;
 use Lorisleiva\Actions\Concerns\AsAction;
 
+/**
+ * @method static array{contact: array<string, mixed>, organisations: list<array<string, mixed>>, leads: list<array<string, mixed>>, activities: list<array<string, mixed>>} run(Contact $contact, ?string $requestedBy = null)
+ */
 final class AuditContactPrivacyExportAction
 {
     use AsAction;

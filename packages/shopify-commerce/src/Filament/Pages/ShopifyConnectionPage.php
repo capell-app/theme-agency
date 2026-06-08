@@ -41,14 +41,14 @@ final class ShopifyConnectionPage extends Page
     /** @var EloquentCollection<int, ShopifyProduct> */
     public EloquentCollection $searchResults;
 
+    protected string $view = 'capell-shopify-commerce::filament.pages.connection';
+
+    protected static ?string $slug = 'shopify-commerce';
+
     private ?ShopifyConnection $manageableConnection = null;
 
     /** @var array<int, string>|null */
     private ?array $siteOptions = null;
-
-    protected string $view = 'capell-shopify-commerce::filament.pages.connection';
-
-    protected static ?string $slug = 'shopify-commerce';
 
     #[Override]
     public static function getNavigationLabel(): string

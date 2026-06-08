@@ -8,6 +8,9 @@ use Capell\Admin\Data\Dashboard\ContentHealthIssueData;
 use Lorisleiva\Actions\Concerns\AsObject;
 use RuntimeException;
 
+/**
+ * @method static string run(int $staleDays = BuildDefaultContentHealthAction::DEFAULT_STALE_DAYS)
+ */
 final class ExportContentHealthCsvAction
 {
     use AsObject;

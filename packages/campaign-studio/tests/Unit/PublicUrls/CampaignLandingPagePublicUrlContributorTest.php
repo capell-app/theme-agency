@@ -38,7 +38,7 @@ it('contributes campaign landing page URLs to the public URL registry contract',
         ->and($urls->first()?->sourcePackage)->toBe(CampaignStudioServiceProvider::$packageName)
         ->and($urls->first()?->priority)->toBe('0.6')
         ->and($urls->first()?->changeFrequency)->toBe('weekly')
-        ->and($urls->first()?->title)->toBe($page->translation?->label ?? $page->name);
+        ->and($urls->first()?->title)->toBe($page->translation->label ?? $page->name);
 });
 
 it('registers the campaign landing page public URL contributor when Site Discovery is available', function (): void {

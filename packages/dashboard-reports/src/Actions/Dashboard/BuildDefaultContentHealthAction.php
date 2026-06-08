@@ -16,6 +16,9 @@ use Lorisleiva\Actions\Concerns\AsObject;
 use Spatie\LaravelData\DataCollection;
 use Throwable;
 
+/**
+ * @method static ContentHealthData run(int $staleDays = self::DEFAULT_STALE_DAYS)
+ */
 final class BuildDefaultContentHealthAction
 {
     use AsObject;

@@ -12,7 +12,9 @@
             >
                 {{ __('capell-theme-knowledge::generic.authors_label') }}
             </p>
-            <h2 class="mt-4 text-4xl font-black tracking-tight text-[var(--site-theme-foreground)]">
+            <h2
+                class="mt-4 text-4xl font-black tracking-tight text-[var(--site-theme-foreground)]"
+            >
                 {{ $sectionHeading }}
             </h2>
         </div>
@@ -29,12 +31,16 @@
             @endphp
 
             @if ($authorTitle !== '')
-                <div class="border border-[var(--site-theme-primary-border)] bg-[var(--site-theme-primary-panel)] p-4">
+                <div
+                    class="border border-[var(--site-theme-primary-border)] bg-[var(--site-theme-primary-panel)] p-4"
+                >
                     <p
                         class="{{ $markerClass }} h-10 w-10"
                         aria-hidden="true"
                     ></p>
-                    <p class="mt-3 font-black text-[var(--site-theme-foreground)]">
+                    <p
+                        class="mt-3 font-black text-[var(--site-theme-foreground)]"
+                    >
                         {{ $authorTitle }}
                     </p>
                     @if ($authorSummary !== '')

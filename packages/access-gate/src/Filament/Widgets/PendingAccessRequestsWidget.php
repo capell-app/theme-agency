@@ -12,7 +12,7 @@ use Filament\Actions\Action;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Filament\Widgets\TableWidget as BaseWidget;
-use Illuminate\Contracts\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Builder;
 use Override;
 
 final class PendingAccessRequestsWidget extends BaseWidget
@@ -21,7 +21,7 @@ final class PendingAccessRequestsWidget extends BaseWidget
 
     protected static ?int $sort = 3;
 
-    /** @var int|string|array<string, int|string|null> */
+    /** @var array<string, int|null>|int|string */
     protected int|string|array $columnSpan = 'full';
 
     #[Override]

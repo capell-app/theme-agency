@@ -53,9 +53,7 @@
             "scenario": "frontend-page",
             "url": "/theme-knowledge-directory",
             "waitFor": ".knowledge-shell",
-            "colorSchemes": [
-                "light"
-            ],
+            "colorSchemes": ["light"],
             "user": false
         },
         {
@@ -72,9 +70,7 @@
             "scenario": "frontend-page",
             "url": "/theme-knowledge-directory",
             "waitFor": ".knowledge-shell",
-            "colorSchemes": [
-                "light"
-            ],
+            "colorSchemes": ["light"],
             "user": false
         },
         {
@@ -91,9 +87,7 @@
             "scenario": "frontend-page",
             "url": "/theme-knowledge-directory",
             "waitFor": ".knowledge-shell",
-            "colorSchemes": [
-                "light"
-            ],
+            "colorSchemes": ["light"],
             "user": false
         },
         {
@@ -110,9 +104,7 @@
             "scenario": "frontend-page",
             "url": "/theme-knowledge-cta",
             "waitFor": ".knowledge-shell",
-            "colorSchemes": [
-                "light"
-            ],
+            "colorSchemes": ["light"],
             "user": false
         },
         {
@@ -129,9 +121,7 @@
             "scenario": "frontend-page",
             "url": "/theme-knowledge-directory",
             "waitFor": ".knowledge-shell",
-            "colorSchemes": [
-                "light"
-            ],
+            "colorSchemes": ["light"],
             "user": false
         }
     ]

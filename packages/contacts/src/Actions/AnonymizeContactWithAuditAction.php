@@ -9,6 +9,9 @@ use Capell\Contacts\Enums\ContactActivityType;
 use Capell\Contacts\Models\Contact;
 use Lorisleiva\Actions\Concerns\AsAction;
 
+/**
+ * @method static Contact run(Contact $contact, ?string $requestedBy = null)
+ */
 final class AnonymizeContactWithAuditAction
 {
     use AsAction;

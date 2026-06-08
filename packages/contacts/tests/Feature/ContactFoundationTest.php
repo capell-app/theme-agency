@@ -107,11 +107,14 @@ it('creates and reuses contacts by normalized email', function (): void {
         lastName: 'Lovelace',
         profile: ['newsletter' => true],
     ));
+    $refreshedSecondContact = $secondContact->fresh();
+
+    throw_unless($refreshedSecondContact instanceof Contact, RuntimeException::class, 'Expected refreshed contact.');
 
     expect($secondContact->is($firstContact))->toBeTrue()
         ->and(Contact::query()->count())->toBe(1)
-        ->and($secondContact->fresh()->email_hash)->toBe(Contact::emailHash('person@example.test'))
-        ->and($secondContact->fresh()->profile)->toBe([
+        ->and($refreshedSecondContact->email_hash)->toBe(Contact::emailHash('person@example.test'))
+        ->and($refreshedSecondContact->profile)->toBe([
             'source' => 'form_builder',
             'newsletter' => true,
         ]);
@@ -133,10 +136,13 @@ it('reuses contacts by package source identity when email is not available', fun
         sourceKey: 'newsletter',
         sourceIdentifier: ' subscriber-123 ',
     ));
+    $refreshedSecondContact = $secondContact->fresh();
+
+    throw_unless($refreshedSecondContact instanceof Contact, RuntimeException::class, 'Expected refreshed contact.');
 
     expect($secondContact->is($firstContact))->toBeTrue()
         ->and(Contact::query()->count())->toBe(1)
-        ->and($secondContact->fresh()->source_identifier_hash)->toBe(Contact::sourceIdentifierHash('subscriber-123'));
+        ->and($refreshedSecondContact->source_identifier_hash)->toBe(Contact::sourceIdentifierHash('subscriber-123'));
 });
 
 it('syncs source records into contacts, tags, leads, and activities', function (): void {
@@ -753,12 +759,15 @@ it('relates contacts to organisations, leads, and activity records', function ()
         lead: $lead,
         organisation: $organisation,
     );
+    $activityLead = $activity->lead;
+
+    throw_unless($activityLead instanceof Lead, RuntimeException::class, 'Expected contact activity lead relation.');
 
     expect($organisation->name_key)->toBe('example-ltd')
         ->and($contact->organisations()->count())->toBe(1)
         ->and($contact->leads()->count())->toBe(1)
         ->and($contact->activities()->count())->toBe(1)
-        ->and($activity->lead->is($lead))->toBeTrue()
+        ->and($activityLead->is($lead))->toBeTrue()
         ->and($activity->payload)->toBe(['goal' => 'demo-request']);
 });
 
@@ -771,8 +780,11 @@ it('stores normalized unique tags on contact profiles', function (): void {
     ));
 
     $taggedContact = TagContactAction::run($contact, [' lead ', 'VIP']);
+    $freshTaggedContact = $taggedContact->fresh();
 
-    expect($taggedContact->fresh()->profile)->toMatchArray([
+    throw_unless($freshTaggedContact instanceof Contact, RuntimeException::class, 'Expected refreshed tagged contact.');
+
+    expect($freshTaggedContact->profile)->toMatchArray([
         'tags' => ['lead', 'vip'],
     ]);
 });
@@ -915,8 +927,12 @@ it('runs contact privacy workflows from the console command', function (): void 
 
     expect($contact->activities()->latest('id')->first()?->type)->toBe(ContactActivityType::PrivacyExport);
 
+    $contactKey = $contact->getKey();
+
+    throw_unless(is_int($contactKey) || is_string($contactKey), RuntimeException::class, 'Expected stringable contact key.');
+
     $anonymizeExitCode = Artisan::call('capell-contacts:privacy', [
-        'contact' => (string) $contact->getKey(),
+        'contact' => (string) $contactKey,
         '--anonymize' => true,
     ]);
 

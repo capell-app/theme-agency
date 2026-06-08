@@ -61,20 +61,20 @@ The publishable config lives at `config/capell-shopify-commerce.php` in the host
 
 ## Runtime Surface
 
-| Surface          | Class or file                        | Job                                                                                                         |
-| ---------------- | ------------------------------------ | ----------------------------------------------------------------------------------------------------------- |
-| Package provider | `ShopifyCommerceServiceProvider`     | Loads config, routes, views, translations, migrations, settings, models, and protected table registrations. |
-| Admin provider   | `AdminServiceProvider`               | Registers the admin page and console commands when the package is installed and enabled.                    |
-| Admin page       | `ShopifyConnectionPage`              | Connects a store, dispatches sync, disconnects a store, and searches cached products.                       |
-| OAuth install    | `ShopifyInstallController`           | Validates the shop domain, creates a nonce, and redirects to Shopify OAuth.                                 |
-| OAuth callback   | `ShopifyCallbackController`          | Validates HMAC and state, exchanges the code, stores the connection, and queues catalog sync.               |
+| Surface          | Class or file                          | Job                                                                                                         |
+| ---------------- | -------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| Package provider | `ShopifyCommerceServiceProvider`       | Loads config, routes, views, translations, migrations, settings, models, and protected table registrations. |
+| Admin provider   | `AdminServiceProvider`                 | Registers the admin page and console commands when the package is installed and enabled.                    |
+| Admin page       | `ShopifyConnectionPage`                | Connects a store, dispatches sync, disconnects a store, and searches cached products.                       |
+| OAuth install    | `ShopifyInstallController`             | Validates the shop domain, creates a nonce, and redirects to Shopify OAuth.                                 |
+| OAuth callback   | `ShopifyCallbackController`            | Validates HMAC and state, exchanges the code, stores the connection, and queues catalog sync.               |
 | OAuth pruning    | `PruneExpiredShopifyOAuthStatesAction` | Removes expired OAuth nonce rows; scheduled hourly while the package is installed.                          |
-| GraphQL client   | `ExecuteShopifyAdminGraphqlAction`   | Calls Shopify Admin GraphQL and paces requests from throttle metadata.                                      |
-| Catalog sync     | `SyncShopifyProductsAction`          | Queues or starts a bulk product sync and prevents overlapping work per connection.                          |
-| Catalog import   | `ImportShopifyProductBulkSyncAction` | Imports JSONL bulk output into product and variant tables.                                                  |
-| Customer sync    | `SyncShopifyCustomersAction`         | Pulls paginated Admin GraphQL customer records into the encrypted local customer cache.                     |
-| Search           | `SearchShopifyProductsAction`        | Searches local products first and falls back to live Shopify product search when needed.                    |
-| Settings         | `ShopifyCommerceSettings`            | Stores API version, default scopes, and catalog search cache TTL.                                           |
+| GraphQL client   | `ExecuteShopifyAdminGraphqlAction`     | Calls Shopify Admin GraphQL and paces requests from throttle metadata.                                      |
+| Catalog sync     | `SyncShopifyProductsAction`            | Queues or starts a bulk product sync and prevents overlapping work per connection.                          |
+| Catalog import   | `ImportShopifyProductBulkSyncAction`   | Imports JSONL bulk output into product and variant tables.                                                  |
+| Customer sync    | `SyncShopifyCustomersAction`           | Pulls paginated Admin GraphQL customer records into the encrypted local customer cache.                     |
+| Search           | `SearchShopifyProductsAction`          | Searches local products first and falls back to live Shopify product search when needed.                    |
+| Settings         | `ShopifyCommerceSettings`              | Stores API version, default scopes, and catalog search cache TTL.                                           |
 
 ## Docs
 

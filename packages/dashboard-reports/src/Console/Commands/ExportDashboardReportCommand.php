@@ -25,7 +25,8 @@ final class ExportDashboardReportCommand extends Command
 
     public function handle(): int
     {
-        $report = (string) $this->argument('report');
+        $reportOption = $this->argument('report');
+        $report = is_string($reportOption) ? $reportOption : '';
 
         if (! in_array($report, ['content-health', 'publishing-trend'], true)) {
             $this->components->error(__('capell-dashboard-reports::dashboard.export_invalid_report'));

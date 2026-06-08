@@ -9,7 +9,11 @@ use Capell\Contacts\Models\ContactTag;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Lorisleiva\Actions\Concerns\AsAction;
+use RuntimeException;
 
+/**
+ * @method static Contact run(Contact $contact, string|list<string> $tags)
+ */
 final class TagContactAction
 {
     use AsAction;
@@ -55,6 +59,16 @@ final class TagContactAction
             'name' => $tag,
         ]);
 
-        return (int) $contactTag->getKey();
+        $key = $contactTag->getKey();
+
+        if (is_int($key)) {
+            return $key;
+        }
+
+        if (is_string($key) && ctype_digit($key)) {
+            return (int) $key;
+        }
+
+        throw new RuntimeException('Contact tag key must be an integer.');
     }
 }

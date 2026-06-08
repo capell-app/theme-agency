@@ -6,6 +6,7 @@ namespace Capell\Deployments\Models;
 
 use Capell\Deployments\Enums\GitProviderType;
 use Carbon\CarbonImmutable;
+use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Override;
@@ -30,6 +31,7 @@ use Override;
  */
 final class DeploymentPublication extends Model
 {
+    /** @use HasFactory<Factory<static>> */
     use HasFactory;
 
     /** @var list<string> */

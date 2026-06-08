@@ -2,10 +2,11 @@
 @php
     $articleVersion = is_scalar($article['version'] ?? null) ? (string) $article['version'] : null;
     $articleLastModified = $article['lastModified'] ?? null;
-    $articleLastModifiedLabel = $articleLastModified instanceof \DateTimeInterface
+    $articleLastModifiedLabel = $articleLastModified instanceof DateTimeInterface
         ? $articleLastModified->format('M j, Y')
         : (is_scalar($articleLastModified) && (string) $articleLastModified !== '' ? substr((string) $articleLastModified, 0, 10) : null);
 @endphp
+
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
         <meta charset="utf-8" />
@@ -28,7 +29,9 @@
                         class="knowledge-doc-sidebar hidden lg:block"
                         aria-label="{{ __('capell-theme-knowledge::generic.doc_sidebar_label') }}"
                     >
-                        <div class="sticky top-8 border border-slate-200 bg-white p-4">
+                        <div
+                            class="sticky top-8 border border-slate-200 bg-white p-4"
+                        >
                             <p
                                 class="text-xs font-black tracking-[0.18em] text-[var(--site-theme-primary)] uppercase"
                             >
@@ -90,7 +93,9 @@
                                 {{ $article['title'] }}
                             </h1>
                             @if ($article['summary'] !== null)
-                                <p class="mt-5 text-lg leading-8 text-slate-600">
+                                <p
+                                    class="mt-5 text-lg leading-8 text-slate-600"
+                                >
                                     {{ $article['summary'] }}
                                 </p>
                             @endif
@@ -124,27 +129,37 @@
                             @endif
                         </header>
 
-                        <div class="knowledge-doc-prose mt-10 max-w-3xl text-slate-700">
+                        <div
+                            class="knowledge-doc-prose mt-10 max-w-3xl text-slate-700"
+                        >
                             {!! $article['body'] !!}
                         </div>
 
                         <section class="mt-10 border-t border-slate-200 pt-8">
-                            <h2 class="text-2xl font-black text-[var(--site-theme-heading)]">
+                            <h2
+                                class="text-2xl font-black text-[var(--site-theme-heading)]"
+                            >
                                 {{ __('capell-knowledge-base::generic.frontend.feedback_title') }}
                             </h2>
 
                             @if (session('knowledge_base_feedback_status') !== null)
-                                <p class="mt-3 font-bold text-[var(--site-theme-primary)]">
+                                <p
+                                    class="mt-3 font-bold text-[var(--site-theme-primary)]"
+                                >
                                     {{ session('knowledge_base_feedback_status') }}
                                 </p>
                             @endif
 
                             @if ($article['feedbackCount'] > 0 && $article['helpfulFeedbackPercentage'] !== null)
-                                <p class="mt-3 text-sm font-bold text-slate-600">
-                                    {{ __('capell-knowledge-base::generic.frontend.feedback_summary', [
-                                        'percentage' => $article['helpfulFeedbackPercentage'],
-                                        'count' => $article['feedbackCount'],
-                                    ]) }}
+                                <p
+                                    class="mt-3 text-sm font-bold text-slate-600"
+                                >
+                                    {{
+                                        __('capell-knowledge-base::generic.frontend.feedback_summary', [
+                                            'percentage' => $article['helpfulFeedbackPercentage'],
+                                            'count' => $article['feedbackCount'],
+                                        ])
+                                    }}
                                 </p>
                             @endif
 
@@ -154,7 +169,9 @@
                                 class="mt-5 grid gap-4"
                             >
                                 @csrf
-                                <label class="grid gap-2 text-sm font-bold text-slate-700">
+                                <label
+                                    class="grid gap-2 text-sm font-bold text-slate-700"
+                                >
                                     {{ __('capell-knowledge-base::generic.frontend.feedback_comment') }}
                                     <textarea
                                         name="comment"

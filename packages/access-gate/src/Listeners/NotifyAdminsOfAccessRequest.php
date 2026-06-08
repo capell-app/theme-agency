@@ -7,7 +7,7 @@ namespace Capell\AccessGate\Listeners;
 use Capell\AccessGate\Contracts\AdminNotificationRecipientResolver;
 use Capell\AccessGate\Filament\Resources\Registrations\RegistrationResource;
 use Capell\AccessGate\Models\Registration;
-use Filament\Notifications\Actions\Action as FilamentNotificationAction;
+use Filament\Actions\Action as FilamentNotificationAction;
 use Filament\Notifications\Notification as FilamentNotification;
 use Illuminate\Contracts\Container\Container;
 use Illuminate\Support\Collection;
@@ -29,7 +29,7 @@ final class NotifyAdminsOfAccessRequest
             return;
         }
 
-        $areaKey = $registration->area?->key ?? (string) $registration->access_area_id;
+        $areaKey = $registration->area->key ?? (string) $registration->access_area_id;
 
         $notification = FilamentNotification::make()
             ->title(__('capell-access-gate::notifications.new_request.title'))
@@ -75,7 +75,13 @@ final class NotifyAdminsOfAccessRequest
                 }
             })
             ->filter()
-            ->unique(fn (object $recipient): string => $recipient::class . ':' . (method_exists($recipient, 'getKey') ? (string) $recipient->getKey() : spl_object_hash($recipient)))
+            ->unique(function (mixed $recipient): string {
+                if (! is_object($recipient)) {
+                    return get_debug_type($recipient);
+                }
+
+                return $recipient::class . ':' . (method_exists($recipient, 'getKey') ? (string) $recipient->getKey() : spl_object_hash($recipient));
+            })
             ->values();
     }
 }

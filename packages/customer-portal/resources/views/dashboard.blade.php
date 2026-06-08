@@ -366,15 +366,18 @@
                                     <div class="stack">
                                         @foreach ($supportRequest['replies'] as $reply)
                                             <p class="muted">
-                                                {{ __('capell-customer-portal::generic.frontend.support_reply_meta', [
-                                                    'sender' => __('capell-customer-portal::generic.frontend.support_sender_' . $reply['sender_type']),
-                                                    'date' => $reply['submitted_at'] ?? __('capell-customer-portal::generic.frontend.support_reply_recent'),
-                                                ]) }}
+                                                {{
+                                                    __('capell-customer-portal::generic.frontend.support_reply_meta', [
+                                                        'sender' => __('capell-customer-portal::generic.frontend.support_sender_' . $reply['sender_type']),
+                                                        'date' => $reply['submitted_at'] ?? __('capell-customer-portal::generic.frontend.support_reply_recent'),
+                                                    ])
+                                                }}
                                             </p>
                                             <p>{{ $reply['message'] }}</p>
                                         @endforeach
                                     </div>
                                 @endif
+
                                 <form
                                     method="post"
                                     action="{{ route('capell-customer-portal.support.replies.store', ['supportRequest' => $supportRequest['id']]) }}"

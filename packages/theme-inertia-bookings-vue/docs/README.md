@@ -4,15 +4,15 @@ Start at the [package README](../README.md) when deciding whether to install thi
 
 ## Documents
 
-| Document | Use |
-| --- | --- |
-| [Overview](overview.md) | Runtime surface, component boundaries, screenshot plan, and verification command. |
-| [Screenshot contract](screenshots.json) | Route-backed component captures required for package publication. |
+| Document                                | Use                                                                               |
+| --------------------------------------- | --------------------------------------------------------------------------------- |
+| [Overview](overview.md)                 | Runtime surface, component boundaries, screenshot plan, and verification command. |
+| [Screenshot contract](screenshots.json) | Route-backed component captures required for package publication.                 |
 
 ## Related Packages
 
-| Package | Why it matters |
-| --- | --- |
-| [Theme Inertia Bookings](../../theme-inertia-bookings/docs/overview.md) | Provides the server theme and booking request renderer. |
+| Package                                                                  | Why it matters                                                  |
+| ------------------------------------------------------------------------ | --------------------------------------------------------------- |
+| [Theme Inertia Bookings](../../theme-inertia-bookings/docs/overview.md)  | Provides the server theme and booking request renderer.         |
 | [Capell Inertia Vue Adapter](../../inertia-vue-adapter/docs/overview.md) | Provides the generic Vue adapter this component pack builds on. |
-| [Bookings](../../bookings/docs/overview.md) | Owns appointment data, validation, and public request props. |
+| [Bookings](../../bookings/docs/overview.md)                              | Owns appointment data, validation, and public request props.    |

@@ -31,15 +31,15 @@ Customer Portal is intentionally BYO-auth. It relies on the host app's authentic
 
 Use these extension points instead of importing another package's internals into Customer Portal:
 
-| Need | Entry point |
-| --- | --- |
-| Customer profile fields | `PortalProfileProviderRegistry` with `PortalProfileProvider` |
-| Dashboard cards | `PortalDashboardItemRegistry` with `PortalDashboardItemProvider` |
+| Need                      | Entry point                                                          |
+| ------------------------- | -------------------------------------------------------------------- |
+| Customer profile fields   | `PortalProfileProviderRegistry` with `PortalProfileProvider`         |
+| Dashboard cards           | `PortalDashboardItemRegistry` with `PortalDashboardItemProvider`     |
 | Self-service feed entries | `PortalSelfServiceItemRegistry` with `PortalSelfServiceItemProvider` |
-| Preference options | `PortalPreferencesProviderRegistry` with `PortalPreferencesProvider` |
-| Resolve portal account | `ResolveAuthenticatedPortalAccountAction` |
-| Submit support request | `SubmitSupportRequestAction` |
-| Update preferences | `UpdatePortalPreferencesAction` |
+| Preference options        | `PortalPreferencesProviderRegistry` with `PortalPreferencesProvider` |
+| Resolve portal account    | `ResolveAuthenticatedPortalAccountAction`                            |
+| Submit support request    | `SubmitSupportRequestAction`                                         |
+| Update preferences        | `UpdatePortalPreferencesAction`                                      |
 
 Provider output must be customer-facing. Do not include internal model IDs, signed admin URLs, tokens, selectors, package internals, or authoring metadata.
 

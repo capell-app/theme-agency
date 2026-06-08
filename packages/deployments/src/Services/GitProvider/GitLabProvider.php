@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Capell\Deployments\Services\GitProvider;
 
-use Capell\Deployments\Contracts\GitProviderContract;
 use Capell\Deployments\Actions\RefreshProviderTokenAction;
+use Capell\Deployments\Contracts\GitProviderContract;
 use Capell\Deployments\Data\PullRequestData;
 use Capell\Deployments\Data\RepoFile;
 use Capell\Deployments\Models\DeploymentConnection;

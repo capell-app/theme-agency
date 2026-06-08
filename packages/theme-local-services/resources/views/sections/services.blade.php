@@ -36,9 +36,7 @@
                         <h3 class="mt-2 text-lg font-black">
                             {{ $service['title'] }}
                         </h3>
-                        <p
-                            class="mt-2 text-sm text-stone-600"
-                        >
+                        <p class="mt-2 text-sm text-stone-600">
                             {{ $service['summary'] ?? '' }}
                         </p>
                     </article>

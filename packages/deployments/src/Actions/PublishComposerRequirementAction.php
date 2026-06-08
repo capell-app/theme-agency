@@ -14,6 +14,9 @@ use Capell\Deployments\Services\GitProvider\GitProviderFactory;
 use Lorisleiva\Actions\Concerns\AsAction;
 use Throwable;
 
+/**
+ * @method static PublishComposerChangeResultData run(ComposerRequirementData $requirement, DeploymentConnection $connection, bool $dryRun = false)
+ */
 final class PublishComposerRequirementAction
 {
     use AsAction;

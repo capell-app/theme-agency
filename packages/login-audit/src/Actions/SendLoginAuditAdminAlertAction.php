@@ -30,9 +30,11 @@ final class SendLoginAuditAdminAlertAction
             if (! $recipient instanceof Model) {
                 continue;
             }
+
             if (! $recipient instanceof Authenticatable) {
                 continue;
             }
+
             $this->sendFilamentNotification($loginAudit, $alertType, $recipient);
         }
     }

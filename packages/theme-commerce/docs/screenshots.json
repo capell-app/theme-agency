@@ -19,9 +19,7 @@
             "scenario": "frontend-page",
             "url": "/theme-commerce",
             "waitFor": ".retail-shell",
-            "colorSchemes": [
-                "light"
-            ],
+            "colorSchemes": ["light"],
             "user": false
         },
         {
@@ -38,9 +36,7 @@
             "scenario": "frontend-page",
             "url": "/theme-commerce",
             "waitFor": ".retail-shell",
-            "colorSchemes": [
-                "light"
-            ],
+            "colorSchemes": ["light"],
             "user": false
         },
         {
@@ -57,9 +53,7 @@
             "scenario": "frontend-page",
             "url": "/theme-commerce-directory",
             "waitFor": ".retail-shell",
-            "colorSchemes": [
-                "light"
-            ],
+            "colorSchemes": ["light"],
             "user": false
         },
         {
@@ -76,9 +70,7 @@
             "scenario": "frontend-page",
             "url": "/theme-commerce-detail",
             "waitFor": ".retail-shell",
-            "colorSchemes": [
-                "light"
-            ],
+            "colorSchemes": ["light"],
             "user": false
         },
         {
@@ -95,9 +87,7 @@
             "scenario": "frontend-page",
             "url": "/theme-commerce-directory",
             "waitFor": ".retail-shell",
-            "colorSchemes": [
-                "light"
-            ],
+            "colorSchemes": ["light"],
             "user": false
         },
         {
@@ -114,9 +104,7 @@
             "scenario": "frontend-page",
             "url": "/theme-commerce-directory",
             "waitFor": ".retail-shell",
-            "colorSchemes": [
-                "light"
-            ],
+            "colorSchemes": ["light"],
             "user": false
         },
         {
@@ -133,9 +121,7 @@
             "scenario": "frontend-page",
             "url": "/theme-commerce-cta",
             "waitFor": ".retail-shell",
-            "colorSchemes": [
-                "light"
-            ],
+            "colorSchemes": ["light"],
             "user": false
         },
         {
@@ -152,9 +138,7 @@
             "scenario": "frontend-page",
             "url": "/theme-commerce-cta",
             "waitFor": ".retail-shell",
-            "colorSchemes": [
-                "light"
-            ],
+            "colorSchemes": ["light"],
             "user": false
         },
         {
@@ -171,9 +155,7 @@
             "scenario": "frontend-page",
             "url": "/theme-commerce-directory",
             "waitFor": ".retail-shell",
-            "colorSchemes": [
-                "light"
-            ],
+            "colorSchemes": ["light"],
             "user": false
         },
         {
@@ -190,9 +172,7 @@
             "scenario": "frontend-page",
             "url": "/theme-commerce-cta",
             "waitFor": ".retail-shell",
-            "colorSchemes": [
-                "light"
-            ],
+            "colorSchemes": ["light"],
             "user": false
         }
     ]

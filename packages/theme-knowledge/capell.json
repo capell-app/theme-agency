@@ -13,14 +13,9 @@
         "bundle": "themes"
     },
     "namespace": "Capell\\ThemeStudio\\Knowledge",
-    "surfaces": [
-        "frontend"
-    ],
+    "surfaces": ["frontend"],
     "dependencies": {
-        "requires": [
-            "capell-app/core",
-            "capell-app/foundation-theme"
-        ],
+        "requires": ["capell-app/core", "capell-app/foundation-theme"],
         "supports": [
             "capell-app/layout-builder",
             "capell-app/frontend-authoring",
@@ -61,31 +56,19 @@
         "install": null,
         "setup": null,
         "demo": "capell:theme-knowledge-demo",
-        "demoParams": [
-            "url",
-            "languages",
-            "sites"
-        ],
+        "demoParams": ["url", "languages", "sites"],
         "doctor": null
     },
     "settings": [],
     "permissions": [],
-    "capabilities": [
-        "theme-knowledge",
-        "theme-knowledge-frontend"
-    ],
+    "capabilities": ["theme-knowledge", "theme-knowledge-frontend"],
     "performance": {
         "frontendRenderBudgetMs": 20,
         "adminQueryBudget": 0,
-        "cacheTags": [
-            "theme-knowledge"
-        ],
+        "cacheTags": ["theme-knowledge"],
         "cacheSafety": {
             "cacheable": false,
-            "variesBy": [
-                "site",
-                "locale"
-            ],
+            "variesBy": ["site", "locale"],
             "sensitiveOutput": false,
             "invalidationSources": [],
             "queueInvalidation": true
@@ -120,10 +103,7 @@
                 "caption": "Route-backed Knowledge homepage in dark mode."
             }
         ],
-        "categories": [
-            "frontend",
-            "themes"
-        ]
+        "categories": ["frontend", "themes"]
     },
     "extends": "capell-app/foundation-theme",
     "themeKey": "knowledge",

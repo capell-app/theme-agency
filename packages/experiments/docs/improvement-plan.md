@@ -69,7 +69,7 @@ Mapped against `capabilities[]` and A/B-testing norms:
 | Shipped 2026-06-07: Results dashboard (Filament page/widget)                                         | Done   | L      | High   | §3, §5      |
 | Shipped 2026-06-07: Bounded candidate scan + query-count benchmark vs budget                         | Done   | M      | Med    | §2, §4      |
 | Shipped 2026-06-07: Add README + CHANGELOG + integration docs                                        | Done   | S      | Med    | §2, §5      |
-| Fix screenshot runner app requirement, then capture screenshots / GIF for marketplace listing         | Next   | S      | Med    | §5          |
+| Fix screenshot runner app requirement, then capture screenshots / GIF for marketplace listing        | Next   | S      | Med    | §5          |
 | Insights + Campaign Studio cross-sell integrations                                                   | Later  | L      | Med    | §5          |
 | Geo/device targeting via `ipAddress`/`userAgent` + geoip                                             | Later  | M      | Med    | §3          |
 | Mutually-exclusive experiment groups                                                                 | Later  | L      | Med    | §3          |

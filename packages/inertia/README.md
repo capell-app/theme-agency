@@ -30,11 +30,11 @@ For developers, it provides one renderer, middleware, root view, facade, adapter
 
 `config/capell-inertia.php` supports:
 
-| Key | Default | Purpose |
-| --- | --- | --- |
-| `adapter` | `env('CAPELL_INERTIA_ADAPTER', 'vue')` | Active frontend adapter key. |
-| `root_view` | `capell-inertia::app` | Inertia root Blade view. |
-| `page_component` | `Capell/Page` | Default public page component. |
+| Key              | Default                                | Purpose                        |
+| ---------------- | -------------------------------------- | ------------------------------ |
+| `adapter`        | `env('CAPELL_INERTIA_ADAPTER', 'vue')` | Active frontend adapter key.   |
+| `root_view`      | `capell-inertia::app`                  | Inertia root Blade view.       |
+| `page_component` | `Capell/Page`                          | Default public page component. |
 
 ## Developer Deep Dive
 

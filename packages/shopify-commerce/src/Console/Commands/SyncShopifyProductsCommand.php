@@ -79,8 +79,6 @@ final class SyncShopifyProductsCommand extends Command
     {
         return ShopifyConnection::query()
             ->where('status', ShopifyConnectionStatus::Active->value)
-            ->when(is_numeric($this->option('site')), function (Builder $query): Builder {
-                return $query->where('site_id', (int) $this->option('site'));
-            });
+            ->when(is_numeric($this->option('site')), fn (Builder $query): Builder => $query->where('site_id', (int) $this->option('site')));
     }
 }

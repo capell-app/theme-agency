@@ -9,6 +9,9 @@ use Capell\Deployments\Models\DeploymentPublication;
 use Capell\Deployments\Services\GitProvider\GitProviderFactory;
 use Lorisleiva\Actions\Concerns\AsAction;
 
+/**
+ * @method static DeploymentPublication run(DeploymentPublication $publication, DeploymentConnection $connection)
+ */
 final class RefreshDeploymentPublicationStatusAction
 {
     use AsAction;

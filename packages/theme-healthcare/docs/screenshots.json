@@ -21,9 +21,7 @@
             "url": "/theme-healthcare",
             "waitFor": ".healthcare-shell",
             "click": "text=Reject non-essential",
-            "colorSchemes": [
-                "light"
-            ]
+            "colorSchemes": ["light"]
         },
         {
             "id": "healthcare-homepage-desktop",
@@ -40,9 +38,7 @@
             "scenario": "frontend-page",
             "url": "/theme-healthcare",
             "waitFor": ".healthcare-shell",
-            "colorSchemes": [
-                "light"
-            ]
+            "colorSchemes": ["light"]
         },
         {
             "id": "healthcare-homepage-mobile",
@@ -60,9 +56,7 @@
             "url": "/theme-healthcare",
             "viewport": "mobile",
             "waitFor": ".healthcare-shell",
-            "colorSchemes": [
-                "light"
-            ]
+            "colorSchemes": ["light"]
         },
         {
             "id": "healthcare-services-listing",
@@ -79,9 +73,7 @@
             "scenario": "frontend-page",
             "url": "/theme-healthcare-directory",
             "waitFor": ".healthcare-shell",
-            "colorSchemes": [
-                "light"
-            ]
+            "colorSchemes": ["light"]
         },
         {
             "id": "healthcare-clinician-detail",
@@ -98,9 +90,7 @@
             "scenario": "frontend-page",
             "url": "/theme-healthcare-detail",
             "waitFor": ".healthcare-shell",
-            "colorSchemes": [
-                "light"
-            ]
+            "colorSchemes": ["light"]
         },
         {
             "id": "healthcare-contact-page",
@@ -117,9 +107,7 @@
             "scenario": "frontend-page",
             "url": "/theme-healthcare-contact",
             "waitFor": ".healthcare-shell",
-            "colorSchemes": [
-                "light"
-            ]
+            "colorSchemes": ["light"]
         }
     ]
 }

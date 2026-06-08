@@ -44,7 +44,11 @@
     },
     "settings": ["Capell\\PasswordPolicy\\Settings\\PasswordPolicySettings"],
     "permissions": [],
-    "capabilities": ["password-policy", "password-policy-admin", "password-policy-console"],
+    "capabilities": [
+        "password-policy",
+        "password-policy-admin",
+        "password-policy-console"
+    ],
     "performance": {
         "frontendRenderBudgetMs": 0,
         "adminQueryBudget": 40,

@@ -13,14 +13,9 @@
         "bundle": "themes"
     },
     "namespace": "Capell\\ThemeStudio\\Commerce",
-    "surfaces": [
-        "frontend"
-    ],
+    "surfaces": ["frontend"],
     "dependencies": {
-        "requires": [
-            "capell-app/core",
-            "capell-app/foundation-theme"
-        ],
+        "requires": ["capell-app/core", "capell-app/foundation-theme"],
         "supports": [
             "capell-app/blog",
             "capell-app/campaign-studio",
@@ -58,31 +53,19 @@
         "install": null,
         "setup": null,
         "demo": "capell:theme-commerce-demo",
-        "demoParams": [
-            "url",
-            "languages",
-            "sites"
-        ],
+        "demoParams": ["url", "languages", "sites"],
         "doctor": null
     },
     "settings": [],
     "permissions": [],
-    "capabilities": [
-        "theme-commerce",
-        "theme-commerce-frontend"
-    ],
+    "capabilities": ["theme-commerce", "theme-commerce-frontend"],
     "performance": {
         "frontendRenderBudgetMs": 20,
         "adminQueryBudget": 0,
-        "cacheTags": [
-            "theme-commerce"
-        ],
+        "cacheTags": ["theme-commerce"],
         "cacheSafety": {
             "cacheable": false,
-            "variesBy": [
-                "site",
-                "locale"
-            ],
+            "variesBy": ["site", "locale"],
             "sensitiveOutput": false,
             "invalidationSources": [],
             "queueInvalidation": false
@@ -118,10 +101,7 @@
                 "caption": "Route-backed Commerce homepage rendered through the package theme shell."
             }
         ],
-        "categories": [
-            "frontend",
-            "themes"
-        ]
+        "categories": ["frontend", "themes"]
     },
     "extends": "capell-app/foundation-theme",
     "themeKey": "commerce"

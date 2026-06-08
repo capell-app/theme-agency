@@ -13,16 +13,9 @@
         "bundle": "operations"
     },
     "namespace": "Capell\\Bookings",
-    "surfaces": [
-        "admin",
-        "console",
-        "frontend"
-    ],
+    "surfaces": ["admin", "console", "frontend"],
     "dependencies": {
-        "requires": [
-            "capell-app/admin",
-            "capell-app/core"
-        ],
+        "requires": ["capell-app/admin", "capell-app/core"],
         "supports": [
             "capell-app/address",
             "capell-app/events",
@@ -35,15 +28,9 @@
     "providers": {
         "metadata": [],
         "install": [],
-        "runtime": [
-            "Capell\\Bookings\\Providers\\BookingsServiceProvider"
-        ],
-        "admin": [
-            "Capell\\Bookings\\Providers\\BookingsServiceProvider"
-        ],
-        "frontend": [
-            "Capell\\Bookings\\Providers\\BookingsServiceProvider"
-        ]
+        "runtime": ["Capell\\Bookings\\Providers\\BookingsServiceProvider"],
+        "admin": ["Capell\\Bookings\\Providers\\BookingsServiceProvider"],
+        "frontend": ["Capell\\Bookings\\Providers\\BookingsServiceProvider"]
     },
     "contributes": [
         {
@@ -165,9 +152,7 @@
     "performance": {
         "frontendRenderBudgetMs": 0,
         "adminQueryBudget": 20,
-        "cacheTags": [
-            "bookings"
-        ],
+        "cacheTags": ["bookings"],
         "cacheSafety": {
             "cacheable": false,
             "variesBy": [],
@@ -205,11 +190,7 @@
                 "caption": "Operators review seeded requests, confirm or cancel appointments, and keep an audit trail for each workflow event."
             }
         ],
-        "categories": [
-            "admin",
-            "calendar",
-            "operations"
-        ]
+        "categories": ["admin", "calendar", "operations"]
     },
     "contributionTraceability": {
         "deferredContributions": []

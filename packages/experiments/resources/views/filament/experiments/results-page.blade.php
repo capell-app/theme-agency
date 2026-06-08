@@ -1,5 +1,7 @@
 @php
-    /** @var \Capell\Experiments\Filament\Resources\Experiments\Pages\ExperimentResultsPage $this */
+    use Capell\Experiments\Filament\Resources\Experiments\Pages\ExperimentResultsPage;
+
+    /** @var ExperimentResultsPage $this */
 @endphp
 
 <x-filament-panels::page>

@@ -11,6 +11,9 @@ use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Model;
 use Lorisleiva\Actions\Concerns\AsAction;
 
+/**
+ * @method static Contact run(ContactIdentityData $identity, ?Model $source = null)
+ */
 final class FindOrCreateContactAction
 {
     use AsAction;

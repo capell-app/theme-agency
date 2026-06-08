@@ -42,7 +42,10 @@
                     </p>
                     <h3 class="mt-2 text-lg font-black">
                         @if ($eventUrl)
-                            <a href="{{ $eventUrl }}" class="no-underline hover:text-[#1d4ed8]">
+                            <a
+                                href="{{ $eventUrl }}"
+                                class="no-underline hover:text-[#1d4ed8]"
+                            >
                                 {{ $eventTitle }}
                             </a>
                         @else
@@ -50,17 +53,22 @@
                         @endif
                     </h3>
                     @if ($eventDate !== '')
-                        <p class="mt-2 text-xs font-black tracking-widest text-[#0f766e] uppercase">
+                        <p
+                            class="mt-2 text-xs font-black tracking-widest text-[#0f766e] uppercase"
+                        >
                             {{ $eventDate }}
                         </p>
                     @endif
+
                     <p class="mt-2 text-sm text-stone-600">
                         {{ $eventSummary }}
                     </p>
                 </article>
             @endif
         @empty
-            <article class="rounded-xl border border-dashed border-indigo-200 bg-white p-5 md:col-span-3">
+            <article
+                class="rounded-xl border border-dashed border-indigo-200 bg-white p-5 md:col-span-3"
+            >
                 <h3 class="text-lg font-black">
                     {{ __('capell-theme-education::generic.events_empty_title') }}
                 </h3>

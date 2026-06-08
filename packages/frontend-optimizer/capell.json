@@ -13,11 +13,7 @@
         "bundle": "foundation"
     },
     "namespace": "Capell\\FrontendOptimizer",
-    "surfaces": [
-        "admin",
-        "console",
-        "frontend"
-    ],
+    "surfaces": ["admin", "console", "frontend"],
     "dependencies": {
         "requires": [
             "capell-app/admin",
@@ -65,22 +61,15 @@
     "performance": {
         "frontendRenderBudgetMs": 20,
         "adminQueryBudget": 0,
-        "cacheTags": [
-            "frontend-optimizer"
-        ],
+        "cacheTags": ["frontend-optimizer"],
         "cacheSafety": {
             "cacheable": false,
-            "variesBy": [
-                "site",
-                "locale"
-            ],
+            "variesBy": ["site", "locale"],
             "sensitiveOutput": false,
             "invalidationSources": [
                 {
                     "model": "Capell\\FrontendOptimizer\\Models\\FrontendRenderProfile",
-                    "events": [
-                        "updated"
-                    ]
+                    "events": ["updated"]
                 }
             ],
             "queueInvalidation": true
@@ -110,17 +99,10 @@
                 "caption": "Frontend Optimizer extension preview"
             }
         ],
-        "categories": [
-            "foundation",
-            "frontend"
-        ]
+        "categories": ["foundation", "frontend"]
     },
-    "scopes": [
-        "frontend"
-    ],
+    "scopes": ["frontend"],
     "contributionTraceability": {
-        "deferredContributions": [
-            "configurator"
-        ]
+        "deferredContributions": ["configurator"]
     }
 }

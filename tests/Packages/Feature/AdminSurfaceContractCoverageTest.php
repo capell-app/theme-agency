@@ -297,7 +297,7 @@ it('keeps package-owned filament route surface slugs namespaced to their package
         $checked++;
 
         if (! in_array($packageSlug, explode('/', $routeSlug), true)) {
-            $failures[] = "{$className} uses [{$routeSlug}] without package segment [{$packageSlug}].";
+            $failures[] = sprintf('%s uses [%s] without package segment [%s].', $className, $routeSlug, $packageSlug);
         }
     }
 
@@ -483,9 +483,7 @@ function packageSurfaceContractPackageSlugForPath(string $path): string
         ? substr($path, strlen(getcwd()) + 1)
         : $path;
 
-    if (! preg_match('#^packages/([^/]+)/#', $relativePath, $packageMatches)) {
-        throw new RuntimeException("Unable to determine package for [{$path}].");
-    }
+    throw_unless(preg_match('#^packages/([^/]+)/#', $relativePath, $packageMatches), RuntimeException::class, sprintf('Unable to determine package for [%s].', $path));
 
     $packageDirectory = $packageMatches[1];
     $manifestPath = getcwd() . '/packages/' . $packageDirectory . '/capell.json';

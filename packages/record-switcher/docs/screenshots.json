@@ -3,9 +3,7 @@
     "composerName": "capell-app/record-switcher",
     "generatedFor": "deployment-screenshot-runner",
     "requiresInstalledPackage": true,
-    "composerRequires": [
-        "capell-app/record-switcher"
-    ],
+    "composerRequires": ["capell-app/record-switcher"],
     "outputDirectory": "packages/record-switcher/docs/screenshots",
     "entries": [
         {

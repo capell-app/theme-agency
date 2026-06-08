@@ -16,6 +16,8 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Override;
 
 /**
+ * @property int|null $site_id
+ * @property int|null $contact_id
  * @property ContactActivityType|null $type
  * @property string|null $summary
  * @property array<string, mixed>|null $payload
@@ -95,13 +97,6 @@ class ContactActivity extends Model
         static::deleted(fn (ContactActivity $activity): null => self::flushOverviewStats($activity));
     }
 
-    private static function flushOverviewStats(ContactActivity $activity): null
-    {
-        ContactsOverviewStatsCache::flushForSite(is_int($activity->site_id) ? $activity->site_id : null);
-
-        return null;
-    }
-
     /**
      * @return array<string, string>
      */
@@ -114,5 +109,12 @@ class ContactActivity extends Model
             'payload' => 'encrypted:array',
             'occurred_at' => 'immutable_datetime',
         ];
+    }
+
+    private static function flushOverviewStats(ContactActivity $activity): null
+    {
+        ContactsOverviewStatsCache::flushForSite(is_int($activity->site_id) ? $activity->site_id : null);
+
+        return null;
     }
 }
