@@ -12,6 +12,9 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Foundation\Application;
 use Lorisleiva\Actions\Concerns\AsAction;
 
+/**
+ * @method static RedirectResolutionData|null run(string $requestUrl, ?int $siteId = null, ?int $languageId = null, bool $recordHit = true, ?string $refererUrl = null, ?string $userAgent = null, ?string $ipAddress = null, ?int $statusCode = null)
+ */
 final class ResolveRedirectRuleAction
 {
     use AsAction;

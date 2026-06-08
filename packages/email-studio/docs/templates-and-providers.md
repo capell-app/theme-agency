@@ -110,18 +110,18 @@ Use a new `EmailProviderType` case before registering a real provider. The `Fake
 
 ## Config Keys
 
-| Key                                             | Use                                                                                                           |
-| ----------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
-| `capell-email-studio.default_provider`          | Provider used when an email profile does not override it.                                                     |
-| `capell-email-studio.queue`                     | Queue used by `SendEmailJob`. Can be set with `CAPELL_EMAIL_STUDIO_QUEUE`.                                    |
+| Key                                             | Use                                                                                                                            |
+| ----------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| `capell-email-studio.default_provider`          | Provider used when an email profile does not override it.                                                                      |
+| `capell-email-studio.queue`                     | Queue used by `SendEmailJob`. Can be set with `CAPELL_EMAIL_STUDIO_QUEUE`.                                                     |
 | `capell-email-studio.track_opens`               | Legacy top-level flag retained for compatibility; MailTracker open tracking is configured through `mail_tracker.inject_pixel`. |
 | `capell-email-studio.track_clicks`              | Legacy top-level flag retained for compatibility; MailTracker click tracking is configured through `mail_tracker.track_links`. |
-| `capell-email-studio.body_retention_days`       | How long rendered message bodies should be retained.                                                          |
-| `capell-email-studio.webhook_tolerance_seconds` | Reserved tolerance window for planned provider webhook validation.                                            |
-| `capell-email-studio.public_route_prefix`       | Public prefix for provider webhook routes. Can be set with `CAPELL_EMAIL_STUDIO_PUBLIC_PREFIX`.               |
-| `capell-email-studio.tracking_token_ttl_days`   | Lifetime of tracking tokens.                                                                                  |
-| `capell-email-studio.webhook_rate_limit`        | Reserved rate limiter name for planned webhooks.                                                              |
-| `capell-email-studio.tracking_rate_limit`       | Reserved rate limiter name for planned tracking routes.                                                       |
+| `capell-email-studio.body_retention_days`       | How long rendered message bodies should be retained.                                                                           |
+| `capell-email-studio.webhook_tolerance_seconds` | Reserved tolerance window for planned provider webhook validation.                                                             |
+| `capell-email-studio.public_route_prefix`       | Public prefix for provider webhook routes. Can be set with `CAPELL_EMAIL_STUDIO_PUBLIC_PREFIX`.                                |
+| `capell-email-studio.tracking_token_ttl_days`   | Lifetime of tracking tokens.                                                                                                   |
+| `capell-email-studio.webhook_rate_limit`        | Reserved rate limiter name for planned webhooks.                                                                               |
+| `capell-email-studio.tracking_rate_limit`       | Reserved rate limiter name for planned tracking routes.                                                                        |
 
 Table-name keys are part of install and migration behavior. Document them in migration notes rather than setup prose unless a host app needs custom table names.
 

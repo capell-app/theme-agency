@@ -593,7 +593,7 @@ it('renders every Nonprofit-owned section anonymously inside the budget without 
     (new NonprofitThemeServiceProvider($this->app))->boot($registry);
 
     $manifest = nonprofitThemeTestManifest();
-    $budgetMilliseconds = (float) data_get($manifest, 'performance.frontendRenderBudgetMs', 20);
+    $budgetMilliseconds = nonprofitFrontendRenderBudgetMs($manifest);
     $queryCount = 0;
 
     DB::listen(static function (QueryExecuted $query) use (&$queryCount): void {
@@ -743,5 +743,23 @@ function nonprofitThemeTestManifest(): array
 
     throw_unless(is_array($manifest), RuntimeException::class, 'Theme Nonprofit manifest must decode to an array.');
 
-    return $manifest;
+    $stringKeyedManifest = [];
+
+    foreach ($manifest as $key => $value) {
+        if (is_string($key)) {
+            $stringKeyedManifest[$key] = $value;
+        }
+    }
+
+    return $stringKeyedManifest;
+}
+
+/**
+ * @param  array<string, mixed>  $manifest
+ */
+function nonprofitFrontendRenderBudgetMs(array $manifest): float
+{
+    $budget = data_get($manifest, 'performance.frontendRenderBudgetMs', 20);
+
+    return is_numeric($budget) ? (float) $budget : 20.0;
 }

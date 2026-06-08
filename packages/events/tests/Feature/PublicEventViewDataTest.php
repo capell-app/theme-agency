@@ -4,10 +4,7 @@ declare(strict_types=1);
 
 use Capell\Events\Data\EventOccurrenceViewData;
 use Capell\Events\Support\Calendar\CalendarWeek;
-use Capell\Events\Tests\EventsTestCase;
 use Carbon\CarbonImmutable;
-
-uses(EventsTestCase::class);
 
 it('renders the public event listing from hydrated view data without model identifiers', function (): void {
     $html = view('capell-events::livewire.page.events-listing', [

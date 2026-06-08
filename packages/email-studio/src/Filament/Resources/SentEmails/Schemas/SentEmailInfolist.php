@@ -49,9 +49,9 @@ final class SentEmailInfolist
                 ->schema([
                     ViewEntry::make('content')
                         ->view('capell-email-studio::filament.sent-emails.content-preview')
-                        ->state(fn (SentEmail $record): string => $record->content ?? ''),
+                        ->state(fn (?SentEmail $record = null): string => $record instanceof SentEmail ? ($record->content ?? '') : ''),
                 ])
-                ->visible(fn (SentEmail $record): bool => $record->content !== null && $record->content !== ''),
+                ->visible(fn (?SentEmail $record = null): bool => $record instanceof SentEmail && $record->content !== null && $record->content !== ''),
             Section::make(__('capell-email-studio::mail_tracker.sections.headers'))
                 ->collapsible()
                 ->collapsed()
@@ -62,14 +62,14 @@ final class SentEmailInfolist
                         ->copyable()
                         ->columnSpanFull(),
                 ])
-                ->visible(fn (SentEmail $record): bool => $record->headers !== null && $record->headers !== ''),
+                ->visible(fn (?SentEmail $record = null): bool => $record instanceof SentEmail && $record->headers !== null && $record->headers !== ''),
             Section::make(__('capell-email-studio::mail_tracker.sections.clicks'))
                 ->collapsible()
                 ->schema([
                     ViewEntry::make('clickRows')
                         ->view('capell-email-studio::filament.sent-emails.click-rows')
-                        ->state(fn (SentEmail $record): array => [
-                            'clickRows' => $record->clickRows()->latest('updated_at')->get(),
+                        ->state(fn (?SentEmail $record = null): array => [
+                            'clickRows' => $record?->clickRows()->latest('updated_at')->get() ?? collect(),
                         ]),
                 ]),
         ]);

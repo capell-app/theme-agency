@@ -93,7 +93,7 @@ Differentiator vs table-stakes: minify/bundle, font/image optimization, and prel
 | Delete or wire orphaned `ResolveOptimizationScopeAction`; reconcile unreachable scopes                                                                        | Done   | S      | Med    | §2.2, §3       |
 | Validate/relax `frontendRenderBudgetMs:20` claim; move manifest disk-write off the hot render path                                                            | Done   | M      | High   | §4             |
 | Drive critical-eligibility + JS-idle from manifest hints, not hardcoded `foundation-theme:*`                                                                  | Done   | M      | High   | §2.5, §2.6     |
-| Shipped 2026-06-08: add image optimization seam (responsive/lazy/eager/AVIF-WebP candidates) paired with media-library URLs                                  | Done   | M      | High   | §3             |
+| Shipped 2026-06-08: add image optimization seam (responsive/lazy/eager/AVIF-WebP candidates) paired with media-library URLs                                   | Done   | M      | High   | §3             |
 | Add preload/preconnect/fetchpriority + font optimization hints                                                                                                | Done   | M      | High   | §3             |
 | Add profile/critical-CSS GC (prune on layout/theme delete + stale signatures)                                                                                 | Done   | M      | Med    | §2.7           |
 | Cover listener, job, settings, health in tests                                                                                                                | Done   | M      | Med    | §4 (test gaps) |

@@ -8,6 +8,9 @@ use Capell\UrlManager\Data\RedirectRuleData;
 use Capell\UrlManager\Models\RedirectRule;
 use Lorisleiva\Actions\Concerns\AsAction;
 
+/**
+ * @method static RedirectRule run(RedirectRuleData $data)
+ */
 final class UpsertRedirectRuleAction
 {
     use AsAction;

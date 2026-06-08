@@ -146,6 +146,10 @@ it('builds an explicit external handoff payload for downstream delivery workers'
             'id' => $send->getKey(),
             'site_id' => $site->getKey(),
             'status' => NewsletterSendStatus::Scheduled->value,
+            'name' => $send->name,
+            'subject' => $send->subject,
+            'preheader' => $send->preheader,
+            'scheduled_at' => $send->scheduled_at?->toJSON(),
         ],
         'audience' => [
             'segment_id' => $segment->getKey(),
@@ -157,6 +161,11 @@ it('builds an explicit external handoff payload for downstream delivery workers'
         ],
         'utm' => [
             'campaign' => 'may-product-update',
+            'source' => null,
+            'medium' => null,
+            'term' => null,
+            'content' => null,
+            'id' => null,
         ],
         'metadata' => [
             'template' => 'release-note',

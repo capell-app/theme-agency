@@ -89,7 +89,7 @@ Completed 2026-06-08. The current manifest-backed plan is closed: Campaign Studi
 | Shipped 2026-06-04: Harden overview conversion-rate join (null/duplicate `utm_campaign`)                                        | Done   | M      | Medium | §2, §4      |
 | Shipped 2026-06-06: Add campaign scheduling command (Scheduled→Active→Ended transitions)                                        | Done   | M      | Medium | §3          |
 | Shipped 2026-06-04: In-package A/B variant results readout (lift per variant)                                                   | Done   | L      | High   | §3          |
-| Shipped 2026-06-08: Feed Campaign Studio conversions into Insights conversion events                                             | Done   | M      | High   | §3, §5      |
+| Shipped 2026-06-08: Feed Campaign Studio conversions into Insights conversion events                                            | Done   | M      | High   | §3, §5      |
 | Revenue/ROAS reporting using existing `value_amount` + `budget_amount`                                                          | Future | M      | High   | §3          |
 | Geo/device/referrer audience targeting (use `torann/geoip`)                                                                     | Future | L      | High   | §3          |
 | Shipped 2026-06-04: Configurable attribution lookback window                                                                    | Done   | M      | Medium | §3, §4      |

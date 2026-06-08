@@ -8,6 +8,7 @@ use Capell\Newsletter\Providers\NewsletterServiceProvider;
 use Capell\Newsletter\Support\EditorialCalendar\NewsletterEditorialCalendarEventContributor;
 use Capell\PublishingStudio\Actions\BuildEditorialCalendarEventsAction;
 use Capell\PublishingStudio\Contracts\EditorialCalendarEventContributor;
+use Capell\PublishingStudio\Data\EditorialCalendarEventData;
 use Carbon\CarbonImmutable;
 
 afterEach(function (): void {
@@ -43,18 +44,21 @@ it('contributes scheduled newsletter sends to the editorial calendar', function 
         siteIds: [(int) $site->getKey()],
         state: NewsletterSendStatus::Scheduled->value,
     );
+    $event = $events->first();
+
+    throw_unless($event instanceof EditorialCalendarEventData, RuntimeException::class, 'Expected newsletter editorial calendar event.');
 
     expect($events)->toHaveCount(1)
-        ->and($events->first()->id)->toBe('newsletter-send-' . $send->id)
-        ->and($events->first()->sourcePackage)->toBe(NewsletterServiceProvider::$packageName)
-        ->and($events->first()->sourceType)->toBe('newsletter')
-        ->and($events->first()->sourceId)->toBe((string) $send->id)
-        ->and($events->first()->title)->toBe('May product update')
-        ->and($events->first()->eventType)->toBe('newsletter.send')
-        ->and($events->first()->state)->toBe(NewsletterSendStatus::Scheduled->value)
-        ->and($events->first()->siteId)->toBe((int) $site->getKey())
-        ->and($events->first()->metadata['subject'])->toBe('What changed in May')
-        ->and($events->first()->metadata['utm_campaign'])->toBe('may-product-update');
+        ->and($event->id)->toBe('newsletter-send-' . $send->id)
+        ->and($event->sourcePackage)->toBe(NewsletterServiceProvider::$packageName)
+        ->and($event->sourceType)->toBe('newsletter')
+        ->and($event->sourceId)->toBe((string) $send->id)
+        ->and($event->title)->toBe('May product update')
+        ->and($event->eventType)->toBe('newsletter.send')
+        ->and($event->state)->toBe(NewsletterSendStatus::Scheduled->value)
+        ->and($event->siteId)->toBe((int) $site->getKey())
+        ->and($event->metadata['subject'])->toBe('What changed in May')
+        ->and($event->metadata['utm_campaign'])->toBe('may-product-update');
 });
 
 it('registers the newsletter editorial calendar contributor when publishing studio is available', function (): void {

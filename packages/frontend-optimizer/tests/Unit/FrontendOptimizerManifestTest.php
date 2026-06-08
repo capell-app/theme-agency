@@ -76,8 +76,9 @@ it('declares render profile cache invalidation metadata for generated critical c
 
 it('declares image optimization and media library pairings', function (): void {
     $manifest = frontendOptimizerPackageManifest();
+    $dependencies = frontendOptimizerManifestArray($manifest, 'dependencies');
 
-    expect($manifest['dependencies']['supports'] ?? [])->toContain('capell-app/media-library')
+    expect($dependencies['supports'] ?? [])->toContain('capell-app/media-library')
         ->and($manifest['capabilities'] ?? [])->toContain('frontend-optimizer-images');
 });
 
@@ -95,4 +96,17 @@ function frontendOptimizerPackageManifest(): array
     throw_unless(is_array($manifest), RuntimeException::class, 'Expected frontend optimizer manifest array.');
 
     return $manifest;
+}
+
+/**
+ * @param  array<string, mixed>  $manifest
+ * @return array<array-key, mixed>
+ */
+function frontendOptimizerManifestArray(array $manifest, string $key): array
+{
+    $value = $manifest[$key] ?? null;
+
+    throw_unless(is_array($value), RuntimeException::class, sprintf('Expected frontend optimizer manifest [%s] to be an array.', $key));
+
+    return $value;
 }

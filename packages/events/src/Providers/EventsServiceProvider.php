@@ -7,7 +7,6 @@ namespace Capell\Events\Providers;
 use Capell\Admin\Data\AdminSurfaceContributionData;
 use Capell\Admin\Enums\ResourceEnum as AdminResourceEnum;
 use Capell\Admin\Facades\CapellAdmin;
-use Capell\Core\Actions\RegisterBlazeOptimizedViewsAction;
 use Capell\Core\Data\PageTypeData;
 use Capell\Core\Data\VendorAssetData;
 use Capell\Core\Facades\CapellCore;
@@ -130,7 +129,6 @@ class EventsServiceProvider extends AbstractPackageServiceProvider
             ->registerPageTypes()
             ->registerPackageAssets()
             ->registerBladeComponents()
-            ->registerBlazeComponents()
             ->registerLivewireComponents()
             ->registerRoutes()
             ->registerRenderHooks()
@@ -215,13 +213,6 @@ class EventsServiceProvider extends AbstractPackageServiceProvider
     {
         Blade::componentNamespace('Capell\\Events\\View\\Components', 'capell-events');
         Blade::anonymousComponentNamespace('Capell\\Events\\View\\Components');
-
-        return $this;
-    }
-
-    private function registerBlazeComponents(): self
-    {
-        RegisterBlazeOptimizedViewsAction::run(__DIR__ . '/../../resources/views/livewire');
 
         return $this;
     }

@@ -41,7 +41,7 @@ it('keeps the approved top-level navigation groups in order on the booted admin 
         label: 'capell-admin::navigation.group_marketing',
         icon: Heroicon::OutlinedMegaphone,
         position: NavigationGroupPositionEnum::After,
-        relativeTo: 'capell-admin::navigation.group_websites',
+        relativeTo: 'capell-admin::navigation.group_workflow',
     );
 
     Filament::setCurrentPanel(Filament::getPanel('admin'));
@@ -52,7 +52,6 @@ it('keeps the approved top-level navigation groups in order on the booted admin 
         __('capell-admin::navigation.group_dashboard'),
         __('capell-admin::navigation.group_content'),
         __('capell-admin::navigation.group_workflow'),
-        __('capell-admin::navigation.group_websites'),
         __('capell-admin::navigation.group_marketing'),
         __('capell-admin::navigation.group_monitoring'),
         __('capell-admin::navigation.group_system'),

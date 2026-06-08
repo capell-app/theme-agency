@@ -8,11 +8,8 @@ use Capell\Core\Models\Page;
 use Capell\MediaAI\Actions\ApplyImageDoctorMetadataAction;
 use Capell\MediaAI\Data\ImageDoctorRequest;
 use Capell\MediaAI\Data\ImageDoctorResult;
-use Capell\MediaAI\Tests\MediaAITestCase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
-
-uses(MediaAITestCase::class);
 
 it('writes generated alt text and captions to localized media metadata', function (): void {
     Storage::fake('public');

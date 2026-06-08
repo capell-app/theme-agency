@@ -15,6 +15,7 @@ use Capell\Events\Support\Calendar\CalendarWeek;
 use Carbon\CarbonImmutable;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
@@ -56,12 +57,14 @@ it('builds the event resource form schema', function (): void {
         ->values();
 
     expect($fields)
-        ->toHaveCount(16)
+        ->toHaveCount(18)
         ->and($fields[3])->toBeInstanceOf(TextInput::class)
         ->and($fields[5])->toBeInstanceOf(DateTimePicker::class)
         ->and($fields[8])->toBeInstanceOf(Toggle::class)
         ->and($fields[10])->toBeInstanceOf(Select::class)
-        ->and($fields[9])->toBeInstanceOf(Textarea::class);
+        ->and($fields[9])->toBeInstanceOf(Textarea::class)
+        ->and($fields[16])->toBeInstanceOf(Toggle::class)
+        ->and($fields[17])->toBeInstanceOf(TagsInput::class);
 });
 
 it('declares event resource metadata and route defaults', function (): void {

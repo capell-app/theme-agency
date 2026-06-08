@@ -9,7 +9,6 @@ use Capell\Diagnostics\Data\Health\HealthCheckResultData;
 use Capell\Diagnostics\Enums\HealthCheckImplementationStatus;
 use Capell\Diagnostics\Models\DiagnosticsHealthSnapshot;
 use Carbon\CarbonImmutable;
-use RuntimeException;
 use Spatie\LaravelData\DataCollection;
 
 it('records extension health report snapshots with per-check payloads', function (): void {

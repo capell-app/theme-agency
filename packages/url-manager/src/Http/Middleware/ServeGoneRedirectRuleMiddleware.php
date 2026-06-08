@@ -39,7 +39,15 @@ final class ServeGoneRedirectRuleMiddleware
     private function modelKey(mixed $value): ?int
     {
         if ($value instanceof Site || $value instanceof Language) {
-            return (int) $value->getKey();
+            $key = $value->getKey();
+
+            if (is_int($key)) {
+                return $key;
+            }
+
+            if (is_string($key) && ctype_digit($key)) {
+                return (int) $key;
+            }
         }
 
         return null;
