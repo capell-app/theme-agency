@@ -9,6 +9,7 @@ use Capell\PublishingStudio\Publisher;
 use Capell\PublishingStudio\Tests\Fixtures\Autoload\FixtureFailingCheck;
 use Capell\PublishingStudio\Tests\Integration\Fixtures\WorkspaceDraftableFixture;
 use Capell\PublishingStudio\WorkspaceRegistry;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
@@ -86,8 +87,15 @@ it('builds typed publish readiness from dry run and blocking checks', function (
     $readiness = BuildPublishReadinessAction::run($workspace);
 
     expect($readiness->wouldPublish)->toBeFalse()
-        ->and($readiness->workspaceId)->toBe((int) $workspace->getKey())
+        ->and($readiness->workspaceId)->toBe(publishingStudioDryRunIntegerModelKey($workspace))
         ->and($readiness->totalRows)->toBe(1)
         ->and($readiness->blockingIssues)->toContain('oh no something broke')
         ->and($readiness->blockingIssueCount)->toBe(1);
 });
+
+function publishingStudioDryRunIntegerModelKey(Model $model): int
+{
+    $key = $model->getKey();
+
+    return is_numeric($key) ? (int) $key : 0;
+}

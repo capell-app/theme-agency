@@ -13,6 +13,9 @@ use Capell\PublishingStudio\Models\Workspace;
 use Capell\PublishingStudio\Publisher;
 use Lorisleiva\Actions\Concerns\AsObject;
 
+/**
+ * @method static PublishReadinessData run(Workspace $workspace, bool $canBypassReleaseWindow = false)
+ */
 final class BuildPublishReadinessAction
 {
     use AsObject;
@@ -23,7 +26,7 @@ final class BuildPublishReadinessAction
         $blockingIssues = $this->blockingIssues($report);
 
         return new PublishReadinessData(
-            workspaceId: (int) $workspace->getKey(),
+            workspaceId: $this->workspaceId($workspace),
             wouldPublish: $report->wouldPublish && $blockingIssues === [],
             totalRows: $report->totalRows(),
             rowCounts: $report->rowCounts,
@@ -98,5 +101,12 @@ final class BuildPublishReadinessAction
         $message = $report->failure->getMessage();
 
         return $message === '' ? null : $message;
+    }
+
+    private function workspaceId(Workspace $workspace): int
+    {
+        $key = $workspace->getKey();
+
+        return is_numeric($key) ? (int) $key : 0;
     }
 }

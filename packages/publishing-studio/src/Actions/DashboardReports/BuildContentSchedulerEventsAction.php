@@ -20,6 +20,9 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Route;
 use Lorisleiva\Actions\Concerns\AsAction;
 
+/**
+ * @method static Collection<int, SchedulerEventData> run(?SchedulerEventTypeEnum $eventType = null, ?string $sourceType = null, ?CarbonInterface $startsAt = null, ?CarbonInterface $endsAt = null, ?SchedulerEventStateEnum $state = null, ?int $siteId = null, array<array-key, mixed>|null $siteIds = null, ?int $ownerId = null, ?string $ownerType = null, int $limit = 250)
+ */
 final class BuildContentSchedulerEventsAction
 {
     use AsAction;

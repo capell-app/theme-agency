@@ -16,6 +16,9 @@ use Carbon\CarbonInterface;
 use Illuminate\Support\Collection;
 use Lorisleiva\Actions\Concerns\AsAction;
 
+/**
+ * @method static Collection<int, EditorialCalendarEventData> run(?CarbonInterface $startsAt = null, ?CarbonInterface $endsAt = null, list<string>|null $sourceTypes = null, list<string>|null $eventTypes = null, ?int $siteId = null, list<int>|null $siteIds = null, ?int $ownerId = null, ?string $ownerType = null, ?string $state = null, int $limit = 250)
+ */
 final class BuildEditorialCalendarEventsAction
 {
     use AsAction;

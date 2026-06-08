@@ -17,6 +17,7 @@ use Capell\PublishingStudio\Models\Workspace;
 use Capell\PublishingStudio\Models\WorkspaceReviewAssignment;
 use Capell\Tests\Support\Concerns\CreatesAdminUser;
 use Carbon\CarbonImmutable;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
@@ -56,12 +57,12 @@ it('keeps Publishing Studio dashboard and calendar actions within the admin quer
         Page::factory()->create(['workspace_id' => $publishedWorkspace->getKey()]);
         Version::query()->create([
             'uuid' => (string) Str::uuid(),
-            'number' => (int) (Version::query()->max('number') ?? 0) + 1,
+            'number' => publishingStudioIntegerValue(Version::query()->max('number')) + 1,
             'name' => 'Published ' . $publishedWorkspace->getKey(),
             'is_live' => false,
             'manifest' => [],
             'source_workspace_id' => $publishedWorkspace->getKey(),
-            'published_at' => CarbonImmutable::now()->subDays((int) $publishedWorkspace->getKey() % 5),
+            'published_at' => CarbonImmutable::now()->subDays(publishingStudioIntegerModelKey($publishedWorkspace) % 5),
         ]);
     }
 
@@ -111,7 +112,7 @@ function publishingStudioAdminQueryBudget(): int
         flags: JSON_THROW_ON_ERROR,
     );
 
-    return (int) data_get($manifest, 'performance.adminQueryBudget', 40);
+    return publishingStudioIntegerValue(data_get($manifest, 'performance.adminQueryBudget', 40), 40);
 }
 
 function countPublishingStudioQueries(Closure $callback): int
@@ -127,4 +128,14 @@ function countPublishingStudioQueries(Closure $callback): int
         DB::disableQueryLog();
         DB::flushQueryLog();
     }
+}
+
+function publishingStudioIntegerValue(mixed $value, int $fallback = 0): int
+{
+    return is_numeric($value) ? (int) $value : $fallback;
+}
+
+function publishingStudioIntegerModelKey(Model $model): int
+{
+    return publishingStudioIntegerValue($model->getKey());
 }

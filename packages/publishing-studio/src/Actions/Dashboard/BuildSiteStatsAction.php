@@ -12,6 +12,9 @@ use Capell\PublishingStudio\Models\Workspace;
 use Carbon\CarbonImmutable;
 use Lorisleiva\Actions\Concerns\AsAction;
 
+/**
+ * @method static SiteStatsData run(string $period = 'last_30_days')
+ */
 final class BuildSiteStatsAction
 {
     use AsAction;
