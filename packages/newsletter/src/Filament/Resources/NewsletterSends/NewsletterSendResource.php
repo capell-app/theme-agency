@@ -32,6 +32,8 @@ class NewsletterSendResource extends Resource
 {
     use ScopesNewsletterResourcesToAssignedSites;
 
+    protected static ?string $slug = 'newsletter/newsletter-sends';
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedPaperAirplane;
 
     protected static ?string $recordTitleAttribute = 'name';

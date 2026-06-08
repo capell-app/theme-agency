@@ -25,7 +25,7 @@ class CalendarFeedController extends BaseController
             site: $site,
             listingPage: $this->listingPage($request, $site),
         );
-        $etag = hash('sha256', $feed);
+        $etag = hash('sha256', (string) $feed);
 
         $response = response($feed, 200, [
             'Cache-Control' => 'public, max-age=3600, stale-while-revalidate=3600',

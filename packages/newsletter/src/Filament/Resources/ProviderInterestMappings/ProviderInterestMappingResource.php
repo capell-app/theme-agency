@@ -22,6 +22,8 @@ use Override;
 
 class ProviderInterestMappingResource extends Resource
 {
+    protected static ?string $slug = 'newsletter/provider-interest-mappings';
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedTag;
 
     protected static ?string $recordTitleAttribute = 'remote_name';

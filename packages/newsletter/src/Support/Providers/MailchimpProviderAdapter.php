@@ -155,6 +155,10 @@ class MailchimpProviderAdapter implements NewsletterProviderAdapter
         $apiKey = $this->apiKey($connection);
         $dataCenter = str_contains($apiKey, '-') ? str($apiKey)->afterLast('-')->toString() : 'us1';
 
+        if (preg_match('/^[a-z0-9-]+$/i', $dataCenter) !== 1) {
+            $dataCenter = 'us1';
+        }
+
         return sprintf('https://%s.api.mailchimp.com/3.0', $dataCenter);
     }
 

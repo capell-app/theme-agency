@@ -7,7 +7,7 @@ function frontendAuthoringLocaleKeys(array $translations, string $prefix = ''): 
     $keys = [];
 
     foreach ($translations as $key => $value) {
-        $path = $prefix === '' ? (string) $key : $prefix . '.' . (string) $key;
+        $path = $prefix === '' ? (string) $key : $prefix . '.' . $key;
 
         if (is_array($value)) {
             array_push($keys, ...frontendAuthoringLocaleKeys($value, $path));

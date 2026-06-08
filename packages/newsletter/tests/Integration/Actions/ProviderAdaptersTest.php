@@ -69,6 +69,25 @@ it('maps Mailchimp audiences, subscriber sync payloads, and webhook state', func
         && $request['status'] === 'subscribed');
 });
 
+it('falls back to a safe Mailchimp data center when the API key suffix is malformed', function (): void {
+    Http::fake([
+        'https://us1.api.mailchimp.com/3.0/lists' => Http::response([
+            'lists' => [
+                ['id' => 'audience-a', 'name' => 'Customers'],
+            ],
+        ]),
+    ]);
+    $connection = providerConnection(ProviderType::Mailchimp, [
+        'credentials' => ['api_key' => 'abc-127.0.0.1:8000/internal'],
+    ]);
+
+    $audiences = (new MailchimpProviderAdapter)->listAudiences($connection);
+
+    expect($audiences)->toHaveCount(1);
+
+    Http::assertSent(static fn (ClientRequest $request): bool => $request->url() === 'https://us1.api.mailchimp.com/3.0/lists');
+});
+
 it('maps Kit audiences, subscriber sync payloads, tag syncs, and webhook state', function (): void {
     Http::fake([
         'https://api.kit.com/v4/forms' => Http::response([

@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 use Capell\Deployments\Filament\Pages\DeploymentConnectionPage;
 use Capell\Deployments\Models\DeploymentConnection;
+use Capell\Deployments\Models\DeploymentPublication;
+use Capell\Deployments\Services\GitProvider\GitHubProvider;
+use Capell\Deployments\Tests\Fixtures\Autoload\FakeComposerPublisher;
 use Capell\Tests\Support\Concerns\CreatesAdminUser;
 use Illuminate\Support\Facades\Schema;
 use Livewire\Livewire;
@@ -21,7 +24,7 @@ it('DeploymentConnectionPage class exists and has correct slug', function (): vo
 
     $property = new ReflectionProperty(DeploymentConnectionPage::class, 'slug');
 
-    expect($property->getValue())->toBe('deployment-connection');
+    expect($property->getValue())->toBe('deployments/deployment-connection');
 });
 
 it('returns a Filament compatible navigation icon', function (): void {
@@ -139,4 +142,33 @@ it('allows connection managers to disconnect active connections', function (): v
     (new DeploymentConnectionPage)->disconnect((int) $connection->getKey());
 
     expect(DeploymentConnection::query()->whereKey($connection->getKey())->exists())->toBeFalse();
+});
+
+it('allows connection managers to cancel pending pull request publications', function (): void {
+    Permission::findOrCreate('Manage:DeploymentConnectionPage', 'web');
+    $provider = new FakeComposerPublisher;
+    app()->instance(GitHubProvider::class, $provider);
+    $connection = DeploymentConnection::factory()->github()->create(['is_active' => true]);
+    $publication = DeploymentPublication::query()->create([
+        'deployment_connection_id' => $connection->id,
+        'provider' => $connection->provider,
+        'repo_owner' => $connection->repo_owner,
+        'repo_name' => $connection->repo_name,
+        'composer_package' => 'capell/cancel-me',
+        'constraint' => '^1.0',
+        'branch_name' => 'capell/add-extension-cancel-me',
+        'commit_sha' => 'commit-sha',
+        'pull_request_id' => 789,
+        'pull_request_url' => 'https://github.test/pull/789',
+        'status' => 'pending',
+        'dry_run' => false,
+        'status_checked_at' => null,
+    ]);
+
+    test()->actingAs(test()->createUserWithPermission('Manage:DeploymentConnectionPage'));
+
+    (new DeploymentConnectionPage)->cancelPublication((int) $connection->getKey(), (int) $publication->getKey());
+
+    expect($publication->refresh()->status)->toBe('cancelled')
+        ->and($provider->closedPullRequestIds)->toBe([789]);
 });

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Capell\CustomerPortal\Models;
 
 use Carbon\CarbonImmutable;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
@@ -21,6 +22,8 @@ use Override;
  */
 class PortalSupportRequestReply extends Model
 {
+    use HasFactory;
+
     /** @var list<string> */
     protected $fillable = [
         'portal_support_request_id',

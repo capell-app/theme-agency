@@ -44,8 +44,8 @@ final class GeneratePaymentGatewayIdempotencyKeyAction
 
         try {
             json_encode($payload, JSON_THROW_ON_ERROR);
-        } catch (JsonException $exception) {
-            throw new RuntimeException('Payment gateway idempotency payload could not be encoded.', previous: $exception);
+        } catch (JsonException $jsonException) {
+            throw new RuntimeException('Payment gateway idempotency payload could not be encoded.', $jsonException->getCode(), previous: $jsonException);
         }
 
         return $payload;

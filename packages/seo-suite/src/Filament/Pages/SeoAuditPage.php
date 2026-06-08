@@ -25,6 +25,8 @@ class SeoAuditPage extends Page implements HasActions, HasTable
     use InteractsWithActions;
     use InteractsWithTable;
 
+    protected static ?string $slug = 'seo-suite/seo-audit';
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedMagnifyingGlass;
 
     protected static string|BackedEnum|null $activeNavigationIcon = Heroicon::MagnifyingGlass;
@@ -32,8 +34,6 @@ class SeoAuditPage extends Page implements HasActions, HasTable
     protected static ?int $navigationSort = 10;
 
     protected string $view = 'capell-admin::components.pages.table';
-
-    protected static ?string $slug = 'seo-audit';
 
     #[Override]
     public static function getNavigationLabel(): string

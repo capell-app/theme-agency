@@ -28,13 +28,13 @@ class ScheduledPublishingPage extends Page implements HasActions, HasTable
     use InteractsWithActions;
     use InteractsWithTable;
 
+    protected static ?string $slug = 'publishing-studio/scheduled-publishing';
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedCalendarDays;
 
     protected static string|BackedEnum|null $activeNavigationIcon = Heroicon::CalendarDays;
 
     protected string $view = 'capell-admin::components.pages.table';
-
-    protected static ?string $slug = 'scheduled-publishing';
 
     protected static ?int $navigationSort = 1;
 

@@ -6,6 +6,7 @@ namespace Capell\KnowledgeBase\Http\Controllers;
 
 use Capell\KnowledgeBase\Actions\BuildAiReadableKnowledgeBaseOutputAction;
 use Capell\KnowledgeBase\Data\AiReadableKnowledgeBaseArticleData;
+use Carbon\CarbonImmutable;
 use Illuminate\Http\Response;
 
 final class ShowKnowledgeBaseAiOutputController
@@ -35,7 +36,7 @@ final class ShowKnowledgeBaseAiOutputController
             '',
             '- URL: ' . $article->publicPath,
             '- Version: ' . $article->version,
-            $article->lastModified !== null ? '- Last modified: ' . $article->lastModified->toDateString() : null,
+            $article->lastModified instanceof CarbonImmutable ? '- Last modified: ' . $article->lastModified->toDateString() : null,
             $article->summary !== null && trim($article->summary) !== '' ? '- Summary: ' . trim($article->summary) : null,
             '',
             $article->content,

@@ -17,6 +17,8 @@ use Override;
 
 class SyncAttemptResource extends Resource
 {
+    protected static ?string $slug = 'newsletter/sync-attempts';
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedArrowPath;
 
     #[Override]

@@ -25,6 +25,8 @@ final class ClaimTokenResource extends Resource
 {
     use AccessGateFilamentOptions;
 
+    protected static ?string $slug = 'access-gate/claim-tokens';
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedLink;
 
     protected static string|BackedEnum|null $activeNavigationIcon = Heroicon::Link;

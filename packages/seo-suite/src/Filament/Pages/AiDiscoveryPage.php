@@ -25,6 +25,8 @@ class AiDiscoveryPage extends Page implements HasActions, HasTable
     use InteractsWithActions;
     use InteractsWithTable;
 
+    protected static ?string $slug = 'seo-suite/ai-discovery';
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedSparkles;
 
     protected static string|BackedEnum|null $activeNavigationIcon = Heroicon::Sparkles;
@@ -32,8 +34,6 @@ class AiDiscoveryPage extends Page implements HasActions, HasTable
     protected static ?int $navigationSort = 13;
 
     protected string $view = 'capell-admin::components.pages.table';
-
-    protected static ?string $slug = 'ai-discovery';
 
     #[Override]
     public static function getNavigationLabel(): string

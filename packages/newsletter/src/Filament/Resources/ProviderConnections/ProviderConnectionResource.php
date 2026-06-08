@@ -30,6 +30,8 @@ class ProviderConnectionResource extends Resource
 {
     use ScopesNewsletterResourcesToAssignedSites;
 
+    protected static ?string $slug = 'newsletter/provider-connections';
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedGlobeAlt;
 
     protected static ?string $recordTitleAttribute = 'name';

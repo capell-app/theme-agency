@@ -9,6 +9,7 @@ use Capell\Admin\Filament\Concerns\GatedByRoleAndSettings;
 use Capell\Admin\Filament\Concerns\HasLineChartOptions;
 use Capell\GA4Reports\Actions\BuildGA4ReportsTrendAction;
 use Capell\GA4Reports\Data\GA4ReportsTrendPointData;
+use Capell\GA4Reports\Data\GA4ReportsWindowData;
 use Capell\GA4Reports\Filament\Widgets\Concerns\BuildsGA4ReportsDashboardWindow;
 use Filament\Widgets\ChartWidget;
 use Override;
@@ -40,9 +41,9 @@ final class GA4ReportsTrafficTrendWidget extends ChartWidget implements CapellWi
     {
         $window = $this->getGA4ReportsWindow();
         $points = BuildGA4ReportsTrendAction::run($window);
-        $previousPoints = $window === null
-            ? []
-            : BuildGA4ReportsTrendAction::run($this->getPreviousGA4ReportsWindow($window));
+        $previousPoints = $window instanceof GA4ReportsWindowData
+            ? BuildGA4ReportsTrendAction::run($this->getPreviousGA4ReportsWindow($window))
+            : [];
 
         return [
             'datasets' => [

@@ -31,6 +31,8 @@ final class PublicActionDestinationResource extends Resource
 {
     use PublicActionFilamentOptions;
 
+    protected static ?string $slug = 'public-actions/destinations/public-action-destinations';
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedArrowUpRight;
 
     protected static ?int $navigationSort = 42;

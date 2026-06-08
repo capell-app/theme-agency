@@ -8,11 +8,13 @@ use Capell\BlockLibrary\Contracts\BlockDefinitionProvider;
 use Capell\Core\Facades\CapellCore;
 use Capell\Core\Support\Packages\AbstractPackageServiceProvider;
 use Capell\SocialFeeds\Blocks\SocialFeedBlockDefinitionProvider;
+use Capell\SocialFeeds\Contracts\SocialFeedHostResolver;
 use Capell\SocialFeeds\Contracts\SocialFeedProviderProvider;
 use Capell\SocialFeeds\Models\SocialFeedConnection;
 use Capell\SocialFeeds\Models\SocialFeedItem;
 use Capell\SocialFeeds\Models\SocialFeedOAuthState;
 use Capell\SocialFeeds\Support\DefaultSocialFeedProviderProvider;
+use Capell\SocialFeeds\Support\DnsSocialFeedHostResolver;
 use Capell\SocialFeeds\Support\SocialFeedProviderRegistry;
 use Spatie\LaravelPackageTools\Package;
 
@@ -38,6 +40,7 @@ final class SocialFeedsServiceProvider extends AbstractPackageServiceProvider
 
     public function packageRegistered(): void
     {
+        $this->app->singleton(SocialFeedHostResolver::class, DnsSocialFeedHostResolver::class);
         $this->app->singleton(SocialFeedProviderRegistry::class);
         $this->app->tag([DefaultSocialFeedProviderProvider::class], SocialFeedProviderProvider::TAG);
         $this->app->tag([SocialFeedBlockDefinitionProvider::class], BlockDefinitionProvider::TAG);

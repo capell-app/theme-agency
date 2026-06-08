@@ -37,8 +37,7 @@ class SubscribeController extends BaseController
             ]);
         }
 
-        return redirect()
-            ->back()
+        return back()
             ->with('newsletter_status', __('capell-newsletter::messages.subscribed'));
     }
 }

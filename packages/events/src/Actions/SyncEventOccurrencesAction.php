@@ -61,6 +61,7 @@ class SyncEventOccurrencesAction
 
         return $occurrence;
     }
+
     private function syncPastDays(): int
     {
         $days = config('capell-events.recurrence.sync_past_days', 31);

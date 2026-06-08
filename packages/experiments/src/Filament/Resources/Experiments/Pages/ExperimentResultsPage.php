@@ -13,7 +13,6 @@ use Filament\Actions\Action;
 use Filament\Resources\Pages\Concerns\InteractsWithRecord;
 use Filament\Resources\Pages\Page;
 use Filament\Support\Icons\Heroicon;
-use Illuminate\Contracts\Support\Htmlable;
 use Override;
 
 /**
@@ -23,9 +22,9 @@ final class ExperimentResultsPage extends Page
 {
     use InteractsWithRecord;
 
-    protected static string $resource = ExperimentResource::class;
-
     protected static ?string $slug = '{record}/results';
+
+    protected static string $resource = ExperimentResource::class;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedChartBar;
 
@@ -45,7 +44,7 @@ final class ExperimentResultsPage extends Page
     }
 
     #[Override]
-    public function getTitle(): string|Htmlable
+    public function getTitle(): string
     {
         return __('capell-experiments::generic.results.heading', ['name' => $this->record->name]);
     }
@@ -65,7 +64,7 @@ final class ExperimentResultsPage extends Page
             Action::make('edit')
                 ->label(__('capell-experiments::generic.actions.edit'))
                 ->icon('heroicon-o-pencil-square')
-                ->url(fn (): string => static::getResource()::getUrl('edit', ['record' => $this->record])),
+                ->url(fn (): string => self::getResource()::getUrl('edit', ['record' => $this->record])),
         ];
     }
 }

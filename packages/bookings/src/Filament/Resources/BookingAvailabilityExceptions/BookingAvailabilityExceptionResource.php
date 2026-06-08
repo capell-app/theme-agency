@@ -28,6 +28,8 @@ use Override;
 
 final class BookingAvailabilityExceptionResource extends Resource
 {
+    protected static ?string $slug = 'bookings/booking-availability-exceptions';
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedCalendarDays;
 
     protected static ?string $recordTitleAttribute = 'date';

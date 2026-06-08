@@ -29,6 +29,8 @@ class FormMappingResource extends Resource
 {
     use ScopesNewsletterResourcesToAssignedSites;
 
+    protected static ?string $slug = 'newsletter/form-mappings';
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
 
     protected static ?string $recordTitleAttribute = 'name';

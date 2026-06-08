@@ -56,7 +56,7 @@ final class ReprocessPaymentWebhookEventsAction
             ->when($webhookEventId === null, function (Builder $query): void {
                 $query->where('status', PaymentWebhookEventStatus::Failed->value);
             })
-            ->orderBy('received_at')
+            ->oldest('received_at')
             ->orderBy('id')
             ->limit(max(1, $limit));
     }

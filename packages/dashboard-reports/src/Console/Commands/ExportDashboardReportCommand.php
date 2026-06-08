@@ -39,7 +39,7 @@ final class ExportDashboardReportCommand extends Command
             $rangeStart = $this->rangeStart();
             $rangeEnd = $this->rangeEnd();
 
-            if ($rangeStart === null || $rangeEnd === null) {
+            if (! $rangeStart instanceof CarbonImmutable || ! $rangeEnd instanceof CarbonImmutable) {
                 return self::INVALID;
             }
 
@@ -61,7 +61,7 @@ final class ExportDashboardReportCommand extends Command
             return self::SUCCESS;
         }
 
-        File::ensureDirectoryExists((string) dirname($path));
+        File::ensureDirectoryExists(dirname($path));
         File::put($path, $csv);
 
         $this->components->info(__('capell-dashboard-reports::dashboard.export_written', [

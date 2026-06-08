@@ -18,6 +18,8 @@ use Override;
 
 final class OrganisationResource extends Resource
 {
+    protected static ?string $slug = 'contacts/organisations';
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedBuildingOffice2;
 
     protected static ?string $recordTitleAttribute = 'name';

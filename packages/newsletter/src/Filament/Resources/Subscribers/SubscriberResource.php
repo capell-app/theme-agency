@@ -29,6 +29,8 @@ class SubscriberResource extends Resource
 {
     use ScopesNewsletterResourcesToAssignedSites;
 
+    protected static ?string $slug = 'newsletter/subscribers';
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedEnvelope;
 
     protected static ?string $recordTitleAttribute = 'email';

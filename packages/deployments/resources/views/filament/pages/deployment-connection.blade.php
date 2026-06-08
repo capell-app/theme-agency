@@ -90,8 +90,12 @@
 
                 @php($recentPublications = $this->getRecentPublications($connection))
 
-                <div class="mt-6 border-t border-gray-950/10 pt-4 dark:border-white/10">
-                    <h4 class="text-sm font-semibold text-gray-950 dark:text-white">
+                <div
+                    class="mt-6 border-t border-gray-950/10 pt-4 dark:border-white/10"
+                >
+                    <h4
+                        class="text-sm font-semibold text-gray-950 dark:text-white"
+                    >
                         {{ __('capell-deployments::plugins.deployment_connection.recent_publishes') }}
                     </h4>
 
@@ -102,7 +106,7 @@
                     @else
                         <div class="mt-3 overflow-x-auto">
                             <table class="w-full text-left text-sm">
-                                <thead class="text-xs uppercase text-gray-500">
+                                <thead class="text-xs text-gray-500 uppercase">
                                     <tr>
                                         <th class="py-2 pr-4 font-medium">
                                             {{ __('capell-deployments::plugins.deployment_connection.package_column') }}
@@ -116,12 +120,21 @@
                                         <th class="py-2 font-medium">
                                             {{ __('capell-deployments::plugins.deployment_connection.published_column') }}
                                         </th>
+                                        @if ($this::canManageConnections())
+                                            <th class="py-2 font-medium">
+                                                {{ __('capell-deployments::plugins.deployment_connection.actions_column') }}
+                                            </th>
+                                        @endif
                                     </tr>
                                 </thead>
-                                <tbody class="divide-y divide-gray-950/10 dark:divide-white/10">
+                                <tbody
+                                    class="divide-y divide-gray-950/10 dark:divide-white/10"
+                                >
                                     @foreach ($recentPublications as $publication)
                                         <tr>
-                                            <td class="py-3 pr-4 font-medium text-gray-950 dark:text-white">
+                                            <td
+                                                class="py-3 pr-4 font-medium text-gray-950 dark:text-white"
+                                            >
                                                 {{ $publication->composer_package }}
                                                 @if ($publication->constraint)
                                                     <span class="text-gray-500">
@@ -129,25 +142,33 @@
                                                     </span>
                                                 @endif
                                             </td>
-                                            <td class="py-3 pr-4 text-gray-600 dark:text-gray-300">
+                                            <td
+                                                class="py-3 pr-4 text-gray-600 dark:text-gray-300"
+                                            >
                                                 {{ $publication->statusLabel() }}
                                             </td>
-                                            <td class="py-3 pr-4 text-gray-600 dark:text-gray-300">
+                                            <td
+                                                class="py-3 pr-4 text-gray-600 dark:text-gray-300"
+                                            >
                                                 @if ($publication->pull_request_url)
                                                     <a
                                                         href="{{ $publication->pull_request_url }}"
                                                         target="_blank"
                                                         rel="noreferrer"
-                                                        class="text-primary-600 hover:underline dark:text-primary-400"
+                                                        class="text-primary-600 dark:text-primary-400 hover:underline"
                                                     >
                                                         {{ __('capell-deployments::plugins.deployment_connection.pull_request_reference', ['id' => $publication->pull_request_id ?? '']) }}
                                                     </a>
                                                 @elseif ($publication->commit_sha)
-                                                    <span class="font-mono text-xs">
+                                                    <span
+                                                        class="font-mono text-xs"
+                                                    >
                                                         {{ Str::limit($publication->commit_sha, 12, '') }}
                                                     </span>
                                                 @elseif ($publication->branch_name)
-                                                    <span class="font-mono text-xs">
+                                                    <span
+                                                        class="font-mono text-xs"
+                                                    >
                                                         {{ $publication->branch_name }}
                                                     </span>
                                                 @else
@@ -156,9 +177,31 @@
                                                     </span>
                                                 @endif
                                             </td>
-                                            <td class="py-3 text-gray-600 dark:text-gray-300">
+                                            <td
+                                                class="py-3 text-gray-600 dark:text-gray-300"
+                                            >
                                                 {{ $publication->created_at?->diffForHumans() }}
                                             </td>
+                                            @if ($this::canManageConnections())
+                                                <td class="py-3">
+                                                    @if ($this->canCancelPublication($publication))
+                                                        <button
+                                                            type="button"
+                                                            wire:click="cancelPublication({{ $connection->id }}, {{ $publication->id }})"
+                                                            wire:confirm="{{ __('capell-deployments::plugins.deployment_connection.cancel_publish_confirm') }}"
+                                                            class="fi-btn fi-btn-size-xs fi-color-danger fi-btn-color-danger"
+                                                        >
+                                                            {{ __('capell-deployments::plugins.deployment_connection.cancel_publish') }}
+                                                        </button>
+                                                    @else
+                                                        <span
+                                                            class="text-gray-400"
+                                                        >
+                                                            {{ __('capell-deployments::plugins.deployment_connection.no_action') }}
+                                                        </span>
+                                                    @endif
+                                                </td>
+                                            @endif
                                         </tr>
                                     @endforeach
                                 </tbody>

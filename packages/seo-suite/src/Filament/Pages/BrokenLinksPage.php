@@ -25,6 +25,8 @@ class BrokenLinksPage extends Page implements HasActions, HasTable
     use InteractsWithActions;
     use InteractsWithTable;
 
+    protected static ?string $slug = 'seo-suite/broken-links';
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedExclamationTriangle;
 
     protected static string|BackedEnum|null $activeNavigationIcon = Heroicon::ExclamationTriangle;
@@ -32,8 +34,6 @@ class BrokenLinksPage extends Page implements HasActions, HasTable
     protected static ?int $navigationSort = 11;
 
     protected string $view = 'capell-admin::components.pages.table';
-
-    protected static ?string $slug = 'broken-links';
 
     #[Override]
     public static function getNavigationLabel(): string

@@ -23,6 +23,8 @@ class CommentModerationInbox extends Page implements HasTable
 {
     use InteractsWithTable;
 
+    protected static ?string $slug = 'comments/comment-moderation-inbox';
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedInboxStack;
 
     protected string $view = 'capell-comments::filament.moderation-inbox';

@@ -17,6 +17,8 @@ use Override;
 
 final class PaymentCustomerResource extends Resource
 {
+    protected static ?string $slug = 'payments/customers/payment-customers';
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedUsers;
 
     protected static ?string $recordTitleAttribute = 'provider_customer_id';

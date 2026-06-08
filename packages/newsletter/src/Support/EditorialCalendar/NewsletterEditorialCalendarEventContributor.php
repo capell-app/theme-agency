@@ -88,7 +88,7 @@ final class NewsletterEditorialCalendarEventContributor implements EditorialCale
 
     private function recordUrl(NewsletterSend $send): ?string
     {
-        if (! Route::has('filament.admin.resources.newsletter-sends.edit')) {
+        if (! Route::has(NewsletterSendResource::getRouteBaseName() . '.edit')) {
             return null;
         }
 

@@ -29,9 +29,9 @@ class CompareVersionPage extends Page
 {
     use InteractsWithRecord;
 
-    protected static string $resource = WorkspaceResource::class;
-
     protected static ?string $slug = '{record}/compare';
+
+    protected static string $resource = WorkspaceResource::class;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedArrowsRightLeft;
 

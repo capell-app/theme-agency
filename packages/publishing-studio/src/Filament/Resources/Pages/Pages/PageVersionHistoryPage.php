@@ -33,9 +33,9 @@ class PageVersionHistoryPage extends FilamentPage
 
     public ?int $selectedRevisionId = null;
 
-    protected static string $resource = PageResource::class;
-
     protected static ?string $slug = '{record}/history';
+
+    protected static string $resource = PageResource::class;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedClock;
 

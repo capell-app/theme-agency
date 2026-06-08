@@ -18,6 +18,8 @@ use Override;
 
 final class PaymentRefundResource extends Resource
 {
+    protected static ?string $slug = 'payments/refunds/payment-refunds';
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedCreditCard;
 
     protected static ?string $recordTitleAttribute = 'provider_refund_id';

@@ -25,6 +25,8 @@ use Override;
 
 final class KnowledgeBaseCollectionResource extends Resource
 {
+    protected static ?string $slug = 'knowledge-base/collections/knowledge-base-collections';
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedBookOpen;
 
     protected static ?string $recordTitleAttribute = 'title';

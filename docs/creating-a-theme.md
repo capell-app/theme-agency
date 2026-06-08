@@ -26,14 +26,22 @@ fallback exists, register every section view the theme promises to support.
 
 Use these packages as the working examples:
 
-| Package                       | Theme key    | Role                                                                                                                               |
-| ----------------------------- | ------------ | ---------------------------------------------------------------------------------------------------------------------------------- |
-| `capell-app/foundation-theme` | `default`    | Free shared runtime, default Blade components, Tailwind asset generation, settings, media URL handling, and generic beacon client. |
-| `capell-app/theme-agency`     | `agency`     | Free expressive renderer for studio, portfolio, and brand-led sites.                                                               |
-| `capell-app/theme-corporate`  | `corporate`  | Free restrained renderer for B2B, public sector, and professional-service sites.                                                   |
-| `capell-app/theme-commerce`   | `commerce`   | Premium image-led renderer for catalog, retail, and conversion pages.                                                              |
-| `capell-app/theme-healthcare` | `healthcare` | Premium clinical renderer for appointment-led care, service discovery, clinicians, resources, and locations.                       |
-| `capell-app/theme-saas`       | `saas`       | Premium product-led renderer for software and subscription sites.                                                                  |
+| Package                                   | Theme key          | Role                                                                                                                               |
+| ----------------------------------------- | ------------------ | ---------------------------------------------------------------------------------------------------------------------------------- |
+| `capell-app/foundation-theme`             | `default`          | Free shared runtime, default Blade components, Tailwind asset generation, settings, media URL handling, and generic beacon client. |
+| `capell-app/theme-agency`                 | `agency`           | Premium expressive renderer for studios, campaigns, launch pages, project showcases, and creative lead capture.                    |
+| `capell-app/theme-corporate`              | `corporate`        | Free restrained renderer for B2B, public sector, and professional-service sites.                                                   |
+| `capell-app/theme-commerce`               | `commerce`         | Premium image-led renderer for catalog, retail, product discovery, buying guides, and conversion pages.                            |
+| `capell-app/theme-education`              | `education`        | Premium learning renderer for course catalogues, instructors, events, admissions, and enrolment journeys.                          |
+| `capell-app/theme-healthcare`             | `healthcare`       | Premium clinical renderer for appointment-led care, service discovery, clinicians, resources, and locations.                       |
+| `capell-app/theme-inertia-bookings`       | `inertia-bookings` | Premium Inertia renderer for services, appointments, locations, and the Bookings public request flow.                              |
+| `capell-app/theme-inertia-bookings-react` | n/a                | Premium React adapter plugin for the Inertia Bookings theme.                                                                       |
+| `capell-app/theme-inertia-bookings-vue`   | n/a                | Premium Vue adapter plugin for the Inertia Bookings theme.                                                                         |
+| `capell-app/theme-knowledge`              | `knowledge`        | Premium search-led renderer for documentation, knowledge bases, topic hubs, and resource libraries.                                |
+| `capell-app/theme-local-services`         | `local-services`   | Premium quote-led renderer for trades, service areas, local proof, quote forms, and click-to-call journeys.                        |
+| `capell-app/theme-nonprofit`              | `nonprofit`        | Premium impact renderer for campaigns, donations, volunteering, events, stories, and transparent support paths.                    |
+| `capell-app/theme-portfolio`              | `portfolio`        | Premium creator/consultant renderer for work grids, case studies, services, media kits, and newsletter growth.                     |
+| `capell-app/theme-saas`                   | `saas`             | Premium product-led renderer for software, pricing, comparison, docs, calculators, and demo-request journeys.                      |
 
 Theme packages are intentionally thin. They have no migrations, routes, models,
 admin navigation, or settings of their own. They register renderer contracts,
@@ -63,8 +71,8 @@ visual treatment:
     "themeKey": "client",
     "extends": "capell-app/foundation-theme",
     "dependencies": {
-        "requires": ["capell-app/foundation-theme"],
-        "optional": [],
+        "requires": ["capell-app/core", "capell-app/foundation-theme"],
+        "supports": [],
         "conflicts": []
     }
 }
@@ -76,30 +84,31 @@ It should still declare `kind: "theme"` and a stable `themeKey`.
 ## 2. Add Package Metadata
 
 Add `capell.json` beside the package `composer.json`. Capell currently uses the
-manifest v2 shape shown below.
+manifest v3 shape shown below.
 
 ```json
 {
-    "manifest-version": 2,
+    "manifest-version": 3,
     "name": "vendor/theme-client",
+    "slug": "theme-client",
+    "displayName": "Theme Client",
     "kind": "theme",
-    "capell-version": "^4.0",
-    "productGroup": "Capell Themes",
-    "tier": "premium",
-    "bundle": "themes",
+    "capellApiVersion": "^4.0",
+    "version": "4.x-dev",
     "description": "Client Theme registers the client theme key and renderer views.",
+    "product": {
+        "group": "Capell Themes",
+        "tier": "premium",
+        "bundle": "themes"
+    },
+    "namespace": "Vendor\\ClientTheme",
     "themeKey": "client",
     "extends": "capell-app/foundation-theme",
     "surfaces": ["frontend"],
     "dependencies": {
-        "requires": ["capell-app/foundation-theme"],
-        "optional": [],
+        "requires": ["capell-app/core", "capell-app/foundation-theme"],
+        "supports": [],
         "conflicts": []
-    },
-    "lifecycle": {
-        "activation": "manual",
-        "defaultStatus": "available",
-        "requiresInstallCommand": false
     },
     "providers": {
         "metadata": [],
@@ -116,16 +125,38 @@ manifest v2 shape shown below.
     "commands": {
         "install": null,
         "setup": null,
-        "setupParams": [],
         "demo": null,
         "demoParams": [],
-        "health": null
+        "doctor": null
     },
     "settings": [],
     "permissions": [],
     "capabilities": [],
-    "assets": [],
-    "healthChecks": []
+    "performance": {
+        "frontendRenderBudgetMs": 20,
+        "adminQueryBudget": 0,
+        "cacheTags": ["theme-client"],
+        "cacheSafety": {
+            "cacheable": false,
+            "variesBy": ["site", "locale"],
+            "sensitiveOutput": false,
+            "invalidationSources": [],
+            "queueInvalidation": false
+        }
+    },
+    "healthChecks": [],
+    "commercial": {
+        "proposedLicense": "paid",
+        "requestedCertification": "first-party",
+        "supportPolicy": "priority",
+        "privateDocsRequested": true
+    },
+    "marketplace": {
+        "summary": "Client Theme gives a Capell site a client-specific renderer.",
+        "description": "Client Theme extends Foundation Theme with client-specific public sections while keeping public output cache-safe and editor-free.",
+        "screenshots": [],
+        "categories": ["frontend", "themes"]
+    }
 }
 ```
 
@@ -448,7 +479,7 @@ be applied manually.
 
 At minimum, add tests for:
 
-- `capell.json` declares `kind: "theme"`, manifest v2 fields, a stable
+- `capell.json` declares `kind: "theme"`, manifest v3 fields, a stable
   `themeKey`, and the correct `extends` package.
 - The service provider registers the package as `PackageTypeEnum::Theme`.
 - The theme registers with `ThemeRegistry` only when the package is installed.

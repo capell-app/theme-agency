@@ -21,9 +21,9 @@ class PermissionAuditPage extends Page implements HasActions, HasTable
     use InteractsWithActions;
     use InteractsWithTable;
 
-    protected static BackedEnum|string|null $navigationIcon = Heroicon::OutlinedShieldCheck;
+    protected static ?string $slug = 'diagnostics/reports/permission-audit';
 
-    protected static ?string $slug = 'reports/permission-audit';
+    protected static BackedEnum|string|null $navigationIcon = Heroicon::OutlinedShieldCheck;
 
     protected static ?int $navigationSort = 3;
 

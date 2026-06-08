@@ -21,8 +21,10 @@
 
 @php
     use Capell\CampaignStudio\Actions\BuildCampaignUrlAction;
+    use Capell\CampaignStudio\Actions\SanitizeCampaignHtmlAction;
     use Capell\CampaignStudio\Data\UtmData;
 
+    $campaignHeroContent = is_string($content) ? SanitizeCampaignHtmlAction::run($content) : '';
     $campaignHeroUtm = new UtmData(
         source: is_scalar($utmSource) ? (string) $utmSource : null,
         medium: is_scalar($utmMedium) ? (string) $utmMedium : null,
@@ -55,8 +57,10 @@
                 <h1 class="max-w-3xl text-4xl font-bold">{{ $title }}</h1>
             @endif
 
-            @if ($content)
-                <div class="mt-5 max-w-2xl text-lg">{!! $content !!}</div>
+            @if ($campaignHeroContent !== '')
+                <div class="mt-5 max-w-2xl text-lg">
+                    {!! $campaignHeroContent !!}
+                </div>
             @endif
 
             <div class="mt-8 flex flex-wrap gap-3">

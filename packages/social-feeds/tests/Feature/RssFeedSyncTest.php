@@ -3,13 +3,24 @@
 declare(strict_types=1);
 
 use Capell\SocialFeeds\Actions\SyncSocialFeedConnectionAction;
+use Capell\SocialFeeds\Contracts\SocialFeedHostResolver;
 use Capell\SocialFeeds\Enums\SocialFeedConnectionStatus;
 use Capell\SocialFeeds\Models\SocialFeedConnection;
 use Capell\SocialFeeds\Models\SocialFeedItem;
+use Capell\SocialFeeds\Tests\Fixtures\StaticSocialFeedHostResolver;
 use Capell\SocialFeeds\Tests\TestCase;
+use GuzzleHttp\Promise\PromiseInterface;
+use Illuminate\Http\Client\Request;
 use Illuminate\Support\Facades\Http;
 
 uses(TestCase::class);
+
+beforeEach(function (): void {
+    app()->instance(SocialFeedHostResolver::class, new StaticSocialFeedHostResolver([
+        'example.test' => ['93.184.216.34'],
+        'youtube.test' => ['93.184.216.34'],
+    ]));
+});
 
 it('syncs rss feed items into the cached social feed table', function (): void {
     Http::fake([
@@ -79,6 +90,52 @@ it('keeps existing cached items when a provider request fails', function (): voi
     expect($synced)->toBe(0)
         ->and($connection->refresh()->status)->toBe(SocialFeedConnectionStatus::Connected)
         ->and(SocialFeedItem::query()->where('external_id', 'existing')->exists())->toBeTrue();
+});
+
+it('does not follow rss feed redirects to unchecked targets', function (): void {
+    /** @var array<string, mixed>|null $requestOptions */
+    $requestOptions = null;
+
+    Http::fake(function (Request $request, array $options) use (&$requestOptions): PromiseInterface {
+        $requestOptions = $options;
+
+        return Http::response('', 302, ['Location' => 'http://169.254.169.254/latest/meta-data']);
+    });
+
+    $connection = SocialFeedConnection::query()->create([
+        'provider' => 'rss',
+        'name' => 'Example Updates',
+        'status' => SocialFeedConnectionStatus::Connected,
+        'credentials' => ['feed_url' => 'https://example.test/feed.xml'],
+    ]);
+
+    $synced = SyncSocialFeedConnectionAction::run($connection, 10);
+
+    expect($synced)->toBe(0)
+        ->and($connection->refresh()->status)->toBe(SocialFeedConnectionStatus::Connected)
+        ->and(data_get($requestOptions, 'allow_redirects'))->toBeFalse()
+        ->and(data_get($requestOptions, 'curl.' . CURLOPT_RESOLVE))->toBe(['example.test:443:93.184.216.34']);
+
+    Http::assertSentCount(1);
+});
+
+it('blocks rss feed urls that target private hosts', function (): void {
+    Http::fake();
+
+    $connection = SocialFeedConnection::query()->create([
+        'provider' => 'rss',
+        'name' => 'Private Updates',
+        'status' => SocialFeedConnectionStatus::Connected,
+        'credentials' => ['feed_url' => 'http://127.0.0.1/feed.xml'],
+    ]);
+
+    $synced = SyncSocialFeedConnectionAction::run($connection, 10);
+
+    expect($synced)->toBe(0)
+        ->and($connection->refresh()->status)->toBe(SocialFeedConnectionStatus::Error)
+        ->and($connection->last_sync_error)->toContain('host is not allowed');
+
+    Http::assertNothingSent();
 });
 
 it('syncs configured social providers through feed url credentials', function (): void {

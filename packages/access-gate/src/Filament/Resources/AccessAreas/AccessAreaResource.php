@@ -42,6 +42,8 @@ final class AccessAreaResource extends Resource
 {
     use AccessGateFilamentOptions;
 
+    protected static ?string $slug = 'access-gate/access-areas';
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedLockClosed;
 
     protected static string|BackedEnum|null $activeNavigationIcon = Heroicon::LockClosed;

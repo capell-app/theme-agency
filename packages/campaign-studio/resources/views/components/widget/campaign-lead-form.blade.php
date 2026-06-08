@@ -6,6 +6,14 @@
     'widget',
 ])
 
+@php
+    use Capell\CampaignStudio\Actions\SanitizeCampaignHtmlAction;
+
+    $campaignLeadFormContent = is_string($widget->translation?->content ?? null)
+        ? SanitizeCampaignHtmlAction::run($widget->translation->content)
+        : '';
+@endphp
+
 <x-capell-foundation-theme::widget.wrapper
     class="capell-widget-campaign-lead-form widget-campaign-lead-form"
     :$container
@@ -25,8 +33,8 @@
             </h2>
         @endif
 
-        @if ($widget->translation?->content)
-            <div class="mb-6">{!! $widget->translation->content !!}</div>
+        @if ($campaignLeadFormContent !== '')
+            <div class="mb-6">{!! $campaignLeadFormContent !!}</div>
         @endif
 
         @if ($widget->getMeta('form_handle'))

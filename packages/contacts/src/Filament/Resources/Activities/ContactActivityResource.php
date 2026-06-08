@@ -18,6 +18,8 @@ use Override;
 
 final class ContactActivityResource extends Resource
 {
+    protected static ?string $slug = 'contacts/activities/contact-activities';
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedClock;
 
     protected static ?string $recordTitleAttribute = 'summary';

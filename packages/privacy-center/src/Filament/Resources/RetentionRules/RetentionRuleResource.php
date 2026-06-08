@@ -31,6 +31,8 @@ use Override;
 
 final class RetentionRuleResource extends Resource
 {
+    protected static ?string $slug = 'privacy-center/retention-rules';
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedClock;
 
     protected static ?string $recordTitleAttribute = 'data_domain';

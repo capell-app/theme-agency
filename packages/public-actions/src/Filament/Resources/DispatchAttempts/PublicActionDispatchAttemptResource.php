@@ -28,6 +28,8 @@ final class PublicActionDispatchAttemptResource extends Resource
 {
     use PublicActionFilamentOptions;
 
+    protected static ?string $slug = 'public-actions/dispatch-attempts/public-action-dispatch-attempts';
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedPaperAirplane;
 
     protected static ?int $navigationSort = 43;

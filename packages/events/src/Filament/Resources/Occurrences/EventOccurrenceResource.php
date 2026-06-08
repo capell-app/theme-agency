@@ -27,6 +27,8 @@ use Override;
 
 class EventOccurrenceResource extends Resource
 {
+    protected static ?string $slug = 'events/occurrences/event-occurrences';
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedCalendar;
 
     #[Override]

@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Capell\Events\Actions\ExpandEventRecurrenceAction;
+use Capell\Events\Data\EventOccurrenceData;
 use Capell\Events\Models\Event;
 use Carbon\CarbonImmutable;
 
@@ -43,7 +44,7 @@ it('keeps recurring event wall time stable across DST changes', function (): voi
     );
 
     expect($occurrences)->toHaveCount(3)
-        ->and($occurrences->map(fn (Capell\Events\Data\EventOccurrenceData $occurrence): string => $occurrence->startsAt->format('H:i'))->all())->toBe([
+        ->and($occurrences->map(fn (EventOccurrenceData $occurrence): string => $occurrence->startsAt->format('H:i'))->all())->toBe([
             '09:00',
             '09:00',
             '09:00',

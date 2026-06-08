@@ -66,16 +66,7 @@ final class MediaAIEditActionExtender implements MediaEditActionExtender
                         RateLimiter::hit($rateLimitKey, $this->decaySeconds());
                     }
 
-                    RunImageDoctorJob::dispatch(
-                        mediaId: (int) $record->getKey(),
-                        operation: (string) $data['operation'],
-                        instructions: (string) $data['instructions'],
-                        locale: app()->getLocale(),
-                        budgetCents: $this->budgetCents(),
-                        model: $this->model(),
-                        notifiableClass: $user instanceof Model ? $user::class : null,
-                        notifiableKey: $user instanceof Model ? $user->getKey() : null,
-                    );
+                    dispatch(new RunImageDoctorJob(mediaId: (int) $record->getKey(), operation: (string) $data['operation'], instructions: (string) $data['instructions'], locale: app()->getLocale(), budgetCents: $this->budgetCents(), model: $this->model(), notifiableClass: $user instanceof Model ? $user::class : null, notifiableKey: $user instanceof Model ? $user->getKey() : null));
 
                     Notification::make('capell_media_ai_image_doctor_queued')
                         ->title(__('capell-media-ai::media-ai.queued'))
@@ -89,7 +80,7 @@ final class MediaAIEditActionExtender implements MediaEditActionExtender
     {
         return sprintf(
             'capell-media-ai:image-doctor:%s:%s',
-            $user === null ? 'guest' : $user::class . ':' . $user->getKey(),
+            $user instanceof Model ? $user::class . ':' . $user->getKey() : 'guest',
             $media->getKey(),
         );
     }

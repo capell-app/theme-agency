@@ -513,7 +513,7 @@ final class SubmitPublicActionAction
                 continue;
             }
 
-            DispatchPublicActionDestinationJob::dispatch($dispatch['destination'], $submission, $dispatch['attempt'])
+            dispatch(new DispatchPublicActionDestinationJob($dispatch['destination'], $submission, $dispatch['attempt']))
                 ->afterCommit();
         }
     }

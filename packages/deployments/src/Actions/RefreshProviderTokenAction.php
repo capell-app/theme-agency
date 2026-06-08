@@ -7,6 +7,7 @@ namespace Capell\Deployments\Actions;
 use Capell\Deployments\Enums\GitProviderType;
 use Capell\Deployments\Models\DeploymentConnection;
 use Carbon\CarbonImmutable;
+use DateTimeInterface;
 use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\Client\RequestException;
 use Illuminate\Support\Facades\Http;
@@ -36,7 +37,7 @@ final class RefreshProviderTokenAction
             return false;
         }
 
-        if (! $connection->token_expires_at instanceof \DateTimeInterface) {
+        if (! $connection->token_expires_at instanceof DateTimeInterface) {
             return false;
         }
 

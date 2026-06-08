@@ -869,10 +869,15 @@ function healthcareThemeTokenBladeViews(string ...$directories): string
         $files = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($directory));
 
         foreach ($files as $file) {
-            if (! $file instanceof SplFileInfo || ! $file->isFile() || ! str_ends_with($file->getFilename(), '.blade.php')) {
+            if (! $file instanceof SplFileInfo) {
                 continue;
             }
-
+            if (! $file->isFile()) {
+                continue;
+            }
+            if (! str_ends_with((string) $file->getFilename(), '.blade.php')) {
+                continue;
+            }
             $views[] = file_get_contents($file->getPathname()) ?: '';
         }
     }

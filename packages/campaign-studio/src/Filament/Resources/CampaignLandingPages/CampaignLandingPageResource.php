@@ -28,6 +28,8 @@ final class CampaignLandingPageResource extends Resource
     use HasConfiguredForm;
     use HasConfiguredTable;
 
+    protected static ?string $slug = 'campaign-studio/campaign-landing-pages';
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedDocumentText;
 
     protected static string|BackedEnum|null $activeNavigationIcon = Heroicon::DocumentText;

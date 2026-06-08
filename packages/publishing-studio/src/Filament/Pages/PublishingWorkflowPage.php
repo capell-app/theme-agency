@@ -19,11 +19,11 @@ class PublishingWorkflowPage extends Page
 {
     use HasPageShield;
 
+    protected static ?string $slug = 'publishing-studio/publishing-workflow';
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedDocumentCheck;
 
     protected static string|BackedEnum|null $activeNavigationIcon = Heroicon::DocumentCheck;
-
-    protected static ?string $slug = 'publishing-workflow';
 
     protected static ?int $navigationSort = 0;
 

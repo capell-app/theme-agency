@@ -26,6 +26,8 @@ final class CampaignCtaWidgetResource extends Resource
     use HasConfiguredForm;
     use HasConfiguredTable;
 
+    protected static ?string $slug = 'campaign-studio/campaign-cta-widgets';
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedCursorArrowRays;
 
     protected static string|BackedEnum|null $activeNavigationIcon = Heroicon::CursorArrowRays;

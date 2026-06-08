@@ -56,7 +56,7 @@ final class IssuePaymentRefundAction
             'metadata' => [
                 'capell_payment_intent_id' => (string) $paymentIntent->getKey(),
             ],
-        ], static fn (mixed $value): bool => $value !== null && $value !== '' && $value !== []);
+        ], static fn (mixed $value): bool => ! in_array($value, [null, '', []], true));
     }
 
     /**

@@ -19,6 +19,7 @@ use Capell\Diagnostics\Tests\DiagnosticsTestCase;
 use Capell\DocumentLifecycle\Tests\DocumentLifecycleTestCase;
 use Capell\EmailStudio\Tests\EmailStudioTestCase;
 use Capell\Events\Tests\EventsTestCase;
+use Capell\ExceptionReports\Tests\ExceptionReportsTestCase;
 use Capell\FilamentPeek\Tests\FilamentPeekTestCase;
 use Capell\FormBuilder\Tests\FormBuilderTestCase;
 use Capell\FrontendAuthoring\Tests\FrontendAuthoringTestCase;
@@ -140,6 +141,7 @@ extendCapellPackageTests(ContentSectionsTestCase::class, 'content-sections', 'co
 extendCapellPackageTests(DemoKitTestCase::class, 'demo-kit', 'demo-kit');
 extendCapellPackageTests(DeploymentsTestCase::class, 'deployments', 'deployments');
 extendCapellPackageTests(DiagnosticsTestCase::class, 'diagnostics', 'diagnostics');
+extendCapellPackageTests(ExceptionReportsTestCase::class, 'exception-reports', 'exception-reports');
 extendCapellPackageTests(DocumentLifecycleTestCase::class, 'document-lifecycle', 'document-lifecycle');
 extendCapellPackageTests(EmailStudioTestCase::class, 'email-studio', 'email-studio');
 extendCapellPackageTests(EventsTestCase::class, 'events', 'events');

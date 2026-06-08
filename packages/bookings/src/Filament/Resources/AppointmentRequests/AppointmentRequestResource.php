@@ -33,6 +33,8 @@ use Override;
 
 final class AppointmentRequestResource extends Resource
 {
+    protected static ?string $slug = 'bookings/appointment-requests';
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedCalendar;
 
     protected static ?string $recordTitleAttribute = 'customer_name';

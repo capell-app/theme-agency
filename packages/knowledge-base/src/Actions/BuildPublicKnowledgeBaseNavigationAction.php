@@ -9,7 +9,6 @@ use Capell\KnowledgeBase\Enums\KnowledgeBaseArticleStatus;
 use Capell\KnowledgeBase\Models\KnowledgeBaseArticle;
 use Capell\KnowledgeBase\Models\KnowledgeBaseCollection;
 use Capell\KnowledgeBase\Support\KnowledgeBasePublicPath;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Collection;
 use Lorisleiva\Actions\Concerns\AsObject;

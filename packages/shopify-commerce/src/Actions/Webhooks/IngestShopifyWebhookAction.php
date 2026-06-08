@@ -41,7 +41,7 @@ final class IngestShopifyWebhookAction
     {
         $product = $this->productData($payload);
 
-        if ($product === null) {
+        if (! $product instanceof ShopifyProductData) {
             return;
         }
 
@@ -138,10 +138,12 @@ final class IngestShopifyWebhookAction
         $selectedOptions = [];
 
         foreach (['option1', 'option2', 'option3'] as $optionKey) {
-            if (! is_string($variant[$optionKey] ?? null) || $variant[$optionKey] === '') {
+            if (! is_string($variant[$optionKey] ?? null)) {
                 continue;
             }
-
+            if ($variant[$optionKey] === '') {
+                continue;
+            }
             $selectedOptions[] = new ShopifyProductOptionData(
                 name: Str::headline($optionKey),
                 value: $variant[$optionKey],

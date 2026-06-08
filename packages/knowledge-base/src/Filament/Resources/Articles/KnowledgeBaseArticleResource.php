@@ -31,6 +31,8 @@ use Override;
 
 final class KnowledgeBaseArticleResource extends Resource
 {
+    protected static ?string $slug = 'knowledge-base/articles/knowledge-base-articles';
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedDocumentText;
 
     protected static ?string $recordTitleAttribute = 'title';

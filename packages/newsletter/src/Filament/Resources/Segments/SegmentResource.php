@@ -30,6 +30,8 @@ class SegmentResource extends Resource
 {
     use ScopesNewsletterResourcesToAssignedSites;
 
+    protected static ?string $slug = 'newsletter/segments';
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedUserGroup;
 
     protected static ?string $recordTitleAttribute = 'name';

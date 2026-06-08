@@ -59,7 +59,7 @@ function dashboardReportsCsvRows(string $csv): array
     $lines = array_values(array_filter(explode("\n", trim($csv)), static fn (string $line): bool => $line !== ''));
 
     return array_map(
-        static fn (string $line): array => str_getcsv($line),
+        str_getcsv(...),
         $lines,
     );
 }

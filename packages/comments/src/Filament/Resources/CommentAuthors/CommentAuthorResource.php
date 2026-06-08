@@ -24,6 +24,8 @@ use Override;
 
 class CommentAuthorResource extends Resource
 {
+    protected static ?string $slug = 'comments/comment-authors';
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedUsers;
 
     protected static ?int $navigationSort = 36;

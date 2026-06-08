@@ -58,7 +58,7 @@ class ConfirmSubscriberAction
 
             SyncNewsletterSubscriberContactAction::run($subscriber);
 
-            SubscriberConfirmed::dispatch($subscriber);
+            event(new SubscriberConfirmed($subscriber));
 
             return $subscriber;
         });

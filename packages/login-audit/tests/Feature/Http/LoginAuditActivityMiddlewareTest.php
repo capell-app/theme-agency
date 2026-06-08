@@ -81,7 +81,7 @@ it('updates matching admin activity for the authenticated actor ip path and user
     $this->actingAs($adminUser);
 
     $request = loginAuditActivityRequest(
-        path: '/admin/login-audits?from=dashboard',
+        path: '/admin/login-audit/login-audits?from=dashboard',
         user: $adminUser,
         ipAddress: $ipAddress,
         userAgent: $userAgent,
@@ -92,7 +92,7 @@ it('updates matching admin activity for the authenticated actor ip path and user
         fn (Request $handledRequest): Response => new Response('next:' . $handledRequest->path()),
     );
 
-    expect($response->getContent())->toBe('next:admin/login-audits')
+    expect($response->getContent())->toBe('next:admin/login-audit/login-audits')
         ->and(loginAuditActivityTimestamp($matchingAudit->refresh()->last_seen_at))->toBe($trackedAt->toDateTimeString())
         ->and(loginAuditActivityTimestamp($wrongIpAudit->refresh()->last_seen_at))->toBe($wrongIpAuditLastSeenAt)
         ->and(loginAuditActivityTimestamp($wrongActorAudit->refresh()->last_seen_at))->toBe($wrongActorAuditLastSeenAt)
@@ -119,7 +119,7 @@ it('throttles repeated admin activity writes for the same session', function ():
     $this->actingAs($adminUser);
 
     $request = loginAuditActivityRequest(
-        path: '/admin/login-audits',
+        path: '/admin/login-audit/login-audits',
         user: $adminUser,
         ipAddress: '198.51.100.23',
         userAgent: 'Capell Admin Browser/1.0',
@@ -152,7 +152,7 @@ it('skips admin activity writes when admin tracking is disabled', function (): v
     $this->actingAs($adminUser);
 
     $request = loginAuditActivityRequest(
-        path: '/admin/login-audits',
+        path: '/admin/login-audit/login-audits',
         user: $adminUser,
         ipAddress: '198.51.100.23',
         userAgent: 'Capell Admin Browser/1.0',
@@ -181,7 +181,7 @@ it('skips admin activity for unauthenticated requests', function (): void {
     $lastSeenAt = loginAuditActivityTimestamp($audit->refresh()->last_seen_at);
 
     $request = Request::create(
-        uri: '/admin/login-audits',
+        uri: '/admin/login-audit/login-audits',
         method: Symfony\Component\HttpFoundation\Request::METHOD_GET,
         server: [
             'REMOTE_ADDR' => '198.51.100.23',
@@ -194,7 +194,7 @@ it('skips admin activity for unauthenticated requests', function (): void {
         fn (Request $handledRequest): Response => new Response('next:' . $handledRequest->path()),
     );
 
-    expect($response->getContent())->toBe('next:admin/login-audits')
+    expect($response->getContent())->toBe('next:admin/login-audit/login-audits')
         ->and(loginAuditActivityTimestamp($audit->refresh()->last_seen_at))->toBe($lastSeenAt);
 });
 

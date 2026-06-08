@@ -81,7 +81,7 @@ final class GitHubCallbackController
             installPolicy: $connectionData->installPolicy,
         );
 
-        return to_route('filament.admin.pages.deployment-connection')
+        return redirect()->to(DeploymentConnectionPage::getUrl())
             ->with('status', __('capell-deployments::plugins.deployment_connection.oauth_connected', ['provider' => 'GitHub']));
     }
 

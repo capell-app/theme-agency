@@ -61,7 +61,7 @@ final class DetectSuspiciousLoginAction
             'type' => 'multiple_failed_logins',
             'count' => $failedAttempts,
             'window_minutes' => $windowMinutes,
-            'message' => "{$failedAttempts} failed login attempts in {$windowMinutes} minutes",
+            'message' => sprintf('%d failed login attempts in %d minutes', $failedAttempts, $windowMinutes),
         ]];
     }
 
@@ -148,7 +148,7 @@ final class DetectSuspiciousLoginAction
         return [[
             'type' => 'unusual_login_time',
             'hour' => $loginHour,
-            'message' => "Login at unusual time: {$loginHour}:00",
+            'message' => sprintf('Login at unusual time: %d:00', $loginHour),
         ]];
     }
 

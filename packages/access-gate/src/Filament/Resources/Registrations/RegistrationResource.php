@@ -37,6 +37,8 @@ final class RegistrationResource extends Resource
 {
     use AccessGateFilamentOptions;
 
+    protected static ?string $slug = 'access-gate/registrations';
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedEnvelope;
 
     protected static string|BackedEnum|null $activeNavigationIcon = Heroicon::Envelope;
@@ -225,11 +227,8 @@ final class RegistrationResource extends Resource
         return $count > 0 ? (string) $count : null;
     }
 
-    /**
-     * @return string|array<string>|null
-     */
     #[Override]
-    public static function getNavigationBadgeColor(): string|array|null
+    public static function getNavigationBadgeColor(): string
     {
         return 'warning';
     }

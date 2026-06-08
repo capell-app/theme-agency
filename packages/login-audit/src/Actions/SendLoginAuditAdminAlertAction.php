@@ -27,10 +27,12 @@ final class SendLoginAuditAdminAlertAction
         $recipients = ResolveAdminNotificationRecipientsAction::run(self::NOTIFICATION_GROUP);
 
         foreach ($recipients as $recipient) {
-            if (! $recipient instanceof Model || ! $recipient instanceof Authenticatable) {
+            if (! $recipient instanceof Model) {
                 continue;
             }
-
+            if (! $recipient instanceof Authenticatable) {
+                continue;
+            }
             $this->sendFilamentNotification($loginAudit, $alertType, $recipient);
         }
     }

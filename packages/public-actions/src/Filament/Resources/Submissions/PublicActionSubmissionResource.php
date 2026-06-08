@@ -25,6 +25,8 @@ final class PublicActionSubmissionResource extends Resource
 {
     use PublicActionFilamentOptions;
 
+    protected static ?string $slug = 'public-actions/submissions/public-action-submissions';
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedInbox;
 
     protected static ?int $navigationSort = 41;

@@ -49,16 +49,7 @@ final class QueueBatchImageDoctorRequestsAction
                 $notifiableClass,
                 $notifiableKey,
             ): void {
-                RunImageDoctorJob::dispatch(
-                    mediaId: (int) $media->getKey(),
-                    operation: $operation,
-                    instructions: $instructions,
-                    locale: $locale,
-                    budgetCents: $budgetCents,
-                    model: $model,
-                    notifiableClass: $notifiableClass,
-                    notifiableKey: $notifiableKey,
-                );
+                dispatch(new RunImageDoctorJob(mediaId: (int) $media->getKey(), operation: $operation, instructions: $instructions, locale: $locale, budgetCents: $budgetCents, model: $model, notifiableClass: $notifiableClass, notifiableKey: $notifiableKey));
 
                 $queued++;
             });

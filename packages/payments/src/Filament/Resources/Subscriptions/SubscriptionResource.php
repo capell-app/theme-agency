@@ -17,6 +17,8 @@ use Override;
 
 final class SubscriptionResource extends Resource
 {
+    protected static ?string $slug = 'payments/subscriptions';
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedArrowPathRoundedSquare;
 
     protected static ?string $recordTitleAttribute = 'provider_subscription_id';

@@ -23,6 +23,8 @@ use Override;
 
 class ProviderAudienceResource extends Resource
 {
+    protected static ?string $slug = 'newsletter/provider-audiences';
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedQueueList;
 
     protected static ?string $recordTitleAttribute = 'name';

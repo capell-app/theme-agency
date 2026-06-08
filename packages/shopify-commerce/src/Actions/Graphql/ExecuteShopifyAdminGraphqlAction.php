@@ -9,6 +9,7 @@ use Capell\ShopifyCommerce\Models\ShopifyConnection;
 use Capell\ShopifyCommerce\Settings\ShopifyCommerceSettings;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Sleep;
 use Lorisleiva\Actions\Concerns\AsAction;
@@ -161,13 +162,13 @@ final class ExecuteShopifyAdminGraphqlAction
             return max(0, (int) $header);
         }
 
-        $timestamp = strtotime($header);
+        $timestamp = Date::parse($header)->getTimestamp();
 
         if ($timestamp === false) {
             return 1;
         }
 
-        return max(0, $timestamp - time());
+        return max(0, $timestamp - Date::now()->getTimestamp());
     }
 
     private function throttleCacheKey(ShopifyConnection $connection): string

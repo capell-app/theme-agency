@@ -25,13 +25,13 @@ class StaleDraftsPage extends Page implements HasActions, HasTable
     use InteractsWithActions;
     use InteractsWithTable;
 
+    protected static ?string $slug = 'publishing-studio/stale-drafts';
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedClock;
 
     protected static string|BackedEnum|null $activeNavigationIcon = Heroicon::Clock;
 
     protected string $view = 'capell-admin::components.pages.table';
-
-    protected static ?string $slug = 'stale-drafts';
 
     protected static ?int $navigationSort = 2;
 

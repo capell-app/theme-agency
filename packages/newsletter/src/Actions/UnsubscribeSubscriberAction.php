@@ -57,7 +57,7 @@ class UnsubscribeSubscriberAction
 
             SyncNewsletterSubscriberContactAction::run($subscriber);
 
-            SubscriberUnsubscribed::dispatch($subscriber);
+            event(new SubscriberUnsubscribed($subscriber));
 
             return $subscriber;
         });

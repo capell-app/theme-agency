@@ -26,6 +26,8 @@ final class CampaignConversionGoalResource extends Resource
     use HasConfiguredForm;
     use HasConfiguredTable;
 
+    protected static ?string $slug = 'campaign-studio/campaign-conversion-goals';
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedChartBar;
 
     protected static string|BackedEnum|null $activeNavigationIcon = Heroicon::ChartBar;

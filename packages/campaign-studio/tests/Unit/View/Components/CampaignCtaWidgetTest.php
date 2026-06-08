@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use Capell\CampaignStudio\Actions\BuildCampaignUrlAction;
+use Capell\CampaignStudio\Data\UtmData;
 use Capell\CampaignStudio\Models\CampaignCtaWidget;
 use Capell\CampaignStudio\Models\CampaignGroup;
 use Capell\CampaignStudio\View\Components\Widget\CampaignCtaWidget as CampaignCtaWidgetComponent;
@@ -122,4 +124,71 @@ it('decorates campaign hero button URLs with configured UTM metadata', function 
         ->toContain('data-campaign-goal="trial-started"')
         ->not->toContain('campaign_group_id')
         ->not->toContain('data-campaign-id');
+});
+
+it('sanitizes campaign widget rich text before raw public rendering', function (): void {
+    $payload = '<p class="lead" onclick="alert(1)">Safe <strong>copy</strong><script>alert(2)</script><a href="javascript:alert(3)">link</a></p>';
+    $widget = Widget::factory()->create();
+    $widget->setRelation('translation', (object) [
+        'title' => 'Lead form',
+        'content' => $payload,
+    ]);
+
+    $heroHtml = view('capell-campaign-studio::components.widget.campaign-hero', [
+        'container' => [],
+        'containerKey' => 'main',
+        'containerWidth' => null,
+        'content' => $payload,
+        'loop' => (object) ['index' => 0, 'first' => true, 'last' => true],
+        'widget' => $widget,
+    ])->render();
+    $leadFormHtml = view('capell-campaign-studio::components.widget.campaign-lead-form', [
+        'container' => [],
+        'containerKey' => 'main',
+        'containerWidth' => null,
+        'loop' => (object) ['index' => 0, 'first' => true, 'last' => true],
+        'widget' => $widget,
+    ])->render();
+
+    expect($heroHtml)
+        ->toContain('<strong>copy</strong>')
+        ->toContain('class="lead"')
+        ->not->toContain('<script')
+        ->not->toContain('onclick')
+        ->not->toContain('javascript:')
+        ->and($leadFormHtml)
+        ->toContain('<strong>copy</strong>')
+        ->toContain('class="lead"')
+        ->not->toContain('<script')
+        ->not->toContain('onclick')
+        ->not->toContain('javascript:');
+});
+
+it('neutralizes unsafe campaign CTA URLs before rendering', function (): void {
+    $utm = new UtmData(source: 'newsletter');
+
+    expect(BuildCampaignUrlAction::run('javascript:alert(1)', $utm))->toBe('#')
+        ->and(BuildCampaignUrlAction::run("java\nscript:alert(1)", $utm))->toBe('#')
+        ->and(BuildCampaignUrlAction::run('mailto:hello@example.test', $utm))->toBe('mailto:hello@example.test')
+        ->and(BuildCampaignUrlAction::run('/demo', $utm))->toBe('/demo?utm_source=newsletter');
+
+    $widget = Widget::factory()->create([
+        'meta' => [
+            'primary_button_text' => 'Unsafe',
+            'primary_button_url' => 'javascript:alert(1)',
+            'utm_source' => 'newsletter',
+        ],
+    ]);
+
+    $html = view('capell-campaign-studio::components.widget.campaign-hero', [
+        'container' => [],
+        'containerKey' => 'main',
+        'containerWidth' => null,
+        'loop' => (object) ['index' => 0, 'first' => true, 'last' => true],
+        'widget' => $widget,
+    ])->render();
+
+    expect($html)
+        ->toContain('href="#"')
+        ->not->toContain('javascript:');
 });

@@ -13,6 +13,12 @@ final class BuildCampaignUrlAction
 
     public function handle(string $url, UtmData $utm): string
     {
+        $url = $this->safeUrl($url);
+
+        if ($url === '#' || $this->shouldSkipTrackingParameters($url)) {
+            return $url;
+        }
+
         $utmParameters = array_filter([
             'utm_source' => $utm->source,
             'utm_medium' => $utm->medium,
@@ -52,5 +58,33 @@ final class BuildCampaignUrlAction
         }
 
         return $rebuiltUrl;
+    }
+
+    private function safeUrl(string $url): string
+    {
+        $url = trim($url);
+
+        if ($url === '' || preg_match('/[\x00-\x1F\x7F]/', $url) === 1) {
+            return '#';
+        }
+
+        if (preg_match('/^\s*([a-z][a-z0-9+.\-]*)\s*:/i', $url, $matches) !== 1) {
+            return $url;
+        }
+
+        $scheme = strtolower((string) $matches[1]);
+
+        return in_array($scheme, ['http', 'https', 'mailto', 'tel'], true) ? $url : '#';
+    }
+
+    private function shouldSkipTrackingParameters(string $url): bool
+    {
+        if (str_starts_with($url, '#')) {
+            return true;
+        }
+
+        $scheme = parse_url($url, PHP_URL_SCHEME);
+
+        return is_string($scheme) && ! in_array(strtolower($scheme), ['http', 'https'], true);
     }
 }

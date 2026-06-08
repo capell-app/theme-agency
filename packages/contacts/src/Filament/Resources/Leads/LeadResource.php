@@ -23,6 +23,8 @@ use Override;
 
 final class LeadResource extends Resource
 {
+    protected static ?string $slug = 'contacts/leads';
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedMegaphone;
 
     protected static ?string $recordTitleAttribute = 'title';

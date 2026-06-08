@@ -28,6 +28,8 @@ final class CampaignGroupResource extends Resource
     use HasConfiguredForm;
     use HasConfiguredTable;
 
+    protected static ?string $slug = 'campaign-studio/campaign-groups';
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedMegaphone;
 
     protected static string|BackedEnum|null $activeNavigationIcon = Heroicon::Megaphone;

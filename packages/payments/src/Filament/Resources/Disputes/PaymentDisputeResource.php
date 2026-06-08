@@ -18,6 +18,8 @@ use Override;
 
 final class PaymentDisputeResource extends Resource
 {
+    protected static ?string $slug = 'payments/disputes/payment-disputes';
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedExclamationTriangle;
 
     protected static ?string $recordTitleAttribute = 'provider_dispute_id';

@@ -18,6 +18,8 @@ use Override;
 
 final class AutomationRunResource extends Resource
 {
+    protected static ?string $slug = 'automation-studio/automation-runs';
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedListBullet;
 
     protected static ?string $recordTitleAttribute = 'rule_key';

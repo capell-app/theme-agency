@@ -112,7 +112,7 @@ final class ExperimentResource extends Resource
         return Action::make('results')
             ->label(__('capell-experiments::generic.actions.results'))
             ->icon('heroicon-o-chart-bar')
-            ->url(fn (Experiment $record): string => static::getUrl('results', ['record' => $record]));
+            ->url(fn (Experiment $record): string => self::getUrl('results', ['record' => $record]));
     }
 
     #[Override]

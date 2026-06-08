@@ -18,6 +18,8 @@ use Override;
 
 final class CheckoutSessionResource extends Resource
 {
+    protected static ?string $slug = 'payments/checkout-sessions';
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedCreditCard;
 
     protected static ?string $recordTitleAttribute = 'provider_session_id';

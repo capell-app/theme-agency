@@ -28,6 +28,8 @@ use Override;
 
 final class BookingAvailabilityWindowResource extends Resource
 {
+    protected static ?string $slug = 'bookings/booking-availability-windows';
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedClock;
 
     protected static ?string $recordTitleAttribute = 'starts_at';

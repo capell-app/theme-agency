@@ -26,6 +26,8 @@ use Override;
 
 final class SentEmailResource extends Resource
 {
+    protected static ?string $slug = 'email-studio/sent-emails';
+
     protected static ?string $model = SentEmail::class;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedEnvelope;

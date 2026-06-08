@@ -38,7 +38,7 @@ final class ShowCustomerPortalController
         $selfServiceItems = ResolvePortalSelfServiceItemsAction::run($portalAccount);
         $supportRequests = $portalAccount
             ->supportRequests()
-            ->with(['replies' => fn (Builder $query): Builder => $query->orderBy('submitted_at')])
+            ->with(['replies' => fn (Builder $query): Builder => $query->oldest('submitted_at')])
             ->latest('submitted_at')
             ->limit(5)
             ->get()

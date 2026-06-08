@@ -28,6 +28,8 @@ final class GrantResource extends Resource
 {
     use AccessGateFilamentOptions;
 
+    protected static ?string $slug = 'access-gate/grants';
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedKey;
 
     protected static string|BackedEnum|null $activeNavigationIcon = Heroicon::Key;

@@ -88,7 +88,7 @@ it('rejects oversized layout builder preview state before caching it', function 
     $layout = Layout::factory()->create();
     $page = Page::factory()->create(['layout_id' => $layout->id]);
 
-    expect(fn () => StoreLayoutBuilderPreviewStateAction::run(
+    expect(fn (): mixed => StoreLayoutBuilderPreviewStateAction::run(
         page: $page,
         layout: $layout,
         containers: [

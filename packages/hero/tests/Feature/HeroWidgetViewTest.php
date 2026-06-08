@@ -108,6 +108,7 @@ it('sanitizes author-provided page hero html before public rendering', function 
         ->create();
 
     $page->load('translation');
+
     $site->load('translation');
 
     $widget = Widget::factory()->create([
@@ -159,6 +160,7 @@ it('renders hydrated page hero state without database queries', function (): voi
         ->create();
 
     $page->load('translation');
+
     $site->load('translation');
 
     $widget = Widget::factory()->create([

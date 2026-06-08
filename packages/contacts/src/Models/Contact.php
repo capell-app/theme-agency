@@ -187,24 +187,6 @@ class Contact extends Model
         )->withTimestamps();
     }
 
-    /**
-     * @param  Builder<Contact>  $query
-     * @return Builder<Contact>
-     */
-    public function scopeWithTag(Builder $query, string $tag): Builder
-    {
-        $slug = ContactTag::slugFor($tag);
-
-        if ($slug === '') {
-            return $query;
-        }
-
-        return $query->whereHas(
-            'tags',
-            static fn (Builder $tagQuery): Builder => $tagQuery->where('slug', $slug),
-        );
-    }
-
     #[Override]
     protected static function booted(): void
     {
@@ -216,6 +198,24 @@ class Contact extends Model
 
         static::saved(fn (Contact $contact): null => self::flushOverviewStats($contact));
         static::deleted(fn (Contact $contact): null => self::flushOverviewStats($contact));
+    }
+
+    /**
+     * @param  Builder<Contact>  $query
+     * @return Builder<Contact>
+     */
+    protected function scopeWithTag(Builder $query, string $tag): Builder
+    {
+        $slug = ContactTag::slugFor($tag);
+
+        if ($slug === '') {
+            return $query;
+        }
+
+        return $query->whereHas(
+            'tags',
+            static fn (Builder $tagQuery): Builder => $tagQuery->where('slug', $slug),
+        );
     }
 
     /**

@@ -26,6 +26,8 @@ class EventVenueResource extends Resource
     use HasConfiguredTable;
     use HasNavigationBadge;
 
+    protected static ?string $slug = 'events/venues/event-venues';
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedMapPin;
 
     protected static ?string $recordTitleAttribute = 'name';

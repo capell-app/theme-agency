@@ -35,6 +35,8 @@ class NotFoundUrlsPage extends Page implements HasActions, HasTable
     use InteractsWithActions;
     use InteractsWithTable;
 
+    protected static ?string $slug = 'seo-suite/missing-pages';
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedExclamationTriangle;
 
     protected static string|BackedEnum|null $activeNavigationIcon = Heroicon::ExclamationTriangle;
@@ -42,8 +44,6 @@ class NotFoundUrlsPage extends Page implements HasActions, HasTable
     protected static ?int $navigationSort = 12;
 
     protected string $view = 'capell-admin::components.pages.table';
-
-    protected static ?string $slug = 'missing-pages';
 
     /**
      * @return class-string<InsightsEvent>

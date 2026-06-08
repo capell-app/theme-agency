@@ -24,6 +24,8 @@ use Override;
 
 final class PolicyAcceptanceResource extends Resource
 {
+    protected static ?string $slug = 'privacy-center/policy-acceptances';
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedDocumentCheck;
 
     #[Override]

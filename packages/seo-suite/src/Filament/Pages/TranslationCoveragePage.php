@@ -25,6 +25,8 @@ class TranslationCoveragePage extends Page implements HasActions, HasTable
     use InteractsWithActions;
     use InteractsWithTable;
 
+    protected static ?string $slug = 'seo-suite/translation-coverage';
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedLanguage;
 
     protected static string|BackedEnum|null $activeNavigationIcon = Heroicon::Language;
@@ -32,8 +34,6 @@ class TranslationCoveragePage extends Page implements HasActions, HasTable
     protected static ?int $navigationSort = 14;
 
     protected string $view = 'capell-admin::components.pages.table';
-
-    protected static ?string $slug = 'translation-coverage';
 
     #[Override]
     public static function getNavigationLabel(): string

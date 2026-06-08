@@ -36,8 +36,7 @@ final class PrunePasswordHistoryAction
                 }
 
                 $idsToPrune = DB::table('password_policy_password_histories')
-                    ->where('user_id', (int) $historyUserId)
-                    ->orderByDesc('created_at')
+                    ->where('user_id', (int) $historyUserId)->latest()
                     ->orderByDesc('id')
                     ->skip($keepCount)
                     ->pluck('id');

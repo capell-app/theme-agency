@@ -22,6 +22,8 @@ use Override;
 
 class EventRegistrationResource extends Resource
 {
+    protected static ?string $slug = 'events/registrations/event-registrations';
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedTicket;
 
     #[Override]

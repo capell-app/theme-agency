@@ -22,6 +22,8 @@ use Override;
 
 final class BookingStaffMemberResource extends Resource
 {
+    protected static ?string $slug = 'bookings/booking-staff-members';
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedUsers;
 
     protected static ?string $recordTitleAttribute = 'display_name';

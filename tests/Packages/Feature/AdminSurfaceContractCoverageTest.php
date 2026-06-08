@@ -269,6 +269,42 @@ it('resolves package-owned filament page metadata and actions', function (): voi
         ->and($built)->toBeGreaterThan(20);
 });
 
+it('keeps package-owned filament route surface slugs namespaced to their package', function (): void {
+    $failures = [];
+    $checked = 0;
+
+    foreach (packageSurfaceContractClassesWithPaths(static fn (string $path): bool => str_contains($path, '/Filament/')) as ['class' => $className, 'path' => $path]) {
+        if (! class_exists($className)) {
+            continue;
+        }
+
+        $isRouteSurface = is_subclass_of($className, Resource::class)
+            || (is_subclass_of($className, FilamentPage::class) && str_contains($path, '/src/Filament/Pages/'));
+
+        if (! $isRouteSurface) {
+            continue;
+        }
+
+        $reflection = new ReflectionClass($className);
+
+        if ($reflection->isAbstract()) {
+            continue;
+        }
+
+        /** @var class-string<resource|FilamentPage> $className */
+        $packageSlug = packageSurfaceContractPackageSlugForPath($path);
+        $routeSlug = $className::getSlug();
+        $checked++;
+
+        if (! in_array($packageSlug, explode('/', $routeSlug), true)) {
+            $failures[] = "{$className} uses [{$routeSlug}] without package segment [{$packageSlug}].";
+        }
+    }
+
+    expect($failures)->toBe([])
+        ->and($checked)->toBeGreaterThan(100);
+});
+
 it('configures package service providers and executes registration hooks', function (): void {
     $failures = [];
     $built = 0;
@@ -393,6 +429,17 @@ it('builds package-owned filament relation manager table contracts', function ()
  */
 function packageSurfaceContractClasses(Closure $pathFilter): array
 {
+    return array_map(
+        static fn (array $classWithPath): string => $classWithPath['class'],
+        packageSurfaceContractClassesWithPaths($pathFilter),
+    );
+}
+
+/**
+ * @return array<int, array{class: class-string, path: string}>
+ */
+function packageSurfaceContractClassesWithPaths(Closure $pathFilter): array
+{
     $classes = [];
     $files = File::allFiles(getcwd() . '/packages');
 
@@ -416,12 +463,41 @@ function packageSurfaceContractClasses(Closure $pathFilter): array
             continue;
         }
 
-        $classes[] = $namespaceMatches[1] . '\\' . $classMatches[1];
+        $classes[] = [
+            'class' => $namespaceMatches[1] . '\\' . $classMatches[1],
+            'path' => $path,
+        ];
     }
 
-    sort($classes);
+    usort(
+        $classes,
+        static fn (array $first, array $second): int => $first['class'] <=> $second['class'],
+    );
 
-    return array_values(array_unique($classes));
+    return array_values(array_unique($classes, SORT_REGULAR));
+}
+
+function packageSurfaceContractPackageSlugForPath(string $path): string
+{
+    $relativePath = str_starts_with($path, getcwd() . '/')
+        ? substr($path, strlen(getcwd()) + 1)
+        : $path;
+
+    if (! preg_match('#^packages/([^/]+)/#', $relativePath, $packageMatches)) {
+        throw new RuntimeException("Unable to determine package for [{$path}].");
+    }
+
+    $packageDirectory = $packageMatches[1];
+    $manifestPath = getcwd() . '/packages/' . $packageDirectory . '/capell.json';
+
+    if (! File::exists($manifestPath)) {
+        return $packageDirectory;
+    }
+
+    $manifest = json_decode(File::get($manifestPath), true);
+    $manifestSlug = is_array($manifest) ? ($manifest['slug'] ?? null) : null;
+
+    return is_string($manifestSlug) && $manifestSlug !== '' ? $manifestSlug : $packageDirectory;
 }
 
 /**

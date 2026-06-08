@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Capell\Deployments\Actions\CancelDeploymentPublicationAction;
 use Capell\Deployments\Actions\PrepareComposerRequirementCommitAction;
 use Capell\Deployments\Actions\PublishComposerRequirementAction;
 use Capell\Deployments\Contracts\PublishesComposerChanges;
@@ -10,6 +11,7 @@ use Capell\Deployments\Data\PullRequestData;
 use Capell\Deployments\Data\RepoFile;
 use Capell\Deployments\Enums\InstallPolicy;
 use Capell\Deployments\Models\DeploymentConnection;
+use Capell\Deployments\Models\DeploymentPublication;
 use Capell\Deployments\Services\GitProvider\GitHubProvider;
 use Capell\Deployments\Tests\Fixtures\Autoload\FakeComposerPublisher;
 
@@ -103,12 +105,38 @@ it('publishes composer requirements through pull requests and enables automerge 
 
     expect($result->pullRequestUrl)->toBe('https://github.test/pull/123')
         ->and($result->pullRequestId)->toBe(123)
-        ->and($result->commitSha)->toBeNull()
+        ->and($result->commitSha)->toBe('commit-sha')
         ->and($provider->branches)->toHaveCount(1)
         ->and($provider->branches[0]['from'])->toBe('branch-commit-sha')
         ->and($provider->commits)->toHaveCount(1)
         ->and($provider->commits[0]['branch'])->toBe('capell/add-extension-pr-extension')
+        ->and($provider->deployStatusCommitShas)->toBe(['commit-sha'])
         ->and($provider->autoMergedPullRequestIds)->toBe([123]);
+});
+
+it('leaves auto merge disabled when pull request health gates are not passing', function (): void {
+    $provider = new FakeComposerPublisher;
+    $provider->deployStatus = 'pending';
+    app()->instance(GitHubProvider::class, $provider);
+    $connection = DeploymentConnection::factory()->github()->create([
+        'install_policy' => InstallPolicy::PullRequestAutoMerge,
+    ]);
+
+    $result = PublishComposerRequirementAction::run(
+        new ComposerRequirementData(
+            composerName: 'capell/pr-extension',
+            versionConstraint: '^3.0',
+            label: 'PR Extension',
+        ),
+        $connection,
+    );
+
+    $publication = DeploymentPublication::query()->where('composer_package', 'capell/pr-extension')->firstOrFail();
+
+    expect($result->commitSha)->toBe('commit-sha')
+        ->and($publication->status)->toBe('pending')
+        ->and($provider->deployStatusCommitShas)->toBe(['commit-sha'])
+        ->and($provider->autoMergedPullRequestIds)->toBeEmpty();
 });
 
 it('reuses an open composer requirement pull request for the same package branch', function (): void {
@@ -139,10 +167,39 @@ it('reuses an open composer requirement pull request for the same package branch
 
     expect($result->pullRequestUrl)->toBe('https://github.test/pull/456')
         ->and($result->pullRequestId)->toBe(456)
+        ->and($result->commitSha)->toBe('existing-sha')
         ->and($result->branchName)->toBe('capell/add-extension-pr-extension')
         ->and($provider->branches)->toBeEmpty()
         ->and($provider->commits)->toBeEmpty()
-        ->and($provider->autoMergedPullRequestIds)->toBeEmpty();
+        ->and($provider->deployStatusCommitShas)->toBe(['existing-sha'])
+        ->and($provider->autoMergedPullRequestIds)->toBe([456]);
+});
+
+it('cancels a pending pull-request publication through the provider', function (): void {
+    $provider = new FakeComposerPublisher;
+    app()->instance(GitHubProvider::class, $provider);
+    $connection = DeploymentConnection::factory()->github()->create();
+    $publication = DeploymentPublication::query()->create([
+        'deployment_connection_id' => $connection->id,
+        'provider' => $connection->provider,
+        'repo_owner' => $connection->repo_owner,
+        'repo_name' => $connection->repo_name,
+        'composer_package' => 'capell/cancel-me',
+        'constraint' => '^1.0',
+        'branch_name' => 'capell/add-extension-cancel-me',
+        'commit_sha' => 'commit-sha',
+        'pull_request_id' => 789,
+        'pull_request_url' => 'https://github.test/pull/789',
+        'status' => 'pending',
+        'dry_run' => false,
+        'status_checked_at' => null,
+    ]);
+
+    $cancelled = CancelDeploymentPublicationAction::run($publication, $connection);
+
+    expect($cancelled->status)->toBe('cancelled')
+        ->and($cancelled->status_checked_at)->not->toBeNull()
+        ->and($provider->closedPullRequestIds)->toBe([789]);
 });
 
 it('bound composer publisher fails loudly when multiple active connections exist', function (): void {

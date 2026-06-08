@@ -23,6 +23,8 @@ use Override;
 
 class NewsletterTagResource extends Resource
 {
+    protected static ?string $slug = 'newsletter/newsletter-tags';
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedTag;
 
     protected static ?string $recordTitleAttribute = 'name';

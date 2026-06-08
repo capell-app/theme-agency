@@ -275,10 +275,12 @@ it('routes commerce section palette utilities through retail tokens', function (
     $offendingViews = [];
 
     foreach ($viewPaths as $viewPath) {
-        if (! $viewPath instanceof SplFileInfo || $viewPath->getExtension() !== 'php') {
+        if (! $viewPath instanceof SplFileInfo) {
             continue;
         }
-
+        if ($viewPath->getExtension() !== 'php') {
+            continue;
+        }
         $contents = (string) file_get_contents($viewPath->getPathname());
 
         if (preg_match('/(?:bg|text|border|shadow|hover:border|hover:text|group-hover:text)-\[#(?:[0-9a-fA-F]{3}){1,2}\]/', $contents) === 1) {
@@ -783,7 +785,7 @@ it('renders empty states for advertised commerce layouts', function (string $vie
     View::addNamespace('capell-theme-commerce', __DIR__ . '/../../resources/views');
     resolve(Translator::class)->addNamespace('capell-theme-commerce', __DIR__ . '/../../resources/lang');
 
-    $html = view("capell-theme-commerce::sections.{$view}", [
+    $html = view('capell-theme-commerce::sections.' . $view, [
         'section' => (object) [
             'heading' => 'Empty layout',
             'summary' => null,
@@ -806,7 +808,7 @@ it('renders core commerce sections directly', function (string $view, object $se
     View::addNamespace('capell-theme-commerce', __DIR__ . '/../../resources/views');
     resolve(Translator::class)->addNamespace('capell-theme-commerce', __DIR__ . '/../../resources/lang');
 
-    $html = view("capell-theme-commerce::sections.{$view}", [
+    $html = view('capell-theme-commerce::sections.' . $view, [
         'section' => $section,
     ])->render();
 

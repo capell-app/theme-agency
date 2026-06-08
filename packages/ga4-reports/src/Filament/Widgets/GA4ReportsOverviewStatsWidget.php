@@ -8,6 +8,7 @@ use Capell\Admin\Contracts\CapellWidgetContract;
 use Capell\Admin\Filament\Concerns\GatedByRoleAndSettings;
 use Capell\GA4Reports\Actions\BuildGA4ReportsOverviewAction;
 use Capell\GA4Reports\Data\GA4ReportsOverviewData;
+use Capell\GA4Reports\Data\GA4ReportsWindowData;
 use Capell\GA4Reports\Filament\Widgets\Concerns\BuildsGA4ReportsDashboardWindow;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
@@ -56,9 +57,9 @@ final class GA4ReportsOverviewStatsWidget extends BaseWidget implements CapellWi
     {
         $window = $this->getGA4ReportsWindow();
         $overview = BuildGA4ReportsOverviewAction::run($window);
-        $previousOverview = $window === null
-            ? new GA4ReportsOverviewData(0, 0, 0, 0, 0.0, 0.0)
-            : BuildGA4ReportsOverviewAction::run($this->getPreviousGA4ReportsWindow($window));
+        $previousOverview = $window instanceof GA4ReportsWindowData
+            ? BuildGA4ReportsOverviewAction::run($this->getPreviousGA4ReportsWindow($window))
+            : new GA4ReportsOverviewData(0, 0, 0, 0, 0.0, 0.0);
 
         return collect([
             [

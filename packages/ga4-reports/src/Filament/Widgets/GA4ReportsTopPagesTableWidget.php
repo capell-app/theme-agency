@@ -7,6 +7,7 @@ namespace Capell\GA4Reports\Filament\Widgets;
 use Capell\Admin\Filament\Concerns\GatedByRoleAndSettings;
 use Capell\GA4Reports\Actions\BuildTopGA4ReportsPagesAction;
 use Capell\GA4Reports\Data\GA4ReportsTopPageData;
+use Capell\GA4Reports\Data\GA4ReportsWindowData;
 use Capell\GA4Reports\Filament\Widgets\Concerns\BuildsGA4ReportsDashboardWindow;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
@@ -72,10 +73,10 @@ final class GA4ReportsTopPagesTableWidget extends BaseWidget
     private function getRecords(): Collection
     {
         $window = $this->getGA4ReportsWindow();
-        $previousPages = $window === null
-            ? collect()
-            : collect(BuildTopGA4ReportsPagesAction::run($this->getPreviousGA4ReportsWindow($window), 100))
-                ->keyBy(fn (GA4ReportsTopPageData $page): string => $page->pagePath);
+        $previousPages = $window instanceof GA4ReportsWindowData
+            ? collect(BuildTopGA4ReportsPagesAction::run($this->getPreviousGA4ReportsWindow($window), 100))
+                ->keyBy(fn (GA4ReportsTopPageData $page): string => $page->pagePath)
+            : collect();
 
         return collect(BuildTopGA4ReportsPagesAction::run($window, 100))
             ->map(fn (GA4ReportsTopPageData $page, int $index): array => [

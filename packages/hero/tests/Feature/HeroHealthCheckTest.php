@@ -5,9 +5,15 @@ declare(strict_types=1);
 use Capell\Core\Data\Diagnostics\DoctorCheckResultData;
 use Capell\Core\Enums\LayoutEnum;
 use Capell\Core\Models\Layout;
+use Capell\Core\Models\Media;
+use Capell\Core\Models\Page;
+use Capell\Core\Models\Theme;
+use Capell\Core\Models\Translation;
 use Capell\Core\Support\Creator\LayoutCreator;
 use Capell\Hero\Actions\InstallHeroLayoutDefaultsAction;
 use Capell\Hero\Health\HeroHealthCheck;
+use Capell\LayoutBuilder\Models\Widget;
+use Capell\LayoutBuilder\Models\WidgetAsset;
 use Illuminate\Support\Facades\View;
 
 it('reports a compatible capell api version', function (): void {
@@ -95,12 +101,12 @@ it('declares cacheable public output with concrete invalidation sources', functi
         ->and($cacheSafety['variesBy'])->toBe(['site', 'locale'])
         ->and($cacheSafety['sensitiveOutput'])->toBeFalse()
         ->and(collect($cacheSafety['invalidationSources'])->pluck('model')->all())->toContain(
-            'Capell\\Core\\Models\\Media',
-            'Capell\\Core\\Models\\Page',
-            'Capell\\Core\\Models\\Theme',
-            'Capell\\Core\\Models\\Translation',
-            'Capell\\LayoutBuilder\\Models\\Widget',
-            'Capell\\LayoutBuilder\\Models\\WidgetAsset',
+            Media::class,
+            Page::class,
+            Theme::class,
+            Translation::class,
+            Widget::class,
+            WidgetAsset::class,
         );
 });
 

@@ -24,6 +24,7 @@ final class PendingAccessRequestsWidget extends BaseWidget
     /** @var int|string|array<string, int|string|null> */
     protected int|string|array $columnSpan = 'full';
 
+    #[Override]
     public static function canView(): bool
     {
         return auth()->user()?->can('viewAny', Registration::class) ?? false;

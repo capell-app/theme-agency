@@ -27,6 +27,8 @@ final class PublicActionIntegrationTokenResource extends Resource
 {
     use PublicActionFilamentOptions;
 
+    protected static ?string $slug = 'public-actions/integration-tokens/public-action-integration-tokens';
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedKey;
 
     protected static ?int $navigationSort = 44;

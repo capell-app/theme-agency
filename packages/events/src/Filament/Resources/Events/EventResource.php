@@ -26,13 +26,13 @@ use Override;
 
 class EventResource extends PageResource
 {
+    protected static ?string $slug = 'events/event';
+
     protected static string $adminResourceName = ResourceEnum::Event->name;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedCalendarDays;
 
     protected static string|BackedEnum|null $activeNavigationIcon = Heroicon::CalendarDays;
-
-    protected static ?string $slug = 'event';
 
     protected static ?string $recordTitleAttribute = 'name';
 

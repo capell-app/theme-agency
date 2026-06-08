@@ -21,6 +21,8 @@ class PreviewLinkResource extends Resource
 {
     use HasConfiguredTable;
 
+    protected static ?string $slug = 'publishing-studio/preview-links';
+
     protected static ?string $model = PreviewLink::class;
 
     protected static string $tableConfigurator = PreviewLinksTable::class;

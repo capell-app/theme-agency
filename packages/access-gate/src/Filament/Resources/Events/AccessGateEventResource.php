@@ -25,6 +25,8 @@ final class AccessGateEventResource extends Resource
 {
     use AccessGateFilamentOptions;
 
+    protected static ?string $slug = 'access-gate/events/access-gate-events';
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedClock;
 
     protected static string|BackedEnum|null $activeNavigationIcon = Heroicon::Clock;

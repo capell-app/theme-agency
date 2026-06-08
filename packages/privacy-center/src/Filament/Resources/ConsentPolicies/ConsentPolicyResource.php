@@ -25,6 +25,8 @@ use Override;
 
 final class ConsentPolicyResource extends Resource
 {
+    protected static ?string $slug = 'privacy-center/consent-policies';
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedShieldCheck;
 
     protected static ?string $recordTitleAttribute = 'title';

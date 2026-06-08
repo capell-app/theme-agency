@@ -92,7 +92,7 @@ final class EventsEditorialCalendarEventContributor implements EditorialCalendar
 
     private function recordUrl(): ?string
     {
-        if (! Route::has('filament.admin.resources.event-occurrences.index')) {
+        if (! Route::has(EventOccurrenceResource::getRouteBaseName() . '.index')) {
             return null;
         }
 

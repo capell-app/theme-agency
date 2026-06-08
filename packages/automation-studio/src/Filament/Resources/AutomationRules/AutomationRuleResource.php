@@ -29,6 +29,8 @@ use Override;
 
 final class AutomationRuleResource extends Resource
 {
+    protected static ?string $slug = 'automation-studio/automation-rules';
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedBolt;
 
     protected static ?string $recordTitleAttribute = 'name';

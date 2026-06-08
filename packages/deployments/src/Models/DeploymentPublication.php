@@ -6,6 +6,7 @@ namespace Capell\Deployments\Models;
 
 use Capell\Deployments\Enums\GitProviderType;
 use Carbon\CarbonImmutable;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Override;
 
@@ -29,6 +30,8 @@ use Override;
  */
 final class DeploymentPublication extends Model
 {
+    use HasFactory;
+
     /** @var list<string> */
     protected $fillable = [
         'deployment_connection_id',

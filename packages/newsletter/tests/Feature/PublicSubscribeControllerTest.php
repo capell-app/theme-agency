@@ -15,7 +15,7 @@ it('captures public newsletter subscriptions for the current frontend site', fun
 
     $site = $this->createNewsletterSite();
 
-    app(FrontendState::class)->withSite($site);
+    resolve(FrontendState::class)->withSite($site);
 
     $this
         ->from('/notes')

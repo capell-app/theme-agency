@@ -21,9 +21,9 @@ class ActivityTrailPage extends Page implements HasActions, HasTable
     use InteractsWithActions;
     use InteractsWithTable;
 
-    protected static BackedEnum|string|null $navigationIcon = Heroicon::OutlinedSparkles;
+    protected static ?string $slug = 'publishing-studio/reports/activity-trail';
 
-    protected static ?string $slug = 'reports/activity-trail';
+    protected static BackedEnum|string|null $navigationIcon = Heroicon::OutlinedSparkles;
 
     protected static ?int $navigationSort = 1;
 

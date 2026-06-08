@@ -5,6 +5,7 @@ declare(strict_types=1);
 use Capell\Deployments\Actions\ConnectDeploymentAction;
 use Capell\Deployments\Actions\OAuth\CreateOAuthStateAction;
 use Capell\Deployments\Enums\GitProviderType;
+use Capell\Deployments\Filament\Pages\DeploymentConnectionPage;
 use Capell\Deployments\Http\Controllers\OAuth\BitbucketCallbackController;
 use Capell\Deployments\Http\Controllers\OAuth\GitHubCallbackController;
 use Capell\Deployments\Http\Controllers\OAuth\GitLabCallbackController;
@@ -89,7 +90,7 @@ it('connects github only after oauth state validation passes', function (): void
         'code' => 'github-code',
         'state' => $state,
     ]))
-        ->assertRedirect(route('filament.admin.pages.deployment-connection'));
+        ->assertRedirect(DeploymentConnectionPage::getUrl());
 
     expect(DeploymentConnection::query()->where([
         'provider' => GitProviderType::GitHub->value,
@@ -125,7 +126,7 @@ it('connects gitlab after oauth state validation passes', function (): void {
         'code' => 'gitlab-code',
         'state' => $state,
     ]))
-        ->assertRedirect(route('filament.admin.pages.deployment-connection'));
+        ->assertRedirect(DeploymentConnectionPage::getUrl());
 
     $connection = DeploymentConnection::query()->where([
         'provider' => GitProviderType::GitLab->value,
@@ -164,7 +165,7 @@ it('connects bitbucket after oauth state validation passes', function (): void {
         'code' => 'bitbucket-code',
         'state' => $state,
     ]))
-        ->assertRedirect(route('filament.admin.pages.deployment-connection'));
+        ->assertRedirect(DeploymentConnectionPage::getUrl());
 
     $connection = DeploymentConnection::query()->where([
         'provider' => GitProviderType::Bitbucket->value,

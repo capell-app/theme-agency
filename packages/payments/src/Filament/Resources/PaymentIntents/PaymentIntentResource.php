@@ -8,8 +8,8 @@ use BackedEnum;
 use Capell\Core\Facades\CapellCore;
 use Capell\Payments\Actions\FormatPaymentMoneyAction;
 use Capell\Payments\Actions\IssuePaymentRefundAction;
-use Capell\Payments\Filament\Resources\PaymentIntents\Pages\ListPaymentIntents;
 use Capell\Payments\Enums\PaymentIntentStatus;
+use Capell\Payments\Filament\Resources\PaymentIntents\Pages\ListPaymentIntents;
 use Capell\Payments\Models\PaymentIntent;
 use Capell\Payments\Providers\PaymentsServiceProvider;
 use Filament\Actions\Action;
@@ -24,6 +24,8 @@ use Override;
 
 final class PaymentIntentResource extends Resource
 {
+    protected static ?string $slug = 'payments/payment-intents';
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedCreditCard;
 
     protected static ?string $recordTitleAttribute = 'provider_payment_intent_id';
@@ -45,6 +47,38 @@ final class PaymentIntentResource extends Resource
         ])->recordActions([
             self::issueRefundAction(),
         ]);
+    }
+
+    #[Override]
+    public static function getModel(): string
+    {
+        return PaymentIntent::class;
+    }
+
+    #[Override]
+    public static function getNavigationGroup(): ?string
+    {
+        return __('capell-admin::navigation.group_monitoring');
+    }
+
+    #[Override]
+    public static function getNavigationLabel(): string
+    {
+        return __('capell-payments::generic.resources.payment_intents');
+    }
+
+    #[Override]
+    public static function shouldRegisterNavigation(): bool
+    {
+        return CapellCore::isPackageInstalled(PaymentsServiceProvider::$packageName);
+    }
+
+    #[Override]
+    public static function getPages(): array
+    {
+        return [
+            'index' => ListPaymentIntents::route('/'),
+        ];
     }
 
     private static function issueRefundAction(): Action
@@ -83,37 +117,5 @@ final class PaymentIntentResource extends Resource
                     ->success()
                     ->send();
             });
-    }
-
-    #[Override]
-    public static function getModel(): string
-    {
-        return PaymentIntent::class;
-    }
-
-    #[Override]
-    public static function getNavigationGroup(): ?string
-    {
-        return __('capell-admin::navigation.group_monitoring');
-    }
-
-    #[Override]
-    public static function getNavigationLabel(): string
-    {
-        return __('capell-payments::generic.resources.payment_intents');
-    }
-
-    #[Override]
-    public static function shouldRegisterNavigation(): bool
-    {
-        return CapellCore::isPackageInstalled(PaymentsServiceProvider::$packageName);
-    }
-
-    #[Override]
-    public static function getPages(): array
-    {
-        return [
-            'index' => ListPaymentIntents::route('/'),
-        ];
     }
 }

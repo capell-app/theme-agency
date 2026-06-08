@@ -39,6 +39,8 @@ use Override;
 
 final class DocumentResource extends Resource
 {
+    protected static ?string $slug = 'document-lifecycle/documents';
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedDocumentCheck;
 
     protected static ?int $navigationSort = 50;

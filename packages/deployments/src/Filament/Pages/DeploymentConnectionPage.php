@@ -5,8 +5,9 @@ declare(strict_types=1);
 namespace Capell\Deployments\Filament\Pages;
 
 use BackedEnum;
-use Capell\Deployments\Actions\RefreshDeploymentPublicationStatusAction;
+use Capell\Deployments\Actions\CancelDeploymentPublicationAction;
 use Capell\Deployments\Actions\OAuth\CreateOAuthStateAction;
+use Capell\Deployments\Actions\RefreshDeploymentPublicationStatusAction;
 use Capell\Deployments\Enums\GitProviderType;
 use Capell\Deployments\Enums\InstallPolicy;
 use Capell\Deployments\Models\DeploymentConnection;
@@ -29,12 +30,12 @@ final class DeploymentConnectionPage extends Page
 
     public string $installPolicy = 'pr_auto_merge';
 
-    /** @var array<int, DeploymentConnection>|null */
-    private ?array $connections = null;
-
     protected string $view = 'capell-deployments::filament.pages.deployment-connection';
 
-    protected static ?string $slug = 'deployment-connection';
+    protected static ?string $slug = 'deployments/deployment-connection';
+
+    /** @var array<int, DeploymentConnection>|null */
+    private ?array $connections = null;
 
     #[Override]
     public static function getNavigationLabel(): string
@@ -248,6 +249,40 @@ final class DeploymentConnectionPage extends Page
             ->title(__('capell-deployments::plugins.deployment_connection.disconnected'))
             ->success()
             ->send();
+    }
+
+    public function cancelPublication(int $connectionId, int $publicationId): void
+    {
+        $this->authorizeManageConnections();
+
+        if (! Schema::hasTable('deployment_connections') || ! Schema::hasTable('deployment_publications')) {
+            return;
+        }
+
+        $connection = DeploymentConnection::query()
+            ->whereKey($connectionId)
+            ->where('is_active', true)
+            ->firstOrFail();
+
+        $publication = DeploymentPublication::query()
+            ->where('deployment_connection_id', $connection->id)
+            ->whereKey($publicationId)
+            ->firstOrFail();
+
+        CancelDeploymentPublicationAction::run($publication, $connection);
+
+        Notification::make()
+            ->title(__('capell-deployments::plugins.deployment_connection.publish_cancelled'))
+            ->success()
+            ->send();
+    }
+
+    public function canCancelPublication(DeploymentPublication $publication): bool
+    {
+        return self::canManageConnections()
+            && $publication->pull_request_id !== null
+            && ! $publication->dry_run
+            && ! in_array($publication->status, ['cancelled', 'success'], true);
     }
 
     private static function viewPermission(): string

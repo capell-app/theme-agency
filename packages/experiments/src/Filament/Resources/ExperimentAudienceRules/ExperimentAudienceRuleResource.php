@@ -30,6 +30,8 @@ use Override;
 
 final class ExperimentAudienceRuleResource extends Resource
 {
+    protected static ?string $slug = 'experiments/experiment-audience-rules';
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedAdjustmentsHorizontal;
 
     protected static ?string $recordTitleAttribute = 'key';

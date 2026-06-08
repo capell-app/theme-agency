@@ -32,9 +32,9 @@ class QueueHealthPage extends Page implements HasActions, HasTable
     use InteractsWithActions;
     use InteractsWithTable;
 
-    protected static BackedEnum|string|null $navigationIcon = Heroicon::OutlinedSignal;
+    protected static ?string $slug = 'diagnostics/reports/queue-health';
 
-    protected static ?string $slug = 'reports/queue-health';
+    protected static BackedEnum|string|null $navigationIcon = Heroicon::OutlinedSignal;
 
     protected static ?int $navigationSort = 2;
 

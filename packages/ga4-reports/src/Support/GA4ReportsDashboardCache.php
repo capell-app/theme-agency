@@ -9,6 +9,7 @@ use Capell\GA4Reports\Data\GA4ReportsTopPageData;
 use Capell\GA4Reports\Data\GA4ReportsTrendPointData;
 use Capell\GA4Reports\Data\GA4ReportsWindowData;
 use Closure;
+use DateTimeInterface;
 use Illuminate\Cache\Repository;
 use Illuminate\Cache\TaggedCache;
 use Illuminate\Support\Facades\Cache;
@@ -73,7 +74,7 @@ final class GA4ReportsDashboardCache
         return Cache::store();
     }
 
-    private static function expiresAt(): \DateTimeInterface
+    private static function expiresAt(): DateTimeInterface
     {
         $ttl = max(1, (int) config('capell-ga4-reports.dashboard_cache_ttl_seconds', 300));
 

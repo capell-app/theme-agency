@@ -56,7 +56,7 @@ it('keeps section palette colours behind semantic token classes', function (): v
         ->toContain('nonprofit-text-accent')
         ->toContain('nonprofit-border-accent')
         ->not->toMatch('/#[0-9a-fA-F]{6}\b/')
-        ->not->toMatch('/(?:bg|text|border|from|to|shadow|hover:border)-(?:emerald|green|amber|yellow|orange)-[0-9]{2,3}(?:\/[0-9]+)?/');
+        ->not->toMatch('/(?:bg|text|border|from|to|shadow|hover:border)-(?:emerald|green|amber|yellow|orange)-\d{2,3}(?:\/\d+)?/');
 });
 
 it('ships default theme tokens with WCAG AA contrast for dark, emerald, and amber pairings', function (): void {

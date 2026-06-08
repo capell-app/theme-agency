@@ -66,7 +66,7 @@ it('executes navigation commands and records successful command palette runs', f
     $run = CommandPaletteRun::query()->firstOrFail();
 
     expect($result->successful)->toBeTrue()
-        ->and($result->url)->toBe('/admin/system-health')
+        ->and($result->url)->toBe('/admin/diagnostics/system-health')
         ->and($result->runId)->toBe($run->getKey())
         ->and($run->status)->toBe('succeeded')
         ->and($run->command_id)->toBe('test.navigate');

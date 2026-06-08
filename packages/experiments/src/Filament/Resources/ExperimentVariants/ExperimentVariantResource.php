@@ -28,6 +28,8 @@ use Override;
 
 final class ExperimentVariantResource extends Resource
 {
+    protected static ?string $slug = 'experiments/experiment-variants';
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedSquares2x2;
 
     protected static ?string $recordTitleAttribute = 'name';

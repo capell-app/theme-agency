@@ -43,10 +43,6 @@ final class ExpireStalePasswordsCommand extends Command
             ->orderBy('id')
             ->chunkById(100, function (EloquentCollection $users) use ($dryRun, &$matched): void {
                 foreach ($users as $user) {
-                    if (! $user instanceof Model) {
-                        continue;
-                    }
-
                     $matched++;
 
                     if (! $dryRun) {

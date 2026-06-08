@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Capell\SocialFeeds\Providers\Drivers;
 
+use Capell\SocialFeeds\Contracts\SocialFeedHostResolver;
 use Capell\SocialFeeds\Contracts\SocialFeedProvider;
+use Capell\SocialFeeds\Data\ResolvedFeedEndpointData;
 use Capell\SocialFeeds\Data\SocialFeedPostData;
 use Capell\SocialFeeds\Enums\SocialAuthStrategy;
 use Capell\SocialFeeds\Enums\SocialFeedItemType;
@@ -13,11 +15,14 @@ use Carbon\CarbonImmutable;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
+use InvalidArgumentException;
 use SimpleXMLElement;
 use Throwable;
 
 final class RssFeedProvider implements SocialFeedProvider
 {
+    public function __construct(private readonly ?SocialFeedHostResolver $hostResolver = null) {}
+
     public function key(): string
     {
         return 'rss';
@@ -57,16 +62,124 @@ final class RssFeedProvider implements SocialFeedProvider
             return [];
         }
 
+        $endpoint = $this->endpoint($feedUrl);
+
         $response = Http::timeout((int) config('capell-social-feeds.http_timeout', 10))
             ->connectTimeout((int) config('capell-social-feeds.http_connect_timeout', 3))
+            ->withoutRedirecting()
+            ->withHeaders(['Host' => $endpoint->hostHeader()])
+            ->withOptions($this->requestOptions($endpoint))
             ->accept('application/rss+xml, application/atom+xml, application/xml, text/xml')
-            ->get($feedUrl);
+            ->get($endpoint->url);
 
         if (! $response->successful()) {
             return [];
         }
 
         return array_slice($this->parseFeed($response->body(), $connection->name), 0, $limit);
+    }
+
+    private function endpoint(string $url): ResolvedFeedEndpointData
+    {
+        $parts = parse_url($url);
+
+        throw_if(! is_array($parts), InvalidArgumentException::class, 'Social feed URL must be an absolute HTTP URL.');
+
+        $scheme = is_string($parts['scheme'] ?? null) ? strtolower($parts['scheme']) : null;
+        $host = is_string($parts['host'] ?? null) ? strtolower($parts['host']) : null;
+
+        throw_if(! in_array($scheme, ['https', 'http'], true) || $host === null || $host === '', InvalidArgumentException::class, 'Social feed URL must be an absolute HTTP URL.');
+
+        $addresses = $this->resolvedHostAddresses($host);
+
+        throw_if($addresses === [], InvalidArgumentException::class, 'Social feed URL host could not be resolved.');
+        throw_if(! (bool) config('capell-social-feeds.allow_private_feed_urls', false) && $this->hasPrivateAddress($addresses), InvalidArgumentException::class, 'Social feed URL host is not allowed.');
+
+        return new ResolvedFeedEndpointData(
+            url: $url,
+            scheme: $scheme,
+            host: $host,
+            port: $this->port($parts, $scheme),
+            address: $addresses[0],
+        );
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function requestOptions(ResolvedFeedEndpointData $endpoint): array
+    {
+        throw_unless(defined('CURLOPT_RESOLVE'), InvalidArgumentException::class, 'Social feed requests require cURL host pinning support.');
+
+        return [
+            'curl' => [
+                CURLOPT_RESOLVE => [$endpoint->curlResolveEntry()],
+            ],
+        ];
+    }
+
+    /**
+     * @param  array<string, mixed>  $parts
+     */
+    private function port(array $parts, string $scheme): int
+    {
+        $port = $parts['port'] ?? null;
+
+        if (is_int($port) && $port > 0 && $port <= 65535) {
+            return $port;
+        }
+
+        return $scheme === 'https' ? 443 : 80;
+    }
+
+    /**
+     * @param  list<string>  $addresses
+     */
+    private function hasPrivateAddress(array $addresses): bool
+    {
+        foreach ($addresses as $address) {
+            if ($this->isPrivateAddress($address)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private function isPrivateHostLabel(string $host): bool
+    {
+        return in_array($host, ['localhost', 'localhost.localdomain'], true) || str_ends_with($host, '.localhost');
+    }
+
+    private function isPrivateAddress(string $address): bool
+    {
+        return filter_var(
+            $address,
+            FILTER_VALIDATE_IP,
+            FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE,
+        ) === false;
+    }
+
+    /**
+     * @return list<string>
+     */
+    private function resolvedHostAddresses(string $host): array
+    {
+        if ($this->isPrivateHostLabel($host)) {
+            return ['127.0.0.1'];
+        }
+
+        if (filter_var($host, FILTER_VALIDATE_IP) !== false) {
+            return [$host];
+        }
+
+        $addresses = ($this->hostResolver ?? resolve(SocialFeedHostResolver::class))->resolve($host);
+
+        return array_values(collect($addresses)
+            ->filter(static fn (string $address): bool => filter_var($address, FILTER_VALIDATE_IP) !== false)
+            ->unique()
+            ->values()
+            ->all());
     }
 
     /**

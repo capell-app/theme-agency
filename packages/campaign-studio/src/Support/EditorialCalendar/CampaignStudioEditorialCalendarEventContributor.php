@@ -111,7 +111,7 @@ final class CampaignStudioEditorialCalendarEventContributor implements Editorial
 
     private function recordUrl(CampaignGroup $campaign): ?string
     {
-        if (! Route::has('filament.admin.resources.campaign-groups.edit')) {
+        if (! Route::has(CampaignGroupResource::getRouteBaseName() . '.edit')) {
             return null;
         }
 

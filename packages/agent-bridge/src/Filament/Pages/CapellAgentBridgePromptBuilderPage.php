@@ -34,7 +34,7 @@ final class CapellAgentBridgePromptBuilderPage extends Page implements HasForms
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedChatBubbleLeftRight;
 
-    protected static ?string $slug = 'capell-agent-bridge/prompt-builder';
+    protected static ?string $slug = 'agent-bridge/capell-agent-bridge/prompt-builder';
 
     protected static ?int $navigationSort = 10;
 

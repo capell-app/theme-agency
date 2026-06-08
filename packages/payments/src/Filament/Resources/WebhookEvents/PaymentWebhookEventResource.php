@@ -17,6 +17,8 @@ use Override;
 
 final class PaymentWebhookEventResource extends Resource
 {
+    protected static ?string $slug = 'payments/webhook-events/payment-webhook-events';
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedBolt;
 
     protected static ?string $recordTitleAttribute = 'provider_event_id';

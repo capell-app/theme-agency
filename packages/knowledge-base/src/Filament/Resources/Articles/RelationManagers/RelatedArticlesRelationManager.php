@@ -160,10 +160,6 @@ final class RelatedArticlesRelationManager extends RelationManager
     {
         $ownerRecord = $this->getOwnerRecord();
 
-        if ($ownerRecord instanceof KnowledgeBaseArticle) {
-            return $ownerRecord;
-        }
-
         /** @var KnowledgeBaseArticle $ownerRecord */
         return $ownerRecord;
     }

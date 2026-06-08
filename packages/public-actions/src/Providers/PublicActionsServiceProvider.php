@@ -176,7 +176,7 @@ class PublicActionsServiceProvider extends AbstractPackageServiceProvider
             }
 
             return Limit::perMinute($this->positiveIntegerConfig('capell-public-actions.api_rate_limit_per_minute', 120))
-                ->by('ip:' . (string) $request->ip());
+                ->by('ip:' . $request->ip());
         });
 
         return $this;
@@ -208,7 +208,7 @@ class PublicActionsServiceProvider extends AbstractPackageServiceProvider
 
     private function integrationTokenRateLimitPerMinute(PublicActionIntegrationToken $token): int
     {
-        $tokenLimit = data_get(config('capell-public-actions.integration_token_rate_limits.tokens', []), (string) $token->getKey() . '.per_minute');
+        $tokenLimit = data_get(config('capell-public-actions.integration_token_rate_limits.tokens', []), $token->getKey() . '.per_minute');
 
         if (is_numeric($tokenLimit) && (int) $tokenLimit > 0) {
             return (int) $tokenLimit;

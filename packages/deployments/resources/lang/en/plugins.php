@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 return [
     'deployment_connection' => [
+        'actions_column' => 'Actions',
+        'cancel_publish' => 'Cancel',
+        'cancel_publish_confirm' => 'Cancel this pending deployment publication pull request?',
         'connect_bitbucket' => 'Connect Bitbucket Repository',
         'connect_github' => 'Connect GitHub Repository',
         'connect_gitlab' => 'Connect GitLab Repository',
@@ -20,9 +23,11 @@ return [
         'oauth_invalid_state' => 'OAuth session validation failed. Please start the connection again.',
         'oauth_missing_code' => 'OAuth error: missing code parameter.',
         'provider_not_configured' => ':provider OAuth is not configured.',
+        'publish_cancelled' => 'Deployment publication cancelled.',
         'package_column' => 'Package',
         'published_column' => 'Published',
         'publish_statuses' => [
+            'cancelled' => 'Cancelled',
             'dry_run' => 'Dry run',
             'failure' => 'Failed',
             'pending' => 'Pending',
@@ -34,6 +39,7 @@ return [
         'repo_name_label' => 'Repository name',
         'repo_owner_label' => 'Repository owner or group',
         'repository_required' => 'Enter the repository owner and name before connecting.',
+        'no_action' => 'No action',
         'no_recent_publishes' => 'No Composer requirement publishes have been recorded for this repository yet.',
         'no_reference' => 'Not available',
         'oauth_user_failed' => 'Could not fetch :provider user info.',

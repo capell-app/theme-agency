@@ -49,9 +49,9 @@ final class BuildDocumentAcceptanceCertificateAction
             ],
         ];
 
-        $canonicalPayload = self::json($payload);
+        $canonicalPayload = $this->json($payload);
 
-        return self::json([
+        return $this->json([
             'payload' => $payload,
             'signature' => [
                 'algorithm' => 'hmac-sha256',
@@ -63,7 +63,7 @@ final class BuildDocumentAcceptanceCertificateAction
     /**
      * @param  array<string, mixed>  $payload
      */
-    private static function json(array $payload, int $flags = 0): string
+    private function json(array $payload, int $flags = 0): string
     {
         return json_encode($payload, JSON_THROW_ON_ERROR | $flags);
     }

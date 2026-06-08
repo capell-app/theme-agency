@@ -4,13 +4,14 @@ Use this scale when creating a new Capell theme, changing one existing theme, or
 
 ## Theme Tiers
 
-| Tier       | Packages                                                                                                                                                                                                                                       | Role                                                                                                                                                           | Expected depth                                                                                                                    |
-| ---------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| Foundation | `capell-app/foundation-theme`                                                                                                                                                                                                                  | Default frontend runtime, shared renderer conventions, Tailwind asset generation, media URL handling, generic Blade components, and base Layout Builder areas. | Boring, stable, shared. Changes here affect every child theme.                                                                    |
-| Basic/free | `capell-app/theme-agency`, `capell-app/theme-corporate`                                                                                                                                                                                        | First-party visual treatments for creative/campaign and business/boardroom sites when the standard section set is enough.                                      | Thin child themes with polished presets, page wrappers, and the standard section set.                                             |
-| Premium    | `capell-app/theme-commerce`, `capell-app/theme-education`, `capell-app/theme-healthcare`, `capell-app/theme-knowledge`, `capell-app/theme-local-services`, `capell-app/theme-nonprofit`, `capell-app/theme-portfolio`, `capell-app/theme-saas` | Higher-value themes for domains that need richer page patterns, optional package integrations, more content states, or a distinct case-study workflow.         | Extra renderer layers, domain sections, optional package fallbacks, richer marketplace screenshots, and more regression coverage. |
+| Tier                   | Packages                                                                                                                                                                                                                                                                  | Role                                                                                                                                                           | Expected depth                                                                                                                    |
+| ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| Foundation             | `capell-app/foundation-theme`                                                                                                                                                                                                                                             | Default frontend runtime, shared renderer conventions, Tailwind asset generation, media URL handling, generic Blade components, and base Layout Builder areas. | Boring, stable, shared. Changes here affect every child theme.                                                                    |
+| Basic/free             | `capell-app/theme-corporate`                                                                                                                                                                                                                                              | Restrained first-party business/boardroom renderer when the standard section set plus a few formal business sections is enough.                                | Thin child theme with polished presets, page wrappers, and a conservative professional section set.                               |
+| Premium                | `capell-app/theme-agency`, `capell-app/theme-commerce`, `capell-app/theme-education`, `capell-app/theme-healthcare`, `capell-app/theme-knowledge`, `capell-app/theme-local-services`, `capell-app/theme-nonprofit`, `capell-app/theme-portfolio`, `capell-app/theme-saas` | Higher-value themes for domains that need richer page patterns, optional package integrations, more content states, or a distinct case-study workflow.         | Extra renderer layers, domain sections, optional package fallbacks, richer marketplace screenshots, and more regression coverage. |
+| Premium Inertia family | `capell-app/theme-inertia-bookings`, `capell-app/theme-inertia-bookings-react`, `capell-app/theme-inertia-bookings-vue`                                                                                                                                                   | Appointment-led booking theme plus React/Vue adapter plugins for Inertia installations.                                                                        | Theme package owns the booking public journey; adapter plugins own framework component registration and screenshots.              |
 
-Foundation is the normal/default theme. Basic and premium themes extend Foundation rather than replacing it unless Foundation's rendering contract is genuinely the wrong base.
+Foundation is the normal/default theme. Basic and premium Blade themes extend Foundation rather than replacing it unless Foundation's rendering contract is genuinely the wrong base. The Inertia Bookings family is separate because it renders through Inertia and uses React/Vue adapter plugins.
 
 ## What A Theme Can Own
 
@@ -91,17 +92,21 @@ Theme keys are content identifiers. Renaming one is a migration, not a cosmetic 
 
 ## Screenshot And Marketplace Requirements
 
-Every first-party theme package must ship marketplace documentation that can feed Capell App, package docs, and generated marketplace pages.
+Every first-party theme package must ship marketplace documentation that can feed Capell App, package docs, generated marketplace pages, and the deployment screenshot runner.
 
-Each theme needs at least five screenshots. Store the manifest in `packages/<theme>/docs/screenshots.json`, and keep the image assets under `packages/<theme>/docs/assets/marketplace/`. Each screenshot entry must include:
+Each theme needs at least five useful screenshots. Store the runner manifest in `packages/<theme>/docs/screenshots.json`, and keep generated route/admin captures under `packages/<theme>/docs/screenshots/`. Package marketplace galleries in `capell.json.marketplace.screenshots` should promote the strongest committed captures or assets, normally from `docs/screenshots/` for real route-backed captures and `docs/assets/marketplace/` for extension cards or hero crops.
 
-- `path`: image path relative to the package root.
+The screenshot-runner manifest uses the contract documented in [Package Screenshot Automation](package-screenshot-automation.md). Each entry should include the fields the runner needs, including:
+
+- `id`: stable capture identifier.
 - `title`: concise screen name, such as `Homepage`, `Search`, or `Contact form`.
-- `description`: what the screen contains and what visitor problem it solves.
-- `layout`: how the page is normally assembled with Layout Builder sections, containers, widgets, and optional package data.
-- `editable`: which parts editors can change in Capell CMS without a Blade change.
-- `useful`: why this screen matters for the theme's target buyer.
-- `distinctive`: what makes the screen different from the same page type in the other themes.
+- `surface`: `admin` or `frontend`.
+- `targetType`: `admin-surface`, `admin-url`, `filament-resource`, or `frontend-url`.
+- `target` and, for frontend fixtures, `url`: the surface to capture.
+- `screenshotPath`: output path relative to the repository root.
+- `required`: whether CI/deployment should fail when the capture cannot be produced.
+- `user`: `false` for anonymous frontend captures; omit or set the required actor for admin captures.
+- `notes` and `useCase`: what the screen contains, why it matters, and what buyer/editor problem it proves.
 
 The five minimum screenshots are:
 
@@ -164,8 +169,9 @@ Current lane ownership:
 - `nonprofit`: campaign, donation, volunteer, impact, and story journeys.
 - `education`: course, cohort, instructor, event, and enrolment journeys.
 - `portfolio`: premium studio/case-study lane for work outcomes, case files, media kits, and audience-building paths.
-- `agency`: basic creative/campaign preset with expressive launch-room treatment; do not duplicate Portfolio's case-study workflow.
+- `agency`: premium creative/campaign lane with expressive launch-room treatment; do not duplicate Portfolio's deeper outcome-led case-study workflow.
 - `corporate`: basic business/boardroom preset unless it becomes a distinct enterprise workflow.
+- `inertia-bookings`: premium appointment, services, location, and public booking request journey for Inertia installs.
 
 Future local-business verticals should extend this non-overlap standard rather than duplicate `local-services`.
 
@@ -204,13 +210,14 @@ Use `composer preflight` before committing broader theme/runtime changes.
 
 ## First-Party Theme Catalogue
 
-The first-party catalogue includes these Foundation child themes:
+The first-party catalogue includes these theme lanes:
 
 - `agency`: studios, portfolios, service pages, case studies, campaigns, lead forms, and search.
 - `commerce`: product collections, lookbooks, buying guides, product stories, search, and newsletter conversion.
 - `corporate`: governance, services, resources, locations, contact paths, and formal proof.
 - `education`: schools and course providers, course catalogues, instructors, events, enrolment CTAs, resources, and FAQs.
 - `healthcare`: services, clinicians, appointment CTAs, care pathways, events, resources, and contact paths.
+- `inertia-bookings`: appointment-led service businesses using Inertia, Bookings, and React/Vue adapter plugins.
 - `knowledge`: editorial/resource sites, topic hubs, featured content, resource libraries, search-led listings, newsletter, and authors.
 - `local-services`: quote-led service businesses, local proof, service areas, quote forms, resources, and contact paths.
 - `nonprofit`: charities and civic sites, impact, campaigns, volunteer/donate CTAs, events, stories, and contact paths.

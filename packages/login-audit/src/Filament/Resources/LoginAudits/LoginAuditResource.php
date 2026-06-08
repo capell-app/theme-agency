@@ -15,6 +15,8 @@ class LoginAuditResource extends AuthenticationLogResource
 {
     use HasConfiguredTable;
 
+    protected static ?string $slug = 'login-audit/login-audits';
+
     protected static ?string $model = LoginAudit::class;
 
     protected static string $tableConfigurator = LoginAuditsTable::class;

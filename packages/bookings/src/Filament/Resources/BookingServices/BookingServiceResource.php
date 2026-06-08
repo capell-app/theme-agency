@@ -23,6 +23,8 @@ use Override;
 
 final class BookingServiceResource extends Resource
 {
+    protected static ?string $slug = 'bookings/booking-services';
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedCalendarDays;
 
     protected static ?string $recordTitleAttribute = 'name';

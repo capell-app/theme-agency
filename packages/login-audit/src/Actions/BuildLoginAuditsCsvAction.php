@@ -71,20 +71,6 @@ final class BuildLoginAuditsCsvAction
         return is_string($contents) ? $contents : '';
     }
 
-    /**
-     * @return Builder<LoginAudit>
-     */
-    private function query(?Model $authenticatable): Builder
-    {
-        return LoginAudit::query()
-            ->with(['authenticatable'])
-            ->when($authenticatable instanceof Model, static fn (Builder $query): Builder => $query
-                ->where('authenticatable_type', $authenticatable->getMorphClass())
-                ->where('authenticatable_id', $authenticatable->getKey()))
-            ->orderByDesc('login_at')
-            ->orderByDesc('id');
-    }
-
     private static function authenticatableName(LoginAudit $loginAudit): string
     {
         $authenticatable = $loginAudit->authenticatable;
@@ -96,5 +82,19 @@ final class BuildLoginAuditsCsvAction
         $name = $authenticatable->getAttribute('name');
 
         return is_scalar($name) ? (string) $name : '';
+    }
+
+    /**
+     * @return Builder<LoginAudit>
+     */
+    private function query(?Model $authenticatable): Builder
+    {
+        return LoginAudit::query()
+            ->with(['authenticatable'])
+            ->when($authenticatable instanceof Model, static fn (Builder $query): Builder => $query
+                ->where('authenticatable_type', $authenticatable->getMorphClass())
+                ->where('authenticatable_id', $authenticatable->getKey()))
+            ->latest('login_at')
+            ->orderByDesc('id');
     }
 }

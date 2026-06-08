@@ -6,6 +6,7 @@ use Capell\Diagnostics\Actions\Health\ExportExtensionHealthReportCsvAction;
 use Capell\Diagnostics\Data\Health\ExtensionHealthReportData;
 use Capell\Diagnostics\Data\Health\HealthCheckResultData;
 use Capell\Diagnostics\Enums\HealthCheckImplementationStatus;
+use Capell\Diagnostics\Health\DiagnosticsHealthCheck;
 use Spatie\LaravelData\DataCollection;
 
 it('exports a health report as support-friendly csv', function (): void {
@@ -22,7 +23,7 @@ it('exports a health report as support-friendly csv', function (): void {
                 packageName: 'capell-app/diagnostics',
                 key: 'diagnostics.package-catalog',
                 label: 'Package catalog',
-                className: 'Capell\\Diagnostics\\Health\\DiagnosticsHealthCheck',
+                className: DiagnosticsHealthCheck::class,
                 severity: 'warning',
                 implementationStatus: HealthCheckImplementationStatus::Implemented,
                 passed: true,
@@ -41,10 +42,9 @@ it('exports a health report as support-friendly csv', function (): void {
         ]),
         overallStatus: 'degraded',
         healthScore: 95,
-        worstSeverity: null,
     );
 
-    $rows = array_map(str_getcsv(...), explode(PHP_EOL, ExportExtensionHealthReportCsvAction::run($report)));
+    $rows = array_map(str_getcsv(...), explode(PHP_EOL, (string) ExportExtensionHealthReportCsvAction::run($report)));
 
     expect($rows[0])->toBe([
         'type',

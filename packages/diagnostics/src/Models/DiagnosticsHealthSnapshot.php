@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Capell\Diagnostics\Models;
 
 use Carbon\CarbonImmutable;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Override;
 
@@ -27,6 +28,8 @@ use Override;
  */
 final class DiagnosticsHealthSnapshot extends Model
 {
+    use HasFactory;
+
     /** @var list<string> */
     protected $fillable = [
         'overall_status',

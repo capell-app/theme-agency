@@ -18,11 +18,11 @@ class EventCalendarPage extends Page
 {
     use HasPageShield;
 
+    protected static ?string $slug = 'events/events-calendar';
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedCalendarDays;
 
     protected static string|BackedEnum|null $activeNavigationIcon = Heroicon::CalendarDays;
-
-    protected static ?string $slug = 'events-calendar';
 
     protected static ?int $navigationSort = 4;
 

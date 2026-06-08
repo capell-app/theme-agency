@@ -32,6 +32,8 @@ use Override;
 
 final class PortalSupportRequestResource extends Resource
 {
+    protected static ?string $slug = 'customer-portal/portal-support-requests';
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedLifebuoy;
 
     protected static ?string $recordTitleAttribute = 'subject';

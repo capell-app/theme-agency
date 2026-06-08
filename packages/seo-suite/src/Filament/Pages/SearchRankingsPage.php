@@ -26,6 +26,8 @@ class SearchRankingsPage extends Page implements HasTable
     use HasPageShield;
     use InteractsWithTable;
 
+    protected static ?string $slug = 'seo-suite/search-rankings';
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedChartBar;
 
     protected static string|BackedEnum|null $activeNavigationIcon = Heroicon::ChartBar;
@@ -33,8 +35,6 @@ class SearchRankingsPage extends Page implements HasTable
     protected static ?int $navigationSort = 15;
 
     protected string $view = 'capell-admin::components.pages.table';
-
-    protected static ?string $slug = 'search-rankings';
 
     #[Override]
     public static function getNavigationLabel(): string

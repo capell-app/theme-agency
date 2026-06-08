@@ -46,10 +46,6 @@ final class RequirePasswordChangeCommand extends Command
 
         $query->chunkById(100, function (EloquentCollection $users) use ($dryRun, &$marked): void {
             foreach ($users as $user) {
-                if (! $user instanceof Model) {
-                    continue;
-                }
-
                 $marked++;
 
                 if (! $dryRun) {

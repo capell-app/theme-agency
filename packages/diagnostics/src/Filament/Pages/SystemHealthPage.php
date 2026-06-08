@@ -17,9 +17,9 @@ use Override;
 
 final class SystemHealthPage extends Dashboard
 {
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedHeart;
+    protected static ?string $slug = 'diagnostics/system-health';
 
-    protected static ?string $slug = 'system-health';
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedHeart;
 
     #[Override]
     public static function getNavigationLabel(): string

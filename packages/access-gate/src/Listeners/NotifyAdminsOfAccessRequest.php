@@ -68,8 +68,8 @@ final class NotifyAdminsOfAccessRequest
 
                 try {
                     return $this->container->make($resolverClass)->resolve();
-                } catch (Throwable $exception) {
-                    report($exception);
+                } catch (Throwable $throwable) {
+                    report($throwable);
 
                     return collect();
                 }

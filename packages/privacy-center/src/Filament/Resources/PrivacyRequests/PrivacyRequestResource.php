@@ -35,6 +35,8 @@ use Override;
 
 final class PrivacyRequestResource extends Resource
 {
+    protected static ?string $slug = 'privacy-center/privacy-requests';
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedInboxStack;
 
     protected static ?string $recordTitleAttribute = 'reference';

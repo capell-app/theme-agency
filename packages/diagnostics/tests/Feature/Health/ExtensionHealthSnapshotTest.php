@@ -74,6 +74,5 @@ function extensionHealthReportForSnapshot(int $score, string $status): Extension
         ], DataCollection::class),
         overallStatus: $status,
         healthScore: $score,
-        worstSeverity: null,
     );
 }

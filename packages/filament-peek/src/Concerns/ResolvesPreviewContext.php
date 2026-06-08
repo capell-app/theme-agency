@@ -53,13 +53,13 @@ trait ResolvesPreviewContext
 
         try {
             $encoded = json_encode($payload, JSON_THROW_ON_ERROR);
-        } catch (JsonException $exception) {
+        } catch (JsonException $jsonException) {
             Log::warning('Filament Peek preview payload could not be encoded before caching.', [
                 'payload_type' => $payloadType,
-                'exception' => $exception::class,
+                'exception' => $jsonException::class,
             ]);
 
-            throw new RuntimeException(__('capell-filament-peek::errors.payload_invalid'), previous: $exception);
+            throw new RuntimeException(__('capell-filament-peek::errors.payload_invalid'), $jsonException->getCode(), previous: $jsonException);
         }
 
         $bytes = strlen($encoded);

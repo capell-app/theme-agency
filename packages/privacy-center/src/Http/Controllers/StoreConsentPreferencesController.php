@@ -37,8 +37,7 @@ final class StoreConsentPreferencesController
             ));
         }
 
-        return redirect()
-            ->route('capell-privacy-center.consent.show')
+        return to_route('capell-privacy-center.consent.show')
             ->with('capell_privacy_center_consent_saved', true)
             ->cookie('capell_privacy_consent_saved', '1', 60 * 24 * 180, '/', null, null, false, false, 'Lax');
     }

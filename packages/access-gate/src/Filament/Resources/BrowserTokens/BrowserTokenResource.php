@@ -27,6 +27,8 @@ final class BrowserTokenResource extends Resource
 {
     use AccessGateFilamentOptions;
 
+    protected static ?string $slug = 'access-gate/browser-tokens';
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedComputerDesktop;
 
     protected static string|BackedEnum|null $activeNavigationIcon = Heroicon::ComputerDesktop;

@@ -21,6 +21,14 @@ final class FakeComposerPublisher implements GitProviderContract
     /** @var list<int|string> */
     public array $autoMergedPullRequestIds = [];
 
+    /** @var list<int|string> */
+    public array $closedPullRequestIds = [];
+
+    /** @var list<string> */
+    public array $deployStatusCommitShas = [];
+
+    public string $deployStatus = 'success';
+
     public ?PullRequestData $existingPullRequest = null;
 
     public function getFile(DeploymentConnection $conn, string $path): RepoFile
@@ -34,9 +42,7 @@ final class FakeComposerPublisher implements GitProviderContract
 
     public function getBranchCommitSha(DeploymentConnection $conn, string $branch): string
     {
-        if ($branch !== $conn->default_branch && collect($this->branches)->doesntContain('branch', $branch)) {
-            throw new RuntimeException('Branch does not exist.');
-        }
+        throw_if($branch !== $conn->default_branch && collect($this->branches)->doesntContain('branch', $branch), RuntimeException::class, 'Branch does not exist.');
 
         return 'branch-commit-sha';
     }
@@ -85,16 +91,26 @@ final class FakeComposerPublisher implements GitProviderContract
 
     public function getPullRequest(DeploymentConnection $conn, int|string $pullRequestId): PullRequestData
     {
-        throw new RuntimeException('Not used in this test.');
+        return $this->existingPullRequest ?? new PullRequestData(
+            id: $pullRequestId,
+            url: 'https://github.test/pull/' . $pullRequestId,
+            state: 'open',
+            headBranch: 'capell/add-extension-test',
+            baseBranch: $conn->default_branch,
+            headSha: 'commit-sha',
+            merged: false,
+        );
     }
 
     public function closePullRequest(DeploymentConnection $conn, int|string $pullRequestId): void
     {
-        throw new RuntimeException('Not used in this test.');
+        $this->closedPullRequestIds[] = $pullRequestId;
     }
 
     public function getDeployStatus(DeploymentConnection $conn, string $commitSha): string
     {
-        throw new RuntimeException('Not used in this test.');
+        $this->deployStatusCommitShas[] = $commitSha;
+
+        return $this->deployStatus;
     }
 }
