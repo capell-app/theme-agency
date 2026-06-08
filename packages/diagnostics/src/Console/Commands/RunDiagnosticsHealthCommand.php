@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Capell\Diagnostics\Console\Commands;
 
-use Capell\Diagnostics\Actions\Health\ExportExtensionHealthReportCsvAction;
 use Capell\Diagnostics\Actions\Health\BuildExtensionHealthTrendAction;
+use Capell\Diagnostics\Actions\Health\ExportExtensionHealthReportCsvAction;
 use Capell\Diagnostics\Actions\Health\RecordExtensionHealthReportAction;
 use Capell\Diagnostics\Actions\Health\RunExtensionHealthChecksAction;
 use Capell\Diagnostics\Data\Health\ExtensionHealthReportData;
@@ -19,7 +19,8 @@ final class RunDiagnosticsHealthCommand extends Command
 {
     protected $signature = 'capell:diagnostics:health
         {--json : Output health-check data as JSON}
-        {--csv : Output health-check data as CSV}';
+        {--csv : Output health-check data as CSV}
+        {--strict : Fail when declared health checks are stubbed}';
 
     protected $description = 'Run Diagnostics extension health checks.';
 
@@ -44,13 +45,13 @@ final class RunDiagnosticsHealthCommand extends Command
         if ((bool) $this->option('json')) {
             $this->output->writeln(json_encode($this->payloadFor($report, $trend), JSON_PRETTY_PRINT | JSON_THROW_ON_ERROR));
 
-            return $this->exitCodeFor($report);
+            return $this->exitCodeFor($report, strict: (bool) $this->option('strict'));
         }
 
         if ((bool) $this->option('csv')) {
             $this->output->writeln(ExportExtensionHealthReportCsvAction::run($report));
 
-            return $this->exitCodeFor($report);
+            return $this->exitCodeFor($report, strict: (bool) $this->option('strict'));
         }
 
         $this->components->info((string) __('capell-diagnostics::package.health_command_summary', [
@@ -80,7 +81,7 @@ final class RunDiagnosticsHealthCommand extends Command
             ], $this->rowsFor($report));
         }
 
-        return $this->exitCodeFor($report);
+        return $this->exitCodeFor($report, strict: (bool) $this->option('strict'));
     }
 
     /**
@@ -156,9 +157,9 @@ final class RunDiagnosticsHealthCommand extends Command
         return (string) __('capell-diagnostics::package.health_command_result_not_run');
     }
 
-    private function exitCodeFor(ExtensionHealthReportData $report): int
+    private function exitCodeFor(ExtensionHealthReportData $report, bool $strict): int
     {
-        return $report->failedCount > 0 || $report->brokenCount > 0
+        return $report->failedCount > 0 || $report->brokenCount > 0 || ($strict && $report->stubCount > 0)
             ? SymfonyCommand::FAILURE
             : SymfonyCommand::SUCCESS;
     }

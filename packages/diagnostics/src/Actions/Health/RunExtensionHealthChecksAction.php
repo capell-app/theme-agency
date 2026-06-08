@@ -432,7 +432,9 @@ final class RunExtensionHealthChecksAction
      */
     private function manifestPaths(): array
     {
-        $packagesPath = $this->customLocalPackagesPath ?? base_path('packages');
+        $configuredPackagesPath = config('capell-diagnostics.health_checks.local_packages_path');
+        $packagesPath = $this->customLocalPackagesPath
+            ?? (is_string($configuredPackagesPath) && $configuredPackagesPath !== '' ? $configuredPackagesPath : base_path('packages'));
 
         if (! File::isDirectory($packagesPath)) {
             return [];

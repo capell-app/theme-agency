@@ -5,6 +5,10 @@ declare(strict_types=1);
 return [
     'expensive_scan_cache_ttl_seconds' => 300,
 
+    'health_checks' => [
+        'local_packages_path' => null,
+    ],
+
     'queue_monitor' => [
         'retention_days' => 14,
         'queues' => [
