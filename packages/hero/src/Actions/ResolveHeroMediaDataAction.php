@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace Capell\Hero\Actions;
 
+use Capell\Core\Models\Blueprint;
 use Capell\Core\Models\Media;
 use Capell\Core\Models\Theme;
 use Capell\Hero\Data\HeroMediaData;
 use Capell\LayoutBuilder\Models\Widget;
 use Capell\LayoutBuilder\Models\WidgetAsset;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Lorisleiva\Actions\Concerns\AsObject;
 
@@ -87,13 +89,48 @@ final class ResolveHeroMediaDataAction
         return array_values(collect([$theme, $widget, $asset])
             ->filter(fn (Theme|Widget|WidgetAsset|null $model): bool => $model !== null)
             ->map(function (Theme|Widget|WidgetAsset $model): ?array {
-                $settings = $model->getMeta('hero_media', []);
+                $settings = $model instanceof Widget
+                    ? $this->widgetMeta($model, 'hero_media', [])
+                    : $model->getMeta('hero_media', []);
 
                 return is_array($settings) ? ['model' => $model, 'settings' => $settings] : null;
             })
             ->filter()
             ->values()
             ->all());
+    }
+
+    private function widgetMeta(Widget $widget, string $key, mixed $fallback = null): mixed
+    {
+        $meta = $widget->meta ?? [];
+
+        if (is_array($meta) && Arr::has($meta, $key)) {
+            $value = data_get($meta, $key);
+
+            if (filled($value)) {
+                return $value;
+            }
+        }
+
+        $blueprint = $widget->relationLoaded('blueprint') ? $widget->getRelation('blueprint') : null;
+
+        if (! $blueprint instanceof Blueprint && $widget->relationLoaded('type')) {
+            $blueprint = $widget->getRelation('type');
+        }
+
+        if ($blueprint instanceof Blueprint) {
+            $blueprintMeta = $blueprint->meta ?? [];
+
+            if (is_array($blueprintMeta) && Arr::has($blueprintMeta, $key)) {
+                $value = data_get($blueprintMeta, $key);
+
+                if (filled($value)) {
+                    return $value;
+                }
+            }
+        }
+
+        return $fallback;
     }
 
     /**

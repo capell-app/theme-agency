@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Capell\Hero\View\Components\Widget;
 
+use Capell\Core\Models\Blueprint;
 use Capell\Core\Models\Language;
 use Capell\Core\Models\Media;
 use Capell\Core\Models\Page;
@@ -26,6 +27,7 @@ use Illuminate\Contracts\Database\Eloquent\Builder as BuilderContract;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Override;
 
@@ -263,7 +265,7 @@ class Hero extends AbstractWidget
      */
     private function carousel(): array
     {
-        $touch = $this->widget->getMeta('carousel_touch');
+        $touch = $this->widgetMeta('carousel_touch');
 
         return [
             'align' => $this->stringMeta('carousel_align', 'center') ?? 'center',
@@ -296,7 +298,7 @@ class Hero extends AbstractWidget
 
     private function stringMeta(string $key, ?string $fallback = null): ?string
     {
-        $value = $this->widget->getMeta($key, $fallback);
+        $value = $this->widgetMeta($key, $fallback);
 
         return is_string($value) && $value !== '' ? $value : $fallback;
     }
@@ -310,14 +312,47 @@ class Hero extends AbstractWidget
 
     private function boolMeta(string $key, bool $fallback): bool
     {
-        return filter_var($this->widget->getMeta($key, $fallback), FILTER_VALIDATE_BOOL);
+        return filter_var($this->widgetMeta($key, $fallback), FILTER_VALIDATE_BOOL);
     }
 
     private function intMeta(string $key, int $fallback): int
     {
-        $value = $this->widget->getMeta($key, $fallback);
+        $value = $this->widgetMeta($key, $fallback);
 
         return is_numeric($value) ? (int) $value : $fallback;
+    }
+
+    private function widgetMeta(string $key, mixed $fallback = null): mixed
+    {
+        $meta = $this->widget->meta ?? [];
+
+        if (is_array($meta) && Arr::has($meta, $key)) {
+            $value = data_get($meta, $key);
+
+            if (filled($value)) {
+                return $value;
+            }
+        }
+
+        $blueprint = $this->loadedRelation($this->widget, 'blueprint');
+
+        if (! $blueprint instanceof Blueprint) {
+            $blueprint = $this->loadedRelation($this->widget, 'type');
+        }
+
+        if ($blueprint instanceof Blueprint) {
+            $blueprintMeta = $blueprint->meta ?? [];
+
+            if (is_array($blueprintMeta) && Arr::has($blueprintMeta, $key)) {
+                $value = data_get($blueprintMeta, $key);
+
+                if (filled($value)) {
+                    return $value;
+                }
+            }
+        }
+
+        return $fallback;
     }
 
     /**

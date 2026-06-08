@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Capell\Hero\Data;
 
 use Capell\Core\Enums\MediaCollectionEnum;
+use Capell\Core\Models\Blueprint;
 use Capell\Core\Models\Media;
 use Capell\Core\Models\Page;
 use Capell\Core\Models\Site;
@@ -12,6 +13,7 @@ use Capell\Frontend\Actions\RenderHtmlContentAction;
 use Capell\LayoutBuilder\Models\Widget;
 use Capell\LayoutBuilder\Models\WidgetAsset;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use RuntimeException;
 
@@ -55,23 +57,23 @@ final readonly class HeroAssetSlideData
 
         throw_unless($asset instanceof Model, RuntimeException::class, 'Hero widget asset must resolve to an Eloquent model.');
 
-        $color = method_exists($asset, 'getMeta') ? $asset->getMeta('color', $fallbackColor) : $fallbackColor;
+        $color = self::modelMeta($asset, 'color', $fallbackColor);
         $linkedPage = $asset instanceof Page ? $asset : self::loadedRelation($asset, 'linkedPage');
         $backgroundImage = self::resolveBackgroundImage($widgetAsset);
         $images = self::resolveImages($widgetAsset);
         $translation = self::loadedRelation($asset, 'translation');
-        $backgroundAttachment = method_exists($asset, 'getMeta') ? $asset->getMeta('background_attachment', $widget->getMeta('background_attachment', 'scroll')) : null;
-        $backgroundColor = method_exists($asset, 'getMeta') ? $asset->getMeta('background_color', $widget->getMeta('background_color')) : null;
-        $backgroundPosition = method_exists($asset, 'getMeta') ? $asset->getMeta('background_position', $widget->getMeta('background_position', 'center')) : null;
-        $backgroundRepeat = method_exists($asset, 'getMeta') ? $asset->getMeta('background_repeat', $widget->getMeta('background_repeat', 'no-repeat')) : null;
-        $backgroundSize = method_exists($asset, 'getMeta') ? $asset->getMeta('background_size', $widget->getMeta('background_size', 'cover')) : null;
-        $linkText = method_exists($asset, 'getMeta') ? $asset->getMeta('link_text') : null;
+        $backgroundAttachment = self::modelMeta($asset, 'background_attachment', self::modelMeta($widget, 'background_attachment', 'scroll'));
+        $backgroundColor = self::modelMeta($asset, 'background_color', self::modelMeta($widget, 'background_color'));
+        $backgroundPosition = self::modelMeta($asset, 'background_position', self::modelMeta($widget, 'background_position', 'center'));
+        $backgroundRepeat = self::modelMeta($asset, 'background_repeat', self::modelMeta($widget, 'background_repeat', 'no-repeat'));
+        $backgroundSize = self::modelMeta($asset, 'background_size', self::modelMeta($widget, 'background_size', 'cover'));
+        $linkText = self::modelMeta($asset, 'link_text');
         $content = is_string(data_get($translation, 'content')) ? data_get($translation, 'content') : null;
 
         return new self(
             asset: $asset,
             color: is_string($color) && $color !== '' ? $color : $fallbackColor,
-            actions: method_exists($asset, 'getMeta') ? $asset->getMeta('actions') : null,
+            actions: self::modelMeta($asset, 'actions'),
             related: self::resolveRelatedItems($asset),
             heroBackground: null,
             heroMedia: null,
@@ -198,7 +200,7 @@ final readonly class HeroAssetSlideData
         $linkedPageRelations = $linkedPage instanceof Model ? $linkedPage->getRelations() : [];
         $pageUrl = $linkedPageRelations['pageUrl'] ?? null;
         $featureTranslation = $featureRelations['translation'] ?? null;
-        $linkText = method_exists($feature, 'getMeta') ? $feature->getMeta('link_text') : null;
+        $linkText = self::modelMeta($feature, 'link_text');
         $url = data_get($pageUrl, 'full_url');
         $title = data_get($featureTranslation, 'title');
         $summary = data_get($featureTranslation, 'summary');
@@ -218,5 +220,38 @@ final readonly class HeroAssetSlideData
         }
 
         return $model->getRelation($relation);
+    }
+
+    private static function modelMeta(Model $model, string $key, mixed $fallback = null): mixed
+    {
+        $meta = $model->getAttribute('meta') ?? [];
+
+        if (is_array($meta) && Arr::has($meta, $key)) {
+            $value = data_get($meta, $key);
+
+            if (filled($value)) {
+                return $value;
+            }
+        }
+
+        $blueprint = self::loadedRelation($model, 'blueprint');
+
+        if (! $blueprint instanceof Blueprint) {
+            $blueprint = self::loadedRelation($model, 'type');
+        }
+
+        if ($blueprint instanceof Blueprint) {
+            $blueprintMeta = $blueprint->meta ?? [];
+
+            if (is_array($blueprintMeta) && Arr::has($blueprintMeta, $key)) {
+                $value = data_get($blueprintMeta, $key);
+
+                if (filled($value)) {
+                    return $value;
+                }
+            }
+        }
+
+        return $fallback;
     }
 }

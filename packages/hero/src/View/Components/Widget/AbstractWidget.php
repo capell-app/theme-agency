@@ -48,19 +48,17 @@ abstract class AbstractWidget extends Component
 
     protected function getComponentItem(): ?string
     {
-        return $this->widget->meta['component_item'] ?? $this->widget->type->meta['component_item'] ?? null;
+        return $this->widget->getComponentItem();
     }
 
     protected function mountWidget(): void {}
 
     private function componentView(): string
     {
-        if (isset($this->widget->meta['view_file']) && $this->widget->meta['view_file'] !== '') {
-            return $this->widget->meta['view_file'];
-        }
+        $viewFile = $this->widget->getViewFile();
 
-        if (isset($this->widget->type->meta['view_file']) && $this->widget->type->meta['view_file'] !== '') {
-            return $this->widget->type->meta['view_file'];
+        if ($viewFile !== null && $viewFile !== '') {
+            return $viewFile;
         }
 
         return static::$defaultView;

@@ -1,3 +1,7 @@
+@php
+    use Capell\Events\Data\EventOccurrenceViewData;
+@endphp
+
 <section class="capell-event-calendar capell-events-calendar">
     <header>
         <button
