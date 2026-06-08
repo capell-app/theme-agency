@@ -17,6 +17,7 @@ use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Gate;
@@ -42,12 +43,22 @@ class CommentAuthorResource extends Resource
         return $table
             ->modifyQueryUsing(fn (Builder $query): Builder => SiteScope::applyForCurrentActor($query->with('site')->withCount('comments')))
             ->columns([
-                TextColumn::make('name')->label(__('capell-comments::table.author')),
-                TextColumn::make('email')->label(__('capell-comments::table.email')),
+                TextColumn::make('name')->label(__('capell-comments::table.author'))->searchable(),
+                TextColumn::make('email')->label(__('capell-comments::table.email'))->searchable(),
                 TextColumn::make('comments_count')->label(__('capell-comments::table.comments'))->numeric(),
                 IconColumn::make('email_verified_at')->label(__('capell-comments::table.verified'))->boolean()->state(fn (CommentAuthor $record): bool => $record->isEmailVerified()),
                 IconColumn::make('trusted_at')->label(__('capell-comments::table.trusted'))->boolean()->state(fn (CommentAuthor $record): bool => $record->isTrusted()),
                 IconColumn::make('blocked_at')->label(__('capell-comments::table.blocked'))->boolean()->state(fn (CommentAuthor $record): bool => $record->isBlocked()),
+            ])
+            ->filters([
+                SelectFilter::make('site_id')
+                    ->label(__('capell-admin::form.site'))
+                    ->searchable()
+                    ->relationship(
+                        name: 'site',
+                        titleAttribute: 'name',
+                        modifyQueryUsing: fn (Builder $query): Builder => SiteScope::applyForCurrentActor($query, 'id'),
+                    ),
             ])
             ->recordActions([
                 self::authorAction('trust', __('capell-comments::table.action_trust'), 'heroicon-o-star', 'success'),

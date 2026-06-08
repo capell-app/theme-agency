@@ -21,6 +21,7 @@ use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\Filter;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Override;
@@ -68,6 +69,17 @@ class SubscriberResource extends Resource
                 TextColumn::make('created_at')->label(__('capell-newsletter::table.created_at'))->dateTime()->sortable(),
             ])
             ->filters([
+                SelectFilter::make('site_id')
+                    ->label(__('capell-admin::form.site'))
+                    ->searchable()
+                    ->relationship(
+                        name: 'site',
+                        titleAttribute: 'name',
+                        modifyQueryUsing: fn (Builder $query): Builder => self::applyNewsletterSiteScope($query, 'id'),
+                    ),
+                SelectFilter::make('status')
+                    ->label(__('capell-newsletter::form.status'))
+                    ->options(self::subscriberStatusOptions()),
                 Filter::make('email')
                     ->schema([
                         TextInput::make('email')

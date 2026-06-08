@@ -11,6 +11,8 @@ use Capell\Core\Models\PageUrl;
 use Capell\Core\Models\Site;
 use Capell\Events\Enums\EventNotificationTypeEnum;
 use Capell\Events\Filament\Resources\Events\Tables\EventsTable;
+use Capell\Events\Filament\Resources\Occurrences\EventOccurrenceResource;
+use Capell\Events\Filament\Resources\Registrations\EventRegistrationResource;
 use Capell\Events\Filament\Resources\Venues\EventVenueResource;
 use Capell\Events\Models\Event;
 use Capell\Events\Models\EventNotificationLog;
@@ -27,10 +29,16 @@ use Illuminate\Contracts\Queue\ShouldQueueAfterCommit;
 
 it('builds events table configurator and schema template defaults', function (): void {
     $template = new EventSchemaTemplate;
+    $eventsTable = EventsTable::configure(eventsTableForCoverage());
+    $venueTable = EventVenueResource::table(eventsTableForCoverage());
 
-    expect(EventsTable::configure(eventsTableForCoverage())->getColumns())->toHaveCount(7)
+    expect($eventsTable->getColumns())->toHaveCount(7)
+        ->and(array_keys($eventsTable->getFilters()))->toContain('visibility')
+        ->and(array_keys(EventOccurrenceResource::table(eventsTableForCoverage())->getFilters()))->toContain('status')
+        ->and(array_keys(EventRegistrationResource::table(eventsTableForCoverage())->getFilters()))->toContain('status')
         ->and(EventVenueResource::form(Schema::make())->getComponents())->toHaveCount(6)
-        ->and(EventVenueResource::table(eventsTableForCoverage())->getColumns())->toHaveCount(2)
+        ->and($venueTable->getColumns())->toHaveCount(2)
+        ->and(array_keys($venueTable->getFilters()))->toContain('site_id', 'state', 'status')
         ->and($template->build(new Page, new Site, new Language))->toBe([])
         ->and($template->requiredFields(new Page, new Site, new Language))->toBe([
             '@type',

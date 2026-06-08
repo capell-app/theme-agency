@@ -16,9 +16,16 @@ use Filament\Tables\Contracts\HasTable;
 use Filament\Tables\Table;
 
 it('builds campaign studio admin table configurators', function (): void {
-    expect(CampaignGroupsTable::configure(campaignStudioTableForCoverage())->getColumns())->not->toBeEmpty()
-        ->and(CampaignConversionGoalsTable::configure(campaignStudioTableForCoverage())->getColumns())->not->toBeEmpty()
-        ->and(CampaignCtaWidgetsTable::configure(campaignStudioTableForCoverage())->getColumns())->not->toBeEmpty()
+    $groupsTable = CampaignGroupsTable::configure(campaignStudioTableForCoverage());
+    $conversionGoalsTable = CampaignConversionGoalsTable::configure(campaignStudioTableForCoverage());
+    $ctaWidgetsTable = CampaignCtaWidgetsTable::configure(campaignStudioTableForCoverage());
+
+    expect($groupsTable->getColumns())->not->toBeEmpty()
+        ->and(array_keys($groupsTable->getFilters()))->toContain('site_id', 'status')
+        ->and($conversionGoalsTable->getColumns())->not->toBeEmpty()
+        ->and(array_keys($conversionGoalsTable->getFilters()))->toContain('site_id', 'type')
+        ->and($ctaWidgetsTable->getColumns())->not->toBeEmpty()
+        ->and(array_keys($ctaWidgetsTable->getFilters()))->toContain('site_id', 'is_active')
         ->and(CampaignLandingPagesTable::configure(campaignStudioTableForCoverage())->getColumns())->not->toBeEmpty();
 });
 

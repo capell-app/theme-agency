@@ -25,6 +25,7 @@ return [
     'reminder_offsets_minutes_placeholder' => '1440',
     'reminders_enabled' => 'Send reminder emails',
     'starts_at' => 'Starts at',
+    'state' => 'State',
     'timezone' => 'Timezone',
     'venue' => 'Venue',
     'visibility' => 'Visibility',

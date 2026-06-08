@@ -20,6 +20,7 @@ use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Gate;
@@ -64,6 +65,11 @@ class EventOccurrenceResource extends Resource
                 TextColumn::make('starts_at')->label(__('capell-events::table.starts_at'))->dateTime()->sortable(),
                 TextColumn::make('status')->label(__('capell-events::table.status'))->badge(),
                 TextColumn::make('registration_count')->label(__('capell-events::table.registrations')),
+            ])
+            ->filters([
+                SelectFilter::make('status')
+                    ->label(__('capell-events::table.status'))
+                    ->options(EventOccurrenceStatusEnum::class),
             ])
             ->recordActions([
                 self::rescheduleOccurrenceAction(),

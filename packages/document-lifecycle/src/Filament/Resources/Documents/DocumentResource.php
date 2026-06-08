@@ -30,6 +30,7 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -109,6 +110,11 @@ final class DocumentResource extends Resource
                     ->label(__('capell-document-lifecycle::navigation.fields.updated_at'))
                     ->dateTime()
                     ->sortable(),
+            ])
+            ->filters([
+                SelectFilter::make('status')
+                    ->label(__('capell-document-lifecycle::navigation.fields.status'))
+                    ->options(DocumentStatusEnum::class),
             ])
             ->recordActions([
                 EditAction::make(),

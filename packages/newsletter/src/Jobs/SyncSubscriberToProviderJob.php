@@ -19,11 +19,11 @@ class SyncSubscriberToProviderJob implements ShouldQueue
     use Queueable;
     use SerializesModels;
 
-    public bool $afterCommit = true;
-
     public function __construct(
         public SyncAttempt $syncAttempt,
     ) {
+        $this->afterCommit();
+
         $queue = config('capell-newsletter.sync.queue');
 
         if (is_string($queue) && $queue !== '') {

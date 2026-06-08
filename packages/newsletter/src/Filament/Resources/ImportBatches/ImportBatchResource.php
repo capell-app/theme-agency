@@ -6,6 +6,8 @@ namespace Capell\Newsletter\Filament\Resources\ImportBatches;
 
 use BackedEnum;
 use Capell\Core\Facades\CapellCore;
+use Capell\Newsletter\Enums\ImportBatchStatus;
+use Capell\Newsletter\Enums\ImportBatchType;
 use Capell\Newsletter\Filament\Concerns\ScopesNewsletterResourcesToAssignedSites;
 use Capell\Newsletter\Filament\Resources\ImportBatches\Pages\ListImportBatches;
 use Capell\Newsletter\Models\ImportBatch;
@@ -13,6 +15,7 @@ use Capell\Newsletter\Providers\NewsletterServiceProvider;
 use Filament\Resources\Resource;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Override;
@@ -38,6 +41,22 @@ class ImportBatchResource extends Resource
                 TextColumn::make('valid_rows')->sortable(),
                 TextColumn::make('invalid_rows')->sortable(),
                 TextColumn::make('created_at')->label(__('capell-newsletter::table.created_at'))->dateTime()->sortable(),
+            ])
+            ->filters([
+                SelectFilter::make('site_id')
+                    ->label(__('capell-admin::form.site'))
+                    ->searchable()
+                    ->relationship(
+                        name: 'site',
+                        titleAttribute: 'name',
+                        modifyQueryUsing: fn (Builder $query): Builder => self::applyNewsletterSiteScope($query, 'id'),
+                    ),
+                SelectFilter::make('type')
+                    ->label(__('capell-newsletter::form.type'))
+                    ->options(self::importBatchTypeOptions()),
+                SelectFilter::make('status')
+                    ->label(__('capell-newsletter::form.status'))
+                    ->options(self::importBatchStatusOptions()),
             ]);
     }
 
@@ -83,5 +102,25 @@ class ImportBatchResource extends Resource
         return [
             'index' => ListImportBatches::route('/'),
         ];
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    private static function importBatchTypeOptions(): array
+    {
+        return collect(ImportBatchType::cases())
+            ->mapWithKeys(static fn (ImportBatchType $type): array => [$type->value => __('capell-newsletter::generic.import_batch_type.' . $type->value)])
+            ->all();
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    private static function importBatchStatusOptions(): array
+    {
+        return collect(ImportBatchStatus::cases())
+            ->mapWithKeys(static fn (ImportBatchStatus $status): array => [$status->value => __('capell-newsletter::generic.import_batch_status.' . $status->value)])
+            ->all();
     }
 }

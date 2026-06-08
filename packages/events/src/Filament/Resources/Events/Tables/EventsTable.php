@@ -9,8 +9,10 @@ use Capell\Admin\Filament\Components\Tables\Columns\DateColumn;
 use Capell\Admin\Filament\Components\Tables\Columns\IdentifierColumn;
 use Capell\Admin\Filament\Components\Tables\Columns\NameColumn;
 use Capell\Admin\Filament\Contracts\TableConfigurator;
+use Capell\Events\Enums\EventVisibilityEnum;
 use Filament\Actions\DeleteAction;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 
 class EventsTable implements TableConfigurator
@@ -20,7 +22,7 @@ class EventsTable implements TableConfigurator
         return $table
             ->columns([
                 IdentifierColumn::make('id'),
-                NameColumn::make('name')->defaultBadge(),
+                NameColumn::make('name'),
                 TextColumn::make('starts_at')
                     ->label(__('capell-events::table.starts_at'))
                     ->dateTime()
@@ -33,6 +35,11 @@ class EventsTable implements TableConfigurator
                     ->badge(),
                 DateColumn::make('created_at'),
                 DateColumn::make('updated_at'),
+            ])
+            ->filters([
+                SelectFilter::make('visibility')
+                    ->label(__('capell-events::table.visibility'))
+                    ->options(EventVisibilityEnum::class),
             ])
             ->recordActions([
                 EditAction::make('edit'),

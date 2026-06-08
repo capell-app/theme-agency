@@ -16,10 +16,10 @@ use Capell\DocumentLifecycle\Models\DocumentPublication;
 use Capell\Tests\Support\Concerns\CreatesAdminUser;
 use Filament\Actions\Testing\TestAction;
 use Filament\Facades\Filament;
-use Illuminate\Database\Events\QueryExecuted;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Events\QueryExecuted;
 use Illuminate\Support\Facades\Date;
+use Illuminate\Support\Facades\DB;
 
 use function Pest\Laravel\assertDatabaseHas;
 use function Pest\Laravel\get;
@@ -50,6 +50,10 @@ it('exposes controlled documents in the admin surface', function (): void {
     get(DocumentResource::getUrl('edit', ['record' => $document]))
         ->assertOk()
         ->assertSee('terms');
+
+    $list = livewire(ListDocuments::class)->assertSuccessful();
+
+    expect(array_keys($list->instance()->getTable()->getFilters()))->toContain('status');
 });
 
 it('keeps the controlled document index within the manifest query budget', function (): void {

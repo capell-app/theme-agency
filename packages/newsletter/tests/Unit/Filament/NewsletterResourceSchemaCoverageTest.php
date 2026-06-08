@@ -7,13 +7,18 @@ use Capell\Newsletter\Enums\ProviderType;
 use Capell\Newsletter\Enums\SubscriberStatus;
 use Capell\Newsletter\Enums\SyncStatus;
 use Capell\Newsletter\Filament\Resources\FormMappings\FormMappingResource;
+use Capell\Newsletter\Filament\Resources\ImportBatches\ImportBatchResource;
+use Capell\Newsletter\Filament\Resources\NewsletterSends\NewsletterSendResource;
 use Capell\Newsletter\Filament\Resources\NewsletterTags\NewsletterTagResource;
 use Capell\Newsletter\Filament\Resources\ProviderAudiences\ProviderAudienceResource;
 use Capell\Newsletter\Filament\Resources\ProviderConnections\ProviderConnectionResource;
 use Capell\Newsletter\Filament\Resources\ProviderInterestMappings\ProviderInterestMappingResource;
+use Capell\Newsletter\Filament\Resources\Segments\SegmentResource;
+use Capell\Newsletter\Filament\Resources\Subscribers\SubscriberResource;
 use Capell\Newsletter\Filament\Resources\SyncAttempts\SyncAttemptResource;
 use Capell\Newsletter\Filament\Settings\NewsletterSettingsSchema;
 use Capell\Newsletter\Filament\Widgets\NewsletterOverviewStatsWidget;
+use Capell\Newsletter\Jobs\SyncSubscriberToProviderJob;
 use Capell\Newsletter\Models\FormMapping;
 use Capell\Newsletter\Models\ProviderAudience;
 use Capell\Newsletter\Models\ProviderConnection;
@@ -95,20 +100,32 @@ it('only offers the fake provider in allowed environments', function (): void {
 
 it('declares newsletter tag and sync attempt table columns and navigation metadata', function (): void {
     $formMappingTable = FormMappingResource::table(newsletterCoverageTable());
+    $importBatchTable = ImportBatchResource::table(newsletterCoverageTable());
+    $newsletterSendTable = NewsletterSendResource::table(newsletterCoverageTable());
     $providerAudienceTable = ProviderAudienceResource::table(newsletterCoverageTable());
+    $providerConnectionTable = ProviderConnectionResource::table(newsletterCoverageTable());
     $providerInterestTable = ProviderInterestMappingResource::table(newsletterCoverageTable());
+    $segmentTable = SegmentResource::table(newsletterCoverageTable());
+    $subscriberTable = SubscriberResource::table(newsletterCoverageTable());
     $tagTable = NewsletterTagResource::table(newsletterCoverageTable());
     $syncAttemptTable = SyncAttemptResource::table(newsletterCoverageTable());
 
     expect(array_keys($formMappingTable->getColumns()))->toBe(['name', 'form_handle', 'email_field', 'updated_at'])
+        ->and(array_keys($formMappingTable->getFilters()))->toContain('site_id')
+        ->and(array_keys($importBatchTable->getFilters()))->toContain('site_id', 'type', 'status')
+        ->and(array_keys($newsletterSendTable->getFilters()))->toContain('site_id', 'status')
         ->and(array_keys($providerAudienceTable->getColumns()))->toBe(['name', 'providerConnection.name', 'remote_id', 'updated_at'])
+        ->and(array_keys($providerConnectionTable->getFilters()))->toContain('site_id', 'provider', 'is_enabled')
         ->and(array_keys($providerInterestTable->getColumns()))->toBe([
             'providerAudience.name',
             'tag.name',
             'remote_interest_id',
             'remote_interest_type',
         ])
+        ->and(array_keys($segmentTable->getFilters()))->toContain('site_id', 'type', 'is_active')
+        ->and(array_keys($subscriberTable->getFilters()))->toContain('site_id', 'status', 'email')
         ->and(array_keys($tagTable->getColumns()))->toBe(['name', 'slug'])
+        ->and(array_keys($tagTable->getFilters()))->toContain('site_id', 'status')
         ->and(array_keys($syncAttemptTable->getColumns()))->toBe([
             'operation',
             'sync_status',
@@ -129,6 +146,12 @@ it('declares newsletter tag and sync attempt table columns and navigation metada
         ->and(SyncAttemptResource::getNavigationGroup())->toBe('capell-admin::navigation.group_marketing')
         ->and(SyncAttemptResource::getNavigationLabel())->toBe('Sync Attempts')
         ->and(SyncAttemptResource::shouldRegisterNavigation())->toBeFalse();
+});
+
+it('constructs subscriber sync jobs after the surrounding transaction commits', function (): void {
+    $job = new SyncSubscriberToProviderJob(new SyncAttempt);
+
+    expect($job->afterCommit)->toBeTrue();
 });
 
 it('summarizes newsletter overview stats for current records', function (): void {

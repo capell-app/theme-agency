@@ -16,6 +16,8 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
+use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Override;
@@ -72,10 +74,31 @@ class EventVenueResource extends Resource
     #[Override]
     public static function table(Table $table): Table
     {
-        return $table->columns([
-            TextColumn::make('name')->label(__('capell-events::table.name'))->searchable(),
-            TextColumn::make('full_address')->label(__('capell-events::table.address'))->wrap(),
-        ]);
+        return $table
+            ->columns([
+                TextColumn::make('name')->label(__('capell-events::table.name'))->searchable(),
+                TextColumn::make('full_address')->label(__('capell-events::table.address'))->wrap(),
+            ])
+            ->filters([
+                SelectFilter::make('site_id')
+                    ->label(__('capell-admin::form.site'))
+                    ->searchable()
+                    ->relationship(
+                        name: 'site',
+                        titleAttribute: 'name',
+                        modifyQueryUsing: fn (Builder $query): Builder => SiteScope::applyForCurrentActor($query, 'id'),
+                    ),
+                SelectFilter::make('state')
+                    ->label(__('capell-events::form.state'))
+                    ->options(fn (): array => EventVenue::query()
+                        ->whereNotNull('state')
+                        ->distinct()
+                        ->orderBy('state')
+                        ->pluck('state', 'state')
+                        ->all()),
+                TernaryFilter::make('status')
+                    ->label(__('capell-admin::table.status')),
+            ]);
     }
 
     #[Override]

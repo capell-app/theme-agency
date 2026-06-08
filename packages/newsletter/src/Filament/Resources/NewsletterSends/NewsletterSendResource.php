@@ -24,6 +24,7 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Override;
@@ -72,13 +73,27 @@ class NewsletterSendResource extends Resource
     #[Override]
     public static function table(Table $table): Table
     {
-        return $table->columns([
-            TextColumn::make('name')->label(__('capell-newsletter::form.name'))->searchable()->sortable(),
-            TextColumn::make('subject')->label(__('capell-newsletter::form.subject'))->searchable(),
-            TextColumn::make('status')->label(__('capell-newsletter::table.status'))->badge()->sortable(),
-            TextColumn::make('scheduled_at')->label(__('capell-newsletter::table.scheduled_at'))->dateTime()->sortable(),
-            TextColumn::make('sent_at')->label(__('capell-newsletter::table.sent_at'))->dateTime()->sortable(),
-        ]);
+        return $table
+            ->columns([
+                TextColumn::make('name')->label(__('capell-newsletter::form.name'))->searchable()->sortable(),
+                TextColumn::make('subject')->label(__('capell-newsletter::form.subject'))->searchable(),
+                TextColumn::make('status')->label(__('capell-newsletter::table.status'))->badge()->sortable(),
+                TextColumn::make('scheduled_at')->label(__('capell-newsletter::table.scheduled_at'))->dateTime()->sortable(),
+                TextColumn::make('sent_at')->label(__('capell-newsletter::table.sent_at'))->dateTime()->sortable(),
+            ])
+            ->filters([
+                SelectFilter::make('site_id')
+                    ->label(__('capell-admin::form.site'))
+                    ->searchable()
+                    ->relationship(
+                        name: 'site',
+                        titleAttribute: 'name',
+                        modifyQueryUsing: fn (Builder $query): Builder => self::applyNewsletterSiteScope($query, 'id'),
+                    ),
+                SelectFilter::make('status')
+                    ->label(__('capell-newsletter::form.status'))
+                    ->options(self::sendStatusOptions()),
+            ]);
     }
 
     #[Override]

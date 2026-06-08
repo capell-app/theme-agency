@@ -30,6 +30,7 @@ it('builds the comments moderation resources with their table controls', functio
 
     $commentsTable = CommentResource::table(commentAdminTableForCoverage());
     $authorsTable = CommentAuthorResource::table(commentAdminTableForCoverage());
+    $authorColumns = $authorsTable->getColumns();
 
     expect(CommentResource::getModel())->toBe(Comment::class)
         ->and(CommentAuthorResource::getModel())->toBe(CommentAuthor::class)
@@ -39,6 +40,9 @@ it('builds the comments moderation resources with their table controls', functio
         ->and(array_keys($commentsTable->getFilters()))->toContain('status')
         ->and(commentAdminActionNames($commentsTable->getRecordActions()))->toContain('context', 'approve', 'reject', 'spam', 'archive')
         ->and(array_keys($authorsTable->getColumns()))->toContain('name', 'email', 'comments_count', 'email_verified_at', 'trusted_at', 'blocked_at')
+        ->and($authorColumns['name']->isSearchable())->toBeTrue()
+        ->and($authorColumns['email']->isSearchable())->toBeTrue()
+        ->and(array_keys($authorsTable->getFilters()))->toContain('site_id')
         ->and(commentAdminActionNames($authorsTable->getRecordActions()))->toContain('trust', 'block', 'unblock', 'verify', 'resend_verification');
 });
 

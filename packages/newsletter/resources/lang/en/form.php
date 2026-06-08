@@ -38,6 +38,7 @@ return [
     'site_resubscribe_policies' => 'Site resubscribe policy overrides',
     'status' => 'Status',
     'subject' => 'Subject',
+    'type' => 'Type',
     'utm_campaign' => 'UTM campaign',
     'utm_content' => 'UTM content',
     'utm_id' => 'UTM ID',

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use Capell\Core\Enums\BlueprintSubjectEnum;
 use Capell\Core\Enums\LayoutEnum;
+use Capell\Core\Enums\LayoutGroupEnum;
 use Capell\Core\Models\Blueprint;
 use Capell\Core\Models\Layout;
 use Capell\Events\Actions\CancelOccurrenceAction;
@@ -68,7 +69,7 @@ it('ensures event publishing defaults for event pages and listing pages', functi
     expect($eventTypeMeta['schema']['type'] ?? null)->toBe('Event')
         ->and($eventTypeMeta['with_date'] ?? null)->toBeTrue()
         ->and($listingType->component)->toBe(LivewireComponentEnum::EventsCalendarPage->value)
-        ->and(Layout::query()->where('key', 'event')->exists())->toBeTrue()
+        ->and(Layout::query()->where('key', 'event')->firstOrFail()->group)->toBe(LayoutGroupEnum::Default->value)
         ->and(Layout::query()->where('key', LayoutEnum::Results->value)->exists())->toBeTrue();
 });
 

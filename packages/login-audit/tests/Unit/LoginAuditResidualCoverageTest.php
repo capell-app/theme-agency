@@ -16,6 +16,8 @@ use Illuminate\Database\Eloquent\Model;
 it('builds login audit table columns filters and helper fallbacks', function (): void {
     $columns = invokeLoginAuditTableMethod('getTableColumns');
     $filters = invokeLoginAuditTableMethod('getTableFilters');
+    $columnNames = array_map(static fn (mixed $column): string => $column->getName(), $columns);
+    $filterNames = array_map(static fn (mixed $filter): string => $filter->getName(), $filters);
 
     $missingRecord = new LoginAudit;
     $namedRecord = new LoginAudit;
@@ -29,9 +31,25 @@ it('builds login audit table columns filters and helper fallbacks', function ():
         ];
     });
 
-    expect($columns)->toHaveCount(7)
+    expect($columnNames)->toBe([
+        'id',
+        'authenticatable',
+        'ip_address',
+        'user_agent',
+        'device_name',
+        'is_trusted',
+        'login_at',
+        'last_activity_at',
+        'logout_at',
+        'location',
+    ])
         ->and($columns[1])->toBeInstanceOf(TextColumn::class)
-        ->and($filters)->toHaveCount(3)
+        ->and($filterNames)->toBe([
+            'login_successful',
+            'login_at',
+            'cleared_by_user',
+            'is_trusted',
+        ])
         ->and(invokeLoginAuditTableMethod('getAuthenticatableName', [$missingRecord]))->toBe(__('capell-admin::generic.missing'))
         ->and(invokeLoginAuditTableMethod('getAuthenticatableName', [$namedRecord]))->toBe('Ben Johnson')
         ->and(invokeLoginAuditTableMethod('getAuthenticatableUrl', [$missingRecord]))->toBeNull();
@@ -40,8 +58,9 @@ it('builds login audit table columns filters and helper fallbacks', function ():
 
     $configured = LoginAuditsTable::configure(loginAuditTableForCoverage($query));
 
-    expect($configured->getColumns())->toHaveCount(7)
-        ->and($configured->getFilters())->toHaveCount(3);
+    expect($configured->getColumns())->toHaveCount(10)
+        ->and($configured->getFilters())->toHaveCount(4)
+        ->and($configured->getHeaderActions())->toHaveCount(1);
 });
 
 it('builds login audit user relation manager table metadata', function (): void {
@@ -51,9 +70,23 @@ it('builds login audit user relation manager table metadata', function (): void 
         use HasFactory;
     };
     $manager = new LoginAuditsRelationManager;
+    $table = $manager->table(loginAuditTableForCoverage(Mockery::mock(Builder::class)->shouldIgnoreMissing()));
+    $columnNames = array_values(array_map(static fn (mixed $column): string => $column->getName(), $table->getColumns()));
+    $filterNames = array_values(array_map(static fn (mixed $filter): string => $filter->getName(), $table->getFilters()));
 
     expect(LoginAuditsRelationManager::getTitle($owner, 'edit'))->toBe(__('capell-login-audit::settings.login_audits'))
-        ->and($manager->table(loginAuditTableForCoverage(Mockery::mock(Builder::class)->shouldIgnoreMissing()))->getColumns())->toHaveCount(6)
+        ->and($columnNames)->toBe([
+            'login_successful',
+            'ip_address',
+            'user_agent',
+            'device_name',
+            'is_trusted',
+            'login_at',
+            'last_activity_at',
+            'cleared_by_user',
+        ])
+        ->and($filterNames)->toBe(['is_trusted'])
+        ->and($table->getHeaderActions())->toHaveCount(1)
         ->and(invokeLoginAuditRelationManagerMethod($manager, 'loginSuccessful', [true]))->toBeTrue()
         ->and(invokeLoginAuditRelationManagerMethod($manager, 'loginSuccessful', ['1']))->toBeTrue()
         ->and(invokeLoginAuditRelationManagerMethod($manager, 'loginSuccessful', [false]))->toBeFalse();

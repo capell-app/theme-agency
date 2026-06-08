@@ -22,6 +22,8 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
+use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Override;
@@ -54,12 +56,28 @@ class SegmentResource extends Resource
     #[Override]
     public static function table(Table $table): Table
     {
-        return $table->columns([
-            TextColumn::make('name')->label(__('capell-newsletter::form.name'))->searchable()->sortable(),
-            TextColumn::make('handle')->label(__('capell-newsletter::form.handle'))->searchable(),
-            TextColumn::make('type')->badge()->sortable(),
-            TextColumn::make('updated_at')->label(__('capell-newsletter::table.updated_at'))->dateTime()->sortable(),
-        ]);
+        return $table
+            ->columns([
+                TextColumn::make('name')->label(__('capell-newsletter::form.name'))->searchable()->sortable(),
+                TextColumn::make('handle')->label(__('capell-newsletter::form.handle'))->searchable(),
+                TextColumn::make('type')->badge()->sortable(),
+                TextColumn::make('updated_at')->label(__('capell-newsletter::table.updated_at'))->dateTime()->sortable(),
+            ])
+            ->filters([
+                SelectFilter::make('site_id')
+                    ->label(__('capell-admin::form.site'))
+                    ->searchable()
+                    ->relationship(
+                        name: 'site',
+                        titleAttribute: 'name',
+                        modifyQueryUsing: fn (Builder $query): Builder => self::applyNewsletterSiteScope($query, 'id'),
+                    ),
+                SelectFilter::make('type')
+                    ->label(__('capell-newsletter::form.type'))
+                    ->options(self::segmentTypeOptions()),
+                TernaryFilter::make('is_active')
+                    ->label(__('capell-newsletter::form.active')),
+            ]);
     }
 
     #[Override]

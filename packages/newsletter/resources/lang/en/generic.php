@@ -29,6 +29,16 @@ return [
         'sending' => 'Sending',
         'sent' => 'Sent',
     ],
+    'import_batch_status' => [
+        'completed' => 'Completed',
+        'dry_run' => 'Dry run',
+        'failed' => 'Failed',
+        'processing' => 'Processing',
+    ],
+    'import_batch_type' => [
+        'export' => 'Export',
+        'import' => 'Import',
+    ],
     'sync_status' => [
         'pending' => 'Pending',
         'running' => 'Running',

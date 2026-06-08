@@ -7,8 +7,8 @@ namespace Capell\DocumentLifecycle\Filament\Resources\Documents\RelationManagers
 use BackedEnum;
 use Capell\DocumentLifecycle\Actions\BuildDocumentPublicationDiffAction;
 use Capell\DocumentLifecycle\Models\DocumentPublication;
+use Filament\Actions\Action;
 use Filament\Resources\RelationManagers\RelationManager;
-use Filament\Tables\Actions\Action;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;

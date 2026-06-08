@@ -60,7 +60,7 @@ final class PublicActionResource extends Resource
                 ->required(),
             Select::make('handler_key')
                 ->label(__('capell-public-actions::filament.fields.handler'))
-                ->options(fn (): array => self::handlerOptions())
+                ->options(fn (?string $state): array => self::handlerOptions($state))
                 ->required(),
             Select::make('site_id')
                 ->label(__('capell-public-actions::filament.fields.site'))
@@ -200,11 +200,17 @@ final class PublicActionResource extends Resource
     /**
      * @return array<string, string>
      */
-    private static function handlerOptions(): array
+    private static function handlerOptions(?string $currentHandlerKey = null): array
     {
-        return collect(resolve(PublicActionHandlerRegistry::class)->all())
+        $options = collect(resolve(PublicActionHandlerRegistry::class)->all())
             ->mapWithKeys(fn (object $handler, string $key): array => [$key => $key])
             ->all();
+
+        if (is_string($currentHandlerKey) && $currentHandlerKey !== '' && ! isset($options[$currentHandlerKey])) {
+            $options[$currentHandlerKey] = $currentHandlerKey;
+        }
+
+        return $options;
     }
 
     private static function canScopeToSites(): bool

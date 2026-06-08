@@ -15,6 +15,7 @@ use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Gate;
@@ -60,6 +61,11 @@ class EventRegistrationResource extends Resource
                 TextColumn::make('occurrence.event.name')->label(__('capell-events::table.event')),
                 TextColumn::make('status')->label(__('capell-events::table.status'))->badge(),
                 TextColumn::make('quantity')->label(__('capell-events::table.quantity')),
+            ])
+            ->filters([
+                SelectFilter::make('status')
+                    ->label(__('capell-events::table.status'))
+                    ->options(EventRegistrationStatusEnum::class),
             ])
             ->recordActions([
                 self::registrationStatusAction(
