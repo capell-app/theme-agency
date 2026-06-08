@@ -10,7 +10,7 @@ return new class extends Migration
 {
     public function up(): void
     {
-        $tableName = config('capell-experiments.tables.goal_events', 'experiment_goal_events');
+        $tableName = $this->tableName();
 
         if (! Schema::hasTable($tableName)) {
             return;
@@ -26,7 +26,7 @@ return new class extends Migration
 
     public function down(): void
     {
-        $tableName = config('capell-experiments.tables.goal_events', 'experiment_goal_events');
+        $tableName = $this->tableName();
 
         if (! Schema::hasTable($tableName)) {
             return;
@@ -35,5 +35,12 @@ return new class extends Migration
         Schema::table($tableName, function (Blueprint $table): void {
             $table->dropUnique('experiment_goal_events_idempotency_unique');
         });
+    }
+
+    private function tableName(): string
+    {
+        $tableName = config('capell-experiments.tables.goal_events', 'experiment_goal_events');
+
+        return is_string($tableName) ? $tableName : 'experiment_goal_events';
     }
 };

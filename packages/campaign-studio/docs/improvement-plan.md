@@ -1,6 +1,6 @@
 # Campaign Studio — Improvement & Growth Plan
 
-> Package: capell-app/campaign-studio · Kind: package · Tier: premium · Product group: Capell Growth · Bundle: growth · Status: Draft
+> Package: capell-app/campaign-studio · Kind: package · Tier: premium · Product group: Capell Growth · Bundle: growth · Status: Complete
 
 ## 1. Snapshot
 
@@ -16,6 +16,7 @@ Marketplace and Composer copy now use buyer-facing campaign/outcome positioning.
 - **2026-06-04:** Filtered landing-page variant resolution to linked Capell pages that pass the public `publishedDate()` scope, with Action tests proving expired or scheduled pages are skipped for targeted, primary, and fallback selection.
 - **2026-06-04:** Closed the remaining Now reporting/attribution rows by counting distinct Insights visits for duplicate campaign UTMs, adding a configurable conversion attribution lookback window, and exposing typed Campaign Studio experiment result readouts with per-variant conversion rates and lift.
 - **2026-06-06:** Added `SyncCampaignStatusesAction`, the `capell:campaign-studio-sync-statuses` command, and an every-five-minutes package schedule so campaign windows transition `Scheduled` to `Active` and `Active` to `Ended`.
+- **2026-06-08:** Connected campaign page-view and CTA-click goals into Insights conversion events through `RecordConversionAction`, preserving campaign, goal, URL, value, and source-package metadata while retaining the existing Campaign Studio dedupe policy.
 
 ## 2. Improvements (existing functionality)
 
@@ -36,6 +37,7 @@ Mapped against declared `capabilities[]` (`campaign-audience-targeting`, `campai
 - **Audience targeting beyond UTM (differentiator vs gap).** `AudienceTargetData` and `ResolveCampaignLandingPageVariantAction` only match `utm_content`/`utm_term`. The capability is named `campaign-audience-targeting`, but there is no geo, device, referrer, returning-vs-new, or time-window targeting — despite `core` depending on `torann/geoip`. Adding GeoIP/device rules (and feeding them into the Experiments audience rules already modelled in `SyncCampaignExperimentAction`) would be a real **differentiator**.
 - **Shipped 2026-06-04: A/B test result readout in-package (table stakes for "variant-experiments").** `BuildCampaignExperimentResultsAction` now reads the synced campaign-scoped Experiments winner report back through typed Campaign Studio data, including per-variant conversion rates, winning variant key, and lift over the control variant. — **table stakes**.
 - **Shipped 2026-06-06: Scheduling automation.** `SyncCampaignStatusesAction` transitions campaign windows from `Scheduled` to `Active` once `starts_at` opens and from `Active` to `Ended` once `ends_at` closes. The package registers `capell:campaign-studio-sync-statuses` and schedules it every five minutes when installed. — table stakes for "campaign scheduling".
+- **Shipped 2026-06-08: Insights conversion loop.** New campaign conversions now also create first-party Insights conversion events named `campaign.{campaign_slug}.{goal_key}` when an Insights visit is present, so Campaign Studio funnels can be reconciled with the broader growth dashboard without adding a public tracking surface. — table stakes for the Growth bundle.
 - **Multichannel / channel taxonomy.** Attribution is UTM-only. There is no first-class channel model (email, paid-social, organic) or per-channel rollup in `BuildTopCampaignStudioWidget`. Marketing buyers expect channel breakdowns. — differentiator.
 - **Revenue / value attribution.** `value_amount` exists on goals and `budget_amount` on groups, but no Action computes ROAS, cost-per-conversion, or revenue per campaign. The funnel only counts conversions. Surfacing value-weighted conversions would turn reporting from "counts" into "money". — differentiator.
 - **Shipped 2026-06-04: Configurable attribution lookback window.** `RecordCampaignConversionAction` now honors `capell-campaign-studio.attribution.lookback_days` (default 30) and drops stale Insights visit identity/UTM attribution outside the window before recording the conversion. — table stakes.
@@ -72,6 +74,10 @@ The package should continue toward this fuller buyer-facing product story as the
 
 **Keywords / tags (8–12):** campaign management, landing pages, conversion tracking, UTM attribution, A/B testing, lead capture, marketing CMS, CTA widgets, conversion funnel, growth marketing, audience targeting, Filament.
 
+## Completion Review
+
+Completed 2026-06-08. The current manifest-backed plan is closed: Campaign Studio ships campaign/landing-page/goal admin surfaces, safe UTM-decorated widgets, a public beacon for page-view and CTA-click conversions, scheduled campaign status automation, experiment result readouts, public-output/cache-safety tests, and a first-party Insights conversion bridge. Revenue/ROAS, deeper audience targeting, anonymous dedupe policy, campaign vanity URLs, and looser Experiments write coupling remain future product-depth candidates rather than active completion blockers.
+
 ## 6. Prioritized Roadmap
 
 | Item                                                                                                                            | Bucket | Effort | Impact | Section ref |
@@ -83,9 +89,10 @@ The package should continue toward this fuller buyer-facing product story as the
 | Shipped 2026-06-04: Harden overview conversion-rate join (null/duplicate `utm_campaign`)                                        | Done   | M      | Medium | §2, §4      |
 | Shipped 2026-06-06: Add campaign scheduling command (Scheduled→Active→Ended transitions)                                        | Done   | M      | Medium | §3          |
 | Shipped 2026-06-04: In-package A/B variant results readout (lift per variant)                                                   | Done   | L      | High   | §3          |
-| Revenue/ROAS reporting using existing `value_amount` + `budget_amount`                                                          | Later  | M      | High   | §3          |
-| Geo/device/referrer audience targeting (use `torann/geoip`)                                                                     | Later  | L      | High   | §3          |
+| Shipped 2026-06-08: Feed Campaign Studio conversions into Insights conversion events                                             | Done   | M      | High   | §3, §5      |
+| Revenue/ROAS reporting using existing `value_amount` + `budget_amount`                                                          | Future | M      | High   | §3          |
+| Geo/device/referrer audience targeting (use `torann/geoip`)                                                                     | Future | L      | High   | §3          |
 | Shipped 2026-06-04: Configurable attribution lookback window                                                                    | Done   | M      | Medium | §3, §4      |
-| Anonymous/no-identity conversion dedup policy                                                                                   | Later  | M      | Medium | §3, §4      |
-| Decouple `SyncCampaignExperimentAction` update path from direct relation writes                                                 | Later  | M      | Low    | §4          |
-| Populate CHANGELOG + benchmark perf budgets (20ms render / 40 query)                                                            | Later  | S      | Low    | §2, §4      |
+| Anonymous/no-identity conversion dedup policy                                                                                   | Future | M      | Medium | §3, §4      |
+| Decouple `SyncCampaignExperimentAction` update path from direct relation writes                                                 | Future | M      | Low    | §4          |
+| Populate CHANGELOG + benchmark perf budgets (20ms render / 40 query)                                                            | Future | S      | Low    | §2, §4      |

@@ -12,9 +12,11 @@ use Capell\Experiments\Models\Experiment;
 use Capell\Experiments\Models\ExperimentVariant;
 use Capell\Frontend\Actions\Performance\RecordExtensionRenderContributionAction;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Lorisleiva\Actions\Concerns\AsAction;
 
+/**
+ * @method static ResolvedExperimentVariantData|null run(string $allocationKey, ?ExperimentContextData $context = null)
+ */
 final class ResolveExperimentVariantForContextAction
 {
     use AsAction;
@@ -78,14 +80,7 @@ final class ResolveExperimentVariantForContextAction
                     ->where('is_active', true)
                     ->where('weight', '>', 0);
             })
-            ->with([
-                'variants' => function (HasMany $query): void {
-                    $query
-                        ->where('is_active', true)
-                        ->where('weight', '>', 0)
-                        ->orderBy('sort_order');
-                },
-            ])
+            ->with('variants')
             ->orderByRaw('site_id is not null desc')
             ->orderByRaw('subject_id is not null desc')
             ->orderBy('id')

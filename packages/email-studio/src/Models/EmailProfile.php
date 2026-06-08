@@ -12,6 +12,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Override;
 
 /**
+ * @property int $id
+ * @property int|null $site_id
+ * @property string|null $site_scope_key
  * @property EmailProviderType $provider
  * @property string $from_email
  * @property string|null $from_name

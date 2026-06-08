@@ -16,7 +16,7 @@ Email Studio owns:
 - MailTracker tracking and retention settings;
 - provider adapter contracts;
 - provider event webhook ingestion;
-- future reply capture, open/click tracking, and unsubscribe flows.
+- future reply capture, one-click unsubscribe, and native template/profile authoring flows.
 
 Email Studio does not own:
 
@@ -91,7 +91,7 @@ This is deliberately smaller than Blade. Email templates should be safe, reviewa
 
 Messages can be requested, queued, sent, failed, or partially failed. Recipients can be queued, sent, failed, suppressed, delivered, bounced, complained, opened, clicked, or replied.
 
-The current implementation records queue/send/failure/suppression states. Provider lifecycle events, replies, opens, and clicks are planned follow-up slices using the models already present in the schema.
+The current implementation records queue/send/failure/suppression states, provider lifecycle events, and MailTracker open/click activity for Laravel mail that flows through MailTracker. Reply ingestion and one-click unsubscribe remain future depth using models already present in the schema.
 
 ## Sellable Product Layer
 

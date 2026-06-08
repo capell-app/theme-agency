@@ -11,6 +11,18 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Override;
 
+/**
+ * @property int $id
+ * @property int|null $site_id
+ * @property string|null $site_scope_key
+ * @property int $email_profile_id
+ * @property int|null $email_message_id
+ * @property int|null $email_recipient_id
+ * @property EmailEventType $type
+ * @property string|null $provider_event_id
+ * @property string $idempotency_key
+ * @property array<string, mixed>|null $provider_payload
+ */
 class EmailEvent extends Model
 {
     /** @use HasFactory<EmailEventFactory> */

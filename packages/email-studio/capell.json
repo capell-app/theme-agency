@@ -6,7 +6,7 @@
     "kind": "package",
     "capellApiVersion": "^4.0",
     "version": "4.x-dev",
-    "description": "Email Studio gives every Capell site a reliable transactional-email core. Define reusable, locale- and site-scoped templates that render through a deliberately safe placeholder engine (HTML-escaped, missing-variable-strict in production), then send through delivery profiles backed by pluggable provider adapters. Every send is rendered to an immutable snapshot, screened against site and global suppression lists, and delivered via a queue job that records per-recipient outcomes for support and audit. Provider event webhooks can now write delivery events back into the audit trail; roadmap slices add open/click tracking, one-click unsubscribe, inbound replies, and an in-panel template studio.",
+    "description": "Email Studio gives every Capell site a reliable transactional-email core. Define reusable, locale- and site-scoped templates that render through a deliberately safe placeholder engine (HTML-escaped, missing-variable-strict in production), then send through delivery profiles backed by pluggable provider adapters. Every send is rendered to an immutable snapshot, screened against site and global suppression lists, and delivered via a queue job that records per-recipient outcomes for support and audit. Provider event webhooks write delivery events back into the audit trail, while the MailTracker-backed admin surface exposes sent-email records, opens, clicks, stored HTML, and retention controls; future depth adds one-click unsubscribe, inbound replies, and native template/profile authoring.",
     "product": {
         "group": "Capell Communications",
         "tier": "premium",
@@ -84,6 +84,7 @@
     "capabilities": [
         "delivery-audit",
         "mail-tracker-admin",
+        "mail-tracker-open-click-tracking",
         "mail-tracker-retention",
         "provider-event-ingestion",
         "provider-normalization-foundation",

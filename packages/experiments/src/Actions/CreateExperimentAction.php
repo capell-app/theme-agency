@@ -13,6 +13,9 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Lorisleiva\Actions\Concerns\AsAction;
 
+/**
+ * @method static Experiment run(ExperimentData $data)
+ */
 final class CreateExperimentAction
 {
     use AsAction;

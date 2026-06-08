@@ -12,6 +12,9 @@ use Capell\Experiments\Models\ExperimentVariant;
 use Illuminate\Support\Collection;
 use Lorisleiva\Actions\Concerns\AsAction;
 
+/**
+ * @method static WinnerReportData run(Experiment $experiment, ?ExperimentGoal $goal = null, int $minimumSampleSize = 100, float $confidenceLevel = 0.95)
+ */
 final class BuildWinnerReportAction
 {
     use AsAction;

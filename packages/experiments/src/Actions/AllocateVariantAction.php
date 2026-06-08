@@ -18,6 +18,9 @@ use Illuminate\Support\Str;
 use Lorisleiva\Actions\Concerns\AsAction;
 use RuntimeException;
 
+/**
+ * @method static VariantAllocationData|null run(Experiment $experiment, string $allocationKey, ?ExperimentContextData $context = null)
+ */
 final class AllocateVariantAction
 {
     use AsAction;

@@ -1,6 +1,6 @@
 # GA4 Reports — Improvement & Growth Plan
 
-> Package: capell-app/ga4-reports · Kind: package · Tier: premium · Product group: Capell Growth · Bundle: growth · Status: Draft
+> Package: capell-app/ga4-reports · Kind: package · Tier: premium · Product group: Capell Growth · Bundle: growth · Status: Complete
 
 ## 1. Snapshot
 
@@ -10,6 +10,7 @@ GA4 Reports is a snapshot-based Google Analytics 4 reporting package: a schedule
 
 - **2026-06-04:** Added bounded retry/backoff configuration for GA4 token and Data API calls, including transient connection failures, GA4 quota exhaustion responses, `Retry-After`, and explicit final quota-exhaustion messaging.
 - **2026-06-05:** Shipped the GA4 Reports cleanup slice: the service provider now falls back to `NullGA4ReportsDataClient` until enabled/property/credentials settings are complete, the stray "GA4 Reports 4" copy is removed from composer/README/lang/command text, and the orphan settings page is absent because settings are managed through the registered `ga4_reports` settings surface. Evidence: `tests/Feature/Package/GA4ReportsPackageTest.php` covers null/real client binding; `src/Providers/AdminServiceProvider.php` registers `GA4ReportsPage` plus the settings management surface only; focused typo checks cover `composer.json`, `README.md`, `resources/lang/en/package.php`, and `src/Console/Commands/SyncGA4ReportsCommand.php`.
+- **2026-06-08:** Added digest/export Actions so local GA4 snapshot data can be assembled once and exported as CSV without hitting GA4 during admin/report rendering.
 
 ## 2. Improvements (existing functionality)
 
@@ -32,7 +33,7 @@ Capabilities declared: `ga4-reports`, `ga4-reports-admin`, `ga4-reports-console`
 - **Single property only.** `property_id` is a scalar setting; no multi-property selection or property picker, and the schema indexes already key on `property_id`, so multi-property is half-built. Multi-property is a clear premium differentiator for agencies/multi-site owners.
 - **Shipped 2026-06-06: period-over-period widget comparisons.** The GA4 dashboard widgets now derive the immediately preceding window from the selected dashboard date range, show previous-period datasets on the traffic trend chart, add `Vs previous` deltas to overview rows, and compare top-page views against the matching previous-period page path. — `src/Filament/Widgets/Concerns/BuildsGA4ReportsDashboardWindow.php`, `src/Filament/Widgets/GA4ReportsTrafficTrendWidget.php`, `src/Filament/Widgets/GA4ReportsOverviewStatsWidget.php`, `src/Filament/Widgets/GA4ReportsTopPagesWidget.php`, `src/Filament/Widgets/GA4ReportsTopPagesTableWidget.php`
 - **No realtime / no events or conversions breakdown widget.** `eventCount` and `conversions` are stored but only `conversions` appears (as a column); there is no events-by-name or conversions-by-event widget, and no GA4 realtime card. Table stakes for "GA4 reporting".
-- **No export / scheduled email of the report.** No CSV/PDF export of top pages or scheduled digest — common buyer expectation and a cross-sell hook into a marketing/email package.
+- **Shipped 2026-06-08: CSV digest/export seam.** `BuildGA4ReportsDigestAction` assembles overview, trend, and top-page local snapshot data; `ExportGA4ReportsDigestCsvAction` serializes that digest to CSV for admin commands, future dashboard downloads, or scheduled-report consumers. PDF output and scheduled email delivery remain future depth.
 - **Dimensions are fixed.** Reports are hardcoded to `date` / `pagePathPlusQueryString` / `pageTitle`; no channel/source-medium, country, or device dimension. No configurable report builder. Differentiator if added.
 
 ## 4. Issues / Risks
@@ -71,11 +72,15 @@ Capabilities declared: `ga4-reports`, `ga4-reports-admin`, `ga4-reports-console`
 - **insights** — same bundle; "first-party vs GA4" complementary pairing; bundle discount.
 - **dashboard-reports** (Operations) — generic reporting widgets that can host GA4 cards.
 - **seo-suite** (Search & SEO) — already has Search Console insights; cross-sell as a "full acquisition picture" (organic search + GA4 behaviour).
-- A future **export/digest** feature is a natural hook into a marketing/email package.
+- The shipped **CSV digest/export** seam is a natural hook into a marketing/email package for scheduled reporting depth.
 
 **Differentiators / value props / target buyer:** Snapshot architecture (zero GA4 calls at render → fast, quota-safe dashboards); swappable `GA4ReportsDataClientInterface` (fake in tests, OAuth/alternate backend in host); admin-native, no third-party BI tool. Target buyer: marketing/growth lead or site owner on a Capell site who already runs GA4 and wants the headline numbers inside the CMS.
 
 **Keywords/tags:** `ga4`, `google-analytics`, `analytics`, `traffic-reports`, `dashboard`, `top-pages`, `conversions`, `marketing-analytics`, `growth`, `service-account`, `scheduled-sync`, `filament`
+
+## Completion Review
+
+Completed 2026-06-08. The current manifest-backed plan is closed: GA4 Reports ships local snapshot syncing, null-client protection, retry/backoff and quota handling, persisted token cache, configurable schedules, setup/error visibility, dashboard aggregate caching, period-over-period widgets, real health diagnostics, runner-backed screenshots, and CSV digest/export Actions. OAuth connect flow, multi-property selection, realtime/events breakdowns, PDF/scheduled emails, and configurable report dimensions remain future product-depth candidates.
 
 ## 6. Prioritized Roadmap
 
@@ -95,8 +100,9 @@ Capabilities declared: `ga4-reports`, `ga4-reports-admin`, `ga4-reports-console`
 | Done/Shipped: Add "Sync now" page action + surface last sync error                                       | Done    | M      | Med    | §2                                                                                                                         |
 | Rename command to `capell:` convention; populate manifest `commands`                                     | Done    | S      | Med    | §2 — Done 2026-06-06: primary command is `capell:ga4-reports-sync`; legacy `ga4-reports:sync` remains an alias.            |
 | Shipped 2026-06-06: Configurable sync schedule (frequency/cron via settings)                             | Done    | S      | Med    | §2                                                                                                                         |
-| Multi-property support + property picker                                                                 | Later   | L      | High   | §3                                                                                                                         |
-| OAuth user-consent connect flow (alongside service account)                                              | Later   | L      | High   | §3                                                                                                                         |
-| Events/conversions breakdown widget + CSV/PDF export & scheduled digest                                  | Later   | L      | Med    | §3                                                                                                                         |
-| Configurable report dimensions (channel, country, device)                                                | Later   | L      | Med    | §3                                                                                                                         |
+| Shipped 2026-06-08: CSV digest/export Action seam                                                        | Done    | M      | Med    | §3                                                                                                                         |
+| Multi-property support + property picker                                                                 | Future  | L      | High   | §3                                                                                                                         |
+| OAuth user-consent connect flow (alongside service account)                                              | Future  | L      | High   | §3                                                                                                                         |
+| Events/conversions breakdown widget + PDF export & scheduled digest                                      | Future  | L      | Med    | §3                                                                                                                         |
+| Configurable report dimensions (channel, country, device)                                                | Future  | L      | Med    | §3                                                                                                                         |
 | Shipped: Test that the container binds the real client when configured                                   | Done    | S      | Med    | §4                                                                                                                         |

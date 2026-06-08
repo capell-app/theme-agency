@@ -7,6 +7,9 @@ namespace Capell\EmailStudio\Actions;
 use Capell\EmailStudio\Models\EmailProfile;
 use Lorisleiva\Actions\Concerns\AsAction;
 
+/**
+ * @method static bool run(EmailProfile $profile, string $payload, string|null $signature)
+ */
 final class ValidateProviderWebhookSignatureAction
 {
     use AsAction;

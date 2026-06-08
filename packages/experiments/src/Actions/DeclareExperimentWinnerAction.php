@@ -12,6 +12,9 @@ use Carbon\CarbonInterface;
 use Illuminate\Validation\ValidationException;
 use Lorisleiva\Actions\Concerns\AsAction;
 
+/**
+ * @method static Experiment run(Experiment $experiment, ?ExperimentGoal $goal = null, ?CarbonInterface $declaredAt = null, bool $endExperiment = true)
+ */
 final class DeclareExperimentWinnerAction
 {
     use AsAction;

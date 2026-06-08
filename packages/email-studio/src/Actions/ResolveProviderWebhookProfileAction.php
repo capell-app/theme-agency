@@ -7,6 +7,9 @@ namespace Capell\EmailStudio\Actions;
 use Capell\EmailStudio\Models\EmailProfile;
 use Lorisleiva\Actions\Concerns\AsAction;
 
+/**
+ * @method static EmailProfile|null run(string $token)
+ */
 final class ResolveProviderWebhookProfileAction
 {
     use AsAction;

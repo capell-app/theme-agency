@@ -9,12 +9,17 @@ use Capell\EmailStudio\Enums\EmailEventType;
 use Capell\EmailStudio\Enums\EmailRecipientStatus;
 use Capell\EmailStudio\Enums\SuppressionReason;
 use Capell\EmailStudio\Models\EmailEvent;
+use Capell\EmailStudio\Models\EmailMessage;
 use Capell\EmailStudio\Models\EmailProfile;
 use Capell\EmailStudio\Models\EmailRecipient;
 use Capell\EmailStudio\Support\EmailAddressNormalizer;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Lorisleiva\Actions\Concerns\AsAction;
 
+/**
+ * @method static EmailEvent run(EmailProfile $profile, ProviderWebhookEventData $eventData)
+ */
 final class RecordProviderEventAction
 {
     use AsAction;
@@ -25,16 +30,22 @@ final class RecordProviderEventAction
         $recipient = $this->recipient($profile, $eventData);
         $message = $recipient?->message;
         $idempotencyKey = $eventData->idempotencyKey ?: $this->idempotencyKey($profile, $eventData);
+        $siteId = $recipient instanceof EmailRecipient ? $recipient->site_id : null;
+        $siteId ??= $message instanceof EmailMessage ? $message->site_id : null;
+        $siteId ??= $profile->site_id;
+        $siteScopeKey = $recipient instanceof EmailRecipient ? $recipient->site_scope_key : null;
+        $siteScopeKey ??= $message instanceof EmailMessage ? $message->site_scope_key : null;
+        $siteScopeKey ??= $profile->site_scope_key;
 
         /** @var EmailEvent $event */
         $event = EmailEvent::query()->firstOrCreate([
-            'email_profile_id' => $profile->getKey(),
+            'email_profile_id' => $this->modelKey($profile),
             'idempotency_key' => $idempotencyKey,
         ], [
-            'site_id' => $recipient?->site_id ?? $message?->site_id ?? $profile->site_id,
-            'site_scope_key' => $recipient?->site_scope_key ?? $message?->site_scope_key ?? $profile->site_scope_key,
-            'email_message_id' => $message?->getKey(),
-            'email_recipient_id' => $recipient?->getKey(),
+            'site_id' => $siteId,
+            'site_scope_key' => $siteScopeKey,
+            'email_message_id' => $this->nullableModelKey($message),
+            'email_recipient_id' => $this->nullableModelKey($recipient),
             'type' => $eventType,
             'provider_event_id' => $eventData->idempotencyKey,
             'provider_payload' => $eventData->payload,
@@ -126,7 +137,7 @@ final class RecordProviderEventAction
     private function idempotencyKey(EmailProfile $profile, ProviderWebhookEventData $eventData): string
     {
         return hash('sha256', implode('|', [
-            (string) $profile->getKey(),
+            (string) $this->modelKey($profile),
             $eventData->provider,
             $eventData->eventType,
             $eventData->providerMessageId ?? '',
@@ -151,5 +162,17 @@ final class RecordProviderEventAction
             source: 'provider-event',
             notes: sprintf('Automatically suppressed from provider %s event.', $eventType->value),
         );
+    }
+
+    private function modelKey(Model $model): int
+    {
+        $key = $model->getKey();
+
+        return is_int($key) ? $key : 0;
+    }
+
+    private function nullableModelKey(?Model $model): ?int
+    {
+        return $model instanceof Model ? $this->modelKey($model) : null;
     }
 }

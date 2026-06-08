@@ -2,9 +2,11 @@
 
 declare(strict_types=1);
 
+use Capell\GA4Reports\Actions\BuildGA4ReportsDigestAction;
 use Capell\GA4Reports\Actions\BuildGA4ReportsOverviewAction;
 use Capell\GA4Reports\Actions\BuildGA4ReportsTrendAction;
 use Capell\GA4Reports\Actions\BuildTopGA4ReportsPagesAction;
+use Capell\GA4Reports\Actions\ExportGA4ReportsDigestCsvAction;
 use Capell\GA4Reports\Actions\PersistGA4ReportsDailyMetricAction;
 use Capell\GA4Reports\Actions\PersistGA4ReportsPageMetricAction;
 use Capell\GA4Reports\Actions\SyncGA4ReportsMetricsAction;
@@ -34,6 +36,17 @@ function configureGA4ReportsSettings(): void
     $settings->route_slug = 'ga4-reports';
 
     app()->instance(GA4ReportsSettings::class, $settings);
+}
+
+/**
+ * @return list<list<string>>
+ */
+function ga4ReportsCsvRows(string $csv): array
+{
+    return collect(explode("\n", trim($csv)))
+        ->map(static fn (string $row): array => str_getcsv($row))
+        ->values()
+        ->all();
 }
 
 it('syncs GA4 metrics idempotently into local reporting tables', function (): void {
@@ -223,6 +236,49 @@ it('builds overview trend and top page data from local tables only', function ()
         ->and($topPages)->toHaveCount(1)
         ->and($topPages[0]->pagePath)->toBe('/about')
         ->and($topPages[0]->screenPageViews)->toBe(35);
+});
+
+it('builds GA4 digest data and exports it as CSV', function (): void {
+    configureGA4ReportsSettings();
+
+    GA4ReportsDailyMetric::query()->create([
+        'property_id' => '123456789',
+        'metric_date' => '2026-05-03',
+        'total_users' => 5,
+        'sessions' => 10,
+        'screen_page_views' => 20,
+        'engaged_sessions' => 6,
+        'engagement_rate' => 0.6,
+        'average_session_duration' => 20,
+        'event_count' => 40,
+        'conversions' => 1,
+    ]);
+    GA4ReportsPageMetric::query()->create([
+        'property_id' => '123456789',
+        'metric_date' => '2026-05-03',
+        'page_path' => '/pricing',
+        'page_title' => 'Pricing',
+        'total_users' => 5,
+        'sessions' => 10,
+        'screen_page_views' => 20,
+        'event_count' => 40,
+        'conversions' => 1,
+    ]);
+
+    $window = new GA4ReportsWindowData(
+        startsAt: CarbonImmutable::parse('2026-05-03'),
+        endsAt: CarbonImmutable::parse('2026-05-03'),
+        propertyId: '123456789',
+    );
+
+    $digest = BuildGA4ReportsDigestAction::run($window, 5);
+    $csvRows = ga4ReportsCsvRows(ExportGA4ReportsDigestCsvAction::run($window, 5));
+
+    expect($digest?->overview->screenPageViews)->toBe(20)
+        ->and($digest?->topPages)->toHaveCount(1)
+        ->and($csvRows[0])->toBe(['section', 'label', 'value', 'sessions', 'total_users', 'conversions', 'extra'])
+        ->and($csvRows)->toContain(['overview', 'screen_page_views', '20', '', '', '', ''])
+        ->and($csvRows)->toContain(['top_page', '/pricing', '20', '10', '5', '1', 'Pricing']);
 });
 
 it('returns an empty sync result when GA4 is not configured', function (): void {

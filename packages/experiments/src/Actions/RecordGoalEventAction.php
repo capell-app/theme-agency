@@ -17,6 +17,9 @@ use Carbon\CarbonInterface;
 use Illuminate\Support\Facades\Schema;
 use Lorisleiva\Actions\Concerns\AsAction;
 
+/**
+ * @method static ExperimentGoalEvent run(ExperimentAllocation $allocation, ExperimentGoal $goal, ExperimentGoalEventData $data)
+ */
 final class RecordGoalEventAction
 {
     use AsAction;

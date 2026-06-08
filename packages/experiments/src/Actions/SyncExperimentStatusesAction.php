@@ -12,6 +12,9 @@ use DateTimeInterface;
 use Illuminate\Database\Eloquent\Builder;
 use Lorisleiva\Actions\Concerns\AsAction;
 
+/**
+ * @method static ExperimentStatusSyncResultData run(DateTimeInterface|null $now = null)
+ */
 final class SyncExperimentStatusesAction
 {
     use AsAction;

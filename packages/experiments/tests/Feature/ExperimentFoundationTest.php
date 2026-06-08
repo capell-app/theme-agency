@@ -25,6 +25,7 @@ use Capell\Experiments\Enums\AudienceRuleType;
 use Capell\Experiments\Enums\ExperimentGoalType;
 use Capell\Experiments\Enums\ExperimentStatus;
 use Capell\Experiments\Enums\ExperimentSubjectType;
+use Capell\Experiments\Models\Experiment;
 use Capell\Experiments\Models\ExperimentAllocation;
 use Capell\Insights\Enums\InsightsConsentRegion;
 use Capell\Insights\Enums\InsightsConsentStatus;
@@ -36,6 +37,30 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Validation\ValidationException;
+
+/**
+ * @return array<string, mixed>
+ */
+function experimentWinnerReportPayload(Experiment $experiment): array
+{
+    $metadata = $experiment->metadata;
+
+    throw_unless(is_array($metadata), RuntimeException::class, 'Expected experiment metadata array.');
+
+    $winnerReport = $metadata['winner_report'] ?? null;
+
+    throw_unless(is_array($winnerReport), RuntimeException::class, 'Expected experiment winner report metadata.');
+
+    $payload = [];
+
+    foreach ($winnerReport as $key => $value) {
+        if (is_string($key)) {
+            $payload[$key] = $value;
+        }
+    }
+
+    return $payload;
+}
 
 it('creates an experiment aggregate with variants goals and audience rules', function (): void {
     $experiment = CreateExperimentAction::run(new ExperimentData(
@@ -331,13 +356,14 @@ it('declares a statistically significant winning variant and ends the experiment
 
     $declaredAt = CarbonImmutable::parse('2026-06-01 10:00:00', 'UTC');
     $experiment = DeclareExperimentWinnerAction::run($experiment, $goal, $declaredAt);
+    $winnerReport = experimentWinnerReportPayload($experiment);
 
     expect($experiment->status)->toBe(ExperimentStatus::Ended)
         ->and($experiment->winning_variant_id)->toBe($benefitVariant->getKey())
         ->and($experiment->winner_declared_at?->toIso8601String())->toBe('2026-06-01T10:00:00+00:00')
         ->and($experiment->ends_at?->toIso8601String())->toBe('2026-06-01T10:00:00+00:00')
-        ->and($experiment->metadata['winner_report']['winning_variant_id'])->toBe($benefitVariant->getKey())
-        ->and($experiment->metadata['winner_report']['is_statistically_significant'])->toBeTrue();
+        ->and($winnerReport['winning_variant_id'] ?? null)->toBe($benefitVariant->getKey())
+        ->and($winnerReport['is_statistically_significant'] ?? null)->toBeTrue();
 });
 
 it('does not declare a winner without allocation data', function (): void {
