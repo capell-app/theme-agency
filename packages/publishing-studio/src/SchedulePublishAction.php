@@ -16,9 +16,8 @@ use Illuminate\Contracts\Auth\Authenticatable;
 
 /**
  * Transition an Approved workspace into the Scheduled state, recording when
- * it should be auto-published. The actual publish is performed later by
- * {@see PublishScheduledPublishingStudioJob}, which subjects the workspace to the
- * usual ReleaseWindowGuard checks.
+ * it should be auto-published. The actual publish is performed later by the
+ * durable scheduler event path invoked by {@see PublishScheduledPublishingStudioJob}.
  */
 class SchedulePublishAction
 {

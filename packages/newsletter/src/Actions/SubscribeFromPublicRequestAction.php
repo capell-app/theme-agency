@@ -13,6 +13,9 @@ use Capell\Newsletter\Models\Subscriber;
 use Illuminate\Http\Request;
 use Lorisleiva\Actions\Concerns\AsAction;
 
+/**
+ * @method static Subscriber run(Site $site, array{email: string, first_name?: string|null, last_name?: string|null, source?: string|null} $payload, Request $request)
+ */
 class SubscribeFromPublicRequestAction
 {
     use AsAction;
@@ -37,7 +40,7 @@ class SubscribeFromPublicRequestAction
         );
 
         $subscriber = UpsertSubscriberAction::run(new SubscriberData(
-            siteId: (int) $site->getKey(),
+            siteId: $this->siteId($site),
             email: $payload['email'],
             status: $targetStatus,
             firstName: $payload['first_name'] ?? null,
@@ -66,6 +69,17 @@ class SubscribeFromPublicRequestAction
     {
         $configuredMode = config('capell-newsletter.double_opt_in.default_confirmation_mode', ConfirmationMode::CapellOwned->value);
 
-        return ConfirmationMode::tryFrom((string) $configuredMode) ?? ConfirmationMode::CapellOwned;
+        return ConfirmationMode::tryFrom(is_string($configuredMode) ? $configuredMode : ConfirmationMode::CapellOwned->value) ?? ConfirmationMode::CapellOwned;
+    }
+
+    private function siteId(Site $site): int
+    {
+        $key = $site->getKey();
+
+        if (is_int($key)) {
+            return $key;
+        }
+
+        return is_string($key) && ctype_digit($key) ? (int) $key : 0;
     }
 }

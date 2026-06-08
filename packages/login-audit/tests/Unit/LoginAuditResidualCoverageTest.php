@@ -16,8 +16,8 @@ use Illuminate\Database\Eloquent\Model;
 it('builds login audit table columns filters and helper fallbacks', function (): void {
     $columns = invokeLoginAuditTableMethod('getTableColumns');
     $filters = invokeLoginAuditTableMethod('getTableFilters');
-    $columnNames = array_map(static fn (mixed $column): string => $column->getName(), $columns);
-    $filterNames = array_map(static fn (mixed $filter): string => $filter->getName(), $filters);
+    $columnNames = loginAuditComponentNames($columns);
+    $filterNames = loginAuditComponentNames($filters);
 
     $missingRecord = new LoginAudit;
     $namedRecord = new LoginAudit;
@@ -71,8 +71,8 @@ it('builds login audit user relation manager table metadata', function (): void 
     };
     $manager = new LoginAuditsRelationManager;
     $table = $manager->table(loginAuditTableForCoverage(Mockery::mock(Builder::class)->shouldIgnoreMissing()));
-    $columnNames = array_values(array_map(static fn (mixed $column): string => $column->getName(), $table->getColumns()));
-    $filterNames = array_values(array_map(static fn (mixed $filter): string => $filter->getName(), $table->getFilters()));
+    $columnNames = loginAuditComponentNames($table->getColumns());
+    $filterNames = loginAuditComponentNames($table->getFilters());
 
     expect(LoginAuditsRelationManager::getTitle($owner, 'edit'))->toBe(__('capell-login-audit::settings.login_audits'))
         ->and($columnNames)->toBe([
@@ -110,6 +110,32 @@ function loginAuditTableForCoverage(mixed $query): Table
     $livewire->shouldReceive('makeFilamentTranslatableContentDriver')->andReturn(null);
 
     return Table::make($livewire)->query($query);
+}
+
+/**
+ * @return list<string>
+ */
+function loginAuditComponentNames(mixed $components): array
+{
+    if (! is_array($components)) {
+        return [];
+    }
+
+    $names = [];
+
+    foreach ($components as $component) {
+        if (! is_object($component) || ! method_exists($component, 'getName')) {
+            continue;
+        }
+
+        $name = $component->getName();
+
+        if (is_string($name)) {
+            $names[] = $name;
+        }
+    }
+
+    return $names;
 }
 
 /**

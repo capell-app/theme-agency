@@ -40,8 +40,10 @@ it('rejects revoked or missing Zapier API tokens', function (): void {
 
 it('honours per-token Zapier API rate limit overrides', function (): void {
     $created = CreatePublicActionIntegrationTokenAction::run('Limited Zapier');
+    $tokenKey = $created->token->getKey();
+    $tokenConfigKey = is_int($tokenKey) || is_string($tokenKey) ? (string) $tokenKey : '';
 
-    config()->set('capell-public-actions.integration_token_rate_limits.tokens.' . $created->token->getKey(), [
+    config()->set('capell-public-actions.integration_token_rate_limits.tokens.' . $tokenConfigKey, [
         'per_minute' => 1,
     ]);
 

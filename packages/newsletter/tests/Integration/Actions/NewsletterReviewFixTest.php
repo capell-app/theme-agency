@@ -40,6 +40,7 @@ use Capell\Newsletter\Models\ProviderConnection;
 use Capell\Newsletter\Models\Subscriber;
 use Capell\Newsletter\Models\SyncAttempt;
 use Capell\Newsletter\Support\NewsletterSettingsResolver;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
@@ -200,7 +201,7 @@ it('records admin updates through the subscriber lifecycle action', function ():
     $site = $this->createNewsletterSite();
 
     $subscriber = UpsertSubscriberAction::run(new SubscriberData(
-        siteId: (int) $site->getKey(),
+        siteId: newsletterReviewModelIntKey($site),
         email: 'admin@example.com',
         status: SubscriberStatus::Subscribed,
         firstName: 'Ada',
@@ -246,20 +247,20 @@ it('registers newsletter preference self service items for portal accounts', fun
 
     throw_unless($item instanceof PortalSelfServiceItemData, RuntimeException::class, 'Expected portal item.');
 
-    expect($item->key)->toBe('newsletter.preferences.' . $subscriber->getKey())
+    expect($item->key)->toBe('newsletter.preferences.' . newsletterReviewModelIntKey($subscriber))
         ->and($item->type)->toBe(PortalSelfServiceItemType::NewsletterPreference)
         ->and($item->label)->toBe(__('capell-newsletter::generic.portal.preferences_label'))
         ->and($item->status)->toBe(SubscriberStatus::Subscribed->getLabel())
         ->and($item->url)->toContain('/newsletter/preferences/')
         ->and($item->meta)->toBe([
-            'subscriber_id' => (int) $subscriber->getKey(),
+            'subscriber_id' => newsletterReviewModelIntKey($subscriber),
             'status' => SubscriberStatus::Subscribed->value,
         ]);
 });
 
 it('validates CSV imports and exports safe fields', function (): void {
     $site = $this->createNewsletterSite();
-    $batch = ImportSubscribersAction::run((int) $site->getKey(), [
+    $batch = ImportSubscribersAction::run(newsletterReviewModelIntKey($site), [
         ['email' => 'valid@example.com', 'first_name' => 'Val'],
         ['email' => 'valid@example.com', 'first_name' => 'Duplicate'],
         ['email' => 'not-an-email'],
@@ -269,15 +270,15 @@ it('validates CSV imports and exports safe fields', function (): void {
         ->and($batch->invalid_rows)->toBe(2)
         ->and(Subscriber::query()->where('site_id', $site->getKey())->count())->toBe(0);
 
-    ImportSubscribersAction::run((int) $site->getKey(), [
+    ImportSubscribersAction::run(newsletterReviewModelIntKey($site), [
         ['email' => 'valid@example.com', 'first_name' => 'Val'],
     ], 'Imported from legacy CRM', dryRun: false);
 
-    expect(ExportSubscribersAction::run((int) $site->getKey())->first())
+    expect(ExportSubscribersAction::run(newsletterReviewModelIntKey($site))->first())
         ->toHaveKeys(['email', 'first_name', 'last_name', 'status', 'subscribed_at', 'unsubscribed_at'])
         ->not->toHaveKeys(['email_hash', 'profile']);
 
-    expect(ExportSubscribersAction::run((int) $site->getKey()))->toBeInstanceOf(LazyCollection::class);
+    expect(ExportSubscribersAction::run(newsletterReviewModelIntKey($site)))->toBeInstanceOf(LazyCollection::class);
 });
 
 it('marks subscriber imports failed when provider sync queueing fails', function (): void {
@@ -289,7 +290,7 @@ it('marks subscriber imports failed when provider sync queueing fails', function
         ->andThrow(new RuntimeException('provider sync unavailable'));
     app()->instance(QueueProviderSyncAction::class, $syncAction);
 
-    expect(fn (): mixed => ImportSubscribersAction::run((int) $site->getKey(), [
+    expect(fn (): mixed => ImportSubscribersAction::run(newsletterReviewModelIntKey($site), [
         ['email' => 'partial@example.com', 'first_name' => 'Partial'],
     ], 'Imported from legacy CRM', dryRun: false))->toThrow(RuntimeException::class, 'provider sync unavailable');
 
@@ -304,7 +305,7 @@ it('rejects subscriber imports above the configured row limit before writing a b
 
     $site = $this->createNewsletterSite();
 
-    ImportSubscribersAction::run((int) $site->getKey(), [
+    ImportSubscribersAction::run(newsletterReviewModelIntKey($site), [
         ['email' => 'first@example.com'],
         ['email' => 'second@example.com'],
     ], 'Imported from legacy CRM', dryRun: false);
@@ -318,7 +319,7 @@ it('streams newsletter subscriber exports without materializing the full collect
         'status' => SubscriberStatus::Subscribed,
     ]);
 
-    $export = ExportSubscribersAction::run((int) $site->getKey());
+    $export = ExportSubscribersAction::run(newsletterReviewModelIntKey($site));
 
     expect($export)->toBeInstanceOf(LazyCollection::class)
         ->and($export->count())->toBe(3);
@@ -328,7 +329,7 @@ it('resolves resubscribe policy per site', function (): void {
     $firstSite = $this->createNewsletterSite('First');
     $secondSite = $this->createNewsletterSite('Second');
 
-    app()->instance(NewsletterSettingsResolver::class, new class($firstSite->getKey()) extends NewsletterSettingsResolver
+    app()->instance(NewsletterSettingsResolver::class, new class(newsletterReviewModelIntKey($firstSite)) extends NewsletterSettingsResolver
     {
         public function __construct(
             private readonly int|string $firstSiteId,
@@ -336,7 +337,7 @@ it('resolves resubscribe policy per site', function (): void {
 
         public function resubscribePolicyForSite(int $siteId): ResubscribePolicy
         {
-            if ($siteId === (int) $this->firstSiteId) {
+            if ($siteId === $this->firstSiteId) {
                 return ResubscribePolicy::AllowWithConsent;
             }
 
@@ -356,12 +357,12 @@ it('resolves resubscribe policy per site', function (): void {
     ]);
 
     $firstSubscriber = UpsertSubscriberAction::run(new SubscriberData(
-        siteId: (int) $firstSite->getKey(),
+        siteId: newsletterReviewModelIntKey($firstSite),
         email: 'resubscribe@example.com',
         status: SubscriberStatus::Subscribed,
     ), new ConsentEvidenceData(sourceType: 'form'));
     $secondSubscriber = UpsertSubscriberAction::run(new SubscriberData(
-        siteId: (int) $secondSite->getKey(),
+        siteId: newsletterReviewModelIntKey($secondSite),
         email: 'resubscribe@example.com',
         status: SubscriberStatus::Subscribed,
     ), new ConsentEvidenceData(sourceType: 'form'));
@@ -369,3 +370,14 @@ it('resolves resubscribe policy per site', function (): void {
     expect($firstSubscriber->status)->toBe(SubscriberStatus::Subscribed)
         ->and($secondSubscriber->status)->toBe(SubscriberStatus::Pending);
 });
+
+function newsletterReviewModelIntKey(Model $model): int
+{
+    $key = $model->getKey();
+
+    if (is_int($key)) {
+        return $key;
+    }
+
+    return is_string($key) && ctype_digit($key) ? (int) $key : 0;
+}

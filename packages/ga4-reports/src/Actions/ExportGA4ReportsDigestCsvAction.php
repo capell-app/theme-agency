@@ -11,6 +11,9 @@ use Capell\GA4Reports\Data\GA4ReportsWindowData;
 use Lorisleiva\Actions\Concerns\AsAction;
 use RuntimeException;
 
+/**
+ * @method static string run(?GA4ReportsWindowData $window = null, int $topPageLimit = 10)
+ */
 final class ExportGA4ReportsDigestCsvAction
 {
     use AsAction;

@@ -28,6 +28,17 @@ function mediaAIScreenshotContract(): array
     return capell_json_file_array(dirname(__DIR__, 2) . '/docs/screenshots.json');
 }
 
+/**
+ * @param  array<string, mixed>  $manifest
+ * @return array<string, mixed>
+ */
+function mediaAIManifestCommands(array $manifest): array
+{
+    $commands = $manifest['commands'] ?? [];
+
+    return is_array($commands) ? $commands : [];
+}
+
 it('keeps marketplace copy aligned with shipped image doctor capabilities', function (): void {
     $manifest = mediaAIManifest();
     $composerManifest = mediaAIComposerManifest();
@@ -60,7 +71,7 @@ it('declares the shipped media ai console batch command in the package manifest'
         'admin',
         'console',
     ])
-        ->and($manifest['commands']['doctor'] ?? null)->toBe('media-ai:doctor-batch')
+        ->and(mediaAIManifestCommands($manifest)['doctor'] ?? null)->toBe('media-ai:doctor-batch')
         ->and($manifest['capabilities'] ?? null)->toContain('media-ai')
         ->and($manifest['capabilities'] ?? null)->toContain('media-ai-admin')
         ->and($manifest['capabilities'] ?? null)->toContain('media-ai-console')

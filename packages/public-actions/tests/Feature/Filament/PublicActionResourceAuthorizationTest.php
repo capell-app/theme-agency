@@ -168,6 +168,8 @@ it('requires site-scoped actors to create integration tokens for assigned sites 
     Permission::findOrCreate('Create:PublicActionIntegrationToken');
 
     $user = test()->createUserWithPermission('Create:PublicActionIntegrationToken');
+    throw_unless($user instanceof User);
+
     assignPublicActionSiteRole($user, (int) $assignedSite->getKey());
 
     expect(fn (): mixed => CreatePublicActionIntegrationTokenAction::run(

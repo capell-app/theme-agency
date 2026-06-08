@@ -6,6 +6,9 @@ namespace Capell\Payments\Actions;
 
 use Lorisleiva\Actions\Concerns\AsAction;
 
+/**
+ * @method static ?string run(?int $minorAmount, ?string $currency)
+ */
 final class FormatPaymentMoneyAction
 {
     use AsAction;

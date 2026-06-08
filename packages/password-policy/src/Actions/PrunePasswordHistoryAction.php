@@ -10,6 +10,9 @@ use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\DB;
 use Lorisleiva\Actions\Concerns\AsObject;
 
+/**
+ * @method static int run(?int $keepCount = null, ?int $userId = null, bool $dryRun = false)
+ */
 final class PrunePasswordHistoryAction
 {
     use AsObject;

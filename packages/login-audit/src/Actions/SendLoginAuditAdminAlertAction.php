@@ -16,6 +16,9 @@ use Illuminate\Support\Facades\Schema;
 use Lorisleiva\Actions\Concerns\AsAction;
 use Throwable;
 
+/**
+ * @method static void run(LoginAudit $loginAudit, string $alertType)
+ */
 final class SendLoginAuditAdminAlertAction
 {
     use AsAction;
@@ -25,6 +28,10 @@ final class SendLoginAuditAdminAlertAction
     public function handle(LoginAudit $loginAudit, string $alertType): void
     {
         $recipients = ResolveAdminNotificationRecipientsAction::run(self::NOTIFICATION_GROUP);
+
+        if (! is_iterable($recipients)) {
+            return;
+        }
 
         foreach ($recipients as $recipient) {
             if (! $recipient instanceof Model) {
@@ -41,7 +48,7 @@ final class SendLoginAuditAdminAlertAction
 
     private function sendFilamentNotification(LoginAudit $loginAudit, string $alertType, Authenticatable&Model $recipient): void
     {
-        $notification = Notification::make('login-audit-' . $alertType . '-' . $loginAudit->getKey())
+        $notification = Notification::make('login-audit-' . $alertType . '-' . $this->stringValue($loginAudit->getKey()))
             ->title($this->title($alertType))
             ->body($this->body($loginAudit))
             ->icon(Heroicon::OutlinedShieldExclamation)
@@ -70,19 +77,40 @@ final class SendLoginAuditAdminAlertAction
     private function title(string $alertType): string
     {
         return match ($alertType) {
-            'new_device' => (string) __('capell-login-audit::settings.alert_new_device_title'),
-            'failed_login' => (string) __('capell-login-audit::settings.alert_failed_login_title'),
-            'suspicious_login' => (string) __('capell-login-audit::settings.alert_suspicious_login_title'),
-            default => (string) __('capell-login-audit::settings.alert_login_audit_title'),
+            'new_device' => $this->translation('capell-login-audit::settings.alert_new_device_title'),
+            'failed_login' => $this->translation('capell-login-audit::settings.alert_failed_login_title'),
+            'suspicious_login' => $this->translation('capell-login-audit::settings.alert_suspicious_login_title'),
+            default => $this->translation('capell-login-audit::settings.alert_login_audit_title'),
         };
     }
 
     private function body(LoginAudit $loginAudit): string
     {
-        return (string) __('capell-login-audit::settings.alert_body', [
-            'id' => $loginAudit->getKey(),
-            'ip' => $loginAudit->ip_address ?: __('capell-admin::generic.missing'),
-            'time' => $loginAudit->login_at?->toIso8601String() ?? __('capell-admin::generic.missing'),
+        $value = __('capell-login-audit::settings.alert_body', [
+            'id' => $this->replacementValue($loginAudit->getKey()),
+            'ip' => $loginAudit->ip_address ?: $this->translation('capell-admin::generic.missing'),
+            'time' => $loginAudit->login_at?->toIso8601String() ?? $this->translation('capell-admin::generic.missing'),
         ]);
+
+        return is_string($value) ? $value : '';
+    }
+
+    private function replacementValue(mixed $value): bool|float|int|string|null
+    {
+        return is_scalar($value) || $value === null ? $value : null;
+    }
+
+    private function stringValue(mixed $value): string
+    {
+        return is_string($value) || is_int($value) || is_float($value)
+            ? (string) $value
+            : '';
+    }
+
+    private function translation(string $key): string
+    {
+        $value = __($key);
+
+        return is_string($value) ? $value : $key;
     }
 }

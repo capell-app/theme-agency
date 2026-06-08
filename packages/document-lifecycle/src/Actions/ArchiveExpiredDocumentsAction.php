@@ -9,6 +9,9 @@ use Capell\DocumentLifecycle\Models\Document;
 use Carbon\CarbonInterface;
 use Lorisleiva\Actions\Concerns\AsAction;
 
+/**
+ * @method static int run(CarbonInterface|null $now = null)
+ */
 final class ArchiveExpiredDocumentsAction
 {
     use AsAction;

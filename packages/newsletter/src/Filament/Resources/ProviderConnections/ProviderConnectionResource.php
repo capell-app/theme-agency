@@ -124,14 +124,21 @@ class ProviderConnectionResource extends Resource
     }
 
     /**
-     * @return array<array-key, mixed>
+     * @return array<string, string>
      */
     private static function providerOptions(): array
     {
-        return collect(ProviderType::cases())
-            ->reject(static fn (ProviderType $provider): bool => $provider === ProviderType::Fake && ! FakeProviderGuard::isAllowed())
-            ->mapWithKeys(static fn (ProviderType $provider): array => [$provider->value => $provider->getLabel()])
-            ->all();
+        $options = [];
+
+        foreach (ProviderType::cases() as $provider) {
+            if ($provider === ProviderType::Fake && ! FakeProviderGuard::isAllowed()) {
+                continue;
+            }
+
+            $options[$provider->value] = $provider->getLabel();
+        }
+
+        return $options;
     }
 
     /**

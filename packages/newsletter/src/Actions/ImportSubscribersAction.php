@@ -36,7 +36,7 @@ class ImportSubscribersAction
         ?Model $actor = null,
         ?string $filename = null,
     ): ImportBatch {
-        $maxRows = (int) config('capell-newsletter.imports.max_rows', 10000);
+        $maxRows = $this->integerConfig('capell-newsletter.imports.max_rows', 10000);
 
         if ($maxRows > 0 && count($rows) > $maxRows) {
             throw ValidationException::withMessages([
@@ -123,12 +123,12 @@ class ImportSubscribersAction
                         lastName: is_string($validRow['last_name'] ?? null) ? $validRow['last_name'] : null,
                     ), new ConsentEvidenceData(
                         sourceType: 'csv_import',
-                        sourceId: (string) $batch->getKey(),
+                        sourceId: $this->modelStringKey($batch),
                         consentText: $consentBasis,
                     ), ConsentEventType::Imported);
 
                     ApplyNewsletterTagsAction::run($subscriber, $tagIds);
-                    $subscriberIds[] = (int) $subscriber->getKey();
+                    $subscriberIds[] = $this->modelIntegerKey($subscriber);
                 }
 
                 return $subscriberIds;
@@ -150,5 +150,36 @@ class ImportSubscribersAction
         }
 
         return $batch->refresh();
+    }
+
+    private function integerConfig(string $key, int $fallback): int
+    {
+        $value = config($key, $fallback);
+
+        if (is_int($value)) {
+            return $value;
+        }
+
+        return is_string($value) && is_numeric($value) ? (int) $value : $fallback;
+    }
+
+    private function modelIntegerKey(Model $model): int
+    {
+        $key = $model->getKey();
+
+        if (is_int($key)) {
+            return $key;
+        }
+
+        return is_string($key) && ctype_digit($key) ? (int) $key : 0;
+    }
+
+    private function modelStringKey(Model $model): string
+    {
+        $key = $model->getKey();
+
+        return is_string($key) || is_int($key) || is_float($key)
+            ? (string) $key
+            : '';
     }
 }

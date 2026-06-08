@@ -6,6 +6,7 @@ use Capell\Newsletter\Actions\CreatePreferenceCenterTokenAction;
 use Capell\Newsletter\Models\Segment;
 use Capell\Newsletter\Models\Subscriber;
 use Capell\Tests\Fixtures\Models\User;
+use Illuminate\Database\Eloquent\Model;
 
 it('keeps anonymous preference center HTML free of admin and model identifiers', function (): void {
     [$token, $segment] = newsletterPublicPreferenceCenterFixture();
@@ -15,7 +16,7 @@ it('keeps anonymous preference center HTML free of admin and model identifiers',
     $response
         ->assertOk()
         ->assertSee('value="' . $segment->handle . '"', false)
-        ->assertDontSee('value="' . $segment->getKey() . '"', false)
+        ->assertDontSee('value="' . newsletterPublicPreferenceCenterModelKey($segment) . '"', false)
         ->assertDontSee('/admin', false)
         ->assertDontSee('filament', false)
         ->assertDontSee('wire:', false)
@@ -36,7 +37,7 @@ it('keeps non-admin preference center HTML free of admin and model identifiers',
     $response
         ->assertOk()
         ->assertSee('value="' . $segment->handle . '"', false)
-        ->assertDontSee('value="' . $segment->getKey() . '"', false)
+        ->assertDontSee('value="' . newsletterPublicPreferenceCenterModelKey($segment) . '"', false)
         ->assertDontSee('/admin', false)
         ->assertDontSee('filament', false)
         ->assertDontSee('wire:', false)
@@ -67,4 +68,13 @@ function newsletterPublicPreferenceCenterFixture(): array
         CreatePreferenceCenterTokenAction::run($subscriber),
         $segment,
     ];
+}
+
+function newsletterPublicPreferenceCenterModelKey(Model $model): string
+{
+    $key = $model->getKey();
+
+    return is_string($key) || is_int($key) || is_float($key)
+        ? (string) $key
+        : '';
 }

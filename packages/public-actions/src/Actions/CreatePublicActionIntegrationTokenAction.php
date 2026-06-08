@@ -15,6 +15,9 @@ use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Str;
 use Lorisleiva\Actions\Concerns\AsAction;
 
+/**
+ * @method static PublicActionIntegrationTokenData run(string $name, PublicActionIntegrationProvider $provider = PublicActionIntegrationProvider::Zapier, ?int $siteId = null, list<PublicActionIntegrationTokenAbility> $abilities = [], ?Authenticatable $actor = null)
+ */
 final class CreatePublicActionIntegrationTokenAction
 {
     use AsAction;

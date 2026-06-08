@@ -4,9 +4,15 @@ declare(strict_types=1);
 
 namespace Capell\DocumentLifecycle\Actions;
 
+use Capell\DocumentLifecycle\Models\Document;
 use Capell\DocumentLifecycle\Models\DocumentAcceptance;
+use Capell\DocumentLifecycle\Models\DocumentPublication;
+use Illuminate\Database\Eloquent\Model;
 use Lorisleiva\Actions\Concerns\AsAction;
 
+/**
+ * @method static string run(DocumentAcceptance $acceptance)
+ */
 final class BuildDocumentAcceptanceCertificateAction
 {
     use AsAction;
@@ -14,17 +20,19 @@ final class BuildDocumentAcceptanceCertificateAction
     public function handle(DocumentAcceptance $acceptance): string
     {
         $acceptance->loadMissing('publication.document');
+        $publication = $acceptance->publication;
+        $document = $publication instanceof DocumentPublication ? $publication->document : null;
 
         $payload = [
             'certificate_version' => 1,
             'evidence_type' => 'document_acceptance',
             'acceptance' => [
-                'id' => (int) $acceptance->getKey(),
+                'id' => $this->modelKey($acceptance),
                 'document_key' => $acceptance->document_key,
                 'document_version' => $acceptance->document_version,
                 'document_publication_id' => $acceptance->document_publication_id,
                 'document_hash' => $acceptance->document_hash,
-                'accepted_at' => $acceptance->accepted_at?->toISOString(),
+                'accepted_at' => $acceptance->accepted_at->toISOString(),
                 'context' => $acceptance->context,
                 'acceptor_type' => $acceptance->acceptor_type,
                 'acceptor_id' => $acceptance->acceptor_id,
@@ -38,14 +46,14 @@ final class BuildDocumentAcceptanceCertificateAction
                 'metadata' => $acceptance->metadata,
             ],
             'publication' => [
-                'version_label' => $acceptance->publication?->version_label,
-                'content_hash' => $acceptance->publication?->content_hash,
-                'published_revision_id' => $acceptance->publication?->published_revision_id,
-                'published_at' => $acceptance->publication?->published_at?->toISOString(),
+                'version_label' => $publication?->version_label,
+                'content_hash' => $publication?->content_hash,
+                'published_revision_id' => $publication?->published_revision_id,
+                'published_at' => $publication?->published_at->toISOString(),
             ],
             'document' => [
-                'key' => $acceptance->publication?->document?->key ?? $acceptance->document_key,
-                'title' => $acceptance->publication?->document?->title,
+                'key' => $document instanceof Document ? $document->key : $acceptance->document_key,
+                'title' => $document instanceof Document ? $document->title : null,
             ],
         ];
 
@@ -70,7 +78,7 @@ final class BuildDocumentAcceptanceCertificateAction
 
     private function signingKey(): string
     {
-        $key = (string) config('app.key');
+        $key = $this->configString('app.key');
 
         if (str_starts_with($key, 'base64:')) {
             $decodedKey = base64_decode(substr($key, 7), true);
@@ -81,5 +89,19 @@ final class BuildDocumentAcceptanceCertificateAction
         }
 
         return $key;
+    }
+
+    private function configString(string $key): string
+    {
+        $value = config($key);
+
+        return is_string($value) ? $value : '';
+    }
+
+    private function modelKey(Model $model): int
+    {
+        $key = $model->getKey();
+
+        return is_int($key) ? $key : 0;
     }
 }

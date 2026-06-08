@@ -12,6 +12,9 @@ use Capell\PublicActions\Models\PublicActionSubmission;
 use Lorisleiva\Actions\Concerns\AsAction;
 use RuntimeException;
 
+/**
+ * @method static PublicActionDispatchResultData run(PublicActionDispatchAttempt $attempt)
+ */
 final class ReplayPublicActionDispatchAttemptAction
 {
     use AsAction;

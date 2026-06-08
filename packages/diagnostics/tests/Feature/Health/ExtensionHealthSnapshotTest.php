@@ -9,19 +9,23 @@ use Capell\Diagnostics\Data\Health\HealthCheckResultData;
 use Capell\Diagnostics\Enums\HealthCheckImplementationStatus;
 use Capell\Diagnostics\Models\DiagnosticsHealthSnapshot;
 use Carbon\CarbonImmutable;
+use RuntimeException;
 use Spatie\LaravelData\DataCollection;
 
 it('records extension health report snapshots with per-check payloads', function (): void {
     $report = extensionHealthReportForSnapshot(score: 82, status: 'degraded');
 
     $snapshot = RecordExtensionHealthReportAction::run($report, CarbonImmutable::parse('2026-06-07 10:30:00'));
+    throw_unless($snapshot instanceof DiagnosticsHealthSnapshot, RuntimeException::class, 'Expected diagnostics health snapshot to be recorded.');
+
+    $firstCheck = extensionHealthSnapshotFirstCheck($snapshot);
 
     expect($snapshot)->toBeInstanceOf(DiagnosticsHealthSnapshot::class)
-        ->and($snapshot?->overall_status)->toBe('degraded')
-        ->and($snapshot?->health_score)->toBe(82)
-        ->and($snapshot?->checks)->toHaveCount(1)
-        ->and($snapshot?->checks[0]['package'])->toBe('capell-app/example')
-        ->and($snapshot?->recorded_at?->toDateTimeString())->toBe('2026-06-07 10:30:00');
+        ->and($snapshot->overall_status)->toBe('degraded')
+        ->and($snapshot->health_score)->toBe(82)
+        ->and($snapshot->checks)->toHaveCount(1)
+        ->and($firstCheck['package'])->toBe('capell-app/example')
+        ->and($snapshot->recorded_at->toDateTimeString())->toBe('2026-06-07 10:30:00');
 });
 
 it('builds trend data from the latest previous health snapshot', function (): void {
@@ -75,4 +79,18 @@ function extensionHealthReportForSnapshot(int $score, string $status): Extension
         overallStatus: $status,
         healthScore: $score,
     );
+}
+
+/**
+ * @return array<string, mixed>
+ */
+function extensionHealthSnapshotFirstCheck(DiagnosticsHealthSnapshot $snapshot): array
+{
+    $checks = $snapshot->checks;
+
+    if (! is_array($checks) || ! isset($checks[0]) || ! is_array($checks[0])) {
+        throw new RuntimeException('Expected diagnostics health snapshot to include a first check payload.');
+    }
+
+    return $checks[0];
 }

@@ -18,6 +18,7 @@ use Capell\KnowledgeBase\Actions\UpdateKnowledgeBaseCollectionAction;
 use Capell\KnowledgeBase\Data\CreateKnowledgeBaseArticleData;
 use Capell\KnowledgeBase\Data\CreateKnowledgeBaseArticleVersionData;
 use Capell\KnowledgeBase\Data\CreateKnowledgeBaseCollectionData;
+use Capell\KnowledgeBase\Data\PublicKnowledgeBaseNavigationItemData;
 use Capell\KnowledgeBase\Data\RecordKnowledgeBaseArticleFeedbackData;
 use Capell\KnowledgeBase\Data\UpdateKnowledgeBaseArticleData;
 use Capell\KnowledgeBase\Data\UpdateKnowledgeBaseCollectionData;
@@ -118,19 +119,24 @@ it('publishes new versions and keeps navigation, search, and ai output public on
 
     PublishKnowledgeBaseArticleVersionAction::run($version);
 
-    /** @var Collection<int, mixed> $navigation */
     $navigation = BuildPublicKnowledgeBaseNavigationAction::run();
     /** @var Collection<int, mixed> $searchDocuments */
     $searchDocuments = BuildKnowledgeBaseSearchDocumentsAction::run();
     /** @var Collection<int, mixed> $aiOutput */
     $aiOutput = BuildAiReadableKnowledgeBaseOutputAction::run();
 
+    $rootNavigationItem = $navigation->first();
+    Assert::assertInstanceOf(PublicKnowledgeBaseNavigationItemData::class, $rootNavigationItem);
+
+    $childNavigationItem = $rootNavigationItem->children[0] ?? null;
+    Assert::assertInstanceOf(PublicKnowledgeBaseNavigationItemData::class, $childNavigationItem);
+
     expect($navigation)->toHaveCount(1)
-        ->and($navigation->first()->articles)->toHaveCount(1)
-        ->and($navigation->first()->articles[0]['title'])->toBe('Public Article Updated')
-        ->and($navigation->first()->children)->toHaveCount(1)
-        ->and($navigation->first()->children[0]->title)->toBe('Child Docs')
-        ->and($navigation->first()->children[0]->articles[0]['title'])->toBe('Child Article')
+        ->and($rootNavigationItem->articles)->toHaveCount(1)
+        ->and($rootNavigationItem->articles[0]['title'])->toBe('Public Article Updated')
+        ->and($rootNavigationItem->children)->toHaveCount(1)
+        ->and($childNavigationItem->title)->toBe('Child Docs')
+        ->and($childNavigationItem->articles[0]['title'])->toBe('Child Article')
         ->and($searchDocuments)->toHaveCount(1)
         ->and($searchDocuments->first()->weight)->toBe(90)
         ->and($searchDocuments->first()->title)->toBe('Public Article Updated')

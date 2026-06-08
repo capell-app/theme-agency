@@ -15,6 +15,9 @@ use Illuminate\Support\Facades\Date;
 use Lorisleiva\Actions\Concerns\AsAction;
 use Throwable;
 
+/**
+ * @method static GA4ReportsSyncResultData run()
+ */
 final class SyncGA4ReportsMetricsAction
 {
     use AsAction;

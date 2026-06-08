@@ -277,7 +277,7 @@ class Publisher
      * collisions, and per-model row counts. Any exception raised during the
      * simulated publish is captured on the report rather than surfacing.
      */
-    public function dryRun(Workspace $workspace): DryRunReport
+    public function dryRun(Workspace $workspace, bool $bypassWindow = false): DryRunReport
     {
         $rebaseReport = (new Rebaser($this->registry))->analyse($workspace);
         $collisions = $this->detectUrlCollisions($workspace);
@@ -306,8 +306,8 @@ class Publisher
         $wouldPublish = false;
 
         try {
-            DB::transaction(function () use ($workspace, &$wouldPublish): void {
-                $this->publish($workspace, bypassChecks: true);
+            DB::transaction(function () use ($workspace, $bypassWindow, &$wouldPublish): void {
+                $this->publish($workspace, bypassWindow: $bypassWindow, bypassChecks: true);
 
                 $wouldPublish = true;
 

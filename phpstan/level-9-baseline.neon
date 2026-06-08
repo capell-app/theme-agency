@@ -20455,12 +20455,6 @@ parameters:
 			path: ../packages/public-actions/src/Actions/SubmitPublicActionAction.php
 
 		-
-			rawMessage: Cannot access property $plainTextToken on mixed.
-			identifier: property.nonObject
-			count: 1
-			path: ../packages/public-actions/src/Filament/Resources/IntegrationTokens/Pages/ListPublicActionIntegrationTokens.php
-
-		-
 			rawMessage: Anonymous function should return Capell\PublicActions\Models\PublicActionIntegrationToken but returns mixed.
 			identifier: return.type
 			count: 1
@@ -20543,18 +20537,6 @@ parameters:
 			identifier: argument.type
 			count: 6
 			path: ../packages/public-actions/tests/Feature/Filament/PublicActionResourceAuthorizationTest.php
-
-		-
-			rawMessage: Cannot access property $plainTextToken on mixed.
-			identifier: property.nonObject
-			count: 11
-			path: ../packages/public-actions/tests/Feature/PublicActionZapierApiTest.php
-
-		-
-			rawMessage: Cannot access property $token on mixed.
-			identifier: property.nonObject
-			count: 1
-			path: ../packages/public-actions/tests/Feature/PublicActionZapierApiTest.php
 
 		-
 			rawMessage: Cannot access offset 'curl' on mixed.

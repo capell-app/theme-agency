@@ -40,13 +40,34 @@ function documentLifecycleComposerManifest(): array
     return $composerManifest;
 }
 
+/**
+ * @param  array<string, mixed>  $manifest
+ * @return list<array<string, mixed>>
+ */
+function documentLifecycleManifestList(array $manifest, string $key): array
+{
+    $items = $manifest[$key] ?? [];
+
+    throw_unless(is_array($items), RuntimeException::class, 'Expected document lifecycle manifest list.');
+
+    $list = [];
+
+    foreach ($items as $item) {
+        if (is_array($item)) {
+            $list[] = $item;
+        }
+    }
+
+    return $list;
+}
+
 it('declares the document admin resource as a manifest contribution', function (): void {
     $manifest = documentLifecycleManifest();
 
     $contribution = null;
 
-    foreach (($manifest['contributes'] ?? []) as $manifestContribution) {
-        if (is_array($manifestContribution) && ($manifestContribution['type'] ?? null) === 'admin-resource') {
+    foreach (documentLifecycleManifestList($manifest, 'contributes') as $manifestContribution) {
+        if (($manifestContribution['type'] ?? null) === 'admin-resource') {
             $contribution = $manifestContribution;
 
             break;
@@ -74,8 +95,8 @@ it('declares the retention command as a scheduled job contribution', function ()
 
     $contribution = null;
 
-    foreach (($manifest['contributes'] ?? []) as $manifestContribution) {
-        if (is_array($manifestContribution) && ($manifestContribution['type'] ?? null) === 'scheduled-job') {
+    foreach (documentLifecycleManifestList($manifest, 'contributes') as $manifestContribution) {
+        if (($manifestContribution['type'] ?? null) === 'scheduled-job') {
             $contribution = $manifestContribution;
 
             break;

@@ -37,21 +37,21 @@ final class EditableRegionPayloadData
     public static function fromArray(array $payload): self
     {
         return new self(
-            model: (string) $payload['model'],
-            recordKey: (int) $payload['recordKey'],
-            field: (string) $payload['field'],
-            label: (string) $payload['label'],
-            type: EditableRegionInputType::from((string) $payload['type']),
-            selector: (string) $payload['selector'],
-            currentUrl: (string) $payload['currentUrl'],
-            pageUrlId: (int) $payload['pageUrlId'],
-            siteId: (int) $payload['siteId'],
-            languageId: (int) $payload['languageId'],
-            regionKey: (string) $payload['regionKey'],
-            surface: EditableRegionSurface::from((string) ($payload['surface'] ?? EditableRegionSurface::Field->value)),
-            target: isset($payload['target']) ? (string) $payload['target'] : null,
-            description: isset($payload['description']) ? (string) $payload['description'] : null,
-            context: is_array($payload['context'] ?? null) ? $payload['context'] : [],
+            model: self::stringValue($payload, 'model'),
+            recordKey: self::intValue($payload, 'recordKey'),
+            field: self::stringValue($payload, 'field'),
+            label: self::stringValue($payload, 'label'),
+            type: EditableRegionInputType::from(self::stringValue($payload, 'type')),
+            selector: self::stringValue($payload, 'selector'),
+            currentUrl: self::stringValue($payload, 'currentUrl'),
+            pageUrlId: self::intValue($payload, 'pageUrlId'),
+            siteId: self::intValue($payload, 'siteId'),
+            languageId: self::intValue($payload, 'languageId'),
+            regionKey: self::stringValue($payload, 'regionKey'),
+            surface: EditableRegionSurface::from(self::optionalStringValue($payload, 'surface') ?? EditableRegionSurface::Field->value),
+            target: self::optionalStringValue($payload, 'target'),
+            description: self::optionalStringValue($payload, 'description'),
+            context: self::stringMap($payload['context'] ?? []),
             permissions: self::stringList($payload['permissions'] ?? []),
         );
     }
@@ -95,9 +95,74 @@ final class EditableRegionPayloadData
             return [];
         }
 
-        return array_values(array_filter(
-            array_map(static fn (mixed $item): string => trim((string) $item), $value),
-            static fn (string $item): bool => $item !== '',
-        ));
+        $items = [];
+
+        foreach ($value as $item) {
+            if (! is_string($item)) {
+                continue;
+            }
+
+            $item = trim($item);
+
+            if ($item !== '') {
+                $items[] = $item;
+            }
+        }
+
+        return $items;
+    }
+
+    /**
+     * @param  array<string, mixed>  $payload
+     */
+    private static function stringValue(array $payload, string $key): string
+    {
+        $value = $payload[$key] ?? null;
+
+        return is_string($value) ? $value : '';
+    }
+
+    /**
+     * @param  array<string, mixed>  $payload
+     */
+    private static function optionalStringValue(array $payload, string $key): ?string
+    {
+        $value = $payload[$key] ?? null;
+
+        return is_string($value) ? $value : null;
+    }
+
+    /**
+     * @param  array<string, mixed>  $payload
+     */
+    private static function intValue(array $payload, string $key): int
+    {
+        $value = $payload[$key] ?? null;
+
+        if (is_int($value)) {
+            return $value;
+        }
+
+        return is_string($value) && ctype_digit($value) ? (int) $value : 0;
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private static function stringMap(mixed $value): array
+    {
+        if (! is_array($value)) {
+            return [];
+        }
+
+        $map = [];
+
+        foreach ($value as $key => $item) {
+            if (is_string($key)) {
+                $map[$key] = $item;
+            }
+        }
+
+        return $map;
     }
 }

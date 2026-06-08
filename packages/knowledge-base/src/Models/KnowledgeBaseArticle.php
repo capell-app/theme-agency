@@ -27,6 +27,7 @@ use Override;
  * @property int $search_weight
  * @property bool $is_ai_readable
  * @property CarbonImmutable|null $published_at
+ * @property CarbonImmutable|null $updated_at
  * @property-read KnowledgeBaseCollection $collection
  * @property-read KnowledgeBaseArticleVersion|null $currentVersion
  *

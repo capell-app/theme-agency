@@ -8,8 +8,12 @@ use Capell\DocumentLifecycle\Models\Document;
 use Capell\DocumentLifecycle\Models\DocumentAcceptance;
 use Capell\DocumentLifecycle\Models\DocumentPublication;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Lorisleiva\Actions\Concerns\AsAction;
 
+/**
+ * @method static string run(Document $document, DocumentPublication|null $publication = null)
+ */
 final class BuildDocumentAcceptanceEvidenceCsvAction
 {
     use AsAction;
@@ -46,7 +50,7 @@ final class BuildDocumentAcceptanceEvidenceCsvAction
             ->cursor()
             ->each(static function (DocumentAcceptance $acceptance) use ($document, $stream): void {
                 fputcsv($stream, [
-                    $acceptance->getKey(),
+                    self::modelKey($acceptance),
                     $acceptance->document_key,
                     $document->title,
                     $acceptance->document_version,
@@ -57,7 +61,7 @@ final class BuildDocumentAcceptanceEvidenceCsvAction
                     $acceptance->subject_type,
                     $acceptance->subject_id,
                     $acceptance->context,
-                    $acceptance->accepted_at?->toISOString(),
+                    $acceptance->accepted_at->toISOString(),
                     $acceptance->ip_hash,
                     $acceptance->user_agent_hash,
                     $acceptance->legal_bundle_version,
@@ -86,16 +90,27 @@ final class BuildDocumentAcceptanceEvidenceCsvAction
         return json_encode($value, JSON_THROW_ON_ERROR);
     }
 
+    private static function modelKey(Model $model): int
+    {
+        $key = $model->getKey();
+
+        return is_int($key) ? $key : 0;
+    }
+
     /**
      * @return Builder<DocumentAcceptance>
      */
     private function query(Document $document, ?DocumentPublication $publication): Builder
     {
-        return DocumentAcceptance::query()
+        $query = DocumentAcceptance::query()
             ->where('document_key', $document->key)
-            ->when($publication instanceof DocumentPublication, static fn (Builder $query): Builder => $query
-                ->where('document_publication_id', $publication->getKey()))
             ->latest('accepted_at')
             ->latest('id');
+
+        if ($publication instanceof DocumentPublication) {
+            $query->where('document_publication_id', self::modelKey($publication));
+        }
+
+        return $query;
     }
 }

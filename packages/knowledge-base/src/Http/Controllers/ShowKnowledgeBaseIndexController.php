@@ -23,8 +23,10 @@ final class ShowKnowledgeBaseIndexController
 
     private function viewName(): string
     {
-        return view()->exists('capell-theme-knowledge::knowledge-base.index')
-            ? 'capell-theme-knowledge::knowledge-base.index'
+        $themeView = implode('::', ['capell-theme-knowledge', 'knowledge-base.index']);
+
+        return view()->exists($themeView)
+            ? $themeView
             : 'capell-knowledge-base::index';
     }
 

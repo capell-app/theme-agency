@@ -11,6 +11,9 @@ use Carbon\CarbonImmutable;
 use DateTimeInterface;
 use Lorisleiva\Actions\Concerns\AsAction;
 
+/**
+ * @method static ReconcilePaymentWebhooksResultData run(?DateTimeInterface $now = null, int $staleAfterMinutes = 30)
+ */
 final class ReconcilePaymentWebhooksAction
 {
     use AsAction;

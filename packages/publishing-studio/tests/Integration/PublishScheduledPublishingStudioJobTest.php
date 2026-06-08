@@ -2,9 +2,11 @@
 
 declare(strict_types=1);
 
+use Capell\PublishingStudio\Enums\SchedulerEventStateEnum;
+use Capell\PublishingStudio\Enums\SchedulerEventTypeEnum;
 use Capell\PublishingStudio\Enums\WorkspaceStatusEnum;
+use Capell\PublishingStudio\Models\SchedulerEvent;
 use Capell\PublishingStudio\Models\Workspace;
-use Capell\PublishingStudio\Publisher;
 use Capell\PublishingStudio\PublishScheduledPublishingStudioJob;
 use Capell\PublishingStudio\Tests\Integration\Fixtures\WorkspaceDraftableFixture;
 use Capell\PublishingStudio\WorkspaceRegistry;
@@ -52,13 +54,18 @@ it('publishes every scheduled workspace whose publish_at has elapsed', function 
     $due = seedScheduledWorkspace('2026-05-01 18:00:00');
     $notDue = seedScheduledWorkspace('2026-05-02 09:00:00');
 
-    (new PublishScheduledPublishingStudioJob)->handle(new Publisher);
+    (new PublishScheduledPublishingStudioJob)->handle();
 
     $freshDue = publishingStudioTestInstance($due->fresh(), Workspace::class);
     $freshNotDue = publishingStudioTestInstance($notDue->fresh(), Workspace::class);
+    $publishEvent = SchedulerEvent::query()
+        ->where('workspace_id', $due->getKey())
+        ->where('event_type', SchedulerEventTypeEnum::Publish->value)
+        ->firstOrFail();
 
     expect($freshDue->status)->toBe(WorkspaceStatusEnum::Published)
-        ->and($freshNotDue->status)->toBe(WorkspaceStatusEnum::Scheduled);
+        ->and($freshNotDue->status)->toBe(WorkspaceStatusEnum::Scheduled)
+        ->and($publishEvent->state)->toBe(SchedulerEventStateEnum::Executed);
 });
 
 it('leaves a scheduled workspace in place when the release window is closed', function (): void {
@@ -72,11 +79,16 @@ it('leaves a scheduled workspace in place when the release window is closed', fu
 
     $workspace = seedScheduledWorkspace('2026-04-18 09:00:00');
 
-    (new PublishScheduledPublishingStudioJob)->handle(new Publisher);
+    (new PublishScheduledPublishingStudioJob)->handle();
 
     $freshWorkspace = publishingStudioTestInstance($workspace->fresh(), Workspace::class);
+    $publishEvent = SchedulerEvent::query()
+        ->where('workspace_id', $workspace->getKey())
+        ->where('event_type', SchedulerEventTypeEnum::Publish->value)
+        ->firstOrFail();
 
-    expect($freshWorkspace->status)->toBe(WorkspaceStatusEnum::Scheduled);
+    expect($freshWorkspace->status)->toBe(WorkspaceStatusEnum::Scheduled)
+        ->and($publishEvent->state)->toBe(SchedulerEventStateEnum::SkippedReleaseWindow);
 });
 
 it('ignores publishing-studio whose publish_at is still in the future', function (): void {
@@ -84,7 +96,7 @@ it('ignores publishing-studio whose publish_at is still in the future', function
 
     $workspace = seedScheduledWorkspace('2026-05-01 18:00:00');
 
-    (new PublishScheduledPublishingStudioJob)->handle(new Publisher);
+    (new PublishScheduledPublishingStudioJob)->handle();
 
     $freshWorkspace = publishingStudioTestInstance($workspace->fresh(), Workspace::class);
 

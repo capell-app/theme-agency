@@ -63,7 +63,7 @@ final class GA4ReportsTopPagesWidget extends BaseWidget implements CapellWidgetC
     }
 
     /**
-     * @return Collection<array-key, mixed>
+     * @return Collection<int, array{id: string, page_path: string, page_title: string|null, screen_page_views: int, sessions: int, total_users: int, conversions: int, comparison: string}>
      */
     private function getRecords(): Collection
     {
@@ -82,7 +82,7 @@ final class GA4ReportsTopPagesWidget extends BaseWidget implements CapellWidgetC
                 'sessions' => $page->sessions,
                 'total_users' => $page->totalUsers,
                 'conversions' => $page->conversions,
-                'comparison' => $this->formatDelta($page->screenPageViews, $previousPages->get($page->pagePath)?->screenPageViews ?? 0),
+                'comparison' => $this->formatDelta($page->screenPageViews, $previousPages->get($page->pagePath)->screenPageViews ?? 0),
             ])
             ->values();
     }

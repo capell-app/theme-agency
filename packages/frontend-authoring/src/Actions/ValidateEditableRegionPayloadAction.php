@@ -11,6 +11,9 @@ use Capell\FrontendAuthoring\Support\EditableRegionSigner;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Lorisleiva\Actions\Concerns\AsObject;
 
+/**
+ * @method static EditableRegionPayloadData run(EditableRegionPayloadData $payload, AuthenticatableContract $user)
+ */
 class ValidateEditableRegionPayloadAction
 {
     use AsObject;

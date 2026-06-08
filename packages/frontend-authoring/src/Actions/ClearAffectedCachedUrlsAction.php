@@ -8,6 +8,9 @@ use Capell\HtmlCache\Actions\ClearCachedUrlAction;
 use Illuminate\Database\Eloquent\Model;
 use Lorisleiva\Actions\Concerns\AsObject;
 
+/**
+ * @method static int run(Model $model, array<int, string> $urls, string $currentUrl)
+ */
 class ClearAffectedCachedUrlsAction
 {
     use AsObject;

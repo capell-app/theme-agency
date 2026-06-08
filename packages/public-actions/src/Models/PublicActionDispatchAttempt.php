@@ -6,6 +6,7 @@ namespace Capell\PublicActions\Models;
 
 use Capell\PublicActions\Database\Factories\PublicActionDispatchAttemptFactory;
 use Capell\PublicActions\Enums\PublicActionDispatchStatus;
+use Carbon\CarbonInterface;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -13,6 +14,7 @@ use Override;
 
 /**
  * @property int $attempt
+ * @property CarbonInterface|null $dispatched_at
  * @property string|null $error_message
  * @property string $request_hash
  * @property string|null $response_summary

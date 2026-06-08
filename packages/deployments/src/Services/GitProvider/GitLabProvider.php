@@ -112,6 +112,7 @@ final class GitLabProvider implements GitProviderContract
             ])
             ->throw()
             ->json();
+        $response = $this->responseMap($response);
 
         return $this->pullRequestDataFromResponse($response);
     }
@@ -128,12 +129,13 @@ final class GitLabProvider implements GitProviderContract
             ])
             ->throw()
             ->json();
+        $mergeRequests = $this->responseList($response);
 
-        if (! is_array($response) || ! isset($response[0]) || ! is_array($response[0])) {
+        if (! isset($mergeRequests[0])) {
             return null;
         }
 
-        return $this->pullRequestDataFromResponse($response[0]);
+        return $this->pullRequestDataFromResponse($mergeRequests[0]);
     }
 
     public function enableAutoMerge(DeploymentConnection $conn, int|string $pullRequestId): void
@@ -155,6 +157,7 @@ final class GitLabProvider implements GitProviderContract
             ->get(sprintf('/projects/%s/merge_requests/%s', $encodedProject, $pullRequestId))
             ->throw()
             ->json();
+        $response = $this->responseMap($response);
 
         return $this->pullRequestDataFromResponse($response);
     }
@@ -178,15 +181,16 @@ final class GitLabProvider implements GitProviderContract
             ->get(sprintf('/projects/%s/repository/commits/%s/statuses', $encodedProject, $commitSha))
             ->throw()
             ->json();
+        $statuses = $this->responseList($statuses);
 
         foreach ($statuses as $status) {
-            if ($status['status'] === 'failed') {
+            if (($status['status'] ?? null) === 'failed') {
                 return 'failure';
             }
         }
 
         foreach ($statuses as $status) {
-            if (in_array($status['status'], ['running', 'pending'], true)) {
+            if (in_array($status['status'] ?? null, ['running', 'pending'], true)) {
                 return 'pending';
             }
         }
@@ -224,5 +228,45 @@ final class GitLabProvider implements GitProviderContract
             headSha: $response['sha'] ?? '',
             merged: $response['state'] === 'merged',
         );
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function responseMap(mixed $response): array
+    {
+        if (! is_array($response)) {
+            return [];
+        }
+
+        $map = [];
+
+        foreach ($response as $key => $value) {
+            if (is_string($key)) {
+                $map[$key] = $value;
+            }
+        }
+
+        return $map;
+    }
+
+    /**
+     * @return list<array<string, mixed>>
+     */
+    private function responseList(mixed $response): array
+    {
+        if (! is_array($response)) {
+            return [];
+        }
+
+        $items = [];
+
+        foreach ($response as $item) {
+            if (is_array($item)) {
+                $items[] = $this->responseMap($item);
+            }
+        }
+
+        return $items;
     }
 }

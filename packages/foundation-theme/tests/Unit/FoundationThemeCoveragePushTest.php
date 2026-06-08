@@ -657,12 +657,29 @@ it('hydrates livewire page widgets from opaque references and skips empty select
 /**
  * @return array<int, object>
  */
-function foundationThemeCoverageChildComponents(object $component): array
+function foundationThemeCoverageChildComponents(mixed $component): array
 {
+    throw_unless(is_object($component), RuntimeException::class, 'Expected foundation theme settings component.');
+
     $reflectionProperty = new ReflectionProperty($component, 'childComponents');
     $childComponents = $reflectionProperty->getValue($component);
+    throw_unless(is_array($childComponents), RuntimeException::class, 'Expected foundation theme child components array.');
 
-    return $childComponents['default'] ?? [];
+    $defaultComponents = $childComponents['default'] ?? [];
+
+    if (! is_array($defaultComponents)) {
+        return [];
+    }
+
+    $components = [];
+
+    foreach ($defaultComponents as $defaultComponent) {
+        if (is_object($defaultComponent)) {
+            $components[] = $defaultComponent;
+        }
+    }
+
+    return $components;
 }
 
 /**

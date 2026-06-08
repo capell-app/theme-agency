@@ -66,7 +66,7 @@ final class MediaAIEditActionExtender implements MediaEditActionExtender
                         RateLimiter::hit($rateLimitKey, $this->decaySeconds());
                     }
 
-                    dispatch(new RunImageDoctorJob(mediaId: (int) $record->getKey(), operation: (string) $data['operation'], instructions: (string) $data['instructions'], locale: app()->getLocale(), budgetCents: $this->budgetCents(), model: $this->model(), notifiableClass: $user instanceof Model ? $user::class : null, notifiableKey: $user instanceof Model ? $user->getKey() : null));
+                    dispatch(new RunImageDoctorJob(mediaId: $this->mediaId($record), operation: $this->dataString($data, 'operation', 'improve'), instructions: $this->dataString($data, 'instructions'), locale: app()->getLocale(), budgetCents: $this->budgetCents(), model: $this->model(), notifiableClass: $user instanceof Model ? $user::class : null, notifiableKey: $this->modelKey($user instanceof Model ? $user : null)));
 
                     Notification::make('capell_media_ai_image_doctor_queued')
                         ->title(__('capell-media-ai::media-ai.queued'))
@@ -80,9 +80,46 @@ final class MediaAIEditActionExtender implements MediaEditActionExtender
     {
         return sprintf(
             'capell-media-ai:image-doctor:%s:%s',
-            $user instanceof Model ? $user::class . ':' . $user->getKey() : 'guest',
-            $media->getKey(),
+            $user instanceof Model ? $user::class . ':' . $this->stringValue($this->modelKey($user)) : 'guest',
+            $this->stringValue($this->modelKey($media)),
         );
+    }
+
+    /**
+     * @param  array<string, mixed>  $data
+     */
+    private function dataString(array $data, string $key, string $fallback = ''): string
+    {
+        $value = $data[$key] ?? null;
+
+        return is_string($value) && $value !== '' ? $value : $fallback;
+    }
+
+    private function mediaId(Media $media): int
+    {
+        $key = $media->getKey();
+
+        if (is_int($key)) {
+            return $key;
+        }
+
+        return is_string($key) && ctype_digit($key) ? (int) $key : 0;
+    }
+
+    private function modelKey(?Model $model): int|string|null
+    {
+        if (! $model instanceof Model) {
+            return null;
+        }
+
+        $key = $model->getKey();
+
+        return is_int($key) || is_string($key) ? $key : null;
+    }
+
+    private function stringValue(int|string|null $value): string
+    {
+        return $value === null ? '' : (string) $value;
     }
 
     private function maxAttempts(): int

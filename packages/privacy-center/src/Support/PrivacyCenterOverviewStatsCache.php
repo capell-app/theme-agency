@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Capell\PrivacyCenter\Support;
 
 use Closure;
-use Illuminate\Cache\Repository;
 use Illuminate\Cache\TaggedCache;
+use Illuminate\Contracts\Cache\Repository;
 use Illuminate\Support\Facades\Cache;
 use Throwable;
 
@@ -22,7 +22,7 @@ final class PrivacyCenterOverviewStatsCache
      */
     public static function remember(Closure $callback): array
     {
-        $ttl = max(1, (int) config('capell-privacy-center.overview_stats_cache_ttl_seconds', 300));
+        $ttl = max(1, self::integerConfig('capell-privacy-center.overview_stats_cache_ttl_seconds', 300));
 
         return self::store()->remember(self::KEY, now()->addSeconds($ttl), $callback);
     }
@@ -51,5 +51,12 @@ final class PrivacyCenterOverviewStatsCache
         }
 
         return Cache::store();
+    }
+
+    private static function integerConfig(string $key, int $fallback): int
+    {
+        $value = config($key, $fallback);
+
+        return is_numeric($value) ? (int) $value : $fallback;
     }
 }

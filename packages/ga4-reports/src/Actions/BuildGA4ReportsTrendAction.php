@@ -10,6 +10,9 @@ use Capell\GA4Reports\Models\GA4ReportsDailyMetric;
 use Capell\GA4Reports\Support\GA4ReportsDashboardCache;
 use Lorisleiva\Actions\Concerns\AsAction;
 
+/**
+ * @method static list<GA4ReportsTrendPointData> run(?GA4ReportsWindowData $window = null)
+ */
 final class BuildGA4ReportsTrendAction
 {
     use AsAction;

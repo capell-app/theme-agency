@@ -9,6 +9,9 @@ use Capell\Diagnostics\Data\Health\HealthCheckResultData;
 use Lorisleiva\Actions\Concerns\AsAction;
 use RuntimeException;
 
+/**
+ * @method static string run(ExtensionHealthReportData $report)
+ */
 final class ExportExtensionHealthReportCsvAction
 {
     use AsAction;

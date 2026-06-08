@@ -97,15 +97,23 @@ final class AcceptancesRelationManager extends RelationManager
         /** @var Document $document */
         $document = $this->getOwnerRecord();
 
-        return $document
+        $publications = $document
             ->publications()
             ->latest('published_at')
             ->latest('id')
-            ->get()
-            ->mapWithKeys(static fn (DocumentPublication $publication): array => [
-                $publication->getKey() => $publication->version_label . ' (' . $publication->content_hash . ')',
-            ])
-            ->all();
+            ->get();
+
+        $options = [];
+
+        foreach ($publications as $publication) {
+            if (! $publication instanceof DocumentPublication) {
+                continue;
+            }
+
+            $options[$this->modelKey($publication)] = $publication->version_label . ' (' . $publication->content_hash . ')';
+        }
+
+        return $options;
     }
 
     /**
@@ -115,9 +123,9 @@ final class AcceptancesRelationManager extends RelationManager
     {
         /** @var Document $document */
         $document = $this->getOwnerRecord();
-        $publicationId = $data['publication_id'] ?? null;
-        $publication = filled($publicationId)
-            ? $document->publications()->find((int) $publicationId)
+        $publicationId = $this->positiveInteger($data['publication_id'] ?? null);
+        $publication = $publicationId !== null
+            ? $document->publications()->find($publicationId)
             : null;
 
         return response()->streamDownload(
@@ -158,8 +166,30 @@ final class AcceptancesRelationManager extends RelationManager
             function () use ($acceptance): void {
                 echo BuildDocumentAcceptanceCertificateAction::run($acceptance);
             },
-            'document-acceptance-certificate-' . $acceptance->getKey() . '-' . now()->format('Y-m-d-His') . '.json',
+            'document-acceptance-certificate-' . $this->modelKey($acceptance) . '-' . now()->format('Y-m-d-His') . '.json',
             ['Content-Type' => 'application/json'],
         );
+    }
+
+    private function modelKey(Model $model): int
+    {
+        $key = $model->getKey();
+
+        return is_int($key) ? $key : 0;
+    }
+
+    private function positiveInteger(mixed $value): ?int
+    {
+        if (is_int($value)) {
+            return $value > 0 ? $value : null;
+        }
+
+        if (! is_string($value) || ! ctype_digit($value)) {
+            return null;
+        }
+
+        $integerValue = (int) $value;
+
+        return $integerValue > 0 ? $integerValue : null;
     }
 }

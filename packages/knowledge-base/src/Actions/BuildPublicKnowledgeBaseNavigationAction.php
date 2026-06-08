@@ -40,7 +40,7 @@ final class BuildPublicKnowledgeBaseNavigationAction
 
         /** @var Collection<int|string, Collection<int, KnowledgeBaseCollection>> $collectionsByParent */
         $collectionsByParent = $collections->groupBy(
-            static fn (KnowledgeBaseCollection $collection): int|string => $collection->parent_id ?? 0,
+            static fn (KnowledgeBaseCollection $collection): int => $collection->parent_id ?? 0,
         );
 
         return $this->navigationItems($collectionsByParent, 0);
@@ -64,7 +64,7 @@ final class BuildPublicKnowledgeBaseNavigationAction
     private function navigationItem(Collection $collectionsByParent, KnowledgeBaseCollection $collection): ?PublicKnowledgeBaseNavigationItemData
     {
         $articles = $this->articles($collection);
-        $children = $this->navigationItems($collectionsByParent, (int) $collection->getKey())->all();
+        $children = $this->listFromCollection($this->navigationItems($collectionsByParent, $this->integerKey($collection)));
 
         if ($articles === [] && $children === []) {
             return null;
@@ -93,5 +93,27 @@ final class BuildPublicKnowledgeBaseNavigationAction
             ])
             ->values()
             ->all());
+    }
+
+    private function integerKey(KnowledgeBaseCollection $collection): int
+    {
+        $key = $collection->getKey();
+
+        return is_numeric($key) ? (int) $key : 0;
+    }
+
+    /**
+     * @param  Collection<int, PublicKnowledgeBaseNavigationItemData>  $items
+     * @return list<PublicKnowledgeBaseNavigationItemData>
+     */
+    private function listFromCollection(Collection $items): array
+    {
+        $list = [];
+
+        foreach ($items->values() as $item) {
+            $list[] = $item;
+        }
+
+        return $list;
     }
 }

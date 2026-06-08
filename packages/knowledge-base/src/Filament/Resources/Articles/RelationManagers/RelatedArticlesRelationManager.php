@@ -18,6 +18,7 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Override;
+use RuntimeException;
 
 final class RelatedArticlesRelationManager extends RelationManager
 {
@@ -117,12 +118,22 @@ final class RelatedArticlesRelationManager extends RelationManager
     private function articleOptions(): array
     {
         $ownerRecord = $this->ownerArticle();
+        $options = [];
 
-        return KnowledgeBaseArticle::query()
+        $articles = KnowledgeBaseArticle::query()
             ->whereKeyNot($ownerRecord->getKey())
             ->orderBy('title')
-            ->pluck('title', 'id')
-            ->all();
+            ->get(['id', 'title']);
+
+        foreach ($articles as $article) {
+            $articleId = $this->optionalInteger($article->getKey());
+
+            if ($articleId !== null) {
+                $options[$articleId] = $article->title;
+            }
+        }
+
+        return $options;
     }
 
     /**
@@ -145,11 +156,11 @@ final class RelatedArticlesRelationManager extends RelationManager
     private function relateArticle(array $data, ?KnowledgeBaseRelatedArticle $existingRelation = null): KnowledgeBaseRelatedArticle
     {
         $ownerRecord = $this->ownerArticle();
-        $relatedArticle = KnowledgeBaseArticle::query()->findOrFail((int) $data['related_article_id']);
-        $relationType = KnowledgeBaseRelatedArticleType::from((string) $data['relation_type']);
-        $sortOrder = max(0, (int) ($data['sort_order'] ?? 0));
+        $relatedArticle = KnowledgeBaseArticle::query()->findOrFail($this->requiredInteger($data['related_article_id'] ?? null, 'related_article_id'));
+        $relationType = KnowledgeBaseRelatedArticleType::from($this->requiredString($data['relation_type'] ?? null, 'relation_type'));
+        $sortOrder = max(0, $this->optionalInteger($data['sort_order'] ?? null) ?? 0);
 
-        if ($existingRelation instanceof KnowledgeBaseRelatedArticle && (int) $existingRelation->related_article_id !== (int) $relatedArticle->getKey()) {
+        if ($existingRelation instanceof KnowledgeBaseRelatedArticle && $existingRelation->related_article_id !== $this->requiredInteger($relatedArticle->getKey(), 'related_article_id')) {
             $existingRelation->delete();
         }
 
@@ -162,6 +173,27 @@ final class RelatedArticlesRelationManager extends RelationManager
 
         /** @var KnowledgeBaseArticle $ownerRecord */
         return $ownerRecord;
+    }
+
+    private function requiredInteger(mixed $value, string $field): int
+    {
+        $integer = $this->optionalInteger($value);
+
+        throw_if($integer === null, RuntimeException::class, sprintf('Expected [%s] to be an integer.', $field));
+
+        return $integer;
+    }
+
+    private function optionalInteger(mixed $value): ?int
+    {
+        return is_numeric($value) ? (int) $value : null;
+    }
+
+    private function requiredString(mixed $value, string $field): string
+    {
+        throw_unless(is_string($value) && $value !== '', RuntimeException::class, sprintf('Expected [%s] to be a string.', $field));
+
+        return $value;
     }
 
     private function formatRelationType(KnowledgeBaseRelatedArticleType|string|null $state): string

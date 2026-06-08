@@ -8,6 +8,9 @@ use Capell\GA4Reports\Data\GA4ReportsDigestData;
 use Capell\GA4Reports\Data\GA4ReportsWindowData;
 use Lorisleiva\Actions\Concerns\AsAction;
 
+/**
+ * @method static GA4ReportsDigestData|null run(?GA4ReportsWindowData $window = null, int $topPageLimit = 10)
+ */
 final class BuildGA4ReportsDigestAction
 {
     use AsAction;

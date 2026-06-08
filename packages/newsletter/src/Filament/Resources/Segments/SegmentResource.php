@@ -127,12 +127,16 @@ class SegmentResource extends Resource
     }
 
     /**
-     * @return array<array-key, mixed>
+     * @return array<string, string>
      */
     private static function segmentTypeOptions(): array
     {
-        return collect(SegmentType::cases())
-            ->mapWithKeys(static fn (SegmentType $type): array => [$type->value => $type->getLabel()])
-            ->all();
+        $options = [];
+
+        foreach (SegmentType::cases() as $type) {
+            $options[$type->value] = $type->getLabel();
+        }
+
+        return $options;
     }
 }

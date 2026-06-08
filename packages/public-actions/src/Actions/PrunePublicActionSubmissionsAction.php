@@ -11,6 +11,9 @@ use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Builder;
 use Lorisleiva\Actions\Concerns\AsAction;
 
+/**
+ * @method static PublicActionRetentionPruneResultData run(int $retentionDays, bool $dryRun = false)
+ */
 final class PrunePublicActionSubmissionsAction
 {
     use AsAction;
@@ -25,7 +28,7 @@ final class PrunePublicActionSubmissionsAction
                 $builder->where('submitted_at', '<', $cutoff);
             })
             ->count();
-        $deletedSubmissions = $dryRun ? 0 : (int) (clone $submissions)->delete();
+        $deletedSubmissions = $dryRun ? 0 : $this->deleteMatchedSubmissions($submissions);
 
         return new PublicActionRetentionPruneResultData(
             retentionDays: $retentionDays,
@@ -45,5 +48,15 @@ final class PrunePublicActionSubmissionsAction
         return PublicActionSubmission::query()
             ->whereNotNull('submitted_at')
             ->where('submitted_at', '<', $cutoff);
+    }
+
+    /**
+     * @param  Builder<PublicActionSubmission>  $submissions
+     */
+    private function deleteMatchedSubmissions(Builder $submissions): int
+    {
+        $deleted = (clone $submissions)->delete();
+
+        return is_numeric($deleted) ? (int) $deleted : 0;
     }
 }

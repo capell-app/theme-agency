@@ -47,6 +47,19 @@ require_once dirname(__DIR__, 2) . '/KnowledgeBaseTestCase.php';
 
 uses(KnowledgeBaseTestCase::class);
 
+/**
+ * @param  array<string, mixed>  $array
+ * @return array<array-key, mixed>
+ */
+function knowledgeBaseManifestArray(array $array, string $key): array
+{
+    $value = $array[$key] ?? null;
+
+    throw_unless(is_array($value), RuntimeException::class, sprintf('Expected manifest [%s] to be an array.', $key));
+
+    return $value;
+}
+
 it('exposes translated collection and article admin resources', function (): void {
     $collectionPages = KnowledgeBaseCollectionResource::getPages();
     $articlePages = KnowledgeBaseArticleResource::getPages();
@@ -78,15 +91,36 @@ it('exposes translated collection and article admin resources', function (): voi
 });
 
 it('declares admin providers, resources, and owned tables in the manifest', function (): void {
-    $manifest = json_decode(
+    $decodedManifest = json_decode(
         File::get(__DIR__ . '/../../../capell.json'),
         associative: true,
         flags: JSON_THROW_ON_ERROR,
     );
+    throw_unless(is_array($decodedManifest), RuntimeException::class, 'Expected knowledge base manifest to decode to an array.');
 
-    expect($manifest['dependencies']['requires'])->toContain('capell-app/admin', 'capell-app/core', 'capell-app/frontend')
-        ->and($manifest['providers']['admin'])->toContain(AdminServiceProvider::class)
-        ->and($manifest['database']['requiredTables'])->toBe([
+    $manifest = [];
+
+    foreach ($decodedManifest as $key => $value) {
+        throw_unless(is_string($key), RuntimeException::class, 'Expected knowledge base manifest to use string keys.');
+
+        $manifest[$key] = $value;
+    }
+
+    $dependencies = knowledgeBaseManifestArray($manifest, 'dependencies');
+    $providers = knowledgeBaseManifestArray($manifest, 'providers');
+    $database = knowledgeBaseManifestArray($manifest, 'database');
+    $actions = knowledgeBaseManifestArray($manifest, 'actions');
+    $commands = knowledgeBaseManifestArray($manifest, 'commands');
+    $performance = knowledgeBaseManifestArray($manifest, 'performance');
+    $cacheSafety = knowledgeBaseManifestArray($performance, 'cacheSafety');
+    $invalidationSources = $cacheSafety['invalidationSources'] ?? [];
+    $contributionTraceability = knowledgeBaseManifestArray($manifest, 'contributionTraceability');
+
+    throw_unless(is_array($invalidationSources), RuntimeException::class, 'Expected manifest cache invalidation sources to be an array.');
+
+    expect($dependencies['requires'] ?? [])->toContain('capell-app/admin', 'capell-app/core', 'capell-app/frontend')
+        ->and($providers['admin'] ?? [])->toContain(AdminServiceProvider::class)
+        ->and($database['requiredTables'] ?? [])->toBe([
             'knowledge_base_collections',
             'knowledge_base_articles',
             'knowledge_base_article_versions',
@@ -116,15 +150,15 @@ it('declares admin providers, resources, and owned tables in the manifest', func
             'class' => KnowledgeBaseFrontendRoutesContribution::class,
         ])
         ->and(class_implements(KnowledgeBaseFrontendRoutesContribution::class))->toContain(RegistersExtensionRoute::class)
-        ->and($manifest['actions']['buildKnowledgeBaseSearchDocuments'])
+        ->and($actions['buildKnowledgeBaseSearchDocuments'] ?? null)
         ->toBe(BuildKnowledgeBaseSearchDocumentsAction::class)
-        ->and($manifest['actions']['buildAiReadableKnowledgeBaseOutput'])
+        ->and($actions['buildAiReadableKnowledgeBaseOutput'] ?? null)
         ->toBe(BuildAiReadableKnowledgeBaseOutputAction::class)
-        ->and($manifest['actions']['buildKnowledgeBaseArticleSchema'])
+        ->and($actions['buildKnowledgeBaseArticleSchema'] ?? null)
         ->toBe(BuildKnowledgeBaseArticleSchemaAction::class)
-        ->and($manifest['commands']['demo'])->toBe('capell:knowledge-base-demo')
-        ->and($manifest['performance']['cacheSafety']['variesBy'])->toBe([])
-        ->and(array_column($manifest['performance']['cacheSafety']['invalidationSources'], 'model'))->toBe([
+        ->and($commands['demo'] ?? null)->toBe('capell:knowledge-base-demo')
+        ->and($cacheSafety['variesBy'] ?? null)->toBe([])
+        ->and(array_column($invalidationSources, 'model'))->toBe([
             KnowledgeBaseCollection::class,
             KnowledgeBaseArticle::class,
             KnowledgeBaseArticleVersion::class,
@@ -136,13 +170,13 @@ it('declares admin providers, resources, and owned tables in the manifest', func
             'knowledge-base-search-weighting',
             'knowledge-base-ai-output',
         )
-        ->and($manifest['contributionTraceability']['deferredContributions'])->not->toContain(
+        ->and($contributionTraceability['deferredContributions'] ?? [])->not->toContain(
             'ai-discovery-output',
             'migration',
             'model',
             'search-index',
         )
-        ->and($manifest['contributionTraceability']['deferredContributions'])->toBe([]);
+        ->and($contributionTraceability['deferredContributions'] ?? [])->toBe([]);
 });
 
 it('builds knowledge base resource forms and tables with configured controls', function (): void {

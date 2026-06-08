@@ -131,8 +131,17 @@ final class LoginAuditsRelationManager extends RelationManager
             function () use ($ownerRecord): void {
                 echo BuildLoginAuditsCsvAction::run($ownerRecord);
             },
-            'login-audits-' . $ownerRecord->getKey() . '-' . now()->format('Y-m-d-His') . '.csv',
+            'login-audits-' . $this->ownerRecordKey($ownerRecord) . '-' . now()->format('Y-m-d-His') . '.csv',
             ['Content-Type' => 'text/csv'],
         );
+    }
+
+    private function ownerRecordKey(Model $ownerRecord): string
+    {
+        $key = $ownerRecord->getKey();
+
+        return is_string($key) || is_int($key) || is_float($key)
+            ? (string) $key
+            : 'unknown';
     }
 }

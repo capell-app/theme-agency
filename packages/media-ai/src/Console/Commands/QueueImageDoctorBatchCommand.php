@@ -24,7 +24,7 @@ final class QueueImageDoctorBatchCommand extends Command
 
     public function handle(): int
     {
-        $operation = (string) $this->option('operation');
+        $operation = $this->stringOption('operation') ?? 'improve';
 
         if (! in_array($operation, ImageDoctorRequest::OPERATIONS, true)) {
             throw new InvalidArgumentException(sprintf('Unsupported Media AI operation [%s].', $operation));
@@ -32,7 +32,7 @@ final class QueueImageDoctorBatchCommand extends Command
 
         $queued = QueueBatchImageDoctorRequestsAction::run(
             operation: $operation,
-            instructions: (string) $this->option('instructions'),
+            instructions: $this->stringOption('instructions') ?? '',
             locale: $this->stringOption('locale'),
             limit: $this->integerOption('limit'),
             missingAltOnly: $this->option('all-images') !== true,
@@ -40,9 +40,19 @@ final class QueueImageDoctorBatchCommand extends Command
             model: $this->stringOption('model'),
         );
 
-        $this->components->info(__('capell-media-ai::media-ai.batch_queued', ['count' => $queued]));
+        $this->components->info($this->translation('capell-media-ai::media-ai.batch_queued', ['count' => $queued]));
 
         return self::SUCCESS;
+    }
+
+    /**
+     * @param  array<string, bool|float|int|string|null>  $replace
+     */
+    private function translation(string $key, array $replace = []): string
+    {
+        $value = __($key, $replace);
+
+        return is_string($value) ? $value : $key;
     }
 
     private function stringOption(string $name): ?string

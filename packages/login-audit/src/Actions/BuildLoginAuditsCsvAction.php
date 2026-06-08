@@ -9,6 +9,9 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Lorisleiva\Actions\Concerns\AsAction;
 
+/**
+ * @method static string run(?Model $authenticatable = null)
+ */
 final class BuildLoginAuditsCsvAction
 {
     use AsAction;
@@ -44,14 +47,14 @@ final class BuildLoginAuditsCsvAction
             ->cursor()
             ->each(static function (LoginAudit $loginAudit) use ($stream): void {
                 fputcsv($stream, [
-                    $loginAudit->getKey(),
-                    $loginAudit->authenticatable_type,
-                    $loginAudit->authenticatable_id,
+                    self::csvValue($loginAudit->getKey()),
+                    self::csvValue($loginAudit->authenticatable_type),
+                    self::csvValue($loginAudit->authenticatable_id),
                     self::authenticatableName($loginAudit),
                     $loginAudit->login_successful ? '1' : '0',
-                    $loginAudit->ip_address,
-                    $loginAudit->user_agent,
-                    $loginAudit->getAttribute('device_name'),
+                    self::csvValue($loginAudit->ip_address),
+                    self::csvValue($loginAudit->user_agent),
+                    self::csvValue($loginAudit->getAttribute('device_name')),
                     $loginAudit->getAttribute('is_trusted') ? '1' : '0',
                     $loginAudit->login_at?->toISOString(),
                     $loginAudit->last_activity_at?->toISOString(),
@@ -59,7 +62,7 @@ final class BuildLoginAuditsCsvAction
                     $loginAudit->logout_at?->toISOString(),
                     $loginAudit->cleared_by_user ? '1' : '0',
                     $loginAudit->getAttribute('is_suspicious') ? '1' : '0',
-                    $loginAudit->getAttribute('suspicious_reason'),
+                    self::csvValue($loginAudit->getAttribute('suspicious_reason')),
                 ]);
             });
 
@@ -84,16 +87,25 @@ final class BuildLoginAuditsCsvAction
         return is_scalar($name) ? (string) $name : '';
     }
 
+    private static function csvValue(mixed $value): bool|float|int|string|null
+    {
+        return is_scalar($value) || $value === null ? $value : null;
+    }
+
     /**
      * @return Builder<LoginAudit>
      */
     private function query(?Model $authenticatable): Builder
     {
-        return LoginAudit::query()
-            ->with(['authenticatable'])
-            ->when($authenticatable instanceof Model, static fn (Builder $query): Builder => $query
+        $query = LoginAudit::query()->with(['authenticatable']);
+
+        if ($authenticatable instanceof Model) {
+            $query
                 ->where('authenticatable_type', $authenticatable->getMorphClass())
-                ->where('authenticatable_id', $authenticatable->getKey()))
+                ->where('authenticatable_id', $authenticatable->getKey());
+        }
+
+        return $query
             ->latest('login_at')
             ->orderByDesc('id');
     }

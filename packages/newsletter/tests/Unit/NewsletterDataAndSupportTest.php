@@ -206,18 +206,14 @@ it('aggregates newsletter audiences from registered providers in registration or
     {
         public function audiencesForSite(int $siteId): Collection
         {
-            return collect([
-                ['site_id' => $siteId, 'name' => 'Primary'],
-            ]);
+            return collect()->push(['site_id' => $siteId, 'name' => 'Primary']);
         }
     });
     $registry->register(new class implements NewsletterAudienceProvider
     {
         public function audiencesForSite(int $siteId): Collection
         {
-            return collect([
-                ['site_id' => $siteId, 'name' => 'Secondary'],
-            ]);
+            return collect()->push(['site_id' => $siteId, 'name' => 'Secondary']);
         }
     });
 

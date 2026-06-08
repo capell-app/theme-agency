@@ -10,6 +10,9 @@ use Capell\MediaAI\Jobs\RunImageDoctorJob;
 use Illuminate\Database\Eloquent\Builder;
 use Lorisleiva\Actions\Concerns\AsAction;
 
+/**
+ * @method static int run(string $operation = 'improve', string $instructions = '', ?string $locale = null, ?int $limit = null, bool $missingAltOnly = true, ?int $budgetCents = null, ?string $model = null, ?string $notifiableClass = null, int|string|null $notifiableKey = null)
+ */
 final class QueueBatchImageDoctorRequestsAction
 {
     use AsAction;
@@ -49,7 +52,7 @@ final class QueueBatchImageDoctorRequestsAction
                 $notifiableClass,
                 $notifiableKey,
             ): void {
-                dispatch(new RunImageDoctorJob(mediaId: (int) $media->getKey(), operation: $operation, instructions: $instructions, locale: $locale, budgetCents: $budgetCents, model: $model, notifiableClass: $notifiableClass, notifiableKey: $notifiableKey));
+                dispatch(new RunImageDoctorJob(mediaId: $this->mediaId($media), operation: $operation, instructions: $instructions, locale: $locale, budgetCents: $budgetCents, model: $model, notifiableClass: $notifiableClass, notifiableKey: $notifiableKey));
 
                 $queued++;
             });
@@ -89,5 +92,16 @@ final class QueueBatchImageDoctorRequestsAction
         $limit = config('capell-media-ai.image_doctor.batch.limit', 50);
 
         return is_numeric($limit) ? max(1, (int) $limit) : 50;
+    }
+
+    private function mediaId(Media $media): int
+    {
+        $key = $media->getKey();
+
+        if (is_int($key)) {
+            return $key;
+        }
+
+        return is_string($key) && ctype_digit($key) ? (int) $key : 0;
     }
 }

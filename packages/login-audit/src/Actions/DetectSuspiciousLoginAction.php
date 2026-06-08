@@ -8,6 +8,9 @@ use Capell\LoginAudit\Models\LoginAudit;
 use Illuminate\Database\Eloquent\Builder;
 use Lorisleiva\Actions\Concerns\AsAction;
 
+/**
+ * @method static LoginAudit run(LoginAudit $loginAudit)
+ */
 final class DetectSuspiciousLoginAction
 {
     use AsAction;
@@ -46,8 +49,8 @@ final class DetectSuspiciousLoginAction
             return [];
         }
 
-        $threshold = max(2, (int) config('login-audit.suspicious.failed_login_threshold', 5));
-        $windowMinutes = max(1, (int) config('login-audit.suspicious.failed_login_window_minutes', 60));
+        $threshold = max(2, $this->integerConfig('login-audit.suspicious.failed_login_threshold', 5));
+        $windowMinutes = max(1, $this->integerConfig('login-audit.suspicious.failed_login_window_minutes', 60));
         $failedAttempts = $this->actorQuery($loginAudit)
             ->where('login_successful', false)
             ->where('login_at', '>=', now()->subMinutes($windowMinutes))
@@ -76,7 +79,7 @@ final class DetectSuspiciousLoginAction
             return [];
         }
 
-        $windowHours = max(1, (int) config('login-audit.suspicious.failed_device_window_hours', 24));
+        $windowHours = max(1, $this->integerConfig('login-audit.suspicious.failed_device_window_hours', 24));
         $hadRecentFailedAttempt = $this->actorQuery($loginAudit)
             ->where('login_successful', false)
             ->where('device_id', $deviceId)
@@ -106,7 +109,7 @@ final class DetectSuspiciousLoginAction
             return [];
         }
 
-        $windowMinutes = max(1, (int) config('login-audit.suspicious.location_window_minutes', 60));
+        $windowMinutes = max(1, $this->integerConfig('login-audit.suspicious.location_window_minutes', 60));
         $countries = $this->actorQuery($loginAudit)
             ->where('login_successful', true)
             ->where('login_at', '>=', now()->subMinutes($windowMinutes))
@@ -160,5 +163,22 @@ final class DetectSuspiciousLoginAction
         return LoginAudit::query()
             ->where('authenticatable_type', $loginAudit->authenticatable_type)
             ->where('authenticatable_id', $loginAudit->authenticatable_id);
+    }
+
+    private function integerConfig(string $key, int $fallback): int
+    {
+        $value = config($key, $fallback);
+
+        if (is_int($value)) {
+            return $value;
+        }
+
+        if (is_float($value)) {
+            return (int) $value;
+        }
+
+        return is_string($value) && is_numeric($value)
+            ? (int) $value
+            : $fallback;
     }
 }

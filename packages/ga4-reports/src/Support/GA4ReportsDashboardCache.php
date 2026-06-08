@@ -10,8 +10,8 @@ use Capell\GA4Reports\Data\GA4ReportsTrendPointData;
 use Capell\GA4Reports\Data\GA4ReportsWindowData;
 use Closure;
 use DateTimeInterface;
-use Illuminate\Cache\Repository;
 use Illuminate\Cache\TaggedCache;
+use Illuminate\Contracts\Cache\Repository;
 use Illuminate\Support\Facades\Cache;
 use Throwable;
 
@@ -24,7 +24,9 @@ final class GA4ReportsDashboardCache
      */
     public static function rememberOverview(GA4ReportsWindowData $window, Closure $callback): GA4ReportsOverviewData
     {
-        return self::store()->remember(self::key('overview', $window), self::expiresAt(), $callback);
+        $overview = self::store()->remember(self::key('overview', $window), self::expiresAt(), $callback);
+
+        return $overview instanceof GA4ReportsOverviewData ? $overview : $callback();
     }
 
     /**
@@ -33,7 +35,9 @@ final class GA4ReportsDashboardCache
      */
     public static function rememberTrend(GA4ReportsWindowData $window, Closure $callback): array
     {
-        return self::store()->remember(self::key('trend', $window), self::expiresAt(), $callback);
+        $trend = self::store()->remember(self::key('trend', $window), self::expiresAt(), $callback);
+
+        return self::trendPoints($trend) ?? $callback();
     }
 
     /**
@@ -42,7 +46,9 @@ final class GA4ReportsDashboardCache
      */
     public static function rememberTopPages(GA4ReportsWindowData $window, int $limit, Closure $callback): array
     {
-        return self::store()->remember(self::key('top-pages', $window, ['limit' => $limit]), self::expiresAt(), $callback);
+        $topPages = self::store()->remember(self::key('top-pages', $window, ['limit' => $limit]), self::expiresAt(), $callback);
+
+        return self::topPages($topPages) ?? $callback();
     }
 
     public static function flushForWindow(GA4ReportsWindowData $window): void
@@ -76,9 +82,54 @@ final class GA4ReportsDashboardCache
 
     private static function expiresAt(): DateTimeInterface
     {
-        $ttl = max(1, (int) config('capell-ga4-reports.dashboard_cache_ttl_seconds', 300));
+        $configuredTtl = config('capell-ga4-reports.dashboard_cache_ttl_seconds', 300);
+        $ttl = is_numeric($configuredTtl) ? max(1, (int) $configuredTtl) : 300;
 
         return now()->addSeconds($ttl);
+    }
+
+    /**
+     * @return list<GA4ReportsTrendPointData>|null
+     */
+    private static function trendPoints(mixed $value): ?array
+    {
+        if (! is_array($value)) {
+            return null;
+        }
+
+        $points = [];
+
+        foreach ($value as $point) {
+            if (! $point instanceof GA4ReportsTrendPointData) {
+                return null;
+            }
+
+            $points[] = $point;
+        }
+
+        return $points;
+    }
+
+    /**
+     * @return list<GA4ReportsTopPageData>|null
+     */
+    private static function topPages(mixed $value): ?array
+    {
+        if (! is_array($value)) {
+            return null;
+        }
+
+        $pages = [];
+
+        foreach ($value as $page) {
+            if (! $page instanceof GA4ReportsTopPageData) {
+                return null;
+            }
+
+            $pages[] = $page;
+        }
+
+        return $pages;
     }
 
     /**

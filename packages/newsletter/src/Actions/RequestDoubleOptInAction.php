@@ -14,6 +14,9 @@ use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Str;
 use Lorisleiva\Actions\Concerns\AsAction;
 
+/**
+ * @method static PublicToken run(Subscriber $subscriber, ?ConsentEvidenceData $evidence = null)
+ */
 class RequestDoubleOptInAction
 {
     use AsAction;

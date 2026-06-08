@@ -26,6 +26,7 @@ use Capell\PublishingStudio\Providers\PublishingStudioServiceProvider;
 use Capell\PublishingStudio\WorkspaceRegistry;
 use Capell\Tests\Fixtures\Models\User;
 use Illuminate\Contracts\Auth\Authenticatable;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Database\QueryException;
 use Illuminate\Database\Schema\Blueprint;
@@ -72,6 +73,17 @@ function editableRegionCachePathFromUrl(string $url): string
     }
 
     return '/' . ltrim($path, '/');
+}
+
+function editableRegionModelKey(Model $model): int
+{
+    $key = $model->getKey();
+
+    if (is_int($key)) {
+        return $key;
+    }
+
+    return is_string($key) && ctype_digit($key) ? (int) $key : 0;
 }
 
 /**
@@ -125,7 +137,7 @@ function editableRegionPayload(Translation $translation, string $field = 'title'
 
     return new EditableRegionPayloadData(
         model: Translation::class,
-        recordKey: (int) $translation->getKey(),
+        recordKey: editableRegionModelKey($translation),
         field: $field,
         label: $field === 'content' ? 'Page content' : ($field === 'title' ? 'Page title' : 'Page description'),
         type: match ($field) {
@@ -137,9 +149,9 @@ function editableRegionPayload(Translation $translation, string $field = 'title'
             ? config('capell-frontend-authoring.selectors.page_content', '#main .content-component:first-of-type')
             : config('capell-frontend-authoring.selectors.page_title', '#main h1:first-of-type'),
         currentUrl: $pageUrl->full_url,
-        pageUrlId: (int) $pageUrl->getKey(),
-        siteId: (int) $pageUrl->site_id,
-        languageId: (int) $pageUrl->language_id,
+        pageUrlId: editableRegionModelKey($pageUrl),
+        siteId: $pageUrl->site_id,
+        languageId: $pageUrl->language_id,
         regionKey: match ($field) {
             'title' => 'page.title',
             'content' => 'page.content',
@@ -603,15 +615,15 @@ it('renders package media editor regions through the registered media surface', 
     app()->bind('frontend-authoring-test.media-region', fn (): callable => fn (PageUrl $resolvedPageUrl): array => [
         new EditableRegionPayloadData(
             model: Translation::class,
-            recordKey: (int) $translation->getKey(),
+            recordKey: editableRegionModelKey($translation),
             field: 'meta.hero_image',
             label: 'Hero image',
             type: EditableRegionInputType::Text,
             selector: '[data-edit-hero-image]',
             currentUrl: $resolvedPageUrl->full_url,
-            pageUrlId: (int) $resolvedPageUrl->getKey(),
-            siteId: (int) $resolvedPageUrl->site_id,
-            languageId: (int) $resolvedPageUrl->language_id,
+            pageUrlId: editableRegionModelKey($resolvedPageUrl),
+            siteId: $resolvedPageUrl->site_id,
+            languageId: $resolvedPageUrl->language_id,
             regionKey: 'test.hero-image',
             surface: EditableRegionSurface::Media,
             target: 'hero-image',
@@ -624,15 +636,15 @@ it('renders package media editor regions through the registered media surface', 
     $encodedPayload = resolve(EditableRegionSigner::class)->encode(
         new EditableRegionPayloadData(
             model: Translation::class,
-            recordKey: (int) $translation->getKey(),
+            recordKey: editableRegionModelKey($translation),
             field: 'meta.hero_image',
             label: 'Hero image',
             type: EditableRegionInputType::Text,
             selector: '[data-edit-hero-image]',
             currentUrl: $pageUrl->full_url,
-            pageUrlId: (int) $pageUrl->getKey(),
-            siteId: (int) $pageUrl->site_id,
-            languageId: (int) $pageUrl->language_id,
+            pageUrlId: editableRegionModelKey($pageUrl),
+            siteId: $pageUrl->site_id,
+            languageId: $pageUrl->language_id,
             regionKey: 'test.hero-image',
             surface: EditableRegionSurface::Media,
             target: 'hero-image',

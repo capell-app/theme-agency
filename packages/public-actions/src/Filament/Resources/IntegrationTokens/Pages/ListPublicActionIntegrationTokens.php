@@ -73,11 +73,11 @@ final class ListPublicActionIntegrationTokens extends ListRecords
                         name: (string) $data['name'],
                         provider: PublicActionIntegrationProvider::from((string) $data['provider']),
                         siteId: $siteId,
-                        abilities: (new Collection($data['abilities'] ?? []))
+                        abilities: array_values((new Collection($data['abilities'] ?? []))
                             ->filter(fn (mixed $ability): bool => is_string($ability))
                             ->map(fn (string $ability): PublicActionIntegrationTokenAbility => PublicActionIntegrationTokenAbility::from($ability))
                             ->values()
-                            ->all(),
+                            ->all()),
                         actor: auth()->user(),
                     );
 

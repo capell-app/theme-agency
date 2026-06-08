@@ -107,6 +107,7 @@ final class BitbucketProvider implements GitProviderContract
             ])
             ->throw()
             ->json();
+        $response = $this->responseMap($response);
 
         return $this->pullRequestDataFromResponse($response);
     }
@@ -120,10 +121,11 @@ final class BitbucketProvider implements GitProviderContract
             ])
             ->throw()
             ->json();
+        $response = $this->responseMap($response);
 
-        $pullRequests = $response['values'] ?? [];
+        $pullRequests = $this->responseList($response['values'] ?? []);
 
-        if (! is_array($pullRequests) || ! isset($pullRequests[0]) || ! is_array($pullRequests[0])) {
+        if (! isset($pullRequests[0])) {
             return null;
         }
 
@@ -145,6 +147,7 @@ final class BitbucketProvider implements GitProviderContract
             ->get(sprintf('/repositories/%s/%s/pullrequests/%s', $conn->repo_owner, $conn->repo_name, $pullRequestId))
             ->throw()
             ->json();
+        $response = $this->responseMap($response);
 
         return $this->pullRequestDataFromResponse($response);
     }
@@ -163,17 +166,18 @@ final class BitbucketProvider implements GitProviderContract
             ->get(sprintf('/repositories/%s/%s/commit/%s/statuses', $conn->repo_owner, $conn->repo_name, $commitSha))
             ->throw()
             ->json();
+        $response = $this->responseMap($response);
 
-        $statuses = $response['values'] ?? [];
+        $statuses = $this->responseList($response['values'] ?? []);
 
         foreach ($statuses as $status) {
-            if ($status['state'] === 'FAILED') {
+            if (($status['state'] ?? null) === 'FAILED') {
                 return 'failure';
             }
         }
 
         foreach ($statuses as $status) {
-            if ($status['state'] === 'INPROGRESS') {
+            if (($status['state'] ?? null) === 'INPROGRESS') {
                 return 'pending';
             }
         }
@@ -205,5 +209,45 @@ final class BitbucketProvider implements GitProviderContract
             headSha: $response['source']['commit']['hash'],
             merged: $response['state'] === 'MERGED',
         );
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function responseMap(mixed $response): array
+    {
+        if (! is_array($response)) {
+            return [];
+        }
+
+        $map = [];
+
+        foreach ($response as $key => $value) {
+            if (is_string($key)) {
+                $map[$key] = $value;
+            }
+        }
+
+        return $map;
+    }
+
+    /**
+     * @return list<array<string, mixed>>
+     */
+    private function responseList(mixed $response): array
+    {
+        if (! is_array($response)) {
+            return [];
+        }
+
+        $items = [];
+
+        foreach ($response as $item) {
+            if (is_array($item)) {
+                $items[] = $this->responseMap($item);
+            }
+        }
+
+        return $items;
     }
 }

@@ -14,13 +14,16 @@ use Carbon\CarbonImmutable;
 use Illuminate\Support\Facades\Schema;
 use Lorisleiva\Actions\Concerns\AsAction;
 
+/**
+ * @method static PaymentsHealthReportData run(int $freshnessHours = 48)
+ */
 final class BuildPaymentsHealthReportAction
 {
     use AsAction;
 
     public function handle(int $freshnessHours = 48): PaymentsHealthReportData
     {
-        $freshnessHours = (int) ResolvePaymentSettingAction::run('capell-payments.stripe.webhook_freshness_hours', 'webhook_freshness_hours', $freshnessHours);
+        $freshnessHours = $this->integerSetting('capell-payments.stripe.webhook_freshness_hours', 'webhook_freshness_hours', $freshnessHours);
         $stripeSecretConfigured = $this->configured('capell-payments.stripe.secret_key', 'stripe_secret_key');
         $stripeWebhookSecretConfigured = $this->configured('capell-payments.stripe.webhook_secret', 'stripe_webhook_secret');
         $recordedWebhookEvents = 0;
@@ -109,6 +112,13 @@ final class BuildPaymentsHealthReportAction
         $value = ResolvePaymentSettingAction::run($configKey, $settingsKey);
 
         return is_string($value) && trim($value) !== '';
+    }
+
+    private function integerSetting(string $configKey, string $settingsKey, int $fallback): int
+    {
+        $value = ResolvePaymentSettingAction::run($configKey, $settingsKey, $fallback);
+
+        return is_numeric($value) ? (int) $value : $fallback;
     }
 
     private function webhookEventsTableExists(): bool

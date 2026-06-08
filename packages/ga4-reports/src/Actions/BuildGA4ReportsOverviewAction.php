@@ -11,6 +11,9 @@ use Capell\GA4Reports\Support\GA4ReportsDashboardCache;
 use Illuminate\Database\Eloquent\Builder;
 use Lorisleiva\Actions\Concerns\AsAction;
 
+/**
+ * @method static GA4ReportsOverviewData run(?GA4ReportsWindowData $window = null)
+ */
 final class BuildGA4ReportsOverviewAction
 {
     use AsAction;

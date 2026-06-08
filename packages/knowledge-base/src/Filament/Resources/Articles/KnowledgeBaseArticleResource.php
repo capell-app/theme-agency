@@ -231,18 +231,23 @@ final class KnowledgeBaseArticleResource extends Resource
 
     private static function helpfulFeedbackRate(KnowledgeBaseArticle $record): string
     {
-        $feedbackCount = (int) ($record->getAttribute('feedback_count') ?? 0);
+        $feedbackCount = self::integerAttribute($record->getAttribute('feedback_count'));
 
         if ($feedbackCount === 0) {
             return __('capell-knowledge-base::generic.admin.feedback.no_votes');
         }
 
-        $helpfulFeedbackCount = (int) ($record->getAttribute('helpful_feedback_count') ?? 0);
+        $helpfulFeedbackCount = self::integerAttribute($record->getAttribute('helpful_feedback_count'));
         $percentage = (int) round(($helpfulFeedbackCount / $feedbackCount) * 100);
 
         return __('capell-knowledge-base::generic.admin.feedback.helpful_rate', [
             'percentage' => $percentage,
             'count' => $feedbackCount,
         ]);
+    }
+
+    private static function integerAttribute(mixed $value): int
+    {
+        return is_numeric($value) ? (int) $value : 0;
     }
 }

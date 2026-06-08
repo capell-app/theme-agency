@@ -40,16 +40,16 @@ final class ResolveHeroMediaDataAction
     private function resolveLayers(array $layers, ?HeroMediaData $base = null): HeroMediaData
     {
         $settings = [
-            'enabled' => $base?->enabled ?? false,
-            'autoplay' => $base?->autoplay ?? true,
-            'loop' => $base?->loop ?? true,
-            'muted' => $base?->muted ?? true,
-            'pause_when_out_of_view' => $base?->pauseWhenOutOfView ?? true,
-            'preload' => $base?->preload ?? HeroMediaData::PreloadMetadata,
+            'enabled' => $base->enabled ?? false,
+            'autoplay' => $base->autoplay ?? true,
+            'loop' => $base->loop ?? true,
+            'muted' => $base->muted ?? true,
+            'pause_when_out_of_view' => $base->pauseWhenOutOfView ?? true,
+            'preload' => $base->preload ?? HeroMediaData::PreloadMetadata,
         ];
 
-        $videos = $base?->videos ?? [];
-        $images = $base?->images ?? [];
+        $videos = $base->videos ?? [];
+        $images = $base->images ?? [];
 
         foreach ($layers as $layer) {
             $mode = $this->stringValue($layer['settings']['mode'] ?? null);

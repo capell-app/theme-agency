@@ -115,7 +115,8 @@ final class PasswordPolicyRule implements ValidationRule
             return false;
         }
 
-        $passwordHashes = collect([(string) $this->user->getAttribute('password')]);
+        $currentPasswordHash = $this->user->getAttribute('password');
+        $passwordHashes = collect(is_string($currentPasswordHash) ? [$currentPasswordHash] : []);
 
         if (resolve(RuntimeSchemaState::class)->hasTable('password_policy_password_histories')) {
             $historyHashes = DB::table('password_policy_password_histories')

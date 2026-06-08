@@ -8,6 +8,9 @@ use Capell\Payments\Data\PaymentRefundData;
 use Capell\Payments\Models\PaymentRefund;
 use Lorisleiva\Actions\Concerns\AsAction;
 
+/**
+ * @method static PaymentRefund run(PaymentRefundData $data)
+ */
 final class RecordPaymentRefundAction
 {
     use AsAction;

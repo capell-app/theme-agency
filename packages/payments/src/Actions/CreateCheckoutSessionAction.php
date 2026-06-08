@@ -10,6 +10,9 @@ use Capell\Payments\Data\CreateCheckoutSessionData;
 use Capell\Payments\Models\CheckoutSession;
 use Lorisleiva\Actions\Concerns\AsAction;
 
+/**
+ * @method static CheckoutSession run(CreateCheckoutSessionData $data)
+ */
 final class CreateCheckoutSessionAction
 {
     use AsAction;

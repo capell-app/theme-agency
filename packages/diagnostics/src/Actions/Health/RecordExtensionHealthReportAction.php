@@ -11,6 +11,9 @@ use Carbon\CarbonImmutable;
 use Illuminate\Support\Facades\Schema;
 use Lorisleiva\Actions\Concerns\AsAction;
 
+/**
+ * @method static DiagnosticsHealthSnapshot|null run(ExtensionHealthReportData $report, CarbonImmutable|null $recordedAt = null)
+ */
 final class RecordExtensionHealthReportAction
 {
     use AsAction;
@@ -42,17 +45,23 @@ final class RecordExtensionHealthReportAction
      */
     private function checksPayload(ExtensionHealthReportData $report): array
     {
-        return $report->checks
-            ->toCollection()
-            ->map(static fn (HealthCheckResultData $check): array => [
+        $payload = [];
+
+        foreach ($report->checks as $check) {
+            if (! $check instanceof HealthCheckResultData) {
+                continue;
+            }
+
+            $payload[] = [
                 'package' => $check->packageName,
                 'key' => $check->key,
                 'severity' => $check->severity,
                 'implementation' => $check->implementationStatus->value,
                 'passed' => $check->passed,
                 'message' => $check->message,
-            ])
-            ->values()
-            ->all();
+            ];
+        }
+
+        return $payload;
     }
 }

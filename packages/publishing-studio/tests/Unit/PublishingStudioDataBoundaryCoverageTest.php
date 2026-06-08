@@ -10,6 +10,7 @@ use Capell\PublishingStudio\Data\Dashboard\MergeHistoryEntryData;
 use Capell\PublishingStudio\Data\Dashboard\WorkspaceActivityData;
 use Capell\PublishingStudio\Data\Dashboard\WorkspaceMergeData;
 use Capell\PublishingStudio\Data\Dashboard\WorkspaceMergeHistoryData;
+use Capell\PublishingStudio\Data\PublishReadinessData;
 use Capell\PublishingStudio\Data\ReleaseWorkspaceItemData;
 use Capell\PublishingStudio\Data\ReleaseWorkspaceReadinessData;
 use Capell\PublishingStudio\Data\ReleaseWorkspaceSummaryData;
@@ -61,6 +62,7 @@ it('keeps release workspace summaries and dashboard rows typed', function (): vo
     $item = new ReleaseWorkspaceItemData('draftable', 'Home', Workspace::class, 1, 'updated', 'ready', '/home');
     $summary = new ReleaseWorkspaceSummaryData(10, [$item], 1);
     $readiness = new ReleaseWorkspaceReadinessData(10, false, ['Needs approval'], 1);
+    $publishReadiness = new PublishReadinessData(10, false, 2, [Workspace::class => 2], [], 0, [], null, ['Needs approval'], 1);
     $merge = new WorkspaceMergeData(10, 'Release', 'Ben', 2, 6, '2026-05-20T10:00:00+00:00');
     $historyEntry = new MergeHistoryEntryData(10, 'Release', 'Ben', 2, 6, '2026-05-20T10:00:00+00:00');
     $history = new WorkspaceMergeHistoryData(MergeHistoryEntryData::collect([$historyEntry], DataCollection::class));
@@ -71,6 +73,8 @@ it('keeps release workspace summaries and dashboard rows typed', function (): vo
 
     expect($summary->items[0]->label)->toBe('Home')
         ->and($readiness->blockingIssues)->toBe(['Needs approval'])
+        ->and($publishReadiness->totalRows)->toBe(2)
+        ->and($publishReadiness->blockingIssueCount)->toBe(1)
         ->and($history->entries)->toHaveCount(1)
         ->and($activity->recentMerges)->toHaveCount(1)
         ->and($metadata->displayTimezone)->toBe('Europe/London')

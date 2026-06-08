@@ -33,6 +33,38 @@ beforeEach(function (): void {
     Filament::setCurrentPanel(Filament::getPanel('admin'));
 });
 
+/**
+ * @param  array<string, mixed>  $manifest
+ */
+function documentLifecycleManifestInt(array $manifest, string $key, int $default): int
+{
+    $value = data_get($manifest, $key, $default);
+
+    if (is_int($value)) {
+        return $value;
+    }
+
+    return is_string($value) && ctype_digit($value) ? (int) $value : $default;
+}
+
+/**
+ * @return array<string, mixed>
+ */
+function documentLifecycleStringMap(mixed $value): array
+{
+    throw_unless(is_array($value), RuntimeException::class, 'Expected document lifecycle manifest array.');
+
+    $map = [];
+
+    foreach ($value as $key => $item) {
+        if (is_string($key)) {
+            $map[$key] = $item;
+        }
+    }
+
+    return $map;
+}
+
 it('exposes controlled documents in the admin surface', function (): void {
     test()->actingAsAdmin();
 
@@ -52,8 +84,11 @@ it('exposes controlled documents in the admin surface', function (): void {
         ->assertSee('terms');
 
     $list = livewire(ListDocuments::class)->assertSuccessful();
+    $listPage = $list->instance();
 
-    expect(array_keys($list->instance()->getTable()->getFilters()))->toContain('status');
+    throw_unless($listPage instanceof ListDocuments, RuntimeException::class, 'Expected document list Livewire page instance.');
+
+    expect(array_keys($listPage->getTable()->getFilters()))->toContain('status');
 });
 
 it('keeps the controlled document index within the manifest query budget', function (): void {
@@ -77,13 +112,13 @@ it('keeps the controlled document index within the manifest query budget', funct
 
     livewire(ListDocuments::class)->assertSuccessful();
 
-    $manifest = json_decode(
+    $manifest = documentLifecycleStringMap(json_decode(
         (string) file_get_contents(dirname(__DIR__, 2) . '/capell.json'),
         true,
         flags: JSON_THROW_ON_ERROR,
-    );
+    ));
 
-    expect($queries)->toBeLessThanOrEqual((int) data_get($manifest, 'performance.adminQueryBudget', 40));
+    expect($queries)->toBeLessThanOrEqual(documentLifecycleManifestInt($manifest, 'performance.adminQueryBudget', 40));
 });
 
 it('shows controlled document publication and acceptance audit trails', function (): void {

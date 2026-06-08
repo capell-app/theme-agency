@@ -14,6 +14,9 @@ use Lorisleiva\Actions\Concerns\AsAction;
 use Spatie\IcalendarGenerator\Components\Calendar;
 use Spatie\IcalendarGenerator\Components\Event as CalendarEvent;
 
+/**
+ * @method static string run(Site $site, ?CarbonImmutable $startsAt = null, ?CarbonImmutable $endsAt = null, ?Page $listingPage = null)
+ */
 class BuildCalendarFeedAction
 {
     use AsAction;
@@ -25,12 +28,17 @@ class BuildCalendarFeedAction
 
         $calendar = Calendar::create('Events');
 
-        EventOccurrence::query()
+        $query = EventOccurrence::query()
             ->with(['event.translation', 'event.pageUrl', 'venue'])
             ->whereHas('event', function (Builder $query) use ($site): void {
                 $query->where('site_id', $site->getKey())->where('visibility', 'public')->publishedDate();
-            })
-            ->when($listingPage instanceof Page, fn (Builder $query): Builder => $this->applyListingPageScope($query, $listingPage))
+            });
+
+        if ($listingPage instanceof Page) {
+            $query = $this->applyListingPageScope($query, $listingPage);
+        }
+
+        $query
             ->public()
             ->inRange($startsAt, $endsAt)
             ->ordered()
@@ -82,11 +90,20 @@ class BuildCalendarFeedAction
      */
     private function ids(mixed $value): array
     {
-        return collect(Arr::wrap($value))
-            ->filter(static fn (mixed $id): bool => is_numeric($id))
-            ->map(static fn (mixed $id): int => (int) $id)
-            ->filter(static fn (int $id): bool => $id > 0)
-            ->values()
-            ->all();
+        $ids = [];
+
+        foreach (Arr::wrap($value) as $id) {
+            if (! is_numeric($id)) {
+                continue;
+            }
+
+            $normalizedId = (int) $id;
+
+            if ($normalizedId > 0) {
+                $ids[] = $normalizedId;
+            }
+        }
+
+        return $ids;
     }
 }

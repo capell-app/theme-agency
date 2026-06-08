@@ -15,6 +15,9 @@ use Illuminate\Foundation\Auth\User;
 use Illuminate\Http\JsonResponse;
 use Lorisleiva\Actions\Concerns\AsObject;
 
+/**
+ * @method static JsonResponse run(BeaconRequest $request)
+ */
 final class BuildBeaconResponseAction
 {
     use AsObject;
@@ -24,13 +27,14 @@ final class BuildBeaconResponseAction
         $data = [
             'csrf_token' => csrf_token(),
         ];
+        $postedUrl = $this->postedUrl($request);
 
         // Anonymous/non-same-origin beacons must stay O(1) and never resolve page data.
-        if ($request->user() === null || ! $this->isSameOriginRequest($request) || ! $this->isPostedUrlSameOrigin($request)) {
+        if ($postedUrl === null || $request->user() === null || ! $this->isSameOriginRequest($request) || ! $this->isPostedUrlSameOrigin($request, $postedUrl)) {
             return response()->json($data);
         }
 
-        $resolvedSiteDomain = LoadSiteDomainFromUrlAction::run($request->url, sites: SiteLoader::getSites());
+        $resolvedSiteDomain = LoadSiteDomainFromUrlAction::run($postedUrl, sites: SiteLoader::getSites());
 
         if (! is_array($resolvedSiteDomain)) {
             return response()->json([
@@ -52,7 +56,7 @@ final class BuildBeaconResponseAction
             /** @var User $user */
             $data['user'] = [
                 'id' => $user->getKey(),
-                'name' => (string) data_get($user, 'name'),
+                'name' => $this->userName($user),
                 'admin' => true,
             ];
             $pageUrl = $this->resolveEditablePageUrl($siteDomain, $url);
@@ -72,7 +76,7 @@ final class BuildBeaconResponseAction
 
     private function resolveEditablePageUrl(SiteDomain $siteDomain, string $url): ?PageUrl
     {
-        return PageUrl::withoutEvents(
+        $pageUrl = PageUrl::withoutEvents(
             fn (): ?PageUrl => PageUrl::query()
                 ->with(['pageable.translation', 'translation', 'siteDomain'])
                 ->where('site_id', $siteDomain->site_id)
@@ -81,6 +85,8 @@ final class BuildBeaconResponseAction
                 ->enabled()
                 ->first(),
         );
+
+        return $pageUrl instanceof PageUrl ? $pageUrl : null;
     }
 
     private function isSameOriginRequest(BeaconRequest $request): bool
@@ -107,11 +113,11 @@ final class BuildBeaconResponseAction
             && $this->originsMatch($originScheme, $originHost, is_int($originPort) ? $originPort : null, $request);
     }
 
-    private function isPostedUrlSameOrigin(BeaconRequest $request): bool
+    private function isPostedUrlSameOrigin(BeaconRequest $request, string $postedUrl): bool
     {
-        $scheme = parse_url($request->url, PHP_URL_SCHEME);
-        $host = parse_url($request->url, PHP_URL_HOST);
-        $port = parse_url($request->url, PHP_URL_PORT);
+        $scheme = parse_url($postedUrl, PHP_URL_SCHEME);
+        $host = parse_url($postedUrl, PHP_URL_HOST);
+        $port = parse_url($postedUrl, PHP_URL_PORT);
 
         if (! is_string($scheme) || ! is_string($host) || ! in_array($scheme, ['http', 'https'], true)) {
             return false;
@@ -137,6 +143,20 @@ final class BuildBeaconResponseAction
         }
 
         return $scheme === 'https' ? 443 : 80;
+    }
+
+    private function postedUrl(BeaconRequest $request): ?string
+    {
+        $url = $request->validated('url');
+
+        return is_string($url) && $url !== '' ? $url : null;
+    }
+
+    private function userName(User $user): string
+    {
+        $name = $user->getAttribute('name');
+
+        return is_string($name) ? $name : '';
     }
 
     private function isAdminUser(AuthenticatableContract $user): bool

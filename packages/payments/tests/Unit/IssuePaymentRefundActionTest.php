@@ -24,6 +24,8 @@ it('issues and records a Stripe payment intent refund', function (): void {
         'amount' => 2500,
         'currency' => 'gbp',
     ]);
+    $paymentIntentKey = $paymentIntent->getKey();
+    $paymentIntentId = is_int($paymentIntentKey) || is_string($paymentIntentKey) ? (string) $paymentIntentKey : '';
 
     Http::fake([
         'https://api.stripe.com/v1/refunds' => Http::response([
@@ -36,7 +38,7 @@ it('issues and records a Stripe payment intent refund', function (): void {
             'reason' => 'requested_by_customer',
             'status' => 'succeeded',
             'metadata' => [
-                'capell_payment_intent_id' => (string) $paymentIntent->getKey(),
+                'capell_payment_intent_id' => $paymentIntentId,
             ],
         ]),
     ]);

@@ -13,6 +13,9 @@ use Capell\Newsletter\Models\SyncAttempt;
 use Illuminate\Database\Eloquent\Builder;
 use Lorisleiva\Actions\Concerns\AsAction;
 
+/**
+ * @method static void run(Subscriber $subscriber, string $operation = 'sync_subscriber', bool $dispatchJobs = true)
+ */
 class QueueProviderSyncAction
 {
     use AsAction;

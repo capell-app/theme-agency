@@ -24,6 +24,7 @@ use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Gate;
+use InvalidArgumentException;
 use Override;
 
 class EventOccurrenceResource extends Resource
@@ -176,6 +177,10 @@ class EventOccurrenceResource extends Resource
             return CarbonImmutable::instance($value);
         }
 
-        return CarbonImmutable::parse((string) $value, $timezone);
+        if (is_string($value) || is_int($value) || is_float($value)) {
+            return CarbonImmutable::parse((string) $value, $timezone);
+        }
+
+        throw new InvalidArgumentException('Expected occurrence date action value to be date-like.');
     }
 }

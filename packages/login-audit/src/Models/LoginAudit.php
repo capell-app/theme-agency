@@ -27,6 +27,8 @@ use Rappasoft\LaravelAuthenticationLog\Models\AuthenticationLog;
  * @property array<array-key, mixed>|null $location
  * @property CarbonImmutable|null $last_activity_at
  * @property CarbonImmutable|null $last_seen_at
+ * @property bool $is_suspicious
+ * @property string|null $suspicious_reason
  * @property-read Model $authenticatable
  *
  * @method static Builder<static>|LoginAudit active()

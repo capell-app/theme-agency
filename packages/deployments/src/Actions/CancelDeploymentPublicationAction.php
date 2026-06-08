@@ -10,6 +10,9 @@ use Capell\Deployments\Services\GitProvider\GitProviderFactory;
 use LogicException;
 use Lorisleiva\Actions\Concerns\AsAction;
 
+/**
+ * @method static DeploymentPublication run(DeploymentPublication $publication, DeploymentConnection $connection)
+ */
 final class CancelDeploymentPublicationAction
 {
     use AsAction;

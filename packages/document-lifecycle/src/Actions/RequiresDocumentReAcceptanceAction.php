@@ -46,7 +46,14 @@ final class RequiresDocumentReAcceptanceAction
             return true;
         }
 
-        return (int) $latestAcceptance->document_publication_id !== (int) $latestPublication->getKey()
+        return $latestAcceptance->document_publication_id !== $this->modelKey($latestPublication)
             || $latestAcceptance->document_hash !== $latestPublication->content_hash;
+    }
+
+    private function modelKey(Model $model): int
+    {
+        $key = $model->getKey();
+
+        return is_int($key) ? $key : 0;
     }
 }

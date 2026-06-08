@@ -13,6 +13,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Collection as SupportCollection;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Sleep;
+use RuntimeException;
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -64,7 +65,7 @@ function cleanupPath(string $path): void
 }
 
 /**
- * @param  Collection<array-key, mixed>  $assignedSiteIds
+ * @param  Collection<int, int>  $assignedSiteIds
  */
 function createScopedUserForBuildTailwindBuildStatusActionTest(SupportCollection $assignedSiteIds): Authenticatable
 {
@@ -103,6 +104,17 @@ function createScopedUserForBuildTailwindBuildStatusActionTest(SupportCollection
     $user->assignedSiteIds = $assignedSiteIds;
 
     return $user;
+}
+
+function tailwindBuildStatusSiteId(Site $site): int
+{
+    $siteId = $site->getKey();
+
+    if (! is_int($siteId)) {
+        throw new RuntimeException('Expected diagnostics build status test site to have an integer key.');
+    }
+
+    return $siteId;
 }
 
 // ---------------------------------------------------------------------------
@@ -189,7 +201,7 @@ it('limits rows to assigned sites for non-global users', function (): void {
     $assignedSite = Site::factory()->withTranslations()->create(['name' => 'Assigned Site']);
     Site::factory()->withTranslations()->create(['name' => 'Hidden Site']);
 
-    test()->actingAs(createScopedUserForBuildTailwindBuildStatusActionTest(collect([$assignedSite->getKey()])));
+    test()->actingAs(createScopedUserForBuildTailwindBuildStatusActionTest(collect([tailwindBuildStatusSiteId($assignedSite)])));
 
     $siteNames = BuildTailwindBuildStatusAction::run()
         ->sites

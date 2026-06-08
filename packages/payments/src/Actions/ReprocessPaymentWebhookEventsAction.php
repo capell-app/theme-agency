@@ -11,6 +11,9 @@ use Illuminate\Database\Eloquent\Builder;
 use Lorisleiva\Actions\Concerns\AsAction;
 use Throwable;
 
+/**
+ * @method static ReprocessPaymentWebhookEventsResultData run(?int $webhookEventId = null, int $limit = 100)
+ */
 final class ReprocessPaymentWebhookEventsAction
 {
     use AsAction;
@@ -30,7 +33,15 @@ final class ReprocessPaymentWebhookEventsAction
                         'error' => null,
                     ])->save();
 
-                    ProcessStripeWebhookEventAction::run((int) $event->getKey());
+                    $eventId = $event->getKey();
+
+                    if (! is_numeric($eventId)) {
+                        $failed++;
+
+                        return;
+                    }
+
+                    ProcessStripeWebhookEventAction::run((int) $eventId);
 
                     $processed++;
                 } catch (Throwable) {

@@ -136,7 +136,7 @@ final class KnowledgeBaseServiceProvider extends AbstractPackageServiceProvider
                 type: 'knowledge-base',
                 enabledSettingKey: 'sources.knowledge-base.enabled',
                 enabledByDefault: true,
-                weight: (float) config('capell-knowledge-base.default_search_weight', 50),
+                weight: $this->configFloat('capell-knowledge-base.default_search_weight', 50.0),
             ));
         };
 
@@ -147,6 +147,13 @@ final class KnowledgeBaseServiceProvider extends AbstractPackageServiceProvider
         }
 
         return $this;
+    }
+
+    private function configFloat(string $key, float $fallback): float
+    {
+        $value = config($key, $fallback);
+
+        return is_numeric($value) ? (float) $value : $fallback;
     }
 
     private function registerPublicUrlContributors(): self

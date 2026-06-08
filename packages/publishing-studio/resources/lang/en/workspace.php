@@ -11,6 +11,14 @@ return [
     'settings' => [
         'enable_user_resource_bridge' => 'Show Publishing Studio user details',
     ],
+    'validation' => [
+        'blocking_body' => '{1} Resolve this readiness issue before publishing: :first|[2,*] Resolve :count readiness issues before publishing. First issue: :first',
+        'failed_body' => 'Readiness validation failed: :message',
+    ],
+    'checks' => [
+        'internal_link_integrity' => 'Internal link integrity',
+        'internal_link_missing' => 'Page ":page" contains an internal link that does not resolve in Capell: :url',
+    ],
     'revisions' => [
         'action_label' => 'Revisions (:count)',
         'close' => 'Close',

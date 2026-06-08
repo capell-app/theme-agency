@@ -13,6 +13,9 @@ use Capell\PublicActions\Support\PublicActionDestinationAdapterRegistry;
 use InvalidArgumentException;
 use Lorisleiva\Actions\Concerns\AsAction;
 
+/**
+ * @method static PublicActionDispatchResultData run(PublicActionDestination $destination, PublicActionSubmission $submission, ?PublicActionDispatchAttempt $attempt = null)
+ */
 final class DispatchPublicActionDestinationAction
 {
     use AsAction;

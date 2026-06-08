@@ -40,7 +40,7 @@ final class PublicationsRelationManager extends RelationManager
                         function () use ($record): void {
                             echo BuildDocumentPublicationDiffAction::run($record);
                         },
-                        'document-publication-diff-' . $record->getKey() . '-' . now()->format('Y-m-d-His') . '.json',
+                        'document-publication-diff-' . $this->modelKey($record) . '-' . now()->format('Y-m-d-His') . '.json',
                         ['Content-Type' => 'application/json'],
                     )),
             ])
@@ -69,5 +69,12 @@ final class PublicationsRelationManager extends RelationManager
     protected static function getPluralModelLabel(): string
     {
         return __('capell-document-lifecycle::navigation.relations.publications');
+    }
+
+    private function modelKey(Model $model): int
+    {
+        $key = $model->getKey();
+
+        return is_int($key) ? $key : 0;
     }
 }

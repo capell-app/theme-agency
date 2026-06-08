@@ -14,6 +14,9 @@ use Capell\Newsletter\Support\NewsletterSettingsResolver;
 use Illuminate\Support\Facades\DB;
 use Lorisleiva\Actions\Concerns\AsAction;
 
+/**
+ * @method static Subscriber run(SubscriberData $data, ?ConsentEvidenceData $evidence = null, ConsentEventType $eventType = ConsentEventType::FormCapture, bool $recordConsentEvent = true)
+ */
 class UpsertSubscriberAction
 {
     use AsAction;

@@ -2,9 +2,11 @@
 
 declare(strict_types=1);
 
+use Capell\PublishingStudio\Actions\BuildPublishReadinessAction;
 use Capell\PublishingStudio\Models\Version;
 use Capell\PublishingStudio\Models\Workspace;
 use Capell\PublishingStudio\Publisher;
+use Capell\PublishingStudio\Tests\Fixtures\Autoload\FixtureFailingCheck;
 use Capell\PublishingStudio\Tests\Integration\Fixtures\WorkspaceDraftableFixture;
 use Capell\PublishingStudio\WorkspaceRegistry;
 use Illuminate\Database\Schema\Blueprint;
@@ -66,4 +68,26 @@ it('dry-run of a non-approved workspace captures the failure and does not run', 
 
     expect($report->wouldPublish)->toBeFalse()
         ->and($report->failure)->not->toBeNull();
+});
+
+it('builds typed publish readiness from dry run and blocking checks', function (): void {
+    config()->set('capell.publishing-studio.publish_checks', [FixtureFailingCheck::class]);
+
+    $workspace = Workspace::factory()->approved()->create();
+
+    WorkspaceDraftableFixture::query()
+        ->withoutGlobalScopes()
+        ->create([
+            'workspace_id' => $workspace->id,
+            'uuid' => (string) Str::uuid(),
+            'name' => 'blocked-by-check',
+        ]);
+
+    $readiness = BuildPublishReadinessAction::run($workspace);
+
+    expect($readiness->wouldPublish)->toBeFalse()
+        ->and($readiness->workspaceId)->toBe((int) $workspace->getKey())
+        ->and($readiness->totalRows)->toBe(1)
+        ->and($readiness->blockingIssues)->toContain('oh no something broke')
+        ->and($readiness->blockingIssueCount)->toBe(1);
 });

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Capell\PublishingStudio\DryRunReport;
+use Capell\PublishingStudio\Data\PublishReadinessData;
 use Capell\PublishingStudio\Enums\WorkspaceStatusEnum;
 use Capell\PublishingStudio\Filament\Pages\ScheduledPublishingPage;
 use Capell\PublishingStudio\Filament\Pages\StaleDraftsPage;
@@ -84,44 +84,55 @@ it('builds publish and rollback action surfaces from workspace state', function 
 
 it('reports validation action outcomes for failures warnings and clean dry runs', function (): void {
     $workspace = Workspace::factory()->create();
-    $notifyFromReport = new ReflectionMethod(ValidateAction::class, 'notifyFromReport');
+    $notifyFromReadiness = new ReflectionMethod(ValidateAction::class, 'notifyFromReadiness');
     $action = ValidateAction::make('validate');
-    $conflictingReport = new RebaseReport($workspace, currentLiveVersionId: 10, conflicts: []);
-    $conflictingReport->addConflict(Workspace::class, (string) Str::uuid());
-
-    $failureReport = new DryRunReport(
-        workspace: $workspace,
+    $failureReadiness = new PublishReadinessData(
+        workspaceId: (int) $workspace->getKey(),
         wouldPublish: false,
-        rebaseReport: null,
-        collisions: [],
+        totalRows: 0,
         rowCounts: [],
-        failure: new RuntimeException('Validation failed'),
-    );
-    $warningReport = new DryRunReport(
-        workspace: $workspace,
-        wouldPublish: false,
-        rebaseReport: $conflictingReport,
-        collisions: [['site_id' => 1, 'language_id' => 1, 'url' => '/conflict']],
-        rowCounts: [Workspace::class => 2],
-    );
-    $cleanReport = new DryRunReport(
-        workspace: $workspace,
-        wouldPublish: true,
-        rebaseReport: null,
         collisions: [],
+        conflictCount: 0,
+        checkResults: [],
+        failureMessage: 'Validation failed',
+        blockingIssues: ['Validation failed'],
+        blockingIssueCount: 1,
+    );
+    $warningReadiness = new PublishReadinessData(
+        workspaceId: (int) $workspace->getKey(),
+        wouldPublish: false,
+        totalRows: 2,
+        rowCounts: [Workspace::class => 2],
+        collisions: [['site_id' => 1, 'language_id' => 1, 'url' => '/conflict']],
+        conflictCount: 1,
+        checkResults: [],
+        failureMessage: null,
+        blockingIssues: ['URL collision: /conflict.'],
+        blockingIssueCount: 1,
+    );
+    $cleanReadiness = new PublishReadinessData(
+        workspaceId: (int) $workspace->getKey(),
+        wouldPublish: true,
+        totalRows: 3,
         rowCounts: [Workspace::class => 3],
+        collisions: [],
+        conflictCount: 0,
+        checkResults: [],
+        failureMessage: null,
+        blockingIssues: [],
+        blockingIssueCount: 0,
     );
 
-    $notifyFromReport->invoke($action, $failureReport);
-    $notifyFromReport->invoke($action, $warningReport);
-    $notifyFromReport->invoke($action, $cleanReport);
+    $notifyFromReadiness->invoke($action, $failureReadiness);
+    $notifyFromReadiness->invoke($action, $warningReadiness);
+    $notifyFromReadiness->invoke($action, $cleanReadiness);
 
     expect(ValidateAction::getDefaultName())->toBe('validate')
-        ->and($failureReport->failure?->getMessage())->toBe('Validation failed')
-        ->and($warningReport->hasCollisions())->toBeTrue()
-        ->and($warningReport->hasConflicts())->toBeTrue()
-        ->and($warningReport->totalRows())->toBe(2)
-        ->and($cleanReport->totalRows())->toBe(3);
+        ->and($failureReadiness->failureMessage)->toBe('Validation failed')
+        ->and($warningReadiness->collisions)->not->toBeEmpty()
+        ->and($warningReadiness->conflictCount)->toBe(1)
+        ->and($warningReadiness->totalRows)->toBe(2)
+        ->and($cleanReadiness->totalRows)->toBe(3);
 });
 
 it('handles publish action release window and blocked report branches from workspace state', function (): void {

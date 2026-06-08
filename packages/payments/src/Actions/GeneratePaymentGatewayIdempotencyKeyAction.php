@@ -8,6 +8,9 @@ use JsonException;
 use Lorisleiva\Actions\Concerns\AsAction;
 use RuntimeException;
 
+/**
+ * @method static string run(string $operation, array<string, mixed> $payload)
+ */
 final class GeneratePaymentGatewayIdempotencyKeyAction
 {
     use AsAction;

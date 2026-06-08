@@ -10,6 +10,9 @@ use Capell\Diagnostics\Models\DiagnosticsHealthSnapshot;
 use Illuminate\Support\Facades\Schema;
 use Lorisleiva\Actions\Concerns\AsAction;
 
+/**
+ * @method static ExtensionHealthTrendData run(ExtensionHealthReportData $report)
+ */
 final class BuildExtensionHealthTrendAction
 {
     use AsAction;

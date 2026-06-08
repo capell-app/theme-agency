@@ -8,6 +8,9 @@ use Capell\GA4Reports\Data\GA4ReportsDailyMetricData;
 use Capell\GA4Reports\Models\GA4ReportsDailyMetric;
 use Lorisleiva\Actions\Concerns\AsAction;
 
+/**
+ * @method static GA4ReportsDailyMetric run(GA4ReportsDailyMetricData $metric)
+ */
 final class PersistGA4ReportsDailyMetricAction
 {
     use AsAction;

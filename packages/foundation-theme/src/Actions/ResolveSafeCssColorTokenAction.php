@@ -8,6 +8,9 @@ use Capell\Core\Actions\ColorConverterAction;
 use Lorisleiva\Actions\Concerns\AsObject;
 use Throwable;
 
+/**
+ * @method static string run(mixed $value, string $fallback)
+ */
 final class ResolveSafeCssColorTokenAction
 {
     use AsObject;

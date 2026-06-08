@@ -59,14 +59,22 @@ class ScheduleEventNotificationsAction
         $settings = $registration->occurrence->event->notification_settings ?? [];
         $offsets = $settings['reminder_offsets_minutes'] ?? config('capell-events.notifications.reminder_offsets_minutes', [1440]);
 
-        $normalized = collect(Arr::wrap($offsets))
-            ->filter(static fn (mixed $offset): bool => is_numeric($offset))
-            ->map(static fn (mixed $offset): int => (int) $offset)
-            ->filter(static fn (int $offset): bool => $offset > 0)
-            ->unique()
-            ->sortDesc()
-            ->values()
-            ->all();
+        $normalized = [];
+
+        foreach (Arr::wrap($offsets) as $offset) {
+            if (! is_numeric($offset)) {
+                continue;
+            }
+
+            $offsetMinutes = (int) $offset;
+
+            if ($offsetMinutes > 0) {
+                $normalized[] = $offsetMinutes;
+            }
+        }
+
+        $normalized = array_values(array_unique($normalized));
+        rsort($normalized);
 
         return $normalized === [] ? [1440] : $normalized;
     }

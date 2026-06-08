@@ -8,6 +8,9 @@ use Capell\HtmlCache\Models\CachedModelUrl;
 use Illuminate\Database\Eloquent\Model;
 use Lorisleiva\Actions\Concerns\AsObject;
 
+/**
+ * @method static list<string> run(Model $model)
+ */
 class CollectAffectedCachedUrlsAction
 {
     use AsObject;

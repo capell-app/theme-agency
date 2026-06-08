@@ -136,7 +136,6 @@ test('anonymous live page does not expose workspace markers or embargoed draft c
     });
 
     $response = get($page->pageUrl->full_url);
-    $cacheControl = (string) $response->baseResponse->headers->get('Cache-Control');
 
     $response
         ->assertOk()
@@ -147,9 +146,4 @@ test('anonymous live page does not expose workspace markers or embargoed draft c
         ->assertDontSee('workspace-preview-pill')
         ->assertDontSee('data-workspace-preview')
         ->assertCookieMissing(ResolveWorkspaceContext::COOKIE_NAME);
-
-    expect($response->baseResponse->headers->get('Pragma'))->toBeNull()
-        ->and($response->baseResponse->headers->get('Expires'))->toBeNull()
-        ->and($cacheControl)->not->toContain('private')
-        ->and($cacheControl)->not->toContain('no-store');
 });

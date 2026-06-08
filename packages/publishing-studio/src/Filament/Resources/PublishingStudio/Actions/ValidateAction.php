@@ -4,14 +4,13 @@ declare(strict_types=1);
 
 namespace Capell\PublishingStudio\Filament\Resources\PublishingStudio\Actions;
 
-use Capell\PublishingStudio\DryRunReport;
+use Capell\PublishingStudio\Actions\BuildPublishReadinessAction;
+use Capell\PublishingStudio\Data\PublishReadinessData;
 use Capell\PublishingStudio\Models\Workspace;
-use Capell\PublishingStudio\Publisher;
 use Filament\Actions\Action;
 use Filament\Notifications\Notification;
 use Filament\Support\Icons\Heroicon;
 use Override;
-use Throwable;
 
 class ValidateAction extends Action
 {
@@ -25,9 +24,7 @@ class ValidateAction extends Action
             ->color('info')
             ->authorize('view')
             ->action(function (Workspace $record): void {
-                $report = (new Publisher)->dryRun($record);
-
-                $this->notifyFromReport($report);
+                $this->notifyFromReadiness(BuildPublishReadinessAction::run($record));
             });
     }
 
@@ -36,12 +33,14 @@ class ValidateAction extends Action
         return 'validate';
     }
 
-    private function notifyFromReport(DryRunReport $report): void
+    private function notifyFromReadiness(PublishReadinessData $readiness): void
     {
-        if ($report->failure instanceof Throwable) {
+        if ($readiness->failureMessage !== null && $readiness->collisions === [] && $readiness->conflictCount === 0) {
             Notification::make()
                 ->title(__('capell-admin::workspace.notifications.validate_failed'))
-                ->body($report->failure->getMessage())
+                ->body(__('capell-publishing-studio::workspace.validation.failed_body', [
+                    'message' => $readiness->failureMessage,
+                ]))
                 ->danger()
                 ->persistent()
                 ->send();
@@ -49,12 +48,12 @@ class ValidateAction extends Action
             return;
         }
 
-        if ($report->hasCollisions() || $report->hasConflicts()) {
+        if ($readiness->blockingIssueCount > 0) {
             Notification::make()
                 ->title(__('capell-admin::workspace.notifications.validate_warnings'))
-                ->body(__('capell-admin::workspace.notifications.validate_warnings_body', [
-                    'collisions' => count($report->collisions),
-                    'conflicts' => $report->rebaseReport?->conflictCount() ?? 0,
+                ->body(trans_choice('capell-publishing-studio::workspace.validation.blocking_body', $readiness->blockingIssueCount, [
+                    'count' => $readiness->blockingIssueCount,
+                    'first' => $readiness->blockingIssues[0] ?? '',
                 ]))
                 ->warning()
                 ->persistent()
@@ -66,7 +65,7 @@ class ValidateAction extends Action
         Notification::make()
             ->title(__('capell-admin::workspace.notifications.validate_passed'))
             ->body(__('capell-admin::workspace.notifications.validate_passed_body', [
-                'rows' => $report->totalRows(),
+                'rows' => $readiness->totalRows,
             ]))
             ->success()
             ->send();

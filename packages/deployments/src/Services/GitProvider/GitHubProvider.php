@@ -138,6 +138,7 @@ final class GitHubProvider implements GitProviderContract
             ])
             ->throw()
             ->json();
+        $response = $this->responseMap($response);
 
         return $this->pullRequestDataFromResponse($response);
     }
@@ -153,12 +154,13 @@ final class GitHubProvider implements GitProviderContract
             ])
             ->throw()
             ->json();
+        $pullRequests = $this->responseList($response);
 
-        if (! is_array($response) || ! isset($response[0]) || ! is_array($response[0])) {
+        if (! isset($pullRequests[0])) {
             return null;
         }
 
-        return $this->pullRequestDataFromResponse($response[0]);
+        return $this->pullRequestDataFromResponse($pullRequests[0]);
     }
 
     public function enableAutoMerge(DeploymentConnection $conn, int|string $pullRequestId): void
@@ -219,6 +221,7 @@ final class GitHubProvider implements GitProviderContract
             ->get(sprintf('/repos/%s/%s/pulls/%s', $conn->repo_owner, $conn->repo_name, $pullRequestId))
             ->throw()
             ->json();
+        $response = $this->responseMap($response);
 
         return $this->pullRequestDataFromResponse($response);
     }
@@ -314,5 +317,45 @@ final class GitHubProvider implements GitProviderContract
             headSha: $response['head']['sha'],
             merged: (bool) $response['merged'],
         );
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function responseMap(mixed $response): array
+    {
+        if (! is_array($response)) {
+            return [];
+        }
+
+        $map = [];
+
+        foreach ($response as $key => $value) {
+            if (is_string($key)) {
+                $map[$key] = $value;
+            }
+        }
+
+        return $map;
+    }
+
+    /**
+     * @return list<array<string, mixed>>
+     */
+    private function responseList(mixed $response): array
+    {
+        if (! is_array($response)) {
+            return [];
+        }
+
+        $items = [];
+
+        foreach ($response as $item) {
+            if (is_array($item)) {
+                $items[] = $this->responseMap($item);
+            }
+        }
+
+        return $items;
     }
 }

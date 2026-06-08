@@ -7,9 +7,13 @@ namespace Capell\DocumentLifecycle\Actions;
 use Capell\DocumentLifecycle\Models\Document;
 use Capell\DocumentLifecycle\Models\DocumentAcceptance;
 use Capell\DocumentLifecycle\Models\DocumentPublication;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Lorisleiva\Actions\Concerns\AsAction;
 
+/**
+ * @method static string run(Document $document)
+ */
 final class BuildOutstandingDocumentAcceptancesCsvAction
 {
     use AsAction;
@@ -42,14 +46,16 @@ final class BuildOutstandingDocumentAcceptancesCsvAction
         $latestPublication = $document->latestPublication();
 
         if ($latestPublication instanceof DocumentPublication) {
+            $latestPublicationId = self::modelKey($latestPublication);
+
             $this->latestKnownAcceptances($document)
-                ->filter(static fn (DocumentAcceptance $acceptance): bool => (int) $acceptance->document_publication_id !== (int) $latestPublication->getKey()
+                ->filter(static fn (DocumentAcceptance $acceptance): bool => $acceptance->document_publication_id !== $latestPublicationId
                     || $acceptance->document_hash !== $latestPublication->content_hash)
                 ->each(static function (DocumentAcceptance $acceptance) use ($document, $latestPublication, $stream): void {
                     fputcsv($stream, [
                         $document->key,
                         $document->title,
-                        $latestPublication->getKey(),
+                        self::modelKey($latestPublication),
                         $latestPublication->version_label,
                         $latestPublication->content_hash,
                         $acceptance->subject_type,
@@ -59,7 +65,7 @@ final class BuildOutstandingDocumentAcceptancesCsvAction
                         $acceptance->document_publication_id,
                         $acceptance->document_version,
                         $acceptance->document_hash,
-                        $acceptance->accepted_at?->toISOString(),
+                        $acceptance->accepted_at->toISOString(),
                         $acceptance->context,
                     ]);
                 });
@@ -71,6 +77,13 @@ final class BuildOutstandingDocumentAcceptancesCsvAction
         fclose($stream);
 
         return is_string($contents) ? $contents : '';
+    }
+
+    private static function modelKey(Model $model): int
+    {
+        $key = $model->getKey();
+
+        return is_int($key) ? $key : 0;
     }
 
     /**

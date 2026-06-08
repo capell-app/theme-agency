@@ -23,6 +23,9 @@ use Illuminate\Support\Str;
 use Lorisleiva\Actions\Concerns\AsObject;
 use RuntimeException;
 
+/**
+ * @method static array{cleared: int, urls: list<string>, status: string, redirect_url: string|null} run(EditableRegionPayloadData $payload, string $value, AuthenticatableContract $user)
+ */
 class UpdateEditableRegionAction
 {
     use AsObject;

@@ -31,7 +31,7 @@ final class KnowledgeBasePublicUrlContributor implements PublicUrlContributor
             ->get()
             ->filter(fn (SiteDomain $domain): bool => $domain->site instanceof Site && $domain->language instanceof Language)
             ->flatMap(fn (SiteDomain $domain): Collection => $this->publicUrlsForDomain($domain))
-            ->unique(fn (PublicUrlData $url): string => $url->site->getKey() . '|' . $url->language->getKey() . '|' . $url->canonicalUrl)
+            ->unique(fn (PublicUrlData $url): string => $this->modelKey($url->site) . '|' . $this->modelKey($url->language) . '|' . $url->canonicalUrl)
             ->values();
     }
 
@@ -62,19 +62,31 @@ final class KnowledgeBasePublicUrlContributor implements PublicUrlContributor
                 site: $site,
                 language: $language,
                 routeName: 'capell-knowledge-base.article',
-                lastModified: $article->currentVersion?->published_at ?? $article->published_at,
+                lastModified: $article->currentVersion->published_at ?? $article->published_at,
                 contentType: PublicUrlContentType::Article,
                 isSitemapEligible: true,
                 isAiDiscoveryEligible: true,
                 priority: '0.7',
                 changeFrequency: 'weekly',
-                title: $article->currentVersion?->title ?? $article->title,
+                title: $article->currentVersion->title ?? $article->title,
             ))
             ->values();
     }
 
     private function canonicalUrl(SiteDomain $domain, KnowledgeBaseArticle $article): string
     {
-        return rtrim($domain->full_url, '/') . KnowledgeBasePublicPath::forArticle($article);
+        return rtrim($this->stringValue($domain->full_url), '/') . KnowledgeBasePublicPath::forArticle($article);
+    }
+
+    private function modelKey(Site|Language $model): string
+    {
+        $key = $model->getKey();
+
+        return is_scalar($key) ? (string) $key : '';
+    }
+
+    private function stringValue(mixed $value): string
+    {
+        return is_string($value) ? $value : '';
     }
 }

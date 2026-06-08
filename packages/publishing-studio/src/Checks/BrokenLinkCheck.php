@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Capell\PublishingStudio\Checks;
 
 use Capell\PublishingStudio\Models\Workspace;
+use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
@@ -17,7 +18,7 @@ class BrokenLinkCheck implements PublishCheck
 
     public function label(): string
     {
-        return 'Broken Links';
+        return (string) __('capell-publishing-studio::workspace.checks.internal_link_integrity');
     }
 
     public function run(Workspace $workspace): PublishCheckResult
@@ -62,7 +63,7 @@ class BrokenLinkCheck implements PublishCheck
         if ($allHrefs !== []) {
             $existingUrls = DB::table('page_urls')
                 ->whereIn('url', array_keys($allHrefs))
-                ->where(function ($query) use ($workspace): void {
+                ->where(function (QueryBuilder $query) use ($workspace): void {
                     $query->where('workspace_id', 0)
                         ->orWhere('workspace_id', $workspace->id);
                 })
@@ -74,7 +75,10 @@ class BrokenLinkCheck implements PublishCheck
                 foreach ($pageData['hrefs'] as $href) {
                     if (! array_key_exists($href, $existingUrls)) {
                         $pageIdentifier = $pageData['slug'] ?? $pageUuid;
-                        $messages[] = sprintf("Page '%s' contains broken link: %s", $pageIdentifier, $href);
+                        $messages[] = (string) __('capell-publishing-studio::workspace.checks.internal_link_missing', [
+                            'page' => $pageIdentifier,
+                            'url' => $href,
+                        ]);
                         $entityRefs[] = ['model' => 'Page', 'uuid' => $pageUuid];
                     }
                 }

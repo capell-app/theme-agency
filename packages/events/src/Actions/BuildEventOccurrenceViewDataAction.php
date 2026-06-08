@@ -4,12 +4,16 @@ declare(strict_types=1);
 
 namespace Capell\Events\Actions;
 
+use Capell\Core\Models\Translation;
 use Capell\Events\Data\EventOccurrenceViewData;
 use Capell\Events\Models\EventOccurrence;
 use Capell\Events\Models\EventVenue;
 use DateTimeZone;
 use Lorisleiva\Actions\Concerns\AsAction;
 
+/**
+ * @method static EventOccurrenceViewData run(EventOccurrence $occurrence, ?string $viewerTimezone = null)
+ */
 final class BuildEventOccurrenceViewDataAction
 {
     use AsAction;
@@ -23,9 +27,13 @@ final class BuildEventOccurrenceViewDataAction
             : $occurrence->starts_at->setTimezone($resolvedViewerTimezone);
         $event = $occurrence->event;
         $venue = $occurrence->venue;
+        $translation = $event->getRelationValue('translation');
+        $title = $translation instanceof Translation && is_string($translation->title) && $translation->title !== ''
+            ? $translation->title
+            : $event->name;
 
         return new EventOccurrenceViewData(
-            title: $event->translation?->title ?? $event->name,
+            title: $title,
             isoStartsAt: $occurrence->starts_at->toIso8601String(),
             displayStartsAt: $startsAt->format('j F Y H:i'),
             eventTimezone: $occurrence->timezone,

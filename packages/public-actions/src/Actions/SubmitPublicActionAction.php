@@ -23,6 +23,7 @@ use Capell\PublicActions\Models\PublicActionSubmission;
 use Capell\PublicActions\Support\PublicActionHandlerRegistry;
 use Capell\PublicActions\Support\PublicActionSpamProtectionAdapterRegistry;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
@@ -34,6 +35,9 @@ use InvalidArgumentException;
 use Lorisleiva\Actions\Concerns\AsAction;
 use Throwable;
 
+/**
+ * @method static PublicActionResultData run(PublicAction|string $action, array<string, mixed> $input, ?Request $request = null)
+ */
 final class SubmitPublicActionAction
 {
     use AsAction;
@@ -481,8 +485,8 @@ final class SubmitPublicActionAction
                 'attempt' => $this->nextDestinationAttemptNumber($destination, $submission),
                 'request_hash' => hash('sha256', sprintf(
                     'pending:%s:%s:%s',
-                    $submission->getKey(),
-                    $destination->getKey(),
+                    $this->modelKey($submission),
+                    $this->modelKey($destination),
                     $destination->adapter,
                 )),
                 'response_status' => null,
@@ -520,10 +524,23 @@ final class SubmitPublicActionAction
 
     private function nextDestinationAttemptNumber(PublicActionDestination $destination, PublicActionSubmission $submission): int
     {
-        return ((int) PublicActionDispatchAttempt::query()
+        $attempt = PublicActionDispatchAttempt::query()
             ->where('public_action_submission_id', $submission->getKey())
             ->where('public_action_destination_id', $destination->getKey())
-            ->max('attempt')) + 1;
+            ->max('attempt');
+
+        return (is_numeric($attempt) ? (int) $attempt : 0) + 1;
+    }
+
+    private function modelKey(Model $model): string
+    {
+        $key = $model->getKey();
+
+        if (is_int($key) || is_string($key)) {
+            return (string) $key;
+        }
+
+        return '';
     }
 
     private function payloadRedirectUrl(PublicActionSubmission $submission, ?Request $request): ?string

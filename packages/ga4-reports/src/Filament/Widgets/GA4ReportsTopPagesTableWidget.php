@@ -68,7 +68,7 @@ final class GA4ReportsTopPagesTableWidget extends BaseWidget
     }
 
     /**
-     * @return Collection<array-key, mixed>
+     * @return Collection<int, array{id: string, page_path: string, page_title: string|null, screen_page_views: int, comparison: string, sessions: int, total_users: int, conversions: int}>
      */
     private function getRecords(): Collection
     {
@@ -84,7 +84,7 @@ final class GA4ReportsTopPagesTableWidget extends BaseWidget
                 'page_path' => $page->pagePath,
                 'page_title' => $page->pageTitle,
                 'screen_page_views' => $page->screenPageViews,
-                'comparison' => $this->formatDelta($page->screenPageViews, $previousPages->get($page->pagePath)?->screenPageViews ?? 0),
+                'comparison' => $this->formatDelta($page->screenPageViews, $previousPages->get($page->pagePath)->screenPageViews ?? 0),
                 'sessions' => $page->sessions,
                 'total_users' => $page->totalUsers,
                 'conversions' => $page->conversions,

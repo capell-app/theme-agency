@@ -9,6 +9,9 @@ use Capell\GA4Reports\Settings\GA4ReportsSettings;
 use Lorisleiva\Actions\Concerns\AsAction;
 use Throwable;
 
+/**
+ * @method static GA4ReportsConfigData run()
+ */
 final class ResolveGA4ReportsConfigAction
 {
     use AsAction;

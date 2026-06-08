@@ -11,6 +11,9 @@ use Capell\FrontendAuthoring\Support\EditableRegionSigner;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Lorisleiva\Actions\Concerns\AsObject;
 
+/**
+ * @method static array<string, array<string, mixed>> run(PageUrl $pageUrl, ?AuthenticatableContract $user = null)
+ */
 class BuildEditableRegionManifestAction
 {
     use AsObject;

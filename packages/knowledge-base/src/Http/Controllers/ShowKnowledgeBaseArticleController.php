@@ -35,8 +35,10 @@ final class ShowKnowledgeBaseArticleController
 
     private function viewName(): string
     {
-        return view()->exists('capell-theme-knowledge::knowledge-base.article')
-            ? 'capell-theme-knowledge::knowledge-base.article'
+        $themeView = implode('::', ['capell-theme-knowledge', 'knowledge-base.article']);
+
+        return view()->exists($themeView)
+            ? $themeView
             : 'capell-knowledge-base::article';
     }
 

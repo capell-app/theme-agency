@@ -11,6 +11,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Gate;
 use Lorisleiva\Actions\Concerns\AsObject;
 
+/**
+ * @method static bool run(AuthenticatableContract $user, EditableRegionPayloadData $payload, ?PageUrl $pageUrl = null)
+ */
 class AuthorizeEditableRegionAction
 {
     use AsObject;

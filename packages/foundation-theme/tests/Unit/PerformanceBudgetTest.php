@@ -39,7 +39,7 @@ it('renders the shared theme wrapper inside the declared frontend budget without
 
     $elapsedMilliseconds = (hrtime(true) - $startedAt) / 1_000_000;
 
-    expect($elapsedMilliseconds)->toBeLessThanOrEqual((float) data_get($manifest, 'performance.frontendRenderBudgetMs', 20))
+    expect($elapsedMilliseconds)->toBeLessThanOrEqual(foundationThemePerformanceFloat($manifest, 'performance.frontendRenderBudgetMs', 20.0))
         ->and($queryCount)->toBe(0)
         ->and($html)->toContain('id="main-content"')
         ->and($html)->toContain('id="theme-status"')
@@ -58,7 +58,7 @@ it('builds the Foundation settings admin schema inside the declared query budget
 
     $components = FoundationThemeSettingsSchema::make(Schema::make());
 
-    expect($queryCount)->toBeLessThanOrEqual((int) data_get($manifest, 'performance.adminQueryBudget', 40))
+    expect($queryCount)->toBeLessThanOrEqual(foundationThemePerformanceInt($manifest, 'performance.adminQueryBudget', 40))
         ->and($components)->toHaveCount(3);
 });
 
@@ -67,9 +67,51 @@ it('builds the Foundation settings admin schema inside the declared query budget
  */
 function foundationThemePerformanceManifest(): array
 {
-    return json_decode(
+    return foundationThemePerformanceJsonMap(json_decode(
         (string) file_get_contents(dirname(__DIR__, 2) . '/capell.json'),
         true,
         flags: JSON_THROW_ON_ERROR,
-    );
+    ));
+}
+
+/**
+ * @return array<string, mixed>
+ */
+function foundationThemePerformanceJsonMap(mixed $value): array
+{
+    throw_unless(is_array($value), RuntimeException::class, 'Expected Foundation Theme performance manifest array.');
+
+    $map = [];
+
+    foreach ($value as $key => $item) {
+        if (is_string($key)) {
+            $map[$key] = $item;
+        }
+    }
+
+    return $map;
+}
+
+/**
+ * @param  array<string, mixed>  $manifest
+ */
+function foundationThemePerformanceFloat(array $manifest, string $key, float $default): float
+{
+    $value = data_get($manifest, $key, $default);
+
+    return is_int($value) || is_float($value) ? (float) $value : $default;
+}
+
+/**
+ * @param  array<string, mixed>  $manifest
+ */
+function foundationThemePerformanceInt(array $manifest, string $key, int $default): int
+{
+    $value = data_get($manifest, $key, $default);
+
+    if (is_int($value)) {
+        return $value;
+    }
+
+    return is_string($value) && ctype_digit($value) ? (int) $value : $default;
 }

@@ -14,6 +14,9 @@ use Illuminate\Support\Facades\Http;
 use Lorisleiva\Actions\Concerns\AsAction;
 use RuntimeException;
 
+/**
+ * @method static PaymentRefund run(PaymentIntent $paymentIntent, ?int $amount = null, ?string $reason = null)
+ */
 final class IssuePaymentRefundAction
 {
     use AsAction;
@@ -39,9 +42,7 @@ final class IssuePaymentRefundAction
             ->throw()
             ->json();
 
-        throw_unless(is_array($response), RuntimeException::class, 'Stripe refund response was not a JSON object.');
-
-        return RecordPaymentRefundAction::run($this->refundData($response, $paymentIntent));
+        return RecordPaymentRefundAction::run($this->refundData($this->responsePayload($response), $paymentIntent));
     }
 
     /**
@@ -54,7 +55,7 @@ final class IssuePaymentRefundAction
             'amount' => $amount,
             'reason' => $reason,
             'metadata' => [
-                'capell_payment_intent_id' => (string) $paymentIntent->getKey(),
+                'capell_payment_intent_id' => $this->modelKey($paymentIntent),
             ],
         ], static fn (mixed $value): bool => ! in_array($value, [null, '', []], true));
     }
@@ -77,7 +78,7 @@ final class IssuePaymentRefundAction
             providerPaymentIntentId: is_string($payload['payment_intent'] ?? null) ? $payload['payment_intent'] : $paymentIntent->provider_payment_intent_id,
             providerChargeId: is_string($payload['charge'] ?? null) ? $payload['charge'] : null,
             reason: is_string($payload['reason'] ?? null) ? $payload['reason'] : null,
-            metadata: is_array($payload['metadata'] ?? null) ? $payload['metadata'] : [],
+            metadata: $this->metadata($payload['metadata'] ?? null),
             providerPayload: $payload,
         );
     }
@@ -109,11 +110,68 @@ final class IssuePaymentRefundAction
 
     private function timeout(): int
     {
-        return (int) ResolvePaymentSettingAction::run('capell-payments.stripe.timeout', 'stripe_timeout', 20);
+        return $this->integerSetting('capell-payments.stripe.timeout', 'stripe_timeout', 20);
     }
 
     private function connectTimeout(): int
     {
-        return (int) ResolvePaymentSettingAction::run('capell-payments.stripe.connect_timeout', 'stripe_connect_timeout', 5);
+        return $this->integerSetting('capell-payments.stripe.connect_timeout', 'stripe_connect_timeout', 5);
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function responsePayload(mixed $payload): array
+    {
+        throw_unless(is_array($payload), RuntimeException::class, 'Stripe refund response was not a JSON object.');
+
+        return $this->stringKeyedArray($payload);
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function metadata(mixed $metadata): array
+    {
+        if (! is_array($metadata)) {
+            return [];
+        }
+
+        return $this->stringKeyedArray($metadata);
+    }
+
+    private function integerSetting(string $configKey, string $settingsKey, int $fallback): int
+    {
+        $value = ResolvePaymentSettingAction::run($configKey, $settingsKey, $fallback);
+
+        return is_numeric($value) ? (int) $value : $fallback;
+    }
+
+    /**
+     * @param  array<mixed>  $values
+     * @return array<string, mixed>
+     */
+    private function stringKeyedArray(array $values): array
+    {
+        $result = [];
+
+        foreach ($values as $key => $value) {
+            if (is_string($key)) {
+                $result[$key] = $value;
+            }
+        }
+
+        return $result;
+    }
+
+    private function modelKey(PaymentIntent $paymentIntent): string
+    {
+        $key = $paymentIntent->getKey();
+
+        if (is_int($key) || is_string($key)) {
+            return (string) $key;
+        }
+
+        return '';
     }
 }

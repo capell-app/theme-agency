@@ -5,8 +5,12 @@ declare(strict_types=1);
 namespace Capell\DocumentLifecycle\Actions;
 
 use Capell\DocumentLifecycle\Models\DocumentPublication;
+use Illuminate\Database\Eloquent\Model;
 use Lorisleiva\Actions\Concerns\AsAction;
 
+/**
+ * @method static string run(DocumentPublication $publication)
+ */
 final class BuildDocumentPublicationDiffAction
 {
     use AsAction;
@@ -44,7 +48,7 @@ final class BuildDocumentPublicationDiffAction
     {
         return [
             'version' => $publication?->version_label,
-            'publication_id' => $publication instanceof DocumentPublication ? (int) $publication->getKey() : null,
+            'publication_id' => $publication instanceof DocumentPublication ? $this->modelKey($publication) : null,
             'content_hash' => $publication?->content_hash,
             'published_at' => $publication?->published_at?->toISOString(),
             'snapshot_available' => $this->snapshot($publication) !== null,
@@ -92,5 +96,12 @@ final class BuildDocumentPublicationDiffAction
         $snapshot = $publication->metadata['content_snapshot'] ?? null;
 
         return is_string($snapshot) ? $snapshot : null;
+    }
+
+    private function modelKey(Model $model): int
+    {
+        $key = $model->getKey();
+
+        return is_int($key) ? $key : 0;
     }
 }

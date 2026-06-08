@@ -115,7 +115,7 @@ it('declares committed marketplace screenshots', function (): void {
 
 it('declares generated Tailwind output review as a command report capture', function (): void {
     $screenshots = foundationThemeScreenshotsContract();
-    $entry = collect($screenshots['entries'] ?? [])
+    $entry = collect(foundationThemeManifestList($screenshots, 'entries'))
         ->firstWhere('id', 'generated-tailwind-asset-output-review');
 
     throw_unless(is_array($entry), RuntimeException::class, 'Generated Tailwind output review screenshot entry must exist.');
@@ -205,11 +205,11 @@ dataset('standalone theme packages', function (): array {
  */
 function themePackageManifest(string $packageDirectory): array
 {
-    return json_decode(
+    return foundationThemeManifestMap(json_decode(
         (string) file_get_contents(dirname(__DIR__, 3) . '/' . $packageDirectory . '/capell.json'),
         true,
         flags: JSON_THROW_ON_ERROR,
-    );
+    ));
 }
 
 /**
@@ -217,11 +217,11 @@ function themePackageManifest(string $packageDirectory): array
  */
 function foundationThemeScreenshotsContract(): array
 {
-    return json_decode(
+    return foundationThemeManifestMap(json_decode(
         (string) file_get_contents(dirname(__DIR__, 2) . '/docs/screenshots.json'),
         true,
         flags: JSON_THROW_ON_ERROR,
-    );
+    ));
 }
 
 /**
@@ -229,9 +229,48 @@ function foundationThemeScreenshotsContract(): array
  */
 function themePackageComposer(string $packageDirectory): array
 {
-    return json_decode(
+    return foundationThemeManifestMap(json_decode(
         (string) file_get_contents(dirname(__DIR__, 3) . '/' . $packageDirectory . '/composer.json'),
         true,
         flags: JSON_THROW_ON_ERROR,
-    );
+    ));
+}
+
+/**
+ * @return array<string, mixed>
+ */
+function foundationThemeManifestMap(mixed $value): array
+{
+    throw_unless(is_array($value), RuntimeException::class, 'Expected Foundation Theme manifest map.');
+
+    $map = [];
+
+    foreach ($value as $key => $item) {
+        if (is_string($key)) {
+            $map[$key] = $item;
+        }
+    }
+
+    return $map;
+}
+
+/**
+ * @param  array<string, mixed>  $manifest
+ * @return list<array<string, mixed>>
+ */
+function foundationThemeManifestList(array $manifest, string $key): array
+{
+    $items = $manifest[$key] ?? [];
+
+    throw_unless(is_array($items), RuntimeException::class, 'Expected Foundation Theme manifest list.');
+
+    $list = [];
+
+    foreach ($items as $item) {
+        if (is_array($item)) {
+            $list[] = foundationThemeManifestMap($item);
+        }
+    }
+
+    return $list;
 }

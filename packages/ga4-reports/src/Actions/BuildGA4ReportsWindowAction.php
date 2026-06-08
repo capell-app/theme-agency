@@ -9,6 +9,9 @@ use Carbon\CarbonImmutable;
 use Illuminate\Support\Facades\Date;
 use Lorisleiva\Actions\Concerns\AsAction;
 
+/**
+ * @method static GA4ReportsWindowData|null run(?CarbonImmutable $startsAt = null, ?CarbonImmutable $endsAt = null)
+ */
 final class BuildGA4ReportsWindowAction
 {
     use AsAction;

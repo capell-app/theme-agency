@@ -8,10 +8,10 @@ use Capell\Events\Actions\BuildCalendarFeedAction;
 use Capell\Events\Models\Event;
 use Capell\Events\Models\EventOccurrence;
 use Capell\Events\Models\EventVenue;
-use Capell\Events\Tests\TestCase;
+use Capell\Events\Tests\EventsTestCase;
 use Carbon\CarbonImmutable;
 
-uses(TestCase::class);
+uses(EventsTestCase::class);
 
 it('filters listing page calendar feeds by configured venue metadata', function (): void {
     $site = Site::factory()->create();

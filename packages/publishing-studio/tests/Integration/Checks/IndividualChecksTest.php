@@ -212,8 +212,10 @@ describe('BrokenLinkCheck', function (): void {
         $result = $check->run($workspace);
 
         expect($result->isClean())->toBeFalse()
+            ->and($result->label)->toBe(__('capell-publishing-studio::workspace.checks.internal_link_integrity'))
             ->and($result->severity)->toBe(PublishCheckSeverity::Error)
-            ->and($result->messages)->toHaveCount(1);
+            ->and($result->messages)->toHaveCount(1)
+            ->and($result->messages[0])->toContain('/contact');
     });
 
     it('returns a clean result when all internal links resolve', function (): void {
@@ -236,6 +238,22 @@ describe('BrokenLinkCheck', function (): void {
         $result = $check->run($workspace);
 
         expect($result->isClean())->toBeTrue()
+            ->and($result->severity)->toBe(PublishCheckSeverity::Info);
+    });
+
+    it('ignores external links because the check only validates internal Capell URLs', function (): void {
+        $workspace = Workspace::factory()->create();
+
+        insertBasePage($workspace, [
+            'body' => '<a href="https://example.com/missing">External</a>',
+        ]);
+
+        $check = new BrokenLinkCheck;
+        $result = $check->run($workspace);
+
+        expect($result->identifier)->toBe('broken-links')
+            ->and($result->label)->toBe(__('capell-publishing-studio::workspace.checks.internal_link_integrity'))
+            ->and($result->isClean())->toBeTrue()
             ->and($result->severity)->toBe(PublishCheckSeverity::Info);
     });
 });

@@ -43,10 +43,19 @@ function configureGA4ReportsSettings(): void
  */
 function ga4ReportsCsvRows(string $csv): array
 {
-    return collect(explode("\n", trim($csv)))
-        ->map(static fn (string $row): array => str_getcsv($row))
-        ->values()
-        ->all();
+    $rows = [];
+
+    foreach (explode("\n", trim($csv)) as $row) {
+        $fields = [];
+
+        foreach (str_getcsv($row) as $field) {
+            $fields[] = $field ?? '';
+        }
+
+        $rows[] = $fields;
+    }
+
+    return $rows;
 }
 
 it('syncs GA4 metrics idempotently into local reporting tables', function (): void {

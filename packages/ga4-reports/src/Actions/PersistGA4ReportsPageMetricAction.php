@@ -8,6 +8,9 @@ use Capell\GA4Reports\Data\GA4ReportsPageMetricData;
 use Capell\GA4Reports\Models\GA4ReportsPageMetric;
 use Lorisleiva\Actions\Concerns\AsAction;
 
+/**
+ * @method static GA4ReportsPageMetric run(GA4ReportsPageMetricData $metric)
+ */
 final class PersistGA4ReportsPageMetricAction
 {
     use AsAction;

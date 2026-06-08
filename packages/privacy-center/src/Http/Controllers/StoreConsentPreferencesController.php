@@ -10,7 +10,6 @@ use Capell\PrivacyCenter\Enums\ConsentDecision;
 use Capell\PrivacyCenter\Enums\CookieCategory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Arr;
 use Illuminate\Validation\Rule;
 
 final class StoreConsentPreferencesController
@@ -22,10 +21,7 @@ final class StoreConsentPreferencesController
             'categories.*' => [Rule::enum(CookieCategory::class)],
         ]);
 
-        $grantedCategories = array_map(
-            static fn (mixed $category): string => (string) $category,
-            Arr::wrap($validated['categories'] ?? []),
-        );
+        $grantedCategories = $this->categoryValues($validated['categories'] ?? []);
 
         foreach (CookieCategory::cases() as $category) {
             RecordConsentAction::run(new ConsentRecordData(
@@ -54,5 +50,25 @@ final class StoreConsentPreferencesController
         return in_array($category->value, $grantedCategories, true)
             ? ConsentDecision::Granted
             : ConsentDecision::Denied;
+    }
+
+    /**
+     * @return list<string>
+     */
+    private function categoryValues(mixed $categories): array
+    {
+        if (! is_array($categories)) {
+            return [];
+        }
+
+        $values = [];
+
+        foreach ($categories as $category) {
+            if (is_string($category)) {
+                $values[] = $category;
+            }
+        }
+
+        return $values;
     }
 }

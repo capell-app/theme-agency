@@ -8,12 +8,25 @@ use Capell\Deployments\Models\DeploymentPublication;
 use Capell\Deployments\Services\GitProvider\GitHubProvider;
 use Capell\Deployments\Tests\Fixtures\Autoload\FakeComposerPublisher;
 use Capell\Tests\Support\Concerns\CreatesAdminUser;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Schema;
 use Livewire\Livewire;
+use RuntimeException;
 use Spatie\Permission\Models\Permission;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 uses(CreatesAdminUser::class);
+
+function deploymentConnectionPageModelKey(Model $model): int
+{
+    $key = $model->getKey();
+
+    if (! is_int($key)) {
+        throw new RuntimeException('Expected deployment test model to have an integer key.');
+    }
+
+    return $key;
+}
 
 it('moves deployment repository connections into the deployments package', function (): void {
     expect(class_exists(DeploymentConnectionPage::class))->toBeTrue();
@@ -165,9 +178,12 @@ it('allows connection managers to cancel pending pull request publications', fun
         'status_checked_at' => null,
     ]);
 
-    test()->actingAs(test()->createUserWithPermission('Manage:DeploymentConnectionPage'));
+    $this->actingAs($this->createUserWithPermission('Manage:DeploymentConnectionPage'));
 
-    (new DeploymentConnectionPage)->cancelPublication((int) $connection->getKey(), (int) $publication->getKey());
+    (new DeploymentConnectionPage)->cancelPublication(
+        deploymentConnectionPageModelKey($connection),
+        deploymentConnectionPageModelKey($publication),
+    );
 
     expect($publication->refresh()->status)->toBe('cancelled')
         ->and($provider->closedPullRequestIds)->toBe([789]);

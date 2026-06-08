@@ -24,7 +24,7 @@ final class UpdatePreferenceCenterController
             ->values()
             ->all();
 
-        $preferences = UpdatePreferenceCenterAction::run($token, new PreferenceCenterUpdateData($segmentHandles));
+        $preferences = UpdatePreferenceCenterAction::run($token, new PreferenceCenterUpdateData(array_values($segmentHandles)));
 
         abort_if($preferences === null, 404, __('capell-newsletter::messages.invalid_token'));
 

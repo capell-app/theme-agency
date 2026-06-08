@@ -51,7 +51,7 @@ final class GA4ReportsOverviewStatsWidget extends BaseWidget implements CapellWi
     }
 
     /**
-     * @return Collection<array-key, mixed>
+     * @return Collection<int, array{id: string, label: string, value: string, comparison: string}>
      */
     private function getRecords(): Collection
     {

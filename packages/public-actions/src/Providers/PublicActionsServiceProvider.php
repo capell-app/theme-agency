@@ -36,6 +36,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 use Illuminate\View\Compilers\BladeCompiler;
 use Override;
@@ -172,7 +173,7 @@ class PublicActionsServiceProvider extends AbstractPackageServiceProvider
 
             if ($token instanceof PublicActionIntegrationToken) {
                 return Limit::perMinute($this->integrationTokenRateLimitPerMinute($token))
-                    ->by('token:' . $token->getKey());
+                    ->by('token:' . $this->modelKey($token));
             }
 
             return Limit::perMinute($this->positiveIntegerConfig('capell-public-actions.api_rate_limit_per_minute', 120))
@@ -208,7 +209,7 @@ class PublicActionsServiceProvider extends AbstractPackageServiceProvider
 
     private function integrationTokenRateLimitPerMinute(PublicActionIntegrationToken $token): int
     {
-        $tokenLimit = data_get(config('capell-public-actions.integration_token_rate_limits.tokens', []), $token->getKey() . '.per_minute');
+        $tokenLimit = data_get(config('capell-public-actions.integration_token_rate_limits.tokens', []), $this->modelKey($token) . '.per_minute');
 
         if (is_numeric($tokenLimit) && (int) $tokenLimit > 0) {
             return (int) $tokenLimit;
@@ -221,6 +222,17 @@ class PublicActionsServiceProvider extends AbstractPackageServiceProvider
         }
 
         return $this->positiveIntegerConfig('capell-public-actions.api_rate_limit_per_minute', 120);
+    }
+
+    private function modelKey(PublicActionIntegrationToken $token): string
+    {
+        $key = $token->getKey();
+
+        if (is_int($key) || is_string($key)) {
+            return (string) $key;
+        }
+
+        return '';
     }
 
     private function positiveIntegerConfig(string $key, int $fallback): int
