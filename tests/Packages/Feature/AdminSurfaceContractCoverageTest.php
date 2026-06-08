@@ -441,7 +441,8 @@ function packageSurfaceContractClasses(Closure $pathFilter): array
 function packageSurfaceContractClassesWithPaths(Closure $pathFilter): array
 {
     $classes = [];
-    $files = File::allFiles(getcwd() . '/packages');
+    $rootPath = packageSurfaceContractRootPath();
+    $files = File::allFiles($rootPath . '/packages');
 
     foreach ($files as $file) {
         $path = $file->getPathname();
@@ -463,8 +464,14 @@ function packageSurfaceContractClassesWithPaths(Closure $pathFilter): array
             continue;
         }
 
+        $class = $namespaceMatches[1] . '\\' . $classMatches[1];
+
+        if (! class_exists($class)) {
+            continue;
+        }
+
         $classes[] = [
-            'class' => $namespaceMatches[1] . '\\' . $classMatches[1],
+            'class' => $class,
             'path' => $path,
         ];
     }
@@ -479,14 +486,15 @@ function packageSurfaceContractClassesWithPaths(Closure $pathFilter): array
 
 function packageSurfaceContractPackageSlugForPath(string $path): string
 {
-    $relativePath = str_starts_with($path, getcwd() . '/')
-        ? substr($path, strlen(getcwd()) + 1)
+    $rootPath = packageSurfaceContractRootPath();
+    $relativePath = str_starts_with($path, $rootPath . '/')
+        ? substr($path, strlen($rootPath) + 1)
         : $path;
 
     throw_unless(preg_match('#^packages/([^/]+)/#', $relativePath, $packageMatches), RuntimeException::class, sprintf('Unable to determine package for [%s].', $path));
 
     $packageDirectory = $packageMatches[1];
-    $manifestPath = getcwd() . '/packages/' . $packageDirectory . '/capell.json';
+    $manifestPath = $rootPath . '/packages/' . $packageDirectory . '/capell.json';
 
     if (! File::exists($manifestPath)) {
         return $packageDirectory;
@@ -496,6 +504,15 @@ function packageSurfaceContractPackageSlugForPath(string $path): string
     $manifestSlug = is_array($manifest) ? ($manifest['slug'] ?? null) : null;
 
     return is_string($manifestSlug) && $manifestSlug !== '' ? $manifestSlug : $packageDirectory;
+}
+
+function packageSurfaceContractRootPath(): string
+{
+    $rootPath = getcwd();
+
+    throw_unless(is_string($rootPath), RuntimeException::class, 'Unable to determine repository root path.');
+
+    return $rootPath;
 }
 
 /**

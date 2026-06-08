@@ -13,6 +13,7 @@ use Capell\FilamentPeek\Actions\CreatePagePreviewSnapshotAction;
 use Capell\Frontend\Contracts\FrontendResponseRenderer;
 use Capell\Frontend\Data\FrontendRenderContextData;
 use Capell\Frontend\Support\Render\FrontendResponseRendererRegistry;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\URL;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 
@@ -261,10 +262,10 @@ function registerPreviewTestRenderer(): void
             $content = $context->page->translation->content ?? '';
             $name = $context->page?->getAttribute('name') ?? '';
             $image = $context->page instanceof Page && $context->page->relationLoaded('image')
-                ? $context->page->getRelation('image')?->uuid
+                ? previewTestRelatedMediaUuid($context->page->getRelation('image'))
                 : '';
             $socialImage = $context->page instanceof Page && $context->page->relationLoaded('socialImage')
-                ? $context->page->getRelation('socialImage')?->uuid
+                ? previewTestRelatedMediaUuid($context->page->getRelation('socialImage'))
                 : '';
 
             return response()->make(sprintf(
@@ -277,6 +278,17 @@ function registerPreviewTestRenderer(): void
             ));
         }
     });
+}
+
+function previewTestRelatedMediaUuid(mixed $media): string
+{
+    if (! $media instanceof Model) {
+        return '';
+    }
+
+    $uuid = $media->getAttribute('uuid');
+
+    return is_string($uuid) ? $uuid : '';
 }
 
 function registerFailingPreviewTestRenderer(): void

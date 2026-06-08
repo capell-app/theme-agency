@@ -8,6 +8,9 @@ use Capell\UrlManager\Models\RedirectRule;
 use Illuminate\Database\Eloquent\Builder;
 use Lorisleiva\Actions\Concerns\AsAction;
 
+/**
+ * @method static list<array<string, bool|int|string|null>> run(?int $siteId = null, ?int $languageId = null)
+ */
 final class ExportRedirectRulesAction
 {
     use AsAction;

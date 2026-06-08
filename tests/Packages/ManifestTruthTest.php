@@ -49,8 +49,16 @@ it('backs console capabilities with at least one declared package command', func
     $invalid = [];
 
     foreach (manifest_truth_package_manifests() as $manifestPath => $entry) {
+        $capabilityValues = $entry['manifest']['capabilities'] ?? [];
+
+        if (! is_array($capabilityValues)) {
+            $invalid[$manifestPath][] = 'capabilities must be an array when declared';
+
+            continue;
+        }
+
         $capabilities = array_values(array_filter(
-            $entry['manifest']['capabilities'] ?? [],
+            $capabilityValues,
             static fn (mixed $capability): bool => is_string($capability) && str_contains($capability, 'console'),
         ));
 
@@ -240,20 +248,25 @@ function manifest_truth_declared_commands(mixed $commands): array
 function manifest_truth_provider_classes(array $manifest): array
 {
     $providers = [];
+    $providerBuckets = $manifest['providers'] ?? [];
 
-    foreach ($manifest['providers'] ?? [] as $bucket) {
+    if (! is_array($providerBuckets)) {
+        return [];
+    }
+
+    foreach ($providerBuckets as $bucket) {
         if (! is_array($bucket)) {
             continue;
         }
 
         foreach ($bucket as $providerClass) {
-            if (is_string($providerClass) && $providerClass !== '') {
-                $providers[] = $providerClass;
+            if (is_string($providerClass) && class_exists($providerClass)) {
+                $providers[$providerClass] = $providerClass;
             }
         }
     }
 
-    return array_values(array_unique($providers));
+    return array_values($providers);
 }
 
 /**

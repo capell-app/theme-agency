@@ -8,6 +8,7 @@ use Capell\CampaignStudio\Data\ConversionAttributionData;
 use Capell\CampaignStudio\Database\Factories\CampaignConversionFactory;
 use Capell\Insights\Models\InsightsEvent;
 use Capell\Insights\Models\InsightsVisit;
+use Carbon\CarbonInterface;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -22,6 +23,7 @@ use Override;
  * @property string|null $source_type
  * @property int|null $source_id
  * @property ConversionAttributionData|null $attribution
+ * @property CarbonInterface|null $converted_at
  */
 class CampaignConversion extends Model
 {

@@ -7,6 +7,9 @@ namespace Capell\UrlManager\Actions;
 use InvalidArgumentException;
 use Lorisleiva\Actions\Concerns\AsAction;
 
+/**
+ * @method static string run(string $url, bool $allowAbsolute = false)
+ */
 final class NormalizeManagedUrlAction
 {
     use AsAction;

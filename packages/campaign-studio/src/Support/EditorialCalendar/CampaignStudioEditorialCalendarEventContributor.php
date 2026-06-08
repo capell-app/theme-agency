@@ -15,6 +15,7 @@ use Carbon\CarbonInterface;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Route;
+use Throwable;
 
 final class CampaignStudioEditorialCalendarEventContributor implements EditorialCalendarEventContributor
 {
@@ -111,10 +112,20 @@ final class CampaignStudioEditorialCalendarEventContributor implements Editorial
 
     private function recordUrl(CampaignGroup $campaign): ?string
     {
-        if (! Route::has(CampaignGroupResource::getRouteBaseName() . '.edit')) {
+        try {
+            $routeBaseName = CampaignGroupResource::getRouteBaseName();
+        } catch (Throwable) {
             return null;
         }
 
-        return CampaignGroupResource::getUrl('edit', ['record' => $campaign]);
+        if (! Route::has($routeBaseName . '.edit')) {
+            return null;
+        }
+
+        try {
+            return CampaignGroupResource::getUrl('edit', ['record' => $campaign]);
+        } catch (Throwable) {
+            return null;
+        }
     }
 }

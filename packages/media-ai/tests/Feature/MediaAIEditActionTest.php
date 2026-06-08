@@ -348,12 +348,14 @@ it('rejects crafted image doctor operations before calling the provider', functi
         ->and($doctor->request)->toBeNull();
 });
 
-it('shows warning notifications when the image doctor reports a null-provider failure', function (): void {
+it('leaves image doctor provider failures to the queued job', function (): void {
     $doctor = new RecordingImageDoctor(ImageDoctorResult::failure(__('capell-media-ai::media-ai.not_configured')));
     app()->instance(ImageDoctor::class, $doctor);
 
+    $media = createMediaAIImage();
+
     Livewire::test(EditMedia::class, [
-        'record' => createMediaAIImage()->getRouteKey(),
+        'record' => $media->getRouteKey(),
     ])
         ->assertSuccessful()
         ->callAction('doctor-image', [
@@ -362,10 +364,17 @@ it('shows warning notifications when the image doctor reports a null-provider fa
         ])
         ->assertHasNoActionErrors()
         ->assertNotified(
-            Notification::make()
-                ->title(__('capell-media-ai::media-ai.not_configured'))
-                ->warning(),
+            Notification::make('capell_media_ai_image_doctor_queued')
+                ->title(__('capell-media-ai::media-ai.queued'))
+                ->success(),
         );
+
+    Queue::assertPushed(RunImageDoctorJob::class, fn (RunImageDoctorJob $job): bool => $job->mediaId === $media->getKey()
+        && $job->operation === 'improve'
+        && $job->instructions === 'Try the configured image doctor.');
+
+    expect($doctor->media)->toBeNull()
+        ->and($doctor->request)->toBeNull();
 });
 
 it('authorizes doctor requests against the media update policy', function (): void {

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Capell\Newsletter\Database\Factories;
 
+use Capell\Core\Models\Site;
 use Capell\Newsletter\Enums\SubscriberStatus;
 use Capell\Newsletter\Models\Subscriber;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -23,6 +24,7 @@ class SubscriberFactory extends Factory
         $email = $this->faker->unique()->safeEmail();
 
         return [
+            'site_id' => Site::factory(),
             'email_hash' => Subscriber::emailHash($email),
             'email' => $email,
             'first_name' => $this->faker->firstName(),

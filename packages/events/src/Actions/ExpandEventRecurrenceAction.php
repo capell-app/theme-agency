@@ -44,11 +44,17 @@ class ExpandEventRecurrenceAction
             ]);
         }
 
-        $rule = new RRule($event->recurrence_rule, $event->starts_at->toDateTimeImmutable());
+        $eventStartsAt = $event->starts_at->setTimezone($event->timezone);
+        $rule = new RRule($event->recurrence_rule, $eventStartsAt->toDateTimeImmutable());
 
         return collect($rule->getOccurrencesBetween($startsAt->toDateTimeImmutable(), $endsAt->toDateTimeImmutable()))
-            ->map(function (DateTimeInterface $occurrenceStart) use ($durationInSeconds, $event): EventOccurrenceData {
-                $occurrenceStartsAt = CarbonImmutable::instance($occurrenceStart)->setTimezone($event->timezone);
+            ->map(function (DateTimeInterface $occurrenceStart) use ($durationInSeconds, $event, $eventStartsAt): EventOccurrenceData {
+                $occurrenceDate = CarbonImmutable::instance($occurrenceStart)->setTimezone($event->timezone);
+                $occurrenceStartsAt = $occurrenceDate->setTime(
+                    (int) $eventStartsAt->format('H'),
+                    (int) $eventStartsAt->format('i'),
+                    (int) $eventStartsAt->format('s'),
+                );
                 $occurrenceEndsAt = $durationInSeconds > 0 ? $occurrenceStartsAt->addSeconds($durationInSeconds) : null;
 
                 return new EventOccurrenceData(

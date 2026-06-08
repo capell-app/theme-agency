@@ -60,15 +60,27 @@ it('keeps section palette colours behind semantic token classes', function (): v
 });
 
 it('ships default theme tokens with WCAG AA contrast for dark, emerald, and amber pairings', function (): void {
-    $values = NonprofitThemeServiceProvider::definition()->presets[0]->values;
+    $primaryColor = nonprofitPresetColor('primaryColor');
+    $neutralColor = nonprofitPresetColor('neutralColor');
+    $accentColor = nonprofitPresetColor('accentColor');
+    $surfaceColor = nonprofitPresetColor('surfaceColor');
 
-    expect(nonprofitContrastRatio('#ffffff', (string) $values['primaryColor']))->toBeGreaterThanOrEqual(4.5)
-        ->and(nonprofitContrastRatio('#ffffff', (string) $values['neutralColor']))->toBeGreaterThanOrEqual(4.5)
-        ->and(nonprofitContrastRatio((string) $values['accentColor'], (string) $values['neutralColor']))->toBeGreaterThanOrEqual(4.5)
-        ->and(nonprofitContrastRatio((string) $values['primaryColor'], (string) $values['surfaceColor']))->toBeGreaterThanOrEqual(4.5)
-        ->and(nonprofitContrastRatio((string) $values['neutralColor'], (string) $values['surfaceColor']))->toBeGreaterThanOrEqual(4.5)
-        ->and(nonprofitContrastRatio('#7c2d12', (string) $values['surfaceColor']))->toBeGreaterThanOrEqual(4.5);
+    expect(nonprofitContrastRatio('#ffffff', $primaryColor))->toBeGreaterThanOrEqual(4.5)
+        ->and(nonprofitContrastRatio('#ffffff', $neutralColor))->toBeGreaterThanOrEqual(4.5)
+        ->and(nonprofitContrastRatio($accentColor, $neutralColor))->toBeGreaterThanOrEqual(4.5)
+        ->and(nonprofitContrastRatio($primaryColor, $surfaceColor))->toBeGreaterThanOrEqual(4.5)
+        ->and(nonprofitContrastRatio($neutralColor, $surfaceColor))->toBeGreaterThanOrEqual(4.5)
+        ->and(nonprofitContrastRatio('#7c2d12', $surfaceColor))->toBeGreaterThanOrEqual(4.5);
 });
+
+function nonprofitPresetColor(string $key): string
+{
+    $value = NonprofitThemeServiceProvider::definition()->presets[0]->values[$key] ?? null;
+
+    throw_unless(is_string($value), RuntimeException::class, sprintf('Theme Nonprofit preset color [%s] must be a string.', $key));
+
+    return $value;
+}
 
 function nonprofitContrastRatio(string $foreground, string $background): float
 {
@@ -97,10 +109,21 @@ function nonprofitRgbChannels(string $hex): array
     $normalized = ltrim($hex, '#');
 
     return [
-        hexdec(substr($normalized, 0, 2)),
-        hexdec(substr($normalized, 2, 2)),
-        hexdec(substr($normalized, 4, 2)),
+        nonprofitHexPairToInteger(substr($normalized, 0, 2)),
+        nonprofitHexPairToInteger(substr($normalized, 2, 2)),
+        nonprofitHexPairToInteger(substr($normalized, 4, 2)),
     ];
+}
+
+function nonprofitHexPairToInteger(string $hex): int
+{
+    $value = hexdec($hex);
+
+    if (! is_int($value)) {
+        throw new RuntimeException(sprintf('Hex pair [%s] must decode to an integer.', $hex));
+    }
+
+    return $value;
 }
 
 function nonprofitLinearChannel(float $channel): float

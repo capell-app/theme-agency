@@ -9463,12 +9463,6 @@ parameters:
 			path: ../packages/filament-peek/tests/Feature/PagePreviewRouteTest.php
 
 		-
-			rawMessage: Cannot access property $uuid on mixed.
-			identifier: property.nonObject
-			count: 1
-			path: ../packages/filament-peek/tests/Feature/PagePreviewRouteTest.php
-
-		-
 			rawMessage: Cannot cast mixed to string.
 			identifier: cast.string
 			count: 1

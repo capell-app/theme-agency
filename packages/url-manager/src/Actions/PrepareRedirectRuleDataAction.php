@@ -13,6 +13,9 @@ use Illuminate\Database\Eloquent\Builder;
 use InvalidArgumentException;
 use Lorisleiva\Actions\Concerns\AsAction;
 
+/**
+ * @method static PreparedRedirectRuleData run(RedirectRuleData $data, ?int $ignoredRuleId = null)
+ */
 final class PrepareRedirectRuleDataAction
 {
     use AsAction;

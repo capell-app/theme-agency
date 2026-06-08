@@ -559,7 +559,7 @@ it('renders every Portfolio-owned section anonymously inside the budget without 
     (new PortfolioThemeServiceProvider($this->app))->boot($registry);
 
     $manifest = portfolioThemeTestManifest();
-    $budgetMilliseconds = (float) data_get($manifest, 'performance.frontendRenderBudgetMs', 20);
+    $budgetMilliseconds = portfolioFrontendRenderBudgetMs($manifest);
     $queryCount = 0;
 
     DB::listen(static function (QueryExecuted $query) use (&$queryCount): void {
@@ -684,5 +684,23 @@ function portfolioThemeTestManifest(): array
 
     throw_unless(is_array($manifest), RuntimeException::class, 'Theme Portfolio manifest must decode to an array.');
 
-    return $manifest;
+    $stringKeyedManifest = [];
+
+    foreach ($manifest as $key => $value) {
+        if (is_string($key)) {
+            $stringKeyedManifest[$key] = $value;
+        }
+    }
+
+    return $stringKeyedManifest;
+}
+
+/**
+ * @param  array<string, mixed>  $manifest
+ */
+function portfolioFrontendRenderBudgetMs(array $manifest): float
+{
+    $budget = data_get($manifest, 'performance.frontendRenderBudgetMs', 20);
+
+    return is_numeric($budget) ? (float) $budget : 20.0;
 }

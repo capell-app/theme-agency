@@ -128,7 +128,7 @@ it('renders every Local Services-owned section anonymously inside the budget wit
     (new LocalServicesThemeServiceProvider($this->app))->boot($registry);
 
     $manifest = localServicesThemeTestManifest();
-    $budgetMilliseconds = (float) data_get($manifest, 'performance.frontendRenderBudgetMs', 20);
+    $budgetMilliseconds = localServicesFrontendRenderBudgetMs($manifest);
     $queryCount = 0;
 
     DB::listen(static function (QueryExecuted $query) use (&$queryCount): void {
@@ -709,5 +709,23 @@ function localServicesThemeTestManifest(): array
 
     throw_unless(is_array($manifest), RuntimeException::class, 'Theme Local Services manifest must decode to an array.');
 
-    return $manifest;
+    $stringKeyedManifest = [];
+
+    foreach ($manifest as $key => $value) {
+        if (is_string($key)) {
+            $stringKeyedManifest[$key] = $value;
+        }
+    }
+
+    return $stringKeyedManifest;
+}
+
+/**
+ * @param  array<string, mixed>  $manifest
+ */
+function localServicesFrontendRenderBudgetMs(array $manifest): float
+{
+    $budget = data_get($manifest, 'performance.frontendRenderBudgetMs', 20);
+
+    return is_numeric($budget) ? (float) $budget : 20.0;
 }

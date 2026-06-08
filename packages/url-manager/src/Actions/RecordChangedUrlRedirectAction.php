@@ -11,6 +11,9 @@ use Capell\UrlManager\Models\RedirectRule;
 use Illuminate\Support\Collection;
 use Lorisleiva\Actions\Concerns\AsAction;
 
+/**
+ * @method static RedirectRule|null run(ChangedUrlRedirectData $data)
+ */
 final class RecordChangedUrlRedirectAction
 {
     use AsAction;

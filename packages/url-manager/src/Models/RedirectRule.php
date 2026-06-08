@@ -29,6 +29,7 @@ use Override;
  * @property int $hit_count
  * @property CarbonInterface|null $last_hit_at
  * @property string|null $notes
+ * @property int|null $created_by_user_id
  */
 class RedirectRule extends Model
 {

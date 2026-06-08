@@ -183,7 +183,7 @@ final class RecordCampaignConversionAction
         $goalKey = $goal->getAttribute('key');
         $normalizedGoalKey = is_string($goalKey) && trim($goalKey) !== ''
             ? trim($goalKey)
-            : 'goal-' . $goal->getKey();
+            : 'goal-' . $this->modelKey($goal);
 
         return sprintf('campaign.%s.%s', $campaignGroup->slug, $normalizedGoalKey);
     }
@@ -229,5 +229,12 @@ final class RecordCampaignConversionAction
     private function numericValue(mixed $value): ?float
     {
         return is_numeric($value) ? (float) $value : null;
+    }
+
+    private function modelKey(Model $model): string
+    {
+        $key = $model->getKey();
+
+        return is_int($key) || is_string($key) ? (string) $key : 'unknown';
     }
 }
