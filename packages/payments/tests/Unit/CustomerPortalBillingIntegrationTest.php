@@ -151,7 +151,7 @@ it('registers payment self service items for portal accounts', function (): void
         ->and($itemsByKeyPrefix->get('download')->type)->toBe(PortalSelfServiceItemType::Payment)
         ->and($itemsByKeyPrefix->get('download')->label)->toBe('Paid guide')
         ->and($itemsByKeyPrefix->get('download')->url)->toContain('/capell/payments/downloads/')
-        ->and($itemsByKeyPrefix->get('checkout')->description)->toBe('Paid 19.99 GBP.')
+        ->and($itemsByKeyPrefix->get('checkout')->description)->toBe('Paid GBP 19.99.')
         ->and($itemsByKeyPrefix->get('subscription')->url)->toBe(route('capell-payments.portal.billing'));
 });
 

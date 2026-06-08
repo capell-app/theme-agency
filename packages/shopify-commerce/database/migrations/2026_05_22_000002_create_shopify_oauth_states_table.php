@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('shop_domain')->index();
             $table->foreignId('site_id')->nullable()->constrained('sites')->cascadeOnDelete();
             $table->unsignedBigInteger('user_id')->nullable()->index();
-            $table->timestamp('expires_at')->index();
+            $table->timestamp('expires_at')->nullable()->index();
             $table->timestamps();
         });
     }

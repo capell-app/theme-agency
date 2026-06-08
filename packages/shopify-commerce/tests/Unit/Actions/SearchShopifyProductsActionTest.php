@@ -101,8 +101,8 @@ it('falls back to live graphql when local search has no matches', function (): v
     $staleProduct = ShopifyProduct::query()->create([
         'connection_id' => $connection->getKey(),
         'shopify_gid' => 'gid://shopify/Product/3',
-        'handle' => 'gamma-old',
-        'title' => 'Gamma Old',
+        'handle' => 'stale-old',
+        'title' => 'Stale Old',
         'status' => 'active',
         'options' => [],
         'raw_snapshot' => [],
@@ -139,7 +139,7 @@ it('falls back to live graphql when local search has no matches', function (): v
         ])
         ->and($product->raw_snapshot['id'])->toBe('gid://shopify/Product/3')
         ->and(ShopifyProductVariant::query()->where('shopify_gid', 'gid://shopify/ProductVariant/stale')->exists())->toBeFalse()
-        ->and(ShopifyProductVariant::query()->where('shopify_gid', 'gid://shopify/ProductVariant/31')->value('price_amount'))->toBe('49.9900');
+        ->and(ShopifyProductVariant::query()->where('shopify_gid', 'gid://shopify/ProductVariant/31')->value('price_amount'))->toBe('49.990000');
 
     Http::assertSent(static fn (Request $request): bool => $request['variables']['query'] === 'title:*Gamma* OR handle:*Gamma*'
         && $request['variables']['first'] === 7);

@@ -29,7 +29,7 @@ final class CreateBillingPortalSessionAction
             ->withToken($secretKey)
             ->withHeaders([
                 'Stripe-Version' => $this->apiVersion(),
-                'Idempotency-Key' => GeneratePaymentGatewayIdempotencyKeyAction::run('billing-portal-session', $data->toArray()),
+                'Idempotency-Key' => GeneratePaymentGatewayIdempotencyKeyAction::run('billing-portal-session', $this->idempotencyPayload($data)),
             ])
             ->timeout($this->timeout())
             ->connectTimeout($this->connectTimeout())
@@ -53,6 +53,19 @@ final class CreateBillingPortalSessionAction
             'configuration' => $data->configuration,
             'locale' => $data->locale,
         ], static fn (?string $value): bool => $value !== null && $value !== '');
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function idempotencyPayload(CreateBillingPortalSessionData $data): array
+    {
+        return [
+            'provider_customer_id' => $data->providerCustomerId,
+            'return_url' => $data->returnUrl,
+            'configuration' => $data->configuration,
+            'locale' => $data->locale,
+        ];
     }
 
     /**

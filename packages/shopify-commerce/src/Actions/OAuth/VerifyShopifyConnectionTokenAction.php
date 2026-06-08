@@ -17,7 +17,7 @@ final class VerifyShopifyConnectionTokenAction
     use AsAction;
 
     private const string TOKEN_PROBE_QUERY = <<<'GRAPHQL'
-query capellShopifyCommerceTokenProbe {
+query capellShopifyCommerceHealthProbe {
   shop {
     name
   }
