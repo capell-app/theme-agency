@@ -33,6 +33,9 @@
             "providers": [
                 "Capell\\Comments\\Providers\\CommentsServiceProvider"
             ]
+        },
+        "branch-alias": {
+            "dev-main": "4.x-dev"
         }
     },
     "minimum-stability": "dev",

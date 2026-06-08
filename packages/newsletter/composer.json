@@ -57,6 +57,9 @@
             "providers": [
                 "Capell\\Newsletter\\Providers\\NewsletterServiceProvider"
             ]
+        },
+        "branch-alias": {
+            "dev-main": "4.x-dev"
         }
     },
     "config": {

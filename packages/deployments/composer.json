@@ -19,6 +19,9 @@
             "providers": [
                 "Capell\\Deployments\\Providers\\DeploymentsServiceProvider"
             ]
+        },
+        "branch-alias": {
+            "dev-main": "4.x-dev"
         }
     },
     "require": {

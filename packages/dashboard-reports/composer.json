@@ -26,6 +26,9 @@
             "providers": [
                 "Capell\\DashboardReports\\Providers\\DashboardReportsServiceProvider"
             ]
+        },
+        "branch-alias": {
+            "dev-main": "4.x-dev"
         }
     },
     "config": {

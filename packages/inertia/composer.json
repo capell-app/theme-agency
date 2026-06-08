@@ -27,6 +27,9 @@
             "providers": [
                 "Capell\\Inertia\\Providers\\InertiaServiceProvider"
             ]
+        },
+        "branch-alias": {
+            "dev-main": "4.x-dev"
         }
     },
     "config": {

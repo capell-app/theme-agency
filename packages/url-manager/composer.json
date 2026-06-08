@@ -30,6 +30,9 @@
             "providers": [
                 "Capell\\UrlManager\\Providers\\UrlManagerServiceProvider"
             ]
+        },
+        "branch-alias": {
+            "dev-main": "4.x-dev"
         }
     },
     "config": {

@@ -18,6 +18,9 @@
             "providers": [
                 "Capell\\SocialFeeds\\Providers\\SocialFeedsServiceProvider"
             ]
+        },
+        "branch-alias": {
+            "dev-main": "4.x-dev"
         }
     },
     "require": {

@@ -35,6 +35,9 @@
             "providers": [
                 "Capell\\PrivacyCenter\\Providers\\PrivacyCenterServiceProvider"
             ]
+        },
+        "branch-alias": {
+            "dev-main": "4.x-dev"
         }
     },
     "config": {

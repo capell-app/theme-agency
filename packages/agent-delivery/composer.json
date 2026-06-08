@@ -36,6 +36,9 @@
             "providers": [
                 "Capell\\AgentDelivery\\Providers\\AgentDeliveryServiceProvider"
             ]
+        },
+        "branch-alias": {
+            "dev-main": "4.x-dev"
         }
     },
     "config": {

@@ -19,6 +19,9 @@
             "providers": [
                 "Capell\\AccessGate\\Providers\\AccessGateServiceProvider"
             ]
+        },
+        "branch-alias": {
+            "dev-main": "4.x-dev"
         }
     },
     "require": {

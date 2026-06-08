@@ -34,6 +34,9 @@
             "providers": [
                 "Capell\\CustomerPortal\\Providers\\CustomerPortalServiceProvider"
             ]
+        },
+        "branch-alias": {
+            "dev-main": "4.x-dev"
         }
     },
     "config": {

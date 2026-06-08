@@ -26,6 +26,9 @@
             "providers": [
                 "Capell\\ThemeStudio\\InertiaBookings\\Providers\\InertiaBookingsThemeServiceProvider"
             ]
+        },
+        "branch-alias": {
+            "dev-main": "4.x-dev"
         }
     },
     "config": {

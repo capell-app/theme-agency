@@ -21,6 +21,9 @@
             "providers": [
                 "Capell\\FoundationTheme\\Providers\\FoundationThemeServiceProvider"
             ]
+        },
+        "branch-alias": {
+            "dev-main": "4.x-dev"
         }
     },
     "homepage": "https://github.com/capell-app/foundation-theme",

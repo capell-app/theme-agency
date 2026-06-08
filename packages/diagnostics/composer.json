@@ -18,6 +18,9 @@
             "providers": [
                 "Capell\\Diagnostics\\Providers\\DiagnosticsServiceProvider"
             ]
+        },
+        "branch-alias": {
+            "dev-main": "4.x-dev"
         }
     },
     "require": {

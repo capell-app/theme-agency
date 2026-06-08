@@ -40,6 +40,9 @@
             "providers": [
                 "Capell\\KnowledgeBase\\Providers\\KnowledgeBaseServiceProvider"
             ]
+        },
+        "branch-alias": {
+            "dev-main": "4.x-dev"
         }
     },
     "config": {

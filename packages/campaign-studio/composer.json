@@ -49,6 +49,9 @@
             "providers": [
                 "Capell\\CampaignStudio\\Providers\\CampaignStudioServiceProvider"
             ]
+        },
+        "branch-alias": {
+            "dev-main": "4.x-dev"
         }
     },
     "config": {

@@ -35,6 +35,9 @@
             "providers": [
                 "Capell\\Hero\\Providers\\HeroServiceProvider"
             ]
+        },
+        "branch-alias": {
+            "dev-main": "4.x-dev"
         }
     },
     "config": {

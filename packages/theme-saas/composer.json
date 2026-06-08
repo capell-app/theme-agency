@@ -27,6 +27,9 @@
             "providers": [
                 "Capell\\ThemeStudio\\Saas\\SaasThemeServiceProvider"
             ]
+        },
+        "branch-alias": {
+            "dev-main": "4.x-dev"
         }
     },
     "homepage": "https://github.com/capell-app/theme-saas",

@@ -27,6 +27,9 @@
             "providers": [
                 "Capell\\LoginAudit\\Providers\\LoginAuditServiceProvider"
             ]
+        },
+        "branch-alias": {
+            "dev-main": "4.x-dev"
         }
     },
     "config": {

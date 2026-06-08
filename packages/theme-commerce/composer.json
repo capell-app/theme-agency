@@ -27,6 +27,9 @@
             "providers": [
                 "Capell\\ThemeStudio\\Commerce\\CommerceThemeServiceProvider"
             ]
+        },
+        "branch-alias": {
+            "dev-main": "4.x-dev"
         }
     },
     "homepage": "https://github.com/capell-app/theme-commerce",

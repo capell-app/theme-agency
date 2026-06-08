@@ -37,6 +37,9 @@
             "providers": [
                 "Capell\\SeoSuite\\Providers\\SeoSuiteServiceProvider"
             ]
+        },
+        "branch-alias": {
+            "dev-main": "4.x-dev"
         }
     },
     "config": {

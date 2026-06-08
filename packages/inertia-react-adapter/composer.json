@@ -24,6 +24,9 @@
             "providers": [
                 "Capell\\InertiaReactAdapter\\Providers\\InertiaReactAdapterServiceProvider"
             ]
+        },
+        "branch-alias": {
+            "dev-main": "4.x-dev"
         }
     },
     "config": {

@@ -46,6 +46,9 @@
             "providers": [
                 "Capell\\EmailStudio\\Providers\\EmailStudioServiceProvider"
             ]
+        },
+        "branch-alias": {
+            "dev-main": "4.x-dev"
         }
     },
     "config": {

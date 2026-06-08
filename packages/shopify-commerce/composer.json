@@ -19,6 +19,9 @@
             "providers": [
                 "Capell\\ShopifyCommerce\\Providers\\ShopifyCommerceServiceProvider"
             ]
+        },
+        "branch-alias": {
+            "dev-main": "4.x-dev"
         }
     },
     "require": {

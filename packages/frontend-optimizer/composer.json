@@ -28,6 +28,9 @@
             "providers": [
                 "Capell\\FrontendOptimizer\\Providers\\FrontendOptimizerServiceProvider"
             ]
+        },
+        "branch-alias": {
+            "dev-main": "4.x-dev"
         }
     },
     "config": {
