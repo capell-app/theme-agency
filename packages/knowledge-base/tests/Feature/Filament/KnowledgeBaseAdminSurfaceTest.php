@@ -60,6 +60,29 @@ function knowledgeBaseManifestArray(array $array, string $key): array
     return $value;
 }
 
+/**
+ * @param  array<array-key, object>  $actions
+ * @return list<string>
+ */
+function knowledgeBaseFilamentActionNames(array $actions): array
+{
+    $names = [];
+
+    foreach ($actions as $action) {
+        if (! method_exists($action, 'getName')) {
+            continue;
+        }
+
+        $name = (new ReflectionMethod($action, 'getName'))->invoke($action);
+
+        if (is_string($name)) {
+            $names[] = $name;
+        }
+    }
+
+    return $names;
+}
+
 it('exposes translated collection and article admin resources', function (): void {
     $collectionPages = KnowledgeBaseCollectionResource::getPages();
     $articlePages = KnowledgeBaseArticleResource::getPages();
@@ -283,8 +306,8 @@ it('exposes related article editing in the article edit surface', function (): v
             TextColumn::class,
             TextColumn::class,
         ])
-        ->and(array_keys($table->getHeaderActions()))->toBe(['relate_article'])
-        ->and(array_keys($table->getRecordActions()))->toBe(['update_relation']);
+        ->and(knowledgeBaseFilamentActionNames($table->getHeaderActions()))->toBe(['relate_article'])
+        ->and(knowledgeBaseFilamentActionNames($table->getRecordActions()))->toBe(['update_relation']);
 });
 
 it('saves article edits as published versions through the edit page adapter', function (): void {

@@ -30,7 +30,6 @@ final class PrivacyCenterServiceProvider extends AbstractPackageServiceProvider
             ->hasConfigFile(self::$name)
             ->hasTranslations()
             ->hasViews()
-            ->hasRoute('web')
             ->hasMigrations([
                 '2026_05_31_000001_create_privacy_consent_policies_table',
                 '2026_05_31_000002_create_privacy_consent_records_table',
@@ -49,6 +48,7 @@ final class PrivacyCenterServiceProvider extends AbstractPackageServiceProvider
             }
 
             $this
+                ->registerRoutes()
                 ->registerModels()
                 ->registerProtectedTables();
         });
@@ -80,6 +80,13 @@ final class PrivacyCenterServiceProvider extends AbstractPackageServiceProvider
     protected function isPackageInstalled(): bool
     {
         return CapellCore::isPackageInstalled(self::$packageName);
+    }
+
+    private function registerRoutes(): self
+    {
+        $this->loadRoutesFrom(__DIR__ . '/../../routes/web.php');
+
+        return $this;
     }
 
     private function registerModels(): self

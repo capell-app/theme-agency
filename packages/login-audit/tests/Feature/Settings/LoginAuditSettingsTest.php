@@ -14,6 +14,15 @@ function seedLoginAuditSetting(string $settingName, mixed $value): void
 {
     /** @var SettingsMigrator $settingsMigrator */
     $settingsMigrator = resolve(SettingsMigrator::class);
+
+    foreach (defaultLoginAuditSettingsForSettingsTest() as $defaultSettingName => $defaultValue) {
+        $defaultSettingKey = 'login_audit.' . $defaultSettingName;
+
+        if (! $settingsMigrator->exists($defaultSettingKey)) {
+            $settingsMigrator->add($defaultSettingKey, $defaultValue);
+        }
+    }
+
     $settingKey = 'login_audit.' . $settingName;
 
     if ($settingsMigrator->exists($settingKey)) {
@@ -23,6 +32,30 @@ function seedLoginAuditSetting(string $settingName, mixed $value): void
     }
 
     $settingsMigrator->add($settingKey, $value);
+}
+
+/**
+ * @return array<string, mixed>
+ */
+function defaultLoginAuditSettingsForSettingsTest(): array
+{
+    return [
+        'show_login_audits' => true,
+        'retention_days' => 90,
+        'track_user_ip_addresses' => true,
+        'track_admin_activity' => true,
+        'activity_update_grace_seconds' => 60,
+        'enable_suspicious_detection' => true,
+        'enable_geo_location' => false,
+        'failed_login_threshold' => 5,
+        'failed_login_window_minutes' => 60,
+        'check_unusual_login_times' => false,
+        'alert_new_devices' => true,
+        'alert_failed_logins' => false,
+        'alert_suspicious_logins' => true,
+        'last_purged_at' => null,
+        'enable_user_resource_bridge' => true,
+    ];
 }
 
 it('uses retention days settings for the purge command configuration', function (): void {

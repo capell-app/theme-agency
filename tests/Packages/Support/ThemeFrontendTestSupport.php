@@ -315,6 +315,14 @@ function themeFrontendMigrateHtmlCacheTables(): void
             $migrationInstance->up();
         }
     }
+
+    if (Schema::hasTable('cached_model_urls') && ! Schema::hasColumn('cached_model_urls', 'hit_count')) {
+        $migrationInstance = require dirname(__DIR__, 3) . '/packages/html-cache/database/migrations/2026_06_07_000001_add_telemetry_to_cached_model_urls_table.php';
+
+        if (is_object($migrationInstance) && method_exists($migrationInstance, 'up')) {
+            $migrationInstance->up();
+        }
+    }
 }
 
 /**

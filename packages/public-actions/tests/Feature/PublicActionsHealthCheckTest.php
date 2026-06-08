@@ -11,10 +11,10 @@ it('reports a compatible capell api version', function (): void {
     expect(PublicActionsHealthCheck::compatibleCapellApiVersion())->toBe('^4.0');
 });
 
-it('runs real diagnostics returning four check results', function (): void {
+it('runs real diagnostics returning five check results', function (): void {
     $results = PublicActionsHealthCheck::runDiagnostics();
 
-    expect($results)->toHaveCount(4)
+    expect($results)->toHaveCount(5)
         ->and($results->every(static fn (mixed $result): bool => $result instanceof DoctorCheckResultData))->toBeTrue();
 });
 

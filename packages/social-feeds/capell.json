@@ -125,6 +125,11 @@
         "summary": "Place branded, cached social feeds anywhere in Capell with RSS, TikTok, YouTube, Bluesky, and custom provider support.",
         "screenshots": [
             {
+                "path": "docs/assets/marketplace/extension-card.svg",
+                "alt": "Social Feeds extension marketplace card.",
+                "caption": "Social Feeds extension preview for Marketplace cards."
+            },
+            {
                 "path": "docs/screenshots/social-feed-carousel-widget.png",
                 "alt": "Social Feeds public carousel widget rendered with seeded cached RSS posts.",
                 "caption": "Route-backed carousel widget with cached feed items"

@@ -8,6 +8,7 @@ use Capell\Admin\Data\AdminSurfaceContributionData;
 use Capell\Admin\Facades\CapellAdmin;
 use Capell\Core\Facades\CapellCore;
 use Capell\Core\Support\Packages\AbstractPackageServiceProvider;
+use Capell\PublicActions\Actions\ResolvePublicActionIntegrationTokenAction;
 use Capell\PublicActions\Console\Commands\PrunePublicActionSubmissionsCommand;
 use Capell\PublicActions\Contracts\PublicActionWebhookHostResolver;
 use Capell\PublicActions\Enums\ResourceEnum;
@@ -169,7 +170,7 @@ class PublicActionsServiceProvider extends AbstractPackageServiceProvider
         });
 
         RateLimiter::for('public-actions-api', function (Request $request): Limit {
-            $token = $request->attributes->get('public_action_integration_token');
+            $token = $this->integrationTokenFromRequest($request);
 
             if ($token instanceof PublicActionIntegrationToken) {
                 return Limit::perMinute($this->integrationTokenRateLimitPerMinute($token))
@@ -181,6 +182,25 @@ class PublicActionsServiceProvider extends AbstractPackageServiceProvider
         });
 
         return $this;
+    }
+
+    private function integrationTokenFromRequest(Request $request): ?PublicActionIntegrationToken
+    {
+        $token = $request->attributes->get('public_action_integration_token');
+
+        if ($token instanceof PublicActionIntegrationToken) {
+            return $token;
+        }
+
+        $plainTextToken = $request->bearerToken();
+
+        if ($plainTextToken === null || $plainTextToken === '') {
+            $headerToken = $request->headers->get('X-Capell-Public-Actions-Token');
+            $plainTextToken = is_string($headerToken) ? $headerToken : null;
+        }
+
+        return resolve(ResolvePublicActionIntegrationTokenAction::class)
+            ->handle($plainTextToken);
     }
 
     private function submitRateLimitPerMinute(string $actionKey): int
