@@ -58,6 +58,8 @@ it('creates the unsaved preview snapshot when the header action is clicked', fun
     expect($iframeUrl)->toBeString()
         ->and($iframeUrl)->toContain('/capell-filament-peek/preview/');
 
+    expect(config('filament-peek.devicePresets.mobile.width'))->toBe('390px');
+
     $token = Str::between((string) $iframeUrl, '/capell-filament-peek/preview/', '?');
     $snapshot = FindPagePreviewSnapshotAction::run($token);
 

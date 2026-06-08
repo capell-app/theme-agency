@@ -35,8 +35,8 @@ final class CreatePagePreviewSnapshotAction
         $token = Str::random(48);
         $snapshot = new PagePreviewSnapshotData(
             token: $token,
-            userId: $user->getAuthIdentifier(),
-            pageId: (int) $page->getKey(),
+            userId: $this->previewUserIdentifier($user),
+            pageId: $this->modelIntKey($page),
             formState: $formState,
             workspaceId: $this->currentWorkspaceId(),
             layoutBuilderState: resolve(StoreLayoutBuilderPreviewStateAction::class)->resolve($page, $user),

@@ -7,13 +7,14 @@ namespace Capell\FilamentPeek\Actions;
 use Capell\Core\Contracts\Pageable;
 use Capell\Core\Models\Layout;
 use Capell\FilamentPeek\Concerns\ResolvesPreviewContext;
+use Capell\FilamentPeek\Contracts\StoresLayoutBuilderPreviewState;
 use Capell\FilamentPeek\Data\LayoutBuilderPreviewStateData;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
 use Lorisleiva\Actions\Concerns\AsAction;
 
-final class StoreLayoutBuilderPreviewStateAction
+final class StoreLayoutBuilderPreviewStateAction implements StoresLayoutBuilderPreviewState
 {
     use AsAction;
     use ResolvesPreviewContext;
@@ -38,7 +39,8 @@ final class StoreLayoutBuilderPreviewStateAction
             return;
         }
 
-        $signature = $this->signature((int) $layout->getKey(), $containers ?? [], $assets);
+        $layoutId = $this->modelIntKey($layout);
+        $signature = $this->signature($layoutId, $containers ?? [], $assets);
         $cache = Cache::store($this->previewCacheStore());
         $cacheKey = $this->layoutBuilderPreviewCacheKey($page, $user);
         $existingPayload = $cache->get($cacheKey);
@@ -48,7 +50,7 @@ final class StoreLayoutBuilderPreviewStateAction
         }
 
         $state = new LayoutBuilderPreviewStateData(
-            layoutId: (int) $layout->getKey(),
+            layoutId: $layoutId,
             containers: $containers ?? [],
             assets: $assets,
             signature: $signature,
@@ -65,7 +67,7 @@ final class StoreLayoutBuilderPreviewStateAction
         );
     }
 
-    public function clear(Pageable $page, ?Model $user = null): void
+    public function clear(Pageable $page, ?Authenticatable $user = null): void
     {
         if (! $page instanceof Model) {
             return;

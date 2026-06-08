@@ -7,5 +7,6 @@ return [
         'label' => 'Changes',
         'tooltip' => 'Preview current unsaved changes without saving',
         'modal_title' => 'Preview changes',
+        'ribbon' => 'Unsaved preview - not published',
     ],
 ];

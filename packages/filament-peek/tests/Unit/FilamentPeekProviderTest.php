@@ -31,6 +31,12 @@ it('registers the peek plugin through the panel extender', function (): void {
     expect($panel->hasPlugin(FilamentPeekPlugin::make()->getId()))->toBeTrue();
 });
 
+it('passes Capell device presets to the upstream preview modal', function (): void {
+    expect(config('filament-peek.devicePresets.mobile.width'))->toBe('390px')
+        ->and(config('filament-peek.devicePresets.tablet.canRotatePreset'))->toBeTrue()
+        ->and(config('filament-peek.initialDevicePreset'))->toBe('fullscreen');
+});
+
 it('does not boot runtime integrations when the package is not installed', function (): void {
     CapellCore::forcePackageInstalled(FilamentPeekServiceProvider::$packageName, false);
 

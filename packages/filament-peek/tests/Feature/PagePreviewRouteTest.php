@@ -146,6 +146,7 @@ it('renders unsaved page fields through a private signed preview without saving 
     $response
         ->assertOk()
         ->assertHeader('Cache-Control', 'no-store, private')
+        ->assertSee('Unsaved preview - not published')
         ->assertSee('Unsaved page name')
         ->assertSee('Unsaved title')
         ->assertSee('Unsaved body', false);
@@ -185,6 +186,54 @@ it('overlays an existing unsaved featured image selection in the preview page co
         ->assertDontSee((string) $savedImage->uuid);
 });
 
+it('overlays an existing unsaved social image selection in the preview page context', function (): void {
+    $user = $this->createUserWithRole('super_admin');
+    $this->actingAs($user);
+    registerPreviewTestRenderer();
+
+    $language = Language::factory()->create();
+    $site = Site::factory()->withTranslations($language)->language($language)->create();
+    $layout = Layout::factory()->site($site)->default()->create(['containers' => []]);
+    $page = Page::factory()->site($site)->layout($layout)->withTranslations($language)->create();
+    $savedImage = MediaFactory::new()->model($page)->collection(MediaCollectionEnum::SocialImage)->create([
+        'uuid' => '33333333-3333-4333-8333-333333333333',
+    ]);
+    $unsavedImage = MediaFactory::new()->model($page)->collection(MediaCollectionEnum::SocialImage)->create([
+        'uuid' => '44444444-4444-4444-8444-444444444444',
+    ]);
+
+    $snapshot = CreatePagePreviewSnapshotAction::run($page, [
+        'social_image' => [$unsavedImage->uuid => $unsavedImage->uuid],
+    ])['snapshot'];
+
+    $response = $this->get(URL::signedRoute('capell-filament-peek.preview', ['token' => $snapshot->token]));
+
+    $response
+        ->assertOk()
+        ->assertSee((string) $unsavedImage->uuid)
+        ->assertDontSee((string) $savedImage->uuid);
+});
+
+it('returns a private friendly response when preview rendering fails', function (): void {
+    $user = $this->createUserWithRole('super_admin');
+    $this->actingAs($user);
+    registerFailingPreviewTestRenderer();
+
+    $language = Language::factory()->create();
+    $site = Site::factory()->withTranslations($language)->language($language)->create();
+    $layout = Layout::factory()->site($site)->default()->create(['containers' => []]);
+    $page = Page::factory()->site($site)->layout($layout)->withTranslations($language)->create();
+    $snapshot = CreatePagePreviewSnapshotAction::run($page, ['name' => 'Preview'])['snapshot'];
+
+    $response = $this->get(URL::signedRoute('capell-filament-peek.preview', ['token' => $snapshot->token]));
+
+    $response
+        ->assertStatus(500)
+        ->assertHeader('Cache-Control', 'no-store, private')
+        ->assertSee('Preview could not render')
+        ->assertDontSee('Preview renderer reached');
+});
+
 it('returns a private friendly response for missing preview snapshots', function (): void {
     $user = $this->createUserWithRole('super_admin');
     $this->actingAs($user);
@@ -214,14 +263,34 @@ function registerPreviewTestRenderer(): void
             $image = $context->page instanceof Page && $context->page->relationLoaded('image')
                 ? $context->page->getRelation('image')?->uuid
                 : '';
+            $socialImage = $context->page instanceof Page && $context->page->relationLoaded('socialImage')
+                ? $context->page->getRelation('socialImage')?->uuid
+                : '';
 
             return response()->make(sprintf(
-                '<main><h1>%s</h1><h2>%s</h2><div>%s</div><span>%s</span></main>',
+                '<main><h1>%s</h1><h2>%s</h2><div>%s</div><span>%s</span><span>%s</span></main>',
                 e((string) $name),
                 e((string) $title),
                 $content,
                 e((string) $image) . ' Preview renderer reached',
+                e((string) $socialImage),
             ));
+        }
+    });
+}
+
+function registerFailingPreviewTestRenderer(): void
+{
+    resolve(FrontendResponseRendererRegistry::class)->register(new class implements FrontendResponseRenderer
+    {
+        public function runtime(): FrontendRuntime
+        {
+            return FrontendRuntime::Blade;
+        }
+
+        public function render(FrontendRenderContextData $context): SymfonyResponse
+        {
+            throw new RuntimeException('Preview renderer failed for test.');
         }
     });
 }

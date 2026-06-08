@@ -37,7 +37,7 @@ trait ResolvesPreviewContext
 
     protected function previewTtlMinutes(): int
     {
-        return max(1, (int) config('capell-filament-peek.preview.ttl_minutes', 15));
+        return $this->configInt('capell-filament-peek.preview.ttl_minutes', 15, 1);
     }
 
     /**
@@ -45,7 +45,7 @@ trait ResolvesPreviewContext
      */
     protected function assertPreviewPayloadWithinLimit(array $payload, string $payloadType): void
     {
-        $maxKilobytes = max(0, (int) config('capell-filament-peek.preview.max_payload_kb', 512));
+        $maxKilobytes = $this->configInt('capell-filament-peek.preview.max_payload_kb', 512, 0);
 
         if ($maxKilobytes === 0) {
             return;
@@ -88,9 +88,58 @@ trait ResolvesPreviewContext
         return implode(':', [
             FilamentPeekServiceProvider::$name,
             'layout-builder',
-            $user->getAuthIdentifier(),
+            $this->previewUserIdentifierString($user),
             $page->getMorphClass(),
-            $page->getKey(),
+            $this->modelKeyString($page),
         ]);
+    }
+
+    protected function modelIntKey(Model $model): int
+    {
+        $key = $model->getKey();
+
+        if (is_int($key)) {
+            return $key;
+        }
+
+        if (is_string($key) && ctype_digit($key)) {
+            return (int) $key;
+        }
+
+        throw new RuntimeException('Expected preview model to have an integer key.');
+    }
+
+    protected function previewUserIdentifier(Authenticatable $user): int|string
+    {
+        $identifier = $user->getAuthIdentifier();
+
+        if (is_int($identifier) || is_string($identifier)) {
+            return $identifier;
+        }
+
+        throw new RuntimeException('Expected preview user to have a scalar auth identifier.');
+    }
+
+    protected function previewUserIdentifierString(Authenticatable $user): string
+    {
+        return (string) $this->previewUserIdentifier($user);
+    }
+
+    protected function modelKeyString(Model $model): string
+    {
+        return (string) $this->modelIntKey($model);
+    }
+
+    private function configInt(string $key, int $default, int $minimum): int
+    {
+        $value = config($key, $default);
+
+        if (is_int($value)) {
+            return max($minimum, $value);
+        }
+
+        return is_string($value) && ctype_digit($value)
+            ? max($minimum, (int) $value)
+            : max($minimum, $default);
     }
 }

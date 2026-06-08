@@ -92,7 +92,9 @@ final class RenderPagePreviewSnapshotAction
             }
         }
 
-        return $response instanceof Response ? $response : $response->toResponse(request());
+        $response = $response instanceof Response ? $response : $response->toResponse(request());
+
+        return $this->withPreviewRibbon($response);
     }
 
     private function previewPage(Page $page, PagePreviewSnapshotData $snapshot): Page
@@ -362,6 +364,24 @@ final class RenderPagePreviewSnapshotAction
         }
 
         return RegisterLayoutBuilderPreviewWidgetsAction::run($page, $language, $snapshot->layoutBuilderState);
+    }
+
+    private function withPreviewRibbon(Response $response): Response
+    {
+        $content = $response->getContent();
+
+        if (! is_string($content) || $content === '') {
+            return $response;
+        }
+
+        $ribbon = view('capell-filament-peek::preview-ribbon')->render();
+        $content = str_contains(strtolower($content), '</body>')
+            ? str_ireplace('</body>', $ribbon . '</body>', $content)
+            : $ribbon . $content;
+
+        $response->setContent($content);
+
+        return $response;
     }
 
     /**

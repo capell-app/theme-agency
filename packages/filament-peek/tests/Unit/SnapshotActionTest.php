@@ -7,9 +7,14 @@ use Capell\Core\Models\Page;
 use Capell\FilamentPeek\Actions\CreatePagePreviewSnapshotAction;
 use Capell\FilamentPeek\Actions\FindPagePreviewSnapshotAction;
 use Capell\FilamentPeek\Actions\StoreLayoutBuilderPreviewStateAction;
+use Capell\FilamentPeek\Contracts\StoresLayoutBuilderPreviewState;
 use Capell\FilamentPeek\Data\LayoutBuilderPreviewStateData;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
+
+it('exposes a typed layout builder preview state store contract', function (): void {
+    expect(resolve(StoreLayoutBuilderPreviewStateAction::class))->toBeInstanceOf(StoresLayoutBuilderPreviewState::class);
+});
 
 it('stores private expiring page preview snapshots for the current user', function (): void {
     $user = $this->createUserWithRole('super_admin');
@@ -33,7 +38,7 @@ it('returns null for missing preview snapshot tokens', function (): void {
 
 it('rejects oversized page preview snapshots before caching them', function (): void {
     config()->set('capell-filament-peek.preview.max_payload_kb', 1);
-    Log::fake();
+    $logger = Log::spy();
 
     $user = $this->createUserWithRole('super_admin');
     $this->actingAs($user);
@@ -44,7 +49,7 @@ it('rejects oversized page preview snapshots before caching them', function (): 
         'body' => str_repeat('x', 2048),
     ]))->toThrow(RuntimeException::class, __('capell-filament-peek::errors.payload_too_large'));
 
-    Log::assertLogged('warning', fn (string $message, array $context): bool => $message === 'Filament Peek preview payload exceeded the configured cache limit.'
+    $logger->shouldHaveReceived('warning')->withArgs(fn (string $message, array $context): bool => $message === 'Filament Peek preview payload exceeded the configured cache limit.'
         && ($context['payload_type'] ?? null) === 'page_preview_snapshot'
         && ($context['max_bytes'] ?? null) === 1024);
 
@@ -80,7 +85,7 @@ it('caches the latest layout builder preview state per user and page', function 
 
 it('rejects oversized layout builder preview state before caching it', function (): void {
     config()->set('capell-filament-peek.preview.max_payload_kb', 1);
-    Log::fake();
+    $logger = Log::spy();
 
     $user = $this->createUserWithRole('super_admin');
     $this->actingAs($user);
@@ -96,7 +101,7 @@ it('rejects oversized layout builder preview state before caching it', function 
         ],
     ))->toThrow(RuntimeException::class, __('capell-filament-peek::errors.payload_too_large'));
 
-    Log::assertLogged('warning', fn (string $message, array $context): bool => $message === 'Filament Peek preview payload exceeded the configured cache limit.'
+    $logger->shouldHaveReceived('warning')->withArgs(fn (string $message, array $context): bool => $message === 'Filament Peek preview payload exceeded the configured cache limit.'
         && ($context['payload_type'] ?? null) === 'layout_builder_preview_state'
         && ($context['max_bytes'] ?? null) === 1024);
 
