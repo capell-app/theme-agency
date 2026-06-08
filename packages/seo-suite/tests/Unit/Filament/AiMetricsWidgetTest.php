@@ -43,6 +43,8 @@ it('builds ai metrics widget data from history rows, settings, and rate limits',
         'prompt_tokens' => 10,
         'completion_tokens' => 20,
         'total_tokens' => 30,
+        'cost_micros' => 2000,
+        'cost_currency' => 'USD',
         'duration' => 0.5,
         'failed' => false,
     ]);
@@ -54,6 +56,8 @@ it('builds ai metrics widget data from history rows, settings, and rate limits',
         'prompt_tokens' => 20,
         'completion_tokens' => 10,
         'total_tokens' => 30,
+        'cost_micros' => 3000,
+        'cost_currency' => 'USD',
         'duration' => 0.7,
         'failed' => true,
         'error_message' => 'Provider failed',
@@ -66,6 +70,8 @@ it('builds ai metrics widget data from history rows, settings, and rate limits',
         'prompt_tokens' => 7,
         'completion_tokens' => 8,
         'total_tokens' => 15,
+        'cost_micros' => 1000,
+        'cost_currency' => 'USD',
         'duration' => 0.2,
         'failed' => false,
     ]);
@@ -81,6 +87,8 @@ it('builds ai metrics widget data from history rows, settings, and rate limits',
 
     expect($data->totalGenerations)->toBe(3)
         ->and($data->totalTokens)->toBe(75)
+        ->and($data->totalCostMicros)->toBe(6000)
+        ->and($data->currency)->toBe('USD')
         ->and($data->failedGenerations)->toBe(1)
         ->and($data->remainingRequests)->toBe(10)
         ->and($data->windowLimitSeconds)->toBe(90)
@@ -98,5 +106,6 @@ it('builds ai metrics widget data from history rows, settings, and rate limits',
     expect($topFeature->feature)->toBe('GeneratePageTitleAction')
         ->and($topFeature->count)->toBe(2)
         ->and($topFeature->tokens)->toBe(60)
+        ->and($topFeature->costMicros)->toBe(5000)
         ->and($topFeature->averageTokensPerRequest)->toBe(30.0);
 });

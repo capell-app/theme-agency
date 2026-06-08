@@ -68,6 +68,26 @@ it('resolves the most specific prefix redirect rule', function (): void {
         ->and($resolution?->matchType)->toBe(RedirectMatchType::Prefix);
 });
 
+it('supports managed 410 gone rules without requiring redirect targets', function (): void {
+    config(['capell-url-manager.hit_recording.defer' => false]);
+
+    $redirectRule = UpsertRedirectRuleAction::run(new RedirectRuleData(
+        sourceUrl: '/removed-page',
+        targetUrl: '',
+        statusCode: 410,
+    ));
+
+    $resolution = ResolveRedirectRuleAction::run('/removed-page', recordHit: false, statusCode: 410);
+    $redirectResolution = ResolveRedirectRuleAction::run('/removed-page', recordHit: false, statusCode: 301);
+
+    expect($redirectRule->source_url)->toBe('/removed-page')
+        ->and($redirectRule->target_url)->toBe('')
+        ->and($redirectRule->status_code)->toBe(410)
+        ->and($resolution?->statusCode)->toBe(410)
+        ->and($resolution?->targetUrl)->toBe('')
+        ->and($redirectResolution)->toBeNull();
+});
+
 it('uses redirect priority when prefix rules overlap', function (): void {
     UpsertRedirectRuleAction::run(new RedirectRuleData(
         sourceUrl: '/docs',
@@ -237,6 +257,11 @@ it('imports valid redirect rows and reports invalid rows', function (): void {
             'priority' => 25,
         ],
         [
+            'source_url' => '/removed',
+            'target_url' => '',
+            'status_code' => 410,
+        ],
+        [
             'source_url' => '',
             'target_url' => '/missing-source',
         ],
@@ -244,13 +269,16 @@ it('imports valid redirect rows and reports invalid rows', function (): void {
 
     $export = ExportRedirectRulesAction::run();
 
-    expect($result->imported)->toBe(1)
+    expect($result->imported)->toBe(2)
         ->and($result->skipped)->toBe(1)
         ->and($result->errors)->toHaveCount(1)
-        ->and($export)->toHaveCount(1)
+        ->and($export)->toHaveCount(2)
         ->and($export[0]['source_url'])->toBe('/legacy')
         ->and($export[0]['status_code'])->toBe(302)
-        ->and($export[0]['priority'])->toBe(25);
+        ->and($export[0]['priority'])->toBe(25)
+        ->and($export[1]['source_url'])->toBe('/removed')
+        ->and($export[1]['target_url'])->toBe('')
+        ->and($export[1]['status_code'])->toBe(410);
 });
 
 it('previews redirect imports with the same safety policy as import', function (): void {

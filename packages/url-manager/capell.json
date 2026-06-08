@@ -95,6 +95,7 @@
         "redirect-hit-counts",
         "redirect-hit-retention",
         "redirect-priority-ordering",
+        "managed-gone-rules",
         "redirect-loop-detection",
         "open-redirect-protection",
         "canonical-url-management",

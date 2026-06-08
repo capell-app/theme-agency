@@ -11,6 +11,9 @@ use Capell\Frontend\Contracts\RenderedModelTracker;
 use Illuminate\Support\Collection;
 use Lorisleiva\Actions\Concerns\AsObject;
 
+/**
+ * @method static array<int, array<string, mixed>> run(Pageable $page)
+ */
 final class BuildPageImageSchemaAction
 {
     use AsObject;

@@ -15,6 +15,8 @@ final class AiMetricsData extends Data
     public function __construct(
         public readonly int $totalGenerations,
         public readonly int $totalTokens,
+        public readonly int $totalCostMicros,
+        public readonly string $currency,
         public readonly int $failedGenerations,
         public readonly int $remainingRequests,
         public readonly int $windowLimitSeconds,
@@ -34,6 +36,7 @@ final class FeatureUsageData extends Data
         public readonly string $feature,
         public readonly int $count,
         public readonly int $tokens,
+        public readonly int $costMicros,
         public readonly float $averageTokensPerRequest,
     ) {}
 }

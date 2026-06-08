@@ -51,6 +51,20 @@ it('resolves managed redirects through the core redirect resolver contract', fun
     expect(RedirectRule::query()->first()?->hit_count)->toBe(1);
 });
 
+it('does not return 410 rules as redirect decisions', function (): void {
+    UpsertRedirectRuleAction::run(new RedirectRuleData(
+        sourceUrl: '/gone',
+        targetUrl: '',
+        siteId: 1,
+        languageId: 1,
+        statusCode: 410,
+    ));
+
+    $decision = (new UrlManagerRedirectResolver)->resolve(urlManagerTestSite(), urlManagerTestLanguage(), '/gone');
+
+    expect($decision)->toBeNull();
+});
+
 it('does not hide an existing non redirect page URL with a managed redirect', function (): void {
     UpsertRedirectRuleAction::run(new RedirectRuleData(
         sourceUrl: '/real-page',

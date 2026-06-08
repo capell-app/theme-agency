@@ -10,12 +10,15 @@ use Capell\SeoSuite\Data\Ai\AiGenerationResultData;
 use Capell\SeoSuite\DataObjects\AiCreatorData;
 use Capell\SeoSuite\Models\AiCreatorContext;
 use Capell\SeoSuite\Models\AiCreatorSession;
+use Capell\SeoSuite\Policies\AiCreatorPolicy;
 use Capell\SeoSuite\Support\AiRateLimiter;
 use Capell\SeoSuite\Support\AiResponse;
 use Capell\SeoSuite\Support\PrismProvider;
 use Capell\SeoSuite\Support\PromptRepository;
 use Capell\SeoSuite\Support\SectionRegistry;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Pipeline\Pipeline;
+use Illuminate\Support\Facades\Auth;
 use InvalidArgumentException;
 
 class AiCreatorPipeline
@@ -26,6 +29,7 @@ class AiCreatorPipeline
         private readonly AiRateLimiter $rateLimiter,
         private readonly SectionRegistry $sectionRegistry,
         private readonly RecordAiGenerationAction $recordAiGenerationAction,
+        private readonly AiCreatorPolicy $policy,
     ) {}
 
     public function execute(AiGenerationInputData $input): AiGenerationResultData
@@ -41,6 +45,7 @@ class AiCreatorPipeline
             ->through([
                 fn (array $pipelinePayload, callable $next): array => $this->loadOrCreateSession($pipelinePayload, $next),
                 fn (array $pipelinePayload, callable $next): array => $this->loadContext($pipelinePayload, $next),
+                fn (array $pipelinePayload, callable $next): array => $this->authorizeUser($pipelinePayload, $next),
                 fn (array $pipelinePayload, callable $next): array => $this->checkRateLimit($pipelinePayload, $next),
                 fn (array $pipelinePayload, callable $next): array => $this->executeAiCall($pipelinePayload, $next),
                 fn (array $pipelinePayload, callable $next): array => $this->parseSections($pipelinePayload, $next),
@@ -106,6 +111,32 @@ class AiCreatorPipeline
     private function checkRateLimit(array $payload, callable $next): array
     {
         $this->rateLimiter->checkLimit((string) $payload['data']->userId, 'ai_creator');
+
+        return $next($payload);
+    }
+
+    /**
+     * @param  array<array-key, mixed>  $payload
+     * @return array<array-key, mixed>
+     */
+    private function authorizeUser(array $payload, callable $next): array
+    {
+        $user = Auth::user();
+
+        if ($user === null) {
+            return $next($payload);
+        }
+
+        /** @var AiCreatorData $data */
+        $data = $payload['data'];
+        $authIdentifier = $user->getAuthIdentifier();
+        $userId = is_numeric($authIdentifier) ? (int) $authIdentifier : null;
+
+        throw_unless(
+            $this->policy->canUse($user, (object) ['ai_creator_enabled' => null]) && $userId === $data->userId,
+            AuthorizationException::class,
+            __('capell-seo-suite::generic.ai_creator_unauthorized'),
+        );
 
         return $next($payload);
     }

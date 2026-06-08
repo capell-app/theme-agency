@@ -69,11 +69,31 @@ function seoSuiteFakeSet(array &$state): Set
                 $path = $path->getName();
             }
 
-            data_set($this->state, $path, $state);
+            $updatedState = $this->state;
+            data_set($updatedState, $path, $state);
+
+            if (is_array($updatedState)) {
+                $this->state = seoSuiteFilamentStringKeyedState($updatedState);
+            }
 
             return null;
         }
     };
+}
+
+/**
+ * @param  array<array-key, mixed>  $state
+ * @return array<string, mixed>
+ */
+function seoSuiteFilamentStringKeyedState(array $state): array
+{
+    $normalizedState = [];
+
+    foreach ($state as $key => $value) {
+        $normalizedState[(string) $key] = $value;
+    }
+
+    return $normalizedState;
 }
 
 /**

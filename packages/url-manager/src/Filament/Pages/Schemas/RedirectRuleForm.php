@@ -44,7 +44,7 @@ final class RedirectRuleForm
                     ->columnSpanFull(),
                 TextInput::make('target_url')
                     ->label(__('capell-url-manager::table.target_url'))
-                    ->required()
+                    ->required(fn (Get $get): bool => self::nullableInt($get('status_code')) !== 410)
                     ->maxLength(2048)
                     ->rules([
                         fn (Get $get): Closure => function (string $attribute, mixed $value, Closure $fail) use ($get): void {
@@ -63,6 +63,7 @@ final class RedirectRuleForm
                         302 => '302',
                         307 => '307',
                         308 => '308',
+                        410 => '410',
                     ])
                     ->default(301)
                     ->required(),

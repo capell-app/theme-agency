@@ -29,7 +29,7 @@ final class ImportRedirectRulesAction
             try {
                 UpsertRedirectRuleAction::run(new RedirectRuleData(
                     sourceUrl: $this->requiredString($row, 'source_url'),
-                    targetUrl: $this->requiredString($row, 'target_url'),
+                    targetUrl: $this->targetUrl($row),
                     siteId: $this->nullableInt($row['site_id'] ?? null),
                     languageId: $this->nullableInt($row['language_id'] ?? null),
                     statusCode: $this->nullableInt($row['status_code'] ?? null) ?? 301,
@@ -67,6 +67,22 @@ final class ImportRedirectRulesAction
         }
 
         return $value;
+    }
+
+    /**
+     * @param  array<string, mixed>  $row
+     */
+    private function targetUrl(array $row): string
+    {
+        $statusCode = $this->nullableInt($row['status_code'] ?? null) ?? 301;
+
+        if ($statusCode === 410) {
+            $value = $row['target_url'] ?? null;
+
+            return is_string($value) ? $value : '';
+        }
+
+        return $this->requiredString($row, 'target_url');
     }
 
     private function nullableInt(mixed $value): ?int

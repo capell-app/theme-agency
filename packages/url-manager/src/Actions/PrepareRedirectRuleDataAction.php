@@ -22,9 +22,18 @@ final class PrepareRedirectRuleDataAction
         $sourceUrl = $data->matchType === RedirectMatchType::Regex
             ? $this->normalizeRegexSource($data->sourceUrl)
             : NormalizeManagedUrlAction::run($data->sourceUrl);
-        $targetUrl = NormalizeManagedUrlAction::run($data->targetUrl, allowAbsolute: true);
 
         $this->assertAllowedStatusCode($data->statusCode);
+
+        if ($data->statusCode === 410) {
+            return new PreparedRedirectRuleData(
+                sourceUrl: $sourceUrl,
+                targetUrl: '',
+                priority: $this->boundedPriority($data->priority),
+            );
+        }
+
+        $targetUrl = NormalizeManagedUrlAction::run($data->targetUrl, allowAbsolute: true);
         $this->assertAllowedTargetUrl($targetUrl);
         $this->assertNotSelfRedirect($data->matchType, $sourceUrl, $targetUrl);
         $targetUrl = $this->resolveFinalTargetUrl($sourceUrl, $targetUrl, $data, $ignoredRuleId);
@@ -155,10 +164,10 @@ final class PrepareRedirectRuleDataAction
      */
     private function allowedStatusCodes(): array
     {
-        $configuredStatusCodes = config('capell-url-manager.redirects.allowed_status_codes', [301, 302, 307, 308]);
+        $configuredStatusCodes = config('capell-url-manager.redirects.allowed_status_codes', [301, 302, 307, 308, 410]);
 
         if (! is_array($configuredStatusCodes)) {
-            return [301, 302, 307, 308];
+            return [301, 302, 307, 308, 410];
         }
 
         $statusCodes = [];
@@ -169,7 +178,7 @@ final class PrepareRedirectRuleDataAction
             }
         }
 
-        return $statusCodes === [] ? [301, 302, 307, 308] : array_values(array_unique($statusCodes));
+        return $statusCodes === [] ? [301, 302, 307, 308, 410] : array_values(array_unique($statusCodes));
     }
 
     private function boundedPriority(int $priority): int

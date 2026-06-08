@@ -86,12 +86,19 @@ final class SeoPublishReportProviderAdapter implements SeoPublishReportProvider
 
         return [
             'page' => [
-                'id' => $page->getKey(),
+                'id' => $this->pageKey($page),
                 'uuid' => $this->stringValue($page->getAttribute('uuid')),
                 'label' => $this->pageLabel($page),
             ],
             'issues' => $issues,
         ];
+    }
+
+    private function pageKey(Page $page): int|string|null
+    {
+        $key = $page->getKey();
+
+        return is_int($key) || is_string($key) ? $key : null;
     }
 
     /**

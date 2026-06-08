@@ -51,9 +51,21 @@ function createScopedUserForAdminReportSiteScopeTest(SupportCollection $assigned
         'email' => fake()->unique()->safeEmail(),
         'password' => bcrypt('password'),
     ]);
-    $user->assignedSiteIds = $assignedSiteIds;
+    $user->assignedSiteIds = adminReportSiteScopeAssignedSiteIds($assignedSiteIds);
 
     return $user;
+}
+
+/**
+ * @param  Collection<array-key, mixed>  $assignedSiteIds
+ * @return SupportCollection<int, int>
+ */
+function adminReportSiteScopeAssignedSiteIds(SupportCollection $assignedSiteIds): SupportCollection
+{
+    return $assignedSiteIds
+        ->filter(static fn (mixed $siteId): bool => is_numeric($siteId))
+        ->map(static fn (mixed $siteId): int => (int) $siteId)
+        ->values();
 }
 
 it('limits SEO audit dashboard-dashboard_reports to assigned sites for non-global users', function (): void {

@@ -47,11 +47,11 @@ final class PreviewRedirectRulesImportAction
     private function validateRow(array $row): void
     {
         $sourceUrl = $this->requiredString($row, 'source_url');
-        $targetUrl = $this->requiredString($row, 'target_url');
         $matchType = RedirectMatchType::from((string) ($row['match_type'] ?? RedirectMatchType::Exact->value));
         $status = RedirectRuleStatus::from((string) ($row['status'] ?? RedirectRuleStatus::Active->value));
 
         $statusCode = is_numeric($row['status_code'] ?? null) ? (int) $row['status_code'] : 301;
+        $targetUrl = $statusCode === 410 ? $this->optionalString($row, 'target_url') : $this->requiredString($row, 'target_url');
 
         PrepareRedirectRuleDataAction::run(new RedirectRuleData(
             sourceUrl: $sourceUrl,
@@ -79,5 +79,15 @@ final class PreviewRedirectRulesImportAction
         }
 
         return $value;
+    }
+
+    /**
+     * @param  array<string, mixed>  $row
+     */
+    private function optionalString(array $row, string $key): string
+    {
+        $value = $row[$key] ?? null;
+
+        return is_string($value) ? $value : '';
     }
 }

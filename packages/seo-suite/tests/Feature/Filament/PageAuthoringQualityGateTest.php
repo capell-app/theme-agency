@@ -46,6 +46,9 @@ beforeEach(function (): void {
     seoSuiteFeatureQualityGateSettings();
 });
 
+/**
+ * @param  array<string, mixed>  $overrides
+ */
 function seoSuiteFeatureQualityGateSettings(array $overrides = []): SeoSuiteSettings
 {
     $settings = resolve(SeoSuiteSettings::class);

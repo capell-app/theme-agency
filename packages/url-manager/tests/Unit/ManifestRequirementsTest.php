@@ -59,6 +59,7 @@ it('declares URL Manager owned models and protected tables', function (): void {
             'managed-redirects',
             'changed-url-redirect-detection',
             'redirect-hit-counts',
+            'managed-gone-rules',
             'redirect-import-export',
             'not-found-opportunities',
             'not-found-redirect-suggestions',
@@ -74,6 +75,8 @@ it('keeps URL Manager marketplace screenshots empty until styled recapture', fun
     $screenshots = data_get($manifest, 'marketplace.screenshots', []);
 
     throw_unless(is_array($screenshots), RuntimeException::class, 'URL Manager screenshots must be an array.');
+
+    expect($screenshots)->toBe([]);
 
     foreach ($screenshots as $screenshot) {
         throw_unless(is_array($screenshot), RuntimeException::class, 'URL Manager screenshot entries must be arrays.');

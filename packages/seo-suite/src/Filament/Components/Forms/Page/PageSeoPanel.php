@@ -118,6 +118,8 @@ class PageSeoPanel extends View
             'schemaIssues' => $hasReport ? $report->issuesForKey(SeoCheckKeyEnum::Schema) : [],
             'searchConsoleIssues' => $hasReport ? $report->issuesForKey(SeoCheckKeyEnum::SearchConsole) : [],
             'intelligenceSummary' => $hasReport ? $report->intelligenceSummary : null,
+            'scoreBreakdown' => $hasReport ? $report->scoreBreakdown : null,
+            'contentAnalysis' => $hasReport ? $report->contentAnalysis : null,
             'redirectOpportunities' => $hasReport ? $report->redirectOpportunities : [],
             'robotsIssues' => $hasReport ? [
                 ...$report->issuesForKey(SeoCheckKeyEnum::Robots),

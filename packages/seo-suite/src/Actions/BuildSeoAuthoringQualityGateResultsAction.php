@@ -15,7 +15,7 @@ use Illuminate\Support\Arr;
 use Lorisleiva\Actions\Concerns\AsAction;
 
 /**
- * @method static list<SeoAuthoringQualityGateResultData> run(array $formData, ?Pageable $page = null, bool $ignoreStrictSwitch = false)
+ * @method static list<SeoAuthoringQualityGateResultData> run(array<string, mixed> $formData, ?Pageable $page = null, bool $ignoreStrictSwitch = false)
  */
 final class BuildSeoAuthoringQualityGateResultsAction
 {
@@ -48,6 +48,7 @@ final class BuildSeoAuthoringQualityGateResultsAction
     }
 
     /**
+     * @param  array<string, mixed>  $translationData
      * @return list<SeoAuthoringQualityGateResultData>
      */
     private function metadataResults(
@@ -59,9 +60,12 @@ final class BuildSeoAuthoringQualityGateResultsAction
         $results = [];
         $titleMode = $this->mode($settings, $blueprint, SeoCheckKeyEnum::MetaTitle);
         $descriptionMode = $this->mode($settings, $blueprint, SeoCheckKeyEnum::MetaDescription);
+        $meta = is_array($translationData['meta'] ?? null)
+            ? $this->stringKeyedArray($translationData['meta'])
+            : [];
 
         if ($titleMode !== SeoCheckModeEnum::Ignored) {
-            $title = $this->plainText($translationData['meta']['title'] ?? null);
+            $title = $this->plainText($meta['title'] ?? null);
 
             if ($title === null) {
                 $results[] = $this->result(
@@ -78,7 +82,7 @@ final class BuildSeoAuthoringQualityGateResultsAction
             return $results;
         }
 
-        $description = $this->plainText($translationData['meta']['description'] ?? null);
+        $description = $this->plainText($meta['description'] ?? null);
         $minimum = $this->minimumDescriptionLength($settings, $blueprint);
         $maximum = $this->maximumDescriptionLength($settings, $blueprint, $minimum);
         $title = $this->plainText($translationData['title'] ?? null);
@@ -190,7 +194,34 @@ final class BuildSeoAuthoringQualityGateResultsAction
             return [];
         }
 
-        return array_filter($translations, is_array(...));
+        $normalized = [];
+
+        foreach ($translations as $key => $translation) {
+            if (! is_array($translation)) {
+                continue;
+            }
+
+            $normalized[$key] = $this->stringKeyedArray($translation);
+        }
+
+        return $normalized;
+    }
+
+    /**
+     * @param  array<mixed>  $values
+     * @return array<string, mixed>
+     */
+    private function stringKeyedArray(array $values): array
+    {
+        $result = [];
+
+        foreach ($values as $key => $value) {
+            if (is_string($key)) {
+                $result[$key] = $value;
+            }
+        }
+
+        return $result;
     }
 
     private function plainText(mixed $value): ?string

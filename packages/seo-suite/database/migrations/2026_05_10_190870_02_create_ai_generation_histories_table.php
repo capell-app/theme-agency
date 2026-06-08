@@ -19,12 +19,15 @@ return new class extends Migration
             $table->unsignedInteger('prompt_tokens')->default(0);
             $table->unsignedInteger('completion_tokens')->default(0);
             $table->unsignedInteger('total_tokens')->default(0);
+            $table->unsignedBigInteger('cost_micros')->default(0);
+            $table->char('cost_currency', 3)->default('USD');
             $table->float('duration')->default(0);
             $table->boolean('failed')->default(false);
             $table->text('error_message')->nullable();
             $table->json('metadata')->nullable();
             $table->nullableMorphs('pageable');
             $table->unsignedBigInteger('language_id')->nullable();
+            $table->unsignedBigInteger('created_by_user_id')->nullable();
             $table->timestamps();
         });
     }

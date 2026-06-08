@@ -32,6 +32,8 @@ class PageSeoReportData extends Data
         public ?string $canonicalUrl = null,
         public array $robotsDirectives = [],
         public ?PageIntelligenceSummaryData $intelligenceSummary = null,
+        public ?SeoScoreBreakdownData $scoreBreakdown = null,
+        public ?PageContentAnalysisData $contentAnalysis = null,
     ) {}
 
     public function criticalCount(): int

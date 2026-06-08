@@ -29,6 +29,7 @@ use Capell\UrlManager\Filament\Pages\NotFoundOpportunitiesPage;
 use Capell\UrlManager\Filament\Pages\RedirectRulesPage;
 use Capell\UrlManager\Filament\Pages\Tables\RedirectRulesTable;
 use Capell\UrlManager\Http\Middleware\RecordNotFoundOpportunityMiddleware;
+use Capell\UrlManager\Http\Middleware\ServeGoneRedirectRuleMiddleware;
 use Capell\UrlManager\Models\RedirectRule;
 use Capell\UrlManager\Providers\UrlManagerServiceProvider;
 use Capell\UrlManager\Support\Redirects\UrlManagerRedirectResolver;
@@ -332,6 +333,7 @@ it('registers frontend not-found capture middleware through the installed packag
     (new UrlManagerServiceProvider(app()))->registeringPackage();
 
     expect(resolve(FrontendRouteMiddlewareRegistry::class)->all())
+        ->toContain(ServeGoneRedirectRuleMiddleware::class)
         ->toContain(RecordNotFoundOpportunityMiddleware::class);
 });
 

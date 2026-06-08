@@ -17,6 +17,9 @@ use InvalidArgumentException;
 use Lorisleiva\Actions\Concerns\AsAction;
 use Throwable;
 
+/**
+ * @method static AIGenerationHistory run(mixed $input, array<array-key, mixed> $options = [])
+ */
 class RecordAiGenerationAction
 {
     use AsAction;

@@ -89,8 +89,8 @@ it('lazy audit badges expose issue counts for the edit page tabs', function (): 
         ->create();
 
     Livewire::test(EditPageSeoAuditBadge::class, ['record' => $page])
-        ->assertSet('issueCount', 5)
-        ->assertSeeText('5');
+        ->assertSet('issueCount', 8)
+        ->assertSeeText('8');
 
     Livewire::test(EditPagePageSpeedAuditBadge::class, ['record' => $page])
         ->assertSet('issueCount', 2)

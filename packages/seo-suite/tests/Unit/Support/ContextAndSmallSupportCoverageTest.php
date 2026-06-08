@@ -115,6 +115,33 @@ it('honours site ai creator overrides before global policy settings', function (
     expect($policy->isEnabledFor((object) []))->toBeFalse();
 });
 
+it('requires the user AI Creator permission when a user is available', function (): void {
+    $settings = (new ReflectionClass(AIOrchestratorSettings::class))->newInstanceWithoutConstructor();
+    $settings->ai_creator = true;
+    $policy = new AiCreatorPolicy($settings);
+
+    $allowedUser = new class
+    {
+        public function can(string $permission): bool
+        {
+            return $permission === 'Use:AiCreator';
+        }
+    };
+
+    $blockedUser = new class
+    {
+        public function can(string $permission): bool
+        {
+            return false;
+        }
+    };
+
+    expect($policy->canUse($allowedUser, (object) []))->toBeTrue()
+        ->and($policy->canUse($blockedUser, (object) []))->toBeFalse()
+        ->and($policy->canUse(null, (object) []))->toBeFalse()
+        ->and($policy->canUse($allowedUser, (object) ['ai_creator_enabled' => false]))->toBeFalse();
+});
+
 it('returns schema components only for matching seo suite extension hooks', function (): void {
     $siteTranslationExtender = resolve(SiteTranslationMetaExtender::class);
 

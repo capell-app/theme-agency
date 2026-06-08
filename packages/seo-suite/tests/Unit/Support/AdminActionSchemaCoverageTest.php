@@ -485,11 +485,31 @@ function seoSuiteAdminFakeSet(array &$state): Set
                 $path = $path->getName();
             }
 
-            data_set($this->state, $path, $state);
+            $updatedState = $this->state;
+            data_set($updatedState, $path, $state);
+
+            if (is_array($updatedState)) {
+                $this->state = seoSuiteAdminActionStringKeyedState($updatedState);
+            }
 
             return null;
         }
     };
+}
+
+/**
+ * @param  array<array-key, mixed>  $state
+ * @return array<string, mixed>
+ */
+function seoSuiteAdminActionStringKeyedState(array $state): array
+{
+    $normalizedState = [];
+
+    foreach ($state as $key => $value) {
+        $normalizedState[(string) $key] = $value;
+    }
+
+    return $normalizedState;
 }
 
 /**

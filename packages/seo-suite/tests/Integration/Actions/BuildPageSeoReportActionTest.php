@@ -257,3 +257,30 @@ it('includes passed checks, canonical, robots, and page redirect opportunities',
         ->and($report->redirectOpportunities)->toHaveCount(1)
         ->and($report->redirectOpportunities[0]->sourceUrl)->toBe('/old-page');
 });
+
+it('grades on-page content and focus keyword workflow in page reports', function (): void {
+    $language = LanguageFactory::new()->create(['name' => 'English', 'code' => 'en']);
+    $site = SiteFactory::new()->recycle($language)->language($language)->withTranslations($language)->create();
+    $page = PageFactory::new()
+        ->site($site)
+        ->withTranslations($language, [
+            'content' => '<h2>Overview</h2><h4>Details</h4><p>Short introduction without the target phrase.</p>',
+            'meta' => [
+                'title' => 'A complete search title for this services page',
+                'description' => 'A complete search description that gives editors enough useful context.',
+                'keywords' => 'laravel cms',
+            ],
+        ])
+        ->create();
+
+    PageUrl::factory()->page($page)->site($site)->language($language)->state(['url' => '/services'])->create();
+
+    $report = BuildPageSeoReportAction::run($page, $site, $language);
+
+    expect($report->contentAnalysis?->focusKeyword)->toBe('laravel cms')
+        ->and($report->contentAnalysis?->h1Count)->toBe(0)
+        ->and($report->contentAnalysis?->headingOrderValid)->toBeFalse()
+        ->and($report->scoreBreakdown?->category('on_page')?->issueCount)->toBeGreaterThan(0)
+        ->and(collect($report->issues)->pluck('key'))->toContain(SeoCheckKeyEnum::OnPageContent)
+        ->and(collect($report->issues)->pluck('key'))->toContain(SeoCheckKeyEnum::FocusKeyword);
+});

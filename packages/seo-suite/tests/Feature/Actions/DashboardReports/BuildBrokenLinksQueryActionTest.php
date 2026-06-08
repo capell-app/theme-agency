@@ -55,9 +55,21 @@ function createScopedUserForBuildBrokenLinksQueryActionTest(SupportCollection $a
         'email' => fake()->unique()->safeEmail(),
         'password' => bcrypt('password'),
     ]);
-    $user->assignedSiteIds = $assignedSiteIds;
+    $user->assignedSiteIds = brokenLinksAssignedSiteIds($assignedSiteIds);
 
     return $user;
+}
+
+/**
+ * @param  Collection<array-key, mixed>  $assignedSiteIds
+ * @return SupportCollection<int, int>
+ */
+function brokenLinksAssignedSiteIds(SupportCollection $assignedSiteIds): SupportCollection
+{
+    return $assignedSiteIds
+        ->filter(static fn (mixed $siteId): bool => is_numeric($siteId))
+        ->map(static fn (mixed $siteId): int => (int) $siteId)
+        ->values();
 }
 
 describe('BuildBrokenLinksQueryAction', function (): void {

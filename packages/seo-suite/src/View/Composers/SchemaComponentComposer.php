@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Capell\SeoSuite\View\Composers;
 
+use Capell\Core\Contracts\Pageable;
 use Capell\Core\Models\Language;
 use Capell\Core\Models\Page;
 use Capell\Core\Models\Site;
@@ -46,7 +47,9 @@ final readonly class SchemaComponentComposer
      */
     private function imageSchema(): array
     {
-        return BuildPageImageSchemaAction::run(Frontend::page());
+        $page = Frontend::page();
+
+        return $page instanceof Pageable ? BuildPageImageSchemaAction::run($page) : [];
     }
 
     /**

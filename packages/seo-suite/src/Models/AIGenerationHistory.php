@@ -20,6 +20,8 @@ use Override;
  * @property int $prompt_tokens
  * @property int $completion_tokens
  * @property int $total_tokens
+ * @property int $cost_micros
+ * @property string $cost_currency
  * @property float $duration
  * @property bool $failed
  * @property string|null $error_message
@@ -27,6 +29,7 @@ use Override;
  * @property int|string|null $pageable_id
  * @property string|null $pageable_type
  * @property int|null $language_id
+ * @property int|null $created_by_user_id
  * @property CarbonImmutable|null $created_at
  * @property CarbonImmutable|null $updated_at
  *
@@ -36,6 +39,9 @@ use Override;
  * @method static Builder<static>|AIGenerationHistory whereAction($value)
  * @method static Builder<static>|AIGenerationHistory whereCompletionTokens($value)
  * @method static Builder<static>|AIGenerationHistory whereCreatedAt($value)
+ * @method static Builder<static>|AIGenerationHistory whereCreatedByUserId($value)
+ * @method static Builder<static>|AIGenerationHistory whereCostCurrency($value)
+ * @method static Builder<static>|AIGenerationHistory whereCostMicros($value)
  * @method static Builder<static>|AIGenerationHistory whereDuration($value)
  * @method static Builder<static>|AIGenerationHistory whereId($value)
  * @method static Builder<static>|AIGenerationHistory whereInput($value)
@@ -65,6 +71,8 @@ class AIGenerationHistory extends Model
         'prompt_tokens',
         'completion_tokens',
         'total_tokens',
+        'cost_micros',
+        'cost_currency',
         'duration',
         'failed',
         'error_message',
@@ -72,6 +80,7 @@ class AIGenerationHistory extends Model
         'pageable_id',
         'pageable_type',
         'language_id',
+        'created_by_user_id',
     ];
 
     #[Override]
@@ -80,6 +89,7 @@ class AIGenerationHistory extends Model
         return [
             'failed' => 'boolean',
             'metadata' => 'array',
+            'cost_micros' => 'integer',
         ];
     }
 }

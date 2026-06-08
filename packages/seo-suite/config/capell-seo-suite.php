@@ -19,6 +19,22 @@ return [
     'ai_creator' => [
         'enabled' => env('AI_CREATOR_ENABLED', true),
     ],
+    'ai_costs' => [
+        'currency' => 'USD',
+        'models' => [
+            'gpt-4o' => [
+                'prompt_micros_per_million_tokens' => 5_000_000,
+                'completion_micros_per_million_tokens' => 15_000_000,
+            ],
+            'gpt-4o-mini' => [
+                'prompt_micros_per_million_tokens' => 150_000,
+                'completion_micros_per_million_tokens' => 600_000,
+            ],
+            'dall-e-3' => [
+                'flat_cost_micros' => 40_000,
+            ],
+        ],
+    ],
     'search_console' => [
         'enabled' => env('CAPELL_SEO_TOOLS_SEARCH_CONSOLE_ENABLED', false),
         'credentials_path' => env('CAPELL_SEO_TOOLS_SEARCH_CONSOLE_CREDENTIALS'),

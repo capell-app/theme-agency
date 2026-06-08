@@ -69,10 +69,22 @@ function createSeoSuiteDashboardWidgetUser(SupportCollection $assignedSiteIds, b
         'email' => fake()->unique()->safeEmail(),
         'password' => bcrypt('password'),
     ]);
-    $user->assignedSiteIds = $assignedSiteIds;
+    $user->assignedSiteIds = seoSuiteDashboardWidgetAssignedSiteIds($assignedSiteIds);
     $user->global = $global;
 
     return $user;
+}
+
+/**
+ * @param  Collection<array-key, mixed>  $assignedSiteIds
+ * @return SupportCollection<int, int>
+ */
+function seoSuiteDashboardWidgetAssignedSiteIds(SupportCollection $assignedSiteIds): SupportCollection
+{
+    return $assignedSiteIds
+        ->filter(static fn (mixed $siteId): bool => is_numeric($siteId))
+        ->map(static fn (mixed $siteId): int => (int) $siteId)
+        ->values();
 }
 
 it('exposes SEO Suite dashboard settings keys with translated labels', function (): void {

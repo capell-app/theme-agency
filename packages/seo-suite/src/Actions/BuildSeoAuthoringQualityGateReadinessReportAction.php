@@ -57,11 +57,11 @@ final class BuildSeoAuthoringQualityGateReadinessReportAction
                     }
 
                     $rows[] = new SeoAuthoringQualityGateReadinessRowData(
-                        pageId: (int) $page->getKey(),
-                        pageName: (string) $page->name,
-                        languageId: (int) $translation->language_id,
-                        languageName: (string) ($translation->language?->name ?? $translation->language_id),
-                        messages: $blockingMessages,
+                        pageId: $this->modelKey($page),
+                        pageName: $this->stringValue($page->name),
+                        languageId: $this->integerValue($translation->language_id),
+                        languageName: $this->stringValue($translation->language->name ?? $translation->language_id),
+                        messages: array_values($blockingMessages),
                     );
                 }
             });
@@ -77,12 +77,27 @@ final class BuildSeoAuthoringQualityGateReadinessReportAction
         return [
             'blueprint_id' => $page->blueprint_id,
             'translations' => [
-                (string) $translation->getKey() => [
+                $this->stringValue($translation->getKey()) => [
                     'language_id' => $translation->language_id,
                     'title' => $translation->title,
                     'meta' => (array) $translation->meta,
                 ],
             ],
         ];
+    }
+
+    private function modelKey(Page $page): int
+    {
+        return $this->integerValue($page->getKey());
+    }
+
+    private function integerValue(mixed $value): int
+    {
+        return is_numeric($value) ? (int) $value : 0;
+    }
+
+    private function stringValue(mixed $value): string
+    {
+        return is_scalar($value) ? (string) $value : '';
     }
 }

@@ -53,6 +53,11 @@ final class AiMetricsWidgetAbstract extends Widget implements CapellWidgetContra
         // Total counts
         $totalGenerations = AIGenerationHistory::query()->count();
         $totalTokens = AIGenerationHistory::query()->sum('total_tokens') ?? 0;
+        $totalCostMicros = AIGenerationHistory::query()->sum('cost_micros') ?? 0;
+        $currency = $this->stringValue(AIGenerationHistory::query()
+            ->whereNotNull('cost_currency')
+            ->latest('id')
+            ->value('cost_currency'), $this->stringValue(config('capell-seo-suite.ai_costs.currency', 'USD'), 'USD'));
         $failedGenerations = AIGenerationHistory::query()
             ->whereNotNull('error_message')
             ->count();
@@ -68,6 +73,8 @@ final class AiMetricsWidgetAbstract extends Widget implements CapellWidgetContra
         return new AiMetricsData(
             totalGenerations: $totalGenerations,
             totalTokens: (int) $totalTokens,
+            totalCostMicros: (int) $totalCostMicros,
+            currency: $currency,
             failedGenerations: $failedGenerations,
             remainingRequests: $remainingRequests,
             windowLimitSeconds: $windowLimitSeconds,
@@ -93,18 +100,28 @@ final class AiMetricsWidgetAbstract extends Widget implements CapellWidgetContra
 
         $featureData = [];
         foreach ($features as $feature) {
+            $feature = $this->stringValue($feature);
+
+            if ($feature === '') {
+                continue;
+            }
+
             $count = AIGenerationHistory::query()
                 ->where('action', $feature)
                 ->count();
             $tokens = AIGenerationHistory::query()
                 ->where('action', $feature)
                 ->sum('total_tokens') ?? 0;
+            $costMicros = AIGenerationHistory::query()
+                ->where('action', $feature)
+                ->sum('cost_micros') ?? 0;
 
             $featureData[] = new FeatureUsageData(
                 feature: $feature,
                 count: $count,
-                tokens: (int) $tokens,
-                averageTokensPerRequest: $count > 0 ? $tokens / $count : 0,
+                tokens: $this->integerValue($tokens),
+                costMicros: $this->integerValue($costMicros),
+                averageTokensPerRequest: $count > 0 ? $this->integerValue($tokens) / $count : 0,
             );
         }
 
@@ -112,5 +129,15 @@ final class AiMetricsWidgetAbstract extends Widget implements CapellWidgetContra
         usort($featureData, fn (FeatureUsageData $a, FeatureUsageData $b): int => $b->count <=> $a->count);
 
         return collect($featureData);
+    }
+
+    private function integerValue(mixed $value): int
+    {
+        return is_numeric($value) ? (int) $value : 0;
+    }
+
+    private function stringValue(mixed $value, string $fallback = ''): string
+    {
+        return is_scalar($value) ? (string) $value : $fallback;
     }
 }

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 return [
     'redirects' => [
-        'allowed_status_codes' => [301, 302, 307, 308],
+        'allowed_status_codes' => [301, 302, 307, 308, 410],
         'absolute_target_allowed_hosts' => [
             //
         ],

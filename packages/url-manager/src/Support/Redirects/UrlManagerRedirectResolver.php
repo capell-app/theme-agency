@@ -41,6 +41,10 @@ final class UrlManagerRedirectResolver implements RedirectResolver
             return null;
         }
 
+        if ($resolution->statusCode === 410) {
+            return null;
+        }
+
         return new RedirectDecisionData(
             targetUrl: $this->targetUrl($resolution),
             statusCode: $resolution->statusCode,

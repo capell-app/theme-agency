@@ -56,9 +56,21 @@ function createScopedUserForSEOAuditWidgetTest(SupportCollection $assignedSiteId
         'email' => fake()->unique()->safeEmail(),
         'password' => bcrypt('password'),
     ]);
-    $user->assignedSiteIds = $assignedSiteIds;
+    $user->assignedSiteIds = seoAuditWidgetAssignedSiteIds($assignedSiteIds);
 
     return $user;
+}
+
+/**
+ * @param  Collection<array-key, mixed>  $assignedSiteIds
+ * @return SupportCollection<int, int>
+ */
+function seoAuditWidgetAssignedSiteIds(SupportCollection $assignedSiteIds): SupportCollection
+{
+    return $assignedSiteIds
+        ->filter(static fn (mixed $siteId): bool => is_numeric($siteId))
+        ->map(static fn (mixed $siteId): int => (int) $siteId)
+        ->values();
 }
 
 beforeEach(function (): void {

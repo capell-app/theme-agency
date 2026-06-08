@@ -12,5 +12,13 @@
             </div>
             <div class="text-sm text-gray-500">Total Tokens</div>
         </div>
+        <div>
+            <div class="text-2xl font-bold">
+                {{ $totalCost }}
+            </div>
+            <div class="text-sm text-gray-500">
+                {{ __('capell-seo-suite::dashboard.ai_estimated_spend') }}
+            </div>
+        </div>
     </x-filament::section>
 </x-filament-widgets::widget>

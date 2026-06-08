@@ -36,9 +36,7 @@ class AiCreatorAction extends Action
             ->label(__('capell-seo-suite::generic.ai_creator_action'))
             ->icon('heroicon-o-sparkles')
             ->slideOver()
-            ->visible(fn (): bool => resolve(AiCreatorPolicy::class)->isEnabledFor(
-                $this->resolveSiteFromRecord(),
-            ))
+            ->visible(fn (): bool => resolve(AiCreatorPolicy::class)->canUse(Auth::user(), $this->resolveSiteFromRecord()))
             ->schema(fn (): array => $this->buildWizardForm())
             ->action(function (array $data): void {
                 $this->runCreator($data);

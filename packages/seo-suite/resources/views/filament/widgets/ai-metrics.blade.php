@@ -2,7 +2,7 @@
     <x-filament::section heading="AI metrics">
         <div class="@container space-y-6">
             {{-- Summary Cards --}}
-            <div class="@md:grid-cols-4 grid grid-cols-2 gap-4">
+            <div class="@md:grid-cols-5 grid grid-cols-2 gap-4">
                 <div class="rounded-lg bg-blue-50 p-4 dark:bg-blue-900/20">
                     <div
                         class="text-sm font-medium text-gray-600 dark:text-gray-400"
@@ -25,6 +25,19 @@
                         class="mt-1 text-2xl font-bold text-gray-900 dark:text-white"
                     >
                         {{ number_format($data->totalTokens) }}
+                    </div>
+                </div>
+                <div class="rounded-lg bg-amber-50 p-4 dark:bg-amber-900/20">
+                    <div
+                        class="text-sm font-medium text-gray-600 dark:text-gray-400"
+                    >
+                        {{ __('capell-seo-suite::dashboard.ai_estimated_spend') }}
+                    </div>
+                    <div
+                        class="mt-1 text-2xl font-bold text-gray-900 dark:text-white"
+                    >
+                        {{ $data->currency }}
+                        {{ number_format($data->totalCostMicros / 1000000, 2) }}
                     </div>
                 </div>
                 <div class="rounded-lg bg-red-50 p-4 dark:bg-red-900/20">
@@ -203,6 +216,10 @@
                                         {{ number_format($feature->tokens) }}
                                         tokens (Ø
                                         {{ number_format($feature->averageTokensPerRequest, 1) }}/req)
+                                    </span>
+                                    <span>
+                                        {{ $data->currency }}
+                                        {{ number_format($feature->costMicros / 1000000, 2) }}
                                     </span>
                                 </div>
                             </div>

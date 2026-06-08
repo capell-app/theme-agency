@@ -11,6 +11,8 @@ enum SeoCheckKeyEnum: string implements HasLabel
     case MetaTitle = 'meta_title';
     case MetaDescription = 'meta_description';
     case DuplicateTitle = 'duplicate_title';
+    case OnPageContent = 'on_page_content';
+    case FocusKeyword = 'focus_keyword';
     case SocialImage = 'social_image';
     case Canonical = 'canonical';
     case Robots = 'robots';

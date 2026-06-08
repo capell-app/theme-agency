@@ -24,11 +24,12 @@ final class ResolveRedirectRuleAction
         ?string $refererUrl = null,
         ?string $userAgent = null,
         ?string $ipAddress = null,
+        ?int $statusCode = null,
     ): ?RedirectResolutionData {
         $sourceUrl = NormalizeManagedUrlAction::run($requestUrl);
-        $redirectRule = $this->findExactRule($sourceUrl, $siteId, $languageId)
-            ?? $this->findPrefixRule($sourceUrl, $siteId, $languageId)
-            ?? $this->findRegexRule($sourceUrl, $siteId, $languageId);
+        $redirectRule = $this->findExactRule($sourceUrl, $siteId, $languageId, $statusCode)
+            ?? $this->findPrefixRule($sourceUrl, $siteId, $languageId, $statusCode)
+            ?? $this->findRegexRule($sourceUrl, $siteId, $languageId, $statusCode);
 
         if (! $redirectRule instanceof RedirectRule) {
             return null;
@@ -48,10 +49,10 @@ final class ResolveRedirectRuleAction
         );
     }
 
-    private function findExactRule(string $sourceUrl, ?int $siteId, ?int $languageId): ?RedirectRule
+    private function findExactRule(string $sourceUrl, ?int $siteId, ?int $languageId, ?int $statusCode): ?RedirectRule
     {
         /** @var RedirectRule|null $redirectRule */
-        $redirectRule = $this->baseRuleQuery($siteId, $languageId)
+        $redirectRule = $this->baseRuleQuery($siteId, $languageId, $statusCode)
             ->where('match_type', RedirectMatchType::Exact->value)
             ->where('source_hash', hash('sha256', $sourceUrl))
             ->first();
@@ -59,7 +60,7 @@ final class ResolveRedirectRuleAction
         return $redirectRule;
     }
 
-    private function findPrefixRule(string $sourceUrl, ?int $siteId, ?int $languageId): ?RedirectRule
+    private function findPrefixRule(string $sourceUrl, ?int $siteId, ?int $languageId, ?int $statusCode): ?RedirectRule
     {
         $prefixCandidates = $this->prefixCandidates($sourceUrl);
 
@@ -68,7 +69,7 @@ final class ResolveRedirectRuleAction
         }
 
         /** @var RedirectRule|null $redirectRule */
-        $redirectRule = $this->baseRuleQuery($siteId, $languageId)
+        $redirectRule = $this->baseRuleQuery($siteId, $languageId, $statusCode)
             ->where('match_type', RedirectMatchType::Prefix->value)
             ->whereIn('source_url', $prefixCandidates)
             ->orderByDesc('priority')
@@ -78,10 +79,10 @@ final class ResolveRedirectRuleAction
         return $redirectRule;
     }
 
-    private function findRegexRule(string $sourceUrl, ?int $siteId, ?int $languageId): ?RedirectRule
+    private function findRegexRule(string $sourceUrl, ?int $siteId, ?int $languageId, ?int $statusCode): ?RedirectRule
     {
         /** @var RedirectRule|null $redirectRule */
-        $redirectRule = $this->baseRuleQuery($siteId, $languageId)
+        $redirectRule = $this->baseRuleQuery($siteId, $languageId, $statusCode)
             ->where('match_type', RedirectMatchType::Regex->value)
             ->orderByDesc('priority')
             ->orderBy('id')
@@ -95,10 +96,11 @@ final class ResolveRedirectRuleAction
     /**
      * @return Builder<RedirectRule>
      */
-    private function baseRuleQuery(?int $siteId, ?int $languageId): Builder
+    private function baseRuleQuery(?int $siteId, ?int $languageId, ?int $statusCode): Builder
     {
         return RedirectRule::query()
             ->where('status', RedirectRuleStatus::Active->value)
+            ->when($statusCode !== null, fn (Builder $query): Builder => $query->where('status_code', $statusCode))
             ->where(function (Builder $query) use ($siteId): void {
                 $query->whereNull('site_id')
                     ->when($siteId !== null, fn (Builder $query): Builder => $query->orWhere('site_id', $siteId));

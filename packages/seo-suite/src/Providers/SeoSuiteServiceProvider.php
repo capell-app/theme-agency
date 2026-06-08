@@ -278,6 +278,7 @@ class SeoSuiteServiceProvider extends AbstractPackageServiceProvider
             $app->make(AiRateLimiter::class),
             $app->make(SectionRegistry::class),
             $app->make(RecordAiGenerationAction::class),
+            $app->make(AiCreatorPolicy::class),
         ));
 
         /** @var AiFeatureRegistry $registry */

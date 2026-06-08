@@ -12,6 +12,9 @@ use Capell\SeoSuite\Enums\SeoCheckModeEnum;
 use Capell\SeoSuite\Settings\SeoSuiteSettings;
 use Illuminate\Support\Str;
 
+/**
+ * @param  array<string, mixed>  $overrides
+ */
 function seoSuiteQualityGateSettings(array $overrides = []): SeoSuiteSettings
 {
     $settings = resolve(SeoSuiteSettings::class);

@@ -120,6 +120,97 @@
                     </div>
                 @endforeach
             </div>
+
+            @if ($scoreBreakdown !== null)
+                <div class="space-y-2">
+                    <div
+                        class="text-xs font-medium tracking-wide text-gray-500 uppercase dark:text-gray-400"
+                    >
+                        {{ __('capell-seo-suite::generic.seo_panel_score_breakdown') }}
+                    </div>
+                    <div class="grid gap-2 md:grid-cols-4">
+                        @foreach ($scoreBreakdown->categories as $category)
+                            <div
+                                class="rounded-md border border-gray-200 p-3 dark:border-gray-700"
+                            >
+                                <div
+                                    class="flex items-center justify-between gap-2 text-sm"
+                                >
+                                    <span
+                                        class="font-medium text-gray-700 dark:text-gray-200"
+                                    >
+                                        {{ $category->label }}
+                                    </span>
+                                    <span
+                                        class="font-semibold text-gray-950 dark:text-white"
+                                    >
+                                        {{ $category->score }}
+                                    </span>
+                                </div>
+                                <div
+                                    class="mt-1 text-xs text-gray-500 dark:text-gray-400"
+                                >
+                                    {{ __('capell-seo-suite::generic.seo_panel_category_weight', ['weight' => $category->weight]) }}
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+            @endif
+
+            @if ($contentAnalysis !== null)
+                <div
+                    class="rounded-md border border-gray-200 p-3 dark:border-gray-700"
+                >
+                    <div
+                        class="text-xs font-medium tracking-wide text-gray-500 uppercase dark:text-gray-400"
+                    >
+                        {{ __('capell-seo-suite::generic.seo_panel_content_analysis') }}
+                    </div>
+                    <dl class="mt-2 grid gap-2 text-sm md:grid-cols-4">
+                        <div>
+                            <dt class="text-gray-500 dark:text-gray-400">
+                                {{ __('capell-seo-suite::generic.seo_panel_word_count') }}
+                            </dt>
+                            <dd
+                                class="font-medium text-gray-950 dark:text-white"
+                            >
+                                {{ number_format($contentAnalysis->wordCount) }}
+                            </dd>
+                        </div>
+                        <div>
+                            <dt class="text-gray-500 dark:text-gray-400">
+                                {{ __('capell-seo-suite::generic.seo_panel_h1_count') }}
+                            </dt>
+                            <dd
+                                class="font-medium text-gray-950 dark:text-white"
+                            >
+                                {{ $contentAnalysis->h1Count }}
+                            </dd>
+                        </div>
+                        <div>
+                            <dt class="text-gray-500 dark:text-gray-400">
+                                {{ __('capell-seo-suite::generic.seo_panel_focus_keyword') }}
+                            </dt>
+                            <dd
+                                class="font-medium text-gray-950 dark:text-white"
+                            >
+                                {{ $contentAnalysis->focusKeyword ?? __('capell-seo-suite::generic.seo_panel_missing_metric') }}
+                            </dd>
+                        </div>
+                        <div>
+                            <dt class="text-gray-500 dark:text-gray-400">
+                                {{ __('capell-seo-suite::generic.seo_panel_keyword_density') }}
+                            </dt>
+                            <dd
+                                class="font-medium text-gray-950 dark:text-white"
+                            >
+                                {{ number_format($contentAnalysis->focusKeywordDensity, 2) }}%
+                            </dd>
+                        </div>
+                    </dl>
+                </div>
+            @endif
         </section>
     @endif
 </div>

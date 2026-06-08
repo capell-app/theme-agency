@@ -11,6 +11,7 @@ use Capell\Core\Models\Translation;
 use Capell\Frontend\Actions\ResolvePageCanonicalUrlAction;
 use Capell\Frontend\Actions\ResolvePageRobotsDirectivesAction;
 use Capell\SeoSuite\Data\InternalLinkSuggestionData;
+use Capell\SeoSuite\Data\PageContentAnalysisData;
 use Capell\SeoSuite\Data\PageSeoReportData;
 use Capell\SeoSuite\Data\RedirectOpportunityData;
 use Capell\SeoSuite\Data\SchemaTemplateReportData;
@@ -51,7 +52,7 @@ final class BuildPageSeoReportAction
             'translation' => fn (BuilderContract $query): BuilderContract => $query->where('language_id', $language->id),
         ]);
 
-        $issues = [];
+        $issues = $this->emptyIssues();
         $settings = resolve(SeoSuiteSettings::class);
         $metaTitle = $this->metaValue($page, 'title');
         $metaDescription = $this->metaValue($page, 'description');
@@ -107,8 +108,15 @@ final class BuildPageSeoReportAction
         $schemaDashboardReports = BuildSchemaTemplateReportAction::run($page, $site, $language);
         $redirectOpportunities = BuildRedirectOpportunityReportAction::run($site->id, $language->id, (int) $page->getKey());
         $searchConsoleInsights = array_values(BuildPageSearchConsoleInsightsAction::run($page));
+        $contentAnalysis = AnalyzePageContentAction::run(
+            html: $this->translationContent($page),
+            metaTitle: $metaTitle ?? $this->stringValue($page->translation?->title),
+            url: $previewUrl,
+            targetKeywords: $this->targetKeywords($page),
+        );
 
         if ($settings->seo_audit_enabled) {
+            $this->addOnPageContentIssues($issues, $contentAnalysis);
             $this->addTechnicalIssues(
                 issues: $issues,
                 page: $page,
@@ -146,9 +154,10 @@ final class BuildPageSeoReportAction
             imageUrl: $socialMeta->imageUrl,
             siteName: $siteName,
         );
+        $scoreBreakdown = resolve(CalculateSeoScoreAction::class)->breakdown($issues);
 
         return new PageSeoReportData(
-            score: CalculateSeoScoreAction::run($issues),
+            score: $scoreBreakdown->score,
             searchPreview: $searchPreview,
             socialPreview: $socialPreview,
             issues: $issues,
@@ -160,6 +169,8 @@ final class BuildPageSeoReportAction
             canonicalUrl: $canonicalUrl,
             robotsDirectives: $robotsDirectives,
             intelligenceSummary: BuildPageIntelligenceSummaryAction::run($page, $site, $language),
+            scoreBreakdown: $scoreBreakdown,
+            contentAnalysis: $contentAnalysis,
         );
     }
 
@@ -243,6 +254,54 @@ final class BuildPageSeoReportAction
 
     /**
      * @param  list<SeoIssueData>  $issues
+     */
+    private function addOnPageContentIssues(array &$issues, PageContentAnalysisData $analysis): void
+    {
+        if ($analysis->h1Count === 0) {
+            $issues[] = $this->issue(SeoCheckKeyEnum::OnPageContent, SeoIssueSeverityEnum::Warning, 'seo_issue_on_page_h1_missing');
+        } elseif ($analysis->h1Count > 1) {
+            $issues[] = $this->issue(SeoCheckKeyEnum::OnPageContent, SeoIssueSeverityEnum::Warning, 'seo_issue_on_page_h1_multiple');
+        }
+
+        if (! $analysis->headingOrderValid) {
+            $issues[] = $this->issue(SeoCheckKeyEnum::OnPageContent, SeoIssueSeverityEnum::Notice, 'seo_issue_on_page_heading_order');
+        }
+
+        if ($analysis->wordCount < 300) {
+            $issues[] = new SeoIssueData(
+                key: SeoCheckKeyEnum::OnPageContent,
+                severity: SeoIssueSeverityEnum::Notice,
+                message: __('capell-seo-suite::generic.seo_issue_on_page_word_count_short', ['min' => 300]),
+            );
+        }
+
+        if (! $analysis->hasFocusKeyword()) {
+            $issues[] = $this->issue(SeoCheckKeyEnum::FocusKeyword, SeoIssueSeverityEnum::Warning, 'seo_issue_focus_keyword_missing');
+
+            return;
+        }
+
+        if (! $analysis->titleContainsFocusKeyword) {
+            $issues[] = $this->issue(SeoCheckKeyEnum::FocusKeyword, SeoIssueSeverityEnum::Warning, 'seo_issue_focus_keyword_title_missing');
+        }
+
+        if (! $analysis->urlContainsFocusKeyword) {
+            $issues[] = $this->issue(SeoCheckKeyEnum::FocusKeyword, SeoIssueSeverityEnum::Notice, 'seo_issue_focus_keyword_url_missing');
+        }
+
+        if (! $analysis->firstParagraphContainsFocusKeyword) {
+            $issues[] = $this->issue(SeoCheckKeyEnum::FocusKeyword, SeoIssueSeverityEnum::Notice, 'seo_issue_focus_keyword_first_paragraph_missing');
+        }
+
+        if ($analysis->focusKeywordOccurrences === 0 || $analysis->focusKeywordDensity < 0.5) {
+            $issues[] = $this->issue(SeoCheckKeyEnum::FocusKeyword, SeoIssueSeverityEnum::Notice, 'seo_issue_focus_keyword_density_low');
+        } elseif ($analysis->focusKeywordDensity > 3.0) {
+            $issues[] = $this->issue(SeoCheckKeyEnum::FocusKeyword, SeoIssueSeverityEnum::Notice, 'seo_issue_focus_keyword_density_high');
+        }
+    }
+
+    /**
+     * @param  list<SeoIssueData>  $issues
      * @param  list<InternalLinkSuggestionData>  $internalLinkSuggestions
      * @param  list<SchemaTemplateReportData>  $schemaDashboardReports
      * @param  list<RedirectOpportunityData>  $redirectOpportunities
@@ -310,6 +369,14 @@ final class BuildPageSeoReportAction
             severity: $severity,
             message: __('capell-seo-suite::generic.' . $messageKey),
         );
+    }
+
+    /**
+     * @return list<SeoIssueData>
+     */
+    private function emptyIssues(): array
+    {
+        return [];
     }
 
     /**
@@ -431,6 +498,8 @@ final class BuildPageSeoReportAction
             $checks[] = SeoCheckKeyEnum::DuplicateTitle;
         }
 
+        $checks[] = SeoCheckKeyEnum::OnPageContent;
+        $checks[] = SeoCheckKeyEnum::FocusKeyword;
         $checks[] = SeoCheckKeyEnum::SocialImage;
         $checks[] = SeoCheckKeyEnum::Canonical;
         $checks[] = SeoCheckKeyEnum::Robots;
@@ -469,5 +538,32 @@ final class BuildPageSeoReportAction
         $stringValue = trim(strip_tags((string) $value));
 
         return $stringValue !== '' ? $stringValue : null;
+    }
+
+    private function translationContent(Page $page): string
+    {
+        $translation = $page->translation;
+
+        if (! $translation instanceof Translation) {
+            return '';
+        }
+
+        $content = $translation->getAttribute('content');
+
+        return is_scalar($content) ? (string) $content : '';
+    }
+
+    /**
+     * @return list<string>
+     */
+    private function targetKeywords(Page $page): array
+    {
+        $translation = $page->translation;
+
+        if (! $translation instanceof Translation) {
+            return [];
+        }
+
+        return NormalizeTargetKeywordsAction::run($translation->getMeta('keywords'));
     }
 }

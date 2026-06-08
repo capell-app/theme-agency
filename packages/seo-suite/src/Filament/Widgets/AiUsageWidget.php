@@ -20,10 +20,31 @@ class AiUsageWidget extends Widget
     {
         $count = AIGenerationHistory::query()->count();
         $tokens = AIGenerationHistory::query()->sum('total_tokens');
+        $costMicros = AIGenerationHistory::query()->sum('cost_micros');
+        $currency = AIGenerationHistory::query()
+            ->whereNotNull('cost_currency')
+            ->latest('id')
+            ->value('cost_currency') ?? config('capell-seo-suite.ai_costs.currency', 'USD');
 
         return [
             'generationCount' => $count,
             'totalTokens' => $tokens,
+            'totalCost' => $this->formatCost($this->integerValue($costMicros), $this->stringValue($currency, 'USD')),
         ];
+    }
+
+    private function formatCost(int $costMicros, string $currency): string
+    {
+        return $currency . ' ' . number_format($costMicros / 1_000_000, 2);
+    }
+
+    private function integerValue(mixed $value): int
+    {
+        return is_numeric($value) ? (int) $value : 0;
+    }
+
+    private function stringValue(mixed $value, string $fallback = ''): string
+    {
+        return is_scalar($value) ? (string) $value : $fallback;
     }
 }

@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 use Capell\Core\Models\Language;
 use Capell\Core\Models\Site;
+use Capell\UrlManager\Actions\UpsertRedirectRuleAction;
+use Capell\UrlManager\Data\RedirectRuleData;
 use Capell\UrlManager\Http\Middleware\RecordNotFoundOpportunityMiddleware;
+use Capell\UrlManager\Http\Middleware\ServeGoneRedirectRuleMiddleware;
 use Capell\UrlManager\Models\NotFoundOpportunity;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -45,4 +48,28 @@ it('does not record ignored 404 paths', function (): void {
     );
 
     expect(NotFoundOpportunity::query()->count())->toBe(0);
+});
+
+it('serves managed 410 gone rules before the frontend 404 response is recorded', function (): void {
+    config(['capell-url-manager.hit_recording.defer' => false]);
+
+    UpsertRedirectRuleAction::run(new RedirectRuleData(
+        sourceUrl: '/retired-page',
+        targetUrl: '',
+        siteId: 1,
+        languageId: 2,
+        statusCode: Response::HTTP_GONE,
+    ));
+
+    $request = Request::create('/retired-page?utm_source=test');
+    $request->attributes->set('site', tap(new Site, fn (Site $site): Site => $site->forceFill(['id' => 1])));
+    $request->attributes->set('language', tap(new Language, fn (Language $language): Language => $language->forceFill(['id' => 2])));
+
+    $response = (new ServeGoneRedirectRuleMiddleware)->handle(
+        $request,
+        static fn (): Response => new Response('', Response::HTTP_NOT_FOUND),
+    );
+
+    expect($response->getStatusCode())->toBe(Response::HTTP_GONE)
+        ->and(NotFoundOpportunity::query()->count())->toBe(0);
 });

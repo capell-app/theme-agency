@@ -15,6 +15,7 @@ use Capell\UrlManager\Console\Commands\PruneRedirectHitsCommand;
 use Capell\UrlManager\Filament\Pages\NotFoundOpportunitiesPage;
 use Capell\UrlManager\Filament\Pages\RedirectRulesPage;
 use Capell\UrlManager\Http\Middleware\RecordNotFoundOpportunityMiddleware;
+use Capell\UrlManager\Http\Middleware\ServeGoneRedirectRuleMiddleware;
 use Capell\UrlManager\Listeners\RecordRedirectForChangedPageUrl;
 use Capell\UrlManager\Models\NotFoundOpportunity;
 use Capell\UrlManager\Models\RedirectHit;
@@ -116,7 +117,10 @@ final class UrlManagerServiceProvider extends AbstractPackageServiceProvider
             return $this;
         }
 
-        $configure = static fn (FrontendRouteMiddlewareRegistry $registry): FrontendRouteMiddlewareRegistry => $registry->append([RecordNotFoundOpportunityMiddleware::class]);
+        $configure = static fn (FrontendRouteMiddlewareRegistry $registry): FrontendRouteMiddlewareRegistry => $registry->append([
+            ServeGoneRedirectRuleMiddleware::class,
+            RecordNotFoundOpportunityMiddleware::class,
+        ]);
 
         $this->app->afterResolving(FrontendRouteMiddlewareRegistry::class, $configure);
 

@@ -12,6 +12,7 @@ return [
     'seo_opportunities' => 'SEO opportunities',
     'search_intelligence' => 'Search intelligence',
     'ai_discovery_coverage' => 'AI Discovery coverage',
+    'ai_estimated_spend' => 'Estimated spend',
     'ai_metrics' => 'AI metrics',
     'clicks' => 'Clicks',
     'impressions' => 'Impressions',

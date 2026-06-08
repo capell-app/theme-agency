@@ -103,12 +103,15 @@ it('records ai generation arrays through the lifecycle wrapper', function (): vo
         'prompt_tokens' => 5,
         'completion_tokens' => 8,
         'total_tokens' => 13,
+        'cost_micros' => 11,
         'duration' => 0.25,
         'metadata' => ['source' => 'unit'],
     ]);
 
     expect($history)->toBeInstanceOf(AIGenerationHistory::class)
         ->and($history->action)->toBe('GeneratePageTitleAction')
+        ->and($history->cost_micros)->toBe(11)
+        ->and($history->cost_currency)->toBe('USD')
         ->and($history->metadata)->toBe(['source' => 'unit']);
 
     Event::assertDispatched(AiGenerationStarted::class);
@@ -145,6 +148,7 @@ it('records ai generation result data with response metadata and request details
         ->and($history->prompt_tokens)->toBe(9)
         ->and($history->completion_tokens)->toBe(12)
         ->and($history->total_tokens)->toBe(21)
+        ->and($history->cost_currency)->toBe('USD')
         ->and($history->metadata)->toMatchArray([
             'provider' => 'openai',
             'feature' => 'meta_description',
@@ -154,6 +158,24 @@ it('records ai generation result data with response metadata and request details
             'ai_params' => ['temperature' => 0.2],
             'ai_creator_session_id' => 44,
         ]);
+});
+
+it('estimates ai generation costs from model pricing when no explicit cost is supplied', function (): void {
+    $history = RecordAiGenerationAction::run([
+        'action' => 'GeneratePageTitleAction',
+        'model' => 'gpt-4o',
+        'input' => 'Input text',
+        'output' => 'Output text',
+        'prompt_tokens' => 1_000_000,
+        'completion_tokens' => 1_000_000,
+        'total_tokens' => 2_000_000,
+        'duration' => 0.25,
+        'metadata' => ['user_id' => 55],
+    ]);
+
+    expect($history->cost_micros)->toBe(20_000_000)
+        ->and($history->cost_currency)->toBe('USD')
+        ->and($history->created_by_user_id)->toBe(55);
 });
 
 it('records ai generation context input when no explicit result payload is supplied', function (): void {

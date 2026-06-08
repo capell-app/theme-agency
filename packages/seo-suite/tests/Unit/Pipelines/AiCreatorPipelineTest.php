@@ -6,6 +6,8 @@ use Capell\SeoSuite\Actions\Ai\RecordAiGenerationAction;
 use Capell\SeoSuite\Data\Ai\AiGenerationInputData;
 use Capell\SeoSuite\Data\Ai\AiGenerationResultData;
 use Capell\SeoSuite\DataObjects\AiCreatorData;
+use Capell\SeoSuite\Policies\AiCreatorPolicy;
+use Capell\SeoSuite\Settings\AIOrchestratorSettings;
 use Capell\SeoSuite\Support\AiRateLimiter;
 use Capell\SeoSuite\Support\AiResponse;
 use Capell\SeoSuite\Support\Cache\RateLimitCache;
@@ -28,6 +30,9 @@ function makeAiCreatorPipelineForJson(string $json): AiCreatorPipeline
         'supports_translations' => true,
         'repeatable' => false,
     ]);
+
+    $settings = (new ReflectionClass(AIOrchestratorSettings::class))->newInstanceWithoutConstructor();
+    $settings->ai_creator = true;
 
     return new AiCreatorPipeline(
         new PromptRepository([
@@ -60,6 +65,7 @@ function makeAiCreatorPipelineForJson(string $json): AiCreatorPipeline
         new AiRateLimiter(resolve(RateLimitCache::class), ['enabled' => false]),
         $sectionRegistry,
         new RecordAiGenerationAction,
+        new AiCreatorPolicy($settings),
     );
 }
 
