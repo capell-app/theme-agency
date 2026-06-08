@@ -16,7 +16,12 @@
     "surfaces": ["admin", "console"],
     "dependencies": {
         "requires": ["capell-app/admin", "capell-app/core"],
-        "supports": [],
+        "supports": [
+            "capell-app/access-gate",
+            "capell-app/diagnostics",
+            "capell-app/login-audit",
+            "capell-app/privacy-center"
+        ],
         "conflicts": []
     },
     "providers": {

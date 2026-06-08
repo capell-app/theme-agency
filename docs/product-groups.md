@@ -2,6 +2,8 @@
 
 Capell groups first-party packages by customer-facing value. Composer names remain focused and stable; the product group controls how packages appear in catalogues, pricing, and marketplace screens.
 
+Product groups are the primary package catalog taxonomy. Extension suites are cross-package sales and onboarding bundles documented in [Capell Extension Suites](extension-suites.md); they use optional `dependencies.supports` relationships rather than renaming packages or adding hard dependencies.
+
 ## Capell Foundation
 
 Free baseline packages:

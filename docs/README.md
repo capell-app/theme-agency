@@ -13,6 +13,7 @@ Use [Package Documentation Standard](package-documentation-standard.md) when cre
 | Document                                                            | Use                                                                        |
 | ------------------------------------------------------------------- | -------------------------------------------------------------------------- |
 | [Package product groups](product-groups.md)                         | Commercial/free grouping and bundle context.                               |
+| [Extension suites](extension-suites.md)                              | Cross-package suite positioning and optional support relationships.         |
 | [Credits and acknowledgements](credits-and-acknowledgements.md)     | Cross-package upstream credits and acknowledgements.                       |
 | [Improvement Plan Status](improvement-plan-status.md)               | Long-running package improvement burn-down.                                |
 | [Cross-Package Improvement Summary](improvement-plans-summary.md)   | Systemic issues and sequencing across package audits.                      |

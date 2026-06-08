@@ -18,8 +18,11 @@
         "requires": ["capell-app/admin", "capell-app/core"],
         "supports": [
             "capell-app/contacts",
+            "capell-app/diagnostics",
+            "capell-app/media-library",
+            "capell-app/payments",
             "capell-app/search",
-            "capell-app/diagnostics"
+            "capell-app/theme-commerce"
         ],
         "conflicts": []
     },

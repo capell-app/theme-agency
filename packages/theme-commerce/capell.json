@@ -20,6 +20,8 @@
             "capell-app/blog",
             "capell-app/campaign-studio",
             "capell-app/media-library",
+            "capell-app/payments",
+            "capell-app/search",
             "capell-app/shopify-commerce"
         ],
         "conflicts": []

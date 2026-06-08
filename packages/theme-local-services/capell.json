@@ -17,11 +17,15 @@
     "dependencies": {
         "requires": ["capell-app/core", "capell-app/foundation-theme"],
         "supports": [
-            "capell-app/layout-builder",
+            "capell-app/address",
+            "capell-app/blog",
+            "capell-app/bookings",
+            "capell-app/events",
             "capell-app/frontend-authoring",
+            "capell-app/form-builder",
+            "capell-app/layout-builder",
             "capell-app/publishing-studio",
-            "capell-app/seo-suite",
-            "capell-app/blog"
+            "capell-app/seo-suite"
         ],
         "conflicts": []
     },

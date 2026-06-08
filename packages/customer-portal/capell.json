@@ -18,10 +18,12 @@
         "requires": ["capell-app/admin", "capell-app/core"],
         "supports": [
             "capell-app/access-gate",
+            "capell-app/contacts",
             "capell-app/document-lifecycle",
             "capell-app/events",
             "capell-app/newsletter",
-            "capell-app/payments"
+            "capell-app/payments",
+            "capell-app/privacy-center"
         ],
         "conflicts": []
     },
