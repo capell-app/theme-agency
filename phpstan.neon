@@ -10,9 +10,6 @@ includes:
 
 parameters:
     treatPhpDocTypesAsCertain: false
-    parallel:
-        maximumNumberOfProcesses: 1
-        jobSize: 5
     paths:
         - packages
         - tests
