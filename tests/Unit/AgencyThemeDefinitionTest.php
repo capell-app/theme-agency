@@ -15,6 +15,7 @@ use Capell\Core\ThemeStudio\Data\NavigationData;
 use Capell\Core\ThemeStudio\Data\ProofSectionData;
 use Capell\Core\ThemeStudio\Data\ThemePageData;
 use Capell\Core\ThemeStudio\Data\ThemePresetData;
+use Capell\Core\ThemeStudio\Rendering\ViewSectionRenderer;
 use Capell\Core\ThemeStudio\Theme\ThemeRegistry;
 use Capell\ThemeStudio\Agency\AgencyThemeServiceProvider;
 use Capell\ThemeStudio\Agency\Health\ThemeAgencyHealthCheck;
@@ -93,8 +94,8 @@ it('keeps agency preset shell contrast at WCAG AA levels', function (): void {
     collect($definition->presets)
         ->each(function (ThemePresetData $preset): void {
             expect(agencyThemeContrastRatio(
-                $preset->values['surfaceColor'],
-                $preset->values['foregroundColor'],
+                agencyThemePresetColor($preset, 'surfaceColor'),
+                agencyThemePresetColor($preset, 'foregroundColor'),
             ))->toBeGreaterThanOrEqual(4.5, sprintf(
                 'Preset [%s] surface/foreground contrast must be at least 4.5:1.',
                 $preset->key,
@@ -159,11 +160,7 @@ it('renders navigation from the agency package views', function (): void {
     View::addNamespace('capell-theme-agency', __DIR__ . '/../../resources/views');
 
     $provider = new AgencyThemeServiceProvider($this->app);
-    $method = new ReflectionMethod($provider, 'sectionRenderers');
-
-    $renderer = $method->invoke($provider)['navigation'] ?? null;
-
-    expect($renderer)->not->toBeNull();
+    $renderer = agencyThemeRenderer($provider, 'navigation');
 
     $html = $renderer->render(new NavigationData(
         brandName: 'Capell',
@@ -179,9 +176,7 @@ it('declares renderers for every included agency section', function (): void {
     View::addNamespace('capell-theme-agency', __DIR__ . '/../../resources/views');
 
     $provider = new AgencyThemeServiceProvider($this->app);
-    $method = new ReflectionMethod($provider, 'sectionRenderers');
-
-    $renderers = $method->invoke($provider);
+    $renderers = agencyThemeSectionRenderers($provider);
 
     expect(array_keys($renderers))->toBe([
         'navigation',
@@ -347,10 +342,7 @@ it('renders a dedicated agency project showcase section', function (): void {
     Lang::addNamespace('capell-theme-agency', __DIR__ . '/../../resources/lang');
 
     $provider = new AgencyThemeServiceProvider($this->app);
-    $method = new ReflectionMethod($provider, 'sectionRenderers');
-    $renderer = $method->invoke($provider)['project-showcase'] ?? null;
-
-    expect($renderer)->not->toBeNull();
+    $renderer = agencyThemeRenderer($provider, 'project-showcase');
 
     $html = $renderer->render(agencyThemeSection('project-showcase', [
         'heading' => 'Launch work that moved markets',
@@ -420,10 +412,7 @@ it('renders a dedicated agency case study section', function (): void {
     Lang::addNamespace('capell-theme-agency', __DIR__ . '/../../resources/lang');
 
     $provider = new AgencyThemeServiceProvider($this->app);
-    $method = new ReflectionMethod($provider, 'sectionRenderers');
-    $renderer = $method->invoke($provider)['case-study'] ?? null;
-
-    expect($renderer)->not->toBeNull();
+    $renderer = agencyThemeRenderer($provider, 'case-study');
 
     $html = $renderer->render(agencyThemeSection('case-study', [
         'heading' => 'Repositioning a national retail launch',
@@ -492,8 +481,7 @@ it('renders agency team, services, and client logo sections', function (): void 
     Lang::addNamespace('capell-theme-agency', __DIR__ . '/../../resources/lang');
 
     $provider = new AgencyThemeServiceProvider($this->app);
-    $method = new ReflectionMethod($provider, 'sectionRenderers');
-    $renderers = $method->invoke($provider);
+    $renderers = agencyThemeSectionRenderers($provider);
 
     $teamHtml = $renderers['team']->render(agencyThemeSection('team', [
         'heading' => 'Studio team',
@@ -631,6 +619,45 @@ function agencyThemeSection(string $key, array $viewData): ThemeSection
             return ['section' => (object) $this->viewData];
         }
     };
+}
+
+function agencyThemePresetColor(ThemePresetData $preset, string $key): string
+{
+    $value = $preset->values[$key] ?? null;
+
+    return is_string($value) ? $value : '';
+}
+
+/**
+ * @return array<string, ViewSectionRenderer>
+ */
+function agencyThemeSectionRenderers(AgencyThemeServiceProvider $provider): array
+{
+    $method = new ReflectionMethod($provider, 'sectionRenderers');
+    $renderers = $method->invoke($provider);
+
+    if (! is_array($renderers)) {
+        return [];
+    }
+
+    $typedRenderers = [];
+
+    foreach ($renderers as $key => $renderer) {
+        if (is_string($key) && $renderer instanceof ViewSectionRenderer) {
+            $typedRenderers[$key] = $renderer;
+        }
+    }
+
+    return $typedRenderers;
+}
+
+function agencyThemeRenderer(AgencyThemeServiceProvider $provider, string $key): ViewSectionRenderer
+{
+    $renderer = agencyThemeSectionRenderers($provider)[$key] ?? null;
+
+    throw_unless($renderer instanceof ViewSectionRenderer, RuntimeException::class);
+
+    return $renderer;
 }
 
 function agencyThemeContrastRatio(string $backgroundHex, string $foregroundHex): float
