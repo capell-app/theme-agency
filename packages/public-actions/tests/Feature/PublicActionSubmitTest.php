@@ -473,7 +473,11 @@ it('marks the submission failed when the handler validation fails', function ():
     PublicAction::factory()->create([
         'key' => 'failing-action',
         'handler_key' => 'test.validation-handler',
-        'payload_schema' => [],
+        'payload_schema' => [
+            'fields' => [
+                ['key' => 'email', 'label' => 'Email address', 'type' => 'text', 'required' => false],
+            ],
+        ],
     ]);
 
     $response = $this->postJson('/actions/failing-action', [

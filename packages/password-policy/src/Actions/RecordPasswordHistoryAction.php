@@ -7,6 +7,7 @@ namespace Capell\PasswordPolicy\Actions;
 use Capell\Core\Support\Database\RuntimeSchemaState;
 use Capell\PasswordPolicy\Support\PasswordPolicySettingsResolver;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\DB;
 use Lorisleiva\Actions\Concerns\AsObject;
 
@@ -34,10 +35,17 @@ class RecordPasswordHistoryAction
 
     private function pruneHistory(Model $user, int $keepCount): void
     {
+        $idsToKeep = DB::table('password_policy_password_histories')
+            ->where('user_id', $user->getKey())->latest()
+            ->orderByDesc('id')
+            ->limit($keepCount)
+            ->pluck('id')
+            ->all();
+
         $idsToPrune = DB::table('password_policy_password_histories')
             ->where('user_id', $user->getKey())->latest()
             ->orderByDesc('id')
-            ->skip($keepCount)
+            ->when($idsToKeep !== [], static fn (Builder $query): Builder => $query->whereNotIn('id', $idsToKeep))
             ->pluck('id');
 
         if ($idsToPrune->isEmpty()) {

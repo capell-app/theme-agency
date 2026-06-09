@@ -50,7 +50,7 @@ it('declares privacy center manifest ownership and cache safety', function (): v
         ->and(data_get($manifest, 'dependencies.requires'))->toContain('capell-app/admin')
         ->and(data_get($manifest, 'providers.admin'))->toBe([AdminServiceProvider::class])
         ->and(data_get($manifest, 'commands.retention'))->toBe('privacy:apply-retention')
-        ->and(data_get($manifest, 'surfaces'))->toContain('public')
+        ->and(data_get($manifest, 'surfaces'))->toContain('frontend')
         ->and(data_get($manifest, 'capabilities'))->toContain('privacy-center-cookie-categories')
         ->and(data_get($manifest, 'capabilities'))->toContain(
             'privacy-center-consent',

@@ -24,7 +24,7 @@ it('denies system health access when disabled or unauthenticated', function (): 
 it('exposes system health page labels, route and layout metadata', function (): void {
     expect(SystemHealthPage::getNavigationLabel())->toBeString()
         ->and(SystemHealthPage::getNavigationGroup())->toBeString()
-        ->and(SystemHealthPage::getRoutePath(Filament::getPanel('admin')))->toBe('/system-health');
+        ->and(SystemHealthPage::getRoutePath(Filament::getPanel('admin')))->toBe('/diagnostics/system-health');
 
     $page = new SystemHealthPage;
 

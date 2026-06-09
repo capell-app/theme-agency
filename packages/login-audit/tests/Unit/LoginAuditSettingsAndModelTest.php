@@ -11,6 +11,7 @@ use Capell\LoginAudit\Settings\LoginAuditSettings;
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
+use Filament\Infolists\Components\TextEntry;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Schema;
 use Illuminate\Support\Facades\Config;
@@ -72,19 +73,42 @@ it('builds the login audit settings schema controls', function (): void {
     $childComponents = rawLoginAuditSettingsChildComponents($components[0]);
 
     expect($childComponents)
-        ->toHaveCount(7)
-        ->and($childComponents[0])->toBeInstanceOf(Toggle::class)
-        ->and($childComponents[1])->toBeInstanceOf(TextInput::class)
-        ->and($childComponents[2])->toBeInstanceOf(Checkbox::class)
-        ->and($childComponents[3])->toBeInstanceOf(Toggle::class)
-        ->and($childComponents[4])->toBeInstanceOf(TextInput::class)
-        ->and($childComponents[5])->toBeInstanceOf(Toggle::class);
+        ->toHaveCount(15)
+        ->and(array_map(
+            static fn (object $component): string => $component::class,
+            $childComponents,
+        ))->toBe([
+            Toggle::class,
+            TextInput::class,
+            Checkbox::class,
+            Toggle::class,
+            TextInput::class,
+            Toggle::class,
+            Toggle::class,
+            TextInput::class,
+            TextInput::class,
+            Toggle::class,
+            Toggle::class,
+            Toggle::class,
+            Toggle::class,
+            Toggle::class,
+            TextEntry::class,
+        ]);
 });
 
 function seedLoginAuditSettingsAndModelSetting(string $settingName, mixed $value): void
 {
     /** @var SettingsMigrator $settingsMigrator */
     $settingsMigrator = resolve(SettingsMigrator::class);
+
+    foreach (defaultLoginAuditSettingsAndModelSettings() as $defaultSettingName => $defaultValue) {
+        $defaultSettingKey = 'login_audit.' . $defaultSettingName;
+
+        if (! $settingsMigrator->exists($defaultSettingKey)) {
+            $settingsMigrator->add($defaultSettingKey, $defaultValue);
+        }
+    }
+
     $settingKey = 'login_audit.' . $settingName;
 
     if ($settingsMigrator->exists($settingKey)) {
@@ -94,6 +118,30 @@ function seedLoginAuditSettingsAndModelSetting(string $settingName, mixed $value
     }
 
     app()->forgetInstance(LoginAuditSettings::class);
+}
+
+/**
+ * @return array<string, mixed>
+ */
+function defaultLoginAuditSettingsAndModelSettings(): array
+{
+    return [
+        'show_login_audits' => true,
+        'retention_days' => 90,
+        'track_user_ip_addresses' => true,
+        'track_admin_activity' => true,
+        'activity_update_grace_seconds' => 60,
+        'enable_suspicious_detection' => true,
+        'enable_geo_location' => false,
+        'failed_login_threshold' => 5,
+        'failed_login_window_minutes' => 60,
+        'check_unusual_login_times' => false,
+        'alert_new_devices' => true,
+        'alert_failed_logins' => false,
+        'alert_suspicious_logins' => true,
+        'last_purged_at' => null,
+        'enable_user_resource_bridge' => true,
+    ];
 }
 
 /**

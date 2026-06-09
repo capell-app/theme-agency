@@ -34,7 +34,7 @@ it('declares admin resources for experiment setup records', function (): void {
 });
 
 it('exposes list create edit pages for experiment setup resources', function (): void {
-    expect(array_keys(ExperimentResource::getPages()))->toBe(['index', 'create', 'edit'])
+    expect(array_keys(ExperimentResource::getPages()))->toBe(['index', 'create', 'edit', 'results'])
         ->and(array_keys(ExperimentVariantResource::getPages()))->toBe(['index', 'create', 'edit'])
         ->and(array_keys(ExperimentGoalResource::getPages()))->toBe(['index', 'create', 'edit'])
         ->and(array_keys(ExperimentAudienceRuleResource::getPages()))->toBe(['index', 'create', 'edit']);

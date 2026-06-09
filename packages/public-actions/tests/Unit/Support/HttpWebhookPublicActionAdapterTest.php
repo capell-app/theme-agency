@@ -122,7 +122,8 @@ it('records provider failures as retryable and redacts response summaries', func
 });
 
 it('releases webhook dispatch jobs when provider failures are retryable', function (): void {
-    config()->set('capell-public-actions.dispatch_retry_seconds', 45);
+    config()->set('capell-public-actions.dispatch_backoff_seconds', [45]);
+    config()->set('capell-public-actions.dispatch_retry_jitter_seconds', 0);
 
     Http::fake([
         'https://hooks.example.test/retry-job' => Http::response('try later', 503),

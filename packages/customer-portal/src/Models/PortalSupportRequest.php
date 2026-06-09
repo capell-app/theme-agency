@@ -8,6 +8,7 @@ use Capell\Core\Models\Site;
 use Capell\CustomerPortal\Database\Factories\PortalSupportRequestFactory;
 use Capell\CustomerPortal\Enums\SupportRequestPriority;
 use Capell\CustomerPortal\Enums\SupportRequestStatus;
+use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -26,6 +27,9 @@ use Override;
  * @property string|null $requester_email
  * @property string|null $requester_email_hash
  * @property array<string, mixed>|null $context
+ * @property CarbonImmutable|null $submitted_at
+ * @property CarbonImmutable|null $resolved_at
+ * @property CarbonImmutable|null $closed_at
  * @property-read PortalAccount $account
  * @property-read Collection<int, PortalSupportRequestReply> $replies
  */

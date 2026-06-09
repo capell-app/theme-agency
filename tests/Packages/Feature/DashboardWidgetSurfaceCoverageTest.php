@@ -126,7 +126,7 @@ it('builds dashboard table widgets from their package query actions', function (
     $seoTable = $seoWidget->table(packageDashboardWidgetTable());
     $seoRecords = ($seoTable->getDataSource())();
 
-    expect($ga4Widget->table(packageDashboardWidgetTable())->getColumns())->toHaveCount(2)
+    expect($ga4Widget->table(packageDashboardWidgetTable())->getColumns())->toHaveCount(3)
         ->and($ga4Records)->toBeInstanceOf(Collection::class)
         ->and($ga4Records->pluck('value')->all())->toBe(['1,234', '234', '345', '45.6%', '12'])
         ->and($campaignWidget->table(packageDashboardWidgetTable())->getColumns())->toHaveCount(4)

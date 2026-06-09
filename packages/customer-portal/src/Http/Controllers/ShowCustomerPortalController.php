@@ -46,7 +46,7 @@ final class ShowCustomerPortalController
                 'subject' => $supportRequest->subject,
                 'status' => $supportRequest->status->getLabel(),
                 'priority' => $supportRequest->priority->getLabel(),
-                'submitted_at' => $supportRequest->submitted_at->toDayDateTimeString(),
+                'submitted_at' => $supportRequest->submitted_at?->toDayDateTimeString(),
                 'message' => $supportRequest->message,
                 'replies' => $supportRequest->replies
                     ->sortBy('submitted_at')

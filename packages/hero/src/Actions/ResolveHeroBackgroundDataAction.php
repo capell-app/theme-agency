@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace Capell\Hero\Actions;
 
+use Capell\Core\Models\Blueprint;
 use Capell\Core\Models\Theme;
 use Capell\Hero\Data\HeroBackgroundData;
 use Capell\LayoutBuilder\Models\Widget;
 use Capell\LayoutBuilder\Models\WidgetAsset;
+use Illuminate\Support\Arr;
 use Lorisleiva\Actions\Concerns\AsObject;
 
 /**
@@ -65,9 +67,42 @@ final class ResolveHeroBackgroundDataAction
     {
         return array_values(array_filter([
             $this->settings($theme?->getMeta('hero_background', [])),
-            $this->settings($widget?->getMeta('hero_background', [])),
+            $this->settings($widget instanceof Widget ? $this->widgetMeta($widget, 'hero_background', []) : []),
             $this->settings($asset?->getMeta('hero_background', [])),
         ]));
+    }
+
+    private function widgetMeta(Widget $widget, string $key, mixed $fallback = null): mixed
+    {
+        $meta = $widget->meta ?? [];
+
+        if (is_array($meta) && Arr::has($meta, $key)) {
+            $value = data_get($meta, $key);
+
+            if (filled($value)) {
+                return $value;
+            }
+        }
+
+        $blueprint = $widget->relationLoaded('blueprint') ? $widget->getRelation('blueprint') : null;
+
+        if (! $blueprint instanceof Blueprint && $widget->relationLoaded('type')) {
+            $blueprint = $widget->getRelation('type');
+        }
+
+        if ($blueprint instanceof Blueprint) {
+            $blueprintMeta = $blueprint->meta ?? [];
+
+            if (is_array($blueprintMeta) && Arr::has($blueprintMeta, $key)) {
+                $value = data_get($blueprintMeta, $key);
+
+                if (filled($value)) {
+                    return $value;
+                }
+            }
+        }
+
+        return $fallback;
     }
 
     /**

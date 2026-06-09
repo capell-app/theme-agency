@@ -131,18 +131,22 @@ it('publishes new versions and keeps navigation, search, and ai output public on
     $childNavigationItem = $rootNavigationItem->children[0] ?? null;
     Assert::assertInstanceOf(PublicKnowledgeBaseNavigationItemData::class, $childNavigationItem);
 
+    $publicSearchDocument = $searchDocuments->firstWhere('title', 'Public Article Updated');
+    $publicAiOutput = $aiOutput->firstWhere('title', 'Public Article Updated');
+
     expect($navigation)->toHaveCount(1)
         ->and($rootNavigationItem->articles)->toHaveCount(1)
         ->and($rootNavigationItem->articles[0]['title'])->toBe('Public Article Updated')
         ->and($rootNavigationItem->children)->toHaveCount(1)
         ->and($childNavigationItem->title)->toBe('Child Docs')
         ->and($childNavigationItem->articles[0]['title'])->toBe('Child Article')
-        ->and($searchDocuments)->toHaveCount(1)
-        ->and($searchDocuments->first()->weight)->toBe(90)
-        ->and($searchDocuments->first()->title)->toBe('Public Article Updated')
-        ->and($aiOutput)->toHaveCount(1)
-        ->and($aiOutput->first()->content)->toBe('Updated Public body for visitors and AI.')
-        ->and($aiOutput->first()->publicPath)->toBe('/docs/public-docs/public-article')
+        ->and($searchDocuments)->toHaveCount(2)
+        ->and($searchDocuments->pluck('title')->all())->toBe(['Public Article Updated', 'Child Article'])
+        ->and($publicSearchDocument?->weight)->toBe(90)
+        ->and($aiOutput)->toHaveCount(2)
+        ->and($aiOutput->pluck('title')->all())->toBe(['Child Article', 'Public Article Updated'])
+        ->and($publicAiOutput?->content)->toBe('Updated Public body for visitors and AI.')
+        ->and($publicAiOutput?->publicPath)->toBe('/docs/public-docs/public-article')
         ->and($aiOutput->pluck('title')->all())->not->toContain($hiddenArticle->title);
 });
 

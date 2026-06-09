@@ -54,6 +54,8 @@ jobs:
           php-version: ${{ matrix.php }}
           extensions: curl, dom, fileinfo, intl, json, libxml, mbstring, phar, simplexml, zip
           tools: composer:v2, pint
+          coverage: none
+          ini-values: opcache.enable_cli=1, opcache.jit=tracing, opcache.jit_buffer_size=256M, memory_limit=-1
 
       - name: Check Composer public files
         run: php scripts/check-composer-local-paths.php
@@ -103,6 +105,14 @@ jobs:
 
       - name: Run Pint check
         run: composer cs:check
+
+      - name: Cache PHPStan result cache
+        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5
+        with:
+          path: /tmp/phpstan/capell-packages
+          key: phpstan-${{ runner.os }}-php${{ matrix.php }}-${{ github.sha }}
+          restore-keys: |
+            phpstan-${{ runner.os }}-php${{ matrix.php }}-
 
       - name: Run PHPStan
         run: composer phpstan

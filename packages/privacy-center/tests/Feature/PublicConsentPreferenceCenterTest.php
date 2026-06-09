@@ -5,7 +5,10 @@ declare(strict_types=1);
 use Capell\PrivacyCenter\Enums\ConsentDecision;
 use Capell\PrivacyCenter\Enums\CookieCategory;
 use Capell\PrivacyCenter\Models\ConsentRecord;
+use Capell\PrivacyCenter\Tests\PrivacyCenterTestCase;
 use Illuminate\Support\Facades\Route;
+
+uses(PrivacyCenterTestCase::class);
 
 it('renders a public cache-safe consent preference center without admin internals', function (): void {
     expect(Route::has('capell-privacy-center.consent.show'))->toBeTrue()

@@ -38,10 +38,17 @@ final class PrunePasswordHistoryAction
                     return;
                 }
 
+                $idsToKeep = DB::table('password_policy_password_histories')
+                    ->where('user_id', (int) $historyUserId)->latest()
+                    ->orderByDesc('id')
+                    ->limit($keepCount)
+                    ->pluck('id')
+                    ->all();
+
                 $idsToPrune = DB::table('password_policy_password_histories')
                     ->where('user_id', (int) $historyUserId)->latest()
                     ->orderByDesc('id')
-                    ->skip($keepCount)
+                    ->when($idsToKeep !== [], static fn (Builder $query): Builder => $query->whereNotIn('id', $idsToKeep))
                     ->pluck('id');
 
                 $deleted += $idsToPrune->count();

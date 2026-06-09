@@ -139,21 +139,13 @@ final class AdminServiceProvider extends ServiceProvider
 
     private function ga4Overview(): GA4ReportsOverviewData
     {
-        static $overview = null;
-
-        if ($overview instanceof GA4ReportsOverviewData) {
-            return $overview;
-        }
-
         $now = CarbonImmutable::now();
         $window = BuildGA4ReportsWindowAction::run(
             startsAt: $now->startOfWeek(),
             endsAt: $now->endOfWeek(),
         );
 
-        $overview = BuildGA4ReportsOverviewAction::run($window);
-
-        return $overview;
+        return BuildGA4ReportsOverviewAction::run($window);
     }
 
     private function registerSchedule(): self
