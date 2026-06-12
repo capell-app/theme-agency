@@ -87,3 +87,11 @@ Run package tests from the repository root:
 ```bash
 vendor/bin/pest packages/document-lifecycle/tests --configuration=phpunit.xml
 ```
+
+## Troubleshooting
+
+| Symptom                                     | Likely cause                                               | Check                                                                                                | Fix                                                                                  |
+| ------------------------------------------- | ---------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------ |
+| Expired documents remain active             | The host scheduler has not run the archive command         | In a host app, run `php artisan schedule:list` and check `capell:document-lifecycle:archive-expired` | Enable the scheduler or run the command in the host app after confirming due dates   |
+| Certificate download cannot be verified     | The acceptance record is missing or the signature is stale | Confirm the acceptance exists in `legal_acceptances` and request a fresh signed certificate URL      | Regenerate the signed URL through the package surface instead of reusing an old link |
+| Publication evidence does not match content | A document was changed without creating a new publication  | Compare the latest publication hash and stored snapshot for the document                             | Publish a new controlled document version through the package Action/admin workflow  |

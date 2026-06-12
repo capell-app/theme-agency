@@ -108,7 +108,7 @@
             "demoCommand": "capell:blog-demo",
             "demoParams": ["sites", "languages", "force"],
             "doctorCommand": null,
-            "entryCount": 10,
+            "entryCount": 5,
             "browserTestCount": 0
         },
         {
@@ -152,7 +152,7 @@
             "demoCommand": null,
             "demoParams": [],
             "doctorCommand": null,
-            "entryCount": 3,
+            "entryCount": 2,
             "browserTestCount": 0
         },
         {
@@ -253,7 +253,7 @@
             "demoCommand": null,
             "demoParams": [],
             "doctorCommand": null,
-            "entryCount": 3,
+            "entryCount": 2,
             "browserTestCount": 0
         },
         {
@@ -275,7 +275,7 @@
             "demoCommand": null,
             "demoParams": [],
             "doctorCommand": null,
-            "entryCount": 0,
+            "entryCount": 2,
             "browserTestCount": 0
         },
         {
@@ -517,7 +517,7 @@
             "demoCommand": null,
             "demoParams": [],
             "doctorCommand": null,
-            "entryCount": 4,
+            "entryCount": 3,
             "browserTestCount": 0
         },
         {
@@ -572,7 +572,7 @@
             "demoCommand": null,
             "demoParams": [],
             "doctorCommand": "capell:seo-suite-doctor",
-            "entryCount": 13,
+            "entryCount": 7,
             "browserTestCount": 0
         },
         {
@@ -1349,45 +1349,6 @@
             "composerName": "capell-app/blog"
         },
         {
-            "id": "article-health-widget",
-            "title": "Article health dashboard widget.",
-            "package": "blog",
-            "surface": "admin",
-            "targetType": "admin-surface",
-            "target": "ArticleHealthWidgetAbstract",
-            "required": false,
-            "notes": "Optional follow-up. Capture only when the runner can target the host dashboard with the Blog widget implementation visible and seeded articles include complete/incomplete metadata states.",
-            "useCase": "An editor sees whether articles are missing metadata, tags, media, translations, or publish settings.",
-            "screenshotPath": "packages/blog/docs/screenshots/article-health-widget.png",
-            "composerName": "capell-app/blog"
-        },
-        {
-            "id": "top-pages-widget",
-            "title": "Top pages dashboard widget.",
-            "package": "blog",
-            "surface": "admin",
-            "targetType": "admin-surface",
-            "target": "TopPagesWidgetAbstract",
-            "required": false,
-            "notes": "Optional follow-up. Capture only when the runner can target the host dashboard with the Blog top pages widget visible and seeded article/page traffic data.",
-            "useCase": "An editor identifies which articles or blog pages are drawing the most visits.",
-            "screenshotPath": "packages/blog/docs/screenshots/top-pages-widget.png",
-            "composerName": "capell-app/blog"
-        },
-        {
-            "id": "traffic-chart-widget",
-            "title": "Traffic chart dashboard widget.",
-            "package": "blog",
-            "surface": "admin",
-            "targetType": "admin-surface",
-            "target": "TrafficChartWidgetAbstract",
-            "required": false,
-            "notes": "Optional follow-up. Capture only when the runner can target the host dashboard with the Blog traffic widget visible and seeded time-series traffic data.",
-            "useCase": "An editor reviews recent traffic trends for blog content from the dashboard.",
-            "screenshotPath": "packages/blog/docs/screenshots/traffic-chart-widget.png",
-            "composerName": "capell-app/blog"
-        },
-        {
             "id": "blog-page-frontend-output",
             "title": "Blog page frontend output.",
             "package": "blog",
@@ -1424,32 +1385,6 @@
             "notes": "Requires seeded tags attached to published articles and tag page URLs from the blog setup flow.",
             "useCase": "A visitor opens a tag page and sees published articles associated with that tag.",
             "screenshotPath": "packages/blog/docs/screenshots/tag-page-frontend-output.png",
-            "composerName": "capell-app/blog"
-        },
-        {
-            "id": "article-page-widget-output",
-            "title": "Article page widget output.",
-            "package": "blog",
-            "surface": "frontend",
-            "targetType": "frontend-view",
-            "target": "capell-blog::components.widget.page.article",
-            "required": false,
-            "notes": "Optional follow-up. Requires a route-backed seeded article fixture with author, date, tag, media, and related metadata. Capture as anonymous public output.",
-            "useCase": "A visitor reads a public article widget with the article metadata needed for scanning and navigation.",
-            "screenshotPath": "packages/blog/docs/screenshots/article-page-widget-output.png",
-            "composerName": "capell-app/blog"
-        },
-        {
-            "id": "article-tags-widget-output",
-            "title": "Article tags widget output.",
-            "package": "blog",
-            "surface": "frontend",
-            "targetType": "frontend-view",
-            "target": "capell-blog::components.widget.tag.tags",
-            "required": false,
-            "notes": "Optional follow-up. Requires a route-backed seeded tag widget fixture with at least one published article per tag. Capture as anonymous public output.",
-            "useCase": "A visitor uses the tag widget to navigate between related article topics.",
-            "screenshotPath": "packages/blog/docs/screenshots/article-tags-widget-output.png",
             "composerName": "capell-app/blog"
         },
         {
@@ -1652,21 +1587,6 @@
             "notes": "Captured from the seeded Capell screenshot runner app with package-specific contact, organisation, lead, and activity data.",
             "useCase": "An operator reviews the CRM activity timeline created by package source adapters.",
             "screenshotPath": "packages/contacts/docs/screenshots/contacts-activity-index.png",
-            "composerName": "capell-app/contacts"
-        },
-        {
-            "id": "contacts-dashboard-stats",
-            "title": "Contacts dashboard stats widget.",
-            "package": "contacts",
-            "surface": "admin",
-            "targetType": "admin-page",
-            "target": "CapellDashboard",
-            "url": "/",
-            "waitFor": "body",
-            "required": false,
-            "notes": "Expected dashboard capture after seeding contact, organisation, lead, and activity counts. The current runner dashboard does not reliably expose the Contacts stats widget in first-viewport capture, so this remains optional until widget targeting is fixed.",
-            "useCase": "An operator sees CRM capture volume from the main Capell dashboard.",
-            "screenshotPath": "packages/contacts/docs/screenshots/contacts-dashboard-stats.png",
             "composerName": "capell-app/contacts"
         },
         {
@@ -2147,23 +2067,6 @@
             "composerName": "capell-app/email-studio"
         },
         {
-            "id": "email-studio-settings",
-            "title": "Email Studio settings.",
-            "package": "email-studio",
-            "surface": "admin",
-            "targetType": "settings-group",
-            "target": "email_studio",
-            "scenario": "admin-index",
-            "url": "/settings",
-            "waitFor": "text=Mail tracking",
-            "click": "button:has-text(\"Email Studio\")",
-            "required": false,
-            "notes": "Pending until the screenshot runner app exposes the email_studio settings group on the shared settings page. Do not publish a generic Settings tab in place of this package-specific surface.",
-            "useCase": "An administrator configures Email Studio tracking, content retention, and queue behaviour from Capell settings.",
-            "screenshotPath": "packages/email-studio/docs/screenshots/email-studio-settings.png",
-            "composerName": "capell-app/email-studio"
-        },
-        {
             "id": "events-index",
             "title": "Events index.",
             "package": "events",
@@ -2349,6 +2252,34 @@
             "waitFor": ".events-fixture",
             "colorSchemes": ["light"],
             "composerName": "capell-app/events"
+        },
+        {
+            "id": "exception-reports-extension-card",
+            "title": "Exception Reports extension card.",
+            "package": "exception-reports",
+            "surface": "marketplace",
+            "targetType": "marketplace-asset",
+            "target": "extension-card",
+            "required": true,
+            "path": "docs/assets/marketplace/extension-card.svg",
+            "screenshotPath": "packages/exception-reports/docs/screenshots/extension-card.svg",
+            "notes": "Committed Marketplace card preview for Exception Reports.",
+            "useCase": "An operator reviews the extension card before enabling exception email reporting.",
+            "composerName": "capell-app/exception-reports"
+        },
+        {
+            "id": "exception-reports-email-preview",
+            "title": "Exception Reports email preview.",
+            "package": "exception-reports",
+            "surface": "email",
+            "targetType": "marketplace-asset",
+            "target": "exception-email-preview",
+            "required": true,
+            "path": "docs/assets/marketplace/exception-email-preview.svg",
+            "screenshotPath": "packages/exception-reports/docs/screenshots/exception-email-preview.svg",
+            "notes": "Committed sanitized exception email preview for Marketplace documentation.",
+            "useCase": "An operator verifies the report email includes useful context without unsafe diagnostic markup.",
+            "composerName": "capell-app/exception-reports"
         },
         {
             "id": "experiments-index",
@@ -4000,21 +3931,6 @@
             "composerName": "capell-app/privacy-center"
         },
         {
-            "id": "privacy-center-dashboard-widget",
-            "title": "Privacy Center dashboard overview.",
-            "package": "privacy-center",
-            "surface": "admin",
-            "targetType": "admin-widget",
-            "target": "PrivacyCenterOverviewWidget",
-            "url": "/",
-            "waitFor": "body",
-            "required": false,
-            "notes": "Capture the compliance overview counts once the runner app requires capell-app/privacy-center and widget targeting can frame the stats.",
-            "useCase": "An operator sees consent, policy acceptance, request, and retention volume from the Capell dashboard.",
-            "screenshotPath": "packages/privacy-center/docs/screenshots/privacy-center-dashboard-widget.png",
-            "composerName": "capell-app/privacy-center"
-        },
-        {
             "id": "public-actions-admin-index",
             "title": "Public Actions admin index.",
             "package": "public-actions",
@@ -4530,84 +4446,6 @@
             "useCase": "An administrator reviews missing or stale translation coverage for SEO-relevant content.",
             "screenshotPath": "packages/seo-suite/docs/screenshots/translation-coverage-page.png",
             "darkScreenshotPath": "packages/seo-suite/docs/screenshots/translation-coverage-page-dark.png",
-            "composerName": "capell-app/seo-suite"
-        },
-        {
-            "id": "not-found-urls-page",
-            "title": "Not-found URLs page.",
-            "package": "seo-suite",
-            "surface": "admin",
-            "targetType": "admin-surface",
-            "target": "NotFoundUrlsPage",
-            "required": false,
-            "notes": "Optional follow-up. Requires capell-app/insights installed/migrated in the screenshot runner and a seeded missing page-view event before this can be captured.",
-            "useCase": "An administrator reviews missing frontend URLs grouped by visitor count and latest view.",
-            "screenshotPath": "packages/seo-suite/docs/screenshots/not-found-urls-page.png",
-            "composerName": "capell-app/seo-suite"
-        },
-        {
-            "id": "ai-discovery-page",
-            "title": "AI Discovery page.",
-            "package": "seo-suite",
-            "surface": "admin",
-            "targetType": "admin-surface",
-            "target": "AiDiscoveryPage",
-            "required": false,
-            "notes": "Optional follow-up. Seed AI Discovery site and page profiles so inclusion, summary, readiness, and Markdown columns are visible before capture.",
-            "useCase": "An administrator manages which public pages appear in AI-readable discovery output.",
-            "screenshotPath": "packages/seo-suite/docs/screenshots/ai-discovery-page.png",
-            "composerName": "capell-app/seo-suite"
-        },
-        {
-            "id": "seo-settings-page",
-            "title": "SEO Suite settings page.",
-            "package": "seo-suite",
-            "surface": "admin",
-            "targetType": "admin-surface",
-            "target": "SeoSuiteSettingsPage",
-            "required": false,
-            "notes": "Optional follow-up. Capture the extension settings page after running capell:seo-suite-install so settings rows exist.",
-            "useCase": "An administrator reviews SEO audit, AI Discovery, crawler, Search Console, and AI provider settings.",
-            "screenshotPath": "packages/seo-suite/docs/screenshots/seo-settings-page.png",
-            "composerName": "capell-app/seo-suite"
-        },
-        {
-            "id": "llms-txt-output",
-            "title": "llms.txt output.",
-            "package": "seo-suite",
-            "surface": "frontend",
-            "targetType": "frontend-url",
-            "target": "/llms.txt",
-            "required": false,
-            "notes": "Optional follow-up. Seed AI Discovery site/page profiles and capture visitor-safe public text output through a runner scenario that can render plain text responses.",
-            "useCase": "An AI crawler reads the concise public page index for the site.",
-            "screenshotPath": "packages/seo-suite/docs/screenshots/llms-txt-output.png",
-            "composerName": "capell-app/seo-suite"
-        },
-        {
-            "id": "robots-txt-output",
-            "title": "robots.txt output.",
-            "package": "seo-suite",
-            "surface": "frontend",
-            "targetType": "frontend-url",
-            "target": "/robots.txt",
-            "required": false,
-            "notes": "Optional follow-up. Seed crawler rules or settings and capture public crawler directives through a runner scenario that can render plain text responses.",
-            "useCase": "A crawler or operator reviews the public robot directives generated by SEO Suite.",
-            "screenshotPath": "packages/seo-suite/docs/screenshots/robots-txt-output.png",
-            "composerName": "capell-app/seo-suite"
-        },
-        {
-            "id": "page-markdown-output",
-            "title": "Page Markdown output.",
-            "package": "seo-suite",
-            "surface": "frontend",
-            "targetType": "frontend-url",
-            "target": "/index.md",
-            "required": false,
-            "notes": "Optional follow-up. Enable Markdown pages on the AI Discovery site profile and capture visitor-safe Markdown through a runner scenario that can render plain text responses.",
-            "useCase": "An AI crawler reads the Markdown representation of a public page.",
-            "screenshotPath": "packages/seo-suite/docs/screenshots/page-markdown-output.png",
             "composerName": "capell-app/seo-suite"
         },
         {

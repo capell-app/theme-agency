@@ -83,3 +83,11 @@ Run package tests from the repository root:
 ```bash
 vendor/bin/pest packages/inertia/tests --configuration=phpunit.xml
 ```
+
+## Troubleshooting
+
+| Symptom                                | Likely cause                                                       | Check                                                                       | Fix                                                                                   |
+| -------------------------------------- | ------------------------------------------------------------------ | --------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
+| Public page falls back to Blade output | The active theme or package route is not using the Inertia runtime | Check the page/theme runtime selection and route middleware in the host app | Select the Inertia runtime or add the `capell.inertia` middleware to package routes   |
+| Component cannot be resolved           | The active adapter does not provide the requested component        | Check `CAPELL_INERTIA_ADAPTER` and the installed React/Vue adapter package  | Install the matching adapter package and register the component under the same name   |
+| Public props expose authoring data     | A package route passed admin/editor state directly into props      | Run `vendor/bin/pest packages/inertia/tests --configuration=phpunit.xml`    | Build props through `BuildInertiaPagePropsAction` and keep editor state behind beacon |

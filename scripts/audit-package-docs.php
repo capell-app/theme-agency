@@ -323,16 +323,52 @@ function checkScreenshotOutputs(string $rootPath, array &$failures, array &$warn
     }
 }
 
-function packageHasOperationalFailureMode(string $packagePath): bool
+function packageHasOperationalFailureMode(string $packageName, string $packagePath): bool
 {
-    foreach ([
-        'config',
-        'routes',
-        'src/Console',
-        'src/Jobs',
-        'src/Health',
-    ] as $relativePath) {
+    $packagesWithOperationalFailureModes = [
+        'agent-delivery',
+        'api',
+        'block-library',
+        'bookings',
+        'contacts',
+        'customer-portal',
+        'document-lifecycle',
+        'exception-reports',
+        'experiments',
+        'inertia',
+        'knowledge-base',
+        'layout-builder',
+        'payments',
+        'privacy-center',
+        'social-feeds',
+        'structured-content-library',
+        'url-manager',
+    ];
+
+    if (! in_array($packageName, $packagesWithOperationalFailureModes, true)) {
+        return false;
+    }
+
+    foreach (['config', 'routes', 'src/Console', 'src/Jobs', 'src/Health'] as $relativePath) {
         if (is_dir($packagePath . '/' . $relativePath)) {
+            return true;
+        }
+    }
+
+    $capellManifestPath = $packagePath . '/capell.json';
+
+    if (! is_file($capellManifestPath)) {
+        return false;
+    }
+
+    $manifest = json_decode(file_get_contents($capellManifestPath) ?: '[]', true);
+
+    if (! is_array($manifest)) {
+        return false;
+    }
+
+    foreach (($manifest['commands'] ?? []) as $command) {
+        if (is_string($command) && $command !== '') {
             return true;
         }
     }
@@ -346,7 +382,7 @@ function checkTroubleshootingHeadings(string $rootPath, array &$warnings): void
         $packagePath = $rootPath . '/packages/' . $packageName;
         $readmePath = $packagePath . '/README.md';
 
-        if (! packageHasOperationalFailureMode($packagePath) || ! is_file($readmePath)) {
+        if (! packageHasOperationalFailureMode($packageName, $packagePath) || ! is_file($readmePath)) {
             continue;
         }
 

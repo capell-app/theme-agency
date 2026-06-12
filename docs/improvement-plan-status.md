@@ -1,6 +1,6 @@
 # Improvement Plan Status
 
-> Last refreshed: 2026-06-08. This is the control document for the long-running package improvement work. The per-package source of truth remains `packages/<package>/docs/improvement-plan.md`; this file tracks implementation progress and the next audit queue.
+> Last refreshed: 2026-06-12. This is the control document for the long-running package improvement work. The per-package source of truth remains `packages/<package>/docs/improvement-plan.md`; this file tracks implementation progress, docs-remediation coverage, and the next audit queue.
 
 ## Current Scope
 
@@ -19,6 +19,10 @@ Existing package plan roadmap rows currently total:
 | Later  | 94 |
 
 The work is not complete until every package plan has been reviewed against current code, required features are implemented or intentionally deferred, new behavior is documented, and focused verification passes for each changed package.
+
+## Docs Remediation Note
+
+The 2026-06-12 docs remediation pass keeps this tracker honest for the current 75-package repository. It verifies that package README/docs indexes exist, removes unsupported optional screenshot-output warnings from the active screenshot contract, keeps consolidated/tombstone docs out of active navigation, and records the 19 packages still missing package-local improvement plans without inventing roadmap rows for them.
 
 ## Status Rules
 

@@ -32,20 +32,6 @@
             "notes": "Captured from the seeded Capell screenshot runner app with package-specific contact, organisation, lead, and activity data.",
             "useCase": "An operator reviews the CRM activity timeline created by package source adapters.",
             "screenshotPath": "packages/contacts/docs/screenshots/contacts-activity-index.png"
-        },
-        {
-            "id": "contacts-dashboard-stats",
-            "title": "Contacts dashboard stats widget.",
-            "package": "contacts",
-            "surface": "admin",
-            "targetType": "admin-page",
-            "target": "CapellDashboard",
-            "url": "/",
-            "waitFor": "body",
-            "required": false,
-            "notes": "Expected dashboard capture after seeding contact, organisation, lead, and activity counts. The current runner dashboard does not reliably expose the Contacts stats widget in first-viewport capture, so this remains optional until widget targeting is fixed.",
-            "useCase": "An operator sees CRM capture volume from the main Capell dashboard.",
-            "screenshotPath": "packages/contacts/docs/screenshots/contacts-dashboard-stats.png"
         }
     ]
 }

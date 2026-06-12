@@ -38,22 +38,6 @@
             "useCase": "A support user opens an immutable sent email snapshot to inspect metadata, headers, tracked URLs, and stored HTML output.",
             "screenshotPath": "packages/email-studio/docs/screenshots/sent-email-view.png",
             "darkScreenshotPath": "packages/email-studio/docs/screenshots/sent-email-view-dark.png"
-        },
-        {
-            "id": "email-studio-settings",
-            "title": "Email Studio settings.",
-            "package": "email-studio",
-            "surface": "admin",
-            "targetType": "settings-group",
-            "target": "email_studio",
-            "scenario": "admin-index",
-            "url": "/settings",
-            "waitFor": "text=Mail tracking",
-            "click": "button:has-text(\"Email Studio\")",
-            "required": false,
-            "notes": "Pending until the screenshot runner app exposes the email_studio settings group on the shared settings page. Do not publish a generic Settings tab in place of this package-specific surface.",
-            "useCase": "An administrator configures Email Studio tracking, content retention, and queue behaviour from Capell settings.",
-            "screenshotPath": "packages/email-studio/docs/screenshots/email-studio-settings.png"
         }
     ]
 }

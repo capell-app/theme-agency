@@ -46,20 +46,6 @@
             "notes": "Captured from a seeded Capell admin runner app with active retention rules.",
             "useCase": "An operator reviews automated data minimisation rules and their retention windows.",
             "screenshotPath": "packages/privacy-center/docs/screenshots/retention-rules-index.png"
-        },
-        {
-            "id": "privacy-center-dashboard-widget",
-            "title": "Privacy Center dashboard overview.",
-            "package": "privacy-center",
-            "surface": "admin",
-            "targetType": "admin-widget",
-            "target": "PrivacyCenterOverviewWidget",
-            "url": "/",
-            "waitFor": "body",
-            "required": false,
-            "notes": "Capture the compliance overview counts once the runner app requires capell-app/privacy-center and widget targeting can frame the stats.",
-            "useCase": "An operator sees consent, policy acceptance, request, and retention volume from the Capell dashboard.",
-            "screenshotPath": "packages/privacy-center/docs/screenshots/privacy-center-dashboard-widget.png"
         }
     ]
 }
