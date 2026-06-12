@@ -121,6 +121,37 @@ it('fails when an admin resource has no permission or policy coverage', function
     }
 });
 
+it('fails when auto-merge workflows do not grant merge permissions', function (): void {
+    $root = makeSecurityFixtureRoot('workflow-merge-permissions');
+
+    try {
+        mkdir($root . '/.github/workflows', 0777, true);
+        file_put_contents($root . '/.github/workflows/dependabot-auto-merge.yml', <<<'YAML'
+name: Dependabot Auto-Merge
+
+on:
+  pull_request_target:
+
+permissions:
+  contents: read
+
+jobs:
+  merge:
+    runs-on: ubuntu-latest
+    steps:
+      - run: gh pr merge --auto --merge "$PR_URL"
+YAML);
+
+        $issues = capell_security_workflow_issues($root);
+
+        expect($issues['.github/workflows/dependabot-auto-merge.yml'] ?? [])
+            ->toContain('gh pr merge workflows require contents: write')
+            ->toContain('gh pr merge workflows require pull-requests: write');
+    } finally {
+        deleteSecurityFixtureRoot($root);
+    }
+});
+
 /**
  * @return non-empty-string
  */

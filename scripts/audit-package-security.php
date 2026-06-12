@@ -612,6 +612,14 @@ function capell_security_workflow_issues(string $root): array
             $issues[$relativePath][] = 'uses the removed composer phpat script';
         }
 
+        if (str_contains($contents, 'gh pr merge')) {
+            foreach (['contents', 'pull-requests'] as $permission) {
+                if (! preg_match('/^\s*' . preg_quote($permission, '/') . ':\s*write\s*$/m', $contents)) {
+                    $issues[$relativePath][] = 'gh pr merge workflows require ' . $permission . ': write';
+                }
+            }
+        }
+
         preg_match_all('/uses:\s*[\'"]?([^\'"\s#]+)[\'"]?/', $contents, $matches, PREG_SET_ORDER);
 
         foreach ($matches as $match) {
