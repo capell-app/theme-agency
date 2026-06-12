@@ -5,7 +5,7 @@
         <div class="grid gap-8 lg:grid-cols-[0.72fr_1.28fr] lg:items-start">
             <div>
                 <p
-                    class="text-xs font-black tracking-[0.18em] text-[var(--retail-accent)] uppercase"
+                    class="text-xs font-black tracking-[0.18em] text-[var(--retail-warm)] uppercase"
                 >
                     {{ __('capell-theme-commerce::generic.retail_proof_label') }}
                 </p>

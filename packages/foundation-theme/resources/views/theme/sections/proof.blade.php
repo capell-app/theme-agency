@@ -6,12 +6,12 @@
     >
         <div>
             <p
-                class="mb-3 text-xs font-semibold tracking-[0.16em] text-[var(--theme-accent)] uppercase"
+                class="mb-3 text-xs font-semibold tracking-[0.16em] text-amber-200 uppercase"
             >
                 {{ __('capell-foundation-theme::generic.proof') }}
             </p>
             <h2
-                class="text-3xl leading-tight font-[var(--theme-heading-font)] font-semibold sm:text-4xl"
+                class="text-3xl leading-tight font-[var(--theme-heading-font)] font-semibold text-white sm:text-4xl"
             >
                 {{ $section->heading }}
             </h2>
@@ -38,7 +38,7 @@
                     <div class="p-5">
                         @if (! empty($item['metric']))
                             <p
-                                class="mb-3 text-xs font-semibold tracking-[0.12em] text-[var(--theme-accent)] uppercase"
+                                class="mb-3 text-xs font-semibold tracking-[0.12em] text-amber-200 uppercase"
                             >
                                 {{ $item['metric'] }}
                             </p>

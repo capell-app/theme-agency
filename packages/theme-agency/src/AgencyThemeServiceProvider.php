@@ -52,7 +52,7 @@ class AgencyThemeServiceProvider extends ServiceProvider
                     description: 'Sharp contrast, strong statements, and energetic section pacing.',
                     previewImage: self::PUBLIC_PREVIEW_IMAGE,
                     values: [
-                        'primaryColor' => '#ff5a7e',
+                        'primaryColor' => '#be123c',
                         'accentColor' => '#3b82f6',
                         'neutralColor' => '#09090b',
                         'surfaceColor' => '#09090b',

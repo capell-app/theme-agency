@@ -40,7 +40,7 @@
                                             {{ __('capell-theme-saas::generic.activation_stage_label') }}
                                         </span>
                                         <span
-                                            class="rounded-full bg-blue-500 px-2 py-1 text-xs font-black text-white"
+                                            class="rounded-full bg-blue-700 px-2 py-1 text-xs font-black text-white"
                                         >
                                             {{ str_pad((string) $loop->iteration, 2, '0', STR_PAD_LEFT) }}
                                         </span>
@@ -54,7 +54,7 @@
                                             {{ __('capell-theme-saas::generic.trial_step_label') }}
                                         </span>
                                         <span
-                                            class="rounded-md bg-blue-500 px-2 py-3 text-white"
+                                            class="rounded-md bg-blue-700 px-2 py-3 text-white"
                                         >
                                             {{ __('capell-theme-saas::generic.aha_step_label') }}
                                         </span>

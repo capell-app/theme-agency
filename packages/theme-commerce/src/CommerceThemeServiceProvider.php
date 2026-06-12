@@ -48,7 +48,7 @@ class CommerceThemeServiceProvider extends ServiceProvider
                     previewImage: '/vendor/capell/themes/commerce.jpg',
                     values: [
                         'primaryColor' => '#1f5f4a',
-                        'accentColor' => '#e86f5c',
+                        'accentColor' => '#b94735',
                         'neutralColor' => '#17211c',
                         'surfaceColor' => '#fffaf3',
                         'foregroundColor' => '#17211c',

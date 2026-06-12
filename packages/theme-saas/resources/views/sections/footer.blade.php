@@ -6,7 +6,7 @@
                 {{ $section->brandName }}
             </p>
             @if ($section->summary)
-                <p class="mt-3 max-w-sm text-sm">
+                <p class="mt-3 max-w-sm text-sm text-slate-700">
                     {{ $section->summary }}
                 </p>
             @endif
@@ -15,7 +15,7 @@
         <div class="grid gap-7 sm:grid-cols-3">
             @foreach ($section->columns as $column)
                 <div>
-                    <h3 class="text-sm font-black">
+                    <h3 class="text-sm font-black text-slate-950">
                         {{ $column['heading'] }}
                     </h3>
                     <ul
