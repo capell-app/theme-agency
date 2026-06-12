@@ -21,6 +21,7 @@ final class FakeGA4ReportsDataClient implements GA4ReportsDataClientInterface
         private readonly array $dailyMetrics = [],
         private readonly array $pageMetrics = [],
         private readonly bool $shouldFail = false,
+        private readonly string $failureMessage = 'GA4 client failed.',
     ) {}
 
     public function isConfigured(): bool
@@ -30,7 +31,7 @@ final class FakeGA4ReportsDataClient implements GA4ReportsDataClientInterface
 
     public function dailyMetrics(GA4ReportsWindowData $window): array
     {
-        throw_if($this->shouldFail, RuntimeException::class, 'GA4 client failed.');
+        throw_if($this->shouldFail, RuntimeException::class, $this->failureMessage);
 
         return $this->dailyMetrics;
     }

@@ -55,7 +55,10 @@
         "sensitiveData": {
             "encryptedFields": [],
             "hashedTokenFields": [],
-            "redactedOutputClasses": [],
+            "redactedOutputClasses": [
+                "Capell\\GA4Reports\\Actions\\RedactGA4ReportsSyncErrorMessageAction",
+                "Capell\\GA4Reports\\Actions\\SyncGA4ReportsMetricsAction"
+            ],
             "plaintextJustifications": []
         },
         "publicOutput": {

@@ -316,3 +316,42 @@ it('records a failed sync run when GA4 fetches fail', function (): void {
         ->and($syncRun?->error_message)->toBe('GA4 client failed.')
         ->and($syncRun?->finished_at)->not->toBeNull();
 });
+
+it('redacts credential values from persisted GA4 sync failures', function (): void {
+    configureGA4ReportsSettings();
+
+    $credentialsPath = tempnam(sys_get_temp_dir(), 'ga4-reports-credentials-');
+    expect($credentialsPath)->toBeString();
+
+    file_put_contents($credentialsPath, json_encode([
+        'client_email' => 'analytics-service@example.test',
+        'private_key_id' => 'private-key-id-secret',
+        'private_key' => 'fixture-private-key-secret',
+        'client_id' => 'client-id-secret',
+        'token_uri' => 'https://oauth2.example.test/token',
+    ], JSON_THROW_ON_ERROR));
+
+    /** @var GA4ReportsSettings $settings */
+    $settings = app(GA4ReportsSettings::class);
+    $settings->credentials_path = $credentialsPath;
+
+    app()->instance(GA4ReportsDataClientInterface::class, new FakeGA4ReportsDataClient(
+        configured: true,
+        shouldFail: true,
+        failureMessage: 'Authorization: Bearer access-token-secret private_key=private-key-secret path=' . $credentialsPath,
+    ));
+
+    try {
+        $result = SyncGA4ReportsMetricsAction::run();
+        $syncRun = GA4ReportsSyncRun::query()->first();
+    } finally {
+        unlink($credentialsPath);
+    }
+
+    expect($result->synced)->toBeFalse()
+        ->and($syncRun?->error_message)->toContain('Authorization: Bearer [redacted]')
+        ->and($syncRun?->error_message)->toContain('private_key=[redacted]')
+        ->and($syncRun?->error_message)->not->toContain('access-token-secret')
+        ->and($syncRun?->error_message)->not->toContain('private-key-secret')
+        ->and($syncRun?->error_message)->not->toContain($credentialsPath);
+});
