@@ -52,6 +52,13 @@ Common active packages include `layout-builder`, `blog`, `address`, `ai-orchestr
 
 **Blog requires LayoutBuilder — install LayoutBuilder first.**
 
+When editing packages:
+
+- Keep the package service provider, auto-discovered types/schemas/widgets, translations, migrations, and tests aligned with the change.
+- If dependencies, scripts, autoload, autoload-dev, repositories, namespaces, or package metadata change, update both `composer.json` and `composer.local.json`.
+- Add or adjust focused package tests before broader checks.
+- Start verification with the smallest useful package or file-level Pest command, then broaden only when the change touches shared behaviour, public rendering, installation, or cross-package contracts.
+
 ## Package boundaries
 
 - **Core must never import plugin classes** — no `use Capell\Blog\...` from Core. Use events or string command names for cross-plugin coordination.
@@ -86,7 +93,7 @@ Any model in draft/publish must implement `Capell\Core\Contracts\Draftable` and 
 - Named test doubles must be real PSR-4 fixture classes under `tests/Fixtures` or `tests/Packages/Fixtures`, not classes declared inside Pest files. See `docs/writing-tests.md`.
 - Start with the narrowest useful Pest command, usually one test file or one package: `vendor/bin/pest packages/{package}/tests --configuration=phpunit.xml`.
 - Run single package: `vendor/bin/pest packages/layout-builder/tests --configuration=phpunit.xml`
-- Minimum 80% coverage. Full suite: `composer test`.
+- Minimum 90% coverage. Full suite: `COMPOSER=composer.local.json composer test`.
 
 ## Composer local overlay
 
@@ -129,14 +136,17 @@ Any model in draft/publish must implement `Capell\Core\Contracts\Draftable` and 
 ## Agent Speed
 
 - Keep task branches focused. This repo can accumulate very large dirty trees across many packages, and that slows agents because they must preserve unrelated user work.
-- Prefer package-level or file-level Pest runs during implementation; reserve `COMPOSER=composer.local.json composer test`, `COMPOSER=composer.local.json composer analyze`, and `COMPOSER=composer.local.json composer preflight:all` for final verification.
+- Do not stage, revert, format, or otherwise touch unrelated dirty work. If unrelated changes are in files needed for the task, work with them instead of discarding them.
+- Prefer package-level or file-level Pest runs during implementation. Before a focused commit, run `COMPOSER=composer.local.json composer preflight` plus the narrowest meaningful tests. Reserve `COMPOSER=composer.local.json composer test`, `COMPOSER=composer.local.json composer analyze`, and `COMPOSER=composer.local.json composer preflight:all` for broad, shared, installation, public rendering, or release-ready changes.
 - Avoid broad repo exploration when the target package or failing command is known. Start from the package, test, or class named in the request.
 - Exclude heavy local paths from Spotlight/antivirus/indexing where practical: `vendor`, `node_modules`, `.git`, `storage`, `coverage`, `.phpunit.cache`, and framework/build caches.
 
 ## Git
 
-1. `composer test` — 100% pass before committing.
-2. `composer preflight` — clean before committing.
-3. Verify in demo workbench (`composer serve`).
-4. Commit immediately after task completion.
-5. Branch naming: `feat/`, `fix/`, `docs/`, `chore/`. Target: `4.x`.
+1. Run the narrowest meaningful Pest command for the changed package or file.
+2. Run `COMPOSER=composer.local.json composer preflight` before committing focused work.
+3. Run `COMPOSER=composer.local.json composer test` and `COMPOSER=composer.local.json composer preflight:all` before committing broad, shared, installation, public rendering, or release-ready changes.
+4. For browser-visible or public rendering changes, verify the relevant workbench or full Capell app route when available. Do not probe unavailable admin routes in this package workbench.
+5. Stage only task-related files, leaving unrelated dirty work untouched.
+6. Commit immediately after task completion.
+7. Branch naming: `feat/`, `fix/`, `docs/`, `chore/`. Target: `4.x`.
