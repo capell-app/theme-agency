@@ -15,10 +15,10 @@
   <g transform="translate(64 58)">
     <text x="0" y="0" fill="#101114" font-family="Helvetica, Arial, sans-serif" font-size="22" font-weight="700">GROWTH</text>
     <text x="0" y="50" fill="#101114" font-family="Helvetica, Arial, sans-serif" font-size="52" font-weight="760">Social Feeds</text>
-    <text x="0" y="92" fill="#4b5563" font-family="Helvetica, Arial, sans-serif" font-size="23">Place branded, cached social feeds anywhere in</text>
-    <text x="0" y="123" fill="#4b5563" font-family="Helvetica, Arial, sans-serif" font-size="23">Capell with RSS, TikTok, YouTube, Bluesky, and...</text>
-    <text x="1152" y="0" fill="#4b5563" font-family="Helvetica, Arial, sans-serif" font-size="18" font-weight="700" text-anchor="end">ADMIN / FRONTEND</text>
-    <text x="1152" y="31" fill="#4b5563" font-family="Helvetica, Arial, sans-serif" font-size="18" font-weight="700" text-anchor="end">PREMIUM</text>
+    <text x="0" y="92" fill="#4b5563" font-family="Helvetica, Arial, sans-serif" font-size="23">Fast public pages with frontend code the application</text>
+    <text x="0" y="123" fill="#4b5563" font-family="Helvetica, Arial, sans-serif" font-size="23">team still owns.</text>
+    <text x="1152" y="0" fill="#4b5563" font-family="Helvetica, Arial, sans-serif" font-size="18" font-weight="700" text-anchor="end">OWNER / EDITOR / BUILDER</text>
+    <text x="1152" y="31" fill="#4b5563" font-family="Helvetica, Arial, sans-serif" font-size="18" font-weight="700" text-anchor="end">PREMIUM PACKAGE</text>
   </g>
   <g transform="translate(64 190)">
     <g transform="translate(0 0)">
@@ -45,8 +45,8 @@
     <line x1="27.84" y1="45.24" x2="33.64" y2="12.76" stroke="#ff6b1a" stroke-width="5"/>
   </g>
     <line x1="38" y1="374" x2="322" y2="374" stroke="#101114" stroke-width="4"/>
-    <text x="38" y="411" fill="#101114" font-family="Helvetica, Arial, sans-serif" font-size="28" font-weight="760">Starter</text>
-    <text x="38" y="433" fill="#4b5563" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="700">LAUNCH SURFACE</text>
+    <text x="38" y="411" fill="#101114" font-family="Helvetica, Arial, sans-serif" font-size="28" font-weight="760">Starter Tier</text>
+    <text x="38" y="433" fill="#4b5563" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="700">PUBLIC POLISH</text>
   </g>
     <g transform="translate(410 0)">
     <rect x="0" y="0" width="360" height="452" fill="#ffffff" stroke="#101114" stroke-width="3"/>
@@ -72,8 +72,8 @@
     <line x1="27.84" y1="45.24" x2="33.64" y2="12.76" stroke="#007f5f" stroke-width="5"/>
   </g>
     <line x1="38" y1="374" x2="322" y2="374" stroke="#101114" stroke-width="4"/>
-    <text x="38" y="411" fill="#101114" font-family="Helvetica, Arial, sans-serif" font-size="28" font-weight="760">Pro</text>
-    <text x="38" y="433" fill="#4b5563" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="700">PUBLIC SURFACE</text>
+    <text x="38" y="411" fill="#101114" font-family="Helvetica, Arial, sans-serif" font-size="28" font-weight="760">Pro Tier</text>
+    <text x="38" y="433" fill="#4b5563" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="700">THEME FIT</text>
   </g>
     <g transform="translate(820 0)">
     <rect x="0" y="0" width="360" height="452" fill="#ffffff" stroke="#101114" stroke-width="3"/>
@@ -123,8 +123,8 @@
     <line x1="37.44" y1="60.84" x2="45.239999999999995" y2="17.16" stroke="#0066ff" stroke-width="5"/>
   </g>
     <line x1="38" y1="374" x2="322" y2="374" stroke="#101114" stroke-width="4"/>
-    <text x="38" y="411" fill="#101114" font-family="Helvetica, Arial, sans-serif" font-size="28" font-weight="760">Enterprise</text>
-    <text x="38" y="433" fill="#4b5563" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="700">SCALED NETWORK</text>
+    <text x="38" y="411" fill="#101114" font-family="Helvetica, Arial, sans-serif" font-size="28" font-weight="760">Enterprise Tier</text>
+    <text x="38" y="433" fill="#4b5563" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="700">FRONTEND OWNED</text>
   </g>
   </g>
 </svg>

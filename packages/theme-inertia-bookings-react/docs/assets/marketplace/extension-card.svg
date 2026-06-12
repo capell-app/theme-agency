@@ -15,9 +15,10 @@
   <g transform="translate(64 58)">
     <text x="0" y="0" fill="#101114" font-family="Helvetica, Arial, sans-serif" font-size="22" font-weight="700">THEMES</text>
     <text x="0" y="50" fill="#101114" font-family="Helvetica, Arial, sans-serif" font-size="52" font-weight="760">Theme Inertia Bookings React</text>
-    <text x="0" y="92" fill="#4b5563" font-family="Helvetica, Arial, sans-serif" font-size="23">React components for Theme Inertia Bookings.</text>
-    <text x="1152" y="0" fill="#4b5563" font-family="Helvetica, Arial, sans-serif" font-size="18" font-weight="700" text-anchor="end">FRONTEND</text>
-    <text x="1152" y="31" fill="#4b5563" font-family="Helvetica, Arial, sans-serif" font-size="18" font-weight="700" text-anchor="end">PREMIUM</text>
+    <text x="0" y="92" fill="#4b5563" font-family="Helvetica, Arial, sans-serif" font-size="23">Booking and event journeys that teams can manage</text>
+    <text x="0" y="123" fill="#4b5563" font-family="Helvetica, Arial, sans-serif" font-size="23">without breaking the public site.</text>
+    <text x="1152" y="0" fill="#4b5563" font-family="Helvetica, Arial, sans-serif" font-size="18" font-weight="700" text-anchor="end">OWNER / EDITOR / BUILDER</text>
+    <text x="1152" y="31" fill="#4b5563" font-family="Helvetica, Arial, sans-serif" font-size="18" font-weight="700" text-anchor="end">PREMIUM PACKAGE</text>
   </g>
   <g transform="translate(64 190)">
     <g transform="translate(0 0)">
@@ -39,13 +40,15 @@
     <line x1="82" y1="160" x2="100" y2="174" stroke="#101114" stroke-width="4" opacity="0.55"/>
   </g>
     <g transform="translate(42 220)">
-    <path d="M20.88 13.92 L9.28 29 L20.88 44.08" fill="none" stroke="#ff6b1a" stroke-width="7"/>
-    <path d="M37.12 13.92 L48.72 29 L37.12 44.08" fill="none" stroke="#ff6b1a" stroke-width="7"/>
-    <line x1="27.84" y1="45.24" x2="33.64" y2="12.76" stroke="#ff6b1a" stroke-width="5"/>
+    <rect x="8" y="12" width="42" height="40" fill="#ffffff" stroke="#ff6b1a" stroke-width="5"/>
+    <rect x="8" y="12" width="42" height="20" fill="#ff6b1a" stroke="#ff6b1a" stroke-width="5"/>
+    <rect x="22" y="46" width="14" height="14" fill="#ff6b1a"/>
+    <rect x="48" y="46" width="14" height="14" fill="#ff6b1a"/>
+    <rect x="22" y="72" width="40" height="12" fill="#ff6b1a"/>
   </g>
     <line x1="38" y1="374" x2="322" y2="374" stroke="#101114" stroke-width="4"/>
-    <text x="38" y="411" fill="#101114" font-family="Helvetica, Arial, sans-serif" font-size="28" font-weight="760">Starter</text>
-    <text x="38" y="433" fill="#4b5563" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="700">LAUNCH SURFACE</text>
+    <text x="38" y="411" fill="#101114" font-family="Helvetica, Arial, sans-serif" font-size="28" font-weight="760">Starter Tier</text>
+    <text x="38" y="433" fill="#4b5563" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="700">VISITOR JOURNEY</text>
   </g>
     <g transform="translate(410 0)">
     <rect x="0" y="0" width="360" height="452" fill="#ffffff" stroke="#101114" stroke-width="3"/>
@@ -59,20 +62,24 @@
     <rect x="102" y="0" width="75" height="162" fill="#0066ff" stroke="#101114" stroke-width="5"/>
     <path d="M22 90 H85 V36 H134 V-18 H209" fill="none" stroke="#101114" stroke-width="7"/>
     <g transform="translate(118 72)">
-    <path d="M19.439999999999998 12.959999999999999 L8.64 27 L19.439999999999998 41.04" fill="none" stroke="#ffffff" stroke-width="7"/>
-    <path d="M34.56 12.959999999999999 L45.36 27 L34.56 41.04" fill="none" stroke="#ffffff" stroke-width="7"/>
-    <line x1="25.919999999999998" y1="42.120000000000005" x2="31.319999999999997" y2="11.88" stroke="#101114" stroke-width="5"/>
+    <rect x="8" y="12" width="38" height="36" fill="#ffffff" stroke="#101114" stroke-width="5"/>
+    <rect x="8" y="12" width="38" height="20" fill="#ffffff" stroke="#101114" stroke-width="5"/>
+    <rect x="22" y="46" width="14" height="14" fill="#101114"/>
+    <rect x="48" y="46" width="14" height="14" fill="#101114"/>
+    <rect x="22" y="72" width="40" height="12" fill="#ffffff"/>
   </g>
     <circle cx="223" cy="-18" r="10" fill="#101114"/>
   </g>
     <g transform="translate(278 220)">
-    <path d="M20.88 13.92 L9.28 29 L20.88 44.08" fill="none" stroke="#007f5f" stroke-width="7"/>
-    <path d="M37.12 13.92 L48.72 29 L37.12 44.08" fill="none" stroke="#007f5f" stroke-width="7"/>
-    <line x1="27.84" y1="45.24" x2="33.64" y2="12.76" stroke="#007f5f" stroke-width="5"/>
+    <rect x="8" y="12" width="42" height="40" fill="#ffffff" stroke="#007f5f" stroke-width="5"/>
+    <rect x="8" y="12" width="42" height="20" fill="#007f5f" stroke="#007f5f" stroke-width="5"/>
+    <rect x="22" y="46" width="14" height="14" fill="#007f5f"/>
+    <rect x="48" y="46" width="14" height="14" fill="#007f5f"/>
+    <rect x="22" y="72" width="40" height="12" fill="#007f5f"/>
   </g>
     <line x1="38" y1="374" x2="322" y2="374" stroke="#101114" stroke-width="4"/>
-    <text x="38" y="411" fill="#101114" font-family="Helvetica, Arial, sans-serif" font-size="28" font-weight="760">Pro</text>
-    <text x="38" y="433" fill="#4b5563" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="700">PUBLIC SURFACE</text>
+    <text x="38" y="411" fill="#101114" font-family="Helvetica, Arial, sans-serif" font-size="28" font-weight="760">Pro Tier</text>
+    <text x="38" y="433" fill="#4b5563" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="700">TEAM WORKFLOW</text>
   </g>
     <g transform="translate(820 0)">
     <rect x="0" y="0" width="360" height="452" fill="#ffffff" stroke="#101114" stroke-width="3"/>
@@ -111,19 +118,23 @@
     <circle cx="127" cy="88" r="5" fill="#ff6b1a" stroke="#101114" stroke-width="2"/>
     <circle cx="116" cy="115" r="5" fill="#ffffff" stroke="#101114" stroke-width="2"/>
     <g transform="translate(81 81)">
-    <path d="M19.439999999999998 12.959999999999999 L8.64 27 L19.439999999999998 41.04" fill="none" stroke="#101114" stroke-width="7"/>
-    <path d="M34.56 12.959999999999999 L45.36 27 L34.56 41.04" fill="none" stroke="#101114" stroke-width="7"/>
-    <line x1="25.919999999999998" y1="42.120000000000005" x2="31.319999999999997" y2="11.88" stroke="#101114" stroke-width="5"/>
+    <rect x="8" y="12" width="38" height="36" fill="#ffffff" stroke="#101114" stroke-width="5"/>
+    <rect x="8" y="12" width="38" height="20" fill="#101114" stroke="#101114" stroke-width="5"/>
+    <rect x="22" y="46" width="14" height="14" fill="#101114"/>
+    <rect x="48" y="46" width="14" height="14" fill="#101114"/>
+    <rect x="22" y="72" width="40" height="12" fill="#101114"/>
   </g>
   </g>
     <g transform="translate(270 70)">
-    <path d="M28.08 18.72 L12.48 39 L28.08 59.28" fill="none" stroke="#0066ff" stroke-width="7"/>
-    <path d="M49.92 18.72 L65.52 39 L49.92 59.28" fill="none" stroke="#0066ff" stroke-width="7"/>
-    <line x1="37.44" y1="60.84" x2="45.239999999999995" y2="17.16" stroke="#0066ff" stroke-width="5"/>
+    <rect x="8" y="12" width="62" height="60" fill="#ffffff" stroke="#0066ff" stroke-width="5"/>
+    <rect x="8" y="12" width="62" height="20" fill="#0066ff" stroke="#0066ff" stroke-width="5"/>
+    <rect x="22" y="46" width="14" height="14" fill="#0066ff"/>
+    <rect x="48" y="46" width="14" height="14" fill="#0066ff"/>
+    <rect x="22" y="72" width="40" height="12" fill="#0066ff"/>
   </g>
     <line x1="38" y1="374" x2="322" y2="374" stroke="#101114" stroke-width="4"/>
-    <text x="38" y="411" fill="#101114" font-family="Helvetica, Arial, sans-serif" font-size="28" font-weight="760">Enterprise</text>
-    <text x="38" y="433" fill="#4b5563" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="700">SCALED NETWORK</text>
+    <text x="38" y="411" fill="#101114" font-family="Helvetica, Arial, sans-serif" font-size="28" font-weight="760">Enterprise Tier</text>
+    <text x="38" y="433" fill="#4b5563" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="700">CLEAN HANDOFF</text>
   </g>
   </g>
 </svg>

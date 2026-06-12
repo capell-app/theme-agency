@@ -22,9 +22,9 @@ const palette = {
 
 const categoryProfiles = [
     {
-        match: ['theme', 'frontend', 'inertia'],
-        key: 'frontend',
-        label: 'Public surface',
+        match: ['ai', 'agent', 'orchestrator', 'media-ai'],
+        key: 'ai',
+        label: 'Agent ready',
     },
     {
         match: [
@@ -37,11 +37,6 @@ const categoryProfiles = [
         ],
         key: 'publishing',
         label: 'Editorial flow',
-    },
-    {
-        match: ['ai', 'agent', 'orchestrator', 'media-ai'],
-        key: 'ai',
-        label: 'Agent ready',
     },
     {
         match: [
@@ -93,6 +88,11 @@ const categoryProfiles = [
         key: 'composition',
         label: 'Page system',
     },
+    {
+        match: ['theme', 'frontend', 'inertia'],
+        key: 'frontend',
+        label: 'Public surface',
+    },
 ]
 
 const packageNames = collectPackageNames(process.argv.slice(2))
@@ -132,6 +132,10 @@ try {
 
         fs.writeFileSync(sourcePath, svg)
         const rasterFormat = targetPath.endsWith('.png') ? 'png' : 'jpeg'
+        const rasterPath = path.join(
+            tempRoot,
+            `${packageName}.${targetPath.endsWith('.png') ? 'png' : 'jpg'}`,
+        )
 
         execFileSync('sips', [
             '-s',
@@ -139,8 +143,9 @@ try {
             rasterFormat,
             sourcePath,
             '--out',
-            targetPath,
+            rasterPath,
         ])
+        fs.renameSync(rasterPath, targetPath)
 
         console.log(path.relative(root, targetPath))
     }
@@ -289,14 +294,15 @@ function buildSvg(packageName, manifest, screenshotData) {
         .filter(Boolean)
         .map((value) => String(value).toLowerCase())
     const profile = resolveProfile(categories)
+    const audienceCopy = resolveAudienceCopy(profile.key)
     const hash = hashString(packageName)
     const accentOrder = rotate(
         [palette.blue, palette.orange, palette.emerald],
         hash % 3,
     )
-    const surfaceText = (manifest.surfaces ?? []).join(' / ') || profile.label
     const tier = String(manifest.product?.tier ?? 'extension')
     const bundle = String(manifest.product?.bundle ?? 'capell')
+    const tierLabel = `${tier} package`
     const textureId = `texture-${packageName}`
     const lineId = `lines-${packageName}`
     const screenshotOne = screenshotData[0] ?? null
@@ -320,15 +326,15 @@ function buildSvg(packageName, manifest, screenshotData) {
   <g transform="translate(64 58)">
     <text x="0" y="0" fill="${palette.black}" font-family="Helvetica, Arial, sans-serif" font-size="22" font-weight="700">${escapeXml(bundle.toUpperCase())}</text>
     <text x="0" y="50" fill="${palette.black}" font-family="Helvetica, Arial, sans-serif" font-size="52" font-weight="760">${escapeXml(title)}</text>
-    ${multilineText(summary, 0, 92, 48, 2, palette.slate, 23, 31)}
-    <text x="1152" y="0" fill="${palette.slate}" font-family="Helvetica, Arial, sans-serif" font-size="18" font-weight="700" text-anchor="end">${escapeXml(surfaceText.toUpperCase())}</text>
-    <text x="1152" y="31" fill="${palette.slate}" font-family="Helvetica, Arial, sans-serif" font-size="18" font-weight="700" text-anchor="end">${escapeXml(tier.toUpperCase())}</text>
+    ${multilineText(audienceCopy.summary, 0, 92, 54, 2, palette.slate, 23, 31)}
+    <text x="1152" y="0" fill="${palette.slate}" font-family="Helvetica, Arial, sans-serif" font-size="18" font-weight="700" text-anchor="end">OWNER / EDITOR / BUILDER</text>
+    <text x="1152" y="31" fill="${palette.slate}" font-family="Helvetica, Arial, sans-serif" font-size="18" font-weight="700" text-anchor="end">${escapeXml(tierLabel.toUpperCase())}</text>
   </g>
   <g transform="translate(64 190)">
     ${showcasePanel({
         x: 0,
-        title: 'Starter',
-        caption: 'Launch surface',
+        title: 'Starter Tier',
+        caption: audienceCopy.buyer,
         accent: accentOrder[0],
         image: screenshotOne === null ? null : screenshotHref(screenshotOne),
         icon: cubeIcon(
@@ -344,8 +350,8 @@ function buildSvg(packageName, manifest, screenshotData) {
     })}
     ${showcasePanel({
         x: 410,
-        title: 'Pro',
-        caption: profile.label,
+        title: 'Pro Tier',
+        caption: audienceCopy.editor,
         accent: accentOrder[1],
         image: screenshotTwo === null ? null : screenshotHref(screenshotTwo),
         icon: stairsIcon(
@@ -368,8 +374,8 @@ function buildSvg(packageName, manifest, screenshotData) {
     })}
     ${showcasePanel({
         x: 820,
-        title: 'Enterprise',
-        caption: 'Scaled network',
+        title: 'Enterprise Tier',
+        caption: audienceCopy.builder,
         accent: accentOrder[2],
         image: null,
         icon: hexNetworkIcon(
@@ -582,6 +588,91 @@ function resolveProfile(categories) {
     }
 
     return { key: 'default', label: 'Package layer' }
+}
+
+function resolveAudienceCopy(profileKey) {
+    const copy = {
+        ai: {
+            summary:
+                'Agent-ready capability with guarded access, clear review points, and public-safe output.',
+            buyer: 'Buyer clarity',
+            editor: 'Guarded flow',
+            builder: 'Safe output',
+        },
+        calendar: {
+            summary:
+                'Booking and event journeys that teams can manage without breaking the public site.',
+            buyer: 'Visitor journey',
+            editor: 'Team workflow',
+            builder: 'Clean handoff',
+        },
+        commerce: {
+            summary:
+                'Content-led revenue workflows with auditable handoffs and room for future gateways.',
+            buyer: 'Revenue path',
+            editor: 'Order workflow',
+            builder: 'Gateway ready',
+        },
+        composition: {
+            summary:
+                'Approved building blocks keep pages flexible for editors and consistent for the brand.',
+            buyer: 'Reusable design',
+            editor: 'Page assembly',
+            builder: 'Owned markup',
+        },
+        forms: {
+            summary:
+                'Capture, route, and review visitor requests inside a structured Capell workflow.',
+            buyer: 'Lead capture',
+            editor: 'Inbox flow',
+            builder: 'Typed boundary',
+        },
+        frontend: {
+            summary:
+                'Fast public pages with frontend code the application team still owns.',
+            buyer: 'Public polish',
+            editor: 'Theme fit',
+            builder: 'Frontend owned',
+        },
+        insight: {
+            summary:
+                'Actionable reporting for owners, editors, and technical teams without extra site sprawl.',
+            buyer: 'Clear signal',
+            editor: 'Triage flow',
+            builder: 'Measured proof',
+        },
+        ops: {
+            summary:
+                'Reviewable operations and diagnostics for long-lived Laravel sites and package installs.',
+            buyer: 'Reliable change',
+            editor: 'Ops workflow',
+            builder: 'Review trail',
+        },
+        publishing: {
+            summary:
+                'Structured publishing workflows that keep content reusable, consistent, and cleanly delivered.',
+            buyer: 'Content value',
+            editor: 'Publish flow',
+            builder: 'Clean delivery',
+        },
+        security: {
+            summary:
+                'Stronger controls for private workflows without exposing CMS details to public visitors.',
+            buyer: 'Risk control',
+            editor: 'Safe access',
+            builder: 'Private output',
+        },
+    }
+
+    return (
+        copy[profileKey] ?? {
+            summary:
+                'Installable CMS capability for Capell sites that need room to grow.',
+            buyer: 'Package value',
+            editor: 'Usable flow',
+            builder: 'Laravel ready',
+        }
+    )
 }
 
 function titleFromSlug(slug) {
