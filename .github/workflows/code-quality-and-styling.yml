@@ -16,6 +16,7 @@ on:
       - 'scripts/check-phpstan-baseline-growth.sh'
       - 'scripts/audit-package-security.php'
       - 'scripts/scan-secrets.php'
+      - 'scripts/sync-package-security-manifests.php'
       - 'scripts/php-modernization-skill.sh'
       - 'phpstan/**'
       - 'phpstan*.neon'

@@ -16,6 +16,7 @@ on:
       - 'packages/frontend-optimizer/package-lock.json'
       - 'scripts/audit-package-security.php'
       - 'scripts/scan-secrets.php'
+      - 'scripts/sync-package-security-manifests.php'
       - '.github/dependabot.yml'
       - '.github/workflows/*.yml'
   schedule:

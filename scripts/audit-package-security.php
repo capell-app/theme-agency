@@ -640,8 +640,10 @@ function capell_security_workflow_issues(string $root): array
 function capell_security_manifest_contract_issues(string $root): array
 {
     $issues = [];
+    $packageDirectories = capell_security_package_directories($root);
 
     foreach (capell_security_manifest_payloads($root) as $slug => $manifest) {
+        $packagePath = $packageDirectories[$slug] ?? null;
         $manifestPath = 'packages/' . $slug . '/capell.json';
         $security = $manifest['security'] ?? null;
 
@@ -690,9 +692,97 @@ function capell_security_manifest_contract_issues(string $root): array
         if (! is_array($security['externalHttpClients']['clients'] ?? null) || ! array_is_list($security['externalHttpClients']['clients'])) {
             $issues[$manifestPath][] = 'security.externalHttpClients.clients must be a list';
         }
+
+        if (! is_string($packagePath)) {
+            continue;
+        }
+
+        foreach (capell_security_manifest_drift_issues($packagePath, $security) as $issue) {
+            $issues[$manifestPath][] = $issue;
+        }
     }
 
     return $issues;
+}
+
+/**
+ * @param  array<string, mixed>  $security
+ * @return list<string>
+ */
+function capell_security_manifest_drift_issues(string $packagePath, array $security): array
+{
+    $routes = capell_security_route_records($packagePath);
+    $publicSurface = capell_security_array_value($security['publicSurface'] ?? null);
+    $sensitiveData = capell_security_array_value($security['sensitiveData'] ?? null);
+    $externalHttpClients = capell_security_array_value($security['externalHttpClients'] ?? null);
+    $issues = [];
+
+    $expectedLists = [
+        'security.publicSurface.routeNames' => [
+            capell_security_manifest_route_names($routes),
+            $publicSurface['routeNames'] ?? null,
+        ],
+        'security.publicSurface.csrfExemptRoutes' => [
+            capell_security_manifest_route_names(array_values(array_filter($routes, static fn (array $route): bool => $route['csrfExempt']))),
+            $publicSurface['csrfExemptRoutes'] ?? null,
+        ],
+        'security.publicSurface.signedRoutes' => [
+            capell_security_manifest_route_names(array_values(array_filter($routes, static fn (array $route): bool => $route['signed']))),
+            $publicSurface['signedRoutes'] ?? null,
+        ],
+        'security.publicSurface.tokenizedRoutes' => [
+            capell_security_manifest_route_names(array_values(array_filter($routes, static fn (array $route): bool => $route['tokenized']))),
+            $publicSurface['tokenizedRoutes'] ?? null,
+        ],
+        'security.publicSurface.webhookRoutes' => [
+            capell_security_manifest_route_names(array_values(array_filter($routes, static fn (array $route): bool => $route['webhook']))),
+            $publicSurface['webhookRoutes'] ?? null,
+        ],
+        'security.publicSurface.throttledRoutes' => [
+            capell_security_manifest_route_names(array_values(array_filter($routes, static fn (array $route): bool => $route['throttled']))),
+            $publicSurface['throttledRoutes'] ?? null,
+        ],
+        'security.sensitiveData.encryptedFields' => [
+            capell_security_encrypted_fields($packagePath),
+            $sensitiveData['encryptedFields'] ?? null,
+        ],
+        'security.sensitiveData.hashedTokenFields' => [
+            capell_security_hashed_token_fields($packagePath),
+            $sensitiveData['hashedTokenFields'] ?? null,
+        ],
+        'security.sensitiveData.redactedOutputClasses' => [
+            capell_security_redacted_output_classes($packagePath),
+            $sensitiveData['redactedOutputClasses'] ?? null,
+        ],
+        'security.externalHttpClients.clients' => [
+            capell_security_http_client_classes($packagePath),
+            $externalHttpClients['clients'] ?? null,
+        ],
+    ];
+
+    foreach ($expectedLists as $field => [$expected, $actual]) {
+        if (capell_security_sorted_string_list($actual) !== $expected) {
+            $issues[] = $field . ' is out of sync with package code; run scripts/sync-package-security-manifests.php';
+        }
+    }
+
+    if (capell_security_plaintext_justification_fields($sensitiveData['plaintextJustifications'] ?? null) !== capell_security_plaintext_justification_fields(capell_security_plaintext_sensitive_field_justifications($packagePath))) {
+        $issues[] = 'security.sensitiveData.plaintextJustifications is out of sync with package code; run scripts/sync-package-security-manifests.php';
+    }
+
+    return $issues;
+}
+
+/**
+ * @param  list<array{name: string}>  $routes
+ * @return list<string>
+ */
+function capell_security_manifest_route_names(array $routes): array
+{
+    $names = array_values(array_unique(array_map(static fn (array $route): string => $route['name'], $routes)));
+    sort($names);
+
+    return $names;
 }
 
 /**
@@ -751,6 +841,49 @@ function capell_security_string_list(mixed $value): array
     return array_values(array_filter($value, static fn (mixed $item): bool => is_string($item) && $item !== ''));
 }
 
+/**
+ * @return array<string, mixed>
+ */
+function capell_security_array_value(mixed $value): array
+{
+    return is_array($value) ? $value : [];
+}
+
+/**
+ * @return list<string>
+ */
+function capell_security_sorted_string_list(mixed $value): array
+{
+    $values = capell_security_string_list($value);
+    sort($values);
+
+    return $values;
+}
+
+/**
+ * @return list<string>
+ */
+function capell_security_plaintext_justification_fields(mixed $value): array
+{
+    if (! is_array($value)) {
+        return [];
+    }
+
+    $fields = [];
+
+    foreach ($value as $item) {
+        if (! is_array($item) || ! is_string($item['field'] ?? null)) {
+            continue;
+        }
+
+        $fields[] = $item['field'];
+    }
+
+    sort($fields);
+
+    return array_values(array_unique($fields));
+}
+
 function capell_security_class_name(string $contents): ?string
 {
     if (! preg_match('/namespace\s+([^;]+);/', $contents, $namespaceMatch)) {
@@ -782,10 +915,10 @@ function capell_security_migration_table(string $contents): ?string
  */
 function capell_security_full_audit(string $root): array
 {
-    $issues = [
-        ...capell_security_manifest_contract_issues($root),
-        ...capell_security_route_contract_issues($root),
-    ];
+    $issues = capell_security_merge_issues(
+        capell_security_manifest_contract_issues($root),
+        capell_security_route_contract_issues($root),
+    );
 
     $httpFailures = capell_security_http_clients_without_timeouts($root);
 
@@ -806,6 +939,26 @@ function capell_security_full_audit(string $root): array
     ksort($issues);
 
     return $issues;
+}
+
+/**
+ * @param  array<string, list<string>>  ...$issueSets
+ * @return array<string, list<string>>
+ */
+function capell_security_merge_issues(array ...$issueSets): array
+{
+    $merged = [];
+
+    foreach ($issueSets as $issueSet) {
+        foreach ($issueSet as $path => $pathIssues) {
+            $merged[$path] = array_values(array_unique([
+                ...($merged[$path] ?? []),
+                ...$pathIssues,
+            ]));
+        }
+    }
+
+    return $merged;
 }
 
 if (PHP_SAPI === 'cli' && realpath((string) ($_SERVER['SCRIPT_FILENAME'] ?? '')) === __FILE__) {
