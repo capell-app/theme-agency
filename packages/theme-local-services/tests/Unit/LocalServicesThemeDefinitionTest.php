@@ -478,6 +478,52 @@ it('renders translated and data-driven service area links', function (): void {
         ->not->toContain('Central service area');
 });
 
+it('renders repeatable local service sections as swipeable container carousels by default with a stack opt out', function (): void {
+    CapellCore::clearPackages();
+    CapellCore::forcePackageInstalled(LocalServicesThemeServiceProvider::$packageName);
+
+    $registry = new ThemeRegistry;
+    (new LocalServicesThemeServiceProvider($this->app))->boot($registry);
+
+    $renderer = $registry->sectionRenderer('local-services', 'services');
+
+    assert($renderer instanceof SectionRenderer);
+
+    $carouselHtml = $renderer->render(localServicesThemeSection('services', [
+        'heading' => 'Dispatch-ready service paths',
+        'items' => [
+            ['title' => 'Emergency repairs', 'summary' => 'Fast triage for urgent jobs.'],
+            ['title' => 'Planned maintenance', 'summary' => 'Scheduled service visits.'],
+            ['title' => 'Installations', 'summary' => 'Scoped project work.'],
+        ],
+    ]));
+
+    $stackHtml = $renderer->render(localServicesThemeSection('services', [
+        'heading' => 'Stacked service paths',
+        'mobileLayout' => 'stack',
+        'items' => [
+            ['title' => 'Emergency repairs', 'summary' => 'Fast triage for urgent jobs.'],
+            ['title' => 'Planned maintenance', 'summary' => 'Scheduled service visits.'],
+        ],
+    ]));
+
+    expect($carouselHtml)
+        ->toContain('data-carousel-breakpoints-base="container"')
+        ->toContain('data-carousel-touch="1"')
+        ->toContain('data-carousel-drag="1"')
+        ->toContain('data-carousel-watch-overflow="1"')
+        ->toContain('swiper-slide h-auto')
+        ->toContain('@2xl:grid')
+        ->not->toContain('capell-app/theme-local-services')
+        ->not->toContain('Filament');
+
+    expect($stackHtml)
+        ->not->toContain('data-carousel-breakpoints-base="container"')
+        ->not->toContain('data-carousel-touch="1"')
+        ->not->toContain('swiper-slide h-auto')
+        ->toContain('Emergency repairs');
+});
+
 it('renders data-driven contact actions without dead or unsafe links', function (): void {
     CapellCore::clearPackages();
     CapellCore::forcePackageInstalled(LocalServicesThemeServiceProvider::$packageName);

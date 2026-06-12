@@ -89,6 +89,7 @@
                     data-carousel-touch="{{ (int) $responsiveLayoutOptions->carouselTouch }}"
                     data-carousel-watch-overflow="1"
                     data-carousel-breakpoints="{{ $responsiveLayoutOptions->carouselBreakpointsJson() }}"
+                    data-carousel-breakpoints-base="container"
                     @class([
                         'widget-assets-carousel',
                         'md:hidden' => $responsiveLayoutPattern === ResponsiveLayoutPattern::DesktopGridMobileCarousel,

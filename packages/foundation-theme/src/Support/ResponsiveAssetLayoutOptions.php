@@ -46,7 +46,7 @@ class ResponsiveAssetLayoutOptions
         $fallbackColumns = $legacyColumns > 0 ? $legacyColumns : max(1, min($total, 4));
 
         return new self(
-            pattern: ResponsiveLayoutPattern::fromNullable(self::meta($widget, 'responsive_layout_pattern')),
+            pattern: self::responsiveLayoutPattern($widget),
             hasGridOverrides: self::hasAnyMeta($widget, [
                 'responsive_grid_sm_columns',
                 'responsive_grid_md_columns',
@@ -146,9 +146,13 @@ HTML);
                 'slidesPerView' => $this->mobileSlides,
                 'spaceBetween' => 16,
             ],
-            640 => [
+            520 => [
                 'slidesPerView' => $this->smSlides,
                 'spaceBetween' => 20,
+            ],
+            760 => [
+                'slidesPerView' => max($this->smSlides, 3),
+                'spaceBetween' => 24,
             ],
         ], JSON_THROW_ON_ERROR);
     }
@@ -218,5 +222,16 @@ HTML);
         }
 
         return $default;
+    }
+
+    private static function responsiveLayoutPattern(Widget $widget): ResponsiveLayoutPattern
+    {
+        $value = self::meta($widget, 'responsive_layout_pattern');
+
+        if ($value === null || $value === '') {
+            return ResponsiveLayoutPattern::DesktopGridMobileCarousel;
+        }
+
+        return ResponsiveLayoutPattern::fromNullable($value);
     }
 }
