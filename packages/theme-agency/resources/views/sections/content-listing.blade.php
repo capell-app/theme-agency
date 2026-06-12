@@ -1,5 +1,5 @@
 @if (in_array($section->variant ?? null, ['gallery', 'pathways', 'spotlight'], true))
-    @include('capell::themes.default.sections.content-listing', ['section' => $section])
+    @include('capell-foundation-theme::theme.sections.content-listing', ['section' => $section])
 @else
     <section class="theme-content-listing mx-auto max-w-7xl px-6 py-20">
         <div class="grid gap-6 lg:grid-cols-[0.65fr_1.35fr] lg:items-end">

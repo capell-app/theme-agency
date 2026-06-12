@@ -38,9 +38,9 @@ it('builds portable fallback theme data for the current frontend page', function
         ->and($page->sections)->toHaveCount(1)
         ->and($heroSection)->toBeInstanceOf(HeroSectionData::class)
         ->and($page->navigation)->toBeInstanceOf(NavigationData::class)
-        ->and($navigation->brandName)->toBe('Capell')
+        ->and($navigation->brandName)->toBe('Site')
         ->and($page->footer)->toBeInstanceOf(FooterData::class)
-        ->and($footer->brandName)->toBe('Capell');
+        ->and($footer->brandName)->toBe('Site');
 
     expect($heroSection->toViewData()['section'])->toBe($heroSection);
 });
@@ -51,9 +51,7 @@ it('keeps default navigation usable when no package navigation is available', fu
 
     expect($navigation)->toBeInstanceOf(NavigationData::class)
         ->and($navigation->items)->toBe([
-            ['label' => 'Content', 'url' => '#content'],
-            ['label' => 'Gallery', 'url' => '#gallery'],
-            ['label' => 'Contact', 'url' => '#footer'],
+            ['label' => 'Home', 'url' => '/'],
         ]);
 });
 

@@ -11,7 +11,7 @@
 @endphp
 
 @if (in_array($variant, ['gallery', 'pathways', 'spotlight'], true))
-    @include('capell::themes.default.sections.content-listing', ['section' => $section])
+    @include('capell-foundation-theme::theme.sections.content-listing', ['section' => $section])
 @else
     <section
         id="{{ $sectionId }}"

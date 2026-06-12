@@ -1,5 +1,5 @@
 @if (in_array($section->variant ?? null, ['gallery', 'pathways', 'spotlight'], true))
-    @include('capell::themes.default.sections.content-listing', ['section' => $section])
+    @include('capell-foundation-theme::theme.sections.content-listing', ['section' => $section])
 @else
     <section class="retail-collections bg-[var(--retail-surface)]">
         <div class="px-6">
