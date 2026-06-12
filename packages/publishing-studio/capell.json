@@ -256,10 +256,7 @@
             ],
             "redactedOutputClasses": [],
             "plaintextJustifications": [
-                {
-                    "field": "preview_links.token",
-                    "reason": "Reviewed package field; not stored as a reusable secret by this package contract."
-                }
+                "preview_links.token: Reviewed package field; not stored as a reusable secret by this package contract."
             ]
         },
         "publicOutput": {

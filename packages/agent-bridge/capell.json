@@ -87,10 +87,7 @@
             ],
             "redactedOutputClasses": [],
             "plaintextJustifications": [
-                {
-                    "field": "capell_agent_bridge_confirmations.token",
-                    "reason": "Reviewed package field; not stored as a reusable secret by this package contract."
-                }
+                "capell_agent_bridge_confirmations.token: Reviewed package field; not stored as a reusable secret by this package contract."
             ]
         },
         "publicOutput": {
