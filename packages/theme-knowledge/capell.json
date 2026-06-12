@@ -62,6 +62,39 @@
     "settings": [],
     "permissions": [],
     "capabilities": ["theme-knowledge", "theme-knowledge-frontend"],
+    "security": {
+        "riskTier": "low",
+        "publicSurface": {
+            "routeNames": [],
+            "auth": "none",
+            "csrfExemptRoutes": [],
+            "signedRoutes": [],
+            "tokenizedRoutes": [],
+            "webhookRoutes": [],
+            "throttledRoutes": []
+        },
+        "sensitiveData": {
+            "encryptedFields": [],
+            "hashedTokenFields": [],
+            "redactedOutputClasses": [],
+            "plaintextJustifications": []
+        },
+        "publicOutput": {
+            "cacheSafe": true,
+            "forbidAuthoringSurface": true,
+            "forbidSecrets": true,
+            "forbidPublicBladeQueries": true
+        },
+        "externalHttpClients": {
+            "requiresTimeouts": false,
+            "requiresSecretRedaction": false,
+            "clients": []
+        },
+        "adminSurface": {
+            "authorization": "none",
+            "permissions": []
+        }
+    },
     "performance": {
         "frontendRenderBudgetMs": 20,
         "adminQueryBudget": 0,
@@ -93,14 +126,29 @@
                 "caption": "Theme Knowledge theme card."
             },
             {
-                "path": "docs/screenshots/knowledge-homepage-layout.png",
-                "alt": "Theme Knowledge homepage with dark documentation shell, search console, and expertise-led hero content.",
-                "caption": "Route-backed Knowledge homepage rendered through the package theme shell."
+                "path": "docs/screenshots/frontend-page-rendered-with-knowledge-theme-dark.png",
+                "alt": "Theme Knowledge Frontend Page Rendered With Knowledge Theme Dark screenshot",
+                "caption": "Frontend Page Rendered With Knowledge Theme Dark rendered with the Theme Knowledge theme."
+            },
+            {
+                "path": "docs/screenshots/frontend-page-rendered-with-knowledge-theme.png",
+                "alt": "Theme Knowledge Frontend Page Rendered With Knowledge Theme screenshot",
+                "caption": "Frontend Page Rendered With Knowledge Theme rendered with the Theme Knowledge theme."
+            },
+            {
+                "path": "docs/screenshots/knowledge-author-bench-layout.png",
+                "alt": "Theme Knowledge Knowledge Author Bench Layout screenshot",
+                "caption": "Knowledge Author Bench Layout rendered with the Theme Knowledge theme."
+            },
+            {
+                "path": "docs/screenshots/knowledge-featured-content-layout.png",
+                "alt": "Theme Knowledge Knowledge Featured Content Layout screenshot",
+                "caption": "Knowledge Featured Content Layout rendered with the Theme Knowledge theme."
             },
             {
                 "path": "docs/screenshots/knowledge-homepage-layout-dark.png",
-                "alt": "Theme Knowledge homepage rendered through the package theme shell in dark mode.",
-                "caption": "Route-backed Knowledge homepage in dark mode."
+                "alt": "Theme Knowledge Knowledge Homepage Layout Dark screenshot",
+                "caption": "Knowledge Homepage Layout Dark rendered with the Theme Knowledge theme."
             }
         ],
         "categories": ["frontend", "themes"]

@@ -123,6 +123,33 @@ describe('carousel runtime', () => {
         expect(options.grabCursor).toBe(true)
     })
 
+    it('passes container-based breakpoints through to Swiper', () => {
+        document.body.innerHTML = createCarouselMarkup(
+            [
+                'data-carousel-id="container-carousel"',
+                'data-carousel-breakpoints-base="container"',
+                'data-carousel-breakpoints=\'{"320":{"slidesPerView":1.1},"520":{"slidesPerView":2},"760":{"slidesPerView":3}}\'',
+            ].join(' '),
+        )
+
+        const swiperNode = document.querySelector('.swiper')
+        const options = parseCarouselOptions(swiperNode)
+        const controls = resolveCarouselControls(swiperNode, options)
+        const abortController = new AbortController()
+        const settings = buildSwiperSettings(
+            swiperNode,
+            options,
+            controls,
+            abortController.signal,
+        )
+
+        expect(options.breakpointsBase).toBe('container')
+        expect(settings.breakpointsBase).toBe('container')
+        expect(settings.breakpoints[320].slidesPerView).toBe(1.1)
+        expect(settings.breakpoints[520].slidesPerView).toBe(2)
+        expect(settings.breakpoints[760].slidesPerView).toBe(3)
+    })
+
     it('resolves controls by scoped carousel id', () => {
         document.body.innerHTML = `
             <section data-carousel-scope>

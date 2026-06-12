@@ -47,8 +47,11 @@ it('uses buyer-facing marketplace copy and committed real preview assets', funct
         ->and($marketplace['description'])->toBe("Theme Education gives schools, course providers, and training teams a complete learning-pathway frontend without commissioning a custom build. Purpose-shaped sections cover course catalogues, instructor and mentor profiles, learning outcomes, open days, resources, FAQs, and a guided enrolment call-to-action. It integrates optionally with Capell Events for open-day calendars, Form Builder for applications and enquiries, and Blog for learning resources — degrading gracefully when those aren't installed. Built on the built-in default frontend theme with brand-token theming, an accessible skip link and focus states, and zero database impact, so editors compose education pages through the normal Layout Builder workflow.")
         ->and($screenshotPaths)->toBe([
             'docs/assets/marketplace/extension-card.jpg',
-            'docs/screenshots/education-homepage-layout.png',
+            'docs/screenshots/education-course-catalogue-layout.png',
             'docs/screenshots/education-enrolment-layout.png',
+            'docs/screenshots/education-events-layout.png',
+            'docs/screenshots/education-homepage-layout.png',
+            'docs/screenshots/education-instructors-layout.png',
         ]);
 
     foreach ($screenshotPaths as $screenshotPath) {

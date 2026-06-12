@@ -13,9 +13,14 @@
         "bundle": "operations"
     },
     "namespace": "Capell\\Deployments",
-    "surfaces": ["admin"],
+    "surfaces": [
+        "admin"
+    ],
     "dependencies": {
-        "requires": ["capell-app/admin", "capell-app/core"],
+        "requires": [
+            "capell-app/admin",
+            "capell-app/core"
+        ],
         "supports": [],
         "conflicts": []
     },
@@ -25,14 +30,19 @@
             "Capell\\Deployments\\Providers\\DeploymentsServiceProvider"
         ],
         "runtime": [],
-        "admin": ["Capell\\Deployments\\Providers\\DeploymentsServiceProvider"],
+        "admin": [
+            "Capell\\Deployments\\Providers\\DeploymentsServiceProvider"
+        ],
         "frontend": []
     },
     "contributes": [],
     "database": {
         "migrations": true,
         "settings": false,
-        "requiredTables": ["deployment_connections", "deployment_publications"]
+        "requiredTables": [
+            "deployment_connections",
+            "deployment_publications"
+        ]
     },
     "commands": {
         "install": null,
@@ -56,7 +66,14 @@
     "security": {
         "riskTier": "sensitive",
         "publicSurface": {
-            "routeNames": ["oauth.github", "oauth.gitlab", "oauth.bitbucket"],
+            "routeNames": [
+                "capell-deployments.oauth.bitbucket",
+                "capell-deployments.oauth.github",
+                "capell-deployments.oauth.gitlab",
+                "oauth.github",
+                "oauth.gitlab",
+                "oauth.bitbucket"
+            ],
             "auth": "authenticated",
             "csrfExemptRoutes": [],
             "signedRoutes": [],
@@ -64,11 +81,41 @@
             "webhookRoutes": [],
             "throttledRoutes": []
         },
+        "sensitiveData": {
+            "encryptedFields": [
+                "Capell\\Deployments\\Models\\DeploymentConnection::$access_token_encrypted",
+                "Capell\\Deployments\\Models\\DeploymentConnection::$refresh_token_encrypted"
+            ],
+            "hashedTokenFields": [],
+            "redactedOutputClasses": [
+                "Capell\\Deployments\\Http\\Controllers\\OAuth\\BitbucketCallbackController",
+                "Capell\\Deployments\\Http\\Controllers\\OAuth\\GitHubCallbackController",
+                "Capell\\Deployments\\Http\\Controllers\\OAuth\\GitLabCallbackController"
+            ],
+            "plaintextJustifications": []
+        },
         "publicOutput": {
             "cacheSafe": false,
             "forbidAuthoringSurface": true,
             "forbidSecrets": true,
             "forbidPublicBladeQueries": true
+        },
+        "externalHttpClients": {
+            "requiresTimeouts": true,
+            "requiresSecretRedaction": true,
+            "clients": [
+                "Capell\\Deployments\\Actions\\RefreshProviderTokenAction",
+                "Capell\\Deployments\\Http\\Controllers\\OAuth\\BitbucketCallbackController",
+                "Capell\\Deployments\\Http\\Controllers\\OAuth\\GitHubCallbackController",
+                "Capell\\Deployments\\Http\\Controllers\\OAuth\\GitLabCallbackController"
+            ]
+        },
+        "adminSurface": {
+            "authorization": "permissions",
+            "permissions": [
+                "View:DeploymentConnectionPage",
+                "Manage:DeploymentConnectionPage"
+            ]
         }
     },
     "performance": {
@@ -117,9 +164,16 @@
                 "caption": "Dark-mode view of the Git provider connection entry point"
             }
         ],
-        "categories": ["admin", "operations"]
+        "categories": [
+            "admin",
+            "operations"
+        ]
     },
     "contributionTraceability": {
-        "deferredContributions": ["admin-page", "dashboard-widget", "route"]
+        "deferredContributions": [
+            "admin-page",
+            "route",
+            "dashboard-widget"
+        ]
     }
 }

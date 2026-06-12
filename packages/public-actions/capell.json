@@ -13,14 +13,21 @@
         "bundle": "automation"
     },
     "namespace": "Capell\\PublicActions",
-    "surfaces": ["admin", "frontend", "console"],
+    "surfaces": [
+        "admin",
+        "frontend",
+        "console"
+    ],
     "dependencies": {
         "requires": [
             "capell-app/admin",
             "capell-app/core",
             "capell-app/frontend"
         ],
-        "supports": ["capell-app/access-gate", "capell-app/form-builder"],
+        "supports": [
+            "capell-app/access-gate",
+            "capell-app/form-builder"
+        ],
         "conflicts": []
     },
     "providers": {
@@ -62,7 +69,11 @@
         "riskTier": "sensitive",
         "publicSurface": {
             "routeNames": [
+                "actions",
+                "actions.submit",
+                "me",
                 "show",
+                "submissions",
                 "submit",
                 "zapier.me",
                 "zapier.actions",
@@ -87,20 +98,51 @@
                 "zapier.submissions"
             ]
         },
+        "sensitiveData": {
+            "encryptedFields": [
+                "Capell\\PublicActions\\Models\\PublicActionDestination::$endpoint_url",
+                "Capell\\PublicActions\\Models\\PublicActionDestination::$headers",
+                "Capell\\PublicActions\\Models\\PublicActionDestination::$secret",
+                "Capell\\PublicActions\\Models\\PublicActionSubmission::$payload"
+            ],
+            "hashedTokenFields": [],
+            "redactedOutputClasses": [
+                "Capell\\PublicActions\\Health\\PublicActionsHealthCheck",
+                "Capell\\PublicActions\\Support\\Providers\\HttpWebhookPublicActionAdapter"
+            ],
+            "plaintextJustifications": []
+        },
         "publicOutput": {
             "cacheSafe": false,
             "forbidAuthoringSurface": true,
             "forbidSecrets": true,
             "forbidPublicBladeQueries": true
+        },
+        "externalHttpClients": {
+            "requiresTimeouts": true,
+            "requiresSecretRedaction": true,
+            "clients": [
+                "Capell\\PublicActions\\Support\\Providers\\HttpWebhookPublicActionAdapter",
+                "Capell\\PublicActions\\Support\\SpamProtection\\TurnstilePublicActionSpamProtectionAdapter"
+            ]
+        },
+        "adminSurface": {
+            "authorization": "policies",
+            "permissions": []
         }
     },
     "performance": {
         "frontendRenderBudgetMs": 20,
         "adminQueryBudget": 40,
-        "cacheTags": ["public-actions"],
+        "cacheTags": [
+            "public-actions"
+        ],
         "cacheSafety": {
             "cacheable": false,
-            "variesBy": ["site", "locale"],
+            "variesBy": [
+                "site",
+                "locale"
+            ],
             "sensitiveOutput": false,
             "invalidationSources": [],
             "queueInvalidation": true
@@ -186,9 +228,18 @@
                 "caption": "Public Action frontend form"
             }
         ],
-        "categories": ["admin", "automation", "console", "frontend"]
+        "categories": [
+            "admin",
+            "automation",
+            "console",
+            "frontend"
+        ]
     },
     "contributionTraceability": {
-        "deferredContributions": ["admin-resource", "model", "route"]
+        "deferredContributions": [
+            "admin-resource",
+            "model",
+            "route"
+        ]
     }
 }

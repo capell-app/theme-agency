@@ -10,5 +10,6 @@ test('asset widget view contains the responsive grid to carousel pattern hooks',
     expect($assetWidgetView)->toContain('ResponsiveAssetLayoutOptions::fromWidget')
         ->and($assetWidgetView)->toContain('usesMobileCarousel()')
         ->and($assetWidgetView)->toContain('data-carousel-breakpoints')
+        ->and($assetWidgetView)->toContain('data-carousel-breakpoints-base="container"')
         ->and($assetWidgetView)->toContain('data-carousel-rows');
 });

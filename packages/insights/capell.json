@@ -13,21 +13,30 @@
         "bundle": "growth"
     },
     "namespace": "Capell\\Insights",
-    "surfaces": ["admin", "frontend"],
+    "surfaces": [
+        "admin",
+        "frontend"
+    ],
     "dependencies": {
         "requires": [
             "capell-app/admin",
             "capell-app/core",
             "capell-app/frontend"
         ],
-        "supports": ["capell-app/privacy-center"],
+        "supports": [
+            "capell-app/privacy-center"
+        ],
         "conflicts": []
     },
     "providers": {
         "metadata": [],
         "install": [],
-        "runtime": ["Capell\\Insights\\Providers\\InsightsServiceProvider"],
-        "admin": ["Capell\\Insights\\Providers\\AdminServiceProvider"],
+        "runtime": [
+            "Capell\\Insights\\Providers\\InsightsServiceProvider"
+        ],
+        "admin": [
+            "Capell\\Insights\\Providers\\AdminServiceProvider"
+        ],
         "frontend": []
     },
     "contributes": [],
@@ -46,10 +55,17 @@
         "setup": null,
         "demo": null,
         "doctor": null,
-        "maintenance": ["insights:purge", "insights:rollups:rebuild"]
+        "maintenance": [
+            "insights:purge",
+            "insights:rollups:rebuild"
+        ]
     },
-    "settings": ["Capell\\Insights\\Settings\\InsightsSettings"],
-    "permissions": ["View:InsightsPage"],
+    "settings": [
+        "Capell\\Insights\\Settings\\InsightsSettings"
+    ],
+    "permissions": [
+        "View:InsightsPage"
+    ],
     "capabilities": [
         "insights",
         "insights-admin",
@@ -68,28 +84,65 @@
     "security": {
         "riskTier": "standard",
         "publicSurface": {
-            "routeNames": ["events", "consent"],
+            "routeNames": [
+                "capell-insights.consent",
+                "capell-insights.events",
+                "events",
+                "consent"
+            ],
             "auth": "public",
-            "csrfExemptRoutes": ["events", "consent"],
+            "csrfExemptRoutes": [
+                "capell-insights.consent",
+                "capell-insights.events",
+                "events",
+                "consent"
+            ],
             "signedRoutes": [],
             "tokenizedRoutes": [],
             "webhookRoutes": [],
-            "throttledRoutes": ["events", "consent"]
+            "throttledRoutes": [
+                "capell-insights.consent",
+                "capell-insights.events",
+                "events",
+                "consent"
+            ]
+        },
+        "sensitiveData": {
+            "encryptedFields": [],
+            "hashedTokenFields": [],
+            "redactedOutputClasses": [],
+            "plaintextJustifications": []
         },
         "publicOutput": {
             "cacheSafe": true,
             "forbidAuthoringSurface": true,
             "forbidSecrets": true,
             "forbidPublicBladeQueries": true
+        },
+        "externalHttpClients": {
+            "requiresTimeouts": false,
+            "requiresSecretRedaction": false,
+            "clients": []
+        },
+        "adminSurface": {
+            "authorization": "permissions",
+            "permissions": [
+                "View:InsightsPage"
+            ]
         }
     },
     "performance": {
         "frontendRenderBudgetMs": 20,
         "adminQueryBudget": 40,
-        "cacheTags": ["insights"],
+        "cacheTags": [
+            "insights"
+        ],
         "cacheSafety": {
             "cacheable": false,
-            "variesBy": ["site", "locale"],
+            "variesBy": [
+                "site",
+                "locale"
+            ],
             "sensitiveOutput": false,
             "invalidationSources": [],
             "queueInvalidation": true
@@ -135,7 +188,11 @@
                 "caption": "Packaged consent banner rendered on a route-backed public page."
             }
         ],
-        "categories": ["admin", "frontend", "growth"]
+        "categories": [
+            "admin",
+            "frontend",
+            "growth"
+        ]
     },
     "contributionTraceability": {
         "deferredContributions": [

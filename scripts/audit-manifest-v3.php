@@ -79,7 +79,6 @@ const CAPELL_MANIFEST_V3_MIGRATION_GROUPS = [
         'deployments',
         'diagnostics',
         'document-lifecycle',
-        'exception-reports',
         'ga4-reports',
         'insights',
         'login-audit',
@@ -89,7 +88,6 @@ const CAPELL_MANIFEST_V3_MIGRATION_GROUPS = [
         'privacy-center',
         'publishing-studio',
         'record-switcher',
-        'social-feeds',
         'translation-manager',
     ],
     'publishing-pro' => [
@@ -105,12 +103,13 @@ const CAPELL_MANIFEST_V3_MIGRATION_GROUPS = [
         'customer-portal',
         'email-studio',
         'events',
+        'exception-reports',
         'experiments',
         'form-builder',
+        'knowledge-base',
         'inertia',
         'inertia-react-adapter',
         'inertia-vue-adapter',
-        'knowledge-base',
         'media-ai',
         'newsletter',
         'payments',
@@ -118,6 +117,7 @@ const CAPELL_MANIFEST_V3_MIGRATION_GROUPS = [
         'search',
         'seo-suite',
         'shopify-commerce',
+        'social-feeds',
         'url-manager',
         'wordpress-importer',
     ],
@@ -426,17 +426,20 @@ function capell_manifest_v3_provider_bucket_errors(array $manifest): array
 function capell_manifest_v3_discovered_contribution_types(string $packagePath): array
 {
     $types = [];
+    $scanPaths = array_values(array_filter([
+        $packagePath . DIRECTORY_SEPARATOR . 'src',
+        $packagePath . DIRECTORY_SEPARATOR . 'routes',
+        $packagePath . DIRECTORY_SEPARATOR . 'database' . DIRECTORY_SEPARATOR . 'migrations',
+        $packagePath . DIRECTORY_SEPARATOR . 'database' . DIRECTORY_SEPARATOR . 'settings',
+    ], static fn (string $path): bool => is_dir($path)));
+
+    if ($scanPaths === []) {
+        return [];
+    }
+
     $finder = (new Finder)
         ->files()
-        ->in(array_values(array_filter(
-            [
-                $packagePath . DIRECTORY_SEPARATOR . 'src',
-                $packagePath . DIRECTORY_SEPARATOR . 'routes',
-                $packagePath . DIRECTORY_SEPARATOR . 'database' . DIRECTORY_SEPARATOR . 'migrations',
-                $packagePath . DIRECTORY_SEPARATOR . 'database' . DIRECTORY_SEPARATOR . 'settings',
-            ],
-            static fn (string $path): bool => is_dir($path),
-        )))
+        ->in($scanPaths)
         ->name('*.php')
         ->exclude(['vendor']);
 
@@ -462,7 +465,7 @@ function capell_manifest_v3_discovered_contribution_types(string $packagePath): 
 
 function capell_manifest_v3_registers_routes(string $contents): bool
 {
-    return preg_match('/Route::(?:get|post|put|patch|delete|match|any|middleware|prefix|domain|group)\s*\(/', $contents) === 1;
+    return preg_match('/\bRoute::(?:any|delete|get|group|match|middleware|name|patch|permanentRedirect|post|prefix|put|redirect|view)\s*\(/', $contents) === 1;
 }
 
 /**
@@ -489,9 +492,11 @@ function capell_manifest_v3_declared_contribution_types(array $manifest): array
         $types['health-check'] = true;
     }
 
-    foreach (($manifest['contributes'] ?? []) as $contribution) {
-        if (is_array($contribution) && is_string($contribution['type'] ?? null)) {
-            $types[$contribution['type']] = true;
+    if (is_array($manifest['contributes'] ?? null)) {
+        foreach ($manifest['contributes'] as $contribution) {
+            if (is_array($contribution) && is_string($contribution['type'] ?? null)) {
+                $types[$contribution['type']] = true;
+            }
         }
     }
 

@@ -35,9 +35,25 @@
         "prettier": "npx prettier --write \"packages/**/*.{css,js,yml,json,md,blade.php}\"",
         "prettier:check": "npx prettier --check \"packages/**/*.{css,js,yml,json,md,blade.php}\"",
         "eslint": "npx eslint 'packages/**/resources/js/**/*.js' --max-warnings=0",
+        "docs:check": "@php scripts/audit-package-docs.php",
         "check:composer-paths": "@php scripts/check-composer-local-paths.php",
         "check:composer-lock": "composer validate --no-check-publish",
         "security:audit": "composer audit --locked",
+        "security:secrets": "@php scripts/scan-secrets.php",
+        "security:dependencies": [
+            "@security:audit",
+            "npm audit --audit-level=high",
+            "if [ -f packages/frontend-optimizer/package-lock.json ]; then npm --prefix packages/frontend-optimizer audit --audit-level=high; fi"
+        ],
+        "security:contracts": [
+            "@php scripts/audit-package-security.php",
+            "@php -d memory_limit=-1 vendor/bin/pest tests/Packages/Security --configuration=phpunit.xml"
+        ],
+        "security:all": [
+            "@security:dependencies",
+            "@security:secrets",
+            "@security:contracts"
+        ],
         "skill:inspect": "bash scripts/php-modernization-skill.sh inspect --format json",
         "skill:verify": "bash scripts/php-modernization-skill.sh verify --format json --summary --no-cache",
         "skill:verify:sarif": "bash scripts/php-modernization-skill.sh verify --format sarif --no-cache",
@@ -72,6 +88,8 @@
             "@phpstan:baseline-check",
             "@php -r \"echo PHP_EOL . 'Running Composer audit...' . PHP_EOL;\"",
             "@security:audit",
+            "@php -r \"echo PHP_EOL . 'Running package security contracts...' . PHP_EOL;\"",
+            "@security:contracts",
             "@php -r \"echo PHP_EOL . 'Running Pest...' . PHP_EOL;\"",
             "@test"
         ],

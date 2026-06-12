@@ -40,6 +40,15 @@ For developers, it registers an Inertia theme definition and replaces the public
 - React and Vue component implementations live in optional component packs.
 - The theme owns no migrations, settings, or package-owned admin resources.
 
+## Runtime Surface
+
+- Provider: `src/Providers/InertiaBookingsThemeServiceProvider.php`
+- Theme renderer: `src/Rendering/InertiaBookingsThemeRenderer.php`
+- Booking request renderer: `src/Rendering/InertiaPublicBookingRequestRenderer.php`
+- Marketplace/admin contribution: `src/Manifest/ThemeManagementPageContribution.php`
+- Theme assets: `resources/`
+- Tests: `packages/theme-inertia-bookings/tests`
+
 ## Docs
 
 - [docs index](docs/README.md)

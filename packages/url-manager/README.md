@@ -1,44 +1,72 @@
 # Capell URL Manager
 
-Capell URL Manager owns managed redirect rules and 404 opportunity tracking.
+URL Manager owns managed redirect rules, canonical URL policy, redirect hit evidence, and 404 opportunity tracking for Capell sites.
 
-The package is intentionally action-driven:
+## At A Glance
 
-- `RedirectRule` stores normalized source and target URLs, match type, status code, active state, hit count, and last hit timestamp.
-- `RedirectHit` stores per-hit evidence without storing raw IP addresses or user agents.
-- `NotFoundOpportunity` stores repeated 404 paths and a suggested target URL when one can be inferred.
-- `ConvertNotFoundOpportunityToRedirectAction` creates a redirect from a reviewed 404 opportunity and marks it converted.
-- `RecordChangedUrlRedirectAction` accepts previous/current page paths and creates an exact redirect only when the normalized URL changed. Parent page moves also create a prefix redirect so child paths continue to resolve.
-- Import/export actions use CSV-compatible rows for admin import/export workflows, including redirect priority.
-- `RedirectRulesPage` and `NotFoundOpportunitiesPage` expose package-owned admin tables. The 404 table calls `ConvertNotFoundOpportunityToRedirectAction` for conversions.
-- `BuildCanonicalUrlAction` applies the package canonical URL policy for scheme, host, path case, trailing slash handling, and tracking-query stripping.
-- `PruneRedirectHitsAction` and `url-manager:prune-hits` prune old per-hit rows according to the configured retention window.
+| Field            | Value                                                   |
+| ---------------- | ------------------------------------------------------- |
+| Composer package | `capell-app/url-manager`                                |
+| Namespace        | `Capell\UrlManager`                                     |
+| Product group    | Capell Growth/Search                                    |
+| Surfaces         | Admin, frontend middleware, console                     |
+| Provider         | `Capell\UrlManager\Providers\UrlManagerServiceProvider` |
+| Admin pages      | `RedirectRulesPage`, `NotFoundOpportunitiesPage`        |
+| Command          | `url-manager:prune-hits`                                |
+| Config           | `config/capell-url-manager.php`                         |
 
-## Redirect policy
+## Why It Helps Your Capell Workflow
 
-Managed source paths are normalized to lowercase paths without query strings before hashing. Query strings are preserved only at response time when `preserve_query` is enabled, so `/old-page?utm_source=x` still matches a `/old-page` rule.
+Owners get a controlled redirect and 404 repair workflow instead of hidden web-server rewrites. Editors can review recurring 404s, convert them into redirects, import/export rules, and keep moved page URLs working.
 
-Absolute targets are allowed only for configured hosts and, by default, the host from `app.url`. This keeps CSV imports and lower-trust admin workflows from creating open redirects to arbitrary domains. Exact redirect chains are collapsed at write time, and cyclic chains are rejected before save. Regex sources are validated at write time and bounded by `capell-url-manager.redirects.regex.max_pattern_length`; runtime regex resolution checks only the configured number of ordered rules.
+Developers get Actions for redirect resolution, import preview, canonical URL building, changed-page URL redirects, hit pruning, and SEO Suite broken-link import without coupling frontend routing to admin tables.
 
-Redirect priority controls overlapping prefix and regex matches. Higher priority wins before fallback ordering, then longer prefix paths win inside the same priority.
+## What It Adds
 
-## Integration points
+- `RedirectRule`, `RedirectHit`, and `NotFoundOpportunity` models.
+- Admin pages for redirect rule management and 404 opportunity review.
+- Exact, prefix, and regex redirect resolution with priority support.
+- CSV import/export and import preview Actions.
+- Changed page URL listener that records redirects for previous page paths.
+- 404 capture middleware through the frontend middleware registry.
+- Canonical URL policy for scheme, host, path case, trailing slash, and tracking query stripping.
+- `PruneRedirectHitsAction` and `url-manager:prune-hits` for retention.
 
-- Frontend/Core request resolution can use `UrlManagerRedirectResolver`, which decorates Core's existing `RedirectResolver` binding and falls back to URL Manager rules when Core `PageUrl` redirects do not resolve.
-- Core `PageUrlChanged` events are handled by `RecordRedirectForChangedPageUrl`, which writes the previous URL into URL Manager when the normalized source and target differ.
-- Public 404 handling is captured by `RecordNotFoundOpportunityMiddleware` through the frontend middleware registry. Hosts that do not use the frontend registry can call `RecordNotFoundOpportunityAction` directly with the normalized path, site ID, language ID, and lightweight context. Do not render any URL Manager metadata into public HTML.
-- Review/admin flows should call `ConvertNotFoundOpportunityToRedirectAction` after an editor chooses a target URL.
-- SEO Suite broken URL surfaces can read URL Manager data by using `NotFoundOpportunity` for 404 candidates and `ExportRedirectRulesAction` for redirect coverage. Existing SEO Suite `BrokenLink` rows can be imported by calling `ImportSeoSuiteBrokenLinksAction`, then `BuildNotFoundRedirectSuggestionsAction`.
+## Boundaries
 
-## Configuration
+URL Manager owns managed redirects and 404 opportunities. Core page URL redirects still resolve first where Core provides them; URL Manager decorates/falls back rather than replacing Core routing.
 
-`config/capell-url-manager.php` controls:
+Public output must not render URL Manager metadata, admin URLs, import details, or redirect hit evidence. Absolute redirect targets are allowed only for configured hosts to avoid open redirects.
 
-- allowed redirect status codes;
-- absolute target host allowlist;
-- regex pattern length and runtime rule scan limits;
-- deferred hit recording and hit retention;
-- ignored paths for 404 capture;
-- canonical URL scheme, host, slash, lowercase, and query stripping policy.
+## Runtime Surface
 
-Hit recording is deferred with an application terminating callback by default so public redirects do not wait for the `redirect_hits` insert and rule counter update before returning the redirect response.
+- Provider: `src/Providers/UrlManagerServiceProvider.php`
+- Admin pages: `src/Filament/Pages/`
+- Middleware: `src/Http/Middleware/`
+- Redirect resolver: `src/Support/Redirects/`
+- Actions: `src/Actions/`
+- Data objects: `src/Data/`
+- Listener: `src/Listeners/RecordRedirectForChangedPageUrl.php`
+- Command: `src/Console/Commands/PruneRedirectHitsCommand.php`
+- Tests: `packages/url-manager/tests`
+
+## Docs
+
+- [Package docs](docs/README.md)
+- [Overview](docs/overview.md)
+- [Improvement plan](docs/improvement-plan.md)
+- [Screenshots contract](docs/screenshots.json)
+
+## Testing
+
+```bash
+vendor/bin/pest packages/url-manager/tests --configuration=phpunit.xml
+```
+
+## Troubleshooting
+
+| Symptom                       | Likely cause                                                            | Check                                                                             | Fix                                                                                   |
+| ----------------------------- | ----------------------------------------------------------------------- | --------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
+| Redirect does not fire        | Rule is inactive, lower priority, invalid regex, or Core resolved first | Check `redirect_rules` status, match type, priority, and normalized source        | Activate/fix the rule and test `ResolveRedirectRuleAction`                            |
+| CSV import rejects rows       | Target host, status code, regex, or loop validation failed              | Preview with `PreviewRedirectRulesImportAction`                                   | Fix the CSV row and keep external targets inside the allowlist                        |
+| 404 opportunities are missing | Frontend middleware registry is not running the recorder                | Check `RecordNotFoundOpportunityMiddleware` registration and ignored paths config | Enable the frontend middleware contribution or call the Action from the host 404 flow |

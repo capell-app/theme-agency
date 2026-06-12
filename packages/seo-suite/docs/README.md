@@ -14,11 +14,6 @@ Start at the [package README](../README.md) when deciding whether to install thi
 | [Extending Seo Suite](extending-seo-suite.md)                   | Package extension points, registration paths, and focused tests.                   |
 | [Overview](overview.md)                                         | Package boundary, runtime surfaces, install notes, and first troubleshooting path. |
 | [Publish Gates](publish-gates.md)                               | Focused package workflow, setup, troubleshooting, or implementation details.       |
-| [Schema Templates](schema-templates.md)                         | Focused package workflow, setup, troubleshooting, or implementation details.       |
-| [Search Console](search-console.md)                             | Focused package workflow, setup, troubleshooting, or implementation details.       |
-| [Seo Intelligence](seo-intelligence.md)                         | Focused package workflow, setup, troubleshooting, or implementation details.       |
-| [Seo Meta And Discoverability](seo-meta-and-discoverability.md) | Focused package workflow, setup, troubleshooting, or implementation details.       |
-| [Sitemaps](sitemaps.md)                                         | Focused package workflow, setup, troubleshooting, or implementation details.       |
 
 ## Read Next
 

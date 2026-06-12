@@ -8,6 +8,18 @@ The directory remains `packages/block-library` for workspace history, but the pa
 
 Start with [Overview](docs/overview.md) for install impact, surfaces, and screenshot coverage. Screenshot targets for consuming-package diagnostics live in [docs/screenshots.json](docs/screenshots.json).
 
+## At A Glance
+
+| Field            | Value                                                                   |
+| ---------------- | ----------------------------------------------------------------------- |
+| Composer package | `capell-app/block-library`                                              |
+| Namespace        | `Capell\BlockLibrary`                                                   |
+| Surfaces         | Shared runtime, public Blade blocks, Filament Builder block definitions |
+| Provider         | `Capell\BlockLibrary\Providers\BlockLibraryServiceProvider`             |
+| Commands         | None                                                                    |
+| Migrations       | None                                                                    |
+| Extension point  | `BlockDefinitionProvider::TAG`                                          |
+
 ## Why It Helps Your Capell Workflow
 
 - Gives content packages a shared typed block language and default renderable block catalog without coupling to each other.
@@ -26,6 +38,20 @@ Start with [Overview](docs/overview.md) for install impact, surfaces, and screen
 - [overview.md](docs/overview.md)
 - [screenshots.json](docs/screenshots.json)
 
+## What It Adds
+
+- Shared block definition, variant, setting, fixture, screenshot, and compatibility DTOs.
+- A registry and manifest compiler for trusted block definitions.
+- Default foundation block catalog and public Blade views.
+- Filament Builder block contracts for packages that author block-editing surfaces.
+- Actions for registering providers, resolving definitions, and listing available blocks.
+
+## Boundaries
+
+Block Library owns trusted definitions and public-safe block rendering primitives. It does not own editor state, migrations, standalone admin resources, public routes, or consuming package business data.
+
+Public block views must be trusted package views. Do not resolve public view names from request data, database content, fixtures, or editor state.
+
 ## Current Surface
 
 | Surface                 | Status                                                                                                 |
@@ -39,6 +65,10 @@ Start with [Overview](docs/overview.md) for install impact, surfaces, and screen
 | Public extension points | `BlockDefinitionProvider::TAG`, `BlockRenderer`, `BlockRegistry`, block fixtures and demo providers    |
 | Default blocks          | Hero, content, CTA, accordion, FAQ, features, stats, pricing, tabs, table, team, testimonial, and more |
 | Tests                   | Package manifest, registry, provider registration, action resolution, catalog rendering, screenshots   |
+
+## Runtime Surface
+
+The table above is the package code map. The main implementation lives in `src/Contracts/`, `src/Support/`, `src/Actions/`, `src/Data/`, and `resources/views/blocks/`.
 
 ## Registering Blocks
 
@@ -91,3 +121,11 @@ Run package tests from the repository root:
 ```bash
 vendor/bin/pest packages/block-library/tests --configuration=phpunit.xml
 ```
+
+## Troubleshooting
+
+| Symptom                              | Likely cause                                                        | Check                                                                                      | Fix                                                                                               |
+| ------------------------------------ | ------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------- |
+| A block key resolves to the fallback | The provider was not tagged or the compiled manifest is stale       | Confirm the provider is tagged with `BlockDefinitionProvider::TAG` and rerun package tests | Register the provider from the package service provider, then rebuild the consuming app cache     |
+| Public block view cannot render      | The definition points at a missing or admin-only view               | Check the `view` value in the `BlockDefinitionData` returned by the provider               | Point the public definition at a package-owned public Blade view and keep admin previews separate |
+| Registry manifest is rejected        | A provider, fixture class, or view reference is no longer installed | Run `vendor/bin/pest packages/block-library/tests --configuration=phpunit.xml`             | Remove the stale definition or install the package that owns the referenced class/view            |

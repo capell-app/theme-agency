@@ -52,6 +52,39 @@
     "settings": [],
     "permissions": [],
     "capabilities": ["theme-agency", "theme-agency-frontend"],
+    "security": {
+        "riskTier": "low",
+        "publicSurface": {
+            "routeNames": [],
+            "auth": "none",
+            "csrfExemptRoutes": [],
+            "signedRoutes": [],
+            "tokenizedRoutes": [],
+            "webhookRoutes": [],
+            "throttledRoutes": []
+        },
+        "sensitiveData": {
+            "encryptedFields": [],
+            "hashedTokenFields": [],
+            "redactedOutputClasses": [],
+            "plaintextJustifications": []
+        },
+        "publicOutput": {
+            "cacheSafe": true,
+            "forbidAuthoringSurface": true,
+            "forbidSecrets": true,
+            "forbidPublicBladeQueries": true
+        },
+        "externalHttpClients": {
+            "requiresTimeouts": false,
+            "requiresSecretRedaction": false,
+            "clients": []
+        },
+        "adminSurface": {
+            "authorization": "none",
+            "permissions": []
+        }
+    },
     "performance": {
         "frontendRenderBudgetMs": 20,
         "adminQueryBudget": 0,
@@ -89,14 +122,29 @@
                 "caption": "Theme Agency premium theme card."
             },
             {
-                "path": "docs/screenshots/agency-homepage-layout.png",
-                "alt": "Agency theme homepage with bold campaign headline, dark gradient shell, and framed studio media.",
-                "caption": "Route-backed Agency homepage rendered through the package theme shell."
+                "path": "docs/screenshots/agency-campaign-layout.png",
+                "alt": "Theme Agency Agency Campaign Layout screenshot",
+                "caption": "Agency Campaign Layout rendered with the Theme Agency theme."
             },
             {
-                "path": "docs/screenshots/agency-lead-form-layout.png",
-                "alt": "Agency theme contact and lead-generation page with bold conversation copy and framed project media.",
-                "caption": "Agency lead-generation route captured from the seeded package demo."
+                "path": "docs/screenshots/agency-case-study-layout.png",
+                "alt": "Theme Agency Agency Case Study Layout screenshot",
+                "caption": "Agency Case Study Layout rendered with the Theme Agency theme."
+            },
+            {
+                "path": "docs/screenshots/agency-event-landing-layout.png",
+                "alt": "Theme Agency Agency Event Landing Layout screenshot",
+                "caption": "Agency Event Landing Layout rendered with the Theme Agency theme."
+            },
+            {
+                "path": "docs/screenshots/agency-homepage-layout.png",
+                "alt": "Theme Agency Agency Homepage Layout screenshot",
+                "caption": "Agency Homepage Layout rendered with the Theme Agency theme."
+            },
+            {
+                "path": "docs/screenshots/agency-insights-layout.png",
+                "alt": "Theme Agency Agency Insights Layout screenshot",
+                "caption": "Agency Insights Layout rendered with the Theme Agency theme."
             }
         ],
         "categories": ["frontend", "themes"]

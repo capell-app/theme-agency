@@ -75,6 +75,17 @@ Register package-specific contributors by tagging implementations of:
 
 Contributors must only return already-public content. Do not include draft state, editor field paths, model IDs, signed URLs, permissions, prompts, or internal package metadata.
 
+## Runtime Surface
+
+- Provider: `src/Providers/AgentDeliveryServiceProvider.php`
+- Controllers: `src/Http/Controllers/`
+- Actions: `src/Actions/`
+- Data objects: `src/Data/`
+- Contributor contracts: `src/Contracts/`
+- Registry/support: `src/Support/`
+- Site Discovery coverage source: `src/Support/SiteDiscovery/AgentDeliveryGeneratedOutputCoverageSource.php`
+- Tests: `packages/agent-delivery/tests`
+
 ## Docs
 
 - [Overview](docs/overview.md)
@@ -88,3 +99,11 @@ Run package tests from the repository root:
 ```bash
 vendor/bin/pest packages/agent-delivery/tests --configuration=phpunit.xml
 ```
+
+## Troubleshooting
+
+| Symptom                           | Likely cause                                                                                        | Check                                                                         | Fix                                                                     |
+| --------------------------------- | --------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------- | ----------------------------------------------------------------------- |
+| Manifest endpoint returns no page | URL is not published, disabled, excluded from agent delivery, or resolved for the wrong site/locale | Check the requested `url`, `locale`, page metadata, and public URL resolution | Publish/enable the page or remove the agent-delivery exclusion metadata |
+| Chunks omit package-specific data | No contributor is registered or the contributor returned private/empty content                      | Check implementations tagged with the contributor `TAG` constants             | Register a public-safe contributor and cover it with a package test     |
+| Response is cached unexpectedly   | Consumer or proxy ignored the package `ETag`/`Cache-Control` contract                               | Inspect response headers for the endpoint                                     | Respect the endpoint headers or clear the affected frontend/proxy cache |

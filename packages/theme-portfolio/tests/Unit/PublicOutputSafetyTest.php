@@ -78,6 +78,8 @@ it('keeps public Blade free of database query calls', function (): void {
         ->not->toContain('SiteLoader::')
         ->not->toContain('NavigationLoader::')
         ->not->toContain('CapellCore::isPackageInstalled')
+        ->not->toContain('Route::getRoutes()')
+        ->not->toContain('refreshNameLookups')
         ->not->toContain('->translation')
         ->not->toContain('->assets')
         ->not->toContain('->media->')

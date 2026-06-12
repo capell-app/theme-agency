@@ -28,7 +28,11 @@ describe('theme corporate capell.json manifest', function (): void {
 
         expect(collect($screenshots)->pluck('path')->all())->toBe([
             'docs/assets/marketplace/extension-card.jpg',
+            'docs/screenshots/corporate-article-layout.png',
+            'docs/screenshots/corporate-contact-layout.png',
+            'docs/screenshots/corporate-governance-layout.png',
             'docs/screenshots/corporate-homepage-layout.png',
+            'docs/screenshots/corporate-investor-event-layout.png',
         ]);
     });
 

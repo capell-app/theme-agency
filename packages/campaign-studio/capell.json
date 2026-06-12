@@ -13,7 +13,10 @@
         "bundle": "growth"
     },
     "namespace": "Capell\\CampaignStudio",
-    "surfaces": ["admin", "frontend"],
+    "surfaces": [
+        "admin",
+        "frontend"
+    ],
     "dependencies": {
         "requires": [
             "capell-app/admin",
@@ -23,7 +26,10 @@
             "capell-app/insights",
             "capell-app/layout-builder"
         ],
-        "supports": ["capell-app/experiments", "capell-app/seo-suite"],
+        "supports": [
+            "capell-app/experiments",
+            "capell-app/seo-suite"
+        ],
         "conflicts": []
     },
     "providers": {
@@ -32,7 +38,9 @@
         "runtime": [
             "Capell\\CampaignStudio\\Providers\\CampaignStudioServiceProvider"
         ],
-        "admin": ["Capell\\CampaignStudio\\Providers\\AdminServiceProvider"],
+        "admin": [
+            "Capell\\CampaignStudio\\Providers\\AdminServiceProvider"
+        ],
         "frontend": [
             "Capell\\CampaignStudio\\Providers\\FrontendServiceProvider"
         ]
@@ -155,25 +163,51 @@
     "security": {
         "riskTier": "standard",
         "publicSurface": {
-            "routeNames": ["conversions"],
+            "routeNames": [
+                "capell-campaigns.conversions",
+                "conversions"
+            ],
             "auth": "public",
-            "csrfExemptRoutes": ["conversions"],
+            "csrfExemptRoutes": [
+                "capell-campaigns.conversions",
+                "conversions"
+            ],
             "signedRoutes": [],
             "tokenizedRoutes": [],
             "webhookRoutes": [],
-            "throttledRoutes": ["conversions"]
+            "throttledRoutes": [
+                "capell-campaigns.conversions",
+                "conversions"
+            ]
+        },
+        "sensitiveData": {
+            "encryptedFields": [],
+            "hashedTokenFields": [],
+            "redactedOutputClasses": [],
+            "plaintextJustifications": []
         },
         "publicOutput": {
             "cacheSafe": true,
             "forbidAuthoringSurface": true,
             "forbidSecrets": true,
             "forbidPublicBladeQueries": true
+        },
+        "externalHttpClients": {
+            "requiresTimeouts": false,
+            "requiresSecretRedaction": false,
+            "clients": []
+        },
+        "adminSurface": {
+            "authorization": "policies",
+            "permissions": []
         }
     },
     "performance": {
         "frontendRenderBudgetMs": 20,
         "adminQueryBudget": 40,
-        "cacheTags": ["campaign-studio"],
+        "cacheTags": [
+            "campaign-studio"
+        ],
         "cacheSafety": {
             "cacheable": false,
             "variesBy": [
@@ -237,9 +271,16 @@
                 "caption": "Track top campaigns and landing pages from the dashboard"
             }
         ],
-        "categories": ["admin", "frontend", "growth"]
+        "categories": [
+            "admin",
+            "frontend",
+            "growth"
+        ]
     },
     "contributionTraceability": {
-        "deferredContributions": ["route", "scheduled-job"]
+        "deferredContributions": [
+            "route",
+            "scheduled-job"
+        ]
     }
 }

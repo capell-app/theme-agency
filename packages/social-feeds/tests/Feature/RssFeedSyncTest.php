@@ -119,6 +119,56 @@ it('does not follow rss feed redirects to unchecked targets', function (): void 
     Http::assertSentCount(1);
 });
 
+it('strips unsafe rss item links and media urls before caching feed items', function (): void {
+    Http::fake([
+        'https://example.test/feed.xml' => Http::response(<<<'XML'
+            <?xml version="1.0" encoding="UTF-8" ?>
+            <rss version="2.0" xmlns:media="http://search.yahoo.com/mrss/">
+                <channel>
+                    <title>Example Updates</title>
+                    <item>
+                        <title>Unsafe post</title>
+                        <link>javascript:alert(1)</link>
+                        <guid>unsafe-post</guid>
+                        <description>Unsafe post summary</description>
+                        <enclosure url="data:text/html;base64,PHNjcmlwdD5hbGVydCgxKTwvc2NyaXB0Pg==" type="image/png" />
+                        <media:content url="file:///etc/passwd" />
+                        <pubDate>Tue, 02 Jun 2026 10:00:00 GMT</pubDate>
+                    </item>
+                    <item>
+                        <title>Safe post</title>
+                        <link>https://example.test/posts/safe</link>
+                        <guid>safe-post</guid>
+                        <description>Safe post summary</description>
+                        <enclosure url="https://example.test/images/safe.jpg" type="image/jpeg" />
+                        <pubDate>Tue, 02 Jun 2026 11:00:00 GMT</pubDate>
+                    </item>
+                </channel>
+            </rss>
+            XML, 200, ['Content-Type' => 'application/rss+xml']),
+    ]);
+
+    $connection = SocialFeedConnection::query()->create([
+        'provider' => 'rss',
+        'name' => 'Example Updates',
+        'status' => SocialFeedConnectionStatus::Connected,
+        'credentials' => ['feed_url' => 'https://example.test/feed.xml'],
+    ]);
+
+    $synced = SyncSocialFeedConnectionAction::run($connection, 10);
+
+    $unsafeItem = SocialFeedItem::query()->where('external_id', 'unsafe-post')->firstOrFail();
+    $safeItem = SocialFeedItem::query()->where('external_id', 'safe-post')->firstOrFail();
+
+    expect($synced)->toBe(2)
+        ->and($unsafeItem->permalink)->toBeNull()
+        ->and($unsafeItem->media_url)->toBeNull()
+        ->and($unsafeItem->thumbnail_url)->toBeNull()
+        ->and($safeItem->permalink)->toBe('https://example.test/posts/safe')
+        ->and($safeItem->media_url)->toBe('https://example.test/images/safe.jpg')
+        ->and($safeItem->thumbnail_url)->toBe('https://example.test/images/safe.jpg');
+});
+
 it('blocks rss feed urls that target private hosts', function (): void {
     Http::fake();
 

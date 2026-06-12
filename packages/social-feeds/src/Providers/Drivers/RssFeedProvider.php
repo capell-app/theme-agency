@@ -221,16 +221,16 @@ final class RssFeedProvider implements SocialFeedProvider
         $items = [];
 
         foreach ($feed->channel->item as $item) {
-            $link = trim((string) $item->link);
+            $link = $this->sanitizePublicHttpUrl((string) $item->link);
             $guid = trim((string) $item->guid);
             $description = trim(strip_tags((string) $item->description));
             $mediaUrl = $this->firstMediaUrl($item);
 
             $items[] = new SocialFeedPostData(
-                externalId: $guid !== '' ? $guid : ($link !== '' ? $link : Str::uuid()->toString()),
-                type: $mediaUrl !== null ? SocialFeedItemType::Image : ($link !== '' ? SocialFeedItemType::Link : SocialFeedItemType::Text),
+                externalId: $guid !== '' ? $guid : ($link ?? Str::uuid()->toString()),
+                type: $mediaUrl !== null ? SocialFeedItemType::Image : ($link !== null ? SocialFeedItemType::Link : SocialFeedItemType::Text),
                 text: trim((string) $item->title) ?: $description,
-                permalink: $link !== '' ? $link : null,
+                permalink: $link,
                 mediaUrl: $mediaUrl,
                 thumbnailUrl: $mediaUrl,
                 authorName: trim((string) $item->author) ?: $fallbackAuthor,
@@ -273,7 +273,7 @@ final class RssFeedProvider implements SocialFeedProvider
         if (property_exists($item, 'enclosure') && $item->enclosure !== null) {
             $url = (string) $item->enclosure->attributes()['url'];
 
-            return $url !== '' ? $url : null;
+            return $this->sanitizePublicHttpUrl($url);
         }
 
         $media = $item->children('media', true);
@@ -281,7 +281,7 @@ final class RssFeedProvider implements SocialFeedProvider
         if (property_exists($media, 'content') && $media->content !== null) {
             $url = (string) $media->content->attributes()['url'];
 
-            return $url !== '' ? $url : null;
+            return $this->sanitizePublicHttpUrl($url);
         }
 
         return null;
@@ -292,12 +292,34 @@ final class RssFeedProvider implements SocialFeedProvider
         foreach ($entry->link as $link) {
             $href = (string) $link->attributes()['href'];
 
-            if ($href !== '') {
-                return $href;
+            $url = $this->sanitizePublicHttpUrl($href);
+
+            if ($url !== null) {
+                return $url;
             }
         }
 
         return null;
+    }
+
+    private function sanitizePublicHttpUrl(string $value): ?string
+    {
+        $url = trim($value);
+
+        if ($url === '' || preg_match('/[\x00-\x1F\x7F]/', $url) === 1) {
+            return null;
+        }
+
+        $parts = parse_url($url);
+
+        if (! is_array($parts)) {
+            return null;
+        }
+
+        $scheme = is_string($parts['scheme'] ?? null) ? strtolower($parts['scheme']) : null;
+        $host = is_string($parts['host'] ?? null) ? $parts['host'] : null;
+
+        return in_array($scheme, ['http', 'https'], true) && $host !== null && $host !== '' ? $url : null;
     }
 
     private function parseDate(string $value): ?CarbonImmutable

@@ -51,7 +51,10 @@ it('uses buyer-facing marketplace copy and committed real preview assets', funct
         ->and($marketplace['description'])->toBe('Theme Knowledge turns a Capell site into a polished documentation and help centre. It pairs a category sidebar, sticky table of contents, code-friendly prose, and breadcrumb trails with a prominent search experience and readable long-form typography, so visitors find answers fast. Resource libraries, author bios, topic hubs, and newsletter capture round out a full knowledge-marketing surface, with optional Blog, Search, and Newsletter integrations lighting up automatically when those packages are installed. Built on the Capell foundation theme with configurable colour tokens, dark-mode support, and accessible focus states.')
         ->and($screenshotPaths)->toBe([
             'docs/assets/marketplace/extension-card.jpg',
-            'docs/screenshots/knowledge-homepage-layout.png',
+            'docs/screenshots/frontend-page-rendered-with-knowledge-theme-dark.png',
+            'docs/screenshots/frontend-page-rendered-with-knowledge-theme.png',
+            'docs/screenshots/knowledge-author-bench-layout.png',
+            'docs/screenshots/knowledge-featured-content-layout.png',
             'docs/screenshots/knowledge-homepage-layout-dark.png',
         ]);
 

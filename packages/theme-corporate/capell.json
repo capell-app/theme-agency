@@ -54,6 +54,39 @@
     "settings": [],
     "permissions": [],
     "capabilities": ["theme-corporate", "theme-corporate-frontend"],
+    "security": {
+        "riskTier": "low",
+        "publicSurface": {
+            "routeNames": [],
+            "auth": "none",
+            "csrfExemptRoutes": [],
+            "signedRoutes": [],
+            "tokenizedRoutes": [],
+            "webhookRoutes": [],
+            "throttledRoutes": []
+        },
+        "sensitiveData": {
+            "encryptedFields": [],
+            "hashedTokenFields": [],
+            "redactedOutputClasses": [],
+            "plaintextJustifications": []
+        },
+        "publicOutput": {
+            "cacheSafe": true,
+            "forbidAuthoringSurface": true,
+            "forbidSecrets": true,
+            "forbidPublicBladeQueries": true
+        },
+        "externalHttpClients": {
+            "requiresTimeouts": false,
+            "requiresSecretRedaction": false,
+            "clients": []
+        },
+        "adminSurface": {
+            "authorization": "none",
+            "permissions": []
+        }
+    },
     "performance": {
         "frontendRenderBudgetMs": 20,
         "adminQueryBudget": 0,
@@ -91,9 +124,29 @@
                 "caption": "Theme Corporate theme card."
             },
             {
+                "path": "docs/screenshots/corporate-article-layout.png",
+                "alt": "Theme Corporate Corporate Article Layout screenshot",
+                "caption": "Corporate Article Layout rendered with the Theme Corporate theme."
+            },
+            {
+                "path": "docs/screenshots/corporate-contact-layout.png",
+                "alt": "Theme Corporate Corporate Contact Layout screenshot",
+                "caption": "Corporate Contact Layout rendered with the Theme Corporate theme."
+            },
+            {
+                "path": "docs/screenshots/corporate-governance-layout.png",
+                "alt": "Theme Corporate Corporate Governance Layout screenshot",
+                "caption": "Corporate Governance Layout rendered with the Theme Corporate theme."
+            },
+            {
                 "path": "docs/screenshots/corporate-homepage-layout.png",
-                "alt": "Theme Corporate homepage with formal governance headline, board-ready proof signals, and city office media.",
-                "caption": "Route-backed Corporate homepage rendered through the package theme shell."
+                "alt": "Theme Corporate Corporate Homepage Layout screenshot",
+                "caption": "Corporate Homepage Layout rendered with the Theme Corporate theme."
+            },
+            {
+                "path": "docs/screenshots/corporate-investor-event-layout.png",
+                "alt": "Theme Corporate Corporate Investor Event Layout screenshot",
+                "caption": "Corporate Investor Event Layout rendered with the Theme Corporate theme."
             }
         ],
         "categories": ["frontend", "themes"]

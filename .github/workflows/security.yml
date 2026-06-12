@@ -1,0 +1,106 @@
+name: Security
+
+on:
+  pull_request:
+    branches:
+      - 4.x
+    types: [opened, synchronize, reopened, ready_for_review]
+    paths:
+      - 'packages/**'
+      - 'tests/Packages/Security/**'
+      - 'composer.json'
+      - 'composer.lock'
+      - 'package.json'
+      - 'package-lock.json'
+      - 'packages/frontend-optimizer/package.json'
+      - 'packages/frontend-optimizer/package-lock.json'
+      - 'scripts/audit-package-security.php'
+      - 'scripts/scan-secrets.php'
+      - 'scripts/sync-package-security-manifests.php'
+      - '.github/dependabot.yml'
+      - '.github/workflows/*.yml'
+  schedule:
+    - cron: '32 4 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.head_ref || github.ref }}-security
+  cancel-in-progress: true
+
+jobs:
+  package-security:
+    name: Package Security
+    runs-on: ubuntu-latest
+    env:
+      COMPOSER_AUTH: '{"github-oauth": {"github.com": "${{ secrets.ACCESS_TOKEN }}"} }'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
+
+      - name: Checkout Capell monorepo
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
+        with:
+          repository: capell-app/capell
+          ref: 4.x
+          token: ${{ secrets.ACCESS_TOKEN }}
+          path: capell-4
+
+      - name: Setup Node
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@7c071dfe9dc99bdf297fa79cb49ea005b9fcadbc # v2
+        with:
+          php-version: 8.4
+          extensions: curl, dom, fileinfo, intl, json, libxml, mbstring, phar, simplexml, zip
+          tools: composer:v2
+          coverage: none
+          ini-values: memory_limit=-1
+
+      - name: Install Node dependencies
+        run: npm ci
+
+      - name: Install frontend optimizer Node dependencies
+        run: npm ci --prefix packages/frontend-optimizer
+
+      - name: Use Capell monorepo packages
+        run: |
+          php <<'PHP'
+          <?php
+
+          declare(strict_types=1);
+
+          $composerFile = 'composer.json';
+          $composer = json_decode((string) file_get_contents($composerFile), true, flags: JSON_THROW_ON_ERROR);
+
+          array_unshift($composer['repositories'], [
+              'type' => 'path',
+              'url' => 'capell-4/packages/*',
+              'options' => [
+                  'symlink' => false,
+              ],
+          ]);
+
+          file_put_contents(
+              $composerFile,
+              json_encode($composer, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR) . PHP_EOL,
+          );
+          PHP
+
+      - name: Install Composer dependencies
+        run: |
+          composer update --no-interaction --no-progress --ansi --optimize-autoloader --with-all-dependencies -W \
+            capell-app/admin \
+            capell-app/core \
+            capell-app/frontend \
+            capell-app/installer \
+            capell-app/marketplace
+
+      - name: Run security checks
+        run: composer security:all

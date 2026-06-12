@@ -87,7 +87,6 @@ NEON
       $composer["scripts"] ??= [];
       $composer["scripts"]["cs:fix"] = "vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.dist.php";
       $composer["scripts"]["cs:check"] = "vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.dist.php --dry-run --diff";
-      $composer["scripts"]["phpat"] = "vendor/bin/phpstan analyse --configuration=phpstan/phpat.neon";
       $composer["scripts"]["rector"] = "vendor/bin/rector process --no-progress-bar";
       file_put_contents($path, json_encode($composer, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR) . PHP_EOL);
     ' "$verify_root/composer.json"

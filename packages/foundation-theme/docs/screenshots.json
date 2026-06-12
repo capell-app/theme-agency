@@ -53,9 +53,14 @@
             "targetType": "frontend-url",
             "target": null,
             "required": true,
-            "notes": "Capture a public page with a seeded header-area widget to prove Foundation Theme renders the registered Layout Builder header area.",
+            "notes": "Capture a route-backed Foundation fixture with the layout contract evidence for the registered Layout Builder header area. Do not use the generic screenshot runner home page.",
             "useCase": "A maintainer verifies the registered Layout Builder header area renders through Foundation Theme.",
-            "screenshotPath": "packages/foundation-theme/docs/screenshots/foundation-theme-header-area.png"
+            "screenshotPath": "packages/foundation-theme/docs/screenshots/foundation-theme-header-area.png",
+            "scenario": "frontend-page",
+            "url": "/screenshot-fixtures/foundation-theme/foundation-homepage-layout",
+            "waitFor": ".theme-foundation",
+            "fullPage": true,
+            "colorSchemes": ["light"]
         },
         {
             "id": "foundation-homepage-layout",

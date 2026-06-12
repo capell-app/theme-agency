@@ -66,6 +66,39 @@
     "settings": [],
     "permissions": [],
     "capabilities": ["theme-education", "theme-education-frontend"],
+    "security": {
+        "riskTier": "low",
+        "publicSurface": {
+            "routeNames": [],
+            "auth": "none",
+            "csrfExemptRoutes": [],
+            "signedRoutes": [],
+            "tokenizedRoutes": [],
+            "webhookRoutes": [],
+            "throttledRoutes": []
+        },
+        "sensitiveData": {
+            "encryptedFields": [],
+            "hashedTokenFields": [],
+            "redactedOutputClasses": [],
+            "plaintextJustifications": []
+        },
+        "publicOutput": {
+            "cacheSafe": true,
+            "forbidAuthoringSurface": true,
+            "forbidSecrets": true,
+            "forbidPublicBladeQueries": true
+        },
+        "externalHttpClients": {
+            "requiresTimeouts": false,
+            "requiresSecretRedaction": false,
+            "clients": []
+        },
+        "adminSurface": {
+            "authorization": "none",
+            "permissions": []
+        }
+    },
     "performance": {
         "frontendRenderBudgetMs": 20,
         "adminQueryBudget": 0,
@@ -97,14 +130,29 @@
                 "caption": "Theme Education theme card."
             },
             {
-                "path": "docs/screenshots/education-homepage-layout.png",
-                "alt": "Theme Education homepage with enrolment-focused headline, programme proof cards, and campus learning media.",
-                "caption": "Route-backed Education homepage rendered through the package theme shell."
+                "path": "docs/screenshots/education-course-catalogue-layout.png",
+                "alt": "Theme Education Education Course Catalogue Layout screenshot",
+                "caption": "Education Course Catalogue Layout rendered with the Theme Education theme."
             },
             {
                 "path": "docs/screenshots/education-enrolment-layout.png",
-                "alt": "Theme Education enrolment CTA with learner pathway steps and application actions.",
-                "caption": "Route-backed Education enrolment call-to-action."
+                "alt": "Theme Education Education Enrolment Layout screenshot",
+                "caption": "Education Enrolment Layout rendered with the Theme Education theme."
+            },
+            {
+                "path": "docs/screenshots/education-events-layout.png",
+                "alt": "Theme Education Education Events Layout screenshot",
+                "caption": "Education Events Layout rendered with the Theme Education theme."
+            },
+            {
+                "path": "docs/screenshots/education-homepage-layout.png",
+                "alt": "Theme Education Education Homepage Layout screenshot",
+                "caption": "Education Homepage Layout rendered with the Theme Education theme."
+            },
+            {
+                "path": "docs/screenshots/education-instructors-layout.png",
+                "alt": "Theme Education Education Instructors Layout screenshot",
+                "caption": "Education Instructors Layout rendered with the Theme Education theme."
             }
         ],
         "categories": ["frontend", "themes"]

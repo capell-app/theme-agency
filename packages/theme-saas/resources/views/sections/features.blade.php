@@ -8,7 +8,7 @@
                     {{ $section->heading }}
                 </h2>
                 @if ($section->summary)
-                    <p class="mt-4 max-w-2xl text-lg">
+                    <p class="mt-4 max-w-2xl text-lg text-slate-700">
                         {{ $section->summary }}
                     </p>
                 @endif
@@ -39,7 +39,7 @@
                                     {{ $feature['type'] ?? $feature['icon'] ?? __('capell-theme-saas::generic.product_signal') }}
                                 </span>
                                 <span
-                                    class="rounded-full bg-blue-500 px-2.5 py-1 text-[0.65rem] font-black tracking-widest text-white uppercase"
+                                    class="rounded-full bg-blue-700 px-2.5 py-1 text-[0.65rem] font-black tracking-widest text-white uppercase"
                                 >
                                     {{ __('capell-theme-saas::generic.experiment_label') }}
                                 </span>
@@ -62,7 +62,7 @@
                                         {{ __('capell-theme-saas::generic.trial_step_label') }}
                                     </span>
                                     <span
-                                        class="rounded-md bg-blue-500 px-2 py-2 text-white"
+                                        class="rounded-md bg-blue-700 px-2 py-2 text-white"
                                     >
                                         {{ __('capell-theme-saas::generic.aha_step_label') }}
                                     </span>
@@ -92,10 +92,10 @@
                                 </span>
                             </div>
                         </div>
-                        <h3 class="text-xl font-black">
+                        <h3 class="text-xl font-black text-slate-950">
                             {{ $feature['title'] }}
                         </h3>
-                        <p class="mt-3 text-sm">
+                        <p class="mt-3 text-sm text-slate-700">
                             {{ $feature['description'] }}
                         </p>
                         <p

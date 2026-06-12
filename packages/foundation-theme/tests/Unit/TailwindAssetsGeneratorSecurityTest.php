@@ -76,12 +76,28 @@ test('generated css is a standalone tailwind entrypoint', function (): void {
 
 test('directory output paths generate a frontend css entrypoint', function (): void {
     $generator = new TailwindAssetsGenerator(new Filesystem);
+    $directory = storage_path('framework/testing/capell-foundation-theme-tailwind');
 
     $path = invokeFoundationThemeTailwindGeneratorMethod(
         $generator,
         'targetPath',
-        ['/var/www/app/resources/css/capell'],
+        [$directory],
     );
 
-    expect($path)->toBe('/var/www/app/resources/css/capell/frontend.css');
+    expect($path)->toBe($directory . '/frontend.css');
+});
+
+test('output paths outside the project are rejected', function (): void {
+    $outsidePath = dirname(base_path()) . '/capell-foundation-theme-tailwind-' . uniqid() . '.css';
+
+    expect(fn (): array => (new TailwindAssetsGenerator(new Filesystem))->generate($outsidePath))
+        ->toThrow(InvalidArgumentException::class, 'Tailwind output CSS path must stay inside the project.');
+});
+
+test('output path traversal is rejected', function (): void {
+    expect(fn (): mixed => invokeFoundationThemeTailwindGeneratorMethod(
+        new TailwindAssetsGenerator(new Filesystem),
+        'targetPath',
+        ['../capell-foundation-theme-tailwind-' . uniqid() . '.css'],
+    ))->toThrow(InvalidArgumentException::class, 'Tailwind output CSS path must stay inside the project.');
 });

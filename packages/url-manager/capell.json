@@ -107,6 +107,50 @@
         "frontend-redirect-resolver",
         "url-manager-admin"
     ],
+    "security": {
+        "riskTier": "sensitive",
+        "publicSurface": {
+            "routeNames": [],
+            "auth": "none",
+            "csrfExemptRoutes": [],
+            "signedRoutes": [],
+            "tokenizedRoutes": [],
+            "webhookRoutes": [],
+            "throttledRoutes": []
+        },
+        "sensitiveData": {
+            "encryptedFields": [],
+            "hashedTokenFields": [
+                "url_manager_not_found_opportunities.source_hash",
+                "url_manager_redirect_hits.ip_hash",
+                "url_manager_redirect_hits.user_agent_hash",
+                "url_manager_redirect_rules.source_hash",
+                "url_manager_redirect_rules.target_hash"
+            ],
+            "redactedOutputClasses": [],
+            "plaintextJustifications": []
+        },
+        "publicOutput": {
+            "cacheSafe": true,
+            "forbidAuthoringSurface": true,
+            "forbidSecrets": true,
+            "forbidPublicBladeQueries": true
+        },
+        "externalHttpClients": {
+            "requiresTimeouts": false,
+            "requiresSecretRedaction": false,
+            "clients": []
+        },
+        "adminSurface": {
+            "authorization": "permissions",
+            "permissions": [
+                "View:RedirectRulesPage",
+                "Manage:RedirectRules",
+                "View:NotFoundOpportunitiesPage",
+                "Manage:NotFoundOpportunities"
+            ]
+        }
+    },
     "performance": {
         "frontendRenderBudgetMs": 0,
         "adminQueryBudget": 40,

@@ -2,7 +2,7 @@
     <div class="grid gap-6 lg:grid-cols-[0.75fr_1.25fr] lg:items-end">
         <div>
             <p
-                class="text-sm font-black tracking-[0.24em] text-[var(--theme-primary)] uppercase"
+                class="text-sm font-black tracking-[0.24em] text-[var(--site-readable-primary)] uppercase"
             >
                 {{ __('capell-theme-agency::generic.campaign_system') }}
             </p>

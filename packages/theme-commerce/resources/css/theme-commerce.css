@@ -4,7 +4,7 @@
         --retail-muted: #5f6b61;
         --retail-line: #e8ddd0;
         --retail-primary: var(--theme-primary, #1f5f4a);
-        --retail-accent: var(--theme-accent, #e86f5c);
+        --retail-accent: var(--theme-accent, #b94735);
         --retail-surface: var(--theme-surface, #fffaf3);
         --retail-warm: color-mix(in srgb, var(--retail-surface) 82%, white);
         --retail-panel: color-mix(in srgb, var(--retail-surface) 88%, white);
@@ -37,7 +37,7 @@
         );
         --retail-accent: color-mix(
             in srgb,
-            var(--theme-accent, #e86f5c) 84%,
+            var(--theme-accent, #b94735) 84%,
             white
         );
         --retail-surface: #101913;

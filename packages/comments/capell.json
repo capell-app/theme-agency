@@ -13,7 +13,10 @@
         "bundle": "comments"
     },
     "namespace": "Capell\\Comments",
-    "surfaces": ["admin", "frontend"],
+    "surfaces": [
+        "admin",
+        "frontend"
+    ],
     "dependencies": {
         "requires": [
             "capell-app/admin",
@@ -30,9 +33,15 @@
     "providers": {
         "metadata": [],
         "install": [],
-        "runtime": ["Capell\\Comments\\Providers\\CommentsServiceProvider"],
-        "admin": ["Capell\\Comments\\Providers\\AdminServiceProvider"],
-        "frontend": ["Capell\\Comments\\Providers\\FrontendServiceProvider"]
+        "runtime": [
+            "Capell\\Comments\\Providers\\CommentsServiceProvider"
+        ],
+        "admin": [
+            "Capell\\Comments\\Providers\\AdminServiceProvider"
+        ],
+        "frontend": [
+            "Capell\\Comments\\Providers\\FrontendServiceProvider"
+        ]
     },
     "contributes": [
         {
@@ -77,7 +86,9 @@
         "requestReplyNotification": "Capell\\Comments\\Actions\\RequestCommentReplyNotificationAction",
         "disableReplyNotifications": "Capell\\Comments\\Actions\\DisableCommentAuthorReplyNotificationsAction"
     },
-    "settings": ["Capell\\Comments\\Settings\\CommentSettings"],
+    "settings": [
+        "Capell\\Comments\\Settings\\CommentSettings"
+    ],
     "permissions": [],
     "capabilities": [
         "comments",
@@ -93,6 +104,10 @@
         "riskTier": "standard",
         "publicSurface": {
             "routeNames": [
+                "capell-comments.reply-notifications.disable",
+                "capell-comments.thread",
+                "capell-comments.verify",
+                "capell-comments.verify.store",
                 "thread",
                 "verify",
                 "verify.store",
@@ -102,6 +117,9 @@
             "csrfExemptRoutes": [],
             "signedRoutes": [],
             "tokenizedRoutes": [
+                "capell-comments.reply-notifications.disable",
+                "capell-comments.verify",
+                "capell-comments.verify.store",
                 "verify",
                 "verify.store",
                 "reply-notifications.disable"
@@ -114,20 +132,50 @@
                 "reply-notifications.disable"
             ]
         },
+        "sensitiveData": {
+            "encryptedFields": [
+                "Capell\\Comments\\Models\\CommentAuthor::$email",
+                "Capell\\Comments\\Models\\CommentAuthor::$name"
+            ],
+            "hashedTokenFields": [
+                "comment_authors.email_hash",
+                "comment_reactions.visitor_ip_hash",
+                "comment_reactions.visitor_user_agent_hash",
+                "comment_tokens.token_hash",
+                "comments.visitor_ip_hash",
+                "comments.visitor_user_agent_hash"
+            ],
+            "redactedOutputClasses": [],
+            "plaintextJustifications": []
+        },
         "publicOutput": {
             "cacheSafe": true,
             "forbidAuthoringSurface": true,
             "forbidSecrets": true,
             "forbidPublicBladeQueries": true
+        },
+        "externalHttpClients": {
+            "requiresTimeouts": false,
+            "requiresSecretRedaction": false,
+            "clients": []
+        },
+        "adminSurface": {
+            "authorization": "policies",
+            "permissions": []
         }
     },
     "performance": {
         "frontendRenderBudgetMs": 20,
         "adminQueryBudget": 40,
-        "cacheTags": ["comments"],
+        "cacheTags": [
+            "comments"
+        ],
         "cacheSafety": {
             "cacheable": false,
-            "variesBy": ["site", "locale"],
+            "variesBy": [
+                "site",
+                "locale"
+            ],
             "sensitiveOutput": false,
             "invalidationSources": [
                 {
@@ -142,7 +190,10 @@
                 },
                 {
                     "model": "Capell\\Comments\\Models\\CommentReaction",
-                    "events": ["created", "deleted"]
+                    "events": [
+                        "created",
+                        "deleted"
+                    ]
                 }
             ],
             "queueInvalidation": true
@@ -192,7 +243,11 @@
                 "caption": "Public thread capture"
             }
         ],
-        "categories": ["admin", "engagement", "frontend"]
+        "categories": [
+            "admin",
+            "engagement",
+            "frontend"
+        ]
     },
     "contributionTraceability": {
         "deferredContributions": [

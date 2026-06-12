@@ -239,7 +239,11 @@ function runPackageCommands(repoPath, appPath, only, packages = null) {
 
             const result = spawnSync(
                 'php',
-                commandArgs(command, commands[paramsKey]),
+                [
+                    '-d',
+                    'memory_limit=-1',
+                    ...commandArgs(command, commands[paramsKey]),
+                ],
                 {
                     cwd: appPath,
                     env: process.env,
@@ -306,10 +310,17 @@ function preflightRunnerArgs(repoPath, appPath) {
 
 function main() {
     const argv = process.argv.slice(2)
+    const defaultRunnerPath = path.resolve(
+        process.cwd(),
+        '../capell-screenshot-runner',
+    )
     const configuredRunnerPath = readOption(
         argv,
         '--runner',
-        process.env.CAPELL_SCREENSHOT_RUNNER_PATH ?? '',
+        process.env.CAPELL_SCREENSHOT_RUNNER_PATH ||
+            (fs.existsSync(path.join(defaultRunnerPath, 'src/cli.mjs'))
+                ? defaultRunnerPath
+                : ''),
     )
     const runnerPath = path.resolve(configuredRunnerPath)
     const repoPath = path.resolve(

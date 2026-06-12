@@ -74,7 +74,7 @@ function foundationThemeCoverageView(mixed $view): View
 }
 
 it('generates tailwind assets from configured app sources and packages', function (): void {
-    $targetPath = sys_get_temp_dir() . '/capell-foundation-theme-coverage/frontend.css';
+    $targetPath = storage_path('framework/testing/capell-foundation-theme-coverage/frontend.css');
 
     config([
         'capell-foundation-theme.tailwind' => [
@@ -133,7 +133,7 @@ it('collects default tailwind assets without writing files', function (): void {
 });
 
 it('generates tailwind assets from installed vendor assets and validates configured sources', function (): void {
-    $targetDirectory = sys_get_temp_dir() . '/capell-foundation-theme-vendor-assets';
+    $targetDirectory = storage_path('framework/testing/capell-foundation-theme-vendor-assets');
     $targetPath = $targetDirectory . '/frontend.css';
     $matchedSource = $targetDirectory . '/views/example.blade.php';
     $packageName = 'vendor/foundation-theme-coverage';
@@ -184,7 +184,7 @@ it('generates tailwind assets from installed vendor assets and validates configu
 });
 
 it('runs foundation tailwind command report generate and package-change listener paths', function (): void {
-    $targetPath = sys_get_temp_dir() . '/capell-foundation-theme-command/frontend.css';
+    $targetPath = storage_path('framework/testing/capell-foundation-theme-command/frontend.css');
 
     $this->artisan(GenerateTailwindAssetsCommand::class, ['--report' => true])
         ->assertSuccessful()

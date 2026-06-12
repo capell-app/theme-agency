@@ -13,7 +13,10 @@
         "bundle": "foundation"
     },
     "namespace": "Capell\\ContentSections",
-    "surfaces": ["admin", "frontend"],
+    "surfaces": [
+        "admin",
+        "frontend"
+    ],
     "dependencies": {
         "requires": [
             "capell-app/admin",
@@ -48,7 +51,9 @@
             "type": "configurator",
             "class": "Capell\\ContentSections\\Manifest\\ContentSectionsPackageContribution",
             "configuratorEnum": "Capell\\ContentSections\\Enums\\SectionConfiguratorEnum",
-            "groups": ["Sections"]
+            "groups": [
+                "Sections"
+            ]
         },
         {
             "type": "asset",
@@ -70,13 +75,18 @@
         {
             "type": "frontend-component",
             "class": "Capell\\ContentSections\\Manifest\\ContentSectionsPackageContribution",
-            "keys": ["section.widget", "section.team-member"]
+            "keys": [
+                "section.widget",
+                "section.team-member"
+            ]
         }
     ],
     "database": {
         "migrations": true,
         "settings": false,
-        "requiredTables": ["sections"]
+        "requiredTables": [
+            "sections"
+        ]
     },
     "commands": {
         "install": null,
@@ -115,6 +125,8 @@
         "riskTier": "standard",
         "publicSurface": {
             "routeNames": [
+                "capell-content-sections.screenshot-fixtures.section-selector-modal",
+                "capell-content-sections.screenshot-fixtures.section-widget-gallery",
                 "screenshot-fixtures.section-selector-modal",
                 "screenshot-fixtures.section-widget-gallery"
             ],
@@ -125,20 +137,53 @@
             "webhookRoutes": [],
             "throttledRoutes": []
         },
+        "sensitiveData": {
+            "encryptedFields": [],
+            "hashedTokenFields": [],
+            "redactedOutputClasses": [],
+            "plaintextJustifications": []
+        },
         "publicOutput": {
             "cacheSafe": false,
             "forbidAuthoringSurface": true,
             "forbidSecrets": true,
             "forbidPublicBladeQueries": true
+        },
+        "externalHttpClients": {
+            "requiresTimeouts": false,
+            "requiresSecretRedaction": false,
+            "clients": []
+        },
+        "adminSurface": {
+            "authorization": "permissions",
+            "permissions": [
+                "ViewAny:Section",
+                "View:Section",
+                "Create:Section",
+                "Update:Section",
+                "Delete:Section",
+                "DeleteAny:Section",
+                "Restore:Section",
+                "RestoreAny:Section",
+                "ForceDelete:Section",
+                "ForceDeleteAny:Section",
+                "Replicate:Section",
+                "Reorder:Section"
+            ]
         }
     },
     "performance": {
         "frontendRenderBudgetMs": 20,
         "adminQueryBudget": 40,
-        "cacheTags": ["content-sections"],
+        "cacheTags": [
+            "content-sections"
+        ],
         "cacheSafety": {
             "cacheable": true,
-            "variesBy": [],
+            "variesBy": [
+                "site",
+                "locale"
+            ],
             "sensitiveOutput": false,
             "invalidationSources": [
                 {
@@ -199,7 +244,11 @@
                 "caption": "The reusable sections index is also captured in Capell Admin dark mode for marketplace parity."
             }
         ],
-        "categories": ["admin", "foundation", "frontend"]
+        "categories": [
+            "admin",
+            "foundation",
+            "frontend"
+        ]
     },
     "contributionTraceability": {
         "deferredContributions": [

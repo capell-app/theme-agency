@@ -20,6 +20,8 @@ class SyncSubscriberToProviderAction
 {
     use AsAction;
 
+    public function __construct(private readonly RedactNewsletterProviderErrorMessageAction $redactProviderErrorMessage = new RedactNewsletterProviderErrorMessageAction) {}
+
     public function handle(SyncAttempt $syncAttempt): SyncAttempt
     {
         if (! $this->claimForSync($syncAttempt)) {
@@ -55,11 +57,17 @@ class SyncSubscriberToProviderAction
                 ),
             );
         } catch (Throwable $throwable) {
-            return $this->fail($syncAttempt, $throwable->getMessage());
+            return $this->fail(
+                $syncAttempt,
+                $this->redactProviderErrorMessage->handle($throwable->getMessage(), $connection, $subscriber),
+            );
         }
 
         if (! $result->successful) {
-            return $this->fail($syncAttempt, $result->errorMessage ?? 'Provider sync failed.');
+            return $this->fail(
+                $syncAttempt,
+                $this->redactProviderErrorMessage->handle($result->errorMessage ?? 'Provider sync failed.', $connection, $subscriber),
+            );
         }
 
         ProviderSubscriber::query()->updateOrCreate([

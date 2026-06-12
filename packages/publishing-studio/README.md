@@ -182,12 +182,7 @@ Screenshots are generated from [docs/screenshots.json](docs/screenshots.json) du
 
 - [docs index](docs/README.md)
 - [credits-and-acknowledgements.md](docs/credits-and-acknowledgements.md)
-- [extending-publishing-studio.md](docs/extending-publishing-studio.md)
 - [overview.md](docs/overview.md)
-- [page-creation-and-approval-flow.md](docs/page-creation-and-approval-flow.md)
-- [page-drafts-and-publishing.md](docs/page-drafts-and-publishing.md)
-- [publishing-studio-draftable-contract.md](docs/publishing-studio-draftable-contract.md)
-- [publishing-studio.md](docs/publishing-studio.md)
 - [publishing-workflow.md](docs/publishing-workflow.md)
 - [release-workspaces.md](docs/release-workspaces.md)
 

@@ -20,37 +20,6 @@
             "useCase": "An editor chooses between a temporary unsaved preview and the saved public page.",
             "screenshotPath": "packages/filament-peek/docs/screenshots/page-edit-preview-actions.png",
             "darkScreenshotPath": "packages/filament-peek/docs/screenshots/page-edit-preview-actions-dark.png"
-        },
-        {
-            "id": "signed-unsaved-page-preview-modal",
-            "title": "Signed unsaved page preview modal.",
-            "package": "filament-peek",
-            "surface": "admin",
-            "scenario": "admin-form",
-            "targetType": "admin-surface",
-            "target": "PageResource/EditPage",
-            "url": "/pages/{first-record}/edit",
-            "click": "button[title=\"Preview current unsaved changes without saving\"], button:has-text(\"Changes\")",
-            "waitFor": ".fi-modal-window iframe, [role=\"dialog\"] iframe",
-            "required": false,
-            "notes": "Optional until the Capell screenshot runner supports sequential clicks inside grouped Filament actions. The current Capell UI keeps `Changes` inside the visible `Preview` action-group dropdown, so the runner must first open that group and then click the hidden action.",
-            "useCase": "An editor reviews temporary Page changes before saving them through the real Peek modal.",
-            "screenshotPath": "packages/filament-peek/docs/screenshots/signed-unsaved-page-preview-modal.png"
-        },
-        {
-            "id": "expired-preview-error",
-            "title": "Expired preview error.",
-            "package": "filament-peek",
-            "surface": "frontend",
-            "targetType": "frontend-route",
-            "target": "capell-filament-peek.preview",
-            "scenario": "frontend-page",
-            "url": "/capell-filament-peek/preview/missing-token",
-            "waitFor": "body",
-            "required": false,
-            "notes": "Optional until the Capell screenshot runner can mint temporary signed route URLs during capture. The state must show the safe expired/missing snapshot error without exposing cache keys or internal exception details.",
-            "useCase": "An editor understands that an old temporary preview link has expired.",
-            "screenshotPath": "packages/filament-peek/docs/screenshots/expired-preview-error.png"
         }
     ]
 }

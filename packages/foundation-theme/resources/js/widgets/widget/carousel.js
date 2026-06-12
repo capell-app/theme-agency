@@ -94,6 +94,12 @@ function parseBreakpoints(node) {
     }
 }
 
+function readBreakpointsBase(node) {
+    const value = readAttribute(node, ['data-carousel-breakpoints-base'])
+
+    return value === 'container' ? 'container' : 'window'
+}
+
 function resolveCarouselId(swiperNode) {
     const existingCarouselId = readAttribute(swiperNode, ['data-carousel-id'])
 
@@ -163,6 +169,7 @@ export function parseCarouselOptions(swiperNode) {
             ]) ?? true,
         autoplayEnabled,
         breakpoints: parseBreakpoints(swiperNode),
+        breakpointsBase: readBreakpointsBase(swiperNode),
         carouselId: resolveCarouselId(swiperNode),
         effect: effectIsFade ? 'fade' : effect,
         fadeEnabled: effectIsFade,
@@ -370,6 +377,7 @@ export function buildSwiperSettings(swiperNode, options, controls, signal) {
 
     if (options.breakpoints) {
         settings.breakpoints = options.breakpoints
+        settings.breakpointsBase = options.breakpointsBase
     }
 
     if (options.rows > 1) {

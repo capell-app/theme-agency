@@ -68,7 +68,7 @@ final class ProcessStripeWebhookEventAction
             $event->forceFill([
                 'status' => PaymentWebhookEventStatus::Failed->value,
                 'failed_at' => CarbonImmutable::now(),
-                'error' => $throwable->getMessage(),
+                'error' => RedactPaymentErrorMessageAction::run($throwable),
             ])->save();
 
             throw $throwable;

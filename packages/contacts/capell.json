@@ -126,6 +126,58 @@
         "contacts-privacy-anonymization",
         "contacts-tags"
     ],
+    "security": {
+        "riskTier": "sensitive",
+        "publicSurface": {
+            "routeNames": [],
+            "auth": "none",
+            "csrfExemptRoutes": [],
+            "signedRoutes": [],
+            "tokenizedRoutes": [],
+            "webhookRoutes": [],
+            "throttledRoutes": []
+        },
+        "sensitiveData": {
+            "encryptedFields": [
+                "Capell\\Contacts\\Models\\Contact::$display_name",
+                "Capell\\Contacts\\Models\\Contact::$email",
+                "Capell\\Contacts\\Models\\Contact::$first_name",
+                "Capell\\Contacts\\Models\\Contact::$last_name",
+                "Capell\\Contacts\\Models\\Contact::$phone",
+                "Capell\\Contacts\\Models\\Contact::$profile",
+                "Capell\\Contacts\\Models\\Contact::$source_identifier",
+                "Capell\\Contacts\\Models\\ContactActivity::$payload",
+                "Capell\\Contacts\\Models\\ContactActivity::$summary",
+                "Capell\\Contacts\\Models\\Lead::$context",
+                "Capell\\Contacts\\Models\\Organisation::$profile"
+            ],
+            "hashedTokenFields": [],
+            "redactedOutputClasses": [],
+            "plaintextJustifications": []
+        },
+        "publicOutput": {
+            "cacheSafe": false,
+            "forbidAuthoringSurface": true,
+            "forbidSecrets": true,
+            "forbidPublicBladeQueries": true
+        },
+        "externalHttpClients": {
+            "requiresTimeouts": false,
+            "requiresSecretRedaction": false,
+            "clients": []
+        },
+        "adminSurface": {
+            "authorization": "permissions",
+            "permissions": [
+                "ExportPrivacy:Contact",
+                "AnonymizePrivacy:Contact",
+                "View:Contact",
+                "View:Organisation",
+                "View:Lead",
+                "View:ContactActivity"
+            ]
+        }
+    },
     "performance": {
         "frontendRenderBudgetMs": 0,
         "adminQueryBudget": 40,

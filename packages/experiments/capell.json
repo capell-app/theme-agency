@@ -121,6 +121,56 @@
         "personalization-payloads",
         "cache-variation-metadata"
     ],
+    "security": {
+        "riskTier": "standard",
+        "publicSurface": {
+            "routeNames": [],
+            "auth": "none",
+            "csrfExemptRoutes": [],
+            "signedRoutes": [],
+            "tokenizedRoutes": [],
+            "webhookRoutes": [],
+            "throttledRoutes": []
+        },
+        "sensitiveData": {
+            "encryptedFields": [],
+            "hashedTokenFields": [],
+            "redactedOutputClasses": [],
+            "plaintextJustifications": []
+        },
+        "publicOutput": {
+            "cacheSafe": true,
+            "forbidAuthoringSurface": true,
+            "forbidSecrets": true,
+            "forbidPublicBladeQueries": true
+        },
+        "externalHttpClients": {
+            "requiresTimeouts": false,
+            "requiresSecretRedaction": false,
+            "clients": []
+        },
+        "adminSurface": {
+            "authorization": "permissions",
+            "permissions": [
+                "View:Experiment",
+                "Create:Experiment",
+                "Update:Experiment",
+                "Delete:Experiment",
+                "View:ExperimentVariant",
+                "Create:ExperimentVariant",
+                "Update:ExperimentVariant",
+                "Delete:ExperimentVariant",
+                "View:ExperimentGoal",
+                "Create:ExperimentGoal",
+                "Update:ExperimentGoal",
+                "Delete:ExperimentGoal",
+                "View:ExperimentAudienceRule",
+                "Create:ExperimentAudienceRule",
+                "Update:ExperimentAudienceRule",
+                "Delete:ExperimentAudienceRule"
+            ]
+        }
+    },
     "performance": {
         "frontendRenderBudgetMs": 20,
         "adminQueryBudget": 40,

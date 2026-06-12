@@ -206,7 +206,7 @@ Then run the affected package suites and any shared Foundation or Layout Builder
 vendor/bin/pest packages/foundation-theme/tests packages/layout-builder/tests --configuration=phpunit.xml
 ```
 
-Use `composer preflight` before committing broader theme/runtime changes.
+Use `COMPOSER=composer.local.json composer preflight` before committing broader theme/runtime changes.
 
 ## First-Party Theme Catalogue
 

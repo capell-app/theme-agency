@@ -6,12 +6,59 @@
     $sectionHash = substr(hash('xxh128', (string) $section->heading), 0, 10);
     $carouselId = 'theme-gallery-' . $sectionHash;
     $spotlightId = 'theme-spotlight-' . $sectionHash;
+    $responsiveImageSrcset = static function (string $url): ?string {
+        if (! str_contains($url, 'images.unsplash.com')) {
+            return null;
+        }
+
+        return collect([480, 800, 1200, 1600])
+            ->map(static function (int $width) use ($url): string {
+                $imageUrl = preg_replace('/([?&])w=\d+/', '$1w=' . $width, $url);
+                $imageUrl ??= $url . (str_contains($url, '?') ? '&' : '?') . 'w=' . $width;
+
+                return $imageUrl . ' ' . $width . 'w';
+            })
+            ->implode(', ');
+    };
 @endphp
 
 <section
     id="{{ $sectionId }}"
     class="theme-content-listing border-b border-slate-200/80 bg-[var(--theme-surface)]"
 >
+    <style>
+        .theme-content-listing {
+            --theme-content-accent: color-mix(
+                in srgb,
+                var(--theme-primary, #2563eb) 54%,
+                var(--theme-foreground, #0f172a)
+            );
+            --theme-content-heading: var(--theme-foreground, #0f172a);
+            --theme-content-muted: color-mix(
+                in srgb,
+                var(--theme-foreground, #0f172a) 72%,
+                var(--theme-surface, #ffffff)
+            );
+        }
+
+        .theme-content-listing [data-theme-section-label] {
+            color: var(--theme-content-accent);
+        }
+
+        .theme-content-listing [data-theme-section-heading] {
+            color: var(--theme-content-heading);
+        }
+
+        .theme-content-listing [data-theme-section-summary] {
+            color: var(--theme-content-muted);
+        }
+
+        .theme-content-listing [data-theme-pathway-badge] {
+            background: var(--theme-primary, #2563eb);
+            color: #fff;
+        }
+    </style>
+
     <div class="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:py-16">
         <div
             class="mb-8 flex flex-col gap-3 md:flex-row md:items-end md:justify-between"
@@ -19,6 +66,7 @@
             <div>
                 <p
                     class="mb-3 text-xs font-semibold tracking-[0.16em] text-[var(--theme-primary)] uppercase"
+                    data-theme-section-label
                 >
                     @if ($isGallery)
                         {{ __('capell-foundation-theme::generic.gallery') }}
@@ -32,6 +80,7 @@
                 </p>
                 <h2
                     class="text-3xl leading-tight font-[var(--theme-heading-font)] font-semibold text-slate-950 sm:text-4xl"
+                    data-theme-section-heading
                 >
                     {{ $section->heading }}
                 </h2>
@@ -39,6 +88,7 @@
             @if ($section->summary)
                 <p
                     class="max-w-2xl text-sm leading-7 text-slate-600 sm:text-base"
+                    data-theme-section-summary
                 >
                     {{ $section->summary }}
                 </p>
@@ -66,7 +116,7 @@
                             var(--theme-surface) 88%,
                             white
                         );
-                        color: #475569;
+                        color: var(--theme-content-muted);
                     }
                 </style>
 
@@ -107,7 +157,7 @@
 
                 <div class="min-w-0">
                     @foreach ($section->items as $item)
-                        <article
+                        <div
                             id="{{ $spotlightId }}-panel-{{ $loop->index }}"
                             class="overflow-hidden rounded-[var(--theme-radius-value)] border border-slate-200 bg-white shadow-xl shadow-slate-950/8"
                             role="tabpanel"
@@ -119,7 +169,13 @@
                             @if (! empty($item['image']))
                                 <img
                                     src="{{ $item['image'] }}"
+                                    @if ($responsiveImageSrcset((string) $item['image']) !== null) srcset="{{ $responsiveImageSrcset((string) $item['image']) }}" @endif
                                     alt=""
+                                    width="1200"
+                                    height="675"
+                                    loading="lazy"
+                                    decoding="async"
+                                    sizes="(min-width: 1024px) 48vw, 92vw"
                                     class="aspect-[16/9] w-full object-cover"
                                 />
                             @endif
@@ -152,7 +208,7 @@
                                     </a>
                                 @endif
                             </div>
-                        </article>
+                        </div>
                     @endforeach
                 </div>
             </div>
@@ -219,7 +275,13 @@
                                     @if (! empty($item['image']))
                                         <img
                                             src="{{ $item['image'] }}"
+                                            @if ($responsiveImageSrcset((string) $item['image']) !== null) srcset="{{ $responsiveImageSrcset((string) $item['image']) }}" @endif
                                             alt=""
+                                            width="1200"
+                                            height="900"
+                                            loading="lazy"
+                                            decoding="async"
+                                            sizes="(min-width: 1080px) 31vw, (min-width: 760px) 46vw, 92vw"
                                             class="aspect-[4/3] w-full object-cover transition duration-500 group-hover:scale-[1.03]"
                                         />
                                     @endif
@@ -316,6 +378,7 @@
                             <span>
                                 <span
                                     class="mb-3 inline-flex rounded-full bg-[var(--theme-surface)] px-3 py-1 text-xs font-semibold tracking-[0.12em] text-[var(--theme-primary)] uppercase"
+                                    data-theme-pathway-badge
                                 >
                                     {{ $item['type'] ?? str_pad((string) $loop->iteration, 2, '0', STR_PAD_LEFT) }}
                                 </span>
@@ -363,7 +426,13 @@
                         @if (! empty($item['image']))
                             <img
                                 src="{{ $item['image'] }}"
+                                @if ($responsiveImageSrcset((string) $item['image']) !== null) srcset="{{ $responsiveImageSrcset((string) $item['image']) }}" @endif
                                 alt=""
+                                width="1200"
+                                height="720"
+                                loading="lazy"
+                                decoding="async"
+                                sizes="(min-width: 768px) 31vw, 92vw"
                                 class="aspect-[5/3] w-full object-cover transition duration-300 group-hover:scale-[1.02]"
                             />
                         @endif

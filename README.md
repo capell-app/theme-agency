@@ -17,35 +17,38 @@ Each package README follows the same shape:
 
 ## Find A Package By Job
 
-| Job                                            | Start with                                                                                                                                                                                                     | Why                                                                                    |
-| ---------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
-| Build editable pages and reusable layouts      | [layout-builder](packages/layout-builder/README.md), [content-sections](packages/content-sections/README.md), [hero](packages/hero/README.md)                                                                  | Owns layout containers, elements, content sections, and starter visual content.        |
-| Publish articles, archives, and tagged content | [blog](packages/blog/README.md), [tags](packages/tags/README.md), [site-discovery](packages/site-discovery/README.md)                                                                                          | Adds article workflow, taxonomy, public archives, and sitemap discovery.               |
-| Add campaign and conversion reporting          | [campaign-studio](packages/campaign-studio/README.md), [insights](packages/insights/README.md), [ga4-reports](packages/ga4-reports/README.md)                                                                  | Connects landing pages, goals, first-party events, and GA4 snapshots.                  |
-| Improve technical SEO and search               | [seo-suite](packages/seo-suite/README.md), [search](packages/search/README.md), [site-discovery](packages/site-discovery/README.md)                                                                            | Covers metadata, structured data, sitemaps, public search, and discoverability checks. |
-| Expose public content to agents                | [agent-delivery](packages/agent-delivery/README.md), [site-discovery](packages/site-discovery/README.md), [seo-suite](packages/seo-suite/README.md)                                                            | Adds public-safe manifests, semantic chunks, and discovery outputs.                    |
-| Prepare demos, screenshots, and fixture sites  | [demo-kit](packages/demo-kit/README.md), [foundation-theme](packages/foundation-theme/README.md)                                                                                                               | Generates repeatable demo sites, package demo content, and frontend theme output.      |
-| Preview unsaved page edits                     | [filament-peek](packages/filament-peek/README.md), [frontend-authoring](packages/frontend-authoring/README.md), [publishing-studio](packages/publishing-studio/README.md)                                      | Separates temporary editor preview state from saved public pages.                      |
-| Add public comments and moderation             | [comments](packages/comments/README.md), [blog](packages/blog/README.md), [email-studio](packages/email-studio/README.md)                                                                                      | Adds moderated frontend discussion and admin review tools.                             |
-| Tighten admin operations and access controls   | [diagnostics](packages/diagnostics/README.md), [dashboard-reports](packages/dashboard-reports/README.md), [password-policy](packages/password-policy/README.md), [login-audit](packages/login-audit/README.md) | Adds health checks, dashboard signals, password enforcement, and login visibility.     |
+| Job                                            | Start with                                                                                                                                                                                                     | Why                                                                                |
+| ---------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
+| Build editable pages and reusable layouts      | [layout-builder](packages/layout-builder/README.md), [content-sections](packages/content-sections/README.md), [hero](packages/hero/README.md)                                                                  | Owns layout containers, elements, content sections, and starter visual content.    |
+| Publish articles, archives, and tagged content | [blog](packages/blog/README.md), [tags](packages/tags/README.md), [site-discovery](packages/site-discovery/README.md)                                                                                          | Adds article workflow, taxonomy, public archives, and sitemap discovery.           |
+| Add campaign and conversion reporting          | [campaign-studio](packages/campaign-studio/README.md), [insights](packages/insights/README.md), [ga4-reports](packages/ga4-reports/README.md)                                                                  | Connects landing pages, goals, first-party events, and GA4 snapshots.              |
+| Improve technical SEO and search               | [seo-suite](packages/seo-suite/README.md), [search](packages/search/README.md), [site-discovery](packages/site-discovery/README.md), [url-manager](packages/url-manager/README.md)                             | Covers metadata, structured data, sitemaps, public search, redirects, and checks.  |
+| Expose public content to agents                | [agent-delivery](packages/agent-delivery/README.md), [site-discovery](packages/site-discovery/README.md), [seo-suite](packages/seo-suite/README.md)                                                            | Adds public-safe manifests, semantic chunks, and discovery outputs.                |
+| Prepare demos, screenshots, and fixture sites  | [demo-kit](packages/demo-kit/README.md), [foundation-theme](packages/foundation-theme/README.md)                                                                                                               | Generates repeatable demo sites, package demo content, and frontend theme output.  |
+| Preview unsaved page edits                     | [filament-peek](packages/filament-peek/README.md), [frontend-authoring](packages/frontend-authoring/README.md), [publishing-studio](packages/publishing-studio/README.md)                                      | Separates temporary editor preview state from saved public pages.                  |
+| Add public comments and moderation             | [comments](packages/comments/README.md), [blog](packages/blog/README.md), [email-studio](packages/email-studio/README.md)                                                                                      | Adds moderated frontend discussion and admin review tools.                         |
+| Tighten admin operations and access controls   | [diagnostics](packages/diagnostics/README.md), [dashboard-reports](packages/dashboard-reports/README.md), [password-policy](packages/password-policy/README.md), [login-audit](packages/login-audit/README.md) | Adds health checks, dashboard signals, password enforcement, and login visibility. |
+| Run customer and commerce workflows            | [customer-portal](packages/customer-portal/README.md), [contacts](packages/contacts/README.md), [bookings](packages/bookings/README.md), [payments](packages/payments/README.md)                               | Adds self-service, CRM records, appointment requests, and payment flows.           |
 
 ## Package Index
 
 ### Foundation And Content
 
-| Package                                                 | Composer package              | Purpose                                                                                            |
-| ------------------------------------------------------- | ----------------------------- | -------------------------------------------------------------------------------------------------- |
-| [address](packages/address/README.md)                   | `capell-app/address`          | Country, region, and address data for Capell forms and admin records.                              |
-| [block-library](packages/block-library/README.md)       | `capell-app/block-library`    | Shared typed content block primitives used by layout and content packages.                         |
-| [blog](packages/blog/README.md)                         | `capell-app/blog`             | Article publishing, archive pages, tag pages, article elements, and sitemap contributions.         |
-| [content-sections](packages/content-sections/README.md) | `capell-app/content-sections` | Reusable content section records and Livewire rendering.                                           |
-| [events](packages/events/README.md)                     | `capell-app/events`           | Event records, venues, occurrences, registrations, calendar pages, and iCalendar feeds.            |
-| [hero](packages/hero/README.md)                         | `capell-app/hero`             | Default home-page hero element rendering and setup.                                                |
-| [media-library](packages/media-library/README.md)       | `capell-app/media-library`    | Awcodes Curator backend integration for Capell media.                                              |
-| [navigation](packages/navigation/README.md)             | `capell-app/navigation`       | Editor-managed menus for Capell frontend themes.                                                   |
-| [notes](packages/notes/README.md)                       | `capell-app/notes`            | Contextual notes, assignments, mentions, and reminders.                                            |
-| [tags](packages/tags/README.md)                         | `capell-app/tags`             | Shared editor-controlled taxonomies.                                                               |
-| [foundation-theme](packages/foundation-theme/README.md) | `capell-app/foundation-theme` | Default frontend theme, asset pipeline, Blade directives, URL generation, and SVG media rendering. |
+| Package                                                                     | Composer package                        | Purpose                                                                                            |
+| --------------------------------------------------------------------------- | --------------------------------------- | -------------------------------------------------------------------------------------------------- |
+| [address](packages/address/README.md)                                       | `capell-app/address`                    | Country, region, and address data for Capell forms and admin records.                              |
+| [block-library](packages/block-library/README.md)                           | `capell-app/block-library`              | Shared typed content block primitives used by layout and content packages.                         |
+| [blog](packages/blog/README.md)                                             | `capell-app/blog`                       | Article publishing, archive pages, tag pages, article elements, and sitemap contributions.         |
+| [content-sections](packages/content-sections/README.md)                     | `capell-app/content-sections`           | Reusable content section records and Livewire rendering.                                           |
+| [events](packages/events/README.md)                                         | `capell-app/events`                     | Event records, venues, occurrences, registrations, calendar pages, and iCalendar feeds.            |
+| [hero](packages/hero/README.md)                                             | `capell-app/hero`                       | Default home-page hero element rendering and setup.                                                |
+| [knowledge-base](packages/knowledge-base/README.md)                         | `capell-app/knowledge-base`             | Collections, articles, public docs routes, feedback, search output, and AI-readable docs.          |
+| [media-library](packages/media-library/README.md)                           | `capell-app/media-library`              | Awcodes Curator backend integration for Capell media.                                              |
+| [navigation](packages/navigation/README.md)                                 | `capell-app/navigation`                 | Editor-managed menus for Capell frontend themes.                                                   |
+| [notes](packages/notes/README.md)                                           | `capell-app/notes`                      | Contextual notes, assignments, mentions, and reminders.                                            |
+| [structured-content-library](packages/structured-content-library/README.md) | `capell-app/structured-content-library` | Reusable business-content records for themes and content packages.                                 |
+| [tags](packages/tags/README.md)                                             | `capell-app/tags`                       | Shared editor-controlled taxonomies.                                                               |
+| [foundation-theme](packages/foundation-theme/README.md)                     | `capell-app/foundation-theme`           | Default frontend theme, asset pipeline, Blade directives, URL generation, and SVG media rendering. |
 
 ### Authoring And Publishing
 
@@ -59,16 +62,35 @@ Each package README follows the same shape:
 | [translation-manager](packages/translation-manager/README.md) | `capell-app/translation-manager` | File-based Laravel translation management for Capell and Filament panels.                  |
 | [welcome-tour](packages/welcome-tour/README.md)               | `capell-app/welcome-tour`        | Optional Filament welcome tour for Capell Admin.                                           |
 
+### Frontend Runtime
+
+| Package                                                           | Composer package                   | Purpose                                                                    |
+| ----------------------------------------------------------------- | ---------------------------------- | -------------------------------------------------------------------------- |
+| [api](packages/api/README.md)                                     | `capell-app/api`                   | Public JSON delivery of published Capell page data for external renderers. |
+| [inertia](packages/inertia/README.md)                             | `capell-app/inertia`               | Inertia runtime bridge for Capell frontend pages.                          |
+| [inertia-react-adapter](packages/inertia-react-adapter/README.md) | `capell-app/inertia-react-adapter` | React adapter for Capell Inertia page rendering.                           |
+| [inertia-vue-adapter](packages/inertia-vue-adapter/README.md)     | `capell-app/inertia-vue-adapter`   | Vue adapter for Capell Inertia page rendering.                             |
+
 ### Forms, Access, And Public Workflows
 
 | Package                                               | Composer package             | Purpose                                                                                                    |
 | ----------------------------------------------------- | ---------------------------- | ---------------------------------------------------------------------------------------------------------- |
 | [access-gate](packages/access-gate/README.md)         | `capell-app/access-gate`     | Public access gates, entitlement checks, and gated delivery foundations.                                   |
 | [comments](packages/comments/README.md)               | `capell-app/comments`        | Moderated public comment threads for registered Capell content.                                            |
+| [contacts](packages/contacts/README.md)               | `capell-app/contacts`        | Encrypted CRM records, source adapters, merge workflows, and privacy actions.                              |
+| [customer-portal](packages/customer-portal/README.md) | `capell-app/customer-portal` | Authenticated customer dashboard, preferences, support requests, and self-service registries.              |
 | [form-builder](packages/form-builder/README.md)       | `capell-app/form-builder`    | Editor-managed forms, fields, submissions, validation, and notifications.                                  |
 | [newsletter](packages/newsletter/README.md)           | `capell-app/newsletter`      | Audience management, subscriptions, consent state, imports, notifications, and public subscription routes. |
 | [password-policy](packages/password-policy/README.md) | `capell-app/password-policy` | Password expiry, forced password changes, and password safety policy.                                      |
 | [public-actions](packages/public-actions/README.md)   | `capell-app/public-actions`  | Reusable public submit actions, outbound automation dispatch, and integration endpoints.                   |
+
+### Commerce And Appointments
+
+| Package                                                 | Composer package              | Purpose                                                                        |
+| ------------------------------------------------------- | ----------------------------- | ------------------------------------------------------------------------------ |
+| [bookings](packages/bookings/README.md)                 | `capell-app/bookings`         | Services, staff, locations, availability, appointment requests, and reminders. |
+| [payments](packages/payments/README.md)                 | `capell-app/payments`         | Stripe Checkout, webhook processing, paid downloads, and payment records.      |
+| [shopify-commerce](packages/shopify-commerce/README.md) | `capell-app/shopify-commerce` | Shopify OAuth connections, catalog sync, and commerce admin workflows.         |
 
 ### Growth, Search, And Reporting
 
@@ -77,11 +99,15 @@ Each package README follows the same shape:
 | [campaign-studio](packages/campaign-studio/README.md)     | `capell-app/campaign-studio`   | Campaign landing pages, CTA blocks, UTM attribution, conversion goals, and campaign insights. |
 | [dashboard-reports](packages/dashboard-reports/README.md) | `capell-app/dashboard-reports` | Generic reporting widgets for Capell dashboards.                                              |
 | [email-studio](packages/email-studio/README.md)           | `capell-app/email-studio`      | Transactional templates, delivery audit, provider events, replies, and suppressions.          |
+| [automation-studio](packages/automation-studio/README.md) | `capell-app/automation-studio` | Rule-driven automation for package events and operator workflows.                             |
+| [experiments](packages/experiments/README.md)             | `capell-app/experiments`       | Server-side experiments, variants, audience rules, allocation, goals, and winner reporting.   |
 | [ga4-reports](packages/ga4-reports/README.md)             | `capell-app/ga4-reports`       | GA4 dashboard reporting for Capell.                                                           |
 | [insights](packages/insights/README.md)                   | `capell-app/insights`          | First-party insights, visitor journeys, click tracking, and consent management.               |
 | [search](packages/search/README.md)                       | `capell-app/search`            | Public site search, optional logging, and admin search insights.                              |
 | [seo-suite](packages/seo-suite/README.md)                 | `capell-app/seo-suite`         | Metadata panels, structured data, social meta, SEO audits, sitemaps, and AI-assisted SEO.     |
 | [site-discovery](packages/site-discovery/README.md)       | `capell-app/site-discovery`    | Public discoverability and sitemap outputs.                                                   |
+| [social-feeds](packages/social-feeds/README.md)           | `capell-app/social-feeds`      | Provider-backed social feed records, cached rendering, and Block Library widgets.             |
+| [url-manager](packages/url-manager/README.md)             | `capell-app/url-manager`       | Managed redirects, 404 opportunity tracking, canonical URL policy, and hit pruning.           |
 
 ### Operations, Agents, And Migration
 
@@ -93,28 +119,35 @@ Each package README follows the same shape:
 | [demo-kit](packages/demo-kit/README.md)                       | `capell-app/demo-kit`            | Demo content and media setup for Capell packages.                                |
 | [deployments](packages/deployments/README.md)                 | `capell-app/deployments`         | Repository deployment connections and Composer publishing.                       |
 | [diagnostics](packages/diagnostics/README.md)                 | `capell-app/diagnostics`         | Developer and operational diagnostics.                                           |
+| [document-lifecycle](packages/document-lifecycle/README.md)   | `capell-app/document-lifecycle`  | Document requests, review, delivery, expiry, and retention workflows.            |
+| [exception-reports](packages/exception-reports/README.md)     | `capell-app/exception-reports`   | Sanitized queued email reports for unhandled exceptions and diagnostics health.  |
 | [login-audit](packages/login-audit/README.md)                 | `capell-app/login-audit`         | Authentication log and login visibility.                                         |
 | [media-ai](packages/media-ai/README.md)                       | `capell-app/media-ai`            | Optional AI-assisted media actions.                                              |
 | [migration-assistant](packages/migration-assistant/README.md) | `capell-app/migration-assistant` | Export, import, rollback report, and migration workflow support.                 |
+| [privacy-center](packages/privacy-center/README.md)           | `capell-app/privacy-center`      | Consent, policy acceptance, DSAR, retention, export, and anonymization records.  |
+| [record-switcher](packages/record-switcher/README.md)         | `capell-app/record-switcher`     | Admin record-switching support for Filament resources.                           |
 | [wordpress-importer](packages/wordpress-importer/README.md)   | `capell-app/wordpress-importer`  | WordPress WXR import source for Migration Assistant.                             |
 
 ### Themes
 
 Use the [Capell Theme Scale](docs/theme-scale.md) when creating a theme, changing renderer contracts, or deciding whether configuration belongs in theme settings, page blueprints, widget blueprints, Layout Builder assets, or Blade.
 
-| Package                                                         | Composer package                  | Tier    | Purpose                                                        |
-| --------------------------------------------------------------- | --------------------------------- | ------- | -------------------------------------------------------------- |
-| [foundation-theme](packages/foundation-theme/README.md)         | `capell-app/foundation-theme`     | Free    | Default frontend runtime and renderer.                         |
-| [theme-agency](packages/theme-agency/README.md)                 | `capell-app/theme-agency`         | Free    | Expressive agency theme for portfolio and service sites.       |
-| [theme-corporate](packages/theme-corporate/README.md)           | `capell-app/theme-corporate`      | Free    | Trust-led corporate theme for business and governance content. |
-| [theme-commerce](packages/theme-commerce/README.md)             | `capell-app/theme-commerce`       | Premium | Editorial commerce theme for product-led pages.                |
-| [theme-education](packages/theme-education/README.md)           | `capell-app/theme-education`      | Premium | Course and school theme for learning programmes.               |
-| [theme-healthcare](packages/theme-healthcare/README.md)         | `capell-app/theme-healthcare`     | Premium | Appointment-led healthcare theme for clinics and resources.    |
-| [theme-knowledge](packages/theme-knowledge/README.md)           | `capell-app/theme-knowledge`      | Premium | Resource-library theme for publishers and knowledge bases.     |
-| [theme-local-services](packages/theme-local-services/README.md) | `capell-app/theme-local-services` | Premium | Quote-led theme for local service businesses.                  |
-| [theme-nonprofit](packages/theme-nonprofit/README.md)           | `capell-app/theme-nonprofit`      | Premium | Impact-led theme for charities, campaigns, and civic sites.    |
-| [theme-portfolio](packages/theme-portfolio/README.md)           | `capell-app/theme-portfolio`      | Premium | Portfolio theme for creators, consultants, and case studies.   |
-| [theme-saas](packages/theme-saas/README.md)                     | `capell-app/theme-saas`           | Premium | Product-led SaaS theme for launches, docs, and pricing.        |
+| Package                                                                         | Composer package                          | Tier    | Purpose                                                        |
+| ------------------------------------------------------------------------------- | ----------------------------------------- | ------- | -------------------------------------------------------------- |
+| [foundation-theme](packages/foundation-theme/README.md)                         | `capell-app/foundation-theme`             | Free    | Default frontend runtime and renderer.                         |
+| [theme-agency](packages/theme-agency/README.md)                                 | `capell-app/theme-agency`                 | Free    | Expressive agency theme for portfolio and service sites.       |
+| [theme-corporate](packages/theme-corporate/README.md)                           | `capell-app/theme-corporate`              | Free    | Trust-led corporate theme for business and governance content. |
+| [theme-commerce](packages/theme-commerce/README.md)                             | `capell-app/theme-commerce`               | Premium | Editorial commerce theme for product-led pages.                |
+| [theme-education](packages/theme-education/README.md)                           | `capell-app/theme-education`              | Premium | Course and school theme for learning programmes.               |
+| [theme-healthcare](packages/theme-healthcare/README.md)                         | `capell-app/theme-healthcare`             | Premium | Appointment-led healthcare theme for clinics and resources.    |
+| [theme-inertia-bookings](packages/theme-inertia-bookings/README.md)             | `capell-app/theme-inertia-bookings`       | Premium | Inertia bookings theme shell and shared appointment UI.        |
+| [theme-inertia-bookings-react](packages/theme-inertia-bookings-react/README.md) | `capell-app/theme-inertia-bookings-react` | Premium | React components for the Inertia Bookings theme.               |
+| [theme-inertia-bookings-vue](packages/theme-inertia-bookings-vue/README.md)     | `capell-app/theme-inertia-bookings-vue`   | Premium | Vue components for the Inertia Bookings theme.                 |
+| [theme-knowledge](packages/theme-knowledge/README.md)                           | `capell-app/theme-knowledge`              | Premium | Resource-library theme for publishers and knowledge bases.     |
+| [theme-local-services](packages/theme-local-services/README.md)                 | `capell-app/theme-local-services`         | Premium | Quote-led theme for local service businesses.                  |
+| [theme-nonprofit](packages/theme-nonprofit/README.md)                           | `capell-app/theme-nonprofit`              | Premium | Impact-led theme for charities, campaigns, and civic sites.    |
+| [theme-portfolio](packages/theme-portfolio/README.md)                           | `capell-app/theme-portfolio`              | Premium | Portfolio theme for creators, consultants, and case studies.   |
+| [theme-saas](packages/theme-saas/README.md)                                     | `capell-app/theme-saas`                   | Premium | Product-led SaaS theme for launches, docs, and pricing.        |
 
 ## Install Pattern
 
@@ -159,9 +192,9 @@ vendor/bin/pest packages/<package>/tests --configuration=phpunit.xml
 Use Pest groups when the failing area is known:
 
 ```bash
-PEST_GROUP=blog composer run test:group
-PEST_GROUP=feature composer run test:group
-PEST_GROUP=blog composer run test:debug:group
+COMPOSER=composer.local.json PEST_GROUP=blog composer run test:group
+COMPOSER=composer.local.json PEST_GROUP=feature composer run test:group
+COMPOSER=composer.local.json PEST_GROUP=blog composer run test:debug:group
 ```
 
 Useful groups include package names such as `blog`, suite names such as `unit`, `feature`, `integration`, and `arch`, plus `package` for all package tests and `workspace` for shared root tests. `test:debug:group` runs without parallelism and stops on the first defect so large failure sets are easier to inspect.
@@ -169,16 +202,16 @@ Useful groups include package names such as `blog`, suite names such as `unit`, 
 Use broader checks before integration:
 
 ```bash
-composer test
-composer preflight
-composer preflight:all
+COMPOSER=composer.local.json composer test
+COMPOSER=composer.local.json composer preflight
+COMPOSER=composer.local.json composer preflight:all
 ```
 
 Run coverage and mutation testing as explicit deep checks:
 
 ```bash
-composer coverage
-composer test:mutate
+COMPOSER=composer.local.json composer coverage
+COMPOSER=composer.local.json composer test:mutate
 ```
 
 Do not run `php artisan` in this repository. Testbench provides the Laravel context for package tests.

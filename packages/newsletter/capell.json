@@ -13,7 +13,10 @@
         "bundle": "newsletter"
     },
     "namespace": "Capell\\Newsletter",
-    "surfaces": ["admin", "frontend"],
+    "surfaces": [
+        "admin",
+        "frontend"
+    ],
     "dependencies": {
         "requires": [
             "capell-app/admin",
@@ -22,14 +25,21 @@
             "capell-app/frontend",
             "capell-app/tags"
         ],
-        "supports": ["capell-app/contacts", "capell-app/customer-portal"],
+        "supports": [
+            "capell-app/contacts",
+            "capell-app/customer-portal"
+        ],
         "conflicts": []
     },
     "providers": {
         "metadata": [],
         "install": [],
-        "runtime": ["Capell\\Newsletter\\Providers\\NewsletterServiceProvider"],
-        "admin": ["Capell\\Newsletter\\Providers\\AdminServiceProvider"],
+        "runtime": [
+            "Capell\\Newsletter\\Providers\\NewsletterServiceProvider"
+        ],
+        "admin": [
+            "Capell\\Newsletter\\Providers\\AdminServiceProvider"
+        ],
         "frontend": []
     },
     "contributes": [
@@ -179,6 +189,13 @@
         "riskTier": "sensitive",
         "publicSurface": {
             "routeNames": [
+                "capell-newsletter.confirm",
+                "capell-newsletter.preferences.show",
+                "capell-newsletter.preferences.update",
+                "capell-newsletter.provider-webhook",
+                "capell-newsletter.subscribe",
+                "capell-newsletter.unsubscribe",
+                "capell-newsletter.unsubscribe.one-click",
                 "subscribe",
                 "confirm",
                 "unsubscribe",
@@ -189,40 +206,95 @@
             ],
             "auth": "mixed",
             "csrfExemptRoutes": [
+                "capell-newsletter.provider-webhook",
+                "capell-newsletter.subscribe",
+                "capell-newsletter.unsubscribe.one-click",
                 "subscribe",
                 "unsubscribe.one-click",
                 "provider-webhook"
             ],
             "signedRoutes": [],
             "tokenizedRoutes": [
+                "capell-newsletter.confirm",
+                "capell-newsletter.preferences.show",
+                "capell-newsletter.preferences.update",
+                "capell-newsletter.unsubscribe",
+                "capell-newsletter.unsubscribe.one-click",
                 "confirm",
                 "unsubscribe",
                 "unsubscribe.one-click",
                 "preferences.show",
                 "preferences.update"
             ],
-            "webhookRoutes": ["provider-webhook"],
+            "webhookRoutes": [
+                "capell-newsletter.provider-webhook",
+                "provider-webhook"
+            ],
             "throttledRoutes": [
+                "capell-newsletter.subscribe",
                 "subscribe",
                 "unsubscribe.one-click",
                 "preferences.update",
                 "provider-webhook"
             ]
         },
+        "sensitiveData": {
+            "encryptedFields": [
+                "Capell\\Newsletter\\Models\\ConsentEvent::$evidence",
+                "Capell\\Newsletter\\Models\\ConsentEvent::$metadata",
+                "Capell\\Newsletter\\Models\\ImportBatch::$dry_run_payload",
+                "Capell\\Newsletter\\Models\\ImportBatch::$source_meta",
+                "Capell\\Newsletter\\Models\\ProviderConnection::$credentials",
+                "Capell\\Newsletter\\Models\\ProviderConnection::$oauth_tokens",
+                "Capell\\Newsletter\\Models\\ProviderConnection::$webhook_secret",
+                "Capell\\Newsletter\\Models\\Subscriber::$email",
+                "Capell\\Newsletter\\Models\\Subscriber::$first_name",
+                "Capell\\Newsletter\\Models\\Subscriber::$last_name",
+                "Capell\\Newsletter\\Models\\Subscriber::$profile"
+            ],
+            "hashedTokenFields": [
+                "newsletter_public_tokens.token_hash",
+                "newsletter_subscribers.email_hash",
+                "newsletter_sync_attempts.payload_hash"
+            ],
+            "redactedOutputClasses": [
+                "Capell\\Newsletter\\Actions\\RedactNewsletterProviderErrorMessageAction",
+                "Capell\\Newsletter\\Actions\\SyncSubscriberToProviderAction"
+            ],
+            "plaintextJustifications": []
+        },
         "publicOutput": {
             "cacheSafe": true,
             "forbidAuthoringSurface": true,
             "forbidSecrets": true,
             "forbidPublicBladeQueries": true
+        },
+        "externalHttpClients": {
+            "requiresTimeouts": true,
+            "requiresSecretRedaction": true,
+            "clients": [
+                "Capell\\Newsletter\\Support\\Providers\\CampaignMonitorProviderAdapter",
+                "Capell\\Newsletter\\Support\\Providers\\KitProviderAdapter",
+                "Capell\\Newsletter\\Support\\Providers\\MailchimpProviderAdapter"
+            ]
+        },
+        "adminSurface": {
+            "authorization": "policies",
+            "permissions": []
         }
     },
     "performance": {
         "frontendRenderBudgetMs": 20,
         "adminQueryBudget": 40,
-        "cacheTags": ["newsletter"],
+        "cacheTags": [
+            "newsletter"
+        ],
         "cacheSafety": {
             "cacheable": false,
-            "variesBy": ["site", "locale"],
+            "variesBy": [
+                "site",
+                "locale"
+            ],
             "sensitiveOutput": false,
             "invalidationSources": [],
             "queueInvalidation": true
@@ -338,7 +410,11 @@
                 "caption": "Unsubscribe route response"
             }
         ],
-        "categories": ["admin", "frontend", "newsletter"]
+        "categories": [
+            "admin",
+            "frontend",
+            "newsletter"
+        ]
     },
     "contributionTraceability": {
         "deferredContributions": []

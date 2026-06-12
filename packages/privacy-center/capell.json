@@ -13,9 +13,16 @@
         "bundle": "operations"
     },
     "namespace": "Capell\\PrivacyCenter",
-    "surfaces": ["admin", "console", "frontend"],
+    "surfaces": [
+        "admin",
+        "console",
+        "frontend"
+    ],
     "dependencies": {
-        "requires": ["capell-app/admin", "capell-app/core"],
+        "requires": [
+            "capell-app/admin",
+            "capell-app/core"
+        ],
         "supports": [
             "capell-app/access-gate",
             "capell-app/contacts",
@@ -30,7 +37,9 @@
         "runtime": [
             "Capell\\PrivacyCenter\\Providers\\PrivacyCenterServiceProvider"
         ],
-        "admin": ["Capell\\PrivacyCenter\\Providers\\AdminServiceProvider"],
+        "admin": [
+            "Capell\\PrivacyCenter\\Providers\\AdminServiceProvider"
+        ],
         "frontend": []
     },
     "contributes": [
@@ -107,7 +116,25 @@
         "recordPolicyAcceptance": "Capell\\PrivacyCenter\\Actions\\RecordPolicyAcceptanceAction",
         "registerConsentPolicy": "Capell\\PrivacyCenter\\Actions\\RegisterConsentPolicyAction"
     },
-    "permissions": [],
+    "permissions": [
+        "ViewAny:ConsentPolicy",
+        "View:ConsentPolicy",
+        "Create:ConsentPolicy",
+        "Update:ConsentPolicy",
+        "Delete:ConsentPolicy",
+        "ViewAny:ConsentRecord",
+        "View:ConsentRecord",
+        "ViewAny:PolicyAcceptance",
+        "View:PolicyAcceptance",
+        "ViewAny:PrivacyRequest",
+        "View:PrivacyRequest",
+        "Update:PrivacyRequest",
+        "ViewAny:RetentionRule",
+        "View:RetentionRule",
+        "Create:RetentionRule",
+        "Update:RetentionRule",
+        "Delete:RetentionRule"
+    ],
     "capabilities": [
         "privacy-center",
         "privacy-center-consent",
@@ -124,7 +151,12 @@
     "security": {
         "riskTier": "sensitive",
         "publicSurface": {
-            "routeNames": ["consent.show", "consent.store"],
+            "routeNames": [
+                "capell-privacy-center.consent.show",
+                "capell-privacy-center.consent.store",
+                "consent.show",
+                "consent.store"
+            ],
             "auth": "public",
             "csrfExemptRoutes": [],
             "signedRoutes": [],
@@ -132,37 +164,91 @@
             "webhookRoutes": [],
             "throttledRoutes": []
         },
+        "sensitiveData": {
+            "encryptedFields": [],
+            "hashedTokenFields": [],
+            "redactedOutputClasses": [],
+            "plaintextJustifications": []
+        },
         "publicOutput": {
             "cacheSafe": true,
             "forbidAuthoringSurface": true,
             "forbidSecrets": true,
             "forbidPublicBladeQueries": true
+        },
+        "externalHttpClients": {
+            "requiresTimeouts": false,
+            "requiresSecretRedaction": false,
+            "clients": []
+        },
+        "adminSurface": {
+            "authorization": "permissions",
+            "permissions": [
+                "ViewAny:ConsentPolicy",
+                "View:ConsentPolicy",
+                "Create:ConsentPolicy",
+                "Update:ConsentPolicy",
+                "Delete:ConsentPolicy",
+                "ViewAny:ConsentRecord",
+                "View:ConsentRecord",
+                "ViewAny:PolicyAcceptance",
+                "View:PolicyAcceptance",
+                "ViewAny:PrivacyRequest",
+                "View:PrivacyRequest",
+                "Update:PrivacyRequest",
+                "ViewAny:RetentionRule",
+                "View:RetentionRule",
+                "Create:RetentionRule",
+                "Update:RetentionRule",
+                "Delete:RetentionRule"
+            ]
         }
     },
     "performance": {
         "frontendRenderBudgetMs": 40,
         "adminQueryBudget": 40,
-        "cacheTags": ["privacy-center"],
+        "cacheTags": [
+            "privacy-center"
+        ],
         "cacheSafety": {
             "cacheable": false,
-            "variesBy": ["site", "subject"],
+            "variesBy": [
+                "site",
+                "subject"
+            ],
             "sensitiveOutput": true,
             "invalidationSources": [
                 {
                     "model": "Capell\\PrivacyCenter\\Models\\ConsentPolicy",
-                    "events": ["created", "updated", "deleted"]
+                    "events": [
+                        "created",
+                        "updated",
+                        "deleted"
+                    ]
                 },
                 {
                     "model": "Capell\\PrivacyCenter\\Models\\ConsentRecord",
-                    "events": ["created", "updated", "deleted"]
+                    "events": [
+                        "created",
+                        "updated",
+                        "deleted"
+                    ]
                 },
                 {
                     "model": "Capell\\PrivacyCenter\\Models\\PrivacyRequest",
-                    "events": ["created", "updated", "deleted"]
+                    "events": [
+                        "created",
+                        "updated",
+                        "deleted"
+                    ]
                 },
                 {
                     "model": "Capell\\PrivacyCenter\\Models\\RetentionRule",
-                    "events": ["created", "updated", "deleted"]
+                    "events": [
+                        "created",
+                        "updated",
+                        "deleted"
+                    ]
                 }
             ],
             "queueInvalidation": true
@@ -202,9 +288,15 @@
                 "caption": "Review active data retention rules, retention windows, and minimisation actions in Capell admin."
             }
         ],
-        "categories": ["admin", "compliance", "operations"]
+        "categories": [
+            "admin",
+            "compliance",
+            "operations"
+        ]
     },
     "contributionTraceability": {
-        "deferredContributions": ["route"]
+        "deferredContributions": [
+            "route"
+        ]
     }
 }

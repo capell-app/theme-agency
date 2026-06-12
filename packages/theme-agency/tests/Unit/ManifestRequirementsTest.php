@@ -34,8 +34,11 @@ describe('theme agency capell.json manifest', function (): void {
 
         expect(collect($screenshots)->pluck('path')->all())->toBe([
             'docs/assets/marketplace/extension-card.jpg',
+            'docs/screenshots/agency-campaign-layout.png',
+            'docs/screenshots/agency-case-study-layout.png',
+            'docs/screenshots/agency-event-landing-layout.png',
             'docs/screenshots/agency-homepage-layout.png',
-            'docs/screenshots/agency-lead-form-layout.png',
+            'docs/screenshots/agency-insights-layout.png',
         ]);
     });
 

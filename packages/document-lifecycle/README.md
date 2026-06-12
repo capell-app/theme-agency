@@ -48,9 +48,26 @@ Use this package when a site needs evidence that a controlled document was publi
 - Actions: register, publish, resolve latest publication, compute content hash, record acceptance, archive expired documents.
 - Command: `capell:document-lifecycle:archive-expired`.
 
+## Boundaries
+
+Document Lifecycle owns controlled document registration, publication evidence, acceptance evidence, and expiry/archive workflows. It is not a general media manager or public file delivery package.
+
+Publishing Studio owns revision workflow. Media packages own file storage and downloads. Public or customer-facing acceptance surfaces should call package Actions and must not expose admin URLs, publication internals, raw hashes beyond the certificate contract, or authoring state.
+
+## Runtime Surface
+
+- Provider: `src/Providers/DocumentLifecycleServiceProvider.php`
+- Admin resource: `src/Filament/Resources/Documents/`
+- Actions: `src/Actions/`
+- Data objects: `src/Data/`
+- Models: `src/Models/`
+- Command: `src/Console/Commands/ArchiveExpiredDocumentsCommand.php`
+- Manifest contributions: `src/Manifest/`
+- Tests: `packages/document-lifecycle/tests`
+
 ## Install And Setup
 
-Install with:
+In a host Capell app, install with:
 
 ```bash
 composer require capell-app/document-lifecycle
@@ -70,3 +87,11 @@ Run package tests from the repository root:
 ```bash
 vendor/bin/pest packages/document-lifecycle/tests --configuration=phpunit.xml
 ```
+
+## Troubleshooting
+
+| Symptom                                     | Likely cause                                               | Check                                                                                                | Fix                                                                                  |
+| ------------------------------------------- | ---------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------ |
+| Expired documents remain active             | The host scheduler has not run the archive command         | In a host app, run `php artisan schedule:list` and check `capell:document-lifecycle:archive-expired` | Enable the scheduler or run the command in the host app after confirming due dates   |
+| Certificate download cannot be verified     | The acceptance record is missing or the signature is stale | Confirm the acceptance exists in `legal_acceptances` and request a fresh signed certificate URL      | Regenerate the signed URL through the package surface instead of reusing an old link |
+| Publication evidence does not match content | A document was changed without creating a new publication  | Compare the latest publication hash and stored snapshot for the document                             | Publish a new controlled document version through the package Action/admin workflow  |

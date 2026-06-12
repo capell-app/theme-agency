@@ -32,7 +32,7 @@ final class InspectPackageOwnershipAction
         $normalizedName = trim($name);
 
         return DiagnosticsSnapshotCache::remember(
-            'package-ownership:' . sha1(implode('|', [
+            'package-ownership:' . hash('sha256', implode('|', [
                 $normalizedKind,
                 $normalizedName,
                 $this->customPackagesPath ?? base_path('packages'),

@@ -7,12 +7,16 @@ on:
     types: [opened, synchronize, reopened, ready_for_review]
     paths:
       - 'packages/**/*.php'
+      - 'packages/**/capell.json'
       - 'tests/**/*.php'
       - 'composer.json'
       - 'composer.lock'
       - 'rector.php'
       - 'scripts/rector-changed.sh'
       - 'scripts/check-phpstan-baseline-growth.sh'
+      - 'scripts/audit-package-security.php'
+      - 'scripts/scan-secrets.php'
+      - 'scripts/sync-package-security-manifests.php'
       - 'scripts/php-modernization-skill.sh'
       - 'phpstan/**'
       - 'phpstan*.neon'
@@ -124,8 +128,8 @@ jobs:
       - name: Check PHPStan baseline did not grow
         run: composer phpstan:baseline-check
 
-      - name: Run PHPat architecture checks
-        run: composer phpat
+      - name: Run package security contracts
+        run: composer security:contracts
 
       - name: Run Composer audit
         run: composer audit --locked

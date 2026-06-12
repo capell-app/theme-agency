@@ -13,9 +13,15 @@
         "bundle": "content-product"
     },
     "namespace": "Capell\\CustomerPortal",
-    "surfaces": ["admin", "frontend"],
+    "surfaces": [
+        "admin",
+        "frontend"
+    ],
     "dependencies": {
-        "requires": ["capell-app/admin", "capell-app/core"],
+        "requires": [
+            "capell-app/admin",
+            "capell-app/core"
+        ],
         "supports": [
             "capell-app/access-gate",
             "capell-app/contacts",
@@ -33,7 +39,9 @@
         "runtime": [
             "Capell\\CustomerPortal\\Providers\\CustomerPortalServiceProvider"
         ],
-        "admin": ["Capell\\CustomerPortal\\Providers\\AdminServiceProvider"],
+        "admin": [
+            "Capell\\CustomerPortal\\Providers\\AdminServiceProvider"
+        ],
         "frontend": [
             "Capell\\CustomerPortal\\Providers\\CustomerPortalServiceProvider"
         ]
@@ -80,7 +88,11 @@
         "submitSupportRequest": "Capell\\CustomerPortal\\Actions\\SubmitSupportRequestAction",
         "updatePortalPreferences": "Capell\\CustomerPortal\\Actions\\UpdatePortalPreferencesAction"
     },
-    "permissions": [],
+    "permissions": [
+        "ViewAny:PortalSupportRequest",
+        "View:PortalSupportRequest",
+        "Update:PortalSupportRequest"
+    ],
     "capabilities": [
         "customer-portal",
         "customer-portal-admin",
@@ -106,31 +118,69 @@
             "routeNames": [
                 "dashboard",
                 "preferences.update",
-                "support.store",
-                "support.replies.store"
+                "support.replies.store",
+                "support.store"
             ],
             "auth": "authenticated",
             "csrfExemptRoutes": [],
             "signedRoutes": [],
             "tokenizedRoutes": [],
             "webhookRoutes": [],
-            "throttledRoutes": ["support.store", "support.replies.store"]
+            "throttledRoutes": [
+                "support.replies.store",
+                "support.store"
+            ]
+        },
+        "sensitiveData": {
+            "encryptedFields": [
+                "Capell\\CustomerPortal\\Models\\PortalAccount::$display_name",
+                "Capell\\CustomerPortal\\Models\\PortalAccount::$email",
+                "Capell\\CustomerPortal\\Models\\PortalAccount::$preferences",
+                "Capell\\CustomerPortal\\Models\\PortalAccount::$profile",
+                "Capell\\CustomerPortal\\Models\\PortalSupportRequest::$context",
+                "Capell\\CustomerPortal\\Models\\PortalSupportRequest::$message",
+                "Capell\\CustomerPortal\\Models\\PortalSupportRequest::$requester_email",
+                "Capell\\CustomerPortal\\Models\\PortalSupportRequest::$subject",
+                "Capell\\CustomerPortal\\Models\\PortalSupportRequestReply::$attachments",
+                "Capell\\CustomerPortal\\Models\\PortalSupportRequestReply::$message"
+            ],
+            "hashedTokenFields": [],
+            "redactedOutputClasses": [],
+            "plaintextJustifications": []
         },
         "publicOutput": {
             "cacheSafe": false,
             "forbidAuthoringSurface": true,
             "forbidSecrets": true,
             "forbidPublicBladeQueries": true
+        },
+        "externalHttpClients": {
+            "requiresTimeouts": false,
+            "requiresSecretRedaction": false,
+            "clients": []
+        },
+        "adminSurface": {
+            "authorization": "permissions",
+            "permissions": [
+                "ViewAny:PortalSupportRequest",
+                "View:PortalSupportRequest",
+                "Update:PortalSupportRequest"
+            ]
         }
     },
     "performance": {
         "frontendRenderBudgetMs": 200,
         "frontendQueryBudget": 20,
         "adminQueryBudget": 20,
-        "cacheTags": ["customer-portal"],
+        "cacheTags": [
+            "customer-portal"
+        ],
         "cacheSafety": {
             "cacheable": false,
-            "variesBy": ["site", "user"],
+            "variesBy": [
+                "site",
+                "user"
+            ],
             "sensitiveOutput": true,
             "invalidationSources": [],
             "queueInvalidation": true
@@ -176,7 +226,12 @@
                 "caption": "Support request detail with status and priority workflow controls."
             }
         ],
-        "categories": ["admin", "frontend", "crm", "self-service"]
+        "categories": [
+            "admin",
+            "frontend",
+            "crm",
+            "self-service"
+        ]
     },
     "contributionTraceability": {
         "deferredContributions": []

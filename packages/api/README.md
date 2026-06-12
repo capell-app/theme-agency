@@ -28,6 +28,21 @@ Capell API exposes published page content as JSON for public integrations such a
 - Optional layout payload inclusion for integrations that need structured page content.
 - HTML sanitization rules for public API responses.
 
+## Boundaries
+
+Capell API only exposes published public content. It must not return drafts, admin-only fields, authoring metadata, signed editor URLs, package internals, permission names, or unsanitized HTML.
+
+Layout payloads are built through package Actions. Public API controllers should not query layout/widget relationships ad hoc or bypass `SanitizesPublicHtml`.
+
+## Runtime Surface
+
+- Provider: `src/Providers/ApiServiceProvider.php`
+- Actions: `src/Actions/BuildPublicPagePayloadAction.php`, `src/Actions/BuildPublicLayoutPayloadAction.php`
+- Data objects: `src/Data/PublicPagePayloadOptionsData.php`
+- HTML safety: `src/Support/SanitizesPublicHtml.php`
+- Health check: `src/Health/ApiHealthCheck.php`
+- Tests: `packages/api/tests`
+
 ## Docs
 
 - [docs index](docs/README.md)
@@ -46,3 +61,11 @@ Run package tests from the repository root:
 ```bash
 vendor/bin/pest packages/api/tests --configuration=phpunit.xml
 ```
+
+## Troubleshooting
+
+| Symptom                                  | Likely cause                                                             | Check                                                                                 | Fix                                                                                           |
+| ---------------------------------------- | ------------------------------------------------------------------------ | ------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- |
+| JSON endpoint returns no page payload    | The host or path does not resolve to a published page                    | Request the endpoint for a known published page on the expected host                  | Publish the page for that site/locale, then repeat the API request                            |
+| Layout data is missing from the response | The request did not ask for layout data or Layout Builder is unavailable | Check the endpoint query/options and confirm `capell-app/layout-builder` is installed | Enable the layout include only for integrations that need it and rerun the package tests      |
+| Response exposes unsafe HTML             | A controller or Action bypassed `SanitizesPublicHtml`                    | Run `vendor/bin/pest packages/api/tests --configuration=phpunit.xml`                  | Route public HTML through `BuildPublicPagePayloadAction` or the sanitizer before returning it |

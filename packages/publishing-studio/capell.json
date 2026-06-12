@@ -13,7 +13,10 @@
         "bundle": "publishing-pro"
     },
     "namespace": "Capell\\PublishingStudio",
-    "surfaces": ["admin", "console"],
+    "surfaces": [
+        "admin",
+        "console"
+    ],
     "dependencies": {
         "requires": [
             "capell-app/admin",
@@ -38,7 +41,9 @@
         "runtime": [
             "Capell\\PublishingStudio\\Providers\\PublishingStudioServiceProvider"
         ],
-        "admin": ["Capell\\PublishingStudio\\Providers\\AdminServiceProvider"],
+        "admin": [
+            "Capell\\PublishingStudio\\Providers\\AdminServiceProvider"
+        ],
         "frontend": []
     },
     "contributes": [
@@ -228,19 +233,59 @@
     "security": {
         "riskTier": "sensitive",
         "publicSurface": {
-            "routeNames": ["preview.exit", "scheduler.ical"],
+            "routeNames": [
+                "capell-frontend.preview.exit",
+                "capell-publishing-studio.scheduler.ical",
+                "preview.exit",
+                "scheduler.ical"
+            ],
             "auth": "mixed",
             "csrfExemptRoutes": [],
             "signedRoutes": [],
-            "tokenizedRoutes": ["scheduler.ical"],
+            "tokenizedRoutes": [
+                "capell-publishing-studio.scheduler.ical",
+                "scheduler.ical"
+            ],
             "webhookRoutes": [],
             "throttledRoutes": []
+        },
+        "sensitiveData": {
+            "encryptedFields": [],
+            "hashedTokenFields": [
+                "publishing_scheduler_events.token_hash"
+            ],
+            "redactedOutputClasses": [],
+            "plaintextJustifications": [
+                {
+                    "field": "preview_links.token",
+                    "reason": "Reviewed package field; not stored as a reusable secret by this package contract."
+                }
+            ]
         },
         "publicOutput": {
             "cacheSafe": false,
             "forbidAuthoringSurface": true,
             "forbidSecrets": true,
             "forbidPublicBladeQueries": true
+        },
+        "externalHttpClients": {
+            "requiresTimeouts": false,
+            "requiresSecretRedaction": false,
+            "clients": []
+        },
+        "adminSurface": {
+            "authorization": "permissions",
+            "permissions": [
+                "submit_workspace_for_approval",
+                "approve_workspace",
+                "publish_workspace",
+                "rollback_workspace",
+                "publish_outside_release_window",
+                "View:ActivityTrailPage",
+                "View:PublishingWorkflowPage",
+                "View:ScheduledPublishingPage",
+                "View:StaleDraftsPage"
+            ]
         }
     },
     "performance": {
@@ -289,7 +334,11 @@
                 "caption": "Review and approval before publish"
             }
         ],
-        "categories": ["admin", "console", "publishing-pro"]
+        "categories": [
+            "admin",
+            "console",
+            "publishing-pro"
+        ]
     },
     "contributionTraceability": {
         "deferredContributions": []

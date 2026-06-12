@@ -1,79 +1,71 @@
 # Capell Privacy Center
 
-Privacy Center gives Capell packages a shared compliance ledger for consent, policy acceptance, retention, privacy subject requests, exports, and anonymization workflows.
+Privacy Center gives Capell packages a shared compliance ledger for consent, policy acceptance, retention, privacy subject requests, exports, and anonymisation workflows.
 
-## Included Capabilities
+## At A Glance
 
-- Consent policy and policy acceptance records for versioned privacy, cookie, terms, and data-processing policies.
-- Cookie-category consent decisions with hashed request evidence for IP address and user agent values.
-- Privacy subject request records for access, export, deletion, correction, restriction, and objection workflows.
-- Admin DSAR workflow actions for marking requests verified, fulfilled, or rejected while stamping the relevant audit timestamps.
-- Retention rules for delete, anonymize, and review actions.
-- `privacy:apply-retention` for manual or scheduled retention execution.
-- Health diagnostics for required privacy tables, morph map aliases, and identity hash configuration.
-- Five Filament admin resources for policies, consent records, policy acceptances, privacy requests, and retention rules.
-- A Privacy Center overview widget with package-owned consent, request, and retention counts.
-- A public cookie consent preference center that records granular category decisions through `RecordConsentAction`.
+| Field            | Value                                                                                                                |
+| ---------------- | -------------------------------------------------------------------------------------------------------------------- |
+| Composer package | `capell-app/privacy-center`                                                                                          |
+| Namespace        | `Capell\PrivacyCenter`                                                                                               |
+| Product group    | Capell Compliance                                                                                                    |
+| Surfaces         | Admin, frontend consent preferences, console                                                                         |
+| Providers        | `Capell\PrivacyCenter\Providers\PrivacyCenterServiceProvider`, `Capell\PrivacyCenter\Providers\AdminServiceProvider` |
+| Public routes    | `capell-privacy-center.consent.show`, `capell-privacy-center.consent.store`                                          |
+| Command          | `privacy:apply-retention`                                                                                            |
+| Hash secret      | `CAPELL_PRIVACY_CENTER_HASH_SECRET`                                                                                  |
 
-Privacy Center currently ships admin and console surfaces plus a public cookie consent preference center. It does not ship a public DSAR intake form or a cross-package subject-data export/erasure registry.
+## Why It Helps Your Capell Workflow
 
-## Installation And Configuration
+Owners get an auditable privacy ledger for cookie consent, policy acceptance, retention rules, and DSAR workflow state. Operators can review privacy requests, run retention rules, and verify compliance health from Capell.
 
-Install the package with the normal Capell package workflow for `capell-app/privacy-center`. The package requires `capell-app/core` and `capell-app/admin`, publishes the `capell-privacy-center` config, and registers five package-owned migrations:
+Developers get Actions for consent, policy acceptance, privacy exports, retention execution, subject anonymisation, and request state transitions without coupling source packages to one table layout.
 
-- `privacy_consent_policies`
-- `privacy_consent_records`
-- `privacy_policy_acceptances`
-- `privacy_retention_rules`
-- `privacy_requests`
+## What It Adds
 
-Configure `CAPELL_PRIVACY_CENTER_HASH_SECRET` in production. If that value is not set, Privacy Center falls back to Laravel's `app.key`; if neither value is configured, hashing consent evidence fails loudly instead of using a predictable default.
+- Filament resources for consent policies, consent records, policy acceptances, privacy requests, and retention rules.
+- Privacy Center overview widget.
+- Public cookie consent preference centre.
+- Actions for registering policies, recording consent/acceptance, opening privacy requests, building exports, anonymising subjects, and applying retention rules, including `BuildPrivacyExportAction` and `AnonymizePrivacySubjectAction`.
+- Daily scheduled `privacy:apply-retention` contribution.
+- Health checks for tables, morph map aliases, and identity hash configuration.
 
-The config also exposes `privacy_request_due_days`, which defaults newly opened privacy requests to a 30-day due date when no explicit due date is supplied.
+Privacy Center currently ships admin and console surfaces plus a public cookie consent preference center. The admin provider contributes these Filament surfaces for operator review and workflow management.
 
-## Consent And Policy Records
+## Boundaries
 
-Integrating packages should write Privacy Center records through Actions, not direct table writes:
+Privacy Center owns its own compliance ledger. It does not ship a public DSAR intake form and does not yet provide a cross-package subject-data export/erasure registry. Other packages still own their operational data until they contribute explicit privacy adapters.
 
-- `RegisterConsentPolicyAction`
-- `RecordConsentAction`
-- `RecordPolicyAcceptanceAction`
+Public consent output must not expose policy model IDs, hashed identifiers, package internals, admin URLs, editor state, or authoring markers. The package declares sensitive, non-cacheable frontend output because consent varies by subject.
 
-`RecordConsentAction` stores cookie category, consent decision, jurisdiction, policy version, optional source model, optional subject model, and evidence metadata. Request IP address and user agent values are hashed before persistence. When an integration passes a source model that carries a loaded `subject` or `visit` relationship, Privacy Center mirrors that related model as the consent subject so package-owned exports and erasure can find the record.
+## Runtime Surface
 
-The public preference center is available at `/privacy/consent`. It renders only category labels and explanatory copy, submits category handles, grants essential cookies automatically, and records optional categories as granted or denied without exposing policy model IDs, admin URLs, hashed identifiers, package internals, or editor state.
+- Providers: `src/Providers/`
+- Admin resources/widgets: `src/Filament/`
+- Public controllers: `src/Http/Controllers/`
+- Actions: `src/Actions/`
+- Data objects: `src/Data/`
+- Models: `src/Models/`
+- Command: `src/Console/Commands/ApplyRetentionRulesCommand.php`
+- Tests: `packages/privacy-center/tests`
 
-## Retention Execution
+## Docs
 
-Run all active retention rules manually with:
+- [Package docs](docs/README.md)
+- [Overview](docs/overview.md)
+- [Improvement plan](docs/improvement-plan.md)
+- [Screenshots contract](docs/screenshots.json)
+
+## Testing
 
 ```bash
-privacy:apply-retention
+vendor/bin/pest packages/privacy-center/tests --configuration=phpunit.xml
 ```
 
-Use `--json` to return a per-rule summary for automation. The package manifest advertises the same command as a daily scheduled job, and the service provider schedules it daily when the package is installed.
+## Troubleshooting
 
-## Privacy Request Workflow
-
-Operators should use the Privacy requests edit page actions to move DSAR records through verification, fulfilment, and rejection. The status and audit timestamp fields are read-only in the form so changes run through package Actions and preserve `verified_at`, `fulfilled_at`, `rejected_at`, and rejection reasons consistently.
-
-`OpenPrivacyRequestAction` records access, export, delete, correction, restriction, and objection requests. `BuildPrivacyExportAction` exports Privacy Center's package-owned consent records, policy acceptances, and privacy requests for a subject while excluding internal IDs and hashed evidence values. `AnonymizePrivacySubjectAction` removes subject links and request evidence from Privacy Center's own ledger records.
-
-Those export and erasure Actions do not yet collect or erase data from other packages such as Contacts, Newsletter, or Insights. Other packages must still own their operational data until a cross-package subject-data contribution registry ships.
-
-## Admin Surfaces
-
-The admin provider contributes these Filament surfaces when the package is installed:
-
-- Consent policies: create, edit, and list versioned policy records.
-- Consent records: list recorded consent decisions and policy versions.
-- Policy acceptances: list accepted policy versions and contexts.
-- Privacy requests: list and edit DSAR records, with workflow actions for verify, fulfil, and reject.
-- Retention rules: create, edit, and list delete/anonymize/review rules.
-- Overview widget: displays package-owned consent, request, and active retention counts.
-
-## Audit And Safety Boundaries
-
-Public output must not expose Privacy Center internals, package names, model identifiers, admin URLs, hashed identifiers, or editor state.
-
-The package manifest declares `cacheable: false`, `sensitiveOutput: true`, and a 40ms frontend render budget because consent decisions vary by subject and request evidence is sensitive. The public preference center is deliberately cache-safe HTML plus a POST action; future public DSAR UI must preserve that boundary and prove anonymous/non-admin output does not expose authoring or privacy internals.
+| Symptom                                 | Likely cause                                                  | Check                                                                              | Fix                                                                              |
+| --------------------------------------- | ------------------------------------------------------------- | ---------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
+| Consent recording fails                 | Hash secret/app key is missing or category payload is invalid | Check `CAPELL_PRIVACY_CENTER_HASH_SECRET`, `app.key`, and request category handles | Configure a hash secret and submit only known cookie categories                  |
+| Retention command reports no work       | No active rules match due dates or models                     | In a host app, run `php artisan privacy:apply-retention --json`                    | Add or adjust active retention rules and rerun the command                       |
+| DSAR status timestamps are inconsistent | Status was changed outside package Actions                    | Inspect `privacy_requests` audit timestamp fields                                  | Move workflow changes through verify/fulfil/reject Actions or admin page actions |

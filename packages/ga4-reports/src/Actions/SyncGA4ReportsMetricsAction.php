@@ -81,7 +81,7 @@ final class SyncGA4ReportsMetricsAction
         } catch (Throwable $throwable) {
             $syncRun->update([
                 'status' => 'failed',
-                'error_message' => $throwable->getMessage(),
+                'error_message' => RedactGA4ReportsSyncErrorMessageAction::run($throwable),
                 'finished_at' => Date::now(),
             ]);
 

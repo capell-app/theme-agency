@@ -25,5 +25,5 @@ vendor/bin/pest packages/<package>/tests --configuration=phpunit.xml
 After adding or moving fixture classes, refresh the optimized autoloader and confirm there are no PSR-4 warnings:
 
 ```bash
-composer dump-autoload --no-scripts
+COMPOSER=composer.local.json composer dump-autoload --no-scripts
 ```
