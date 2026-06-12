@@ -26,13 +26,15 @@ Developers get Actions for consent, policy acceptance, privacy exports, retentio
 - Filament resources for consent policies, consent records, policy acceptances, privacy requests, and retention rules.
 - Privacy Center overview widget.
 - Public cookie consent preference centre.
-- Actions for registering policies, recording consent/acceptance, opening privacy requests, building exports, anonymising subjects, and applying retention rules.
+- Actions for registering policies, recording consent/acceptance, opening privacy requests, building exports, anonymising subjects, and applying retention rules, including `BuildPrivacyExportAction` and `AnonymizePrivacySubjectAction`.
 - Daily scheduled `privacy:apply-retention` contribution.
 - Health checks for tables, morph map aliases, and identity hash configuration.
 
+Privacy Center currently ships admin and console surfaces plus a public cookie consent preference center. The admin provider contributes these Filament surfaces for operator review and workflow management.
+
 ## Boundaries
 
-Privacy Center owns its own compliance ledger. It does not yet provide a public DSAR intake form or a cross-package subject-data export/erasure registry. Other packages still own their operational data until they contribute explicit privacy adapters.
+Privacy Center owns its own compliance ledger. It does not ship a public DSAR intake form and does not yet provide a cross-package subject-data export/erasure registry. Other packages still own their operational data until they contribute explicit privacy adapters.
 
 Public consent output must not expose policy model IDs, hashed identifiers, package internals, admin URLs, editor state, or authoring markers. The package declares sensitive, non-cacheable frontend output because consent varies by subject.
 
