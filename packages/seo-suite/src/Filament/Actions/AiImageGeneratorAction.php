@@ -25,10 +25,10 @@ class AiImageGeneratorAction extends Action
     public static function make(?string $name = null, array $contextFieldKeys = []): static
     {
         return parent::make($name ?? 'generate-ai-image')
-            ->label('Generate with AI')
+            ->label(__('capell-seo-suite::generic.ai_image_generator_action'))
             ->icon('heroicon-o-sparkles')
-            ->modalHeading('AI Image Generator')
-            ->modalSubmitActionLabel('Accept')
+            ->modalHeading(__('capell-seo-suite::generic.ai_image_generator_modal_heading'))
+            ->modalSubmitActionLabel(__('capell-seo-suite::generic.ai_image_generator_accept'))
             ->schema(function (Get $get) use ($contextFieldKeys): array {
                 $contextParts = [];
                 foreach ($contextFieldKeys as $key => $label) {
@@ -42,15 +42,15 @@ class AiImageGeneratorAction extends Action
 
                 return [
                     Textarea::make('prompt')
-                        ->label('Describe the image')
+                        ->label(__('capell-seo-suite::generic.ai_image_generator_prompt'))
                         ->default($autoPrompt)
                         ->required()
                         ->rows(3)
-                        ->helperText('Edit to refine, then click Generate.'),
+                        ->helperText(__('capell-seo-suite::generic.ai_image_generator_prompt_helper')),
 
                     Actions::make([
                         Action::make('generate_preview')
-                            ->label('Generate')
+                            ->label(__('capell-seo-suite::generic.ai_image_generator_generate'))
                             ->color('gray')
                             ->action(function (array $state, Set $set): void {
                                 try {
@@ -63,7 +63,7 @@ class AiImageGeneratorAction extends Action
                                     $set('preview_url', $url);
                                 } catch (Throwable $throwable) {
                                     Notification::make()
-                                        ->title('Image generation failed')
+                                        ->title(__('capell-seo-suite::generic.ai_image_generator_failed'))
                                         ->body($throwable->getMessage())
                                         ->danger()
                                         ->send();
@@ -81,7 +81,7 @@ class AiImageGeneratorAction extends Action
 
                 if (! $url) {
                     Notification::make()
-                        ->title('No image generated yet')
+                        ->title(__('capell-seo-suite::generic.ai_image_generator_missing_image'))
                         ->warning()
                         ->send();
 
@@ -91,7 +91,7 @@ class AiImageGeneratorAction extends Action
                 $set('../../' . $name, $url);
 
                 Notification::make()
-                    ->title('Image applied')
+                    ->title(__('capell-seo-suite::generic.ai_image_generator_applied'))
                     ->success()
                     ->send();
             });

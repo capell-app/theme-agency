@@ -75,13 +75,25 @@ it('defines the inertia bookings theme contract', function (): void {
         ->and($definition->runtime)->toBe(FrontendRuntime::Inertia);
 });
 
-it('keeps marketplace media separate from unverified screenshot capture targets', function (): void {
+it('promotes buyer safe marketplace screenshots backed by the runner contract', function (): void {
     $packagePath = dirname(__DIR__, 2);
     $manifest = json_decode(File::get($packagePath . '/capell.json'), true, flags: JSON_THROW_ON_ERROR);
     $screenshotContract = json_decode(File::get($packagePath . '/docs/screenshots.json'), true, flags: JSON_THROW_ON_ERROR);
 
     $marketplaceScreenshots = $manifest['marketplace']['screenshots'] ?? [];
     $contractEntries = $screenshotContract['entries'] ?? [];
+    $expectedMarketplaceScreenshotPaths = [
+        'docs/assets/marketplace/extension-card.svg',
+        'docs/assets/marketplace/inertia-bookings-request-form.png',
+        'docs/assets/marketplace/inertia-bookings-mobile-request.png',
+    ];
+    $expectedRunnerScreenshotPaths = [
+        'docs/screenshots/inertia-bookings-homepage.png',
+        'docs/screenshots/inertia-bookings-request-flow.png',
+        'docs/screenshots/inertia-bookings-services.png',
+        'docs/screenshots/inertia-bookings-locations.png',
+        'docs/screenshots/inertia-bookings-mobile-request.png',
+    ];
 
     throw_unless(is_array($marketplaceScreenshots), RuntimeException::class, 'Theme Inertia Bookings marketplace screenshots must be an array.');
     throw_unless(is_array($contractEntries), RuntimeException::class, 'Theme Inertia Bookings screenshot contract entries must be an array.');
@@ -107,6 +119,8 @@ it('keeps marketplace media separate from unverified screenshot capture targets'
             ->and(strlen(trim($caption)))->toBeGreaterThanOrEqual(12);
     }
 
+    $requiredContractPaths = [];
+
     foreach ($contractEntries as $contractEntry) {
         if (! is_array($contractEntry)) {
             continue;
@@ -120,12 +134,14 @@ it('keeps marketplace media separate from unverified screenshot capture targets'
 
         throw_unless(is_string($screenshotPath), RuntimeException::class, 'Required Theme Inertia Bookings screenshot contract entries must have screenshot paths.');
 
-        expect(File::exists(dirname(__DIR__, 4) . '/' . $screenshotPath))->toBeTrue()
-            ->and($marketplaceScreenshotPaths)->not->toContain(str_replace('packages/theme-inertia-bookings/', '', $screenshotPath));
+        $packageRelativePath = str_replace('packages/theme-inertia-bookings/', '', $screenshotPath);
+        $requiredContractPaths[] = $packageRelativePath;
+
+        expect(File::exists(dirname(__DIR__, 4) . '/' . $screenshotPath))->toBeTrue();
     }
 
-    expect($marketplaceScreenshotPaths)
-        ->toContain('docs/assets/marketplace/extension-card.svg');
+    expect($marketplaceScreenshotPaths)->toBe($expectedMarketplaceScreenshotPaths);
+    expect($requiredContractPaths)->toBe($expectedRunnerScreenshotPaths);
 });
 
 it('registers the theme, booking renderer, and inertia theme assets when installed', function (): void {

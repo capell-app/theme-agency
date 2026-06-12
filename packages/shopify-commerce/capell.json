@@ -13,9 +13,15 @@
         "bundle": "commerce"
     },
     "namespace": "Capell\\ShopifyCommerce",
-    "surfaces": ["admin", "console"],
+    "surfaces": [
+        "admin",
+        "console"
+    ],
     "dependencies": {
-        "requires": ["capell-app/admin", "capell-app/core"],
+        "requires": [
+            "capell-app/admin",
+            "capell-app/core"
+        ],
         "supports": [
             "capell-app/contacts",
             "capell-app/diagnostics",
@@ -34,7 +40,9 @@
         "runtime": [
             "Capell\\ShopifyCommerce\\Providers\\ShopifyCommerceServiceProvider"
         ],
-        "admin": ["Capell\\ShopifyCommerce\\Providers\\AdminServiceProvider"],
+        "admin": [
+            "Capell\\ShopifyCommerce\\Providers\\AdminServiceProvider"
+        ],
         "frontend": []
     },
     "contributes": [],
@@ -72,8 +80,12 @@
         "syncShopifyCustomers": "Capell\\ShopifyCommerce\\Actions\\Customers\\SyncShopifyCustomersAction",
         "upsertShopifyCustomer": "Capell\\ShopifyCommerce\\Actions\\Customers\\UpsertShopifyCustomerAction"
     },
-    "settings": ["Capell\\ShopifyCommerce\\Settings\\ShopifyCommerceSettings"],
-    "permissions": ["shopify-commerce.manage"],
+    "settings": [
+        "Capell\\ShopifyCommerce\\Settings\\ShopifyCommerceSettings"
+    ],
+    "permissions": [
+        "shopify-commerce.manage"
+    ],
     "capabilities": [
         "shopify-commerce",
         "shopify-commerce-admin",
@@ -83,19 +95,29 @@
         "shopify-commerce-webhooks"
     ],
     "security": {
-        "riskTier": "critical",
+        "riskTier": "sensitive",
         "publicSurface": {
             "routeNames": [
                 "capell-shopify-commerce.oauth.callback",
                 "capell-shopify-commerce.oauth.install",
-                "capell-shopify-commerce.webhooks.shopify"
+                "capell-shopify-commerce.webhooks.shopify",
+                "oauth.install",
+                "oauth.callback",
+                "webhooks.shopify"
             ],
-            "auth": "public",
-            "csrfExemptRoutes": [],
+            "auth": "mixed",
+            "csrfExemptRoutes": [
+                "webhooks.shopify"
+            ],
             "signedRoutes": [],
             "tokenizedRoutes": [],
-            "webhookRoutes": ["capell-shopify-commerce.webhooks.shopify"],
-            "throttledRoutes": []
+            "webhookRoutes": [
+                "capell-shopify-commerce.webhooks.shopify",
+                "webhooks.shopify"
+            ],
+            "throttledRoutes": [
+                "webhooks.shopify"
+            ]
         },
         "sensitiveData": {
             "encryptedFields": [
@@ -105,7 +127,9 @@
                 "Capell\\ShopifyCommerce\\Models\\ShopifyCustomer::$last_name",
                 "Capell\\ShopifyCommerce\\Models\\ShopifyCustomer::$phone"
             ],
-            "hashedTokenFields": ["shopify_customers.email_hash"],
+            "hashedTokenFields": [
+                "shopify_customers.email_hash"
+            ],
             "redactedOutputClasses": [
                 "Capell\\ShopifyCommerce\\Actions\\Catalog\\SanitizeShopifySyncErrorAction"
             ],
@@ -128,29 +152,47 @@
         },
         "adminSurface": {
             "authorization": "permissions",
-            "permissions": ["shopify-commerce.manage"]
+            "permissions": [
+                "shopify-commerce.manage"
+            ]
         }
     },
     "performance": {
         "frontendRenderBudgetMs": 0,
         "adminQueryBudget": 40,
-        "cacheTags": ["shopify-commerce"],
+        "cacheTags": [
+            "shopify-commerce"
+        ],
         "cacheSafety": {
             "cacheable": false,
-            "variesBy": ["site"],
+            "variesBy": [
+                "site"
+            ],
             "sensitiveOutput": true,
             "invalidationSources": [
                 {
                     "model": "Capell\\ShopifyCommerce\\Models\\ShopifyProduct",
-                    "events": ["created", "updated", "deleted"]
+                    "events": [
+                        "created",
+                        "updated",
+                        "deleted"
+                    ]
                 },
                 {
                     "model": "Capell\\ShopifyCommerce\\Models\\ShopifyProductVariant",
-                    "events": ["created", "updated", "deleted"]
+                    "events": [
+                        "created",
+                        "updated",
+                        "deleted"
+                    ]
                 },
                 {
                     "model": "Capell\\ShopifyCommerce\\Models\\ShopifyCustomer",
-                    "events": ["created", "updated", "deleted"]
+                    "events": [
+                        "created",
+                        "updated",
+                        "deleted"
+                    ]
                 }
             ],
             "queueInvalidation": true
@@ -191,9 +233,18 @@
                 "caption": "Connected-store controls remain readable in dark mode"
             }
         ],
-        "categories": ["admin", "commerce", "integrations"]
+        "categories": [
+            "admin",
+            "commerce",
+            "integrations"
+        ]
     },
     "contributionTraceability": {
-        "deferredContributions": ["admin-page", "model", "route"]
+        "deferredContributions": [
+            "admin-page",
+            "model",
+            "route",
+            "scheduled-job"
+        ]
     }
 }

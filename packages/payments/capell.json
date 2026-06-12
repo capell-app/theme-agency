@@ -6,16 +6,23 @@
     "kind": "package",
     "capellApiVersion": "^4.0",
     "version": "4.x-dev",
-    "description": "Payments gives Capell a first-party way to charge customers without depending on an external store. It ships native Stripe Checkout for one-off purchases, recurring subscriptions, donations, paid file downloads, and paid gated access, plus signed webhook intake that keeps payments, subscriptions, refunds, and disputes in sync automatically. Every record is stored behind a provider-neutral model layer, so admins get read-only audit resources, customers get a self-service billing portal, and Form Builder fields can collect payment inline. Designed for revenue-generating sites that want checkout, fulfilment, and reconciliation handled inside the CMS.",
+    "description": "Payments gives Capell a first-party way to charge customers without depending on an external store. It ships native Stripe Checkout for one-off purchases, recurring subscriptions, donations, paid file downloads, and fulfillment-backed gated-access handoffs, plus signed webhook intake that keeps payments, subscriptions, refunds, and disputes in sync automatically. Every record is stored behind a provider-neutral model layer, so admins get read-only audit resources, customers get a self-service billing portal, and Form Builder fields can collect payment inline. Designed for revenue-generating sites that want checkout, fulfilment, and reconciliation handled inside the CMS.",
     "product": {
         "group": "Capell Commerce",
         "tier": "premium",
         "bundle": "commerce"
     },
     "namespace": "Capell\\Payments",
-    "surfaces": ["admin", "frontend", "console"],
+    "surfaces": [
+        "admin",
+        "frontend",
+        "console"
+    ],
     "dependencies": {
-        "requires": ["capell-app/admin", "capell-app/core"],
+        "requires": [
+            "capell-app/admin",
+            "capell-app/core"
+        ],
         "supports": [
             "capell-app/access-gate",
             "capell-app/customer-portal",
@@ -25,9 +32,15 @@
     },
     "providers": {
         "metadata": [],
-        "install": ["Capell\\Payments\\Providers\\PaymentsServiceProvider"],
-        "runtime": ["Capell\\Payments\\Providers\\PaymentsServiceProvider"],
-        "admin": ["Capell\\Payments\\Providers\\AdminServiceProvider"],
+        "install": [
+            "Capell\\Payments\\Providers\\PaymentsServiceProvider"
+        ],
+        "runtime": [
+            "Capell\\Payments\\Providers\\PaymentsServiceProvider"
+        ],
+        "admin": [
+            "Capell\\Payments\\Providers\\AdminServiceProvider"
+        ],
         "frontend": []
     },
     "contributes": [
@@ -113,7 +126,9 @@
         "paidDownloadUrl": "Capell\\Payments\\Actions\\CreatePaidDownloadUrlAction",
         "subscriptionEntitlement": "Capell\\Payments\\Actions\\ResolveSubscriptionEntitlementAction"
     },
-    "settings": ["Capell\\Payments\\Settings\\PaymentsSettings"],
+    "settings": [
+        "Capell\\Payments\\Settings\\PaymentsSettings"
+    ],
     "permissions": [
         "View:PaymentCustomer",
         "View:CheckoutSession",
@@ -142,20 +157,36 @@
         "customer-portal-payments-feed"
     ],
     "security": {
-        "riskTier": "critical",
+        "riskTier": "sensitive",
         "publicSurface": {
             "routeNames": [
                 "capell-payments.form-builder.checkout",
                 "capell-payments.paid-downloads.show",
                 "capell-payments.portal.billing",
-                "capell-payments.stripe-webhook"
+                "capell-payments.stripe-webhook",
+                "stripe-webhook",
+                "paid-downloads.show",
+                "form-builder.checkout",
+                "portal.billing"
             ],
-            "auth": "public",
-            "csrfExemptRoutes": ["capell-payments.stripe-webhook"],
-            "signedRoutes": ["capell-payments.paid-downloads.show"],
+            "auth": "mixed",
+            "csrfExemptRoutes": [
+                "capell-payments.stripe-webhook",
+                "stripe-webhook"
+            ],
+            "signedRoutes": [
+                "capell-payments.paid-downloads.show",
+                "paid-downloads.show",
+                "form-builder.checkout"
+            ],
             "tokenizedRoutes": [],
-            "webhookRoutes": ["capell-payments.stripe-webhook"],
-            "throttledRoutes": []
+            "webhookRoutes": [
+                "capell-payments.stripe-webhook",
+                "stripe-webhook"
+            ],
+            "throttledRoutes": [
+                "stripe-webhook"
+            ]
         },
         "sensitiveData": {
             "encryptedFields": [
@@ -207,10 +238,15 @@
     "performance": {
         "frontendRenderBudgetMs": 0,
         "adminQueryBudget": 40,
-        "cacheTags": ["payments"],
+        "cacheTags": [
+            "payments"
+        ],
         "cacheSafety": {
             "cacheable": false,
-            "variesBy": ["site", "customer"],
+            "variesBy": [
+                "site",
+                "customer"
+            ],
             "sensitiveOutput": true,
             "invalidationSources": [],
             "queueInvalidation": false
@@ -232,7 +268,7 @@
         "privateDocsRequested": true
     },
     "marketplace": {
-        "summary": "Take one-off payments, donations, subscriptions, paid downloads, and gated access on any Capell site through Stripe Checkout — with a provider-neutral record layer built to add more gateways later.",
+        "summary": "Take one-off payments, donations, subscriptions, paid downloads, and fulfillment-backed gated-access handoffs through Stripe Checkout — with a provider-neutral record layer built to add more gateways later.",
         "screenshots": [
             {
                 "path": "docs/screenshots/payments-checkout-sessions.png",
@@ -260,7 +296,10 @@
                 "caption": "Payments Form Builder checkout"
             }
         ],
-        "categories": ["commerce", "integrations"]
+        "categories": [
+            "commerce",
+            "integrations"
+        ]
     },
     "contributionTraceability": {
         "deferredContributions": []

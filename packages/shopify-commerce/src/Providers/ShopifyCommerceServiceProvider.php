@@ -18,7 +18,10 @@ use Capell\ShopifyCommerce\Models\ShopifyProduct;
 use Capell\ShopifyCommerce\Models\ShopifyProductVariant;
 use Capell\ShopifyCommerce\Settings\ShopifyCommerceSettings;
 use Filament\Support\Icons\Heroicon;
+use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Console\Scheduling\Schedule;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\RateLimiter;
 use Spatie\LaravelPackageTools\Package;
 
 final class ShopifyCommerceServiceProvider extends AbstractPackageServiceProvider
@@ -64,6 +67,12 @@ final class ShopifyCommerceServiceProvider extends AbstractPackageServiceProvide
                 ->registerScheduledMaintenance()
                 ->registerScheduledSync();
         });
+    }
+
+    public function bootingPackage(): void
+    {
+        RateLimiter::for('capell-shopify-commerce-webhooks', static fn (Request $request): Limit => Limit::perMinute(120)
+            ->by((string) $request->ip()));
     }
 
     private function registerModels(): self

@@ -13,7 +13,10 @@ use Capell\Bookings\Rendering\BladePublicBookingRequestRenderer;
 use Capell\Bookings\Support\BookingsModelRegistrar;
 use Capell\Core\Facades\CapellCore;
 use Capell\Core\Support\Packages\AbstractPackageServiceProvider;
+use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Console\Scheduling\Schedule;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\RateLimiter;
 use Override;
 use Spatie\LaravelPackageTools\Package;
 
@@ -41,7 +44,6 @@ class BookingsServiceProvider extends AbstractPackageServiceProvider
             ->hasConfigFile()
             ->hasTranslations()
             ->hasViews(self::$name)
-            ->hasRoute('web')
             ->hasCommand(SendDueAppointmentRemindersCommand::class)
             ->hasMigrations([
                 '2026_05_31_130000_01_create_booking_services_table',
@@ -69,6 +71,25 @@ class BookingsServiceProvider extends AbstractPackageServiceProvider
                 ->registerAdminResources()
                 ->registerReminderSchedule();
         });
+    }
+
+    public function bootingPackage(): void
+    {
+        RateLimiter::for('capell-bookings-request', static function (Request $request): Limit {
+            $email = strtolower((string) $request->input('customer_email', ''));
+
+            return Limit::perMinute(6)
+                ->by(hash('sha256', $email . '|' . (string) $request->ip()));
+        });
+    }
+
+    public function packageBooted(): void
+    {
+        if (! $this->isPackageInstalled()) {
+            return;
+        }
+
+        $this->loadRoutesFrom(__DIR__ . '/../../routes/web.php');
     }
 
     #[Override]

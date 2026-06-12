@@ -154,7 +154,15 @@
             "queueInvalidation": true
         }
     },
-    "healthChecks": [],
+    "healthChecks": [
+        {
+            "key": "social-feeds.storage-and-widget",
+            "label": "Social Feeds storage tables and frontend widget renderer are available",
+            "class": "Capell\\SocialFeeds\\Health\\SocialFeedsHealthCheck",
+            "severity": "warning",
+            "surface": "frontend"
+        }
+    ],
     "commercial": {
         "proposedLicense": "paid",
         "requestedCertification": "first-party",

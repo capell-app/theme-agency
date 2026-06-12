@@ -13,7 +13,10 @@
         "bundle": "foundation"
     },
     "namespace": "Capell\\FrontendAuthoring",
-    "surfaces": ["frontend", "console"],
+    "surfaces": [
+        "frontend",
+        "console"
+    ],
     "dependencies": {
         "requires": [
             "capell-app/admin",
@@ -46,7 +49,9 @@
         "doctor": null
     },
     "settings": [],
-    "permissions": ["frontend-authoring.edit"],
+    "permissions": [
+        "frontend-authoring.edit"
+    ],
     "capabilities": [
         "authoring-surface",
         "preview-only",
@@ -54,18 +59,29 @@
         "cache-blocking"
     ],
     "security": {
-        "riskTier": "critical",
+        "riskTier": "sensitive",
         "publicSurface": {
             "routeNames": [
                 "capell-frontend.authoring.edit",
-                "capell-frontend.beacon"
+                "capell-frontend.beacon",
+                "beacon",
+                "authoring.edit"
             ],
-            "auth": "mixed",
-            "csrfExemptRoutes": ["capell-frontend.beacon"],
-            "signedRoutes": ["capell-frontend.authoring.edit"],
+            "auth": "admin-only",
+            "csrfExemptRoutes": [
+                "capell-frontend.beacon",
+                "beacon"
+            ],
+            "signedRoutes": [
+                "capell-frontend.authoring.edit",
+                "authoring.edit"
+            ],
             "tokenizedRoutes": [],
             "webhookRoutes": [],
-            "throttledRoutes": ["capell-frontend.beacon"]
+            "throttledRoutes": [
+                "capell-frontend.beacon",
+                "beacon"
+            ]
         },
         "sensitiveData": {
             "encryptedFields": [],
@@ -86,16 +102,23 @@
         },
         "adminSurface": {
             "authorization": "permissions",
-            "permissions": ["frontend-authoring.edit"]
+            "permissions": [
+                "frontend-authoring.edit"
+            ]
         }
     },
     "performance": {
         "frontendRenderBudgetMs": 20,
         "adminQueryBudget": 0,
-        "cacheTags": ["frontend-authoring"],
+        "cacheTags": [
+            "frontend-authoring"
+        ],
         "cacheSafety": {
             "cacheable": false,
-            "variesBy": ["site", "locale"],
+            "variesBy": [
+                "site",
+                "locale"
+            ],
             "sensitiveOutput": false,
             "invalidationSources": [],
             "queueInvalidation": true
@@ -130,10 +153,18 @@
                 "caption": "Authoring controls stay usable on mobile"
             }
         ],
-        "categories": ["console", "foundation", "frontend"]
+        "categories": [
+            "console",
+            "foundation",
+            "frontend"
+        ]
     },
-    "scopes": ["frontend"],
+    "scopes": [
+        "frontend"
+    ],
     "contributionTraceability": {
-        "deferredContributions": ["route"]
+        "deferredContributions": [
+            "route"
+        ]
     }
 }

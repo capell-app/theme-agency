@@ -5,6 +5,12 @@ declare(strict_types=1);
 return [
     'action_aria_label' => ':action :label, :count item(s)',
     'activity_trail' => 'Activity Trail',
+    'activity_trail_table' => [
+        'actor' => 'Actor',
+        'event' => 'Event',
+        'model' => 'Model',
+        'timestamp' => 'Timestamp',
+    ],
     'actions' => [
         'abandoned_workspaces' => 'Abandoned workspaces',
         'approval_history' => 'Approval history',

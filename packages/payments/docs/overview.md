@@ -6,7 +6,7 @@ Payments gives Capell a general payment layer beyond Shopify Commerce. It stores
 - Subscriptions
 - Donations
 - Paid downloads
-- Paid gated access
+- Paid gated-access handoffs through fulfillment handlers
 - Form Builder payment fields
 
 ## Integrations

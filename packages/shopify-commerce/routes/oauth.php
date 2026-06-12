@@ -13,4 +13,5 @@ Route::middleware(['web', 'auth'])->prefix('capell/oauth/shopify')->group(functi
 });
 
 Route::post('/capell/webhooks/shopify', ShopifyWebhookController::class)
+    ->middleware('throttle:capell-shopify-commerce-webhooks')
     ->name('capell-shopify-commerce.webhooks.shopify');

@@ -13,7 +13,10 @@
         "bundle": "publishing-pro"
     },
     "namespace": "Capell\\PublishingStudio",
-    "surfaces": ["admin", "console"],
+    "surfaces": [
+        "admin",
+        "console"
+    ],
     "dependencies": {
         "requires": [
             "capell-app/admin",
@@ -38,7 +41,9 @@
         "runtime": [
             "Capell\\PublishingStudio\\Providers\\PublishingStudioServiceProvider"
         ],
-        "admin": ["Capell\\PublishingStudio\\Providers\\AdminServiceProvider"],
+        "admin": [
+            "Capell\\PublishingStudio\\Providers\\AdminServiceProvider"
+        ],
         "frontend": []
     },
     "contributes": [
@@ -230,18 +235,25 @@
         "publicSurface": {
             "routeNames": [
                 "capell-frontend.preview.exit",
-                "capell-publishing-studio.scheduler.ical"
+                "capell-publishing-studio.scheduler.ical",
+                "preview.exit",
+                "scheduler.ical"
             ],
-            "auth": "public",
+            "auth": "mixed",
             "csrfExemptRoutes": [],
             "signedRoutes": [],
-            "tokenizedRoutes": ["capell-publishing-studio.scheduler.ical"],
+            "tokenizedRoutes": [
+                "capell-publishing-studio.scheduler.ical",
+                "scheduler.ical"
+            ],
             "webhookRoutes": [],
             "throttledRoutes": []
         },
         "sensitiveData": {
             "encryptedFields": [],
-            "hashedTokenFields": ["publishing_scheduler_events.token_hash"],
+            "hashedTokenFields": [
+                "publishing_scheduler_events.token_hash"
+            ],
             "redactedOutputClasses": [],
             "plaintextJustifications": [
                 {
@@ -251,7 +263,7 @@
             ]
         },
         "publicOutput": {
-            "cacheSafe": true,
+            "cacheSafe": false,
             "forbidAuthoringSurface": true,
             "forbidSecrets": true,
             "forbidPublicBladeQueries": true
@@ -322,7 +334,11 @@
                 "caption": "Review and approval before publish"
             }
         ],
-        "categories": ["admin", "console", "publishing-pro"]
+        "categories": [
+            "admin",
+            "console",
+            "publishing-pro"
+        ]
     },
     "contributionTraceability": {
         "deferredContributions": []

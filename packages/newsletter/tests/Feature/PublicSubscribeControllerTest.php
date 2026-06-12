@@ -9,7 +9,28 @@ use Capell\Newsletter\Enums\SubscriberStatus;
 use Capell\Newsletter\Models\ConsentEvent;
 use Capell\Newsletter\Models\PublicToken;
 use Capell\Newsletter\Models\Subscriber;
+use Capell\Newsletter\Providers\NewsletterServiceProvider;
 use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Facades\Route;
+
+it('throttles public newsletter write routes', function (): void {
+    expect(Route::getRoutes()->getByName('capell-newsletter.subscribe')?->gatherMiddleware())
+        ->toContain('throttle:capell-newsletter-subscribe')
+        ->and(Route::getRoutes()->getByName('capell-newsletter.unsubscribe.one-click')?->gatherMiddleware())
+        ->toContain('throttle:capell-newsletter-one-click-unsubscribe')
+        ->and(Route::getRoutes()->getByName('capell-newsletter.preferences.update')?->gatherMiddleware())
+        ->toContain('throttle:capell-newsletter-preferences')
+        ->and(Route::getRoutes()->getByName('capell-newsletter.provider-webhook')?->gatherMiddleware())
+        ->toContain('throttle:capell-newsletter-provider-webhook');
+});
+
+it('loads public routes only after the newsletter package is installed', function (): void {
+    $providerSource = file_get_contents((new ReflectionClass(NewsletterServiceProvider::class))->getFileName());
+
+    expect($providerSource)->toBeString()
+        ->and($providerSource)->not->toContain("->hasRoute('web')")
+        ->and($providerSource)->toContain('loadRoutesFrom(__DIR__ . \'/../../routes/web.php\')');
+});
 
 it('captures public newsletter subscriptions for the current frontend site', function (): void {
     Notification::fake();

@@ -19,6 +19,7 @@ return [
 
     'webhooks' => [
         'queue' => Env::get('CAPELL_PAYMENTS_WEBHOOK_QUEUE', 'payments'),
+        'stripe_rate_limit' => 'capell-payments-stripe-webhook',
     ],
 
     'tables' => [

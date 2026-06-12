@@ -13,9 +13,14 @@
         "bundle": "operations"
     },
     "namespace": "Capell\\Deployments",
-    "surfaces": ["admin"],
+    "surfaces": [
+        "admin"
+    ],
     "dependencies": {
-        "requires": ["capell-app/admin", "capell-app/core"],
+        "requires": [
+            "capell-app/admin",
+            "capell-app/core"
+        ],
         "supports": [],
         "conflicts": []
     },
@@ -25,14 +30,19 @@
             "Capell\\Deployments\\Providers\\DeploymentsServiceProvider"
         ],
         "runtime": [],
-        "admin": ["Capell\\Deployments\\Providers\\DeploymentsServiceProvider"],
+        "admin": [
+            "Capell\\Deployments\\Providers\\DeploymentsServiceProvider"
+        ],
         "frontend": []
     },
     "contributes": [],
     "database": {
         "migrations": true,
         "settings": false,
-        "requiredTables": ["deployment_connections", "deployment_publications"]
+        "requiredTables": [
+            "deployment_connections",
+            "deployment_publications"
+        ]
     },
     "commands": {
         "install": null,
@@ -54,14 +64,17 @@
         "deployments-token-refresh"
     ],
     "security": {
-        "riskTier": "critical",
+        "riskTier": "sensitive",
         "publicSurface": {
             "routeNames": [
                 "capell-deployments.oauth.bitbucket",
                 "capell-deployments.oauth.github",
-                "capell-deployments.oauth.gitlab"
+                "capell-deployments.oauth.gitlab",
+                "oauth.github",
+                "oauth.gitlab",
+                "oauth.bitbucket"
             ],
-            "auth": "public",
+            "auth": "authenticated",
             "csrfExemptRoutes": [],
             "signedRoutes": [],
             "tokenizedRoutes": [],
@@ -82,7 +95,7 @@
             "plaintextJustifications": []
         },
         "publicOutput": {
-            "cacheSafe": true,
+            "cacheSafe": false,
             "forbidAuthoringSurface": true,
             "forbidSecrets": true,
             "forbidPublicBladeQueries": true
@@ -151,9 +164,16 @@
                 "caption": "Dark-mode view of the Git provider connection entry point"
             }
         ],
-        "categories": ["admin", "operations"]
+        "categories": [
+            "admin",
+            "operations"
+        ]
     },
     "contributionTraceability": {
-        "deferredContributions": ["admin-page", "route"]
+        "deferredContributions": [
+            "admin-page",
+            "route",
+            "dashboard-widget"
+        ]
     }
 }

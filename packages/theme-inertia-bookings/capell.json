@@ -13,7 +13,9 @@
         "bundle": "themes"
     },
     "namespace": "Capell\\ThemeStudio\\InertiaBookings",
-    "surfaces": ["frontend"],
+    "surfaces": [
+        "frontend"
+    ],
     "dependencies": {
         "requires": [
             "capell-app/core",
@@ -61,7 +63,10 @@
     },
     "settings": [],
     "permissions": [],
-    "capabilities": ["theme-inertia-bookings", "inertia-bookings-frontend"],
+    "capabilities": [
+        "theme-inertia-bookings",
+        "inertia-bookings-frontend"
+    ],
     "security": {
         "riskTier": "low",
         "publicSurface": {
@@ -98,10 +103,15 @@
     "performance": {
         "frontendRenderBudgetMs": 20,
         "adminQueryBudget": 0,
-        "cacheTags": ["theme-inertia-bookings"],
+        "cacheTags": [
+            "theme-inertia-bookings"
+        ],
         "cacheSafety": {
             "cacheable": false,
-            "variesBy": ["site", "locale"],
+            "variesBy": [
+                "site",
+                "locale"
+            ],
             "sensitiveOutput": false,
             "invalidationSources": [],
             "queueInvalidation": true
@@ -132,32 +142,21 @@
                 "caption": "Theme Inertia Bookings extension card."
             },
             {
-                "path": "docs/assets/marketplace/inertia-bookings-homepage.png",
-                "alt": "Theme Inertia Bookings Inertia Bookings Homepage screenshot",
-                "caption": "Inertia Bookings Homepage rendered with the Theme Inertia Bookings theme."
-            },
-            {
-                "path": "docs/assets/marketplace/inertia-bookings-locations.png",
-                "alt": "Theme Inertia Bookings Inertia Bookings Locations screenshot",
-                "caption": "Inertia Bookings Locations rendered with the Theme Inertia Bookings theme."
+                "path": "docs/assets/marketplace/inertia-bookings-request-form.png",
+                "alt": "Theme Inertia Bookings desktop appointment request form with service, staff, location, and slot fields.",
+                "caption": "Desktop booking request form with labelled controls, appointment slots, and customer details."
             },
             {
                 "path": "docs/assets/marketplace/inertia-bookings-mobile-request.png",
-                "alt": "Theme Inertia Bookings Inertia Bookings Mobile Request screenshot",
-                "caption": "Inertia Bookings Mobile Request rendered with the Theme Inertia Bookings theme."
-            },
-            {
-                "path": "docs/assets/marketplace/inertia-bookings-request-flow.png",
-                "alt": "Theme Inertia Bookings Inertia Bookings Request Flow screenshot",
-                "caption": "Inertia Bookings Request Flow rendered with the Theme Inertia Bookings theme."
-            },
-            {
-                "path": "docs/assets/marketplace/inertia-bookings-services.png",
-                "alt": "Theme Inertia Bookings Inertia Bookings Services screenshot",
-                "caption": "Inertia Bookings Services rendered with the Theme Inertia Bookings theme."
+                "alt": "Theme Inertia Bookings mobile booking request flow with labelled controls and appointment CTA.",
+                "caption": "Mobile booking request flow with service controls, available slots, and appointment actions."
             }
         ],
-        "categories": ["frontend", "themes", "bookings"]
+        "categories": [
+            "frontend",
+            "themes",
+            "bookings"
+        ]
     },
     "themeKey": "inertia-bookings"
 }

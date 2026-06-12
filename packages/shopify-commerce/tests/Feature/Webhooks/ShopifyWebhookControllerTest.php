@@ -8,12 +8,18 @@ use Capell\ShopifyCommerce\Models\ShopifyConnection;
 use Capell\ShopifyCommerce\Models\ShopifyCustomer;
 use Capell\ShopifyCommerce\Models\ShopifyProduct;
 use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Testing\TestResponse;
 
 use function Pest\Laravel\postJson;
 
 beforeEach(function (): void {
     config()->set('capell-shopify-commerce.client_secret', 'client-secret');
+});
+
+it('throttles shopify webhook ingestion', function (): void {
+    expect(Route::getRoutes()->getByName('capell-shopify-commerce.webhooks.shopify')?->gatherMiddleware())
+        ->toContain('throttle:capell-shopify-commerce-webhooks');
 });
 
 it('ingests product update webhooks into the local catalog cache', function (): void {

@@ -13,9 +13,15 @@
         "bundle": "operations"
     },
     "namespace": "Capell\\AgentBridge",
-    "surfaces": ["admin", "frontend"],
+    "surfaces": [
+        "admin",
+        "frontend"
+    ],
     "dependencies": {
-        "requires": ["capell-app/admin", "capell-app/core"],
+        "requires": [
+            "capell-app/admin",
+            "capell-app/core"
+        ],
         "supports": [],
         "conflicts": []
     },
@@ -40,19 +46,38 @@
         "demo": null,
         "doctor": null
     },
-    "settings": ["Capell\\AgentBridge\\Settings\\AgentBridgeSettings"],
-    "permissions": ["agent-bridge.manage-tokens", "agent-bridge.view-audit"],
-    "capabilities": ["agent-bridge", "agent-bridge-admin"],
+    "settings": [
+        "Capell\\AgentBridge\\Settings\\AgentBridgeSettings"
+    ],
+    "permissions": [
+        "agent-bridge.manage-tokens",
+        "agent-bridge.view-audit"
+    ],
+    "capabilities": [
+        "agent-bridge",
+        "agent-bridge-admin"
+    ],
     "security": {
-        "riskTier": "critical",
+        "riskTier": "sensitive",
         "publicSurface": {
-            "routeNames": ["capell-agent-bridge.home"],
-            "auth": "public",
+            "routeNames": [
+                "capell-agent-bridge.home",
+                "home",
+                "knowledge",
+                "site"
+            ],
+            "auth": "tokenized",
             "csrfExemptRoutes": [],
             "signedRoutes": [],
-            "tokenizedRoutes": [],
+            "tokenizedRoutes": [
+                "knowledge",
+                "site"
+            ],
             "webhookRoutes": [],
-            "throttledRoutes": []
+            "throttledRoutes": [
+                "knowledge",
+                "site"
+            ]
         },
         "sensitiveData": {
             "encryptedFields": [],
@@ -69,7 +94,7 @@
             ]
         },
         "publicOutput": {
-            "cacheSafe": true,
+            "cacheSafe": false,
             "forbidAuthoringSurface": true,
             "forbidSecrets": true,
             "forbidPublicBladeQueries": true
@@ -128,7 +153,10 @@
                 "caption": "Build scoped prompts in dark mode while keeping agent instructions tied to installed package context."
             }
         ],
-        "categories": ["admin", "operations"]
+        "categories": [
+            "admin",
+            "operations"
+        ]
     },
     "contributionTraceability": {
         "deferredContributions": [

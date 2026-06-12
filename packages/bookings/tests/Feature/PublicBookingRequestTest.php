@@ -16,12 +16,24 @@ use Capell\Bookings\Models\BookingAvailabilityWindow;
 use Capell\Bookings\Models\BookingLocation;
 use Capell\Bookings\Models\BookingService;
 use Capell\Bookings\Models\BookingStaffMember;
+use Capell\Bookings\Providers\BookingsServiceProvider;
 use Carbon\CarbonImmutable;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
 use Symfony\Component\HttpFoundation\Response;
 
 afterEach(function (): void {
     CarbonImmutable::setTestNow();
+});
+
+it('throttles public booking request submissions and install-gates public routes', function (): void {
+    $providerSource = file_get_contents((new ReflectionClass(BookingsServiceProvider::class))->getFileName());
+
+    expect(Route::getRoutes()->getByName('capell-bookings.request.store')?->gatherMiddleware())
+        ->toContain('throttle:capell-bookings-request')
+        ->and($providerSource)->toBeString()
+        ->and($providerSource)->not->toContain("->hasRoute('web')")
+        ->and($providerSource)->toContain('loadRoutesFrom(__DIR__ . \'/../../routes/web.php\')');
 });
 
 it('renders a public booking request form without exposing admin internals', function (): void {

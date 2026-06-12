@@ -13,10 +13,16 @@
         "bundle": "publishing-pro"
     },
     "namespace": "Capell\\AgentDelivery",
-    "surfaces": ["frontend"],
+    "surfaces": [
+        "frontend"
+    ],
     "dependencies": {
-        "requires": ["capell-app/core"],
-        "supports": ["capell-app/site-discovery"],
+        "requires": [
+            "capell-app/core"
+        ],
+        "supports": [
+            "capell-app/site-discovery"
+        ],
         "conflicts": []
     },
     "providers": {
@@ -48,19 +54,26 @@
         "public-page-chunks"
     ],
     "security": {
-        "riskTier": "critical",
+        "riskTier": "standard",
         "publicSurface": {
             "routeNames": [
                 "capell-agent-delivery.pages.chunks",
                 "capell-agent-delivery.pages.index",
-                "capell-agent-delivery.pages.manifest"
+                "capell-agent-delivery.pages.manifest",
+                "pages.index",
+                "pages.manifest",
+                "pages.chunks"
             ],
             "auth": "public",
             "csrfExemptRoutes": [],
             "signedRoutes": [],
             "tokenizedRoutes": [],
             "webhookRoutes": [],
-            "throttledRoutes": []
+            "throttledRoutes": [
+                "pages.index",
+                "pages.manifest",
+                "pages.chunks"
+            ]
         },
         "sensitiveData": {
             "encryptedFields": [],
@@ -87,10 +100,16 @@
     "performance": {
         "frontendRenderBudgetMs": 20,
         "adminQueryBudget": 0,
-        "cacheTags": ["agent-delivery"],
+        "cacheTags": [
+            "agent-delivery"
+        ],
         "cacheSafety": {
             "cacheable": false,
-            "variesBy": ["site", "locale", "url"],
+            "variesBy": [
+                "site",
+                "locale",
+                "url"
+            ],
             "sensitiveOutput": false,
             "invalidationSources": [
                 {
@@ -125,7 +144,11 @@
     "marketplace": {
         "summary": "Serve your published Capell pages to AI agents and answer engines as clean, public-safe JSON manifests and RAG-ready semantic chunks — no scraping, no admin leakage.",
         "screenshots": [],
-        "categories": ["frontend", "publishing-pro", "ai"]
+        "categories": [
+            "frontend",
+            "publishing-pro",
+            "ai"
+        ]
     },
     "contributionTraceability": {
         "deferredContributions": [

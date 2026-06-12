@@ -305,6 +305,6 @@
         "categories": ["admin", "console", "frontend", "search-seo"]
     },
     "contributionTraceability": {
-        "deferredContributions": []
+        "deferredContributions": ["dashboard-widget", "model", "scheduled-job"]
     }
 }

@@ -102,7 +102,15 @@
             "queueInvalidation": false
         }
     },
-    "healthChecks": [],
+    "healthChecks": [
+        {
+            "key": "record-switcher.admin-heading",
+            "label": "Record Switcher heading extender and admin assets are available",
+            "class": "Capell\\RecordSwitcher\\Health\\RecordSwitcherHealthCheck",
+            "severity": "warning",
+            "surface": "admin"
+        }
+    ],
     "commercial": {
         "proposedLicense": "free",
         "requestedCertification": "first-party",

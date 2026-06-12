@@ -13,7 +13,10 @@
         "bundle": "content-product"
     },
     "namespace": "Capell\\KnowledgeBase",
-    "surfaces": ["frontend", "admin"],
+    "surfaces": [
+        "frontend",
+        "admin"
+    ],
     "dependencies": {
         "requires": [
             "capell-app/admin",
@@ -34,7 +37,9 @@
         "runtime": [
             "Capell\\KnowledgeBase\\Providers\\KnowledgeBaseServiceProvider"
         ],
-        "admin": ["Capell\\KnowledgeBase\\Providers\\AdminServiceProvider"],
+        "admin": [
+            "Capell\\KnowledgeBase\\Providers\\AdminServiceProvider"
+        ],
         "frontend": []
     },
     "contributes": [
@@ -109,13 +114,20 @@
     "security": {
         "riskTier": "standard",
         "publicSurface": {
-            "routeNames": ["ai-output", "article", "article.feedback", "index"],
+            "routeNames": [
+                "ai-output",
+                "article",
+                "article.feedback",
+                "index"
+            ],
             "auth": "public",
             "csrfExemptRoutes": [],
             "signedRoutes": [],
             "tokenizedRoutes": [],
             "webhookRoutes": [],
-            "throttledRoutes": ["article.feedback"]
+            "throttledRoutes": [
+                "article.feedback"
+            ]
         },
         "sensitiveData": {
             "encryptedFields": [],
@@ -145,7 +157,9 @@
     "performance": {
         "frontendRenderBudgetMs": 20,
         "adminQueryBudget": 40,
-        "cacheTags": ["knowledge-base"],
+        "cacheTags": [
+            "knowledge-base"
+        ],
         "cacheSafety": {
             "cacheable": true,
             "variesBy": [],
@@ -216,7 +230,11 @@
                 "caption": "Edit an article through the shipped Capell admin form while preparing the next version for publication."
             }
         ],
-        "categories": ["content", "frontend", "search-seo"]
+        "categories": [
+            "content",
+            "frontend",
+            "search-seo"
+        ]
     },
     "contributionTraceability": {
         "deferredContributions": []

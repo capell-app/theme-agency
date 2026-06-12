@@ -1,0 +1,7 @@
+{
+    "resources/js/theme-commerce.js": {
+        "file": "assets/theme-commerce.js",
+        "src": "resources/js/theme-commerce.js",
+        "isEntry": true
+    }
+}
