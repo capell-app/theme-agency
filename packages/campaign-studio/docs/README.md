@@ -8,8 +8,6 @@ Start at the [package README](../README.md) when deciding whether to install thi
 
 | Doc                                                             | Use it for                                                                         |
 | --------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
-| [Campaign Studio Api](campaign-studio-api.md)                   | HTTP/API contracts, payloads, and integration behavior.                            |
-| [Campaign Studio Database](campaign-studio-database.md)         | Tables, migrations, model ownership, and persistence behavior.                     |
 | [Credits And Acknowledgements](credits-and-acknowledgements.md) | Upstream services, dependencies, and acknowledgements.                             |
 | [Overview](overview.md)                                         | Package boundary, runtime surfaces, install notes, and first troubleshooting path. |
 

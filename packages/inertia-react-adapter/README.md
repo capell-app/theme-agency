@@ -31,6 +31,14 @@ For developers, it registers the `react` adapter key, NPM dependencies, build as
 - Feature-specific React components can live in theme/component packages such as `capell-app/theme-inertia-bookings-react`.
 - It owns no migrations, settings, routes, admin resources, or public Blade views.
 
+## Runtime Surface
+
+- Provider: `src/Providers/InertiaReactAdapterServiceProvider.php`
+- Health check: `src/Health/InertiaReactAdapterHealthCheck.php`
+- Entry point: `resources/js/app.jsx`
+- Component source: `resources/js/`
+- Tests: `packages/inertia-react-adapter/tests`
+
 ## Docs
 
 - [docs index](docs/README.md)

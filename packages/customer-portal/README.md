@@ -1,66 +1,71 @@
 # Customer Portal
 
-Customer Portal turns a Capell site into an authenticated self-service hub. It gives signed-in customers a private dashboard for profile details, contributed self-service items, preferences, support requests, and recent support history without leaking admin/editor internals into frontend output.
+Customer Portal turns a Capell site into an authenticated self-service hub for profile data, contributed dashboard items, preferences, support requests, and recent support history.
 
-## Features
+## At A Glance
 
-- Authenticated frontend routes under `/portal` using the configured `web` and `auth` middleware.
-- Site-scoped `PortalAccount` records with encrypted email, display name, profile, and preference storage.
-- A profile surface powered by `ResolvePortalProfileAction` and `PortalProfileProviderRegistry`.
-- Dashboard and self-service item registries so packages such as payments, document lifecycle, events, newsletter, and access-gate can contribute cards and feed items without Customer Portal importing their internals.
-- Configurable per-provider and global caps for dashboard and self-service item fan-out.
-- Preference updates through `UpdatePortalPreferencesAction`, with option rendering and validation driven by the package preference schema.
-- Support request submission and threaded replies through Actions, with encrypted request/reply details and requester email hashing.
-- Support request submitted/status-changed events and queued requester mail notifications.
-- Admin support-request triage through a Filament resource scoped to the current actor's assigned sites.
-- Real package health diagnostics for required tables and model resolution.
-- Package factories for `PortalAccount` and `PortalSupportRequest`.
+| Field             | Value                                                                                                                   |
+| ----------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| Composer package  | `capell-app/customer-portal`                                                                                            |
+| Namespace         | `Capell\CustomerPortal`                                                                                                 |
+| Product group     | Capell Customer                                                                                                         |
+| Surfaces          | Authenticated frontend, admin                                                                                           |
+| Providers         | `Capell\CustomerPortal\Providers\CustomerPortalServiceProvider`, `Capell\CustomerPortal\Providers\AdminServiceProvider` |
+| Public route area | `/portal` behind configured `web` and `auth` middleware                                                                 |
+| Admin resource    | Portal support requests                                                                                                 |
+| Extension points  | Profile, preferences, dashboard item, and self-service item registries                                                  |
 
-## Frontend Safety
+## Why It Helps Your Capell Workflow
 
-The dashboard is a private customer surface. Responses send `no-store` and `noindex` headers, and tests assert the rendered output does not expose package names, signed editor URLs, Filament internals, account ids, or unsafe profile fields. Public Blade receives hydrated arrays from controllers and Actions; it should not query models directly.
+Owners get a customer-facing account surface without each package building its own dashboard. Customers can see profile data, preferences, support threads, and self-service links in one authenticated place.
 
-`capell.json` declares a 200ms frontend render budget and a 20-query frontend budget. Provider adapters should keep expensive lookups out of Blade and return already-hydrated `PortalDashboardItemData`, `PortalSelfServiceItemData`, and `PortalProfileData` objects.
+Developers get registries for package-contributed cards and self-service items, while each owning package keeps its billing, documents, events, gated access, or newsletter operations behind its own Actions.
 
-Provider fan-out is bounded by `dashboard_items_per_provider_limit`, `dashboard_items_limit`, `self_service_items_per_provider_limit`, and `self_service_items_limit` in `capell-customer-portal.php`.
+## What It Adds
 
-## Authentication Boundary
+- Site-scoped `PortalAccount` records with encrypted profile/preference storage.
+- Authenticated frontend portal routes and controllers.
+- Registries for profile providers, preference providers, dashboard items, and self-service items.
+- Support request submission, threaded replies, status updates, events, and notifications.
+- Filament support-request triage resource.
+- DTOs for portal profiles, dashboard items, preferences, self-service items, and support request data.
 
-Customer Portal is intentionally a BYO-auth package. It mounts authenticated frontend routes behind the configured middleware stack and resolves the signed-in Laravel user into a site-scoped `PortalAccount`; it does not install login, registration, password reset, magic-link, or SSO screens. Pair it with the host app's auth stack, Fortify, Socialite, Access Gate, or another first-party auth package when a site needs a complete customer identity journey.
+## Boundaries
 
-## Extension Points
+Customer Portal is a BYO-auth package. It does not install login, registration, password reset, magic-link, or SSO screens. Pair it with the host app auth stack, Fortify, Socialite, Access Gate, or another identity package.
 
-Register provider adapters through the package registries:
+The portal aggregates customer-facing links and cards; owning packages keep their domain operations. Provider output must not contain internal IDs, tokens, admin URLs, selectors, package internals, signed editor URLs, or authoring metadata.
 
-- `PortalProfileProviderRegistry` for customer-facing profile fields.
-- `PortalDashboardItemRegistry` for dashboard cards.
-- `PortalSelfServiceItemRegistry` for recent payments, documents, gated resources, event registrations, newsletter links, and support items.
-- `PortalPreferencesProviderRegistry` for preference-schema work.
+## Runtime Surface
 
-Provider output is escaped in Blade. Keep labels, descriptions, URLs, and profile values customer-facing, and do not include internal ids, tokens, admin URLs, selectors, or authoring metadata.
+- Providers: `src/Providers/`
+- Contracts: `src/Contracts/`
+- Registries: `src/Support/`
+- Controllers: `src/Http/Controllers/`
+- Actions: `src/Actions/`
+- Data objects: `src/Data/`
+- Events and notifications: `src/Events/`, `src/Notifications/`
+- Admin resource: `src/Filament/Resources/`
+- Tests: `packages/customer-portal/tests`
 
-## Suite Boundaries
+## Docs
 
-Customer Portal aggregates self-service links and dashboard cards; owning packages keep their domain operations. Payments should issue invoice, payment-method, checkout, and subscription URLs through its portal providers. Document Lifecycle and gated-resource packages should issue signed download or entitlement URLs through their own providers. Customer Portal renders those customer-facing items without importing billing, document, or entitlement internals.
-
-## Support Workflow
-
-Customers can submit support requests from the dashboard, then continue the thread from their recent-support history. Staff can reply from the admin triage table. The package stores request subject, message, requester email, context, status, priority, and threaded replies in encrypted columns where appropriate; reply attachments are represented as encrypted metadata references so file-owning packages can provide the actual storage/download surface. Submissions emit `PortalSupportRequestSubmitted`; status transitions emit `PortalSupportRequestStatusChanged` only when the status changes.
-
-Requester notifications are sent on demand through Laravel's notification system when a requester email address is available.
-
-## Marketplace Screenshots
-
-`docs/screenshots.json` defines the Capell runner capture contract for the frontend dashboard, preferences/support workflow, support triage list, and support triage detail screen. The light PNGs are promoted in `capell.json`; dark variants are committed alongside them for documentation and listing alternates.
+- [Package docs](docs/README.md)
+- [Overview](docs/overview.md)
+- [Foundation](docs/foundation.md)
+- [Improvement plan](docs/improvement-plan.md)
+- [Screenshots contract](docs/screenshots.json)
 
 ## Testing
 
-Run the package tests directly from the monorepo root:
-
 ```bash
 vendor/bin/pest packages/customer-portal/tests --configuration=phpunit.xml
-vendor/bin/phpstan analyse packages/customer-portal/src packages/customer-portal/tests --configuration=phpstan.neon --memory-limit=1G
-vendor/bin/pint --test packages/customer-portal/src packages/customer-portal/tests
 ```
 
-Use `vendor/bin/pest` directly in this repository; do not run `php artisan` here.
+## Troubleshooting
+
+| Symptom                            | Likely cause                                                       | Check                                                        | Fix                                                                           |
+| ---------------------------------- | ------------------------------------------------------------------ | ------------------------------------------------------------ | ----------------------------------------------------------------------------- |
+| Portal redirects to login          | Host auth middleware cannot resolve an authenticated user          | Check the route middleware stack and current Laravel guard   | Configure the host auth stack before enabling `/portal`                       |
+| Dashboard cards are missing        | Provider was not registered or exceeded per-provider/global limits | Check `PortalDashboardItemRegistry` and portal config limits | Register the provider and adjust limits if the output is intentionally larger |
+| Support notifications are not sent | No requester email or queue/mail transport is unavailable          | Check support request email fields and queued notifications  | Configure mail/queue in the host app and retry through the support workflow   |

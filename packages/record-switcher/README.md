@@ -32,6 +32,14 @@ For developers, it keeps the heading switcher in a first-party package with Cape
 - Search columns should stay narrow; option labels should not lazy-load expensive relationships.
 - The package has no migrations, settings, routes, frontend output, or console commands.
 
+## Runtime Surface
+
+- Provider: `src/Providers/RecordSwitcherServiceProvider.php`
+- Heading extender: `src/Filament/RecordSwitcherHeadingExtender.php`
+- Livewire component: `src/Livewire/RecordSwitcher.php`
+- Asset contribution: `src/Manifest/RecordSwitcherAssetsContribution.php`
+- Tests: `packages/record-switcher/tests`
+
 ## Docs
 
 - [docs index](docs/README.md)

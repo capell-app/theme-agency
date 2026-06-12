@@ -256,11 +256,6 @@ These items are approved product direction for the package. Keep implementation 
 - [extending-seo-suite.md](docs/extending-seo-suite.md)
 - [overview.md](docs/overview.md)
 - [publish-gates.md](docs/publish-gates.md)
-- [schema-templates.md](docs/schema-templates.md)
-- [search-console.md](docs/search-console.md)
-- [seo-intelligence.md](docs/seo-intelligence.md)
-- [seo-meta-and-discoverability.md](docs/seo-meta-and-discoverability.md)
-- [sitemaps.md](docs/sitemaps.md)
 
 ## Testing
 

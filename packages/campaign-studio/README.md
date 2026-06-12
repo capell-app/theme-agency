@@ -192,8 +192,6 @@ The tracker is post-load and contains no admin/editor state, signed editor URLs,
 ## Docs
 
 - [docs index](docs/README.md)
-- [campaign-studio-api.md](docs/campaign-studio-api.md)
-- [campaign-studio-database.md](docs/campaign-studio-database.md)
 - [credits-and-acknowledgements.md](docs/credits-and-acknowledgements.md)
 - [overview.md](docs/overview.md)
 

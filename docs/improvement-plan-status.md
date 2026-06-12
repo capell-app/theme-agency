@@ -4,7 +4,13 @@
 
 ## Current Scope
 
-The current repository contains 56 package improvement plans. Their roadmap rows currently total:
+The current repository contains 75 packages. 56 package-local improvement plans currently exist, and 19 packages do not yet have `packages/<package>/docs/improvement-plan.md`.
+
+Packages without a package-local improvement plan:
+
+`access-gate`, `address`, `agent-bridge`, `agent-delivery`, `ai-orchestrator`, `api`, `automation-studio`, `block-library`, `blog`, `bookings`, `exception-reports`, `inertia`, `inertia-react-adapter`, `inertia-vue-adapter`, `record-switcher`, `social-feeds`, `theme-inertia-bookings`, `theme-inertia-bookings-react`, `theme-inertia-bookings-vue`.
+
+Existing package plan roadmap rows currently total:
 
 | Bucket | Rows |
 | ------ | ---: |

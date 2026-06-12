@@ -48,9 +48,26 @@ Use this package when a site needs evidence that a controlled document was publi
 - Actions: register, publish, resolve latest publication, compute content hash, record acceptance, archive expired documents.
 - Command: `capell:document-lifecycle:archive-expired`.
 
+## Boundaries
+
+Document Lifecycle owns controlled document registration, publication evidence, acceptance evidence, and expiry/archive workflows. It is not a general media manager or public file delivery package.
+
+Publishing Studio owns revision workflow. Media packages own file storage and downloads. Public or customer-facing acceptance surfaces should call package Actions and must not expose admin URLs, publication internals, raw hashes beyond the certificate contract, or authoring state.
+
+## Runtime Surface
+
+- Provider: `src/Providers/DocumentLifecycleServiceProvider.php`
+- Admin resource: `src/Filament/Resources/Documents/`
+- Actions: `src/Actions/`
+- Data objects: `src/Data/`
+- Models: `src/Models/`
+- Command: `src/Console/Commands/ArchiveExpiredDocumentsCommand.php`
+- Manifest contributions: `src/Manifest/`
+- Tests: `packages/document-lifecycle/tests`
+
 ## Install And Setup
 
-Install with:
+In a host Capell app, install with:
 
 ```bash
 composer require capell-app/document-lifecycle

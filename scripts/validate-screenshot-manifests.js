@@ -14,6 +14,7 @@ const packageDirs =
         : allPackageDirs
 
 const failures = []
+const warnings = []
 
 const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'))
 const themeEntryFields = [
@@ -283,6 +284,70 @@ function validateMarketplaceScreenshots(packageName) {
     }
 }
 
+function validatePackageScreenshotOutputs(
+    packageName,
+    screenshotsPath,
+    packageManifest,
+) {
+    if (!Array.isArray(packageManifest.entries)) {
+        return
+    }
+
+    for (const [index, entry] of packageManifest.entries.entries()) {
+        if (typeof entry !== 'object' || entry === null) {
+            continue
+        }
+
+        for (const field of ['screenshotPath', 'darkScreenshotPath']) {
+            if (!isNonEmptyString(entry[field])) {
+                continue
+            }
+
+            const outputPath = entry[field]
+
+            if (
+                path.isAbsolute(outputPath) ||
+                outputPath.includes('\\') ||
+                outputPath.split('/').includes('..')
+            ) {
+                failures.push(
+                    `${relativePath(screenshotsPath)}: entries[${index}].${field} must be a safe repository-relative path`,
+                )
+
+                continue
+            }
+
+            if (
+                !outputPath.startsWith(
+                    `packages/${packageName}/docs/screenshots/`,
+                )
+            ) {
+                failures.push(
+                    `${relativePath(screenshotsPath)}: entries[${index}].${field} must start with packages/${packageName}/docs/screenshots/`,
+                )
+
+                continue
+            }
+
+            const absoluteOutputPath = path.join(root, outputPath)
+
+            if (fs.existsSync(absoluteOutputPath)) {
+                continue
+            }
+
+            const message = `${relativePath(screenshotsPath)}: entries[${index}].${field} references missing output ${outputPath}`
+
+            if (entry.required === false) {
+                warnings.push(message)
+
+                continue
+            }
+
+            failures.push(message)
+        }
+    }
+}
+
 for (const packageName of packageDirs) {
     validateMarketplaceScreenshots(packageName)
 }
@@ -416,6 +481,12 @@ for (const packageName of packageDirs) {
             }
         }
 
+        validatePackageScreenshotOutputs(
+            packageName,
+            screenshotsPath,
+            packageManifest,
+        )
+
         if (packageName.startsWith('theme-')) {
             validateThemeManifest(packageName, screenshotsPath, packageManifest)
         }
@@ -441,6 +512,10 @@ for (const packageName of manifestPackages) {
             `docs/package-screenshot-manifest.json references "${packageName}" but ${screenshotsPath} does not exist`,
         )
     }
+}
+
+for (const warning of warnings) {
+    console.warn(`Warning: ${warning}`)
 }
 
 if (failures.length > 0) {

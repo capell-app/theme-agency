@@ -6,11 +6,11 @@ Capell package docs have two jobs: help a developer change the package safely, a
 
 Every package needs both a non-technical overview and a developer deep dive. They can live in one README when the package is small, but the distinction should be obvious.
 
-| Reader | What they need |
-| --- | --- |
-| Site owner, buyer, or operator | What workflow the package unlocks, which bundle it belongs to, which screens or public routes appear, and what operational risk it reduces. |
-| Editor or admin user | What they can create, review, approve, publish, inspect, recover, or hand off without custom development. |
-| Developer | Real package boundaries: Actions, Data objects, providers, routes, models, settings, extension points, tests, and unsafe integration paths to avoid. |
+| Reader                         | What they need                                                                                                                                       |
+| ------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Site owner, buyer, or operator | What workflow the package unlocks, which bundle it belongs to, which screens or public routes appear, and what operational risk it reduces.          |
+| Editor or admin user           | What they can create, review, approve, publish, inspect, recover, or hand off without custom development.                                            |
+| Developer                      | Real package boundaries: Actions, Data objects, providers, routes, models, settings, extension points, tests, and unsafe integration paths to avoid. |
 
 Use this split when writing examples:
 

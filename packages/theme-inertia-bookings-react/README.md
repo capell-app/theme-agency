@@ -31,6 +31,14 @@ For developers, it registers the themed React entrypoint and component contribut
 - It owns no booking data, routes, validation, database tables, settings, or admin resources.
 - Do not duplicate booking availability or appointment request logic in React components.
 
+## Runtime Surface
+
+- Provider: `src/Providers/InertiaBookingsReactServiceProvider.php`
+- Component contribution: `src/Manifest/InertiaBookingsReactComponentContribution.php`
+- Health check: `src/Health/InertiaBookingsReactHealthCheck.php`
+- Entry point and components: `resources/js/`
+- Tests: `packages/theme-inertia-bookings-react/tests`
+
 ## Docs
 
 - [docs index](docs/README.md)

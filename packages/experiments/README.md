@@ -1,85 +1,70 @@
 # Capell Experiments
 
-Server-side A/B testing for Capell pages, campaigns, and package-owned growth workflows.
+Experiments adds server-side A/B testing for Capell pages, campaigns, and package-owned growth workflows.
 
-Experiments lets operators create experiments, variants, goals, and audience rules in the Capell admin. Runtime integrations call package Actions to resolve a visitor's variant, render the consuming package's chosen payload, and record goal events without adding client-side testing scripts or public authoring markers.
+## At A Glance
 
-## What It Ships
+| Field            | Value                                                                   |
+| ---------------- | ----------------------------------------------------------------------- |
+| Composer package | `capell-app/experiments`                                                |
+| Namespace        | `Capell\Experiments`                                                    |
+| Product group    | Capell Growth, premium growth bundle                                    |
+| Surfaces         | Admin, runtime Action surface                                           |
+| Provider         | `Capell\Experiments\Providers\ExperimentsServiceProvider`               |
+| Admin resources  | Experiments, variants, goals, audience rules                            |
+| Supports         | Campaign Studio, Frontend Optimizer, HTML Cache, Form Builder, Insights |
+| Command          | `experiments:sync-statuses` where installed                             |
 
-- Filament resources for experiments, variants, goals, and audience rules.
-- Deterministic weighted allocation with sticky or per-request allocation strategies.
+## Why It Helps Your Capell Workflow
+
+Owners can test page and campaign variants without embedding third-party client scripts. Operators manage experiments, variants, audience rules, goals, and winner reporting in Capell admin.
+
+Developers resolve variants and record goals through Actions. Consumer packages keep rendering ownership while Experiments contributes allocation, cache-safety metadata, and reporting inputs.
+
+## What It Adds
+
+- Filament resources for experiments, experiment variants, experiment goals, and audience rules.
+- Weighted allocation with sticky and per-request strategies.
 - Audience rules for path, query, UTM, referrer, attributes, and segments.
 - Goal event recording and statistically gated winner reports.
-- Cache-safety metadata for frontend integrations that resolve variants during render.
-- Health diagnostics for required tables and model storage.
+- Winner declaration and status sync Actions.
+- Cache variation metadata for frontend integrations that resolve variants during render.
 
-## Resolve A Variant
+## Boundaries
 
-Use `ResolveExperimentVariantForContextAction` from the consuming page, campaign, theme, or render integration. Pass a stable visitor key and enough context to match the intended experiments.
+Experiments is currently an admin package plus runtime Action surface. It does not inject Blade, JavaScript, signed editor URLs, model IDs, package names, or authoring metadata into public HTML.
 
-```php
-use Capell\Experiments\Actions\ResolveExperimentVariantForContextAction;
-use Capell\Experiments\Data\ExperimentContextData;
-use Capell\Experiments\Enums\ExperimentSubjectType;
+Consumer packages own rendering and conversion routes. HTML Cache and Frontend Optimizer integrations should respect the resolver cache-safety contribution when a variant is selected during render.
 
-$resolved = ResolveExperimentVariantForContextAction::run(
-    allocationKey: $visitorHash,
-    context: new ExperimentContextData(
-        siteId: $site->id,
-        subjectType: ExperimentSubjectType::Page->value,
-        subjectClass: $page::class,
-        subjectId: $page->id,
-        path: request()->path(),
-        query: request()->query(),
-        utm: request()->only(['utm_source', 'utm_medium', 'utm_campaign']),
-        segments: $knownSegments,
-    ),
-);
+## Runtime Surface
 
-if ($resolved !== null) {
-    $variantKey = $resolved->variantKey;
-    $payload = $resolved->variantPayload;
-}
-```
+- Provider: `src/Providers/ExperimentsServiceProvider.php`
+- Admin resources: `src/Filament/Resources/`
+- Actions: `src/Actions/`
+- Data objects: `src/Data/`
+- Models: `src/Models/`
+- Enums: `src/Enums/`
+- Command: `src/Console/Commands/SyncExperimentStatusesCommand.php`
+- Tests: `packages/experiments/tests`
 
-The resolver records a frontend render contribution when a variant is selected, marking the response as not safe for shared static HTML caching and adding experiment/variant vary metadata for cache-aware packages.
+## Docs
 
-## Record A Goal Event
+- [Package docs](docs/README.md)
+- [Overview](docs/overview.md)
+- [Foundation](docs/foundation.md)
+- [Improvement plan](docs/improvement-plan.md)
+- [Screenshots contract](docs/screenshots.json)
 
-Goal events are recorded against an explicit allocation and goal. Store or pass the allocation id returned by the allocation data when your integration needs to connect a later conversion to the resolved variant.
-
-```php
-use Capell\Experiments\Actions\RecordGoalEventAction;
-use Capell\Experiments\Data\ExperimentGoalEventData;
-
-RecordGoalEventAction::run(
-    allocation: $allocation,
-    goal: $goal,
-    data: new ExperimentGoalEventData(
-        eventKey: 'demo-requested',
-        valueAmount: '99.00',
-        metadata: [
-            'source' => 'form-builder',
-        ],
-    ),
-);
-```
-
-## Public Output Boundary
-
-Experiments is currently an admin package plus runtime Action surface. It does not inject Blade, JavaScript, signed editor URLs, model ids, or package internals into public HTML. Consumer packages own rendering and goal-beacon routes until a first-party frontend surface is deliberately shipped.
-
-## Integration Notes
-
-- Campaign Studio can create campaign-scoped experiments using `subject_type=campaign`, `subject_class`, and `subject_id`.
-- Form Builder can record form-submission goals after resolving the allocation used by the rendered page or campaign.
-- Insights can consume allocation and goal metadata for reporting once an integration is added.
-- HTML Cache and Frontend Optimizer should respect resolver cache-safety contributions when variants are resolved during render.
-
-## Verify
-
-Run focused package checks from this repository when tests are allowed:
+## Testing
 
 ```bash
 vendor/bin/pest packages/experiments/tests --configuration=phpunit.xml
 ```
+
+## Troubleshooting
+
+| Symptom                               | Likely cause                                                                            | Check                                                                                    | Fix                                                               |
+| ------------------------------------- | --------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- | ----------------------------------------------------------------- |
+| No variant resolves                   | Experiment is inactive, dates/status exclude it, or audience rules do not match context | Check experiment status, dates, subject fields, and `EvaluateAudienceRulesAction` inputs | Activate the experiment and pass complete `ExperimentContextData` |
+| Allocations change unexpectedly       | Per-request strategy is configured or allocation key is unstable                        | Inspect the experiment allocation strategy and visitor key                               | Use sticky allocation with a stable non-PII allocation key        |
+| Shared cache serves the wrong variant | Consuming renderer ignored cache-safety metadata                                        | Check frontend cache vary metadata after `ResolveExperimentVariantForContextAction`      | Vary/bypass shared cache when variants resolve during render      |

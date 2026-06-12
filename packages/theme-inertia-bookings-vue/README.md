@@ -31,6 +31,14 @@ For developers, it registers the themed Vue entrypoint and component contributio
 - It owns no booking data, routes, validation, database tables, settings, or admin resources.
 - Do not duplicate booking availability or appointment request logic in Vue components.
 
+## Runtime Surface
+
+- Provider: `src/Providers/InertiaBookingsVueServiceProvider.php`
+- Component contribution: `src/Manifest/InertiaBookingsVueComponentContribution.php`
+- Health check: `src/Health/InertiaBookingsVueHealthCheck.php`
+- Entry point and components: `resources/js/`
+- Tests: `packages/theme-inertia-bookings-vue/tests`
+
 ## Docs
 
 - [docs index](docs/README.md)

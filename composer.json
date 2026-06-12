@@ -35,6 +35,7 @@
         "prettier": "npx prettier --write \"packages/**/*.{css,js,yml,json,md,blade.php}\"",
         "prettier:check": "npx prettier --check \"packages/**/*.{css,js,yml,json,md,blade.php}\"",
         "eslint": "npx eslint 'packages/**/resources/js/**/*.js' --max-warnings=0",
+        "docs:check": "@php scripts/audit-package-docs.php",
         "check:composer-paths": "@php scripts/check-composer-local-paths.php",
         "check:composer-lock": "composer validate --no-check-publish",
         "security:audit": "composer audit --locked",

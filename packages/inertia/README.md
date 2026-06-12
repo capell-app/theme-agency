@@ -58,6 +58,17 @@ Use the frontend runtime renderer for normal Capell pages by selecting the Inert
 - Theme/component packages own actual React or Vue components.
 - Public Inertia responses must not expose authoring markers, signed editor URLs, admin selectors, model IDs, field paths, or package internals.
 
+## Runtime Surface
+
+- Provider: `src/Providers/InertiaServiceProvider.php`
+- Facade/manager: `src/Facades/CapellInertia.php`, `src/Support/CapellInertiaManager.php`
+- Adapter registry: `src/Support/InertiaAdapterRegistry.php`
+- Renderer: `src/Rendering/CapellInertiaResponseRenderer.php`
+- Actions: `src/Actions/BuildInertiaPagePropsAction.php`
+- Data objects: `src/Data/InertiaAdapterData.php`
+- Root view: `resources/views/app.blade.php`
+- Tests: `packages/inertia/tests`
+
 ## Docs
 
 - [docs index](docs/README.md)
