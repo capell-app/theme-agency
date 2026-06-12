@@ -48,7 +48,7 @@ final class SyncSocialFeedConnectionAction
             $connection->forceFill([
                 'status' => SocialFeedConnectionStatus::Error,
                 'sync_status' => 'failed',
-                'last_sync_error' => $throwable->getMessage(),
+                'last_sync_error' => RedactSocialFeedSyncErrorAction::run($throwable, $connection),
             ])->save();
 
             report($throwable);

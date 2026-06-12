@@ -223,7 +223,10 @@
                 "newsletter_subscribers.email_hash",
                 "newsletter_sync_attempts.payload_hash"
             ],
-            "redactedOutputClasses": [],
+            "redactedOutputClasses": [
+                "Capell\\Newsletter\\Actions\\RedactNewsletterProviderErrorMessageAction",
+                "Capell\\Newsletter\\Actions\\SyncSubscriberToProviderAction"
+            ],
             "plaintextJustifications": []
         },
         "publicOutput": {

@@ -170,7 +170,10 @@
                 "Capell\\Payments\\Models\\Subscription::$provider_payload"
             ],
             "hashedTokenFields": [],
-            "redactedOutputClasses": [],
+            "redactedOutputClasses": [
+                "Capell\\Payments\\Actions\\ProcessStripeWebhookEventAction",
+                "Capell\\Payments\\Actions\\RedactPaymentErrorMessageAction"
+            ],
             "plaintextJustifications": []
         },
         "publicOutput": {

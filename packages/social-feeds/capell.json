@@ -97,7 +97,10 @@
                 "Capell\\SocialFeeds\\Models\\SocialFeedConnection::$credentials"
             ],
             "hashedTokenFields": [],
-            "redactedOutputClasses": [],
+            "redactedOutputClasses": [
+                "Capell\\SocialFeeds\\Actions\\RedactSocialFeedSyncErrorAction",
+                "Capell\\SocialFeeds\\Actions\\SyncSocialFeedConnectionAction"
+            ],
             "plaintextJustifications": []
         },
         "publicOutput": {
