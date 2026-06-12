@@ -53,6 +53,24 @@
         "deployments-publish-idempotency",
         "deployments-token-refresh"
     ],
+    "security": {
+        "riskTier": "sensitive",
+        "publicSurface": {
+            "routeNames": ["oauth.github", "oauth.gitlab", "oauth.bitbucket"],
+            "auth": "authenticated",
+            "csrfExemptRoutes": [],
+            "signedRoutes": [],
+            "tokenizedRoutes": [],
+            "webhookRoutes": [],
+            "throttledRoutes": []
+        },
+        "publicOutput": {
+            "cacheSafe": false,
+            "forbidAuthoringSurface": true,
+            "forbidSecrets": true,
+            "forbidPublicBladeQueries": true
+        }
+    },
     "performance": {
         "frontendRenderBudgetMs": 0,
         "adminQueryBudget": 40,
@@ -102,6 +120,6 @@
         "categories": ["admin", "operations"]
     },
     "contributionTraceability": {
-        "deferredContributions": ["admin-page", "route"]
+        "deferredContributions": ["admin-page", "dashboard-widget", "route"]
     }
 }

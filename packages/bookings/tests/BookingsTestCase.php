@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Capell\Bookings\Tests;
 
 use Capell\Bookings\Providers\BookingsServiceProvider;
+use Capell\Core\Facades\CapellCore;
 use Illuminate\Contracts\Config\Repository;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -47,5 +48,7 @@ class BookingsTestCase extends TestCase
         $app->make(Repository::class)->set('database.default', 'sqlite');
         $app->make(Repository::class)->set('database.connections.sqlite.database', ':memory:');
         $app->make(Repository::class)->set('database.connections.sqlite.url');
+
+        CapellCore::forcePackageInstalled(BookingsServiceProvider::$packageName);
     }
 }

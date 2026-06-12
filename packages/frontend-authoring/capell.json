@@ -53,6 +53,24 @@
         "beacon",
         "cache-blocking"
     ],
+    "security": {
+        "riskTier": "sensitive",
+        "publicSurface": {
+            "routeNames": ["beacon", "authoring.edit"],
+            "auth": "admin-only",
+            "csrfExemptRoutes": ["beacon"],
+            "signedRoutes": ["authoring.edit"],
+            "tokenizedRoutes": [],
+            "webhookRoutes": [],
+            "throttledRoutes": ["beacon"]
+        },
+        "publicOutput": {
+            "cacheSafe": true,
+            "forbidAuthoringSurface": true,
+            "forbidSecrets": true,
+            "forbidPublicBladeQueries": true
+        }
+    },
     "performance": {
         "frontendRenderBudgetMs": 20,
         "adminQueryBudget": 0,

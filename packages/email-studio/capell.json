@@ -79,8 +79,11 @@
         "recordProviderEvent": "Capell\\EmailStudio\\Actions\\RecordProviderEventAction",
         "validateProviderWebhookSignature": "Capell\\EmailStudio\\Actions\\ValidateProviderWebhookSignatureAction"
     },
-    "settings": ["Capell\\EmailStudio\\Settings\\EmailStudioSettings"],
-    "permissions": [],
+    "settings": [
+        "Capell\\EmailStudio\\Settings\\EmailStudioSettings",
+        "Capell\\EmailStudio\\Manifest\\EmailStudioSettingsContribution"
+    ],
+    "permissions": ["ViewAny:SentEmail", "View:SentEmail"],
     "capabilities": [
         "delivery-audit",
         "mail-tracker-admin",
@@ -93,6 +96,24 @@
         "template-rendering",
         "transactional-email"
     ],
+    "security": {
+        "riskTier": "sensitive",
+        "publicSurface": {
+            "routeNames": ["provider-events"],
+            "auth": "tokenized",
+            "csrfExemptRoutes": [],
+            "signedRoutes": [],
+            "tokenizedRoutes": ["provider-events"],
+            "webhookRoutes": ["provider-events"],
+            "throttledRoutes": ["provider-events"]
+        },
+        "publicOutput": {
+            "cacheSafe": true,
+            "forbidAuthoringSurface": true,
+            "forbidSecrets": true,
+            "forbidPublicBladeQueries": true
+        }
+    },
     "performance": {
         "frontendRenderBudgetMs": 20,
         "adminQueryBudget": 40,

@@ -12,6 +12,8 @@ Route::middleware(['web'])
     ->as('capell-bookings.')
     ->group(function (): void {
         Route::get('/', ShowBookingRequestController::class)->name('request');
-        Route::post('/', StoreBookingRequestController::class)->name('request.store');
+        Route::post('/', StoreBookingRequestController::class)
+            ->middleware('throttle:capell-bookings-request')
+            ->name('request.store');
         Route::get('/calendar/staff/{token}.ics', ShowStaffCalendarFeedController::class)->name('calendar.staff');
     });

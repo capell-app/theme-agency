@@ -179,6 +179,6 @@
         "categories": ["growth", "analytics"]
     },
     "contributionTraceability": {
-        "deferredContributions": []
+        "deferredContributions": ["scheduled-job"]
     }
 }

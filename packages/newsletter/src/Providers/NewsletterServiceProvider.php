@@ -38,9 +38,12 @@ use Capell\Newsletter\Support\Providers\MailchimpProviderAdapter;
 use Capell\Newsletter\Support\Providers\ProviderAdapterRegistry;
 use Capell\Newsletter\Support\SegmentAudienceProvider;
 use Capell\PublishingStudio\Contracts\EditorialCalendarEventContributor;
+use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Contracts\Container\Container;
 use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\RateLimiter;
 use Override;
 use Spatie\LaravelPackageTools\Package;
 
@@ -57,7 +60,6 @@ class NewsletterServiceProvider extends AbstractPackageServiceProvider
             ->hasConfigFile('capell-newsletter')
             ->hasTranslations()
             ->hasViews()
-            ->hasRoute('web')
             ->hasMigrations([
                 '2026_05_10_190861_02_create_newsletter_subscribers_table',
                 '2026_05_10_190861_01_create_newsletter_provider_connections_table',
@@ -101,11 +103,18 @@ class NewsletterServiceProvider extends AbstractPackageServiceProvider
         });
     }
 
+    public function bootingPackage(): void
+    {
+        $this->registerRateLimiters();
+    }
+
     public function packageBooted(): void
     {
         if (! $this->isPackageInstalled()) {
             return;
         }
+
+        $this->loadRoutesFrom(__DIR__ . '/../../routes/web.php');
 
         Relation::morphMap([
             'newsletter_subscriber' => Subscriber::class,
@@ -190,6 +199,25 @@ class NewsletterServiceProvider extends AbstractPackageServiceProvider
         }
 
         return $this;
+    }
+
+    private function registerRateLimiters(): void
+    {
+        RateLimiter::for('capell-newsletter-subscribe', static function (Request $request): Limit {
+            $email = strtolower((string) $request->input('email', ''));
+
+            return Limit::perMinute(6)
+                ->by(hash('sha256', $email . '|' . (string) $request->ip()));
+        });
+
+        RateLimiter::for('capell-newsletter-one-click-unsubscribe', static fn (Request $request): Limit => Limit::perMinute(12)
+            ->by((string) $request->ip()));
+
+        RateLimiter::for('capell-newsletter-preferences', static fn (Request $request): Limit => Limit::perMinute(20)
+            ->by(hash('sha256', (string) $request->route('token') . '|' . (string) $request->ip())));
+
+        RateLimiter::for('capell-newsletter-provider-webhook', static fn (Request $request): Limit => Limit::perMinute(120)
+            ->by((string) $request->ip()));
     }
 
     private function registerAudienceProviders(): self

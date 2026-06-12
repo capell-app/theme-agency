@@ -16,6 +16,7 @@ Route::prefix('capell/payments')
     ->middleware(['web'])
     ->group(function (): void {
         Route::post('stripe/webhook', StripeWebhookController::class)
+            ->middleware('throttle:' . config('capell-payments.webhooks.stripe_rate_limit', 'capell-payments-stripe-webhook'))
             ->withoutMiddleware([VerifyCsrfToken::class])
             ->name('stripe-webhook');
 

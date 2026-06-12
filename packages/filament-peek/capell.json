@@ -50,6 +50,24 @@
     "settings": [],
     "permissions": [],
     "capabilities": ["page-preview"],
+    "security": {
+        "riskTier": "sensitive",
+        "publicSurface": {
+            "routeNames": ["preview"],
+            "auth": "signed",
+            "csrfExemptRoutes": [],
+            "signedRoutes": ["preview"],
+            "tokenizedRoutes": ["preview"],
+            "webhookRoutes": [],
+            "throttledRoutes": []
+        },
+        "publicOutput": {
+            "cacheSafe": false,
+            "forbidAuthoringSurface": true,
+            "forbidSecrets": true,
+            "forbidPublicBladeQueries": true
+        }
+    },
     "performance": {
         "frontendRenderBudgetMs": 0,
         "adminQueryBudget": 40,
@@ -97,5 +115,8 @@
             }
         ],
         "categories": ["admin", "editorial"]
+    },
+    "contributionTraceability": {
+        "deferredContributions": ["route"]
     }
 }

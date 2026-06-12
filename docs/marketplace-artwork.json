@@ -1,0 +1,2812 @@
+{
+    "generatedFor": "capell-marketplace-responsive-artwork",
+    "variants": [
+        {
+            "key": "extensionCard",
+            "label": "Marketplace card",
+            "width": 1280,
+            "height": 720
+        },
+        {
+            "key": "heroDesktop",
+            "label": "Desktop hero",
+            "width": 1600,
+            "height": 900
+        },
+        {
+            "key": "heroMobile",
+            "label": "Mobile hero",
+            "width": 900,
+            "height": 1200
+        },
+        {
+            "key": "tileSquare",
+            "label": "Square tile",
+            "width": 1200,
+            "height": 1200
+        },
+        {
+            "key": "thumbnail",
+            "label": "Compact thumbnail",
+            "width": 640,
+            "height": 360
+        }
+    ],
+    "packages": [
+        {
+            "package": "access-gate",
+            "displayName": "Access Gate",
+            "concept": "Protect private journeys",
+            "assets": [
+                {
+                    "variant": "extensionCard",
+                    "path": "docs/assets/marketplace/extension-card.jpg",
+                    "width": 1280,
+                    "height": 720
+                },
+                {
+                    "variant": "heroDesktop",
+                    "path": "docs/assets/marketplace/hero-desktop.jpg",
+                    "width": 1600,
+                    "height": 900
+                },
+                {
+                    "variant": "heroMobile",
+                    "path": "docs/assets/marketplace/hero-mobile.jpg",
+                    "width": 900,
+                    "height": 1200
+                },
+                {
+                    "variant": "tileSquare",
+                    "path": "docs/assets/marketplace/tile-square.jpg",
+                    "width": 1200,
+                    "height": 1200
+                },
+                {
+                    "variant": "thumbnail",
+                    "path": "docs/assets/marketplace/thumbnail.jpg",
+                    "width": 640,
+                    "height": 360
+                }
+            ]
+        },
+        {
+            "package": "address",
+            "displayName": "Address",
+            "concept": "One address record",
+            "assets": [
+                {
+                    "variant": "extensionCard",
+                    "path": "docs/assets/marketplace/extension-card.jpg",
+                    "width": 1280,
+                    "height": 720
+                },
+                {
+                    "variant": "heroDesktop",
+                    "path": "docs/assets/marketplace/hero-desktop.jpg",
+                    "width": 1600,
+                    "height": 900
+                },
+                {
+                    "variant": "heroMobile",
+                    "path": "docs/assets/marketplace/hero-mobile.jpg",
+                    "width": 900,
+                    "height": 1200
+                },
+                {
+                    "variant": "tileSquare",
+                    "path": "docs/assets/marketplace/tile-square.jpg",
+                    "width": 1200,
+                    "height": 1200
+                },
+                {
+                    "variant": "thumbnail",
+                    "path": "docs/assets/marketplace/thumbnail.jpg",
+                    "width": 640,
+                    "height": 360
+                }
+            ]
+        },
+        {
+            "package": "agent-bridge",
+            "displayName": "Agent Bridge",
+            "concept": "Safe agent operations",
+            "assets": [
+                {
+                    "variant": "extensionCard",
+                    "path": "docs/assets/marketplace/extension-card.jpg",
+                    "width": 1280,
+                    "height": 720
+                },
+                {
+                    "variant": "heroDesktop",
+                    "path": "docs/assets/marketplace/hero-desktop.jpg",
+                    "width": 1600,
+                    "height": 900
+                },
+                {
+                    "variant": "heroMobile",
+                    "path": "docs/assets/marketplace/hero-mobile.jpg",
+                    "width": 900,
+                    "height": 1200
+                },
+                {
+                    "variant": "tileSquare",
+                    "path": "docs/assets/marketplace/tile-square.jpg",
+                    "width": 1200,
+                    "height": 1200
+                },
+                {
+                    "variant": "thumbnail",
+                    "path": "docs/assets/marketplace/thumbnail.jpg",
+                    "width": 640,
+                    "height": 360
+                }
+            ]
+        },
+        {
+            "package": "agent-delivery",
+            "displayName": "Agent Delivery",
+            "concept": "Public AI delivery",
+            "assets": [
+                {
+                    "variant": "extensionCard",
+                    "path": "docs/assets/marketplace/extension-card.jpg",
+                    "width": 1280,
+                    "height": 720
+                },
+                {
+                    "variant": "heroDesktop",
+                    "path": "docs/assets/marketplace/hero-desktop.jpg",
+                    "width": 1600,
+                    "height": 900
+                },
+                {
+                    "variant": "heroMobile",
+                    "path": "docs/assets/marketplace/hero-mobile.jpg",
+                    "width": 900,
+                    "height": 1200
+                },
+                {
+                    "variant": "tileSquare",
+                    "path": "docs/assets/marketplace/tile-square.jpg",
+                    "width": 1200,
+                    "height": 1200
+                },
+                {
+                    "variant": "thumbnail",
+                    "path": "docs/assets/marketplace/thumbnail.jpg",
+                    "width": 640,
+                    "height": 360
+                }
+            ]
+        },
+        {
+            "package": "ai-orchestrator",
+            "displayName": "AI Orchestrator",
+            "concept": "Govern AI capability",
+            "assets": [
+                {
+                    "variant": "extensionCard",
+                    "path": "docs/assets/marketplace/extension-card.jpg",
+                    "width": 1280,
+                    "height": 720
+                },
+                {
+                    "variant": "heroDesktop",
+                    "path": "docs/assets/marketplace/hero-desktop.jpg",
+                    "width": 1600,
+                    "height": 900
+                },
+                {
+                    "variant": "heroMobile",
+                    "path": "docs/assets/marketplace/hero-mobile.jpg",
+                    "width": 900,
+                    "height": 1200
+                },
+                {
+                    "variant": "tileSquare",
+                    "path": "docs/assets/marketplace/tile-square.jpg",
+                    "width": 1200,
+                    "height": 1200
+                },
+                {
+                    "variant": "thumbnail",
+                    "path": "docs/assets/marketplace/thumbnail.jpg",
+                    "width": 640,
+                    "height": 360
+                }
+            ]
+        },
+        {
+            "package": "api",
+            "displayName": "API",
+            "concept": "Published data API",
+            "assets": [
+                {
+                    "variant": "extensionCard",
+                    "path": "docs/assets/marketplace/extension-card.jpg",
+                    "width": 1280,
+                    "height": 720
+                },
+                {
+                    "variant": "heroDesktop",
+                    "path": "docs/assets/marketplace/hero-desktop.jpg",
+                    "width": 1600,
+                    "height": 900
+                },
+                {
+                    "variant": "heroMobile",
+                    "path": "docs/assets/marketplace/hero-mobile.jpg",
+                    "width": 900,
+                    "height": 1200
+                },
+                {
+                    "variant": "tileSquare",
+                    "path": "docs/assets/marketplace/tile-square.jpg",
+                    "width": 1200,
+                    "height": 1200
+                },
+                {
+                    "variant": "thumbnail",
+                    "path": "docs/assets/marketplace/thumbnail.jpg",
+                    "width": 640,
+                    "height": 360
+                }
+            ]
+        },
+        {
+            "package": "automation-studio",
+            "displayName": "Automation Studio",
+            "concept": "Native automation rules",
+            "assets": [
+                {
+                    "variant": "extensionCard",
+                    "path": "docs/assets/marketplace/extension-card.jpg",
+                    "width": 1280,
+                    "height": 720
+                },
+                {
+                    "variant": "heroDesktop",
+                    "path": "docs/assets/marketplace/hero-desktop.jpg",
+                    "width": 1600,
+                    "height": 900
+                },
+                {
+                    "variant": "heroMobile",
+                    "path": "docs/assets/marketplace/hero-mobile.jpg",
+                    "width": 900,
+                    "height": 1200
+                },
+                {
+                    "variant": "tileSquare",
+                    "path": "docs/assets/marketplace/tile-square.jpg",
+                    "width": 1200,
+                    "height": 1200
+                },
+                {
+                    "variant": "thumbnail",
+                    "path": "docs/assets/marketplace/thumbnail.jpg",
+                    "width": 640,
+                    "height": 360
+                }
+            ]
+        },
+        {
+            "package": "block-library",
+            "displayName": "Block Library",
+            "concept": "Reusable content blocks",
+            "assets": [
+                {
+                    "variant": "extensionCard",
+                    "path": "docs/assets/marketplace/extension-card.jpg",
+                    "width": 1280,
+                    "height": 720
+                },
+                {
+                    "variant": "heroDesktop",
+                    "path": "docs/assets/marketplace/hero-desktop.jpg",
+                    "width": 1600,
+                    "height": 900
+                },
+                {
+                    "variant": "heroMobile",
+                    "path": "docs/assets/marketplace/hero-mobile.jpg",
+                    "width": 900,
+                    "height": 1200
+                },
+                {
+                    "variant": "tileSquare",
+                    "path": "docs/assets/marketplace/tile-square.jpg",
+                    "width": 1200,
+                    "height": 1200
+                },
+                {
+                    "variant": "thumbnail",
+                    "path": "docs/assets/marketplace/thumbnail.jpg",
+                    "width": 640,
+                    "height": 360
+                }
+            ]
+        },
+        {
+            "package": "blog",
+            "displayName": "Blog",
+            "concept": "Structured publishing",
+            "assets": [
+                {
+                    "variant": "extensionCard",
+                    "path": "docs/assets/marketplace/extension-card.jpg",
+                    "width": 1280,
+                    "height": 720
+                },
+                {
+                    "variant": "heroDesktop",
+                    "path": "docs/assets/marketplace/hero-desktop.jpg",
+                    "width": 1600,
+                    "height": 900
+                },
+                {
+                    "variant": "heroMobile",
+                    "path": "docs/assets/marketplace/hero-mobile.jpg",
+                    "width": 900,
+                    "height": 1200
+                },
+                {
+                    "variant": "tileSquare",
+                    "path": "docs/assets/marketplace/tile-square.jpg",
+                    "width": 1200,
+                    "height": 1200
+                },
+                {
+                    "variant": "thumbnail",
+                    "path": "docs/assets/marketplace/thumbnail.jpg",
+                    "width": 640,
+                    "height": 360
+                }
+            ]
+        },
+        {
+            "package": "bookings",
+            "displayName": "Bookings",
+            "concept": "Appointment workflow",
+            "assets": [
+                {
+                    "variant": "extensionCard",
+                    "path": "docs/assets/marketplace/extension-card.svg",
+                    "width": 1280,
+                    "height": 720
+                },
+                {
+                    "variant": "heroDesktop",
+                    "path": "docs/assets/marketplace/hero-desktop.jpg",
+                    "width": 1600,
+                    "height": 900
+                },
+                {
+                    "variant": "heroMobile",
+                    "path": "docs/assets/marketplace/hero-mobile.jpg",
+                    "width": 900,
+                    "height": 1200
+                },
+                {
+                    "variant": "tileSquare",
+                    "path": "docs/assets/marketplace/tile-square.jpg",
+                    "width": 1200,
+                    "height": 1200
+                },
+                {
+                    "variant": "thumbnail",
+                    "path": "docs/assets/marketplace/thumbnail.jpg",
+                    "width": 640,
+                    "height": 360
+                }
+            ]
+        },
+        {
+            "package": "campaign-studio",
+            "displayName": "Campaign Studio",
+            "concept": "Campaign conversion loop",
+            "assets": [
+                {
+                    "variant": "extensionCard",
+                    "path": "docs/assets/marketplace/extension-card.jpg",
+                    "width": 1280,
+                    "height": 720
+                },
+                {
+                    "variant": "heroDesktop",
+                    "path": "docs/assets/marketplace/hero-desktop.jpg",
+                    "width": 1600,
+                    "height": 900
+                },
+                {
+                    "variant": "heroMobile",
+                    "path": "docs/assets/marketplace/hero-mobile.jpg",
+                    "width": 900,
+                    "height": 1200
+                },
+                {
+                    "variant": "tileSquare",
+                    "path": "docs/assets/marketplace/tile-square.jpg",
+                    "width": 1200,
+                    "height": 1200
+                },
+                {
+                    "variant": "thumbnail",
+                    "path": "docs/assets/marketplace/thumbnail.jpg",
+                    "width": 640,
+                    "height": 360
+                }
+            ]
+        },
+        {
+            "package": "comments",
+            "displayName": "Comments",
+            "concept": "Moderated discussion",
+            "assets": [
+                {
+                    "variant": "extensionCard",
+                    "path": "docs/assets/marketplace/extension-card.jpg",
+                    "width": 1280,
+                    "height": 720
+                },
+                {
+                    "variant": "heroDesktop",
+                    "path": "docs/assets/marketplace/hero-desktop.jpg",
+                    "width": 1600,
+                    "height": 900
+                },
+                {
+                    "variant": "heroMobile",
+                    "path": "docs/assets/marketplace/hero-mobile.jpg",
+                    "width": 900,
+                    "height": 1200
+                },
+                {
+                    "variant": "tileSquare",
+                    "path": "docs/assets/marketplace/tile-square.jpg",
+                    "width": 1200,
+                    "height": 1200
+                },
+                {
+                    "variant": "thumbnail",
+                    "path": "docs/assets/marketplace/thumbnail.jpg",
+                    "width": 640,
+                    "height": 360
+                }
+            ]
+        },
+        {
+            "package": "contacts",
+            "displayName": "Contacts",
+            "concept": "Unified CRM layer",
+            "assets": [
+                {
+                    "variant": "extensionCard",
+                    "path": "docs/assets/marketplace/extension-card.jpg",
+                    "width": 1280,
+                    "height": 720
+                },
+                {
+                    "variant": "heroDesktop",
+                    "path": "docs/assets/marketplace/hero-desktop.jpg",
+                    "width": 1600,
+                    "height": 900
+                },
+                {
+                    "variant": "heroMobile",
+                    "path": "docs/assets/marketplace/hero-mobile.jpg",
+                    "width": 900,
+                    "height": 1200
+                },
+                {
+                    "variant": "tileSquare",
+                    "path": "docs/assets/marketplace/tile-square.jpg",
+                    "width": 1200,
+                    "height": 1200
+                },
+                {
+                    "variant": "thumbnail",
+                    "path": "docs/assets/marketplace/thumbnail.jpg",
+                    "width": 640,
+                    "height": 360
+                }
+            ]
+        },
+        {
+            "package": "content-sections",
+            "displayName": "Content Sections",
+            "concept": "Themeable section set",
+            "assets": [
+                {
+                    "variant": "extensionCard",
+                    "path": "docs/assets/marketplace/extension-card.jpg",
+                    "width": 1280,
+                    "height": 720
+                },
+                {
+                    "variant": "heroDesktop",
+                    "path": "docs/assets/marketplace/hero-desktop.jpg",
+                    "width": 1600,
+                    "height": 900
+                },
+                {
+                    "variant": "heroMobile",
+                    "path": "docs/assets/marketplace/hero-mobile.jpg",
+                    "width": 900,
+                    "height": 1200
+                },
+                {
+                    "variant": "tileSquare",
+                    "path": "docs/assets/marketplace/tile-square.jpg",
+                    "width": 1200,
+                    "height": 1200
+                },
+                {
+                    "variant": "thumbnail",
+                    "path": "docs/assets/marketplace/thumbnail.jpg",
+                    "width": 640,
+                    "height": 360
+                }
+            ]
+        },
+        {
+            "package": "customer-portal",
+            "displayName": "Customer Portal",
+            "concept": "Logged-in customer hub",
+            "assets": [
+                {
+                    "variant": "extensionCard",
+                    "path": "docs/assets/marketplace/extension-card.jpg",
+                    "width": 1280,
+                    "height": 720
+                },
+                {
+                    "variant": "heroDesktop",
+                    "path": "docs/assets/marketplace/hero-desktop.jpg",
+                    "width": 1600,
+                    "height": 900
+                },
+                {
+                    "variant": "heroMobile",
+                    "path": "docs/assets/marketplace/hero-mobile.jpg",
+                    "width": 900,
+                    "height": 1200
+                },
+                {
+                    "variant": "tileSquare",
+                    "path": "docs/assets/marketplace/tile-square.jpg",
+                    "width": 1200,
+                    "height": 1200
+                },
+                {
+                    "variant": "thumbnail",
+                    "path": "docs/assets/marketplace/thumbnail.jpg",
+                    "width": 640,
+                    "height": 360
+                }
+            ]
+        },
+        {
+            "package": "dashboard-reports",
+            "displayName": "Dashboard Reports",
+            "concept": "Content health at a glance",
+            "assets": [
+                {
+                    "variant": "extensionCard",
+                    "path": "docs/assets/marketplace/extension-card.jpg",
+                    "width": 1280,
+                    "height": 720
+                },
+                {
+                    "variant": "heroDesktop",
+                    "path": "docs/assets/marketplace/hero-desktop.jpg",
+                    "width": 1600,
+                    "height": 900
+                },
+                {
+                    "variant": "heroMobile",
+                    "path": "docs/assets/marketplace/hero-mobile.jpg",
+                    "width": 900,
+                    "height": 1200
+                },
+                {
+                    "variant": "tileSquare",
+                    "path": "docs/assets/marketplace/tile-square.jpg",
+                    "width": 1200,
+                    "height": 1200
+                },
+                {
+                    "variant": "thumbnail",
+                    "path": "docs/assets/marketplace/thumbnail.jpg",
+                    "width": 640,
+                    "height": 360
+                }
+            ]
+        },
+        {
+            "package": "demo-kit",
+            "displayName": "Demo Kit",
+            "concept": "Known demo data",
+            "assets": [
+                {
+                    "variant": "extensionCard",
+                    "path": "docs/assets/marketplace/extension-card.jpg",
+                    "width": 1280,
+                    "height": 720
+                },
+                {
+                    "variant": "heroDesktop",
+                    "path": "docs/assets/marketplace/hero-desktop.jpg",
+                    "width": 1600,
+                    "height": 900
+                },
+                {
+                    "variant": "heroMobile",
+                    "path": "docs/assets/marketplace/hero-mobile.jpg",
+                    "width": 900,
+                    "height": 1200
+                },
+                {
+                    "variant": "tileSquare",
+                    "path": "docs/assets/marketplace/tile-square.jpg",
+                    "width": 1200,
+                    "height": 1200
+                },
+                {
+                    "variant": "thumbnail",
+                    "path": "docs/assets/marketplace/thumbnail.jpg",
+                    "width": 640,
+                    "height": 360
+                }
+            ]
+        },
+        {
+            "package": "deployments",
+            "displayName": "Deployments",
+            "concept": "Reviewed extension installs",
+            "assets": [
+                {
+                    "variant": "extensionCard",
+                    "path": "docs/assets/marketplace/extension-card.jpg",
+                    "width": 1280,
+                    "height": 720
+                },
+                {
+                    "variant": "heroDesktop",
+                    "path": "docs/assets/marketplace/hero-desktop.jpg",
+                    "width": 1600,
+                    "height": 900
+                },
+                {
+                    "variant": "heroMobile",
+                    "path": "docs/assets/marketplace/hero-mobile.jpg",
+                    "width": 900,
+                    "height": 1200
+                },
+                {
+                    "variant": "tileSquare",
+                    "path": "docs/assets/marketplace/tile-square.jpg",
+                    "width": 1200,
+                    "height": 1200
+                },
+                {
+                    "variant": "thumbnail",
+                    "path": "docs/assets/marketplace/thumbnail.jpg",
+                    "width": 640,
+                    "height": 360
+                }
+            ]
+        },
+        {
+            "package": "diagnostics",
+            "displayName": "Diagnostics",
+            "concept": "Operations cockpit",
+            "assets": [
+                {
+                    "variant": "extensionCard",
+                    "path": "docs/assets/marketplace/extension-card.jpg",
+                    "width": 1280,
+                    "height": 720
+                },
+                {
+                    "variant": "heroDesktop",
+                    "path": "docs/assets/marketplace/hero-desktop.jpg",
+                    "width": 1600,
+                    "height": 900
+                },
+                {
+                    "variant": "heroMobile",
+                    "path": "docs/assets/marketplace/hero-mobile.jpg",
+                    "width": 900,
+                    "height": 1200
+                },
+                {
+                    "variant": "tileSquare",
+                    "path": "docs/assets/marketplace/tile-square.jpg",
+                    "width": 1200,
+                    "height": 1200
+                },
+                {
+                    "variant": "thumbnail",
+                    "path": "docs/assets/marketplace/thumbnail.jpg",
+                    "width": 640,
+                    "height": 360
+                }
+            ]
+        },
+        {
+            "package": "document-lifecycle",
+            "displayName": "Document Lifecycle",
+            "concept": "Versioned acceptance",
+            "assets": [
+                {
+                    "variant": "extensionCard",
+                    "path": "docs/assets/marketplace/extension-card.jpg",
+                    "width": 1280,
+                    "height": 720
+                },
+                {
+                    "variant": "heroDesktop",
+                    "path": "docs/assets/marketplace/hero-desktop.jpg",
+                    "width": 1600,
+                    "height": 900
+                },
+                {
+                    "variant": "heroMobile",
+                    "path": "docs/assets/marketplace/hero-mobile.jpg",
+                    "width": 900,
+                    "height": 1200
+                },
+                {
+                    "variant": "tileSquare",
+                    "path": "docs/assets/marketplace/tile-square.jpg",
+                    "width": 1200,
+                    "height": 1200
+                },
+                {
+                    "variant": "thumbnail",
+                    "path": "docs/assets/marketplace/thumbnail.jpg",
+                    "width": 640,
+                    "height": 360
+                }
+            ]
+        },
+        {
+            "package": "email-studio",
+            "displayName": "Email Studio",
+            "concept": "Auditable email engine",
+            "assets": [
+                {
+                    "variant": "extensionCard",
+                    "path": "docs/assets/marketplace/extension-card.jpg",
+                    "width": 1280,
+                    "height": 720
+                },
+                {
+                    "variant": "heroDesktop",
+                    "path": "docs/assets/marketplace/hero-desktop.jpg",
+                    "width": 1600,
+                    "height": 900
+                },
+                {
+                    "variant": "heroMobile",
+                    "path": "docs/assets/marketplace/hero-mobile.jpg",
+                    "width": 900,
+                    "height": 1200
+                },
+                {
+                    "variant": "tileSquare",
+                    "path": "docs/assets/marketplace/tile-square.jpg",
+                    "width": 1200,
+                    "height": 1200
+                },
+                {
+                    "variant": "thumbnail",
+                    "path": "docs/assets/marketplace/thumbnail.jpg",
+                    "width": 640,
+                    "height": 360
+                }
+            ]
+        },
+        {
+            "package": "events",
+            "displayName": "Events",
+            "concept": "Capacity-aware events",
+            "assets": [
+                {
+                    "variant": "extensionCard",
+                    "path": "docs/assets/marketplace/extension-card.jpg",
+                    "width": 1280,
+                    "height": 720
+                },
+                {
+                    "variant": "heroDesktop",
+                    "path": "docs/assets/marketplace/hero-desktop.jpg",
+                    "width": 1600,
+                    "height": 900
+                },
+                {
+                    "variant": "heroMobile",
+                    "path": "docs/assets/marketplace/hero-mobile.jpg",
+                    "width": 900,
+                    "height": 1200
+                },
+                {
+                    "variant": "tileSquare",
+                    "path": "docs/assets/marketplace/tile-square.jpg",
+                    "width": 1200,
+                    "height": 1200
+                },
+                {
+                    "variant": "thumbnail",
+                    "path": "docs/assets/marketplace/thumbnail.jpg",
+                    "width": 640,
+                    "height": 360
+                }
+            ]
+        },
+        {
+            "package": "exception-reports",
+            "displayName": "Exception Reports",
+            "concept": "Sanitized exception alerts",
+            "assets": [
+                {
+                    "variant": "extensionCard",
+                    "path": "docs/assets/marketplace/extension-card.svg",
+                    "width": 1280,
+                    "height": 720
+                },
+                {
+                    "variant": "heroDesktop",
+                    "path": "docs/assets/marketplace/hero-desktop.jpg",
+                    "width": 1600,
+                    "height": 900
+                },
+                {
+                    "variant": "heroMobile",
+                    "path": "docs/assets/marketplace/hero-mobile.jpg",
+                    "width": 900,
+                    "height": 1200
+                },
+                {
+                    "variant": "tileSquare",
+                    "path": "docs/assets/marketplace/tile-square.jpg",
+                    "width": 1200,
+                    "height": 1200
+                },
+                {
+                    "variant": "thumbnail",
+                    "path": "docs/assets/marketplace/thumbnail.jpg",
+                    "width": 640,
+                    "height": 360
+                }
+            ]
+        },
+        {
+            "package": "experiments",
+            "displayName": "Experiments",
+            "concept": "Server-side experiments",
+            "assets": [
+                {
+                    "variant": "extensionCard",
+                    "path": "docs/assets/marketplace/extension-card.jpg",
+                    "width": 1280,
+                    "height": 720
+                },
+                {
+                    "variant": "heroDesktop",
+                    "path": "docs/assets/marketplace/hero-desktop.jpg",
+                    "width": 1600,
+                    "height": 900
+                },
+                {
+                    "variant": "heroMobile",
+                    "path": "docs/assets/marketplace/hero-mobile.jpg",
+                    "width": 900,
+                    "height": 1200
+                },
+                {
+                    "variant": "tileSquare",
+                    "path": "docs/assets/marketplace/tile-square.jpg",
+                    "width": 1200,
+                    "height": 1200
+                },
+                {
+                    "variant": "thumbnail",
+                    "path": "docs/assets/marketplace/thumbnail.jpg",
+                    "width": 640,
+                    "height": 360
+                }
+            ]
+        },
+        {
+            "package": "filament-peek",
+            "displayName": "Filament Peek",
+            "concept": "Private preview links",
+            "assets": [
+                {
+                    "variant": "extensionCard",
+                    "path": "docs/assets/marketplace/extension-card.jpg",
+                    "width": 1280,
+                    "height": 720
+                },
+                {
+                    "variant": "heroDesktop",
+                    "path": "docs/assets/marketplace/hero-desktop.jpg",
+                    "width": 1600,
+                    "height": 900
+                },
+                {
+                    "variant": "heroMobile",
+                    "path": "docs/assets/marketplace/hero-mobile.jpg",
+                    "width": 900,
+                    "height": 1200
+                },
+                {
+                    "variant": "tileSquare",
+                    "path": "docs/assets/marketplace/tile-square.jpg",
+                    "width": 1200,
+                    "height": 1200
+                },
+                {
+                    "variant": "thumbnail",
+                    "path": "docs/assets/marketplace/thumbnail.jpg",
+                    "width": 640,
+                    "height": 360
+                }
+            ]
+        },
+        {
+            "package": "form-builder",
+            "displayName": "Form Builder",
+            "concept": "Encrypted intake forms",
+            "assets": [
+                {
+                    "variant": "extensionCard",
+                    "path": "docs/assets/marketplace/extension-card.jpg",
+                    "width": 1280,
+                    "height": 720
+                },
+                {
+                    "variant": "heroDesktop",
+                    "path": "docs/assets/marketplace/hero-desktop.jpg",
+                    "width": 1600,
+                    "height": 900
+                },
+                {
+                    "variant": "heroMobile",
+                    "path": "docs/assets/marketplace/hero-mobile.jpg",
+                    "width": 900,
+                    "height": 1200
+                },
+                {
+                    "variant": "tileSquare",
+                    "path": "docs/assets/marketplace/tile-square.jpg",
+                    "width": 1200,
+                    "height": 1200
+                },
+                {
+                    "variant": "thumbnail",
+                    "path": "docs/assets/marketplace/thumbnail.jpg",
+                    "width": 640,
+                    "height": 360
+                }
+            ]
+        },
+        {
+            "package": "foundation-theme",
+            "displayName": "Foundation Theme",
+            "concept": "Base theme contract",
+            "assets": [
+                {
+                    "variant": "extensionCard",
+                    "path": "docs/assets/marketplace/extension-card.jpg",
+                    "width": 1280,
+                    "height": 720
+                },
+                {
+                    "variant": "heroDesktop",
+                    "path": "docs/assets/marketplace/hero-desktop.jpg",
+                    "width": 1600,
+                    "height": 900
+                },
+                {
+                    "variant": "heroMobile",
+                    "path": "docs/assets/marketplace/hero-mobile.jpg",
+                    "width": 900,
+                    "height": 1200
+                },
+                {
+                    "variant": "tileSquare",
+                    "path": "docs/assets/marketplace/tile-square.jpg",
+                    "width": 1200,
+                    "height": 1200
+                },
+                {
+                    "variant": "thumbnail",
+                    "path": "docs/assets/marketplace/thumbnail.jpg",
+                    "width": 640,
+                    "height": 360
+                }
+            ]
+        },
+        {
+            "package": "frontend-authoring",
+            "displayName": "Frontend Authoring",
+            "concept": "Post-load admin authoring",
+            "assets": [
+                {
+                    "variant": "extensionCard",
+                    "path": "docs/assets/marketplace/extension-card.jpg",
+                    "width": 1280,
+                    "height": 720
+                },
+                {
+                    "variant": "heroDesktop",
+                    "path": "docs/assets/marketplace/hero-desktop.jpg",
+                    "width": 1600,
+                    "height": 900
+                },
+                {
+                    "variant": "heroMobile",
+                    "path": "docs/assets/marketplace/hero-mobile.jpg",
+                    "width": 900,
+                    "height": 1200
+                },
+                {
+                    "variant": "tileSquare",
+                    "path": "docs/assets/marketplace/tile-square.jpg",
+                    "width": 1200,
+                    "height": 1200
+                },
+                {
+                    "variant": "thumbnail",
+                    "path": "docs/assets/marketplace/thumbnail.jpg",
+                    "width": 640,
+                    "height": 360
+                }
+            ]
+        },
+        {
+            "package": "frontend-optimizer",
+            "displayName": "Frontend Optimizer",
+            "concept": "Faster first paint",
+            "assets": [
+                {
+                    "variant": "extensionCard",
+                    "path": "docs/assets/marketplace/extension-card.jpg",
+                    "width": 1280,
+                    "height": 720
+                },
+                {
+                    "variant": "heroDesktop",
+                    "path": "docs/assets/marketplace/hero-desktop.jpg",
+                    "width": 1600,
+                    "height": 900
+                },
+                {
+                    "variant": "heroMobile",
+                    "path": "docs/assets/marketplace/hero-mobile.jpg",
+                    "width": 900,
+                    "height": 1200
+                },
+                {
+                    "variant": "tileSquare",
+                    "path": "docs/assets/marketplace/tile-square.jpg",
+                    "width": 1200,
+                    "height": 1200
+                },
+                {
+                    "variant": "thumbnail",
+                    "path": "docs/assets/marketplace/thumbnail.jpg",
+                    "width": 640,
+                    "height": 360
+                }
+            ]
+        },
+        {
+            "package": "ga4-reports",
+            "displayName": "GA4 Reports",
+            "concept": "GA4 snapshots in admin",
+            "assets": [
+                {
+                    "variant": "extensionCard",
+                    "path": "docs/assets/marketplace/extension-card.jpg",
+                    "width": 1280,
+                    "height": 720
+                },
+                {
+                    "variant": "heroDesktop",
+                    "path": "docs/assets/marketplace/hero-desktop.jpg",
+                    "width": 1600,
+                    "height": 900
+                },
+                {
+                    "variant": "heroMobile",
+                    "path": "docs/assets/marketplace/hero-mobile.jpg",
+                    "width": 900,
+                    "height": 1200
+                },
+                {
+                    "variant": "tileSquare",
+                    "path": "docs/assets/marketplace/tile-square.jpg",
+                    "width": 1200,
+                    "height": 1200
+                },
+                {
+                    "variant": "thumbnail",
+                    "path": "docs/assets/marketplace/thumbnail.jpg",
+                    "width": 640,
+                    "height": 360
+                }
+            ]
+        },
+        {
+            "package": "hero",
+            "displayName": "Hero",
+            "concept": "Theme-ready hero media",
+            "assets": [
+                {
+                    "variant": "extensionCard",
+                    "path": "docs/assets/marketplace/extension-card.jpg",
+                    "width": 1280,
+                    "height": 720
+                },
+                {
+                    "variant": "heroDesktop",
+                    "path": "docs/assets/marketplace/hero-desktop.jpg",
+                    "width": 1600,
+                    "height": 900
+                },
+                {
+                    "variant": "heroMobile",
+                    "path": "docs/assets/marketplace/hero-mobile.jpg",
+                    "width": 900,
+                    "height": 1200
+                },
+                {
+                    "variant": "tileSquare",
+                    "path": "docs/assets/marketplace/tile-square.jpg",
+                    "width": 1200,
+                    "height": 1200
+                },
+                {
+                    "variant": "thumbnail",
+                    "path": "docs/assets/marketplace/thumbnail.jpg",
+                    "width": 640,
+                    "height": 360
+                }
+            ]
+        },
+        {
+            "package": "html-cache",
+            "displayName": "HTML Cache",
+            "concept": "Static HTML delivery",
+            "assets": [
+                {
+                    "variant": "extensionCard",
+                    "path": "docs/assets/marketplace/extension-card.jpg",
+                    "width": 1280,
+                    "height": 720
+                },
+                {
+                    "variant": "heroDesktop",
+                    "path": "docs/assets/marketplace/hero-desktop.jpg",
+                    "width": 1600,
+                    "height": 900
+                },
+                {
+                    "variant": "heroMobile",
+                    "path": "docs/assets/marketplace/hero-mobile.jpg",
+                    "width": 900,
+                    "height": 1200
+                },
+                {
+                    "variant": "tileSquare",
+                    "path": "docs/assets/marketplace/tile-square.jpg",
+                    "width": 1200,
+                    "height": 1200
+                },
+                {
+                    "variant": "thumbnail",
+                    "path": "docs/assets/marketplace/thumbnail.jpg",
+                    "width": 640,
+                    "height": 360
+                }
+            ]
+        },
+        {
+            "package": "inertia",
+            "displayName": "Capell Inertia",
+            "concept": "Shared Inertia bridge",
+            "assets": [
+                {
+                    "variant": "extensionCard",
+                    "path": "docs/assets/marketplace/extension-card.jpg",
+                    "width": 1280,
+                    "height": 720
+                },
+                {
+                    "variant": "heroDesktop",
+                    "path": "docs/assets/marketplace/hero-desktop.jpg",
+                    "width": 1600,
+                    "height": 900
+                },
+                {
+                    "variant": "heroMobile",
+                    "path": "docs/assets/marketplace/hero-mobile.jpg",
+                    "width": 900,
+                    "height": 1200
+                },
+                {
+                    "variant": "tileSquare",
+                    "path": "docs/assets/marketplace/tile-square.jpg",
+                    "width": 1200,
+                    "height": 1200
+                },
+                {
+                    "variant": "thumbnail",
+                    "path": "docs/assets/marketplace/thumbnail.jpg",
+                    "width": 640,
+                    "height": 360
+                }
+            ]
+        },
+        {
+            "package": "inertia-react-adapter",
+            "displayName": "Capell Inertia React Adapter",
+            "concept": "React runtime adapter",
+            "assets": [
+                {
+                    "variant": "extensionCard",
+                    "path": "docs/assets/marketplace/extension-card.jpg",
+                    "width": 1280,
+                    "height": 720
+                },
+                {
+                    "variant": "heroDesktop",
+                    "path": "docs/assets/marketplace/hero-desktop.jpg",
+                    "width": 1600,
+                    "height": 900
+                },
+                {
+                    "variant": "heroMobile",
+                    "path": "docs/assets/marketplace/hero-mobile.jpg",
+                    "width": 900,
+                    "height": 1200
+                },
+                {
+                    "variant": "tileSquare",
+                    "path": "docs/assets/marketplace/tile-square.jpg",
+                    "width": 1200,
+                    "height": 1200
+                },
+                {
+                    "variant": "thumbnail",
+                    "path": "docs/assets/marketplace/thumbnail.jpg",
+                    "width": 640,
+                    "height": 360
+                }
+            ]
+        },
+        {
+            "package": "inertia-vue-adapter",
+            "displayName": "Capell Inertia Vue Adapter",
+            "concept": "Vue runtime adapter",
+            "assets": [
+                {
+                    "variant": "extensionCard",
+                    "path": "docs/assets/marketplace/extension-card.jpg",
+                    "width": 1280,
+                    "height": 720
+                },
+                {
+                    "variant": "heroDesktop",
+                    "path": "docs/assets/marketplace/hero-desktop.jpg",
+                    "width": 1600,
+                    "height": 900
+                },
+                {
+                    "variant": "heroMobile",
+                    "path": "docs/assets/marketplace/hero-mobile.jpg",
+                    "width": 900,
+                    "height": 1200
+                },
+                {
+                    "variant": "tileSquare",
+                    "path": "docs/assets/marketplace/tile-square.jpg",
+                    "width": 1200,
+                    "height": 1200
+                },
+                {
+                    "variant": "thumbnail",
+                    "path": "docs/assets/marketplace/thumbnail.jpg",
+                    "width": 640,
+                    "height": 360
+                }
+            ]
+        },
+        {
+            "package": "insights",
+            "displayName": "Insights",
+            "concept": "Privacy-aware analytics",
+            "assets": [
+                {
+                    "variant": "extensionCard",
+                    "path": "docs/assets/marketplace/extension-card.jpg",
+                    "width": 1280,
+                    "height": 720
+                },
+                {
+                    "variant": "heroDesktop",
+                    "path": "docs/assets/marketplace/hero-desktop.jpg",
+                    "width": 1600,
+                    "height": 900
+                },
+                {
+                    "variant": "heroMobile",
+                    "path": "docs/assets/marketplace/hero-mobile.jpg",
+                    "width": 900,
+                    "height": 1200
+                },
+                {
+                    "variant": "tileSquare",
+                    "path": "docs/assets/marketplace/tile-square.jpg",
+                    "width": 1200,
+                    "height": 1200
+                },
+                {
+                    "variant": "thumbnail",
+                    "path": "docs/assets/marketplace/thumbnail.jpg",
+                    "width": 640,
+                    "height": 360
+                }
+            ]
+        },
+        {
+            "package": "knowledge-base",
+            "displayName": "Knowledge Base",
+            "concept": "Self-hosted help center",
+            "assets": [
+                {
+                    "variant": "extensionCard",
+                    "path": "docs/assets/marketplace/extension-card.jpg",
+                    "width": 1280,
+                    "height": 720
+                },
+                {
+                    "variant": "heroDesktop",
+                    "path": "docs/assets/marketplace/hero-desktop.jpg",
+                    "width": 1600,
+                    "height": 900
+                },
+                {
+                    "variant": "heroMobile",
+                    "path": "docs/assets/marketplace/hero-mobile.jpg",
+                    "width": 900,
+                    "height": 1200
+                },
+                {
+                    "variant": "tileSquare",
+                    "path": "docs/assets/marketplace/tile-square.jpg",
+                    "width": 1200,
+                    "height": 1200
+                },
+                {
+                    "variant": "thumbnail",
+                    "path": "docs/assets/marketplace/thumbnail.jpg",
+                    "width": 640,
+                    "height": 360
+                }
+            ]
+        },
+        {
+            "package": "layout-builder",
+            "displayName": "Layout Builder",
+            "concept": "Composed pages, clean output",
+            "assets": [
+                {
+                    "variant": "extensionCard",
+                    "path": "docs/assets/marketplace/extension-card.jpg",
+                    "width": 1280,
+                    "height": 720
+                },
+                {
+                    "variant": "heroDesktop",
+                    "path": "docs/assets/marketplace/hero-desktop.jpg",
+                    "width": 1600,
+                    "height": 900
+                },
+                {
+                    "variant": "heroMobile",
+                    "path": "docs/assets/marketplace/hero-mobile.jpg",
+                    "width": 900,
+                    "height": 1200
+                },
+                {
+                    "variant": "tileSquare",
+                    "path": "docs/assets/marketplace/tile-square.jpg",
+                    "width": 1200,
+                    "height": 1200
+                },
+                {
+                    "variant": "thumbnail",
+                    "path": "docs/assets/marketplace/thumbnail.jpg",
+                    "width": 640,
+                    "height": 360
+                }
+            ]
+        },
+        {
+            "package": "login-audit",
+            "displayName": "Login Audit",
+            "concept": "Access evidence trail",
+            "assets": [
+                {
+                    "variant": "extensionCard",
+                    "path": "docs/assets/marketplace/extension-card.jpg",
+                    "width": 1280,
+                    "height": 720
+                },
+                {
+                    "variant": "heroDesktop",
+                    "path": "docs/assets/marketplace/hero-desktop.jpg",
+                    "width": 1600,
+                    "height": 900
+                },
+                {
+                    "variant": "heroMobile",
+                    "path": "docs/assets/marketplace/hero-mobile.jpg",
+                    "width": 900,
+                    "height": 1200
+                },
+                {
+                    "variant": "tileSquare",
+                    "path": "docs/assets/marketplace/tile-square.jpg",
+                    "width": 1200,
+                    "height": 1200
+                },
+                {
+                    "variant": "thumbnail",
+                    "path": "docs/assets/marketplace/thumbnail.jpg",
+                    "width": 640,
+                    "height": 360
+                }
+            ]
+        },
+        {
+            "package": "media-ai",
+            "displayName": "Media AI",
+            "concept": "Provider-backed image edits",
+            "assets": [
+                {
+                    "variant": "extensionCard",
+                    "path": "docs/assets/marketplace/extension-card.jpg",
+                    "width": 1280,
+                    "height": 720
+                },
+                {
+                    "variant": "heroDesktop",
+                    "path": "docs/assets/marketplace/hero-desktop.jpg",
+                    "width": 1600,
+                    "height": 900
+                },
+                {
+                    "variant": "heroMobile",
+                    "path": "docs/assets/marketplace/hero-mobile.jpg",
+                    "width": 900,
+                    "height": 1200
+                },
+                {
+                    "variant": "tileSquare",
+                    "path": "docs/assets/marketplace/tile-square.jpg",
+                    "width": 1200,
+                    "height": 1200
+                },
+                {
+                    "variant": "thumbnail",
+                    "path": "docs/assets/marketplace/thumbnail.jpg",
+                    "width": 640,
+                    "height": 360
+                }
+            ]
+        },
+        {
+            "package": "media-library",
+            "displayName": "Media Library",
+            "concept": "Consistent media backbone",
+            "assets": [
+                {
+                    "variant": "extensionCard",
+                    "path": "docs/assets/marketplace/extension-card.jpg",
+                    "width": 1280,
+                    "height": 720
+                },
+                {
+                    "variant": "heroDesktop",
+                    "path": "docs/assets/marketplace/hero-desktop.jpg",
+                    "width": 1600,
+                    "height": 900
+                },
+                {
+                    "variant": "heroMobile",
+                    "path": "docs/assets/marketplace/hero-mobile.jpg",
+                    "width": 900,
+                    "height": 1200
+                },
+                {
+                    "variant": "tileSquare",
+                    "path": "docs/assets/marketplace/tile-square.jpg",
+                    "width": 1200,
+                    "height": 1200
+                },
+                {
+                    "variant": "thumbnail",
+                    "path": "docs/assets/marketplace/thumbnail.jpg",
+                    "width": 640,
+                    "height": 360
+                }
+            ]
+        },
+        {
+            "package": "migration-assistant",
+            "displayName": "Migration Assistant",
+            "concept": "Previewed imports",
+            "assets": [
+                {
+                    "variant": "extensionCard",
+                    "path": "docs/assets/marketplace/extension-card.jpg",
+                    "width": 1280,
+                    "height": 720
+                },
+                {
+                    "variant": "heroDesktop",
+                    "path": "docs/assets/marketplace/hero-desktop.jpg",
+                    "width": 1600,
+                    "height": 900
+                },
+                {
+                    "variant": "heroMobile",
+                    "path": "docs/assets/marketplace/hero-mobile.jpg",
+                    "width": 900,
+                    "height": 1200
+                },
+                {
+                    "variant": "tileSquare",
+                    "path": "docs/assets/marketplace/tile-square.jpg",
+                    "width": 1200,
+                    "height": 1200
+                },
+                {
+                    "variant": "thumbnail",
+                    "path": "docs/assets/marketplace/thumbnail.jpg",
+                    "width": 640,
+                    "height": 360
+                }
+            ]
+        },
+        {
+            "package": "navigation",
+            "displayName": "Navigation",
+            "concept": "Managed site menus",
+            "assets": [
+                {
+                    "variant": "extensionCard",
+                    "path": "docs/assets/marketplace/extension-card.jpg",
+                    "width": 1280,
+                    "height": 720
+                },
+                {
+                    "variant": "heroDesktop",
+                    "path": "docs/assets/marketplace/hero-desktop.jpg",
+                    "width": 1600,
+                    "height": 900
+                },
+                {
+                    "variant": "heroMobile",
+                    "path": "docs/assets/marketplace/hero-mobile.jpg",
+                    "width": 900,
+                    "height": 1200
+                },
+                {
+                    "variant": "tileSquare",
+                    "path": "docs/assets/marketplace/tile-square.jpg",
+                    "width": 1200,
+                    "height": 1200
+                },
+                {
+                    "variant": "thumbnail",
+                    "path": "docs/assets/marketplace/thumbnail.jpg",
+                    "width": 640,
+                    "height": 360
+                }
+            ]
+        },
+        {
+            "package": "newsletter",
+            "displayName": "Newsletter",
+            "concept": "Consent-safe subscriptions",
+            "assets": [
+                {
+                    "variant": "extensionCard",
+                    "path": "docs/assets/marketplace/extension-card.jpg",
+                    "width": 1280,
+                    "height": 720
+                },
+                {
+                    "variant": "heroDesktop",
+                    "path": "docs/assets/marketplace/hero-desktop.jpg",
+                    "width": 1600,
+                    "height": 900
+                },
+                {
+                    "variant": "heroMobile",
+                    "path": "docs/assets/marketplace/hero-mobile.jpg",
+                    "width": 900,
+                    "height": 1200
+                },
+                {
+                    "variant": "tileSquare",
+                    "path": "docs/assets/marketplace/tile-square.jpg",
+                    "width": 1200,
+                    "height": 1200
+                },
+                {
+                    "variant": "thumbnail",
+                    "path": "docs/assets/marketplace/thumbnail.jpg",
+                    "width": 640,
+                    "height": 360
+                }
+            ]
+        },
+        {
+            "package": "notes",
+            "displayName": "Notes",
+            "concept": "Context on every record",
+            "assets": [
+                {
+                    "variant": "extensionCard",
+                    "path": "docs/assets/marketplace/extension-card.jpg",
+                    "width": 1280,
+                    "height": 720
+                },
+                {
+                    "variant": "heroDesktop",
+                    "path": "docs/assets/marketplace/hero-desktop.jpg",
+                    "width": 1600,
+                    "height": 900
+                },
+                {
+                    "variant": "heroMobile",
+                    "path": "docs/assets/marketplace/hero-mobile.jpg",
+                    "width": 900,
+                    "height": 1200
+                },
+                {
+                    "variant": "tileSquare",
+                    "path": "docs/assets/marketplace/tile-square.jpg",
+                    "width": 1200,
+                    "height": 1200
+                },
+                {
+                    "variant": "thumbnail",
+                    "path": "docs/assets/marketplace/thumbnail.jpg",
+                    "width": 640,
+                    "height": 360
+                }
+            ]
+        },
+        {
+            "package": "password-policy",
+            "displayName": "Password Policy",
+            "concept": "Stronger admin passwords",
+            "assets": [
+                {
+                    "variant": "extensionCard",
+                    "path": "docs/assets/marketplace/extension-card.jpg",
+                    "width": 1280,
+                    "height": 720
+                },
+                {
+                    "variant": "heroDesktop",
+                    "path": "docs/assets/marketplace/hero-desktop.jpg",
+                    "width": 1600,
+                    "height": 900
+                },
+                {
+                    "variant": "heroMobile",
+                    "path": "docs/assets/marketplace/hero-mobile.jpg",
+                    "width": 900,
+                    "height": 1200
+                },
+                {
+                    "variant": "tileSquare",
+                    "path": "docs/assets/marketplace/tile-square.jpg",
+                    "width": 1200,
+                    "height": 1200
+                },
+                {
+                    "variant": "thumbnail",
+                    "path": "docs/assets/marketplace/thumbnail.jpg",
+                    "width": 640,
+                    "height": 360
+                }
+            ]
+        },
+        {
+            "package": "payments",
+            "displayName": "Payments",
+            "concept": "Checkout and fulfilment",
+            "assets": [
+                {
+                    "variant": "extensionCard",
+                    "path": "docs/assets/marketplace/extension-card.jpg",
+                    "width": 1280,
+                    "height": 720
+                },
+                {
+                    "variant": "heroDesktop",
+                    "path": "docs/assets/marketplace/hero-desktop.jpg",
+                    "width": 1600,
+                    "height": 900
+                },
+                {
+                    "variant": "heroMobile",
+                    "path": "docs/assets/marketplace/hero-mobile.jpg",
+                    "width": 900,
+                    "height": 1200
+                },
+                {
+                    "variant": "tileSquare",
+                    "path": "docs/assets/marketplace/tile-square.jpg",
+                    "width": 1200,
+                    "height": 1200
+                },
+                {
+                    "variant": "thumbnail",
+                    "path": "docs/assets/marketplace/thumbnail.jpg",
+                    "width": 640,
+                    "height": 360
+                }
+            ]
+        },
+        {
+            "package": "privacy-center",
+            "displayName": "Privacy Center",
+            "concept": "Compliance ledger",
+            "assets": [
+                {
+                    "variant": "extensionCard",
+                    "path": "docs/assets/marketplace/extension-card.jpg",
+                    "width": 1280,
+                    "height": 720
+                },
+                {
+                    "variant": "heroDesktop",
+                    "path": "docs/assets/marketplace/hero-desktop.jpg",
+                    "width": 1600,
+                    "height": 900
+                },
+                {
+                    "variant": "heroMobile",
+                    "path": "docs/assets/marketplace/hero-mobile.jpg",
+                    "width": 900,
+                    "height": 1200
+                },
+                {
+                    "variant": "tileSquare",
+                    "path": "docs/assets/marketplace/tile-square.jpg",
+                    "width": 1200,
+                    "height": 1200
+                },
+                {
+                    "variant": "thumbnail",
+                    "path": "docs/assets/marketplace/thumbnail.jpg",
+                    "width": 640,
+                    "height": 360
+                }
+            ]
+        },
+        {
+            "package": "public-actions",
+            "displayName": "Public Actions",
+            "concept": "Signed public automation",
+            "assets": [
+                {
+                    "variant": "extensionCard",
+                    "path": "docs/assets/marketplace/extension-card.jpg",
+                    "width": 1280,
+                    "height": 720
+                },
+                {
+                    "variant": "heroDesktop",
+                    "path": "docs/assets/marketplace/hero-desktop.jpg",
+                    "width": 1600,
+                    "height": 900
+                },
+                {
+                    "variant": "heroMobile",
+                    "path": "docs/assets/marketplace/hero-mobile.jpg",
+                    "width": 900,
+                    "height": 1200
+                },
+                {
+                    "variant": "tileSquare",
+                    "path": "docs/assets/marketplace/tile-square.jpg",
+                    "width": 1200,
+                    "height": 1200
+                },
+                {
+                    "variant": "thumbnail",
+                    "path": "docs/assets/marketplace/thumbnail.jpg",
+                    "width": 640,
+                    "height": 360
+                }
+            ]
+        },
+        {
+            "package": "publishing-studio",
+            "displayName": "Publishing Studio",
+            "concept": "Review-first publishing",
+            "assets": [
+                {
+                    "variant": "extensionCard",
+                    "path": "docs/assets/marketplace/extension-card.jpg",
+                    "width": 1280,
+                    "height": 720
+                },
+                {
+                    "variant": "heroDesktop",
+                    "path": "docs/assets/marketplace/hero-desktop.jpg",
+                    "width": 1600,
+                    "height": 900
+                },
+                {
+                    "variant": "heroMobile",
+                    "path": "docs/assets/marketplace/hero-mobile.jpg",
+                    "width": 900,
+                    "height": 1200
+                },
+                {
+                    "variant": "tileSquare",
+                    "path": "docs/assets/marketplace/tile-square.jpg",
+                    "width": 1200,
+                    "height": 1200
+                },
+                {
+                    "variant": "thumbnail",
+                    "path": "docs/assets/marketplace/thumbnail.jpg",
+                    "width": 640,
+                    "height": 360
+                }
+            ]
+        },
+        {
+            "package": "record-switcher",
+            "displayName": "Record Switcher",
+            "concept": "Fast record switching",
+            "assets": [
+                {
+                    "variant": "extensionCard",
+                    "path": "docs/assets/marketplace/extension-card.svg",
+                    "width": 1280,
+                    "height": 720
+                },
+                {
+                    "variant": "heroDesktop",
+                    "path": "docs/assets/marketplace/hero-desktop.jpg",
+                    "width": 1600,
+                    "height": 900
+                },
+                {
+                    "variant": "heroMobile",
+                    "path": "docs/assets/marketplace/hero-mobile.jpg",
+                    "width": 900,
+                    "height": 1200
+                },
+                {
+                    "variant": "tileSquare",
+                    "path": "docs/assets/marketplace/tile-square.jpg",
+                    "width": 1200,
+                    "height": 1200
+                },
+                {
+                    "variant": "thumbnail",
+                    "path": "docs/assets/marketplace/thumbnail.jpg",
+                    "width": 640,
+                    "height": 360
+                }
+            ]
+        },
+        {
+            "package": "search",
+            "displayName": "Search",
+            "concept": "Production-grade search",
+            "assets": [
+                {
+                    "variant": "extensionCard",
+                    "path": "docs/assets/marketplace/extension-card.jpg",
+                    "width": 1280,
+                    "height": 720
+                },
+                {
+                    "variant": "heroDesktop",
+                    "path": "docs/assets/marketplace/hero-desktop.jpg",
+                    "width": 1600,
+                    "height": 900
+                },
+                {
+                    "variant": "heroMobile",
+                    "path": "docs/assets/marketplace/hero-mobile.jpg",
+                    "width": 900,
+                    "height": 1200
+                },
+                {
+                    "variant": "tileSquare",
+                    "path": "docs/assets/marketplace/tile-square.jpg",
+                    "width": 1200,
+                    "height": 1200
+                },
+                {
+                    "variant": "thumbnail",
+                    "path": "docs/assets/marketplace/thumbnail.jpg",
+                    "width": 640,
+                    "height": 360
+                }
+            ]
+        },
+        {
+            "package": "seo-suite",
+            "displayName": "SEO Suite",
+            "concept": "Search-ready pages",
+            "assets": [
+                {
+                    "variant": "extensionCard",
+                    "path": "docs/assets/marketplace/extension-card.jpg",
+                    "width": 1280,
+                    "height": 720
+                },
+                {
+                    "variant": "heroDesktop",
+                    "path": "docs/assets/marketplace/hero-desktop.jpg",
+                    "width": 1600,
+                    "height": 900
+                },
+                {
+                    "variant": "heroMobile",
+                    "path": "docs/assets/marketplace/hero-mobile.jpg",
+                    "width": 900,
+                    "height": 1200
+                },
+                {
+                    "variant": "tileSquare",
+                    "path": "docs/assets/marketplace/tile-square.jpg",
+                    "width": 1200,
+                    "height": 1200
+                },
+                {
+                    "variant": "thumbnail",
+                    "path": "docs/assets/marketplace/thumbnail.jpg",
+                    "width": 640,
+                    "height": 360
+                }
+            ]
+        },
+        {
+            "package": "shopify-commerce",
+            "displayName": "Shopify Commerce",
+            "concept": "Shopify catalog sync",
+            "assets": [
+                {
+                    "variant": "extensionCard",
+                    "path": "docs/assets/marketplace/extension-card.jpg",
+                    "width": 1280,
+                    "height": 720
+                },
+                {
+                    "variant": "heroDesktop",
+                    "path": "docs/assets/marketplace/hero-desktop.jpg",
+                    "width": 1600,
+                    "height": 900
+                },
+                {
+                    "variant": "heroMobile",
+                    "path": "docs/assets/marketplace/hero-mobile.jpg",
+                    "width": 900,
+                    "height": 1200
+                },
+                {
+                    "variant": "tileSquare",
+                    "path": "docs/assets/marketplace/tile-square.jpg",
+                    "width": 1200,
+                    "height": 1200
+                },
+                {
+                    "variant": "thumbnail",
+                    "path": "docs/assets/marketplace/thumbnail.jpg",
+                    "width": 640,
+                    "height": 360
+                }
+            ]
+        },
+        {
+            "package": "site-discovery",
+            "displayName": "Site Discovery",
+            "concept": "Canonical discovery",
+            "assets": [
+                {
+                    "variant": "extensionCard",
+                    "path": "docs/assets/marketplace/extension-card.jpg",
+                    "width": 1280,
+                    "height": 720
+                },
+                {
+                    "variant": "heroDesktop",
+                    "path": "docs/assets/marketplace/hero-desktop.jpg",
+                    "width": 1600,
+                    "height": 900
+                },
+                {
+                    "variant": "heroMobile",
+                    "path": "docs/assets/marketplace/hero-mobile.jpg",
+                    "width": 900,
+                    "height": 1200
+                },
+                {
+                    "variant": "tileSquare",
+                    "path": "docs/assets/marketplace/tile-square.jpg",
+                    "width": 1200,
+                    "height": 1200
+                },
+                {
+                    "variant": "thumbnail",
+                    "path": "docs/assets/marketplace/thumbnail.jpg",
+                    "width": 640,
+                    "height": 360
+                }
+            ]
+        },
+        {
+            "package": "social-feeds",
+            "displayName": "Social Feeds",
+            "concept": "Cached social feeds",
+            "assets": [
+                {
+                    "variant": "extensionCard",
+                    "path": "docs/assets/marketplace/extension-card.svg",
+                    "width": 1280,
+                    "height": 720
+                },
+                {
+                    "variant": "heroDesktop",
+                    "path": "docs/assets/marketplace/hero-desktop.jpg",
+                    "width": 1600,
+                    "height": 900
+                },
+                {
+                    "variant": "heroMobile",
+                    "path": "docs/assets/marketplace/hero-mobile.jpg",
+                    "width": 900,
+                    "height": 1200
+                },
+                {
+                    "variant": "tileSquare",
+                    "path": "docs/assets/marketplace/tile-square.jpg",
+                    "width": 1200,
+                    "height": 1200
+                },
+                {
+                    "variant": "thumbnail",
+                    "path": "docs/assets/marketplace/thumbnail.jpg",
+                    "width": 640,
+                    "height": 360
+                }
+            ]
+        },
+        {
+            "package": "structured-content-library",
+            "displayName": "Structured Content Library",
+            "concept": "Reusable content records",
+            "assets": [
+                {
+                    "variant": "extensionCard",
+                    "path": "docs/assets/marketplace/extension-card.jpg",
+                    "width": 1280,
+                    "height": 720
+                },
+                {
+                    "variant": "heroDesktop",
+                    "path": "docs/assets/marketplace/hero-desktop.jpg",
+                    "width": 1600,
+                    "height": 900
+                },
+                {
+                    "variant": "heroMobile",
+                    "path": "docs/assets/marketplace/hero-mobile.jpg",
+                    "width": 900,
+                    "height": 1200
+                },
+                {
+                    "variant": "tileSquare",
+                    "path": "docs/assets/marketplace/tile-square.jpg",
+                    "width": 1200,
+                    "height": 1200
+                },
+                {
+                    "variant": "thumbnail",
+                    "path": "docs/assets/marketplace/thumbnail.jpg",
+                    "width": 640,
+                    "height": 360
+                }
+            ]
+        },
+        {
+            "package": "tags",
+            "displayName": "Tags",
+            "concept": "Shared taxonomy",
+            "assets": [
+                {
+                    "variant": "extensionCard",
+                    "path": "docs/assets/marketplace/extension-card.jpg",
+                    "width": 1280,
+                    "height": 720
+                },
+                {
+                    "variant": "heroDesktop",
+                    "path": "docs/assets/marketplace/hero-desktop.jpg",
+                    "width": 1600,
+                    "height": 900
+                },
+                {
+                    "variant": "heroMobile",
+                    "path": "docs/assets/marketplace/hero-mobile.jpg",
+                    "width": 900,
+                    "height": 1200
+                },
+                {
+                    "variant": "tileSquare",
+                    "path": "docs/assets/marketplace/tile-square.jpg",
+                    "width": 1200,
+                    "height": 1200
+                },
+                {
+                    "variant": "thumbnail",
+                    "path": "docs/assets/marketplace/thumbnail.jpg",
+                    "width": 640,
+                    "height": 360
+                }
+            ]
+        },
+        {
+            "package": "theme-agency",
+            "displayName": "Theme Agency",
+            "concept": "Agency conversion theme",
+            "assets": [
+                {
+                    "variant": "extensionCard",
+                    "path": "docs/assets/marketplace/extension-card.jpg",
+                    "width": 1280,
+                    "height": 720
+                },
+                {
+                    "variant": "heroDesktop",
+                    "path": "docs/assets/marketplace/hero-desktop.jpg",
+                    "width": 1600,
+                    "height": 900
+                },
+                {
+                    "variant": "heroMobile",
+                    "path": "docs/assets/marketplace/hero-mobile.jpg",
+                    "width": 900,
+                    "height": 1200
+                },
+                {
+                    "variant": "tileSquare",
+                    "path": "docs/assets/marketplace/tile-square.jpg",
+                    "width": 1200,
+                    "height": 1200
+                },
+                {
+                    "variant": "thumbnail",
+                    "path": "docs/assets/marketplace/thumbnail.jpg",
+                    "width": 640,
+                    "height": 360
+                }
+            ]
+        },
+        {
+            "package": "theme-commerce",
+            "displayName": "Theme Commerce",
+            "concept": "Retail discovery theme",
+            "assets": [
+                {
+                    "variant": "extensionCard",
+                    "path": "docs/assets/marketplace/extension-card.jpg",
+                    "width": 1280,
+                    "height": 720
+                },
+                {
+                    "variant": "heroDesktop",
+                    "path": "docs/assets/marketplace/hero-desktop.jpg",
+                    "width": 1600,
+                    "height": 900
+                },
+                {
+                    "variant": "heroMobile",
+                    "path": "docs/assets/marketplace/hero-mobile.jpg",
+                    "width": 900,
+                    "height": 1200
+                },
+                {
+                    "variant": "tileSquare",
+                    "path": "docs/assets/marketplace/tile-square.jpg",
+                    "width": 1200,
+                    "height": 1200
+                },
+                {
+                    "variant": "thumbnail",
+                    "path": "docs/assets/marketplace/thumbnail.jpg",
+                    "width": 640,
+                    "height": 360
+                }
+            ]
+        },
+        {
+            "package": "theme-corporate",
+            "displayName": "Theme Corporate",
+            "concept": "Trust-led corporate theme",
+            "assets": [
+                {
+                    "variant": "extensionCard",
+                    "path": "docs/assets/marketplace/extension-card.jpg",
+                    "width": 1280,
+                    "height": 720
+                },
+                {
+                    "variant": "heroDesktop",
+                    "path": "docs/assets/marketplace/hero-desktop.jpg",
+                    "width": 1600,
+                    "height": 900
+                },
+                {
+                    "variant": "heroMobile",
+                    "path": "docs/assets/marketplace/hero-mobile.jpg",
+                    "width": 900,
+                    "height": 1200
+                },
+                {
+                    "variant": "tileSquare",
+                    "path": "docs/assets/marketplace/tile-square.jpg",
+                    "width": 1200,
+                    "height": 1200
+                },
+                {
+                    "variant": "thumbnail",
+                    "path": "docs/assets/marketplace/thumbnail.jpg",
+                    "width": 640,
+                    "height": 360
+                }
+            ]
+        },
+        {
+            "package": "theme-education",
+            "displayName": "Theme Education",
+            "concept": "Course-first education theme",
+            "assets": [
+                {
+                    "variant": "extensionCard",
+                    "path": "docs/assets/marketplace/extension-card.jpg",
+                    "width": 1280,
+                    "height": 720
+                },
+                {
+                    "variant": "heroDesktop",
+                    "path": "docs/assets/marketplace/hero-desktop.jpg",
+                    "width": 1600,
+                    "height": 900
+                },
+                {
+                    "variant": "heroMobile",
+                    "path": "docs/assets/marketplace/hero-mobile.jpg",
+                    "width": 900,
+                    "height": 1200
+                },
+                {
+                    "variant": "tileSquare",
+                    "path": "docs/assets/marketplace/tile-square.jpg",
+                    "width": 1200,
+                    "height": 1200
+                },
+                {
+                    "variant": "thumbnail",
+                    "path": "docs/assets/marketplace/thumbnail.jpg",
+                    "width": 640,
+                    "height": 360
+                }
+            ]
+        },
+        {
+            "package": "theme-healthcare",
+            "displayName": "Theme Healthcare",
+            "concept": "Appointment-led healthcare theme",
+            "assets": [
+                {
+                    "variant": "extensionCard",
+                    "path": "docs/assets/marketplace/extension-card.jpg",
+                    "width": 1280,
+                    "height": 720
+                },
+                {
+                    "variant": "heroDesktop",
+                    "path": "docs/assets/marketplace/hero-desktop.jpg",
+                    "width": 1600,
+                    "height": 900
+                },
+                {
+                    "variant": "heroMobile",
+                    "path": "docs/assets/marketplace/hero-mobile.jpg",
+                    "width": 900,
+                    "height": 1200
+                },
+                {
+                    "variant": "tileSquare",
+                    "path": "docs/assets/marketplace/tile-square.jpg",
+                    "width": 1200,
+                    "height": 1200
+                },
+                {
+                    "variant": "thumbnail",
+                    "path": "docs/assets/marketplace/thumbnail.jpg",
+                    "width": 640,
+                    "height": 360
+                }
+            ]
+        },
+        {
+            "package": "theme-inertia-bookings",
+            "displayName": "Theme Inertia Bookings",
+            "concept": "Inertia booking theme",
+            "assets": [
+                {
+                    "variant": "extensionCard",
+                    "path": "docs/assets/marketplace/extension-card.svg",
+                    "width": 1280,
+                    "height": 720
+                },
+                {
+                    "variant": "heroDesktop",
+                    "path": "docs/assets/marketplace/hero-desktop.jpg",
+                    "width": 1600,
+                    "height": 900
+                },
+                {
+                    "variant": "heroMobile",
+                    "path": "docs/assets/marketplace/hero-mobile.jpg",
+                    "width": 900,
+                    "height": 1200
+                },
+                {
+                    "variant": "tileSquare",
+                    "path": "docs/assets/marketplace/tile-square.jpg",
+                    "width": 1200,
+                    "height": 1200
+                },
+                {
+                    "variant": "thumbnail",
+                    "path": "docs/assets/marketplace/thumbnail.jpg",
+                    "width": 640,
+                    "height": 360
+                }
+            ]
+        },
+        {
+            "package": "theme-inertia-bookings-react",
+            "displayName": "Theme Inertia Bookings React",
+            "concept": "React booking components",
+            "assets": [
+                {
+                    "variant": "extensionCard",
+                    "path": "docs/assets/marketplace/extension-card.svg",
+                    "width": 1280,
+                    "height": 720
+                },
+                {
+                    "variant": "heroDesktop",
+                    "path": "docs/assets/marketplace/hero-desktop.jpg",
+                    "width": 1600,
+                    "height": 900
+                },
+                {
+                    "variant": "heroMobile",
+                    "path": "docs/assets/marketplace/hero-mobile.jpg",
+                    "width": 900,
+                    "height": 1200
+                },
+                {
+                    "variant": "tileSquare",
+                    "path": "docs/assets/marketplace/tile-square.jpg",
+                    "width": 1200,
+                    "height": 1200
+                },
+                {
+                    "variant": "thumbnail",
+                    "path": "docs/assets/marketplace/thumbnail.jpg",
+                    "width": 640,
+                    "height": 360
+                }
+            ]
+        },
+        {
+            "package": "theme-inertia-bookings-vue",
+            "displayName": "Theme Inertia Bookings Vue",
+            "concept": "Vue booking components",
+            "assets": [
+                {
+                    "variant": "extensionCard",
+                    "path": "docs/assets/marketplace/extension-card.svg",
+                    "width": 1280,
+                    "height": 720
+                },
+                {
+                    "variant": "heroDesktop",
+                    "path": "docs/assets/marketplace/hero-desktop.jpg",
+                    "width": 1600,
+                    "height": 900
+                },
+                {
+                    "variant": "heroMobile",
+                    "path": "docs/assets/marketplace/hero-mobile.jpg",
+                    "width": 900,
+                    "height": 1200
+                },
+                {
+                    "variant": "tileSquare",
+                    "path": "docs/assets/marketplace/tile-square.jpg",
+                    "width": 1200,
+                    "height": 1200
+                },
+                {
+                    "variant": "thumbnail",
+                    "path": "docs/assets/marketplace/thumbnail.jpg",
+                    "width": 640,
+                    "height": 360
+                }
+            ]
+        },
+        {
+            "package": "theme-knowledge",
+            "displayName": "Theme Knowledge",
+            "concept": "Documentation theme",
+            "assets": [
+                {
+                    "variant": "extensionCard",
+                    "path": "docs/assets/marketplace/extension-card.jpg",
+                    "width": 1280,
+                    "height": 720
+                },
+                {
+                    "variant": "heroDesktop",
+                    "path": "docs/assets/marketplace/hero-desktop.jpg",
+                    "width": 1600,
+                    "height": 900
+                },
+                {
+                    "variant": "heroMobile",
+                    "path": "docs/assets/marketplace/hero-mobile.jpg",
+                    "width": 900,
+                    "height": 1200
+                },
+                {
+                    "variant": "tileSquare",
+                    "path": "docs/assets/marketplace/tile-square.jpg",
+                    "width": 1200,
+                    "height": 1200
+                },
+                {
+                    "variant": "thumbnail",
+                    "path": "docs/assets/marketplace/thumbnail.jpg",
+                    "width": 640,
+                    "height": 360
+                }
+            ]
+        },
+        {
+            "package": "theme-local-services",
+            "displayName": "Theme Local Services",
+            "concept": "Local service conversion",
+            "assets": [
+                {
+                    "variant": "extensionCard",
+                    "path": "docs/assets/marketplace/extension-card.jpg",
+                    "width": 1280,
+                    "height": 720
+                },
+                {
+                    "variant": "heroDesktop",
+                    "path": "docs/assets/marketplace/hero-desktop.jpg",
+                    "width": 1600,
+                    "height": 900
+                },
+                {
+                    "variant": "heroMobile",
+                    "path": "docs/assets/marketplace/hero-mobile.jpg",
+                    "width": 900,
+                    "height": 1200
+                },
+                {
+                    "variant": "tileSquare",
+                    "path": "docs/assets/marketplace/tile-square.jpg",
+                    "width": 1200,
+                    "height": 1200
+                },
+                {
+                    "variant": "thumbnail",
+                    "path": "docs/assets/marketplace/thumbnail.jpg",
+                    "width": 640,
+                    "height": 360
+                }
+            ]
+        },
+        {
+            "package": "theme-nonprofit",
+            "displayName": "Theme Nonprofit",
+            "concept": "Supporter journey theme",
+            "assets": [
+                {
+                    "variant": "extensionCard",
+                    "path": "docs/assets/marketplace/extension-card.jpg",
+                    "width": 1280,
+                    "height": 720
+                },
+                {
+                    "variant": "heroDesktop",
+                    "path": "docs/assets/marketplace/hero-desktop.jpg",
+                    "width": 1600,
+                    "height": 900
+                },
+                {
+                    "variant": "heroMobile",
+                    "path": "docs/assets/marketplace/hero-mobile.jpg",
+                    "width": 900,
+                    "height": 1200
+                },
+                {
+                    "variant": "tileSquare",
+                    "path": "docs/assets/marketplace/tile-square.jpg",
+                    "width": 1200,
+                    "height": 1200
+                },
+                {
+                    "variant": "thumbnail",
+                    "path": "docs/assets/marketplace/thumbnail.jpg",
+                    "width": 640,
+                    "height": 360
+                }
+            ]
+        },
+        {
+            "package": "theme-portfolio",
+            "displayName": "Theme Portfolio",
+            "concept": "Portfolio proof theme",
+            "assets": [
+                {
+                    "variant": "extensionCard",
+                    "path": "docs/assets/marketplace/extension-card.jpg",
+                    "width": 1280,
+                    "height": 720
+                },
+                {
+                    "variant": "heroDesktop",
+                    "path": "docs/assets/marketplace/hero-desktop.jpg",
+                    "width": 1600,
+                    "height": 900
+                },
+                {
+                    "variant": "heroMobile",
+                    "path": "docs/assets/marketplace/hero-mobile.jpg",
+                    "width": 900,
+                    "height": 1200
+                },
+                {
+                    "variant": "tileSquare",
+                    "path": "docs/assets/marketplace/tile-square.jpg",
+                    "width": 1200,
+                    "height": 1200
+                },
+                {
+                    "variant": "thumbnail",
+                    "path": "docs/assets/marketplace/thumbnail.jpg",
+                    "width": 640,
+                    "height": 360
+                }
+            ]
+        },
+        {
+            "package": "theme-saas",
+            "displayName": "Theme Saas",
+            "concept": "Product-led SaaS theme",
+            "assets": [
+                {
+                    "variant": "extensionCard",
+                    "path": "docs/assets/marketplace/extension-card.jpg",
+                    "width": 1280,
+                    "height": 720
+                },
+                {
+                    "variant": "heroDesktop",
+                    "path": "docs/assets/marketplace/hero-desktop.jpg",
+                    "width": 1600,
+                    "height": 900
+                },
+                {
+                    "variant": "heroMobile",
+                    "path": "docs/assets/marketplace/hero-mobile.jpg",
+                    "width": 900,
+                    "height": 1200
+                },
+                {
+                    "variant": "tileSquare",
+                    "path": "docs/assets/marketplace/tile-square.jpg",
+                    "width": 1200,
+                    "height": 1200
+                },
+                {
+                    "variant": "thumbnail",
+                    "path": "docs/assets/marketplace/thumbnail.jpg",
+                    "width": 640,
+                    "height": 360
+                }
+            ]
+        },
+        {
+            "package": "translation-manager",
+            "displayName": "Translation Manager",
+            "concept": "Language file workflow",
+            "assets": [
+                {
+                    "variant": "extensionCard",
+                    "path": "docs/assets/marketplace/extension-card.jpg",
+                    "width": 1280,
+                    "height": 720
+                },
+                {
+                    "variant": "heroDesktop",
+                    "path": "docs/assets/marketplace/hero-desktop.jpg",
+                    "width": 1600,
+                    "height": 900
+                },
+                {
+                    "variant": "heroMobile",
+                    "path": "docs/assets/marketplace/hero-mobile.jpg",
+                    "width": 900,
+                    "height": 1200
+                },
+                {
+                    "variant": "tileSquare",
+                    "path": "docs/assets/marketplace/tile-square.jpg",
+                    "width": 1200,
+                    "height": 1200
+                },
+                {
+                    "variant": "thumbnail",
+                    "path": "docs/assets/marketplace/thumbnail.jpg",
+                    "width": 640,
+                    "height": 360
+                }
+            ]
+        },
+        {
+            "package": "url-manager",
+            "displayName": "URL Manager",
+            "concept": "Recovered traffic",
+            "assets": [
+                {
+                    "variant": "extensionCard",
+                    "path": "docs/assets/marketplace/extension-card.jpg",
+                    "width": 1280,
+                    "height": 720
+                },
+                {
+                    "variant": "heroDesktop",
+                    "path": "docs/assets/marketplace/hero-desktop.jpg",
+                    "width": 1600,
+                    "height": 900
+                },
+                {
+                    "variant": "heroMobile",
+                    "path": "docs/assets/marketplace/hero-mobile.jpg",
+                    "width": 900,
+                    "height": 1200
+                },
+                {
+                    "variant": "tileSquare",
+                    "path": "docs/assets/marketplace/tile-square.jpg",
+                    "width": 1200,
+                    "height": 1200
+                },
+                {
+                    "variant": "thumbnail",
+                    "path": "docs/assets/marketplace/thumbnail.jpg",
+                    "width": 640,
+                    "height": 360
+                }
+            ]
+        },
+        {
+            "package": "welcome-tour",
+            "displayName": "Welcome Tour",
+            "concept": "Guided editor onboarding",
+            "assets": [
+                {
+                    "variant": "extensionCard",
+                    "path": "docs/assets/marketplace/extension-card.jpg",
+                    "width": 1280,
+                    "height": 720
+                },
+                {
+                    "variant": "heroDesktop",
+                    "path": "docs/assets/marketplace/hero-desktop.jpg",
+                    "width": 1600,
+                    "height": 900
+                },
+                {
+                    "variant": "heroMobile",
+                    "path": "docs/assets/marketplace/hero-mobile.jpg",
+                    "width": 900,
+                    "height": 1200
+                },
+                {
+                    "variant": "tileSquare",
+                    "path": "docs/assets/marketplace/tile-square.jpg",
+                    "width": 1200,
+                    "height": 1200
+                },
+                {
+                    "variant": "thumbnail",
+                    "path": "docs/assets/marketplace/thumbnail.jpg",
+                    "width": 640,
+                    "height": 360
+                }
+            ]
+        },
+        {
+            "package": "wordpress-importer",
+            "displayName": "WordPress Importer",
+            "concept": "WordPress WXR preview",
+            "assets": [
+                {
+                    "variant": "extensionCard",
+                    "path": "docs/assets/marketplace/extension-card.jpg",
+                    "width": 1280,
+                    "height": 720
+                },
+                {
+                    "variant": "heroDesktop",
+                    "path": "docs/assets/marketplace/hero-desktop.jpg",
+                    "width": 1600,
+                    "height": 900
+                },
+                {
+                    "variant": "heroMobile",
+                    "path": "docs/assets/marketplace/hero-mobile.jpg",
+                    "width": 900,
+                    "height": 1200
+                },
+                {
+                    "variant": "tileSquare",
+                    "path": "docs/assets/marketplace/tile-square.jpg",
+                    "width": 1200,
+                    "height": 1200
+                },
+                {
+                    "variant": "thumbnail",
+                    "path": "docs/assets/marketplace/thumbnail.jpg",
+                    "width": 640,
+                    "height": 360
+                }
+            ]
+        }
+    ]
+}

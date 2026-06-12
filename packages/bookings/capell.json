@@ -149,6 +149,33 @@
         "bookings-reminders",
         "bookings-calendar-feeds"
     ],
+    "security": {
+        "riskTier": "sensitive",
+        "publicSurface": {
+            "routeNames": ["calendar.staff", "request", "request.store"],
+            "auth": "public",
+            "csrfExemptRoutes": [],
+            "signedRoutes": [],
+            "tokenizedRoutes": ["calendar.staff"],
+            "webhookRoutes": [],
+            "throttledRoutes": ["request.store"]
+        },
+        "sensitiveData": {
+            "encryptedFields": [],
+            "hashedTokenFields": [],
+            "redactedOutputClasses": [],
+            "plaintextJustifications": [
+                "appointment_requests.confirmation_token: Reviewed package field; not stored as a reusable secret by this package contract.",
+                "booking_staff_members.calendar_feed_token: Reviewed package field; not stored as a reusable secret by this package contract."
+            ]
+        },
+        "publicOutput": {
+            "cacheSafe": true,
+            "forbidAuthoringSurface": true,
+            "forbidSecrets": true,
+            "forbidPublicBladeQueries": true
+        }
+    },
     "performance": {
         "frontendRenderBudgetMs": 0,
         "adminQueryBudget": 20,

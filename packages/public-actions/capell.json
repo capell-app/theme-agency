@@ -58,6 +58,42 @@
         "submit-actions",
         "zapier-integration"
     ],
+    "security": {
+        "riskTier": "sensitive",
+        "publicSurface": {
+            "routeNames": [
+                "show",
+                "submit",
+                "zapier.me",
+                "zapier.actions",
+                "zapier.actions.submit",
+                "zapier.submissions"
+            ],
+            "auth": "mixed",
+            "csrfExemptRoutes": [],
+            "signedRoutes": [],
+            "tokenizedRoutes": [
+                "zapier.me",
+                "zapier.actions",
+                "zapier.actions.submit",
+                "zapier.submissions"
+            ],
+            "webhookRoutes": [],
+            "throttledRoutes": [
+                "submit",
+                "zapier.me",
+                "zapier.actions",
+                "zapier.actions.submit",
+                "zapier.submissions"
+            ]
+        },
+        "publicOutput": {
+            "cacheSafe": false,
+            "forbidAuthoringSurface": true,
+            "forbidSecrets": true,
+            "forbidPublicBladeQueries": true
+        }
+    },
     "performance": {
         "frontendRenderBudgetMs": 20,
         "adminQueryBudget": 40,

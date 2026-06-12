@@ -141,6 +141,29 @@
         "customer-portal-billing-dashboard",
         "customer-portal-payments-feed"
     ],
+    "security": {
+        "riskTier": "sensitive",
+        "publicSurface": {
+            "routeNames": [
+                "stripe-webhook",
+                "paid-downloads.show",
+                "form-builder.checkout",
+                "portal.billing"
+            ],
+            "auth": "mixed",
+            "csrfExemptRoutes": ["stripe-webhook"],
+            "signedRoutes": ["paid-downloads.show", "form-builder.checkout"],
+            "tokenizedRoutes": [],
+            "webhookRoutes": ["stripe-webhook"],
+            "throttledRoutes": ["stripe-webhook"]
+        },
+        "publicOutput": {
+            "cacheSafe": false,
+            "forbidAuthoringSurface": true,
+            "forbidSecrets": true,
+            "forbidPublicBladeQueries": true
+        }
+    },
     "performance": {
         "frontendRenderBudgetMs": 0,
         "adminQueryBudget": 40,

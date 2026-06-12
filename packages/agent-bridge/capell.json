@@ -43,6 +43,24 @@
     "settings": ["Capell\\AgentBridge\\Settings\\AgentBridgeSettings"],
     "permissions": ["agent-bridge.manage-tokens", "agent-bridge.view-audit"],
     "capabilities": ["agent-bridge", "agent-bridge-admin"],
+    "security": {
+        "riskTier": "sensitive",
+        "publicSurface": {
+            "routeNames": ["home", "knowledge", "site"],
+            "auth": "tokenized",
+            "csrfExemptRoutes": [],
+            "signedRoutes": [],
+            "tokenizedRoutes": ["knowledge", "site"],
+            "webhookRoutes": [],
+            "throttledRoutes": ["knowledge", "site"]
+        },
+        "publicOutput": {
+            "cacheSafe": false,
+            "forbidAuthoringSurface": true,
+            "forbidSecrets": true,
+            "forbidPublicBladeQueries": true
+        }
+    },
     "performance": {
         "frontendRenderBudgetMs": 0,
         "adminQueryBudget": 40,

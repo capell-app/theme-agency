@@ -30,7 +30,10 @@ use Capell\Payments\Support\CustomerPortal\PaymentsPortalSelfServiceItemProvider
 use Capell\Payments\Support\Fulfillment\PaidDownloadFulfillmentHandler;
 use Capell\Payments\Support\Gateways\StripePaymentGateway;
 use Filament\Support\Icons\Heroicon;
+use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\RateLimiter;
 use Spatie\LaravelPackageTools\Package;
 
 final class PaymentsServiceProvider extends AbstractPackageServiceProvider
@@ -78,6 +81,16 @@ final class PaymentsServiceProvider extends AbstractPackageServiceProvider
                 ->registerPaymentFulfillmentHandlers()
                 ->registerCustomerPortalIntegrations();
         });
+    }
+
+    public function bootingPackage(): void
+    {
+        $limiter = config('capell-payments.webhooks.stripe_rate_limit', 'capell-payments-stripe-webhook');
+
+        if (is_string($limiter) && $limiter !== '') {
+            RateLimiter::for($limiter, static fn (Request $request): Limit => Limit::perMinute(120)
+                ->by((string) $request->ip()));
+        }
     }
 
     private function registerModels(): self

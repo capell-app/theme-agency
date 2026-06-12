@@ -100,6 +100,29 @@
         "portal-support-request-notifications",
         "portal-support-request-triage"
     ],
+    "security": {
+        "riskTier": "sensitive",
+        "publicSurface": {
+            "routeNames": [
+                "dashboard",
+                "preferences.update",
+                "support.store",
+                "support.replies.store"
+            ],
+            "auth": "authenticated",
+            "csrfExemptRoutes": [],
+            "signedRoutes": [],
+            "tokenizedRoutes": [],
+            "webhookRoutes": [],
+            "throttledRoutes": ["support.store", "support.replies.store"]
+        },
+        "publicOutput": {
+            "cacheSafe": false,
+            "forbidAuthoringSurface": true,
+            "forbidSecrets": true,
+            "forbidPublicBladeQueries": true
+        }
+    },
     "performance": {
         "frontendRenderBudgetMs": 200,
         "frontendQueryBudget": 20,

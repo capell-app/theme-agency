@@ -89,6 +89,38 @@
         "comments-reactions",
         "comments-reply-notifications"
     ],
+    "security": {
+        "riskTier": "standard",
+        "publicSurface": {
+            "routeNames": [
+                "thread",
+                "verify",
+                "verify.store",
+                "reply-notifications.disable"
+            ],
+            "auth": "tokenized",
+            "csrfExemptRoutes": [],
+            "signedRoutes": [],
+            "tokenizedRoutes": [
+                "verify",
+                "verify.store",
+                "reply-notifications.disable"
+            ],
+            "webhookRoutes": [],
+            "throttledRoutes": [
+                "thread",
+                "verify",
+                "verify.store",
+                "reply-notifications.disable"
+            ]
+        },
+        "publicOutput": {
+            "cacheSafe": true,
+            "forbidAuthoringSurface": true,
+            "forbidSecrets": true,
+            "forbidPublicBladeQueries": true
+        }
+    },
     "performance": {
         "frontendRenderBudgetMs": 20,
         "adminQueryBudget": 40,

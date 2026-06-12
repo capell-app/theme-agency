@@ -107,6 +107,30 @@
         "paid-gated-access-fulfillment",
         "access-gate-customer-portal-gated-resource-feed"
     ],
+    "security": {
+        "riskTier": "sensitive",
+        "publicSurface": {
+            "routeNames": [
+                "request",
+                "request.store",
+                "claim",
+                "logout",
+                "status"
+            ],
+            "auth": "mixed",
+            "csrfExemptRoutes": [],
+            "signedRoutes": [],
+            "tokenizedRoutes": ["claim"],
+            "webhookRoutes": [],
+            "throttledRoutes": ["request.store", "claim", "status"]
+        },
+        "publicOutput": {
+            "cacheSafe": false,
+            "forbidAuthoringSurface": true,
+            "forbidSecrets": true,
+            "forbidPublicBladeQueries": true
+        }
+    },
     "performance": {
         "frontendRenderBudgetMs": 0,
         "adminQueryBudget": 40,
@@ -196,6 +220,10 @@
         "categories": ["admin", "operations"]
     },
     "contributionTraceability": {
-        "deferredContributions": ["paid-access-checkout-creation"]
+        "deferredContributions": [
+            "model",
+            "paid-access-checkout-creation",
+            "route"
+        ]
     }
 }

@@ -85,6 +85,11 @@ it('exposes advertised payment routes through production controllers', function 
         ->and(paymentsCapabilityRouteAction('capell-payments.portal.billing'))->toContain(CreatePortalBillingSessionController::class);
 });
 
+it('throttles public stripe webhook ingestion', function (): void {
+    expect(Route::getRoutes()->getByName('capell-payments.stripe-webhook')?->gatherMiddleware())
+        ->toContain('throttle:capell-payments-stripe-webhook');
+});
+
 it('registers production fulfillment and customer portal integrations when installed', function (): void {
     $handlers = collect(app()->tagged(PaymentFulfillmentHandler::TAG));
 

@@ -82,6 +82,28 @@
         "shopify-commerce-customer-synced-event",
         "shopify-commerce-webhooks"
     ],
+    "security": {
+        "riskTier": "sensitive",
+        "publicSurface": {
+            "routeNames": [
+                "oauth.install",
+                "oauth.callback",
+                "webhooks.shopify"
+            ],
+            "auth": "mixed",
+            "csrfExemptRoutes": ["webhooks.shopify"],
+            "signedRoutes": [],
+            "tokenizedRoutes": [],
+            "webhookRoutes": ["webhooks.shopify"],
+            "throttledRoutes": ["webhooks.shopify"]
+        },
+        "publicOutput": {
+            "cacheSafe": false,
+            "forbidAuthoringSurface": true,
+            "forbidSecrets": true,
+            "forbidPublicBladeQueries": true
+        }
+    },
     "performance": {
         "frontendRenderBudgetMs": 0,
         "adminQueryBudget": 40,
@@ -145,6 +167,11 @@
         "categories": ["admin", "commerce", "integrations"]
     },
     "contributionTraceability": {
-        "deferredContributions": ["admin-page", "model", "route"]
+        "deferredContributions": [
+            "admin-page",
+            "model",
+            "route",
+            "scheduled-job"
+        ]
     }
 }

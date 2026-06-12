@@ -1,0 +1,7 @@
+{
+    "resources/js/theme-corporate.js": {
+        "file": "assets/theme-corporate.js",
+        "src": "resources/js/theme-corporate.js",
+        "isEntry": true
+    }
+}

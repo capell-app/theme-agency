@@ -18,10 +18,10 @@ class ActivityTrailTable implements TableConfigurator
             ->query(fn (): Builder => resolve(self::providerClass())->build())
             ->columns([
                 TextColumn::make('subject_type')
-                    ->label('Model')
+                    ->label(__('capell-publishing-studio::workflow.activity_trail_table.model'))
                     ->formatStateUsing(fn (string $state): string => class_basename($state)),
                 TextColumn::make('event')
-                    ->label('Event')
+                    ->label(__('capell-publishing-studio::workflow.activity_trail_table.event'))
                     ->badge()
                     ->color(fn (string $state): string => match ($state) {
                         'created' => 'success',
@@ -30,10 +30,10 @@ class ActivityTrailTable implements TableConfigurator
                         default => 'gray',
                     }),
                 TextColumn::make('causer.name')
-                    ->label('Actor')
+                    ->label(__('capell-publishing-studio::workflow.activity_trail_table.actor'))
                     ->sortable(),
                 TextColumn::make('created_at')
-                    ->label('Timestamp')
+                    ->label(__('capell-publishing-studio::workflow.activity_trail_table.timestamp'))
                     ->dateTime('Y-m-d H:i:s')
                     ->sortable(),
             ])
