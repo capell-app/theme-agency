@@ -97,6 +97,16 @@
                 "path": "docs/assets/marketplace/extension-card.svg",
                 "alt": "Theme Inertia Bookings marketplace card.",
                 "caption": "Theme Inertia Bookings extension card."
+            },
+            {
+                "path": "docs/assets/marketplace/inertia-bookings-request-form.png",
+                "alt": "Theme Inertia Bookings desktop appointment request form with service, staff, location, and slot fields.",
+                "caption": "Desktop booking request form with labelled controls, appointment slots, and customer details."
+            },
+            {
+                "path": "docs/assets/marketplace/inertia-bookings-mobile-request.png",
+                "alt": "Theme Inertia Bookings mobile booking request flow with labelled controls and appointment CTA.",
+                "caption": "Mobile booking request flow with service controls, available slots, and appointment actions."
             }
         ],
         "categories": ["frontend", "themes", "bookings"]
