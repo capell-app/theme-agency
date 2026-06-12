@@ -17,6 +17,7 @@ Use [Package Documentation Standard](package-documentation-standard.md) when cre
 | [Credits and acknowledgements](credits-and-acknowledgements.md)     | Cross-package upstream credits and acknowledgements.                       |
 | [Improvement Plan Status](improvement-plan-status.md)               | Long-running package improvement burn-down.                                |
 | [Cross-Package Improvement Summary](improvement-plans-summary.md)   | Systemic issues and sequencing across package audits.                      |
+| [Missing Package Opportunities](missing-package-opportunities.md)    | Evaluation of proposed package ideas against the current catalogue.        |
 | [Package Documentation Standard](package-documentation-standard.md) | README/overview shape, examples, safety rules, and review checklist.       |
 | [Package Screenshot Automation](package-screenshot-automation.md)   | Screenshot capture contract and expected output paths.                     |
 | [Creating a Capell theme](creating-a-theme.md)                      | Theme authoring guide.                                                     |
