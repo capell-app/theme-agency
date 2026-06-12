@@ -80,7 +80,11 @@
         "submitSupportRequest": "Capell\\CustomerPortal\\Actions\\SubmitSupportRequestAction",
         "updatePortalPreferences": "Capell\\CustomerPortal\\Actions\\UpdatePortalPreferencesAction"
     },
-    "permissions": [],
+    "permissions": [
+        "ViewAny:PortalSupportRequest",
+        "View:PortalSupportRequest",
+        "Update:PortalSupportRequest"
+    ],
     "capabilities": [
         "customer-portal",
         "customer-portal-admin",
@@ -145,8 +149,12 @@
             "clients": []
         },
         "adminSurface": {
-            "authorization": "panel-auth",
-            "permissions": []
+            "authorization": "permissions",
+            "permissions": [
+                "ViewAny:PortalSupportRequest",
+                "View:PortalSupportRequest",
+                "Update:PortalSupportRequest"
+            ]
         }
     },
     "performance": {

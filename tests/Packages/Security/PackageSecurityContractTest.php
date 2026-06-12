@@ -46,6 +46,10 @@ it('declares authorization posture for admin package surfaces', function (): voi
     expect($invalid)->toBe([]);
 });
 
+it('requires admin resources to have manifest permissions or package policies', function (): void {
+    expect(capell_security_admin_resource_coverage_issues(base_path()))->toBe([]);
+});
+
 it('fails when manifest public route metadata drifts from package code', function (): void {
     $root = makeSecurityFixtureRoot('route-drift');
 
@@ -80,6 +84,38 @@ it('fails when sensitive manifest metadata drifts from model and migration code'
         expect($issues['packages/fixture-sensitive-drift/capell.json'] ?? [])->toContain('security.sensitiveData.encryptedFields is out of sync with package code; run scripts/sync-package-security-manifests.php')
             ->and($issues['packages/fixture-sensitive-drift/capell.json'] ?? [])->toContain('security.sensitiveData.hashedTokenFields is out of sync with package code; run scripts/sync-package-security-manifests.php')
             ->and($issues['packages/fixture-sensitive-drift/capell.json'] ?? [])->toContain('security.sensitiveData.plaintextJustifications is out of sync with package code; run scripts/sync-package-security-manifests.php');
+    } finally {
+        deleteSecurityFixtureRoot($root);
+    }
+});
+
+it('fails when an admin resource has no permission or policy coverage', function (): void {
+    $root = makeSecurityFixtureRoot('admin-resource-coverage');
+
+    try {
+        makeSecurityFixturePackage($root, 'fixture-admin-resource');
+        $manifestPath = $root . '/packages/fixture-admin-resource/capell.json';
+        $manifest = json_decode((string) file_get_contents($manifestPath), true, flags: JSON_THROW_ON_ERROR);
+
+        throw_unless(is_array($manifest), RuntimeException::class, 'Expected fixture manifest JSON to decode to an array.');
+
+        $manifest['surfaces'] = ['admin'];
+        $contributions = $manifest['contributes'] ?? [];
+        $manifest['contributes'] = is_array($contributions) ? $contributions : [];
+        $manifest['contributes'][] = [
+            'type' => 'admin-resource',
+            'class' => 'Capell\\FixtureRouteDrift\\Manifest\\FixtureResourceContribution',
+            'resourceClass' => 'Capell\\FixtureRouteDrift\\Filament\\Resources\\FixtureRecordResource',
+        ];
+
+        file_put_contents(
+            $manifestPath,
+            json_encode($manifest, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR) . PHP_EOL,
+        );
+
+        $issues = capell_security_admin_resource_coverage_issues($root);
+
+        expect($issues['packages/fixture-admin-resource/capell.json'] ?? [])->toContain('admin-resource contributions require manifest permissions or package policy classes');
     } finally {
         deleteSecurityFixtureRoot($root);
     }

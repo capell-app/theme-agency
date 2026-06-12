@@ -107,7 +107,25 @@
         "recordPolicyAcceptance": "Capell\\PrivacyCenter\\Actions\\RecordPolicyAcceptanceAction",
         "registerConsentPolicy": "Capell\\PrivacyCenter\\Actions\\RegisterConsentPolicyAction"
     },
-    "permissions": [],
+    "permissions": [
+        "ViewAny:ConsentPolicy",
+        "View:ConsentPolicy",
+        "Create:ConsentPolicy",
+        "Update:ConsentPolicy",
+        "Delete:ConsentPolicy",
+        "ViewAny:ConsentRecord",
+        "View:ConsentRecord",
+        "ViewAny:PolicyAcceptance",
+        "View:PolicyAcceptance",
+        "ViewAny:PrivacyRequest",
+        "View:PrivacyRequest",
+        "Update:PrivacyRequest",
+        "ViewAny:RetentionRule",
+        "View:RetentionRule",
+        "Create:RetentionRule",
+        "Update:RetentionRule",
+        "Delete:RetentionRule"
+    ],
     "capabilities": [
         "privacy-center",
         "privacy-center-consent",
@@ -153,8 +171,26 @@
             "clients": []
         },
         "adminSurface": {
-            "authorization": "panel-auth",
-            "permissions": []
+            "authorization": "permissions",
+            "permissions": [
+                "ViewAny:ConsentPolicy",
+                "View:ConsentPolicy",
+                "Create:ConsentPolicy",
+                "Update:ConsentPolicy",
+                "Delete:ConsentPolicy",
+                "ViewAny:ConsentRecord",
+                "View:ConsentRecord",
+                "ViewAny:PolicyAcceptance",
+                "View:PolicyAcceptance",
+                "ViewAny:PrivacyRequest",
+                "View:PrivacyRequest",
+                "Update:PrivacyRequest",
+                "ViewAny:RetentionRule",
+                "View:RetentionRule",
+                "Create:RetentionRule",
+                "Update:RetentionRule",
+                "Delete:RetentionRule"
+            ]
         }
     },
     "performance": {

@@ -80,7 +80,7 @@
         "validateProviderWebhookSignature": "Capell\\EmailStudio\\Actions\\ValidateProviderWebhookSignatureAction"
     },
     "settings": ["Capell\\EmailStudio\\Settings\\EmailStudioSettings"],
-    "permissions": [],
+    "permissions": ["ViewAny:SentEmail", "View:SentEmail"],
     "capabilities": [
         "delivery-audit",
         "mail-tracker-admin",
@@ -128,8 +128,8 @@
             "clients": []
         },
         "adminSurface": {
-            "authorization": "panel-auth",
-            "permissions": []
+            "authorization": "permissions",
+            "permissions": ["ViewAny:SentEmail", "View:SentEmail"]
         }
     },
     "performance": {

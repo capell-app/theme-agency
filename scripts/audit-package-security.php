@@ -830,6 +830,54 @@ function capell_security_route_contract_issues(string $root): array
 }
 
 /**
+ * @return array<string, list<string>>
+ */
+function capell_security_admin_resource_coverage_issues(string $root): array
+{
+    $issues = [];
+
+    foreach (capell_security_manifest_payloads($root) as $slug => $manifest) {
+        if (! capell_security_manifest_contributes_admin_resource($manifest)) {
+            continue;
+        }
+
+        $permissions = capell_security_string_list($manifest['permissions'] ?? []);
+        $policiesPath = rtrim($root, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . 'packages' . DIRECTORY_SEPARATOR . $slug . DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR . 'Policies';
+        $hasPolicies = is_dir($policiesPath) && (new Finder)->files()->in($policiesPath)->name('*.php')->hasResults();
+
+        if ($permissions === [] && ! $hasPolicies) {
+            $issues['packages/' . $slug . '/capell.json'][] = 'admin-resource contributions require manifest permissions or package policy classes';
+        }
+    }
+
+    return $issues;
+}
+
+/**
+ * @param  array<string, mixed>  $manifest
+ */
+function capell_security_manifest_contributes_admin_resource(array $manifest): bool
+{
+    $contributions = $manifest['contributes'] ?? [];
+
+    if (! is_array($contributions)) {
+        return false;
+    }
+
+    foreach ($contributions as $contribution) {
+        if (! is_array($contribution)) {
+            continue;
+        }
+
+        if (($contribution['type'] ?? null) === 'admin-resource') {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+/**
  * @return list<string>
  */
 function capell_security_string_list(mixed $value): array
@@ -918,6 +966,7 @@ function capell_security_full_audit(string $root): array
     $issues = capell_security_merge_issues(
         capell_security_manifest_contract_issues($root),
         capell_security_route_contract_issues($root),
+        capell_security_admin_resource_coverage_issues($root),
     );
 
     $httpFailures = capell_security_http_clients_without_timeouts($root);
