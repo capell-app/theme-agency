@@ -9,7 +9,7 @@ use Illuminate\Console\Command;
 
 class GenerateTailwindAssetsCommand extends Command
 {
-    protected $signature = 'capell:frontend-tailwind-assets {--report : Print the aggregated assets report instead of writing files} {--output-path= : Absolute path or directory for the generated frontend CSS entrypoint}';
+    protected $signature = 'capell:frontend-tailwind-assets {--report : Print the aggregated assets report instead of writing files} {--output-path= : Project-local absolute path or directory for the generated frontend CSS entrypoint}';
 
     protected $description = 'Generate the Tailwind CSS directive file for Capell frontend.';
 

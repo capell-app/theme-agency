@@ -273,26 +273,95 @@ class TailwindAssetsGenerator
         throw_if(! is_string($configPath) || $configPath === '', InvalidArgumentException::class, 'Tailwind output CSS path is not configured');
 
         if (Path::isAbsolute($configPath)) {
-            return $configPath;
+            return $this->normalizeTargetPath($configPath);
         }
 
         // Relative to application base (resource_path preferable for resources/*)
         if (str_starts_with($configPath, 'resources/')) {
-            return rtrim(resource_path(''), '/') . '/' . substr($configPath, strlen('resources/'));
+            return $this->normalizeTargetPath(rtrim(resource_path(''), '/') . '/' . substr($configPath, strlen('resources/')));
         }
 
-        return rtrim(base_path(''), '/') . '/' . ltrim($configPath, '/');
+        return $this->normalizeTargetPath(rtrim(base_path(''), '/') . '/' . ltrim($configPath, '/'));
     }
 
     private function normalizeTargetPath(string $path): string
     {
         $normalized = rtrim($path, '/');
 
-        if (strtolower(pathinfo($normalized, PATHINFO_EXTENSION)) === 'css') {
-            return $normalized;
+        throw_if(
+            $normalized === '' || str_contains($normalized, "\0"),
+            InvalidArgumentException::class,
+            'Tailwind output CSS path is invalid.',
+        );
+
+        $targetPath = strtolower(pathinfo($normalized, PATHINFO_EXTENSION)) === 'css'
+            ? $normalized
+            : $normalized . '/frontend.css';
+
+        $absoluteTargetPath = Path::isAbsolute($targetPath)
+            ? Path::canonicalize($targetPath)
+            : Path::makeAbsolute($targetPath, $this->projectPath());
+
+        $this->ensureTargetPathStaysInsideProject($absoluteTargetPath);
+
+        return $absoluteTargetPath;
+    }
+
+    private function ensureTargetPathStaysInsideProject(string $targetPath): void
+    {
+        $projectPath = $this->projectPath();
+        $realProjectPath = $this->realProjectPath();
+
+        throw_unless(
+            Path::isBasePath($projectPath, $targetPath) || Path::isBasePath($realProjectPath, $targetPath),
+            InvalidArgumentException::class,
+            'Tailwind output CSS path must stay inside the project.',
+        );
+
+        $realParentPath = $this->realExistingPath(Path::getDirectory($targetPath));
+
+        throw_unless(
+            $realParentPath !== null && Path::isBasePath($realProjectPath, $realParentPath),
+            InvalidArgumentException::class,
+            'Tailwind output CSS path must stay inside the project.',
+        );
+    }
+
+    private function projectPath(): string
+    {
+        return Path::canonicalize(base_path());
+    }
+
+    private function realProjectPath(): string
+    {
+        $realPath = realpath(base_path());
+
+        throw_unless(is_string($realPath), InvalidArgumentException::class, 'Unable to resolve the project path.');
+
+        return Path::canonicalize($realPath);
+    }
+
+    private function realExistingPath(string $path): ?string
+    {
+        $currentPath = Path::canonicalize($path);
+
+        while ($currentPath !== '') {
+            $realPath = realpath($currentPath);
+
+            if (is_string($realPath)) {
+                return Path::canonicalize($realPath);
+            }
+
+            $parentPath = Path::getDirectory($currentPath);
+
+            if ($parentPath === $currentPath) {
+                return null;
+            }
+
+            $currentPath = $parentPath;
         }
 
-        return $normalized . '/frontend.css';
+        return null;
     }
 
     private function relativePath(string $path, string $targetPath): string
