@@ -35,6 +35,21 @@ The current catalogue already has strong package coverage for media, automation,
 
 5. **Hold `reputation-manager` until provider choices are real.** The current catalogue can show social proof through Comments, Social Feeds, Contacts, and theme proof sections. A new package is only justified once it owns external review providers, response workflow, curation rights, and reputation reporting.
 
+## Audience Fit Pass
+
+This second pass checks the recommendations against the Capell audience positioning. The package decisions should sell outcomes without weakening the core story: Capell is Laravel packages, structure is defined once, the frontend stays owned by the application team, and optional capability arrives through installable extensions.
+
+| Audience | What they need from these decisions | Product implication |
+| --- | --- | --- |
+| Site owner | A clear reason to buy another package instead of seeing another technical add-on. | Lead with Media Pro reducing asset risk and Accessibility Auditor surfacing fixable site-quality issues. Keep Integration Hub, Course Builder, and Reputation Manager from becoming confusing shelfware. |
+| Admin/editor | Visible workflows they can use without breaking the site. | Media Pro must show folders, crops, conversions, rights, and where-used screens. Accessibility Auditor must show issue queues and remediation state, not just command output. |
+| Critical developer | Boundaries that will not turn into core patches or public-output leaks. | Both package candidates need Actions/Data, manifest contributions, package-owned tables, optional supports, and explicit public-output safety tests before scaffolding. |
+| Frontend developer | No takeover of the DOM, no CMS runtime in public pages, and no hidden public queries. | Media Pro and Accessibility Auditor can produce reports and hydrated data, but public Blade must stay query-free and free of admin/editor metadata. |
+| Package developer | Stable extension points and Marketplace proof. | Each package candidate needs contribution classes, health checks, screenshot contracts, and documented supports rather than ad hoc cross-package imports. |
+| Agency | Repeatable delivery and a stronger package bundle story. | Media Pro fits high-value media-heavy sites; Accessibility Auditor fits QA/compliance retainers. Integration Hub is better as an Automation bundle story than a separate package. |
+| Evaluator | Honest fit guidance and restraint. | Course Builder and Reputation Manager should wait because the current catalogue does not yet justify new Composer packages. This is a strength: Capell avoids adding packages where existing boundaries are clearer. |
+| Site visitor | Fast, readable, consistent public output. | Media Pro should improve image delivery and visual consistency; Accessibility Auditor should improve headings, alt text, forms, landmarks, and clean output without shipping audit tooling to visitors. |
+
 ## Issue-Ready Spec: Media Pro
 
 **Working package name:** `capell-app/media-pro`
@@ -42,6 +57,14 @@ The current catalogue already has strong package coverage for media, automation,
 **Decision:** Create a premium package plan, then scaffold only after the package boundaries and Marketplace contract are approved.
 
 **Product job:** Turn the free Media Library foundation into a DAM-grade workflow for teams that need asset governance, conversion output, and editor-friendly visual controls.
+
+**Audience outcomes:**
+
+- Site owners get a safer media operation: fewer expired rights, fewer duplicate files, clearer usage evidence, and generated image formats that support performance goals.
+- Editors get practical admin screens for folders, focal crops, conversion status, rights metadata, and where an asset is used before replacing or deleting it.
+- Frontend developers keep control of markup and rendering. Media Pro should produce conversion metadata and hydrated asset data, not inject frontend gallery behavior or query DAM tables from public Blade.
+- Package developers get a package-owned DAM layer that builds on Media Library contracts instead of replacing Curator or reaching into sibling internals.
+- Agencies get a repeatable premium media workflow they can attach to media-heavy client sites without custom per-project asset tooling.
 
 **Requires:** `capell-app/admin`, `capell-app/core`, `capell-app/media-library`
 
@@ -103,6 +126,15 @@ The current catalogue already has strong package coverage for media, automation,
 **Decision:** Candidate standalone premium package. Start with a plan and technical spike before scaffolding because the runner strategy matters.
 
 **Product job:** Give operators and editors a Capell-native accessibility queue that audits public pages, records issue evidence, and routes remediation to the right package owner without leaking admin state into public output.
+
+**Audience outcomes:**
+
+- Site owners get an evidence-backed quality report they can review without reading Lighthouse logs or raw HTML.
+- Editors get a remediation queue that explains which page needs work and whether the fix belongs in content, media metadata, a form, a theme, or a package.
+- Frontend developers get actionable findings for headings, landmarks, labels, focusable controls, contrast-adjacent metadata, and public-output cleanliness while keeping the frontend implementation theirs.
+- Package developers get a feedback loop that identifies package-owned rendering issues without adding authoring markers or audit payloads to anonymous responses.
+- Agencies get a retainer-friendly QA surface for launch checks, redesigns, and ongoing content governance.
+- Visitors benefit indirectly through cleaner structure, better media descriptions, labelled forms, predictable reading order, and no audit runtime shipped to the browser.
 
 **Requires:** `capell-app/admin`, `capell-app/core`, `capell-app/frontend`
 
