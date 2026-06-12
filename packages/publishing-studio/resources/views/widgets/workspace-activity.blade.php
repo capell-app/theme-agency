@@ -1,5 +1,7 @@
 <x-filament-widgets::widget class="capell-workspace-activity">
-    <x-filament::section heading="Workspace activity">
+    <x-filament::section
+        :heading="__('capell-publishing-studio::workflow.widgets.workspace_activity.heading')"
+    >
         @php
             $data = $this->data;
             $hasActivity = $data->pendingApprovalsCount > 0 || $data->stuckCount > 0 || $data->recentMerges->count() > 0;
@@ -13,7 +15,7 @@
                         {{ $data->pendingApprovalsCount }}
                     </div>
                     <div class="mt-0.5 text-xs text-amber-600">
-                        Pending your approval
+                        {{ __('capell-publishing-studio::workflow.widgets.workspace_activity.pending_approval') }}
                     </div>
                 </div>
                 <div class="rounded-lg bg-red-50 p-3">
@@ -21,7 +23,7 @@
                         {{ $data->stuckCount }}
                     </div>
                     <div class="mt-0.5 text-xs text-red-600">
-                        Stuck (&gt;7 days open)
+                        {{ __('capell-publishing-studio::workflow.widgets.workspace_activity.stuck_open') }}
                     </div>
                 </div>
             </div>
@@ -29,16 +31,20 @@
             {{-- Recent merges --}}
             @if ($data->recentMerges->count() === 0)
                 @if (! $hasActivity)
-                    <div class="text-sm text-gray-500">No recent activity.</div>
+                    <div class="text-sm text-gray-500">
+                        {{ __('capell-publishing-studio::workflow.widgets.workspace_activity.no_recent_activity') }}
+                    </div>
                 @else
-                    <div class="text-sm text-gray-500">No recent merges.</div>
+                    <div class="text-sm text-gray-500">
+                        {{ __('capell-publishing-studio::workflow.widgets.workspace_activity.no_recent_merges') }}
+                    </div>
                 @endif
             @else
                 <div>
                     <div
                         class="mb-1.5 text-xs font-semibold tracking-wide text-gray-400 uppercase"
                     >
-                        Recent merges
+                        {{ __('capell-publishing-studio::workflow.widgets.workspace_activity.recent_merges') }}
                     </div>
                     <div class="space-y-2">
                         @foreach ($data->recentMerges as $merge)

@@ -55,6 +55,7 @@ abstract class AbstractWidget extends Component
             'widgetData' => $this->widgetData,
             'widgetIndex' => $this->widgetIndex,
             'pageSlot' => $this->pageSlot,
+            ...$this->viewData(),
             ...$data,
         ];
 
@@ -78,6 +79,14 @@ abstract class AbstractWidget extends Component
     }
 
     protected function mountWidget(): void {}
+
+    /**
+     * @return array<string, mixed>
+     */
+    protected function viewData(): array
+    {
+        return [];
+    }
 
     private function frontendContextValue(string $method): mixed
     {

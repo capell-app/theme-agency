@@ -1,4 +1,5 @@
 @props([
+    'assetRenderDataItems',
     'currency' => $widget->getMeta('currency', '$'),
     'billingOptions' => $widget->getMeta('billing_options', 'monthly'),
     'container',
@@ -39,7 +40,9 @@
 
         @if ($billingOptions === 'both')
             <div class="mb-12 flex items-center justify-center gap-4">
-                <span class="text-gray-700">Monthly</span>
+                <span class="text-gray-700">
+                    {{ __('capell-foundation-theme::generic.pricing_monthly') }}
+                </span>
                 <button
                     class="billing-toggle-button relative h-8 w-14 rounded-full bg-stone-800 transition-colors"
                     data-billing-toggle
@@ -48,9 +51,11 @@
                         class="billing-toggle-dot absolute top-1 left-1 h-6 w-6 rounded-full bg-white transition-all"
                     ></div>
                 </button>
-                <span class="text-gray-700">Annual</span>
+                <span class="text-gray-700">
+                    {{ __('capell-foundation-theme::generic.pricing_annual') }}
+                </span>
                 <span class="text-sm font-semibold text-emerald-700">
-                    Save 17%
+                    {{ __('capell-foundation-theme::generic.pricing_savings_badge') }}
                 </span>
             </div>
         @endif
@@ -59,12 +64,10 @@
             class="pricing-grid mx-auto grid max-w-5xl grid-cols-1 gap-6 md:grid-cols-3"
             data-billing="{{ $billingOptions === 'both' ? 'monthly' : $billingOptions }}"
         >
-            @forelse ($widget->assets as $widgetAsset)
+            @forelse ($assetRenderDataItems as $assetRenderDataItem)
                 @php
-                    $widgetAssetRelations = method_exists($widgetAsset, 'getRelations') ? $widgetAsset->getRelations() : [];
-                    $asset = $widgetAssetRelations['asset'] ?? null;
-                    $assetRelations = $asset !== null && method_exists($asset, 'getRelations') ? $asset->getRelations() : [];
-                    $assetTranslation = $assetRelations['translation'] ?? null;
+                    $assetRenderData = $assetRenderDataItem['renderData'];
+                    $asset = $assetRenderData->asset;
                     $price = $asset?->getMeta('price', '0') ?? '0';
                     $priceAnnual = $asset?->getMeta('price_annual', $price) ?? $price;
                     $featured = (bool) ($asset?->getMeta('featured', false) ?? false);
@@ -72,8 +75,6 @@
                     $ctaUrl = $asset?->getMeta('cta_url', '#') ?? '#';
                     $features = $asset?->getMeta('features', []) ?? [];
                 @endphp
-
-                @continue($asset === null)
 
                 @if ($featured)
                     <div
@@ -85,21 +86,21 @@
                             <span
                                 class="rounded-full bg-amber-400 px-4 py-1 text-xs font-bold text-amber-900"
                             >
-                                Most Popular
+                                {{ __('capell-foundation-theme::generic.pricing_featured_badge') }}
                             </span>
                         </div>
 
-                        @if ($assetTranslation?->title)
+                        @if ($assetRenderData->title)
                             <h3
                                 class="mb-1 text-2xl font-bold tracking-tight text-white"
                             >
-                                {{ $assetTranslation->title }}
+                                {{ $assetRenderData->title }}
                             </h3>
                         @endif
 
-                        @if ($assetTranslation?->content)
+                        @if ($assetRenderData->content)
                             <p class="mb-6 text-sm text-stone-400">
-                                {{ strip_tags($assetTranslation->content) }}
+                                {{ strip_tags($assetRenderData->content) }}
                             </p>
                         @endif
 
@@ -146,17 +147,17 @@
                         data-price-monthly="{{ $price }}"
                         data-price-annual="{{ $priceAnnual }}"
                     >
-                        @if ($assetTranslation?->title)
+                        @if ($assetRenderData->title)
                             <h3
                                 class="mb-1 text-2xl font-bold tracking-tight text-gray-900"
                             >
-                                {{ $assetTranslation->title }}
+                                {{ $assetRenderData->title }}
                             </h3>
                         @endif
 
-                        @if ($assetTranslation?->content)
+                        @if ($assetRenderData->content)
                             <p class="mb-6 text-sm text-gray-500">
-                                {{ strip_tags($assetTranslation->content) }}
+                                {{ strip_tags($assetRenderData->content) }}
                             </p>
                         @endif
 
@@ -200,7 +201,9 @@
                 @endif
             @empty
                 <div class="col-span-full py-12 text-center">
-                    <p class="text-gray-500">No pricing plans configured</p>
+                    <p class="text-gray-500">
+                        {{ __('capell-foundation-theme::generic.empty_pricing_plans') }}
+                    </p>
                 </div>
             @endforelse
         </div>

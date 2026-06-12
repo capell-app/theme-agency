@@ -1,5 +1,7 @@
 <x-filament-widgets::widget class="capell-migrations-health">
-    <x-filament::section heading="Migrations health">
+    <x-filament::section
+        :heading="__('capell-diagnostics::package.widget_migrations_health_heading')"
+    >
         @php
             $data = $this->data;
         @endphp
@@ -14,7 +16,7 @@
                     <span
                         class="text-sm font-medium text-green-700 dark:text-green-300"
                     >
-                        All migrated
+                        {{ __('capell-diagnostics::package.widget_migrations_health_all_migrated') }}
                     </span>
                 </div>
             @else
@@ -31,7 +33,7 @@
                                 <span
                                     class="h-2 w-2 rounded-full bg-red-500"
                                 ></span>
-                                Pending migrations
+                                {{ __('capell-diagnostics::package.widget_migrations_health_pending') }}
                             </span>
                             <span
                                 class="rounded-full bg-red-100 px-2 py-0.5 text-xs font-semibold text-red-700 dark:bg-red-900/40 dark:text-red-300"
@@ -65,7 +67,7 @@
                                 <span
                                     class="h-2 w-2 rounded-full bg-amber-500"
                                 ></span>
-                                Orphaned registrations
+                                {{ __('capell-diagnostics::package.widget_migrations_health_orphaned') }}
                             </span>
                             <span
                                 class="rounded-full bg-amber-100 px-2 py-0.5 text-xs font-semibold text-amber-700 dark:bg-amber-900/40 dark:text-amber-300"
@@ -108,7 +110,7 @@
                 <div
                     class="border-t pt-2 text-xs text-gray-400 dark:border-gray-700 dark:text-gray-500"
                 >
-                    Last batch: {{ $data->lastBatch }}
+                    {{ __('capell-diagnostics::package.widget_migrations_health_last_batch', ['batch' => $data->lastBatch]) }}
                 </div>
             @endif
         </div>

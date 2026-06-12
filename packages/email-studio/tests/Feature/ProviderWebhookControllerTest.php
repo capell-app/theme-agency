@@ -10,6 +10,14 @@ use Capell\EmailStudio\Models\EmailMessage;
 use Capell\EmailStudio\Models\EmailProfile;
 use Capell\EmailStudio\Models\EmailRecipient;
 use Capell\EmailStudio\Models\EmailSuppression;
+use Illuminate\Support\Facades\Route;
+
+it('throttles provider webhook events', function (): void {
+    $route = Route::getRoutes()->getByName('capell-email-studio.provider-events');
+
+    expect($route)->not->toBeNull()
+        ->and($route->gatherMiddleware())->toContain('throttle:capell-email-studio-provider-events');
+});
 
 it('records provider webhooks and updates matching recipients', function (): void {
     $token = 'provider-token';

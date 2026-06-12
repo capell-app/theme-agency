@@ -27,6 +27,7 @@ Route::middleware(is_array($middleware) ? $middleware : ['web'])
             ->name('claim');
 
         Route::post('/logout/{area}', LogoutAccessGateController::class)
+            ->middleware('throttle:access-gate-logout')
             ->name('logout');
 
         if (config('access-gate.status_endpoint_enabled', false) === true) {

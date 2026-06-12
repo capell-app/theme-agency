@@ -26,6 +26,13 @@ it('renders a public cache-safe consent preference center without admin internal
         ->assertDontSee('policy_id');
 });
 
+it('throttles public consent preference writes', function (): void {
+    $route = Route::getRoutes()->getByName('capell-privacy-center.consent.store');
+
+    expect($route)->not->toBeNull()
+        ->and($route->gatherMiddleware())->toContain('throttle:capell-privacy-center-consent');
+});
+
 it('records public consent preferences through the consent ledger action', function (): void {
     $response = $this->post(route('capell-privacy-center.consent.store'), [
         'categories' => [

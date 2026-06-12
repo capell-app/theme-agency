@@ -13,16 +13,9 @@
         "bundle": "operations"
     },
     "namespace": "Capell\\PrivacyCenter",
-    "surfaces": [
-        "admin",
-        "console",
-        "frontend"
-    ],
+    "surfaces": ["admin", "console", "frontend"],
     "dependencies": {
-        "requires": [
-            "capell-app/admin",
-            "capell-app/core"
-        ],
+        "requires": ["capell-app/admin", "capell-app/core"],
         "supports": [
             "capell-app/access-gate",
             "capell-app/contacts",
@@ -37,9 +30,7 @@
         "runtime": [
             "Capell\\PrivacyCenter\\Providers\\PrivacyCenterServiceProvider"
         ],
-        "admin": [
-            "Capell\\PrivacyCenter\\Providers\\AdminServiceProvider"
-        ],
+        "admin": ["Capell\\PrivacyCenter\\Providers\\AdminServiceProvider"],
         "frontend": []
     },
     "contributes": [
@@ -162,7 +153,10 @@
             "signedRoutes": [],
             "tokenizedRoutes": [],
             "webhookRoutes": [],
-            "throttledRoutes": []
+            "throttledRoutes": [
+                "capell-privacy-center.consent.store",
+                "consent.store"
+            ]
         },
         "sensitiveData": {
             "encryptedFields": [],
@@ -207,48 +201,27 @@
     "performance": {
         "frontendRenderBudgetMs": 40,
         "adminQueryBudget": 40,
-        "cacheTags": [
-            "privacy-center"
-        ],
+        "cacheTags": ["privacy-center"],
         "cacheSafety": {
             "cacheable": false,
-            "variesBy": [
-                "site",
-                "subject"
-            ],
+            "variesBy": ["site", "subject"],
             "sensitiveOutput": true,
             "invalidationSources": [
                 {
                     "model": "Capell\\PrivacyCenter\\Models\\ConsentPolicy",
-                    "events": [
-                        "created",
-                        "updated",
-                        "deleted"
-                    ]
+                    "events": ["created", "updated", "deleted"]
                 },
                 {
                     "model": "Capell\\PrivacyCenter\\Models\\ConsentRecord",
-                    "events": [
-                        "created",
-                        "updated",
-                        "deleted"
-                    ]
+                    "events": ["created", "updated", "deleted"]
                 },
                 {
                     "model": "Capell\\PrivacyCenter\\Models\\PrivacyRequest",
-                    "events": [
-                        "created",
-                        "updated",
-                        "deleted"
-                    ]
+                    "events": ["created", "updated", "deleted"]
                 },
                 {
                     "model": "Capell\\PrivacyCenter\\Models\\RetentionRule",
-                    "events": [
-                        "created",
-                        "updated",
-                        "deleted"
-                    ]
+                    "events": ["created", "updated", "deleted"]
                 }
             ],
             "queueInvalidation": true
@@ -288,15 +261,9 @@
                 "caption": "Review active data retention rules, retention windows, and minimisation actions in Capell admin."
             }
         ],
-        "categories": [
-            "admin",
-            "compliance",
-            "operations"
-        ]
+        "categories": ["admin", "compliance", "operations"]
     },
     "contributionTraceability": {
-        "deferredContributions": [
-            "route"
-        ]
+        "deferredContributions": ["route"]
     }
 }

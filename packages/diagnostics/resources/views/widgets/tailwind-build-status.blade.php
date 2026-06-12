@@ -1,5 +1,7 @@
 <x-filament-widgets::widget class="capell-tailwind-build-status">
-    <x-filament::section heading="Tailwind build status">
+    <x-filament::section
+        :heading="__('capell-diagnostics::package.widget_tailwind_build_status_heading')"
+    >
         @php
             $data = $this->data;
         @endphp
@@ -11,7 +13,7 @@
                     <span
                         class="rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-semibold text-green-700 dark:bg-green-900/40 dark:text-green-300"
                     >
-                        {{ $data->freshCount }} fresh
+                        {{ __('capell-diagnostics::package.widget_tailwind_build_status_fresh', ['count' => $data->freshCount]) }}
                     </span>
                 @endif
 
@@ -19,7 +21,7 @@
                     <span
                         class="rounded-full bg-amber-100 px-2.5 py-0.5 text-xs font-semibold text-amber-700 dark:bg-amber-900/40 dark:text-amber-300"
                     >
-                        {{ $data->staleCount }} stale
+                        {{ __('capell-diagnostics::package.widget_tailwind_build_status_stale', ['count' => $data->staleCount]) }}
                     </span>
                 @endif
 
@@ -27,13 +29,13 @@
                     <span
                         class="rounded-full bg-red-100 px-2.5 py-0.5 text-xs font-semibold text-red-700 dark:bg-red-900/40 dark:text-red-300"
                     >
-                        {{ $data->neverBuiltCount }} never built
+                        {{ __('capell-diagnostics::package.widget_tailwind_build_status_never_built', ['count' => $data->neverBuiltCount]) }}
                     </span>
                 @endif
 
                 @if ($data->sites->count() === 0)
                     <span class="text-xs text-gray-400 dark:text-gray-500">
-                        No sites found.
+                        {{ __('capell-diagnostics::package.widget_tailwind_build_status_no_sites') }}
                     </span>
                 @endif
             </div>
@@ -55,19 +57,19 @@
                                 <span
                                     class="shrink-0 rounded bg-green-100 px-1.5 py-0.5 text-green-700 dark:bg-green-900/40 dark:text-green-300"
                                 >
-                                    fresh
+                                    {{ __('capell-diagnostics::package.widget_tailwind_build_status_fresh_label') }}
                                 </span>
                             @elseif ($siteRow->status === 'stale')
                                 <span
                                     class="shrink-0 rounded bg-amber-100 px-1.5 py-0.5 text-amber-700 dark:bg-amber-900/40 dark:text-amber-300"
                                 >
-                                    stale
+                                    {{ __('capell-diagnostics::package.widget_tailwind_build_status_stale_label') }}
                                 </span>
                             @else
                                 <span
                                     class="shrink-0 rounded bg-red-100 px-1.5 py-0.5 text-red-700 dark:bg-red-900/40 dark:text-red-300"
                                 >
-                                    never built
+                                    {{ __('capell-diagnostics::package.widget_tailwind_build_status_never_built_label') }}
                                 </span>
                             @endif
 

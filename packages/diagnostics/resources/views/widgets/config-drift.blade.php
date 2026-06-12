@@ -1,5 +1,7 @@
 <x-filament-widgets::widget class="capell-config-drift">
-    <x-filament::section heading="Config drift">
+    <x-filament::section
+        :heading="__('capell-diagnostics::package.widget_config_drift_heading')"
+    >
         @php
             $data = $this->data;
         @endphp
@@ -12,12 +14,13 @@
                     class="flex items-center gap-2 rounded-md bg-green-50 px-3 py-2 text-sm text-green-700 dark:bg-green-900/20 dark:text-green-400"
                 >
                     <span class="font-medium">
-                        &#10003; No config drift detected
+                        &#10003;
+                        {{ __('capell-diagnostics::package.widget_config_drift_none') }}
                     </span>
                     <span class="text-green-500 dark:text-green-600">
                         ({{ $data->packagesChecked }}
                         {{ Str::plural('package', $data->packagesChecked) }}
-                        checked)
+                        {{ __('capell-diagnostics::package.widget_config_drift_checked') }})
                     </span>
                 </div>
             @else
@@ -27,10 +30,10 @@
                         class="rounded-full bg-red-100 px-2.5 py-0.5 text-xs font-semibold text-red-700 dark:bg-red-900/40 dark:text-red-300"
                     >
                         {{ $data->totalDriftCount }}
-                        {{ Str::plural('drift', $data->totalDriftCount) }}
+                        {{ trans_choice('capell-diagnostics::package.widget_config_drift_drift', $data->totalDriftCount) }}
                     </span>
                     <span class="text-xs text-gray-500 dark:text-gray-400">
-                        across {{ $data->packagesChecked }}
+                        {{ __('capell-diagnostics::package.widget_config_drift_across', ['count' => $data->packagesChecked]) }}
                         {{ Str::plural('package', $data->packagesChecked) }}
                     </span>
                 </div>
@@ -60,13 +63,13 @@
                                 <span
                                     class="shrink-0 rounded bg-amber-100 px-1.5 py-0.5 text-amber-700 dark:bg-amber-900/40 dark:text-amber-300"
                                 >
-                                    missing
+                                    {{ __('capell-diagnostics::package.widget_config_drift_missing') }}
                                 </span>
                             @else
                                 <span
                                     class="shrink-0 rounded bg-red-100 px-1.5 py-0.5 text-red-700 dark:bg-red-900/40 dark:text-red-300"
                                 >
-                                    stale
+                                    {{ __('capell-diagnostics::package.widget_config_drift_stale') }}
                                 </span>
                             @endif
                         </div>
@@ -78,8 +81,7 @@
             <div
                 class="border-t pt-2 text-xs text-gray-400 dark:border-gray-700 dark:text-gray-500"
             >
-                Missing = key in shipped config absent from host. Stale = key in
-                host config no longer shipped.
+                {{ __('capell-diagnostics::package.widget_config_drift_note') }}
             </div>
         </div>
     </x-filament::section>

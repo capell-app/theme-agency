@@ -1,5 +1,7 @@
 <x-filament-widgets::widget class="capell-registry-health">
-    <x-filament::section heading="Registry health">
+    <x-filament::section
+        :heading="__('capell-diagnostics::package.widget_registry_health_heading')"
+    >
         <div class="space-y-4">
             @foreach ($this->data->sections as $section)
                 <details class="group">
@@ -34,14 +36,14 @@
                                         <span
                                             class="rounded bg-amber-100 px-1.5 py-0.5 text-amber-700 dark:bg-amber-900/40 dark:text-amber-300"
                                         >
-                                            auto
+                                            {{ __('capell-diagnostics::package.widget_registry_health_auto') }}
                                         </span>
                                     @endif
                                 </div>
                             </div>
                         @empty
                             <p class="px-2 py-1 text-xs text-gray-400">
-                                None registered
+                                {{ __('capell-diagnostics::package.widget_registry_health_none') }}
                             </p>
                         @endforelse
                     </div>

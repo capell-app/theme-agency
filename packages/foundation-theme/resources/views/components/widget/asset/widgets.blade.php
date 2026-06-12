@@ -7,17 +7,19 @@ $theme = Frontend::theme();
 @php
     use Capell\Core\Enums\AssetComponentEnum;
     use Capell\Core\Facades\CapellCore;
-    use Capell\FoundationTheme\Actions\BuildWidgetAssetRenderDataAction;
     use Capell\Frontend\Contracts\AssetsRegistryInterface;
 @endphp
 
 @props([
+    'assets',
     'color' => $widget->getMeta('color', 'dark'),
     'container',
     'containerKey',
     'containerWidth' => null,
+    'firstAssetRenderData' => null,
+    'lastAssetRenderData' => null,
     'loop',
-    'total' => $widget->assets->count(),
+    'total' => $assets->count(),
     'widget',
     'widgetIndex',
     'withChildCount' => (bool) $widget->getMeta('with_child_count'),
@@ -29,7 +31,7 @@ $theme = Frontend::theme();
     'columns' => (int) $widget->getMeta('columns'),
 ])
 
-@if ($widget->assets->isNotEmpty() || ! config('capell-layout-builder.widget.skip_render_empty', true))
+@if ($assets->isNotEmpty() || ! config('capell-layout-builder.widget.skip_render_empty', true))
     <x-capell-foundation-theme::widget.wrapper
         class="site-widget-asset widget-assets-widgets relative"
         :$container
@@ -53,13 +55,8 @@ $theme = Frontend::theme();
             />
         @endif
 
-        @if ($widget->assets->isNotEmpty())
+        @if ($assets->isNotEmpty())
             <div>
-                @php
-                    $firstAssetRenderData = BuildWidgetAssetRenderDataAction::run($widget->assets->first());
-                    $lastAssetRenderData = BuildWidgetAssetRenderDataAction::run($widget->assets->last());
-                @endphp
-
                 @if ($color = ($firstAssetRenderData->meta['color'] ?? null))
                     <x-capell-foundation-theme::widget.asset.extended-background
                         :$color
@@ -78,7 +75,7 @@ $theme = Frontend::theme();
                         '2xl:grid-cols-6' => $total >= 6 && $columns !== 0 && $total <= $columns,
                     ])
                 >
-                    @foreach ($widget->assets as $asset)
+                    @foreach ($assets as $asset)
                         <x-dynamic-component
                             :component="app(AssetsRegistryInterface::class)->getAsset($asset['asset_type'])->component"
                             :componentItem="$widget->getMeta('component_item', AssetComponentEnum::Card->value)"

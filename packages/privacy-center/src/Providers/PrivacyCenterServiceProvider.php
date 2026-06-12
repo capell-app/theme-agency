@@ -12,8 +12,11 @@ use Capell\PrivacyCenter\Models\ConsentRecord;
 use Capell\PrivacyCenter\Models\PolicyAcceptance;
 use Capell\PrivacyCenter\Models\PrivacyRequest;
 use Capell\PrivacyCenter\Models\RetentionRule;
+use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\RateLimiter;
 use Override;
 use Spatie\LaravelPackageTools\Package;
 
@@ -43,6 +46,8 @@ final class PrivacyCenterServiceProvider extends AbstractPackageServiceProvider
     public function packageRegistered(): void
     {
         $this->app->booted(function (): void {
+            $this->registerRateLimiters();
+
             if (! $this->isPackageInstalled()) {
                 return;
             }
@@ -80,6 +85,13 @@ final class PrivacyCenterServiceProvider extends AbstractPackageServiceProvider
     protected function isPackageInstalled(): bool
     {
         return CapellCore::isPackageInstalled(self::$packageName);
+    }
+
+    private function registerRateLimiters(): self
+    {
+        RateLimiter::for('capell-privacy-center-consent', fn (Request $request): Limit => Limit::perMinute(30)->by((string) $request->ip()));
+
+        return $this;
     }
 
     private function registerRoutes(): self

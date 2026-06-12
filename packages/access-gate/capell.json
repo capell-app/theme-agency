@@ -13,16 +13,9 @@
         "bundle": "operations"
     },
     "namespace": "Capell\\AccessGate",
-    "surfaces": [
-        "admin",
-        "frontend",
-        "console"
-    ],
+    "surfaces": ["admin", "frontend", "console"],
     "dependencies": {
-        "requires": [
-            "capell-app/admin",
-            "capell-app/core"
-        ],
+        "requires": ["capell-app/admin", "capell-app/core"],
         "supports": [
             "capell-app/customer-portal",
             "capell-app/diagnostics",
@@ -35,9 +28,7 @@
     "providers": {
         "metadata": [],
         "install": [],
-        "runtime": [
-            "Capell\\AccessGate\\Providers\\AccessGateServiceProvider"
-        ],
+        "runtime": ["Capell\\AccessGate\\Providers\\AccessGateServiceProvider"],
         "admin": [],
         "frontend": []
     },
@@ -129,15 +120,9 @@
             "auth": "mixed",
             "csrfExemptRoutes": [],
             "signedRoutes": [],
-            "tokenizedRoutes": [
-                "claim"
-            ],
+            "tokenizedRoutes": ["claim"],
             "webhookRoutes": [],
-            "throttledRoutes": [
-                "claim",
-                "request.store",
-                "status"
-            ]
+            "throttledRoutes": ["claim", "logout", "request.store", "status"]
         },
         "sensitiveData": {
             "encryptedFields": [],
@@ -260,10 +245,7 @@
                 "caption": "Public request CTA component for routing visitors from protected pages or teaser content into the correct request flow."
             }
         ],
-        "categories": [
-            "admin",
-            "operations"
-        ]
+        "categories": ["admin", "operations"]
     },
     "contributionTraceability": {
         "deferredContributions": [

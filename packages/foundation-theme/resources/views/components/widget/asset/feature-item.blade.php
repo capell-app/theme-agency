@@ -1,14 +1,12 @@
 @props([
     'color',
     'column',
+    'assetRenderData',
     'widget',
     'widgetAsset',
 ])
 
 @php
-    use Capell\FoundationTheme\Actions\BuildWidgetAssetRenderDataAction;
-
-    $assetRenderData = BuildWidgetAssetRenderDataAction::run($widgetAsset);
     $linkedPageUrl = $assetRenderData->linkUrl;
     $image = $assetRenderData->image;
     $icon = $assetRenderData->icon;

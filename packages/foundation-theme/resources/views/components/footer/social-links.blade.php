@@ -40,21 +40,24 @@
                 {!! $icon !!}
             @elseif (! empty($link['file']))
                 @php
-                    $image = is_array($link['file']) ? collect($link['file'])->first() : $link['file'];
+                    $file = $link['file'];
+                    $image = is_array($file) ? ($file[array_key_first($file)] ?? null) : $file;
                 @endphp
 
-                <img
-                    @class([
-                        'shrink-0 grow-0 overflow-hidden text-center leading-none brightness-0 contrast-[.5] invert sepia-0 filter group-hover/item:contrast-150 group-focus/item:contrast-150',
-                        'h-6 w-6' => $size === 'xs',
-                        'h-8 w-8' => $size === 'sm',
-                        'h-10 w-10' => $size === 'md',
-                        'h-12 w-12' => $size === 'lg',
-                    ])
-                    src="{{ asset('storage/' . $image) }}"
-                    alt="{{ $link['title'] ?: $link['type'] }}"
-                    loading="lazy"
-                />
+                @if ($image)
+                    <img
+                        @class([
+                            'shrink-0 grow-0 overflow-hidden text-center leading-none brightness-0 contrast-[.5] invert sepia-0 filter group-hover/item:contrast-150 group-focus/item:contrast-150',
+                            'h-6 w-6' => $size === 'xs',
+                            'h-8 w-8' => $size === 'sm',
+                            'h-10 w-10' => $size === 'md',
+                            'h-12 w-12' => $size === 'lg',
+                        ])
+                        src="{{ asset('storage/' . $image) }}"
+                        alt="{{ $link['title'] ?: $link['type'] }}"
+                        loading="lazy"
+                    />
+                @endif
             @endif
 
             @if (! empty($link['title']))

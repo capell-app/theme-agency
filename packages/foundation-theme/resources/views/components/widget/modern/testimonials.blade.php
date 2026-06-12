@@ -1,4 +1,5 @@
 @props([
+    'assetRenderDataItems',
     'columns' => $widget->getMeta('columns', 2),
     'displayMode' => $widget->getMeta('display_mode', 'grid'),
     'container',
@@ -17,7 +18,6 @@
 
     $gridClass = $gridClasses[(int) $columns] ?? $gridClasses[2];
     $responsiveGrid = '!flex snap-x [scrollbar-width:none] gap-4 !overflow-x-auto pb-3 md:!grid md:!overflow-visible md:pb-0 [&::-webkit-scrollbar]:hidden';
-    $assets = $widget->assets;
 @endphp
 
 <x-capell-foundation-theme::widget.wrapper
@@ -55,17 +55,12 @@
                     <div
                         class="carousel-container flex transition-transform duration-300 ease-in-out"
                     >
-                        @forelse ($assets as $widgetAsset)
+                        @forelse ($assetRenderDataItems as $assetRenderDataItem)
                             @php
-                                $widgetAssetRelations = method_exists($widgetAsset, 'getRelations') ? $widgetAsset->getRelations() : [];
-                                $asset = $widgetAssetRelations['asset'] ?? null;
-                                $assetRelations = $asset !== null && method_exists($asset, 'getRelations') ? $asset->getRelations() : [];
-                                $assetTranslation = $assetRelations['translation'] ?? null;
-                                $icon = $asset?->getMeta('icon');
-                                $role = $asset?->getMeta('position');
+                                $assetRenderData = $assetRenderDataItem['renderData'];
+                                $icon = $assetRenderData->icon;
+                                $role = $assetRenderData->position;
                             @endphp
-
-                            @continue($asset === null)
 
                             <div class="carousel-slide min-w-full">
                                 <div
@@ -77,12 +72,12 @@
                                         &ldquo;
                                     </div>
 
-                                    @if ($assetTranslation?->content)
+                                    @if ($assetRenderData->content)
                                         <blockquote class="mb-6">
                                             <p
                                                 class="text-lg leading-relaxed text-gray-700 italic"
                                             >
-                                                {{ strip_tags($assetTranslation->content) }}
+                                                {{ strip_tags($assetRenderData->content) }}
                                             </p>
                                         </blockquote>
                                     @endif
@@ -105,11 +100,11 @@
                                         @endif
 
                                         <div>
-                                            @if ($assetTranslation?->title)
+                                            @if ($assetRenderData->title)
                                                 <p
                                                     class="font-bold text-gray-900"
                                                 >
-                                                    {{ $assetTranslation->title }}
+                                                    {{ $assetRenderData->title }}
                                                 </p>
                                             @endif
 
@@ -127,14 +122,14 @@
                         @empty
                             <div class="w-full py-12 text-center">
                                 <p class="text-gray-500">
-                                    No testimonials configured
+                                    {{ __('capell-foundation-theme::generic.empty_testimonials') }}
                                 </p>
                             </div>
                         @endforelse
                     </div>
                 </div>
 
-                @if ($assets->count() > 1)
+                @if ($assetRenderDataItems->count() > 1)
                     <button
                         class="carousel-prev absolute top-1/2 left-0 -translate-x-12 -translate-y-1/2 text-2xl text-gray-600 hover:text-gray-900"
                         data-carousel-direction="-1"
@@ -149,7 +144,7 @@
                     </button>
 
                     <div class="mt-6 flex justify-center gap-2">
-                        @for ($dotIndex = 0; $dotIndex < $assets->count(); $dotIndex++)
+                        @for ($dotIndex = 0; $dotIndex < $assetRenderDataItems->count(); $dotIndex++)
                             <button
                                 class="{{ $dotIndex === 0 ? 'is-active bg-stone-900' : 'bg-stone-300' }} carousel-dot h-2.5 w-2.5 rounded-full transition-all"
                                 data-carousel-slide="{{ $dotIndex }}"
@@ -160,17 +155,12 @@
             </div>
         @else
             <div class="{{ $responsiveGrid }} {{ $gridClass }}">
-                @forelse ($assets as $widgetAsset)
+                @forelse ($assetRenderDataItems as $assetRenderDataItem)
                     @php
-                        $widgetAssetRelations = method_exists($widgetAsset, 'getRelations') ? $widgetAsset->getRelations() : [];
-                        $asset = $widgetAssetRelations['asset'] ?? null;
-                        $assetRelations = $asset !== null && method_exists($asset, 'getRelations') ? $asset->getRelations() : [];
-                        $assetTranslation = $assetRelations['translation'] ?? null;
-                        $icon = $asset?->getMeta('icon');
-                        $role = $asset?->getMeta('position');
+                        $assetRenderData = $assetRenderDataItem['renderData'];
+                        $icon = $assetRenderData->icon;
+                        $role = $assetRenderData->position;
                     @endphp
-
-                    @continue($asset === null)
 
                     <div
                         class="min-w-full snap-start rounded-xl border border-stone-200 bg-white p-6 md:min-w-0 md:p-8"
@@ -181,12 +171,12 @@
                             &ldquo;
                         </div>
 
-                        @if ($assetTranslation?->content)
+                        @if ($assetRenderData->content)
                             <blockquote class="mb-6">
                                 <p
                                     class="text-lg leading-relaxed text-gray-700 italic"
                                 >
-                                    {{ strip_tags($assetTranslation->content) }}
+                                    {{ strip_tags($assetRenderData->content) }}
                                 </p>
                             </blockquote>
                         @endif
@@ -209,9 +199,9 @@
                             @endif
 
                             <div>
-                                @if ($assetTranslation?->title)
+                                @if ($assetRenderData->title)
                                     <p class="font-bold text-gray-900">
-                                        {{ $assetTranslation->title }}
+                                        {{ $assetRenderData->title }}
                                     </p>
                                 @endif
 
@@ -225,7 +215,9 @@
                     </div>
                 @empty
                     <div class="col-span-full py-12 text-center">
-                        <p class="text-gray-500">No testimonials configured</p>
+                        <p class="text-gray-500">
+                            {{ __('capell-foundation-theme::generic.empty_testimonials') }}
+                        </p>
                     </div>
                 @endforelse
             </div>

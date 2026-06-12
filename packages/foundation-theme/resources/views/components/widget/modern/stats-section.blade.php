@@ -1,4 +1,5 @@
 @props([
+    'assetRenderDataItems',
     'layout' => $widget->getMeta('layout', 'horizontal'),
     'container',
     'containerKey',
@@ -45,16 +46,11 @@
                 'max-w-5xl ' . $responsiveGrid . ' md:grid-cols-4' => $layout !== 'vertical',
             ])
         >
-            @forelse ($widget->assets as $widgetAsset)
+            @forelse ($assetRenderDataItems as $assetRenderDataItem)
                 @php
-                    $widgetAssetRelations = method_exists($widgetAsset, 'getRelations') ? $widgetAsset->getRelations() : [];
-                    $asset = $widgetAssetRelations['asset'] ?? null;
-                    $assetRelations = $asset !== null && method_exists($asset, 'getRelations') ? $asset->getRelations() : [];
-                    $assetTranslation = $assetRelations['translation'] ?? null;
-                    $icon = $asset !== null ? (string) $asset->getMeta('icon', '') : '';
+                    $assetRenderData = $assetRenderDataItem['renderData'];
+                    $icon = (string) ($assetRenderData->icon ?? '');
                 @endphp
-
-                @continue($asset === null)
 
                 <div
                     class="min-w-full snap-start rounded-xl border border-stone-200 bg-white p-6 text-center md:min-w-0 md:p-8"
@@ -71,23 +67,25 @@
                         </div>
                     @endif
 
-                    @if ($assetTranslation?->content)
+                    @if ($assetRenderData->content)
                         <p
                             class="mb-1 text-3xl font-bold text-emerald-700 md:text-4xl"
                         >
-                            {{ strip_tags($assetTranslation->content) }}
+                            {{ strip_tags($assetRenderData->content) }}
                         </p>
                     @endif
 
-                    @if ($assetTranslation?->title)
+                    @if ($assetRenderData->title)
                         <p class="text-sm font-medium text-gray-500">
-                            {{ $assetTranslation->title }}
+                            {{ $assetRenderData->title }}
                         </p>
                     @endif
                 </div>
             @empty
                 <div class="col-span-full py-12 text-center">
-                    <p class="text-gray-500">No stats configured.</p>
+                    <p class="text-gray-500">
+                        {{ __('capell-foundation-theme::generic.empty_stats') }}
+                    </p>
                 </div>
             @endforelse
         </div>

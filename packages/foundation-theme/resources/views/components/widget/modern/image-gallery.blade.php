@@ -1,4 +1,6 @@
 @props([
+    'assetRenderDataItems',
+    'assets',
     'title' => $widget->translation?->title,
     'content' => $widget->translation?->content,
     'columns' => (int) ($widget->getMeta('columns', 3)),
@@ -10,8 +12,6 @@
 ])
 
 @php
-    use Capell\FoundationTheme\Actions\BuildWidgetAssetRenderDataAction;
-
     $responsiveGrid = '!flex snap-x [scrollbar-width:none] gap-4 !overflow-x-auto pb-3 md:!grid md:!overflow-visible md:pb-0 [&::-webkit-scrollbar]:hidden';
     $responsiveItem = 'min-w-full snap-start md:min-w-0';
 @endphp
@@ -44,16 +44,16 @@
                 </div>
             @endif
 
-            @if ($widget->assets->isNotEmpty())
+            @if ($assets->isNotEmpty())
                 <div
                     class="ap-gallery-grid {{ $responsiveGrid }}"
                     style="
                         --ap-gallery-columns: {{ max(1, min(4, $columns)) }};
                     "
                 >
-                    @foreach ($widget->assets as $asset)
+                    @foreach ($assetRenderDataItems as $assetRenderDataItem)
                         @php
-                            $assetRenderData = BuildWidgetAssetRenderDataAction::run($asset);
+                            $assetRenderData = $assetRenderDataItem['renderData'];
                             $media = $assetRenderData->image?->media;
                             $role = $assetRenderData->role ?? 'gallery-item';
                             $accent = $assetRenderData->accent ?? 'teal';

@@ -12,11 +12,13 @@
         @endif
 
         @if ($errors->any() && ! $errors->has('shop'))
+            @php($messages = $errors->all())
+
             <div
                 role="alert"
                 class="bg-danger-50 text-danger-700 ring-danger-600/20 dark:bg-danger-400/10 dark:text-danger-300 dark:ring-danger-400/20 rounded-lg p-4 text-sm ring-1"
             >
-                {{ $errors->first() }}
+                {{ $messages[0] ?? '' }}
             </div>
         @endif
 

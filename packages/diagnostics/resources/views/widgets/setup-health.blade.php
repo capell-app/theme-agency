@@ -25,7 +25,9 @@
 @endphp
 
 <x-filament-widgets::widget class="capell-setup-health">
-    <x-filament::section heading="Setup health">
+    <x-filament::section
+        :heading="__('capell-diagnostics::package.widget_setup_health_heading')"
+    >
         <div class="space-y-4">
             <!-- Progress Bar -->
             <div>
@@ -33,7 +35,7 @@
                     <span
                         class="text-sm font-medium text-gray-700 dark:text-gray-300"
                     >
-                        {{ $greenCount }} of {{ $totalChecks }} complete
+                        {{ __('capell-diagnostics::package.widget_setup_health_progress', ['green' => $greenCount, 'total' => $totalChecks]) }}
                     </span>
                     <span
                         class="text-sm font-semibold text-gray-900 dark:text-gray-100"
@@ -60,7 +62,7 @@
                     <p
                         class="mb-3 text-sm font-medium text-gray-700 dark:text-gray-300"
                     >
-                        Items to complete:
+                        {{ __('capell-diagnostics::package.widget_setup_health_items_to_complete') }}
                     </p>
                     <div class="space-y-2">
                         @foreach ($failingChecks as $check)
@@ -127,7 +129,7 @@
                                 clip-rule="evenodd"
                             />
                         </svg>
-                        All setup requirements met!
+                        {{ __('capell-diagnostics::package.widget_setup_health_complete') }}
                     </p>
                 </div>
             @endif

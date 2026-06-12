@@ -15,7 +15,9 @@ Route::middleware(is_array($middleware) ? $middleware : ['web', 'auth'])
     ->as('capell-customer-portal.')
     ->group(function (): void {
         Route::get('/', ShowCustomerPortalController::class)->name('dashboard');
-        Route::post('/preferences', UpdatePortalPreferencesController::class)->name('preferences.update');
+        Route::post('/preferences', UpdatePortalPreferencesController::class)
+            ->middleware('throttle:capell-customer-portal-preferences')
+            ->name('preferences.update');
         Route::post('/support', StorePortalSupportRequestController::class)
             ->middleware('throttle:12,1')
             ->name('support.store');

@@ -1,4 +1,5 @@
 @props([
+    'assetRenderDataItems',
     'container',
     'containerKey',
     'containerWidth' => null,
@@ -7,14 +8,9 @@
 ])
 
 @php
-    $categories = $widget->assets
-        ->map(function (object $widgetAsset): ?string {
-            $widgetAssetRelations = method_exists($widgetAsset, 'getRelations') ? $widgetAsset->getRelations() : [];
-            $asset = $widgetAssetRelations['asset'] ?? null;
-            $category = $asset !== null ? $asset->getMeta('category') : null;
-
-            return is_string($category) && $category !== '' ? $category : null;
-        })
+    $categories = $assetRenderDataItems
+        ->map(fn (array $assetRenderDataItem): mixed => $assetRenderDataItem['renderData']->meta['category'] ?? null)
+        ->filter(fn (mixed $category): bool => is_string($category) && $category !== '')
         ->filter()
         ->unique()
         ->values()
@@ -75,25 +71,21 @@
         @endif
 
         <div class="faq-container mx-auto max-w-3xl space-y-3">
-            @forelse ($widget->assets as $widgetAsset)
+            @forelse ($assetRenderDataItems as $assetRenderDataItem)
                 @php
-                    $widgetAssetRelations = method_exists($widgetAsset, 'getRelations') ? $widgetAsset->getRelations() : [];
-                    $asset = $widgetAssetRelations['asset'] ?? null;
-                    $assetRelations = $asset !== null && method_exists($asset, 'getRelations') ? $asset->getRelations() : [];
-                    $assetTranslation = $assetRelations['translation'] ?? null;
+                    $assetRenderData = $assetRenderDataItem['renderData'];
+                    $category = $assetRenderData->meta['category'] ?? 'uncategorized';
                 @endphp
-
-                @continue($asset === null)
 
                 <details
                     class="faq-item group rounded-xl border border-stone-200 bg-white"
-                    data-category="{{ $asset->getMeta('category', 'uncategorized') }}"
+                    data-category="{{ $category }}"
                 >
                     <summary
                         class="flex cursor-pointer items-center justify-between p-5 text-base font-semibold text-gray-900 select-none"
                     >
                         <span>
-                            {{ $assetTranslation?->title }}
+                            {{ $assetRenderData->title }}
                         </span>
                         <span
                             class="ml-4 flex-shrink-0 text-xl text-stone-500 transition-transform group-open:rotate-45"
@@ -102,17 +94,19 @@
                         </span>
                     </summary>
 
-                    @if ($assetTranslation?->content)
+                    @if ($assetRenderData->content)
                         <div
                             class="border-t border-stone-100 px-5 pt-4 pb-5 leading-relaxed text-stone-600"
                         >
-                            {{ strip_tags($assetTranslation->content) }}
+                            {{ strip_tags($assetRenderData->content) }}
                         </div>
                     @endif
                 </details>
             @empty
                 <div class="py-12 text-center">
-                    <p class="text-gray-500">No FAQs configured</p>
+                    <p class="text-gray-500">
+                        {{ __('capell-foundation-theme::generic.empty_faqs') }}
+                    </p>
                 </div>
             @endforelse
         </div>
