@@ -16,6 +16,7 @@ it('keeps every package manifest in an approved product group', function (): voi
         'content-product' => 'Capell Content',
         'form-builder' => 'Capell FormBuilder',
         'foundation' => 'Capell Foundation',
+        'frontend' => 'Capell Frontend',
         'growth' => 'Capell Growth',
         'media' => 'Capell Media',
         'newsletter' => 'Capell Marketing',
@@ -43,8 +44,8 @@ it('keeps every package manifest in an approved product group', function (): voi
             $invalid[$path] = 'Product group does not match bundle.';
         }
 
-        if (! in_array($product['tier'] ?? null, ['free', 'premium'], true)) {
-            $invalid[$path] = 'Tier must be free or premium.';
+        if (! in_array($product['tier'] ?? null, ['core', 'free', 'premium'], true)) {
+            $invalid[$path] = 'Tier must be core, free, or premium.';
         }
     }
 
@@ -96,7 +97,6 @@ it('groups packages into the current product bundles', function (): void {
             'email-studio/capell.json',
         ],
         'content-product' => [
-            'address/capell.json',
             'contacts/capell.json',
             'customer-portal/capell.json',
             'events/capell.json',
@@ -106,8 +106,8 @@ it('groups packages into the current product bundles', function (): void {
             'form-builder/capell.json',
         ],
         'foundation' => [
-            'widget-library/capell.json',
-            'blog/capell.json',
+            'address/capell.json',
+            'block-library/capell.json',
             'content-sections/capell.json',
             'demo-kit/capell.json',
             'filament-peek/capell.json',
@@ -122,15 +122,20 @@ it('groups packages into the current product bundles', function (): void {
             'record-switcher/capell.json',
             'structured-content-library/capell.json',
             'tags/capell.json',
-            'theme-agency/capell.json',
             'theme-corporate/capell.json',
             'welcome-tour/capell.json',
+        ],
+        'frontend' => [
+            'inertia-react-adapter/capell.json',
+            'inertia-vue-adapter/capell.json',
+            'inertia/capell.json',
         ],
         'growth' => [
             'campaign-studio/capell.json',
             'experiments/capell.json',
             'ga4-reports/capell.json',
             'insights/capell.json',
+            'social-feeds/capell.json',
         ],
         'media' => [
             'media-ai/capell.json',
@@ -146,6 +151,7 @@ it('groups packages into the current product bundles', function (): void {
             'deployments/capell.json',
             'diagnostics/capell.json',
             'document-lifecycle/capell.json',
+            'exception-reports/capell.json',
             'login-audit/capell.json',
             'migration-assistant/capell.json',
             'password-policy/capell.json',
@@ -155,6 +161,7 @@ it('groups packages into the current product bundles', function (): void {
         'publishing-pro' => [
             'agent-delivery/capell.json',
             'api/capell.json',
+            'blog/capell.json',
             'publishing-studio/capell.json',
         ],
         'search-seo' => [
@@ -164,9 +171,13 @@ it('groups packages into the current product bundles', function (): void {
             'url-manager/capell.json',
         ],
         'themes' => [
+            'theme-agency/capell.json',
             'theme-commerce/capell.json',
             'theme-education/capell.json',
             'theme-healthcare/capell.json',
+            'theme-inertia-bookings-react/capell.json',
+            'theme-inertia-bookings-vue/capell.json',
+            'theme-inertia-bookings/capell.json',
             'theme-knowledge/capell.json',
             'theme-local-services/capell.json',
             'theme-nonprofit/capell.json',

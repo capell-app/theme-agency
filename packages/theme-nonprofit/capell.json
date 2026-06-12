@@ -124,19 +124,29 @@
                 "caption": "Theme Nonprofit extension preview"
             },
             {
-                "path": "docs/screenshots/nonprofit-volunteer-donate-layout.png",
-                "alt": "Theme Nonprofit volunteer and donation support paths rendered in the Capell nonprofit theme",
-                "caption": "Volunteer and donate layout"
+                "path": "docs/screenshots/frontend-page-rendered-with-nonprofit-theme.png",
+                "alt": "Theme Nonprofit Frontend Page Rendered With Nonprofit Theme screenshot",
+                "caption": "Frontend Page Rendered With Nonprofit Theme rendered with the Theme Nonprofit theme."
+            },
+            {
+                "path": "docs/screenshots/nonprofit-campaigns-layout.png",
+                "alt": "Theme Nonprofit Nonprofit Campaigns Layout screenshot",
+                "caption": "Nonprofit Campaigns Layout rendered with the Theme Nonprofit theme."
+            },
+            {
+                "path": "docs/screenshots/nonprofit-events-layout.png",
+                "alt": "Theme Nonprofit Nonprofit Events Layout screenshot",
+                "caption": "Nonprofit Events Layout rendered with the Theme Nonprofit theme."
             },
             {
                 "path": "docs/screenshots/nonprofit-homepage-layout.png",
-                "alt": "Theme Nonprofit homepage with campaign hero, donation progress, impact proof, and support paths",
-                "caption": "Nonprofit homepage"
+                "alt": "Theme Nonprofit Nonprofit Homepage Layout screenshot",
+                "caption": "Nonprofit Homepage Layout rendered with the Theme Nonprofit theme."
             },
             {
                 "path": "docs/screenshots/nonprofit-impact-layout.png",
-                "alt": "Theme Nonprofit impact evidence page with metrics, campaign cards, and supporter stories",
-                "caption": "Impact evidence layout"
+                "alt": "Theme Nonprofit Nonprofit Impact Layout screenshot",
+                "caption": "Nonprofit Impact Layout rendered with the Theme Nonprofit theme."
             }
         ],
         "categories": ["frontend", "themes"]

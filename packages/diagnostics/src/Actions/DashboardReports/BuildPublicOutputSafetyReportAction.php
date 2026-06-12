@@ -24,7 +24,7 @@ final class BuildPublicOutputSafetyReportAction
         $packagesPath ??= base_path('packages');
 
         return DiagnosticsSnapshotCache::remember(
-            'public-output-safety:' . sha1($packagesPath),
+            'public-output-safety:' . hash('sha256', $packagesPath),
             fn (): array => $this->build($packagesPath),
         );
     }

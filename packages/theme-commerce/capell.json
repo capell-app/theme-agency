@@ -131,9 +131,29 @@
                 "caption": "Theme Commerce theme card."
             },
             {
+                "path": "docs/screenshots/commerce-buying-guide-layout.png",
+                "alt": "Theme Commerce Commerce Buying Guide Layout screenshot",
+                "caption": "Commerce Buying Guide Layout rendered with the Theme Commerce theme."
+            },
+            {
+                "path": "docs/screenshots/commerce-campaign-layout.png",
+                "alt": "Theme Commerce Commerce Campaign Layout screenshot",
+                "caption": "Commerce Campaign Layout rendered with the Theme Commerce theme."
+            },
+            {
+                "path": "docs/screenshots/commerce-collection-layout.png",
+                "alt": "Theme Commerce Commerce Collection Layout screenshot",
+                "caption": "Commerce Collection Layout rendered with the Theme Commerce theme."
+            },
+            {
                 "path": "docs/screenshots/commerce-homepage-layout.png",
-                "alt": "Theme Commerce homepage with curated retail headline, buying-path CTAs, and product lifestyle media.",
-                "caption": "Route-backed Commerce homepage rendered through the package theme shell."
+                "alt": "Theme Commerce Commerce Homepage Layout screenshot",
+                "caption": "Commerce Homepage Layout rendered with the Theme Commerce theme."
+            },
+            {
+                "path": "docs/screenshots/commerce-lookbook-layout.png",
+                "alt": "Theme Commerce Commerce Lookbook Layout screenshot",
+                "caption": "Commerce Lookbook Layout rendered with the Theme Commerce theme."
             }
         ],
         "categories": ["frontend", "themes"]

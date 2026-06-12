@@ -128,19 +128,29 @@
                 "caption": "Theme Local Services extension preview"
             },
             {
-                "path": "docs/screenshots/local-services-quote-form-layout.png",
-                "alt": "Theme Local Services quote request form rendered in the Capell local services theme",
-                "caption": "Quote request form"
+                "path": "docs/screenshots/frontend-page-rendered-with-local-services-theme.png",
+                "alt": "Theme Local Services Frontend Page Rendered With Local Services Theme screenshot",
+                "caption": "Frontend Page Rendered With Local Services Theme rendered with the Theme Local Services theme."
             },
             {
                 "path": "docs/screenshots/local-services-homepage-layout.png",
-                "alt": "Theme Local Services homepage with local proof, services, areas, and quote path",
-                "caption": "Local services homepage"
+                "alt": "Theme Local Services Local Services Homepage Layout screenshot",
+                "caption": "Local Services Homepage Layout rendered with the Theme Local Services theme."
             },
             {
-                "path": "docs/screenshots/local-services-service-areas-layout.png",
-                "alt": "Theme Local Services service areas page with postcode coverage and local proof",
-                "caption": "Service areas layout"
+                "path": "docs/screenshots/local-services-job-proof-layout.png",
+                "alt": "Theme Local Services Local Services Job Proof Layout screenshot",
+                "caption": "Local Services Job Proof Layout rendered with the Theme Local Services theme."
+            },
+            {
+                "path": "docs/screenshots/local-services-quote-form-layout.png",
+                "alt": "Theme Local Services Local Services Quote Form Layout screenshot",
+                "caption": "Local Services Quote Form Layout rendered with the Theme Local Services theme."
+            },
+            {
+                "path": "docs/screenshots/local-services-resources-layout.png",
+                "alt": "Theme Local Services Local Services Resources Layout screenshot",
+                "caption": "Local Services Resources Layout rendered with the Theme Local Services theme."
             }
         ],
         "categories": ["frontend", "themes"]

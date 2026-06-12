@@ -124,19 +124,29 @@
                 "caption": "Theme Portfolio extension preview"
             },
             {
-                "path": "docs/screenshots/portfolio-case-study-layout.png",
-                "alt": "Theme Portfolio case-study detail with outcome proof, scope, and enquiry path",
-                "caption": "Case-study detail"
+                "path": "docs/screenshots/frontend-page-rendered-with-portfolio-theme.png",
+                "alt": "Theme Portfolio Frontend Page Rendered With Portfolio Theme screenshot",
+                "caption": "Frontend Page Rendered With Portfolio Theme rendered with the Theme Portfolio theme."
             },
             {
-                "path": "docs/screenshots/portfolio-services-layout.png",
-                "alt": "Theme Portfolio services and enquiry layout rendered in the Capell portfolio theme",
-                "caption": "Services and enquiry layout"
+                "path": "docs/screenshots/portfolio-case-study-layout.png",
+                "alt": "Theme Portfolio Portfolio Case Study Layout screenshot",
+                "caption": "Portfolio Case Study Layout rendered with the Theme Portfolio theme."
             },
             {
                 "path": "docs/screenshots/portfolio-homepage-layout.png",
-                "alt": "Theme Portfolio homepage with work-led hero, selected work, outcome proof, and enquiry path",
-                "caption": "Portfolio homepage"
+                "alt": "Theme Portfolio Portfolio Homepage Layout screenshot",
+                "caption": "Portfolio Homepage Layout rendered with the Theme Portfolio theme."
+            },
+            {
+                "path": "docs/screenshots/portfolio-media-kit-layout.png",
+                "alt": "Theme Portfolio Portfolio Media Kit Layout screenshot",
+                "caption": "Portfolio Media Kit Layout rendered with the Theme Portfolio theme."
+            },
+            {
+                "path": "docs/screenshots/portfolio-newsletter-layout.png",
+                "alt": "Theme Portfolio Portfolio Newsletter Layout screenshot",
+                "caption": "Portfolio Newsletter Layout rendered with the Theme Portfolio theme."
             }
         ],
         "categories": ["frontend", "themes"]
