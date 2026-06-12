@@ -149,16 +149,22 @@ it('declares generated Tailwind output review as a command report capture', func
         ->toContain('theme_colors');
 });
 
-it('declares standalone theme packages extending foundation', function (string $packageDirectory, string $composerName, string $themeKey): void {
+it('declares standalone theme packages as frontend themes', function (string $packageDirectory, string $composerName, string $themeKey): void {
     $manifest = themePackageManifest($packageDirectory);
     $composer = themePackageComposer($packageDirectory);
+    $requires = data_get($manifest, 'dependencies.requires');
+
+    if (! is_array($requires)) {
+        throw new RuntimeException('Theme package manifest dependencies.requires must be an array.');
+    }
 
     expect($manifest['name'])->toBe($composerName)
         ->and($composer['name'])->toBe($composerName)
         ->and($manifest['kind'])->toBe('theme')
         ->and($manifest['themeKey'])->toBe($themeKey)
-        ->and($manifest['extends'])->toBe('capell-app/foundation-theme')
-        ->and($manifest['dependencies']['requires'])->toContain('capell-app/foundation-theme')
+        ->and($manifest['extends'] ?? null)->toBeNull()
+        ->and($requires)->toContain('capell-app/core')
+        ->and($requires)->toContain('capell-app/frontend')
         ->and($manifest['product']['group'])->toBeIn(['Capell Foundation', 'Capell Themes']);
 })->with('standalone theme packages');
 
@@ -183,10 +189,6 @@ dataset('standalone theme packages', function (): array {
         }
 
         if (! is_string($themeKey)) {
-            continue;
-        }
-
-        if (($manifest['extends'] ?? null) !== 'capell-app/foundation-theme') {
             continue;
         }
 

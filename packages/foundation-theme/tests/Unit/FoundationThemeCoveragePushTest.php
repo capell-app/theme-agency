@@ -184,7 +184,7 @@ it('generates tailwind assets from installed vendor assets and validates configu
 });
 
 it('runs foundation tailwind command report generate and package-change listener paths', function (): void {
-    $targetPath = sys_get_temp_dir() . '/capell-foundation-theme-command/frontend.css';
+    $targetPath = storage_path('framework/testing/capell-foundation-theme-command/frontend.css');
 
     $this->artisan(GenerateTailwindAssetsCommand::class, ['--report' => true])
         ->assertSuccessful()
