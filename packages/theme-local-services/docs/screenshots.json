@@ -13,7 +13,7 @@
             "targetType": "filament-resource",
             "target": "ThemeResource:index",
             "required": true,
-            "notes": "Capture with Foundation Theme, Layout Builder, and capell-app/theme-local-services installed in the isolated demo harness.",
+            "notes": "Capture with Capell Frontend default theme, Layout Builder, and capell-app/theme-local-services installed in the isolated demo harness.",
             "useCase": "An administrator confirms the Local Services theme is available for quote-led local operators.",
             "screenshotPath": "packages/theme-local-services/docs/screenshots/theme-admin-list-showing-local-services.png",
             "scenario": "admin-index",

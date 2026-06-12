@@ -636,7 +636,7 @@ it('renders the uncached corporate page inside the declared frontend budget with
 
 it('renders the corporate content listing variant matrix', function (string $variant, string $expectedMarkup): void {
     View::addNamespace('capell-theme-corporate', __DIR__ . '/../../resources/views');
-    View::addNamespace('capell-foundation-theme', __DIR__ . '/../../../foundation-theme/resources/views');
+    View::addNamespace('capell', __DIR__ . '/../../../../../capell-4/packages/frontend/resources/views');
     Lang::addNamespace('capell-theme-corporate', __DIR__ . '/../../resources/lang');
 
     $html = view('capell-theme-corporate::sections.content-listing', [

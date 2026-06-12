@@ -15,7 +15,7 @@
     "namespace": "Capell\\ThemeStudio\\Commerce",
     "surfaces": ["frontend"],
     "dependencies": {
-        "requires": ["capell-app/core", "capell-app/foundation-theme"],
+        "requires": ["capell-app/core", "capell-app/frontend"],
         "supports": [
             "capell-app/blog",
             "capell-app/campaign-studio",
@@ -105,6 +105,6 @@
         ],
         "categories": ["frontend", "themes"]
     },
-    "extends": "capell-app/foundation-theme",
+    "extends": null,
     "themeKey": "commerce"
 }

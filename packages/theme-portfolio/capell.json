@@ -15,7 +15,7 @@
     "namespace": "Capell\\ThemeStudio\\Portfolio",
     "surfaces": ["frontend"],
     "dependencies": {
-        "requires": ["capell-app/core", "capell-app/foundation-theme"],
+        "requires": ["capell-app/core", "capell-app/frontend"],
         "supports": [
             "capell-app/layout-builder",
             "capell-app/frontend-authoring",
@@ -108,7 +108,7 @@
         ],
         "categories": ["frontend", "themes"]
     },
-    "extends": "capell-app/foundation-theme",
+    "extends": null,
     "themeKey": "portfolio",
     "commercial": {
         "proposedLicense": "paid",

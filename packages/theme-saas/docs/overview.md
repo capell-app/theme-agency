@@ -6,22 +6,22 @@ This page documents the renderer-only SaaS theme package from the code that ship
 
 ## What This Package Adds
 
-SaaS is a standalone Capell theme package. It registers the `saas` theme key, extends Foundation Theme, and adds product-focused renderer views for software and subscription sites.
+SaaS is a standalone Capell theme package. It registers the `saas` theme key, extends Capell Frontend default theme, and adds product-focused renderer views for software and subscription sites.
 
 - SaaS theme service provider.
 - Theme renderer/views for SaaS page output.
 - Section Blade views for navigation, hero, features, proof, content listing, comparison, calculator, pricing, docs onboarding, demo request, CTA, footer, and blog.
 - Connected/static guidance for Content Sections-powered pricing detail, Document Lifecycle onboarding/docs, and Form Builder demo capture.
 - Blog index and article Blade views for Blog-aware rendering.
-- Dependency on Foundation Theme.
+- Dependency on Capell Frontend default theme.
 
 ## Developer Notes
 
-Adds a renderer package that uses Foundation Theme runtime contracts while leaving content models unchanged.
+Adds a renderer package that uses Capell Frontend default theme runtime contracts while leaving content models unchanged.
 
 - SaasThemeServiceProvider registers the SaaS renderer.
-- `capell.json` declares `themeKey: "saas"` and `extends: "capell-app/foundation-theme"`.
-- Uses Foundation Theme runtime data and standard section keys, while rendering its own page and section Blade views.
+- `capell.json` declares `themeKey: "saas"` and manifest `extends: null`; Theme Studio runtime inheritance remains `default`.
+- Uses Capell Frontend default theme runtime data and standard section keys, while rendering its own page and section Blade views.
 - Ships Blade resources for the page wrapper, standard theme sections, comparison, calculator, blog section, and blog page views.
 - No migrations, config, routes, models, admin navigation, or package-owned settings are present.
 - Public theme output must not expose package identifiers, signed admin URLs, Filament/editor markers, or other authoring metadata. The package test renders every section and checks for those leak tokens.
@@ -48,16 +48,16 @@ Provides a SaaS visual option for product sites managed through the normal Theme
 
 ## Pitfalls
 
-- Install Layout Builder before Foundation Theme in a disposable harness; Foundation Theme setup expects the layout stack to be available.
-- Install Foundation Theme before using this renderer.
-- Build both frontend and Filament assets. Missing Foundation Theme manifests make screenshots fail even when the Composer install succeeds.
+- Layout Builder is only needed in disposable harnesses that exercise optional layout-area chrome.
+- Install Capell Frontend before using this renderer.
+- Build both frontend and Filament assets. Missing Capell Frontend manifests make screenshots fail even when the Composer install succeeds.
 - Keep Theme Studio settings aligned with `activeTheme: "saas"` and the `saas` preset. Stale settings from another theme can render the wrong token set.
 - Do not install a Studio metapackage; this package installs independently.
 
 ## Verification
 
 - From the repository root, run `vendor/bin/pest packages/theme-saas/tests`. Pest uses the root `phpunit.xml`; this package does not ship its own PHPUnit config.
-- In a disposable Capell app, install only the core stack, Layout Builder, Foundation Theme, and `capell-app/theme-saas`.
+- In a disposable Capell app, install only the core stack, Layout Builder, Capell Frontend default theme, and `capell-app/theme-saas`.
 - Open `/theme-saas-demo` anonymously and scan the response for `capell-theme`, `data-capell-theme`, `theme-saas`, `signed`, `filament`, `editor`, and `/admin`.
 - Capture the screenshots listed in [screenshots.json](screenshots.json).
 
@@ -70,7 +70,7 @@ Provides a SaaS visual option for product sites managed through the normal Theme
 - Tier: premium
 - Bundle: themes
 - Contexts: `frontend`
-- Requires: `capell-app/foundation-theme`
+- Requires: `capell-app/frontend`
 - Optional dependencies: `capell-app/blog`, `capell-app/content-sections`, `capell-app/document-lifecycle`, `capell-app/form-builder`
 
 ## Admin Surfaces

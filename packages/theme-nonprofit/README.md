@@ -14,7 +14,8 @@ or volunteer calls to action.
   `Capell\ThemeStudio\Nonprofit\NonprofitThemeServiceProvider`
 - Demo command:
   `capell:theme-nonprofit-demo {--url=} {--languages=} {--sites=} {--force}`
-- Extends: `capell-app/foundation-theme`
+- Manifest extends: `null`
+- Runtime extends: `default`
 - Database impact: none
 
 ## Why It Helps Your Capell Workflow
@@ -28,7 +29,7 @@ or volunteer calls to action.
 
 ## Best Used With
 
-- [Foundation Theme](../foundation-theme/README.md)
+- [Capell Frontend](https://github.com/capell-app/frontend)
 - [Campaign Studio](../campaign-studio/README.md) for campaign-led pages.
 - [Form Builder](../form-builder/README.md) for volunteer or donation interest
   forms.
@@ -65,7 +66,7 @@ or volunteer calls to action.
 - Adds a frontend theme renderer and console demo command.
 - Adds no migrations, settings, models, package-owned routes, or admin
   resources.
-- Depends on Foundation Theme and reads normal Capell page/theme runtime data.
+- Depends on Capell Frontend default theme and reads normal Capell page/theme runtime data.
 - Optional sections stay guarded when Campaign Studio, Form Builder, Events, or
   Blog are not installed.
 

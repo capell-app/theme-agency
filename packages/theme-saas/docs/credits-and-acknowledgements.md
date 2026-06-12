@@ -16,8 +16,8 @@ Package role: Conversion-led SaaS renderer for Capell theme system
 ## Capell Packages Used Here
 
 - [Capell Core](https://docs.capell.app) supplies the Capell-side contracts, surfaces, or runtime that Theme SaaS builds on.
-- [Foundation Theme](../../foundation-theme/README.md) supplies the Capell-side contracts, surfaces, or runtime that Theme SaaS builds on.
-- [Foundation Theme](../../foundation-theme/README.md) supplies the Capell-side contracts, surfaces, or runtime that Theme SaaS builds on.
+- [Capell Frontend](https://github.com/capell-app/frontend) supplies the Capell-side contracts, surfaces, or runtime that Theme SaaS builds on.
+- [Capell Frontend](https://github.com/capell-app/frontend) supplies the Capell-side contracts, surfaces, or runtime that Theme SaaS builds on.
 
 ## What We Especially Appreciate
 

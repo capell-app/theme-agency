@@ -14,7 +14,8 @@ requests.
   `Capell\ThemeStudio\LocalServices\LocalServicesThemeServiceProvider`
 - Demo command:
   `capell:theme-local-services-demo {--url=} {--languages=} {--sites=} {--force}`
-- Extends: `capell-app/foundation-theme`
+- Manifest extends: `null`
+- Runtime extends: `default`
 - Database impact: none
 
 ## Why It Helps Your Capell Workflow
@@ -28,7 +29,7 @@ requests.
 
 ## Best Used With
 
-- [Foundation Theme](../foundation-theme/README.md)
+- [Capell Frontend](https://github.com/capell-app/frontend)
 - [Form Builder](../form-builder/README.md) for quote requests.
 - [Blog](../blog/README.md) for advice/resources.
 - [SEO Suite](../seo-suite/README.md) for local service discovery.
@@ -66,7 +67,7 @@ requests.
 - Adds a frontend theme renderer and console demo command.
 - Adds no migrations, settings, models, package-owned routes, or admin
   resources.
-- Depends on Foundation Theme and reads normal Capell page/theme runtime data.
+- Depends on Capell Frontend default theme and reads normal Capell page/theme runtime data.
 - Optional sections stay guarded when Blog or Form Builder are not installed.
 
 ## Docs

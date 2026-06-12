@@ -69,7 +69,7 @@ final class EducationThemeServiceProvider extends ServiceProvider
             ],
             assets: ['css' => self::GENERATED_FRONTEND_CSS],
             runtime: FrontendRuntime::Blade,
-            // Foundation Theme registers the runtime inheritance key as "default"; capell.json records the package dependency.
+            // Capell Frontend registers the built-in "default" runtime inheritance key.
             extends: 'default',
         );
     }

@@ -28,7 +28,7 @@ understand what I offer, trust the proof, and stay connected?" It gives a
 portfolio site a stronger structure than a generic page template.
 
 For developers, the package keeps portfolio presentation separate from
-Foundation Theme. Case-study, media, and newsletter sections only rely on
+Capell Frontend. Case-study, media, and newsletter sections only rely on
 optional packages when those packages are installed.
 
 ## Runtime Shape
@@ -36,8 +36,7 @@ optional packages when those packages are installed.
 - `PortfolioThemeServiceProvider` registers the theme when
   `capell-app/theme-portfolio` is installed.
 - Theme Studio runtime inheritance uses `extends: default`; package metadata
-  still records `capell-app/foundation-theme` as the installable Foundation
-  dependency.
+  requires `capell-app/frontend` for the built-in default fallback.
 - `DemoCommand` calls `InstallPortfolioThemeDemoAction`.
 - Core `ViewSectionRenderer` extra view data guards optional Content Sections, Media Library,
   and Newsletter sections.
@@ -46,7 +45,7 @@ optional packages when those packages are installed.
 ## Data And Persistence
 
 This package owns no database tables, settings, models, or routes. It reads
-Foundation Theme runtime data and Capell page content.
+Capell Frontend runtime data and Capell page content.
 
 ## Product Direction
 

@@ -6,18 +6,18 @@ Product-led commerce theme for Capell, shipped under the existing `commerce` the
 
 - Package: `capell-app/theme-commerce`
 - Namespace: `Capell\ThemeStudio\Commerce\`
-- Capell dependencies: `capell-app/core`, `capell-app/foundation-theme`
+- Capell dependencies: `capell-app/core`, `capell-app/frontend`
 
 ## Why It Helps Your Capell Workflow
 
 - Provides Editorial Commerce renderer views for catalog and retail sites built on Capell.
 - Helps owners launch product-led pages with product finding, collections, product grids, comparison, catalog, proof, and resource surfaces.
 - Lets hero trust badges come from page render data, with translated retail defaults when no badges are provided.
-- Gives developers a focused theme package that reuses Foundation Theme conventions instead of hard-coding product layouts into content.
+- Gives developers a focused theme package that reuses Capell Frontend default theme conventions instead of hard-coding product layouts into content.
 
 ## Best Used With
 
-- [Foundation Theme](../foundation-theme/README.md)
+- [Capell Frontend](https://github.com/capell-app/frontend)
 - [Blog](../blog/README.md)
 - [Campaign Studio](../campaign-studio/README.md)
 - [Media Library](../media-library/README.md)
@@ -33,7 +33,7 @@ Product-led commerce theme for Capell, shipped under the existing `commerce` the
 
 ## Why It Matters
 
-**For developers:** Adds a renderer package that uses Foundation Theme runtime contracts while leaving content models unchanged.
+**For developers:** Adds a renderer package that uses Capell Frontend default theme runtime contracts while leaving content models unchanged.
 
 **For teams:** Provides a commerce-oriented visual option for product sites managed through the normal Theme admin page and install flow.
 
@@ -44,7 +44,7 @@ This package makes its Composer dependencies visible because they are part of th
 **Capell packages used here**
 
 - [Capell Core](https://github.com/capell-app/core)
-- [Capell Foundation Theme](../foundation-theme/README.md)
+- [Capell Frontend](https://github.com/capell-app/frontend)
 - [Capell Blog](../blog/README.md)
 - [Capell Shopify Commerce](../shopify-commerce/README.md)
 
@@ -63,8 +63,8 @@ Screenshots are generated from [docs/screenshots.json](docs/screenshots.json) du
 ## Technical Shape
 
 - CommerceThemeServiceProvider registers the Editorial Commerce renderer.
-- `capell.json` declares `themeKey: "commerce"` and `extends: "capell-app/foundation-theme"`.
-- Uses Foundation Theme runtime data and standard section keys, while rendering its own page and section Blade views.
+- `capell.json` declares `themeKey: "commerce"` and manifest `extends: null`; Theme Studio runtime inheritance remains `default`.
+- Uses Capell Frontend default theme runtime data and standard section keys, while rendering its own page and section Blade views.
 - Ships Blade resources for the page wrapper, product discovery sections, catalog panel, comparison, proof, blog teaser, CTA, and footer views.
 - No migrations, config, routes, models, admin navigation, or package-owned settings are present.
 - Public theme output must stay free of package identifiers, signed admin URLs, Filament/editor markers, and other authoring metadata.
@@ -95,7 +95,7 @@ Screenshots are generated from [docs/screenshots.json](docs/screenshots.json) du
 - Seed the Editorial Commerce preview pages with `php artisan capell:theme-commerce-demo --url=https://demo.test --sites=Demo --languages=en --force`.
 - The Extensions installer demo checkbox and full Capell demo install use the same manifest demo command path.
 - In this repository, verify package changes with `vendor/bin/pest`; do not use `php artisan`.
-- For screenshots, use a disposable Capell app with the core stack, Layout Builder, Foundation Theme, and only this theme package installed.
+- For screenshots, use a disposable Capell app with the core stack, Layout Builder, Capell Frontend default theme, and only this theme package installed.
 
 ## Admin And Access
 
@@ -103,8 +103,8 @@ Screenshots are generated from [docs/screenshots.json](docs/screenshots.json) du
 
 ## Common Pitfalls
 
-- Install Layout Builder before Foundation Theme in the disposable harness.
-- Install Foundation Theme before using this renderer.
+- Layout Builder is only needed in disposable harnesses that exercise optional layout-area chrome.
+- Install Capell Frontend before using this renderer.
 - Build both frontend and Filament assets before browser capture.
 - Keep Theme Studio settings aligned with the `commerce` preset; stale settings from another theme can make screenshots misleading.
 - Pass `badges` into the hero section data when a page needs store-specific trust signals; otherwise the translated retail defaults render.

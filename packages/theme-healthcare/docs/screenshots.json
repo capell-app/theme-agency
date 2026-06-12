@@ -14,7 +14,7 @@
             "target": "/theme-healthcare",
             "required": false,
             "user": false,
-            "notes": "Capture a seeded clinic page after installing capell-app/theme-healthcare and building the Foundation Theme/frontend assets. Capture the seeded Healthcare theme route anonymously instead of the shared theme-gallery route.",
+            "notes": "Capture a seeded clinic page after installing capell-app/theme-healthcare and building the Capell Frontend assets. Capture the seeded Healthcare theme route anonymously instead of the shared theme-gallery route.",
             "useCase": "A patient sees an appointment-led journey through utility bar, hero, service finder, clinicians, booking, events, proof, resources, contact, CTA, and footer.",
             "screenshotPath": "packages/theme-healthcare/docs/screenshots/frontend-page-rendered-with-healthcare-theme.png",
             "scenario": "frontend-page",

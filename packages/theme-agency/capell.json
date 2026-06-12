@@ -6,7 +6,7 @@
     "kind": "theme",
     "capellApiVersion": "^4.0",
     "version": "4.x-dev",
-    "description": "Theme Agency turns a Capell site into a confident creative portfolio. It ships an expressive page system — full-bleed launch hero, animated proof wall, project showcase, and a conversion-focused brief CTA — built to make studio and agency work look like the work, not a template. Three presets (Signal, Gallery, Atelier) re-skin every section from energetic high-contrast to refined editorial neutrals, all driven by Theme Studio tokens with zero code. Built on Foundation Theme contracts, it stays fast, cache-aware, and safe for public output, so it drops into the standard Capell theme workflow.",
+    "description": "Theme Agency turns a Capell site into a confident creative portfolio. It ships an expressive page system — full-bleed launch hero, animated proof wall, project showcase, and a conversion-focused brief CTA — built to make studio and agency work look like the work, not a template. Three presets (Signal, Gallery, Atelier) re-skin every section from energetic high-contrast to refined editorial neutrals, all driven by Theme Studio tokens with zero code. Built on the built-in default frontend contracts, it stays fast, cache-aware, and safe for public output, so it drops into the standard Capell theme workflow.",
     "product": {
         "group": "Capell Themes",
         "tier": "premium",
@@ -15,7 +15,7 @@
     "namespace": "Capell\\ThemeStudio\\Agency",
     "surfaces": ["frontend"],
     "dependencies": {
-        "requires": ["capell-app/core", "capell-app/foundation-theme"],
+        "requires": ["capell-app/core", "capell-app/frontend"],
         "supports": [],
         "conflicts": []
     },
@@ -81,7 +81,7 @@
     },
     "marketplace": {
         "summary": "A bold, motion-led theme for creative studios and marketing agencies — campaign hero, case-study proof, and a filterable work showcase, with three presets from high-contrast Signal to editorial Atelier.",
-        "description": "Theme Agency turns a Capell site into a confident creative portfolio. It ships an expressive page system — full-bleed launch hero, animated proof wall, project showcase, and a conversion-focused brief CTA — built to make studio and agency work look like the work, not a template. Three presets (Signal, Gallery, Atelier) re-skin every section from energetic high-contrast to refined editorial neutrals, all driven by Theme Studio tokens with zero code. Built on Foundation Theme contracts, it stays fast, cache-aware, and safe for public output, so it drops into the standard Capell theme workflow.",
+        "description": "Theme Agency turns a Capell site into a confident creative portfolio. It ships an expressive page system — full-bleed launch hero, animated proof wall, project showcase, and a conversion-focused brief CTA — built to make studio and agency work look like the work, not a template. Three presets (Signal, Gallery, Atelier) re-skin every section from energetic high-contrast to refined editorial neutrals, all driven by Theme Studio tokens with zero code. Built on the built-in default frontend contracts, it stays fast, cache-aware, and safe for public output, so it drops into the standard Capell theme workflow.",
         "screenshots": [
             {
                 "path": "docs/assets/marketplace/extension-card.jpg",
@@ -101,6 +101,6 @@
         ],
         "categories": ["frontend", "themes"]
     },
-    "extends": "capell-app/foundation-theme",
+    "extends": null,
     "themeKey": "agency"
 }

@@ -29,7 +29,7 @@ the structure of a serious resource library without asking the owner to plan
 renderer internals.
 
 For developers, the package keeps editorial presentation separate from
-Foundation Theme. Optional package integrations are checked at render time
+Capell Frontend default theme. Optional package integrations are checked at render time
 instead of assumed.
 
 ## Runtime Shape
@@ -46,7 +46,7 @@ instead of assumed.
 ## Data And Persistence
 
 This package owns no database tables, settings, models, or routes. It reads
-Foundation Theme runtime data and Capell page content.
+Capell Frontend default theme runtime data and Capell page content.
 
 ## Screenshot Coverage
 

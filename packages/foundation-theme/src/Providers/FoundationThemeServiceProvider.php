@@ -24,7 +24,6 @@ use Capell\Core\ThemeStudio\Rendering\BladeThemeRenderer;
 use Capell\Core\ThemeStudio\Rendering\ViewSectionRenderer;
 use Capell\Core\ThemeStudio\Theme\ThemeRegistry;
 use Capell\FoundationTheme\Console\Commands\DemoCommand;
-use Capell\FoundationTheme\Console\Commands\GenerateTailwindAssetsCommand;
 use Capell\FoundationTheme\Console\Commands\SetupCommand;
 use Capell\FoundationTheme\Enums\FoundationThemeAssetEnum;
 use Capell\FoundationTheme\Filament\Settings\FoundationThemeSettingsSchema;
@@ -36,7 +35,6 @@ use Capell\FoundationTheme\Support\Assets\FoundationThemeAssetContributor;
 use Capell\FoundationTheme\Support\Blade\BladeDirectives;
 use Capell\FoundationTheme\Support\Interceptors\Themes\FoundationThemeInterceptor;
 use Capell\FoundationTheme\Support\Media\CapellUrlGenerator;
-use Capell\FoundationTheme\Support\Tailwind\TailwindAssetsGenerator;
 use Capell\FoundationTheme\View\Components\Actions as ActionsComponent;
 use Capell\FoundationTheme\View\Components\App\Body as AppBodyComponent;
 use Capell\FoundationTheme\View\Components\Footer\Index as FooterIndexComponent;
@@ -57,7 +55,6 @@ use Capell\Frontend\Data\FrontendAssetData;
 use Capell\LayoutBuilder\Enums\FrontendComponentKeyEnum;
 use Capell\LayoutBuilder\Support\LayoutAreas\LayoutAreaRegistry;
 use Illuminate\Contracts\View\Factory as ViewFactory;
-use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Event;
 use Livewire\Livewire;
@@ -123,7 +120,6 @@ final class FoundationThemeServiceProvider extends AbstractPackageServiceProvide
             ->hasTranslations()
             ->hasCommands([
                 DemoCommand::class,
-                GenerateTailwindAssetsCommand::class,
                 SetupCommand::class,
             ]);
     }
@@ -155,9 +151,6 @@ final class FoundationThemeServiceProvider extends AbstractPackageServiceProvide
 
     public function packageRegistered(): void
     {
-        $this->app->singleton('capell.tailwind.generator', fn (): TailwindAssetsGenerator => new TailwindAssetsGenerator(
-            $this->app->make(Filesystem::class),
-        ));
         $this->app->scoped(FoundationThemeAssetContributor::class);
 
         $this->registerVendorNpmDependencies();

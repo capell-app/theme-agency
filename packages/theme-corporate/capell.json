@@ -15,7 +15,7 @@
     "namespace": "Capell\\ThemeStudio\\Corporate",
     "surfaces": ["frontend"],
     "dependencies": {
-        "requires": ["capell-app/core", "capell-app/foundation-theme"],
+        "requires": ["capell-app/core", "capell-app/frontend"],
         "supports": [],
         "conflicts": []
     },
@@ -98,6 +98,6 @@
         ],
         "categories": ["frontend", "themes"]
     },
-    "extends": "capell-app/foundation-theme",
+    "extends": null,
     "themeKey": "corporate"
 }

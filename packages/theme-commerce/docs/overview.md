@@ -6,22 +6,22 @@ This page documents the renderer-only Editorial Commerce theme package from the 
 
 ## What This Package Adds
 
-Editorial Commerce is a standalone Capell theme package. It registers the `commerce` theme key, extends Foundation Theme, and adds product-focused renderer views for catalog and retail sites.
+Editorial Commerce is a standalone Capell theme package. It registers the `commerce` theme key, extends Capell Frontend default theme, and adds product-focused renderer views for catalog and retail sites.
 
 - Editorial Commerce theme service provider.
 - Theme renderer/views for Editorial Commerce page output.
 - Section Blade views for navigation, hero, product finder, collections, product grid, comparison, catalog, proof, blog teaser, CTA, and footer.
 - Catalog and blog teaser renderers that receive optional Shopify Commerce and Blog availability before Blade renders.
 - Hero trust badges can be supplied by page render data, with translated retail fallback badges.
-- Dependency on Foundation Theme.
+- Dependency on Capell Frontend default theme.
 
 ## Developer Notes
 
-Adds a renderer package that uses Foundation Theme runtime contracts while leaving content models unchanged.
+Adds a renderer package that uses Capell Frontend default theme runtime contracts while leaving content models unchanged.
 
 - CommerceThemeServiceProvider registers the Editorial Commerce renderer.
-- `capell.json` declares `themeKey: "commerce"` and `extends: "capell-app/foundation-theme"`.
-- Uses Foundation Theme runtime data and standard section keys, while rendering its own page and section Blade views.
+- `capell.json` declares `themeKey: "commerce"` and manifest `extends: null`; Theme Studio runtime inheritance remains `default`.
+- Uses Capell Frontend default theme runtime data and standard section keys, while rendering its own page and section Blade views.
 - Ships Blade resources for the page wrapper, product discovery sections, catalog panel, comparison, proof, blog teaser, CTA, and footer views.
 - Translates hero badge and catalog highlight copy through `capell-theme-commerce::generic`.
 - No migrations, config, routes, models, admin navigation, or package-owned settings are present.
@@ -51,16 +51,16 @@ The committed Capell runner-backed gallery covers the full `docs/screenshots.jso
 
 ## Pitfalls
 
-- Install Layout Builder before Foundation Theme in a disposable harness; Foundation Theme setup expects the layout stack to be available.
-- Install Foundation Theme before using this renderer.
-- Build both frontend and Filament assets. Missing Foundation Theme manifests make screenshots fail even when the Composer install succeeds.
+- Layout Builder is only needed in disposable harnesses that exercise optional layout-area chrome.
+- Install Capell Frontend before using this renderer.
+- Build both frontend and Filament assets. Missing Capell Frontend manifests make screenshots fail even when the Composer install succeeds.
 - Keep Theme Studio settings aligned with `activeTheme: "commerce"` and the `commerce` preset. Stale settings from another theme can render the wrong token set.
 - Do not install a Studio metapackage; this package installs independently.
 
 ## Verification
 
 - Run `vendor/bin/pest packages/theme-commerce/tests --configuration=phpunit.xml`.
-- In a disposable Capell app, install only the core stack, Layout Builder, Foundation Theme, and `capell-app/theme-commerce`.
+- In a disposable Capell app, install only the core stack, Layout Builder, Capell Frontend default theme, and `capell-app/theme-commerce`.
 - Open `/theme-commerce-demo` anonymously and scan the response for `capell-theme`, `data-capell-theme`, `theme-commerce`, `signed`, `filament`, `editor`, and `/admin`.
 - Capture the screenshots listed in [screenshots.json](screenshots.json).
 
@@ -73,7 +73,7 @@ The committed Capell runner-backed gallery covers the full `docs/screenshots.jso
 - Tier: premium
 - Bundle: themes
 - Contexts: `frontend`
-- Requires: `capell-app/foundation-theme`
+- Requires: `capell-app/frontend`
 - Optional dependencies: `capell-app/blog`, `capell-app/campaign-studio`, `capell-app/media-library`, `capell-app/shopify-commerce`.
 
 ## Admin Surfaces

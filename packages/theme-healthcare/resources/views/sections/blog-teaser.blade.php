@@ -12,7 +12,7 @@
 @endphp
 
 @if (in_array($section->variant ?? null, ['gallery', 'pathways', 'spotlight'], true))
-    @include('capell-foundation-theme::theme.sections.content-listing', ['section' => $section])
+    @include('capell::themes.default.sections.content-listing', ['section' => $section])
 @else
     <section class="healthcare-resources bg-[var(--healthcare-surface)]">
         <div class="px-6">

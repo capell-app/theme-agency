@@ -62,7 +62,7 @@ final class KnowledgeThemeServiceProvider extends ServiceProvider
             ],
             assets: ['css' => 'vendor/capell/themes/knowledge.css'],
             runtime: FrontendRuntime::Blade,
-            // Foundation Theme registers the runtime inheritance key as "default"; capell.json records the package dependency.
+            // Capell Frontend registers the built-in "default" runtime inheritance key.
             extends: 'default',
         );
     }

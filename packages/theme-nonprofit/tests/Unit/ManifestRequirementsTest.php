@@ -9,7 +9,8 @@ it('declares the required first-party theme manifest boundaries', function (): v
     $composer = capell_json_file_array(__DIR__ . '/../../composer.json');
 
     expect($manifest['themeKey'])->toBe('nonprofit')
-        ->and($manifest['extends'])->toBe('capell-app/foundation-theme')
+        ->and($manifest['extends'])->toBeNull()
+        ->and(data_get($manifest, 'dependencies.requires'))->toContain('capell-app/frontend')
         ->and($manifest['database']['migrations'])->toBeFalse()
         ->and($manifest['providers']['runtime'])->toContain(NonprofitThemeServiceProvider::class)
         ->and($manifest['marketplace']['summary'])->toBe('A premium charity, NGO, and civic theme that moves visitors from your mission to a clear support action — donate, volunteer, or follow — with impact proof, live campaign progress, and transparent annual-report sections built in.')

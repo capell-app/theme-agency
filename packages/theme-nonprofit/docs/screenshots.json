@@ -13,7 +13,7 @@
             "targetType": "filament-resource",
             "target": "ThemeResource:index",
             "required": true,
-            "notes": "Capture with Foundation Theme, Layout Builder, and capell-app/theme-nonprofit installed in the isolated demo harness.",
+            "notes": "Capture with Capell Frontend default theme, Layout Builder, and capell-app/theme-nonprofit installed in the isolated demo harness.",
             "useCase": "An administrator confirms the Nonprofit theme is available for charity, campaign, and civic sites.",
             "screenshotPath": "packages/theme-nonprofit/docs/screenshots/theme-admin-list-showing-nonprofit.png",
             "scenario": "admin-index",

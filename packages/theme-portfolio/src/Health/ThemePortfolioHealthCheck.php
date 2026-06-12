@@ -176,8 +176,14 @@ final class ThemePortfolioHealthCheck implements ChecksExtensionHealth
             $issues[] = 'Theme key does not match the service provider theme key.';
         }
 
-        if (($manifest['extends'] ?? null) !== 'capell-app/foundation-theme') {
-            $issues[] = 'Manifest must declare the Foundation Theme package dependency.';
+        if (($manifest['extends'] ?? null) !== null) {
+            $issues[] = 'Manifest must not declare package-level theme inheritance; the default fallback lives in Capell Frontend.';
+        }
+
+        $requires = data_get($manifest, 'dependencies.requires', []);
+
+        if (! is_array($requires) || ! in_array('capell-app/frontend', $requires, true)) {
+            $issues[] = 'Manifest must require Capell Frontend for built-in default theme fallbacks.';
         }
 
         $surfaces = $manifest['surfaces'] ?? [];

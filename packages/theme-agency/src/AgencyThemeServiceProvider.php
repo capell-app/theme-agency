@@ -178,7 +178,7 @@ class AgencyThemeServiceProvider extends ServiceProvider
             ],
             assets: ['css' => self::GENERATED_FRONTEND_CSS],
             runtime: FrontendRuntime::Blade,
-            // Theme Studio inherits section fallbacks from the runtime default; capell.json keeps package-level inheritance on Foundation Theme.
+            // Theme Studio inherits section fallbacks from the runtime default; capell.json no longer declares package-level inheritance because the default fallback lives in capell-app/frontend.
             extends: 'default',
         );
     }

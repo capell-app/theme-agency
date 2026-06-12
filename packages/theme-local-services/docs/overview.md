@@ -27,7 +27,7 @@ where we work, why they should trust us, and how they request a quote?" It gives
 that journey a purpose-built structure.
 
 For developers, the package keeps service-business presentation separate from
-Foundation Theme. Quote and resource sections only rely on Form Builder or Blog
+Capell Frontend default theme. Quote and resource sections only rely on Form Builder or Blog
 when those packages are installed.
 
 ## Runtime Shape
@@ -41,7 +41,7 @@ when those packages are installed.
 ## Data And Persistence
 
 This package owns no database tables, settings, models, or routes. It reads
-Foundation Theme runtime data and Capell page content.
+Capell Frontend default theme runtime data and Capell page content.
 
 ## Screenshot Plan
 

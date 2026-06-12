@@ -25,7 +25,7 @@ mission, see proof of impact, and take the next supporter action?" It gives
 campaign and community pages a clear structure without custom theme work.
 
 For developers, the package keeps impact-led presentation separate from
-Foundation Theme. Campaign, form, event, and story sections only rely on
+Capell Frontend default theme. Campaign, form, event, and story sections only rely on
 optional packages when those packages are installed.
 
 ## Runtime Shape
@@ -42,7 +42,7 @@ optional packages when those packages are installed.
 ## Data And Persistence
 
 This package owns no database tables, settings, models, or routes. It reads
-Foundation Theme runtime data and Capell page content.
+Capell Frontend default theme runtime data and Capell page content.
 
 ## Screenshot Plan
 

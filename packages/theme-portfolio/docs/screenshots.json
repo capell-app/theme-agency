@@ -13,7 +13,7 @@
             "targetType": "filament-resource",
             "target": "ThemeResource:index",
             "required": true,
-            "notes": "Capture with Foundation Theme, Layout Builder, and capell-app/theme-portfolio installed in the isolated demo harness.",
+            "notes": "Capture with Capell Frontend default theme, Layout Builder, and capell-app/theme-portfolio installed in the isolated demo harness.",
             "useCase": "An administrator confirms the Portfolio theme is available for a premium studio or case-study site.",
             "screenshotPath": "packages/theme-portfolio/docs/screenshots/theme-admin-list-showing-portfolio.png",
             "scenario": "admin-index",

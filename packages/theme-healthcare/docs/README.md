@@ -13,8 +13,8 @@ Start at the [package README](../README.md) when deciding whether to install thi
 
 ## Read Next
 
-| Related doc                                                 | Why                                                   |
-| ----------------------------------------------------------- | ----------------------------------------------------- |
-| [Repository package docs](../../../docs/README.md)          | Cross-package workflow index and install-order notes. |
-| [Foundation Theme](../../foundation-theme/docs/overview.md) | Neighboring package in the same Capell workflow.      |
-| [Theme Agency](../../theme-agency/docs/overview.md)         | Neighboring package in the same Capell workflow.      |
+| Related doc                                               | Why                                                   |
+| --------------------------------------------------------- | ----------------------------------------------------- |
+| [Repository package docs](../../../docs/README.md)        | Cross-package workflow index and install-order notes. |
+| [Capell Frontend](https://github.com/capell-app/frontend) | Neighboring package in the same Capell workflow.      |
+| [Theme Agency](../../theme-agency/docs/overview.md)       | Neighboring package in the same Capell workflow.      |

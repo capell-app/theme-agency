@@ -112,8 +112,7 @@ it('registers foundation theme provider runtime services and package boot hooks'
     $provider->packageRegistered();
     $provider->packageBooted();
 
-    capell_expect(resolve('capell.tailwind.generator'))->toBeInstanceOf(TailwindAssetsGenerator::class)
-        ->and(config('media-library.url_generator'))->toBe(CapellUrlGenerator::class);
+    capell_expect(config('media-library.url_generator'))->toBe(CapellUrlGenerator::class);
 });
 
 it('collects default tailwind assets without writing files', function (): void {

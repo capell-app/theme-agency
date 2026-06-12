@@ -6,17 +6,17 @@ Product-led SaaS theme for Capell, shipped under the existing `saas` theme key.
 
 - Package: `capell-app/theme-saas`
 - Namespace: `Capell\ThemeStudio\Saas\`
-- Capell dependencies: `capell-app/core`, `capell-app/foundation-theme`
+- Capell dependencies: `capell-app/core`, `capell-app/frontend`
 
 ## Why It Helps Your Capell Workflow
 
 - Provides SaaS renderer views for software and subscription sites built on Capell.
 - Helps owners launch product-led pages with feature discovery, proof, comparison, calculator, and insight surfaces.
-- Gives developers a focused theme package that reuses Foundation Theme conventions instead of hard-coding product layouts into content.
+- Gives developers a focused theme package that reuses Capell Frontend default theme conventions instead of hard-coding product layouts into content.
 
 ## Best Used With
 
-- [Foundation Theme](../foundation-theme/README.md)
+- [Capell Frontend](https://github.com/capell-app/frontend)
 - [Content Sections](../content-sections/README.md) for richer pricing and plan detail.
 - [Document Lifecycle](../document-lifecycle/README.md) for onboarding/docs workflows.
 - [Form Builder](../form-builder/README.md) for demo or trial capture.
@@ -32,7 +32,7 @@ Product-led SaaS theme for Capell, shipped under the existing `saas` theme key.
 
 ## Why It Matters
 
-**For developers:** Adds a renderer package that uses Foundation Theme runtime contracts while leaving content models unchanged.
+**For developers:** Adds a renderer package that uses Capell Frontend default theme runtime contracts while leaving content models unchanged.
 
 **For teams:** Provides a SaaS-oriented visual option for product sites managed through the normal Theme admin page and install flow.
 
@@ -43,7 +43,7 @@ This package makes its Composer dependencies visible because they are part of th
 **Capell packages used here**
 
 - [Capell Core](https://github.com/capell-app/core)
-- [Capell Foundation Theme](../foundation-theme/README.md)
+- [Capell Frontend](https://github.com/capell-app/frontend)
 
 **Open-source packages used here**
 
@@ -60,8 +60,8 @@ Screenshots are generated from [docs/screenshots.json](docs/screenshots.json) du
 ## Technical Shape
 
 - SaasThemeServiceProvider registers the SaaS renderer.
-- `capell.json` declares `themeKey: "saas"` and `extends: "capell-app/foundation-theme"`.
-- Uses Foundation Theme runtime data and standard section keys, while rendering its own page and section Blade views.
+- `capell.json` declares `themeKey: "saas"` and manifest `extends: null`; Theme Studio runtime inheritance remains `default`.
+- Uses Capell Frontend default theme runtime data and standard section keys, while rendering its own page and section Blade views.
 - Ships Blade resources for the page wrapper, standard theme sections, comparison, calculator, blog section, and blog page views.
 - No migrations, config, routes, models, admin navigation, or package-owned settings are present.
 - Public theme output must stay free of package identifiers, signed admin URLs, Filament/editor markers, and other authoring metadata.
@@ -91,7 +91,7 @@ Screenshots are generated from [docs/screenshots.json](docs/screenshots.json) du
 - Seed the SaaS preview pages with `php artisan capell:theme-saas-demo --url=https://demo.test --sites=Demo --languages=en --force`.
 - The Extensions installer demo checkbox and full Capell demo install use the same manifest demo command path.
 - In this repository, verify package changes with `vendor/bin/pest`; do not use `php artisan`.
-- For screenshots, use a disposable Capell app with the core stack, Layout Builder, Foundation Theme, and only this theme package installed.
+- For screenshots, use a disposable Capell app with the core stack, Layout Builder, Capell Frontend default theme, and only this theme package installed.
 
 ## Admin And Access
 
@@ -99,8 +99,8 @@ Screenshots are generated from [docs/screenshots.json](docs/screenshots.json) du
 
 ## Common Pitfalls
 
-- Install Layout Builder before Foundation Theme in the disposable harness.
-- Install Foundation Theme before using this renderer.
+- Layout Builder is only needed in disposable harnesses that exercise optional layout-area chrome.
+- Install Capell Frontend before using this renderer.
 - Build both frontend and Filament assets before browser capture.
 - Keep Theme Studio settings aligned with the `saas` preset; stale settings from another theme can make screenshots misleading.
 - Do not install a Studio metapackage; this package installs independently.

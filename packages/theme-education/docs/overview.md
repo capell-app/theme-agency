@@ -27,7 +27,7 @@ learn, why they should trust us, and how they enrol?" It gives that site shape
 without asking the owner to understand renderer contracts.
 
 For developers, the package keeps education presentation separate from
-Foundation Theme. It registers through Capell theme APIs, ships no schema, and
+Capell Frontend default theme. It registers through Capell theme APIs, ships no schema, and
 can be tested as a package.
 
 ## Runtime Shape
@@ -42,7 +42,7 @@ can be tested as a package.
 ## Data And Persistence
 
 This package owns no database tables, settings, models, or routes. It reads
-Foundation Theme runtime data and Capell page content.
+Capell Frontend default theme runtime data and Capell page content.
 
 ## Screenshot Coverage
 

@@ -14,7 +14,8 @@ enrolment.
   `Capell\ThemeStudio\Education\EducationThemeServiceProvider`
 - Demo command:
   `capell:theme-education-demo {--url=} {--languages=} {--sites=} {--force}`
-- Extends: `capell-app/foundation-theme`
+- Manifest extends: `null`
+- Runtime extends: `default`
 - Database impact: none
 
 ## Why It Helps Your Capell Workflow
@@ -26,11 +27,11 @@ enrolment.
   Builder workflow instead of commissioning a custom frontend for every course
   catalogue.
 - Developers get a package-scoped renderer and demo installer without changing
-  Foundation Theme or Capell core rendering contracts.
+  Capell Frontend default theme or Capell core rendering contracts.
 
 ## Best Used With
 
-- [Foundation Theme](../foundation-theme/README.md)
+- [Capell Frontend](https://github.com/capell-app/frontend)
 - [Blog](../blog/README.md) for resources and learning content.
 - [Events](../events/README.md) for open days, sessions, and course events.
 - [Form Builder](../form-builder/README.md) for enrolment or enquiry CTAs.
@@ -68,7 +69,7 @@ enrolment.
 - Adds a frontend theme renderer and console demo command.
 - Adds no migrations, settings, models, package-owned routes, or admin
   resources.
-- Depends on Foundation Theme and reads normal Capell page/theme runtime data.
+- Depends on Capell Frontend default theme and reads normal Capell page/theme runtime data.
 - Optional sections degrade through package-aware renderer integration checks
   when Blog, Events, or Form Builder are not installed.
 - Course catalogue cards, event defaults, and instructor role labels use package

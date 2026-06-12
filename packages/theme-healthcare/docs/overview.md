@@ -6,22 +6,22 @@ This page documents the renderer-only Editorial Healthcare theme package from th
 
 ## What This Package Adds
 
-Editorial Healthcare is a standalone Capell theme package. It registers the `healthcare` theme key, extends Foundation Theme, and adds appointment-led clinical renderer views for clinics and healthcare providers.
+Editorial Healthcare is a standalone Capell theme package. It registers the `healthcare` theme key, extends Capell Frontend default theme, and adds appointment-led clinical renderer views for clinics and healthcare providers.
 
 - Editorial Healthcare theme service provider.
 - Theme renderer/views for Editorial Healthcare page output.
 - Section Blade views for utility bar, navigation, appointment hero, service finder, services, clinicians, booking, events, proof, comparison, resources, contact, CTA, and footer.
 - Booking, event, and blog teaser renderers that receive optional Form Builder, Events, and Blog availability before Blade renders.
 - A public skip-link target, translated event carousel controls, and image loading attributes for hero, clinician, service, and resource card images.
-- Dependency on Foundation Theme.
+- Dependency on Capell Frontend default theme.
 
 ## Developer Notes
 
-Adds a renderer package that uses Foundation Theme runtime contracts while leaving content models unchanged.
+Adds a renderer package that uses Capell Frontend default theme runtime contracts while leaving content models unchanged.
 
 - HealthcareThemeServiceProvider registers the Editorial Healthcare renderer.
-- `capell.json` declares `themeKey: "healthcare"` and `extends: "capell-app/foundation-theme"`.
-- Uses Foundation Theme runtime data and standard section keys, while rendering its own page and section Blade views.
+- `capell.json` declares `themeKey: "healthcare"` and manifest `extends: null`; Theme Studio runtime inheritance remains `default`.
+- Uses Capell Frontend default theme runtime data and standard section keys, while rendering its own page and section Blade views.
 - Ships Blade resources for the page wrapper, service discovery sections, booking panel, event panel, comparison, proof, blog teaser, CTA, and footer views.
 - No migrations, config, routes, models, admin navigation, or package-owned settings are present.
 - Public theme output must not expose package identifiers, signed admin URLs, Filament/editor markers, or other authoring metadata. The package test renders every section and checks for those leak tokens.
@@ -51,16 +51,16 @@ The committed Capell runner-backed gallery covers the full `docs/screenshots.jso
 
 ## Pitfalls
 
-- Install Layout Builder before Foundation Theme in a disposable harness; Foundation Theme setup expects the layout stack to be available.
-- Install Foundation Theme before using this renderer.
-- Build both frontend and Filament assets. Missing Foundation Theme manifests make screenshots fail even when the Composer install succeeds.
+- Layout Builder is only needed in disposable harnesses that exercise optional layout-area chrome.
+- Install Capell Frontend before using this renderer.
+- Build both frontend and Filament assets. Missing Capell Frontend manifests make screenshots fail even when the Composer install succeeds.
 - Keep Theme Studio settings aligned with `activeTheme: "healthcare"` and the `healthcare` preset. Stale settings from another theme can render the wrong token set.
 - Do not install a Studio metapackage; this package installs independently.
 
 ## Verification
 
 - Run `vendor/bin/pest packages/theme-healthcare/tests --configuration=phpunit.xml`.
-- In a disposable Capell app, install only the core stack, Layout Builder, Foundation Theme, and `capell-app/theme-healthcare`.
+- In a disposable Capell app, install only the core stack, Layout Builder, Capell Frontend default theme, and `capell-app/theme-healthcare`.
 - Open `/theme-healthcare-demo` anonymously and scan the response for `capell-theme`, `data-capell-theme`, `theme-healthcare`, `signed`, `filament`, `editor`, and `/admin`.
 - Capture the screenshots listed in [screenshots.json](screenshots.json).
 
@@ -73,7 +73,7 @@ The committed Capell runner-backed gallery covers the full `docs/screenshots.jso
 - Tier: premium
 - Bundle: themes
 - Contexts: `frontend`
-- Requires: `capell-app/foundation-theme`
+- Requires: `capell-app/frontend`
 - Optional dependencies: `capell-app/blog`, `capell-app/events`, `capell-app/form-builder`.
 
 ## Admin Surfaces

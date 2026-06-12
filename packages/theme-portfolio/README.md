@@ -15,7 +15,7 @@ and newsletter sections.
   `Capell\ThemeStudio\Portfolio\PortfolioThemeServiceProvider`
 - Demo command:
   `capell:theme-portfolio-demo {--url=} {--languages=} {--sites=} {--force}`
-- Manifest extends: `capell-app/foundation-theme`
+- Manifest extends: `null`
 - Runtime extends: `default`
 - Database impact: none
 
@@ -30,7 +30,7 @@ and newsletter sections.
 
 ## Best Used With
 
-- [Foundation Theme](../foundation-theme/README.md)
+- [Capell Frontend](https://github.com/capell-app/frontend)
 - [Content Sections](../content-sections/README.md) for case-study content.
 - [Media Library](../media-library/README.md) for work-grid media.
 - [Newsletter](../newsletter/README.md) for audience capture.
@@ -69,7 +69,7 @@ and newsletter sections.
 - Adds a frontend theme renderer and console demo command.
 - Adds no migrations, settings, models, package-owned routes, or admin
   resources.
-- Depends on Foundation Theme and reads normal Capell page/theme runtime data.
+- Depends on Capell Frontend and reads normal Capell page/theme runtime data.
 - Optional sections stay guarded when Content Sections, Media Library, or
   Newsletter are not installed.
 

@@ -13,7 +13,8 @@ hubs, and content-led teams that need searchable, editorial frontend pages.
   `Capell\ThemeStudio\Knowledge\KnowledgeThemeServiceProvider`
 - Demo command:
   `capell:theme-knowledge-demo {--url=} {--languages=} {--sites=} {--force}`
-- Extends: `capell-app/foundation-theme`
+- Manifest extends: `null`
+- Runtime extends: `default`
 - Database impact: none
 
 ## Why It Helps Your Capell Workflow
@@ -27,7 +28,7 @@ hubs, and content-led teams that need searchable, editorial frontend pages.
 
 ## Best Used With
 
-- [Foundation Theme](../foundation-theme/README.md)
+- [Capell Frontend](https://github.com/capell-app/frontend)
 - [Blog](../blog/README.md) for resources and author content.
 - [Search](../search/README.md) for public search listing sections.
 - [Newsletter](../newsletter/README.md) for subscription CTAs.
@@ -71,7 +72,7 @@ hubs, and content-led teams that need searchable, editorial frontend pages.
 - Adds a frontend theme renderer and console demo command.
 - Adds no migrations, settings, models, package-owned routes, or admin
   resources.
-- Depends on Foundation Theme and reads normal Capell page/theme runtime data.
+- Depends on Capell Frontend default theme and reads normal Capell page/theme runtime data.
 - Optional sections stay guarded when Blog, Search, or Newsletter are not
   installed.
 - Author and topic hub defaults use package translations and accept hydrated
