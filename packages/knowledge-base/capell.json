@@ -106,6 +106,42 @@
         "knowledge-base-search-weighting",
         "knowledge-base-ai-output"
     ],
+    "security": {
+        "riskTier": "standard",
+        "publicSurface": {
+            "routeNames": ["ai-output", "article", "article.feedback", "index"],
+            "auth": "public",
+            "csrfExemptRoutes": [],
+            "signedRoutes": [],
+            "tokenizedRoutes": [],
+            "webhookRoutes": [],
+            "throttledRoutes": ["article.feedback"]
+        },
+        "sensitiveData": {
+            "encryptedFields": [],
+            "hashedTokenFields": [
+                "knowledge_base_collections.user_agent_hash",
+                "knowledge_base_collections.visitor_hash"
+            ],
+            "redactedOutputClasses": [],
+            "plaintextJustifications": []
+        },
+        "publicOutput": {
+            "cacheSafe": true,
+            "forbidAuthoringSurface": true,
+            "forbidSecrets": true,
+            "forbidPublicBladeQueries": true
+        },
+        "externalHttpClients": {
+            "requiresTimeouts": false,
+            "requiresSecretRedaction": false,
+            "clients": []
+        },
+        "adminSurface": {
+            "authorization": "policies",
+            "permissions": []
+        }
+    },
     "performance": {
         "frontendRenderBudgetMs": 20,
         "adminQueryBudget": 40,

@@ -118,6 +118,88 @@
         "events-registration-created-event",
         "events-customer-portal-registration-feed"
     ],
+    "security": {
+        "riskTier": "standard",
+        "publicSurface": {
+            "routeNames": ["calendar-feed", "listing-calendar-feed"],
+            "auth": "public",
+            "csrfExemptRoutes": [],
+            "signedRoutes": [],
+            "tokenizedRoutes": [],
+            "webhookRoutes": [],
+            "throttledRoutes": []
+        },
+        "sensitiveData": {
+            "encryptedFields": [],
+            "hashedTokenFields": [],
+            "redactedOutputClasses": [],
+            "plaintextJustifications": []
+        },
+        "publicOutput": {
+            "cacheSafe": true,
+            "forbidAuthoringSurface": true,
+            "forbidSecrets": true,
+            "forbidPublicBladeQueries": true
+        },
+        "externalHttpClients": {
+            "requiresTimeouts": false,
+            "requiresSecretRedaction": false,
+            "clients": []
+        },
+        "adminSurface": {
+            "authorization": "permissions",
+            "permissions": [
+                "ViewAny:Event",
+                "View:Event",
+                "Create:Event",
+                "Update:Event",
+                "Delete:Event",
+                "DeleteAny:Event",
+                "Restore:Event",
+                "RestoreAny:Event",
+                "ForceDelete:Event",
+                "ForceDeleteAny:Event",
+                "Replicate:Event",
+                "Reorder:Event",
+                "ViewAny:EventVenue",
+                "View:EventVenue",
+                "Create:EventVenue",
+                "Update:EventVenue",
+                "Delete:EventVenue",
+                "DeleteAny:EventVenue",
+                "Restore:EventVenue",
+                "RestoreAny:EventVenue",
+                "ForceDelete:EventVenue",
+                "ForceDeleteAny:EventVenue",
+                "Replicate:EventVenue",
+                "Reorder:EventVenue",
+                "ViewAny:EventOccurrence",
+                "View:EventOccurrence",
+                "Create:EventOccurrence",
+                "Update:EventOccurrence",
+                "Delete:EventOccurrence",
+                "DeleteAny:EventOccurrence",
+                "Restore:EventOccurrence",
+                "RestoreAny:EventOccurrence",
+                "ForceDelete:EventOccurrence",
+                "ForceDeleteAny:EventOccurrence",
+                "Replicate:EventOccurrence",
+                "Reorder:EventOccurrence",
+                "ViewAny:EventRegistration",
+                "View:EventRegistration",
+                "Create:EventRegistration",
+                "Update:EventRegistration",
+                "Delete:EventRegistration",
+                "DeleteAny:EventRegistration",
+                "Restore:EventRegistration",
+                "RestoreAny:EventRegistration",
+                "ForceDelete:EventRegistration",
+                "ForceDeleteAny:EventRegistration",
+                "Replicate:EventRegistration",
+                "Reorder:EventRegistration"
+            ]
+        }
+    },
     "performance": {
         "frontendRenderBudgetMs": 20,
         "adminQueryBudget": 40,

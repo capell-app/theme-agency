@@ -81,6 +81,43 @@
         "social-feed-provider-registry",
         "social-feed-cached-rendering"
     ],
+    "security": {
+        "riskTier": "sensitive",
+        "publicSurface": {
+            "routeNames": [],
+            "auth": "none",
+            "csrfExemptRoutes": [],
+            "signedRoutes": [],
+            "tokenizedRoutes": [],
+            "webhookRoutes": [],
+            "throttledRoutes": []
+        },
+        "sensitiveData": {
+            "encryptedFields": [
+                "Capell\\SocialFeeds\\Models\\SocialFeedConnection::$credentials"
+            ],
+            "hashedTokenFields": [],
+            "redactedOutputClasses": [],
+            "plaintextJustifications": []
+        },
+        "publicOutput": {
+            "cacheSafe": true,
+            "forbidAuthoringSurface": true,
+            "forbidSecrets": true,
+            "forbidPublicBladeQueries": true
+        },
+        "externalHttpClients": {
+            "requiresTimeouts": true,
+            "requiresSecretRedaction": true,
+            "clients": [
+                "Capell\\SocialFeeds\\Providers\\Drivers\\RssFeedProvider"
+            ]
+        },
+        "adminSurface": {
+            "authorization": "panel-auth",
+            "permissions": []
+        }
+    },
     "performance": {
         "frontendRenderBudgetMs": 20,
         "adminQueryBudget": 40,

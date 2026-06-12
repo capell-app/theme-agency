@@ -16,6 +16,7 @@ Route::prefix('newsletter')
     ->name('capell-newsletter.')
     ->group(function (): void {
         Route::post('subscribe', SubscribeController::class)
+            ->middleware('throttle:30,1')
             ->withoutMiddleware([VerifyCsrfToken::class])
             ->name('subscribe');
         Route::get('confirm/{token}', ConfirmSubscriptionController::class)->name('confirm');

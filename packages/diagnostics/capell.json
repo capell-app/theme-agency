@@ -139,6 +139,49 @@
         "diagnostics-expensive-scan-cache",
         "diagnostics-health-history"
     ],
+    "security": {
+        "riskTier": "sensitive",
+        "publicSurface": {
+            "routeNames": [],
+            "auth": "none",
+            "csrfExemptRoutes": [],
+            "signedRoutes": [],
+            "tokenizedRoutes": [],
+            "webhookRoutes": [],
+            "throttledRoutes": []
+        },
+        "sensitiveData": {
+            "encryptedFields": [],
+            "hashedTokenFields": [],
+            "redactedOutputClasses": [
+                "Capell\\Diagnostics\\Actions\\CommandPalette\\ExecuteCommandPaletteCommandAction",
+                "Capell\\Diagnostics\\Actions\\CommandPalette\\RedactCommandPaletteOutputAction"
+            ],
+            "plaintextJustifications": []
+        },
+        "publicOutput": {
+            "cacheSafe": true,
+            "forbidAuthoringSurface": true,
+            "forbidSecrets": true,
+            "forbidPublicBladeQueries": true
+        },
+        "externalHttpClients": {
+            "requiresTimeouts": false,
+            "requiresSecretRedaction": false,
+            "clients": []
+        },
+        "adminSurface": {
+            "authorization": "permissions",
+            "permissions": [
+                "accessDiagnostics",
+                "viewDiagnostics",
+                "View:PermissionAuditPage",
+                "View:CommandPalettePage",
+                "View:QueueHealthPage",
+                "Manage:QueueHealthPage"
+            ]
+        }
+    },
     "performance": {
         "frontendRenderBudgetMs": 0,
         "adminQueryBudget": 40,

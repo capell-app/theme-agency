@@ -107,6 +107,58 @@
         "paid-gated-access-fulfillment",
         "access-gate-customer-portal-gated-resource-feed"
     ],
+    "security": {
+        "riskTier": "sensitive",
+        "publicSurface": {
+            "routeNames": [
+                "claim",
+                "logout",
+                "request",
+                "request.store",
+                "status"
+            ],
+            "auth": "public",
+            "csrfExemptRoutes": [],
+            "signedRoutes": [],
+            "tokenizedRoutes": ["claim"],
+            "webhookRoutes": [],
+            "throttledRoutes": ["claim", "request.store", "status"]
+        },
+        "sensitiveData": {
+            "encryptedFields": [],
+            "hashedTokenFields": [],
+            "redactedOutputClasses": [],
+            "plaintextJustifications": []
+        },
+        "publicOutput": {
+            "cacheSafe": true,
+            "forbidAuthoringSurface": true,
+            "forbidSecrets": true,
+            "forbidPublicBladeQueries": true
+        },
+        "externalHttpClients": {
+            "requiresTimeouts": false,
+            "requiresSecretRedaction": false,
+            "clients": []
+        },
+        "adminSurface": {
+            "authorization": "permissions",
+            "permissions": [
+                "View:Area",
+                "Create:Area",
+                "Update:Area",
+                "Delete:Area",
+                "View:Registration",
+                "Update:Registration",
+                "View:Grant",
+                "Update:Grant",
+                "View:BrowserToken",
+                "Update:BrowserToken",
+                "View:ClaimToken",
+                "View:Event"
+            ]
+        }
+    },
     "performance": {
         "frontendRenderBudgetMs": 0,
         "adminQueryBudget": 40,

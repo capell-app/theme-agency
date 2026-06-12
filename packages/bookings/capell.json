@@ -149,6 +149,71 @@
         "bookings-reminders",
         "bookings-calendar-feeds"
     ],
+    "security": {
+        "riskTier": "sensitive",
+        "publicSurface": {
+            "routeNames": ["calendar.staff", "request", "request.store"],
+            "auth": "public",
+            "csrfExemptRoutes": [],
+            "signedRoutes": [],
+            "tokenizedRoutes": ["calendar.staff"],
+            "webhookRoutes": [],
+            "throttledRoutes": []
+        },
+        "sensitiveData": {
+            "encryptedFields": [],
+            "hashedTokenFields": [],
+            "redactedOutputClasses": [],
+            "plaintextJustifications": [
+                {
+                    "field": "appointment_requests.confirmation_token",
+                    "reason": "Reviewed package field; not stored as a reusable secret by this package contract."
+                },
+                {
+                    "field": "booking_staff_members.calendar_feed_token",
+                    "reason": "Reviewed package field; not stored as a reusable secret by this package contract."
+                }
+            ]
+        },
+        "publicOutput": {
+            "cacheSafe": true,
+            "forbidAuthoringSurface": true,
+            "forbidSecrets": true,
+            "forbidPublicBladeQueries": true
+        },
+        "externalHttpClients": {
+            "requiresTimeouts": false,
+            "requiresSecretRedaction": false,
+            "clients": []
+        },
+        "adminSurface": {
+            "authorization": "permissions",
+            "permissions": [
+                "View:BookingService",
+                "Create:BookingService",
+                "Update:BookingService",
+                "Delete:BookingService",
+                "View:BookingStaffMember",
+                "Create:BookingStaffMember",
+                "Update:BookingStaffMember",
+                "Delete:BookingStaffMember",
+                "View:BookingLocation",
+                "Create:BookingLocation",
+                "Update:BookingLocation",
+                "Delete:BookingLocation",
+                "View:BookingAvailabilityWindow",
+                "Create:BookingAvailabilityWindow",
+                "Update:BookingAvailabilityWindow",
+                "Delete:BookingAvailabilityWindow",
+                "View:BookingAvailabilityException",
+                "Create:BookingAvailabilityException",
+                "Update:BookingAvailabilityException",
+                "Delete:BookingAvailabilityException",
+                "View:AppointmentRequest",
+                "Update:AppointmentRequest"
+            ]
+        }
+    },
     "performance": {
         "frontendRenderBudgetMs": 0,
         "adminQueryBudget": 20,

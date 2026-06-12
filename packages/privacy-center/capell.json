@@ -121,6 +121,42 @@
         "privacy-center-policy-acceptance",
         "privacy-center-subject-requests"
     ],
+    "security": {
+        "riskTier": "sensitive",
+        "publicSurface": {
+            "routeNames": [
+                "capell-privacy-center.consent.show",
+                "capell-privacy-center.consent.store"
+            ],
+            "auth": "public",
+            "csrfExemptRoutes": [],
+            "signedRoutes": [],
+            "tokenizedRoutes": [],
+            "webhookRoutes": [],
+            "throttledRoutes": []
+        },
+        "sensitiveData": {
+            "encryptedFields": [],
+            "hashedTokenFields": [],
+            "redactedOutputClasses": [],
+            "plaintextJustifications": []
+        },
+        "publicOutput": {
+            "cacheSafe": false,
+            "forbidAuthoringSurface": true,
+            "forbidSecrets": true,
+            "forbidPublicBladeQueries": true
+        },
+        "externalHttpClients": {
+            "requiresTimeouts": false,
+            "requiresSecretRedaction": false,
+            "clients": []
+        },
+        "adminSurface": {
+            "authorization": "panel-auth",
+            "permissions": []
+        }
+    },
     "performance": {
         "frontendRenderBudgetMs": 40,
         "adminQueryBudget": 40,

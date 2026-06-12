@@ -88,6 +88,56 @@
         "document-lifecycle-publication-diff",
         "document-lifecycle-customer-portal-document-feed"
     ],
+    "security": {
+        "riskTier": "standard",
+        "publicSurface": {
+            "routeNames": [],
+            "auth": "none",
+            "csrfExemptRoutes": [],
+            "signedRoutes": [],
+            "tokenizedRoutes": [],
+            "webhookRoutes": [],
+            "throttledRoutes": []
+        },
+        "sensitiveData": {
+            "encryptedFields": [],
+            "hashedTokenFields": [
+                "document_lifecycle_publications.content_hash",
+                "legal_acceptances.document_hash",
+                "legal_acceptances.ip_hash",
+                "legal_acceptances.legal_bundle_hash",
+                "legal_acceptances.user_agent_hash"
+            ],
+            "redactedOutputClasses": [],
+            "plaintextJustifications": []
+        },
+        "publicOutput": {
+            "cacheSafe": false,
+            "forbidAuthoringSurface": true,
+            "forbidSecrets": true,
+            "forbidPublicBladeQueries": true
+        },
+        "externalHttpClients": {
+            "requiresTimeouts": false,
+            "requiresSecretRedaction": false,
+            "clients": []
+        },
+        "adminSurface": {
+            "authorization": "permissions",
+            "permissions": [
+                "ViewAny:Document",
+                "View:Document",
+                "Create:Document",
+                "Update:Document",
+                "Delete:Document",
+                "DeleteAny:Document",
+                "Restore:Document",
+                "ForceDelete:Document",
+                "Replicate:Document",
+                "Reorder:Document"
+            ]
+        }
+    },
     "performance": {
         "frontendRenderBudgetMs": 0,
         "adminQueryBudget": 40,

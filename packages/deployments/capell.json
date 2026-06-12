@@ -53,6 +53,58 @@
         "deployments-publish-idempotency",
         "deployments-token-refresh"
     ],
+    "security": {
+        "riskTier": "critical",
+        "publicSurface": {
+            "routeNames": [
+                "capell-deployments.oauth.bitbucket",
+                "capell-deployments.oauth.github",
+                "capell-deployments.oauth.gitlab"
+            ],
+            "auth": "public",
+            "csrfExemptRoutes": [],
+            "signedRoutes": [],
+            "tokenizedRoutes": [],
+            "webhookRoutes": [],
+            "throttledRoutes": []
+        },
+        "sensitiveData": {
+            "encryptedFields": [
+                "Capell\\Deployments\\Models\\DeploymentConnection::$access_token_encrypted",
+                "Capell\\Deployments\\Models\\DeploymentConnection::$refresh_token_encrypted"
+            ],
+            "hashedTokenFields": [],
+            "redactedOutputClasses": [
+                "Capell\\Deployments\\Http\\Controllers\\OAuth\\BitbucketCallbackController",
+                "Capell\\Deployments\\Http\\Controllers\\OAuth\\GitHubCallbackController",
+                "Capell\\Deployments\\Http\\Controllers\\OAuth\\GitLabCallbackController"
+            ],
+            "plaintextJustifications": []
+        },
+        "publicOutput": {
+            "cacheSafe": true,
+            "forbidAuthoringSurface": true,
+            "forbidSecrets": true,
+            "forbidPublicBladeQueries": true
+        },
+        "externalHttpClients": {
+            "requiresTimeouts": true,
+            "requiresSecretRedaction": true,
+            "clients": [
+                "Capell\\Deployments\\Actions\\RefreshProviderTokenAction",
+                "Capell\\Deployments\\Http\\Controllers\\OAuth\\BitbucketCallbackController",
+                "Capell\\Deployments\\Http\\Controllers\\OAuth\\GitHubCallbackController",
+                "Capell\\Deployments\\Http\\Controllers\\OAuth\\GitLabCallbackController"
+            ]
+        },
+        "adminSurface": {
+            "authorization": "permissions",
+            "permissions": [
+                "View:DeploymentConnectionPage",
+                "Manage:DeploymentConnectionPage"
+            ]
+        }
+    },
     "performance": {
         "frontendRenderBudgetMs": 0,
         "adminQueryBudget": 40,

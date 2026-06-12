@@ -93,6 +93,45 @@
         "template-rendering",
         "transactional-email"
     ],
+    "security": {
+        "riskTier": "sensitive",
+        "publicSurface": {
+            "routeNames": ["capell-email-studio.provider-events"],
+            "auth": "public",
+            "csrfExemptRoutes": [],
+            "signedRoutes": [],
+            "tokenizedRoutes": ["capell-email-studio.provider-events"],
+            "webhookRoutes": ["capell-email-studio.provider-events"],
+            "throttledRoutes": []
+        },
+        "sensitiveData": {
+            "encryptedFields": [],
+            "hashedTokenFields": [
+                "email_profiles.webhook_endpoint_token_hash",
+                "email_recipients.email_hash",
+                "email_replies.from_email_hash",
+                "email_suppressions.email_hash",
+                "email_tracking_tokens.token_hash"
+            ],
+            "redactedOutputClasses": [],
+            "plaintextJustifications": []
+        },
+        "publicOutput": {
+            "cacheSafe": true,
+            "forbidAuthoringSurface": true,
+            "forbidSecrets": true,
+            "forbidPublicBladeQueries": true
+        },
+        "externalHttpClients": {
+            "requiresTimeouts": false,
+            "requiresSecretRedaction": false,
+            "clients": []
+        },
+        "adminSurface": {
+            "authorization": "panel-auth",
+            "permissions": []
+        }
+    },
     "performance": {
         "frontendRenderBudgetMs": 20,
         "adminQueryBudget": 40,

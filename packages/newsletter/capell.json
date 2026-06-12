@@ -175,6 +175,77 @@
         "newsletter-customer-portal-preferences-feed",
         "newsletter-public-preference-center"
     ],
+    "security": {
+        "riskTier": "sensitive",
+        "publicSurface": {
+            "routeNames": [
+                "capell-newsletter.confirm",
+                "capell-newsletter.preferences.show",
+                "capell-newsletter.preferences.update",
+                "capell-newsletter.provider-webhook",
+                "capell-newsletter.subscribe",
+                "capell-newsletter.unsubscribe",
+                "capell-newsletter.unsubscribe.one-click"
+            ],
+            "auth": "public",
+            "csrfExemptRoutes": [
+                "capell-newsletter.provider-webhook",
+                "capell-newsletter.subscribe",
+                "capell-newsletter.unsubscribe.one-click"
+            ],
+            "signedRoutes": [],
+            "tokenizedRoutes": [
+                "capell-newsletter.confirm",
+                "capell-newsletter.preferences.show",
+                "capell-newsletter.preferences.update",
+                "capell-newsletter.unsubscribe",
+                "capell-newsletter.unsubscribe.one-click"
+            ],
+            "webhookRoutes": ["capell-newsletter.provider-webhook"],
+            "throttledRoutes": ["capell-newsletter.subscribe"]
+        },
+        "sensitiveData": {
+            "encryptedFields": [
+                "Capell\\Newsletter\\Models\\ConsentEvent::$evidence",
+                "Capell\\Newsletter\\Models\\ConsentEvent::$metadata",
+                "Capell\\Newsletter\\Models\\ImportBatch::$dry_run_payload",
+                "Capell\\Newsletter\\Models\\ImportBatch::$source_meta",
+                "Capell\\Newsletter\\Models\\ProviderConnection::$credentials",
+                "Capell\\Newsletter\\Models\\ProviderConnection::$oauth_tokens",
+                "Capell\\Newsletter\\Models\\ProviderConnection::$webhook_secret",
+                "Capell\\Newsletter\\Models\\Subscriber::$email",
+                "Capell\\Newsletter\\Models\\Subscriber::$first_name",
+                "Capell\\Newsletter\\Models\\Subscriber::$last_name",
+                "Capell\\Newsletter\\Models\\Subscriber::$profile"
+            ],
+            "hashedTokenFields": [
+                "newsletter_public_tokens.token_hash",
+                "newsletter_subscribers.email_hash",
+                "newsletter_sync_attempts.payload_hash"
+            ],
+            "redactedOutputClasses": [],
+            "plaintextJustifications": []
+        },
+        "publicOutput": {
+            "cacheSafe": true,
+            "forbidAuthoringSurface": true,
+            "forbidSecrets": true,
+            "forbidPublicBladeQueries": true
+        },
+        "externalHttpClients": {
+            "requiresTimeouts": true,
+            "requiresSecretRedaction": true,
+            "clients": [
+                "Capell\\Newsletter\\Support\\Providers\\CampaignMonitorProviderAdapter",
+                "Capell\\Newsletter\\Support\\Providers\\KitProviderAdapter",
+                "Capell\\Newsletter\\Support\\Providers\\MailchimpProviderAdapter"
+            ]
+        },
+        "adminSurface": {
+            "authorization": "policies",
+            "permissions": []
+        }
+    },
     "performance": {
         "frontendRenderBudgetMs": 20,
         "adminQueryBudget": 40,

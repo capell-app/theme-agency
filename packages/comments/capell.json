@@ -89,6 +89,58 @@
         "comments-reactions",
         "comments-reply-notifications"
     ],
+    "security": {
+        "riskTier": "sensitive",
+        "publicSurface": {
+            "routeNames": [
+                "capell-comments.reply-notifications.disable",
+                "capell-comments.thread",
+                "capell-comments.verify",
+                "capell-comments.verify.store"
+            ],
+            "auth": "public",
+            "csrfExemptRoutes": [],
+            "signedRoutes": [],
+            "tokenizedRoutes": [
+                "capell-comments.reply-notifications.disable",
+                "capell-comments.verify",
+                "capell-comments.verify.store"
+            ],
+            "webhookRoutes": [],
+            "throttledRoutes": []
+        },
+        "sensitiveData": {
+            "encryptedFields": [
+                "Capell\\Comments\\Models\\CommentAuthor::$email",
+                "Capell\\Comments\\Models\\CommentAuthor::$name"
+            ],
+            "hashedTokenFields": [
+                "comment_authors.email_hash",
+                "comment_reactions.visitor_ip_hash",
+                "comment_reactions.visitor_user_agent_hash",
+                "comment_tokens.token_hash",
+                "comments.visitor_ip_hash",
+                "comments.visitor_user_agent_hash"
+            ],
+            "redactedOutputClasses": [],
+            "plaintextJustifications": []
+        },
+        "publicOutput": {
+            "cacheSafe": true,
+            "forbidAuthoringSurface": true,
+            "forbidSecrets": true,
+            "forbidPublicBladeQueries": true
+        },
+        "externalHttpClients": {
+            "requiresTimeouts": false,
+            "requiresSecretRedaction": false,
+            "clients": []
+        },
+        "adminSurface": {
+            "authorization": "policies",
+            "permissions": []
+        }
+    },
     "performance": {
         "frontendRenderBudgetMs": 20,
         "adminQueryBudget": 40,

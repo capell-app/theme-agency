@@ -82,6 +82,55 @@
         "shopify-commerce-customer-synced-event",
         "shopify-commerce-webhooks"
     ],
+    "security": {
+        "riskTier": "critical",
+        "publicSurface": {
+            "routeNames": [
+                "capell-shopify-commerce.oauth.callback",
+                "capell-shopify-commerce.oauth.install",
+                "capell-shopify-commerce.webhooks.shopify"
+            ],
+            "auth": "public",
+            "csrfExemptRoutes": [],
+            "signedRoutes": [],
+            "tokenizedRoutes": [],
+            "webhookRoutes": ["capell-shopify-commerce.webhooks.shopify"],
+            "throttledRoutes": []
+        },
+        "sensitiveData": {
+            "encryptedFields": [
+                "Capell\\ShopifyCommerce\\Models\\ShopifyConnection::$access_token",
+                "Capell\\ShopifyCommerce\\Models\\ShopifyCustomer::$email",
+                "Capell\\ShopifyCommerce\\Models\\ShopifyCustomer::$first_name",
+                "Capell\\ShopifyCommerce\\Models\\ShopifyCustomer::$last_name",
+                "Capell\\ShopifyCommerce\\Models\\ShopifyCustomer::$phone"
+            ],
+            "hashedTokenFields": ["shopify_customers.email_hash"],
+            "redactedOutputClasses": [
+                "Capell\\ShopifyCommerce\\Actions\\Catalog\\SanitizeShopifySyncErrorAction"
+            ],
+            "plaintextJustifications": []
+        },
+        "publicOutput": {
+            "cacheSafe": false,
+            "forbidAuthoringSurface": true,
+            "forbidSecrets": true,
+            "forbidPublicBladeQueries": true
+        },
+        "externalHttpClients": {
+            "requiresTimeouts": true,
+            "requiresSecretRedaction": true,
+            "clients": [
+                "Capell\\ShopifyCommerce\\Actions\\Catalog\\ImportShopifyProductBulkSyncAction",
+                "Capell\\ShopifyCommerce\\Actions\\Graphql\\ExecuteShopifyAdminGraphqlAction",
+                "Capell\\ShopifyCommerce\\Actions\\OAuth\\ExchangeShopifyAuthorizationCodeAction"
+            ]
+        },
+        "adminSurface": {
+            "authorization": "permissions",
+            "permissions": ["shopify-commerce.manage"]
+        }
+    },
     "performance": {
         "frontendRenderBudgetMs": 0,
         "adminQueryBudget": 40,

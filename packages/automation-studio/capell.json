@@ -109,6 +109,51 @@
         "email-studio-bridge",
         "agent-capability-queue"
     ],
+    "security": {
+        "riskTier": "sensitive",
+        "publicSurface": {
+            "routeNames": [],
+            "auth": "none",
+            "csrfExemptRoutes": [],
+            "signedRoutes": [],
+            "tokenizedRoutes": [],
+            "webhookRoutes": [],
+            "throttledRoutes": []
+        },
+        "sensitiveData": {
+            "encryptedFields": [
+                "Capell\\AutomationStudio\\Models\\AutomationRule::$actions",
+                "Capell\\AutomationStudio\\Models\\AutomationRule::$conditions",
+                "Capell\\AutomationStudio\\Models\\AutomationRule::$settings",
+                "Capell\\AutomationStudio\\Models\\AutomationRun::$context",
+                "Capell\\AutomationStudio\\Models\\AutomationRun::$payload"
+            ],
+            "hashedTokenFields": [],
+            "redactedOutputClasses": [],
+            "plaintextJustifications": []
+        },
+        "publicOutput": {
+            "cacheSafe": true,
+            "forbidAuthoringSurface": true,
+            "forbidSecrets": true,
+            "forbidPublicBladeQueries": true
+        },
+        "externalHttpClients": {
+            "requiresTimeouts": false,
+            "requiresSecretRedaction": false,
+            "clients": []
+        },
+        "adminSurface": {
+            "authorization": "permissions",
+            "permissions": [
+                "View:AutomationRule",
+                "Create:AutomationRule",
+                "Update:AutomationRule",
+                "Delete:AutomationRule",
+                "View:AutomationRun"
+            ]
+        }
+    },
     "performance": {
         "frontendRenderBudgetMs": 0,
         "adminQueryBudget": 20,

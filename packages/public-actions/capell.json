@@ -58,6 +58,57 @@
         "submit-actions",
         "zapier-integration"
     ],
+    "security": {
+        "riskTier": "critical",
+        "publicSurface": {
+            "routeNames": [
+                "actions",
+                "actions.submit",
+                "me",
+                "show",
+                "submissions",
+                "submit"
+            ],
+            "auth": "public",
+            "csrfExemptRoutes": [],
+            "signedRoutes": [],
+            "tokenizedRoutes": [],
+            "webhookRoutes": [],
+            "throttledRoutes": ["submit"]
+        },
+        "sensitiveData": {
+            "encryptedFields": [
+                "Capell\\PublicActions\\Models\\PublicActionDestination::$endpoint_url",
+                "Capell\\PublicActions\\Models\\PublicActionDestination::$headers",
+                "Capell\\PublicActions\\Models\\PublicActionDestination::$secret",
+                "Capell\\PublicActions\\Models\\PublicActionSubmission::$payload"
+            ],
+            "hashedTokenFields": [],
+            "redactedOutputClasses": [
+                "Capell\\PublicActions\\Health\\PublicActionsHealthCheck",
+                "Capell\\PublicActions\\Support\\Providers\\HttpWebhookPublicActionAdapter"
+            ],
+            "plaintextJustifications": []
+        },
+        "publicOutput": {
+            "cacheSafe": true,
+            "forbidAuthoringSurface": true,
+            "forbidSecrets": true,
+            "forbidPublicBladeQueries": true
+        },
+        "externalHttpClients": {
+            "requiresTimeouts": true,
+            "requiresSecretRedaction": true,
+            "clients": [
+                "Capell\\PublicActions\\Support\\Providers\\HttpWebhookPublicActionAdapter",
+                "Capell\\PublicActions\\Support\\SpamProtection\\TurnstilePublicActionSpamProtectionAdapter"
+            ]
+        },
+        "adminSurface": {
+            "authorization": "policies",
+            "permissions": []
+        }
+    },
     "performance": {
         "frontendRenderBudgetMs": 20,
         "adminQueryBudget": 40,

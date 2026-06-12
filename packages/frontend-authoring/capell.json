@@ -53,6 +53,42 @@
         "beacon",
         "cache-blocking"
     ],
+    "security": {
+        "riskTier": "critical",
+        "publicSurface": {
+            "routeNames": [
+                "capell-frontend.authoring.edit",
+                "capell-frontend.beacon"
+            ],
+            "auth": "mixed",
+            "csrfExemptRoutes": ["capell-frontend.beacon"],
+            "signedRoutes": ["capell-frontend.authoring.edit"],
+            "tokenizedRoutes": [],
+            "webhookRoutes": [],
+            "throttledRoutes": ["capell-frontend.beacon"]
+        },
+        "sensitiveData": {
+            "encryptedFields": [],
+            "hashedTokenFields": [],
+            "redactedOutputClasses": [],
+            "plaintextJustifications": []
+        },
+        "publicOutput": {
+            "cacheSafe": true,
+            "forbidAuthoringSurface": true,
+            "forbidSecrets": true,
+            "forbidPublicBladeQueries": true
+        },
+        "externalHttpClients": {
+            "requiresTimeouts": false,
+            "requiresSecretRedaction": false,
+            "clients": []
+        },
+        "adminSurface": {
+            "authorization": "permissions",
+            "permissions": ["frontend-authoring.edit"]
+        }
+    },
     "performance": {
         "frontendRenderBudgetMs": 20,
         "adminQueryBudget": 0,

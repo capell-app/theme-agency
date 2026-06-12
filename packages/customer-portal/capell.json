@@ -100,6 +100,55 @@
         "portal-support-request-notifications",
         "portal-support-request-triage"
     ],
+    "security": {
+        "riskTier": "sensitive",
+        "publicSurface": {
+            "routeNames": [
+                "dashboard",
+                "preferences.update",
+                "support.replies.store",
+                "support.store"
+            ],
+            "auth": "public",
+            "csrfExemptRoutes": [],
+            "signedRoutes": [],
+            "tokenizedRoutes": [],
+            "webhookRoutes": [],
+            "throttledRoutes": ["support.replies.store", "support.store"]
+        },
+        "sensitiveData": {
+            "encryptedFields": [
+                "Capell\\CustomerPortal\\Models\\PortalAccount::$display_name",
+                "Capell\\CustomerPortal\\Models\\PortalAccount::$email",
+                "Capell\\CustomerPortal\\Models\\PortalAccount::$preferences",
+                "Capell\\CustomerPortal\\Models\\PortalAccount::$profile",
+                "Capell\\CustomerPortal\\Models\\PortalSupportRequest::$context",
+                "Capell\\CustomerPortal\\Models\\PortalSupportRequest::$message",
+                "Capell\\CustomerPortal\\Models\\PortalSupportRequest::$requester_email",
+                "Capell\\CustomerPortal\\Models\\PortalSupportRequest::$subject",
+                "Capell\\CustomerPortal\\Models\\PortalSupportRequestReply::$attachments",
+                "Capell\\CustomerPortal\\Models\\PortalSupportRequestReply::$message"
+            ],
+            "hashedTokenFields": [],
+            "redactedOutputClasses": [],
+            "plaintextJustifications": []
+        },
+        "publicOutput": {
+            "cacheSafe": false,
+            "forbidAuthoringSurface": true,
+            "forbidSecrets": true,
+            "forbidPublicBladeQueries": true
+        },
+        "externalHttpClients": {
+            "requiresTimeouts": false,
+            "requiresSecretRedaction": false,
+            "clients": []
+        },
+        "adminSurface": {
+            "authorization": "panel-auth",
+            "permissions": []
+        }
+    },
     "performance": {
         "frontendRenderBudgetMs": 200,
         "frontendQueryBudget": 20,

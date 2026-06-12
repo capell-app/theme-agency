@@ -141,6 +141,66 @@
         "customer-portal-billing-dashboard",
         "customer-portal-payments-feed"
     ],
+    "security": {
+        "riskTier": "critical",
+        "publicSurface": {
+            "routeNames": [
+                "capell-payments.form-builder.checkout",
+                "capell-payments.paid-downloads.show",
+                "capell-payments.portal.billing",
+                "capell-payments.stripe-webhook"
+            ],
+            "auth": "public",
+            "csrfExemptRoutes": ["capell-payments.stripe-webhook"],
+            "signedRoutes": ["capell-payments.paid-downloads.show"],
+            "tokenizedRoutes": [],
+            "webhookRoutes": ["capell-payments.stripe-webhook"],
+            "throttledRoutes": []
+        },
+        "sensitiveData": {
+            "encryptedFields": [
+                "Capell\\Payments\\Models\\CheckoutSession::$provider_payload",
+                "Capell\\Payments\\Models\\PaymentCustomer::$email",
+                "Capell\\Payments\\Models\\PaymentCustomer::$provider_payload",
+                "Capell\\Payments\\Models\\PaymentDispute::$provider_payload",
+                "Capell\\Payments\\Models\\PaymentDownloadEntitlement::$email",
+                "Capell\\Payments\\Models\\PaymentIntent::$provider_payload",
+                "Capell\\Payments\\Models\\PaymentRefund::$provider_payload",
+                "Capell\\Payments\\Models\\PaymentWebhookEvent::$payload",
+                "Capell\\Payments\\Models\\Subscription::$provider_payload"
+            ],
+            "hashedTokenFields": [],
+            "redactedOutputClasses": [],
+            "plaintextJustifications": []
+        },
+        "publicOutput": {
+            "cacheSafe": false,
+            "forbidAuthoringSurface": true,
+            "forbidSecrets": true,
+            "forbidPublicBladeQueries": true
+        },
+        "externalHttpClients": {
+            "requiresTimeouts": true,
+            "requiresSecretRedaction": true,
+            "clients": [
+                "Capell\\Payments\\Actions\\CreateBillingPortalSessionAction",
+                "Capell\\Payments\\Actions\\IssuePaymentRefundAction",
+                "Capell\\Payments\\Support\\Gateways\\StripePaymentGateway"
+            ]
+        },
+        "adminSurface": {
+            "authorization": "permissions",
+            "permissions": [
+                "View:PaymentCustomer",
+                "View:CheckoutSession",
+                "View:PaymentIntent",
+                "View:Subscription",
+                "View:PaymentWebhookEvent",
+                "View:PaymentRefund",
+                "View:PaymentDispute"
+            ]
+        }
+    },
     "performance": {
         "frontendRenderBudgetMs": 0,
         "adminQueryBudget": 40,
