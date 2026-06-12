@@ -4,7 +4,7 @@ Payments is the Capell payment layer for provider-neutral payment records and na
 
 ## Included Capabilities
 
-- Stripe Checkout sessions for one-off payments, donations, subscriptions, paid downloads, paid gated access, and Form Builder payment fields.
+- Stripe Checkout sessions for one-off payments, donations, subscriptions, paid downloads, fulfillment-backed gated-access handoffs, and Form Builder payment fields.
 - Stripe webhook intake for checkout sessions, payment intents, subscriptions, refunds, and disputes.
 - Read-only admin resources for payment customers, checkout sessions, payment intents, subscriptions, webhook events, refunds, and disputes.
 - Paid download entitlements with signed download URLs.
