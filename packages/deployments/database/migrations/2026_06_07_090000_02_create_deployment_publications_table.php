@@ -27,7 +27,7 @@ return new class extends Migration
             $table->timestamp('status_checked_at')->nullable();
             $table->timestamps();
 
-            $table->index(['deployment_connection_id', 'created_at']);
+            $table->index(['deployment_connection_id', 'created_at'], 'deployment_publications_connection_created_index');
         });
     }
 

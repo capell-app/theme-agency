@@ -13,6 +13,7 @@ use Capell\Core\ThemeStudio\Rendering\BladeThemeRenderer;
 use Capell\Core\ThemeStudio\Rendering\ViewSectionRenderer;
 use Capell\Core\ThemeStudio\Theme\ThemeRegistry;
 use Capell\ThemeStudio\Portfolio\Console\Commands\DemoCommand;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use Override;
 
@@ -186,9 +187,24 @@ final class PortfolioThemeServiceProvider extends ServiceProvider
             'availability' => ['newsletterAvailable' => $newsletterAvailable],
             'newsletter' => [
                 'newsletterAvailable' => $newsletterAvailable,
-                'newsletterFormRoute' => $newsletterAvailable ? 'capell-newsletter.subscribe' : null,
+                'newsletterFormAction' => $this->newsletterFormAction($newsletterAvailable),
                 'newsletterFormMethod' => 'POST',
             ],
         ];
+    }
+
+    private function newsletterFormAction(bool $newsletterAvailable): ?string
+    {
+        if (! $newsletterAvailable) {
+            return null;
+        }
+
+        Route::getRoutes()->refreshNameLookups();
+
+        if (! Route::has('capell-newsletter.subscribe')) {
+            return null;
+        }
+
+        return route('capell-newsletter.subscribe');
     }
 }

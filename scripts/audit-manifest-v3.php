@@ -87,6 +87,7 @@ const CAPELL_MANIFEST_V3_MIGRATION_GROUPS = [
         'password-policy',
         'privacy-center',
         'publishing-studio',
+        'record-switcher',
         'translation-manager',
     ],
     'publishing-pro' => [
@@ -102,9 +103,13 @@ const CAPELL_MANIFEST_V3_MIGRATION_GROUPS = [
         'customer-portal',
         'email-studio',
         'events',
+        'exception-reports',
         'experiments',
         'form-builder',
         'knowledge-base',
+        'inertia',
+        'inertia-react-adapter',
+        'inertia-vue-adapter',
         'media-ai',
         'newsletter',
         'payments',
@@ -112,6 +117,7 @@ const CAPELL_MANIFEST_V3_MIGRATION_GROUPS = [
         'search',
         'seo-suite',
         'shopify-commerce',
+        'social-feeds',
         'url-manager',
         'wordpress-importer',
     ],
@@ -121,6 +127,9 @@ const CAPELL_MANIFEST_V3_MIGRATION_GROUPS = [
         'theme-corporate',
         'theme-education',
         'theme-healthcare',
+        'theme-inertia-bookings',
+        'theme-inertia-bookings-react',
+        'theme-inertia-bookings-vue',
         'theme-knowledge',
         'theme-local-services',
         'theme-nonprofit',
@@ -187,6 +196,7 @@ const CAPELL_MANIFEST_V3_KNOWN_CONTRIBUTION_TYPES = [
     'theme-adapter',
     'theme-integration',
     'webhook',
+    'paid-access-checkout-creation',
 ];
 
 /**
@@ -416,9 +426,20 @@ function capell_manifest_v3_provider_bucket_errors(array $manifest): array
 function capell_manifest_v3_discovered_contribution_types(string $packagePath): array
 {
     $types = [];
+    $scanPaths = array_values(array_filter([
+        $packagePath . DIRECTORY_SEPARATOR . 'src',
+        $packagePath . DIRECTORY_SEPARATOR . 'routes',
+        $packagePath . DIRECTORY_SEPARATOR . 'database' . DIRECTORY_SEPARATOR . 'migrations',
+        $packagePath . DIRECTORY_SEPARATOR . 'database' . DIRECTORY_SEPARATOR . 'settings',
+    ], static fn (string $path): bool => is_dir($path)));
+
+    if ($scanPaths === []) {
+        return [];
+    }
+
     $finder = (new Finder)
         ->files()
-        ->in($packagePath)
+        ->in($scanPaths)
         ->name('*.php')
         ->exclude(['vendor']);
 
@@ -426,6 +447,10 @@ function capell_manifest_v3_discovered_contribution_types(string $packagePath): 
         $contents = $file->getContents();
 
         foreach (CAPELL_MANIFEST_V3_CONTRIBUTION_PATTERNS as $type => $pattern) {
+            if ($type === 'route' && ! capell_manifest_v3_registers_routes($contents)) {
+                continue;
+            }
+
             if (str_contains($contents, $pattern)) {
                 $types[$type] = true;
             }
@@ -438,21 +463,40 @@ function capell_manifest_v3_discovered_contribution_types(string $packagePath): 
     return $types;
 }
 
+function capell_manifest_v3_registers_routes(string $contents): bool
+{
+    return preg_match('/\bRoute::(?:any|delete|get|group|match|middleware|name|patch|permanentRedirect|post|prefix|put|redirect|view)\s*\(/', $contents) === 1;
+}
+
 /**
  * @param  array<string, mixed>  $manifest
  * @return list<string>
  */
 function capell_manifest_v3_declared_contribution_types(array $manifest): array
 {
-    if (! is_array($manifest['contributes'] ?? null)) {
-        return [];
-    }
-
     $types = [];
 
-    foreach ($manifest['contributes'] as $contribution) {
-        if (is_array($contribution) && is_string($contribution['type'] ?? null)) {
-            $types[$contribution['type']] = true;
+    if (($manifest['database']['migrations'] ?? false) === true) {
+        $types['migration'] = true;
+    }
+
+    if (is_array($manifest['settings'] ?? null) && $manifest['settings'] !== []) {
+        $types['setting'] = true;
+    }
+
+    if (is_array($manifest['security']['publicSurface']['routeNames'] ?? null) && $manifest['security']['publicSurface']['routeNames'] !== []) {
+        $types['route'] = true;
+    }
+
+    if (is_array($manifest['healthChecks'] ?? null) && $manifest['healthChecks'] !== []) {
+        $types['health-check'] = true;
+    }
+
+    if (is_array($manifest['contributes'] ?? null)) {
+        foreach ($manifest['contributes'] as $contribution) {
+            if (is_array($contribution) && is_string($contribution['type'] ?? null)) {
+                $types[$contribution['type']] = true;
+            }
         }
     }
 

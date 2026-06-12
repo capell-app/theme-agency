@@ -1,18 +1,7 @@
 @php
-    use Illuminate\Support\Facades\Route;
-
     $heading ??= $section->heading ?? __('capell-theme-nonprofit::generic.newsletter_label');
     $summary ??= $section->summary ?? null;
     $formAction = $section->formAction ?? $section->action ?? ($formAction ?? $newsletterFormAction ?? null);
-    $formRoute = $newsletterFormRoute ?? null;
-    Route::getRoutes()->refreshNameLookups();
-    if (
-        (! is_string($formAction) || trim($formAction) === '')
-        && is_string($formRoute)
-        && Route::has($formRoute)
-    ) {
-        $formAction = route($formRoute);
-    }
     $formMethod = strtoupper((string) ($section->formMethod ?? $method ?? $newsletterFormMethod ?? 'POST'));
     $formMethod = in_array($formMethod, ['GET', 'POST'], true) ? $formMethod : 'POST';
     $formAction = is_string($formAction) ? trim($formAction) : '';

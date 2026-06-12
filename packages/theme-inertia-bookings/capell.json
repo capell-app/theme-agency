@@ -132,27 +132,27 @@
                 "caption": "Theme Inertia Bookings extension card."
             },
             {
-                "path": "docs/screenshots/inertia-bookings-homepage.png",
+                "path": "docs/assets/marketplace/inertia-bookings-homepage.png",
                 "alt": "Theme Inertia Bookings Inertia Bookings Homepage screenshot",
                 "caption": "Inertia Bookings Homepage rendered with the Theme Inertia Bookings theme."
             },
             {
-                "path": "docs/screenshots/inertia-bookings-locations.png",
+                "path": "docs/assets/marketplace/inertia-bookings-locations.png",
                 "alt": "Theme Inertia Bookings Inertia Bookings Locations screenshot",
                 "caption": "Inertia Bookings Locations rendered with the Theme Inertia Bookings theme."
             },
             {
-                "path": "docs/screenshots/inertia-bookings-mobile-request.png",
+                "path": "docs/assets/marketplace/inertia-bookings-mobile-request.png",
                 "alt": "Theme Inertia Bookings Inertia Bookings Mobile Request screenshot",
                 "caption": "Inertia Bookings Mobile Request rendered with the Theme Inertia Bookings theme."
             },
             {
-                "path": "docs/screenshots/inertia-bookings-request-flow.png",
+                "path": "docs/assets/marketplace/inertia-bookings-request-flow.png",
                 "alt": "Theme Inertia Bookings Inertia Bookings Request Flow screenshot",
                 "caption": "Inertia Bookings Request Flow rendered with the Theme Inertia Bookings theme."
             },
             {
-                "path": "docs/screenshots/inertia-bookings-services.png",
+                "path": "docs/assets/marketplace/inertia-bookings-services.png",
                 "alt": "Theme Inertia Bookings Inertia Bookings Services screenshot",
                 "caption": "Inertia Bookings Services rendered with the Theme Inertia Bookings theme."
             }
