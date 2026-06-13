@@ -1,0 +1,157 @@
+{
+    "manifest-version": 3,
+    "name": "capell-app/theme-estate-agents",
+    "slug": "theme-estate-agents",
+    "displayName": "Theme Estate Agents",
+    "kind": "theme",
+    "capellApiVersion": "^4.0",
+    "version": "4.x-dev",
+    "description": "Theme Estate Agents gives property teams a premium agency website built around search intent, featured listings, vendor valuations, local-area confidence, agent credibility, and viewing requests. It extends the built-in default frontend theme while keeping property copy, area guidance, and enquiry content portable in Capell data. The theme owns the property brochure rhythm: search bands, listing ledgers, valuation CTAs, neighbourhood guides, agent proof, and viewing forms. It pairs with Search for public listing discovery, Address for location context, and Form Builder for valuation or viewing capture without introducing theme-owned property records.",
+    "product": {
+        "group": "Capell Themes",
+        "tier": "premium",
+        "bundle": "themes"
+    },
+    "namespace": "Capell\\ThemeStudio\\EstateAgents",
+    "surfaces": ["frontend", "console"],
+    "dependencies": {
+        "requires": ["capell-app/core", "capell-app/frontend"],
+        "supports": [
+            "capell-app/address",
+            "capell-app/blog",
+            "capell-app/form-builder",
+            "capell-app/search",
+            "capell-app/seo-suite"
+        ],
+        "conflicts": []
+    },
+    "providers": {
+        "metadata": [],
+        "install": [],
+        "runtime": [
+            "Capell\\ThemeStudio\\EstateAgents\\EstateAgentsThemeServiceProvider"
+        ],
+        "admin": [],
+        "frontend": []
+    },
+    "contributes": [
+        {
+            "type": "admin-page",
+            "class": "Capell\\ThemeStudio\\EstateAgents\\Manifest\\ThemeManagementPageContribution",
+            "pageClass": "Capell\\Marketplace\\Filament\\Pages\\ThemeExtensionPage",
+            "pageParameters": {
+                "themeKey": "estate-agents"
+            },
+            "labelKey": "capell-marketplace::marketplace.theme_extension.management_entry_label"
+        }
+    ],
+    "database": {
+        "migrations": false,
+        "settings": false,
+        "requiredTables": []
+    },
+    "commands": {
+        "install": null,
+        "setup": null,
+        "demo": "capell:theme-estate-agents-demo",
+        "demoParams": ["url", "languages", "sites"],
+        "doctor": null
+    },
+    "settings": [],
+    "permissions": [],
+    "capabilities": ["theme-estate-agents", "theme-estate-agents-frontend"],
+    "security": {
+        "riskTier": "low",
+        "publicSurface": {
+            "routeNames": [],
+            "auth": "none",
+            "csrfExemptRoutes": [],
+            "signedRoutes": [],
+            "tokenizedRoutes": [],
+            "webhookRoutes": [],
+            "throttledRoutes": []
+        },
+        "sensitiveData": {
+            "encryptedFields": [],
+            "hashedTokenFields": [],
+            "redactedOutputClasses": [],
+            "plaintextJustifications": []
+        },
+        "publicOutput": {
+            "cacheSafe": true,
+            "forbidAuthoringSurface": true,
+            "forbidSecrets": true,
+            "forbidPublicBladeQueries": true
+        },
+        "externalHttpClients": {
+            "requiresTimeouts": false,
+            "requiresSecretRedaction": false,
+            "clients": []
+        },
+        "adminSurface": {
+            "authorization": "none",
+            "permissions": []
+        }
+    },
+    "performance": {
+        "frontendRenderBudgetMs": 20,
+        "adminQueryBudget": 0,
+        "cacheTags": ["theme-estate-agents"],
+        "cacheSafety": {
+            "cacheable": false,
+            "variesBy": ["site", "locale"],
+            "sensitiveOutput": false,
+            "invalidationSources": [],
+            "queueInvalidation": false
+        }
+    },
+    "healthChecks": [
+        {
+            "key": "theme-estate-agents.package-health",
+            "label": "Theme Estate Agents package surfaces, providers, and install health are discoverable by Diagnostics.",
+            "class": "Capell\\ThemeStudio\\EstateAgents\\Health\\ThemeEstateAgentsHealthCheck",
+            "severity": "critical",
+            "surface": "frontend"
+        }
+    ],
+    "commercial": {
+        "proposedLicense": "paid",
+        "requestedCertification": "first-party",
+        "supportPolicy": "priority",
+        "privateDocsRequested": true
+    },
+    "marketplace": {
+        "summary": "A premium property theme for estate agencies, lettings teams, valuations, local guides, and viewing-led enquiry journeys.",
+        "description": "Theme Estate Agents gives property teams a premium agency website built around search intent, featured listings, vendor valuations, local-area confidence, agent credibility, and viewing requests. It extends the built-in default frontend theme while keeping property copy, area guidance, and enquiry content portable in Capell data. The theme owns the property brochure rhythm: search bands, listing ledgers, valuation CTAs, neighbourhood guides, agent proof, and viewing forms. It pairs with Search for public listing discovery, Address for location context, and Form Builder for valuation or viewing capture without introducing theme-owned property records.",
+        "screenshots": [
+            {
+                "path": "docs/assets/marketplace/extension-card.svg",
+                "alt": "Theme Estate Agents marketplace card preview",
+                "caption": "Property search homepage with valuation and viewing intent."
+            },
+            {
+                "path": "docs/assets/marketplace/estate-homepage.svg",
+                "alt": "Theme Estate Agents homepage preview",
+                "caption": "Agency homepage with search, featured property, and proof."
+            },
+            {
+                "path": "docs/assets/marketplace/estate-search.svg",
+                "alt": "Theme Estate Agents property search preview",
+                "caption": "Property search band and listing filters."
+            },
+            {
+                "path": "docs/assets/marketplace/estate-valuation.svg",
+                "alt": "Theme Estate Agents valuation preview",
+                "caption": "Vendor valuation and appraisal conversion surface."
+            },
+            {
+                "path": "docs/assets/marketplace/estate-local-guide.svg",
+                "alt": "Theme Estate Agents local guide preview",
+                "caption": "Area-guide layout with agent proof and neighbourhood context."
+            }
+        ],
+        "categories": ["frontend", "themes", "property"]
+    },
+    "extends": "default",
+    "themeKey": "estate-agents"
+}

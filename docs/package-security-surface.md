@@ -87,6 +87,7 @@ Cache posture uses three terms: `safe` means public output is expected to avoid 
 | capell-app/theme-commerce | low | 0 | - | - | - | - | none | safe; not cacheable; no sensitive output; varies by site, locale |
 | capell-app/theme-corporate | low | 0 | - | - | - | - | none | safe; not cacheable; no sensitive output; varies by site, locale |
 | capell-app/theme-education | low | 0 | - | - | - | - | none | safe; not cacheable; no sensitive output; varies by site, locale |
+| capell-app/theme-estate-agents | low | 0 | - | - | - | - | none | safe; not cacheable; no sensitive output; varies by site, locale |
 | capell-app/theme-healthcare | low | 0 | - | - | - | - | none | safe; not cacheable; no sensitive output; varies by site, locale |
 | capell-app/theme-inertia-bookings | low | 0 | - | - | - | - | none | safe; not cacheable; no sensitive output; varies by site, locale |
 | capell-app/theme-inertia-bookings-react | low | 0 | - | - | - | - | none | safe; not cacheable; no sensitive output; varies by site, locale |
@@ -96,6 +97,7 @@ Cache posture uses three terms: `safe` means public output is expected to avoid 
 | capell-app/theme-local-services | low | 0 | - | - | - | - | none | safe; not cacheable; no sensitive output; varies by site, locale |
 | capell-app/theme-nonprofit | low | 0 | - | - | - | - | none | safe; not cacheable; no sensitive output; varies by site, locale |
 | capell-app/theme-portfolio | low | 0 | - | - | - | - | none | safe; not cacheable; no sensitive output; varies by site, locale |
+| capell-app/theme-restaurant | low | 0 | - | - | - | - | none | safe; not cacheable; no sensitive output; varies by site, locale |
 | capell-app/theme-saas | low | 0 | - | - | - | - | none | safe; not cacheable; no sensitive output; varies by site, locale |
 | capell-app/translation-manager | sensitive | 0 | - | - | - | - | panel-auth | safe; not cacheable; no sensitive output; varies by none |
 | capell-app/url-manager | sensitive | 0 | - | - | - | url_manager_not_found_opportunities.source_hash<br>url_manager_redirect_hits.ip_hash<br>url_manager_redirect_hits.user_agent_hash<br>url_manager_redirect_rules.source_hash<br>url_manager_redirect_rules.target_hash | permissions; 4 permissions | safe; not cacheable; no sensitive output; varies by none |

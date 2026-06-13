@@ -1,8 +1,17 @@
 # Capell Theme Catalogue Review
 
-Last reviewed: 2026-06-08
+Last reviewed: 2026-06-13
 
 This review covers the first-party theme catalogue in `packages/foundation-theme` and `packages/theme-*`. It checks theme positioning, manifest/docs consistency, public-output safety signals, screenshot coverage, and whether the premium themes feel professionally differentiated.
+
+## 2026-06-13 Premium Additions
+
+The catalogue now includes two additional premium themes chosen from the non-overlap review:
+
+- `theme-restaurant`: a hospitality lane for menu discovery, reservations, private dining, events, opening hours, location guidance, chef story, and venue proof. This avoids Commerce's product-buying lane and Local Services' quote/dispatch lane by centring the visitor workflow on dining intent and table conversion.
+- `theme-estate-agents`: a property lane for public search, featured listings, vendor valuations, local-area guides, agent proof, market evidence, and viewing requests. This avoids Local Services, Portfolio, SaaS, and Commerce by centring the visitor workflow on buyer/vendor property decisions rather than generic lead capture or retail catalogue browsing.
+
+Both new themes are first-party paid themes, extend the built-in default runtime, own no schema, use safe optional-package fallbacks, and include package-local public-output safety, manifest, definition, and health-check tests.
 
 Evidence used:
 
@@ -49,22 +58,24 @@ The result is accepted with follow-up items below. No PHP/theme runtime changes 
 
 ## Consistency Matrix
 
-| Package                        | Current role                            | Manifest tier/kind | Extends Foundation | Screenshot-runner entries | Marketplace screenshots | Review verdict                                                                |
-| ------------------------------ | --------------------------------------- | ------------------ | ------------------ | ------------------------: | ----------------------: | ----------------------------------------------------------------------------- |
-| `foundation-theme`             | Shared runtime/base theme               | free theme         | n/a                |                        12 |                      11 | Stable baseline; one missing declared screenshot.                             |
-| `theme-agency`                 | Creative/campaign premium theme         | premium theme      | yes                |                        10 |                       3 | Visually strong and premium; central docs needed tier correction.             |
-| `theme-commerce`               | Editorial retail/commerce theme         | premium theme      | yes                |                        10 |                       2 | Premium and distinct; marketplace gallery should expose more captures.        |
-| `theme-corporate`              | Restrained business/public-sector theme | free theme         | yes                |                        10 |                       2 | Professional basic theme; should stay deliberately conservative.              |
-| `theme-education`              | Course/enrolment theme                  | premium theme      | yes                |                         7 |                       3 | Structurally premium; first viewport needs more confidence and proof.         |
-| `theme-healthcare`             | Clinic/service/appointment theme        | premium theme      | yes                |                         6 |                       6 | Strong premium lane with mobile coverage.                                     |
-| `theme-inertia-bookings`       | Inertia booking-business theme          | premium theme      | no                 |                         5 |                       3 | Strong booking product family with promoted desktop/mobile booking proof.     |
-| `theme-inertia-bookings-react` | React booking adapter                   | premium plugin     | no                 |                         5 |                       1 | Adapter plugin, not a standalone theme.                                       |
-| `theme-inertia-bookings-vue`   | Vue booking adapter                     | premium plugin     | no                 |                         5 |                       1 | Adapter plugin, not a standalone theme.                                       |
-| `theme-knowledge`              | Search/resource/documentation theme     | premium theme      | yes                |                         7 |                       3 | Distinct premium lane; make runner captures required when stable.             |
-| `theme-local-services`         | Quote-led local service theme           | premium theme      | yes                |                         9 |                       4 | Strong premium operational-service theme.                                     |
-| `theme-nonprofit`              | Campaign/donation/volunteer theme       | premium theme      | yes                |                         9 |                       4 | Professional and useful; needs more visual differentiation in hero.           |
-| `theme-portfolio`              | Creator/consultant case-study theme     | premium theme      | yes                |                         9 |                       4 | Structurally premium; needs stronger media/case-study expression.             |
-| `theme-saas`                   | Product-led software/subscription theme | premium theme      | yes                |                         9 |                       8 | Strong premium theme and best current marketplace coverage.                   |
+| Package                        | Current role                            | Manifest tier/kind | Extends Foundation | Screenshot-runner entries | Marketplace screenshots | Review verdict                                                                         |
+| ------------------------------ | --------------------------------------- | ------------------ | ------------------ | ------------------------: | ----------------------: | -------------------------------------------------------------------------------------- |
+| `foundation-theme`             | Shared runtime/base theme               | free theme         | n/a                |                        12 |                      11 | Stable baseline; one missing declared screenshot.                                      |
+| `theme-agency`                 | Creative/campaign premium theme         | premium theme      | yes                |                        10 |                       3 | Visually strong and premium; central docs needed tier correction.                      |
+| `theme-commerce`               | Editorial retail/commerce theme         | premium theme      | yes                |                        10 |                       2 | Premium and distinct; marketplace gallery should expose more captures.                 |
+| `theme-corporate`              | Restrained business/public-sector theme | free theme         | yes                |                        10 |                       2 | Professional basic theme; should stay deliberately conservative.                       |
+| `theme-education`              | Course/enrolment theme                  | premium theme      | yes                |                         7 |                       3 | Structurally premium; first viewport needs more confidence and proof.                  |
+| `theme-estate-agents`          | Property search and valuation theme     | premium theme      | yes                |                         5 |                       5 | New premium property lane with search, valuation, local-guide, and viewing proof.      |
+| `theme-healthcare`             | Clinic/service/appointment theme        | premium theme      | yes                |                         6 |                       6 | Strong premium lane with mobile coverage.                                              |
+| `theme-inertia-bookings`       | Inertia booking-business theme          | premium theme      | no                 |                         5 |                       3 | Strong booking product family with promoted desktop/mobile booking proof.              |
+| `theme-inertia-bookings-react` | React booking adapter                   | premium plugin     | no                 |                         5 |                       1 | Adapter plugin, not a standalone theme.                                                |
+| `theme-inertia-bookings-vue`   | Vue booking adapter                     | premium plugin     | no                 |                         5 |                       1 | Adapter plugin, not a standalone theme.                                                |
+| `theme-knowledge`              | Search/resource/documentation theme     | premium theme      | yes                |                         7 |                       3 | Distinct premium lane; make runner captures required when stable.                      |
+| `theme-local-services`         | Quote-led local service theme           | premium theme      | yes                |                         9 |                       4 | Strong premium operational-service theme.                                              |
+| `theme-nonprofit`              | Campaign/donation/volunteer theme       | premium theme      | yes                |                         9 |                       4 | Professional and useful; needs more visual differentiation in hero.                    |
+| `theme-portfolio`              | Creator/consultant case-study theme     | premium theme      | yes                |                         9 |                       4 | Structurally premium; needs stronger media/case-study expression.                      |
+| `theme-restaurant`             | Hospitality menu and reservation theme  | premium theme      | yes                |                         5 |                       5 | New premium hospitality lane with menu, reservation, private dining, and events proof. |
+| `theme-saas`                   | Product-led software/subscription theme | premium theme      | yes                |                         9 |                       8 | Strong premium theme and best current marketplace coverage.                            |
 
 ## Customisation Model
 

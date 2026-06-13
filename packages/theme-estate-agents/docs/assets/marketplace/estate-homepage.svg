@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720" role="img" aria-labelledby="title desc">
+  <title id="title">Estate Agents homepage preview</title>
+  <desc id="desc">Property homepage with search, valuation, and listing proof.</desc>
+  <rect width="1280" height="720" fill="#eaf0ec"/>
+  <rect x="102" y="78" width="1076" height="564" fill="#ffffff" stroke="#b9ccc4" stroke-width="3"/>
+  <rect x="152" y="134" width="404" height="320" fill="#f6f8f4"/>
+  <rect x="188" y="172" width="116" height="18" fill="#174c3f"/>
+  <rect x="188" y="218" width="292" height="62" fill="#1a1c1f"/>
+  <rect x="188" y="308" width="320" height="18" fill="#606a65"/>
+  <rect x="188" y="342" width="254" height="18" fill="#606a65"/>
+  <rect x="188" y="400" width="146" height="48" fill="#174c3f"/>
+  <rect x="618" y="134" width="450" height="320" fill="#174c3f"/>
+  <rect x="654" y="172" width="272" height="218" fill="#ffffff" opacity="0.2"/>
+  <rect x="954" y="172" width="80" height="62" fill="#c7f464"/>
+  <rect x="954" y="262" width="80" height="62" fill="#ffffff" opacity="0.2"/>
+  <rect x="954" y="352" width="80" height="62" fill="#1a1c1f"/>
+  <rect x="152" y="498" width="276" height="68" fill="#ffffff" stroke="#dce7e2"/>
+  <rect x="456" y="498" width="276" height="68" fill="#ffffff" stroke="#dce7e2"/>
+  <rect x="760" y="498" width="276" height="68" fill="#ffffff" stroke="#dce7e2"/>
+</svg>
