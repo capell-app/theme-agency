@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Capell\LiveChat\Tests;
 
+use Capell\AIOrchestrator\Providers\AIOrchestratorServiceProvider;
 use Capell\Contacts\Providers\ContactsServiceProvider;
 use Capell\Core\Facades\CapellCore;
 use Capell\Core\Support\CapellCoreManager;
@@ -57,6 +58,7 @@ class LiveChatTestCase extends OrchestraTestCase
             LaravelDataServiceProvider::class,
             ContactsServiceProvider::class,
             KnowledgeBaseServiceProvider::class,
+            AIOrchestratorServiceProvider::class,
             LiveChatServiceProvider::class,
         ];
     }
@@ -76,6 +78,7 @@ class LiveChatTestCase extends OrchestraTestCase
         Config::set('capell-live-chat.default_site_id', 1);
 
         CapellCore::forcePackageInstalled(ContactsServiceProvider::$packageName);
+        CapellCore::forcePackageInstalled(AIOrchestratorServiceProvider::$packageName);
         CapellCore::forcePackageInstalled(KnowledgeBaseServiceProvider::$packageName);
         CapellCore::forcePackageInstalled(LiveChatServiceProvider::$packageName);
     }

@@ -6,8 +6,11 @@ namespace Capell\LiveChat\Health;
 
 use Capell\Core\Contracts\Extensions\ChecksExtensionHealth;
 use Capell\LiveChat\Actions\ApplyLiveChatCorsHeadersAction;
+use Capell\LiveChat\Actions\BuildLiveChatOperatorStateAction;
+use Capell\LiveChat\Actions\BuildLiveChatSuggestedReplyAction;
 use Capell\LiveChat\Actions\BuildLiveChatWidgetConfigAction;
 use Capell\LiveChat\Actions\CloseLiveChatConversationAction;
+use Capell\LiveChat\Actions\GenerateLiveChatSummaryAction;
 use Capell\LiveChat\Actions\GuardLiveChatInstallationOriginAction;
 use Capell\LiveChat\Actions\RequestLiveChatHandoffAction;
 use Capell\LiveChat\Actions\ResolveLiveChatConversationForInstallationAction;
@@ -15,6 +18,7 @@ use Capell\LiveChat\Actions\ResolveLiveChatInstallationAction;
 use Capell\LiveChat\Actions\SearchLiveChatKnowledgeDocumentsAction;
 use Capell\LiveChat\Actions\StartLiveChatConversationAction;
 use Capell\LiveChat\Actions\StoreLiveChatMessageAction;
+use Capell\LiveChat\Actions\SuggestLiveChatHumanReplyAction;
 use Capell\LiveChat\Actions\SyncLiveChatConversationContactAction;
 use Capell\LiveChat\Models\LiveChatAIRun;
 use Capell\LiveChat\Models\LiveChatAvailabilityException;
@@ -48,8 +52,11 @@ final class LiveChatHealthCheck implements ChecksExtensionHealth
     /** @var list<class-string> */
     private const array ACTIONS = [
         ApplyLiveChatCorsHeadersAction::class,
+        BuildLiveChatOperatorStateAction::class,
+        BuildLiveChatSuggestedReplyAction::class,
         BuildLiveChatWidgetConfigAction::class,
         CloseLiveChatConversationAction::class,
+        GenerateLiveChatSummaryAction::class,
         GuardLiveChatInstallationOriginAction::class,
         RequestLiveChatHandoffAction::class,
         ResolveLiveChatConversationForInstallationAction::class,
@@ -57,6 +64,7 @@ final class LiveChatHealthCheck implements ChecksExtensionHealth
         SearchLiveChatKnowledgeDocumentsAction::class,
         StartLiveChatConversationAction::class,
         StoreLiveChatMessageAction::class,
+        SuggestLiveChatHumanReplyAction::class,
         SyncLiveChatConversationContactAction::class,
     ];
 

@@ -7,9 +7,12 @@ require_once __DIR__ . '/../Pest.php';
 use Capell\Core\Contracts\Extensions\RegistersExtensionFrontendComponent;
 use Capell\Core\Contracts\Extensions\RegistersExtensionRoute;
 use Capell\LiveChat\Actions\BuildLiveChatAnalyticsAction;
+use Capell\LiveChat\Actions\BuildLiveChatOperatorStateAction;
+use Capell\LiveChat\Actions\BuildLiveChatSuggestedReplyAction;
 use Capell\LiveChat\Actions\BuildLiveChatTranscriptAction;
 use Capell\LiveChat\Actions\BuildLiveChatWidgetConfigAction;
 use Capell\LiveChat\Actions\CloseLiveChatConversationAction;
+use Capell\LiveChat\Actions\GenerateLiveChatSummaryAction;
 use Capell\LiveChat\Actions\IndexLiveChatKnowledgeDocumentAction;
 use Capell\LiveChat\Actions\IndexLiveChatKnowledgeSourceAction;
 use Capell\LiveChat\Actions\RecordLiveChatAIRunAction;
@@ -18,6 +21,7 @@ use Capell\LiveChat\Actions\RequestLiveChatHandoffAction;
 use Capell\LiveChat\Actions\SearchLiveChatKnowledgeDocumentsAction;
 use Capell\LiveChat\Actions\StartLiveChatConversationAction;
 use Capell\LiveChat\Actions\StoreLiveChatMessageAction;
+use Capell\LiveChat\Actions\SuggestLiveChatHumanReplyAction;
 use Capell\LiveChat\Actions\SyncLiveChatConversationContactAction;
 use Capell\LiveChat\Filament\Resources\AvailabilityWindows\AvailabilityWindowResource;
 use Capell\LiveChat\Filament\Resources\Conversations\ConversationResource;
@@ -201,9 +205,12 @@ it('declares the live chat package manifest contract', function (): void {
         ->and(class_implements(LiveChatWidgetContribution::class))->toContain(RegistersExtensionFrontendComponent::class)
         ->and(live_chat_array($manifest, 'actions'))->toMatchArray([
             'buildLiveChatAnalytics' => BuildLiveChatAnalyticsAction::class,
+            'buildLiveChatOperatorState' => BuildLiveChatOperatorStateAction::class,
+            'buildLiveChatSuggestedReply' => BuildLiveChatSuggestedReplyAction::class,
             'buildLiveChatTranscript' => BuildLiveChatTranscriptAction::class,
             'buildLiveChatWidgetConfig' => BuildLiveChatWidgetConfigAction::class,
             'closeLiveChatConversation' => CloseLiveChatConversationAction::class,
+            'generateLiveChatSummary' => GenerateLiveChatSummaryAction::class,
             'indexLiveChatKnowledgeDocument' => IndexLiveChatKnowledgeDocumentAction::class,
             'indexLiveChatKnowledgeSource' => IndexLiveChatKnowledgeSourceAction::class,
             'recordLiveChatAIRun' => RecordLiveChatAIRunAction::class,
@@ -212,6 +219,7 @@ it('declares the live chat package manifest contract', function (): void {
             'searchLiveChatKnowledgeDocuments' => SearchLiveChatKnowledgeDocumentsAction::class,
             'startLiveChatConversation' => StartLiveChatConversationAction::class,
             'storeLiveChatMessage' => StoreLiveChatMessageAction::class,
+            'suggestLiveChatHumanReply' => SuggestLiveChatHumanReplyAction::class,
             'syncLiveChatConversationContact' => SyncLiveChatConversationContactAction::class,
         ])
         ->and(live_chat_string_list($manifest, 'capabilities'))->toContain(
@@ -221,6 +229,10 @@ it('declares the live chat package manifest contract', function (): void {
             'live-chat-contacts-sync',
             'live-chat-human-handoff',
             'live-chat-file-uploads',
+            'live-chat-ai-orchestrator-module',
+            'live-chat-agent-bridge-capabilities',
+            'live-chat-operator-summary',
+            'live-chat-suggested-human-replies',
             'live-chat-ai-run-audit',
             'live-chat-knowledge-documents',
             'live-chat-knowledge-gaps',

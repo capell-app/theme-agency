@@ -16,6 +16,8 @@ use Capell\LiveChat\Contracts\LiveChatKnowledgeProvider;
 use Capell\LiveChat\Contracts\LiveChatResponder;
 use Capell\LiveChat\Contracts\LiveChatWidgetRenderer;
 use Capell\LiveChat\Enums\ResourceEnum;
+use Capell\LiveChat\Integrations\AgentBridge\LiveChatAgentBridgeCapabilityProvider;
+use Capell\LiveChat\Integrations\AIOrchestrator\LiveChatAIOrchestratorModule;
 use Capell\LiveChat\Models\LiveChatAIRun;
 use Capell\LiveChat\Models\LiveChatAvailabilityException;
 use Capell\LiveChat\Models\LiveChatAvailabilityWindow;
@@ -84,6 +86,7 @@ final class LiveChatServiceProvider extends AbstractPackageServiceProvider
             ManualLiveChatKnowledgeProvider::class,
             KnowledgeBaseLiveChatKnowledgeProvider::class,
         ], LiveChatKnowledgeProvider::TAG);
+        $this->registerAgentBridgeIntegration();
     }
 
     public function packageRegistered(): void
@@ -96,6 +99,7 @@ final class LiveChatServiceProvider extends AbstractPackageServiceProvider
             $this
                 ->registerModels()
                 ->registerProtectedTables()
+                ->registerAIOrchestratorIntegration()
                 ->registerPolicies()
                 ->registerAdminResources();
         });
@@ -207,6 +211,41 @@ final class LiveChatServiceProvider extends AbstractPackageServiceProvider
         Gate::policy(LiveChatKnowledgeDocument::class, LiveChatKnowledgeDocumentPolicy::class);
         Gate::policy(LiveChatKnowledgeGap::class, LiveChatKnowledgeGapPolicy::class);
         Gate::policy(LiveChatKnowledgeSource::class, LiveChatKnowledgeSourcePolicy::class);
+
+        return $this;
+    }
+
+    private function registerAIOrchestratorIntegration(): self
+    {
+        $registryClass = 'Capell\\AIOrchestrator\\Support\\AIOrchestratorModuleRegistry';
+
+        if (! class_exists($registryClass) || ! CapellCore::isPackageInstalled('capell-app/ai-orchestrator')) {
+            return $this;
+        }
+
+        if (! class_exists(LiveChatAIOrchestratorModule::class)) {
+            return $this;
+        }
+
+        $this->app->afterResolving($registryClass, static function (object $registry): void {
+            if (method_exists($registry, 'register')) {
+                $registry->register(new LiveChatAIOrchestratorModule);
+            }
+        });
+
+        return $this;
+    }
+
+    private function registerAgentBridgeIntegration(): self
+    {
+        $providerInterface = 'Capell\\AgentBridge\\Contracts\\CapellAgentBridgeCapabilityProvider';
+
+        if (! interface_exists($providerInterface) || ! class_exists(LiveChatAgentBridgeCapabilityProvider::class)) {
+            return $this;
+        }
+
+        $this->app->bind(LiveChatAgentBridgeCapabilityProvider::class);
+        $this->app->tag([LiveChatAgentBridgeCapabilityProvider::class], $providerInterface);
 
         return $this;
     }
