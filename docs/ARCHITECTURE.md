@@ -1,4 +1,4 @@
-# Capell Theme And AIOrchestrator Boundaries
+# Capell Theme, Layout Builder, And AI Orchestrator Boundaries
 
 ## Package Responsibilities
 
@@ -10,17 +10,17 @@ Owns Capell's public rendering context: site, language, page, layout, theme key,
 
 Owns the free theme foundation and shared theme runtime. It provides the baseline Blade/Tailwind rendering surface, theme registry, renderer contracts, preview context, and token CSS support. Premium themes may extend it, but Foundation remains the platform fallback and carries the `default` theme key.
 
-### `capell-app/theme-corporate`, `capell-app/theme-agency`, `capell-app/theme-saas`
+### First-party theme packages
 
-Own polished premium renderers. They register definitions, curated presets, page renderers, section renderers, views, and visual assets. Each theme installs independently and declares `extends: "capell-app/foundation-theme"` in `capell.json`. There is no Studio metapackage bundling them together.
+Theme packages such as `capell-app/theme-corporate`, `capell-app/theme-agency`, `capell-app/theme-saas`, and the other first-party `theme-*` packages own polished renderers. They register definitions, curated presets, page renderers, section renderers, views, and visual assets. Each theme installs independently and declares `extends: "capell-app/foundation-theme"` in `capell.json`. There is no Studio metapackage bundling them together.
 
-### Admin/frontend layout builder APIs
+### `capell-app/layout-builder`
 
-Structured layout building, containers, widgets, widget assets, page-level widget asset overrides, layout presets, and layout creator actions now live in the admin/frontend core packages. Optional packages may consume those APIs, but there is no separate `capell-app/layout-builder` package in this repository.
+Owns Capell's visual composition layer: layout containers, widgets, widget assets, page-level widget asset overrides, layout presets, layout areas, public layout graphs, and the Filament layout editor. It is a separate optional package in this repository, installed before packages that need editable page composition such as Blog and first-party themes. Core still owns sites, pages, languages, URLs, themes, and base content models.
 
 ### `capell-app/ai-orchestrator`
 
-Owns the commercial AI orchestration layer: provider connectors, prompt runs, capability registry, approval levels, and optional package integrations. AIOrchestrator wraps package-owned Actions such as core layout builder layout previewing; packages expose normal Actions and do not need commercial AI dependencies.
+Owns the commercial AI orchestration layer: capability registration, prompt/capability execution boundaries, approval levels, and optional package integrations. AI Orchestrator wraps package-owned Actions such as Layout Builder layout previewing; packages expose normal Actions and do not need commercial AI dependencies unless they provide an AI-assisted surface.
 
 ## Composition Model
 
@@ -29,7 +29,8 @@ HTTP request
   -> frontend resolves site, language, page, layout, and active theme key
   -> foundation theme runtime optionally supplies preview theme/preset
   -> theme runtime resolves active or preview theme/preset and brand profile
-  -> CapellFrontendThemePageAdapter maps the page and layout builder layout widgets into portable sections
+  -> Layout Builder builds the public layout graph when the page uses editable composition
+  -> CapellFrontendThemePageAdapter maps the page and layout graph into portable sections
   -> selected theme renderer renders shared section data
   -> token CSS asset is loaded using the isolated theme/preset/brand cache key
 ```
@@ -40,7 +41,9 @@ HTTP request
 2. Theme inheritance is single-parent through `capell.json` `extends`.
 3. Parent preset defaults load first, child preset defaults load second, and Theme admin database edits win last.
 4. Foundation Theme owns shared runtime behavior; visual treatment belongs in concrete theme packages.
-5. The admin/frontend layout builder APIs own layout/widget storage and page-level widget asset overrides.
-6. AIOrchestrator owns AI integration and optional package wrappers; Foundation packages do not import AIOrchestrator classes.
+5. Layout Builder owns layout/widget storage, public layout graphs, layout areas, and page-level widget asset overrides.
+6. Packages that need editable visual composition should require `capell-app/layout-builder`; packages that only render fixed public data should not.
+7. AI Orchestrator owns AI integration and optional package wrappers; Foundation packages do not import AI Orchestrator classes.
+8. Public Blade, cached HTML, and theme output must stay free of authoring controls, editor metadata, signed admin URLs, and database queries.
 
 See [Creating a Capell theme](creating-a-theme.md) for the package contract and install flow.

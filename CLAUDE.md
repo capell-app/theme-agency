@@ -32,12 +32,9 @@ Frontend authoring safety is mandatory: non-admin frontend users must never rece
 
 ## Packages
 
-| Package           | Namespace               | Depends on                                |
-| ----------------- | ----------------------- | ----------------------------------------- |
-| `layout-builder`  | `Capell\LayoutBuilder`  | core, admin, frontend                     |
-| `blog`            | `Capell\Blog`           | core, admin, frontend, **layout-builder** |
-| `address`         | `Capell\Address`        | core, admin                               |
-| `ai-orchestrator` | `Capell\AIOrchestrator` | core, admin                               |
+This repo contains many Capell add-on packages. Treat `composer.json`, `composer.local.json`, package `composer.json` files, and package `capell.json` manifests as the current source of truth for namespaces, dependencies, surfaces, and tests.
+
+Common active packages include `layout-builder`, `blog`, `address`, `ai-orchestrator`, `campaign-studio`, `content-sections`, `frontend-authoring`, `html-cache`, `login-audit`, `media-ai`, `publishing-studio`, `seo-suite`, `theme-*`, and others under `packages/`.
 
 **Blog requires LayoutBuilder — install LayoutBuilder first.**
 
@@ -72,29 +69,36 @@ Any model in draft/publish must implement `Capell\Core\Contracts\Draftable` and 
 ## Testing
 
 - Test actions directly: `MyAction::run($input)` — not through HTTP.
-- Run single package: `vendor/bin/pest packages/layout-builder/tests`
-- Minimum 80% coverage. Full suite: `composer test`.
+- Run single package: `vendor/bin/pest packages/layout-builder/tests --configuration=phpunit.xml`
+- Minimum 90% coverage. Full suite: `COMPOSER=composer.local.json composer test`.
+- Start with the narrowest useful package or file-level Pest command, then broaden only when the change touches shared behaviour, public rendering, installation, or cross-package contracts.
 
 ## Composer local overlay
 
+- Always run Composer commands through the local overlay in this repo: `COMPOSER=composer.local.json composer ...`. Do not run plain `composer ...` unless you explicitly need the public package manifest.
 - Common issue: if a package test case class is not found, check `composer.local.json` as well as `composer.json`. The local overlay often needs matching `autoload` and `autoload-dev` PSR-4 entries for package namespaces, then regenerate with `COMPOSER=composer.local.json composer dump-autoload --no-scripts`.
+- When changing `composer.json`, update `composer.local.json` in the same change unless the difference is deliberately local-only.
 
 ## Commands
 
-| Command                                    | Purpose                      |
-| ------------------------------------------ | ---------------------------- |
-| `composer test`                            | Pest tests (parallel)        |
-| `composer preflight`                       | Rector + Pint + PHPStan      |
-| `composer lint`                            | Pint only                    |
-| `composer analyze`                         | PHPStan only                 |
-| `composer prepare`                         | Seed demo workbench          |
-| `composer serve`                           | Build + serve localhost:8000 |
-| `vendor/bin/pest packages/{package}/tests` | Single package tests         |
+| Command                                               | Purpose                                                                         |
+| ----------------------------------------------------- | ------------------------------------------------------------------------------- |
+| `COMPOSER=composer.local.json composer test`          | Pest tests (parallel)                                                           |
+| `COMPOSER=composer.local.json composer preflight`     | Composer path check plus changed-file formatting                                |
+| `COMPOSER=composer.local.json composer preflight:all` | Rector + full Pint + Prettier + ESLint + PHPStan + audits + tests               |
+| `COMPOSER=composer.local.json composer lint`          | Pint only                                                                       |
+| `COMPOSER=composer.local.json composer analyze`       | PHPStan only                                                                    |
+| `COMPOSER=composer.local.json composer prepare`       | Prepare the Testbench package workbench                                         |
+| `COMPOSER=composer.local.json composer serve`         | Build + serve the Orchestra Testbench workbench                                 |
+| `vendor/bin/pest packages/{package}/tests`            | Single package tests; add `--configuration=phpunit.xml` for consistency with CI |
+
+`COMPOSER=composer.local.json composer serve` starts an Orchestra Testbench package workbench, not a full installed Capell app. Do not assume `/admin` exists unless `vendor/bin/testbench route:list --no-ansi` shows the relevant Filament routes.
 
 ## Git
 
-1. `composer test` — 100% pass before committing.
-2. `composer preflight` — clean before committing.
-3. Verify in demo workbench (`composer serve`).
-4. Commit immediately after task completion.
-5. Branch naming: `feat/`, `fix/`, `docs/`, `chore/`. Target: `4.x`.
+1. Run the narrowest meaningful Pest command for the changed package or file.
+2. Run `COMPOSER=composer.local.json composer preflight` before committing focused work.
+3. Run `COMPOSER=composer.local.json composer test` and `COMPOSER=composer.local.json composer preflight:all` before committing broad, shared, installation, public rendering, or release-ready changes.
+4. Verify browser-visible or public rendering changes in the relevant workbench or full Capell app when available.
+5. Stage only task-related files and commit immediately after verified completion.
+6. Branch naming: `feat/`, `fix/`, `docs/`, `chore/`. Target: `4.x`.
