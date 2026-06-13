@@ -79,6 +79,7 @@ const CAPELL_MANIFEST_V3_MIGRATION_GROUPS = [
         'deployments',
         'diagnostics',
         'document-lifecycle',
+        'equestrian-clinics',
         'ga4-reports',
         'insights',
         'login-audit',
@@ -605,5 +606,7 @@ if (realpath((string) ($_SERVER['SCRIPT_FILENAME'] ?? '')) === __FILE__) {
 
     echo json_encode($report, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) . PHP_EOL;
 
-    exit($report['errors'] === [] && $report['unassignedPackages'] === [] && $report['duplicateAssignments'] === [] ? 0 : 1);
+    $exitCode = $report['errors'] === [] && $report['unassignedPackages'] === [] && $report['duplicateAssignments'] === [] ? 0 : 1;
+
+    exit /* status */ ($exitCode);
 }

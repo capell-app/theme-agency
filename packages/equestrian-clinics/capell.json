@@ -47,6 +47,7 @@
         }
     ],
     "database": {
+        "migrationGroup": "operations",
         "migrations": true,
         "settings": false,
         "requiredTables": [

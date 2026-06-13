@@ -122,6 +122,7 @@ Each package README follows the same shape:
 | [deployments](packages/deployments/README.md)                 | `capell-app/deployments`         | Repository deployment connections and Composer publishing.                       |
 | [diagnostics](packages/diagnostics/README.md)                 | `capell-app/diagnostics`         | Developer and operational diagnostics.                                           |
 | [document-lifecycle](packages/document-lifecycle/README.md)   | `capell-app/document-lifecycle`  | Document requests, review, delivery, expiry, and retention workflows.            |
+| [equestrian-clinics](packages/equestrian-clinics/README.md)   | `capell-app/equestrian-clinics`  | Tour days, clinic discovery, riders, horses, waivers, payments, and facilities.  |
 | [exception-reports](packages/exception-reports/README.md)     | `capell-app/exception-reports`   | Sanitized queued email reports for unhandled exceptions and diagnostics health.  |
 | [login-audit](packages/login-audit/README.md)                 | `capell-app/login-audit`         | Authentication log and login visibility.                                         |
 | [media-ai](packages/media-ai/README.md)                       | `capell-app/media-ai`            | Optional AI-assisted media actions.                                              |
