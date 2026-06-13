@@ -13,10 +13,7 @@
         "bundle": "publishing-pro"
     },
     "namespace": "Capell\\PublishingStudio",
-    "surfaces": [
-        "admin",
-        "console"
-    ],
+    "surfaces": ["admin", "console"],
     "dependencies": {
         "requires": [
             "capell-app/admin",
@@ -41,9 +38,7 @@
         "runtime": [
             "Capell\\PublishingStudio\\Providers\\PublishingStudioServiceProvider"
         ],
-        "admin": [
-            "Capell\\PublishingStudio\\Providers\\AdminServiceProvider"
-        ],
+        "admin": ["Capell\\PublishingStudio\\Providers\\AdminServiceProvider"],
         "frontend": []
     },
     "contributes": [
@@ -251,9 +246,7 @@
         },
         "sensitiveData": {
             "encryptedFields": [],
-            "hashedTokenFields": [
-                "publishing_scheduler_events.token_hash"
-            ],
+            "hashedTokenFields": ["publishing_scheduler_events.token_hash"],
             "redactedOutputClasses": [],
             "plaintextJustifications": [
                 "preview_links.token: Reviewed package field; not stored as a reusable secret by this package contract."
@@ -331,11 +324,7 @@
                 "caption": "Review and approval before publish"
             }
         ],
-        "categories": [
-            "admin",
-            "console",
-            "publishing-pro"
-        ]
+        "categories": ["admin", "console", "publishing-pro"]
     },
     "contributionTraceability": {
         "deferredContributions": []

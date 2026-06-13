@@ -13,14 +13,9 @@
         "bundle": "operations"
     },
     "namespace": "Capell\\Deployments",
-    "surfaces": [
-        "admin"
-    ],
+    "surfaces": ["admin"],
     "dependencies": {
-        "requires": [
-            "capell-app/admin",
-            "capell-app/core"
-        ],
+        "requires": ["capell-app/admin", "capell-app/core"],
         "supports": [],
         "conflicts": []
     },
@@ -30,19 +25,14 @@
             "Capell\\Deployments\\Providers\\DeploymentsServiceProvider"
         ],
         "runtime": [],
-        "admin": [
-            "Capell\\Deployments\\Providers\\DeploymentsServiceProvider"
-        ],
+        "admin": ["Capell\\Deployments\\Providers\\DeploymentsServiceProvider"],
         "frontend": []
     },
     "contributes": [],
     "database": {
         "migrations": true,
         "settings": false,
-        "requiredTables": [
-            "deployment_connections",
-            "deployment_publications"
-        ]
+        "requiredTables": ["deployment_connections", "deployment_publications"]
     },
     "commands": {
         "install": null,
@@ -164,16 +154,9 @@
                 "caption": "Dark-mode view of the Git provider connection entry point"
             }
         ],
-        "categories": [
-            "admin",
-            "operations"
-        ]
+        "categories": ["admin", "operations"]
     },
     "contributionTraceability": {
-        "deferredContributions": [
-            "admin-page",
-            "route",
-            "dashboard-widget"
-        ]
+        "deferredContributions": ["admin-page", "route", "dashboard-widget"]
     }
 }

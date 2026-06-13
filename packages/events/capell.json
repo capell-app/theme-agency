@@ -13,11 +13,7 @@
         "bundle": "content-product"
     },
     "namespace": "Capell\\Events",
-    "surfaces": [
-        "admin",
-        "frontend",
-        "console"
-    ],
+    "surfaces": ["admin", "frontend", "console"],
     "dependencies": {
         "requires": [
             "capell-app/admin",
@@ -38,9 +34,7 @@
     "providers": {
         "metadata": [],
         "install": [],
-        "runtime": [
-            "Capell\\Events\\Providers\\EventsServiceProvider"
-        ],
+        "runtime": ["Capell\\Events\\Providers\\EventsServiceProvider"],
         "admin": [],
         "frontend": []
     },
@@ -127,10 +121,7 @@
     "security": {
         "riskTier": "standard",
         "publicSurface": {
-            "routeNames": [
-                "calendar-feed",
-                "listing-calendar-feed"
-            ],
+            "routeNames": ["calendar-feed", "listing-calendar-feed"],
             "auth": "public",
             "csrfExemptRoutes": [],
             "signedRoutes": [],
@@ -212,15 +203,10 @@
     "performance": {
         "frontendRenderBudgetMs": 20,
         "adminQueryBudget": 40,
-        "cacheTags": [
-            "events"
-        ],
+        "cacheTags": ["events"],
         "cacheSafety": {
             "cacheable": false,
-            "variesBy": [
-                "site",
-                "locale"
-            ],
+            "variesBy": ["site", "locale"],
             "sensitiveOutput": false,
             "invalidationSources": [],
             "queueInvalidation": true
@@ -321,12 +307,7 @@
                 "caption": "Frontend events calendar page"
             }
         ],
-        "categories": [
-            "admin",
-            "console",
-            "content-product",
-            "frontend"
-        ]
+        "categories": ["admin", "console", "content-product", "frontend"]
     },
     "contributionTraceability": {
         "deferredContributions": [

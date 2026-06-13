@@ -13,15 +13,9 @@
         "bundle": "foundation"
     },
     "namespace": "Capell\\FilamentPeek",
-    "surfaces": [
-        "admin",
-        "frontend"
-    ],
+    "surfaces": ["admin", "frontend"],
     "dependencies": {
-        "requires": [
-            "capell-app/admin",
-            "capell-app/frontend"
-        ],
+        "requires": ["capell-app/admin", "capell-app/frontend"],
         "supports": [
             "capell-app/layout-builder",
             "capell-app/publishing-studio"
@@ -55,25 +49,15 @@
     },
     "settings": [],
     "permissions": [],
-    "capabilities": [
-        "page-preview"
-    ],
+    "capabilities": ["page-preview"],
     "security": {
         "riskTier": "sensitive",
         "publicSurface": {
-            "routeNames": [
-                "capell-filament-peek.preview",
-                "preview"
-            ],
+            "routeNames": ["capell-filament-peek.preview", "preview"],
             "auth": "signed",
             "csrfExemptRoutes": [],
-            "signedRoutes": [
-                "preview"
-            ],
-            "tokenizedRoutes": [
-                "capell-filament-peek.preview",
-                "preview"
-            ],
+            "signedRoutes": ["preview"],
+            "tokenizedRoutes": ["capell-filament-peek.preview", "preview"],
             "webhookRoutes": [],
             "throttledRoutes": []
         },
@@ -102,15 +86,10 @@
     "performance": {
         "frontendRenderBudgetMs": 0,
         "adminQueryBudget": 40,
-        "cacheTags": [
-            "filament-peek-preview"
-        ],
+        "cacheTags": ["filament-peek-preview"],
         "cacheSafety": {
             "cacheable": false,
-            "variesBy": [
-                "admin-user",
-                "snapshot-token"
-            ],
+            "variesBy": ["admin-user", "snapshot-token"],
             "sensitiveOutput": true,
             "invalidationSources": [],
             "queueInvalidation": false
@@ -150,14 +129,9 @@
                 "caption": "Use the same unsaved preview action from Capell's dark admin theme"
             }
         ],
-        "categories": [
-            "admin",
-            "editorial"
-        ]
+        "categories": ["admin", "editorial"]
     },
     "contributionTraceability": {
-        "deferredContributions": [
-            "route"
-        ]
+        "deferredContributions": ["route"]
     }
 }
