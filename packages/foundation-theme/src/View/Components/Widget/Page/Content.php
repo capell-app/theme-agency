@@ -47,6 +47,10 @@ class Content extends AbstractWidget
             return;
         }
 
+        if (Frontend::getFrontendData('blog.article.render_data') !== null) {
+            return;
+        }
+
         if ((bool) $page->getMeta('with_next_prev')) {
             $this->previousPage = PageLoader::getPreviousPage($page, $site, $language);
             $this->nextPage = PageLoader::getNextPage($page, $site, $language);

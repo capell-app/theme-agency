@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Capell\SeoSuite\View\Composers;
 
 use Capell\Core\Models\Language;
-use Capell\Core\Models\Page;
 use Capell\Core\Models\Site;
 use Capell\Core\Models\SiteDomain;
 use Capell\Frontend\Facades\Frontend;
@@ -35,7 +34,7 @@ final readonly class WebsiteSchemaComposer
             'url' => $siteUrl,
         ];
 
-        $searchPageUrl = Page::getFirstPageByTypeForSite('results', $site, $language)?->pageUrl?->full_url;
+        $searchPageUrl = Frontend::getFrontendData('seo.website_search_url');
 
         if (is_string($searchPageUrl) && $searchPageUrl !== '') {
             $schema['potentialAction'] = [

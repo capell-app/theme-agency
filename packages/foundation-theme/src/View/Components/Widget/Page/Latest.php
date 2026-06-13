@@ -12,6 +12,7 @@ use Capell\Frontend\Support\Loader\PageLoader;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Support\Collection;
 
 class Latest extends AbstractPagesWidget
 {
@@ -24,6 +25,24 @@ class Latest extends AbstractPagesWidget
 
         if (! $page instanceof Pageable || ! $page instanceof Model || ! $language instanceof Language) {
             $this->skipRender = true;
+
+            return;
+        }
+
+        $preparedLatestArticles = Frontend::getFrontendData('blog.latest_articles');
+
+        if ($preparedLatestArticles instanceof Collection) {
+            $limit = $this->paginationLimit();
+            $fallbackLimit = config('capell-frontend.pagination_limit', 12);
+            $limit ??= is_int($fallbackLimit) ? $fallbackLimit : 12;
+
+            $this->pages = $preparedLatestArticles->where('id', '!=', $page->getKey())
+                ->take($limit)
+                ->values();
+
+            if ($this->pages->isEmpty() && config('capell-layout-builder.widget.skip_render_empty', true) === true) {
+                $this->skipRender = true;
+            }
 
             return;
         }

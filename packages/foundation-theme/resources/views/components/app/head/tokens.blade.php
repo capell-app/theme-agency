@@ -1,8 +1,13 @@
 <?php
 
 use Capell\FoundationTheme\Actions\ResolveFoundationThemeTokensAction;
+use Capell\FoundationTheme\Data\FoundationThemeTokensData;
+use Capell\Frontend\Facades\Frontend;
 
-$tokens = ResolveFoundationThemeTokensAction::run();
+$preparedTokens = Frontend::getFrontendData('foundation.theme.tokens');
+$tokens = $preparedTokens instanceof FoundationThemeTokensData
+    ? $preparedTokens
+    : ResolveFoundationThemeTokensAction::run();
 
 ?>
 

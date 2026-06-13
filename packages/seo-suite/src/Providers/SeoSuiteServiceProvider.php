@@ -33,6 +33,7 @@ use Capell\Core\Support\ContentGraph\ContentGraphRegistry;
 use Capell\Core\Support\Packages\AbstractPackageServiceProvider;
 use Capell\Core\Support\Settings\SettingsGroupMetadata;
 use Capell\Core\Support\Settings\SettingsSchemaRegistry;
+use Capell\Frontend\Contracts\FrontendRuntimeManifestContributor;
 use Capell\Frontend\Events\FrontendContextResolved;
 use Capell\Frontend\Support\Render\RenderHookRegistry;
 use Capell\SeoSuite\Actions\Ai\RecordAiGenerationAction;
@@ -137,6 +138,7 @@ use Capell\SeoSuite\Support\SchemaTemplates\WebPageSchemaTemplate;
 use Capell\SeoSuite\Support\SearchConsole\GoogleSearchConsoleClient;
 use Capell\SeoSuite\Support\SearchConsole\NullSearchConsoleClient;
 use Capell\SeoSuite\Support\SectionRegistry;
+use Capell\SeoSuite\Support\SeoSuiteFrontendRuntimeManifestContributor;
 use Capell\SeoSuite\Support\SiteDiscovery\AiDiscoveryGeneratedOutputCoverageSource;
 use Capell\SeoSuite\Targets\FlatJsonTarget;
 use Capell\SeoSuite\View\Composers\SchemaComponentComposer;
@@ -589,6 +591,7 @@ class SeoSuiteServiceProvider extends AbstractPackageServiceProvider
             ->registerSchemaTemplateRegistry()
             ->bindPageMarkdownResponder()
             ->registerFrontendContextHydration()
+            ->registerFrontendRuntimeManifestContributors()
             ->registerFilamentPages()
             ->registerDashboardSettingsContributor()
             ->registerDashboardWidgets()
@@ -611,6 +614,15 @@ class SeoSuiteServiceProvider extends AbstractPackageServiceProvider
             /** @var DiscoveryOutputRegistry $registry */
             $registry = $this->app->make(DiscoveryOutputRegistry::class);
             $registry->register($this->app->make(AiDiscoveryDiscoveryOutputSource::class));
+        }
+
+        return $this;
+    }
+
+    private function registerFrontendRuntimeManifestContributors(): self
+    {
+        if (interface_exists(FrontendRuntimeManifestContributor::class)) {
+            $this->app->tag([SeoSuiteFrontendRuntimeManifestContributor::class], FrontendRuntimeManifestContributor::TAG);
         }
 
         return $this;

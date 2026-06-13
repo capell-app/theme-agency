@@ -7,10 +7,9 @@ namespace Capell\SeoSuite\Support\RenderHooks;
 use Capell\Frontend\Data\RenderHookContext;
 use Capell\Frontend\Enums\RenderHookLocation;
 use Capell\Frontend\Enums\RenderHookScenario;
+use Capell\Frontend\Facades\Frontend;
 use Capell\Frontend\Support\Render\RenderHookRegistry;
 use Capell\SeoSuite\Actions\BuildSocialMetaAction;
-use Capell\SeoSuite\Actions\SchemaGraphAction;
-use Capell\SeoSuite\Enums\MetaSchemaEnum;
 
 class RegisterSeoHeadHooks
 {
@@ -40,23 +39,15 @@ class RegisterSeoHeadHooks
                     'language' => $language,
                 ])->render();
 
-                if ($this->shouldRenderSchemaGraph($site->meta ?? [])) {
-                    $html .= SchemaGraphAction::run($page, $site, $language)->toJsonLdScript();
+                $schemaGraphScript = Frontend::getFrontendData('seo.schema.graph_script');
+
+                if (is_string($schemaGraphScript) && $schemaGraphScript !== '') {
+                    $html .= $schemaGraphScript;
                 }
 
                 return $html;
             },
             scenario: RenderHookScenario::SeoMeta->value,
         );
-    }
-
-    /**
-     * @param  array<string, mixed>  $siteMeta
-     */
-    private function shouldRenderSchemaGraph(array $siteMeta): bool
-    {
-        $metaSchema = $siteMeta['meta_schema'] ?? [];
-
-        return is_array($metaSchema) && in_array(MetaSchemaEnum::Graph->getComponent(), $metaSchema, true);
     }
 }
