@@ -16,6 +16,7 @@ use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Lorisleiva\Actions\Concerns\AsAction;
+use RuntimeException;
 
 /**
  * @method static EloquentCollection<int, ShopifyProduct> run(string $term, int $limit, ShopifyConnection $connection)
@@ -39,17 +40,115 @@ final class SearchShopifyProductsAction
         $cacheVersion = InvalidateShopifyProductSearchCacheAction::version($connectionId);
         $cacheKey = sprintf('capell-shopify-commerce.search.%d.%d.%s.%d', $connectionId, $cacheVersion, hash('sha256', mb_strtolower($normalisedTerm)), $limit);
 
-        return Cache::remember($cacheKey, now()->addMinutes($this->cacheTtlMinutes()), function () use ($connection, $normalisedTerm, $limit): EloquentCollection {
-            $localProducts = $this->localResults($connection, $normalisedTerm, $limit);
+        $cachedProductIds = Cache::get($cacheKey);
+        $productIds = $this->integerList($cachedProductIds);
 
-            if ($localProducts->isNotEmpty() || $normalisedTerm === '') {
-                return $localProducts;
+        if (is_array($productIds)) {
+            return $this->productsByIds($productIds);
+        }
+
+        if ($cachedProductIds !== null) {
+            Cache::forget($cacheKey);
+        }
+
+        $productIds = $this->productIds($connection, $normalisedTerm, $limit);
+
+        Cache::put($cacheKey, $productIds, now()->addMinutes($this->cacheTtlMinutes()));
+
+        return $this->productsByIds($productIds);
+    }
+
+    /**
+     * @return list<int>
+     */
+    private function productIds(ShopifyConnection $connection, string $normalisedTerm, int $limit): array
+    {
+        $localProducts = $this->localResults($connection, $normalisedTerm, $limit);
+
+        if ($localProducts->isNotEmpty() || $normalisedTerm === '') {
+            return $this->productKeys($localProducts);
+        }
+
+        $this->fetchAndPersistLiveResults($connection, $normalisedTerm, $limit);
+
+        return $this->productKeys($this->localResults($connection, $normalisedTerm, $limit));
+    }
+
+    /**
+     * @param  list<int>  $productIds
+     * @return EloquentCollection<int, ShopifyProduct>
+     */
+    private function productsByIds(array $productIds): EloquentCollection
+    {
+        if ($productIds === []) {
+            return new EloquentCollection;
+        }
+
+        $products = ShopifyProduct::query()
+            ->withCount('variants')
+            ->whereKey($productIds)
+            ->get()
+            ->keyBy(fn (ShopifyProduct $product): int => $this->productKey($product));
+
+        return new EloquentCollection(
+            collect($productIds)
+                ->map(fn (int $productId): ?ShopifyProduct => $products->get($productId))
+                ->filter(fn (?ShopifyProduct $product): bool => $product instanceof ShopifyProduct)
+                ->values()
+                ->all(),
+        );
+    }
+
+    /**
+     * @return list<int>|null
+     */
+    private function integerList(mixed $value): ?array
+    {
+        if (! is_array($value) || ! array_is_list($value)) {
+            return null;
+        }
+
+        $productIds = [];
+
+        foreach ($value as $productId) {
+            if (! is_int($productId)) {
+                return null;
             }
 
-            $this->fetchAndPersistLiveResults($connection, $normalisedTerm, $limit);
+            $productIds[] = $productId;
+        }
 
-            return $this->localResults($connection, $normalisedTerm, $limit);
-        });
+        return $productIds;
+    }
+
+    /**
+     * @param  EloquentCollection<int, ShopifyProduct>  $products
+     * @return list<int>
+     */
+    private function productKeys(EloquentCollection $products): array
+    {
+        $keys = [];
+
+        foreach ($products as $product) {
+            $keys[] = $this->productKey($product);
+        }
+
+        return $keys;
+    }
+
+    private function productKey(ShopifyProduct $product): int
+    {
+        $key = $product->getKey();
+
+        if (is_int($key)) {
+            return $key;
+        }
+
+        if (is_string($key) && ctype_digit($key)) {
+            return (int) $key;
+        }
+
+        throw new RuntimeException('Shopify product key must be an integer.');
     }
 
     /**

@@ -23,8 +23,9 @@ final class BuildPublicOutputSafetyReportAction
     {
         $packagesPath ??= base_path('packages');
 
-        return DiagnosticsSnapshotCache::remember(
+        return DiagnosticsSnapshotCache::rememberDataList(
             'public-output-safety:' . hash('sha256', $packagesPath),
+            InfrastructureStatusData::class,
             fn (): array => $this->build($packagesPath),
         );
     }

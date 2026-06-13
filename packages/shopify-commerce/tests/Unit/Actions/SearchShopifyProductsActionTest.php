@@ -42,6 +42,42 @@ it('searches local cached products first', function (): void {
         ->and($results->first()?->title)->toBe('Alpha Shirt');
 });
 
+it('hydrates cached searches from product ids when cache object unserialization is disabled', function (): void {
+    config()->set('cache.default', 'array');
+    config()->set('cache.stores.array.serialize', true);
+    config()->set('cache.serializable_classes', false);
+    Cache::purge('array');
+
+    $connection = ShopifyConnection::query()->create([
+        'shop_domain' => 'foo.myshopify.com',
+        'status' => ShopifyConnectionStatus::Active,
+        'access_token' => 'admin-token',
+        'scopes' => ['read_products'],
+    ]);
+
+    $product = ShopifyProduct::query()->create([
+        'connection_id' => $connection->getKey(),
+        'shopify_gid' => 'gid://shopify/Product/1',
+        'handle' => 'alpha',
+        'title' => 'Alpha Shirt',
+        'status' => 'active',
+        'options' => [],
+        'raw_snapshot' => [],
+        'synced_at' => now(),
+    ]);
+
+    Http::fake();
+
+    SearchShopifyProductsAction::run('Alpha', 20, $connection);
+
+    $product->update(['title' => 'Renamed Shirt', 'search_text' => 'renamed shirt']);
+
+    $results = SearchShopifyProductsAction::run('Alpha', 20, $connection);
+
+    expect($results)->toHaveCount(1)
+        ->and($results->first()?->title)->toBe('Renamed Shirt');
+});
+
 it('falls back to live graphql when local search has no matches', function (): void {
     Cache::flush();
 

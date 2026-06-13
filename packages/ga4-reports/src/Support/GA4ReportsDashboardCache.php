@@ -24,9 +24,27 @@ final class GA4ReportsDashboardCache
      */
     public static function rememberOverview(GA4ReportsWindowData $window, Closure $callback): GA4ReportsOverviewData
     {
-        $overview = self::store()->remember(self::key('overview', $window), self::expiresAt(), $callback);
+        $cacheKey = self::key('overview', $window);
+        $store = self::store();
+        $payload = $store->get($cacheKey);
 
-        return $overview instanceof GA4ReportsOverviewData ? $overview : $callback();
+        if (is_array($payload)) {
+            try {
+                return GA4ReportsOverviewData::from($payload);
+            } catch (Throwable) {
+                //
+            }
+        }
+
+        if ($payload !== null) {
+            $store->forget($cacheKey);
+        }
+
+        $overview = $callback();
+
+        $store->put($cacheKey, $overview->toArray(), self::expiresAt());
+
+        return $overview;
     }
 
     /**
@@ -35,9 +53,27 @@ final class GA4ReportsDashboardCache
      */
     public static function rememberTrend(GA4ReportsWindowData $window, Closure $callback): array
     {
-        $trend = self::store()->remember(self::key('trend', $window), self::expiresAt(), $callback);
+        $cacheKey = self::key('trend', $window);
+        $store = self::store();
+        $payload = $store->get($cacheKey);
 
-        return self::trendPoints($trend) ?? $callback();
+        if (is_array($payload)) {
+            $trend = self::trendPoints($payload);
+
+            if (is_array($trend)) {
+                return $trend;
+            }
+        }
+
+        if ($payload !== null) {
+            $store->forget($cacheKey);
+        }
+
+        $trend = $callback();
+
+        $store->put($cacheKey, array_map(fn (GA4ReportsTrendPointData $point): array => $point->toArray(), $trend), self::expiresAt());
+
+        return $trend;
     }
 
     /**
@@ -46,9 +82,27 @@ final class GA4ReportsDashboardCache
      */
     public static function rememberTopPages(GA4ReportsWindowData $window, int $limit, Closure $callback): array
     {
-        $topPages = self::store()->remember(self::key('top-pages', $window, ['limit' => $limit]), self::expiresAt(), $callback);
+        $cacheKey = self::key('top-pages', $window, ['limit' => $limit]);
+        $store = self::store();
+        $payload = $store->get($cacheKey);
 
-        return self::topPages($topPages) ?? $callback();
+        if (is_array($payload)) {
+            $topPages = self::topPages($payload);
+
+            if (is_array($topPages)) {
+                return $topPages;
+            }
+        }
+
+        if ($payload !== null) {
+            $store->forget($cacheKey);
+        }
+
+        $topPages = $callback();
+
+        $store->put($cacheKey, array_map(fn (GA4ReportsTopPageData $page): array => $page->toArray(), $topPages), self::expiresAt());
+
+        return $topPages;
     }
 
     public static function flushForWindow(GA4ReportsWindowData $window): void
@@ -100,11 +154,15 @@ final class GA4ReportsDashboardCache
         $points = [];
 
         foreach ($value as $point) {
-            if (! $point instanceof GA4ReportsTrendPointData) {
+            if (! is_array($point)) {
                 return null;
             }
 
-            $points[] = $point;
+            try {
+                $points[] = GA4ReportsTrendPointData::from($point);
+            } catch (Throwable) {
+                return null;
+            }
         }
 
         return $points;
@@ -122,11 +180,15 @@ final class GA4ReportsDashboardCache
         $pages = [];
 
         foreach ($value as $page) {
-            if (! $page instanceof GA4ReportsTopPageData) {
+            if (! is_array($page)) {
                 return null;
             }
 
-            $pages[] = $page;
+            try {
+                $pages[] = GA4ReportsTopPageData::from($page);
+            } catch (Throwable) {
+                return null;
+            }
         }
 
         return $pages;
