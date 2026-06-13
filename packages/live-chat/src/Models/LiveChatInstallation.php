@@ -13,6 +13,7 @@ use Illuminate\Support\Str;
 use Override;
 
 /**
+ * @property int $id
  * @property int $site_id
  * @property string $uuid
  * @property string $name
@@ -77,6 +78,30 @@ class LiveChatInstallation extends Model
     public function conversations(): HasMany
     {
         return $this->hasMany(LiveChatConversation::class, 'installation_id');
+    }
+
+    /**
+     * @return HasMany<LiveChatKnowledgeDocument, $this>
+     */
+    public function knowledgeDocuments(): HasMany
+    {
+        return $this->hasMany(LiveChatKnowledgeDocument::class, 'installation_id');
+    }
+
+    /**
+     * @return HasMany<LiveChatAIRun, $this>
+     */
+    public function aiRuns(): HasMany
+    {
+        return $this->hasMany(LiveChatAIRun::class, 'installation_id');
+    }
+
+    /**
+     * @return HasMany<LiveChatKnowledgeGap, $this>
+     */
+    public function knowledgeGaps(): HasMany
+    {
+        return $this->hasMany(LiveChatKnowledgeGap::class, 'installation_id');
     }
 
     #[Override]

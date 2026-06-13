@@ -10,18 +10,28 @@ use Capell\LiveChat\Enums\KnowledgeSourceType;
 use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Override;
 
 /**
+ * @property int $id
+ * @property int|null $site_id
  * @property KnowledgeSourceType $type
  * @property KnowledgeSourceStatus $status
+ * @property string $source_key
+ * @property string $title
+ * @property string|null $url
+ * @property string|null $content
+ * @property string|null $content_hash
  * @property CarbonImmutable|null $last_synced_at
+ * @property array<string, mixed>|null $metadata
  */
 class LiveChatKnowledgeSource extends Model
 {
     /** @var list<string> */
     protected $fillable = [
         'content_hash',
+        'content',
         'last_synced_at',
         'metadata',
         'site_id',
@@ -48,11 +58,20 @@ class LiveChatKnowledgeSource extends Model
         return $this->belongsTo(Site::class);
     }
 
+    /**
+     * @return HasMany<LiveChatKnowledgeDocument, $this>
+     */
+    public function documents(): HasMany
+    {
+        return $this->hasMany(LiveChatKnowledgeDocument::class, 'source_id');
+    }
+
     #[Override]
     protected function casts(): array
     {
         return [
             'last_synced_at' => 'immutable_datetime',
+            'content' => 'encrypted',
             'metadata' => 'encrypted:array',
             'status' => KnowledgeSourceStatus::class,
             'type' => KnowledgeSourceType::class,

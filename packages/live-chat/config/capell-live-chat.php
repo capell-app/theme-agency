@@ -30,6 +30,9 @@ return [
         'availability_exceptions' => 'live_chat_availability_exceptions',
         'escalation_rules' => 'live_chat_escalation_rules',
         'knowledge_sources' => 'live_chat_knowledge_sources',
+        'knowledge_documents' => 'live_chat_knowledge_documents',
+        'ai_runs' => 'live_chat_ai_runs',
+        'knowledge_gaps' => 'live_chat_knowledge_gaps',
     ],
 
     'widget' => [

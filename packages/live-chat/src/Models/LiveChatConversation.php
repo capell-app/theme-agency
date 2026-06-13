@@ -28,7 +28,9 @@ use Override;
  * @property EscalationReason|null $escalation_reason
  * @property string|null $visitor_name
  * @property string|null $visitor_email
+ * @property string|null $visitor_email_hash
  * @property string|null $visitor_phone
+ * @property string|null $visitor_phone_hash
  * @property string|null $visitor_company
  * @property string|null $visitor_token_hash
  * @property array<string, mixed>|null $metadata
@@ -122,6 +124,22 @@ class LiveChatConversation extends Model
     public function messages(): HasMany
     {
         return $this->hasMany(LiveChatMessage::class, 'conversation_id');
+    }
+
+    /**
+     * @return HasMany<LiveChatAIRun, $this>
+     */
+    public function aiRuns(): HasMany
+    {
+        return $this->hasMany(LiveChatAIRun::class, 'conversation_id');
+    }
+
+    /**
+     * @return HasMany<LiveChatKnowledgeGap, $this>
+     */
+    public function knowledgeGaps(): HasMany
+    {
+        return $this->hasMany(LiveChatKnowledgeGap::class, 'conversation_id');
     }
 
     #[Override]

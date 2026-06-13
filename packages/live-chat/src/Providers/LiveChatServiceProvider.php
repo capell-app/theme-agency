@@ -15,18 +15,24 @@ use Capell\Frontend\Support\Render\RenderHookRegistry;
 use Capell\LiveChat\Contracts\LiveChatResponder;
 use Capell\LiveChat\Contracts\LiveChatWidgetRenderer;
 use Capell\LiveChat\Enums\ResourceEnum;
+use Capell\LiveChat\Models\LiveChatAIRun;
 use Capell\LiveChat\Models\LiveChatAvailabilityException;
 use Capell\LiveChat\Models\LiveChatAvailabilityWindow;
 use Capell\LiveChat\Models\LiveChatConversation;
 use Capell\LiveChat\Models\LiveChatEscalationRule;
 use Capell\LiveChat\Models\LiveChatInstallation;
+use Capell\LiveChat\Models\LiveChatKnowledgeDocument;
+use Capell\LiveChat\Models\LiveChatKnowledgeGap;
 use Capell\LiveChat\Models\LiveChatKnowledgeSource;
 use Capell\LiveChat\Models\LiveChatMessage;
+use Capell\LiveChat\Policies\LiveChatAIRunPolicy;
 use Capell\LiveChat\Policies\LiveChatAvailabilityExceptionPolicy;
 use Capell\LiveChat\Policies\LiveChatAvailabilityWindowPolicy;
 use Capell\LiveChat\Policies\LiveChatConversationPolicy;
 use Capell\LiveChat\Policies\LiveChatEscalationRulePolicy;
 use Capell\LiveChat\Policies\LiveChatInstallationPolicy;
+use Capell\LiveChat\Policies\LiveChatKnowledgeDocumentPolicy;
+use Capell\LiveChat\Policies\LiveChatKnowledgeGapPolicy;
 use Capell\LiveChat\Policies\LiveChatKnowledgeSourcePolicy;
 use Capell\LiveChat\Rendering\BladeLiveChatWidgetRenderer;
 use Capell\LiveChat\Support\LocalLiveChatResponder;
@@ -48,6 +54,7 @@ final class LiveChatServiceProvider extends AbstractPackageServiceProvider
         '2026_06_13_000003_create_live_chat_availability_tables',
         '2026_06_13_000004_create_live_chat_rules_and_sources_table',
         '2026_06_13_000005_create_live_chat_installations_table',
+        '2026_06_13_000006_create_live_chat_ai_source_tables',
     ];
 
     public static string $name = 'capell-live-chat';
@@ -101,10 +108,13 @@ final class LiveChatServiceProvider extends AbstractPackageServiceProvider
         Relation::morphMap([
             'live_chat_conversation' => LiveChatConversation::class,
             'live_chat_message' => LiveChatMessage::class,
+            'live_chat_ai_run' => LiveChatAIRun::class,
             'live_chat_availability_window' => LiveChatAvailabilityWindow::class,
             'live_chat_availability_exception' => LiveChatAvailabilityException::class,
             'live_chat_escalation_rule' => LiveChatEscalationRule::class,
             'live_chat_installation' => LiveChatInstallation::class,
+            'live_chat_knowledge_document' => LiveChatKnowledgeDocument::class,
+            'live_chat_knowledge_gap' => LiveChatKnowledgeGap::class,
             'live_chat_knowledge_source' => LiveChatKnowledgeSource::class,
         ], merge: true);
 
@@ -145,10 +155,13 @@ final class LiveChatServiceProvider extends AbstractPackageServiceProvider
         $this->surface()->models([
             LiveChatConversation::class,
             LiveChatMessage::class,
+            LiveChatAIRun::class,
             LiveChatAvailabilityWindow::class,
             LiveChatAvailabilityException::class,
             LiveChatEscalationRule::class,
             LiveChatInstallation::class,
+            LiveChatKnowledgeDocument::class,
+            LiveChatKnowledgeGap::class,
             LiveChatKnowledgeSource::class,
         ]);
 
@@ -177,10 +190,13 @@ final class LiveChatServiceProvider extends AbstractPackageServiceProvider
     private function registerPolicies(): self
     {
         Gate::policy(LiveChatConversation::class, LiveChatConversationPolicy::class);
+        Gate::policy(LiveChatAIRun::class, LiveChatAIRunPolicy::class);
         Gate::policy(LiveChatAvailabilityWindow::class, LiveChatAvailabilityWindowPolicy::class);
         Gate::policy(LiveChatAvailabilityException::class, LiveChatAvailabilityExceptionPolicy::class);
         Gate::policy(LiveChatEscalationRule::class, LiveChatEscalationRulePolicy::class);
         Gate::policy(LiveChatInstallation::class, LiveChatInstallationPolicy::class);
+        Gate::policy(LiveChatKnowledgeDocument::class, LiveChatKnowledgeDocumentPolicy::class);
+        Gate::policy(LiveChatKnowledgeGap::class, LiveChatKnowledgeGapPolicy::class);
         Gate::policy(LiveChatKnowledgeSource::class, LiveChatKnowledgeSourcePolicy::class);
 
         return $this;

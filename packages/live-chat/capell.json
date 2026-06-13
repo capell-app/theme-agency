@@ -55,9 +55,12 @@
                 "Capell\\LiveChat\\Models\\LiveChatInstallation",
                 "Capell\\LiveChat\\Models\\LiveChatConversation",
                 "Capell\\LiveChat\\Models\\LiveChatMessage",
+                "Capell\\LiveChat\\Models\\LiveChatAIRun",
                 "Capell\\LiveChat\\Models\\LiveChatAvailabilityWindow",
                 "Capell\\LiveChat\\Models\\LiveChatAvailabilityException",
                 "Capell\\LiveChat\\Models\\LiveChatEscalationRule",
+                "Capell\\LiveChat\\Models\\LiveChatKnowledgeDocument",
+                "Capell\\LiveChat\\Models\\LiveChatKnowledgeGap",
                 "Capell\\LiveChat\\Models\\LiveChatKnowledgeSource"
             ]
         },
@@ -94,9 +97,12 @@
             "live_chat_conversations",
             "live_chat_installations",
             "live_chat_messages",
+            "live_chat_ai_runs",
             "live_chat_availability_windows",
             "live_chat_availability_exceptions",
             "live_chat_escalation_rules",
+            "live_chat_knowledge_documents",
+            "live_chat_knowledge_gaps",
             "live_chat_knowledge_sources"
         ]
     },
@@ -115,6 +121,10 @@
         "determineLiveChatEscalation": "Capell\\LiveChat\\Actions\\DetermineLiveChatEscalationAction",
         "detectLiveChatIntent": "Capell\\LiveChat\\Actions\\DetectLiveChatIntentAction",
         "guardLiveChatInstallationOrigin": "Capell\\LiveChat\\Actions\\GuardLiveChatInstallationOriginAction",
+        "indexLiveChatKnowledgeDocument": "Capell\\LiveChat\\Actions\\IndexLiveChatKnowledgeDocumentAction",
+        "indexLiveChatKnowledgeSource": "Capell\\LiveChat\\Actions\\IndexLiveChatKnowledgeSourceAction",
+        "recordLiveChatAIRun": "Capell\\LiveChat\\Actions\\RecordLiveChatAIRunAction",
+        "recordLiveChatKnowledgeGap": "Capell\\LiveChat\\Actions\\RecordLiveChatKnowledgeGapAction",
         "replyToLiveChatMessage": "Capell\\LiveChat\\Actions\\ReplyToLiveChatMessageAction",
         "requestLiveChatHandoff": "Capell\\LiveChat\\Actions\\RequestLiveChatHandoffAction",
         "resolveLiveChatConversationForInstallation": "Capell\\LiveChat\\Actions\\ResolveLiveChatConversationForInstallationAction",
@@ -129,6 +139,13 @@
         "Create:LiveChatInstallation",
         "Update:LiveChatInstallation",
         "Delete:LiveChatInstallation",
+        "View:LiveChatAIRun",
+        "View:LiveChatKnowledgeDocument",
+        "Create:LiveChatKnowledgeDocument",
+        "Update:LiveChatKnowledgeDocument",
+        "Delete:LiveChatKnowledgeDocument",
+        "View:LiveChatKnowledgeGap",
+        "Update:LiveChatKnowledgeGap",
         "View:LiveChatConversation",
         "Update:LiveChatConversation",
         "View:LiveChatAvailabilityWindow",
@@ -162,7 +179,10 @@
         "live-chat-file-uploads",
         "live-chat-transcripts",
         "live-chat-basic-analytics",
-        "live-chat-knowledge-sources"
+        "live-chat-knowledge-sources",
+        "live-chat-ai-run-audit",
+        "live-chat-knowledge-gaps",
+        "live-chat-knowledge-documents"
     ],
     "security": {
         "riskTier": "sensitive",
@@ -204,6 +224,11 @@
                 "Capell\\LiveChat\\Models\\LiveChatInstallation::$allowed_domains",
                 "Capell\\LiveChat\\Models\\LiveChatInstallation::$metadata",
                 "Capell\\LiveChat\\Models\\LiveChatInstallation::$widget_settings",
+                "Capell\\LiveChat\\Models\\LiveChatAIRun::$error_message",
+                "Capell\\LiveChat\\Models\\LiveChatAIRun::$input_payload",
+                "Capell\\LiveChat\\Models\\LiveChatAIRun::$output_payload",
+                "Capell\\LiveChat\\Models\\LiveChatAIRun::$refusal_reason",
+                "Capell\\LiveChat\\Models\\LiveChatAIRun::$source_document_ids",
                 "Capell\\LiveChat\\Models\\LiveChatConversation::$metadata",
                 "Capell\\LiveChat\\Models\\LiveChatConversation::$visitor_company",
                 "Capell\\LiveChat\\Models\\LiveChatConversation::$visitor_email",
@@ -213,6 +238,10 @@
                 "Capell\\LiveChat\\Models\\LiveChatMessage::$body",
                 "Capell\\LiveChat\\Models\\LiveChatMessage::$metadata",
                 "Capell\\LiveChat\\Models\\LiveChatEscalationRule::$metadata",
+                "Capell\\LiveChat\\Models\\LiveChatKnowledgeDocument::$metadata",
+                "Capell\\LiveChat\\Models\\LiveChatKnowledgeGap::$metadata",
+                "Capell\\LiveChat\\Models\\LiveChatKnowledgeGap::$question",
+                "Capell\\LiveChat\\Models\\LiveChatKnowledgeSource::$content",
                 "Capell\\LiveChat\\Models\\LiveChatKnowledgeSource::$metadata"
             ],
             "hashedTokenFields": [
@@ -225,6 +254,7 @@
             "redactedOutputClasses": [],
             "plaintextJustifications": [
                 "live_chat_conversations.uuid: Public opaque conversation identifier used by the browser widget.",
+                "live_chat_knowledge_documents.content: Normalized public/support knowledge text must remain searchable for lexical retrieval.",
                 "live_chat_messages.role: Non-sensitive routing metadata for transcript ordering.",
                 "live_chat_messages.intent: Non-sensitive classification metadata for reporting."
             ]
@@ -247,6 +277,13 @@
                 "Create:LiveChatInstallation",
                 "Update:LiveChatInstallation",
                 "Delete:LiveChatInstallation",
+                "View:LiveChatAIRun",
+                "View:LiveChatKnowledgeDocument",
+                "Create:LiveChatKnowledgeDocument",
+                "Update:LiveChatKnowledgeDocument",
+                "Delete:LiveChatKnowledgeDocument",
+                "View:LiveChatKnowledgeGap",
+                "Update:LiveChatKnowledgeGap",
                 "View:LiveChatConversation",
                 "Update:LiveChatConversation",
                 "View:LiveChatAvailabilityWindow",

@@ -10,6 +10,10 @@ use Capell\LiveChat\Actions\BuildLiveChatAnalyticsAction;
 use Capell\LiveChat\Actions\BuildLiveChatTranscriptAction;
 use Capell\LiveChat\Actions\BuildLiveChatWidgetConfigAction;
 use Capell\LiveChat\Actions\CloseLiveChatConversationAction;
+use Capell\LiveChat\Actions\IndexLiveChatKnowledgeDocumentAction;
+use Capell\LiveChat\Actions\IndexLiveChatKnowledgeSourceAction;
+use Capell\LiveChat\Actions\RecordLiveChatAIRunAction;
+use Capell\LiveChat\Actions\RecordLiveChatKnowledgeGapAction;
 use Capell\LiveChat\Actions\RequestLiveChatHandoffAction;
 use Capell\LiveChat\Actions\StartLiveChatConversationAction;
 use Capell\LiveChat\Actions\StoreLiveChatMessageAction;
@@ -59,9 +63,12 @@ it('declares the live chat package manifest contract', function (): void {
             'live_chat_conversations',
             'live_chat_installations',
             'live_chat_messages',
+            'live_chat_ai_runs',
             'live_chat_availability_windows',
             'live_chat_availability_exceptions',
             'live_chat_escalation_rules',
+            'live_chat_knowledge_documents',
+            'live_chat_knowledge_gaps',
             'live_chat_knowledge_sources',
         ])
         ->and($contributions->contains(static fn (array $contribution): bool => ($contribution['type'] ?? null) === 'admin-resource'
@@ -80,9 +87,12 @@ it('declares the live chat package manifest contract', function (): void {
                 'Capell\\LiveChat\\Models\\LiveChatInstallation',
                 'Capell\\LiveChat\\Models\\LiveChatConversation',
                 'Capell\\LiveChat\\Models\\LiveChatMessage',
+                'Capell\\LiveChat\\Models\\LiveChatAIRun',
                 'Capell\\LiveChat\\Models\\LiveChatAvailabilityWindow',
                 'Capell\\LiveChat\\Models\\LiveChatAvailabilityException',
                 'Capell\\LiveChat\\Models\\LiveChatEscalationRule',
+                'Capell\\LiveChat\\Models\\LiveChatKnowledgeDocument',
+                'Capell\\LiveChat\\Models\\LiveChatKnowledgeGap',
                 'Capell\\LiveChat\\Models\\LiveChatKnowledgeSource',
             ],
         ])
@@ -93,6 +103,10 @@ it('declares the live chat package manifest contract', function (): void {
             'buildLiveChatTranscript' => BuildLiveChatTranscriptAction::class,
             'buildLiveChatWidgetConfig' => BuildLiveChatWidgetConfigAction::class,
             'closeLiveChatConversation' => CloseLiveChatConversationAction::class,
+            'indexLiveChatKnowledgeDocument' => IndexLiveChatKnowledgeDocumentAction::class,
+            'indexLiveChatKnowledgeSource' => IndexLiveChatKnowledgeSourceAction::class,
+            'recordLiveChatAIRun' => RecordLiveChatAIRunAction::class,
+            'recordLiveChatKnowledgeGap' => RecordLiveChatKnowledgeGapAction::class,
             'requestLiveChatHandoff' => RequestLiveChatHandoffAction::class,
             'startLiveChatConversation' => StartLiveChatConversationAction::class,
             'storeLiveChatMessage' => StoreLiveChatMessageAction::class,
@@ -105,6 +119,9 @@ it('declares the live chat package manifest contract', function (): void {
             'live-chat-contacts-sync',
             'live-chat-human-handoff',
             'live-chat-file-uploads',
+            'live-chat-ai-run-audit',
+            'live-chat-knowledge-documents',
+            'live-chat-knowledge-gaps',
         )
         ->and($manifest['contributionTraceability']['deferredContributions'])->toBe([]);
 });

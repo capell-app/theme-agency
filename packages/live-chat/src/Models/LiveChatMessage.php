@@ -9,6 +9,7 @@ use Capell\LiveChat\Enums\MessageRole;
 use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Override;
 
 /**
@@ -52,6 +53,22 @@ class LiveChatMessage extends Model
     public function conversation(): BelongsTo
     {
         return $this->belongsTo(LiveChatConversation::class, 'conversation_id');
+    }
+
+    /**
+     * @return HasMany<LiveChatAIRun, $this>
+     */
+    public function aiRuns(): HasMany
+    {
+        return $this->hasMany(LiveChatAIRun::class, 'message_id');
+    }
+
+    /**
+     * @return HasMany<LiveChatKnowledgeGap, $this>
+     */
+    public function knowledgeGaps(): HasMany
+    {
+        return $this->hasMany(LiveChatKnowledgeGap::class, 'message_id');
     }
 
     #[Override]
