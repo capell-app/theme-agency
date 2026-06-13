@@ -49,8 +49,11 @@
         ],
         "security:contracts": [
             "@php scripts/audit-package-security.php",
-            "@php -d memory_limit=-1 vendor/bin/pest tests/Packages/Security --configuration=phpunit.xml"
+            "@php -d memory_limit=-1 vendor/bin/pest tests/Packages/Security --configuration=phpunit.xml",
+            "@security:surface-report:check"
         ],
+        "security:surface-report": "@php scripts/generate-package-security-surface-report.php",
+        "security:surface-report:check": "@php scripts/generate-package-security-surface-report.php --check",
         "security:all": [
             "@security:dependencies",
             "@security:secrets",
