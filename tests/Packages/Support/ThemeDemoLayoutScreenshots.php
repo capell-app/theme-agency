@@ -527,7 +527,7 @@ function registerThemeDemoScreenshotRoutePageData(Page $page): void
         $registeredPages = [];
     }
 
-    $registeredPages[(int) $page->getKey()] = themeDemoScreenshotPageData($page, themeDemoScreenshotRenderData($page));
+    $registeredPages[themeDemoScreenshotPageKey($page)] = themeDemoScreenshotPageData($page, themeDemoScreenshotRenderData($page));
 
     app()->instance('capell.theme-demo-screenshot.page-data', $registeredPages);
 }
@@ -544,9 +544,24 @@ function themeDemoScreenshotRegisteredPageData(Page $page): ?ThemePageData
         return null;
     }
 
-    $pageData = $registeredPages[(int) $page->getKey()] ?? null;
+    $pageData = $registeredPages[themeDemoScreenshotPageKey($page)] ?? null;
 
     return $pageData instanceof ThemePageData ? $pageData : null;
+}
+
+function themeDemoScreenshotPageKey(Page $page): int
+{
+    $key = $page->getKey();
+
+    if (is_int($key)) {
+        return $key;
+    }
+
+    if (is_string($key) && ctype_digit($key)) {
+        return (int) $key;
+    }
+
+    throw new RuntimeException('Theme demo screenshot pages must have an integer key.');
 }
 
 function registerThemeDemoScreenshotRuntimeSettings(string $themeKey): void
@@ -3320,7 +3335,9 @@ function themeDemoScreenshotDirectory(string $themeKey): string
 
 function themeDemoScreenshotRefreshesFixtureBaselines(): bool
 {
-    return filter_var(env('CAPELL_REFRESH_THEME_SCREENSHOT_FIXTURES', false), FILTER_VALIDATE_BOOL);
+    $value = getenv('CAPELL_REFRESH_THEME_SCREENSHOT_FIXTURES');
+
+    return is_string($value) && filter_var($value, FILTER_VALIDATE_BOOL);
 }
 
 /**
