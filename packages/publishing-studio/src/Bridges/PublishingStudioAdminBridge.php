@@ -8,7 +8,6 @@ use Capell\Admin\Contracts\Bridges\AdminBridge;
 use Capell\Admin\Contracts\Extenders\UserSchemaExtender;
 use Capell\Admin\Data\Bridges\AdminBridgeContextData;
 use Capell\Admin\Enums\DashboardEnum;
-use Capell\Admin\Facades\CapellAdmin;
 use Capell\Admin\Filament\Widgets\Dashboard\MyWorkQueueWidget;
 use Capell\Admin\Filament\Widgets\Dashboard\RecentlyPublishedWidget;
 use Capell\Admin\Support\Bridges\AdminBridgeRegistrar;
@@ -20,7 +19,6 @@ use Capell\PublishingStudio\Filament\Pages\StaleDraftsPage;
 use Capell\PublishingStudio\Filament\Resources\PreviewLinks\PreviewLinkResource;
 use Capell\PublishingStudio\Filament\Resources\PublishingStudio\WorkspaceResource;
 use Capell\PublishingStudio\Filament\Widgets\WorkspaceActivityWidgetAbstract;
-use Filament\Pages\Page;
 
 final class PublishingStudioAdminBridge implements AdminBridge
 {
@@ -38,17 +36,9 @@ final class PublishingStudioAdminBridge implements AdminBridge
         $registrar->resource(WorkspaceResource::class, group: 'Workspace');
         $registrar->resource(PreviewLinkResource::class, group: 'PreviewLink');
 
-        $this->extensionPage($context->packageName, PublishingWorkflowPage::class);
-        $this->extensionPage($context->packageName, ActivityTrailPage::class);
-        $this->extensionPage($context->packageName, ScheduledPublishingPage::class);
-        $this->extensionPage($context->packageName, StaleDraftsPage::class);
-    }
-
-    /**
-     * @param  class-string<Page>  $page
-     */
-    private function extensionPage(string $packageName, string $page): void
-    {
-        CapellAdmin::registerExtensionPage($packageName, $page);
+        $registrar->extensionPage($context->packageName, PublishingWorkflowPage::class);
+        $registrar->extensionPage($context->packageName, ActivityTrailPage::class);
+        $registrar->extensionPage($context->packageName, ScheduledPublishingPage::class);
+        $registrar->extensionPage($context->packageName, StaleDraftsPage::class);
     }
 }

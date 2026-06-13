@@ -376,7 +376,7 @@ class AccessGateServiceProvider extends AbstractPackageServiceProvider
         }
 
         $this->app->singleton(AccessGatePaymentFulfillmentHandler::class);
-        $this->app->tag([AccessGatePaymentFulfillmentHandler::class], 'capell.payments.fulfillment_handler');
+        $this->app->tag([AccessGatePaymentFulfillmentHandler::class], PaymentFulfillmentHandler::TAG);
 
         return $this;
     }
