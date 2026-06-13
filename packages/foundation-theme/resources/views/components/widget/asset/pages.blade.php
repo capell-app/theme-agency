@@ -12,7 +12,7 @@
 @endphp
 
 @props([
-    'assets',
+    'assets' => collect(),
     'columns' => $container['meta']['override_columns'] ?? $widget->getMeta('columns', 3),
     'componentItem' => $widget->getMeta('component_item', AssetComponentEnum::Card->value),
     'container',
