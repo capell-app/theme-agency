@@ -54,17 +54,14 @@
         "deployments-token-refresh"
     ],
     "security": {
-        "riskTier": "sensitive",
+        "riskTier": "critical",
         "publicSurface": {
             "routeNames": [
                 "capell-deployments.oauth.bitbucket",
                 "capell-deployments.oauth.github",
-                "capell-deployments.oauth.gitlab",
-                "oauth.github",
-                "oauth.gitlab",
-                "oauth.bitbucket"
+                "capell-deployments.oauth.gitlab"
             ],
-            "auth": "authenticated",
+            "auth": "public",
             "csrfExemptRoutes": [],
             "signedRoutes": [],
             "tokenizedRoutes": [],
@@ -85,7 +82,7 @@
             "plaintextJustifications": []
         },
         "publicOutput": {
-            "cacheSafe": false,
+            "cacheSafe": true,
             "forbidAuthoringSurface": true,
             "forbidSecrets": true,
             "forbidPublicBladeQueries": true

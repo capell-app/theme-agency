@@ -928,6 +928,12 @@ function capell_security_plaintext_justification_fields(mixed $value): array
     $fields = [];
 
     foreach ($value as $item) {
+        if (is_string($item) && preg_match('/^([^:]+):/', $item, $matches) === 1) {
+            $fields[] = $matches[1];
+
+            continue;
+        }
+
         if (! is_array($item) || ! is_string($item['field'] ?? null)) {
             continue;
         }
@@ -938,6 +944,18 @@ function capell_security_plaintext_justification_fields(mixed $value): array
     sort($fields);
 
     return array_values(array_unique($fields));
+}
+
+/**
+ * @param  list<array{field: string, reason: string}>  $justifications
+ * @return list<string>
+ */
+function capell_security_plaintext_justification_strings(array $justifications): array
+{
+    return array_map(
+        static fn (array $justification): string => $justification['field'] . ': ' . $justification['reason'],
+        $justifications,
+    );
 }
 
 function capell_security_class_name(string $contents): ?string

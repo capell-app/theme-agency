@@ -140,6 +140,21 @@
                 "path": "docs/assets/marketplace/inertia-bookings-mobile-request.png",
                 "alt": "Theme Inertia Bookings mobile booking request flow with labelled controls and appointment CTA.",
                 "caption": "Mobile booking request flow with service controls, available slots, and appointment actions."
+            },
+            {
+                "path": "docs/assets/marketplace/inertia-bookings-homepage.png",
+                "alt": "Theme Inertia Bookings homepage with service-led booking content and appointment calls to action.",
+                "caption": "Homepage experience for service businesses using the Inertia Bookings theme."
+            },
+            {
+                "path": "docs/assets/marketplace/inertia-bookings-services.png",
+                "alt": "Theme Inertia Bookings services listing with appointment-focused service cards.",
+                "caption": "Services listing with booking-oriented content cards and clear appointment paths."
+            },
+            {
+                "path": "docs/assets/marketplace/inertia-bookings-locations.png",
+                "alt": "Theme Inertia Bookings locations page with clinic and service-location details.",
+                "caption": "Locations page for multi-location booking businesses."
             }
         ],
         "categories": ["frontend", "themes", "bookings"]

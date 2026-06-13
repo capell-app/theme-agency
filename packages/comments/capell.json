@@ -90,36 +90,24 @@
         "comments-reply-notifications"
     ],
     "security": {
-        "riskTier": "standard",
+        "riskTier": "sensitive",
         "publicSurface": {
             "routeNames": [
                 "capell-comments.reply-notifications.disable",
                 "capell-comments.thread",
                 "capell-comments.verify",
-                "capell-comments.verify.store",
-                "thread",
-                "verify",
-                "verify.store",
-                "reply-notifications.disable"
+                "capell-comments.verify.store"
             ],
-            "auth": "tokenized",
+            "auth": "public",
             "csrfExemptRoutes": [],
             "signedRoutes": [],
             "tokenizedRoutes": [
                 "capell-comments.reply-notifications.disable",
                 "capell-comments.verify",
-                "capell-comments.verify.store",
-                "verify",
-                "verify.store",
-                "reply-notifications.disable"
+                "capell-comments.verify.store"
             ],
             "webhookRoutes": [],
-            "throttledRoutes": [
-                "thread",
-                "verify",
-                "verify.store",
-                "reply-notifications.disable"
-            ]
+            "throttledRoutes": []
         },
         "sensitiveData": {
             "encryptedFields": [

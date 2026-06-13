@@ -157,7 +157,7 @@
         ],
         "categories": ["frontend", "themes"]
     },
-    "extends": null,
+    "extends": "default",
     "themeKey": "education",
     "commercial": {
         "proposedLicense": "paid",

@@ -48,22 +48,19 @@
         "public-page-chunks"
     ],
     "security": {
-        "riskTier": "standard",
+        "riskTier": "critical",
         "publicSurface": {
             "routeNames": [
                 "capell-agent-delivery.pages.chunks",
                 "capell-agent-delivery.pages.index",
-                "capell-agent-delivery.pages.manifest",
-                "pages.index",
-                "pages.manifest",
-                "pages.chunks"
+                "capell-agent-delivery.pages.manifest"
             ],
             "auth": "public",
             "csrfExemptRoutes": [],
             "signedRoutes": [],
             "tokenizedRoutes": [],
             "webhookRoutes": [],
-            "throttledRoutes": ["pages.index", "pages.manifest", "pages.chunks"]
+            "throttledRoutes": []
         },
         "sensitiveData": {
             "encryptedFields": [],

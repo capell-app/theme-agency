@@ -44,20 +44,15 @@
     "permissions": ["agent-bridge.manage-tokens", "agent-bridge.view-audit"],
     "capabilities": ["agent-bridge", "agent-bridge-admin"],
     "security": {
-        "riskTier": "sensitive",
+        "riskTier": "critical",
         "publicSurface": {
-            "routeNames": [
-                "capell-agent-bridge.home",
-                "home",
-                "knowledge",
-                "site"
-            ],
-            "auth": "tokenized",
+            "routeNames": ["capell-agent-bridge.home"],
+            "auth": "public",
             "csrfExemptRoutes": [],
             "signedRoutes": [],
-            "tokenizedRoutes": ["knowledge", "site"],
+            "tokenizedRoutes": [],
             "webhookRoutes": [],
-            "throttledRoutes": ["knowledge", "site"]
+            "throttledRoutes": []
         },
         "sensitiveData": {
             "encryptedFields": [],
@@ -71,7 +66,7 @@
             ]
         },
         "publicOutput": {
-            "cacheSafe": false,
+            "cacheSafe": true,
             "forbidAuthoringSurface": true,
             "forbidSecrets": true,
             "forbidPublicBladeQueries": true

@@ -144,19 +144,14 @@
         "publicSurface": {
             "routeNames": [
                 "capell-privacy-center.consent.show",
-                "capell-privacy-center.consent.store",
-                "consent.show",
-                "consent.store"
+                "capell-privacy-center.consent.store"
             ],
             "auth": "public",
             "csrfExemptRoutes": [],
             "signedRoutes": [],
             "tokenizedRoutes": [],
             "webhookRoutes": [],
-            "throttledRoutes": [
-                "capell-privacy-center.consent.store",
-                "consent.store"
-            ]
+            "throttledRoutes": ["capell-privacy-center.consent.store"]
         },
         "sensitiveData": {
             "encryptedFields": [],
@@ -165,7 +160,7 @@
             "plaintextJustifications": []
         },
         "publicOutput": {
-            "cacheSafe": true,
+            "cacheSafe": false,
             "forbidAuthoringSurface": true,
             "forbidSecrets": true,
             "forbidPublicBladeQueries": true

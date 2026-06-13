@@ -51,13 +51,13 @@
     "permissions": [],
     "capabilities": ["page-preview"],
     "security": {
-        "riskTier": "sensitive",
+        "riskTier": "standard",
         "publicSurface": {
-            "routeNames": ["capell-filament-peek.preview", "preview"],
-            "auth": "signed",
+            "routeNames": ["capell-filament-peek.preview"],
+            "auth": "public",
             "csrfExemptRoutes": [],
-            "signedRoutes": ["preview"],
-            "tokenizedRoutes": ["capell-filament-peek.preview", "preview"],
+            "signedRoutes": [],
+            "tokenizedRoutes": ["capell-filament-peek.preview"],
             "webhookRoutes": [],
             "throttledRoutes": []
         },

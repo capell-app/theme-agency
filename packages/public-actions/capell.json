@@ -59,7 +59,7 @@
         "zapier-integration"
     ],
     "security": {
-        "riskTier": "sensitive",
+        "riskTier": "critical",
         "publicSurface": {
             "routeNames": [
                 "actions",
@@ -67,29 +67,14 @@
                 "me",
                 "show",
                 "submissions",
-                "submit",
-                "zapier.me",
-                "zapier.actions",
-                "zapier.actions.submit",
-                "zapier.submissions"
+                "submit"
             ],
-            "auth": "mixed",
+            "auth": "public",
             "csrfExemptRoutes": [],
             "signedRoutes": [],
-            "tokenizedRoutes": [
-                "zapier.me",
-                "zapier.actions",
-                "zapier.actions.submit",
-                "zapier.submissions"
-            ],
+            "tokenizedRoutes": [],
             "webhookRoutes": [],
-            "throttledRoutes": [
-                "submit",
-                "zapier.me",
-                "zapier.actions",
-                "zapier.actions.submit",
-                "zapier.submissions"
-            ]
+            "throttledRoutes": ["submit"]
         },
         "sensitiveData": {
             "encryptedFields": [
@@ -106,7 +91,7 @@
             "plaintextJustifications": []
         },
         "publicOutput": {
-            "cacheSafe": false,
+            "cacheSafe": true,
             "forbidAuthoringSurface": true,
             "forbidSecrets": true,
             "forbidPublicBladeQueries": true

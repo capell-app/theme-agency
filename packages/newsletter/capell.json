@@ -185,23 +185,13 @@
                 "capell-newsletter.provider-webhook",
                 "capell-newsletter.subscribe",
                 "capell-newsletter.unsubscribe",
-                "capell-newsletter.unsubscribe.one-click",
-                "subscribe",
-                "confirm",
-                "unsubscribe",
-                "unsubscribe.one-click",
-                "preferences.show",
-                "preferences.update",
-                "provider-webhook"
+                "capell-newsletter.unsubscribe.one-click"
             ],
-            "auth": "mixed",
+            "auth": "public",
             "csrfExemptRoutes": [
                 "capell-newsletter.provider-webhook",
                 "capell-newsletter.subscribe",
-                "capell-newsletter.unsubscribe.one-click",
-                "subscribe",
-                "unsubscribe.one-click",
-                "provider-webhook"
+                "capell-newsletter.unsubscribe.one-click"
             ],
             "signedRoutes": [],
             "tokenizedRoutes": [
@@ -209,23 +199,14 @@
                 "capell-newsletter.preferences.show",
                 "capell-newsletter.preferences.update",
                 "capell-newsletter.unsubscribe",
-                "capell-newsletter.unsubscribe.one-click",
-                "confirm",
-                "unsubscribe",
-                "unsubscribe.one-click",
-                "preferences.show",
-                "preferences.update"
+                "capell-newsletter.unsubscribe.one-click"
             ],
-            "webhookRoutes": [
-                "capell-newsletter.provider-webhook",
-                "provider-webhook"
-            ],
+            "webhookRoutes": ["capell-newsletter.provider-webhook"],
             "throttledRoutes": [
+                "capell-newsletter.preferences.update",
+                "capell-newsletter.provider-webhook",
                 "capell-newsletter.subscribe",
-                "subscribe",
-                "unsubscribe.one-click",
-                "preferences.update",
-                "provider-webhook"
+                "capell-newsletter.unsubscribe.one-click"
             ]
         },
         "sensitiveData": {

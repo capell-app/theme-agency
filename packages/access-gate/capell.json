@@ -117,7 +117,7 @@
                 "request.store",
                 "status"
             ],
-            "auth": "mixed",
+            "auth": "public",
             "csrfExemptRoutes": [],
             "signedRoutes": [],
             "tokenizedRoutes": ["claim"],
@@ -131,7 +131,7 @@
             "plaintextJustifications": []
         },
         "publicOutput": {
-            "cacheSafe": false,
+            "cacheSafe": true,
             "forbidAuthoringSurface": true,
             "forbidSecrets": true,
             "forbidPublicBladeQueries": true

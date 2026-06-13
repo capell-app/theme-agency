@@ -113,7 +113,7 @@
                 "support.replies.store",
                 "support.store"
             ],
-            "auth": "authenticated",
+            "auth": "public",
             "csrfExemptRoutes": [],
             "signedRoutes": [],
             "tokenizedRoutes": [],

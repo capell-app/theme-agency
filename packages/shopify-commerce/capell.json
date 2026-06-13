@@ -83,25 +83,19 @@
         "shopify-commerce-webhooks"
     ],
     "security": {
-        "riskTier": "sensitive",
+        "riskTier": "critical",
         "publicSurface": {
             "routeNames": [
                 "capell-shopify-commerce.oauth.callback",
                 "capell-shopify-commerce.oauth.install",
-                "capell-shopify-commerce.webhooks.shopify",
-                "oauth.install",
-                "oauth.callback",
-                "webhooks.shopify"
+                "capell-shopify-commerce.webhooks.shopify"
             ],
-            "auth": "mixed",
-            "csrfExemptRoutes": ["webhooks.shopify"],
+            "auth": "public",
+            "csrfExemptRoutes": [],
             "signedRoutes": [],
             "tokenizedRoutes": [],
-            "webhookRoutes": [
-                "capell-shopify-commerce.webhooks.shopify",
-                "webhooks.shopify"
-            ],
-            "throttledRoutes": ["webhooks.shopify"]
+            "webhookRoutes": ["capell-shopify-commerce.webhooks.shopify"],
+            "throttledRoutes": ["capell-shopify-commerce.webhooks.shopify"]
         },
         "sensitiveData": {
             "encryptedFields": [

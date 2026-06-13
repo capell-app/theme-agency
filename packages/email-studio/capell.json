@@ -99,25 +99,13 @@
     "security": {
         "riskTier": "sensitive",
         "publicSurface": {
-            "routeNames": [
-                "capell-email-studio.provider-events",
-                "provider-events"
-            ],
-            "auth": "tokenized",
+            "routeNames": ["capell-email-studio.provider-events"],
+            "auth": "public",
             "csrfExemptRoutes": [],
             "signedRoutes": [],
-            "tokenizedRoutes": [
-                "capell-email-studio.provider-events",
-                "provider-events"
-            ],
-            "webhookRoutes": [
-                "capell-email-studio.provider-events",
-                "provider-events"
-            ],
-            "throttledRoutes": [
-                "capell-email-studio.provider-events",
-                "provider-events"
-            ]
+            "tokenizedRoutes": ["capell-email-studio.provider-events"],
+            "webhookRoutes": ["capell-email-studio.provider-events"],
+            "throttledRoutes": ["capell-email-studio.provider-events"]
         },
         "sensitiveData": {
             "encryptedFields": [],

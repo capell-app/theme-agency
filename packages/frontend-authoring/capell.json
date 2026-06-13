@@ -54,23 +54,18 @@
         "cache-blocking"
     ],
     "security": {
-        "riskTier": "sensitive",
+        "riskTier": "critical",
         "publicSurface": {
             "routeNames": [
                 "capell-frontend.authoring.edit",
-                "capell-frontend.beacon",
-                "beacon",
-                "authoring.edit"
+                "capell-frontend.beacon"
             ],
-            "auth": "admin-only",
-            "csrfExemptRoutes": ["capell-frontend.beacon", "beacon"],
-            "signedRoutes": [
-                "capell-frontend.authoring.edit",
-                "authoring.edit"
-            ],
+            "auth": "mixed",
+            "csrfExemptRoutes": ["capell-frontend.beacon"],
+            "signedRoutes": ["capell-frontend.authoring.edit"],
             "tokenizedRoutes": [],
             "webhookRoutes": [],
-            "throttledRoutes": ["capell-frontend.beacon", "beacon"]
+            "throttledRoutes": ["capell-frontend.beacon"]
         },
         "sensitiveData": {
             "encryptedFields": [],

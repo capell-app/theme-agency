@@ -155,13 +155,13 @@
     "security": {
         "riskTier": "standard",
         "publicSurface": {
-            "routeNames": ["capell-campaigns.conversions", "conversions"],
+            "routeNames": ["capell-campaigns.conversions"],
             "auth": "public",
-            "csrfExemptRoutes": ["capell-campaigns.conversions", "conversions"],
+            "csrfExemptRoutes": ["capell-campaigns.conversions"],
             "signedRoutes": [],
             "tokenizedRoutes": [],
             "webhookRoutes": [],
-            "throttledRoutes": ["capell-campaigns.conversions", "conversions"]
+            "throttledRoutes": ["capell-campaigns.conversions"]
         },
         "sensitiveData": {
             "encryptedFields": [],

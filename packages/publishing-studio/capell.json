@@ -230,17 +230,12 @@
         "publicSurface": {
             "routeNames": [
                 "capell-frontend.preview.exit",
-                "capell-publishing-studio.scheduler.ical",
-                "preview.exit",
-                "scheduler.ical"
+                "capell-publishing-studio.scheduler.ical"
             ],
-            "auth": "mixed",
+            "auth": "public",
             "csrfExemptRoutes": [],
             "signedRoutes": [],
-            "tokenizedRoutes": [
-                "capell-publishing-studio.scheduler.ical",
-                "scheduler.ical"
-            ],
+            "tokenizedRoutes": ["capell-publishing-studio.scheduler.ical"],
             "webhookRoutes": [],
             "throttledRoutes": []
         },
@@ -253,7 +248,7 @@
             ]
         },
         "publicOutput": {
-            "cacheSafe": false,
+            "cacheSafe": true,
             "forbidAuthoringSurface": true,
             "forbidSecrets": true,
             "forbidPublicBladeQueries": true
