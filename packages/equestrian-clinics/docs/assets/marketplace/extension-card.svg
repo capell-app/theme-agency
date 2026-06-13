@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+  <title id="title">Equestrian Clinics extension card</title>
+  <desc id="desc">A marketplace preview for Capell Equestrian Clinics showing tour days, riders, horses, waivers, payments, and venues.</desc>
+  <rect width="1200" height="630" fill="#18332f"/>
+  <rect x="70" y="70" width="1060" height="490" rx="28" fill="#f7f3ea"/>
+  <text x="120" y="160" font-family="Arial, sans-serif" font-size="58" font-weight="700" fill="#18332f">Equestrian Clinics</text>
+  <text x="120" y="222" font-family="Arial, sans-serif" font-size="30" fill="#33514b">Tour days, riders, horses, venues, waivers, payments</text>
+  <g font-family="Arial, sans-serif" font-size="26" fill="#18332f">
+    <text x="132" y="320">Calendar discovery</text>
+    <text x="132" y="372">Slot generation</text>
+    <text x="132" y="424">Facility reports</text>
+    <text x="132" y="476">Coach timetable</text>
+    <text x="570" y="320">Stripe and PayPal</text>
+    <text x="570" y="372">Rider and horse profiles</text>
+    <text x="570" y="424">Clinic credits</text>
+    <text x="570" y="476">Host requests</text>
+  </g>
+  <circle cx="100" cy="311" r="10" fill="#c28b2c"/>
+  <circle cx="100" cy="363" r="10" fill="#c28b2c"/>
+  <circle cx="100" cy="415" r="10" fill="#c28b2c"/>
+  <circle cx="100" cy="467" r="10" fill="#c28b2c"/>
+  <circle cx="538" cy="311" r="10" fill="#c28b2c"/>
+  <circle cx="538" cy="363" r="10" fill="#c28b2c"/>
+  <circle cx="538" cy="415" r="10" fill="#c28b2c"/>
+  <circle cx="538" cy="467" r="10" fill="#c28b2c"/>
+</svg>

@@ -1,0 +1,234 @@
+{
+    "manifest-version": 3,
+    "name": "capell-app/equestrian-clinics",
+    "slug": "equestrian-clinics",
+    "displayName": "Equestrian Clinics",
+    "kind": "plugin",
+    "capellApiVersion": "^4.0",
+    "version": "4.x-dev",
+    "description": "Equestrian Clinics turns Capell into a full equestrian operations platform for travelling coaches, riding schools, clinics, venues, riders, horses, waivers, payments, credits, resources, and mobile day-of delivery.",
+    "product": {
+        "group": "Capell Operations",
+        "tier": "premium",
+        "bundle": "operations"
+    },
+    "namespace": "Capell\\EquestrianClinics",
+    "surfaces": ["admin", "frontend", "console"],
+    "dependencies": {
+        "requires": [
+            "capell-app/address",
+            "capell-app/bookings",
+            "capell-app/core",
+            "capell-app/customer-portal",
+            "capell-app/events",
+            "capell-app/media-library",
+            "capell-app/payments"
+        ],
+        "supports": [
+            "capell-app/ai-orchestrator",
+            "capell-app/email-studio",
+            "capell-app/social-feeds"
+        ],
+        "conflicts": []
+    },
+    "providers": {
+        "metadata": [],
+        "install": [],
+        "runtime": [
+            "Capell\\EquestrianClinics\\Providers\\EquestrianClinicsServiceProvider"
+        ],
+        "admin": [],
+        "frontend": []
+    },
+    "contributes": [
+        {
+            "type": "model",
+            "class": "Capell\\EquestrianClinics\\Manifest\\EquestrianClinicsModelsContribution"
+        }
+    ],
+    "database": {
+        "migrations": true,
+        "settings": false,
+        "requiredTables": [
+            "equestrian_venues",
+            "equestrian_tour_days",
+            "equestrian_tour_day_slots",
+            "equestrian_rider_profiles",
+            "equestrian_horse_profiles",
+            "equestrian_facility_resources",
+            "equestrian_facility_bookings",
+            "equestrian_waiver_signatures",
+            "equestrian_clinic_credits",
+            "equestrian_host_requests"
+        ]
+    },
+    "commands": {
+        "install": null,
+        "setup": null,
+        "demo": null,
+        "doctor": null
+    },
+    "actions": {
+        "generateTourDaySlots": "Capell\\EquestrianClinics\\Actions\\GenerateTourDaySlotsAction",
+        "quoteTourDaySlotBooking": "Capell\\EquestrianClinics\\Actions\\QuoteTourDaySlotBookingAction",
+        "validateRiderHorseEligibility": "Capell\\EquestrianClinics\\Actions\\ValidateRiderHorseEligibilityAction",
+        "allocateHorseToSlot": "Capell\\EquestrianClinics\\Actions\\AllocateHorseToSlotAction",
+        "reserveFacilityResource": "Capell\\EquestrianClinics\\Actions\\ReserveFacilityResourceAction",
+        "buildFacilityReport": "Capell\\EquestrianClinics\\Actions\\BuildFacilityReportAction",
+        "recordHostRequest": "Capell\\EquestrianClinics\\Actions\\RecordHostRequestAction",
+        "buildOpenSlotDemandHeatmap": "Capell\\EquestrianClinics\\Actions\\BuildOpenSlotDemandHeatmapAction"
+    },
+    "settings": [],
+    "permissions": [
+        "ViewAny:EquestrianTourDay",
+        "View:EquestrianTourDay",
+        "Create:EquestrianTourDay",
+        "Update:EquestrianTourDay",
+        "Delete:EquestrianTourDay",
+        "ViewAny:EquestrianRiderProfile",
+        "ViewAny:EquestrianHorseProfile",
+        "ViewAny:EquestrianVenue"
+    ],
+    "capabilities": [
+        "equestrian-clinics",
+        "equestrian-tour-days",
+        "equestrian-slot-generation",
+        "equestrian-private-semi-private-group-slots",
+        "equestrian-public-calendar-discovery",
+        "equestrian-nearest-event-search",
+        "equestrian-open-slot-demand-heatmap",
+        "equestrian-stripe-paypal-cash-approval",
+        "equestrian-guarded-payment-fees",
+        "equestrian-rider-family-profiles",
+        "equestrian-horse-profiles",
+        "equestrian-horse-allocation-workload",
+        "equestrian-facility-resource-booking",
+        "equestrian-waivers-intake-compliance",
+        "equestrian-add-ons-facility-reports",
+        "equestrian-credits-memberships-loyalty",
+        "equestrian-coach-mobile-dashboard",
+        "equestrian-coaching-vault",
+        "equestrian-messaging-broadcasts",
+        "equestrian-host-portal-workflow",
+        "equestrian-marketing-qr-social-reviews",
+        "equestrian-analytics-bi-export",
+        "equestrian-ai-assistant-prompts",
+        "equestrian-calendar-payments-maps-integrations"
+    ],
+    "security": {
+        "riskTier": "sensitive",
+        "publicSurface": {
+            "routeNames": [
+                "capell-equestrian-clinics.discovery",
+                "capell-equestrian-clinics.host-request.store",
+                "capell-equestrian-clinics.coach.timetable"
+            ],
+            "auth": "public",
+            "csrfExemptRoutes": [],
+            "signedRoutes": ["capell-equestrian-clinics.coach.timetable"],
+            "tokenizedRoutes": [],
+            "webhookRoutes": [],
+            "throttledRoutes": ["capell-equestrian-clinics.host-request.store"]
+        },
+        "sensitiveData": {
+            "encryptedFields": [],
+            "hashedTokenFields": [],
+            "redactedOutputClasses": [],
+            "plaintextJustifications": []
+        },
+        "publicOutput": {
+            "cacheSafe": true,
+            "forbidAuthoringSurface": true,
+            "forbidSecrets": true,
+            "forbidPublicBladeQueries": true
+        },
+        "externalHttpClients": {
+            "requiresTimeouts": true,
+            "requiresSecretRedaction": true,
+            "clients": [
+                "stripe",
+                "paypal",
+                "maps",
+                "sms",
+                "whatsapp",
+                "meta",
+                "ai"
+            ]
+        },
+        "adminSurface": {
+            "authorization": "permissions",
+            "permissions": [
+                "ViewAny:EquestrianTourDay",
+                "View:EquestrianTourDay",
+                "Create:EquestrianTourDay",
+                "Update:EquestrianTourDay",
+                "Delete:EquestrianTourDay",
+                "ViewAny:EquestrianRiderProfile",
+                "ViewAny:EquestrianHorseProfile",
+                "ViewAny:EquestrianVenue"
+            ]
+        }
+    },
+    "performance": {
+        "frontendRenderBudgetMs": 35,
+        "adminQueryBudget": 60,
+        "cacheTags": ["equestrian-clinics"],
+        "cacheSafety": {
+            "cacheable": false,
+            "variesBy": ["site", "locale", "portal_account"],
+            "sensitiveOutput": true,
+            "invalidationSources": [
+                "equestrian_tour_days",
+                "equestrian_tour_day_slots",
+                "equestrian_venues"
+            ],
+            "queueInvalidation": true
+        }
+    },
+    "healthChecks": [
+        {
+            "key": "equestrian-clinics.core-schema",
+            "label": "Equestrian Clinics tables and core Actions are available",
+            "class": "Capell\\EquestrianClinics\\Health\\EquestrianClinicsHealthCheck",
+            "severity": "critical",
+            "surface": "admin"
+        }
+    ],
+    "commercial": {
+        "proposedLicense": "paid",
+        "requestedCertification": "first-party",
+        "supportPolicy": "priority",
+        "privateDocsRequested": true
+    },
+    "marketplace": {
+        "summary": "Tour days, riders, horses, waivers, payments, facilities, credits, waitlists, and coach-ready operations for equestrian businesses inside Capell.",
+        "description": "Equestrian Clinics gives travelling coaches and riding schools a complete operations package: publish tour days and clinics, generate private/semi-private/group slots, take Stripe or PayPal checkout, approve trusted cash customers, manage riders, horses, waivers, facility resources, add-ons, host requests, demand heatmaps, credits, and coach day-of workflows without turning the public site into a generic booking SaaS.",
+        "screenshots": [
+            {
+                "path": "docs/assets/marketplace/extension-card.svg",
+                "alt": "Equestrian Clinics extension card showing tour day operations",
+                "caption": "Marketplace card for the Equestrian Clinics operations package."
+            }
+        ]
+    },
+    "competitorCoverage": [
+        "tour-days-clinics",
+        "public-discovery",
+        "payments",
+        "riders-families",
+        "horses",
+        "horse-allocation",
+        "facilities-resources",
+        "waivers-compliance",
+        "add-ons",
+        "credits-loyalty",
+        "coach-dashboard",
+        "coaching-vault",
+        "messaging",
+        "venue-host-workflow",
+        "marketing",
+        "analytics",
+        "ai-assistant",
+        "integrations"
+    ]
+}

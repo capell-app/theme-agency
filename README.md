@@ -28,7 +28,7 @@ Each package README follows the same shape:
 | Preview unsaved page edits                     | [filament-peek](packages/filament-peek/README.md), [frontend-authoring](packages/frontend-authoring/README.md), [publishing-studio](packages/publishing-studio/README.md)                                                                                       | Separates temporary editor preview state from saved public pages.                                 |
 | Add public comments and moderation             | [comments](packages/comments/README.md), [blog](packages/blog/README.md), [email-studio](packages/email-studio/README.md)                                                                                                                                       | Adds moderated frontend discussion and admin review tools.                                        |
 | Tighten admin operations and access controls   | [diagnostics](packages/diagnostics/README.md), [site-monitor](packages/site-monitor/README.md), [dashboard-reports](packages/dashboard-reports/README.md), [password-policy](packages/password-policy/README.md), [login-audit](packages/login-audit/README.md) | Adds health checks, uptime checks, dashboard signals, password enforcement, and login visibility. |
-| Run customer and commerce workflows            | [customer-portal](packages/customer-portal/README.md), [contacts](packages/contacts/README.md), [bookings](packages/bookings/README.md), [payments](packages/payments/README.md)                                                                                | Adds self-service, CRM records, appointment requests, and payment flows.                          |
+| Run customer and commerce workflows            | [customer-portal](packages/customer-portal/README.md), [contacts](packages/contacts/README.md), [bookings](packages/bookings/README.md), [payments](packages/payments/README.md), [equestrian-clinics](packages/equestrian-clinics/README.md)                   | Adds self-service, CRM records, appointment requests, vertical operations, and payment flows.     |
 
 ## Package Index
 
@@ -86,11 +86,12 @@ Each package README follows the same shape:
 
 ### Commerce And Appointments
 
-| Package                                                 | Composer package              | Purpose                                                                        |
-| ------------------------------------------------------- | ----------------------------- | ------------------------------------------------------------------------------ |
-| [bookings](packages/bookings/README.md)                 | `capell-app/bookings`         | Services, staff, locations, availability, appointment requests, and reminders. |
-| [payments](packages/payments/README.md)                 | `capell-app/payments`         | Stripe Checkout, webhook processing, paid downloads, and payment records.      |
-| [shopify-commerce](packages/shopify-commerce/README.md) | `capell-app/shopify-commerce` | Shopify OAuth connections, catalog sync, and commerce admin workflows.         |
+| Package                                                     | Composer package                | Purpose                                                                                         |
+| ----------------------------------------------------------- | ------------------------------- | ----------------------------------------------------------------------------------------------- |
+| [bookings](packages/bookings/README.md)                     | `capell-app/bookings`           | Services, staff, locations, availability, appointment requests, and reminders.                  |
+| [equestrian-clinics](packages/equestrian-clinics/README.md) | `capell-app/equestrian-clinics` | Tour days, riders, horses, venues, waivers, payments, facilities, credits, and coach workflows. |
+| [payments](packages/payments/README.md)                     | `capell-app/payments`           | Stripe Checkout, webhook processing, paid downloads, and payment records.                       |
+| [shopify-commerce](packages/shopify-commerce/README.md)     | `capell-app/shopify-commerce`   | Shopify OAuth connections, catalog sync, and commerce admin workflows.                          |
 
 ### Growth, Search, And Reporting
 

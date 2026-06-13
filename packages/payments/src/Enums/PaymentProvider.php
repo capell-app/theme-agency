@@ -9,6 +9,7 @@ use Filament\Support\Contracts\HasLabel;
 enum PaymentProvider: string implements HasLabel
 {
     case Stripe = 'stripe';
+    case PayPal = 'paypal';
 
     public function getLabel(): string
     {

@@ -17,4 +17,9 @@ final class PaymentGatewayConfigurationException extends RuntimeException
     {
         return new self('Stripe webhooks require a configured STRIPE_WEBHOOK_SECRET value.');
     }
+
+    public static function missingPayPalCredentials(): self
+    {
+        return new self('PayPal checkout requires configured PAYPAL_CLIENT_ID and PAYPAL_CLIENT_SECRET values.');
+    }
 }
