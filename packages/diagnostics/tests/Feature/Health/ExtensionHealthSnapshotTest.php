@@ -70,6 +70,8 @@ function extensionHealthReportForSnapshot(int $score, string $status): Extension
                 label: 'Example health',
                 className: 'ExampleHealthCheck',
                 severity: 'critical',
+                surface: 'admin',
+                coverage: ['manifest-validity'],
                 implementationStatus: HealthCheckImplementationStatus::Implemented,
                 passed: true,
                 message: 'All good.',
