@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace Capell\EquestrianClinics\Models;
 
 use Carbon\CarbonImmutable;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Override;
 
 /**
@@ -20,12 +22,39 @@ use Override;
  * @property array<int, string>|null $suitable_skill_tiers
  * @property string|null $notes
  * @property bool $active
+ * @property-read Collection<int, EquestrianHorseCareTask> $careTasks
+ * @property-read Collection<int, EquestrianHorseHealthRecord> $healthRecords
+ * @property-read Collection<int, EquestrianCompetitionResult> $competitionResults
  */
 final class EquestrianHorseProfile extends Model
 {
     protected $table = 'equestrian_horse_profiles';
 
     protected $guarded = [];
+
+    /**
+     * @return HasMany<EquestrianHorseCareTask, $this>
+     */
+    public function careTasks(): HasMany
+    {
+        return $this->hasMany(EquestrianHorseCareTask::class, 'horse_profile_id');
+    }
+
+    /**
+     * @return HasMany<EquestrianHorseHealthRecord, $this>
+     */
+    public function healthRecords(): HasMany
+    {
+        return $this->hasMany(EquestrianHorseHealthRecord::class, 'horse_profile_id');
+    }
+
+    /**
+     * @return HasMany<EquestrianCompetitionResult, $this>
+     */
+    public function competitionResults(): HasMany
+    {
+        return $this->hasMany(EquestrianCompetitionResult::class, 'horse_profile_id');
+    }
 
     public function isSuitableFor(string $skillTier): bool
     {

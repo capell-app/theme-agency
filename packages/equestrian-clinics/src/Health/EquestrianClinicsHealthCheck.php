@@ -8,9 +8,26 @@ use Capell\Core\Contracts\Extensions\ChecksExtensionHealth;
 use Capell\EquestrianClinics\Actions\AllocateHorseToSlotAction;
 use Capell\EquestrianClinics\Actions\BuildFacilityReportAction;
 use Capell\EquestrianClinics\Actions\BuildOpenSlotDemandHeatmapAction;
+use Capell\EquestrianClinics\Actions\BuildStaffCareWorklistAction;
+use Capell\EquestrianClinics\Actions\CancelSlotBookingAction;
+use Capell\EquestrianClinics\Actions\ClaimWaitlistOfferAction;
+use Capell\EquestrianClinics\Actions\CompleteHorseCareTaskAction;
+use Capell\EquestrianClinics\Actions\ConfirmSlotBookingPaymentAction;
+use Capell\EquestrianClinics\Actions\CreateBillingEntryAction;
+use Capell\EquestrianClinics\Actions\CreateCommercialProductAction;
+use Capell\EquestrianClinics\Actions\CreateHorseCareTaskAction;
+use Capell\EquestrianClinics\Actions\CreateHorseHealthRecordAction;
+use Capell\EquestrianClinics\Actions\ExpireSlotBookingHoldsAction;
+use Capell\EquestrianClinics\Actions\ExpireWaitlistOffersAction;
 use Capell\EquestrianClinics\Actions\GenerateTourDaySlotsAction;
+use Capell\EquestrianClinics\Actions\JoinSlotWaitlistAction;
+use Capell\EquestrianClinics\Actions\MarkBillingEntryExportedAction;
+use Capell\EquestrianClinics\Actions\PromoteWaitlistEntryAction;
 use Capell\EquestrianClinics\Actions\QuoteTourDaySlotBookingAction;
+use Capell\EquestrianClinics\Actions\RecordCoachBroadcastAction;
+use Capell\EquestrianClinics\Actions\RecordCompetitionResultAction;
 use Capell\EquestrianClinics\Actions\RecordHostRequestAction;
+use Capell\EquestrianClinics\Actions\RequestSlotBookingAction;
 use Capell\EquestrianClinics\Actions\ReserveFacilityResourceAction;
 use Capell\EquestrianClinics\Actions\ValidateRiderHorseEligibilityAction;
 use Illuminate\Support\Facades\Schema;
@@ -22,12 +39,21 @@ final class EquestrianClinicsHealthCheck implements ChecksExtensionHealth
         'equestrian_venues',
         'equestrian_tour_days',
         'equestrian_tour_day_slots',
+        'equestrian_staff_members',
         'equestrian_rider_profiles',
         'equestrian_horse_profiles',
+        'equestrian_slot_bookings',
+        'equestrian_slot_waitlist_entries',
+        'equestrian_horse_care_tasks',
+        'equestrian_horse_health_records',
+        'equestrian_competition_results',
         'equestrian_facility_resources',
         'equestrian_facility_bookings',
         'equestrian_waiver_signatures',
         'equestrian_clinic_credits',
+        'equestrian_commercial_products',
+        'equestrian_billing_entries',
+        'equestrian_communication_logs',
         'equestrian_host_requests',
     ];
 
@@ -35,10 +61,27 @@ final class EquestrianClinicsHealthCheck implements ChecksExtensionHealth
     private const array ACTIONS = [
         GenerateTourDaySlotsAction::class,
         QuoteTourDaySlotBookingAction::class,
+        RequestSlotBookingAction::class,
+        ConfirmSlotBookingPaymentAction::class,
+        ExpireSlotBookingHoldsAction::class,
+        CancelSlotBookingAction::class,
+        JoinSlotWaitlistAction::class,
+        PromoteWaitlistEntryAction::class,
+        ClaimWaitlistOfferAction::class,
+        ExpireWaitlistOffersAction::class,
         ValidateRiderHorseEligibilityAction::class,
         AllocateHorseToSlotAction::class,
+        CreateHorseCareTaskAction::class,
+        CompleteHorseCareTaskAction::class,
+        CreateHorseHealthRecordAction::class,
+        RecordCompetitionResultAction::class,
+        BuildStaffCareWorklistAction::class,
         ReserveFacilityResourceAction::class,
         BuildFacilityReportAction::class,
+        CreateCommercialProductAction::class,
+        CreateBillingEntryAction::class,
+        MarkBillingEntryExportedAction::class,
+        RecordCoachBroadcastAction::class,
         RecordHostRequestAction::class,
         BuildOpenSlotDemandHeatmapAction::class,
     ];

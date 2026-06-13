@@ -6,15 +6,17 @@ Equestrian Clinics is a premium Capell Operations package for tour-day, clinic, 
 
 The package adds an equestrian operations layer around Capell's existing booking, event, payment, portal, address, and media capabilities.
 
-| Feature family         | Current package coverage                                                                                                                          |
-| ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Tour days and clinics  | Venue-linked Tour Days, operating hours, slot templates, auto-generation, slot archetypes, capacity counts, and minimum viable clinic thresholds. |
-| Public discovery       | Search, venue filtering, postcode filtering, coordinate distance sorting, demand heatmap, and host/request form.                                  |
-| Payments               | Quote rules for universal booking fees and guarded method-specific fees, plus PayPal support in Payments.                                         |
-| Riders and horses      | Rider/horse profiles, skill tiers, cash approval timestamp, suitability checks, vaccination fields, and workload limits.                          |
-| Facilities             | Resource inventory, capacity conflict checks, resource pricing, reservations, and host-safe reports.                                              |
-| Waivers and compliance | Waiver signature records, version snapshots, guardian data, and sensitive-output boundaries.                                                      |
-| Coach dashboard        | Signed mobile timetable with venue notes, minimum threshold status, slot capacity, waitlist count, and resources.                                 |
+| Feature family         | Current package coverage                                                                                                                                                                 |
+| ---------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Tour days and clinics  | Venue-linked Tour Days, operating hours, slot templates, auto-generation, slot archetypes, capacity counts, waitlist counts, and minimum viable clinic thresholds.                       |
+| Public discovery       | Search, venue filtering, postcode filtering, coordinate distance sorting, demand heatmap, and host/request form.                                                                         |
+| Payments               | Quote rules for universal booking fees and guarded method-specific fees, PayPal support in Payments, checkout holds, provider confirmation, cash approval, and refund cutoffs.           |
+| Riders and horses      | Rider/horse profiles, skill tiers, cash approval timestamp, suitability checks, vaccination fields, workload limits, horse care tasks, health/service records, and staff care worklists. |
+| Facilities             | Resource inventory, capacity conflict checks, resource pricing, reservations, and host-safe reports.                                                                                     |
+| Commerce               | Clinic credits, commercial products, lesson packs, memberships, stable cards, gift cards, services, add-ons, billing entries, invoice references, and export state.                      |
+| Competitions           | Competition result records for class, discipline, score, placing, rider, horse, and Tour Day linkage.                                                                                    |
+| Waivers and compliance | Waiver signature records, version snapshots, guardian data, and sensitive-output boundaries.                                                                                             |
+| Coach dashboard        | Signed mobile timetable with venue notes, minimum threshold status, slot capacity, waitlist count, resources, and broadcast-recipient logging support.                                   |
 
 ## Why It Matters
 
@@ -38,10 +40,27 @@ Domain behavior is held in Actions:
 
 - `GenerateTourDaySlotsAction`
 - `QuoteTourDaySlotBookingAction`
+- `RequestSlotBookingAction`
+- `ConfirmSlotBookingPaymentAction`
+- `ExpireSlotBookingHoldsAction`
+- `CancelSlotBookingAction`
+- `JoinSlotWaitlistAction`
+- `PromoteWaitlistEntryAction`
+- `ClaimWaitlistOfferAction`
+- `ExpireWaitlistOffersAction`
 - `ValidateRiderHorseEligibilityAction`
 - `AllocateHorseToSlotAction`
+- `CreateHorseCareTaskAction`
+- `CompleteHorseCareTaskAction`
+- `CreateHorseHealthRecordAction`
+- `RecordCompetitionResultAction`
+- `BuildStaffCareWorklistAction`
 - `ReserveFacilityResourceAction`
 - `BuildFacilityReportAction`
+- `CreateCommercialProductAction`
+- `CreateBillingEntryAction`
+- `MarkBillingEntryExportedAction`
+- `RecordCoachBroadcastAction`
 - `RecordHostRequestAction`
 - `BuildOpenSlotDemandHeatmapAction`
 - `BuildClinicDiscoveryAction`
@@ -53,30 +72,39 @@ The package contributes model metadata and a health check through the manifest. 
 
 The migration creates these package-owned tables:
 
-| Table                           | Purpose                                                                                                                                     |
-| ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
-| `equestrian_venues`             | Venue profile, address, postcode, coordinates, Google Maps URL, facility/access/parking notes, and contact details.                         |
-| `equestrian_tour_days`          | Clinic day connected to one venue, with status, time window, booking lock, refund cutoff, minimum paid attendees, and minimum revenue.      |
-| `equestrian_tour_day_slots`     | Slot blocks with title, archetype, time window, capacity, booked/waitlist counts, skill tier, price, deposit, and booking bridge IDs.       |
-| `equestrian_rider_profiles`     | Rider records scoped to a portal account, including emergency contact, medical disclosure, skill tiers, guardian fields, and cash approval. |
-| `equestrian_horse_profiles`     | Horse records with fitness, vaccination, suitability tiers, workload limits, and notes.                                                     |
-| `equestrian_facility_resources` | Venue-owned arenas, fields, stables, horseboxes, hookups, equipment, and priced resource capacity.                                          |
-| `equestrian_facility_bookings`  | Resource reservations against slot time windows.                                                                                            |
-| `equestrian_waiver_signatures`  | Versioned waiver signatures and consent snapshots.                                                                                          |
-| `equestrian_clinic_credits`     | Account-scoped credits, packs, memberships, and expiry.                                                                                     |
-| `equestrian_host_requests`      | Public request/host demand capture and heatmap source.                                                                                      |
+| Table                              | Purpose                                                                                                                                     |
+| ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| `equestrian_venues`                | Venue profile, address, postcode, coordinates, Google Maps URL, facility/access/parking notes, and contact details.                         |
+| `equestrian_tour_days`             | Clinic day connected to one venue, with status, time window, booking lock, refund cutoff, minimum paid attendees, and minimum revenue.      |
+| `equestrian_tour_day_slots`        | Slot blocks with title, archetype, time window, capacity, booked/waitlist counts, skill tier, price, deposit, and booking bridge IDs.       |
+| `equestrian_staff_members`         | Staff identity, roles, availability, and care assignment scope.                                                                             |
+| `equestrian_rider_profiles`        | Rider records scoped to a portal account, including emergency contact, medical disclosure, skill tiers, guardian fields, and cash approval. |
+| `equestrian_horse_profiles`        | Horse records with fitness, vaccination, suitability tiers, workload limits, and notes.                                                     |
+| `equestrian_slot_bookings`         | Checkout holds, confirmed bookings, provider/payment state, cash approval, cancellation, and refund cutoff state.                           |
+| `equestrian_slot_waitlist_entries` | Waiting riders, private offer windows, claim state, and quoted totals.                                                                      |
+| `equestrian_horse_care_tasks`      | Feed, medication, vet, farrier, exercise, vaccination, grooming, and billable care tasks.                                                   |
+| `equestrian_horse_health_records`  | Vet, farrier, vaccination, medication, dental, bodywork, document, reminder, and billable service history.                                  |
+| `equestrian_competition_results`   | Rider/horse class results, discipline, score, placing, and Tour Day linkage.                                                                |
+| `equestrian_facility_resources`    | Venue-owned arenas, fields, stables, horseboxes, hookups, equipment, and priced resource capacity.                                          |
+| `equestrian_facility_bookings`     | Resource reservations against slot time windows.                                                                                            |
+| `equestrian_waiver_signatures`     | Versioned waiver signatures and consent snapshots.                                                                                          |
+| `equestrian_clinic_credits`        | Account-scoped credits, packs, memberships, and expiry.                                                                                     |
+| `equestrian_commercial_products`   | Lesson packs, memberships, stable cards, gift cards, services, add-ons, pricing, and eligibility.                                           |
+| `equestrian_billing_entries`       | Invoice/export-ready billable lines for care, products, services, and accounting integrations.                                              |
+| `equestrian_communication_logs`    | Broadcast channel, audience, message, recipients, and sent timestamp.                                                                       |
+| `equestrian_host_requests`         | Public request/host demand capture and heatmap source.                                                                                      |
 
 ## Install Impact
 
 The package requires `capell-app/address`, `capell-app/bookings`, `capell-app/core`, `capell-app/customer-portal`, `capell-app/events`, `capell-app/media-library`, and `capell-app/payments`.
 
-Install adds database tables and public routes, and it extends Payments with PayPal as a provider. It does not yet add full Filament CRUD resources or customer portal pages; those are the next implementation layer.
+Install adds database tables and public routes, and it extends Payments with PayPal as a provider. It does not yet add full Filament CRUD resources, checkout screens, outbound messaging jobs, or customer portal pages; those are the next implementation layer.
 
 ## Common Pitfalls
 
 - Composer availability is not the same as Capell installation. Routes are registered only after the package is marked installed.
-- The public discovery buttons are currently state labels, not checkout forms. Booking handoff still needs the Bookings/Payments UI layer.
-- Waitlist counts render, but promotion, claim windows, and customer notifications are not yet implemented.
+- The public discovery buttons are currently state labels, not checkout forms. Booking handoff screens still need the Bookings/Payments UI layer.
+- Waitlist promotion and claim windows exist as Actions; customer-facing notification delivery and portal claim screens are still UI/integration work.
 - The coach timetable deliberately avoids medical disclosure and waiver snapshot output.
 - Method-specific payment fees are quoted only when legal acknowledgement is passed to the Action; a real admin setting must persist that acknowledgement before production use.
 
@@ -103,8 +131,8 @@ Install adds database tables and public routes, and it extends Payments with Pay
 
 The next product layer should add:
 
-- Filament resources for venues, Tour Days, slots, rider profiles, horse profiles, waivers, credits, resources, host requests, and reports.
-- Public booking handoff into Bookings and Payments, including checkout holds, refunds, cash approval, and waitlist claim windows.
+- Filament resources for venues, Tour Days, slots, rider profiles, horse profiles, bookings, waitlists, staff, care tasks, health records, competition results, waivers, credits, products, billing entries, resources, host requests, and reports.
+- Public booking handoff screens into Bookings and Payments, backed by the implemented hold, confirmation, cancellation, cash approval, and waitlist Actions.
 - Customer portal pages for riders, horses, waivers, credits, bookings, waitlist offers, coaching vault, and rebooking.
 - Messaging jobs for reminders, cancellations, weather changes, waitlist offers, and broadcast history.
 - Screenshot fixture generation in Equi Dynamics after its package install blocker is resolved.

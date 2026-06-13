@@ -31,6 +31,8 @@ use Override;
  * @property array<string, mixed>|null $meta
  * @property-read EquestrianTourDay $tourDay
  * @property-read Collection<int, EquestrianFacilityBooking> $facilityBookings
+ * @property-read Collection<int, EquestrianSlotBooking> $bookings
+ * @property-read Collection<int, EquestrianSlotWaitlistEntry> $waitlistEntries
  */
 final class EquestrianTourDaySlot extends Model
 {
@@ -52,6 +54,22 @@ final class EquestrianTourDaySlot extends Model
     public function facilityBookings(): HasMany
     {
         return $this->hasMany(EquestrianFacilityBooking::class, 'tour_day_slot_id');
+    }
+
+    /**
+     * @return HasMany<EquestrianSlotBooking, $this>
+     */
+    public function bookings(): HasMany
+    {
+        return $this->hasMany(EquestrianSlotBooking::class, 'tour_day_slot_id');
+    }
+
+    /**
+     * @return HasMany<EquestrianSlotWaitlistEntry, $this>
+     */
+    public function waitlistEntries(): HasMany
+    {
+        return $this->hasMany(EquestrianSlotWaitlistEntry::class, 'tour_day_slot_id');
     }
 
     public function remainingCapacity(): int

@@ -26,6 +26,9 @@ use Override;
  * @property CarbonImmutable|null $cash_approved_at
  * @property bool $active
  * @property-read Collection<int, EquestrianWaiverSignature> $waiverSignatures
+ * @property-read Collection<int, EquestrianSlotBooking> $slotBookings
+ * @property-read Collection<int, EquestrianSlotWaitlistEntry> $waitlistEntries
+ * @property-read Collection<int, EquestrianCompetitionResult> $competitionResults
  */
 final class EquestrianRiderProfile extends Model
 {
@@ -39,6 +42,30 @@ final class EquestrianRiderProfile extends Model
     public function waiverSignatures(): HasMany
     {
         return $this->hasMany(EquestrianWaiverSignature::class, 'rider_profile_id');
+    }
+
+    /**
+     * @return HasMany<EquestrianSlotBooking, $this>
+     */
+    public function slotBookings(): HasMany
+    {
+        return $this->hasMany(EquestrianSlotBooking::class, 'rider_profile_id');
+    }
+
+    /**
+     * @return HasMany<EquestrianSlotWaitlistEntry, $this>
+     */
+    public function waitlistEntries(): HasMany
+    {
+        return $this->hasMany(EquestrianSlotWaitlistEntry::class, 'rider_profile_id');
+    }
+
+    /**
+     * @return HasMany<EquestrianCompetitionResult, $this>
+     */
+    public function competitionResults(): HasMany
+    {
+        return $this->hasMany(EquestrianCompetitionResult::class, 'rider_profile_id');
     }
 
     public function hasSkillTier(string $skillTier): bool
