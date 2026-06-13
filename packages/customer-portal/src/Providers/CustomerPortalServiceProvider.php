@@ -97,7 +97,7 @@ final class CustomerPortalServiceProvider extends AbstractPackageServiceProvider
 
     private function registerModels(): self
     {
-        CapellCore::registerModels([
+        $this->surface()->models([
             PortalAccount::class,
             PortalSupportRequest::class,
             PortalSupportRequestReply::class,

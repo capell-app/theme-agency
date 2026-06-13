@@ -8,7 +8,6 @@ use Capell\Admin\Data\Extensions\ExtensionManagementSurfaceData;
 use Capell\Admin\Facades\CapellAdmin;
 use Capell\Core\Facades\CapellCore;
 use Capell\Core\Support\Packages\AbstractPackageServiceProvider;
-use Capell\Core\Support\Settings\SettingsSchemaRegistry;
 use Capell\CustomerPortal\Contracts\PortalSelfServiceItemProvider;
 use Capell\CustomerPortal\Support\PortalSelfServiceItemRegistry;
 use Capell\FormBuilder\Events\FormSubmitted;
@@ -145,9 +144,8 @@ class NewsletterServiceProvider extends AbstractPackageServiceProvider
 
     private function registerSettingsSchemas(): self
     {
-        $registry = resolve(SettingsSchemaRegistry::class);
-        $registry->registerSettingsClass('newsletter', NewsletterSettings::class);
-        $registry->register('newsletter', NewsletterSettingsSchema::class);
+        $this->surface()->settingsClass('newsletter', NewsletterSettings::class);
+        $this->surface()->settingsSchema('newsletter', NewsletterSettingsSchema::class);
         CapellAdmin::registerExtensionManagementSurface(ExtensionManagementSurfaceData::settings(
             packageName: self::$packageName,
             label: 'capell-newsletter::settings.fieldset',
@@ -160,7 +158,7 @@ class NewsletterServiceProvider extends AbstractPackageServiceProvider
 
     private function registerModels(): self
     {
-        CapellCore::registerModels([
+        $this->surface()->models([
             Subscriber::class,
             ConsentEvent::class,
             PublicToken::class,

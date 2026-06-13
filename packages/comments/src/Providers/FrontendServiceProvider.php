@@ -6,14 +6,13 @@ namespace Capell\Comments\Providers;
 
 use Capell\Comments\Enums\LivewireComponentEnum;
 use Capell\Comments\Livewire\CommentThreadComponent;
+use Capell\Comments\Support\RenderHooks\CommentThreadRenderHook;
 use Capell\Core\Data\RenderableDefinitionData;
 use Capell\Core\Facades\CapellCore;
 use Capell\Core\Support\Renderables\RenderableRegistry;
-use Capell\Frontend\Data\MainContentRenderHookData;
 use Capell\Frontend\Enums\RenderHookLocation;
-use Capell\Frontend\Support\Render\RenderHookRegistry;
+use Capell\Frontend\Support\Render\FrontendHookRegistrar;
 use Composer\InstalledVersions;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
 use Livewire\Livewire;
@@ -85,27 +84,19 @@ class FrontendServiceProvider extends ServiceProvider
 
     private function registerAutoInjection(): self
     {
-        if (! (bool) config('capell-comments.auto_inject', false) || ! $this->app->bound(RenderHookRegistry::class)) {
+        if (! (bool) config('capell-comments.auto_inject', false) || ! $this->app->bound(FrontendHookRegistrar::class)) {
             return $this;
         }
 
-        $this->app->make(RenderHookRegistry::class)->register(
-            RenderHookLocation::MainContent,
-            static function (mixed $context): string {
-                $item = $context->item ?? null;
-                if (! $item instanceof MainContentRenderHookData || ! $item->page instanceof Model) {
-                    return '';
-                }
-
-                $threadKey = CommentThreadComponent::threadKeyFor($item->page);
-
-                return view('capell-comments::livewire.thread-shell', [
-                    'threadKey' => $threadKey,
-                ])->render();
-            },
+        resolve(FrontendHookRegistrar::class)->contribute(
+            location: RenderHookLocation::MainContent,
+            extension: new CommentThreadRenderHook,
+            owner: 'capell-app/comments',
+            key: 'comment-thread',
             priority: 90,
             scenario: 'frontend-main-layout',
             target: 'capell::layout.main',
+            cacheSafe: false,
         );
 
         return $this;

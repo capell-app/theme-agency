@@ -84,7 +84,7 @@ final class LessonSeriesResource extends Resource
     }
 
     #[Override]
-    public static function getNavigationGroup(): ?string
+    public static function getNavigationGroup(): string
     {
         return __('capell-bookings::admin.navigation_group');
     }
@@ -106,7 +106,7 @@ final class LessonSeriesResource extends Resource
     }
 
     /**
-     * @return array<int, string>
+     * @return array<int|string, string>
      */
     private static function serviceOptions(): array
     {
@@ -114,11 +114,21 @@ final class LessonSeriesResource extends Resource
             return [];
         }
 
-        return BookingService::query()->orderBy('name')->pluck('name', 'id')->all();
+        $serviceOptions = [];
+
+        foreach (BookingService::query()->orderBy('name')->pluck('name', 'id')->all() as $id => $name) {
+            if (! is_string($name) && ! is_int($name) && ! is_float($name)) {
+                continue;
+            }
+
+            $serviceOptions[$id] = (string) $name;
+        }
+
+        return $serviceOptions;
     }
 
     /**
-     * @return array<int, string>
+     * @return array<int|string, string>
      */
     private static function staffOptions(): array
     {
@@ -126,11 +136,21 @@ final class LessonSeriesResource extends Resource
             return [];
         }
 
-        return BookingStaffMember::query()->orderBy('display_name')->pluck('display_name', 'id')->all();
+        $staffOptions = [];
+
+        foreach (BookingStaffMember::query()->orderBy('display_name')->pluck('display_name', 'id')->all() as $id => $name) {
+            if (! is_string($name) && ! is_int($name) && ! is_float($name)) {
+                continue;
+            }
+
+            $staffOptions[$id] = (string) $name;
+        }
+
+        return $staffOptions;
     }
 
     /**
-     * @return array<int, string>
+     * @return array<int|string, string>
      */
     private static function locationOptions(): array
     {
@@ -138,7 +158,17 @@ final class LessonSeriesResource extends Resource
             return [];
         }
 
-        return BookingLocation::query()->orderBy('name')->pluck('name', 'id')->all();
+        $locationOptions = [];
+
+        foreach (BookingLocation::query()->orderBy('name')->pluck('name', 'id')->all() as $id => $name) {
+            if (! is_string($name) && ! is_int($name) && ! is_float($name)) {
+                continue;
+            }
+
+            $locationOptions[$id] = (string) $name;
+        }
+
+        return $locationOptions;
     }
 
     private static function weekdayLabel(int|string|null $state): string

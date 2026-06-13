@@ -34,8 +34,8 @@ use Capell\AgentBridge\Support\CapellAgentBridgeCapabilityRegistry;
 use Capell\AgentBridge\Tools\Boost\ListBoostCapabilitiesTool;
 use Capell\AgentBridge\Tools\Boost\PreviewBoostCapabilityTool;
 use Capell\Core\Facades\CapellCore;
+use Capell\Core\Support\Packages\PackageSurfaceRegistrar;
 use Capell\Core\Support\Settings\SettingsGroupMetadata;
-use Capell\Core\Support\Settings\SettingsSchemaRegistry;
 use Filament\Pages\Page;
 use Filament\Support\Facades\FilamentView;
 use Filament\Support\Icons\Heroicon;
@@ -152,29 +152,9 @@ final class AgentBridgeServiceProvider extends ServiceProvider
 
         config(['settings.settings' => $settings]);
 
-        if (! class_exists(SettingsSchemaRegistry::class)) {
-            return;
-        }
+        app(PackageSurfaceRegistrar::class)->settingsClass(AgentBridgeSettings::group(), AgentBridgeSettings::class);
+        app(PackageSurfaceRegistrar::class)->settingsSchema(AgentBridgeSettings::group(), AgentBridgeSettingsSchema::class);
 
-        if (! $this->app->bound(SettingsSchemaRegistry::class)) {
-            $this->app->afterResolving(
-                SettingsSchemaRegistry::class,
-                fn (SettingsSchemaRegistry $registry): SettingsSchemaRegistry => $this->registerSettingsSchemas($registry),
-            );
-
-            return;
-        }
-
-        /** @var SettingsSchemaRegistry $registry */
-        $registry = $this->app->make(SettingsSchemaRegistry::class);
-
-        $this->registerSettingsSchemas($registry);
-    }
-
-    private function registerSettingsSchemas(SettingsSchemaRegistry $registry): SettingsSchemaRegistry
-    {
-        $registry->registerSettingsClass(AgentBridgeSettings::group(), AgentBridgeSettings::class);
-        $registry->register(AgentBridgeSettings::group(), AgentBridgeSettingsSchema::class);
         CapellAdmin::registerExtensionManagementSurface(ExtensionManagementSurfaceData::settings(
             packageName: self::$packageName,
             label: 'capell-agent-bridge::admin.settings_title',
@@ -182,18 +162,14 @@ final class AgentBridgeServiceProvider extends ServiceProvider
             icon: Heroicon::OutlinedSparkles,
         ));
 
-        if (class_exists(SettingsGroupMetadata::class)) {
-            $registry->registerMetadata(new SettingsGroupMetadata(
-                group: AgentBridgeSettings::group(),
-                label: 'capell-agent-bridge::admin.settings_title',
-                icon: Heroicon::OutlinedSparkles,
-                navigationGroup: 'capell-admin::navigation.group_system',
-                navigationSort: 94,
-                packageName: self::$packageName,
-            ));
-        }
-
-        return $registry;
+        app(PackageSurfaceRegistrar::class)->settingsMetadata(new SettingsGroupMetadata(
+            group: AgentBridgeSettings::group(),
+            label: 'capell-agent-bridge::admin.settings_title',
+            icon: Heroicon::OutlinedSparkles,
+            navigationGroup: 'capell-admin::navigation.group_system',
+            navigationSort: 94,
+            packageName: self::$packageName,
+        ));
     }
 
     private function registerUserResourceBridgeFallback(): void

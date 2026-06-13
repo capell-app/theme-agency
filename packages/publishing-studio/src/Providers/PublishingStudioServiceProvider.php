@@ -21,8 +21,9 @@ use Capell\Core\Models\SiteDomain;
 use Capell\Core\Models\Theme;
 use Capell\Core\Models\Translation;
 use Capell\Core\Support\Database\RuntimeSchemaState;
+use Capell\Core\Support\Packages\PackageSurfaceRegistrar;
 use Capell\Frontend\Enums\RenderHookLocation;
-use Capell\Frontend\Support\Render\RenderHookRegistry;
+use Capell\Frontend\Support\Render\FrontendHookRegistrar;
 use Capell\MigrationAssistant\Contracts\MigrationAssistantContextResolver;
 use Capell\MigrationAssistant\Contracts\PageCollisionDetector;
 use Capell\MigrationAssistant\Contracts\PageImportTargetResolver;
@@ -53,6 +54,7 @@ use Capell\PublishingStudio\Support\PublishingStudioManager;
 use Capell\PublishingStudio\Support\PublishingStudioMigrationAssistantContextResolver;
 use Capell\PublishingStudio\Support\PublishingStudioPageImportTargetResolver;
 use Capell\PublishingStudio\Support\PublishingStudioPageUrlCollisionDetector;
+use Capell\PublishingStudio\Support\RenderHooks\WorkspacePreviewPillHook;
 use Capell\PublishingStudio\Support\WorkspaceSchema;
 use Capell\PublishingStudio\WorkspaceContext;
 use Capell\PublishingStudio\WorkspaceContextScope;
@@ -128,7 +130,7 @@ class PublishingStudioServiceProvider extends ServiceProvider
 
     private function registerModels(): self
     {
-        CapellCore::registerModels([
+        app(PackageSurfaceRegistrar::class)->models([
             PreviewLink::class,
             PublishingRevision::class,
             SchedulerDelivery::class,
@@ -497,13 +499,16 @@ class PublishingStudioServiceProvider extends ServiceProvider
 
     private function registerFrontendRenderHooks(): self
     {
-        if (! $this->app->bound(RenderHookRegistry::class)) {
+        if (! $this->app->bound(FrontendHookRegistrar::class)) {
             return $this;
         }
 
-        $this->app->make(RenderHookRegistry::class)->register(
-            RenderHookLocation::BodyEnd,
-            static fn (): string => view('capell-publishing-studio::components.workspace-preview-pill')->render(),
+        resolve(FrontendHookRegistrar::class)->contribute(
+            location: RenderHookLocation::BodyEnd,
+            extension: new WorkspacePreviewPillHook,
+            owner: 'capell-app/publishing-studio',
+            key: 'workspace-preview-pill',
+            cacheSafe: false,
         );
 
         return $this;

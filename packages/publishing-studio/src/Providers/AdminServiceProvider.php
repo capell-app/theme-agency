@@ -24,8 +24,8 @@ use Capell\Admin\Support\Dashboard\NullRecentlyPublishedDataProvider;
 use Capell\Core\Events\PageSaved;
 use Capell\Core\Facades\CapellCore;
 use Capell\Core\Models\Page;
+use Capell\Core\Support\Packages\PackageSurfaceRegistrar;
 use Capell\Core\Support\Settings\SettingsGroupMetadata;
-use Capell\Core\Support\Settings\SettingsSchemaRegistry;
 use Capell\PublishingStudio\Actions\DashboardReports\BuildContentSchedulerEventsAction;
 use Capell\PublishingStudio\Bridges\PublishingStudioAdminBridge;
 use Capell\PublishingStudio\Contracts\WorkspaceTableActionContributor;
@@ -110,11 +110,10 @@ class AdminServiceProvider extends ServiceProvider
 
     private function registerSettingsSchemas(): self
     {
-        /** @var SettingsSchemaRegistry $registry */
-        $registry = $this->app->make(SettingsSchemaRegistry::class);
+        app(PackageSurfaceRegistrar::class)->settingsClass('publishing_studio', PublishingStudioSettings::class);
+        app(PackageSurfaceRegistrar::class)->settingsSchema('publishing_studio', PublishingStudioSettingsSchema::class);
 
-        $registry->registerSettingsClass('publishing_studio', PublishingStudioSettings::class);
-        $registry->registerMetadata(new SettingsGroupMetadata(
+        app(PackageSurfaceRegistrar::class)->settingsMetadata(new SettingsGroupMetadata(
             group: 'publishing_studio',
             label: 'capell-publishing-studio::workspace.settings.group',
             icon: Heroicon::OutlinedDocumentCheck,
@@ -122,7 +121,6 @@ class AdminServiceProvider extends ServiceProvider
             navigationSort: 110,
             packageName: PublishingStudioServiceProvider::$packageName,
         ));
-        $registry->register('publishing_studio', PublishingStudioSettingsSchema::class);
         CapellAdmin::registerExtensionManagementSurface(ExtensionManagementSurfaceData::settings(
             packageName: PublishingStudioServiceProvider::$packageName,
             label: 'capell-publishing-studio::workspace.settings.group',

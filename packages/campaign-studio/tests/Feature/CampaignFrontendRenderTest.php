@@ -67,7 +67,10 @@ it('marks the campaign tracker as non-cacheable frontend output', function (): v
     resolve(RecordExtensionRenderContributionAction::class)->clear();
 
     $registry = new RenderHookRegistry;
-    (new RegisterCampaignTrackerHook($registry))->register();
+    $registry->registerExtension(
+        location: RenderHookLocation::BodyEnd,
+        extension: new RegisterCampaignTrackerHook,
+    );
 
     $html = $registry->renderAll(RenderHookLocation::BodyEnd);
     $contribution = collect(resolve(RecordExtensionRenderContributionAction::class)->recorded())

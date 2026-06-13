@@ -103,7 +103,7 @@ final class PrivacyCenterServiceProvider extends AbstractPackageServiceProvider
 
     private function registerModels(): self
     {
-        CapellCore::registerModels([
+        $this->surface()->models([
             ConsentPolicy::class,
             ConsentRecord::class,
             PolicyAcceptance::class,

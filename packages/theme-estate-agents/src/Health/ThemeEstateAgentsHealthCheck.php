@@ -253,12 +253,25 @@ final class ThemeEstateAgentsHealthCheck implements ChecksExtensionHealth
                 return null;
             }
 
-            $manifest = json_decode($contents, true, flags: JSON_THROW_ON_ERROR);
+            $manifestData = json_decode($contents, true, flags: JSON_THROW_ON_ERROR);
         } catch (JsonException) {
             return null;
         }
 
-        return is_array($manifest) ? $manifest : null;
+        if (! is_array($manifestData)) {
+            return null;
+        }
+
+        /** @var array<string, mixed> $manifest */
+        $manifest = [];
+
+        foreach ($manifestData as $key => $value) {
+            if (is_string($key)) {
+                $manifest[$key] = $value;
+            }
+        }
+
+        return $manifest;
     }
 
     /**

@@ -7,7 +7,6 @@ namespace Capell\EmailStudio\Providers;
 use Capell\Core\Facades\CapellCore;
 use Capell\Core\Support\Packages\AbstractPackageServiceProvider;
 use Capell\Core\Support\Settings\SettingsGroupMetadata;
-use Capell\Core\Support\Settings\SettingsSchemaRegistry;
 use Capell\EmailStudio\Actions\ApplyMailTrackerSettingsAction;
 use Capell\EmailStudio\Console\Commands\PruneEmailBodiesCommand;
 use Capell\EmailStudio\Console\Commands\PurgeTrackedEmailsCommand;
@@ -148,7 +147,7 @@ class EmailStudioServiceProvider extends AbstractPackageServiceProvider
 
     private function registerModels(): self
     {
-        CapellCore::registerModels([
+        $this->surface()->models([
             EmailProfile::class,
             EmailTemplate::class,
             EmailTemplateVariant::class,
@@ -168,11 +167,8 @@ class EmailStudioServiceProvider extends AbstractPackageServiceProvider
 
     private function registerSettings(): self
     {
-        /** @var SettingsSchemaRegistry $registry */
-        $registry = $this->app->make(SettingsSchemaRegistry::class);
-
-        $registry->registerSettingsClass(EmailStudioSettings::group(), EmailStudioSettings::class);
-        $registry->registerMetadata(new SettingsGroupMetadata(
+        $this->surface()->settingsClass(EmailStudioSettings::group(), EmailStudioSettings::class);
+        $this->surface()->settingsMetadata(new SettingsGroupMetadata(
             group: EmailStudioSettings::group(),
             label: 'capell-email-studio::settings.title',
             icon: Heroicon::OutlinedEnvelope,
@@ -180,7 +176,7 @@ class EmailStudioServiceProvider extends AbstractPackageServiceProvider
             navigationSort: 94,
             packageName: self::$packageName,
         ));
-        $registry->register(EmailStudioSettings::group(), EmailStudioSettingsSchema::class);
+        $this->surface()->settingsSchema(EmailStudioSettings::group(), EmailStudioSettingsSchema::class);
 
         return $this;
     }

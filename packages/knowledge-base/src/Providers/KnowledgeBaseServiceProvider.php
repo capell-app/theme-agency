@@ -68,7 +68,7 @@ final class KnowledgeBaseServiceProvider extends AbstractPackageServiceProvider
 
     private function registerModels(): self
     {
-        CapellCore::registerModels([
+        $this->surface()->models([
             KnowledgeBaseCollection::class,
             KnowledgeBaseArticle::class,
             KnowledgeBaseArticleVersion::class,

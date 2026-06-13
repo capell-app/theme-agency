@@ -7,7 +7,6 @@ namespace Capell\GA4Reports\Providers;
 use Capell\Core\Facades\CapellCore;
 use Capell\Core\Support\Packages\AbstractPackageServiceProvider;
 use Capell\Core\Support\Settings\SettingsGroupMetadata;
-use Capell\Core\Support\Settings\SettingsSchemaRegistry;
 use Capell\GA4Reports\Actions\ResolveGA4ReportsConfigAction;
 use Capell\GA4Reports\Contracts\GA4ReportsDataClientInterface;
 use Capell\GA4Reports\Filament\Settings\GA4ReportsSettingsSchema;
@@ -88,7 +87,7 @@ final class GA4ReportsServiceProvider extends AbstractPackageServiceProvider
 
     private function registerModels(): self
     {
-        CapellCore::registerModels([
+        $this->surface()->models([
             GA4ReportsSyncRun::class,
             GA4ReportsDailyMetric::class,
             GA4ReportsPageMetric::class,
@@ -99,11 +98,8 @@ final class GA4ReportsServiceProvider extends AbstractPackageServiceProvider
 
     private function registerSettings(): self
     {
-        /** @var SettingsSchemaRegistry $registry */
-        $registry = $this->app->make(SettingsSchemaRegistry::class);
-
-        $registry->registerSettingsClass('ga4_reports', GA4ReportsSettings::class);
-        $registry->registerMetadata(new SettingsGroupMetadata(
+        $this->surface()->settingsClass('ga4_reports', GA4ReportsSettings::class);
+        $this->surface()->settingsMetadata(new SettingsGroupMetadata(
             group: 'ga4_reports',
             label: 'capell-ga4-reports::settings.title',
             icon: Heroicon::OutlinedChartBarSquare,
@@ -111,7 +107,7 @@ final class GA4ReportsServiceProvider extends AbstractPackageServiceProvider
             navigationSort: 90,
             packageName: self::$packageName,
         ));
-        $registry->register('ga4_reports', GA4ReportsSettingsSchema::class);
+        $this->surface()->settingsSchema('ga4_reports', GA4ReportsSettingsSchema::class);
 
         return $this;
     }

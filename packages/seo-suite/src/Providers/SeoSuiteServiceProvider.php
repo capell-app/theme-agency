@@ -32,10 +32,11 @@ use Capell\Core\Models\Site;
 use Capell\Core\Support\ContentGraph\ContentGraphRegistry;
 use Capell\Core\Support\Packages\AbstractPackageServiceProvider;
 use Capell\Core\Support\Settings\SettingsGroupMetadata;
-use Capell\Core\Support\Settings\SettingsSchemaRegistry;
 use Capell\Frontend\Contracts\FrontendRuntimeManifestContributor;
+use Capell\Frontend\Enums\RenderHookLocation;
+use Capell\Frontend\Enums\RenderHookScenario;
 use Capell\Frontend\Events\FrontendContextResolved;
-use Capell\Frontend\Support\Render\RenderHookRegistry;
+use Capell\Frontend\Support\Render\FrontendHookRegistrar;
 use Capell\SeoSuite\Actions\Ai\RecordAiGenerationAction;
 use Capell\SeoSuite\Actions\ClearAiDiscoveryCacheAction;
 use Capell\SeoSuite\Console\Commands\ClearAiCacheCommand;
@@ -390,12 +391,13 @@ class SeoSuiteServiceProvider extends AbstractPackageServiceProvider
 
     protected function registerSettingsSchema(): self
     {
-        /** @var SettingsSchemaRegistry $registry */
-        $registry = $this->app->make(SettingsSchemaRegistry::class);
-        $registry->register('ai-orchestrator', AIOrchestratorSettingsSchema::class);
-        $registry->registerSettingsClass('ai-orchestrator', AIOrchestratorSettings::class);
-        $registry->registerSettingsClass('seo_suite', SeoSuiteSettings::class);
-        $registry->registerMetadata(new SettingsGroupMetadata(
+        $this->surface()->settingsSchema('ai-orchestrator', AIOrchestratorSettingsSchema::class);
+        $this->surface()->settingsClass('ai-orchestrator', AIOrchestratorSettings::class);
+        $this->surface()->settingsClass('seo_suite', SeoSuiteSettings::class);
+        $this->surface()->settingsSchema('seo_suite', SeoSettingsSchema::class);
+        $this->surface()->settingsSchema('frontend', StructuredDataSettingsSchema::class);
+
+        $this->surface()->settingsMetadata(new SettingsGroupMetadata(
             group: 'seo_suite',
             label: 'capell-seo-suite::generic.seo_settings',
             icon: Heroicon::OutlinedMagnifyingGlass,
@@ -403,8 +405,6 @@ class SeoSuiteServiceProvider extends AbstractPackageServiceProvider
             navigationSort: 94,
             packageName: static::$packageName,
         ));
-        $registry->register('seo_suite', SeoSettingsSchema::class);
-        $registry->register('frontend', StructuredDataSettingsSchema::class);
 
         return $this;
     }
@@ -505,9 +505,18 @@ class SeoSuiteServiceProvider extends AbstractPackageServiceProvider
 
     protected function registerRenderHooks(): self
     {
-        if (class_exists(RenderHookRegistry::class)) {
-            $this->app->make(RegisterSeoHeadHooks::class)->register();
+        if (! $this->app->bound(FrontendHookRegistrar::class)) {
+            return $this;
         }
+
+        resolve(FrontendHookRegistrar::class)->contribute(
+            location: RenderHookLocation::HeadClose,
+            extension: new RegisterSeoHeadHooks,
+            owner: 'capell-app/seo-suite',
+            key: 'seo-head-meta',
+            scenario: RenderHookScenario::SeoMeta->value,
+            cacheSafe: false,
+        );
 
         return $this;
     }
@@ -831,7 +840,7 @@ class SeoSuiteServiceProvider extends AbstractPackageServiceProvider
 
     private function registerModels(): self
     {
-        CapellCore::registerModels([
+        $this->surface()->models([
             AIGenerationHistory::class,
             AiCreatorContext::class,
             AiCreatorSession::class,

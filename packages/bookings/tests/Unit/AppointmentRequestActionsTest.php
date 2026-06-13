@@ -623,8 +623,8 @@ it('links appointment requests to portal accounts only when the matching user em
 
     $linkedAppointmentRequest = LinkBookingToPortalAccountAction::run($appointmentRequest, $portalAccount, $user);
 
-    expect($linkedAppointmentRequest->site_id)->toBe($siteId)
-        ->and((int) $linkedAppointmentRequest->portal_account_id)->toBe((int) $portalAccount->getKey());
+    expect($linkedAppointmentRequest->site_id)->toBe($siteId);
+    expect($linkedAppointmentRequest->portal_account_id)->toBe($portalAccount->id);
 });
 
 it('rejects portal linking when the matching user email is unverified', function (): void {
@@ -700,16 +700,18 @@ it('materialises standing lesson series into confirmed appointment requests once
         CarbonImmutable::parse('2026-06-15 23:59:59', 'Europe/London'),
     );
 
-    expect($appointmentRequests)->toHaveCount(3)
-        ->and($appointmentRequests->pluck('status')->all())->each->toBe(AppointmentRequestStatusEnum::Confirmed)
-        ->and($appointmentRequests->pluck('series_occurrence_date')->map->toDateString()->all())->toBe([
-            '2026-06-01',
-            '2026-06-08',
-            '2026-06-15',
-        ])
-        ->and($appointmentRequests->first()?->site_id)->toBe($siteId)
-        ->and((int) $appointmentRequests->first()?->portal_account_id)->toBe((int) $portalAccount->getKey())
-        ->and($lessonSeries->refresh()->materialized_until?->toDateString())->toBe('2026-06-15');
+    $firstAppointmentRequest = $appointmentRequests->first();
+
+    expect($appointmentRequests)->toHaveCount(3);
+    expect($appointmentRequests->pluck('status')->all())->each->toBe(AppointmentRequestStatusEnum::Confirmed);
+    expect($appointmentRequests->pluck('series_occurrence_date')->map->toDateString()->all())->toBe([
+        '2026-06-01',
+        '2026-06-08',
+        '2026-06-15',
+    ]);
+    expect($firstAppointmentRequest?->site_id)->toBe($siteId);
+    expect($firstAppointmentRequest?->portal_account_id)->toBe($portalAccount->id);
+    expect($lessonSeries->refresh()->materialized_until?->toDateString())->toBe('2026-06-15');
 
     expect(MaterialiseLessonSeriesAction::run(
         $lessonSeries,

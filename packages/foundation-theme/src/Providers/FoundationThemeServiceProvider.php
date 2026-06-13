@@ -16,7 +16,6 @@ use Capell\Core\Facades\CapellCore;
 use Capell\Core\Models\Theme;
 use Capell\Core\Support\Assets\VendorAssetConditionRegistry;
 use Capell\Core\Support\Packages\AbstractPackageServiceProvider;
-use Capell\Core\Support\Settings\SettingsSchemaRegistry;
 use Capell\Core\Support\Themes\ThemeChromeRegistry;
 use Capell\Core\ThemeStudio\Data\ThemeDefinitionData;
 use Capell\Core\ThemeStudio\Data\ThemePresetData;
@@ -239,9 +238,8 @@ final class FoundationThemeServiceProvider extends AbstractPackageServiceProvide
 
     private function registerSettingsSchemas(): void
     {
-        $registry = resolve(SettingsSchemaRegistry::class);
-        $registry->registerSettingsClass('foundation_theme', FoundationThemeSettings::class);
-        $registry->register('foundation_theme', FoundationThemeSettingsSchema::class);
+        $this->surface()->settingsClass('foundation_theme', FoundationThemeSettings::class);
+        $this->surface()->settingsSchema('foundation_theme', FoundationThemeSettingsSchema::class);
         CapellAdmin::registerExtensionManagementSurface(ExtensionManagementSurfaceData::settings(
             packageName: self::$packageName,
             label: 'capell-foundation-theme::generic.foundation_theme',

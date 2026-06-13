@@ -45,14 +45,8 @@ use Capell\Core\Contracts\Extensions\RunsScheduledExtensionJob;
 use Illuminate\Support\Facades\File;
 
 it('keeps package manifest requirements aligned with composer requirements', function (): void {
-    $manifest = json_decode(
-        File::get(__DIR__ . '/../../capell.json'),
-        associative: true,
-    );
-    $composer = json_decode(
-        File::get(__DIR__ . '/../../composer.json'),
-        associative: true,
-    );
+    $manifest = File::json(__DIR__ . '/../../capell.json');
+    $composer = File::json(__DIR__ . '/../../composer.json');
 
     $composerPackageRequirements = array_values(array_filter(
         array_keys($composer['require'] ?? []),
@@ -83,8 +77,8 @@ it('keeps package manifest requirements aligned with composer requirements', fun
 
 it('declares committed marketplace assets for every required screenshot capture target', function (): void {
     $packagePath = dirname(__DIR__, 2);
-    $manifest = json_decode(File::get($packagePath . '/capell.json'), true, flags: JSON_THROW_ON_ERROR);
-    $screenshotContract = json_decode(File::get($packagePath . '/docs/screenshots.json'), true, flags: JSON_THROW_ON_ERROR);
+    $manifest = File::json($packagePath . '/capell.json');
+    $screenshotContract = File::json($packagePath . '/docs/screenshots.json');
     throw_unless(is_array($manifest), RuntimeException::class, 'Bookings manifest must decode to an array.');
     throw_unless(is_array($screenshotContract), RuntimeException::class, 'Bookings screenshot contract must decode to an array.');
 
@@ -151,11 +145,7 @@ it('declares committed marketplace assets for every required screenshot capture 
 });
 
 it('declares implemented bookings contributions and feature capabilities', function (): void {
-    $manifest = json_decode(
-        File::get(__DIR__ . '/../../capell.json'),
-        associative: true,
-        flags: JSON_THROW_ON_ERROR,
-    );
+    $manifest = File::json(__DIR__ . '/../../capell.json');
 
     $contributions = collect($manifest['contributes']);
 

@@ -14,7 +14,6 @@ use Capell\Admin\Support\Bridges\AdminBridgeRegistrar;
 use Capell\Admin\Support\CapellAdminManager;
 use Capell\Core\Support\Packages\AbstractPackageServiceProvider;
 use Capell\Core\Support\Settings\SettingsGroupMetadata;
-use Capell\Core\Support\Settings\SettingsSchemaRegistry;
 use Capell\PasswordPolicy\Bridges\PasswordPolicyAdminBridge;
 use Capell\PasswordPolicy\Console\Commands\ExpireStalePasswordsCommand;
 use Capell\PasswordPolicy\Console\Commands\PasswordPolicyDoctorCommand;
@@ -70,37 +69,19 @@ class PasswordPolicyServiceProvider extends AbstractPackageServiceProvider
 
     private function registerSettingsWhenRegistryIsReady(): self
     {
-        $this->app->afterResolving(
-            SettingsSchemaRegistry::class,
-            fn (SettingsSchemaRegistry $registry): SettingsSchemaRegistry => $this->registerSettings($registry),
-        );
+        $this->surface()->settingsClass('password_policy', PasswordPolicySettings::class);
+        $this->surface()->settingsSchema('password_policy', PasswordPolicySettingsSchema::class);
 
-        if ($this->app->resolved(SettingsSchemaRegistry::class)) {
-            $this->registerSettings(resolve(SettingsSchemaRegistry::class));
-        }
+        $this->surface()->settingsMetadata(new SettingsGroupMetadata(
+            group: 'password_policy',
+            label: 'capell-password-policy::settings.title',
+            icon: Heroicon::OutlinedKey,
+            navigationGroup: 'capell-admin::navigation.group_system',
+            navigationSort: 93,
+            packageName: static::$packageName,
+        ));
 
         return $this;
-    }
-
-    private function registerSettings(SettingsSchemaRegistry $registry): SettingsSchemaRegistry
-    {
-        $registry->registerSettingsClass('password_policy', PasswordPolicySettings::class);
-        $metadataClass = SettingsGroupMetadata::class;
-
-        if (class_exists($metadataClass)) {
-            $registry->registerMetadata(new $metadataClass(
-                group: 'password_policy',
-                label: 'capell-password-policy::settings.title',
-                icon: Heroicon::OutlinedKey,
-                navigationGroup: 'capell-admin::navigation.group_system',
-                navigationSort: 93,
-                packageName: static::$packageName,
-            ));
-        }
-
-        $registry->register('password_policy', PasswordPolicySettingsSchema::class);
-
-        return $registry;
     }
 
     private function registerAdminSurface(): self

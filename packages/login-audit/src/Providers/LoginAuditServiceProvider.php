@@ -9,7 +9,6 @@ use Capell\Admin\Facades\CapellAdmin;
 use Capell\Admin\Support\Notifications\AdminNotificationGroupRegistry;
 use Capell\Core\Facades\CapellCore;
 use Capell\Core\Support\Packages\AbstractPackageServiceProvider;
-use Capell\Core\Support\Settings\SettingsSchemaRegistry;
 use Capell\LoginAudit\Actions\ApplyLoginAuditSettingsAction;
 use Capell\LoginAudit\Actions\SendLoginAuditAdminAlertAction;
 use Capell\LoginAudit\Filament\Settings\LoginAuditSettingsSchema;
@@ -93,7 +92,7 @@ class LoginAuditServiceProvider extends AbstractPackageServiceProvider
         Config::set('login-audit.login_audit_model', LoginAudit::class);
         $this->syncVendorAuthenticationLogConfiguration();
 
-        CapellCore::registerModels([LoginAudit::class]);
+        $this->surface()->models([LoginAudit::class]);
 
         return $this;
     }
@@ -107,11 +106,8 @@ class LoginAuditServiceProvider extends AbstractPackageServiceProvider
 
     private function registerSettings(): self
     {
-        /** @var SettingsSchemaRegistry $registry */
-        $registry = $this->app->make(SettingsSchemaRegistry::class);
-
-        $registry->registerSettingsClass('login_audit', LoginAuditSettings::class);
-        $registry->register('login_audit', LoginAuditSettingsSchema::class);
+        $this->surface()->settingsClass('login_audit', LoginAuditSettings::class);
+        $this->surface()->settingsSchema('login_audit', LoginAuditSettingsSchema::class);
         CapellAdmin::registerExtensionManagementSurface(ExtensionManagementSurfaceData::settings(
             packageName: self::$packageName,
             label: 'capell-login-audit::settings.security_access',

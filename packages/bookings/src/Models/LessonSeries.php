@@ -21,9 +21,11 @@ use Override;
  * @property CarbonImmutable $active_from
  * @property CarbonImmutable|null $active_until
  * @property bool $auto_confirm_instances
+ * @property int $id
  * @property int $cadence_weeks
  * @property string $customer_email
  * @property string $customer_name
+ * @property int|null $portal_account_id
  * @property string|null $customer_phone
  * @property int $day_of_week
  * @property int|null $duration_minutes
@@ -33,6 +35,8 @@ use Override;
  * @property array<string, mixed>|null $reminder_preferences
  * @property int $service_id
  * @property int|null $site_id
+ * @property int|null $staff_member_id
+ * @property int|null $location_id
  * @property string $starts_at
  * @property string $timezone
  * @property-read BookingLocation|null $location

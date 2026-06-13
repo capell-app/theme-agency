@@ -121,7 +121,7 @@ class PublicActionsServiceProvider extends AbstractPackageServiceProvider
 
     private function registerModels(): self
     {
-        CapellCore::registerModels([
+        $this->surface()->models([
             PublicAction::class,
             PublicActionDestination::class,
             PublicActionSubmission::class,

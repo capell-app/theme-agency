@@ -4,50 +4,39 @@ declare(strict_types=1);
 
 namespace Capell\SeoSuite\Support\RenderHooks;
 
+use Capell\Frontend\Contracts\RenderHookExtensionInterface;
 use Capell\Frontend\Data\RenderHookContext;
-use Capell\Frontend\Enums\RenderHookLocation;
-use Capell\Frontend\Enums\RenderHookScenario;
 use Capell\Frontend\Facades\Frontend;
-use Capell\Frontend\Support\Render\RenderHookRegistry;
 use Capell\SeoSuite\Actions\BuildSocialMetaAction;
 
-class RegisterSeoHeadHooks
+final class RegisterSeoHeadHooks implements RenderHookExtensionInterface
 {
-    /** @param RenderHookRegistry<RenderHookContext> $registry */
-    public function __construct(private readonly RenderHookRegistry $registry) {}
-
-    public function register(): void
+    public function render(RenderHookContext $context): string
     {
-        $this->registry->register(
-            RenderHookLocation::HeadClose,
-            function (RenderHookContext $context): string {
-                $item = is_array($context->item) ? $context->item : [];
-                $page = $item['page'] ?? null;
-                $site = $item['site'] ?? null;
-                $language = $item['language'] ?? null;
+        $item = is_array($context->item) ? $context->item : [];
+        $page = $item['page'] ?? null;
+        $site = $item['site'] ?? null;
+        $language = $item['language'] ?? null;
 
-                if ($page === null || $site === null || $language === null) {
-                    return '';
-                }
+        if ($page === null || $site === null || $language === null) {
+            return '';
+        }
 
-                $meta = BuildSocialMetaAction::run($page, $site, $language);
+        $meta = BuildSocialMetaAction::run($page, $site, $language);
 
-                $html = view('capell::head.social-meta', [
-                    'meta' => $meta,
-                    'page' => $page,
-                    'site' => $site,
-                    'language' => $language,
-                ])->render();
+        $html = view('capell::head.social-meta', [
+            'meta' => $meta,
+            'page' => $page,
+            'site' => $site,
+            'language' => $language,
+        ])->render();
 
-                $schemaGraphScript = Frontend::getFrontendData('seo.schema.graph_script');
+        $schemaGraphScript = Frontend::getFrontendData('seo.schema.graph_script');
 
-                if (is_string($schemaGraphScript) && $schemaGraphScript !== '') {
-                    $html .= $schemaGraphScript;
-                }
+        if (is_string($schemaGraphScript) && $schemaGraphScript !== '') {
+            $html .= $schemaGraphScript;
+        }
 
-                return $html;
-            },
-            scenario: RenderHookScenario::SeoMeta->value,
-        );
+        return $html;
     }
 }

@@ -42,7 +42,7 @@ class LinkBookingToPortalAccountAction
 
             $this->assertCanLink($lockedAppointmentRequest, $portalAccount, $normalizedEmail);
 
-            if ((int) $lockedAppointmentRequest->portal_account_id === (int) $portalAccount->getKey()) {
+            if ($lockedAppointmentRequest->portal_account_id === $portalAccount->id) {
                 return $lockedAppointmentRequest;
             }
 
@@ -60,13 +60,13 @@ class LinkBookingToPortalAccountAction
         PortalAccount $portalAccount,
         string $normalizedEmail,
     ): void {
-        if ($appointmentRequest->portal_account_id !== null && (int) $appointmentRequest->portal_account_id !== (int) $portalAccount->getKey()) {
+        if ($appointmentRequest->portal_account_id !== null && $appointmentRequest->portal_account_id !== $portalAccount->id) {
             throw ValidationException::withMessages([
                 'portal_account_id' => __('capell-bookings::validation.appointment_already_linked'),
             ]);
         }
 
-        if ($appointmentRequest->site_id !== null && (int) $appointmentRequest->site_id !== (int) $portalAccount->site_id) {
+        if ($appointmentRequest->site_id !== null && $appointmentRequest->site_id !== $portalAccount->site_id) {
             throw ValidationException::withMessages([
                 'site_id' => __('capell-bookings::validation.portal_account_site_mismatch'),
             ]);

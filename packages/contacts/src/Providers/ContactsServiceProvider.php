@@ -102,7 +102,7 @@ final class ContactsServiceProvider extends AbstractPackageServiceProvider
 
     private function registerModels(): self
     {
-        CapellCore::registerModels([
+        $this->surface()->models([
             Contact::class,
             ContactTag::class,
             Organisation::class,

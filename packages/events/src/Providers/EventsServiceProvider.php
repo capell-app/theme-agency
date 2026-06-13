@@ -36,7 +36,8 @@ use Capell\Events\Support\EventModelRegistrar;
 use Capell\Events\Support\PublicUrls\EventsPublicUrlContributor;
 use Capell\Events\Support\RenderHooks\RegisterEventSchemaHooks;
 use Capell\Events\Support\Schema\EventSchemaTemplate;
-use Capell\Frontend\Support\Render\RenderHookRegistry;
+use Capell\Frontend\Enums\RenderHookLocation;
+use Capell\Frontend\Support\Render\FrontendHookRegistrar;
 use Capell\PublishingStudio\Contracts\EditorialCalendarEventContributor;
 use Capell\PublishingStudio\WorkspaceRegistry;
 use Capell\SeoSuite\Enums\SchemaTemplateTypeEnum;
@@ -189,7 +190,7 @@ class EventsServiceProvider extends AbstractPackageServiceProvider
 
     private function registerPageTypes(): self
     {
-        CapellCore::registerPageType(
+        $this->surface()->pageType(
             new PageTypeData(
                 name: 'event',
                 model: Event::class,
@@ -250,8 +251,14 @@ class EventsServiceProvider extends AbstractPackageServiceProvider
 
     private function registerRenderHooks(): self
     {
-        if (class_exists(RenderHookRegistry::class)) {
-            $this->app->make(RegisterEventSchemaHooks::class)->register();
+        if (class_exists(FrontendHookRegistrar::class)) {
+            resolve(FrontendHookRegistrar::class)->contribute(
+                location: RenderHookLocation::HeadClose,
+                extension: new RegisterEventSchemaHooks,
+                owner: 'capell-app/events',
+                key: 'event-schema',
+                cacheSafe: false,
+            );
         }
 
         return $this;

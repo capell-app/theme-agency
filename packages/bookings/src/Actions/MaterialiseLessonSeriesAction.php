@@ -123,7 +123,7 @@ class MaterialiseLessonSeriesAction
             requestedEndsAt: $requestedEndsAt,
             siteId: $lessonSeries->site_id,
             portalAccountId: $lessonSeries->portal_account_id,
-            lessonSeriesId: (int) $lessonSeries->getKey(),
+            lessonSeriesId: $lessonSeries->id,
             seriesOccurrenceDate: $occurrenceDate,
             staffMemberId: $lessonSeries->staff_member_id,
             locationId: $lessonSeries->location_id,

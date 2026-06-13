@@ -6,17 +6,13 @@ namespace Capell\CampaignStudio\Providers;
 
 use Capell\CampaignStudio\Support\RenderHooks\RegisterCampaignTrackerHook;
 use Capell\Core\Facades\CapellCore;
-use Capell\Frontend\Data\RenderHookContext;
-use Capell\Frontend\Support\Render\RenderHookRegistry;
+use Capell\Frontend\Enums\RenderHookLocation;
+use Capell\Frontend\Support\Render\FrontendHookRegistrar;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
-use WeakMap;
 
 final class FrontendServiceProvider extends ServiceProvider
 {
-    /** @var WeakMap<RenderHookRegistry<RenderHookContext>, true>|null */
-    private ?WeakMap $frontendRenderHookRegistries = null;
-
     public function boot(): void
     {
         if (! $this->isPackageInstalled()) {
@@ -37,29 +33,12 @@ final class FrontendServiceProvider extends ServiceProvider
 
     private function registerRenderHooks(): void
     {
-        $this->app->afterResolving(
-            RenderHookRegistry::class,
-            function (RenderHookRegistry $registry): void {
-                $this->registerRenderHooksForRegistry($registry);
-            },
+        resolve(FrontendHookRegistrar::class)->contribute(
+            location: RenderHookLocation::BodyEnd,
+            extension: new RegisterCampaignTrackerHook,
+            owner: 'capell-app/campaign-studio',
+            key: 'campaign-tracker',
+            cacheSafe: false,
         );
-
-        if ($this->app->bound(RenderHookRegistry::class)) {
-            $this->registerRenderHooksForRegistry($this->app->make(RenderHookRegistry::class));
-        }
-    }
-
-    /** @param RenderHookRegistry<RenderHookContext> $registry */
-    private function registerRenderHooksForRegistry(RenderHookRegistry $registry): void
-    {
-        $this->frontendRenderHookRegistries ??= new WeakMap;
-
-        if (isset($this->frontendRenderHookRegistries[$registry])) {
-            return;
-        }
-
-        $this->frontendRenderHookRegistries[$registry] = true;
-
-        (new RegisterCampaignTrackerHook($registry))->register();
     }
 }

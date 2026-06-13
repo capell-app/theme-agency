@@ -68,7 +68,7 @@ final class ExperimentsServiceProvider extends AbstractPackageServiceProvider
 
     private function registerModels(): self
     {
-        CapellCore::registerModels([
+        $this->surface()->models([
             Experiment::class,
             ExperimentVariant::class,
             ExperimentGoal::class,

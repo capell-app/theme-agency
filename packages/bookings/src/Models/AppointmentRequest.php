@@ -23,6 +23,7 @@ use Override;
  * @property ConfirmationPolicyEnum $confirmation_policy
  * @property string $customer_email
  * @property string $customer_name
+ * @property int|null $portal_account_id
  * @property CarbonImmutable|null $hold_expires_at
  * @property bool $is_time_pinned
  * @property array<string, mixed>|null $payload
@@ -33,6 +34,7 @@ use Override;
  * @property CarbonImmutable $requested_starts_at
  * @property CarbonImmutable|null $series_occurrence_date
  * @property AppointmentRequestStatusEnum $status
+ * @property int|null $site_id
  * @property string $timezone
  * @property-read LessonSeries|null $lessonSeries
  * @property-read BookingLocation|null $location

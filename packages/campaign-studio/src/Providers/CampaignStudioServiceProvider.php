@@ -106,7 +106,7 @@ final class CampaignStudioServiceProvider extends AbstractPackageServiceProvider
 
     private function registerModels(): self
     {
-        CapellCore::registerModels([
+        $this->surface()->models([
             CampaignGroup::class,
             CampaignLandingPage::class,
             CampaignCtaWidget::class,
@@ -131,7 +131,13 @@ final class CampaignStudioServiceProvider extends AbstractPackageServiceProvider
     {
         Blade::componentNamespace('Capell\\CampaignStudio\\View\\Components', 'capell-campaign-studio');
 
-        CapellCore::registerComponents('Widget', CampaignWidgetComponentEnum::cases());
+        $widgetComponents = [];
+
+        foreach (CampaignWidgetComponentEnum::cases() as $widgetComponent) {
+            $widgetComponents[$widgetComponent->name] = $widgetComponent->value;
+        }
+
+        $this->surface()->components('Widget', $widgetComponents);
 
         return $this;
     }

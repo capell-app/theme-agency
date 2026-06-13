@@ -113,7 +113,7 @@ class DocumentLifecycleServiceProvider extends AbstractPackageServiceProvider
 
     private function registerModels(): self
     {
-        CapellCore::registerModels([
+        $this->surface()->models([
             Document::class,
             DocumentAcceptance::class,
             DocumentPublication::class,

@@ -77,7 +77,7 @@ final class AutomationStudioServiceProvider extends AbstractPackageServiceProvid
 
     private function registerModels(): self
     {
-        CapellCore::registerModels([
+        $this->surface()->models([
             AutomationRule::class,
             AutomationRun::class,
         ]);

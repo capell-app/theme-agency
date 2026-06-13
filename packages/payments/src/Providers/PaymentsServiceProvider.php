@@ -7,7 +7,6 @@ namespace Capell\Payments\Providers;
 use Capell\Core\Facades\CapellCore;
 use Capell\Core\Support\Packages\AbstractPackageServiceProvider;
 use Capell\Core\Support\Settings\SettingsGroupMetadata;
-use Capell\Core\Support\Settings\SettingsSchemaRegistry;
 use Capell\CustomerPortal\Contracts\PortalDashboardItemProvider;
 use Capell\CustomerPortal\Contracts\PortalSelfServiceItemProvider;
 use Capell\CustomerPortal\Support\PortalDashboardItemRegistry;
@@ -96,7 +95,7 @@ final class PaymentsServiceProvider extends AbstractPackageServiceProvider
 
     private function registerModels(): self
     {
-        CapellCore::registerModels([
+        $this->surface()->models([
             PaymentCustomer::class,
             CheckoutSession::class,
             PaymentIntent::class,
@@ -134,15 +133,14 @@ final class PaymentsServiceProvider extends AbstractPackageServiceProvider
 
     private function registerSettings(): self
     {
-        if (! class_exists(SettingsSchemaRegistry::class) || ! class_exists(PaymentsSettings::class) || ! class_exists(PaymentsSettingsSchema::class)) {
+        if (! class_exists(PaymentsSettings::class) || ! class_exists(PaymentsSettingsSchema::class)) {
             return $this;
         }
 
-        /** @var SettingsSchemaRegistry $registry */
-        $registry = $this->app->make(SettingsSchemaRegistry::class);
+        $this->surface()->settingsClass(PaymentsSettings::group(), PaymentsSettings::class);
+        $this->surface()->settingsSchema(PaymentsSettings::group(), PaymentsSettingsSchema::class);
 
-        $registry->registerSettingsClass(PaymentsSettings::group(), PaymentsSettings::class);
-        $registry->registerMetadata(new SettingsGroupMetadata(
+        $this->surface()->settingsMetadata(new SettingsGroupMetadata(
             group: PaymentsSettings::group(),
             label: 'capell-payments::settings.title',
             icon: Heroicon::OutlinedCreditCard,
@@ -150,7 +148,6 @@ final class PaymentsServiceProvider extends AbstractPackageServiceProvider
             navigationSort: 96,
             packageName: self::$packageName,
         ));
-        $registry->register(PaymentsSettings::group(), PaymentsSettingsSchema::class);
 
         return $this;
     }

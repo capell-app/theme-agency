@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Capell\Bookings\Settings;
 
+use Capell\Admin\Filament\Contracts\HasSchema;
 use Capell\Bookings\Filament\Settings\BookingsSettingsSchema;
 use Capell\Core\Contracts\SettingsContract;
 use Capell\Core\Contracts\SettingsSchemaContract;
@@ -51,6 +52,9 @@ class BookingsSettings extends Settings implements SettingsContract, SettingsSch
         return 'bookings';
     }
 
+    /**
+     * @return class-string<HasSchema>
+     */
     public static function schema(): string
     {
         return BookingsSettingsSchema::class;

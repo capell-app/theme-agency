@@ -8,37 +8,47 @@ use Capell\Events\Actions\BuildEventSchemaAction;
 use Capell\Events\Actions\ResolvePublicEventSchemaOccurrenceAction;
 use Capell\Events\Models\Event;
 use Capell\Events\Models\EventOccurrence;
+use Capell\Events\Providers\EventsServiceProvider;
+use Capell\Frontend\Actions\Performance\RecordExtensionRenderContributionAction;
+use Capell\Frontend\Contracts\RenderHookExtensionInterface;
 use Capell\Frontend\Data\RenderHookContext;
-use Capell\Frontend\Enums\RenderHookLocation;
 use Capell\Frontend\Facades\Frontend;
-use Capell\Frontend\Support\Render\RenderHookRegistry;
 
-class RegisterEventSchemaHooks
+final class RegisterEventSchemaHooks implements RenderHookExtensionInterface
 {
-    /** @param RenderHookRegistry<RenderHookContext> $registry */
-    public function __construct(private readonly RenderHookRegistry $registry) {}
-
-    public function register(): void
+    public function render(RenderHookContext $context): string
     {
-        $this->registry->register(
-            RenderHookLocation::HeadClose,
-            function (): string {
-                $pageable = Frontend::page()->pageable ?? null;
+        $startedAt = microtime(true);
 
-                if (! $pageable instanceof Event) {
-                    return '';
-                }
+        $pageable = Frontend::page()->pageable ?? null;
 
-                $occurrence = ResolvePublicEventSchemaOccurrenceAction::run($pageable);
+        if (! $pageable instanceof Event) {
+            return '';
+        }
 
-                if (! $occurrence instanceof EventOccurrence) {
-                    return '';
-                }
+        $occurrence = ResolvePublicEventSchemaOccurrenceAction::run($pageable);
 
-                $schema = BuildEventSchemaAction::run($occurrence);
+        if (! $occurrence instanceof EventOccurrence) {
+            return '';
+        }
 
-                return '<script type="application/ld+json">' . json_encode($schema, JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES) . '</script>';
-            },
+        $schema = BuildEventSchemaAction::run($occurrence);
+
+        $html = '<script type="application/ld+json">' . json_encode($schema, JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES) . '</script>';
+
+        RecordExtensionRenderContributionAction::run(
+            packageName: EventsServiceProvider::$packageName,
+            surface: 'frontend',
+            contributionType: 'event-schema',
+            contributionClass: self::class,
+            elapsedMilliseconds: (microtime(true) - $startedAt) * 1000,
+            frontendRenderBudgetMs: 20,
+            cacheTags: ['events'],
+            cacheable: false,
+            sensitiveOutput: false,
+            variesBy: ['page'],
         );
+
+        return $html;
     }
 }

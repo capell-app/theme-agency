@@ -10,7 +10,6 @@ use Capell\Admin\Enums\ConfiguratorTypeEnum;
 use Capell\Admin\Facades\CapellAdmin;
 use Capell\Core\Facades\CapellCore;
 use Capell\Core\Support\Packages\AbstractPackageServiceProvider;
-use Capell\Core\Support\Settings\SettingsSchemaRegistry;
 use Capell\Frontend\Contracts\FrontendAssetManifestRenderer;
 use Capell\Frontend\Events\FrontendContextResolved;
 use Capell\Frontend\Support\Cache\CacheInvalidationRegistry;
@@ -81,11 +80,8 @@ final class FrontendOptimizerServiceProvider extends AbstractPackageServiceProvi
 
     private function registerSettings(): void
     {
-        /** @var SettingsSchemaRegistry $registry */
-        $registry = $this->app->make(SettingsSchemaRegistry::class);
-
-        $registry->registerSettingsClass(FrontendOptimizerSettings::group(), FrontendOptimizerSettings::class);
-        $registry->register(FrontendOptimizerSettings::group(), FrontendOptimizerSettingsSchema::class);
+        $this->surface()->settingsClass(FrontendOptimizerSettings::group(), FrontendOptimizerSettings::class);
+        $this->surface()->settingsSchema(FrontendOptimizerSettings::group(), FrontendOptimizerSettingsSchema::class);
         CapellAdmin::registerExtensionManagementSurface(ExtensionManagementSurfaceData::settings(
             packageName: self::$packageName,
             label: 'capell-frontend-optimizer::settings.critical_css',

@@ -16,11 +16,11 @@ use Capell\Bookings\Support\BookingsModelRegistrar;
 use Capell\Core\Facades\CapellCore;
 use Capell\Core\Support\Packages\AbstractPackageServiceProvider;
 use Capell\Core\Support\Settings\SettingsGroupMetadata;
-use Capell\Core\Support\Settings\SettingsSchemaRegistry;
 use Filament\Support\Icons\Heroicon;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\RateLimiter;
 use Override;
 use Spatie\LaravelPackageTools\Package;
@@ -69,7 +69,7 @@ class BookingsServiceProvider extends AbstractPackageServiceProvider
         $this->app->bindIf(PublicBookingRequestRenderer::class, BladePublicBookingRequestRenderer::class);
         $this
             ->registerConfigSettings()
-            ->registerSettingsWhenRegistryIsReady();
+            ->registerSettings();
 
         $this->app->booted(function (): void {
             if (! $this->isPackageInstalled()) {
@@ -155,7 +155,7 @@ class BookingsServiceProvider extends AbstractPackageServiceProvider
 
     private function registerConfigSettings(): self
     {
-        $settings = config('settings.settings', []);
+        $settings = Config::array('settings.settings', []);
 
         if (! in_array(BookingsSettings::class, $settings, true)) {
             $settings[] = BookingsSettings::class;
@@ -166,30 +166,12 @@ class BookingsServiceProvider extends AbstractPackageServiceProvider
         return $this;
     }
 
-    private function registerSettingsWhenRegistryIsReady(): self
+    private function registerSettings(): self
     {
-        if (! class_exists(SettingsSchemaRegistry::class)) {
-            return $this;
-        }
-
-        $this->app->afterResolving(
-            SettingsSchemaRegistry::class,
-            fn (SettingsSchemaRegistry $registry): SettingsSchemaRegistry => $this->registerSettings($registry),
-        );
-
-        if ($this->app->resolved(SettingsSchemaRegistry::class)) {
-            $this->registerSettings($this->app->make(SettingsSchemaRegistry::class));
-        }
-
-        return $this;
-    }
-
-    private function registerSettings(SettingsSchemaRegistry $registry): SettingsSchemaRegistry
-    {
-        $registry->registerSettingsClass(BookingsSettings::group(), BookingsSettings::class);
+        $this->surface()->settingsClass(BookingsSettings::group(), BookingsSettings::class);
 
         if (class_exists(SettingsGroupMetadata::class)) {
-            $registry->registerMetadata(new SettingsGroupMetadata(
+            $this->surface()->settingsMetadata(new SettingsGroupMetadata(
                 group: BookingsSettings::group(),
                 label: 'capell-bookings::settings.title',
                 icon: Heroicon::OutlinedCalendarDays,
@@ -199,7 +181,7 @@ class BookingsServiceProvider extends AbstractPackageServiceProvider
             ));
         }
 
-        $registry->register(BookingsSettings::group(), BookingsSettings::schema());
+        $this->surface()->settingsSchema(BookingsSettings::group(), BookingsSettings::schema());
 
         if (class_exists(ExtensionManagementSurfaceData::class)) {
             CapellAdmin::registerExtensionManagementSurface(ExtensionManagementSurfaceData::settings(
@@ -210,6 +192,6 @@ class BookingsServiceProvider extends AbstractPackageServiceProvider
             ));
         }
 
-        return $registry;
+        return $this;
     }
 }

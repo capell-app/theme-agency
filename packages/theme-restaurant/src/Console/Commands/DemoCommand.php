@@ -7,6 +7,7 @@ namespace Capell\ThemeStudio\Restaurant\Console\Commands;
 use Capell\FoundationTheme\Data\ThemeDemoInstallData;
 use Capell\ThemeStudio\Restaurant\Actions\InstallRestaurantThemeDemoAction;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Config;
 
 final class DemoCommand extends Command
 {
@@ -16,7 +17,7 @@ final class DemoCommand extends Command
 
     public function handle(): int
     {
-        return InstallRestaurantThemeDemoAction::run(new ThemeDemoInstallData(
+        return (new InstallRestaurantThemeDemoAction)->handle(new ThemeDemoInstallData(
             siteNames: $this->parseCsvOption('sites'),
             languageCodes: $this->parseCsvOption('languages'),
             baseUrl: $this->resolveBaseUrl(),
@@ -33,7 +34,13 @@ final class DemoCommand extends Command
 
         if (is_array($value)) {
             return array_values(array_filter(
-                array_map(static fn (mixed $item): string => trim((string) $item), $value),
+                array_map(
+                    static fn (string $item): string => trim($item),
+                    array_filter(
+                        $value,
+                        static fn (mixed $item): bool => is_string($item),
+                    ),
+                ),
                 static fn (string $item): bool => $item !== '',
             ));
         }
@@ -43,7 +50,7 @@ final class DemoCommand extends Command
         }
 
         return array_values(array_filter(
-            array_map(trim(...), explode(',', $value)),
+            array_map(static fn (string $item): string => trim($item), explode(',', $value)),
             static fn (string $item): bool => $item !== '',
         ));
     }
@@ -56,6 +63,6 @@ final class DemoCommand extends Command
             return $url;
         }
 
-        return (string) config('app.url');
+        return Config::string('app.url', url('/'));
     }
 }

@@ -25,7 +25,6 @@ use Capell\Comments\Support\CommentableRegistry;
 use Capell\Comments\Support\Spam\ConfiguredCommentSpamProvider;
 use Capell\Core\Facades\CapellCore;
 use Capell\Core\Support\Packages\AbstractPackageServiceProvider;
-use Capell\Core\Support\Settings\SettingsSchemaRegistry;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Http\Request;
@@ -114,7 +113,7 @@ class CommentsServiceProvider extends AbstractPackageServiceProvider
 
     private function registerModels(): self
     {
-        CapellCore::registerModels([
+        $this->surface()->models([
             Comment::class,
             CommentAuthor::class,
             CommentToken::class,
@@ -134,10 +133,8 @@ class CommentsServiceProvider extends AbstractPackageServiceProvider
 
     private function registerSettings(): self
     {
-        /** @var SettingsSchemaRegistry $registry */
-        $registry = $this->app->make(SettingsSchemaRegistry::class);
-        $registry->registerSettingsClass('comments', CommentSettings::class);
-        $registry->register('comments', CommentSettingsSchema::class);
+        $this->surface()->settingsClass('comments', CommentSettings::class);
+        $this->surface()->settingsSchema('comments', CommentSettingsSchema::class);
         CapellAdmin::registerExtensionManagementSurface(ExtensionManagementSurfaceData::settings(
             packageName: self::$packageName,
             label: 'capell-comments::package.name',

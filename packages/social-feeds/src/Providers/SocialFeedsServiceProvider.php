@@ -60,7 +60,7 @@ final class SocialFeedsServiceProvider extends AbstractPackageServiceProvider
                 return;
             }
 
-            CapellCore::registerModels([
+            $this->surface()->models([
                 SocialFeedConnection::class,
                 SocialFeedItem::class,
                 SocialFeedOAuthState::class,

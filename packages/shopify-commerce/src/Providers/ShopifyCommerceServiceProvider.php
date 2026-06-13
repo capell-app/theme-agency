@@ -9,7 +9,6 @@ use Capell\Admin\Facades\CapellAdmin;
 use Capell\Core\Facades\CapellCore;
 use Capell\Core\Support\Packages\AbstractPackageServiceProvider;
 use Capell\Core\Support\Settings\SettingsGroupMetadata;
-use Capell\Core\Support\Settings\SettingsSchemaRegistry;
 use Capell\ShopifyCommerce\Filament\Settings\ShopifyCommerceSettingsSchema;
 use Capell\ShopifyCommerce\Models\ShopifyConnection;
 use Capell\ShopifyCommerce\Models\ShopifyCustomer;
@@ -77,7 +76,7 @@ final class ShopifyCommerceServiceProvider extends AbstractPackageServiceProvide
 
     private function registerModels(): self
     {
-        CapellCore::registerModels([
+        $this->surface()->models([
             ShopifyConnection::class,
             ShopifyCustomer::class,
             ShopifyOAuthState::class,
@@ -90,11 +89,10 @@ final class ShopifyCommerceServiceProvider extends AbstractPackageServiceProvide
 
     private function registerSettings(): self
     {
-        /** @var SettingsSchemaRegistry $registry */
-        $registry = $this->app->make(SettingsSchemaRegistry::class);
+        $this->surface()->settingsClass(ShopifyCommerceSettings::group(), ShopifyCommerceSettings::class);
+        $this->surface()->settingsSchema(ShopifyCommerceSettings::group(), ShopifyCommerceSettingsSchema::class);
 
-        $registry->registerSettingsClass(ShopifyCommerceSettings::group(), ShopifyCommerceSettings::class);
-        $registry->registerMetadata(new SettingsGroupMetadata(
+        $this->surface()->settingsMetadata(new SettingsGroupMetadata(
             group: ShopifyCommerceSettings::group(),
             label: 'capell-shopify-commerce::capell-shopify-commerce.settings.title',
             icon: Heroicon::OutlinedShoppingBag,
@@ -102,7 +100,6 @@ final class ShopifyCommerceServiceProvider extends AbstractPackageServiceProvide
             navigationSort: 80,
             packageName: self::$packageName,
         ));
-        $registry->register(ShopifyCommerceSettings::group(), ShopifyCommerceSettingsSchema::class);
         CapellAdmin::registerExtensionManagementSurface(ExtensionManagementSurfaceData::settings(
             packageName: self::$packageName,
             label: 'capell-shopify-commerce::capell-shopify-commerce.settings.title',
