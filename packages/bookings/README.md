@@ -2,26 +2,36 @@
 
 <!-- prettier-ignore-start -->
 
-## What This Plugin Adds
+Bookings is the Capell Operations package for appointment and lesson-based businesses. It starts as a clean public request form and grows into availability, confirmations, reminders, travel-aware planning, group sessions, reviews, waitlists, reporting, and retention workflows without turning the site into a booking-system project.
 
-Bookings is an **Available**, **Schema-owning** Capell plugin in the **Capell Operations** product group. It ships as `capell-app/bookings` and extends admin, console, and frontend surfaces.
+It ships as `capell-app/bookings`, lives inside the Laravel application like any Capell package, and keeps the public frontend owned by the site team.
 
-Bookings now covers the full adaptive lessons workflow: public booking requests, services, staff, locations, availability, appointment confirmations, reminders, lesson series, travel-aware planning, provisional holds, payments, group clinics, review loops, waitlists, webhook ingestion, lesson progress, bundles, cancellation support, reporting, retention, and AI-assisted owner prompts.
+## The Short Version
 
-Status details:
+- **For site owners:** customers can request appointments, the team can manage demand, and future scheduling rules are changed in one place.
+- **For operators:** the Bookings admin area gives you setup, requests, messages, reviews, waitlists, travel signals, and follow-up surfaces without asking you to edit the website.
+- **For developers:** booking logic stays in package Actions, models, migrations, Filament resources, signed/tokenized routes, and documented extension metadata.
+- **For agencies:** start with the same reliable workflow on every client, then enable only the advanced pieces a client actually needs.
 
-- Status: Available
-- Tier: premium
-- Bundle: operations
-- Composer package: `capell-app/bookings`
-- Namespace: `Capell\Bookings`
-- Theme key: not applicable
+## Start Simple, Add Depth Later
 
-## Why It Matters
+Bookings is intentionally progressive. A small site can use only the first layer; a busier operation can turn on the rest.
 
-**For developers:** The package keeps booking domain behaviour inside package-owned Actions, models, migrations, Filament resources, routes, settings, and Blade views instead of pushing it into Capell core or host applications.
+1. **Take requests:** configure services, staff, locations, availability, and the public `/bookings` form.
+2. **Run the queue:** review appointment requests, confirm or cancel them, and keep an audit trail.
+3. **Keep customers informed:** send reminders, consent-aware messages, calendar feeds, portal lesson links, and change proposals.
+4. **Handle real operations:** use travel observations, work zones, provisional holds, payment gates, group sessions, waitlists, and weather/cancellation prompts.
+5. **Improve over time:** collect multi-participant reviews, track lesson progress, import clinic attendance, score risk, build fuel/service-area reports, and prune old data.
 
-**For teams:** Bookings gives operators one place to manage lesson demand, scheduling, travel constraints, customer messaging, reviews, waitlists, operational reports, and retention-sensitive customer data.
+## What It Adds
+
+| Area | What the package gives you |
+| --- | --- |
+| Public booking | Branded request form, availability validation, capacity checks, timezone handling, and browser-tested public screenshots. |
+| Admin workflow | Setup resources, appointment queue, day planner, group sessions, message logs, reviews, waitlist, prompts, proposals, travel observations, and work zones. |
+| Customer links | Temporary signed links for portal lessons, consent, change proposals, review requests, and participant reviews without exposing database IDs. |
+| Operations | Travel-aware planning, fuel allowance reporting, service-area heatmaps, clinic attendance import, cancellation fees, and retention pruning. |
+| Growth | Optional integration points for payments, notifications, AI advice, events, customer portal, media, and SEO without patching Capell core. |
 
 ## Screens And Workflow
 
@@ -29,63 +39,53 @@ Screenshot contract: `docs/screenshots.json`.
 
 - Public booking request form.
 - Appointment request admin queue.
-- Review request detail with participant responses.
-- Waitlist admin queue.
+- Equi Dynamics desktop and mobile booking form.
+- Equi Dynamics successful booking submission.
 
 ## Technical Shape
 
 - Service provider: `Capell\Bookings\Providers\BookingsServiceProvider`.
 - Config: `packages/bookings/config/capell-bookings.php`.
-- Routes: public request, calendar feed, opaque portal lessons, opaque consent, tokenized proposals, tokenized review requests, tokenized review participants, and guarded webhook ingestion.
+- Routes: public request, staff calendar feed, opaque portal lessons, opaque consent, tokenized proposals, tokenized review requests, tokenized participant reviews, and guarded webhook ingestion.
 - Admin resources: booking setup, appointment queue, day planner, group sessions, message logs, review requests, travel observations, work zones, owner prompts, change proposals, and waitlist entries.
 - Actions: availability, requests, confirmations, reminders, portal links, consent, travel, work zones, payment gates, group sessions, reviews, webhook ingestion, waitlists, skill progress, bundles, cancellation, reporting, import, suppression, risk scoring, owner digests, GDPR export/erasure, and retention pruning.
-- Security: customer-facing portal/review/proposal URLs use temporary signatures plus opaque encrypted payloads or hashed tokens; public routes do not expose database IDs.
 - Health: `Capell\Bookings\Health\BookingsHealthCheck` verifies tables, morph aliases, and action discoverability.
 
-## Data Model
+## Safety Boundaries
 
-Required tables include booking setup tables, `appointment_requests`, audit logs, lesson notes, messaging consent/logs, travel observations/adjustments, work zones, change proposals, group sessions, review requests/participants, owner prompts, webhook events, waitlist entries, skill assessments, and lesson bundles.
+Customer-specific URLs use temporary signatures plus opaque encrypted payloads or hashed tokens. Public routes do not expose database IDs. Webhook tokens are supplied through headers or bearer auth rather than URL paths.
 
-Token fields are hashed at rest for change proposal parties, review requests, and review participants. Message logs and travel observations are covered by package retention settings.
+Public Blade views must remain ordinary customer-facing output: no authoring markers, model IDs, field paths, permissions, package internals, signed editor URLs, or database queries.
 
 ## Install Impact
 
-- Admin navigation: adds package-owned Filament resources under Bookings.
-- Permissions: declared for setup CRUD, appointment updates, planner/message/review/travel visibility, work zones, owner prompts, change proposals, and waitlist CRUD.
-- Public routes: signed or tokenized where customer-specific data is visible; booking request submissions and webhooks are throttled.
-- Settings: `Capell\Bookings\Settings\BookingsSettings`.
-- Queues/schedules: reminder dispatch, workflow expiry, review scheduling, and retention pruning commands are registered.
-- Cache tags: `bookings`.
+- Admin navigation adds Bookings resources under the Bookings group.
+- Permissions cover setup CRUD, appointment updates, planner/message/review/travel visibility, work zones, owner prompts, change proposals, and waitlist CRUD.
+- Public request submissions and webhooks are throttled.
+- Settings live in `Capell\Bookings\Settings\BookingsSettings`.
+- Scheduled jobs handle reminder dispatch, workflow expiry, review scheduling, and retention pruning.
 
 ## Common Pitfalls
 
-- Configure `capell-bookings.webhook_tokens` before enabling provider webhook endpoints.
-- Use generated Actions for portal, consent, proposal, and review links; do not hand-build URLs.
-- Keep public Blade free of authoring markers, model IDs, permissions, signed editor URLs, and lazy database queries.
-- Run package commands from the host app; in this repository use `vendor/bin/pest` for package tests.
+- Do not enable every advanced feature on day one. Start with request, availability, and appointment queue; then add operations features as the client needs them.
+- Configure `capell-bookings.webhook_tokens` before exposing provider webhook endpoints.
+- Generate portal, consent, proposal, and review URLs through Actions; do not hand-build them.
 - Keep `composer.json`, `composer.local.json`, `capell.json`, docs, screenshots, and tests aligned when the package surface changes.
-
-## Troubleshooting
-
-| Symptom | Likely cause | Check | Fix |
-| --- | --- | --- | --- |
-| Package surface is missing after install | Provider or manifest is not loaded | Confirm `capell.json`, Composer metadata, and package install state | Reinstall the package, refresh Composer autoload, and clear host caches |
-| Admin screen fails on a missing table | Package migrations have not run | Check the tables listed in `Data Model` | Run host migrations and rerun focused package tests |
-| Portal link returns 403 | Temporary signature expired or URL was hand-built | Check generated Action output and `expires` query value | Regenerate the link through the relevant Action |
-| Webhook returns 403 | Provider token is missing or wrong | Check `capell-bookings.webhook_tokens.{provider}` | Configure the token and retry |
-| Public output leaks unexpected state | Render data, cache variation, or authoring boundary regressed | Check public Blade and public-output tests | Move data loading out of Blade and rerun package public-output tests |
 
 ## Quick Start
 
 1. Install the package: `composer require capell-app/bookings`.
-2. Run the required setup from the host Capell app.
-3. Configure booking settings, availability, webhook tokens if used, and staff/calendar surfaces.
-4. Open the Bookings admin resources and verify the public `/bookings` route.
+2. Run host package setup and migrations.
+3. Configure services, staff, locations, availability windows, and booking settings.
+4. Open `/bookings` and submit a test request.
+5. Confirm the request in the Bookings admin queue.
+6. Add reminders, reviews, waitlists, payments, travel, or reporting only when the operation needs them.
 
-## Next Steps
+## More Detail
 
+- [Adoption guide](docs/adoption-guide.md)
 - [Package docs](docs/README.md)
-- [Overview](docs/overview.md)
+- [Technical overview](docs/overview.md)
 - [Screenshot contract](docs/screenshots.json)
 - [Marketplace assets](docs/assets/marketplace/)
 - Focused tests: `vendor/bin/pest packages/bookings/tests --configuration=phpunit.xml`.

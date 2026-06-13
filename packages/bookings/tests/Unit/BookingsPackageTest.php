@@ -184,6 +184,20 @@ it('declares committed marketplace assets for every required screenshot capture 
         ->toContain(...$requiredMarketplaceScreenshotPaths);
 });
 
+it('keeps audience-focused adoption docs discoverable', function (): void {
+    $packagePath = dirname(__DIR__, 2);
+    $readme = File::get($packagePath . '/README.md');
+    $docsReadme = File::get($packagePath . '/docs/README.md');
+    $adoptionGuide = File::get($packagePath . '/docs/adoption-guide.md');
+
+    expect($readme)->toContain('Start Simple, Add Depth Later')
+        ->and($readme)->toContain('docs/adoption-guide.md')
+        ->and($docsReadme)->toContain('adoption-guide.md')
+        ->and($adoptionGuide)->toContain('Default Setup')
+        ->and($adoptionGuide)->toContain('What Not To Enable First')
+        ->and($adoptionGuide)->toContain('Developer Handoff');
+});
+
 it('declares implemented bookings contributions and feature capabilities', function (): void {
     $manifest = File::json(__DIR__ . '/../../capell.json');
 

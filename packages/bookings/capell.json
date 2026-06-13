@@ -6,7 +6,7 @@
     "kind": "plugin",
     "capellApiVersion": "^4.0",
     "version": "4.x-dev",
-    "description": "Bookings adds adaptive lessons, service areas, travel-aware planning, provisional holds, group clinics, reminders, reviews, and AI-assisted owner prompts.",
+    "description": "Bookings turns public appointment requests into a managed Capell operations workflow with availability, reminders, reviews, waitlists, travel planning, reporting, and optional advanced automation.",
     "product": {
         "group": "Capell Operations",
         "tier": "premium",
@@ -512,7 +512,7 @@
         "privateDocsRequested": true
     },
     "marketplace": {
-        "summary": "Bookings adds appointment request workflows, availability, confirmations, reminders, and calendar feeds for healthcare, services, education, consulting, nonprofit, and portfolio sites.",
+        "summary": "Bookings starts with a branded request form and admin queue, then adds the operational depth teams need: availability, reminders, reviews, waitlists, travel planning, reporting, and secure customer links.",
         "screenshots": [
             {
                 "path": "docs/assets/marketplace/extension-card.svg",

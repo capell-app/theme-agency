@@ -4,10 +4,11 @@ Start at the [package README](../README.md) when deciding whether to install thi
 
 ## Documents
 
-| Document                                | Use                                                                   |
-| --------------------------------------- | --------------------------------------------------------------------- |
-| [Overview](overview.md)                 | Appointment workflow, screenshot plan, and manifest traceability.     |
-| [Screenshot contract](screenshots.json) | Marketplace/admin/frontend captures required for package publication. |
+| Document                                | Use                                                                     |
+| --------------------------------------- | ----------------------------------------------------------------------- |
+| [Adoption guide](adoption-guide.md)     | Progressive setup path for owners, operators, agencies, and developers. |
+| [Overview](overview.md)                 | Technical workflow layers, public boundary, and integration points.     |
+| [Screenshot contract](screenshots.json) | Marketplace/admin/frontend captures required for package publication.   |
 
 ## Related Packages
 
