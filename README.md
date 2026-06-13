@@ -144,6 +144,7 @@ Use the [Capell Theme Scale](docs/theme-scale.md) when creating a theme, changin
 | [theme-inertia-bookings-react](packages/theme-inertia-bookings-react/README.md) | `capell-app/theme-inertia-bookings-react` | Premium | React components for the Inertia Bookings theme.               |
 | [theme-inertia-bookings-vue](packages/theme-inertia-bookings-vue/README.md)     | `capell-app/theme-inertia-bookings-vue`   | Premium | Vue components for the Inertia Bookings theme.                 |
 | [theme-knowledge](packages/theme-knowledge/README.md)                           | `capell-app/theme-knowledge`              | Premium | Resource-library theme for publishers and knowledge bases.     |
+| [theme-liquid-glass](packages/theme-liquid-glass/README.md)                     | `capell-app/theme-liquid-glass`           | Free    | Modern glass interface theme with token-driven presets.        |
 | [theme-local-services](packages/theme-local-services/README.md)                 | `capell-app/theme-local-services`         | Premium | Quote-led theme for local service businesses.                  |
 | [theme-nonprofit](packages/theme-nonprofit/README.md)                           | `capell-app/theme-nonprofit`              | Premium | Impact-led theme for charities, campaigns, and civic sites.    |
 | [theme-portfolio](packages/theme-portfolio/README.md)                           | `capell-app/theme-portfolio`              | Premium | Portfolio theme for creators, consultants, and case studies.   |

@@ -174,6 +174,7 @@ extendCapellPackageTests(PackagesTestCase::class, 'theme-agency', 'theme-agency'
 extendCapellPackageTests(PackagesTestCase::class, 'theme-commerce', 'theme-commerce');
 extendCapellPackageTests(PackagesTestCase::class, 'theme-corporate', 'theme-corporate');
 extendCapellPackageTests(PackagesTestCase::class, 'theme-healthcare', 'theme-healthcare');
+extendCapellPackageTests(PackagesTestCase::class, 'theme-liquid-glass', 'theme-liquid-glass');
 extendCapellPackageTests(PackagesTestCase::class, 'theme-saas', 'theme-saas');
 pest()->extend(UninstalledPackagesTestCase::class)->in('UninstalledPackages');
 extendCapellPackageTests(WelcomeTourTestCase::class, 'welcome-tour', 'welcome-tour');
