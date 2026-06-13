@@ -16,6 +16,7 @@ use Capell\Bookings\Models\BookingLessonSkillAssessment;
 use Capell\Bookings\Models\BookingLocation;
 use Capell\Bookings\Models\BookingMessageLog;
 use Capell\Bookings\Models\BookingOwnerPrompt;
+use Capell\Bookings\Models\BookingReviewParticipant;
 use Capell\Bookings\Models\BookingReviewRequest;
 use Capell\Bookings\Models\BookingService;
 use Capell\Bookings\Models\BookingStaffMember;
@@ -54,6 +55,7 @@ class BookingsModelRegistrar
         BookingChangeProposalParty::class,
         BookingGroupSession::class,
         BookingReviewRequest::class,
+        BookingReviewParticipant::class,
         BookingOwnerPrompt::class,
         BookingWebhookEvent::class,
         BookingWaitlistEntry::class,

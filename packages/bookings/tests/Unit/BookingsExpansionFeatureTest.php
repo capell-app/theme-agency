@@ -8,12 +8,15 @@ use Capell\Bookings\Actions\ApplyLessonBundleCreditAction;
 use Capell\Bookings\Actions\BuildInstructorFuelReportAction;
 use Capell\Bookings\Actions\BuildServiceAreaHeatmapAction;
 use Capell\Bookings\Actions\CalculateCancellationFeeAction;
+use Capell\Bookings\Actions\CaptureReviewAction;
 use Capell\Bookings\Actions\CreateMessagingConsentUrlAction;
 use Capell\Bookings\Actions\CreatePortalLessonsUrlAction;
+use Capell\Bookings\Actions\CreateReviewLoopAction;
 use Capell\Bookings\Actions\CreateReviewRequestUrlAction;
 use Capell\Bookings\Actions\ExpireWaitlistOffersAction;
 use Capell\Bookings\Actions\ImportClinicAttendanceCsvAction;
 use Capell\Bookings\Actions\IssueBookingChangeProposalTokenAction;
+use Capell\Bookings\Actions\IssueReviewParticipantUrlAction;
 use Capell\Bookings\Actions\JoinBookingWaitlistAction;
 use Capell\Bookings\Actions\MarkBookingWebhookEventProcessedAction;
 use Capell\Bookings\Actions\OfferWaitlistSlotAction;
@@ -28,6 +31,7 @@ use Capell\Bookings\Enums\AppointmentRequestStatusEnum;
 use Capell\Bookings\Enums\BookingLessonBundleStatusEnum;
 use Capell\Bookings\Enums\BookingLessonSkillStatusEnum;
 use Capell\Bookings\Enums\BookingMessageChannelEnum;
+use Capell\Bookings\Enums\BookingReviewParticipantStatusEnum;
 use Capell\Bookings\Enums\BookingReviewRequestStatusEnum;
 use Capell\Bookings\Enums\BookingWaitlistStatusEnum;
 use Capell\Bookings\Enums\LessonNoteVisibilityEnum;
@@ -35,6 +39,7 @@ use Capell\Bookings\Enums\MessagingConsentStatusEnum;
 use Capell\Bookings\Models\AppointmentRequest;
 use Capell\Bookings\Models\BookingGroupSession;
 use Capell\Bookings\Models\BookingLessonBundle;
+use Capell\Bookings\Models\BookingReviewParticipant;
 use Capell\Bookings\Models\BookingReviewRequest;
 use Capell\Bookings\Models\BookingService;
 use Capell\Bookings\Models\MessagingConsent;
@@ -131,6 +136,162 @@ it('accepts signed review and change proposal responses', function (): void {
 
     expect($reviewRequest->refresh()->status)->toBe(BookingReviewRequestStatusEnum::Completed)
         ->and($clientParty->refresh()->accepted_at)->not->toBeNull();
+});
+
+it('runs multi participant review loops with required completion and signed token isolation', function (): void {
+    CarbonImmutable::setTestNow(CarbonImmutable::parse('2026-07-01 09:00:00', 'Europe/London'));
+
+    $siteId = (int) DB::table('sites')->insertGetId([]);
+    $portalAccount = PortalAccount::factory()->forSite($siteId)->create(['email' => 'jordan@example.com']);
+    $startsAt = CarbonImmutable::parse('2026-07-05 10:00:00', 'Europe/London');
+    $appointmentRequest = AppointmentRequest::factory()->create([
+        'site_id' => $siteId,
+        'portal_account_id' => $portalAccount->getKey(),
+        'customer_name' => 'Jordan Lee',
+        'customer_email' => 'jordan@example.com',
+        'requested_starts_at' => $startsAt,
+        'requested_ends_at' => $startsAt->addHour(),
+        'status' => AppointmentRequestStatusEnum::Completed,
+        'completed_at' => CarbonImmutable::now(),
+    ]);
+    $reviewRequest = BookingReviewRequest::query()->create([
+        'appointment_request_id' => $appointmentRequest->getKey(),
+        'site_id' => $siteId,
+        'portal_account_id' => $portalAccount->getKey(),
+        'status' => BookingReviewRequestStatusEnum::Scheduled,
+        'scheduled_for' => CarbonImmutable::now(),
+    ]);
+    $portalAccountId = filter_var($portalAccount->getKey(), FILTER_VALIDATE_INT);
+    throw_if($portalAccountId === false, RuntimeException::class, 'Expected portal account key to be an integer.');
+
+    CreateReviewLoopAction::run($reviewRequest, [
+        [
+            'role' => 'learner',
+            'name' => 'Jordan Lee',
+            'email' => 'jordan@example.com',
+            'portal_account_id' => $portalAccountId,
+            'required' => true,
+        ],
+        [
+            'role' => 'guardian',
+            'name' => 'Pat Lee',
+            'email' => 'pat@example.com',
+            'required' => true,
+        ],
+        [
+            'role' => 'instructor',
+            'name' => 'Avery Stone',
+            'email' => 'avery@example.com',
+            'required' => false,
+        ],
+    ]);
+
+    $learner = BookingReviewParticipant::query()->where('role', 'learner')->firstOrFail();
+    $guardian = BookingReviewParticipant::query()->where('role', 'guardian')->firstOrFail();
+    $instructor = BookingReviewParticipant::query()->where('role', 'instructor')->firstOrFail();
+    $learnerUrl = IssueReviewParticipantUrlAction::run($learner);
+    $guardianUrl = IssueReviewParticipantUrlAction::run($guardian);
+    $learnerId = filter_var($learner->getKey(), FILTER_VALIDATE_INT);
+    $guardianId = filter_var($guardian->getKey(), FILTER_VALIDATE_INT);
+    throw_if($learnerId === false || $guardianId === false, RuntimeException::class, 'Expected participant keys to be integers.');
+    $forgedUrl = str_replace(
+        '/review-participant/' . $learnerId . '/',
+        '/review-participant/' . $guardianId . '/',
+        $learnerUrl,
+    );
+
+    $this->post($forgedUrl, [
+        'rating' => 1,
+        'response' => 'Forged',
+    ])->assertForbidden();
+
+    $this->get($learnerUrl)
+        ->assertOk()
+        ->assertSee('learner');
+
+    $this->post($learnerUrl, [
+        'rating' => 5,
+        'response' => 'Learner response.',
+    ])->assertRedirect();
+
+    expect($reviewRequest->refresh()->status)->toBe(BookingReviewRequestStatusEnum::Scheduled)
+        ->and($learner->refresh()->status)->toBe(BookingReviewParticipantStatusEnum::Completed)
+        ->and($instructor->refresh()->status)->toBe(BookingReviewParticipantStatusEnum::Pending);
+
+    $this->post($guardianUrl, [
+        'rating' => 4,
+        'response' => 'Guardian response.',
+    ])->assertRedirect();
+
+    $reviewRequest->refresh();
+
+    expect($reviewRequest->status)->toBe(BookingReviewRequestStatusEnum::Completed)
+        ->and($reviewRequest->rating)->toBe(5)
+        ->and($reviewRequest->response)->toContain('learner: Learner response.', 'guardian: Guardian response.')
+        ->and($reviewRequest->meta['average_rating'] ?? null)->toBe(4.5)
+        ->and($reviewRequest->meta['total_participants'] ?? null)->toBe(3);
+});
+
+it('keeps legacy parent review capture compatible by creating a default participant', function (): void {
+    CarbonImmutable::setTestNow(CarbonImmutable::parse('2026-07-01 09:00:00', 'Europe/London'));
+
+    $appointmentRequest = AppointmentRequest::factory()->create([
+        'customer_name' => 'Jordan Lee',
+        'customer_email' => 'jordan@example.com',
+        'status' => AppointmentRequestStatusEnum::Completed,
+        'completed_at' => CarbonImmutable::now(),
+    ]);
+    $reviewRequest = BookingReviewRequest::query()->create([
+        'appointment_request_id' => $appointmentRequest->getKey(),
+        'status' => BookingReviewRequestStatusEnum::Scheduled,
+        'scheduled_for' => CarbonImmutable::now(),
+    ]);
+
+    CaptureReviewAction::run($reviewRequest, 3, 'Simple review.');
+
+    $participant = BookingReviewParticipant::query()->firstOrFail();
+
+    expect($reviewRequest->refresh()->status)->toBe(BookingReviewRequestStatusEnum::Completed)
+        ->and($participant->role)->toBe('customer')
+        ->and($participant->email)->toBe('jordan@example.com')
+        ->and($participant->status)->toBe(BookingReviewParticipantStatusEnum::Completed);
+});
+
+it('does not let legacy parent review capture complete required multi participant loops early', function (): void {
+    CarbonImmutable::setTestNow(CarbonImmutable::parse('2026-07-01 09:00:00', 'Europe/London'));
+
+    $appointmentRequest = AppointmentRequest::factory()->create([
+        'customer_name' => 'Jordan Lee',
+        'customer_email' => 'jordan@example.com',
+        'status' => AppointmentRequestStatusEnum::Completed,
+        'completed_at' => CarbonImmutable::now(),
+    ]);
+    $reviewRequest = BookingReviewRequest::query()->create([
+        'appointment_request_id' => $appointmentRequest->getKey(),
+        'status' => BookingReviewRequestStatusEnum::Scheduled,
+        'scheduled_for' => CarbonImmutable::now(),
+    ]);
+
+    CreateReviewLoopAction::run($reviewRequest, [
+        [
+            'role' => 'learner',
+            'name' => 'Jordan Lee',
+            'email' => 'jordan@example.com',
+            'required' => true,
+        ],
+        [
+            'role' => 'guardian',
+            'name' => 'Pat Lee',
+            'email' => 'pat@example.com',
+            'required' => true,
+        ],
+    ]);
+
+    CaptureReviewAction::run($reviewRequest, 5, 'Learner response.');
+
+    expect($reviewRequest->refresh()->status)->toBe(BookingReviewRequestStatusEnum::Scheduled)
+        ->and($reviewRequest->completed_at)->toBeNull()
+        ->and(BookingReviewParticipant::query()->where('status', BookingReviewParticipantStatusEnum::Completed)->count())->toBe(1);
 });
 
 it('records webhook events idempotently and processes waitlist offers', function (): void {

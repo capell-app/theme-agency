@@ -10,6 +10,7 @@ use Capell\CustomerPortal\Models\PortalAccount;
 use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Override;
 
 /**
@@ -19,8 +20,11 @@ use Override;
  * @property int|null $portal_account_id
  * @property int|null $site_id
  * @property CarbonImmutable|null $completed_at
+ * @property int|null $rating
+ * @property string|null $response
  * @property CarbonImmutable $scheduled_for
  * @property CarbonImmutable|null $sent_at
+ * @property array<string, mixed>|null $meta
  * @property-read AppointmentRequest|null $appointmentRequest
  */
 class BookingReviewRequest extends Model
@@ -66,6 +70,14 @@ class BookingReviewRequest extends Model
     public function site(): BelongsTo
     {
         return $this->belongsTo(Site::class, 'site_id');
+    }
+
+    /**
+     * @return HasMany<BookingReviewParticipant, $this>
+     */
+    public function participants(): HasMany
+    {
+        return $this->hasMany(BookingReviewParticipant::class, 'booking_review_request_id');
     }
 
     #[Override]

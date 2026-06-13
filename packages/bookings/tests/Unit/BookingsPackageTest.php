@@ -6,20 +6,27 @@ use Capell\Bookings\Providers\BookingsServiceProvider;
 
 require_once __DIR__ . '/../Pest.php';
 
+use Capell\Bookings\Actions\AddReviewParticipantAction;
 use Capell\Bookings\Actions\BuildStaffCalendarFeedAction;
 use Capell\Bookings\Actions\CancelAppointmentRequestAction;
+use Capell\Bookings\Actions\CaptureReviewParticipantResponseAction;
+use Capell\Bookings\Actions\CompleteReviewLoopIfReadyAction;
 use Capell\Bookings\Actions\ConfirmAppointmentRequestAction;
 use Capell\Bookings\Actions\CreateAppointmentRequestAction;
 use Capell\Bookings\Actions\CreateAvailabilityExceptionAction;
 use Capell\Bookings\Actions\CreateMessagingConsentUrlAction;
 use Capell\Bookings\Actions\CreatePortalLessonsUrlAction;
+use Capell\Bookings\Actions\CreateReviewLoopAction;
 use Capell\Bookings\Actions\CreateReviewRequestUrlAction;
 use Capell\Bookings\Actions\CreateStaffCalendarFeedUrlAction;
+use Capell\Bookings\Actions\IssueReviewParticipantUrlAction;
 use Capell\Bookings\Actions\JoinBookingWaitlistAction;
 use Capell\Bookings\Actions\LinkBookingToPortalAccountAction;
 use Capell\Bookings\Actions\MaterialiseLessonSeriesAction;
 use Capell\Bookings\Actions\QueueAppointmentReminderAction;
 use Capell\Bookings\Actions\RecordBookingWebhookEventAction;
+use Capell\Bookings\Actions\RemindPendingReviewParticipantsAction;
+use Capell\Bookings\Actions\ResolveReviewParticipantTokenAction;
 use Capell\Bookings\Enums\AppointmentRequestStatusEnum;
 use Capell\Bookings\Enums\BookingAvailabilityStatusEnum;
 use Capell\Bookings\Enums\BookingLocationTypeEnum;
@@ -92,6 +99,7 @@ it('keeps package manifest requirements aligned with composer requirements', fun
             'booking_change_proposal_parties',
             'booking_group_sessions',
             'booking_review_requests',
+            'booking_review_participants',
             'booking_owner_prompts',
             'booking_webhook_events',
             'booking_waitlist_entries',
@@ -240,6 +248,7 @@ it('declares implemented bookings contributions and feature capabilities', funct
             'bookings-notifications',
             'bookings-reminders',
             'bookings-calendar-feeds',
+            'bookings-multi-participant-review-loops',
             'bookings-customer-portal-lessons',
             'bookings-signed-change-proposals',
             'bookings-webhook-ingestion',
@@ -267,6 +276,13 @@ it('declares implemented bookings contributions and feature capabilities', funct
             'createPortalLessonsUrl' => CreatePortalLessonsUrlAction::class,
             'createMessagingConsentUrl' => CreateMessagingConsentUrlAction::class,
             'createReviewRequestUrl' => CreateReviewRequestUrlAction::class,
+            'createReviewLoop' => CreateReviewLoopAction::class,
+            'addReviewParticipant' => AddReviewParticipantAction::class,
+            'issueReviewParticipantUrl' => IssueReviewParticipantUrlAction::class,
+            'resolveReviewParticipantToken' => ResolveReviewParticipantTokenAction::class,
+            'captureReviewParticipantResponse' => CaptureReviewParticipantResponseAction::class,
+            'completeReviewLoopIfReady' => CompleteReviewLoopIfReadyAction::class,
+            'remindPendingReviewParticipants' => RemindPendingReviewParticipantsAction::class,
             'recordBookingWebhookEvent' => RecordBookingWebhookEventAction::class,
             'joinBookingWaitlist' => JoinBookingWaitlistAction::class,
         ])

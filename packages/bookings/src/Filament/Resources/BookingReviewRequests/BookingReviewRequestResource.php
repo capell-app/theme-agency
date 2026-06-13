@@ -24,6 +24,7 @@ final class BookingReviewRequestResource extends Resource
     {
         return $table->columns([
             TextColumn::make('status')->label(__('capell-bookings::admin.fields.status'))->badge()->sortable(),
+            TextColumn::make('participants_count')->counts('participants')->label(__('capell-bookings::admin.fields.participants'))->sortable(),
             TextColumn::make('rating')->label(__('capell-bookings::admin.fields.rating'))->numeric()->sortable(),
             TextColumn::make('scheduled_for')->label(__('capell-bookings::admin.fields.scheduled_for'))->dateTime()->sortable(),
             TextColumn::make('sent_at')->label(__('capell-bookings::admin.fields.sent_at'))->dateTime()->sortable()->toggleable(),

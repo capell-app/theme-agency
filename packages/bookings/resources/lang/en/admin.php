@@ -86,6 +86,7 @@ return [
         'origin' => 'Origin',
         'observed_at' => 'Observed',
         'payload' => 'Payload',
+        'participants' => 'Participants',
         'phone' => 'Phone',
         'photos' => 'Photos',
         'postal_code' => 'Postal code',

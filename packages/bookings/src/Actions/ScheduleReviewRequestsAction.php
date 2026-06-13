@@ -48,7 +48,7 @@ class ScheduleReviewRequestsAction
                     continue;
                 }
 
-                BookingReviewRequest::query()->firstOrCreate(
+                $reviewRequest = BookingReviewRequest::query()->firstOrCreate(
                     [
                         'appointment_request_id' => $appointmentRequest->getKey(),
                         'scheduled_for' => $scheduledFor,
@@ -60,6 +60,8 @@ class ScheduleReviewRequestsAction
                         'requested_at' => $now,
                     ],
                 );
+
+                CreateReviewLoopAction::run($reviewRequest);
 
                 $scheduled++;
             }

@@ -36,6 +36,8 @@ return [
     'portal_account_site_mismatch' => 'The portal account belongs to a different site.',
     'portal_lesson_scope_mismatch' => 'This lesson record belongs to a different portal account.',
     'review_rating_range' => 'Review ratings must be between 1 and 5.',
+    'review_participant_completed' => 'This review response has already been completed.',
+    'review_participant_token_invalid' => 'This review link is invalid or has expired.',
     'service_unavailable' => 'The selected booking service is unavailable.',
     'staff_member_unavailable' => 'The selected staff member is unavailable.',
     'travel_observation_positive' => 'Travel observations must use non-negative time and distance values.',

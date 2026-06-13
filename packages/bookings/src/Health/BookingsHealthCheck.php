@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Capell\Bookings\Health;
 
+use Capell\Bookings\Actions\AddReviewParticipantAction;
 use Capell\Bookings\Actions\BuildAvailableBookingSlotsAction;
 use Capell\Bookings\Actions\BuildDayPlanAction;
 use Capell\Bookings\Actions\BuildInstructorFuelReportAction;
@@ -17,10 +18,14 @@ use Capell\Bookings\Actions\CalculateCancellationFeeAction;
 use Capell\Bookings\Actions\CancelAppointmentRequestAction;
 use Capell\Bookings\Actions\CaptureMessagingConsentAction;
 use Capell\Bookings\Actions\CaptureReviewAction;
+use Capell\Bookings\Actions\CaptureReviewParticipantResponseAction;
+use Capell\Bookings\Actions\CompleteReviewLoopIfReadyAction;
 use Capell\Bookings\Actions\ConfirmAppointmentRequestAction;
 use Capell\Bookings\Actions\CreateAppointmentRequestAction;
+use Capell\Bookings\Actions\CreateReviewLoopAction;
 use Capell\Bookings\Actions\ExpireWaitlistOffersAction;
 use Capell\Bookings\Actions\ImportClinicAttendanceCsvAction;
+use Capell\Bookings\Actions\IssueReviewParticipantUrlAction;
 use Capell\Bookings\Actions\JoinBookingWaitlistAction;
 use Capell\Bookings\Actions\LinkBookingToPortalAccountAction;
 use Capell\Bookings\Actions\MarkBookingWebhookEventProcessedAction;
@@ -32,6 +37,8 @@ use Capell\Bookings\Actions\QueueAppointmentReminderAction;
 use Capell\Bookings\Actions\RecordBookingWebhookEventAction;
 use Capell\Bookings\Actions\RecordLessonNoteAction;
 use Capell\Bookings\Actions\RecordLessonSkillAssessmentAction;
+use Capell\Bookings\Actions\RemindPendingReviewParticipantsAction;
+use Capell\Bookings\Actions\ResolveReviewParticipantTokenAction;
 use Capell\Bookings\Actions\ScheduleReviewRequestsAction;
 use Capell\Bookings\Actions\ScoreBookingRiskAction;
 use Capell\Bookings\Actions\ShouldSuppressReviewRequestAction;
@@ -47,6 +54,7 @@ use Capell\Bookings\Models\BookingLessonSkillAssessment;
 use Capell\Bookings\Models\BookingLocation;
 use Capell\Bookings\Models\BookingMessageLog;
 use Capell\Bookings\Models\BookingOwnerPrompt;
+use Capell\Bookings\Models\BookingReviewParticipant;
 use Capell\Bookings\Models\BookingReviewRequest;
 use Capell\Bookings\Models\BookingService;
 use Capell\Bookings\Models\BookingStaffMember;
@@ -69,6 +77,7 @@ final class BookingsHealthCheck implements ChecksExtensionHealth
     private const array ACTIONS = [
         BuildPublicBookingRequestOptionsAction::class,
         BuildPublicBookingRequestPropsAction::class,
+        AddReviewParticipantAction::class,
         BuildAvailableBookingSlotsAction::class,
         BuildDayPlanAction::class,
         BuildInstructorFuelReportAction::class,
@@ -80,10 +89,14 @@ final class BookingsHealthCheck implements ChecksExtensionHealth
         CancelAppointmentRequestAction::class,
         CaptureMessagingConsentAction::class,
         CaptureReviewAction::class,
+        CaptureReviewParticipantResponseAction::class,
+        CompleteReviewLoopIfReadyAction::class,
         ConfirmAppointmentRequestAction::class,
         CreateAppointmentRequestAction::class,
+        CreateReviewLoopAction::class,
         ExpireWaitlistOffersAction::class,
         ImportClinicAttendanceCsvAction::class,
+        IssueReviewParticipantUrlAction::class,
         JoinBookingWaitlistAction::class,
         LinkBookingToPortalAccountAction::class,
         MarkBookingWebhookEventProcessedAction::class,
@@ -95,6 +108,8 @@ final class BookingsHealthCheck implements ChecksExtensionHealth
         RecordBookingWebhookEventAction::class,
         RecordLessonNoteAction::class,
         RecordLessonSkillAssessmentAction::class,
+        RemindPendingReviewParticipantsAction::class,
+        ResolveReviewParticipantTokenAction::class,
         ScheduleReviewRequestsAction::class,
         ScoreBookingRiskAction::class,
         ShouldSuppressReviewRequestAction::class,
@@ -120,6 +135,7 @@ final class BookingsHealthCheck implements ChecksExtensionHealth
         'booking_change_proposal_parties' => BookingChangeProposalParty::class,
         'booking_group_sessions' => BookingGroupSession::class,
         'booking_review_requests' => BookingReviewRequest::class,
+        'booking_review_participants' => BookingReviewParticipant::class,
         'booking_owner_prompts' => BookingOwnerPrompt::class,
         'booking_webhook_events' => BookingWebhookEvent::class,
         'booking_waitlist_entries' => BookingWaitlistEntry::class,

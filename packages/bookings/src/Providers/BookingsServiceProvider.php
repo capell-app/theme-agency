@@ -58,6 +58,7 @@ class BookingsServiceProvider extends AbstractPackageServiceProvider
         'booking_change_proposal_parties',
         'booking_group_sessions',
         'booking_review_requests',
+        'booking_review_participants',
         'booking_owner_prompts',
         'booking_webhook_events',
         'booking_waitlist_entries',
@@ -103,6 +104,7 @@ class BookingsServiceProvider extends AbstractPackageServiceProvider
                 '2026_06_13_000013_create_booking_waitlist_entries_table',
                 '2026_06_13_000014_create_booking_lesson_skill_assessments_table',
                 '2026_06_13_000015_create_booking_lesson_bundles_table',
+                '2026_06_13_000016_create_booking_review_participants_table',
             ]);
     }
 

@@ -37,6 +37,8 @@ class DispatchReviewRequestAction
             subject: __('capell-bookings::review.request_subject'),
         );
 
+        RemindPendingReviewParticipantsAction::run($reviewRequest);
+
         $reviewRequest->forceFill([
             'status' => BookingReviewRequestStatusEnum::Sent,
             'sent_at' => CarbonImmutable::now(),
