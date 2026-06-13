@@ -9,6 +9,7 @@
         "screenshots:check": "node scripts/validate-screenshot-manifests.js",
         "screenshots:contact-sheets": "node scripts/build-theme-screenshot-contact-sheets.js",
         "screenshots:validate": "node scripts/validate-screenshot-manifests.js",
+        "capell-json:check": "npx prettier --check 'packages/**/capell.json'",
         "prettier": "npx prettier --write 'packages/**/*.{css,js,yml,json,md,blade.php}'",
         "eslint": "npx eslint 'packages/**/resources/js/**/*.js' --max-warnings=0"
     },
