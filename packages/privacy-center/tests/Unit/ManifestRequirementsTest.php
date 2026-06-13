@@ -122,7 +122,7 @@ it('declares privacy center manifest ownership and cache safety', function (): v
             'recordPolicyAcceptance' => RecordPolicyAcceptanceAction::class,
             'registerConsentPolicy' => RegisterConsentPolicyAction::class,
         ])
-        ->and(data_get($manifest, 'contributionTraceability.deferredContributions'))->toBe([]);
+        ->and(data_get($manifest, 'contributionTraceability.deferredContributions'))->toBe(['route']);
 });
 
 it('declares cookie consent categories', function (): void {
