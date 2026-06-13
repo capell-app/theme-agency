@@ -1,5 +1,7 @@
 <x-filament-widgets::widget>
-    <x-filament::section heading="AI metrics">
+    <x-filament::section
+        :heading="__('capell-seo-suite::dashboard.ai_metrics')"
+    >
         <div class="@container space-y-6">
             {{-- Summary Cards --}}
             <div class="@md:grid-cols-5 grid grid-cols-2 gap-4">
@@ -7,7 +9,7 @@
                     <div
                         class="text-sm font-medium text-gray-600 dark:text-gray-400"
                     >
-                        Total Generations
+                        {{ __('capell-seo-suite::dashboard.ai_total_generations') }}
                     </div>
                     <div
                         class="mt-1 text-2xl font-bold text-gray-900 dark:text-white"
@@ -19,7 +21,7 @@
                     <div
                         class="text-sm font-medium text-gray-600 dark:text-gray-400"
                     >
-                        Total Tokens
+                        {{ __('capell-seo-suite::dashboard.ai_total_tokens') }}
                     </div>
                     <div
                         class="mt-1 text-2xl font-bold text-gray-900 dark:text-white"
@@ -44,7 +46,7 @@
                     <div
                         class="text-sm font-medium text-gray-600 dark:text-gray-400"
                     >
-                        Failed
+                        {{ __('capell-seo-suite::dashboard.ai_failed') }}
                     </div>
                     <div
                         class="mt-1 text-2xl font-bold text-gray-900 dark:text-white"
@@ -56,7 +58,7 @@
                     <div
                         class="text-sm font-medium text-gray-600 dark:text-gray-400"
                     >
-                        Remaining Quota
+                        {{ __('capell-seo-suite::dashboard.ai_remaining_quota') }}
                     </div>
                     <div
                         class="mt-1 text-2xl font-bold text-gray-900 dark:text-white"
@@ -71,14 +73,14 @@
                 <h3
                     class="mb-3 text-sm font-semibold text-gray-900 dark:text-white"
                 >
-                    Configuration
+                    {{ __('capell-seo-suite::dashboard.ai_configuration') }}
                 </h3>
                 <div class="space-y-2">
                     <div
                         class="flex items-center justify-between rounded px-3 py-2 text-sm odd:bg-gray-50 dark:odd:bg-gray-800/50"
                     >
                         <span class="text-gray-700 dark:text-gray-300">
-                            AI Provider
+                            {{ __('capell-seo-suite::dashboard.ai_provider') }}
                         </span>
                         <span
                             class="rounded bg-blue-100 px-2 py-1 text-xs font-medium text-blue-700 dark:bg-blue-900/40 dark:text-blue-300"
@@ -90,7 +92,7 @@
                         class="flex items-center justify-between rounded px-3 py-2 text-sm even:bg-gray-50 dark:even:bg-gray-800/50"
                     >
                         <span class="text-gray-700 dark:text-gray-300">
-                            AI Model
+                            {{ __('capell-seo-suite::dashboard.ai_model') }}
                         </span>
                         <span
                             class="rounded bg-blue-100 px-2 py-1 text-xs font-medium text-blue-700 dark:bg-blue-900/40 dark:text-blue-300"
@@ -106,26 +108,26 @@
                 <h3
                     class="mb-3 text-sm font-semibold text-gray-900 dark:text-white"
                 >
-                    Feature Toggles
+                    {{ __('capell-seo-suite::dashboard.ai_feature_toggles') }}
                 </h3>
                 <div class="space-y-2">
                     <div
                         class="flex items-center justify-between rounded px-3 py-2 text-sm odd:bg-gray-50 dark:odd:bg-gray-800/50"
                     >
                         <span class="text-gray-700 dark:text-gray-300">
-                            Page Content Generator
+                            {{ __('capell-seo-suite::dashboard.ai_page_content_generator') }}
                         </span>
                         @if ($data->pageContentGeneratorEnabled)
                             <span
                                 class="rounded bg-green-100 px-2 py-1 text-xs font-medium text-green-700 dark:bg-green-900/40 dark:text-green-300"
                             >
-                                Enabled
+                                {{ __('capell-seo-suite::dashboard.ai_enabled') }}
                             </span>
                         @else
                             <span
                                 class="rounded bg-gray-100 px-2 py-1 text-xs font-medium text-gray-700 dark:bg-gray-700 dark:text-gray-300"
                             >
-                                Disabled
+                                {{ __('capell-seo-suite::dashboard.ai_disabled') }}
                             </span>
                         @endif
                     </div>
@@ -133,19 +135,19 @@
                         class="flex items-center justify-between rounded px-3 py-2 text-sm even:bg-gray-50 dark:even:bg-gray-800/50"
                     >
                         <span class="text-gray-700 dark:text-gray-300">
-                            Page Title Suggestions
+                            {{ __('capell-seo-suite::dashboard.ai_page_title_suggestions') }}
                         </span>
                         @if ($data->pageTitleSuggestionsEnabled)
                             <span
                                 class="rounded bg-green-100 px-2 py-1 text-xs font-medium text-green-700 dark:bg-green-900/40 dark:text-green-300"
                             >
-                                Enabled
+                                {{ __('capell-seo-suite::dashboard.ai_enabled') }}
                             </span>
                         @else
                             <span
                                 class="rounded bg-gray-100 px-2 py-1 text-xs font-medium text-gray-700 dark:bg-gray-700 dark:text-gray-300"
                             >
-                                Disabled
+                                {{ __('capell-seo-suite::dashboard.ai_disabled') }}
                             </span>
                         @endif
                     </div>
@@ -153,19 +155,19 @@
                         class="flex items-center justify-between rounded px-3 py-2 text-sm odd:bg-gray-50 dark:odd:bg-gray-800/50"
                     >
                         <span class="text-gray-700 dark:text-gray-300">
-                            AI Creator
+                            {{ __('capell-seo-suite::dashboard.ai_creator') }}
                         </span>
                         @if ($data->aiCreatorEnabled)
                             <span
                                 class="rounded bg-green-100 px-2 py-1 text-xs font-medium text-green-700 dark:bg-green-900/40 dark:text-green-300"
                             >
-                                Enabled
+                                {{ __('capell-seo-suite::dashboard.ai_enabled') }}
                             </span>
                         @else
                             <span
                                 class="rounded bg-gray-100 px-2 py-1 text-xs font-medium text-gray-700 dark:bg-gray-700 dark:text-gray-300"
                             >
-                                Disabled
+                                {{ __('capell-seo-suite::dashboard.ai_disabled') }}
                             </span>
                         @endif
                     </div>
@@ -178,7 +180,9 @@
                     <summary
                         class="flex cursor-pointer items-center justify-between gap-2 py-2 text-sm font-medium text-gray-900 dark:text-white"
                     >
-                        <span>Feature Usage Breakdown</span>
+                        <span>
+                            {{ __('capell-seo-suite::dashboard.ai_feature_usage_breakdown') }}
+                        </span>
                         <svg
                             class="h-4 w-4 transition-transform group-open:rotate-180"
                             xmlns="http://www.w3.org/2000/svg"

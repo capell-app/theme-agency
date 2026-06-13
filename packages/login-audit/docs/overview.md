@@ -1,161 +1,100 @@
 # Login Audit
 
-Status: **Available, schema-owning** · Kind: **package** · Tier: **premium** · Bundle: **operations** · Contexts: **admin** · Product group: **Capell Operations**
+<!-- prettier-ignore-start -->
 
-This page is the implementation overview for the Login Audit package. It is based on the package README, providers, migrations, config, Filament resources, Actions, middleware, and tests.
+## What This Plugin Adds
 
-## What This Package Adds
+Login Audit is an **Available**, **Schema-owning** Capell package in the **Capell Operations** product group. It ships as `capell-app/login-audit` and extends these surfaces: admin.
 
-Login Audit records login, failed login, logout, and last-activity metadata for Capell users.
+Login Audit gives Capell operators a complete, immutable record of who accessed the admin and storefront, when, from which IP and device, and whether each attempt succeeded. A dedicated Filament resource, dashboard widget, and per-user access summary make it easy to spot unusual activity and respond to incidents, while configurable retention keeps the log lean and aligned with your data-protection policy. IP capture can be disabled or resolved through your CDN (Cloudflare and similar), and the audit log is read-only by design so records can't be quietly altered. Built on the battle-tested Laravel authentication-log foundation and wired into Capell's settings, permissions, and Diagnostics.
 
-- Filament resource for authentication logs.
-- Dashboard widget for recent authentication activity.
-- Settings schema for authentication log behaviour.
-- Middleware for admin and user activity tracking.
-- User edit sidebar summary and authentication logs relation manager when the bridge is enabled.
-- CSV exports from the global authentication log and per-user authentication history.
-- Suspicious-login detection for repeated failures, failed-device success, rapid country changes, and optional unusual login hours.
-- Capell admin alerts for new-device, failed-login, and suspicious-login audit events.
+After install, admins get package-owned management or reporting surfaces inside Capell.
 
-## Developer Notes
+Status details:
 
-The package uses `rappasoft/laravel-authentication-log` for event capture and storage, then layers Capell-specific settings, Actions, resources, widgets, bridge fields, and IP retention policy on top.
-
-- `LoginAuditServiceProvider` registers config, translations, migrations, settings, protected table metadata, the `frontend.activity` middleware alias, and the `LoginAudit` model override.
-- `AdminServiceProvider` registers the admin bridge, Filament resource, dashboard widget, settings contributor, persistent admin middleware, and daily `authentication-log:purge` schedule.
-- `LoginAuditResource` extends `Tapp\FilamentAuthenticationLog\Resources\AuthenticationLogResource` and replaces the table with `LoginAuditsTable`.
-- `AdminActivityMiddleware` and `UserActivityMiddleware` update matching audit rows without changing unrelated vendor audit state.
-
-## Operational Notes
-
-Helps site operators review access activity and spot account behaviour that needs follow-up.
-
-- Adds login_audit table.
-- Adds settings migration.
-- Adds authentication log admin resource and widget.
-- Exports access logs as CSV for incident review and compliance handoff.
-- Marks suspicious audit rows using configurable failed-attempt and unusual-login heuristics.
-- Sends persistent Filament/database alerts to the Login Audit security alert notification group.
-- Listens to Laravel auth events configured in login-audit.php.
-- May send new-device or failed-login notifications depending on config.
-
-## Data And Retention
-
-- login_audit stores authenticatable type/id, IP address, user agent, login time, and logout time.
-- Records belong polymorphically to authenticatable users.
-- Config purge value defaults to 365 days and is synced from the Login Audit retention setting before the daily purge runs.
-
-## Screenshot Plan
-
-- Authentication logs admin index.
-- Authentication log table filters.
-- Dashboard widget.
-- Authentication log settings screen.
-
-## Screenshots
-
-![Authentication logs admin index](screenshots/login-audits-admin-index.png)
-
-![Authentication log settings screen](screenshots/login-audit-settings-screen.png)
-
-![Login audit dashboard widget](screenshots/dashboard-widget.png)
-
-User access summary screenshot target: `packages/login-audit/docs/screenshots/user-edit-access-summary.png`. Keep this as text until the screenshot file is committed.
-
-User authentication logs relation manager screenshot target: `packages/login-audit/docs/screenshots/user-login-audits-relation-manager.png`. Keep this as text until the screenshot file is committed.
-
-## Pitfalls
-
-- Set CDN IP header config before trusting IP addresses behind a proxy.
-- Confirm notification settings before production rollout.
-- Run migrations before loading the resource.
-- In Laravel 13 apps, use the `fdemb/laravel-authentication-log` PR fork at the root app level until upstream ships Laravel 13 support.
-
-## Verification
-
-- Run `vendor/bin/pest packages/login-audit/tests --configuration=phpunit.xml`.
-- Run the relevant host-app migration or package install flow in a disposable database.
-- Open the listed admin or frontend surface and compare it with the screenshot plan.
-
-## Package Manifest
-
-- Composer name: `capell-app/login-audit`
-- Product group: Capell Operations
-- Kind: package
+- Status: Available
 - Tier: premium
 - Bundle: operations
-- Contexts: `admin`
-- Requires: `capell-app/admin`
-- Optional dependencies: None listed.
+- Composer package: `capell-app/login-audit`
+- Namespace: `Capell\LoginAudit`
+- Theme key: not applicable
 
-## Laravel 13 Dependency Note
+## Why It Matters
 
-`rappasoft/laravel-authentication-log` PR #140 adds Laravel 13 support. Until that PR is released upstream, Laravel 13 host apps need the fork as a root Composer repository and alias:
+**For developers:** The package gives developers package-owned service providers, Actions, models, and Filament classes instead of pushing this behaviour into core or application code.
 
-```json
-{
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://github.com/fdemb/laravel-authentication-log"
-        }
-    ],
-    "require": {
-        "rappasoft/laravel-authentication-log": "dev-main as 6.0.1"
-    }
-}
-```
+**For teams:** Tamper-proof access logging for Capell - track every login, failed attempt, logout, device, and session, with retention controls and an admin audit trail built for security and compliance reviews.
 
-Keep `packages/login-audit/composer.json` on the normal `^6.0|^5.0` constraint. Composer inline aliases are root-only, so the fork alias belongs in the consuming Laravel app, not inside the package dependency list.
+## Screens And Workflow
 
-## Admin Surfaces
+Screenshot contract: `screenshots.json`.
 
-- LoginAuditResource (packages/login-audit/src/Filament/Resources/LoginAudits/LoginAuditResource.php)
-- LoginAuditsWidget (packages/login-audit/src/Filament/Widgets/LoginAuditsWidget.php)
-- LoginAuditSettingsSchema (packages/login-audit/src/Filament/Settings/LoginAuditSettingsSchema.php)
-- LoginAuditsRelationManager (packages/login-audit/src/Filament/Resources/Users/RelationManagers/LoginAuditsRelationManager.php)
+- Authentication logs admin index (admin, required).
+- Authentication log table filters (admin, required).
+- Dashboard widget (admin, required).
+- Authentication log settings screen (admin, required).
+- User edit access summary (frontend, required).
+- User authentication logs relation manager (frontend, required).
 
-## Commands
+## Technical Shape
 
-- None proven in this package directory.
+- Service providers: `Capell\LoginAudit\Providers\LoginAuditServiceProvider`, `Capell\LoginAudit\Providers\AdminServiceProvider`.
+- Config files: `packages/login-audit/config/login-audit.php`.
+- Migrations: `packages/login-audit/database/migrations/2026_05_10_190857_01_create_login_audit_table.php`.
+- Settings migrations: `packages/login-audit/database/settings/2026_05_10_190858_01_add_login_audit_settings.php`, `packages/login-audit/database/settings/2026_06_06_000001_add_login_audit_suspicious_detection_settings.php`, `packages/login-audit/database/settings/2026_06_06_000002_add_login_audit_alert_settings.php`, `packages/login-audit/database/settings/2026_06_06_000003_add_login_audit_geo_location_setting.php`.
+- Settings classes: `LoginAuditSettings`.
+- Models: `LoginAudit`.
+- Filament classes: `LoginAuditAdminPanelExtender`, `LoginAuditResource`, `LoginAuditsTable`, `LoginAuditsRelationManager`, `LoginAuditDashboardSettingsContributor`, `LoginAuditSettingsSchema`, `LoginAuditsWidget`.
+- Policies: `LoginAuditPolicy`.
+- Listeners: `DetectSuspiciousLoginFromAuthEvent`.
+- Actions: `ApplyLoginAuditSettingsAction`, `BuildLoginAuditsCsvAction`, `BuildLoginAuditsQueryAction`, `DetectSuspiciousLoginAction`, `RecordLoginAuditPurgeAction`, `ResolveLoginAuditIpAddressAction`, `SendLoginAuditAdminAlertAction`, `ShouldTrackAdminActivityAction`, `ShouldTrackUserIpAddressesAction`, `UpdateLastSeenForActorAction`.
+- Health checks: `Capell\LoginAudit\Health\LoginAuditHealthCheck`.
 
-## Routes And Config
+## Data Model
 
-- Config: packages/login-audit/config/login-audit.php
+- Models: `LoginAudit`.
+- Migration files: `2026_05_10_190857_01_create_login_audit_table.php`.
+- Migration impact: run host migrations through the package install flow before opening package surfaces.
+- Deletion/retention behaviour: Docs gap unless the package has an explicit pruning command, retention setting, or tested cascade path.
 
-## Permissions And Gates
+## Install Impact
 
-- Gate: LoginAuditsWidget: `admin`, `super_admin`
+- Admin navigation: adds package-owned Filament classes when registered.
+- Permissions: none declared in `capell.json`.
+- Public routes: none detected in package route files.
+- Database changes: package migrations are declared.
+- Settings: settings classes or settings migrations exist; verify the install flow registers them.
+- Queues or schedules: none detected in standard package paths.
+- Cache tags: none declared.
+- Commands: none declared.
 
-## Migrations
+## Common Pitfalls
 
-- Migration: create_login_audit_table.php
-- Settings migration: add_login_audit_settings.php
+- Run migrations before opening package resources or public routes.
+- Keep `composer.json`, `composer.local.json`, `capell.json`, docs, screenshots, and tests aligned when the package surface changes.
 
-## ERD Excerpt
+## Troubleshooting
 
-```mermaid
-erDiagram
-    USERS ||--o{ AUTHENTICATION_LOG : records
+| Symptom | Likely cause | Check | Fix |
+| --- | --- | --- | --- |
+| Package surface is missing after install | Provider or manifest is not loaded | Confirm `capell.json`, package `composer.json`, and provider registration | Reinstall the package, refresh Composer autoload, and clear host caches |
+| Admin screen or command fails on missing table | Package migrations have not run | Check the tables listed in `Data Model` | Run host migrations and rerun the focused package test |
 
-    AUTHENTICATION_LOG {
-        bigint id PK
-        string authenticatable_type
-        bigint authenticatable_id
-        string ip_address
-        text user_agent
-        timestamp login_at
-        timestamp logout_at
-    }
-```
+## Quick Start
 
-## Screenshot Automation
+1. Install the package: `composer require capell-app/login-audit`.
+2. Run the required setup: `php artisan migrate`.
+3. Open the related Capell admin surface and verify Login Audit appears.
 
-Deployment should read [screenshots.json](screenshots.json), install the package with demo data, resolve each admin surface or frontend URL, and write images to `packages/login-audit/docs/screenshots`.
+## Next Steps
 
-- Authentication logs admin index: seeded audit records for the demo admin user.
-- Authentication log table filters: filter drawer and date/success controls.
-- Dashboard/widget configuration: Access Logs contribution available in dashboard settings.
-- Authentication log settings screen: retention, IP tracking, visibility, and user bridge settings.
-- User edit access summary: recent login, failed attempt, device, and active-session counts.
-- User authentication logs relation use case: requires the host user model to expose `authentications()`, normally through Rappasoft's `AuthenticationLoggable` trait.
+- [Package docs index](README.md)
+- [Screenshot contract](screenshots.json)
+- [Marketplace assets](assets/marketplace/)
+- [Capell content language plan](../../../docs/CONTENT_LANGUAGE_PLAN.md)
+- [Capell documentation design system](../../../docs/DESIGN_SYSTEM.md)
+- [Capell and package ERD notes](../../../docs/erd/capell-and-package-erds.md)
+- Related packages: [Password Policy](../../password-policy/README.md), [Privacy Center](../../privacy-center/README.md), [Diagnostics](../../diagnostics/README.md), [Access Gate](../../access-gate/README.md).
+- Focused tests: `vendor/bin/pest packages/login-audit/tests --configuration=phpunit.xml`.
+
+<!-- prettier-ignore-end -->

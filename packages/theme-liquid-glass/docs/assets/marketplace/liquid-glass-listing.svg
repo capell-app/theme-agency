@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800" role="img" aria-labelledby="title desc">
+  <title id="title">Theme Liquid Glass listing preview</title>
+  <desc id="desc">Listing preview with translucent cards.</desc>
+  <rect width="1200" height="800" fill="#edf7fb"/>
+  <rect x="120" y="90" width="520" height="46" rx="23" fill="#111827"/>
+  <rect x="120" y="170" width="960" height="64" rx="28" fill="#ffffff" fill-opacity="0.72"/>
+  <rect x="160" y="192" width="280" height="20" rx="10" fill="#0e7490"/>
+  <rect x="120" y="300" width="280" height="280" rx="38" fill="#ffffff" fill-opacity="0.76" stroke="#0e7490" stroke-opacity="0.22"/>
+  <rect x="460" y="300" width="280" height="280" rx="38" fill="#ffffff" fill-opacity="0.76" stroke="#0e7490" stroke-opacity="0.22"/>
+  <rect x="800" y="300" width="280" height="280" rx="38" fill="#ffffff" fill-opacity="0.76" stroke="#0e7490" stroke-opacity="0.22"/>
+  <rect x="164" y="502" width="160" height="22" rx="11" fill="#334155" fill-opacity="0.5"/>
+  <rect x="504" y="502" width="160" height="22" rx="11" fill="#334155" fill-opacity="0.5"/>
+  <rect x="844" y="502" width="160" height="22" rx="11" fill="#334155" fill-opacity="0.5"/>
+</svg>

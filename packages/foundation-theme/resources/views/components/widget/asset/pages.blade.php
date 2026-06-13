@@ -12,6 +12,7 @@
 @endphp
 
 @props([
+    'assets' => collect(),
     'columns' => $container['meta']['override_columns'] ?? $widget->getMeta('columns', 3),
     'componentItem' => $widget->getMeta('component_item', AssetComponentEnum::Card->value),
     'container',
@@ -31,7 +32,7 @@
     'withSummary' => (bool) $widget->getMeta('with_summary'),
 ])
 @php
-    $pages ??= $widget->assets
+    $pages ??= $assets
         ->map(fn (object $widgetAsset): ?object => method_exists($widgetAsset, 'getRelations') ? ($widgetAsset->getRelations()['asset'] ?? null) : null)
         ->filter()
         ->values();

@@ -1,129 +1,100 @@
-# Editorial Commerce Theme
+# Theme Commerce
 
-Product-led commerce theme for Capell, shipped under the existing `commerce` theme key.
+<!-- prettier-ignore-start -->
 
-## At A Glance
+## What This Plugin Adds
 
-- Package: `capell-app/theme-commerce`
-- Namespace: `Capell\ThemeStudio\Commerce\`
-- Capell dependencies: `capell-app/core`, `capell-app/frontend`
+Theme Commerce is an **Available**, **No schema impact** Capell theme in the **Capell Themes** product group. It ships as `capell-app/theme-commerce` and extends these surfaces: frontend.
 
-## Why It Helps Your Capell Workflow
+Editorial Commerce is a premium Capell theme built for retail and e-commerce storefronts that need to feel like a buying journey, not a styled brochure. It ships an image-led hero, product finder, collection and product grids, comparison and proof sections, buying-guide editorial, and conversion CTAs - all driven by hydrated render data with zero database access in public Blade. Pair it with Capell Shopify Commerce to light up connected-catalog merchandising panels, and with Blog for buying-guide content that supports purchase decisions. Warm editorial direction (deep ink, forest-green merchandising, coral action accents) and a token-driven design system keep every store on-brand while staying fast and accessible.
 
-- Provides Editorial Commerce renderer views for catalog and retail sites built on Capell.
-- Helps owners launch product-led pages with product finding, collections, product grids, comparison, catalog, proof, and resource surfaces.
-- Lets hero trust badges come from page render data, with translated retail defaults when no badges are provided.
-- Gives developers a focused theme package that reuses Capell Frontend default theme conventions instead of hard-coding product layouts into content.
+After install, admins can select the theme through the core theme management surface. Editors keep using normal Capell content workflows while the package controls public presentation.
 
-## Best Used With
+Status details:
 
-- [Capell Frontend](https://github.com/capell-app/frontend)
-- [Blog](../blog/README.md)
-- [Campaign Studio](../campaign-studio/README.md)
-- [Media Library](../media-library/README.md)
-- [Shopify Commerce](../shopify-commerce/README.md)
-- [Theme Agency](../theme-agency/README.md)
-- [Theme Corporate](../theme-corporate/README.md)
-
-## What It Adds
-
-- Editorial Commerce commerce theme for Capell.
-- Public views for navigation, hero, product finder, collections, product grid, comparison, catalog, proof, blog teaser, CTA, and footer sections.
-- Catalog and blog teaser renderers receive optional Shopify Commerce and Blog availability from the service provider, then render enhanced or neutral panels without querying from Blade.
+- Status: Available
+- Tier: premium
+- Bundle: themes
+- Composer package: `capell-app/theme-commerce`
+- Namespace: `Capell\ThemeStudio\Commerce`
+- Theme key: `commerce`
 
 ## Why It Matters
 
-**For developers:** Adds a renderer package that uses Capell Frontend default theme runtime contracts while leaving content models unchanged.
+**For developers:** The package gives developers package-owned service providers, Actions, and Blade views instead of pushing this behaviour into core or application code.
 
-**For teams:** Provides a commerce-oriented visual option for product sites managed through the normal Theme admin page and install flow.
-
-## Built With
-
-This package makes its Composer dependencies visible because they are part of the value proposition, not just plumbing. When an upstream package has a public repository, its linked preview card points readers back to the maintainers so their work gets proper credit.
-
-**Capell packages used here**
-
-- [Capell Core](https://github.com/capell-app/core)
-- [Capell Frontend](https://github.com/capell-app/frontend)
-- [Capell Blog](../blog/README.md)
-- [Capell Shopify Commerce](../shopify-commerce/README.md)
-
-**Open-source packages used here**
-
-- No extra third-party Composer package beyond the Capell package stack is required here.
+**For teams:** A premium, conversion-focused retail theme for Capell - image-led catalog, product discovery, social proof, and buying-guide layouts that turn browsing into baskets.
 
 ## Screens And Workflow
 
-Screenshots are generated from [docs/screenshots.json](docs/screenshots.json) during package deployment.
+Screenshot contract: `docs/screenshots.json`.
 
-- Theme admin list showing Editorial Commerce.
-- Frontend page rendered with Editorial Commerce theme.
-- Theme preview URL output.
+- Frontend page rendered with commerce theme (frontend, optional).
+- Commerce homepage (frontend, optional).
+- Collection listing (frontend, optional).
+- Product detail page (frontend, optional).
+- Lookbook page (frontend, optional).
+- Buying guide article (frontend, optional).
+- Newsletter capture page (frontend, optional).
+- Retail event page (frontend, optional).
+- Product search page (frontend, optional).
+- Promotion campaign page (frontend, optional).
 
 ## Technical Shape
 
-- CommerceThemeServiceProvider registers the Editorial Commerce renderer.
-- `capell.json` declares `themeKey: "commerce"` and manifest `extends: null`; Theme Studio runtime inheritance remains `default`.
-- Uses Capell Frontend default theme runtime data and standard section keys, while rendering its own page and section Blade views.
-- Ships Blade resources for the page wrapper, product discovery sections, catalog panel, comparison, proof, blog teaser, CTA, and footer views.
-- No migrations, config, routes, models, admin navigation, or package-owned settings are present.
-- Public theme output must stay free of package identifiers, signed admin URLs, Filament/editor markers, and other authoring metadata.
-- Hero badge and catalog highlight copy is translated through `capell-theme-commerce::generic`.
+- Service providers: `Capell\ThemeStudio\Commerce\CommerceThemeServiceProvider`.
+- Actions: `InstallCommerceThemeDemoAction`.
+- Command signatures: `capell:theme-commerce-demo`.
+- Console command classes: `DemoCommand`.
+- Manifest contributions: `admin-page: Capell\ThemeStudio\Commerce\Manifest\ThemeManagementPageContribution`.
+- Health checks: `Capell\ThemeStudio\Commerce\Health\ThemeCommerceHealthCheck`.
+- Blade views: `packages/theme-commerce/resources/views/blog/article.blade.php`, `packages/theme-commerce/resources/views/blog/index.blade.php`, `packages/theme-commerce/resources/views/page.blade.php`, `packages/theme-commerce/resources/views/sections/blog-teaser.blade.php`, `packages/theme-commerce/resources/views/sections/buying-guide.blade.php`, `packages/theme-commerce/resources/views/sections/campaign.blade.php`, `packages/theme-commerce/resources/views/sections/catalog.blade.php`, `packages/theme-commerce/resources/views/sections/collections.blade.php`, `packages/theme-commerce/resources/views/sections/comparison.blade.php`, `packages/theme-commerce/resources/views/sections/cta.blade.php`, `packages/theme-commerce/resources/views/sections/footer.blade.php`, `packages/theme-commerce/resources/views/sections/hero.blade.php`, `and 11 more`.
+- Cache tags: `theme-commerce`.
 
-## Code Map
+## Data Model
 
-| Area      | Path                                | Purpose                                             |
-| --------- | ----------------------------------- | --------------------------------------------------- |
-| Resources | `packages/theme-commerce/resources` | Views, translations, assets, and package resources. |
-| Tests     | `packages/theme-commerce/tests`     | Package-level Pest coverage.                        |
-
-## Data And Persistence
-
-- This package does not own data.
-- It consumes theme runtime settings and core page content.
+This theme has no schema impact. It relies on core Capell site, page, locale, and theme records instead of declaring package-owned tables.
 
 ## Install Impact
 
-- Adds the Editorial Commerce renderer to theme system.
-- No database changes.
-- No admin navigation by itself.
-- No public routes by itself.
-
-## Install And Setup
-
-- Install with `composer require capell-app/theme-commerce` in the host Capell application.
-- Seed the Editorial Commerce preview pages with `php artisan capell:theme-commerce-demo --url=https://demo.test --sites=Demo --languages=en --force`.
-- The Extensions installer demo checkbox and full Capell demo install use the same manifest demo command path.
-- In this repository, verify package changes with `vendor/bin/pest`; do not use `php artisan`.
-- For screenshots, use a disposable Capell app with the core stack, Layout Builder, Capell Frontend default theme, and only this theme package installed.
-
-## Admin And Access
-
-- The package appears through the core Themes resource after install. It does not add a package-owned admin page.
+- Admin navigation: contributes admin extension points through `capell.json`.
+- Permissions: none declared in `capell.json`.
+- Public routes: none detected in package route files.
+- Database changes: no package migrations declared.
+- Settings: no package settings declared.
+- Queues or schedules: none detected in standard package paths.
+- Cache tags: `theme-commerce`.
+- Commands: `capell:theme-commerce-demo`.
 
 ## Common Pitfalls
 
-- Layout Builder is only needed in disposable harnesses that exercise optional layout-area chrome.
-- Install Capell Frontend before using this renderer.
-- Build both frontend and Filament assets before browser capture.
-- Keep Theme Studio settings aligned with the `commerce` preset; stale settings from another theme can make screenshots misleading.
-- Pass `badges` into the hero section data when a page needs store-specific trust signals; otherwise the translated retail defaults render.
-- Do not install a Studio metapackage; this package installs independently.
+- Keep public Blade and cached HTML free of authoring markers, model IDs, permissions, signed editor URLs, and lazy database queries.
+- Keep `composer.json`, `composer.local.json`, `capell.json`, docs, screenshots, and tests aligned when the package surface changes.
 
-## Docs
+## Troubleshooting
 
-- [docs index](docs/README.md)
-- [credits-and-acknowledgements.md](docs/credits-and-acknowledgements.md)
-- [overview.md](docs/overview.md)
+| Symptom | Likely cause | Check | Fix |
+| --- | --- | --- | --- |
+| Package surface is missing after install | Provider or manifest is not loaded | Confirm `capell.json`, package `composer.json`, and provider registration | Reinstall the package, refresh Composer autoload, and clear host caches |
+| Background work does not run | Queue worker or scheduled command is not active | Check package jobs, commands, and host scheduler configuration | Start the queue or scheduler, then run the focused command or package test |
+| Public output leaks unexpected state | Render data, cache variation, or authoring boundary has regressed | Check public Blade, cache tags, and public-output safety tests | Move data loading out of Blade and rerun the package public-output tests |
 
-## Testing
+## Quick Start
 
-Run package tests from the repository root:
+1. Install the package: `composer require capell-app/theme-commerce`.
+2. Run the required setup: `php artisan capell:theme-commerce-demo`.
+3. Verify the package provider is registered and the related frontend, command, or extension point is active.
 
-```bash
-vendor/bin/pest packages/theme-commerce/tests --configuration=phpunit.xml
-```
+## Next Steps
 
-## Maintenance Notes
+- [Package docs](docs/README.md)
+- [Overview](docs/overview.md)
+- [Screenshot contract](docs/screenshots.json)
+- [Marketplace assets](docs/assets/marketplace/)
+- [Capell content language plan](../../docs/CONTENT_LANGUAGE_PLAN.md)
+- [Capell documentation design system](../../docs/DESIGN_SYSTEM.md)
+- [Capell and package ERD notes](../../docs/erd/capell-and-package-erds.md)
+- Related packages: [Blog](../blog/README.md), [Campaign Studio](../campaign-studio/README.md), [Media Library](../media-library/README.md), [Payments](../payments/README.md), [Search](../search/README.md), [Shopify Commerce](../shopify-commerce/README.md).
+- Focused tests: `vendor/bin/pest packages/theme-commerce/tests --configuration=phpunit.xml`.
 
-- Theme output is public output. Keep admin-only metadata and editor hooks out of rendered markup.
+<!-- prettier-ignore-end -->

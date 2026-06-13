@@ -1,68 +1,105 @@
-# Capell Bookings
+# Bookings
 
-Bookings adds appointment request workflows to Capell sites: services, staff, locations, availability, public request forms, confirmations, reminders, and calendar feeds.
+<!-- prettier-ignore-start -->
 
-## At A Glance
+## What This Plugin Adds
 
-| Field             | Value                                                   |
-| ----------------- | ------------------------------------------------------- |
-| Composer package  | `capell-app/bookings`                                   |
-| Namespace         | `Capell\Bookings`                                       |
-| Product group     | Capell Operations, premium operations bundle            |
-| Surfaces          | Admin, frontend, console                                |
-| Provider          | `Capell\Bookings\Providers\BookingsServiceProvider`     |
-| Requires          | `capell-app/admin`, `capell-app/core`                   |
-| Supports          | Address, Events, Form Builder, Notifications, SEO Suite |
-| Public routes     | `calendar.staff`, `request`, `request.store`            |
-| Scheduled command | `capell:bookings:send-due-reminders` every five minutes |
+Bookings is an **Available**, **Schema-owning** Capell plugin in the **Capell Operations** product group. It ships as `capell-app/bookings` and extends these surfaces: admin, console, frontend.
 
-## Why It Helps Your Capell Workflow
+Bookings adds services, staff, locations, availability, appointment requests, confirmations, reminders, and calendar feeds.
 
-Owners can sell or coordinate appointment-led services without bolting on a separate booking system. Editors manage the service catalogue, staff availability, blackout dates, locations, and appointment request queues from Capell admin.
+After install, admins get package-owned management surfaces and public users may see package-owned frontend output or routes.
 
-Visitors get public booking request forms and staff calendar feeds that expose only public-safe appointment data. Developers get Actions and DTOs for request creation, slot building, confirmation, cancellation, reminders, and calendar export without wiring business rules into controllers or views.
+Status details:
 
-## What It Adds
+- Status: Available
+- Tier: premium
+- Bundle: operations
+- Composer package: `capell-app/bookings`
+- Namespace: `Capell\Bookings`
+- Theme key: not applicable
 
-- Filament resources for booking services, staff members, locations, availability windows, availability exceptions, and appointment requests.
-- Public booking request controllers backed by `BuildPublicBookingRequestPropsAction`, `BuildAvailableBookingSlotsAction`, and `CreateAppointmentRequestAction`.
-- Appointment workflow Actions for confirmation, cancellation, audit logging, notification queueing, and reminder scheduling.
-- Staff calendar feed URLs and feed output through `CreateStaffCalendarFeedUrlAction` and `BuildStaffCalendarFeedAction`.
-- Package-owned models and tables for services, staff, locations, availability, requests, and audit logs.
+## Why It Matters
 
-## Boundaries
+**For developers:** The package gives developers package-owned service providers, Actions, Data objects, models, Laravel routes, Filament classes, and Blade views instead of pushing this behaviour into core or application code.
 
-Bookings owns appointment setup, request handling, appointment audit history, reminders, and calendar exports. Public routes must stay `no-store` and must not expose Filament resources, package internals, authoring metadata, permission names, or admin-only identifiers.
+**For teams:** Bookings adds appointment request workflows, availability, confirmations, reminders, and calendar feeds for healthcare, services, education, consulting, nonprofit, and portfolio sites.
 
-External notification delivery belongs to the notification/mail layer. Themes and consuming packages should render public request data from package Actions/DTOs rather than querying booking models in Blade.
+## Screens And Workflow
 
-## Runtime Surface
+Screenshot contract: `docs/screenshots.json`.
 
-- Provider: `src/Providers/BookingsServiceProvider.php`
-- Controllers: `src/Http/Controllers/`
-- Actions: `src/Actions/`
-- Data objects: `src/Data/`
-- Models: `src/Models/`
-- Command: `src/Console/SendDueAppointmentRemindersCommand.php`
-- Manifest contributions: `src/Manifest/`
-- Tests: `packages/bookings/tests`
+- Public booking request form (frontend, required).
+- Appointment request admin queue (admin, required).
 
-## Docs
+## Technical Shape
 
-- [Package docs](docs/README.md)
-- [Overview](docs/overview.md)
-- [Screenshots contract](docs/screenshots.json)
+- Service providers: `Capell\Bookings\Providers\BookingsServiceProvider`.
+- Config files: `packages/bookings/config/capell-bookings.php`.
+- Migrations: `packages/bookings/database/migrations/2026_05_31_130000_01_create_booking_services_table.php`, `packages/bookings/database/migrations/2026_05_31_130000_02_create_booking_staff_members_table.php`, `packages/bookings/database/migrations/2026_05_31_130000_03_create_booking_locations_table.php`, `packages/bookings/database/migrations/2026_05_31_130000_04_create_booking_availability_windows_table.php`, `packages/bookings/database/migrations/2026_05_31_130000_05_create_appointment_requests_table.php`, `packages/bookings/database/migrations/2026_05_31_130000_06_create_booking_availability_exceptions_table.php`, `packages/bookings/database/migrations/2026_05_31_130000_07_create_appointment_audit_logs_table.php`.
+- Models: `AppointmentAuditLog`, `AppointmentRequest`, `BookingAvailabilityException`, `BookingAvailabilityWindow`, `BookingLocation`, `BookingService`, `BookingStaffMember`.
+- Filament classes: `AppointmentRequestResource`, `EditAppointmentRequest`, `ListAppointmentRequests`, `AppointmentAuditLogsRelationManager`, `BookingAvailabilityExceptionResource`, `CreateBookingAvailabilityException`, `EditBookingAvailabilityException`, `ListBookingAvailabilityExceptions`, `BookingAvailabilityWindowResource`, `CreateBookingAvailabilityWindow`, `EditBookingAvailabilityWindow`, `ListBookingAvailabilityWindows`, `and 12 more`.
+- Route files: `packages/bookings/routes/web.php`.
+- Actions: `BuildAvailableBookingSlotsAction`, `BuildPublicBookingRequestOptionsAction`, `BuildPublicBookingRequestPropsAction`, `BuildStaffCalendarFeedAction`, `CancelAppointmentRequestAction`, `ConfirmAppointmentRequestAction`, `CreateAppointmentRequestAction`, `CreateAvailabilityExceptionAction`, `CreateStaffCalendarFeedUrlAction`, `QueueAppointmentNotificationAction`, `QueueAppointmentReminderAction`, `RecordAppointmentAuditLogAction`.
+- Data objects: `AppointmentRequestData`, `AvailabilityExceptionData`, `AvailabilityWindowData`.
+- Console command classes: `SendDueAppointmentRemindersCommand`.
+- Manifest contributions: `admin-resource: Capell\Bookings\Manifest\AppointmentRequestResourceContribution`, `admin-resource: Capell\Bookings\Manifest\BookingAvailabilityExceptionResourceContribution`, `admin-resource: Capell\Bookings\Manifest\BookingAvailabilityWindowResourceContribution`, `admin-resource: Capell\Bookings\Manifest\BookingLocationResourceContribution`, `admin-resource: Capell\Bookings\Manifest\BookingServiceResourceContribution`, `admin-resource: Capell\Bookings\Manifest\BookingStaffMemberResourceContribution`, `model: Capell\Bookings\Manifest\BookingsModelsContribution`, `route: Capell\Bookings\Manifest\BookingsFrontendRoutesContribution`, `scheduled-job: Capell\Bookings\Manifest\BookingsReminderScheduleContribution`.
+- Health checks: `Capell\Bookings\Health\BookingsHealthCheck`.
+- Blade views: `packages/bookings/resources/views/request.blade.php`.
+- Cache tags: `bookings`.
 
-## Testing
+## Data Model
 
-```bash
-vendor/bin/pest packages/bookings/tests --configuration=phpunit.xml
-```
+- Required tables: `booking_services`, `booking_staff_members`, `booking_locations`, `booking_availability_windows`, `booking_availability_exceptions`, `appointment_requests`, `appointment_audit_logs`.
+- Models: `AppointmentAuditLog`, `AppointmentRequest`, `BookingAvailabilityException`, `BookingAvailabilityWindow`, `BookingLocation`, `BookingService`, `BookingStaffMember`.
+- Migration files: `2026_05_31_130000_01_create_booking_services_table.php`, `2026_05_31_130000_02_create_booking_staff_members_table.php`, `2026_05_31_130000_03_create_booking_locations_table.php`, `2026_05_31_130000_04_create_booking_availability_windows_table.php`, `2026_05_31_130000_05_create_appointment_requests_table.php`, `2026_05_31_130000_06_create_booking_availability_exceptions_table.php`, `2026_05_31_130000_07_create_appointment_audit_logs_table.php`.
+- Migration impact: run host migrations through the package install flow before opening package surfaces.
+- Deletion/retention behaviour: Docs gap unless the package has an explicit pruning command, retention setting, or tested cascade path.
+
+## Install Impact
+
+- Admin navigation: adds package-owned Filament classes when registered.
+- Permissions: `View:BookingService`, `Create:BookingService`, `Update:BookingService`, `Delete:BookingService`, `View:BookingStaffMember`, `Create:BookingStaffMember`, `Update:BookingStaffMember`, `Delete:BookingStaffMember`, `View:BookingLocation`, `Create:BookingLocation`, `Update:BookingLocation`, `Delete:BookingLocation`, `View:BookingAvailabilityWindow`, `Create:BookingAvailabilityWindow`, `Update:BookingAvailabilityWindow`, `Delete:BookingAvailabilityWindow`, `View:BookingAvailabilityException`, `Create:BookingAvailabilityException`, `Update:BookingAvailabilityException`, `Delete:BookingAvailabilityException`, `View:AppointmentRequest`, `Update:AppointmentRequest`.
+- Public routes: route files exist and must be reviewed before public enablement.
+- Database changes: package migrations are declared.
+- Settings: no package settings declared.
+- Queues or schedules: none detected in standard package paths.
+- Cache tags: `bookings`.
+- Commands: console command classes detected: `SendDueAppointmentRemindersCommand`.
+
+## Common Pitfalls
+
+- Run migrations before opening package resources or public routes.
+- Review route middleware, throttling, signed URLs, and public-output safety before exposing routes.
+- Keep public Blade and cached HTML free of authoring markers, model IDs, permissions, signed editor URLs, and lazy database queries.
+- Run package commands from the host app; in this repository use `vendor/bin/pest` for package tests.
+- Keep `composer.json`, `composer.local.json`, `capell.json`, docs, screenshots, and tests aligned when the package surface changes.
 
 ## Troubleshooting
 
-| Symptom                                              | Likely cause                                                                                   | Check                                                                                                      | Fix                                                                                   |
-| ---------------------------------------------------- | ---------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
-| Public request form shows no slots                   | Service, staff, availability window, lead time, or exception rules leave no available interval | Review booking service/staff resources and run the package tests around `BuildAvailableBookingSlotsAction` | Add active availability windows, reduce constraints, or remove conflicting exceptions |
-| Confirmed appointments do not appear in a staff feed | Calendar feed token or appointment status is not valid for export                              | Inspect `booking_staff_members.calendar_feed_token` and the appointment request status                     | Regenerate the staff feed URL or confirm the appointment through the package Action   |
-| Reminders do not send                                | Scheduler is not running the package command                                                   | In a host app, run `php artisan schedule:list` and check `capell:bookings:send-due-reminders`              | Enable the scheduler/queue worker and rerun the command in the host app               |
+| Symptom | Likely cause | Check | Fix |
+| --- | --- | --- | --- |
+| Package surface is missing after install | Provider or manifest is not loaded | Confirm `capell.json`, package `composer.json`, and provider registration | Reinstall the package, refresh Composer autoload, and clear host caches |
+| Admin screen or command fails on missing table | Package migrations have not run | Check the tables listed in `Data Model` | Run host migrations and rerun the focused package test |
+| Route returns unexpected output | Route cache, middleware, or signed URL setup does not match the package route file | Check the route files listed in `Technical Shape` | Clear route cache and verify middleware before exposing public routes |
+| Public output leaks unexpected state | Render data, cache variation, or authoring boundary has regressed | Check public Blade, cache tags, and public-output safety tests | Move data loading out of Blade and rerun the package public-output tests |
+
+## Quick Start
+
+1. Install the package: `composer require capell-app/bookings`.
+2. Run the required setup: `php artisan migrate`.
+3. Open the related Capell admin surface and verify Bookings appears.
+
+## Next Steps
+
+- [Package docs](docs/README.md)
+- [Overview](docs/overview.md)
+- [Screenshot contract](docs/screenshots.json)
+- [Marketplace assets](docs/assets/marketplace/)
+- [Capell content language plan](../../docs/CONTENT_LANGUAGE_PLAN.md)
+- [Capell documentation design system](../../docs/DESIGN_SYSTEM.md)
+- [Capell and package ERD notes](../../docs/erd/capell-and-package-erds.md)
+- Related packages: [Address](../address/README.md), [Events](../events/README.md), [Form Builder](../form-builder/README.md), [Seo Suite](../seo-suite/README.md).
+- Focused tests: `vendor/bin/pest packages/bookings/tests --configuration=phpunit.xml`.
+
+<!-- prettier-ignore-end -->

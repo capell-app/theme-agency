@@ -8,15 +8,23 @@ on:
     paths:
       - 'packages/**/*.php'
       - 'packages/**/capell.json'
+      - 'packages/**/docs/screenshots.json'
       - 'tests/**/*.php'
+      - 'docs/package-screenshot-manifest.json'
+      - 'docs/package-security-surface.md'
       - 'composer.json'
       - 'composer.lock'
+      - 'package.json'
+      - 'package-lock.json'
       - 'rector.php'
       - 'scripts/rector-changed.sh'
       - 'scripts/check-phpstan-baseline-growth.sh'
       - 'scripts/audit-package-security.php'
+      - 'scripts/generate-package-security-surface-report.php'
+      - 'scripts/audit-manifest-v3.php'
       - 'scripts/scan-secrets.php'
       - 'scripts/sync-package-security-manifests.php'
+      - 'scripts/validate-screenshot-manifests.js'
       - 'scripts/php-modernization-skill.sh'
       - 'phpstan/**'
       - 'phpstan*.neon'
@@ -60,6 +68,15 @@ jobs:
           tools: composer:v2, pint
           coverage: none
           ini-values: opcache.enable_cli=1, opcache.jit=tracing, opcache.jit_buffer_size=256M, memory_limit=-1
+
+      - name: Setup Node
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install Node dependencies
+        run: npm ci
 
       - name: Check Composer public files
         run: php scripts/check-composer-local-paths.php
@@ -109,6 +126,15 @@ jobs:
 
       - name: Run Pint check
         run: composer cs:check
+
+      - name: Validate package manifests
+        run: composer manifest:check
+
+      - name: Validate screenshot manifests
+        run: npm run screenshots:check
+
+      - name: Check capell.json formatting
+        run: npm run capell-json:check
 
       - name: Cache PHPStan result cache
         uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5

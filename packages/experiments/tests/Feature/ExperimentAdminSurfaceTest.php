@@ -110,5 +110,5 @@ it('declares admin manifest contributions and package requirements', function ()
             'recordGoalEvent',
             'resolveExperimentVariantForContext',
         ])
-        ->and($manifest['contributionTraceability']['deferredContributions'])->toBe([]);
+        ->and($manifest['contributionTraceability']['deferredContributions'])->toBe(['scheduled-job']);
 });

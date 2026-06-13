@@ -1,26 +1,113 @@
-# Payments Overview
+# Payments
 
-Payments gives Capell a general payment layer beyond Shopify Commerce. It stores provider-neutral records while shipping native Stripe Checkout support for:
+<!-- prettier-ignore-start -->
 
-- One-off payments
-- Subscriptions
-- Donations
-- Paid downloads
-- Paid gated-access handoffs through fulfillment handlers
-- Form Builder payment fields
+## What This Plugin Adds
 
-## Integrations
+Payments is an **Available**, **Schema-owning** Capell package in the **Capell Commerce** product group. It ships as `capell-app/payments` and extends these surfaces: admin, frontend, console.
 
-- Form Builder submissions can resolve payment fields into signed Checkout URLs. Custom success and cancel URLs must use the app host or a host listed in `capell-payments.form_builder.allowed_return_hosts`; unsafe external return URLs are rejected before Stripe Checkout is created.
-- Access Gate registrations can be approved by the paid gated-access fulfillment handler.
-- Customer Portal can show billing, subscriptions, completed payments, and paid downloads.
-- Stripe webhooks keep checkout, intent, subscription, refund, and dispute records synchronized. Intake verifies the signature and stores a `received` event before queueing `ProcessStripeWebhookEventJob`; the job locks the stored event row before processing so duplicate deliveries cannot run fulfillment concurrently. Use `CAPELL_PAYMENTS_WEBHOOK_QUEUE` or `capell-payments.webhooks.queue` to route webhook work to a dedicated queue; it defaults to `payments`.
-- Paid download fulfillment is replay-safe: redelivered checkout-complete webhooks reuse the existing entitlement without extending the original expiry window.
+Payments gives Capell a first-party way to charge customers without depending on an external store. It ships native Stripe Checkout for one-off purchases, recurring subscriptions, donations, paid file downloads, and fulfillment-backed gated-access handoffs, plus signed webhook intake that keeps payments, subscriptions, refunds, and disputes in sync automatically. Every record is stored behind a provider-neutral model layer, so admins get read-only audit resources, customers get a self-service billing portal, and Form Builder fields can collect payment inline. Designed for revenue-generating sites that want checkout, fulfilment, and reconciliation handled inside the CMS.
 
-## Traceability
+After install, admins get package-owned management surfaces and public users may see package-owned frontend output or routes.
 
-The package manifest declares admin resources, payment models, frontend/payment routes, required tables, public actions, and capabilities. `contributionTraceability.deferredContributions` is intentionally empty because the current native payment scope is implemented by package-owned code or guarded optional-package integrations.
+Status details:
 
-## Screenshot Coverage
+- Status: Available
+- Tier: premium
+- Bundle: commerce
+- Composer package: `capell-app/payments`
+- Namespace: `Capell\Payments`
+- Theme key: not applicable
 
-The committed Capell runner-backed screenshot gallery covers checkout session monitoring, Stripe webhook event health, Payments settings, customer portal billing, and a Form Builder payment checkout handoff.
+## Why It Matters
+
+**For developers:** The package gives developers package-owned service providers, Actions, Data objects, models, Laravel routes, and Filament classes instead of pushing this behaviour into core or application code.
+
+**For teams:** Take one-off payments, donations, subscriptions, paid downloads, and fulfillment-backed gated-access handoffs through Stripe Checkout - with a provider-neutral record layer built to add more gateways later.
+
+## Screens And Workflow
+
+Screenshot contract: `screenshots.json`.
+
+- Payments checkout sessions (admin, required).
+- Payments webhook events (admin, required).
+- Payments settings (admin, required).
+- Payments customer portal billing (frontend, required).
+- Payments Form Builder checkout (frontend, required).
+
+## Technical Shape
+
+- Service providers: `Capell\Payments\Providers\PaymentsServiceProvider`, `Capell\Payments\Providers\AdminServiceProvider`.
+- Config files: `packages/payments/config/capell-payments.php`.
+- Migrations: `packages/payments/database/migrations/2026_05_31_000001_create_payment_customers_table.php`, `packages/payments/database/migrations/2026_05_31_000002_create_payment_checkout_sessions_table.php`, `packages/payments/database/migrations/2026_05_31_000003_create_payment_intents_table.php`, `packages/payments/database/migrations/2026_05_31_000004_create_payment_subscriptions_table.php`, `packages/payments/database/migrations/2026_05_31_000005_create_payment_webhook_events_table.php`, `packages/payments/database/migrations/2026_05_31_000006_create_payment_refunds_table.php`, `packages/payments/database/migrations/2026_05_31_000007_create_payment_disputes_table.php`, `packages/payments/database/migrations/2026_05_31_000009_create_payment_download_entitlements_table.php`.
+- Settings migrations: `packages/payments/database/settings/2026_05_31_000008_create_payments_settings.php`.
+- Settings classes: `PaymentsSettings`.
+- Models: `CheckoutSession`, `PaymentCustomer`, `PaymentDispute`, `PaymentDownloadEntitlement`, `PaymentIntent`, `PaymentRefund`, `PaymentWebhookEvent`, `Subscription`.
+- Filament classes: `CheckoutSessionResource`, `ListCheckoutSessions`, `ListPaymentCustomers`, `PaymentCustomerResource`, `ListPaymentDisputes`, `PaymentDisputeResource`, `ListPaymentIntents`, `PaymentIntentResource`, `ListPaymentRefunds`, `PaymentRefundResource`, `ListSubscriptions`, `SubscriptionResource`, `and 3 more`.
+- Route files: `packages/payments/routes/web.php`.
+- Policies: `AbstractPaymentsResourcePolicy`, `CheckoutSessionPolicy`, `PaymentCustomerPolicy`, `PaymentDisputePolicy`, `PaymentIntentPolicy`, `PaymentRefundPolicy`, `PaymentWebhookEventPolicy`, `SubscriptionPolicy`.
+- Actions: `BuildPaymentsHealthReportAction`, `CreateBillingPortalSessionAction`, `CreateCheckoutSessionAction`, `CreateFormPaymentCheckoutSessionAction`, `CreateFormPaymentCheckoutUrlAction`, `CreatePaidDownloadUrlAction`, `DownloadPaidDownloadAction`, `FormatPaymentMoneyAction`, `FulfillCompletedCheckoutSessionAction`, `GeneratePaymentGatewayIdempotencyKeyAction`, `GrantPaidDownloadAccessAction`, `HandleStripeWebhookAction`, `and 17 more`.
+- Data objects: `BillingPortalSessionData`, `CheckoutLineItemData`, `CheckoutSessionData`, `CreateBillingPortalSessionData`, `CreateCheckoutSessionData`, `FormPaymentCheckoutData`, `PaymentCustomerData`, `PaymentDisputeData`, `PaymentFulfillmentResultData`, `PaymentIntentData`, `PaymentRefundData`, `PaymentsHealthReportData`, `and 4 more`.
+- Jobs: `ProcessStripeWebhookEventJob`.
+- Console command classes: `ReconcilePaymentWebhooksCommand`, `ReprocessPaymentWebhookEventsCommand`.
+- Manifest contributions: `admin-resource: Capell\Payments\Manifest\CheckoutSessionResourceContribution`, `admin-resource: Capell\Payments\Manifest\PaymentCustomerResourceContribution`, `admin-resource: Capell\Payments\Manifest\PaymentDisputeResourceContribution`, `admin-resource: Capell\Payments\Manifest\PaymentIntentResourceContribution`, `admin-resource: Capell\Payments\Manifest\PaymentRefundResourceContribution`, `admin-resource: Capell\Payments\Manifest\PaymentWebhookEventResourceContribution`, `admin-resource: Capell\Payments\Manifest\SubscriptionResourceContribution`, `model: Capell\Payments\Manifest\PaymentsModelsContribution`, `route: Capell\Payments\Manifest\PaymentsFrontendRoutesContribution`.
+- Health checks: `Capell\Payments\Health\PaymentsHealthCheck`.
+- Cache tags: `payments`.
+
+## Data Model
+
+- Required tables: `payment_customers`, `payment_checkout_sessions`, `payment_intents`, `payment_subscriptions`, `payment_webhook_events`, `payment_refunds`, `payment_disputes`, `payment_download_entitlements`.
+- Protected tables: `payment_customers`, `payment_checkout_sessions`, `payment_intents`, `payment_subscriptions`, `payment_webhook_events`, `payment_refunds`, `payment_disputes`, `payment_download_entitlements`.
+- Models: `CheckoutSession`, `PaymentCustomer`, `PaymentDispute`, `PaymentDownloadEntitlement`, `PaymentIntent`, `PaymentRefund`, `PaymentWebhookEvent`, `Subscription`.
+- Migration files: `2026_05_31_000001_create_payment_customers_table.php`, `2026_05_31_000002_create_payment_checkout_sessions_table.php`, `2026_05_31_000003_create_payment_intents_table.php`, `2026_05_31_000004_create_payment_subscriptions_table.php`, `2026_05_31_000005_create_payment_webhook_events_table.php`, `2026_05_31_000006_create_payment_refunds_table.php`, `2026_05_31_000007_create_payment_disputes_table.php`, `2026_05_31_000009_create_payment_download_entitlements_table.php`.
+- Migration impact: run host migrations through the package install flow before opening package surfaces.
+- Deletion/retention behaviour: Docs gap unless the package has an explicit pruning command, retention setting, or tested cascade path.
+
+## Install Impact
+
+- Admin navigation: adds package-owned Filament classes when registered.
+- Permissions: `View:PaymentCustomer`, `View:CheckoutSession`, `View:PaymentIntent`, `View:Subscription`, `View:PaymentWebhookEvent`, `View:PaymentRefund`, `View:PaymentDispute`.
+- Public routes: route files exist and must be reviewed before public enablement.
+- Database changes: package migrations are declared.
+- Settings: `Capell\Payments\Settings\PaymentsSettings`.
+- Queues or schedules: review package jobs or schedules before install.
+- Cache tags: `payments`.
+- Commands: console command classes detected: `ReconcilePaymentWebhooksCommand`, `ReprocessPaymentWebhookEventsCommand`.
+
+## Common Pitfalls
+
+- Run migrations before opening package resources or public routes.
+- Configure package settings before testing production-like workflows.
+- Review route middleware, throttling, signed URLs, and public-output safety before exposing routes.
+- Keep public Blade and cached HTML free of authoring markers, model IDs, permissions, signed editor URLs, and lazy database queries.
+- Run package commands from the host app; in this repository use `vendor/bin/pest` for package tests.
+- Keep `composer.json`, `composer.local.json`, `capell.json`, docs, screenshots, and tests aligned when the package surface changes.
+
+## Troubleshooting
+
+| Symptom | Likely cause | Check | Fix |
+| --- | --- | --- | --- |
+| Package surface is missing after install | Provider or manifest is not loaded | Confirm `capell.json`, package `composer.json`, and provider registration | Reinstall the package, refresh Composer autoload, and clear host caches |
+| Admin screen or command fails on missing table | Package migrations have not run | Check the tables listed in `Data Model` | Run host migrations and rerun the focused package test |
+| Route returns unexpected output | Route cache, middleware, or signed URL setup does not match the package route file | Check the route files listed in `Technical Shape` | Clear route cache and verify middleware before exposing public routes |
+| Background work does not run | Queue worker or scheduled command is not active | Check package jobs, commands, and host scheduler configuration | Start the queue or scheduler, then run the focused command or package test |
+| Public output leaks unexpected state | Render data, cache variation, or authoring boundary has regressed | Check public Blade, cache tags, and public-output safety tests | Move data loading out of Blade and rerun the package public-output tests |
+
+## Quick Start
+
+1. Install the package: `composer require capell-app/payments`.
+2. Run the required setup: `php artisan migrate`.
+3. Open the related Capell admin surface and verify Payments appears.
+
+## Next Steps
+
+- [Package docs index](README.md)
+- [Screenshot contract](screenshots.json)
+- [Marketplace assets](assets/marketplace/)
+- [Capell content language plan](../../../docs/CONTENT_LANGUAGE_PLAN.md)
+- [Capell documentation design system](../../../docs/DESIGN_SYSTEM.md)
+- [Capell and package ERD notes](../../../docs/erd/capell-and-package-erds.md)
+- Related packages: [Access Gate](../../access-gate/README.md), [Customer Portal](../../customer-portal/README.md), [Form Builder](../../form-builder/README.md).
+- Focused tests: `vendor/bin/pest packages/payments/tests --configuration=phpunit.xml`.
+
+<!-- prettier-ignore-end -->

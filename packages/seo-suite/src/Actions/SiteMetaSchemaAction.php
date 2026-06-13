@@ -22,6 +22,20 @@ class SiteMetaSchemaAction
 {
     use AsAction;
 
+    /**
+     * @var array<string, string>
+     */
+    private const array SCHEMA_DAY_URLS = [
+        'monday' => 'https://schema.org/Monday',
+        'tuesday' => 'https://schema.org/Tuesday',
+        'wednesday' => 'https://schema.org/Wednesday',
+        'thursday' => 'https://schema.org/Thursday',
+        'friday' => 'https://schema.org/Friday',
+        'saturday' => 'https://schema.org/Saturday',
+        'sunday' => 'https://schema.org/Sunday',
+        'public_holidays' => 'https://schema.org/PublicHolidays',
+    ];
+
     protected string $site_domain;
 
     protected Site $site;
@@ -205,18 +219,7 @@ class SiteMetaSchemaAction
 
     protected function getSchemaDay(string $day): string
     {
-        return match ($day) {
-            // TODO convert to WeekDayEnum
-            'monday' => 'https://schema.org/Monday',
-            'tuesday' => 'https://schema.org/Tuesday',
-            'wednesday' => 'https://schema.org/Wednesday',
-            'thursday' => 'https://schema.org/Thursday',
-            'friday' => 'https://schema.org/Friday',
-            'saturday' => 'https://schema.org/Saturday',
-            'sunday' => 'https://schema.org/Sunday',
-            'public_holidays' => 'https://schema.org/PublicHolidays',
-            default => 'https://schema.org/' . ucfirst($day),
-        };
+        return self::SCHEMA_DAY_URLS[$day] ?? 'https://schema.org/' . ucfirst($day);
     }
 
     /**

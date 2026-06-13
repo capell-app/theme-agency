@@ -28,9 +28,17 @@ class Breadcrumbs extends AbstractWidget
         $site = Frontend::site();
         $language = Frontend::language();
 
-        $ancestors = $page instanceof Page && $site instanceof Site && $language instanceof Language
-            ? PageLoader::getPageAncestors($page, $language, $site)
-            : null;
+        $preparedAncestors = Frontend::getFrontendData('foundation.page.ancestors');
+
+        if ($preparedAncestors instanceof Collection) {
+            $ancestors = $preparedAncestors;
+        } elseif (Frontend::getFrontendData('blog.article.render_data') !== null) {
+            return '';
+        } else {
+            $ancestors = $page instanceof Page && $site instanceof Site && $language instanceof Language
+                ? PageLoader::getPageAncestors($page, $language, $site)
+                : null;
+        }
         $pageTranslation = $page instanceof Page && $page->relationLoaded('translation') ? $page->translation : null;
 
         $currentPageLabel = $pageTranslation !== null
@@ -38,7 +46,12 @@ class Breadcrumbs extends AbstractWidget
             : '';
 
         $showCurrentPage = $page instanceof Page && ($page->url_params === null || Frontend::params() === []);
-        $home = $site instanceof Site && $language instanceof Language ? $site->getHomePage($language) : null;
+        $frontendData = Frontend::getFrontendData();
+        $hasPreparedHome = is_array($frontendData) && array_key_exists('foundation.page.home', $frontendData);
+        $preparedHome = Frontend::getFrontendData('foundation.page.home');
+        $home = $hasPreparedHome
+            ? $preparedHome
+            : ($site instanceof Site && $language instanceof Language ? $site->getHomePage($language) : null);
         $homeTranslation = $home instanceof Page && $home->relationLoaded('translation') ? $home->translation : null;
         $siteDomain = $site instanceof Site && $site->relationLoaded('siteDomain') ? $site->siteDomain : null;
 

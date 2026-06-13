@@ -1,97 +1,99 @@
 # Theme Nonprofit
 
-Theme Nonprofit is a Capell theme for charities, civic organisations, campaigns,
-and community teams that need impact stories, supporter journeys, and donation
-or volunteer calls to action.
+<!-- prettier-ignore-start -->
 
-## At A Glance
+## What This Plugin Adds
 
-- Package: `capell-app/theme-nonprofit`
-- Namespace: `Capell\ThemeStudio\Nonprofit\`
+Theme Nonprofit is an **Available**, **No schema impact** Capell theme in the **Capell Themes** product group. It ships as `capell-app/theme-nonprofit` and extends these surfaces: frontend.
+
+Impact-led civic and charity theme for campaigns, donations, volunteering, and community stories.
+
+After install, admins can select the theme through the core theme management surface. Editors keep using normal Capell content workflows while the package controls public presentation.
+
+Status details:
+
+- Status: Available
+- Tier: premium
+- Bundle: themes
+- Composer package: `capell-app/theme-nonprofit`
+- Namespace: `Capell\ThemeStudio\Nonprofit`
 - Theme key: `nonprofit`
-- Surfaces: frontend, console
-- Service provider:
-  `Capell\ThemeStudio\Nonprofit\NonprofitThemeServiceProvider`
-- Demo command:
-  `capell:theme-nonprofit-demo {--url=} {--languages=} {--sites=} {--force}`
-- Manifest extends: `null`
-- Runtime extends: `default`
-- Database impact: none
 
-## Why It Helps Your Capell Workflow
+## Why It Matters
 
-- Site owners can present impact, campaigns, events, stories, and supporter
-  actions in a site structure built for trust and conversion.
-- Editors can build campaign and community pages using normal Capell page/theme
-  tools instead of maintaining bespoke campaign templates.
-- Developers get a renderer package with optional Campaign Studio, Form Builder,
-  Events, and Blog checks for campaign, donation, event, and story sections.
+**For developers:** The package gives developers package-owned service providers, Actions, and Blade views instead of pushing this behaviour into core or application code.
 
-## Best Used With
+**For teams:** A premium charity, NGO, and civic theme that moves visitors from your mission to a clear support action - donate, volunteer, or follow - with impact proof, live campaign progress, and transparent annual-report sections built in.
 
-- [Capell Frontend](https://github.com/capell-app/frontend)
-- [Campaign Studio](../campaign-studio/README.md) for campaign-led pages.
-- [Form Builder](../form-builder/README.md) for volunteer or donation interest
-  forms.
-- [Events](../events/README.md) for community events.
-- [Blog](../blog/README.md) for stories and updates.
+## Screens And Workflow
 
-## What It Adds
+Screenshot contract: `docs/screenshots.json`.
 
-- Registers the `nonprofit` theme definition and preset.
-- Ships an impact-led page wrapper, reachable skip-link target, and theme CSS.
-- Adds section renderers for impact, campaigns, volunteer/donate, events,
-  stories, contact, proof, CTA, and supporting content blocks.
-- Uses Core `ViewSectionRenderer` extra view data for optional Campaign Studio, Form Builder,
-  Events, and Blog sections.
-- Adds a demo install command backed by `InstallNonprofitThemeDemoAction`.
-- Adds `ThemeNonprofitHealthCheck` and a Theme management page contribution.
+- Theme admin list showing Nonprofit (admin, required).
+- Frontend page rendered with Nonprofit theme (frontend, required).
+- Nonprofit homepage (frontend, required).
+- Campaigns and appeals (frontend, required).
+- Impact evidence (frontend, required).
+- Volunteer and donate (frontend, required).
+- Community events (frontend, required).
+- Supporter and beneficiary stories (frontend, required).
+- Signed admin preview route (admin, required).
 
-## Runtime Surface
+## Technical Shape
 
-| Area                | Path                                               |
-| ------------------- | -------------------------------------------------- |
-| Provider            | `src/NonprofitThemeServiceProvider.php`            |
-| Demo command        | `src/Console/Commands/DemoCommand.php`             |
-| Demo action         | `src/Actions/InstallNonprofitThemeDemoAction.php`  |
-| Renderer            | Core `ViewSectionRenderer` extra view data         |
-| Theme management    | `src/Manifest/ThemeManagementPageContribution.php` |
-| Health check        | `src/Health/ThemeNonprofitHealthCheck.php`         |
-| Views               | `resources/views/page.blade.php`                   |
-| CSS                 | `resources/css/theme-nonprofit.css`                |
-| Screenshot manifest | `docs/screenshots.json`                            |
+- Service providers: `Capell\ThemeStudio\Nonprofit\NonprofitThemeServiceProvider`.
+- Actions: `InstallNonprofitThemeDemoAction`.
+- Command signatures: `capell:theme-nonprofit-demo`.
+- Console command classes: `DemoCommand`.
+- Manifest contributions: `admin-page: Capell\ThemeStudio\Nonprofit\Manifest\ThemeManagementPageContribution`.
+- Health checks: `Capell\ThemeStudio\Nonprofit\Health\ThemeNonprofitHealthCheck`.
+- Blade views: `packages/theme-nonprofit/resources/views/page.blade.php`, `packages/theme-nonprofit/resources/views/sections/annual-report-proof.blade.php`, `packages/theme-nonprofit/resources/views/sections/campaigns.blade.php`, `packages/theme-nonprofit/resources/views/sections/contact.blade.php`, `packages/theme-nonprofit/resources/views/sections/content-listing.blade.php`, `packages/theme-nonprofit/resources/views/sections/cta.blade.php`, `packages/theme-nonprofit/resources/views/sections/donation-impact.blade.php`, `packages/theme-nonprofit/resources/views/sections/events.blade.php`, `packages/theme-nonprofit/resources/views/sections/features.blade.php`, `packages/theme-nonprofit/resources/views/sections/footer.blade.php`, `packages/theme-nonprofit/resources/views/sections/hero.blade.php`, `packages/theme-nonprofit/resources/views/sections/impact.blade.php`, `and 6 more`.
+- Cache tags: `theme-nonprofit`.
+
+## Data Model
+
+This theme has no schema impact. It relies on core Capell site, page, locale, and theme records instead of declaring package-owned tables.
 
 ## Install Impact
 
-- Adds a frontend theme renderer and console demo command.
-- Adds no migrations, settings, models, package-owned routes, or admin
-  resources.
-- Depends on Capell Frontend default theme and reads normal Capell page/theme runtime data.
-- Optional sections stay guarded when Campaign Studio, Form Builder, Events, or
-  Blog are not installed.
+- Admin navigation: contributes admin extension points through `capell.json`.
+- Permissions: none declared in `capell.json`.
+- Public routes: none detected in package route files.
+- Database changes: no package migrations declared.
+- Settings: no package settings declared.
+- Queues or schedules: none detected in standard package paths.
+- Cache tags: `theme-nonprofit`.
+- Commands: `capell:theme-nonprofit-demo`.
 
-## Docs
+## Common Pitfalls
 
-- [Docs index](docs/README.md)
+- Keep public Blade and cached HTML free of authoring markers, model IDs, permissions, signed editor URLs, and lazy database queries.
+- Keep `composer.json`, `composer.local.json`, `capell.json`, docs, screenshots, and tests aligned when the package surface changes.
+
+## Troubleshooting
+
+| Symptom | Likely cause | Check | Fix |
+| --- | --- | --- | --- |
+| Package surface is missing after install | Provider or manifest is not loaded | Confirm `capell.json`, package `composer.json`, and provider registration | Reinstall the package, refresh Composer autoload, and clear host caches |
+| Background work does not run | Queue worker or scheduled command is not active | Check package jobs, commands, and host scheduler configuration | Start the queue or scheduler, then run the focused command or package test |
+| Public output leaks unexpected state | Render data, cache variation, or authoring boundary has regressed | Check public Blade, cache tags, and public-output safety tests | Move data loading out of Blade and rerun the package public-output tests |
+
+## Quick Start
+
+1. Install the package: `composer require capell-app/theme-nonprofit`.
+2. Run the required setup: `php artisan capell:theme-nonprofit-demo`.
+3. Verify the package provider is registered and the related frontend, command, or extension point is active.
+
+## Next Steps
+
+- [Package docs](docs/README.md)
 - [Overview](docs/overview.md)
-- [Creating a Capell theme](../../docs/creating-a-theme.md)
-- [Package Screenshot Automation](../../docs/package-screenshot-automation.md)
+- [Screenshot contract](docs/screenshots.json)
+- [Marketplace assets](docs/assets/marketplace/)
+- [Capell content language plan](../../docs/CONTENT_LANGUAGE_PLAN.md)
+- [Capell documentation design system](../../docs/DESIGN_SYSTEM.md)
+- [Capell and package ERD notes](../../docs/erd/capell-and-package-erds.md)
+- Related packages: [Layout Builder](../layout-builder/README.md), [Frontend Authoring](../frontend-authoring/README.md), [Publishing Studio](../publishing-studio/README.md), [Seo Suite](../seo-suite/README.md), [Blog](../blog/README.md).
+- Focused tests: `vendor/bin/pest packages/theme-nonprofit/tests --configuration=phpunit.xml`.
 
-## Testing
-
-Run package tests from the repository root:
-
-```bash
-vendor/bin/pest packages/theme-nonprofit/tests --configuration=phpunit.xml
-```
-
-## Maintenance Notes
-
-- Keep public theme output free of admin URLs, signed preview URLs, editor
-  selectors, theme internals, model IDs, and permission metadata.
-- Keep optional package checks inside the service provider/renderer layer, not
-  public Blade.
-- Keep the skip link and `main-content` target together when changing the page
-  shell.
-- Keep the docs aligned with `NonprofitThemeServiceProvider::definition()` when
-  section keys, presets, or optional integrations change.
+<!-- prettier-ignore-end -->

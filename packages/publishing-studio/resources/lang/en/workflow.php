@@ -79,4 +79,18 @@ return [
     ],
     'subheading' => 'Draft, review, schedule, publish, and recover content from one workflow.',
     'title' => 'Publishing Workflow',
+    'widgets' => [
+        'workspace_activity' => [
+            'heading' => 'Workspace activity',
+            'no_recent_activity' => 'No recent activity.',
+            'no_recent_merges' => 'No recent merges.',
+            'pending_approval' => 'Pending your approval',
+            'recent_merges' => 'Recent merges',
+            'stuck_open' => 'Stuck (>7 days open)',
+        ],
+        'workspace_merge_history' => [
+            'empty' => 'No merged publishing-studio found.',
+            'heading' => 'Workspace merge history',
+        ],
+    ],
 ];

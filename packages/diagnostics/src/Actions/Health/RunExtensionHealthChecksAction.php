@@ -52,7 +52,7 @@ final class RunExtensionHealthChecksAction
     }
 
     /**
-     * @param  array{package: string, key: string, label: string, class: string, severity: string}  $declaration
+     * @param  array{package: string, key: string, label: string, class: string, severity: string, surface: string, coverage: list<string>}  $declaration
      */
     private function resolveAndRun(array $declaration): HealthCheckResultData
     {
@@ -79,6 +79,8 @@ final class RunExtensionHealthChecksAction
                 label: $declaration['label'],
                 className: $className,
                 severity: $declaration['severity'],
+                surface: $declaration['surface'],
+                coverage: $declaration['coverage'],
                 implementationStatus: HealthCheckImplementationStatus::Stub,
                 passed: null,
                 message: (string) __('capell-diagnostics::package.health_check_stub_no_assertions'),
@@ -89,7 +91,7 @@ final class RunExtensionHealthChecksAction
     }
 
     /**
-     * @param  array{package: string, key: string, label: string, class: string, severity: string}  $declaration
+     * @param  array{package: string, key: string, label: string, class: string, severity: string, surface: string, coverage: list<string>}  $declaration
      * @param  class-string  $className
      */
     private function executeRunnable(array $declaration, string $className): HealthCheckResultData
@@ -104,6 +106,8 @@ final class RunExtensionHealthChecksAction
                 label: $declaration['label'],
                 className: $className,
                 severity: $declaration['severity'],
+                surface: $declaration['surface'],
+                coverage: $declaration['coverage'],
                 implementationStatus: HealthCheckImplementationStatus::Implemented,
                 passed: $passed,
                 message: $message,
@@ -115,6 +119,8 @@ final class RunExtensionHealthChecksAction
                 label: $declaration['label'],
                 className: $className,
                 severity: $declaration['severity'],
+                surface: $declaration['surface'],
+                coverage: $declaration['coverage'],
                 implementationStatus: HealthCheckImplementationStatus::Implemented,
                 passed: false,
                 message: (string) __('capell-diagnostics::package.health_check_threw', [
@@ -240,7 +246,7 @@ final class RunExtensionHealthChecksAction
     }
 
     /**
-     * @param  array{package: string, key: string, label: string, class: string, severity: string}  $declaration
+     * @param  array{package: string, key: string, label: string, class: string, severity: string, surface: string, coverage: list<string>}  $declaration
      */
     private function brokenResult(array $declaration, string $message): HealthCheckResultData
     {
@@ -250,6 +256,8 @@ final class RunExtensionHealthChecksAction
             label: $declaration['label'],
             className: $declaration['class'],
             severity: $declaration['severity'],
+            surface: $declaration['surface'],
+            coverage: $declaration['coverage'],
             implementationStatus: HealthCheckImplementationStatus::Broken,
             passed: null,
             message: $message,
@@ -384,7 +392,7 @@ final class RunExtensionHealthChecksAction
     /**
      * Reads `healthChecks[]` from every installed Capell package manifest.
      *
-     * @return list<array{package: string, key: string, label: string, class: string, severity: string}>
+     * @return list<array{package: string, key: string, label: string, class: string, severity: string, surface: string, coverage: list<string>}>
      */
     private function discoverDeclaredHealthChecks(): array
     {
@@ -409,6 +417,8 @@ final class RunExtensionHealthChecksAction
                 continue;
             }
 
+            $coverage = $this->manifestCoverage($manifest);
+
             foreach ($healthChecks as $healthCheck) {
                 if (! is_array($healthCheck)) {
                     continue;
@@ -420,11 +430,114 @@ final class RunExtensionHealthChecksAction
                     'label' => is_string($healthCheck['label'] ?? null) ? $healthCheck['label'] : '',
                     'class' => is_string($healthCheck['class'] ?? null) ? $healthCheck['class'] : '',
                     'severity' => is_string($healthCheck['severity'] ?? null) ? $healthCheck['severity'] : 'warning',
+                    'surface' => is_string($healthCheck['surface'] ?? null) ? $healthCheck['surface'] : 'shared',
+                    'coverage' => $coverage,
                 ];
             }
         }
 
         return $declarations;
+    }
+
+    /**
+     * @param  array<string, mixed>  $manifest
+     * @return list<string>
+     */
+    private function manifestCoverage(array $manifest): array
+    {
+        $coverage = ['manifest-validity'];
+
+        if (is_array($manifest['providers'] ?? null) && $manifest['providers'] !== []) {
+            $coverage[] = 'provider-registration';
+        }
+
+        if ($this->hasRequiredDatabaseTables($manifest)) {
+            $coverage[] = 'required-migrations';
+        }
+
+        if (is_array($manifest['settings'] ?? null) && $manifest['settings'] !== []) {
+            $coverage[] = 'required-settings';
+        }
+
+        if ($this->hasPublicRoutes($manifest)) {
+            $coverage[] = 'public-route-security';
+        }
+
+        if ($this->hasAdminPermissions($manifest)) {
+            $coverage[] = 'admin-permissions';
+        }
+
+        sort($coverage);
+
+        return array_values(array_unique($coverage));
+    }
+
+    /**
+     * @param  array<string, mixed>  $manifest
+     */
+    private function hasRequiredDatabaseTables(array $manifest): bool
+    {
+        $database = $manifest['database'] ?? null;
+
+        if (! is_array($database)) {
+            return false;
+        }
+
+        $requiredTables = $database['requiredTables'] ?? null;
+
+        return is_array($requiredTables) && $requiredTables !== [];
+    }
+
+    /**
+     * @param  array<string, mixed>  $manifest
+     */
+    private function hasPublicRoutes(array $manifest): bool
+    {
+        $security = $manifest['security'] ?? null;
+
+        if (! is_array($security)) {
+            return false;
+        }
+
+        $publicSurface = $security['publicSurface'] ?? null;
+
+        if (! is_array($publicSurface)) {
+            return false;
+        }
+
+        $routeNames = $publicSurface['routeNames'] ?? null;
+
+        return is_array($routeNames) && $routeNames !== [];
+    }
+
+    /**
+     * @param  array<string, mixed>  $manifest
+     */
+    private function hasAdminPermissions(array $manifest): bool
+    {
+        $permissions = $manifest['permissions'] ?? null;
+
+        if (is_array($permissions) && $permissions !== []) {
+            return true;
+        }
+
+        $contributions = $manifest['contributes'] ?? null;
+
+        if (! is_array($contributions)) {
+            return false;
+        }
+
+        foreach ($contributions as $contribution) {
+            if (! is_array($contribution)) {
+                continue;
+            }
+
+            if (($contribution['type'] ?? null) === 'admin-resource' || ($contribution['surface'] ?? null) === 'admin') {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**

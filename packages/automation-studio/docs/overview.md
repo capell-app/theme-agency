@@ -1,74 +1,100 @@
-# Automation Studio Overview
+# Automation Studio
 
-Status: **Available, schema-owning** · Kind: **package** · Tier: **premium** · Bundle: **automation** · Contexts: **admin, console/queue** · Product group: **Capell Automation**
+<!-- prettier-ignore-start -->
 
-Automation Studio turns package events into auditable workflow runs. Operators configure rules in Capell admin; developers keep each package's domain behavior in its own Actions and let Automation Studio coordinate cross-package follow-up.
+## What This Plugin Adds
 
-## Non-Technical Overview
+Automation Studio is an **Available**, **Schema-owning** Capell package in the **Capell Automation** product group. It ships as `capell-app/automation-studio` and extends these surfaces: admin, console.
 
-Automation Studio is useful when a site needs repeatable follow-up work after customer or editor activity:
+Automation Studio provides rule-based workflow orchestration for Capell package events, native actions, Public Actions, and agent capabilities.
 
-- a form submission starts a nurture workflow;
-- an access request approval sends a claim email and tags the contact;
-- a page publish event queues a downstream notification;
-- a campaign conversion records a note and triggers an agent review.
+After install, admins get package-owned management or reporting surfaces inside Capell.
 
-The package gives admins rule and run-history screens so workflow behavior is visible. It does not add public widgets or JavaScript to visitor pages.
+Status details:
 
-## What This Package Adds
+- Status: Available
+- Tier: premium
+- Bundle: automation
+- Composer package: `capell-app/automation-studio`
+- Namespace: `Capell\AutomationStudio`
+- Theme key: not applicable
 
-- Filament resources for mutable automation rules and read-only automation runs.
-- Persisted `automation_rules` and `automation_runs` tables.
-- Trigger definitions for form submissions, access approvals, page publishes, and campaign conversions.
-- Native action definitions for email, webhooks, contact tags, contact notes, newsletter subscriptions, agent capabilities, and Public Actions.
-- Queue-backed dispatch with idempotency metadata.
-- Optional-package guarded handlers for Contacts, Newsletter, Email Studio, Agent Bridge, and Public Actions.
+## Why It Matters
 
-## Developer Deep Dive
+**For developers:** The package gives developers package-owned service providers, Actions, Data objects, models, and Filament classes instead of pushing this behaviour into core or application code.
 
-Use these package entry points rather than calling handler classes directly:
+**For teams:** Automation Studio connects Capell package events to rule-based native actions, Public Actions, and agent capability workflows.
 
-| Need                                              | Entry point                                                               |
-| ------------------------------------------------- | ------------------------------------------------------------------------- |
-| Queue a package event for automation              | `QueueAutomationTriggerAction::run(AutomationTriggerEventData $event)`    |
-| Dispatch a trigger immediately                    | `DispatchAutomationTriggerAction::run(AutomationTriggerEventData $event)` |
-| Load persisted active rules into runtime matching | `LoadPersistedAutomationRulesAction::run()`                               |
-| Record or update run audit state                  | `RecordAutomationRunAction::run(...)`                                     |
-| Register trigger/action defaults                  | `RegisterAutomationStudioDefaultsAction::run()`                           |
+## Screens And Workflow
 
-Use `AutomationTriggerRegistry`, `AutomationActionRegistry`, and `AutomationRuleRegistry` for extension work. Handler output should be an `AutomationActionResultData` object so the run history can store success, failure, message, and provider metadata consistently.
+Screenshot contract: `screenshots.json`.
 
-## Example Trigger Dispatch
+- Automation rules admin index (admin, required).
+- Automation rule edit screen (admin, required).
+- Automation runs admin index (admin, required).
 
-```php
-use Capell\AutomationStudio\Actions\QueueAutomationTriggerAction;
-use Capell\AutomationStudio\Data\AutomationTriggerEventData;
-use Capell\AutomationStudio\Enums\AutomationTriggerType;
+## Technical Shape
 
-QueueAutomationTriggerAction::run(new AutomationTriggerEventData(
-    triggerType: AutomationTriggerType::CampaignConverted,
-    sourceType: 'campaign',
-    sourceId: (string) $campaign->getKey(),
-    payload: [
-        'email' => $conversion->email,
-        'campaign_id' => $campaign->getKey(),
-    ],
-), siteId: $campaign->site_id);
-```
+- Service providers: `Capell\AutomationStudio\Providers\AutomationStudioServiceProvider`, `Capell\AutomationStudio\Providers\AdminServiceProvider`.
+- Migrations: `packages/automation-studio/database/migrations/2026_05_31_170000_01_create_automation_rules_table.php`, `packages/automation-studio/database/migrations/2026_05_31_170000_02_create_automation_runs_table.php`.
+- Models: `AutomationRule`, `AutomationRun`.
+- Filament classes: `AutomationRuleResource`, `CreateAutomationRule`, `EditAutomationRule`, `ListAutomationRules`, `AutomationRunResource`, `ListAutomationRuns`.
+- Listeners: `DispatchAutomationFromAccessApproval`, `DispatchAutomationFromCampaignConversion`, `DispatchAutomationFromFormSubmission`, `DispatchAutomationFromWorkspaceStateChanged`.
+- Actions: `DispatchAutomationTriggerAction`, `LoadPersistedAutomationRulesAction`, `PersistAutomationTriggerResultsAction`, `QueueAutomationTriggerAction`, `RecordAutomationRunAction`, `RegisterAutomationStudioDefaultsAction`.
+- Data objects: `AutomationActionDefinitionData`, `AutomationActionResultData`, `AutomationRuleActionData`, `AutomationRuleData`, `AutomationTriggerDefinitionData`, `AutomationTriggerEventData`.
+- Jobs: `DispatchQueuedAutomationTriggerJob`.
+- Manifest contributions: `admin-resource: Capell\AutomationStudio\Manifest\AutomationRuleResourceContribution`, `admin-resource: Capell\AutomationStudio\Manifest\AutomationRunResourceContribution`, `model: Capell\AutomationStudio\Manifest\AutomationStudioModelsContribution`.
+- Health checks: `Capell\AutomationStudio\Health\AutomationStudioHealthCheck`.
+- Cache tags: `automation-studio`.
 
-## Boundaries
+## Data Model
 
-- Automation Studio owns orchestration, matching, queueing, idempotency, and audit records.
-- Contacts, Newsletter, Email Studio, Agent Bridge, and Public Actions own their domain writes.
-- Missing optional integrations should return unavailable action results, not throw unhandled errors from normal rule dispatch.
-- The package has no public frontend surface; public-output safety concerns belong to the packages that render the originating page or form.
+- Required tables: `automation_rules`, `automation_runs`.
+- Models: `AutomationRule`, `AutomationRun`.
+- Migration files: `2026_05_31_170000_01_create_automation_rules_table.php`, `2026_05_31_170000_02_create_automation_runs_table.php`.
+- Migration impact: run host migrations through the package install flow before opening package surfaces.
+- Deletion/retention behaviour: Docs gap unless the package has an explicit pruning command, retention setting, or tested cascade path.
 
-## Screenshot Plan
+## Install Impact
 
-`docs/screenshots.json` covers the rules index, rule edit screen, and run history index. Keep those captures aligned with the admin resources declared in `capell.json`.
+- Admin navigation: adds package-owned Filament classes when registered.
+- Permissions: `View:AutomationRule`, `Create:AutomationRule`, `Update:AutomationRule`, `Delete:AutomationRule`, `View:AutomationRun`.
+- Public routes: none detected in package route files.
+- Database changes: package migrations are declared.
+- Settings: no package settings declared.
+- Queues or schedules: review package jobs or schedules before install.
+- Cache tags: `automation-studio`.
+- Commands: none declared.
 
-## Verification
+## Common Pitfalls
 
-```bash
-vendor/bin/pest packages/automation-studio/tests --configuration=phpunit.xml
-```
+- Run migrations before opening package resources or public routes.
+- Run package commands from the host app; in this repository use `vendor/bin/pest` for package tests.
+- Keep `composer.json`, `composer.local.json`, `capell.json`, docs, screenshots, and tests aligned when the package surface changes.
+
+## Troubleshooting
+
+| Symptom | Likely cause | Check | Fix |
+| --- | --- | --- | --- |
+| Package surface is missing after install | Provider or manifest is not loaded | Confirm `capell.json`, package `composer.json`, and provider registration | Reinstall the package, refresh Composer autoload, and clear host caches |
+| Admin screen or command fails on missing table | Package migrations have not run | Check the tables listed in `Data Model` | Run host migrations and rerun the focused package test |
+| Background work does not run | Queue worker or scheduled command is not active | Check package jobs, commands, and host scheduler configuration | Start the queue or scheduler, then run the focused command or package test |
+
+## Quick Start
+
+1. Install the package: `composer require capell-app/automation-studio`.
+2. Run the required setup: `php artisan migrate`.
+3. Open the related Capell admin surface and verify Automation Studio appears.
+
+## Next Steps
+
+- [Package docs index](README.md)
+- [Screenshot contract](screenshots.json)
+- [Marketplace assets](assets/marketplace/)
+- [Capell content language plan](../../../docs/CONTENT_LANGUAGE_PLAN.md)
+- [Capell documentation design system](../../../docs/DESIGN_SYSTEM.md)
+- [Capell and package ERD notes](../../../docs/erd/capell-and-package-erds.md)
+- Related packages: [Access Gate](../../access-gate/README.md), [Agent Bridge](../../agent-bridge/README.md), [Campaign Studio](../../campaign-studio/README.md), [Contacts](../../contacts/README.md), [Email Studio](../../email-studio/README.md), [Form Builder](../../form-builder/README.md), [Newsletter](../../newsletter/README.md), [Public Actions](../../public-actions/README.md), [Publishing Studio](../../publishing-studio/README.md).
+- Focused tests: `vendor/bin/pest packages/automation-studio/tests --configuration=phpunit.xml`.
+
+<!-- prettier-ignore-end -->

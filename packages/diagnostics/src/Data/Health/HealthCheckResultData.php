@@ -13,12 +13,17 @@ use Spatie\LaravelData\Data;
  */
 final class HealthCheckResultData extends Data
 {
+    /**
+     * @param  list<string>  $coverage
+     */
     public function __construct(
         public readonly string $packageName,
         public readonly string $key,
         public readonly string $label,
         public readonly string $className,
         public readonly string $severity,
+        public readonly string $surface,
+        public readonly array $coverage,
         public readonly HealthCheckImplementationStatus $implementationStatus,
         public readonly ?bool $passed = null,
         public readonly ?string $message = null,

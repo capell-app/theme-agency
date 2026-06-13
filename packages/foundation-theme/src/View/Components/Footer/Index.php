@@ -110,19 +110,34 @@ final class Index extends Component
         $this->subFooterMenuItems = $navigationAvailable
             ? $this->menuItems(NavigationHandle::SubFooter->value, $site, $language)
             : null;
-        $this->contactPage = Page::getFirstPageByTypeForSite('contact', $site, $language);
-        $this->siteLanguages = SiteLoader::pageLanguages($site, $language, $page);
+        $frontendData = Frontend::getFrontendData();
+        $hasPreparedContactPage = is_array($frontendData) && array_key_exists('foundation.footer.contact_page', $frontendData);
+        $preparedContactPage = Frontend::getFrontendData('foundation.footer.contact_page');
+        $preparedSiteLanguages = Frontend::getFrontendData('foundation.footer.site_languages');
+        $preparedLatestFooterPages = Frontend::getFrontendData('foundation.footer.latest_pages');
+        $preparedRelatedSites = Frontend::getFrontendData('foundation.footer.related_sites');
+
+        $this->contactPage = $hasPreparedContactPage
+            ? $preparedContactPage
+            : Page::getFirstPageByTypeForSite('contact', $site, $language);
+        $this->siteLanguages = $preparedSiteLanguages instanceof Collection
+            ? $preparedSiteLanguages
+            : SiteLoader::pageLanguages($site, $language, $page);
         $this->footerCopy = $site->translation?->getMeta('footer_copy');
         $this->footerSpacing = $theme->getMeta('footer_spacing', 'compact');
         $this->footerDividerColor = (bool) $theme->getMeta('footer_divider') ? $theme->getMeta('footer_border_color') : null;
-        $this->latestFooterPages = PageLoader::getPages(
-            language: $language,
-            site: $site,
-            limit: 4,
-            ordering: PageOrderEnum::Latest,
-            pageGroup: BlueprintGroupEnum::Default,
-        );
-        $this->relatedSites = $this->relatedSites($site, $language);
+        $this->latestFooterPages = $preparedLatestFooterPages instanceof Collection
+            ? $preparedLatestFooterPages
+            : PageLoader::getPages(
+                language: $language,
+                site: $site,
+                limit: 4,
+                ordering: PageOrderEnum::Latest,
+                pageGroup: BlueprintGroupEnum::Default,
+            );
+        $this->relatedSites = $preparedRelatedSites instanceof Collection
+            ? $preparedRelatedSites
+            : $this->relatedSites($site, $language);
         $this->hasFooterMenu = $this->footerMenuItems?->isNotEmpty() === true;
         $this->hasLatestFooterPages = ! $this->hasFooterMenu && $this->latestFooterPages->isNotEmpty();
         $hasFooterRenderHooks = trim($this->footerRenderHooks) !== '';

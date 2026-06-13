@@ -1,6 +1,5 @@
 @php
     use Capell\Core\Enums\ContainerWidthEnum;
-    use Capell\FoundationTheme\Actions\BuildWidgetAssetRenderDataAction;
     use Capell\Frontend\Facades\Frontend;
     use Illuminate\Support\Str;
 
@@ -8,6 +7,8 @@
 @endphp
 
 @props([
+    'assetRenderDataItems',
+    'assets',
     'color' => $widget->getMeta('color', 'dark'),
     'columns' => $container['meta']['override_columns'] ?? $widget->getMeta('columns', 4),
     'container',
@@ -20,7 +21,7 @@
     'widget',
     'widget_theme' => $widget->getMeta('widget_theme'),
 ])
-@if ($widget->assets->isNotEmpty() || ! config('capell-layout-builder.widget.skip_render_empty', true))
+@if ($assets->isNotEmpty() || ! config('capell-layout-builder.widget.skip_render_empty', true))
     <x-capell-foundation-theme::widget.wrapper
         :class="'capell-asset-media widget-media-gallery' . ($containerWidth === ContainerWidthEnum::Full ? ' px-4' : '')"
         :$container
@@ -45,7 +46,7 @@
             />
         @endif
 
-        @if ($widget->assets->isNotEmpty())
+        @if ($assets->isNotEmpty())
             <div
                 @class([
                     'grid grid-cols-2 md:grid-cols-3 2xl:container',
@@ -54,10 +55,11 @@
                     'gap-6' => $spacing === 'lg',
                 ])
             >
-                @foreach ($widget->assets as $widgetAsset)
+                @foreach ($assetRenderDataItems as $assetRenderDataItem)
                     {{-- format-ignore-start --}}
                 @php
-                    $assetRenderData = BuildWidgetAssetRenderDataAction::run($widgetAsset);
+                    $widgetAsset = $assetRenderDataItem['widgetAsset'];
+                    $assetRenderData = $assetRenderDataItem['renderData'];
                     $image = $assetRenderData->image;
                     if (! $image) {
                         report('Image not found for WidgetAsset: ' . $widgetAsset->asset_type . ' ' . $widgetAsset->id);

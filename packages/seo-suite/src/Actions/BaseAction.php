@@ -55,11 +55,14 @@ abstract class BaseAction implements ActionContract
     {
         /** @var AiActionContextInterface|null $context */
         $context = $args[0] ?? null;
-        $options = is_array($args[1] ?? null) ? $args[1] : [];
+        $options = $args[1] ?? null;
 
         throw_unless($this->validate(['context' => $context, 'options' => $options]), InvalidArgumentException::class, 'Invalid AI action input: missing context or malformed options.');
 
         throw_unless($context instanceof AiActionContextInterface, InvalidArgumentException::class, 'Invalid AI action input: missing context.');
+
+        $options ??= [];
+        throw_unless(is_array($options), InvalidArgumentException::class, 'Invalid AI action input: malformed options.');
 
         $this->before($context, $options);
 
@@ -79,7 +82,6 @@ abstract class BaseAction implements ActionContract
      */
     public function validate(array $input): bool
     {
-        // TODO: Replace with a dedicated validator/service; keep fast guards here for now.
         $context = $input['context'] ?? null;
         $options = $input['options'] ?? null;
 
@@ -87,11 +89,7 @@ abstract class BaseAction implements ActionContract
             return false;
         }
 
-        if ($options !== null && ! is_array($options)) {
-            return false;
-        }
-
-        return true;
+        return $this->hasValidOptions($options);
     }
 
     /**
@@ -100,6 +98,11 @@ abstract class BaseAction implements ActionContract
     public function getMetadata(): array
     {
         return $this->metadata;
+    }
+
+    protected function hasValidOptions(mixed $options): bool
+    {
+        return $options === null || is_array($options);
     }
 
     protected function before(mixed ...$args): void

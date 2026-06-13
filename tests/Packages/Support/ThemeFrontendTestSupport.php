@@ -47,6 +47,8 @@ use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Testing\TestResponse;
 
+require_once __DIR__ . '/PublicOutputSafety.php';
+
 /**
  * @return array<string, array{provider: class-string<ServiceProvider>, package: string}>
  */
@@ -345,11 +347,7 @@ function themeFrontendForbiddenPublicTokens(): array
 
 function assertThemeFrontendPublicHtmlIsSafe(TestResponse|string $response): void
 {
-    $html = $response instanceof TestResponse ? (string) $response->getContent() : $response;
-
-    foreach (themeFrontendForbiddenPublicTokens() as $token) {
-        expect($html)->not->toContain($token);
-    }
+    assertCapellPublicOutputIsSafe($response, 'theme frontend HTML');
 }
 
 final class ThemeFrontendStringSectionRenderer implements SectionRenderer

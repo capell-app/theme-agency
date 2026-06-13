@@ -1,5 +1,7 @@
 <x-filament-widgets::widget class="capell-workspace-merge-history">
-    <x-filament::section heading="Workspace merge history">
+    <x-filament::section
+        :heading="__('capell-publishing-studio::workflow.widgets.workspace_merge_history.heading')"
+    >
         @php
             $data = $this->data;
         @endphp
@@ -7,7 +9,7 @@
         <div class="space-y-2">
             @if ($data->entries->count() === 0)
                 <div class="text-sm text-gray-400 dark:text-gray-500">
-                    No merged publishing-studio found.
+                    {{ __('capell-publishing-studio::workflow.widgets.workspace_merge_history.empty') }}
                 </div>
             @else
                 <div class="divide-y divide-gray-100 dark:divide-gray-700">

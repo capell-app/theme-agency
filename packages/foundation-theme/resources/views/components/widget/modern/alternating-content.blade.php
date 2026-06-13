@@ -1,14 +1,11 @@
 @props([
+    'assetRenderDataItems',
     'container',
     'containerKey',
     'containerWidth' => null,
     'loop',
     'widget',
 ])
-
-@php
-    use Capell\FoundationTheme\Actions\BuildWidgetAssetRenderDataAction;
-@endphp
 
 <x-capell-foundation-theme::widget.wrapper
     class="capell-modern-alternating-content widget-ap-alternating-content"
@@ -36,9 +33,9 @@
         @endif
 
         <div class="mx-auto max-w-5xl space-y-8 md:space-y-10">
-            @forelse ($widget->assets as $widgetAsset)
+            @forelse ($assetRenderDataItems as $assetRenderDataItem)
                 @php
-                    $assetRenderData = BuildWidgetAssetRenderDataAction::run($widgetAsset);
+                    $assetRenderData = $assetRenderDataItem['renderData'];
                     $isRight = $assetRenderData->position === 'right';
                     $icon = (string) ($assetRenderData->icon ?? '');
                     $media = $assetRenderData->image?->media;
@@ -92,7 +89,9 @@
                 </div>
             @empty
                 <div class="py-12 text-center">
-                    <p class="text-gray-500">No content sections configured.</p>
+                    <p class="text-gray-500">
+                        {{ __('capell-foundation-theme::generic.empty_content_sections') }}
+                    </p>
                 </div>
             @endforelse
         </div>

@@ -1,4 +1,6 @@
 @props([
+    'assetRenderDataItems',
+    'assets',
     'columns' => (int) ($widget->getMeta('columns', 3)),
     'container',
     'containerKey',
@@ -8,8 +10,6 @@
 ])
 
 @php
-    use Capell\FoundationTheme\Actions\BuildWidgetAssetRenderDataAction;
-
     $responsiveGrid = '!flex snap-x [scrollbar-width:none] gap-4 !overflow-x-auto pb-3 md:!grid md:!overflow-visible md:pb-0 [&::-webkit-scrollbar]:hidden';
     $responsiveItem = 'min-w-full snap-start md:min-w-0';
 @endphp
@@ -48,10 +48,10 @@
                 class="ap-card-grid {{ $responsiveGrid }}"
                 style="--ap-card-columns: {{ max(1, min(4, $columns)) }}"
             >
-                @if ($widget->assets->isNotEmpty())
-                    @foreach ($widget->assets as $widgetAsset)
+                @if ($assets->isNotEmpty())
+                    @foreach ($assetRenderDataItems as $assetRenderDataItem)
                         @php
-                            $assetRenderData = BuildWidgetAssetRenderDataAction::run($widgetAsset);
+                            $assetRenderData = $assetRenderDataItem['renderData'];
                             $icon = $assetRenderData->icon ?? '';
                             $accent = $assetRenderData->accent ?? 'teal';
                             $role = $assetRenderData->role ?? 'card';

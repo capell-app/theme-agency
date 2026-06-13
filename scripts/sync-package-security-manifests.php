@@ -91,7 +91,9 @@ function capell_sync_security_section(string $slug, string $packagePath, array $
             'encryptedFields' => capell_security_encrypted_fields($packagePath),
             'hashedTokenFields' => capell_security_hashed_token_fields($packagePath),
             'redactedOutputClasses' => capell_security_redacted_output_classes($packagePath),
-            'plaintextJustifications' => capell_security_plaintext_sensitive_field_justifications($packagePath),
+            'plaintextJustifications' => capell_security_plaintext_justification_strings(
+                capell_security_plaintext_sensitive_field_justifications($packagePath),
+            ),
         ],
         'publicOutput' => [
             'cacheSafe' => ($manifest['performance']['cacheSafety']['sensitiveOutput'] ?? false) === false,

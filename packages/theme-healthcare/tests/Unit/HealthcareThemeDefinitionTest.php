@@ -62,7 +62,7 @@ it('defines the healthcare premium renderer contract', function (): void {
         ->and($definition->extends)->toBe('default')
         ->and($definition->tags)->toBe(['Healthcare', 'Appointments', 'Services'])
         ->and(data_get($manifest, 'product.tier'))->toBe('premium')
-        ->and($manifest['extends'])->toBeNull()
+        ->and($manifest['extends'])->toBe('default')
         ->and(data_get($manifest, 'dependencies.requires'))->toContain('capell-app/frontend')
         ->and($manifest['commands']['demo'])->toBe('capell:theme-healthcare-demo')
         ->and($manifest['commands']['demoParams'])->toBe(['url', 'languages', 'sites'])

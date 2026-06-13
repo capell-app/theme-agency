@@ -343,11 +343,13 @@ test('reviewed public blade widgets do not read asset and page relations directl
         'resources/views/components/widget/asset/carousel.blade.php',
         'resources/views/components/widget/asset/feature-item.blade.php',
         'resources/views/components/widget/asset/media.blade.php',
+        'resources/views/components/widget/asset/widgets.blade.php',
     ];
     $forbiddenPatterns = [
         '$page?->assets',
         '$attachment->asset',
         '$heroItem->asset',
+        '$widget->assets',
         '$asset->asset->media',
         '$asset->asset->translation',
         '$widgetAsset->asset->translation',

@@ -1,51 +1,95 @@
-# Hero Overview
+# Hero
 
-Hero provides the shared default home-page hero widget used by Capell frontend themes. It registers Blade components and a setup command that can seed Hero-managed home layout defaults.
+<!-- prettier-ignore-start -->
 
-## What It Adds
+## What This Plugin Adds
 
-- `capell::widget.hero` Blade component.
-- Anonymous `capell-hero::...` component namespace for hero partials.
-- Tailwind import and view-source registration for hero assets.
-- `capell:hero-setup` setup command.
-- Filament schema extenders for theme, widget, and widget-asset hero background/media settings.
-- No package-owned tables, routes, settings, or Filament resources.
+Hero is an **Available**, **No schema impact** Capell package in the **Capell Foundation** product group. It ships as `capell-app/hero` and extends these surfaces: admin, frontend, console.
+
+A polished, responsive home hero for every Capell theme - autoplay video or decorative overlay backgrounds, multi-slide carousel, and theme-level styling that pages inherit automatically.
+
+After install, admins get package-owned management surfaces and public users may see package-owned frontend output or routes.
+
+Status details:
+
+- Status: Available
+- Tier: free
+- Bundle: foundation
+- Composer package: `capell-app/hero`
+- Namespace: `Capell\Hero`
+- Theme key: not applicable
+
+## Why It Matters
+
+**For developers:** The package gives developers package-owned service providers, Actions, Data objects, Filament classes, and Blade views instead of pushing this behaviour into core or application code.
+
+**For teams:** A polished, responsive home hero for every Capell theme - autoplay video or decorative overlay backgrounds, multi-slide carousel, and theme-level styling that pages inherit automatically.
+
+## Screens And Workflow
+
+Screenshot contract: `screenshots.json`.
+
+- Insights consent priming capture (frontend, optional).
+- Hero home widget rendered on a public page (frontend, required).
+
+## Technical Shape
+
+- Service providers: `Capell\Hero\Providers\HeroServiceProvider`.
+- Filament classes: `HeroBackgroundSchema`, `HeroBackgroundThemeSchemaExtender`, `HeroBackgroundWidgetAssetSchemaExtender`, `HeroBackgroundWidgetSchemaExtender`.
+- Actions: `InstallHeroLayoutDefaultsAction`, `ResolveHeroBackgroundDataAction`, `ResolveHeroMediaDataAction`.
+- Data objects: `HeroAssetSlideData`, `HeroBackgroundData`, `HeroMediaData`, `HeroWidgetRenderData`.
+- Command signatures: `capell:hero-setup`.
+- Console command classes: `SetupCommand`.
+- Health checks: `Capell\Hero\Health\HeroHealthCheck`.
+- Blade views: `packages/hero/resources/views/components/hero/background.blade.php`, `packages/hero/resources/views/components/hero/content.blade.php`, `packages/hero/resources/views/components/hero/media.blade.php`, `packages/hero/resources/views/components/hero/related.blade.php`, `packages/hero/resources/views/components/hero/slide.blade.php`, `packages/hero/resources/views/components/hero/wrapper.blade.php`, `packages/hero/resources/views/components/widget/hero.blade.php`.
+- Cache tags: `hero`.
+
+## Data Model
+
+This package has no schema impact. It does not declare package-owned migrations or required tables.
+
+Docs gap: document extension points here if the package delegates persistence to a host package.
 
 ## Install Impact
 
-- Requires `capell-app/admin`, `capell-app/core`, `capell-app/frontend`, and `capell-app/layout-builder`.
-- Adds no migrations.
-- Adds frontend rendering only when a layout/theme uses the Hero widget component or after the setup command creates default layout content.
+- Admin navigation: adds package-owned Filament classes when registered.
+- Permissions: none declared in `capell.json`.
+- Public routes: none detected in package route files.
+- Database changes: no package migrations declared.
+- Settings: no package settings declared.
+- Queues or schedules: none detected in standard package paths.
+- Cache tags: `hero`.
+- Commands: `capell:hero-setup`.
 
-## Admin Surfaces
+## Common Pitfalls
 
-Hero does not add a standalone admin page or resource. It does register Filament schema extenders that add hero background and media controls to theme settings, widget display settings, and widget-asset forms.
+- Keep public Blade and cached HTML free of authoring markers, model IDs, permissions, signed editor URLs, and lazy database queries.
+- Run package commands from the host app; in this repository use `vendor/bin/pest` for package tests.
+- Keep `composer.json`, `composer.local.json`, `capell.json`, docs, screenshots, and tests aligned when the package surface changes.
 
-## Frontend Surfaces
+## Troubleshooting
 
-| Surface                     | Use case                                                                  | Screenshot           |
-| --------------------------- | ------------------------------------------------------------------------- | -------------------- |
-| Home hero widget            | Show the default hero widget rendered in a public theme/page.             | `hero-home-widget`   |
-| Hero slide/related partials | Show multi-item hero content if seeded by the setup flow or demo fixture. | `hero-slide-variant` |
+| Symptom | Likely cause | Check | Fix |
+| --- | --- | --- | --- |
+| Package surface is missing after install | Provider or manifest is not loaded | Confirm `capell.json`, package `composer.json`, and provider registration | Reinstall the package, refresh Composer autoload, and clear host caches |
+| Background work does not run | Queue worker or scheduled command is not active | Check package jobs, commands, and host scheduler configuration | Start the queue or scheduler, then run the focused command or package test |
+| Public output leaks unexpected state | Render data, cache variation, or authoring boundary has regressed | Check public Blade, cache tags, and public-output safety tests | Move data loading out of Blade and rerun the package public-output tests |
 
-## Demo Setup
+## Quick Start
 
-Install core baseline packages, hard dependencies, and `capell-app/hero`. Run `capell:hero-setup` in the host app if the demo needs seeded layout defaults. Capture a public page using a theme that renders the hero component.
+1. Install the package: `composer require capell-app/hero`.
+2. Run the required setup: `php artisan capell:hero-setup`.
+3. Open the related Capell admin surface and verify Hero appears.
 
-## Screenshot Coverage
+## Next Steps
 
-The screenshot contract declares two public targets, but neither is currently promoted into marketplace media. Generate them with the Capell screenshot runner from a seeded public page after `capell:hero-setup`; the previous illustrative PNG/SVG captures were removed because they were not runner-backed Capell output. There is no standalone admin screen to capture.
+- [Package docs index](README.md)
+- [Screenshot contract](screenshots.json)
+- [Marketplace assets](assets/marketplace/)
+- [Capell content language plan](../../../docs/CONTENT_LANGUAGE_PLAN.md)
+- [Capell documentation design system](../../../docs/DESIGN_SYSTEM.md)
+- [Capell and package ERD notes](../../../docs/erd/capell-and-package-erds.md)
+- Related packages: [Layout Builder](../../layout-builder/README.md).
+- Focused tests: `vendor/bin/pest packages/hero/tests --configuration=phpunit.xml`.
 
-## Known Risks
-
-- A package install alone may not create visible output; the setup command or demo content is required.
-- The widget relies on a theme/layout to call the component, so captures should name the theme fixture used.
-- Hero asset registration should be checked when frontend Tailwind assets are regenerated.
-
-## Verification
-
-Run package tests from the repository root:
-
-```bash
-vendor/bin/pest packages/hero/tests --configuration=phpunit.xml
-```
+<!-- prettier-ignore-end -->

@@ -88,6 +88,7 @@ const CAPELL_MANIFEST_V3_MIGRATION_GROUPS = [
         'privacy-center',
         'publishing-studio',
         'record-switcher',
+        'site-monitor',
         'translation-manager',
     ],
     'publishing-pro' => [
@@ -131,6 +132,7 @@ const CAPELL_MANIFEST_V3_MIGRATION_GROUPS = [
         'theme-inertia-bookings-react',
         'theme-inertia-bookings-vue',
         'theme-knowledge',
+        'theme-liquid-glass',
         'theme-local-services',
         'theme-nonprofit',
         'theme-portfolio',
@@ -532,5 +534,5 @@ if (realpath((string) ($_SERVER['SCRIPT_FILENAME'] ?? '')) === __FILE__) {
 
     echo json_encode($report, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) . PHP_EOL;
 
-    return $report['errors'] === [] && $report['unassignedPackages'] === [] && $report['duplicateAssignments'] === [] ? 0 : 1;
+    exit($report['errors'] === [] && $report['unassignedPackages'] === [] && $report['duplicateAssignments'] === [] ? 0 : 1);
 }

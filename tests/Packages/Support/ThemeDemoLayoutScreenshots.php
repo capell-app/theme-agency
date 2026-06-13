@@ -13,6 +13,7 @@ use Capell\Core\Models\PageUrl;
 use Capell\Core\Models\Site;
 use Capell\Core\Support\Creator\PageCreator;
 use Capell\Core\ThemeStudio\Contracts\ThemePageAdapter;
+use Capell\Core\ThemeStudio\Contracts\ThemeRuntimeSettings;
 use Capell\Core\ThemeStudio\Contracts\ThemeSection;
 use Capell\Core\ThemeStudio\Data\BrandProfileData;
 use Capell\Core\ThemeStudio\Data\ContentListingSectionData;
@@ -74,6 +75,7 @@ function installThemeDemoScreenshotFixture(
     }
 
     registerThemeDemoScreenshotPageAdapter($themeKey);
+    registerThemeDemoScreenshotRuntimeSettings($themeKey);
 
     $exitCode = $installerClass::run(new ThemeDemoInstallData(
         siteNames: ['Snapshot'],
@@ -124,6 +126,7 @@ function installFoundationThemeDemoScreenshotFixture(): Collection
 
     registerFoundationThemeDemoScreenshotRenderer();
     registerThemeDemoScreenshotPageAdapter($themeKey);
+    registerThemeDemoScreenshotRuntimeSettings($themeKey);
 
     $exitCode = ThemeDemoPageInstaller::run(new ThemeDemoInstallData(
         siteNames: ['Snapshot'],
@@ -301,7 +304,7 @@ function assertThemeDemoLayoutScreenshots(string $themeKey, Collection $pages, a
         ->sort()
         ->values()
         ->all();
-    $actualScreenshotNames = collect(glob(themeDemoRepositoryPath('tests/Packages/Fixtures/theme-demo-layout-screenshots/' . $themeKey . '/*.png')) ?: [])
+    $actualScreenshotNames = collect(glob(themeDemoScreenshotDirectory($themeKey) . '/*.png') ?: [])
         ->map(fn (string $path): string => basename($path))
         ->sort()
         ->values()
@@ -413,7 +416,19 @@ function themeDemoScreenshotRouteBackedHtml(Page $page, string $surface): string
 {
     $pageUrl = capell_test_instance($page->pageUrl, PageUrl::class);
 
-    $response = get($pageUrl->full_url);
+    registerThemeDemoScreenshotRoutePageData($page);
+
+    $previousQueryGuardMode = config('capell-frontend.public_view_query_guard.mode');
+
+    // Screenshot captures verify visual output and leak markers; query-guard coverage lives in public render tests.
+    config(['capell-frontend.public_view_query_guard.mode' => 'log']);
+
+    try {
+        $response = get($pageUrl->full_url);
+    } finally {
+        config(['capell-frontend.public_view_query_guard.mode' => $previousQueryGuardMode]);
+    }
+
     $statusCode = 200;
 
     if ($response->baseResponse->getStatusCode() !== $statusCode) {
@@ -476,6 +491,12 @@ function registerThemeDemoScreenshotPageAdapter(string $themeKey): void
                 $page = Frontend::page();
 
                 if ($page instanceof Page) {
+                    $registeredPageData = themeDemoScreenshotRegisteredPageData($page);
+
+                    if ($registeredPageData instanceof ThemePageData) {
+                        return $registeredPageData;
+                    }
+
                     return themeDemoScreenshotPageData($page, themeDemoScreenshotRenderData($page));
                 }
 
@@ -494,6 +515,81 @@ function registerThemeDemoScreenshotPageAdapter(string $themeKey): void
             }
         },
     );
+}
+
+function registerThemeDemoScreenshotRoutePageData(Page $page): void
+{
+    $registeredPages = app()->bound('capell.theme-demo-screenshot.page-data')
+        ? app('capell.theme-demo-screenshot.page-data')
+        : [];
+
+    if (! is_array($registeredPages)) {
+        $registeredPages = [];
+    }
+
+    $registeredPages[themeDemoScreenshotPageKey($page)] = themeDemoScreenshotPageData($page, themeDemoScreenshotRenderData($page));
+
+    app()->instance('capell.theme-demo-screenshot.page-data', $registeredPages);
+}
+
+function themeDemoScreenshotRegisteredPageData(Page $page): ?ThemePageData
+{
+    if (! app()->bound('capell.theme-demo-screenshot.page-data')) {
+        return null;
+    }
+
+    $registeredPages = app('capell.theme-demo-screenshot.page-data');
+
+    if (! is_array($registeredPages)) {
+        return null;
+    }
+
+    $pageData = $registeredPages[themeDemoScreenshotPageKey($page)] ?? null;
+
+    return $pageData instanceof ThemePageData ? $pageData : null;
+}
+
+function themeDemoScreenshotPageKey(Page $page): int
+{
+    $key = $page->getKey();
+
+    if (is_int($key)) {
+        return $key;
+    }
+
+    if (is_string($key) && ctype_digit($key)) {
+        return (int) $key;
+    }
+
+    throw new RuntimeException('Theme demo screenshot pages must have an integer key.');
+}
+
+function registerThemeDemoScreenshotRuntimeSettings(string $themeKey): void
+{
+    app()->instance(ThemeRuntimeSettings::class, new class($themeKey) implements ThemeRuntimeSettings
+    {
+        public function __construct(private readonly string $themeKey) {}
+
+        public function activeTheme(): string
+        {
+            return $this->themeKey;
+        }
+
+        public function activePreset(): string
+        {
+            return 'boardroom';
+        }
+
+        public function brandProfile(): BrandProfileData
+        {
+            return new BrandProfileData;
+        }
+
+        public function themeOverrides(): array
+        {
+            return [];
+        }
+    });
 }
 
 function themeDemoScreenshotRenderedHtml(string $themeKey, Page $page, string $surface): string
@@ -3195,7 +3291,7 @@ function themeDemoScreenshotThemeCssPath(string $themeKey): ?string
 
 function cleanThemeDemoScreenshotDirectory(string $themeKey): void
 {
-    $directory = themeDemoRepositoryPath('tests/Packages/Fixtures/theme-demo-layout-screenshots/' . $themeKey);
+    $directory = themeDemoScreenshotDirectory($themeKey);
 
     if (! is_dir($directory)) {
         return;
@@ -3219,13 +3315,29 @@ function themeDemoScreenshotHtmlPath(string $themeKey, string $surface, string $
 
 function themeDemoScreenshotPath(string $themeKey, string $surface, string $type, string $layout): string
 {
-    $path = themeDemoRepositoryPath('tests/Packages/Fixtures/theme-demo-layout-screenshots/' . $themeKey . '/' . themeDemoScreenshotName($themeKey, $surface, $type, $layout) . '.png');
+    $path = themeDemoScreenshotDirectory($themeKey) . '/' . themeDemoScreenshotName($themeKey, $surface, $type, $layout) . '.png';
 
     if (! is_dir(dirname($path))) {
         mkdir(dirname($path), 0775, true);
     }
 
     return $path;
+}
+
+function themeDemoScreenshotDirectory(string $themeKey): string
+{
+    if (themeDemoScreenshotRefreshesFixtureBaselines()) {
+        return themeDemoRepositoryPath('tests/Packages/Fixtures/theme-demo-layout-screenshots/' . $themeKey);
+    }
+
+    return storage_path('framework/testing/theme-demo-layout-screenshots/screenshots/' . $themeKey);
+}
+
+function themeDemoScreenshotRefreshesFixtureBaselines(): bool
+{
+    $value = getenv('CAPELL_REFRESH_THEME_SCREENSHOT_FIXTURES');
+
+    return is_string($value) && filter_var($value, FILTER_VALIDATE_BOOL);
 }
 
 /**

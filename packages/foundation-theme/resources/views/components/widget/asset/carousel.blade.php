@@ -1,5 +1,4 @@
 @php
-    use Capell\FoundationTheme\Actions\BuildWidgetAssetRenderDataAction;
     use Capell\Frontend\Facades\Frontend;
     use Spatie\Image\Image;
 
@@ -7,6 +6,8 @@
 @endphp
 
 @props([
+    'assetRenderDataItems',
+    'assets',
     'carouselAlign' => $widget->getMeta('carousel_align', 'center'),
     'carouselArrows' => (bool) $widget->getMeta('carousel_arrows', true),
     'carouselAutoPlay' => (bool) $widget->getMeta('carousel_auto_play', true),
@@ -31,7 +32,7 @@
     'showPageTitle' => $widgetData['meta']['show_page_title'] ?? false,
     'loop',
     'rounded' => (bool) $theme->getMeta('rounded_images'),
-    'total' => $widget->assets->count(),
+    'total' => $assets->count(),
     'widget',
 ])
 @php
@@ -39,7 +40,7 @@
     $carouselEffect = $carouselFade ? 'fade' : $carouselEffect;
 @endphp
 
-@if ($widget->assets->isNotEmpty() || ! config('capell-layout-builder.widget.skip_render_empty', true))
+@if ($assets->isNotEmpty() || ! config('capell-layout-builder.widget.skip_render_empty', true))
     <x-capell-foundation-theme::widget.wrapper
         class="capell-asset-carousel widget-media-carousel"
         :$container
@@ -128,10 +129,11 @@
             style="--swiper-navigation-sides-offset: 0"
         >
             <div class="swiper-wrapper w-full">
-                @foreach ($widget->assets as $widgetAsset)
+                @foreach ($assetRenderDataItems as $assetRenderDataItem)
                     {{-- format-ignore-start --}}
                 @php
-                    $assetRenderData = BuildWidgetAssetRenderDataAction::run($widgetAsset);
+                    $widgetAsset = $assetRenderDataItem['widgetAsset'];
+                    $assetRenderData = $assetRenderDataItem['renderData'];
                     $imageSource = $assetRenderData->image;
                     $media = $imageSource?->media;
 

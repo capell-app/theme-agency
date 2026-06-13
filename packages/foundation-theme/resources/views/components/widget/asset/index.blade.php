@@ -10,6 +10,7 @@
 @endphp
 
 @props([
+    'assets',
     'color' => $widget->getMeta('color', 'dark'),
     'container',
     'containerKey',
@@ -17,7 +18,7 @@
     'widget',
     'widgetIndex' => null,
     'loop',
-    'total' => $widget->assets->count(),
+    'total' => $assets->count(),
     'widget' => $widget,
     'widgetIndex' => $widgetIndex,
     'maxWidth' => $widget->getMeta('max_width'),
@@ -42,7 +43,7 @@
         : '';
 @endphp
 
-@if ($widget->assets->isNotEmpty() || ! config('capell-layout-builder.widget.skip_render_empty', true))
+@if ($assets->isNotEmpty() || ! config('capell-layout-builder.widget.skip_render_empty', true))
     <x-capell-foundation-theme::widget.wrapper
         class="site-widget-asset widget-assets widget-assets-grid"
         :$container
@@ -66,7 +67,7 @@
             />
         @endif
 
-        @if ($widget->assets->isNotEmpty())
+        @if ($assets->isNotEmpty())
             @if ($responsiveLayoutPattern->usesMobileCarousel())
                 <div
                     wire:ignore
@@ -97,7 +98,7 @@
                     ])
                 >
                     <div class="swiper-wrapper">
-                        @foreach ($widget->assets as $asset)
+                        @foreach ($assets as $asset)
                             <div class="swiper-slide h-auto">
                                 <x-dynamic-component
                                     :component="app(AssetsRegistryInterface::class)->getAsset($asset['asset_type'])->component"
@@ -163,7 +164,7 @@
                         '2xl:grid-cols-6' => ! $responsiveLayoutOptions->shouldUseResponsiveGrid() && $total >= 6 && $columns !== 0 && $total <= $columns,
                     ])
                 >
-                    @foreach ($widget->assets as $asset)
+                    @foreach ($assets as $asset)
                         <x-dynamic-component
                             :component="app(AssetsRegistryInterface::class)->getAsset($asset['asset_type'])->component"
                             :componentItem="$widget->getMeta('component_item', AssetComponentEnum::Card->value)"

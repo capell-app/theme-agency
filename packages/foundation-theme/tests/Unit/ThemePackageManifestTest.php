@@ -162,7 +162,7 @@ it('declares standalone theme packages as frontend themes', function (string $pa
         ->and($composer['name'])->toBe($composerName)
         ->and($manifest['kind'])->toBe('theme')
         ->and($manifest['themeKey'])->toBe($themeKey)
-        ->and($manifest['extends'] ?? null)->toBeNull()
+        ->and($manifest['extends'] ?? null)->toBeIn([null, 'default'])
         ->and($requires)->toContain('capell-app/core')
         ->and($requires)->toContain('capell-app/frontend')
         ->and($manifest['product']['group'])->toBeIn(['Capell Foundation', 'Capell Themes']);

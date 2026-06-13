@@ -1,87 +1,101 @@
----
-title: 'GA4 Reports Overview'
-description: 'How the Capell GA4 Reports package syncs Google Analytics 4 metrics into local dashboard snapshots.'
----
+# GA4 Reports
 
-# GA4 Reports Overview
+<!-- prettier-ignore-start -->
 
-GA4 Reports syncs Google Analytics 4 metrics into local Capell tables so admin dashboards can show traffic trends and top pages without calling GA4 on every page load.
+## What This Plugin Adds
 
-Use it for installed sites that need GA4 visibility in the Capell admin panel. The package is intentionally snapshot-based: the sync command pulls a configured window, stores the result, and widgets read the local rows.
+GA4 Reports is an **Available**, **Schema-owning** Capell package in the **Capell Growth** product group. It ships as `capell-app/ga4-reports` and extends these surfaces: admin, console.
 
-## What It Adds
+GA4 Reports brings Google Analytics 4 into the Capell admin as cached daily snapshots, so owners see traffic trends, top pages, sessions, and conversions beside the content they manage. A scheduled sync authenticates with a Google service account, stores a configurable window locally, and powers dashboard widgets and overview stats that never call GA4 at render time. Setup status, sync history, and a swappable data-client contract keep the integration transparent and testable. Built for marketing and growth teams who want analytics signal in the CMS without standing up a separate reporting tool.
 
-- GA4 settings for property ID, credentials path, route slug, and sync window.
-- Local sync runs, daily metrics, and page metrics tables.
-- A `capell:ga4-reports-sync` command for refreshing local snapshots. The older `ga4-reports:sync` command name remains available as an alias for existing schedules.
-- A `GA4ReportsPage` Filament extension page under the monitoring navigation group.
-- Dashboard widgets for setup status, overview stats, traffic trends, and top pages.
-- `GA4ReportsDataClientInterface` so the GA4 client can be swapped or faked in tests.
+After install, admins get package-owned management or reporting surfaces inside Capell.
 
-## Configuration
+Status details:
 
-The publishable config lives at `packages/ga4-reports/config/capell-ga4-reports.php`.
+- Status: Available
+- Tier: premium
+- Bundle: growth
+- Composer package: `capell-app/ga4-reports`
+- Namespace: `Capell\GA4Reports`
+- Theme key: not applicable
 
-| Key                       | Default             | Purpose                                                       |
-| ------------------------- | ------------------- | ------------------------------------------------------------- |
-| `enabled`                 | `false`             | Keeps the package inert until GA4 is configured.              |
-| `property_id`             | `null`              | GA4 property to query.                                        |
-| `credentials_path`        | `null`              | Service account credential path used by the data client.      |
-| `http_timeout`            | `20`                | Token and Data API request timeout.                           |
-| `http_retry_times`        | `3`                 | Total attempts for retryable token and Data API failures.     |
-| `http_retry_delay_ms`     | `250`               | Base retry delay for transient GA4 HTTP failures.             |
-| `http_retry_max_delay_ms` | `5000`              | Maximum retry delay, including `Retry-After` delays.          |
-| `sync_days`               | `30`                | Number of days included in the sync window.                   |
-| `route_slug`              | `ga4-reports`       | Admin route slug for the reports page.                        |
-| `tables.*`                | package table names | Allows host apps to override the local table names if needed. |
+## Why It Matters
 
-If the package is not configured, `SyncGA4ReportsMetricsAction` exits cleanly and records no rows.
+**For developers:** The package gives developers package-owned service providers, Actions, Data objects, models, Filament classes, and Blade views instead of pushing this behaviour into core or application code.
 
-## Sync Workflow
+**For teams:** Pull Google Analytics 4 traffic, top-page, and conversion snapshots into your Capell admin on a daily schedule - no per-pageview API calls, no leaving the CMS.
 
-Run the sync from the host Capell app:
+## Screens And Workflow
 
-```bash
-php artisan capell:ga4-reports-sync
-```
+Screenshot contract: `screenshots.json`.
 
-The command calls `SyncGA4ReportsMetricsAction`, which:
+- GA4 Reports dashboard page (admin, required).
+- GA4 Reports setup status widget (admin, required).
+- GA4 Reports settings (admin, required).
 
-1. Builds the configured date window.
-2. Resolves `GA4ReportsDataClientInterface`.
-3. Creates a `GA4ReportsSyncRun` row with `running` status.
-4. Persists daily metrics and page metrics.
-5. Marks the sync run as `succeeded` or `failed`.
+## Technical Shape
 
-Failures are captured on the sync run and the command still exits successfully, so scheduled jobs can keep running while the dashboard shows the latest known state.
+- Service providers: `Capell\GA4Reports\Providers\GA4ReportsServiceProvider`, `Capell\GA4Reports\Providers\AdminServiceProvider`.
+- Config files: `packages/ga4-reports/config/capell-ga4-reports.php`.
+- Migrations: `packages/ga4-reports/database/migrations/2026_05_10_190852_01_create_ga4_reports_daily_metrics_table.php`, `packages/ga4-reports/database/migrations/2026_05_10_190852_02_create_ga4_reports_page_metrics_table.php`, `packages/ga4-reports/database/migrations/2026_05_10_190852_03_create_ga4_reports_sync_runs_table.php`.
+- Settings migrations: `packages/ga4-reports/database/settings/2026_05_10_190853_01_create_ga4_reports_settings.php`.
+- Settings classes: `GA4ReportsSettings`, `GA4ReportsSettingsMigrationProvider`.
+- Models: `GA4ReportsDailyMetric`, `GA4ReportsPageMetric`, `GA4ReportsSyncRun`.
+- Filament classes: `GA4ReportsPage`, `GA4ReportsDashboardSettingsContributor`, `GA4ReportsSettingsSchema`, `BuildsGA4ReportsDashboardWindow`, `GA4ReportsOverviewStatsWidget`, `GA4ReportsSetupStatusWidget`, `GA4ReportsTopPagesTableWidget`, `GA4ReportsTopPagesWidget`, `GA4ReportsTrafficTrendWidget`.
+- Actions: `BuildGA4ReportsDigestAction`, `BuildGA4ReportsOverviewAction`, `BuildGA4ReportsTrendAction`, `BuildGA4ReportsWindowAction`, `BuildTopGA4ReportsPagesAction`, `ExportGA4ReportsDigestCsvAction`, `PersistGA4ReportsDailyMetricAction`, `PersistGA4ReportsPageMetricAction`, `RedactGA4ReportsSyncErrorMessageAction`, `ResolveGA4ReportsConfigAction`, `SyncGA4ReportsMetricsAction`.
+- Data objects: `GA4ReportsConfigData`, `GA4ReportsDailyMetricData`, `GA4ReportsDigestData`, `GA4ReportsOverviewData`, `GA4ReportsPageMetricData`, `GA4ReportsSyncResultData`, `GA4ReportsTopPageData`, `GA4ReportsTrendPointData`, `GA4ReportsWindowData`.
+- Command signatures: `capell:ga4-reports-sync`.
+- Console command classes: `SyncGA4ReportsCommand`.
+- Health checks: `Capell\GA4Reports\Health\Ga4ReportsHealthCheck`.
+- Blade views: `packages/ga4-reports/resources/views/filament/pages/ga4-reports.blade.php`.
+- Cache tags: `ga4-reports`.
 
-The GA4 data client retries transient connection failures, quota-limited responses, and common upstream error statuses before the sync run is marked failed. Final quota failures are reported as quota exhaustion instead of a generic non-2xx response.
+## Data Model
 
-## Stored Data
+- Models: `GA4ReportsDailyMetric`, `GA4ReportsPageMetric`, `GA4ReportsSyncRun`.
+- Migration files: `2026_05_10_190852_01_create_ga4_reports_daily_metrics_table.php`, `2026_05_10_190852_02_create_ga4_reports_page_metrics_table.php`, `2026_05_10_190852_03_create_ga4_reports_sync_runs_table.php`.
+- Migration impact: run host migrations through the package install flow before opening package surfaces.
+- Deletion/retention behaviour: Docs gap unless the package has an explicit pruning command, retention setting, or tested cascade path.
 
-| Model                   | Purpose                                                                       |
-| ----------------------- | ----------------------------------------------------------------------------- |
-| `GA4ReportsSyncRun`     | Tracks each sync attempt, status, row counts, date window, and error message. |
-| `GA4ReportsDailyMetric` | Stores daily totals for dashboard trend charts.                               |
-| `GA4ReportsPageMetric`  | Stores page-level metrics for top-page widgets.                               |
+## Install Impact
 
-The package stores reporting snapshots, not raw visitor events.
+- Admin navigation: adds package-owned Filament classes when registered.
+- Permissions: none declared in `capell.json`.
+- Public routes: none detected in package route files.
+- Database changes: package migrations are declared.
+- Settings: settings classes or settings migrations exist; verify the install flow registers them.
+- Queues or schedules: none detected in standard package paths.
+- Cache tags: `ga4-reports`.
+- Commands: `capell:ga4-reports-sync`.
 
-## Extension Notes
+## Common Pitfalls
 
-Bind a concrete `GA4ReportsDataClientInterface` implementation in the host app or package provider. Tests can fake the interface and exercise `SyncGA4ReportsMetricsAction` directly.
+- Run migrations before opening package resources or public routes.
+- Run package commands from the host app; in this repository use `vendor/bin/pest` for package tests.
+- Keep `composer.json`, `composer.local.json`, `capell.json`, docs, screenshots, and tests aligned when the package surface changes.
 
-Keep dashboard reads local. New widgets should read `GA4ReportsDailyMetric`, `GA4ReportsPageMetric`, or Action DTOs rather than calling the GA4 API during Filament rendering.
+## Troubleshooting
 
-## Admin Surfaces
+| Symptom | Likely cause | Check | Fix |
+| --- | --- | --- | --- |
+| Package surface is missing after install | Provider or manifest is not loaded | Confirm `capell.json`, package `composer.json`, and provider registration | Reinstall the package, refresh Composer autoload, and clear host caches |
+| Admin screen or command fails on missing table | Package migrations have not run | Check the tables listed in `Data Model` | Run host migrations and rerun the focused package test |
+| Background work does not run | Queue worker or scheduled command is not active | Check package jobs, commands, and host scheduler configuration | Start the queue or scheduler, then run the focused command or package test |
 
-- Extension page: `GA4ReportsPage`.
-- Header widgets: overview stats, traffic trend, top pages, and setup status.
-- Footer widget: top pages table.
-- Settings schema: `GA4ReportsSettingsSchema`.
-- Overview stats: views, sessions, and engagement rate.
+## Quick Start
 
-## Screenshot Automation
+1. Install the package: `composer require capell-app/ga4-reports`.
+2. Run the required setup: `php artisan migrate`.
+3. Open the related Capell admin surface and verify GA4 Reports appears.
 
-Deployment should read [screenshots.json](screenshots.json), install the package with demo data, resolve the admin page and settings section, and write images to `packages/ga4-reports/docs/screenshots`.
-The dashboard, setup-status, and settings captures are committed under `docs/screenshots/` and promoted into the marketplace manifest.
+## Next Steps
+
+- [Package docs index](README.md)
+- [Screenshot contract](screenshots.json)
+- [Marketplace assets](assets/marketplace/)
+- [Capell content language plan](../../../docs/CONTENT_LANGUAGE_PLAN.md)
+- [Capell documentation design system](../../../docs/DESIGN_SYSTEM.md)
+- [Capell and package ERD notes](../../../docs/erd/capell-and-package-erds.md)
+- Focused tests: `vendor/bin/pest packages/ga4-reports/tests --configuration=phpunit.xml`.
+
+<!-- prettier-ignore-end -->

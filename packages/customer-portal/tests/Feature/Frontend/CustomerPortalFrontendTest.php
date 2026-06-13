@@ -48,6 +48,14 @@ it('registers authenticated customer portal frontend routes', function (): void 
         ->and(Route::has('capell-customer-portal.support.replies.store'))->toBeTrue();
 });
 
+it('throttles customer portal preference updates', function (): void {
+    $route = Route::getRoutes()->getByName('capell-customer-portal.preferences.update');
+
+    throw_if($route === null, RuntimeException::class, 'Expected customer portal preferences route to be registered.');
+
+    expect($route->gatherMiddleware())->toContain('throttle:capell-customer-portal-preferences');
+});
+
 it('requires authentication for frontend workflows', function (string $httpMethod, string $routeName): void {
     $response = match ($httpMethod) {
         'get' => $this->withHeader('Accept', 'application/json')->get(route($routeName)),

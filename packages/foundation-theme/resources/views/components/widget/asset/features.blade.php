@@ -9,12 +9,14 @@
 @endphp
 
 @props([
+    'assetRenderDataItems',
+    'assets',
     'color' => $widget->getMeta('color', 'dark'),
     'container',
     'containerKey',
     'containerWidth' => null,
     'loop',
-    'total' => $widget->assets->count(),
+    'total' => $assets->count(),
     'widget',
     'widgetIndex',
     'withChildCount' => (bool) $widget->getMeta('with_child_count'),
@@ -24,7 +26,7 @@
     'withSummary' => (bool) $widget->getMeta('with_summary'),
 ])
 
-@if ($widget->assets->isNotEmpty() || ! config('capell-layout-builder.widget.skip_render_empty', true))
+@if ($assets->isNotEmpty() || ! config('capell-layout-builder.widget.skip_render_empty', true))
     <x-capell-foundation-theme::widget.wrapper
         class="capell-asset-features widget-assets widget-assets-features"
         :$container
@@ -50,7 +52,7 @@
             />
         @endif
 
-        @if ($widget->assets->isNotEmpty())
+        @if ($assets->isNotEmpty())
             <div
                 @class([
                     'grid grid-cols-1 items-start gap-x-10 gap-y-6 md:grid-cols-2',
@@ -75,12 +77,13 @@
                 <div
                     class="grid space-y-6 md:min-h-full md:auto-rows-fr lg:order-1 lg:space-y-8"
                 >
-                    @foreach ($widget->assets->slice(0, ceil($widget->assets->count() / 2)) as $widgetAsset)
+                    @foreach ($assetRenderDataItems->slice(0, ceil($assetRenderDataItems->count() / 2)) as $assetRenderDataItem)
                         <x-capell-foundation-theme::widget.asset.feature-item
                             :$color
                             column="1"
                             :$widget
-                            :$widgetAsset
+                            :widget-asset="$assetRenderDataItem['widgetAsset']"
+                            :asset-render-data="$assetRenderDataItem['renderData']"
                         />
                     @endforeach
                 </div>
@@ -88,12 +91,13 @@
                 <div
                     class="grid space-y-6 md:min-h-full md:auto-rows-fr lg:order-3 lg:space-y-8"
                 >
-                    @foreach ($widget->assets->slice(ceil($widget->assets->count() / 2)) as $widgetAsset)
+                    @foreach ($assetRenderDataItems->slice(ceil($assetRenderDataItems->count() / 2)) as $assetRenderDataItem)
                         <x-capell-foundation-theme::widget.asset.feature-item
                             :$color
                             column="2"
                             :$widget
-                            :$widgetAsset
+                            :widget-asset="$assetRenderDataItem['widgetAsset']"
+                            :asset-render-data="$assetRenderDataItem['renderData']"
                         />
                     @endforeach
                 </div>

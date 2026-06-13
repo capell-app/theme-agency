@@ -1,190 +1,106 @@
 # Diagnostics
 
-Diagnostics adds operational diagnostics for cache, configuration drift, migrations, packages, registries, queues, permissions, setup health, and Tailwind build status.
+<!-- prettier-ignore-start -->
 
-## At A Glance
+## What This Plugin Adds
 
-- Package: `capell-app/diagnostics`
-- Namespace: `Capell\Diagnostics\`
-- Surfaces: Filament admin, console, database
-- Service providers: `packages/diagnostics/src/Providers/AdminServiceProvider.php`, `packages/diagnostics/src/Providers/DiagnosticsServiceProvider.php`
-- Capell dependencies: `capell-app/admin`, `capell-app/core`, `capell-app/html-cache`
-- Third-party dependencies: `croustibat/filament-jobs-monitor`, `lorisleiva/laravel-actions`, `spatie/laravel-data`
+Diagnostics is an **Available**, **Schema-owning** Capell package in the **Capell Operations** product group. It ships as `capell-app/diagnostics` and extends these surfaces: admin, console.
 
-## Why It Helps Your Capell Workflow
+A single operations cockpit for Capell that surfaces system health, queue activity, config drift, permission audits, and per-package install health - with a guarded command palette for trusted capell:* operations.
 
-- Gives developers and operators one admin surface for checking cache, config drift, migrations, packages, queues, permissions, setup health, and Tailwind status.
-- Shortens support loops because package health checks can be found from Capell instead of by reading logs first.
-- Reports whether declared package health checks are implemented, contract-only stubs, or broken declarations.
-- Provides extension points for command-palette style diagnostic actions with explicit ability and risk metadata.
+After install, admins get package-owned management or reporting surfaces inside Capell.
 
-## Best Used With
+Status details:
 
-- [Dashboard Reports](../dashboard-reports/README.md)
-- [Login Audit](../login-audit/README.md)
-- [Deployments](../deployments/README.md)
-
-## What It Adds
-
-Diagnostics adds operational diagnostics for cache, configuration drift, migrations, packages, registries, queues, permissions, setup health, and Tailwind build status.
-
-- Command palette admin page.
-- System health admin pages.
-- Developer tools dashboard page.
-- Permission audit report.
-- Queue Operations report backed by [`croustibat/filament-jobs-monitor`](https://github.com/ultraviolettes/filament-jobs-monitor) telemetry.
-- Health widgets for cache, content, migrations, registry, setup, packages, and Tailwind.
-- Secure command palette discovery, execution, feedback, and audit logging for developer tools, system health, queue health, and trusted `capell:*` Artisan operations.
-- `capell:diagnostics:health` for running declared extension health checks from the console.
+- Status: Available
+- Tier: premium
+- Bundle: operations
+- Composer package: `capell-app/diagnostics`
+- Namespace: `Capell\Diagnostics`
+- Theme key: not applicable
 
 ## Why It Matters
 
-**For developers:** Keeps diagnostics in actions and data objects so admin pages can show health information without hard-coded checks in the UI.
+**For developers:** The package gives developers package-owned service providers, Actions, Data objects, models, Filament classes, and Blade views instead of pushing this behaviour into core or application code.
 
-**For teams:** Helps operators and agencies see setup problems before they become publishing or deployment issues.
-
-## Built With
-
-This package makes its Composer dependencies visible because they are part of the value proposition, not just plumbing. When an upstream package has a public repository, its linked preview card points readers back to the maintainers so their work gets proper credit.
-
-**Capell packages used here**
-
-- [Capell Admin](https://github.com/capell-app/admin)
-- [Capell Core](https://github.com/capell-app/core)
-
-**Open-source packages used here**
-
-- [Laravel Actions](https://github.com/lorisleiva/laravel-actions) - single-purpose action classes that keep package workflows out of controllers and Filament resources.
-- [Filament Jobs Monitor](https://github.com/ultraviolettes/filament-jobs-monitor) by Croustibat / Ultraviolettes - Laravel queue-event telemetry for the `queue_monitors` history that Capell wraps as Queue Operations.
-- [Spatie Laravel Data](https://github.com/spatie/laravel-data) - typed data objects for package boundaries, form state, settings, and structured results.
-
-**Linked package previews**
-
-[![Laravel Actions GitHub preview](https://opengraph.githubassets.com/capell-readme/lorisleiva/laravel-actions)](https://github.com/lorisleiva/laravel-actions)
-
-[![Filament Jobs Monitor GitHub preview](https://opengraph.githubassets.com/capell-readme/ultraviolettes/filament-jobs-monitor)](https://github.com/ultraviolettes/filament-jobs-monitor)
-
-[![Spatie Laravel Data GitHub preview](https://opengraph.githubassets.com/capell-readme/spatie/laravel-data)](https://github.com/spatie/laravel-data)
+**For teams:** A single operations cockpit for Capell that surfaces system health, queue activity, config drift, permission audits, and per-package install health - with a guarded command palette for trusted capell:* operations.
 
 ## Screens And Workflow
 
-Screenshots are generated from [docs/screenshots.json](docs/screenshots.json) during package deployment.
+Screenshot contract: `docs/screenshots.json`.
 
-- Developer tools dashboard.
-- Command palette page.
-- System health page.
-- Permission audit page.
-- Queue Operations page with seeded queue-monitor history, failed jobs, and pending jobs.
-- Health widgets on the admin dashboard.
-
-Current runner screenshots are committed under `packages/diagnostics/docs/screenshots`. The capture contract now points at the Capell admin pages directly; keep operational data synthetic so Marketplace media never exposes real job names, customer payloads, or exception details.
+- Developer tools dashboard (admin, required).
+- Health widgets on the admin dashboard (admin, required).
+- Command palette page (admin, required).
+- System health page (admin, required).
+- Permission audit page (admin, required).
+- Queue Operations page (admin, required).
 
 ## Technical Shape
 
-- DiagnosticsServiceProvider and AdminServiceProvider register admin pages and widgets.
-- DiagnosticsServiceProvider configures [`croustibat/filament-jobs-monitor`](https://packagist.org/packages/croustibat/filament-jobs-monitor) as the telemetry dependency, disables its upstream navigation, and routes queue UX through Capell Diagnostics.
-- AdminServiceProvider registers palette command providers through the `capell.diagnostics.command-palette-provider` container tag.
-- Command palette actions discover providers dynamically, authorize commands, validate parameters, execute navigation or Artisan commands, and record audit runs.
-- Command palette output is redacted before it is returned or persisted to the audit table.
-- `RunExtensionHealthChecksAction` resolves manifest-declared health checks, classifies implemented/stub/broken declarations, and executes runnable checks.
-- Actions build each health report.
-- Data objects describe report rows and dashboard state.
-- QueueMonitor, FailedJob, and PendingQueueJob models support Queue Operations reporting.
-- CommandPaletteRun model records command palette execution history.
+- Service providers: `Capell\Diagnostics\Providers\DiagnosticsServiceProvider`, `Capell\Diagnostics\Providers\AdminServiceProvider`.
+- Config files: `packages/diagnostics/config/capell-diagnostics.php`.
+- Migrations: `packages/diagnostics/database/migrations/2026_05_10_190846_01_create_command_palette_runs_table.php`, `packages/diagnostics/database/migrations/2026_05_29_000001_create_queue_monitors_table.php`, `packages/diagnostics/database/migrations/2026_06_07_000001_create_diagnostics_health_snapshots_table.php`.
+- Models: `CommandPaletteRun`, `DiagnosticsHealthSnapshot`, `FailedJob`, `PendingQueueJob`, `QueueMonitor`.
+- Filament classes: `CommandPalettePage`, `DiagnosticsPage`, `PermissionAuditPage`, `QueueHealthPage`, `SystemHealthPage`, `PermissionAuditTable`, `QueueHealthTable`, `AlertsWidgetAbstract`, `CacheHealthWidgetAbstract`, `ConfigDriftWidgetAbstract`, `ContentGraphHealthWidgetAbstract`, `ContentHealthWidgetAbstract`, `and 7 more`.
+- Actions: `DiscoverCommandPaletteCommandsAction`, `ExecuteCommandPaletteCommandAction`, `RedactCommandPaletteOutputAction`, `ValidateCommandPaletteParametersAction`, `BuildCacheHealthAction`, `BuildConfigDriftAction`, `BuildContentGraphHealthAction`, `BuildMigrationsHealthAction`, `BuildPackagesInstalledAction`, `BuildRegistryHealthAction`, `BuildSetupHealthAction`, `BuildTailwindBuildStatusAction`, `and 17 more`.
+- Data objects: `CommandPaletteCommandData`, `CommandPaletteParameterData`, `CommandPaletteResultData`, `CacheHealthData`, `ConfigDriftData`, `ConfigDriftEntryData`, `ContentGraphHealthData`, `ContentHealthData`, `ContentHealthIssueData`, `MigrationsHealthData`, `PackageInfoData`, `PackagesInstalledData`, `and 14 more`.
+- Command signatures: `capell:diagnostics:health`.
+- Console command classes: `RunDiagnosticsHealthCommand`.
+- Manifest contributions: `admin-page: Capell\Diagnostics\Manifest\CommandPalettePageContribution`, `admin-page: Capell\Diagnostics\Manifest\DiagnosticsPageContribution`, `admin-page: Capell\Diagnostics\Manifest\PermissionAuditPageContribution`, `admin-page: Capell\Diagnostics\Manifest\QueueHealthPageContribution`, `admin-page: Capell\Diagnostics\Manifest\SystemHealthPageContribution`, `dashboard-widget: Capell\Diagnostics\Manifest\SiteHealthWidgetContribution`, `dashboard-widget: Capell\Diagnostics\Manifest\SystemHealthWidgetsContribution`.
+- Health checks: `Capell\Diagnostics\Health\DiagnosticsHealthCheck`.
+- Blade views: `packages/diagnostics/resources/views/filament/pages/command-palette.blade.php`, `packages/diagnostics/resources/views/filament/pages/diagnostics.blade.php`, `packages/diagnostics/resources/views/widgets/cache-health.blade.php`, `packages/diagnostics/resources/views/widgets/config-drift.blade.php`, `packages/diagnostics/resources/views/widgets/content-graph-health.blade.php`, `packages/diagnostics/resources/views/widgets/content-health.blade.php`, `packages/diagnostics/resources/views/widgets/migrations-health.blade.php`, `packages/diagnostics/resources/views/widgets/packages-installed.blade.php`, `packages/diagnostics/resources/views/widgets/registry-health.blade.php`, `packages/diagnostics/resources/views/widgets/setup-health.blade.php`, `packages/diagnostics/resources/views/widgets/site-health.blade.php`, `packages/diagnostics/resources/views/widgets/tailwind-build-status.blade.php`.
+- Cache tags: `diagnostics`.
 
-## Code Map
+## Data Model
 
-| Area      | Path                                 | Purpose                                                             |
-| --------- | ------------------------------------ | ------------------------------------------------------------------- |
-| Actions   | `packages/diagnostics/src/Actions`   | Domain operations. Test these directly where possible.              |
-| Data      | `packages/diagnostics/src/Data`      | Structured payloads, form state, view models, and integration data. |
-| Enums     | `packages/diagnostics/src/Enums`     | Persisted states and Filament option values.                        |
-| Models    | `packages/diagnostics/src/Models`    | Eloquent records owned by the package.                              |
-| Filament  | `packages/diagnostics/src/Filament`  | Admin resources, pages, widgets, and settings UI.                   |
-| Providers | `packages/diagnostics/src/Providers` | Registration, extension hooks, routes, migrations, and resources.   |
-| Resources | `packages/diagnostics/resources`     | Views, translations, assets, and package resources.                 |
-| Database  | `packages/diagnostics/database`      | Migrations, seeders, and settings migrations.                       |
-| Tests     | `packages/diagnostics/tests`         | Package-level Pest coverage.                                        |
-
-## Admin Surface
-
-- Pages: `CommandPalettePage`, `DiagnosticsPage`, `PermissionAuditPage`, `PermissionAuditTable`, `QueueHealthPage`, `QueueHealthTable`, `SystemHealthPage`.
-- Widgets: `AlertsWidgetAbstract`, `CacheHealthWidgetAbstract`, `ConfigDriftWidgetAbstract`, `ContentGraphHealthWidgetAbstract`, `ContentHealthWidgetAbstract`, `MigrationsHealthWidgetAbstract`, `PackagesInstalledWidgetAbstract`, `RegistryHealthWidgetAbstract`, `SetupHealthWidgetAbstract`, `SiteHealthWidgetAbstract`, `TailwindBuildStatusWidgetAbstract`.
-
-## Data And Persistence
-
-- This package owns the `command_palette_runs` table for command palette audit history.
-- This package ships a guarded `queue_monitors` migration compatible with `croustibat/filament-jobs-monitor` so Capell installs do not depend on manual vendor publishing.
-- It reads existing Laravel and Capell state such as config, migrations, failed jobs, permissions, packages, registries, and Tailwind outputs.
-
-- Models: `CommandPaletteRun`, `FailedJob`, `PendingQueueJob`, `QueueMonitor`.
-- Migrations: `2026_05_10_190846_01_create_command_palette_runs_table.php`, `2026_05_29_000001_create_queue_monitors_table.php`.
-- Data objects live in `src/Data/`; use them for payloads, form state, and view models.
-
-## Extension Points
-
-- Contracts: `CommandPaletteProvider`.
-- Console: `capell:diagnostics:health` runs the extension health-check rollup with optional JSON output.
-- Register Capell extension points, routes, migrations, settings, render hooks, and resources from service providers.
+- Required tables: `command_palette_runs`, `queue_monitors`, `diagnostics_health_snapshots`.
+- Models: `CommandPaletteRun`, `DiagnosticsHealthSnapshot`, `FailedJob`, `PendingQueueJob`, `QueueMonitor`.
+- Migration files: `2026_05_10_190846_01_create_command_palette_runs_table.php`, `2026_05_29_000001_create_queue_monitors_table.php`, `2026_06_07_000001_create_diagnostics_health_snapshots_table.php`.
+- Migration impact: run host migrations through the package install flow before opening package surfaces.
+- Deletion/retention behaviour: Docs gap unless the package has an explicit pruning command, retention setting, or tested cascade path.
 
 ## Install Impact
 
-- Adds admin pages for developer diagnostics.
-- Adds dashboard widgets.
-- Adds the `command_palette_runs` audit table.
-- Adds the `queue_monitors` table when the host app has not already installed the upstream `croustibat/filament-jobs-monitor` table.
-- No public routes are registered by this package.
-
-## Install And Setup
-
-- Install with `composer require capell-app/diagnostics` in the host Capell application.
-- Run migrations through the host application package install flow.
-- In this repository, verify package changes with `vendor/bin/pest`; do not use `php artisan`.
-
-## Admin And Access
-
-- DiagnosticsPage (packages/diagnostics/src/Filament/Pages/DiagnosticsPage.php, slug `diagnostics`)
-- CommandPalettePage (packages/diagnostics/src/Filament/Pages/CommandPalettePage.php, slug `diagnostics/command-palette`)
-- PermissionAuditPage (packages/diagnostics/src/Filament/Pages/PermissionAuditPage.php, slug `reports/permission-audit`)
-- QueueHealthPage / Queue Operations (packages/diagnostics/src/Filament/Pages/QueueHealthPage.php, slug `reports/queue-health`)
-- SystemHealthPage (packages/diagnostics/src/Filament/Pages/SystemHealthPage.php, slug `system-health`)
-
-- Gate: CacheHealthWidgetAbstract: `admin`, `super_admin`
-- Gate: ConfigDriftWidgetAbstract: `super_admin`
-- Gate: ContentHealthWidgetAbstract: `editor`, `admin`, `super_admin`
-- Gate: DiagnosticsPage: Gate `accessDiagnostics`, `viewDiagnostics`
-- Gate: MigrationsHealthWidgetAbstract: `super_admin`
-- Gate: PackagesInstalledWidgetAbstract: `super_admin`
-- Gate: QueueHealthPage: Gate `accessDiagnostics`, `viewDiagnostics`
-- Gate: RegistryHealthWidgetAbstract: `super_admin`
-- Gate: SetupHealthWidgetAbstract: settings-gated only
-- Gate: SiteHealthWidgetAbstract: settings-gated only
-- Gate: TailwindBuildStatusWidgetAbstract: `super_admin`
+- Admin navigation: adds package-owned Filament classes when registered.
+- Permissions: `accessDiagnostics`, `viewDiagnostics`, `View:PermissionAuditPage`, `View:CommandPalettePage`, `View:QueueHealthPage`, `Manage:QueueHealthPage`.
+- Public routes: none detected in package route files.
+- Database changes: package migrations are declared.
+- Settings: no package settings declared.
+- Queues or schedules: none detected in standard package paths.
+- Cache tags: `diagnostics`.
+- Commands: `capell:diagnostics:health`.
 
 ## Common Pitfalls
 
-- Some checks depend on host-app conventions and may need configuration.
-- Queue Operations depends on `croustibat/filament-jobs-monitor` queue telemetry for history, Laravel failed job data for retries, and the database queue driver for pending-job rows.
-- Permission audit output is only useful when permissions are registered.
+- Run migrations before opening package resources or public routes.
+- Run package commands from the host app; in this repository use `vendor/bin/pest` for package tests.
+- Keep `composer.json`, `composer.local.json`, `capell.json`, docs, screenshots, and tests aligned when the package surface changes.
 
-## Docs
+## Troubleshooting
 
-- [docs index](docs/README.md)
-- [command-palette.md](docs/command-palette.md)
-- [credits-and-acknowledgements.md](docs/credits-and-acknowledgements.md)
-- [overview.md](docs/overview.md)
-- [queue-operations.md](docs/queue-operations.md)
+| Symptom | Likely cause | Check | Fix |
+| --- | --- | --- | --- |
+| Package surface is missing after install | Provider or manifest is not loaded | Confirm `capell.json`, package `composer.json`, and provider registration | Reinstall the package, refresh Composer autoload, and clear host caches |
+| Admin screen or command fails on missing table | Package migrations have not run | Check the tables listed in `Data Model` | Run host migrations and rerun the focused package test |
+| Background work does not run | Queue worker or scheduled command is not active | Check package jobs, commands, and host scheduler configuration | Start the queue or scheduler, then run the focused command or package test |
 
-## Testing
+## Quick Start
 
-Run package tests from the repository root:
+1. Install the package: `composer require capell-app/diagnostics`.
+2. Run the required setup: `php artisan migrate`.
+3. Open the related Capell admin surface and verify Diagnostics appears.
 
-```bash
-vendor/bin/pest packages/diagnostics/tests --configuration=phpunit.xml
-```
+## Next Steps
 
-## Maintenance Notes
+- [Package docs](docs/README.md)
+- [Overview](docs/overview.md)
+- [Screenshot contract](docs/screenshots.json)
+- [Marketplace assets](docs/assets/marketplace/)
+- [Capell content language plan](../../docs/CONTENT_LANGUAGE_PLAN.md)
+- [Capell documentation design system](../../docs/DESIGN_SYSTEM.md)
+- [Capell and package ERD notes](../../docs/erd/capell-and-package-erds.md)
+- Related packages: [Html Cache](../html-cache/README.md).
+- Focused tests: `vendor/bin/pest packages/diagnostics/tests --configuration=phpunit.xml`.
 
-- Put behaviour changes in `src/Actions/`; UI classes, commands, and controllers should call actions instead of owning domain logic.
-- Use package `Data` classes at boundaries instead of passing anonymous arrays between layers.
-- Use backed enums for persisted values and enum labels for Filament options.
+<!-- prettier-ignore-end -->

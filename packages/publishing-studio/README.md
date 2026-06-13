@@ -1,201 +1,120 @@
 # Publishing Studio
 
-Publishing Studio is Capell's flagship editorial timeline workflow. It gives content teams a premium, Statamic-style publishing experience for Capell: preview, compare, approve, editorial calendar, schedule, publish, and rollback every meaningful content change without editing live records directly.
+<!-- prettier-ignore-start -->
 
-## At A Glance
+## What This Plugin Adds
 
-- Package: `capell-app/publishing-studio`
-- Namespace: `Capell\PublishingStudio\`
-- Surfaces: Filament admin, Livewire, console, HTTP, database
-- Service providers: `packages/publishing-studio/src/Providers/AdminServiceProvider.php`, `packages/publishing-studio/src/Providers/ConsoleServiceProvider.php`, `packages/publishing-studio/src/Providers/PublishingStudioServiceProvider.php`
-- Capell dependencies: `capell-app/admin`, `capell-app/core`, `capell-app/html-cache`, `capell-app/migration-assistant`, `capell-app/navigation`
-- Third-party dependencies: `jfcherng/php-diff`
+Publishing Studio is an **Available**, **Schema-owning** Capell package in the **Capell Publishing Pro** product group. It ships as `capell-app/publishing-studio` and extends these surfaces: admin, console.
 
-## Why It Helps Your Capell Workflow
+Publishing Studio is Capell's premium editorial workflow. Every change happens in a copy-on-write workspace that stays invisible to visitors until it's approved and published as a single atomic, versioned release - so the live site is never half-edited. Built-in publish-readiness checks (accessibility, SEO meta, alt text, internal links, URL collisions, stale-draft and release-window guards) stop risky publishes before they ship, while signed, revocable preview links let stakeholders review the exact pending state. When a publish goes wrong, roll back to any prior version or restore individual entities in seconds.
 
-- Adds preview, compare, approval, editorial calendar, scheduling, publishing, restore, rollback, and release workspace workflows for Capell content.
-- Helps owners manage editorial risk by making review state, publish readiness, and rollback paths visible in admin.
-- Gives developers draftable contracts, workspace registries, release contributors, and focused Actions for publishing behavior.
+After install, admins get package-owned management or reporting surfaces inside Capell.
 
-## Best Used With
+Status details:
 
-- [SEO Suite](../seo-suite/README.md)
-- [Document Lifecycle](../document-lifecycle/README.md)
-- [Notes](../notes/README.md)
-
-## What It Adds
-
-Publishing Studio is Capell's flagship editorial timeline workflow. It gives content teams a premium, Statamic-style publishing experience for Capell: preview, compare, approve, schedule, publish, and rollback every meaningful content change without editing live records directly.
-
-- Draft publishing-studio with copy-on-write editing for Draftable content.
-- Signed live preview links, expiry/revocation management, access tracking, and a frontend workspace preview banner.
-- Compare and readiness views with diff, dry-run validation, field comments, review assignments, URL-collision checks, stale workspace warnings, and publish checks.
-- Release Workspaces for grouping coordinated content, navigation, SEO, media, layout, and package-owned draftable changes into one previewable, approvable, schedulable, atomic publish.
-- Approval history for submit, approve, reject, and request-changes decisions, including reviewer notes and required approval levels.
-- Scheduled publishing with release-window guards, unpublish dates, embargo windows, review reminders, immediate publishing, version history, rollback, and entity-level restore.
-- Editorial calendar aggregation for page/workspace scheduler events plus tagged package contributors from Blog, Campaign Studio, Newsletter, and Events.
-- Activity timeline widgets, stale draft management, import recovery screens, load-test fixtures, and prune commands for audit-friendly editorial operations.
+- Status: Available
+- Tier: premium
+- Bundle: publishing-pro
+- Composer package: `capell-app/publishing-studio`
+- Namespace: `Capell\PublishingStudio`
+- Theme key: not applicable
 
 ## Why It Matters
 
-**For developers:** Adds copy-on-write, draftable model support, workspace events, review policies, preview signing, and page resource extenders without moving domain logic into Filament pages.
+**For developers:** The package gives developers package-owned service providers, Actions, Data objects, models, Laravel routes, Filament classes, and Blade views instead of pushing this behaviour into core or application code.
 
-**For teams:** Gives editors the confidence of a content history product: they can see what changed, preview it safely, gather approval, schedule the release, publish when ready, and restore a previous version if production needs to move back.
-
-## Built With
-
-This package makes its Composer dependencies visible because they are part of the value proposition, not just plumbing. When an upstream package has a public repository, its linked preview card points readers back to the maintainers so their work gets proper credit.
-
-**Capell packages used here**
-
-- [Capell Admin](https://github.com/capell-app/admin)
-- [Capell Migration Assistant](../migration-assistant/README.md)
-- [Capell Core](https://github.com/capell-app/core)
-- [Capell Navigation](../navigation/README.md)
-
-**Open-source packages used here**
-
-- [php-diff](https://github.com/jfcherng/php-diff) - diff generation that powers editorial comparisons and publishing review workflows.
-
-**Linked package previews**
-
-[![php-diff GitHub preview](https://opengraph.githubassets.com/capell-readme/jfcherng/php-diff)](https://github.com/jfcherng/php-diff)
+**For teams:** Publishing Studio turns Capell into a review-first CMS: edit any content in an isolated draft workspace, get sign-off, schedule it, and publish atomically - with one-click rollback when something breaks.
 
 ## Screens And Workflow
 
-Screenshots are generated from [docs/screenshots.json](docs/screenshots.json) during package deployment. The step-by-step workflow screenshots with overlay text live in [docs/publishing-workflow.md](docs/publishing-workflow.md).
+Screenshot contract: `docs/screenshots.json`.
 
-- Editorial timeline dashboard.
-- Live preview, preview link management, and preview banner.
-- Compare, dry-run validation, and publish readiness panel.
-- Approval history, reviewer assignments, and field comments.
-- Scheduled publishing queue with embargo, unpublish, and review-reminder metadata.
-- Stale drafts, recovery imports, activity history, and audit trail.
-- Rollback, entity restore, and version history flow.
+- Editorial timeline dashboard (admin, required).
+- Editor responsibility (admin, required).
+- Reviewer responsibility (admin, required).
+- Live preview (frontend, required).
+- Preview link management (admin, required).
+- Compare and publish readiness (admin, required).
+- Approval history (admin, required).
+- Scheduled publishing (admin, required).
+- Scheduler metadata (admin, required).
+- Stale drafts (admin, required).
+- Activity history (admin, required).
+- Rollback and restore (admin, required).
+- Preview banner (frontend, required).
 
 ## Technical Shape
 
-- PublishingStudioServiceProvider, AdminServiceProvider, ConsoleServiceProvider register package surfaces.
-- Routes include `capell/preview/exit` and scheduler iCal feeds.
-- Migrations create publishing-studio, versions, preview links, approvals, field comments, review assignments, and workspace columns on core/external tables.
-- Events track state changes and version rollback.
-- Publish checks include accessibility, broken links, missing alt text, SEO meta, stale workspace state, URL collisions, and release-window rules.
-
-## Code Map
-
-| Area      | Path                                       | Purpose                                                             |
-| --------- | ------------------------------------------ | ------------------------------------------------------------------- |
-| Actions   | `packages/publishing-studio/src/Actions`   | Domain operations. Test these directly where possible.              |
-| Data      | `packages/publishing-studio/src/Data`      | Structured payloads, form state, view models, and integration data. |
-| Enums     | `packages/publishing-studio/src/Enums`     | Persisted states and Filament option values.                        |
-| Models    | `packages/publishing-studio/src/Models`    | Eloquent records owned by the package.                              |
-| Filament  | `packages/publishing-studio/src/Filament`  | Admin resources, pages, widgets, and settings UI.                   |
-| Livewire  | `packages/publishing-studio/src/Livewire`  | Interactive frontend or admin components.                           |
-| HTTP      | `packages/publishing-studio/src/Http`      | Controllers, middleware, and request handling.                      |
-| Providers | `packages/publishing-studio/src/Providers` | Registration, extension hooks, routes, migrations, and resources.   |
-| Resources | `packages/publishing-studio/resources`     | Views, translations, assets, and package resources.                 |
-| Routes    | `packages/publishing-studio/routes`        | Route files loaded by the service provider.                         |
-| Database  | `packages/publishing-studio/database`      | Migrations, seeders, and settings migrations.                       |
-| Tests     | `packages/publishing-studio/tests`         | Package-level Pest coverage.                                        |
-
-## Admin Surface
-
-- Resources: `PreviewLinkResource`, `WorkspaceResource`.
-- Pages: `ActivityTrailPage`, `ActivityTrailTable`, `CompareVersionPage`, `DiscardDraftsBulkAction`, `ManagePreviewLinks`, `ManagePublishingStudio`, `PageVersionHistoryPage`, `PublishPageAction`, `PublishingWorkflowPage`, `RequestReviewBulkAction`, `ResubmitForReviewAction`, `SaveAsDraftFormAction`, `ScheduledPublishingPage`, and related pages.
-- Widgets: `ContentSchedulerCalendarWidget`, `ContentSchedulerOverviewWidget`, `PageAlertsWidget`, `WorkspaceActivityWidgetAbstract`, `WorkspaceMergeHistoryWidgetAbstract`.
-- Settings: `PublishingStudioSettings`.
-
-## Runtime Surface
-
-- Livewire: `DiffPanel`, `FieldCommentThread`, `PageApprovalStatus`, `PublishStatusPanel`, `ReleaseWorkspaceSummaryPanel`, `WorkspaceApprovalHistory`, `WorkspaceContextBanner`, `WorkspaceSwitcher`.
-- Controllers: `ExitWorkspacePreviewController`, `SchedulerIcalFeedController`.
-- Routes: `packages/publishing-studio/routes/web.php`.
-
-## Commands
-
-- `capell:publishing-studio-install` (packages/publishing-studio/src/Console/Commands/InstallCommand.php)
-- `capell:publishing-studio:load-test {--publishing-studio=10 : Number of publishing-studio to create} {--rows-per-workspace=100 : Fixture rows per workspace} {--fresh : Truncate the fixture workspace tables first} {--publish= : Publish the first N publishing-studio after populating (defaults to 0)} {--force : Allow running outside local/testing environments}` (packages/publishing-studio/src/Console/Commands/LoadTestPublishingStudioCommand.php)
-- `capell:publishing-studio:prune {--id=* : Prune a specific workspace id instead of every abandoned workspace} {--dry-run : Report what would be pruned without making changes}` (packages/publishing-studio/src/Console/Commands/PruneAbandonedPublishingStudioCommand.php)
-
-## Data And Persistence
-
-- publishing-studio stores uuid, slug, status, base version, cloned-from workspace, submitted/approved/publish timestamps, and timeline status metadata.
-- versions stores uuid, number, live flag, manifest, source workspace, and rollback links.
-- preview_links, workspace_approvals, workspace_review_assignments, and workspace_field_comments support preview, compare, approval, comments, assignments, and activity history.
-- Core tables receive workspace_id columns.
-
-- Models: `PreviewLink`, `Version`, `Workspace`, `WorkspaceApproval`, `WorkspaceFieldComment`, `WorkspaceReviewAssignment`.
-- Migrations: `2026_05_10_190866_01_create_preview_links_table.php`, `2026_05_10_190866_02_create_publishing-studio_table.php`, `2026_05_10_190866_03_create_versions_table.php`, `2026_05_10_190866_04_create_workspace_approvals_table.php`, `2026_05_10_190866_05_create_workspace_field_comments_table.php`, `2026_05_10_190866_06_create_workspace_review_assignments_table.php`, `2026_05_10_190866_07_seed_bootstrap_workspace_version.php`, `2026_05_10_190866_08_z_add_workspace_columns_to_core_tables.php`, `2026_05_10_190866_09_z_add_workspace_id_to_external_tables.php`, `2026_05_10_190866_10_z_add_workspace_id_to_import_sessions_table.php`.
-- Data objects live in `src/Data/`; use them for payloads, form state, and view models.
-
-## Extension Points
-
-- Contracts: `ReleaseWorkspaceItemContributor`, `WorkspaceTableActionContributor`.
-- Events: `VersionRolledBack`, `WorkspaceEventDispatcher`, `WorkspaceEventSubscriber`, `WorkspaceStateChanged`.
+- Service providers: `Capell\PublishingStudio\Providers\ConsoleServiceProvider`, `Capell\PublishingStudio\Providers\PublishingStudioServiceProvider`, `Capell\PublishingStudio\Providers\AdminServiceProvider`.
+- Config files: `packages/publishing-studio/config/publishing-studio.php`.
+- Migrations: `packages/publishing-studio/database/migrations/2026_05_10_190866_01_create_preview_links_table.php`, `packages/publishing-studio/database/migrations/2026_05_10_190866_02_create_publishing-studio_table.php`, `packages/publishing-studio/database/migrations/2026_05_10_190866_03_create_versions_table.php`, `packages/publishing-studio/database/migrations/2026_05_10_190866_04_create_workspace_approvals_table.php`, `packages/publishing-studio/database/migrations/2026_05_10_190866_05_create_workspace_field_comments_table.php`, `packages/publishing-studio/database/migrations/2026_05_10_190866_06_create_workspace_review_assignments_table.php`, `packages/publishing-studio/database/migrations/2026_05_10_190866_07_seed_bootstrap_workspace_version.php`, `packages/publishing-studio/database/migrations/2026_05_10_190866_08_z_add_workspace_columns_to_core_tables.php`, `packages/publishing-studio/database/migrations/2026_05_10_190866_09_z_add_workspace_id_to_external_tables.php`, `packages/publishing-studio/database/migrations/2026_05_10_190866_10_z_add_workspace_id_to_import_sessions_table.php`, `packages/publishing-studio/database/migrations/2026_05_10_190866_11_create_publishing_revisions_table.php`, `packages/publishing-studio/database/migrations/2026_05_10_190866_12_create_publishing_scheduler_tables.php`.
+- Settings migrations: `packages/publishing-studio/database/settings/2026_05_10_190867_01_add_publishing_studio_settings.php`.
+- Settings classes: `PublishingStudioSettings`.
+- Models: `PreviewLink`, `PublishingRevision`, `SchedulerDelivery`, `SchedulerEvent`, `SchedulerIcalToken`, `Version`, `Workspace`, `WorkspaceApproval`, `WorkspaceFieldComment`, `WorkspaceReviewAssignment`.
+- Filament classes: `PublishingRevisionsHeaderAction`, `ActivityTrailPage`, `PublishingWorkflowPage`, `ScheduledPublishingPage`, `StaleDraftsPage`, `ActivityTrailTable`, `ScheduledPublishingTable`, `StaleDraftsTable`, `DiscardDraftsBulkAction`, `PublishPageAction`, `RequestReviewBulkAction`, `ResubmitForReviewAction`, `and 39 more`.
+- Livewire components: `DiffPanel`, `FieldCommentThread`, `PageApprovalStatus`, `PublishStatusPanel`, `ReleaseWorkspaceSummaryPanel`, `WorkspaceApprovalHistory`, `WorkspaceContextBanner`, `WorkspaceSwitcher`.
+- Route files: `packages/publishing-studio/routes/web.php`.
+- Policies: `WorkspacePolicy`.
+- Events: `WorkspaceEventSubscriber`, `VersionRolledBack`, `WorkspaceEventDispatcher`, `WorkspaceStateChanged`.
 - Listeners: `SendWorkspaceStateNotification`, `StampWorkspaceOnActivity`.
-- Register Capell extension points, routes, migrations, settings, render hooks, and resources from service providers.
+- Actions: `BuildEditorialCalendarEventsAction`, `BuildPublishReadinessAction`, `BuildReleaseWorkspaceReadinessAction`, `BuildReleaseWorkspaceSummaryAction`, `BuildSchedulerIcalFeedAction`, `CancelSchedulerEventAction`, `ComparePublishingRevisionAction`, `CopyOnWriteAction`, `CreatePageDraftWorkspaceAction`, `CreateRecordDraftWorkspaceAction`, `CreateSchedulerIcalTokenAction`, `BuildContentHealthAction`, `and 34 more`.
+- Data objects: `MergeHistoryEntryData`, `WorkspaceActivityData`, `WorkspaceMergeData`, `WorkspaceMergeHistoryData`, `EditorialCalendarEventData`, `EditorialCalendarQueryData`, `PublishReadinessData`, `ReleaseWorkspaceItemData`, `ReleaseWorkspaceReadinessData`, `ReleaseWorkspaceSummaryData`, `SavedRecordDraftData`, `SchedulerEventData`, `and 4 more`.
+- Console command classes: `InstallCommand`, `LoadTestPublishingStudioCommand`, `PruneAbandonedPublishingStudioCommand`.
+- Manifest contributions: `admin-page: Capell\PublishingStudio\Manifest\ActivityTrailPageContribution`, `admin-page: Capell\PublishingStudio\Manifest\PublishingWorkflowPageContribution`, `admin-page: Capell\PublishingStudio\Manifest\ScheduledPublishingPageContribution`, `admin-page: Capell\PublishingStudio\Manifest\StaleDraftsPageContribution`, `admin-resource: Capell\PublishingStudio\Manifest\PublishingStudioAdminResourcesContribution`, `dashboard-widget: Capell\PublishingStudio\Manifest\PublishingStudioDashboardWidgetsContribution`, `model: Capell\PublishingStudio\Manifest\PublishingStudioModelsContribution`, `overview-stat: Capell\PublishingStudio\Manifest\ContentSchedulerOverviewStatsContribution`, `route: Capell\PublishingStudio\Manifest\PublishingStudioRoutesContribution`, `scheduled-job: Capell\PublishingStudio\Manifest\PublishingStudioPruneScheduleContribution`, `scheduled-job: Capell\PublishingStudio\Manifest\ScheduledPublishingJobContribution`, `workflow-attention: Capell\PublishingStudio\Actions\Workflow\BuildPublishingWorkflowAttentionItemsAction`.
+- Health checks: `Capell\PublishingStudio\Health\PublishingStudioHealthCheck`.
+- Blade views: `packages/publishing-studio/resources/views/components/pages/publishing-studio/compare.blade.php`, `packages/publishing-studio/resources/views/components/publishing-studio/approval-history.blade.php`, `packages/publishing-studio/resources/views/components/publishing-studio/diff-panel.blade.php`, `packages/publishing-studio/resources/views/components/publishing-studio/field-comment-thread.blade.php`, `packages/publishing-studio/resources/views/components/workspace-preview-pill.blade.php`, `packages/publishing-studio/resources/views/filament/actions/publishing-revisions.blade.php`, `packages/publishing-studio/resources/views/filament/pages/publishing-workflow.blade.php`, `packages/publishing-studio/resources/views/filament/resources/pages/revisions-table.blade.php`, `packages/publishing-studio/resources/views/filament/resources/pages/version-history.blade.php`, `packages/publishing-studio/resources/views/livewire/header/workspace-context-banner.blade.php`, `packages/publishing-studio/resources/views/livewire/header/workspace-switcher.blade.php`, `packages/publishing-studio/resources/views/livewire/publish-status-panel.blade.php`, `and 4 more`.
+
+## Data Model
+
+- Required tables: `preview_links`, `workspaces`, `versions`, `workspace_approvals`, `workspace_field_comments`, `workspace_review_assignments`, `publishing_revisions`, `publishing_scheduler_events`, `publishing_scheduler_deliveries`, `publishing_scheduler_ical_tokens`.
+- Models: `PreviewLink`, `PublishingRevision`, `SchedulerDelivery`, `SchedulerEvent`, `SchedulerIcalToken`, `Version`, `Workspace`, `WorkspaceApproval`, `WorkspaceFieldComment`, `WorkspaceReviewAssignment`.
+- Migration files: `2026_05_10_190866_01_create_preview_links_table.php`, `2026_05_10_190866_02_create_publishing-studio_table.php`, `2026_05_10_190866_03_create_versions_table.php`, `2026_05_10_190866_04_create_workspace_approvals_table.php`, `2026_05_10_190866_05_create_workspace_field_comments_table.php`, `2026_05_10_190866_06_create_workspace_review_assignments_table.php`, `2026_05_10_190866_07_seed_bootstrap_workspace_version.php`, `2026_05_10_190866_08_z_add_workspace_columns_to_core_tables.php`, `2026_05_10_190866_09_z_add_workspace_id_to_external_tables.php`, `2026_05_10_190866_10_z_add_workspace_id_to_import_sessions_table.php`, `2026_05_10_190866_11_create_publishing_revisions_table.php`, `2026_05_10_190866_12_create_publishing_scheduler_tables.php`.
+- Migration impact: run host migrations through the package install flow before opening package surfaces.
+- Deletion/retention behaviour: Docs gap unless the package has an explicit pruning command, retention setting, or tested cascade path.
 
 ## Install Impact
 
-- Adds workspace and versioning tables.
-- Adds workspace_id columns to core and external tables.
-- Adds admin resources/pages/widgets and frontend preview route.
-- Adds middleware to resolve workspace context.
-- Adds commands for install, load testing, and pruning abandoned publishing-studio.
-- Adds Migration Assistant adapters so page imports can stage content into Publishing Studio workspaces.
-
-## Install And Setup
-
-- Install with `composer require capell-app/publishing-studio` in the host Capell application.
-- Run migrations through the host application package install flow.
-- In this repository, verify package changes with `vendor/bin/pest`; do not use `php artisan`.
-
-## Admin And Access
-
-- ActivityTrailPage (packages/publishing-studio/src/Filament/Pages/ActivityTrailPage.php, slug `reports/activity-trail`)
-- ScheduledPublishingPage (packages/publishing-studio/src/Filament/Pages/ScheduledPublishingPage.php, slug `scheduled-publishing`)
-- StaleDraftsPage (packages/publishing-studio/src/Filament/Pages/StaleDraftsPage.php, slug `stale-drafts`)
-- PageVersionHistoryPage (packages/publishing-studio/src/Filament/Resources/Pages/Pages/PageVersionHistoryPage.php, slug `{record}/history`)
-- ManagePreviewLinks (packages/publishing-studio/src/Filament/Resources/PreviewLinks/Pages/ManagePreviewLinks.php)
-- PreviewLinkResource (packages/publishing-studio/src/Filament/Resources/PreviewLinks/PreviewLinkResource.php)
-- CompareVersionPage (packages/publishing-studio/src/Filament/Resources/PublishingStudio/Pages/CompareVersionPage.php, slug `{record}/compare`)
-- ManagePublishingStudio (packages/publishing-studio/src/Filament/Resources/PublishingStudio/Pages/ManagePublishingStudio.php)
-- WorkspaceResource (packages/publishing-studio/src/Filament/Resources/PublishingStudio/WorkspaceResource.php)
-
-- Policy: WorkspacePolicy (packages/publishing-studio/src/Policies/WorkspacePolicy.php)
-- Gate: ContentSchedulerOverviewWidget: `admin`, `super_admin`
-- Gate: ScheduledPublishingPage: Filament Shield page permissions
-- Gate: StaleDraftsPage: Filament Shield page permissions
-- Gate: WorkspaceActivityWidgetAbstract: `admin`, `super_admin`
-- Gate: WorkspaceMergeHistoryWidgetAbstract: `super_admin`
+- Admin navigation: adds package-owned Filament classes when registered.
+- Permissions: `submit_workspace_for_approval`, `approve_workspace`, `publish_workspace`, `rollback_workspace`, `publish_outside_release_window`, `View:ActivityTrailPage`, `View:PublishingWorkflowPage`, `View:ScheduledPublishingPage`, `View:StaleDraftsPage`.
+- Public routes: route files exist and must be reviewed before public enablement.
+- Database changes: package migrations are declared.
+- Settings: `Capell\PublishingStudio\Settings\PublishingStudioSettings`.
+- Queues or schedules: none detected in standard package paths.
+- Cache tags: none declared.
+- Commands: console command classes detected: `InstallCommand`, `LoadTestPublishingStudioCommand`, `PruneAbandonedPublishingStudioCommand`.
 
 ## Common Pitfalls
 
-- Models participating in draft/publish must implement Draftable and be registered.
-- Run migrations in order before using copy-on-write.
-- Publish checks, stale workspace analysis, URL collisions, and release windows can block publishing.
-- Preview links need expiry, revocation, and access-count review.
-- Schedule release windows, unpublish dates, embargo rules, and review reminders must match site operations.
-- Recovery Center page import screens are owned by Migration Assistant; Publishing Studio contributes workspace target, context, and collision adapters when both packages are installed.
+- Run migrations before opening package resources or public routes.
+- Configure package settings before testing production-like workflows.
+- Review route middleware, throttling, signed URLs, and public-output safety before exposing routes.
+- Run package commands from the host app; in this repository use `vendor/bin/pest` for package tests.
+- Keep `composer.json`, `composer.local.json`, `capell.json`, docs, screenshots, and tests aligned when the package surface changes.
 
-## Docs
+## Troubleshooting
 
-- [docs index](docs/README.md)
-- [credits-and-acknowledgements.md](docs/credits-and-acknowledgements.md)
-- [overview.md](docs/overview.md)
-- [publishing-workflow.md](docs/publishing-workflow.md)
-- [release-workspaces.md](docs/release-workspaces.md)
+| Symptom | Likely cause | Check | Fix |
+| --- | --- | --- | --- |
+| Package surface is missing after install | Provider or manifest is not loaded | Confirm `capell.json`, package `composer.json`, and provider registration | Reinstall the package, refresh Composer autoload, and clear host caches |
+| Admin screen or command fails on missing table | Package migrations have not run | Check the tables listed in `Data Model` | Run host migrations and rerun the focused package test |
+| Route returns unexpected output | Route cache, middleware, or signed URL setup does not match the package route file | Check the route files listed in `Technical Shape` | Clear route cache and verify middleware before exposing public routes |
 
-## Testing
+## Quick Start
 
-Run package tests from the repository root:
+1. Install the package: `composer require capell-app/publishing-studio`.
+2. Run the required setup: `php artisan migrate`.
+3. Open the related Capell admin surface and verify Publishing Studio appears.
 
-```bash
-vendor/bin/pest packages/publishing-studio/tests --configuration=phpunit.xml
-```
+## Next Steps
 
-## Maintenance Notes
+- [Package docs](docs/README.md)
+- [Overview](docs/overview.md)
+- [Screenshot contract](docs/screenshots.json)
+- [Marketplace assets](docs/assets/marketplace/)
+- [Capell content language plan](../../docs/CONTENT_LANGUAGE_PLAN.md)
+- [Capell documentation design system](../../docs/DESIGN_SYSTEM.md)
+- [Capell and package ERD notes](../../docs/erd/capell-and-package-erds.md)
+- Related packages: [Html Cache](../html-cache/README.md), [Migration Assistant](../migration-assistant/README.md), [Navigation](../navigation/README.md), [Blog](../blog/README.md), [Campaign Studio](../campaign-studio/README.md), [Events](../events/README.md), [Newsletter](../newsletter/README.md).
+- Focused tests: `vendor/bin/pest packages/publishing-studio/tests --configuration=phpunit.xml`.
 
-- Put behaviour changes in `src/Actions/`; UI classes, commands, and controllers should call actions instead of owning domain logic.
-- Use package `Data` classes at boundaries instead of passing anonymous arrays between layers.
-- Use backed enums for persisted values and enum labels for Filament options.
+<!-- prettier-ignore-end -->

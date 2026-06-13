@@ -25,6 +25,8 @@ it('exports a health report as support-friendly csv', function (): void {
                 label: 'Package catalog',
                 className: DiagnosticsHealthCheck::class,
                 severity: 'warning',
+                surface: 'admin',
+                coverage: ['manifest-validity', 'provider-registration'],
                 implementationStatus: HealthCheckImplementationStatus::Implemented,
                 passed: true,
                 message: 'All 1 assertion(s) passed.',
@@ -35,6 +37,8 @@ it('exports a health report as support-friendly csv', function (): void {
                 label: 'Example stub',
                 className: 'Capell\\Example\\Health\\ExampleHealthCheck',
                 severity: 'critical',
+                surface: 'frontend',
+                coverage: ['manifest-validity', 'public-route-security'],
                 implementationStatus: HealthCheckImplementationStatus::Stub,
                 passed: null,
                 message: 'Check only satisfies the contract and asserts nothing.',
@@ -56,6 +60,8 @@ it('exports a health report as support-friendly csv', function (): void {
         'label',
         'class',
         'severity',
+        'surface',
+        'coverage',
         'implementation',
         'passed',
         'message',
@@ -67,11 +73,13 @@ it('exports a health report as support-friendly csv', function (): void {
         'passed_count',
         'failed_count',
     ])
-        ->and($rows[1])->toBe(['summary', 'degraded', '95', '', '', '', '', '', '', '', '', '', '2', '1', '1', '0', '1', '1', '0'])
+        ->and($rows[1])->toBe(['summary', 'degraded', '95', '', '', '', '', '', '', '', '', '', '', '', '2', '1', '1', '0', '1', '1', '0'])
         ->and($rows[2][0])->toBe('check')
         ->and($rows[2][4])->toBe('capell-app/diagnostics')
-        ->and($rows[2][10])->toBe('true')
+        ->and($rows[2][9])->toBe('admin')
+        ->and($rows[2][10])->toBe('manifest-validity|provider-registration')
+        ->and($rows[2][12])->toBe('true')
         ->and($rows[3][4])->toBe('capell-app/example')
-        ->and($rows[3][9])->toBe(HealthCheckImplementationStatus::Stub->value)
-        ->and($rows[3][10])->toBe('');
+        ->and($rows[3][11])->toBe(HealthCheckImplementationStatus::Stub->value)
+        ->and($rows[3][12])->toBe('');
 });

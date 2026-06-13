@@ -15,8 +15,15 @@ on:
       - 'packages/frontend-optimizer/package.json'
       - 'packages/frontend-optimizer/package-lock.json'
       - 'scripts/audit-package-security.php'
+      - 'scripts/generate-package-security-surface-report.php'
+      - 'scripts/audit-manifest-v3.php'
       - 'scripts/scan-secrets.php'
       - 'scripts/sync-package-security-manifests.php'
+      - 'scripts/validate-screenshot-manifests.js'
+      - 'docs/package-screenshot-manifest.json'
+      - 'docs/package-security-surface.md'
+      - 'packages/**/capell.json'
+      - 'packages/**/docs/screenshots.json'
       - '.github/dependabot.yml'
       - '.github/workflows/*.yml'
   schedule:
@@ -104,3 +111,12 @@ jobs:
 
       - name: Run security checks
         run: composer security:all
+
+      - name: Validate package manifests
+        run: composer manifest:check
+
+      - name: Validate screenshot manifests
+        run: npm run screenshots:check
+
+      - name: Check capell.json formatting
+        run: npm run capell-json:check

@@ -33,6 +33,7 @@ use Capell\FoundationTheme\Livewire\Widget\Pages;
 use Capell\FoundationTheme\Settings\FoundationThemeSettings;
 use Capell\FoundationTheme\Support\Assets\FoundationThemeAssetContributor;
 use Capell\FoundationTheme\Support\Blade\BladeDirectives;
+use Capell\FoundationTheme\Support\FoundationThemeRuntimeManifestContributor;
 use Capell\FoundationTheme\Support\Interceptors\Themes\FoundationThemeInterceptor;
 use Capell\FoundationTheme\Support\Media\CapellUrlGenerator;
 use Capell\FoundationTheme\View\Components\Actions as ActionsComponent;
@@ -50,6 +51,7 @@ use Capell\FoundationTheme\View\Components\Widget\Slot as SlotComponent;
 use Capell\Frontend\Contracts\AssetsRegistryInterface;
 use Capell\Frontend\Contracts\FrontendAssetContributor;
 use Capell\Frontend\Contracts\FrontendComponentRegistryInterface;
+use Capell\Frontend\Contracts\FrontendRuntimeManifestContributor;
 use Capell\Frontend\Data\FrontendAssetContextData;
 use Capell\Frontend\Data\FrontendAssetData;
 use Capell\LayoutBuilder\Enums\FrontendComponentKeyEnum;
@@ -132,6 +134,7 @@ final class FoundationThemeServiceProvider extends AbstractPackageServiceProvide
         $this->registerMediaBladeComponents();
         $this->registerBlazeComponents();
         $this->registerPublishCommands();
+        $this->registerFrontendRuntimeManifestContributors();
 
         if (! $this->isPackageInstalled()) {
             return;
@@ -207,6 +210,15 @@ final class FoundationThemeServiceProvider extends AbstractPackageServiceProvide
     private function registerMediaUrlGenerator(): void
     {
         config(['media-library.url_generator' => CapellUrlGenerator::class]);
+    }
+
+    private function registerFrontendRuntimeManifestContributors(): void
+    {
+        if (! interface_exists(FrontendRuntimeManifestContributor::class)) {
+            return;
+        }
+
+        $this->app->tag([FoundationThemeRuntimeManifestContributor::class], FrontendRuntimeManifestContributor::TAG);
     }
 
     private function registerMediaBladeComponents(): void

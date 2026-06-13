@@ -176,8 +176,8 @@ final class ThemeNonprofitHealthCheck implements ChecksExtensionHealth
             $issues[] = 'Theme key does not match the service provider theme key.';
         }
 
-        if (($manifest['extends'] ?? null) !== null) {
-            $issues[] = 'Manifest must not declare package-level theme inheritance; the default fallback lives in Capell Frontend.';
+        if (($manifest['extends'] ?? null) !== 'default') {
+            $issues[] = 'Manifest must declare the built-in default theme as its parent.';
         }
 
         $requires = data_get($manifest, 'dependencies.requires', []);

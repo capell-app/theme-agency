@@ -110,3 +110,4 @@ parameters:
     scanFiles:
         - ../scripts/audit-manifest-v3.php
         - ../scripts/audit-package-security.php
+        - ../scripts/generate-package-security-surface-report.php

@@ -1,278 +1,116 @@
 # SEO Suite
 
-SEO Suite adds metadata panels, structured data, broken link tracking, Search Console insights, AI-assisted content briefs, AI Discovery output, crawler policy controls, publish checks, and generated-output diagnostics.
+<!-- prettier-ignore-start -->
 
-## At A Glance
+## What This Plugin Adds
 
-- Package: `capell-app/seo-suite`
-- Namespace: `Capell\SeoSuite\`
-- Surfaces: Filament admin, console, HTTP, database
-- Service providers: `packages/seo-suite/src/Providers/SeoSuiteServiceProvider.php`
-- Capell dependencies: `capell-app/admin`, `capell-app/frontend`, `capell-app/insights`, `capell-app/site-discovery`
-- Third-party dependencies: `prism-php/prism`
+SEO Suite is an **Available**, **Schema-owning** Capell package in the **Capell Search & SEO** product group. It ships as `capell-app/seo-suite` and extends these surfaces: admin, frontend, console.
 
-## Why It Helps Your Capell Workflow
+Ship search-ready pages by default: live SEO scoring, schema.org structured data, broken-link and redirect management, Google Search Console insights, and first-class AI-discovery output (`llms.txt`, page Markdown, AI-crawler controls) - all inside the Capell page editor.
 
-- Adds metadata panels, structured data, broken-link tracking, Search Console insights, AI content briefs, generated-output diagnostics, and publish checks.
-- Helps owners improve discoverability while giving editors concrete readiness signals before publishing.
-- Gives developers schema, sitemap, AI, and publish-gate extension points without mixing SEO behavior into core pages.
+After install, admins get package-owned management surfaces and public users may see package-owned frontend output or routes.
 
-## Best Used With
+Status details:
 
-- [Search](../search/README.md)
-- [Site Discovery](../site-discovery/README.md)
-- [Publishing Studio](../publishing-studio/README.md)
-
-## What It Adds
-
-SEO Suite adds metadata panels, structured data, broken link tracking, Search Console insights, AI-assisted content briefs, AI Discovery output, crawler policy controls, generated-output diagnostics, and publish checks.
-
-- Page and site SEO schema extenders.
-- SEO audit, AI Discovery, broken links, not-found URLs, and translation coverage pages.
-- AI creator actions for briefs, images, layouts, metadata suggestions, and draft application.
-- AI Discovery for `llms.txt`, optional `llms-full.txt`, page Markdown URLs, `Accept: text/markdown`, configurable AI crawler rules, and page-readiness audits.
-- Search Console sync and dashboard reports.
-- Page SEO reports account for every `SeoCheckKeyEnum` check: metadata, canonical, robots, schema, social image, image alt text, internal links, broken links, redirects, translation coverage, sitemap URL availability, `llms.txt` eligibility, and Search Console status.
-- Diagnostics for route ownership, generated document content types, sitemap quality, crawler policy, public-output leaks, and stale AI Discovery snapshots.
+- Status: Available
+- Tier: premium
+- Bundle: search-seo
+- Composer package: `capell-app/seo-suite`
+- Namespace: `Capell\SeoSuite`
+- Theme key: not applicable
 
 ## Why It Matters
 
-**For developers:** Exposes SEO work as actions, contracts, data objects, settings schemas, and extenders that connect to core pages, sites, translations, routes, and optional AI providers.
+**For developers:** The package gives developers package-owned service providers, Actions, Data objects, models, Filament classes, and Blade views instead of pushing this behaviour into core or application code.
 
-**For teams:** Gives editors and site operators practical checks before publishing and operational dashboard reports after launch.
-
-## Built With
-
-This package makes its Composer dependencies visible because they are part of the value proposition, not just plumbing. When an upstream package has a public repository, its linked preview card points readers back to the maintainers so their work gets proper credit.
-
-**Capell packages used here**
-
-- [Capell Admin](https://github.com/capell-app/admin)
-- [Capell Insights](../insights/README.md)
-- [Capell Frontend](https://github.com/capell-app/frontend)
-- [Capell Site Discovery](../site-discovery/README.md)
-
-**Open-source packages used here**
-
-- [Prism PHP](https://github.com/prism-php/prism) - AI provider abstraction used by SEO Suite for assisted content and metadata workflows.
-
-**Linked package previews**
-
-[![Prism PHP GitHub preview](https://opengraph.githubassets.com/capell-readme/prism-php/prism)](https://github.com/prism-php/prism)
+**For teams:** Ship search-ready pages by default: live SEO scoring, schema.org structured data, broken-link and redirect management, Google Search Console insights, and first-class AI-discovery output (`llms.txt`, page Markdown, AI-crawler controls) - all inside the Capell page editor.
 
 ## Screens And Workflow
 
-Screenshots are generated from [docs/screenshots.json](docs/screenshots.json) during package deployment.
+Screenshot contract: `docs/screenshots.json`.
 
-- Page SEO panel.
-- SEO audit page.
-- Broken links page.
-- Search Console insights panel.
-- AI Creator action modal.
-- Sitemap page.
-- Translation coverage page.
-
-AI Discovery, SEO settings, not-found URLs, and public text-output captures remain optional until the runner has the required seeded state and plain-text response support.
-
-- Translation coverage page.
-- AI Discovery page.
-- SEO Suite settings modal on the Extensions page.
-- Search Console insights panel.
-- Public AI Discovery outputs: `/llms.txt`, `/robots.txt`, and `/index.md`.
+- Page SEO panel (admin, required).
+- SEO audit page (admin, required).
+- Search Console insights panel (admin, required).
+- Broken links page (admin, required).
+- AI Creator action modal (admin, required).
+- Sitemap page (admin, required).
+- Translation coverage page (admin, required).
 
 ## Technical Shape
 
-- SeoSuiteServiceProvider registers settings, pages, extenders, commands, routes, and views.
-- The manifest declares SEO Suite settings classes, admin permissions, PageSpeed capabilities, supported Blog/Publishing Studio/URL Manager integrations, and AI Discovery cache invalidation sources.
-- Config files: capell-seo-suite.php and exchanger.php.
-- Migrations create broken links, page SEO snapshots, Search Console metrics, AI creator contexts, AI histories, AI sessions, AI Discovery profiles, crawler rules, and generated-output snapshots.
-- Commands cover install, setup, AI cache, AI usage, and OpenAI connection testing.
-- Controllers: LlmsTxtController, LlmsFullTxtController, PageMarkdownController, RobotsTxtController.
-
-## Code Map
-
-| Area      | Path                               | Purpose                                                             |
-| --------- | ---------------------------------- | ------------------------------------------------------------------- |
-| Actions   | `packages/seo-suite/src/Actions`   | Domain operations. Test these directly where possible.              |
-| Data      | `packages/seo-suite/src/Data`      | Structured payloads, form state, view models, and integration data. |
-| Enums     | `packages/seo-suite/src/Enums`     | Persisted states and Filament option values.                        |
-| Models    | `packages/seo-suite/src/Models`    | Eloquent records owned by the package.                              |
-| Filament  | `packages/seo-suite/src/Filament`  | Admin resources, pages, widgets, and settings UI.                   |
-| Livewire  | `packages/seo-suite/src/Livewire`  | Interactive frontend or admin components.                           |
-| HTTP      | `packages/seo-suite/src/Http`      | Controllers, middleware, and request handling.                      |
-| Providers | `packages/seo-suite/src/Providers` | Registration, extension hooks, routes, migrations, and resources.   |
-| Resources | `packages/seo-suite/resources`     | Views, translations, assets, and package resources.                 |
-| Config    | `packages/seo-suite/config`        | Package configuration and publishable config.                       |
-| Database  | `packages/seo-suite/database`      | Migrations, seeders, and settings migrations.                       |
-| Tests     | `packages/seo-suite/tests`         | Package-level Pest coverage.                                        |
-
-## Admin Surface
-
-- Pages: `AiDiscoveryPage`, `AiDiscoveryTable`, `BrokenLinksPage`, `BrokenLinksTable`, `ListPageSeoAuditWidget`, `NotFoundUrlsPage`, `SeoAuditPage`, `SeoAuditTable`, `TranslationCoveragePage`, `TranslationCoverageTable`.
-- Widgets: `AiMetricsWidgetAbstract`, `AiUsageWidget`, `EditPageSeoAuditWidget`, `ListPageSeoAuditWidget`.
-- Settings: `AIOrchestratorSettings`, `SeoSuiteSettings`.
-
-## Runtime Surface
-
-- Controllers: `LlmsFullTxtController`, `LlmsTxtController`, `PageMarkdownController`, `RobotsTxtController`.
-
-## Commands
-
-- `capell:admin-clear-ai-cache` (packages/seo-suite/src/Console/Commands/ClearAiCacheCommand.php)
-- `capell:admin-monitor-ai-usage` (packages/seo-suite/src/Console/Commands/MonitorAiUsageCommand.php)
-- `capell:admin-test-openai` (packages/seo-suite/src/Console/Commands/TestOpenAiConnectionCommand.php)
-- `capell:seo-suite-install` (packages/seo-suite/src/Console/Commands/InstallCommand.php)
-- `capell:seo-suite-setup` (packages/seo-suite/src/Console/Commands/SetupCommand.php)
-
-## Data And Persistence
-
-- broken_links stores page, target URL, HTTP status, and last check time.
-- page_seo_snapshots store page SEO report state.
-- search_console_url_metrics store imported Search Console values.
-- ai_creator_contexts, ai_generation_histories, and ai_creator_sessions store AI workflow state.
-- ai_discovery_site_profiles, ai_discovery_page_profiles, ai_discovery_crawler_rules, and ai_discovery_snapshots store AI Discovery configuration, robots controls, and generated document state.
-- SEO data connects to sites, pages, languages, users, and publishing-studio.
-
-- Models: `AIGenerationHistory`, `AiCreatorContext`, `AiCreatorSession`, `AiDiscoveryCrawlerRule`, `AiDiscoveryPageProfile`, `AiDiscoverySiteProfile`, `AiDiscoverySnapshot`, `BrokenLink`, `PageSeoSnapshot`, `SearchConsoleUrlMetric`.
-- Migrations: `2026_05_10_190870_01_create_ai_creator_contexts_table.php`, `2026_05_10_190870_02_create_ai_generation_histories_table.php`, `2026_05_10_190870_03_create_ai_creator_sessions_table.php`, `2026_05_10_190870_04_create_ai_discovery_crawler_rules_table.php`, `2026_05_10_190870_05_create_ai_discovery_page_profiles_table.php`, `2026_05_10_190870_06_create_ai_discovery_site_profiles_table.php`, `2026_05_10_190870_07_create_ai_discovery_snapshots_table.php`, `2026_05_10_190870_08_create_broken_links_table.php`, `2026_05_10_190870_09_create_page_seo_snapshots_table.php`, `2026_05_10_190870_10_create_search_console_url_metrics_table.php`, `2026_05_10_190870_11_remove_redirect_opportunities_count_from_page_seo_snapshots_table.php`.
-- Config: `packages/seo-suite/config/capell-seo-suite.php`, `packages/seo-suite/config/exchanger.php`.
-- Data objects live in `src/Data/`; use them for payloads, form state, and view models.
-
-## Extension Points
-
-- Contracts: `ActionContract`, `AiActionContextInterface`, `ContentTargetContract`, `ExchangerInterface`, `SchemaTemplate`, `SearchConsoleClientInterface`, `SearchMetaDataSectionExtender`, `SearchMetaDataSectionExtenderResolverInterface`, `SeoPublishReportProvider`.
+- Service providers: `Capell\SeoSuite\Providers\SeoSuiteServiceProvider`.
+- Config files: `packages/seo-suite/config/capell-seo-suite.php`, `packages/seo-suite/config/exchanger.php`.
+- Migrations: `packages/seo-suite/database/migrations/2026_05_10_190870_01_create_ai_creator_contexts_table.php`, `packages/seo-suite/database/migrations/2026_05_10_190870_02_create_ai_generation_histories_table.php`, `packages/seo-suite/database/migrations/2026_05_10_190870_03_create_ai_creator_sessions_table.php`, `packages/seo-suite/database/migrations/2026_05_10_190870_04_create_ai_discovery_crawler_rules_table.php`, `packages/seo-suite/database/migrations/2026_05_10_190870_05_create_ai_discovery_page_profiles_table.php`, `packages/seo-suite/database/migrations/2026_05_10_190870_06_create_ai_discovery_site_profiles_table.php`, `packages/seo-suite/database/migrations/2026_05_10_190870_07_create_ai_discovery_snapshots_table.php`, `packages/seo-suite/database/migrations/2026_05_10_190870_08_create_broken_links_table.php`, `packages/seo-suite/database/migrations/2026_05_10_190870_09_create_page_seo_snapshots_table.php`, `packages/seo-suite/database/migrations/2026_05_10_190870_10_create_search_console_url_metrics_table.php`, `packages/seo-suite/database/migrations/2026_05_10_190870_11_create_search_console_query_metrics_table.php`, `packages/seo-suite/database/migrations/2026_05_29_000001_create_page_speed_audit_runs_table.php`, `packages/seo-suite/database/migrations/2026_05_29_000002_create_page_speed_audit_results_table.php`, `packages/seo-suite/database/migrations/2026_06_08_000001_add_cost_fields_to_ai_generation_histories_table.php`.
+- Settings migrations: `packages/seo-suite/database/settings/2026_05_10_190871_01_create_ai-orchestrator_settings.php`, `packages/seo-suite/database/settings/2026_05_10_190871_03_create_seo_suite_settings.php`, `packages/seo-suite/database/settings/2026_05_29_000001_add_pagespeed_seo_suite_settings.php`, `packages/seo-suite/database/settings/2026_06_07_000001_add_seo_authoring_quality_gate_settings.php`.
+- Settings classes: `AIOrchestratorSettings`, `SeoSuiteSettings`.
+- Models: `AIGenerationHistory`, `AiCreatorContext`, `AiCreatorSession`, `AiDiscoveryCrawlerRule`, `AiDiscoveryPageProfile`, `AiDiscoverySiteProfile`, `AiDiscoverySnapshot`, `BrokenLink`, `PageSeoSnapshot`, `PageSpeedAuditResult`, `PageSpeedAuditRun`, `SearchConsoleQueryMetric`, `SearchConsoleUrlMetric`.
+- Filament classes: `AiContentBriefAction`, `AiCreatorAction`, `AiImageGeneratorAction`, `CreateRedirectFromBrokenLinkAction`, `PageSeoPanel`, `TranslationSeoMetaSchema`, `SearchMetaDataSection`, `MetaSchema`, `TranslationMetaSchema`, `PageSeoPanelSchemaExtender`, `PageSeoSettingsTabExtender`, `SearchMetaSchemaExtender`, `and 34 more`.
+- Policies: `AiCreatorPolicy`.
 - Events: `AiGenerationCompleted`, `AiGenerationFailed`, `AiGenerationStarted`.
-- Listeners: `ClearAiDiscoveryCacheOnPageDeleted`, `ClearAiDiscoveryCacheOnPageSaved`, `LogAiGeneration`, `NotifyAiFailure`, `RecordBrokenLink`, `SeedAiCrawlerRulesOnSiteCreated`.
-- Register Capell extension points, routes, migrations, settings, render hooks, and resources from service providers.
+- Listeners: `ClearAiDiscoveryCacheOnPageDeleted`, `ClearAiDiscoveryCacheOnPageSaved`, `SeedAiCrawlerRulesOnSiteCreated`, `LogAiGeneration`, `NotifyAiFailure`, `RecordBrokenLink`.
+- Actions: `EstimateAiGenerationCostAction`, `RecordAiGenerationAction`, `AnalyzePageContentAction`, `ApplyAiDraftAction`, `BaseAction`, `BreadcrumbsSchemaAction`, `BuildAiDiscoveryPageEntriesAction`, `BuildAiReadinessAuditAction`, `BuildAiRobotsTxtRulesAction`, `BuildCrawlerPreviewReportAction`, `BuildDecliningSearchConsolePagesAction`, `BuildMarketplaceStructuredDataFreshnessWarningsAction`, `and 65 more`.
+- Data objects: `AiGenerationInputData`, `AiGenerationResultData`, `AiContentBriefData`, `AiDiscoveryAuditData`, `AiDiscoveryCrawlerRuleData`, `AiDiscoveryPageEntryData`, `AiDiscoveryRenderContextData`, `AiReadinessIssueData`, `CrawlerPreviewData`, `AiMetricsData`, `SearchConsoleDashboardStatsData`, `InternalLinkSuggestionData`, `and 23 more`.
+- Jobs: `RunPageSpeedAuditJob`.
+- Command signatures: `capell:seo-suite-doctor`.
+- Console command classes: `ClearAiCacheCommand`, `DoctorCommand`, `InstallCommand`, `MonitorAiUsageCommand`, `PageSpeedAuditCommand`, `RefreshAiDiscoveryMarkdownCommand`, `SetupCommand`, `SyncSearchConsoleCommand`, `TestOpenAiConnectionCommand`.
+- Manifest contributions: `admin-page: Capell\SeoSuite\Manifest\AiDiscoveryPageContribution`, `admin-page: Capell\SeoSuite\Manifest\BrokenLinksPageContribution`, `admin-page: Capell\SeoSuite\Manifest\NotFoundUrlsPageContribution`, `admin-page: Capell\SeoSuite\Manifest\SearchRankingsPageContribution`, `admin-page: Capell\SeoSuite\Manifest\SeoAuditPageContribution`, `admin-page: Capell\SeoSuite\Manifest\TranslationCoveragePageContribution`, `route: Capell\SeoSuite\Manifest\AiDiscoveryRoutesContribution`.
+- Health checks: `Capell\SeoSuite\Health\SeoSuiteHealthCheck`.
+- Blade views: `packages/seo-suite/resources/views/components/schema/breadcrumb.blade.php`, `packages/seo-suite/resources/views/components/schema/graph.blade.php`, `packages/seo-suite/resources/views/components/schema/image.blade.php`, `packages/seo-suite/resources/views/components/schema/organization.blade.php`, `packages/seo-suite/resources/views/components/schema/webpage.blade.php`, `packages/seo-suite/resources/views/components/schema/website.blade.php`, `packages/seo-suite/resources/views/filament/components/page-seo-panel.blade.php`, `packages/seo-suite/resources/views/filament/fields/image-preview.blade.php`, `packages/seo-suite/resources/views/filament/widgets/ai-metrics.blade.php`, `packages/seo-suite/resources/views/filament/widgets/ai-usage.blade.php`, `packages/seo-suite/resources/views/filament/widgets/edit-page-audit-tabs.blade.php`, `packages/seo-suite/resources/views/filament/widgets/pagespeed-audit-edit.blade.php`, `and 10 more`.
+- Cache tags: `seo-suite`.
+
+## Data Model
+
+- Required tables: `ai_creator_contexts`, `ai_creator_sessions`, `ai_discovery_crawler_rules`, `ai_discovery_page_profiles`, `ai_discovery_site_profiles`, `ai_discovery_snapshots`, `ai_generation_histories`, `broken_links`, `page_seo_snapshots`, `page_speed_audit_results`, `page_speed_audit_runs`, `search_console_query_metrics`, `search_console_url_metrics`.
+- Models: `AIGenerationHistory`, `AiCreatorContext`, `AiCreatorSession`, `AiDiscoveryCrawlerRule`, `AiDiscoveryPageProfile`, `AiDiscoverySiteProfile`, `AiDiscoverySnapshot`, `BrokenLink`, `PageSeoSnapshot`, `PageSpeedAuditResult`, `PageSpeedAuditRun`, `SearchConsoleQueryMetric`, `SearchConsoleUrlMetric`.
+- Migration files: `2026_05_10_190870_01_create_ai_creator_contexts_table.php`, `2026_05_10_190870_02_create_ai_generation_histories_table.php`, `2026_05_10_190870_03_create_ai_creator_sessions_table.php`, `2026_05_10_190870_04_create_ai_discovery_crawler_rules_table.php`, `2026_05_10_190870_05_create_ai_discovery_page_profiles_table.php`, `2026_05_10_190870_06_create_ai_discovery_site_profiles_table.php`, `2026_05_10_190870_07_create_ai_discovery_snapshots_table.php`, `2026_05_10_190870_08_create_broken_links_table.php`, `2026_05_10_190870_09_create_page_seo_snapshots_table.php`, `2026_05_10_190870_10_create_search_console_url_metrics_table.php`, `2026_05_10_190870_11_create_search_console_query_metrics_table.php`, `2026_05_29_000001_create_page_speed_audit_runs_table.php`, `2026_05_29_000002_create_page_speed_audit_results_table.php`, `2026_06_08_000001_add_cost_fields_to_ai_generation_histories_table.php`.
+- Migration impact: run host migrations through the package install flow before opening package surfaces.
+- Deletion/retention behaviour: Docs gap unless the package has an explicit pruning command, retention setting, or tested cascade path.
 
 ## Install Impact
 
-- Adds SEO and AI-related tables/settings.
-- Extends page and site admin form-builder.
-- Adds SEO admin pages and widgets.
-- Adds llms.txt, llms-full.txt, robots.txt, and page Markdown frontend output.
-- Requires Site Discovery for public page discovery and sitemap outputs.
-- Adds config for AI provider/model, image model, Search Console, publish gates, and prompts.
-
-## Install And Setup
-
-- Install with `composer require capell-app/seo-suite` in the host Capell application.
-- Install and migrate hard dependencies first: `capell-app/insights` and `capell-app/site-discovery`.
-- Run `php artisan capell:seo-suite-install` in the host app after Composer install. The command publishes all SEO Suite schema migrations and settings migrations.
-- Regenerate Filament Shield permissions in demo/admin apps after installation: `php artisan shield:generate --all --panel=admin`.
-- Run migrations through the host application package install flow.
-- Make sure the web server routes generated discovery documents through Laravel. SEO Suite owns `/llms.txt`, `/llms-full.txt`, `/robots.txt`, `/index.md`, and `/{url}.md`; do not let a static-file rule return `404` before the Laravel front controller can run.
-- In this repository, verify package changes with `vendor/bin/pest`; do not use `php artisan`.
-
-### Web Server Routing
-
-The default Laravel Apache `.htaccess` works because it rewrites any missing file to `public/index.php`. Custom Apache or nginx configs often add static-file shortcuts for `.txt`, `.xml`, or `.md`; those shortcuts must exclude SEO Suite routes.
-
-For nginx, put exact discovery routes before generic static-asset locations:
-
-```nginx
-location = /robots.txt    { try_files /__missing__ /index.php$is_args$args; }
-location = /llms.txt      { try_files /__missing__ /index.php$is_args$args; }
-location = /llms-full.txt { try_files /__missing__ /index.php$is_args$args; }
-location = /index.md      { try_files /__missing__ /index.php$is_args$args; }
-location ~ ^/.+\.md$      { try_files $uri /__missing__ /index.php$is_args$args; }
-
-location / {
-    try_files $uri $uri/ /index.php$is_args$args;
-}
-```
-
-For Apache, keep Laravel's front-controller rewrite active for missing files:
-
-```apache
-RewriteEngine On
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteRule ^ index.php [L]
-```
-
-If a vhost has explicit static handlers for `*.txt` or `*.md`, add exceptions for `/robots.txt`, `/llms.txt`, `/llms-full.txt`, `/index.md`, and generated page Markdown URLs before those static handlers.
-
-## Approved Improvement Roadmap
-
-These items are approved product direction for the package. Keep implementation in Actions, console commands, typed Data objects, package settings, and Filament pages rather than embedding SEO behavior in host applications.
-
-### Diagnostics And Install Safety
-
-- `capell:seo-suite-doctor` checks route registration, route collisions, installed package state, AI Discovery settings, generated document responses, redirects, content types, public cache headers, sitemap XML, public-output leak markers, and web-server interception symptoms.
-- The edit-page integration contributes `EditPageAuditTabsWidget`, a lazy tabbed SEO/PageSpeed audit surface with lightweight issue-count badges so editors do not load both audit bodies up front.
-- SEO Suite owns `/robots.txt`, `/llms.txt`, `/llms-full.txt`, `/index.md`, and `/{url}.md` unless a host app intentionally overrides those routes and delegates to SEO Suite generators.
-- Add install/setup diagnostics that warn when generated Markdown is returned with HTTP `404`, when a static vhost block handles `.txt` or `.md` before Laravel, or when the package is installed without Site Discovery outputs available.
-
-### AI Discovery Quality
-
-- Expand the AI Discovery admin page into a coverage dashboard that shows included pages, excluded pages with reasons, missing summaries, duplicate entity names, stale snapshots, unavailable Markdown views, and sitemap-visible pages missing from AI Discovery.
-- Add stale-cache controls and a regenerate action for AI Discovery outputs so editors can refresh `llms.txt`, `llms-full.txt`, robots, and page Markdown after content or policy changes.
-- Keep crawler policy presets explicit: search-visible/training-restricted, open, restrictive, and private or staging lockdown. Render `robots.txt` from policy objects and override rows rather than one-off strings.
-
-### Public Output Auditing
-
-- Add a public-output leak scanner that crawls generated sitemap, AI Discovery, Markdown, and robots outputs and fails if it finds admin URLs, signed URLs, model IDs, field paths, Livewire internals, unpublished content, or editor-only metadata.
-- Add a structured data audit surface that previews each page graph and flags missing required fields, duplicate/conflicting entities, invalid URLs, stale marketplace pricing or rating values, and JSON-LD validation failures.
-
-### Integration With Site Discovery
-
-- Consume a unified Site Discovery URL registry as the canonical source for public URLs, canonical status, robots directives, site/language scope, source package, last modified state, and output eligibility.
-- Compare AI Discovery coverage against sitemap coverage so public indexable pages do not silently drop out of `llms.txt` or page Markdown output.
-
-## Admin And Access
-
-- BrokenLinksPage (packages/seo-suite/src/Filament/Pages/BrokenLinksPage.php, slug `broken-links`)
-- NotFoundUrlsPage (packages/seo-suite/src/Filament/Pages/NotFoundUrlsPage.php, slug `missing-pages`)
-- SeoAuditPage (packages/seo-suite/src/Filament/Pages/SeoAuditPage.php, slug `seo-audit`)
-- AiDiscoveryPage (packages/seo-suite/src/Filament/Pages/AiDiscoveryPage.php, slug `ai-discovery`)
-- TranslationCoveragePage (packages/seo-suite/src/Filament/Pages/TranslationCoveragePage.php, slug `translation-coverage`)
-
-- Policy: AiCreatorPolicy (packages/seo-suite/src/Policies/AiCreatorPolicy.php)
-- Gate: AiMetricsWidgetAbstract: `developer`, `admin`, `super_admin`
-- Gate: BrokenLinksPage: Filament Shield page permissions
-- Gate: NotFoundUrlsPage: Filament Shield page permissions
-- Gate: SeoAuditPage: Filament Shield page permissions
-- Gate: AiDiscoveryPage: Filament Shield page permissions
-- Gate: TranslationCoveragePage: Filament Shield page permissions
+- Admin navigation: adds package-owned Filament classes when registered.
+- Permissions: `View:SeoAuditPage`, `View:BrokenLinksPage`, `Manage:BrokenLinks`, `View:NotFoundUrlsPage`, `Manage:NotFoundUrls`, `View:AiDiscoveryPage`, `Manage:AiDiscovery`, `View:SearchRankingsPage`, `View:TranslationCoveragePage`, `Manage:SeoSuiteSettings`, `Use:AiCreator`.
+- Public routes: none detected in package route files.
+- Database changes: package migrations are declared.
+- Settings: `Capell\SeoSuite\Settings\AIOrchestratorSettings`, `Capell\SeoSuite\Settings\SeoSuiteSettings`.
+- Queues or schedules: review package jobs or schedules before install.
+- Cache tags: `seo-suite`.
+- Commands: `capell:seo-suite-doctor`.
 
 ## Common Pitfalls
 
-- Missing `insights_events` or `insights_visits` tables will break `NotFoundUrlsPage` and some dashboard widgets. That means the Insights dependency has not been migrated in the host app.
-- Missing `broken_links`, `page_seo_snapshots`, `search_console_url_metrics`, or AI creator tables means `capell:seo-suite-install` did not publish the full SEO Suite schema.
-- Do not enable AI creator without checking provider credentials and review workflow.
-- Search Console requires credentials and property URL.
-- Publish gates can block publishing when required metadata is missing.
-- Prism AI telemetry is defensive around missing usage data, and the circuit breaker is scoped per configured provider so one provider outage does not disable every AI provider.
-- PageSpeed digest default recipients resolve through the user role relation when available rather than loading every user into memory.
-- Site Discovery owns sitemap output and public URL discovery; SEO Suite consumes that public discovery boundary for AI Discovery.
-- Review AI Discovery summaries, Markdown previews, and crawler policy before launching a site that should be visible to AI search and answer engines.
+- Run migrations before opening package resources or public routes.
+- Configure package settings before testing production-like workflows.
+- Keep public Blade and cached HTML free of authoring markers, model IDs, permissions, signed editor URLs, and lazy database queries.
+- Run package commands from the host app; in this repository use `vendor/bin/pest` for package tests.
+- Keep `composer.json`, `composer.local.json`, `capell.json`, docs, screenshots, and tests aligned when the package surface changes.
 
-## Docs
+## Troubleshooting
 
-- [docs index](docs/README.md)
-- [ai-discovery.md](docs/ai-discovery.md)
-- [credits-and-acknowledgements.md](docs/credits-and-acknowledgements.md)
-- [extending-seo-suite.md](docs/extending-seo-suite.md)
-- [overview.md](docs/overview.md)
-- [publish-gates.md](docs/publish-gates.md)
+| Symptom | Likely cause | Check | Fix |
+| --- | --- | --- | --- |
+| Package surface is missing after install | Provider or manifest is not loaded | Confirm `capell.json`, package `composer.json`, and provider registration | Reinstall the package, refresh Composer autoload, and clear host caches |
+| Admin screen or command fails on missing table | Package migrations have not run | Check the tables listed in `Data Model` | Run host migrations and rerun the focused package test |
+| Background work does not run | Queue worker or scheduled command is not active | Check package jobs, commands, and host scheduler configuration | Start the queue or scheduler, then run the focused command or package test |
+| Public output leaks unexpected state | Render data, cache variation, or authoring boundary has regressed | Check public Blade, cache tags, and public-output safety tests | Move data loading out of Blade and rerun the package public-output tests |
 
-## Testing
+## Quick Start
 
-Run package tests from the repository root:
+1. Install the package: `composer require capell-app/seo-suite`.
+2. Run the required setup: `php artisan migrate`.
+3. Open the related Capell admin surface and verify SEO Suite appears.
 
-```bash
-vendor/bin/pest packages/seo-suite/tests --configuration=phpunit.xml
-```
+## Next Steps
 
-Focused install and Filament render checks:
+- [Package docs](docs/README.md)
+- [Overview](docs/overview.md)
+- [Screenshot contract](docs/screenshots.json)
+- [Marketplace assets](docs/assets/marketplace/)
+- [Capell content language plan](../../docs/CONTENT_LANGUAGE_PLAN.md)
+- [Capell documentation design system](../../docs/DESIGN_SYSTEM.md)
+- [Capell and package ERD notes](../../docs/erd/capell-and-package-erds.md)
+- Related packages: [Insights](../insights/README.md), [Site Discovery](../site-discovery/README.md), [Blog](../blog/README.md), [Media Ai](../media-ai/README.md), [Media Library](../media-library/README.md), [Publishing Studio](../publishing-studio/README.md), [Url Manager](../url-manager/README.md).
+- Focused tests: `vendor/bin/pest packages/seo-suite/tests --configuration=phpunit.xml`.
 
-```bash
-vendor/bin/pest packages/seo-suite/tests/Feature/AiDiscovery/AiDiscoveryMigrationTest.php packages/seo-suite/tests/Feature/Filament/Pages/BrokenLinksPageTest.php --configuration=phpunit.xml
-```
-
-## Maintenance Notes
-
-- Put behaviour changes in `src/Actions/`; UI classes, commands, and controllers should call actions instead of owning domain logic.
-- Use package `Data` classes at boundaries instead of passing anonymous arrays between layers.
-- Use backed enums for persisted values and enum labels for Filament options.
+<!-- prettier-ignore-end -->

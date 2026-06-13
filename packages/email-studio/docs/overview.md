@@ -1,109 +1,110 @@
-# Email Studio Overview
+# Email Studio
 
-Email Studio is the transactional email layer for Capell. It gives first-party and project packages one path for template registration, site-aware rendering, provider delivery, send recording, suppressions, and provider delivery events.
+<!-- prettier-ignore-start -->
 
-The product goal is simple: when an email matters, Capell should be able to show what was supposed to be sent, who it was sent to, which provider handled it, and why it failed when it failed.
+## What This Plugin Adds
 
-## Responsibilities
+Email Studio is an **Available**, **Schema-owning** Capell package in the **Capell Communications** product group. It ships as `capell-app/email-studio` and extends these surfaces: admin, frontend, console.
 
-Email Studio owns:
+Email Studio gives every Capell site a reliable transactional-email core. Define reusable, locale- and site-scoped templates that render through a deliberately safe placeholder engine (HTML-escaped, missing-variable-strict in production), then send through delivery profiles backed by pluggable provider adapters. Every send is rendered to an immutable snapshot, screened against site and global suppression lists, and delivered via a queue job that records per-recipient outcomes for support and audit. Provider event webhooks write delivery events back into the audit trail, while the MailTracker-backed admin surface exposes sent-email records, opens, clicks, stored HTML, and retention controls; future depth adds one-click unsubscribe, inbound replies, and native template/profile authoring.
 
-- template definitions and template variants;
-- delivery profiles and provider selection;
-- send requests, rendered snapshots, and recipient rows;
-- suppression checks before queueing and before delivery;
-- MailTracker-backed sent email viewing for non-Email Studio Laravel mail;
-- MailTracker tracking and retention settings;
-- provider adapter contracts;
-- provider event webhook ingestion;
-- future reply capture, one-click unsubscribe, and native template/profile authoring flows.
+After install, admins get package-owned management surfaces and public users may see package-owned frontend output or routes.
 
-Email Studio does not own:
+Status details:
 
-- newsletter subscribers;
-- audience imports;
-- segment rules;
-- bulk campaign orchestration;
-- public authoring controls.
+- Status: Available
+- Tier: premium
+- Bundle: communications
+- Composer package: `capell-app/email-studio`
+- Namespace: `Capell\EmailStudio`
+- Theme key: not applicable
 
-Those boundaries keep the package useful for transactional email without turning it into a newsletter platform.
+## Why It Matters
 
-## Visible Surfaces
+**For developers:** The package gives developers package-owned service providers, Actions, Data objects, models, Laravel routes, Filament classes, and Blade views instead of pushing this behaviour into core or application code.
 
-Email Studio ships a package-owned Filament sent email resource for MailTracker records and an extension settings surface for tracking and retention configuration. The vendor MailTracker tracking routes stay active, but its bundled Blade admin routes are disabled; Capell owns the admin viewing surface.
+**For teams:** Email Studio is Capell's transactional-email engine: site-scoped reusable templates with safe {{ variable }} rendering, pluggable delivery profiles and provider adapters, suppression enforcement, and a queued, auditable per-recipient send pipeline.
 
-The active runtime surfaces are:
+## Screens And Workflow
 
-- package actions for registering templates, rendering variants, suppressing recipients, sending messages, and delivering queued mail;
-- `SendEmailJob`;
-- `SentEmailResource` for read-only sent email inspection;
-- `EmailStudioSettings` for MailTracker open tracking, click tracking, content storage, and retention;
-- `capell-email-studio:purge-tracked-emails` for scheduled tracked-email cleanup;
-- `POST /mail/provider-events/{token}` for tokenized provider event ingestion, with `X-Capell-Email-Studio-Signature` HMAC verification when the profile defines `provider_settings.webhook_secret`;
-- provider adapter contracts and registries;
-- database records for templates, profiles, messages, recipients, events, replies, suppressions, registrations, and tracking tokens.
+Screenshot contract: `screenshots.json`.
 
-## Screenshot Coverage
+- Sent emails admin index (admin, required).
+- Sent email detail view (admin, required).
 
-The screenshot contract is stored in [screenshots.json](screenshots.json). Current committed runner captures cover the sent email index and sent email detail view in light and dark mode. The Email Studio settings target remains in the contract but is not promoted to Marketplace media until the runner app exposes the `email_studio` settings group on the shared settings page.
+## Technical Shape
 
-## Workflow
+- Service providers: `Capell\EmailStudio\Providers\EmailStudioServiceProvider`, `Capell\EmailStudio\Providers\AdminServiceProvider`, `Capell\EmailStudio\Providers\FrontendServiceProvider`.
+- Config files: `packages/email-studio/config/capell-email-studio.php`.
+- Migrations: `packages/email-studio/database/migrations/2026_05_10_190847_01_create_email_profiles_table.php`, `packages/email-studio/database/migrations/2026_05_10_190847_02_create_email_templates_table.php`, `packages/email-studio/database/migrations/2026_05_10_190847_03_create_email_template_variants_table.php`, `packages/email-studio/database/migrations/2026_05_10_190847_04_create_email_messages_table.php`, `packages/email-studio/database/migrations/2026_05_10_190847_05_create_email_recipients_table.php`, `packages/email-studio/database/migrations/2026_05_10_190847_06_create_email_events_table.php`, `packages/email-studio/database/migrations/2026_05_10_190847_07_create_email_replies_table.php`, `packages/email-studio/database/migrations/2026_05_10_190847_08_create_email_suppressions_table.php`, `packages/email-studio/database/migrations/2026_05_10_190847_09_create_email_template_registrations_table.php`, `packages/email-studio/database/migrations/2026_05_10_190847_10_create_email_tracking_tokens_table.php`.
+- Settings migrations: `packages/email-studio/database/settings/2026_06_05_000001_create_email_studio_settings.php`.
+- Settings classes: `EmailStudioSettings`, `EmailStudioSettingsMigrationProvider`.
+- Models: `EmailEvent`, `EmailMessage`, `EmailProfile`, `EmailRecipient`, `EmailReply`, `EmailSuppression`, `EmailTemplate`, `EmailTemplateRegistration`, `EmailTemplateVariant`, `EmailTrackingToken`, `SentEmail`, `SentEmailUrlClicked`.
+- Filament classes: `ListSentEmails`, `ViewSentEmail`, `SentEmailInfolist`, `SentEmailResource`, `EmailStudioSettingsSchema`.
+- Route files: `packages/email-studio/routes/web.php`.
+- Actions: `ApplyMailTrackerSettingsAction`, `CheckEmailSuppressionAction`, `DeliverEmailMessageAction`, `MarkEmailMessageDeliveryFailedAction`, `PruneEmailBodiesAction`, `PurgeTrackedEmailsAction`, `RecordProviderEventAction`, `RegisterEmailTemplateAction`, `RenderEmailTemplateAction`, `ResolveEmailTemplateVariantAction`, `ResolveProviderWebhookProfileAction`, `SendEmailAction`, `and 2 more`.
+- Data objects: `EmailAddressData`, `EmailBodyPruneResultData`, `EmailContextData`, `EmailHeaderData`, `InboundEmailReplyData`, `ProviderSendResultData`, `ProviderWebhookEventData`, `RenderedEmailData`, `SendEmailData`, `TrackedEmailPurgeResultData`.
+- Jobs: `SendEmailJob`.
+- Command signatures: `Capell\EmailStudio\Console\Commands\PurgeTrackedEmailsCommand`, `capell-email-studio:prune-bodies`.
+- Console command classes: `PruneEmailBodiesCommand`, `PurgeTrackedEmailsCommand`.
+- Manifest contributions: `admin-resource: Capell\EmailStudio\Manifest\SentEmailResourceContribution`, `model: Capell\EmailStudio\Manifest\SentEmailModelContribution`, `scheduled-job: Capell\EmailStudio\Manifest\TrackedEmailPurgeScheduleContribution`, `setting: Capell\EmailStudio\Manifest\EmailStudioSettingsContribution`.
+- Health checks: `Capell\EmailStudio\Health\EmailStudioHealthCheck`.
+- Blade views: `packages/email-studio/resources/views/filament/sent-emails/click-rows.blade.php`, `packages/email-studio/resources/views/filament/sent-emails/content-preview.blade.php`.
+- Cache tags: `email-studio`.
 
-```mermaid
-flowchart LR
-    Package["Capell package"] --> SendEmailAction["SendEmailAction"]
-    SendEmailAction --> Profile["Resolve profile"]
-    SendEmailAction --> Template["Resolve template and variant"]
-    Template --> Render["Render declared variables"]
-    Render --> Message["Create message and recipients"]
-    Message --> Suppression["Apply suppression checks"]
-    Suppression --> Queue["Dispatch SendEmailJob"]
-    Queue --> Deliver["DeliverEmailMessageAction"]
-    Deliver --> Provider["Provider adapter"]
-    Provider --> Result["Record recipient and message outcome"]
-```
+## Data Model
 
-The send pipeline stores a rendered snapshot before delivery. That is intentional. Support staff need to see what was generated at send time even if the template changes later.
+- Required tables: `sent_emails`, `sent_emails_url_clicked`.
+- Models: `EmailEvent`, `EmailMessage`, `EmailProfile`, `EmailRecipient`, `EmailReply`, `EmailSuppression`, `EmailTemplate`, `EmailTemplateRegistration`, `EmailTemplateVariant`, `EmailTrackingToken`, `SentEmail`, `SentEmailUrlClicked`.
+- Migration files: `2026_05_10_190847_01_create_email_profiles_table.php`, `2026_05_10_190847_02_create_email_templates_table.php`, `2026_05_10_190847_03_create_email_template_variants_table.php`, `2026_05_10_190847_04_create_email_messages_table.php`, `2026_05_10_190847_05_create_email_recipients_table.php`, `2026_05_10_190847_06_create_email_events_table.php`, `2026_05_10_190847_07_create_email_replies_table.php`, `2026_05_10_190847_08_create_email_suppressions_table.php`, `2026_05_10_190847_09_create_email_template_registrations_table.php`, `2026_05_10_190847_10_create_email_tracking_tokens_table.php`.
+- Migration impact: run host migrations through the package install flow before opening package surfaces.
+- Deletion/retention behaviour: Docs gap unless the package has an explicit pruning command, retention setting, or tested cascade path.
 
-## Site Scope
+## Install Impact
 
-Most records store both `site_id` and `site_scope_key`. The `site_scope_key` avoids nullable uniqueness traps and makes global records explicit.
+- Admin navigation: adds package-owned Filament classes when registered.
+- Permissions: `ViewAny:SentEmail`, `View:SentEmail`.
+- Public routes: route files exist and must be reviewed before public enablement.
+- Database changes: package migrations are declared.
+- Settings: `Capell\EmailStudio\Settings\EmailStudioSettings`, `Capell\EmailStudio\Manifest\EmailStudioSettingsContribution`.
+- Queues or schedules: review package jobs or schedules before install.
+- Cache tags: `email-studio`.
+- Commands: `Capell\EmailStudio\Console\Commands\PurgeTrackedEmailsCommand`, `capell-email-studio:prune-bodies`.
 
-Common values:
+## Common Pitfalls
 
-- `global` for shared templates, profiles, and suppressions;
-- `site:12` for records owned by a specific site.
+- Run migrations before opening package resources or public routes.
+- Configure package settings before testing production-like workflows.
+- Review route middleware, throttling, signed URLs, and public-output safety before exposing routes.
+- Keep public Blade and cached HTML free of authoring markers, model IDs, permissions, signed editor URLs, and lazy database queries.
+- Run package commands from the host app; in this repository use `vendor/bin/pest` for package tests.
+- Keep `composer.json`, `composer.local.json`, `capell.json`, docs, screenshots, and tests aligned when the package surface changes.
 
-Actions receive the scope instead of asking models to infer it. That keeps writes predictable and easier to test.
+## Troubleshooting
 
-## Rendering Rules
+| Symptom | Likely cause | Check | Fix |
+| --- | --- | --- | --- |
+| Package surface is missing after install | Provider or manifest is not loaded | Confirm `capell.json`, package `composer.json`, and provider registration | Reinstall the package, refresh Composer autoload, and clear host caches |
+| Admin screen or command fails on missing table | Package migrations have not run | Check the tables listed in `Data Model` | Run host migrations and rerun the focused package test |
+| Route returns unexpected output | Route cache, middleware, or signed URL setup does not match the package route file | Check the route files listed in `Technical Shape` | Clear route cache and verify middleware before exposing public routes |
+| Background work does not run | Queue worker or scheduled command is not active | Check package jobs, commands, and host scheduler configuration | Start the queue or scheduler, then run the focused command or package test |
+| Public output leaks unexpected state | Render data, cache variation, or authoring boundary has regressed | Check public Blade, cache tags, and public-output safety tests | Move data loading out of Blade and rerun the package public-output tests |
 
-Templates use simple `{{ variable }}` placeholders. Variables must be declared on the `EmailTemplate` before they are rendered in production mode.
+## Quick Start
 
-- Subject, preview text, and HTML output are escaped.
-- Plain text output is not HTML-escaped.
-- Preview mode leaves missing placeholders visible.
-- Production rendering throws when a placeholder is missing or undeclared.
+1. Install the package: `composer require capell-app/email-studio`.
+2. Run the required setup: `php artisan migrate`.
+3. Open the related Capell admin surface and verify Email Studio appears.
 
-This is deliberately smaller than Blade. Email templates should be safe, reviewable, and easy to diagnose.
+## Next Steps
 
-## Delivery Outcomes
+- [Package docs index](README.md)
+- [Screenshot contract](screenshots.json)
+- [Marketplace assets](assets/marketplace/)
+- [Capell content language plan](../../../docs/CONTENT_LANGUAGE_PLAN.md)
+- [Capell documentation design system](../../../docs/DESIGN_SYSTEM.md)
+- [Capell and package ERD notes](../../../docs/erd/capell-and-package-erds.md)
+- Related packages: [Campaign Studio](../../campaign-studio/README.md), [Form Builder](../../form-builder/README.md), [Insights](../../insights/README.md).
+- Focused tests: `vendor/bin/pest packages/email-studio/tests --configuration=phpunit.xml`.
 
-Messages can be requested, queued, sent, failed, or partially failed. Recipients can be queued, sent, failed, suppressed, delivered, bounced, complained, opened, clicked, or replied.
-
-The current implementation records queue/send/failure/suppression states, provider lifecycle events, and MailTracker open/click activity for Laravel mail that flows through MailTracker. Reply ingestion and one-click unsubscribe remain future depth using models already present in the schema.
-
-## Sellable Product Layer
-
-The sellable part of Email Studio is not the transport. Laravel already sends email well. The paid value is the command centre around that transport:
-
-- reusable templates across packages;
-- approval-ready variants per site and locale;
-- delivery profiles for real client brands;
-- recipient-level audit trails;
-- suppressions and complaint handling;
-- a reply inbox;
-- retention and redaction tooling;
-- provider diagnostics that make support cases cheaper.
-
-That makes Email Studio a good fit for a premium Capell Communications bundle.
+<!-- prettier-ignore-end -->

@@ -151,7 +151,7 @@
         ],
         "categories": ["frontend", "themes"]
     },
-    "extends": null,
+    "extends": "default",
     "themeKey": "portfolio",
     "commercial": {
         "proposedLicense": "paid",

@@ -13,7 +13,10 @@ use Capell\CustomerPortal\Support\PortalDashboardItemRegistry;
 use Capell\CustomerPortal\Support\PortalPreferencesProviderRegistry;
 use Capell\CustomerPortal\Support\PortalProfileProviderRegistry;
 use Capell\CustomerPortal\Support\PortalSelfServiceItemRegistry;
+use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\RateLimiter;
 use Override;
 use Spatie\LaravelPackageTools\Package;
 
@@ -48,6 +51,8 @@ final class CustomerPortalServiceProvider extends AbstractPackageServiceProvider
         $this->app->singleton(PortalSelfServiceItemRegistry::class);
 
         $this->app->booted(function (): void {
+            $this->registerRateLimiters();
+
             if (! $this->isPackageInstalled()) {
                 return;
             }
@@ -75,6 +80,19 @@ final class CustomerPortalServiceProvider extends AbstractPackageServiceProvider
     protected function isPackageInstalled(): bool
     {
         return CapellCore::isPackageInstalled(self::$packageName);
+    }
+
+    private function registerRateLimiters(): self
+    {
+        RateLimiter::for('capell-customer-portal-preferences', function (Request $request): Limit {
+            $identifier = $request->user()?->getAuthIdentifier();
+            $actorKey = is_scalar($identifier) ? (string) $identifier : 'guest';
+            $key = hash('sha256', $actorKey . '|' . ($request->ip() ?? 'unknown'));
+
+            return Limit::perMinute(20)->by($key);
+        });
+
+        return $this;
     }
 
     private function registerModels(): self

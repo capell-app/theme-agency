@@ -11,5 +11,7 @@ Route::prefix('privacy/consent')
     ->middleware('web')
     ->group(function (): void {
         Route::get('/', ShowConsentPreferencesController::class)->name('show');
-        Route::post('/', StoreConsentPreferencesController::class)->name('store');
+        Route::post('/', StoreConsentPreferencesController::class)
+            ->middleware('throttle:capell-privacy-center-consent')
+            ->name('store');
     });

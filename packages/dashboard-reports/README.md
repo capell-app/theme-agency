@@ -1,112 +1,94 @@
 # Dashboard Reports
 
-At-a-glance content-health and publishing-activity widgets for Capell admin dashboards.
+<!-- prettier-ignore-start -->
 
-## At A Glance
+## What This Plugin Adds
 
-- Package: `capell-app/dashboard-reports`
-- Namespace: `Capell\DashboardReports\`
-- Surfaces: Filament admin
-- Service providers: `packages/dashboard-reports/src/Providers/AdminServiceProvider.php`, `packages/dashboard-reports/src/Providers/DashboardReportsServiceProvider.php`
-- Capell dependencies: `capell-app/admin`, `capell-app/core`
-- Third-party dependencies: `lorisleiva/laravel-actions`, `spatie/laravel-data`, `spatie/laravel-package-tools`
+Dashboard Reports is an **Available**, **No schema impact** Capell package in the **Capell Operations** product group. It ships as `capell-app/dashboard-reports` and extends these surfaces: admin.
 
-## Why It Helps Your Capell Workflow
+Dashboard Reports surfaces editorial health and publishing momentum directly on the Capell admin dashboard, so owners and editors see what needs attention the moment they log in. The Content Health widget flags scheduled, expired, stale, and URL-less pages with one-click deep-links into the page list, while the Publishing Trend chart tracks published-vs-scheduled activity across any date window. All counts respect each user's site access, and report visibility is toggleable per dashboard. Built on testable Actions and typed Data objects so teams can extend the reporting layer instead of bolting on a bespoke analytics package.
 
-- Turns common CMS health and content signals into dashboard widgets that operators can scan quickly.
-- Helps owners understand content health and publishing trends without opening several admin resources.
-- Gives developers small reporting Actions that can be tested independently from Filament widget rendering.
+After install, admins get package-owned management or reporting surfaces inside Capell.
 
-## Best Used With
+Status details:
 
-- [Diagnostics](../diagnostics/README.md)
-- [Publishing Studio](../publishing-studio/README.md)
-- [Login Audit](../login-audit/README.md)
-
-## What It Adds
-
-- Content Health and Publishing Trend widgets for Capell admin screens.
-- Filtered Content Health drill-downs into the Page resource for scheduled, expired, URL-less, and stale pages.
-- CSV exports for both dashboard widgets through `capell:dashboard-reports:export`.
-- Diagnostics checks for install state, dashboard widgets, settings contribution, provider binding, and page-list filters.
-- Service providers for package and admin registration.
-- Typed reporting Actions that other operations packages can build on.
+- Status: Available
+- Tier: premium
+- Bundle: operations
+- Composer package: `capell-app/dashboard-reports`
+- Namespace: `Capell\DashboardReports`
+- Theme key: not applicable
 
 ## Why It Matters
 
-**For developers:** Keeps Dashboard Reports package responsibilities isolated behind providers, actions, data objects, and package-owned resources where the package needs them.
+**For developers:** The package gives developers package-owned service providers, Actions, Data objects, Filament classes, and Blade views instead of pushing this behaviour into core or application code.
 
-**For teams:** Makes the Capell Operations capability easier to explain, install, and verify during package selection.
+**For teams:** At-a-glance content-health and publishing-activity widgets for the Capell admin dashboard - spot scheduled, expired, stale, and URL-less pages without opening a single resource.
 
-## Built With
+## Screens And Workflow
 
-This package makes its Composer dependencies visible because they are part of the value proposition, not just plumbing. When an upstream package has a public repository, its linked preview card points readers back to the maintainers so their work gets proper credit.
+Screenshot contract: `docs/screenshots.json`.
 
-**Capell packages used here**
+- Publishing trend dashboard widget (admin, required).
+- Content health dashboard widget (admin, required).
+- Dashboard report visibility settings (admin, required).
 
-- [Capell Admin](https://github.com/capell-app/admin)
-- [Capell Core](https://github.com/capell-app/core)
+## Technical Shape
 
-**Open-source packages used here**
+- Service providers: `Capell\DashboardReports\Providers\DashboardReportsServiceProvider`, `Capell\DashboardReports\Providers\AdminServiceProvider`.
+- Config files: `packages/dashboard-reports/config/capell-dashboard-reports.php`.
+- Filament classes: `DashboardReportsPageTableExtender`, `DashboardReportsDashboardSettingsContributor`, `ContentHealthWidget`, `PublishingTrendChartWidget`.
+- Actions: `BuildDefaultContentHealthAction`, `BuildPublishingTrendAction`, `ExportContentHealthCsvAction`, `ExportPublishingTrendCsvAction`.
+- Data objects: `PublishingTrendData`, `PublishingTrendPointData`, `ResolvedDashboardReportsSettingsData`.
+- Command signatures: `capell:dashboard-reports:export`.
+- Console command classes: `ExportDashboardReportCommand`.
+- Health checks: `Capell\DashboardReports\Health\DashboardReportsHealthCheck`.
+- Blade views: `packages/dashboard-reports/resources/views/widgets/content-health.blade.php`.
 
-- [Laravel Actions](https://github.com/lorisleiva/laravel-actions) - single-purpose action classes that keep package workflows out of controllers and Filament resources.
-- [Spatie Laravel Data](https://github.com/spatie/laravel-data) - typed data objects for package boundaries, form state, settings, and structured results.
-- [Spatie Laravel Package Tools](https://github.com/spatie/laravel-package-tools) - Laravel package bootstrapping for config, migrations, commands, translations, and service provider setup.
+## Data Model
 
-**Linked package previews**
+This package has no schema impact. It does not declare package-owned migrations or required tables.
 
-[![Laravel Actions GitHub preview](https://opengraph.githubassets.com/capell-readme/lorisleiva/laravel-actions)](https://github.com/lorisleiva/laravel-actions)
+Docs gap: document extension points here if the package delegates persistence to a host package.
 
-[![Spatie Laravel Data GitHub preview](https://opengraph.githubassets.com/capell-readme/spatie/laravel-data)](https://github.com/spatie/laravel-data)
+## Install Impact
 
-[![Spatie Laravel Package Tools GitHub preview](https://opengraph.githubassets.com/capell-readme/spatie/laravel-package-tools)](https://github.com/spatie/laravel-package-tools)
+- Admin navigation: adds package-owned Filament classes when registered.
+- Permissions: none declared in `capell.json`.
+- Public routes: none detected in package route files.
+- Database changes: no package migrations declared.
+- Settings: no package settings declared.
+- Queues or schedules: none detected in standard package paths.
+- Cache tags: none declared.
+- Commands: `capell:dashboard-reports:export`.
 
-## Code Map
+## Common Pitfalls
 
-| Area      | Path                                       | Purpose                                                             |
-| --------- | ------------------------------------------ | ------------------------------------------------------------------- |
-| Actions   | `packages/dashboard-reports/src/Actions`   | Domain operations. Test these directly where possible.              |
-| Data      | `packages/dashboard-reports/src/Data`      | Structured payloads, form state, view models, and integration data. |
-| Filament  | `packages/dashboard-reports/src/Filament`  | Admin resources, pages, widgets, and settings UI.                   |
-| Providers | `packages/dashboard-reports/src/Providers` | Registration, extension hooks, routes, migrations, and resources.   |
-| Resources | `packages/dashboard-reports/resources`     | Views, translations, assets, and package resources.                 |
-| Tests     | `packages/dashboard-reports/tests`         | Package-level Pest coverage.                                        |
+- Verify the package is installed before expecting its provider, views, or extension contributions to run.
+- Keep `composer.json`, `composer.local.json`, `capell.json`, docs, screenshots, and tests aligned when the package surface changes.
 
-## Admin Surface
+## Troubleshooting
 
-- Widgets: `ContentHealthWidget`, `PublishingTrendChartWidget`.
-- Page table extender: `DashboardReportsPageTableExtender` adds a hidden-by-default Content Health filter target for widget deep links.
-- Command: `capell:dashboard-reports:export content-health|publishing-trend --path=storage/app/report.csv`.
+| Symptom | Likely cause | Check | Fix |
+| --- | --- | --- | --- |
+| Package surface is missing after install | Provider or manifest is not loaded | Confirm `capell.json`, package `composer.json`, and provider registration | Reinstall the package, refresh Composer autoload, and clear host caches |
+| Background work does not run | Queue worker or scheduled command is not active | Check package jobs, commands, and host scheduler configuration | Start the queue or scheduler, then run the focused command or package test |
 
-## Data And Persistence
+## Quick Start
 
-- Data objects live in `src/Data/`; use them for payloads, form state, and view models.
-- The package does not create reporting tables. It reads Capell page state through site-scoped queries.
+1. Install the package: `composer require capell-app/dashboard-reports`.
+2. Run the required setup: no package migrations are declared; clear cached config and routes if the host app uses caches.
+3. Open the related Capell admin surface and verify Dashboard Reports appears.
 
-## Extension Points
+## Next Steps
 
-- Register Capell extension points, routes, migrations, settings, render hooks, and resources from service providers.
+- [Package docs](docs/README.md)
+- [Overview](docs/overview.md)
+- [Screenshot contract](docs/screenshots.json)
+- [Marketplace assets](docs/assets/marketplace/)
+- [Capell content language plan](../../docs/CONTENT_LANGUAGE_PLAN.md)
+- [Capell documentation design system](../../docs/DESIGN_SYSTEM.md)
+- [Capell and package ERD notes](../../docs/erd/capell-and-package-erds.md)
+- Focused tests: `vendor/bin/pest packages/dashboard-reports/tests --configuration=phpunit.xml`.
 
-## Install And Setup
-
-- Install with `composer require capell-app/dashboard-reports` in the host Capell application.
-- In this repository, verify package changes with `vendor/bin/pest`; do not use `php artisan`.
-
-## Docs
-
-- [docs index](docs/README.md)
-- [overview.md](docs/overview.md)
-- [credits-and-acknowledgements.md](docs/credits-and-acknowledgements.md)
-
-## Testing
-
-Run package tests from the repository root:
-
-```bash
-vendor/bin/pest packages/dashboard-reports/tests --configuration=phpunit.xml
-```
-
-## Maintenance Notes
-
-- Put behaviour changes in `src/Actions/`; UI classes, commands, and controllers should call actions instead of owning domain logic.
-- Use package `Data` classes at boundaries instead of passing anonymous arrays between layers.
+<!-- prettier-ignore-end -->

@@ -9,7 +9,7 @@ it('declares the required first-party theme manifest boundaries', function (): v
     $composer = capell_json_file_array(__DIR__ . '/../../composer.json');
 
     expect($manifest['themeKey'])->toBe('nonprofit')
-        ->and($manifest['extends'])->toBeNull()
+        ->and($manifest['extends'])->toBe('default')
         ->and(data_get($manifest, 'dependencies.requires'))->toContain('capell-app/frontend')
         ->and($manifest['database']['migrations'])->toBeFalse()
         ->and($manifest['providers']['runtime'])->toContain(NonprofitThemeServiceProvider::class)

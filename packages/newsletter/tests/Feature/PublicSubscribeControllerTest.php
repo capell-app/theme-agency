@@ -25,7 +25,10 @@ it('throttles public newsletter write routes', function (): void {
 });
 
 it('loads public routes only after the newsletter package is installed', function (): void {
-    $providerSource = file_get_contents((new ReflectionClass(NewsletterServiceProvider::class))->getFileName());
+    $providerFile = (new ReflectionClass(NewsletterServiceProvider::class))->getFileName();
+    throw_unless(is_string($providerFile), RuntimeException::class, 'Expected newsletter service provider to have a source file.');
+
+    $providerSource = file_get_contents($providerFile);
 
     expect($providerSource)->toBeString()
         ->and($providerSource)->not->toContain("->hasRoute('web')")

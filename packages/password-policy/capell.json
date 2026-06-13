@@ -70,10 +70,7 @@
             "hashedTokenFields": [],
             "redactedOutputClasses": [],
             "plaintextJustifications": [
-                {
-                    "field": "password_policy_password_histories.password",
-                    "reason": "Reviewed package field; not stored as a reusable secret by this package contract."
-                }
+                "password_policy_password_histories.password: Reviewed package field; not stored as a reusable secret by this package contract."
             ]
         },
         "publicOutput": {

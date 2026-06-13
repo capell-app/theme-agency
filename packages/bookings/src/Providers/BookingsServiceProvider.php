@@ -76,10 +76,11 @@ class BookingsServiceProvider extends AbstractPackageServiceProvider
     public function bootingPackage(): void
     {
         RateLimiter::for('capell-bookings-request', static function (Request $request): Limit {
-            $email = strtolower((string) $request->input('customer_email', ''));
+            $email = $request->input('customer_email');
+            $normalizedEmail = is_string($email) ? strtolower($email) : '';
 
             return Limit::perMinute(6)
-                ->by(hash('sha256', $email . '|' . (string) $request->ip()));
+                ->by(hash('sha256', $normalizedEmail . '|' . ($request->ip() ?? 'unknown')));
         });
     }
 

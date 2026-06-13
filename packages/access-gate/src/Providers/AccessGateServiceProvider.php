@@ -258,6 +258,13 @@ class AccessGateServiceProvider extends AbstractPackageServiceProvider
             return Limit::perMinute(6)->by($key);
         });
 
+        RateLimiter::for('access-gate-logout', function (Request $request): Limit {
+            $area = (string) $request->route('area', '');
+            $key = hash('sha256', $area . '|' . $request->ip());
+
+            return Limit::perMinute(20)->by($key);
+        });
+
         return $this;
     }
 

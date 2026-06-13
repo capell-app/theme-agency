@@ -92,6 +92,8 @@ it('rejects malformed base ai action input before running hooks', function (): v
 
     expect(fn (): mixed => $action->handle(null, ['tone' => 'direct']))
         ->toThrow(InvalidArgumentException::class, 'Invalid AI action input');
+    expect(fn (): mixed => $action->handle(makeSeoSuiteBaseActionContext(), 'tone=direct'))
+        ->toThrow(InvalidArgumentException::class, 'Invalid AI action input');
 
     expect($action->performed)->toBeFalse();
     Event::assertNothingDispatched();

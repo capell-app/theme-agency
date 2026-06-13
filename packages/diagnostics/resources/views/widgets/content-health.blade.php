@@ -1,5 +1,7 @@
 <x-filament-widgets::widget class="capell-diagnostics-content-health">
-    <x-filament::section heading="Content health">
+    <x-filament::section
+        :heading="__('capell-diagnostics::package.widget_content_health_heading')"
+    >
         <div class="space-y-2">
             @foreach ($this->data->issues as $issue)
                 <div class="flex items-center justify-between gap-4">

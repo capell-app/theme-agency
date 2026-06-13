@@ -18,7 +18,7 @@ it('declares the required first-party theme manifest boundaries', function (): v
     throw_unless(is_array($runtimeProviders), RuntimeException::class, 'Theme Education runtime providers must be an array.');
 
     expect($manifest['themeKey'])->toBe('education')
-        ->and($manifest['extends'])->toBeNull()
+        ->and($manifest['extends'])->toBe('default')
         ->and($manifest['surfaces'])->toBe(['frontend', 'console'])
         ->and(data_get($manifest, 'dependencies.requires'))->toContain('capell-app/frontend')
         ->and($database['migrations'])->toBeFalse()

@@ -77,9 +77,9 @@ final class RecordSwitcherHealthCheck implements ChecksExtensionHealth
             'resources/dist/record-switcher.js' => dirname(__DIR__, 2) . '/resources/dist/record-switcher.js',
         ];
 
-        return array_values(array_keys(array_filter(
+        return array_keys(array_filter(
             $paths,
             static fn (string $path): bool => ! is_file($path),
-        )));
+        ));
     }
 }

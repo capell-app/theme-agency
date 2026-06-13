@@ -1,178 +1,107 @@
 # Agent Bridge
 
-Agent Bridge connects AI agents and MCP clients to Capell through scoped tokens, read-only package knowledge, preview-then-confirm site operations, and audited execution records.
+<!-- prettier-ignore-start -->
 
-## At A Glance
+## What This Plugin Adds
 
-- Package: `capell-app/agent-bridge`
-- Namespace: `Capell\AgentBridge\`
-- Surfaces: Filament admin, HTTP, database
-- Service providers: `packages/agent-bridge/src/Providers/AgentBridgeServiceProvider.php`
-- Capell dependencies: `capell-app/admin`, `capell-app/core`
-- Third-party dependencies: `laravel/framework`, `laravel/mcp`, `lorisleiva/laravel-actions`, `spatie/laravel-data`, `spatie/laravel-package-tools`
+Agent Bridge is an **Available**, **Schema-owning** Capell package in the **Capell Operations** product group. It ships as `capell-app/agent-bridge` and extends these surfaces: admin, frontend.
 
-## Why It Helps Your Capell Workflow
+Connect AI agents and MCP clients to Capell with read-only package knowledge, scoped site capabilities, preview-then-confirm execution, and audited operations.
 
-- Lets trusted agent tools inspect Capell knowledge and run approved capabilities without opening broad admin access.
-- Keeps capability risk, confirmation, audit, and token behavior in one package so operators can reason about agent actions.
-- Gives developers a documented bridge for automation instead of adding ad hoc endpoints to admin resources.
+After install, admins get package-owned management surfaces and public users may see package-owned frontend output or routes.
 
-## Best Used With
+Status details:
 
-- [Diagnostics](../diagnostics/README.md)
-- [AI Orchestrator](../ai-orchestrator/README.md)
-- [Public Actions](../public-actions/README.md)
-
-## What It Adds
-
-Agent Bridge connects AI agents and MCP clients to Capell through standard Laravel MCP servers: a read-only knowledge server for packages and docs, and an authenticated site server for inspecting and operating a Capell installation.
-
-- Capell knowledge and site MCP servers.
-- Token, confirmation, and audit models.
-- Capability registry and capability actions.
-- Prompt builder Filament page.
-- Tools for knowledge lookup, package recommendation, site inspection, capability listing, confirmation, and execution.
+- Status: Available
+- Tier: premium
+- Bundle: operations
+- Composer package: `capell-app/agent-bridge`
+- Namespace: `Capell\AgentBridge`
+- Theme key: not applicable
 
 ## Why It Matters
 
-**For developers:** Provides a typed capability contract so Agent Bridge tools can preview, confirm, run, and audit changes instead of directly mutating site state.
+**For developers:** The package gives developers package-owned service providers, Actions, Data objects, models, Laravel routes, Filament classes, and Blade views instead of pushing this behaviour into core or application code.
 
-**For teams:** Lets trusted agent clients inspect Capell and request controlled site operations with per-token scoping, per-site authorization, confirmation records, and audit history.
-
-## Built With
-
-This package makes its Composer dependencies visible because they are part of the value proposition, not just plumbing. When an upstream package has a public repository, its linked preview card points readers back to the maintainers so their work gets proper credit.
-
-**Capell packages used here**
-
-- [Capell Admin](https://github.com/capell-app/admin)
-- [Capell Core](https://github.com/capell-app/core)
-
-**Open-source packages used here**
-
-- [Laravel MCP](https://github.com/laravel/mcp) - Laravel MCP server primitives used by Agent Bridge to expose Capell capabilities to agent tooling.
-- [Laravel Actions](https://github.com/lorisleiva/laravel-actions) - single-purpose action classes that keep package workflows out of controllers and Filament resources.
-- [Spatie Laravel Data](https://github.com/spatie/laravel-data) - typed data objects for package boundaries, form state, settings, and structured results.
-- [Spatie Laravel Package Tools](https://github.com/spatie/laravel-package-tools) - Laravel package bootstrapping for config, migrations, commands, translations, and service provider setup.
-
-**Linked package previews**
-
-[![Laravel MCP GitHub preview](https://opengraph.githubassets.com/capell-readme/laravel/mcp)](https://github.com/laravel/mcp)
-
-[![Laravel Actions GitHub preview](https://opengraph.githubassets.com/capell-readme/lorisleiva/laravel-actions)](https://github.com/lorisleiva/laravel-actions)
-
-[![Spatie Laravel Data GitHub preview](https://opengraph.githubassets.com/capell-readme/spatie/laravel-data)](https://github.com/spatie/laravel-data)
-
-[![Spatie Laravel Package Tools GitHub preview](https://opengraph.githubassets.com/capell-readme/spatie/laravel-package-tools)](https://github.com/spatie/laravel-package-tools)
+**For teams:** Let AI agents safely read and operate your Capell site through scoped tokens, preview-then-confirm guardrails, and a full audit trail.
 
 ## Screens And Workflow
 
-Screenshots are generated from [docs/screenshots.json](docs/screenshots.json) during package deployment.
+Screenshot contract: `docs/screenshots.json`.
 
-- Agent Bridge prompt builder page.
-- Token management or setup surface.
-- Capability preview and confirmation flow.
-- Audit entry review.
-- Agent Bridge server health output.
+- Agent Bridge prompt builder page (admin, required).
+- Token management or setup surface (admin, required).
+- Capability preview and confirmation flow (admin, required).
+- Audit entry review (admin, required).
+- Agent Bridge server health output (admin, required).
 
 ## Technical Shape
 
-- AgentBridgeServiceProvider registers routes, servers, resources, and capabilities.
-- Config file: capell-agent-bridge.php.
-- Routes file registers Agent Bridge endpoints through Laravel Agent Bridge.
-- Middleware: AuthenticateCapellAgentBridgeToken.
-- Models: CapellAgentBridgeToken, CapellAgentBridgeConfirmation, CapellAgentBridgeAuditEntry.
-- Servers: CapellKnowledgeServer and CapellSiteServer.
+- Service providers: `Capell\AgentBridge\Providers\AgentBridgeServiceProvider`.
+- Config files: `packages/agent-bridge/config/capell-agent-bridge.php`.
+- Migrations: `packages/agent-bridge/database/migrations/2026_05_10_190840_01_create_capell_agent-bridge_tokens_table.php`, `packages/agent-bridge/database/migrations/2026_05_10_190840_02_create_capell_agent-bridge_confirmations_table.php`, `packages/agent-bridge/database/migrations/2026_05_10_190840_03_create_capell_agent-bridge_audit_entries_table.php`, `packages/agent-bridge/database/migrations/2026_05_27_000001_create_capell_agent-bridge_saved_prompts_table.php`.
+- Settings migrations: `packages/agent-bridge/database/settings/2026_05_10_190841_01_add_agent_bridge_settings.php`.
+- Settings classes: `AgentBridgeSettings`.
+- Models: `CapellAgentBridgeAuditEntry`, `CapellAgentBridgeConfirmation`, `CapellAgentBridgeSavedPrompt`, `CapellAgentBridgeToken`.
+- Filament classes: `CapellAgentBridgePromptBuilderPage`, `AgentBridgeAuditEntriesRelationManager`, `AgentBridgeConfirmationsRelationManager`, `AgentBridgeTokensRelationManager`, `AgentBridgeSettingsSchema`.
+- Livewire components: `PromptBuilderToolbarAction`.
+- Route files: `packages/agent-bridge/routes/agent-bridge.php`.
+- Actions: `AuditAgentBridgeCapabilityAction`, `BuildAgentBridgePromptAction`, `ClearCapellCacheCapabilityAction`, `ConfirmAgentBridgeCapabilityAction`, `CreateAgentBridgeTokenAction`, `DeleteAgentBridgePromptAction`, `InvokeAgentBridgeCapabilityPreviewAction`, `CreateDraftPageCapabilityAction`, `DisablePageCapabilityAction`, `InspectPagePublishingReadinessCapabilityAction`, `UpdateDraftPageCapabilityAction`, `PruneAgentBridgeAuditEntriesAction`, `and 4 more`.
+- Data objects: `AgentBridgePromptData`, `AuthenticatedAgentBridgeClientData`, `ClearCacheCapabilityInputData`, `CreateDraftPageCapabilityInputData`, `PageIdCapabilityInputData`, `UpdateDraftPageCapabilityInputData`, `CapabilityData`, `CapabilityInvocationData`, `CapabilityResultData`.
+- Console command classes: `PruneAgentBridgeAuditEntriesCommand`.
+- Health checks: `Capell\AgentBridge\Health\AgentBridgeHealthCheck`.
+- Blade views: `packages/agent-bridge/resources/views/filament/pages/prompt-builder.blade.php`, `packages/agent-bridge/resources/views/livewire/prompt-builder-toolbar-action.blade.php`.
 
-## Code Map
+## Data Model
 
-| Area      | Path                                  | Purpose                                                             |
-| --------- | ------------------------------------- | ------------------------------------------------------------------- |
-| Actions   | `packages/agent-bridge/src/Actions`   | Domain operations. Test these directly where possible.              |
-| Data      | `packages/agent-bridge/src/Data`      | Structured payloads, form state, view models, and integration data. |
-| Enums     | `packages/agent-bridge/src/Enums`     | Persisted states and Filament option values.                        |
-| Models    | `packages/agent-bridge/src/Models`    | Eloquent records owned by the package.                              |
-| Filament  | `packages/agent-bridge/src/Filament`  | Admin resources, pages, widgets, and settings UI.                   |
-| HTTP      | `packages/agent-bridge/src/Http`      | Controllers, middleware, and request handling.                      |
-| Providers | `packages/agent-bridge/src/Providers` | Registration, extension hooks, routes, migrations, and resources.   |
-| Resources | `packages/agent-bridge/resources`     | Views, translations, assets, and package resources.                 |
-| Routes    | `packages/agent-bridge/routes`        | Route files loaded by the service provider.                         |
-| Config    | `packages/agent-bridge/config`        | Package configuration and publishable config.                       |
-| Database  | `packages/agent-bridge/database`      | Migrations, seeders, and settings migrations.                       |
-| Tests     | `packages/agent-bridge/tests`         | Package-level Pest coverage.                                        |
-
-## Admin Surface
-
-- Pages: `CapellAgentBridgePromptBuilderPage`.
-- Settings: `AgentBridgeSettings`.
-
-## Runtime Surface
-
-- Routes: `packages/agent-bridge/routes/agent-bridge.php`.
-
-## Data And Persistence
-
-- `capell_agent_bridge_tokens` stores Agent Bridge client tokens.
-- `capell_agent_bridge_confirmations` stores pending or completed confirmations.
-- `capell_agent_bridge_audit_entries` stores capability invocation records.
-- `capell_agent_bridge_saved_prompts` stores prompt builder templates.
-- Confirmation TTL defaults to 10 minutes.
-
-- Models: `CapellAgentBridgeAuditEntry`, `CapellAgentBridgeConfirmation`, `CapellAgentBridgeToken`.
-- Migrations create canonical underscore table names directly on fresh installs.
-- Config: `packages/agent-bridge/config/capell-agent-bridge.php`.
-- Data objects live in `src/Data/`; use them for payloads, form state, and view models.
-
-## Extension Points
-
-- Contracts: `CapellAgentBridgeCapabilityAction`, `CapellAgentBridgeCapabilityProvider`.
-- Register Capell extension points, routes, migrations, settings, render hooks, and resources from service providers.
+- Models: `CapellAgentBridgeAuditEntry`, `CapellAgentBridgeConfirmation`, `CapellAgentBridgeSavedPrompt`, `CapellAgentBridgeToken`.
+- Migration files: `2026_05_10_190840_01_create_capell_agent-bridge_tokens_table.php`, `2026_05_10_190840_02_create_capell_agent-bridge_confirmations_table.php`, `2026_05_10_190840_03_create_capell_agent-bridge_audit_entries_table.php`, `2026_05_27_000001_create_capell_agent-bridge_saved_prompts_table.php`.
+- Migration impact: run host migrations through the package install flow before opening package surfaces.
+- Deletion/retention behaviour: Docs gap unless the package has an explicit pruning command, retention setting, or tested cascade path.
 
 ## Install Impact
 
-- Adds Agent Bridge token, confirmation, and audit tables.
-- Adds configurable Agent Bridge routes.
-- Default config enables site route agent-bridge/capell and disables home/knowledge route registration.
-- Adds prompt builder admin page.
-- Adds token prefix and auth guard configuration.
-
-## Install And Setup
-
-- Install with `composer require capell-app/agent-bridge` in the host Capell application.
-- Run migrations through the host application package install flow.
-- In this repository, verify package changes with `vendor/bin/pest`; do not use `php artisan`.
-
-## Admin And Access
-
-- CapellAgentBridgePromptBuilderPage (packages/agent-bridge/src/Filament/Pages/CapellAgentBridgePromptBuilderPage.php, slug `capell-agent-bridge/prompt-builder`)
-
-- None proven in this package directory.
+- Admin navigation: adds package-owned Filament classes when registered.
+- Permissions: `agent-bridge.manage-tokens`, `agent-bridge.view-audit`.
+- Public routes: route files exist and must be reviewed before public enablement.
+- Database changes: package migrations are declared.
+- Settings: `Capell\AgentBridge\Settings\AgentBridgeSettings`.
+- Queues or schedules: none detected in standard package paths.
+- Cache tags: none declared.
+- Commands: console command classes detected: `PruneAgentBridgeAuditEntriesCommand`.
 
 ## Common Pitfalls
 
-- Enable only the Agent Bridge routes you intend to expose.
-- Protect site capabilities with token auth and confirmation flow.
-- Keep public_docs_paths scoped to documentation safe for Agent Bridge clients.
-- Run migrations before creating tokens.
+- Run migrations before opening package resources or public routes.
+- Configure package settings before testing production-like workflows.
+- Review route middleware, throttling, signed URLs, and public-output safety before exposing routes.
+- Keep public Blade and cached HTML free of authoring markers, model IDs, permissions, signed editor URLs, and lazy database queries.
+- Keep `composer.json`, `composer.local.json`, `capell.json`, docs, screenshots, and tests aligned when the package surface changes.
 
-## Docs
+## Troubleshooting
 
-- [docs index](docs/README.md)
-- [boost-integration.md](docs/boost-integration.md)
-- [capabilities.md](docs/capabilities.md)
-- [credits-and-acknowledgements.md](docs/credits-and-acknowledgements.md)
-- [overview.md](docs/overview.md)
+| Symptom | Likely cause | Check | Fix |
+| --- | --- | --- | --- |
+| Package surface is missing after install | Provider or manifest is not loaded | Confirm `capell.json`, package `composer.json`, and provider registration | Reinstall the package, refresh Composer autoload, and clear host caches |
+| Admin screen or command fails on missing table | Package migrations have not run | Check the tables listed in `Data Model` | Run host migrations and rerun the focused package test |
+| Route returns unexpected output | Route cache, middleware, or signed URL setup does not match the package route file | Check the route files listed in `Technical Shape` | Clear route cache and verify middleware before exposing public routes |
+| Public output leaks unexpected state | Render data, cache variation, or authoring boundary has regressed | Check public Blade, cache tags, and public-output safety tests | Move data loading out of Blade and rerun the package public-output tests |
 
-## Testing
+## Quick Start
 
-Run package tests from the repository root:
+1. Install the package: `composer require capell-app/agent-bridge`.
+2. Run the required setup: `php artisan migrate`.
+3. Open the related Capell admin surface and verify Agent Bridge appears.
 
-```bash
-vendor/bin/pest packages/agent-bridge/tests --configuration=phpunit.xml
-```
+## Next Steps
 
-## Maintenance Notes
+- [Package docs](docs/README.md)
+- [Overview](docs/overview.md)
+- [Screenshot contract](docs/screenshots.json)
+- [Marketplace assets](docs/assets/marketplace/)
+- [Capell content language plan](../../docs/CONTENT_LANGUAGE_PLAN.md)
+- [Capell documentation design system](../../docs/DESIGN_SYSTEM.md)
+- [Capell and package ERD notes](../../docs/erd/capell-and-package-erds.md)
+- Focused tests: `vendor/bin/pest packages/agent-bridge/tests --configuration=phpunit.xml`.
 
-- Put behaviour changes in `src/Actions/`; UI classes, commands, and controllers should call actions instead of owning domain logic.
-- Use package `Data` classes at boundaries instead of passing anonymous arrays between layers.
-- Use backed enums for persisted values and enum labels for Filament options.
+<!-- prettier-ignore-end -->

@@ -86,6 +86,9 @@ it('promotes buyer safe marketplace screenshots backed by the runner contract', 
         'docs/assets/marketplace/extension-card.svg',
         'docs/assets/marketplace/inertia-bookings-request-form.png',
         'docs/assets/marketplace/inertia-bookings-mobile-request.png',
+        'docs/assets/marketplace/inertia-bookings-homepage.png',
+        'docs/assets/marketplace/inertia-bookings-services.png',
+        'docs/assets/marketplace/inertia-bookings-locations.png',
     ];
     $expectedRunnerScreenshotPaths = [
         'docs/screenshots/inertia-bookings-homepage.png',

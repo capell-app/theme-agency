@@ -1,66 +1,94 @@
-# Capell Filament Peek
+# Filament Peek
 
-Status: **Available, no schema impact** · Kind: **package** · Tier:
-**free** · Bundle: **foundation** · Contexts: **admin, frontend** · Product
-group: **Capell Foundation**
+<!-- prettier-ignore-start -->
 
-Capell Filament Peek gives editors a safe preview of unsaved Page changes. It
-adds a `Changes` preview action beside the saved `Live page` action, then opens
-a signed URL backed by a temporary cache snapshot.
+## What This Plugin Adds
 
-## What This Package Adds
+Filament Peek is an **Available**, **No schema impact** Capell package in the **Capell Foundation** product group. It ships as `capell-app/filament-peek` and extends these surfaces: admin, frontend.
 
-- A Page edit header preview action for unsaved changes.
-- Short-lived preview snapshots for Page form state.
-- Layout Builder preview state capture for the current admin user.
-- A signed frontend preview route.
-- A preview error view for invalid, expired, or unavailable snapshots.
+Preview unsaved page and Layout Builder edits exactly as they'll render on your live theme - through a private, expiring, signed link, with nothing written to your content until you save.
+
+After install, admins get package-owned management surfaces and public users may see package-owned frontend output or routes.
+
+Status details:
+
+- Status: Available
+- Tier: free
+- Bundle: foundation
+- Composer package: `capell-app/filament-peek`
+- Namespace: `Capell\FilamentPeek`
+- Theme key: not applicable
 
 ## Why It Matters
 
-For a non-technical editor, the benefit is simple: they can see how a page will
-look before saving it. That reduces accidental publishing mistakes and keeps the
-saved live page separate from temporary editing work.
+**For developers:** The package gives developers package-owned service providers, Actions, Data objects, Laravel routes, Filament classes, and Blade views instead of pushing this behaviour into core or application code.
 
-For developers, the package keeps preview state out of persisted page and
-publishing tables. It uses cache snapshots and signed routes instead of turning
-preview data into permanent content.
+**For teams:** Preview unsaved page and Layout Builder edits exactly as they'll render on your live theme - through a private, expiring, signed link, with nothing written to your content until you save.
 
-## Runtime Shape
+## Screens And Workflow
 
-- `FilamentPeekServiceProvider` registers the package config, views, routes, and
-  preview behavior.
-- `CreatePagePreviewSnapshotAction` creates the short-lived snapshot payload.
-- `FindPagePreviewSnapshotAction` reads cached snapshots for signed render
-  requests without coupling the controller to the write action.
-- `StoreLayoutBuilderPreviewStateAction` records the latest Layout Builder state
-  for an admin preview.
-- `RenderPagePreviewSnapshotAction` applies the snapshot to frontend rendering.
-- `PagePreviewController` serves signed preview requests.
+Screenshot contract: `screenshots.json`.
 
-## Configuration
+- Page edit preview actions (admin, required).
 
-`config/capell-filament-peek.php` exposes:
+## Technical Shape
 
-- `enabled`
-- `preview.cache_store`
-- `preview.ttl_minutes`
-- `preview.route_prefix`
-- `preview.middleware`
+- Service providers: `Capell\FilamentPeek\Providers\FilamentPeekServiceProvider`.
+- Config files: `packages/filament-peek/config/capell-filament-peek.php`.
+- Filament classes: `PeekPagePreviewAction`, `FilamentPeekPanelExtender`, `PagePeekPreviewActionExtender`.
+- Route files: `packages/filament-peek/routes/web.php`.
+- Actions: `CreatePagePreviewSnapshotAction`, `FindPagePreviewSnapshotAction`, `RegisterLayoutBuilderPreviewWidgetsAction`, `RenderPagePreviewSnapshotAction`, `StoreLayoutBuilderPreviewStateAction`.
+- Data objects: `LayoutBuilderPreviewStateData`, `PagePreviewSnapshotData`.
+- Health checks: `Capell\FilamentPeek\Health\FilamentPeekHealthCheck`.
+- Blade views: `packages/filament-peek/resources/views/preview-error.blade.php`, `packages/filament-peek/resources/views/preview-ribbon.blade.php`.
+- Cache tags: `filament-peek-preview`.
 
-The default middleware is `web` plus `signed`.
+## Data Model
 
-## Data And Persistence
+This package has no schema impact. It does not declare package-owned migrations or required tables.
 
-This package owns no database tables and no settings. Snapshot payloads live in
-cache for the configured TTL. The package must not persist unsaved preview state
-into Pages, Layouts, translations, URLs, workspaces, or block assets.
+Docs gap: document extension points here if the package delegates persistence to a host package.
 
-## Verification
+## Install Impact
 
-```bash
-vendor/bin/pest packages/filament-peek/tests --configuration=phpunit.xml
-```
+- Admin navigation: adds package-owned Filament classes when registered.
+- Permissions: none declared in `capell.json`.
+- Public routes: route files exist and must be reviewed before public enablement.
+- Database changes: no package migrations declared.
+- Settings: no package settings declared.
+- Queues or schedules: none detected in standard package paths.
+- Cache tags: `filament-peek-preview`.
+- Commands: none declared.
 
-The focused tests cover the preview route, Page preview action wiring, provider
-registration, Layout Builder preview block registration, and snapshot action.
+## Common Pitfalls
+
+- Review route middleware, throttling, signed URLs, and public-output safety before exposing routes.
+- Keep public Blade and cached HTML free of authoring markers, model IDs, permissions, signed editor URLs, and lazy database queries.
+- Keep `composer.json`, `composer.local.json`, `capell.json`, docs, screenshots, and tests aligned when the package surface changes.
+
+## Troubleshooting
+
+| Symptom | Likely cause | Check | Fix |
+| --- | --- | --- | --- |
+| Package surface is missing after install | Provider or manifest is not loaded | Confirm `capell.json`, package `composer.json`, and provider registration | Reinstall the package, refresh Composer autoload, and clear host caches |
+| Route returns unexpected output | Route cache, middleware, or signed URL setup does not match the package route file | Check the route files listed in `Technical Shape` | Clear route cache and verify middleware before exposing public routes |
+| Public output leaks unexpected state | Render data, cache variation, or authoring boundary has regressed | Check public Blade, cache tags, and public-output safety tests | Move data loading out of Blade and rerun the package public-output tests |
+
+## Quick Start
+
+1. Install the package: `composer require capell-app/filament-peek`.
+2. Run the required setup: no package migrations are declared; clear cached config and routes if the host app uses caches.
+3. Open the related Capell admin surface and verify Filament Peek appears.
+
+## Next Steps
+
+- [Package docs index](README.md)
+- [Screenshot contract](screenshots.json)
+- [Marketplace assets](assets/marketplace/)
+- [Capell content language plan](../../../docs/CONTENT_LANGUAGE_PLAN.md)
+- [Capell documentation design system](../../../docs/DESIGN_SYSTEM.md)
+- [Capell and package ERD notes](../../../docs/erd/capell-and-package-erds.md)
+- Related packages: [Layout Builder](../../layout-builder/README.md), [Publishing Studio](../../publishing-studio/README.md).
+- Focused tests: `vendor/bin/pest packages/filament-peek/tests --configuration=phpunit.xml`.
+
+<!-- prettier-ignore-end -->

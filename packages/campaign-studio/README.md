@@ -1,210 +1,113 @@
 # Campaign Studio
 
-Campaign Studio adds campaign groups, landing-page variants, audience targeting, experiments, CTA widgets, conversion goals, UTM attribution, funnel reporting, and conversion reporting to Capell.
+<!-- prettier-ignore-start -->
 
-## At A Glance
+## What This Plugin Adds
 
-- Package: `capell-app/campaign-studio`
-- Namespace: `Capell\CampaignStudio\`
-- Surfaces: Filament admin, frontend route/render hook, console, database
-- Service providers: `packages/campaign-studio/src/Providers/AdminServiceProvider.php`, `packages/campaign-studio/src/Providers/CampaignStudioServiceProvider.php`, `packages/campaign-studio/src/Providers/FrontendServiceProvider.php`
-- Capell dependencies: `capell-app/admin`, `capell-app/core`, `capell-app/form-builder`, `capell-app/frontend`, `capell-app/insights`
-- Third-party dependencies: `lorisleiva/laravel-actions`, `spatie/laravel-data`, `spatie/laravel-package-tools`
+Campaign Studio is an **Available**, **Schema-owning** Capell package in the **Capell Growth** product group. It ships as `capell-app/campaign-studio` and extends these surfaces: admin, frontend.
 
-## Why It Helps Your Capell Workflow
+Launch, target, and measure marketing campaigns inside Capell - build landing-page variants, drop in CTA and lead-capture widgets, and track UTM-attributed conversions and funnels without bolting on a separate analytics tool.
 
-- Connects campaign landing pages, landing-page variants, audience targeting, experiments, CTA widgets, UTM attribution, conversion goals, funnel reporting, and reporting into one growth workflow.
-- Helps owners see which campaigns and pages are producing conversions without stitching together custom admin widgets.
-- Gives developers package-owned Actions and models for attribution, funnels, overview stats, and campaign URLs.
+After install, admins get package-owned management surfaces and public users may see package-owned frontend output or routes.
 
-## Best Used With
+Status details:
 
-- [Insights](../insights/README.md)
-- [GA4 Reports](../ga4-reports/README.md)
-- [Form Builder](../form-builder/README.md)
-
-## What It Adds
-
-Campaign Studio adds campaign groups, landing-page variants, audience targeting, experiments, CTA widgets, conversion goals, UTM attribution, funnel reporting, and conversion reporting to Capell.
-
-- Campaign Filament resources for groups, landing pages, goals, and CTA widgets.
-- Campaign dashboard widgets.
-- Page schema extender for campaign fields.
-- core layout builder widget configurators for campaign hero, CTA, and lead form widgets.
-- Landing-page variant selection from UTM audience data, with optional experiment sync when Experiments is installed.
-- Campaign experiment result readout from synced Experiments winner reports, including per-variant conversion rates and lift over the control variant.
-- Campaign hero widget CTAs can append configured UTM metadata through the shared campaign URL builder.
-- Campaign conversion funnel reporting from conversion goals and recorded conversions.
-- Conversion recording actions for page views, CTA clicks, and form submissions.
-- Public post-load conversion capture for page-view and CTA-click goals through the Campaign Studio beacon.
+- Status: Available
+- Tier: premium
+- Bundle: growth
+- Composer package: `capell-app/campaign-studio`
+- Namespace: `Capell\CampaignStudio`
+- Theme key: not applicable
 
 ## Why It Matters
 
-**For developers:** Connects Capell pages, FormBuilder, Insights, and core layout builder APIs through explicit actions and listener classes instead of inline resource logic.
+**For developers:** The package gives developers package-owned service providers, Actions, Data objects, models, Laravel routes, Filament classes, and Blade views instead of pushing this behaviour into core or application code.
 
-**For teams:** Lets marketing and editorial teams connect landing pages to goals and see which campaign-studio convert.
-
-## Built With
-
-This package makes its Composer dependencies visible because they are part of the value proposition, not just plumbing. When an upstream package has a public repository, its linked preview card points readers back to the maintainers so their work gets proper credit.
-
-**Capell packages used here**
-
-- [Capell Admin](https://github.com/capell-app/admin)
-- [Capell Insights](../insights/README.md)
-- [Capell Core](https://github.com/capell-app/core)
-- [Capell Form Builder](../form-builder/README.md)
-- [Capell Frontend](https://github.com/capell-app/frontend)
-- Core admin/frontend layout builder APIs
-
-**Open-source packages used here**
-
-- [Laravel Actions](https://github.com/lorisleiva/laravel-actions) - single-purpose action classes that keep package workflows out of controllers and Filament resources.
-- [Spatie Laravel Data](https://github.com/spatie/laravel-data) - typed data objects for package boundaries, form state, settings, and structured results.
-- [Spatie Laravel Package Tools](https://github.com/spatie/laravel-package-tools) - Laravel package bootstrapping for config, migrations, commands, translations, and service provider setup.
-
-**Linked package previews**
-
-[![Laravel Actions GitHub preview](https://opengraph.githubassets.com/capell-readme/lorisleiva/laravel-actions)](https://github.com/lorisleiva/laravel-actions)
-
-[![Spatie Laravel Data GitHub preview](https://opengraph.githubassets.com/capell-readme/spatie/laravel-data)](https://github.com/spatie/laravel-data)
-
-[![Spatie Laravel Package Tools GitHub preview](https://opengraph.githubassets.com/capell-readme/spatie/laravel-package-tools)](https://github.com/spatie/laravel-package-tools)
+**For teams:** Launch, target, and measure marketing campaigns inside Capell - build landing-page variants, drop in CTA and lead-capture widgets, and track UTM-attributed conversions and funnels without bolting on a separate analytics tool.
 
 ## Screens And Workflow
 
-Screenshots are generated from [docs/screenshots.json](docs/screenshots.json) during package deployment.
+Screenshot contract: `docs/screenshots.json`.
 
-- Campaign groups index.
-- Campaign landing pages index.
-- Campaign conversion goals form.
-- CTA widget form.
-- Campaign dashboard widgets.
-- Frontend landing page with campaign widgets.
+- Campaign groups index (admin, required).
+- Campaign landing pages index (admin, required).
+- Campaign conversion goals form (admin, required).
+- CTA widget form (admin, required).
+- Campaign dashboard widgets (admin, required).
+- Frontend landing page with campaign widgets (frontend, required).
 
 ## Technical Shape
 
-- CampaignStudioServiceProvider, AdminServiceProvider, and FrontendServiceProvider register package surfaces.
-- Config file: capell-campaign-studio.php.
-- Migrations create campaign groups, goals, landing pages, CTA widgets, and conversions.
-- Filament resources cover each owned model.
-- Frontend routes and render hooks add the campaign conversion beacon and public tracker script.
-- Listeners sync landing pages, editorial calendar events, Site Discovery URLs, and form submission conversions.
-- `BuildCampaignExperimentResultsAction` reads synced campaign experiment results when `capell-app/experiments` is installed.
-
-## Code Map
-
-| Area      | Path                                     | Purpose                                                             |
-| --------- | ---------------------------------------- | ------------------------------------------------------------------- |
-| Actions   | `packages/campaign-studio/src/Actions`   | Domain operations. Test these directly where possible.              |
-| Data      | `packages/campaign-studio/src/Data`      | Structured payloads, form state, view models, and integration data. |
-| Enums     | `packages/campaign-studio/src/Enums`     | Persisted states and Filament option values.                        |
-| Models    | `packages/campaign-studio/src/Models`    | Eloquent records owned by the package.                              |
-| Filament  | `packages/campaign-studio/src/Filament`  | Admin resources, pages, widgets, and settings UI.                   |
-| Providers | `packages/campaign-studio/src/Providers` | Registration, extension hooks, routes, migrations, and resources.   |
-| Resources | `packages/campaign-studio/resources`     | Views, translations, assets, and package resources.                 |
-| Config    | `packages/campaign-studio/config`        | Package configuration and publishable config.                       |
-| Database  | `packages/campaign-studio/database`      | Migrations, seeders, and settings migrations.                       |
-| Tests     | `packages/campaign-studio/tests`         | Package-level Pest coverage.                                        |
-
-## Admin Surface
-
-- Resources: `CampaignConversionGoalResource`, `CampaignCtaWidgetResource`, `CampaignGroupResource`, `CampaignLandingPageResource`.
-- Pages: `CreateCampaignConversionGoal`, `CreateCampaignCtaWidget`, `CreateCampaignGroup`, `CreateCampaignLandingPage`, `EditCampaignConversionGoal`, `EditCampaignCtaWidget`, `EditCampaignGroup`, `EditCampaignLandingPage`, `ListCampaignConversionGoals`, `ListCampaignCtaWidgets`, `ListCampaignGroups`, `ListCampaignLandingPages`.
-- Widgets: `CampaignCtaWidgetWidgetConfigurator`, `CampaignHeroWidgetConfigurator`, `CampaignLeadFormWidgetConfigurator`, `CampaignOverviewStatsWidget`, `TopCampaignStudioWidget`, `TopLandingPagesWidget`.
-
-## Commands
-
-- `capell:campaign-studio-install-layouts {--force : Update existing campaign layouts}` (packages/campaign-studio/src/Console/Commands/InstallCampaignLayoutsCommand.php)
-
-## Frontend Conversion Capture
-
-Campaign Studio injects a small public tracker at the frontend `BodyEnd` render hook. The tracker posts to `POST /capell/campaigns/conversions`, reads the existing Insights visit id from local storage or cookie when available, records page-view conversions for campaign landing pages, and records CTA-click conversions from elements with `data-campaign-goal`. CTA-click goals are resolved inside the campaign landing page matched from the submitted URL; unresolved URLs are ignored rather than attributed to another campaign with the same goal key.
-
-The tracker is post-load and contains no admin/editor state, signed editor URLs, model ids, or field paths. Because Campaign Studio can render UTM-aware landing-page variants, its frontend contribution is recorded as non-cacheable with UTM variance metadata; HTML cache should not store those rendered pages, while static HTML that already exists can still load the tracker and record conversions after the response is served.
-
-## Data And Persistence
-
-- campaign_groups belong to sites.
-- campaign_landing_pages belong to groups and target pages.
-- campaign_conversion_goals define measurable outcomes.
-- campaign_cta_widgets store CTA content.
-- campaign_conversions connect goals, landing pages, insights visits/events, and attribution JSON.
-
+- Service providers: `Capell\CampaignStudio\Providers\CampaignStudioServiceProvider`, `Capell\CampaignStudio\Providers\AdminServiceProvider`, `Capell\CampaignStudio\Providers\FrontendServiceProvider`.
+- Config files: `packages/campaign-studio/config/capell-campaign-studio.php`.
+- Migrations: `packages/campaign-studio/database/migrations/2026_05_10_190843_01_create_campaign_groups_table.php`, `packages/campaign-studio/database/migrations/2026_05_10_190843_02_create_campaign_conversion_goals_table.php`, `packages/campaign-studio/database/migrations/2026_05_10_190843_03_create_campaign_landing_pages_table.php`, `packages/campaign-studio/database/migrations/2026_05_10_190843_04_create_campaign_cta_widgets_table.php`, `packages/campaign-studio/database/migrations/2026_05_10_190843_05_create_campaign_conversions_table.php`.
 - Models: `CampaignConversion`, `CampaignConversionGoal`, `CampaignCtaWidget`, `CampaignGroup`, `CampaignLandingPage`.
-- Migrations: `2026_05_10_190843_01_create_campaign_groups_table.php`, `2026_05_10_190843_02_create_campaign_conversion_goals_table.php`, `2026_05_10_190843_03_create_campaign_landing_pages_table.php`, `2026_05_10_190843_04_create_campaign_cta_widgets_table.php`, `2026_05_10_190843_05_create_campaign_conversions_table.php`.
-- Config: `packages/campaign-studio/config/capell-campaign-studio.php`.
-- Data objects live in `src/Data/`; use them for payloads, form state, and view models.
-
-## Extension Points
-
+- Filament classes: `CampaignCtaWidgetWidgetConfigurator`, `CampaignHeroWidgetConfigurator`, `CampaignLeadFormWidgetConfigurator`, `CampaignPageSchemaExtender`, `CampaignConversionGoalResource`, `CreateCampaignConversionGoal`, `EditCampaignConversionGoal`, `ListCampaignConversionGoals`, `CampaignConversionGoalForm`, `CampaignConversionGoalsTable`, `CampaignCtaWidgetResource`, `CreateCampaignCtaWidget`, `and 19 more`.
+- Route files: `packages/campaign-studio/routes/web.php`.
+- Policies: `AbstractCampaignStudioResourcePolicy`, `CampaignConversionGoalPolicy`, `CampaignCtaWidgetPolicy`, `CampaignGroupPolicy`, `CampaignLandingPagePolicy`.
+- Events: `CampaignConverted`.
 - Listeners: `RecordFormSubmissionConversion`, `SyncCampaignLandingPageFromPage`.
-- Register Capell extension points, routes, migrations, settings, render hooks, and resources from service providers.
+- Actions: `ApplyCampaignPageDefaultsAction`, `BuildCampaignConversionFunnelAction`, `BuildCampaignExperimentResultsAction`, `BuildCampaignLandingPageVariantsAction`, `BuildCampaignOverviewStatsAction`, `BuildCampaignUrlAction`, `BuildConversionAttributionAction`, `BuildTopCampaignStudioQueryAction`, `BuildTopLandingPagesQueryAction`, `CaptureCampaignConversionAction`, `GetCampaignStudioTrackerScriptAction`, `InstallCampaignLayoutsAction`, `and 11 more`.
+- Data objects: `AudienceTargetData`, `CampaignConversionCaptureData`, `CampaignCtaActionData`, `CampaignExperimentResultsData`, `CampaignExperimentVariantResultData`, `ConversionAttributionData`, `CampaignConversionSummaryData`, `CampaignLandingPageSummaryData`, `LandingPageVariantData`, `LandingPageVariantSelectionData`, `UtmData`.
+- Command signatures: `capell:campaign-studio-sync-statuses`.
+- Console command classes: `InstallCampaignLayoutsCommand`, `SyncCampaignStatusesCommand`.
+- Manifest contributions: `admin-resource: Capell\CampaignStudio\Manifest\CampaignStudioAdminResourcesContribution`, `configurator: Capell\CampaignStudio\Manifest\CampaignWidgetConfiguratorsContribution`, `dashboard-widget: Capell\CampaignStudio\Manifest\CampaignStudioDashboardWidgetsContribution`, `frontend-component: Capell\CampaignStudio\Manifest\CampaignWidgetComponentsContribution`, `model: Capell\CampaignStudio\Manifest\CampaignStudioModelsContribution`, `overview-stat: Capell\CampaignStudio\Manifest\CampaignOverviewStatsContribution`, `schema-extender: Capell\CampaignStudio\Manifest\CampaignPageSchemaExtenderContribution`.
+- Health checks: `Capell\CampaignStudio\Health\CampaignStudioHealthCheck`.
+- Blade views: `packages/campaign-studio/resources/views/components/tracking/attributes.blade.php`, `packages/campaign-studio/resources/views/components/widget/campaign-cta-widget.blade.php`, `packages/campaign-studio/resources/views/components/widget/campaign-hero.blade.php`, `packages/campaign-studio/resources/views/components/widget/campaign-lead-form.blade.php`, `packages/campaign-studio/resources/views/tracker.blade.php`.
+- Cache tags: `campaign-studio`.
+
+## Data Model
+
+- Required tables: `campaign_groups`, `campaign_landing_pages`, `campaign_cta_widgets`, `campaign_conversion_goals`, `campaign_conversions`.
+- Models: `CampaignConversion`, `CampaignConversionGoal`, `CampaignCtaWidget`, `CampaignGroup`, `CampaignLandingPage`.
+- Migration files: `2026_05_10_190843_01_create_campaign_groups_table.php`, `2026_05_10_190843_02_create_campaign_conversion_goals_table.php`, `2026_05_10_190843_03_create_campaign_landing_pages_table.php`, `2026_05_10_190843_04_create_campaign_cta_widgets_table.php`, `2026_05_10_190843_05_create_campaign_conversions_table.php`.
+- Migration impact: run host migrations through the package install flow before opening package surfaces.
+- Deletion/retention behaviour: Docs gap unless the package has an explicit pruning command, retention setting, or tested cascade path.
 
 ## Install Impact
 
-- Adds campaign admin navigation and database tables.
-- Adds campaign dashboard widgets.
-- Adds config keys for conversion cookie, UTM keys, table names, tracker route prefix, and layout presets.
-- Adds `attribution.lookback_days` so stale Insights visits can be excluded from conversion identity and attribution.
-- May use Insights events and FormBuilder submissions when those packages are installed.
-- Registers `POST /capell/campaigns/conversions` for same-origin page-view and CTA-click conversion capture.
-
-## Install And Setup
-
-- Install with `composer require capell-app/campaign-studio` in the host Capell application.
-- Run migrations through the host application package install flow.
-- In this repository, verify package changes with `vendor/bin/pest`; do not use `php artisan`.
-
-## Admin And Access
-
-- CampaignConversionGoalResource (packages/campaign-studio/src/Filament/Resources/CampaignConversionGoals/CampaignConversionGoalResource.php)
-- CreateCampaignConversionGoal (packages/campaign-studio/src/Filament/Resources/CampaignConversionGoals/Pages/CreateCampaignConversionGoal.php)
-- EditCampaignConversionGoal (packages/campaign-studio/src/Filament/Resources/CampaignConversionGoals/Pages/EditCampaignConversionGoal.php)
-- ListCampaignConversionGoals (packages/campaign-studio/src/Filament/Resources/CampaignConversionGoals/Pages/ListCampaignConversionGoals.php)
-- CampaignCtaWidgetResource (packages/campaign-studio/src/Filament/Resources/CampaignCtaWidgets/CampaignCtaWidgetResource.php)
-- CreateCampaignCtaWidget (packages/campaign-studio/src/Filament/Resources/CampaignCtaWidgets/Pages/CreateCampaignCtaWidget.php)
-- EditCampaignCtaWidget (packages/campaign-studio/src/Filament/Resources/CampaignCtaWidgets/Pages/EditCampaignCtaWidget.php)
-- ListCampaignCtaWidgets (packages/campaign-studio/src/Filament/Resources/CampaignCtaWidgets/Pages/ListCampaignCtaWidgets.php)
-- CampaignGroupResource (packages/campaign-studio/src/Filament/Resources/CampaignGroups/CampaignGroupResource.php)
-- CreateCampaignGroup (packages/campaign-studio/src/Filament/Resources/CampaignGroups/Pages/CreateCampaignGroup.php)
-- EditCampaignGroup (packages/campaign-studio/src/Filament/Resources/CampaignGroups/Pages/EditCampaignGroup.php)
-- ListCampaignGroups (packages/campaign-studio/src/Filament/Resources/CampaignGroups/Pages/ListCampaignGroups.php)
-- CampaignLandingPageResource (packages/campaign-studio/src/Filament/Resources/CampaignLandingPages/CampaignLandingPageResource.php)
-- CreateCampaignLandingPage (packages/campaign-studio/src/Filament/Resources/CampaignLandingPages/Pages/CreateCampaignLandingPage.php)
-- EditCampaignLandingPage (packages/campaign-studio/src/Filament/Resources/CampaignLandingPages/Pages/EditCampaignLandingPage.php)
-- ListCampaignLandingPages (packages/campaign-studio/src/Filament/Resources/CampaignLandingPages/Pages/ListCampaignLandingPages.php)
-
-- Gate: CampaignOverviewStatsWidget: `admin`, `super_admin`
-- Gate: TopCampaignStudioWidget: `admin`, `super_admin`
-- Gate: TopLandingPagesWidget: `admin`, `super_admin`
+- Admin navigation: adds package-owned Filament classes when registered.
+- Permissions: none declared in `capell.json`.
+- Public routes: route files exist and must be reviewed before public enablement.
+- Database changes: package migrations are declared.
+- Settings: no package settings declared.
+- Queues or schedules: none detected in standard package paths.
+- Cache tags: `campaign-studio`.
+- Commands: `capell:campaign-studio-sync-statuses`.
 
 ## Common Pitfalls
 
-- Install dependent packages before expecting attribution from form-builder or insights.
-- Check UTM keys before launch.
-- Configure campaign hero UTM fields when hero CTAs should carry campaign attribution.
-- Create conversion goals before reporting on landing page success.
-- Keep the Insights tracker enabled when visitor-level deduplication is required for CTA/page-view conversions.
-- Tune `capell-campaign-studio.attribution.lookback_days` for the marketing team's attribution policy.
-- Treat UTM-targeted campaign variant pages as dynamic frontend output; do not rely on static HTML cache to personalize variant selection.
+- Run migrations before opening package resources or public routes.
+- Review route middleware, throttling, signed URLs, and public-output safety before exposing routes.
+- Keep public Blade and cached HTML free of authoring markers, model IDs, permissions, signed editor URLs, and lazy database queries.
+- Keep `composer.json`, `composer.local.json`, `capell.json`, docs, screenshots, and tests aligned when the package surface changes.
 
-## Docs
+## Troubleshooting
 
-- [docs index](docs/README.md)
-- [credits-and-acknowledgements.md](docs/credits-and-acknowledgements.md)
-- [overview.md](docs/overview.md)
+| Symptom | Likely cause | Check | Fix |
+| --- | --- | --- | --- |
+| Package surface is missing after install | Provider or manifest is not loaded | Confirm `capell.json`, package `composer.json`, and provider registration | Reinstall the package, refresh Composer autoload, and clear host caches |
+| Admin screen or command fails on missing table | Package migrations have not run | Check the tables listed in `Data Model` | Run host migrations and rerun the focused package test |
+| Route returns unexpected output | Route cache, middleware, or signed URL setup does not match the package route file | Check the route files listed in `Technical Shape` | Clear route cache and verify middleware before exposing public routes |
+| Background work does not run | Queue worker or scheduled command is not active | Check package jobs, commands, and host scheduler configuration | Start the queue or scheduler, then run the focused command or package test |
+| Public output leaks unexpected state | Render data, cache variation, or authoring boundary has regressed | Check public Blade, cache tags, and public-output safety tests | Move data loading out of Blade and rerun the package public-output tests |
 
-## Testing
+## Quick Start
 
-Run package tests from the repository root:
+1. Install the package: `composer require capell-app/campaign-studio`.
+2. Run the required setup: `php artisan migrate`.
+3. Open the related Capell admin surface and verify Campaign Studio appears.
 
-```bash
-vendor/bin/pest packages/campaign-studio/tests --configuration=phpunit.xml
-```
+## Next Steps
 
-## Maintenance Notes
+- [Package docs](docs/README.md)
+- [Overview](docs/overview.md)
+- [Screenshot contract](docs/screenshots.json)
+- [Marketplace assets](docs/assets/marketplace/)
+- [Capell content language plan](../../docs/CONTENT_LANGUAGE_PLAN.md)
+- [Capell documentation design system](../../docs/DESIGN_SYSTEM.md)
+- [Capell and package ERD notes](../../docs/erd/capell-and-package-erds.md)
+- Related packages: [Form Builder](../form-builder/README.md), [Insights](../insights/README.md), [Layout Builder](../layout-builder/README.md), [Experiments](../experiments/README.md), [Seo Suite](../seo-suite/README.md).
+- Focused tests: `vendor/bin/pest packages/campaign-studio/tests --configuration=phpunit.xml`.
 
-- Put behaviour changes in `src/Actions/`; UI classes, commands, and controllers should call actions instead of owning domain logic.
-- Use package `Data` classes at boundaries instead of passing anonymous arrays between layers.
-- Use backed enums for persisted values and enum labels for Filament options.
+<!-- prettier-ignore-end -->

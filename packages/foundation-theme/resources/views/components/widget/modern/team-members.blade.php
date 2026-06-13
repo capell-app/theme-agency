@@ -1,4 +1,5 @@
 @props([
+    'assetRenderDataItems',
     'columns' => $widget->getMeta('columns', 3),
     'container',
     'containerKey',
@@ -8,8 +9,6 @@
 ])
 
 @php
-    use Capell\FoundationTheme\Actions\BuildWidgetAssetRenderDataAction;
-
     $gridClasses = [
         2 => 'grid-cols-1 md:grid-cols-2',
         3 => 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3',
@@ -56,10 +55,9 @@
         @endif
 
         <div class="{{ $responsiveGrid }} {{ $gridClass }}">
-            @forelse ($widget->assets as $widgetAsset)
+            @forelse ($assetRenderDataItems as $assetRenderDataItem)
                 @php
-                    $assetRenderData = BuildWidgetAssetRenderDataAction::run($widgetAsset);
-                    $asset = $assetRenderData->asset;
+                    $assetRenderData = $assetRenderDataItem['renderData'];
                     $role = $assetRenderData->position;
                     $tags = $assetRenderData->tags;
                     $social = $assetRenderData->social;
@@ -148,7 +146,9 @@
                 </div>
             @empty
                 <div class="col-span-full py-12 text-center">
-                    <p class="text-gray-500">No team members configured</p>
+                    <p class="text-gray-500">
+                        {{ __('capell-foundation-theme::generic.empty_team_members') }}
+                    </p>
                 </div>
             @endforelse
         </div>

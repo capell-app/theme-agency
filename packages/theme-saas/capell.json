@@ -159,6 +159,6 @@
         ],
         "categories": ["frontend", "themes"]
     },
-    "extends": null,
+    "extends": "default",
     "themeKey": "saas"
 }

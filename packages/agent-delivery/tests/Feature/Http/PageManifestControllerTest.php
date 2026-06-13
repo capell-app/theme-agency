@@ -17,6 +17,8 @@ use function Pest\Laravel\getJson;
 
 uses(AgentDeliveryTestCase::class);
 
+require_once dirname(__DIR__, 5) . '/tests/Packages/Support/PublicOutputSafety.php';
+
 it('returns a public-safe page manifest for an already public page', function (): void {
     [$pageUrl, $page, $language, $site] = createAgentDeliveryPage('/guides/ai-ready', [
         'title' => 'AI Ready Websites',
@@ -34,7 +36,7 @@ it('returns a public-safe page manifest for an already public page', function ()
 
     URL::useOrigin('http://example.com');
 
-    getJson(route('capell-agent-delivery.pages.manifest', ['url' => $pageUrl->url]))
+    $response = getJson(route('capell-agent-delivery.pages.manifest', ['url' => $pageUrl->url]))
         ->assertOk()
         ->assertHeader('X-Capell-Agent-Delivery-Version', 'v1')
         ->assertHeader('X-Capell-Cache-Tags', sprintf('agent-delivery,site:%s,language:%s,page:%s', $site->getKey(), $language->getKey(), $page->getKey()))
@@ -55,6 +57,8 @@ it('returns a public-safe page manifest for an already public page', function ()
         ->assertJsonPath('data.references.0.url', 'https://source.example/reference')
         ->assertJsonMissingPath('data.metadata.admin_prompt')
         ->assertJsonMissingPath('data.references.1');
+
+    assertCapellPublicOutputIsSafe($response, 'Agent Delivery page manifest response');
 });
 
 it('returns stable semantic chunks for a public page', function (): void {
@@ -63,13 +67,15 @@ it('returns stable semantic chunks for a public page', function (): void {
         'content' => '<h2>Discovery</h2><p>Readable public copy</p>',
     ], siteDomainPath: '/chunks');
 
-    getJson(agentDeliveryUrl('capell-agent-delivery.pages.chunks', ['url' => '/chunks/guides/ai-ready']))
+    $response = getJson(agentDeliveryUrl('capell-agent-delivery.pages.chunks', ['url' => '/chunks/guides/ai-ready']))
         ->assertOk()
         ->assertJsonPath('data.0.id', 'discovery')
         ->assertJsonPath('data.0.heading', 'Discovery')
         ->assertJsonPath('data.0.sourceUrl', 'http://example.com/chunks/guides/ai-ready#discovery')
         ->assertJsonPath('data.0.body', 'Discovery Readable public copy')
         ->assertJsonPath('data.0.dependsOn.0', 'url:http://example.com/chunks/guides/ai-ready');
+
+    assertCapellPublicOutputIsSafe($response, 'Agent Delivery page chunks response');
 });
 
 it('returns a 304 response when manifest etag matches', function (): void {

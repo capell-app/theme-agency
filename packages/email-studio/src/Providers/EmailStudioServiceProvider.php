@@ -33,7 +33,10 @@ use Capell\EmailStudio\Support\Providers\FakeEmailProviderAdapter;
 use Capell\EmailStudio\Support\Providers\PostmarkEmailProviderAdapter;
 use Capell\EmailStudio\Support\Providers\SmtpEmailProviderAdapter;
 use Filament\Support\Icons\Heroicon;
+use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Console\Scheduling\Schedule;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\RateLimiter;
 use Override;
 use Spatie\LaravelPackageTools\Package;
 
@@ -96,6 +99,8 @@ class EmailStudioServiceProvider extends AbstractPackageServiceProvider
             ->register(EmailProviderType::Postmark, new PostmarkEmailProviderAdapter));
 
         $this->app->booted(function (): void {
+            $this->registerRateLimiters();
+
             if (! $this->isPackageInstalled()) {
                 return;
             }
@@ -209,6 +214,14 @@ class EmailStudioServiceProvider extends AbstractPackageServiceProvider
 
         CapellCore::registerProtectedTable(static fn (): string => 'sent_emails');
         CapellCore::registerProtectedTable(static fn (): string => 'sent_emails_url_clicked');
+
+        return $this;
+    }
+
+    private function registerRateLimiters(): self
+    {
+        RateLimiter::for('capell-email-studio-provider-events', static fn (Request $request): Limit => Limit::perMinute(120)
+            ->by(hash('sha256', (string) $request->route('token') . '|' . (string) $request->ip())));
 
         return $this;
     }

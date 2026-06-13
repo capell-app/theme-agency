@@ -6,29 +6,34 @@ for coverage. All packages are tested from the root.
 ## Quick start
 
 ```bash
-composer install
-composer test             # all packages, parallel
+COMPOSER=composer.local.json composer install
+COMPOSER=composer.local.json composer test
 ```
 
 ## Test commands
 
-| Command                    | Purpose                          |
-| -------------------------- | -------------------------------- |
-| `composer test`            | Full suite (parallel)            |
-| `composer test:unit`       | Unit suite only                  |
-| `composer coverage`        | HTML coverage report (min 90%)   |
-| `composer coverage-report` | Coverage summary in the terminal |
+Run Composer commands through the local overlay unless you are explicitly checking the public package manifest.
+
+| Command                                                | Purpose                                                |
+| ------------------------------------------------------ | ------------------------------------------------------ |
+| `COMPOSER=composer.local.json composer test`           | Full suite (parallel)                                  |
+| `COMPOSER=composer.local.json composer test:unit`      | Unit suite only                                        |
+| `COMPOSER=composer.local.json composer test:group`     | One Pest group, controlled by `PEST_GROUP`             |
+| `COMPOSER=composer.local.json composer coverage`       | Coverage run with a 90% minimum                        |
+| `COMPOSER=composer.local.json composer coverage:blade` | Blade view coverage ratchet                            |
+| `COMPOSER=composer.local.json composer preflight`      | Composer path check plus changed-file formatting       |
+| `COMPOSER=composer.local.json composer preflight:all`  | Rector, Pint, Prettier, ESLint, PHPStan, audits, tests |
 
 Run a single package:
 
 ```bash
-php -d memory_limit=-1 vendor/bin/pest packages/theme-saas/tests
+vendor/bin/pest packages/theme-saas/tests --configuration=phpunit.xml
 ```
 
 Run a single file:
 
 ```bash
-php -d memory_limit=-1 vendor/bin/pest packages/theme-saas/tests/Unit
+vendor/bin/pest packages/theme-saas/tests/Unit/ExampleTest.php --configuration=phpunit.xml
 ```
 
 ## Test suites
@@ -56,8 +61,8 @@ Tests are collected from these directory patterns (configured in `phpunit.xml`):
 Coverage is measured with pcov scoped to grouped package source directories:
 
 ```bash
-composer coverage           # writes HTML to coverage-html/
-composer coverage-report    # text summary only
+COMPOSER=composer.local.json composer coverage
+COMPOSER=composer.local.json composer coverage-report
 ```
 
 The minimum threshold is **90%**. ServiceProviders, Console commands, and Middleware are excluded
@@ -74,7 +79,7 @@ The git hooks run these automatically before every commit:
 To run the full pre-flight suite manually:
 
 ```bash
-composer preflight    # Prettier + ESLint + Rector + Pint + PHPStan
+COMPOSER=composer.local.json composer preflight
 ```
 
 PHPStan runs at level 5. Annotate unavoidable suppressions with a comment explaining why.

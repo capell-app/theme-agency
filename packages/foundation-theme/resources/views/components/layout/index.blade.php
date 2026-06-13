@@ -7,17 +7,31 @@
     'pageSlot' => null,
 ])
 @php
+    use Capell\Core\Contracts\Pageable;
+    use Capell\Core\Enums\ContentStructure;
+    use Capell\Core\Models\Site;
     use Capell\Frontend\Facades\Frontend;
+    use Illuminate\Database\Eloquent\Model;
 
     $theme ??= Frontend::theme();
     $page ??= Frontend::page();
     $layout ??= Frontend::layout();
     $site ??= Frontend::site();
     $isSystemPageLayout ??= data_get($layout->admin ?? [], 'system_page_layout') === true;
-    $siteLogoBladeView = $site?->getMeta('logo_blade_view', 'brand.capell-logo') ?? 'brand.capell-logo';
+    $siteRelations = $site instanceof Site ? $site->getRelations() : [];
+    $pageRelations = $page instanceof Model ? $page->getRelations() : [];
+    $siteDefaultDomain = $siteRelations['defaultDomain'] ?? null;
+    $siteDomain = $siteRelations['siteDomain'] ?? null;
+    $siteHomeUrl = data_get($siteDefaultDomain, 'url') ?? data_get($siteDomain, 'url') ?? '/';
+    $siteLogoBladeView = $site instanceof Site ? $site->getMeta('logo_blade_view', 'brand.capell-logo') : 'brand.capell-logo';
     $siteLogoBladeView = is_string($siteLogoBladeView) && view()->exists($siteLogoBladeView)
         ? $siteLogoBladeView
         : null;
+    $siteLogo = $siteRelations['logo'] ?? null;
+    $siteTranslation = $siteRelations['translation'] ?? null;
+    $pageTranslation = $pageRelations['translation'] ?? null;
+    $pageType = $pageRelations['type'] ?? null;
+    $htmlContentStructure = ContentStructure::Html;
     $isThemeDemoContactPage = data_get($page?->meta ?? [], 'theme_demo.surface') === 'contact'
         && view()->exists('capell-foundation-theme::components.demo.contact-page');
     $layoutNeighborLinks ??= null;
@@ -57,7 +71,7 @@
             "
         >
             <a
-                href="{{ $site->defaultDomain?->url ?? $site->siteDomain?->url ?? '/' }}"
+                href="{{ $siteHomeUrl }}"
                 style="
                     margin-bottom: 2.5rem;
                     display: inline-flex;
@@ -71,17 +85,17 @@
             >
                 @if ($siteLogoBladeView)
                     @include($siteLogoBladeView, ['class' => 'h-10 w-auto'])
-                @elseif ($site->logo)
-                    <x-capell::logo :media="$site->logo" />
+                @elseif ($siteLogo)
+                    <x-capell::logo :media="$siteLogo" />
                 @else
-                    <span>{{ $site->translation->title ?? $site->name }}</span>
+                    <span>{{ $siteTranslation?->title ?? $site?->name }}</span>
                 @endif
             </a>
 
             <x-capell::content
-                :content="$page->translation->content"
-                :content-type="$page->type->content_structure"
-                :title="$page->translation->title"
+                :content="$pageTranslation?->content ?? ''"
+                :content-type="$pageType?->content_structure ?? $htmlContentStructure"
+                :title="$pageTranslation?->title ?? ''"
                 class="mx-auto max-w-2xl text-slate-700 [&_h1]:text-slate-950"
                 heading-tag="h1"
                 heading-size="h1"

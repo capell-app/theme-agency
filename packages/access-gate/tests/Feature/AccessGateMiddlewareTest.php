@@ -651,6 +651,14 @@ it('revokes the local browser token on access gate logout', function (): void {
     expect(BrowserToken::query()->firstOrFail()->status)->toBe(BrowserTokenStatus::Revoked);
 });
 
+it('throttles access gate logout attempts', function (): void {
+    $route = Route::getRoutes()->getByName('capell-access-gate.logout');
+
+    throw_if($route === null, RuntimeException::class, 'Expected access gate logout route to be registered.');
+
+    expect($route->gatherMiddleware())->toContain('throttle:access-gate-logout');
+});
+
 it('resolves public access request areas within the current site context', function (): void {
     defineAccessGateSiteTables();
     defineAccessGateSiteDomain(1, 'localhost');

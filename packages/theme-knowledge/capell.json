@@ -153,7 +153,7 @@
         ],
         "categories": ["frontend", "themes"]
     },
-    "extends": null,
+    "extends": "default",
     "themeKey": "knowledge",
     "commercial": {
         "proposedLicense": "paid",

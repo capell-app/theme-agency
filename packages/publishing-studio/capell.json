@@ -13,10 +13,7 @@
         "bundle": "publishing-pro"
     },
     "namespace": "Capell\\PublishingStudio",
-    "surfaces": [
-        "admin",
-        "console"
-    ],
+    "surfaces": ["admin", "console"],
     "dependencies": {
         "requires": [
             "capell-app/admin",
@@ -41,9 +38,7 @@
         "runtime": [
             "Capell\\PublishingStudio\\Providers\\PublishingStudioServiceProvider"
         ],
-        "admin": [
-            "Capell\\PublishingStudio\\Providers\\AdminServiceProvider"
-        ],
+        "admin": ["Capell\\PublishingStudio\\Providers\\AdminServiceProvider"],
         "frontend": []
     },
     "contributes": [
@@ -235,35 +230,25 @@
         "publicSurface": {
             "routeNames": [
                 "capell-frontend.preview.exit",
-                "capell-publishing-studio.scheduler.ical",
-                "preview.exit",
-                "scheduler.ical"
+                "capell-publishing-studio.scheduler.ical"
             ],
-            "auth": "mixed",
+            "auth": "public",
             "csrfExemptRoutes": [],
             "signedRoutes": [],
-            "tokenizedRoutes": [
-                "capell-publishing-studio.scheduler.ical",
-                "scheduler.ical"
-            ],
+            "tokenizedRoutes": ["capell-publishing-studio.scheduler.ical"],
             "webhookRoutes": [],
             "throttledRoutes": []
         },
         "sensitiveData": {
             "encryptedFields": [],
-            "hashedTokenFields": [
-                "publishing_scheduler_events.token_hash"
-            ],
+            "hashedTokenFields": ["publishing_scheduler_events.token_hash"],
             "redactedOutputClasses": [],
             "plaintextJustifications": [
-                {
-                    "field": "preview_links.token",
-                    "reason": "Reviewed package field; not stored as a reusable secret by this package contract."
-                }
+                "preview_links.token: Reviewed package field; not stored as a reusable secret by this package contract."
             ]
         },
         "publicOutput": {
-            "cacheSafe": false,
+            "cacheSafe": true,
             "forbidAuthoringSurface": true,
             "forbidSecrets": true,
             "forbidPublicBladeQueries": true
@@ -334,11 +319,7 @@
                 "caption": "Review and approval before publish"
             }
         ],
-        "categories": [
-            "admin",
-            "console",
-            "publishing-pro"
-        ]
+        "categories": ["admin", "console", "publishing-pro"]
     },
     "contributionTraceability": {
         "deferredContributions": []

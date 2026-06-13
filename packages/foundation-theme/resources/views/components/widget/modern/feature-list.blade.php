@@ -1,4 +1,5 @@
 @props([
+    'assetRenderDataItems',
     'layout' => $widget->getMeta('layout', 'grid'),
     'container',
     'containerKey',
@@ -48,16 +49,11 @@
                     'ap-feature-grid ' . $responsiveGrid => $layout !== 'vertical',
                 ])
             >
-                @forelse ($widget->assets as $widgetAsset)
+                @forelse ($assetRenderDataItems as $assetRenderDataItem)
                     @php
-                        $widgetAssetRelations = method_exists($widgetAsset, 'getRelations') ? $widgetAsset->getRelations() : [];
-                        $asset = $widgetAssetRelations['asset'] ?? null;
-                        $assetRelations = $asset !== null && method_exists($asset, 'getRelations') ? $asset->getRelations() : [];
-                        $assetTranslation = $assetRelations['translation'] ?? null;
-                        $icon = $asset !== null ? (string) $asset->getMeta('icon', '') : '';
+                        $assetRenderData = $assetRenderDataItem['renderData'];
+                        $icon = (string) ($assetRenderData->icon ?? '');
                     @endphp
-
-                    @continue($asset === null)
 
                     <article
                         @class([
@@ -75,23 +71,23 @@
                             </span>
                         @endif
 
-                        @if ($assetTranslation?->title)
+                        @if ($assetRenderData->title)
                             <h3 class="ap-feature-title ap-feature-item__title">
-                                {{ $assetTranslation->title }}
+                                {{ $assetRenderData->title }}
                             </h3>
                         @endif
 
-                        @if ($assetTranslation?->content)
+                        @if ($assetRenderData->content)
                             <p
                                 class="ap-feature-description ap-feature-item__description"
                             >
-                                {{ strip_tags($assetTranslation->content) }}
+                                {{ strip_tags($assetRenderData->content) }}
                             </p>
                         @endif
                     </article>
                 @empty
                     <div class="py-12 text-slate-300">
-                        No features configured.
+                        {{ __('capell-foundation-theme::generic.empty_features') }}
                     </div>
                 @endforelse
             </div>

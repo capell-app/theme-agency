@@ -2,9 +2,7 @@
 @php
     use Capell\Core\Enums\AssetComponentEnum;
     use Capell\Core\Models\Page;
-    use Capell\FoundationTheme\Actions\BuildWidgetAssetRenderDataAction;
     use Capell\Frontend\Facades\Frontend;
-    use Capell\LayoutBuilder\Models\WidgetAsset;
 
     $site = Frontend::site();
     $theme = Frontend::theme();
@@ -12,6 +10,8 @@
 {{-- format-ignore-end --}}
 
 @props([
+    'assetRenderDataItems',
+    'assets',
     'columns' => $container['meta']['override_columns'] ?? $widget->getMeta('columns', 3),
     'container',
     'containerKey',
@@ -23,7 +23,7 @@
     'size' => $widget->getMeta('size'),
     'widget',
 ])
-@if ($widget->assets->isNotEmpty() || ! config('capell-layout-builder.widget.skip_render_empty', true))
+@if ($assets->isNotEmpty() || ! config('capell-layout-builder.widget.skip_render_empty', true))
     <x-capell-foundation-theme::widget.wrapper
         class="capell-asset-accordion widget-section-grid widget-accordion space-y-6"
         :$container
@@ -47,7 +47,7 @@
             />
         @endif
 
-        @if ($widget->assets->isNotEmpty())
+        @if ($assets->isNotEmpty())
             <div
                 x-data="{
                     selected: 0,
@@ -57,12 +57,11 @@
                 }"
                 class="flex w-full flex-col divide-y divide-gray-200 rounded-lg border border-gray-200 dark:divide-gray-600 dark:border-gray-600"
             >
-                @foreach ($widget->assets as $widgetAsset)
+                @foreach ($assetRenderDataItems as $assetRenderDataItem)
                     {{-- format-ignore-start --}}
                 @php
-                    /** @var WidgetAsset $widgetAsset */
-
-                    $assetRenderData = BuildWidgetAssetRenderDataAction::run($widgetAsset);
+                    $widgetAsset = $assetRenderDataItem['widgetAsset'];
+                    $assetRenderData = $assetRenderDataItem['renderData'];
                     $image = $assetRenderData->image;
                     $media = $image?->media;
                     $linkedPageUrl = $assetRenderData->linkUrl;

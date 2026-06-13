@@ -34,7 +34,7 @@ it('declares implemented campaign studio contribution surfaces', function (): vo
         'campaign_conversion_goals',
         'campaign_conversions',
     )
-        ->and($manifest['contributionTraceability']['deferredContributions'])->toBe([])
+        ->and($manifest['contributionTraceability']['deferredContributions'])->toBe(['route', 'scheduled-job'])
         ->and($contributions->pluck('class')->all())->toContain(
             CampaignStudioAdminResourcesContribution::class,
             CampaignWidgetConfiguratorsContribution::class,

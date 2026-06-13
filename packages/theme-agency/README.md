@@ -1,126 +1,99 @@
 # Theme Agency
 
-Expressive agency theme for Capell.
+<!-- prettier-ignore-start -->
 
-## At A Glance
+## What This Plugin Adds
 
-- Package: `capell-app/theme-agency`
-- Namespace: `Capell\ThemeStudio\Agency\`
-- Capell dependencies: `capell-app/core`, `capell-app/frontend`
+Theme Agency is an **Available**, **No schema impact** Capell theme in the **Capell Themes** product group. It ships as `capell-app/theme-agency` and extends these surfaces: frontend.
 
-## Why It Helps Your Capell Workflow
+Theme Agency turns a Capell site into a confident creative portfolio. It ships an expressive page system - full-bleed launch hero, animated proof wall, project showcase, and a conversion-focused brief CTA - built to make studio and agency work look like the work, not a template. Three presets (Signal, Gallery, Atelier) re-skin every section from energetic high-contrast to refined editorial neutrals, all driven by Theme Studio tokens with zero code. Built on the built-in default frontend contracts, it stays fast, cache-aware, and safe for public output, so it drops into the standard Capell theme workflow.
 
-- Provides expressive renderer views for studio, portfolio, and brand-led sites that need stronger visual storytelling.
-- Helps owners launch an agency-style Capell site faster by building on Capell Frontend default theme and Layout Builder conventions.
-- Lets each Agency preset control the public shell surface, foreground, and brand gradient through Theme Studio tokens.
-- Gives developers a focused theme package to extend without changing the baseline Capell Frontend default theme.
+After install, admins can select the theme through the core theme management surface. Editors keep using normal Capell content workflows while the package controls public presentation.
 
-## Best Used With
+Status details:
 
-- [Capell Frontend](https://github.com/capell-app/frontend)
-- [Theme Corporate](../theme-corporate/README.md)
-- [Theme SaaS](../theme-saas/README.md)
-
-## What It Adds
-
-- Expressive agency theme for Capell.
+- Status: Available
+- Tier: premium
+- Bundle: themes
+- Composer package: `capell-app/theme-agency`
+- Namespace: `Capell\ThemeStudio\Agency`
+- Theme key: `agency`
 
 ## Why It Matters
 
-**For developers:** Adds a renderer package that plugs into Capell Frontend default theme rather than changing Capell core rendering contracts.
+**For developers:** The package gives developers package-owned service providers, Actions, and Blade views instead of pushing this behaviour into core or application code.
 
-**For teams:** Provides an agency-focused visual option for sites managed through the normal Theme admin page and install flow.
-
-## Built With
-
-This package makes its Composer dependencies visible because they are part of the value proposition, not just plumbing. When an upstream package has a public repository, its linked preview card points readers back to the maintainers so their work gets proper credit.
-
-**Capell packages used here**
-
-- [Capell Core](https://github.com/capell-app/core)
-- [Capell Frontend](https://github.com/capell-app/frontend)
-
-**Open-source packages used here**
-
-- No extra third-party Composer package beyond the Capell package stack is required here.
+**For teams:** A bold, motion-led theme for creative studios and marketing agencies - campaign hero, case-study proof, and a filterable work showcase, with three presets from high-contrast Signal to editorial Atelier.
 
 ## Screens And Workflow
 
-Screenshots are generated from [docs/screenshots.json](docs/screenshots.json) during package deployment.
+Screenshot contract: `docs/screenshots.json`.
 
-- Themes admin list showing Agency.
-- Frontend page rendered with Agency theme sections.
-- Theme preview URL output from the host signed preview route.
+- Frontend page rendered with Agency theme (frontend, optional).
+- Agency homepage (frontend, optional).
+- Services page (frontend, optional).
+- Campaign work board (frontend, optional).
+- Launch recap detail (frontend, optional).
+- Insights article (frontend, optional).
+- Event landing page (frontend, optional).
+- Lead generation page (frontend, optional).
+- Campaign page (frontend, optional).
+- Search results page (frontend, optional).
 
 ## Technical Shape
 
-- AgencyThemeServiceProvider registers the renderer.
-- `capell.json` declares `themeKey: "agency"` and manifest `extends: null`; Theme Studio runtime inheritance remains `default`.
-- Uses Capell Frontend default theme runtime data and standard section keys, while rendering its own page and section Blade views.
-- Ships Blade resources for the page wrapper and standard theme sections.
-- Defines six Agency presets, each with primary, accent, neutral, surface, and foreground tokens.
-- No migrations, config, routes, models, admin navigation, or package-owned settings are present.
+- Service providers: `Capell\ThemeStudio\Agency\AgencyThemeServiceProvider`.
+- Actions: `InstallAgencyThemeDemoAction`.
+- Command signatures: `capell:theme-agency-demo`.
+- Console command classes: `DemoCommand`.
+- Manifest contributions: `admin-page: Capell\ThemeStudio\Agency\Manifest\ThemeManagementPageContribution`.
+- Health checks: `Capell\ThemeStudio\Agency\Health\ThemeAgencyHealthCheck`.
+- Blade views: `packages/theme-agency/resources/views/livewire/page/page.blade.php`, `packages/theme-agency/resources/views/page.blade.php`, `packages/theme-agency/resources/views/sections/case-study.blade.php`, `packages/theme-agency/resources/views/sections/client-logos.blade.php`, `packages/theme-agency/resources/views/sections/content-listing.blade.php`, `packages/theme-agency/resources/views/sections/cta.blade.php`, `packages/theme-agency/resources/views/sections/features.blade.php`, `packages/theme-agency/resources/views/sections/footer.blade.php`, `packages/theme-agency/resources/views/sections/hero.blade.php`, `packages/theme-agency/resources/views/sections/navigation.blade.php`, `packages/theme-agency/resources/views/sections/partials/hero-canvas.blade.php`, `packages/theme-agency/resources/views/sections/project-showcase.blade.php`, `and 3 more`.
+- Cache tags: `theme-agency`.
 
-## Code Map
+## Data Model
 
-| Area      | Path                              | Purpose                                                |
-| --------- | --------------------------------- | ------------------------------------------------------ |
-| Resources | `packages/theme-agency/resources` | Blade page wrapper, section views, and Boost guidance. |
-| Tests     | `packages/theme-agency/tests`     | Package-level Pest coverage.                           |
-
-## Data And Persistence
-
-- This package does not own data.
-- It reads theme runtime data and core page content through Capell Frontend default theme.
+This theme has no schema impact. It relies on core Capell site, page, locale, and theme records instead of declaring package-owned tables.
 
 ## Install Impact
 
-- Adds an Agency renderer to theme system.
-- No database changes.
-- No admin navigation by itself.
-- No public routes by itself.
-
-## Install And Setup
-
-- Install with `composer require capell-app/theme-agency` in the host Capell application.
-- Seed the Agency preview pages with `php artisan capell:theme-agency-demo --url=https://demo.test --sites=Demo --languages=en --force`.
-- The Extensions installer demo checkbox and full Capell demo install use the same manifest demo command path.
-- In this repository, verify package changes with `vendor/bin/pest`; do not use `php artisan`.
-
-## Admin And Access
-
-- None proven in this package directory.
+- Admin navigation: contributes admin extension points through `capell.json`.
+- Permissions: none declared in `capell.json`.
+- Public routes: none detected in package route files.
+- Database changes: no package migrations declared.
+- Settings: no package settings declared.
+- Queues or schedules: none detected in standard package paths.
+- Cache tags: `theme-agency`.
+- Commands: `capell:theme-agency-demo`.
 
 ## Common Pitfalls
 
-- Install Capell Frontend before using this renderer.
-- Layout Builder is only needed for optional demo or chrome packages that register layout areas.
-- Build frontend and Filament assets in demo apps. Capell Frontend CSS is generated by the frontend package; optional widget packages own any extra npm dependencies.
-- Keep Theme Studio's active preset aligned with this theme (`signal`, `gallery`, `atelier`, `zenith`, `northstar`, or `motion-studio`). A preset from another theme will fail when Agency renders.
-- Use Theme Studio surface and foreground tokens for page-level colour changes instead of editing the Agency page wrapper.
-- Public output must not expose package/theme identifiers. Token CSS filenames are intentionally opaque.
-- Do not install a Studio metapackage; this package installs independently.
+- Keep public Blade and cached HTML free of authoring markers, model IDs, permissions, signed editor URLs, and lazy database queries.
+- Keep `composer.json`, `composer.local.json`, `capell.json`, docs, screenshots, and tests aligned when the package surface changes.
 
-## Docs
+## Troubleshooting
 
-- [docs index](docs/README.md)
-- [credits-and-acknowledgements.md](docs/credits-and-acknowledgements.md)
-- [overview.md](docs/overview.md)
+| Symptom | Likely cause | Check | Fix |
+| --- | --- | --- | --- |
+| Package surface is missing after install | Provider or manifest is not loaded | Confirm `capell.json`, package `composer.json`, and provider registration | Reinstall the package, refresh Composer autoload, and clear host caches |
+| Background work does not run | Queue worker or scheduled command is not active | Check package jobs, commands, and host scheduler configuration | Start the queue or scheduler, then run the focused command or package test |
+| Public output leaks unexpected state | Render data, cache variation, or authoring boundary has regressed | Check public Blade, cache tags, and public-output safety tests | Move data loading out of Blade and rerun the package public-output tests |
 
-## Testing
+## Quick Start
 
-Run package tests from the repository root:
+1. Install the package: `composer require capell-app/theme-agency`.
+2. Run the required setup: `php artisan capell:theme-agency-demo`.
+3. Verify the package provider is registered and the related frontend, command, or extension point is active.
 
-```bash
-vendor/bin/pest packages/theme-agency/tests --configuration=phpunit.xml
-```
+## Next Steps
 
-The public token filename guard is covered in Capell Frontend default theme:
+- [Package docs](docs/README.md)
+- [Overview](docs/overview.md)
+- [Screenshot contract](docs/screenshots.json)
+- [Marketplace assets](docs/assets/marketplace/)
+- [Capell content language plan](../../docs/CONTENT_LANGUAGE_PLAN.md)
+- [Capell documentation design system](../../docs/DESIGN_SYSTEM.md)
+- [Capell and package ERD notes](../../docs/erd/capell-and-package-erds.md)
+- Focused tests: `vendor/bin/pest packages/theme-agency/tests --configuration=phpunit.xml`.
 
-```bash
-vendor/bin/pest packages/frontend/tests/Unit/ThemeTokenStoreTest.php --configuration=phpunit.xml
-```
-
-## Maintenance Notes
-
-- Theme output is public output. Keep admin-only metadata and editor hooks out of rendered markup.
+<!-- prettier-ignore-end -->

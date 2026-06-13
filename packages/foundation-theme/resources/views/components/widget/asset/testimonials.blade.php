@@ -1,6 +1,5 @@
 @php
     use Capell\Core\Facades\CapellCore;
-    use Capell\FoundationTheme\Actions\BuildWidgetAssetRenderDataAction;
     use Capell\Frontend\Facades\Frontend;
 
     $page = Frontend::page();
@@ -8,6 +7,8 @@
 @endphp
 
 @props([
+    'assetRenderDataItems',
+    'assets',
     'align' => $widget->getMeta('align', 'center'),
     'carouselArrows' => (bool) $widget->getMeta('carousel_arrows', false),
     'carouselFade' => $widget->getMeta('carousel_fade', true),
@@ -29,7 +30,7 @@
     'containerIndex',
     'containerWidth',
     'loop',
-    'total' => $widget->assets->count(),
+    'total' => $assets->count(),
     'widget',
     'widgetIndex',
 ])
@@ -38,7 +39,7 @@
     $carouselEffect = $carouselFade ? 'fade' : $carouselEffect;
 @endphp
 
-@if ($widget->assets->isNotEmpty() || ! config('capell-layout-builder.widget.skip_render_empty', true))
+@if ($assets->isNotEmpty() || ! config('capell-layout-builder.widget.skip_render_empty', true))
     <x-capell-foundation-theme::widget.wrapper
         class="capell-asset-testimonials widget-assets widget-assets-testimonials"
         :$container
@@ -65,7 +66,7 @@
             />
         @endif
 
-        @if ($widget->assets->isNotEmpty())
+        @if ($assets->isNotEmpty())
             <div
                 @class([
                     'relative',
@@ -104,12 +105,13 @@
                     class="swiper grid h-full w-full"
                 >
                     <div class="swiper-wrapper h-full w-full">
-                        @foreach ($widget->assets as $widgetAsset)
+                        @foreach ($assetRenderDataItems as $assetRenderDataItem)
                             {{-- format-ignore-start --}}
                         @php
                             $title = '';
                             $content = '';
-                            $assetRenderData = BuildWidgetAssetRenderDataAction::run($widgetAsset);
+                            $widgetAsset = $assetRenderDataItem['widgetAsset'];
+                            $assetRenderData = $assetRenderDataItem['renderData'];
                             $media = $assetRenderData->image?->media;
 
                             $position = is_object($assetRenderData->translation) && method_exists($assetRenderData->translation, 'getMeta')

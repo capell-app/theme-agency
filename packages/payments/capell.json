@@ -13,16 +13,9 @@
         "bundle": "commerce"
     },
     "namespace": "Capell\\Payments",
-    "surfaces": [
-        "admin",
-        "frontend",
-        "console"
-    ],
+    "surfaces": ["admin", "frontend", "console"],
     "dependencies": {
-        "requires": [
-            "capell-app/admin",
-            "capell-app/core"
-        ],
+        "requires": ["capell-app/admin", "capell-app/core"],
         "supports": [
             "capell-app/access-gate",
             "capell-app/customer-portal",
@@ -32,15 +25,9 @@
     },
     "providers": {
         "metadata": [],
-        "install": [
-            "Capell\\Payments\\Providers\\PaymentsServiceProvider"
-        ],
-        "runtime": [
-            "Capell\\Payments\\Providers\\PaymentsServiceProvider"
-        ],
-        "admin": [
-            "Capell\\Payments\\Providers\\AdminServiceProvider"
-        ],
+        "install": ["Capell\\Payments\\Providers\\PaymentsServiceProvider"],
+        "runtime": ["Capell\\Payments\\Providers\\PaymentsServiceProvider"],
+        "admin": ["Capell\\Payments\\Providers\\AdminServiceProvider"],
         "frontend": []
     },
     "contributes": [
@@ -126,9 +113,7 @@
         "paidDownloadUrl": "Capell\\Payments\\Actions\\CreatePaidDownloadUrlAction",
         "subscriptionEntitlement": "Capell\\Payments\\Actions\\ResolveSubscriptionEntitlementAction"
     },
-    "settings": [
-        "Capell\\Payments\\Settings\\PaymentsSettings"
-    ],
+    "settings": ["Capell\\Payments\\Settings\\PaymentsSettings"],
     "permissions": [
         "View:PaymentCustomer",
         "View:CheckoutSession",
@@ -157,36 +142,20 @@
         "customer-portal-payments-feed"
     ],
     "security": {
-        "riskTier": "sensitive",
+        "riskTier": "critical",
         "publicSurface": {
             "routeNames": [
                 "capell-payments.form-builder.checkout",
                 "capell-payments.paid-downloads.show",
                 "capell-payments.portal.billing",
-                "capell-payments.stripe-webhook",
-                "stripe-webhook",
-                "paid-downloads.show",
-                "form-builder.checkout",
-                "portal.billing"
+                "capell-payments.stripe-webhook"
             ],
-            "auth": "mixed",
-            "csrfExemptRoutes": [
-                "capell-payments.stripe-webhook",
-                "stripe-webhook"
-            ],
-            "signedRoutes": [
-                "capell-payments.paid-downloads.show",
-                "paid-downloads.show",
-                "form-builder.checkout"
-            ],
+            "auth": "public",
+            "csrfExemptRoutes": ["capell-payments.stripe-webhook"],
+            "signedRoutes": ["capell-payments.paid-downloads.show"],
             "tokenizedRoutes": [],
-            "webhookRoutes": [
-                "capell-payments.stripe-webhook",
-                "stripe-webhook"
-            ],
-            "throttledRoutes": [
-                "stripe-webhook"
-            ]
+            "webhookRoutes": ["capell-payments.stripe-webhook"],
+            "throttledRoutes": ["capell-payments.stripe-webhook"]
         },
         "sensitiveData": {
             "encryptedFields": [
@@ -238,15 +207,10 @@
     "performance": {
         "frontendRenderBudgetMs": 0,
         "adminQueryBudget": 40,
-        "cacheTags": [
-            "payments"
-        ],
+        "cacheTags": ["payments"],
         "cacheSafety": {
             "cacheable": false,
-            "variesBy": [
-                "site",
-                "customer"
-            ],
+            "variesBy": ["site", "customer"],
             "sensitiveOutput": true,
             "invalidationSources": [],
             "queueInvalidation": false
@@ -296,10 +260,7 @@
                 "caption": "Payments Form Builder checkout"
             }
         ],
-        "categories": [
-            "commerce",
-            "integrations"
-        ]
+        "categories": ["commerce", "integrations"]
     },
     "contributionTraceability": {
         "deferredContributions": []

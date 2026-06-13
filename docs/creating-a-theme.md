@@ -38,6 +38,7 @@ Use these packages as the working examples:
 | `capell-app/theme-inertia-bookings-react` | n/a                | Premium React adapter plugin for the Inertia Bookings theme.                                                                       |
 | `capell-app/theme-inertia-bookings-vue`   | n/a                | Premium Vue adapter plugin for the Inertia Bookings theme.                                                                         |
 | `capell-app/theme-knowledge`              | `knowledge`        | Premium search-led renderer for documentation, knowledge bases, topic hubs, and resource libraries.                                |
+| `capell-app/theme-liquid-glass`           | `liquid-glass`     | Free modern glass renderer for launch, service, and design-led sites using the standard section set.                               |
 | `capell-app/theme-local-services`         | `local-services`   | Premium quote-led renderer for trades, service areas, local proof, quote forms, and click-to-call journeys.                        |
 | `capell-app/theme-nonprofit`              | `nonprofit`        | Premium impact renderer for campaigns, donations, volunteering, events, stories, and transparent support paths.                    |
 | `capell-app/theme-portfolio`              | `portfolio`        | Premium creator/consultant renderer for work grids, case studies, services, media kits, and newsletter growth.                     |

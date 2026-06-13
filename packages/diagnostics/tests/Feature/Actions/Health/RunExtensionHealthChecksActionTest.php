@@ -16,9 +16,10 @@ use Illuminate\Support\Facades\File;
  * Writes a single package directory containing a capell.json that declares the
  * provided health-check entries, then runs the action against it.
  *
- * @param  list<array{key: string, label: string, class: string, severity: string}>  $healthChecks
+ * @param  list<array{key: string, label: string, class: string, severity: string, surface?: string}>  $healthChecks
+ * @param  array<string, mixed>  $manifest
  */
-function runFixtureHealthChecks(array $healthChecks): ExtensionHealthReportData
+function runFixtureHealthChecks(array $healthChecks, array $manifest = []): ExtensionHealthReportData
 {
     $packagesPath = sys_get_temp_dir() . '/capell_health_checks_' . uniqid();
     $packagePath = $packagesPath . '/fixture-package';
@@ -28,6 +29,7 @@ function runFixtureHealthChecks(array $healthChecks): ExtensionHealthReportData
         'name' => 'capell-app/fixture-package',
         'slug' => 'fixture-package',
         'healthChecks' => $healthChecks,
+        ...$manifest,
     ], JSON_THROW_ON_ERROR));
 
     try {
@@ -71,10 +73,46 @@ it('reports an implemented passing health check as passing', function (): void {
         ->and($report->failedCount)->toBe(0)
         ->and($check)->toBeInstanceOf(HealthCheckResultData::class)
         ->and($check->implementationStatus)->toBe(HealthCheckImplementationStatus::Implemented)
+        ->and($check->surface)->toBe('shared')
+        ->and($check->coverage)->toBe(['manifest-validity'])
         ->and($check->passed)->toBeTrue()
         ->and($check->message)->toBe((string) __('capell-diagnostics::package.health_check_assertions_passed', [
             'total' => 1,
         ]));
+});
+
+it('adds manifest-derived coverage dimensions to each health check result', function (): void {
+    $report = runFixtureHealthChecks([
+        ['key' => 'fixture.passing', 'label' => 'Passing', 'class' => PassingFixtureHealthCheck::class, 'severity' => 'warning', 'surface' => 'frontend'],
+    ], [
+        'providers' => [
+            'runtime' => ['Capell\\Fixture\\FixtureServiceProvider'],
+        ],
+        'database' => [
+            'requiredTables' => ['fixture_records'],
+        ],
+        'settings' => [
+            'class' => 'Capell\\Fixture\\Settings\\FixtureSettings',
+        ],
+        'permissions' => ['fixture.manage'],
+        'security' => [
+            'publicSurface' => [
+                'routeNames' => ['capell-fixture.public'],
+            ],
+        ],
+    ]);
+
+    $check = firstFixtureHealthCheck($report);
+
+    expect($check->surface)->toBe('frontend')
+        ->and($check->coverage)->toBe([
+            'admin-permissions',
+            'manifest-validity',
+            'provider-registration',
+            'public-route-security',
+            'required-migrations',
+            'required-settings',
+        ]);
 });
 
 it('reports an implemented failing health check as failing', function (): void {
