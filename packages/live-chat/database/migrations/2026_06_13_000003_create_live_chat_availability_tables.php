@@ -4,14 +4,15 @@ declare(strict_types=1);
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
     public function up(): void
     {
-        $windowsTable = config('capell-live-chat.tables.availability_windows', 'live_chat_availability_windows');
-        $exceptionsTable = config('capell-live-chat.tables.availability_exceptions', 'live_chat_availability_exceptions');
+        $windowsTable = Config::string('capell-live-chat.tables.availability_windows', 'live_chat_availability_windows');
+        $exceptionsTable = Config::string('capell-live-chat.tables.availability_exceptions', 'live_chat_availability_exceptions');
 
         if (! Schema::hasTable($windowsTable)) {
             Schema::create($windowsTable, function (Blueprint $table): void {

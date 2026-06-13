@@ -9,6 +9,16 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Override;
 
+/**
+ * @property int $id
+ * @property int $site_id
+ * @property int $day_of_week
+ * @property string|null $label
+ * @property string $opens_at
+ * @property string $closes_at
+ * @property string $timezone
+ * @property bool $is_active
+ */
 class LiveChatAvailabilityWindow extends Model
 {
     /** @var list<string> */

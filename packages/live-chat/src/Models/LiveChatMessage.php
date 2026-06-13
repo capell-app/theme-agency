@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Override;
 
 /**
+ * @property int $id
  * @property int $conversation_id
  * @property MessageRole $role
  * @property string $body
@@ -22,6 +23,7 @@ use Override;
  * @property array<int, array<string, mixed>>|null $attachments
  * @property array<string, mixed>|null $metadata
  * @property CarbonImmutable|null $read_at
+ * @property CarbonImmutable|null $created_at
  * @property-read LiveChatConversation $conversation
  */
 class LiveChatMessage extends Model

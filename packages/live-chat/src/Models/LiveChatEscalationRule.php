@@ -11,6 +11,17 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Override;
 
+/**
+ * @property int $id
+ * @property int|null $site_id
+ * @property string $name
+ * @property EscalationTriggerType $trigger_type
+ * @property string|null $trigger_value
+ * @property string|null $route_to
+ * @property LiveChatPriority $priority
+ * @property bool $is_active
+ * @property array<string, mixed>|null $metadata
+ */
 class LiveChatEscalationRule extends Model
 {
     /** @var list<string> */

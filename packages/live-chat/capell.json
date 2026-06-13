@@ -127,6 +127,7 @@
         "recordLiveChatKnowledgeGap": "Capell\\LiveChat\\Actions\\RecordLiveChatKnowledgeGapAction",
         "replyToLiveChatMessage": "Capell\\LiveChat\\Actions\\ReplyToLiveChatMessageAction",
         "requestLiveChatHandoff": "Capell\\LiveChat\\Actions\\RequestLiveChatHandoffAction",
+        "searchLiveChatKnowledgeDocuments": "Capell\\LiveChat\\Actions\\SearchLiveChatKnowledgeDocumentsAction",
         "resolveLiveChatConversationForInstallation": "Capell\\LiveChat\\Actions\\ResolveLiveChatConversationForInstallationAction",
         "resolveLiveChatInstallation": "Capell\\LiveChat\\Actions\\ResolveLiveChatInstallationAction",
         "resolveLiveChatAvailability": "Capell\\LiveChat\\Actions\\ResolveLiveChatAvailabilityAction",

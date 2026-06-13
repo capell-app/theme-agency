@@ -42,8 +42,8 @@ final class StartLiveChatConversationAction
             'visitor_phone' => $visitor?->phone,
             'visitor_company' => $visitor?->company,
             'preferred_callback_at' => $visitor?->preferredCallbackAt,
-            'processing_consent' => $visitor?->processingConsent ?? false,
-            'marketing_consent' => $visitor?->marketingConsent ?? false,
+            'processing_consent' => $visitor !== null && $visitor->processingConsent,
+            'marketing_consent' => $visitor !== null && $visitor->marketingConsent,
             'ai_disclosure_at' => $now,
             'first_page_url' => $this->pageValue($data->page, 'url'),
             'last_page_url' => $this->pageValue($data->page, 'url'),
@@ -63,7 +63,7 @@ final class StartLiveChatConversationAction
             'attachments' => $data->attachments,
         ]);
 
-        $result = ReplyToLiveChatMessageAction::run($conversation, $visitorMessage);
+        $result = app(ReplyToLiveChatMessageAction::class)->handle($conversation, $visitorMessage);
 
         SyncLiveChatConversationContactAction::run($conversation);
 
@@ -76,7 +76,7 @@ final class StartLiveChatConversationAction
 
     private function trimBody(string $body): string
     {
-        $maxLength = (int) config('capell-live-chat.max_message_length', 4000);
+        $maxLength = $this->configInt('capell-live-chat.max_message_length', 4000);
 
         return Str::limit(trim($body), max(1, $maxLength), '');
     }
@@ -96,5 +96,12 @@ final class StartLiveChatConversationAction
         $value = config($key);
 
         return is_string($value) && $value !== '' ? $value : $fallback;
+    }
+
+    private function configInt(string $key, int $fallback): int
+    {
+        $value = config($key);
+
+        return is_int($value) || (is_string($value) && ctype_digit($value)) ? (int) $value : $fallback;
     }
 }

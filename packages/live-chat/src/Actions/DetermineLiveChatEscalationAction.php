@@ -49,7 +49,7 @@ final class DetermineLiveChatEscalationAction
             );
         }
 
-        if ($response->confidence < (float) config('capell-live-chat.low_confidence_threshold', 0.55)) {
+        if ($response->confidence < $this->configFloat('capell-live-chat.low_confidence_threshold', 0.55)) {
             return new LiveChatEscalationDecisionData(
                 shouldEscalate: true,
                 reason: EscalationReason::LowConfidence,
@@ -88,7 +88,7 @@ final class DetermineLiveChatEscalationAction
                 return match ($rule->trigger_type) {
                     EscalationTriggerType::Keyword => $this->keywordMatches($message->body, $rule->trigger_value),
                     EscalationTriggerType::Intent => $rule->trigger_value === $response->intent->value,
-                    EscalationTriggerType::LowConfidence => $response->confidence < (float) ($rule->trigger_value ?? config('capell-live-chat.low_confidence_threshold', 0.55)),
+                    EscalationTriggerType::LowConfidence => $response->confidence < $this->thresholdForRule($rule),
                     EscalationTriggerType::Manual, EscalationTriggerType::AfterHours => false,
                 };
             });
@@ -117,6 +117,24 @@ final class DetermineLiveChatEscalationAction
     private function defaultQueue(): string
     {
         return $this->configString('capell-live-chat.escalation.default_queue', 'support');
+    }
+
+    private function thresholdForRule(LiveChatEscalationRule $rule): float
+    {
+        if (is_string($rule->trigger_value) && is_numeric($rule->trigger_value)) {
+            return (float) $rule->trigger_value;
+        }
+
+        return $this->configFloat('capell-live-chat.low_confidence_threshold', 0.55);
+    }
+
+    private function configFloat(string $key, float $fallback): float
+    {
+        $value = config($key);
+
+        return is_int($value) || is_float($value) || (is_string($value) && is_numeric($value))
+            ? (float) $value
+            : $fallback;
     }
 
     private function configString(string $key, string $fallback): string

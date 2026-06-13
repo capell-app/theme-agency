@@ -23,13 +23,13 @@ final class SyncLiveChatConversationContactAction
             return null;
         }
 
-        $transcript = BuildLiveChatTranscriptAction::run($conversation);
+        $transcript = (new BuildLiveChatTranscriptAction)->handle($conversation);
 
         $resolvedLeadTitle = $conversation->lead_id === null
             ? ($leadTitle ?? $this->leadTitle($conversation))
             : null;
 
-        $result = SyncContactSourceRecordAction::run(
+        $result = (new SyncContactSourceRecordAction)->handle(
             new ContactSourceRecordData(
                 siteId: (int) $conversation->site_id,
                 sourceKey: 'live-chat',

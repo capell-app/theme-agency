@@ -34,25 +34,25 @@ final class StoreLiveChatMessageController
                 ->where('uuid', $conversationUuid)
                 ->firstOrFail();
         } else {
-            $installation = ResolveLiveChatInstallationAction::run($publicKey);
+            $installation = (new ResolveLiveChatInstallationAction)->handle($publicKey);
 
             abort_if($installation === null, 404);
 
-            $origin = GuardLiveChatInstallationOriginAction::run($installation, $request);
-            $liveChatConversation = ResolveLiveChatConversationForInstallationAction::run(
+            $origin = (new GuardLiveChatInstallationOriginAction)->handle($installation, $request);
+            $liveChatConversation = (new ResolveLiveChatConversationForInstallationAction)->handle(
                 installation: $installation,
                 uuid: $conversationUuid,
                 visitorToken: $this->nullableString($request->validated('visitor_token')),
             );
         }
 
-        $attachments = StoreLiveChatAttachmentsAction::run(
+        $attachments = (new StoreLiveChatAttachmentsAction)->handle(
             files: $this->uploadedFiles($request->file('attachments', [])),
             conversationUuid: $liveChatConversation->uuid,
         );
 
         $data = $this->incomingMessageData($request->validated(), $attachments);
-        $result = StoreLiveChatMessageAction::run($liveChatConversation, $data);
+        $result = (new StoreLiveChatMessageAction)->handle($liveChatConversation, $data);
 
         return $this->publicResponse(response()->json($this->responsePayload(
             $result['conversation'],
@@ -121,7 +121,7 @@ final class StoreLiveChatMessageController
         $response->headers->set('Pragma', 'no-cache');
         $response->headers->set('Expires', '0');
 
-        ApplyLiveChatCorsHeadersAction::run($response, $origin);
+        (new ApplyLiveChatCorsHeadersAction)->handle($response, $origin);
 
         return $response;
     }

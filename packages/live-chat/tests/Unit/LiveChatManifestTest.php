@@ -15,6 +15,7 @@ use Capell\LiveChat\Actions\IndexLiveChatKnowledgeSourceAction;
 use Capell\LiveChat\Actions\RecordLiveChatAIRunAction;
 use Capell\LiveChat\Actions\RecordLiveChatKnowledgeGapAction;
 use Capell\LiveChat\Actions\RequestLiveChatHandoffAction;
+use Capell\LiveChat\Actions\SearchLiveChatKnowledgeDocumentsAction;
 use Capell\LiveChat\Actions\StartLiveChatConversationAction;
 use Capell\LiveChat\Actions\StoreLiveChatMessageAction;
 use Capell\LiveChat\Actions\SyncLiveChatConversationContactAction;
@@ -31,23 +32,123 @@ use Capell\LiveChat\Manifest\LiveChatWidgetContribution;
 use Capell\LiveChat\Providers\LiveChatServiceProvider;
 use Illuminate\Support\Facades\File;
 
+/**
+ * @return array<string, mixed>
+ */
+function live_chat_json_file_array(string $path): array
+{
+    $decoded = json_decode(File::get($path), associative: true, flags: JSON_THROW_ON_ERROR);
+
+    throw_unless(is_array($decoded), RuntimeException::class, sprintf('JSON file [%s] did not decode to an array.', $path));
+
+    $items = [];
+
+    foreach ($decoded as $key => $value) {
+        throw_unless(is_string($key), RuntimeException::class, sprintf('JSON file [%s] must decode to an object.', $path));
+
+        $items[$key] = $value;
+    }
+
+    return $items;
+}
+
+/**
+ * @param  array<string, mixed>  $data
+ * @return array<string, mixed>
+ */
+function live_chat_array(array $data, string $key): array
+{
+    $value = $data[$key] ?? [];
+
+    throw_unless(is_array($value), RuntimeException::class, sprintf('Manifest key [%s] must be an array.', $key));
+
+    $items = [];
+
+    foreach ($value as $itemKey => $itemValue) {
+        throw_unless(is_string($itemKey), RuntimeException::class, sprintf('Manifest key [%s] must be an object.', $key));
+
+        $items[$itemKey] = $itemValue;
+    }
+
+    return $items;
+}
+
+/**
+ * @param  array<string, mixed>  $data
+ * @return list<array<string, mixed>>
+ */
+function live_chat_array_list(array $data, string $key): array
+{
+    $value = $data[$key] ?? [];
+
+    throw_unless(is_array($value), RuntimeException::class, sprintf('Manifest key [%s] must be an array list.', $key));
+
+    $items = [];
+
+    foreach ($value as $item) {
+        throw_unless(is_array($item), RuntimeException::class, sprintf('Manifest key [%s] must contain only arrays.', $key));
+
+        $arrayItem = [];
+
+        foreach ($item as $itemKey => $itemValue) {
+            throw_unless(is_string($itemKey), RuntimeException::class, sprintf('Manifest key [%s] must contain only objects.', $key));
+
+            $arrayItem[$itemKey] = $itemValue;
+        }
+
+        $items[] = $arrayItem;
+    }
+
+    return $items;
+}
+
+/**
+ * @param  array<string, mixed>  $data
+ * @return list<string>
+ */
+function live_chat_string_list(array $data, string $key): array
+{
+    $value = $data[$key] ?? [];
+
+    throw_unless(is_array($value), RuntimeException::class, sprintf('Manifest key [%s] must be a string list.', $key));
+
+    $items = [];
+
+    foreach ($value as $item) {
+        throw_unless(is_string($item), RuntimeException::class, sprintf('Manifest key [%s] must contain only strings.', $key));
+
+        $items[] = $item;
+    }
+
+    return $items;
+}
+
+/**
+ * @param  array<string, mixed>  $data
+ */
+function live_chat_string(array $data, string $key): string
+{
+    $value = $data[$key] ?? null;
+
+    throw_unless(is_string($value), RuntimeException::class, sprintf('Manifest key [%s] must be a string.', $key));
+
+    return $value;
+}
+
 it('declares the live chat package manifest contract', function (): void {
-    $manifest = json_decode(
-        File::get(__DIR__ . '/../../capell.json'),
-        associative: true,
-        flags: JSON_THROW_ON_ERROR,
-    );
-    $composer = json_decode(
-        File::get(__DIR__ . '/../../composer.json'),
-        associative: true,
-        flags: JSON_THROW_ON_ERROR,
-    );
-    $contributions = collect($manifest['contributes']);
+    $manifest = live_chat_json_file_array(__DIR__ . '/../../capell.json');
+    $composer = live_chat_json_file_array(__DIR__ . '/../../composer.json');
+    $contributions = collect(live_chat_array_list($manifest, 'contributes'));
+    $composerRequire = live_chat_array($composer, 'require');
+    $dependencies = live_chat_array($manifest, 'dependencies');
+    $providers = live_chat_array($manifest, 'providers');
+    $database = live_chat_array($manifest, 'database');
+    $contributionTraceability = live_chat_array($manifest, 'contributionTraceability');
     $composerRequirements = array_values(array_filter(
-        array_keys($composer['require'] ?? []),
+        array_keys($composerRequire),
         static fn (int|string $packageName): bool => is_string($packageName) && str_starts_with($packageName, 'capell-app/'),
     ));
-    $manifestRequirements = $manifest['dependencies']['requires'] ?? [];
+    $manifestRequirements = live_chat_string_list($dependencies, 'requires');
 
     sort($composerRequirements);
     sort($manifestRequirements);
@@ -57,9 +158,9 @@ it('declares the live chat package manifest contract', function (): void {
         ->toHaveKey('name', 'capell-app/live-chat')
         ->toHaveKey('namespace', 'Capell\\LiveChat')
         ->and($manifestRequirements)->toBe($composerRequirements)
-        ->and($manifest['providers']['runtime'])->toContain(LiveChatServiceProvider::class)
-        ->and($manifest['database']['migrations'])->toBeTrue()
-        ->and($manifest['database']['requiredTables'])->toBe([
+        ->and(live_chat_string_list($providers, 'runtime'))->toContain(LiveChatServiceProvider::class)
+        ->and($database['migrations'] ?? null)->toBeTrue()
+        ->and(live_chat_string_list($database, 'requiredTables'))->toBe([
             'live_chat_conversations',
             'live_chat_installations',
             'live_chat_messages',
@@ -80,7 +181,7 @@ it('declares the live chat package manifest contract', function (): void {
                 EscalationRuleResource::class,
                 KnowledgeSourceResource::class,
             ]))->toBeTrue()
-        ->and($manifest['contributes'])->toContain([
+        ->and(live_chat_array_list($manifest, 'contributes'))->toContain([
             'type' => 'model',
             'class' => LiveChatModelsContribution::class,
             'modelClasses' => [
@@ -98,7 +199,7 @@ it('declares the live chat package manifest contract', function (): void {
         ])
         ->and(class_implements(LiveChatFrontendRoutesContribution::class))->toContain(RegistersExtensionRoute::class)
         ->and(class_implements(LiveChatWidgetContribution::class))->toContain(RegistersExtensionFrontendComponent::class)
-        ->and($manifest['actions'])->toMatchArray([
+        ->and(live_chat_array($manifest, 'actions'))->toMatchArray([
             'buildLiveChatAnalytics' => BuildLiveChatAnalyticsAction::class,
             'buildLiveChatTranscript' => BuildLiveChatTranscriptAction::class,
             'buildLiveChatWidgetConfig' => BuildLiveChatWidgetConfigAction::class,
@@ -108,11 +209,12 @@ it('declares the live chat package manifest contract', function (): void {
             'recordLiveChatAIRun' => RecordLiveChatAIRunAction::class,
             'recordLiveChatKnowledgeGap' => RecordLiveChatKnowledgeGapAction::class,
             'requestLiveChatHandoff' => RequestLiveChatHandoffAction::class,
+            'searchLiveChatKnowledgeDocuments' => SearchLiveChatKnowledgeDocumentsAction::class,
             'startLiveChatConversation' => StartLiveChatConversationAction::class,
             'storeLiveChatMessage' => StoreLiveChatMessageAction::class,
             'syncLiveChatConversationContact' => SyncLiveChatConversationContactAction::class,
         ])
-        ->and($manifest['capabilities'])->toContain(
+        ->and(live_chat_string_list($manifest, 'capabilities'))->toContain(
             'live-chat-widget',
             'live-chat-message-first',
             'live-chat-details-first',
@@ -123,27 +225,32 @@ it('declares the live chat package manifest contract', function (): void {
             'live-chat-knowledge-documents',
             'live-chat-knowledge-gaps',
         )
-        ->and($manifest['contributionTraceability']['deferredContributions'])->toBe([]);
+        ->and($contributionTraceability['deferredContributions'] ?? null)->toBe([]);
 });
 
 it('declares committed marketplace assets and screenshot fallbacks', function (): void {
     $packagePath = dirname(__DIR__, 2);
-    $manifest = json_decode(File::get($packagePath . '/capell.json'), true, flags: JSON_THROW_ON_ERROR);
-    $screenshotContract = json_decode(File::get($packagePath . '/docs/screenshots.json'), true, flags: JSON_THROW_ON_ERROR);
+    $manifest = live_chat_json_file_array($packagePath . '/capell.json');
+    $screenshotContract = live_chat_json_file_array($packagePath . '/docs/screenshots.json');
+    $marketplace = live_chat_array($manifest, 'marketplace');
 
-    foreach ($manifest['marketplace']['screenshots'] as $screenshot) {
-        expect($screenshot['path'])->toBeString()
-            ->and(File::exists($packagePath . '/' . $screenshot['path']))->toBeTrue()
-            ->and(strlen(trim((string) $screenshot['alt'])))->toBeGreaterThanOrEqual(12)
-            ->and(strlen(trim((string) $screenshot['caption'])))->toBeGreaterThanOrEqual(12);
+    foreach (live_chat_array_list($marketplace, 'screenshots') as $screenshot) {
+        $path = live_chat_string($screenshot, 'path');
+
+        expect($path)->toBeString()
+            ->and(File::exists($packagePath . '/' . $path))->toBeTrue()
+            ->and(strlen(trim(live_chat_string($screenshot, 'alt'))))->toBeGreaterThanOrEqual(12)
+            ->and(strlen(trim(live_chat_string($screenshot, 'caption'))))->toBeGreaterThanOrEqual(12);
     }
 
-    expect($screenshotContract['generatedFor'])->toBe('deployment-screenshot-runner')
-        ->and($screenshotContract['composerRequires'])->toContain('capell-app/live-chat');
+    expect($screenshotContract['generatedFor'] ?? null)->toBe('deployment-screenshot-runner')
+        ->and(live_chat_string_list($screenshotContract, 'composerRequires'))->toContain('capell-app/live-chat');
 
-    foreach ($screenshotContract['entries'] as $entry) {
-        expect($entry['fallbackAsset'])->toBeString()
-            ->and(File::exists($packagePath . '/' . str_replace('packages/live-chat/', '', $entry['fallbackAsset'])))->toBeTrue();
+    foreach (live_chat_array_list($screenshotContract, 'entries') as $entry) {
+        $fallbackAsset = live_chat_string($entry, 'fallbackAsset');
+
+        expect($fallbackAsset)->toBeString()
+            ->and(File::exists($packagePath . '/' . str_replace('packages/live-chat/', '', $fallbackAsset)))->toBeTrue();
     }
 });
 

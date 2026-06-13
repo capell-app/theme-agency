@@ -116,6 +116,7 @@ return [
         'technical' => 'I can help narrow this down. What were you trying to do, and what happened instead?',
         'clarify' => 'Can you share a little more detail so I can point you in the right direction?',
         'fallback' => 'I can help with that. I will answer from approved site content and can bring in a person if this needs follow-up.',
+        'grounded' => 'From :source: :answer',
     ],
     'availability' => [
         'available' => 'Available',

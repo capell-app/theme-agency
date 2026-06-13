@@ -24,17 +24,17 @@ final class StoreLiveChatConversationController
     public function __invoke(StoreLiveChatConversationRequest $request): JsonResponse
     {
         $publicKey = $this->nullableString($request->route('public_key'));
-        $installation = $publicKey === null ? null : ResolveLiveChatInstallationAction::run($publicKey);
+        $installation = $publicKey === null ? null : (new ResolveLiveChatInstallationAction)->handle($publicKey);
         $origin = null;
 
         if ($publicKey !== null) {
             abort_if($installation === null, 404);
-            $origin = GuardLiveChatInstallationOriginAction::run($installation, $request);
+            $origin = (new GuardLiveChatInstallationOriginAction)->handle($installation, $request);
         }
 
-        $siteId = $installation?->site_id ?? (int) config('capell-live-chat.default_site_id', 1);
+        $siteId = $installation !== null ? $installation->site_id : $this->defaultSiteId();
         $conversationUuid = (string) Str::uuid();
-        $attachments = StoreLiveChatAttachmentsAction::run(
+        $attachments = (new StoreLiveChatAttachmentsAction)->handle(
             files: $this->uploadedFiles($request->file('attachments', [])),
             conversationUuid: $conversationUuid,
         );
@@ -44,7 +44,7 @@ final class StoreLiveChatConversationController
             $attachments,
         );
 
-        $result = StartLiveChatConversationAction::run($data, $siteId, $installation);
+        $result = (new StartLiveChatConversationAction)->handle($data, $siteId, $installation);
 
         return $this->publicResponse(response()->json($this->responsePayload(
             $result['conversation'],
@@ -114,8 +114,15 @@ final class StoreLiveChatConversationController
         $response->headers->set('Pragma', 'no-cache');
         $response->headers->set('Expires', '0');
 
-        ApplyLiveChatCorsHeadersAction::run($response, $origin);
+        (new ApplyLiveChatCorsHeadersAction)->handle($response, $origin);
 
         return $response;
+    }
+
+    private function defaultSiteId(): int
+    {
+        $siteId = config('capell-live-chat.default_site_id');
+
+        return is_int($siteId) || (is_string($siteId) && ctype_digit($siteId)) ? (int) $siteId : 1;
     }
 }

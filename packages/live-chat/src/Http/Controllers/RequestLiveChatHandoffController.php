@@ -32,12 +32,12 @@ final class RequestLiveChatHandoffController
                 ->where('uuid', $conversationUuid)
                 ->firstOrFail();
         } else {
-            $installation = ResolveLiveChatInstallationAction::run($publicKey);
+            $installation = (new ResolveLiveChatInstallationAction)->handle($publicKey);
 
             abort_if($installation === null, 404);
 
-            $origin = GuardLiveChatInstallationOriginAction::run($installation, $request);
-            $liveChatConversation = ResolveLiveChatConversationForInstallationAction::run(
+            $origin = (new GuardLiveChatInstallationOriginAction)->handle($installation, $request);
+            $liveChatConversation = (new ResolveLiveChatConversationForInstallationAction)->handle(
                 installation: $installation,
                 uuid: $conversationUuid,
                 visitorToken: $this->nullableString($validated['visitor_token'] ?? null),
@@ -55,7 +55,7 @@ final class RequestLiveChatHandoffController
             ])->save();
         }
 
-        $updatedConversation = RequestLiveChatHandoffAction::run(
+        $updatedConversation = (new RequestLiveChatHandoffAction)->handle(
             conversation: $liveChatConversation,
             note: $this->nullableString($validated['note'] ?? null),
         );
@@ -78,7 +78,7 @@ final class RequestLiveChatHandoffController
         $response->headers->set('Pragma', 'no-cache');
         $response->headers->set('Expires', '0');
 
-        ApplyLiveChatCorsHeadersAction::run($response, $origin);
+        (new ApplyLiveChatCorsHeadersAction)->handle($response, $origin);
 
         return $response;
     }

@@ -8,6 +8,7 @@ use Capell\Contacts\Providers\ContactsServiceProvider;
 use Capell\Core\Facades\CapellCore;
 use Capell\Core\Support\CapellCoreManager;
 use Capell\Frontend\Support\Render\RenderHookRegistry;
+use Capell\KnowledgeBase\Providers\KnowledgeBaseServiceProvider;
 use Capell\LiveChat\Models\LiveChatInstallation;
 use Capell\LiveChat\Providers\LiveChatServiceProvider;
 use Illuminate\Database\Schema\Blueprint;
@@ -55,6 +56,7 @@ class LiveChatTestCase extends OrchestraTestCase
             ActionServiceProvider::class,
             LaravelDataServiceProvider::class,
             ContactsServiceProvider::class,
+            KnowledgeBaseServiceProvider::class,
             LiveChatServiceProvider::class,
         ];
     }
@@ -74,6 +76,7 @@ class LiveChatTestCase extends OrchestraTestCase
         Config::set('capell-live-chat.default_site_id', 1);
 
         CapellCore::forcePackageInstalled(ContactsServiceProvider::$packageName);
+        CapellCore::forcePackageInstalled(KnowledgeBaseServiceProvider::$packageName);
         CapellCore::forcePackageInstalled(LiveChatServiceProvider::$packageName);
     }
 
@@ -84,6 +87,7 @@ class LiveChatTestCase extends OrchestraTestCase
         });
 
         $this->loadMigrationsFrom(__DIR__ . '/../../contacts/database/migrations');
+        $this->loadMigrationsFrom(__DIR__ . '/../../knowledge-base/database/migrations');
         $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
     }
 }

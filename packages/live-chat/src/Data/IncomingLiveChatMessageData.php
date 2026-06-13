@@ -12,7 +12,7 @@ use Spatie\LaravelData\Mappers\SnakeCaseMapper;
 final class IncomingLiveChatMessageData extends Data
 {
     /**
-     * @param  list<array{name?: string, url?: string, mime?: string, size?: int}>  $attachments
+     * @param  list<array{name?: string, disk?: string, path?: string, url?: string, mime?: string|null, size?: int|null}>  $attachments
      * @param  array<string, mixed>  $page
      */
     public function __construct(

@@ -17,7 +17,7 @@ trait BuildsLiveChatPayloads
     private function incomingMessageData(array $validated, array $attachments = []): IncomingLiveChatMessageData
     {
         return new IncomingLiveChatMessageData(
-            body: (string) $validated['body'],
+            body: $this->requiredString($validated['body'] ?? null),
             visitorToken: $this->nullableString($validated['visitor_token'] ?? null),
             conversationUuid: $this->nullableString($validated['conversation_uuid'] ?? null),
             visitor: $this->visitorData($validated['visitor'] ?? null),
@@ -50,6 +50,11 @@ trait BuildsLiveChatPayloads
     private function nullableString(mixed $value): ?string
     {
         return is_string($value) && trim($value) !== '' ? trim($value) : null;
+    }
+
+    private function requiredString(mixed $value): string
+    {
+        return is_string($value) ? trim($value) : '';
     }
 
     private function date(mixed $value): ?CarbonImmutable

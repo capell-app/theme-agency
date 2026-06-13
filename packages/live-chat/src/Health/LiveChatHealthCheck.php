@@ -12,6 +12,7 @@ use Capell\LiveChat\Actions\GuardLiveChatInstallationOriginAction;
 use Capell\LiveChat\Actions\RequestLiveChatHandoffAction;
 use Capell\LiveChat\Actions\ResolveLiveChatConversationForInstallationAction;
 use Capell\LiveChat\Actions\ResolveLiveChatInstallationAction;
+use Capell\LiveChat\Actions\SearchLiveChatKnowledgeDocumentsAction;
 use Capell\LiveChat\Actions\StartLiveChatConversationAction;
 use Capell\LiveChat\Actions\StoreLiveChatMessageAction;
 use Capell\LiveChat\Actions\SyncLiveChatConversationContactAction;
@@ -53,6 +54,7 @@ final class LiveChatHealthCheck implements ChecksExtensionHealth
         RequestLiveChatHandoffAction::class,
         ResolveLiveChatConversationForInstallationAction::class,
         ResolveLiveChatInstallationAction::class,
+        SearchLiveChatKnowledgeDocumentsAction::class,
         StartLiveChatConversationAction::class,
         StoreLiveChatMessageAction::class,
         SyncLiveChatConversationContactAction::class,

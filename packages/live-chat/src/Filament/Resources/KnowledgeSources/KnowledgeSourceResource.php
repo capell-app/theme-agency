@@ -65,7 +65,7 @@ final class KnowledgeSourceResource extends Resource
     }
 
     #[Override]
-    public static function getNavigationGroup(): ?string
+    public static function getNavigationGroup(): string
     {
         return __('capell-live-chat::generic.navigation_group');
     }

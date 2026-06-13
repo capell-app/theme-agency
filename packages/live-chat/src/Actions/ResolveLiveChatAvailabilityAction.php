@@ -108,11 +108,24 @@ final class ResolveLiveChatAvailabilityAction
                 continue;
             }
 
-            if ((int) ($window['day'] ?? 0) !== $checkedAt->dayOfWeekIso) {
+            $day = $window['day'] ?? null;
+
+            if (! is_int($day) && ! (is_string($day) && ctype_digit($day))) {
                 continue;
             }
 
-            if ($this->isWithinWindow((string) ($window['opens_at'] ?? ''), (string) ($window['closes_at'] ?? ''), $checkedAt)) {
+            if ((int) $day !== $checkedAt->dayOfWeekIso) {
+                continue;
+            }
+
+            $opensAt = $window['opens_at'] ?? null;
+            $closesAt = $window['closes_at'] ?? null;
+
+            if (! is_string($opensAt) || ! is_string($closesAt)) {
+                continue;
+            }
+
+            if ($this->isWithinWindow($opensAt, $closesAt, $checkedAt)) {
                 return true;
             }
         }

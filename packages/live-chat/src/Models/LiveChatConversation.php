@@ -19,13 +19,20 @@ use Illuminate\Support\Str;
 use Override;
 
 /**
+ * @property int $id
  * @property int $site_id
+ * @property int|null $installation_id
  * @property string $uuid
  * @property ConversationStatus $status
  * @property ConversationFlow $flow
  * @property LiveChatIntent|null $intent
  * @property LiveChatPriority $priority
  * @property EscalationReason|null $escalation_reason
+ * @property int|null $contact_id
+ * @property int|null $lead_id
+ * @property string|null $assignment_queue
+ * @property string|null $first_page_url
+ * @property string|null $last_page_url
  * @property string|null $visitor_name
  * @property string|null $visitor_email
  * @property string|null $visitor_email_hash
@@ -33,9 +40,18 @@ use Override;
  * @property string|null $visitor_phone_hash
  * @property string|null $visitor_company
  * @property string|null $visitor_token_hash
+ * @property string $timezone
+ * @property bool $processing_consent
+ * @property bool $marketing_consent
  * @property array<string, mixed>|null $metadata
+ * @property CarbonImmutable|null $preferred_callback_at
  * @property CarbonImmutable|null $last_message_at
+ * @property CarbonImmutable|null $handoff_requested_at
+ * @property CarbonImmutable|null $contact_captured_at
+ * @property CarbonImmutable|null $escalated_at
+ * @property CarbonImmutable|null $closed_at
  * @property-read Site $site
+ * @property-read LiveChatInstallation|null $installation
  */
 class LiveChatConversation extends Model
 {

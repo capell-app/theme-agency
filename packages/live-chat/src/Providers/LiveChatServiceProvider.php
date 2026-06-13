@@ -12,6 +12,7 @@ use Capell\Core\Support\Packages\AbstractPackageServiceProvider;
 use Capell\Frontend\Enums\RenderHookLocation;
 use Capell\Frontend\Support\Render\FrontendHookRegistrar;
 use Capell\Frontend\Support\Render\RenderHookRegistry;
+use Capell\LiveChat\Contracts\LiveChatKnowledgeProvider;
 use Capell\LiveChat\Contracts\LiveChatResponder;
 use Capell\LiveChat\Contracts\LiveChatWidgetRenderer;
 use Capell\LiveChat\Enums\ResourceEnum;
@@ -35,7 +36,9 @@ use Capell\LiveChat\Policies\LiveChatKnowledgeDocumentPolicy;
 use Capell\LiveChat\Policies\LiveChatKnowledgeGapPolicy;
 use Capell\LiveChat\Policies\LiveChatKnowledgeSourcePolicy;
 use Capell\LiveChat\Rendering\BladeLiveChatWidgetRenderer;
+use Capell\LiveChat\Support\KnowledgeBaseLiveChatKnowledgeProvider;
 use Capell\LiveChat\Support\LocalLiveChatResponder;
+use Capell\LiveChat\Support\ManualLiveChatKnowledgeProvider;
 use Capell\LiveChat\Support\RenderHooks\RegisterLiveChatWidgetHook;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Database\Eloquent\Relations\Relation;
@@ -75,6 +78,12 @@ final class LiveChatServiceProvider extends AbstractPackageServiceProvider
     {
         $this->app->bindIf(LiveChatResponder::class, LocalLiveChatResponder::class);
         $this->app->bindIf(LiveChatWidgetRenderer::class, BladeLiveChatWidgetRenderer::class);
+        $this->app->singleton(ManualLiveChatKnowledgeProvider::class);
+        $this->app->singleton(KnowledgeBaseLiveChatKnowledgeProvider::class);
+        $this->app->tag([
+            ManualLiveChatKnowledgeProvider::class,
+            KnowledgeBaseLiveChatKnowledgeProvider::class,
+        ], LiveChatKnowledgeProvider::TAG);
     }
 
     public function packageRegistered(): void

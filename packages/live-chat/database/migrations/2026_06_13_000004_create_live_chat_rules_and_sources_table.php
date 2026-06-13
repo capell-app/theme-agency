@@ -7,14 +7,15 @@ use Capell\LiveChat\Enums\KnowledgeSourceStatus;
 use Capell\LiveChat\Enums\KnowledgeSourceType;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
     public function up(): void
     {
-        $rulesTable = config('capell-live-chat.tables.escalation_rules', 'live_chat_escalation_rules');
-        $sourcesTable = config('capell-live-chat.tables.knowledge_sources', 'live_chat_knowledge_sources');
+        $rulesTable = Config::string('capell-live-chat.tables.escalation_rules', 'live_chat_escalation_rules');
+        $sourcesTable = Config::string('capell-live-chat.tables.knowledge_sources', 'live_chat_knowledge_sources');
 
         if (! Schema::hasTable($rulesTable)) {
             Schema::create($rulesTable, function (Blueprint $table): void {
@@ -54,7 +55,7 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::dropIfExists(config('capell-live-chat.tables.knowledge_sources', 'live_chat_knowledge_sources'));
-        Schema::dropIfExists(config('capell-live-chat.tables.escalation_rules', 'live_chat_escalation_rules'));
+        Schema::dropIfExists(Config::string('capell-live-chat.tables.knowledge_sources', 'live_chat_knowledge_sources'));
+        Schema::dropIfExists(Config::string('capell-live-chat.tables.escalation_rules', 'live_chat_escalation_rules'));
     }
 };

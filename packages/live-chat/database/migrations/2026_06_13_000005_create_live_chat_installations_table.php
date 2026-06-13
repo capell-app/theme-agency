@@ -5,14 +5,15 @@ declare(strict_types=1);
 use Capell\LiveChat\Enums\LiveChatSourcePolicy;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
     public function up(): void
     {
-        $installationsTable = config('capell-live-chat.tables.installations', 'live_chat_installations');
-        $conversationsTable = config('capell-live-chat.tables.conversations', 'live_chat_conversations');
+        $installationsTable = Config::string('capell-live-chat.tables.installations', 'live_chat_installations');
+        $conversationsTable = Config::string('capell-live-chat.tables.conversations', 'live_chat_conversations');
 
         if (! Schema::hasTable($installationsTable)) {
             Schema::create($installationsTable, function (Blueprint $table): void {
@@ -48,8 +49,8 @@ return new class extends Migration
 
     public function down(): void
     {
-        $installationsTable = config('capell-live-chat.tables.installations', 'live_chat_installations');
-        $conversationsTable = config('capell-live-chat.tables.conversations', 'live_chat_conversations');
+        $installationsTable = Config::string('capell-live-chat.tables.installations', 'live_chat_installations');
+        $conversationsTable = Config::string('capell-live-chat.tables.conversations', 'live_chat_conversations');
 
         if (Schema::hasTable($conversationsTable) && Schema::hasColumn($conversationsTable, 'installation_id')) {
             Schema::table($conversationsTable, function (Blueprint $table): void {

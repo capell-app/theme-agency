@@ -17,7 +17,7 @@ final class BuildLiveChatTranscriptAction
      */
     public function handle(LiveChatConversation $conversation): array
     {
-        return $conversation
+        return array_values($conversation
             ->messages()
             ->oldest()
             ->get()
@@ -26,6 +26,7 @@ final class BuildLiveChatTranscriptAction
                 'body' => $message->body,
                 'created_at' => $message->created_at?->toISOString(),
             ])
-            ->all();
+            ->values()
+            ->all());
     }
 }

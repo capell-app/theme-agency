@@ -6,11 +6,9 @@ namespace Capell\LiveChat\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
-use Override;
 
 final class StoreLiveChatConversationRequest extends FormRequest
 {
-    #[Override]
     public function authorize(): bool
     {
         return true;
@@ -19,11 +17,10 @@ final class StoreLiveChatConversationRequest extends FormRequest
     /**
      * @return array<string, mixed>
      */
-    #[Override]
     public function rules(): array
     {
         return [
-            'body' => ['required', 'string', 'max:' . (int) config('capell-live-chat.max_message_length', 4000)],
+            'body' => ['required', 'string', 'max:' . $this->configInt('capell-live-chat.max_message_length', 4000)],
             'visitor_token' => ['nullable', 'string', 'max:255'],
             'flow' => ['nullable', Rule::in(['message_first', 'details_first'])],
             'timezone' => ['nullable', 'timezone'],
@@ -40,10 +37,10 @@ final class StoreLiveChatConversationRequest extends FormRequest
             'page' => ['nullable', 'array'],
             'page.url' => ['nullable', 'url', 'max:2048'],
             'page.referrer' => ['nullable', 'url', 'max:2048'],
-            'attachments' => ['nullable', 'array', 'max:' . (int) config('capell-live-chat.max_attachment_count', 5)],
+            'attachments' => ['nullable', 'array', 'max:' . $this->configInt('capell-live-chat.max_attachment_count', 5)],
             'attachments.*' => [
                 'file',
-                'max:' . (int) config('capell-live-chat.attachments.max_kilobytes', 10240),
+                'max:' . $this->configInt('capell-live-chat.attachments.max_kilobytes', 10240),
                 'mimes:' . implode(',', $this->attachmentMimes()),
             ],
         ];
@@ -59,5 +56,12 @@ final class StoreLiveChatConversationRequest extends FormRequest
         return is_array($mimes)
             ? array_values(array_filter($mimes, static fn (mixed $mime): bool => is_string($mime) && $mime !== ''))
             : ['jpg', 'jpeg', 'png', 'webp', 'gif', 'pdf', 'txt', 'csv', 'doc', 'docx'];
+    }
+
+    private function configInt(string $key, int $fallback): int
+    {
+        $value = config($key);
+
+        return is_int($value) || (is_string($value) && ctype_digit($value)) ? (int) $value : $fallback;
     }
 }

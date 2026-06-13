@@ -5,11 +5,9 @@ declare(strict_types=1);
 namespace Capell\LiveChat\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Override;
 
 final class RequestLiveChatHandoffRequest extends FormRequest
 {
-    #[Override]
     public function authorize(): bool
     {
         return true;
@@ -18,7 +16,6 @@ final class RequestLiveChatHandoffRequest extends FormRequest
     /**
      * @return array<string, mixed>
      */
-    #[Override]
     public function rules(): array
     {
         return [

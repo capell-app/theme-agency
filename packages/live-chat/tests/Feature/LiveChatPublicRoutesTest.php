@@ -36,7 +36,7 @@ it('renders the public widget without exposing admin internals', function (): vo
 it('serializes browser widget config with public labels', function (): void {
     $this->createLiveChatSite();
 
-    $config = BuildLiveChatWidgetConfigAction::run()->toArray();
+    $config = (new BuildLiveChatWidgetConfigAction)->handle()->toArray();
 
     expect($config)
         ->toHaveKey('start_url')
@@ -53,8 +53,7 @@ it('serializes browser widget config with public labels', function (): void {
 it('injects the live chat widget through the frontend body-end hook', function (): void {
     $this->createLiveChatSite();
 
-    /** @var RenderHookRegistry $registry */
-    $registry = resolve(RenderHookRegistry::class);
+    $registry = app(RenderHookRegistry::class);
     $output = $registry->renderAll(RenderHookLocation::BodyEnd);
 
     expect($output)
@@ -68,8 +67,7 @@ it('does not inject the widget on ignored admin paths', function (): void {
     $this->createLiveChatSite();
     app()->instance('request', Request::create('/admin/pages', Symfony\Component\HttpFoundation\Request::METHOD_GET));
 
-    /** @var RenderHookRegistry $registry */
-    $registry = resolve(RenderHookRegistry::class);
+    $registry = app(RenderHookRegistry::class);
     $output = $registry->renderAll(RenderHookLocation::BodyEnd);
 
     expect($output)->toBe('');
@@ -127,14 +125,14 @@ it('guards external installations by allowed origin', function (): void {
 
     expect(GuardLiveChatInstallationOriginAction::run($installation, $allowedRequest))->toBe('https://example.test');
 
-    expect(fn (): ?string => GuardLiveChatInstallationOriginAction::run($installation, $blockedRequest))
+    expect(fn (): string => (new GuardLiveChatInstallationOriginAction)->handle($installation, $blockedRequest))
         ->toThrow(HttpException::class);
 });
 
 it('stores installation ownership when starting external conversations', function (): void {
     $installation = $this->createLiveChatInstallation();
 
-    $result = StartLiveChatConversationAction::run(
+    $result = (new StartLiveChatConversationAction)->handle(
         new IncomingLiveChatMessageData(
             body: 'Can you help with pricing?',
             visitorToken: 'external-visitor-token',
@@ -163,13 +161,13 @@ it('enforces installation ownership and visitor token continuity for external me
         'visitor_token_hash' => LiveChatConversation::hashVisitorToken('external-visitor-token'),
     ]);
 
-    expect(fn () => ResolveLiveChatConversationForInstallationAction::run($installation, $conversation->uuid, 'wrong-token'))
+    expect(fn () => (new ResolveLiveChatConversationForInstallationAction)->handle($installation, $conversation->uuid, 'wrong-token'))
         ->toThrow(HttpException::class);
 
-    expect(fn () => ResolveLiveChatConversationForInstallationAction::run($otherInstallation, $conversation->uuid, 'external-visitor-token'))
+    expect(fn () => (new ResolveLiveChatConversationForInstallationAction)->handle($otherInstallation, $conversation->uuid, 'external-visitor-token'))
         ->toThrow(ModelNotFoundException::class);
 
-    expect(ResolveLiveChatConversationForInstallationAction::run($installation, $conversation->uuid, 'external-visitor-token')->is($conversation))
+    expect((new ResolveLiveChatConversationForInstallationAction)->handle($installation, $conversation->uuid, 'external-visitor-token')->is($conversation))
         ->toBeTrue();
 });
 

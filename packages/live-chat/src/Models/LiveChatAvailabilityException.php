@@ -11,7 +11,14 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Override;
 
 /**
+ * @property int $id
+ * @property int $site_id
  * @property CarbonImmutable $date
+ * @property bool $is_available
+ * @property string|null $opens_at
+ * @property string|null $closes_at
+ * @property string|null $message
+ * @property string $timezone
  */
 class LiveChatAvailabilityException extends Model
 {

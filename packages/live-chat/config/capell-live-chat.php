@@ -16,6 +16,11 @@ return [
     'max_message_length' => 4000,
     'max_attachment_count' => 5,
     'low_confidence_threshold' => 0.55,
+    'knowledge' => [
+        'provider_document_limit' => 50,
+        'max_source_documents' => 3,
+        'minimum_score' => 2,
+    ],
     'attachments' => [
         'disk' => 'local',
         'max_kilobytes' => 10240,

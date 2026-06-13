@@ -39,7 +39,7 @@ it('handles message-first pricing enquiries and syncs captured details to contac
         'status' => 'active',
     ]);
 
-    $result = StartLiveChatConversationAction::run(new IncomingLiveChatMessageData(
+    $result = (new StartLiveChatConversationAction)->handle(new IncomingLiveChatMessageData(
         body: 'Can you help with pricing?',
         visitorToken: 'visitor-token',
         visitor: new LiveChatVisitorData(
@@ -101,7 +101,7 @@ it('applies after-hours handling with a custom message', function (): void {
         'message' => 'We are out of the office between 9 and 10.',
     ]);
 
-    $availability = ResolveLiveChatAvailabilityAction::run($siteId, CarbonImmutable::now('Europe/London'), 'Europe/London');
+    $availability = (new ResolveLiveChatAvailabilityAction)->handle($siteId, CarbonImmutable::now('Europe/London'), 'Europe/London');
 
     expect($availability->available)->toBeFalse()
         ->and($availability->message)->toBe('We are out of the office between 9 and 10.');
@@ -119,7 +119,7 @@ it('escalates keyword-triggered sensitive conversations and preserves handoff co
         'is_active' => true,
     ]);
 
-    $result = StartLiveChatConversationAction::run(new IncomingLiveChatMessageData(
+    $result = (new StartLiveChatConversationAction)->handle(new IncomingLiveChatMessageData(
         body: 'I need a refund urgently',
         visitorToken: 'urgent-token',
         visitor: new LiveChatVisitorData(
@@ -130,11 +130,12 @@ it('escalates keyword-triggered sensitive conversations and preserves handoff co
         flow: 'details_first',
     ), $siteId);
 
-    $conversation = RequestLiveChatHandoffAction::run($result['conversation']);
+    $conversation = (new RequestLiveChatHandoffAction)->handle($result['conversation']);
+    $activityPayload = ContactActivity::query()->latest('id')->firstOrFail()->payload ?? [];
 
     expect($conversation->status)->toBe(ConversationStatus::WaitingForHuman)
         ->and($conversation->escalation_reason)->toBe(EscalationReason::Keyword)
         ->and($conversation->assignment_queue)->toBe('accounts')
         ->and($conversation->messages()->count())->toBeGreaterThanOrEqual(3)
-        ->and(ContactActivity::query()->latest('id')->firstOrFail()->payload['transcript'])->toHaveCount(3);
+        ->and($activityPayload['transcript'] ?? [])->toHaveCount(3);
 });

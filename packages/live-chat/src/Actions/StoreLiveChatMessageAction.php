@@ -46,7 +46,7 @@ final class StoreLiveChatMessageAction
             'attachments' => $data->attachments,
         ]);
 
-        $assistantMessage = ReplyToLiveChatMessageAction::run($conversation, $visitorMessage);
+        $assistantMessage = app(ReplyToLiveChatMessageAction::class)->handle($conversation, $visitorMessage);
 
         SyncLiveChatConversationContactAction::run($conversation);
 
@@ -59,7 +59,7 @@ final class StoreLiveChatMessageAction
 
     private function trimBody(string $body): string
     {
-        $maxLength = (int) config('capell-live-chat.max_message_length', 4000);
+        $maxLength = $this->configInt('capell-live-chat.max_message_length', 4000);
 
         return Str::limit(trim($body), max(1, $maxLength), '');
     }
@@ -72,5 +72,12 @@ final class StoreLiveChatMessageAction
         $value = $page[$key] ?? null;
 
         return is_string($value) && trim($value) !== '' ? $value : null;
+    }
+
+    private function configInt(string $key, int $fallback): int
+    {
+        $value = config($key);
+
+        return is_int($value) || (is_string($value) && ctype_digit($value)) ? (int) $value : $fallback;
     }
 }

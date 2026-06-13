@@ -7,13 +7,14 @@ use Capell\LiveChat\Enums\ConversationStatus;
 use Capell\LiveChat\Enums\LiveChatPriority;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
     public function up(): void
     {
-        $tableName = config('capell-live-chat.tables.conversations', 'live_chat_conversations');
+        $tableName = Config::string('capell-live-chat.tables.conversations', 'live_chat_conversations');
 
         if (Schema::hasTable($tableName)) {
             return;
@@ -65,6 +66,6 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::dropIfExists(config('capell-live-chat.tables.conversations', 'live_chat_conversations'));
+        Schema::dropIfExists(Config::string('capell-live-chat.tables.conversations', 'live_chat_conversations'));
     }
 };
