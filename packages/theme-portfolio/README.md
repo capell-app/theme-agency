@@ -15,7 +15,7 @@ and newsletter sections.
   `Capell\ThemeStudio\Portfolio\PortfolioThemeServiceProvider`
 - Demo command:
   `capell:theme-portfolio-demo {--url=} {--languages=} {--sites=} {--force}`
-- Manifest extends: `null`
+- Manifest extends: `default`
 - Runtime extends: `default`
 - Database impact: none
 

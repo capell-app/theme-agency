@@ -14,7 +14,7 @@ enrolment.
   `Capell\ThemeStudio\Education\EducationThemeServiceProvider`
 - Demo command:
   `capell:theme-education-demo {--url=} {--languages=} {--sites=} {--force}`
-- Manifest extends: `null`
+- Manifest extends: `default`
 - Runtime extends: `default`
 - Database impact: none
 

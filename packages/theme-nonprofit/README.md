@@ -14,7 +14,7 @@ or volunteer calls to action.
   `Capell\ThemeStudio\Nonprofit\NonprofitThemeServiceProvider`
 - Demo command:
   `capell:theme-nonprofit-demo {--url=} {--languages=} {--sites=} {--force}`
-- Manifest extends: `null`
+- Manifest extends: `default`
 - Runtime extends: `default`
 - Database impact: none
 

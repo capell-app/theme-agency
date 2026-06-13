@@ -14,7 +14,7 @@ requests.
   `Capell\ThemeStudio\LocalServices\LocalServicesThemeServiceProvider`
 - Demo command:
   `capell:theme-local-services-demo {--url=} {--languages=} {--sites=} {--force}`
-- Manifest extends: `null`
+- Manifest extends: `default`
 - Runtime extends: `default`
 - Database impact: none
 

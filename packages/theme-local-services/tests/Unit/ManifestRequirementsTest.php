@@ -22,7 +22,7 @@ it('declares the required first-party theme manifest boundaries', function (): v
     throw_unless(is_array($runtimeProviders), RuntimeException::class, 'Theme Local Services runtime providers must be an array.');
 
     expect($manifest['themeKey'])->toBe('local-services')
-        ->and($manifest['extends'])->toBeNull()
+        ->and($manifest['extends'])->toBe('default')
         ->and(data_get($manifest, 'dependencies.requires'))->toContain('capell-app/frontend')
         ->and($manifest['surfaces'])->toBe(['frontend', 'console'])
         ->and($database['migrations'])->toBeFalse()

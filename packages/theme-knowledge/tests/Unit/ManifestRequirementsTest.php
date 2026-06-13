@@ -21,7 +21,7 @@ it('declares the required first-party theme manifest boundaries', function (): v
     throw_unless(is_array($runtimeProviders), RuntimeException::class, 'Theme Knowledge runtime providers must be an array.');
 
     expect($manifest['themeKey'])->toBe('knowledge')
-        ->and($manifest['extends'])->toBeNull()
+        ->and($manifest['extends'])->toBe('default')
         ->and(data_get($manifest, 'dependencies.requires'))->toContain('capell-app/frontend')
         ->and(knowledgeThemePerformanceInteger($performance, 'frontendRenderBudgetMs'))->toBeLessThanOrEqual(20)
         ->and(knowledgeThemePerformanceInteger($performance, 'adminQueryBudget'))->toBe(0)

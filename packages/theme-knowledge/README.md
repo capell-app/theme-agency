@@ -13,7 +13,7 @@ hubs, and content-led teams that need searchable, editorial frontend pages.
   `Capell\ThemeStudio\Knowledge\KnowledgeThemeServiceProvider`
 - Demo command:
   `capell:theme-knowledge-demo {--url=} {--languages=} {--sites=} {--force}`
-- Manifest extends: `null`
+- Manifest extends: `default`
 - Runtime extends: `default`
 - Database impact: none
 
