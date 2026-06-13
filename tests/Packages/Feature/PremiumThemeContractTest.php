@@ -11,6 +11,8 @@ use Capell\ThemeStudio\Nonprofit\NonprofitThemeServiceProvider;
 use Capell\ThemeStudio\Portfolio\PortfolioThemeServiceProvider;
 use Capell\ThemeStudio\Saas\SaasThemeServiceProvider;
 
+require_once __DIR__ . '/../Support/ThemeManifestContracts.php';
+
 function premiumThemePackagePath(string $path): string
 {
     return dirname(__DIR__, 3) . '/' . $path;
@@ -29,14 +31,15 @@ function premiumThemeShellClass(string $path): string
 }
 
 it('treats every documented premium lane theme as a premium theme package', function (string $path, string $providerClass): void {
-    $manifest = json_decode((string) file_get_contents(premiumThemePackagePath($path) . '/capell.json'), true, flags: JSON_THROW_ON_ERROR);
+    $manifest = capell_json_file_array(premiumThemePackagePath($path) . '/capell.json');
     $definition = $providerClass::definition();
+    $manifests = capell_theme_manifest_entries();
+    $manifestsByName = capell_theme_manifests_by_name($manifests);
 
     expect($manifest['product']['group'])->toBe('Capell Themes')
         ->and($manifest['product']['tier'])->toBe('premium')
         ->and($manifest['product']['bundle'])->toBe('themes')
-        ->and($definition->package)->toBe($manifest['name'])
-        ->and($definition->extends)->toBe('default');
+        ->and(capell_theme_manifest_definition_issues($providerClass, $manifest, $definition, $manifestsByName))->toBe([]);
 })->with('premium themes');
 
 it('keeps premium theme preset customization keys consistent', function (string $path, string $providerClass): void {

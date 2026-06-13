@@ -5,6 +5,8 @@ declare(strict_types=1);
 use Capell\Core\Contracts\Extensions\ChecksExtensionHealth;
 use Capell\Core\ThemeStudio\Data\ThemeDefinitionData;
 
+require_once __DIR__ . '/Support/ThemeManifestContracts.php';
+
 it('keeps declared marketplace screenshots backed by package files', function (): void {
     $invalid = [];
 
@@ -131,23 +133,11 @@ it('declares health checks that resolve to the Diagnostics health contract', fun
 
 it('keeps theme manifest parent metadata aligned with provider definitions', function (): void {
     $invalid = [];
-    $manifests = manifest_truth_package_manifests();
-    $manifestsByName = [];
-
-    foreach ($manifests as $entry) {
-        $name = $entry['manifest']['name'] ?? null;
-
-        if (is_string($name) && $name !== '') {
-            $manifestsByName[$name] = $entry['manifest'];
-        }
-    }
+    $manifests = capell_theme_manifest_entries();
+    $manifestsByName = capell_theme_manifests_by_name($manifests);
 
     foreach ($manifests as $manifestPath => $entry) {
-        if (($entry['manifest']['kind'] ?? null) !== 'theme') {
-            continue;
-        }
-
-        foreach (manifest_truth_provider_classes($entry['manifest']) as $providerClass) {
+        foreach (capell_theme_manifest_provider_classes($entry['manifest']) as $providerClass) {
             if (! class_exists($providerClass)) {
                 continue;
             }
@@ -162,17 +152,13 @@ it('keeps theme manifest parent metadata aligned with provider definitions', fun
                 continue;
             }
 
-            $manifestExtends = $entry['manifest']['extends'] ?? null;
-            $resolvedExtends = manifest_truth_resolved_theme_extends($manifestExtends, $manifestsByName);
+            $issues = capell_theme_manifest_definition_issues($providerClass, $entry['manifest'], $definition, $manifestsByName);
 
-            if ($resolvedExtends !== $definition->extends) {
-                $invalid[$manifestPath][] = sprintf(
-                    '%s manifest extends [%s] resolves to [%s], but provider definition extends [%s]',
-                    $providerClass,
-                    is_string($manifestExtends) ? $manifestExtends : 'null',
-                    is_string($resolvedExtends) ? $resolvedExtends : 'null',
-                    $definition->extends ?? 'null',
-                );
+            if ($issues !== []) {
+                $invalid[$manifestPath] = [
+                    ...($invalid[$manifestPath] ?? []),
+                    ...$issues,
+                ];
             }
         }
     }
@@ -239,53 +225,4 @@ function manifest_truth_declared_commands(mixed $commands): array
     }
 
     return array_values(array_unique($declared));
-}
-
-/**
- * @param  array<string, mixed>  $manifest
- * @return list<class-string>
- */
-function manifest_truth_provider_classes(array $manifest): array
-{
-    $providers = [];
-    $providerBuckets = $manifest['providers'] ?? [];
-
-    if (! is_array($providerBuckets)) {
-        return [];
-    }
-
-    foreach ($providerBuckets as $bucket) {
-        if (! is_array($bucket)) {
-            continue;
-        }
-
-        foreach ($bucket as $providerClass) {
-            if (is_string($providerClass) && class_exists($providerClass)) {
-                $providers[$providerClass] = $providerClass;
-            }
-        }
-    }
-
-    return array_values($providers);
-}
-
-/**
- * @param  array<string, array<string, mixed>>  $manifestsByName
- */
-function manifest_truth_resolved_theme_extends(mixed $manifestExtends, array $manifestsByName): ?string
-{
-    if ($manifestExtends === null) {
-        return null;
-    }
-
-    if (! is_string($manifestExtends) || $manifestExtends === '') {
-        return null;
-    }
-
-    $parentManifest = $manifestsByName[$manifestExtends] ?? null;
-    $parentThemeKey = is_array($parentManifest) ? ($parentManifest['themeKey'] ?? null) : null;
-
-    return is_string($parentThemeKey) && $parentThemeKey !== ''
-        ? $parentThemeKey
-        : $manifestExtends;
 }
