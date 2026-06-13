@@ -140,6 +140,8 @@ jobs:
             repository_name: theme-corporate
           - package_directory: packages/theme-education
             repository_name: theme-education
+          - package_directory: packages/theme-estate-agents
+            repository_name: theme-estate-agents
           - package_directory: packages/theme-healthcare
             repository_name: theme-healthcare
           - package_directory: packages/theme-inertia-bookings
@@ -158,6 +160,8 @@ jobs:
             repository_name: theme-nonprofit
           - package_directory: packages/theme-portfolio
             repository_name: theme-portfolio
+          - package_directory: packages/theme-restaurant
+            repository_name: theme-restaurant
           - package_directory: packages/theme-saas
             repository_name: theme-saas
           - package_directory: packages/translation-manager
