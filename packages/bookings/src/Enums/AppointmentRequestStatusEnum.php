@@ -8,6 +8,7 @@ use Filament\Support\Contracts\HasLabel;
 
 enum AppointmentRequestStatusEnum: string implements HasLabel
 {
+    case Provisional = 'provisional';
     case Requested = 'requested';
     case Confirmed = 'confirmed';
     case Declined = 'declined';
@@ -17,17 +18,17 @@ enum AppointmentRequestStatusEnum: string implements HasLabel
 
     public function canConfirm(): bool
     {
-        return $this === self::Requested;
+        return in_array($this, [self::Provisional, self::Requested], true);
     }
 
     public function canCancel(): bool
     {
-        return in_array($this, [self::Requested, self::Confirmed], true);
+        return in_array($this, [self::Provisional, self::Requested, self::Confirmed], true);
     }
 
     public function blocksCapacity(): bool
     {
-        return in_array($this, [self::Requested, self::Confirmed], true);
+        return in_array($this, [self::Provisional, self::Requested, self::Confirmed], true);
     }
 
     public function getLabel(): string

@@ -8,6 +8,7 @@ use BackedEnum;
 use Capell\Bookings\Actions\CancelAppointmentRequestAction;
 use Capell\Bookings\Actions\ConfirmAppointmentRequestAction;
 use Capell\Bookings\Enums\AppointmentRequestStatusEnum;
+use Capell\Bookings\Enums\ConfirmationPolicyEnum;
 use Capell\Bookings\Filament\Resources\AppointmentRequests\Pages\EditAppointmentRequest;
 use Capell\Bookings\Filament\Resources\AppointmentRequests\Pages\ListAppointmentRequests;
 use Capell\Bookings\Filament\Resources\AppointmentRequests\RelationManagers\AppointmentAuditLogsRelationManager;
@@ -22,6 +23,7 @@ use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
 use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Schemas\Components\Section;
@@ -46,11 +48,16 @@ final class AppointmentRequestResource extends Resource
             Section::make(__('capell-bookings::admin.resources.appointment_requests'))
                 ->schema([
                     Select::make('status')->label(__('capell-bookings::admin.fields.status'))->options(self::statusOptions())->required(),
+                    Select::make('confirmation_policy')->label(__('capell-bookings::admin.fields.confirmation_policy'))->options(self::confirmationPolicyOptions())->required(),
                     Select::make('service_id')->label(__('capell-bookings::admin.fields.service'))->options(self::serviceOptions())->searchable(),
                     Select::make('staff_member_id')->label(__('capell-bookings::admin.fields.staff_member'))->options(self::staffOptions())->searchable(),
                     Select::make('location_id')->label(__('capell-bookings::admin.fields.location'))->options(self::locationOptions())->searchable(),
                     DateTimePicker::make('requested_starts_at')->label(__('capell-bookings::admin.fields.requested_starts_at'))->required(),
                     DateTimePicker::make('requested_ends_at')->label(__('capell-bookings::admin.fields.requested_ends_at'))->required(),
+                    DateTimePicker::make('offered_window_starts_at')->label(__('capell-bookings::admin.fields.offered_window_starts_at')),
+                    DateTimePicker::make('offered_window_ends_at')->label(__('capell-bookings::admin.fields.offered_window_ends_at')),
+                    DateTimePicker::make('hold_expires_at')->label(__('capell-bookings::admin.fields.hold_expires_at')),
+                    Toggle::make('is_time_pinned')->label(__('capell-bookings::admin.fields.is_time_pinned'))->default(true),
                     TextInput::make('timezone')->label(__('capell-bookings::admin.fields.timezone'))->required()->default('UTC'),
                     TextInput::make('customer_name')->label(__('capell-bookings::admin.fields.customer_name'))->required()->maxLength(255),
                     TextInput::make('customer_email')->label(__('capell-bookings::admin.fields.customer_email'))->email()->required()->maxLength(255),
@@ -179,6 +186,16 @@ final class AppointmentRequestResource extends Resource
     {
         return collect(AppointmentRequestStatusEnum::cases())
             ->mapWithKeys(static fn (AppointmentRequestStatusEnum $status): array => [$status->value => $status->getLabel()])
+            ->all();
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    private static function confirmationPolicyOptions(): array
+    {
+        return collect(ConfirmationPolicyEnum::cases())
+            ->mapWithKeys(static fn (ConfirmationPolicyEnum $policy): array => [$policy->value => $policy->getLabel()])
             ->all();
     }
 

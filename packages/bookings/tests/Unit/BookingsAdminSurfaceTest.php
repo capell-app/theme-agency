@@ -13,29 +13,33 @@ use Capell\Bookings\Filament\Resources\BookingAvailabilityWindows\BookingAvailab
 use Capell\Bookings\Filament\Resources\BookingLocations\BookingLocationResource;
 use Capell\Bookings\Filament\Resources\BookingServices\BookingServiceResource;
 use Capell\Bookings\Filament\Resources\BookingStaffMembers\BookingStaffMemberResource;
+use Capell\Bookings\Filament\Resources\LessonSeries\LessonSeriesResource;
 use Capell\Bookings\Models\AppointmentRequest;
 use Capell\Bookings\Models\BookingAvailabilityException;
 use Capell\Bookings\Models\BookingAvailabilityWindow;
 use Capell\Bookings\Models\BookingLocation;
 use Capell\Bookings\Models\BookingService;
 use Capell\Bookings\Models\BookingStaffMember;
+use Capell\Bookings\Models\LessonSeries;
 use Filament\Actions\ActionGroup;
 use Filament\Tables\Contracts\HasTable;
 use Filament\Tables\Table;
 
 it('declares admin resources for all bookings operator records', function (): void {
-    expect(ResourceEnum::cases())->toHaveCount(6)
+    expect(ResourceEnum::cases())->toHaveCount(7)
         ->and(BookingServiceResource::getModel())->toBe(BookingService::class)
         ->and(BookingStaffMemberResource::getModel())->toBe(BookingStaffMember::class)
         ->and(BookingLocationResource::getModel())->toBe(BookingLocation::class)
         ->and(BookingAvailabilityWindowResource::getModel())->toBe(BookingAvailabilityWindow::class)
         ->and(BookingAvailabilityExceptionResource::getModel())->toBe(BookingAvailabilityException::class)
+        ->and(LessonSeriesResource::getModel())->toBe(LessonSeries::class)
         ->and(AppointmentRequestResource::getModel())->toBe(AppointmentRequest::class)
         ->and(BookingServiceResource::getNavigationLabel())->toBe(__('capell-bookings::admin.resources.services'))
         ->and(BookingStaffMemberResource::getNavigationLabel())->toBe(__('capell-bookings::admin.resources.staff_members'))
         ->and(BookingLocationResource::getNavigationLabel())->toBe(__('capell-bookings::admin.resources.locations'))
         ->and(BookingAvailabilityWindowResource::getNavigationLabel())->toBe(__('capell-bookings::admin.resources.availability_windows'))
         ->and(BookingAvailabilityExceptionResource::getNavigationLabel())->toBe(__('capell-bookings::admin.resources.availability_exceptions'))
+        ->and(LessonSeriesResource::getNavigationLabel())->toBe(__('capell-bookings::admin.resources.lesson_series'))
         ->and(AppointmentRequestResource::getNavigationLabel())->toBe(__('capell-bookings::admin.resources.appointment_requests'));
 });
 
@@ -45,6 +49,7 @@ it('exposes list create edit pages for mutable booking setup resources', functio
         ->and(array_keys(BookingLocationResource::getPages()))->toBe(['index', 'create', 'edit'])
         ->and(array_keys(BookingAvailabilityWindowResource::getPages()))->toBe(['index', 'create', 'edit'])
         ->and(array_keys(BookingAvailabilityExceptionResource::getPages()))->toBe(['index', 'create', 'edit'])
+        ->and(array_keys(LessonSeriesResource::getPages()))->toBe(['index', 'create', 'edit'])
         ->and(array_keys(AppointmentRequestResource::getPages()))->toBe(['index', 'edit']);
 });
 
