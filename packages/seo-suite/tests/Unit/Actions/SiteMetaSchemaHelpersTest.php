@@ -88,6 +88,21 @@ it('builds rich site contact points with areas, languages, hours, options, and s
         ]);
 });
 
+it('maps schema weekdays to canonical schema.org URLs with a safe extension fallback', function (): void {
+    $language = Language::factory()->create(['name' => 'English', 'code' => 'en']);
+    $site = Site::factory()
+        ->language($language)
+        ->withTranslations($language)
+        ->create();
+
+    $action = makeSeoSuiteSiteMetaAction($site, $language);
+    $method = new ReflectionMethod(SiteMetaSchemaAction::class, 'getSchemaDay');
+
+    expect($method->invoke($action, 'monday'))->toBe('https://schema.org/Monday')
+        ->and($method->invoke($action, 'public_holidays'))->toBe('https://schema.org/PublicHolidays')
+        ->and($method->invoke($action, 'seasonal'))->toBe('https://schema.org/Seasonal');
+});
+
 it('builds site schema contact points through process when contacts are present', function (): void {
     $language = Language::factory()->create(['name' => 'English', 'code' => 'en']);
     $site = Site::factory()
