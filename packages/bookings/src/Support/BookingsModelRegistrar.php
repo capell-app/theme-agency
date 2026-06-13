@@ -11,6 +11,8 @@ use Capell\Bookings\Models\BookingAvailabilityWindow;
 use Capell\Bookings\Models\BookingChangeProposal;
 use Capell\Bookings\Models\BookingChangeProposalParty;
 use Capell\Bookings\Models\BookingGroupSession;
+use Capell\Bookings\Models\BookingLessonBundle;
+use Capell\Bookings\Models\BookingLessonSkillAssessment;
 use Capell\Bookings\Models\BookingLocation;
 use Capell\Bookings\Models\BookingMessageLog;
 use Capell\Bookings\Models\BookingOwnerPrompt;
@@ -19,6 +21,8 @@ use Capell\Bookings\Models\BookingService;
 use Capell\Bookings\Models\BookingStaffMember;
 use Capell\Bookings\Models\BookingTravelAdjustment;
 use Capell\Bookings\Models\BookingTravelObservation;
+use Capell\Bookings\Models\BookingWaitlistEntry;
+use Capell\Bookings\Models\BookingWebhookEvent;
 use Capell\Bookings\Models\BookingWorkZone;
 use Capell\Bookings\Models\LessonNote;
 use Capell\Bookings\Models\LessonSeries;
@@ -51,6 +55,10 @@ class BookingsModelRegistrar
         BookingGroupSession::class,
         BookingReviewRequest::class,
         BookingOwnerPrompt::class,
+        BookingWebhookEvent::class,
+        BookingWaitlistEntry::class,
+        BookingLessonSkillAssessment::class,
+        BookingLessonBundle::class,
     ];
 
     public static function register(): void
@@ -59,7 +67,7 @@ class BookingsModelRegistrar
 
         /** @var array<string, class-string<Model>> $morphMap */
         $morphMap = collect(self::MODELS)
-            ->mapWithKeys(fn (string $modelClass): array => [Str::snake(class_basename($modelClass)) => $modelClass])
+            ->mapWithKeys(static fn (string $modelClass): array => [Str::snake(class_basename($modelClass)) => $modelClass])
             ->all();
 
         Relation::morphMap($morphMap, merge: true);

@@ -7,6 +7,9 @@ namespace Capell\Bookings\Providers;
 use Capell\Admin\Data\AdminSurfaceContributionData;
 use Capell\Admin\Data\Extensions\ExtensionManagementSurfaceData;
 use Capell\Admin\Facades\CapellAdmin;
+use Capell\Bookings\Console\ExpireBookingWorkflowStateCommand;
+use Capell\Bookings\Console\PruneBookingRetentionDataCommand;
+use Capell\Bookings\Console\ScheduleBookingReviewRequestsCommand;
 use Capell\Bookings\Console\SendDueAppointmentRemindersCommand;
 use Capell\Bookings\Contracts\BookingMessageChannel;
 use Capell\Bookings\Contracts\BookingsAiAdvisor;
@@ -56,6 +59,10 @@ class BookingsServiceProvider extends AbstractPackageServiceProvider
         'booking_group_sessions',
         'booking_review_requests',
         'booking_owner_prompts',
+        'booking_webhook_events',
+        'booking_waitlist_entries',
+        'booking_lesson_skill_assessments',
+        'booking_lesson_bundles',
     ];
 
     public static string $name = 'capell-bookings';
@@ -69,6 +76,9 @@ class BookingsServiceProvider extends AbstractPackageServiceProvider
             ->hasConfigFile()
             ->hasTranslations()
             ->hasViews(self::$name)
+            ->hasCommand(ExpireBookingWorkflowStateCommand::class)
+            ->hasCommand(PruneBookingRetentionDataCommand::class)
+            ->hasCommand(ScheduleBookingReviewRequestsCommand::class)
             ->hasCommand(SendDueAppointmentRemindersCommand::class)
             ->hasMigrations([
                 '2026_05_31_130000_01_create_booking_services_table',
@@ -89,6 +99,10 @@ class BookingsServiceProvider extends AbstractPackageServiceProvider
                 '2026_06_13_000009_add_group_session_fields_to_appointment_requests_table',
                 '2026_06_13_000010_create_booking_review_requests_table',
                 '2026_06_13_000011_create_booking_owner_prompts_table',
+                '2026_06_13_000012_create_booking_webhook_events_table',
+                '2026_06_13_000013_create_booking_waitlist_entries_table',
+                '2026_06_13_000014_create_booking_lesson_skill_assessments_table',
+                '2026_06_13_000015_create_booking_lesson_bundles_table',
             ]);
     }
 
@@ -178,6 +192,21 @@ class BookingsServiceProvider extends AbstractPackageServiceProvider
         $this->callAfterResolving(Schedule::class, function (Schedule $schedule): void {
             $schedule->command('capell:bookings:send-due-reminders')
                 ->everyFiveMinutes()
+                ->withoutOverlapping()
+                ->onOneServer();
+
+            $schedule->command('capell:bookings:expire-workflow-state')
+                ->everyFiveMinutes()
+                ->withoutOverlapping()
+                ->onOneServer();
+
+            $schedule->command('capell:bookings:schedule-review-requests')
+                ->hourly()
+                ->withoutOverlapping()
+                ->onOneServer();
+
+            $schedule->command('capell:bookings:prune-retention-data')
+                ->daily()
                 ->withoutOverlapping()
                 ->onOneServer();
         });

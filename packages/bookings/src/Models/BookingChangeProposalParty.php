@@ -19,6 +19,7 @@ use Override;
  * @property CarbonImmutable|null $accepted_at
  * @property CarbonImmutable|null $rejected_at
  * @property CarbonImmutable|null $token_expires_at
+ * @property string|null $token_hash
  * @property BookingChangeProposalPartyStatusEnum $status
  */
 class BookingChangeProposalParty extends Model

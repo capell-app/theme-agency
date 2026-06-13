@@ -34,6 +34,10 @@ class ScheduleReviewRequestsAction
                 continue;
             }
 
+            if (ShouldSuppressReviewRequestAction::run($appointmentRequest)) {
+                continue;
+            }
+
             $completedAt = CarbonImmutable::parse($appointmentRequest->completed_at);
 
             foreach (is_array($reviewOffsetsDays) ? $reviewOffsetsDays : [1, 2, 10] as $offsetDays) {

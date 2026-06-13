@@ -6,22 +6,35 @@ namespace Capell\Bookings\Health;
 
 use Capell\Bookings\Actions\BuildAvailableBookingSlotsAction;
 use Capell\Bookings\Actions\BuildDayPlanAction;
+use Capell\Bookings\Actions\BuildInstructorFuelReportAction;
 use Capell\Bookings\Actions\BuildOwnerDigestAction;
 use Capell\Bookings\Actions\BuildPortalLessonRowsAction;
 use Capell\Bookings\Actions\BuildPublicBookingRequestOptionsAction;
 use Capell\Bookings\Actions\BuildPublicBookingRequestPropsAction;
+use Capell\Bookings\Actions\BuildServiceAreaHeatmapAction;
 use Capell\Bookings\Actions\BuildStaffCalendarFeedAction;
+use Capell\Bookings\Actions\CalculateCancellationFeeAction;
 use Capell\Bookings\Actions\CancelAppointmentRequestAction;
 use Capell\Bookings\Actions\CaptureMessagingConsentAction;
 use Capell\Bookings\Actions\CaptureReviewAction;
 use Capell\Bookings\Actions\ConfirmAppointmentRequestAction;
 use Capell\Bookings\Actions\CreateAppointmentRequestAction;
+use Capell\Bookings\Actions\ExpireWaitlistOffersAction;
+use Capell\Bookings\Actions\ImportClinicAttendanceCsvAction;
+use Capell\Bookings\Actions\JoinBookingWaitlistAction;
 use Capell\Bookings\Actions\LinkBookingToPortalAccountAction;
+use Capell\Bookings\Actions\MarkBookingWebhookEventProcessedAction;
 use Capell\Bookings\Actions\MaterialiseLessonSeriesAction;
+use Capell\Bookings\Actions\OfferWaitlistSlotAction;
 use Capell\Bookings\Actions\PlaceProvisionalHoldAction;
+use Capell\Bookings\Actions\ProposeWeatherCancellationAction;
 use Capell\Bookings\Actions\QueueAppointmentReminderAction;
+use Capell\Bookings\Actions\RecordBookingWebhookEventAction;
 use Capell\Bookings\Actions\RecordLessonNoteAction;
+use Capell\Bookings\Actions\RecordLessonSkillAssessmentAction;
 use Capell\Bookings\Actions\ScheduleReviewRequestsAction;
+use Capell\Bookings\Actions\ScoreBookingRiskAction;
+use Capell\Bookings\Actions\ShouldSuppressReviewRequestAction;
 use Capell\Bookings\Models\AppointmentAuditLog;
 use Capell\Bookings\Models\AppointmentRequest;
 use Capell\Bookings\Models\BookingAvailabilityException;
@@ -29,6 +42,8 @@ use Capell\Bookings\Models\BookingAvailabilityWindow;
 use Capell\Bookings\Models\BookingChangeProposal;
 use Capell\Bookings\Models\BookingChangeProposalParty;
 use Capell\Bookings\Models\BookingGroupSession;
+use Capell\Bookings\Models\BookingLessonBundle;
+use Capell\Bookings\Models\BookingLessonSkillAssessment;
 use Capell\Bookings\Models\BookingLocation;
 use Capell\Bookings\Models\BookingMessageLog;
 use Capell\Bookings\Models\BookingOwnerPrompt;
@@ -37,6 +52,8 @@ use Capell\Bookings\Models\BookingService;
 use Capell\Bookings\Models\BookingStaffMember;
 use Capell\Bookings\Models\BookingTravelAdjustment;
 use Capell\Bookings\Models\BookingTravelObservation;
+use Capell\Bookings\Models\BookingWaitlistEntry;
+use Capell\Bookings\Models\BookingWebhookEvent;
 use Capell\Bookings\Models\BookingWorkZone;
 use Capell\Bookings\Models\LessonNote;
 use Capell\Bookings\Models\LessonSeries;
@@ -54,20 +71,33 @@ final class BookingsHealthCheck implements ChecksExtensionHealth
         BuildPublicBookingRequestPropsAction::class,
         BuildAvailableBookingSlotsAction::class,
         BuildDayPlanAction::class,
+        BuildInstructorFuelReportAction::class,
         BuildOwnerDigestAction::class,
         BuildPortalLessonRowsAction::class,
         BuildStaffCalendarFeedAction::class,
+        BuildServiceAreaHeatmapAction::class,
+        CalculateCancellationFeeAction::class,
         CancelAppointmentRequestAction::class,
         CaptureMessagingConsentAction::class,
         CaptureReviewAction::class,
         ConfirmAppointmentRequestAction::class,
         CreateAppointmentRequestAction::class,
+        ExpireWaitlistOffersAction::class,
+        ImportClinicAttendanceCsvAction::class,
+        JoinBookingWaitlistAction::class,
         LinkBookingToPortalAccountAction::class,
+        MarkBookingWebhookEventProcessedAction::class,
         MaterialiseLessonSeriesAction::class,
+        OfferWaitlistSlotAction::class,
         PlaceProvisionalHoldAction::class,
+        ProposeWeatherCancellationAction::class,
         QueueAppointmentReminderAction::class,
+        RecordBookingWebhookEventAction::class,
         RecordLessonNoteAction::class,
+        RecordLessonSkillAssessmentAction::class,
         ScheduleReviewRequestsAction::class,
+        ScoreBookingRiskAction::class,
+        ShouldSuppressReviewRequestAction::class,
     ];
 
     /** @var array<string, class-string> */
@@ -91,6 +121,10 @@ final class BookingsHealthCheck implements ChecksExtensionHealth
         'booking_group_sessions' => BookingGroupSession::class,
         'booking_review_requests' => BookingReviewRequest::class,
         'booking_owner_prompts' => BookingOwnerPrompt::class,
+        'booking_webhook_events' => BookingWebhookEvent::class,
+        'booking_waitlist_entries' => BookingWaitlistEntry::class,
+        'booking_lesson_skill_assessments' => BookingLessonSkillAssessment::class,
+        'booking_lesson_bundles' => BookingLessonBundle::class,
     ];
 
     public static function compatibleCapellApiVersion(): string

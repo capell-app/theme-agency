@@ -76,6 +76,46 @@
             "resourceClass": "Capell\\Bookings\\Filament\\Resources\\AppointmentRequests\\AppointmentRequestResource"
         },
         {
+            "type": "admin-resource",
+            "class": "Capell\\Bookings\\Manifest\\BookingDayPlannerResourceContribution",
+            "resourceClass": "Capell\\Bookings\\Filament\\Resources\\BookingDayPlanner\\BookingDayPlannerResource"
+        },
+        {
+            "type": "admin-resource",
+            "class": "Capell\\Bookings\\Manifest\\BookingGroupSessionResourceContribution",
+            "resourceClass": "Capell\\Bookings\\Filament\\Resources\\BookingGroupSessions\\BookingGroupSessionResource"
+        },
+        {
+            "type": "admin-resource",
+            "class": "Capell\\Bookings\\Manifest\\BookingMessageLogResourceContribution",
+            "resourceClass": "Capell\\Bookings\\Filament\\Resources\\BookingMessageLogs\\BookingMessageLogResource"
+        },
+        {
+            "type": "admin-resource",
+            "class": "Capell\\Bookings\\Manifest\\BookingReviewRequestResourceContribution",
+            "resourceClass": "Capell\\Bookings\\Filament\\Resources\\BookingReviewRequests\\BookingReviewRequestResource"
+        },
+        {
+            "type": "admin-resource",
+            "class": "Capell\\Bookings\\Manifest\\BookingTravelObservationResourceContribution",
+            "resourceClass": "Capell\\Bookings\\Filament\\Resources\\BookingTravelObservations\\BookingTravelObservationResource"
+        },
+        {
+            "type": "admin-resource",
+            "class": "Capell\\Bookings\\Manifest\\BookingWorkZoneResourceContribution",
+            "resourceClass": "Capell\\Bookings\\Filament\\Resources\\BookingWorkZones\\BookingWorkZoneResource"
+        },
+        {
+            "type": "admin-resource",
+            "class": "Capell\\Bookings\\Manifest\\BookingOwnerPromptResourceContribution",
+            "resourceClass": "Capell\\Bookings\\Filament\\Resources\\BookingOwnerPrompts\\BookingOwnerPromptResource"
+        },
+        {
+            "type": "admin-resource",
+            "class": "Capell\\Bookings\\Manifest\\BookingChangeProposalResourceContribution",
+            "resourceClass": "Capell\\Bookings\\Filament\\Resources\\BookingChangeProposals\\BookingChangeProposalResource"
+        },
+        {
             "type": "model",
             "class": "Capell\\Bookings\\Manifest\\BookingsModelsContribution"
         },
@@ -89,6 +129,27 @@
             "name": "capell-bookings-send-due-reminders",
             "command": "capell:bookings:send-due-reminders",
             "frequency": "everyFiveMinutes"
+        },
+        {
+            "type": "scheduled-job",
+            "class": "Capell\\Bookings\\Manifest\\BookingsReminderScheduleContribution",
+            "name": "capell-bookings-expire-workflow-state",
+            "command": "capell:bookings:expire-workflow-state",
+            "frequency": "everyFiveMinutes"
+        },
+        {
+            "type": "scheduled-job",
+            "class": "Capell\\Bookings\\Manifest\\BookingsReminderScheduleContribution",
+            "name": "capell-bookings-schedule-review-requests",
+            "command": "capell:bookings:schedule-review-requests",
+            "frequency": "hourly"
+        },
+        {
+            "type": "scheduled-job",
+            "class": "Capell\\Bookings\\Manifest\\BookingsReminderScheduleContribution",
+            "name": "capell-bookings-prune-retention-data",
+            "command": "capell:bookings:prune-retention-data",
+            "frequency": "daily"
         }
     ],
     "database": {
@@ -113,7 +174,11 @@
             "booking_change_proposal_parties",
             "booking_group_sessions",
             "booking_review_requests",
-            "booking_owner_prompts"
+            "booking_owner_prompts",
+            "booking_webhook_events",
+            "booking_waitlist_entries",
+            "booking_lesson_skill_assessments",
+            "booking_lesson_bundles"
         ]
     },
     "commands": {
@@ -160,6 +225,25 @@
         "syncFacebookAttendance": "Capell\\Bookings\\Actions\\SyncFacebookAttendanceAction",
         "scheduleReviewRequests": "Capell\\Bookings\\Actions\\ScheduleReviewRequestsAction",
         "dispatchReviewRequest": "Capell\\Bookings\\Actions\\DispatchReviewRequestAction",
+        "createPortalLessonsUrl": "Capell\\Bookings\\Actions\\CreatePortalLessonsUrlAction",
+        "createMessagingConsentUrl": "Capell\\Bookings\\Actions\\CreateMessagingConsentUrlAction",
+        "createReviewRequestUrl": "Capell\\Bookings\\Actions\\CreateReviewRequestUrlAction",
+        "issueBookingChangeProposalToken": "Capell\\Bookings\\Actions\\IssueBookingChangeProposalTokenAction",
+        "resolveBookingChangeProposalToken": "Capell\\Bookings\\Actions\\ResolveBookingChangeProposalTokenAction",
+        "recordBookingWebhookEvent": "Capell\\Bookings\\Actions\\RecordBookingWebhookEventAction",
+        "markBookingWebhookEventProcessed": "Capell\\Bookings\\Actions\\MarkBookingWebhookEventProcessedAction",
+        "joinBookingWaitlist": "Capell\\Bookings\\Actions\\JoinBookingWaitlistAction",
+        "offerWaitlistSlot": "Capell\\Bookings\\Actions\\OfferWaitlistSlotAction",
+        "expireWaitlistOffers": "Capell\\Bookings\\Actions\\ExpireWaitlistOffersAction",
+        "recordLessonSkillAssessment": "Capell\\Bookings\\Actions\\RecordLessonSkillAssessmentAction",
+        "applyLessonBundleCredit": "Capell\\Bookings\\Actions\\ApplyLessonBundleCreditAction",
+        "calculateCancellationFee": "Capell\\Bookings\\Actions\\CalculateCancellationFeeAction",
+        "proposeWeatherCancellation": "Capell\\Bookings\\Actions\\ProposeWeatherCancellationAction",
+        "buildInstructorFuelReport": "Capell\\Bookings\\Actions\\BuildInstructorFuelReportAction",
+        "buildServiceAreaHeatmap": "Capell\\Bookings\\Actions\\BuildServiceAreaHeatmapAction",
+        "importClinicAttendanceCsv": "Capell\\Bookings\\Actions\\ImportClinicAttendanceCsvAction",
+        "shouldSuppressReviewRequest": "Capell\\Bookings\\Actions\\ShouldSuppressReviewRequestAction",
+        "scoreBookingRisk": "Capell\\Bookings\\Actions\\ScoreBookingRiskAction",
         "buildOwnerDigest": "Capell\\Bookings\\Actions\\BuildOwnerDigestAction",
         "proposeScheduleOptimisation": "Capell\\Bookings\\Actions\\ProposeScheduleOptimisationAction",
         "exportPortalBookingData": "Capell\\Bookings\\Actions\\ExportPortalBookingDataAction",
@@ -226,6 +310,19 @@
         "bookings-group-clinics",
         "bookings-social-event-sync",
         "bookings-review-requests",
+        "bookings-customer-portal-lessons",
+        "bookings-signed-change-proposals",
+        "bookings-webhook-ingestion",
+        "bookings-waitlist",
+        "bookings-lesson-skill-progress",
+        "bookings-prepaid-lesson-bundles",
+        "bookings-cancellation-fees",
+        "bookings-weather-cancellation-prompts",
+        "bookings-instructor-fuel-reporting",
+        "bookings-service-area-heatmap",
+        "bookings-clinic-attendance-import",
+        "bookings-review-suppression",
+        "bookings-risk-scoring",
         "bookings-ai-owner-assistant",
         "bookings-gdpr-export-erasure",
         "bookings-retention-pruning"
@@ -233,11 +330,32 @@
     "security": {
         "riskTier": "sensitive",
         "publicSurface": {
-            "routeNames": ["calendar.staff", "request", "request.store"],
+            "routeNames": [
+                "calendar.staff",
+                "request",
+                "request.store",
+                "portal.lessons",
+                "portal.consent",
+                "portal.consent.update",
+                "portal.proposal",
+                "portal.proposal.respond",
+                "portal.review",
+                "portal.review.store"
+            ],
             "auth": "public",
             "csrfExemptRoutes": [],
-            "signedRoutes": [],
-            "tokenizedRoutes": ["calendar.staff"],
+            "signedRoutes": [
+                "portal.lessons",
+                "portal.consent",
+                "portal.consent.update",
+                "portal.review",
+                "portal.review.store"
+            ],
+            "tokenizedRoutes": [
+                "calendar.staff",
+                "portal.proposal",
+                "portal.proposal.respond"
+            ],
             "webhookRoutes": [],
             "throttledRoutes": ["request.store"]
         },

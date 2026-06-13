@@ -11,10 +11,15 @@ use Capell\Bookings\Actions\CancelAppointmentRequestAction;
 use Capell\Bookings\Actions\ConfirmAppointmentRequestAction;
 use Capell\Bookings\Actions\CreateAppointmentRequestAction;
 use Capell\Bookings\Actions\CreateAvailabilityExceptionAction;
+use Capell\Bookings\Actions\CreateMessagingConsentUrlAction;
+use Capell\Bookings\Actions\CreatePortalLessonsUrlAction;
+use Capell\Bookings\Actions\CreateReviewRequestUrlAction;
 use Capell\Bookings\Actions\CreateStaffCalendarFeedUrlAction;
+use Capell\Bookings\Actions\JoinBookingWaitlistAction;
 use Capell\Bookings\Actions\LinkBookingToPortalAccountAction;
 use Capell\Bookings\Actions\MaterialiseLessonSeriesAction;
 use Capell\Bookings\Actions\QueueAppointmentReminderAction;
+use Capell\Bookings\Actions\RecordBookingWebhookEventAction;
 use Capell\Bookings\Enums\AppointmentRequestStatusEnum;
 use Capell\Bookings\Enums\BookingAvailabilityStatusEnum;
 use Capell\Bookings\Enums\BookingLocationTypeEnum;
@@ -23,12 +28,20 @@ use Capell\Bookings\Health\BookingsHealthCheck;
 use Capell\Bookings\Manifest\AppointmentRequestResourceContribution;
 use Capell\Bookings\Manifest\BookingAvailabilityExceptionResourceContribution;
 use Capell\Bookings\Manifest\BookingAvailabilityWindowResourceContribution;
+use Capell\Bookings\Manifest\BookingChangeProposalResourceContribution;
+use Capell\Bookings\Manifest\BookingDayPlannerResourceContribution;
+use Capell\Bookings\Manifest\BookingGroupSessionResourceContribution;
 use Capell\Bookings\Manifest\BookingLocationResourceContribution;
+use Capell\Bookings\Manifest\BookingMessageLogResourceContribution;
+use Capell\Bookings\Manifest\BookingOwnerPromptResourceContribution;
+use Capell\Bookings\Manifest\BookingReviewRequestResourceContribution;
 use Capell\Bookings\Manifest\BookingServiceResourceContribution;
 use Capell\Bookings\Manifest\BookingsFrontendRoutesContribution;
 use Capell\Bookings\Manifest\BookingsModelsContribution;
 use Capell\Bookings\Manifest\BookingsReminderScheduleContribution;
 use Capell\Bookings\Manifest\BookingStaffMemberResourceContribution;
+use Capell\Bookings\Manifest\BookingTravelObservationResourceContribution;
+use Capell\Bookings\Manifest\BookingWorkZoneResourceContribution;
 use Capell\Bookings\Manifest\LessonSeriesResourceContribution;
 use Capell\Bookings\Models\AppointmentAuditLog;
 use Capell\Bookings\Models\AppointmentRequest;
@@ -80,6 +93,10 @@ it('keeps package manifest requirements aligned with composer requirements', fun
             'booking_group_sessions',
             'booking_review_requests',
             'booking_owner_prompts',
+            'booking_webhook_events',
+            'booking_waitlist_entries',
+            'booking_lesson_skill_assessments',
+            'booking_lesson_bundles',
         ])
         ->and($manifest['database']['settings'])->toBeTrue()
         ->and($manifest['settings'])->toBe([BookingsSettings::class])
@@ -174,6 +191,22 @@ it('declares implemented bookings contributions and feature capabilities', funct
             && ($contribution['class'] ?? null) === LessonSeriesResourceContribution::class))->toBeTrue()
         ->and($contributions->contains(fn (array $contribution): bool => ($contribution['type'] ?? null) === 'admin-resource'
             && ($contribution['class'] ?? null) === AppointmentRequestResourceContribution::class))->toBeTrue()
+        ->and($contributions->contains(fn (array $contribution): bool => ($contribution['type'] ?? null) === 'admin-resource'
+            && ($contribution['class'] ?? null) === BookingDayPlannerResourceContribution::class))->toBeTrue()
+        ->and($contributions->contains(fn (array $contribution): bool => ($contribution['type'] ?? null) === 'admin-resource'
+            && ($contribution['class'] ?? null) === BookingGroupSessionResourceContribution::class))->toBeTrue()
+        ->and($contributions->contains(fn (array $contribution): bool => ($contribution['type'] ?? null) === 'admin-resource'
+            && ($contribution['class'] ?? null) === BookingMessageLogResourceContribution::class))->toBeTrue()
+        ->and($contributions->contains(fn (array $contribution): bool => ($contribution['type'] ?? null) === 'admin-resource'
+            && ($contribution['class'] ?? null) === BookingReviewRequestResourceContribution::class))->toBeTrue()
+        ->and($contributions->contains(fn (array $contribution): bool => ($contribution['type'] ?? null) === 'admin-resource'
+            && ($contribution['class'] ?? null) === BookingTravelObservationResourceContribution::class))->toBeTrue()
+        ->and($contributions->contains(fn (array $contribution): bool => ($contribution['type'] ?? null) === 'admin-resource'
+            && ($contribution['class'] ?? null) === BookingWorkZoneResourceContribution::class))->toBeTrue()
+        ->and($contributions->contains(fn (array $contribution): bool => ($contribution['type'] ?? null) === 'admin-resource'
+            && ($contribution['class'] ?? null) === BookingOwnerPromptResourceContribution::class))->toBeTrue()
+        ->and($contributions->contains(fn (array $contribution): bool => ($contribution['type'] ?? null) === 'admin-resource'
+            && ($contribution['class'] ?? null) === BookingChangeProposalResourceContribution::class))->toBeTrue()
         ->and($manifest['contributes'])->toContain([
             'type' => 'model',
             'class' => BookingsModelsContribution::class,
@@ -185,6 +218,15 @@ it('declares implemented bookings contributions and feature capabilities', funct
         ->and($contributions->contains(fn (array $contribution): bool => ($contribution['type'] ?? null) === 'scheduled-job'
             && ($contribution['class'] ?? null) === BookingsReminderScheduleContribution::class
             && ($contribution['command'] ?? null) === 'capell:bookings:send-due-reminders'))->toBeTrue()
+        ->and($contributions->contains(fn (array $contribution): bool => ($contribution['type'] ?? null) === 'scheduled-job'
+            && ($contribution['class'] ?? null) === BookingsReminderScheduleContribution::class
+            && ($contribution['command'] ?? null) === 'capell:bookings:expire-workflow-state'))->toBeTrue()
+        ->and($contributions->contains(fn (array $contribution): bool => ($contribution['type'] ?? null) === 'scheduled-job'
+            && ($contribution['class'] ?? null) === BookingsReminderScheduleContribution::class
+            && ($contribution['command'] ?? null) === 'capell:bookings:schedule-review-requests'))->toBeTrue()
+        ->and($contributions->contains(fn (array $contribution): bool => ($contribution['type'] ?? null) === 'scheduled-job'
+            && ($contribution['class'] ?? null) === BookingsReminderScheduleContribution::class
+            && ($contribution['command'] ?? null) === 'capell:bookings:prune-retention-data'))->toBeTrue()
         ->and(class_implements(BookingsReminderScheduleContribution::class))->toContain(RunsScheduledExtensionJob::class)
         ->and(class_implements(BookingsFrontendRoutesContribution::class))->toContain(RegistersExtensionRoute::class)
         ->and($manifest['capabilities'])->toContain(
@@ -198,6 +240,19 @@ it('declares implemented bookings contributions and feature capabilities', funct
             'bookings-notifications',
             'bookings-reminders',
             'bookings-calendar-feeds',
+            'bookings-customer-portal-lessons',
+            'bookings-signed-change-proposals',
+            'bookings-webhook-ingestion',
+            'bookings-waitlist',
+            'bookings-lesson-skill-progress',
+            'bookings-prepaid-lesson-bundles',
+            'bookings-cancellation-fees',
+            'bookings-weather-cancellation-prompts',
+            'bookings-instructor-fuel-reporting',
+            'bookings-service-area-heatmap',
+            'bookings-clinic-attendance-import',
+            'bookings-review-suppression',
+            'bookings-risk-scoring',
         )
         ->and($manifest['actions'])->toMatchArray([
             'createAvailabilityException' => CreateAvailabilityExceptionAction::class,
@@ -209,6 +264,11 @@ it('declares implemented bookings contributions and feature capabilities', funct
             'queueAppointmentReminder' => QueueAppointmentReminderAction::class,
             'createStaffCalendarFeedUrl' => CreateStaffCalendarFeedUrlAction::class,
             'buildStaffCalendarFeed' => BuildStaffCalendarFeedAction::class,
+            'createPortalLessonsUrl' => CreatePortalLessonsUrlAction::class,
+            'createMessagingConsentUrl' => CreateMessagingConsentUrlAction::class,
+            'createReviewRequestUrl' => CreateReviewRequestUrlAction::class,
+            'recordBookingWebhookEvent' => RecordBookingWebhookEventAction::class,
+            'joinBookingWaitlist' => JoinBookingWaitlistAction::class,
         ])
         ->and($manifest['contributionTraceability']['deferredContributions'])->toBe([]);
 });
