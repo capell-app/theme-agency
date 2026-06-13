@@ -50,6 +50,16 @@ Screenshot contract: `screenshots.json`.
 - Blade views: `packages/theme-portfolio/resources/views/page.blade.php`, `packages/theme-portfolio/resources/views/sections/about-bio.blade.php`, `packages/theme-portfolio/resources/views/sections/availability.blade.php`, `packages/theme-portfolio/resources/views/sections/case-studies.blade.php`, `packages/theme-portfolio/resources/views/sections/case-study-detail.blade.php`, `packages/theme-portfolio/resources/views/sections/client-logos.blade.php`, `packages/theme-portfolio/resources/views/sections/content-listing.blade.php`, `packages/theme-portfolio/resources/views/sections/cta.blade.php`, `packages/theme-portfolio/resources/views/sections/features.blade.php`, `packages/theme-portfolio/resources/views/sections/footer.blade.php`, `packages/theme-portfolio/resources/views/sections/gallery-lightbox.blade.php`, `packages/theme-portfolio/resources/views/sections/hero.blade.php`, `and 9 more`.
 - Cache tags: `theme-portfolio`.
 
+## Theme Inheritance Contract
+
+Product group:
+**Capell Themes**
+
+- Product group: `Capell Themes`
+- Manifest extends: `default`
+- Runtime extends: `default`
+- Portfolio runtime inheritance uses `extends: default` and requires `capell-app/frontend` for the built-in default fallback.
+
 ## Data Model
 
 This theme has no schema impact. It relies on core Capell site, page, locale, and theme records instead of declaring package-owned tables.

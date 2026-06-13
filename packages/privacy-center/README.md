@@ -50,6 +50,18 @@ Screenshot contract: `docs/screenshots.json`.
 - Blade views: `packages/privacy-center/resources/views/consent/banner.blade.php`, `packages/privacy-center/resources/views/consent/preferences.blade.php`.
 - Cache tags: `privacy-center`.
 
+## Shipped And Deferred Privacy Surfaces
+
+Privacy Center currently ships admin and console surfaces for consent policy records, privacy requests, retention rules, policy acceptances, retention execution, and audited DSAR handling. It also ships a cache-safe public preference center for cookie consent preferences, but it does not ship a public DSAR intake form.
+
+Current boundaries:
+
+- Public consent: use the public cookie consent preference center and `RecordConsentAction`; `RecordConsentAction` can infer a subject from a source model when another package mirrors consent.
+- Subject data: the cross-package subject-data export/erasure registry is Action-backed through `BuildPrivacyExportAction` and `AnonymizePrivacySubjectAction`.
+- Request intake: open requests through `OpenPrivacyRequestAction` or admin workflows until a public DSAR intake route is shipped.
+- Evidence hashing: configure `CAPELL_PRIVACY_CENTER_HASH_SECRET` before relying on request or consent evidence hashes.
+- Admin surface: The admin provider contributes these Filament surfaces: consent policies, consent records, policy acceptances, privacy requests, retention rules, and the overview widget.
+
 ## Data Model
 
 - Required tables: `privacy_consent_policies`, `privacy_consent_records`, `privacy_policy_acceptances`, `privacy_retention_rules`, `privacy_requests`.

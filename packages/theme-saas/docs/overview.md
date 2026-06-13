@@ -50,6 +50,12 @@ Screenshot contract: `screenshots.json`.
 - Blade views: `packages/theme-saas/resources/views/blog/article.blade.php`, `packages/theme-saas/resources/views/blog/index.blade.php`, `packages/theme-saas/resources/views/livewire/page/page.blade.php`, `packages/theme-saas/resources/views/page.blade.php`, `packages/theme-saas/resources/views/sections/blog.blade.php`, `packages/theme-saas/resources/views/sections/calculator.blade.php`, `packages/theme-saas/resources/views/sections/comparison.blade.php`, `packages/theme-saas/resources/views/sections/content-listing.blade.php`, `packages/theme-saas/resources/views/sections/cta.blade.php`, `packages/theme-saas/resources/views/sections/demo-request.blade.php`, `packages/theme-saas/resources/views/sections/docs-onboarding.blade.php`, `packages/theme-saas/resources/views/sections/faq.blade.php`, `and 8 more`.
 - Cache tags: `theme-saas`.
 
+## Test Command
+
+Run package tests from the repository root.
+
+From the repository root, run `vendor/bin/pest packages/theme-saas/tests`; this package does not ship its own PHPUnit config.
+
 ## Data Model
 
 This theme has no schema impact. It relies on core Capell site, page, locale, and theme records instead of declaring package-owned tables.
@@ -93,6 +99,6 @@ This theme has no schema impact. It relies on core Capell site, page, locale, an
 - [Capell documentation design system](../../../docs/DESIGN_SYSTEM.md)
 - [Capell and package ERD notes](../../../docs/erd/capell-and-package-erds.md)
 - Related packages: [Blog](../../blog/README.md).
-- Focused tests: `vendor/bin/pest packages/theme-saas/tests --configuration=phpunit.xml`.
+- Focused tests: `vendor/bin/pest packages/theme-saas/tests`.
 
 <!-- prettier-ignore-end -->
