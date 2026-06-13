@@ -35,6 +35,12 @@ Deployment can generate package screenshots from the committed screenshot manife
 
 Package marketplace screenshots declared in `capell.json` must point at committed files under `docs/assets/marketplace/`. The package-side validator checks those paths so marketplace pages cannot ship with broken gallery images.
 
+## Theme Demo Layout Fixture Policy
+
+Routine Pest runs must not overwrite committed PNG fixtures. By default, theme demo layout screenshot tests write generated images to `storage/framework/testing/theme-demo-layout-screenshots/screenshots`, compare the generated filenames for the current run, and leave `tests/Packages/Fixtures/theme-demo-layout-screenshots` untouched.
+
+To refresh intentional baselines, run the target test with `CAPELL_REFRESH_THEME_SCREENSHOT_FIXTURES=1`, visually review the changed PNGs, then stage only the accepted fixture changes.
+
 ## Notes
 
 The package repo does not need to run a browser during docs generation. It commits the contract that the demo/docs deployment can consume after package installation.
