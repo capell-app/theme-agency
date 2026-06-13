@@ -23,7 +23,7 @@ class Asset extends AbstractWidget
 
     /**
      * @return array{
-     *     assets: EloquentCollection<int, mixed>,
+     *     assets: EloquentCollection<int, WidgetAsset>,
      *     assetRenderDataItems: SupportCollection<int, array{widgetAsset: WidgetAsset, renderData: WidgetAssetRenderData}>,
      *     firstAssetRenderData: WidgetAssetRenderData|null,
      *     lastAssetRenderData: WidgetAssetRenderData|null,
@@ -45,7 +45,7 @@ class Asset extends AbstractWidget
     }
 
     /**
-     * @return EloquentCollection<int, mixed>
+     * @return EloquentCollection<int, WidgetAsset>
      */
     private function assets(): EloquentCollection
     {
@@ -55,28 +55,31 @@ class Asset extends AbstractWidget
 
         $assets = $this->widget->getRelation('assets');
 
-        if ($assets instanceof EloquentCollection) {
-            return $assets;
-        }
+        if ($assets instanceof EloquentCollection || $assets instanceof SupportCollection) {
+            $widgetAssets = [];
 
-        if ($assets instanceof SupportCollection) {
-            return new EloquentCollection($assets->all());
+            foreach ($assets as $asset) {
+                if ($asset instanceof WidgetAsset) {
+                    $widgetAssets[] = $asset;
+                }
+            }
+
+            return new EloquentCollection($widgetAssets);
         }
 
         return new EloquentCollection;
     }
 
     /**
-     * @param  EloquentCollection<int, mixed>  $assets
+     * @param  EloquentCollection<int, WidgetAsset>  $assets
      * @return SupportCollection<int, array{widgetAsset: WidgetAsset, renderData: WidgetAssetRenderData}>
      */
     private function assetRenderDataItems(EloquentCollection $assets): SupportCollection
     {
         return $assets
-            ->filter(static fn (mixed $widgetAsset): bool => $widgetAsset instanceof WidgetAsset)
             ->map(static fn (WidgetAsset $widgetAsset): array => [
                 'widgetAsset' => $widgetAsset,
-                'renderData' => BuildWidgetAssetRenderDataAction::run($widgetAsset),
+                'renderData' => (new BuildWidgetAssetRenderDataAction)->handle($widgetAsset),
             ])
             ->values();
     }

@@ -143,9 +143,11 @@ it('exposes a public preference center route for reusable newsletter tokens', fu
 
     $token = CreatePreferenceCenterTokenAction::run($subscriber);
 
-    $this->get(route('capell-newsletter.preferences.show', ['token' => $token]))
+    $response = $this->get(route('capell-newsletter.preferences.show', ['token' => $token]));
+    $cacheControl = (string) $response->baseResponse->headers->get('Cache-Control');
+
+    $response
         ->assertOk()
-        ->assertHeader('Cache-Control', 'no-store, private')
         ->assertHeader('X-Robots-Tag', 'noindex, nofollow')
         ->assertSee('Newsletter preferences')
         ->assertSee('Product updates')
@@ -153,6 +155,9 @@ it('exposes a public preference center route for reusable newsletter tokens', fu
         ->assertDontSee('capell-app/newsletter', false)
         ->assertDontSee('newsletter_subscriber', false)
         ->assertDontSee('signed', false);
+
+    expect($cacheControl)->toContain('no-store')
+        ->toContain('private');
 
     $this->post(route('capell-newsletter.preferences.update', ['token' => $token]), [
         'segments' => [$unselectedSegment->handle],

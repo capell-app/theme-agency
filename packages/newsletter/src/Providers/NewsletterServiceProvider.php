@@ -204,14 +204,15 @@ class NewsletterServiceProvider extends AbstractPackageServiceProvider
     private function registerRateLimiters(): void
     {
         RateLimiter::for('capell-newsletter-subscribe', static function (Request $request): Limit {
-            $email = strtolower((string) $request->input('email', ''));
+            $email = $request->input('email');
+            $normalizedEmail = is_string($email) ? strtolower($email) : '';
 
             return Limit::perMinute(6)
-                ->by(hash('sha256', $email . '|' . (string) $request->ip()));
+                ->by(hash('sha256', $normalizedEmail . '|' . ($request->ip() ?? 'unknown')));
         });
 
         RateLimiter::for('capell-newsletter-one-click-unsubscribe', static fn (Request $request): Limit => Limit::perMinute(12)
-            ->by((string) $request->ip()));
+            ->by($request->ip() ?? 'unknown'));
 
         RateLimiter::for('capell-newsletter-preferences', static fn (Request $request): Limit => Limit::perMinute(20)
             ->by(hash('sha256', (string) $request->route('token') . '|' . (string) $request->ip())));

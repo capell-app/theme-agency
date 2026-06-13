@@ -85,7 +85,9 @@ final class CustomerPortalServiceProvider extends AbstractPackageServiceProvider
     private function registerRateLimiters(): self
     {
         RateLimiter::for('capell-customer-portal-preferences', function (Request $request): Limit {
-            $key = hash('sha256', (string) $request->user()?->getAuthIdentifier() . '|' . $request->ip());
+            $identifier = $request->user()?->getAuthIdentifier();
+            $actorKey = is_scalar($identifier) ? (string) $identifier : 'guest';
+            $key = hash('sha256', $actorKey . '|' . ($request->ip() ?? 'unknown'));
 
             return Limit::perMinute(20)->by($key);
         });

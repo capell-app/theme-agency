@@ -104,11 +104,7 @@ it('registers production fulfillment and customer portal integrations when insta
  */
 function paymentsCapabilityManifest(): array
 {
-    return json_decode(
-        (string) file_get_contents(__DIR__ . '/../../capell.json'),
-        associative: true,
-        flags: JSON_THROW_ON_ERROR,
-    );
+    return capell_json_file_array(__DIR__ . '/../../capell.json');
 }
 
 /**
@@ -136,7 +132,7 @@ function paymentsCapabilityRouteAction(string $routeName): string
 {
     $route = Route::getRoutes()->getByName($routeName);
 
-    expect($route)->not->toBeNull();
+    throw_if($route === null, RuntimeException::class, sprintf('Expected route [%s] to be registered.', $routeName));
 
     return $route->getActionName();
 }

@@ -25,7 +25,7 @@ class SiteMetaSchemaAction
     /**
      * @var array<string, string>
      */
-    private const SCHEMA_DAY_URLS = [
+    private const array SCHEMA_DAY_URLS = [
         'monday' => 'https://schema.org/Monday',
         'tuesday' => 'https://schema.org/Tuesday',
         'wednesday' => 'https://schema.org/Wednesday',

@@ -27,7 +27,10 @@ afterEach(function (): void {
 });
 
 it('throttles public booking request submissions and install-gates public routes', function (): void {
-    $providerSource = file_get_contents((new ReflectionClass(BookingsServiceProvider::class))->getFileName());
+    $providerFile = (new ReflectionClass(BookingsServiceProvider::class))->getFileName();
+    throw_unless(is_string($providerFile), RuntimeException::class, 'Expected bookings service provider to have a source file.');
+
+    $providerSource = file_get_contents($providerFile);
 
     expect(Route::getRoutes()->getByName('capell-bookings.request.store')?->gatherMiddleware())
         ->toContain('throttle:capell-bookings-request')

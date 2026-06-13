@@ -15,8 +15,9 @@ use Illuminate\Support\Facades\Route;
 it('throttles provider webhook events', function (): void {
     $route = Route::getRoutes()->getByName('capell-email-studio.provider-events');
 
-    expect($route)->not->toBeNull()
-        ->and($route->gatherMiddleware())->toContain('throttle:capell-email-studio-provider-events');
+    throw_if($route === null, RuntimeException::class, 'Expected email provider events route to be registered.');
+
+    expect($route->gatherMiddleware())->toContain('throttle:capell-email-studio-provider-events');
 });
 
 it('records provider webhooks and updates matching recipients', function (): void {
