@@ -14,3 +14,6 @@ packages/layout-builder/resources/views/components/layout/main-content.blade.php
 
 # Prettier's Blade plugin is non-idempotent for this pricing-table fragment.
 packages/foundation-theme/resources/views/components/element/modern/pricing-table.blade.php
+
+# This view is served as JavaScript; the Blade parser can wrap string literals incorrectly.
+packages/live-chat/resources/views/script.blade.php
