@@ -5,16 +5,18 @@ declare(strict_types=1);
 namespace Capell\LiveChat\Actions;
 
 use Capell\LiveChat\Data\LiveChatWidgetConfigData;
+use Capell\LiveChat\Models\LiveChatInstallation;
 use Lorisleiva\Actions\Concerns\AsAction;
 
 final class BuildLiveChatWidgetConfigAction
 {
     use AsAction;
 
-    public function handle(): LiveChatWidgetConfigData
+    public function handle(?LiveChatInstallation $installation = null): LiveChatWidgetConfigData
     {
-        $widget = config('capell-live-chat.widget', []);
+        $widget = $this->widgetSettings($installation);
         $enabled = config('capell-live-chat.enabled', true) === true;
+        $publicKey = $installation?->public_key;
 
         return new LiveChatWidgetConfigData(
             enabled: $enabled,
@@ -28,9 +30,9 @@ final class BuildLiveChatWidgetConfigAction
             detailsFirstLabel: $this->string($widget, 'details_first_label', __('capell-live-chat::generic.widget.details_first_label')),
             handoffLabel: $this->string($widget, 'handoff_label', __('capell-live-chat::generic.widget.handoff_label')),
             statusMessage: $this->string($widget, 'offline_message', __('capell-live-chat::generic.widget.offline_message')),
-            startUrl: route('capell-live-chat.conversations.store'),
-            messageUrl: url('/' . trim((string) config('capell-live-chat.public_path_prefix', 'live-chat'), '/') . '/conversations/{conversation}/messages'),
-            handoffUrl: url('/' . trim((string) config('capell-live-chat.public_path_prefix', 'live-chat'), '/') . '/conversations/{conversation}/handoff'),
+            startUrl: $this->conversationUrl($publicKey),
+            messageUrl: $this->messageUrl($publicKey),
+            handoffUrl: $this->handoffUrl($publicKey),
             branding: [
                 'primary' => $this->string($widget, 'primary_color', '#087765'),
                 'surface' => $this->string($widget, 'surface_color', '#fcfffb'),
@@ -39,6 +41,53 @@ final class BuildLiveChatWidgetConfigAction
             proactiveTriggers: $this->proactiveTriggers($widget['proactive_triggers'] ?? []),
             labels: $this->labels($widget['labels'] ?? []),
         );
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function widgetSettings(?LiveChatInstallation $installation): array
+    {
+        $widget = config('capell-live-chat.widget', []);
+        $configuredWidget = is_array($widget) ? $widget : [];
+
+        if ($installation === null || ! is_array($installation->widget_settings)) {
+            return $configuredWidget;
+        }
+
+        return array_replace_recursive($configuredWidget, $installation->widget_settings);
+    }
+
+    private function conversationUrl(?string $publicKey): string
+    {
+        if (is_string($publicKey) && $publicKey !== '') {
+            return route('capell-live-chat.api.conversations.store', ['public_key' => $publicKey]);
+        }
+
+        return route('capell-live-chat.conversations.store');
+    }
+
+    private function messageUrl(?string $publicKey): string
+    {
+        if (is_string($publicKey) && $publicKey !== '') {
+            return url('/' . $this->prefix() . '/api/' . rawurlencode($publicKey) . '/conversations/{conversation}/messages');
+        }
+
+        return url('/' . $this->prefix() . '/conversations/{conversation}/messages');
+    }
+
+    private function handoffUrl(?string $publicKey): string
+    {
+        if (is_string($publicKey) && $publicKey !== '') {
+            return url('/' . $this->prefix() . '/api/' . rawurlencode($publicKey) . '/conversations/{conversation}/handoff');
+        }
+
+        return url('/' . $this->prefix() . '/conversations/{conversation}/handoff');
+    }
+
+    private function prefix(): string
+    {
+        return trim($this->configString('capell-live-chat.public_path_prefix', 'live-chat'), '/');
     }
 
     /**
@@ -70,7 +119,7 @@ final class BuildLiveChatWidgetConfigAction
             $name = $trigger['name'] ?? null;
             $path = $trigger['path'] ?? null;
             $message = $trigger['message'] ?? null;
-            $delaySeconds = $trigger['delay_seconds'] ?? 10;
+            $delaySeconds = $trigger['delay_seconds'] ?? null;
 
             if (! is_string($name) || ! is_string($path) || ! is_string($message)) {
                 continue;
@@ -79,7 +128,7 @@ final class BuildLiveChatWidgetConfigAction
             $normalized[] = [
                 'name' => $name,
                 'path' => $path,
-                'delay_seconds' => max(1, (int) $delaySeconds),
+                'delay_seconds' => max(1, is_numeric($delaySeconds) ? (int) $delaySeconds : 10),
                 'message' => $message,
             ];
         }
@@ -107,5 +156,12 @@ final class BuildLiveChatWidgetConfigAction
             'handoff_requested' => $this->string($configuredLabels, 'handoff_requested', __('capell-live-chat::generic.widget.labels.handoff_requested')),
             'handoff_failed' => $this->string($configuredLabels, 'handoff_failed', __('capell-live-chat::generic.widget.labels.handoff_failed')),
         ];
+    }
+
+    private function configString(string $key, string $fallback): string
+    {
+        $value = config($key);
+
+        return is_string($value) && trim($value) !== '' ? $value : $fallback;
     }
 }

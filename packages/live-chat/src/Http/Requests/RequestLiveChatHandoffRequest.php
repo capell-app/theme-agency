@@ -23,6 +23,7 @@ final class RequestLiveChatHandoffRequest extends FormRequest
     {
         return [
             'note' => ['nullable', 'string', 'max:1000'],
+            'visitor_token' => ['nullable', 'string', 'max:255'],
             'visitor' => ['nullable', 'array'],
             'visitor.name' => ['nullable', 'string', 'max:255'],
             'visitor.email' => ['nullable', 'email:rfc', 'max:255'],

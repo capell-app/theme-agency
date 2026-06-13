@@ -3,6 +3,7 @@
         return
     }
     window.CapellLiveChatLoaded = true
+    var embeddedConfig = @json($config?->toArray(), JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT | JSON_HEX_TAG);
     var style = document.createElement('style')
     style.textContent = [
         '.capell-live-chat{position:fixed;right:18px;bottom:18px;z-index:2147483000;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--clc-text,#101715)}',
@@ -42,6 +43,15 @@
         '@media (max-width:480px){.capell-live-chat{right:12px;bottom:12px}.capell-live-chat__panel{width:calc(100vw - 24px);height:calc(100vh - 24px)}.capell-live-chat__details{grid-template-columns:1fr}.capell-live-chat__controls{align-items:stretch;flex-direction:column}.capell-live-chat__actions{width:100%}.capell-live-chat__secondary,.capell-live-chat__send{flex:1}}',
     ].join('')
     document.head.appendChild(style)
+    if (
+        embeddedConfig &&
+        !document.querySelector('[data-capell-live-chat-widget]')
+    ) {
+        var embeddedRoot = document.createElement('div')
+        embeddedRoot.setAttribute('data-capell-live-chat-widget', '')
+        embeddedRoot.dataset.config = JSON.stringify(embeddedConfig)
+        document.body.appendChild(embeddedRoot)
+    }
     document
         .querySelectorAll('[data-capell-live-chat-widget]')
         .forEach(function (root) {
@@ -268,6 +278,7 @@
             return
         }
         var payload = new FormData()
+        payload.append('visitor_token', state.visitorToken)
         addVisitor(payload, form)
         fetch(
             config.handoffUrl.replace(
@@ -518,14 +529,12 @@
     }
     function randomToken() {
         if (window.crypto && window.crypto.randomUUID) {
-            return
-            window.crypto.randomUUID()
+            return window.crypto.randomUUID()
         }
         return String(Date.now()) + String(Math.random()).slice(2)
     }
     function escapeHtml(value) {
-        return
-        String(value || '')
+        return String(value || '')
             .split('&')
             .join('&amp;')
             .split('<')

@@ -30,6 +30,7 @@ use Override;
  * @property string|null $visitor_email
  * @property string|null $visitor_phone
  * @property string|null $visitor_company
+ * @property string|null $visitor_token_hash
  * @property array<string, mixed>|null $metadata
  * @property CarbonImmutable|null $last_message_at
  * @property-read Site $site
@@ -48,6 +49,7 @@ class LiveChatConversation extends Model
         'first_page_url',
         'flow',
         'handoff_requested_at',
+        'installation_id',
         'intent',
         'ip_hash',
         'last_message_at',
@@ -104,6 +106,14 @@ class LiveChatConversation extends Model
     public function site(): BelongsTo
     {
         return $this->belongsTo(Site::class);
+    }
+
+    /**
+     * @return BelongsTo<LiveChatInstallation, $this>
+     */
+    public function installation(): BelongsTo
+    {
+        return $this->belongsTo(LiveChatInstallation::class, 'installation_id');
     }
 
     /**

@@ -17,6 +17,7 @@ use Capell\LiveChat\Actions\SyncLiveChatConversationContactAction;
 use Capell\LiveChat\Filament\Resources\AvailabilityWindows\AvailabilityWindowResource;
 use Capell\LiveChat\Filament\Resources\Conversations\ConversationResource;
 use Capell\LiveChat\Filament\Resources\EscalationRules\EscalationRuleResource;
+use Capell\LiveChat\Filament\Resources\Installations\InstallationResource;
 use Capell\LiveChat\Filament\Resources\KnowledgeSources\KnowledgeSourceResource;
 use Capell\LiveChat\Health\LiveChatHealthCheck;
 use Capell\LiveChat\Manifest\LiveChatAdminResourcesContribution;
@@ -56,6 +57,7 @@ it('declares the live chat package manifest contract', function (): void {
         ->and($manifest['database']['migrations'])->toBeTrue()
         ->and($manifest['database']['requiredTables'])->toBe([
             'live_chat_conversations',
+            'live_chat_installations',
             'live_chat_messages',
             'live_chat_availability_windows',
             'live_chat_availability_exceptions',
@@ -65,6 +67,7 @@ it('declares the live chat package manifest contract', function (): void {
         ->and($contributions->contains(static fn (array $contribution): bool => ($contribution['type'] ?? null) === 'admin-resource'
             && ($contribution['class'] ?? null) === LiveChatAdminResourcesContribution::class
             && ($contribution['resourceClasses'] ?? []) === [
+                InstallationResource::class,
                 ConversationResource::class,
                 AvailabilityWindowResource::class,
                 EscalationRuleResource::class,
@@ -74,6 +77,7 @@ it('declares the live chat package manifest contract', function (): void {
             'type' => 'model',
             'class' => LiveChatModelsContribution::class,
             'modelClasses' => [
+                'Capell\\LiveChat\\Models\\LiveChatInstallation',
                 'Capell\\LiveChat\\Models\\LiveChatConversation',
                 'Capell\\LiveChat\\Models\\LiveChatMessage',
                 'Capell\\LiveChat\\Models\\LiveChatAvailabilityWindow',

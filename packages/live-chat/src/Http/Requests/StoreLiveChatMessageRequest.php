@@ -23,6 +23,7 @@ final class StoreLiveChatMessageRequest extends FormRequest
     {
         return [
             'body' => ['required', 'string', 'max:' . (int) config('capell-live-chat.max_message_length', 4000)],
+            'visitor_token' => ['nullable', 'string', 'max:255'],
             'visitor' => ['nullable', 'array'],
             'visitor.name' => ['nullable', 'string', 'max:255'],
             'visitor.email' => ['nullable', 'email:rfc', 'max:255'],

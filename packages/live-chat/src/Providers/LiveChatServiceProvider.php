@@ -9,6 +9,8 @@ use Capell\Admin\Facades\CapellAdmin;
 use Capell\Admin\Support\CapellAdminManager;
 use Capell\Core\Facades\CapellCore;
 use Capell\Core\Support\Packages\AbstractPackageServiceProvider;
+use Capell\Frontend\Enums\RenderHookLocation;
+use Capell\Frontend\Support\Render\FrontendHookRegistrar;
 use Capell\Frontend\Support\Render\RenderHookRegistry;
 use Capell\LiveChat\Contracts\LiveChatResponder;
 use Capell\LiveChat\Contracts\LiveChatWidgetRenderer;
@@ -17,12 +19,14 @@ use Capell\LiveChat\Models\LiveChatAvailabilityException;
 use Capell\LiveChat\Models\LiveChatAvailabilityWindow;
 use Capell\LiveChat\Models\LiveChatConversation;
 use Capell\LiveChat\Models\LiveChatEscalationRule;
+use Capell\LiveChat\Models\LiveChatInstallation;
 use Capell\LiveChat\Models\LiveChatKnowledgeSource;
 use Capell\LiveChat\Models\LiveChatMessage;
 use Capell\LiveChat\Policies\LiveChatAvailabilityExceptionPolicy;
 use Capell\LiveChat\Policies\LiveChatAvailabilityWindowPolicy;
 use Capell\LiveChat\Policies\LiveChatConversationPolicy;
 use Capell\LiveChat\Policies\LiveChatEscalationRulePolicy;
+use Capell\LiveChat\Policies\LiveChatInstallationPolicy;
 use Capell\LiveChat\Policies\LiveChatKnowledgeSourcePolicy;
 use Capell\LiveChat\Rendering\BladeLiveChatWidgetRenderer;
 use Capell\LiveChat\Support\LocalLiveChatResponder;
@@ -43,6 +47,7 @@ final class LiveChatServiceProvider extends AbstractPackageServiceProvider
         '2026_06_13_000002_create_live_chat_messages_table',
         '2026_06_13_000003_create_live_chat_availability_tables',
         '2026_06_13_000004_create_live_chat_rules_and_sources_table',
+        '2026_06_13_000005_create_live_chat_installations_table',
     ];
 
     public static string $name = 'capell-live-chat';
@@ -99,13 +104,33 @@ final class LiveChatServiceProvider extends AbstractPackageServiceProvider
             'live_chat_availability_window' => LiveChatAvailabilityWindow::class,
             'live_chat_availability_exception' => LiveChatAvailabilityException::class,
             'live_chat_escalation_rule' => LiveChatEscalationRule::class,
+            'live_chat_installation' => LiveChatInstallation::class,
             'live_chat_knowledge_source' => LiveChatKnowledgeSource::class,
         ], merge: true);
 
         $this->loadRoutesFrom(__DIR__ . '/../../routes/web.php');
 
-        if (config('capell-live-chat.auto_inject', true) === true && $this->app->bound(RenderHookRegistry::class)) {
-            $this->app->make(RegisterLiveChatWidgetHook::class)->register();
+        if (config('capell-live-chat.auto_inject', true) !== true) {
+            return;
+        }
+
+        if ($this->app->bound(FrontendHookRegistrar::class)) {
+            resolve(FrontendHookRegistrar::class)->contribute(
+                location: RenderHookLocation::BodyEnd,
+                extension: new RegisterLiveChatWidgetHook,
+                owner: 'capell-app/live-chat',
+                key: 'live-chat-widget',
+                cacheSafe: false,
+            );
+
+            return;
+        }
+
+        if ($this->app->bound(RenderHookRegistry::class)) {
+            resolve(RenderHookRegistry::class)->registerExtension(
+                location: RenderHookLocation::BodyEnd,
+                extension: new RegisterLiveChatWidgetHook,
+            );
         }
     }
 
@@ -117,12 +142,13 @@ final class LiveChatServiceProvider extends AbstractPackageServiceProvider
 
     private function registerModels(): self
     {
-        CapellCore::registerModels([
+        $this->surface()->models([
             LiveChatConversation::class,
             LiveChatMessage::class,
             LiveChatAvailabilityWindow::class,
             LiveChatAvailabilityException::class,
             LiveChatEscalationRule::class,
+            LiveChatInstallation::class,
             LiveChatKnowledgeSource::class,
         ]);
 
@@ -154,6 +180,7 @@ final class LiveChatServiceProvider extends AbstractPackageServiceProvider
         Gate::policy(LiveChatAvailabilityWindow::class, LiveChatAvailabilityWindowPolicy::class);
         Gate::policy(LiveChatAvailabilityException::class, LiveChatAvailabilityExceptionPolicy::class);
         Gate::policy(LiveChatEscalationRule::class, LiveChatEscalationRulePolicy::class);
+        Gate::policy(LiveChatInstallation::class, LiveChatInstallationPolicy::class);
         Gate::policy(LiveChatKnowledgeSource::class, LiveChatKnowledgeSourcePolicy::class);
 
         return $this;

@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace Capell\LiveChat\Http\Controllers;
 
+use Capell\LiveChat\Actions\ApplyLiveChatCorsHeadersAction;
+use Capell\LiveChat\Actions\GuardLiveChatInstallationOriginAction;
+use Capell\LiveChat\Actions\ResolveLiveChatConversationForInstallationAction;
+use Capell\LiveChat\Actions\ResolveLiveChatInstallationAction;
 use Capell\LiveChat\Actions\StoreLiveChatAttachmentsAction;
 use Capell\LiveChat\Actions\StoreLiveChatMessageAction;
 use Capell\LiveChat\Http\Controllers\Concerns\BuildsLiveChatPayloads;
@@ -17,11 +21,31 @@ final class StoreLiveChatMessageController
 {
     use BuildsLiveChatPayloads;
 
-    public function __invoke(StoreLiveChatMessageRequest $request, string $conversation): JsonResponse
+    public function __invoke(StoreLiveChatMessageRequest $request): JsonResponse
     {
-        $liveChatConversation = LiveChatConversation::query()
-            ->where('uuid', $conversation)
-            ->firstOrFail();
+        $publicKey = $this->nullableString($request->route('public_key'));
+        $conversationUuid = $this->nullableString($request->route('conversation'));
+        $origin = null;
+
+        abort_if($conversationUuid === null, 404);
+
+        if ($publicKey === null) {
+            $liveChatConversation = LiveChatConversation::query()
+                ->where('uuid', $conversationUuid)
+                ->firstOrFail();
+        } else {
+            $installation = ResolveLiveChatInstallationAction::run($publicKey);
+
+            abort_if($installation === null, 404);
+
+            $origin = GuardLiveChatInstallationOriginAction::run($installation, $request);
+            $liveChatConversation = ResolveLiveChatConversationForInstallationAction::run(
+                installation: $installation,
+                uuid: $conversationUuid,
+                visitorToken: $this->nullableString($request->validated('visitor_token')),
+            );
+        }
+
         $attachments = StoreLiveChatAttachmentsAction::run(
             files: $this->uploadedFiles($request->file('attachments', [])),
             conversationUuid: $liveChatConversation->uuid,
@@ -30,11 +54,11 @@ final class StoreLiveChatMessageController
         $data = $this->incomingMessageData($request->validated(), $attachments);
         $result = StoreLiveChatMessageAction::run($liveChatConversation, $data);
 
-        return $this->noStore(response()->json($this->responsePayload(
+        return $this->publicResponse(response()->json($this->responsePayload(
             $result['conversation'],
             $result['visitor_message'],
             $result['assistant_message'],
-        )));
+        )), $origin);
     }
 
     /**
@@ -91,11 +115,13 @@ final class StoreLiveChatMessageController
         ];
     }
 
-    private function noStore(JsonResponse $response): JsonResponse
+    private function publicResponse(JsonResponse $response, ?string $origin): JsonResponse
     {
         $response->headers->set('Cache-Control', 'no-store, private');
         $response->headers->set('Pragma', 'no-cache');
         $response->headers->set('Expires', '0');
+
+        ApplyLiveChatCorsHeadersAction::run($response, $origin);
 
         return $response;
     }

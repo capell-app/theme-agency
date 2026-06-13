@@ -7,6 +7,8 @@ return [
     'resources' => [
         'conversation' => 'Conversation',
         'conversations' => 'Conversations',
+        'installation' => 'Chat site',
+        'installations' => 'Chat sites',
         'availability_window' => 'Availability window',
         'availability_windows' => 'Availability windows',
         'escalation_rule' => 'Escalation rule',
@@ -16,6 +18,7 @@ return [
     ],
     'fields' => [
         'agent_name' => 'Agent name',
+        'allowed_domains' => 'Allowed domains',
         'body' => 'Body',
         'closes_at' => 'Closes at',
         'company' => 'Company',
@@ -41,9 +44,11 @@ return [
         'phone' => 'Phone',
         'preferred_callback_at' => 'Preferred callback',
         'priority' => 'Priority',
+        'public_key' => 'Public key',
         'route_to' => 'Route to',
         'site_id' => 'Site',
         'source_key' => 'Source key',
+        'source_policy' => 'Source policy',
         'status' => 'Status',
         'timezone' => 'Timezone',
         'title' => 'Title',
@@ -57,6 +62,10 @@ return [
     'actions' => [
         'close' => 'Close',
         'request_handoff' => 'Request handoff',
+    ],
+    'states' => [
+        'active' => 'Active',
+        'inactive' => 'Inactive',
     ],
     'messages' => [
         'handoff_requested' => 'Human handoff requested.',
@@ -156,6 +165,10 @@ return [
         'active' => 'Active',
         'paused' => 'Paused',
         'syncing' => 'Syncing',
+    ],
+    'source_policy' => [
+        'manual' => 'Manual sources only',
+        'manual_and_knowledge_base' => 'Manual sources and Knowledge Base',
     ],
     'days' => [
         1 => 'Monday',

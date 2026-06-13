@@ -4,25 +4,25 @@ declare(strict_types=1);
 
 namespace Capell\LiveChat\Support\RenderHooks;
 
-use Capell\Frontend\Enums\RenderHookLocation;
-use Capell\Frontend\Support\Render\RenderHookRegistry;
+use Capell\Frontend\Contracts\RenderHookExtensionInterface;
+use Capell\Frontend\Data\RenderHookContext;
 use Capell\LiveChat\Actions\BuildLiveChatWidgetConfigAction;
+use Capell\LiveChat\Actions\ResolveLiveChatInstallationAction;
 use Illuminate\Support\Str;
 
-final class RegisterLiveChatWidgetHook
+final class RegisterLiveChatWidgetHook implements RenderHookExtensionInterface
 {
-    public function __construct(private readonly RenderHookRegistry $registry) {}
-
-    public function register(): void
+    public function render(RenderHookContext $context): string
     {
-        $this->registry->register(
-            RenderHookLocation::BodyEnd,
-            static fn (): string => self::shouldRenderForCurrentRequest()
-                ? view('capell-live-chat::widget', [
-                    'config' => BuildLiveChatWidgetConfigAction::run(),
-                ])->render()
-                : '',
-        );
+        if (! self::shouldRenderForCurrentRequest()) {
+            return '';
+        }
+
+        $installation = ResolveLiveChatInstallationAction::run();
+
+        return view('capell-live-chat::widget', [
+            'config' => BuildLiveChatWidgetConfigAction::run($installation),
+        ])->render();
     }
 
     private static function shouldRenderForCurrentRequest(): bool

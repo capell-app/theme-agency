@@ -10,6 +10,7 @@ use Capell\LiveChat\Enums\ConversationStatus;
 use Capell\LiveChat\Enums\LiveChatPriority;
 use Capell\LiveChat\Enums\MessageRole;
 use Capell\LiveChat\Models\LiveChatConversation;
+use Capell\LiveChat\Models\LiveChatInstallation;
 use Capell\LiveChat\Models\LiveChatMessage;
 use Carbon\CarbonImmutable;
 use Illuminate\Support\Str;
@@ -22,12 +23,13 @@ final class StartLiveChatConversationAction
     /**
      * @return array{conversation: LiveChatConversation, visitor_message: LiveChatMessage, assistant_message: LiveChatMessage}
      */
-    public function handle(IncomingLiveChatMessageData $data, int $siteId): array
+    public function handle(IncomingLiveChatMessageData $data, int $siteId, ?LiveChatInstallation $installation = null): array
     {
         $now = CarbonImmutable::now();
         $visitor = $data->visitor;
         $conversation = new LiveChatConversation([
             'site_id' => $siteId,
+            'installation_id' => $installation?->getKey(),
             'uuid' => $data->conversationUuid,
             'status' => ConversationStatus::Active,
             'flow' => ConversationFlow::tryFrom($data->flow) ?? ConversationFlow::MessageFirst,

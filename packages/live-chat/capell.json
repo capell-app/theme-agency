@@ -41,6 +41,7 @@
             "type": "admin-resource",
             "class": "Capell\\LiveChat\\Manifest\\LiveChatAdminResourcesContribution",
             "resourceClasses": [
+                "Capell\\LiveChat\\Filament\\Resources\\Installations\\InstallationResource",
                 "Capell\\LiveChat\\Filament\\Resources\\Conversations\\ConversationResource",
                 "Capell\\LiveChat\\Filament\\Resources\\AvailabilityWindows\\AvailabilityWindowResource",
                 "Capell\\LiveChat\\Filament\\Resources\\EscalationRules\\EscalationRuleResource",
@@ -51,6 +52,7 @@
             "type": "model",
             "class": "Capell\\LiveChat\\Manifest\\LiveChatModelsContribution",
             "modelClasses": [
+                "Capell\\LiveChat\\Models\\LiveChatInstallation",
                 "Capell\\LiveChat\\Models\\LiveChatConversation",
                 "Capell\\LiveChat\\Models\\LiveChatMessage",
                 "Capell\\LiveChat\\Models\\LiveChatAvailabilityWindow",
@@ -65,6 +67,10 @@
             "routeNames": [
                 "capell-live-chat.widget",
                 "capell-live-chat.widget.script",
+                "capell-live-chat.api.preflight",
+                "capell-live-chat.api.conversations.store",
+                "capell-live-chat.api.messages.store",
+                "capell-live-chat.api.handoff.store",
                 "capell-live-chat.conversations.store",
                 "capell-live-chat.messages.store",
                 "capell-live-chat.handoff.store"
@@ -86,6 +92,7 @@
         "settings": false,
         "requiredTables": [
             "live_chat_conversations",
+            "live_chat_installations",
             "live_chat_messages",
             "live_chat_availability_windows",
             "live_chat_availability_exceptions",
@@ -107,14 +114,21 @@
         "closeLiveChatConversation": "Capell\\LiveChat\\Actions\\CloseLiveChatConversationAction",
         "determineLiveChatEscalation": "Capell\\LiveChat\\Actions\\DetermineLiveChatEscalationAction",
         "detectLiveChatIntent": "Capell\\LiveChat\\Actions\\DetectLiveChatIntentAction",
+        "guardLiveChatInstallationOrigin": "Capell\\LiveChat\\Actions\\GuardLiveChatInstallationOriginAction",
         "replyToLiveChatMessage": "Capell\\LiveChat\\Actions\\ReplyToLiveChatMessageAction",
         "requestLiveChatHandoff": "Capell\\LiveChat\\Actions\\RequestLiveChatHandoffAction",
+        "resolveLiveChatConversationForInstallation": "Capell\\LiveChat\\Actions\\ResolveLiveChatConversationForInstallationAction",
+        "resolveLiveChatInstallation": "Capell\\LiveChat\\Actions\\ResolveLiveChatInstallationAction",
         "resolveLiveChatAvailability": "Capell\\LiveChat\\Actions\\ResolveLiveChatAvailabilityAction",
         "startLiveChatConversation": "Capell\\LiveChat\\Actions\\StartLiveChatConversationAction",
         "storeLiveChatMessage": "Capell\\LiveChat\\Actions\\StoreLiveChatMessageAction",
         "syncLiveChatConversationContact": "Capell\\LiveChat\\Actions\\SyncLiveChatConversationContactAction"
     },
     "permissions": [
+        "View:LiveChatInstallation",
+        "Create:LiveChatInstallation",
+        "Update:LiveChatInstallation",
+        "Delete:LiveChatInstallation",
         "View:LiveChatConversation",
         "Update:LiveChatConversation",
         "View:LiveChatAvailabilityWindow",
@@ -133,6 +147,8 @@
     "capabilities": [
         "live-chat",
         "live-chat-widget",
+        "live-chat-external-embeds",
+        "live-chat-domain-allowlist",
         "live-chat-message-first",
         "live-chat-details-first",
         "live-chat-ai-responder-contract",
@@ -154,12 +170,19 @@
             "routeNames": [
                 "capell-live-chat.widget",
                 "capell-live-chat.widget.script",
+                "capell-live-chat.api.preflight",
+                "capell-live-chat.api.conversations.store",
+                "capell-live-chat.api.messages.store",
+                "capell-live-chat.api.handoff.store",
                 "capell-live-chat.conversations.store",
                 "capell-live-chat.messages.store",
                 "capell-live-chat.handoff.store"
             ],
             "auth": "public",
             "csrfExemptRoutes": [
+                "capell-live-chat.api.conversations.store",
+                "capell-live-chat.api.messages.store",
+                "capell-live-chat.api.handoff.store",
                 "capell-live-chat.conversations.store",
                 "capell-live-chat.messages.store",
                 "capell-live-chat.handoff.store"
@@ -168,6 +191,9 @@
             "tokenizedRoutes": [],
             "webhookRoutes": [],
             "throttledRoutes": [
+                "capell-live-chat.api.conversations.store",
+                "capell-live-chat.api.messages.store",
+                "capell-live-chat.api.handoff.store",
                 "capell-live-chat.conversations.store",
                 "capell-live-chat.messages.store",
                 "capell-live-chat.handoff.store"
@@ -175,6 +201,9 @@
         },
         "sensitiveData": {
             "encryptedFields": [
+                "Capell\\LiveChat\\Models\\LiveChatInstallation::$allowed_domains",
+                "Capell\\LiveChat\\Models\\LiveChatInstallation::$metadata",
+                "Capell\\LiveChat\\Models\\LiveChatInstallation::$widget_settings",
                 "Capell\\LiveChat\\Models\\LiveChatConversation::$metadata",
                 "Capell\\LiveChat\\Models\\LiveChatConversation::$visitor_company",
                 "Capell\\LiveChat\\Models\\LiveChatConversation::$visitor_email",
@@ -214,6 +243,10 @@
         "adminSurface": {
             "authorization": "permissions",
             "permissions": [
+                "View:LiveChatInstallation",
+                "Create:LiveChatInstallation",
+                "Update:LiveChatInstallation",
+                "Delete:LiveChatInstallation",
                 "View:LiveChatConversation",
                 "Update:LiveChatConversation",
                 "View:LiveChatAvailabilityWindow",

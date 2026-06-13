@@ -23,6 +23,7 @@ return [
     ],
 
     'tables' => [
+        'installations' => 'live_chat_installations',
         'conversations' => 'live_chat_conversations',
         'messages' => 'live_chat_messages',
         'availability_windows' => 'live_chat_availability_windows',

@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Capell\LiveChat\Http\Controllers;
 
+use Capell\LiveChat\Actions\ApplyLiveChatCorsHeadersAction;
+use Capell\LiveChat\Actions\GuardLiveChatInstallationOriginAction;
+use Capell\LiveChat\Actions\ResolveLiveChatInstallationAction;
 use Capell\LiveChat\Actions\StartLiveChatConversationAction;
 use Capell\LiveChat\Actions\StoreLiveChatAttachmentsAction;
 use Capell\LiveChat\Http\Controllers\Concerns\BuildsLiveChatPayloads;
@@ -20,7 +23,16 @@ final class StoreLiveChatConversationController
 
     public function __invoke(StoreLiveChatConversationRequest $request): JsonResponse
     {
-        $siteId = (int) config('capell-live-chat.default_site_id', 1);
+        $publicKey = $this->nullableString($request->route('public_key'));
+        $installation = $publicKey === null ? null : ResolveLiveChatInstallationAction::run($publicKey);
+        $origin = null;
+
+        if ($publicKey !== null) {
+            abort_if($installation === null, 404);
+            $origin = GuardLiveChatInstallationOriginAction::run($installation, $request);
+        }
+
+        $siteId = $installation?->site_id ?? (int) config('capell-live-chat.default_site_id', 1);
         $conversationUuid = (string) Str::uuid();
         $attachments = StoreLiveChatAttachmentsAction::run(
             files: $this->uploadedFiles($request->file('attachments', [])),
@@ -32,13 +44,13 @@ final class StoreLiveChatConversationController
             $attachments,
         );
 
-        $result = StartLiveChatConversationAction::run($data, $siteId);
+        $result = StartLiveChatConversationAction::run($data, $siteId, $installation);
 
-        return $this->noStore(response()->json($this->responsePayload(
+        return $this->publicResponse(response()->json($this->responsePayload(
             $result['conversation'],
             $result['visitor_message'],
             $result['assistant_message'],
-        )));
+        )), $origin);
     }
 
     /**
@@ -96,11 +108,13 @@ final class StoreLiveChatConversationController
         ];
     }
 
-    private function noStore(JsonResponse $response): JsonResponse
+    private function publicResponse(JsonResponse $response, ?string $origin): JsonResponse
     {
         $response->headers->set('Cache-Control', 'no-store, private');
         $response->headers->set('Pragma', 'no-cache');
         $response->headers->set('Expires', '0');
+
+        ApplyLiveChatCorsHeadersAction::run($response, $origin);
 
         return $response;
     }

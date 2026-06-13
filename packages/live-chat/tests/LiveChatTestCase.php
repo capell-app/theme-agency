@@ -8,6 +8,7 @@ use Capell\Contacts\Providers\ContactsServiceProvider;
 use Capell\Core\Facades\CapellCore;
 use Capell\Core\Support\CapellCoreManager;
 use Capell\Frontend\Support\Render\RenderHookRegistry;
+use Capell\LiveChat\Models\LiveChatInstallation;
 use Capell\LiveChat\Providers\LiveChatServiceProvider;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -26,6 +27,22 @@ class LiveChatTestCase extends OrchestraTestCase
     protected function createLiveChatSite(): int
     {
         return (int) DB::table('sites')->insertGetId([]);
+    }
+
+    /**
+     * @param  list<string>  $allowedDomains
+     */
+    protected function createLiveChatInstallation(?int $siteId = null, array $allowedDomains = ['example.test']): LiveChatInstallation
+    {
+        return LiveChatInstallation::query()->create([
+            'site_id' => $siteId ?? $this->createLiveChatSite(),
+            'name' => 'Example chat',
+            'allowed_domains' => $allowedDomains,
+            'timezone' => 'Europe/London',
+            'widget_settings' => [
+                'brand_name' => 'Example support',
+            ],
+        ]);
     }
 
     /**
