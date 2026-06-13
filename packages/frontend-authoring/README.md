@@ -1,113 +1,100 @@
 # Frontend Authoring
 
-Frontend authoring bridge and in-page editing for Capell frontend.
+<!-- prettier-ignore-start -->
 
-## At A Glance
+## What This Plugin Adds
 
-- Package: `capell-app/frontend-authoring`
-- Namespace: `Capell\FrontendAuthoring\`
-- Surfaces: Livewire, HTTP
-- Service providers: `packages/frontend-authoring/src/Providers/FrontendAuthoringServiceProvider.php`
-- Capell dependencies: `capell-app/admin`, `capell-app/frontend`, `capell-app/html-cache`
-- Third-party dependencies: `spatie/laravel-package-tools`
+Frontend Authoring is an **Available**, **No schema impact** Capell package in the **Capell Foundation** product group. It ships as `capell-app/frontend-authoring` and extends these surfaces: frontend, console.
 
-## Why It Helps Your Capell Workflow
+In-page (frontend) editing for Capell: an admin-only beacon adds inline edit controls to live pages without leaking any editor markup or signed URLs into public or cached output.
 
-- Lets authenticated admins edit page fields from the public site context without exposing authoring controls to anonymous visitors.
-- Protects static caching because the public page loads as ordinary HTML and the admin-only beacon adds editing affordances later.
-- Helps editors fix content in place while developers keep signed edit URLs, permissions, and field paths out of public Blade.
+After install, the package affects public rendering, public routes, or frontend runtime behaviour.
 
-## Best Used With
+Status details:
 
-- [HTML Cache](../html-cache/README.md)
-- [Layout Builder](../layout-builder/README.md)
-- [API](../api/README.md)
+- Status: Available
+- Tier: free
+- Bundle: foundation
+- Composer package: `capell-app/frontend-authoring`
+- Namespace: `Capell\FrontendAuthoring`
+- Theme key: not applicable
 
-## What It Adds
+## Why It Matters
 
-- Frontend authoring bridge and in-page editing for Capell frontend.
-- Livewire components: `EditRegionField`.
+**For developers:** The package gives developers package-owned service providers, Actions, Data objects, Laravel routes, and Blade views instead of pushing this behaviour into core or application code.
 
-## Built With
-
-This package makes its Composer dependencies visible because they are part of the value proposition, not just plumbing. When an upstream package has a public repository, its linked preview card points readers back to the maintainers so their work gets proper credit.
-
-**Capell packages used here**
-
-- [Capell Admin](https://github.com/capell-app/admin)
-- [Capell Frontend](https://github.com/capell-app/frontend)
-- [Capell HTML Cache](https://github.com/capell-app/html-cache)
-
-**Open-source packages used here**
-
-- [Spatie Laravel Package Tools](https://github.com/spatie/laravel-package-tools) - Laravel package bootstrapping for config, migrations, commands, translations, and service provider setup.
-
-**Linked package previews**
-
-[![Spatie Laravel Package Tools GitHub preview](https://opengraph.githubassets.com/capell-readme/spatie/laravel-package-tools)](https://github.com/spatie/laravel-package-tools)
+**For teams:** Edit page titles, descriptions and content straight from the live site - admins get inline edit controls after the page loads, while visitors and caches only ever see ordinary HTML.
 
 ## Screens And Workflow
 
-Screenshots are generated from [docs/screenshots.json](docs/screenshots.json) during package deployment.
+Screenshot contract: `docs/screenshots.json`.
 
-The documentation screenshots include the package working inside `capell-app`: the runner logs in as an admin, opens the public homepage, waits for the beacon to decorate editable regions, and hovers the first region so the edit control is visible.
+- Frontend page with authoring enabled for admins (frontend, required).
+- Capell app frontend authoring working on the public homepage (frontend, required).
+- Capell app frontend authoring working on mobile (frontend, required).
+- Beacon network request (admin, required).
+- Frontend authoring enabled/disabled configuration proof (admin, required).
 
-## Code Map
+## Technical Shape
 
-| Area      | Path                                        | Purpose                                                             |
-| --------- | ------------------------------------------- | ------------------------------------------------------------------- |
-| Actions   | `packages/frontend-authoring/src/Actions`   | Domain operations. Test these directly where possible.              |
-| Data      | `packages/frontend-authoring/src/Data`      | Structured payloads, form state, view models, and integration data. |
-| Livewire  | `packages/frontend-authoring/src/Livewire`  | Interactive frontend or admin components.                           |
-| HTTP      | `packages/frontend-authoring/src/Http`      | Controllers, middleware, and request handling.                      |
-| Providers | `packages/frontend-authoring/src/Providers` | Registration, extension hooks, routes, migrations, and resources.   |
-| Resources | `packages/frontend-authoring/resources`     | Views, translations, assets, and package resources.                 |
-| Routes    | `packages/frontend-authoring/routes`        | Route files loaded by the service provider.                         |
-| Config    | `packages/frontend-authoring/config`        | Package configuration and publishable config.                       |
-| Tests     | `packages/frontend-authoring/tests`         | Package-level Pest coverage.                                        |
+- Service providers: `Capell\FrontendAuthoring\Providers\FrontendAuthoringServiceProvider`.
+- Config files: `packages/frontend-authoring/config/capell-frontend-authoring.php`.
+- Livewire components: `EditRegionField`.
+- Route files: `packages/frontend-authoring/routes/web.php`.
+- Actions: `AuthorizeEditableRegionAction`, `BuildAuthoringBannerContextAction`, `BuildBeaconResponseAction`, `BuildEditableRegionManifestAction`, `ClearAffectedCachedUrlsAction`, `CollectAffectedCachedUrlsAction`, `UpdateEditableRegionAction`, `ValidateEditableRegionPayloadAction`.
+- Data objects: `EditableRegionData`, `EditableRegionPayloadData`.
+- Health checks: `Capell\FrontendAuthoring\Health\FrontendAuthoringHealthCheck`.
+- Blade views: `packages/frontend-authoring/resources/views/authoring/bootstrap-script.blade.php`, `packages/frontend-authoring/resources/views/components/page-data.blade.php`, `packages/frontend-authoring/resources/views/editor/filament-shell-assets.blade.php`, `packages/frontend-authoring/resources/views/editor/region.blade.php`, `packages/frontend-authoring/resources/views/livewire/edit-region-field.blade.php`.
+- Cache tags: `frontend-authoring`.
 
-## Runtime Surface
+## Data Model
 
-- Livewire: `EditRegionField`.
-- Controllers: `BeaconController`, `EditRegionController`.
-- Routes: `packages/frontend-authoring/routes/web.php`.
+This package has no schema impact. It does not declare package-owned migrations or required tables.
 
-## Diagnostics
+Docs gap: document extension points here if the package delegates persistence to a host package.
 
-The package manifest registers `FrontendAuthoringHealthCheck` as a critical Diagnostics health check. It verifies the beacon route is registered, the enabled config flag is readable, `app.key` is present for signing, and the editable region registry, editor surface registry, and region signer resolve from the container.
+## Install Impact
 
-## Data And Persistence
+- Admin navigation: no admin surface declared.
+- Permissions: `frontend-authoring.edit`.
+- Public routes: route files exist and must be reviewed before public enablement.
+- Database changes: no package migrations declared.
+- Settings: no package settings declared.
+- Queues or schedules: none detected in standard package paths.
+- Cache tags: `frontend-authoring`.
+- Commands: none declared.
 
-- Config: `packages/frontend-authoring/config/capell-frontend-authoring.php`.
-- Data objects live in `src/Data/`; use them for payloads, form state, and view models.
+## Common Pitfalls
 
-## Extension Points
+- Review route middleware, throttling, signed URLs, and public-output safety before exposing routes.
+- Keep public Blade and cached HTML free of authoring markers, model IDs, permissions, signed editor URLs, and lazy database queries.
+- Run package commands from the host app; in this repository use `vendor/bin/pest` for package tests.
+- Keep `composer.json`, `composer.local.json`, `capell.json`, docs, screenshots, and tests aligned when the package surface changes.
 
-- Register Capell extension points, routes, migrations, settings, render hooks, and resources from service providers.
+## Troubleshooting
 
-## Install And Setup
+| Symptom | Likely cause | Check | Fix |
+| --- | --- | --- | --- |
+| Package surface is missing after install | Provider or manifest is not loaded | Confirm `capell.json`, package `composer.json`, and provider registration | Reinstall the package, refresh Composer autoload, and clear host caches |
+| Route returns unexpected output | Route cache, middleware, or signed URL setup does not match the package route file | Check the route files listed in `Technical Shape` | Clear route cache and verify middleware before exposing public routes |
+| Public output leaks unexpected state | Render data, cache variation, or authoring boundary has regressed | Check public Blade, cache tags, and public-output safety tests | Move data loading out of Blade and rerun the package public-output tests |
 
-- Install with `composer require capell-app/frontend-authoring` in the host Capell application.
-- In this repository, verify package changes with `vendor/bin/pest`; do not use `php artisan`.
+## Quick Start
 
-## Docs
+1. Install the package: `composer require capell-app/frontend-authoring`.
+2. Run the required setup: no package migrations are declared; clear cached config and routes if the host app uses caches.
+3. Verify the package provider is registered and the related frontend, command, or extension point is active.
 
-- [docs index](docs/README.md)
-- [credits-and-acknowledgements.md](docs/credits-and-acknowledgements.md)
-- [editable-regions.md](docs/editable-regions.md)
-- [in-page-editing.md](docs/in-page-editing.md)
-- [overview.md](docs/overview.md)
+## Next Steps
 
-## Testing
+- [Package docs](docs/README.md)
+- [Overview](docs/overview.md)
+- [Screenshot contract](docs/screenshots.json)
+- [Marketplace assets](docs/assets/marketplace/)
+- [Capell content language plan](../../docs/CONTENT_LANGUAGE_PLAN.md)
+- [Capell documentation design system](../../docs/DESIGN_SYSTEM.md)
+- [Capell and package ERD notes](../../docs/erd/capell-and-package-erds.md)
+- Related packages: [Html Cache](../html-cache/README.md).
+- Focused tests: `vendor/bin/pest packages/frontend-authoring/tests --configuration=phpunit.xml`.
 
-Run package tests from the repository root:
-
-```bash
-vendor/bin/pest packages/frontend-authoring/tests --configuration=phpunit.xml
-```
-
-## Maintenance Notes
-
-- Never render authoring controls, model identifiers, field paths, selectors, signed editor URLs, or package hints into public HTML. Add editing affordances only after an authenticated admin beacon response.
-- Put behaviour changes in `src/Actions/`; UI classes, commands, and controllers should call actions instead of owning domain logic.
-- Use package `Data` classes at boundaries instead of passing anonymous arrays between layers.
+<!-- prettier-ignore-end -->

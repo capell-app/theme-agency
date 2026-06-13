@@ -39,6 +39,7 @@ use Capell\RecordSwitcher\Tests\RecordSwitcherTestCase;
 use Capell\Search\Tests\SearchTestCase;
 use Capell\SeoSuite\Tests\SeoSuiteTestCase;
 use Capell\ShopifyCommerce\Tests\TestCase as ShopifyCommerceTestCase;
+use Capell\SiteMonitor\Tests\SiteMonitorTestCase;
 use Capell\Tags\Tests\TagsTestCase;
 use Capell\Tests\Packages\PackagesTestCase;
 use Capell\Tests\Packages\UninstalledPackagesTestCase;
@@ -168,6 +169,7 @@ extendCapellPackageTests(RecordSwitcherTestCase::class, 'record-switcher', 'reco
 extendCapellPackageTests(SearchTestCase::class, 'search', 'search');
 extendCapellPackageTests(SeoSuiteTestCase::class, 'seo-suite', 'seo-suite');
 extendCapellPackageTests(ShopifyCommerceTestCase::class, 'shopify-commerce', 'shopify-commerce');
+extendCapellPackageTests(SiteMonitorTestCase::class, 'site-monitor', 'site-monitor');
 extendCapellPackageTests(TagsTestCase::class, 'tags', 'tags');
 extendCapellPackageTests(UrlManagerTestCase::class, 'url-manager', 'url-manager');
 extendCapellPackageTests(PackagesTestCase::class, 'theme-agency', 'theme-agency');

@@ -8,7 +8,7 @@ Every package needs both a non-technical overview and a developer deep dive. The
 
 | Reader                         | What they need                                                                                                                                       |
 | ------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Site owner, buyer, or operator | What workflow the package unlocks, which bundle it belongs to, which screens or public routes appear, and what operational risk it reduces.          |
+| Site owner, buyer, or operator | What workflow the package adds, which bundle it belongs to, which screens or public routes appear, and what operational risk it reduces.             |
 | Editor or admin user           | What they can create, review, approve, publish, inspect, recover, or hand off without custom development.                                            |
 | Developer                      | Real package boundaries: Actions, Data objects, providers, routes, models, settings, extension points, tests, and unsafe integration paths to avoid. |
 
@@ -29,25 +29,35 @@ Better: Automation Studio listens for package events such as form submissions an
 
 ## README Shape
 
-Every package README should include these sections, in this order when practical:
+Every package README should include these sections, in this order when
+practical. The current strict audit checks the heading names below.
 
-| Section                             | Purpose                                                                                                   |
-| ----------------------------------- | --------------------------------------------------------------------------------------------------------- |
-| Opening sentence                    | Name the package and the workflow it improves.                                                            |
-| `At A Glance`                       | Composer package, namespace, surfaces, service providers, dependencies.                                   |
-| `Why It Helps Your Capell Workflow` | Concrete business/editor/developer/operator value. This is product copy, but it must be grounded in code. |
-| `What It Adds`                      | User-facing and runtime features the package owns.                                                        |
-| `Boundaries` or `Maintenance Notes` | What the package owns, what it does not own, and unsafe integration paths to avoid.                       |
-| `Runtime Surface` or `Code Map`     | Providers, routes, commands, Actions, Data, models, settings, jobs, views, resources, and tests.          |
-| `Docs`                              | Links to all package docs and important neighboring docs.                                                 |
-| `Testing` or `Verification`         | Smallest useful package test command and any focused commands for risky areas.                            |
-| `Troubleshooting`                   | Symptom table for packages with install, queue, cache, external API, or public output failure modes.      |
+| Section                 | Purpose                                                                                                   |
+| ----------------------- | --------------------------------------------------------------------------------------------------------- |
+| Opening H1              | Title the page with the package or plugin name.                                                           |
+| `What This Plugin Adds` | Practical job, Capell surface, admin/editor outcome, and status such as Available or Pipeline.            |
+| `Why It Matters`        | Separate developer impact from team/editor/operator value.                                                |
+| `Screens And Workflow`  | Planned or existing screenshots, diagrams, admin screens, frontend output, and workflow steps.            |
+| `Technical Shape`       | Providers, config, migrations, models, resources, routes, Livewire, policies, events, jobs, views, cache. |
+| `Data Model`            | Tables, relationships, core records, migration impact, deletion/retention, or no-schema statement.        |
+| `Install Impact`        | Admin navigation, permissions, public routes, database changes, config, queues, schedules, cache paths.   |
+| `Common Pitfalls`       | Practical issues developers and operators should check.                                                   |
+| `Troubleshooting`       | Optional symptom table for packages with routes, commands, jobs, schema, health checks, or external APIs. |
+| `Quick Start`           | Three steps only: install, run setup, open/verify the new surface.                                        |
+| `Next Steps`            | Links to configuration, screenshots, ERD/schema, extension points, troubleshooting, related package docs. |
+
+Use the shared language guides before rewriting package docs:
+
+- [Capell Content Language Plan](CONTENT_LANGUAGE_PLAN.md)
+- [Capell Documentation Design System](DESIGN_SYSTEM.md)
+- [Capell and package ERD notes](erd/capell-and-package-erds.md)
+- [Package Documentation Audience Review](package-documentation-audience-review.md)
 
 ## Workflow Value Rules
 
 Write from the reader's job:
 
-- For owners: explain what capability this unlocks in a Capell site, dashboard, workflow, or package bundle.
+- For owners: explain what capability this adds in a Capell site, dashboard, workflow, or package bundle.
 - For editors: explain what becomes easier to create, approve, reuse, publish, inspect, or recover.
 - For developers: explain what extension point, Action, Data object, or provider surface saves custom code.
 - For operators: explain what gets monitored, cached, audited, migrated, protected, or debugged.
@@ -134,8 +144,9 @@ vendor/bin/pest packages/<package>/tests --configuration=phpunit.xml
 Run repository-level docs checks before finishing a broad documentation pass:
 
 ```bash
-find packages -maxdepth 2 -name README.md -print
-rg -n "$STALE_DOC_PATTERN" packages/*/README.md packages/*/docs docs
+COMPOSER=composer.local.json composer docs:rewrite-readmes:check
+COMPOSER=composer.local.json composer docs:check:strict
+COMPOSER=composer.local.json composer security:surface-report:check
 ```
 
 When a package README documents behavior covered by tests, run the package-local Pest command or the specific test file named in the README.

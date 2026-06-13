@@ -1,99 +1,93 @@
----
-title: 'Dashboard Reports Overview'
-description: 'How the Capell Dashboard Reports package adds reusable admin dashboard health and publishing trend widgets.'
----
+# Dashboard Reports
 
-# Dashboard Reports Overview
+<!-- prettier-ignore-start -->
 
-Dashboard Reports adds reusable admin dashboard widgets for Capell sites that need editorial health and publishing activity surfaced in one place.
+## What This Plugin Adds
 
-Use it when a project needs a package-owned reporting layer, but does not need a bespoke analytics package. The package stays admin-only and reads existing Capell page state instead of creating new content records.
+Dashboard Reports is an **Available**, **No schema impact** Capell package in the **Capell Operations** product group. It ships as `capell-app/dashboard-reports` and extends these surfaces: admin.
 
-## What It Adds
+Dashboard Reports surfaces editorial health and publishing momentum directly on the Capell admin dashboard, so owners and editors see what needs attention the moment they log in. The Content Health widget flags scheduled, expired, stale, and URL-less pages with one-click deep-links into the page list, while the Publishing Trend chart tracks published-vs-scheduled activity across any date window. All counts respect each user's site access, and report visibility is toggleable per dashboard. Built on testable Actions and typed Data objects so teams can extend the reporting layer instead of bolting on a bespoke analytics package.
 
-- Content health reporting for scheduled pages, expired pages, pages without URLs, and stale published pages.
-- Publishing trend reporting across common date windows.
-- Filtered deep-links from content-health issue counts into the Page resource.
-- Dashboard widgets registered into the main Capell admin dashboard.
-- A `ContentHealthDataProvider` implementation that can replace the admin package's null provider when the package is installed.
-- Dashboard settings contribution for report visibility, plus package config for the stale-page threshold.
-- CSV export for the content-health and publishing-trend widget data.
-- Diagnostics checks for package install state, provider binding, dashboard widget registration, dashboard settings contribution, and page-table filter registration.
+After install, admins get package-owned management or reporting surfaces inside Capell.
 
-## Admin Surface
+Status details:
 
-Dashboard Reports registers these widgets through `CapellAdmin::registerDashboardWidget(...)`:
+- Status: Available
+- Tier: premium
+- Bundle: operations
+- Composer package: `capell-app/dashboard-reports`
+- Namespace: `Capell\DashboardReports`
+- Theme key: not applicable
 
-| Widget                       | Purpose                                                |
-| ---------------------------- | ------------------------------------------------------ |
-| `ContentHealthWidget`        | Shows content issues that need editorial attention.    |
-| `PublishingTrendChartWidget` | Shows published and scheduled page activity over time. |
+## Why It Matters
 
-`ContentHealthWidget` is only visible when the resolved content health provider returns at least one issue. Its data is computed and cached by Livewire for 300 seconds, and the package also memoises the provider result for the current request so `canView()` and `data()` share the same build.
+**For developers:** The package gives developers package-owned service providers, Actions, Data objects, Filament classes, and Blade views instead of pushing this behaviour into core or application code.
 
-Content-health issue counts link to the Page resource with the package-owned `dashboard_reports_health` table filter preselected. The filter is registered through the admin `PageTableExtender` contract and covers scheduled pages, expired pages, pages without URLs, and stale published pages.
+**For teams:** At-a-glance content-health and publishing-activity widgets for the Capell admin dashboard - spot scheduled, expired, stale, and URL-less pages without opening a single resource.
 
-The stale-page threshold defaults to 90 days and can be changed with `capell-dashboard-reports.stale_page_threshold_days`. The package clamps the resolved value to 1-3650 days, and the Content Health widget and Page resource drill-down filter share the same resolved threshold.
+## Screens And Workflow
 
-## Frontend Surface
+Screenshot contract: `screenshots.json`.
 
-Dashboard Reports is admin-only. It does not register public frontend routes, public Blade renders, render hooks, or frontend assets in the current implementation.
+- Publishing trend dashboard widget (admin, required).
+- Content health dashboard widget (admin, required).
+- Dashboard report visibility settings (admin, required).
 
-## Screenshot Coverage
+## Technical Shape
 
-The screenshot contract is stored in [screenshots.json](screenshots.json). The committed runtime captures show seeded page state for the publishing trend chart, content health issues, and dashboard widget visibility settings.
+- Service providers: `Capell\DashboardReports\Providers\DashboardReportsServiceProvider`, `Capell\DashboardReports\Providers\AdminServiceProvider`.
+- Config files: `packages/dashboard-reports/config/capell-dashboard-reports.php`.
+- Filament classes: `DashboardReportsPageTableExtender`, `DashboardReportsDashboardSettingsContributor`, `ContentHealthWidget`, `PublishingTrendChartWidget`.
+- Actions: `BuildDefaultContentHealthAction`, `BuildPublishingTrendAction`, `ExportContentHealthCsvAction`, `ExportPublishingTrendCsvAction`.
+- Data objects: `PublishingTrendData`, `PublishingTrendPointData`, `ResolvedDashboardReportsSettingsData`.
+- Command signatures: `capell:dashboard-reports:export`.
+- Console command classes: `ExportDashboardReportCommand`.
+- Health checks: `Capell\DashboardReports\Health\DashboardReportsHealthCheck`.
+- Blade views: `packages/dashboard-reports/resources/views/widgets/content-health.blade.php`.
 
-## Data Sources
+## Data Model
 
-The package reads Capell core `Page` records through `SiteScope::applyForCurrentActor(..., denyWhenMissingActor: true)`, so editors only see counts for sites they can access and non-admin/anonymous execution resolves empty report counts instead of unscoped site data.
+This package has no schema impact. It does not declare package-owned migrations or required tables.
 
-| Report             | Source                                                                      |
-| ------------------ | --------------------------------------------------------------------------- |
-| Scheduled pages    | `Page::pending()`                                                           |
-| Expired pages      | `Page::expired()`                                                           |
-| Pages without URLs | Pages without related page URL records                                      |
-| Stale pages        | Published pages older than the configured stale-day threshold               |
-| Publishing trend   | Published and scheduled page counts bucketed across the selected date range |
+Docs gap: document extension points here if the package delegates persistence to a host package.
 
-Dashboard Reports does not create reporting tables. It computes the current dashboard state from the installed site's page records. The publishing trend Action receives the dashboard's resolved date range from the widget, so chart buckets and headline totals use the same selected window.
+## Install Impact
 
-## CSV Export
+- Admin navigation: adds package-owned Filament classes when registered.
+- Permissions: none declared in `capell.json`.
+- Public routes: none detected in package route files.
+- Database changes: no package migrations declared.
+- Settings: no package settings declared.
+- Queues or schedules: none detected in standard package paths.
+- Cache tags: none declared.
+- Commands: `capell:dashboard-reports:export`.
 
-Export the current widget data from a host Capell app with:
+## Common Pitfalls
 
-```bash
-php artisan capell:dashboard-reports:export content-health --path=storage/app/dashboard-content-health.csv
-php artisan capell:dashboard-reports:export publishing-trend --from=2026-05-01 --to=2026-06-01 --path=storage/app/dashboard-publishing-trend.csv
-```
+- Verify the package is installed before expecting its provider, views, or extension contributions to run.
+- Keep `composer.json`, `composer.local.json`, `capell.json`, docs, screenshots, and tests aligned when the package surface changes.
 
-Omit `--path` to write CSV to stdout. `content-health` accepts `--stale-days`; `publishing-trend` accepts `--from` and `--to`.
+## Troubleshooting
 
-## Diagnostics
+| Symptom | Likely cause | Check | Fix |
+| --- | --- | --- | --- |
+| Package surface is missing after install | Provider or manifest is not loaded | Confirm `capell.json`, package `composer.json`, and provider registration | Reinstall the package, refresh Composer autoload, and clear host caches |
+| Background work does not run | Queue worker or scheduled command is not active | Check package jobs, commands, and host scheduler configuration | Start the queue or scheduler, then run the focused command or package test |
 
-`DashboardReportsHealthCheck` reports real Diagnostics results for:
+## Quick Start
 
-- Package installed state.
-- Content health provider availability.
-- Publishing Trend and Content Health widget registration.
-- Dashboard settings contributor registration.
-- Content-health Page resource filter registration.
+1. Install the package: `composer require capell-app/dashboard-reports`.
+2. Run the required setup: no package migrations are declared; clear cached config and routes if the host app uses caches.
+3. Open the related Capell admin surface and verify Dashboard Reports appears.
 
-## Extension Notes
+## Next Steps
 
-If a project needs different content health rules, bind `Capell\Admin\Contracts\Dashboard\ContentHealthDataProvider` before the Dashboard Reports admin provider boots. The package only replaces the admin null provider; it will not override a real provider already registered by the host app or another package.
+- [Package docs index](README.md)
+- [Screenshot contract](screenshots.json)
+- [Marketplace assets](assets/marketplace/)
+- [Capell content language plan](../../../docs/CONTENT_LANGUAGE_PLAN.md)
+- [Capell documentation design system](../../../docs/DESIGN_SYSTEM.md)
+- [Capell and package ERD notes](../../../docs/erd/capell-and-package-erds.md)
+- Focused tests: `vendor/bin/pest packages/dashboard-reports/tests --configuration=phpunit.xml`.
 
-Put new report calculations in `src/Actions/Dashboard/` and keep Filament widgets thin. Tests should target the Action output first, then widget visibility where needed.
-
-## Install And Verify
-
-Install the package in a host Capell app:
-
-```bash
-composer require capell-app/dashboard-reports
-```
-
-Then verify the package in this repository with:
-
-```bash
-vendor/bin/pest packages/dashboard-reports/tests --configuration=phpunit.xml
-```
+<!-- prettier-ignore-end -->

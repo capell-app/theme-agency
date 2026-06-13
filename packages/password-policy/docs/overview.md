@@ -1,105 +1,101 @@
----
-title: 'Password Policy Overview'
-description: 'How the Capell Password Policy package enforces expiry, forced changes, compromised password checks, and password history.'
----
+# Password Policy
 
-# Password Policy Overview
+<!-- prettier-ignore-start -->
 
-Password Policy adds opt-in password safety rules to Capell Admin. It can force a user to change their password, expire old passwords, enforce complexity rules, reject compromised passwords, and prevent recent password reuse.
+## What This Plugin Adds
 
-Use it for Capell installs that need stronger admin account controls without putting password rules into app-specific Filament pages.
+Password Policy is an **Available**, **Schema-owning** Capell package in the **Capell Operations** product group. It ships as `capell-app/password-policy` and extends these surfaces: admin, console.
 
-## What It Adds
+Enforce admin password expiry, forced resets, reuse history, and breach (HIBP) checks across your Capell panels - configured from one settings screen, no code.
 
-- Settings-backed password policy rules.
-- User columns for password change state and last password change time.
-- Password history storage for recent-password reuse checks.
-- Actions for evaluation, validation, updates, forced changes, and history recording.
-- Admin settings and forced-password-change surfaces.
-- Console commands for stale expiry marking, forced-change marking, history pruning, and diagnostics.
+After install, admins get package-owned management or reporting surfaces inside Capell.
 
-## Policy Rules
+Status details:
 
-| Rule              | Setting                                                                               | Behaviour                                                                                                                                                    |
-| ----------------- | ------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Password expiry   | `password_expiry_enabled`, `password_expiry_days`                                     | Users with an old `password_changed_at` value are treated as expired; missing legacy timestamps are shown separately but do not force a reset by themselves. |
-| Forced change     | `force_change_enabled`                                                                | Users with `must_change_password` set must choose a new password.                                                                                            |
-| Complexity        | `minimum_password_length`, `require_mixed_case`, `require_numbers`, `require_symbols` | New passwords are checked with Laravel's password rule builder for the configured length and character requirements.                                         |
-| Compromised check | `compromised_password_checks_enabled`                                                 | New passwords can use Laravel's `Password::uncompromised()` rule.                                                                                            |
-| Password history  | `password_history_enabled`, `password_history_count`                                  | Recent hashes are checked before a new password is accepted.                                                                                                 |
+- Status: Available
+- Tier: premium
+- Bundle: operations
+- Composer package: `capell-app/password-policy`
+- Namespace: `Capell\PasswordPolicy`
+- Theme key: not applicable
 
-The package checks for required columns and tables before using them, so partially migrated environments fail softly where possible.
+## Why It Matters
 
-When the package installs the `password_changed_at` column, existing users are backfilled to the install time. This avoids turning on expiry and immediately forcing every existing administrator through a password reset. If a legacy user still has a missing timestamp, expiry treats that as unknown rather than expired; explicit `must_change_password` flags still take precedence.
+**For developers:** The package gives developers package-owned service providers, Actions, Data objects, Filament classes, and Blade views instead of pushing this behaviour into core or application code.
 
-## Data And Persistence
+**For teams:** Enforce admin password expiry, forced resets, reuse history, and breach (HIBP) checks across your Capell panels - configured from one settings screen, no code.
 
-Password Policy adds:
+## Screens And Workflow
 
-- columns on the users table for password policy state
-- `password_policy_password_histories` for previous password hashes
-- settings under the `password_policy` group
+Screenshot contract: `screenshots.json`.
 
-The settings class is `Capell\PasswordPolicy\Settings\PasswordPolicySettings`.
+- Password Policy settings page (admin, required).
+- Forced password change form (admin, required).
+- User table password policy columns and filters (admin, required).
 
-The package registers its two normal Laravel migrations through `PasswordPolicyServiceProvider`. The package install flow must also publish the settings migration from `database/settings` so the settings rows exist before the Filament settings page is used.
+## Technical Shape
 
-## Action Boundary
+- Service providers: `Capell\PasswordPolicy\Providers\PasswordPolicyServiceProvider`.
+- Config files: `packages/password-policy/config/capell-password-policy.php`.
+- Migrations: `packages/password-policy/database/migrations/2026_05_10_190863_01_add_password_policy_columns_to_users_table.php`, `packages/password-policy/database/migrations/2026_05_10_190863_02_create_password_policy_password_histories_table.php`.
+- Settings migrations: `packages/password-policy/database/settings/2026_05_10_190864_01_create_password_policy_settings.php`, `packages/password-policy/database/settings/2026_06_04_000001_01_add_password_complexity_settings.php`.
+- Settings classes: `PasswordPolicySettings`.
+- Filament classes: `PasswordPolicyPanelExtender`, `PasswordPolicyUserFormExtender`, `PasswordPolicyUserTableExtender`, `ForcedPasswordChangePage`, `PasswordPolicySettingsPage`, `PasswordPolicySettingsSchema`.
+- Events: `PasswordChanged`, `PasswordExpired`, `UserMarkedForPasswordChange`.
+- Actions: `BuildPasswordSecurityPostureReportAction`, `EvaluatePasswordPolicyAction`, `MarkUserForPasswordChangeAction`, `NotifyPasswordPolicyLifecycleEventAction`, `PrunePasswordHistoryAction`, `RecordPasswordHistoryAction`, `UpdatePasswordAction`, `ValidatePasswordChangeAction`.
+- Data objects: `PasswordChangeData`, `PasswordPolicyStatusData`, `PasswordSecurityPostureReportData`, `ResolvedPasswordPolicySettingsData`.
+- Command signatures: `capell:password-policy:doctor`.
+- Console command classes: `ExpireStalePasswordsCommand`, `PasswordPolicyDoctorCommand`, `PrunePasswordHistoryCommand`, `RequirePasswordChangeCommand`.
+- Health checks: `Capell\PasswordPolicy\Health\PasswordPolicyHealthCheck`.
+- Blade views: `packages/password-policy/resources/views/filament/pages/forced-password-change.blade.php`.
 
-Use the Actions directly when changing password behaviour:
+## Data Model
 
-| Action                            | Purpose                                                                                               |
-| --------------------------------- | ----------------------------------------------------------------------------------------------------- |
-| `EvaluatePasswordPolicyAction`    | Returns whether a user must change password or has an expired password.                               |
-| `ValidatePasswordChangeAction`    | Validates current password, confirmation, complexity, compromised-password checks, and history reuse. |
-| `UpdatePasswordAction`            | Updates the user's password through the package flow.                                                 |
-| `RecordPasswordHistoryAction`     | Stores password history after a successful change.                                                    |
-| `MarkUserForPasswordChangeAction` | Marks a user for the forced-change flow.                                                              |
+- Migration files: `2026_05_10_190863_01_add_password_policy_columns_to_users_table.php`, `2026_05_10_190863_02_create_password_policy_password_histories_table.php`.
+- Migration impact: run host migrations through the package install flow before opening package surfaces.
+- Deletion/retention behaviour: Docs gap unless the package has an explicit pruning command, retention setting, or tested cascade path.
 
-Keep validation and history rules in these Actions rather than duplicating them in Filament pages or controllers.
+## Install Impact
 
-## Console Commands
+- Admin navigation: adds package-owned Filament classes when registered.
+- Permissions: none declared in `capell.json`.
+- Public routes: none detected in package route files.
+- Database changes: package migrations are declared.
+- Settings: `Capell\PasswordPolicy\Settings\PasswordPolicySettings`.
+- Queues or schedules: none detected in standard package paths.
+- Cache tags: none declared.
+- Commands: `capell:password-policy:doctor`.
 
-Use the console commands for scheduled or operator-driven maintenance:
+## Common Pitfalls
 
-| Command                                 | Purpose                                                                                              |
-| --------------------------------------- | ---------------------------------------------------------------------------------------------------- |
-| `capell:password-policy:expire-stale`   | Marks users with passwords older than the configured or supplied `--days` value for password change. |
-| `capell:password-policy:require-change` | Marks one user with `--user-id` or every user with `--all`; supports `--dry-run`.                    |
-| `capell:password-policy:prune-history`  | Prunes old password history rows, optionally scoped by `--user-id` or `--keep`.                      |
-| `capell:password-policy:doctor`         | Runs the package health diagnostics, with optional `--json` output.                                  |
+- Run migrations before opening package resources or public routes.
+- Configure package settings before testing production-like workflows.
+- Run package commands from the host app; in this repository use `vendor/bin/pest` for package tests.
+- Keep `composer.json`, `composer.local.json`, `capell.json`, docs, screenshots, and tests aligned when the package surface changes.
 
-## Lifecycle Events
+## Troubleshooting
 
-Password Policy notifies Capell Core subscribers when password state changes so
-Login Audit, 2FA, or other security packages can react without coupling to
-Filament pages.
+| Symptom | Likely cause | Check | Fix |
+| --- | --- | --- | --- |
+| Package surface is missing after install | Provider or manifest is not loaded | Confirm `capell.json`, package `composer.json`, and provider registration | Reinstall the package, refresh Composer autoload, and clear host caches |
+| Admin screen or command fails on missing table | Package migrations have not run | Check the tables listed in `Data Model` | Run host migrations and rerun the focused package test |
+| Background work does not run | Queue worker or scheduled command is not active | Check package jobs, commands, and host scheduler configuration | Start the queue or scheduler, then run the focused command or package test |
 
-| Event name                               | Context class                                              | Emitted when                                                               |
-| ---------------------------------------- | ---------------------------------------------------------- | -------------------------------------------------------------------------- |
-| `password-policy.password-changed`       | `Capell\PasswordPolicy\Events\PasswordChanged`             | A password is changed through the forced-change action or admin user form. |
-| `password-policy.password-expired`       | `Capell\PasswordPolicy\Events\PasswordExpired`             | Policy evaluation detects an expired password.                             |
-| `password-policy.user-marked-for-change` | `Capell\PasswordPolicy\Events\UserMarkedForPasswordChange` | A user is marked for forced password change.                               |
+## Quick Start
 
-Subscribe through `CapellCore::subscriberManager()` with an implementation of
-`Capell\Core\Contracts\EventSubscriber`.
+1. Install the package: `composer require capell-app/password-policy`.
+2. Run the required setup: `php artisan migrate`.
+3. Open the related Capell admin surface and verify Password Policy appears.
 
-## Install And Verify
+## Next Steps
 
-Install the package in a host Capell app:
+- [Package docs index](README.md)
+- [Screenshot contract](screenshots.json)
+- [Marketplace assets](assets/marketplace/)
+- [Capell content language plan](../../../docs/CONTENT_LANGUAGE_PLAN.md)
+- [Capell documentation design system](../../../docs/DESIGN_SYSTEM.md)
+- [Capell and package ERD notes](../../../docs/erd/capell-and-package-erds.md)
+- Related packages: [Access Gate](../../access-gate/README.md), [Diagnostics](../../diagnostics/README.md), [Login Audit](../../login-audit/README.md), [Privacy Center](../../privacy-center/README.md).
+- Focused tests: `vendor/bin/pest packages/password-policy/tests --configuration=phpunit.xml`.
 
-```bash
-composer require capell-app/password-policy
-```
-
-Run the host app's package install and migration flow, then verify package changes in this repository with:
-
-```bash
-vendor/bin/pest packages/password-policy/tests --configuration=phpunit.xml
-```
-
-## Screenshot Coverage
-
-The marketplace manifest lists the extension card plus Capell screenshot runner
-captures for the settings page, forced-password-change form, and Users-table
-policy-column surface in light and dark mode.
+<!-- prettier-ignore-end -->

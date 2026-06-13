@@ -1,64 +1,105 @@
-# Frontend Optimizer Overview
+# Frontend Optimizer
 
-Frontend Optimizer records render profiles for public Capell pages and renders profile-aware CSS and JavaScript assets through the `@frontendOptimizerAssets(...)` Blade directive.
+<!-- prettier-ignore-start -->
 
-Use it when a site needs deterministic asset delivery per layout, widget set, site, locale, or theme context without hard-coding frontend bundles into theme views.
+## What This Plugin Adds
 
-## What It Adds
+Frontend Optimizer is an **Available**, **Schema-owning** Capell package in the **Capell Foundation** product group. It ships as `capell-app/frontend-optimizer` and extends these surfaces: admin, console, frontend.
 
-- `@frontendOptimizerAssets(...)` for rendering the resolved asset profile.
-- Critical CSS generation through `CriticalCssGenerator`, backed by Playwright by default.
-- Extension settings for viewports, fold depth, generation behavior, and inline-size limits.
-- A page type opt-out for pages that should not run above-the-fold CSS generation.
-- Render profile actions for resolving, preparing, persisting, and storing profile manifests.
-- `frontend_render_profiles` and `frontend_optimization_runs` tables.
+Frontend Optimizer speeds up your public Capell site by inlining the exact above-the-fold CSS each layout needs and deferring everything else, so visitors see styled content sooner and your Core Web Vitals improve. Unlike source-scanning tools, it generates critical CSS from your pages as a real browser renders them - Layout Builder content, theme markup, render hooks, and responsive styles all included - across mobile and desktop viewports. Generation runs on your queue, never in the public response, and falls back safely to standard stylesheet delivery until critical CSS exists. Per-layout render profiles mean equivalent pages reuse one optimized result, and page types you don't want to optimize can opt out with a single toggle.
+
+After install, admins get package-owned management surfaces and public users may see package-owned frontend output or routes.
+
+Status details:
+
+- Status: Available
+- Tier: premium
+- Bundle: foundation
+- Composer package: `capell-app/frontend-optimizer`
+- Namespace: `Capell\FrontendOptimizer`
+- Theme key: not applicable
+
+## Why It Matters
+
+**For developers:** The package gives developers package-owned service providers, Actions, Data objects, models, and Filament classes instead of pushing this behaviour into core or application code.
+
+**For teams:** Faster first paint for public Capell pages: automatic above-the-fold critical CSS extracted from your real rendered pages, plus smart deferring of non-critical CSS and JavaScript.
+
+## Screens And Workflow
+
+Screenshot contract: `screenshots.json`.
+
+- Frontend Optimizer profile asset output (frontend, required).
+- Frontend Optimizer critical CSS output (frontend, required).
+
+## Technical Shape
+
+- Service providers: `Capell\FrontendOptimizer\Providers\FrontendOptimizerServiceProvider`.
+- Config files: `packages/frontend-optimizer/config/capell-frontend-optimizer.php`.
+- Migrations: `packages/frontend-optimizer/database/migrations/2026_05_10_190851_01_create_frontend_optimizer_tables.php`.
+- Settings migrations: `packages/frontend-optimizer/database/settings/2026_05_24_000001_add_frontend_optimizer_settings.php`.
+- Settings classes: `FrontendOptimizerSettings`.
+- Models: `FrontendOptimizationRun`, `FrontendRenderProfile`.
+- Filament classes: `FrontendOptimizerPageTypeConfigurator`, `FrontendOptimizerSettingsSchema`.
+- Listeners: `CaptureCriticalCssPageTypeOptOut`.
+- Actions: `BuildOptimizedImageMarkupAction`, `GenerateCriticalCssAction`, `InvalidateGeneratedCriticalCssCacheAction`, `PersistRenderProfileAction`, `PrepareRenderProfileAction`, `PruneRenderProfilesAction`, `RenderProfileAssetsAction`, `ResolveOptimizationScopeAction`, `ResolveRenderProfileAction`, `StoreRenderProfileManifestAction`.
+- Data objects: `FrontendAssetDefinitionData`, `FrontendResourceHintData`, `PruneRenderProfilesResultData`, `RenderProfileData`.
+- Jobs: `GenerateCriticalCssJob`.
+- Command signatures: `capell:frontend-optimizer:prune-profiles`.
+- Console command classes: `PruneRenderProfilesCommand`.
+- Health checks: `Capell\FrontendOptimizer\Health\FrontendOptimizerHealthCheck`.
+- Cache tags: `frontend-optimizer`.
+
+## Data Model
+
+- Models: `FrontendOptimizationRun`, `FrontendRenderProfile`.
+- Migration files: `2026_05_10_190851_01_create_frontend_optimizer_tables.php`.
+- Migration impact: run host migrations through the package install flow before opening package surfaces.
+- Deletion/retention behaviour: Docs gap unless the package has an explicit pruning command, retention setting, or tested cascade path.
 
 ## Install Impact
 
-- Requires `capell-app/core` and `capell-app/frontend`.
-- Adds one migration file that creates render profile and optimization run storage.
-- Registers extension settings and a page type configurator for critical CSS controls.
-- Frontend output is visible only where a theme or frontend view calls the Blade directive.
+- Admin navigation: adds package-owned Filament classes when registered.
+- Permissions: none declared in `capell.json`.
+- Public routes: none detected in package route files.
+- Database changes: package migrations are declared.
+- Settings: `Capell\FrontendOptimizer\Settings\FrontendOptimizerSettings`.
+- Queues or schedules: review package jobs or schedules before install.
+- Cache tags: `frontend-optimizer`.
+- Commands: `capell:frontend-optimizer:prune-profiles`.
 
-## Admin Surfaces
+## Common Pitfalls
 
-- Extension settings are registered through `FrontendOptimizerSettings` and `FrontendOptimizerSettingsSchema`.
-- Page type critical CSS opt-out is registered through `FrontendOptimizerPageTypeConfigurator`.
+- Run migrations before opening package resources or public routes.
+- Configure package settings before testing production-like workflows.
+- Keep public Blade and cached HTML free of authoring markers, model IDs, permissions, signed editor URLs, and lazy database queries.
+- Run package commands from the host app; in this repository use `vendor/bin/pest` for package tests.
+- Keep `composer.json`, `composer.local.json`, `capell.json`, docs, screenshots, and tests aligned when the package surface changes.
 
-## Frontend Surfaces
+## Troubleshooting
 
-| Surface                   | Use case                                                                               | Screenshot                               |
-| ------------------------- | -------------------------------------------------------------------------------------- | ---------------------------------------- |
-| Blade directive output    | Verify that the active render profile emits the expected asset tags for a public page. | `frontend-optimizer-profile-assets`      |
-| Critical CSS run artifact | Verify generated critical CSS and manifest metadata for a seeded page profile.         | `frontend-optimizer-critical-css-output` |
+| Symptom | Likely cause | Check | Fix |
+| --- | --- | --- | --- |
+| Package surface is missing after install | Provider or manifest is not loaded | Confirm `capell.json`, package `composer.json`, and provider registration | Reinstall the package, refresh Composer autoload, and clear host caches |
+| Admin screen or command fails on missing table | Package migrations have not run | Check the tables listed in `Data Model` | Run host migrations and rerun the focused package test |
+| Background work does not run | Queue worker or scheduled command is not active | Check package jobs, commands, and host scheduler configuration | Start the queue or scheduler, then run the focused command or package test |
+| Public output leaks unexpected state | Render data, cache variation, or authoring boundary has regressed | Check public Blade, cache tags, and public-output safety tests | Move data loading out of Blade and rerun the package public-output tests |
 
-## Demo Setup
+## Quick Start
 
-Install the core baseline plus `capell-app/frontend-optimizer`, run migrations through the host app, seed or render at least one public page, then capture the public page HTML around the `@frontendOptimizerAssets(...)` output. A useful screenshot requires a theme fixture that actually calls the directive.
+1. Install the package: `composer require capell-app/frontend-optimizer`.
+2. Run the required setup: `php artisan migrate`.
+3. Open the related Capell admin surface and verify Frontend Optimizer appears.
 
-## Screenshot Coverage
+## Next Steps
 
-The package needs screenshot coverage for asset output, not for admin navigation. Captures should include the public page and enough response/source inspection to prove the expected profile assets were emitted.
+- [Package docs index](README.md)
+- [Screenshot contract](screenshots.json)
+- [Marketplace assets](assets/marketplace/)
+- [Capell content language plan](../../../docs/CONTENT_LANGUAGE_PLAN.md)
+- [Capell documentation design system](../../../docs/DESIGN_SYSTEM.md)
+- [Capell and package ERD notes](../../../docs/erd/capell-and-package-erds.md)
+- Related packages: [Media Library](../../media-library/README.md).
+- Focused tests: `vendor/bin/pest packages/frontend-optimizer/tests --configuration=phpunit.xml`.
 
-The screenshot runner contract is defined in [screenshots.json](screenshots.json). The two required captures and their dark-mode variants are committed under `docs/screenshots/`, but they are not promoted in `capell.json` marketplace media until they show optimizer-specific profile asset and critical CSS output.
-
-## Known Risks
-
-- Empty screenshots are likely unless the demo theme calls the directive.
-- Playwright-backed critical CSS generation depends on the host runtime and browser availability.
-- Asset profile keys vary by render context; demo data should state the site, locale, layout, and theme used for capture.
-- Critical CSS generation should use a representative public URL for the profile; using an unusual page for a shared layout can produce a less useful above-the-fold subset.
-- Critical CSS generation completion invalidates through the frontend cache registry without importing HTML Cache internals. The invalidation is intentionally broad today because render profiles do not record exact cached URL coverage.
-
-## Related Guides
-
-- [Critical CSS](critical-css.md)
-- [Assets And Render Profiles](assets-and-render-profiles.md)
-
-## Verification
-
-Run package tests from the repository root:
-
-```bash
-vendor/bin/pest packages/frontend-optimizer/tests --configuration=phpunit.xml
-```
+<!-- prettier-ignore-end -->

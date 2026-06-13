@@ -1,216 +1,120 @@
 # Foundation Theme
 
-Capell default theme - ships the standard Tailwind asset pipeline, Blade directives, URL generator, and SVG media component.
+<!-- prettier-ignore-start -->
 
-## At A Glance
+## What This Plugin Adds
 
-- Package: `capell-app/foundation-theme`
-- Namespace: `Capell\FoundationTheme\`
-- Surfaces: admin, frontend
-- Service provider: `packages/foundation-theme/src/Providers/FoundationThemeServiceProvider.php`
-- Capell dependencies: `capell-app/frontend`, `capell-app/layout-builder`
-- Third-party dependencies: `lorisleiva/laravel-actions`, `spatie/laravel-data`, `spatie/laravel-package-tools`
+Foundation Theme is an **Available**, **No schema impact** Capell theme in the **Capell Foundation** product group. It ships as `capell-app/foundation-theme` and extends these surfaces: admin, frontend.
 
-## Why It Helps Your Capell Workflow
+Capell's foundation theme - base Blade layouts, runtime design tokens, the Tailwind asset pipeline, Blade directives, media/SVG handling, and the override contracts that all vertical Capell themes extend.
 
-- Provides the default frontend theme base, asset pipeline, Blade directives, URL generation, and media rendering conventions for Capell sites.
-- Helps owners launch a coherent frontend faster while keeping theme-specific presentation out of database content.
-- Gives developers the baseline renderer patterns used by premium theme packages and package frontend components.
+After install, admins can select the theme through the core theme management surface. Editors keep using normal Capell content workflows while the package controls public presentation.
 
-## Best Used With
+Status details:
 
-- [Layout Builder](../layout-builder/README.md)
-- [Theme Agency](../theme-agency/README.md)
-- [Theme Corporate](../theme-corporate/README.md)
-
-## What It Adds
-
-- Capell default theme - ships the standard Tailwind asset pipeline, Blade directives, URL generator, and SVG media component.
-- Theme Studio registration, frontend Blade chrome, Layout Builder rendering views, widget components, and runtime asset registration.
-- Livewire helpers for page listings and page-asset selection where the frontend runtime needs them.
-- Package setup and Tailwind asset generation commands.
-- A demo seeding command for route-backed Foundation page captures.
-- A `header` Layout Builder area so editors can place normal layout widgets inside the Foundation header chrome.
-- Seven `kitchen-sink-*` reference widgets for the Demo Kit kitchen sink page: rich text, structured text, data display, forms, interactions, embeds, and utility states.
-
-The kitchen sink widgets are CMS authoring/reference fixtures for inspecting semantic HTML, page-scoped assets, and accessibility contracts. They should not be used as production landing page templates.
+- Status: Available
+- Tier: free
+- Bundle: foundation
+- Composer package: `capell-app/foundation-theme`
+- Namespace: `Capell\FoundationTheme`
+- Theme key: `default`
 
 ## Why It Matters
 
-**For developers:** Provides the baseline Laravel view and asset pipeline that child themes and frontend packages can target.
+**For developers:** The package gives developers package-owned service providers, Actions, Data objects, Filament classes, and Blade views instead of pushing this behaviour into core or application code.
 
-**For teams:** Gives each Capell installation a standard frontend foundation before a custom or theme renderer is added.
-
-## Built With
-
-This package makes its Composer dependencies visible because they are part of the value proposition, not just plumbing. When an upstream package has a public repository, its linked preview card points readers back to the maintainers so their work gets proper credit.
-
-**Capell packages used here**
-
-- [Capell Frontend](https://github.com/capell-app/frontend)
-
-**Open-source packages used here**
-
-- [Spatie Laravel Package Tools](https://github.com/spatie/laravel-package-tools) - Laravel package bootstrapping for config, migrations, commands, translations, and service provider setup.
-
-**Linked package previews**
-
-[![Spatie Laravel Package Tools GitHub preview](https://opengraph.githubassets.com/capell-readme/spatie/laravel-package-tools)](https://github.com/spatie/laravel-package-tools)
+**For teams:** The base theme every Capell site and child theme builds on: shared Blade layouts, a runtime design-token system (colours, spacing, radius), the Tailwind asset pipeline, an SVG sanitiser, and the section/area contracts that vertical themes override.
 
 ## Screens And Workflow
 
-Screenshot capture targets are defined in [docs/screenshots.json](docs/screenshots.json) during package deployment.
+Screenshot contract: `docs/screenshots.json`.
 
-- 12 deployment capture targets cover the Foundation settings screen, Tailwind asset output review, frontend render checks, the header Layout Builder area, and marketplace layout captures.
-- 15 marketplace media entries ship in `capell.json`: one extension card image
-  and 14 committed runner PNG captures.
-- The generated PNG screenshots are committed under `docs/screenshots` for
-  settings, frontend, Tailwind output review, and route-backed layout workflows.
+- Default theme settings screen (admin, required).
+- Generated Tailwind asset output review (developer, required).
+- Frontend page using the default theme (frontend, required).
+- Foundation header Layout Builder area (frontend, required).
+- Homepage layout (frontend, required).
+- Standard content page (frontend, required).
+- Blog article layout (frontend, required).
+- Listing page layout (frontend, required).
+- Contact form layout (frontend, required).
+- Search results layout (frontend, required).
+- Events listing layout (frontend, required).
+- Access-gated page layout (frontend, required).
 
 ## Technical Shape
 
-- FoundationThemeServiceProvider registers theme services and settings.
-- Config file: capell-foundation-theme.php.
-- Settings migration creates default theme settings.
-- Registers the `capell` Blade namespace and anonymous `capell::...` components.
-- Registers core layout builder frontend rendering views and widget components.
-- Registers the `header` Layout Builder area and renders it from `capell::header.index`.
-- Page-listing widgets can opt into request-aware pagination with widget `pagination` and `limit` metadata; latest pages and selected pages use separate query keys.
-- Runtime theme data layers parent defaults, child defaults, and database edits in that order.
-- GenerateTailwindAssetsCommand writes one frontend Tailwind directive file; runtime theme colours are emitted as CSS variables by the theme head tokens.
-- core layout builder JavaScript is registered as a conditional vendor build asset and only loads when the resolved frontend layout contains widgets.
-- BladeDirectives and CapellUrlGenerator support rendering.
-- The beacon client is generic. It must not ship authoring controls or authoring metadata in theme HTML; `capell-app/frontend-authoring` owns the admin-only response that decorates the page.
-
-## Code Map
-
-| Area      | Path                                      | Purpose                                                           |
-| --------- | ----------------------------------------- | ----------------------------------------------------------------- |
-| Actions   | `packages/foundation-theme/src/Actions`   | Domain operations. Test these directly where possible.            |
-| Enums     | `packages/foundation-theme/src/Enums`     | Persisted states and option values.                               |
-| Filament  | `packages/foundation-theme/src/Filament`  | Settings schema surfaced through the main provider.               |
-| Livewire  | `packages/foundation-theme/src/Livewire`  | Page listing and page-asset helper components.                    |
-| Providers | `packages/foundation-theme/src/Providers` | Registration, extension hooks, routes, migrations, and resources. |
-| Resources | `packages/foundation-theme/resources`     | Views, translations, assets, and package resources.               |
-| Config    | `packages/foundation-theme/config`        | Package configuration and publishable config.                     |
-| Database  | `packages/foundation-theme/database`      | Migrations, seeders, and settings migrations.                     |
-| Tests     | `packages/foundation-theme/tests`         | Package-level Pest coverage.                                      |
-
-## Admin Surface
-
-- Settings schema: `FoundationThemeSettingsSchema`.
-- Settings data and migrations: `FoundationThemeSettings`, `FoundationThemeSettingsMigrationProvider`.
-- Theme chrome choices: Foundation header and footer registrations.
-
-## Runtime Surface
-
-- Frontend Blade namespaces and components under `capell::...` and `capell-foundation-theme::...`.
-- Theme Studio definition and Blade renderer for `themeKey: default`.
-- Conditional frontend asset registration for CSS, runtime JavaScript, Tailwind imports, and Tailwind sources.
-- Livewire helpers: `AbstractAssets`, `AbstractWidget`, `PageAssets`, `Pages`.
+- Service providers: `Capell\FoundationTheme\Providers\FoundationThemeServiceProvider`.
+- Config files: `packages/foundation-theme/config/capell-foundation-theme.php`.
+- Settings migrations: `packages/foundation-theme/database/settings/2026_05_10_190850_01_create_foundation_theme_settings.php`, `packages/foundation-theme/database/settings/2026_05_23_160819_add_foundation_theme_design_tokens.php`, `packages/foundation-theme/database/settings/2026_05_23_161002_refresh_foundation_theme_design_token_defaults.php`, `packages/foundation-theme/database/settings/2026_05_23_170001_add_foundation_theme_composition_tokens.php`, `packages/foundation-theme/database/settings/2026_05_23_171201_quiet_foundation_theme_composition_palette.php`, `packages/foundation-theme/database/settings/2026_05_23_180101_add_foundation_theme_image_tokens.php`, `packages/foundation-theme/database/settings/2026_06_07_000001_add_foundation_theme_dark_design_tokens.php`, `packages/foundation-theme/database/settings/2026_06_07_000002_add_foundation_theme_typography_tokens.php`.
+- Settings classes: `FoundationThemeSettings`, `FoundationThemeSettingsMigrationProvider`.
+- Filament classes: `FoundationThemeSettingsSchema`.
+- Livewire components: `AbstractAssets`, `PageAssets`, `AbstractWidget`, `Pages`.
+- Listeners: `RunTailwindAssetsOnPackageChange`.
+- Actions: `BuildAssetBannerItemsAction`, `BuildBannerImageRenderDataAction`, `BuildHeroRailItemsRenderDataAction`, `BuildLayoutNeighborLinksDataAction`, `BuildPageContentRenderDataAction`, `BuildWidgetAssetRenderDataAction`, `InstallFoundationThemeDemoAction`, `InstallFoundationThemeLayoutDefaultsAction`, `MarkPrimaryHeadingRenderedAction`, `ResolveFoundationThemeTokensAction`, `ResolveLoadedLayoutContainerBackgroundImageAction`, `ResolveLoadedWidgetBackgroundImageAction`, `and 3 more`.
+- Data objects: `AssetBannerItemData`, `BannerImageRenderData`, `FoundationThemeTokensData`, `LayoutNeighborLinksData`, `PageContentRenderData`, `ThemeDemoInstallData`, `WidgetAssetRenderData`.
+- Command signatures: `capell:foundation-theme-demo`, `capell:foundation-theme-setup`.
+- Console command classes: `DemoCommand`, `GenerateTailwindAssetsCommand`, `SetupCommand`.
+- Health checks: `Capell\FoundationTheme\Health\FoundationThemeHealthCheck`.
+- Blade views: `packages/foundation-theme/resources/views/app.blade.php`, `packages/foundation-theme/resources/views/block/wrapper.blade.php`, `packages/foundation-theme/resources/views/components/actions/index.blade.php`, `packages/foundation-theme/resources/views/components/app/body.blade.php`, `packages/foundation-theme/resources/views/components/app/head/custom.blade.php`, `packages/foundation-theme/resources/views/components/app/head/tokens.blade.php`, `packages/foundation-theme/resources/views/components/badge.blade.php`, `packages/foundation-theme/resources/views/components/block/wrapper.blade.php`, `packages/foundation-theme/resources/views/components/button/index.blade.php`, `packages/foundation-theme/resources/views/components/content.blade.php`, `packages/foundation-theme/resources/views/components/demo/contact-page.blade.php`, `packages/foundation-theme/resources/views/components/dropdown/index.blade.php`, `and 78 more`.
+- Cache tags: `foundation-theme`.
 
 ## Child Theme Override Contract
 
-Child themes should extend the Foundation package in `capell.json` and use runtime `extends: 'default'` in `ThemeDefinitionData`. Foundation owns the stable base contract below; child themes may override these presentation surfaces without changing persisted content or leaking authoring metadata.
+Foundation Theme owns the stable child theme override surface for Capell themes. Child themes should declare `extends: 'default'` and override documented sections, views, tokens, and chrome areas instead of replacing the whole public rendering path.
 
-**Section keys:** `navigation`, `hero`, `features`, `proof`, `content-listing`, `cta`, `footer`.
+Stable contract points:
 
-**Shared component views:** `capell::theme.page`, `capell::theme.sections.*`, `capell::header.index`, `capell::footer`, `capell::layout.index`, `capell::layout.main`, `capell::layout.area`, `capell::content`, `capell::button.index`, `capell::media.background`, `capell::media.svg`.
+- Theme Studio sections: `navigation`, `hero`, `features`, `proof`, `content-listing`, `cta`, `footer`.
+- Shared views: `capell::theme.page`, `capell::layout.area`, `capell::media.svg`.
+- Runtime tokens: `--foundation-page-bg`, `--foundation-section-spacing`, `--foundation-widget-gap`.
+- Layout Builder chrome areas: `header`.
+- Public-output rule: child themes must not expose authoring metadata, editor controls, model IDs, field paths, permissions, or signed editor URLs.
 
-**Runtime CSS tokens:** `--color-brand`, `--color-link`, `--color-link-active`, `--color-divider`, `--foundation-page-bg`, `--foundation-surface-bg`, `--foundation-muted-bg`, `--foundation-header-bg`, `--foundation-border`, `--foundation-border-strong`, `--foundation-card-bg`, `--foundation-primary-action`, `--foundation-band-bg`, `--foundation-band-alt-bg`, `--foundation-band-accent-bg`, `--foundation-band-border`, `--foundation-image-border`, `--foundation-image-radius`, `--foundation-section-spacing`, `--foundation-widget-gap`, `--foundation-radius`.
+## Data Model
 
-**Theme chrome areas:** `header` is the supported Layout Builder area for editable chrome. Future chrome areas should follow the same registry + explicit render pattern.
-
-Do not override Foundation internals to add editor controls, query data in public Blade, or move presentation HTML into database content. Add theme-specific markup in child package section views, and keep shared runtime behavior in Foundation.
-
-## Commands
-
-- `capell:foundation-theme-setup {--force : Rebuild Foundation-managed layout defaults}` (packages/foundation-theme/src/Console/Commands/SetupCommand.php)
-- `capell:foundation-theme-demo {--site=* : Site name(s) to seed} {--language=* : Language code(s) to seed} {--base-url= : Base URL used for seeded demo links} {--force : Rebuild existing Foundation demo page layouts}` (packages/foundation-theme/src/Console/Commands/DemoCommand.php)
-
-## Data And Persistence
-
-- This package does not create content tables.
-- It owns settings through create_foundation_theme_settings.php.
-- Theme output depends on core site, page, layout, and media data.
-
-- Config: `packages/foundation-theme/config/capell-foundation-theme.php`.
-
-## Extension Points
-
-- Listeners: `RunTailwindAssetsOnPackageChange`.
-- Register Capell extension points, routes, migrations, settings, render hooks, and resources from service providers.
-
-## Layout Builder Areas
-
-Foundation Theme exposes the first non-main Layout Builder area: `header`. Editors still work with ordinary containers and widgets in the Layout Builder, but containers assigned to the header area render in the site header instead of the main page-content loop.
-
-The service provider registers the area with `Capell\LayoutBuilder\Support\LayoutAreas\LayoutAreaRegistry`:
-
-```php
-use Capell\LayoutBuilder\Support\LayoutAreas\LayoutAreaRegistry;
-
-$this->app->afterResolving(
-    LayoutAreaRegistry::class,
-    function (LayoutAreaRegistry $registry): void {
-        $registry->register('header', __('capell-layout-builder::generic.header_area'));
-    },
-);
-```
-
-The header view renders the area explicitly:
-
-```blade
-<x-capell::layout.area area="header" />
-```
-
-Use this pattern for future theme chrome areas such as `footer`, `announcement`, or client-specific header slots. Do not hide containers in the main loop to fake theme placement; set `meta.area`, register the area, and render it from the theme view that owns the chrome.
+This theme has no schema impact. It relies on core Capell site, page, locale, and theme records instead of declaring package-owned tables.
 
 ## Install Impact
 
-- Adds default theme settings.
-- Adds Foundation-owned core layout builder defaults when the package setup command runs.
-- Adds the `header` Layout Builder area when Layout Builder is installed.
-- Adds Tailwind asset generation command.
-- Adds config keys for asset build tool, npm dependencies, Tailwind sources, and media URL behaviour.
-- No public routes are registered by this package.
-- Does not add in-page authoring markup to public Blade or cached HTML.
-
-## Install And Setup
-
-- Install with `composer require capell-app/foundation-theme` in the host Capell application.
-- In this repository, verify package changes with `vendor/bin/pest`; do not use `php artisan`.
-
-## Admin And Access
-
-- None proven in this package directory.
+- Admin navigation: adds package-owned Filament classes when registered.
+- Permissions: none declared in `capell.json`.
+- Public routes: none detected in package route files.
+- Database changes: no package migrations declared.
+- Settings: settings classes or settings migrations exist; verify the install flow registers them.
+- Queues or schedules: none detected in standard package paths.
+- Cache tags: `foundation-theme`.
+- Commands: `capell:foundation-theme-demo`, `capell:foundation-theme-setup`.
 
 ## Common Pitfalls
 
-- Regenerate assets after changing source paths, Tailwind plugins, or package CSS imports. Theme colour edits are runtime CSS variables and do not require a rebuild.
-- Match asset_build_tool to the host app.
-- Set media URL config before production media rendering.
-- Treat Foundation Theme as the shared runtime, not the place for client-specific branding.
-- Add branded page wrappers and section views in child theme packages such as `theme-agency`, `theme-corporate`, or `theme-saas`.
-- Keep authoring behaviour in `capell-app/frontend-authoring`; themes should expose stable presentation selectors, not hidden editor metadata.
-- Keep child themes on shared `capell::...` views unless they need their own section markup.
+- Keep public Blade and cached HTML free of authoring markers, model IDs, permissions, signed editor URLs, and lazy database queries.
+- Keep `composer.json`, `composer.local.json`, `capell.json`, docs, screenshots, and tests aligned when the package surface changes.
 
-## Docs
+## Troubleshooting
 
-- [docs index](docs/README.md)
-- [credits-and-acknowledgements.md](docs/credits-and-acknowledgements.md)
-- [overview.md](docs/overview.md)
+| Symptom | Likely cause | Check | Fix |
+| --- | --- | --- | --- |
+| Package surface is missing after install | Provider or manifest is not loaded | Confirm `capell.json`, package `composer.json`, and provider registration | Reinstall the package, refresh Composer autoload, and clear host caches |
+| Background work does not run | Queue worker or scheduled command is not active | Check package jobs, commands, and host scheduler configuration | Start the queue or scheduler, then run the focused command or package test |
+| Public output leaks unexpected state | Render data, cache variation, or authoring boundary has regressed | Check public Blade, cache tags, and public-output safety tests | Move data loading out of Blade and rerun the package public-output tests |
 
-## Testing
+## Quick Start
 
-Run package tests from the repository root:
+1. Install the package: `composer require capell-app/foundation-theme`.
+2. Run the required setup: `php artisan capell:foundation-theme-setup`.
+3. Open the related Capell admin surface and verify Foundation Theme appears.
 
-```bash
-vendor/bin/pest packages/foundation-theme/tests --configuration=phpunit.xml
-```
+## Next Steps
 
-## Maintenance Notes
+- [Package docs](docs/README.md)
+- [Overview](docs/overview.md)
+- [Screenshot contract](docs/screenshots.json)
+- [Marketplace assets](docs/assets/marketplace/)
+- [Capell content language plan](../../docs/CONTENT_LANGUAGE_PLAN.md)
+- [Capell documentation design system](../../docs/DESIGN_SYSTEM.md)
+- [Capell and package ERD notes](../../docs/erd/capell-and-package-erds.md)
+- Related packages: [Layout Builder](../layout-builder/README.md).
+- Focused tests: `vendor/bin/pest packages/foundation-theme/tests --configuration=phpunit.xml`.
 
-- Theme output is public output. Keep admin-only metadata and editor hooks out of rendered markup.
-- Put behaviour changes in `src/Actions/`; UI classes, commands, and controllers should call actions instead of owning domain logic.
-- Use backed enums for persisted values and enum labels for Filament options.
+<!-- prettier-ignore-end -->

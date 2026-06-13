@@ -1,68 +1,100 @@
 # Social Feeds
 
-Social Feeds renders cached social or RSS content through Capell blocks and widgets while keeping public HTML free of credentials, admin URLs, editor markers, and connection internals.
+<!-- prettier-ignore-start -->
 
-## At A Glance
+## What This Plugin Adds
 
-| Field            | Value                                                                        |
-| ---------------- | ---------------------------------------------------------------------------- |
-| Composer package | `capell-app/social-feeds`                                                    |
-| Namespace        | `Capell\SocialFeeds`                                                         |
-| Product group    | Capell Growth                                                                |
-| Surfaces         | Admin, frontend, console where host sync jobs call Actions                   |
-| Provider         | `Capell\SocialFeeds\Providers\SocialFeedsServiceProvider`                    |
-| Key contracts    | `SocialFeedProvider`, `SocialFeedProviderProvider`, `SocialFeedHostResolver` |
-| Models           | `SocialFeedConnection`, `SocialFeedItem`, `SocialFeedOAuthState`             |
-| Public renderer  | `SocialFeedBlockRenderer`                                                    |
+Social Feeds is an **Available**, **Schema-owning** Capell package in the **Capell Growth** product group. It ships as `capell-app/social-feeds` and extends these surfaces: admin, frontend.
 
-## Why It Helps Your Capell Workflow
+Premium social feed widgets for Capell with cached public rendering, provider extensibility, and configurable list, slideshow, carousel, and paginated layouts.
 
-Owners can reuse social proof and news updates across pages without embedding third-party widgets directly into public output. Editors configure connection-backed feed blocks with layout options for list, slideshow, carousel, and paginated displays.
+After install, the package contributes admin-facing extension points and may affect public output or routes. Docs gap: no concrete Filament resource or page was detected.
 
-Developers get a provider registry, DTO-based render data, and a Block Library renderer. Provider integrations can be added without changing the public Blade surface.
+Status details:
 
-## What It Adds
+- Status: Available
+- Tier: premium
+- Bundle: growth
+- Composer package: `capell-app/social-feeds`
+- Namespace: `Capell\SocialFeeds`
+- Theme key: not applicable
 
-- Extendable provider registry with provider-provider tagging.
-- Built-in provider keys for RSS/Atom, TikTok, YouTube, Bluesky, Instagram, Facebook, LinkedIn, and X.
-- Native RSS/Atom sync plus `feed_url` backed sync for configured providers while native API bridges mature.
-- Cached `social_feed_items` storage consumed by public rendering.
-- `social-feed` Block Library block with provider, connection, limit, pagination, columns, caption, author, date, media, autoplay, transition, and aspect-ratio controls.
-- Public DTOs from `FetchSocialFeedRenderDataAction`.
+## Why It Matters
 
-## Boundaries
+**For developers:** The package gives developers package-owned service providers, Actions, Data objects, models, and Blade views instead of pushing this behaviour into core or application code.
 
-Social Feeds owns connection records, provider sync, item storage, and public feed render data. It does not own account OAuth product strategy for every provider, nor should it render credentials, OAuth state, provider errors, package names, admin URLs, or raw API payloads into public HTML.
+**For teams:** Place branded, cached social feeds anywhere in Capell with RSS, TikTok, YouTube, Bluesky, and custom provider support.
 
-Public views consume hydrated `SocialFeedRenderData`; do not query feed models from Blade.
+## Screens And Workflow
 
-## Runtime Surface
+Screenshot contract: `docs/screenshots.json`.
 
-- Provider: `src/Providers/SocialFeedsServiceProvider.php`
-- Contracts: `src/Contracts/`
-- Provider drivers: `src/Providers/Drivers/`
-- Registry/support: `src/Support/`
-- Block renderer/definition: `src/Blocks/`
-- Actions: `src/Actions/`
-- Data objects: `src/Data/`
-- Tests: `packages/social-feeds/tests`
+- Social feed carousel widget (frontend, required).
+- RSS feed sync and cached items (admin, required).
+- Provider registry extension surface (shared, required).
 
-## Docs
+## Technical Shape
 
-- [Package docs](docs/README.md)
-- [Overview](docs/overview.md)
-- [Screenshots contract](docs/screenshots.json)
+- Service providers: `Capell\SocialFeeds\Providers\SocialFeedsServiceProvider`, `AbstractConfiguredProvider`, `BlueskyFeedProvider`, `FacebookFeedProvider`, `InstagramFeedProvider`, `LinkedInFeedProvider`, `RssFeedProvider`, `TikTokFeedProvider`, `XFeedProvider`, `YouTubeFeedProvider`.
+- Config files: `packages/social-feeds/config/capell-social-feeds.php`.
+- Migrations: `packages/social-feeds/database/migrations/2026_06_04_000001_create_social_feed_connections_table.php`, `packages/social-feeds/database/migrations/2026_06_04_000002_create_social_feed_items_table.php`, `packages/social-feeds/database/migrations/2026_06_04_000003_create_social_feed_oauth_states_table.php`.
+- Models: `SocialFeedConnection`, `SocialFeedItem`, `SocialFeedOAuthState`.
+- Actions: `FetchSocialFeedRenderDataAction`, `RedactSocialFeedSyncErrorAction`, `SyncSocialFeedConnectionAction`, `UpsertSocialFeedItemsAction`.
+- Data objects: `ResolvedFeedEndpointData`, `SocialFeedPostData`, `SocialFeedRenderData`, `SocialFeedRenderItemData`, `SocialFeedWidgetConfigData`.
+- Manifest contributions: `frontend-component: Capell\SocialFeeds\Manifest\SocialFeedWidgetContribution`, `model: Capell\SocialFeeds\Manifest\SocialFeedConnectionModelContribution`, `model: Capell\SocialFeeds\Manifest\SocialFeedItemModelContribution`.
+- Health checks: `Capell\SocialFeeds\Health\SocialFeedsHealthCheck`.
+- Blade views: `packages/social-feeds/resources/views/blocks/social-feed.blade.php`.
+- Cache tags: `social-feeds`.
 
-## Testing
+## Data Model
 
-```bash
-vendor/bin/pest packages/social-feeds/tests --configuration=phpunit.xml
-```
+- Required tables: `social_feed_connections`, `social_feed_items`, `social_feed_oauth_states`.
+- Models: `SocialFeedConnection`, `SocialFeedItem`, `SocialFeedOAuthState`.
+- Migration files: `2026_06_04_000001_create_social_feed_connections_table.php`, `2026_06_04_000002_create_social_feed_items_table.php`, `2026_06_04_000003_create_social_feed_oauth_states_table.php`.
+- Migration impact: run host migrations through the package install flow before opening package surfaces.
+- Deletion/retention behaviour: Docs gap unless the package has an explicit pruning command, retention setting, or tested cascade path.
+
+## Install Impact
+
+- Admin navigation: admin-facing extension points are declared, but no concrete Filament class was detected.
+- Permissions: none declared in `capell.json`.
+- Public routes: none detected in package route files.
+- Database changes: package migrations are declared.
+- Settings: no package settings declared.
+- Queues or schedules: none detected in standard package paths.
+- Cache tags: `social-feeds`.
+- Commands: none declared.
+
+## Common Pitfalls
+
+- Run migrations before opening package resources or public routes.
+- Keep public Blade and cached HTML free of authoring markers, model IDs, permissions, signed editor URLs, and lazy database queries.
+- Keep `composer.json`, `composer.local.json`, `capell.json`, docs, screenshots, and tests aligned when the package surface changes.
 
 ## Troubleshooting
 
-| Symptom                                | Likely cause                                    | Check                                                                 | Fix                                                                                          |
-| -------------------------------------- | ----------------------------------------------- | --------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
-| Feed renders empty                     | Connection has no cached items or sync failed   | Check `social_feed_connections.status` and recent `social_feed_items` | Run `SyncSocialFeedConnectionAction` from the host workflow and inspect the connection error |
-| Provider sync reports missing endpoint | Provider needs a configured `feed_url`          | Review the connection provider and endpoint fields                    | Add a valid RSS/Atom/feed URL or implement a native provider driver                          |
-| Public output shows stale posts        | Cached render data was not refreshed after sync | Compare item timestamps and frontend cache tags                       | Re-sync the connection and clear the affected frontend cache tag                             |
+| Symptom | Likely cause | Check | Fix |
+| --- | --- | --- | --- |
+| Package surface is missing after install | Provider or manifest is not loaded | Confirm `capell.json`, package `composer.json`, and provider registration | Reinstall the package, refresh Composer autoload, and clear host caches |
+| Admin screen or command fails on missing table | Package migrations have not run | Check the tables listed in `Data Model` | Run host migrations and rerun the focused package test |
+| Public output leaks unexpected state | Render data, cache variation, or authoring boundary has regressed | Check public Blade, cache tags, and public-output safety tests | Move data loading out of Blade and rerun the package public-output tests |
+
+## Quick Start
+
+1. Install the package: `composer require capell-app/social-feeds`.
+2. Run the required setup: `php artisan migrate`.
+3. Verify the package provider is registered and the related frontend, command, or extension point is active.
+
+## Next Steps
+
+- [Package docs](docs/README.md)
+- [Overview](docs/overview.md)
+- [Screenshot contract](docs/screenshots.json)
+- [Marketplace assets](docs/assets/marketplace/)
+- [Capell content language plan](../../docs/CONTENT_LANGUAGE_PLAN.md)
+- [Capell documentation design system](../../docs/DESIGN_SYSTEM.md)
+- [Capell and package ERD notes](../../docs/erd/capell-and-package-erds.md)
+- Related packages: [Block Library](../block-library/README.md).
+- Focused tests: `vendor/bin/pest packages/social-feeds/tests --configuration=phpunit.xml`.
+
+<!-- prettier-ignore-end -->

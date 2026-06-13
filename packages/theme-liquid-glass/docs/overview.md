@@ -85,6 +85,9 @@ This theme has no schema impact. It relies on core Capell site, page, locale, an
 - [Package docs index](README.md)
 - [Screenshot contract](screenshots.json)
 - [Marketplace assets](assets/marketplace/)
+- [Capell content language plan](../../../docs/CONTENT_LANGUAGE_PLAN.md)
+- [Capell documentation design system](../../../docs/DESIGN_SYSTEM.md)
+- [Capell and package ERD notes](../../../docs/erd/capell-and-package-erds.md)
 - Focused tests: `vendor/bin/pest packages/theme-liquid-glass/tests --configuration=phpunit.xml`.
 
 <!-- prettier-ignore-end -->

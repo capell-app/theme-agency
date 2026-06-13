@@ -225,16 +225,30 @@ function liquidGlassThemeSectionRenderers(LiquidGlassThemeServiceProvider $provi
 
     $renderers = $method->invoke($provider);
 
-    expect($renderers)->toBeArray();
+    if (! is_array($renderers)) {
+        throw new RuntimeException('Liquid Glass section renderers must be an array.');
+    }
 
-    return $renderers;
+    $typedRenderers = [];
+
+    foreach ($renderers as $key => $renderer) {
+        if (! is_string($key) || ! $renderer instanceof ViewSectionRenderer) {
+            throw new RuntimeException('Liquid Glass section renderers must be keyed ViewSectionRenderer instances.');
+        }
+
+        $typedRenderers[$key] = $renderer;
+    }
+
+    return $typedRenderers;
 }
 
 function liquidGlassThemeRenderer(LiquidGlassThemeServiceProvider $provider, string $sectionKey): ViewSectionRenderer
 {
     $renderer = liquidGlassThemeSectionRenderers($provider)[$sectionKey] ?? null;
 
-    expect($renderer)->toBeInstanceOf(ViewSectionRenderer::class);
+    if (! $renderer instanceof ViewSectionRenderer) {
+        throw new RuntimeException(sprintf('Liquid Glass renderer [%s] was not registered.', $sectionKey));
+    }
 
     return $renderer;
 }

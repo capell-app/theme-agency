@@ -1,80 +1,100 @@
-# Experiments Overview
+# Experiments
 
-Status: **Available, schema-owning** · Kind: **package** · Tier: **premium** · Bundle: **growth** · Contexts: **admin** · Product group: **Capell Growth**
+<!-- prettier-ignore-start -->
 
-Experiments gives Capell server-side A/B testing foundations: admin-managed experiments, weighted variants, audience rules, goal events, and winner reports.
+## What This Plugin Adds
 
-## Non-Technical Overview
+Experiments is an **Available**, **Schema-owning** Capell package in the **Capell Growth** product group. It ships as `capell-app/experiments` and extends these surfaces: admin.
 
-Use Experiments when a team wants to test page, campaign, or package-owned growth changes without loading third-party testing scripts into the public site. Operators configure tests in admin, choose audience rules, compare variants, and review goal results.
+Run server-side A/B tests on Capell pages or campaigns. Target visitors by path, UTM, referrer, query, or custom segments, choose sticky or per-request weighted allocation, and track goal conversions with statistically gated winner reports.
 
-The package does not render public widgets by itself. A consuming page, theme, campaign, or package resolves a variant and renders the chosen payload through its own safe frontend surface.
+After install, admins get package-owned management or reporting surfaces inside Capell.
 
-## What This Package Adds
+Status details:
 
-- Filament resources for experiments, variants, goals, and audience rules.
-- Weighted allocation with sticky or per-request strategies.
-- Audience matching for path, URL, referrer, query, UTM, attributes, and segments.
-- Goal event recording tied to an experiment allocation.
-- Winner report and declaration actions.
-- Frontend render contribution metadata so cache-aware packages know variant output is visitor-varying.
+- Status: Available
+- Tier: premium
+- Bundle: growth
+- Composer package: `capell-app/experiments`
+- Namespace: `Capell\Experiments`
+- Theme key: not applicable
 
-## Developer Deep Dive
+## Why It Matters
 
-Use `ResolveExperimentVariantForContextAction` in the package that owns rendering. Pass a stable allocation key and enough `ExperimentContextData` for the resolver to find a matching active experiment.
+**For developers:** The package gives developers package-owned service providers, Actions, Data objects, models, Filament classes, and Blade views instead of pushing this behaviour into core or application code.
 
-```php
-use Capell\Experiments\Actions\ResolveExperimentVariantForContextAction;
-use Capell\Experiments\Data\ExperimentContextData;
-use Capell\Experiments\Enums\ExperimentSubjectType;
+**For teams:** Run statistically gated server-side A/B tests on Capell pages or campaigns - audience targeting, weighted allocation, and goal-tracked winner reports.
 
-$resolved = ResolveExperimentVariantForContextAction::run(
-    allocationKey: $visitorHash,
-    context: new ExperimentContextData(
-        siteId: $site->id,
-        subjectType: ExperimentSubjectType::Page->value,
-        subjectClass: $page::class,
-        subjectId: $page->id,
-        path: request()->path(),
-        query: request()->query(),
-        utm: request()->only(['utm_source', 'utm_medium', 'utm_campaign']),
-        segments: $segments,
-    ),
-);
+## Screens And Workflow
 
-$payload = $resolved?->variantPayload;
-```
+Screenshot contract: `screenshots.json`.
 
-Record a conversion only when the integration can identify the allocation and goal:
+- Experiments admin index (admin, required).
+- Experiment variants admin index (admin, required).
+- Experiment goals admin index (admin, required).
+- Experiment audience rules admin index (admin, required).
 
-```php
-use Capell\Experiments\Actions\RecordGoalEventAction;
-use Capell\Experiments\Data\ExperimentGoalEventData;
+## Technical Shape
 
-RecordGoalEventAction::run(
-    allocation: $allocation,
-    goal: $goal,
-    data: new ExperimentGoalEventData(
-        eventKey: 'demo-requested',
-        valueAmount: '99.00',
-        metadata: ['source' => 'form-builder'],
-    ),
-);
-```
+- Service providers: `Capell\Experiments\Providers\ExperimentsServiceProvider`.
+- Config files: `packages/experiments/config/capell-experiments.php`.
+- Migrations: `packages/experiments/database/migrations/2026_05_31_000001_create_experiments_table.php`, `packages/experiments/database/migrations/2026_05_31_000002_create_experiment_variants_table.php`, `packages/experiments/database/migrations/2026_05_31_000003_create_experiment_goals_table.php`, `packages/experiments/database/migrations/2026_05_31_000004_create_experiment_audience_rules_table.php`, `packages/experiments/database/migrations/2026_05_31_000005_create_experiment_allocations_table.php`, `packages/experiments/database/migrations/2026_05_31_000006_create_experiment_goal_events_table.php`, `packages/experiments/database/migrations/2026_06_07_000001_add_idempotency_unique_to_experiment_goal_events_table.php`.
+- Models: `Experiment`, `ExperimentAllocation`, `ExperimentAudienceRule`, `ExperimentGoal`, `ExperimentGoalEvent`, `ExperimentVariant`.
+- Filament classes: `ExperimentAudienceRuleResource`, `CreateExperimentAudienceRule`, `EditExperimentAudienceRule`, `ListExperimentAudienceRules`, `ExperimentGoalResource`, `CreateExperimentGoal`, `EditExperimentGoal`, `ListExperimentGoals`, `ExperimentVariantResource`, `CreateExperimentVariant`, `EditExperimentVariant`, `ListExperimentVariants`, `and 5 more`.
+- Actions: `AllocateVariantAction`, `BuildWinnerReportAction`, `CreateExperimentAction`, `DeclareExperimentWinnerAction`, `EvaluateAudienceRulesAction`, `RecordGoalEventAction`, `ResolveExperimentVariantForContextAction`, `SyncExperimentStatusesAction`.
+- Data objects: `ExperimentAudienceRuleData`, `ExperimentContextData`, `ExperimentData`, `ExperimentGoalData`, `ExperimentGoalEventData`, `ExperimentStatusSyncResultData`, `ExperimentVariantData`, `ResolvedExperimentVariantData`, `VariantAllocationData`, `WinnerReportData`, `WinnerVariantReportData`.
+- Console command classes: `SyncExperimentStatusesCommand`.
+- Manifest contributions: `admin-resource: Capell\Experiments\Manifest\ExperimentAudienceRuleResourceContribution`, `admin-resource: Capell\Experiments\Manifest\ExperimentGoalResourceContribution`, `admin-resource: Capell\Experiments\Manifest\ExperimentResourceContribution`, `admin-resource: Capell\Experiments\Manifest\ExperimentVariantResourceContribution`, `model: Capell\Experiments\Manifest\ExperimentsModelsContribution`.
+- Health checks: `Capell\Experiments\Health\ExperimentsHealthCheck`.
+- Blade views: `packages/experiments/resources/views/filament/experiments/results-page.blade.php`, `packages/experiments/resources/views/filament/experiments/results.blade.php`.
+- Cache tags: `experiments`.
 
-## Boundaries
+## Data Model
 
-- Experiments owns experiment records, variant allocation, audience evaluation, goal events, and reporting.
-- Consuming packages own public rendering and any goal-beacon routes.
-- Shared static HTML caches must not serve one visitor's variant to another visitor. Respect the resolver's cache contribution metadata.
-- Public output should not expose experiment internals, admin URLs, authoring metadata, or package implementation details.
+- Required tables: `experiments`, `experiment_variants`, `experiment_goals`, `experiment_audience_rules`, `experiment_allocations`, `experiment_goal_events`.
+- Models: `Experiment`, `ExperimentAllocation`, `ExperimentAudienceRule`, `ExperimentGoal`, `ExperimentGoalEvent`, `ExperimentVariant`.
+- Migration files: `2026_05_31_000001_create_experiments_table.php`, `2026_05_31_000002_create_experiment_variants_table.php`, `2026_05_31_000003_create_experiment_goals_table.php`, `2026_05_31_000004_create_experiment_audience_rules_table.php`, `2026_05_31_000005_create_experiment_allocations_table.php`, `2026_05_31_000006_create_experiment_goal_events_table.php`, `2026_06_07_000001_add_idempotency_unique_to_experiment_goal_events_table.php`.
+- Migration impact: run host migrations through the package install flow before opening package surfaces.
+- Deletion/retention behaviour: Docs gap unless the package has an explicit pruning command, retention setting, or tested cascade path.
 
-## Screenshot Plan
+## Install Impact
 
-`docs/screenshots.json` covers experiments, variants, goals, and audience rules admin indexes.
+- Admin navigation: adds package-owned Filament classes when registered.
+- Permissions: `View:Experiment`, `Create:Experiment`, `Update:Experiment`, `Delete:Experiment`, `View:ExperimentVariant`, `Create:ExperimentVariant`, `Update:ExperimentVariant`, `Delete:ExperimentVariant`, `View:ExperimentGoal`, `Create:ExperimentGoal`, `Update:ExperimentGoal`, `Delete:ExperimentGoal`, `View:ExperimentAudienceRule`, `Create:ExperimentAudienceRule`, `Update:ExperimentAudienceRule`, `Delete:ExperimentAudienceRule`.
+- Public routes: none detected in package route files.
+- Database changes: package migrations are declared.
+- Settings: no package settings declared.
+- Queues or schedules: none detected in standard package paths.
+- Cache tags: `experiments`.
+- Commands: console command classes detected: `SyncExperimentStatusesCommand`.
 
-## Verification
+## Common Pitfalls
 
-```bash
-vendor/bin/pest packages/experiments/tests --configuration=phpunit.xml
-```
+- Run migrations before opening package resources or public routes.
+- Keep `composer.json`, `composer.local.json`, `capell.json`, docs, screenshots, and tests aligned when the package surface changes.
+
+## Troubleshooting
+
+| Symptom | Likely cause | Check | Fix |
+| --- | --- | --- | --- |
+| Package surface is missing after install | Provider or manifest is not loaded | Confirm `capell.json`, package `composer.json`, and provider registration | Reinstall the package, refresh Composer autoload, and clear host caches |
+| Admin screen or command fails on missing table | Package migrations have not run | Check the tables listed in `Data Model` | Run host migrations and rerun the focused package test |
+
+## Quick Start
+
+1. Install the package: `composer require capell-app/experiments`.
+2. Run the required setup: `php artisan migrate`.
+3. Open the related Capell admin surface and verify Experiments appears.
+
+## Next Steps
+
+- [Package docs index](README.md)
+- [Screenshot contract](screenshots.json)
+- [Marketplace assets](assets/marketplace/)
+- [Capell content language plan](../../../docs/CONTENT_LANGUAGE_PLAN.md)
+- [Capell documentation design system](../../../docs/DESIGN_SYSTEM.md)
+- [Capell and package ERD notes](../../../docs/erd/capell-and-package-erds.md)
+- Related packages: [Campaign Studio](../../campaign-studio/README.md), [Frontend Optimizer](../../frontend-optimizer/README.md), [Html Cache](../../html-cache/README.md), [Form Builder](../../form-builder/README.md), [Insights](../../insights/README.md).
+- Focused tests: `vendor/bin/pest packages/experiments/tests --configuration=phpunit.xml`.
+
+<!-- prettier-ignore-end -->

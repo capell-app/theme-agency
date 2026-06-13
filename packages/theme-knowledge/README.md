@@ -1,103 +1,97 @@
 # Theme Knowledge
 
-Theme Knowledge is a Capell theme for knowledge bases, publishers, resource
-hubs, and content-led teams that need searchable, editorial frontend pages.
+<!-- prettier-ignore-start -->
 
-## At A Glance
+## What This Plugin Adds
 
-- Package: `capell-app/theme-knowledge`
-- Namespace: `Capell\ThemeStudio\Knowledge\`
+Theme Knowledge is an **Available**, **No schema impact** Capell theme in the **Capell Themes** product group. It ships as `capell-app/theme-knowledge` and extends these surfaces: frontend.
+
+Editorial and resource-library theme for knowledge bases, publishers, and content-led teams.
+
+After install, admins can select the theme through the core theme management surface. Editors keep using normal Capell content workflows while the package controls public presentation.
+
+Status details:
+
+- Status: Available
+- Tier: premium
+- Bundle: themes
+- Composer package: `capell-app/theme-knowledge`
+- Namespace: `Capell\ThemeStudio\Knowledge`
 - Theme key: `knowledge`
-- Surfaces: frontend, console
-- Service provider:
-  `Capell\ThemeStudio\Knowledge\KnowledgeThemeServiceProvider`
-- Demo command:
-  `capell:theme-knowledge-demo {--url=} {--languages=} {--sites=} {--force}`
-- Manifest extends: `default`
-- Runtime extends: `default`
-- Database impact: none
 
-## Why It Helps Your Capell Workflow
+## Why It Matters
 
-- Site owners can launch a resource-library site where visitors can browse
-  topics, featured content, authors, and search-led journeys.
-- Editors get a theme vocabulary that fits documentation, articles, resource
-  hubs, newsletters, and author-led content.
-- Developers get a renderer package with optional Blog, Search, and Newsletter
-  integration checks instead of hard package coupling.
+**For developers:** The package gives developers package-owned service providers, Actions, and Blade views instead of pushing this behaviour into core or application code.
 
-## Best Used With
+**For teams:** A premium knowledge-base and documentation theme for Capell - sidebar-navigated articles, in-page table of contents, prominent search, and readable long-form layouts out of the box.
 
-- [Capell Frontend](https://github.com/capell-app/frontend)
-- [Blog](../blog/README.md) for resources and author content.
-- [Search](../search/README.md) for public search listing sections.
-- [Newsletter](../newsletter/README.md) for subscription CTAs.
-- [SEO Suite](../seo-suite/README.md) for structured discovery.
+## Screens And Workflow
 
-## What It Adds
+Screenshot contract: `docs/screenshots.json`.
 
-- Registers the `knowledge` theme definition and preset.
-- Ships a knowledge-focused page wrapper and theme CSS.
-- Adds section renderers for topic hubs, featured content, resource library,
-  doc articles, search listing, newsletter, authors, proof, and supporting
-  content blocks.
-- Uses Core `ViewSectionRenderer` extra view data for optional Blog, Search, and Newsletter
-  sections.
-- Provides standalone Knowledge Base index/article templates that consume
-  `capell-app/knowledge-base` public DTO arrays when that package is installed.
-- Keeps optional package availability checks in the service provider/renderer
-  layer, while author and topic hub cards can come from page render data with
-  translated defaults.
-- Renders docs/article pages with hydrated breadcrumbs, category sidebar,
-  article metadata, readable body copy, and a sticky table of contents.
-- Adds a demo install command backed by `InstallKnowledgeThemeDemoAction`.
-- Adds `ThemeKnowledgeHealthCheck` and a Theme management page contribution.
+- Frontend page rendered with Knowledge theme (frontend, optional).
+- Knowledge homepage (frontend, optional).
+- Search results and facets (frontend, optional).
+- Topic hubs (frontend, optional).
+- Featured research (frontend, optional).
+- Research digest signup (frontend, optional).
+- Author bench (frontend, optional).
 
-## Runtime Surface
+## Technical Shape
 
-| Area                | Path                                               |
-| ------------------- | -------------------------------------------------- |
-| Provider            | `src/KnowledgeThemeServiceProvider.php`            |
-| Demo command        | `src/Console/Commands/DemoCommand.php`             |
-| Demo action         | `src/Actions/InstallKnowledgeThemeDemoAction.php`  |
-| Renderer            | Core `ViewSectionRenderer` extra view data         |
-| Theme management    | `src/Manifest/ThemeManagementPageContribution.php` |
-| Health check        | `src/Health/ThemeKnowledgeHealthCheck.php`         |
-| Views               | `resources/views/page.blade.php`                   |
-| CSS                 | `resources/css/theme-knowledge.css`                |
-| Screenshot manifest | `docs/screenshots.json`                            |
+- Service providers: `Capell\ThemeStudio\Knowledge\KnowledgeThemeServiceProvider`.
+- Actions: `InstallKnowledgeThemeDemoAction`.
+- Command signatures: `capell:theme-knowledge-demo`.
+- Console command classes: `DemoCommand`.
+- Manifest contributions: `admin-page: Capell\ThemeStudio\Knowledge\Manifest\ThemeManagementPageContribution`.
+- Health checks: `Capell\ThemeStudio\Knowledge\Health\ThemeKnowledgeHealthCheck`.
+- Blade views: `packages/theme-knowledge/resources/views/knowledge-base/article.blade.php`, `packages/theme-knowledge/resources/views/knowledge-base/index.blade.php`, `packages/theme-knowledge/resources/views/knowledge-base/partials/collection-card.blade.php`, `packages/theme-knowledge/resources/views/page.blade.php`, `packages/theme-knowledge/resources/views/sections/authors.blade.php`, `packages/theme-knowledge/resources/views/sections/content-listing.blade.php`, `packages/theme-knowledge/resources/views/sections/cta.blade.php`, `packages/theme-knowledge/resources/views/sections/doc-article.blade.php`, `packages/theme-knowledge/resources/views/sections/featured-content.blade.php`, `packages/theme-knowledge/resources/views/sections/features.blade.php`, `packages/theme-knowledge/resources/views/sections/footer.blade.php`, `packages/theme-knowledge/resources/views/sections/hero.blade.php`, `and 9 more`.
+- Cache tags: `theme-knowledge`.
+
+## Data Model
+
+This theme has no schema impact. It relies on core Capell site, page, locale, and theme records instead of declaring package-owned tables.
 
 ## Install Impact
 
-- Adds a frontend theme renderer and console demo command.
-- Adds no migrations, settings, models, package-owned routes, or admin
-  resources.
-- Depends on Capell Frontend default theme and reads normal Capell page/theme runtime data.
-- Optional sections stay guarded when Blog, Search, or Newsletter are not
-  installed.
-- Author and topic hub defaults use package translations and accept hydrated
-  section items for real site-specific teams and topics.
+- Admin navigation: contributes admin extension points through `capell.json`.
+- Permissions: none declared in `capell.json`.
+- Public routes: none detected in package route files.
+- Database changes: no package migrations declared.
+- Settings: no package settings declared.
+- Queues or schedules: none detected in standard package paths.
+- Cache tags: `theme-knowledge`.
+- Commands: `capell:theme-knowledge-demo`.
 
-## Docs
+## Common Pitfalls
 
-- [Docs index](docs/README.md)
+- Keep public Blade and cached HTML free of authoring markers, model IDs, permissions, signed editor URLs, and lazy database queries.
+- Keep `composer.json`, `composer.local.json`, `capell.json`, docs, screenshots, and tests aligned when the package surface changes.
+
+## Troubleshooting
+
+| Symptom | Likely cause | Check | Fix |
+| --- | --- | --- | --- |
+| Package surface is missing after install | Provider or manifest is not loaded | Confirm `capell.json`, package `composer.json`, and provider registration | Reinstall the package, refresh Composer autoload, and clear host caches |
+| Background work does not run | Queue worker or scheduled command is not active | Check package jobs, commands, and host scheduler configuration | Start the queue or scheduler, then run the focused command or package test |
+| Public output leaks unexpected state | Render data, cache variation, or authoring boundary has regressed | Check public Blade, cache tags, and public-output safety tests | Move data loading out of Blade and rerun the package public-output tests |
+
+## Quick Start
+
+1. Install the package: `composer require capell-app/theme-knowledge`.
+2. Run the required setup: `php artisan capell:theme-knowledge-demo`.
+3. Verify the package provider is registered and the related frontend, command, or extension point is active.
+
+## Next Steps
+
+- [Package docs](docs/README.md)
 - [Overview](docs/overview.md)
-- [Creating a Capell theme](../../docs/creating-a-theme.md)
-- [Package Screenshot Automation](../../docs/package-screenshot-automation.md)
+- [Screenshot contract](docs/screenshots.json)
+- [Marketplace assets](docs/assets/marketplace/)
+- [Capell content language plan](../../docs/CONTENT_LANGUAGE_PLAN.md)
+- [Capell documentation design system](../../docs/DESIGN_SYSTEM.md)
+- [Capell and package ERD notes](../../docs/erd/capell-and-package-erds.md)
+- Related packages: [Layout Builder](../layout-builder/README.md), [Frontend Authoring](../frontend-authoring/README.md), [Publishing Studio](../publishing-studio/README.md), [Seo Suite](../seo-suite/README.md), [Blog](../blog/README.md), [Search](../search/README.md), [Newsletter](../newsletter/README.md).
+- Focused tests: `vendor/bin/pest packages/theme-knowledge/tests --configuration=phpunit.xml`.
 
-## Testing
-
-Run package tests from the repository root:
-
-```bash
-vendor/bin/pest packages/theme-knowledge/tests --configuration=phpunit.xml
-```
-
-## Maintenance Notes
-
-- Keep public theme output free of admin URLs, signed preview URLs, editor
-  selectors, theme internals, model IDs, and permission metadata.
-- Keep optional package checks inside the service provider/renderer layer, not
-  public Blade.
-- Keep the docs aligned with `KnowledgeThemeServiceProvider::definition()` when
-  section keys, presets, or optional integrations change.
+<!-- prettier-ignore-end -->

@@ -1,127 +1,96 @@
-# Editorial Healthcare Theme
+# Theme Healthcare
 
-Appointment-led healthcare theme for Capell, shipped under the existing `healthcare` theme key.
+<!-- prettier-ignore-start -->
 
-## At A Glance
+## What This Plugin Adds
 
-- Package: `capell-app/theme-healthcare`
-- Namespace: `Capell\ThemeStudio\Healthcare\`
-- Capell dependencies: `capell-app/core`, `capell-app/frontend`
+Theme Healthcare is an **Available**, **No schema impact** Capell theme in the **Capell Themes** product group. It ships as `capell-app/theme-healthcare` and extends these surfaces: frontend.
 
-## Why It Helps Your Capell Workflow
+Theme Healthcare turns Capell into a conversion-focused clinical website. It ships nineteen care-oriented sections - an appointment hero, service finder, clinician carousel, care-pathway guidance, insurance/trust signals, locations, events, and a booking panel - that route patients toward the right enquiry with calm, clinical styling. The booking, events, and resource sections light up automatically when Capell Bookings/Form Builder, Events, and Blog are installed, with no theme reconfiguration. Built on the built-in default frontend theme with accessible focus states and a skip link, it activates from the Themes screen and seeds a full demo via `capell:theme-healthcare-demo`.
 
-- Provides Editorial Healthcare renderer views for clinics and healthcare providers built on Capell.
-- Helps owners launch healthcare pages with service finding, clinician cards, booking panels, care pathway comparison, trust proof, resources, and location surfaces.
-- Gives developers a focused theme package that reuses Capell Frontend default theme conventions instead of hard-coding product layouts into content.
+After install, admins can select the theme through the core theme management surface. Editors keep using normal Capell content workflows while the package controls public presentation.
 
-## Best Used With
+Status details:
 
-- [Capell Frontend](https://github.com/capell-app/frontend)
-- [Blog](../blog/README.md)
-- [Events](../events/README.md)
-- [Theme Agency](../theme-agency/README.md)
-- [Theme Corporate](../theme-corporate/README.md)
-
-## What It Adds
-
-- Editorial Healthcare theme for Capell.
-- Public views for utility bar, navigation, appointment hero, service finder, services, clinicians, booking, events, proof, comparison, resources, contact, CTA, and footer sections.
-- Booking, event, and blog teaser renderers receive optional Form Builder, Events, and Blog availability from the service provider, then render enhanced or neutral panels without querying from Blade.
-- The page wrapper includes a real skip-link target, event carousel controls use package translations, and rendered images include explicit loading, decoding, and dimension attributes.
+- Status: Available
+- Tier: premium
+- Bundle: themes
+- Composer package: `capell-app/theme-healthcare`
+- Namespace: `Capell\ThemeStudio\Healthcare`
+- Theme key: `healthcare`
 
 ## Why It Matters
 
-**For developers:** Adds a renderer package that uses Capell Frontend default theme runtime contracts while leaving content models unchanged.
+**For developers:** The package gives developers package-owned service providers, Actions, and Blade views instead of pushing this behaviour into core or application code.
 
-**For teams:** Provides a healthcare-oriented visual option for clinic and service-line sites managed through the normal Theme admin page and install flow.
-
-## Built With
-
-This package makes its Composer dependencies visible because they are part of the value proposition, not just plumbing. When an upstream package has a public repository, its linked preview card points readers back to the maintainers so their work gets proper credit.
-
-**Capell packages used here**
-
-- [Capell Core](https://github.com/capell-app/core)
-- [Capell Frontend](https://github.com/capell-app/frontend)
-- [Capell Blog](../blog/README.md)
-- [Capell Events](../events/README.md)
-- [Capell Form Builder](../form-builder/README.md)
-
-**Open-source packages used here**
-
-- No extra third-party Composer package beyond the Capell package stack is required here.
+**For teams:** A premium, appointment-led theme for private clinics and healthcare groups - service discovery, clinician profiles, care pathways, locations, and a booking-ready enquiry panel, all WCAG-minded and brand-tunable in Theme Studio.
 
 ## Screens And Workflow
 
-Screenshots are generated from [docs/screenshots.json](docs/screenshots.json) during package deployment.
+Screenshot contract: `docs/screenshots.json`.
 
-- Theme admin list showing Editorial Healthcare.
-- Frontend page rendered with Editorial Healthcare theme.
-- Theme preview URL output.
+- Frontend page rendered with healthcare theme (frontend, optional).
+- Healthcare homepage desktop (frontend, optional).
+- Healthcare homepage mobile (frontend, optional).
+- Healthcare services listing (frontend, optional).
+- Healthcare clinician detail (frontend, optional).
+- Healthcare contact page (frontend, optional).
 
 ## Technical Shape
 
-- HealthcareThemeServiceProvider registers the Editorial Healthcare renderer.
-- `capell.json` declares `themeKey: "healthcare"` and manifest `extends: null`; Theme Studio runtime inheritance remains `default`.
-- Uses Capell Frontend default theme runtime data and standard section keys, while rendering its own page and section Blade views.
-- Ships Blade resources for the page wrapper, service discovery sections, booking panel, event panel, comparison, proof, blog teaser, CTA, and footer views.
-- No migrations, config, routes, models, admin navigation, or package-owned settings are present.
-- Public theme output must stay free of package identifiers, signed admin URLs, Filament/editor markers, and other authoring metadata.
-- Keep the skip link target, translated controls, and image loading attributes in place when changing public section views.
+- Service providers: `Capell\ThemeStudio\Healthcare\HealthcareThemeServiceProvider`.
+- Actions: `InstallHealthcareThemeDemoAction`.
+- Command signatures: `capell:theme-healthcare-demo`.
+- Console command classes: `DemoCommand`.
+- Manifest contributions: `admin-page: Capell\ThemeStudio\Healthcare\Manifest\ThemeManagementPageContribution`.
+- Health checks: `Capell\ThemeStudio\Healthcare\Health\ThemeHealthcareHealthCheck`.
+- Blade views: `packages/theme-healthcare/resources/views/blog/article.blade.php`, `packages/theme-healthcare/resources/views/blog/index.blade.php`, `packages/theme-healthcare/resources/views/page.blade.php`, `packages/theme-healthcare/resources/views/sections/blog-teaser.blade.php`, `packages/theme-healthcare/resources/views/sections/booking.blade.php`, `packages/theme-healthcare/resources/views/sections/care-pathway.blade.php`, `packages/theme-healthcare/resources/views/sections/clinician-profile.blade.php`, `packages/theme-healthcare/resources/views/sections/clinicians.blade.php`, `packages/theme-healthcare/resources/views/sections/comparison.blade.php`, `packages/theme-healthcare/resources/views/sections/conditions-directory.blade.php`, `packages/theme-healthcare/resources/views/sections/contact.blade.php`, `packages/theme-healthcare/resources/views/sections/cta.blade.php`, `and 12 more`.
+- Cache tags: `theme-healthcare`.
 
-## Code Map
+## Data Model
 
-| Area      | Path                                  | Purpose                                             |
-| --------- | ------------------------------------- | --------------------------------------------------- |
-| Resources | `packages/theme-healthcare/resources` | Views, translations, assets, and package resources. |
-| Tests     | `packages/theme-healthcare/tests`     | Package-level Pest coverage.                        |
-
-## Data And Persistence
-
-- This package does not own data.
-- It consumes theme runtime settings and core page content.
+This theme has no schema impact. It relies on core Capell site, page, locale, and theme records instead of declaring package-owned tables.
 
 ## Install Impact
 
-- Adds the Editorial Healthcare renderer to theme system.
-- No database changes.
-- No admin navigation by itself.
-- No public routes by itself.
-
-## Install And Setup
-
-- Install with `composer require capell-app/theme-healthcare` in the host Capell application.
-- Seed the Editorial Healthcare preview pages with `php artisan capell:theme-healthcare-demo --url=https://demo.test --sites=Demo --languages=en --force`.
-- The Extensions installer demo checkbox and full Capell demo install use the same manifest demo command path.
-- In this repository, verify package changes with `vendor/bin/pest`; do not use `php artisan`.
-- For screenshots, use a disposable Capell app with the core stack, Layout Builder, Capell Frontend default theme, and only this theme package installed.
-
-## Admin And Access
-
-- The package appears through the core Themes resource after install. It does not add a package-owned admin page.
+- Admin navigation: contributes admin extension points through `capell.json`.
+- Permissions: none declared in `capell.json`.
+- Public routes: none detected in package route files.
+- Database changes: no package migrations declared.
+- Settings: no package settings declared.
+- Queues or schedules: none detected in standard package paths.
+- Cache tags: `theme-healthcare`.
+- Commands: `capell:theme-healthcare-demo`.
 
 ## Common Pitfalls
 
-- Layout Builder is only needed in disposable harnesses that exercise optional layout-area chrome.
-- Install Capell Frontend before using this renderer.
-- Build both frontend and Filament assets before browser capture.
-- Keep Theme Studio settings aligned with the `healthcare` preset; stale settings from another theme can make screenshots misleading.
-- Do not install a Studio metapackage; this package installs independently.
+- Keep public Blade and cached HTML free of authoring markers, model IDs, permissions, signed editor URLs, and lazy database queries.
+- Keep `composer.json`, `composer.local.json`, `capell.json`, docs, screenshots, and tests aligned when the package surface changes.
 
-## Docs
+## Troubleshooting
 
-- [docs index](docs/README.md)
-- [credits-and-acknowledgements.md](docs/credits-and-acknowledgements.md)
-- [overview.md](docs/overview.md)
+| Symptom | Likely cause | Check | Fix |
+| --- | --- | --- | --- |
+| Package surface is missing after install | Provider or manifest is not loaded | Confirm `capell.json`, package `composer.json`, and provider registration | Reinstall the package, refresh Composer autoload, and clear host caches |
+| Background work does not run | Queue worker or scheduled command is not active | Check package jobs, commands, and host scheduler configuration | Start the queue or scheduler, then run the focused command or package test |
+| Public output leaks unexpected state | Render data, cache variation, or authoring boundary has regressed | Check public Blade, cache tags, and public-output safety tests | Move data loading out of Blade and rerun the package public-output tests |
 
-## Testing
+## Quick Start
 
-Run package tests from the repository root:
+1. Install the package: `composer require capell-app/theme-healthcare`.
+2. Run the required setup: `php artisan capell:theme-healthcare-demo`.
+3. Verify the package provider is registered and the related frontend, command, or extension point is active.
 
-```bash
-vendor/bin/pest packages/theme-healthcare/tests --configuration=phpunit.xml
-```
+## Next Steps
 
-## Maintenance Notes
+- [Package docs](docs/README.md)
+- [Overview](docs/overview.md)
+- [Screenshot contract](docs/screenshots.json)
+- [Marketplace assets](docs/assets/marketplace/)
+- [Capell content language plan](../../docs/CONTENT_LANGUAGE_PLAN.md)
+- [Capell documentation design system](../../docs/DESIGN_SYSTEM.md)
+- [Capell and package ERD notes](../../docs/erd/capell-and-package-erds.md)
+- Related packages: [Blog](../blog/README.md), [Bookings](../bookings/README.md), [Events](../events/README.md), [Form Builder](../form-builder/README.md).
+- Focused tests: `vendor/bin/pest packages/theme-healthcare/tests --configuration=phpunit.xml`.
 
-- Theme output is public output. Keep admin-only metadata and editor hooks out of rendered markup.
+<!-- prettier-ignore-end -->

@@ -1,125 +1,99 @@
-# SaaS Theme
+# Theme Saas
 
-Product-led SaaS theme for Capell, shipped under the existing `saas` theme key.
+<!-- prettier-ignore-start -->
 
-## At A Glance
+## What This Plugin Adds
 
-- Package: `capell-app/theme-saas`
-- Namespace: `Capell\ThemeStudio\Saas\`
-- Capell dependencies: `capell-app/core`, `capell-app/frontend`
+Theme Saas is an **Available**, **No schema impact** Capell theme in the **Capell Themes** product group. It ships as `capell-app/theme-saas` and extends these surfaces: frontend.
 
-## Why It Helps Your Capell Workflow
+Theme SaaS gives software and subscription businesses a product-led storefront out of the box: an activation-first hero, metric and logo proof, a plan-comparison and pricing layout, an ROI calculator, docs onboarding, and a demo-request flow - all rendered from portable Capell content with no presentation markup stored in your pages. It extends the built-in default frontend theme, so your content stays clean while this theme owns the conversion layout, palette, and rhythm. Pairs with Form Builder for live demo/trial capture and Document Lifecycle for in-theme docs, and reads brand tokens so the SaaS preset re-skins the whole site. Built on Blade + Tailwind, cache-safe, and translation-ready.
 
-- Provides SaaS renderer views for software and subscription sites built on Capell.
-- Helps owners launch product-led pages with feature discovery, proof, comparison, calculator, and insight surfaces.
-- Gives developers a focused theme package that reuses Capell Frontend default theme conventions instead of hard-coding product layouts into content.
+After install, admins can select the theme through the core theme management surface. Editors keep using normal Capell content workflows while the package controls public presentation.
 
-## Best Used With
+Status details:
 
-- [Capell Frontend](https://github.com/capell-app/frontend)
-- [Content Sections](../content-sections/README.md) for richer pricing and plan detail.
-- [Document Lifecycle](../document-lifecycle/README.md) for onboarding/docs workflows.
-- [Form Builder](../form-builder/README.md) for demo or trial capture.
-- [Theme Agency](../theme-agency/README.md)
-- [Theme Corporate](../theme-corporate/README.md)
-
-## What It Adds
-
-- Product-led SaaS theme for Capell.
-- Public views for navigation, hero, features, proof, content listing, comparison, calculator, pricing, docs onboarding, demo request, CTA, footer, and blog sections.
-- Connected/static guidance in pricing, docs onboarding, and demo request sections based on Content Sections, Document Lifecycle, and Form Builder availability.
-- Blog index and article views that render custom insight markup when Blog is installed and marketing-safe fallback cards when it is not.
+- Status: Available
+- Tier: premium
+- Bundle: themes
+- Composer package: `capell-app/theme-saas`
+- Namespace: `Capell\ThemeStudio\Saas`
+- Theme key: `saas`
 
 ## Why It Matters
 
-**For developers:** Adds a renderer package that uses Capell Frontend default theme runtime contracts while leaving content models unchanged.
+**For developers:** The package gives developers package-owned service providers, Actions, and Blade views instead of pushing this behaviour into core or application code.
 
-**For teams:** Provides a SaaS-oriented visual option for product sites managed through the normal Theme admin page and install flow.
-
-## Built With
-
-This package makes its Composer dependencies visible because they are part of the value proposition, not just plumbing. When an upstream package has a public repository, its linked preview card points readers back to the maintainers so their work gets proper credit.
-
-**Capell packages used here**
-
-- [Capell Core](https://github.com/capell-app/core)
-- [Capell Frontend](https://github.com/capell-app/frontend)
-
-**Open-source packages used here**
-
-- No extra third-party Composer package beyond the Capell package stack is required here.
+**For teams:** A conversion-focused premium theme for software and subscription products - hero, feature proof, pricing comparison, calculator, docs, and demo-request sections that turn a Capell site into a product-led landing experience.
 
 ## Screens And Workflow
 
-Screenshots are generated from [docs/screenshots.json](docs/screenshots.json) during package deployment.
+Screenshot contract: `docs/screenshots.json`.
 
-- Theme admin list showing SaaS.
-- Frontend page rendered with SaaS theme.
-- Theme preview URL output.
+- Theme preset selection showing SaaS (admin, required).
+- Signed admin preview route (admin, required).
+- Frontend page rendered with SaaS theme (frontend, required).
+- SaaS homepage (frontend, required).
+- SaaS directory page (frontend, required).
+- SaaS detail page (frontend, required).
+- SaaS contact page (frontend, required).
+- SaaS empty state page (frontend, required).
+- SaaS CTA page (frontend, required).
 
 ## Technical Shape
 
-- SaasThemeServiceProvider registers the SaaS renderer.
-- `capell.json` declares `themeKey: "saas"` and manifest `extends: null`; Theme Studio runtime inheritance remains `default`.
-- Uses Capell Frontend default theme runtime data and standard section keys, while rendering its own page and section Blade views.
-- Ships Blade resources for the page wrapper, standard theme sections, comparison, calculator, blog section, and blog page views.
-- No migrations, config, routes, models, admin navigation, or package-owned settings are present.
-- Public theme output must stay free of package identifiers, signed admin URLs, Filament/editor markers, and other authoring metadata.
+- Service providers: `Capell\ThemeStudio\Saas\SaasThemeServiceProvider`.
+- Actions: `InstallSaasThemeDemoAction`.
+- Command signatures: `capell:theme-saas-demo`.
+- Console command classes: `DemoCommand`.
+- Manifest contributions: `admin-page: Capell\ThemeStudio\Saas\Manifest\ThemeManagementPageContribution`.
+- Health checks: `Capell\ThemeStudio\Saas\Health\ThemeSaasHealthCheck`.
+- Blade views: `packages/theme-saas/resources/views/blog/article.blade.php`, `packages/theme-saas/resources/views/blog/index.blade.php`, `packages/theme-saas/resources/views/livewire/page/page.blade.php`, `packages/theme-saas/resources/views/page.blade.php`, `packages/theme-saas/resources/views/sections/blog.blade.php`, `packages/theme-saas/resources/views/sections/calculator.blade.php`, `packages/theme-saas/resources/views/sections/comparison.blade.php`, `packages/theme-saas/resources/views/sections/content-listing.blade.php`, `packages/theme-saas/resources/views/sections/cta.blade.php`, `packages/theme-saas/resources/views/sections/demo-request.blade.php`, `packages/theme-saas/resources/views/sections/docs-onboarding.blade.php`, `packages/theme-saas/resources/views/sections/faq.blade.php`, `and 8 more`.
+- Cache tags: `theme-saas`.
 
-## Code Map
+## Data Model
 
-| Area      | Path                            | Purpose                                             |
-| --------- | ------------------------------- | --------------------------------------------------- |
-| Resources | `packages/theme-saas/resources` | Views, translations, assets, and package resources. |
-| Tests     | `packages/theme-saas/tests`     | Package-level Pest coverage.                        |
-
-## Data And Persistence
-
-- This package does not own data.
-- It consumes theme runtime settings and core page content.
+This theme has no schema impact. It relies on core Capell site, page, locale, and theme records instead of declaring package-owned tables.
 
 ## Install Impact
 
-- Adds the SaaS renderer to theme system.
-- No database changes.
-- No admin navigation by itself.
-- No public routes by itself.
-
-## Install And Setup
-
-- Install with `composer require capell-app/theme-saas` in the host Capell application.
-- Seed the SaaS preview pages with `php artisan capell:theme-saas-demo --url=https://demo.test --sites=Demo --languages=en --force`.
-- The Extensions installer demo checkbox and full Capell demo install use the same manifest demo command path.
-- In this repository, verify package changes with `vendor/bin/pest`; do not use `php artisan`.
-- For screenshots, use a disposable Capell app with the core stack, Layout Builder, Capell Frontend default theme, and only this theme package installed.
-
-## Admin And Access
-
-- The package appears through the core Themes resource after install. It does not add a package-owned admin page.
+- Admin navigation: contributes admin extension points through `capell.json`.
+- Permissions: none declared in `capell.json`.
+- Public routes: none detected in package route files.
+- Database changes: no package migrations declared.
+- Settings: no package settings declared.
+- Queues or schedules: none detected in standard package paths.
+- Cache tags: `theme-saas`.
+- Commands: `capell:theme-saas-demo`.
 
 ## Common Pitfalls
 
-- Layout Builder is only needed in disposable harnesses that exercise optional layout-area chrome.
-- Install Capell Frontend before using this renderer.
-- Build both frontend and Filament assets before browser capture.
-- Keep Theme Studio settings aligned with the `saas` preset; stale settings from another theme can make screenshots misleading.
-- Do not install a Studio metapackage; this package installs independently.
+- Keep public Blade and cached HTML free of authoring markers, model IDs, permissions, signed editor URLs, and lazy database queries.
+- Keep `composer.json`, `composer.local.json`, `capell.json`, docs, screenshots, and tests aligned when the package surface changes.
 
-## Docs
+## Troubleshooting
 
-- [docs index](docs/README.md)
-- [credits-and-acknowledgements.md](docs/credits-and-acknowledgements.md)
-- [overview.md](docs/overview.md)
+| Symptom | Likely cause | Check | Fix |
+| --- | --- | --- | --- |
+| Package surface is missing after install | Provider or manifest is not loaded | Confirm `capell.json`, package `composer.json`, and provider registration | Reinstall the package, refresh Composer autoload, and clear host caches |
+| Background work does not run | Queue worker or scheduled command is not active | Check package jobs, commands, and host scheduler configuration | Start the queue or scheduler, then run the focused command or package test |
+| Public output leaks unexpected state | Render data, cache variation, or authoring boundary has regressed | Check public Blade, cache tags, and public-output safety tests | Move data loading out of Blade and rerun the package public-output tests |
 
-## Testing
+## Quick Start
 
-Run package tests from the repository root so Pest picks up the root `phpunit.xml`:
+1. Install the package: `composer require capell-app/theme-saas`.
+2. Run the required setup: `php artisan capell:theme-saas-demo`.
+3. Verify the package provider is registered and the related frontend, command, or extension point is active.
 
-```bash
-vendor/bin/pest packages/theme-saas/tests
-```
+## Next Steps
 
-## Maintenance Notes
+- [Package docs](docs/README.md)
+- [Overview](docs/overview.md)
+- [Screenshot contract](docs/screenshots.json)
+- [Marketplace assets](docs/assets/marketplace/)
+- [Capell content language plan](../../docs/CONTENT_LANGUAGE_PLAN.md)
+- [Capell documentation design system](../../docs/DESIGN_SYSTEM.md)
+- [Capell and package ERD notes](../../docs/erd/capell-and-package-erds.md)
+- Related packages: [Blog](../blog/README.md).
+- Focused tests: `vendor/bin/pest packages/theme-saas/tests --configuration=phpunit.xml`.
 
-- Theme output is public output. Keep admin-only metadata and editor hooks out of rendered markup.
-- Keep optional package checks inside the service provider/renderer layer; public Blade should consume injected availability flags.
+<!-- prettier-ignore-end -->

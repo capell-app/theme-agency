@@ -1,53 +1,88 @@
 # Record Switcher
 
-Record Switcher adds searchable, keyboard-friendly record navigation to supported Capell Filament edit pages.
+<!-- prettier-ignore-start -->
 
-## At A Glance
+## What This Plugin Adds
 
-- Package: `capell-app/record-switcher`
-- Namespace: `Capell\RecordSwitcher\`
-- Surfaces: Filament admin
-- Service provider: `Capell\RecordSwitcher\Providers\RecordSwitcherServiceProvider`
-- Capell dependencies: `capell-app/admin`, `capell-app/core`
-- Conflicts with: `howdu/filament-record-switcher`
+Record Switcher is an **Available**, **No schema impact** Capell package in the **Capell Foundation** product group. It ships as `capell-app/record-switcher` and extends these surfaces: admin.
 
-## Why It Helps Your Capell Workflow
+Fast Filament edit-page record switching for Capell admins, with searchable suggestions and keyboard selection.
 
-For editors, Record Switcher removes the table-view round trip when moving between related records such as pages, layouts, sections, navigation items, and widget records.
+After install, admins get package-owned management or reporting surfaces inside Capell.
 
-For developers, it keeps the heading switcher in a first-party package with Capell-owned assets, Livewire behavior, and manifest coverage instead of relying on a third-party Filament extension.
+Status details:
 
-## What It Adds
+- Status: Available
+- Tier: free
+- Bundle: foundation
+- Composer package: `capell-app/record-switcher`
+- Namespace: `Capell\RecordSwitcher`
+- Theme key: not applicable
 
-- A reusable Filament edit-page heading extender.
-- A Livewire `RecordSwitcher` component.
-- First-party admin JavaScript/CSS asset contribution.
-- Searchable suggestions and Tab-to-accept keyboard flow.
-- Light and dark marketplace screenshots for the admin heading workflow.
+## Why It Matters
 
-## Boundaries
+**For developers:** The package gives developers package-owned service providers, Filament classes, and Blade views instead of pushing this behaviour into core or application code.
 
-- Record Switcher owns the edit-heading switcher UI and assets.
-- Package resources still own their record queries, labels, authorization, and relation eager loading.
-- Search columns should stay narrow; option labels should not lazy-load expensive relationships.
-- The package has no migrations, settings, routes, frontend output, or console commands.
+**For teams:** Jump between editable Capell records directly from the page heading with fast suggestions and Tab-to-accept keyboard flow.
 
-## Runtime Surface
+## Screens And Workflow
 
-- Provider: `src/Providers/RecordSwitcherServiceProvider.php`
-- Heading extender: `src/Filament/RecordSwitcherHeadingExtender.php`
-- Livewire component: `src/Livewire/RecordSwitcher.php`
-- Asset contribution: `src/Manifest/RecordSwitcherAssetsContribution.php`
-- Tests: `packages/record-switcher/tests`
+Screenshot contract: `docs/screenshots.json`.
 
-## Docs
+- Record Switcher admin heading suggestions (admin, required).
 
-- [docs index](docs/README.md)
-- [overview.md](docs/overview.md)
-- [screenshots.json](docs/screenshots.json)
+## Technical Shape
 
-## Testing
+- Service providers: `Capell\RecordSwitcher\Providers\RecordSwitcherServiceProvider`.
+- Filament classes: `RecordSwitcherHeadingExtender`.
+- Livewire components: `RecordSwitcher`.
+- Manifest contributions: `asset: Capell\RecordSwitcher\Manifest\RecordSwitcherAssetsContribution`.
+- Health checks: `Capell\RecordSwitcher\Health\RecordSwitcherHealthCheck`.
+- Blade views: `packages/record-switcher/resources/views/components/record-switcher.blade.php`.
 
-```bash
-vendor/bin/pest packages/record-switcher/tests --configuration=phpunit.xml
-```
+## Data Model
+
+This package has no schema impact. It does not declare package-owned migrations or required tables.
+
+Docs gap: document extension points here if the package delegates persistence to a host package.
+
+## Install Impact
+
+- Admin navigation: adds package-owned Filament classes when registered.
+- Permissions: none declared in `capell.json`.
+- Public routes: none detected in package route files.
+- Database changes: no package migrations declared.
+- Settings: no package settings declared.
+- Queues or schedules: none detected in standard package paths.
+- Cache tags: none declared.
+- Commands: none declared.
+
+## Common Pitfalls
+
+- Verify the package is installed before expecting its provider, views, or extension contributions to run.
+- Keep `composer.json`, `composer.local.json`, `capell.json`, docs, screenshots, and tests aligned when the package surface changes.
+
+## Troubleshooting
+
+| Symptom | Likely cause | Check | Fix |
+| --- | --- | --- | --- |
+| Package surface is missing after install | Provider or manifest is not loaded | Confirm `capell.json`, package `composer.json`, and provider registration | Reinstall the package, refresh Composer autoload, and clear host caches |
+
+## Quick Start
+
+1. Install the package: `composer require capell-app/record-switcher`.
+2. Run the required setup: no package migrations are declared; clear cached config and routes if the host app uses caches.
+3. Open the related Capell admin surface and verify Record Switcher appears.
+
+## Next Steps
+
+- [Package docs](docs/README.md)
+- [Overview](docs/overview.md)
+- [Screenshot contract](docs/screenshots.json)
+- [Marketplace assets](docs/assets/marketplace/)
+- [Capell content language plan](../../docs/CONTENT_LANGUAGE_PLAN.md)
+- [Capell documentation design system](../../docs/DESIGN_SYSTEM.md)
+- [Capell and package ERD notes](../../docs/erd/capell-and-package-erds.md)
+- Focused tests: `vendor/bin/pest packages/record-switcher/tests --configuration=phpunit.xml`.
+
+<!-- prettier-ignore-end -->

@@ -1,115 +1,119 @@
 # Events
 
-Events adds event records, venues, occurrences, registrations, calendar pages, notifications, and iCalendar feed support to Capell.
+<!-- prettier-ignore-start -->
 
-## At A Glance
+## What This Plugin Adds
 
-- Package: `capell-app/events`
-- Namespace: `Capell\Events\`
-- Surfaces: Filament admin, Livewire, console, HTTP, database
-- Service providers: `packages/events/src/Providers/EventsServiceProvider.php`
-- Capell dependencies: `capell-app/admin`, `capell-app/frontend`, `capell-app/navigation`, `capell-app/publishing-studio`
-- Third-party dependencies: `rlanvin/php-rrule`, `spatie/icalendar-generator`
+Events is an **Available**, **Schema-owning** Capell plugin in the **Capell Content** product group. It ships as `capell-app/events` and extends these surfaces: admin, frontend, console.
 
-## Why It Helps Your Capell Workflow
+Events turns Capell into a full event platform: editors create one event with an RRULE recurrence and the package materializes every occurrence, each with its own page, venue, schedule, and capacity. Visitors RSVP with automatic waitlisting and confirmation/reminder emails, while a public `.ics` feed lets them subscribe in Apple/Google/Outlook calendars. Every occurrence emits schema.org `Event` JSON-LD for rich results, and an admin calendar plus dashboard widget keep the programme visible. Built on `php-rrule` and `spatie/icalendar-generator`, with first-class hooks into Publishing Studio, Site Discovery, and the Customer Portal.
 
-- Adds event listings, venues, occurrences, staff-managed registrations, calendar feeds, and Event schema for sites that publish schedules.
-- Lets editors manage event content and feeds inside Capell instead of maintaining separate calendar tooling.
-- Gives developers documented extension points for registration, booking, feeds, schema, and publishing integration.
+After install, admins get package-owned management surfaces and public users may see package-owned frontend output or routes.
 
-## Best Used With
+Status details:
 
-- [Address](../address/README.md)
-- [Tags](../tags/README.md)
-- [SEO Suite](../seo-suite/README.md)
+- Status: Available
+- Tier: premium
+- Bundle: content-product
+- Composer package: `capell-app/events`
+- Namespace: `Capell\Events`
+- Theme key: not applicable
 
-## What It Adds
+## Why It Matters
 
-- Events adds event records, venues, occurrences, registrations, calendar pages, notifications, and iCalendar feed support to Capell.
-- Admin resources: `EventOccurrenceResource`, `EventRegistrationResource`, `EventResource`, `EventVenueResource`; registration rows can be confirmed or cancelled by staff.
-- Livewire components: `EventCalendar`, `EventsCalendarPage`, `EventsListingPage`.
-- Package setup or maintenance commands.
+**For developers:** The package gives developers package-owned service providers, Actions, Data objects, models, Laravel routes, Filament classes, and Blade views instead of pushing this behaviour into core or application code.
+
+**For teams:** Publish recurring events with venues, capacity-managed RSVPs, subscribable iCal feeds, and Google-ready Event schema - all inside your Capell admin.
+
+## Screens And Workflow
+
+Screenshot contract: `docs/screenshots.json`.
+
+- Events index (admin, required).
+- Create event form (admin, required).
+- Edit event form (admin, required).
+- Event venues management (admin, required).
+- Event occurrences management (admin, required).
+- Event registrations management (admin, required).
+- Admin event calendar page (admin, required).
+- Event calendar widget (admin, required).
+- Frontend events listing page (frontend, required).
+- Frontend events calendar page (frontend, required).
+- iCalendar feed route (frontend, required).
 
 ## Technical Shape
 
-- EventsServiceProvider registers admin resources, frontend pages, calendar feed routes, migrations, and translations.
-- Recurrence handling uses `rlanvin/php-rrule`; calendar feed output uses `spatie/icalendar-generator`.
-- Event registration and booking integrations are behind contracts so the package can accept different registration providers.
-
-## Code Map
-
-| Area      | Path                            | Purpose                                                             |
-| --------- | ------------------------------- | ------------------------------------------------------------------- |
-| Actions   | `packages/events/src/Actions`   | Domain operations. Test these directly where possible.              |
-| Data      | `packages/events/src/Data`      | Structured payloads, form state, view models, and integration data. |
-| Enums     | `packages/events/src/Enums`     | Persisted states and Filament option values.                        |
-| Models    | `packages/events/src/Models`    | Eloquent records owned by the package.                              |
-| Filament  | `packages/events/src/Filament`  | Admin resources, pages, widgets, and settings UI.                   |
-| Livewire  | `packages/events/src/Livewire`  | Interactive frontend or admin components.                           |
-| HTTP      | `packages/events/src/Http`      | Controllers, middleware, and request handling.                      |
-| Providers | `packages/events/src/Providers` | Registration, extension hooks, routes, migrations, and resources.   |
-| Resources | `packages/events/resources`     | Views, translations, assets, and package resources.                 |
-| Routes    | `packages/events/routes`        | Route files loaded by the service provider.                         |
-| Database  | `packages/events/database`      | Migrations, seeders, and settings migrations.                       |
-| Tests     | `packages/events/tests`         | Package-level Pest coverage.                                        |
-
-## Admin Surface
-
-- Resources: `EventOccurrenceResource`, `EventRegistrationResource`, `EventResource`, `EventVenueResource`.
-- Pages: `CreateEvent`, `EditEvent`, `EventCalendarPage`, `ListEvents`, `ManageEventOccurrences`, `ManageEventRegistrations`, `ManageEventVenues`.
-- Widgets: `EventCalendarWidget`.
-
-## Runtime Surface
-
-- Livewire: `EventCalendar`, `EventsCalendarPage`, `EventsListingPage`.
-- Controllers: `CalendarFeedController`.
-- Routes: `packages/events/routes/web.php`.
-
-## Commands
-
-- `capell:events-install` (packages/events/src/Console/Commands/InstallCommand.php)
-
-## Data And Persistence
-
+- Service providers: `Capell\Events\Providers\EventsServiceProvider`.
+- Config files: `packages/events/config/capell-events.php`.
+- Migrations: `packages/events/database/migrations/2026_05_10_190848_01_create_event_venues_table.php`, `packages/events/database/migrations/2026_05_10_190848_02_create_events_table.php`, `packages/events/database/migrations/2026_05_10_190848_03_create_event_occurrences_table.php`, `packages/events/database/migrations/2026_05_10_190848_04_create_event_registrations_table.php`, `packages/events/database/migrations/2026_05_10_190848_05_create_event_notification_logs_table.php`, `packages/events/database/migrations/2026_05_31_070000_06_add_unique_event_notification_logs_identity_index.php`, `packages/events/database/migrations/2026_06_07_000000_07_add_notification_keys_to_event_notification_logs_table.php`.
 - Models: `Event`, `EventNotificationLog`, `EventOccurrence`, `EventRegistration`, `EventVenue`.
-- Migrations: `2026_05_10_190848_01_create_event_venues_table.php`, `2026_05_10_190848_02_create_events_table.php`, `2026_05_10_190848_03_create_event_occurrences_table.php`, `2026_05_10_190848_04_create_event_registrations_table.php`, `2026_05_10_190848_05_create_event_notification_logs_table.php`.
-- Data objects live in `src/Data/`; use them for payloads, form state, and view models.
+- Filament classes: `EventCalendarPage`, `EventResource`, `CreateEvent`, `EditEvent`, `ListEvents`, `EventForm`, `EventsTable`, `EventOccurrenceResource`, `ManageEventOccurrences`, `EventRegistrationResource`, `ManageEventRegistrations`, `EventVenueResource`, `and 2 more`.
+- Livewire components: `EventCalendar`, `EventsCalendarPage`, `EventsListingPage`.
+- Route files: `packages/events/routes/web.php`.
+- Policies: `AbstractEventResourcePolicy`, `EventOccurrencePolicy`, `EventPolicy`, `EventRegistrationPolicy`, `EventVenuePolicy`.
+- Events: `EventRegistrationCancelled`, `EventRegistrationCreated`.
+- Listeners: `PromoteWaitlistAfterRegistrationCancelled`.
+- Actions: `BuildCalendarFeedAction`, `BuildEventOccurrenceViewDataAction`, `BuildEventSchemaAction`, `CancelOccurrenceAction`, `EnsureEventPublishingDefaultsAction`, `EnsureEventPublishingSurfaceAction`, `ExpandEventRecurrenceAction`, `InstallEventsPackageAction`, `InstallPackageAction`, `ProcessDueEventNotificationLogsAction`, `PromoteWaitlistAction`, `QueryPublicEventOccurrencesAction`, `and 8 more`.
+- Data objects: `EventOccurrenceData`, `EventOccurrenceViewData`, `EventRegistrationData`.
+- Command signatures: `capell:events-doctor`, `capell:events-install`.
+- Console command classes: `EventsDoctorCommand`, `InstallCommand`.
+- Health checks: `Capell\Events\Health\EventsHealthCheck`.
+- Blade views: `packages/events/resources/views/filament/widgets/event-calendar.blade.php`, `packages/events/resources/views/livewire/event-calendar.blade.php`, `packages/events/resources/views/livewire/page/events-calendar.blade.php`, `packages/events/resources/views/livewire/page/events-listing.blade.php`.
+- Cache tags: `events`.
 
-## Extension Points
+## Data Model
 
-- Contracts: `EventBookingProvider`, `EventRegistrationProvider`.
-- Register Capell extension points, routes, migrations, settings, render hooks, and resources from service providers.
+- Required tables: `event_venues`, `events`, `event_occurrences`, `event_registrations`, `event_notification_logs`.
+- Models: `Event`, `EventNotificationLog`, `EventOccurrence`, `EventRegistration`, `EventVenue`.
+- Migration files: `2026_05_10_190848_01_create_event_venues_table.php`, `2026_05_10_190848_02_create_events_table.php`, `2026_05_10_190848_03_create_event_occurrences_table.php`, `2026_05_10_190848_04_create_event_registrations_table.php`, `2026_05_10_190848_05_create_event_notification_logs_table.php`, `2026_05_31_070000_06_add_unique_event_notification_logs_identity_index.php`, `2026_06_07_000000_07_add_notification_keys_to_event_notification_logs_table.php`.
+- Migration impact: run host migrations through the package install flow before opening package surfaces.
+- Deletion/retention behaviour: Docs gap unless the package has an explicit pruning command, retention setting, or tested cascade path.
 
 ## Install Impact
 
-- Adds event, venue, occurrence, registration, and notification log tables.
-- Adds event management resources to the admin panel.
-- Adds frontend calendar/listing components and a calendar feed route.
+- Admin navigation: adds package-owned Filament classes when registered.
+- Permissions: `ViewAny:Event`, `View:Event`, `Create:Event`, `Update:Event`, `Delete:Event`, `DeleteAny:Event`, `Restore:Event`, `RestoreAny:Event`, `ForceDelete:Event`, `ForceDeleteAny:Event`, `Replicate:Event`, `Reorder:Event`, `ViewAny:EventVenue`, `View:EventVenue`, `Create:EventVenue`, `Update:EventVenue`, `Delete:EventVenue`, `DeleteAny:EventVenue`, `Restore:EventVenue`, `RestoreAny:EventVenue`, `ForceDelete:EventVenue`, `ForceDeleteAny:EventVenue`, `Replicate:EventVenue`, `Reorder:EventVenue`, `ViewAny:EventOccurrence`, `View:EventOccurrence`, `Create:EventOccurrence`, `Update:EventOccurrence`, `Delete:EventOccurrence`, `DeleteAny:EventOccurrence`, `Restore:EventOccurrence`, `RestoreAny:EventOccurrence`, `ForceDelete:EventOccurrence`, `ForceDeleteAny:EventOccurrence`, `Replicate:EventOccurrence`, `Reorder:EventOccurrence`, `ViewAny:EventRegistration`, `View:EventRegistration`, `Create:EventRegistration`, `Update:EventRegistration`, `Delete:EventRegistration`, `DeleteAny:EventRegistration`, `Restore:EventRegistration`, `RestoreAny:EventRegistration`, `ForceDelete:EventRegistration`, `ForceDeleteAny:EventRegistration`, `Replicate:EventRegistration`, `Reorder:EventRegistration`.
+- Public routes: route files exist and must be reviewed before public enablement.
+- Database changes: package migrations are declared.
+- Settings: no package settings declared.
+- Queues or schedules: none detected in standard package paths.
+- Cache tags: `events`.
+- Commands: `capell:events-doctor`, `capell:events-install`.
 
-## Install And Setup
+## Common Pitfalls
 
-- Install with `composer require capell-app/events` in the host Capell application.
-- Run migrations through the host application package install flow.
-- In this repository, verify package changes with `vendor/bin/pest`; do not use `php artisan`.
+- Run migrations before opening package resources or public routes.
+- Review route middleware, throttling, signed URLs, and public-output safety before exposing routes.
+- Keep public Blade and cached HTML free of authoring markers, model IDs, permissions, signed editor URLs, and lazy database queries.
+- Run package commands from the host app; in this repository use `vendor/bin/pest` for package tests.
+- Keep `composer.json`, `composer.local.json`, `capell.json`, docs, screenshots, and tests aligned when the package surface changes.
 
-## Docs
+## Troubleshooting
 
-- [docs index](docs/README.md)
-- [event-extension-points.md](docs/event-extension-points.md)
-- [overview.md](docs/overview.md)
-- [screenshots.json](docs/screenshots.json)
+| Symptom | Likely cause | Check | Fix |
+| --- | --- | --- | --- |
+| Package surface is missing after install | Provider or manifest is not loaded | Confirm `capell.json`, package `composer.json`, and provider registration | Reinstall the package, refresh Composer autoload, and clear host caches |
+| Admin screen or command fails on missing table | Package migrations have not run | Check the tables listed in `Data Model` | Run host migrations and rerun the focused package test |
+| Route returns unexpected output | Route cache, middleware, or signed URL setup does not match the package route file | Check the route files listed in `Technical Shape` | Clear route cache and verify middleware before exposing public routes |
+| Background work does not run | Queue worker or scheduled command is not active | Check package jobs, commands, and host scheduler configuration | Start the queue or scheduler, then run the focused command or package test |
+| Public output leaks unexpected state | Render data, cache variation, or authoring boundary has regressed | Check public Blade, cache tags, and public-output safety tests | Move data loading out of Blade and rerun the package public-output tests |
 
-## Testing
+## Quick Start
 
-Run package tests from the repository root:
+1. Install the package: `composer require capell-app/events`.
+2. Run the required setup: `php artisan capell:events-install`.
+3. Open the related Capell admin surface and verify Events appears.
 
-```bash
-vendor/bin/pest packages/events/tests --configuration=phpunit.xml
-```
+## Next Steps
 
-## Maintenance Notes
+- [Package docs](docs/README.md)
+- [Overview](docs/overview.md)
+- [Screenshot contract](docs/screenshots.json)
+- [Marketplace assets](docs/assets/marketplace/)
+- [Capell content language plan](../../docs/CONTENT_LANGUAGE_PLAN.md)
+- [Capell documentation design system](../../docs/DESIGN_SYSTEM.md)
+- [Capell and package ERD notes](../../docs/erd/capell-and-package-erds.md)
+- Related packages: [Navigation](../navigation/README.md), [Publishing Studio](../publishing-studio/README.md), [Address](../address/README.md), [Customer Portal](../customer-portal/README.md), [Form Builder](../form-builder/README.md), [Seo Suite](../seo-suite/README.md), [Site Discovery](../site-discovery/README.md), [Tags](../tags/README.md).
+- Focused tests: `vendor/bin/pest packages/events/tests --configuration=phpunit.xml`.
 
-- Treat public routes as untrusted input and keep validation, permission checks, and side effects inside actions or dedicated services.
-- Put behaviour changes in `src/Actions/`; UI classes, commands, and controllers should call actions instead of owning domain logic.
-- Use package `Data` classes at boundaries instead of passing anonymous arrays between layers.
-- Use backed enums for persisted values and enum labels for Filament options.
+<!-- prettier-ignore-end -->

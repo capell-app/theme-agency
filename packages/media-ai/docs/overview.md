@@ -1,55 +1,92 @@
 # Media AI
 
-The Media AI package adds provider-backed image actions to Capell's existing media resource. It does not replace the media backend, crop system, or localized metadata model.
+<!-- prettier-ignore-start -->
 
-Status: `Optional` · Tier: `Premium` · Bundle: `media` · Surface: `Admin` · Depends on: `capell-app/admin`, `capell-app/core`
+## What This Plugin Adds
 
-![Media AI Doctor image action surface in the media library](images/screenshots/media-ai-doctor-image.png)
+Media AI is an **Available**, **No schema impact** Capell package in the **Capell Media** product group. It ships as `capell-app/media-ai` and extends these surfaces: admin, console.
 
-## What It Adds
+Media AI adds a provider-backed "Doctor image" action to image records in the Capell Admin media library, letting editors improve images, remove backgrounds or objects, restore damaged assets, and request upscales without leaving the CMS. It ships the `ImageDoctor` contract and a safe null implementation rather than a production AI provider; bind an implementation directly or through AI Orchestrator, and the action stays hidden until one is configured. Media AI is positioned as a premium Capell Media add-on to the free Media Library workflow, with no public frontend output and no database writes of its own.
 
-- A `Doctor image` action on image records in the Media resource.
-- A small form for the editor to choose the image operation and add instructions.
-- A `Capell\MediaAI\Contracts\ImageDoctor` contract that a provider package can bind to the real image-editing implementation, directly or through AI Orchestrator.
-- An opt-in `AIOrchestratorImageDoctor` adapter that runs a configured AI Orchestrator module/capability and maps its response back to `ImageDoctorResult`.
-- A safe default `NullImageDoctor`, so installing the package never exposes a broken action before an AI provider is configured.
+After install, admins get package-owned management or reporting surfaces inside Capell.
 
-## Marketplace Positioning
+Status details:
 
-Media AI is a premium Capell Media add-on to the free Media Library workflow. Today it should be sold as the admin-safe provider seam for image operations - improve, remove background, remove object, restore, and upscale - rather than as a full AI media suite. Pair Media AI with Media Library for the editing surface and AI Orchestrator for provider governance; the bundled adapter connects to a registered AI Orchestrator image capability, but the actual image model/provider remains outside this package.
+- Status: Available
+- Tier: premium
+- Bundle: media
+- Composer package: `capell-app/media-ai`
+- Namespace: `Capell\MediaAI`
+- Theme key: not applicable
 
-## Editor Flow
+## Why It Matters
 
-1. Upload or open an image in Admin > Media.
-2. Select `Doctor image`.
-3. Choose the operation, such as background removal or cleanup.
-4. Add short instructions.
-5. Submit the action.
+**For developers:** The package gives developers package-owned service providers, Actions, Data objects, and Filament classes instead of pushing this behaviour into core or application code.
 
-When the action runs, the editor sees a Filament notification carrying the `ImageDoctorResult` message — a success notification when the request succeeds, or a warning when it does not. The result object carries `successful`, an optional `message`, and optional generated `altText` / `caption` fields. Successful results with generated alt text or captions are written to the media record's localized translation `meta` for the request locale.
+**For teams:** Provider-backed image editing inside Capell's media library: improve images, remove backgrounds or objects, restore, and upscale through a Doctor image action that stays hidden until configured.
 
-## Integration Contract
+## Screens And Workflow
 
-By default the package binds `NullImageDoctor`. To use the first-party AI Orchestrator adapter, configure the driver and capability keys:
+Screenshot contract: `screenshots.json`.
 
-```php
-return [
-    'image_doctor' => [
-        'driver' => 'ai_orchestrator',
-        'ai_orchestrator' => [
-            'module' => 'media-ai',
-            'capability' => 'doctor-image',
-        ],
-    ],
-];
-```
+- Doctor image action on the Media edit page (admin, required).
 
-Custom providers can still bind `Capell\MediaAI\Contracts\ImageDoctor` directly. Every implementation receives the current media record and an `ImageDoctorRequest` (a validated `operation`, free-text `instructions`, and optional `locale`). It returns an `ImageDoctorResult` reporting `successful`, an optional human-readable `message`, and optional localized `altText` / `caption` values. The `message` is rendered verbatim in the editor notification, so providers must return a translated, credential-free string for the request locale.
+## Technical Shape
 
-Doctor image requests are rate-limited per editor/media pair through `capell-media-ai.image_doctor.rate_limit`. Optional `budget_cents` and `model` config values are forwarded on `ImageDoctorRequest` and through the AI Orchestrator prompt/context so provider packages can enforce spend and model selection consistently.
+- Service providers: `Capell\MediaAI\Providers\MediaAIServiceProvider`.
+- Config files: `packages/media-ai/config/capell-media-ai.php`.
+- Filament classes: `MediaAIEditActionExtender`.
+- Actions: `ApplyImageDoctorMetadataAction`, `QueueBatchImageDoctorRequestsAction`.
+- Data objects: `ImageDoctorRequest`, `ImageDoctorResult`.
+- Jobs: `RunImageDoctorJob`.
+- Command signatures: `media-ai:doctor-batch`.
+- Console command classes: `QueueImageDoctorBatchCommand`.
+- Health checks: `Capell\MediaAI\Health\MediaAIHealthCheck`.
 
-## Boundaries
+## Data Model
 
-- Cropping remains owned by Curator when `capell.media.backend` is `curator`.
-- Spatie installs use Capell's fallback focal-point and crop-preset UI.
-- Localized alt text, captions, credits, and decorative flags are stored in the shared `translations.meta` JSON column.
+This package has no schema impact. It does not declare package-owned migrations or required tables.
+
+Docs gap: document extension points here if the package delegates persistence to a host package.
+
+## Install Impact
+
+- Admin navigation: adds package-owned Filament classes when registered.
+- Permissions: none declared in `capell.json`.
+- Public routes: none detected in package route files.
+- Database changes: no package migrations declared.
+- Settings: no package settings declared.
+- Queues or schedules: review package jobs or schedules before install.
+- Cache tags: none declared.
+- Commands: `media-ai:doctor-batch`.
+
+## Common Pitfalls
+
+- Run package commands from the host app; in this repository use `vendor/bin/pest` for package tests.
+- Keep `composer.json`, `composer.local.json`, `capell.json`, docs, screenshots, and tests aligned when the package surface changes.
+
+## Troubleshooting
+
+| Symptom | Likely cause | Check | Fix |
+| --- | --- | --- | --- |
+| Package surface is missing after install | Provider or manifest is not loaded | Confirm `capell.json`, package `composer.json`, and provider registration | Reinstall the package, refresh Composer autoload, and clear host caches |
+| Background work does not run | Queue worker or scheduled command is not active | Check package jobs, commands, and host scheduler configuration | Start the queue or scheduler, then run the focused command or package test |
+
+## Quick Start
+
+1. Install the package: `composer require capell-app/media-ai`.
+2. Run the required setup: no package migrations are declared; clear cached config and routes if the host app uses caches.
+3. Open the related Capell admin surface and verify Media AI appears.
+
+## Next Steps
+
+- [Package docs index](README.md)
+- [Screenshot contract](screenshots.json)
+- [Marketplace assets](assets/marketplace/)
+- [Capell content language plan](../../../docs/CONTENT_LANGUAGE_PLAN.md)
+- [Capell documentation design system](../../../docs/DESIGN_SYSTEM.md)
+- [Capell and package ERD notes](../../../docs/erd/capell-and-package-erds.md)
+- Related packages: [Ai Orchestrator](../../ai-orchestrator/README.md), [Media Library](../../media-library/README.md), [Seo Suite](../../seo-suite/README.md).
+- Focused tests: `vendor/bin/pest packages/media-ai/tests --configuration=phpunit.xml`.
+
+<!-- prettier-ignore-end -->

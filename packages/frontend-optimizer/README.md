@@ -1,92 +1,106 @@
 # Frontend Optimizer
 
-Profile-based CSS and JavaScript delivery for public Capell pages.
+<!-- prettier-ignore-start -->
 
-## At A Glance
+## What This Plugin Adds
 
-- Package: `capell-app/frontend-optimizer`
-- Namespace: `Capell\FrontendOptimizer\`
-- Surfaces: frontend Blade directive, queue, database
-- Service providers: `packages/frontend-optimizer/src/Providers/FrontendOptimizerServiceProvider.php`
-- Capell dependencies: `capell-app/core`, `capell-app/frontend`
-- Third-party dependencies: `lorisleiva/laravel-actions`, `spatie/laravel-data`, `spatie/laravel-package-tools`, `symfony/process`
+Frontend Optimizer is an **Available**, **Schema-owning** Capell package in the **Capell Foundation** product group. It ships as `capell-app/frontend-optimizer` and extends these surfaces: admin, console, frontend.
 
-## Why It Helps Your Capell Workflow
+Frontend Optimizer speeds up your public Capell site by inlining the exact above-the-fold CSS each layout needs and deferring everything else, so visitors see styled content sooner and your Core Web Vitals improve. Unlike source-scanning tools, it generates critical CSS from your pages as a real browser renders them - Layout Builder content, theme markup, render hooks, and responsive styles all included - across mobile and desktop viewports. Generation runs on your queue, never in the public response, and falls back safely to standard stylesheet delivery until critical CSS exists. Per-layout render profiles mean equivalent pages reuse one optimized result, and page types you don't want to optimize can opt out with a single toggle.
 
-- Provides profile-based CSS and JavaScript delivery so Capell frontend performance can improve without rewriting themes.
-- Helps owners keep pages lean as optional packages add assets, widgets, and render profiles.
-- Gives developers manifest, critical CSS, and render-profile surfaces for package-aware asset loading.
+After install, admins get package-owned management surfaces and public users may see package-owned frontend output or routes.
 
-## Best Used With
+Status details:
 
-- [Foundation Theme](../foundation-theme/README.md)
-- [HTML Cache](../html-cache/README.md)
-- [Frontend Authoring](../frontend-authoring/README.md)
+- Status: Available
+- Tier: premium
+- Bundle: foundation
+- Composer package: `capell-app/frontend-optimizer`
+- Namespace: `Capell\FrontendOptimizer`
+- Theme key: not applicable
 
-## What It Adds
+## Why It Matters
 
-- Profile-based CSS and JavaScript delivery for public Capell pages.
-- `@frontendOptimizerAssets(...)` Blade directive for rendering resolved profile assets.
-- Render profile storage and critical CSS generation support.
-- No direct Filament admin surface or public route.
+**For developers:** The package gives developers package-owned service providers, Actions, Data objects, models, and Filament classes instead of pushing this behaviour into core or application code.
 
-## Code Map
+**For teams:** Faster first paint for public Capell pages: automatic above-the-fold critical CSS extracted from your real rendered pages, plus smart deferring of non-critical CSS and JavaScript.
 
-| Area      | Path                                        | Purpose                                                             |
-| --------- | ------------------------------------------- | ------------------------------------------------------------------- |
-| Actions   | `packages/frontend-optimizer/src/Actions`   | Domain operations. Test these directly where possible.              |
-| Data      | `packages/frontend-optimizer/src/Data`      | Structured payloads, form state, view models, and integration data. |
-| Enums     | `packages/frontend-optimizer/src/Enums`     | Persisted states and Filament option values.                        |
-| Models    | `packages/frontend-optimizer/src/Models`    | Eloquent records owned by the package.                              |
-| Jobs      | `packages/frontend-optimizer/src/Jobs`      | Queued work and async side effects.                                 |
-| Providers | `packages/frontend-optimizer/src/Providers` | Registration, extension hooks, routes, migrations, and resources.   |
-| Resources | `packages/frontend-optimizer/resources`     | Views, translations, assets, and package resources.                 |
-| Config    | `packages/frontend-optimizer/config`        | Package configuration and publishable config.                       |
-| Database  | `packages/frontend-optimizer/database`      | Migrations, seeders, and settings migrations.                       |
-| Tests     | `packages/frontend-optimizer/tests`         | Package-level Pest coverage.                                        |
+## Screens And Workflow
 
-## Runtime Surface
+Screenshot contract: `docs/screenshots.json`.
 
-- Blade directive: `@frontendOptimizerAssets(...)`.
+- Frontend Optimizer profile asset output (frontend, required).
+- Frontend Optimizer critical CSS output (frontend, required).
+
+## Technical Shape
+
+- Service providers: `Capell\FrontendOptimizer\Providers\FrontendOptimizerServiceProvider`.
+- Config files: `packages/frontend-optimizer/config/capell-frontend-optimizer.php`.
+- Migrations: `packages/frontend-optimizer/database/migrations/2026_05_10_190851_01_create_frontend_optimizer_tables.php`.
+- Settings migrations: `packages/frontend-optimizer/database/settings/2026_05_24_000001_add_frontend_optimizer_settings.php`.
+- Settings classes: `FrontendOptimizerSettings`.
+- Models: `FrontendOptimizationRun`, `FrontendRenderProfile`.
+- Filament classes: `FrontendOptimizerPageTypeConfigurator`, `FrontendOptimizerSettingsSchema`.
+- Listeners: `CaptureCriticalCssPageTypeOptOut`.
+- Actions: `BuildOptimizedImageMarkupAction`, `GenerateCriticalCssAction`, `InvalidateGeneratedCriticalCssCacheAction`, `PersistRenderProfileAction`, `PrepareRenderProfileAction`, `PruneRenderProfilesAction`, `RenderProfileAssetsAction`, `ResolveOptimizationScopeAction`, `ResolveRenderProfileAction`, `StoreRenderProfileManifestAction`.
+- Data objects: `FrontendAssetDefinitionData`, `FrontendResourceHintData`, `PruneRenderProfilesResultData`, `RenderProfileData`.
 - Jobs: `GenerateCriticalCssJob`.
-- Critical CSS generation uses the configured process runner; keep failures visible in optimization run records rather than hiding them in Blade output.
+- Command signatures: `capell:frontend-optimizer:prune-profiles`.
+- Console command classes: `PruneRenderProfilesCommand`.
+- Health checks: `Capell\FrontendOptimizer\Health\FrontendOptimizerHealthCheck`.
+- Cache tags: `frontend-optimizer`.
 
-## Data And Persistence
+## Data Model
 
 - Models: `FrontendOptimizationRun`, `FrontendRenderProfile`.
-- Migrations: `2026_05_10_190851_01_create_frontend_optimizer_tables.php`.
-- Config: `packages/frontend-optimizer/config/capell-frontend-optimizer.php`.
-- Data objects live in `src/Data/`; use them for payloads, form state, and view models.
+- Migration files: `2026_05_10_190851_01_create_frontend_optimizer_tables.php`.
+- Migration impact: run host migrations through the package install flow before opening package surfaces.
+- Deletion/retention behaviour: Docs gap unless the package has an explicit pruning command, retention setting, or tested cascade path.
 
-## Extension Points
+## Install Impact
 
-- Contracts: `CriticalCssGenerator`.
-- Register Capell extension points, routes, migrations, settings, render hooks, and resources from service providers.
+- Admin navigation: adds package-owned Filament classes when registered.
+- Permissions: none declared in `capell.json`.
+- Public routes: none detected in package route files.
+- Database changes: package migrations are declared.
+- Settings: `Capell\FrontendOptimizer\Settings\FrontendOptimizerSettings`.
+- Queues or schedules: review package jobs or schedules before install.
+- Cache tags: `frontend-optimizer`.
+- Commands: `capell:frontend-optimizer:prune-profiles`.
 
-## Install And Setup
+## Common Pitfalls
 
-- Install with `composer require capell-app/frontend-optimizer` in the host Capell application.
-- Run migrations through the host application package install flow.
-- In this repository, verify package changes with `vendor/bin/pest`; do not use `php artisan`.
+- Run migrations before opening package resources or public routes.
+- Configure package settings before testing production-like workflows.
+- Keep public Blade and cached HTML free of authoring markers, model IDs, permissions, signed editor URLs, and lazy database queries.
+- Run package commands from the host app; in this repository use `vendor/bin/pest` for package tests.
+- Keep `composer.json`, `composer.local.json`, `capell.json`, docs, screenshots, and tests aligned when the package surface changes.
 
-## Docs
+## Troubleshooting
 
-- [docs index](docs/README.md)
-- [overview.md](docs/overview.md)
-- [assets-and-render-profiles.md](docs/assets-and-render-profiles.md)
-- [critical-css.md](docs/critical-css.md)
-- [screenshots.json](docs/screenshots.json)
+| Symptom | Likely cause | Check | Fix |
+| --- | --- | --- | --- |
+| Package surface is missing after install | Provider or manifest is not loaded | Confirm `capell.json`, package `composer.json`, and provider registration | Reinstall the package, refresh Composer autoload, and clear host caches |
+| Admin screen or command fails on missing table | Package migrations have not run | Check the tables listed in `Data Model` | Run host migrations and rerun the focused package test |
+| Background work does not run | Queue worker or scheduled command is not active | Check package jobs, commands, and host scheduler configuration | Start the queue or scheduler, then run the focused command or package test |
+| Public output leaks unexpected state | Render data, cache variation, or authoring boundary has regressed | Check public Blade, cache tags, and public-output safety tests | Move data loading out of Blade and rerun the package public-output tests |
 
-## Testing
+## Quick Start
 
-Run package tests from the repository root:
+1. Install the package: `composer require capell-app/frontend-optimizer`.
+2. Run the required setup: `php artisan migrate`.
+3. Open the related Capell admin surface and verify Frontend Optimizer appears.
 
-```bash
-vendor/bin/pest packages/frontend-optimizer/tests --configuration=phpunit.xml
-```
+## Next Steps
 
-## Maintenance Notes
+- [Package docs](docs/README.md)
+- [Overview](docs/overview.md)
+- [Screenshot contract](docs/screenshots.json)
+- [Marketplace assets](docs/assets/marketplace/)
+- [Capell content language plan](../../docs/CONTENT_LANGUAGE_PLAN.md)
+- [Capell documentation design system](../../docs/DESIGN_SYSTEM.md)
+- [Capell and package ERD notes](../../docs/erd/capell-and-package-erds.md)
+- Related packages: [Media Library](../media-library/README.md).
+- Focused tests: `vendor/bin/pest packages/frontend-optimizer/tests --configuration=phpunit.xml`.
 
-- Put behaviour changes in `src/Actions/`; UI classes, commands, and controllers should call actions instead of owning domain logic.
-- Use package `Data` classes at boundaries instead of passing anonymous arrays between layers.
-- Use backed enums for persisted values and enum labels for Filament options.
+<!-- prettier-ignore-end -->

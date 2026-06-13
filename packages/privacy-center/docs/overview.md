@@ -1,75 +1,107 @@
 # Privacy Center
 
-Privacy Center is the package-owned compliance foundation for Capell consent and privacy workflows.
+<!-- prettier-ignore-start -->
 
-It intentionally does not replace package-specific consent capture in packages such as Insights or Newsletter. Those packages can continue to record their own operational evidence and later call Privacy Center Actions when they need a shared compliance ledger.
+## What This Plugin Adds
 
-## Foundation Scope
+Privacy Center is an **Available**, **Schema-owning** Capell package in the **Capell Operations** product group. It ships as `capell-app/privacy-center` and extends these surfaces: admin, console, frontend.
 
-- Consent policies and version metadata.
-- Cookie/category consent decisions with hashed request evidence.
-- Policy version acceptance records.
-- Privacy subject requests for access, export, deletion, correction, restriction, and objection workflows.
-- Operator workflow actions for marking privacy requests verified, fulfilled, or rejected without bypassing audit timestamps.
-- Filament admin resources for consent policies, consent records, policy acceptances, privacy requests, and retention rules.
-- An admin overview widget for package-owned consent, request, and retention counts.
-- Retention rules for package-owned or integration-owned data domains.
-- Retention execution Actions and the `privacy:apply-retention` console command for delete, anonymize, and review workflows.
-- Export and anonymization Actions that operate on Privacy Center records first.
-- A daily retention schedule contribution so installers can discover and run the package-owned retention execution hook.
-- A public cookie consent preference center that records category decisions through `RecordConsentAction`.
+Privacy Center gives every Capell site a single, queryable system of record for privacy obligations: granular cookie-category consent, versioned policy acceptances, retention rules, and access/export/delete subject requests. Consent and subject data are recorded through stable Actions that other Capell packages can call. Hashed request evidence (IP, user-agent) and consent records give you defensible proof, while retention rules keep data minimised. Admin operators get resources and an at-a-glance compliance dashboard; nothing sensitive ever leaks to public output.
 
-Privacy Center currently ships admin and console surfaces plus a public cookie consent preference center. It does not ship a public DSAR intake form or cross-package subject-data export/erasure registry.
+After install, admins get package-owned management surfaces and public users may see package-owned frontend output or routes.
 
-## Integration Contract
+Status details:
 
-Integrating packages should call Actions instead of writing Privacy Center tables directly:
+- Status: Available
+- Tier: premium
+- Bundle: operations
+- Composer package: `capell-app/privacy-center`
+- Namespace: `Capell\PrivacyCenter`
+- Theme key: not applicable
 
-- `RecordConsentAction`
-- `RecordPolicyAcceptanceAction`
-- `OpenPrivacyRequestAction`
-- `CreateRetentionRuleAction`
-- `ApplyRetentionRuleAction`
-- `ApplyRetentionRulesAction`
-- `BuildPrivacyExportAction`
-- `AnonymizePrivacySubjectAction`
+## Why It Matters
 
-`RecordConsentAction` can infer a subject from a source model with a loaded `subject` or `visit` relation. That keeps mirrored records from integrations such as Insights discoverable by Privacy Center's package-owned export and anonymization Actions.
+**For developers:** The package gives developers package-owned service providers, Actions, Data objects, models, Laravel routes, Filament classes, and Blade views instead of pushing this behaviour into core or application code.
 
-Public frontend output must not expose Privacy Center internals, package names, model identifiers, admin URLs, or editor state.
+**For teams:** The compliance backbone for Capell - one auditable ledger for cookie consent, policy acceptances, retention rules, and GDPR/CCPA subject requests, with Actions your other packages plug straight into.
 
-The public preference center lives at `/privacy/consent`. It renders category handles and translated explanatory copy only, grants essential cookies automatically, writes optional category decisions through the same Action used by integrations, and keeps policy model IDs plus hashed evidence out of anonymous HTML.
+## Screens And Workflow
 
-## Console
+Screenshot contract: `screenshots.json`.
 
-Run active retention rules manually with:
+- Privacy requests admin queue (admin, required).
+- Privacy request workflow actions (admin, required).
+- Privacy retention rules admin list (admin, required).
 
-```bash
-privacy:apply-retention
-```
+## Technical Shape
 
-Use `--json` when automation needs the per-rule matched and affected record counts.
+- Service providers: `Capell\PrivacyCenter\Providers\PrivacyCenterServiceProvider`, `Capell\PrivacyCenter\Providers\AdminServiceProvider`.
+- Config files: `packages/privacy-center/config/capell-privacy-center.php`.
+- Migrations: `packages/privacy-center/database/migrations/2026_05_31_000001_create_privacy_consent_policies_table.php`, `packages/privacy-center/database/migrations/2026_05_31_000002_create_privacy_consent_records_table.php`, `packages/privacy-center/database/migrations/2026_05_31_000003_create_privacy_policy_acceptances_table.php`, `packages/privacy-center/database/migrations/2026_05_31_000004_create_privacy_retention_rules_table.php`, `packages/privacy-center/database/migrations/2026_05_31_000005_create_privacy_requests_table.php`.
+- Models: `ConsentPolicy`, `ConsentRecord`, `PolicyAcceptance`, `PrivacyRequest`, `RetentionRule`.
+- Filament classes: `ConsentPolicyResource`, `CreateConsentPolicy`, `EditConsentPolicy`, `ListConsentPolicies`, `ConsentRecordResource`, `ListConsentRecords`, `ListPolicyAcceptances`, `PolicyAcceptanceResource`, `EditPrivacyRequest`, `ListPrivacyRequests`, `PrivacyRequestResource`, `CreateRetentionRule`, `and 4 more`.
+- Route files: `packages/privacy-center/routes/web.php`.
+- Actions: `AnonymizePrivacySubjectAction`, `ApplyRetentionRuleAction`, `ApplyRetentionRulesAction`, `BuildPrivacyCenterOverviewStatsAction`, `BuildPrivacyExportAction`, `CreateRetentionRuleAction`, `MarkPrivacyRequestFulfilledAction`, `MarkPrivacyRequestVerifiedAction`, `OpenPrivacyRequestAction`, `RecordConsentAction`, `RecordPolicyAcceptanceAction`, `RegisterConsentPolicyAction`, `and 1 more`.
+- Data objects: `ConsentPolicyData`, `ConsentRecordData`, `PolicyAcceptanceData`, `PrivacyExportData`, `PrivacyRequestData`, `RetentionExecutionResultData`, `RetentionRuleData`.
+- Command signatures: `privacy:apply-retention`.
+- Console command classes: `ApplyRetentionRulesCommand`.
+- Manifest contributions: `admin-resource: Capell\PrivacyCenter\Manifest\ConsentPolicyResourceContribution`, `admin-resource: Capell\PrivacyCenter\Manifest\ConsentRecordResourceContribution`, `admin-resource: Capell\PrivacyCenter\Manifest\PolicyAcceptanceResourceContribution`, `admin-resource: Capell\PrivacyCenter\Manifest\PrivacyRequestResourceContribution`, `admin-resource: Capell\PrivacyCenter\Manifest\RetentionRuleResourceContribution`, `dashboard-widget: Capell\PrivacyCenter\Manifest\PrivacyCenterOverviewWidgetContribution`, `model: Capell\PrivacyCenter\Manifest\PrivacyCenterModelsContribution`, `scheduled-job: Capell\PrivacyCenter\Manifest\PrivacyRetentionScheduleContribution`.
+- Health checks: `Capell\PrivacyCenter\Health\PrivacyCenterHealthCheck`.
+- Blade views: `packages/privacy-center/resources/views/consent/banner.blade.php`, `packages/privacy-center/resources/views/consent/preferences.blade.php`.
+- Cache tags: `privacy-center`.
 
-The service provider schedules the same command daily when the package is installed, matching the scheduled-job contribution in `capell.json`.
+## Data Model
 
-## Admin Request Workflow
+- Required tables: `privacy_consent_policies`, `privacy_consent_records`, `privacy_policy_acceptances`, `privacy_retention_rules`, `privacy_requests`.
+- Models: `ConsentPolicy`, `ConsentRecord`, `PolicyAcceptance`, `PrivacyRequest`, `RetentionRule`.
+- Migration files: `2026_05_31_000001_create_privacy_consent_policies_table.php`, `2026_05_31_000002_create_privacy_consent_records_table.php`, `2026_05_31_000003_create_privacy_policy_acceptances_table.php`, `2026_05_31_000004_create_privacy_retention_rules_table.php`, `2026_05_31_000005_create_privacy_requests_table.php`.
+- Migration impact: run host migrations through the package install flow before opening package surfaces.
+- Deletion/retention behaviour: Docs gap unless the package has an explicit pruning command, retention setting, or tested cascade path.
 
-Privacy request status changes should be handled from the edit-page workflow actions:
+## Install Impact
 
-- Mark verified stamps `verified_at` and moves the request into processing.
-- Mark fulfilled stamps `fulfilled_at`.
-- Reject requires a rejection reason and stamps `rejected_at`.
+- Admin navigation: adds package-owned Filament classes when registered.
+- Permissions: `ViewAny:ConsentPolicy`, `View:ConsentPolicy`, `Create:ConsentPolicy`, `Update:ConsentPolicy`, `Delete:ConsentPolicy`, `ViewAny:ConsentRecord`, `View:ConsentRecord`, `ViewAny:PolicyAcceptance`, `View:PolicyAcceptance`, `ViewAny:PrivacyRequest`, `View:PrivacyRequest`, `Update:PrivacyRequest`, `ViewAny:RetentionRule`, `View:RetentionRule`, `Create:RetentionRule`, `Update:RetentionRule`, `Delete:RetentionRule`.
+- Public routes: route files exist and must be reviewed before public enablement.
+- Database changes: package migrations are declared.
+- Settings: no package settings declared.
+- Queues or schedules: none detected in standard package paths.
+- Cache tags: `privacy-center`.
+- Commands: `privacy:apply-retention`.
 
-The form keeps status, workflow timestamps, and rejection reason read-only so operators cannot bypass the Actions that maintain the compliance audit trail.
+## Common Pitfalls
 
-## Export And Erasure Boundaries
+- Run migrations before opening package resources or public routes.
+- Review route middleware, throttling, signed URLs, and public-output safety before exposing routes.
+- Keep public Blade and cached HTML free of authoring markers, model IDs, permissions, signed editor URLs, and lazy database queries.
+- Run package commands from the host app; in this repository use `vendor/bin/pest` for package tests.
+- Keep `composer.json`, `composer.local.json`, `capell.json`, docs, screenshots, and tests aligned when the package surface changes.
 
-`BuildPrivacyExportAction` exports Privacy Center's own consent records, policy acceptances, and privacy requests for a subject. It removes internal primary keys, subject/source links, IP hashes, user-agent hashes, and email hashes from the exported rows.
+## Troubleshooting
 
-`AnonymizePrivacySubjectAction` removes subject links and hashed/request evidence from Privacy Center consent records, policy acceptances, and privacy requests. It does not erase package-owned data from Contacts, Newsletter, Insights, or other integrations. Those packages must continue to own their operational deletion/export behavior until a dedicated cross-package subject-data contribution contract ships.
+| Symptom | Likely cause | Check | Fix |
+| --- | --- | --- | --- |
+| Package surface is missing after install | Provider or manifest is not loaded | Confirm `capell.json`, package `composer.json`, and provider registration | Reinstall the package, refresh Composer autoload, and clear host caches |
+| Admin screen or command fails on missing table | Package migrations have not run | Check the tables listed in `Data Model` | Run host migrations and rerun the focused package test |
+| Route returns unexpected output | Route cache, middleware, or signed URL setup does not match the package route file | Check the route files listed in `Technical Shape` | Clear route cache and verify middleware before exposing public routes |
+| Background work does not run | Queue worker or scheduled command is not active | Check package jobs, commands, and host scheduler configuration | Start the queue or scheduler, then run the focused command or package test |
+| Public output leaks unexpected state | Render data, cache variation, or authoring boundary has regressed | Check public Blade, cache tags, and public-output safety tests | Move data loading out of Blade and rerun the package public-output tests |
 
-## Audit And Safety Boundaries
+## Quick Start
 
-The package stores hashed request evidence for consent and policy acceptance workflows. `CAPELL_PRIVACY_CENTER_HASH_SECRET` should be set explicitly in production; if no package hash secret and no `app.key` are available, hashing fails instead of falling back to a predictable salt.
+1. Install the package: `composer require capell-app/privacy-center`.
+2. Run the required setup: `php artisan migrate`.
+3. Open the related Capell admin surface and verify Privacy Center appears.
 
-The manifest marks the package as non-cacheable with sensitive output and a 40ms frontend render budget because consent decisions vary by subject and request evidence is sensitive. The cache-safe public preference center must keep Privacy Center internals, package names, model identifiers, admin URLs, hashed identifiers, and editor state out of anonymous and non-admin output. Future public DSAR UI must preserve the same boundary.
+## Next Steps
+
+- [Package docs index](README.md)
+- [Screenshot contract](screenshots.json)
+- [Marketplace assets](assets/marketplace/)
+- [Capell content language plan](../../../docs/CONTENT_LANGUAGE_PLAN.md)
+- [Capell documentation design system](../../../docs/DESIGN_SYSTEM.md)
+- [Capell and package ERD notes](../../../docs/erd/capell-and-package-erds.md)
+- Related packages: [Access Gate](../../access-gate/README.md), [Contacts](../../contacts/README.md), [Insights](../../insights/README.md), [Newsletter](../../newsletter/README.md).
+- Focused tests: `vendor/bin/pest packages/privacy-center/tests --configuration=phpunit.xml`.
+
+<!-- prettier-ignore-end -->

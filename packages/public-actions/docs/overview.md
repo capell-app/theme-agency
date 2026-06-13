@@ -1,64 +1,113 @@
 # Public Actions
 
-Status: **Available, schema-owning** · Kind: **package** · Tier: **premium** · Bundle: **automation** · Contexts: **admin, frontend, console** · Product group: **Capell Automation**
+<!-- prettier-ignore-start -->
 
-Public Actions lets a Capell site expose configured public submission endpoints and dispatch those submissions to first-party handlers or outbound automation destinations.
+## What This Plugin Adds
 
-## What This Package Adds
+Public Actions is an **Available**, **Schema-owning** Capell package in the **Capell Automation** product group. It ships as `capell-app/public-actions` and extends these surfaces: admin, frontend, console.
 
-- Public Action, Destination, Submission, Dispatch Attempt, and Integration Token Filament resources.
-- Public web submit route at `/{route_prefix}/{action}`, defaulting to `/actions/{action}`.
-- Zapier/API routes under `/api/public-actions/zapier`.
-- Webhook dispatch jobs, provider presets, token authentication, throttling, and durable dispatch attempts.
-- HTTP webhook destinations resolve the endpoint host once, reject private or unresolved addresses by default, pin cURL to the validated address, and disable redirects during dispatch.
-- Optional integration points for Access Gate and Form Builder.
+Public Actions gives Capell a safe boundary for untrusted public input: submissions are validated against a per-action schema, screened for spam (honeypot + Turnstile), de-duplicated by idempotency key, and persisted before anything fires. Successful submissions fan out to configured destinations over signed HTTP webhooks (HMAC-SHA256) with SSRF protection, encrypted secrets, durable retry, and a complete per-attempt dispatch audit. Native presets cover Zapier, Make, n8n, Pipedream, and generic endpoints, and a registry lets other packages plug in their own handlers, destination adapters, and spam guards. An authenticated Zapier-style JSON API exposes discoverable actions and submissions for no-code automation builders.
 
-## Install And Demo Setup
+After install, admins get package-owned management surfaces and public users may see package-owned frontend output or routes.
 
-Install the package in a host Capell app:
+Status details:
 
-```bash
-composer require capell-app/public-actions
-```
+- Status: Available
+- Tier: premium
+- Bundle: automation
+- Composer package: `capell-app/public-actions`
+- Namespace: `Capell\PublicActions`
+- Theme key: not applicable
 
-Run the host app's migration/package install flow, then seed at least one active public action and destination before capturing screenshots.
+## Why It Matters
 
-## Admin Surfaces
+**For developers:** The package gives developers package-owned service providers, Actions, Data objects, models, Laravel routes, Filament classes, and Blade views instead of pushing this behaviour into core or application code.
 
-- `PublicActionResource`: action key, handler, site scope, redirect/messages, API/Zapier exposure, and payload schema.
-- `PublicActionDestinationResource`: webhook destination, adapter, endpoint, secret, headers, and settings.
-- `PublicActionSubmissionResource`: received public submissions and status.
-- `PublicActionDispatchAttemptResource`: outbound dispatch attempts, response status, and retry state.
-- `PublicActionIntegrationTokenResource`: provider-scoped integration tokens.
+**For teams:** Turn any public form or API request into a signed, retried, fully-audited webhook to Zapier, Make, n8n, Pipedream, or your own endpoint - without exposing a single admin route.
 
-## Frontend Surfaces
+## Screens And Workflow
 
-- `GET /actions/{action}` renders the package public action form.
-- `POST /actions/{action}` accepts a public submission with `throttle:public-actions-submit`.
-- `GET /api/public-actions/zapier/me`, `/actions`, and `/submissions` expose Zapier discovery.
-- `POST /api/public-actions/zapier/actions/{action}/submissions` accepts authenticated Zapier submissions.
+Screenshot contract: `screenshots.json`.
 
-## Screenshot Coverage
+- Public Actions admin index (admin, required).
+- Public Action create/edit form (admin, required).
+- Public Action destinations (admin, required).
+- Public Action submissions (admin, required).
+- Public Action dispatch attempts (admin, required).
+- Public Action integration tokens (admin, required).
+- Public Action frontend form (frontend, required).
+- Zapier action discovery API (frontend, required).
 
-The committed Capell runner-backed screenshot gallery covers:
+## Technical Shape
 
-- Public Actions admin index.
-- Public Action create/edit form.
-- Destinations admin index and destination form.
-- Submissions admin index.
-- Dispatch attempts admin index.
-- Integration token list and create-token modal.
-- Public action frontend form.
-- Zapier API discovery response as runner evidence only; it is not promoted as buyer-facing marketplace media because it is raw JSON output.
+- Service providers: `Capell\PublicActions\Providers\PublicActionsServiceProvider`.
+- Config files: `packages/public-actions/config/capell-public-actions.php`.
+- Migrations: `packages/public-actions/database/migrations/2026_05_10_190865_01_create_public_actions_table.php`, `packages/public-actions/database/migrations/2026_05_10_190865_02_create_public_action_destinations_table.php`, `packages/public-actions/database/migrations/2026_05_10_190865_03_create_public_action_submissions_table.php`, `packages/public-actions/database/migrations/2026_05_10_190865_04_create_public_action_dispatch_attempts_table.php`, `packages/public-actions/database/migrations/2026_05_10_190865_05_create_public_action_integration_tokens_table.php`, `packages/public-actions/database/migrations/2026_05_28_000002_add_idempotency_keys_to_public_action_submissions_table.php`.
+- Models: `PublicAction`, `PublicActionDestination`, `PublicActionDispatchAttempt`, `PublicActionIntegrationToken`, `PublicActionSubmission`.
+- Filament classes: `PublicActionFilamentOptions`, `CreatePublicActionDestination`, `EditPublicActionDestination`, `ListPublicActionDestinations`, `PublicActionDestinationResource`, `ListPublicActionDispatchAttempts`, `PublicActionDispatchAttemptResource`, `ListPublicActionIntegrationTokens`, `PublicActionIntegrationTokenResource`, `CreatePublicAction`, `EditPublicAction`, `ListPublicActions`, `and 3 more`.
+- Route files: `packages/public-actions/routes/web.php`.
+- Policies: `AbstractPublicActionResourcePolicy`, `PublicActionDestinationPolicy`, `PublicActionDispatchAttemptPolicy`, `PublicActionIntegrationTokenPolicy`, `PublicActionPolicy`, `PublicActionSubmissionPolicy`.
+- Listeners: `SubmitPublicActionFromFormSubmission`.
+- Actions: `BuildPublicActionIntegrationQueryAction`, `BuildZapierSubmissionPayloadAction`, `CreatePublicActionIntegrationTokenAction`, `DispatchPublicActionDestinationAction`, `ListPublicActionOptionsAction`, `PrunePublicActionSubmissionsAction`, `ReplayPublicActionDispatchAttemptAction`, `ResolvePublicActionForIntegrationTokenAction`, `ResolvePublicActionIntegrationTokenAction`, `RevokePublicActionIntegrationTokenAction`, `SubmitPublicActionAction`.
+- Data objects: `PublicActionDispatchResultData`, `PublicActionIntegrationTokenData`, `PublicActionMetadataData`, `PublicActionPayloadData`, `PublicActionProviderPresetData`, `PublicActionResultData`, `PublicActionRetentionPruneResultData`, `PublicActionSpamProtectionResultData`, `PublicActionSubmissionData`, `PublicActionZapierSubmissionData`, `ResolvedWebhookEndpointData`.
+- Jobs: `DispatchPublicActionDestinationJob`.
+- Command signatures: `capell:public-actions:prune-submissions`.
+- Console command classes: `PrunePublicActionSubmissionsCommand`.
+- Health checks: `Capell\PublicActions\Health\PublicActionsHealthCheck`.
+- Blade views: `packages/public-actions/resources/views/action.blade.php`, `packages/public-actions/resources/views/components/action-button.blade.php`.
+- Cache tags: `public-actions`.
 
-## Public Safety Notes
+## Data Model
 
-Treat public routes as untrusted input. Screenshots of public forms should not expose handler class names, secrets, integration token values, internal model IDs, or admin-only labels.
+- Models: `PublicAction`, `PublicActionDestination`, `PublicActionDispatchAttempt`, `PublicActionIntegrationToken`, `PublicActionSubmission`.
+- Migration files: `2026_05_10_190865_01_create_public_actions_table.php`, `2026_05_10_190865_02_create_public_action_destinations_table.php`, `2026_05_10_190865_03_create_public_action_submissions_table.php`, `2026_05_10_190865_04_create_public_action_dispatch_attempts_table.php`, `2026_05_10_190865_05_create_public_action_integration_tokens_table.php`, `2026_05_28_000002_add_idempotency_keys_to_public_action_submissions_table.php`.
+- Migration impact: run host migrations through the package install flow before opening package surfaces.
+- Deletion/retention behaviour: Docs gap unless the package has an explicit pruning command, retention setting, or tested cascade path.
 
-Outbound webhook destinations are also treated as untrusted. Keep `allow_insecure_webhook_urls` and `allow_private_webhook_urls` disabled on public sites; the built-in HTTP adapter fails closed when a hostname cannot be resolved, when any resolved address is private or reserved, or when cURL host pinning is unavailable.
+## Install Impact
 
-## Verification
+- Admin navigation: adds package-owned Filament classes when registered.
+- Permissions: none declared in `capell.json`.
+- Public routes: route files exist and must be reviewed before public enablement.
+- Database changes: package migrations are declared.
+- Settings: no package settings declared.
+- Queues or schedules: review package jobs or schedules before install.
+- Cache tags: `public-actions`.
+- Commands: `capell:public-actions:prune-submissions`.
 
-```bash
-vendor/bin/pest packages/public-actions/tests --configuration=phpunit.xml
-```
+## Common Pitfalls
+
+- Run migrations before opening package resources or public routes.
+- Review route middleware, throttling, signed URLs, and public-output safety before exposing routes.
+- Keep public Blade and cached HTML free of authoring markers, model IDs, permissions, signed editor URLs, and lazy database queries.
+- Run package commands from the host app; in this repository use `vendor/bin/pest` for package tests.
+- Keep `composer.json`, `composer.local.json`, `capell.json`, docs, screenshots, and tests aligned when the package surface changes.
+
+## Troubleshooting
+
+| Symptom | Likely cause | Check | Fix |
+| --- | --- | --- | --- |
+| Package surface is missing after install | Provider or manifest is not loaded | Confirm `capell.json`, package `composer.json`, and provider registration | Reinstall the package, refresh Composer autoload, and clear host caches |
+| Admin screen or command fails on missing table | Package migrations have not run | Check the tables listed in `Data Model` | Run host migrations and rerun the focused package test |
+| Route returns unexpected output | Route cache, middleware, or signed URL setup does not match the package route file | Check the route files listed in `Technical Shape` | Clear route cache and verify middleware before exposing public routes |
+| Background work does not run | Queue worker or scheduled command is not active | Check package jobs, commands, and host scheduler configuration | Start the queue or scheduler, then run the focused command or package test |
+| Public output leaks unexpected state | Render data, cache variation, or authoring boundary has regressed | Check public Blade, cache tags, and public-output safety tests | Move data loading out of Blade and rerun the package public-output tests |
+
+## Quick Start
+
+1. Install the package: `composer require capell-app/public-actions`.
+2. Run the required setup: `php artisan migrate`.
+3. Open the related Capell admin surface and verify Public Actions appears.
+
+## Next Steps
+
+- [Package docs index](README.md)
+- [Screenshot contract](screenshots.json)
+- [Marketplace assets](assets/marketplace/)
+- [Capell content language plan](../../../docs/CONTENT_LANGUAGE_PLAN.md)
+- [Capell documentation design system](../../../docs/DESIGN_SYSTEM.md)
+- [Capell and package ERD notes](../../../docs/erd/capell-and-package-erds.md)
+- Related packages: [Access Gate](../../access-gate/README.md), [Form Builder](../../form-builder/README.md).
+- Focused tests: `vendor/bin/pest packages/public-actions/tests --configuration=phpunit.xml`.
+
+<!-- prettier-ignore-end -->

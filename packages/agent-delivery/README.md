@@ -1,109 +1,94 @@
 # Agent Delivery
 
-Agent Delivery exposes already-public Capell page content as structured manifests and stable semantic chunks for agents, search assistants, and machine readers.
+<!-- prettier-ignore-start -->
 
-## At A Glance
+## What This Plugin Adds
 
-- Package: `capell-app/agent-delivery`
-- Namespace: `Capell\AgentDelivery\`
-- Surfaces: public HTTP JSON endpoints
-- Service provider: `packages/agent-delivery/src/Providers/AgentDeliveryServiceProvider.php`
-- Capell dependencies: `capell-app/core`
+Agent Delivery is an **Available**, **No schema impact** Capell package in the **Capell Publishing Pro** product group. It ships as `capell-app/agent-delivery` and extends these surfaces: frontend.
 
-## Why It Helps Your Capell Workflow
+Serve your published Capell pages to AI agents and answer engines as clean, public-safe JSON manifests and RAG-ready semantic chunks - no scraping, no admin leakage.
 
-- Site owners can make public Capell pages easier for search assistants and
-  agent tools to understand without exposing private admin state.
-- Developers get a stable manifest and chunk contract instead of writing
-  package-specific JSON endpoints for every public content type.
-- Operators can keep the surface anonymous and read-only, separate from the
-  authenticated Agent Bridge workflow.
+After install, the package affects public rendering, public routes, or frontend runtime behaviour.
 
-## Best Used With
+Status details:
 
-- [Site Discovery](../site-discovery/README.md) — public URL registry and
-  generated-output coverage reporting.
-- [SEO Suite](../seo-suite/README.md) — AI Discovery (`llms.txt`,
-  `/llms-full.txt`, page Markdown at `/{url}.md`, `Accept: text/markdown`
-  negotiation, robots AI-crawler rules, and editor inclusion controls).
-- [Agent Bridge](../agent-bridge/README.md) — authenticated agent actions
-  (the write/trusted counterpart to Agent Delivery's read-only surface).
+- Status: Available
+- Tier: premium
+- Bundle: publishing-pro
+- Composer package: `capell-app/agent-delivery`
+- Namespace: `Capell\AgentDelivery`
+- Theme key: not applicable
 
-## Boundary with SEO Suite AI Discovery
+## Why It Matters
 
-Agent Delivery and SEO Suite's AI Discovery serve complementary audiences:
+**For developers:** The package gives developers package-owned service providers, Actions, Data objects, and Laravel routes instead of pushing this behaviour into core or application code.
 
-| Concern         | Agent Delivery                                      | SEO Suite AI Discovery                     |
-| --------------- | --------------------------------------------------- | ------------------------------------------ |
-| Format          | Structured JSON manifests and semantic chunks       | Markdown, `llms.txt`, content negotiation  |
-| Audience        | RAG pipelines, answer engines, structured consumers | LLM crawlers, human-readable AI indexes    |
-| Endpoint style  | `?url=` query parameter                             | Path-based (`.md` suffix, `/llms.txt`)     |
-| Coverage source | `AgentDeliveryGeneratedOutputCoverageSource`        | `AiDiscoveryGeneratedOutputCoverageSource` |
+**For teams:** Serve your published Capell pages to AI agents and answer engines as clean, public-safe JSON manifests and RAG-ready semantic chunks - no scraping, no admin leakage.
 
-Install **Agent Delivery** when agents need structured JSON with typed fields,
-ordered chunks, and contributor-extensible metadata. Install **SEO Suite** when
-you need `llms.txt`, Markdown views, and editor-level AI inclusion controls.
-Install both for full coverage: SEO Suite provides the human/Markdown side,
-Agent Delivery provides the machine/JSON side, and Site Discovery unifies the
-coverage report.
+## Screens And Workflow
 
-## What It Adds
+Screenshot contract: `docs/screenshots.json`.
 
-- `GET /api/capell/agent/v1/pages` lists public, agent-readable page URLs for the resolved site and locale.
-- `GET /api/capell/agent/v1/pages/manifest?url=/path` returns canonical URL, locale, alternates, title, headings, summary, plain-text body, public metadata, schema.org data, references, and timestamps.
-- `GET /api/capell/agent/v1/pages/chunks?url=/path` returns heading-aware chunk records suitable for long-form agent consumption.
-- Focused contributor contracts let packages contribute public-safe metadata, chunks, references, and related URLs without putting package-specific logic into themes or public Blade.
-- All endpoints support `?locale=` overrides and deterministic `ETag`/`Cache-Control` responses.
+- Public page manifest JSON response (frontend, required).
+- Public page chunks JSON response (frontend, required).
 
-## Public Safety
+## Technical Shape
 
-Agent Delivery resolves pages through Core public URL resolution. Drafts, disabled URLs, unpublished pages, admin state, prompts, signed URLs, authoring markers, model permissions, and package internals are not part of the output contract.
+- Service providers: `Capell\AgentDelivery\Providers\AgentDeliveryServiceProvider`.
+- Config files: `packages/agent-delivery/config/capell-agent-delivery.php`.
+- Route files: `packages/agent-delivery/routes/agent-delivery.php`.
+- Actions: `BuildAgentDeliveryChunksAction`, `BuildAgentDeliveryPageAction`, `BuildAgentDeliveryPageIndexAction`, `ResolveAgentDeliveryPageAction`.
+- Data objects: `AgentDeliveryChunkData`, `AgentDeliveryPageData`, `AgentDeliveryPageIndexEntryData`, `ResolvedAgentDeliveryPageData`.
+- Health checks: `Capell\AgentDelivery\Health\AgentDeliveryHealthCheck`.
+- Cache tags: `agent-delivery`.
 
-Set page or translation metadata `agent_delivery.enabled` to `false`, `agent_delivery.exclude` to `true`, or include a `noai` robots directive to hide a public page from Agent Delivery without changing normal public rendering.
+## Data Model
 
-The package is deliberately separate from `agent-bridge`: Agent Delivery is anonymous, read-only, and public-safe. Agent Bridge remains the authenticated surface for trusted agent actions.
+This package has no schema impact. It does not declare package-owned migrations or required tables.
 
-## Extension
+Docs gap: document extension points here if the package delegates persistence to a host package.
 
-Register package-specific contributors by tagging implementations of:
+## Install Impact
 
-- `AgentDeliveryContributor::TAG` for legacy aggregate metadata and chunks.
-- `AgentDeliveryMetadataContributor::TAG` for public-safe metadata and provenance.
-- `AgentDeliveryChunkContributor::TAG` for stable semantic chunks.
-- `AgentDeliveryReferenceContributor::TAG` for public source/reference links.
-- `AgentDeliveryRelatedUrlContributor::TAG` for related public URLs.
+- Admin navigation: no admin surface declared.
+- Permissions: none declared in `capell.json`.
+- Public routes: route files exist and must be reviewed before public enablement.
+- Database changes: no package migrations declared.
+- Settings: no package settings declared.
+- Queues or schedules: none detected in standard package paths.
+- Cache tags: `agent-delivery`.
+- Commands: none declared.
 
-Contributors must only return already-public content. Do not include draft state, editor field paths, model IDs, signed URLs, permissions, prompts, or internal package metadata.
+## Common Pitfalls
 
-## Runtime Surface
-
-- Provider: `src/Providers/AgentDeliveryServiceProvider.php`
-- Controllers: `src/Http/Controllers/`
-- Actions: `src/Actions/`
-- Data objects: `src/Data/`
-- Contributor contracts: `src/Contracts/`
-- Registry/support: `src/Support/`
-- Site Discovery coverage source: `src/Support/SiteDiscovery/AgentDeliveryGeneratedOutputCoverageSource.php`
-- Tests: `packages/agent-delivery/tests`
-
-## Docs
-
-- [Overview](docs/overview.md)
-- [Contract](docs/contract.md)
-- [Screenshot manifest](docs/screenshots.json)
-
-## Testing
-
-Run package tests from the repository root:
-
-```bash
-vendor/bin/pest packages/agent-delivery/tests --configuration=phpunit.xml
-```
+- Review route middleware, throttling, signed URLs, and public-output safety before exposing routes.
+- Keep public Blade and cached HTML free of authoring markers, model IDs, permissions, signed editor URLs, and lazy database queries.
+- Keep `composer.json`, `composer.local.json`, `capell.json`, docs, screenshots, and tests aligned when the package surface changes.
 
 ## Troubleshooting
 
-| Symptom                           | Likely cause                                                                                        | Check                                                                         | Fix                                                                     |
-| --------------------------------- | --------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------- | ----------------------------------------------------------------------- |
-| Manifest endpoint returns no page | URL is not published, disabled, excluded from agent delivery, or resolved for the wrong site/locale | Check the requested `url`, `locale`, page metadata, and public URL resolution | Publish/enable the page or remove the agent-delivery exclusion metadata |
-| Chunks omit package-specific data | No contributor is registered or the contributor returned private/empty content                      | Check implementations tagged with the contributor `TAG` constants             | Register a public-safe contributor and cover it with a package test     |
-| Response is cached unexpectedly   | Consumer or proxy ignored the package `ETag`/`Cache-Control` contract                               | Inspect response headers for the endpoint                                     | Respect the endpoint headers or clear the affected frontend/proxy cache |
+| Symptom | Likely cause | Check | Fix |
+| --- | --- | --- | --- |
+| Package surface is missing after install | Provider or manifest is not loaded | Confirm `capell.json`, package `composer.json`, and provider registration | Reinstall the package, refresh Composer autoload, and clear host caches |
+| Route returns unexpected output | Route cache, middleware, or signed URL setup does not match the package route file | Check the route files listed in `Technical Shape` | Clear route cache and verify middleware before exposing public routes |
+| Public output leaks unexpected state | Render data, cache variation, or authoring boundary has regressed | Check public Blade, cache tags, and public-output safety tests | Move data loading out of Blade and rerun the package public-output tests |
+
+## Quick Start
+
+1. Install the package: `composer require capell-app/agent-delivery`.
+2. Run the required setup: no package migrations are declared; clear cached config and routes if the host app uses caches.
+3. Verify the package provider is registered and the related frontend, command, or extension point is active.
+
+## Next Steps
+
+- [Package docs](docs/README.md)
+- [Overview](docs/overview.md)
+- [Screenshot contract](docs/screenshots.json)
+- [Marketplace assets](docs/assets/marketplace/)
+- [Capell content language plan](../../docs/CONTENT_LANGUAGE_PLAN.md)
+- [Capell documentation design system](../../docs/DESIGN_SYSTEM.md)
+- [Capell and package ERD notes](../../docs/erd/capell-and-package-erds.md)
+- Related packages: [Site Discovery](../site-discovery/README.md).
+- Focused tests: `vendor/bin/pest packages/agent-delivery/tests --configuration=phpunit.xml`.
+
+<!-- prettier-ignore-end -->

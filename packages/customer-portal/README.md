@@ -1,71 +1,106 @@
 # Customer Portal
 
-Customer Portal turns a Capell site into an authenticated self-service hub for profile data, contributed dashboard items, preferences, support requests, and recent support history.
+<!-- prettier-ignore-start -->
 
-## At A Glance
+## What This Plugin Adds
 
-| Field             | Value                                                                                                                   |
-| ----------------- | ----------------------------------------------------------------------------------------------------------------------- |
-| Composer package  | `capell-app/customer-portal`                                                                                            |
-| Namespace         | `Capell\CustomerPortal`                                                                                                 |
-| Product group     | Capell Customer                                                                                                         |
-| Surfaces          | Authenticated frontend, admin                                                                                           |
-| Providers         | `Capell\CustomerPortal\Providers\CustomerPortalServiceProvider`, `Capell\CustomerPortal\Providers\AdminServiceProvider` |
-| Public route area | `/portal` behind configured `web` and `auth` middleware                                                                 |
-| Admin resource    | Portal support requests                                                                                                 |
-| Extension points  | Profile, preferences, dashboard item, and self-service item registries                                                  |
+Customer Portal is an **Available**, **Schema-owning** Capell package in the **Capell Content** product group. It ships as `capell-app/customer-portal` and extends these surfaces: admin, frontend.
 
-## Why It Helps Your Capell Workflow
+Customer Portal turns a Capell site into an authenticated self-service experience. A single dashboard aggregates billing, documents, event registrations, gated resources and newsletter preferences contributed by your other Capell packages - no custom glue code, just install and they appear. Customers raise and track support requests; staff triage them from the admin panel with full status workflow and audit-safe, encrypted records. Built on Capell's Action and provider-registry architecture, it stays cache-safe and never leaks admin internals into public output.
 
-Owners get a customer-facing account surface without each package building its own dashboard. Customers can see profile data, preferences, support threads, and self-service links in one authenticated place.
+After install, admins get package-owned management surfaces and public users may see package-owned frontend output or routes.
 
-Developers get registries for package-contributed cards and self-service items, while each owning package keeps its billing, documents, events, gated access, or newsletter operations behind its own Actions.
+Status details:
 
-## What It Adds
+- Status: Available
+- Tier: premium
+- Bundle: content-product
+- Composer package: `capell-app/customer-portal`
+- Namespace: `Capell\CustomerPortal`
+- Theme key: not applicable
 
-- Site-scoped `PortalAccount` records with encrypted profile/preference storage.
-- Authenticated frontend portal routes and controllers.
-- Registries for profile providers, preference providers, dashboard items, and self-service items.
-- Support request submission, threaded replies, status updates, events, and notifications.
-- Filament support-request triage resource.
-- DTOs for portal profiles, dashboard items, preferences, self-service items, and support request data.
+## Why It Matters
 
-## Boundaries
+**For developers:** The package gives developers package-owned service providers, Actions, Data objects, models, Laravel routes, Filament classes, and Blade views instead of pushing this behaviour into core or application code.
 
-Customer Portal is a BYO-auth package. It does not install login, registration, password reset, magic-link, or SSO screens. Pair it with the host app auth stack, Fortify, Socialite, Access Gate, or another identity package.
+**For teams:** A unified, logged-in customer hub for Capell sites - payments, documents, event registrations, gated content and support requests in one secure dashboard.
 
-The portal aggregates customer-facing links and cards; owning packages keep their domain operations. Provider output must not contain internal IDs, tokens, admin URLs, selectors, package internals, signed editor URLs, or authoring metadata.
+## Screens And Workflow
 
-## Runtime Surface
+Screenshot contract: `docs/screenshots.json`.
 
-- Providers: `src/Providers/`
-- Contracts: `src/Contracts/`
-- Registries: `src/Support/`
-- Controllers: `src/Http/Controllers/`
-- Actions: `src/Actions/`
-- Data objects: `src/Data/`
-- Events and notifications: `src/Events/`, `src/Notifications/`
-- Admin resource: `src/Filament/Resources/`
-- Tests: `packages/customer-portal/tests`
+- Customer portal frontend dashboard (frontend, required).
+- Customer portal preferences and support form (frontend, required).
+- Customer portal support triage admin list (frontend, required).
+- Customer portal support triage edit screen (frontend, required).
 
-## Docs
+## Technical Shape
 
-- [Package docs](docs/README.md)
-- [Overview](docs/overview.md)
-- [Foundation](docs/foundation.md)
-- [Improvement plan](docs/improvement-plan.md)
-- [Screenshots contract](docs/screenshots.json)
+- Service providers: `Capell\CustomerPortal\Providers\CustomerPortalServiceProvider`, `Capell\CustomerPortal\Providers\AdminServiceProvider`.
+- Config files: `packages/customer-portal/config/capell-customer-portal.php`.
+- Migrations: `packages/customer-portal/database/migrations/2026_05_31_150000_01_create_portal_accounts_table.php`, `packages/customer-portal/database/migrations/2026_05_31_150000_02_create_portal_support_requests_table.php`, `packages/customer-portal/database/migrations/2026_06_06_000001_create_portal_support_request_replies_table.php`.
+- Models: `PortalAccount`, `PortalSupportRequest`, `PortalSupportRequestReply`.
+- Filament classes: `EditPortalSupportRequest`, `ListPortalSupportRequests`, `PortalSupportRequestResource`.
+- Route files: `packages/customer-portal/routes/web.php`.
+- Events: `PortalSupportRequestStatusChanged`, `PortalSupportRequestSubmitted`.
+- Actions: `AddSupportRequestReplyAction`, `FindOrCreatePortalAccountAction`, `ResolveAuthenticatedPortalAccountAction`, `ResolvePortalDashboardItemsAction`, `ResolvePortalPreferenceOptionsAction`, `ResolvePortalProfileAction`, `ResolvePortalSelfServiceItemsAction`, `SubmitSupportRequestAction`, `UpdatePortalPreferencesAction`, `UpdateSupportRequestStatusAction`.
+- Data objects: `PortalAccountIdentityData`, `PortalDashboardItemData`, `PortalPreferenceOptionData`, `PortalPreferencesData`, `PortalProfileData`, `PortalSelfServiceItemData`, `SupportRequestData`.
+- Manifest contributions: `admin-resource: Capell\CustomerPortal\Manifest\PortalSupportRequestResourceContribution`, `model: Capell\CustomerPortal\Manifest\CustomerPortalModelsContribution`, `route: Capell\CustomerPortal\Manifest\CustomerPortalFrontendRoutesContribution`.
+- Health checks: `Capell\CustomerPortal\Health\CustomerPortalHealthCheck`.
+- Blade views: `packages/customer-portal/resources/views/dashboard.blade.php`.
+- Cache tags: `customer-portal`.
 
-## Testing
+## Data Model
 
-```bash
-vendor/bin/pest packages/customer-portal/tests --configuration=phpunit.xml
-```
+- Required tables: `portal_accounts`, `portal_support_requests`, `portal_support_request_replies`.
+- Models: `PortalAccount`, `PortalSupportRequest`, `PortalSupportRequestReply`.
+- Migration files: `2026_05_31_150000_01_create_portal_accounts_table.php`, `2026_05_31_150000_02_create_portal_support_requests_table.php`, `2026_06_06_000001_create_portal_support_request_replies_table.php`.
+- Migration impact: run host migrations through the package install flow before opening package surfaces.
+- Deletion/retention behaviour: Docs gap unless the package has an explicit pruning command, retention setting, or tested cascade path.
+
+## Install Impact
+
+- Admin navigation: adds package-owned Filament classes when registered.
+- Permissions: `ViewAny:PortalSupportRequest`, `View:PortalSupportRequest`, `Update:PortalSupportRequest`.
+- Public routes: route files exist and must be reviewed before public enablement.
+- Database changes: package migrations are declared.
+- Settings: no package settings declared.
+- Queues or schedules: none detected in standard package paths.
+- Cache tags: `customer-portal`.
+- Commands: none declared.
+
+## Common Pitfalls
+
+- Run migrations before opening package resources or public routes.
+- Review route middleware, throttling, signed URLs, and public-output safety before exposing routes.
+- Keep public Blade and cached HTML free of authoring markers, model IDs, permissions, signed editor URLs, and lazy database queries.
+- Keep `composer.json`, `composer.local.json`, `capell.json`, docs, screenshots, and tests aligned when the package surface changes.
 
 ## Troubleshooting
 
-| Symptom                            | Likely cause                                                       | Check                                                        | Fix                                                                           |
-| ---------------------------------- | ------------------------------------------------------------------ | ------------------------------------------------------------ | ----------------------------------------------------------------------------- |
-| Portal redirects to login          | Host auth middleware cannot resolve an authenticated user          | Check the route middleware stack and current Laravel guard   | Configure the host auth stack before enabling `/portal`                       |
-| Dashboard cards are missing        | Provider was not registered or exceeded per-provider/global limits | Check `PortalDashboardItemRegistry` and portal config limits | Register the provider and adjust limits if the output is intentionally larger |
-| Support notifications are not sent | No requester email or queue/mail transport is unavailable          | Check support request email fields and queued notifications  | Configure mail/queue in the host app and retry through the support workflow   |
+| Symptom | Likely cause | Check | Fix |
+| --- | --- | --- | --- |
+| Package surface is missing after install | Provider or manifest is not loaded | Confirm `capell.json`, package `composer.json`, and provider registration | Reinstall the package, refresh Composer autoload, and clear host caches |
+| Admin screen or command fails on missing table | Package migrations have not run | Check the tables listed in `Data Model` | Run host migrations and rerun the focused package test |
+| Route returns unexpected output | Route cache, middleware, or signed URL setup does not match the package route file | Check the route files listed in `Technical Shape` | Clear route cache and verify middleware before exposing public routes |
+| Public output leaks unexpected state | Render data, cache variation, or authoring boundary has regressed | Check public Blade, cache tags, and public-output safety tests | Move data loading out of Blade and rerun the package public-output tests |
+
+## Quick Start
+
+1. Install the package: `composer require capell-app/customer-portal`.
+2. Run the required setup: `php artisan migrate`.
+3. Open the related Capell admin surface and verify Customer Portal appears.
+
+## Next Steps
+
+- [Package docs](docs/README.md)
+- [Overview](docs/overview.md)
+- [Screenshot contract](docs/screenshots.json)
+- [Marketplace assets](docs/assets/marketplace/)
+- [Capell content language plan](../../docs/CONTENT_LANGUAGE_PLAN.md)
+- [Capell documentation design system](../../docs/DESIGN_SYSTEM.md)
+- [Capell and package ERD notes](../../docs/erd/capell-and-package-erds.md)
+- Related packages: [Access Gate](../access-gate/README.md), [Contacts](../contacts/README.md), [Document Lifecycle](../document-lifecycle/README.md), [Events](../events/README.md), [Newsletter](../newsletter/README.md), [Payments](../payments/README.md), [Privacy Center](../privacy-center/README.md).
+- Focused tests: `vendor/bin/pest packages/customer-portal/tests --configuration=phpunit.xml`.
+
+<!-- prettier-ignore-end -->

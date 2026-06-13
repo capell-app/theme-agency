@@ -1,93 +1,94 @@
 # Capell Inertia
 
-Capell Inertia is the shared runtime bridge that lets Capell public pages and package-owned frontend routes render through Inertia instead of Blade-only theme views.
+<!-- prettier-ignore-start -->
 
-## At A Glance
+## What This Plugin Adds
 
-- Package: `capell-app/inertia`
-- Namespace: `Capell\Inertia\`
-- Surfaces: public frontend
-- Service provider: `Capell\Inertia\Providers\InertiaServiceProvider`
-- Capell dependencies: `capell-app/core`, `capell-app/frontend`, `capell-app/api`
-- Third-party dependency: `inertiajs/inertia-laravel`
+Capell Inertia is an **Available**, **No schema impact** Capell plugin in the **Capell Frontend** product group. It ships as `capell-app/inertia` and extends these surfaces: frontend.
 
-## Why It Helps Your Capell Workflow
+Shared Inertia runtime bridge for Capell public pages and package-owned frontend routes.
 
-For teams, Capell Inertia makes it possible to ship richer app-like public experiences while keeping normal Capell page, language, layout, theme, asset, and render-hook data in the request.
+After install, the package affects public rendering, public routes, or frontend runtime behaviour.
 
-For developers, it provides one renderer, middleware, root view, facade, adapter registry, and page-prop builder so package routes do not each invent their own Inertia bootstrapping.
+Status details:
 
-## What It Adds
+- Status: Available
+- Tier: core
+- Bundle: frontend
+- Composer package: `capell-app/inertia`
+- Namespace: `Capell\Inertia`
+- Theme key: not applicable
 
-- Registers the `FrontendRuntime::Inertia` response renderer.
-- Adds the `capell.inertia` middleware alias and inserts Inertia middleware into frontend routes.
-- Provides the `CapellInertia::render()` facade for package-owned routes.
-- Builds public page props through `BuildInertiaPagePropsAction`.
-- Registers an `InertiaAdapterRegistry` for React/Vue adapter packages.
-- Uses `capell-inertia::app` as the default root view.
+## Why It Matters
 
-## Configuration
+**For developers:** The package gives developers package-owned service providers, Actions, Data objects, and Blade views instead of pushing this behaviour into core or application code.
 
-`config/capell-inertia.php` supports:
+**For teams:** Shared Inertia runtime bridge for Capell frontend pages and package routes.
 
-| Key              | Default                                | Purpose                        |
-| ---------------- | -------------------------------------- | ------------------------------ |
-| `adapter`        | `env('CAPELL_INERTIA_ADAPTER', 'vue')` | Active frontend adapter key.   |
-| `root_view`      | `capell-inertia::app`                  | Inertia root Blade view.       |
-| `page_component` | `Capell/Page`                          | Default public page component. |
+## Screens And Workflow
 
-## Developer Deep Dive
+Docs gap: add `docs/screenshots.json` before promoting this package with visual workflow claims.
 
-Use the facade for package-owned routes:
+- Admin index screen if the package has a Filament resource.
+- Create/edit screen if editors create records.
+- Settings/configuration screen when settings exist.
+- Frontend output when the package renders public pages.
+- Package detail or install intent screen when marketplace-owned.
 
-```php
-use Capell\Inertia\Facades\CapellInertia;
+## Technical Shape
 
-return CapellInertia::render('Capell/Bookings/Request', [
-    'service' => $serviceData,
-    'slots' => $slotData,
-]);
-```
+- Service providers: `Capell\Inertia\Providers\InertiaServiceProvider`.
+- Config files: `packages/inertia/config/capell-inertia.php`.
+- Actions: `BuildInertiaPagePropsAction`.
+- Data objects: `InertiaAdapterData`.
+- Health checks: `Capell\Inertia\Health\InertiaHealthCheck`.
+- Blade views: `packages/inertia/resources/views/app.blade.php`.
+- Cache tags: `inertia`.
 
-Use the frontend runtime renderer for normal Capell pages by selecting the Inertia runtime in the theme/package definition. The renderer builds public page payloads with `BuildPublicPagePayloadAction`, includes layout widget component data when a layout is present, and runs the public authoring-surface assertion before returning the response.
+## Data Model
 
-## Boundaries
+This package has no schema impact. It does not declare package-owned migrations or required tables.
 
-- Capell Inertia owns the server-side bridge, root view, renderer, middleware, and adapter registry.
-- Adapter packages own framework dependencies and application entrypoints.
-- Theme/component packages own actual React or Vue components.
-- Public Inertia responses must not expose authoring markers, signed editor URLs, admin selectors, model IDs, field paths, or package internals.
+Docs gap: document extension points here if the package delegates persistence to a host package.
 
-## Runtime Surface
+## Install Impact
 
-- Provider: `src/Providers/InertiaServiceProvider.php`
-- Facade/manager: `src/Facades/CapellInertia.php`, `src/Support/CapellInertiaManager.php`
-- Adapter registry: `src/Support/InertiaAdapterRegistry.php`
-- Renderer: `src/Rendering/CapellInertiaResponseRenderer.php`
-- Actions: `src/Actions/BuildInertiaPagePropsAction.php`
-- Data objects: `src/Data/InertiaAdapterData.php`
-- Root view: `resources/views/app.blade.php`
-- Tests: `packages/inertia/tests`
+- Admin navigation: no admin surface declared.
+- Permissions: none declared in `capell.json`.
+- Public routes: none detected in package route files.
+- Database changes: no package migrations declared.
+- Settings: no package settings declared.
+- Queues or schedules: none detected in standard package paths.
+- Cache tags: `inertia`.
+- Commands: none declared.
 
-## Docs
+## Common Pitfalls
 
-- [docs index](docs/README.md)
-- [overview.md](docs/overview.md)
-- [React adapter](../inertia-react-adapter/README.md)
-- [Vue adapter](../inertia-vue-adapter/README.md)
-
-## Testing
-
-Run package tests from the repository root:
-
-```bash
-vendor/bin/pest packages/inertia/tests --configuration=phpunit.xml
-```
+- Keep public Blade and cached HTML free of authoring markers, model IDs, permissions, signed editor URLs, and lazy database queries.
+- Keep `composer.json`, `composer.local.json`, `capell.json`, docs, screenshots, and tests aligned when the package surface changes.
 
 ## Troubleshooting
 
-| Symptom                                | Likely cause                                                       | Check                                                                       | Fix                                                                                   |
-| -------------------------------------- | ------------------------------------------------------------------ | --------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
-| Public page falls back to Blade output | The active theme or package route is not using the Inertia runtime | Check the page/theme runtime selection and route middleware in the host app | Select the Inertia runtime or add the `capell.inertia` middleware to package routes   |
-| Component cannot be resolved           | The active adapter does not provide the requested component        | Check `CAPELL_INERTIA_ADAPTER` and the installed React/Vue adapter package  | Install the matching adapter package and register the component under the same name   |
-| Public props expose authoring data     | A package route passed admin/editor state directly into props      | Run `vendor/bin/pest packages/inertia/tests --configuration=phpunit.xml`    | Build props through `BuildInertiaPagePropsAction` and keep editor state behind beacon |
+| Symptom | Likely cause | Check | Fix |
+| --- | --- | --- | --- |
+| Package surface is missing after install | Provider or manifest is not loaded | Confirm `capell.json`, package `composer.json`, and provider registration | Reinstall the package, refresh Composer autoload, and clear host caches |
+| Public output leaks unexpected state | Render data, cache variation, or authoring boundary has regressed | Check public Blade, cache tags, and public-output safety tests | Move data loading out of Blade and rerun the package public-output tests |
+
+## Quick Start
+
+1. Install the package: `composer require capell-app/inertia`.
+2. Run the required setup: no package migrations are declared; clear cached config and routes if the host app uses caches.
+3. Verify the package provider is registered and the related frontend, command, or extension point is active.
+
+## Next Steps
+
+- [Package docs](docs/README.md)
+- [Overview](docs/overview.md)
+- [Marketplace assets](docs/assets/marketplace/)
+- [Capell content language plan](../../docs/CONTENT_LANGUAGE_PLAN.md)
+- [Capell documentation design system](../../docs/DESIGN_SYSTEM.md)
+- [Capell and package ERD notes](../../docs/erd/capell-and-package-erds.md)
+- Related packages: [Api](../api/README.md), [Layout Builder](../layout-builder/README.md).
+- Focused tests: `vendor/bin/pest packages/inertia/tests --configuration=phpunit.xml`.
+
+<!-- prettier-ignore-end -->

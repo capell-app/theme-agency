@@ -1,97 +1,102 @@
 # Document Lifecycle
 
-Controlled document registration, publication history, and acceptance tracking for Capell.
+<!-- prettier-ignore-start -->
 
-## At A Glance
+## What This Plugin Adds
 
-- Package: `capell-app/document-lifecycle`
-- Namespace: `Capell\DocumentLifecycle\`
-- Surfaces: Filament admin, database
-- Service providers: `packages/document-lifecycle/src/Providers/DocumentLifecycleServiceProvider.php`
-- Capell dependencies: `capell-app/admin`, `capell-app/core`, `capell-app/publishing-studio`
+Document Lifecycle is an **Available**, **Schema-owning** Capell package in the **Capell Operations** product group. It ships as `capell-app/document-lifecycle` and extends these surfaces: admin, console.
 
-## Why It Helps Your Capell Workflow
+Document Lifecycle tracks controlled documents as admin-managed records with version-labelled, content-hashed publications and acceptance history. Admin users can publish manual versions, matching Publishing Studio revisions can create publication records automatically, and acceptance records show which actor accepted which document version and when. The package also registers protected audit tables, a health diagnostic, and an authenticated Customer Portal feed for account self-service history.
 
-- Adds controlled document registry, publication metadata, hashes, and acceptance evidence for compliance-heavy Capell sites.
-- Helps owners prove which document version was published or accepted without inventing a custom audit layer.
-- Fits publishing workflows where documents need clearer state and evidence than ordinary page content.
+After install, admins get package-owned management or reporting surfaces inside Capell.
 
-## Best Used With
+Status details:
 
-- [Publishing Studio](../publishing-studio/README.md)
-- [Diagnostics](../diagnostics/README.md)
-- [Password Policy](../password-policy/README.md)
+- Status: Available
+- Tier: premium
+- Bundle: operations
+- Composer package: `capell-app/document-lifecycle`
+- Namespace: `Capell\DocumentLifecycle`
+- Theme key: not applicable
 
-## What It Adds
+## Why It Matters
 
-- A Controlled documents admin resource.
-- Document registration and publication actions.
-- Publication records linked to Publishing Studio revisions.
-- Stored publication content snapshots with JSON diff downloads between versions.
-- Acceptance records stored in or extending the `legal_acceptances` table.
-- Signed JSON certificate downloads for individual acceptance records.
-- Review-due and expiry dates for controlled documents, with a daily archive-expired command.
-- Protected table registration for document and acceptance audit data.
+**For developers:** The package gives developers package-owned service providers, Actions, Data objects, models, and Filament classes instead of pushing this behaviour into core or application code.
 
-Use this package when a site needs evidence that a controlled document was published and accepted. It is not a general file manager; media and downloadable assets stay in the media packages.
+**For teams:** Version-pinned acceptance evidence for controlled documents in Capell: register documents, publish hashed versions from admin or Publishing Studio, and record who accepted which version and when.
 
-## Admin Surface
+## Screens And Workflow
 
-- Resource: `DocumentResource`.
-- Pages: `ListDocuments`, `EditDocument`.
-- Relation managers: `PublicationsRelationManager`, `AcceptancesRelationManager`.
+Screenshot contract: `docs/screenshots.json`.
 
-## Data And Persistence
+- Controlled documents index (admin, required).
+- Controlled document edit form (admin, required).
+- Document publications relation manager (admin, required).
+- Document acceptances relation manager (admin, required).
 
-- Models: `Document`, `DocumentPublication`, `DocumentAcceptance`.
-- Migrations: `document_lifecycle_documents`, `document_lifecycle_publications`, and `legal_acceptances` extension.
-- Actions: register, publish, resolve latest publication, compute content hash, record acceptance, archive expired documents.
-- Command: `capell:document-lifecycle:archive-expired`.
+## Technical Shape
 
-## Boundaries
+- Service providers: `Capell\DocumentLifecycle\Providers\DocumentLifecycleServiceProvider`.
+- Migrations: `packages/document-lifecycle/database/migrations/2026_05_10_190868_01_create_document_lifecycle_documents_table.php`, `packages/document-lifecycle/database/migrations/2026_05_10_190868_02_create_document_lifecycle_publications_table.php`, `packages/document-lifecycle/database/migrations/2026_05_10_190868_03_extend_legal_acceptances_for_document_lifecycle.php`, `packages/document-lifecycle/database/migrations/2026_06_06_000001_add_review_dates_to_document_lifecycle_documents_table.php`.
+- Models: `Document`, `DocumentAcceptance`, `DocumentPublication`.
+- Filament classes: `DocumentResource`, `CreateDocument`, `EditDocument`, `ListDocuments`, `AcceptancesRelationManager`, `PublicationsRelationManager`.
+- Policies: `DocumentPolicy`.
+- Actions: `ArchiveDocumentAction`, `ArchiveExpiredDocumentsAction`, `BuildDocumentAcceptanceCertificateAction`, `BuildDocumentAcceptanceEvidenceCsvAction`, `BuildDocumentLifecycleHealthReportAction`, `BuildDocumentPublicationDiffAction`, `BuildOutstandingDocumentAcceptancesCsvAction`, `ComputeDocumentContentHashAction`, `PublishDocumentAction`, `PublishDocumentFromPublishingRevisionAction`, `RecordDocumentAcceptanceAction`, `RegisterDocumentAction`, `and 3 more`.
+- Data objects: `DocumentLifecycleHealthReportData`.
+- Command signatures: `capell:document-lifecycle:archive-expired`.
+- Console command classes: `ArchiveExpiredDocumentsCommand`.
+- Manifest contributions: `admin-resource: Capell\DocumentLifecycle\Manifest\DocumentResourceContribution`, `scheduled-job: Capell\DocumentLifecycle\Manifest\DocumentLifecycleRetentionScheduleContribution`.
+- Health checks: `Capell\DocumentLifecycle\Health\DocumentLifecycleHealthCheck`.
 
-Document Lifecycle owns controlled document registration, publication evidence, acceptance evidence, and expiry/archive workflows. It is not a general media manager or public file delivery package.
+## Data Model
 
-Publishing Studio owns revision workflow. Media packages own file storage and downloads. Public or customer-facing acceptance surfaces should call package Actions and must not expose admin URLs, publication internals, raw hashes beyond the certificate contract, or authoring state.
+- Required tables: `document_lifecycle_documents`, `document_lifecycle_publications`, `legal_acceptances`.
+- Models: `Document`, `DocumentAcceptance`, `DocumentPublication`.
+- Migration files: `2026_05_10_190868_01_create_document_lifecycle_documents_table.php`, `2026_05_10_190868_02_create_document_lifecycle_publications_table.php`, `2026_05_10_190868_03_extend_legal_acceptances_for_document_lifecycle.php`, `2026_06_06_000001_add_review_dates_to_document_lifecycle_documents_table.php`.
+- Migration impact: run host migrations through the package install flow before opening package surfaces.
+- Deletion/retention behaviour: Docs gap unless the package has an explicit pruning command, retention setting, or tested cascade path.
 
-## Runtime Surface
+## Install Impact
 
-- Provider: `src/Providers/DocumentLifecycleServiceProvider.php`
-- Admin resource: `src/Filament/Resources/Documents/`
-- Actions: `src/Actions/`
-- Data objects: `src/Data/`
-- Models: `src/Models/`
-- Command: `src/Console/Commands/ArchiveExpiredDocumentsCommand.php`
-- Manifest contributions: `src/Manifest/`
-- Tests: `packages/document-lifecycle/tests`
+- Admin navigation: adds package-owned Filament classes when registered.
+- Permissions: `ViewAny:Document`, `View:Document`, `Create:Document`, `Update:Document`, `Delete:Document`, `DeleteAny:Document`, `Restore:Document`, `ForceDelete:Document`, `Replicate:Document`, `Reorder:Document`.
+- Public routes: none detected in package route files.
+- Database changes: package migrations are declared.
+- Settings: no package settings declared.
+- Queues or schedules: none detected in standard package paths.
+- Cache tags: none declared.
+- Commands: `capell:document-lifecycle:archive-expired`.
 
-## Install And Setup
+## Common Pitfalls
 
-In a host Capell app, install with:
-
-```bash
-composer require capell-app/document-lifecycle
-```
-
-Run migrations through the host application package install flow.
-
-## Docs
-
-- [docs index](docs/README.md)
-- [overview.md](docs/overview.md)
-
-## Testing
-
-Run package tests from the repository root:
-
-```bash
-vendor/bin/pest packages/document-lifecycle/tests --configuration=phpunit.xml
-```
+- Run migrations before opening package resources or public routes.
+- Run package commands from the host app; in this repository use `vendor/bin/pest` for package tests.
+- Keep `composer.json`, `composer.local.json`, `capell.json`, docs, screenshots, and tests aligned when the package surface changes.
 
 ## Troubleshooting
 
-| Symptom                                     | Likely cause                                               | Check                                                                                                | Fix                                                                                  |
-| ------------------------------------------- | ---------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------ |
-| Expired documents remain active             | The host scheduler has not run the archive command         | In a host app, run `php artisan schedule:list` and check `capell:document-lifecycle:archive-expired` | Enable the scheduler or run the command in the host app after confirming due dates   |
-| Certificate download cannot be verified     | The acceptance record is missing or the signature is stale | Confirm the acceptance exists in `legal_acceptances` and request a fresh signed certificate URL      | Regenerate the signed URL through the package surface instead of reusing an old link |
-| Publication evidence does not match content | A document was changed without creating a new publication  | Compare the latest publication hash and stored snapshot for the document                             | Publish a new controlled document version through the package Action/admin workflow  |
+| Symptom | Likely cause | Check | Fix |
+| --- | --- | --- | --- |
+| Package surface is missing after install | Provider or manifest is not loaded | Confirm `capell.json`, package `composer.json`, and provider registration | Reinstall the package, refresh Composer autoload, and clear host caches |
+| Admin screen or command fails on missing table | Package migrations have not run | Check the tables listed in `Data Model` | Run host migrations and rerun the focused package test |
+| Background work does not run | Queue worker or scheduled command is not active | Check package jobs, commands, and host scheduler configuration | Start the queue or scheduler, then run the focused command or package test |
+
+## Quick Start
+
+1. Install the package: `composer require capell-app/document-lifecycle`.
+2. Run the required setup: `php artisan migrate`.
+3. Open the related Capell admin surface and verify Document Lifecycle appears.
+
+## Next Steps
+
+- [Package docs](docs/README.md)
+- [Overview](docs/overview.md)
+- [Screenshot contract](docs/screenshots.json)
+- [Marketplace assets](docs/assets/marketplace/)
+- [Capell content language plan](../../docs/CONTENT_LANGUAGE_PLAN.md)
+- [Capell documentation design system](../../docs/DESIGN_SYSTEM.md)
+- [Capell and package ERD notes](../../docs/erd/capell-and-package-erds.md)
+- Related packages: [Publishing Studio](../publishing-studio/README.md), [Customer Portal](../customer-portal/README.md).
+- Focused tests: `vendor/bin/pest packages/document-lifecycle/tests --configuration=phpunit.xml`.
+
+<!-- prettier-ignore-end -->

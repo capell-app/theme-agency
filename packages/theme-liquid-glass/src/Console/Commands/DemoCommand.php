@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace Capell\ThemeStudio\LiquidGlass\Console\Commands;
 
+use Capell\FoundationTheme\Contracts\InstallsThemeDemo;
 use Capell\FoundationTheme\Data\ThemeDemoInstallData;
 use Capell\ThemeStudio\LiquidGlass\Actions\InstallLiquidGlassThemeDemoAction;
 use Illuminate\Console\Command;
+use RuntimeException;
 
 final class DemoCommand extends Command
 {
@@ -16,7 +18,7 @@ final class DemoCommand extends Command
 
     public function handle(): int
     {
-        return InstallLiquidGlassThemeDemoAction::run(new ThemeDemoInstallData(
+        return $this->installer()->handle(new ThemeDemoInstallData(
             siteNames: $this->parseCsvOption('sites'),
             languageCodes: $this->parseCsvOption('languages'),
             baseUrl: $this->resolveBaseUrl(),
@@ -32,10 +34,21 @@ final class DemoCommand extends Command
         $value = $this->option($option);
 
         if (is_array($value)) {
-            return array_values(array_filter(
-                array_map(static fn (mixed $item): string => trim((string) $item), $value),
-                static fn (string $item): bool => $item !== '',
-            ));
+            $items = [];
+
+            foreach ($value as $item) {
+                if (! is_scalar($item)) {
+                    continue;
+                }
+
+                $item = trim((string) $item);
+
+                if ($item !== '') {
+                    $items[] = $item;
+                }
+            }
+
+            return $items;
         }
 
         if (! is_string($value) || $value === '') {
@@ -56,6 +69,19 @@ final class DemoCommand extends Command
             return $url;
         }
 
-        return (string) config('app.url');
+        $appUrl = config('app.url');
+
+        return is_string($appUrl) && $appUrl !== '' ? $appUrl : 'http://localhost';
+    }
+
+    private function installer(): InstallsThemeDemo
+    {
+        $installer = app(InstallLiquidGlassThemeDemoAction::class);
+
+        if (! $installer instanceof InstallsThemeDemo) {
+            throw new RuntimeException('Theme Liquid Glass demo installer is not registered.');
+        }
+
+        return $installer;
     }
 }

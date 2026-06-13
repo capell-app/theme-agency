@@ -1,62 +1,97 @@
 # Theme Education
 
-Status: **Available, no schema impact** · Kind: **theme** · Theme key:
-**education** · Contexts: **frontend, console** · Product group:
-**Capell Foundation** · Commercial proposal: **paid first-party theme**
+<!-- prettier-ignore-start -->
 
-Theme Education helps a Capell site present courses, training programmes,
-learning resources, instructors, events, and enrolment calls to action in one
-coherent frontend theme.
+## What This Plugin Adds
 
-## What This Package Adds
+Theme Education is an **Available**, **No schema impact** Capell theme in the **Capell Themes** product group. It ships as `capell-app/theme-education` and extends these surfaces: frontend, console.
 
-- An `education` theme definition and preset.
-- Education-specific CSS and page wrapper.
-- Section renderers for learning-pathway content such as course catalogue,
-  instructors, resources, events, enrolment CTA, FAQ, proof, and footer flows.
-- Translated default course catalogue cards, event cards, and instructor role
-  labels for localisable public education copy.
-- Optional renderer awareness for Blog, Events, and Form Builder.
-- A demo command that installs route-backed education demo pages.
-- Theme health and management-page manifest contributions.
+Course and school theme for education providers, training teams, and learning programmes.
+
+After install, admins can select the theme through the core theme management surface. Editors keep using normal Capell content workflows while the package controls public presentation.
+
+Status details:
+
+- Status: Available
+- Tier: premium
+- Bundle: themes
+- Composer package: `capell-app/theme-education`
+- Namespace: `Capell\ThemeStudio\Education`
+- Theme key: `education`
 
 ## Why It Matters
 
-For a non-technical owner, this theme answers: "Can I show what people can
-learn, why they should trust us, and how they enrol?" It gives that site shape
-without asking the owner to understand renderer contracts.
+**For developers:** The package gives developers package-owned service providers, Actions, and Blade views instead of pushing this behaviour into core or application code.
 
-For developers, the package keeps education presentation separate from
-Capell Frontend default theme. It registers through Capell theme APIs, ships no schema, and
-can be tested as a package.
+**For teams:** A polished, course-first theme for schools, academies, and training providers - turning programme discovery, faculty trust, open days, and enrolment into one coherent learner journey.
 
-## Runtime Shape
+## Screens And Workflow
 
-- `EducationThemeServiceProvider` registers the theme when
-  `capell-app/theme-education` is installed.
-- `DemoCommand` calls `InstallEducationThemeDemoAction`.
-- Core `ViewSectionRenderer` extra view data guards optional Blog, Events, and Form Builder
-  sections.
-- `ThemeEducationHealthCheck` exposes package health to diagnostics.
+Screenshot contract: `screenshots.json`.
 
-## Data And Persistence
+- Frontend page rendered with Education theme (frontend, optional).
+- Education homepage (frontend, optional).
+- Course catalogue (frontend, optional).
+- Instructor and mentor profiles (frontend, optional).
+- Open days and workshops (frontend, optional).
+- Enrolment CTA (frontend, optional).
+- Learning resources (frontend, optional).
 
-This package owns no database tables, settings, models, or routes. It reads
-Capell Frontend default theme runtime data and Capell page content.
+## Technical Shape
 
-## Screenshot Coverage
+- Service providers: `Capell\ThemeStudio\Education\EducationThemeServiceProvider`.
+- Actions: `InstallEducationThemeDemoAction`, `RebalanceEducationThemeDemoPagesAction`.
+- Command signatures: `capell:theme-education-demo`.
+- Console command classes: `DemoCommand`.
+- Manifest contributions: `admin-page: Capell\ThemeStudio\Education\Manifest\ThemeManagementPageContribution`.
+- Health checks: `Capell\ThemeStudio\Education\Health\ThemeEducationHealthCheck`.
+- Blade views: `packages/theme-education/resources/views/page.blade.php`, `packages/theme-education/resources/views/sections/admissions-checklist.blade.php`, `packages/theme-education/resources/views/sections/admissions-funnel.blade.php`, `packages/theme-education/resources/views/sections/content-listing.blade.php`, `packages/theme-education/resources/views/sections/course-catalog.blade.php`, `packages/theme-education/resources/views/sections/course-detail.blade.php`, `packages/theme-education/resources/views/sections/cta.blade.php`, `packages/theme-education/resources/views/sections/enrolment-cta.blade.php`, `packages/theme-education/resources/views/sections/events.blade.php`, `packages/theme-education/resources/views/sections/faculty-directory.blade.php`, `packages/theme-education/resources/views/sections/faq.blade.php`, `packages/theme-education/resources/views/sections/features.blade.php`, `and 6 more`.
+- Cache tags: `theme-education`.
 
-`docs/screenshots.json` describes committed deployment captures for the admin theme list,
-seeded frontend demo, homepage, course catalogue, instructors, events,
-enrolment, learning resources, and signed preview output. The marketplace
-manifest promotes the same route-backed PNG capture set under `docs/screenshots`.
+## Data Model
 
-## Verification
+This theme has no schema impact. It relies on core Capell site, page, locale, and theme records instead of declaring package-owned tables.
 
-```bash
-vendor/bin/pest packages/theme-education/tests --configuration=phpunit.xml
-```
+## Install Impact
 
-The focused tests cover theme definition, translated default education layouts,
-manifest requirements, package-aware rendering, health diagnostics, and public
-output safety.
+- Admin navigation: contributes admin extension points through `capell.json`.
+- Permissions: none declared in `capell.json`.
+- Public routes: none detected in package route files.
+- Database changes: no package migrations declared.
+- Settings: no package settings declared.
+- Queues or schedules: none detected in standard package paths.
+- Cache tags: `theme-education`.
+- Commands: `capell:theme-education-demo`.
+
+## Common Pitfalls
+
+- Keep public Blade and cached HTML free of authoring markers, model IDs, permissions, signed editor URLs, and lazy database queries.
+- Run package commands from the host app; in this repository use `vendor/bin/pest` for package tests.
+- Keep `composer.json`, `composer.local.json`, `capell.json`, docs, screenshots, and tests aligned when the package surface changes.
+
+## Troubleshooting
+
+| Symptom | Likely cause | Check | Fix |
+| --- | --- | --- | --- |
+| Package surface is missing after install | Provider or manifest is not loaded | Confirm `capell.json`, package `composer.json`, and provider registration | Reinstall the package, refresh Composer autoload, and clear host caches |
+| Background work does not run | Queue worker or scheduled command is not active | Check package jobs, commands, and host scheduler configuration | Start the queue or scheduler, then run the focused command or package test |
+| Public output leaks unexpected state | Render data, cache variation, or authoring boundary has regressed | Check public Blade, cache tags, and public-output safety tests | Move data loading out of Blade and rerun the package public-output tests |
+
+## Quick Start
+
+1. Install the package: `composer require capell-app/theme-education`.
+2. Run the required setup: `php artisan capell:theme-education-demo`.
+3. Verify the package provider is registered and the related frontend, command, or extension point is active.
+
+## Next Steps
+
+- [Package docs index](README.md)
+- [Screenshot contract](screenshots.json)
+- [Marketplace assets](assets/marketplace/)
+- [Capell content language plan](../../../docs/CONTENT_LANGUAGE_PLAN.md)
+- [Capell documentation design system](../../../docs/DESIGN_SYSTEM.md)
+- [Capell and package ERD notes](../../../docs/erd/capell-and-package-erds.md)
+- Related packages: [Access Gate](../../access-gate/README.md), [Blog](../../blog/README.md), [Bookings](../../bookings/README.md), [Customer Portal](../../customer-portal/README.md), [Events](../../events/README.md), [Frontend Authoring](../../frontend-authoring/README.md), [Form Builder](../../form-builder/README.md), [Layout Builder](../../layout-builder/README.md), [Payments](../../payments/README.md), [Publishing Studio](../../publishing-studio/README.md), [Seo Suite](../../seo-suite/README.md).
+- Focused tests: `vendor/bin/pest packages/theme-education/tests --configuration=phpunit.xml`.
+
+<!-- prettier-ignore-end -->

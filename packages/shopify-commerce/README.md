@@ -1,119 +1,110 @@
 # Shopify Commerce
 
-Shopify Admin API connection and catalog sync foundation for Capell CMS.
+<!-- prettier-ignore-start -->
 
-## At A Glance
+## What This Plugin Adds
 
-- Package: `capell-app/shopify-commerce`
-- Namespace: `Capell\ShopifyCommerce\`
-- Surfaces: Filament admin, console, authenticated OAuth routes, queue, database
-- Service providers: `Capell\ShopifyCommerce\Providers\ShopifyCommerceServiceProvider`, `Capell\ShopifyCommerce\Providers\AdminServiceProvider`
-- Capell dependencies: `capell-app/admin`, `capell-app/core`
-- Third-party dependencies: `laravel/framework`, `lorisleiva/laravel-actions`, `spatie/laravel-data`, `spatie/laravel-package-tools`, `spatie/laravel-settings`
+Shopify Commerce is an **Available**, **Schema-owning** Capell package in the **Capell Commerce** product group. It ships as `capell-app/shopify-commerce` and extends these surfaces: admin, console.
 
-## Boundaries
+Shopify Commerce adds site-scoped Shopify Admin API OAuth, catalog sync, and customer cache foundations for Capell.
 
-This package owns Shopify app configuration, admin OAuth, site-scoped Shopify connections, local catalog and customer cache tables, catalog search, and the first-party admin page for connecting or syncing a store.
+After install, admins get package-owned management or reporting surfaces inside Capell.
 
-It does not own storefront rendering, checkout, cart state, order import, product merchandising UI, or public frontend output. It receives Shopify product/customer/app-uninstalled webhooks to keep local caches and connection state fresh. Frontend packages should consume synced catalog/customer records through explicit Actions or package-owned view models, not by leaking Shopify admin tokens or connection metadata into public HTML.
+Status details:
 
-## Why It Helps Your Capell Workflow
+- Status: Available
+- Tier: premium
+- Bundle: commerce
+- Composer package: `capell-app/shopify-commerce`
+- Namespace: `Capell\ShopifyCommerce`
+- Theme key: not applicable
 
-- Adds site-scoped Shopify OAuth and product catalog sync so Capell can reference commerce data without storing Shopify credentials in content code.
-- Helps owners connect store catalog data to Capell workflows while keeping checkout and storefront ownership outside this package.
-- Gives developers Actions for OAuth, GraphQL, bulk sync, customer sync, import, and local product search with focused test coverage.
+## Why It Matters
 
-## Best Used With
+**For developers:** The package gives developers package-owned service providers, Actions, Data objects, models, Laravel routes, Filament classes, and Blade views instead of pushing this behaviour into core or application code.
 
-- [Search](../search/README.md)
-- [Public Actions](../public-actions/README.md)
-- [Diagnostics](../diagnostics/README.md)
+**For teams:** Connect any Shopify store to Capell in minutes and keep its product catalog and customer data in sync - securely, per site, with no storefront lock-in.
 
-## What It Adds
+## Screens And Workflow
 
-- Admin page: `Capell\ShopifyCommerce\Filament\Pages\ShopifyConnectionPage`.
-- OAuth routes: `capell-shopify-commerce.oauth.install` and `capell-shopify-commerce.oauth.callback` under `capell/oauth/shopify`.
-- Commands: `capell-shopify-commerce:install`, `capell-shopify-commerce:sync {connection?}`, `capell-shopify-commerce:sync-customers {connection?}`, and `capell-shopify-commerce:prune-oauth-states`.
-- Settings group: `shopify_commerce` through `ShopifyCommerceSettings`.
-- Permission: `manage_shopify_commerce`.
+Screenshot contract: `docs/screenshots.json`.
+
+- Shopify connection page (admin, required).
+- Shopify catalog sync state (admin, required).
+- Shopify product search (admin, required).
+
+## Technical Shape
+
+- Service providers: `Capell\ShopifyCommerce\Providers\ShopifyCommerceServiceProvider`, `Capell\ShopifyCommerce\Providers\AdminServiceProvider`.
+- Config files: `packages/shopify-commerce/config/capell-shopify-commerce.php`.
+- Migrations: `packages/shopify-commerce/database/migrations/2026_05_22_000001_create_shopify_connections_table.php`, `packages/shopify-commerce/database/migrations/2026_05_22_000002_create_shopify_oauth_states_table.php`, `packages/shopify-commerce/database/migrations/2026_05_22_000003_create_shopify_products_table.php`, `packages/shopify-commerce/database/migrations/2026_05_22_000004_create_shopify_product_variants_table.php`, `packages/shopify-commerce/database/migrations/2026_06_01_000001_create_shopify_customers_table.php`.
+- Settings migrations: `packages/shopify-commerce/database/settings/2026_05_22_000001_create_shopify_commerce_settings.php`.
+- Settings classes: `ShopifyCommerceSettings`.
+- Models: `ShopifyConnection`, `ShopifyCustomer`, `ShopifyOAuthState`, `ShopifyProduct`, `ShopifyProductVariant`.
+- Filament classes: `ShopifyConnectionPage`, `ShopifyCommerceSettingsSchema`.
+- Route files: `packages/shopify-commerce/routes/oauth.php`.
+- Events: `ShopifyCustomerSynced`.
+- Actions: `BuildShopifyCatalogThemeDataAction`, `ContinueShopifyProductBulkSyncAction`, `FetchShopifyProductAction`, `ImportShopifyProductBulkSyncAction`, `InvalidateShopifyProductSearchCacheAction`, `PersistShopifyProductAction`, `PollShopifyProductBulkSyncAction`, `SanitizeShopifySyncErrorAction`, `SearchShopifyProductsAction`, `StartShopifyProductBulkSyncAction`, `SyncShopifyProductsAction`, `SyncShopifyCustomersAction`, `and 16 more`.
+- Data objects: `ShopifyCallbackQueryData`, `ShopifyCatalogProductThemeData`, `ShopifyCatalogSummaryThemeData`, `ShopifyCatalogThemeData`, `ShopifyCatalogVariantThemeData`, `ShopifyProductData`, `ShopifyProductOptionData`, `ShopifyProductVariantData`, `ShopifyTokenExchangeResponseData`.
+- Command signatures: `capell-shopify-commerce:install`, `capell-shopify-commerce:prune-oauth-states`, `capell-shopify-commerce:sync-customers`.
+- Console command classes: `InstallShopifyCommerceCommand`, `PruneExpiredShopifyOAuthStatesCommand`, `SyncShopifyCustomersCommand`, `SyncShopifyProductsCommand`.
+- Health checks: `Capell\ShopifyCommerce\Health\ShopifyCommerceHealthCheck`.
+- Blade views: `packages/shopify-commerce/resources/views/filament/pages/connection.blade.php`.
+- Cache tags: `shopify-commerce`.
+
+## Data Model
+
+- Required tables: `shopify_connections`, `shopify_oauth_states`, `shopify_products`, `shopify_product_variants`, `shopify_customers`.
 - Protected tables: `shopify_connections`, `shopify_oauth_states`, `shopify_products`, `shopify_product_variants`, `shopify_customers`.
-- Diagnostics health check: `Capell\ShopifyCommerce\Health\ShopifyCommerceHealthCheck`.
+- Models: `ShopifyConnection`, `ShopifyCustomer`, `ShopifyOAuthState`, `ShopifyProduct`, `ShopifyProductVariant`.
+- Migration files: `2026_05_22_000001_create_shopify_connections_table.php`, `2026_05_22_000002_create_shopify_oauth_states_table.php`, `2026_05_22_000003_create_shopify_products_table.php`, `2026_05_22_000004_create_shopify_product_variants_table.php`, `2026_06_01_000001_create_shopify_customers_table.php`.
+- Migration impact: run host migrations through the package install flow before opening package surfaces.
+- Deletion/retention behaviour: Docs gap unless the package has an explicit pruning command, retention setting, or tested cascade path.
 
-## Install And Configure
+## Install Impact
 
-Install the package in a host Capell application:
+- Admin navigation: adds package-owned Filament classes when registered.
+- Permissions: `shopify-commerce.manage`.
+- Public routes: route files exist and must be reviewed before public enablement.
+- Database changes: package migrations are declared.
+- Settings: `Capell\ShopifyCommerce\Settings\ShopifyCommerceSettings`.
+- Queues or schedules: none detected in standard package paths.
+- Cache tags: `shopify-commerce`.
+- Commands: `capell-shopify-commerce:install`, `capell-shopify-commerce:prune-oauth-states`, `capell-shopify-commerce:sync-customers`.
 
-```bash
-composer require capell-app/shopify-commerce
-php artisan capell-shopify-commerce:install
-php artisan migrate
-```
+## Common Pitfalls
 
-Set the Shopify app credentials in the host environment:
-
-```dotenv
-CAPELL_SHOPIFY_COMMERCE_ENABLED=true
-SHOPIFY_APP_CLIENT_ID=your-shopify-client-id
-SHOPIFY_APP_CLIENT_SECRET=your-shopify-client-secret
-```
-
-The publishable config lives at `config/capell-shopify-commerce.php` in the host app. The package default config is `packages/shopify-commerce/config/capell-shopify-commerce.php`.
-
-## Runtime Surface
-
-| Surface          | Class or file                          | Job                                                                                                         |
-| ---------------- | -------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
-| Package provider | `ShopifyCommerceServiceProvider`       | Loads config, routes, views, translations, migrations, settings, models, and protected table registrations. |
-| Admin provider   | `AdminServiceProvider`                 | Registers the admin page and console commands when the package is installed and enabled.                    |
-| Admin page       | `ShopifyConnectionPage`                | Connects a store, dispatches sync, disconnects a store, and searches cached products.                       |
-| OAuth install    | `ShopifyInstallController`             | Validates the shop domain, creates a nonce, and redirects to Shopify OAuth.                                 |
-| OAuth callback   | `ShopifyCallbackController`            | Validates HMAC and state, exchanges the code, stores the connection, and queues catalog sync.               |
-| OAuth pruning    | `PruneExpiredShopifyOAuthStatesAction` | Removes expired OAuth nonce rows; scheduled hourly while the package is installed.                          |
-| GraphQL client   | `ExecuteShopifyAdminGraphqlAction`     | Calls Shopify Admin GraphQL and paces requests from throttle metadata.                                      |
-| Catalog sync     | `SyncShopifyProductsAction`            | Queues or starts a bulk product sync and prevents overlapping work per connection.                          |
-| Catalog import   | `ImportShopifyProductBulkSyncAction`   | Imports JSONL bulk output into product and variant tables.                                                  |
-| Customer sync    | `SyncShopifyCustomersAction`           | Pulls paginated Admin GraphQL customer records into the encrypted local customer cache.                     |
-| Search           | `SearchShopifyProductsAction`          | Searches local products first and falls back to live Shopify product search when needed.                    |
-| Settings         | `ShopifyCommerceSettings`              | Stores API version, default scopes, and catalog search cache TTL.                                           |
-
-## Docs
-
-- [Docs index](docs/README.md)
-- [Overview](docs/overview.md)
-- [OAuth and catalog sync](docs/oauth-and-catalog-sync.md)
-- [Screenshot manifest](docs/screenshots.json)
-
-## Verification
-
-Run package tests from the repository root:
-
-```bash
-vendor/bin/pest packages/shopify-commerce/tests --configuration=phpunit.xml
-```
-
-Use focused tests while changing one surface:
-
-```bash
-vendor/bin/pest packages/shopify-commerce/tests/Feature/OAuth --configuration=phpunit.xml
-vendor/bin/pest packages/shopify-commerce/tests/Unit/Actions/SyncShopifyProductsActionTest.php --configuration=phpunit.xml
-vendor/bin/pest packages/shopify-commerce/tests/Unit/Actions/SyncShopifyCustomersActionTest.php --configuration=phpunit.xml
-vendor/bin/pest packages/shopify-commerce/tests/Unit/Actions/SearchShopifyProductsActionTest.php --configuration=phpunit.xml
-```
+- Run migrations before opening package resources or public routes.
+- Configure package settings before testing production-like workflows.
+- Review route middleware, throttling, signed URLs, and public-output safety before exposing routes.
+- Run package commands from the host app; in this repository use `vendor/bin/pest` for package tests.
+- Keep `composer.json`, `composer.local.json`, `capell.json`, docs, screenshots, and tests aligned when the package surface changes.
 
 ## Troubleshooting
 
-| Symptom                                                 | Likely cause                                                           | Check                                                                                                   | Fix                                                                                                      |
-| ------------------------------------------------------- | ---------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
-| Admin page is missing                                   | Package is disabled or not installed in Capell package registry        | Check `CAPELL_SHOPIFY_COMMERCE_ENABLED` and package install state for `capell-app/shopify-commerce`     | Enable the package and run the host install flow again.                                                  |
-| OAuth install redirects back with a configuration error | `SHOPIFY_APP_CLIENT_ID` or `SHOPIFY_APP_CLIENT_SECRET` is empty        | Inspect host config key `capell-shopify-commerce.client_id` and `capell-shopify-commerce.client_secret` | Set both env vars and clear host config cache.                                                           |
-| Callback fails after returning from Shopify             | HMAC mismatch, expired state, wrong user, or invalid shop domain       | Check Laravel logs for `Shopify OAuth failed` and inspect `shopify_oauth_states.expires_at`             | Restart OAuth from the admin page; verify app secret and callback URL.                                   |
-| Sync command says no connection exists                  | No active row in `shopify_connections`                                 | Query `shopify_connections.status` and `shopify_connections.sync_status`                                | Connect the store again or pass a specific connection id to `capell-shopify-commerce:sync {connection}`. |
-| Customer cache is empty                                 | Customer sync has not been run or the token lacks `read_customers`     | Query `shopify_customers`, connection scopes, and Shopify GraphQL errors                                | Run `capell-shopify-commerce:sync-customers {connection}` after granting the customer-read scope.        |
-| Search results are stale                                | Search cache version has not changed or sync has not imported new rows | Check cache key prefix `capell-shopify-commerce.search.` and product `synced_at` values                 | Run sync, then confirm `InvalidateShopifyProductSearchCacheAction` bumps the connection version.         |
+| Symptom | Likely cause | Check | Fix |
+| --- | --- | --- | --- |
+| Package surface is missing after install | Provider or manifest is not loaded | Confirm `capell.json`, package `composer.json`, and provider registration | Reinstall the package, refresh Composer autoload, and clear host caches |
+| Admin screen or command fails on missing table | Package migrations have not run | Check the tables listed in `Data Model` | Run host migrations and rerun the focused package test |
+| Route returns unexpected output | Route cache, middleware, or signed URL setup does not match the package route file | Check the route files listed in `Technical Shape` | Clear route cache and verify middleware before exposing public routes |
+| Background work does not run | Queue worker or scheduled command is not active | Check package jobs, commands, and host scheduler configuration | Start the queue or scheduler, then run the focused command or package test |
 
-## Maintenance Notes
+## Quick Start
 
-- Keep tokens in `shopify_connections.access_token`; never expose them through public frontend output.
-- Add new Shopify behavior as Actions and cover the Action directly before wiring admin UI.
-- Scope admin queries by `ShopifySiteContext` so site-limited users only see assigned site connections.
-- Use `ShopifyCommerceSettings` for runtime API version, default scopes, and search cache TTL instead of hard-coding values in UI code.
+1. Install the package: `composer require capell-app/shopify-commerce`.
+2. Run the required setup: `php artisan capell-shopify-commerce:install`.
+3. Open the related Capell admin surface and verify Shopify Commerce appears.
+
+## Next Steps
+
+- [Package docs](docs/README.md)
+- [Overview](docs/overview.md)
+- [Screenshot contract](docs/screenshots.json)
+- [Marketplace assets](docs/assets/marketplace/)
+- [Capell content language plan](../../docs/CONTENT_LANGUAGE_PLAN.md)
+- [Capell documentation design system](../../docs/DESIGN_SYSTEM.md)
+- [Capell and package ERD notes](../../docs/erd/capell-and-package-erds.md)
+- Related packages: [Contacts](../contacts/README.md), [Diagnostics](../diagnostics/README.md), [Media Library](../media-library/README.md), [Payments](../payments/README.md), [Search](../search/README.md), [Theme Commerce](../theme-commerce/README.md).
+- Focused tests: `vendor/bin/pest packages/shopify-commerce/tests --configuration=phpunit.xml`.
+
+<!-- prettier-ignore-end -->

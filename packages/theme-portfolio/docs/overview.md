@@ -1,71 +1,98 @@
 # Theme Portfolio
 
-Status: **Available, no schema impact** · Kind: **theme** · Theme key:
-**portfolio** · Contexts: **frontend, console** · Product group:
-**Capell Themes** · Commercial proposal: **paid first-party theme**
+<!-- prettier-ignore-start -->
 
-Theme Portfolio helps a Capell site present work, case studies, services,
-testimonials, media-kit content, newsletter signup, and conversion paths in one
-coherent frontend theme.
+## What This Plugin Adds
 
-## What This Package Adds
+Theme Portfolio is an **Available**, **No schema impact** Capell theme in the **Capell Themes** product group. It ships as `capell-app/theme-portfolio` and extends these surfaces: frontend.
 
-- A `portfolio` theme definition and preset.
-- Portfolio-specific CSS and page wrapper.
-- Section renderers for work grid, case studies, services, testimonials,
-  speaking/media kit, newsletter, proof, CTA, and footer flows.
-- Optional renderer awareness for Content Sections, Media Library, and
-  Newsletter.
-- Newsletter static states avoid inert form posts; hydrated section data can
-  provide a real capture action and method.
-- A demo command that installs route-backed portfolio demo pages.
-- Theme health and management-page manifest contributions.
+Creator and consultant portfolio theme for work, case studies, services, media kits, and newsletters.
+
+After install, admins can select the theme through the core theme management surface. Editors keep using normal Capell content workflows while the package controls public presentation.
+
+Status details:
+
+- Status: Available
+- Tier: premium
+- Bundle: themes
+- Composer package: `capell-app/theme-portfolio`
+- Namespace: `Capell\ThemeStudio\Portfolio`
+- Theme key: `portfolio`
 
 ## Why It Matters
 
-For a non-technical owner, this theme answers: "Can visitors see my work,
-understand what I offer, trust the proof, and stay connected?" It gives a
-portfolio site a stronger structure than a generic page template.
+**For developers:** The package gives developers package-owned service providers, Actions, and Blade views instead of pushing this behaviour into core or application code.
 
-For developers, the package keeps portfolio presentation separate from
-Capell Frontend. Case-study, media, and newsletter sections only rely on
-optional packages when those packages are installed.
+**For teams:** A premium portfolio theme for creators and consultants - turn selected work into outcome-driven case studies, sell your services and media kit, and grow your audience from one polished site.
 
-## Runtime Shape
+## Screens And Workflow
 
-- `PortfolioThemeServiceProvider` registers the theme when
-  `capell-app/theme-portfolio` is installed.
-- Theme Studio runtime inheritance uses `extends: default`; package metadata
-  requires `capell-app/frontend` for the built-in default fallback.
-- `DemoCommand` calls `InstallPortfolioThemeDemoAction`.
-- Core `ViewSectionRenderer` extra view data guards optional Content Sections, Media Library,
-  and Newsletter sections.
-- `ThemePortfolioHealthCheck` exposes package health to diagnostics.
+Screenshot contract: `screenshots.json`.
 
-## Data And Persistence
+- Theme admin list showing Portfolio (admin, required).
+- Frontend page rendered with Portfolio theme (frontend, required).
+- Portfolio homepage (frontend, required).
+- Selected work board (frontend, required).
+- Case-study detail (frontend, required).
+- Studio capabilities (frontend, required).
+- Media kit and speaking package (frontend, required).
+- Audience and newsletter path (frontend, required).
+- Signed admin preview route (admin, required).
 
-This package owns no database tables, settings, models, or routes. It reads
-Capell Frontend runtime data and Capell page content.
+## Technical Shape
 
-## Product Direction
+- Service providers: `Capell\ThemeStudio\Portfolio\PortfolioThemeServiceProvider`.
+- Actions: `InstallPortfolioThemeDemoAction`.
+- Command signatures: `capell:theme-portfolio-demo`.
+- Console command classes: `DemoCommand`.
+- Manifest contributions: `admin-page: Capell\ThemeStudio\Portfolio\Manifest\ThemeManagementPageContribution`.
+- Health checks: `Capell\ThemeStudio\Portfolio\Health\ThemePortfolioHealthCheck`.
+- Blade views: `packages/theme-portfolio/resources/views/page.blade.php`, `packages/theme-portfolio/resources/views/sections/about-bio.blade.php`, `packages/theme-portfolio/resources/views/sections/availability.blade.php`, `packages/theme-portfolio/resources/views/sections/case-studies.blade.php`, `packages/theme-portfolio/resources/views/sections/case-study-detail.blade.php`, `packages/theme-portfolio/resources/views/sections/client-logos.blade.php`, `packages/theme-portfolio/resources/views/sections/content-listing.blade.php`, `packages/theme-portfolio/resources/views/sections/cta.blade.php`, `packages/theme-portfolio/resources/views/sections/features.blade.php`, `packages/theme-portfolio/resources/views/sections/footer.blade.php`, `packages/theme-portfolio/resources/views/sections/gallery-lightbox.blade.php`, `packages/theme-portfolio/resources/views/sections/hero.blade.php`, `and 9 more`.
+- Cache tags: `theme-portfolio`.
 
-Keep this package only while it provides a distinct studio/portfolio lane. If it
-continues to overlap with Theme Agency, merge its useful work, case-study,
-media-kit, and newsletter ideas into the stronger theme.
+## Data Model
 
-## Screenshot Plan
+This theme has no schema impact. It relies on core Capell site, page, locale, and theme records instead of declaring package-owned tables.
 
-`docs/screenshots.json` describes the committed route-backed capture set. The
-marketplace manifest keeps the extension-card and hero JPG previews, and now
-uses real PNG captures for the homepage, case-study, and services/enquiry
-workflows instead of the earlier SVG layout diagrams.
+## Install Impact
 
-## Verification
+- Admin navigation: contributes admin extension points through `capell.json`.
+- Permissions: none declared in `capell.json`.
+- Public routes: none detected in package route files.
+- Database changes: no package migrations declared.
+- Settings: no package settings declared.
+- Queues or schedules: none detected in standard package paths.
+- Cache tags: `theme-portfolio`.
+- Commands: `capell:theme-portfolio-demo`.
 
-```bash
-vendor/bin/pest packages/theme-portfolio/tests --configuration=phpunit.xml
-```
+## Common Pitfalls
 
-The focused tests cover theme definition, newsletter static/hydrated rendering,
-manifest requirements, package-aware rendering, health checks, and public output
-safety.
+- Keep public Blade and cached HTML free of authoring markers, model IDs, permissions, signed editor URLs, and lazy database queries.
+- Keep `composer.json`, `composer.local.json`, `capell.json`, docs, screenshots, and tests aligned when the package surface changes.
+
+## Troubleshooting
+
+| Symptom | Likely cause | Check | Fix |
+| --- | --- | --- | --- |
+| Package surface is missing after install | Provider or manifest is not loaded | Confirm `capell.json`, package `composer.json`, and provider registration | Reinstall the package, refresh Composer autoload, and clear host caches |
+| Background work does not run | Queue worker or scheduled command is not active | Check package jobs, commands, and host scheduler configuration | Start the queue or scheduler, then run the focused command or package test |
+| Public output leaks unexpected state | Render data, cache variation, or authoring boundary has regressed | Check public Blade, cache tags, and public-output safety tests | Move data loading out of Blade and rerun the package public-output tests |
+
+## Quick Start
+
+1. Install the package: `composer require capell-app/theme-portfolio`.
+2. Run the required setup: `php artisan capell:theme-portfolio-demo`.
+3. Verify the package provider is registered and the related frontend, command, or extension point is active.
+
+## Next Steps
+
+- [Package docs index](README.md)
+- [Screenshot contract](screenshots.json)
+- [Marketplace assets](assets/marketplace/)
+- [Capell content language plan](../../../docs/CONTENT_LANGUAGE_PLAN.md)
+- [Capell documentation design system](../../../docs/DESIGN_SYSTEM.md)
+- [Capell and package ERD notes](../../../docs/erd/capell-and-package-erds.md)
+- Related packages: [Layout Builder](../../layout-builder/README.md), [Frontend Authoring](../../frontend-authoring/README.md), [Publishing Studio](../../publishing-studio/README.md), [Seo Suite](../../seo-suite/README.md), [Blog](../../blog/README.md).
+- Focused tests: `vendor/bin/pest packages/theme-portfolio/tests --configuration=phpunit.xml`.
+
+<!-- prettier-ignore-end -->

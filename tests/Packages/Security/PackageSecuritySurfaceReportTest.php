@@ -13,8 +13,9 @@ it('keeps the generated package security surface report current', function (): v
     throw_unless(is_string($current), RuntimeException::class, 'Expected package security surface report to be readable.');
 
     expect($current)->toBe($report);
-    expect($report)->toContain('| Package | Risk | Public routes | Webhooks | Throttled | Signed/tokenized | Sensitive fields | Cache safety |');
+    expect($report)->toContain('| Package | Risk | Public routes | Webhooks | Throttled | Signed/tokenized | Sensitive fields | Admin authorization | Cache posture |');
     expect($report)->toContain('capell-app/payments');
     expect($report)->toContain('capell-payments.stripe-webhook');
+    expect($report)->toContain('permissions;');
     expect($report)->toContain('safe;');
 });

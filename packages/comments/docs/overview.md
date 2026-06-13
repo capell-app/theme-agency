@@ -1,149 +1,114 @@
 # Comments
 
-Status: **Available, schema impact** · Kind: **package** · Tier:
-**premium** · Bundle: **comments** · Contexts: **admin, frontend** · Product
-group: **Capell Engagement**
+<!-- prettier-ignore-start -->
 
-Comments adds moderated public discussion to registered Capell content. A site
-owner gets a controlled way for visitors to respond to pages or articles, while
-editors keep approval and author-management work inside Capell Admin.
+## What This Plugin Adds
 
-## What This Package Adds
+Comments is an **Available**, **Schema-owning** Capell package in the **Capell Engagement** product group. It ships as `capell-app/comments` and extends these surfaces: admin, frontend.
 
-- A public comment thread component that can load after the page response.
-- Comment author, comment, token, and moderation event tables.
-- Email verification and moderation transitions.
-- Admin resources, moderation inbox, settings schema, and dashboard widgets.
-- Settings for identity mode, publication policy, verification flow, page size,
-  depth, throttling, spam checks, and moderator notifications.
-- Public form bot-trap controls for honeypot-filled and too-fast submissions.
-- Automatic local spam scoring for configured link-count and blocked-term
-  rules, including scheme, `www.`, and bare-domain link detection.
-- Pluggable external spam provider support through `CommentSpamProvider`,
-  layered with the local provider by default.
-- Comment body sanitization that strips tags plus invisible/control characters
-  before storage.
-- Settings-aware reply pagination with per-parent "load more replies" support.
-- Batched sibling reply-count hydration to avoid empty-grandchild query fanout.
-- Request-local Livewire commentable memoization during public submit and
-  refresh workflows.
-- Locale-pinned public timestamp labels based on the commentable page language.
-- Queued moderator notifications for configured moderator email addresses.
-- Public Like reactions with aggregate counts on approved public comments.
-- Approved-reply notifications for verified parent authors, plus tokenized
-  reply-notification opt-out handling.
-- Privacy retention tooling for old visitor hashes, moderation notes, tokens,
-  and author email erasure.
-- Diagnostics checks for storage tables, settings registration, thread route
-  registration, and Livewire component registration.
+Add moderated, threaded discussion to any Capell page or article - with cache-safe public rendering, encrypted author records, and per-site moderation controls, no custom code required.
+
+After install, admins get package-owned management surfaces and public users may see package-owned frontend output or routes.
+
+Status details:
+
+- Status: Available
+- Tier: premium
+- Bundle: comments
+- Composer package: `capell-app/comments`
+- Namespace: `Capell\Comments`
+- Theme key: not applicable
 
 ## Why It Matters
 
-Without this package, a Capell build that needs comments has to choose between
-custom frontend forms, external embeds, or bespoke moderation tables. Comments
-keeps that workflow in Capell and keeps the public output boundary explicit.
+**For developers:** The package gives developers package-owned service providers, Actions, Data objects, models, Laravel routes, Filament classes, and Blade views instead of pushing this behaviour into core or application code.
 
-For a non-technical site owner, the benefit is straightforward: visitors can
-discuss content, editors can approve or reject comments, and the public page does
-not reveal internal moderation data.
+**For teams:** Add moderated, threaded discussion to any Capell page or article - with cache-safe public rendering, encrypted author records, and per-site moderation controls, no custom code required.
 
-## Runtime Shape
+## Screens And Workflow
 
-- `CommentsServiceProvider` registers package config, migrations, settings,
-  routes, commands, translations, views, and default commentable support.
-- `AdminServiceProvider` registers admin resources, settings contributors, and
-  widgets.
-- `FrontendServiceProvider` registers the public Livewire thread component.
-- `RenderCommentThreadController` serves the dynamic thread endpoint.
-- `BuildPublicThreadAction` hydrates approved public thread DTOs with bounded
-  root/reply pagination, batched sibling reply counts, and locale-pinned
-  timestamp labels.
-- `CommentThreadComponent` memoizes the decrypted commentable model for the
-  current Livewire request only.
-- `VerifyCommentAuthorEmailController` handles author verification links.
-- `ScoreCommentSpamAction` delegates to configured `CommentSpamProvider`
-  implementations before comment verification or public visibility decisions.
-- `LocalCommentSpamProvider` preserves the built-in link-count and blocked-term
-  checks, while `ConfiguredCommentSpamProvider` combines configured provider
-  scores.
-- `CommentBodySanitizer` normalizes public body text and reports link counts
-  for spam scoring.
-- `NotifyModeratorsOfNewComment` listens for `CommentCreated` and notifies
-  configured moderators when comments need review.
-- `ToggleCommentReactionAction` toggles Like reactions for approved comments
-  using authenticated user IDs or hashed visitor request data.
-- `RequestCommentReplyNotificationAction` sends approved-reply notifications
-  to verified parent authors, while `DisableCommentAuthorReplyNotificationsAction`
-  handles tokenized opt-outs.
-- `ApplyCommentPrivacyRetentionAction` prunes old private identifiers and
-  anonymizes author records by email while preserving public comment history.
-- `CommentsHealthCheck` reports real Diagnostics results for package storage,
-  settings, route, and component wiring.
+Screenshot contract: `screenshots.json`.
 
-## Data And Retention
+- Comment moderation inbox (admin, required).
+- Comments admin resource (admin, required).
+- Comment authors admin resource (admin, required).
+- Public comment thread (frontend, required).
 
-The package owns:
+## Technical Shape
 
-- `comment_authors`
-- `comments`
-- `comment_tokens`
-- `comment_moderation_events`
-- `comment_reactions`
+- Service providers: `Capell\Comments\Providers\CommentsServiceProvider`, `Capell\Comments\Providers\AdminServiceProvider`, `Capell\Comments\Providers\FrontendServiceProvider`.
+- Config files: `packages/comments/config/capell-comments.php`.
+- Migrations: `packages/comments/database/migrations/2026_05_24_000001_create_comment_authors_table.php`, `packages/comments/database/migrations/2026_05_24_000002_create_comments_table.php`, `packages/comments/database/migrations/2026_05_24_000003_create_comment_tokens_table.php`, `packages/comments/database/migrations/2026_05_24_000004_create_comment_moderation_events_table.php`, `packages/comments/database/migrations/2026_05_24_000006_add_reply_notification_opt_out_to_comment_authors_table.php`, `packages/comments/database/migrations/2026_05_24_000007_create_comment_reactions_table.php`.
+- Settings migrations: `packages/comments/database/settings/2026_05_24_000005_create_comments_settings.php`.
+- Settings classes: `CommentSettings`.
+- Models: `Comment`, `CommentAuthor`, `CommentModerationEvent`, `CommentReaction`, `CommentToken`.
+- Filament classes: `CommentModerationInbox`, `CommentAuthorResource`, `ListCommentAuthors`, `CommentResource`, `ListComments`, `CommentsTable`, `CommentSettingsSchema`, `CommentsDashboardSettingsContributor`, `CommentStatsWidget`, `LatestCommentsWidget`.
+- Livewire components: `CommentThreadComponent`.
+- Route files: `packages/comments/routes/web.php`.
+- Policies: `CommentAuthorPolicy`, `CommentPolicy`.
+- Events: `CommentCreated`.
+- Listeners: `NotifyModeratorsOfNewComment`.
+- Actions: `ApplyCommentPrivacyRetentionAction`, `BuildPublicThreadAction`, `CommentModerationEventAction`, `CreateCommentAction`, `DisableCommentAuthorReplyNotificationsAction`, `InstallCommentsPackageAction`, `InvalidateCommentableCacheAction`, `RegisterCommentEmailTemplatesAction`, `RegisterDefaultCommentablesAction`, `RequestCommentEmailVerificationAction`, `RequestCommentReplyNotificationAction`, `ResolvePublicCommentableThreadAction`, `and 5 more`.
+- Data objects: `CommentEmailTemplateData`, `CommentPrivacyRetentionResultData`, `CommentReactionResultData`, `CommentSpamCheckData`, `CommentSpamScoreData`, `CommentableTypeData`, `CreateCommentData`, `PublicCommentData`, `PublicCommentableThreadData`.
+- Command signatures: `capell-comments:install`, `capell-comments:privacy-retention`.
+- Console command classes: `InstallCommentsCommand`, `PruneCommentPrivacyDataCommand`.
+- Manifest contributions: `dashboard-widget: Capell\Comments\Filament\Widgets\CommentStatsWidget`, `dashboard-widget: Capell\Comments\Filament\Widgets\LatestCommentsWidget`, `frontend-component: Capell\Comments\Livewire\CommentThreadComponent`.
+- Health checks: `Capell\Comments\Health\CommentsHealthCheck`.
+- Blade views: `packages/comments/resources/views/filament/comment-context.blade.php`, `packages/comments/resources/views/filament/moderation-inbox.blade.php`, `packages/comments/resources/views/livewire/partials/comment-list.blade.php`, `packages/comments/resources/views/livewire/thread-livewire.blade.php`, `packages/comments/resources/views/livewire/thread-shell.blade.php`, `packages/comments/resources/views/livewire/thread.blade.php`, `packages/comments/resources/views/reply-notifications-disabled.blade.php`, `packages/comments/resources/views/verify-email.blade.php`.
+- Cache tags: `comments`.
 
-Settings are stored through `CommentSettings`. Email and visitor identifiers are
-handled through hash helpers and token records rather than exposed in public
-thread DTOs.
+## Data Model
 
-## Marketplace Gallery
+- Required tables: `comment_authors`, `comments`, `comment_tokens`, `comment_moderation_events`, `comment_reactions`.
+- Models: `Comment`, `CommentAuthor`, `CommentModerationEvent`, `CommentReaction`, `CommentToken`.
+- Migration files: `2026_05_24_000001_create_comment_authors_table.php`, `2026_05_24_000002_create_comments_table.php`, `2026_05_24_000003_create_comment_tokens_table.php`, `2026_05_24_000004_create_comment_moderation_events_table.php`, `2026_05_24_000006_add_reply_notification_opt_out_to_comment_authors_table.php`, `2026_05_24_000007_create_comment_reactions_table.php`.
+- Migration impact: run host migrations through the package install flow before opening package surfaces.
+- Deletion/retention behaviour: Docs gap unless the package has an explicit pruning command, retention setting, or tested cascade path.
 
-`capell.json` lists a committed marketplace gallery for the extension card plus
-four route-backed PNG captures for the required screenshot-contract surfaces:
+## Install Impact
 
-- moderation inbox
-- comments admin resource
-- comment authors admin resource
-- public comment thread
+- Admin navigation: adds package-owned Filament classes when registered.
+- Permissions: none declared in `capell.json`.
+- Public routes: route files exist and must be reviewed before public enablement.
+- Database changes: package migrations are declared.
+- Settings: `Capell\Comments\Settings\CommentSettings`.
+- Queues or schedules: none detected in standard package paths.
+- Cache tags: `comments`.
+- Commands: `capell-comments:install`, `capell-comments:privacy-retention`.
 
-The extension card lives under `docs/assets/marketplace/`, while the runtime
-captures live under `docs/screenshots/`. The screenshot contract in
-`docs/screenshots.json` now declares concrete admin and frontend URLs so the
-deployment screenshot runner can regenerate the same Capell admin/public views.
+## Common Pitfalls
 
-## Commands And Routes
+- Run migrations before opening package resources or public routes.
+- Configure package settings before testing production-like workflows.
+- Review route middleware, throttling, signed URLs, and public-output safety before exposing routes.
+- Keep public Blade and cached HTML free of authoring markers, model IDs, permissions, signed editor URLs, and lazy database queries.
+- Keep `composer.json`, `composer.local.json`, `capell.json`, docs, screenshots, and tests aligned when the package surface changes.
 
-- Install command: `capell-comments:install`
-- Retention command: `capell-comments:privacy-retention {--days=} {--email=}
-{--site-id=} {--dry-run} {--json}`
-- Public thread route name: `capell-comments.thread`
-- Reply notification opt-out route name:
-  `capell-comments.reply-notifications.disable`
-- Verification route names: `capell-comments.verify`,
-  `capell-comments.verify.store`
-- Default route prefix: `capell/comments`
+## Troubleshooting
 
-## Safety Notes
+| Symptom | Likely cause | Check | Fix |
+| --- | --- | --- | --- |
+| Package surface is missing after install | Provider or manifest is not loaded | Confirm `capell.json`, package `composer.json`, and provider registration | Reinstall the package, refresh Composer autoload, and clear host caches |
+| Admin screen or command fails on missing table | Package migrations have not run | Check the tables listed in `Data Model` | Run host migrations and rerun the focused package test |
+| Route returns unexpected output | Route cache, middleware, or signed URL setup does not match the package route file | Check the route files listed in `Technical Shape` | Clear route cache and verify middleware before exposing public routes |
+| Background work does not run | Queue worker or scheduled command is not active | Check package jobs, commands, and host scheduler configuration | Start the queue or scheduler, then run the focused command or package test |
+| Public output leaks unexpected state | Render data, cache variation, or authoring boundary has regressed | Check public Blade, cache tags, and public-output safety tests | Move data loading out of Blade and rerun the package public-output tests |
 
-- Public output uses `PublicCommentData` and `PublicCommentableThreadData`.
-- Public DTOs should stay free of moderation status, model IDs, author email,
-  visitor hashes, tokens, permissions, and admin URLs.
-- The public thread endpoint should not be cached as shared HTML.
-- The auto-injected cached shell has regression coverage proving it does not
-  expose comments, author PII, model identifiers, moderation state, Livewire
-  snapshots, or admin URLs before the no-store thread endpoint loads.
-- The Livewire public form passes honeypot and render-age metadata into
-  `CreateCommentAction`; keep those checks before persistence.
+## Quick Start
 
-## Verification
+1. Install the package: `composer require capell-app/comments`.
+2. Run the required setup: `php artisan capell-comments:install`.
+3. Open the related Capell admin surface and verify Comments appears.
 
-```bash
-vendor/bin/pest packages/comments/tests --configuration=phpunit.xml
-```
+## Next Steps
 
-The current focused tests cover settings registration, settings resolution,
-manifest requirements, health diagnostics, email verification, local and
-external-provider spam scoring, moderator notification wiring, public thread
-rendering, component submission, sanitization hardening, auto-inject shell
-safety, reply pagination, reaction toggling, approved-reply notifications,
-package architecture boundaries, commentable memoization, locale-pinned public
-timestamps, performance budgets, privacy retention, throttling, and bot-trap
-rejection.
+- [Package docs index](README.md)
+- [Screenshot contract](screenshots.json)
+- [Marketplace assets](assets/marketplace/)
+- [Capell content language plan](../../../docs/CONTENT_LANGUAGE_PLAN.md)
+- [Capell documentation design system](../../../docs/DESIGN_SYSTEM.md)
+- [Capell and package ERD notes](../../../docs/erd/capell-and-package-erds.md)
+- Related packages: [Blog](../../blog/README.md), [Email Studio](../../email-studio/README.md), [Html Cache](../../html-cache/README.md).
+- Focused tests: `vendor/bin/pest packages/comments/tests --configuration=phpunit.xml`.
+
+<!-- prettier-ignore-end -->

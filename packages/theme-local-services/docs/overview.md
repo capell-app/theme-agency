@@ -1,61 +1,99 @@
 # Theme Local Services
 
-Status: **Available, no schema impact** · Kind: **theme** · Theme key:
-**local-services** · Contexts: **frontend, console** · Product group:
-**Capell Foundation** · Commercial proposal: **paid first-party theme**
+<!-- prettier-ignore-start -->
 
-Theme Local Services helps a Capell site explain services, service areas, proof,
-case studies, resources, contact paths, and quote requests in one coherent
-frontend theme.
+## What This Plugin Adds
 
-## What This Package Adds
+Theme Local Services is an **Available**, **No schema impact** Capell theme in the **Capell Themes** product group. It ships as `capell-app/theme-local-services` and extends these surfaces: frontend, console.
 
-- A `local-services` theme definition and preset.
-- Local-services CSS and page wrapper.
-- Section renderers for services, service areas, quote forms, case studies,
-  resources, contact, proof, CTA, and footer flows.
-- Optional renderer awareness for Blog and Form Builder.
-- Service-area cards that accept hydrated area data with `label`, `url`, and
-  optional `postcode` values, backed by translated defaults.
-- A demo command that installs route-backed local-services demo pages.
-- Theme health and management-page manifest contributions.
+Quote-led service business theme for local operators, trades, clinics, and consultancies.
+
+After install, admins can select the theme through the core theme management surface. Editors keep using normal Capell content workflows while the package controls public presentation.
+
+Status details:
+
+- Status: Available
+- Tier: premium
+- Bundle: themes
+- Composer package: `capell-app/theme-local-services`
+- Namespace: `Capell\ThemeStudio\LocalServices`
+- Theme key: `local-services`
 
 ## Why It Matters
 
-For a non-technical owner, this theme answers: "Can visitors see what we do,
-where we work, why they should trust us, and how they request a quote?" It gives
-that journey a purpose-built structure.
+**For developers:** The package gives developers package-owned service providers, Actions, and Blade views instead of pushing this behaviour into core or application code.
 
-For developers, the package keeps service-business presentation separate from
-Capell Frontend default theme. Quote and resource sections only rely on Form Builder or Blog
-when those packages are installed.
+**For teams:** A conversion-first Capell theme for local trades, clinics, and service businesses - built around quote requests, service-area coverage, and click-to-call trust.
 
-## Runtime Shape
+## Screens And Workflow
 
-- `LocalServicesThemeServiceProvider` registers the theme when
-  `capell-app/theme-local-services` is installed.
-- `DemoCommand` calls `InstallLocalServicesThemeDemoAction`.
-- Core `ViewSectionRenderer` extra view data guards optional Blog and Form Builder sections.
-- `ThemeLocalServicesHealthCheck` exposes package health to diagnostics.
+Screenshot contract: `screenshots.json`.
 
-## Data And Persistence
+- Theme admin list showing Local Services (admin, required).
+- Frontend page rendered with Local Services theme (frontend, required).
+- Local services homepage (frontend, required).
+- Bookable services (frontend, required).
+- Service areas (frontend, required).
+- Quote request (frontend, required).
+- Job proof and case studies (frontend, required).
+- Service resources (frontend, required).
+- Signed admin preview route (admin, required).
 
-This package owns no database tables, settings, models, or routes. It reads
-Capell Frontend default theme runtime data and Capell page content.
+## Technical Shape
 
-## Screenshot Plan
+- Service providers: `Capell\ThemeStudio\LocalServices\LocalServicesThemeServiceProvider`.
+- Actions: `InstallLocalServicesThemeDemoAction`.
+- Command signatures: `capell:theme-local-services-demo`.
+- Console command classes: `DemoCommand`.
+- Manifest contributions: `admin-page: Capell\ThemeStudio\LocalServices\Manifest\ThemeManagementPageContribution`.
+- Health checks: `Capell\ThemeStudio\LocalServices\Health\ThemeLocalServicesHealthCheck`.
+- Blade views: `packages/theme-local-services/resources/views/page.blade.php`, `packages/theme-local-services/resources/views/sections/before-after-gallery.blade.php`, `packages/theme-local-services/resources/views/sections/case-studies.blade.php`, `packages/theme-local-services/resources/views/sections/contact.blade.php`, `packages/theme-local-services/resources/views/sections/content-listing.blade.php`, `packages/theme-local-services/resources/views/sections/cta.blade.php`, `packages/theme-local-services/resources/views/sections/features.blade.php`, `packages/theme-local-services/resources/views/sections/footer.blade.php`, `packages/theme-local-services/resources/views/sections/hero.blade.php`, `packages/theme-local-services/resources/views/sections/locality-proof.blade.php`, `packages/theme-local-services/resources/views/sections/navigation.blade.php`, `packages/theme-local-services/resources/views/sections/opening-hours.blade.php`, `and 10 more`.
+- Cache tags: `theme-local-services`.
 
-`docs/screenshots.json` describes the committed route-backed capture set. The
-marketplace manifest keeps the extension-card and hero JPG previews, and now
-uses real PNG captures for the homepage, service-area, and quote-form workflows
-instead of the earlier SVG layout diagrams.
+## Data Model
 
-## Verification
+This theme has no schema impact. It relies on core Capell site, page, locale, and theme records instead of declaring package-owned tables.
 
-```bash
-vendor/bin/pest packages/theme-local-services/tests --configuration=phpunit.xml
-```
+## Install Impact
 
-The focused tests cover theme definition, service-area fallback/custom
-rendering, manifest requirements, package-aware rendering, health checks, and
-public output safety.
+- Admin navigation: contributes admin extension points through `capell.json`.
+- Permissions: none declared in `capell.json`.
+- Public routes: none detected in package route files.
+- Database changes: no package migrations declared.
+- Settings: no package settings declared.
+- Queues or schedules: none detected in standard package paths.
+- Cache tags: `theme-local-services`.
+- Commands: `capell:theme-local-services-demo`.
+
+## Common Pitfalls
+
+- Keep public Blade and cached HTML free of authoring markers, model IDs, permissions, signed editor URLs, and lazy database queries.
+- Run package commands from the host app; in this repository use `vendor/bin/pest` for package tests.
+- Keep `composer.json`, `composer.local.json`, `capell.json`, docs, screenshots, and tests aligned when the package surface changes.
+
+## Troubleshooting
+
+| Symptom | Likely cause | Check | Fix |
+| --- | --- | --- | --- |
+| Package surface is missing after install | Provider or manifest is not loaded | Confirm `capell.json`, package `composer.json`, and provider registration | Reinstall the package, refresh Composer autoload, and clear host caches |
+| Background work does not run | Queue worker or scheduled command is not active | Check package jobs, commands, and host scheduler configuration | Start the queue or scheduler, then run the focused command or package test |
+| Public output leaks unexpected state | Render data, cache variation, or authoring boundary has regressed | Check public Blade, cache tags, and public-output safety tests | Move data loading out of Blade and rerun the package public-output tests |
+
+## Quick Start
+
+1. Install the package: `composer require capell-app/theme-local-services`.
+2. Run the required setup: `php artisan capell:theme-local-services-demo`.
+3. Verify the package provider is registered and the related frontend, command, or extension point is active.
+
+## Next Steps
+
+- [Package docs index](README.md)
+- [Screenshot contract](screenshots.json)
+- [Marketplace assets](assets/marketplace/)
+- [Capell content language plan](../../../docs/CONTENT_LANGUAGE_PLAN.md)
+- [Capell documentation design system](../../../docs/DESIGN_SYSTEM.md)
+- [Capell and package ERD notes](../../../docs/erd/capell-and-package-erds.md)
+- Related packages: [Address](../../address/README.md), [Blog](../../blog/README.md), [Bookings](../../bookings/README.md), [Events](../../events/README.md), [Frontend Authoring](../../frontend-authoring/README.md), [Form Builder](../../form-builder/README.md), [Layout Builder](../../layout-builder/README.md), [Publishing Studio](../../publishing-studio/README.md), [Seo Suite](../../seo-suite/README.md).
+- Focused tests: `vendor/bin/pest packages/theme-local-services/tests --configuration=phpunit.xml`.
+
+<!-- prettier-ignore-end -->

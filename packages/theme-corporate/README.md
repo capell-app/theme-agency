@@ -1,120 +1,99 @@
 # Theme Corporate
 
-Trust-led corporate theme for Capell.
+<!-- prettier-ignore-start -->
 
-## At A Glance
+## What This Plugin Adds
 
-- Package: `capell-app/theme-corporate`
-- Namespace: `Capell\ThemeStudio\Corporate\`
-- Capell dependencies: `capell-app/core`, `capell-app/frontend`
+Theme Corporate is an **Available**, **No schema impact** Capell theme in the **Capell Foundation** product group. It ships as `capell-app/theme-corporate` and extends these surfaces: frontend.
 
-## Why It Helps Your Capell Workflow
+Theme Corporate gives established businesses, advisory firms, and public bodies a polished, credibility-first site without a design project. Six curated presets - Boardroom, Civic, Advisory, Integrity, Enterprise Trust, and Public Ledger - span deep-navy formal through accessible civic and editorial advisory looks, each tuned for clarity and contrast. Structured proof carousels, capability bands, and a measured content hierarchy are built to read as authoritative on desktop and mobile alike, with full dark-mode support. Drop it on any Capell site, run the one-command demo, and pick a preset.
 
-- Provides restrained renderer views for B2B, public-sector, and professional-service Capell sites.
-- Helps owners launch a trust-led site with a theme direction that fits formal content and service pages.
-- Renders translated corporate defaults for hero credibility stats, proof/gallery controls, and content listing labels while allowing page render data to supply real stats.
-- Gives developers a corporate theme package to customize without weakening the shared Capell Frontend default theme base.
+After install, admins can select the theme through the core theme management surface. Editors keep using normal Capell content workflows while the package controls public presentation.
 
-## Best Used With
+Status details:
 
-- [Capell Frontend](https://github.com/capell-app/frontend)
-- [Theme Agency](../theme-agency/README.md)
-- [Theme SaaS](../theme-saas/README.md)
-
-## What It Adds
-
-- Trust-led corporate theme for Capell.
+- Status: Available
+- Tier: free
+- Bundle: foundation
+- Composer package: `capell-app/theme-corporate`
+- Namespace: `Capell\ThemeStudio\Corporate`
+- Theme key: `corporate`
 
 ## Why It Matters
 
-**For developers:** Adds a renderer package that plugs into Capell Frontend default theme contracts and runtime settings.
+**For developers:** The package gives developers package-owned service providers, Actions, and Blade views instead of pushing this behaviour into core or application code.
 
-**For teams:** Provides a corporate visual option for sites that need restrained, trust-focused presentation through the normal Theme admin page and install flow.
-
-## Built With
-
-This package makes its Composer dependencies visible because they are part of the value proposition, not just plumbing. When an upstream package has a public repository, its linked preview card points readers back to the maintainers so their work gets proper credit.
-
-**Capell packages used here**
-
-- [Capell Core](https://github.com/capell-app/core)
-- [Capell Frontend](https://github.com/capell-app/frontend)
-
-**Open-source packages used here**
-
-- No extra third-party Composer package beyond the Capell package stack is required here.
+**For teams:** A restrained, trust-led website theme for B2B, professional-services, and public-sector organisations - formal hierarchy, board-grade proof blocks, and six palette presets out of the box.
 
 ## Screens And Workflow
 
-Screenshots are generated from [docs/screenshots.json](docs/screenshots.json) during package deployment.
+Screenshot contract: `docs/screenshots.json`.
 
-- Themes admin list showing Corporate.
-- Frontend page rendered with Corporate theme sections.
-- Theme preview URL output from the host signed preview route.
+- Frontend page rendered with Corporate theme (frontend, optional).
+- Corporate homepage (frontend, optional).
+- Services page (frontend, optional).
+- Governance page (frontend, optional).
+- Resources listing (frontend, optional).
+- Thought leadership article (frontend, optional).
+- Contact form page (frontend, optional).
+- Locations page (frontend, optional).
+- Search results page (frontend, optional).
+- Event detail page (frontend, optional).
 
 ## Technical Shape
 
-- CorporateThemeServiceProvider registers the renderer.
-- `capell.json` declares `themeKey: "corporate"` and manifest `extends: null`; Theme Studio runtime inheritance remains `default`.
-- Uses Capell Frontend default theme runtime data and standard section keys, while rendering its own page and section Blade views.
-- Hero credibility stats can be supplied through section render data; translated corporate defaults are used when no custom stats exist.
-- Proof/gallery controls and content-listing labels use package translations so public UI copy stays localisable.
-- Ships Blade resources for the page wrapper and standard theme sections.
-- No migrations, config, routes, models, admin navigation, or package-owned settings are present.
+- Service providers: `Capell\ThemeStudio\Corporate\CorporateThemeServiceProvider`.
+- Actions: `InstallCorporateThemeDemoAction`.
+- Command signatures: `capell:theme-corporate-demo`.
+- Console command classes: `DemoCommand`.
+- Manifest contributions: `admin-page: Capell\ThemeStudio\Corporate\Manifest\ThemeManagementPageContribution`.
+- Health checks: `Capell\ThemeStudio\Corporate\Health\ThemeCorporateHealthCheck`.
+- Blade views: `packages/theme-corporate/resources/views/livewire/page/page.blade.php`, `packages/theme-corporate/resources/views/page.blade.php`, `packages/theme-corporate/resources/views/sections/careers.blade.php`, `packages/theme-corporate/resources/views/sections/content-listing.blade.php`, `packages/theme-corporate/resources/views/sections/cta.blade.php`, `packages/theme-corporate/resources/views/sections/features.blade.php`, `packages/theme-corporate/resources/views/sections/footer.blade.php`, `packages/theme-corporate/resources/views/sections/hero.blade.php`, `packages/theme-corporate/resources/views/sections/investor-relations.blade.php`, `packages/theme-corporate/resources/views/sections/locations.blade.php`, `packages/theme-corporate/resources/views/sections/navigation.blade.php`, `packages/theme-corporate/resources/views/sections/proof.blade.php`.
+- Cache tags: `theme-corporate`.
 
-## Code Map
+## Data Model
 
-| Area      | Path                                 | Purpose                                                |
-| --------- | ------------------------------------ | ------------------------------------------------------ |
-| Resources | `packages/theme-corporate/resources` | Blade page wrapper, section views, and Boost guidance. |
-| Tests     | `packages/theme-corporate/tests`     | Package-level Pest coverage.                           |
-
-## Data And Persistence
-
-- This package does not own data.
-- It consumes theme runtime settings and core page content.
+This theme has no schema impact. It relies on core Capell site, page, locale, and theme records instead of declaring package-owned tables.
 
 ## Install Impact
 
-- Adds a Corporate renderer to theme system.
-- No database changes.
-- No admin navigation by itself.
-- No public routes by itself.
-
-## Install And Setup
-
-- Install with `composer require capell-app/theme-corporate` in the host Capell application.
-- Seed the Corporate preview pages with `php artisan capell:theme-corporate-demo --url=https://demo.test --sites=Demo --languages=en --force`.
-- The Extensions installer demo checkbox and full Capell demo install use the same manifest demo command path.
-- In this repository, verify package changes with `vendor/bin/pest`; do not use `php artisan`.
-
-## Admin And Access
-
-- None proven in this package directory.
+- Admin navigation: contributes admin extension points through `capell.json`.
+- Permissions: none declared in `capell.json`.
+- Public routes: none detected in package route files.
+- Database changes: no package migrations declared.
+- Settings: no package settings declared.
+- Queues or schedules: none detected in standard package paths.
+- Cache tags: `theme-corporate`.
+- Commands: `capell:theme-corporate-demo`.
 
 ## Common Pitfalls
 
-- Install Capell Frontend before using this renderer.
-- Layout Builder is only needed for optional demo or chrome packages that register layout areas.
-- Build frontend and Filament assets in demo apps. Capell Frontend CSS is generated by the frontend package; optional widget packages own any extra npm dependencies.
-- Keep Theme Studio's active preset aligned with this theme (`boardroom`, `civic`, `advisory`, `integrity`, `enterprise-trust`, or `public-ledger`). A preset from another theme will fail when Corporate renders.
-- Public output must not expose package/theme identifiers. Token CSS filenames are intentionally opaque.
-- Do not install a Studio metapackage; this package installs independently.
+- Keep public Blade and cached HTML free of authoring markers, model IDs, permissions, signed editor URLs, and lazy database queries.
+- Keep `composer.json`, `composer.local.json`, `capell.json`, docs, screenshots, and tests aligned when the package surface changes.
 
-## Docs
+## Troubleshooting
 
-- [docs index](docs/README.md)
-- [credits-and-acknowledgements.md](docs/credits-and-acknowledgements.md)
-- [overview.md](docs/overview.md)
+| Symptom | Likely cause | Check | Fix |
+| --- | --- | --- | --- |
+| Package surface is missing after install | Provider or manifest is not loaded | Confirm `capell.json`, package `composer.json`, and provider registration | Reinstall the package, refresh Composer autoload, and clear host caches |
+| Background work does not run | Queue worker or scheduled command is not active | Check package jobs, commands, and host scheduler configuration | Start the queue or scheduler, then run the focused command or package test |
+| Public output leaks unexpected state | Render data, cache variation, or authoring boundary has regressed | Check public Blade, cache tags, and public-output safety tests | Move data loading out of Blade and rerun the package public-output tests |
 
-## Testing
+## Quick Start
 
-Run package tests from the repository root:
+1. Install the package: `composer require capell-app/theme-corporate`.
+2. Run the required setup: `php artisan capell:theme-corporate-demo`.
+3. Verify the package provider is registered and the related frontend, command, or extension point is active.
 
-```bash
-vendor/bin/pest packages/theme-corporate/tests --configuration=phpunit.xml
-```
+## Next Steps
 
-## Maintenance Notes
+- [Package docs](docs/README.md)
+- [Overview](docs/overview.md)
+- [Screenshot contract](docs/screenshots.json)
+- [Marketplace assets](docs/assets/marketplace/)
+- [Capell content language plan](../../docs/CONTENT_LANGUAGE_PLAN.md)
+- [Capell documentation design system](../../docs/DESIGN_SYSTEM.md)
+- [Capell and package ERD notes](../../docs/erd/capell-and-package-erds.md)
+- Focused tests: `vendor/bin/pest packages/theme-corporate/tests --configuration=phpunit.xml`.
 
-- Theme output is public output. Keep admin-only metadata and editor hooks out of rendered markup.
+<!-- prettier-ignore-end -->

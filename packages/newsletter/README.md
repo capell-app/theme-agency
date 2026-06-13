@@ -1,121 +1,121 @@
 # Newsletter
 
-Newsletter captures, confirms, segments, and syncs subscribers for Capell sites, with consent evidence, imports, scheduled send records, preference center updates, UTM attribution, automation hooks, and public subscription routes.
+<!-- prettier-ignore-start -->
 
-## At A Glance
+## What This Plugin Adds
 
-- Package: `capell-app/newsletter`
-- Namespace: `Capell\Newsletter\`
-- Surfaces: Filament admin, console, HTTP, queue, database
-- Service providers: `packages/newsletter/src/Providers/AdminServiceProvider.php`, `packages/newsletter/src/Providers/NewsletterServiceProvider.php`
-- Capell dependencies: `capell-app/admin`, `capell-app/core`, `capell-app/form-builder`, `capell-app/frontend`, `capell-app/tags`
+Newsletter is an **Available**, **Schema-owning** Capell package in the **Capell Marketing** product group. It ships as `capell-app/newsletter` and extends these surfaces: admin, frontend.
 
-## Why It Helps Your Capell Workflow
+Capture, confirm, and segment newsletter subscribers on every Capell site - with double opt-in, a public preference center, GDPR-grade consent evidence, and one-click sync to Mailchimp, Kit, and Campaign Monitor.
 
-- Adds subscriber capture, consent state, imports, segmentation, scheduled send records, preference center updates, UTM attribution, automation hooks, and public subscription routes for Capell sites.
-- Helps owners build audience workflows without putting newsletter-specific logic into Form Builder or Campaign Studio.
-- Gives developers provider sync and subscription Actions that can connect to email, public actions, and growth workflows.
+After install, admins get package-owned management surfaces and public users may see package-owned frontend output or routes.
 
-## Best Used With
+Status details:
 
-- [Email Studio](../email-studio/README.md)
-- [Public Actions](../public-actions/README.md)
-- [Campaign Studio](../campaign-studio/README.md)
+- Status: Available
+- Tier: premium
+- Bundle: newsletter
+- Composer package: `capell-app/newsletter`
+- Namespace: `Capell\Newsletter`
+- Theme key: not applicable
 
-## What It Adds
+## Why It Matters
 
-- Newsletter manages audiences, subscriptions, consent state, imports, segmentation, scheduled send records, external delivery handoff payloads, preference center updates, UTM attribution, automation hooks, and public subscription routes.
-- Admin resources: `FormMappingResource`, `ImportBatchResource`, `NewsletterSendResource`, `NewsletterTagResource`, `ProviderAudienceResource`, `ProviderConnectionResource`, `ProviderInterestMappingResource`, `SegmentResource`, `SubscriberResource`, `SyncAttemptResource`.
-- Package setup or maintenance commands.
+**For developers:** The package gives developers package-owned service providers, Actions, Data objects, models, Laravel routes, Filament classes, and Blade views instead of pushing this behaviour into core or application code.
+
+**For teams:** Capture, confirm, and segment newsletter subscribers on every Capell site - with double opt-in, a public preference center, GDPR-grade consent evidence, and one-click sync to Mailchimp, Kit, and Campaign Monitor.
+
+## Screens And Workflow
+
+Screenshot contract: `docs/screenshots.json`.
+
+- Subscribers admin index (admin, required).
+- Create/edit subscriber form (admin, required).
+- Provider connections admin index and form (admin, required).
+- Provider audiences admin index and form (admin, required).
+- Provider interest mappings admin index and form (admin, required).
+- Form mappings admin index and form (admin, required).
+- Newsletter tags admin index and form (admin, required).
+- Segments admin index and form (admin, required).
+- Import batches admin index (admin, required).
+- Sync attempts admin index (admin, required).
+- Newsletter overview stats (admin, required).
+- Subscription confirmation route response (frontend, required).
+- Unsubscribe route response (frontend, required).
 
 ## Technical Shape
 
-- NewsletterServiceProvider registers public routes, admin resources, jobs, listeners, migrations, settings, and translations.
-- Subscription, import, consent, and notification behaviour lives in actions and jobs.
-- Public endpoints route through controllers and should treat all payloads as untrusted input.
-
-## Code Map
-
-| Area      | Path                                | Purpose                                                             |
-| --------- | ----------------------------------- | ------------------------------------------------------------------- |
-| Actions   | `packages/newsletter/src/Actions`   | Domain operations. Test these directly where possible.              |
-| Data      | `packages/newsletter/src/Data`      | Structured payloads, form state, view models, and integration data. |
-| Enums     | `packages/newsletter/src/Enums`     | Persisted states and Filament option values.                        |
-| Models    | `packages/newsletter/src/Models`    | Eloquent records owned by the package.                              |
-| Filament  | `packages/newsletter/src/Filament`  | Admin resources, pages, widgets, and settings UI.                   |
-| HTTP      | `packages/newsletter/src/Http`      | Controllers, middleware, and request handling.                      |
-| Jobs      | `packages/newsletter/src/Jobs`      | Queued work and async side effects.                                 |
-| Providers | `packages/newsletter/src/Providers` | Registration, extension hooks, routes, migrations, and resources.   |
-| Resources | `packages/newsletter/resources`     | Views, translations, assets, and package resources.                 |
-| Routes    | `packages/newsletter/routes`        | Route files loaded by the service provider.                         |
-| Config    | `packages/newsletter/config`        | Package configuration and publishable config.                       |
-| Database  | `packages/newsletter/database`      | Migrations, seeders, and settings migrations.                       |
-| Tests     | `packages/newsletter/tests`         | Package-level Pest coverage.                                        |
-
-## Admin Surface
-
-- Resources: `FormMappingResource`, `ImportBatchResource`, `NewsletterTagResource`, `ProviderAudienceResource`, `ProviderConnectionResource`, `ProviderInterestMappingResource`, `SegmentResource`, `SubscriberResource`, `SyncAttemptResource`.
-- Pages: `CreateFormMapping`, `CreateNewsletterTag`, `CreateProviderAudience`, `CreateProviderConnection`, `CreateProviderInterestMapping`, `CreateSegment`, `CreateSubscriber`, `EditFormMapping`, `EditNewsletterTag`, `EditProviderAudience`, `EditProviderConnection`, `EditProviderInterestMapping`, `EditSegment`, `EditSubscriber`, and related pages.
-- Widgets: `NewsletterOverviewStatsWidget`.
-- Settings: `NewsletterSettings`.
-
-## Runtime Surface
-
-- Controllers: `SubscribeController`, `ConfirmSubscriptionController`, `ProviderWebhookController`, `ShowPreferenceCenterController`, `UnsubscribeController`, `UpdatePreferenceCenterController`.
-- Routes: `packages/newsletter/routes/web.php`.
-- Jobs: `SyncSubscriberToProviderJob`.
-
-## Commands
-
-- `newsletter:sync-retry-due {--limit= : Maximum number of due attempts to requeue}` (packages/newsletter/src/Console/Commands/RequeueDueProviderSyncAttemptsCommand.php)
-
-## Data And Persistence
-
+- Service providers: `Capell\Newsletter\Providers\NewsletterServiceProvider`, `Capell\Newsletter\Providers\AdminServiceProvider`.
+- Config files: `packages/newsletter/config/capell-newsletter.php`.
+- Migrations: `packages/newsletter/database/migrations/2026_05_10_190861_01_create_newsletter_provider_connections_table.php`, `packages/newsletter/database/migrations/2026_05_10_190861_02_create_newsletter_subscribers_table.php`, `packages/newsletter/database/migrations/2026_05_10_190861_03_create_newsletter_provider_audiences_table.php`, `packages/newsletter/database/migrations/2026_05_10_190861_04_create_newsletter_consent_events_table.php`, `packages/newsletter/database/migrations/2026_05_10_190861_05_create_newsletter_provider_interest_mappings_table.php`, `packages/newsletter/database/migrations/2026_05_10_190861_06_create_newsletter_provider_subscribers_table.php`, `packages/newsletter/database/migrations/2026_05_10_190861_07_create_newsletter_public_tokens_table.php`, `packages/newsletter/database/migrations/2026_05_10_190861_08_create_newsletter_segments_table.php`, `packages/newsletter/database/migrations/2026_05_10_190861_09_create_newsletter_sync_attempts_table.php`, `packages/newsletter/database/migrations/2026_05_10_190861_10_create_newsletter_form_mappings_table.php`, `packages/newsletter/database/migrations/2026_05_10_190861_11_create_newsletter_import_batches_table.php`, `packages/newsletter/database/migrations/2026_05_10_190861_12_create_newsletter_processed_webhook_events_table.php`, `packages/newsletter/database/migrations/2026_05_31_120000_13_create_newsletter_sends_table.php`.
+- Settings classes: `NewsletterSettings`.
 - Models: `ConsentEvent`, `FormMapping`, `ImportBatch`, `NewsletterSend`, `ProviderAudience`, `ProviderConnection`, `ProviderInterestMapping`, `ProviderSubscriber`, `PublicToken`, `Segment`, `Subscriber`, `SyncAttempt`.
-- Send strategy: Newsletter records scheduled campaign sends and exposes `BuildNewsletterSendHandoffPayloadAction` for Email Studio, Campaign Studio, Automation Studio, or ESP-specific workers to deliver them. It does not ship a standalone in-house email delivery worker.
-- Migrations: `2026_05_10_190861_01_create_newsletter_provider_connections_table.php`, `2026_05_10_190861_02_create_newsletter_subscribers_table.php`, `2026_05_10_190861_03_create_newsletter_provider_audiences_table.php`, `2026_05_10_190861_04_create_newsletter_consent_events_table.php`, `2026_05_10_190861_05_create_newsletter_provider_interest_mappings_table.php`, `2026_05_10_190861_06_create_newsletter_provider_subscribers_table.php`, `2026_05_10_190861_07_create_newsletter_public_tokens_table.php`, `2026_05_10_190861_08_create_newsletter_segments_table.php`, `2026_05_10_190861_09_create_newsletter_sync_attempts_table.php`, `2026_05_10_190861_10_create_newsletter_form_mappings_table.php`, `2026_05_10_190861_11_create_newsletter_import_batches_table.php`, `2026_05_10_190861_12_create_newsletter_processed_webhook_events_table.php`, `2026_05_31_120000_13_create_newsletter_sends_table.php`.
-- Config: `packages/newsletter/config/capell-newsletter.php`.
-- Data objects live in `src/Data/`; use them for payloads, form state, and view models.
-
-## Extension Points
-
-- Contracts: `NewsletterAudienceProvider`, `NewsletterProviderAdapter`, `NewsletterSegmentProvider`.
+- Filament classes: `ScopesNewsletterResourcesToAssignedSites`, `FormMappingResource`, `CreateFormMapping`, `EditFormMapping`, `ListFormMappings`, `ImportBatchResource`, `ListImportBatches`, `NewsletterSendResource`, `CreateNewsletterSend`, `EditNewsletterSend`, `ListNewsletterSends`, `NewsletterTagResource`, `and 27 more`.
+- Route files: `packages/newsletter/routes/web.php`.
+- Policies: `AbstractNewsletterResourcePolicy`, `FormMappingPolicy`, `ImportBatchPolicy`, `NewsletterSendPolicy`, `ProviderAudiencePolicy`, `ProviderConnectionPolicy`, `ProviderInterestMappingPolicy`, `SegmentPolicy`, `SubscriberPolicy`, `SyncAttemptPolicy`.
+- Events: `SubscriberConfirmed`, `SubscriberUnsubscribed`.
 - Listeners: `SubscribeFromFormSubmission`.
-- Register Capell extension points, routes, migrations, settings, render hooks, and resources from service providers.
+- Actions: `ApplyNewsletterTagsAction`, `BuildDueNewsletterSendsAction`, `BuildListUnsubscribeHeadersAction`, `BuildNewsletterHealthDiagnosticsAction`, `BuildNewsletterSendHandoffPayloadAction`, `ConfirmSubscriberAction`, `CreatePreferenceCenterTokenAction`, `CreateUnsubscribeTokenAction`, `EvaluateNewsletterSegmentAction`, `ExportSubscribersAction`, `HandleProviderWebhookAction`, `ImportSubscribersAction`, `and 17 more`.
+- Data objects: `ConsentEvidenceData`, `FormMappingData`, `PreferenceCenterData`, `PreferenceCenterSegmentData`, `PreferenceCenterUpdateData`, `ProviderAudienceData`, `ProviderInterestData`, `ProviderSubscriberData`, `ProviderSyncResultData`, `ProviderWebhookEventData`, `SubscriberData`, `UtmAttributionData`.
+- Jobs: `SyncSubscriberToProviderJob`.
+- Console command classes: `RequeueDueProviderSyncAttemptsCommand`.
+- Manifest contributions: `admin-resource: Capell\Newsletter\Manifest\NewsletterAdminResourcesContribution`, `dashboard-widget: Capell\Newsletter\Manifest\NewsletterOverviewWidgetContribution`, `model: Capell\Newsletter\Manifest\NewsletterModelsContribution`, `overview-stat: Capell\Newsletter\Manifest\NewsletterOverviewStatsContribution`, `route: Capell\Newsletter\Manifest\NewsletterFrontendRoutesContribution`, `scheduled-job: Capell\Newsletter\Manifest\NewsletterSyncRetryScheduleContribution`.
+- Health checks: `Capell\Newsletter\Health\NewsletterHealthCheck`.
+- Blade views: `packages/newsletter/resources/views/preference-center.blade.php`.
+- Cache tags: `newsletter`.
+
+## Data Model
+
+- Required tables: `newsletter_provider_connections`, `newsletter_subscribers`, `newsletter_provider_audiences`, `newsletter_consent_events`, `newsletter_provider_interest_mappings`, `newsletter_provider_subscribers`, `newsletter_public_tokens`, `newsletter_segments`, `newsletter_sync_attempts`, `newsletter_form_mappings`, `newsletter_import_batches`, `newsletter_processed_webhook_events`, `newsletter_sends`.
+- Models: `ConsentEvent`, `FormMapping`, `ImportBatch`, `NewsletterSend`, `ProviderAudience`, `ProviderConnection`, `ProviderInterestMapping`, `ProviderSubscriber`, `PublicToken`, `Segment`, `Subscriber`, `SyncAttempt`.
+- Migration files: `2026_05_10_190861_01_create_newsletter_provider_connections_table.php`, `2026_05_10_190861_02_create_newsletter_subscribers_table.php`, `2026_05_10_190861_03_create_newsletter_provider_audiences_table.php`, `2026_05_10_190861_04_create_newsletter_consent_events_table.php`, `2026_05_10_190861_05_create_newsletter_provider_interest_mappings_table.php`, `2026_05_10_190861_06_create_newsletter_provider_subscribers_table.php`, `2026_05_10_190861_07_create_newsletter_public_tokens_table.php`, `2026_05_10_190861_08_create_newsletter_segments_table.php`, `2026_05_10_190861_09_create_newsletter_sync_attempts_table.php`, `2026_05_10_190861_10_create_newsletter_form_mappings_table.php`, `2026_05_10_190861_11_create_newsletter_import_batches_table.php`, `2026_05_10_190861_12_create_newsletter_processed_webhook_events_table.php`, `2026_05_31_120000_13_create_newsletter_sends_table.php`.
+- Migration impact: run host migrations through the package install flow before opening package surfaces.
+- Deletion/retention behaviour: Docs gap unless the package has an explicit pruning command, retention setting, or tested cascade path.
 
 ## Install Impact
 
-- Adds audience, subscriber, subscription, consent, import, segment, and notification tables.
-- Adds newsletter admin resources and settings.
-- Adds public subscription endpoints and async newsletter processing jobs.
+- Admin navigation: adds package-owned Filament classes when registered.
+- Permissions: none declared in `capell.json`.
+- Public routes: route files exist and must be reviewed before public enablement.
+- Database changes: package migrations are declared.
+- Settings: settings classes or settings migrations exist; verify the install flow registers them.
+- Queues or schedules: review package jobs or schedules before install.
+- Cache tags: `newsletter`.
+- Commands: console command classes detected: `RequeueDueProviderSyncAttemptsCommand`.
 
-## Install And Setup
+## Common Pitfalls
 
-- Install with `composer require capell-app/newsletter` in the host Capell application.
-- Run migrations through the host application package install flow.
-- In this repository, verify package changes with `vendor/bin/pest`; do not use `php artisan`.
+- Run migrations before opening package resources or public routes.
+- Review route middleware, throttling, signed URLs, and public-output safety before exposing routes.
+- Keep public Blade and cached HTML free of authoring markers, model IDs, permissions, signed editor URLs, and lazy database queries.
+- Keep `composer.json`, `composer.local.json`, `capell.json`, docs, screenshots, and tests aligned when the package surface changes.
 
-## Docs
+## Troubleshooting
 
-- [docs index](docs/README.md)
-- [overview.md](docs/overview.md)
-- [screenshots.json](docs/screenshots.json)
-- [subscription-workflow.md](docs/subscription-workflow.md)
+| Symptom | Likely cause | Check | Fix |
+| --- | --- | --- | --- |
+| Package surface is missing after install | Provider or manifest is not loaded | Confirm `capell.json`, package `composer.json`, and provider registration | Reinstall the package, refresh Composer autoload, and clear host caches |
+| Admin screen or command fails on missing table | Package migrations have not run | Check the tables listed in `Data Model` | Run host migrations and rerun the focused package test |
+| Route returns unexpected output | Route cache, middleware, or signed URL setup does not match the package route file | Check the route files listed in `Technical Shape` | Clear route cache and verify middleware before exposing public routes |
+| Background work does not run | Queue worker or scheduled command is not active | Check package jobs, commands, and host scheduler configuration | Start the queue or scheduler, then run the focused command or package test |
+| Public output leaks unexpected state | Render data, cache variation, or authoring boundary has regressed | Check public Blade, cache tags, and public-output safety tests | Move data loading out of Blade and rerun the package public-output tests |
 
-The full 13-capture screenshot contract is committed under `docs/screenshots/`
-and listed in `capell.json` marketplace media with the extension card.
+## Quick Start
 
-## Testing
+1. Install the package: `composer require capell-app/newsletter`.
+2. Run the required setup: `php artisan migrate`.
+3. Open the related Capell admin surface and verify Newsletter appears.
 
-Run package tests from the repository root:
+## Next Steps
 
-```bash
-vendor/bin/pest packages/newsletter/tests --configuration=phpunit.xml
-```
+- [Package docs](docs/README.md)
+- [Overview](docs/overview.md)
+- [Screenshot contract](docs/screenshots.json)
+- [Marketplace assets](docs/assets/marketplace/)
+- [Capell content language plan](../../docs/CONTENT_LANGUAGE_PLAN.md)
+- [Capell documentation design system](../../docs/DESIGN_SYSTEM.md)
+- [Capell and package ERD notes](../../docs/erd/capell-and-package-erds.md)
+- Related packages: [Form Builder](../form-builder/README.md), [Tags](../tags/README.md), [Contacts](../contacts/README.md), [Customer Portal](../customer-portal/README.md).
+- Focused tests: `vendor/bin/pest packages/newsletter/tests --configuration=phpunit.xml`.
 
-## Maintenance Notes
-
-- Treat public routes as untrusted input and keep validation, permission checks, and side effects inside actions or dedicated services.
-- Put behaviour changes in `src/Actions/`; UI classes, commands, and controllers should call actions instead of owning domain logic.
-- Use package `Data` classes at boundaries instead of passing anonymous arrays between layers.
-- Use backed enums for persisted values and enum labels for Filament options.
+<!-- prettier-ignore-end -->

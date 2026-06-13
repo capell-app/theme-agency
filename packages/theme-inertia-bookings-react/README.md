@@ -1,52 +1,92 @@
 # Theme Inertia Bookings React
 
-Theme Inertia Bookings React provides the React component implementation for the booking-first Inertia theme.
+<!-- prettier-ignore-start -->
 
-## At A Glance
+## What This Plugin Adds
 
-- Package: `capell-app/theme-inertia-bookings-react`
-- Namespace: `Capell\ThemeStudio\InertiaBookingsReact\`
-- Runtime: Inertia React
-- Surfaces: public frontend
-- Service provider: `Capell\ThemeStudio\InertiaBookingsReact\Providers\InertiaBookingsReactServiceProvider`
-- Capell dependencies: `capell-app/theme-inertia-bookings`, `capell-app/inertia-react-adapter`
+Theme Inertia Bookings React is an **Available**, **No schema impact** Capell plugin in the **Capell Themes** product group. It ships as `capell-app/theme-inertia-bookings-react` and extends these surfaces: frontend.
 
-## Why It Helps Your Capell Workflow
+React component pack for Theme Inertia Bookings.
 
-For teams, this package turns the booking theme into a React-powered public experience with the same server-side booking contract.
+After install, the package affects public rendering, public routes, or frontend runtime behaviour.
 
-For developers, it registers the themed React entrypoint and component contribution for `Capell/Bookings/Request`; the generic React adapter build backs off when this component pack is installed.
+Status details:
 
-## What It Adds
+- Status: Available
+- Tier: premium
+- Bundle: themes
+- Composer package: `capell-app/theme-inertia-bookings-react`
+- Namespace: `Capell\ThemeStudio\InertiaBookingsReact`
+- Theme key: not applicable
 
-- `resources/js/app.jsx`, the themed React Inertia entrypoint.
-- React implementations for `Capell/Page` and `Capell/Bookings/Request`.
-- React widget components for title, content, and image blocks.
-- Tailwind source registration and package-owned build asset conditions.
-- Marketplace screenshot contract for booking request, services, loading, validation, and mobile states.
+## Why It Matters
 
-## Boundaries
+**For developers:** The package gives developers package-owned service providers instead of pushing this behaviour into core or application code.
 
-- The package renders server props supplied by Theme Inertia Bookings and Bookings.
-- It owns no booking data, routes, validation, database tables, settings, or admin resources.
-- Do not duplicate booking availability or appointment request logic in React components.
+**For teams:** React components for Theme Inertia Bookings.
 
-## Runtime Surface
+## Screens And Workflow
 
-- Provider: `src/Providers/InertiaBookingsReactServiceProvider.php`
-- Component contribution: `src/Manifest/InertiaBookingsReactComponentContribution.php`
-- Health check: `src/Health/InertiaBookingsReactHealthCheck.php`
-- Entry point and components: `resources/js/`
-- Tests: `packages/theme-inertia-bookings-react/tests`
+Screenshot contract: `docs/screenshots.json`.
 
-## Docs
+- React booking component pack (frontend, required).
+- React themed booking services (frontend, required).
+- React booking slot loading state (frontend, required).
+- React booking validation state (frontend, required).
+- React booking mobile layout (frontend, required).
 
-- [docs index](docs/README.md)
-- [overview.md](docs/overview.md)
-- [screenshots.json](docs/screenshots.json)
+## Technical Shape
 
-## Testing
+- Service providers: `Capell\ThemeStudio\InertiaBookingsReact\Providers\InertiaBookingsReactServiceProvider`.
+- Manifest contributions: `frontend-component: Capell\ThemeStudio\InertiaBookingsReact\Manifest\InertiaBookingsReactComponentContribution`.
+- Health checks: `Capell\ThemeStudio\InertiaBookingsReact\Health\InertiaBookingsReactHealthCheck`.
+- Cache tags: `theme-inertia-bookings-react`.
 
-```bash
-vendor/bin/pest packages/theme-inertia-bookings-react/tests --configuration=phpunit.xml
-```
+## Data Model
+
+This package has no schema impact. It does not declare package-owned migrations or required tables.
+
+Docs gap: document extension points here if the package delegates persistence to a host package.
+
+## Install Impact
+
+- Admin navigation: no admin surface declared.
+- Permissions: none declared in `capell.json`.
+- Public routes: none detected in package route files.
+- Database changes: no package migrations declared.
+- Settings: no package settings declared.
+- Queues or schedules: none detected in standard package paths.
+- Cache tags: `theme-inertia-bookings-react`.
+- Commands: none declared.
+
+## Common Pitfalls
+
+- Keep public Blade and cached HTML free of authoring markers, model IDs, permissions, signed editor URLs, and lazy database queries.
+- Keep `composer.json`, `composer.local.json`, `capell.json`, docs, screenshots, and tests aligned when the package surface changes.
+
+## Troubleshooting
+
+| Symptom | Likely cause | Check | Fix |
+| --- | --- | --- | --- |
+| Package surface is missing after install | Provider or manifest is not loaded | Confirm `capell.json`, package `composer.json`, and provider registration | Reinstall the package, refresh Composer autoload, and clear host caches |
+| Public output leaks unexpected state | Render data, cache variation, or authoring boundary has regressed | Check public Blade, cache tags, and public-output safety tests | Move data loading out of Blade and rerun the package public-output tests |
+
+## Quick Start
+
+1. Install the package: `composer require capell-app/theme-inertia-bookings-react`.
+2. Run the required setup: no package migrations are declared; clear cached config and routes if the host app uses caches.
+3. Verify the package provider is registered and the related frontend, command, or extension point is active.
+
+## Next Steps
+
+- [Package docs](docs/README.md)
+- [Overview](docs/overview.md)
+- [Screenshot contract](docs/screenshots.json)
+- [Marketplace assets](docs/assets/marketplace/)
+- [Capell content language plan](../../docs/CONTENT_LANGUAGE_PLAN.md)
+- [Capell documentation design system](../../docs/DESIGN_SYSTEM.md)
+- [Capell and package ERD notes](../../docs/erd/capell-and-package-erds.md)
+- Related packages: [Theme Inertia Bookings](../theme-inertia-bookings/README.md), [Inertia React Adapter](../inertia-react-adapter/README.md).
+- Focused tests: `vendor/bin/pest packages/theme-inertia-bookings-react/tests --configuration=phpunit.xml`.
+
+<!-- prettier-ignore-end -->

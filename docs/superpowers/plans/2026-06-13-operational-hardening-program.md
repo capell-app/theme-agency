@@ -590,7 +590,7 @@ git commit -m "test: standardize package health coverage"
 
 **Files:**
 
-- Create: `scripts/build-package-security-surface-report.php`
+- Create: `scripts/generate-package-security-surface-report.php`
 - Create: `docs/package-security-surface.md`
 - Create: `tests/Packages/Security/PackageSecuritySurfaceReportTest.php`
 - Modify: `composer.json`
@@ -600,7 +600,7 @@ git commit -m "test: standardize package health coverage"
 
 ### Task 7.1: Add Report Builder
 
-- [ ] Create `scripts/build-package-security-surface-report.php`.
+- [ ] Create `scripts/generate-package-security-surface-report.php`.
 - [ ] Require `scripts/audit-package-security.php`.
 - [ ] For every package manifest, output a Markdown table with columns:
   - Package
@@ -620,14 +620,15 @@ git commit -m "test: standardize package health coverage"
 - [ ] Add to both Composer manifests:
 
 ```json
-"security:surface-report": "@php scripts/build-package-security-surface-report.php"
+"security:surface-report": "@php scripts/generate-package-security-surface-report.php",
+"security:surface-report:check": "@php scripts/generate-package-security-surface-report.php --check"
 ```
 
 ### Task 7.3: Add Report Test
 
 - [ ] Create `tests/Packages/Security/PackageSecuritySurfaceReportTest.php`.
 - [ ] Assert the generated report contains:
-  - a top-level heading `# Capell Package Security Surface`
+  - a top-level heading `# Package Security Surface Report`
   - table headers for every required column
   - known high-risk packages: `payments`, `public-actions`, `privacy-center`, `frontend-authoring`
   - no absolute local filesystem paths
@@ -656,7 +657,7 @@ COMPOSER=composer.local.json composer preflight
 - [ ] Commit:
 
 ```bash
-git add scripts/build-package-security-surface-report.php docs/package-security-surface.md docs/README.md tests/Packages/Security/PackageSecuritySurfaceReportTest.php composer.json composer.local.json
+git add scripts/generate-package-security-surface-report.php docs/package-security-surface.md docs/README.md tests/Packages/Security/PackageSecuritySurfaceReportTest.php composer.json composer.local.json
 git commit -m "docs: add package security surface report"
 ```
 
