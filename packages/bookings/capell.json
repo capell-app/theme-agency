@@ -15,7 +15,11 @@
     "namespace": "Capell\\Bookings",
     "surfaces": ["admin", "console", "frontend"],
     "dependencies": {
-        "requires": ["capell-app/admin", "capell-app/core"],
+        "requires": [
+            "capell-app/admin",
+            "capell-app/core",
+            "capell-app/customer-portal"
+        ],
         "supports": [
             "capell-app/address",
             "capell-app/events",
@@ -60,6 +64,11 @@
         },
         {
             "type": "admin-resource",
+            "class": "Capell\\Bookings\\Manifest\\LessonSeriesResourceContribution",
+            "resourceClass": "Capell\\Bookings\\Filament\\Resources\\LessonSeries\\LessonSeriesResource"
+        },
+        {
+            "type": "admin-resource",
             "class": "Capell\\Bookings\\Manifest\\AppointmentRequestResourceContribution",
             "resourceClass": "Capell\\Bookings\\Filament\\Resources\\AppointmentRequests\\AppointmentRequestResource"
         },
@@ -81,13 +90,14 @@
     ],
     "database": {
         "migrations": true,
-        "settings": false,
+        "settings": true,
         "requiredTables": [
             "booking_services",
             "booking_staff_members",
             "booking_locations",
             "booking_availability_windows",
             "booking_availability_exceptions",
+            "lesson_series",
             "appointment_requests",
             "appointment_audit_logs"
         ]
@@ -103,6 +113,8 @@
         "createAppointmentRequest": "Capell\\Bookings\\Actions\\CreateAppointmentRequestAction",
         "confirmAppointmentRequest": "Capell\\Bookings\\Actions\\ConfirmAppointmentRequestAction",
         "cancelAppointmentRequest": "Capell\\Bookings\\Actions\\CancelAppointmentRequestAction",
+        "linkBookingToPortalAccount": "Capell\\Bookings\\Actions\\LinkBookingToPortalAccountAction",
+        "materialiseLessonSeries": "Capell\\Bookings\\Actions\\MaterialiseLessonSeriesAction",
         "queueAppointmentReminder": "Capell\\Bookings\\Actions\\QueueAppointmentReminderAction",
         "createStaffCalendarFeedUrl": "Capell\\Bookings\\Actions\\CreateStaffCalendarFeedUrlAction",
         "buildStaffCalendarFeed": "Capell\\Bookings\\Actions\\BuildStaffCalendarFeedAction",
@@ -110,7 +122,7 @@
         "buildPublicBookingRequestProps": "Capell\\Bookings\\Actions\\BuildPublicBookingRequestPropsAction",
         "buildAvailableBookingSlots": "Capell\\Bookings\\Actions\\BuildAvailableBookingSlotsAction"
     },
-    "settings": [],
+    "settings": ["Capell\\Bookings\\Settings\\BookingsSettings"],
     "permissions": [
         "View:BookingService",
         "Create:BookingService",
@@ -132,6 +144,10 @@
         "Create:BookingAvailabilityException",
         "Update:BookingAvailabilityException",
         "Delete:BookingAvailabilityException",
+        "View:LessonSeries",
+        "Create:LessonSeries",
+        "Update:LessonSeries",
+        "Delete:LessonSeries",
         "View:AppointmentRequest",
         "Update:AppointmentRequest"
     ],
@@ -144,6 +160,11 @@
         "bookings-lead-times",
         "bookings-service-buffers",
         "bookings-appointment-requests",
+        "bookings-client-identity",
+        "bookings-flexible-confirmation-gate",
+        "bookings-lesson-series",
+        "bookings-provisional-holds",
+        "bookings-settings",
         "bookings-appointment-audit",
         "bookings-notifications",
         "bookings-reminders",
@@ -203,6 +224,10 @@
                 "Create:BookingAvailabilityException",
                 "Update:BookingAvailabilityException",
                 "Delete:BookingAvailabilityException",
+                "View:LessonSeries",
+                "Create:LessonSeries",
+                "Update:LessonSeries",
+                "Delete:LessonSeries",
                 "View:AppointmentRequest",
                 "Update:AppointmentRequest"
             ]

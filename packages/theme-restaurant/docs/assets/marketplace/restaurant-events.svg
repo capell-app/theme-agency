@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720" role="img" aria-labelledby="title desc">
+  <title id="title">Restaurant events preview</title>
+  <desc id="desc">Seasonal event listing for producer dinners and menu launches.</desc>
+  <rect width="1280" height="720" fill="#e8f5ee"/>
+  <rect x="120" y="86" width="1040" height="548" fill="#ffffff" stroke="#b8cec2" stroke-width="3"/>
+  <rect x="172" y="140" width="110" height="18" fill="#b45309"/>
+  <rect x="172" y="188" width="430" height="56" fill="#171312"/>
+  <rect x="172" y="304" width="880" height="112" fill="#ffffff" stroke="#d4e4dc"/>
+  <rect x="196" y="328" width="112" height="64" fill="#0f3d2e"/>
+  <rect x="342" y="330" width="260" height="24" fill="#171312"/>
+  <rect x="342" y="372" width="500" height="16" fill="#5f6660"/>
+  <rect x="172" y="450" width="880" height="112" fill="#ffffff" stroke="#d4e4dc"/>
+  <rect x="196" y="474" width="112" height="64" fill="#b45309"/>
+  <rect x="342" y="476" width="260" height="24" fill="#171312"/>
+  <rect x="342" y="518" width="500" height="16" fill="#5f6660"/>
+</svg>

@@ -35,6 +35,16 @@ class ConfirmAppointmentRequestAction
                 ]);
             }
 
+            if (
+                $lockedAppointmentRequest->status === AppointmentRequestStatusEnum::Provisional
+                && $lockedAppointmentRequest->hold_expires_at !== null
+                && $lockedAppointmentRequest->hold_expires_at->lessThanOrEqualTo(CarbonImmutable::now())
+            ) {
+                throw ValidationException::withMessages([
+                    'hold_expires_at' => __('capell-bookings::validation.appointment_hold_expired'),
+                ]);
+            }
+
             $previousStatus = $lockedAppointmentRequest->status;
 
             $lockedAppointmentRequest->forceFill([

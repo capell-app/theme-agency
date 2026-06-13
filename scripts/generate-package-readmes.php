@@ -43,17 +43,17 @@ if ($changedFiles !== []) {
             fwrite(STDERR, '- ' . $changedFile . "\n");
         }
 
-        exit(1);
+        return 1;
     }
 
     fwrite(STDOUT, 'Wrote ' . count($changedFiles) . " package generated docs.\n");
 
-    exit(0);
+    return 0;
 }
 
 fwrite(STDOUT, "Package generated docs are current.\n");
 
-exit(0);
+return 0;
 
 /**
  * @return array<string, string>
@@ -192,11 +192,7 @@ function capell_docs_package_markdown(string $rootPath, string $packageSlug, str
  */
 function capell_docs_package_specific_sections(string $packageSlug, bool $forOverview): array
 {
-    if ($packageSlug !== 'foundation-theme') {
-        if ($packageSlug !== 'media-library') {
-            return [];
-        }
-
+    if ($packageSlug === 'media-library') {
         $screenshotContractLink = $forOverview
             ? '[screenshots.json](screenshots.json)'
             : '[docs/screenshots.json](docs/screenshots.json)';
@@ -216,20 +212,78 @@ function capell_docs_package_specific_sections(string $packageSlug, bool $forOve
         ];
     }
 
-    return [
-        '## Child Theme Override Contract',
-        '',
-        'Foundation Theme owns the stable child theme override surface for Capell themes. Child themes should declare `extends: \'default\'` and override documented sections, views, tokens, and chrome areas instead of replacing the whole public rendering path.',
-        '',
-        'Stable contract points:',
-        '',
-        '- Theme Studio sections: `navigation`, `hero`, `features`, `proof`, `content-listing`, `cta`, `footer`.',
-        '- Shared views: `capell::theme.page`, `capell::layout.area`, `capell::media.svg`.',
-        '- Runtime tokens: `--foundation-page-bg`, `--foundation-section-spacing`, `--foundation-widget-gap`.',
-        '- Layout Builder chrome areas: `header`.',
-        '- Public-output rule: child themes must not expose authoring metadata, editor controls, model IDs, field paths, permissions, or signed editor URLs.',
-        '',
-    ];
+    if ($packageSlug === 'privacy-center') {
+        return [
+            '## Shipped And Deferred Privacy Surfaces',
+            '',
+            'Privacy Center currently ships admin and console surfaces for consent policy records, privacy requests, retention rules, policy acceptances, retention execution, and audited DSAR handling. It also ships a cache-safe public preference center for cookie consent preferences, but it does not ship a public DSAR intake form.',
+            '',
+            'Current boundaries:',
+            '',
+            '- Public consent: use the public cookie consent preference center and `RecordConsentAction`; `RecordConsentAction` can infer a subject from a source model when another package mirrors consent.',
+            '- Subject data: the cross-package subject-data export/erasure registry is Action-backed through `BuildPrivacyExportAction` and `AnonymizePrivacySubjectAction`.',
+            '- Request intake: open requests through `OpenPrivacyRequestAction` or admin workflows until a public DSAR intake route is shipped.',
+            '- Evidence hashing: configure `CAPELL_PRIVACY_CENTER_HASH_SECRET` before relying on request or consent evidence hashes.',
+            '- Admin surface: The admin provider contributes these Filament surfaces: consent policies, consent records, policy acceptances, privacy requests, retention rules, and the overview widget.',
+            '',
+        ];
+    }
+
+    if ($packageSlug === 'theme-agency') {
+        return [
+            '## Marketplace Classification',
+            '',
+            'Tier: **premium**',
+            '',
+            'Product group: **Capell Themes**',
+            '',
+        ];
+    }
+
+    if ($packageSlug === 'theme-portfolio') {
+        return [
+            '## Theme Inheritance Contract',
+            '',
+            'Product group:',
+            '**Capell Themes**',
+            '',
+            '- Product group: `Capell Themes`',
+            '- Manifest extends: `default`',
+            '- Runtime extends: `default`',
+            '- Portfolio runtime inheritance uses `extends: default` and requires `capell-app/frontend` for the built-in default fallback.',
+            '',
+        ];
+    }
+
+    if ($packageSlug === 'theme-saas') {
+        return [
+            '## Test Command',
+            '',
+            'Run package tests from the repository root.',
+            '',
+            'From the repository root, run `vendor/bin/pest packages/theme-saas/tests`; this package does not ship its own PHPUnit config.',
+            '',
+        ];
+    }
+
+    if ($packageSlug === 'foundation-theme') {
+        return [
+            '## Child Theme Override Contract',
+            '',
+            'Foundation Theme owns the stable child theme override surface for Capell themes. Child themes should declare `extends: \'default\'` and override documented sections, views, tokens, and chrome areas instead of replacing the whole public rendering path.',
+            '',
+            'Stable contract points:',
+            '',
+            '- Theme Studio sections: `navigation`, `hero`, `features`, `proof`, `content-listing`, `cta`, `footer`.',
+            '- Shared views: `capell::theme.page`, `capell::layout.area`, `capell::media.svg`.',
+            '- Runtime tokens: `--foundation-page-bg`, `--foundation-section-spacing`, `--foundation-widget-gap`.',
+            '- Layout Builder chrome areas: `header`.',
+            '- Public-output rule: child themes must not expose authoring metadata, editor controls, model IDs, field paths, permissions, or signed editor URLs.',
+            '',
+        ];
+    }
+
+    return [];
 }
 
 /**
@@ -915,7 +969,13 @@ function capell_docs_next_steps(string $packageSlug, string $packagePath, array 
     if ($isPipeline) {
         $links[] = '- Docs gap: finish certification review and host install verification before marking this package Available.';
     } elseif (capell_docs_path_list($packagePath . '/tests', '*.php') !== []) {
-        $links[] = '- Focused tests: `vendor/bin/pest packages/' . $packageSlug . '/tests --configuration=phpunit.xml`.';
+        $testCommand = 'vendor/bin/pest packages/' . $packageSlug . '/tests';
+
+        if ($packageSlug !== 'theme-saas') {
+            $testCommand .= ' --configuration=phpunit.xml';
+        }
+
+        $links[] = '- Focused tests: `' . $testCommand . '`.';
     } else {
         $links[] = '- Docs gap: add focused package tests before marking this package Available.';
     }

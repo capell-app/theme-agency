@@ -8,7 +8,7 @@
         "php": "^8.3",
         "capell-app/admin": "^4.0 || 4.x-dev",
         "capell-app/core": "^4.0 || 4.x-dev",
-        "filament/filament": "^4.0",
+        "filament/filament": "^4.0|^5.0",
         "laravel/framework": "^11.44.2|^12.0|^13.0",
         "lorisleiva/laravel-actions": "^2.8",
         "spatie/laravel-data": "^4.5",

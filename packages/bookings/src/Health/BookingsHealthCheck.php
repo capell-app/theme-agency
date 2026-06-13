@@ -11,6 +11,8 @@ use Capell\Bookings\Actions\BuildStaffCalendarFeedAction;
 use Capell\Bookings\Actions\CancelAppointmentRequestAction;
 use Capell\Bookings\Actions\ConfirmAppointmentRequestAction;
 use Capell\Bookings\Actions\CreateAppointmentRequestAction;
+use Capell\Bookings\Actions\LinkBookingToPortalAccountAction;
+use Capell\Bookings\Actions\MaterialiseLessonSeriesAction;
 use Capell\Bookings\Actions\QueueAppointmentReminderAction;
 use Capell\Bookings\Models\AppointmentAuditLog;
 use Capell\Bookings\Models\AppointmentRequest;
@@ -19,6 +21,7 @@ use Capell\Bookings\Models\BookingAvailabilityWindow;
 use Capell\Bookings\Models\BookingLocation;
 use Capell\Bookings\Models\BookingService;
 use Capell\Bookings\Models\BookingStaffMember;
+use Capell\Bookings\Models\LessonSeries;
 use Capell\Core\Contracts\Extensions\ChecksExtensionHealth;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Facades\Schema;
@@ -35,6 +38,8 @@ final class BookingsHealthCheck implements ChecksExtensionHealth
         CancelAppointmentRequestAction::class,
         ConfirmAppointmentRequestAction::class,
         CreateAppointmentRequestAction::class,
+        LinkBookingToPortalAccountAction::class,
+        MaterialiseLessonSeriesAction::class,
         QueueAppointmentReminderAction::class,
     ];
 
@@ -45,6 +50,7 @@ final class BookingsHealthCheck implements ChecksExtensionHealth
         'booking_locations' => BookingLocation::class,
         'booking_availability_windows' => BookingAvailabilityWindow::class,
         'booking_availability_exceptions' => BookingAvailabilityException::class,
+        'lesson_series' => LessonSeries::class,
         'appointment_requests' => AppointmentRequest::class,
         'appointment_audit_logs' => AppointmentAuditLog::class,
     ];

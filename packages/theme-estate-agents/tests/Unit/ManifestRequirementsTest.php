@@ -1,0 +1,50 @@
+<?php
+
+declare(strict_types=1);
+
+use Capell\ThemeStudio\EstateAgents\EstateAgentsThemeServiceProvider;
+use Illuminate\Support\Facades\File;
+
+it('declares the required first-party estate agents theme manifest boundaries', function (): void {
+    $manifest = capell_json_file_array(__DIR__ . '/../../capell.json');
+    $composer = capell_json_file_array(__DIR__ . '/../../composer.json');
+    $overviewContents = file_get_contents(__DIR__ . '/../../docs/overview.md');
+    $overview = $overviewContents === false ? '' : $overviewContents;
+    $readmeContents = file_get_contents(__DIR__ . '/../../README.md');
+    $readme = $readmeContents === false ? '' : $readmeContents;
+
+    expect($manifest['themeKey'])->toBe('estate-agents')
+        ->and(data_get($manifest, 'product.group'))->toBe('Capell Themes')
+        ->and(data_get($manifest, 'product.tier'))->toBe('premium')
+        ->and(data_get($manifest, 'commercial.proposedLicense'))->toBe('paid')
+        ->and($overview)->toContain('Product group:' . PHP_EOL . '**Capell Themes**')
+        ->and($readme)->toContain('- Product group: `Capell Themes`')
+        ->and($manifest['extends'])->toBe('default')
+        ->and(data_get($manifest, 'dependencies.requires'))->toContain('capell-app/frontend')
+        ->and(EstateAgentsThemeServiceProvider::definition()->extends)->toBe('default')
+        ->and($overview)->toContain('runtime inheritance uses `extends: default`')
+        ->and($overview)->toContain('requires `capell-app/frontend` for the built-in default fallback')
+        ->and($readme)->toContain('- Manifest extends: `default`')
+        ->and($readme)->toContain('- Runtime extends: `default`')
+        ->and($manifest['database']['migrations'])->toBeFalse()
+        ->and($manifest['providers']['runtime'])->toContain(EstateAgentsThemeServiceProvider::class)
+        ->and($manifest['commands']['demo'])->toBe('capell:theme-estate-agents-demo')
+        ->and($manifest['marketplace']['summary'])->toBe('A premium property theme for estate agencies, lettings teams, valuations, local guides, and viewing-led enquiry journeys.')
+        ->and($manifest['marketplace']['description'])->toBe($manifest['description'])
+        ->and($composer['description'])->toBe($manifest['marketplace']['summary']);
+});
+
+it('declares only estate agents marketplace screenshots that exist in the package', function (): void {
+    $manifest = capell_json_file_array(__DIR__ . '/../../capell.json');
+    $screenshots = data_get($manifest, 'marketplace.screenshots', []);
+
+    throw_unless(is_array($screenshots), RuntimeException::class, 'Theme Estate Agents screenshots must be an array.');
+
+    expect($screenshots)->toHaveCount(5);
+
+    foreach ($screenshots as $screenshot) {
+        throw_if(! is_array($screenshot) || ! is_string($screenshot['path'] ?? null), RuntimeException::class, 'Theme Estate Agents screenshot path must be a string.');
+
+        expect(File::exists(__DIR__ . '/../../' . $screenshot['path']))->toBeTrue();
+    }
+});

@@ -33,6 +33,7 @@ Use these packages as the working examples:
 | `capell-app/theme-corporate`              | `corporate`        | Free restrained renderer for B2B, public sector, and professional-service sites.                                                   |
 | `capell-app/theme-commerce`               | `commerce`         | Premium image-led renderer for catalog, retail, product discovery, buying guides, and conversion pages.                            |
 | `capell-app/theme-education`              | `education`        | Premium learning renderer for course catalogues, instructors, events, admissions, and enrolment journeys.                          |
+| `capell-app/theme-estate-agents`          | `estate-agents`    | Premium property renderer for search, listings, valuations, local guides, agent proof, and viewing requests.                       |
 | `capell-app/theme-healthcare`             | `healthcare`       | Premium clinical renderer for appointment-led care, service discovery, clinicians, resources, and locations.                       |
 | `capell-app/theme-inertia-bookings`       | `inertia-bookings` | Premium Inertia renderer for services, appointments, locations, and the Bookings public request flow.                              |
 | `capell-app/theme-inertia-bookings-react` | n/a                | Premium React adapter plugin for the Inertia Bookings theme.                                                                       |
@@ -42,6 +43,7 @@ Use these packages as the working examples:
 | `capell-app/theme-local-services`         | `local-services`   | Premium quote-led renderer for trades, service areas, local proof, quote forms, and click-to-call journeys.                        |
 | `capell-app/theme-nonprofit`              | `nonprofit`        | Premium impact renderer for campaigns, donations, volunteering, events, stories, and transparent support paths.                    |
 | `capell-app/theme-portfolio`              | `portfolio`        | Premium creator/consultant renderer for work grids, case studies, services, media kits, and newsletter growth.                     |
+| `capell-app/theme-restaurant`             | `restaurant`       | Premium hospitality renderer for menu discovery, reservations, private dining, events, opening hours, and location confidence.     |
 | `capell-app/theme-saas`                   | `saas`             | Premium product-led renderer for software, pricing, comparison, docs, calculators, and demo-request journeys.                      |
 
 Theme packages are intentionally thin. They have no migrations, routes, models,

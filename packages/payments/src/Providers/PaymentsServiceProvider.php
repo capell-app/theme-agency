@@ -14,6 +14,7 @@ use Capell\CustomerPortal\Support\PortalDashboardItemRegistry;
 use Capell\CustomerPortal\Support\PortalSelfServiceItemRegistry;
 use Capell\Payments\Console\Commands\ReconcilePaymentWebhooksCommand;
 use Capell\Payments\Console\Commands\ReprocessPaymentWebhookEventsCommand;
+use Capell\Payments\Contracts\PaymentFulfillmentHandler;
 use Capell\Payments\Contracts\PaymentGateway;
 use Capell\Payments\Filament\Settings\PaymentsSettingsSchema;
 use Capell\Payments\Models\CheckoutSession;
@@ -126,7 +127,7 @@ final class PaymentsServiceProvider extends AbstractPackageServiceProvider
     private function registerPaymentFulfillmentHandlers(): self
     {
         $this->app->singleton(PaidDownloadFulfillmentHandler::class);
-        $this->app->tag([PaidDownloadFulfillmentHandler::class], 'capell.payments.fulfillment_handler');
+        $this->app->tag([PaidDownloadFulfillmentHandler::class], PaymentFulfillmentHandler::TAG);
 
         return $this;
     }

@@ -10,6 +10,7 @@ use Capell\Bookings\Filament\Resources\BookingAvailabilityWindows\BookingAvailab
 use Capell\Bookings\Filament\Resources\BookingLocations\BookingLocationResource;
 use Capell\Bookings\Filament\Resources\BookingServices\BookingServiceResource;
 use Capell\Bookings\Filament\Resources\BookingStaffMembers\BookingStaffMemberResource;
+use Capell\Bookings\Filament\Resources\LessonSeries\LessonSeriesResource;
 
 enum ResourceEnum: string
 {
@@ -18,5 +19,6 @@ enum ResourceEnum: string
     case BookingLocation = BookingLocationResource::class;
     case BookingAvailabilityWindow = BookingAvailabilityWindowResource::class;
     case BookingAvailabilityException = BookingAvailabilityExceptionResource::class;
+    case LessonSeries = LessonSeriesResource::class;
     case AppointmentRequest = AppointmentRequestResource::class;
 }

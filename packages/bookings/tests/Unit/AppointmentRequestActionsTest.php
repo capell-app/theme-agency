@@ -8,12 +8,15 @@ use Capell\Bookings\Actions\CancelAppointmentRequestAction;
 use Capell\Bookings\Actions\ConfirmAppointmentRequestAction;
 use Capell\Bookings\Actions\CreateAppointmentRequestAction;
 use Capell\Bookings\Actions\CreateAvailabilityExceptionAction;
+use Capell\Bookings\Actions\LinkBookingToPortalAccountAction;
+use Capell\Bookings\Actions\MaterialiseLessonSeriesAction;
 use Capell\Bookings\Actions\QueueAppointmentReminderAction;
 use Capell\Bookings\Data\AppointmentRequestData;
 use Capell\Bookings\Data\AvailabilityExceptionData;
 use Capell\Bookings\Enums\AppointmentAuditEventEnum;
 use Capell\Bookings\Enums\AppointmentRequestStatusEnum;
 use Capell\Bookings\Enums\BookingAvailabilityStatusEnum;
+use Capell\Bookings\Enums\ConfirmationPolicyEnum;
 use Capell\Bookings\Models\AppointmentAuditLog;
 use Capell\Bookings\Models\AppointmentRequest;
 use Capell\Bookings\Models\BookingAvailabilityException;
@@ -21,8 +24,12 @@ use Capell\Bookings\Models\BookingAvailabilityWindow;
 use Capell\Bookings\Models\BookingLocation;
 use Capell\Bookings\Models\BookingService;
 use Capell\Bookings\Models\BookingStaffMember;
+use Capell\Bookings\Models\LessonSeries;
 use Capell\Bookings\Notifications\AppointmentWorkflowNotification;
+use Capell\CustomerPortal\Models\PortalAccount;
 use Carbon\CarbonImmutable;
+use Illuminate\Foundation\Auth\User as AuthenticatableUser;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Validation\ValidationException;
 
@@ -461,6 +468,46 @@ it('allows overlapping appointment requests when availability capacity remains',
         ->and($appointmentRequest->status)->toBe(AppointmentRequestStatusEnum::Requested);
 });
 
+it('treats provisional appointment holds as capacity blocking time', function (): void {
+    CarbonImmutable::setTestNow(CarbonImmutable::parse('2026-06-01 08:00:00', 'Europe/London'));
+
+    $service = BookingService::factory()->create([
+        'duration_minutes' => 45,
+        'lead_time_minutes' => 0,
+    ]);
+    $startsAt = CarbonImmutable::parse('2026-06-03 10:00:00', 'Europe/London');
+
+    BookingAvailabilityWindow::factory()->create([
+        'service_id' => $service->getKey(),
+        'staff_member_id' => null,
+        'location_id' => null,
+        'day_of_week' => $startsAt->dayOfWeek,
+        'starts_at' => '09:00:00',
+        'ends_at' => '17:00:00',
+        'timezone' => 'Europe/London',
+        'capacity' => 1,
+    ]);
+
+    AppointmentRequest::factory()->create([
+        'service_id' => $service->getKey(),
+        'staff_member_id' => null,
+        'location_id' => null,
+        'status' => AppointmentRequestStatusEnum::Provisional,
+        'confirmation_policy' => ConfirmationPolicyEnum::SelfConfirmLink,
+        'hold_expires_at' => CarbonImmutable::now()->addMinutes(30),
+        'requested_starts_at' => $startsAt,
+        'requested_ends_at' => $startsAt->addMinutes(45),
+    ]);
+
+    CreateAppointmentRequestAction::run(new AppointmentRequestData(
+        serviceId: (int) $service->getKey(),
+        requestedStartsAt: $startsAt,
+        timezone: 'Europe/London',
+        customerName: 'Riley Chen',
+        customerEmail: 'riley@example.com',
+    ));
+})->throws(ValidationException::class);
+
 it('treats service buffers as capacity blocking time', function (): void {
     CarbonImmutable::setTestNow(CarbonImmutable::parse('2026-06-01 08:00:00', 'Europe/London'));
 
@@ -518,6 +565,159 @@ it('confirms requested appointments once', function (): void {
 
     ConfirmAppointmentRequestAction::run($confirmedAppointmentRequest);
 })->throws(ValidationException::class);
+
+it('confirms unexpired provisional holds', function (): void {
+    Notification::fake();
+    CarbonImmutable::setTestNow(CarbonImmutable::parse('2026-06-01 08:00:00', 'UTC'));
+
+    $appointmentRequest = AppointmentRequest::factory()->create([
+        'status' => AppointmentRequestStatusEnum::Provisional,
+        'confirmation_policy' => ConfirmationPolicyEnum::SelfConfirmLink,
+        'hold_expires_at' => CarbonImmutable::now()->addMinutes(30),
+        'confirmed_at' => null,
+    ]);
+
+    $confirmedAppointmentRequest = ConfirmAppointmentRequestAction::run($appointmentRequest);
+
+    expect($confirmedAppointmentRequest->status)->toBe(AppointmentRequestStatusEnum::Confirmed)
+        ->and($confirmedAppointmentRequest->confirmed_at)->not->toBeNull();
+
+    Notification::assertSentOnDemand(AppointmentWorkflowNotification::class);
+});
+
+it('rejects confirmation for expired provisional holds', function (): void {
+    Notification::fake();
+    CarbonImmutable::setTestNow(CarbonImmutable::parse('2026-06-01 08:00:00', 'UTC'));
+
+    $appointmentRequest = AppointmentRequest::factory()->create([
+        'status' => AppointmentRequestStatusEnum::Provisional,
+        'confirmation_policy' => ConfirmationPolicyEnum::SelfConfirmLink,
+        'hold_expires_at' => CarbonImmutable::now()->subMinute(),
+        'confirmed_at' => null,
+    ]);
+
+    ConfirmAppointmentRequestAction::run($appointmentRequest);
+})->throws(ValidationException::class);
+
+it('links appointment requests to portal accounts only when the matching user email is verified', function (): void {
+    $siteId = (int) DB::table('sites')->insertGetId([]);
+
+    /** @var PortalAccount $portalAccount */
+    $portalAccount = PortalAccount::query()->create([
+        'site_id' => $siteId,
+        'email' => 'jordan@example.com',
+        'display_name' => 'Jordan Lee',
+    ]);
+
+    $appointmentRequest = AppointmentRequest::factory()->create([
+        'site_id' => null,
+        'portal_account_id' => null,
+        'customer_email' => 'jordan@example.com',
+    ]);
+
+    $user = new AuthenticatableUser;
+    $user->forceFill([
+        'email' => 'jordan@example.com',
+        'email_verified_at' => CarbonImmutable::now(),
+    ]);
+
+    $linkedAppointmentRequest = LinkBookingToPortalAccountAction::run($appointmentRequest, $portalAccount, $user);
+
+    expect($linkedAppointmentRequest->site_id)->toBe($siteId)
+        ->and((int) $linkedAppointmentRequest->portal_account_id)->toBe((int) $portalAccount->getKey());
+});
+
+it('rejects portal linking when the matching user email is unverified', function (): void {
+    $siteId = (int) DB::table('sites')->insertGetId([]);
+
+    /** @var PortalAccount $portalAccount */
+    $portalAccount = PortalAccount::query()->create([
+        'site_id' => $siteId,
+        'email' => 'jordan@example.com',
+        'display_name' => 'Jordan Lee',
+    ]);
+
+    $appointmentRequest = AppointmentRequest::factory()->create([
+        'customer_email' => 'jordan@example.com',
+    ]);
+
+    $user = new AuthenticatableUser;
+    $user->forceFill([
+        'email' => 'jordan@example.com',
+        'email_verified_at' => null,
+    ]);
+
+    LinkBookingToPortalAccountAction::run($appointmentRequest, $portalAccount, $user);
+})->throws(ValidationException::class);
+
+it('materialises standing lesson series into confirmed appointment requests once', function (): void {
+    Notification::fake();
+    CarbonImmutable::setTestNow(CarbonImmutable::parse('2026-06-01 08:00:00', 'Europe/London'));
+
+    $siteId = (int) DB::table('sites')->insertGetId([]);
+    /** @var PortalAccount $portalAccount */
+    $portalAccount = PortalAccount::query()->create([
+        'site_id' => $siteId,
+        'email' => 'jordan@example.com',
+        'display_name' => 'Jordan Lee',
+    ]);
+
+    $service = BookingService::factory()->create([
+        'duration_minutes' => 60,
+        'lead_time_minutes' => 0,
+    ]);
+    $staffMember = BookingStaffMember::factory()->create();
+    $location = BookingLocation::factory()->create();
+
+    BookingAvailabilityWindow::factory()->create([
+        'service_id' => $service->getKey(),
+        'staff_member_id' => $staffMember->getKey(),
+        'location_id' => $location->getKey(),
+        'day_of_week' => 1,
+        'starts_at' => '09:00:00',
+        'ends_at' => '17:00:00',
+        'timezone' => 'Europe/London',
+        'capacity' => 4,
+    ]);
+
+    /** @var LessonSeries $lessonSeries */
+    $lessonSeries = LessonSeries::factory()->create([
+        'site_id' => $siteId,
+        'portal_account_id' => $portalAccount->getKey(),
+        'service_id' => $service->getKey(),
+        'staff_member_id' => $staffMember->getKey(),
+        'location_id' => $location->getKey(),
+        'customer_name' => 'Jordan Lee',
+        'customer_email' => 'jordan@example.com',
+        'day_of_week' => 1,
+        'starts_at' => '10:00:00',
+        'active_from' => CarbonImmutable::parse('2026-06-01', 'Europe/London'),
+        'auto_confirm_instances' => true,
+    ]);
+
+    $appointmentRequests = MaterialiseLessonSeriesAction::run(
+        $lessonSeries,
+        CarbonImmutable::parse('2026-06-15 23:59:59', 'Europe/London'),
+    );
+
+    expect($appointmentRequests)->toHaveCount(3)
+        ->and($appointmentRequests->pluck('status')->all())->each->toBe(AppointmentRequestStatusEnum::Confirmed)
+        ->and($appointmentRequests->pluck('series_occurrence_date')->map->toDateString()->all())->toBe([
+            '2026-06-01',
+            '2026-06-08',
+            '2026-06-15',
+        ])
+        ->and($appointmentRequests->first()?->site_id)->toBe($siteId)
+        ->and((int) $appointmentRequests->first()?->portal_account_id)->toBe((int) $portalAccount->getKey())
+        ->and($lessonSeries->refresh()->materialized_until?->toDateString())->toBe('2026-06-15');
+
+    expect(MaterialiseLessonSeriesAction::run(
+        $lessonSeries,
+        CarbonImmutable::parse('2026-06-15 23:59:59', 'Europe/London'),
+    ))->toHaveCount(0);
+
+    Notification::assertSentOnDemandTimes(AppointmentWorkflowNotification::class, 3);
+});
 
 it('cancels requested appointments with audit logs and queued notifications', function (): void {
     Notification::fake();

@@ -48,12 +48,21 @@ class CreateAppointmentRequestAction
 
             /** @var AppointmentRequest $appointmentRequest */
             $appointmentRequest = AppointmentRequest::query()->create([
+                'site_id' => $appointmentRequestData->siteId,
+                'portal_account_id' => $appointmentRequestData->portalAccountId,
+                'lesson_series_id' => $appointmentRequestData->lessonSeriesId,
+                'series_occurrence_date' => $appointmentRequestData->seriesOccurrenceDate,
                 'service_id' => $service->getKey(),
                 'staff_member_id' => $staffMember?->getKey(),
                 'location_id' => $location?->getKey(),
                 'status' => AppointmentRequestStatusEnum::Requested,
+                'confirmation_policy' => $appointmentRequestData->confirmationPolicy,
+                'hold_expires_at' => $appointmentRequestData->holdExpiresAt,
                 'requested_starts_at' => $appointmentRequestData->requestedStartsAt,
                 'requested_ends_at' => $requestedEndsAt,
+                'offered_window_starts_at' => $appointmentRequestData->offeredWindowStartsAt,
+                'offered_window_ends_at' => $appointmentRequestData->offeredWindowEndsAt,
+                'is_time_pinned' => $appointmentRequestData->isTimePinned,
                 'timezone' => $appointmentRequestData->timezone,
                 'customer_name' => $appointmentRequestData->customerName,
                 'customer_email' => $appointmentRequestData->customerEmail,

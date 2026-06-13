@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720" role="img" aria-labelledby="title desc">
+  <title id="title">Restaurant menu preview</title>
+  <desc id="desc">Editorial menu rows with dish notes and prices.</desc>
+  <rect width="1280" height="720" fill="#f7fbf7"/>
+  <rect x="110" y="90" width="1060" height="540" fill="#ffffff" stroke="#b8cec2" stroke-width="3"/>
+  <rect x="160" y="140" width="340" height="48" fill="#171312"/>
+  <rect x="160" y="216" width="360" height="18" fill="#5f6660"/>
+  <rect x="160" y="250" width="280" height="18" fill="#5f6660"/>
+  <g fill="#ffffff" stroke="#d4e4dc" stroke-width="2">
+    <rect x="590" y="140" width="500" height="102"/>
+    <rect x="590" y="270" width="500" height="102"/>
+    <rect x="590" y="400" width="500" height="102"/>
+  </g>
+  <g fill="#171312">
+    <rect x="624" y="174" width="250" height="22"/>
+    <rect x="624" y="304" width="270" height="22"/>
+    <rect x="624" y="434" width="230" height="22"/>
+  </g>
+  <g fill="#5f6660">
+    <rect x="624" y="210" width="330" height="14"/>
+    <rect x="624" y="340" width="340" height="14"/>
+    <rect x="624" y="470" width="310" height="14"/>
+  </g>
+  <g fill="#0f3d2e">
+    <rect x="1010" y="174" width="46" height="24"/>
+    <rect x="1010" y="304" width="46" height="24"/>
+    <rect x="1010" y="434" width="46" height="24"/>
+  </g>
+</svg>

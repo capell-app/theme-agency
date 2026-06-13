@@ -51,7 +51,7 @@
     "scripts": {
         "lint": "pint",
         "test": "pest --colors=always",
-        "analyze": "phpstan analyse --memory-limit=-1"
+        "analyze": "phpstan analyse --memory-limit=4G"
     },
     "homepage": "https://github.com/capell-app/agent-bridge",
     "keywords": [

@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720" role="img" aria-labelledby="title desc">
+  <title id="title">Estate Agents search preview</title>
+  <desc id="desc">Property search band with location, budget, bedrooms, and listing cards.</desc>
+  <rect width="1280" height="720" fill="#174c3f"/>
+  <rect x="118" y="92" width="1044" height="536" fill="#ffffff"/>
+  <rect x="164" y="146" width="952" height="128" fill="#1a1c1f"/>
+  <rect x="204" y="188" width="218" height="48" fill="#ffffff"/>
+  <rect x="448" y="188" width="180" height="48" fill="#ffffff"/>
+  <rect x="654" y="188" width="180" height="48" fill="#ffffff"/>
+  <rect x="860" y="188" width="180" height="48" fill="#c7f464"/>
+  <rect x="164" y="334" width="280" height="214" fill="#f6f8f4" stroke="#dce7e2"/>
+  <rect x="474" y="334" width="280" height="214" fill="#f6f8f4" stroke="#dce7e2"/>
+  <rect x="784" y="334" width="280" height="214" fill="#f6f8f4" stroke="#dce7e2"/>
+  <rect x="192" y="364" width="224" height="92" fill="#174c3f"/>
+  <rect x="502" y="364" width="224" height="92" fill="#174c3f"/>
+  <rect x="812" y="364" width="224" height="92" fill="#174c3f"/>
+  <rect x="192" y="486" width="138" height="18" fill="#1a1c1f"/>
+  <rect x="502" y="486" width="138" height="18" fill="#1a1c1f"/>
+  <rect x="812" y="486" width="138" height="18" fill="#1a1c1f"/>
+</svg>

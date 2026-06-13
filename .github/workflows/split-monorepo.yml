@@ -26,16 +26,24 @@ jobs:
             repository_name: ai-orchestrator
           - package_directory: packages/api
             repository_name: api
+          - package_directory: packages/automation-studio
+            repository_name: automation-studio
           - package_directory: packages/block-library
             repository_name: block-library
           - package_directory: packages/blog
             repository_name: blog
+          - package_directory: packages/bookings
+            repository_name: bookings
           - package_directory: packages/campaign-studio
             repository_name: campaign-studio
           - package_directory: packages/comments
             repository_name: comments
+          - package_directory: packages/contacts
+            repository_name: contacts
           - package_directory: packages/content-sections
             repository_name: content-sections
+          - package_directory: packages/customer-portal
+            repository_name: customer-portal
           - package_directory: packages/dashboard-reports
             repository_name: dashboard-reports
           - package_directory: packages/demo-kit
@@ -50,6 +58,10 @@ jobs:
             repository_name: email-studio
           - package_directory: packages/events
             repository_name: events
+          - package_directory: packages/exception-reports
+            repository_name: exception-reports
+          - package_directory: packages/experiments
+            repository_name: experiments
           - package_directory: packages/filament-peek
             repository_name: filament-peek
           - package_directory: packages/form-builder
@@ -66,8 +78,16 @@ jobs:
             repository_name: hero
           - package_directory: packages/html-cache
             repository_name: html-cache
+          - package_directory: packages/inertia
+            repository_name: inertia
+          - package_directory: packages/inertia-react-adapter
+            repository_name: inertia-react-adapter
+          - package_directory: packages/inertia-vue-adapter
+            repository_name: inertia-vue-adapter
           - package_directory: packages/insights
             repository_name: insights
+          - package_directory: packages/knowledge-base
+            repository_name: knowledge-base
           - package_directory: packages/layout-builder
             repository_name: layout-builder
           - package_directory: packages/login-audit
@@ -86,10 +106,16 @@ jobs:
             repository_name: notes
           - package_directory: packages/password-policy
             repository_name: password-policy
+          - package_directory: packages/payments
+            repository_name: payments
+          - package_directory: packages/privacy-center
+            repository_name: privacy-center
           - package_directory: packages/public-actions
             repository_name: public-actions
           - package_directory: packages/publishing-studio
             repository_name: publishing-studio
+          - package_directory: packages/record-switcher
+            repository_name: record-switcher
           - package_directory: packages/search
             repository_name: search
           - package_directory: packages/seo-suite
@@ -98,6 +124,12 @@ jobs:
             repository_name: shopify-commerce
           - package_directory: packages/site-discovery
             repository_name: site-discovery
+          - package_directory: packages/site-monitor
+            repository_name: site-monitor
+          - package_directory: packages/social-feeds
+            repository_name: social-feeds
+          - package_directory: packages/structured-content-library
+            repository_name: structured-content-library
           - package_directory: packages/tags
             repository_name: tags
           - package_directory: packages/theme-agency
@@ -110,8 +142,16 @@ jobs:
             repository_name: theme-education
           - package_directory: packages/theme-healthcare
             repository_name: theme-healthcare
+          - package_directory: packages/theme-inertia-bookings
+            repository_name: theme-inertia-bookings
+          - package_directory: packages/theme-inertia-bookings-react
+            repository_name: theme-inertia-bookings-react
+          - package_directory: packages/theme-inertia-bookings-vue
+            repository_name: theme-inertia-bookings-vue
           - package_directory: packages/theme-knowledge
             repository_name: theme-knowledge
+          - package_directory: packages/theme-liquid-glass
+            repository_name: theme-liquid-glass
           - package_directory: packages/theme-local-services
             repository_name: theme-local-services
           - package_directory: packages/theme-nonprofit
@@ -122,6 +162,8 @@ jobs:
             repository_name: theme-saas
           - package_directory: packages/translation-manager
             repository_name: translation-manager
+          - package_directory: packages/url-manager
+            repository_name: url-manager
           - package_directory: packages/welcome-tour
             repository_name: welcome-tour
           - package_directory: packages/wordpress-importer

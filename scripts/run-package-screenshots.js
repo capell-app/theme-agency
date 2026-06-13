@@ -241,7 +241,7 @@ function runPackageCommands(repoPath, appPath, only, packages = null) {
                 'php',
                 [
                     '-d',
-                    'memory_limit=-1',
+                    'memory_limit=4G',
                     ...commandArgs(command, commands[paramsKey]),
                 ],
                 {

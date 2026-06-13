@@ -1,0 +1,25 @@
+@php
+    $brandName = $section->brandName ?? ($brandName ?? __('capell-theme-estate-agents::generic.brand_name'));
+    $items = $section->items ?? ($items ?? []);
+@endphp
+
+<footer class="estate-footer px-6 py-10">
+    <div class="mx-auto grid max-w-6xl gap-8 lg:grid-cols-[1fr_auto]">
+        <div>
+            <p class="text-xl font-black text-white">{{ $brandName }}</p>
+            <p class="mt-3 max-w-xl text-sm leading-6 text-white/65">
+                {{ __('capell-theme-estate-agents::generic.footer_summary') }}
+            </p>
+        </div>
+        <div class="flex flex-wrap gap-5 text-sm font-bold">
+            @foreach ($items as $item)
+                <a
+                    href="{{ $item['url'] ?? '#' }}"
+                    class="text-white/75 hover:text-white"
+                >
+                    {{ $item['label'] ?? $item['title'] ?? '' }}
+                </a>
+            @endforeach
+        </div>
+    </div>
+</footer>

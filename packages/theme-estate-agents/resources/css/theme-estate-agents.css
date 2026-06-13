@@ -1,0 +1,234 @@
+.estate-shell {
+    --site-theme-primary: #174c3f;
+    --site-theme-accent: #c7f464;
+    --estate-ink: var(--theme-foreground, #1a1c1f);
+    --estate-muted: #606a65;
+    --estate-green: var(--theme-primary, #174c3f);
+    --estate-lime: var(--theme-accent, #c7f464);
+    --estate-charcoal: #1a1c1f;
+    --estate-surface: var(--theme-surface, #f6f8f4);
+    --estate-mist: #eaf0ec;
+    --estate-paper: #ffffff;
+    --estate-border: rgb(23 76 63 / 18%);
+
+    background:
+        linear-gradient(
+            180deg,
+            #ffffff 0%,
+            var(--estate-surface) 52%,
+            #eaf0ec 100%
+        ),
+        linear-gradient(90deg, rgb(23 76 63 / 5%) 1px, transparent 1px);
+    background-size:
+        auto,
+        2rem 2rem;
+    color: var(--estate-ink);
+}
+
+.estate-shell :where(h1, h2, h3, p, a, span, dt, dd) {
+    letter-spacing: 0;
+}
+
+.estate-shell :where(a, button, input, textarea, select):focus-visible {
+    outline: 3px solid rgb(199 244 100 / 90%);
+    outline-offset: 3px;
+}
+
+.estate-skip-link {
+    background: var(--estate-charcoal);
+    color: #ffffff;
+    font-weight: 800;
+    left: 1rem;
+    padding: 0.75rem 1rem;
+    position: fixed;
+    top: 1rem;
+    transform: translateY(-150%);
+    z-index: 50;
+}
+
+.estate-skip-link:focus {
+    transform: translateY(0);
+}
+
+.estate-text-ink {
+    color: var(--estate-ink);
+}
+
+.estate-link {
+    color: var(--estate-muted);
+    text-decoration: none;
+}
+
+.estate-link:hover {
+    color: var(--estate-green);
+}
+
+.estate-button-primary,
+.estate-button-secondary,
+.estate-button-light {
+    align-items: center;
+    border: 1px solid transparent;
+    display: inline-flex;
+    font-size: 0.875rem;
+    font-weight: 900;
+    min-height: 2.75rem;
+    padding: 0.75rem 1.1rem;
+    text-decoration: none;
+}
+
+.estate-button-primary {
+    background: var(--estate-green);
+    color: #ffffff;
+}
+
+.estate-button-secondary {
+    background: #ffffff;
+    border-color: var(--estate-border);
+    color: var(--estate-ink);
+}
+
+.estate-button-light {
+    background: var(--estate-lime);
+    color: var(--estate-charcoal);
+}
+
+.estate-eyebrow,
+.estate-small-label {
+    color: var(--estate-green);
+    font-size: 0.75rem;
+    font-weight: 900;
+    letter-spacing: 0;
+    text-transform: uppercase;
+}
+
+.estate-hero {
+    background:
+        linear-gradient(135deg, rgb(199 244 100 / 20%), transparent 42%),
+        linear-gradient(90deg, #ffffff, var(--estate-surface));
+}
+
+.estate-property-frame,
+.estate-search-form,
+.estate-panel,
+.estate-property-card,
+.estate-feature-card,
+.estate-proof-card,
+.estate-listing-card,
+.estate-agent-card {
+    border: 1px solid var(--estate-border);
+    box-shadow: 0 24px 70px rgb(26 28 31 / 8%);
+}
+
+.estate-hero-board,
+.estate-search-band,
+.estate-valuation,
+.estate-proof-band,
+.estate-cta,
+.estate-footer {
+    background:
+        linear-gradient(135deg, var(--estate-green), var(--estate-charcoal)),
+        var(--estate-charcoal);
+    color: #ffffff;
+}
+
+.estate-listing-strip {
+    border-top: 1px solid var(--estate-border);
+}
+
+.estate-listing-strip div {
+    padding: 1rem;
+}
+
+.estate-listing-strip div + div {
+    border-left: 1px solid var(--estate-border);
+}
+
+.estate-listing-strip dt {
+    color: var(--estate-muted);
+    font-size: 0.72rem;
+    font-weight: 900;
+    text-transform: uppercase;
+}
+
+.estate-listing-strip dd {
+    color: var(--estate-ink);
+    font-size: 1.25rem;
+    font-weight: 900;
+    margin: 0.35rem 0 0;
+}
+
+.estate-form-label {
+    color: var(--estate-ink);
+    display: grid;
+    font-size: 0.75rem;
+    font-weight: 900;
+    gap: 0.5rem;
+    text-transform: uppercase;
+}
+
+.estate-form-input {
+    border: 1px solid var(--estate-border);
+    color: var(--estate-ink);
+    min-height: 2.75rem;
+    padding: 0.7rem 0.85rem;
+}
+
+.estate-property-card,
+.estate-feature-card,
+.estate-proof-card,
+.estate-listing-card,
+.estate-agent-card {
+    background: #ffffff;
+}
+
+.estate-property-image {
+    background:
+        linear-gradient(135deg, rgb(23 76 63 / 92%), rgb(26 28 31 / 75%)),
+        linear-gradient(90deg, rgb(255 255 255 / 14%) 1px, transparent 1px);
+    background-size:
+        auto,
+        1.75rem 1.75rem;
+    min-height: 12rem;
+}
+
+.estate-section-muted {
+    background: var(--estate-mist);
+}
+
+.estate-guide-row {
+    background: #ffffff;
+    border: 1px solid var(--estate-border);
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: minmax(10rem, 0.45fr) minmax(0, 1fr);
+    padding: 1.25rem;
+}
+
+.estate-agent-card,
+.estate-feature-card,
+.estate-proof-card,
+.estate-listing-card {
+    padding: 1.5rem;
+}
+
+.estate-agent-avatar {
+    aspect-ratio: 1;
+    background:
+        linear-gradient(135deg, rgb(199 244 100 / 55%), transparent),
+        var(--estate-green);
+    width: 5rem;
+}
+
+.estate-dark-card {
+    border: 1px solid rgb(255 255 255 / 18%);
+    background: rgb(255 255 255 / 8%);
+    padding: 1.5rem;
+}
+
+.estate-inline-link {
+    color: var(--estate-green);
+    display: inline-flex;
+    font-size: 0.875rem;
+    font-weight: 900;
+    text-decoration: none;
+}

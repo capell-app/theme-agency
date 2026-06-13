@@ -35,6 +35,7 @@
             <file>./tests/Packages/Arch/PackageMigrationLoadingTest.php</file>
             <file>./tests/Packages/Arch/ManifestProviderClassExistsTest.php</file>
             <file>./tests/Packages/Arch/CompanionPackageDependencyBoundaryTest.php</file>
+            <file>./tests/Packages/Arch/RawStringExtensionTagBanTest.php</file>
             <file>./tests/Packages/Arch/PackageSettingsFeatureHealthTest.php</file>
         </testsuite>
         <testsuite name="Unit">
@@ -60,10 +61,10 @@
         </exclude>
     </source>
     <php>
-        <ini name="memory_limit" value="-1"/>
+        <ini name="memory_limit" value="1G"/>
         <server name="APP_ENV" value="testing"/>
         <env name="APP_KEY" value="12345678901234567890123456789012"/>
-        <env name="BCRYPT_ROUNDS" value="12"/>
+        <env name="BCRYPT_ROUNDS" value="4"/>
         <env name="CACHE_STORE" value="array"/>
         <env name="CURATOR_GLIDE_TOKEN" value="123456789"/>
         <env name="DB_CONNECTION" value="sqlite" force="true"/>

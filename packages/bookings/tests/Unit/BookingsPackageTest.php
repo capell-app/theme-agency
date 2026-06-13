@@ -12,10 +12,13 @@ use Capell\Bookings\Actions\ConfirmAppointmentRequestAction;
 use Capell\Bookings\Actions\CreateAppointmentRequestAction;
 use Capell\Bookings\Actions\CreateAvailabilityExceptionAction;
 use Capell\Bookings\Actions\CreateStaffCalendarFeedUrlAction;
+use Capell\Bookings\Actions\LinkBookingToPortalAccountAction;
+use Capell\Bookings\Actions\MaterialiseLessonSeriesAction;
 use Capell\Bookings\Actions\QueueAppointmentReminderAction;
 use Capell\Bookings\Enums\AppointmentRequestStatusEnum;
 use Capell\Bookings\Enums\BookingAvailabilityStatusEnum;
 use Capell\Bookings\Enums\BookingLocationTypeEnum;
+use Capell\Bookings\Enums\ConfirmationPolicyEnum;
 use Capell\Bookings\Health\BookingsHealthCheck;
 use Capell\Bookings\Manifest\AppointmentRequestResourceContribution;
 use Capell\Bookings\Manifest\BookingAvailabilityExceptionResourceContribution;
@@ -26,6 +29,7 @@ use Capell\Bookings\Manifest\BookingsFrontendRoutesContribution;
 use Capell\Bookings\Manifest\BookingsModelsContribution;
 use Capell\Bookings\Manifest\BookingsReminderScheduleContribution;
 use Capell\Bookings\Manifest\BookingStaffMemberResourceContribution;
+use Capell\Bookings\Manifest\LessonSeriesResourceContribution;
 use Capell\Bookings\Models\AppointmentAuditLog;
 use Capell\Bookings\Models\AppointmentRequest;
 use Capell\Bookings\Models\BookingAvailabilityException;
@@ -33,6 +37,8 @@ use Capell\Bookings\Models\BookingAvailabilityWindow;
 use Capell\Bookings\Models\BookingLocation;
 use Capell\Bookings\Models\BookingService;
 use Capell\Bookings\Models\BookingStaffMember;
+use Capell\Bookings\Models\LessonSeries;
+use Capell\Bookings\Settings\BookingsSettings;
 use Capell\Bookings\Support\BookingsModelRegistrar;
 use Capell\Core\Contracts\Extensions\RegistersExtensionRoute;
 use Capell\Core\Contracts\Extensions\RunsScheduledExtensionJob;
@@ -66,9 +72,12 @@ it('keeps package manifest requirements aligned with composer requirements', fun
             'booking_locations',
             'booking_availability_windows',
             'booking_availability_exceptions',
+            'lesson_series',
             'appointment_requests',
             'appointment_audit_logs',
         ])
+        ->and($manifest['database']['settings'])->toBeTrue()
+        ->and($manifest['settings'])->toBe([BookingsSettings::class])
         ->and($manifest['providers']['runtime'])->toContain(BookingsServiceProvider::class);
 });
 
@@ -161,6 +170,8 @@ it('declares implemented bookings contributions and feature capabilities', funct
         ->and($contributions->contains(fn (array $contribution): bool => ($contribution['type'] ?? null) === 'admin-resource'
             && ($contribution['class'] ?? null) === BookingAvailabilityExceptionResourceContribution::class))->toBeTrue()
         ->and($contributions->contains(fn (array $contribution): bool => ($contribution['type'] ?? null) === 'admin-resource'
+            && ($contribution['class'] ?? null) === LessonSeriesResourceContribution::class))->toBeTrue()
+        ->and($contributions->contains(fn (array $contribution): bool => ($contribution['type'] ?? null) === 'admin-resource'
             && ($contribution['class'] ?? null) === AppointmentRequestResourceContribution::class))->toBeTrue()
         ->and($manifest['contributes'])->toContain([
             'type' => 'model',
@@ -178,6 +189,11 @@ it('declares implemented bookings contributions and feature capabilities', funct
         ->and($manifest['capabilities'])->toContain(
             'bookings-availability',
             'bookings-appointment-requests',
+            'bookings-client-identity',
+            'bookings-flexible-confirmation-gate',
+            'bookings-lesson-series',
+            'bookings-provisional-holds',
+            'bookings-settings',
             'bookings-notifications',
             'bookings-reminders',
             'bookings-calendar-feeds',
@@ -187,6 +203,8 @@ it('declares implemented bookings contributions and feature capabilities', funct
             'createAppointmentRequest' => CreateAppointmentRequestAction::class,
             'confirmAppointmentRequest' => ConfirmAppointmentRequestAction::class,
             'cancelAppointmentRequest' => CancelAppointmentRequestAction::class,
+            'linkBookingToPortalAccount' => LinkBookingToPortalAccountAction::class,
+            'materialiseLessonSeries' => MaterialiseLessonSeriesAction::class,
             'queueAppointmentReminder' => QueueAppointmentReminderAction::class,
             'createStaffCalendarFeedUrl' => CreateStaffCalendarFeedUrlAction::class,
             'buildStaffCalendarFeed' => BuildStaffCalendarFeedAction::class,
@@ -227,6 +245,12 @@ it('casts enums and exposes core relationships', function (): void {
         'staff_member_id' => $staffMember->getKey(),
         'location_id' => $location->getKey(),
         'status' => AppointmentRequestStatusEnum::Requested,
+        'confirmation_policy' => ConfirmationPolicyEnum::Manual,
+    ]);
+    $lessonSeries = LessonSeries::factory()->create([
+        'service_id' => $service->getKey(),
+        'staff_member_id' => $staffMember->getKey(),
+        'location_id' => $location->getKey(),
     ]);
 
     expect($service->settings)->toBe(['intake' => true])
@@ -247,7 +271,10 @@ it('casts enums and exposes core relationships', function (): void {
         ->and($availabilityWindow->staffMember?->is($staffMember))->toBeTrue()
         ->and($availabilityWindow->location?->is($location))->toBeTrue()
         ->and($appointmentRequest->status)->toBe(AppointmentRequestStatusEnum::Requested)
+        ->and($appointmentRequest->confirmation_policy)->toBe(ConfirmationPolicyEnum::Manual)
         ->and($appointmentRequest->status->blocksCapacity())->toBeTrue()
         ->and($appointmentRequest->service?->is($service))->toBeTrue()
+        ->and($lessonSeries->service?->is($service))->toBeTrue()
+        ->and($lessonSeries->appointmentRequests()->getRelated())->toBeInstanceOf(AppointmentRequest::class)
         ->and($appointmentRequest->auditLogs()->getRelated())->toBeInstanceOf(AppointmentAuditLog::class);
 });

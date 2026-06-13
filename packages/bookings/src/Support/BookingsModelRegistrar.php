@@ -11,6 +11,7 @@ use Capell\Bookings\Models\BookingAvailabilityWindow;
 use Capell\Bookings\Models\BookingLocation;
 use Capell\Bookings\Models\BookingService;
 use Capell\Bookings\Models\BookingStaffMember;
+use Capell\Bookings\Models\LessonSeries;
 use Capell\Core\Facades\CapellCore;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
@@ -25,6 +26,7 @@ class BookingsModelRegistrar
         BookingLocation::class,
         BookingAvailabilityWindow::class,
         BookingAvailabilityException::class,
+        LessonSeries::class,
         AppointmentRequest::class,
         AppointmentAuditLog::class,
     ];
