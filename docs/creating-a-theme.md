@@ -9,8 +9,8 @@ classes currently live under the `Capell\Core\ThemeStudio` namespace.
 
 Most new themes should extend `capell-app/foundation-theme`. Foundation Theme
 owns the shared Blade, Tailwind, media, settings, and runtime pieces. A child
-theme should mostly provide a theme definition, presets, a page wrapper, and
-section views.
+theme should mostly provide a theme definition, presets, a page wrapper, and the
+section views it intentionally customises.
 
 The runtime layers theme data in this order:
 
@@ -18,9 +18,10 @@ The runtime layers theme data in this order:
 2. Child package preset defaults.
 3. Database edits from the Theme admin page.
 
-Database edits always win. The current premium themes ship a full standard
-section set rather than relying on parent-chain view fallback. Until parent view
-fallback exists, register every section view the theme promises to support.
+Database edits always win. Section renderers resolve through the parent theme
+chain, so a child theme can override a few sections and inherit the rest from
+Foundation. Register full section sets only when the theme deliberately owns all
+of those views.
 
 ## Existing Packages
 
@@ -51,6 +52,56 @@ admin navigation, or settings of their own. They register renderer contracts,
 consume the Foundation Theme runtime, and expose demo commands through the same
 manifest path used by the Extensions installer demo option and the full Capell
 demo install.
+
+## Project-Local Client Themes
+
+Use a project-local theme when the theme belongs to one Laravel app or one
+client build, not the reusable Capell marketplace. This is the shape used for
+fresh installs that need a bespoke brand while still testing normal Capell
+packages.
+
+Recommended host-app layout:
+
+```text
+packages/client-theme/
+    capell.json
+    composer.json
+    src/ClientThemeServiceProvider.php
+    resources/views/page.blade.php
+    resources/views/sections/*.blade.php
+    resources/css/client-theme.css
+```
+
+Add it as a path repository in the host `composer.json`:
+
+```json
+{
+    "repositories": [
+        {
+            "type": "path",
+            "url": "packages/*",
+            "options": {
+                "symlink": true
+            }
+        }
+    ],
+    "require": {
+        "vendor/client-theme": "4.x-dev"
+    }
+}
+```
+
+For first-party or marketplace-ready packages, keep the runtime provider behind
+`CapellCore::isPackageInstalled()`. For app-local themes, register views and the
+Theme Registry definition unconditionally from the provider. The site still uses
+the theme only when the database `themes` record and selected layout point at
+that theme key, but unconditional registration avoids a common fresh-install
+test problem: the provider boots before the seed action marks the local package
+installed.
+
+Still include `capell.json`. The installer, doctor command, theme validator,
+and package catalogue use the manifest as the source of truth for package name,
+theme key, dependencies, and marketplace metadata.
 
 ## 1. Choose The Theme Shape
 
@@ -174,6 +225,10 @@ In the service provider, keep registration split by responsibility:
 - `register()` tells Capell this Composer package exists and is a theme.
 - `boot()` checks the package is installed, loads package views, and registers
   the runtime definition and renderers.
+
+That installed-package gate is correct for reusable packages. For project-local
+client themes, omit the early return in `boot()` so tests and seed actions can
+render the theme during the same process that installs the package record.
 
 ```php
 <?php
@@ -337,6 +392,32 @@ Each page wrapper should render the theme key and brand tokens:
 
 This makes preset and admin edits available as CSS custom properties such as
 `--theme-primary`, `--theme-accent`, and `--theme-heading-font`.
+
+Use `@frontendAsset()` for theme-local CSS, images, fonts, and other files under
+the host app's `public/` directory:
+
+```blade
+<link
+    rel="stylesheet"
+    href="@frontendAsset('css/client-theme.css')"
+/>
+
+<img
+    src="@frontendAsset('images/client-theme/logo.png')"
+    alt=""
+    width="96"
+    height="96"
+/>
+```
+
+Do not use root-relative asset paths such as `/images/client/logo.png` in public
+theme Blade unless you have tested the configured site domain and the local dev
+server use the same origin. Capell's frontend head includes a `<base>` tag for
+the resolved site domain. That is correct for canonical URLs, but it means
+relative and root-relative theme assets can resolve to the configured site
+domain instead of the current dev server port. `@frontendAsset()` resolves
+against the current request origin, so `php artisan serve --port=8000` and
+production domains both load the same public asset path correctly.
 
 If the theme overrides `resources/views/livewire/page/page.blade.php`, keep it
 thin. The current premium themes simply call `RenderCurrentThemePageAction::run()`
@@ -511,6 +592,8 @@ For installer or marketplace changes, run the matching host-app tests in
   behaviour. Prefer shared `BrandProfileData` fields.
 - Do not duplicate Foundation Theme views just to change spacing or colour. Use
   tokens and page wrapper CSS first.
+- Do not use root-relative theme asset URLs in Blade when the frontend renders a
+  `<base>` tag. Use `@frontendAsset('path/from/public.css')`.
 - Do not make public markup depend on `frontend-authoring`.
 - Do not rely on a Studio metapackage. Theme packages install independently.
 - Do not rename a `themeKey` after content exists without a migration plan.
@@ -528,59 +611,12 @@ These changes would make theme work faster and safer:
 - Add a visual theme contract test that renders all standard sections for each
   registered theme and checks for missing views, empty sections, and leaked
   authoring metadata.
-- Add parent-chain view fallback so a child theme can override only the sections
-  it changes and inherit the rest from Foundation.
 - Add an admin preview matrix for theme and preset combinations, with generated
   screenshots stored beside package docs.
 - Move the public namespace from `ThemeStudio` to a neutral `Themes` namespace
   over time, keeping aliases for backwards compatibility.
 - Document and enforce the supported `BrandProfileData` token vocabulary so
   custom themes do not invent incompatible preset fields.
-
-## Theme Inheritance Runtime
-
-Set runtime inheritance in the service provider definition:
-
-```php
-return new ThemeDefinitionData(
-    key: 'client',
-    name: 'Client',
-    description: 'Client-specific Foundation child theme.',
-    package: 'vendor/theme-client',
-    previewImage: '/vendor/client/theme.jpg',
-    tags: ['Client'],
-    bestFit: ['Client sites'],
-    includedSections: ['navigation', 'hero', 'features', 'proof', 'content-listing', 'cta', 'footer'],
-    presets: [$preset],
-    extends: 'default',
-);
-```
-
-The manifest still uses the package-level parent:
-
-```json
-{
-    "kind": "theme",
-    "themeKey": "client",
-    "extends": "capell-app/foundation-theme"
-}
-```
-
-A child theme may omit standard section renderers and inherit them from Foundation. It should register only the views it actually customises. Add tests for inherited sections and for the loud failure path when no child or parent renderer exists.
-
-## Marketplace Metadata Expectations
-
-For first-party and marketplace-ready themes, include enough metadata for product-grade admin cards: `tags`, `bestFit`, `includedSections`, `previewImage`, screenshot metadata, optional integration names, and demo command/action readiness when demos exist.
-
-Admin UI strings must stay in `capell-admin::*`; package public Blade must remain free of package names, authoring controls, signed URLs, model IDs, field paths, permissions, and database queries.
-
-## Current First-Party Child Themes
-
-- `capell-app/theme-local-services`, key `local-services`.
-- `capell-app/theme-knowledge`, key `knowledge`.
-- `capell-app/theme-education`, key `education`.
-- `capell-app/theme-nonprofit`, key `nonprofit`.
-- `capell-app/theme-portfolio`, key `portfolio`.
 
 ## Theme Inheritance Runtime
 
