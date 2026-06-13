@@ -6,6 +6,8 @@ $rootPath = dirname(__DIR__);
 $packagesPath = $rootPath . '/packages';
 $failures = [];
 $warnings = [];
+$strictStructure = in_array('--strict-structure', $argv, true)
+    || filter_var(getenv('CAPELL_DOCS_STRICT_STRUCTURE') ?: false, FILTER_VALIDATE_BOOL);
 
 $tombstoneDocs = [
     'packages/address/docs/address-api.md',
@@ -37,7 +39,43 @@ function packageNames(string $packagesPath): array
             continue;
         }
 
-        if (is_dir($packagesPath . '/' . $entry)) {
+        if (is_dir($packagesPath . '/' . $entry) && is_file($packagesPath . '/' . $entry . '/capell.json')) {
+            $names[] = $entry;
+        }
+    }
+
+    sort($names);
+
+    return $names;
+}
+
+function packageDirectoriesWithoutManifest(string $packagesPath): array
+{
+    $names = [];
+
+    foreach (scandir($packagesPath) ?: [] as $entry) {
+        if ($entry === '.' || $entry === '..') {
+            continue;
+        }
+
+        if (! is_dir($packagesPath . '/' . $entry) || is_file($packagesPath . '/' . $entry . '/capell.json')) {
+            continue;
+        }
+
+        $hasFiles = false;
+        $iterator = new RecursiveIteratorIterator(
+            new RecursiveDirectoryIterator($packagesPath . '/' . $entry, FilesystemIterator::SKIP_DOTS),
+        );
+
+        foreach ($iterator as $fileInfo) {
+            if ($fileInfo instanceof SplFileInfo && $fileInfo->isFile()) {
+                $hasFiles = true;
+
+                break;
+            }
+        }
+
+        if ($hasFiles) {
             $names[] = $entry;
         }
     }
@@ -345,8 +383,8 @@ function packageHasOperationalFailureMode(string $packageName, string $packagePa
         'url-manager',
     ];
 
-    if (! in_array($packageName, $packagesWithOperationalFailureModes, true)) {
-        return false;
+    if (in_array($packageName, $packagesWithOperationalFailureModes, true)) {
+        return true;
     }
 
     foreach (['config', 'routes', 'src/Console', 'src/Jobs', 'src/Health'] as $relativePath) {
@@ -380,24 +418,198 @@ function checkTroubleshootingHeadings(string $rootPath, array &$warnings): void
 {
     foreach (packageNames($rootPath . '/packages') as $packageName) {
         $packagePath = $rootPath . '/packages/' . $packageName;
-        $readmePath = $packagePath . '/README.md';
 
-        if (! packageHasOperationalFailureMode($packageName, $packagePath) || ! is_file($readmePath)) {
+        if (! packageHasOperationalFailureMode($packageName, $packagePath)) {
             continue;
         }
 
-        $contents = file_get_contents($readmePath) ?: '';
+        foreach (['README.md', 'docs/overview.md'] as $relativeFile) {
+            $readmePath = $packagePath . '/' . $relativeFile;
 
-        if (! preg_match('/^#{2,3}\s+Troubleshooting\b/mi', $contents)) {
-            addWarning($warnings, 'packages/' . $packageName . '/README.md has operational surfaces but no Troubleshooting heading');
+            if (! is_file($readmePath)) {
+                continue;
+            }
+
+            $contents = file_get_contents($readmePath) ?: '';
+
+            if (! preg_match('/^#{2,3}\s+Troubleshooting\b/mi', $contents)) {
+                addWarning($warnings, 'packages/' . $packageName . '/' . $relativeFile . ' has operational surfaces but no Troubleshooting heading');
+            }
         }
+    }
+}
+
+function markdownHeadings(string $contents): array
+{
+    preg_match_all('/^#{2}\s+(.+)$/m', $contents, $matches);
+
+    return array_map(
+        static fn (string $heading): string => trim($heading),
+        $matches[1] ?? [],
+    );
+}
+
+function checkRequiredMarkdownStructure(string $rootPath, string $packageName, string $relativeFile, array &$warnings, array &$failures, bool $strictStructure): void
+{
+    $readmePath = $rootPath . '/packages/' . $packageName . '/' . $relativeFile;
+
+    if (! is_file($readmePath)) {
+        return;
+    }
+
+    $contents = file_get_contents($readmePath) ?: '';
+    $headings = markdownHeadings($contents);
+    $requiredHeadings = [
+        'What This Plugin Adds',
+        'Why It Matters',
+        'Screens And Workflow',
+        'Technical Shape',
+        'Data Model',
+        'Install Impact',
+        'Common Pitfalls',
+        'Quick Start',
+        'Next Steps',
+    ];
+
+    foreach ($requiredHeadings as $requiredHeading) {
+        if (in_array($requiredHeading, $headings, true)) {
+            continue;
+        }
+
+        $message = 'packages/' . $packageName . '/' . $relativeFile . ' is missing required heading "' . $requiredHeading . '"';
+
+        if ($strictStructure) {
+            addFailure($failures, $message);
+
+            continue;
+        }
+
+        addWarning($warnings, $message);
+    }
+
+    if (! preg_match('/^#\s+.+/m', $contents)) {
+        $message = 'packages/' . $packageName . '/' . $relativeFile . ' is missing an H1 title';
+
+        if ($strictStructure) {
+            addFailure($failures, $message);
+
+            return;
+        }
+
+        addWarning($warnings, $message);
+    }
+}
+
+function checkReadmeVoiceRules(string $rootPath, string $packageName, array &$failures): void
+{
+    checkPackageMarkdownVoiceRules($rootPath, $packageName, 'README.md', $failures);
+    checkPackageMarkdownVoiceRules($rootPath, $packageName, 'docs/overview.md', $failures);
+}
+
+function checkPackageMarkdownVoiceRules(string $rootPath, string $packageName, string $relativeFile, array &$failures): void
+{
+    $readmePath = $rootPath . '/packages/' . $packageName . '/' . $relativeFile;
+
+    if (! is_file($readmePath)) {
+        return;
+    }
+
+    $contents = file_get_contents($readmePath) ?: '';
+    $bannedTerms = [
+        'powerful',
+        'seamless',
+        'future-proof',
+        'all-in-one',
+        'game-changing',
+        'best-in-class',
+        'supercharge',
+        'unlock',
+        'calm CMS assistant',
+        'serious CMS',
+        'without the sprawl',
+    ];
+
+    foreach ($bannedTerms as $bannedTerm) {
+        $pattern = '/\b' . preg_quote($bannedTerm, '/') . '(?:s|ed|ing)?\b/i';
+
+        if (preg_match($pattern, $contents) === 1) {
+            addFailure(
+                $failures,
+                'packages/' . $packageName . '/' . $relativeFile . ' uses banned docs term "' . $bannedTerm . '"',
+            );
+        }
+    }
+
+    if (preg_match('/[—–“”‘’]/u', $contents) === 1) {
+        addFailure(
+            $failures,
+            'packages/' . $packageName . '/' . $relativeFile . ' uses non-ASCII punctuation that should be normalized',
+        );
+    }
+
+    if (preg_match('/^```/m', $contents) === 1) {
+        addFailure(
+            $failures,
+            'packages/' . $packageName . '/' . $relativeFile . ' contains fenced code blocks; use inline snippets unless essential',
+        );
+    }
+}
+
+function markdownSection(string $contents, string $heading): string
+{
+    $pattern = '/^##\s+' . preg_quote($heading, '/') . '\s*$\n(?P<body>.*?)(?=^##\s+|\z)/ms';
+
+    if (preg_match($pattern, $contents, $matches) !== 1) {
+        return '';
+    }
+
+    return trim((string) ($matches['body'] ?? ''));
+}
+
+function checkMarkdownOutputRules(string $rootPath, string $packageName, string $relativeFile, ?array $manifest, array &$failures): void
+{
+    $readmePath = $rootPath . '/packages/' . $packageName . '/' . $relativeFile;
+
+    if (! is_file($readmePath)) {
+        return;
+    }
+
+    $contents = file_get_contents($readmePath) ?: '';
+    $displayName = is_array($manifest) && is_string($manifest['displayName'] ?? null)
+        ? $manifest['displayName']
+        : null;
+
+    if ($displayName !== null && preg_match('/^#\s+(.+)$/m', $contents, $matches) === 1) {
+        $actualTitle = trim((string) ($matches[1] ?? ''));
+
+        if ($actualTitle !== $displayName) {
+            addFailure(
+                $failures,
+                'packages/' . $packageName . '/' . $relativeFile . ' title "' . $actualTitle . '" does not match displayName "' . $displayName . '"',
+            );
+        }
+    }
+
+    $overview = markdownSection($contents, 'What This Plugin Adds');
+    $wordCount = str_word_count(strip_tags($overview));
+
+    if ($wordCount > 500) {
+        addFailure(
+            $failures,
+            'packages/' . $packageName . '/' . $relativeFile . ' What This Plugin Adds is over 500 words',
+        );
     }
 }
 
 $packageNames = packageNames($packagesPath);
 
+foreach (packageDirectoriesWithoutManifest($packagesPath) as $packageDirectory) {
+    addWarning($warnings, 'packages/' . $packageDirectory . ' has no capell.json and is skipped by the package docs audit');
+}
+
 foreach ($packageNames as $packageName) {
     $packagePath = $packagesPath . '/' . $packageName;
+    $manifest = null;
 
     foreach (['README.md', 'docs/README.md', 'docs/overview.md', 'capell.json'] as $relativeFile) {
         if (! is_file($packagePath . '/' . $relativeFile)) {
@@ -408,8 +620,14 @@ foreach ($packageNames as $packageName) {
     $capellManifestPath = $packagePath . '/capell.json';
 
     if (is_file($capellManifestPath)) {
-        readJson('packages/' . $packageName . '/capell.json', $failures);
+        $manifest = readJson('packages/' . $packageName . '/capell.json', $failures);
     }
+
+    checkRequiredMarkdownStructure($rootPath, $packageName, 'README.md', $warnings, $failures, $strictStructure);
+    checkRequiredMarkdownStructure($rootPath, $packageName, 'docs/overview.md', $warnings, $failures, $strictStructure);
+    checkReadmeVoiceRules($rootPath, $packageName, $failures);
+    checkMarkdownOutputRules($rootPath, $packageName, 'README.md', $manifest, $failures);
+    checkMarkdownOutputRules($rootPath, $packageName, 'docs/overview.md', $manifest, $failures);
 }
 
 $rootReadme = file_get_contents($rootPath . '/README.md') ?: '';
@@ -445,7 +663,7 @@ if ($failures !== []) {
         fwrite(STDERR, '- ' . $failure . PHP_EOL);
     }
 
-    return EXIT_FAILURE;
+    exit(1);
 }
 
 fwrite(STDOUT, 'Package docs audit passed for ' . count($packageNames) . ' packages.');
@@ -455,3 +673,5 @@ if ($warnings !== []) {
 }
 
 fwrite(STDOUT, PHP_EOL);
+
+exit(0);
