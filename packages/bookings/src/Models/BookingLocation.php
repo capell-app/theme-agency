@@ -13,6 +13,15 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Override;
 
+/**
+ * @property int $id
+ * @property int $access_overhead_minutes
+ * @property float|null $latitude
+ * @property float|null $longitude
+ * @property string|null $postal_code
+ * @property string|null $service_area
+ * @property string|null $timezone
+ */
 class BookingLocation extends Model
 {
     /** @use HasFactory<BookingLocationFactory> */
@@ -27,14 +36,19 @@ class BookingLocation extends Model
      */
     protected $fillable = [
         'active',
+        'access_overhead_minutes',
         'city',
         'country',
         'instructions',
+        'latitude',
         'line1',
         'line2',
+        'longitude',
         'meta',
         'name',
         'postal_code',
+        'route_notes',
+        'service_area',
         'settings',
         'state',
         'timezone',
@@ -82,6 +96,9 @@ class BookingLocation extends Model
     {
         return [
             'active' => 'boolean',
+            'access_overhead_minutes' => 'integer',
+            'latitude' => 'float',
+            'longitude' => 'float',
             'meta' => 'json',
             'settings' => 'json',
             'type' => BookingLocationTypeEnum::class,

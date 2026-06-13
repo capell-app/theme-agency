@@ -79,6 +79,14 @@ class BookingService extends Model
     }
 
     /**
+     * @return HasMany<BookingGroupSession, $this>
+     */
+    public function groupSessions(): HasMany
+    {
+        return $this->hasMany(BookingGroupSession::class, 'service_id');
+    }
+
+    /**
      * @param  Builder<self>  $query
      * @return Builder<self>
      */

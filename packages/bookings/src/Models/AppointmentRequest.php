@@ -18,15 +18,28 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Override;
 
 /**
+ * @property int $id
  * @property string $calendar_uid
+ * @property int|null $location_id
+ * @property int|null $service_id
+ * @property int|null $staff_member_id
+ * @property CarbonImmutable|null $completed_at
+ * @property string|null $customer_phone
  * @property CarbonImmutable|null $confirmed_at
  * @property ConfirmationPolicyEnum $confirmation_policy
  * @property string $customer_email
  * @property string $customer_name
  * @property int|null $portal_account_id
+ * @property int|null $group_session_id
  * @property CarbonImmutable|null $hold_expires_at
  * @property bool $is_time_pinned
+ * @property int|null $fuel_allowance_pence
+ * @property CarbonImmutable|null $fuel_acknowledged_at
  * @property array<string, mixed>|null $payload
+ * @property string|null $payment_checkout_session_id
+ * @property CarbonImmutable|null $payment_confirmed_at
+ * @property string|null $payment_provider_reference
+ * @property int|null $payment_required_amount_pence
  * @property CarbonImmutable|null $offered_window_ends_at
  * @property CarbonImmutable|null $offered_window_starts_at
  * @property array<string, mixed>|null $reminder_preferences
@@ -36,6 +49,9 @@ use Override;
  * @property AppointmentRequestStatusEnum $status
  * @property int|null $site_id
  * @property string $timezone
+ * @property float|null $travel_distance_miles
+ * @property int|null $travel_duration_minutes
+ * @property-read BookingGroupSession|null $groupSession
  * @property-read LessonSeries|null $lessonSeries
  * @property-read BookingLocation|null $location
  * @property-read PortalAccount|null $portalAccount
@@ -63,6 +79,11 @@ class AppointmentRequest extends Model
         'customer_email',
         'customer_name',
         'customer_phone',
+        'attendance_status',
+        'attended_at',
+        'fuel_acknowledged_at',
+        'fuel_allowance_pence',
+        'group_session_id',
         'hold_expires_at',
         'is_time_pinned',
         'lesson_series_id',
@@ -72,6 +93,10 @@ class AppointmentRequest extends Model
         'offered_window_ends_at',
         'offered_window_starts_at',
         'payload',
+        'payment_checkout_session_id',
+        'payment_confirmed_at',
+        'payment_provider_reference',
+        'payment_required_amount_pence',
         'portal_account_id',
         'reminder_preferences',
         'requested_at',
@@ -84,6 +109,8 @@ class AppointmentRequest extends Model
         'staff_member_id',
         'status',
         'timezone',
+        'travel_distance_miles',
+        'travel_duration_minutes',
     ];
 
     protected static string $factory = AppointmentRequestFactory::class;
@@ -110,6 +137,14 @@ class AppointmentRequest extends Model
     public function lessonSeries(): BelongsTo
     {
         return $this->belongsTo(LessonSeries::class, 'lesson_series_id');
+    }
+
+    /**
+     * @return BelongsTo<BookingGroupSession, $this>
+     */
+    public function groupSession(): BelongsTo
+    {
+        return $this->belongsTo(BookingGroupSession::class, 'group_session_id');
     }
 
     /**
@@ -145,6 +180,30 @@ class AppointmentRequest extends Model
     }
 
     /**
+     * @return HasMany<LessonNote, $this>
+     */
+    public function lessonNotes(): HasMany
+    {
+        return $this->hasMany(LessonNote::class, 'appointment_request_id');
+    }
+
+    /**
+     * @return HasMany<BookingMessageLog, $this>
+     */
+    public function messageLogs(): HasMany
+    {
+        return $this->hasMany(BookingMessageLog::class, 'appointment_request_id');
+    }
+
+    /**
+     * @return HasMany<BookingReviewRequest, $this>
+     */
+    public function reviewRequests(): HasMany
+    {
+        return $this->hasMany(BookingReviewRequest::class, 'appointment_request_id');
+    }
+
+    /**
      * @param  Builder<self>  $query
      * @return Builder<self>
      */
@@ -157,22 +216,29 @@ class AppointmentRequest extends Model
     protected function casts(): array
     {
         return [
+            'attended_at' => 'immutable_datetime',
             'cancelled_at' => 'immutable_datetime',
             'completed_at' => 'immutable_datetime',
             'confirmation_policy' => ConfirmationPolicyEnum::class,
             'confirmed_at' => 'immutable_datetime',
+            'fuel_acknowledged_at' => 'immutable_datetime',
+            'fuel_allowance_pence' => 'integer',
             'hold_expires_at' => 'immutable_datetime',
             'is_time_pinned' => 'boolean',
             'meta' => 'json',
             'offered_window_ends_at' => 'immutable_datetime',
             'offered_window_starts_at' => 'immutable_datetime',
             'payload' => 'json',
+            'payment_confirmed_at' => 'immutable_datetime',
+            'payment_required_amount_pence' => 'integer',
             'reminder_preferences' => 'json',
             'requested_at' => 'immutable_datetime',
             'requested_ends_at' => 'immutable_datetime',
             'requested_starts_at' => 'immutable_datetime',
             'series_occurrence_date' => 'immutable_date',
             'status' => AppointmentRequestStatusEnum::class,
+            'travel_distance_miles' => 'float',
+            'travel_duration_minutes' => 'integer',
         ];
     }
 }

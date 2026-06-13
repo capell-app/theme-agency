@@ -8,6 +8,7 @@ use Capell\Bookings\Enums\ResourceEnum;
 use Capell\Bookings\Filament\Resources\AppointmentRequests\AppointmentRequestResource;
 use Capell\Bookings\Filament\Resources\AppointmentRequests\Pages\EditAppointmentRequest;
 use Capell\Bookings\Filament\Resources\AppointmentRequests\RelationManagers\AppointmentAuditLogsRelationManager;
+use Capell\Bookings\Filament\Resources\AppointmentRequests\RelationManagers\LessonNotesRelationManager;
 use Capell\Bookings\Filament\Resources\BookingAvailabilityExceptions\BookingAvailabilityExceptionResource;
 use Capell\Bookings\Filament\Resources\BookingAvailabilityWindows\BookingAvailabilityWindowResource;
 use Capell\Bookings\Filament\Resources\BookingLocations\BookingLocationResource;
@@ -59,7 +60,8 @@ it('exposes appointment request workflow actions and audit log relation', functi
 
     expect(bookingsAdminActionNames($table->getRecordActions()))->toContain('confirm', 'cancel')
         ->and(bookingsAdminActionNames(bookingsAdminEditAppointmentHeaderActions($page)))->toBe(['confirm', 'cancel'])
-        ->and(AppointmentRequestResource::getRelations())->toBe([AppointmentAuditLogsRelationManager::class])
+        ->and(AppointmentRequestResource::getRelations())->toBe([LessonNotesRelationManager::class, AppointmentAuditLogsRelationManager::class])
+        ->and(LessonNotesRelationManager::getRelationshipName())->toBe('lessonNotes')
         ->and(AppointmentAuditLogsRelationManager::getRelationshipName())->toBe('auditLogs');
 });
 

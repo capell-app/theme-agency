@@ -69,6 +69,17 @@ it('keeps package manifest requirements aligned with composer requirements', fun
             'lesson_series',
             'appointment_requests',
             'appointment_audit_logs',
+            'booking_lesson_notes',
+            'booking_messaging_consents',
+            'booking_message_logs',
+            'booking_travel_observations',
+            'booking_travel_adjustments',
+            'booking_work_zones',
+            'booking_change_proposals',
+            'booking_change_proposal_parties',
+            'booking_group_sessions',
+            'booking_review_requests',
+            'booking_owner_prompts',
         ])
         ->and($manifest['database']['settings'])->toBeTrue()
         ->and($manifest['settings'])->toBe([BookingsSettings::class])

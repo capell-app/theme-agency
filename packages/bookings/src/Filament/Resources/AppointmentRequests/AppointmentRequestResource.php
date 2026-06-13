@@ -12,6 +12,7 @@ use Capell\Bookings\Enums\ConfirmationPolicyEnum;
 use Capell\Bookings\Filament\Resources\AppointmentRequests\Pages\EditAppointmentRequest;
 use Capell\Bookings\Filament\Resources\AppointmentRequests\Pages\ListAppointmentRequests;
 use Capell\Bookings\Filament\Resources\AppointmentRequests\RelationManagers\AppointmentAuditLogsRelationManager;
+use Capell\Bookings\Filament\Resources\AppointmentRequests\RelationManagers\LessonNotesRelationManager;
 use Capell\Bookings\Models\AppointmentRequest;
 use Capell\Bookings\Models\BookingLocation;
 use Capell\Bookings\Models\BookingService;
@@ -117,6 +118,7 @@ final class AppointmentRequestResource extends Resource
     public static function getRelations(): array
     {
         return [
+            LessonNotesRelationManager::class,
             AppointmentAuditLogsRelationManager::class,
         ];
     }
