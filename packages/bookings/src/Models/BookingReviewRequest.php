@@ -24,6 +24,8 @@ use Override;
  * @property string|null $response
  * @property CarbonImmutable $scheduled_for
  * @property CarbonImmutable|null $sent_at
+ * @property string|null $token_hash
+ * @property CarbonImmutable|null $token_expires_at
  * @property array<string, mixed>|null $meta
  * @property-read AppointmentRequest|null $appointmentRequest
  */
@@ -46,6 +48,8 @@ class BookingReviewRequest extends Model
         'sent_at',
         'site_id',
         'status',
+        'token_expires_at',
+        'token_hash',
     ];
 
     /**
@@ -91,6 +95,7 @@ class BookingReviewRequest extends Model
             'scheduled_for' => 'immutable_datetime',
             'sent_at' => 'immutable_datetime',
             'status' => BookingReviewRequestStatusEnum::class,
+            'token_expires_at' => 'immutable_datetime',
         ];
     }
 }

@@ -13,6 +13,7 @@ use Capell\Bookings\Actions\CreateMessagingConsentUrlAction;
 use Capell\Bookings\Actions\CreatePortalLessonsUrlAction;
 use Capell\Bookings\Actions\CreateReviewLoopAction;
 use Capell\Bookings\Actions\CreateReviewRequestUrlAction;
+use Capell\Bookings\Actions\DispatchReviewRequestAction;
 use Capell\Bookings\Actions\ExpireWaitlistOffersAction;
 use Capell\Bookings\Actions\ImportClinicAttendanceCsvAction;
 use Capell\Bookings\Actions\IssueBookingChangeProposalTokenAction;
@@ -39,6 +40,7 @@ use Capell\Bookings\Enums\MessagingConsentStatusEnum;
 use Capell\Bookings\Models\AppointmentRequest;
 use Capell\Bookings\Models\BookingGroupSession;
 use Capell\Bookings\Models\BookingLessonBundle;
+use Capell\Bookings\Models\BookingMessageLog;
 use Capell\Bookings\Models\BookingReviewParticipant;
 use Capell\Bookings\Models\BookingReviewRequest;
 use Capell\Bookings\Models\BookingService;
@@ -68,14 +70,20 @@ it('serves signed portal lessons and consent updates without exposing unsigned a
     $portalAccountId = filter_var($portalAccount->getKey(), FILTER_VALIDATE_INT);
     throw_if($portalAccountId === false, RuntimeException::class, 'Expected portal account key to be an integer.');
 
-    $this->get('/bookings/portal/' . $siteId . '/' . $portalAccountId . '/lessons')->assertForbidden();
+    $lessonsUrl = CreatePortalLessonsUrlAction::run($portalAccount);
 
-    $this->get(CreatePortalLessonsUrlAction::run($portalAccount))
+    expect($lessonsUrl)->not->toContain('/' . $siteId . '/' . $portalAccountId . '/');
+
+    $this->get('/bookings/portal/' . $siteId . '/' . $portalAccountId . '/lessons')->assertNotFound();
+
+    $this->get($lessonsUrl)
         ->assertOk()
         ->assertSee('Reverse bay parking')
         ->assertDontSee('Instructor concern');
 
     $consentUrl = CreateMessagingConsentUrlAction::run($portalAccount);
+
+    expect($consentUrl)->not->toContain('/' . $siteId . '/' . $portalAccountId . '/');
 
     $this->get($consentUrl)
         ->assertOk()
@@ -117,6 +125,11 @@ it('accepts signed review and change proposal responses', function (): void {
     ]);
 
     $reviewUrl = CreateReviewRequestUrlAction::run($reviewRequest);
+    $reviewRequestId = filter_var($reviewRequest->getKey(), FILTER_VALIDATE_INT);
+    throw_if($reviewRequestId === false, RuntimeException::class, 'Expected review request key to be an integer.');
+    $reviewPathSegments = explode('/', trim((string) parse_url($reviewUrl, PHP_URL_PATH), '/'));
+
+    expect($reviewPathSegments)->not->toContain((string) $reviewRequestId);
 
     $this->post($reviewUrl, [
         'rating' => 5,
@@ -131,6 +144,10 @@ it('accepts signed review and change proposal responses', function (): void {
     );
     $clientParty = $proposal->parties()->where('party', 'client')->firstOrFail();
     $proposalUrl = IssueBookingChangeProposalTokenAction::run($clientParty);
+    $clientPartyId = filter_var($clientParty->getKey(), FILTER_VALIDATE_INT);
+    throw_if($clientPartyId === false, RuntimeException::class, 'Expected proposal party key to be an integer.');
+
+    expect($proposalUrl)->not->toContain('/proposal/' . $clientPartyId . '/');
 
     $this->post($proposalUrl, ['accepted' => '1'])->assertRedirect();
 
@@ -192,13 +209,12 @@ it('runs multi participant review loops with required completion and signed toke
     $learnerUrl = IssueReviewParticipantUrlAction::run($learner);
     $guardianUrl = IssueReviewParticipantUrlAction::run($guardian);
     $learnerId = filter_var($learner->getKey(), FILTER_VALIDATE_INT);
-    $guardianId = filter_var($guardian->getKey(), FILTER_VALIDATE_INT);
-    throw_if($learnerId === false || $guardianId === false, RuntimeException::class, 'Expected participant keys to be integers.');
-    $forgedUrl = str_replace(
-        '/review-participant/' . $learnerId . '/',
-        '/review-participant/' . $guardianId . '/',
-        $learnerUrl,
-    );
+    throw_if($learnerId === false, RuntimeException::class, 'Expected participant key to be an integer.');
+    $guardianToken = basename((string) parse_url($guardianUrl, PHP_URL_PATH));
+    $learnerToken = basename((string) parse_url($learnerUrl, PHP_URL_PATH));
+    $forgedUrl = str_replace('/review-participant/' . $learnerToken, '/review-participant/' . $guardianToken, $learnerUrl);
+
+    expect($learnerUrl)->not->toContain('/review-participant/' . $learnerId . '/');
 
     $this->post($forgedUrl, [
         'rating' => 1,
@@ -294,6 +310,64 @@ it('does not let legacy parent review capture complete required multi participan
         ->and(BookingReviewParticipant::query()->where('status', BookingReviewParticipantStatusEnum::Completed)->count())->toBe(1);
 });
 
+it('dispatches individual participant review reminder messages with tokenized urls', function (): void {
+    CarbonImmutable::setTestNow(CarbonImmutable::parse('2026-07-01 09:00:00', 'Europe/London'));
+
+    $appointmentRequest = AppointmentRequest::factory()->create([
+        'customer_name' => 'Jordan Lee',
+        'customer_email' => 'jordan@example.com',
+        'status' => AppointmentRequestStatusEnum::Completed,
+        'completed_at' => CarbonImmutable::now(),
+    ]);
+    $reviewRequest = BookingReviewRequest::query()->create([
+        'appointment_request_id' => $appointmentRequest->getKey(),
+        'status' => BookingReviewRequestStatusEnum::Scheduled,
+        'scheduled_for' => CarbonImmutable::now(),
+    ]);
+
+    CreateReviewLoopAction::run($reviewRequest, [
+        [
+            'role' => 'learner',
+            'name' => 'Jordan Lee',
+            'email' => 'jordan@example.com',
+            'required' => true,
+        ],
+        [
+            'role' => 'guardian',
+            'name' => 'Pat Lee',
+            'email' => 'pat@example.com',
+            'required' => true,
+        ],
+    ]);
+
+    DispatchReviewRequestAction::run($reviewRequest);
+
+    $participantMessages = BookingMessageLog::query()
+        ->where('type', 'like', 'review_participant_request:%')
+        ->orderBy('recipient')
+        ->get();
+    $reviewUrls = $participantMessages
+        ->pluck('meta')
+        ->map(static function (mixed $meta): string {
+            if (! is_array($meta)) {
+                return '';
+            }
+
+            $reviewUrl = $meta['review_url'] ?? null;
+
+            return is_string($reviewUrl) ? $reviewUrl : '';
+        })
+        ->all();
+
+    expect($participantMessages)->toHaveCount(2)
+        ->and($participantMessages->pluck('recipient')->all())->toBe(['jordan@example.com', 'pat@example.com'])
+        ->and(BookingReviewParticipant::query()->where('status', BookingReviewParticipantStatusEnum::Sent)->count())->toBe(2);
+
+    foreach ($reviewUrls as $reviewUrl) {
+        expect($reviewUrl)->toContain('/bookings/review-participant/');
+    }
+});
+
 it('records webhook events idempotently and processes waitlist offers', function (): void {
     CarbonImmutable::setTestNow(CarbonImmutable::parse('2026-07-01 09:00:00', 'Europe/London'));
 
@@ -314,6 +388,31 @@ it('records webhook events idempotently and processes waitlist offers', function
         ->and($entry->customer_email)->toBe('jordan@example.com')
         ->and(ExpireWaitlistOffersAction::run())->toBe(1)
         ->and($entry->refresh()->status)->toBe(BookingWaitlistStatusEnum::Expired);
+});
+
+it('accepts configured webhook route events without exposing an open ingestion endpoint', function (): void {
+    config(['capell-bookings.webhook_tokens.stripe' => 'secret-token']);
+
+    $this->postJson('/bookings/webhooks/stripe', [
+        'id' => 'evt_forbidden',
+        'type' => 'checkout.session.completed',
+    ])->assertForbidden();
+
+    $this->withHeader('X-Capell-Webhook-Token', 'secret-token')->postJson('/bookings/webhooks/stripe', [
+        'id' => 'evt_route_123',
+        'type' => 'checkout.session.completed',
+        'amount_total' => 7500,
+    ])->assertCreated()
+        ->assertJsonPath('status', 'received');
+
+    $this->withHeader('Authorization', 'Bearer secret-token')->postJson('/bookings/webhooks/stripe', [
+        'id' => 'evt_route_123',
+        'type' => 'checkout.session.completed',
+        'amount_total' => 9999,
+    ])->assertOk();
+
+    expect(BookingMessageLog::query()->count())->toBe(0)
+        ->and(DB::table('booking_webhook_events')->where('provider_event_id', 'evt_route_123')->count())->toBe(1);
 });
 
 it('tracks lesson skills, prepaid bundle credits, cancellation fees, and risk signals', function (): void {

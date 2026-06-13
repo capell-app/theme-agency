@@ -6,6 +6,8 @@ namespace Capell\Bookings\Filament\Resources\BookingReviewRequests;
 
 use BackedEnum;
 use Capell\Bookings\Filament\Resources\BookingReviewRequests\Pages\ListBookingReviewRequests;
+use Capell\Bookings\Filament\Resources\BookingReviewRequests\Pages\ViewBookingReviewRequest;
+use Capell\Bookings\Filament\Resources\BookingReviewRequests\RelationManagers\ReviewParticipantsRelationManager;
 use Capell\Bookings\Models\BookingReviewRequest;
 use Filament\Resources\Resource;
 use Filament\Support\Icons\Heroicon;
@@ -53,6 +55,15 @@ final class BookingReviewRequestResource extends Resource
     #[Override]
     public static function getPages(): array
     {
-        return ['index' => ListBookingReviewRequests::route('/')];
+        return [
+            'index' => ListBookingReviewRequests::route('/'),
+            'view' => ViewBookingReviewRequest::route('/{record}'),
+        ];
+    }
+
+    #[Override]
+    public static function getRelations(): array
+    {
+        return [ReviewParticipantsRelationManager::class];
     }
 }

@@ -13,4 +13,5 @@ return [
     'review_offsets_days' => [1, 2, 10],
     'message_log_retention_days' => 730,
     'travel_observation_retention_days' => 365,
+    'webhook_tokens' => [],
 ];

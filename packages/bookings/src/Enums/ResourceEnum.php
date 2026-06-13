@@ -17,6 +17,7 @@ use Capell\Bookings\Filament\Resources\BookingReviewRequests\BookingReviewReques
 use Capell\Bookings\Filament\Resources\BookingServices\BookingServiceResource;
 use Capell\Bookings\Filament\Resources\BookingStaffMembers\BookingStaffMemberResource;
 use Capell\Bookings\Filament\Resources\BookingTravelObservations\BookingTravelObservationResource;
+use Capell\Bookings\Filament\Resources\BookingWaitlistEntries\BookingWaitlistEntryResource;
 use Capell\Bookings\Filament\Resources\BookingWorkZones\BookingWorkZoneResource;
 use Capell\Bookings\Filament\Resources\LessonSeries\LessonSeriesResource;
 
@@ -37,4 +38,5 @@ enum ResourceEnum: string
     case BookingWorkZone = BookingWorkZoneResource::class;
     case BookingOwnerPrompt = BookingOwnerPromptResource::class;
     case BookingChangeProposal = BookingChangeProposalResource::class;
+    case BookingWaitlistEntry = BookingWaitlistEntryResource::class;
 }

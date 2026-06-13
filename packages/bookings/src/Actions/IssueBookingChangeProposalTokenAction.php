@@ -30,10 +30,7 @@ class IssueBookingChangeProposalTokenAction
         return URL::temporarySignedRoute(
             'capell-bookings.portal.proposal',
             $tokenExpiresAt,
-            [
-                'proposalParty' => $proposalParty->getKey(),
-                'token' => $token,
-            ],
+            ['token' => $token],
         );
     }
 }

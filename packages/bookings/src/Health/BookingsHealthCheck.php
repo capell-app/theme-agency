@@ -22,9 +22,12 @@ use Capell\Bookings\Actions\CaptureReviewParticipantResponseAction;
 use Capell\Bookings\Actions\CompleteReviewLoopIfReadyAction;
 use Capell\Bookings\Actions\ConfirmAppointmentRequestAction;
 use Capell\Bookings\Actions\CreateAppointmentRequestAction;
+use Capell\Bookings\Actions\CreatePortalAccessTokenAction;
 use Capell\Bookings\Actions\CreateReviewLoopAction;
+use Capell\Bookings\Actions\CreateReviewRequestUrlAction;
 use Capell\Bookings\Actions\ExpireWaitlistOffersAction;
 use Capell\Bookings\Actions\ImportClinicAttendanceCsvAction;
+use Capell\Bookings\Actions\IssueBookingChangeProposalTokenAction;
 use Capell\Bookings\Actions\IssueReviewParticipantUrlAction;
 use Capell\Bookings\Actions\JoinBookingWaitlistAction;
 use Capell\Bookings\Actions\LinkBookingToPortalAccountAction;
@@ -38,7 +41,10 @@ use Capell\Bookings\Actions\RecordBookingWebhookEventAction;
 use Capell\Bookings\Actions\RecordLessonNoteAction;
 use Capell\Bookings\Actions\RecordLessonSkillAssessmentAction;
 use Capell\Bookings\Actions\RemindPendingReviewParticipantsAction;
+use Capell\Bookings\Actions\ResolveBookingChangeProposalTokenAction;
+use Capell\Bookings\Actions\ResolvePortalAccessTokenAction;
 use Capell\Bookings\Actions\ResolveReviewParticipantTokenAction;
+use Capell\Bookings\Actions\ResolveReviewRequestTokenAction;
 use Capell\Bookings\Actions\ScheduleReviewRequestsAction;
 use Capell\Bookings\Actions\ScoreBookingRiskAction;
 use Capell\Bookings\Actions\ShouldSuppressReviewRequestAction;
@@ -93,9 +99,12 @@ final class BookingsHealthCheck implements ChecksExtensionHealth
         CompleteReviewLoopIfReadyAction::class,
         ConfirmAppointmentRequestAction::class,
         CreateAppointmentRequestAction::class,
+        CreatePortalAccessTokenAction::class,
         CreateReviewLoopAction::class,
+        CreateReviewRequestUrlAction::class,
         ExpireWaitlistOffersAction::class,
         ImportClinicAttendanceCsvAction::class,
+        IssueBookingChangeProposalTokenAction::class,
         IssueReviewParticipantUrlAction::class,
         JoinBookingWaitlistAction::class,
         LinkBookingToPortalAccountAction::class,
@@ -109,7 +118,10 @@ final class BookingsHealthCheck implements ChecksExtensionHealth
         RecordLessonNoteAction::class,
         RecordLessonSkillAssessmentAction::class,
         RemindPendingReviewParticipantsAction::class,
+        ResolveBookingChangeProposalTokenAction::class,
+        ResolvePortalAccessTokenAction::class,
         ResolveReviewParticipantTokenAction::class,
+        ResolveReviewRequestTokenAction::class,
         ScheduleReviewRequestsAction::class,
         ScoreBookingRiskAction::class,
         ShouldSuppressReviewRequestAction::class,

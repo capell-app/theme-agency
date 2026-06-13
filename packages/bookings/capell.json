@@ -116,6 +116,11 @@
             "resourceClass": "Capell\\Bookings\\Filament\\Resources\\BookingChangeProposals\\BookingChangeProposalResource"
         },
         {
+            "type": "admin-resource",
+            "class": "Capell\\Bookings\\Manifest\\BookingWaitlistEntryResourceContribution",
+            "resourceClass": "Capell\\Bookings\\Filament\\Resources\\BookingWaitlistEntries\\BookingWaitlistEntryResource"
+        },
+        {
             "type": "model",
             "class": "Capell\\Bookings\\Manifest\\BookingsModelsContribution"
         },
@@ -235,9 +240,12 @@
         "remindPendingReviewParticipants": "Capell\\Bookings\\Actions\\RemindPendingReviewParticipantsAction",
         "createPortalLessonsUrl": "Capell\\Bookings\\Actions\\CreatePortalLessonsUrlAction",
         "createMessagingConsentUrl": "Capell\\Bookings\\Actions\\CreateMessagingConsentUrlAction",
+        "createPortalAccessToken": "Capell\\Bookings\\Actions\\CreatePortalAccessTokenAction",
         "createReviewRequestUrl": "Capell\\Bookings\\Actions\\CreateReviewRequestUrlAction",
         "issueBookingChangeProposalToken": "Capell\\Bookings\\Actions\\IssueBookingChangeProposalTokenAction",
+        "resolvePortalAccessToken": "Capell\\Bookings\\Actions\\ResolvePortalAccessTokenAction",
         "resolveBookingChangeProposalToken": "Capell\\Bookings\\Actions\\ResolveBookingChangeProposalTokenAction",
+        "resolveReviewRequestToken": "Capell\\Bookings\\Actions\\ResolveReviewRequestTokenAction",
         "recordBookingWebhookEvent": "Capell\\Bookings\\Actions\\RecordBookingWebhookEventAction",
         "markBookingWebhookEventProcessed": "Capell\\Bookings\\Actions\\MarkBookingWebhookEventProcessedAction",
         "joinBookingWaitlist": "Capell\\Bookings\\Actions\\JoinBookingWaitlistAction",
@@ -285,7 +293,27 @@
         "Update:LessonSeries",
         "Delete:LessonSeries",
         "View:AppointmentRequest",
-        "Update:AppointmentRequest"
+        "Update:AppointmentRequest",
+        "View:BookingDayPlanner",
+        "View:BookingGroupSession",
+        "Create:BookingGroupSession",
+        "Update:BookingGroupSession",
+        "Delete:BookingGroupSession",
+        "View:BookingMessageLog",
+        "View:BookingReviewRequest",
+        "View:BookingTravelObservation",
+        "View:BookingWorkZone",
+        "Create:BookingWorkZone",
+        "Update:BookingWorkZone",
+        "Delete:BookingWorkZone",
+        "View:BookingOwnerPrompt",
+        "Update:BookingOwnerPrompt",
+        "View:BookingChangeProposal",
+        "Update:BookingChangeProposal",
+        "View:BookingWaitlistEntry",
+        "Create:BookingWaitlistEntry",
+        "Update:BookingWaitlistEntry",
+        "Delete:BookingWaitlistEntry"
     ],
     "capabilities": [
         "bookings",
@@ -351,7 +379,8 @@
                 "portal.review",
                 "portal.review.store",
                 "portal.review-participant",
-                "portal.review-participant.store"
+                "portal.review-participant.store",
+                "webhook.store"
             ],
             "auth": "public",
             "csrfExemptRoutes": [],
@@ -359,6 +388,8 @@
                 "portal.lessons",
                 "portal.consent",
                 "portal.consent.update",
+                "portal.proposal",
+                "portal.proposal.respond",
                 "portal.review",
                 "portal.review.store",
                 "portal.review-participant",
@@ -368,16 +399,20 @@
                 "calendar.staff",
                 "portal.proposal",
                 "portal.proposal.respond",
+                "portal.review",
+                "portal.review.store",
                 "portal.review-participant",
-                "portal.review-participant.store"
+                "portal.review-participant.store",
+                "webhook.store"
             ],
-            "webhookRoutes": [],
-            "throttledRoutes": ["request.store"]
+            "webhookRoutes": ["webhook.store"],
+            "throttledRoutes": ["request.store", "webhook.store"]
         },
         "sensitiveData": {
             "encryptedFields": [],
             "hashedTokenFields": [
                 "booking_change_proposal_parties.token_hash",
+                "booking_review_requests.token_hash",
                 "booking_review_participants.token_hash"
             ],
             "redactedOutputClasses": [],
@@ -425,7 +460,27 @@
                 "Update:LessonSeries",
                 "Delete:LessonSeries",
                 "View:AppointmentRequest",
-                "Update:AppointmentRequest"
+                "Update:AppointmentRequest",
+                "View:BookingDayPlanner",
+                "View:BookingGroupSession",
+                "Create:BookingGroupSession",
+                "Update:BookingGroupSession",
+                "Delete:BookingGroupSession",
+                "View:BookingMessageLog",
+                "View:BookingReviewRequest",
+                "View:BookingTravelObservation",
+                "View:BookingWorkZone",
+                "Create:BookingWorkZone",
+                "Update:BookingWorkZone",
+                "Delete:BookingWorkZone",
+                "View:BookingOwnerPrompt",
+                "Update:BookingOwnerPrompt",
+                "View:BookingChangeProposal",
+                "Update:BookingChangeProposal",
+                "View:BookingWaitlistEntry",
+                "Create:BookingWaitlistEntry",
+                "Update:BookingWaitlistEntry",
+                "Delete:BookingWaitlistEntry"
             ]
         }
     },
@@ -473,6 +528,21 @@
                 "path": "docs/screenshots/appointment-requests-admin.png",
                 "alt": "Admin appointment request queue with requested, confirmed, and audited booking states.",
                 "caption": "Operators review seeded requests, confirm or cancel appointments, and keep an audit trail for each workflow event."
+            },
+            {
+                "path": "docs/screenshots/equi-dynamics-public-booking-desktop.png",
+                "alt": "Equi Dynamics desktop booking form with seeded services, staff, location, timezone, and customer fields.",
+                "caption": "Bookings renders inside a branded Capell customer site with seeded consultation services and appointment request fields."
+            },
+            {
+                "path": "docs/screenshots/equi-dynamics-public-booking-mobile.png",
+                "alt": "Equi Dynamics mobile booking form showing the appointment request workflow in a narrow viewport.",
+                "caption": "The same public booking flow is verified at mobile width without horizontal overflow or browser console errors."
+            },
+            {
+                "path": "docs/screenshots/equi-dynamics-booking-submitted.png",
+                "alt": "Equi Dynamics booking form after a valid request has been submitted successfully.",
+                "caption": "A browser-tested seeded appointment request reaches the success state through the public Bookings route."
             }
         ],
         "categories": ["admin", "calendar", "operations"]

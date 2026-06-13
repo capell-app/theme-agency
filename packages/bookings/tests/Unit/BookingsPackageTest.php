@@ -15,6 +15,7 @@ use Capell\Bookings\Actions\ConfirmAppointmentRequestAction;
 use Capell\Bookings\Actions\CreateAppointmentRequestAction;
 use Capell\Bookings\Actions\CreateAvailabilityExceptionAction;
 use Capell\Bookings\Actions\CreateMessagingConsentUrlAction;
+use Capell\Bookings\Actions\CreatePortalAccessTokenAction;
 use Capell\Bookings\Actions\CreatePortalLessonsUrlAction;
 use Capell\Bookings\Actions\CreateReviewLoopAction;
 use Capell\Bookings\Actions\CreateReviewRequestUrlAction;
@@ -26,7 +27,9 @@ use Capell\Bookings\Actions\MaterialiseLessonSeriesAction;
 use Capell\Bookings\Actions\QueueAppointmentReminderAction;
 use Capell\Bookings\Actions\RecordBookingWebhookEventAction;
 use Capell\Bookings\Actions\RemindPendingReviewParticipantsAction;
+use Capell\Bookings\Actions\ResolvePortalAccessTokenAction;
 use Capell\Bookings\Actions\ResolveReviewParticipantTokenAction;
+use Capell\Bookings\Actions\ResolveReviewRequestTokenAction;
 use Capell\Bookings\Enums\AppointmentRequestStatusEnum;
 use Capell\Bookings\Enums\BookingAvailabilityStatusEnum;
 use Capell\Bookings\Enums\BookingLocationTypeEnum;
@@ -48,6 +51,7 @@ use Capell\Bookings\Manifest\BookingsModelsContribution;
 use Capell\Bookings\Manifest\BookingsReminderScheduleContribution;
 use Capell\Bookings\Manifest\BookingStaffMemberResourceContribution;
 use Capell\Bookings\Manifest\BookingTravelObservationResourceContribution;
+use Capell\Bookings\Manifest\BookingWaitlistEntryResourceContribution;
 use Capell\Bookings\Manifest\BookingWorkZoneResourceContribution;
 use Capell\Bookings\Manifest\LessonSeriesResourceContribution;
 use Capell\Bookings\Models\AppointmentAuditLog;
@@ -215,6 +219,8 @@ it('declares implemented bookings contributions and feature capabilities', funct
             && ($contribution['class'] ?? null) === BookingOwnerPromptResourceContribution::class))->toBeTrue()
         ->and($contributions->contains(fn (array $contribution): bool => ($contribution['type'] ?? null) === 'admin-resource'
             && ($contribution['class'] ?? null) === BookingChangeProposalResourceContribution::class))->toBeTrue()
+        ->and($contributions->contains(fn (array $contribution): bool => ($contribution['type'] ?? null) === 'admin-resource'
+            && ($contribution['class'] ?? null) === BookingWaitlistEntryResourceContribution::class))->toBeTrue()
         ->and($manifest['contributes'])->toContain([
             'type' => 'model',
             'class' => BookingsModelsContribution::class,
@@ -275,6 +281,7 @@ it('declares implemented bookings contributions and feature capabilities', funct
             'buildStaffCalendarFeed' => BuildStaffCalendarFeedAction::class,
             'createPortalLessonsUrl' => CreatePortalLessonsUrlAction::class,
             'createMessagingConsentUrl' => CreateMessagingConsentUrlAction::class,
+            'createPortalAccessToken' => CreatePortalAccessTokenAction::class,
             'createReviewRequestUrl' => CreateReviewRequestUrlAction::class,
             'createReviewLoop' => CreateReviewLoopAction::class,
             'addReviewParticipant' => AddReviewParticipantAction::class,
@@ -283,6 +290,8 @@ it('declares implemented bookings contributions and feature capabilities', funct
             'captureReviewParticipantResponse' => CaptureReviewParticipantResponseAction::class,
             'completeReviewLoopIfReady' => CompleteReviewLoopIfReadyAction::class,
             'remindPendingReviewParticipants' => RemindPendingReviewParticipantsAction::class,
+            'resolvePortalAccessToken' => ResolvePortalAccessTokenAction::class,
+            'resolveReviewRequestToken' => ResolveReviewRequestTokenAction::class,
             'recordBookingWebhookEvent' => RecordBookingWebhookEventAction::class,
             'joinBookingWaitlist' => JoinBookingWaitlistAction::class,
         ])

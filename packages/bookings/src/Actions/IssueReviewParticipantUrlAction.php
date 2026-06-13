@@ -30,10 +30,7 @@ class IssueReviewParticipantUrlAction
         return URL::temporarySignedRoute(
             'capell-bookings.portal.review-participant',
             $tokenExpiresAt,
-            [
-                'reviewParticipant' => $reviewParticipant->getKey(),
-                'token' => $token,
-            ],
+            ['token' => $token],
         );
     }
 }

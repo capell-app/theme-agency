@@ -17,12 +17,15 @@ use Illuminate\Support\Facades\DB;
 use Lorisleiva\Actions\Concerns\AsAction;
 
 /**
- * @method static BookingMessageLog run(AppointmentRequest $appointmentRequest, BookingMessageChannelEnum $channel, string $type, string $body, ?string $subject = null, ?CarbonImmutable $sendAt = null)
+ * @method static BookingMessageLog run(AppointmentRequest $appointmentRequest, BookingMessageChannelEnum $channel, string $type, string $body, ?string $subject = null, ?CarbonImmutable $sendAt = null, ?string $recipient = null, array<string, mixed> $context = [])
  */
 class DispatchBookingMessageAction
 {
     use AsAction;
 
+    /**
+     * @param  array<string, mixed>  $context
+     */
     public function handle(
         AppointmentRequest $appointmentRequest,
         BookingMessageChannelEnum $channel,
@@ -30,8 +33,10 @@ class DispatchBookingMessageAction
         string $body,
         ?string $subject = null,
         ?CarbonImmutable $sendAt = null,
+        ?string $recipient = null,
+        array $context = [],
     ): BookingMessageLog {
-        return DB::transaction(function () use ($appointmentRequest, $channel, $type, $body, $subject, $sendAt): BookingMessageLog {
+        return DB::transaction(function () use ($appointmentRequest, $channel, $type, $body, $subject, $sendAt, $recipient, $context): BookingMessageLog {
             /** @var BookingMessageLog|null $existingMessageLog */
             $existingMessageLog = BookingMessageLog::query()
                 ->where('appointment_request_id', $appointmentRequest->getKey())
@@ -44,12 +49,12 @@ class DispatchBookingMessageAction
                 return $existingMessageLog;
             }
 
-            $recipient = $this->recipient($appointmentRequest, $channel);
+            $messageRecipient = $recipient ?? $this->recipient($appointmentRequest, $channel);
             $status = BookingMessageStatusEnum::Pending;
             $error = null;
             $providerMessageId = null;
             $sentAt = null;
-            $meta = [];
+            $meta = $context;
 
             if (! $this->hasConsent($appointmentRequest, $channel)) {
                 $status = BookingMessageStatusEnum::Skipped;
@@ -57,19 +62,19 @@ class DispatchBookingMessageAction
             } else {
                 $result = app(BookingMessageChannel::class)->send(new BookingMessageData(
                     channel: $channel,
-                    recipient: $recipient,
+                    recipient: $messageRecipient,
                     type: $type,
                     body: $body,
                     subject: $subject,
                     sendAt: $sendAt,
-                    context: ['appointment_request_id' => $appointmentRequest->getKey()],
+                    context: array_merge(['appointment_request_id' => $appointmentRequest->getKey()], $context),
                 ));
 
                 $status = $result->sent ? BookingMessageStatusEnum::Sent : BookingMessageStatusEnum::Failed;
                 $providerMessageId = $result->providerMessageId;
                 $error = $result->error;
                 $sentAt = $result->sent ? CarbonImmutable::now() : null;
-                $meta = $result->meta;
+                $meta = array_merge($context, $result->meta);
             }
 
             /** @var BookingMessageLog $messageLog */
@@ -80,7 +85,7 @@ class DispatchBookingMessageAction
                 'channel' => $channel,
                 'type' => $type,
                 'status' => $status,
-                'recipient' => $recipient,
+                'recipient' => $messageRecipient,
                 'subject' => $subject,
                 'body' => $body,
                 'scheduled_for' => $sendAt,

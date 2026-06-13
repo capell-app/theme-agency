@@ -24,7 +24,7 @@
                 @php($consent = $consents->get($channel->value))
                 <form
                     method="post"
-                    action="{{ URL::signedRoute('capell-bookings.portal.consent.update', ['site' => $siteId, 'portalAccount' => $portalAccount->getKey()]) }}"
+                    action="{{ URL::temporarySignedRoute('capell-bookings.portal.consent.update', $signatureExpiresAt, ['portalToken' => $portalToken]) }}"
                 >
                     @csrf
                     <input

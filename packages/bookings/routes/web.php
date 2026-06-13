@@ -11,6 +11,7 @@ use Capell\Bookings\Http\Controllers\ShowReviewParticipantController;
 use Capell\Bookings\Http\Controllers\ShowReviewRequestController;
 use Capell\Bookings\Http\Controllers\ShowStaffCalendarFeedController;
 use Capell\Bookings\Http\Controllers\StoreBookingRequestController;
+use Capell\Bookings\Http\Controllers\StoreBookingWebhookEventController;
 use Capell\Bookings\Http\Controllers\StoreReviewParticipantController;
 use Capell\Bookings\Http\Controllers\StoreReviewRequestController;
 use Capell\Bookings\Http\Controllers\UpdateMessagingConsentController;
@@ -25,13 +26,16 @@ Route::middleware(['web'])
             ->middleware('throttle:capell-bookings-request')
             ->name('request.store');
         Route::get('/calendar/staff/{token}.ics', ShowStaffCalendarFeedController::class)->name('calendar.staff');
-        Route::get('/portal/{site}/{portalAccount}/lessons', ShowPortalLessonsController::class)->name('portal.lessons');
-        Route::get('/portal/{site}/{portalAccount}/consent', ShowMessagingConsentController::class)->name('portal.consent');
-        Route::post('/portal/{site}/{portalAccount}/consent', UpdateMessagingConsentController::class)->name('portal.consent.update');
-        Route::get('/proposal/{proposalParty}/{token}', ShowBookingChangeProposalController::class)->name('portal.proposal');
-        Route::post('/proposal/{proposalParty}/{token}', RespondBookingChangeProposalController::class)->name('portal.proposal.respond');
-        Route::get('/review/{reviewRequest}', ShowReviewRequestController::class)->name('portal.review');
-        Route::post('/review/{reviewRequest}', StoreReviewRequestController::class)->name('portal.review.store');
-        Route::get('/review-participant/{reviewParticipant}/{token}', ShowReviewParticipantController::class)->name('portal.review-participant');
-        Route::post('/review-participant/{reviewParticipant}/{token}', StoreReviewParticipantController::class)->name('portal.review-participant.store');
+        Route::get('/portal/{portalToken}/lessons', ShowPortalLessonsController::class)->name('portal.lessons');
+        Route::get('/portal/{portalToken}/consent', ShowMessagingConsentController::class)->name('portal.consent');
+        Route::post('/portal/{portalToken}/consent', UpdateMessagingConsentController::class)->name('portal.consent.update');
+        Route::get('/proposal/{token}', ShowBookingChangeProposalController::class)->name('portal.proposal');
+        Route::post('/proposal/{token}', RespondBookingChangeProposalController::class)->name('portal.proposal.respond');
+        Route::get('/review/{token}', ShowReviewRequestController::class)->name('portal.review');
+        Route::post('/review/{token}', StoreReviewRequestController::class)->name('portal.review.store');
+        Route::get('/review-participant/{token}', ShowReviewParticipantController::class)->name('portal.review-participant');
+        Route::post('/review-participant/{token}', StoreReviewParticipantController::class)->name('portal.review-participant.store');
+        Route::post('/webhooks/{provider}', StoreBookingWebhookEventController::class)
+            ->middleware('throttle:capell-bookings-webhook')
+            ->name('webhook.store');
     });

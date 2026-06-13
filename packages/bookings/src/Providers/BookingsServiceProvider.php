@@ -105,6 +105,7 @@ class BookingsServiceProvider extends AbstractPackageServiceProvider
                 '2026_06_13_000014_create_booking_lesson_skill_assessments_table',
                 '2026_06_13_000015_create_booking_lesson_bundles_table',
                 '2026_06_13_000016_create_booking_review_participants_table',
+                '2026_06_13_000017_add_token_fields_to_booking_review_requests_table',
             ]);
     }
 
@@ -141,6 +142,8 @@ class BookingsServiceProvider extends AbstractPackageServiceProvider
             return Limit::perMinute(6)
                 ->by(hash('sha256', $normalizedEmail . '|' . ($request->ip() ?? 'unknown')));
         });
+
+        RateLimiter::for('capell-bookings-webhook', static fn (Request $request): Limit => Limit::perMinute(60)->by($request->ip() ?? 'unknown'));
     }
 
     public function packageBooted(): void

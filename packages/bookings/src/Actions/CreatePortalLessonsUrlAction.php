@@ -21,10 +21,7 @@ class CreatePortalLessonsUrlAction
         return URL::temporarySignedRoute(
             'capell-bookings.portal.lessons',
             $expiresAt ?? CarbonImmutable::now()->addDays(14),
-            [
-                'site' => $portalAccount->site_id,
-                'portalAccount' => $portalAccount->getKey(),
-            ],
+            ['portalToken' => CreatePortalAccessTokenAction::run($portalAccount)],
         );
     }
 }

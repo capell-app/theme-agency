@@ -29,7 +29,7 @@
 
                 <form
                     method="post"
-                    action="{{ URL::signedRoute('capell-bookings.portal.review-participant.store', ['reviewParticipant' => $reviewParticipant->getKey(), 'token' => $token]) }}"
+                    action="{{ URL::temporarySignedRoute('capell-bookings.portal.review-participant.store', $signatureExpiresAt, ['token' => $token]) }}"
                 >
                     @csrf
                     <label>

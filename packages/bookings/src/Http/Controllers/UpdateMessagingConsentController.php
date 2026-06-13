@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Capell\Bookings\Http\Controllers;
 
 use Capell\Bookings\Actions\CaptureMessagingConsentAction;
+use Capell\Bookings\Actions\ResolvePortalAccessTokenAction;
 use Capell\Bookings\Enums\BookingMessageChannelEnum;
 use Capell\CustomerPortal\Models\PortalAccount;
 use Illuminate\Http\RedirectResponse;
@@ -13,10 +14,13 @@ use Illuminate\Validation\Rule;
 
 final class UpdateMessagingConsentController
 {
-    public function __invoke(Request $request, int $site, PortalAccount $portalAccount): RedirectResponse
+    public function __invoke(Request $request, string $portalToken): RedirectResponse
     {
         abort_unless($request->hasValidSignature(), 403);
-        abort_unless($portalAccount->site_id === $site, 404);
+
+        $resolved = ResolvePortalAccessTokenAction::run($portalToken);
+        /** @var PortalAccount $portalAccount */
+        $portalAccount = $resolved['portal_account'];
 
         $validated = $request->validate([
             'channel' => ['required', Rule::enum(BookingMessageChannelEnum::class)],

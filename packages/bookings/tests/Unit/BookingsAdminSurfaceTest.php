@@ -18,9 +18,11 @@ use Capell\Bookings\Filament\Resources\BookingLocations\BookingLocationResource;
 use Capell\Bookings\Filament\Resources\BookingMessageLogs\BookingMessageLogResource;
 use Capell\Bookings\Filament\Resources\BookingOwnerPrompts\BookingOwnerPromptResource;
 use Capell\Bookings\Filament\Resources\BookingReviewRequests\BookingReviewRequestResource;
+use Capell\Bookings\Filament\Resources\BookingReviewRequests\RelationManagers\ReviewParticipantsRelationManager;
 use Capell\Bookings\Filament\Resources\BookingServices\BookingServiceResource;
 use Capell\Bookings\Filament\Resources\BookingStaffMembers\BookingStaffMemberResource;
 use Capell\Bookings\Filament\Resources\BookingTravelObservations\BookingTravelObservationResource;
+use Capell\Bookings\Filament\Resources\BookingWaitlistEntries\BookingWaitlistEntryResource;
 use Capell\Bookings\Filament\Resources\BookingWorkZones\BookingWorkZoneResource;
 use Capell\Bookings\Filament\Resources\LessonSeries\LessonSeriesResource;
 use Capell\Bookings\Models\AppointmentRequest;
@@ -35,6 +37,7 @@ use Capell\Bookings\Models\BookingReviewRequest;
 use Capell\Bookings\Models\BookingService;
 use Capell\Bookings\Models\BookingStaffMember;
 use Capell\Bookings\Models\BookingTravelObservation;
+use Capell\Bookings\Models\BookingWaitlistEntry;
 use Capell\Bookings\Models\BookingWorkZone;
 use Capell\Bookings\Models\LessonSeries;
 use Filament\Actions\ActionGroup;
@@ -42,7 +45,7 @@ use Filament\Tables\Contracts\HasTable;
 use Filament\Tables\Table;
 
 it('declares admin resources for all bookings operator records', function (): void {
-    expect(ResourceEnum::cases())->toHaveCount(15)
+    expect(ResourceEnum::cases())->toHaveCount(16)
         ->and(BookingServiceResource::getModel())->toBe(BookingService::class)
         ->and(BookingStaffMemberResource::getModel())->toBe(BookingStaffMember::class)
         ->and(BookingLocationResource::getModel())->toBe(BookingLocation::class)
@@ -58,6 +61,7 @@ it('declares admin resources for all bookings operator records', function (): vo
         ->and(BookingWorkZoneResource::getModel())->toBe(BookingWorkZone::class)
         ->and(BookingOwnerPromptResource::getModel())->toBe(BookingOwnerPrompt::class)
         ->and(BookingChangeProposalResource::getModel())->toBe(BookingChangeProposal::class)
+        ->and(BookingWaitlistEntryResource::getModel())->toBe(BookingWaitlistEntry::class)
         ->and(BookingServiceResource::getNavigationLabel())->toBe(__('capell-bookings::admin.resources.services'))
         ->and(BookingStaffMemberResource::getNavigationLabel())->toBe(__('capell-bookings::admin.resources.staff_members'))
         ->and(BookingLocationResource::getNavigationLabel())->toBe(__('capell-bookings::admin.resources.locations'))
@@ -72,7 +76,8 @@ it('declares admin resources for all bookings operator records', function (): vo
         ->and(BookingTravelObservationResource::getNavigationLabel())->toBe(__('capell-bookings::admin.resources.travel_observations'))
         ->and(BookingWorkZoneResource::getNavigationLabel())->toBe(__('capell-bookings::admin.resources.work_zones'))
         ->and(BookingOwnerPromptResource::getNavigationLabel())->toBe(__('capell-bookings::admin.resources.owner_prompts'))
-        ->and(BookingChangeProposalResource::getNavigationLabel())->toBe(__('capell-bookings::admin.resources.change_proposals'));
+        ->and(BookingChangeProposalResource::getNavigationLabel())->toBe(__('capell-bookings::admin.resources.change_proposals'))
+        ->and(BookingWaitlistEntryResource::getNavigationLabel())->toBe(__('capell-bookings::admin.resources.waitlist'));
 });
 
 it('exposes list create edit pages for mutable booking setup resources', function (): void {
@@ -88,9 +93,10 @@ it('exposes list create edit pages for mutable booking setup resources', functio
         ->and(array_keys(BookingOwnerPromptResource::getPages()))->toBe(['index', 'edit'])
         ->and(array_keys(BookingDayPlannerResource::getPages()))->toBe(['index'])
         ->and(array_keys(BookingMessageLogResource::getPages()))->toBe(['index'])
-        ->and(array_keys(BookingReviewRequestResource::getPages()))->toBe(['index'])
+        ->and(array_keys(BookingReviewRequestResource::getPages()))->toBe(['index', 'view'])
         ->and(array_keys(BookingTravelObservationResource::getPages()))->toBe(['index'])
-        ->and(array_keys(BookingChangeProposalResource::getPages()))->toBe(['index']);
+        ->and(array_keys(BookingChangeProposalResource::getPages()))->toBe(['index'])
+        ->and(array_keys(BookingWaitlistEntryResource::getPages()))->toBe(['index', 'create', 'edit']);
 });
 
 it('exposes appointment request workflow actions and audit log relation', function (): void {
@@ -102,6 +108,11 @@ it('exposes appointment request workflow actions and audit log relation', functi
         ->and(AppointmentRequestResource::getRelations())->toBe([LessonNotesRelationManager::class, AppointmentAuditLogsRelationManager::class])
         ->and(LessonNotesRelationManager::getRelationshipName())->toBe('lessonNotes')
         ->and(AppointmentAuditLogsRelationManager::getRelationshipName())->toBe('auditLogs');
+});
+
+it('exposes review participant detail from review requests', function (): void {
+    expect(BookingReviewRequestResource::getRelations())->toBe([ReviewParticipantsRelationManager::class])
+        ->and(ReviewParticipantsRelationManager::getRelationshipName())->toBe('participants');
 });
 
 function bookingsAdminTableForCoverage(): Table

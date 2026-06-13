@@ -4,11 +4,9 @@
 
 ## What This Plugin Adds
 
-Bookings is an **Available**, **Schema-owning** Capell plugin in the **Capell Operations** product group. It ships as `capell-app/bookings` and extends these surfaces: admin, console, frontend.
+Bookings is an **Available**, **Schema-owning** Capell plugin in the **Capell Operations** product group. It ships as `capell-app/bookings` and extends admin, console, and frontend surfaces.
 
-Bookings adds services, staff, locations, availability, appointment requests, confirmations, reminders, and calendar feeds.
-
-After install, admins get package-owned management surfaces and public users may see package-owned frontend output or routes.
+Bookings now covers the full adaptive lessons workflow: public booking requests, services, staff, locations, availability, appointment confirmations, reminders, lesson series, travel-aware planning, provisional holds, payments, group clinics, review loops, waitlists, webhook ingestion, lesson progress, bundles, cancellation support, reporting, retention, and AI-assisted owner prompts.
 
 Status details:
 
@@ -21,57 +19,49 @@ Status details:
 
 ## Why It Matters
 
-**For developers:** The package gives developers package-owned service providers, Actions, Data objects, models, Laravel routes, Filament classes, and Blade views instead of pushing this behaviour into core or application code.
+**For developers:** The package keeps booking domain behaviour inside package-owned Actions, models, migrations, Filament resources, routes, settings, and Blade views instead of pushing it into Capell core or host applications.
 
-**For teams:** Bookings adds appointment request workflows, availability, confirmations, reminders, and calendar feeds for healthcare, services, education, consulting, nonprofit, and portfolio sites.
+**For teams:** Bookings gives operators one place to manage lesson demand, scheduling, travel constraints, customer messaging, reviews, waitlists, operational reports, and retention-sensitive customer data.
 
 ## Screens And Workflow
 
 Screenshot contract: `docs/screenshots.json`.
 
-- Public booking request form (frontend, required).
-- Appointment request admin queue (admin, required).
+- Public booking request form.
+- Appointment request admin queue.
+- Review request detail with participant responses.
+- Waitlist admin queue.
 
 ## Technical Shape
 
-- Service providers: `Capell\Bookings\Providers\BookingsServiceProvider`.
-- Config files: `packages/bookings/config/capell-bookings.php`.
-- Migrations: `packages/bookings/database/migrations/2026_05_31_130000_01_create_booking_services_table.php`, `packages/bookings/database/migrations/2026_05_31_130000_02_create_booking_staff_members_table.php`, `packages/bookings/database/migrations/2026_05_31_130000_03_create_booking_locations_table.php`, `packages/bookings/database/migrations/2026_05_31_130000_04_create_booking_availability_windows_table.php`, `packages/bookings/database/migrations/2026_05_31_130000_05_create_appointment_requests_table.php`, `packages/bookings/database/migrations/2026_05_31_130000_06_create_booking_availability_exceptions_table.php`, `packages/bookings/database/migrations/2026_05_31_130000_07_create_appointment_audit_logs_table.php`.
-- Models: `AppointmentAuditLog`, `AppointmentRequest`, `BookingAvailabilityException`, `BookingAvailabilityWindow`, `BookingLocation`, `BookingService`, `BookingStaffMember`.
-- Filament classes: `AppointmentRequestResource`, `EditAppointmentRequest`, `ListAppointmentRequests`, `AppointmentAuditLogsRelationManager`, `BookingAvailabilityExceptionResource`, `CreateBookingAvailabilityException`, `EditBookingAvailabilityException`, `ListBookingAvailabilityExceptions`, `BookingAvailabilityWindowResource`, `CreateBookingAvailabilityWindow`, `EditBookingAvailabilityWindow`, `ListBookingAvailabilityWindows`, `and 12 more`.
-- Route files: `packages/bookings/routes/web.php`.
-- Actions: `BuildAvailableBookingSlotsAction`, `BuildPublicBookingRequestOptionsAction`, `BuildPublicBookingRequestPropsAction`, `BuildStaffCalendarFeedAction`, `CancelAppointmentRequestAction`, `ConfirmAppointmentRequestAction`, `CreateAppointmentRequestAction`, `CreateAvailabilityExceptionAction`, `CreateStaffCalendarFeedUrlAction`, `QueueAppointmentNotificationAction`, `QueueAppointmentReminderAction`, `RecordAppointmentAuditLogAction`.
-- Data objects: `AppointmentRequestData`, `AvailabilityExceptionData`, `AvailabilityWindowData`.
-- Console command classes: `SendDueAppointmentRemindersCommand`.
-- Manifest contributions: `admin-resource: Capell\Bookings\Manifest\AppointmentRequestResourceContribution`, `admin-resource: Capell\Bookings\Manifest\BookingAvailabilityExceptionResourceContribution`, `admin-resource: Capell\Bookings\Manifest\BookingAvailabilityWindowResourceContribution`, `admin-resource: Capell\Bookings\Manifest\BookingLocationResourceContribution`, `admin-resource: Capell\Bookings\Manifest\BookingServiceResourceContribution`, `admin-resource: Capell\Bookings\Manifest\BookingStaffMemberResourceContribution`, `model: Capell\Bookings\Manifest\BookingsModelsContribution`, `route: Capell\Bookings\Manifest\BookingsFrontendRoutesContribution`, `scheduled-job: Capell\Bookings\Manifest\BookingsReminderScheduleContribution`.
-- Health checks: `Capell\Bookings\Health\BookingsHealthCheck`.
-- Blade views: `packages/bookings/resources/views/request.blade.php`.
-- Cache tags: `bookings`.
+- Service provider: `Capell\Bookings\Providers\BookingsServiceProvider`.
+- Config: `packages/bookings/config/capell-bookings.php`.
+- Routes: public request, calendar feed, opaque portal lessons, opaque consent, tokenized proposals, tokenized review requests, tokenized review participants, and guarded webhook ingestion.
+- Admin resources: booking setup, appointment queue, day planner, group sessions, message logs, review requests, travel observations, work zones, owner prompts, change proposals, and waitlist entries.
+- Actions: availability, requests, confirmations, reminders, portal links, consent, travel, work zones, payment gates, group sessions, reviews, webhook ingestion, waitlists, skill progress, bundles, cancellation, reporting, import, suppression, risk scoring, owner digests, GDPR export/erasure, and retention pruning.
+- Security: customer-facing portal/review/proposal URLs use temporary signatures plus opaque encrypted payloads or hashed tokens; public routes do not expose database IDs.
+- Health: `Capell\Bookings\Health\BookingsHealthCheck` verifies tables, morph aliases, and action discoverability.
 
 ## Data Model
 
-- Required tables: `booking_services`, `booking_staff_members`, `booking_locations`, `booking_availability_windows`, `booking_availability_exceptions`, `appointment_requests`, `appointment_audit_logs`.
-- Models: `AppointmentAuditLog`, `AppointmentRequest`, `BookingAvailabilityException`, `BookingAvailabilityWindow`, `BookingLocation`, `BookingService`, `BookingStaffMember`.
-- Migration files: `2026_05_31_130000_01_create_booking_services_table.php`, `2026_05_31_130000_02_create_booking_staff_members_table.php`, `2026_05_31_130000_03_create_booking_locations_table.php`, `2026_05_31_130000_04_create_booking_availability_windows_table.php`, `2026_05_31_130000_05_create_appointment_requests_table.php`, `2026_05_31_130000_06_create_booking_availability_exceptions_table.php`, `2026_05_31_130000_07_create_appointment_audit_logs_table.php`.
-- Migration impact: run host migrations through the package install flow before opening package surfaces.
-- Deletion/retention behaviour: Docs gap unless the package has an explicit pruning command, retention setting, or tested cascade path.
+Required tables include booking setup tables, `appointment_requests`, audit logs, lesson notes, messaging consent/logs, travel observations/adjustments, work zones, change proposals, group sessions, review requests/participants, owner prompts, webhook events, waitlist entries, skill assessments, and lesson bundles.
+
+Token fields are hashed at rest for change proposal parties, review requests, and review participants. Message logs and travel observations are covered by package retention settings.
 
 ## Install Impact
 
-- Admin navigation: adds package-owned Filament classes when registered.
-- Permissions: `View:BookingService`, `Create:BookingService`, `Update:BookingService`, `Delete:BookingService`, `View:BookingStaffMember`, `Create:BookingStaffMember`, `Update:BookingStaffMember`, `Delete:BookingStaffMember`, `View:BookingLocation`, `Create:BookingLocation`, `Update:BookingLocation`, `Delete:BookingLocation`, `View:BookingAvailabilityWindow`, `Create:BookingAvailabilityWindow`, `Update:BookingAvailabilityWindow`, `Delete:BookingAvailabilityWindow`, `View:BookingAvailabilityException`, `Create:BookingAvailabilityException`, `Update:BookingAvailabilityException`, `Delete:BookingAvailabilityException`, `View:AppointmentRequest`, `Update:AppointmentRequest`.
-- Public routes: route files exist and must be reviewed before public enablement.
-- Database changes: package migrations are declared.
-- Settings: no package settings declared.
-- Queues or schedules: none detected in standard package paths.
+- Admin navigation: adds package-owned Filament resources under Bookings.
+- Permissions: declared for setup CRUD, appointment updates, planner/message/review/travel visibility, work zones, owner prompts, change proposals, and waitlist CRUD.
+- Public routes: signed or tokenized where customer-specific data is visible; booking request submissions and webhooks are throttled.
+- Settings: `Capell\Bookings\Settings\BookingsSettings`.
+- Queues/schedules: reminder dispatch, workflow expiry, review scheduling, and retention pruning commands are registered.
 - Cache tags: `bookings`.
-- Commands: console command classes detected: `SendDueAppointmentRemindersCommand`.
 
 ## Common Pitfalls
 
-- Run migrations before opening package resources or public routes.
-- Review route middleware, throttling, signed URLs, and public-output safety before exposing routes.
-- Keep public Blade and cached HTML free of authoring markers, model IDs, permissions, signed editor URLs, and lazy database queries.
+- Configure `capell-bookings.webhook_tokens` before enabling provider webhook endpoints.
+- Use generated Actions for portal, consent, proposal, and review links; do not hand-build URLs.
+- Keep public Blade free of authoring markers, model IDs, permissions, signed editor URLs, and lazy database queries.
 - Run package commands from the host app; in this repository use `vendor/bin/pest` for package tests.
 - Keep `composer.json`, `composer.local.json`, `capell.json`, docs, screenshots, and tests aligned when the package surface changes.
 
@@ -79,16 +69,18 @@ Screenshot contract: `docs/screenshots.json`.
 
 | Symptom | Likely cause | Check | Fix |
 | --- | --- | --- | --- |
-| Package surface is missing after install | Provider or manifest is not loaded | Confirm `capell.json`, package `composer.json`, and provider registration | Reinstall the package, refresh Composer autoload, and clear host caches |
-| Admin screen or command fails on missing table | Package migrations have not run | Check the tables listed in `Data Model` | Run host migrations and rerun the focused package test |
-| Route returns unexpected output | Route cache, middleware, or signed URL setup does not match the package route file | Check the route files listed in `Technical Shape` | Clear route cache and verify middleware before exposing public routes |
-| Public output leaks unexpected state | Render data, cache variation, or authoring boundary has regressed | Check public Blade, cache tags, and public-output safety tests | Move data loading out of Blade and rerun the package public-output tests |
+| Package surface is missing after install | Provider or manifest is not loaded | Confirm `capell.json`, Composer metadata, and package install state | Reinstall the package, refresh Composer autoload, and clear host caches |
+| Admin screen fails on a missing table | Package migrations have not run | Check the tables listed in `Data Model` | Run host migrations and rerun focused package tests |
+| Portal link returns 403 | Temporary signature expired or URL was hand-built | Check generated Action output and `expires` query value | Regenerate the link through the relevant Action |
+| Webhook returns 403 | Provider token is missing or wrong | Check `capell-bookings.webhook_tokens.{provider}` | Configure the token and retry |
+| Public output leaks unexpected state | Render data, cache variation, or authoring boundary regressed | Check public Blade and public-output tests | Move data loading out of Blade and rerun package public-output tests |
 
 ## Quick Start
 
 1. Install the package: `composer require capell-app/bookings`.
-2. Run the required setup: `php artisan migrate`.
-3. Open the related Capell admin surface and verify Bookings appears.
+2. Run the required setup from the host Capell app.
+3. Configure booking settings, availability, webhook tokens if used, and staff/calendar surfaces.
+4. Open the Bookings admin resources and verify the public `/bookings` route.
 
 ## Next Steps
 
@@ -96,10 +88,6 @@ Screenshot contract: `docs/screenshots.json`.
 - [Overview](docs/overview.md)
 - [Screenshot contract](docs/screenshots.json)
 - [Marketplace assets](docs/assets/marketplace/)
-- [Capell content language plan](../../docs/CONTENT_LANGUAGE_PLAN.md)
-- [Capell documentation design system](../../docs/DESIGN_SYSTEM.md)
-- [Capell and package ERD notes](../../docs/erd/capell-and-package-erds.md)
-- Related packages: [Address](../address/README.md), [Events](../events/README.md), [Form Builder](../form-builder/README.md), [Seo Suite](../seo-suite/README.md).
 - Focused tests: `vendor/bin/pest packages/bookings/tests --configuration=phpunit.xml`.
 
 <!-- prettier-ignore-end -->
