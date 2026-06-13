@@ -32,6 +32,25 @@ $tombstoneDocs = [
 
 function packageNames(string $packagesPath): array
 {
+    $trackedManifestPaths = gitTrackedFiles(dirname($packagesPath), 'packages/*/capell.json');
+
+    if ($trackedManifestPaths !== []) {
+        $names = [];
+
+        foreach ($trackedManifestPaths as $trackedManifestPath) {
+            $pathParts = explode('/', $trackedManifestPath);
+
+            if (($pathParts[0] ?? null) === 'packages' && isset($pathParts[1])) {
+                $names[] = $pathParts[1];
+            }
+        }
+
+        $names = array_values(array_unique($names));
+        sort($names);
+
+        return $names;
+    }
+
     $names = [];
 
     foreach (scandir($packagesPath) ?: [] as $entry) {
@@ -51,6 +70,26 @@ function packageNames(string $packagesPath): array
 
 function packageDirectoriesWithoutManifest(string $packagesPath): array
 {
+    $trackedPackagePaths = gitTrackedFiles(dirname($packagesPath), 'packages/*');
+
+    if ($trackedPackagePaths !== []) {
+        $packageNames = [];
+        $manifestPackageNames = packageNames($packagesPath);
+
+        foreach ($trackedPackagePaths as $trackedPackagePath) {
+            $pathParts = explode('/', $trackedPackagePath);
+
+            if (($pathParts[0] ?? null) === 'packages' && isset($pathParts[1])) {
+                $packageNames[] = $pathParts[1];
+            }
+        }
+
+        $names = array_values(array_diff(array_unique($packageNames), $manifestPackageNames));
+        sort($names);
+
+        return $names;
+    }
+
     $names = [];
 
     foreach (scandir($packagesPath) ?: [] as $entry) {
@@ -131,6 +170,15 @@ function readJson(string $path, array &$failures): ?array
 
 function markdownFiles(string $rootPath): array
 {
+    $trackedMarkdownPaths = gitTrackedFiles($rootPath, '*.md');
+
+    if ($trackedMarkdownPaths !== []) {
+        return array_map(
+            static fn (string $trackedMarkdownPath): string => $rootPath . '/' . $trackedMarkdownPath,
+            $trackedMarkdownPaths,
+        );
+    }
+
     $files = [];
     $iterator = new RecursiveIteratorIterator(
         new RecursiveCallbackFilterIterator(
@@ -162,6 +210,34 @@ function markdownFiles(string $rootPath): array
         }
     }
 
+    sort($files);
+
+    return $files;
+}
+
+/**
+ * @return list<string>
+ */
+function gitTrackedFiles(string $rootPath, string $pathspec): array
+{
+    $command = sprintf(
+        'git -C %s ls-files -- %s 2>/dev/null',
+        escapeshellarg($rootPath),
+        escapeshellarg($pathspec),
+    );
+    $output = [];
+    $exitCode = 0;
+
+    exec($command, $output, $exitCode);
+
+    if ($exitCode !== 0) {
+        return [];
+    }
+
+    $files = array_values(array_filter(
+        $output,
+        static fn (string $trackedPath): bool => $trackedPath !== '',
+    ));
     sort($files);
 
     return $files;

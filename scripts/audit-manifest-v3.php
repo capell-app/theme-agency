@@ -311,6 +311,28 @@ function capell_manifest_v3_package_assignments(): array
 function capell_manifest_v3_package_directories(string $packagesPath): array
 {
     $directories = [];
+    $rootPath = dirname($packagesPath);
+    $trackedComposerPaths = capell_manifest_v3_git_tracked_files($rootPath, 'packages/*/composer.json');
+
+    if ($trackedComposerPaths !== []) {
+        foreach ($trackedComposerPaths as $trackedComposerPath) {
+            $pathParts = explode('/', $trackedComposerPath);
+
+            if (($pathParts[0] ?? null) !== 'packages' || ! isset($pathParts[1])) {
+                continue;
+            }
+
+            $packagePath = $packagesPath . DIRECTORY_SEPARATOR . $pathParts[1];
+
+            if (is_dir($packagePath)) {
+                $directories[$pathParts[1]] = $packagePath;
+            }
+        }
+
+        ksort($directories);
+
+        return $directories;
+    }
 
     $packagePaths = glob($packagesPath . DIRECTORY_SEPARATOR . '*', GLOB_ONLYDIR);
 
@@ -332,12 +354,33 @@ function capell_manifest_v3_package_directories(string $packagesPath): array
  */
 function capell_manifest_v3_manifest_payloads(string $root): array
 {
+    $trackedManifestPaths = capell_manifest_v3_git_tracked_files($root, 'packages/*/capell.json');
+    $payloads = [];
+
+    if ($trackedManifestPaths !== []) {
+        foreach ($trackedManifestPaths as $trackedManifestPath) {
+            $manifestPath = rtrim($root, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $trackedManifestPath;
+
+            if (! is_file($manifestPath)) {
+                continue;
+            }
+
+            $payloads[$trackedManifestPath] = json_decode(
+                (string) file_get_contents($manifestPath),
+                true,
+                flags: JSON_THROW_ON_ERROR,
+            );
+        }
+
+        ksort($payloads);
+
+        return $payloads;
+    }
+
     $finder = (new Finder)
         ->in(rtrim($root, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . 'packages')
         ->name('capell.json')
         ->depth('< 4');
-
-    $payloads = [];
 
     foreach ($finder as $manifest) {
         $payloads[$manifest->getRelativePathname()] = json_decode(
@@ -350,6 +393,34 @@ function capell_manifest_v3_manifest_payloads(string $root): array
     ksort($payloads);
 
     return $payloads;
+}
+
+/**
+ * @return list<string>
+ */
+function capell_manifest_v3_git_tracked_files(string $rootPath, string $pathspec): array
+{
+    $command = sprintf(
+        'git -C %s ls-files -- %s 2>/dev/null',
+        escapeshellarg($rootPath),
+        escapeshellarg($pathspec),
+    );
+    $output = [];
+    $exitCode = 0;
+
+    exec($command, $output, $exitCode);
+
+    if ($exitCode !== 0) {
+        return [];
+    }
+
+    $files = array_values(array_filter(
+        $output,
+        static fn (string $trackedPath): bool => $trackedPath !== '',
+    ));
+    sort($files);
+
+    return $files;
 }
 
 /**

@@ -28,26 +28,36 @@ Prefer an org-level `SPLIT_PR_FORWARD_TOKEN` selected for all package split repo
 
 ## Package Split Coverage
 
-The split workflow covers every directory currently present under `packages/`. The latest audit added these previously missing packages to split coverage:
+The split workflow covers every tracked package manifest under `packages/`. The 2026-06-13 split audit added these previously missing packages to split coverage and package-local forwarding workflow coverage:
 
-- `agent-delivery`
-- `comments`
-- `filament-peek`
-- `shopify-commerce`
-- `theme-commerce`
-- `theme-education`
-- `theme-healthcare`
-- `theme-knowledge`
-- `theme-local-services`
-- `theme-nonprofit`
-- `theme-portfolio`
+- `automation-studio`
+- `bookings`
+- `contacts`
+- `customer-portal`
+- `exception-reports`
+- `experiments`
+- `inertia`
+- `inertia-react-adapter`
+- `inertia-vue-adapter`
+- `knowledge-base`
+- `payments`
+- `privacy-center`
+- `record-switcher`
+- `site-monitor`
+- `social-feeds`
+- `structured-content-library`
+- `theme-inertia-bookings`
+- `theme-inertia-bookings-react`
+- `theme-inertia-bookings-vue`
+- `theme-liquid-glass`
+- `url-manager`
 
 Run this check before adding a package:
 
 ```bash
 comm -23 \
-  <(find packages -mindepth 1 -maxdepth 1 -type d -exec basename {} \; | sort) \
+  <(git ls-files 'packages/*/composer.json' | sed 's#^packages/##; s#/composer.json$##' | sort) \
   <(ruby -ryaml -e 'workflow = YAML.load_file(".github/workflows/split-monorepo.yml"); puts workflow.dig("jobs", "split-monorepo", "strategy", "matrix", "include").map { |row| row["repository_name"] }.sort')
 ```
 
-The command should print nothing.
+The command should print nothing for committed package manifests.

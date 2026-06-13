@@ -1,14 +1,14 @@
 # Improvement Plan Status
 
-> Last refreshed: 2026-06-12. This is the control document for the long-running package improvement work. The per-package source of truth remains `packages/<package>/docs/improvement-plan.md`; this file tracks implementation progress, docs-remediation coverage, and the next audit queue.
+> Last refreshed: 2026-06-13. This is the control document for the long-running package improvement work. The per-package source of truth remains `packages/<package>/docs/improvement-plan.md`; this file tracks implementation progress, docs-remediation coverage, and the next audit queue.
 
 ## Current Scope
 
-The current repository contains 75 packages. 56 package-local improvement plans currently exist, and 19 packages do not yet have `packages/<package>/docs/improvement-plan.md`.
+The current repository contains 77 tracked packages. 56 package-local improvement plans currently exist, and 21 packages do not yet have `packages/<package>/docs/improvement-plan.md`.
 
 Packages without a package-local improvement plan:
 
-`access-gate`, `address`, `agent-bridge`, `agent-delivery`, `ai-orchestrator`, `api`, `automation-studio`, `block-library`, `blog`, `bookings`, `exception-reports`, `inertia`, `inertia-react-adapter`, `inertia-vue-adapter`, `record-switcher`, `social-feeds`, `theme-inertia-bookings`, `theme-inertia-bookings-react`, `theme-inertia-bookings-vue`.
+`access-gate`, `address`, `agent-bridge`, `agent-delivery`, `ai-orchestrator`, `api`, `automation-studio`, `block-library`, `blog`, `bookings`, `exception-reports`, `inertia`, `inertia-react-adapter`, `inertia-vue-adapter`, `record-switcher`, `site-monitor`, `social-feeds`, `theme-inertia-bookings`, `theme-inertia-bookings-react`, `theme-inertia-bookings-vue`, `theme-liquid-glass`.
 
 Existing package plan roadmap rows currently total:
 
@@ -22,7 +22,7 @@ The work is not complete until every package plan has been reviewed against curr
 
 ## Docs Remediation Note
 
-The 2026-06-12 docs remediation pass keeps this tracker honest for the current 75-package repository. It verifies that package README/docs indexes exist, removes unsupported optional screenshot-output warnings from the active screenshot contract, keeps consolidated/tombstone docs out of active navigation, and records the 19 packages still missing package-local improvement plans without inventing roadmap rows for them.
+The 2026-06-13 docs remediation pass keeps this tracker honest for the current 77-package repository. It verifies that package README/docs indexes exist, removes unsupported optional screenshot-output warnings from the active screenshot contract, keeps consolidated/tombstone docs out of active navigation, and records the 21 packages still missing package-local improvement plans without inventing roadmap rows for them.
 
 ## Status Rules
 
