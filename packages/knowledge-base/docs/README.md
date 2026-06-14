@@ -15,6 +15,10 @@ The package owns the content models, admin resources, public docs routes, feedba
 
 The fixture uses semantic article HTML only and does not write presentation wrappers or theme classes into content fields.
 
+## Review Plan
+
+Track completed review slices and follow-up roadmap items in [Improvement Plan](improvement-plan.md).
+
 ## Screenshots
 
 `docs/screenshots.json` documents four runner-backed captures. `capell.json` promotes the two Capell admin screenshots for the marketplace gallery and keeps the two public `/docs` route captures as supporting evidence.

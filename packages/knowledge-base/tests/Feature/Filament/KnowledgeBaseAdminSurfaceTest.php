@@ -134,6 +134,9 @@ it('declares admin providers, resources, and owned tables in the manifest', func
     $database = knowledgeBaseManifestArray($manifest, 'database');
     $actions = knowledgeBaseManifestArray($manifest, 'actions');
     $commands = knowledgeBaseManifestArray($manifest, 'commands');
+    $security = knowledgeBaseManifestArray($manifest, 'security');
+    $publicSurface = knowledgeBaseManifestArray($security, 'publicSurface');
+    $sensitiveData = knowledgeBaseManifestArray($security, 'sensitiveData');
     $performance = knowledgeBaseManifestArray($manifest, 'performance');
     $cacheSafety = knowledgeBaseManifestArray($performance, 'cacheSafety');
     $invalidationSources = $cacheSafety['invalidationSources'] ?? [];
@@ -180,6 +183,19 @@ it('declares admin providers, resources, and owned tables in the manifest', func
         ->and($actions['buildKnowledgeBaseArticleSchema'] ?? null)
         ->toBe(BuildKnowledgeBaseArticleSchemaAction::class)
         ->and($commands['demo'] ?? null)->toBe('capell:knowledge-base-demo')
+        ->and($publicSurface['routeNames'] ?? null)->toBe([
+            'capell-knowledge-base.ai-output',
+            'capell-knowledge-base.article',
+            'capell-knowledge-base.article.feedback',
+            'capell-knowledge-base.index',
+        ])
+        ->and($publicSurface['throttledRoutes'] ?? null)->toBe([
+            'capell-knowledge-base.article.feedback',
+        ])
+        ->and($sensitiveData['hashedTokenFields'] ?? null)->toBe([
+            'knowledge_base_article_feedback.user_agent_hash',
+            'knowledge_base_article_feedback.visitor_hash',
+        ])
         ->and($cacheSafety['variesBy'] ?? null)->toBe([])
         ->and(array_column($invalidationSources, 'model'))->toBe([
             KnowledgeBaseCollection::class,

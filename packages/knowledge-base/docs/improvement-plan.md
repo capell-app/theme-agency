@@ -26,6 +26,8 @@ Prioritized:
 
 8. **Done/Shipped: make `relation_type` / `sort_order` editable for related articles.** The Article edit surface now includes a Related Articles relation manager. Authors can relate an article, choose `Prerequisite` / `NextStep` / `Related`, set display order, and update existing relations through `RelateKnowledgeBaseArticlesAction`. Evidence: admin surface coverage asserts the relation manager registration, columns, and relate/update actions. — `src/Filament/Resources/Articles/RelationManagers/RelatedArticlesRelationManager.php`, `src/Filament/Resources/Articles/KnowledgeBaseArticleResource.php`, `tests/Feature/Filament/KnowledgeBaseAdminSurfaceTest.php` — **M**
 
+9. **Done/Shipped 2026-06-14: correct manifest security metadata.** The manifest now lists the actual `capell-knowledge-base.*` public route names and points hashed visitor/user-agent fields at `knowledge_base_article_feedback`, matching the migration/model that stores anonymous article feedback. Evidence: the manifest contract test asserts route names, throttled route metadata, and hashed field declarations. — `capell.json`, `tests/Feature/Filament/KnowledgeBaseAdminSurfaceTest.php` — **S**
+
 ## 3. Missing Features (gaps)
 
 Mapped to `capabilities[]` and KB-category norms. **Table-stakes** = expected of any KB product; **Differentiator** = sets it apart.
@@ -50,6 +52,7 @@ Mapped to `capabilities[]` and KB-category norms. **Table-stakes** = expected of
 - **Performance budget unverifiable.** `frontendRenderBudgetMs: 20` / `adminQueryBudget: 40` are declared but no test or benchmark enforces them. `BuildPublicKnowledgeBaseNavigationAction` eager-loads `articles.currentVersion` (good), but the article controller eager-loads `relatedArticleLinks.relatedArticle.collection` + `.currentVersion` two levels deep on every hit with no cap on related count.
 - **i18n is partial by product scope.** All admin/frontend strings are translated (`resources/lang/en/generic.php`), but the content is single-locale (no translatable article bodies). The manifest now reflects this by not claiming a locale cache variant.
 - **Done/Shipped: docs/README/CHANGELOG are no longer empty.** README, docs README, and CHANGELOG now describe shipped routes, feedback safety, Search integration, demo content, and screenshot evidence. Deeper private docs can still expand host-app installation and cross-package recipes.
+- **Done/Shipped 2026-06-14: manifest security metadata now matches storage and routes.** The security block no longer attributes feedback hashes to collection rows, and route metadata uses the full named routes registered by `routes/web.php`.
 
 ## 5. Marketplace & Selling
 
@@ -93,3 +96,4 @@ Mapped to `capabilities[]` and KB-category norms. **Table-stakes** = expected of
 | Done/Shipped: Nest child collections in public navigation output                                                                                                                                                                                                                                                 | Done   | S      | Low                   | §3          |
 | Done/Shipped: SEO/Site Discovery integration (Article schema data + `/docs/*` public URL/sitemap discovery)                                                                                                                                                                                                      | Done   | M      | Medium (cross-sell)   | §5          |
 | Done/Shipped: `theme-knowledge` reference templates for KB payloads                                                                                                                                                                                                                                              | Done   | M      | Medium (bundle)       | §5          |
+| Done/Shipped: Correct manifest route/security metadata for public Knowledge Base feedback                                                                                                                                                                                                                        | Done   | S      | Medium (trust)        | §2, §4      |
