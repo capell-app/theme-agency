@@ -54,13 +54,28 @@ class Breadcrumbs extends AbstractWidget
             : ($site instanceof Site && $language instanceof Language ? $site->getHomePage($language) : null);
         $homeTranslation = $home instanceof Page && $home->relationLoaded('translation') ? $home->translation : null;
         $siteDomain = $site instanceof Site && $site->relationLoaded('siteDomain') ? $site->siteDomain : null;
+        $meta = is_array($this->widget?->meta) ? $this->widget->meta : [];
+        $showHome = $this->metaBoolean($meta, 'show_home', true);
+        $showParent = $this->metaBoolean($meta, 'show_parent', true);
+        $showCurrentPage = $showCurrentPage && $this->metaBoolean($meta, 'show_current_page', true);
+        $minimumItems = max(1, (int) ($meta['minimum_items'] ?? 1));
+        $ancestors = $this->visibleAncestors($ancestors, $showParent);
+        $homeLabel = $showHome ? $homeTranslation?->label : null;
+        $homeUrl = $showHome ? $siteDomain?->url : null;
+        $visibleItemCount = ($homeUrl !== null && $homeLabel !== null ? 1 : 0)
+            + ($ancestors instanceof Collection ? $ancestors->count() : 0)
+            + ($showCurrentPage ? 1 : 0);
+
+        if ($visibleItemCount < $minimumItems) {
+            return '';
+        }
 
         return parent::render([
             ...$data,
             'ancestors' => $ancestors,
             'currentPageLabel' => $currentPageLabel,
-            'homeLabel' => $homeTranslation?->label,
-            'homeUrl' => $siteDomain?->url,
+            'homeLabel' => $homeLabel,
+            'homeUrl' => $homeUrl,
             'page' => $page,
             'showCurrentPage' => $showCurrentPage,
         ]);
@@ -75,5 +90,30 @@ class Breadcrumbs extends AbstractWidget
             ->filter(fn (mixed $value): bool => is_scalar($value) || $value instanceof Stringable)
             ->map(fn (mixed $value): string => (string) $value)
             ->all();
+    }
+
+    /**
+     * @param  Collection<array-key, mixed>|null  $ancestors
+     * @return Collection<array-key, mixed>|null
+     */
+    private function visibleAncestors(?Collection $ancestors, bool $showParent): ?Collection
+    {
+        if (! $showParent || ! $ancestors instanceof Collection) {
+            return new Collection;
+        }
+
+        return $ancestors->filter(fn (mixed $ancestor): bool => $ancestor instanceof Page && ! $ancestor->home)->values();
+    }
+
+    /**
+     * @param  array<string, mixed>  $meta
+     */
+    private function metaBoolean(array $meta, string $key, bool $default): bool
+    {
+        if (! array_key_exists($key, $meta)) {
+            return $default;
+        }
+
+        return filter_var($meta[$key], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) ?? $default;
     }
 }
