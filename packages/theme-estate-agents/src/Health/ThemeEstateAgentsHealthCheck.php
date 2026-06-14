@@ -172,6 +172,10 @@ final class ThemeEstateAgentsHealthCheck implements ChecksExtensionHealth
 
         $requires = data_get($manifest, 'dependencies.requires', []);
 
+        if (! is_array($requires) || ! in_array('capell-app/foundation-theme', $requires, true)) {
+            $issues[] = 'Manifest must require Foundation Theme for built-in default theme inheritance.';
+        }
+
         if (! is_array($requires) || ! in_array('capell-app/frontend', $requires, true)) {
             $issues[] = 'Manifest must require Capell Frontend for built-in default theme fallbacks.';
         }

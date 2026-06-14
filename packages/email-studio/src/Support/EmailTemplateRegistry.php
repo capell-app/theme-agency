@@ -104,7 +104,7 @@ class EmailTemplateRegistry
      */
     public function persist(): array
     {
-        if (! Schema::hasTable((new EmailTemplateRegistration)->getTable())) {
+        if (! $this->hasPersistenceSchema()) {
             return [];
         }
 
@@ -112,6 +112,23 @@ class EmailTemplateRegistry
             static fn (array $registration): EmailTemplateRegistration => RegisterEmailTemplateAction::run(...$registration),
             $this->registrations,
         ));
+    }
+
+    private function hasPersistenceSchema(): bool
+    {
+        $registrationTable = (new EmailTemplateRegistration)->getTable();
+
+        if (! Schema::hasTable($registrationTable)) {
+            return false;
+        }
+
+        foreach (['site_scope_key', 'package_name', 'template_key', 'default_locale', 'is_static_renderable'] as $column) {
+            if (! Schema::hasColumn($registrationTable, $column)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     private function storeDefinition(EmailTemplateDefinitionData $definition): void

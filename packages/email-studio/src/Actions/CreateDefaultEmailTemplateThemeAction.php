@@ -25,31 +25,34 @@ class CreateDefaultEmailTemplateThemeAction
         string $name = 'Default Email Theme',
         array $colors = [],
     ): EmailTemplateTheme {
-        return DB::transaction(function () use ($siteId, $siteScopeKey, $key, $name, $colors): EmailTemplateTheme {
-            EmailTemplateTheme::query()
-                ->where('site_scope_key', $siteScopeKey)
-                ->where('is_default', true)
-                ->update(['is_default' => false]);
+        return DB::transaction(
+            function () use ($siteId, $siteScopeKey, $key, $name, $colors): EmailTemplateTheme {
+                EmailTemplateTheme::query()
+                    ->where('site_scope_key', $siteScopeKey)
+                    ->where('is_default', true)
+                    ->update(['is_default' => false]);
 
-            /** @var EmailTemplateTheme $theme */
-            $theme = EmailTemplateTheme::query()->updateOrCreate(
-                [
-                    'site_scope_key' => $siteScopeKey,
-                    'key' => $key,
-                ],
-                [
-                    'site_id' => $siteId,
-                    'name' => $name,
-                    'is_default' => true,
-                    'colors' => [
-                        ...$this->defaultColors(),
-                        ...$colors,
+                /** @var EmailTemplateTheme $theme */
+                $theme = EmailTemplateTheme::query()->updateOrCreate(
+                    [
+                        'site_scope_key' => $siteScopeKey,
+                        'key' => $key,
                     ],
-                ],
-            );
+                    [
+                        'site_id' => $siteId,
+                        'name' => $name,
+                        'is_default' => true,
+                        'colors' => [
+                            ...$this->defaultColors(),
+                            ...$colors,
+                        ],
+                    ],
+                );
 
-            return $theme;
-        });
+                return $theme;
+            },
+            attempts: 3,
+        );
     }
 
     /**

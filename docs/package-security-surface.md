@@ -11,14 +11,14 @@ Cache posture uses three terms: `safe` means public output is expected to avoid 
 
 ## Summary
 
-- Packages: 77
-- Packages with public routes: 25
-- Public routes: 70
-- Webhook routes: 4
-- Throttled routes: 24
-- Signed or tokenized routes: 15
-- Sensitive fields: 106
-- Anonymous-output-safe packages: 69
+- Packages: 81
+- Packages with public routes: 27
+- Public routes: 92
+- Webhook routes: 5
+- Throttled routes: 32
+- Signed or tokenized routes: 26
+- Sensitive fields: 140
+- Anonymous-output-safe packages: 73
 
 ## Package Surface
 
@@ -33,7 +33,7 @@ Cache posture uses three terms: `safe` means public output is expected to avoid 
 | capell-app/automation-studio | sensitive | 0 | - | - | - | Capell\AutomationStudio\Models\AutomationRule::$actions<br>Capell\AutomationStudio\Models\AutomationRule::$conditions<br>Capell\AutomationStudio\Models\AutomationRule::$settings<br>Capell\AutomationStudio\Models\AutomationRun::$context<br>Capell\AutomationStudio\Models\AutomationRun::$payload | permissions; 5 permissions | safe; not cacheable; no sensitive output; varies by none |
 | capell-app/block-library | low | 0 | - | - | - | - | panel-auth | safe; not cacheable; no sensitive output; varies by none |
 | capell-app/blog | standard | 0 | - | - | - | - | permissions; 12 permissions | safe; not cacheable; no sensitive output; varies by site, locale |
-| capell-app/bookings | sensitive | 3 | - | request.store | calendar.staff | appointment_requests.confirmation_token<br>booking_staff_members.calendar_feed_token | permissions; 22 permissions | safe; not cacheable; no sensitive output; varies by none |
+| capell-app/bookings | sensitive | 13 | webhook.store | request.store<br>webhook.store | calendar.staff<br>portal.consent<br>portal.consent.update<br>portal.lessons<br>portal.proposal<br>portal.proposal.respond<br>portal.review<br>portal.review-participant<br>portal.review-participant.store<br>portal.review.store<br>webhook.store | appointment_requests.confirmation_token<br>booking_change_proposal_parties.token_hash<br>booking_review_participants.token_hash<br>booking_review_requests.token_hash<br>booking_staff_members.calendar_feed_token | permissions; 46 permissions | safe; not cacheable; no sensitive output; varies by none |
 | capell-app/campaign-studio | standard | 1 | - | capell-campaigns.conversions | - | - | policies | safe; not cacheable; no sensitive output; varies by site, locale, utm_campaign, utm_content, utm_term |
 | capell-app/comments | sensitive | 4 | - | - | capell-comments.reply-notifications.disable<br>capell-comments.verify<br>capell-comments.verify.store | Capell\Comments\Models\CommentAuthor::$email<br>Capell\Comments\Models\CommentAuthor::$name<br>comment_authors.email_hash<br>comment_reactions.visitor_ip_hash<br>comment_reactions.visitor_user_agent_hash<br>comment_tokens.token_hash<br>comments.visitor_ip_hash<br>comments.visitor_user_agent_hash | policies | safe; not cacheable; no sensitive output; varies by site, locale |
 | capell-app/contacts | sensitive | 0 | - | - | - | Capell\Contacts\Models\Contact::$display_name<br>Capell\Contacts\Models\Contact::$email<br>Capell\Contacts\Models\Contact::$first_name<br>Capell\Contacts\Models\Contact::$last_name<br>Capell\Contacts\Models\Contact::$phone<br>Capell\Contacts\Models\Contact::$profile<br>Capell\Contacts\Models\Contact::$source_identifier<br>Capell\Contacts\Models\ContactActivity::$payload<br>Capell\Contacts\Models\ContactActivity::$summary<br>Capell\Contacts\Models\Lead::$context<br>Capell\Contacts\Models\Organisation::$profile | permissions; 6 permissions | not safe; not cacheable; sensitive output; varies by site |
@@ -44,7 +44,8 @@ Cache posture uses three terms: `safe` means public output is expected to avoid 
 | capell-app/deployments | critical | 3 | - | - | - | Capell\Deployments\Models\DeploymentConnection::$access_token_encrypted<br>Capell\Deployments\Models\DeploymentConnection::$refresh_token_encrypted | permissions; 2 permissions | safe; not cacheable; no sensitive output; varies by none |
 | capell-app/diagnostics | sensitive | 0 | - | - | - | - | permissions; 6 permissions | safe; not cacheable; no sensitive output; varies by none |
 | capell-app/document-lifecycle | standard | 0 | - | - | - | document_lifecycle_publications.content_hash<br>legal_acceptances.document_hash<br>legal_acceptances.ip_hash<br>legal_acceptances.legal_bundle_hash<br>legal_acceptances.user_agent_hash | permissions; 10 permissions | not safe; not cacheable; sensitive output; varies by none |
-| capell-app/email-studio | sensitive | 1 | capell-email-studio.provider-events | capell-email-studio.provider-events | capell-email-studio.provider-events | email_profiles.webhook_endpoint_token_hash<br>email_recipients.email_hash<br>email_replies.from_email_hash<br>email_suppressions.email_hash<br>email_tracking_tokens.token_hash | permissions; 2 permissions | safe; not cacheable; no sensitive output; varies by site, locale |
+| capell-app/email-studio | sensitive | 1 | capell-email-studio.provider-events | capell-email-studio.provider-events | capell-email-studio.provider-events | email_profiles.webhook_endpoint_token_hash<br>email_recipients.email_hash<br>email_replies.from_email_hash<br>email_suppressions.email_hash<br>email_tracking_tokens.token_hash | permissions; 11 permissions | safe; not cacheable; no sensitive output; varies by site, locale |
+| capell-app/equestrian-clinics | sensitive | 3 | - | capell-equestrian-clinics.host-request.store | capell-equestrian-clinics.coach.timetable | - | permissions; 8 permissions | safe; not cacheable; sensitive output; varies by site, locale, portal_account |
 | capell-app/events | standard | 2 | - | - | - | - | permissions; 48 permissions | safe; not cacheable; no sensitive output; varies by site, locale |
 | capell-app/exception-reports | low | 0 | - | - | - | - | none | not safe; not cacheable; sensitive output; varies by none |
 | capell-app/experiments | standard | 0 | - | - | - | - | permissions; 16 permissions | safe; not cacheable; no sensitive output; varies by site, visitor |
@@ -55,14 +56,15 @@ Cache posture uses three terms: `safe` means public output is expected to avoid 
 | capell-app/frontend-optimizer | standard | 0 | - | - | - | frontend_render_profiles.hash | panel-auth | safe; not cacheable; no sensitive output; varies by site, locale |
 | capell-app/ga4-reports | sensitive | 0 | - | - | - | - | panel-auth | safe; cacheable; no sensitive output; varies by property_id, date_range, limit |
 | capell-app/hero | low | 0 | - | - | - | - | panel-auth | safe; cacheable; no sensitive output; varies by site, locale |
-| capell-app/html-cache | standard | 0 | - | - | - | cached_model_urls.url_hash<br>stale_cached_urls.claim_token<br>stale_cached_urls.url_hash | permissions; 2 permissions | safe; not cacheable; no sensitive output; varies by site, locale |
+| capell-app/html-cache | standard | 0 | - | - | - | cached_model_urls.url_hash<br>stale_cached_urls.claim_token<br>stale_cached_urls.url_hash | permissions; 2 permissions | safe; cacheable; no sensitive output; varies by site, locale |
 | capell-app/inertia | low | 0 | - | - | - | - | none | safe; not cacheable; no sensitive output; varies by site, locale |
 | capell-app/inertia-react-adapter | low | 0 | - | - | - | - | none | safe; not cacheable; no sensitive output; varies by site, locale |
 | capell-app/inertia-vue-adapter | low | 0 | - | - | - | - | none | safe; not cacheable; no sensitive output; varies by site, locale |
 | capell-app/insights | sensitive | 2 | - | capell-insights.consent<br>capell-insights.events | - | - | permissions; 1 permission | safe; not cacheable; no sensitive output; varies by site, locale |
-| capell-app/knowledge-base | standard | 4 | - | article.feedback | - | knowledge_base_collections.user_agent_hash<br>knowledge_base_collections.visitor_hash | policies | safe; cacheable; no sensitive output; varies by none |
+| capell-app/knowledge-base | standard | 4 | - | capell-knowledge-base.article.feedback | - | knowledge_base_article_feedback.user_agent_hash<br>knowledge_base_article_feedback.visitor_hash | policies | safe; cacheable; no sensitive output; varies by none |
 | capell-app/layout-builder | standard | 0 | - | - | - | layout_bulk_change_runs.original_container_hash<br>layout_bulk_change_runs.proposed_container_hash | permissions; 13 permissions | safe; not cacheable; no sensitive output; varies by site, locale, page |
-| capell-app/login-audit | sensitive | 0 | - | - | - | - | policies | safe; not cacheable; no sensitive output; varies by none |
+| capell-app/live-chat | sensitive | 9 | - | capell-live-chat.api.conversations.store<br>capell-live-chat.api.messages.store<br>capell-live-chat.api.handoff.store<br>capell-live-chat.conversations.store<br>capell-live-chat.messages.store<br>capell-live-chat.handoff.store | - | Capell\LiveChat\Models\LiveChatAIRun::$error_message<br>Capell\LiveChat\Models\LiveChatAIRun::$input_payload<br>Capell\LiveChat\Models\LiveChatAIRun::$output_payload<br>Capell\LiveChat\Models\LiveChatAIRun::$refusal_reason<br>Capell\LiveChat\Models\LiveChatAIRun::$source_document_ids<br>Capell\LiveChat\Models\LiveChatConversation::$metadata<br>Capell\LiveChat\Models\LiveChatConversation::$visitor_company<br>Capell\LiveChat\Models\LiveChatConversation::$visitor_email<br>Capell\LiveChat\Models\LiveChatConversation::$visitor_name<br>Capell\LiveChat\Models\LiveChatConversation::$visitor_phone<br>Capell\LiveChat\Models\LiveChatEscalationRule::$metadata<br>Capell\LiveChat\Models\LiveChatInstallation::$allowed_domains<br>Capell\LiveChat\Models\LiveChatInstallation::$metadata<br>Capell\LiveChat\Models\LiveChatInstallation::$widget_settings<br>Capell\LiveChat\Models\LiveChatKnowledgeDocument::$metadata<br>Capell\LiveChat\Models\LiveChatKnowledgeGap::$metadata<br>Capell\LiveChat\Models\LiveChatKnowledgeGap::$question<br>Capell\LiveChat\Models\LiveChatKnowledgeSource::$content<br>Capell\LiveChat\Models\LiveChatKnowledgeSource::$metadata<br>Capell\LiveChat\Models\LiveChatMessage::$attachments<br>Capell\LiveChat\Models\LiveChatMessage::$body<br>Capell\LiveChat\Models\LiveChatMessage::$metadata<br>live_chat_conversations.ip_hash<br>live_chat_conversations.user_agent_hash<br>live_chat_conversations.uuid<br>live_chat_conversations.visitor_email_hash<br>live_chat_conversations.visitor_phone_hash<br>live_chat_conversations.visitor_token_hash<br>live_chat_knowledge_documents.content<br>live_chat_messages.intent<br>live_chat_messages.role | permissions; 25 permissions | safe; not cacheable; sensitive output; varies by site |
+| capell-app/login-audit | sensitive | 0 | - | - | - | - | policies; 1 permission | safe; not cacheable; no sensitive output; varies by none |
 | capell-app/media-ai | sensitive | 0 | - | - | - | - | panel-auth | safe; not cacheable; no sensitive output; varies by none |
 | capell-app/media-library | low | 0 | - | - | - | - | panel-auth | safe; not cacheable; no sensitive output; varies by none |
 | capell-app/migration-assistant | standard | 0 | - | - | - | - | permissions; 7 permissions | safe; not cacheable; no sensitive output; varies by none |

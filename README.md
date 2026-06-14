@@ -104,6 +104,7 @@ Each package README follows the same shape:
 | [experiments](packages/experiments/README.md)             | `capell-app/experiments`       | Server-side experiments, variants, audience rules, allocation, goals, and winner reporting.   |
 | [ga4-reports](packages/ga4-reports/README.md)             | `capell-app/ga4-reports`       | GA4 dashboard reporting for Capell.                                                           |
 | [insights](packages/insights/README.md)                   | `capell-app/insights`          | First-party insights, visitor journeys, click tracking, and consent management.               |
+| [live-chat](packages/live-chat/README.md)                 | `capell-app/live-chat`         | AI-assisted website chat, lead capture, human handoff, and Contacts sync.                     |
 | [search](packages/search/README.md)                       | `capell-app/search`            | Public site search, optional logging, and admin search insights.                              |
 | [seo-suite](packages/seo-suite/README.md)                 | `capell-app/seo-suite`         | Metadata panels, structured data, social meta, SEO audits, sitemaps, and AI-assisted SEO.     |
 | [site-discovery](packages/site-discovery/README.md)       | `capell-app/site-discovery`    | Public discoverability and sitemap outputs.                                                   |
@@ -142,6 +143,7 @@ Use the [Capell Theme Scale](docs/theme-scale.md) when creating a theme, changin
 | [theme-corporate](packages/theme-corporate/README.md)                           | `capell-app/theme-corporate`              | Free    | Trust-led corporate theme for business and governance content. |
 | [theme-commerce](packages/theme-commerce/README.md)                             | `capell-app/theme-commerce`               | Premium | Editorial commerce theme for product-led pages.                |
 | [theme-education](packages/theme-education/README.md)                           | `capell-app/theme-education`              | Premium | Course and school theme for learning programmes.               |
+| [theme-estate-agents](packages/theme-estate-agents/README.md)                   | `capell-app/theme-estate-agents`          | Premium | Property theme for estate agencies, valuations, and viewings.  |
 | [theme-healthcare](packages/theme-healthcare/README.md)                         | `capell-app/theme-healthcare`             | Premium | Appointment-led healthcare theme for clinics and resources.    |
 | [theme-inertia-bookings](packages/theme-inertia-bookings/README.md)             | `capell-app/theme-inertia-bookings`       | Premium | Inertia bookings theme shell and shared appointment UI.        |
 | [theme-inertia-bookings-react](packages/theme-inertia-bookings-react/README.md) | `capell-app/theme-inertia-bookings-react` | Premium | React components for the Inertia Bookings theme.               |
@@ -151,6 +153,7 @@ Use the [Capell Theme Scale](docs/theme-scale.md) when creating a theme, changin
 | [theme-local-services](packages/theme-local-services/README.md)                 | `capell-app/theme-local-services`         | Premium | Quote-led theme for local service businesses.                  |
 | [theme-nonprofit](packages/theme-nonprofit/README.md)                           | `capell-app/theme-nonprofit`              | Premium | Impact-led theme for charities, campaigns, and civic sites.    |
 | [theme-portfolio](packages/theme-portfolio/README.md)                           | `capell-app/theme-portfolio`              | Premium | Portfolio theme for creators, consultants, and case studies.   |
+| [theme-restaurant](packages/theme-restaurant/README.md)                         | `capell-app/theme-restaurant`             | Premium | Hospitality theme for restaurants, menus, and reservations.    |
 | [theme-saas](packages/theme-saas/README.md)                                     | `capell-app/theme-saas`                   | Premium | Product-led SaaS theme for launches, docs, and pricing.        |
 
 ## Install Pattern

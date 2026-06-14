@@ -51,5 +51,47 @@ return [
         'linkedin' => 'LinkedIn',
         'x' => 'X',
     ],
+    'resources' => [
+        'connections' => 'Social feed connections',
+        'items' => 'Cached social feed items',
+    ],
+    'fields' => [
+        'name' => 'Name',
+        'provider' => 'Provider',
+        'status' => 'Status',
+        'site_id' => 'Site ID',
+        'feed_url' => 'Feed URL',
+        'handle' => 'Handle',
+        'api_key' => 'API key',
+        'meta' => 'Metadata',
+        'sync_status' => 'Sync status',
+        'items' => 'Items',
+        'last_synced_at' => 'Last synced',
+        'last_sync_error' => 'Last sync error',
+        'connection' => 'Connection',
+        'type' => 'Type',
+        'text' => 'Text',
+        'author' => 'Author',
+        'published_at' => 'Published',
+        'permalink' => 'Permalink',
+    ],
+    'statuses' => [
+        'connected' => 'Connected',
+        'disconnected' => 'Disconnected',
+        'error' => 'Error',
+        'pending' => 'Pending',
+    ],
+    'actions' => [
+        'sync_now' => 'Sync now',
+    ],
+    'notifications' => [
+        'connection_synced' => '{0} No new social feed items were synced.|{1} Synced one social feed item.|[2,*] Synced :count social feed items.',
+    ],
+    'commands' => [
+        'sync' => [
+            'description' => 'Sync connected Social Feeds into the cached item table.',
+            'completed' => '{0} No social feed items were synced.|{1} Synced one social feed item.|[2,*] Synced :count social feed items.',
+        ],
+    ],
     'empty' => 'No social posts are available yet.',
 ];

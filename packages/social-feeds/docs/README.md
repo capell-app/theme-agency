@@ -4,10 +4,10 @@ Start at the [package README](../README.md) when deciding whether to install thi
 
 ## Documents
 
-| Document                                | Use                                                                             |
-| --------------------------------------- | ------------------------------------------------------------------------------- |
-| [Overview](overview.md)                 | Package value, provider status, public rendering boundary, and screenshot plan. |
-| [Screenshot contract](screenshots.json) | Marketplace/frontend captures required for package publication.                 |
+| Document                                | Use                                                                                 |
+| --------------------------------------- | ----------------------------------------------------------------------------------- |
+| [Overview](overview.md)                 | Operator workflow, provider status, public rendering boundary, and screenshot plan. |
+| [Screenshot contract](screenshots.json) | Marketplace/frontend captures required for package publication.                     |
 
 ## Related Packages
 

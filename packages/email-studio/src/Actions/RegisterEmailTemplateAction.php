@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Capell\EmailStudio\Actions;
 
 use Capell\EmailStudio\Models\EmailTemplateRegistration;
+use Illuminate\Database\UniqueConstraintViolationException;
 use Lorisleiva\Actions\Concerns\AsAction;
 
 /**
@@ -28,12 +29,6 @@ class RegisterEmailTemplateAction
         string $defaultLocale = 'en',
         bool $isStaticRenderable = false,
     ): EmailTemplateRegistration {
-        $registration = EmailTemplateRegistration::query()
-            ->where('site_scope_key', $siteScopeKey)
-            ->where('package_name', $packageName)
-            ->where('template_key', $key)
-            ->first();
-
         $attributes = [
             'site_id' => $siteId,
             'site_scope_key' => $siteScopeKey,
@@ -46,8 +41,18 @@ class RegisterEmailTemplateAction
             'is_static_renderable' => $isStaticRenderable,
         ];
 
+        $registration = $this->findRegistration($siteScopeKey, $packageName, $key);
+
         if (! $registration instanceof EmailTemplateRegistration) {
-            return EmailTemplateRegistration::query()->create($attributes);
+            try {
+                return EmailTemplateRegistration::query()->create($attributes);
+            } catch (UniqueConstraintViolationException $exception) {
+                $registration = $this->findRegistration($siteScopeKey, $packageName, $key);
+
+                if (! $registration instanceof EmailTemplateRegistration) {
+                    throw $exception;
+                }
+            }
         }
 
         $registration->fill($attributes);
@@ -57,5 +62,17 @@ class RegisterEmailTemplateAction
         }
 
         return $registration;
+    }
+
+    private function findRegistration(
+        string $siteScopeKey,
+        string $packageName,
+        string $key,
+    ): ?EmailTemplateRegistration {
+        return EmailTemplateRegistration::query()
+            ->where('site_scope_key', $siteScopeKey)
+            ->where('package_name', $packageName)
+            ->where('template_key', $key)
+            ->first();
     }
 }

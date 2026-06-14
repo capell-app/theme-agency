@@ -36,6 +36,7 @@ use Capell\EmailStudio\Support\Providers\FakeEmailProviderAdapter;
 use Capell\EmailStudio\Support\Providers\PostmarkEmailProviderAdapter;
 use Capell\EmailStudio\Support\Providers\SmtpEmailProviderAdapter;
 use Capell\EmailStudio\Tests\Fixtures\CapturingEmailStudioMailer;
+use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Storage;
@@ -274,6 +275,31 @@ it('skips email template persistence before migrations create the registration t
         ->persist();
 
     expect($registrations)->toBe([]);
+});
+
+it('skips email template persistence until the registration table has authoring columns', function (): void {
+    $registrationTable = (new EmailTemplateRegistration)->getTable();
+
+    Schema::table($registrationTable, function (Blueprint $table) use ($registrationTable): void {
+        if (Schema::hasColumn($registrationTable, 'is_static_renderable')) {
+            $table->dropColumn('is_static_renderable');
+        }
+
+        if (Schema::hasColumn($registrationTable, 'default_locale')) {
+            $table->dropColumn('default_locale');
+        }
+    });
+
+    $registrations = (new EmailTemplateRegistry)
+        ->register(
+            key: 'welcome',
+            name: 'Welcome',
+            variables: ['name'],
+        )
+        ->persist();
+
+    expect($registrations)->toBe([])
+        ->and(EmailTemplateRegistration::query()->where('template_key', 'welcome')->exists())->toBeFalse();
 });
 
 it('casts email studio model state and links event tracking records', function (): void {

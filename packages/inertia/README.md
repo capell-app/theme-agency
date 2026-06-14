@@ -6,9 +6,9 @@
 
 Capell Inertia is an **Available**, **No schema impact** Capell plugin in the **Capell Frontend** product group. It ships as `capell-app/inertia` and extends these surfaces: frontend.
 
-Shared Inertia runtime bridge for Capell public pages and package-owned frontend routes.
+Shared Inertia runtime bridge for Capell public pages, package-owned frontend routes, and adapter-driven themes.
 
-After install, package and theme developers get a registered Inertia renderer, middleware, root view, safe shared runtime props, and an adapter registry for Vue or React frontend packages.
+After install, the package affects public rendering, public routes, or frontend runtime behaviour.
 
 Status details:
 
@@ -21,19 +21,25 @@ Status details:
 
 ## Why It Matters
 
-**For developers:** The package gives developers package-owned service providers, Actions, Data objects, middleware, and Blade views instead of pushing this behaviour into core or application code.
+**For developers:** The package gives developers package-owned service providers, Actions, Data objects, and Blade views instead of pushing this behaviour into core or application code.
 
-**For teams:** Capell can render public pages through approved Inertia adapters while CMS internals stay out of public payloads.
+**For teams:** Connect Capell public rendering to Inertia adapters with one root view, middleware stack, safe runtime props, and an adapter registry for package-owned Vue or React frontends.
 
 ## Screens And Workflow
 
-No screenshot contract is required for this bridge package. Visual screenshots belong to adapter or theme packages that render actual public pages through the bridge.
+Docs gap: add `docs/screenshots.json` before promoting this package with visual workflow claims.
+
+- Admin index screen if the package has a Filament resource.
+- Create/edit screen if editors create records.
+- Settings/configuration screen when settings exist.
+- Frontend output when the package renders public pages.
+- Package detail or install intent screen when marketplace-owned.
 
 ## Technical Shape
 
 - Service providers: `Capell\Inertia\Providers\InertiaServiceProvider`.
 - Config files: `packages/inertia/config/capell-inertia.php`.
-- Actions: `BuildInertiaPagePropsAction`.
+- Actions: `BuildInertiaPagePropsAction`, `ResolveInertiaAdapterKeyAction`.
 - Data objects: `InertiaAdapterData`.
 - Health checks: `Capell\Inertia\Health\InertiaHealthCheck`.
 - Blade views: `packages/inertia/resources/views/app.blade.php`.
@@ -43,7 +49,7 @@ No screenshot contract is required for this bridge package. Visual screenshots b
 
 This package has no schema impact. It does not declare package-owned migrations or required tables.
 
-It delegates page content and layout payloads to `capell-app/api` and frontend rendering state to `capell-app/frontend`. Adapter packages register client assets and component maps.
+Docs gap: document extension points here if the package delegates persistence to a host package.
 
 ## Install Impact
 
@@ -59,7 +65,6 @@ It delegates page content and layout payloads to `capell-app/api` and frontend r
 ## Common Pitfalls
 
 - Keep public Blade and cached HTML free of authoring markers, model IDs, permissions, signed editor URLs, and lazy database queries.
-- Keep `capell-inertia.adapter` as a string key. Invalid or blank values fall back to `vue` before reaching public props.
 - Keep `composer.json`, `composer.local.json`, `capell.json`, docs, screenshots, and tests aligned when the package surface changes.
 
 ## Troubleshooting
@@ -72,14 +77,13 @@ It delegates page content and layout payloads to `capell-app/api` and frontend r
 ## Quick Start
 
 1. Install the package: `composer require capell-app/inertia`.
-2. Install an adapter/theme package that registers Vue, React, or another Inertia frontend.
-3. Set `CAPELL_INERTIA_ADAPTER` to the adapter key and verify the frontend runtime is `inertia`.
+2. Run the required setup: no package migrations are declared; clear cached config and routes if the host app uses caches.
+3. Verify the package provider is registered and the related frontend, command, or extension point is active.
 
 ## Next Steps
 
 - [Package docs](docs/README.md)
 - [Overview](docs/overview.md)
-- [Improvement plan](docs/improvement-plan.md)
 - [Marketplace assets](docs/assets/marketplace/)
 - [Capell content language plan](../../docs/CONTENT_LANGUAGE_PLAN.md)
 - [Capell documentation design system](../../docs/DESIGN_SYSTEM.md)

@@ -39,7 +39,6 @@ Screenshot contract: `screenshots.json`.
 - Public access request form (frontend, required).
 - Public gated message (frontend, required).
 - Public request CTA component (frontend, required).
-- Public announcement bar (frontend, required).
 
 ## Technical Shape
 
@@ -52,7 +51,7 @@ Screenshot contract: `screenshots.json`.
 - Policies: `AbstractAccessGateResourcePolicy`, `AccessAreaPolicy`, `AccessGateEventPolicy`, `BrowserTokenPolicy`, `ClaimTokenPolicy`, `GrantPolicy`, `RegistrationPolicy`.
 - Events: `RegistrationApproved`.
 - Listeners: `NotifyAdminsOfAccessRequest`.
-- Actions: `ApproveNextRegistrationsAction`, `ApproveRegistrationAction`, `AreaIsCurrentlyGatingAction`, `ConsumeAccessGateClaimTokenAction`, `CreateAccessGateBrowserTokenAction`, `CreateAccessGateClaimTokenAction`, `CreateAccessGateGrantAction`, `CreateRegistrationAction`, `EnsureAccessGateGrantCanIssueTokenAction`, `ExpireRegistrationAction`, `InstallAccessGatePackageAction`, `ListAccessRequestMethodsAction`, `ResolveAccessGateAnnouncementBarAction`, `and 13 more`.
+- Actions: `ApproveNextRegistrationsAction`, `ApproveRegistrationAction`, `AreaIsCurrentlyGatingAction`, `ConsumeAccessGateClaimTokenAction`, `CreateAccessGateBrowserTokenAction`, `CreateAccessGateClaimTokenAction`, `CreateAccessGateGrantAction`, `CreateRegistrationAction`, `EnsureAccessGateGrantCanIssueTokenAction`, `ExpireRegistrationAction`, `InstallAccessGatePackageAction`, `ListAccessRequestMethodsAction`, `and 14 more`.
 - Data objects: `AccessGateAccessResultData`, `AccessRequestMethodData`, `AnnouncementBarData`, `IssuedAccessGateTokenData`, `RegistrationFieldValue`.
 - Command signatures: `capell:access-gate-doctor`, `capell:access-gate-install`, `capell:access-gate-setup`.
 - Console command classes: `AccessGateDoctorCommand`, `AccessGateInstallCommand`, `AccessGateSetupCommand`.

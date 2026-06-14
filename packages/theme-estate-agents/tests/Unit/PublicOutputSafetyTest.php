@@ -62,3 +62,12 @@ it('keeps estate agents public Blade free of database query calls', function ():
         ->not->toContain('->media->')
         ->not->toContain('find(');
 });
+
+it('renders a working skip link target in the public page wrapper', function (): void {
+    $pageView = file_get_contents(__DIR__ . '/../../resources/views/page.blade.php') ?: '';
+
+    expect($pageView)
+        ->toContain('href="#main-content"')
+        ->toContain('id="main-content"')
+        ->toContain('<main');
+});

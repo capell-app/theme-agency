@@ -3,12 +3,17 @@
 declare(strict_types=1);
 
 use Capell\Core\Contracts\Extensions\ExtensionContribution;
+use Capell\Core\Contracts\Extensions\RegistersExtensionAdminResource;
 use Capell\Core\Contracts\Extensions\RegistersExtensionFrontendComponent;
 use Capell\Core\Support\Manifest\ManifestValidator;
 use Capell\SocialFeeds\Blocks\SocialFeedBlockDefinitionProvider;
 use Capell\SocialFeeds\Blocks\SocialFeedBlockRenderer;
+use Capell\SocialFeeds\Filament\Resources\SocialFeedConnections\SocialFeedConnectionResource;
+use Capell\SocialFeeds\Filament\Resources\SocialFeedItems\SocialFeedItemResource;
 use Capell\SocialFeeds\Manifest\SocialFeedConnectionModelContribution;
+use Capell\SocialFeeds\Manifest\SocialFeedConnectionResourceContribution;
 use Capell\SocialFeeds\Manifest\SocialFeedItemModelContribution;
+use Capell\SocialFeeds\Manifest\SocialFeedItemResourceContribution;
 use Capell\SocialFeeds\Manifest\SocialFeedWidgetContribution;
 use Capell\SocialFeeds\Models\SocialFeedConnection;
 use Capell\SocialFeeds\Models\SocialFeedItem;
@@ -30,7 +35,7 @@ it('declares valid Capell extension manifest metadata', function (): void {
         ->and($manifest['marketplace']['screenshots'])->not->toBeEmpty();
 });
 
-it('declares the shipped frontend widget and schema-owned model contributions', function (): void {
+it('declares the shipped admin resources, frontend widget, and schema-owned model contributions', function (): void {
     $manifest = json_decode(
         File::get(dirname(__DIR__, 2) . '/capell.json'),
         true,
@@ -38,13 +43,23 @@ it('declares the shipped frontend widget and schema-owned model contributions', 
     );
 
     expect($manifest['contributes'])->toContain([
-        'type' => 'frontend-component',
-        'class' => SocialFeedWidgetContribution::class,
-        'blockKey' => 'social-feed',
-        'definitionProviderClass' => SocialFeedBlockDefinitionProvider::class,
-        'rendererClass' => SocialFeedBlockRenderer::class,
-        'surface' => 'frontend',
+        'type' => 'admin-resource',
+        'class' => SocialFeedConnectionResourceContribution::class,
+        'resourceClass' => SocialFeedConnectionResource::class,
     ])
+        ->and($manifest['contributes'])->toContain([
+            'type' => 'admin-resource',
+            'class' => SocialFeedItemResourceContribution::class,
+            'resourceClass' => SocialFeedItemResource::class,
+        ])
+        ->and($manifest['contributes'])->toContain([
+            'type' => 'frontend-component',
+            'class' => SocialFeedWidgetContribution::class,
+            'blockKey' => 'social-feed',
+            'definitionProviderClass' => SocialFeedBlockDefinitionProvider::class,
+            'rendererClass' => SocialFeedBlockRenderer::class,
+            'surface' => 'frontend',
+        ])
         ->and($manifest['contributes'])->toContain([
             'type' => 'model',
             'class' => SocialFeedConnectionModelContribution::class,
@@ -55,10 +70,12 @@ it('declares the shipped frontend widget and schema-owned model contributions', 
             'class' => SocialFeedItemModelContribution::class,
             'modelClass' => SocialFeedItem::class,
         ])
+        ->and(class_implements(SocialFeedConnectionResourceContribution::class))->toContain(RegistersExtensionAdminResource::class)
+        ->and(class_implements(SocialFeedItemResourceContribution::class))->toContain(RegistersExtensionAdminResource::class)
         ->and(class_implements(SocialFeedWidgetContribution::class))->toContain(RegistersExtensionFrontendComponent::class)
         ->and(class_implements(SocialFeedConnectionModelContribution::class))->toContain(ExtensionContribution::class)
         ->and(class_implements(SocialFeedItemModelContribution::class))->toContain(ExtensionContribution::class)
-        ->and($manifest['contributionTraceability']['deferredContributions'])->not->toContain('model', 'frontend-component');
+        ->and($manifest['contributionTraceability']['deferredContributions'])->not->toContain('admin-resource', 'model', 'frontend-component');
 });
 
 it('declares committed marketplace assets for every required screenshot capture target', function (): void {
