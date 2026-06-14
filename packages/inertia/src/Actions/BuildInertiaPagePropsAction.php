@@ -43,7 +43,7 @@ class BuildInertiaPagePropsAction
             ),
             'language' => $this->language($language),
             'runtime' => [
-                'adapter' => config('capell-inertia.adapter', 'vue'),
+                'adapter' => ResolveInertiaAdapterKeyAction::run(),
             ],
         ];
     }

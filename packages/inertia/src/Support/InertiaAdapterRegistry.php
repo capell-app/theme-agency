@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Capell\Inertia\Support;
 
+use Capell\Inertia\Actions\ResolveInertiaAdapterKeyAction;
 use Capell\Inertia\Data\InertiaAdapterData;
 
 class InertiaAdapterRegistry
@@ -25,9 +26,7 @@ class InertiaAdapterRegistry
 
     public function active(): ?InertiaAdapterData
     {
-        $key = config('capell-inertia.adapter', 'vue');
-
-        return is_string($key) ? $this->get($key) : null;
+        return $this->get(ResolveInertiaAdapterKeyAction::run());
     }
 
     /**
