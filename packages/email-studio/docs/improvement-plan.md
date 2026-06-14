@@ -1,110 +1,156 @@
-# Email Studio — Improvement & Growth Plan
+# Email Studio - Improvement Plan
 
-> Package: capell-app/email-studio · Kind: package · Tier: premium · Product group: Capell Communications · Bundle: communications · Status: Complete
+- Package: `capell-app/email-studio`
+- Status reviewed: 2026-06-14
+- Primary audience: Capell package developers and Laravel integrators
+- Phase: plan pass only. No implementation has started.
 
-## 1. Snapshot
+## Snapshot
 
-Email Studio is the transactional-email backbone for Capell: it registers reusable templates (with locale/site variants), resolves a delivery profile, renders declared `{{ variable }}` placeholders into a stored snapshot, applies suppression checks, and dispatches a queued `SendEmailJob` that calls a provider adapter to deliver per-recipient and record outcomes. Provider event webhooks write delivery audit events back into `email_events`, while the MailTracker-backed admin surface exposes sent-email records, opens, clicks, stored HTML previews, and retention controls. One-click unsubscribe, inbound replies, and native template/profile authoring remain future product depth outside the completed current manifest scope.
+Email Studio is Capell's package-owned transactional email substrate. It ships as an ordinary Laravel package with Capell admin contributions, Actions, Data objects, models, migrations, settings, queued delivery, MailTracker integration, and package-registered auth/template definitions. That is the right shape for Capell's extension model: packages register capability through service providers and public extension points, while host applications keep control of install, queues, configuration, and frontend output.
 
-- **Surfaces (declared):** `admin`, `frontend`, `console` — in code: `routes/web.php` exposes tokenized provider-event ingestion, MailTracker owns open/click tracking routes, `AdminServiceProvider` owns the read-only sent-email admin resource plus settings management, and the queue/console path owns delivery plus retention.
-- **Key Actions:** `SendEmailAction`, `DeliverEmailMessageAction`, `RenderEmailTemplateAction`, `ResolveEmailTemplateVariantAction`, `RegisterEmailTemplateAction`, `CheckEmailSuppressionAction`, `SuppressEmailAddressAction` (`src/Actions/`).
-- **Models/tables (10 + 1 FK migration):** `email_profiles`, `email_templates`, `email_template_variants`, `email_messages`, `email_recipients`, `email_events`, `email_replies`, `email_suppressions`, `email_template_registrations`, `email_tracking_tokens` (`database/migrations/2026_05_10_190847_*`, plus `2026_05_21_000001_add_site_foreign_keys_to_email_studio_tables`).
-- **Support/infra:** `EmailVariableRenderer`, `EmailProfileResolver`, `EmailProviderRegistry`, `EmailTemplateRegistry`, `EmailAddressNormalizer`; provider adapters `SmtpEmailProviderAdapter`, `PostmarkEmailProviderAdapter` (extends SMTP), `FakeEmailProviderAdapter`; contract `EmailProviderAdapter`.
-- **Dependencies:** requires `capell-app/admin`, `capell-app/core`, `capell-app/frontend`; supports `capell-app/campaign-studio`, `capell-app/form-builder`, `capell-app/insights`; conflicts none.
-- **Declared capabilities:** `delivery-audit`, `mail-tracker-admin`, `mail-tracker-open-click-tracking`, `mail-tracker-retention`, `provider-event-ingestion`, `provider-normalization-foundation`, `provider-adapters`, `suppressions`, `template-rendering`, `transactional-email`. Reply ingestion, native token tracking, and one-click unsubscribe are not listed as shipped capabilities.
-- **Marketplace summary (verbatim):** "Email Studio is Capell's transactional-email engine: site-scoped reusable templates with safe {{ variable }} rendering, pluggable delivery profiles and provider adapters, suppression enforcement, and a queued, auditable per-recipient send pipeline."
-- **Screenshots:** `capell.json` promotes the extension card plus four runner-backed sent-email admin captures. `docs/screenshots.json` declares sent email index/detail and settings-surface capture targets for the Capell screenshot runner.
+Current shipped surfaces:
 
-## 2. Improvements (existing functionality)
+- **Admin:** `AdminServiceProvider` contributes sent email, registered template, template variant, and template theme Filament resources, plus the Email Studio settings group.
+- **Frontend/public:** `routes/web.php` exposes the tokenized provider webhook endpoint at `/mail/provider-events/{token}`. The `FrontendServiceProvider` is currently inert, so the manifest's `frontend` surface means webhook/tracking integration rather than rendered public UI.
+- **Console/queues:** `SendEmailJob`, body pruning, MailTracker purge scheduling, queue names, lock TTL, and retention settings are present.
+- **Auth email integration:** `AuthEmailServiceProvider` registers static auth templates, replaces Laravel verification/password reset `MailMessage` content by default, and optionally sends lifecycle auth emails through `SendEmailAction`.
+- **Template authoring:** package definitions can be registered, previewed, customized into draft variants, activated, themed, and test-sent from admin resources.
+- **Delivery and tracking:** `SendEmailAction` creates message and recipient rows, resolves profiles and renderable templates, checks suppressions, stores snapshots and attachments, and queues delivery through provider adapters. MailTracker captures open/click/content records through package-owned models and admin resources.
+- **Provider events:** tokenized webhooks resolve an `EmailProfile`, optionally validate an HMAC signature, normalize payloads through the configured adapter, write `EmailEvent` rows idempotently, update recipient state, and auto-suppress bounce/complaint recipients.
+- **Public-output safety:** there is no package-owned public Blade page. Public provider webhook responses are JSON/HTTP status only, and package Blade views are email or admin views. Future unsubscribe/reply/tracking routes must preserve the no-authoring-output boundary.
 
-- **Done/Shipped: Wire `EmailStudioHealthCheck` to actually run the 4 declared checks.** Four diagnostics probe template rendering, delivery adapters, suppressions, and provider event/reply normalization foundations with focused pass/fail coverage. — `src/Health/EmailStudioHealthCheck.php`, `tests/Feature/Health/EmailStudioHealthCheckTest.php` — **M**
-- **Done/Shipped: Persist real Symfony transport message IDs for SMTP/Postmark-over-Symfony sends.** `SmtpEmailProviderAdapter::send()` now reads the returned Laravel/Symfony `SentMessage::getMessageId()` and maps that provider transport ID onto every delivered recipient instead of fabricating `smtp-{message}-{recipient}` IDs. `PostmarkEmailProviderAdapter` inherits the same behavior through its Symfony mailer path. The fake adapter remains deterministic for local/test delivery only. — `src/Support/Providers/SmtpEmailProviderAdapter.php`, `tests/Fixtures/CapturingEmailStudioMailer.php`, `tests/Unit/EmailStudioDataAndSupportCoverageTest.php` — **M**
-- **Done/Shipped: `SendEmailJob` retry/backoff/timeout policy.** The queued job now has retry/backoff/timeout handling plus a terminal `failed()` path, and retryable provider exceptions rethrow for the queue instead of immediately marking every recipient permanently failed. — `src/Jobs/SendEmailJob.php`, `src/Actions/DeliverEmailMessageAction.php` — **M**
-- **Done/Shipped: Distinguish transient vs permanent provider failures.** Retryable email delivery exceptions now leave the queue in control; permanent provider failures still record recipient/message outcomes through the delivery Action. — `src/Actions/DeliverEmailMessageAction.php`, `src/Exceptions/RetryableEmailDeliveryException.php` — **M**
-- **Shipped 2026-06-05: Batch recipient status writes in the delivery loop.** `markNewSuppressions` now batches newly suppressed recipients, provider failures update by failure-reason bucket, successful recipient provider IDs write through a single upsert, and message status is derived from known delivery counts instead of re-plucking every recipient status. Manifest `adminQueryBudget` remains 40. — `src/Actions/DeliverEmailMessageAction.php` — **Done**
-- **Done/Shipped: `CheckEmailSuppressionAction` resolves through the container.** `DeliverEmailMessageAction` now calls `resolve(CheckEmailSuppressionAction::class)->handle(...)`, preserving the Action boundary and keeping the suppression check fakeable in tests. — `src/Actions/DeliverEmailMessageAction.php` — **S**
-- **Done/Shipped: Body retention is enforced.** `PruneEmailBodiesAction` and `capell-email-studio:prune-bodies` clear stored rendered HTML/text after the configured retention window, and the package schedules the command daily. — `config/capell-email-studio.php`, `src/Actions/PruneEmailBodiesAction.php`, `src/Console/Commands/PruneEmailBodiesCommand.php` — **M**
-- **Done/Shipped: MailTracker open/click tracking is active and documented.** MailTracker injects the tracking pixel and rewrites links according to `EmailStudioSettings`; the package disables MailTracker's bundled Blade admin route and exposes records through Capell's Filament sent-email resource. Legacy top-level `track_opens` / `track_clicks` keys are documented as compatibility flags. — `src/Actions/ApplyMailTrackerSettingsAction.php`, `src/Filament/Resources/SentEmails/SentEmailResource.php`, `docs/templates-and-providers.md` — **L**
-- **`PostmarkEmailProviderAdapter` is SMTP-in-disguise** — it only overrides `mailerName()` to `'postmark'`; it does not use the Postmark API, capture Postmark message IDs, or verify Postmark webhook signatures. Buyers reading "provider adapters" will expect a real Postmark integration. Either build it on the Postmark HTTP API or rename it to clarify it is "Postmark-over-Symfony-mailer". — `src/Support/Providers/PostmarkEmailProviderAdapter.php` — **M**
-- **`EmailProfileResolver` default-provider ordering is partly inert** — it orders by `provider = default_provider` but still requires `is_default = true`; if multiple defaults exist across scopes the secondary ordering rarely matters, and there's no guard against >1 `is_default` per scope. Add a partial unique index or resolver tie-break test. — `src/Support/EmailProfileResolver.php` — **S**
-- **Locale fallback is opaque** — `ResolveEmailTemplateVariantAction` resolves "requested or current locale before fallbacks" but the fallback chain isn't documented or configurable (no default-locale config key). Document and make the fallback locale a config value. — `src/Actions/ResolveEmailTemplateVariantAction.php` — **S**
+Source areas inspected:
 
-## 3. Missing Features (gaps)
+- `capell.json`, `composer.json`, README, docs, screenshot contract, and marketplace assets.
+- Providers, routes, Actions, Data objects, models, migrations, settings migrations, Filament resources, views, jobs, commands, support registries, provider adapters, health checks, and tests under `packages/email-studio`.
+- Existing screenshots and screenshot contract for sent-email, template, and theme admin surfaces.
 
-- **Done/Shipped: provider webhook + event ingestion.** `POST /mail/provider-events/{token}` resolves `EmailProfile.webhook_endpoint_token_hash`, validates `X-Capell-Email-Studio-Signature` when `provider_settings.webhook_secret` is configured, normalizes payloads through the profile provider adapter, writes idempotent `EmailEvent` rows through `RecordProviderEventAction`, and updates matching recipient statuses/timestamps for sent/delivered/bounced/complained/opened/clicked/replied/failed events. — `routes/web.php`, `src/Http/Controllers/ProviderWebhookController.php`, `src/Actions/RecordProviderEventAction.php`, `src/Actions/ResolveProviderWebhookProfileAction.php`, `src/Actions/ValidateProviderWebhookSignatureAction.php`, `tests/Feature/ProviderWebhookControllerTest.php`
-- **Inbound reply ingestion.** `email_replies`, `EmailReply`, `InboundEmailReplyData`, and `normalizeInboundReply()` exist but are never wired to a route/action. "Replies" in the summary is currently fictional. — table-stakes.
-- **Done/Shipped: MailTracker open/click tracking endpoints.** The package configures MailTracker's pixel and signed redirect tracking routes, maps MailTracker to package-owned `SentEmail` / `SentEmailUrlClicked` models, and exposes the tracked records in Capell admin. The `email_tracking_tokens` table remains reserved for future native Email Studio message tracking. — table stakes closed for current manifest scope.
-- **Unsubscribe / suppression self-service + List-Unsubscribe header.** Suppressions can only be created via `SuppressEmailAddressAction` server-side. No public one-click unsubscribe route, no signed unsubscribe token, no `List-Unsubscribe`/`List-Unsubscribe-Post` headers on outbound mail. This is now effectively mandatory for bulk senders (Gmail/Yahoo 2024 rules). — table-stakes.
-- **Done/Shipped: Admin sent-email surface.** `SentEmailResource` provides a read-only Capell Filament table and detail page for MailTracker sent-email records, opens, clicks, headers, stored HTML previews, and tracked URL click rows; `EmailStudioSettingsSchema` manages tracking, content storage, queue, and retention settings. Native template/profile authoring remains future depth outside the current manifest scope. — table-stakes for delivery visibility closed.
-- **Done/Shipped: bounce/complaint handling loop.** `RecordProviderEventAction` now calls `SuppressEmailAddressAction` for bounced and complained provider events, creating site-scoped provider-event suppressions for the affected recipient after the event is recorded. — `src/Actions/RecordProviderEventAction.php`, `tests/Feature/ProviderWebhookControllerTest.php`
-- **Scheduling / send-at.** `SendEmailData` has no `sendAt`; `SendEmailJob` dispatches immediately. No delayed/scheduled transactional sends. — differentiator.
-- **A/B testing of variants.** `email_template_variants` exists and could host A/B, but `ResolveEmailTemplateVariantAction` only picks by site+locale+active, with no split assignment, weighting, or winner tracking. — differentiator.
-- **Done/Shipped: Delivery/open/click visibility.** The sent-email admin resource surfaces MailTracker opens, clicks, clicked URLs, and stored content state. Deeper aggregate delivery dashboards and Insights feed remain future reporting depth. — differentiator.
-- **Idempotency keys for sends.** No dedupe on `(templateKey, triggeredByType, triggeredById)` — a double-fired listener sends twice. — table-stakes for transactional reliability.
-- **Attachments & inline images.** `SendEmailData`/adapters support neither attachments nor embedded images. — table-stakes for many transactional emails (receipts, tickets).
-- **Done/Shipped: webhook endpoint verification.** Provider events require a per-profile token whose SHA-256 hash is stored on `email_profiles.webhook_endpoint_token_hash`; profiles can also set `provider_settings.webhook_secret` to require `X-Capell-Email-Studio-Signature` HMAC validation over the raw request body. Provider-specific timestamp tolerance remains future depth for real HTTP adapters such as Postmark API webhooks; `webhook_tolerance_seconds` is still unused. — table-stakes (security).
+## Improvements
 
-## 4. Issues / Risks
+- **Refresh docs to match shipped scope.** Several docs still describe provider events as planned and template/profile authoring as future, while `capell.json` and code now ship provider webhooks, template authoring, theme authoring, auth template registration, MailTracker settings, and retention. Update `docs/README.md`, `docs/templates-and-providers.md`, `docs/email-studio-database.md`, and `CHANGELOG.md` before adding more product depth.
+- **Clarify auth email audit semantics.** Verification and password reset replacements render themed `MailMessage` content, but they do not create native `EmailMessage` audit rows through `SendEmailAction`. Optional welcome/verified/login/lockout/reset-success lifecycle emails do. Product copy should avoid saying every auth email gets an Email Studio immutable snapshot unless the replacement path is moved onto the send pipeline.
+- **Harden provider event recipient matching.** `RecordProviderEventAction` falls back from provider message ID to latest matching email hash within the profile. That can attach a webhook event to the wrong recipient when the same address receives repeated messages. Prefer provider IDs as required for status-changing events, or use a stronger fallback with event timestamp/message metadata.
+- **Encrypt or explicitly justify provider secrets.** `EmailProfile.provider_settings` can hold `webhook_secret` and mailer configuration as plaintext JSON. The manifest lists no encrypted fields and no plaintext justification. Add a cast/encrypted value boundary or update the manifest with a deliberate redaction/justification policy.
+- **Align suppression Action resolution.** `DeliverEmailMessageAction` resolves `CheckEmailSuppressionAction` through the container, but `SendEmailAction` constructs it directly when creating recipients. Resolve it consistently so tests and host apps can fake/replace the Action cleanly.
+- **Constrain default delivery profiles.** `EmailProfileResolver` chooses the first default profile by scope/provider ordering, but the schema does not prevent multiple defaults for the same scope. Add a uniqueness rule or deterministic tie-break tests.
+- **Tighten Postmark positioning.** `PostmarkEmailProviderAdapter` is a Symfony mailer adapter that defaults the mailer name to `postmark`; it is not a native Postmark API adapter. Rename/describe it as Postmark-over-Laravel-mailer or build native API sending and webhook verification.
+- **Complete screenshot evidence.** Existing image files cover sent-email index/detail only. `docs/screenshots.json` now requires template index and theme captures too. Generate or mark blockers for those captures before marketplace release.
+- **Add auth service-provider behavior tests.** Existing tests cover `BuildAuthEmailMailMessageAction`, but not the actual `VerifyEmail::toMailUsing`, `ResetPassword::toMailUsing`, and optional auth event listeners. Add focused provider tests for enabled/disabled settings and fallback behavior.
 
-- **Closed: Health checks are functional.** `EmailStudioHealthCheck` now probes the declared template-rendering, provider-delivery, suppression, and provider-event foundation checks with focused coverage. — `src/Health/EmailStudioHealthCheck.php`, `tests/Feature/Health/EmailStudioHealthCheckTest.php`.
-- **Closed: Manifest surfaces align with shipped behavior.** `admin` is backed by the sent-email resource and settings surface, `frontend` is backed by tokenized provider webhooks plus MailTracker tracking routes, and `console` is backed by delivery/retention commands. The manifest still avoids advertising replies, one-click unsubscribe, or native Email Studio template/profile authoring as shipped. — `capell.json`.
-- **Dead schema + Data objects = maintenance debt is shrinking.** `EmailEvent` and `ProviderWebhookEventData` now have a real write path through provider-event ingestion. `EmailReply`, `EmailTrackingToken`, and `InboundEmailReplyData` still await consuming routes/actions. — `src/Models/EmailEvent.php`, `src/Models/EmailReply.php`, `src/Models/EmailTrackingToken.php`.
-- **Closed: Queue resilience gap.** `SendEmailJob` now owns retry/backoff/timeout behavior and terminal failure recording, while retryable delivery exceptions rethrow for the queue. — `src/Jobs/SendEmailJob.php`, `src/Actions/DeliverEmailMessageAction.php`.
-- **Closed: Multi-recipient delivery write amplification reduced.** Recipient statuses now update by suppression/failure bucket and provider IDs write through a single upsert, keeping the current manifest query budget realistic for the package's supported send path. — `src/Actions/DeliverEmailMessageAction.php`.
-- **Closed: Rendered-body retention is enforced.** `PruneEmailBodiesAction` and the scheduled prune command clear stored rendered bodies according to `body_retention_days`. — `src/Actions/PruneEmailBodiesAction.php`, `src/Console/Commands/PruneEmailBodiesCommand.php`.
-- **Suppression hashing is unsalted SHA-256.** `EmailAddressNormalizer::hash()` is `hash('sha256', lowercased-email)`. Email address space is enumerable, so a leaked `email_suppressions` table is trivially reversible via rainbow tables. Consider a keyed HMAC (app-key-derived) if these hashes are meant to protect addresses. — `src/Support/EmailAddressNormalizer.php`.
-- **Public-output safety.** Provider webhook routes return JSON/no-content responses only, MailTracker tracking routes do not render Email Studio admin HTML, and the package still has no public Blade surface. Future unsubscribe/reply routes must keep the same no-admin-output boundary. — `routes/web.php`.
-- **Reply test coverage is still thin relative to future claims.** Tests cover send/deliver/suppression/render/resolve/migrations/relationships and provider-event ingestion. `normalizeInboundReply` is still only asserted as a pure transformer because inbound reply ingestion has not shipped. — `tests/Unit/EmailStudioDataAndSupportCoverageTest.php`.
-- **i18n half-done.** Enum labels resolve through `__('capell-email-studio::generic.statuses.*')` (good), but there is no per-recipient/per-message language column on the message itself and locale fallback is undocumented. Translations only ship `en`. — `src/Enums/EmailMessageStatus.php`, `resources/lang/en/`.
-- **Release notes.** `CHANGELOG.md` should keep tracking future product-depth slices, but the current implementation plan is closed by code, manifest, and test evidence.
+## Missing Features
 
-**Test coverage map (what IS covered):**
+- **Inbound reply ingestion.** `EmailReply`, `InboundEmailReplyData`, and adapter normalizers exist, but there is no route/action that records inbound replies.
+- **One-click unsubscribe.** Suppressions are server-side only. There is no signed unsubscribe route, suppression self-service flow, or `List-Unsubscribe` / `List-Unsubscribe-Post` header support.
+- **Profile and suppression management.** Template and theme authoring are present, but there is no native EmailProfile or EmailSuppression admin resource. Integrators must seed/configure profiles outside the advertised admin workflow.
+- **Native provider depth.** SMTP and fake adapters are real. Postmark currently rides Laravel's mailer abstraction. There are no native HTTP clients, timeout policies, provider-specific webhook timestamp checks, or provider-specific signature formats.
+- **Idempotent send requests.** `SendEmailData` has trigger metadata, but no idempotency key or dedupe guard for listener retries/double-fired events.
+- **Scheduled sends.** Sends dispatch now or run synchronously; there is no `sendAt`/delayed transactional scheduling API.
+- **Aggregate reporting.** Admin users can inspect sent MailTracker records, opens, clicks, and stored content, but there is no aggregate dashboard or Insights contribution.
+- **A/B testing and variant analytics.** Variant versioning exists, but there is no weighted split, assignment, or winner selection.
+- **Public/email compliance helpers.** Bounce/complaint suppression exists. Deliverability compliance still needs unsubscribe headers, domain/profile validation guidance, and provider-specific setup docs.
 
-- _Unit:_ template registration upsert; variable render (escaping + missing-variable modes, preview vs production); variant resolution (site/locale/fallback); Data/enum/normalizer coverage; SMTP delivery happy-path + provider-id mapping; adapter registry + health metadata; registry persistence pre/post migration; service-provider metadata.
-- _Integration:_ deliver (suppression recheck, double-claim guard, stale-claim reclaim); suppression check by hash+scope; send (queued send + cross-site rejection); migrations create tables; model relationships.
-- **What ISN'T covered:** inbound reply ingestion, one-click unsubscribe flow, Postmark HTTP API behavior, idempotency/dedupe, scheduled sends, attachments, native template/profile authoring, and aggregate delivery dashboards. These are future depth rather than current manifest blockers.
+## Issues / Risks
 
-## 5. Marketplace & Selling
+- **P1 - Plaintext webhook secrets.** `provider_settings.webhook_secret` is stored in a regular JSON cast and the manifest has no plaintext justification. This is not public output, but it is sensitive operational configuration. Recommended fix: introduce encrypted profile settings or move secrets into a redacted settings/secret boundary.
+- **P1 - Webhook fallback matching can mutate the wrong recipient.** If a provider webhook lacks `message_id`, the package updates the latest recipient for the same email hash under the profile. Repeated sends to one address make that ambiguous. Recommended fix: avoid status mutation without provider message ID unless the adapter can provide a stronger correlation key.
+- **P2 - Marketplace/docs overclaim audit coverage for auth replacements.** Auth verification/reset replacements render Email Studio templates but do not create native `EmailMessage` audit rows. Recommended fix: either document the distinction or route replacements through the send pipeline.
+- **P2 - Documentation drift can mislead integrators.** The docs still contain planned/future wording for shipped provider webhook behavior and stale gaps around template authoring/retention. Recommended fix: docs alignment should be the first implementation slice.
+- **P2 - Missing profile/suppression admin surface weakens "studio" completeness.** Templates/themes are editable, but delivery profiles and suppressions still need developer/database setup. Recommended fix: add conservative admin resources with permissions, redaction, and tests.
+- **P2 - Default profile ambiguity.** Multiple default profiles per site scope can produce surprising provider selection. Recommended fix: add a migration-level constraint where supported, plus resolver tests.
+- **P3 - Navigation grouping is split between CapellAdmin contribution group and resource translation.** Resources return translated navigation groups, but `AdminServiceProvider` contributes them with literal `EmailStudio`. Recommended fix: use the package translation key or verify contribution grouping behavior in admin tests.
+- **P3 - Docs mention reserved rate-limit/tolerance settings.** Provider webhook rate limiting is active through `capell-email-studio-provider-events`, while `webhook_tolerance_seconds` remains unused. Recommended fix: document which settings are live and which are reserved.
+- **P3 - Changelog is behind newer template authoring work.** `CHANGELOG.md` stops at provider events and older copy alignment. Recommended fix: add concise unreleased entries for template authoring, auth replacements, theme editing, attachments, MailTracker purge, and screenshot contract changes.
 
-**Critique.** The `capell.json` marketplace `summary` and composer `description` now scope to what ships today: safe template rendering, delivery profiles and adapters, suppression enforcement, queued delivery, per-recipient send audit, provider event ingestion, and MailTracker-backed sent-email admin/tracking. Keep the guard test in place so replies and unsubscribe do not reappear in buyer-facing metadata until those flows ship.
+Public/cache safety risk is currently low because Email Studio has no public rendered package page and package views do not query the database directly. The risk rises if unsubscribe, reply ingestion, preview links, or public tracking-token pages are added; those routes must return generic responses and never expose admin/editor metadata, model IDs, field paths, package internals, permissions, signed editor URLs, or authoring selectors.
 
-**Improved 1-sentence summary (honest to current code):**
+## Marketplace & Positioning
 
-> Email Studio is Capell's transactional-email engine: site-scoped reusable templates with safe `{{ variable }}` rendering, pluggable delivery profiles and provider adapters, suppression enforcement, and a queued, auditable per-recipient send pipeline.
+For package developers and Laravel integrators, Email Studio should be positioned as the shared email layer that keeps transactional mail out of core and out of one-off application glue. The proof points are ordinary Laravel package mechanics: Composer install, package service providers, Filament admin resources, Actions/Data boundaries, model ownership, tests, and a provider adapter contract.
 
-**Improved 3–4 sentence description:**
+Recommended honest positioning:
 
-> Email Studio gives every Capell site a reliable transactional-email core. Define reusable, locale- and site-scoped templates that render through a deliberately safe placeholder engine (HTML-escaped, missing-variable-strict in production), then send through delivery profiles backed by pluggable provider adapters. Every send is rendered to an immutable snapshot, screened against site and global suppression lists, and delivered via a queue job that records per-recipient outcomes for support and audit. Provider event webhooks write delivery events back into the audit trail, while the MailTracker-backed admin surface exposes sent-email records, opens, clicks, stored HTML, and retention controls.
+> Email Studio gives Capell packages a shared transactional email layer: registered static templates, editable site and locale variants, branded themes, auth email replacements, queued provider delivery, suppressions, provider event ingestion, and MailTracker-backed sent-email visibility.
 
-**Screenshot/media status.** `capell.json` promotes the extension card plus four runner-backed sent-email admin captures. `docs/screenshots.json` declares sent email index/detail and settings-surface capture targets; the settings target remains runner evidence until the shared settings page reliably exposes the `email_studio` group.
+Use this distinction in marketplace copy:
 
-**Pricing/tier/bundle positioning.** `premium` tier in the `communications` bundle is now defensible for the current scope: operators get the send pipeline, provider event ingestion, suppression enforcement, sent-email admin visibility, open/click tracking, and retention controls. Cross-sell is strong: it already `supports` `campaign-studio` (bulk/marketing sends can reuse templates, profiles, suppressions), `form-builder` (the docs' canonical example is `forms.confirmation`), and `insights` (future aggregate delivery/open/click metrics). Position Email Studio as the **shared sending substrate** that those three plug into.
+- **Template authoring is shipped.** Admins can customize template variants and themes from package-registered defaults.
+- **Delivery audit is shipped for `SendEmailAction`.** It creates Email Studio message/recipient records and queued provider delivery.
+- **Auth verification/reset replacement is shipped as rendered `MailMessage` content.** It should not be sold as native Email Studio audit unless the send path changes.
+- **Provider events are shipped.** Inbound replies are not.
+- **Postmark support is Laravel-mailer based.** Do not imply native Postmark API/webhook semantics until built.
 
-**Top differentiators / value props / target buyer.**
+Target buyer:
 
-- Differentiators: site-scoped (`global` vs `site:N`) templates+suppressions+profiles in one model; immutable rendered snapshot for support reproducibility; provider-agnostic adapter contract; safe-by-default render engine (smaller than Blade, no template injection).
-- Target buyer: Capell agencies/operators running multi-site installs who need branded transactional mail (form confirmations, account/order notifications) with auditability and per-site control — without bolting on a third-party ESP SDK per project.
+- Agencies and Laravel teams running multi-site Capell installs who want one package-owned transactional email layer for form confirmations, auth messages, account notices, and future campaign/insights integration.
 
-**8–12 keywords/tags:** transactional-email, email-templates, email-suppressions, delivery-profiles, provider-adapters, smtp, postmark, email-audit-log, multi-site-email, queued-email, unsubscribe, bounce-handling.
+Keywords/tags:
 
-Completed 2026-06-08. Every current manifest-backed roadmap row is closed: Email Studio now ships functional health checks, retry-aware queued delivery, provider message IDs, body-retention pruning, batched recipient outcome writes, provider webhook ingestion with optional HMAC validation, hard-bounce/complaint suppression, MailTracker open/click tracking, a read-only sent-email admin resource, settings/retention controls, and runner-backed Marketplace media. One-click unsubscribe, inbound replies, Postmark HTTP API depth, scheduled sends, attachments, native template/profile authoring, and aggregate delivery dashboards remain future product-depth candidates rather than active completion blockers.
+- transactional-email
+- email-templates
+- template-authoring
+- auth-email-overrides
+- email-themes
+- delivery-profiles
+- provider-webhooks
+- mail-tracking
+- suppressions
+- queued-email
+- multi-site-email
+- laravel-package
 
-## 6. Prioritized Roadmap
+## Prioritized Roadmap
 
-| Item                                                                                                                                                                                                                                                                                                                       | Bucket | Effort | Impact | Section ref |
-| -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------ | ------ | ------ | ----------- |
-| ✅ Shipped 2026-06-04: Align manifest/composer summary + capabilities to shipped reality. Evidence: manifest/composer/README/docs copy now sell the shipped send/audit pipeline and provider normalization foundations, with tests guarding against replies/events/webhooks/tracking/unsubscribe being advertised as done. | Done   | S      | High   | §5, §4      |
-| ✅ Shipped 2026-06-04: Implement `EmailStudioHealthCheck` to run the 4 declared checks. Evidence: four diagnostics now probe template rendering, delivery adapters, suppressions, and provider event/reply normalization with focused pass/fail tests.                                                                     | Done   | M      | High   | §2, §4      |
-| ✅ Shipped: Add `SendEmailJob` retry/backoff/timeout + `failed()`; split transient vs permanent failures                                                                                                                                                                                                                   | Done   | M      | High   | §2, §4      |
-| ✅ Shipped 2026-06-05: Capture real provider message IDs for SMTP/Postmark-over-Symfony sends. Evidence: SMTP maps `SentMessage::getMessageId()` to delivered recipients with fixture coverage; fake IDs remain local/test only.                                                                                           | Done   | M      | High   | §2, §3      |
-| ✅ Shipped: Enforce `body_retention_days` via scheduled prune command (PII)                                                                                                                                                                                                                                                | Done   | M      | High   | §2, §4      |
-| ✅ Shipped 2026-06-05: Batch recipient status writes in `DeliverEmailMessageAction` (query-budget)                                                                                                                                                                                                                         | Done   | M      | Med    | §2, §4      |
-| Done/Shipped: Provider webhook ingestion route + `RecordProviderEventAction` writes `email_events` and updates recipient status through tokenized endpoint and optional HMAC verification                                                                                                                                  | Done   | L      | High   | §3, §4      |
-| One-click unsubscribe: signed token route + `List-Unsubscribe` headers + self-service suppression                                                                                                                                                                                                                          | Future | M      | High   | §3, §4      |
-| Done/Shipped: Auto-suppress on hard bounce / complaint once events ingest                                                                                                                                                                                                                                                  | Done   | M      | High   | §3          |
-| Done/Shipped: MailTracker sent-email admin surface, settings, tracking controls, and runner-backed sent-email screenshots                                                                                                                                                                                                  | Done   | L      | High   | §3, §5      |
-| Real Postmark adapter (API + message-id + webhook verify) or rename to avoid over-promising                                                                                                                                                                                                                                | Future | M      | Med    | §2, §3      |
-| Inbound reply ingestion route + `RecordInboundReplyAction` (writes `email_replies`)                                                                                                                                                                                                                                        | Future | M      | Med    | §3          |
-| Done/Shipped: MailTracker open/click tracking routes, pixel injection, link rewriting, package-owned models, and Capell admin read surface                                                                                                                                                                                 | Done   | L      | Med    | §2, §3      |
-| Scheduled sends (`sendAt`) + idempotency keys + attachments/inline images                                                                                                                                                                                                                                                  | Future | M      | Med    | §3          |
-| Native template/profile/suppression authoring and aggregate delivery dashboards                                                                                                                                                                                                                                            | Future | L      | Med    | §3, §5      |
+| Priority | Item | Effort | Impact | Notes |
+| --- | --- | --- | --- | --- |
+| P0 | Align docs, changelog, manifest language, screenshot contract, and current feature map | S | High | Fix stale "planned" wording before new implementation. |
+| P0 | Add missing template/theme screenshots or mark runner blockers | S | High | Marketplace evidence currently trails the required screenshot contract. |
+| P1 | Encrypt/redact `EmailProfile.provider_settings` secrets or document plaintext justification | M | High | Sensitive package tier needs a deliberate secret boundary. |
+| P1 | Require strong provider-event recipient correlation before mutating recipient state | M | High | Prevent wrong-recipient status changes for repeated sends. |
+| P1 | Add auth provider hook tests for verification/reset replacements and optional lifecycle emails | M | High | Protects default auth behavior and fallback paths. |
+| P1 | Make profile default selection deterministic and constrained | S-M | Med | Avoid accidental provider drift in multi-profile installs. |
+| P1 | Resolve `CheckEmailSuppressionAction` through the container inside `SendEmailAction` | S | Med | Keeps Action boundaries fakeable and consistent. |
+| P2 | Add delivery profile admin management with redacted secret handling | M-L | High | Closes the biggest operator workflow gap. |
+| P2 | Add suppression admin management and audit-safe release workflow | M | High | Needed for support teams before high-volume use. |
+| P2 | Add one-click unsubscribe plus `List-Unsubscribe` headers | M | High | Important for compliance and bulk-adjacent transactional sends. |
+| P2 | Build inbound reply ingestion route/action | M | Med | Existing data and adapter contracts are ready for this slice. |
+| P2 | Build native Postmark API adapter or relabel current adapter | M | Med | Avoids provider overclaiming and improves webhook semantics. |
+| P3 | Add idempotency keys and delayed send support | M | Med | Reduces duplicate sends and enables scheduled workflows. |
+| P3 | Add aggregate delivery/open/click dashboard or Insights contribution | L | Med | Turns audit records into operator reporting. |
+| P3 | Add variant split testing and winner selection | L | Low-Med | Useful after template usage volume grows. |
+
+## Verification
+
+Plan-pass inspection performed:
+
+- Read package README, docs, manifest, composer metadata, screenshot contract, changelog, providers, routes, migrations, settings, Actions, Data objects, models, Filament resources, views, jobs, commands, provider adapters, health checks, and focused tests.
+- Searched package views/routes for public Blade database access patterns. No public package view queries or lazy model lookups were found.
+- Searched docs/manifest/source for shipped-vs-planned drift around provider events, template authoring, retention, secrets, and sensitive output.
+- Confirmed this worktree has no `composer.local.json` and no host `vendor/bin/pest`; use the Docker harness or install dependencies for executable package tests.
+
+Recommended verification before implementation slices:
+
+```bash
+./capell up
+./capell pest packages/email-studio/tests --configuration=phpunit.xml
+./capell preflight
+```
+
+For docs-only edits in this phase, the smallest useful checks are:
+
+```bash
+git diff --check -- packages/email-studio/docs/improvement-plan.md
+python3 -m json.tool packages/email-studio/capell.json >/dev/null
+python3 -m json.tool packages/email-studio/docs/screenshots.json >/dev/null
+```
+
+## Completion Checklist
+
+- [x] Single-agent plan pass completed.
+- [x] Existing dirty work checked for `packages/email-studio` before editing.
+- [x] Source, docs, manifest, migrations/settings, tests, screenshots, providers, Actions/Data boundaries, admin/queue/email surfaces, and sensitive-output safety inspected.
+- [x] Current shipped features separated from missing features and product-depth candidates.
+- [x] Package-developer/Laravel-integrator positioning included.
+- [x] Focused/static verification run after this document refresh.
+- [x] Focused docs commit created if verification is clean and branch state is safe.
+- [x] No implementation code changes made in this phase.
