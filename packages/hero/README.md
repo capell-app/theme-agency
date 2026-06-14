@@ -6,9 +6,9 @@
 
 Hero is an **Available**, **No schema impact** Capell package in the **Capell Foundation** product group. It ships as `capell-app/hero` and extends these surfaces: admin, frontend, console.
 
-A polished, responsive home hero for every Capell theme - autoplay video or decorative overlay backgrounds, multi-slide carousel, and theme-level styling that pages inherit automatically.
+A polished, responsive home hero for every Capell theme - decorative overlays, responsive image or video backgrounds, a multi-slide carousel, and theme-level styling that pages inherit automatically.
 
-After install, admins get package-owned management surfaces and public users may see package-owned frontend output or routes.
+After install, editors configure hero background/media fields on themes, widgets, and widget assets. Visitors see only ordinary public hero markup: no editor URLs, model IDs, field paths, or authoring controls.
 
 Status details:
 
@@ -23,7 +23,7 @@ Status details:
 
 **For developers:** The package gives developers package-owned service providers, Actions, Data objects, Filament classes, and Blade views instead of pushing this behaviour into core or application code.
 
-**For teams:** A polished, responsive home hero for every Capell theme - autoplay video or decorative overlay backgrounds, multi-slide carousel, and theme-level styling that pages inherit automatically.
+**For teams:** Editors can compose a polished homepage hero from approved fields and media while the frontend stays consistent with the theme.
 
 ## Screens And Workflow
 
@@ -48,7 +48,7 @@ Screenshot contract: `docs/screenshots.json`.
 
 This package has no schema impact. It does not declare package-owned migrations or required tables.
 
-Docs gap: document extension points here if the package delegates persistence to a host package.
+Hero stores its configuration on existing Capell theme, widget, and widget-asset metadata through schema extenders. It does not add tables of its own.
 
 ## Install Impact
 
@@ -77,9 +77,9 @@ Docs gap: document extension points here if the package delegates persistence to
 
 ## Quick Start
 
-1. Install the package: `composer require capell-app/hero`.
-2. Run the required setup: `php artisan capell:hero-setup`.
-3. Open the related Capell admin surface and verify Hero appears.
+1. Install the package in a host Capell app: `composer require capell-app/hero`.
+2. From the host app, run the setup command: `php artisan capell:hero-setup`.
+3. Open theme or layout widget settings and verify the Hero background/media fields appear.
 
 ## Next Steps
 

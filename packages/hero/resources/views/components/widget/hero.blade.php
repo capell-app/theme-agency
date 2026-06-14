@@ -195,6 +195,7 @@
                     :background-position="$hero->pageBackgroundPosition"
                     :background-attachment="$hero->pageBackgroundAttachment"
                     :background-repeat="$hero->pageBackgroundRepeat"
+                    :title="$hero->pageHeroTitle ?: $hero->widgetFallbackTitle"
                     :first="true"
                     :total="1"
                     container-class="container"

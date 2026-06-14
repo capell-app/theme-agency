@@ -48,7 +48,7 @@
         }}
     >
         <x-capell-hero::hero.background :background="$heroBackground" :instance-key="$backgroundKey" />
-        <x-capell-hero::hero.media :media="$heroMedia" />
+        <x-capell-hero::hero.media :media="$heroMedia" :alt="$title" />
 
         @if ($backgroundImage)
             <x-capell::media
