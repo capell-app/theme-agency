@@ -48,10 +48,12 @@ Screenshot contract: `screenshots.json`.
 - Policies: `LoginAuditPolicy`.
 - Listeners: `DetectSuspiciousLoginFromAuthEvent`.
 - Actions: `ApplyLoginAuditSettingsAction`, `BuildLoginAuditsCsvAction`, `BuildLoginAuditsQueryAction`, `DetectSuspiciousLoginAction`, `RecordLoginAuditPurgeAction`, `ResolveLoginAuditIpAddressAction`, `SendLoginAuditAdminAlertAction`, `ShouldTrackAdminActivityAction`, `ShouldTrackUserIpAddressesAction`, `UpdateLastSeenForActorAction`.
+- Manifest contributions: `admin-resource: Capell\LoginAudit\Manifest\LoginAuditAdminResourcesContribution`, `dashboard-widget: Capell\LoginAudit\Manifest\LoginAuditDashboardWidgetContribution`, `health-check: Capell\LoginAudit\Manifest\LoginAuditHealthContribution`, `model: Capell\LoginAudit\Manifest\LoginAuditModelsContribution`, `permission: Capell\LoginAudit\Manifest\LoginAuditPermissionsContribution`, `scheduled-job: Capell\LoginAudit\Manifest\LoginAuditPurgeScheduleContribution`, `setting: Capell\LoginAudit\Manifest\LoginAuditSettingsContribution`.
 - Health checks: `Capell\LoginAudit\Health\LoginAuditHealthCheck`.
 
 ## Data Model
 
+- Required tables: `login_audit`.
 - Models: `LoginAudit`.
 - Migration files: `2026_05_10_190857_01_create_login_audit_table.php`.
 - Migration impact: run host migrations through the package install flow before opening package surfaces.
@@ -60,10 +62,10 @@ Screenshot contract: `screenshots.json`.
 ## Install Impact
 
 - Admin navigation: adds package-owned Filament classes when registered.
-- Permissions: none declared in `capell.json`.
+- Permissions: `View:LoginAudit`.
 - Public routes: none detected in package route files.
 - Database changes: package migrations are declared.
-- Settings: settings classes or settings migrations exist; verify the install flow registers them.
+- Settings: `Capell\LoginAudit\Settings\LoginAuditSettings`.
 - Queues or schedules: none detected in standard package paths.
 - Cache tags: none declared.
 - Commands: none declared.
@@ -71,6 +73,7 @@ Screenshot contract: `screenshots.json`.
 ## Common Pitfalls
 
 - Run migrations before opening package resources or public routes.
+- Configure package settings before testing production-like workflows.
 - Keep `composer.json`, `composer.local.json`, `capell.json`, docs, screenshots, and tests aligned when the package surface changes.
 
 ## Troubleshooting

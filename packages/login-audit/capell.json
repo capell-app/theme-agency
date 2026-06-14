@@ -32,11 +32,50 @@
         "admin": ["Capell\\LoginAudit\\Providers\\AdminServiceProvider"],
         "frontend": []
     },
-    "contributes": [],
+    "contributes": [
+        {
+            "type": "admin-resource",
+            "class": "Capell\\LoginAudit\\Manifest\\LoginAuditAdminResourcesContribution",
+            "resourceClass": "Capell\\LoginAudit\\Filament\\Resources\\LoginAudits\\LoginAuditResource"
+        },
+        {
+            "type": "dashboard-widget",
+            "class": "Capell\\LoginAudit\\Manifest\\LoginAuditDashboardWidgetContribution",
+            "widgetClass": "Capell\\LoginAudit\\Filament\\Widgets\\LoginAuditsWidget",
+            "dashboard": "system-health"
+        },
+        {
+            "type": "model",
+            "class": "Capell\\LoginAudit\\Manifest\\LoginAuditModelsContribution",
+            "modelClass": "Capell\\LoginAudit\\Models\\LoginAudit"
+        },
+        {
+            "type": "setting",
+            "class": "Capell\\LoginAudit\\Manifest\\LoginAuditSettingsContribution",
+            "settingsClass": "Capell\\LoginAudit\\Settings\\LoginAuditSettings",
+            "settingsGroup": "login_audit"
+        },
+        {
+            "type": "permission",
+            "class": "Capell\\LoginAudit\\Manifest\\LoginAuditPermissionsContribution",
+            "permissions": ["View:LoginAudit"]
+        },
+        {
+            "type": "scheduled-job",
+            "class": "Capell\\LoginAudit\\Manifest\\LoginAuditPurgeScheduleContribution",
+            "command": "authentication-log:purge",
+            "frequency": "daily"
+        },
+        {
+            "type": "health-check",
+            "class": "Capell\\LoginAudit\\Manifest\\LoginAuditHealthContribution",
+            "checkClass": "Capell\\LoginAudit\\Health\\LoginAuditHealthCheck"
+        }
+    ],
     "database": {
         "migrations": true,
         "settings": true,
-        "requiredTables": []
+        "requiredTables": ["login_audit"]
     },
     "commands": {
         "install": null,
@@ -44,8 +83,20 @@
         "demo": null,
         "doctor": null
     },
-    "settings": [],
-    "permissions": [],
+    "actions": {
+        "applyLoginAuditSettings": "Capell\\LoginAudit\\Actions\\ApplyLoginAuditSettingsAction",
+        "buildLoginAuditsCsv": "Capell\\LoginAudit\\Actions\\BuildLoginAuditsCsvAction",
+        "buildLoginAuditsQuery": "Capell\\LoginAudit\\Actions\\BuildLoginAuditsQueryAction",
+        "detectSuspiciousLogin": "Capell\\LoginAudit\\Actions\\DetectSuspiciousLoginAction",
+        "recordLoginAuditPurge": "Capell\\LoginAudit\\Actions\\RecordLoginAuditPurgeAction",
+        "resolveLoginAuditIpAddress": "Capell\\LoginAudit\\Actions\\ResolveLoginAuditIpAddressAction",
+        "sendLoginAuditAdminAlert": "Capell\\LoginAudit\\Actions\\SendLoginAuditAdminAlertAction",
+        "shouldTrackAdminActivity": "Capell\\LoginAudit\\Actions\\ShouldTrackAdminActivityAction",
+        "shouldTrackUserIpAddresses": "Capell\\LoginAudit\\Actions\\ShouldTrackUserIpAddressesAction",
+        "updateLastSeenForActor": "Capell\\LoginAudit\\Actions\\UpdateLastSeenForActorAction"
+    },
+    "settings": ["Capell\\LoginAudit\\Settings\\LoginAuditSettings"],
+    "permissions": ["View:LoginAudit"],
     "capabilities": [
         "login-audit",
         "login-audit-admin",
@@ -69,7 +120,11 @@
             "encryptedFields": [],
             "hashedTokenFields": [],
             "redactedOutputClasses": [],
-            "plaintextJustifications": []
+            "plaintextJustifications": [
+                "login_audit.ip_address is retained for security incident review and can be disabled with track_user_ip_addresses.",
+                "login_audit.user_agent is retained as device/browser evidence for access investigations.",
+                "login_audit.location is optional vendor geo metadata controlled by enable_geo_location."
+            ]
         },
         "publicOutput": {
             "cacheSafe": true,
@@ -84,7 +139,7 @@
         },
         "adminSurface": {
             "authorization": "policies",
-            "permissions": []
+            "permissions": ["View:LoginAudit"]
         }
     },
     "performance": {
@@ -176,12 +231,6 @@
         "categories": ["admin", "operations"]
     },
     "contributionTraceability": {
-        "deferredContributions": [
-            "admin-resource",
-            "dashboard-widget",
-            "model",
-            "route",
-            "scheduled-job"
-        ]
+        "deferredContributions": []
     }
 }

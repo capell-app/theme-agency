@@ -12,6 +12,8 @@ use Capell\Admin\Support\Bridges\AdminBridgeRegistrar;
 use Capell\Admin\Support\CapellAdminManager;
 use Capell\Admin\Support\Extensions\ExtensionManagementSurfaceRegistry;
 use Capell\Core\Facades\CapellCore;
+use Capell\Core\Support\CapellCoreManager;
+use Capell\Core\Support\Packages\PackageSurfaceRegistrar;
 use Capell\Core\Support\Settings\SettingsSchemaRegistry;
 use Capell\LoginAudit\Bridges\LoginAuditAdminBridge;
 use Capell\LoginAudit\Extenders\LoginAuditUserSchemaExtender;
@@ -40,6 +42,13 @@ function resetLoginAuditAdminBridgeState(): void
     CapellAdmin::clearAdminSurfaceContributions();
 }
 
+function resetLoginAuditCoreSurfaceState(): void
+{
+    app()->forgetInstance(CapellCoreManager::class);
+    app()->forgetInstance(PackageSurfaceRegistrar::class);
+    CapellCore::clearResolvedInstance(CapellCoreManager::class);
+}
+
 it('declares its login audit provider for auth-context loading', function (): void {
     $manifest = json_decode(
         (string) file_get_contents(dirname(__DIR__, 3) . '/capell.json'),
@@ -51,6 +60,13 @@ it('declares its login audit provider for auth-context loading', function (): vo
 });
 
 it('registers login-audit bridges through package-neutral Capell extension points', function (): void {
+    resetLoginAuditCoreSurfaceState();
+    CapellCore::forcePackageInstalled(LoginAuditServiceProvider::$packageName);
+
+    $provider = new LoginAuditServiceProvider(app());
+    invokeLoginAuditProviderMethod($provider, 'registerModels');
+    invokeLoginAuditProviderMethod($provider, 'registerProtectedTables');
+
     $adminPanelExtenders = collect(app()->tagged(AdminPanelExtender::TAG))
         ->map(fn (object $extender): string => $extender::class);
 
