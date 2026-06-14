@@ -37,3 +37,34 @@ it('publishes package migrations through the canonical Capell publisher instead 
         "\n" . json_encode($offenders, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES),
     );
 });
+
+it('does not register Laravel vendor publish migration tags from package source', function (): void {
+    $sourceFiles = (new Finder)
+        ->in(__DIR__ . '/../../../packages')
+        ->path('/src/')
+        ->name('*.php');
+
+    $offenders = [];
+
+    foreach ($sourceFiles as $sourceFile) {
+        foreach (explode("\n", $sourceFile->getContents()) as $lineNumber => $line) {
+            if (preg_match('/[\'"][^\'"]+-migrations[\'"]/', $line) !== 1) {
+                continue;
+            }
+
+            if (str_contains($line, 'required-migrations')) {
+                continue;
+            }
+
+            $offenders[] = sprintf('%s:%d', $sourceFile->getRelativePathname(), $lineNumber + 1);
+        }
+    }
+
+    sort($offenders);
+
+    expect($offenders)->toBe(
+        [],
+        'Package source must not expose Laravel vendor publish tags for migrations. Use PublishPackageMigrationsAction/capell:publish-migrations so published filenames stay canonical:' .
+        "\n" . json_encode($offenders, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES),
+    );
+});

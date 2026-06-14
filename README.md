@@ -163,6 +163,21 @@ composer require capell-app/<package>
 
 Then run the package install command listed in that package README when it owns migrations, settings, generated pages, demo data, or external setup.
 
+### Migration Publishing
+
+Package migrations must be published through Capell's migration publisher, not Laravel `vendor:publish` migration tags.
+
+Use `Capell\Core\Actions\Install\PublishPackageMigrationsAction` from package install actions. For command-line publishing, use `php artisan capell:publish-migrations --items=capell-app/<package>`.
+
+Do not register or run tags such as `capell-foo-migrations`. Laravel publish tags can stamp files with the current date when copied into a host app, which breaks Capell's canonical package migration ordering and can leave duplicate app migrations behind during fresh installs.
+
+The root architecture tests enforce this rule:
+
+```bash
+vendor/bin/pest tests/Packages/Arch/PackageMigrationPublishContractTest.php --compact
+vendor/bin/pest tests/Packages/Arch/PackageMigrationLoadingTest.php --compact
+```
+
 ## Package Screenshots
 
 Use the full capture path when the screenshot demo app needs to be prepared or refreshed:
