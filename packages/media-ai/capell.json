@@ -30,7 +30,25 @@
         "admin": ["Capell\\MediaAI\\Providers\\MediaAIServiceProvider"],
         "frontend": []
     },
-    "contributes": [],
+    "contributes": [
+        {
+            "type": "configurator",
+            "class": "Capell\\MediaAI\\Manifest\\MediaAIEditActionContribution",
+            "extenderClass": "Capell\\MediaAI\\Filament\\MediaAIEditActionExtender",
+            "tag": "capell-admin:media-edit-actions"
+        },
+        {
+            "type": "configurator",
+            "class": "Capell\\MediaAI\\Manifest\\MediaAIBatchCommandContribution",
+            "command": "media-ai:doctor-batch",
+            "commandClass": "Capell\\MediaAI\\Console\\Commands\\QueueImageDoctorBatchCommand"
+        },
+        {
+            "type": "health-check",
+            "class": "Capell\\MediaAI\\Manifest\\MediaAIHealthContribution",
+            "checkClass": "Capell\\MediaAI\\Health\\MediaAIHealthCheck"
+        }
+    ],
     "database": {
         "migrations": false,
         "settings": false,

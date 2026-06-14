@@ -41,6 +41,7 @@ Screenshot contract: `docs/screenshots.json`.
 - Jobs: `RunImageDoctorJob`.
 - Command signatures: `media-ai:doctor-batch`.
 - Console command classes: `QueueImageDoctorBatchCommand`.
+- Manifest contributions: `configurator: Capell\MediaAI\Manifest\MediaAIBatchCommandContribution`, `configurator: Capell\MediaAI\Manifest\MediaAIEditActionContribution`, `health-check: Capell\MediaAI\Manifest\MediaAIHealthContribution`.
 - Health checks: `Capell\MediaAI\Health\MediaAIHealthCheck`.
 
 ## Data Model

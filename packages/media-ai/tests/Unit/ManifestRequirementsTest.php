@@ -2,6 +2,15 @@
 
 declare(strict_types=1);
 
+use Capell\Admin\Contracts\Extenders\MediaEditActionExtender as AdminMediaEditActionExtender;
+use Capell\Core\Contracts\Extensions\ChecksExtensionHealth;
+use Capell\Core\Contracts\Extensions\ExtensionContribution;
+use Capell\MediaAI\Console\Commands\QueueImageDoctorBatchCommand;
+use Capell\MediaAI\Filament\MediaAIEditActionExtender;
+use Capell\MediaAI\Health\MediaAIHealthCheck;
+use Capell\MediaAI\Manifest\MediaAIBatchCommandContribution;
+use Capell\MediaAI\Manifest\MediaAIEditActionContribution;
+use Capell\MediaAI\Manifest\MediaAIHealthContribution;
 use Illuminate\Support\Facades\File;
 
 /**
@@ -82,6 +91,37 @@ it('declares the shipped media ai console batch command in the package manifest'
         ->and(data_get($manifest, 'dependencies.supports'))->toContain('capell-app/ai-orchestrator')
         ->and(data_get($manifest, 'dependencies.supports'))->toContain('capell-app/media-library')
         ->and(data_get($manifest, 'dependencies.supports'))->toContain('capell-app/seo-suite');
+});
+
+it('declares the media ai extension contributions in the package manifest', function (): void {
+    $manifest = mediaAIManifest();
+
+    expect($manifest['contributes'] ?? [])->toContain(
+        [
+            'type' => 'configurator',
+            'class' => MediaAIEditActionContribution::class,
+            'extenderClass' => MediaAIEditActionExtender::class,
+            'tag' => AdminMediaEditActionExtender::TAG,
+        ],
+        [
+            'type' => 'configurator',
+            'class' => MediaAIBatchCommandContribution::class,
+            'command' => 'media-ai:doctor-batch',
+            'commandClass' => QueueImageDoctorBatchCommand::class,
+        ],
+        [
+            'type' => 'health-check',
+            'class' => MediaAIHealthContribution::class,
+            'checkClass' => MediaAIHealthCheck::class,
+        ],
+    );
+});
+
+it('keeps media ai manifest contribution classes on core extension contracts', function (): void {
+    expect(class_implements(MediaAIEditActionContribution::class))->toContain(ExtensionContribution::class)
+        ->and(class_implements(MediaAIBatchCommandContribution::class))->toContain(ExtensionContribution::class)
+        ->and(class_implements(MediaAIHealthContribution::class))->toContain(ChecksExtensionHealth::class)
+        ->and(MediaAIHealthContribution::compatibleCapellApiVersion())->toBe('^4.0');
 });
 
 it('keeps marketplace screenshots backed by the committed media ai gallery assets', function (): void {
