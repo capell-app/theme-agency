@@ -7,6 +7,7 @@ namespace Capell\AccessGate\Actions;
 use Capell\AccessGate\Data\AnnouncementBarData;
 use Capell\AccessGate\Models\Area;
 use Capell\AccessGate\Support\AccessGateSchema;
+use Capell\AccessGate\Support\AnnouncementLinkUrl;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Lorisleiva\Actions\Concerns\AsAction;
@@ -40,13 +41,16 @@ final class ResolveAccessGateAnnouncementBarAction
         $linkLabel = trim((string) $area->announcement_link_label);
         $linkShortLabel = trim((string) ($area->announcement_link_short_label ?: $linkLabel));
         $linkUrl = trim((string) $area->announcement_link_url);
+        $linkIsRenderable = $linkUrl !== ''
+            && $linkLabel !== ''
+            && AnnouncementLinkUrl::isAllowed($linkUrl);
 
         return new AnnouncementBarData(
             message: $message,
             shortMessage: $shortMessage,
-            linkLabel: $linkLabel !== '' ? $linkLabel : null,
-            linkShortLabel: $linkShortLabel !== '' ? $linkShortLabel : null,
-            linkUrl: $linkUrl !== '' ? $linkUrl : null,
+            linkLabel: $linkIsRenderable ? $linkLabel : null,
+            linkShortLabel: $linkIsRenderable && $linkShortLabel !== '' ? $linkShortLabel : null,
+            linkUrl: $linkIsRenderable ? $linkUrl : null,
         );
     }
 

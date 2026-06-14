@@ -39,31 +39,32 @@ Screenshot contract: `docs/screenshots.json`.
 - Public access request form (frontend, required).
 - Public gated message (frontend, required).
 - Public request CTA component (frontend, required).
+- Public announcement bar (frontend, required).
 
 ## Technical Shape
 
 - Service providers: `Capell\AccessGate\Providers\AccessGateServiceProvider`.
 - Config files: `packages/access-gate/config/access-gate.php`.
-- Migrations: `packages/access-gate/database/migrations/2026_05_10_190838_01_create_access_gate_areas_table.php`, `packages/access-gate/database/migrations/2026_05_10_190838_02_create_access_gate_registrations_table.php`, `packages/access-gate/database/migrations/2026_05_10_190838_03_create_access_gate_grants_table.php`, `packages/access-gate/database/migrations/2026_05_10_190838_04_create_access_gate_claim_tokens_table.php`, `packages/access-gate/database/migrations/2026_05_10_190838_05_create_access_gate_browser_tokens_table.php`, `packages/access-gate/database/migrations/2026_05_10_190838_06_create_access_gate_events_table.php`, `packages/access-gate/database/migrations/2026_06_07_000001_add_claim_landing_url_to_access_gate_areas_table.php`.
+- Migrations: `packages/access-gate/database/migrations/2026_05_10_190838_01_create_access_gate_areas_table.php`, `packages/access-gate/database/migrations/2026_05_10_190838_02_create_access_gate_registrations_table.php`, `packages/access-gate/database/migrations/2026_05_10_190838_03_create_access_gate_grants_table.php`, `packages/access-gate/database/migrations/2026_05_10_190838_04_create_access_gate_claim_tokens_table.php`, `packages/access-gate/database/migrations/2026_05_10_190838_05_create_access_gate_browser_tokens_table.php`, `packages/access-gate/database/migrations/2026_05_10_190838_06_create_access_gate_events_table.php`, `packages/access-gate/database/migrations/2026_06_07_000001_add_claim_landing_url_to_access_gate_areas_table.php`, `packages/access-gate/database/migrations/2026_06_14_000001_add_announcement_bar_fields_to_access_gate_areas_table.php`.
 - Models: `AccessGateModel`, `Area`, `BrowserToken`, `ClaimToken`, `Event`, `Grant`, `Registration`.
 - Filament classes: `AccessAreaResource`, `CreateAccessArea`, `EditAccessArea`, `ListAccessAreas`, `BrowserTokenResource`, `ListBrowserTokens`, `ClaimTokenResource`, `ListClaimTokens`, `AccessGateFilamentOptions`, `AccessGateEventResource`, `ListAccessGateEvents`, `GrantResource`, `and 4 more`.
 - Route files: `packages/access-gate/routes/web.php`.
 - Policies: `AbstractAccessGateResourcePolicy`, `AccessAreaPolicy`, `AccessGateEventPolicy`, `BrowserTokenPolicy`, `ClaimTokenPolicy`, `GrantPolicy`, `RegistrationPolicy`.
 - Events: `RegistrationApproved`.
 - Listeners: `NotifyAdminsOfAccessRequest`.
-- Actions: `ApproveNextRegistrationsAction`, `ApproveRegistrationAction`, `AreaIsCurrentlyGatingAction`, `ConsumeAccessGateClaimTokenAction`, `CreateAccessGateBrowserTokenAction`, `CreateAccessGateClaimTokenAction`, `CreateAccessGateGrantAction`, `CreateRegistrationAction`, `EnsureAccessGateGrantCanIssueTokenAction`, `ExpireRegistrationAction`, `InstallAccessGatePackageAction`, `ListAccessRequestMethodsAction`, `and 13 more`.
-- Data objects: `AccessGateAccessResultData`, `AccessRequestMethodData`, `IssuedAccessGateTokenData`, `RegistrationFieldValue`.
+- Actions: `ApproveNextRegistrationsAction`, `ApproveRegistrationAction`, `AreaIsCurrentlyGatingAction`, `ConsumeAccessGateClaimTokenAction`, `CreateAccessGateBrowserTokenAction`, `CreateAccessGateClaimTokenAction`, `CreateAccessGateGrantAction`, `CreateRegistrationAction`, `EnsureAccessGateGrantCanIssueTokenAction`, `ExpireRegistrationAction`, `InstallAccessGatePackageAction`, `ListAccessRequestMethodsAction`, `ResolveAccessGateAnnouncementBarAction`, `and 13 more`.
+- Data objects: `AccessGateAccessResultData`, `AccessRequestMethodData`, `AnnouncementBarData`, `IssuedAccessGateTokenData`, `RegistrationFieldValue`.
 - Command signatures: `capell:access-gate-doctor`, `capell:access-gate-install`, `capell:access-gate-setup`.
 - Console command classes: `AccessGateDoctorCommand`, `AccessGateInstallCommand`, `AccessGateSetupCommand`.
 - Manifest contributions: `admin-resource: Capell\AccessGate\Manifest\AccessAreaResourceContribution`, `admin-resource: Capell\AccessGate\Manifest\AccessGateEventResourceContribution`, `admin-resource: Capell\AccessGate\Manifest\BrowserTokenResourceContribution`, `admin-resource: Capell\AccessGate\Manifest\ClaimTokenResourceContribution`, `admin-resource: Capell\AccessGate\Manifest\GrantResourceContribution`, `admin-resource: Capell\AccessGate\Manifest\RegistrationResourceContribution`.
 - Health checks: `Capell\AccessGate\Health\AccessGateHealthCheck`.
-- Blade views: `packages/access-gate/resources/views/claimed.blade.php`, `packages/access-gate/resources/views/components/request-cta.blade.php`, `packages/access-gate/resources/views/message.blade.php`, `packages/access-gate/resources/views/request.blade.php`.
+- Blade views: `packages/access-gate/resources/views/claimed.blade.php`, `packages/access-gate/resources/views/components/announcement-bar.blade.php`, `packages/access-gate/resources/views/components/request-cta.blade.php`, `packages/access-gate/resources/views/message.blade.php`, `packages/access-gate/resources/views/request.blade.php`.
 
 ## Data Model
 
 - Required tables: `access_gate_areas`, `access_gate_registrations`, `access_gate_grants`, `access_gate_claim_tokens`, `access_gate_browser_tokens`, `access_gate_events`.
 - Models: `AccessGateModel`, `Area`, `BrowserToken`, `ClaimToken`, `Event`, `Grant`, `Registration`.
-- Migration files: `2026_05_10_190838_01_create_access_gate_areas_table.php`, `2026_05_10_190838_02_create_access_gate_registrations_table.php`, `2026_05_10_190838_03_create_access_gate_grants_table.php`, `2026_05_10_190838_04_create_access_gate_claim_tokens_table.php`, `2026_05_10_190838_05_create_access_gate_browser_tokens_table.php`, `2026_05_10_190838_06_create_access_gate_events_table.php`, `2026_06_07_000001_add_claim_landing_url_to_access_gate_areas_table.php`.
+- Migration files: `2026_05_10_190838_01_create_access_gate_areas_table.php`, `2026_05_10_190838_02_create_access_gate_registrations_table.php`, `2026_05_10_190838_03_create_access_gate_grants_table.php`, `2026_05_10_190838_04_create_access_gate_claim_tokens_table.php`, `2026_05_10_190838_05_create_access_gate_browser_tokens_table.php`, `2026_05_10_190838_06_create_access_gate_events_table.php`, `2026_06_07_000001_add_claim_landing_url_to_access_gate_areas_table.php`, `2026_06_14_000001_add_announcement_bar_fields_to_access_gate_areas_table.php`.
 - Migration impact: run host migrations through the package install flow before opening package surfaces.
 - Deletion/retention behaviour: Docs gap unless the package has an explicit pruning command, retention setting, or tested cascade path.
 

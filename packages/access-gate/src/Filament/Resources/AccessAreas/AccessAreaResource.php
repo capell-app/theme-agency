@@ -17,9 +17,11 @@ use Capell\AccessGate\Filament\Resources\Concerns\AccessGateFilamentOptions;
 use Capell\AccessGate\Models\Area;
 use Capell\AccessGate\Providers\AccessGateServiceProvider;
 use Capell\AccessGate\Support\AccessGateSiteScope;
+use Capell\AccessGate\Support\AnnouncementLinkUrl;
 use Capell\Admin\Support\SiteScope;
 use Capell\Core\Facades\CapellCore;
 use Capell\Core\Models\Site;
+use Closure;
 use Filament\Actions\EditAction;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\KeyValue;
@@ -28,6 +30,7 @@ use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Resources\Resource;
+use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
@@ -129,12 +132,14 @@ final class AccessAreaResource extends Resource
                     ->helperText(__('capell-access-gate::filament.fields.announcement_enabled_help')),
                 TextInput::make('announcement_message')
                     ->label(__('capell-access-gate::filament.fields.announcement_message'))
+                    ->required(fn (Get $get): bool => (bool) $get('announcement_enabled'))
                     ->maxLength(500),
                 TextInput::make('announcement_short_message')
                     ->label(__('capell-access-gate::filament.fields.announcement_short_message'))
                     ->maxLength(120),
                 TextInput::make('announcement_link_label')
                     ->label(__('capell-access-gate::filament.fields.announcement_link_label'))
+                    ->required(fn (Get $get): bool => trim((string) $get('announcement_link_url')) !== '')
                     ->maxLength(120),
                 TextInput::make('announcement_link_short_label')
                     ->label(__('capell-access-gate::filament.fields.announcement_link_short_label'))
@@ -142,10 +147,23 @@ final class AccessAreaResource extends Resource
                 TextInput::make('announcement_link_url')
                     ->label(__('capell-access-gate::filament.fields.announcement_link_url'))
                     ->helperText(__('capell-access-gate::filament.fields.announcement_link_url_help'))
-                    ->maxLength(2048),
+                    ->required(fn (Get $get): bool => trim((string) $get('announcement_link_label')) !== '')
+                    ->maxLength(2048)
+                    ->rules([
+                        static fn (): Closure => static function (string $attribute, mixed $value, Closure $fail): void {
+                            if ($value === null || trim((string) $value) === '') {
+                                return;
+                            }
+
+                            if (! AnnouncementLinkUrl::isAllowed((string) $value)) {
+                                $fail(__('capell-access-gate::filament.validation.announcement_link_url'));
+                            }
+                        },
+                    ]),
                 TagsInput::make('announcement_path_patterns')
                     ->label(__('capell-access-gate::filament.fields.announcement_path_patterns'))
                     ->helperText(__('capell-access-gate::filament.fields.announcement_path_patterns_help'))
+                    ->required(fn (Get $get): bool => (bool) $get('announcement_enabled'))
                     ->columnSpanFull(),
                 KeyValue::make('metadata')
                     ->label(__('capell-access-gate::filament.fields.metadata'))

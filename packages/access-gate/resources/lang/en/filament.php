@@ -90,4 +90,7 @@ return [
         'grants' => 'Grants',
         'registrations' => 'Registrations',
     ],
+    'validation' => [
+        'announcement_link_url' => 'Use a relative path or an http/https URL.',
+    ],
 ];

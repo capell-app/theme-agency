@@ -35,12 +35,15 @@ use Capell\AccessGate\Support\AccessRequestMethodRegistry;
 use Capell\AccessGate\Support\CustomerPortal\AccessGatePortalSelfServiceItemProvider;
 use Capell\AccessGate\Support\Payments\AccessGatePaymentFulfillmentHandler;
 use Capell\AccessGate\Support\RegistrationFieldRegistry;
+use Capell\AccessGate\Support\RenderHooks\RegisterAnnouncementBarHook;
 use Capell\Admin\Data\AdminSurfaceContributionData;
 use Capell\Admin\Facades\CapellAdmin;
 use Capell\Core\Facades\CapellCore;
 use Capell\Core\Support\Packages\AbstractPackageServiceProvider;
 use Capell\CustomerPortal\Contracts\PortalSelfServiceItemProvider;
 use Capell\CustomerPortal\Support\PortalSelfServiceItemRegistry;
+use Capell\Frontend\Enums\RenderHookLocation;
+use Capell\Frontend\Support\Render\FrontendHookRegistrar;
 use Capell\Frontend\Support\Rules\FrontendRuleConditionRegistry;
 use Capell\Payments\Contracts\PaymentFulfillmentHandler;
 use Capell\PublicActions\Support\PublicActionHandlerRegistry;
@@ -114,6 +117,7 @@ class AccessGateServiceProvider extends AbstractPackageServiceProvider
                 ->registerPolicies()
                 ->registerAdminResources()
                 ->registerFrontendRuleConditions()
+                ->registerFrontendRenderHooks()
                 ->registerProtectedTables()
                 ->registerCustomerPortalIntegrations()
                 ->registerPaymentFulfillmentHandler();
@@ -169,6 +173,23 @@ class AccessGateServiceProvider extends AbstractPackageServiceProvider
             $registry->register(HasActiveAccessGateGrantCondition::class);
             $registry->register(MissingActiveAccessGateGrantCondition::class);
         });
+
+        return $this;
+    }
+
+    private function registerFrontendRenderHooks(): self
+    {
+        if (! class_exists(FrontendHookRegistrar::class) || ! $this->app->bound(FrontendHookRegistrar::class)) {
+            return $this;
+        }
+
+        $this->app->make(FrontendHookRegistrar::class)->contribute(
+            location: RenderHookLocation::BodyStart,
+            extension: new RegisterAnnouncementBarHook,
+            owner: self::$packageName,
+            key: 'announcement-bar',
+            cacheSafe: true,
+        );
 
         return $this;
     }

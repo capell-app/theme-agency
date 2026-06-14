@@ -81,7 +81,7 @@ final class GA4ReportsServiceProvider extends AbstractPackageServiceProvider
 
     private function registerModels(): self
     {
-        $this->surface()->models([
+        CapellCore::registerModels([
             GA4ReportsSyncRun::class,
             GA4ReportsDailyMetric::class,
             GA4ReportsPageMetric::class,
@@ -97,6 +97,10 @@ final class GA4ReportsServiceProvider extends AbstractPackageServiceProvider
 
             return;
         }
+
+        $this->app->booting(function (): void {
+            $this->registerInstalledPackageSurfaces();
+        });
 
         $this->app->booted(function (): void {
             $this->registerInstalledPackageSurfaces();
