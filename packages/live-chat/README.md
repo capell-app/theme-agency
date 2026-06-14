@@ -27,7 +27,7 @@ Status details:
 
 ## Screens And Workflow
 
-Screenshot contract: `screenshots.json`.
+Screenshot contract: `docs/screenshots.json`.
 
 - live-chat-widget (optional).
 - live-chat-conversations-admin (optional).
@@ -91,13 +91,14 @@ Screenshot contract: `screenshots.json`.
 
 ## Next Steps
 
-- [Package docs index](README.md)
-- [Screenshot contract](screenshots.json)
-- [Marketplace assets](assets/marketplace/)
-- [Capell content language plan](../../../docs/CONTENT_LANGUAGE_PLAN.md)
-- [Capell documentation design system](../../../docs/DESIGN_SYSTEM.md)
-- [Capell and package ERD notes](../../../docs/erd/capell-and-package-erds.md)
-- Related packages: [Contacts](../../contacts/README.md), [Agent Bridge](../../agent-bridge/README.md), [Ai Orchestrator](../../ai-orchestrator/README.md), [Email Studio](../../email-studio/README.md), [Knowledge Base](../../knowledge-base/README.md), [Privacy Center](../../privacy-center/README.md).
+- [Package docs](docs/README.md)
+- [Overview](docs/overview.md)
+- [Screenshot contract](docs/screenshots.json)
+- [Marketplace assets](docs/assets/marketplace/)
+- [Capell content language plan](../../docs/CONTENT_LANGUAGE_PLAN.md)
+- [Capell documentation design system](../../docs/DESIGN_SYSTEM.md)
+- [Capell and package ERD notes](../../docs/erd/capell-and-package-erds.md)
+- Related packages: [Contacts](../contacts/README.md), [Agent Bridge](../agent-bridge/README.md), [Ai Orchestrator](../ai-orchestrator/README.md), [Email Studio](../email-studio/README.md), [Knowledge Base](../knowledge-base/README.md), [Privacy Center](../privacy-center/README.md).
 - Focused tests: `vendor/bin/pest packages/live-chat/tests --configuration=phpunit.xml`.
 
 <!-- prettier-ignore-end -->

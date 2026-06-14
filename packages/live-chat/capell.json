@@ -125,6 +125,7 @@
         "detectLiveChatIntent": "Capell\\LiveChat\\Actions\\DetectLiveChatIntentAction",
         "generateLiveChatSummary": "Capell\\LiveChat\\Actions\\GenerateLiveChatSummaryAction",
         "guardLiveChatInstallationOrigin": "Capell\\LiveChat\\Actions\\GuardLiveChatInstallationOriginAction",
+        "guardLiveChatSameSiteRequest": "Capell\\LiveChat\\Actions\\GuardLiveChatSameSiteRequestAction",
         "indexLiveChatKnowledgeDocument": "Capell\\LiveChat\\Actions\\IndexLiveChatKnowledgeDocumentAction",
         "indexLiveChatKnowledgeSource": "Capell\\LiveChat\\Actions\\IndexLiveChatKnowledgeSourceAction",
         "recordLiveChatAIRun": "Capell\\LiveChat\\Actions\\RecordLiveChatAIRunAction",
@@ -136,6 +137,7 @@
         "resolveLiveChatInstallation": "Capell\\LiveChat\\Actions\\ResolveLiveChatInstallationAction",
         "resolveLiveChatAvailability": "Capell\\LiveChat\\Actions\\ResolveLiveChatAvailabilityAction",
         "startLiveChatConversation": "Capell\\LiveChat\\Actions\\StartLiveChatConversationAction",
+        "storeLiveChatAttachments": "Capell\\LiveChat\\Actions\\StoreLiveChatAttachmentsAction",
         "storeLiveChatMessage": "Capell\\LiveChat\\Actions\\StoreLiveChatMessageAction",
         "suggestLiveChatHumanReply": "Capell\\LiveChat\\Actions\\SuggestLiveChatHumanReplyAction",
         "syncLiveChatConversationContact": "Capell\\LiveChat\\Actions\\SyncLiveChatConversationContactAction"

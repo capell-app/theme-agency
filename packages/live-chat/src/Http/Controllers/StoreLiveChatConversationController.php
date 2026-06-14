@@ -6,6 +6,7 @@ namespace Capell\LiveChat\Http\Controllers;
 
 use Capell\LiveChat\Actions\ApplyLiveChatCorsHeadersAction;
 use Capell\LiveChat\Actions\GuardLiveChatInstallationOriginAction;
+use Capell\LiveChat\Actions\GuardLiveChatSameSiteRequestAction;
 use Capell\LiveChat\Actions\ResolveLiveChatInstallationAction;
 use Capell\LiveChat\Actions\StartLiveChatConversationAction;
 use Capell\LiveChat\Actions\StoreLiveChatAttachmentsAction;
@@ -26,13 +27,21 @@ final class StoreLiveChatConversationController
         $publicKey = $this->nullableString($request->route('public_key'));
         $installation = $publicKey === null ? null : (new ResolveLiveChatInstallationAction)->handle($publicKey);
         $origin = null;
+        $validated = $request->validated();
 
         if ($publicKey !== null) {
             abort_if($installation === null, 404);
             $origin = (new GuardLiveChatInstallationOriginAction)->handle($installation, $request);
+        } else {
+            $installation = ResolveLiveChatInstallationAction::run();
+
+            abort_if($installation === null, 404);
+
+            GuardLiveChatSameSiteRequestAction::run($installation, $request);
         }
 
-        $siteId = $installation !== null ? $installation->site_id : $this->defaultSiteId();
+        abort_if($this->nullableString($validated['visitor_token'] ?? null) === null, 403);
+
         $conversationUuid = (string) Str::uuid();
         $attachments = (new StoreLiveChatAttachmentsAction)->handle(
             files: $this->uploadedFiles($request->file('attachments', [])),
@@ -40,11 +49,11 @@ final class StoreLiveChatConversationController
         );
 
         $data = $this->incomingMessageData(
-            array_replace($request->validated(), ['conversation_uuid' => $conversationUuid]),
+            array_replace($validated, ['conversation_uuid' => $conversationUuid]),
             $attachments,
         );
 
-        $result = (new StartLiveChatConversationAction)->handle($data, $siteId, $installation);
+        $result = (new StartLiveChatConversationAction)->handle($data, $installation->site_id, $installation);
 
         return $this->publicResponse(response()->json($this->responsePayload(
             $result['conversation'],
@@ -100,7 +109,6 @@ final class StoreLiveChatConversationController
     private function messagePayload(LiveChatMessage $message): array
     {
         return [
-            'id' => $message->getKey(),
             'role' => $message->role->value,
             'body' => $message->body,
             'requires_contact' => $message->requires_contact,
@@ -117,12 +125,5 @@ final class StoreLiveChatConversationController
         (new ApplyLiveChatCorsHeadersAction)->handle($response, $origin);
 
         return $response;
-    }
-
-    private function defaultSiteId(): int
-    {
-        $siteId = config('capell-live-chat.default_site_id');
-
-        return is_int($siteId) || (is_string($siteId) && ctype_digit($siteId)) ? (int) $siteId : 1;
     }
 }

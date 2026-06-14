@@ -13,6 +13,7 @@ use Capell\LiveChat\Actions\BuildLiveChatTranscriptAction;
 use Capell\LiveChat\Actions\BuildLiveChatWidgetConfigAction;
 use Capell\LiveChat\Actions\CloseLiveChatConversationAction;
 use Capell\LiveChat\Actions\GenerateLiveChatSummaryAction;
+use Capell\LiveChat\Actions\GuardLiveChatSameSiteRequestAction;
 use Capell\LiveChat\Actions\IndexLiveChatKnowledgeDocumentAction;
 use Capell\LiveChat\Actions\IndexLiveChatKnowledgeSourceAction;
 use Capell\LiveChat\Actions\RecordLiveChatAIRunAction;
@@ -20,6 +21,7 @@ use Capell\LiveChat\Actions\RecordLiveChatKnowledgeGapAction;
 use Capell\LiveChat\Actions\RequestLiveChatHandoffAction;
 use Capell\LiveChat\Actions\SearchLiveChatKnowledgeDocumentsAction;
 use Capell\LiveChat\Actions\StartLiveChatConversationAction;
+use Capell\LiveChat\Actions\StoreLiveChatAttachmentsAction;
 use Capell\LiveChat\Actions\StoreLiveChatMessageAction;
 use Capell\LiveChat\Actions\SuggestLiveChatHumanReplyAction;
 use Capell\LiveChat\Actions\SyncLiveChatConversationContactAction;
@@ -211,6 +213,7 @@ it('declares the live chat package manifest contract', function (): void {
             'buildLiveChatWidgetConfig' => BuildLiveChatWidgetConfigAction::class,
             'closeLiveChatConversation' => CloseLiveChatConversationAction::class,
             'generateLiveChatSummary' => GenerateLiveChatSummaryAction::class,
+            'guardLiveChatSameSiteRequest' => GuardLiveChatSameSiteRequestAction::class,
             'indexLiveChatKnowledgeDocument' => IndexLiveChatKnowledgeDocumentAction::class,
             'indexLiveChatKnowledgeSource' => IndexLiveChatKnowledgeSourceAction::class,
             'recordLiveChatAIRun' => RecordLiveChatAIRunAction::class,
@@ -218,6 +221,7 @@ it('declares the live chat package manifest contract', function (): void {
             'requestLiveChatHandoff' => RequestLiveChatHandoffAction::class,
             'searchLiveChatKnowledgeDocuments' => SearchLiveChatKnowledgeDocumentsAction::class,
             'startLiveChatConversation' => StartLiveChatConversationAction::class,
+            'storeLiveChatAttachments' => StoreLiveChatAttachmentsAction::class,
             'storeLiveChatMessage' => StoreLiveChatMessageAction::class,
             'suggestLiveChatHumanReply' => SuggestLiveChatHumanReplyAction::class,
             'syncLiveChatConversationContact' => SyncLiveChatConversationContactAction::class,
@@ -275,5 +279,8 @@ it('checks live chat health dependencies are discoverable', function (): void {
         ->and($healthCheck->missingTables())->toBe([])
         ->and($healthCheck->unregisteredMorphAliases())->toBe([])
         ->and($healthCheck->unresolvableActions())->toBe([])
+        ->and($healthCheck->missingRoutes())->toBe([])
+        ->and($healthCheck->missingAdminResources())->toBe([])
+        ->and($healthCheck->unresolvableWidgetSurfaces())->toBe([])
         ->and($healthCheck->passes())->toBeTrue();
 });

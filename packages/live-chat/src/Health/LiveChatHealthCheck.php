@@ -6,20 +6,34 @@ namespace Capell\LiveChat\Health;
 
 use Capell\Core\Contracts\Extensions\ChecksExtensionHealth;
 use Capell\LiveChat\Actions\ApplyLiveChatCorsHeadersAction;
+use Capell\LiveChat\Actions\BuildLiveChatAnalyticsAction;
 use Capell\LiveChat\Actions\BuildLiveChatOperatorStateAction;
 use Capell\LiveChat\Actions\BuildLiveChatSuggestedReplyAction;
+use Capell\LiveChat\Actions\BuildLiveChatTranscriptAction;
 use Capell\LiveChat\Actions\BuildLiveChatWidgetConfigAction;
 use Capell\LiveChat\Actions\CloseLiveChatConversationAction;
+use Capell\LiveChat\Actions\DetectLiveChatIntentAction;
+use Capell\LiveChat\Actions\DetermineLiveChatEscalationAction;
 use Capell\LiveChat\Actions\GenerateLiveChatSummaryAction;
 use Capell\LiveChat\Actions\GuardLiveChatInstallationOriginAction;
+use Capell\LiveChat\Actions\GuardLiveChatSameSiteRequestAction;
+use Capell\LiveChat\Actions\IndexLiveChatKnowledgeDocumentAction;
+use Capell\LiveChat\Actions\IndexLiveChatKnowledgeSourceAction;
+use Capell\LiveChat\Actions\RecordLiveChatAIRunAction;
+use Capell\LiveChat\Actions\RecordLiveChatKnowledgeGapAction;
+use Capell\LiveChat\Actions\ReplyToLiveChatMessageAction;
 use Capell\LiveChat\Actions\RequestLiveChatHandoffAction;
+use Capell\LiveChat\Actions\ResolveLiveChatAvailabilityAction;
 use Capell\LiveChat\Actions\ResolveLiveChatConversationForInstallationAction;
 use Capell\LiveChat\Actions\ResolveLiveChatInstallationAction;
 use Capell\LiveChat\Actions\SearchLiveChatKnowledgeDocumentsAction;
 use Capell\LiveChat\Actions\StartLiveChatConversationAction;
+use Capell\LiveChat\Actions\StoreLiveChatAttachmentsAction;
 use Capell\LiveChat\Actions\StoreLiveChatMessageAction;
 use Capell\LiveChat\Actions\SuggestLiveChatHumanReplyAction;
 use Capell\LiveChat\Actions\SyncLiveChatConversationContactAction;
+use Capell\LiveChat\Contracts\LiveChatWidgetRenderer;
+use Capell\LiveChat\Enums\ResourceEnum;
 use Capell\LiveChat\Models\LiveChatAIRun;
 use Capell\LiveChat\Models\LiveChatAvailabilityException;
 use Capell\LiveChat\Models\LiveChatAvailabilityWindow;
@@ -30,8 +44,11 @@ use Capell\LiveChat\Models\LiveChatKnowledgeDocument;
 use Capell\LiveChat\Models\LiveChatKnowledgeGap;
 use Capell\LiveChat\Models\LiveChatKnowledgeSource;
 use Capell\LiveChat\Models\LiveChatMessage;
+use Capell\LiveChat\Support\RenderHooks\RegisterLiveChatWidgetHook;
 use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Schema;
+use Throwable;
 
 final class LiveChatHealthCheck implements ChecksExtensionHealth
 {
@@ -52,20 +69,45 @@ final class LiveChatHealthCheck implements ChecksExtensionHealth
     /** @var list<class-string> */
     private const array ACTIONS = [
         ApplyLiveChatCorsHeadersAction::class,
+        BuildLiveChatAnalyticsAction::class,
         BuildLiveChatOperatorStateAction::class,
         BuildLiveChatSuggestedReplyAction::class,
+        BuildLiveChatTranscriptAction::class,
         BuildLiveChatWidgetConfigAction::class,
         CloseLiveChatConversationAction::class,
+        DetermineLiveChatEscalationAction::class,
+        DetectLiveChatIntentAction::class,
         GenerateLiveChatSummaryAction::class,
         GuardLiveChatInstallationOriginAction::class,
+        GuardLiveChatSameSiteRequestAction::class,
+        IndexLiveChatKnowledgeDocumentAction::class,
+        IndexLiveChatKnowledgeSourceAction::class,
+        RecordLiveChatAIRunAction::class,
+        RecordLiveChatKnowledgeGapAction::class,
+        ReplyToLiveChatMessageAction::class,
         RequestLiveChatHandoffAction::class,
+        ResolveLiveChatAvailabilityAction::class,
         ResolveLiveChatConversationForInstallationAction::class,
         ResolveLiveChatInstallationAction::class,
         SearchLiveChatKnowledgeDocumentsAction::class,
         StartLiveChatConversationAction::class,
+        StoreLiveChatAttachmentsAction::class,
         StoreLiveChatMessageAction::class,
         SuggestLiveChatHumanReplyAction::class,
         SyncLiveChatConversationContactAction::class,
+    ];
+
+    /** @var list<string> */
+    private const array ROUTE_NAMES = [
+        'capell-live-chat.widget',
+        'capell-live-chat.widget.script',
+        'capell-live-chat.api.preflight',
+        'capell-live-chat.api.conversations.store',
+        'capell-live-chat.api.messages.store',
+        'capell-live-chat.api.handoff.store',
+        'capell-live-chat.conversations.store',
+        'capell-live-chat.messages.store',
+        'capell-live-chat.handoff.store',
     ];
 
     public static function compatibleCapellApiVersion(): string
@@ -77,7 +119,10 @@ final class LiveChatHealthCheck implements ChecksExtensionHealth
     {
         return $this->missingTables() === []
             && $this->unregisteredMorphAliases() === []
-            && $this->unresolvableActions() === [];
+            && $this->unresolvableActions() === []
+            && $this->missingRoutes() === []
+            && $this->missingAdminResources() === []
+            && $this->unresolvableWidgetSurfaces() === [];
     }
 
     /**
@@ -117,6 +162,59 @@ final class LiveChatHealthCheck implements ChecksExtensionHealth
         }
 
         return $actions;
+    }
+
+    /**
+     * @return list<string>
+     */
+    public function missingRoutes(): array
+    {
+        return array_values(collect(self::ROUTE_NAMES)
+            ->reject(static fn (string $routeName): bool => Route::has($routeName))
+            ->values()
+            ->all());
+    }
+
+    /**
+     * @return list<string>
+     */
+    public function missingAdminResources(): array
+    {
+        return array_values(collect(ResourceEnum::cases())
+            ->map(static fn (ResourceEnum $resource): string => $resource->value)
+            ->reject(static fn (string $resourceClass): bool => class_exists($resourceClass))
+            ->values()
+            ->all());
+    }
+
+    /**
+     * @return list<string>
+     */
+    public function unresolvableWidgetSurfaces(): array
+    {
+        $missing = [];
+
+        try {
+            $renderer = app()->make(LiveChatWidgetRenderer::class);
+        } catch (Throwable) {
+            $renderer = null;
+        }
+
+        if (! $renderer instanceof LiveChatWidgetRenderer) {
+            $missing[] = LiveChatWidgetRenderer::class;
+        }
+
+        if (! class_exists(RegisterLiveChatWidgetHook::class)) {
+            $missing[] = RegisterLiveChatWidgetHook::class;
+        }
+
+        foreach (['capell-live-chat::widget', 'capell-live-chat::script'] as $viewName) {
+            if (! view()->exists($viewName)) {
+                $missing[] = $viewName;
+            }
+        }
+
+        return $missing;
     }
 
     /**
