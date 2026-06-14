@@ -11,6 +11,7 @@ use Capell\Core\Support\Settings\SettingsSchemaRegistry;
 use Capell\GA4Reports\Filament\Pages\GA4ReportsPage;
 use Capell\GA4Reports\Filament\Settings\Contributors\GA4ReportsDashboardSettingsContributor;
 use Capell\GA4Reports\Filament\Settings\GA4ReportsSettingsSchema;
+use Capell\GA4Reports\Filament\Widgets\GA4ReportsOverviewStatsWidget;
 use Capell\GA4Reports\Filament\Widgets\GA4ReportsSetupStatusWidget;
 use Capell\GA4Reports\Filament\Widgets\GA4ReportsTopPagesTableWidget;
 use Capell\GA4Reports\Filament\Widgets\GA4ReportsTopPagesWidget;
@@ -168,8 +169,62 @@ it('renders GA4 dashboard widgets with empty and seeded data', function (string 
 
     Livewire::test($widgetClass)->assertOk();
 })->with([
+    GA4ReportsOverviewStatsWidget::class,
     GA4ReportsTrafficTrendWidget::class,
     GA4ReportsTopPagesWidget::class,
     GA4ReportsTopPagesTableWidget::class,
     GA4ReportsSetupStatusWidget::class,
 ]);
+
+it('surfaces stored event count and average session duration in overview stats', function (): void {
+    configureGA4ReportsFilamentSettings();
+    CarbonImmutable::setTestNow(CarbonImmutable::parse('2026-05-06 12:00:00'));
+
+    GA4ReportsDailyMetric::query()->create([
+        'property_id' => '123456789',
+        'metric_date' => '2026-05-05',
+        'total_users' => 8,
+        'sessions' => 12,
+        'screen_page_views' => 24,
+        'engaged_sessions' => 9,
+        'engagement_rate' => 0.75,
+        'average_session_duration' => 44,
+        'event_count' => 50,
+        'conversions' => 2,
+    ]);
+
+    Livewire::test(GA4ReportsOverviewStatsWidget::class)
+        ->assertOk()
+        ->assertSee('Events')
+        ->assertSee('50')
+        ->assertSee('Avg. session duration')
+        ->assertSee('44.0s');
+
+    CarbonImmutable::setTestNow();
+});
+
+it('reports service account credential readiness without exposing the path', function (): void {
+    $credentialsPath = tempnam(sys_get_temp_dir(), 'ga4-reports-settings-');
+    expect($credentialsPath)->toBeString();
+
+    file_put_contents($credentialsPath, json_encode([
+        'client_email' => 'ga4-reports@example.test',
+        'private_key' => 'fake-service-account-private-key',
+    ], JSON_THROW_ON_ERROR));
+
+    configureGA4ReportsFilamentSettings();
+
+    /** @var GA4ReportsSettings $settings */
+    $settings = app(GA4ReportsSettings::class);
+    $settings->credentials_path = $credentialsPath;
+
+    try {
+        Livewire::test(GA4ReportsSetupStatusWidget::class)
+            ->assertOk()
+            ->assertSee('Credentials file')
+            ->assertSee('Readable service-account JSON')
+            ->assertDontSee($credentialsPath);
+    } finally {
+        unlink($credentialsPath);
+    }
+});

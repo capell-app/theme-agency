@@ -11,15 +11,16 @@ GA4 Reports is a snapshot-based Google Analytics 4 reporting package: a schedule
 - **2026-06-04:** Added bounded retry/backoff configuration for GA4 token and Data API calls, including transient connection failures, GA4 quota exhaustion responses, `Retry-After`, and explicit final quota-exhaustion messaging.
 - **2026-06-05:** Shipped the GA4 Reports cleanup slice: the service provider now falls back to `NullGA4ReportsDataClient` until enabled/property/credentials settings are complete, the stray "GA4 Reports 4" copy is removed from composer/README/lang/command text, and the orphan settings page is absent because settings are managed through the registered `ga4_reports` settings surface. Evidence: `tests/Feature/Package/GA4ReportsPackageTest.php` covers null/real client binding; `src/Providers/AdminServiceProvider.php` registers `GA4ReportsPage` plus the settings management surface only; focused typo checks cover `composer.json`, `README.md`, `resources/lang/en/package.php`, and `src/Console/Commands/SyncGA4ReportsCommand.php`.
 - **2026-06-08:** Added digest/export Actions so local GA4 snapshot data can be assembled once and exported as CSV without hitting GA4 during admin/report rendering.
+- **2026-06-14:** Surfaced stored `event_count` and weighted `average_session_duration` in the overview widget and CSV digest, added a shared credential-path readiness Action/Data object, wired it into settings validation, setup status, and health checks, and made package-local tests register GA4 model surfaces deterministically.
 
 ## 2. Improvements (existing functionality)
 
-- **Surface `averageSessionDuration` and `eventCount`, or stop computing them** — `BuildGA4ReportsOverviewAction::averageSessionDuration()` runs an extra full `->get()` load on every overview render to weight a value no widget or overview stat ever displays; `conversions`/`eventCount` are persisted but `eventCount` is never shown. Either add an "Avg. session duration" / "Events" metric row to `GA4ReportsOverviewStatsWidget` or drop the computation. — `src/Actions/BuildGA4ReportsOverviewAction.php`, `src/Filament/Widgets/GA4ReportsOverviewStatsWidget.php` — S
+- **Done/Shipped 2026-06-14: surfaced `averageSessionDuration` and `eventCount`.** `BuildGA4ReportsOverviewAction` now returns `eventCount`, `GA4ReportsOverviewStatsWidget` renders Events and Avg. session duration rows with previous-window comparisons, and CSV digest export includes the events row. Evidence: focused Actions and Filament tests cover aggregate event count, overview widget output, and CSV export. — `src/Actions/BuildGA4ReportsOverviewAction.php`, `src/Data/GA4ReportsOverviewData.php`, `src/Filament/Widgets/GA4ReportsOverviewStatsWidget.php`, `src/Actions/ExportGA4ReportsDigestCsvAction.php`, `tests/Feature/Actions/GA4ReportsActionsTest.php`, `tests/Feature/Filament/GA4ReportsFilamentTest.php` — S
 - **Shipped 2026-06-06: dashboard read aggregates are cached.** `BuildGA4ReportsOverviewAction`, `BuildGA4ReportsTrendAction`, and `BuildTopGA4ReportsPagesAction` now cache local aggregate DTOs under a short TTL keyed by `property_id`, date window, and top-page limit, with successful syncs invalidating the dashboard cache. `capell.json` now declares the `ga4-reports` cache tag and marks the admin aggregate reads cache-safe because they only render local metric snapshots. — `src/Support/GA4ReportsDashboardCache.php`, `src/Actions/BuildGA4ReportsOverviewAction.php`, `BuildGA4ReportsTrendAction.php`, `BuildTopGA4ReportsPagesAction.php`, `SyncGA4ReportsMetricsAction.php`, `capell.json` — M
 - **Shipped 2026-06-06: overview stats use the dashboard default date range.** `AdminServiceProvider::ga4Overview()` now builds the same current-week dashboard window used by GA4 dashboard widgets before calling `BuildGA4ReportsOverviewAction`, so the three registered overview stats no longer fall back to the package `sync_days` window. Focused coverage seeds a large out-of-window metric and asserts the registered sessions stat only resolves current dashboard-window data. — `src/Providers/AdminServiceProvider.php`, `tests/Feature/Filament/GA4ReportsFilamentTest.php` — S
 - **Shipped 2026-06-06: command follows the `capell:` convention.** `SyncGA4ReportsCommand` now exposes `capell:ga4-reports-sync`, keeps `ga4-reports:sync` as a backward-compatible alias, the schedule uses the Capell command name, and `capell.json.commands.doctor` points at the sync command for discoverability. — `src/Console/Commands/SyncGA4ReportsCommand.php`, `src/Providers/AdminServiceProvider.php`, `capell.json` — S
 - **Shipped 2026-06-06: configurable sync schedule.** `registerSchedule()` now reads `GA4ReportsSettings::$sync_cron` with a config fallback and calls `->cron(...)` instead of hard-coded `->daily()`. The settings schema exposes a translated cron expression field and the package config defaults to `0 2 * * *`. — `src/Providers/AdminServiceProvider.php`, `src/Settings/GA4ReportsSettings.php`, `config/capell-ga4-reports.php` — S
-- **Mark `credentials_path` as a path field, validate existence** — settings `TextInput` has no validation; an unreadable/missing path only surfaces as a runtime `GA4ReportsApiException` deep in a sync run. Add a "file exists & is JSON service account" validation/affordance in `GA4ReportsSettingsSchema` and reflect it in setup status. — `src/Filament/Settings/GA4ReportsSettingsSchema.php`, `src/Filament/Widgets/GA4ReportsSetupStatusWidget.php` — M
+- **Done/Shipped 2026-06-14: validate service-account credential readiness before sync.** `CheckGA4ReportsCredentialsPathAction` returns a typed status for missing, unreadable, invalid JSON, invalid service-account, and valid credentials. Settings validation now rejects bad paths when provided, setup status shows credential readiness without exposing the filesystem path, and health diagnostics reuse the same check. — `src/Actions/CheckGA4ReportsCredentialsPathAction.php`, `src/Data/GA4ReportsCredentialsStatusData.php`, `src/Filament/Settings/GA4ReportsSettingsSchema.php`, `src/Filament/Widgets/GA4ReportsSetupStatusWidget.php`, `src/Health/Ga4ReportsHealthCheck.php`, `tests/Feature/Filament/GA4ReportsFilamentTest.php` — M
 - **Done/Shipped: add a "Sync now" action to the page/setup widget.** — `GA4ReportsPage` now exposes a translated `Sync now` header action that runs `SyncGA4ReportsMetricsAction` and shows the returned success/failure message in a Filament notification. — `src/Filament/Pages/GA4ReportsPage.php` — M
 - **Done/Shipped: surface the last sync error to operators.** — `GA4ReportsSetupStatusWidget` now adds a translated `Last error` row when the latest sync run failed and has a stored error message, capped to a short admin-safe summary. — `src/Filament/Widgets/GA4ReportsSetupStatusWidget.php` — S
 
@@ -32,7 +33,7 @@ Capabilities declared: `ga4-reports`, `ga4-reports-admin`, `ga4-reports-console`
 - **Service-account is the only auth path.** Norm is to also support OAuth user consent (Search Console / GA4 connect-flow) so non-technical owners avoid hand-placing a JSON key file. The contract (`GA4ReportsDataClientInterface`) makes this swappable, but no OAuth client ships. Differentiator vs table-stakes.
 - **Single property only.** `property_id` is a scalar setting; no multi-property selection or property picker, and the schema indexes already key on `property_id`, so multi-property is half-built. Multi-property is a clear premium differentiator for agencies/multi-site owners.
 - **Shipped 2026-06-06: period-over-period widget comparisons.** The GA4 dashboard widgets now derive the immediately preceding window from the selected dashboard date range, show previous-period datasets on the traffic trend chart, add `Vs previous` deltas to overview rows, and compare top-page views against the matching previous-period page path. — `src/Filament/Widgets/Concerns/BuildsGA4ReportsDashboardWindow.php`, `src/Filament/Widgets/GA4ReportsTrafficTrendWidget.php`, `src/Filament/Widgets/GA4ReportsOverviewStatsWidget.php`, `src/Filament/Widgets/GA4ReportsTopPagesWidget.php`, `src/Filament/Widgets/GA4ReportsTopPagesTableWidget.php`
-- **No realtime / no events or conversions breakdown widget.** `eventCount` and `conversions` are stored but only `conversions` appears (as a column); there is no events-by-name or conversions-by-event widget, and no GA4 realtime card. Table stakes for "GA4 reporting".
+- **No realtime / named event breakdown widget.** Aggregate `eventCount` and conversions now appear in overview/digest surfaces, but there is still no events-by-name, conversions-by-event, or GA4 realtime card. Table stakes for deeper "GA4 reporting".
 - **Shipped 2026-06-08: CSV digest/export seam.** `BuildGA4ReportsDigestAction` assembles overview, trend, and top-page local snapshot data; `ExportGA4ReportsDigestCsvAction` serializes that digest to CSV for admin commands, future dashboard downloads, or scheduled-report consumers. PDF output and scheduled email delivery remain future depth.
 - **Dimensions are fixed.** Reports are hardcoded to `date` / `pagePathPlusQueryString` / `pageTitle`; no channel/source-medium, country, or device dimension. No configurable report builder. Differentiator if added.
 
@@ -44,7 +45,7 @@ Capabilities declared: `ga4-reports`, `ga4-reports-admin`, `ga4-reports-console`
 - **Orphan settings page removed.** Settings are surfaced via `registerExtensionManagementSurface` + the `ga4_reports` settings group, and only `GA4ReportsPage` is registered as an extension page. No `GA4ReportsSettingsPage` file remains in the package. — `src/Providers/AdminServiceProvider.php`
 - **Limited caching resilience remains (see §3)** — transient GA4 5xx/429 failures now retry before the sync run fails, and access tokens are cached cross-process in the configured cache store. The sync schedule is still daily by default. — `src/Support/Insights/GA4ReportsDataClient.php`, `src/Providers/AdminServiceProvider.php`
 - **Bound client coverage added; real sync-path exception coverage remains.** `GA4ReportsDataClientTest` exercises `GA4ReportsDataClient` directly, and `tests/Feature/Package/GA4ReportsPackageTest.php` now asserts the container binds the null client when unconfigured and the real client when configured. `SyncGA4ReportsMetricsAction` still uses `FakeGA4ReportsDataClient` for lifecycle/error-path tests. — `tests/Feature/Actions/GA4ReportsActionsTest.php`, `tests/Feature/Package/GA4ReportsPackageTest.php`
-- **Credential/secret handling.** The service-account JSON (containing a private key) lives at an operator-set filesystem path; `credentials_path` is stored in the settings DB and rendered as a plain `TextInput` (path disclosure, no `password()`/masking). The client reads the file each token refresh with an `is_readable` guard and throws typed exceptions — acceptable — but secrets should never be echoed; confirm the path field and any error surfacing never leak the file contents, and mask the path in the UI. Public-output safety is not a concern here (admin-only surfaces, no frontend) but the capell "never leak API credentials" rule still applies to admin error messages. — `src/Filament/Settings/GA4ReportsSettingsSchema.php`, `src/Support/Insights/GA4ReportsDataClient.php`
+- **Done/Shipped 2026-06-14: credential readiness is checked without echoing secrets.** The service-account JSON still lives at an operator-set filesystem path, but the settings field now validates provided paths through a shared Action, the setup widget reports readiness without rendering the path, and health checks reuse the same service-account JSON checks. Public-output safety remains not applicable because the package has no frontend routes. Future hardening can replace raw path entry with a host-managed secret/file picker. — `src/Actions/CheckGA4ReportsCredentialsPathAction.php`, `src/Filament/Settings/GA4ReportsSettingsSchema.php`, `src/Filament/Widgets/GA4ReportsSetupStatusWidget.php`, `src/Health/Ga4ReportsHealthCheck.php`
 - **Performance cache metadata shipped.** `capell.json performance` now keeps `frontendRenderBudgetMs: 0` for the admin-only package, declares the `ga4-reports` cache tag, and marks local aggregate dashboard reads cache-safe by property/date range/limit with invalidation from sync/local metric persistence. — `capell.json`, `src/Support/GA4ReportsDashboardCache.php`
 - **`commercial.privateDocsRequested: true` but `docs/` is public-style.** The README links siblings and renders public OpenGraph preview cards; confirm what is intended to be private vs marketplace-public. — `capell.json`, `README.md`
 - **Done/Shipped: Branding typo "GA4 Reports 4".** The stray "4" copy has been removed from composer, README, language, and command-description surfaces; focused `rg` checks now find no shipped-code copy matches. — `composer.json`, `README.md`, `resources/lang/en/package.php`, `src/Console/Commands/SyncGA4ReportsCommand.php`
@@ -80,7 +81,7 @@ Capabilities declared: `ga4-reports`, `ga4-reports-admin`, `ga4-reports-console`
 
 ## Completion Review
 
-Completed 2026-06-08. The current manifest-backed plan is closed: GA4 Reports ships local snapshot syncing, null-client protection, retry/backoff and quota handling, persisted token cache, configurable schedules, setup/error visibility, dashboard aggregate caching, period-over-period widgets, real health diagnostics, runner-backed screenshots, and CSV digest/export Actions. OAuth connect flow, multi-property selection, realtime/events breakdowns, PDF/scheduled emails, and configurable report dimensions remain future product-depth candidates.
+Completion review refreshed 2026-06-14. The current manifest-backed plan is closed for the approved GA4 Reports slice: GA4 Reports ships local snapshot syncing, null-client protection, retry/backoff and quota handling, persisted token cache, configurable schedules, setup/error visibility, dashboard aggregate caching, period-over-period widgets, aggregate events and average-session-duration reporting, shared credential-readiness validation, real health diagnostics, runner-backed screenshots, and CSV digest/export Actions. OAuth connect flow, multi-property selection, realtime/named-event breakdowns, PDF/scheduled emails, configurable report dimensions, and host-managed credential storage remain future product-depth candidates.
 
 ## 6. Prioritized Roadmap
 
@@ -98,6 +99,8 @@ Completed 2026-06-08. The current manifest-backed plan is closed: GA4 Reports sh
 | Shipped 2026-06-06: Add period-over-period comparison (deltas) to widgets                                | Done    | M      | High   | §3 — overview rows, traffic trend datasets, and top-pages rows compare against the immediately preceding dashboard window. |
 | Shipped 2026-06-06: Persisted/cross-process OAuth token cache                                            | Done    | S      | Med    | §3                                                                                                                         |
 | Done/Shipped: Add "Sync now" page action + surface last sync error                                       | Done    | M      | Med    | §2                                                                                                                         |
+| Done/Shipped 2026-06-14: Surface aggregate Events and Avg. session duration in overview and CSV digest   | Done    | S      | Med    | §2, §3                                                                                                                     |
+| Done/Shipped 2026-06-14: Validate service-account credential readiness in settings/status/health         | Done    | M      | High   | §2, §4                                                                                                                     |
 | Rename command to `capell:` convention; populate manifest `commands`                                     | Done    | S      | Med    | §2 — Done 2026-06-06: primary command is `capell:ga4-reports-sync`; legacy `ga4-reports:sync` remains an alias.            |
 | Shipped 2026-06-06: Configurable sync schedule (frequency/cron via settings)                             | Done    | S      | Med    | §2                                                                                                                         |
 | Shipped 2026-06-08: CSV digest/export Action seam                                                        | Done    | M      | Med    | §3                                                                                                                         |
@@ -106,3 +109,39 @@ Completed 2026-06-08. The current manifest-backed plan is closed: GA4 Reports sh
 | Events/conversions breakdown widget + PDF export & scheduled digest                                      | Future  | L      | Med    | §3                                                                                                                         |
 | Configurable report dimensions (channel, country, device)                                                | Future  | L      | Med    | §3                                                                                                                         |
 | Shipped: Test that the container binds the real client when configured                                   | Done    | S      | Med    | §4                                                                                                                         |
+
+## 7. Verification
+
+Latest focused verification:
+
+```bash
+vendor/bin/pest packages/ga4-reports/tests/Feature/Actions/GA4ReportsActionsTest.php packages/ga4-reports/tests/Feature/Filament/GA4ReportsFilamentTest.php packages/ga4-reports/tests/Feature/Health/GA4ReportsHealthCheckTest.php --configuration=phpunit.xml
+```
+
+Result: passed on 2026-06-14 (35 tests, 145 assertions).
+
+Full package verification:
+
+```bash
+vendor/bin/pest packages/ga4-reports/tests --configuration=phpunit.xml
+```
+
+Result: passed on 2026-06-14 (48 tests, 207 assertions).
+
+Preflight:
+
+```bash
+COMPOSER=composer.local.json composer preflight
+```
+
+Result: passed on 2026-06-14.
+
+## 8. Completion Checklist
+
+- [x] Package plan refreshed against current code.
+- [x] Comprehensive review pass completed locally for Actions, Filament widgets/settings, health checks, docs, manifest, and tests.
+- [x] Capell audience pass completed for package developers/integrators, admin operators, and site-owner marketplace positioning.
+- [x] Approved implementation slice shipped for aggregate metrics and credential readiness.
+- [x] Focused GA4 Reports verification passed.
+- [x] Package tests passed.
+- [x] Repo preflight passed for changed files.

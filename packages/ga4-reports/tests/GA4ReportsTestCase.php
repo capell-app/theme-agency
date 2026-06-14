@@ -7,6 +7,9 @@ namespace Capell\GA4Reports\Tests;
 use Capell\Admin\Facades\CapellAdmin;
 use Capell\Admin\Providers\AdminServiceProvider as CapellAdminServiceProvider;
 use Capell\Core\Facades\CapellCore;
+use Capell\GA4Reports\Models\GA4ReportsDailyMetric;
+use Capell\GA4Reports\Models\GA4ReportsPageMetric;
+use Capell\GA4Reports\Models\GA4ReportsSyncRun;
 use Capell\GA4Reports\Providers\GA4ReportsServiceProvider;
 use Capell\GA4Reports\Settings\GA4ReportsSettingsMigrationProvider;
 use Capell\Tests\AbstractTestCase;
@@ -37,6 +40,12 @@ class GA4ReportsTestCase extends AbstractTestCase
             $googleInsightsSettingsMigrationProvider->getSettingMigrations(),
             $googleInsightsSettingsMigrationProvider->path(),
         );
+
+        CapellCore::registerModels([
+            GA4ReportsSyncRun::class,
+            GA4ReportsDailyMetric::class,
+            GA4ReportsPageMetric::class,
+        ]);
     }
 
     protected function getPackageServiceName(): string

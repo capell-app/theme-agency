@@ -23,7 +23,7 @@ final class BuildGA4ReportsOverviewAction
         $resolvedWindow = $window ?? BuildGA4ReportsWindowAction::run();
 
         if ($resolvedWindow === null) {
-            return new GA4ReportsOverviewData(0, 0, 0, 0, 0.0, 0.0);
+            return new GA4ReportsOverviewData(0, 0, 0, 0, 0, 0.0, 0.0);
         }
 
         return GA4ReportsDashboardCache::rememberOverview(
@@ -46,6 +46,7 @@ final class BuildGA4ReportsOverviewAction
             totalUsers: (int) (clone $query)->sum('total_users'),
             sessions: $sessions,
             screenPageViews: (int) (clone $query)->sum('screen_page_views'),
+            eventCount: (int) (clone $query)->sum('event_count'),
             conversions: (int) (clone $query)->sum('conversions'),
             engagementRate: $sessions === 0 ? 0.0 : round($engagedSessions / $sessions, 4),
             averageSessionDuration: $this->averageSessionDuration($query, $sessions),

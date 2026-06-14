@@ -6,6 +6,7 @@ namespace Capell\GA4Reports\Filament\Widgets;
 
 use Capell\Admin\Contracts\CapellWidgetContract;
 use Capell\Admin\Filament\Concerns\GatedByRoleAndSettings;
+use Capell\GA4Reports\Actions\CheckGA4ReportsCredentialsPathAction;
 use Capell\GA4Reports\Actions\ResolveGA4ReportsConfigAction;
 use Capell\GA4Reports\Models\GA4ReportsSyncRun;
 use Filament\Tables\Columns\TextColumn;
@@ -53,6 +54,7 @@ final class GA4ReportsSetupStatusWidget extends BaseWidget implements CapellWidg
     {
         $config = ResolveGA4ReportsConfigAction::run();
         $latestRun = GA4ReportsSyncRun::query()->latest('started_at')->first();
+        $credentialsStatus = CheckGA4ReportsCredentialsPathAction::run($config->credentialsPath);
 
         $records = collect([
             [
@@ -66,6 +68,11 @@ final class GA4ReportsSetupStatusWidget extends BaseWidget implements CapellWidg
                 'id' => 'property-id',
                 'label' => (string) __('capell-ga4-reports::settings.property_id'),
                 'value' => $config->propertyId !== '' ? (string) $config->propertyId : (string) __('capell-ga4-reports::widgets.not_set'),
+            ],
+            [
+                'id' => 'credentials-status',
+                'label' => (string) __('capell-ga4-reports::widgets.credentials_status'),
+                'value' => (string) __($credentialsStatus->messageKey),
             ],
             [
                 'id' => 'last-sync',

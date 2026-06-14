@@ -54,6 +54,7 @@ final class ExportGA4ReportsDigestCsvAction
             ['overview', 'sessions', (string) $digest->overview->sessions, '', '', '', ''],
             ['overview', 'screen_page_views', (string) $digest->overview->screenPageViews, '', '', '', ''],
             ['overview', 'conversions', (string) $digest->overview->conversions, '', '', '', ''],
+            ['overview', 'event_count', (string) $digest->overview->eventCount, '', '', '', ''],
             ['overview', 'engagement_rate', (string) $digest->overview->engagementRate, '', '', '', ''],
             ['overview', 'average_session_duration', (string) $digest->overview->averageSessionDuration, '', '', '', ''],
         ];

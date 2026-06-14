@@ -12,6 +12,7 @@ final class GA4ReportsOverviewData extends Data
         public readonly int $totalUsers,
         public readonly int $sessions,
         public readonly int $screenPageViews,
+        public readonly int $eventCount,
         public readonly int $conversions,
         public readonly float $engagementRate,
         public readonly float $averageSessionDuration,

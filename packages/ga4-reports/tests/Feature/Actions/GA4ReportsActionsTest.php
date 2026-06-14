@@ -237,6 +237,7 @@ it('builds overview trend and top page data from local tables only', function ()
     expect($overview->screenPageViews)->toBe(55)
         ->and($overview->sessions)->toBe(30)
         ->and($overview->totalUsers)->toBe(13)
+        ->and($overview->eventCount)->toBe(100)
         ->and($overview->conversions)->toBe(4)
         ->and($overview->engagementRate)->toBe(0.6667)
         ->and($overview->averageSessionDuration)->toBe(40.0)
@@ -287,6 +288,7 @@ it('builds GA4 digest data and exports it as CSV', function (): void {
         ->and($digest?->topPages)->toHaveCount(1)
         ->and($csvRows[0])->toBe(['section', 'label', 'value', 'sessions', 'total_users', 'conversions', 'extra'])
         ->and($csvRows)->toContain(['overview', 'screen_page_views', '20', '', '', '', ''])
+        ->and($csvRows)->toContain(['overview', 'event_count', '40', '', '', '', ''])
         ->and($csvRows)->toContain(['top_page', '/pricing', '20', '10', '5', '1', 'Pricing']);
 });
 

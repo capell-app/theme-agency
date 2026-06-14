@@ -59,7 +59,7 @@ final class GA4ReportsOverviewStatsWidget extends BaseWidget implements CapellWi
         $overview = BuildGA4ReportsOverviewAction::run($window);
         $previousOverview = $window instanceof GA4ReportsWindowData
             ? BuildGA4ReportsOverviewAction::run($this->getPreviousGA4ReportsWindow($window))
-            : new GA4ReportsOverviewData(0, 0, 0, 0, 0.0, 0.0);
+            : new GA4ReportsOverviewData(0, 0, 0, 0, 0, 0.0, 0.0);
 
         return collect([
             [
@@ -81,10 +81,22 @@ final class GA4ReportsOverviewStatsWidget extends BaseWidget implements CapellWi
                 'comparison' => $this->formatDelta($overview->totalUsers, $previousOverview->totalUsers),
             ],
             [
+                'id' => 'events',
+                'label' => (string) __('capell-ga4-reports::widgets.events'),
+                'value' => number_format($overview->eventCount),
+                'comparison' => $this->formatDelta($overview->eventCount, $previousOverview->eventCount),
+            ],
+            [
                 'id' => 'engagement-rate',
                 'label' => (string) __('capell-ga4-reports::widgets.engagement_rate'),
                 'value' => number_format($overview->engagementRate * 100, 1) . '%',
                 'comparison' => $this->formatPercentagePointDelta($overview->engagementRate, $previousOverview->engagementRate),
+            ],
+            [
+                'id' => 'average-session-duration',
+                'label' => (string) __('capell-ga4-reports::widgets.average_session_duration'),
+                'value' => $this->formatSeconds($overview->averageSessionDuration),
+                'comparison' => $this->formatSecondsDelta($overview->averageSessionDuration, $previousOverview->averageSessionDuration),
             ],
             [
                 'id' => 'conversions',
@@ -113,5 +125,21 @@ final class GA4ReportsOverviewStatsWidget extends BaseWidget implements CapellWi
         $change = ($current - $previous) * 100;
 
         return sprintf('%+0.1f pp', $change);
+    }
+
+    private function formatSeconds(float $seconds): string
+    {
+        return number_format($seconds, 1) . 's';
+    }
+
+    private function formatSecondsDelta(float $current, float $previous): string
+    {
+        $change = $current - $previous;
+
+        if (abs($change) < 0.05) {
+            return (string) __('capell-ga4-reports::widgets.no_change');
+        }
+
+        return sprintf('%+0.1fs', $change);
     }
 }
