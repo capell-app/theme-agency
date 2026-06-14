@@ -8,7 +8,7 @@ Capell Inertia React Adapter is an **Available**, **No schema impact** Capell pl
 
 React asset adapter for Capell Inertia pages and package routes.
 
-After install, the package affects public rendering, public routes, or frontend runtime behaviour.
+After install, React theme and package developers get registered React/Vite dependencies, a generic React entrypoint, and a bridge adapter key that Capell Inertia can resolve safely.
 
 Status details:
 
@@ -21,19 +21,13 @@ Status details:
 
 ## Why It Matters
 
-**For developers:** The package gives developers package-owned service providers instead of pushing this behaviour into core or application code.
+**For developers:** The package gives developers package-owned service providers and a React client entrypoint instead of pushing adapter behaviour into core or application code.
 
-**For teams:** React adapter for Capell Inertia.
+**For teams:** React-based Capell frontends can share the same Inertia bridge while themes own the actual visual components.
 
 ## Screens And Workflow
 
-Docs gap: add `docs/screenshots.json` before promoting this package with visual workflow claims.
-
-- Admin index screen if the package has a Filament resource.
-- Create/edit screen if editors create records.
-- Settings/configuration screen when settings exist.
-- Frontend output when the package renders public pages.
-- Package detail or install intent screen when marketplace-owned.
+No screenshot contract is required for this generic adapter. Visual screenshots belong to React theme/component packages that render actual public pages through it.
 
 ## Technical Shape
 
@@ -45,7 +39,7 @@ Docs gap: add `docs/screenshots.json` before promoting this package with visual 
 
 This package has no schema impact. It does not declare package-owned migrations or required tables.
 
-Docs gap: document extension points here if the package delegates persistence to a host package.
+It registers adapter metadata and vendor assets with `capell-app/inertia` and `capell-app/core`; it does not persist data.
 
 ## Install Impact
 
@@ -61,6 +55,7 @@ Docs gap: document extension points here if the package delegates persistence to
 ## Common Pitfalls
 
 - Keep public Blade and cached HTML free of authoring markers, model IDs, permissions, signed editor URLs, and lazy database queries.
+- Set `CAPELL_INERTIA_ADAPTER=react` when this generic React build should be used. A richer React theme package may suppress this generic build and provide its own component pack.
 - Keep `composer.json`, `composer.local.json`, `capell.json`, docs, screenshots, and tests aligned when the package surface changes.
 
 ## Troubleshooting
@@ -73,12 +68,13 @@ Docs gap: document extension points here if the package delegates persistence to
 ## Quick Start
 
 1. Install the package: `composer require capell-app/inertia-react-adapter`.
-2. Run the required setup: no package migrations are declared; clear cached config and routes if the host app uses caches.
-3. Verify the package provider is registered and the related frontend, command, or extension point is active.
+2. Set `CAPELL_INERTIA_ADAPTER=react` in the host app.
+3. Verify the Capell Inertia bridge reports the React adapter and that the React build entrypoint is included in vendor assets.
 
 ## Next Steps
 
 - [Package docs index](README.md)
+- [Improvement plan](improvement-plan.md)
 - [Marketplace assets](assets/marketplace/)
 - [Capell content language plan](../../../docs/CONTENT_LANGUAGE_PLAN.md)
 - [Capell documentation design system](../../../docs/DESIGN_SYSTEM.md)
