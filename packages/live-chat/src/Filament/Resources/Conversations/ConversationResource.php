@@ -13,6 +13,7 @@ use Capell\LiveChat\Actions\SyncLiveChatConversationContactAction;
 use Capell\LiveChat\Enums\ConversationStatus;
 use Capell\LiveChat\Enums\LiveChatIntent;
 use Capell\LiveChat\Enums\LiveChatPriority;
+use Capell\LiveChat\Filament\Resources\Concerns\ScopesLiveChatResourcesToSites;
 use Capell\LiveChat\Filament\Resources\Conversations\Pages\EditConversation;
 use Capell\LiveChat\Filament\Resources\Conversations\Pages\ListConversations;
 use Capell\LiveChat\Models\LiveChatConversation;
@@ -32,6 +33,8 @@ use Override;
 
 final class ConversationResource extends Resource
 {
+    use ScopesLiveChatResourcesToSites;
+
     protected static ?string $slug = 'live-chat/conversations';
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedChatBubbleLeftRight;
@@ -128,7 +131,7 @@ final class ConversationResource extends Resource
     #[Override]
     public static function getEloquentQuery(): Builder
     {
-        return parent::getEloquentQuery()->latest('last_message_at');
+        return self::scopeLiveChatQueryToActorSites(parent::getEloquentQuery())->latest('last_message_at');
     }
 
     #[Override]

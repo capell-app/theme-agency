@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Capell\LiveChat\Tests;
 
+use BezhanSalleh\FilamentShield\FilamentShieldServiceProvider;
 use Capell\AIOrchestrator\Providers\AIOrchestratorServiceProvider;
 use Capell\Contacts\Providers\ContactsServiceProvider;
 use Capell\Core\Facades\CapellCore;
@@ -28,7 +29,9 @@ class LiveChatTestCase extends OrchestraTestCase
 
     protected function createLiveChatSite(): int
     {
-        return (int) DB::table('sites')->insertGetId([]);
+        return (int) DB::table('sites')->insertGetId([
+            'name' => 'Test site',
+        ]);
     }
 
     /**
@@ -55,6 +58,7 @@ class LiveChatTestCase extends OrchestraTestCase
     {
         return [
             ActionServiceProvider::class,
+            FilamentShieldServiceProvider::class,
             LaravelDataServiceProvider::class,
             ContactsServiceProvider::class,
             KnowledgeBaseServiceProvider::class,
@@ -76,6 +80,9 @@ class LiveChatTestCase extends OrchestraTestCase
         Config::set('capell-contacts.hash_secret', 'contacts-test-secret');
         Config::set('capell-live-chat.hash_secret', 'live-chat-test-secret');
         Config::set('capell-live-chat.default_site_id', 1);
+        Config::set('filament-shield.permissions.separator', ':');
+        Config::set('filament-shield.permissions.case', 'pascal');
+        Config::set('filament-shield.permissions.generate', true);
 
         CapellCore::forcePackageInstalled(ContactsServiceProvider::$packageName);
         CapellCore::forcePackageInstalled(AIOrchestratorServiceProvider::$packageName);
@@ -87,6 +94,8 @@ class LiveChatTestCase extends OrchestraTestCase
     {
         Schema::create('sites', function (Blueprint $table): void {
             $table->id();
+            $table->string('name')->nullable();
+            $table->softDeletes();
         });
 
         $this->loadMigrationsFrom(__DIR__ . '/../../contacts/database/migrations');

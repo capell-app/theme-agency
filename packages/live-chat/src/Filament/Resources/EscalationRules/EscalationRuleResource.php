@@ -7,6 +7,7 @@ namespace Capell\LiveChat\Filament\Resources\EscalationRules;
 use BackedEnum;
 use Capell\LiveChat\Enums\EscalationTriggerType;
 use Capell\LiveChat\Enums\LiveChatPriority;
+use Capell\LiveChat\Filament\Resources\Concerns\ScopesLiveChatResourcesToSites;
 use Capell\LiveChat\Filament\Resources\EscalationRules\Pages\CreateEscalationRule;
 use Capell\LiveChat\Filament\Resources\EscalationRules\Pages\EditEscalationRule;
 use Capell\LiveChat\Filament\Resources\EscalationRules\Pages\ListEscalationRules;
@@ -21,10 +22,13 @@ use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 use Override;
 
 final class EscalationRuleResource extends Resource
 {
+    use ScopesLiveChatResourcesToSites;
+
     protected static ?string $slug = 'live-chat/escalation-rules';
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedBolt;
@@ -37,7 +41,7 @@ final class EscalationRuleResource extends Resource
         return $schema->components([
             Section::make(__('capell-live-chat::generic.resources.escalation_rule'))
                 ->schema([
-                    TextInput::make('site_id')->label(__('capell-live-chat::generic.fields.site_id'))->numeric(),
+                    Select::make('site_id')->label(__('capell-live-chat::generic.fields.site_id'))->options(fn (): array => self::liveChatSiteOptions())->searchable()->preload(),
                     TextInput::make('name')->label(__('capell-live-chat::generic.fields.name'))->required()->maxLength(255),
                     Select::make('trigger_type')->label(__('capell-live-chat::generic.fields.trigger_type'))->options(self::triggerOptions())->required(),
                     TextInput::make('trigger_value')->label(__('capell-live-chat::generic.fields.trigger_value'))->maxLength(255),
@@ -66,6 +70,12 @@ final class EscalationRuleResource extends Resource
     public static function getModel(): string
     {
         return LiveChatEscalationRule::class;
+    }
+
+    #[Override]
+    public static function getEloquentQuery(): Builder
+    {
+        return self::scopeLiveChatQueryToActorSites(parent::getEloquentQuery());
     }
 
     #[Override]

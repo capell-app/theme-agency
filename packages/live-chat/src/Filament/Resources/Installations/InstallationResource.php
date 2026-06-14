@@ -6,6 +6,7 @@ namespace Capell\LiveChat\Filament\Resources\Installations;
 
 use BackedEnum;
 use Capell\LiveChat\Enums\LiveChatSourcePolicy;
+use Capell\LiveChat\Filament\Resources\Concerns\ScopesLiveChatResourcesToSites;
 use Capell\LiveChat\Filament\Resources\Installations\Pages\CreateInstallation;
 use Capell\LiveChat\Filament\Resources\Installations\Pages\EditInstallation;
 use Capell\LiveChat\Filament\Resources\Installations\Pages\ListInstallations;
@@ -21,10 +22,13 @@ use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 use Override;
 
 final class InstallationResource extends Resource
 {
+    use ScopesLiveChatResourcesToSites;
+
     protected static ?string $slug = 'live-chat/installations';
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedChatBubbleLeftRight;
@@ -37,7 +41,7 @@ final class InstallationResource extends Resource
         return $schema->components([
             Section::make(__('capell-live-chat::generic.resources.installation'))
                 ->schema([
-                    TextInput::make('site_id')->label(__('capell-live-chat::generic.fields.site_id'))->numeric()->required(),
+                    Select::make('site_id')->label(__('capell-live-chat::generic.fields.site_id'))->options(fn (): array => self::liveChatSiteOptions())->searchable()->preload()->required(),
                     TextInput::make('name')->label(__('capell-live-chat::generic.fields.name'))->required()->maxLength(255),
                     TextInput::make('public_key')->label(__('capell-live-chat::generic.fields.public_key'))->disabled()->dehydrated(false),
                     TagsInput::make('allowed_domains')->label(__('capell-live-chat::generic.fields.allowed_domains'))->placeholder('example.com')->columnSpanFull(),
@@ -66,6 +70,12 @@ final class InstallationResource extends Resource
     public static function getModel(): string
     {
         return LiveChatInstallation::class;
+    }
+
+    #[Override]
+    public static function getEloquentQuery(): Builder
+    {
+        return self::scopeLiveChatQueryToActorSites(parent::getEloquentQuery());
     }
 
     #[Override]

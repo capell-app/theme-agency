@@ -7,6 +7,7 @@ namespace Capell\LiveChat\Filament\Resources\KnowledgeSources;
 use BackedEnum;
 use Capell\LiveChat\Enums\KnowledgeSourceStatus;
 use Capell\LiveChat\Enums\KnowledgeSourceType;
+use Capell\LiveChat\Filament\Resources\Concerns\ScopesLiveChatResourcesToSites;
 use Capell\LiveChat\Filament\Resources\KnowledgeSources\Pages\CreateKnowledgeSource;
 use Capell\LiveChat\Filament\Resources\KnowledgeSources\Pages\EditKnowledgeSource;
 use Capell\LiveChat\Filament\Resources\KnowledgeSources\Pages\ListKnowledgeSources;
@@ -19,10 +20,13 @@ use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 use Override;
 
 final class KnowledgeSourceResource extends Resource
 {
+    use ScopesLiveChatResourcesToSites;
+
     protected static ?string $slug = 'live-chat/knowledge-sources';
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedBookOpen;
@@ -35,7 +39,7 @@ final class KnowledgeSourceResource extends Resource
         return $schema->components([
             Section::make(__('capell-live-chat::generic.resources.knowledge_source'))
                 ->schema([
-                    TextInput::make('site_id')->label(__('capell-live-chat::generic.fields.site_id'))->numeric(),
+                    Select::make('site_id')->label(__('capell-live-chat::generic.fields.site_id'))->options(fn (): array => self::liveChatSiteOptions())->searchable()->preload(),
                     Select::make('type')->label(__('capell-live-chat::generic.fields.type'))->options(self::typeOptions())->required()->default(KnowledgeSourceType::Website->value),
                     TextInput::make('source_key')->label(__('capell-live-chat::generic.fields.source_key'))->required()->maxLength(255),
                     TextInput::make('title')->label(__('capell-live-chat::generic.fields.title'))->required()->maxLength(255),
@@ -62,6 +66,12 @@ final class KnowledgeSourceResource extends Resource
     public static function getModel(): string
     {
         return LiveChatKnowledgeSource::class;
+    }
+
+    #[Override]
+    public static function getEloquentQuery(): Builder
+    {
+        return self::scopeLiveChatQueryToActorSites(parent::getEloquentQuery());
     }
 
     #[Override]
