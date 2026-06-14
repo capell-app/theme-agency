@@ -114,6 +114,13 @@ class Breadcrumbs extends AbstractWidget
             return $default;
         }
 
-        return filter_var($meta[$key], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) ?? $default;
+        return match (true) {
+            is_bool($meta[$key]) => $meta[$key],
+            is_int($meta[$key]) && $meta[$key] === 0 => false,
+            is_int($meta[$key]) && $meta[$key] === 1 => true,
+            is_string($meta[$key]) && in_array(strtolower(trim($meta[$key])), ['0', 'false', 'no', 'off'], true) => false,
+            is_string($meta[$key]) && in_array(strtolower(trim($meta[$key])), ['1', 'true', 'yes', 'on'], true) => true,
+            default => $default,
+        };
     }
 }
