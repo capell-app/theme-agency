@@ -24,6 +24,7 @@ use Filament\Tables\Contracts\HasTable;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
+use Illuminate\Http\Request;
 
 it('exposes translation coverage table columns for page, language completeness, missing languages, and author', function (): void {
     $method = new ReflectionMethod(TranslationCoverageTable::class, 'configure');
@@ -239,6 +240,42 @@ it('builds markdown urls for included ai discovery pages with public urls', func
     $markdownUrlFor = new ReflectionMethod(AiDiscoveryTable::class, 'markdownUrlFor');
 
     expect($markdownUrlFor->invoke(null, $page->fresh()))->toBe('https://example.test/public-page.md');
+});
+
+it('keeps ai discovery table profile cache scoped to the current request', function (): void {
+    resetAiDiscoveryTableCaches();
+
+    $language = Language::factory()->create();
+    $site = Site::factory()
+        ->language($language)
+        ->withTranslations($language)
+        ->create();
+    $page = Page::factory()
+        ->site($site)
+        ->type(Blueprint::factory()->page()->create(['status' => true]))
+        ->withTranslations($language, ['title' => 'AI Discovery Cached Page'])
+        ->create();
+    $profile = AiDiscoveryPageProfile::query()->create([
+        'page_id' => $page->getKey(),
+        'site_id' => $site->getKey(),
+        'language_id' => $language->getKey(),
+        'include_in_ai_index' => true,
+        'section' => 'Pages',
+        'priority' => 500,
+    ]);
+
+    $profileFor = new ReflectionMethod(AiDiscoveryTable::class, 'profileFor');
+    app()->instance('request', Request::create('/ai-discovery/first'));
+
+    $firstProfile = $profileFor->invoke(null, $page->fresh());
+
+    $profile->forceFill(['include_in_ai_index' => false])->save();
+    app()->instance('request', Request::create('/ai-discovery/second'));
+
+    $secondProfile = $profileFor->invoke(null, $page->fresh());
+
+    expect($firstProfile?->include_in_ai_index)->toBeTrue()
+        ->and($secondProfile?->include_in_ai_index)->toBeFalse();
 });
 
 it('exposes seo audit table columns and status filters', function (): void {

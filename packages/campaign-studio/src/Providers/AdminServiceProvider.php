@@ -21,11 +21,14 @@ use Capell\CampaignStudio\Filament\Widgets\TopLandingPagesWidget;
 use Capell\Core\Facades\CapellCore;
 use Capell\LayoutBuilder\Enums\ConfiguratorTypeEnum;
 use Carbon\CarbonImmutable;
+use Illuminate\Http\Request;
 use Illuminate\Support\ServiceProvider;
 use Override;
 
 final class AdminServiceProvider extends ServiceProvider
 {
+    private const string REQUEST_CAMPAIGN_OVERVIEW_CACHE_KEY = 'capell.campaign-studio.admin.overview';
+
     private const string LAYOUT_BUILDER_CONFIGURATOR_TYPE_ENUM = ConfiguratorTypeEnum::class;
 
     #[Override]
@@ -183,11 +186,15 @@ final class AdminServiceProvider extends ServiceProvider
      */
     private function campaignOverview(): array
     {
-        /** @var array{active_campaign-studio: int, conversions: int, conversion_rate: int|float|string}|null $overview */
-        static $overview = null;
+        $request = $this->currentRequest();
 
-        if (is_array($overview)) {
-            return $overview;
+        if ($request instanceof Request) {
+            $cachedOverview = $request->attributes->get(self::REQUEST_CAMPAIGN_OVERVIEW_CACHE_KEY);
+
+            if (is_array($cachedOverview)) {
+                /** @var array{active_campaign-studio: int, conversions: int, conversion_rate: int|float|string} $cachedOverview */
+                return $cachedOverview;
+            }
         }
 
         $now = CarbonImmutable::now();
@@ -196,6 +203,21 @@ final class AdminServiceProvider extends ServiceProvider
         /** @var array{active_campaign-studio: int, conversions: int, conversion_rate: int|float|string} $overview */
         $overview = BuildCampaignOverviewStatsAction::run($rangeStart, $rangeEnd);
 
+        if ($request instanceof Request) {
+            $request->attributes->set(self::REQUEST_CAMPAIGN_OVERVIEW_CACHE_KEY, $overview);
+        }
+
         return $overview;
+    }
+
+    private function currentRequest(): ?Request
+    {
+        if (! app()->bound('request')) {
+            return null;
+        }
+
+        $request = request();
+
+        return $request instanceof Request ? $request : null;
     }
 }

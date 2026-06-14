@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Capell\AgentBridge\Data\AuthenticatedAgentBridgeClientData;
 use Capell\AgentBridge\Http\Middleware\AuthenticateCapellAgentBridgeToken;
 use Capell\AgentBridge\Models\CapellAgentBridgeToken;
 use Capell\AgentBridge\Tests\Fixtures\User;
@@ -35,14 +36,45 @@ it('authenticates valid agent bridge bearer tokens and binds client context', fu
     $token->user()->associate($user);
     $token->save();
 
+    $contextWasBoundDuringRequest = false;
+
     $response = (new AuthenticateCapellAgentBridgeToken)->handle(
         Request::create('/agent-bridge/capell', server: ['HTTP_AUTHORIZATION' => 'Bearer plain-token']),
-        fn (Request $request): Response => response('ok'),
+        function (Request $request) use ($token, &$contextWasBoundDuringRequest): Response {
+            $contextWasBoundDuringRequest = resolve(CapellAgentBridgeToken::class)->is($token);
+
+            return response('ok');
+        },
     );
 
     expect($response->getStatusCode())->toBe(200)
         ->and($token->refresh()->last_used_at)->not->toBeNull()
-        ->and(resolve(CapellAgentBridgeToken::class)->is($token))->toBeTrue();
+        ->and($contextWasBoundDuringRequest)->toBeTrue()
+        ->and(app()->bound(CapellAgentBridgeToken::class))->toBeFalse();
+});
+
+it('clears bound agent bridge request context after the middleware pipeline returns', function (): void {
+    $user = User::query()->create([
+        'name' => 'Context Cleanup User',
+        'email' => 'context-cleanup@example.test',
+        'password' => 'secret',
+    ]);
+    $token = new CapellAgentBridgeToken;
+    $token->forceFill([
+        'name' => 'Context cleanup token',
+        'token_hash' => CapellAgentBridgeToken::hashPlainTextToken('cleanup-token'),
+        'scopes' => ['capell.pages.read'],
+    ]);
+    $token->user()->associate($user);
+    $token->save();
+
+    (new AuthenticateCapellAgentBridgeToken)->handle(
+        Request::create('/agent-bridge/capell', server: ['HTTP_AUTHORIZATION' => 'Bearer cleanup-token']),
+        fn (Request $request): Response => response('ok'),
+    );
+
+    expect(app()->bound(CapellAgentBridgeToken::class))->toBeFalse()
+        ->and(app()->bound(AuthenticatedAgentBridgeClientData::class))->toBeFalse();
 });
 
 it('hashes agent bridge tokens with the application key', function (): void {

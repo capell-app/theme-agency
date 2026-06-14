@@ -36,11 +36,20 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder as QueryBuilder;
+use Illuminate\Http\Request;
 use LogicException;
 use Throwable;
 
 class AiDiscoveryTable implements TableConfigurator
 {
+    private const string REQUEST_PROFILE_CACHE_KEY = 'capell.seo-suite.ai-discovery-table.profiles';
+
+    private const string REQUEST_SITE_PROFILE_CACHE_KEY = 'capell.seo-suite.ai-discovery-table.site-profiles';
+
+    private const string REQUEST_READINESS_ISSUE_COUNT_CACHE_KEY = 'capell.seo-suite.ai-discovery-table.readiness-issue-counts';
+
+    private const string REQUEST_MARKDOWN_DISCOVERABILITY_CACHE_KEY = 'capell.seo-suite.ai-discovery-table.markdown-discoverability';
+
     /**
      * @var array<string, AiDiscoveryPageProfile|null>
      */
@@ -366,13 +375,14 @@ class AiDiscoveryTable implements TableConfigurator
         $site = self::siteFor($record);
         $language = self::languageFor($record);
         $cacheKey = self::recordCacheKey($record);
+        $cachedProfile = self::cachedProfile($cacheKey);
 
-        if (array_key_exists($cacheKey, self::$profiles)) {
-            return self::$profiles[$cacheKey];
+        if ($cachedProfile['hit']) {
+            return $cachedProfile['profile'];
         }
 
         if (! $site instanceof Site || ! $language instanceof Language) {
-            return self::$profiles[$cacheKey] = null;
+            return self::putCachedProfile($cacheKey, null);
         }
 
         $profile = AiDiscoveryPageProfile::query()
@@ -381,7 +391,7 @@ class AiDiscoveryTable implements TableConfigurator
             ->where('language_id', $language->getKey())
             ->first();
 
-        return self::$profiles[$cacheKey] = $profile instanceof AiDiscoveryPageProfile ? $profile : null;
+        return self::putCachedProfile($cacheKey, $profile instanceof AiDiscoveryPageProfile ? $profile : null);
     }
 
     private static function includeInAiIndexFor(Page $record): bool
@@ -402,16 +412,17 @@ class AiDiscoveryTable implements TableConfigurator
         $site = self::siteFor($record);
         $language = self::languageFor($record);
         $cacheKey = self::recordCacheKey($record);
+        $cachedCount = self::cachedReadinessIssueCount($cacheKey);
 
-        if (array_key_exists($cacheKey, self::$readinessIssueCounts)) {
-            return self::$readinessIssueCounts[$cacheKey];
+        if ($cachedCount['hit']) {
+            return $cachedCount['count'];
         }
 
         if (! $site instanceof Site || ! $language instanceof Language) {
-            return self::$readinessIssueCounts[$cacheKey] = 0;
+            return self::putCachedReadinessIssueCount($cacheKey, 0);
         }
 
-        return self::$readinessIssueCounts[$cacheKey] = BuildAiReadinessAuditAction::run($record, $site, $language)->count();
+        return self::putCachedReadinessIssueCount($cacheKey, BuildAiReadinessAuditAction::run($record, $site, $language)->count());
     }
 
     private static function readinessIssueStateFor(Page $record): string
@@ -478,9 +489,10 @@ class AiDiscoveryTable implements TableConfigurator
         }
 
         $cacheKey = sprintf('%s:%s', $site->getKey(), $language->getKey());
+        $cachedProfile = self::cachedSiteProfile($cacheKey);
 
-        if (array_key_exists($cacheKey, self::$siteProfiles)) {
-            return self::$siteProfiles[$cacheKey];
+        if ($cachedProfile['hit']) {
+            return $cachedProfile['profile'];
         }
 
         $profile = AiDiscoverySiteProfile::query()
@@ -488,7 +500,7 @@ class AiDiscoveryTable implements TableConfigurator
             ->where('language_id', $language->getKey())
             ->first();
 
-        return self::$siteProfiles[$cacheKey] = $profile instanceof AiDiscoverySiteProfile ? $profile : null;
+        return self::putCachedSiteProfile($cacheKey, $profile instanceof AiDiscoverySiteProfile ? $profile : null);
     }
 
     private static function isDiscoverableForMarkdown(Page $record): bool
@@ -496,16 +508,17 @@ class AiDiscoveryTable implements TableConfigurator
         $site = self::siteFor($record);
         $language = self::languageFor($record);
         $cacheKey = self::recordCacheKey($record);
+        $cachedDiscoverability = self::cachedMarkdownDiscoverability($cacheKey);
 
-        if (array_key_exists($cacheKey, self::$markdownDiscoverability)) {
-            return self::$markdownDiscoverability[$cacheKey];
+        if ($cachedDiscoverability['hit']) {
+            return $cachedDiscoverability['discoverable'];
         }
 
         if (! $site instanceof Site || ! $language instanceof Language) {
-            return self::$markdownDiscoverability[$cacheKey] = false;
+            return self::putCachedMarkdownDiscoverability($cacheKey, false);
         }
 
-        return self::$markdownDiscoverability[$cacheKey] = PageIsDiscoverableForAiDiscoveryAction::run($record, $site, $language);
+        return self::putCachedMarkdownDiscoverability($cacheKey, PageIsDiscoverableForAiDiscoveryAction::run($record, $site, $language));
     }
 
     private static function siteFor(Page $record): ?Site
@@ -644,11 +657,242 @@ class AiDiscoveryTable implements TableConfigurator
 
     private static function forgetRecordCache(Page $record): void
     {
+        $cacheKey = self::recordCacheKey($record);
+
         unset(
-            self::$profiles[self::recordCacheKey($record)],
-            self::$readinessIssueCounts[self::recordCacheKey($record)],
-            self::$markdownDiscoverability[self::recordCacheKey($record)],
+            self::$profiles[$cacheKey],
+            self::$readinessIssueCounts[$cacheKey],
+            self::$markdownDiscoverability[$cacheKey],
         );
+
+        $request = self::currentRequest();
+
+        if (! $request instanceof Request) {
+            return;
+        }
+
+        self::forgetRequestCacheValue($request, self::REQUEST_PROFILE_CACHE_KEY, $cacheKey);
+        self::forgetRequestCacheValue($request, self::REQUEST_READINESS_ISSUE_COUNT_CACHE_KEY, $cacheKey);
+        self::forgetRequestCacheValue($request, self::REQUEST_MARKDOWN_DISCOVERABILITY_CACHE_KEY, $cacheKey);
+    }
+
+    /**
+     * @return array{hit: bool, profile: AiDiscoveryPageProfile|null}
+     */
+    private static function cachedProfile(string $cacheKey): array
+    {
+        $request = self::currentRequest();
+
+        if (! $request instanceof Request) {
+            return [
+                'hit' => array_key_exists($cacheKey, self::$profiles),
+                'profile' => self::$profiles[$cacheKey] ?? null,
+            ];
+        }
+
+        $cache = self::requestProfileCache($request);
+
+        return [
+            'hit' => array_key_exists($cacheKey, $cache),
+            'profile' => $cache[$cacheKey] ?? null,
+        ];
+    }
+
+    private static function putCachedProfile(string $cacheKey, ?AiDiscoveryPageProfile $profile): ?AiDiscoveryPageProfile
+    {
+        $request = self::currentRequest();
+
+        if (! $request instanceof Request) {
+            self::$profiles[$cacheKey] = $profile;
+
+            return $profile;
+        }
+
+        $cache = self::requestProfileCache($request);
+        $cache[$cacheKey] = $profile;
+        $request->attributes->set(self::REQUEST_PROFILE_CACHE_KEY, $cache);
+
+        return $profile;
+    }
+
+    /**
+     * @return array{hit: bool, profile: AiDiscoverySiteProfile|null}
+     */
+    private static function cachedSiteProfile(string $cacheKey): array
+    {
+        $request = self::currentRequest();
+
+        if (! $request instanceof Request) {
+            return [
+                'hit' => array_key_exists($cacheKey, self::$siteProfiles),
+                'profile' => self::$siteProfiles[$cacheKey] ?? null,
+            ];
+        }
+
+        $cache = self::requestSiteProfileCache($request);
+
+        return [
+            'hit' => array_key_exists($cacheKey, $cache),
+            'profile' => $cache[$cacheKey] ?? null,
+        ];
+    }
+
+    private static function putCachedSiteProfile(string $cacheKey, ?AiDiscoverySiteProfile $profile): ?AiDiscoverySiteProfile
+    {
+        $request = self::currentRequest();
+
+        if (! $request instanceof Request) {
+            self::$siteProfiles[$cacheKey] = $profile;
+
+            return $profile;
+        }
+
+        $cache = self::requestSiteProfileCache($request);
+        $cache[$cacheKey] = $profile;
+        $request->attributes->set(self::REQUEST_SITE_PROFILE_CACHE_KEY, $cache);
+
+        return $profile;
+    }
+
+    /**
+     * @return array{hit: bool, count: int}
+     */
+    private static function cachedReadinessIssueCount(string $cacheKey): array
+    {
+        $request = self::currentRequest();
+
+        if (! $request instanceof Request) {
+            return [
+                'hit' => array_key_exists($cacheKey, self::$readinessIssueCounts),
+                'count' => self::$readinessIssueCounts[$cacheKey] ?? 0,
+            ];
+        }
+
+        $cache = self::requestReadinessIssueCountCache($request);
+
+        return [
+            'hit' => array_key_exists($cacheKey, $cache),
+            'count' => $cache[$cacheKey] ?? 0,
+        ];
+    }
+
+    private static function putCachedReadinessIssueCount(string $cacheKey, int $count): int
+    {
+        $request = self::currentRequest();
+
+        if (! $request instanceof Request) {
+            self::$readinessIssueCounts[$cacheKey] = $count;
+
+            return $count;
+        }
+
+        $cache = self::requestReadinessIssueCountCache($request);
+        $cache[$cacheKey] = $count;
+        $request->attributes->set(self::REQUEST_READINESS_ISSUE_COUNT_CACHE_KEY, $cache);
+
+        return $count;
+    }
+
+    /**
+     * @return array{hit: bool, discoverable: bool}
+     */
+    private static function cachedMarkdownDiscoverability(string $cacheKey): array
+    {
+        $request = self::currentRequest();
+
+        if (! $request instanceof Request) {
+            return [
+                'hit' => array_key_exists($cacheKey, self::$markdownDiscoverability),
+                'discoverable' => self::$markdownDiscoverability[$cacheKey] ?? false,
+            ];
+        }
+
+        $cache = self::requestMarkdownDiscoverabilityCache($request);
+
+        return [
+            'hit' => array_key_exists($cacheKey, $cache),
+            'discoverable' => $cache[$cacheKey] ?? false,
+        ];
+    }
+
+    private static function putCachedMarkdownDiscoverability(string $cacheKey, bool $discoverable): bool
+    {
+        $request = self::currentRequest();
+
+        if (! $request instanceof Request) {
+            self::$markdownDiscoverability[$cacheKey] = $discoverable;
+
+            return $discoverable;
+        }
+
+        $cache = self::requestMarkdownDiscoverabilityCache($request);
+        $cache[$cacheKey] = $discoverable;
+        $request->attributes->set(self::REQUEST_MARKDOWN_DISCOVERABILITY_CACHE_KEY, $cache);
+
+        return $discoverable;
+    }
+
+    /**
+     * @return array<string, AiDiscoveryPageProfile|null>
+     */
+    private static function requestProfileCache(Request $request): array
+    {
+        $cache = $request->attributes->get(self::REQUEST_PROFILE_CACHE_KEY, []);
+
+        return is_array($cache) ? $cache : [];
+    }
+
+    /**
+     * @return array<string, AiDiscoverySiteProfile|null>
+     */
+    private static function requestSiteProfileCache(Request $request): array
+    {
+        $cache = $request->attributes->get(self::REQUEST_SITE_PROFILE_CACHE_KEY, []);
+
+        return is_array($cache) ? $cache : [];
+    }
+
+    /**
+     * @return array<string, int>
+     */
+    private static function requestReadinessIssueCountCache(Request $request): array
+    {
+        $cache = $request->attributes->get(self::REQUEST_READINESS_ISSUE_COUNT_CACHE_KEY, []);
+
+        return is_array($cache) ? $cache : [];
+    }
+
+    /**
+     * @return array<string, bool>
+     */
+    private static function requestMarkdownDiscoverabilityCache(Request $request): array
+    {
+        $cache = $request->attributes->get(self::REQUEST_MARKDOWN_DISCOVERABILITY_CACHE_KEY, []);
+
+        return is_array($cache) ? $cache : [];
+    }
+
+    private static function forgetRequestCacheValue(Request $request, string $attribute, string $cacheKey): void
+    {
+        $cache = $request->attributes->get($attribute, []);
+
+        if (! is_array($cache)) {
+            return;
+        }
+
+        unset($cache[$cacheKey]);
+        $request->attributes->set($attribute, $cache);
+    }
+
+    private static function currentRequest(): ?Request
+    {
+        if (! app()->bound('request')) {
+            return null;
+        }
+
+        $request = request();
+
+        return $request instanceof Request ? $request : null;
     }
 
     private static function recordCacheKey(Page $record): string

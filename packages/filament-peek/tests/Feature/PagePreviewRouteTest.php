@@ -10,9 +10,13 @@ use Capell\Core\Models\Layout;
 use Capell\Core\Models\Page;
 use Capell\Core\Models\Site;
 use Capell\FilamentPeek\Actions\CreatePagePreviewSnapshotAction;
+use Capell\Frontend\Contracts\FrontendContextReader;
 use Capell\Frontend\Contracts\FrontendResponseRenderer;
 use Capell\Frontend\Data\FrontendRenderContextData;
+use Capell\Frontend\Facades\Frontend;
+use Capell\Frontend\Support\CapellFrontendContext;
 use Capell\Frontend\Support\Render\FrontendResponseRendererRegistry;
+use Capell\Frontend\Support\State\FrontendState;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\URL;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
@@ -157,6 +161,48 @@ it('renders unsaved page fields through a private signed preview without saving 
     expect($page->name)->toBe('Saved page name')
         ->and($page->translation->title)->toBe('Saved title')
         ->and($page->translation->content)->toBe('<p>Saved body</p>');
+});
+
+it('restores the previous frontend context after rendering a signed page preview', function (): void {
+    $user = $this->createUserWithRole('super_admin');
+    $this->actingAs($user);
+    registerPreviewTestRenderer();
+
+    $previousReader = new FrontendState;
+    $previousContext = new CapellFrontendContext($previousReader);
+    app()->instance(FrontendContextReader::class, $previousReader);
+    app()->instance(CapellFrontendContext::class, $previousContext);
+    Frontend::clearResolvedInstance(CapellFrontendContext::class);
+
+    $language = Language::factory()->create();
+    $site = Site::factory()->withTranslations($language)->language($language)->create();
+    $layout = Layout::factory()->site($site)->default()->create([
+        'containers' => [],
+    ]);
+    $page = Page::factory()
+        ->site($site)
+        ->layout($layout)
+        ->withTranslations($language, [
+            'title' => 'Saved title',
+            'content' => '<p>Saved body</p>',
+        ])
+        ->create(['name' => 'Saved page name']);
+
+    $snapshot = CreatePagePreviewSnapshotAction::run($page, [
+        'name' => 'Unsaved page name',
+        'translations' => [[
+            'language_id' => $language->getKey(),
+            'title' => 'Unsaved title',
+            'content' => '<p>Unsaved body</p>',
+            'meta' => ['slug' => 'saved-page-name'],
+        ]],
+    ])['snapshot'];
+
+    $this->get(URL::signedRoute('capell-filament-peek.preview', ['token' => $snapshot->token]))
+        ->assertOk();
+
+    expect(resolve(FrontendContextReader::class))->toBe($previousReader)
+        ->and(resolve(CapellFrontendContext::class))->toBe($previousContext);
 });
 
 it('overlays an existing unsaved featured image selection in the preview page context', function (): void {
