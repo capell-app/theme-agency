@@ -15,13 +15,14 @@ it('reports compatible capell api version', function (): void {
     expect(EmailStudioHealthCheck::compatibleCapellApiVersion())->toBe('^4.0');
 });
 
-it('runs the four declared email studio diagnostics and passes when the slice is installed', function (): void {
+it('runs the declared email studio diagnostics and passes when the slice is installed', function (): void {
     $checks = EmailStudioHealthCheck::runDiagnostics();
 
-    expect($checks)->toHaveCount(4)
+    expect($checks)->toHaveCount(5)
         ->and($checks->every(fn (DoctorCheckResultData $check): bool => $check->passed))->toBeTrue()
         ->and($checks->pluck('label')->all())->toBe([
-            'Email templates render through typed template actions',
+            'Email templates render through database variants and static registered definitions',
+            'Template authoring resources, themes, and test-send actions are available',
             'Queued email delivery records provider results per recipient',
             'Suppressions are enforced before provider handoff',
             'Provider webhook and inbound reply normalization foundations are present',
@@ -39,7 +40,7 @@ it('fails the template rendering diagnostic when the templates table is missing'
     $checks = EmailStudioHealthCheck::runDiagnostics();
 
     $templateCheck = $checks->firstOrFail(
-        fn (DoctorCheckResultData $check): bool => $check->label === 'Email templates render through typed template actions',
+        fn (DoctorCheckResultData $check): bool => $check->label === 'Email templates render through database variants and static registered definitions',
     );
 
     expect($templateCheck->passed)->toBeFalse()

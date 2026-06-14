@@ -19,6 +19,14 @@ return new class extends SettingsMigration
             'email_studio.mail_tracker_content_max_size' => 65_535,
             'email_studio.mail_tracker_search_date_start_days' => 30,
             'email_studio.mail_tracker_purge_retention_days' => 60,
+            'email_studio.template_config_variables' => ['app.name', 'app.url'],
+            'email_studio.auth_replace_verification' => true,
+            'email_studio.auth_replace_password_reset' => true,
+            'email_studio.auth_send_welcome' => false,
+            'email_studio.auth_send_verified' => false,
+            'email_studio.auth_send_login' => false,
+            'email_studio.auth_send_lockout' => false,
+            'email_studio.auth_send_password_reset_success' => false,
         ];
 
         foreach ($defaults as $key => $value) {

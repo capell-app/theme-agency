@@ -6,7 +6,7 @@
     "kind": "package",
     "capellApiVersion": "^4.0",
     "version": "4.x-dev",
-    "description": "Email Studio gives every Capell site a reliable transactional-email core. Define reusable, locale- and site-scoped templates that render through a deliberately safe placeholder engine (HTML-escaped, missing-variable-strict in production), then send through delivery profiles backed by pluggable provider adapters. Every send is rendered to an immutable snapshot, screened against site and global suppression lists, and delivered via a queue job that records per-recipient outcomes for support and audit. Provider event webhooks write delivery events back into the audit trail, while the MailTracker-backed admin surface exposes sent-email records, opens, clicks, stored HTML, and retention controls; future depth adds one-click unsubscribe, inbound replies, and native template/profile authoring.",
+    "description": "Email Studio gives every Capell site a reliable transactional-email core. Packages register static Blade-backed template definitions with declared variables and sample data, while admins can customize site and locale variants, activate versions, preview with sample data, send test emails, and apply branded email themes. Auth email overrides replace Laravel verification and password reset messages by default, with welcome, verified, login, lockout, and reset-success lifecycle emails available as opt-in templates. Every send is rendered to an immutable snapshot, screened against site and global suppression lists, and delivered via provider adapters and queue jobs that record per-recipient outcomes for support and audit.",
     "product": {
         "group": "Capell Communications",
         "tier": "premium",
@@ -30,6 +30,7 @@
     "providers": {
         "metadata": [],
         "install": [],
+        "auth": ["Capell\\EmailStudio\\Providers\\AuthEmailServiceProvider"],
         "runtime": [
             "Capell\\EmailStudio\\Providers\\EmailStudioServiceProvider"
         ],
@@ -41,6 +42,21 @@
             "type": "admin-resource",
             "class": "Capell\\EmailStudio\\Manifest\\SentEmailResourceContribution",
             "resourceClass": "Capell\\EmailStudio\\Filament\\Resources\\SentEmails\\SentEmailResource"
+        },
+        {
+            "type": "admin-resource",
+            "class": "Capell\\EmailStudio\\Manifest\\TemplateAuthoringResourceContribution",
+            "resourceClass": "Capell\\EmailStudio\\Filament\\Resources\\EmailTemplates\\EmailTemplateResource"
+        },
+        {
+            "type": "admin-resource",
+            "class": "Capell\\EmailStudio\\Manifest\\TemplateAuthoringResourceContribution",
+            "resourceClass": "Capell\\EmailStudio\\Filament\\Resources\\EmailTemplateVariants\\EmailTemplateVariantResource"
+        },
+        {
+            "type": "admin-resource",
+            "class": "Capell\\EmailStudio\\Manifest\\TemplateAuthoringResourceContribution",
+            "resourceClass": "Capell\\EmailStudio\\Filament\\Resources\\EmailTemplateThemes\\EmailTemplateThemeResource"
         },
         {
             "type": "model",
@@ -63,7 +79,11 @@
     "database": {
         "migrations": true,
         "settings": true,
-        "requiredTables": ["sent_emails", "sent_emails_url_clicked"]
+        "requiredTables": [
+            "email_template_themes",
+            "sent_emails",
+            "sent_emails_url_clicked"
+        ]
     },
     "commands": {
         "install": null,
@@ -77,13 +97,30 @@
         "applyMailTrackerSettings": "Capell\\EmailStudio\\Actions\\ApplyMailTrackerSettingsAction",
         "purgeTrackedEmails": "Capell\\EmailStudio\\Actions\\PurgeTrackedEmailsAction",
         "recordProviderEvent": "Capell\\EmailStudio\\Actions\\RecordProviderEventAction",
-        "validateProviderWebhookSignature": "Capell\\EmailStudio\\Actions\\ValidateProviderWebhookSignatureAction"
+        "validateProviderWebhookSignature": "Capell\\EmailStudio\\Actions\\ValidateProviderWebhookSignatureAction",
+        "createTemplateOverride": "Capell\\EmailStudio\\Actions\\CreateEmailTemplateOverrideAction",
+        "activateTemplateVariant": "Capell\\EmailStudio\\Actions\\ActivateEmailTemplateVariantAction",
+        "captureTemplateThemeScreenshot": "Capell\\EmailStudio\\Actions\\CaptureEmailTemplateThemeScreenshotAction",
+        "renderStaticTemplateDefinition": "Capell\\EmailStudio\\Actions\\RenderEmailTemplateDefinitionAction",
+        "sendTemplateTest": "Capell\\EmailStudio\\Actions\\SendEmailTemplateTestAction"
     },
     "settings": [
         "Capell\\EmailStudio\\Settings\\EmailStudioSettings",
         "Capell\\EmailStudio\\Manifest\\EmailStudioSettingsContribution"
     ],
-    "permissions": ["ViewAny:SentEmail", "View:SentEmail"],
+    "permissions": [
+        "ViewAny:SentEmail",
+        "View:SentEmail",
+        "ViewAny:EmailTemplateRegistration",
+        "View:EmailTemplateRegistration",
+        "ViewAny:EmailTemplateVariant",
+        "View:EmailTemplateVariant",
+        "Update:EmailTemplateVariant",
+        "ViewAny:EmailTemplateTheme",
+        "View:EmailTemplateTheme",
+        "Create:EmailTemplateTheme",
+        "Update:EmailTemplateTheme"
+    ],
     "capabilities": [
         "delivery-audit",
         "mail-tracker-admin",
@@ -92,7 +129,14 @@
         "provider-event-ingestion",
         "provider-normalization-foundation",
         "provider-adapters",
+        "auth-email-overrides",
+        "package-template-registration",
+        "static-template-fallback",
         "suppressions",
+        "template-authoring-admin",
+        "template-preview-test-send",
+        "template-theme-screenshot-capture",
+        "template-theme-editor",
         "template-rendering",
         "transactional-email"
     ],
@@ -132,7 +176,19 @@
         },
         "adminSurface": {
             "authorization": "permissions",
-            "permissions": ["ViewAny:SentEmail", "View:SentEmail"]
+            "permissions": [
+                "ViewAny:SentEmail",
+                "View:SentEmail",
+                "ViewAny:EmailTemplateRegistration",
+                "View:EmailTemplateRegistration",
+                "ViewAny:EmailTemplateVariant",
+                "View:EmailTemplateVariant",
+                "Update:EmailTemplateVariant",
+                "ViewAny:EmailTemplateTheme",
+                "View:EmailTemplateTheme",
+                "Create:EmailTemplateTheme",
+                "Update:EmailTemplateTheme"
+            ]
         }
     },
     "performance": {
@@ -150,7 +206,14 @@
     "healthChecks": [
         {
             "key": "email-studio.template-rendering",
-            "label": "Email templates render through typed template actions",
+            "label": "Email templates render through database variants and static registered definitions",
+            "class": "Capell\\EmailStudio\\Health\\EmailStudioHealthCheck",
+            "severity": "critical",
+            "surface": "admin"
+        },
+        {
+            "key": "email-studio.template-authoring",
+            "label": "Template authoring resources, themes, and test-send actions are available",
             "class": "Capell\\EmailStudio\\Health\\EmailStudioHealthCheck",
             "severity": "critical",
             "surface": "admin"
@@ -184,7 +247,7 @@
         "privateDocsRequested": true
     },
     "marketplace": {
-        "summary": "Email Studio is Capell's transactional-email engine: site-scoped reusable templates with safe {{ variable }} rendering, pluggable delivery profiles and provider adapters, suppression enforcement, and a queued, auditable per-recipient send pipeline.",
+        "summary": "Email Studio is Capell's transactional-email engine and template authoring surface: package-registered static defaults, safe {{ variable }} rendering, editable site and locale overrides, auth email replacements, branded themes, preview/test-send, delivery profiles, suppressions, and a queued audit trail.",
         "screenshots": [
             {
                 "path": "docs/assets/marketplace/extension-card.jpg",
@@ -210,6 +273,11 @@
                 "path": "docs/screenshots/sent-email-view-dark.png",
                 "alt": "Email Studio sent email detail page with headers and sandboxed HTML preview in dark mode",
                 "caption": "Sent email detail view in dark mode"
+            },
+            {
+                "path": "docs/assets/marketplace/hero-desktop.jpg",
+                "alt": "Email Studio template authoring and theme editing marketplace hero",
+                "caption": "Template authoring and branded email themes"
             }
         ],
         "categories": ["admin", "communications", "console", "frontend"]

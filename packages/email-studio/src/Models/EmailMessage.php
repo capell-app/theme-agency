@@ -16,15 +16,25 @@ use Override;
 /**
  * @property int $id
  * @property int|null $site_id
- * @property EmailMessageStatus $status
  * @property string $site_scope_key
+ * @property int $email_profile_id
+ * @property int|null $email_template_id
+ * @property int|null $email_template_variant_id
+ * @property EmailMessageStatus $status
  * @property string $subject
+ * @property string|null $preview_text
  * @property string|null $rendered_html
  * @property string|null $rendered_text
+ * @property array<string, mixed>|null $context_snapshot
+ * @property array<string, string>|null $headers
+ * @property array<int, array{disk: string, path: string, name: string, mime: string}>|null $attachments
+ * @property string|null $triggered_by_type
+ * @property int|null $triggered_by_id
  * @property CarbonImmutable|null $queued_at
  * @property CarbonImmutable|null $sent_at
  * @property CarbonImmutable|null $failed_at
  * @property string|null $failure_reason
+ * @property EmailProfile|null $profile
  */
 class EmailMessage extends Model
 {
@@ -45,6 +55,7 @@ class EmailMessage extends Model
         'rendered_text',
         'context_snapshot',
         'headers',
+        'attachments',
         'triggered_by_type',
         'triggered_by_id',
         'queued_at',
@@ -121,6 +132,7 @@ class EmailMessage extends Model
             'status' => EmailMessageStatus::class,
             'context_snapshot' => 'array',
             'headers' => 'array',
+            'attachments' => 'array',
             'queued_at' => 'immutable_datetime',
             'sent_at' => 'immutable_datetime',
             'failed_at' => 'immutable_datetime',

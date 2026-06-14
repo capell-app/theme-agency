@@ -6,7 +6,7 @@
 
 Email Studio is an **Available**, **Schema-owning** Capell package in the **Capell Communications** product group. It ships as `capell-app/email-studio` and extends these surfaces: admin, frontend, console.
 
-Email Studio gives every Capell site a reliable transactional-email core. Define reusable, locale- and site-scoped templates that render through a deliberately safe placeholder engine (HTML-escaped, missing-variable-strict in production), then send through delivery profiles backed by pluggable provider adapters. Every send is rendered to an immutable snapshot, screened against site and global suppression lists, and delivered via a queue job that records per-recipient outcomes for support and audit. Provider event webhooks write delivery events back into the audit trail, while the MailTracker-backed admin surface exposes sent-email records, opens, clicks, stored HTML, and retention controls; future depth adds one-click unsubscribe, inbound replies, and native template/profile authoring.
+Email Studio gives every Capell site a reliable transactional-email core and authoring surface. Packages register static Blade-backed template definitions with declared variables and sample data, while admins can customize site and locale variants, activate versions, preview with sample data, send test emails, and apply branded email themes. Auth email overrides replace Laravel verification and password reset messages by default, with welcome, verified, login, lockout, and reset-success lifecycle emails available as opt-in templates. Every send is rendered to an immutable snapshot, screened against site and global suppression lists, and delivered through provider adapters and queue jobs that record per-recipient outcomes for support and audit.
 
 After install, admins get package-owned management surfaces and public users may see package-owned frontend output or routes.
 
@@ -23,7 +23,7 @@ Status details:
 
 **For developers:** The package gives developers package-owned service providers, Actions, Data objects, models, Laravel routes, Filament classes, and Blade views instead of pushing this behaviour into core or application code.
 
-**For teams:** Email Studio is Capell's transactional-email engine: site-scoped reusable templates with safe {{ variable }} rendering, pluggable delivery profiles and provider adapters, suppression enforcement, and a queued, auditable per-recipient send pipeline.
+**For teams:** Email Studio is Capell's transactional-email engine and template studio: static package defaults, safe {{ variable }} rendering, editable overrides, branded themes, auth replacements, preview/test-send, pluggable delivery profiles, suppressions, and a queued audit trail.
 
 ## Screens And Workflow
 
@@ -31,19 +31,22 @@ Screenshot contract: `screenshots.json`.
 
 - Sent emails admin index (admin, required).
 - Sent email detail view (admin, required).
+- Registered email templates index (admin, required).
+- Email template variant editor (admin, required).
+- Email theme editor (admin, required).
 
 ## Technical Shape
 
-- Service providers: `Capell\EmailStudio\Providers\EmailStudioServiceProvider`, `Capell\EmailStudio\Providers\AdminServiceProvider`, `Capell\EmailStudio\Providers\FrontendServiceProvider`.
+- Service providers: `Capell\EmailStudio\Providers\EmailStudioServiceProvider`, `Capell\EmailStudio\Providers\AdminServiceProvider`, `Capell\EmailStudio\Providers\FrontendServiceProvider`, `Capell\EmailStudio\Providers\AuthEmailServiceProvider`.
 - Config files: `packages/email-studio/config/capell-email-studio.php`.
 - Migrations: `packages/email-studio/database/migrations/2026_05_10_190847_01_create_email_profiles_table.php`, `packages/email-studio/database/migrations/2026_05_10_190847_02_create_email_templates_table.php`, `packages/email-studio/database/migrations/2026_05_10_190847_03_create_email_template_variants_table.php`, `packages/email-studio/database/migrations/2026_05_10_190847_04_create_email_messages_table.php`, `packages/email-studio/database/migrations/2026_05_10_190847_05_create_email_recipients_table.php`, `packages/email-studio/database/migrations/2026_05_10_190847_06_create_email_events_table.php`, `packages/email-studio/database/migrations/2026_05_10_190847_07_create_email_replies_table.php`, `packages/email-studio/database/migrations/2026_05_10_190847_08_create_email_suppressions_table.php`, `packages/email-studio/database/migrations/2026_05_10_190847_09_create_email_template_registrations_table.php`, `packages/email-studio/database/migrations/2026_05_10_190847_10_create_email_tracking_tokens_table.php`.
-- Settings migrations: `packages/email-studio/database/settings/2026_06_05_000001_create_email_studio_settings.php`.
+- Settings migrations: `packages/email-studio/database/settings/2026_06_05_000001_create_email_studio_settings.php`, `packages/email-studio/database/settings/2026_06_13_000001_add_email_template_authoring_settings.php`.
 - Settings classes: `EmailStudioSettings`, `EmailStudioSettingsMigrationProvider`.
-- Models: `EmailEvent`, `EmailMessage`, `EmailProfile`, `EmailRecipient`, `EmailReply`, `EmailSuppression`, `EmailTemplate`, `EmailTemplateRegistration`, `EmailTemplateVariant`, `EmailTrackingToken`, `SentEmail`, `SentEmailUrlClicked`.
-- Filament classes: `ListSentEmails`, `ViewSentEmail`, `SentEmailInfolist`, `SentEmailResource`, `EmailStudioSettingsSchema`.
+- Models: `EmailEvent`, `EmailMessage`, `EmailProfile`, `EmailRecipient`, `EmailReply`, `EmailSuppression`, `EmailTemplate`, `EmailTemplateRegistration`, `EmailTemplateTheme`, `EmailTemplateVariant`, `EmailTrackingToken`, `SentEmail`, `SentEmailUrlClicked`.
+- Filament classes: `EmailTemplateResource`, `EmailTemplateVariantResource`, `EmailTemplateThemeResource`, `ListSentEmails`, `ViewSentEmail`, `SentEmailInfolist`, `SentEmailResource`, `EmailStudioSettingsSchema`.
 - Route files: `packages/email-studio/routes/web.php`.
-- Actions: `ApplyMailTrackerSettingsAction`, `CheckEmailSuppressionAction`, `DeliverEmailMessageAction`, `MarkEmailMessageDeliveryFailedAction`, `PruneEmailBodiesAction`, `PurgeTrackedEmailsAction`, `RecordProviderEventAction`, `RegisterEmailTemplateAction`, `RenderEmailTemplateAction`, `ResolveEmailTemplateVariantAction`, `ResolveProviderWebhookProfileAction`, `SendEmailAction`, `and 2 more`.
-- Data objects: `EmailAddressData`, `EmailBodyPruneResultData`, `EmailContextData`, `EmailHeaderData`, `InboundEmailReplyData`, `ProviderSendResultData`, `ProviderWebhookEventData`, `RenderedEmailData`, `SendEmailData`, `TrackedEmailPurgeResultData`.
+- Actions include template registration, static rendering, override creation, variant activation, themed rendering, auth mail message building, test sends, provider delivery, suppressions, webhooks, and retention.
+- Data objects include address/header/context/send data plus template definitions, variables, attachments, rendered output, and resolved template payloads.
 - Jobs: `SendEmailJob`.
 - Command signatures: `Capell\EmailStudio\Console\Commands\PurgeTrackedEmailsCommand`, `capell-email-studio:prune-bodies`.
 - Console command classes: `PruneEmailBodiesCommand`, `PurgeTrackedEmailsCommand`.
@@ -54,8 +57,8 @@ Screenshot contract: `screenshots.json`.
 
 ## Data Model
 
-- Required tables: `sent_emails`, `sent_emails_url_clicked`.
-- Models: `EmailEvent`, `EmailMessage`, `EmailProfile`, `EmailRecipient`, `EmailReply`, `EmailSuppression`, `EmailTemplate`, `EmailTemplateRegistration`, `EmailTemplateVariant`, `EmailTrackingToken`, `SentEmail`, `SentEmailUrlClicked`.
+- Required tables: `email_template_themes`, `sent_emails`, `sent_emails_url_clicked`.
+- Models: `EmailEvent`, `EmailMessage`, `EmailProfile`, `EmailRecipient`, `EmailReply`, `EmailSuppression`, `EmailTemplate`, `EmailTemplateRegistration`, `EmailTemplateTheme`, `EmailTemplateVariant`, `EmailTrackingToken`, `SentEmail`, `SentEmailUrlClicked`.
 - Migration files: `2026_05_10_190847_01_create_email_profiles_table.php`, `2026_05_10_190847_02_create_email_templates_table.php`, `2026_05_10_190847_03_create_email_template_variants_table.php`, `2026_05_10_190847_04_create_email_messages_table.php`, `2026_05_10_190847_05_create_email_recipients_table.php`, `2026_05_10_190847_06_create_email_events_table.php`, `2026_05_10_190847_07_create_email_replies_table.php`, `2026_05_10_190847_08_create_email_suppressions_table.php`, `2026_05_10_190847_09_create_email_template_registrations_table.php`, `2026_05_10_190847_10_create_email_tracking_tokens_table.php`.
 - Migration impact: run host migrations through the package install flow before opening package surfaces.
 - Deletion/retention behaviour: Docs gap unless the package has an explicit pruning command, retention setting, or tested cascade path.

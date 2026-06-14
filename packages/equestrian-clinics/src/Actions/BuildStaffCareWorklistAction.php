@@ -27,14 +27,15 @@ final class BuildStaffCareWorklistAction
         bool $includeUnassigned = true,
     ): Collection {
         $dueBefore ??= CarbonImmutable::now()->endOfDay();
+        $staffMemberId = $staffMember instanceof EquestrianStaffMember ? $staffMember->getKey() : null;
 
         return EquestrianHorseCareTask::query()
             ->with(['horseProfile', 'assignedStaffMember'])
             ->whereNull('completed_at')
             ->where('due_at', '<=', $dueBefore)
-            ->when($staffMember instanceof EquestrianStaffMember, function (Builder $query) use ($staffMember, $includeUnassigned): void {
-                $query->where(function (Builder $assignedQuery) use ($staffMember, $includeUnassigned): void {
-                    $assignedQuery->where('assigned_staff_member_id', $staffMember->getKey());
+            ->when($staffMemberId !== null, function (Builder $query) use ($staffMemberId, $includeUnassigned): void {
+                $query->where(function (Builder $assignedQuery) use ($staffMemberId, $includeUnassigned): void {
+                    $assignedQuery->where('assigned_staff_member_id', $staffMemberId);
 
                     if ($includeUnassigned) {
                         $assignedQuery->orWhereNull('assigned_staff_member_id');

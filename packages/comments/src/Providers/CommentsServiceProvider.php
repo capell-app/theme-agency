@@ -6,6 +6,7 @@ namespace Capell\Comments\Providers;
 
 use Capell\Admin\Data\Extensions\ExtensionManagementSurfaceData;
 use Capell\Admin\Facades\CapellAdmin;
+use Capell\Comments\Actions\RegisterCommentEmailTemplatesAction;
 use Capell\Comments\Actions\RegisterDefaultCommentablesAction;
 use Capell\Comments\Console\Commands\InstallCommentsCommand;
 use Capell\Comments\Console\Commands\PruneCommentPrivacyDataCommand;
@@ -85,6 +86,7 @@ class CommentsServiceProvider extends AbstractPackageServiceProvider
                 ->registerSettings()
                 ->registerProtectedTables()
                 ->registerCommentables()
+                ->registerEmailTemplates()
                 ->registerListeners()
                 ->registerRateLimits();
         });
@@ -157,6 +159,13 @@ class CommentsServiceProvider extends AbstractPackageServiceProvider
     private function registerCommentables(): self
     {
         RegisterDefaultCommentablesAction::run();
+
+        return $this;
+    }
+
+    private function registerEmailTemplates(): self
+    {
+        RegisterCommentEmailTemplatesAction::run();
 
         return $this;
     }

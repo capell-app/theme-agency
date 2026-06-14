@@ -51,6 +51,9 @@ final class RequestSlotBookingAction
         }
 
         return DB::transaction(function () use ($slot, $riderProfile, $horseProfile, $provider, $cashPayment, $quotedTotalPence, $now): EquestrianSlotBooking {
+            $holdMinutes = config('capell-equestrian-clinics.checkout_hold_minutes', 10);
+            $holdMinutes = is_numeric($holdMinutes) ? (int) $holdMinutes : 10;
+
             $lockedSlot = EquestrianTourDaySlot::query()
                 ->whereKey($slot->getKey())
                 ->lockForUpdate()
@@ -71,7 +74,7 @@ final class RequestSlotBookingAction
                 'payment_status' => $cashPayment ? EquestrianPaymentStatusEnum::CashApproved : EquestrianPaymentStatusEnum::Pending,
                 'cash_payment' => $cashPayment,
                 'quoted_total_pence' => $quotedTotalPence,
-                'hold_expires_at' => $cashPayment ? null : $now->addMinutes((int) config('capell-equestrian-clinics.checkout_hold_minutes', 10)),
+                'hold_expires_at' => $cashPayment ? null : $now->addMinutes($holdMinutes),
                 'refund_available_until' => $lockedSlot->tourDay->starts_at->subHours($lockedSlot->tourDay->cancellation_refund_hours),
                 'confirmed_at' => $cashPayment ? $now : null,
             ]);

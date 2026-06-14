@@ -215,17 +215,50 @@
             "variesBy": ["site", "locale", "portal_account"],
             "sensitiveOutput": true,
             "invalidationSources": [
-                "equestrian_tour_days",
-                "equestrian_tour_day_slots",
-                "equestrian_venues",
-                "equestrian_slot_bookings",
-                "equestrian_slot_waitlist_entries",
-                "equestrian_horse_care_tasks",
-                "equestrian_horse_health_records",
-                "equestrian_competition_results",
-                "equestrian_commercial_products",
-                "equestrian_billing_entries",
-                "equestrian_communication_logs"
+                {
+                    "model": "Capell\\EquestrianClinics\\Models\\EquestrianTourDay",
+                    "events": ["created", "updated", "deleted"]
+                },
+                {
+                    "model": "Capell\\EquestrianClinics\\Models\\EquestrianTourDaySlot",
+                    "events": ["created", "updated", "deleted"]
+                },
+                {
+                    "model": "Capell\\EquestrianClinics\\Models\\EquestrianVenue",
+                    "events": ["created", "updated", "deleted"]
+                },
+                {
+                    "model": "Capell\\EquestrianClinics\\Models\\EquestrianSlotBooking",
+                    "events": ["created", "updated", "deleted"]
+                },
+                {
+                    "model": "Capell\\EquestrianClinics\\Models\\EquestrianSlotWaitlistEntry",
+                    "events": ["created", "updated", "deleted"]
+                },
+                {
+                    "model": "Capell\\EquestrianClinics\\Models\\EquestrianHorseCareTask",
+                    "events": ["created", "updated", "deleted"]
+                },
+                {
+                    "model": "Capell\\EquestrianClinics\\Models\\EquestrianHorseHealthRecord",
+                    "events": ["created", "updated", "deleted"]
+                },
+                {
+                    "model": "Capell\\EquestrianClinics\\Models\\EquestrianCompetitionResult",
+                    "events": ["created", "updated", "deleted"]
+                },
+                {
+                    "model": "Capell\\EquestrianClinics\\Models\\EquestrianCommercialProduct",
+                    "events": ["created", "updated", "deleted"]
+                },
+                {
+                    "model": "Capell\\EquestrianClinics\\Models\\EquestrianBillingEntry",
+                    "events": ["created", "updated", "deleted"]
+                },
+                {
+                    "model": "Capell\\EquestrianClinics\\Models\\EquestrianCommunicationLog",
+                    "events": ["created", "updated", "deleted"]
+                }
             ],
             "queueInvalidation": true
         }
@@ -248,40 +281,33 @@
     "marketplace": {
         "summary": "Tour days, riders, horses, waivers, payments, facilities, credits, waitlists, and coach-ready operations for equestrian businesses inside Capell.",
         "description": "Equestrian Clinics gives travelling coaches and riding schools a complete operations package: publish tour days and clinics, generate private/semi-private/group slots, take Stripe or PayPal checkout, approve trusted cash customers, manage riders, horses, waivers, facility resources, add-ons, host requests, demand heatmaps, credits, and coach day-of workflows without turning the public site into a generic booking SaaS.",
+        "competitorCoverage": [
+            "tour-days-clinics",
+            "public-discovery",
+            "payments",
+            "riders-families",
+            "horses",
+            "horse-allocation",
+            "facilities-resources",
+            "waivers-compliance",
+            "add-ons",
+            "credits-loyalty",
+            "coach-dashboard",
+            "coaching-vault",
+            "messaging",
+            "venue-host-workflow",
+            "marketing",
+            "analytics",
+            "ai-assistant",
+            "integrations"
+        ],
         "screenshots": [
             {
                 "path": "docs/assets/marketplace/extension-card.svg",
                 "alt": "Equestrian Clinics extension card showing tour day operations",
                 "caption": "Marketplace card for the Equestrian Clinics operations package."
             }
-        ]
-    },
-    "competitorCoverage": [
-        "tour-days-clinics",
-        "public-discovery",
-        "payments",
-        "checkout-holds",
-        "waitlist-claim-windows",
-        "riders-families",
-        "horses",
-        "horse-care-tasks",
-        "horse-health-service-records",
-        "competition-scores-results",
-        "staff-management",
-        "horse-allocation",
-        "facilities-resources",
-        "waivers-compliance",
-        "add-ons",
-        "credits-loyalty",
-        "stablecards-memberships-giftcards-services",
-        "billing-invoice-export",
-        "coach-dashboard",
-        "coaching-vault",
-        "messaging",
-        "venue-host-workflow",
-        "marketing",
-        "analytics",
-        "ai-assistant",
-        "integrations"
-    ]
+        ],
+        "categories": ["admin", "bookings", "commerce", "operations"]
+    }
 }

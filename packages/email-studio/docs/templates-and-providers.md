@@ -4,23 +4,44 @@ Email Studio separates template registration, message creation, provider deliver
 
 ## Register a Template
 
-Use `EmailTemplateRegistry` from a service provider when another package needs a template available to editors.
+Use `EmailTemplateRegistry::registerDefinition()` from a service provider when another package needs a static fallback template available to editors. Static definitions should point at package-owned Blade views or literal bodies; database template rows are customizations, not the source of truth.
 
 ```php
+use Capell\EmailStudio\Data\EmailTemplateDefinitionData;
+use Capell\EmailStudio\Data\EmailTemplateVariableData;
 use Capell\EmailStudio\Support\EmailTemplateRegistry;
 
 $this->app->afterResolving(EmailTemplateRegistry::class, static function (EmailTemplateRegistry $registry): void {
-    $registry->register(
+    $registry->registerDefinition(new EmailTemplateDefinitionData(
         key: 'access-approved',
-        name: 'Access approved',
-        variables: ['name', 'claim_url'],
-        description: 'Sent when an access request is approved.',
         packageName: 'capell-app/access-gate',
-    );
+        name: 'Access approved',
+        description: 'Sent when an access request is approved.',
+        variables: [
+            new EmailTemplateVariableData(name: 'name', label: 'Recipient name', sampleValue: 'Sam Editor'),
+            new EmailTemplateVariableData(name: 'claim_url', label: 'Claim URL', sampleValue: 'https://example.test/access/claim/token'),
+            new EmailTemplateVariableData(name: 'config.app.name', label: 'App name', required: false),
+        ],
+        defaultLocale: 'en',
+        subject: 'Your access request was approved',
+        previewText: 'Claim access to {{ config.app.name }}.',
+        htmlView: 'capell-access-gate::emails.access-approved',
+        text: "Hi {{ name }},\n\nClaim access: {{ claim_url }}",
+        defaultThemeKey: 'default',
+    ));
 });
 ```
 
-The registry persists its registrations through `RegisterEmailTemplateAction`. Keep the key stable; editors may already have variants attached to it.
+The registry persists registration metadata through `RegisterEmailTemplateAction`. Keep the key stable; editors may already have variants attached to it. The legacy `register()` method is metadata-only compatibility. It makes templates discoverable but does not provide a static render fallback.
+
+Resolution order is:
+
+1. Active database variant for the requested site scope and locale.
+2. Active global database variant for the locale.
+3. Registered static definition for the locale, then its default locale.
+4. Existing Email Studio rendering exception when no renderable template exists.
+
+Variables are explicit. Declare flat names such as `name` or dot-path names such as `customer.name`; Email Studio renders only values supplied in the variables array or Data payload. Config variables must be declared as `config.*` and allow-listed in Email Studio settings, with secrets excluded by default.
 
 ## Send an Email
 

@@ -24,6 +24,8 @@ class EmailTemplateRegistrationFactory extends Factory
             'name' => $this->faker->sentence(3),
             'description' => $this->faker->sentence(),
             'variables' => ['name', 'email'],
+            'default_locale' => 'en',
+            'is_static_renderable' => false,
         ];
     }
 }

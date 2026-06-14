@@ -38,6 +38,7 @@ use Capell\EmailStudio\Support\Providers\SmtpEmailProviderAdapter;
 use Capell\EmailStudio\Tests\Fixtures\CapturingEmailStudioMailer;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\Storage;
 use Spatie\LaravelData\DataCollection;
 use Symfony\Component\Mime\Email as SymfonyEmail;
 
@@ -133,6 +134,9 @@ it('normalizes provider webhooks and inbound replies without leaking transport d
 });
 
 it('delivers queued recipients through the smtp provider and maps provider message ids', function (): void {
+    Storage::fake('local');
+    Storage::disk('local')->put('attachments/report.txt', 'Report body');
+
     $profile = EmailProfile::factory()->create([
         'from_email' => 'sender@example.com',
         'from_name' => 'Sender',
@@ -146,6 +150,14 @@ it('delivers queued recipients through the smtp provider and maps provider messa
             'subject' => 'Workflow update',
             'rendered_html' => '<p>Hello team</p>',
             'rendered_text' => 'Hello team',
+            'attachments' => [
+                [
+                    'disk' => 'local',
+                    'path' => 'attachments/report.txt',
+                    'name' => 'report.txt',
+                    'mime' => 'text/plain',
+                ],
+            ],
         ]);
     $to = EmailRecipient::factory()->for($message, 'message')->create([
         'type' => 'to',
@@ -193,7 +205,9 @@ it('delivers queued recipients through the smtp provider and maps provider messa
         ->and($mailer->message?->getCc()[0]->getAddress())->toBe('cc@example.com')
         ->and($mailer->message?->getBcc()[0]->getAddress())->toBe('bcc@example.com')
         ->and($mailer->message?->getHtmlBody())->toBe('<p>Hello team</p>')
-        ->and($mailer->message?->getTextBody())->toBe('Hello team');
+        ->and($mailer->message?->getTextBody())->toBe('Hello team')
+        ->and($mailer->message?->getAttachments())->toHaveCount(1)
+        ->and($mailer->message?->getAttachments()[0]->getPreparedHeaders()->getHeaderParameter('Content-Disposition', 'filename'))->toBe('report.txt');
 });
 
 it('registers email provider adapters and exposes package health metadata', function (): void {
@@ -229,7 +243,20 @@ it('persists registered email templates through the registry', function (): void
         ->and($registrations[0])->toBeInstanceOf(EmailTemplateRegistration::class)
         ->and($registrations[0]->getAttribute('template_key'))->toBe('welcome')
         ->and($registrations[0]->getAttribute('variables'))->toBe(['name', 'email'])
-        ->and($registrations[0]->getAttribute('site_scope_key'))->toBe('primary');
+        ->and($registrations[0]->getAttribute('site_scope_key'))->toBe('primary')
+        ->and($registrations[0]->getAttribute('is_static_renderable'))->toBeFalse();
+});
+
+it('does not expose metadata-only registrations as static renderable definitions', function (): void {
+    $registry = (new EmailTemplateRegistry)
+        ->register(
+            key: 'metadata-only',
+            name: 'Metadata only',
+            variables: ['name'],
+        );
+
+    expect($registry->findDefinition('metadata-only'))->toBeNull()
+        ->and($registry->definitions())->toBe([]);
 });
 
 it('skips email template persistence before migrations create the registration table', function (): void {

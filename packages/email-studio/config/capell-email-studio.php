@@ -8,6 +8,7 @@ return [
     'tables' => [
         'profiles' => 'email_profiles',
         'templates' => 'email_templates',
+        'template_themes' => 'email_template_themes',
         'template_variants' => 'email_template_variants',
         'messages' => 'email_messages',
         'recipients' => 'email_recipients',
@@ -28,6 +29,20 @@ return [
     'tracking_token_ttl_days' => 180,
     'webhook_rate_limit' => 'email-studio-webhooks',
     'tracking_rate_limit' => 'email-studio-tracking',
+    'template_config_variables' => [
+        'app.name',
+        'app.url',
+    ],
+    'screenshot_adapter' => null,
+    'auth' => [
+        'replace_verification' => true,
+        'replace_password_reset' => true,
+        'send_welcome' => false,
+        'send_verified' => false,
+        'send_login' => false,
+        'send_lockout' => false,
+        'send_password_reset_success' => false,
+    ],
     'mail_tracker' => [
         'inject_pixel' => true,
         'track_links' => true,

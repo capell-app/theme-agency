@@ -30,6 +30,23 @@ final class EmailStudioSettings extends Settings implements SettingsContract
 
     public int $mail_tracker_purge_retention_days = 60;
 
+    /** @var list<string> */
+    public array $template_config_variables = ['app.name', 'app.url'];
+
+    public bool $auth_replace_verification = true;
+
+    public bool $auth_replace_password_reset = true;
+
+    public bool $auth_send_welcome = false;
+
+    public bool $auth_send_verified = false;
+
+    public bool $auth_send_login = false;
+
+    public bool $auth_send_lockout = false;
+
+    public bool $auth_send_password_reset_success = false;
+
     public static function group(): string
     {
         return 'email_studio';

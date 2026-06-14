@@ -15,6 +15,7 @@ class SendEmailData extends Data
      * @param  DataCollection<int, EmailAddressData>  $bcc
      * @param  array<string, mixed>  $variables
      * @param  DataCollection<int, EmailHeaderData>  $headers
+     * @param  DataCollection<int, EmailAttachmentData>|null  $attachments
      */
     public function __construct(
         public string $templateKey,
@@ -30,5 +31,6 @@ class SendEmailData extends Data
         public ?int $triggeredById,
         public bool $queue = true,
         public ?string $locale = null,
+        public ?DataCollection $attachments = null,
     ) {}
 }

@@ -8,6 +8,8 @@ use Capell\Core\Facades\CapellCore;
 use Capell\Core\Support\Packages\AbstractPackageServiceProvider;
 use Capell\Core\Support\Settings\SettingsGroupMetadata;
 use Capell\EmailStudio\Actions\ApplyMailTrackerSettingsAction;
+use Capell\EmailStudio\Actions\CreateDefaultEmailTemplateThemeAction;
+use Capell\EmailStudio\Actions\RegisterAuthEmailTemplatesAction;
 use Capell\EmailStudio\Console\Commands\PruneEmailBodiesCommand;
 use Capell\EmailStudio\Console\Commands\PurgeTrackedEmailsCommand;
 use Capell\EmailStudio\Enums\EmailProviderType;
@@ -20,6 +22,7 @@ use Capell\EmailStudio\Models\EmailReply;
 use Capell\EmailStudio\Models\EmailSuppression;
 use Capell\EmailStudio\Models\EmailTemplate;
 use Capell\EmailStudio\Models\EmailTemplateRegistration;
+use Capell\EmailStudio\Models\EmailTemplateTheme;
 use Capell\EmailStudio\Models\EmailTemplateVariant;
 use Capell\EmailStudio\Models\EmailTrackingToken;
 use Capell\EmailStudio\Models\SentEmail;
@@ -36,6 +39,7 @@ use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Support\Facades\Schema;
 use Override;
 use Spatie\LaravelPackageTools\Package;
 
@@ -52,6 +56,7 @@ class EmailStudioServiceProvider extends AbstractPackageServiceProvider
     {
         return [
             '2026_06_05_000001_create_email_studio_settings',
+            '2026_06_13_000001_add_email_template_authoring_settings',
         ];
     }
 
@@ -75,6 +80,7 @@ class EmailStudioServiceProvider extends AbstractPackageServiceProvider
                 '2026_05_10_190847_09_create_email_template_registrations_table',
                 '2026_05_10_190847_10_create_email_tracking_tokens_table',
                 '2026_05_21_000001_add_site_foreign_keys_to_email_studio_tables',
+                '2026_06_13_000001_add_email_template_authoring_tables',
             ])
             ->hasCommand(PruneEmailBodiesCommand::class)
             ->hasCommand(PurgeTrackedEmailsCommand::class);
@@ -107,6 +113,8 @@ class EmailStudioServiceProvider extends AbstractPackageServiceProvider
             $this
                 ->registerModels()
                 ->registerSettings()
+                ->registerDefaultTemplateDefinitions()
+                ->registerDefaultTheme()
                 ->registerProtectedTables();
         });
     }
@@ -135,6 +143,7 @@ class EmailStudioServiceProvider extends AbstractPackageServiceProvider
 
             $this->publishes([
                 $provider->path() . '/2026_06_05_000001_create_email_studio_settings.php' => database_path('settings/2026_06_05_000001_create_email_studio_settings.php'),
+                $provider->path() . '/2026_06_13_000001_add_email_template_authoring_settings.php' => database_path('settings/2026_06_13_000001_add_email_template_authoring_settings.php'),
             ], 'capell-email-studio-settings');
         }
     }
@@ -150,6 +159,7 @@ class EmailStudioServiceProvider extends AbstractPackageServiceProvider
         $this->surface()->models([
             EmailProfile::class,
             EmailTemplate::class,
+            EmailTemplateTheme::class,
             EmailTemplateVariant::class,
             EmailMessage::class,
             EmailRecipient::class,
@@ -210,6 +220,36 @@ class EmailStudioServiceProvider extends AbstractPackageServiceProvider
 
         CapellCore::registerProtectedTable(static fn (): string => 'sent_emails');
         CapellCore::registerProtectedTable(static fn (): string => 'sent_emails_url_clicked');
+        CapellCore::registerProtectedTable(static fn (): string => 'email_template_themes');
+
+        return $this;
+    }
+
+    private function registerDefaultTemplateDefinitions(): self
+    {
+        RegisterAuthEmailTemplatesAction::run();
+
+        if (
+            Schema::hasTable((new EmailTemplateRegistration)->getTable())
+            && ! EmailTemplateRegistration::query()->where('template_key', 'auth.verify-email')->exists()
+        ) {
+            resolve(EmailTemplateRegistry::class)->persist();
+        }
+
+        return $this;
+    }
+
+    private function registerDefaultTheme(): self
+    {
+        if (
+            Schema::hasTable((new EmailTemplateTheme)->getTable())
+            && ! EmailTemplateTheme::query()
+                ->where('site_scope_key', 'global')
+                ->where('key', 'default')
+                ->exists()
+        ) {
+            CreateDefaultEmailTemplateThemeAction::run();
+        }
 
         return $this;
     }

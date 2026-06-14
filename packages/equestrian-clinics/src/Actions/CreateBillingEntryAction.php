@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 use Lorisleiva\Actions\Concerns\AsAction;
 
 /**
- * @method static EquestrianBillingEntry run(string $label, int $amountPence, ?Model $source = null, ?int $portalAccountId = null, ?int $siteId = null, EquestrianBillingEntryStatusEnum $status = EquestrianBillingEntryStatusEnum::Draft, ?string $invoiceReference = null, ?array $meta = null)
+ * @method static EquestrianBillingEntry run(string $label, int $amountPence, ?Model $source = null, ?int $portalAccountId = null, ?int $siteId = null, EquestrianBillingEntryStatusEnum $status = EquestrianBillingEntryStatusEnum::Draft, ?string $invoiceReference = null, ?array<string, mixed> $meta = null)
  */
 final class CreateBillingEntryAction
 {

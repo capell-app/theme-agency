@@ -14,12 +14,12 @@ use Capell\EquestrianClinics\Models\EquestrianTourDay;
 use Capell\EquestrianClinics\Models\EquestrianTourDaySlot;
 use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Collection;
 use Lorisleiva\Actions\Concerns\AsAction;
 
 /**
- * @method static EquestrianCommunicationLog run(EquestrianTourDay $tourDay, EquestrianCommunicationChannelEnum $channel, string $message, string $audience = 'confirmed_bookings', ?EquestrianTourDaySlot $slot = null, ?string $subject = null, ?CarbonImmutable $sentAt = null, ?array $meta = null)
+ * @method static EquestrianCommunicationLog run(EquestrianTourDay $tourDay, EquestrianCommunicationChannelEnum $channel, string $message, string $audience = 'confirmed_bookings', ?EquestrianTourDaySlot $slot = null, ?string $subject = null, ?CarbonImmutable $sentAt = null, ?array<string, mixed> $meta = null)
  */
 final class RecordCoachBroadcastAction
 {
@@ -60,12 +60,14 @@ final class RecordCoachBroadcastAction
      */
     private function recipients(EquestrianTourDay $tourDay, string $audience, ?EquestrianTourDaySlot $slot): Collection
     {
+        $slotKey = $slot instanceof EquestrianTourDaySlot ? $slot->getKey() : null;
+
         if ($audience === 'waitlist') {
             return $tourDay->slots()
-                ->when($slot instanceof EquestrianTourDaySlot, static function (Builder $query) use ($slot): void {
-                    $query->whereKey($slot->getKey());
+                ->when($slotKey !== null, static function (Builder $query) use ($slotKey): void {
+                    $query->whereKey($slotKey);
                 })
-                ->with(['waitlistEntries' => static function (HasMany $query): void {
+                ->with(['waitlistEntries' => static function (Relation $query): void {
                     $query->whereIn('status', [
                         EquestrianWaitlistStatusEnum::Waiting,
                         EquestrianWaitlistStatusEnum::Offered,
@@ -83,10 +85,10 @@ final class RecordCoachBroadcastAction
         }
 
         return $tourDay->slots()
-            ->when($slot instanceof EquestrianTourDaySlot, static function (Builder $query) use ($slot): void {
-                $query->whereKey($slot->getKey());
+            ->when($slotKey !== null, static function (Builder $query) use ($slotKey): void {
+                $query->whereKey($slotKey);
             })
-            ->with(['bookings' => static function (HasMany $query): void {
+            ->with(['bookings' => static function (Relation $query): void {
                 $query->where('status', EquestrianSlotBookingStatusEnum::Confirmed)->with('riderProfile');
             }])
             ->get()

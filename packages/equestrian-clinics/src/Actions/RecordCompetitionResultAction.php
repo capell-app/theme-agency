@@ -12,7 +12,7 @@ use Carbon\CarbonImmutable;
 use Lorisleiva\Actions\Concerns\AsAction;
 
 /**
- * @method static EquestrianCompetitionResult run(EquestrianRiderProfile $riderProfile, string $className, CarbonImmutable $occurredAt, ?EquestrianTourDay $tourDay = null, ?EquestrianHorseProfile $horseProfile = null, ?string $discipline = null, ?string $score = null, ?string $placing = null, ?string $resultNotes = null, ?array $meta = null)
+ * @method static EquestrianCompetitionResult run(EquestrianRiderProfile $riderProfile, string $className, CarbonImmutable $occurredAt, ?EquestrianTourDay $tourDay = null, ?EquestrianHorseProfile $horseProfile = null, ?string $discipline = null, ?string $score = null, ?string $placing = null, ?string $resultNotes = null, ?array<string, mixed> $meta = null)
  */
 final class RecordCompetitionResultAction
 {

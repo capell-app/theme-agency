@@ -37,10 +37,13 @@ final class PromoteWaitlistEntryAction
                 ]);
             }
 
+            $claimMinutes = config('capell-equestrian-clinics.waitlist_claim_minutes', 120);
+            $claimMinutes = is_numeric($claimMinutes) ? (int) $claimMinutes : 120;
+
             $entry->forceFill([
                 'status' => EquestrianWaitlistStatusEnum::Offered,
                 'offered_at' => $now,
-                'offer_expires_at' => $now->addMinutes((int) config('capell-equestrian-clinics.waitlist_claim_minutes', 120)),
+                'offer_expires_at' => $now->addMinutes($claimMinutes),
             ])->save();
 
             return $entry->refresh();

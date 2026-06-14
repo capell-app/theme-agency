@@ -7,8 +7,11 @@ use Capell\EquestrianClinics\Http\Controllers\ShowCoachTimetableController;
 use Capell\EquestrianClinics\Http\Controllers\StoreHostRequestController;
 use Illuminate\Support\Facades\Route;
 
+$publicPathPrefix = config('capell-equestrian-clinics.public_path_prefix', 'equestrian-clinics');
+$publicPathPrefix = is_string($publicPathPrefix) ? $publicPathPrefix : 'equestrian-clinics';
+
 Route::middleware(['web'])
-    ->prefix(trim((string) config('capell-equestrian-clinics.public_path_prefix', 'equestrian-clinics'), '/'))
+    ->prefix(trim($publicPathPrefix, '/'))
     ->as('capell-equestrian-clinics.')
     ->group(function (): void {
         Route::get('/', ShowClinicDiscoveryController::class)->name('discovery');

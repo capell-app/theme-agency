@@ -34,7 +34,7 @@ it('keeps package manifest aligned with composer and the competitor feature matr
             'equestrian_clinic_credits',
             'equestrian_host_requests',
         )
-        ->and(stringListValue($manifest, 'competitorCoverage'))->toContain(
+        ->and(stringListValue(arrayValue($manifest, 'marketplace'), 'competitorCoverage'))->toContain(
             'tour-days-clinics',
             'public-discovery',
             'payments',

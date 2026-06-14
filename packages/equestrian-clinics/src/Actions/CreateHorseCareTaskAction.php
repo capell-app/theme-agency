@@ -12,7 +12,7 @@ use Carbon\CarbonImmutable;
 use Lorisleiva\Actions\Concerns\AsAction;
 
 /**
- * @method static EquestrianHorseCareTask run(EquestrianHorseProfile $horseProfile, EquestrianCareTaskTypeEnum $type, string $title, CarbonImmutable $dueAt, ?EquestrianStaffMember $assignedStaffMember = null, ?string $instructions = null, int $billablePence = 0, ?array $recurrence = null, ?array $meta = null)
+ * @method static EquestrianHorseCareTask run(EquestrianHorseProfile $horseProfile, EquestrianCareTaskTypeEnum $type, string $title, CarbonImmutable $dueAt, ?EquestrianStaffMember $assignedStaffMember = null, ?string $instructions = null, int $billablePence = 0, ?array<string, mixed> $recurrence = null, ?array<string, mixed> $meta = null)
  */
 final class CreateHorseCareTaskAction
 {
