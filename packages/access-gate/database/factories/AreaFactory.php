@@ -47,6 +47,13 @@ class AreaFactory extends Factory
             'discount_code' => null,
             'discount_expires_at' => null,
             'discount_metadata' => [],
+            'announcement_enabled' => false,
+            'announcement_message' => null,
+            'announcement_short_message' => null,
+            'announcement_link_label' => null,
+            'announcement_link_short_label' => null,
+            'announcement_link_url' => null,
+            'announcement_path_patterns' => [],
         ];
     }
 }

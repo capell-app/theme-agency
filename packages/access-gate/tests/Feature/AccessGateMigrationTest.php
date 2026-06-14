@@ -60,6 +60,18 @@ it('includes claim landing URL on access areas', function (): void {
     expect(Schema::hasColumn('access_gate_areas', 'claim_landing_url'))->toBeTrue();
 });
 
+it('includes announcement bar columns on access areas', function (): void {
+    expect(Schema::hasColumns('access_gate_areas', [
+        'announcement_enabled',
+        'announcement_message',
+        'announcement_short_message',
+        'announcement_link_label',
+        'announcement_link_short_label',
+        'announcement_link_url',
+        'announcement_path_patterns',
+    ]))->toBeTrue();
+});
+
 it('includes resolver indexes for download access state lookups', function (): void {
     expect(Schema::hasIndex('access_gate_registrations', 'ag_regs_area_email_norm_requested_idx'))->toBeTrue()
         ->and(Schema::hasIndex('access_gate_registrations', 'ag_regs_area_user_requested_idx'))->toBeTrue()
@@ -83,5 +95,6 @@ function accessGateMigrationFiles(): array
         __DIR__ . '/../../database/migrations/2026_05_10_190838_05_create_access_gate_browser_tokens_table.php',
         __DIR__ . '/../../database/migrations/2026_05_10_190838_06_create_access_gate_events_table.php',
         __DIR__ . '/../../database/migrations/2026_06_07_000001_add_claim_landing_url_to_access_gate_areas_table.php',
+        __DIR__ . '/../../database/migrations/2026_06_14_000001_add_announcement_bar_fields_to_access_gate_areas_table.php',
     ];
 }

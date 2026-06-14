@@ -26,6 +26,7 @@ use Filament\Forms\Components\KeyValue;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
@@ -123,6 +124,29 @@ final class AccessAreaResource extends Resource
                     ->label(__('capell-access-gate::filament.fields.discount_code')),
                 DateTimePicker::make('discount_expires_at')
                     ->label(__('capell-access-gate::filament.fields.discount_expires_at')),
+                Toggle::make('announcement_enabled')
+                    ->label(__('capell-access-gate::filament.fields.announcement_enabled'))
+                    ->helperText(__('capell-access-gate::filament.fields.announcement_enabled_help')),
+                TextInput::make('announcement_message')
+                    ->label(__('capell-access-gate::filament.fields.announcement_message'))
+                    ->maxLength(500),
+                TextInput::make('announcement_short_message')
+                    ->label(__('capell-access-gate::filament.fields.announcement_short_message'))
+                    ->maxLength(120),
+                TextInput::make('announcement_link_label')
+                    ->label(__('capell-access-gate::filament.fields.announcement_link_label'))
+                    ->maxLength(120),
+                TextInput::make('announcement_link_short_label')
+                    ->label(__('capell-access-gate::filament.fields.announcement_link_short_label'))
+                    ->maxLength(80),
+                TextInput::make('announcement_link_url')
+                    ->label(__('capell-access-gate::filament.fields.announcement_link_url'))
+                    ->helperText(__('capell-access-gate::filament.fields.announcement_link_url_help'))
+                    ->maxLength(2048),
+                TagsInput::make('announcement_path_patterns')
+                    ->label(__('capell-access-gate::filament.fields.announcement_path_patterns'))
+                    ->helperText(__('capell-access-gate::filament.fields.announcement_path_patterns_help'))
+                    ->columnSpanFull(),
                 KeyValue::make('metadata')
                     ->label(__('capell-access-gate::filament.fields.metadata'))
                     ->columnSpanFull(),
