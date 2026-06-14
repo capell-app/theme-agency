@@ -52,7 +52,7 @@ class AgencyThemeServiceProvider extends ServiceProvider
                     description: 'Sharp contrast, strong statements, and energetic section pacing.',
                     previewImage: self::PUBLIC_PREVIEW_IMAGE,
                     values: [
-                        'primaryColor' => '#ff5a7e',
+                        'primaryColor' => '#be123c',
                         'accentColor' => '#3b82f6',
                         'neutralColor' => '#09090b',
                         'surfaceColor' => '#09090b',
@@ -178,7 +178,7 @@ class AgencyThemeServiceProvider extends ServiceProvider
             ],
             assets: ['css' => self::GENERATED_FRONTEND_CSS],
             runtime: FrontendRuntime::Blade,
-            // Theme Studio inherits section fallbacks from the runtime default; capell.json keeps package-level inheritance on Foundation Theme.
+            // Theme Studio inherits section fallbacks from the runtime default; capell.json no longer declares package-level inheritance because the default fallback lives in capell-app/frontend.
             extends: 'default',
         );
     }

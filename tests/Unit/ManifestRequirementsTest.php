@@ -9,7 +9,7 @@ describe('theme agency capell.json manifest', function (): void {
         $manifest = agencyThemeManifest();
         $overview = File::get(__DIR__ . '/../../docs/overview.md');
 
-        expect($manifest['description'])->toBe('Theme Agency turns a Capell site into a confident creative portfolio. It ships an expressive page system — full-bleed launch hero, animated proof wall, project showcase, and a conversion-focused brief CTA — built to make studio and agency work look like the work, not a template. Three presets (Signal, Gallery, Atelier) re-skin every section from energetic high-contrast to refined editorial neutrals, all driven by Theme Studio tokens with zero code. Built on Foundation Theme contracts, it stays fast, cache-aware, and safe for public output, so it drops into the standard Capell theme workflow.')
+        expect($manifest['description'])->toBe('Theme Agency turns a Capell site into a confident creative portfolio. It ships an expressive page system — full-bleed launch hero, animated proof wall, project showcase, and a conversion-focused brief CTA — built to make studio and agency work look like the work, not a template. Three presets (Signal, Gallery, Atelier) re-skin every section from energetic high-contrast to refined editorial neutrals, all driven by Theme Studio tokens with zero code. Built on the built-in default frontend contracts, it stays fast, cache-aware, and safe for public output, so it drops into the standard Capell theme workflow.')
             ->and($manifest['product'])->toMatchArray([
                 'group' => 'Capell Themes',
                 'tier' => 'premium',
@@ -34,8 +34,11 @@ describe('theme agency capell.json manifest', function (): void {
 
         expect(collect($screenshots)->pluck('path')->all())->toBe([
             'docs/assets/marketplace/extension-card.jpg',
+            'docs/screenshots/agency-campaign-layout.png',
+            'docs/screenshots/agency-case-study-layout.png',
+            'docs/screenshots/agency-event-landing-layout.png',
             'docs/screenshots/agency-homepage-layout.png',
-            'docs/screenshots/agency-lead-form-layout.png',
+            'docs/screenshots/agency-insights-layout.png',
         ]);
     });
 
