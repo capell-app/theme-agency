@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Capell\AccessGate\Console\Commands\AccessGateAuditExportCommand;
 use Capell\AccessGate\Console\Commands\AccessGateDoctorCommand;
 use Capell\AccessGate\Console\Commands\AccessGateInstallCommand;
 use Capell\AccessGate\Console\Commands\AccessGatePruneCommand;
@@ -140,12 +141,14 @@ it('declares the shipped access gate package manifest surfaces', function (): vo
             'type' => 'console-command',
             'class' => AccessGateConsoleCommandsContribution::class,
             'commands' => [
+                'capell:access-gate-audit-export',
                 'capell:access-gate-install',
                 'capell:access-gate-setup',
                 'capell:access-gate-doctor',
                 'capell:access-gate-prune',
             ],
             'commandClasses' => [
+                AccessGateAuditExportCommand::class,
                 AccessGateInstallCommand::class,
                 AccessGateSetupCommand::class,
                 AccessGateDoctorCommand::class,

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Capell\AccessGate\Providers;
 
 use Capell\AccessGate\Actions\SubmitAccessGatePublicAction;
+use Capell\AccessGate\Console\Commands\AccessGateAuditExportCommand;
 use Capell\AccessGate\Console\Commands\AccessGateDoctorCommand;
 use Capell\AccessGate\Console\Commands\AccessGateInstallCommand;
 use Capell\AccessGate\Console\Commands\AccessGatePruneCommand;
@@ -76,6 +77,7 @@ class AccessGateServiceProvider extends AbstractPackageServiceProvider
             ->hasViews(self::$name)
             ->hasRoute('web')
             ->hasCommands([
+                AccessGateAuditExportCommand::class,
                 AccessGateDoctorCommand::class,
                 AccessGateInstallCommand::class,
                 AccessGatePruneCommand::class,

@@ -4,7 +4,7 @@
 
 ## 1. Snapshot
 
-Access Gate is a schema-owning operations package for page, download, member-area, guest-link, schedule, and paid-access gating. It owns admin resources for areas, registrations, grants, browser tokens, claim tokens, and events; public request, claim, logout, and optional status routes; customer-portal and payments bridges; diagnostics; announcement-bar hooks; and screenshot coverage for admin and public workflows. The paid-access checkout slice is now explicit: Access Gate creates Payments `gated_access` checkout sessions for registrations, and the Payments fulfillment handler approves the registration after completion. The code is already Action-heavy and has broad focused tests, but the remaining risk is operational depth: stale tokens/registrations/events can accumulate, duplicate public submissions need stronger idempotency guarantees, and the public cache/privacy boundaries should be documented as first-class product behavior.
+Access Gate is a schema-owning operations package for page, download, member-area, guest-link, schedule, and paid-access gating. It owns admin resources for areas, registrations, grants, browser tokens, claim tokens, and events; public request, claim, logout, and optional status routes; customer-portal and payments bridges; diagnostics; announcement-bar hooks; and screenshot coverage for admin and public workflows. The paid-access checkout slice is now explicit: Access Gate creates Payments `gated_access` checkout sessions for registrations, and the Payments fulfillment handler approves the registration after completion. The current operations wave has also added retention pruning, duplicate public-request idempotency, broader diagnostics, documented public cache/privacy boundaries, and CSV audit export for support evidence. The remaining risk is deeper customer self-service and approval-limit race coverage.
 
 ## 2. Improvements (existing functionality)
 
@@ -23,7 +23,7 @@ Access Gate is a schema-owning operations package for page, download, member-are
 Capabilities declared: `access-gating`, `registration-approval`, `claim-token-management`, `paid-gated-access-checkout-creation`, `paid-gated-access-fulfillment`, and `access-gate-customer-portal-gated-resource-feed`.
 
 - **No retention automation.** Expired registrations and tokens can be marked unusable, but package-owned cleanup is not exposed as a command/schedule.
-- **No export/report workflow for access audits.** Events are visible in admin, but support teams often need CSV evidence of access grants, denials, and revocations.
+- **Done/Shipped: audit CSV export support.** `capell:access-gate-audit-export` exports events with area, registration, grant, token, actor, subject, payload, and metadata columns; operators can filter by area key, event type, date range, and limit, then write to a path or stdout.
 - **Limited user self-service.** Customer Portal integration exists, but browser-token revocation and active-grant visibility should be expanded for end users.
 - **No plan-backed load/concurrency tests.** Approval limits and queued registrations are sensitive to race conditions; tests should cover concurrent approval batches.
 
@@ -57,7 +57,7 @@ Access Gate should be positioned as a serious access-control layer for Capell op
 | Make public registration submission idempotent for duplicate pending users  | Done   | M      | High   | §2.2, §4.2  |
 | Expand health diagnostics for methods, fields, throttles, bridges, and hook | Done   | M      | Medium | §2.3        |
 | Document cache/privacy boundaries for public gated output                   | Done   | S      | Medium | §2.4, §4.3  |
-| Add audit CSV/export support                                                | Next   | M      | Medium | §3, §4.4    |
+| Add audit CSV/export support                                                | Done   | M      | Medium | §3, §4.4    |
 | Expand Customer Portal self-service for active grants and browser tokens    | Next   | M      | Medium | §3          |
 | Add approval-limit concurrency coverage                                     | Next   | M      | High   | §3          |
 | Add richer paid-access lifecycle reporting                                  | Later  | L      | Medium | §4.4, §5    |
@@ -76,6 +76,12 @@ For pruning or public-route changes, include:
 
 ```bash
 vendor/bin/pest packages/access-gate/tests/Feature/AccessGateMiddlewareTest.php packages/access-gate/tests/Unit/Actions --configuration=phpunit.xml
+```
+
+For audit export changes, include:
+
+```bash
+vendor/bin/pest packages/access-gate/tests/Feature/AccessGateDoctorCommandTest.php --configuration=phpunit.xml
 ```
 
 ## 8. Completion Checklist

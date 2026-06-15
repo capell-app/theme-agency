@@ -53,8 +53,8 @@ Screenshot contract: `docs/screenshots.json`.
 - Listeners: `NotifyAdminsOfAccessRequest`.
 - Actions: `ApproveNextRegistrationsAction`, `ApproveRegistrationAction`, `AreaIsCurrentlyGatingAction`, `ConsumeAccessGateClaimTokenAction`, `CreateAccessGateBrowserTokenAction`, `CreateAccessGateClaimTokenAction`, `CreateAccessGateGrantAction`, `CreatePaidAccessCheckoutForRegistrationAction`, `CreateRegistrationAction`, `EnsureAccessGateGrantCanIssueTokenAction`, `ExpireRegistrationAction`, `InstallAccessGatePackageAction`, `and 15 more`.
 - Data objects: `AccessGateAccessResultData`, `AccessRequestMethodData`, `AnnouncementBarData`, `CreatePaidAccessCheckoutData`, `IssuedAccessGateTokenData`, `RegistrationFieldValue`.
-- Command signatures: `capell:access-gate-doctor`, `capell:access-gate-install`, `capell:access-gate-setup`.
-- Console command classes: `AccessGateDoctorCommand`, `AccessGateInstallCommand`, `AccessGateSetupCommand`.
+- Command signatures: `capell:access-gate-audit-export`, `capell:access-gate-doctor`, `capell:access-gate-install`, `capell:access-gate-prune`, `capell:access-gate-setup`.
+- Console command classes: `AccessGateAuditExportCommand`, `AccessGateDoctorCommand`, `AccessGateInstallCommand`, `AccessGatePruneCommand`, `AccessGateSetupCommand`.
 - Manifest contributions: `admin-resource: Capell\AccessGate\Manifest\AccessAreaResourceContribution`, `admin-resource: Capell\AccessGate\Manifest\AccessGateEventResourceContribution`, `admin-resource: Capell\AccessGate\Manifest\BrowserTokenResourceContribution`, `admin-resource: Capell\AccessGate\Manifest\ClaimTokenResourceContribution`, `admin-resource: Capell\AccessGate\Manifest\GrantResourceContribution`, `admin-resource: Capell\AccessGate\Manifest\RegistrationResourceContribution`, `console-command: Capell\AccessGate\Manifest\AccessGateConsoleCommandsContribution`, `dashboard-widget: Capell\AccessGate\Manifest\PendingAccessRequestsWidgetContribution`, `health-check: Capell\AccessGate\Manifest\AccessGateHealthContribution`, `model: Capell\AccessGate\Manifest\AccessGateModelsContribution`, `route: Capell\AccessGate\Manifest\AccessGateRoutesContribution`. Paid access checkout creation is declared under manifest actions as `CreatePaidAccessCheckoutForRegistrationAction` with `PaidAccessCheckoutCreationContribution` traceability.
 - Health checks: `Capell\AccessGate\Health\AccessGateHealthCheck`.
 - Blade views: `packages/access-gate/resources/views/claimed.blade.php`, `packages/access-gate/resources/views/components/announcement-bar.blade.php`, `packages/access-gate/resources/views/components/request-cta.blade.php`, `packages/access-gate/resources/views/message.blade.php`, `packages/access-gate/resources/views/request.blade.php`.
@@ -76,7 +76,7 @@ Screenshot contract: `docs/screenshots.json`.
 - Settings: no package settings declared.
 - Queues or schedules: none detected in standard package paths.
 - Cache tags: none declared.
-- Commands: `capell:access-gate-doctor`, `capell:access-gate-install`, `capell:access-gate-setup`.
+- Commands: `capell:access-gate-audit-export`, `capell:access-gate-doctor`, `capell:access-gate-install`, `capell:access-gate-prune`, `capell:access-gate-setup`.
 - Paid checkout: requires `capell-app/payments`; Access Gate creates a `gated_access` checkout session for a registration and Payments fulfills the completed checkout into an approved grant.
 
 ## Public Cache And Privacy Boundaries
@@ -86,6 +86,8 @@ Access Gate public output must stay safe for anonymous HTML caches. Public gated
 Cache variation belongs at the controller/render-data boundary. Vary gated public output by site, language, route, access method, and the minimum anonymous state needed to decide whether a gate is visible. Do not vary static HTML on raw user IDs or private grant records; resolve active grants after the public page load through authenticated Customer Portal or package-owned endpoints.
 
 Paid access handoff should keep checkout/session state out of cached markup. Render a public CTA, then create payment or approval sessions through POST routes that are throttled, CSRF-protected, and tied to package Actions.
+
+Audit exports are available through `capell:access-gate-audit-export`. Use `--area`, `--type`, `--from`, `--to`, and `--limit` to narrow evidence for a support case, and pass `--path=/absolute/path/access-gate-audit.csv` when the CSV should be written to disk instead of stdout.
 
 ## Common Pitfalls
 
