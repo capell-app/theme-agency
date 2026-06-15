@@ -18,13 +18,21 @@ use Throwable;
 
 abstract class AbstractAgentDeliveryController
 {
+    public const string HEADER_VERSION = 'X-Capell-Agent-Delivery-Version';
+
+    public const string HEADER_CACHE_TAGS = 'X-Capell-Cache-Tags';
+
+    public const string HEADER_CACHE_VARIATION = 'X-Capell-Agent-Delivery-Variation';
+
+    public const string CACHE_VARIATION = 'site,language,url,page';
+
     protected const string API_VERSION = 'v1';
 
     protected function notFound(): JsonResponse
     {
         return response()
             ->json(['message' => __('capell-agent-delivery::messages.page_not_found')], 404)
-            ->header('X-Capell-Agent-Delivery-Version', static::API_VERSION);
+            ->header(self::HEADER_VERSION, static::API_VERSION);
     }
 
     protected function isNotInstalled(): bool
@@ -40,8 +48,8 @@ abstract class AbstractAgentDeliveryController
     {
         return response()
             ->json($payload, $status)
-            ->header('X-Capell-Agent-Delivery-Version', static::API_VERSION)
-            ->header('X-Capell-Cache-Tags', implode(',', $cacheTags));
+            ->header(self::HEADER_VERSION, static::API_VERSION)
+            ->header(self::HEADER_CACHE_TAGS, implode(',', $cacheTags));
     }
 
     /**
@@ -58,10 +66,12 @@ abstract class AbstractAgentDeliveryController
         if ($this->requestMatchesEtag($request, $etag)) {
             $response = response()
                 ->json(null, Response::HTTP_NOT_MODIFIED)
-                ->header('X-Capell-Agent-Delivery-Version', static::API_VERSION)
-                ->header('X-Capell-Cache-Tags', implode(',', $cacheTags))
+                ->header(self::HEADER_VERSION, static::API_VERSION)
+                ->header(self::HEADER_CACHE_TAGS, implode(',', $cacheTags))
                 ->header('Cache-Control', sprintf('public, max-age=%d', $maxAge))
                 ->header('ETag', $etag);
+
+            $this->applyVariationHeaders($response);
 
             if ($lastModifiedHeader !== null) {
                 $response->header('Last-Modified', $lastModifiedHeader);
@@ -73,6 +83,8 @@ abstract class AbstractAgentDeliveryController
         $response = $this->json($payload, cacheTags: $cacheTags)
             ->header('Cache-Control', sprintf('public, max-age=%d', $maxAge))
             ->header('ETag', $etag);
+
+        $this->applyVariationHeaders($response);
 
         if ($lastModifiedHeader !== null) {
             $response->header('Last-Modified', $lastModifiedHeader);
@@ -112,6 +124,13 @@ abstract class AbstractAgentDeliveryController
         }
 
         return is_numeric($maxAge) ? max(0, (int) $maxAge) : 300;
+    }
+
+    private function applyVariationHeaders(JsonResponse $response): void
+    {
+        $response
+            ->header(self::HEADER_CACHE_VARIATION, self::CACHE_VARIATION)
+            ->setVary(['Host'], false);
     }
 
     private function requestMatchesEtag(Request $request, string $etag): bool

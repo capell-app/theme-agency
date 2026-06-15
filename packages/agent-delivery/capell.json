@@ -39,7 +39,17 @@
             "contentType": "application/json",
             "auth": "public",
             "cachePolicy": "short-lived-public-json",
+            "cacheVariation": ["site", "language", "url", "page"],
             "conditionalRequests": true,
+            "responseHeaders": [
+                "X-Capell-Agent-Delivery-Version",
+                "X-Capell-Cache-Tags",
+                "X-Capell-Agent-Delivery-Variation",
+                "Cache-Control",
+                "Vary",
+                "ETag",
+                "Last-Modified"
+            ],
             "routes": [
                 "capell-agent-delivery.pages.index",
                 "capell-agent-delivery.pages.manifest",
@@ -128,8 +138,8 @@
         "adminQueryBudget": 0,
         "cacheTags": ["agent-delivery"],
         "cacheSafety": {
-            "cacheable": false,
-            "variesBy": ["site", "locale", "url"],
+            "cacheable": true,
+            "variesBy": ["site", "language", "url", "page"],
             "sensitiveOutput": false,
             "invalidationSources": [
                 {

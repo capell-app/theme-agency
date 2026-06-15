@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace Capell\AgentDelivery\Health;
 
+use Capell\AgentDelivery\Http\Controllers\AbstractAgentDeliveryController;
 use Capell\AgentDelivery\Support\AgentDeliveryRegistry;
 use Capell\AgentDelivery\Support\SiteDiscovery\AgentDeliveryGeneratedOutputCoverageSource;
 use Capell\Core\Contracts\Extensions\ChecksExtensionHealth;
 use Capell\Core\Data\Diagnostics\DoctorCheckResultData;
 use Capell\SiteDiscovery\Contracts\GeneratedOutputCoverageSource;
 use Closure;
+use Illuminate\Routing\Route as RoutingRoute;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Route;
@@ -31,6 +33,7 @@ final class AgentDeliveryHealthCheck implements ChecksExtensionHealth
         return collect([
             $check->routeRegistrationCheck(),
             $check->rateLimiterCheck(),
+            $check->jsonResponseHeaderCheck(),
             $check->registryBindingCheck(),
             $check->siteDiscoveryCoverageCheck(),
         ]);
@@ -44,11 +47,7 @@ final class AgentDeliveryHealthCheck implements ChecksExtensionHealth
 
     public function routeRegistrationCheck(): DoctorCheckResultData
     {
-        $missingRoutes = collect([
-            'capell-agent-delivery.pages.index',
-            'capell-agent-delivery.pages.manifest',
-            'capell-agent-delivery.pages.chunks',
-        ])
+        $missingRoutes = collect($this->publicRouteNames())
             ->reject(fn (string $routeName): bool => Route::has($routeName))
             ->values()
             ->all();
@@ -101,6 +100,37 @@ final class AgentDeliveryHealthCheck implements ChecksExtensionHealth
         );
     }
 
+    public function jsonResponseHeaderCheck(): DoctorCheckResultData
+    {
+        $requiredHeaders = [
+            AbstractAgentDeliveryController::HEADER_VERSION,
+            AbstractAgentDeliveryController::HEADER_CACHE_TAGS,
+            AbstractAgentDeliveryController::HEADER_CACHE_VARIATION,
+            'Cache-Control',
+            'ETag',
+        ];
+        $missingHeaders = collect($requiredHeaders)
+            ->filter(static fn (string $header): bool => $header === '')
+            ->values()
+            ->all();
+        $routesWithoutSharedController = collect($this->publicRouteNames())
+            ->reject(fn (string $routeName): bool => $this->routeUsesAgentDeliveryController($routeName))
+            ->values()
+            ->all();
+        $passed = $missingHeaders === [] && $routesWithoutSharedController === [];
+
+        return new DoctorCheckResultData(
+            label: 'Agent Delivery JSON response headers',
+            passed: $passed,
+            message: $passed
+                ? 'Agent Delivery cacheable JSON responses declare version, cache, conditional request, and variation headers.'
+                : 'Agent Delivery cacheable JSON response headers are incomplete.',
+            remediation: $passed
+                ? null
+                : 'Keep cacheable Agent Delivery responses on AbstractAgentDeliveryController::cacheableJson so cache and variation headers stay consistent.',
+        );
+    }
+
     public function siteDiscoveryCoverageCheck(): DoctorCheckResultData
     {
         if (! interface_exists(GeneratedOutputCoverageSource::class)) {
@@ -124,5 +154,36 @@ final class AgentDeliveryHealthCheck implements ChecksExtensionHealth
                 ? null
                 : 'Ensure AgentDeliveryServiceProvider tags AgentDeliveryGeneratedOutputCoverageSource when Site Discovery is installed.',
         );
+    }
+
+    /**
+     * @return list<string>
+     */
+    private function publicRouteNames(): array
+    {
+        return [
+            'capell-agent-delivery.pages.index',
+            'capell-agent-delivery.pages.manifest',
+            'capell-agent-delivery.pages.chunks',
+        ];
+    }
+
+    private function routeUsesAgentDeliveryController(string $routeName): bool
+    {
+        $route = Route::getRoutes()->getByName($routeName);
+
+        if (! $route instanceof RoutingRoute) {
+            return false;
+        }
+
+        $controller = $route->getAction('controller');
+
+        if (! is_string($controller) || $controller === '') {
+            return false;
+        }
+
+        $controllerClass = explode('@', $controller, 2)[0];
+
+        return is_a($controllerClass, AbstractAgentDeliveryController::class, true);
     }
 }

@@ -32,7 +32,9 @@ it('returns chunks with a meta envelope for a published page', function (): void
         ->assertOk()
         ->assertHeader('X-Capell-Agent-Delivery-Version', 'v1')
         ->assertHeader('X-Capell-Cache-Tags')
+        ->assertHeader('X-Capell-Agent-Delivery-Variation', 'site,language,url,page')
         ->assertHeader('Cache-Control', 'max-age=300, public')
+        ->assertHeader('Vary', 'Host')
         ->assertHeader('ETag')
         ->assertJsonPath('data.0.id', 'section')
         ->assertJsonPath('data.0.heading', 'Section')
@@ -136,7 +138,9 @@ it('returns a 304 response when chunk etag matches', function (): void {
         'If-None-Match' => chunksResponseHeader($response, 'ETag'),
     ])
         ->assertStatus(304)
-        ->assertHeader('ETag', chunksResponseHeader($response, 'ETag'));
+        ->assertHeader('ETag', chunksResponseHeader($response, 'ETag'))
+        ->assertHeader('X-Capell-Agent-Delivery-Variation', 'site,language,url,page')
+        ->assertHeader('Vary', 'Host');
 });
 
 /**

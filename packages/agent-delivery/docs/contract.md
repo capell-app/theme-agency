@@ -14,11 +14,15 @@ Successful responses include:
 
 - `X-Capell-Agent-Delivery-Version`
 - `X-Capell-Cache-Tags`
+- `X-Capell-Agent-Delivery-Variation`
 - `Cache-Control`
+- `Vary`
 - `ETag`
 - `Last-Modified` when a page timestamp is available
 
 Requests with a matching `If-None-Match` return `304`.
+
+Cacheable responses declare `site,language,url,page` variation dimensions and `Vary: Host` because the same route names resolve different public content for different site domains. The variation header lists dimensions only; it does not expose model identifiers or authoring metadata.
 
 ## Page Index
 

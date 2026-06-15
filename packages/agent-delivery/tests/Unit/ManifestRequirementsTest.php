@@ -43,6 +43,8 @@ it('declares shipped agent delivery manifest contributions', function (): void {
             'capell-agent-delivery.pages.index',
             'capell-agent-delivery.pages.manifest',
         ])
+        ->and(data_get($manifest, 'performance.cacheSafety.cacheable'))->toBeTrue()
+        ->and(data_get($manifest, 'performance.cacheSafety.variesBy'))->toBe(['site', 'language', 'url', 'page'])
         ->and(data_get($manifest, 'healthChecks.0.class'))->toBe(AgentDeliveryHealthCheck::class)
         ->and(data_get($manifest, 'contributionTraceability.deferredContributions'))->toBe([]);
 
@@ -57,7 +59,17 @@ it('declares shipped agent delivery manifest contributions', function (): void {
             'contentType' => 'application/json',
             'auth' => 'public',
             'cachePolicy' => 'short-lived-public-json',
+            'cacheVariation' => ['site', 'language', 'url', 'page'],
             'conditionalRequests' => true,
+            'responseHeaders' => [
+                'X-Capell-Agent-Delivery-Version',
+                'X-Capell-Cache-Tags',
+                'X-Capell-Agent-Delivery-Variation',
+                'Cache-Control',
+                'Vary',
+                'ETag',
+                'Last-Modified',
+            ],
             'routes' => [
                 'capell-agent-delivery.pages.index',
                 'capell-agent-delivery.pages.manifest',

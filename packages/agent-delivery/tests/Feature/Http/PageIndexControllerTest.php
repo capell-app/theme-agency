@@ -33,7 +33,9 @@ it('lists agent-delivery pages for the resolved site and language', function ():
 
     $response = getJson(indexTestUrl('capell-agent-delivery.pages.index'))
         ->assertOk()
+        ->assertHeader('X-Capell-Agent-Delivery-Variation', 'site,language,url,page')
         ->assertHeader('Cache-Control', 'max-age=300, public')
+        ->assertHeader('Vary', 'Host')
         ->assertHeader('ETag');
 
     $data = $response->json('data');
@@ -69,7 +71,9 @@ it('returns a 304 response when page index etag matches', function (): void {
         'If-None-Match' => indexResponseHeader($response, 'ETag'),
     ])
         ->assertStatus(304)
-        ->assertHeader('ETag', indexResponseHeader($response, 'ETag'));
+        ->assertHeader('ETag', indexResponseHeader($response, 'ETag'))
+        ->assertHeader('X-Capell-Agent-Delivery-Variation', 'site,language,url,page')
+        ->assertHeader('Vary', 'Host');
 });
 
 it('resolves manifests for a requested locale override', function (): void {

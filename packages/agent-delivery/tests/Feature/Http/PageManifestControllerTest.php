@@ -40,7 +40,9 @@ it('returns a public-safe page manifest for an already public page', function ()
         ->assertOk()
         ->assertHeader('X-Capell-Agent-Delivery-Version', 'v1')
         ->assertHeader('X-Capell-Cache-Tags', sprintf('agent-delivery,site:%s,language:%s,page:%s', $site->getKey(), $language->getKey(), $page->getKey()))
+        ->assertHeader('X-Capell-Agent-Delivery-Variation', 'site,language,url,page')
         ->assertHeader('Cache-Control', 'max-age=300, public')
+        ->assertHeader('Vary', 'Host')
         ->assertHeader('ETag')
         ->assertJsonPath('data.canonicalUrl', 'http://example.com/guides/ai-ready')
         ->assertJsonPath('data.url', '/guides/ai-ready')
@@ -89,7 +91,9 @@ it('returns a 304 response when manifest etag matches', function (): void {
         'If-None-Match' => manifestResponseHeader($response, 'ETag'),
     ])
         ->assertStatus(304)
-        ->assertHeader('ETag', manifestResponseHeader($response, 'ETag'));
+        ->assertHeader('ETag', manifestResponseHeader($response, 'ETag'))
+        ->assertHeader('X-Capell-Agent-Delivery-Variation', 'site,language,url,page')
+        ->assertHeader('Vary', 'Host');
 });
 
 it('does not serve pages opted out of agent delivery', function (): void {

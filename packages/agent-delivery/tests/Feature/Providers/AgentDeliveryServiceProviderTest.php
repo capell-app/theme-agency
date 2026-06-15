@@ -46,12 +46,13 @@ it('applies the documented rate limiter to public endpoints by default', functio
 it('reports actionable package health diagnostics', function (): void {
     $results = AgentDeliveryHealthCheck::runDiagnostics();
 
-    expect($results)->toHaveCount(4)
+    expect($results)->toHaveCount(5)
         ->and($results->every(fn (DoctorCheckResultData $result): bool => $result->passed))->toBeTrue()
         ->and(AgentDeliveryHealthCheck::passed())->toBeTrue()
         ->and($results->pluck('label')->all())->toBe([
             'Agent Delivery public routes',
             'Agent Delivery rate limiting',
+            'Agent Delivery JSON response headers',
             'Agent Delivery contributor registry',
             'Agent Delivery Site Discovery coverage',
         ]);
