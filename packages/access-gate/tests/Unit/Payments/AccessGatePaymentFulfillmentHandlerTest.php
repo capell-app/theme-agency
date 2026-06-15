@@ -83,12 +83,12 @@ final class AccessGatePaymentFulfillmentHandlerTest extends PaymentsAccessGateTe
         $this->assertSame('access-gate.registration', $checkoutSession->payable_type);
         $this->assertSame((string) $registration->getKey(), $checkoutSession->payable_id);
         $this->assertSame('access-gate-registration-' . $registration->getKey(), $checkoutSession->reference_id);
-        $this->assertSame('access-gate-registration-' . $registration->getKey(), $gateway->lastRequest?->idempotencyKey);
-        $this->assertSame('paid-reader@example.test', $gateway->lastRequest?->customerEmail);
-        $this->assertSame('gbp', $gateway->lastRequest?->lineItems[0]->currency);
-        $this->assertSame('access-gate.registration', $gateway->lastRequest?->sourceType);
-        $this->assertSame((string) $registration->getKey(), $gateway->lastRequest?->metadata['access_gate_registration_id'] ?? null);
-        $this->assertSame('launch', $gateway->lastRequest?->metadata['campaign'] ?? null);
+        $this->assertSame('access-gate-registration-' . $registration->getKey(), $gateway->lastRequest->idempotencyKey);
+        $this->assertSame('paid-reader@example.test', $gateway->lastRequest->customerEmail);
+        $this->assertSame('gbp', $gateway->lastRequest->lineItems[0]->currency);
+        $this->assertSame('access-gate.registration', $gateway->lastRequest->sourceType);
+        $this->assertSame((string) $registration->getKey(), $gateway->lastRequest->metadata['access_gate_registration_id'] ?? null);
+        $this->assertSame('launch', $gateway->lastRequest->metadata['campaign'] ?? null);
     }
 
     public function test_it_rejects_unsafe_paid_access_checkout_creation_input(): void

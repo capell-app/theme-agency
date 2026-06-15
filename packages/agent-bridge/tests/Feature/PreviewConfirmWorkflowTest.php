@@ -160,7 +160,11 @@ it('redacts sensitive payload and result fragments before writing audit entries'
         user: $user,
     );
 
-    expect($result['result']['data']['payload']['accessToken'])->toBe('secret-access-token');
+    $resultPayload = data_get($result, 'result.data.payload');
+
+    throw_unless(is_array($resultPayload), RuntimeException::class, 'Expected agent bridge result payload array.');
+
+    expect($resultPayload['accessToken'] ?? null)->toBe('secret-access-token');
 
     $auditEntries = CapellAgentBridgeAuditEntry::query()
         ->orderBy('id')
@@ -169,6 +173,10 @@ it('redacts sensitive payload and result fragments before writing audit entries'
     expect($auditEntries)->toHaveCount(2);
 
     foreach ($auditEntries as $auditEntry) {
+        $auditResultPayload = data_get($auditEntry->result, 'data.payload');
+
+        throw_unless(is_array($auditResultPayload), RuntimeException::class, 'Expected redacted audit result payload array.');
+
         expect($auditEntry->payload)
             ->toMatchArray([
                 'name' => 'Example',
@@ -179,11 +187,11 @@ it('redacts sensitive payload and result fragments before writing audit entries'
                 'adminUrl' => '[redacted]',
                 'prompt' => ['[redacted]'],
             ])
-            ->and($auditEntry->result['data']['payload']['accessToken'])->toBe('[redacted]')
-            ->and($auditEntry->result['data']['payload']['password'])->toBe('[redacted]')
-            ->and($auditEntry->result['data']['payload']['authorization'])->toBe('[redacted]')
-            ->and($auditEntry->result['data']['payload']['adminUrl'])->toBe('[redacted]')
-            ->and($auditEntry->result['data']['payload']['prompt'])->toBe(['[redacted]']);
+            ->and($auditResultPayload['accessToken'] ?? null)->toBe('[redacted]')
+            ->and($auditResultPayload['password'] ?? null)->toBe('[redacted]')
+            ->and($auditResultPayload['authorization'] ?? null)->toBe('[redacted]')
+            ->and($auditResultPayload['adminUrl'] ?? null)->toBe('[redacted]')
+            ->and($auditResultPayload['prompt'] ?? null)->toBe(['[redacted]']);
     }
 });
 

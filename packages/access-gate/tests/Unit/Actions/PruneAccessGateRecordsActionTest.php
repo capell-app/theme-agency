@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Capell\AccessGate\Actions\PruneAccessGateRecordsAction;
+use Capell\AccessGate\Data\PrunedAccessGateRecordsData;
 use Capell\AccessGate\Enums\BrowserTokenStatus;
 use Capell\AccessGate\Enums\ClaimTokenStatus;
 use Capell\AccessGate\Enums\EventType;
@@ -77,6 +78,8 @@ it('prunes stale access records without deleting active grants', function (): vo
 
     $dryRun = PruneAccessGateRecordsAction::run(dryRun: true);
 
+    expect($dryRun)->toBeInstanceOf(PrunedAccessGateRecordsData::class);
+
     expect($dryRun->toArray())->toMatchArray([
         'browser_tokens' => 2,
         'claim_tokens' => 2,
@@ -90,6 +93,8 @@ it('prunes stale access records without deleting active grants', function (): vo
         ->and(Event::query()->count())->toBe(2);
 
     $pruned = PruneAccessGateRecordsAction::run();
+
+    expect($pruned)->toBeInstanceOf(PrunedAccessGateRecordsData::class);
 
     expect($pruned->total())->toBe(6)
         ->and(BrowserToken::query()->whereKey($oldExpiredBrowserToken->getKey())->exists())->toBeFalse()
