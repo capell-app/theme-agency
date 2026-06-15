@@ -6,7 +6,10 @@ namespace Capell\AutomationStudio\Actions;
 
 use Capell\AutomationStudio\Contracts\AutomationActionHandler;
 use Capell\AutomationStudio\Data\AutomationActionResultData;
+use Capell\AutomationStudio\Data\AutomationRuleActionData;
 use Capell\AutomationStudio\Data\AutomationTriggerEventData;
+use Capell\AutomationStudio\Enums\AutomationRunStatus;
+use Capell\AutomationStudio\Models\AutomationRun;
 use Capell\AutomationStudio\Support\AutomationActionRegistry;
 use Capell\AutomationStudio\Support\AutomationRuleRegistry;
 use Lorisleiva\Actions\Concerns\AsAction;
@@ -38,6 +41,20 @@ final class DispatchAutomationTriggerAction
 
         foreach ($this->rules->matching($event) as $rule) {
             foreach ($rule->actions as $ruleAction) {
+                if ($idempotencyKey !== null && $this->successfulRunExists($idempotencyKey, $rule->key, $ruleAction)) {
+                    $results[] = new AutomationActionResultData(
+                        success: true,
+                        message: $this->alreadyCompletedMessage($ruleAction->type->value),
+                        context: [
+                            'rule_key' => $rule->key,
+                            'action_key' => $ruleAction->key,
+                            'idempotency_status' => 'already_completed',
+                        ],
+                    );
+
+                    continue;
+                }
+
                 $handler = $this->actions->handler($ruleAction->type);
 
                 if (! $handler instanceof AutomationActionHandler) {
@@ -101,6 +118,14 @@ final class DispatchAutomationTriggerAction
         return $results;
     }
 
+    private function successfulRunExists(string $idempotencyKey, string $ruleKey, AutomationRuleActionData $ruleAction): bool
+    {
+        return AutomationRun::query()
+            ->where('idempotency_key', implode(':', [$idempotencyKey, $ruleKey, $ruleAction->key]))
+            ->where('status', AutomationRunStatus::Succeeded)
+            ->exists();
+    }
+
     private function handlerMissingMessage(string $actionType): string
     {
         try {
@@ -125,5 +150,18 @@ final class DispatchAutomationTriggerAction
         }
 
         return sprintf('Automation Studio action %s failed. Check the application logs for details.', $actionType);
+    }
+
+    private function alreadyCompletedMessage(string $actionType): string
+    {
+        try {
+            if (function_exists('app') && app()->bound('translator')) {
+                return __('capell-automation-studio::generic.dispatcher.already_completed', ['action' => $actionType]);
+            }
+        } catch (Throwable) {
+            //
+        }
+
+        return sprintf('Automation Studio action %s already completed for this trigger.', $actionType);
     }
 }

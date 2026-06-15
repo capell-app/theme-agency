@@ -79,3 +79,71 @@ it('loads persisted rules, dispatches handlers, and persists queued run results'
             'action_key' => 'notify',
         ]);
 });
+
+it('skips handler side effects when a queued trigger retry already has a successful run', function (): void {
+    AutomationRule::query()->create([
+        'key' => 'retry-safe-form-rule',
+        'name' => 'Retry safe form rule',
+        'trigger_type' => AutomationTriggerType::FormSubmitted,
+        'status' => AutomationRuleStatus::Active,
+        'conditions' => ['form_handle' => 'contact'],
+        'actions' => [
+            [
+                'key' => 'notify',
+                'type' => AutomationActionType::SendEmail->value,
+            ],
+        ],
+    ]);
+
+    $rules = new AutomationRuleRegistry;
+    $actions = new AutomationActionRegistry;
+    $handler = new class implements AutomationActionHandler
+    {
+        public int $calls = 0;
+
+        public function handle(AutomationTriggerEventData $event, AutomationRuleActionData $action): AutomationActionResultData
+        {
+            $this->calls++;
+
+            return new AutomationActionResultData(
+                success: true,
+                message: 'Retry safe handler ran',
+                context: ['calls' => $this->calls],
+            );
+        }
+    };
+
+    $actions->registerHandler(AutomationActionType::SendEmail, $handler);
+
+    $job = new DispatchQueuedAutomationTriggerJob(
+        event: new AutomationTriggerEventData(
+            triggerType: AutomationTriggerType::FormSubmitted,
+            sourceType: 'form-builder.form',
+            sourceId: 'contact',
+            payload: [
+                'form_handle' => 'contact',
+                'email' => 'person@example.test',
+            ],
+        ),
+        idempotencyKey: 'queued-trigger-retry-safe',
+    );
+
+    $loadRules = new LoadPersistedAutomationRulesAction($rules);
+    $dispatch = new DispatchAutomationTriggerAction($rules, $actions, new PersistAutomationTriggerResultsAction);
+
+    $job->handle($loadRules, $dispatch);
+    $job->handle($loadRules, $dispatch);
+
+    $run = AutomationRun::query()->sole();
+
+    expect($handler->calls)->toBe(1)
+        ->and(AutomationRun::query()->count())->toBe(1)
+        ->and($run->idempotency_key)->toBe('queued-trigger-retry-safe:retry-safe-form-rule:notify')
+        ->and($run->status)->toBe(AutomationRunStatus::Succeeded)
+        ->and($run->message)->toBe('Retry safe handler ran')
+        ->and($run->context)->toMatchArray([
+            'calls' => 1,
+            'rule_key' => 'retry-safe-form-rule',
+            'action_key' => 'notify',
+        ]);
+});

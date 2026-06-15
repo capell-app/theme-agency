@@ -56,6 +56,15 @@ final class RecordAutomationRunAction
             return AutomationRun::query()->create($attributes);
         }
 
+        /** @var AutomationRun|null $existingRun */
+        $existingRun = AutomationRun::query()
+            ->where('idempotency_key', $idempotencyKey)
+            ->first();
+
+        if ($existingRun instanceof AutomationRun && $existingRun->status === AutomationRunStatus::Succeeded) {
+            return $existingRun;
+        }
+
         /** @var AutomationRun $automationRun */
         $automationRun = AutomationRun::query()->updateOrCreate([
             'idempotency_key' => $idempotencyKey,

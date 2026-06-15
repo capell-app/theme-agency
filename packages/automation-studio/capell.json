@@ -139,9 +139,9 @@
             "forbidPublicBladeQueries": true
         },
         "externalHttpClients": {
-            "requiresTimeouts": false,
-            "requiresSecretRedaction": false,
-            "clients": []
+            "requiresTimeouts": true,
+            "requiresSecretRedaction": true,
+            "clients": ["public-actions-webhook"]
         },
         "adminSurface": {
             "authorization": "permissions",
@@ -172,7 +172,16 @@
             "label": "Automation Studio registries and trigger/action defaults are discoverable.",
             "class": "Capell\\AutomationStudio\\Health\\AutomationStudioHealthCheck",
             "severity": "critical",
-            "surface": "admin"
+            "surface": "admin",
+            "coverage": [
+                "storage-tables",
+                "admin-resources",
+                "trigger-registry",
+                "action-registry",
+                "queued-dispatch",
+                "native-handlers",
+                "optional-bridge-listeners"
+            ]
         }
     ],
     "commercial": {
