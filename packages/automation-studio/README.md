@@ -80,6 +80,10 @@ Screenshot contract: `docs/screenshots.json`.
 | Admin screen or command fails on missing table | Package migrations have not run | Check the tables listed in `Data Model` | Run host migrations and rerun the focused package test |
 | Background work does not run | Queue worker or scheduled command is not active | Check package jobs, commands, and host scheduler configuration | Start the queue or scheduler, then run the focused command or package test |
 
+## Handler Failure Safety
+
+Automation Studio delegates native action delivery to the owning packages. Public Actions, Email Studio, Agent Bridge, Contacts, and Newsletter own their transport timeout and retry settings. Automation Studio records safe run results only: downstream exceptions become a translated handler failure with `handler_failed` context, while raw exception messages, exception classes, API tokens, provider payloads, and transport details stay out of admin-visible run history.
+
 ## Quick Start
 
 1. Install the package: `composer require capell-app/automation-studio`.

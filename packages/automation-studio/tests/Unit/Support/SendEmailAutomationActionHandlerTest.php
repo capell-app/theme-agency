@@ -186,3 +186,37 @@ it('falls back to event email and site scope when optional email settings are om
         ->and($sentEmail->data?->headers->items())->toBe([])
         ->and($sentEmail->data?->variables)->toMatchArray(['email' => 'subscriber@example.test', 'site_id' => 12]);
 });
+
+it('returns email studio send failures as safe automation action failures', function (): void {
+    app()->instance(SendEmailAction::class, new class extends SendEmailAction
+    {
+        public function handle(SendEmailData $data): EmailMessage
+        {
+            throw new RuntimeException('Email provider rejected api_secret=secret-token.');
+        }
+    });
+
+    $result = (new SendEmailAutomationActionHandler)->handle(
+        event: new AutomationTriggerEventData(
+            triggerType: AutomationTriggerType::FormSubmitted,
+            sourceType: 'form-builder.submission',
+            payload: [
+                'email' => 'subscriber@example.test',
+                'site_id' => 12,
+            ],
+        ),
+        action: new AutomationRuleActionData(
+            key: 'send-email',
+            type: AutomationActionType::SendEmail,
+            settings: [
+                'template_key' => 'receipt',
+            ],
+        ),
+    );
+
+    expect($result->success)->toBeFalse()
+        ->and($result->message)->toBe('Automation Studio action send_email failed. Check the application logs for details.')
+        ->and($result->message)->not->toContain('secret-token')
+        ->and($result->context)->toMatchArray(['error' => 'handler_failed'])
+        ->and($result->context)->not->toHaveKey('error_type');
+});

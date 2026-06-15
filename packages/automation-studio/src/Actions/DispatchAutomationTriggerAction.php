@@ -83,15 +83,7 @@ final class DispatchAutomationTriggerAction
                         'source_id' => $event->sourceId,
                     ]);
 
-                    $result = new AutomationActionResultData(
-                        success: false,
-                        message: $this->handlerFailedMessage($ruleAction->type->value),
-                        context: [
-                            'rule_key' => $rule->key,
-                            'action_key' => $ruleAction->key,
-                            'error' => 'handler_failed',
-                        ],
-                    );
+                    $result = BuildSafeAutomationActionFailureResultAction::run($ruleAction->type);
                 }
 
                 $results[] = new AutomationActionResultData(
@@ -137,19 +129,6 @@ final class DispatchAutomationTriggerAction
         }
 
         return sprintf('No Automation Studio handler is registered for %s.', $actionType);
-    }
-
-    private function handlerFailedMessage(string $actionType): string
-    {
-        try {
-            if (function_exists('app') && app()->bound('translator')) {
-                return __('capell-automation-studio::generic.dispatcher.handler_failed', ['action' => $actionType]);
-            }
-        } catch (Throwable) {
-            //
-        }
-
-        return sprintf('Automation Studio action %s failed. Check the application logs for details.', $actionType);
     }
 
     private function alreadyCompletedMessage(string $actionType): string

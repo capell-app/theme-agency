@@ -6,6 +6,7 @@ namespace Capell\AutomationStudio\Support\Handlers;
 
 use Capell\AgentBridge\Actions\InvokeAgentBridgeCapabilityPreviewAction;
 use Capell\AgentBridge\Data\AuthenticatedAgentBridgeClientData;
+use Capell\AutomationStudio\Actions\BuildSafeAutomationActionFailureResultAction;
 use Capell\AutomationStudio\Contracts\AutomationActionHandler;
 use Capell\AutomationStudio\Data\AutomationActionResultData;
 use Capell\AutomationStudio\Data\AutomationRuleActionData;
@@ -49,14 +50,8 @@ final class QueueAgentCapabilityAutomationActionHandler implements AutomationAct
                 token: null,
                 user: null,
             );
-        } catch (Throwable $throwable) {
-            return new AutomationActionResultData(
-                success: false,
-                message: $throwable->getMessage(),
-                context: [
-                    'error_type' => $throwable::class,
-                ],
-            );
+        } catch (Throwable) {
+            return BuildSafeAutomationActionFailureResultAction::run($action->type);
         }
 
         return new AutomationActionResultData(

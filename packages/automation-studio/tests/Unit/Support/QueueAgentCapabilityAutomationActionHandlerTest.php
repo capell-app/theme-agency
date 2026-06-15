@@ -109,7 +109,7 @@ it('queues agent bridge capabilities with merged payload and scoped automation c
         ->and($invocation->client?->scopes)->toBe(['site:read', 'site:write']);
 });
 
-it('returns agent bridge invocation failures as automation action failures', function (): void {
+it('returns agent bridge invocation failures as safe automation action failures', function (): void {
     app()->instance(InvokeAgentBridgeCapabilityPreviewAction::class, new class
     {
         /**
@@ -123,7 +123,7 @@ it('returns agent bridge invocation failures as automation action failures', fun
             mixed $token = null,
             mixed $user = null,
         ): array {
-            throw new RuntimeException('Agent Bridge rejected the capability.');
+            throw new RuntimeException('Agent Bridge rejected the capability with token secret-token.');
         }
     });
 
@@ -144,6 +144,8 @@ it('returns agent bridge invocation failures as automation action failures', fun
     );
 
     expect($result->success)->toBeFalse()
-        ->and($result->message)->toBe('Agent Bridge rejected the capability.')
-        ->and($result->context['error_type'])->toBe(RuntimeException::class);
+        ->and($result->message)->toBe('Automation Studio action queue_agent_capability failed. Check the application logs for details.')
+        ->and($result->message)->not->toContain('secret-token')
+        ->and($result->context)->toMatchArray(['error' => 'handler_failed'])
+        ->and($result->context)->not->toHaveKey('error_type');
 });

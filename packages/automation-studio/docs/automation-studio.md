@@ -36,6 +36,13 @@ This slice creates the domain foundation, persistence layer, initial admin surfa
 - The native `send_email` action handler is implemented through Email Studio when that package is installed. It resolves recipients from rule settings or trigger payloads, maps variables and headers into Email Studio DTOs, and returns the queued email message id.
 - The native `queue_agent_capability` action handler is implemented through Agent Bridge when that package is installed. It invokes the Agent Bridge capability preview/execution boundary and returns Agent Bridge result or confirmation metadata.
 
+## Handler Timeouts, Failures, And Secret Redaction
+
+- Automation Studio does not add a second transport timeout layer around optional packages. Public Actions, Email Studio, Agent Bridge, Contacts, and Newsletter own their HTTP/client/queue timeout settings; Automation Studio records the action result those package boundaries return.
+- If a native handler catches a downstream exception, the persisted automation result must use the generic `handler_failed` context and translated failure message. Raw exception messages, exception class names, API tokens, provider payloads, and transport details belong in application logs, not in `automation_runs.context` or admin-visible run messages.
+- Native handlers should return only operational identifiers that are safe for admins to see, such as message ids, subscriber ids, contact ids, action keys, redirect URLs, tags, and status values.
+- Queued trigger retries keep the same per-action idempotency identity. A previously successful action is reported as already completed instead of invoking the downstream handler again.
+
 ## Integration Notes
 
 - Automation Studio listens for `Capell\CampaignStudio\Events\CampaignConverted` when Campaign Studio is installed. Campaign Studio dispatches that event when a conversion row is newly recorded.

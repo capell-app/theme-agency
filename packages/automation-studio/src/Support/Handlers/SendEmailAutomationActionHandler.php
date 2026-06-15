@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Capell\AutomationStudio\Support\Handlers;
 
+use Capell\AutomationStudio\Actions\BuildSafeAutomationActionFailureResultAction;
 use Capell\AutomationStudio\Contracts\AutomationActionHandler;
 use Capell\AutomationStudio\Data\AutomationActionResultData;
 use Capell\AutomationStudio\Data\AutomationRuleActionData;
@@ -78,14 +79,8 @@ final class SendEmailAutomationActionHandler implements AutomationActionHandler
                 queue: (bool) ($action->settings['queue'] ?? true),
                 locale: $this->stringSetting($event, $action, 'locale'),
             ));
-        } catch (Throwable $throwable) {
-            return new AutomationActionResultData(
-                success: false,
-                message: $throwable->getMessage(),
-                context: [
-                    'error_type' => $throwable::class,
-                ],
-            );
+        } catch (Throwable) {
+            return BuildSafeAutomationActionFailureResultAction::run($action->type);
         }
 
         return new AutomationActionResultData(
