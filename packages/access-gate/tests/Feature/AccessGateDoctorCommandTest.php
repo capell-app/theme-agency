@@ -3,8 +3,10 @@
 declare(strict_types=1);
 
 use Capell\AccessGate\Enums\AccessAreaStatus;
+use Capell\AccessGate\Enums\ClaimTokenStatus;
 use Capell\AccessGate\Http\Middleware\AccessGateMiddleware;
 use Capell\AccessGate\Models\Area;
+use Capell\AccessGate\Models\ClaimToken;
 use Capell\AccessGate\Support\AccessGateDiagnosticsService;
 use Capell\AccessGate\Tests\Support\FakePageCacheMiddleware;
 use Capell\Core\Data\Diagnostics\DoctorCheckResultData;
@@ -169,6 +171,27 @@ it('installs publishables, runs migrations, and creates the paused default acces
 
     expect($area->name)->toBe('Capell Preview')
         ->and($area->status)->toBe(AccessAreaStatus::Paused);
+});
+
+it('reports stale access records before pruning them', function (): void {
+    $area = Area::factory()->create();
+    $claimToken = ClaimToken::factory()->for($area, 'area')->create([
+        'status' => ClaimTokenStatus::Expired,
+        'expires_at' => now()->subDays(120),
+        'updated_at' => now()->subDays(120),
+    ]);
+
+    capell_artisan('capell:access-gate-prune', ['--dry-run' => true])
+        ->expectsOutputToContain('Found 1 stale Access Gate record')
+        ->assertSuccessful();
+
+    expect(ClaimToken::query()->whereKey($claimToken->getKey())->exists())->toBeTrue();
+
+    capell_artisan('capell:access-gate-prune')
+        ->expectsOutputToContain('Pruned 1 stale Access Gate record')
+        ->assertSuccessful();
+
+    expect(ClaimToken::query()->whereKey($claimToken->getKey())->exists())->toBeFalse();
 });
 
 function defineAccessGateSiteTablesForDoctorTest(): void

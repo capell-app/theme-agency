@@ -47,6 +47,15 @@ return [
         ],
     ],
 
+    'pruning' => [
+        'retention_days' => [
+            'browser_tokens' => env('ACCESS_GATE_PRUNE_BROWSER_TOKENS_AFTER_DAYS', 90),
+            'claim_tokens' => env('ACCESS_GATE_PRUNE_CLAIM_TOKENS_AFTER_DAYS', 90),
+            'registrations' => env('ACCESS_GATE_PRUNE_REGISTRATIONS_AFTER_DAYS', 90),
+            'events' => env('ACCESS_GATE_PRUNE_EVENTS_AFTER_DAYS', 365),
+        ],
+    ],
+
     'registration' => [
         'methods' => [
             'email' => [

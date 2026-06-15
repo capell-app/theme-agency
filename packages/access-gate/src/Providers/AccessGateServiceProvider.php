@@ -7,6 +7,7 @@ namespace Capell\AccessGate\Providers;
 use Capell\AccessGate\Actions\SubmitAccessGatePublicAction;
 use Capell\AccessGate\Console\Commands\AccessGateDoctorCommand;
 use Capell\AccessGate\Console\Commands\AccessGateInstallCommand;
+use Capell\AccessGate\Console\Commands\AccessGatePruneCommand;
 use Capell\AccessGate\Console\Commands\AccessGateSetupCommand;
 use Capell\AccessGate\Contracts\AccessRequestMethod;
 use Capell\AccessGate\Contracts\RegistrationField;
@@ -77,6 +78,7 @@ class AccessGateServiceProvider extends AbstractPackageServiceProvider
             ->hasCommands([
                 AccessGateDoctorCommand::class,
                 AccessGateInstallCommand::class,
+                AccessGatePruneCommand::class,
                 AccessGateSetupCommand::class,
             ])
             ->hasMigrations([

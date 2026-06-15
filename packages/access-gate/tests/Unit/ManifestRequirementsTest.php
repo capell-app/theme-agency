@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use Capell\AccessGate\Console\Commands\AccessGateDoctorCommand;
 use Capell\AccessGate\Console\Commands\AccessGateInstallCommand;
+use Capell\AccessGate\Console\Commands\AccessGatePruneCommand;
 use Capell\AccessGate\Console\Commands\AccessGateSetupCommand;
 use Capell\AccessGate\Filament\Resources\AccessAreas\AccessAreaResource;
 use Capell\AccessGate\Filament\Resources\BrowserTokens\BrowserTokenResource;
@@ -59,6 +60,7 @@ it('declares the shipped access gate package manifest surfaces', function (): vo
         ->and(data_get($manifest, 'commands.install'))->toBe('capell:access-gate-install')
         ->and(data_get($manifest, 'commands.setup'))->toBe('capell:access-gate-setup')
         ->and(data_get($manifest, 'commands.doctor'))->toBe('capell:access-gate-doctor')
+        ->and(data_get($manifest, 'commands.prune'))->toBe('capell:access-gate-prune')
         ->and(data_get($manifest, 'healthChecks.0.class'))->toBe(AccessGateHealthCheck::class)
         ->and(data_get($manifest, 'security.publicSurface.routeNames', []))->toBe([
             'capell-access-gate.claim',
@@ -141,11 +143,13 @@ it('declares the shipped access gate package manifest surfaces', function (): vo
                 'capell:access-gate-install',
                 'capell:access-gate-setup',
                 'capell:access-gate-doctor',
+                'capell:access-gate-prune',
             ],
             'commandClasses' => [
                 AccessGateInstallCommand::class,
                 AccessGateSetupCommand::class,
                 AccessGateDoctorCommand::class,
+                AccessGatePruneCommand::class,
             ],
         ])
         ->toContain([

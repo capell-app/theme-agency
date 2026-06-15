@@ -229,6 +229,32 @@ it('reports the resolved access area when status checks are denied', function ()
         ]);
 });
 
+it('keeps duplicate public request submissions idempotent for single-email areas', function (): void {
+    Notification::fake();
+
+    $area = Area::factory()->create([
+        'key' => 'preview',
+    ]);
+
+    $payload = [
+        'email' => 'mona@example.test',
+        'requested_url' => 'https://example.test/preview',
+    ];
+
+    $this
+        ->post(route('capell-access-gate.request.store', ['area' => $area->key]), $payload)
+        ->assertRedirect(route('capell-access-gate.request', ['area' => $area->key]));
+
+    $firstRegistration = Registration::query()->firstOrFail();
+
+    $this
+        ->post(route('capell-access-gate.request.store', ['area' => $area->key]), $payload)
+        ->assertRedirect(route('capell-access-gate.request', ['area' => $area->key]));
+
+    expect(Registration::query()->count())->toBe(1)
+        ->and(Registration::query()->firstOrFail()->getKey())->toBe($firstRegistration->getKey());
+});
+
 it('allows guest browser tokens and marks protected responses private', function (): void {
     $area = Area::factory()->create([
         'key' => 'preview',

@@ -98,12 +98,14 @@
             "commands": [
                 "capell:access-gate-install",
                 "capell:access-gate-setup",
-                "capell:access-gate-doctor"
+                "capell:access-gate-doctor",
+                "capell:access-gate-prune"
             ],
             "commandClasses": [
                 "Capell\\AccessGate\\Console\\Commands\\AccessGateInstallCommand",
                 "Capell\\AccessGate\\Console\\Commands\\AccessGateSetupCommand",
-                "Capell\\AccessGate\\Console\\Commands\\AccessGateDoctorCommand"
+                "Capell\\AccessGate\\Console\\Commands\\AccessGateDoctorCommand",
+                "Capell\\AccessGate\\Console\\Commands\\AccessGatePruneCommand"
             ]
         },
         {
@@ -128,7 +130,8 @@
         "install": "capell:access-gate-install",
         "setup": "capell:access-gate-setup",
         "demo": null,
-        "doctor": "capell:access-gate-doctor"
+        "doctor": "capell:access-gate-doctor",
+        "prune": "capell:access-gate-prune"
     },
     "actions": {
         "install": "Capell\\AccessGate\\Actions\\InstallAccessGatePackageAction",
