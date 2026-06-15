@@ -36,7 +36,7 @@ Screenshot contract: `docs/screenshots.json`.
 - Service providers: `Capell\RecordSwitcher\Providers\RecordSwitcherServiceProvider`.
 - Filament classes: `RecordSwitcherHeadingExtender`.
 - Livewire components: `RecordSwitcher`.
-- Manifest contributions: `asset: Capell\RecordSwitcher\Manifest\RecordSwitcherAssetsContribution`.
+- Manifest contributions: `asset: Capell\RecordSwitcher\Manifest\RecordSwitcherAssetsContribution`, `health-check: Capell\RecordSwitcher\Manifest\RecordSwitcherHealthContribution`.
 - Health checks: `Capell\RecordSwitcher\Health\RecordSwitcherHealthCheck`.
 - Blade views: `packages/record-switcher/resources/views/components/record-switcher.blade.php`.
 

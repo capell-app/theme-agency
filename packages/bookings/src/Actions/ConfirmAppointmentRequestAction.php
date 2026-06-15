@@ -7,6 +7,7 @@ namespace Capell\Bookings\Actions;
 use Capell\Bookings\Enums\AppointmentAuditEventEnum;
 use Capell\Bookings\Enums\AppointmentNotificationTypeEnum;
 use Capell\Bookings\Enums\AppointmentRequestStatusEnum;
+use Capell\Bookings\Enums\ConfirmationPolicyEnum;
 use Capell\Bookings\Models\AppointmentRequest;
 use Carbon\CarbonImmutable;
 use Illuminate\Support\Facades\DB;
@@ -42,6 +43,16 @@ class ConfirmAppointmentRequestAction
             ) {
                 throw ValidationException::withMessages([
                     'hold_expires_at' => __('capell-bookings::validation.appointment_hold_expired'),
+                ]);
+            }
+
+            if (
+                $lockedAppointmentRequest->confirmation_policy === ConfirmationPolicyEnum::Payment
+                && (int) ($lockedAppointmentRequest->payment_required_amount_pence ?? 0) > 0
+                && $lockedAppointmentRequest->payment_confirmed_at === null
+            ) {
+                throw ValidationException::withMessages([
+                    'payment_confirmed_at' => __('capell-bookings::validation.payment_required_before_confirmation'),
                 ]);
             }
 

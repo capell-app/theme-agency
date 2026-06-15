@@ -75,6 +75,7 @@ return [
     ],
     'providers' => [
         'stripe' => 'Stripe',
+        'paypal' => 'PayPal',
     ],
     'checkout_modes' => [
         'payment' => 'One-off payment',

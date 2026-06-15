@@ -46,6 +46,35 @@
             "class": "Capell\\DocumentLifecycle\\Manifest\\DocumentLifecycleRetentionScheduleContribution",
             "command": "capell:document-lifecycle:archive-expired",
             "frequency": "daily"
+        },
+        {
+            "type": "model",
+            "class": "Capell\\DocumentLifecycle\\Manifest\\DocumentLifecycleModelsContribution",
+            "modelClasses": [
+                "Capell\\DocumentLifecycle\\Models\\Document",
+                "Capell\\DocumentLifecycle\\Models\\DocumentPublication",
+                "Capell\\DocumentLifecycle\\Models\\DocumentAcceptance"
+            ],
+            "morphAliases": {
+                "document_lifecycle_document": "Capell\\DocumentLifecycle\\Models\\Document",
+                "document_lifecycle_publication": "Capell\\DocumentLifecycle\\Models\\DocumentPublication",
+                "document_acceptance": "Capell\\DocumentLifecycle\\Models\\DocumentAcceptance"
+            }
+        },
+        {
+            "type": "migration",
+            "class": "Capell\\DocumentLifecycle\\Manifest\\DocumentLifecycleMigrationsContribution",
+            "migrationFiles": [
+                "2026_05_10_190868_01_create_document_lifecycle_documents_table",
+                "2026_05_10_190868_02_create_document_lifecycle_publications_table",
+                "2026_05_10_190868_03_extend_legal_acceptances_for_document_lifecycle",
+                "2026_06_06_000001_add_review_dates_to_document_lifecycle_documents_table"
+            ],
+            "requiredTables": [
+                "document_lifecycle_documents",
+                "document_lifecycle_publications",
+                "legal_acceptances"
+            ]
         }
     ],
     "database": {
@@ -197,6 +226,6 @@
         "categories": ["admin", "console", "operations"]
     },
     "contributionTraceability": {
-        "deferredContributions": ["model", "migration"]
+        "deferredContributions": []
     }
 }

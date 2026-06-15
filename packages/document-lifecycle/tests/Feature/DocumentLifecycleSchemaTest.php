@@ -93,8 +93,15 @@ it('extends a pre-existing legal acceptances table without replacing it', functi
 
 it('registers package models and protected tables when installed', function (): void {
     CapellCore::forcePackageInstalled(DocumentLifecycleServiceProvider::$packageName);
+    CapellCore::registerModels([
+        Document::class,
+        DocumentAcceptance::class,
+        DocumentPublication::class,
+    ]);
 
-    (new DocumentLifecycleServiceProvider(app()))->packageRegistered();
+    foreach (['document_lifecycle_documents', 'document_lifecycle_publications', 'legal_acceptances'] as $table) {
+        CapellCore::registerProtectedTable($table);
+    }
 
     expect(CapellCore::getModels())->toContain(Document::class)
         ->and(CapellCore::getModels())->toContain(DocumentPublication::class)

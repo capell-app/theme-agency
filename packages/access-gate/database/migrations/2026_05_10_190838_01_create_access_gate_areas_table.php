@@ -32,6 +32,13 @@ return new class extends Migration
             $table->string('discount_code')->nullable();
             $table->timestamp('discount_expires_at')->nullable();
             $table->json('discount_metadata')->nullable();
+            $table->boolean('announcement_enabled')->default(false);
+            $table->text('announcement_message')->nullable();
+            $table->string('announcement_short_message')->nullable();
+            $table->string('announcement_link_label')->nullable();
+            $table->string('announcement_link_short_label')->nullable();
+            $table->string('announcement_link_url')->nullable();
+            $table->json('announcement_path_patterns')->nullable();
             $table->timestamps();
         });
     }

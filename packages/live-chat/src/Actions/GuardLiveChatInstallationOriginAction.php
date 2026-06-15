@@ -10,6 +10,9 @@ use Illuminate\Support\Str;
 use Lorisleiva\Actions\Concerns\AsAction;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
+/**
+ * @method static string run(LiveChatInstallation $installation, Request $request)
+ */
 final class GuardLiveChatInstallationOriginAction
 {
     use AsAction;

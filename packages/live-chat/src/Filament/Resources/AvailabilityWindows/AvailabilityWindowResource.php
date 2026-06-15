@@ -8,6 +8,7 @@ use BackedEnum;
 use Capell\LiveChat\Filament\Resources\AvailabilityWindows\Pages\CreateAvailabilityWindow;
 use Capell\LiveChat\Filament\Resources\AvailabilityWindows\Pages\EditAvailabilityWindow;
 use Capell\LiveChat\Filament\Resources\AvailabilityWindows\Pages\ListAvailabilityWindows;
+use Capell\LiveChat\Filament\Resources\Concerns\ScopesLiveChatResourcesToSites;
 use Capell\LiveChat\Models\LiveChatAvailabilityWindow;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -19,10 +20,13 @@ use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 use Override;
 
 final class AvailabilityWindowResource extends Resource
 {
+    use ScopesLiveChatResourcesToSites;
+
     protected static ?string $slug = 'live-chat/availability-windows';
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedClock;
@@ -35,7 +39,7 @@ final class AvailabilityWindowResource extends Resource
         return $schema->components([
             Section::make(__('capell-live-chat::generic.resources.availability_window'))
                 ->schema([
-                    TextInput::make('site_id')->label(__('capell-live-chat::generic.fields.site_id'))->numeric()->required(),
+                    Select::make('site_id')->label(__('capell-live-chat::generic.fields.site_id'))->options(fn (): array => self::liveChatSiteOptions())->searchable()->preload()->required(),
                     Select::make('day_of_week')->label(__('capell-live-chat::generic.fields.day_of_week'))->options(self::dayOptions())->required(),
                     TextInput::make('opens_at')->label(__('capell-live-chat::generic.fields.opens_at'))->placeholder('09:00')->required()->maxLength(5),
                     TextInput::make('closes_at')->label(__('capell-live-chat::generic.fields.closes_at'))->placeholder('17:00')->required()->maxLength(5),
@@ -64,6 +68,12 @@ final class AvailabilityWindowResource extends Resource
     public static function getModel(): string
     {
         return LiveChatAvailabilityWindow::class;
+    }
+
+    #[Override]
+    public static function getEloquentQuery(): Builder
+    {
+        return self::scopeLiveChatQueryToActorSites(parent::getEloquentQuery());
     }
 
     #[Override]

@@ -3,10 +3,16 @@
 declare(strict_types=1);
 
 use Capell\Core\Contracts\Extensions\RegistersExtensionAdminResource;
+use Capell\Core\Contracts\Extensions\RunsExtensionMigration;
 use Capell\Core\Contracts\Extensions\RunsScheduledExtensionJob;
 use Capell\DocumentLifecycle\Filament\Resources\Documents\DocumentResource;
+use Capell\DocumentLifecycle\Manifest\DocumentLifecycleMigrationsContribution;
+use Capell\DocumentLifecycle\Manifest\DocumentLifecycleModelsContribution;
 use Capell\DocumentLifecycle\Manifest\DocumentLifecycleRetentionScheduleContribution;
 use Capell\DocumentLifecycle\Manifest\DocumentResourceContribution;
+use Capell\DocumentLifecycle\Models\Document;
+use Capell\DocumentLifecycle\Models\DocumentAcceptance;
+use Capell\DocumentLifecycle\Models\DocumentPublication;
 
 /**
  * @return array<string, mixed>
@@ -110,6 +116,38 @@ it('declares the retention command as a scheduled job contribution', function ()
         ->and($contribution['frequency'] ?? null)->toBe('daily')
         ->and(DocumentLifecycleRetentionScheduleContribution::compatibleCapellApiVersion())->toBe('^4.0')
         ->and(class_implements(DocumentLifecycleRetentionScheduleContribution::class))->toContain(RunsScheduledExtensionJob::class);
+});
+
+it('declares model and migration contributions for install diagnostics', function (): void {
+    $manifest = documentLifecycleManifest();
+    $contributions = collect(documentLifecycleManifestList($manifest, 'contributes'));
+
+    $models = $contributions->firstWhere('class', DocumentLifecycleModelsContribution::class);
+    $migrations = $contributions->firstWhere('class', DocumentLifecycleMigrationsContribution::class);
+
+    expect($models)->toBeArray()
+        ->and($models['type'])->toBe('model')
+        ->and($models['modelClasses'])->toBe([
+            Document::class,
+            DocumentPublication::class,
+            DocumentAcceptance::class,
+        ])
+        ->and($models['morphAliases'])->toBe([
+            'document_lifecycle_document' => Document::class,
+            'document_lifecycle_publication' => DocumentPublication::class,
+            'document_acceptance' => DocumentAcceptance::class,
+        ])
+        ->and($migrations)->toBeArray()
+        ->and($migrations['type'])->toBe('migration')
+        ->and($migrations['migrationFiles'])->toBe([
+            '2026_05_10_190868_01_create_document_lifecycle_documents_table',
+            '2026_05_10_190868_02_create_document_lifecycle_publications_table',
+            '2026_05_10_190868_03_extend_legal_acceptances_for_document_lifecycle',
+            '2026_06_06_000001_add_review_dates_to_document_lifecycle_documents_table',
+        ])
+        ->and($migrations['requiredTables'])->toBe($manifest['database']['requiredTables'])
+        ->and($manifest['contributionTraceability']['deferredContributions'])->toBe([])
+        ->and(class_implements(DocumentLifecycleMigrationsContribution::class))->toContain(RunsExtensionMigration::class);
 });
 
 it('keeps manifest and composer package copy aligned with shipped capabilities', function (): void {

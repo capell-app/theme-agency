@@ -3,8 +3,11 @@
 declare(strict_types=1);
 
 use Capell\Core\Enums\FrontendRuntime;
+use Capell\Frontend\Data\FrontendRenderContextData;
 use Capell\Frontend\Support\Render\FrontendResponseRendererRegistry;
 use Capell\Frontend\Support\Routing\FrontendRouteMiddlewareRegistry;
+use Capell\Inertia\Actions\BuildInertiaPagePropsAction;
+use Capell\Inertia\Actions\ResolveInertiaAdapterKeyAction;
 use Capell\Inertia\Data\InertiaAdapterData;
 use Capell\Inertia\Facades\CapellInertia;
 use Capell\Inertia\Health\InertiaHealthCheck;
@@ -40,9 +43,19 @@ it('shares namespaced capell inertia props through the middleware', function ():
     config()->set('capell-inertia.adapter', 'react');
 
     $shared = resolve(HandleInertiaRequests::class)->share(request());
+    $capell = $shared['capell'] ?? null;
+    throw_unless(is_array($capell), RuntimeException::class, 'Expected shared Capell inertia props.');
 
     expect($shared)->toHaveKey('capell')
-        ->and($shared['capell']['adapter'])->toBe('react');
+        ->and($capell['adapter'] ?? null)->toBe('react');
+
+    config()->set('capell-inertia.adapter', ['invalid']);
+
+    $shared = resolve(HandleInertiaRequests::class)->share(request());
+    $capell = $shared['capell'] ?? null;
+    throw_unless(is_array($capell), RuntimeException::class, 'Expected shared Capell inertia props.');
+
+    expect($capell['adapter'] ?? null)->toBe('vue');
 });
 
 it('tracks registered inertia adapters and resolves the configured active adapter', function (): void {
@@ -74,7 +87,23 @@ it('tracks registered inertia adapters and resolves the configured active adapte
 
     config()->set('capell-inertia.adapter', ['invalid']);
 
-    expect($registry->active())->toBeNull();
+    expect($registry->active())->toBe($vueAdapter)
+        ->and(ResolveInertiaAdapterKeyAction::run(''))->toBe('vue')
+        ->and(ResolveInertiaAdapterKeyAction::run(' react '))->toBe('react');
+});
+
+it('uses a sanitized adapter key in public page props', function (): void {
+    config()->set('capell-inertia.adapter', ['invalid']);
+
+    $props = BuildInertiaPagePropsAction::run(new FrontendRenderContextData(
+        page: null,
+        site: null,
+        language: null,
+        layout: null,
+        theme: null,
+    ));
+
+    expect(data_get($props, 'runtime.adapter'))->toBe('vue');
 });
 
 it('reports inertia bridge health from registered renderer and middleware services', function (): void {

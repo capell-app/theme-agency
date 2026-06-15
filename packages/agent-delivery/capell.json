@@ -28,7 +28,34 @@
         "admin": [],
         "frontend": []
     },
-    "contributes": [],
+    "contributes": [
+        {
+            "type": "route",
+            "class": "Capell\\AgentDelivery\\Manifest\\AgentDeliveryRoutesContribution",
+            "routes": [
+                "capell-agent-delivery.pages.index",
+                "capell-agent-delivery.pages.manifest",
+                "capell-agent-delivery.pages.chunks"
+            ],
+            "prefix": "api/capell/agent/v1",
+            "middleware": ["api", "throttle:capell-agent-delivery"]
+        },
+        {
+            "type": "agent-capability",
+            "class": "Capell\\AgentDelivery\\Manifest\\AgentDeliveryContractsContribution",
+            "contracts": [
+                "Capell\\AgentDelivery\\Contracts\\AgentDeliveryContributor",
+                "Capell\\AgentDelivery\\Contracts\\AgentDeliveryMetadataContributor",
+                "Capell\\AgentDelivery\\Contracts\\AgentDeliveryChunkContributor",
+                "Capell\\AgentDelivery\\Contracts\\AgentDeliveryReferenceContributor",
+                "Capell\\AgentDelivery\\Contracts\\AgentDeliveryRelatedUrlContributor"
+            ]
+        },
+        {
+            "type": "health-check",
+            "class": "Capell\\AgentDelivery\\Health\\AgentDeliveryHealthCheck"
+        }
+    ],
     "database": {
         "migrations": false,
         "settings": false,
@@ -128,10 +155,6 @@
         "categories": ["frontend", "publishing-pro", "ai"]
     },
     "contributionTraceability": {
-        "deferredContributions": [
-            "route",
-            "public-api-endpoint",
-            "agent-delivery-contract"
-        ]
+        "deferredContributions": ["public-api-endpoint"]
     }
 }

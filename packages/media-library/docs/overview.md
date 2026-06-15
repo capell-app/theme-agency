@@ -44,7 +44,7 @@ Screenshot contract: `screenshots.json`.
 - Actions: `BuildDuplicateMediaQueryAction`, `BuildMediaHealthQueryAction`, `BuildMediaUsageDrilldownAction`, `BuildMissingAltMediaQueryAction`, `BuildMissingRightsMetadataQueryAction`, `BuildOrphanMediaQueryAction`, `DeleteOrphanMediaRecordsAction`, `DiscoverOwnerForeignKeysAction`, `ResolveOwnerForeignKeysAction`, `DispatchMissingAltMediaSignalsAction`, `MigrateSpatieMediaToCuratorAction`, `SanitizeSvgUploadAction`.
 - Data objects: `MediaOwnerForeignKeyData`, `MediaUsageReferenceData`, `MigrateSpatieMediaInput`, `MigrateSpatieMediaResult`.
 - Console command classes: `MigrateSpatieToCuratorCommand`.
-- Manifest contributions: `admin-page: Capell\MediaLibrary\Manifest\MediaHealthPageContribution`, `model: Capell\MediaLibrary\Manifest\CuratorMediaModelContribution`.
+- Manifest contributions: `admin-page: Capell\MediaLibrary\Manifest\MediaHealthPageContribution`, `configurator: Capell\MediaLibrary\Manifest\MediaMigrationCommandContribution`, `health-check: Capell\MediaLibrary\Manifest\MediaLibraryHealthContribution`, `model: Capell\MediaLibrary\Manifest\CuratorMediaModelContribution`.
 - Health checks: `Capell\MediaLibrary\Health\MediaLibraryHealthCheck`.
 
 ## Media Handling Contract

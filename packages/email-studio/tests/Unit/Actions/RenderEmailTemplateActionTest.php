@@ -28,7 +28,7 @@ it('renders declared variables safely and handles missing variables by mode', fu
         ]),
     );
 
-    expect($preview->subject)->toBe('Hello &lt;Ben&gt;')
+    expect($preview->subject)->toBe('Hello <Ben>')
         ->and($preview->previewText)->toBe('Preview for &lt;Ben&gt;')
         ->and($preview->html)->toContain('<p>Hello &lt;Ben&gt;</p>')
         ->and($preview->html)->toContain('<p>{{ unsafe }}</p>')

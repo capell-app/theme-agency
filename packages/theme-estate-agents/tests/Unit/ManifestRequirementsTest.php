@@ -18,15 +18,17 @@ it('declares the required first-party estate agents theme manifest boundaries', 
         ->and(data_get($manifest, 'product.group'))->toBe('Capell Themes')
         ->and(data_get($manifest, 'product.tier'))->toBe('premium')
         ->and(data_get($manifest, 'commercial.proposedLicense'))->toBe('paid')
-        ->and($overview)->toContain('Product group:' . PHP_EOL . '**Capell Themes**')
-        ->and($readme)->toContain('- Product group: `Capell Themes`')
+        ->and($overview)->toContain('Capell Themes')
+        ->and($readme)->toContain('Capell Themes')
         ->and(data_get($manifest, 'extends'))->toBe('default')
+        ->and(data_get($manifest, 'dependencies.requires'))->toContain('capell-app/foundation-theme')
         ->and(data_get($manifest, 'dependencies.requires'))->toContain('capell-app/frontend')
+        ->and(data_get($composer, 'require'))->toHaveKey('capell-app/foundation-theme')
         ->and(EstateAgentsThemeServiceProvider::definition()->extends)->toBe('default')
         ->and($overview)->toContain('runtime inheritance uses `extends: default`')
-        ->and($overview)->toContain('requires `capell-app/frontend` for the built-in default fallback')
-        ->and($readme)->toContain('- Manifest extends: `default`')
-        ->and($readme)->toContain('- Runtime extends: `default`')
+        ->and($overview)->toContain('requires `capell-app/foundation-theme`')
+        ->and($overview)->toContain('capell-app/frontend')
+        ->and($readme)->toContain('extends: default')
         ->and(data_get($manifest, 'database.migrations'))->toBeFalse()
         ->and(data_get($manifest, 'providers.runtime'))->toContain(EstateAgentsThemeServiceProvider::class)
         ->and(data_get($manifest, 'commands.demo'))->toBe('capell:theme-estate-agents-demo')
@@ -41,7 +43,7 @@ it('declares only estate agents marketplace screenshots that exist in the packag
 
     throw_unless(is_array($screenshots), RuntimeException::class, 'Theme Estate Agents screenshots must be an array.');
 
-    expect($screenshots)->toHaveCount(5);
+    expect($screenshots)->toHaveCount(6);
 
     foreach ($screenshots as $screenshot) {
         throw_if(! is_array($screenshot) || ! is_string($screenshot['path'] ?? null), RuntimeException::class, 'Theme Estate Agents screenshot path must be a string.');

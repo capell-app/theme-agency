@@ -39,6 +39,7 @@ Screenshot contract: `docs/screenshots.json`.
 - Route files: `packages/agent-delivery/routes/agent-delivery.php`.
 - Actions: `BuildAgentDeliveryChunksAction`, `BuildAgentDeliveryPageAction`, `BuildAgentDeliveryPageIndexAction`, `ResolveAgentDeliveryPageAction`.
 - Data objects: `AgentDeliveryChunkData`, `AgentDeliveryPageData`, `AgentDeliveryPageIndexEntryData`, `ResolvedAgentDeliveryPageData`.
+- Manifest contributions: `agent-capability: Capell\AgentDelivery\Manifest\AgentDeliveryContractsContribution`, `health-check: Capell\AgentDelivery\Health\AgentDeliveryHealthCheck`, `route: Capell\AgentDelivery\Manifest\AgentDeliveryRoutesContribution`.
 - Health checks: `Capell\AgentDelivery\Health\AgentDeliveryHealthCheck`.
 - Cache tags: `agent-delivery`.
 

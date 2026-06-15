@@ -49,7 +49,7 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::dropIfExists(config('capell-live-chat.tables.availability_exceptions', 'live_chat_availability_exceptions'));
-        Schema::dropIfExists(config('capell-live-chat.tables.availability_windows', 'live_chat_availability_windows'));
+        Schema::dropIfExists(Config::string('capell-live-chat.tables.availability_exceptions', 'live_chat_availability_exceptions'));
+        Schema::dropIfExists(Config::string('capell-live-chat.tables.availability_windows', 'live_chat_availability_windows'));
     }
 };

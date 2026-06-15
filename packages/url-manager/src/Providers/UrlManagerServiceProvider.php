@@ -64,11 +64,14 @@ final class UrlManagerServiceProvider extends AbstractPackageServiceProvider
 
     private function registerModels(): self
     {
-        $this->surface()->models([
+        $models = [
             RedirectRule::class,
             RedirectHit::class,
             NotFoundOpportunity::class,
-        ]);
+        ];
+
+        $this->surface()->models($models);
+        CapellCore::registerModels($models);
 
         return $this;
     }

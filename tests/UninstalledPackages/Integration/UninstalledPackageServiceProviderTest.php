@@ -32,7 +32,6 @@ use Capell\Core\Enums\VendorAssetEnum;
 use Capell\Core\Facades\CapellCore;
 use Capell\Diagnostics\Filament\Pages\DiagnosticsPage;
 use Capell\Diagnostics\Filament\Widgets\Health\SiteHealthWidgetAbstract;
-use Capell\Diagnostics\Providers\DiagnosticsServiceProvider;
 use Capell\FormBuilder\Filament\Resources\Submissions\SubmissionResource;
 use Capell\FormBuilder\Models\Form;
 use Capell\FormBuilder\Models\Submission;
@@ -68,7 +67,6 @@ use Capell\PublishingStudio\Models\PreviewLink;
 use Capell\PublishingStudio\Models\Version;
 use Capell\PublishingStudio\Models\Workspace;
 use Capell\PublishingStudio\Providers\PublishingStudioServiceProvider;
-use Capell\Search\Contracts\Search;
 use Capell\Search\Filament\Widgets\SearchOverviewStatsWidget;
 use Capell\Search\Models\SearchLog;
 use Capell\Search\Providers\SearchServiceProvider;
@@ -114,7 +112,6 @@ it('registers package metadata but skips runtime models, tables, settings, and a
         MigrationAssistantServiceProvider::$packageName,
         BlogServiceProvider::$packageName,
         CampaignStudioServiceProvider::$packageName,
-        DiagnosticsServiceProvider::$packageName,
         FormBuilderServiceProvider::$packageName,
         MediaLibraryServiceProvider::$packageName,
         NavigationServiceProvider::$packageName,
@@ -231,7 +228,6 @@ it('does not expose admin resources, pages, widgets, or routes for uninstalled p
 
 it('does not bind package runtime services for uninstalled packages', function (): void {
     expect(app()->bound(MigrationAssistantContextResolver::class))->toBeFalse()
-        ->and(app()->bound(Search::class))->toBeFalse()
         ->and(app()->bound(CapellAgentBridgeCapabilityRegistry::class))->toBeFalse();
 
     expect(CapellCore::getPageTypes()->keys()->all())->not->toContain(

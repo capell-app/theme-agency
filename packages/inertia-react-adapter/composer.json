@@ -1,6 +1,6 @@
 {
     "name": "capell-app/inertia-react-adapter",
-    "description": "React client adapter for Capell Inertia.",
+    "description": "React client adapter for Capell Inertia pages, package routes, and adapter-driven themes.",
     "type": "library",
     "license": "proprietary",
     "require": {

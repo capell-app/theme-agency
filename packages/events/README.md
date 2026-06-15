@@ -76,7 +76,7 @@ Screenshot contract: `docs/screenshots.json`.
 - Public routes: route files exist and must be reviewed before public enablement.
 - Database changes: package migrations are declared.
 - Settings: no package settings declared.
-- Queues or schedules: none detected in standard package paths.
+- Queues or schedules: registers `capell-events:process-notifications` every minute and `capell-events:reconcile-waitlists` every fifteen minutes.
 - Cache tags: `events`.
 - Commands: `capell:events-doctor`, `capell:events-install`.
 

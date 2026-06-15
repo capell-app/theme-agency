@@ -10,6 +10,7 @@ TAG=""
 BRANCH="${CAPELL_SPLIT_BRANCH:-4.x}"
 ORG="${CAPELL_SPLIT_ORG:-capell-app}"
 REMOTE_TEMPLATE="${CAPELL_SPLIT_REMOTE_TEMPLATE:-}"
+VISIBILITY="${CAPELL_SPLIT_REPO_VISIBILITY:-private}"
 SELECTED_PACKAGES=()
 
 usage() {
@@ -22,6 +23,7 @@ Options:
   --package <slug>          Package slug to split. Repeatable. Defaults to workflow matrix.
   --branch <branch>         Destination branch. Defaults to 4.x.
   --org <org>               GitHub org. Defaults to capell-app.
+  --public                  Create missing GitHub repositories as public. Defaults to private.
   --remote-template <fmt>   printf template for repo URL, e.g. file:///tmp/%s.git.
   --env-file <path>         Env file. Defaults to .env.deploy.local.
   --dry-run                 Print commands without pushing.
@@ -50,6 +52,10 @@ while [[ $# -gt 0 ]]; do
     --org)
       ORG="${2:-}"
       shift 2
+      ;;
+    --public)
+      VISIBILITY="public"
+      shift
       ;;
     --remote-template)
       REMOTE_TEMPLATE="${2:-}"
@@ -168,6 +174,41 @@ github_token() {
   return 1
 }
 
+gh_with_token() {
+  if [[ -n "${CAPELL_GITHUB_TOKEN:-}" ]]; then
+    GH_TOKEN="${CAPELL_GITHUB_TOKEN}" gh "$@"
+    return
+  fi
+
+  gh "$@"
+}
+
+ensure_github_repository() {
+  local repository="$1"
+  local full_repository="${ORG}/${repository}"
+
+  if [[ -n "${REMOTE_TEMPLATE}" ]]; then
+    return
+  fi
+
+  if ! command -v gh >/dev/null 2>&1; then
+    echo "gh CLI is required to create missing GitHub repositories." >&2
+    exit 1
+  fi
+
+  if [[ "${DRY_RUN}" == true ]]; then
+    echo "[dry-run] gh repo view ${full_repository} || gh repo create ${full_repository} --${VISIBILITY}"
+    return
+  fi
+
+  if gh_with_token repo view "${full_repository}" >/dev/null 2>&1; then
+    return
+  fi
+
+  echo "Creating GitHub repository ${full_repository}."
+  gh_with_token repo create "${full_repository}" "--${VISIBILITY}" --description "Capell ${repository} package"
+}
+
 remote_url_for() {
   local repository="$1"
   local token
@@ -219,6 +260,7 @@ for package in "${PACKAGES[@]}"; do
   echo "Splitting ${directory} from ${REF} for ${ORG}/${repository}:${BRANCH} (${TAG})."
 
   if [[ "${DRY_RUN}" == true ]]; then
+    ensure_github_repository "${repository}"
     echo "[dry-run] git subtree split --prefix ${directory} ${REF}"
     echo "[dry-run] git push <${ORG}/${repository}> <split-sha>:refs/heads/${BRANCH}"
     echo "[dry-run] git push <${ORG}/${repository}> <split-sha>:refs/tags/${TAG}"
@@ -226,6 +268,7 @@ for package in "${PACKAGES[@]}"; do
   fi
 
   split_sha="$(git subtree split --prefix "${directory}" "${REF}")"
+  ensure_github_repository "${repository}"
   remote_url="$(remote_url_for "${repository}")"
 
   git push "${remote_url}" "${split_sha}:refs/heads/${BRANCH}"

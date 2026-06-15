@@ -76,7 +76,7 @@ The package should continue toward this fuller buyer-facing product story as the
 
 ## Completion Review
 
-Completed 2026-06-08. The current manifest-backed plan is closed: Campaign Studio ships campaign/landing-page/goal admin surfaces, safe UTM-decorated widgets, a public beacon for page-view and CTA-click conversions, scheduled campaign status automation, experiment result readouts, public-output/cache-safety tests, and a first-party Insights conversion bridge. Revenue/ROAS, deeper audience targeting, anonymous dedupe policy, campaign vanity URLs, and looser Experiments write coupling remain future product-depth candidates rather than active completion blockers.
+Completed 2026-06-08. Implementation slice 1 for this pass also exposes the public conversion beacon route, status-sync schedule, and status-sync console command as manifest contributions. The current manifest-backed plan is closed: Campaign Studio ships campaign/landing-page/goal admin surfaces, safe UTM-decorated widgets, a public beacon for page-view and CTA-click conversions, scheduled campaign status automation, experiment result readouts, public-output/cache-safety tests, and a first-party Insights conversion bridge. Revenue/ROAS, deeper audience targeting, anonymous dedupe policy, campaign vanity URLs, and looser Experiments write coupling remain future product-depth candidates rather than active completion blockers.
 
 ## 6. Prioritized Roadmap
 

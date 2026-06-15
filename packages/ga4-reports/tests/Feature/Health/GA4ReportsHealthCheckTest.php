@@ -3,8 +3,11 @@
 declare(strict_types=1);
 
 use Capell\Core\Data\Diagnostics\DoctorCheckResultData;
+use Capell\Core\Facades\CapellCore;
 use Capell\GA4Reports\Contracts\GA4ReportsDataClientInterface;
 use Capell\GA4Reports\Health\Ga4ReportsHealthCheck;
+use Capell\GA4Reports\Models\GA4ReportsDailyMetric;
+use Capell\GA4Reports\Models\GA4ReportsPageMetric;
 use Capell\GA4Reports\Models\GA4ReportsSyncRun;
 use Capell\GA4Reports\Settings\GA4ReportsSettings;
 use Capell\GA4Reports\Tests\Fakes\FakeGA4ReportsDataClient;
@@ -83,7 +86,10 @@ it('passes when enabled with a property id and readable credentials file', funct
 it('passes the model availability check when models are registered and storage columns exist', function (): void {
     $check = new Ga4ReportsHealthCheck;
 
-    expect($check->missingModelClasses())->toBe([])
+    expect(CapellCore::getModels())->toContain(GA4ReportsSyncRun::class)
+        ->and(CapellCore::getModels())->toContain(GA4ReportsDailyMetric::class)
+        ->and(CapellCore::getModels())->toContain(GA4ReportsPageMetric::class)
+        ->and($check->missingModelClasses())->toBe([])
         ->and($check->missingStorageColumns())->toBe([])
         ->and($check->modelAvailabilityCheck()->passed)->toBeTrue();
 });

@@ -22,6 +22,7 @@
             "capell-app/frontend"
         ],
         "supports": [
+            "capell-app/agent-bridge",
             "capell-app/ai-orchestrator",
             "capell-app/email-studio",
             "capell-app/knowledge-base",
@@ -115,12 +116,16 @@
     "settings": [],
     "actions": {
         "buildLiveChatAnalytics": "Capell\\LiveChat\\Actions\\BuildLiveChatAnalyticsAction",
+        "buildLiveChatOperatorState": "Capell\\LiveChat\\Actions\\BuildLiveChatOperatorStateAction",
+        "buildLiveChatSuggestedReply": "Capell\\LiveChat\\Actions\\BuildLiveChatSuggestedReplyAction",
         "buildLiveChatTranscript": "Capell\\LiveChat\\Actions\\BuildLiveChatTranscriptAction",
         "buildLiveChatWidgetConfig": "Capell\\LiveChat\\Actions\\BuildLiveChatWidgetConfigAction",
         "closeLiveChatConversation": "Capell\\LiveChat\\Actions\\CloseLiveChatConversationAction",
         "determineLiveChatEscalation": "Capell\\LiveChat\\Actions\\DetermineLiveChatEscalationAction",
         "detectLiveChatIntent": "Capell\\LiveChat\\Actions\\DetectLiveChatIntentAction",
+        "generateLiveChatSummary": "Capell\\LiveChat\\Actions\\GenerateLiveChatSummaryAction",
         "guardLiveChatInstallationOrigin": "Capell\\LiveChat\\Actions\\GuardLiveChatInstallationOriginAction",
+        "guardLiveChatSameSiteRequest": "Capell\\LiveChat\\Actions\\GuardLiveChatSameSiteRequestAction",
         "indexLiveChatKnowledgeDocument": "Capell\\LiveChat\\Actions\\IndexLiveChatKnowledgeDocumentAction",
         "indexLiveChatKnowledgeSource": "Capell\\LiveChat\\Actions\\IndexLiveChatKnowledgeSourceAction",
         "recordLiveChatAIRun": "Capell\\LiveChat\\Actions\\RecordLiveChatAIRunAction",
@@ -132,7 +137,9 @@
         "resolveLiveChatInstallation": "Capell\\LiveChat\\Actions\\ResolveLiveChatInstallationAction",
         "resolveLiveChatAvailability": "Capell\\LiveChat\\Actions\\ResolveLiveChatAvailabilityAction",
         "startLiveChatConversation": "Capell\\LiveChat\\Actions\\StartLiveChatConversationAction",
+        "storeLiveChatAttachments": "Capell\\LiveChat\\Actions\\StoreLiveChatAttachmentsAction",
         "storeLiveChatMessage": "Capell\\LiveChat\\Actions\\StoreLiveChatMessageAction",
+        "suggestLiveChatHumanReply": "Capell\\LiveChat\\Actions\\SuggestLiveChatHumanReplyAction",
         "syncLiveChatConversationContact": "Capell\\LiveChat\\Actions\\SyncLiveChatConversationContactAction"
     },
     "permissions": [
@@ -181,6 +188,10 @@
         "live-chat-transcripts",
         "live-chat-basic-analytics",
         "live-chat-knowledge-sources",
+        "live-chat-ai-orchestrator-module",
+        "live-chat-agent-bridge-capabilities",
+        "live-chat-operator-summary",
+        "live-chat-suggested-human-replies",
         "live-chat-ai-run-audit",
         "live-chat-knowledge-gaps",
         "live-chat-knowledge-documents"
@@ -342,6 +353,6 @@
         "categories": ["frontend", "crm", "support", "ai"]
     },
     "contributionTraceability": {
-        "deferredContributions": []
+        "deferredContributions": ["agent-capability"]
     }
 }

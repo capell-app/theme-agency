@@ -12,6 +12,8 @@ use Capell\Core\Models\Page;
 use Capell\Core\Models\PageUrl;
 use Capell\Core\Models\Site;
 use Capell\Core\Support\Creator\PageCreator;
+use Capell\Core\Support\Manifest\CapellManifestData;
+use Capell\Core\Support\PackageRegistry\CapellPackageRegistry;
 use Capell\Core\ThemeStudio\Contracts\ThemePageAdapter;
 use Capell\Core\ThemeStudio\Contracts\ThemeRuntimeSettings;
 use Capell\Core\ThemeStudio\Contracts\ThemeSection;
@@ -61,6 +63,7 @@ function installThemeDemoScreenshotFixture(
     $foundationProvider = new FoundationThemeServiceProvider(app());
     $foundationProvider->register();
     $foundationProvider->boot();
+    registerFoundationThemeDemoScreenshotRenderer();
 
     CapellCore::forcePackageInstalled($packageName);
 
@@ -162,6 +165,34 @@ function installFoundationThemeDemoScreenshotFixture(): Collection
 function registerFoundationThemeDemoScreenshotRenderer(): void
 {
     $registry = resolve(ThemeRegistry::class);
+    $packageRegistry = resolve(CapellPackageRegistry::class);
+    $packageRegistry->fill([
+        ...$packageRegistry->all(),
+        'default' => CapellManifestData::fromArray([
+            'manifest-version' => 3,
+            'name' => 'default',
+            'slug' => 'default',
+            'displayName' => 'Default',
+            'kind' => 'theme',
+            'capellApiVersion' => '^4.0',
+            'version' => '4.x-dev',
+            'product' => ['group' => 'Capell Themes', 'tier' => 'core'],
+            'surfaces' => ['frontend'],
+            'dependencies' => ['requires' => [], 'supports' => [], 'conflicts' => []],
+            'providers' => ['metadata' => [], 'install' => [], 'runtime' => [], 'admin' => [], 'frontend' => []],
+            'contributes' => [],
+            'performance' => [
+                'cacheSafety' => [
+                    'cacheable' => true,
+                    'variesBy' => [],
+                    'sensitiveOutput' => false,
+                    'invalidationSources' => [],
+                    'queueInvalidation' => false,
+                ],
+            ],
+            'themeKey' => 'default',
+        ], themeDemoRepositoryPath('packages/foundation-theme')),
+    ]);
 
     if ($registry->has('default')) {
         return;

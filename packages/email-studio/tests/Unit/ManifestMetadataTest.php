@@ -25,9 +25,10 @@ it('keeps package summaries aligned to shipped email studio capabilities', funct
     $capabilities = data_get($manifest, 'capabilities', []);
 
     expect($marketplaceSummary)
-        ->toContain('transactional-email engine')
+        ->toContain('transactional-email engine and template authoring surface')
         ->toContain('safe {{ variable }} rendering')
-        ->toContain('queued, auditable per-recipient send pipeline')
+        ->toContain('auth email replacements')
+        ->toContain('preview/test-send')
         ->not->toContain('replies')
         ->not->toContain('unsubscribe')
         ->and($composerDescription)
@@ -36,9 +37,13 @@ it('keeps package summaries aligned to shipped email studio capabilities', funct
         ->not->toContain('replies')
         ->not->toContain('unsubscribe')
         ->and($manifestDescription)
-        ->toContain('Provider event webhooks write delivery events back into the audit trail')
-        ->toContain('MailTracker-backed admin surface exposes sent-email records, opens, clicks, stored HTML, and retention controls')
+        ->toContain('Packages register static Blade-backed template definitions')
+        ->toContain('Auth email overrides replace Laravel verification and password reset messages by default')
         ->and($capabilities)
+        ->toContain('auth-email-overrides')
+        ->toContain('static-template-fallback')
+        ->toContain('template-authoring-admin')
+        ->toContain('template-theme-editor')
         ->toContain('provider-normalization-foundation')
         ->toContain('provider-event-ingestion')
         ->toContain('delivery-audit')
@@ -56,12 +61,22 @@ it('describes provider event and reply health as normalization foundations only'
         flags: JSON_THROW_ON_ERROR,
     );
 
-    $providerEventsCheck = collect(data_get($manifest, 'healthChecks', []))
+    $healthChecks = data_get($manifest, 'healthChecks', []);
+    $healthChecks = is_array($healthChecks) ? $healthChecks : [];
+
+    $providerEventsCheck = collect($healthChecks)
         ->firstWhere('key', 'email-studio.provider-events');
+    $templateAuthoringCheck = collect($healthChecks)
+        ->firstWhere('key', 'email-studio.template-authoring');
+    $providerEventsLabel = is_array($providerEventsCheck) ? $providerEventsCheck['label'] ?? null : null;
+    $templateAuthoringLabel = is_array($templateAuthoringCheck) ? $templateAuthoringCheck['label'] ?? null : null;
 
     expect($providerEventsCheck)->toBeArray()
-        ->and($providerEventsCheck['label'] ?? null)
+        ->and($providerEventsLabel)
         ->toBe('Provider webhook and inbound reply normalization foundations are present')
-        ->and((string) ($providerEventsCheck['label'] ?? ''))
-        ->not->toContain('local records');
+        ->and(is_string($providerEventsLabel) ? $providerEventsLabel : '')
+        ->not->toContain('local records')
+        ->and($templateAuthoringCheck)->toBeArray()
+        ->and($templateAuthoringLabel)
+        ->toBe('Template authoring resources, themes, and test-send actions are available');
 });

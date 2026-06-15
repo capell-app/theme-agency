@@ -8,7 +8,6 @@ use Capell\Admin\Contracts\DashboardSettingsContributor;
 use Capell\Admin\Data\AdminSurfaceContributionData;
 use Capell\Admin\Enums\DashboardEnum;
 use Capell\Admin\Facades\CapellAdmin;
-use Capell\Comments\Actions\RegisterCommentEmailTemplatesAction;
 use Capell\Comments\Enums\ResourceEnum;
 use Capell\Comments\Filament\Pages\CommentModerationInbox;
 use Capell\Comments\Filament\Settings\Contributors\CommentsDashboardSettingsContributor;
@@ -29,8 +28,7 @@ class AdminServiceProvider extends ServiceProvider
             ->registerResources()
             ->registerPages()
             ->registerDashboardWidgets()
-            ->registerDashboardSettingsContributor()
-            ->registerEmailTemplates();
+            ->registerDashboardSettingsContributor();
     }
 
     protected function isPackageInstalled(): bool
@@ -72,13 +70,6 @@ class AdminServiceProvider extends ServiceProvider
     private function registerDashboardSettingsContributor(): self
     {
         $this->app->tag([CommentsDashboardSettingsContributor::class], DashboardSettingsContributor::TAG);
-
-        return $this;
-    }
-
-    private function registerEmailTemplates(): self
-    {
-        RegisterCommentEmailTemplatesAction::run();
 
         return $this;
     }

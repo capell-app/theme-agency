@@ -11,6 +11,7 @@ return [
     'booking_services' => 'Booking services',
     'booking_staff' => 'Booking staff',
     'bookings' => 'Bookings',
+    'erased_customer' => 'Erased customer',
     'frontend' => [
         'title' => 'Request an appointment',
         'intro' => 'Choose a service, time, and contact details to request an appointment.',

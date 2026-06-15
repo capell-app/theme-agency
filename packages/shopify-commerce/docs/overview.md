@@ -46,8 +46,9 @@ Screenshot contract: `screenshots.json`.
 - Events: `ShopifyCustomerSynced`.
 - Actions: `BuildShopifyCatalogThemeDataAction`, `ContinueShopifyProductBulkSyncAction`, `FetchShopifyProductAction`, `ImportShopifyProductBulkSyncAction`, `InvalidateShopifyProductSearchCacheAction`, `PersistShopifyProductAction`, `PollShopifyProductBulkSyncAction`, `SanitizeShopifySyncErrorAction`, `SearchShopifyProductsAction`, `StartShopifyProductBulkSyncAction`, `SyncShopifyProductsAction`, `SyncShopifyCustomersAction`, `and 16 more`.
 - Data objects: `ShopifyCallbackQueryData`, `ShopifyCatalogProductThemeData`, `ShopifyCatalogSummaryThemeData`, `ShopifyCatalogThemeData`, `ShopifyCatalogVariantThemeData`, `ShopifyProductData`, `ShopifyProductOptionData`, `ShopifyProductVariantData`, `ShopifyTokenExchangeResponseData`.
-- Command signatures: `capell-shopify-commerce:install`, `capell-shopify-commerce:prune-oauth-states`, `capell-shopify-commerce:sync-customers`.
+- Command signatures: `capell-shopify-commerce:install`, `capell-shopify-commerce:prune-oauth-states`, `capell-shopify-commerce:sync`, `capell-shopify-commerce:sync-customers`.
 - Console command classes: `InstallShopifyCommerceCommand`, `PruneExpiredShopifyOAuthStatesCommand`, `SyncShopifyCustomersCommand`, `SyncShopifyProductsCommand`.
+- Manifest contributions: `admin-page: Capell\ShopifyCommerce\Manifest\ShopifyConnectionPageContribution`, `console-command: Capell\ShopifyCommerce\Manifest\ShopifyCommerceConsoleCommandsContribution`, `health-check: Capell\ShopifyCommerce\Manifest\ShopifyCommerceHealthContribution`, `model: Capell\ShopifyCommerce\Manifest\ShopifyCommerceModelsContribution`, `route: Capell\ShopifyCommerce\Manifest\ShopifyCommerceRoutesContribution`, `scheduled-job: Capell\ShopifyCommerce\Manifest\ShopifyOAuthStatePruneScheduleContribution`, `scheduled-job: Capell\ShopifyCommerce\Manifest\ShopifyProductSyncScheduleContribution`, `setting: Capell\ShopifyCommerce\Manifest\ShopifyCommerceSettingsContribution`.
 - Health checks: `Capell\ShopifyCommerce\Health\ShopifyCommerceHealthCheck`.
 - Blade views: `packages/shopify-commerce/resources/views/filament/pages/connection.blade.php`.
 - Cache tags: `shopify-commerce`.
@@ -70,7 +71,7 @@ Screenshot contract: `screenshots.json`.
 - Settings: `Capell\ShopifyCommerce\Settings\ShopifyCommerceSettings`.
 - Queues or schedules: none detected in standard package paths.
 - Cache tags: `shopify-commerce`.
-- Commands: `capell-shopify-commerce:install`, `capell-shopify-commerce:prune-oauth-states`, `capell-shopify-commerce:sync-customers`.
+- Commands: `capell-shopify-commerce:install`, `capell-shopify-commerce:prune-oauth-states`, `capell-shopify-commerce:sync`, `capell-shopify-commerce:sync-customers`.
 
 ## Common Pitfalls
 

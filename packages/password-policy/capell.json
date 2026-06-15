@@ -35,17 +35,76 @@
         ],
         "frontend": []
     },
-    "contributes": [],
+    "contributes": [
+        {
+            "type": "admin-page",
+            "class": "Capell\\PasswordPolicy\\Manifest\\PasswordPolicyAdminPagesContribution",
+            "pageClasses": [
+                "Capell\\PasswordPolicy\\Filament\\Pages\\PasswordPolicySettingsPage",
+                "Capell\\PasswordPolicy\\Filament\\Pages\\ForcedPasswordChangePage"
+            ],
+            "extensionManagementSurface": {
+                "settingsGroup": "password_policy",
+                "label": "capell-password-policy::settings.title"
+            }
+        },
+        {
+            "type": "admin-action-extender",
+            "class": "Capell\\PasswordPolicy\\Manifest\\PasswordPolicyAdminExtendersContribution",
+            "extenderClasses": [
+                "Capell\\PasswordPolicy\\Filament\\Extenders\\PasswordPolicyPanelExtender",
+                "Capell\\PasswordPolicy\\Filament\\Extenders\\PasswordPolicyUserFormExtender",
+                "Capell\\PasswordPolicy\\Filament\\Extenders\\PasswordPolicyUserTableExtender"
+            ],
+            "tags": [
+                "capell.admin.panel_extenders",
+                "capell.admin.user-form-extender",
+                "capell.admin.user_table_extenders"
+            ]
+        },
+        {
+            "type": "setting",
+            "class": "Capell\\PasswordPolicy\\Manifest\\PasswordPolicySettingsContribution",
+            "settingsClass": "Capell\\PasswordPolicy\\Settings\\PasswordPolicySettings",
+            "settingsGroup": "password_policy",
+            "settingsSchema": "Capell\\PasswordPolicy\\Filament\\Settings\\PasswordPolicySettingsSchema"
+        },
+        {
+            "type": "console-command",
+            "class": "Capell\\PasswordPolicy\\Manifest\\PasswordPolicyConsoleCommandsContribution",
+            "commands": [
+                "capell:password-policy:expire-stale",
+                "capell:password-policy:doctor",
+                "capell:password-policy:prune-history",
+                "capell:password-policy:require-change"
+            ],
+            "commandClasses": [
+                "Capell\\PasswordPolicy\\Console\\Commands\\ExpireStalePasswordsCommand",
+                "Capell\\PasswordPolicy\\Console\\Commands\\PasswordPolicyDoctorCommand",
+                "Capell\\PasswordPolicy\\Console\\Commands\\PrunePasswordHistoryCommand",
+                "Capell\\PasswordPolicy\\Console\\Commands\\RequirePasswordChangeCommand"
+            ]
+        },
+        {
+            "type": "health-check",
+            "class": "Capell\\PasswordPolicy\\Manifest\\PasswordPolicyHealthContribution",
+            "checkClass": "Capell\\PasswordPolicy\\Health\\PasswordPolicyHealthCheck"
+        }
+    ],
     "database": {
         "migrations": true,
         "settings": true,
-        "requiredTables": []
+        "requiredTables": ["password_policy_password_histories"],
+        "requiredUserColumns": ["password_changed_at", "must_change_password"]
     },
     "commands": {
         "install": null,
         "setup": null,
         "demo": null,
-        "doctor": "capell:password-policy:doctor"
+        "doctor": "capell:password-policy:doctor",
+        "expireStale": "capell:password-policy:expire-stale",
+        "pruneHistory": "capell:password-policy:prune-history",
+        "requireChange": "capell:password-policy:require-change"
     },
     "settings": ["Capell\\PasswordPolicy\\Settings\\PasswordPolicySettings"],
     "permissions": [],
@@ -158,6 +217,6 @@
         "categories": ["admin", "operations"]
     },
     "contributionTraceability": {
-        "deferredContributions": ["admin-page"]
+        "deferredContributions": []
     }
 }

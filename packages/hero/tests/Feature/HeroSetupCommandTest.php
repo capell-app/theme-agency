@@ -36,7 +36,7 @@ it('installs compact natural home hero defaults', function (): void {
     $containers = $homeLayout->containers ?? [];
 
     capell_expect(array_keys($containers))->toBe(['hero', 'main'])
-        ->and($containers['hero']['widgets'] ?? null)->toBe([
+        ->and(data_get($containers, 'hero.widgets'))->toBe([
             ['widget_key' => 'hero'],
         ])
         ->and($homeLayout->widgets)->toBe(['hero', 'page-content'])
@@ -78,6 +78,38 @@ it('does not duplicate hero defaults on repeated setup', function (): void {
     capell_expect(array_keys($containers))->toBe(['hero', 'main'])
         ->and($homeLayout->widgets)->toBe(['hero', 'page-content'])
         ->and(Widget::query()->where('key', 'hero')->count())->toBe(1);
+});
+
+it('repairs page content below an existing hero container', function (): void {
+    resolve(LayoutCreator::class)->setup();
+
+    $homeLayout = Layout::query()
+        ->where('key', LayoutEnum::Home->value)
+        ->firstOrFail();
+
+    Widget::query()->where('key', 'hero')->delete();
+
+    $homeLayout->update([
+        'containers' => [
+            'hero' => [
+                'widgets' => [
+                    ['widget_key' => 'hero'],
+                ],
+            ],
+        ],
+    ]);
+
+    $result = InstallHeroLayoutDefaultsAction::run();
+
+    $homeLayout->refresh();
+    $containers = $homeLayout->containers ?? [];
+
+    expect($result)->toBe(['created' => 0, 'updated' => 1, 'skipped' => 0])
+        ->and(array_keys($containers))->toBe(['hero', 'main'])
+        ->and($containers['main']['widgets'] ?? null)->toBe([
+            ['widget_key' => 'page-content'],
+        ])
+        ->and($homeLayout->widgets)->toBe(['hero', 'page-content']);
 });
 
 it('installs hero defaults when home layout containers are null', function (): void {
@@ -148,8 +180,8 @@ it('force updates an existing hero container without replacing custom home copy'
     throw_unless($translation instanceof Translation, RuntimeException::class, 'Expected custom home page translation to be loaded.');
 
     expect($result)->toBe(['created' => 0, 'updated' => 1, 'skipped' => 0])
-        ->and($containers['hero']['widgets'] ?? null)->toBe([['widget_key' => 'hero']])
-        ->and($containers['main']['widgets'] ?? null)->toBe([['widget_key' => 'page-content']])
+        ->and(data_get($containers, 'hero.widgets'))->toBe([['widget_key' => 'hero']])
+        ->and(data_get($containers, 'main.widgets'))->toBe([['widget_key' => 'page-content']])
         ->and($translation->getMeta('hero_title'))->toBe('Custom headline')
         ->and($translation->getMeta('hero'))->toBe('<p>Custom hero copy.</p>')
         ->and($translation->content)->toBe('<p>Custom body copy.</p>');

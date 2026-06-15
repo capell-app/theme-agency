@@ -58,6 +58,12 @@
         {
             "type": "model",
             "class": "Capell\\Experiments\\Manifest\\ExperimentsModelsContribution"
+        },
+        {
+            "type": "scheduled-job",
+            "class": "Capell\\Experiments\\Manifest\\ExperimentsStatusSyncScheduleContribution",
+            "command": "capell:experiments:sync-statuses",
+            "frequency": "everyFiveMinutes"
         }
     ],
     "database": {
@@ -76,7 +82,8 @@
         "install": null,
         "setup": null,
         "demo": null,
-        "doctor": null
+        "doctor": null,
+        "syncStatuses": "capell:experiments:sync-statuses"
     },
     "settings": [],
     "actions": {
@@ -229,6 +236,6 @@
         "categories": ["growth", "analytics"]
     },
     "contributionTraceability": {
-        "deferredContributions": ["scheduled-job"]
+        "deferredContributions": []
     }
 }

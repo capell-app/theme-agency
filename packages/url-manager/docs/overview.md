@@ -46,8 +46,9 @@ Screenshot contract: `screenshots.json`.
 - Data objects: `ChangedUrlRedirectData`, `ConvertNotFoundOpportunityData`, `NotFoundOpportunityData`, `PreparedRedirectRuleData`, `RedirectImportResultData`, `RedirectImportRowData`, `RedirectResolutionData`, `RedirectRuleData`.
 - Command signatures: `url-manager:prune-hits`.
 - Console command classes: `PruneRedirectHitsCommand`.
-- Manifest contributions: `admin-page: Capell\UrlManager\Manifest\NotFoundOpportunitiesPageContribution`, `admin-page: Capell\UrlManager\Manifest\RedirectRulesPageContribution`, `model: Capell\UrlManager\Manifest\UrlManagerModelsContribution`.
+- Manifest contributions: `admin-page: Capell\UrlManager\Manifest\NotFoundOpportunitiesPageContribution`, `admin-page: Capell\UrlManager\Manifest\RedirectRulesPageContribution`, `console-command: Capell\UrlManager\Manifest\UrlManagerConsoleCommandsContribution`, `health-check: Capell\UrlManager\Manifest\UrlManagerHealthContribution`, `model: Capell\UrlManager\Manifest\UrlManagerModelsContribution`.
 - Health checks: `Capell\UrlManager\Health\UrlManagerHealthCheck`.
+- Cache tags: `url-manager`.
 
 ## Data Model
 
@@ -65,7 +66,7 @@ Screenshot contract: `screenshots.json`.
 - Database changes: package migrations are declared.
 - Settings: no package settings declared.
 - Queues or schedules: none detected in standard package paths.
-- Cache tags: none declared.
+- Cache tags: `url-manager`.
 - Commands: `url-manager:prune-hits`.
 
 ## Common Pitfalls

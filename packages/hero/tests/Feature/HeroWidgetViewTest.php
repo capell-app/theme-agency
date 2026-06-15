@@ -444,6 +444,8 @@ it('renders responsive hero media without exposing editor metadata', function ()
 
     expect($html)
         ->toContain('data-hero-video')
+        ->toContain('data-hero-video-toggle')
+        ->toContain('Pause hero video')
         ->toContain('hero-desktop.webm')
         ->toContain('hero-mobile.jpg')
         ->toContain('hero-mobile.jpg 640w')
@@ -482,6 +484,7 @@ it('marks the hero media poster as high fetch priority without exposing editor m
             'content' => '<p>Body content.</p>',
             'meta' => [
                 'hero' => '<p>Hero copy.</p>',
+                'hero_title' => 'Hero Media Poster',
                 'slug' => 'hero-media-poster',
             ],
         ])
@@ -526,6 +529,7 @@ it('marks the hero media poster as high fetch priority without exposing editor m
         ->toContain('hero-poster.jpg 1600w')
         ->toContain('sizes="100vw"')
         ->toContain('fetchpriority="high"')
+        ->toContain('alt="Hero Media Poster"')
         ->not->toContain('capell-hero')
         ->not->toContain('hero_media')
         ->not->toContain('theme_id')
@@ -630,10 +634,23 @@ it('renders multi-slide carousel data attributes from prepared slide state', fun
         ->toContain('data-carousel-speed="450"')
         ->toContain('data-carousel-touch="0"')
         ->toContain('data-carousel-wheel="0"')
+        ->not->toContain('data-auto=')
+        ->not->toContain('data-loop=')
+        ->not->toContain('data-delay=')
+        ->not->toContain('data-align=')
+        ->not->toContain('data-drag=')
+        ->not->toContain('data-wheel=')
+        ->not->toContain('data-fade=')
         ->toContain('swiper-button-prev')
         ->toContain('swiper-pagination')
         ->toContain('First feature')
         ->toContain('Second feature')
         ->not->toContain('capell-hero')
         ->not->toContain('widget_id');
+});
+
+it('ships a safe default widget fallback view for base widget subclasses', function (): void {
+    $viewName = implode('', ['capell-hero::components.widget.default']);
+
+    expect(view()->exists($viewName))->toBeTrue();
 });

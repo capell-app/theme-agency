@@ -35,12 +35,15 @@ use Capell\AccessGate\Support\AccessRequestMethodRegistry;
 use Capell\AccessGate\Support\CustomerPortal\AccessGatePortalSelfServiceItemProvider;
 use Capell\AccessGate\Support\Payments\AccessGatePaymentFulfillmentHandler;
 use Capell\AccessGate\Support\RegistrationFieldRegistry;
+use Capell\AccessGate\Support\RenderHooks\RegisterAnnouncementBarHook;
 use Capell\Admin\Data\AdminSurfaceContributionData;
 use Capell\Admin\Facades\CapellAdmin;
 use Capell\Core\Facades\CapellCore;
 use Capell\Core\Support\Packages\AbstractPackageServiceProvider;
 use Capell\CustomerPortal\Contracts\PortalSelfServiceItemProvider;
 use Capell\CustomerPortal\Support\PortalSelfServiceItemRegistry;
+use Capell\Frontend\Enums\RenderHookLocation;
+use Capell\Frontend\Support\Render\FrontendHookRegistrar;
 use Capell\Frontend\Support\Rules\FrontendRuleConditionRegistry;
 use Capell\Payments\Contracts\PaymentFulfillmentHandler;
 use Capell\PublicActions\Support\PublicActionHandlerRegistry;
@@ -84,6 +87,7 @@ class AccessGateServiceProvider extends AbstractPackageServiceProvider
                 '2026_05_10_190838_05_create_access_gate_browser_tokens_table',
                 '2026_05_10_190838_06_create_access_gate_events_table',
                 '2026_06_07_000001_add_claim_landing_url_to_access_gate_areas_table',
+                '2026_06_14_000001_add_announcement_bar_fields_to_access_gate_areas_table',
             ]);
     }
 
@@ -113,6 +117,7 @@ class AccessGateServiceProvider extends AbstractPackageServiceProvider
                 ->registerPolicies()
                 ->registerAdminResources()
                 ->registerFrontendRuleConditions()
+                ->registerFrontendRenderHooks()
                 ->registerProtectedTables()
                 ->registerCustomerPortalIntegrations()
                 ->registerPaymentFulfillmentHandler();
@@ -168,6 +173,23 @@ class AccessGateServiceProvider extends AbstractPackageServiceProvider
             $registry->register(HasActiveAccessGateGrantCondition::class);
             $registry->register(MissingActiveAccessGateGrantCondition::class);
         });
+
+        return $this;
+    }
+
+    private function registerFrontendRenderHooks(): self
+    {
+        if (! class_exists(FrontendHookRegistrar::class) || ! $this->app->bound(FrontendHookRegistrar::class)) {
+            return $this;
+        }
+
+        $this->app->make(FrontendHookRegistrar::class)->contribute(
+            location: RenderHookLocation::BodyStart,
+            extension: new RegisterAnnouncementBarHook,
+            owner: self::$packageName,
+            key: 'announcement-bar',
+            cacheSafe: true,
+        );
 
         return $this;
     }
@@ -316,14 +338,17 @@ class AccessGateServiceProvider extends AbstractPackageServiceProvider
 
     private function registerModels(): self
     {
-        $this->surface()->models([
+        $models = [
             Area::class,
             Registration::class,
             Grant::class,
             ClaimToken::class,
             BrowserToken::class,
             Event::class,
-        ]);
+        ];
+
+        $this->surface()->models($models);
+        CapellCore::registerModels($models);
 
         return $this;
     }

@@ -6,12 +6,12 @@ namespace Capell\LiveChat\Http\Controllers;
 
 use Capell\LiveChat\Actions\ApplyLiveChatCorsHeadersAction;
 use Capell\LiveChat\Actions\GuardLiveChatInstallationOriginAction;
+use Capell\LiveChat\Actions\GuardLiveChatSameSiteRequestAction;
 use Capell\LiveChat\Actions\RequestLiveChatHandoffAction;
 use Capell\LiveChat\Actions\ResolveLiveChatConversationForInstallationAction;
 use Capell\LiveChat\Actions\ResolveLiveChatInstallationAction;
 use Capell\LiveChat\Http\Controllers\Concerns\BuildsLiveChatPayloads;
 use Capell\LiveChat\Http\Requests\RequestLiveChatHandoffRequest;
-use Capell\LiveChat\Models\LiveChatConversation;
 use Illuminate\Http\JsonResponse;
 
 final class RequestLiveChatHandoffController
@@ -27,22 +27,21 @@ final class RequestLiveChatHandoffController
 
         abort_if($conversationUuid === null, 404);
 
-        if ($publicKey === null) {
-            $liveChatConversation = LiveChatConversation::query()
-                ->where('uuid', $conversationUuid)
-                ->firstOrFail();
-        } else {
-            $installation = (new ResolveLiveChatInstallationAction)->handle($publicKey);
+        $installation = (new ResolveLiveChatInstallationAction)->handle($publicKey);
 
-            abort_if($installation === null, 404);
+        abort_if($installation === null, 404);
 
+        if ($publicKey !== null) {
             $origin = (new GuardLiveChatInstallationOriginAction)->handle($installation, $request);
-            $liveChatConversation = (new ResolveLiveChatConversationForInstallationAction)->handle(
-                installation: $installation,
-                uuid: $conversationUuid,
-                visitorToken: $this->nullableString($validated['visitor_token'] ?? null),
-            );
+        } else {
+            GuardLiveChatSameSiteRequestAction::run($installation, $request);
         }
+
+        $liveChatConversation = (new ResolveLiveChatConversationForInstallationAction)->handle(
+            installation: $installation,
+            uuid: $conversationUuid,
+            visitorToken: $this->nullableString($validated['visitor_token'] ?? null),
+        );
 
         $visitor = $this->visitorData($validated['visitor'] ?? null);
 

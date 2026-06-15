@@ -8,6 +8,7 @@ use Capell\Admin\Contracts\Extenders\PageEditExtender;
 use Capell\Admin\Contracts\Extenders\PageExportExtender;
 use Capell\Admin\Contracts\Extenders\PageResourcePageExtender;
 use Capell\Admin\Contracts\Extenders\PageTableExtender;
+use Capell\Core\Events\DatabaseSchemaChanged;
 use Capell\Core\Facades\CapellCore;
 use Capell\Core\Models\AssetAttachment;
 use Capell\Core\Models\Blueprint;
@@ -84,6 +85,9 @@ class PublishingStudioServiceProvider extends ServiceProvider
 
         $this->app->register(AdminServiceProvider::class);
         $this->app->singleton(ReleaseWorkspaceItemRegistry::class);
+        Event::listen(DatabaseSchemaChanged::class, static function (): void {
+            WorkspaceContextScope::flushWorkspaceColumnCache();
+        });
 
     }
 

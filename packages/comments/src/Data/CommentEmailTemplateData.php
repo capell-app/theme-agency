@@ -16,5 +16,9 @@ class CommentEmailTemplateData extends Data
         public string $name,
         public array $variables,
         public ?string $description = null,
+        public ?string $subject = null,
+        public ?string $previewText = null,
+        public ?string $htmlView = null,
+        public ?string $text = null,
     ) {}
 }

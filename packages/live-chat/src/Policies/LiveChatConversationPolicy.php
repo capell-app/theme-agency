@@ -11,11 +11,20 @@ final class LiveChatConversationPolicy extends AbstractLiveChatResourcePolicy
 {
     public function create(User $user): bool
     {
+        unset($user);
+
         return false;
     }
 
     public function delete(User $user, Model $record): bool
     {
+        unset($user, $record);
+
         return false;
+    }
+
+    protected static function subject(): string
+    {
+        return 'LiveChatConversation';
     }
 }

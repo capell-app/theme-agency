@@ -15,7 +15,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Symfony\Component\HttpFoundation\Response;
 
-$prefix = trim((string) config('capell-live-chat.public_path_prefix', 'live-chat'), '/');
+$configuredPrefix = config('capell-live-chat.public_path_prefix', 'live-chat');
+$prefix = trim(is_string($configuredPrefix) ? $configuredPrefix : 'live-chat', '/');
 
 Route::middleware(['web'])
     ->prefix($prefix)

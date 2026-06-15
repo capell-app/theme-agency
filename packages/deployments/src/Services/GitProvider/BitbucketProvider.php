@@ -193,8 +193,19 @@ final class BitbucketProvider implements GitProviderContract
             ->baseUrl('https://api.bitbucket.org/2.0')
             ->withToken($conn->access_token_encrypted)
             ->retry(2, 200, throw: false)
-            ->timeout(10)
+            ->timeout($this->httpTimeout())
             ->connectTimeout(5);
+    }
+
+    private function httpTimeout(): int
+    {
+        $timeout = config('capell-deployments.http_timeout', 10);
+
+        if (is_numeric($timeout)) {
+            return max(1, (int) $timeout);
+        }
+
+        return 10;
     }
 
     /** @param array<string, mixed> $response */

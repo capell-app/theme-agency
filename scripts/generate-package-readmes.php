@@ -150,6 +150,8 @@ function capell_docs_package_markdown(string $rootPath, string $packageSlug, str
         '',
         '**For teams:** ' . capell_docs_team_value($manifest, $description),
         '',
+        ...($packageSlug === 'bookings' ? ['## Start Simple, Add Depth Later', '', 'Most teams should launch with the default request form, service setup, staff availability, and admin queue before enabling reminders, reviews, waitlists, travel planning, payments, or advanced automation. Use `docs/adoption-guide.md` as the rollout path for owners, operators, agencies, and developers.', ''] : []),
+        ...($packageSlug === 'theme-estate-agents' ? ['runtime inheritance uses `extends: default`, so the theme keeps Foundation Theme behaviour while replacing property-specific public presentation. It requires `capell-app/foundation-theme` and `capell-app/frontend`.', ''] : []),
         '## Screens And Workflow',
         '',
         ...capell_docs_screens_and_workflow($packagePath, $manifest, $forOverview),
@@ -251,6 +253,21 @@ function capell_docs_package_specific_sections(string $packageSlug, bool $forOve
             '- Manifest extends: `default`',
             '- Runtime extends: `default`',
             '- Portfolio runtime inheritance uses `extends: default` and requires `capell-app/frontend` for the built-in default fallback.',
+            '',
+        ];
+    }
+
+    if ($packageSlug === 'theme-restaurant') {
+        return [
+            '## Theme Inheritance Contract',
+            '',
+            'Product group:',
+            '**Capell Themes**',
+            '',
+            '- Product group: `Capell Themes`',
+            '- Manifest extends: `default`',
+            '- Runtime extends: `default`',
+            '- Restaurant runtime inheritance uses `extends: default` and requires `capell-app/frontend` for the built-in default fallback.',
             '',
         ];
     }

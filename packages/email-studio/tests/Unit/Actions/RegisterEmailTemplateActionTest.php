@@ -34,3 +34,38 @@ it('upserts registered templates by package, key, and site scope', function (): 
         ->and($updatedRegistration->refresh()->name)->toBe('Updated confirmation')
         ->and($updatedRegistration->variables)->toBe(['name']);
 });
+
+it('does not save unchanged registered templates', function (): void {
+    Site::factory()->create(['id' => 12]);
+
+    $registration = RegisterEmailTemplateAction::run(
+        key: 'forms.confirmation',
+        name: 'Form confirmation',
+        variables: ['name', 'submission_reference'],
+        description: 'Sent after a form submission.',
+        packageName: 'capell-app/form-builder',
+        siteId: 12,
+        siteScopeKey: 'site:12',
+    );
+
+    $registration->forceFill(['updated_at' => now()->subDay()])->saveQuietly();
+    $lastUpdatedAt = $registration->refresh()->updated_at?->toImmutable();
+
+    if ($lastUpdatedAt === null) {
+        throw new RuntimeException('Expected registration timestamp to be available.');
+    }
+
+    $unchangedRegistration = RegisterEmailTemplateAction::run(
+        key: 'forms.confirmation',
+        name: 'Form confirmation',
+        variables: ['name', 'submission_reference'],
+        description: 'Sent after a form submission.',
+        packageName: 'capell-app/form-builder',
+        siteId: 12,
+        siteScopeKey: 'site:12',
+    );
+
+    expect($unchangedRegistration->is($registration))->toBeTrue()
+        ->and(EmailTemplateRegistration::query()->count())->toBe(1)
+        ->and($unchangedRegistration->refresh()->updated_at?->toImmutable()->equalTo($lastUpdatedAt))->toBeTrue();
+});

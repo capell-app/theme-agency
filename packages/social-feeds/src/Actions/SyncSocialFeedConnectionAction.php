@@ -11,6 +11,9 @@ use Illuminate\Queue\Middleware\WithoutOverlapping;
 use Lorisleiva\Actions\Concerns\AsAction;
 use Throwable;
 
+/**
+ * @method static int run(SocialFeedConnection|int $connection, ?int $limit = null)
+ */
 final class SyncSocialFeedConnectionAction
 {
     use AsAction;

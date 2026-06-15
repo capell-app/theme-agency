@@ -148,6 +148,11 @@
                 "path": "docs/assets/marketplace/restaurant-events.svg",
                 "alt": "Theme Restaurant events layout preview",
                 "caption": "Seasonal events, chef nights, and ticketed dining previews."
+            },
+            {
+                "path": "docs/assets/marketplace/restaurant-private-dining.svg",
+                "alt": "Theme Restaurant private dining preview",
+                "caption": "Private dining page with room options, menus, and enquiry intent."
             }
         ],
         "categories": ["frontend", "themes", "hospitality"]

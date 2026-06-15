@@ -24,6 +24,16 @@ final class PaymentsSettings extends Settings implements SettingsContract
 
     public int $stripe_connect_timeout = 5;
 
+    public ?string $paypal_client_id = null;
+
+    public ?string $paypal_client_secret = null;
+
+    public string $paypal_api_base_url = 'https://api-m.paypal.com';
+
+    public int $paypal_timeout = 20;
+
+    public int $paypal_connect_timeout = 5;
+
     public int $webhook_freshness_hours = 48;
 
     public static function group(): string

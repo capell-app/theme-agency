@@ -44,7 +44,25 @@
         },
         {
             "type": "model",
-            "class": "Capell\\UrlManager\\Manifest\\UrlManagerModelsContribution"
+            "class": "Capell\\UrlManager\\Manifest\\UrlManagerModelsContribution",
+            "modelClasses": [
+                "Capell\\UrlManager\\Models\\RedirectRule",
+                "Capell\\UrlManager\\Models\\RedirectHit",
+                "Capell\\UrlManager\\Models\\NotFoundOpportunity"
+            ]
+        },
+        {
+            "type": "console-command",
+            "class": "Capell\\UrlManager\\Manifest\\UrlManagerConsoleCommandsContribution",
+            "commands": ["url-manager:prune-hits"],
+            "commandClasses": [
+                "Capell\\UrlManager\\Console\\Commands\\PruneRedirectHitsCommand"
+            ]
+        },
+        {
+            "type": "health-check",
+            "class": "Capell\\UrlManager\\Manifest\\UrlManagerHealthContribution",
+            "checkClass": "Capell\\UrlManager\\Health\\UrlManagerHealthCheck"
         }
     ],
     "database": {
@@ -154,12 +172,25 @@
     "performance": {
         "frontendRenderBudgetMs": 0,
         "adminQueryBudget": 40,
-        "cacheTags": [],
+        "cacheTags": ["url-manager"],
         "cacheSafety": {
             "cacheable": false,
             "variesBy": [],
             "sensitiveOutput": false,
-            "invalidationSources": [],
+            "invalidationSources": [
+                {
+                    "model": "Capell\\UrlManager\\Models\\RedirectRule",
+                    "events": ["saved", "deleted"]
+                },
+                {
+                    "model": "Capell\\UrlManager\\Models\\RedirectHit",
+                    "events": ["saved", "deleted"]
+                },
+                {
+                    "model": "Capell\\UrlManager\\Models\\NotFoundOpportunity",
+                    "events": ["saved", "deleted"]
+                }
+            ],
             "queueInvalidation": false
         }
     },

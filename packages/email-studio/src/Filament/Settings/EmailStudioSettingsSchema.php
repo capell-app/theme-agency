@@ -7,6 +7,7 @@ namespace Capell\EmailStudio\Filament\Settings;
 use Capell\Admin\Filament\Contracts\HasSchema;
 use Capell\Admin\Filament\Support\HelperText;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Grid;
@@ -73,6 +74,36 @@ final class EmailStudioSettingsSchema implements HasSchema
                                 ->integer()
                                 ->minValue(0)
                                 ->suffix(__('capell-admin::form.days')),
+                        ]),
+                ]),
+            Section::make(__('capell-email-studio::settings.template_authoring'))
+                ->columnSpanFull()
+                ->schema([
+                    TagsInput::make('template_config_variables')
+                        ->label(__('capell-email-studio::settings.template_config_variables'))
+                        ->helperText(__('capell-email-studio::settings.template_config_variables_helper'))
+                        ->placeholder('app.name')
+                        ->columnSpanFull(),
+                ]),
+            Section::make(__('capell-email-studio::settings.auth_emails'))
+                ->columnSpanFull()
+                ->schema([
+                    Grid::make(2)
+                        ->schema([
+                            Toggle::make('auth_replace_verification')
+                                ->label(__('capell-email-studio::settings.auth_replace_verification')),
+                            Toggle::make('auth_replace_password_reset')
+                                ->label(__('capell-email-studio::settings.auth_replace_password_reset')),
+                            Toggle::make('auth_send_welcome')
+                                ->label(__('capell-email-studio::settings.auth_send_welcome')),
+                            Toggle::make('auth_send_verified')
+                                ->label(__('capell-email-studio::settings.auth_send_verified')),
+                            Toggle::make('auth_send_login')
+                                ->label(__('capell-email-studio::settings.auth_send_login')),
+                            Toggle::make('auth_send_lockout')
+                                ->label(__('capell-email-studio::settings.auth_send_lockout')),
+                            Toggle::make('auth_send_password_reset_success')
+                                ->label(__('capell-email-studio::settings.auth_send_password_reset_success')),
                         ]),
                 ]),
         ];

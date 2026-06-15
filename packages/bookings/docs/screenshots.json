@@ -29,6 +29,42 @@
             "notes": "Capture requested and confirmed appointments with service, staff, location, customer, status, and audit context visible.",
             "useCase": "An operator checks incoming appointment requests and manages confirmation or cancellation safely.",
             "screenshotPath": "packages/bookings/docs/screenshots/appointment-requests-admin.png"
+        },
+        {
+            "id": "equi-dynamics-public-booking-desktop",
+            "title": "Equi Dynamics public booking form on desktop.",
+            "package": "bookings",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "http://127.0.0.1:8013/bookings",
+            "required": true,
+            "notes": "Capture the consuming Equi Dynamics site booking form at a desktop viewport with seeded services, staff, location, timezone, and customer fields visible.",
+            "useCase": "A buyer confirms Bookings renders correctly inside a branded Capell customer site.",
+            "screenshotPath": "packages/bookings/docs/screenshots/equi-dynamics-public-booking-desktop.png"
+        },
+        {
+            "id": "equi-dynamics-public-booking-mobile",
+            "title": "Equi Dynamics public booking form on mobile.",
+            "package": "bookings",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "http://127.0.0.1:8013/bookings",
+            "required": true,
+            "notes": "Capture the consuming Equi Dynamics site booking form at a mobile viewport and verify there is no horizontal overflow.",
+            "useCase": "A buyer confirms the public booking workflow is usable on a phone-sized viewport.",
+            "screenshotPath": "packages/bookings/docs/screenshots/equi-dynamics-public-booking-mobile.png"
+        },
+        {
+            "id": "equi-dynamics-booking-submitted",
+            "title": "Equi Dynamics successful booking submission.",
+            "package": "bookings",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "http://127.0.0.1:8013/bookings",
+            "required": true,
+            "notes": "Capture the success state after submitting a valid seeded Equi Dynamics booking request with fake QA contact details.",
+            "useCase": "A buyer confirms the rendered booking form can submit through the package action end to end.",
+            "screenshotPath": "packages/bookings/docs/screenshots/equi-dynamics-booking-submitted.png"
         }
     ]
 }

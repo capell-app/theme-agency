@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use Capell\AgentBridge\Health\AgentBridgeHealthCheck;
 use Capell\Core\Data\Diagnostics\DoctorCheckResultData;
+use Illuminate\Support\Facades\Schema;
 
 it('returns a compatible capell api version', function (): void {
     expect(AgentBridgeHealthCheck::compatibleCapellApiVersion())->toBe('^4.0');
@@ -38,6 +39,20 @@ it('checks that agent bridge database tables exist', function (): void {
     expect($tableCheck)->not->toBeNull()
         ->and($tableCheck->passed)->toBeTrue()
         ->and($tableCheck->message)->toContain('All required Agent Bridge tables are present');
+});
+
+it('uses package-safe remediation when database tables are missing', function (): void {
+    Schema::dropIfExists('capell_agent_bridge_saved_prompts');
+
+    $results = AgentBridgeHealthCheck::runDiagnostics();
+
+    $tableCheck = $results->first(fn (DoctorCheckResultData $check): bool => $check->label === 'Agent Bridge database tables');
+
+    throw_unless($tableCheck instanceof DoctorCheckResultData, RuntimeException::class, 'Agent Bridge database tables health check was not returned.');
+
+    expect($tableCheck->passed)->toBeFalse()
+        ->and($tableCheck->remediation)->toContain('Install or migrate the Agent Bridge package')
+        ->and($tableCheck->remediation)->not->toContain('php artisan');
 });
 
 it('checks that the capability registry is resolvable with capabilities', function (): void {

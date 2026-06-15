@@ -2,10 +2,14 @@
 
 declare(strict_types=1);
 
+use Capell\UrlManager\Console\Commands\PruneRedirectHitsCommand;
 use Capell\UrlManager\Filament\Pages\NotFoundOpportunitiesPage;
 use Capell\UrlManager\Filament\Pages\RedirectRulesPage;
+use Capell\UrlManager\Health\UrlManagerHealthCheck;
 use Capell\UrlManager\Manifest\NotFoundOpportunitiesPageContribution;
 use Capell\UrlManager\Manifest\RedirectRulesPageContribution;
+use Capell\UrlManager\Manifest\UrlManagerConsoleCommandsContribution;
+use Capell\UrlManager\Manifest\UrlManagerHealthContribution;
 use Capell\UrlManager\Manifest\UrlManagerModelsContribution;
 use Capell\UrlManager\Models\NotFoundOpportunity;
 use Capell\UrlManager\Models\RedirectHit;
@@ -42,6 +46,22 @@ it('declares URL Manager owned models and protected tables', function (): void {
         ->and(data_get($manifest, 'contributes'))->toContain([
             'type' => 'model',
             'class' => UrlManagerModelsContribution::class,
+            'modelClasses' => [
+                RedirectRule::class,
+                RedirectHit::class,
+                NotFoundOpportunity::class,
+            ],
+        ])
+        ->and(data_get($manifest, 'contributes'))->toContain([
+            'type' => 'console-command',
+            'class' => UrlManagerConsoleCommandsContribution::class,
+            'commands' => ['url-manager:prune-hits'],
+            'commandClasses' => [PruneRedirectHitsCommand::class],
+        ])
+        ->and(data_get($manifest, 'contributes'))->toContain([
+            'type' => 'health-check',
+            'class' => UrlManagerHealthContribution::class,
+            'checkClass' => UrlManagerHealthCheck::class,
         ])
         ->and(data_get($manifest, 'actions'))->toHaveKeys([
             'buildNotFoundRedirectSuggestions',
@@ -67,6 +87,17 @@ it('declares URL Manager owned models and protected tables', function (): void {
             'frontend-redirect-resolver',
             'url-manager-admin',
         )
+        ->and(data_get($manifest, 'performance.cacheTags'))->toContain('url-manager')
+        ->and(data_get($manifest, 'performance.cacheSafety.invalidationSources'))->toContain([
+            'model' => RedirectRule::class,
+            'events' => ['saved', 'deleted'],
+        ], [
+            'model' => RedirectHit::class,
+            'events' => ['saved', 'deleted'],
+        ], [
+            'model' => NotFoundOpportunity::class,
+            'events' => ['saved', 'deleted'],
+        ])
         ->and(data_get($manifest, 'contributionTraceability.deferredContributions'))->toBe([]);
 });
 

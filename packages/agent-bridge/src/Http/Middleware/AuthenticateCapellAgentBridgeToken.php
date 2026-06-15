@@ -19,6 +19,8 @@ final class AuthenticateCapellAgentBridgeToken
      */
     public function handle(Request $request, Closure $next): Response
     {
+        $this->forgetRequestContext();
+
         $plainTextToken = (string) $request->bearerToken();
 
         if ($plainTextToken === '') {
@@ -63,7 +65,11 @@ final class AuthenticateCapellAgentBridgeToken
             scopes: $token->scopes,
         ));
 
-        return $next($request);
+        try {
+            return $next($request);
+        } finally {
+            $this->forgetRequestContext();
+        }
     }
 
     private function shouldUpdateLastUsedAt(CapellAgentBridgeToken $token): bool
@@ -87,5 +93,11 @@ final class AuthenticateCapellAgentBridgeToken
     {
         return response($message, 401)
             ->header('WWW-Authenticate', 'Bearer realm="capell-agent-bridge", error="invalid_token"');
+    }
+
+    private function forgetRequestContext(): void
+    {
+        app()->forgetInstance(CapellAgentBridgeToken::class);
+        app()->forgetInstance(AuthenticatedAgentBridgeClientData::class);
     }
 }

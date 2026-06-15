@@ -18,11 +18,15 @@ final class ResolveFoundationThemeTokensAction
 {
     use AsAction;
 
-    public function handle(?Theme $theme = null, ?Site $site = null, ?FoundationThemeSettings $settings = null): FoundationThemeTokensData
-    {
+    public function handle(
+        ?Theme $theme = null,
+        ?Site $site = null,
+        ?FoundationThemeSettings $settings = null,
+        bool $resolveSettings = true,
+    ): FoundationThemeTokensData {
         $theme ??= Frontend::theme();
         $site ??= Frontend::site();
-        $settings ??= $this->resolveSettings();
+        $settings ??= $resolveSettings ? $this->resolveSettings() : null;
 
         $brandColorMeta = $site instanceof Site ? $site->getMeta('brand_color') : null;
         $linkColorMeta = $theme instanceof Theme ? $theme->getMeta('link_color') : null;

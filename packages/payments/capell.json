@@ -68,11 +68,51 @@
         },
         {
             "type": "model",
-            "class": "Capell\\Payments\\Manifest\\PaymentsModelsContribution"
+            "class": "Capell\\Payments\\Manifest\\PaymentsModelsContribution",
+            "modelClasses": [
+                "Capell\\Payments\\Models\\PaymentCustomer",
+                "Capell\\Payments\\Models\\CheckoutSession",
+                "Capell\\Payments\\Models\\PaymentIntent",
+                "Capell\\Payments\\Models\\Subscription",
+                "Capell\\Payments\\Models\\PaymentWebhookEvent",
+                "Capell\\Payments\\Models\\PaymentRefund",
+                "Capell\\Payments\\Models\\PaymentDispute",
+                "Capell\\Payments\\Models\\PaymentDownloadEntitlement"
+            ]
         },
         {
             "type": "route",
-            "class": "Capell\\Payments\\Manifest\\PaymentsFrontendRoutesContribution"
+            "class": "Capell\\Payments\\Manifest\\PaymentsFrontendRoutesContribution",
+            "routes": [
+                "capell-payments.form-builder.checkout",
+                "capell-payments.paid-downloads.show",
+                "capell-payments.portal.billing",
+                "capell-payments.stripe-webhook"
+            ]
+        },
+        {
+            "type": "setting",
+            "class": "Capell\\Payments\\Manifest\\PaymentsSettingsContribution",
+            "settingsClass": "Capell\\Payments\\Settings\\PaymentsSettings",
+            "settingsGroup": "payments",
+            "settingsSchema": "Capell\\Payments\\Filament\\Settings\\PaymentsSettingsSchema"
+        },
+        {
+            "type": "console-command",
+            "class": "Capell\\Payments\\Manifest\\PaymentsConsoleCommandsContribution",
+            "commands": [
+                "capell:payments:webhooks:reconcile",
+                "capell:payments:webhooks:reprocess"
+            ],
+            "commandClasses": [
+                "Capell\\Payments\\Console\\Commands\\ReconcilePaymentWebhooksCommand",
+                "Capell\\Payments\\Console\\Commands\\ReprocessPaymentWebhookEventsCommand"
+            ]
+        },
+        {
+            "type": "health-check",
+            "class": "Capell\\Payments\\Manifest\\PaymentsHealthContribution",
+            "checkClass": "Capell\\Payments\\Health\\PaymentsHealthCheck"
         }
     ],
     "database": {
@@ -103,7 +143,9 @@
         "install": null,
         "setup": null,
         "demo": null,
-        "doctor": null
+        "doctor": null,
+        "webhookReconcile": "capell:payments:webhooks:reconcile",
+        "webhookReprocess": "capell:payments:webhooks:reprocess"
     },
     "actions": {
         "checkout": "Capell\\Payments\\Actions\\CreateCheckoutSessionAction",

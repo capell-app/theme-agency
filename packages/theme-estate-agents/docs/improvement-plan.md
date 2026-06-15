@@ -1,0 +1,97 @@
+# Theme Estate Agents - Improvement & Growth Plan
+
+> Package: capell-app/theme-estate-agents · Kind: theme · Tier: premium · Product group: Capell Themes · Bundle: themes · Status: Active
+
+## 1. Snapshot
+
+Theme Estate Agents is a premium Blade child theme for property agencies, lettings teams, valuations, area guides, agent proof, and viewing-request journeys. It registers theme key `estate-agents`, runtime inheritance `extends: default`, one preset, a package page wrapper, 14 section renderers, a demo command, and a critical health check that verifies definition/manifest/files. The theme stays thin: no migrations, models, routes, permissions, settings, or admin resources. Optional integrations are passed into sections for Search, Address, and Form Builder, but current views mostly use static form/search markup with connected labels. The package has solid public-output and no-query source tests. Marketplace media is still static SVG preview art, while `docs/screenshots.json` declares route-backed fixture entries that are optional and not committed as PNG captures.
+
+## 2. Improvements (existing functionality)
+
+1. **Require Foundation Theme explicitly.** Theme scale says child themes should require `capell-app/foundation-theme`; this package extends `default` but `composer.json` and `capell.json` only require Core and Frontend. Add Foundation Theme to Composer/manifest dependencies and update tests/docs to prevent install-order drift. Evidence: `capell.json dependencies.requires`, `composer.json require`, `EstateAgentsThemeServiceProvider::definition()`. - **S** - **Done 2026-06-14:** `composer.json` and `capell.json` now explicitly require `capell-app/foundation-theme`, with manifest and health coverage updated.
+
+2. **Fix the broken skip link target.** `page.blade.php` renders a skip link to `#main-content`, but no element in the theme views has that id. Add `id="main-content"` to the main public wrapper or render a semantic `<main>` so keyboard users have a working skip target. Evidence: `resources/views/page.blade.php`, `rg main-content`. - **S** - **Done 2026-06-14:** the page wrapper is now a semantic `<main id="main-content">` and public-output tests lock the skip target.
+
+3. **Replace static marketplace SVGs with route-backed captures.** Premium themes need at least five real frontend screenshots. This package promotes five SVG previews and marks runner entries `required: false`; no `docs/screenshots/*.png` captures are committed. Capture homepage, property search/listing, valuation, local guide, and viewing-request fixtures as required runner screenshots before completion. Evidence: `capell.json marketplace.screenshots`, `docs/screenshots.json`, `docs/assets/marketplace/*.svg`. - **M**
+
+4. **Wire or clarify optional integration forms/search.** Search/Form Builder availability changes labels, but property search, valuation, and viewing sections still render plain GET forms to `#` unless `form_action` is supplied. For a premium theme, connected Search/Form Builder states should use real public-safe URLs/actions from render data, or the fallback should be explicitly non-submitting CTA markup. Evidence: `sections/property-search.blade.php`, `valuation-cta.blade.php`, `viewing-request.blade.php`. - **M**
+
+5. **Add required page-set coverage.** Theme scale expects homepage, landing/conversion page, list page with pagination, search results, contact/conversion form, and a detail/resource page. Current tests cover individual section rendering and source safety, but not the required page set or screenshot fixture contract. Add tests around demo install output or fixture route metadata. - **M**
+
+6. **Strengthen token/dark-mode coverage.** CSS uses theme variables for primary/accent/surface but still hardcodes several whites, mists, and dark gradients. Add tests or visual fixtures proving the preset tokens recolor key buttons, panels, and dark cards, plus define dark-mode expectations if marketplace captures include dark variants later. Evidence: `resources/css/theme-estate-agents.css`. - **M**
+
+## 3. Missing Features (gaps)
+
+Capabilities declared: estate-agents theme and frontend renderer.
+
+- **No real property data/search package integration.** The theme intentionally does not own property records, but there is no companion property-listings package or Search contract for structured property filters.
+- **Valuation and viewing capture are static by default.** Form Builder availability is detected, but the theme does not render a package-owned form component or documented form action contract.
+- **No route-backed demo depth.** Demo install delegates to Foundation's generic `ThemeDemoPageInstaller`, so estate-specific homepage/search/valuation/local-guide/viewing fixture content may be thinner than the marketplace lane implies.
+- **No dark/mobile screenshot proof.** Premium property sites are sold visually; current proof is static SVG only.
+
+## 4. Issues / Risks
+
+1. **Important gap: child theme dependency is incomplete.** A theme extending `default` should explicitly require Foundation Theme so install order and split package metadata are clear. Recommended fix: add `capell-app/foundation-theme` to manifests/Composer overlays and tests. - **P2**
+
+2. **Important gap: skip link is broken.** This is a real accessibility defect in every rendered page. Recommended fix: add the target and test it. - **P2**
+
+3. **Important gap: premium screenshots are placeholders.** Static SVG previews do not prove the real renderer, content depth, or responsive state. Recommended fix: make route-backed captures required and promote committed PNGs. - **P2**
+
+4. **Important gap: connected forms/search are labels, not workflows.** Visitors can submit forms to `#` unless host content supplies actions. Recommended fix: either wire safe optional package actions or render CTA links/fallback copy when disconnected. - **P2**
+
+5. **Improvement: theme cache metadata is conservative.** Public output is marked safe but `performance.cacheSafety.cacheable` is false. Recommended fix: decide whether this child theme can inherit Foundation cacheability and declare invalidation sources or document why theme output is intentionally non-cacheable. - **P3**
+
+## 5. Marketplace & Positioning
+
+Estate Agents has a distinct premium lane: buyer search, vendor valuation, local expertise, agent credibility, and viewing requests. That separation is strong and should stay separate from Local Services, Portfolio, and Commerce. For owners, the outcome is a site that serves buyers and sellers in one premium journey. For developers, the value is property-specific presentation without theme-owned listing models.
+
+**Current summary:** "A premium property theme for estate agencies, lettings teams, valuations, local guides, and viewing-led enquiry journeys."
+
+**Improved summary:** "A premium estate-agency theme for buyer search, vendor valuation, local guides, agent proof, and viewing-request journeys."
+
+**Improved description:** "Theme Estate Agents gives property teams a polished public renderer for the two journeys every agency site needs: buyers searching for homes and vendors deciding who to trust with a valuation. It provides search bands, featured-property cards, area-guide sections, market proof, agent credibility, valuation CTAs, and viewing-request layouts while keeping property records and enquiries in companion packages or Capell content. Optional Search, Address, SEO Suite, Blog, and Form Builder integrations have safe static fallbacks. Built for agencies that want a premium property brochure without hardcoding listing data into theme views."
+
+**Media status:** Placeholder SVGs are useful planning assets only. Completion requires real route-backed screenshots for homepage, search/listing, valuation, local guide, and viewing request.
+
+**Cross-sell:** Search should power property discovery. Address should support branch/area context. Form Builder should own valuation/viewing capture. Blog and SEO Suite should support market reports and area guides. A future Property Listings package would be the natural structured data companion.
+
+**Keywords/tags:** `estate-agents`, `property`, `listings`, `valuation`, `viewings`, `local-guides`, `agents`, `search`, `form-builder`, `premium-theme`.
+
+## 6. Prioritized Roadmap
+
+| Item                                                                              | Bucket | Effort | Impact | Section ref |
+| --------------------------------------------------------------------------------- | ------ | ------ | ------ | ----------- |
+| Add explicit Foundation Theme dependency in Composer/manifest/tests               | Done   | S      | High   | §2.1, §4.1  |
+| Fix skip link target and add source/render test coverage                          | Done   | S      | High   | §2.2, §4.2  |
+| Convert static SVG screenshot contract to five required route-backed PNG captures | Now    | M      | High   | §2.3, §4.3  |
+| Rewrite README/overview with current theme-scale install/screenshot expectations  | Done   | S      | Medium | §5          |
+| Wire connected Search/Form Builder actions or render non-submitting CTA fallbacks | Next   | M      | High   | §2.4, §4.4  |
+| Add required page-set/demo fixture coverage                                       | Next   | M      | Medium | §2.5        |
+| Add token/dark/mobile visual proof                                                | Next   | M      | Medium | §2.6        |
+| Define property-listings companion package boundary or documented Search contract | Later  | L      | High   | §3, §5      |
+
+## 7. Verification
+
+Focused package verification passed:
+
+```bash
+vendor/bin/pest packages/theme-estate-agents/tests --configuration=phpunit.xml
+```
+
+Result: 9 tests, 95 assertions passed.
+
+For renderer contract changes, include:
+
+```bash
+vendor/bin/pest packages/foundation-theme/tests packages/layout-builder/tests --configuration=phpunit.xml
+```
+
+## 8. Completion Checklist
+
+- [x] Package plan created from current code, manifest, docs, screenshots, and tests.
+- [x] Comprehensive local review pass completed for theme definition, public views, accessibility, optional integrations, screenshots, docs, and tests.
+- [x] Capell audience pass completed for site owners, agency implementers, and frontend/theme developers.
+- [x] Approved implementation slices shipped.
+- [x] Focused Theme Estate Agents verification passed.
+- [x] Package tests passed.
+- [ ] Repo preflight passed for changed files.

@@ -49,8 +49,9 @@ Screenshot contract: `docs/screenshots.json`.
 - Actions: `BuildPaymentsHealthReportAction`, `CreateBillingPortalSessionAction`, `CreateCheckoutSessionAction`, `CreateFormPaymentCheckoutSessionAction`, `CreateFormPaymentCheckoutUrlAction`, `CreatePaidDownloadUrlAction`, `DownloadPaidDownloadAction`, `FormatPaymentMoneyAction`, `FulfillCompletedCheckoutSessionAction`, `GeneratePaymentGatewayIdempotencyKeyAction`, `GrantPaidDownloadAccessAction`, `HandleStripeWebhookAction`, `and 17 more`.
 - Data objects: `BillingPortalSessionData`, `CheckoutLineItemData`, `CheckoutSessionData`, `CreateBillingPortalSessionData`, `CreateCheckoutSessionData`, `FormPaymentCheckoutData`, `PaymentCustomerData`, `PaymentDisputeData`, `PaymentFulfillmentResultData`, `PaymentIntentData`, `PaymentRefundData`, `PaymentsHealthReportData`, `and 4 more`.
 - Jobs: `ProcessStripeWebhookEventJob`.
+- Command signatures: `capell:payments:webhooks:reconcile`, `capell:payments:webhooks:reprocess`.
 - Console command classes: `ReconcilePaymentWebhooksCommand`, `ReprocessPaymentWebhookEventsCommand`.
-- Manifest contributions: `admin-resource: Capell\Payments\Manifest\CheckoutSessionResourceContribution`, `admin-resource: Capell\Payments\Manifest\PaymentCustomerResourceContribution`, `admin-resource: Capell\Payments\Manifest\PaymentDisputeResourceContribution`, `admin-resource: Capell\Payments\Manifest\PaymentIntentResourceContribution`, `admin-resource: Capell\Payments\Manifest\PaymentRefundResourceContribution`, `admin-resource: Capell\Payments\Manifest\PaymentWebhookEventResourceContribution`, `admin-resource: Capell\Payments\Manifest\SubscriptionResourceContribution`, `model: Capell\Payments\Manifest\PaymentsModelsContribution`, `route: Capell\Payments\Manifest\PaymentsFrontendRoutesContribution`.
+- Manifest contributions: `admin-resource: Capell\Payments\Manifest\CheckoutSessionResourceContribution`, `admin-resource: Capell\Payments\Manifest\PaymentCustomerResourceContribution`, `admin-resource: Capell\Payments\Manifest\PaymentDisputeResourceContribution`, `admin-resource: Capell\Payments\Manifest\PaymentIntentResourceContribution`, `admin-resource: Capell\Payments\Manifest\PaymentRefundResourceContribution`, `admin-resource: Capell\Payments\Manifest\PaymentWebhookEventResourceContribution`, `admin-resource: Capell\Payments\Manifest\SubscriptionResourceContribution`, `console-command: Capell\Payments\Manifest\PaymentsConsoleCommandsContribution`, `health-check: Capell\Payments\Manifest\PaymentsHealthContribution`, `model: Capell\Payments\Manifest\PaymentsModelsContribution`, `route: Capell\Payments\Manifest\PaymentsFrontendRoutesContribution`, `setting: Capell\Payments\Manifest\PaymentsSettingsContribution`.
 - Health checks: `Capell\Payments\Health\PaymentsHealthCheck`.
 - Cache tags: `payments`.
 
@@ -72,7 +73,7 @@ Screenshot contract: `docs/screenshots.json`.
 - Settings: `Capell\Payments\Settings\PaymentsSettings`.
 - Queues or schedules: review package jobs or schedules before install.
 - Cache tags: `payments`.
-- Commands: console command classes detected: `ReconcilePaymentWebhooksCommand`, `ReprocessPaymentWebhookEventsCommand`.
+- Commands: `capell:payments:webhooks:reconcile`, `capell:payments:webhooks:reprocess`.
 
 ## Common Pitfalls
 

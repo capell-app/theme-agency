@@ -68,6 +68,14 @@ class BookingStaffMember extends Model
     }
 
     /**
+     * @return HasMany<BookingGroupSession, $this>
+     */
+    public function groupSessions(): HasMany
+    {
+        return $this->hasMany(BookingGroupSession::class, 'staff_member_id');
+    }
+
+    /**
      * @param  Builder<self>  $query
      * @return Builder<self>
      */

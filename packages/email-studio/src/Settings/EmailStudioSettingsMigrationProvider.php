@@ -11,7 +11,10 @@ final class EmailStudioSettingsMigrationProvider
      */
     public function getSettingMigrations(): array
     {
-        return ['2026_06_05_000001_create_email_studio_settings'];
+        return [
+            '2026_06_05_000001_create_email_studio_settings',
+            '2026_06_13_000001_add_email_template_authoring_settings',
+        ];
     }
 
     /**

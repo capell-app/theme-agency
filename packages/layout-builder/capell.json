@@ -92,7 +92,10 @@
             "layouts",
             "widgets",
             "widget_assets",
-            "widget_widgets"
+            "widget_widgets",
+            "layout_presets",
+            "layout_bulk_change_runs",
+            "layout_bulk_change_results"
         ]
     },
     "commands": {
@@ -102,7 +105,8 @@
         "doctor": null
     },
     "actions": {
-        "install": "Capell\\LayoutBuilder\\Actions\\InstallLayoutBuilderPackageAction"
+        "install": "Capell\\LayoutBuilder\\Actions\\InstallLayoutBuilderPackageAction",
+        "setup": "Capell\\LayoutBuilder\\Actions\\SetupLayoutBuilderPackageAction"
     },
     "settings": [],
     "permissions": [

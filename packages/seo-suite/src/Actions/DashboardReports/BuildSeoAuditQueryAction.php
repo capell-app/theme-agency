@@ -9,6 +9,9 @@ use Capell\Core\Models\Page;
 use Illuminate\Database\Eloquent\Builder;
 use Lorisleiva\Actions\Concerns\AsAction;
 
+/**
+ * @method static Builder<Page> run()
+ */
 final class BuildSeoAuditQueryAction
 {
     use AsAction;

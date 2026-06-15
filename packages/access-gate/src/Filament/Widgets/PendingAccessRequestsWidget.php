@@ -17,8 +17,6 @@ use Override;
 
 final class PendingAccessRequestsWidget extends BaseWidget
 {
-    protected static ?string $heading = 'Pending access requests';
-
     protected static ?int $sort = 3;
 
     /** @var array<string, int|null>|int|string */
@@ -30,12 +28,17 @@ final class PendingAccessRequestsWidget extends BaseWidget
         return auth()->user()?->can('viewAny', Registration::class) ?? false;
     }
 
+    public function getHeading(): string
+    {
+        return __('capell-access-gate::filament.widgets.pending_access_requests');
+    }
+
     #[Override]
     public function table(Table $table): Table
     {
         return $table
             ->query($this->getQuery())
-            ->emptyStateHeading(__('No pending access requests'))
+            ->emptyStateHeading(__('capell-access-gate::filament.widgets.pending_access_requests_empty'))
             ->columns([
                 TextColumn::make('email')
                     ->label(__('capell-access-gate::filament.fields.email'))
@@ -56,7 +59,7 @@ final class PendingAccessRequestsWidget extends BaseWidget
             ->defaultPaginationPageOption(5)
             ->recordActions([
                 Action::make('review')
-                    ->label(__('Review'))
+                    ->label(__('capell-access-gate::filament.widgets.review'))
                     ->url(fn (Registration $record): string => RegistrationResource::getUrl('index', ['tableSearch' => $record->email])),
             ]);
     }

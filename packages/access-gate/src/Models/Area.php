@@ -41,6 +41,13 @@ use Override;
  * @property string|null $discount_code
  * @property CarbonInterface|null $discount_expires_at
  * @property array<array-key, mixed>|null $discount_metadata
+ * @property bool $announcement_enabled
+ * @property string|null $announcement_message
+ * @property string|null $announcement_short_message
+ * @property string|null $announcement_link_label
+ * @property string|null $announcement_link_short_label
+ * @property string|null $announcement_link_url
+ * @property array<int, string>|null $announcement_path_patterns
  */
 class Area extends AccessGateModel
 {
@@ -70,6 +77,13 @@ class Area extends AccessGateModel
         'discount_code',
         'discount_expires_at',
         'discount_metadata',
+        'announcement_enabled',
+        'announcement_message',
+        'announcement_short_message',
+        'announcement_link_label',
+        'announcement_link_short_label',
+        'announcement_link_url',
+        'announcement_path_patterns',
     ];
 
     protected $table = 'access_gate_areas';
@@ -143,6 +157,8 @@ class Area extends AccessGateModel
             'metadata' => 'array',
             'discount_expires_at' => 'datetime',
             'discount_metadata' => 'array',
+            'announcement_enabled' => 'boolean',
+            'announcement_path_patterns' => 'array',
         ];
     }
 }

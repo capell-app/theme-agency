@@ -7,6 +7,7 @@ namespace Capell\GA4Reports\Health;
 use Capell\Core\Contracts\Extensions\ChecksExtensionHealth;
 use Capell\Core\Data\Diagnostics\DoctorCheckResultData;
 use Capell\Core\Facades\CapellCore;
+use Capell\GA4Reports\Actions\CheckGA4ReportsCredentialsPathAction;
 use Capell\GA4Reports\Actions\ResolveGA4ReportsConfigAction;
 use Capell\GA4Reports\Contracts\GA4ReportsDataClientInterface;
 use Capell\GA4Reports\Data\GA4ReportsConfigData;
@@ -127,7 +128,9 @@ final class Ga4ReportsHealthCheck implements ChecksExtensionHealth
             );
         }
 
-        if (! $this->credentialsFileIsReadable($config->credentialsPath)) {
+        $credentialsStatus = CheckGA4ReportsCredentialsPathAction::run($config->credentialsPath);
+
+        if (! $credentialsStatus->readable) {
             return new DoctorCheckResultData(
                 label: 'GA4 Reports configuration',
                 passed: false,
@@ -136,7 +139,7 @@ final class Ga4ReportsHealthCheck implements ChecksExtensionHealth
             );
         }
 
-        if (! $this->credentialsFileHasServiceAccountValues($config->credentialsPath)) {
+        if (! $credentialsStatus->valid) {
             return new DoctorCheckResultData(
                 label: 'GA4 Reports configuration',
                 passed: false,
@@ -242,8 +245,7 @@ final class Ga4ReportsHealthCheck implements ChecksExtensionHealth
 
         if (
             $this->missingConfigurationKeys($config) !== []
-            || ! $this->credentialsFileIsReadable($config->credentialsPath)
-            || ! $this->credentialsFileHasServiceAccountValues($config->credentialsPath)
+            || ! CheckGA4ReportsCredentialsPathAction::run($config->credentialsPath)->valid
         ) {
             return new DoctorCheckResultData(
                 label: 'GA4 Reports data client',
@@ -359,38 +361,12 @@ final class Ga4ReportsHealthCheck implements ChecksExtensionHealth
 
     public function credentialsFileIsReadable(string $credentialsPath): bool
     {
-        return $credentialsPath !== '' && is_readable($credentialsPath);
+        return CheckGA4ReportsCredentialsPathAction::run($credentialsPath)->readable;
     }
 
     public function credentialsFileHasServiceAccountValues(string $credentialsPath): bool
     {
-        if (! $this->credentialsFileIsReadable($credentialsPath)) {
-            return false;
-        }
-
-        try {
-            $contents = file_get_contents($credentialsPath);
-
-            if (! is_string($contents)) {
-                return false;
-            }
-
-            $credentials = json_decode($contents, true, 512, JSON_THROW_ON_ERROR);
-        } catch (Throwable) {
-            return false;
-        }
-
-        if (! is_array($credentials)) {
-            return false;
-        }
-
-        $clientEmail = $credentials['client_email'] ?? null;
-        $privateKey = $credentials['private_key'] ?? null;
-
-        return is_string($clientEmail)
-            && trim($clientEmail) !== ''
-            && is_string($privateKey)
-            && trim($privateKey) !== '';
+        return CheckGA4ReportsCredentialsPathAction::run($credentialsPath)->valid;
     }
 
     public function latestSuccessfulSyncFinishedAt(): ?CarbonImmutable

@@ -840,7 +840,7 @@ class SeoSuiteServiceProvider extends AbstractPackageServiceProvider
 
     private function registerModels(): self
     {
-        $this->surface()->models([
+        $models = [
             AIGenerationHistory::class,
             AiCreatorContext::class,
             AiCreatorSession::class,
@@ -854,7 +854,10 @@ class SeoSuiteServiceProvider extends AbstractPackageServiceProvider
             PageSeoSnapshot::class,
             SearchConsoleUrlMetric::class,
             SearchConsoleQueryMetric::class,
-        ]);
+        ];
+
+        $this->surface()->models($models);
+        CapellCore::registerModels($models);
 
         return $this;
     }

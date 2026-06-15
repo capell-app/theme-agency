@@ -28,7 +28,7 @@ use Capell\Payments\Settings\PaymentsSettings;
 use Capell\Payments\Support\CustomerPortal\PaymentsPortalDashboardItemProvider;
 use Capell\Payments\Support\CustomerPortal\PaymentsPortalSelfServiceItemProvider;
 use Capell\Payments\Support\Fulfillment\PaidDownloadFulfillmentHandler;
-use Capell\Payments\Support\Gateways\StripePaymentGateway;
+use Capell\Payments\Support\Gateways\ConfiguredPaymentGateway;
 use Filament\Support\Icons\Heroicon;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Contracts\Foundation\Application;
@@ -67,7 +67,7 @@ final class PaymentsServiceProvider extends AbstractPackageServiceProvider
 
     public function packageRegistered(): void
     {
-        $this->app->singleton(PaymentGateway::class, static fn (Application $app): PaymentGateway => new StripePaymentGateway);
+        $this->app->singleton(PaymentGateway::class, static fn (Application $app): PaymentGateway => new ConfiguredPaymentGateway);
 
         $this->app->booted(function (): void {
             if (! CapellCore::isPackageInstalled(self::$packageName)) {

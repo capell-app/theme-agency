@@ -1,6 +1,6 @@
 {
     "name": "capell-app/inertia",
-    "description": "Shared Inertia bridge for Capell frontend runtimes and package routes.",
+    "description": "Shared Inertia runtime bridge for Capell public pages, package-owned frontend routes, and adapter-driven themes.",
     "type": "library",
     "license": "proprietary",
     "require": {

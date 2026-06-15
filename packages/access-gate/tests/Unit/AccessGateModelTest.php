@@ -83,6 +83,8 @@ it('covers area relationships and enum casts', function (): void {
         'claim_url_hosts' => ['example.test'],
         'metadata' => ['tier' => 'partner'],
         'discount_metadata' => ['source' => 'launch'],
+        'announcement_enabled' => true,
+        'announcement_path_patterns' => ['extensions/*'],
     ]);
 
     expect($area->site()->getForeignKeyName())->toBe('site_id')
@@ -99,5 +101,7 @@ it('covers area relationships and enum casts', function (): void {
         ->and($area->public_allowlist)->toBe(['https://example.test'])
         ->and($area->claim_url_hosts)->toBe(['example.test'])
         ->and($area->metadata)->toBe(['tier' => 'partner'])
-        ->and($area->discount_metadata)->toBe(['source' => 'launch']);
+        ->and($area->discount_metadata)->toBe(['source' => 'launch'])
+        ->and($area->announcement_enabled)->toBeTrue()
+        ->and($area->announcement_path_patterns)->toBe(['extensions/*']);
 });

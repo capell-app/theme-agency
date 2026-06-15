@@ -23,7 +23,7 @@ class BuildConfigDriftAction
 
     public function handle(): ConfigDriftData
     {
-        return DiagnosticsSnapshotCache::remember('config-drift', fn (): ConfigDriftData => $this->build());
+        return DiagnosticsSnapshotCache::rememberData('config-drift', ConfigDriftData::class, fn (): ConfigDriftData => $this->build());
     }
 
     /**

@@ -5,6 +5,7 @@ declare(strict_types=1);
 require_once __DIR__ . '/../Pest.php';
 
 use Capell\Core\Contracts\Extensions\RegistersExtensionAdminResource;
+use Capell\Core\Contracts\Extensions\RunsScheduledExtensionJob;
 use Capell\Experiments\Enums\ResourceEnum;
 use Capell\Experiments\Filament\Resources\ExperimentAudienceRules\ExperimentAudienceRuleResource;
 use Capell\Experiments\Filament\Resources\ExperimentGoals\ExperimentGoalResource;
@@ -14,6 +15,7 @@ use Capell\Experiments\Manifest\ExperimentAudienceRuleResourceContribution;
 use Capell\Experiments\Manifest\ExperimentGoalResourceContribution;
 use Capell\Experiments\Manifest\ExperimentResourceContribution;
 use Capell\Experiments\Manifest\ExperimentsModelsContribution;
+use Capell\Experiments\Manifest\ExperimentsStatusSyncScheduleContribution;
 use Capell\Experiments\Manifest\ExperimentVariantResourceContribution;
 use Capell\Experiments\Models\Experiment;
 use Capell\Experiments\Models\ExperimentAudienceRule;
@@ -86,10 +88,18 @@ it('declares admin manifest contributions and package requirements', function ()
             'type' => 'model',
             'class' => ExperimentsModelsContribution::class,
         ])
+        ->and($manifest['contributes'])->toContain([
+            'type' => 'scheduled-job',
+            'class' => ExperimentsStatusSyncScheduleContribution::class,
+            'command' => 'capell:experiments:sync-statuses',
+            'frequency' => 'everyFiveMinutes',
+        ])
+        ->and($manifest['commands']['syncStatuses'])->toBe('capell:experiments:sync-statuses')
         ->and(class_implements(ExperimentResourceContribution::class))->toContain(RegistersExtensionAdminResource::class)
         ->and(class_implements(ExperimentVariantResourceContribution::class))->toContain(RegistersExtensionAdminResource::class)
         ->and(class_implements(ExperimentGoalResourceContribution::class))->toContain(RegistersExtensionAdminResource::class)
         ->and(class_implements(ExperimentAudienceRuleResourceContribution::class))->toContain(RegistersExtensionAdminResource::class)
+        ->and(class_implements(ExperimentsStatusSyncScheduleContribution::class))->toContain(RunsScheduledExtensionJob::class)
         ->and($manifest['capabilities'])->toContain(
             'variant-allocation',
             'request-context-variant-resolution',
@@ -110,5 +120,5 @@ it('declares admin manifest contributions and package requirements', function ()
             'recordGoalEvent',
             'resolveExperimentVariantForContext',
         ])
-        ->and($manifest['contributionTraceability']['deferredContributions'])->toBe(['scheduled-job']);
+        ->and($manifest['contributionTraceability']['deferredContributions'])->toBe([]);
 });

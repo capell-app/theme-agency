@@ -1,6 +1,6 @@
 # Theme Inertia Bookings Docs
 
-Start at the [package README](../README.md) when deciding whether to install this theme.
+Start at the [package README](../README.md) when deciding whether to install this theme. This base package requires the shared Inertia bridge plus the configured Vue or React adapter; the optional theme adapter packages provide framework-specific components.
 
 ## Documents
 

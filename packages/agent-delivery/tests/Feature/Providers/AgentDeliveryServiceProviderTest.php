@@ -2,8 +2,10 @@
 
 declare(strict_types=1);
 
+use Capell\AgentDelivery\Health\AgentDeliveryHealthCheck;
 use Capell\AgentDelivery\Providers\AgentDeliveryServiceProvider;
 use Capell\AgentDelivery\Tests\AgentDeliveryTestCase;
+use Capell\Core\Data\Diagnostics\DoctorCheckResultData;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Route;
@@ -39,4 +41,18 @@ it('applies the documented rate limiter to public endpoints by default', functio
 
     expect($route)->not->toBeNull()
         ->and($route?->gatherMiddleware())->toContain('throttle:capell-agent-delivery');
+});
+
+it('reports actionable package health diagnostics', function (): void {
+    $results = AgentDeliveryHealthCheck::runDiagnostics();
+
+    expect($results)->toHaveCount(4)
+        ->and($results->every(fn (DoctorCheckResultData $result): bool => $result->passed))->toBeTrue()
+        ->and(AgentDeliveryHealthCheck::passed())->toBeTrue()
+        ->and($results->pluck('label')->all())->toBe([
+            'Agent Delivery public routes',
+            'Agent Delivery rate limiting',
+            'Agent Delivery contributor registry',
+            'Agent Delivery Site Discovery coverage',
+        ]);
 });

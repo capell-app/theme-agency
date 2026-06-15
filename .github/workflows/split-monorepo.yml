@@ -34,6 +34,8 @@ jobs:
             repository_name: blog
           - package_directory: packages/bookings
             repository_name: bookings
+          - package_directory: packages/equestrian-clinics
+            repository_name: equestrian-clinics
           - package_directory: packages/campaign-studio
             repository_name: campaign-studio
           - package_directory: packages/comments
@@ -176,6 +178,23 @@ jobs:
       - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
       - id: previous-tag
         uses: 'WyriHaximus/github-action-get-previous-tag@61819f33034117e6c686e6a31dba995a85afc9de' # master
+      - name: Ensure split repository exists
+        env:
+          GH_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+          REPOSITORY_NAME: ${{ matrix.repository_name }}
+        run: |
+          set -euo pipefail
+
+          repository="capell-app/${REPOSITORY_NAME}"
+
+          if gh repo view "${repository}" > /dev/null 2>&1; then
+            echo "Split repository ${repository} already exists."
+            exit 0
+          fi
+
+          gh repo create "${repository}" \
+            --private \
+            --description "Capell ${REPOSITORY_NAME} package"
       - name: Ensure split repository branch exists
         env:
           ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}

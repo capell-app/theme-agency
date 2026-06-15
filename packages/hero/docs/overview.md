@@ -41,7 +41,7 @@ Screenshot contract: `screenshots.json`.
 - Command signatures: `capell:hero-setup`.
 - Console command classes: `SetupCommand`.
 - Health checks: `Capell\Hero\Health\HeroHealthCheck`.
-- Blade views: `packages/hero/resources/views/components/hero/background.blade.php`, `packages/hero/resources/views/components/hero/content.blade.php`, `packages/hero/resources/views/components/hero/media.blade.php`, `packages/hero/resources/views/components/hero/related.blade.php`, `packages/hero/resources/views/components/hero/slide.blade.php`, `packages/hero/resources/views/components/hero/wrapper.blade.php`, `packages/hero/resources/views/components/widget/hero.blade.php`.
+- Blade views: `packages/hero/resources/views/components/hero/background.blade.php`, `packages/hero/resources/views/components/hero/content.blade.php`, `packages/hero/resources/views/components/hero/media.blade.php`, `packages/hero/resources/views/components/hero/related.blade.php`, `packages/hero/resources/views/components/hero/slide.blade.php`, `packages/hero/resources/views/components/hero/wrapper.blade.php`, `packages/hero/resources/views/components/widget/default.blade.php`, `packages/hero/resources/views/components/widget/hero.blade.php`.
 - Cache tags: `hero`.
 
 ## Data Model

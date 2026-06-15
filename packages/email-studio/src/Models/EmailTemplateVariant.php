@@ -6,6 +6,7 @@ namespace Capell\EmailStudio\Models;
 
 use Capell\EmailStudio\Database\Factories\EmailTemplateVariantFactory;
 use Capell\EmailStudio\Enums\EmailVariantStatus;
+use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -13,10 +14,24 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Override;
 
 /**
+ * @property int|null $site_id
+ * @property string $site_scope_key
+ * @property int $email_template_id
+ * @property int|null $email_profile_id
+ * @property int|null $email_template_theme_id
+ * @property string|null $locale
+ * @property EmailVariantStatus $status
+ * @property int $version
  * @property string $subject
  * @property string|null $preview_text
+ * @property array<int, array{email: string, name?: string|null}>|null $cc
+ * @property array<int, array{email: string, name?: string|null}>|null $bcc
  * @property string $html_body
  * @property string|null $text_body
+ * @property CarbonImmutable|null $approved_at
+ * @property int|null $approved_by
+ * @property EmailTemplate|null $template
+ * @property EmailTemplateTheme|null $theme
  */
 class EmailTemplateVariant extends Model
 {
@@ -29,11 +44,14 @@ class EmailTemplateVariant extends Model
         'site_scope_key',
         'email_template_id',
         'email_profile_id',
+        'email_template_theme_id',
         'locale',
         'status',
         'version',
         'subject',
         'preview_text',
+        'cc',
+        'bcc',
         'html_body',
         'text_body',
         'approved_at',
@@ -67,6 +85,14 @@ class EmailTemplateVariant extends Model
     }
 
     /**
+     * @return BelongsTo<EmailTemplateTheme, $this>
+     */
+    public function theme(): BelongsTo
+    {
+        return $this->belongsTo(EmailTemplateTheme::class, 'email_template_theme_id');
+    }
+
+    /**
      * @return HasMany<EmailMessage, $this>
      */
     public function messages(): HasMany
@@ -82,6 +108,8 @@ class EmailTemplateVariant extends Model
     {
         return [
             'status' => EmailVariantStatus::class,
+            'cc' => 'array',
+            'bcc' => 'array',
             'approved_at' => 'immutable_datetime',
         ];
     }

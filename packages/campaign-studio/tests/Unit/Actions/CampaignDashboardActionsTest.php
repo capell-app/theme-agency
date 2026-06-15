@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Capell\Admin\Facades\CapellAdmin;
 use Capell\CampaignStudio\Actions\ApplyCampaignPageDefaultsAction;
 use Capell\CampaignStudio\Actions\BuildCampaignConversionFunnelAction;
 use Capell\CampaignStudio\Actions\BuildCampaignOverviewStatsAction;
@@ -28,6 +29,7 @@ use Filament\Panel;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Http\Request;
 use Illuminate\Support\Collection as SupportCollection;
 
 it('resolves active campaigns from utm campaign values before falling back to landing page urls', function (): void {
@@ -174,6 +176,37 @@ it('counts duplicate campaign utm visits once in overview conversion rates', fun
         'conversions' => 1,
         'conversion_rate' => 50.0,
     ]);
+});
+
+it('keeps campaign overview stat cache scoped to the current request', function (): void {
+    CarbonImmutable::setTestNow(CarbonImmutable::parse('2026-04-15 12:00:00'));
+
+    try {
+        CampaignGroup::factory()->create([
+            'status' => CampaignStatus::Active,
+            'utm_campaign' => 'first-request-campaign',
+        ]);
+
+        app()->instance('request', Request::create('/admin/campaigns/first'));
+
+        $firstRequestStat = collect(CapellAdmin::getOverviewStats(false))
+            ->firstWhere('key', 'campaign_overview');
+
+        CampaignGroup::factory()->create([
+            'status' => CampaignStatus::Active,
+            'utm_campaign' => 'second-request-campaign',
+        ]);
+
+        app()->instance('request', Request::create('/admin/campaigns/second'));
+
+        $secondRequestStat = collect(CapellAdmin::getOverviewStats(false))
+            ->firstWhere('key', 'campaign_overview');
+
+        expect($firstRequestStat?->value)->toBe('1')
+            ->and($secondRequestStat?->value)->toBe('2');
+    } finally {
+        CarbonImmutable::setTestNow();
+    }
 });
 
 it('scopes campaign dashboard actions to the actor assigned sites', function (): void {

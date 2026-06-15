@@ -6,7 +6,7 @@
     "kind": "plugin",
     "capellApiVersion": "^4.0",
     "version": "4.x-dev",
-    "description": "Shared Inertia runtime bridge for Capell public pages and package-owned frontend routes.",
+    "description": "Shared Inertia runtime bridge for Capell public pages, package-owned frontend routes, and adapter-driven themes.",
     "product": {
         "group": "Capell Frontend",
         "tier": "core",
@@ -106,8 +106,8 @@
         "privateDocsRequested": false
     },
     "marketplace": {
-        "summary": "Shared Inertia runtime bridge for Capell frontend pages and package routes.",
-        "description": "Registers the Inertia renderer, root view, middleware, and shared public prop helpers for Capell frontend runtimes.",
+        "summary": "Connect Capell public rendering to Inertia adapters with one root view, middleware stack, safe runtime props, and an adapter registry for package-owned Vue or React frontends.",
+        "description": "Registers the Inertia renderer, root view, middleware, sanitized public runtime props, and adapter registry for Capell frontend runtimes.",
         "screenshots": [],
         "categories": ["frontend", "developer-tools"]
     }

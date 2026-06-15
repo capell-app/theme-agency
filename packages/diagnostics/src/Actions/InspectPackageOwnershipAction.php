@@ -31,13 +31,14 @@ final class InspectPackageOwnershipAction
         $normalizedKind = $this->normalizeKind($kind);
         $normalizedName = trim($name);
 
-        return DiagnosticsSnapshotCache::remember(
+        return DiagnosticsSnapshotCache::rememberData(
             'package-ownership:' . hash('sha256', implode('|', [
                 $normalizedKind,
                 $normalizedName,
                 $this->customPackagesPath ?? base_path('packages'),
                 $this->customInstalledJsonPath ?? base_path('vendor/composer/installed.json'),
             ])),
+            PackageOwnershipInspectionData::class,
             fn (): PackageOwnershipInspectionData => $this->inspect($normalizedKind, $normalizedName),
         );
     }

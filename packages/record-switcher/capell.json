@@ -34,6 +34,11 @@
             "class": "Capell\\RecordSwitcher\\Manifest\\RecordSwitcherAssetsContribution",
             "surface": "admin",
             "assets": ["record-switcher"]
+        },
+        {
+            "type": "health-check",
+            "class": "Capell\\RecordSwitcher\\Manifest\\RecordSwitcherHealthContribution",
+            "checkClass": "Capell\\RecordSwitcher\\Health\\RecordSwitcherHealthCheck"
         }
     ],
     "database": {

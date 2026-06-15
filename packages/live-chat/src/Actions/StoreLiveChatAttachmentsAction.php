@@ -19,13 +19,15 @@ final class StoreLiveChatAttachmentsAction
      */
     public function handle(array $files, string $conversationUuid): array
     {
-        $disk = $this->disk();
+        $disk = ValidateLiveChatAttachmentAction::disk();
         $attachments = [];
 
         foreach ($files as $file) {
             if (! $file instanceof UploadedFile) {
                 continue;
             }
+
+            ValidateLiveChatAttachmentAction::run($file);
 
             $extension = $file->guessExtension() ?: $file->getClientOriginalExtension() ?: 'bin';
             $path = sprintf(
@@ -53,12 +55,5 @@ final class StoreLiveChatAttachmentsAction
         }
 
         return $attachments;
-    }
-
-    private function disk(): string
-    {
-        $disk = config('capell-live-chat.attachments.disk');
-
-        return is_string($disk) && $disk !== '' ? $disk : 'local';
     }
 }

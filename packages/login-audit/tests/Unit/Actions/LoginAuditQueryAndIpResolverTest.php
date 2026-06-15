@@ -49,7 +49,7 @@ it('builds login audit queries filtered by time window ordered newest first and 
         'login_at' => $trackedAt->subHours(8),
     ]);
 
-    $records = BuildLoginAuditsQueryAction::run(hours: 6, limit: 3)->get();
+    $records = (new BuildLoginAuditsQueryAction)->handle(hours: 6, limit: 3)->get();
 
     expect($records->modelKeys())->toBe([
         $newestAudit->getKey(),
@@ -57,6 +57,30 @@ it('builds login audit queries filtered by time window ordered newest first and 
         $thirdNewestAudit->getKey(),
     ])->and($records->modelKeys())->not->toContain($limitedOutAudit->getKey())
         ->and($records->modelKeys())->not->toContain($outsideWindowAudit->getKey());
+});
+
+it('builds default login audit queries from the latest records without a time floor', function (): void {
+    $trackedAt = CarbonImmutable::parse('2026-05-07 10:00:00');
+    $this->travelTo($trackedAt);
+
+    $newestAudit = LoginAudit::factory()->create([
+        'login_at' => $trackedAt->subMinutes(5),
+    ]);
+
+    $olderAudit = LoginAudit::factory()->create([
+        'login_at' => $trackedAt->subDays(12),
+    ]);
+
+    $limitedOutAudit = LoginAudit::factory()->create([
+        'login_at' => $trackedAt->subDays(13),
+    ]);
+
+    $records = (new BuildLoginAuditsQueryAction)->handle(limit: 2)->get();
+
+    expect($records->modelKeys())->toBe([
+        $newestAudit->getKey(),
+        $olderAudit->getKey(),
+    ])->and($records->modelKeys())->not->toContain($limitedOutAudit->getKey());
 });
 
 it('uses the direct request ip address when proxy headers are not configured', function (): void {

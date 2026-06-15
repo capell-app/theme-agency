@@ -2,6 +2,11 @@
 
 declare(strict_types=1);
 
+use Capell\Core\Contracts\Extensions\RegistersExtensionWidget;
+use Capell\DashboardReports\Filament\Settings\Contributors\DashboardReportsDashboardSettingsContributor;
+use Capell\DashboardReports\Filament\Widgets\ContentHealthWidget;
+use Capell\DashboardReports\Filament\Widgets\PublishingTrendChartWidget;
+use Capell\DashboardReports\Manifest\DashboardReportsDashboardWidgetsContribution;
 use Capell\DashboardReports\Tests\DashboardReportsTestCase;
 use Illuminate\Support\Facades\File;
 
@@ -92,4 +97,22 @@ it('declares the dashboard report export command', function (): void {
     $manifest = capell_json_file_array($packagePath . '/capell.json');
 
     expect(data_get($manifest, 'commands.export'))->toBe('capell:dashboard-reports:export');
+});
+
+it('declares dashboard widget contribution metadata', function (): void {
+    $packagePath = dirname(__DIR__, 3);
+    $manifest = capell_json_file_array($packagePath . '/capell.json');
+    $contributions = collect(data_get($manifest, 'contributes', []));
+    $dashboardWidgets = $contributions->firstWhere('class', DashboardReportsDashboardWidgetsContribution::class);
+
+    expect($dashboardWidgets)->toBeArray()
+        ->and($dashboardWidgets['type'])->toBe('dashboard-widget')
+        ->and($dashboardWidgets['dashboard'])->toBe('main')
+        ->and($dashboardWidgets['widgetClasses'])->toBe([
+            PublishingTrendChartWidget::class,
+            ContentHealthWidget::class,
+        ])
+        ->and($dashboardWidgets['settingsContributor'])->toBe(DashboardReportsDashboardSettingsContributor::class)
+        ->and(data_get($manifest, 'contributionTraceability.deferredContributions'))->toBe([])
+        ->and(class_implements(DashboardReportsDashboardWidgetsContribution::class))->toContain(RegistersExtensionWidget::class);
 });

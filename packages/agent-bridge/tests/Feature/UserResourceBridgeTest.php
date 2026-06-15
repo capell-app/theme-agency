@@ -111,8 +111,6 @@ it('hydrates agent bridge settings and registers the settings schema', function 
 
     expect(resolve(AgentBridgeSettings::class)->enable_user_resource_bridge)->toBeTrue();
 
-    app()->singleton(ExtensionManagementSurfaceRegistry::class, fn (): ExtensionManagementSurfaceRegistry => new ExtensionManagementSurfaceRegistry);
-
     /** @var SettingsSchemaRegistry $registry */
     $registry = resolve(SettingsSchemaRegistry::class);
 

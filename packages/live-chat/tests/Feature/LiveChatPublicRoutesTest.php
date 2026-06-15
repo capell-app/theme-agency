@@ -10,12 +10,17 @@ use Capell\LiveChat\Actions\BuildLiveChatWidgetConfigAction;
 use Capell\LiveChat\Actions\GuardLiveChatInstallationOriginAction;
 use Capell\LiveChat\Actions\ResolveLiveChatConversationForInstallationAction;
 use Capell\LiveChat\Actions\StartLiveChatConversationAction;
+use Capell\LiveChat\Actions\ValidateLiveChatAttachmentAction;
 use Capell\LiveChat\Data\IncomingLiveChatMessageData;
 use Capell\LiveChat\Models\LiveChatConversation;
+use Capell\LiveChat\Models\LiveChatMessage;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 it('renders the public widget without exposing admin internals', function (): void {
@@ -182,4 +187,187 @@ it('returns scoped cors headers for allowed external preflight requests', functi
         ->assertNoContent()
         ->assertHeader('Access-Control-Allow-Origin', 'https://example.test')
         ->assertHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+});
+
+it('requires an active installation and same-site origin for local conversation writes', function (): void {
+    $siteId = $this->createLiveChatSite();
+
+    $this
+        ->postJson(route('capell-live-chat.conversations.store'), [
+            'body' => 'Can you help?',
+            'visitor_token' => 'local-visitor-token',
+        ])
+        ->assertNotFound();
+
+    $installation = $this->createLiveChatInstallation(siteId: $siteId);
+
+    $this
+        ->postJson(route('capell-live-chat.conversations.store'), [
+            'body' => 'Can you help?',
+            'visitor_token' => 'local-visitor-token',
+        ])
+        ->assertForbidden();
+
+    $this
+        ->withHeader('Origin', 'https://blocked.test')
+        ->postJson(route('capell-live-chat.conversations.store'), [
+            'body' => 'Can you help?',
+            'visitor_token' => 'local-visitor-token',
+        ])
+        ->assertForbidden();
+
+    $response = $this
+        ->withHeader('Origin', 'http://localhost')
+        ->postJson(route('capell-live-chat.conversations.store'), [
+            'body' => 'Can you help?',
+            'visitor_token' => 'local-visitor-token',
+        ])
+        ->assertOk();
+
+    $conversation = LiveChatConversation::query()->latest('id')->firstOrFail();
+
+    expect($conversation->installation_id)->toBe($installation->getKey())
+        ->and($conversation->site_id)->toBe($installation->site_id)
+        ->and($conversation->visitor_token_hash)->toBe(LiveChatConversation::hashVisitorToken('local-visitor-token'))
+        ->and($response->json('messages.0'))->not->toHaveKey('id')
+        ->and($response->json('messages.1'))->not->toHaveKey('id');
+});
+
+it('stores allowed public conversation attachments after server-side mime validation', function (): void {
+    Storage::fake('local');
+
+    $siteId = $this->createLiveChatSite();
+    $installation = $this->createLiveChatInstallation(siteId: $siteId);
+    $attachment = UploadedFile::fake()->createWithContent('chat-note.txt', 'Please review this attachment.');
+
+    $this
+        ->withHeader('Accept', 'application/json')
+        ->withHeader('Origin', 'http://localhost')
+        ->post(route('capell-live-chat.conversations.store'), [
+            'body' => 'Can you review this?',
+            'visitor_token' => 'local-visitor-token',
+            'attachments' => [$attachment],
+        ])
+        ->assertOk();
+
+    $message = LiveChatMessage::query()
+        ->where('conversation_id', LiveChatConversation::query()->latest('id')->firstOrFail()->getKey())
+        ->where('role', 'visitor')
+        ->firstOrFail();
+    $storedAttachment = $message->attachments[0] ?? null;
+
+    expect($storedAttachment)->toBeArray();
+
+    if (! is_array($storedAttachment)) {
+        return;
+    }
+
+    expect($message->conversation->installation_id)->toBe($installation->getKey())
+        ->and($storedAttachment['mime'] ?? null)->toBe('text/plain')
+        ->and($storedAttachment['disk'] ?? null)->toBe('local');
+
+    $attachmentPath = $storedAttachment['path'] ?? null;
+
+    expect($attachmentPath)->toBeString();
+
+    if (! is_string($attachmentPath)) {
+        return;
+    }
+
+    Storage::disk('local')->assertExists($attachmentPath);
+});
+
+it('rejects public conversation attachments with disallowed server-side mime types', function (): void {
+    $siteId = $this->createLiveChatSite();
+    $this->createLiveChatInstallation(siteId: $siteId);
+    $attachment = UploadedFile::fake()->create('payload.exe', 1, 'application/x-msdownload');
+
+    $this
+        ->withHeader('Accept', 'application/json')
+        ->withHeader('Origin', 'http://localhost')
+        ->post(route('capell-live-chat.conversations.store'), [
+            'body' => 'Please check this file.',
+            'visitor_token' => 'local-visitor-token',
+            'attachments' => [$attachment],
+        ])
+        ->assertUnprocessable()
+        ->assertJsonValidationErrors(['attachments.0']);
+});
+
+it('rejects attachment storage when the configured disk does not exist', function (): void {
+    config()->set('capell-live-chat.attachments.disk', 'missing-live-chat-disk');
+
+    expect(function (): void {
+        ValidateLiveChatAttachmentAction::run(
+            UploadedFile::fake()->createWithContent('chat-note.txt', 'Please review this attachment.'),
+        );
+    })->toThrow(ValidationException::class);
+});
+
+it('enforces local visitor token continuity for message writes and hides message ids', function (): void {
+    $installation = $this->createLiveChatInstallation();
+    $conversation = LiveChatConversation::query()->create([
+        'site_id' => $installation->site_id,
+        'installation_id' => $installation->getKey(),
+        'visitor_token_hash' => LiveChatConversation::hashVisitorToken('local-visitor-token'),
+    ]);
+
+    $this
+        ->withHeader('Origin', 'http://localhost')
+        ->postJson(route('capell-live-chat.messages.store', ['conversation' => $conversation->uuid]), [
+            'body' => 'Here is more detail.',
+        ])
+        ->assertForbidden();
+
+    $this
+        ->withHeader('Origin', 'http://localhost')
+        ->postJson(route('capell-live-chat.messages.store', ['conversation' => $conversation->uuid]), [
+            'body' => 'Here is more detail.',
+            'visitor_token' => 'wrong-token',
+        ])
+        ->assertForbidden();
+
+    $response = $this
+        ->withHeader('Origin', 'http://localhost')
+        ->postJson(route('capell-live-chat.messages.store', ['conversation' => $conversation->uuid]), [
+            'body' => 'Here is more detail.',
+            'visitor_token' => 'local-visitor-token',
+        ])
+        ->assertOk();
+
+    expect($response->json('messages.0'))->not->toHaveKey('id')
+        ->and($response->json('messages.1'))->not->toHaveKey('id');
+});
+
+it('enforces local visitor token continuity for handoff requests', function (): void {
+    $installation = $this->createLiveChatInstallation();
+    $conversation = LiveChatConversation::query()->create([
+        'site_id' => $installation->site_id,
+        'installation_id' => $installation->getKey(),
+        'visitor_token_hash' => LiveChatConversation::hashVisitorToken('local-visitor-token'),
+    ]);
+
+    $this
+        ->withHeader('Origin', 'http://localhost')
+        ->postJson(route('capell-live-chat.handoff.store', ['conversation' => $conversation->uuid]), [
+            'note' => 'Please ask a person to reply.',
+        ])
+        ->assertForbidden();
+
+    $this
+        ->withHeader('Origin', 'http://localhost')
+        ->postJson(route('capell-live-chat.handoff.store', ['conversation' => $conversation->uuid]), [
+            'note' => 'Please ask a person to reply.',
+            'visitor_token' => 'wrong-token',
+        ])
+        ->assertForbidden();
+
+    $this
+        ->withHeader('Origin', 'http://localhost')
+        ->postJson(route('capell-live-chat.handoff.store', ['conversation' => $conversation->uuid]), [
+            'note' => 'Please ask a person to reply.',
+            'visitor_token' => 'local-visitor-token',
+        ])
+        ->assertOk()
+        ->assertJsonPath('conversation.uuid', $conversation->uuid);
 });

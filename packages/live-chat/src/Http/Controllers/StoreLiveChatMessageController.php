@@ -6,6 +6,7 @@ namespace Capell\LiveChat\Http\Controllers;
 
 use Capell\LiveChat\Actions\ApplyLiveChatCorsHeadersAction;
 use Capell\LiveChat\Actions\GuardLiveChatInstallationOriginAction;
+use Capell\LiveChat\Actions\GuardLiveChatSameSiteRequestAction;
 use Capell\LiveChat\Actions\ResolveLiveChatConversationForInstallationAction;
 use Capell\LiveChat\Actions\ResolveLiveChatInstallationAction;
 use Capell\LiveChat\Actions\StoreLiveChatAttachmentsAction;
@@ -26,32 +27,32 @@ final class StoreLiveChatMessageController
         $publicKey = $this->nullableString($request->route('public_key'));
         $conversationUuid = $this->nullableString($request->route('conversation'));
         $origin = null;
+        $validated = $request->validated();
 
         abort_if($conversationUuid === null, 404);
 
-        if ($publicKey === null) {
-            $liveChatConversation = LiveChatConversation::query()
-                ->where('uuid', $conversationUuid)
-                ->firstOrFail();
-        } else {
-            $installation = (new ResolveLiveChatInstallationAction)->handle($publicKey);
+        $installation = (new ResolveLiveChatInstallationAction)->handle($publicKey);
 
-            abort_if($installation === null, 404);
+        abort_if($installation === null, 404);
 
+        if ($publicKey !== null) {
             $origin = (new GuardLiveChatInstallationOriginAction)->handle($installation, $request);
-            $liveChatConversation = (new ResolveLiveChatConversationForInstallationAction)->handle(
-                installation: $installation,
-                uuid: $conversationUuid,
-                visitorToken: $this->nullableString($request->validated('visitor_token')),
-            );
+        } else {
+            GuardLiveChatSameSiteRequestAction::run($installation, $request);
         }
+
+        $liveChatConversation = (new ResolveLiveChatConversationForInstallationAction)->handle(
+            installation: $installation,
+            uuid: $conversationUuid,
+            visitorToken: $this->nullableString($validated['visitor_token'] ?? null),
+        );
 
         $attachments = (new StoreLiveChatAttachmentsAction)->handle(
             files: $this->uploadedFiles($request->file('attachments', [])),
             conversationUuid: $liveChatConversation->uuid,
         );
 
-        $data = $this->incomingMessageData($request->validated(), $attachments);
+        $data = $this->incomingMessageData($validated, $attachments);
         $result = (new StoreLiveChatMessageAction)->handle($liveChatConversation, $data);
 
         return $this->publicResponse(response()->json($this->responsePayload(
@@ -107,7 +108,6 @@ final class StoreLiveChatMessageController
     private function messagePayload(LiveChatMessage $message): array
     {
         return [
-            'id' => $message->getKey(),
             'role' => $message->role->value,
             'body' => $message->body,
             'requires_contact' => $message->requires_contact,

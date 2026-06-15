@@ -206,7 +206,7 @@ final class GitLabProvider implements GitProviderContract
             ->baseUrl('https://gitlab.com/api/v4')
             ->withHeader('PRIVATE-TOKEN', $conn->access_token_encrypted)
             ->withHeader('Content-Type', 'application/json')
-            ->timeout(10)
+            ->timeout($this->httpTimeout())
             ->connectTimeout(5);
 
         if ($retry) {
@@ -214,6 +214,17 @@ final class GitLabProvider implements GitProviderContract
         }
 
         return $request;
+    }
+
+    private function httpTimeout(): int
+    {
+        $timeout = config('capell-deployments.http_timeout', 10);
+
+        if (is_numeric($timeout)) {
+            return max(1, (int) $timeout);
+        }
+
+        return 10;
     }
 
     /** @param array<string, mixed> $response */

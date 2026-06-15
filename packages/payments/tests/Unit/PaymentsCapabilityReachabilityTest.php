@@ -25,7 +25,7 @@ use Capell\Payments\Http\Controllers\StripeWebhookController;
 use Capell\Payments\Support\CustomerPortal\PaymentsPortalDashboardItemProvider;
 use Capell\Payments\Support\CustomerPortal\PaymentsPortalSelfServiceItemProvider;
 use Capell\Payments\Support\Fulfillment\PaidDownloadFulfillmentHandler;
-use Capell\Payments\Support\Gateways\StripePaymentGateway;
+use Capell\Payments\Support\Gateways\ConfiguredPaymentGateway;
 use Capell\Payments\Tests\CustomerPortalPaymentsTestCase;
 use Illuminate\Support\Facades\Route;
 
@@ -62,7 +62,7 @@ it('backs advertised payment capabilities with production entrypoints', function
         'subscriptionEntitlement' => ResolveSubscriptionEntitlementAction::class,
     ]);
 
-    expect(app(PaymentGateway::class))->toBeInstanceOf(StripePaymentGateway::class)
+    expect(app(PaymentGateway::class))->toBeInstanceOf(ConfiguredPaymentGateway::class)
         ->and(PaymentPurpose::OneOff->value)->toBe('one_off')
         ->and(PaymentPurpose::Subscription->value)->toBe('subscription')
         ->and(PaymentPurpose::Donation->value)->toBe('donation')

@@ -16,6 +16,7 @@ use Illuminate\Contracts\Mail\Mailer as MailerContract;
 use Illuminate\Mail\Message;
 use Illuminate\Mail\SentMessage;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Storage;
 use RuntimeException;
 
 class SmtpEmailProviderAdapter implements EmailProviderAdapter
@@ -66,6 +67,20 @@ class SmtpEmailProviderAdapter implements EmailProviderAdapter
 
             if ($message->rendered_text !== null) {
                 $mail->text($message->rendered_text);
+            }
+
+            foreach ($this->attachments($message) as $attachment) {
+                $contents = Storage::disk($attachment['disk'])->get($attachment['path']);
+
+                if (! is_string($contents)) {
+                    continue;
+                }
+
+                $mail->attachData(
+                    $contents,
+                    $attachment['name'],
+                    ['mime' => $attachment['mime']],
+                );
             }
         });
         $providerMessageId = $this->providerMessageId($sentMessage);
@@ -121,6 +136,33 @@ class SmtpEmailProviderAdapter implements EmailProviderAdapter
     protected function providerKey(): string
     {
         return 'smtp';
+    }
+
+    /**
+     * @return array<int, array{disk: string, path: string, name: string, mime: string}>
+     */
+    private function attachments(EmailMessage $message): array
+    {
+        $attachments = $message->attachments;
+
+        if (! is_array($attachments)) {
+            return [];
+        }
+
+        return collect($attachments)
+            ->filter(static fn (mixed $attachment): bool => is_array($attachment)
+                && is_string($attachment['disk'] ?? null)
+                && is_string($attachment['path'] ?? null)
+                && is_string($attachment['name'] ?? null)
+                && is_string($attachment['mime'] ?? null))
+            ->map(static fn (array $attachment): array => [
+                'disk' => $attachment['disk'],
+                'path' => $attachment['path'],
+                'name' => $attachment['name'],
+                'mime' => $attachment['mime'],
+            ])
+            ->values()
+            ->all();
     }
 
     private function providerMessageId(?SentMessage $sentMessage): ?string

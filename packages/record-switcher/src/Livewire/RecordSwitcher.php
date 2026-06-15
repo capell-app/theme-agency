@@ -194,8 +194,11 @@ final class RecordSwitcher extends Component
     /** @param Builder<Model> $query */
     private function searchColumnExpression(Builder $query, string $column, Connection $databaseConnection): QueryExpressionContract
     {
-        $qualifiedColumn = str_contains($column, '`') ? $column : $query->qualifyColumn($column);
-        $columnExpression = sprintf('lower(%s)', $databaseConnection->getQueryGrammar()->wrap($qualifiedColumn));
+        $qualifiedColumn = str_contains($column, '`')
+            ? $column
+            : $databaseConnection->getQueryGrammar()->wrap($query->qualifyColumn($column));
+
+        $columnExpression = sprintf('lower(%s)', $qualifiedColumn);
         $collation = $databaseConnection->getConfig('search_collation');
 
         if (filled($collation)) {

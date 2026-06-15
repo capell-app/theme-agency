@@ -28,7 +28,18 @@
         "admin": ["Capell\\DashboardReports\\Providers\\AdminServiceProvider"],
         "frontend": []
     },
-    "contributes": [],
+    "contributes": [
+        {
+            "type": "dashboard-widget",
+            "class": "Capell\\DashboardReports\\Manifest\\DashboardReportsDashboardWidgetsContribution",
+            "dashboard": "main",
+            "widgetClasses": [
+                "Capell\\DashboardReports\\Filament\\Widgets\\PublishingTrendChartWidget",
+                "Capell\\DashboardReports\\Filament\\Widgets\\ContentHealthWidget"
+            ],
+            "settingsContributor": "Capell\\DashboardReports\\Filament\\Settings\\Contributors\\DashboardReportsDashboardSettingsContributor"
+        }
+    ],
     "database": {
         "migrations": false,
         "settings": false,
@@ -131,6 +142,6 @@
         "categories": ["admin", "operations"]
     },
     "contributionTraceability": {
-        "deferredContributions": ["dashboard-widget"]
+        "deferredContributions": []
     }
 }

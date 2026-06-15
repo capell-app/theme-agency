@@ -44,14 +44,15 @@ Screenshot contract: `docs/screenshots.json`.
 - Filament classes: `CreateNoteResourceHeaderActionExtender`, `NotesInboxPage`.
 - Actions: `AssignNoteUsersAction`, `BuildSubjectNotesAction`, `BuildUserAttentionCountsAction`, `BuildUserInboxNotesAction`, `CanViewNoteAction`, `CompleteNoteAssignmentAction`, `CreateNoteAction`, `MarkNoteMentionsReadAction`, `MentionNoteUsersAction`, `PruneNotesForDeletedParticipantAction`, `PruneNotesForDeletedSubjectAction`, `ReopenNoteAction`, `and 5 more`.
 - Data objects: `CreateNoteData`, `NoteReminderData`, `UserAttentionCountData`.
-- Command signatures: `capell:notes-demo`.
+- Command signatures: `capell:notes-demo`, `capell:notes:send-due-reminders`.
 - Console command classes: `DemoCommand`, `SendDueNoteRemindersCommand`.
-- Manifest contributions: `scheduled-job: Capell\Notes\Manifest\NotesReminderScheduleContribution`.
+- Manifest contributions: `admin-action-extender: Capell\Notes\Manifest\NotesAdminActionExtenderContribution`, `admin-page: Capell\Notes\Manifest\NotesAdminPageContribution`, `console-command: Capell\Notes\Manifest\NotesConsoleCommandsContribution`, `health-check: Capell\Notes\Manifest\NotesHealthContribution`, `model: Capell\Notes\Manifest\NotesModelsContribution`, `scheduled-job: Capell\Notes\Manifest\NotesReminderScheduleContribution`.
 - Health checks: `Capell\Notes\Health\NotesHealthCheck`.
 - Blade views: `packages/notes/resources/views/filament/pages/notes-inbox.blade.php`.
 
 ## Data Model
 
+- Required tables: `notes`, `note_assignments`, `note_mentions`, `note_reminders`.
 - Models: `Note`, `NoteAssignment`, `NoteMention`, `NoteReminder`.
 - Migration files: `2026_05_10_190862_01_create_notes_tables.php`.
 - Migration impact: run host migrations through the package install flow before opening package surfaces.
@@ -66,7 +67,7 @@ Screenshot contract: `docs/screenshots.json`.
 - Settings: no package settings declared.
 - Queues or schedules: none detected in standard package paths.
 - Cache tags: none declared.
-- Commands: `capell:notes-demo`.
+- Commands: `capell:notes-demo`, `capell:notes:send-due-reminders`.
 
 ## Common Pitfalls
 

@@ -1,0 +1,86 @@
+# Agent Bridge - Improvement & Growth Plan
+
+> Package: capell-app/agent-bridge · Kind: package · Tier: premium · Product group: Capell Operations · Bundle: operations · Status: Active
+
+## 1. Snapshot
+
+Agent Bridge connects AI agents and MCP clients to Capell through scoped tokens, MCP server routes, read-only knowledge/site capabilities, preview-then-confirm execution, saved prompts, audit entries, settings, Boost integration, and an admin prompt-builder surface. It already has a meaningful health check and preview/confirm tests. The biggest current risk is route/config hardening: the home route defaults to `/`, health remediation references a host-app migration command instead of package install guidance, and the package needs clearer token retention, audit redaction, and marketplace media boundaries for AI-agent administrators.
+
+## 2. Improvements (existing functionality)
+
+1. **Move the default home route away from `/` or make it opt-in.** `routes/agent-bridge.php` registers the configured home route when non-empty, and config defaults appear to expose a JSON home document. A package route should not risk shadowing a host homepage. Evidence: `routes/agent-bridge.php`, `config/capell-agent-bridge.php`, `tests/Feature/HomeRouteTest.php`. - **S**
+
+2. **Fix package health remediation language.** `AgentBridgeHealthCheck` tells users to run a host-app migration command, which conflicts with this repo's package workflow and the repo convention to use package commands/composer overlay. Update remediation to package/install guidance and cover it in tests. Evidence: `src/Health/AgentBridgeHealthCheck.php`, `tests/Unit/AgentBridgeHealthCheckTest.php`. - **S**
+
+3. **Add audit/token retention automation to manifest and docs.** The provider registers `PruneAgentBridgeAuditEntriesCommand`, but `capell.json commands` does not expose install/setup/doctor/prune information and docs should explain retention defaults. Evidence: `src/Providers/AgentBridgeServiceProvider.php`, `src/Actions/PruneAgentBridgeAuditEntriesAction.php`, `capell.json`. - **M**
+
+4. **Harden audit payload redaction.** Preview/execute/confirm flows audit payloads and results. Add a sanitizer that strips secrets, access tokens, passwords, prompts marked private, and signed admin URLs before persistence. Evidence: `src/Actions/AuditAgentBridgeCapabilityAction.php`, `InvokeAgentBridgeCapabilityPreviewAction`, `ConfirmAgentBridgeCapabilityAction`. - **M**
+
+## 3. Missing Features (gaps)
+
+Capabilities declared: `agent-bridge` and `agent-bridge-admin`.
+
+- **No first-class token management manifest contribution.** Admin surfaces exist through bridge/extension page registration, but manifest traceability is thin.
+- **No explicit audit retention command in marketplace metadata.** Pruning exists in code but is not surfaced in `capell.json`.
+- **No operator-facing capability catalog outside the prompt builder.** Capabilities can be registered and listed, but buyers need a clear admin inventory of scope, risk, server, and confirmation requirements.
+- **No screenshot recapture for token/audit/server surfaces.** Current tracker notes only prompt-builder media is trustworthy.
+
+## 4. Issues / Risks
+
+1. **Critical risk: a default package home route can shadow host public output.** A package should not claim `/` unless explicitly configured by the host. Recommended fix: default to disabled or a namespaced health path. - **P1**
+
+2. **Important risk: audit records may persist sensitive payload fragments.** AI capability calls can include prompts, tokens, user data, and signed URLs. Recommended fix: central redaction before audit persistence. - **P2**
+
+3. **Important gap: health remediation points to the wrong operational command style.** Recommended fix: update copy/tests to package-safe guidance. - **P2**
+
+4. **Improvement: admin/buyer positioning should emphasize governance.** The differentiator is preview/confirm, scope, and audit. Recommended fix: docs and marketplace copy around governed operations. - **P3**
+
+## 5. Marketplace & Positioning
+
+Agent Bridge should be positioned as a governed AI operations bridge, not a generic AI chat layer. For operators, emphasize scoped tokens, confirmation, audit, and package knowledge. For developers, emphasize the capability registry, typed Data contracts, MCP route boundaries, and Boost integration.
+
+**Current summary:** "Connect AI agents and MCP clients to Capell with read-only package knowledge, scoped site capabilities, preview-then-confirm execution, and audited operations."
+
+**Improved summary:** "A governed MCP and AI-agent bridge for Capell, with scoped tokens, preview-and-confirm capabilities, Boost integration, and auditable execution."
+
+**Media status:** Keep buyer media conservative until token management, audit review, and server health surfaces are recaptured as real Capell UI rather than duplicated prompt-builder captures.
+
+**Cross-sell:** AI Orchestrator for package capability governance, Automation Studio for queued capability actions, Diagnostics for health, Live Chat for support-side capability examples.
+
+## 6. Prioritized Roadmap
+
+| Item                                                          | Bucket | Effort | Impact | Section ref |
+| ------------------------------------------------------------- | ------ | ------ | ------ | ----------- |
+| Disable or namespace the default home route                   | Now    | S      | High   | §2.1, §4.1  |
+| Fix health remediation copy away from host-app migration text | Now    | S      | Medium | §2.2, §4.3  |
+| Surface audit/token pruning command in manifest/docs          | Now    | M      | Medium | §2.3        |
+| Add central audit payload/result redaction                    | Now    | M      | High   | §2.4, §4.2  |
+| Add capability catalog/admin inventory surface                | Next   | M      | Medium | §3, §5      |
+| Add token scope lifecycle UI and tests                        | Next   | M      | Medium | §3          |
+| Recapture token/audit/server health marketplace screenshots   | Next   | M      | Medium | §3, §5      |
+| Add server-specific RBAC and policy diagnostics               | Later  | L      | Medium | §3          |
+| Add richer MCP schema export and compatibility tests          | Later  | M      | Medium | §5          |
+
+## 7. Verification
+
+Implementation slice 1 hardened route defaults so discovery remains disabled unless configured, fixed migration-health remediation copy, and exposed the shipped admin page, user schema extender, models, routes, settings, migrations, prune command, built-in capabilities, and health check as manifest contributions. Verify with:
+
+```bash
+vendor/bin/pest packages/agent-bridge/tests --configuration=phpunit.xml
+```
+
+For route/health changes, include:
+
+```bash
+vendor/bin/pest packages/agent-bridge/tests/Feature/HomeRouteTest.php packages/agent-bridge/tests/Unit/AgentBridgeHealthCheckTest.php --configuration=phpunit.xml
+```
+
+## 8. Completion Checklist
+
+- [x] Package plan created from current code, manifest, docs, screenshots, and tests.
+- [x] Comprehensive local review pass completed for routes, provider, health, capability execution, audits, docs, and marketplace media.
+- [x] Capell audience pass completed for operators, AI-agent developers, and buyers.
+- [x] Approved implementation slice 1 shipped: route hardening, health remediation, and manifest contribution metadata.
+- [ ] Focused Agent Bridge verification passed.
+- [ ] Package tests passed.
+- [ ] Repo preflight passed for changed files.

@@ -28,17 +28,97 @@
         "admin": [],
         "frontend": []
     },
-    "contributes": [],
+    "contributes": [
+        {
+            "type": "admin-page",
+            "class": "Capell\\AgentBridge\\Manifest\\AgentBridgeAdminPageContribution",
+            "pageClass": "Capell\\AgentBridge\\Filament\\Pages\\CapellAgentBridgePromptBuilderPage",
+            "labelKey": "capell-agent-bridge::admin.prompt_builder_title"
+        },
+        {
+            "type": "schema-extender",
+            "class": "Capell\\AgentBridge\\Manifest\\AgentBridgeUserSchemaExtenderContribution",
+            "extenderClass": "Capell\\AgentBridge\\Extenders\\AgentBridgeUserSchemaExtender",
+            "tag": "capell-admin:user-schema-extenders"
+        },
+        {
+            "type": "model",
+            "class": "Capell\\AgentBridge\\Manifest\\AgentBridgeModelsContribution",
+            "modelClasses": [
+                "Capell\\AgentBridge\\Models\\CapellAgentBridgeToken",
+                "Capell\\AgentBridge\\Models\\CapellAgentBridgeConfirmation",
+                "Capell\\AgentBridge\\Models\\CapellAgentBridgeAuditEntry",
+                "Capell\\AgentBridge\\Models\\CapellAgentBridgeSavedPrompt"
+            ]
+        },
+        {
+            "type": "route",
+            "class": "Capell\\AgentBridge\\Manifest\\AgentBridgeRoutesContribution",
+            "routes": [
+                "capell-agent-bridge.home",
+                "agent-bridge/capell/knowledge",
+                "agent-bridge/capell"
+            ],
+            "defaultEnabledRoutes": ["agent-bridge/capell"]
+        },
+        {
+            "type": "setting",
+            "class": "Capell\\AgentBridge\\Manifest\\AgentBridgeSettingsContribution",
+            "settingsClass": "Capell\\AgentBridge\\Settings\\AgentBridgeSettings",
+            "settingsGroup": "agent_bridge",
+            "settingsSchema": "Capell\\AgentBridge\\Filament\\Settings\\AgentBridgeSettingsSchema"
+        },
+        {
+            "type": "migration",
+            "class": "Capell\\AgentBridge\\Manifest\\AgentBridgeMigrationsContribution",
+            "tables": [
+                "capell_agent_bridge_tokens",
+                "capell_agent_bridge_confirmations",
+                "capell_agent_bridge_audit_entries",
+                "capell_agent_bridge_saved_prompts"
+            ]
+        },
+        {
+            "type": "console-command",
+            "class": "Capell\\AgentBridge\\Manifest\\AgentBridgeConsoleCommandsContribution",
+            "commands": ["capell:agent-bridge-prune-audit"],
+            "commandClasses": [
+                "Capell\\AgentBridge\\Console\\Commands\\PruneAgentBridgeAuditEntriesCommand"
+            ]
+        },
+        {
+            "type": "agent-capability",
+            "class": "Capell\\AgentBridge\\Manifest\\AgentBridgeBuiltInCapabilitiesContribution",
+            "capabilities": [
+                "capell.cache.clear",
+                "capell.pages.create_draft",
+                "capell.pages.update_draft",
+                "capell.pages.disable",
+                "capell.pages.inspect_readiness"
+            ],
+            "requiresPreviewConfirmation": true
+        },
+        {
+            "type": "health-check",
+            "class": "Capell\\AgentBridge\\Health\\AgentBridgeHealthCheck"
+        }
+    ],
     "database": {
         "migrations": true,
         "settings": true,
-        "requiredTables": []
+        "requiredTables": [
+            "capell_agent_bridge_tokens",
+            "capell_agent_bridge_confirmations",
+            "capell_agent_bridge_audit_entries",
+            "capell_agent_bridge_saved_prompts"
+        ]
     },
     "commands": {
         "install": null,
         "setup": null,
         "demo": null,
-        "doctor": null
+        "doctor": null,
+        "pruneAudit": "capell:agent-bridge-prune-audit"
     },
     "settings": ["Capell\\AgentBridge\\Settings\\AgentBridgeSettings"],
     "permissions": ["agent-bridge.manage-tokens", "agent-bridge.view-audit"],
@@ -128,11 +208,6 @@
         "categories": ["admin", "operations"]
     },
     "contributionTraceability": {
-        "deferredContributions": [
-            "admin-page",
-            "agent-capability",
-            "migration",
-            "route"
-        ]
+        "deferredContributions": []
     }
 }

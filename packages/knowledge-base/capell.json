@@ -109,19 +109,24 @@
     "security": {
         "riskTier": "standard",
         "publicSurface": {
-            "routeNames": ["ai-output", "article", "article.feedback", "index"],
+            "routeNames": [
+                "capell-knowledge-base.ai-output",
+                "capell-knowledge-base.article",
+                "capell-knowledge-base.article.feedback",
+                "capell-knowledge-base.index"
+            ],
             "auth": "public",
             "csrfExemptRoutes": [],
             "signedRoutes": [],
             "tokenizedRoutes": [],
             "webhookRoutes": [],
-            "throttledRoutes": ["article.feedback"]
+            "throttledRoutes": ["capell-knowledge-base.article.feedback"]
         },
         "sensitiveData": {
             "encryptedFields": [],
             "hashedTokenFields": [
-                "knowledge_base_collections.user_agent_hash",
-                "knowledge_base_collections.visitor_hash"
+                "knowledge_base_article_feedback.user_agent_hash",
+                "knowledge_base_article_feedback.visitor_hash"
             ],
             "redactedOutputClasses": [],
             "plaintextJustifications": []

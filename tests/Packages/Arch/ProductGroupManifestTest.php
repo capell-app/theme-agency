@@ -18,6 +18,7 @@ it('keeps every package manifest in an approved product group', function (): voi
         'foundation' => 'Capell Foundation',
         'frontend' => 'Capell Frontend',
         'growth' => 'Capell Growth',
+        'growth-product' => 'Capell Growth',
         'media' => 'Capell Media',
         'newsletter' => 'Capell Marketing',
         'operations' => 'Capell Operations',
@@ -123,6 +124,7 @@ it('groups packages into the current product bundles', function (): void {
             'structured-content-library/capell.json',
             'tags/capell.json',
             'theme-corporate/capell.json',
+            'theme-liquid-glass/capell.json',
             'welcome-tour/capell.json',
         ],
         'frontend' => [
@@ -136,6 +138,9 @@ it('groups packages into the current product bundles', function (): void {
             'ga4-reports/capell.json',
             'insights/capell.json',
             'social-feeds/capell.json',
+        ],
+        'growth-product' => [
+            'live-chat/capell.json',
         ],
         'media' => [
             'media-ai/capell.json',
@@ -151,11 +156,13 @@ it('groups packages into the current product bundles', function (): void {
             'deployments/capell.json',
             'diagnostics/capell.json',
             'document-lifecycle/capell.json',
+            'equestrian-clinics/capell.json',
             'exception-reports/capell.json',
             'login-audit/capell.json',
             'migration-assistant/capell.json',
             'password-policy/capell.json',
             'privacy-center/capell.json',
+            'site-monitor/capell.json',
             'wordpress-importer/capell.json',
         ],
         'publishing-pro' => [
@@ -174,6 +181,7 @@ it('groups packages into the current product bundles', function (): void {
             'theme-agency/capell.json',
             'theme-commerce/capell.json',
             'theme-education/capell.json',
+            'theme-estate-agents/capell.json',
             'theme-healthcare/capell.json',
             'theme-inertia-bookings-react/capell.json',
             'theme-inertia-bookings-vue/capell.json',
@@ -182,6 +190,7 @@ it('groups packages into the current product bundles', function (): void {
             'theme-local-services/capell.json',
             'theme-nonprofit/capell.json',
             'theme-portfolio/capell.json',
+            'theme-restaurant/capell.json',
             'theme-saas/capell.json',
         ],
     ]);

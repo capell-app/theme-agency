@@ -5,6 +5,7 @@ declare(strict_types=1);
 use Capell\Admin\Contracts\Dashboard\ContentHealthDataProvider;
 use Capell\Admin\Contracts\DashboardSettingsContributor;
 use Capell\Admin\Enums\DashboardEnum;
+use Capell\Admin\Facades\CapellAdmin;
 use Capell\Admin\Support\CapellAdminManager;
 use Capell\Admin\Support\Dashboard\NullContentHealthDataProvider;
 use Capell\Core\Data\Diagnostics\DoctorCheckResultData;
@@ -24,7 +25,9 @@ uses(DashboardReportsTestCase::class);
  */
 function dashboardReportsHealthSetMainDashboardWidgets(array $widgets): void
 {
-    $manager = resolve(CapellAdminManager::class);
+    $manager = CapellAdmin::getFacadeRoot();
+    throw_unless($manager instanceof CapellAdminManager, RuntimeException::class);
+
     $property = new ReflectionProperty($manager, 'dashboardWidgets');
 
     $property->setValue($manager, [

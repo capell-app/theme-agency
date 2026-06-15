@@ -8,6 +8,7 @@ use Capell\BlockLibrary\Contracts\BlockDefinitionProvider;
 use Capell\Core\Facades\CapellCore;
 use Capell\Core\Support\Packages\AbstractPackageServiceProvider;
 use Capell\SocialFeeds\Blocks\SocialFeedBlockDefinitionProvider;
+use Capell\SocialFeeds\Console\Commands\SyncSocialFeedsCommand;
 use Capell\SocialFeeds\Contracts\SocialFeedHostResolver;
 use Capell\SocialFeeds\Contracts\SocialFeedProviderProvider;
 use Capell\SocialFeeds\Models\SocialFeedConnection;
@@ -16,6 +17,7 @@ use Capell\SocialFeeds\Models\SocialFeedOAuthState;
 use Capell\SocialFeeds\Support\DefaultSocialFeedProviderProvider;
 use Capell\SocialFeeds\Support\DnsSocialFeedHostResolver;
 use Capell\SocialFeeds\Support\SocialFeedProviderRegistry;
+use Illuminate\Console\Scheduling\Schedule;
 use Spatie\LaravelPackageTools\Package;
 
 final class SocialFeedsServiceProvider extends AbstractPackageServiceProvider
@@ -31,6 +33,9 @@ final class SocialFeedsServiceProvider extends AbstractPackageServiceProvider
             ->hasConfigFile()
             ->hasViews(self::$name)
             ->hasTranslations()
+            ->hasCommands([
+                SyncSocialFeedsCommand::class,
+            ])
             ->hasMigrations([
                 '2026_06_04_000001_create_social_feed_connections_table',
                 '2026_06_04_000002_create_social_feed_items_table',
@@ -40,6 +45,8 @@ final class SocialFeedsServiceProvider extends AbstractPackageServiceProvider
 
     public function packageRegistered(): void
     {
+        $this->app->register(AdminServiceProvider::class);
+
         $this->app->singleton(SocialFeedHostResolver::class, DnsSocialFeedHostResolver::class);
         $this->app->singleton(SocialFeedProviderRegistry::class);
         $this->app->tag([DefaultSocialFeedProviderProvider::class], SocialFeedProviderProvider::TAG);
@@ -69,6 +76,14 @@ final class SocialFeedsServiceProvider extends AbstractPackageServiceProvider
             CapellCore::registerProtectedTable('social_feed_connections');
             CapellCore::registerProtectedTable('social_feed_items');
             CapellCore::registerProtectedTable('social_feed_oauth_states');
+
+            if ((bool) config('capell-social-feeds.sync_schedule_enabled', false)) {
+                $this->callAfterResolving(Schedule::class, function (Schedule $schedule): void {
+                    $schedule->command('capell:social-feeds:sync --all')
+                        ->hourly()
+                        ->withoutOverlapping();
+                });
+            }
         });
     }
 }

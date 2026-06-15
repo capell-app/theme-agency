@@ -6,7 +6,7 @@
 
 Capell Inertia is an **Available**, **No schema impact** Capell plugin in the **Capell Frontend** product group. It ships as `capell-app/inertia` and extends these surfaces: frontend.
 
-Shared Inertia runtime bridge for Capell public pages and package-owned frontend routes.
+Shared Inertia runtime bridge for Capell public pages, package-owned frontend routes, and adapter-driven themes.
 
 After install, the package affects public rendering, public routes, or frontend runtime behaviour.
 
@@ -23,7 +23,7 @@ Status details:
 
 **For developers:** The package gives developers package-owned service providers, Actions, Data objects, and Blade views instead of pushing this behaviour into core or application code.
 
-**For teams:** Shared Inertia runtime bridge for Capell frontend pages and package routes.
+**For teams:** Connect Capell public rendering to Inertia adapters with one root view, middleware stack, safe runtime props, and an adapter registry for package-owned Vue or React frontends.
 
 ## Screens And Workflow
 
@@ -39,7 +39,7 @@ Docs gap: add `docs/screenshots.json` before promoting this package with visual 
 
 - Service providers: `Capell\Inertia\Providers\InertiaServiceProvider`.
 - Config files: `packages/inertia/config/capell-inertia.php`.
-- Actions: `BuildInertiaPagePropsAction`.
+- Actions: `BuildInertiaPagePropsAction`, `ResolveInertiaAdapterKeyAction`.
 - Data objects: `InertiaAdapterData`.
 - Health checks: `Capell\Inertia\Health\InertiaHealthCheck`.
 - Blade views: `packages/inertia/resources/views/app.blade.php`.

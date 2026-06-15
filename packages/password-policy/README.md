@@ -44,13 +44,15 @@ Screenshot contract: `docs/screenshots.json`.
 - Events: `PasswordChanged`, `PasswordExpired`, `UserMarkedForPasswordChange`.
 - Actions: `BuildPasswordSecurityPostureReportAction`, `EvaluatePasswordPolicyAction`, `MarkUserForPasswordChangeAction`, `NotifyPasswordPolicyLifecycleEventAction`, `PrunePasswordHistoryAction`, `RecordPasswordHistoryAction`, `UpdatePasswordAction`, `ValidatePasswordChangeAction`.
 - Data objects: `PasswordChangeData`, `PasswordPolicyStatusData`, `PasswordSecurityPostureReportData`, `ResolvedPasswordPolicySettingsData`.
-- Command signatures: `capell:password-policy:doctor`.
+- Command signatures: `capell:password-policy:doctor`, `capell:password-policy:expire-stale`, `capell:password-policy:prune-history`, `capell:password-policy:require-change`.
 - Console command classes: `ExpireStalePasswordsCommand`, `PasswordPolicyDoctorCommand`, `PrunePasswordHistoryCommand`, `RequirePasswordChangeCommand`.
+- Manifest contributions: `admin-action-extender: Capell\PasswordPolicy\Manifest\PasswordPolicyAdminExtendersContribution`, `admin-page: Capell\PasswordPolicy\Manifest\PasswordPolicyAdminPagesContribution`, `console-command: Capell\PasswordPolicy\Manifest\PasswordPolicyConsoleCommandsContribution`, `health-check: Capell\PasswordPolicy\Manifest\PasswordPolicyHealthContribution`, `setting: Capell\PasswordPolicy\Manifest\PasswordPolicySettingsContribution`.
 - Health checks: `Capell\PasswordPolicy\Health\PasswordPolicyHealthCheck`.
 - Blade views: `packages/password-policy/resources/views/filament/pages/forced-password-change.blade.php`.
 
 ## Data Model
 
+- Required tables: `password_policy_password_histories`.
 - Migration files: `2026_05_10_190863_01_add_password_policy_columns_to_users_table.php`, `2026_05_10_190863_02_create_password_policy_password_histories_table.php`.
 - Migration impact: run host migrations through the package install flow before opening package surfaces.
 - Deletion/retention behaviour: Docs gap unless the package has an explicit pruning command, retention setting, or tested cascade path.
@@ -64,7 +66,7 @@ Screenshot contract: `docs/screenshots.json`.
 - Settings: `Capell\PasswordPolicy\Settings\PasswordPolicySettings`.
 - Queues or schedules: none detected in standard package paths.
 - Cache tags: none declared.
-- Commands: `capell:password-policy:doctor`.
+- Commands: `capell:password-policy:doctor`, `capell:password-policy:expire-stale`, `capell:password-policy:prune-history`, `capell:password-policy:require-change`.
 
 ## Common Pitfalls
 

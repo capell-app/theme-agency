@@ -6,7 +6,7 @@
     "kind": "plugin",
     "capellApiVersion": "^4.0",
     "version": "4.x-dev",
-    "description": "Bookings adds services, staff, locations, availability, appointment requests, confirmations, reminders, and calendar feeds.",
+    "description": "Bookings turns public appointment requests into a managed Capell operations workflow with availability, reminders, reviews, waitlists, travel planning, reporting, and optional advanced automation.",
     "product": {
         "group": "Capell Operations",
         "tier": "premium",
@@ -22,9 +22,12 @@
         ],
         "supports": [
             "capell-app/address",
+            "capell-app/ai-orchestrator",
             "capell-app/events",
             "capell-app/form-builder",
+            "capell-app/media-library",
             "capell-app/notifications",
+            "capell-app/payments",
             "capell-app/seo-suite"
         ],
         "conflicts": []
@@ -73,6 +76,51 @@
             "resourceClass": "Capell\\Bookings\\Filament\\Resources\\AppointmentRequests\\AppointmentRequestResource"
         },
         {
+            "type": "admin-resource",
+            "class": "Capell\\Bookings\\Manifest\\BookingDayPlannerResourceContribution",
+            "resourceClass": "Capell\\Bookings\\Filament\\Resources\\BookingDayPlanner\\BookingDayPlannerResource"
+        },
+        {
+            "type": "admin-resource",
+            "class": "Capell\\Bookings\\Manifest\\BookingGroupSessionResourceContribution",
+            "resourceClass": "Capell\\Bookings\\Filament\\Resources\\BookingGroupSessions\\BookingGroupSessionResource"
+        },
+        {
+            "type": "admin-resource",
+            "class": "Capell\\Bookings\\Manifest\\BookingMessageLogResourceContribution",
+            "resourceClass": "Capell\\Bookings\\Filament\\Resources\\BookingMessageLogs\\BookingMessageLogResource"
+        },
+        {
+            "type": "admin-resource",
+            "class": "Capell\\Bookings\\Manifest\\BookingReviewRequestResourceContribution",
+            "resourceClass": "Capell\\Bookings\\Filament\\Resources\\BookingReviewRequests\\BookingReviewRequestResource"
+        },
+        {
+            "type": "admin-resource",
+            "class": "Capell\\Bookings\\Manifest\\BookingTravelObservationResourceContribution",
+            "resourceClass": "Capell\\Bookings\\Filament\\Resources\\BookingTravelObservations\\BookingTravelObservationResource"
+        },
+        {
+            "type": "admin-resource",
+            "class": "Capell\\Bookings\\Manifest\\BookingWorkZoneResourceContribution",
+            "resourceClass": "Capell\\Bookings\\Filament\\Resources\\BookingWorkZones\\BookingWorkZoneResource"
+        },
+        {
+            "type": "admin-resource",
+            "class": "Capell\\Bookings\\Manifest\\BookingOwnerPromptResourceContribution",
+            "resourceClass": "Capell\\Bookings\\Filament\\Resources\\BookingOwnerPrompts\\BookingOwnerPromptResource"
+        },
+        {
+            "type": "admin-resource",
+            "class": "Capell\\Bookings\\Manifest\\BookingChangeProposalResourceContribution",
+            "resourceClass": "Capell\\Bookings\\Filament\\Resources\\BookingChangeProposals\\BookingChangeProposalResource"
+        },
+        {
+            "type": "admin-resource",
+            "class": "Capell\\Bookings\\Manifest\\BookingWaitlistEntryResourceContribution",
+            "resourceClass": "Capell\\Bookings\\Filament\\Resources\\BookingWaitlistEntries\\BookingWaitlistEntryResource"
+        },
+        {
             "type": "model",
             "class": "Capell\\Bookings\\Manifest\\BookingsModelsContribution"
         },
@@ -86,6 +134,27 @@
             "name": "capell-bookings-send-due-reminders",
             "command": "capell:bookings:send-due-reminders",
             "frequency": "everyFiveMinutes"
+        },
+        {
+            "type": "scheduled-job",
+            "class": "Capell\\Bookings\\Manifest\\BookingsReminderScheduleContribution",
+            "name": "capell-bookings-expire-workflow-state",
+            "command": "capell:bookings:expire-workflow-state",
+            "frequency": "everyFiveMinutes"
+        },
+        {
+            "type": "scheduled-job",
+            "class": "Capell\\Bookings\\Manifest\\BookingsReminderScheduleContribution",
+            "name": "capell-bookings-schedule-review-requests",
+            "command": "capell:bookings:schedule-review-requests",
+            "frequency": "hourly"
+        },
+        {
+            "type": "scheduled-job",
+            "class": "Capell\\Bookings\\Manifest\\BookingsReminderScheduleContribution",
+            "name": "capell-bookings-prune-retention-data",
+            "command": "capell:bookings:prune-retention-data",
+            "frequency": "daily"
         }
     ],
     "database": {
@@ -99,7 +168,23 @@
             "booking_availability_exceptions",
             "lesson_series",
             "appointment_requests",
-            "appointment_audit_logs"
+            "appointment_audit_logs",
+            "booking_lesson_notes",
+            "booking_messaging_consents",
+            "booking_message_logs",
+            "booking_travel_observations",
+            "booking_travel_adjustments",
+            "booking_work_zones",
+            "booking_change_proposals",
+            "booking_change_proposal_parties",
+            "booking_group_sessions",
+            "booking_review_requests",
+            "booking_review_participants",
+            "booking_owner_prompts",
+            "booking_webhook_events",
+            "booking_waitlist_entries",
+            "booking_lesson_skill_assessments",
+            "booking_lesson_bundles"
         ]
     },
     "commands": {
@@ -120,7 +205,66 @@
         "buildStaffCalendarFeed": "Capell\\Bookings\\Actions\\BuildStaffCalendarFeedAction",
         "buildPublicBookingRequestOptions": "Capell\\Bookings\\Actions\\BuildPublicBookingRequestOptionsAction",
         "buildPublicBookingRequestProps": "Capell\\Bookings\\Actions\\BuildPublicBookingRequestPropsAction",
-        "buildAvailableBookingSlots": "Capell\\Bookings\\Actions\\BuildAvailableBookingSlotsAction"
+        "buildAvailableBookingSlots": "Capell\\Bookings\\Actions\\BuildAvailableBookingSlotsAction",
+        "recordLessonNote": "Capell\\Bookings\\Actions\\RecordLessonNoteAction",
+        "attachLessonPhoto": "Capell\\Bookings\\Actions\\AttachLessonPhotoAction",
+        "buildPortalLessonRows": "Capell\\Bookings\\Actions\\BuildPortalLessonRowsAction",
+        "captureMessagingConsent": "Capell\\Bookings\\Actions\\CaptureMessagingConsentAction",
+        "dispatchBookingMessage": "Capell\\Bookings\\Actions\\DispatchBookingMessageAction",
+        "dispatchDueBookingMessages": "Capell\\Bookings\\Actions\\DispatchDueBookingMessagesAction",
+        "estimateTravelTime": "Capell\\Bookings\\Actions\\EstimateTravelTimeAction",
+        "recordTravelObservation": "Capell\\Bookings\\Actions\\RecordTravelObservationAction",
+        "proposeTravelAdjustment": "Capell\\Bookings\\Actions\\ProposeTravelAdjustmentAction",
+        "enforceWorkZone": "Capell\\Bookings\\Actions\\EnforceWorkZoneAction",
+        "calculateFuelAllowance": "Capell\\Bookings\\Actions\\CalculateFuelAllowanceAction",
+        "buildDayPlan": "Capell\\Bookings\\Actions\\BuildDayPlanAction",
+        "optimizeDayPlan": "Capell\\Bookings\\Actions\\OptimizeDayPlanAction",
+        "proposeBookingChange": "Capell\\Bookings\\Actions\\ProposeBookingChangeAction",
+        "confirmBookingChange": "Capell\\Bookings\\Actions\\ConfirmBookingChangeAction",
+        "placeProvisionalHold": "Capell\\Bookings\\Actions\\PlaceProvisionalHoldAction",
+        "expireStaleHolds": "Capell\\Bookings\\Actions\\ExpireStaleHoldsAction",
+        "markBookingPaymentFulfilled": "Capell\\Bookings\\Actions\\MarkBookingPaymentFulfilledAction",
+        "createGroupSession": "Capell\\Bookings\\Actions\\CreateGroupSessionAction",
+        "registerGroupAttendee": "Capell\\Bookings\\Actions\\RegisterGroupAttendeeAction",
+        "assignGroupSlotTimes": "Capell\\Bookings\\Actions\\AssignGroupSlotTimesAction",
+        "publishClinicToFacebook": "Capell\\Bookings\\Actions\\PublishClinicToFacebookAction",
+        "syncFacebookAttendance": "Capell\\Bookings\\Actions\\SyncFacebookAttendanceAction",
+        "scheduleReviewRequests": "Capell\\Bookings\\Actions\\ScheduleReviewRequestsAction",
+        "dispatchReviewRequest": "Capell\\Bookings\\Actions\\DispatchReviewRequestAction",
+        "createReviewLoop": "Capell\\Bookings\\Actions\\CreateReviewLoopAction",
+        "addReviewParticipant": "Capell\\Bookings\\Actions\\AddReviewParticipantAction",
+        "issueReviewParticipantUrl": "Capell\\Bookings\\Actions\\IssueReviewParticipantUrlAction",
+        "resolveReviewParticipantToken": "Capell\\Bookings\\Actions\\ResolveReviewParticipantTokenAction",
+        "captureReviewParticipantResponse": "Capell\\Bookings\\Actions\\CaptureReviewParticipantResponseAction",
+        "completeReviewLoopIfReady": "Capell\\Bookings\\Actions\\CompleteReviewLoopIfReadyAction",
+        "remindPendingReviewParticipants": "Capell\\Bookings\\Actions\\RemindPendingReviewParticipantsAction",
+        "createPortalLessonsUrl": "Capell\\Bookings\\Actions\\CreatePortalLessonsUrlAction",
+        "createMessagingConsentUrl": "Capell\\Bookings\\Actions\\CreateMessagingConsentUrlAction",
+        "createPortalAccessToken": "Capell\\Bookings\\Actions\\CreatePortalAccessTokenAction",
+        "createReviewRequestUrl": "Capell\\Bookings\\Actions\\CreateReviewRequestUrlAction",
+        "issueBookingChangeProposalToken": "Capell\\Bookings\\Actions\\IssueBookingChangeProposalTokenAction",
+        "resolvePortalAccessToken": "Capell\\Bookings\\Actions\\ResolvePortalAccessTokenAction",
+        "resolveBookingChangeProposalToken": "Capell\\Bookings\\Actions\\ResolveBookingChangeProposalTokenAction",
+        "resolveReviewRequestToken": "Capell\\Bookings\\Actions\\ResolveReviewRequestTokenAction",
+        "recordBookingWebhookEvent": "Capell\\Bookings\\Actions\\RecordBookingWebhookEventAction",
+        "markBookingWebhookEventProcessed": "Capell\\Bookings\\Actions\\MarkBookingWebhookEventProcessedAction",
+        "joinBookingWaitlist": "Capell\\Bookings\\Actions\\JoinBookingWaitlistAction",
+        "offerWaitlistSlot": "Capell\\Bookings\\Actions\\OfferWaitlistSlotAction",
+        "expireWaitlistOffers": "Capell\\Bookings\\Actions\\ExpireWaitlistOffersAction",
+        "recordLessonSkillAssessment": "Capell\\Bookings\\Actions\\RecordLessonSkillAssessmentAction",
+        "applyLessonBundleCredit": "Capell\\Bookings\\Actions\\ApplyLessonBundleCreditAction",
+        "calculateCancellationFee": "Capell\\Bookings\\Actions\\CalculateCancellationFeeAction",
+        "proposeWeatherCancellation": "Capell\\Bookings\\Actions\\ProposeWeatherCancellationAction",
+        "buildInstructorFuelReport": "Capell\\Bookings\\Actions\\BuildInstructorFuelReportAction",
+        "buildServiceAreaHeatmap": "Capell\\Bookings\\Actions\\BuildServiceAreaHeatmapAction",
+        "importClinicAttendanceCsv": "Capell\\Bookings\\Actions\\ImportClinicAttendanceCsvAction",
+        "shouldSuppressReviewRequest": "Capell\\Bookings\\Actions\\ShouldSuppressReviewRequestAction",
+        "scoreBookingRisk": "Capell\\Bookings\\Actions\\ScoreBookingRiskAction",
+        "buildOwnerDigest": "Capell\\Bookings\\Actions\\BuildOwnerDigestAction",
+        "proposeScheduleOptimisation": "Capell\\Bookings\\Actions\\ProposeScheduleOptimisationAction",
+        "exportPortalBookingData": "Capell\\Bookings\\Actions\\ExportPortalBookingDataAction",
+        "erasePortalBookingData": "Capell\\Bookings\\Actions\\ErasePortalBookingDataAction",
+        "pruneBookingRetentionData": "Capell\\Bookings\\Actions\\PruneBookingRetentionDataAction"
     },
     "settings": ["Capell\\Bookings\\Settings\\BookingsSettings"],
     "permissions": [
@@ -149,7 +293,27 @@
         "Update:LessonSeries",
         "Delete:LessonSeries",
         "View:AppointmentRequest",
-        "Update:AppointmentRequest"
+        "Update:AppointmentRequest",
+        "View:BookingDayPlanner",
+        "View:BookingGroupSession",
+        "Create:BookingGroupSession",
+        "Update:BookingGroupSession",
+        "Delete:BookingGroupSession",
+        "View:BookingMessageLog",
+        "View:BookingReviewRequest",
+        "View:BookingTravelObservation",
+        "View:BookingWorkZone",
+        "Create:BookingWorkZone",
+        "Update:BookingWorkZone",
+        "Delete:BookingWorkZone",
+        "View:BookingOwnerPrompt",
+        "Update:BookingOwnerPrompt",
+        "View:BookingChangeProposal",
+        "Update:BookingChangeProposal",
+        "View:BookingWaitlistEntry",
+        "Create:BookingWaitlistEntry",
+        "Update:BookingWaitlistEntry",
+        "Delete:BookingWaitlistEntry"
     ],
     "capabilities": [
         "bookings",
@@ -168,22 +332,89 @@
         "bookings-appointment-audit",
         "bookings-notifications",
         "bookings-reminders",
-        "bookings-calendar-feeds"
+        "bookings-calendar-feeds",
+        "bookings-portal-lesson-records",
+        "bookings-private-lesson-media",
+        "bookings-channel-consent",
+        "bookings-message-log",
+        "bookings-travel-aware-planning",
+        "bookings-work-zones",
+        "bookings-fuel-allowance",
+        "bookings-day-plan-optimisation",
+        "bookings-change-proposals",
+        "bookings-payment-gated-confirmation",
+        "bookings-group-clinics",
+        "bookings-social-event-sync",
+        "bookings-review-requests",
+        "bookings-multi-participant-review-loops",
+        "bookings-customer-portal-lessons",
+        "bookings-signed-change-proposals",
+        "bookings-webhook-ingestion",
+        "bookings-waitlist",
+        "bookings-lesson-skill-progress",
+        "bookings-prepaid-lesson-bundles",
+        "bookings-cancellation-fees",
+        "bookings-weather-cancellation-prompts",
+        "bookings-instructor-fuel-reporting",
+        "bookings-service-area-heatmap",
+        "bookings-clinic-attendance-import",
+        "bookings-review-suppression",
+        "bookings-risk-scoring",
+        "bookings-ai-owner-assistant",
+        "bookings-gdpr-export-erasure",
+        "bookings-retention-pruning"
     ],
     "security": {
         "riskTier": "sensitive",
         "publicSurface": {
-            "routeNames": ["calendar.staff", "request", "request.store"],
+            "routeNames": [
+                "calendar.staff",
+                "request",
+                "request.store",
+                "portal.lessons",
+                "portal.consent",
+                "portal.consent.update",
+                "portal.proposal",
+                "portal.proposal.respond",
+                "portal.review",
+                "portal.review.store",
+                "portal.review-participant",
+                "portal.review-participant.store",
+                "webhook.store"
+            ],
             "auth": "public",
             "csrfExemptRoutes": [],
-            "signedRoutes": [],
-            "tokenizedRoutes": ["calendar.staff"],
-            "webhookRoutes": [],
-            "throttledRoutes": ["request.store"]
+            "signedRoutes": [
+                "portal.lessons",
+                "portal.consent",
+                "portal.consent.update",
+                "portal.proposal",
+                "portal.proposal.respond",
+                "portal.review",
+                "portal.review.store",
+                "portal.review-participant",
+                "portal.review-participant.store"
+            ],
+            "tokenizedRoutes": [
+                "calendar.staff",
+                "portal.proposal",
+                "portal.proposal.respond",
+                "portal.review",
+                "portal.review.store",
+                "portal.review-participant",
+                "portal.review-participant.store",
+                "webhook.store"
+            ],
+            "webhookRoutes": ["webhook.store"],
+            "throttledRoutes": ["request.store", "webhook.store"]
         },
         "sensitiveData": {
             "encryptedFields": [],
-            "hashedTokenFields": [],
+            "hashedTokenFields": [
+                "booking_change_proposal_parties.token_hash",
+                "booking_review_requests.token_hash",
+                "booking_review_participants.token_hash"
+            ],
             "redactedOutputClasses": [],
             "plaintextJustifications": [
                 "appointment_requests.confirmation_token: Reviewed package field; not stored as a reusable secret by this package contract.",
@@ -229,7 +460,27 @@
                 "Update:LessonSeries",
                 "Delete:LessonSeries",
                 "View:AppointmentRequest",
-                "Update:AppointmentRequest"
+                "Update:AppointmentRequest",
+                "View:BookingDayPlanner",
+                "View:BookingGroupSession",
+                "Create:BookingGroupSession",
+                "Update:BookingGroupSession",
+                "Delete:BookingGroupSession",
+                "View:BookingMessageLog",
+                "View:BookingReviewRequest",
+                "View:BookingTravelObservation",
+                "View:BookingWorkZone",
+                "Create:BookingWorkZone",
+                "Update:BookingWorkZone",
+                "Delete:BookingWorkZone",
+                "View:BookingOwnerPrompt",
+                "Update:BookingOwnerPrompt",
+                "View:BookingChangeProposal",
+                "Update:BookingChangeProposal",
+                "View:BookingWaitlistEntry",
+                "Create:BookingWaitlistEntry",
+                "Update:BookingWaitlistEntry",
+                "Delete:BookingWaitlistEntry"
             ]
         }
     },
@@ -261,7 +512,7 @@
         "privateDocsRequested": true
     },
     "marketplace": {
-        "summary": "Bookings adds appointment request workflows, availability, confirmations, reminders, and calendar feeds for healthcare, services, education, consulting, nonprofit, and portfolio sites.",
+        "summary": "Bookings starts with a branded request form and admin queue, then adds the operational depth teams need: availability, reminders, reviews, waitlists, travel planning, reporting, and secure customer links.",
         "screenshots": [
             {
                 "path": "docs/assets/marketplace/extension-card.svg",
@@ -277,6 +528,21 @@
                 "path": "docs/screenshots/appointment-requests-admin.png",
                 "alt": "Admin appointment request queue with requested, confirmed, and audited booking states.",
                 "caption": "Operators review seeded requests, confirm or cancel appointments, and keep an audit trail for each workflow event."
+            },
+            {
+                "path": "docs/screenshots/equi-dynamics-public-booking-desktop.png",
+                "alt": "Equi Dynamics desktop booking form with seeded services, staff, location, timezone, and customer fields.",
+                "caption": "Bookings renders inside a branded Capell customer site with seeded consultation services and appointment request fields."
+            },
+            {
+                "path": "docs/screenshots/equi-dynamics-public-booking-mobile.png",
+                "alt": "Equi Dynamics mobile booking form showing the appointment request workflow in a narrow viewport.",
+                "caption": "The same public booking flow is verified at mobile width without horizontal overflow or browser console errors."
+            },
+            {
+                "path": "docs/screenshots/equi-dynamics-booking-submitted.png",
+                "alt": "Equi Dynamics booking form after a valid request has been submitted successfully.",
+                "caption": "A browser-tested seeded appointment request reaches the success state through the public Bookings route."
             }
         ],
         "categories": ["admin", "calendar", "operations"]

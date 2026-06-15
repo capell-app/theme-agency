@@ -38,7 +38,129 @@
         "admin": [],
         "frontend": []
     },
-    "contributes": [],
+    "contributes": [
+        {
+            "type": "admin-page",
+            "class": "Capell\\Events\\Manifest\\EventsAdminPageContribution",
+            "pageClass": "Capell\\Events\\Filament\\Pages\\EventCalendarPage",
+            "navigationGroup": "content",
+            "label": "Events admin calendar page."
+        },
+        {
+            "type": "admin-resource",
+            "class": "Capell\\Events\\Manifest\\EventsAdminResourcesContribution",
+            "resourceClasses": [
+                "Capell\\Events\\Filament\\Resources\\Events\\EventResource",
+                "Capell\\Events\\Filament\\Resources\\Venues\\EventVenueResource",
+                "Capell\\Events\\Filament\\Resources\\Occurrences\\EventOccurrenceResource",
+                "Capell\\Events\\Filament\\Resources\\Registrations\\EventRegistrationResource"
+            ],
+            "groups": [
+                "Page",
+                "EventVenue",
+                "EventOccurrence",
+                "EventRegistration"
+            ]
+        },
+        {
+            "type": "dashboard-widget",
+            "class": "Capell\\Events\\Manifest\\EventsDashboardWidgetsContribution",
+            "widgetClass": "Capell\\Events\\Filament\\Widgets\\EventCalendarWidget"
+        },
+        {
+            "type": "model",
+            "class": "Capell\\Events\\Manifest\\EventsModelsContribution",
+            "modelClasses": [
+                "Capell\\Events\\Models\\Event",
+                "Capell\\Events\\Models\\EventVenue",
+                "Capell\\Events\\Models\\EventOccurrence",
+                "Capell\\Events\\Models\\EventRegistration",
+                "Capell\\Events\\Models\\EventNotificationLog"
+            ]
+        },
+        {
+            "type": "page-type",
+            "class": "Capell\\Events\\Manifest\\EventsPageTypesContribution",
+            "name": "event",
+            "modelClass": "Capell\\Events\\Models\\Event"
+        },
+        {
+            "type": "page-variation",
+            "class": "Capell\\Events\\Manifest\\EventsPageTypesContribution",
+            "name": "event",
+            "modelClass": "Capell\\Events\\Models\\Event",
+            "resourceName": "event"
+        },
+        {
+            "type": "frontend-component",
+            "class": "Capell\\Events\\Manifest\\EventsFrontendComponentsContribution",
+            "componentClasses": [
+                "Capell\\Events\\Livewire\\EventCalendar",
+                "Capell\\Events\\Livewire\\Page\\EventsCalendarPage",
+                "Capell\\Events\\Livewire\\Page\\EventsListingPage"
+            ],
+            "keys": [
+                "capell-events::event-calendar",
+                "capell-events::page.events-calendar",
+                "capell-events::page.events-listing"
+            ]
+        },
+        {
+            "type": "route",
+            "class": "Capell\\Events\\Manifest\\EventsRoutesContribution",
+            "routeNames": [
+                "capell-events.calendar-feed",
+                "capell-events.listing-calendar-feed"
+            ],
+            "middleware": ["web", "frontend.resolve"]
+        },
+        {
+            "type": "render-hook",
+            "class": "Capell\\Events\\Manifest\\EventsRenderHookContribution",
+            "hookClass": "Capell\\Events\\Support\\RenderHooks\\RegisterEventSchemaHooks",
+            "location": "headClose",
+            "keys": ["event-schema"],
+            "cacheSafe": false
+        },
+        {
+            "type": "migration",
+            "class": "Capell\\Events\\Manifest\\EventsMigrationsContribution",
+            "tables": [
+                "event_venues",
+                "events",
+                "event_occurrences",
+                "event_registrations",
+                "event_notification_logs"
+            ]
+        },
+        {
+            "type": "scheduled-job",
+            "class": "Capell\\Events\\Manifest\\EventsScheduleContribution",
+            "name": "capell-events:process-notifications",
+            "actionClass": "Capell\\Events\\Actions\\ProcessDueEventNotificationLogsAction",
+            "frequency": "everyMinute"
+        },
+        {
+            "type": "scheduled-job",
+            "class": "Capell\\Events\\Manifest\\EventsScheduleContribution",
+            "name": "capell-events:reconcile-waitlists",
+            "actionClass": "Capell\\Events\\Actions\\ReconcileEventWaitlistsAction",
+            "frequency": "everyFifteenMinutes"
+        },
+        {
+            "type": "console-command",
+            "class": "Capell\\Events\\Manifest\\EventsConsoleCommandsContribution",
+            "commands": ["capell:events-install", "capell:events-doctor"],
+            "commandClasses": [
+                "Capell\\Events\\Console\\Commands\\InstallCommand",
+                "Capell\\Events\\Console\\Commands\\EventsDoctorCommand"
+            ]
+        },
+        {
+            "type": "health-check",
+            "class": "Capell\\Events\\Health\\EventsHealthCheck"
+        }
+    ],
     "database": {
         "migrations": true,
         "settings": false,
@@ -121,7 +243,10 @@
     "security": {
         "riskTier": "standard",
         "publicSurface": {
-            "routeNames": ["calendar-feed", "listing-calendar-feed"],
+            "routeNames": [
+                "capell-events.calendar-feed",
+                "capell-events.listing-calendar-feed"
+            ],
             "auth": "public",
             "csrfExemptRoutes": [],
             "signedRoutes": [],
@@ -310,14 +435,6 @@
         "categories": ["admin", "console", "content-product", "frontend"]
     },
     "contributionTraceability": {
-        "deferredContributions": [
-            "admin-page",
-            "admin-resource",
-            "model",
-            "page-type",
-            "page-variation",
-            "route",
-            "scheduled-job"
-        ]
+        "deferredContributions": []
     }
 }

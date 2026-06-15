@@ -58,8 +58,9 @@ Screenshot contract: `screenshots.json`.
 - Actions: `ApplyNewsletterTagsAction`, `BuildDueNewsletterSendsAction`, `BuildListUnsubscribeHeadersAction`, `BuildNewsletterHealthDiagnosticsAction`, `BuildNewsletterSendHandoffPayloadAction`, `ConfirmSubscriberAction`, `CreatePreferenceCenterTokenAction`, `CreateUnsubscribeTokenAction`, `EvaluateNewsletterSegmentAction`, `ExportSubscribersAction`, `HandleProviderWebhookAction`, `ImportSubscribersAction`, `and 17 more`.
 - Data objects: `ConsentEvidenceData`, `FormMappingData`, `PreferenceCenterData`, `PreferenceCenterSegmentData`, `PreferenceCenterUpdateData`, `ProviderAudienceData`, `ProviderInterestData`, `ProviderSubscriberData`, `ProviderSyncResultData`, `ProviderWebhookEventData`, `SubscriberData`, `UtmAttributionData`.
 - Jobs: `SyncSubscriberToProviderJob`.
+- Command signatures: `newsletter:sync-retry-due`.
 - Console command classes: `RequeueDueProviderSyncAttemptsCommand`.
-- Manifest contributions: `admin-resource: Capell\Newsletter\Manifest\NewsletterAdminResourcesContribution`, `dashboard-widget: Capell\Newsletter\Manifest\NewsletterOverviewWidgetContribution`, `model: Capell\Newsletter\Manifest\NewsletterModelsContribution`, `overview-stat: Capell\Newsletter\Manifest\NewsletterOverviewStatsContribution`, `route: Capell\Newsletter\Manifest\NewsletterFrontendRoutesContribution`, `scheduled-job: Capell\Newsletter\Manifest\NewsletterSyncRetryScheduleContribution`.
+- Manifest contributions: `admin-resource: Capell\Newsletter\Manifest\NewsletterAdminResourcesContribution`, `console-command: Capell\Newsletter\Manifest\NewsletterConsoleCommandsContribution`, `dashboard-widget: Capell\Newsletter\Manifest\NewsletterOverviewWidgetContribution`, `health-check: Capell\Newsletter\Manifest\NewsletterHealthContribution`, `model: Capell\Newsletter\Manifest\NewsletterModelsContribution`, `overview-stat: Capell\Newsletter\Manifest\NewsletterOverviewStatsContribution`, `route: Capell\Newsletter\Manifest\NewsletterFrontendRoutesContribution`, `scheduled-job: Capell\Newsletter\Manifest\NewsletterSyncRetryScheduleContribution`, `setting: Capell\Newsletter\Manifest\NewsletterSettingsContribution`.
 - Health checks: `Capell\Newsletter\Health\NewsletterHealthCheck`.
 - Blade views: `packages/newsletter/resources/views/preference-center.blade.php`.
 - Cache tags: `newsletter`.
@@ -78,14 +79,15 @@ Screenshot contract: `screenshots.json`.
 - Permissions: none declared in `capell.json`.
 - Public routes: route files exist and must be reviewed before public enablement.
 - Database changes: package migrations are declared.
-- Settings: settings classes or settings migrations exist; verify the install flow registers them.
+- Settings: `Capell\Newsletter\Settings\NewsletterSettings`.
 - Queues or schedules: review package jobs or schedules before install.
 - Cache tags: `newsletter`.
-- Commands: console command classes detected: `RequeueDueProviderSyncAttemptsCommand`.
+- Commands: `newsletter:sync-retry-due`.
 
 ## Common Pitfalls
 
 - Run migrations before opening package resources or public routes.
+- Configure package settings before testing production-like workflows.
 - Review route middleware, throttling, signed URLs, and public-output safety before exposing routes.
 - Keep public Blade and cached HTML free of authoring markers, model IDs, permissions, signed editor URLs, and lazy database queries.
 - Keep `composer.json`, `composer.local.json`, `capell.json`, docs, screenshots, and tests aligned when the package surface changes.

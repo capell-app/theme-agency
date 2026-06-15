@@ -29,10 +29,20 @@
         "runtime": [
             "Capell\\SocialFeeds\\Providers\\SocialFeedsServiceProvider"
         ],
-        "admin": [],
+        "admin": ["Capell\\SocialFeeds\\Providers\\AdminServiceProvider"],
         "frontend": []
     },
     "contributes": [
+        {
+            "type": "admin-resource",
+            "class": "Capell\\SocialFeeds\\Manifest\\SocialFeedConnectionResourceContribution",
+            "resourceClass": "Capell\\SocialFeeds\\Filament\\Resources\\SocialFeedConnections\\SocialFeedConnectionResource"
+        },
+        {
+            "type": "admin-resource",
+            "class": "Capell\\SocialFeeds\\Manifest\\SocialFeedItemResourceContribution",
+            "resourceClass": "Capell\\SocialFeeds\\Filament\\Resources\\SocialFeedItems\\SocialFeedItemResource"
+        },
         {
             "type": "frontend-component",
             "class": "Capell\\SocialFeeds\\Manifest\\SocialFeedWidgetContribution",
@@ -65,7 +75,8 @@
         "install": null,
         "setup": null,
         "demo": null,
-        "doctor": null
+        "doctor": null,
+        "sync": "capell:social-feeds:sync"
     },
     "actions": {
         "fetchRenderData": "Capell\\SocialFeeds\\Actions\\FetchSocialFeedRenderDataAction",
@@ -170,7 +181,7 @@
         "privateDocsRequested": true
     },
     "marketplace": {
-        "summary": "Place branded, cached social feeds anywhere in Capell with RSS, TikTok, YouTube, Bluesky, and custom provider support.",
+        "summary": "Place cached RSS-compatible social feeds in Capell pages with a provider registry and clean public rendering.",
         "screenshots": [
             {
                 "path": "docs/assets/marketplace/extension-card.svg",
@@ -196,10 +207,6 @@
         "categories": ["admin", "frontend", "growth"]
     },
     "contributionTraceability": {
-        "deferredContributions": [
-            "admin-resource",
-            "frontend-component",
-            "settings"
-        ]
+        "deferredContributions": ["settings", "scheduled-job"]
     }
 }

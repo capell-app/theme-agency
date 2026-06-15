@@ -6,9 +6,11 @@ namespace Capell\AgentBridge\Tests;
 
 use BladeUI\Heroicons\BladeHeroiconsServiceProvider;
 use BladeUI\Icons\BladeIconsServiceProvider;
+use Capell\Admin\Providers\AdminServiceProvider;
 use Capell\AgentBridge\Providers\AgentBridgeServiceProvider;
 use Capell\AgentBridge\Tests\Fixtures\InstalledAgentBridgePackageServiceProvider;
 use Capell\AgentBridge\Tests\Fixtures\User;
+use Capell\Core\Providers\CapellServiceProvider;
 use Filament\Actions\ActionsServiceProvider;
 use Filament\FilamentServiceProvider;
 use Filament\Notifications\NotificationsServiceProvider;
@@ -51,6 +53,8 @@ abstract class TestCase extends OrchestraTestCase
             LivewireServiceProvider::class,
             TablesServiceProvider::class,
             LaravelSettingsServiceProvider::class,
+            CapellServiceProvider::class,
+            AdminServiceProvider::class,
             InstalledAgentBridgePackageServiceProvider::class,
             AgentBridgeServiceProvider::class,
         ];

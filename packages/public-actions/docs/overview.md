@@ -53,12 +53,15 @@ Screenshot contract: `screenshots.json`.
 - Jobs: `DispatchPublicActionDestinationJob`.
 - Command signatures: `capell:public-actions:prune-submissions`.
 - Console command classes: `PrunePublicActionSubmissionsCommand`.
+- Manifest contributions: `admin-resource: Capell\PublicActions\Manifest\PublicActionsAdminResourcesContribution`, `console-command: Capell\PublicActions\Manifest\PublicActionsConsoleCommandsContribution`, `health-check: Capell\PublicActions\Manifest\PublicActionsHealthContribution`, `model: Capell\PublicActions\Manifest\PublicActionsModelsContribution`, `route: Capell\PublicActions\Manifest\PublicActionsRoutesContribution`.
 - Health checks: `Capell\PublicActions\Health\PublicActionsHealthCheck`.
 - Blade views: `packages/public-actions/resources/views/action.blade.php`, `packages/public-actions/resources/views/components/action-button.blade.php`.
 - Cache tags: `public-actions`.
 
 ## Data Model
 
+- Required tables: `public_actions`, `public_action_destinations`, `public_action_submissions`, `public_action_dispatch_attempts`, `public_action_integration_tokens`.
+- Protected tables: `public_actions`, `public_action_destinations`, `public_action_submissions`, `public_action_dispatch_attempts`, `public_action_integration_tokens`.
 - Models: `PublicAction`, `PublicActionDestination`, `PublicActionDispatchAttempt`, `PublicActionIntegrationToken`, `PublicActionSubmission`.
 - Migration files: `2026_05_10_190865_01_create_public_actions_table.php`, `2026_05_10_190865_02_create_public_action_destinations_table.php`, `2026_05_10_190865_03_create_public_action_submissions_table.php`, `2026_05_10_190865_04_create_public_action_dispatch_attempts_table.php`, `2026_05_10_190865_05_create_public_action_integration_tokens_table.php`, `2026_05_28_000002_add_idempotency_keys_to_public_action_submissions_table.php`.
 - Migration impact: run host migrations through the package install flow before opening package surfaces.

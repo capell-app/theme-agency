@@ -79,6 +79,7 @@ const CAPELL_MANIFEST_V3_MIGRATION_GROUPS = [
         'deployments',
         'diagnostics',
         'document-lifecycle',
+        'equestrian-clinics',
         'ga4-reports',
         'insights',
         'login-audit',
@@ -111,6 +112,7 @@ const CAPELL_MANIFEST_V3_MIGRATION_GROUPS = [
         'inertia',
         'inertia-react-adapter',
         'inertia-vue-adapter',
+        'live-chat',
         'media-ai',
         'newsletter',
         'payments',
@@ -127,6 +129,7 @@ const CAPELL_MANIFEST_V3_MIGRATION_GROUPS = [
         'theme-commerce',
         'theme-corporate',
         'theme-education',
+        'theme-estate-agents',
         'theme-healthcare',
         'theme-inertia-bookings',
         'theme-inertia-bookings-react',
@@ -136,6 +139,7 @@ const CAPELL_MANIFEST_V3_MIGRATION_GROUPS = [
         'theme-local-services',
         'theme-nonprofit',
         'theme-portfolio',
+        'theme-restaurant',
         'theme-saas',
     ],
 ];
@@ -605,5 +609,7 @@ if (realpath((string) ($_SERVER['SCRIPT_FILENAME'] ?? '')) === __FILE__) {
 
     echo json_encode($report, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) . PHP_EOL;
 
-    exit($report['errors'] === [] && $report['unassignedPackages'] === [] && $report['duplicateAssignments'] === [] ? 0 : 1);
+    $exitCode = $report['errors'] === [] && $report['unassignedPackages'] === [] && $report['duplicateAssignments'] === [] ? 0 : 1;
+
+    exit /* status */ ($exitCode);
 }

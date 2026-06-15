@@ -25,7 +25,6 @@
 @endphp
 
 <div
-    data-auto="{{ (int) $carouselAutoPlay }}"
     data-carousel="1"
     data-carousel-align="{{ $carouselAlign }}"
     data-carousel-autoplay="{{ (int) $carouselAutoPlay }}"
@@ -34,10 +33,6 @@
     data-carousel-drag="{{ (int) $carouselDrag }}"
     data-carousel-effect="{{ $carouselEffect }}"
     data-carousel-id="{{ $carouselId }}"
-    data-loop="{{ (int) $carouselLoop }}"
-    data-delay="{{ $carouselAutoDelay }}"
-    data-align="{{ $carouselAlign }}"
-    data-drag="{{ (int) $carouselDrag }}"
     data-carousel-loop="{{ (int) $carouselLoop }}"
     data-carousel-navigation="{{ (int) $carouselArrows }}"
     data-carousel-pagination="{{ (int) $carouselPagination }}"
@@ -46,8 +41,6 @@
     data-carousel-speed="{{ $carouselSpeed }}"
     data-carousel-watch-overflow="1"
     data-carousel-wheel="{{ (int) $carouselWheel }}"
-    data-wheel="{{ (int) $carouselWheel }}"
-    data-fade="{{ (int) $carouselFade }}"
     @if ($carouselTouch !== null)
         data-carousel-touch="{{ (int) $carouselTouch }}"
     @endif

@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="960" viewBox="0 0 1440 960" role="img" aria-labelledby="title desc">
+  <title id="title">Restaurant private dining preview</title>
+  <desc id="desc">A private dining page with room cards, menu highlights, and enquiry actions.</desc>
+  <rect width="1440" height="960" fill="#fbf7f0"/>
+  <rect x="96" y="88" width="1248" height="112" rx="24" fill="#2f2621"/>
+  <rect x="144" y="130" width="240" height="28" rx="14" fill="#f5e3c4"/>
+  <rect x="1040" y="124" width="244" height="40" rx="20" fill="#b4643b"/>
+  <rect x="96" y="248" width="1248" height="260" rx="32" fill="#6f4435"/>
+  <rect x="144" y="304" width="408" height="42" rx="21" fill="#fff8ec"/>
+  <rect x="144" y="378" width="520" height="20" rx="10" fill="#e9c9a2"/>
+  <rect x="144" y="422" width="432" height="20" rx="10" fill="#e9c9a2"/>
+  <circle cx="1132" cy="378" r="96" fill="#d9aa68"/>
+  <rect x="96" y="568" width="376" height="248" rx="28" fill="#ffffff"/>
+  <rect x="532" y="568" width="376" height="248" rx="28" fill="#ffffff"/>
+  <rect x="968" y="568" width="376" height="248" rx="28" fill="#ffffff"/>
+  <rect x="144" y="626" width="180" height="24" rx="12" fill="#2f2621"/>
+  <rect x="580" y="626" width="196" height="24" rx="12" fill="#2f2621"/>
+  <rect x="1016" y="626" width="172" height="24" rx="12" fill="#2f2621"/>
+  <rect x="144" y="688" width="260" height="16" rx="8" fill="#d8c3a8"/>
+  <rect x="580" y="688" width="244" height="16" rx="8" fill="#d8c3a8"/>
+  <rect x="1016" y="688" width="252" height="16" rx="8" fill="#d8c3a8"/>
+</svg>

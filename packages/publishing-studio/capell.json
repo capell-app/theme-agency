@@ -137,6 +137,31 @@
             "frequencyConfig": "capell.publishing-studio.prune_schedule_cron"
         },
         {
+            "type": "console-command",
+            "class": "Capell\\PublishingStudio\\Manifest\\PublishingStudioConsoleCommandsContribution",
+            "commands": [
+                "capell:install-publishing-studio",
+                "capell:publishing-studio:load-test",
+                "capell:publishing-studio:prune"
+            ],
+            "commandClasses": [
+                "Capell\\PublishingStudio\\Console\\Commands\\InstallCommand",
+                "Capell\\PublishingStudio\\Console\\Commands\\LoadTestPublishingStudioCommand",
+                "Capell\\PublishingStudio\\Console\\Commands\\PruneAbandonedPublishingStudioCommand"
+            ]
+        },
+        {
+            "type": "setting",
+            "class": "Capell\\PublishingStudio\\Manifest\\PublishingStudioSettingsContribution",
+            "settingsClass": "Capell\\PublishingStudio\\Settings\\PublishingStudioSettings",
+            "settingsGroup": "publishing_studio"
+        },
+        {
+            "type": "health-check",
+            "class": "Capell\\PublishingStudio\\Manifest\\PublishingStudioHealthContribution",
+            "checkClass": "Capell\\PublishingStudio\\Health\\PublishingStudioHealthCheck"
+        },
+        {
             "type": "workflow-attention",
             "class": "Capell\\PublishingStudio\\Actions\\Workflow\\BuildPublishingWorkflowAttentionItemsAction",
             "pageClass": "Capell\\PublishingStudio\\Filament\\Pages\\PublishingWorkflowPage",
@@ -166,7 +191,9 @@
         "install": null,
         "setup": null,
         "demo": null,
-        "doctor": null
+        "doctor": null,
+        "loadTest": "capell:publishing-studio:load-test",
+        "prune": "capell:publishing-studio:prune"
     },
     "actions": {
         "buildContentSchedulerEvents": "Capell\\PublishingStudio\\Actions\\DashboardReports\\BuildContentSchedulerEventsAction",

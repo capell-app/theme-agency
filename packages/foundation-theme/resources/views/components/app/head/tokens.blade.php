@@ -7,7 +7,7 @@ use Capell\Frontend\Facades\Frontend;
 $preparedTokens = Frontend::getFrontendData('foundation.theme.tokens');
 $tokens = $preparedTokens instanceof FoundationThemeTokensData
     ? $preparedTokens
-    : ResolveFoundationThemeTokensAction::run();
+    : ResolveFoundationThemeTokensAction::run(resolveSettings: false);
 
 ?>
 

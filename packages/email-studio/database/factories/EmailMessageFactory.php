@@ -33,6 +33,7 @@ class EmailMessageFactory extends Factory
             'rendered_text' => $this->faker->sentence(),
             'context_snapshot' => [],
             'headers' => [],
+            'attachments' => [],
             'triggered_by_type' => null,
             'triggered_by_id' => null,
             'queued_at' => now()->toImmutable(),

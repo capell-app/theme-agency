@@ -17,6 +17,14 @@ return [
         'connect_timeout' => 5,
     ],
 
+    'paypal' => [
+        'client_id' => Env::get('PAYPAL_CLIENT_ID'),
+        'client_secret' => Env::get('PAYPAL_CLIENT_SECRET'),
+        'api_base_url' => Env::get('PAYPAL_API_BASE_URL', 'https://api-m.paypal.com'),
+        'timeout' => 20,
+        'connect_timeout' => 5,
+    ],
+
     'webhooks' => [
         'queue' => Env::get('CAPELL_PAYMENTS_WEBHOOK_QUEUE', 'payments'),
         'stripe_rate_limit' => 'capell-payments-stripe-webhook',

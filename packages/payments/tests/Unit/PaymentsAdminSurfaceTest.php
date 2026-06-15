@@ -24,6 +24,7 @@ use Capell\Payments\Manifest\SubscriptionResourceContribution;
 use Capell\Payments\Models\CheckoutSession;
 use Capell\Payments\Models\PaymentCustomer;
 use Capell\Payments\Models\PaymentDispute;
+use Capell\Payments\Models\PaymentDownloadEntitlement;
 use Capell\Payments\Models\PaymentIntent;
 use Capell\Payments\Models\PaymentRefund;
 use Capell\Payments\Models\PaymentWebhookEvent;
@@ -106,10 +107,26 @@ it('declares admin resources in the package manifest', function (): void {
         ->and($manifest['contributes'])->toContain([
             'type' => 'model',
             'class' => PaymentsModelsContribution::class,
+            'modelClasses' => [
+                PaymentCustomer::class,
+                CheckoutSession::class,
+                PaymentIntent::class,
+                Subscription::class,
+                PaymentWebhookEvent::class,
+                PaymentRefund::class,
+                PaymentDispute::class,
+                PaymentDownloadEntitlement::class,
+            ],
         ])
         ->and($manifest['contributes'])->toContain([
             'type' => 'route',
             'class' => PaymentsFrontendRoutesContribution::class,
+            'routes' => [
+                'capell-payments.form-builder.checkout',
+                'capell-payments.paid-downloads.show',
+                'capell-payments.portal.billing',
+                'capell-payments.stripe-webhook',
+            ],
         ])
         ->and(class_implements(PaymentCustomerResourceContribution::class))->toContain(RegistersExtensionAdminResource::class)
         ->and(class_implements(CheckoutSessionResourceContribution::class))->toContain(RegistersExtensionAdminResource::class)

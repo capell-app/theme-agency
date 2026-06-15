@@ -6,9 +6,14 @@ namespace Capell\EmailStudio\Health;
 
 use Capell\Core\Contracts\Extensions\ChecksExtensionHealth;
 use Capell\Core\Data\Diagnostics\DoctorCheckResultData;
+use Capell\EmailStudio\Actions\ActivateEmailTemplateVariantAction;
+use Capell\EmailStudio\Actions\CaptureEmailTemplateThemeScreenshotAction;
 use Capell\EmailStudio\Actions\CheckEmailSuppressionAction;
+use Capell\EmailStudio\Actions\CreateEmailTemplateOverrideAction;
 use Capell\EmailStudio\Actions\DeliverEmailMessageAction;
 use Capell\EmailStudio\Actions\RenderEmailTemplateAction;
+use Capell\EmailStudio\Actions\RenderEmailTemplateDefinitionAction;
+use Capell\EmailStudio\Actions\SendEmailTemplateTestAction;
 use Capell\EmailStudio\Actions\SuppressEmailAddressAction;
 use Capell\EmailStudio\Data\InboundEmailReplyData;
 use Capell\EmailStudio\Data\ProviderWebhookEventData;
@@ -20,8 +25,10 @@ use Capell\EmailStudio\Models\EmailRecipient;
 use Capell\EmailStudio\Models\EmailReply;
 use Capell\EmailStudio\Models\EmailSuppression;
 use Capell\EmailStudio\Models\EmailTemplate;
+use Capell\EmailStudio\Models\EmailTemplateTheme;
 use Capell\EmailStudio\Support\EmailAddressNormalizer;
 use Capell\EmailStudio\Support\EmailProviderRegistry;
+use Capell\EmailStudio\Support\EmailTemplateRegistry;
 use Capell\EmailStudio\Support\EmailVariableRenderer;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Schema;
@@ -43,6 +50,7 @@ final class EmailStudioHealthCheck implements ChecksExtensionHealth
 
         return collect([
             $check->templateRenderingCheck(),
+            $check->templateAuthoringCheck(),
             $check->providerDeliveryCheck(),
             $check->suppressionEnforcementCheck(),
             $check->providerEventsCheck(),
@@ -63,8 +71,16 @@ final class EmailStudioHealthCheck implements ChecksExtensionHealth
             $missing[] = $this->translation('capell-email-studio::package.health.components.render_action');
         }
 
+        if (! class_exists(RenderEmailTemplateDefinitionAction::class)) {
+            $missing[] = $this->translation('capell-email-studio::package.health.components.render_definition_action');
+        }
+
         if (! class_exists(EmailVariableRenderer::class)) {
             $missing[] = $this->translation('capell-email-studio::package.health.components.variable_renderer');
+        }
+
+        if (! class_exists(EmailTemplateRegistry::class)) {
+            $missing[] = $this->translation('capell-email-studio::package.health.components.template_registry');
         }
 
         if (! Schema::hasTable((new EmailTemplate)->getTable())) {
@@ -80,6 +96,37 @@ final class EmailStudioHealthCheck implements ChecksExtensionHealth
             remediation: $missing === []
                 ? null
                 : $this->translation('capell-email-studio::package.health.template_rendering.remediation'),
+        );
+    }
+
+    private function templateAuthoringCheck(): DoctorCheckResultData
+    {
+        $missing = [];
+
+        foreach ([
+            CreateEmailTemplateOverrideAction::class => 'create_override_action',
+            ActivateEmailTemplateVariantAction::class => 'activate_variant_action',
+            SendEmailTemplateTestAction::class => 'send_test_action',
+            CaptureEmailTemplateThemeScreenshotAction::class => 'capture_theme_screenshot_action',
+        ] as $class => $translationKey) {
+            if (! class_exists($class)) {
+                $missing[] = $this->translation('capell-email-studio::package.health.components.' . $translationKey);
+            }
+        }
+
+        if (! Schema::hasTable((new EmailTemplateTheme)->getTable())) {
+            $missing[] = $this->translation('capell-email-studio::package.health.components.email_template_themes_table');
+        }
+
+        return new DoctorCheckResultData(
+            label: $this->translation('capell-email-studio::package.health.template_authoring.label'),
+            passed: $missing === [],
+            message: $missing === []
+                ? $this->translation('capell-email-studio::package.health.template_authoring.passed')
+                : $this->translation('capell-email-studio::package.health.missing', ['components' => implode(', ', $missing)]),
+            remediation: $missing === []
+                ? null
+                : $this->translation('capell-email-studio::package.health.template_authoring.remediation'),
         );
     }
 

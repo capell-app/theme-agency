@@ -10,4 +10,5 @@ return [
     'default_limit' => (int) env('CAPELL_SOCIAL_FEEDS_DEFAULT_LIMIT', 12),
     'max_limit' => (int) env('CAPELL_SOCIAL_FEEDS_MAX_LIMIT', 48),
     'retention_items' => (int) env('CAPELL_SOCIAL_FEEDS_RETENTION_ITEMS', 200),
+    'sync_schedule_enabled' => (bool) env('CAPELL_SOCIAL_FEEDS_SYNC_SCHEDULE_ENABLED', false),
 ];

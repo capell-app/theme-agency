@@ -6,7 +6,7 @@ Start at the [package README](../README.md) when deciding whether to install thi
 
 | Document                                | Use                                                          |
 | --------------------------------------- | ------------------------------------------------------------ |
-| [Overview](overview.md)                 | Buyer value, admin surface, setup notes, and safety caveats. |
+| [Overview](overview.md)                 | Heading switcher workflow, setup notes, and health checks.   |
 | [Screenshot contract](screenshots.json) | Marketplace/admin captures required for package publication. |
 
 ## Related Packages

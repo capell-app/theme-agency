@@ -17,7 +17,15 @@ final class InertiaReactAdapterHealthCheck implements ChecksExtensionHealth
 
     public function passes(): bool
     {
-        return app()->bound(InertiaAdapterRegistry::class)
-            && resolve(InertiaAdapterRegistry::class)->get(InertiaReactAdapterServiceProvider::ADAPTER_KEY) !== null;
+        if (! app()->bound(InertiaAdapterRegistry::class)) {
+            return false;
+        }
+
+        $adapter = resolve(InertiaAdapterRegistry::class)->get(InertiaReactAdapterServiceProvider::ADAPTER_KEY);
+
+        return $adapter !== null
+            && $adapter->packageName === InertiaReactAdapterServiceProvider::$packageName
+            && $adapter->buildPath === InertiaReactAdapterServiceProvider::BUILD_PATH
+            && $adapter->entrypoint === InertiaReactAdapterServiceProvider::ENTRYPOINT;
     }
 }

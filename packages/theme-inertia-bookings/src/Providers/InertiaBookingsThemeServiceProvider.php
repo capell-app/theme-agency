@@ -96,13 +96,5 @@ class InertiaBookingsThemeServiceProvider extends AbstractPackageServiceProvider
         CapellCore::registerVendorAsset(
             VendorAssetData::tailwindImport('resources/css/theme-inertia-bookings.css', self::$packageName),
         );
-
-        CapellCore::registerVendorAsset(
-            VendorAssetData::tailwindSource('resources/js/**/*.vue', self::$packageName),
-        );
-
-        CapellCore::registerVendorAsset(
-            VendorAssetData::tailwindSource('resources/js/**/*.jsx', self::$packageName),
-        );
     }
 }

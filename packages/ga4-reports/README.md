@@ -42,8 +42,8 @@ Screenshot contract: `docs/screenshots.json`.
 - Settings classes: `GA4ReportsSettings`, `GA4ReportsSettingsMigrationProvider`.
 - Models: `GA4ReportsDailyMetric`, `GA4ReportsPageMetric`, `GA4ReportsSyncRun`.
 - Filament classes: `GA4ReportsPage`, `GA4ReportsDashboardSettingsContributor`, `GA4ReportsSettingsSchema`, `BuildsGA4ReportsDashboardWindow`, `GA4ReportsOverviewStatsWidget`, `GA4ReportsSetupStatusWidget`, `GA4ReportsTopPagesTableWidget`, `GA4ReportsTopPagesWidget`, `GA4ReportsTrafficTrendWidget`.
-- Actions: `BuildGA4ReportsDigestAction`, `BuildGA4ReportsOverviewAction`, `BuildGA4ReportsTrendAction`, `BuildGA4ReportsWindowAction`, `BuildTopGA4ReportsPagesAction`, `ExportGA4ReportsDigestCsvAction`, `PersistGA4ReportsDailyMetricAction`, `PersistGA4ReportsPageMetricAction`, `RedactGA4ReportsSyncErrorMessageAction`, `ResolveGA4ReportsConfigAction`, `SyncGA4ReportsMetricsAction`.
-- Data objects: `GA4ReportsConfigData`, `GA4ReportsDailyMetricData`, `GA4ReportsDigestData`, `GA4ReportsOverviewData`, `GA4ReportsPageMetricData`, `GA4ReportsSyncResultData`, `GA4ReportsTopPageData`, `GA4ReportsTrendPointData`, `GA4ReportsWindowData`.
+- Actions: `BuildGA4ReportsDigestAction`, `BuildGA4ReportsOverviewAction`, `BuildGA4ReportsTrendAction`, `BuildGA4ReportsWindowAction`, `BuildTopGA4ReportsPagesAction`, `CheckGA4ReportsCredentialsPathAction`, `ExportGA4ReportsDigestCsvAction`, `PersistGA4ReportsDailyMetricAction`, `PersistGA4ReportsPageMetricAction`, `RedactGA4ReportsSyncErrorMessageAction`, `ResolveGA4ReportsConfigAction`, `SyncGA4ReportsMetricsAction`.
+- Data objects: `GA4ReportsConfigData`, `GA4ReportsCredentialsStatusData`, `GA4ReportsDailyMetricData`, `GA4ReportsDigestData`, `GA4ReportsOverviewData`, `GA4ReportsPageMetricData`, `GA4ReportsSyncResultData`, `GA4ReportsTopPageData`, `GA4ReportsTrendPointData`, `GA4ReportsWindowData`.
 - Command signatures: `capell:ga4-reports-sync`.
 - Console command classes: `SyncGA4ReportsCommand`.
 - Health checks: `Capell\GA4Reports\Health\Ga4ReportsHealthCheck`.
@@ -55,7 +55,7 @@ Screenshot contract: `docs/screenshots.json`.
 - Models: `GA4ReportsDailyMetric`, `GA4ReportsPageMetric`, `GA4ReportsSyncRun`.
 - Migration files: `2026_05_10_190852_01_create_ga4_reports_daily_metrics_table.php`, `2026_05_10_190852_02_create_ga4_reports_page_metrics_table.php`, `2026_05_10_190852_03_create_ga4_reports_sync_runs_table.php`.
 - Migration impact: run host migrations through the package install flow before opening package surfaces.
-- Deletion/retention behaviour: Docs gap unless the package has an explicit pruning command, retention setting, or tested cascade path.
+- Deletion/retention behaviour: each sync refreshes the configured reporting window (`sync_days`, default 30) for the configured GA4 property and replaces local daily/page snapshots for that window. Sync run history is retained for operational audit.
 
 ## Install Impact
 
@@ -64,7 +64,7 @@ Screenshot contract: `docs/screenshots.json`.
 - Public routes: none detected in package route files.
 - Database changes: package migrations are declared.
 - Settings: settings classes or settings migrations exist; verify the install flow registers them.
-- Queues or schedules: none detected in standard package paths.
+- Queues or schedules: registers `capell:ga4-reports-sync` on the host scheduler using `capell-ga4-reports.sync_cron` / the GA4 Reports settings cron expression, with overlap protection.
 - Cache tags: `ga4-reports`.
 - Commands: `capell:ga4-reports-sync`.
 
@@ -81,6 +81,7 @@ Screenshot contract: `docs/screenshots.json`.
 | Package surface is missing after install | Provider or manifest is not loaded | Confirm `capell.json`, package `composer.json`, and provider registration | Reinstall the package, refresh Composer autoload, and clear host caches |
 | Admin screen or command fails on missing table | Package migrations have not run | Check the tables listed in `Data Model` | Run host migrations and rerun the focused package test |
 | Background work does not run | Queue worker or scheduled command is not active | Check package jobs, commands, and host scheduler configuration | Start the queue or scheduler, then run the focused command or package test |
+| Dashboard data looks stale | The scheduled sync has not completed recently or GA4 credentials are unreadable | Check the GA4 Reports setup status widget and package health check | Fix the property/credentials settings, then run `capell:ga4-reports-sync` |
 
 ## Quick Start
 

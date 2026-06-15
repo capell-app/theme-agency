@@ -52,9 +52,9 @@ Screenshot contract: `screenshots.json`.
 - Actions: `EstimateAiGenerationCostAction`, `RecordAiGenerationAction`, `AnalyzePageContentAction`, `ApplyAiDraftAction`, `BaseAction`, `BreadcrumbsSchemaAction`, `BuildAiDiscoveryPageEntriesAction`, `BuildAiReadinessAuditAction`, `BuildAiRobotsTxtRulesAction`, `BuildCrawlerPreviewReportAction`, `BuildDecliningSearchConsolePagesAction`, `BuildMarketplaceStructuredDataFreshnessWarningsAction`, `and 65 more`.
 - Data objects: `AiGenerationInputData`, `AiGenerationResultData`, `AiContentBriefData`, `AiDiscoveryAuditData`, `AiDiscoveryCrawlerRuleData`, `AiDiscoveryPageEntryData`, `AiDiscoveryRenderContextData`, `AiReadinessIssueData`, `CrawlerPreviewData`, `AiMetricsData`, `SearchConsoleDashboardStatsData`, `InternalLinkSuggestionData`, `and 23 more`.
 - Jobs: `RunPageSpeedAuditJob`.
-- Command signatures: `capell:seo-suite-doctor`.
+- Command signatures: `capell:admin-clear-ai-cache`, `capell:admin-monitor-ai-usage`, `capell:admin-test-openai`, `capell:seo-suite-doctor`, `capell:seo-suite-install`, `capell:seo-suite-setup`, `capell:seo-suite-sync-search-console`, `capell:seo-suite:pagespeed-audit`, `capell:seo-suite:refresh-ai-discovery-markdown`.
 - Console command classes: `ClearAiCacheCommand`, `DoctorCommand`, `InstallCommand`, `MonitorAiUsageCommand`, `PageSpeedAuditCommand`, `RefreshAiDiscoveryMarkdownCommand`, `SetupCommand`, `SyncSearchConsoleCommand`, `TestOpenAiConnectionCommand`.
-- Manifest contributions: `admin-page: Capell\SeoSuite\Manifest\AiDiscoveryPageContribution`, `admin-page: Capell\SeoSuite\Manifest\BrokenLinksPageContribution`, `admin-page: Capell\SeoSuite\Manifest\NotFoundUrlsPageContribution`, `admin-page: Capell\SeoSuite\Manifest\SearchRankingsPageContribution`, `admin-page: Capell\SeoSuite\Manifest\SeoAuditPageContribution`, `admin-page: Capell\SeoSuite\Manifest\TranslationCoveragePageContribution`, `route: Capell\SeoSuite\Manifest\AiDiscoveryRoutesContribution`.
+- Manifest contributions: `admin-page: Capell\SeoSuite\Manifest\AiDiscoveryPageContribution`, `admin-page: Capell\SeoSuite\Manifest\BrokenLinksPageContribution`, `admin-page: Capell\SeoSuite\Manifest\NotFoundUrlsPageContribution`, `admin-page: Capell\SeoSuite\Manifest\SearchRankingsPageContribution`, `admin-page: Capell\SeoSuite\Manifest\SeoAuditPageContribution`, `admin-page: Capell\SeoSuite\Manifest\TranslationCoveragePageContribution`, `console-command: Capell\SeoSuite\Manifest\SeoSuiteConsoleCommandsContribution`, `dashboard-widget: Capell\SeoSuite\Manifest\SeoSuiteDashboardWidgetsContribution`, `health-check: Capell\SeoSuite\Manifest\SeoSuiteHealthContribution`, `model: Capell\SeoSuite\Manifest\SeoSuiteModelsContribution`, `route: Capell\SeoSuite\Manifest\AiDiscoveryRoutesContribution`, `scheduled-job: Capell\SeoSuite\Manifest\SeoSuitePageSpeedScheduleContribution`, `setting: Capell\SeoSuite\Manifest\SeoSuiteSettingsContribution`.
 - Health checks: `Capell\SeoSuite\Health\SeoSuiteHealthCheck`.
 - Blade views: `packages/seo-suite/resources/views/components/schema/breadcrumb.blade.php`, `packages/seo-suite/resources/views/components/schema/graph.blade.php`, `packages/seo-suite/resources/views/components/schema/image.blade.php`, `packages/seo-suite/resources/views/components/schema/organization.blade.php`, `packages/seo-suite/resources/views/components/schema/webpage.blade.php`, `packages/seo-suite/resources/views/components/schema/website.blade.php`, `packages/seo-suite/resources/views/filament/components/page-seo-panel.blade.php`, `packages/seo-suite/resources/views/filament/fields/image-preview.blade.php`, `packages/seo-suite/resources/views/filament/widgets/ai-metrics.blade.php`, `packages/seo-suite/resources/views/filament/widgets/ai-usage.blade.php`, `packages/seo-suite/resources/views/filament/widgets/edit-page-audit-tabs.blade.php`, `packages/seo-suite/resources/views/filament/widgets/pagespeed-audit-edit.blade.php`, `and 10 more`.
 - Cache tags: `seo-suite`.
@@ -76,7 +76,7 @@ Screenshot contract: `screenshots.json`.
 - Settings: `Capell\SeoSuite\Settings\AIOrchestratorSettings`, `Capell\SeoSuite\Settings\SeoSuiteSettings`.
 - Queues or schedules: review package jobs or schedules before install.
 - Cache tags: `seo-suite`.
-- Commands: `capell:seo-suite-doctor`.
+- Commands: `capell:admin-clear-ai-cache`, `capell:admin-monitor-ai-usage`, `capell:admin-test-openai`, `capell:seo-suite-doctor`, `capell:seo-suite-install`, `capell:seo-suite-setup`, `capell:seo-suite-sync-search-console`, `capell:seo-suite:pagespeed-audit`, `capell:seo-suite:refresh-ai-discovery-markdown`.
 
 ## Common Pitfalls
 
@@ -98,7 +98,7 @@ Screenshot contract: `screenshots.json`.
 ## Quick Start
 
 1. Install the package: `composer require capell-app/seo-suite`.
-2. Run the required setup: `php artisan migrate`.
+2. Run the required setup: `php artisan capell:seo-suite-setup`.
 3. Open the related Capell admin surface and verify SEO Suite appears.
 
 ## Next Steps

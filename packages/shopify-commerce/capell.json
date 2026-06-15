@@ -37,7 +37,79 @@
         "admin": ["Capell\\ShopifyCommerce\\Providers\\AdminServiceProvider"],
         "frontend": []
     },
-    "contributes": [],
+    "contributes": [
+        {
+            "type": "admin-page",
+            "class": "Capell\\ShopifyCommerce\\Manifest\\ShopifyConnectionPageContribution",
+            "pageClass": "Capell\\ShopifyCommerce\\Filament\\Pages\\ShopifyConnectionPage",
+            "labelKey": "capell-shopify-commerce::capell-shopify-commerce.navigation.label"
+        },
+        {
+            "type": "route",
+            "class": "Capell\\ShopifyCommerce\\Manifest\\ShopifyCommerceRoutesContribution",
+            "routes": [
+                "capell-shopify-commerce.oauth.install",
+                "capell-shopify-commerce.oauth.callback",
+                "capell-shopify-commerce.webhooks.shopify"
+            ]
+        },
+        {
+            "type": "model",
+            "class": "Capell\\ShopifyCommerce\\Manifest\\ShopifyCommerceModelsContribution",
+            "modelClasses": [
+                "Capell\\ShopifyCommerce\\Models\\ShopifyConnection",
+                "Capell\\ShopifyCommerce\\Models\\ShopifyCustomer",
+                "Capell\\ShopifyCommerce\\Models\\ShopifyOAuthState",
+                "Capell\\ShopifyCommerce\\Models\\ShopifyProduct",
+                "Capell\\ShopifyCommerce\\Models\\ShopifyProductVariant"
+            ]
+        },
+        {
+            "type": "scheduled-job",
+            "class": "Capell\\ShopifyCommerce\\Manifest\\ShopifyProductSyncScheduleContribution",
+            "command": "capell-shopify-commerce:sync --all",
+            "name": "capell-shopify-commerce-product-sync",
+            "frequency": "everyFifteenMinutes",
+            "enabledWhen": "capell-shopify-commerce.scheduled_sync_enabled"
+        },
+        {
+            "type": "scheduled-job",
+            "class": "Capell\\ShopifyCommerce\\Manifest\\ShopifyOAuthStatePruneScheduleContribution",
+            "command": "capell-shopify-commerce:prune-oauth-states",
+            "name": "capell-shopify-commerce-prune-oauth-states",
+            "frequency": "hourly",
+            "enabledWhen": "package installed"
+        },
+        {
+            "type": "console-command",
+            "class": "Capell\\ShopifyCommerce\\Manifest\\ShopifyCommerceConsoleCommandsContribution",
+            "commands": [
+                "capell-shopify-commerce:install",
+                "capell-shopify-commerce:prune-oauth-states",
+                "capell-shopify-commerce:sync-customers",
+                "capell-shopify-commerce:sync"
+            ],
+            "commandClasses": [
+                "Capell\\ShopifyCommerce\\Console\\Commands\\InstallShopifyCommerceCommand",
+                "Capell\\ShopifyCommerce\\Console\\Commands\\PruneExpiredShopifyOAuthStatesCommand",
+                "Capell\\ShopifyCommerce\\Console\\Commands\\SyncShopifyCustomersCommand",
+                "Capell\\ShopifyCommerce\\Console\\Commands\\SyncShopifyProductsCommand"
+            ]
+        },
+        {
+            "type": "setting",
+            "class": "Capell\\ShopifyCommerce\\Manifest\\ShopifyCommerceSettingsContribution",
+            "settingsClasses": [
+                "Capell\\ShopifyCommerce\\Settings\\ShopifyCommerceSettings"
+            ],
+            "settingsGroups": ["shopify_commerce"]
+        },
+        {
+            "type": "health-check",
+            "class": "Capell\\ShopifyCommerce\\Manifest\\ShopifyCommerceHealthContribution",
+            "checkClass": "Capell\\ShopifyCommerce\\Health\\ShopifyCommerceHealthCheck"
+        }
+    ],
     "database": {
         "migrations": true,
         "settings": true,
@@ -60,6 +132,7 @@
         "install": "capell-shopify-commerce:install",
         "pruneOAuthStates": "capell-shopify-commerce:prune-oauth-states",
         "syncCustomers": "capell-shopify-commerce:sync-customers",
+        "syncProducts": "capell-shopify-commerce:sync",
         "setup": null,
         "demo": null,
         "doctor": null
@@ -194,11 +267,6 @@
         "categories": ["admin", "commerce", "integrations"]
     },
     "contributionTraceability": {
-        "deferredContributions": [
-            "admin-page",
-            "model",
-            "route",
-            "scheduled-job"
-        ]
+        "deferredContributions": []
     }
 }

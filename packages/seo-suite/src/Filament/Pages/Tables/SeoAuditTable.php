@@ -22,9 +22,12 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder as QueryBuilder;
+use Illuminate\Http\Request;
 
 class SeoAuditTable implements TableConfigurator
 {
+    private const string REQUEST_SNAPSHOT_CACHE_KEY = 'capell.seo-suite.seo-audit-table.snapshots';
+
     /**
      * @var array<string, PageSeoSnapshot|null>
      */
@@ -265,13 +268,14 @@ class SeoAuditTable implements TableConfigurator
         $site = $record->site;
         $language = $site?->language;
         $cacheKey = sprintf('%s:%s', $record->getKey(), $language?->getKey() ?? 'none');
+        $cachedSnapshot = self::cachedSnapshot($cacheKey);
 
-        if (array_key_exists($cacheKey, self::$snapshots)) {
-            return self::$snapshots[$cacheKey];
+        if ($cachedSnapshot['hit']) {
+            return $cachedSnapshot['snapshot'];
         }
 
         if (! $site instanceof Site || ! $language instanceof Language) {
-            return self::$snapshots[$cacheKey] = null;
+            return self::putCachedSnapshot($cacheKey, null);
         }
 
         if ($record->relationLoaded('seoSnapshots')) {
@@ -282,14 +286,86 @@ class SeoAuditTable implements TableConfigurator
                         && (int) $snapshot->language_id === (int) $language->getKey(),
                 );
 
-            return self::$snapshots[$cacheKey] = $snapshot instanceof PageSeoSnapshot ? $snapshot : null;
+            return self::putCachedSnapshot($cacheKey, $snapshot instanceof PageSeoSnapshot ? $snapshot : null);
         }
 
-        return self::$snapshots[$cacheKey] = PageSeoSnapshot::query()
+        return self::putCachedSnapshot($cacheKey, PageSeoSnapshot::query()
             ->where('page_id', $record->getKey())
             ->where('site_id', $site->getKey())
             ->where('language_id', $language->getKey())
-            ->first();
+            ->first());
+    }
+
+    /**
+     * @return array{hit: bool, snapshot: PageSeoSnapshot|null}
+     */
+    private static function cachedSnapshot(string $cacheKey): array
+    {
+        $request = self::currentRequest();
+
+        if (! $request instanceof Request) {
+            return [
+                'hit' => array_key_exists($cacheKey, self::$snapshots),
+                'snapshot' => self::$snapshots[$cacheKey] ?? null,
+            ];
+        }
+
+        $cache = self::requestSnapshotCache($request);
+
+        return [
+            'hit' => array_key_exists($cacheKey, $cache),
+            'snapshot' => $cache[$cacheKey] ?? null,
+        ];
+    }
+
+    private static function putCachedSnapshot(string $cacheKey, ?PageSeoSnapshot $snapshot): ?PageSeoSnapshot
+    {
+        $request = self::currentRequest();
+
+        if (! $request instanceof Request) {
+            self::$snapshots[$cacheKey] = $snapshot;
+
+            return $snapshot;
+        }
+
+        $cache = self::requestSnapshotCache($request);
+        $cache[$cacheKey] = $snapshot;
+        $request->attributes->set(self::REQUEST_SNAPSHOT_CACHE_KEY, $cache);
+
+        return $snapshot;
+    }
+
+    /**
+     * @return array<string, PageSeoSnapshot|null>
+     */
+    private static function requestSnapshotCache(Request $request): array
+    {
+        $cache = $request->attributes->get(self::REQUEST_SNAPSHOT_CACHE_KEY, []);
+
+        if (! is_array($cache)) {
+            return [];
+        }
+
+        $typedCache = [];
+
+        foreach ($cache as $key => $snapshot) {
+            if (is_string($key) && ($snapshot === null || $snapshot instanceof PageSeoSnapshot)) {
+                $typedCache[$key] = $snapshot;
+            }
+        }
+
+        return $typedCache;
+    }
+
+    private static function currentRequest(): ?Request
+    {
+        if (! app()->bound('request')) {
+            return null;
+        }
+
+        $request = request();
+
+        return $request instanceof Request ? $request : null;
     }
 
     private static function searchPreviewTitleFor(Page $record): string

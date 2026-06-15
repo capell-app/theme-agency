@@ -6,12 +6,14 @@ namespace Capell\AccessGate\Actions;
 
 use Capell\AccessGate\Models\Area;
 use Capell\AccessGate\Support\AccessGateSchema;
+use Capell\Core\Actions\Install\PublishPackageMigrationsAction;
 use Capell\Core\Actions\Install\RunArtisanCommandAction;
 use Capell\Core\Actions\Install\RunMigrationsAction;
 use Capell\Core\Contracts\PackageLifecycleAction;
 use Capell\Core\Contracts\ProgressReporter;
 use Capell\Core\Data\PackageData;
 use Capell\Core\Support\Install\NullProgressReporter;
+use Illuminate\Support\Collection;
 use Lorisleiva\Actions\Concerns\AsObject;
 
 final class InstallAccessGatePackageAction implements PackageLifecycleAction
@@ -28,7 +30,7 @@ final class InstallAccessGatePackageAction implements PackageLifecycleAction
 
         $schemaIsReady = $this->accessGateSchemaIsReady();
 
-        foreach ($this->publishTags($schemaIsReady) as $tag) {
+        foreach ($this->publishTags() as $tag) {
             RunArtisanCommandAction::run('vendor:publish', [
                 '--tag' => $tag,
                 '--force' => false,
@@ -38,6 +40,7 @@ final class InstallAccessGatePackageAction implements PackageLifecycleAction
         $reporter->report((string) __('capell-access-gate::install.published'));
 
         if (! $schemaIsReady) {
+            PublishPackageMigrationsAction::run(new Collection([$package->name => $package]), $reporter);
             RunMigrationsAction::run($reporter);
         }
 
@@ -49,19 +52,13 @@ final class InstallAccessGatePackageAction implements PackageLifecycleAction
     /**
      * @return list<string>
      */
-    private function publishTags(bool $schemaIsReady): array
+    private function publishTags(): array
     {
-        $tags = [
+        return [
             'capell-access-gate-config',
             'capell-access-gate-views',
             'capell-access-gate-translations',
         ];
-
-        if (! $schemaIsReady) {
-            $tags[] = 'capell-access-gate-migrations';
-        }
-
-        return $tags;
     }
 
     private function accessGateSchemaIsReady(): bool

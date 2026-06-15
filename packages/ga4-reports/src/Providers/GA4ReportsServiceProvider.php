@@ -27,6 +27,8 @@ final class GA4ReportsServiceProvider extends AbstractPackageServiceProvider
 
     public static string $packageName = 'capell-app/ga4-reports';
 
+    private bool $packageSurfacesRegistered = false;
+
     public function configurePackage(Package $package): void
     {
         $package
@@ -49,24 +51,16 @@ final class GA4ReportsServiceProvider extends AbstractPackageServiceProvider
     public function packageRegistered(): void
     {
         $this
-
             ->registerSettingsMigrations()
             ->bindGA4ReportsClient();
 
-        $this->app->booted(function (): void {
-            if (! $this->isPackageInstalled()) {
-                return;
-            }
-
-            $this
-                ->registerModels()
-                ->registerSettings()
-                ->registerProtectedTables();
-        });
+        $this->registerInstalledPackageSurfacesWhenReady();
     }
 
     public function packageBooted(): void
     {
+        $this->registerInstalledPackageSurfaces();
+
         if (! $this->isPackageInstalled() || ! $this->app->runningInConsole()) {
             return;
         }
@@ -87,13 +81,44 @@ final class GA4ReportsServiceProvider extends AbstractPackageServiceProvider
 
     private function registerModels(): self
     {
-        $this->surface()->models([
+        CapellCore::registerModels([
             GA4ReportsSyncRun::class,
             GA4ReportsDailyMetric::class,
             GA4ReportsPageMetric::class,
         ]);
 
         return $this;
+    }
+
+    private function registerInstalledPackageSurfacesWhenReady(): void
+    {
+        if ($this->app->isBooted()) {
+            $this->registerInstalledPackageSurfaces();
+
+            return;
+        }
+
+        $this->app->booting(function (): void {
+            $this->registerInstalledPackageSurfaces();
+        });
+
+        $this->app->booted(function (): void {
+            $this->registerInstalledPackageSurfaces();
+        });
+    }
+
+    private function registerInstalledPackageSurfaces(): void
+    {
+        if ($this->packageSurfacesRegistered || ! $this->isPackageInstalled()) {
+            return;
+        }
+
+        $this->packageSurfacesRegistered = true;
+
+        $this
+            ->registerModels()
+            ->registerSettings()
+            ->registerProtectedTables();
     }
 
     private function registerSettings(): self

@@ -31,6 +31,7 @@ use Capell\Frontend\Support\Rules\FrontendRuleConditionRegistry;
 use Capell\PublicActions\Support\PublicActionHandlerRegistry;
 use Filament\Actions\Action;
 use Filament\Actions\ActionGroup;
+use Filament\Forms\Components\Field;
 use Filament\Schemas\Schema;
 use Filament\Tables\Contracts\HasTable;
 use Filament\Tables\Table;
@@ -63,6 +64,22 @@ it('declares resource models pages schemas and tables', function (): void {
 
     expect(AccessAreaResource::form(Schema::make()))->toBeInstanceOf(Schema::class)
         ->and(RegistrationResource::form(Schema::make()))->toBeInstanceOf(Schema::class);
+
+    $accessAreaFormFields = collect(AccessAreaResource::form(Schema::make())->getComponents())
+        ->map(fn (mixed $component): ?string => $component instanceof Field ? $component->getName() : null)
+        ->filter()
+        ->values()
+        ->all();
+
+    expect($accessAreaFormFields)->toContain(
+        'announcement_enabled',
+        'announcement_message',
+        'announcement_short_message',
+        'announcement_link_label',
+        'announcement_link_short_label',
+        'announcement_link_url',
+        'announcement_path_patterns',
+    );
 
     $areaTable = AccessAreaResource::table(accessGateTableForCoverage());
     $registrationTable = RegistrationResource::table(accessGateTableForCoverage());

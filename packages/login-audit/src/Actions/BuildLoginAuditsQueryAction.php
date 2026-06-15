@@ -18,7 +18,7 @@ final class BuildLoginAuditsQueryAction
      */
     public function handle(
         ?Site $site = null,
-        int $hours = 24,
+        ?int $hours = null,
         int $limit = 20,
     ): Builder {
         // Site filter is a no-op: LoginAudit has no site_id column and there
@@ -26,8 +26,11 @@ final class BuildLoginAuditsQueryAction
         // future use when such a linkage is introduced.
         return LoginAudit::query()
             ->with('authenticatable')
-            ->where('login_at', '>=', now()->subHours($hours))
+            ->when(
+                $hours !== null,
+                fn (Builder $query): Builder => $query->where('login_at', '>=', now()->subHours(max(1, $hours))),
+            )
             ->latest('login_at')
-            ->limit($limit);
+            ->limit(max(1, $limit));
     }
 }

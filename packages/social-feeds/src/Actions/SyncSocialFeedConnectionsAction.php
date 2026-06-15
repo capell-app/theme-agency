@@ -1,0 +1,33 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Capell\SocialFeeds\Actions;
+
+use Capell\SocialFeeds\Enums\SocialFeedConnectionStatus;
+use Capell\SocialFeeds\Models\SocialFeedConnection;
+use Lorisleiva\Actions\Concerns\AsAction;
+
+/**
+ * @method static int run(?int $connectionId = null, ?int $limit = null)
+ */
+final class SyncSocialFeedConnectionsAction
+{
+    use AsAction;
+
+    public function handle(?int $connectionId = null, ?int $limit = null): int
+    {
+        if ($connectionId !== null) {
+            return SyncSocialFeedConnectionAction::run(
+                SocialFeedConnection::query()->findOrFail($connectionId),
+                $limit,
+            );
+        }
+
+        return (int) SocialFeedConnection::query()
+            ->where('status', SocialFeedConnectionStatus::Connected)
+            ->orderBy('id')
+            ->get()
+            ->sum(static fn (SocialFeedConnection $connection): int => SyncSocialFeedConnectionAction::run($connection, $limit));
+    }
+}

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Capell\Inertia\Http\Middleware;
 
+use Capell\Inertia\Actions\ResolveInertiaAdapterKeyAction;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 use Override;
@@ -30,7 +31,7 @@ class HandleInertiaRequests extends Middleware
         return [
             ...parent::share($request),
             'capell' => [
-                'adapter' => config('capell-inertia.adapter', 'vue'),
+                'adapter' => ResolveInertiaAdapterKeyAction::run(),
             ],
         ];
     }

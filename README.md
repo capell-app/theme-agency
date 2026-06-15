@@ -28,7 +28,7 @@ Each package README follows the same shape:
 | Preview unsaved page edits                     | [filament-peek](packages/filament-peek/README.md), [frontend-authoring](packages/frontend-authoring/README.md), [publishing-studio](packages/publishing-studio/README.md)                                                                                       | Separates temporary editor preview state from saved public pages.                                 |
 | Add public comments and moderation             | [comments](packages/comments/README.md), [blog](packages/blog/README.md), [email-studio](packages/email-studio/README.md)                                                                                                                                       | Adds moderated frontend discussion and admin review tools.                                        |
 | Tighten admin operations and access controls   | [diagnostics](packages/diagnostics/README.md), [site-monitor](packages/site-monitor/README.md), [dashboard-reports](packages/dashboard-reports/README.md), [password-policy](packages/password-policy/README.md), [login-audit](packages/login-audit/README.md) | Adds health checks, uptime checks, dashboard signals, password enforcement, and login visibility. |
-| Run customer and commerce workflows            | [customer-portal](packages/customer-portal/README.md), [contacts](packages/contacts/README.md), [bookings](packages/bookings/README.md), [payments](packages/payments/README.md)                                                                                | Adds self-service, CRM records, appointment requests, and payment flows.                          |
+| Run customer and commerce workflows            | [customer-portal](packages/customer-portal/README.md), [contacts](packages/contacts/README.md), [bookings](packages/bookings/README.md), [payments](packages/payments/README.md), [equestrian-clinics](packages/equestrian-clinics/README.md)                   | Adds self-service, CRM records, appointment requests, vertical operations, and payment flows.     |
 
 ## Package Index
 
@@ -86,11 +86,12 @@ Each package README follows the same shape:
 
 ### Commerce And Appointments
 
-| Package                                                 | Composer package              | Purpose                                                                        |
-| ------------------------------------------------------- | ----------------------------- | ------------------------------------------------------------------------------ |
-| [bookings](packages/bookings/README.md)                 | `capell-app/bookings`         | Services, staff, locations, availability, appointment requests, and reminders. |
-| [payments](packages/payments/README.md)                 | `capell-app/payments`         | Stripe Checkout, webhook processing, paid downloads, and payment records.      |
-| [shopify-commerce](packages/shopify-commerce/README.md) | `capell-app/shopify-commerce` | Shopify OAuth connections, catalog sync, and commerce admin workflows.         |
+| Package                                                     | Composer package                | Purpose                                                                                         |
+| ----------------------------------------------------------- | ------------------------------- | ----------------------------------------------------------------------------------------------- |
+| [bookings](packages/bookings/README.md)                     | `capell-app/bookings`           | Services, staff, locations, availability, appointment requests, and reminders.                  |
+| [equestrian-clinics](packages/equestrian-clinics/README.md) | `capell-app/equestrian-clinics` | Tour days, riders, horses, venues, waivers, payments, facilities, credits, and coach workflows. |
+| [payments](packages/payments/README.md)                     | `capell-app/payments`           | Stripe Checkout, webhook processing, paid downloads, and payment records.                       |
+| [shopify-commerce](packages/shopify-commerce/README.md)     | `capell-app/shopify-commerce`   | Shopify OAuth connections, catalog sync, and commerce admin workflows.                          |
 
 ### Growth, Search, And Reporting
 
@@ -103,6 +104,7 @@ Each package README follows the same shape:
 | [experiments](packages/experiments/README.md)             | `capell-app/experiments`       | Server-side experiments, variants, audience rules, allocation, goals, and winner reporting.   |
 | [ga4-reports](packages/ga4-reports/README.md)             | `capell-app/ga4-reports`       | GA4 dashboard reporting for Capell.                                                           |
 | [insights](packages/insights/README.md)                   | `capell-app/insights`          | First-party insights, visitor journeys, click tracking, and consent management.               |
+| [live-chat](packages/live-chat/README.md)                 | `capell-app/live-chat`         | AI-assisted website chat, lead capture, human handoff, and Contacts sync.                     |
 | [search](packages/search/README.md)                       | `capell-app/search`            | Public site search, optional logging, and admin search insights.                              |
 | [seo-suite](packages/seo-suite/README.md)                 | `capell-app/seo-suite`         | Metadata panels, structured data, social meta, SEO audits, sitemaps, and AI-assisted SEO.     |
 | [site-discovery](packages/site-discovery/README.md)       | `capell-app/site-discovery`    | Public discoverability and sitemap outputs.                                                   |
@@ -121,6 +123,7 @@ Each package README follows the same shape:
 | [deployments](packages/deployments/README.md)                 | `capell-app/deployments`         | Repository deployment connections and Composer publishing.                       |
 | [diagnostics](packages/diagnostics/README.md)                 | `capell-app/diagnostics`         | Developer and operational diagnostics.                                           |
 | [document-lifecycle](packages/document-lifecycle/README.md)   | `capell-app/document-lifecycle`  | Document requests, review, delivery, expiry, and retention workflows.            |
+| [equestrian-clinics](packages/equestrian-clinics/README.md)   | `capell-app/equestrian-clinics`  | Tour days, clinic discovery, riders, horses, waivers, payments, and facilities.  |
 | [exception-reports](packages/exception-reports/README.md)     | `capell-app/exception-reports`   | Sanitized queued email reports for unhandled exceptions and diagnostics health.  |
 | [login-audit](packages/login-audit/README.md)                 | `capell-app/login-audit`         | Authentication log and login visibility.                                         |
 | [media-ai](packages/media-ai/README.md)                       | `capell-app/media-ai`            | Optional AI-assisted media actions.                                              |
@@ -140,6 +143,7 @@ Use the [Capell Theme Scale](docs/theme-scale.md) when creating a theme, changin
 | [theme-corporate](packages/theme-corporate/README.md)                           | `capell-app/theme-corporate`              | Free    | Trust-led corporate theme for business and governance content. |
 | [theme-commerce](packages/theme-commerce/README.md)                             | `capell-app/theme-commerce`               | Premium | Editorial commerce theme for product-led pages.                |
 | [theme-education](packages/theme-education/README.md)                           | `capell-app/theme-education`              | Premium | Course and school theme for learning programmes.               |
+| [theme-estate-agents](packages/theme-estate-agents/README.md)                   | `capell-app/theme-estate-agents`          | Premium | Property theme for estate agencies, valuations, and viewings.  |
 | [theme-healthcare](packages/theme-healthcare/README.md)                         | `capell-app/theme-healthcare`             | Premium | Appointment-led healthcare theme for clinics and resources.    |
 | [theme-inertia-bookings](packages/theme-inertia-bookings/README.md)             | `capell-app/theme-inertia-bookings`       | Premium | Inertia bookings theme shell and shared appointment UI.        |
 | [theme-inertia-bookings-react](packages/theme-inertia-bookings-react/README.md) | `capell-app/theme-inertia-bookings-react` | Premium | React components for the Inertia Bookings theme.               |
@@ -149,6 +153,7 @@ Use the [Capell Theme Scale](docs/theme-scale.md) when creating a theme, changin
 | [theme-local-services](packages/theme-local-services/README.md)                 | `capell-app/theme-local-services`         | Premium | Quote-led theme for local service businesses.                  |
 | [theme-nonprofit](packages/theme-nonprofit/README.md)                           | `capell-app/theme-nonprofit`              | Premium | Impact-led theme for charities, campaigns, and civic sites.    |
 | [theme-portfolio](packages/theme-portfolio/README.md)                           | `capell-app/theme-portfolio`              | Premium | Portfolio theme for creators, consultants, and case studies.   |
+| [theme-restaurant](packages/theme-restaurant/README.md)                         | `capell-app/theme-restaurant`             | Premium | Hospitality theme for restaurants, menus, and reservations.    |
 | [theme-saas](packages/theme-saas/README.md)                                     | `capell-app/theme-saas`                   | Premium | Product-led SaaS theme for launches, docs, and pricing.        |
 
 ## Install Pattern
@@ -160,6 +165,21 @@ composer require capell-app/<package>
 ```
 
 Then run the package install command listed in that package README when it owns migrations, settings, generated pages, demo data, or external setup.
+
+### Migration Publishing
+
+Package migrations must be published through Capell's migration publisher, not Laravel `vendor:publish` migration tags.
+
+Use `Capell\Core\Actions\Install\PublishPackageMigrationsAction` from package install actions. For command-line publishing, use `php artisan capell:publish-migrations --items=capell-app/<package>`.
+
+Do not register or run tags such as `capell-foo-migrations`. Laravel publish tags can stamp files with the current date when copied into a host app, which breaks Capell's canonical package migration ordering and can leave duplicate app migrations behind during fresh installs.
+
+The root architecture tests enforce this rule:
+
+```bash
+vendor/bin/pest tests/Packages/Arch/PackageMigrationPublishContractTest.php --compact
+vendor/bin/pest tests/Packages/Arch/PackageMigrationLoadingTest.php --compact
+```
 
 ## Package Screenshots
 

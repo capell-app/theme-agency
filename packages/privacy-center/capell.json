@@ -66,13 +66,41 @@
         },
         {
             "type": "model",
-            "class": "Capell\\PrivacyCenter\\Manifest\\PrivacyCenterModelsContribution"
+            "class": "Capell\\PrivacyCenter\\Manifest\\PrivacyCenterModelsContribution",
+            "modelClasses": [
+                "Capell\\PrivacyCenter\\Models\\ConsentPolicy",
+                "Capell\\PrivacyCenter\\Models\\ConsentRecord",
+                "Capell\\PrivacyCenter\\Models\\PolicyAcceptance",
+                "Capell\\PrivacyCenter\\Models\\PrivacyRequest",
+                "Capell\\PrivacyCenter\\Models\\RetentionRule"
+            ]
         },
         {
             "type": "scheduled-job",
             "class": "Capell\\PrivacyCenter\\Manifest\\PrivacyRetentionScheduleContribution",
             "command": "privacy:apply-retention",
             "frequency": "daily"
+        },
+        {
+            "type": "route",
+            "class": "Capell\\PrivacyCenter\\Manifest\\PrivacyCenterRoutesContribution",
+            "routes": [
+                "capell-privacy-center.consent.show",
+                "capell-privacy-center.consent.store"
+            ]
+        },
+        {
+            "type": "console-command",
+            "class": "Capell\\PrivacyCenter\\Manifest\\PrivacyCenterConsoleCommandsContribution",
+            "commands": ["privacy:apply-retention"],
+            "commandClasses": [
+                "Capell\\PrivacyCenter\\Console\\Commands\\ApplyRetentionRulesCommand"
+            ]
+        },
+        {
+            "type": "health-check",
+            "class": "Capell\\PrivacyCenter\\Manifest\\PrivacyCenterHealthContribution",
+            "checkClass": "Capell\\PrivacyCenter\\Health\\PrivacyCenterHealthCheck"
         }
     ],
     "database": {
@@ -259,6 +287,6 @@
         "categories": ["admin", "compliance", "operations"]
     },
     "contributionTraceability": {
-        "deferredContributions": ["route"]
+        "deferredContributions": []
     }
 }

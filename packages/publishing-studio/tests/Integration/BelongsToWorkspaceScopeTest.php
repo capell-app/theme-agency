@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Capell\Core\Events\DatabaseSchemaChanged;
 use Capell\PublishingStudio\Models\Workspace;
 use Capell\PublishingStudio\Tests\Integration\Fixtures\WorkspaceDraftableFixture;
 use Capell\PublishingStudio\WorkspaceContext;
@@ -79,6 +80,33 @@ it('skips workspace filtering before workspace columns are migrated', function (
     $rows = WorkspaceDraftableFixture::query()->pluck('name')->all();
 
     expect($rows)->toBe(['pending-migration']);
+});
+
+it('flushes memoized workspace column detection when the database schema changes', function (): void {
+    WorkspaceDraftableFixture::query()->count();
+
+    Schema::dropIfExists('workspace_draftable_fixtures');
+    Schema::create('workspace_draftable_fixtures', function (Blueprint $table): void {
+        $table->id();
+        $table->uuid('uuid');
+        $table->string('name');
+        $table->timestamps();
+    });
+
+    event(new DatabaseSchemaChanged);
+    Model::clearBootedModels();
+
+    WorkspaceDraftableFixture::query()->create([
+        'uuid' => (string) Str::uuid(),
+        'name' => 'rebuilt-without-workspace-columns',
+    ]);
+
+    $workspace = new Workspace;
+    $workspace->forceFill(['id' => 123]);
+    WorkspaceContext::set($workspace);
+
+    expect(WorkspaceDraftableFixture::query()->pluck('name')->all())
+        ->toBe(['rebuilt-without-workspace-columns']);
 });
 
 it('memoizes workspace column detection per table', function (): void {

@@ -27,6 +27,11 @@ final class InstallHeroLayoutDefaultsAction
      */
     public function handle(bool $force = false): array
     {
+        $existingHomeContainers = Layout::query()
+            ->where('key', LayoutEnum::Home->value)
+            ->first()
+            ?->containers;
+
         resolve(LayoutCreator::class)->setup();
         resolve(WidgetCreator::class)->pageContentWidget();
 
@@ -43,10 +48,18 @@ final class InstallHeroLayoutDefaultsAction
 
         $this->installNeutralHomeHeroContent();
 
-        $containers = is_array($homeLayout->containers) ? $homeLayout->containers : [];
+        $containers = is_array($existingHomeContainers) && $existingHomeContainers !== [] && ! $force
+            ? $existingHomeContainers
+            : (is_array($homeLayout->containers) ? $homeLayout->containers : []);
         $hadHeroContainer = array_key_exists('hero', $containers);
 
         if ($hadHeroContainer && ! $force) {
+            $homeLayout->forceFill(['containers' => $containers])->save();
+
+            if ($this->ensurePageContentWidget($homeLayout, $containers)) {
+                return ['created' => 0, 'updated' => 1, 'skipped' => 0];
+            }
+
             return ['created' => 0, 'updated' => 0, 'skipped' => 1];
         }
 
@@ -70,6 +83,65 @@ final class InstallHeroLayoutDefaultsAction
             'updated' => $hadHeroContainer ? 1 : 0,
             'skipped' => 0,
         ];
+    }
+
+    /**
+     * @param  array<string, mixed>  $containers
+     */
+    private function ensurePageContentWidget(Layout $layout, array $containers): bool
+    {
+        if (in_array('page-content', $layout->widgets, true)) {
+            return false;
+        }
+
+        $main = $containers['main'] ?? [];
+
+        if (! is_array($main)) {
+            $main = [];
+        }
+
+        $main['widgets'] = [
+            ['widget_key' => 'page-content'],
+            ...(is_array($main['widgets'] ?? null) ? $main['widgets'] : []),
+        ];
+
+        $containers['main'] = $main;
+
+        $layout->update([
+            'containers' => $this->moveMainContainerAfterHero($containers),
+        ]);
+
+        return true;
+    }
+
+    /**
+     * @param  array<string, mixed>  $containers
+     * @return array<string, mixed>
+     */
+    private function moveMainContainerAfterHero(array $containers): array
+    {
+        $keys = array_keys($containers);
+        $heroIndex = array_search('hero', $keys, true);
+        $mainIndex = array_search('main', $keys, true);
+
+        if ($heroIndex === false || $mainIndex === false || $mainIndex > $heroIndex) {
+            return $containers;
+        }
+
+        $main = $containers['main'];
+        unset($containers['main']);
+
+        $updated = [];
+
+        foreach ($containers as $key => $container) {
+            $updated[$key] = $container;
+
+            if ($key === 'hero') {
+                $updated['main'] = $main;
+            }
+        }
+
+        return $updated;
     }
 
     /**

@@ -82,7 +82,7 @@ it('creates queued sends and rejects records scoped only to another site', funct
     expect($message->status)->toBe(EmailMessageStatus::Queued)
         ->and($message->site_id)->toBe(12)
         ->and($message->site_scope_key)->toBe('site:12')
-        ->and($message->subject)->toBe('Hello &lt;Ben&gt;')
+        ->and($message->subject)->toBe('Hello <Ben>')
         ->and($message->rendered_html)->toContain('<p>Hello &lt;Ben&gt;</p>');
 
     expect(EmailRecipient::query()->where('email_message_id', $message->getKey())->count())->toBe(2)

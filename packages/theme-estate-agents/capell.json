@@ -15,7 +15,11 @@
     "namespace": "Capell\\ThemeStudio\\EstateAgents",
     "surfaces": ["frontend", "console"],
     "dependencies": {
-        "requires": ["capell-app/core", "capell-app/frontend"],
+        "requires": [
+            "capell-app/core",
+            "capell-app/foundation-theme",
+            "capell-app/frontend"
+        ],
         "supports": [
             "capell-app/address",
             "capell-app/blog",
@@ -148,6 +152,11 @@
                 "path": "docs/assets/marketplace/estate-local-guide.svg",
                 "alt": "Theme Estate Agents local guide preview",
                 "caption": "Area-guide layout with agent proof and neighbourhood context."
+            },
+            {
+                "path": "docs/assets/marketplace/estate-property-detail.svg",
+                "alt": "Theme Estate Agents property detail preview",
+                "caption": "Property detail page with photography, features, and viewing intent."
             }
         ],
         "categories": ["frontend", "themes", "property"]

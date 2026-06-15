@@ -20,6 +20,7 @@ use Capell\Frontend\Actions\BuildPublicRenderPerformanceReportAction;
 use Capell\Frontend\Actions\ResolveFrontendRuntimeAction;
 use Capell\Frontend\Contracts\FrontendContextReader;
 use Capell\Frontend\Data\FrontendRenderContextData;
+use Capell\Frontend\Facades\Frontend;
 use Capell\Frontend\Support\CapellFrontendContext;
 use Capell\Frontend\Support\Render\FrontendResponseRendererRegistry;
 use Capell\Frontend\Support\State\FrontendState;
@@ -80,16 +81,20 @@ final class RenderPagePreviewSnapshotAction
         abort_unless($layout instanceof Layout, 404);
 
         $this->registerThemeViews($theme);
-        $previewWidgetsRegistered = $this->registerLayoutBuilderPreviewWidgets($previewPage, $language, $snapshot);
-
-        $context = $this->seedFrontendContext($site, $language, $previewPage, $layout, $theme);
+        $previousContextReader = $this->resolvedInstance(FrontendContextReader::class);
+        $previousFrontendContext = $this->resolvedInstance(CapellFrontendContext::class);
+        $previewWidgetsRegistered = false;
 
         try {
+            $previewWidgetsRegistered = $this->registerLayoutBuilderPreviewWidgets($previewPage, $language, $snapshot);
+            $context = $this->seedFrontendContext($site, $language, $previewPage, $layout, $theme);
             $response = $this->render($context, $previewPage, $site, $language, $layout, $theme);
         } finally {
             if ($previewWidgetsRegistered && class_exists(CapellLayoutManager::class)) {
                 CapellLayoutManager::clearContainerWidgets();
             }
+
+            $this->restoreFrontendBindings($previousContextReader, $previousFrontendContext);
         }
 
         $response = $response instanceof Response ? $response : $response->toResponse(request());
@@ -307,6 +312,7 @@ final class RenderPagePreviewSnapshotAction
 
         app()->instance(FrontendContextReader::class, $state);
         app()->forgetInstance(CapellFrontendContext::class);
+        Frontend::clearResolvedInstance(CapellFrontendContext::class);
 
         return $state;
     }
@@ -382,6 +388,41 @@ final class RenderPagePreviewSnapshotAction
         $response->setContent($content);
 
         return $response;
+    }
+
+    /**
+     * @param  class-string  $abstract
+     */
+    private function resolvedInstance(string $abstract): ?object
+    {
+        if (! app()->resolved($abstract)) {
+            return null;
+        }
+
+        $instance = resolve($abstract);
+
+        return is_object($instance) ? $instance : null;
+    }
+
+    private function restoreFrontendBindings(?object $contextReader, ?object $frontendContext): void
+    {
+        $this->restoreInstance(FrontendContextReader::class, $contextReader);
+        $this->restoreInstance(CapellFrontendContext::class, $frontendContext);
+        Frontend::clearResolvedInstance(CapellFrontendContext::class);
+    }
+
+    /**
+     * @param  class-string  $abstract
+     */
+    private function restoreInstance(string $abstract, ?object $instance): void
+    {
+        if ($instance !== null) {
+            app()->instance($abstract, $instance);
+
+            return;
+        }
+
+        app()->forgetInstance($abstract);
     }
 
     /**

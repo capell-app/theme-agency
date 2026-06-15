@@ -6,7 +6,7 @@
 
 Capell Inertia React Adapter is an **Available**, **No schema impact** Capell plugin in the **Capell Frontend** product group. It ships as `capell-app/inertia-react-adapter` and extends these surfaces: frontend.
 
-React asset adapter for Capell Inertia pages and package routes.
+React client adapter for Capell Inertia pages, package routes, and adapter-driven themes.
 
 After install, the package affects public rendering, public routes, or frontend runtime behaviour.
 
@@ -23,7 +23,7 @@ Status details:
 
 **For developers:** The package gives developers package-owned service providers instead of pushing this behaviour into core or application code.
 
-**For teams:** React adapter for Capell Inertia.
+**For teams:** Register the React client runtime for Capell Inertia with React/Vite dependencies, a generic application entrypoint, and safe adapter activation.
 
 ## Screens And Workflow
 

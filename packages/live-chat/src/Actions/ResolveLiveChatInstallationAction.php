@@ -7,6 +7,9 @@ namespace Capell\LiveChat\Actions;
 use Capell\LiveChat\Models\LiveChatInstallation;
 use Lorisleiva\Actions\Concerns\AsAction;
 
+/**
+ * @method static LiveChatInstallation|null run(?string $publicKey = null, ?int $siteId = null)
+ */
 final class ResolveLiveChatInstallationAction
 {
     use AsAction;

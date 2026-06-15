@@ -56,7 +56,7 @@ Screenshot contract: `screenshots.json`.
 
 - Admin navigation: adds package-owned Filament classes when registered.
 - Permissions: `View:DeploymentConnectionPage`, `Manage:DeploymentConnectionPage`.
-- Public routes: route files exist and must be reviewed before public enablement.
+- Authenticated OAuth routes: `capell/oauth/*/callback` routes use `web` and `auth` middleware for provider callbacks initiated from the admin page.
 - Database changes: package migrations are declared.
 - Settings: no package settings declared.
 - Queues or schedules: none detected in standard package paths.
@@ -65,8 +65,8 @@ Screenshot contract: `screenshots.json`.
 
 ## Common Pitfalls
 
-- Run migrations before opening package resources or public routes.
-- Review route middleware, throttling, signed URLs, and public-output safety before exposing routes.
+- Run migrations before opening package resources or OAuth callback routes.
+- Keep OAuth routes behind the configured `web` and `auth` middleware unless the callback flow is redesigned with a signed, tokenized handoff.
 - Keep `composer.json`, `composer.local.json`, `capell.json`, docs, screenshots, and tests aligned when the package surface changes.
 
 ## Troubleshooting
@@ -75,7 +75,7 @@ Screenshot contract: `screenshots.json`.
 | --- | --- | --- | --- |
 | Package surface is missing after install | Provider or manifest is not loaded | Confirm `capell.json`, package `composer.json`, and provider registration | Reinstall the package, refresh Composer autoload, and clear host caches |
 | Admin screen or command fails on missing table | Package migrations have not run | Check the tables listed in `Data Model` | Run host migrations and rerun the focused package test |
-| Route returns unexpected output | Route cache, middleware, or signed URL setup does not match the package route file | Check the route files listed in `Technical Shape` | Clear route cache and verify middleware before exposing public routes |
+| Route returns unexpected output | Route cache or middleware setup does not match the package route file | Check the route files listed in `Technical Shape` | Clear route cache and verify `web` and `auth` middleware are applied |
 
 ## Quick Start
 
