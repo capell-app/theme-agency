@@ -326,7 +326,8 @@ final class BookingsHealthCheck implements ChecksExtensionHealth
 
     public function settingsMigrationCheck(): DoctorCheckResultData
     {
-        $settingsRegistered = in_array(BookingsSettings::class, config('settings.settings', []), true);
+        $registeredSettings = config('settings.settings', []);
+        $settingsRegistered = is_array($registeredSettings) && in_array(BookingsSettings::class, $registeredSettings, true);
         $migrationExists = File::exists(dirname(__DIR__, 2) . '/database/settings/2026_06_13_000001_create_bookings_settings.php');
         $passed = $settingsRegistered && $migrationExists;
 
