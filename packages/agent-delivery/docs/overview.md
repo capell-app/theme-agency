@@ -42,6 +42,8 @@ Screenshot contract: `screenshots.json`.
 - Public page manifest JSON response (frontend, required).
 - Public page chunks JSON response (frontend, required).
 
+These JSON captures prove endpoint behavior for the deployment screenshot runner. They should not be promoted as Marketplace screenshots because raw response bodies do not show a Capell buyer workflow. Keep Marketplace media empty until a styled endpoint explorer, admin page, or comparable visual surface exists.
+
 ## Technical Shape
 
 - Service providers: `Capell\AgentDelivery\Providers\AgentDeliveryServiceProvider`.
@@ -74,6 +76,7 @@ Docs gap: document extension points here if the package delegates persistence to
 
 - Review route middleware, throttling, signed URLs, and public-output safety before exposing routes.
 - Keep public Blade and cached HTML free of authoring markers, model IDs, permissions, signed editor URLs, and lazy database queries.
+- Keep JSON captures as runner evidence; do not use them as buyer-facing Marketplace media.
 - Keep `composer.json`, `composer.local.json`, `capell.json`, docs, screenshots, and tests aligned when the package surface changes.
 
 ## Troubleshooting

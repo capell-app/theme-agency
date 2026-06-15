@@ -17,7 +17,7 @@ final class DemoCommand extends Command
 
     public function handle(): int
     {
-        return (new InstallRestaurantThemeDemoAction)->handle(new ThemeDemoInstallData(
+        return InstallRestaurantThemeDemoAction::run(new ThemeDemoInstallData(
             siteNames: $this->parseCsvOption('sites'),
             languageCodes: $this->parseCsvOption('languages'),
             baseUrl: $this->resolveBaseUrl(),
@@ -35,11 +35,8 @@ final class DemoCommand extends Command
         if (is_array($value)) {
             return array_values(array_filter(
                 array_map(
-                    static fn (string $item): string => trim($item),
-                    array_filter(
-                        $value,
-                        static fn (mixed $item): bool => is_string($item),
-                    ),
+                    static fn (mixed $item): string => trim((string) $item),
+                    $value,
                 ),
                 static fn (string $item): bool => $item !== '',
             ));
@@ -50,7 +47,7 @@ final class DemoCommand extends Command
         }
 
         return array_values(array_filter(
-            array_map(static fn (string $item): string => trim($item), explode(',', $value)),
+            array_map(trim(...), explode(',', $value)),
             static fn (string $item): bool => $item !== '',
         ));
     }
@@ -63,6 +60,6 @@ final class DemoCommand extends Command
             return $url;
         }
 
-        return Config::string('app.url', url('/'));
+        return Config::string('app.url');
     }
 }

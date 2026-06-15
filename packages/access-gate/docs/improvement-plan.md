@@ -56,7 +56,7 @@ Access Gate should be positioned as a serious access-control layer for Capell op
 | Add retention pruning Action, command, config, and tests                    | Done   | M      | High   | §2.1, §4.1  |
 | Make public registration submission idempotent for duplicate pending users  | Done   | M      | High   | §2.2, §4.2  |
 | Expand health diagnostics for methods, fields, throttles, bridges, and hook | Done   | M      | Medium | §2.3        |
-| Document cache/privacy boundaries for public gated output                   | Now    | S      | Medium | §2.4, §4.3  |
+| Document cache/privacy boundaries for public gated output                   | Done   | S      | Medium | §2.4, §4.3  |
 | Add audit CSV/export support                                                | Next   | M      | Medium | §3, §4.4    |
 | Expand Customer Portal self-service for active grants and browser tokens    | Next   | M      | Medium | §3          |
 | Add approval-limit concurrency coverage                                     | Next   | M      | High   | §3          |

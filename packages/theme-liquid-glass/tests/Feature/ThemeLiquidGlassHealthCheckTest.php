@@ -26,7 +26,7 @@ afterEach(function (): void {
 it('runs real diagnostics returning doctor check results', function (): void {
     $results = ThemeLiquidGlassHealthCheck::runDiagnostics();
 
-    expect($results)->toHaveCount(3)
+    expect($results)->toHaveCount(5)
         ->and($results->every(static fn (mixed $result): bool => $result instanceof DoctorCheckResultData))->toBeTrue();
 });
 
@@ -53,6 +53,20 @@ it('fails the required views check when a package view is missing', function ():
     expect($check->missingRequiredViewFiles(['resources/views/sections/missing.blade.php']))
         ->toBe(['resources/views/sections/missing.blade.php'])
         ->and($check->requiredViewsCheck(['resources/views/sections/missing.blade.php'])->passed)->toBeFalse();
+});
+
+it('fails the required assets check when theme css is missing', function (): void {
+    $check = new ThemeLiquidGlassHealthCheck;
+
+    expect($check->missingRequiredAssetFiles(['resources/css/missing.css']))
+        ->toBe(['resources/css/missing.css'])
+        ->and($check->requiredAssetsCheck(['resources/css/missing.css'])->passed)->toBeFalse();
+});
+
+it('passes renderer alignment for the inherited default renderer and css asset', function (): void {
+    $check = new ThemeLiquidGlassHealthCheck;
+
+    expect($check->rendererAlignmentCheck()->passed)->toBeTrue();
 });
 
 it('fails the marketplace screenshots check when a referenced image is missing', function (): void {

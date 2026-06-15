@@ -79,11 +79,20 @@ Screenshot contract: `docs/screenshots.json`.
 - Commands: `capell:access-gate-doctor`, `capell:access-gate-install`, `capell:access-gate-setup`.
 - Paid checkout: requires `capell-app/payments`; Access Gate creates a `gated_access` checkout session for a registration and Payments fulfills the completed checkout into an approved grant.
 
+## Public Cache And Privacy Boundaries
+
+Access Gate public output must stay safe for anonymous HTML caches. Public gated sections may show generic availability, pricing, waitlist, or request-access prompts, but they must not render grant IDs, pending registration IDs, buyer emails, payment references, browser tokens, signed admin URLs, permissions, or editor metadata.
+
+Cache variation belongs at the controller/render-data boundary. Vary gated public output by site, language, route, access method, and the minimum anonymous state needed to decide whether a gate is visible. Do not vary static HTML on raw user IDs or private grant records; resolve active grants after the public page load through authenticated Customer Portal or package-owned endpoints.
+
+Paid access handoff should keep checkout/session state out of cached markup. Render a public CTA, then create payment or approval sessions through POST routes that are throttled, CSRF-protected, and tied to package Actions.
+
 ## Common Pitfalls
 
 - Run migrations before opening package resources or public routes.
 - Review route middleware, throttling, signed URLs, and public-output safety before exposing routes.
 - Keep public Blade and cached HTML free of authoring markers, model IDs, permissions, signed editor URLs, and lazy database queries.
+- Never place active grants, browser tokens, pending-registration identifiers, or payment provider references in public cached HTML.
 - Run package commands from the host app; in this repository use `vendor/bin/pest` for package tests.
 - Keep `composer.json`, `composer.local.json`, `capell.json`, docs, screenshots, and tests aligned when the package surface changes.
 

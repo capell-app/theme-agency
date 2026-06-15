@@ -27,6 +27,13 @@ final class ThemeLiquidGlassHealthCheck implements ChecksExtensionHealth
         'resources/views/sections/footer.blade.php',
     ];
 
+    /**
+     * @var list<string>
+     */
+    private const array REQUIRED_ASSET_FILES = [
+        'resources/css/theme-liquid-glass.css',
+    ];
+
     public static function compatibleCapellApiVersion(): string
     {
         return '^4.0';
@@ -42,6 +49,8 @@ final class ThemeLiquidGlassHealthCheck implements ChecksExtensionHealth
         return collect([
             $check->themeStudioDefinitionCheck(),
             $check->requiredViewsCheck(),
+            $check->requiredAssetsCheck(),
+            $check->rendererAlignmentCheck(),
             $check->marketplaceScreenshotsCheck(),
         ]);
     }
@@ -50,6 +59,45 @@ final class ThemeLiquidGlassHealthCheck implements ChecksExtensionHealth
     {
         return self::runDiagnostics()
             ->every(static fn (DoctorCheckResultData $result): bool => $result->passed);
+    }
+
+    /**
+     * @param  list<string>|null  $requiredAssetFiles
+     */
+    public function requiredAssetsCheck(?array $requiredAssetFiles = null): DoctorCheckResultData
+    {
+        $missingAssetFiles = $this->missingRequiredAssetFiles($requiredAssetFiles);
+
+        return new DoctorCheckResultData(
+            label: 'Theme Liquid Glass assets',
+            passed: $missingAssetFiles === [],
+            message: $missingAssetFiles === []
+                ? 'All Theme Liquid Glass package assets are present.'
+                : 'Missing Theme Liquid Glass assets: ' . implode(', ', $missingAssetFiles) . '.',
+            remediation: $missingAssetFiles === []
+                ? null
+                : 'Restore the missing CSS or asset files before enabling Theme Liquid Glass.',
+        );
+    }
+
+    public function rendererAlignmentCheck(): DoctorCheckResultData
+    {
+        $definition = LiquidGlassThemeServiceProvider::definition();
+        $valid = $definition->key === LiquidGlassThemeServiceProvider::THEME_KEY
+            && $definition->package === LiquidGlassThemeServiceProvider::$packageName
+            && $definition->extends === 'default'
+            && ($definition->assets['css'] ?? null) === 'vendor/capell/themes/liquid-glass.css';
+
+        return new DoctorCheckResultData(
+            label: 'Theme Liquid Glass renderer alignment',
+            passed: $valid,
+            message: $valid
+                ? 'Theme definition, inherited renderer, and CSS asset path are aligned.'
+                : 'Theme definition, inherited renderer, or CSS asset path is misaligned.',
+            remediation: $valid
+                ? null
+                : 'Align LiquidGlassThemeServiceProvider::definition(), capell.json, and the published CSS asset path.',
+        );
     }
 
     public function themeStudioDefinitionCheck(): DoctorCheckResultData
@@ -122,6 +170,18 @@ final class ThemeLiquidGlassHealthCheck implements ChecksExtensionHealth
     public function missingRequiredViewFiles(?array $requiredViewFiles = null): array
     {
         return array_values(collect($requiredViewFiles ?? self::REQUIRED_VIEW_FILES)
+            ->reject(fn (string $relativePath): bool => is_file($this->packagePath($relativePath)))
+            ->values()
+            ->all());
+    }
+
+    /**
+     * @param  list<string>|null  $requiredAssetFiles
+     * @return list<string>
+     */
+    public function missingRequiredAssetFiles(?array $requiredAssetFiles = null): array
+    {
+        return array_values(collect($requiredAssetFiles ?? self::REQUIRED_ASSET_FILES)
             ->reject(fn (string $relativePath): bool => is_file($this->packagePath($relativePath)))
             ->values()
             ->all());

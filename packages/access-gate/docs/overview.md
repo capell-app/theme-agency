@@ -79,11 +79,20 @@ Screenshot contract: `screenshots.json`.
 - Commands: `capell:access-gate-doctor`, `capell:access-gate-install`, `capell:access-gate-setup`.
 - Paid checkout: requires `capell-app/payments`; Access Gate creates a `gated_access` checkout session for a registration and Payments fulfills the completed checkout into an approved grant.
 
+## Public Cache And Privacy Boundaries
+
+Public gated output is cacheable only when it stays generic. It may describe the gate, show public pricing, or offer a request-access CTA, but it must not include grant IDs, pending registration IDs, buyer emails, payment references, browser tokens, signed admin URLs, permissions, editor metadata, or private Customer Portal state.
+
+Resolve personalized access after the public page load through authenticated package endpoints or Customer Portal surfaces. Static HTML should vary by site, language, route, access method, and public gate state, not by raw user IDs or private grant records.
+
+Payment-gated flows should render public CTAs and create checkout or approval sessions through throttled POST Actions. Keep provider references and session tokens out of cached markup.
+
 ## Common Pitfalls
 
 - Run migrations before opening package resources or public routes.
 - Review route middleware, throttling, signed URLs, and public-output safety before exposing routes.
 - Keep public Blade and cached HTML free of authoring markers, model IDs, permissions, signed editor URLs, and lazy database queries.
+- Keep active grants, browser tokens, pending registrations, and payment references out of public cached HTML.
 - Run package commands from the host app; in this repository use `vendor/bin/pest` for package tests.
 - Keep `composer.json`, `composer.local.json`, `capell.json`, docs, screenshots, and tests aligned when the package surface changes.
 

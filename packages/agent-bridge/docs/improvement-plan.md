@@ -51,7 +51,7 @@ Agent Bridge should be positioned as a governed AI operations bridge, not a gene
 
 | Item                                                          | Bucket | Effort | Impact | Section ref |
 | ------------------------------------------------------------- | ------ | ------ | ------ | ----------- |
-| Disable or namespace the default home route                   | Now    | S      | High   | §2.1, §4.1  |
+| Disable or namespace the default home route                   | Done   | S      | High   | §2.1, §4.1  |
 | Fix health remediation copy away from host-app migration text | Done   | S      | Medium | §2.2, §4.3  |
 | Surface audit/token pruning command in manifest/docs          | Done   | M      | Medium | §2.3        |
 | Add central audit payload/result redaction                    | Done   | M      | High   | §2.4, §4.2  |

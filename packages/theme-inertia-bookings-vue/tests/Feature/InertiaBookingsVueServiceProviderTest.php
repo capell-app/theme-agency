@@ -62,6 +62,14 @@ it('ships the shared inertia component contract for the bookings theme', functio
         ->and((new InertiaBookingsVueHealthCheck)->passes())->toBeTrue();
 });
 
+it('fails vue health when required component files or map entries are missing', function (): void {
+    $check = new InertiaBookingsVueHealthCheck;
+
+    expect($check->missingRequiredFiles(['resources/js/Pages/Capell/Missing.vue']))
+        ->toBe(['resources/js/Pages/Capell/Missing.vue'])
+        ->and($check->componentMapContainsRequiredPages())->toBeTrue();
+});
+
 it('exposes accessible booking validation and slot loading states for screenshot capture', function (): void {
     $component = (string) file_get_contents(dirname(__DIR__, 2) . '/resources/js/Pages/Capell/Bookings/Request.vue');
 

@@ -69,8 +69,8 @@ Restaurant has a strong premium lane separate from Commerce and Local Services. 
 | Add explicit Foundation Theme dependency in Composer/manifest/tests                            | Done   | S      | High   | §2.1, §4.1  |
 | Fix skip link target and add rendered shell coverage                                           | Done   | S      | High   | §2.2, §4.3  |
 | Replace `action="#"` reservation fallback with real action or non-submitting state             | Done   | M      | High   | §2.3, §4.2  |
-| Add health check failure tests and renderer alignment assertions                               | Now    | S      | Medium | §2.5, §4.5  |
-| Align demo command with Action/container pattern and add command tests                         | Now    | S      | Medium | §2.6        |
+| Add health check failure tests and renderer alignment assertions                               | Done   | S      | Medium | §2.5, §4.5  |
+| Align demo command with Action/container pattern and add command tests                         | Done   | S      | Medium | §2.6        |
 | Rewrite docs around dependencies, integration render-data contracts, and verification commands | Done   | S      | Medium | §2.8, §5    |
 | Convert static SVG marketplace media to required route-backed PNG captures                     | Next   | M      | High   | §2.4, §4.4  |
 | Add public-output tests for scripts and dead premium conversion links                          | Next   | S      | Medium | §2.7        |

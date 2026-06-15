@@ -98,6 +98,37 @@ it('keeps the react booking request form explicitly labelled', function (): void
         ->and($component)->not->toContain('placeholder=');
 });
 
+it('keeps react component map entries aligned with source files and manifest declarations', function (): void {
+    $basePath = dirname(__DIR__, 2);
+    $manifest = json_decode(
+        (string) file_get_contents($basePath . '/capell.json'),
+        true,
+        flags: JSON_THROW_ON_ERROR,
+    );
+    $entrypoint = (string) file_get_contents($basePath . '/resources/js/app.jsx');
+
+    $declaredComponents = collect($manifest['contributes'] ?? [])
+        ->filter(static fn (mixed $contribution): bool => is_array($contribution) && ($contribution['type'] ?? null) === 'frontend-component')
+        ->map(static fn (array $contribution): string => (string) $contribution['component'])
+        ->values();
+
+    expect($declaredComponents->all())->toBe(['Capell/Bookings/Request'])
+        ->and($entrypoint)->toContain("import Page from './Pages/Capell/Page.jsx'")
+        ->and($entrypoint)->toContain("import BookingRequest from './Pages/Capell/Bookings/Request.jsx'")
+        ->and($entrypoint)->toContain("'Capell/Page': Page")
+        ->and($entrypoint)->toContain("'Capell/Bookings/Request': BookingRequest")
+        ->and($entrypoint)->toContain('pages[name] ?? Page')
+        ->and(file_exists($basePath . '/resources/js/Pages/Capell/Page.jsx'))->toBeTrue()
+        ->and(file_exists($basePath . '/resources/js/Pages/Capell/Bookings/Request.jsx'))->toBeTrue();
+
+    foreach ($declaredComponents as $component) {
+        $componentFile = $basePath . '/resources/js/Pages/' . $component . '.jsx';
+
+        expect($entrypoint)->toContain("'" . $component . "':")
+            ->and(file_exists($componentFile))->toBeTrue();
+    }
+});
+
 it('keeps the react booking request validation and loading states screenshotable', function (): void {
     $component = (string) file_get_contents(__DIR__ . '/../../resources/js/Pages/Capell/Bookings/Request.jsx');
 

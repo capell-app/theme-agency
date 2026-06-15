@@ -65,8 +65,8 @@ The Vue adapter should be sold as part of the Inertia Bookings theme family, not
 | Add accessible validation errors and `.error` screenshot state                             | Done   | S      | High   | §2.1, §4.1, §4.2 |
 | Add `.slots` loading region and stable deferred slot state                                 | Done   | S      | High   | §2.1, §4.1       |
 | Rewrite README/overview around base theme, Vue adapter, and generic adapter suppression    | Done   | S      | Medium | §2.6             |
-| Add component-map drift tests for source files and manifest component declarations         | Now    | S      | Medium | §2.2             |
-| Strengthen health check coverage beyond file presence                                      | Now    | S      | Medium | §2.7             |
+| Add component-map drift tests for source files and manifest component declarations         | Done   | S      | Medium | §2.2             |
+| Strengthen health check coverage beyond file presence                                      | Done   | S      | Medium | §2.7             |
 | Document/test sanitized prop boundary for `v-html` usage                                   | Done   | M      | High   | §2.4, §4.3       |
 | Coordinate screenshot runner recapture and keep marketplace media card-only until verified | Next   | M      | Medium | §2.5             |
 | Add browser-level component smoke coverage for booking request interactions                | Later  | M      | Medium | §3               |
