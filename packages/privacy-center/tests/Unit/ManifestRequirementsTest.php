@@ -2,7 +2,10 @@
 
 declare(strict_types=1);
 
+use Capell\Core\Contracts\Extensions\ChecksExtensionHealth;
+use Capell\Core\Contracts\Extensions\ExtensionContribution;
 use Capell\Core\Contracts\Extensions\RegistersExtensionAdminResource;
+use Capell\Core\Contracts\Extensions\RegistersExtensionRoute;
 use Capell\Core\Contracts\Extensions\RegistersExtensionWidget;
 use Capell\Core\Contracts\Extensions\RunsScheduledExtensionJob;
 use Capell\PrivacyCenter\Actions\AnonymizePrivacySubjectAction;
@@ -23,14 +26,23 @@ use Capell\PrivacyCenter\Filament\Resources\PolicyAcceptances\PolicyAcceptanceRe
 use Capell\PrivacyCenter\Filament\Resources\PrivacyRequests\PrivacyRequestResource;
 use Capell\PrivacyCenter\Filament\Resources\RetentionRules\RetentionRuleResource;
 use Capell\PrivacyCenter\Filament\Widgets\PrivacyCenterOverviewWidget;
+use Capell\PrivacyCenter\Health\PrivacyCenterHealthCheck;
 use Capell\PrivacyCenter\Manifest\ConsentPolicyResourceContribution;
 use Capell\PrivacyCenter\Manifest\ConsentRecordResourceContribution;
 use Capell\PrivacyCenter\Manifest\PolicyAcceptanceResourceContribution;
+use Capell\PrivacyCenter\Manifest\PrivacyCenterConsoleCommandsContribution;
+use Capell\PrivacyCenter\Manifest\PrivacyCenterHealthContribution;
 use Capell\PrivacyCenter\Manifest\PrivacyCenterModelsContribution;
 use Capell\PrivacyCenter\Manifest\PrivacyCenterOverviewWidgetContribution;
+use Capell\PrivacyCenter\Manifest\PrivacyCenterRoutesContribution;
 use Capell\PrivacyCenter\Manifest\PrivacyRequestResourceContribution;
 use Capell\PrivacyCenter\Manifest\PrivacyRetentionScheduleContribution;
 use Capell\PrivacyCenter\Manifest\RetentionRuleResourceContribution;
+use Capell\PrivacyCenter\Models\ConsentPolicy;
+use Capell\PrivacyCenter\Models\ConsentRecord;
+use Capell\PrivacyCenter\Models\PolicyAcceptance;
+use Capell\PrivacyCenter\Models\PrivacyRequest;
+use Capell\PrivacyCenter\Models\RetentionRule;
 use Capell\PrivacyCenter\Providers\AdminServiceProvider;
 use Capell\PrivacyCenter\Tests\PrivacyCenterTestCase;
 
@@ -94,12 +106,40 @@ it('declares privacy center manifest ownership and cache safety', function (): v
         ->and(data_get($manifest, 'contributes'))->toContain([
             'type' => 'model',
             'class' => PrivacyCenterModelsContribution::class,
+            'modelClasses' => [
+                ConsentPolicy::class,
+                ConsentRecord::class,
+                PolicyAcceptance::class,
+                PrivacyRequest::class,
+                RetentionRule::class,
+            ],
         ])
         ->and(data_get($manifest, 'contributes'))->toContain([
             'type' => 'scheduled-job',
             'class' => PrivacyRetentionScheduleContribution::class,
             'command' => 'privacy:apply-retention',
             'frequency' => 'daily',
+        ])
+        ->and(data_get($manifest, 'contributes'))->toContain([
+            'type' => 'route',
+            'class' => PrivacyCenterRoutesContribution::class,
+            'routes' => [
+                'capell-privacy-center.consent.show',
+                'capell-privacy-center.consent.store',
+            ],
+        ])
+        ->and(data_get($manifest, 'contributes'))->toContain([
+            'type' => 'console-command',
+            'class' => PrivacyCenterConsoleCommandsContribution::class,
+            'commands' => ['privacy:apply-retention'],
+            'commandClasses' => [
+                ApplyRetentionRulesCommand::class,
+            ],
+        ])
+        ->and(data_get($manifest, 'contributes'))->toContain([
+            'type' => 'health-check',
+            'class' => PrivacyCenterHealthContribution::class,
+            'checkClass' => PrivacyCenterHealthCheck::class,
         ])
         ->and(data_get($manifest, 'commands.retention'))->toBe('privacy:apply-retention')
         ->and((new ApplyRetentionRulesCommand)->getName())->toBe('privacy:apply-retention')
@@ -110,6 +150,10 @@ it('declares privacy center manifest ownership and cache safety', function (): v
         ->and(class_implements(RetentionRuleResourceContribution::class))->toContain(RegistersExtensionAdminResource::class)
         ->and(class_implements(PrivacyCenterOverviewWidgetContribution::class))->toContain(RegistersExtensionWidget::class)
         ->and(class_implements(PrivacyRetentionScheduleContribution::class))->toContain(RunsScheduledExtensionJob::class)
+        ->and(class_implements(PrivacyCenterModelsContribution::class))->toContain(ExtensionContribution::class)
+        ->and(class_implements(PrivacyCenterRoutesContribution::class))->toContain(RegistersExtensionRoute::class)
+        ->and(class_implements(PrivacyCenterConsoleCommandsContribution::class))->toContain(ExtensionContribution::class)
+        ->and(class_implements(PrivacyCenterHealthContribution::class))->toContain(ChecksExtensionHealth::class)
         ->and(data_get($manifest, 'actions'))->toMatchArray([
             'anonymizePrivacySubject' => AnonymizePrivacySubjectAction::class,
             'applyRetentionRules' => ApplyRetentionRulesAction::class,
@@ -122,7 +166,7 @@ it('declares privacy center manifest ownership and cache safety', function (): v
             'recordPolicyAcceptance' => RecordPolicyAcceptanceAction::class,
             'registerConsentPolicy' => RegisterConsentPolicyAction::class,
         ])
-        ->and(data_get($manifest, 'contributionTraceability.deferredContributions'))->toBe(['route']);
+        ->and(data_get($manifest, 'contributionTraceability.deferredContributions'))->toBe([]);
 });
 
 it('declares cookie consent categories', function (): void {
