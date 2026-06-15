@@ -112,6 +112,7 @@ const CAPELL_MANIFEST_V3_MIGRATION_GROUPS = [
         'inertia',
         'inertia-react-adapter',
         'inertia-vue-adapter',
+        'live-chat',
         'media-ai',
         'newsletter',
         'payments',
@@ -128,6 +129,7 @@ const CAPELL_MANIFEST_V3_MIGRATION_GROUPS = [
         'theme-commerce',
         'theme-corporate',
         'theme-education',
+        'theme-estate-agents',
         'theme-healthcare',
         'theme-inertia-bookings',
         'theme-inertia-bookings-react',
@@ -137,6 +139,7 @@ const CAPELL_MANIFEST_V3_MIGRATION_GROUPS = [
         'theme-local-services',
         'theme-nonprofit',
         'theme-portfolio',
+        'theme-restaurant',
         'theme-saas',
     ],
 ];

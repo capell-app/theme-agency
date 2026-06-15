@@ -207,6 +207,6 @@
         "categories": ["admin", "frontend", "growth"]
     },
     "contributionTraceability": {
-        "deferredContributions": ["settings"]
+        "deferredContributions": ["settings", "scheduled-job"]
     }
 }

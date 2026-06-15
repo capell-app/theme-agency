@@ -25,6 +25,10 @@ Status details:
 
 **For teams:** Bookings starts with a branded request form and admin queue, then adds the operational depth teams need: availability, reminders, reviews, waitlists, travel planning, reporting, and secure customer links.
 
+## Start Simple, Add Depth Later
+
+Most teams should launch with the default request form, service setup, staff availability, and admin queue before enabling reminders, reviews, waitlists, travel planning, payments, or advanced automation. Use `docs/adoption-guide.md` as the rollout path for owners, operators, agencies, and developers.
+
 ## Screens And Workflow
 
 Screenshot contract: `docs/screenshots.json`.

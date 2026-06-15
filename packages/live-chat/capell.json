@@ -353,6 +353,6 @@
         "categories": ["frontend", "crm", "support", "ai"]
     },
     "contributionTraceability": {
-        "deferredContributions": []
+        "deferredContributions": ["agent-capability"]
     }
 }

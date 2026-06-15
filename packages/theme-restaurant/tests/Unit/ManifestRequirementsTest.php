@@ -41,7 +41,7 @@ it('declares only restaurant marketplace screenshots that exist in the package',
 
     throw_unless(is_array($screenshots), RuntimeException::class, 'Theme Restaurant screenshots must be an array.');
 
-    expect($screenshots)->toHaveCount(5);
+    expect($screenshots)->toHaveCount(6);
 
     foreach ($screenshots as $screenshot) {
         throw_if(! is_array($screenshot) || ! is_string($screenshot['path'] ?? null), RuntimeException::class, 'Theme Restaurant screenshot path must be a string.');

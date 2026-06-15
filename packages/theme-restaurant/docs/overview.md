@@ -46,6 +46,16 @@ Screenshot contract: `screenshots.json`.
 - Blade views: `packages/theme-restaurant/resources/views/page.blade.php`, `packages/theme-restaurant/resources/views/sections/chef-story.blade.php`, `packages/theme-restaurant/resources/views/sections/content-listing.blade.php`, `packages/theme-restaurant/resources/views/sections/cta.blade.php`, `packages/theme-restaurant/resources/views/sections/events-calendar.blade.php`, `packages/theme-restaurant/resources/views/sections/features.blade.php`, `packages/theme-restaurant/resources/views/sections/footer.blade.php`, `packages/theme-restaurant/resources/views/sections/hero.blade.php`, `packages/theme-restaurant/resources/views/sections/location-guide.blade.php`, `packages/theme-restaurant/resources/views/sections/menu-highlights.blade.php`, `packages/theme-restaurant/resources/views/sections/navigation.blade.php`, `packages/theme-restaurant/resources/views/sections/opening-hours.blade.php`, `and 3 more`.
 - Cache tags: `theme-restaurant`.
 
+## Theme Inheritance Contract
+
+Product group:
+**Capell Themes**
+
+- Product group: `Capell Themes`
+- Manifest extends: `default`
+- Runtime extends: `default`
+- Restaurant runtime inheritance uses `extends: default` and requires `capell-app/frontend` for the built-in default fallback.
+
 ## Data Model
 
 This theme has no schema impact. It relies on core Capell site, page, locale, and theme records instead of declaring package-owned tables.
