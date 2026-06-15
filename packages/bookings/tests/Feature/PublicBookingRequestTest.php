@@ -40,9 +40,29 @@ it('throttles public booking request submissions and install-gates public routes
 });
 
 it('renders a public booking request form without exposing admin internals', function (): void {
-    BookingService::factory()->create(['name' => 'Consultation']);
-    BookingStaffMember::factory()->create(['display_name' => 'Avery Morgan']);
-    BookingLocation::factory()->create(['name' => 'Main office']);
+    BookingService::factory()->create([
+        'name' => 'Consultation',
+        'instructions' => 'ServicePrivateRunbookMarker',
+        'settings' => ['admin_url' => 'https://admin.example.test/bookings/services/secret'],
+        'meta' => ['signed_editor_url' => 'https://admin.example.test/signed-service-editor'],
+    ]);
+    BookingStaffMember::factory()->create([
+        'display_name' => 'Avery Morgan',
+        'email' => 'avery-private@example.test',
+        'phone' => 'PrivateStaffPhoneMarker',
+        'calendar_feed_token' => 'PrivateCalendarFeedTokenMarker',
+        'profile_url' => 'https://admin.example.test/staff/private-profile',
+        'settings' => ['private_notes' => 'PrivateStaffSettingsMarker'],
+        'meta' => ['filament_resource' => 'BookingStaffMemberResource'],
+    ]);
+    BookingLocation::factory()->create([
+        'name' => 'Main office',
+        'line1' => 'Private Location Line Marker',
+        'route_notes' => 'PrivateRouteNotesMarker',
+        'virtual_url' => 'https://admin.example.test/private-room',
+        'settings' => ['private_notes' => 'PrivateLocationSettingsMarker'],
+        'meta' => ['editor_url' => 'https://admin.example.test/location-editor'],
+    ]);
 
     $response = $this->get(route('capell-bookings.request'));
 
@@ -59,8 +79,17 @@ it('renders a public booking request form without exposing admin internals', fun
         ->assertDontSee('capell-app/bookings', false)
         ->assertDontSee('Filament', false)
         ->assertDontSee('BookingServiceResource', false)
+        ->assertDontSee('BookingStaffMemberResource', false)
         ->assertDontSee('admin', false)
-        ->assertDontSee('signed', false);
+        ->assertDontSee('signed-service-editor', false)
+        ->assertDontSee('ServicePrivateRunbookMarker', false)
+        ->assertDontSee('avery-private@example.test', false)
+        ->assertDontSee('PrivateStaffPhoneMarker', false)
+        ->assertDontSee('PrivateCalendarFeedTokenMarker', false)
+        ->assertDontSee('PrivateStaffSettingsMarker', false)
+        ->assertDontSee('Private Location Line Marker', false)
+        ->assertDontSee('PrivateRouteNotesMarker', false)
+        ->assertDontSee('PrivateLocationSettingsMarker', false);
 });
 
 it('allows the public booking request renderer to be replaced', function (): void {

@@ -195,6 +195,66 @@ it('builds public booking props with eager options and optional lazy slots', fun
     }
 });
 
+it('builds public booking props without private package internals for renderer overrides', function (): void {
+    [$service, $staffMember, $location] = createPublicSlotFixture();
+
+    $service->forceFill([
+        'instructions' => 'ServicePrivateRunbookMarker',
+        'settings' => ['admin_url' => 'https://admin.example.test/bookings/services/secret'],
+        'meta' => ['signed_editor_url' => 'https://admin.example.test/signed-service-editor'],
+    ])->save();
+
+    $staffMember->forceFill([
+        'email' => 'avery-private@example.test',
+        'phone' => 'PrivateStaffPhoneMarker',
+        'calendar_feed_token' => 'PrivateCalendarFeedTokenMarker',
+        'profile_url' => 'https://admin.example.test/staff/private-profile',
+        'settings' => ['private_notes' => 'PrivateStaffSettingsMarker'],
+        'meta' => ['filament_resource' => 'BookingStaffMemberResource'],
+    ])->save();
+
+    $location->forceFill([
+        'line1' => 'Private Location Line Marker',
+        'route_notes' => 'PrivateRouteNotesMarker',
+        'virtual_url' => 'https://admin.example.test/private-room',
+        'settings' => ['private_notes' => 'PrivateLocationSettingsMarker'],
+        'meta' => ['editor_url' => 'https://admin.example.test/location-editor'],
+    ])->save();
+
+    $request = Request::create('/bookings', Symfony\Component\HttpFoundation\Request::METHOD_GET, [
+        'service_id' => $service->getKey(),
+        'staff_member_id' => $staffMember->getKey(),
+        'location_id' => $location->getKey(),
+        'timezone' => 'Europe/London',
+    ]);
+
+    $props = BuildPublicBookingRequestPropsAction::run($request, lazySlots: false);
+
+    expect($props['options']['services'][0])->toHaveKeys(['id', 'name', 'description', 'duration_minutes'])
+        ->not->toHaveKeys(['instructions', 'settings', 'meta'])
+        ->and($props['options']['staff'][0])->toHaveKeys(['id', 'display_name', 'title'])
+        ->not->toHaveKeys(['email', 'phone', 'calendar_feed_token', 'profile_url', 'settings', 'meta'])
+        ->and($props['options']['locations'][0])->toHaveKeys(['id', 'name', 'type', 'city'])
+        ->not->toHaveKeys(['line1', 'route_notes', 'virtual_url', 'settings', 'meta']);
+
+    expect(publicBookingPropStrings($props))->not->toContain(
+        'ServicePrivateRunbookMarker',
+        'https://admin.example.test/bookings/services/secret',
+        'https://admin.example.test/signed-service-editor',
+        'avery-private@example.test',
+        'PrivateStaffPhoneMarker',
+        'PrivateCalendarFeedTokenMarker',
+        'https://admin.example.test/staff/private-profile',
+        'PrivateStaffSettingsMarker',
+        'BookingStaffMemberResource',
+        'Private Location Line Marker',
+        'PrivateRouteNotesMarker',
+        'https://admin.example.test/private-room',
+        'PrivateLocationSettingsMarker',
+        'https://admin.example.test/location-editor',
+    );
+});
+
 it('uses the blade booking request renderer by default', function (): void {
     expect(resolve(PublicBookingRequestRenderer::class))->toBeInstanceOf(BladePublicBookingRequestRenderer::class);
 });
@@ -228,4 +288,34 @@ function createPublicSlotFixture(int $capacity = 1): array
     ]);
 
     return [$service, $staffMember, $location, $monday];
+}
+
+/**
+ * @param  array<string, mixed>  $props
+ * @return list<string>
+ */
+function publicBookingPropStrings(array $props): array
+{
+    $strings = [];
+    $stack = [$props];
+
+    while ($stack !== []) {
+        $value = array_pop($stack);
+
+        if (is_array($value)) {
+            foreach ($value as $nestedValue) {
+                $stack[] = $nestedValue;
+            }
+
+            continue;
+        }
+
+        if (is_string($value)) {
+            $strings[] = $value;
+        }
+    }
+
+    sort($strings);
+
+    return $strings;
 }
