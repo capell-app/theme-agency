@@ -12,8 +12,8 @@ Cache posture uses three terms: `safe` means public output is expected to avoid 
 ## Summary
 
 - Packages: 81
-- Packages with public routes: 27
-- Public routes: 92
+- Packages with public routes: 28
+- Public routes: 97
 - Webhook routes: 5
 - Throttled routes: 32
 - Signed or tokenized routes: 26
@@ -68,7 +68,7 @@ Cache posture uses three terms: `safe` means public output is expected to avoid 
 | capell-app/media-ai | sensitive | 0 | - | - | - | - | panel-auth | safe; not cacheable; no sensitive output; varies by none |
 | capell-app/media-library | low | 0 | - | - | - | - | panel-auth | safe; not cacheable; no sensitive output; varies by none |
 | capell-app/migration-assistant | standard | 0 | - | - | - | - | permissions; 7 permissions | safe; not cacheable; no sensitive output; varies by none |
-| capell-app/navigation | standard | 1 | - | - | - | - | policies | safe; cacheable; no sensitive output; varies by site, locale, page, domain, guest |
+| capell-app/navigation | standard | 1 | - | - | - | - | policies | safe; cacheable; no sensitive output; varies by page |
 | capell-app/newsletter | sensitive | 7 | capell-newsletter.provider-webhook | capell-newsletter.preferences.update<br>capell-newsletter.provider-webhook<br>capell-newsletter.subscribe<br>capell-newsletter.unsubscribe.one-click | capell-newsletter.confirm<br>capell-newsletter.preferences.show<br>capell-newsletter.preferences.update<br>capell-newsletter.unsubscribe<br>capell-newsletter.unsubscribe.one-click | Capell\Newsletter\Models\ConsentEvent::$evidence<br>Capell\Newsletter\Models\ConsentEvent::$metadata<br>Capell\Newsletter\Models\ImportBatch::$dry_run_payload<br>Capell\Newsletter\Models\ImportBatch::$source_meta<br>Capell\Newsletter\Models\ProviderConnection::$credentials<br>Capell\Newsletter\Models\ProviderConnection::$oauth_tokens<br>Capell\Newsletter\Models\ProviderConnection::$webhook_secret<br>Capell\Newsletter\Models\Subscriber::$email<br>Capell\Newsletter\Models\Subscriber::$first_name<br>Capell\Newsletter\Models\Subscriber::$last_name<br>Capell\Newsletter\Models\Subscriber::$profile<br>newsletter_public_tokens.token_hash<br>newsletter_subscribers.email_hash<br>newsletter_sync_attempts.payload_hash | policies | safe; not cacheable; no sensitive output; varies by site, locale |
 | capell-app/notes | standard | 0 | - | - | - | - | panel-auth | safe; not cacheable; no sensitive output; varies by none |
 | capell-app/password-policy | sensitive | 0 | - | - | - | password_policy_password_histories.password | panel-auth | safe; not cacheable; no sensitive output; varies by none |
@@ -78,7 +78,7 @@ Cache posture uses three terms: `safe` means public output is expected to avoid 
 | capell-app/publishing-studio | sensitive | 2 | - | - | capell-publishing-studio.scheduler.ical | preview_links.token<br>publishing_scheduler_events.token_hash | permissions; 9 permissions | safe; not cacheable; no sensitive output; varies by none |
 | capell-app/record-switcher | low | 0 | - | - | - | - | panel-auth | safe; not cacheable; no sensitive output; varies by none |
 | capell-app/search | sensitive | 3 | - | capell-frontend.search.autocomplete<br>capell-frontend.search.click | - | - | panel-auth | safe; not cacheable; no sensitive output; varies by site, locale |
-| capell-app/seo-suite | sensitive | 0 | - | - | - | ai_discovery_page_profiles.markdown_hash<br>ai_discovery_snapshots.content_hash<br>search_console_query_metrics.query_hash<br>search_console_query_metrics.url_hash<br>search_console_url_metrics.url_hash | permissions; 11 permissions | safe; cacheable; no sensitive output; varies by site, locale |
+| capell-app/seo-suite | sensitive | 5 | - | - | - | ai_discovery_page_profiles.markdown_hash<br>ai_discovery_snapshots.content_hash<br>search_console_query_metrics.query_hash<br>search_console_query_metrics.url_hash<br>search_console_url_metrics.url_hash | permissions; 11 permissions | safe; cacheable; no sensitive output; varies by site, locale |
 | capell-app/shopify-commerce | critical | 3 | capell-shopify-commerce.webhooks.shopify | capell-shopify-commerce.webhooks.shopify | - | Capell\ShopifyCommerce\Models\ShopifyConnection::$access_token<br>Capell\ShopifyCommerce\Models\ShopifyCustomer::$email<br>Capell\ShopifyCommerce\Models\ShopifyCustomer::$first_name<br>Capell\ShopifyCommerce\Models\ShopifyCustomer::$last_name<br>Capell\ShopifyCommerce\Models\ShopifyCustomer::$phone<br>shopify_customers.email_hash | permissions; 1 permission | not safe; not cacheable; sensitive output; varies by site |
 | capell-app/site-discovery | standard | 2 | - | - | - | - | permissions; 1 permission | safe; not cacheable; no sensitive output; varies by site, locale |
 | capell-app/site-monitor | standard | 0 | - | - | - | - | package-installed; 6 permissions | safe; not cacheable; no sensitive output; varies by none |
@@ -103,7 +103,7 @@ Cache posture uses three terms: `safe` means public output is expected to avoid 
 | capell-app/theme-saas | low | 0 | - | - | - | - | none | safe; not cacheable; no sensitive output; varies by site, locale |
 | capell-app/translation-manager | sensitive | 0 | - | - | - | - | panel-auth | safe; not cacheable; no sensitive output; varies by none |
 | capell-app/url-manager | sensitive | 0 | - | - | - | url_manager_not_found_opportunities.source_hash<br>url_manager_redirect_hits.ip_hash<br>url_manager_redirect_hits.user_agent_hash<br>url_manager_redirect_rules.source_hash<br>url_manager_redirect_rules.target_hash | permissions; 4 permissions | safe; not cacheable; no sensitive output; varies by none |
-| capell-app/welcome-tour | standard | 0 | - | - | - | - | panel-auth | safe; not cacheable; no sensitive output; varies by none |
+| capell-app/welcome-tour | standard | 0 | - | - | - | - | panel-auth | safe; not cacheable; no sensitive output; varies by user |
 | capell-app/wordpress-importer | sensitive | 0 | - | - | - | - | panel-auth | safe; not cacheable; no sensitive output; varies by none |
 
 <!-- prettier-ignore-end -->

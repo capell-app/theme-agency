@@ -159,6 +159,7 @@ function themeFrontendRegisterFoundationPackageManifest(): void
 }
 
 /**
+ * @param  array<array-key, mixed>  $items
  * @return array<string, mixed>
  */
 function themeFrontendStringKeyedArray(array $items): array

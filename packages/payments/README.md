@@ -8,7 +8,7 @@ Payments is an **Available**, **Schema-owning** Capell package in the **Capell C
 
 Payments gives Capell a first-party way to charge customers without depending on an external store. It ships native Stripe Checkout for one-off purchases, recurring subscriptions, donations, paid file downloads, and fulfillment-backed gated-access handoffs, plus signed webhook intake that keeps payments, subscriptions, refunds, and disputes in sync automatically. Every record is stored behind a provider-neutral model layer, so admins get read-only audit resources, customers get a self-service billing portal, and Form Builder fields can collect payment inline. Designed for revenue-generating sites that want checkout, fulfilment, and reconciliation handled inside the CMS.
 
-After install, admins get read-only payment audit resources, webhook recovery commands, Payments settings, and health diagnostics; public users get signed paid-download, customer billing portal, form-checkout, and Stripe webhook routes.
+After install, admins get package-owned management surfaces and public users may see package-owned frontend output or routes.
 
 Status details:
 
@@ -49,6 +49,7 @@ Screenshot contract: `docs/screenshots.json`.
 - Actions: `BuildPaymentsHealthReportAction`, `CreateBillingPortalSessionAction`, `CreateCheckoutSessionAction`, `CreateFormPaymentCheckoutSessionAction`, `CreateFormPaymentCheckoutUrlAction`, `CreatePaidDownloadUrlAction`, `DownloadPaidDownloadAction`, `FormatPaymentMoneyAction`, `FulfillCompletedCheckoutSessionAction`, `GeneratePaymentGatewayIdempotencyKeyAction`, `GrantPaidDownloadAccessAction`, `HandleStripeWebhookAction`, `and 17 more`.
 - Data objects: `BillingPortalSessionData`, `CheckoutLineItemData`, `CheckoutSessionData`, `CreateBillingPortalSessionData`, `CreateCheckoutSessionData`, `FormPaymentCheckoutData`, `PaymentCustomerData`, `PaymentDisputeData`, `PaymentFulfillmentResultData`, `PaymentIntentData`, `PaymentRefundData`, `PaymentsHealthReportData`, `and 4 more`.
 - Jobs: `ProcessStripeWebhookEventJob`.
+- Command signatures: `capell:payments:webhooks:reconcile`, `capell:payments:webhooks:reprocess`.
 - Console command classes: `ReconcilePaymentWebhooksCommand`, `ReprocessPaymentWebhookEventsCommand`.
 - Manifest contributions: `admin-resource: Capell\Payments\Manifest\CheckoutSessionResourceContribution`, `admin-resource: Capell\Payments\Manifest\PaymentCustomerResourceContribution`, `admin-resource: Capell\Payments\Manifest\PaymentDisputeResourceContribution`, `admin-resource: Capell\Payments\Manifest\PaymentIntentResourceContribution`, `admin-resource: Capell\Payments\Manifest\PaymentRefundResourceContribution`, `admin-resource: Capell\Payments\Manifest\PaymentWebhookEventResourceContribution`, `admin-resource: Capell\Payments\Manifest\SubscriptionResourceContribution`, `console-command: Capell\Payments\Manifest\PaymentsConsoleCommandsContribution`, `health-check: Capell\Payments\Manifest\PaymentsHealthContribution`, `model: Capell\Payments\Manifest\PaymentsModelsContribution`, `route: Capell\Payments\Manifest\PaymentsFrontendRoutesContribution`, `setting: Capell\Payments\Manifest\PaymentsSettingsContribution`.
 - Health checks: `Capell\Payments\Health\PaymentsHealthCheck`.
@@ -65,12 +66,12 @@ Screenshot contract: `docs/screenshots.json`.
 
 ## Install Impact
 
-- Admin navigation: adds read-only payment customer, checkout, intent, subscription, webhook, refund, and dispute resources when registered.
+- Admin navigation: adds package-owned Filament classes when registered.
 - Permissions: `View:PaymentCustomer`, `View:CheckoutSession`, `View:PaymentIntent`, `View:Subscription`, `View:PaymentWebhookEvent`, `View:PaymentRefund`, `View:PaymentDispute`.
-- Public routes: Stripe webhook, paid-download, customer billing portal, and Form Builder checkout routes are declared in `capell.json`.
+- Public routes: route files exist and must be reviewed before public enablement.
 - Database changes: package migrations are declared.
 - Settings: `Capell\Payments\Settings\PaymentsSettings`.
-- Queues or schedules: Stripe webhook processing runs through `ProcessStripeWebhookEventJob`.
+- Queues or schedules: review package jobs or schedules before install.
 - Cache tags: `payments`.
 - Commands: `capell:payments:webhooks:reconcile`, `capell:payments:webhooks:reprocess`.
 
@@ -96,7 +97,7 @@ Screenshot contract: `docs/screenshots.json`.
 ## Quick Start
 
 1. Install the package: `composer require capell-app/payments`.
-2. Run the host application's package install and migration flow.
+2. Run the required setup: `php artisan migrate`.
 3. Open the related Capell admin surface and verify Payments appears.
 
 ## Next Steps

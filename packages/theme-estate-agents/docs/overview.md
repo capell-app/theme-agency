@@ -25,6 +25,8 @@ Status details:
 
 **For teams:** A premium property theme for estate agencies, lettings teams, valuations, local guides, and viewing-led enquiry journeys.
 
+runtime inheritance uses `extends: default`, so the theme keeps Foundation Theme behaviour while replacing property-specific public presentation. It requires `capell-app/foundation-theme` and `capell-app/frontend`.
+
 ## Screens And Workflow
 
 Screenshot contract: `screenshots.json`.

@@ -8,7 +8,7 @@ Privacy Center is an **Available**, **Schema-owning** Capell package in the **Ca
 
 Privacy Center gives every Capell site a single, queryable system of record for privacy obligations: granular cookie-category consent, versioned policy acceptances, retention rules, and access/export/delete subject requests. Consent and subject data are recorded through stable Actions that other Capell packages can call. Hashed request evidence (IP, user-agent) and consent records give you defensible proof, while retention rules keep data minimised. Admin operators get resources and an at-a-glance compliance dashboard; nothing sensitive ever leaks to public output.
 
-After install, admins get consent, policy, privacy request, retention rule, and overview surfaces; public users get the cookie consent preference center routes declared in the package manifest.
+After install, admins get package-owned management surfaces and public users may see package-owned frontend output or routes.
 
 Status details:
 
@@ -72,12 +72,12 @@ Current boundaries:
 
 ## Install Impact
 
-- Admin navigation: adds consent policies, consent records, policy acceptances, privacy requests, retention rules, and overview widget surfaces when registered.
+- Admin navigation: adds package-owned Filament classes when registered.
 - Permissions: `ViewAny:ConsentPolicy`, `View:ConsentPolicy`, `Create:ConsentPolicy`, `Update:ConsentPolicy`, `Delete:ConsentPolicy`, `ViewAny:ConsentRecord`, `View:ConsentRecord`, `ViewAny:PolicyAcceptance`, `View:PolicyAcceptance`, `ViewAny:PrivacyRequest`, `View:PrivacyRequest`, `Update:PrivacyRequest`, `ViewAny:RetentionRule`, `View:RetentionRule`, `Create:RetentionRule`, `Update:RetentionRule`, `Delete:RetentionRule`.
-- Public routes: cookie consent preference routes `capell-privacy-center.consent.show` and `capell-privacy-center.consent.store` are declared in `capell.json`.
+- Public routes: route files exist and must be reviewed before public enablement.
 - Database changes: package migrations are declared.
 - Settings: no package settings declared.
-- Queues or schedules: `privacy:apply-retention` is scheduled daily.
+- Queues or schedules: none detected in standard package paths.
 - Cache tags: `privacy-center`.
 - Commands: `privacy:apply-retention`.
 
@@ -102,7 +102,7 @@ Current boundaries:
 ## Quick Start
 
 1. Install the package: `composer require capell-app/privacy-center`.
-2. Run the host application's package install and migration flow.
+2. Run the required setup: `php artisan migrate`.
 3. Open the related Capell admin surface and verify Privacy Center appears.
 
 ## Next Steps

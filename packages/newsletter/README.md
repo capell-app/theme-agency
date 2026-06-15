@@ -8,7 +8,7 @@ Newsletter is an **Available**, **Schema-owning** Capell package in the **Capell
 
 Capture, confirm, and segment newsletter subscribers on every Capell site - with double opt-in, a public preference center, GDPR-grade consent evidence, and one-click sync to Mailchimp, Kit, and Campaign Monitor.
 
-After install, admins get package-owned subscriber, segment, provider, import, and send management surfaces; public users get the subscription, confirmation, unsubscribe, webhook, and preference-center routes declared in the package manifest.
+After install, admins get package-owned management surfaces and public users may see package-owned frontend output or routes.
 
 Status details:
 
@@ -58,6 +58,7 @@ Screenshot contract: `docs/screenshots.json`.
 - Actions: `ApplyNewsletterTagsAction`, `BuildDueNewsletterSendsAction`, `BuildListUnsubscribeHeadersAction`, `BuildNewsletterHealthDiagnosticsAction`, `BuildNewsletterSendHandoffPayloadAction`, `ConfirmSubscriberAction`, `CreatePreferenceCenterTokenAction`, `CreateUnsubscribeTokenAction`, `EvaluateNewsletterSegmentAction`, `ExportSubscribersAction`, `HandleProviderWebhookAction`, `ImportSubscribersAction`, `and 17 more`.
 - Data objects: `ConsentEvidenceData`, `FormMappingData`, `PreferenceCenterData`, `PreferenceCenterSegmentData`, `PreferenceCenterUpdateData`, `ProviderAudienceData`, `ProviderInterestData`, `ProviderSubscriberData`, `ProviderSyncResultData`, `ProviderWebhookEventData`, `SubscriberData`, `UtmAttributionData`.
 - Jobs: `SyncSubscriberToProviderJob`.
+- Command signatures: `newsletter:sync-retry-due`.
 - Console command classes: `RequeueDueProviderSyncAttemptsCommand`.
 - Manifest contributions: `admin-resource: Capell\Newsletter\Manifest\NewsletterAdminResourcesContribution`, `console-command: Capell\Newsletter\Manifest\NewsletterConsoleCommandsContribution`, `dashboard-widget: Capell\Newsletter\Manifest\NewsletterOverviewWidgetContribution`, `health-check: Capell\Newsletter\Manifest\NewsletterHealthContribution`, `model: Capell\Newsletter\Manifest\NewsletterModelsContribution`, `overview-stat: Capell\Newsletter\Manifest\NewsletterOverviewStatsContribution`, `route: Capell\Newsletter\Manifest\NewsletterFrontendRoutesContribution`, `scheduled-job: Capell\Newsletter\Manifest\NewsletterSyncRetryScheduleContribution`, `setting: Capell\Newsletter\Manifest\NewsletterSettingsContribution`.
 - Health checks: `Capell\Newsletter\Health\NewsletterHealthCheck`.
@@ -74,18 +75,19 @@ Screenshot contract: `docs/screenshots.json`.
 
 ## Install Impact
 
-- Admin navigation: adds subscriber, segment, provider, form mapping, import, sync attempt, and send Filament resources when registered.
+- Admin navigation: adds package-owned Filament classes when registered.
 - Permissions: none declared in `capell.json`.
-- Public routes: subscription, confirmation, unsubscribe, one-click unsubscribe, provider webhook, and preference-center routes are declared in `capell.json`.
+- Public routes: route files exist and must be reviewed before public enablement.
 - Database changes: package migrations are declared.
-- Settings: `NewsletterSettings` is declared and registered under the `newsletter` settings group.
-- Queues or schedules: provider sync jobs and the `newsletter:sync-retry-due` scheduled command must run through the host scheduler/queue worker.
+- Settings: `Capell\Newsletter\Settings\NewsletterSettings`.
+- Queues or schedules: review package jobs or schedules before install.
 - Cache tags: `newsletter`.
-- Commands: `newsletter:sync-retry-due` requeues due provider sync attempts.
+- Commands: `newsletter:sync-retry-due`.
 
 ## Common Pitfalls
 
 - Run migrations before opening package resources or public routes.
+- Configure package settings before testing production-like workflows.
 - Review route middleware, throttling, signed URLs, and public-output safety before exposing routes.
 - Keep public Blade and cached HTML free of authoring markers, model IDs, permissions, signed editor URLs, and lazy database queries.
 - Keep `composer.json`, `composer.local.json`, `capell.json`, docs, screenshots, and tests aligned when the package surface changes.
@@ -103,7 +105,7 @@ Screenshot contract: `docs/screenshots.json`.
 ## Quick Start
 
 1. Install the package: `composer require capell-app/newsletter`.
-2. Run the host application's package install and migration flow.
+2. Run the required setup: `php artisan migrate`.
 3. Open the related Capell admin surface and verify Newsletter appears.
 
 ## Next Steps

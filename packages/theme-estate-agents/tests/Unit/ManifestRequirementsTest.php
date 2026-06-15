@@ -43,7 +43,7 @@ it('declares only estate agents marketplace screenshots that exist in the packag
 
     throw_unless(is_array($screenshots), RuntimeException::class, 'Theme Estate Agents screenshots must be an array.');
 
-    expect($screenshots)->toHaveCount(5);
+    expect($screenshots)->toHaveCount(6);
 
     foreach ($screenshots as $screenshot) {
         throw_if(! is_array($screenshot) || ! is_string($screenshot['path'] ?? null), RuntimeException::class, 'Theme Estate Agents screenshot path must be a string.');

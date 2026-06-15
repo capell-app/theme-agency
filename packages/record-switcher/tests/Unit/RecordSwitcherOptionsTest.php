@@ -42,7 +42,7 @@ it('searches generic resource options with declared searchable attributes', func
 
     $switcher = new RecordSwitcher;
     $switcher->resourceClass = RecordSwitcherTestRecordResource::class;
-    $switcher->recordKey = (string) $currentRecord->getRouteKey();
+    $switcher->recordKey = recordSwitcherRouteKey($currentRecord);
     $switcher->label = 'Current';
 
     $options = $switcher->getOptions('launch');
@@ -61,7 +61,7 @@ it('keeps empty searchable attributes from breaking generic option loading', fun
 
     $switcher = new RecordSwitcher;
     $switcher->resourceClass = RecordSwitcherEmptySearchResource::class;
-    $switcher->recordKey = (string) $currentRecord->getRouteKey();
+    $switcher->recordKey = recordSwitcherRouteKey($currentRecord);
     $switcher->label = 'Current';
     $switcher->limitResults = 1;
 
@@ -114,6 +114,15 @@ function recordSwitcherCreateFixtureRecordsTable(): void
         $table->string('code');
         $table->timestamps();
     });
+}
+
+function recordSwitcherRouteKey(RecordSwitcherTestRecord $record): string
+{
+    $routeKey = $record->getRouteKey();
+
+    throw_unless(is_string($routeKey) || is_int($routeKey), RuntimeException::class, 'Expected record switcher fixture route key to be scalar.');
+
+    return (string) $routeKey;
 }
 
 function recordSwitcherAdminQueryBudget(): int

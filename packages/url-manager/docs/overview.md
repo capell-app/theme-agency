@@ -46,8 +46,9 @@ Screenshot contract: `screenshots.json`.
 - Data objects: `ChangedUrlRedirectData`, `ConvertNotFoundOpportunityData`, `NotFoundOpportunityData`, `PreparedRedirectRuleData`, `RedirectImportResultData`, `RedirectImportRowData`, `RedirectResolutionData`, `RedirectRuleData`.
 - Command signatures: `url-manager:prune-hits`.
 - Console command classes: `PruneRedirectHitsCommand`.
-- Manifest contributions: `admin-page: Capell\UrlManager\Manifest\NotFoundOpportunitiesPageContribution`, `admin-page: Capell\UrlManager\Manifest\RedirectRulesPageContribution`, `model: Capell\UrlManager\Manifest\UrlManagerModelsContribution`, `console-command: Capell\UrlManager\Manifest\UrlManagerConsoleCommandsContribution`, `health-check: Capell\UrlManager\Manifest\UrlManagerHealthContribution`.
+- Manifest contributions: `admin-page: Capell\UrlManager\Manifest\NotFoundOpportunitiesPageContribution`, `admin-page: Capell\UrlManager\Manifest\RedirectRulesPageContribution`, `console-command: Capell\UrlManager\Manifest\UrlManagerConsoleCommandsContribution`, `health-check: Capell\UrlManager\Manifest\UrlManagerHealthContribution`, `model: Capell\UrlManager\Manifest\UrlManagerModelsContribution`.
 - Health checks: `Capell\UrlManager\Health\UrlManagerHealthCheck`.
+- Cache tags: `url-manager`.
 
 ## Data Model
 
@@ -55,7 +56,7 @@ Screenshot contract: `screenshots.json`.
 - Models: `NotFoundOpportunity`, `RedirectHit`, `RedirectRule`.
 - Migration files: `2026_05_31_000001_create_url_manager_redirect_rules_table.php`, `2026_05_31_000002_create_url_manager_redirect_hits_table.php`, `2026_05_31_000003_create_url_manager_not_found_opportunities_table.php`, `2026_06_04_000001_add_priority_to_url_manager_redirect_rules_table.php`.
 - Migration impact: run host migrations through the package install flow before opening package surfaces.
-- Deletion/retention behaviour: redirect hits are pruned by `url-manager:prune-hits` using the configured retention window.
+- Deletion/retention behaviour: Docs gap unless the package has an explicit pruning command, retention setting, or tested cascade path.
 
 ## Install Impact
 
@@ -86,7 +87,7 @@ Screenshot contract: `screenshots.json`.
 ## Quick Start
 
 1. Install the package: `composer require capell-app/url-manager`.
-2. Run host migrations through the installed Capell app.
+2. Run the required setup: `php artisan migrate`.
 3. Open the related Capell admin surface and verify URL Manager appears.
 
 ## Next Steps

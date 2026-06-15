@@ -59,6 +59,7 @@ Screenshot contract: `screenshots.json`.
 - Listeners: `SendWorkspaceStateNotification`, `StampWorkspaceOnActivity`.
 - Actions: `BuildEditorialCalendarEventsAction`, `BuildPublishReadinessAction`, `BuildReleaseWorkspaceReadinessAction`, `BuildReleaseWorkspaceSummaryAction`, `BuildSchedulerIcalFeedAction`, `CancelSchedulerEventAction`, `ComparePublishingRevisionAction`, `CopyOnWriteAction`, `CreatePageDraftWorkspaceAction`, `CreateRecordDraftWorkspaceAction`, `CreateSchedulerIcalTokenAction`, `BuildContentHealthAction`, `and 34 more`.
 - Data objects: `MergeHistoryEntryData`, `WorkspaceActivityData`, `WorkspaceMergeData`, `WorkspaceMergeHistoryData`, `EditorialCalendarEventData`, `EditorialCalendarQueryData`, `PublishReadinessData`, `ReleaseWorkspaceItemData`, `ReleaseWorkspaceReadinessData`, `ReleaseWorkspaceSummaryData`, `SavedRecordDraftData`, `SchedulerEventData`, `and 4 more`.
+- Command signatures: `capell:publishing-studio:load-test`, `capell:publishing-studio:prune`.
 - Console command classes: `InstallCommand`, `LoadTestPublishingStudioCommand`, `PruneAbandonedPublishingStudioCommand`.
 - Manifest contributions: `admin-page: Capell\PublishingStudio\Manifest\ActivityTrailPageContribution`, `admin-page: Capell\PublishingStudio\Manifest\PublishingWorkflowPageContribution`, `admin-page: Capell\PublishingStudio\Manifest\ScheduledPublishingPageContribution`, `admin-page: Capell\PublishingStudio\Manifest\StaleDraftsPageContribution`, `admin-resource: Capell\PublishingStudio\Manifest\PublishingStudioAdminResourcesContribution`, `console-command: Capell\PublishingStudio\Manifest\PublishingStudioConsoleCommandsContribution`, `dashboard-widget: Capell\PublishingStudio\Manifest\PublishingStudioDashboardWidgetsContribution`, `health-check: Capell\PublishingStudio\Manifest\PublishingStudioHealthContribution`, `model: Capell\PublishingStudio\Manifest\PublishingStudioModelsContribution`, `overview-stat: Capell\PublishingStudio\Manifest\ContentSchedulerOverviewStatsContribution`, `route: Capell\PublishingStudio\Manifest\PublishingStudioRoutesContribution`, `scheduled-job: Capell\PublishingStudio\Manifest\PublishingStudioPruneScheduleContribution`, `scheduled-job: Capell\PublishingStudio\Manifest\ScheduledPublishingJobContribution`, `setting: Capell\PublishingStudio\Manifest\PublishingStudioSettingsContribution`, `workflow-attention: Capell\PublishingStudio\Actions\Workflow\BuildPublishingWorkflowAttentionItemsAction`.
 - Health checks: `Capell\PublishingStudio\Health\PublishingStudioHealthCheck`.
@@ -79,9 +80,9 @@ Screenshot contract: `screenshots.json`.
 - Public routes: route files exist and must be reviewed before public enablement.
 - Database changes: package migrations are declared.
 - Settings: `Capell\PublishingStudio\Settings\PublishingStudioSettings`.
-- Queues or schedules: schedules `PublishScheduledPublishingStudioJob` every minute when scheduled publishing is enabled and `capell:publishing-studio:prune` on the configured prune cron when pruning is enabled.
+- Queues or schedules: none detected in standard package paths.
 - Cache tags: none declared.
-- Commands: console command classes detected: `InstallCommand`, `LoadTestPublishingStudioCommand`, `PruneAbandonedPublishingStudioCommand`.
+- Commands: `capell:publishing-studio:load-test`, `capell:publishing-studio:prune`.
 
 ## Common Pitfalls
 
@@ -98,11 +99,12 @@ Screenshot contract: `screenshots.json`.
 | Package surface is missing after install | Provider or manifest is not loaded | Confirm `capell.json`, package `composer.json`, and provider registration | Reinstall the package, refresh Composer autoload, and clear host caches |
 | Admin screen or command fails on missing table | Package migrations have not run | Check the tables listed in `Data Model` | Run host migrations and rerun the focused package test |
 | Route returns unexpected output | Route cache, middleware, or signed URL setup does not match the package route file | Check the route files listed in `Technical Shape` | Clear route cache and verify middleware before exposing public routes |
+| Background work does not run | Queue worker or scheduled command is not active | Check package jobs, commands, and host scheduler configuration | Start the queue or scheduler, then run the focused command or package test |
 
 ## Quick Start
 
 1. Install the package: `composer require capell-app/publishing-studio`.
-2. Run the host application's migration flow, including this package's migrations and settings migration.
+2. Run the required setup: `php artisan migrate`.
 3. Open the related Capell admin surface and verify Publishing Studio appears.
 
 ## Next Steps

@@ -260,7 +260,16 @@ PHP);
         ],
         'performance' => [
             'cacheSafety' => [
+                'cacheable' => true,
+                'variesBy' => ['site', 'locale'],
                 'sensitiveOutput' => false,
+                'invalidationSources' => [
+                    [
+                        'model' => 'Capell\\FixtureRouteDrift\\Models\\FixtureRecord',
+                        'events' => ['created', 'updated', 'deleted'],
+                    ],
+                ],
+                'queueInvalidation' => false,
             ],
         ],
         'security' => [

@@ -12,6 +12,7 @@ use Capell\PublishingStudio\Models\Workspace;
 use Capell\PublishingStudio\Support\PublishingStudioManager;
 use Capell\PublishingStudio\WorkspaceContext;
 use Capell\Tests\Support\Concerns\CreatesAdminUser;
+use Illuminate\Support\Str;
 use Livewire\Livewire;
 use Spatie\Permission\Models\Role;
 
@@ -19,6 +20,7 @@ uses(CreatesAdminUser::class);
 
 beforeEach(function (): void {
     config()->set('capell.publishing-studio.release_windows.enabled', false);
+    config()->set('capell.publishing-studio.publish_checks', []);
     app()->forgetInstance(PublishingStudioManager::class);
     CapellPublishingStudio::clearResolvedInstance(PublishingStudioManager::class);
 
@@ -29,7 +31,7 @@ beforeEach(function (): void {
 });
 
 it('runs the full live -> draft -> publish cycle', function (): void {
-    $page = Page::factory()->withTranslations()->create(['name' => 'About']);
+    $page = Page::factory()->withTranslations()->create(['name' => 'About ' . Str::random(12)]);
 
     // Step 1: save as draft (new workspace)
     Livewire::test(EditPage::class, ['record' => $page->getRouteKey()])

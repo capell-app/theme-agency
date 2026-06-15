@@ -150,6 +150,7 @@ function capell_docs_package_markdown(string $rootPath, string $packageSlug, str
         '',
         '**For teams:** ' . capell_docs_team_value($manifest, $description),
         '',
+        ...($packageSlug === 'theme-estate-agents' ? ['runtime inheritance uses `extends: default`, so the theme keeps Foundation Theme behaviour while replacing property-specific public presentation. It requires `capell-app/foundation-theme` and `capell-app/frontend`.', ''] : []),
         '## Screens And Workflow',
         '',
         ...capell_docs_screens_and_workflow($packagePath, $manifest, $forOverview),

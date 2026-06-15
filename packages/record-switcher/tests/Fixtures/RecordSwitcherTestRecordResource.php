@@ -30,7 +30,8 @@ class RecordSwitcherTestRecordResource extends Resource
     public static function getUrl(?string $name = null, array $parameters = [], bool $isAbsolute = true, ?string $panel = null, ?Model $tenant = null, bool $shouldGuessMissingParameters = false, ?string $configuration = null): string
     {
         $record = $parameters['record'] ?? null;
+        $recordKey = $record instanceof Model ? $record->getRouteKey() : null;
 
-        return sprintf('/record-switcher-test-records/%s/%s', $record instanceof Model ? $record->getRouteKey() : 'missing', $name ?? 'index');
+        return sprintf('/record-switcher-test-records/%s/%s', is_string($recordKey) || is_int($recordKey) ? $recordKey : 'missing', $name ?? 'index');
     }
 }
