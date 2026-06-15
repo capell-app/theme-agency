@@ -142,6 +142,8 @@ final class PruneAccessGateRecordsAction
             return (int) $query->count();
         }
 
-        return (int) $query->delete();
+        $deleted = $query->delete();
+
+        return is_numeric($deleted) ? (int) $deleted : 0;
     }
 }
