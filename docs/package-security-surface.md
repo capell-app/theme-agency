@@ -12,10 +12,10 @@ Cache posture uses three terms: `safe` means public output is expected to avoid 
 ## Summary
 
 - Packages: 81
-- Packages with public routes: 28
-- Public routes: 97
+- Packages with public routes: 29
+- Public routes: 98
 - Webhook routes: 5
-- Throttled routes: 32
+- Throttled routes: 35
 - Signed or tokenized routes: 26
 - Sensitive fields: 140
 - Anonymous-output-safe packages: 73
@@ -27,7 +27,7 @@ Cache posture uses three terms: `safe` means public output is expected to avoid 
 | capell-app/access-gate | sensitive | 5 | - | capell-access-gate.claim<br>capell-access-gate.logout<br>capell-access-gate.request.store<br>capell-access-gate.status | capell-access-gate.claim | - | permissions; 12 permissions | safe; not cacheable; no sensitive output; varies by none |
 | capell-app/address | standard | 0 | - | - | - | - | policies | safe; not cacheable; no sensitive output; varies by none |
 | capell-app/agent-bridge | critical | 1 | - | - | - | capell_agent_bridge_confirmations.payload_hash<br>capell_agent_bridge_confirmations.token<br>capell_agent_bridge_tokens.token_hash | permissions; 2 permissions | safe; not cacheable; no sensitive output; varies by none |
-| capell-app/agent-delivery | critical | 3 | - | - | - | - | none | safe; not cacheable; no sensitive output; varies by site, locale, url |
+| capell-app/agent-delivery | critical | 3 | - | capell-agent-delivery.pages.chunks<br>capell-agent-delivery.pages.index<br>capell-agent-delivery.pages.manifest | - | - | none | safe; not cacheable; no sensitive output; varies by site, locale, url |
 | capell-app/ai-orchestrator | low | 0 | - | - | - | - | panel-auth | safe; not cacheable; no sensitive output; varies by none |
 | capell-app/api | critical | 2 | - | - | - | - | none | safe; not cacheable; no sensitive output; varies by site, locale |
 | capell-app/automation-studio | sensitive | 0 | - | - | - | Capell\AutomationStudio\Models\AutomationRule::$actions<br>Capell\AutomationStudio\Models\AutomationRule::$conditions<br>Capell\AutomationStudio\Models\AutomationRule::$settings<br>Capell\AutomationStudio\Models\AutomationRun::$context<br>Capell\AutomationStudio\Models\AutomationRun::$payload | permissions; 5 permissions | safe; not cacheable; no sensitive output; varies by none |
@@ -45,7 +45,7 @@ Cache posture uses three terms: `safe` means public output is expected to avoid 
 | capell-app/diagnostics | sensitive | 0 | - | - | - | - | permissions; 6 permissions | safe; not cacheable; no sensitive output; varies by none |
 | capell-app/document-lifecycle | standard | 0 | - | - | - | document_lifecycle_publications.content_hash<br>legal_acceptances.document_hash<br>legal_acceptances.ip_hash<br>legal_acceptances.legal_bundle_hash<br>legal_acceptances.user_agent_hash | permissions; 10 permissions | not safe; not cacheable; sensitive output; varies by none |
 | capell-app/email-studio | sensitive | 1 | capell-email-studio.provider-events | capell-email-studio.provider-events | capell-email-studio.provider-events | email_profiles.webhook_endpoint_token_hash<br>email_recipients.email_hash<br>email_replies.from_email_hash<br>email_suppressions.email_hash<br>email_tracking_tokens.token_hash | permissions; 11 permissions | safe; not cacheable; no sensitive output; varies by site, locale |
-| capell-app/equestrian-clinics | sensitive | 3 | - | capell-equestrian-clinics.host-request.store | capell-equestrian-clinics.coach.timetable | - | permissions; 8 permissions | safe; not cacheable; sensitive output; varies by site, locale, portal_account |
+| capell-app/equestrian-clinics | sensitive | 3 | - | capell-equestrian-clinics.host-request.store | capell-equestrian-clinics.coach.timetable | - | panel-auth | safe; not cacheable; sensitive output; varies by site, locale, portal_account |
 | capell-app/events | standard | 2 | - | - | - | - | permissions; 48 permissions | safe; not cacheable; no sensitive output; varies by site, locale |
 | capell-app/exception-reports | low | 0 | - | - | - | - | none | not safe; not cacheable; sensitive output; varies by none |
 | capell-app/experiments | standard | 0 | - | - | - | - | permissions; 16 permissions | safe; not cacheable; no sensitive output; varies by site, visitor |
@@ -62,7 +62,7 @@ Cache posture uses three terms: `safe` means public output is expected to avoid 
 | capell-app/inertia-vue-adapter | low | 0 | - | - | - | - | none | safe; not cacheable; no sensitive output; varies by site, locale |
 | capell-app/insights | sensitive | 2 | - | capell-insights.consent<br>capell-insights.events | - | - | permissions; 1 permission | safe; not cacheable; no sensitive output; varies by site, locale |
 | capell-app/knowledge-base | standard | 4 | - | capell-knowledge-base.article.feedback | - | knowledge_base_article_feedback.user_agent_hash<br>knowledge_base_article_feedback.visitor_hash | policies | safe; cacheable; no sensitive output; varies by none |
-| capell-app/layout-builder | standard | 0 | - | - | - | layout_bulk_change_runs.original_container_hash<br>layout_bulk_change_runs.proposed_container_hash | permissions; 13 permissions | safe; not cacheable; no sensitive output; varies by site, locale, page |
+| capell-app/layout-builder | standard | 1 | - | - | - | layout_bulk_change_runs.original_container_hash<br>layout_bulk_change_runs.proposed_container_hash | permissions; 13 permissions | safe; not cacheable; no sensitive output; varies by site, locale, page |
 | capell-app/live-chat | sensitive | 9 | - | capell-live-chat.api.conversations.store<br>capell-live-chat.api.messages.store<br>capell-live-chat.api.handoff.store<br>capell-live-chat.conversations.store<br>capell-live-chat.messages.store<br>capell-live-chat.handoff.store | - | Capell\LiveChat\Models\LiveChatAIRun::$error_message<br>Capell\LiveChat\Models\LiveChatAIRun::$input_payload<br>Capell\LiveChat\Models\LiveChatAIRun::$output_payload<br>Capell\LiveChat\Models\LiveChatAIRun::$refusal_reason<br>Capell\LiveChat\Models\LiveChatAIRun::$source_document_ids<br>Capell\LiveChat\Models\LiveChatConversation::$metadata<br>Capell\LiveChat\Models\LiveChatConversation::$visitor_company<br>Capell\LiveChat\Models\LiveChatConversation::$visitor_email<br>Capell\LiveChat\Models\LiveChatConversation::$visitor_name<br>Capell\LiveChat\Models\LiveChatConversation::$visitor_phone<br>Capell\LiveChat\Models\LiveChatEscalationRule::$metadata<br>Capell\LiveChat\Models\LiveChatInstallation::$allowed_domains<br>Capell\LiveChat\Models\LiveChatInstallation::$metadata<br>Capell\LiveChat\Models\LiveChatInstallation::$widget_settings<br>Capell\LiveChat\Models\LiveChatKnowledgeDocument::$metadata<br>Capell\LiveChat\Models\LiveChatKnowledgeGap::$metadata<br>Capell\LiveChat\Models\LiveChatKnowledgeGap::$question<br>Capell\LiveChat\Models\LiveChatKnowledgeSource::$content<br>Capell\LiveChat\Models\LiveChatKnowledgeSource::$metadata<br>Capell\LiveChat\Models\LiveChatMessage::$attachments<br>Capell\LiveChat\Models\LiveChatMessage::$body<br>Capell\LiveChat\Models\LiveChatMessage::$metadata<br>live_chat_conversations.ip_hash<br>live_chat_conversations.user_agent_hash<br>live_chat_conversations.uuid<br>live_chat_conversations.visitor_email_hash<br>live_chat_conversations.visitor_phone_hash<br>live_chat_conversations.visitor_token_hash<br>live_chat_knowledge_documents.content<br>live_chat_messages.intent<br>live_chat_messages.role | permissions; 25 permissions | safe; not cacheable; sensitive output; varies by site |
 | capell-app/login-audit | sensitive | 0 | - | - | - | - | policies; 1 permission | safe; not cacheable; no sensitive output; varies by none |
 | capell-app/media-ai | sensitive | 0 | - | - | - | - | panel-auth | safe; not cacheable; no sensitive output; varies by none |

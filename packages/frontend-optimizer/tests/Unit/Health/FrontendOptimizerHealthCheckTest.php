@@ -12,7 +12,27 @@ use Illuminate\Support\Facades\Storage;
 beforeEach(function (): void {
     Storage::fake('local');
     Config::set('queue.default', 'database');
+    Config::set('capell-frontend-optimizer.playwright.node_binary', frontendOptimizerNodeBinary());
 });
+
+function frontendOptimizerNodeBinary(): string
+{
+    $candidates = array_filter([
+        getenv('CAPELL_FRONTEND_OPTIMIZER_NODE') ?: null,
+        '/opt/homebrew/bin/node',
+        '/usr/local/bin/node',
+        getenv('HOME') !== false ? getenv('HOME') . '/.nvm/versions/node/v22.18.0/bin/node' : null,
+        'node',
+    ]);
+
+    foreach ($candidates as $candidate) {
+        if ($candidate === 'node' || is_executable($candidate)) {
+            return $candidate;
+        }
+    }
+
+    return 'node';
+}
 
 it('reports a compatible capell api version', function (): void {
     expect(FrontendOptimizerHealthCheck::compatibleCapellApiVersion())->toBe('^4.0');

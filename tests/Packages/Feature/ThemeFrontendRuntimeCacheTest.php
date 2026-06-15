@@ -6,6 +6,7 @@ require_once __DIR__ . '/../Support/ThemeFrontendTestSupport.php';
 
 use Capell\Core\Facades\CapellCore;
 use Capell\HtmlCache\Providers\HtmlCacheServiceProvider;
+use Capell\HtmlCache\Support\Extensions\ExtensionCacheSafetyResolver;
 use Illuminate\Support\Facades\Route;
 
 use function Pest\Laravel\get;
@@ -72,6 +73,28 @@ it('caches public theme route output without authoring surface', function (): vo
     config()->set('capell-html-cache.write_enabled', true);
     config()->set('capell-html-cache.cache_ttl', '3600');
     config()->set('capell-html-cache.cache_skip_authenticated', false);
+    app()->instance(ExtensionCacheSafetyResolver::class, new class
+    {
+        public function isPublicCacheSafe(): bool
+        {
+            return true;
+        }
+
+        public function blockingPackageNames(): array
+        {
+            return [];
+        }
+
+        public function blockingReasonCodes(): array
+        {
+            return [];
+        }
+
+        public function cacheTags(): array
+        {
+            return [];
+        }
+    });
 
     $pageUrl = themeFrontendCreatePage('saas', 'saas');
 

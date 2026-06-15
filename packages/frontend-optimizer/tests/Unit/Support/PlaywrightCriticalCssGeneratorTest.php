@@ -29,6 +29,7 @@ it('writes a playwright payload with only critical-eligible stylesheet paths', f
     JS_WRAP);
 
     config()->set('capell-frontend-optimizer.playwright.script', $scriptPath);
+    config()->set('capell-frontend-optimizer.playwright.node_binary', frontendOptimizerSupportNodeBinary());
 
     $profileData = ResolveRenderProfileAction::run(
         scope: OptimizationScope::Layout,
@@ -68,3 +69,22 @@ it('writes a playwright payload with only critical-eligible stylesheet paths', f
     ]);
     expect($payload['max_inline_css_bytes'])->toBe(20000);
 });
+
+function frontendOptimizerSupportNodeBinary(): string
+{
+    $candidates = array_filter([
+        getenv('CAPELL_FRONTEND_OPTIMIZER_NODE') ?: null,
+        '/opt/homebrew/bin/node',
+        '/usr/local/bin/node',
+        getenv('HOME') !== false ? getenv('HOME') . '/.nvm/versions/node/v22.18.0/bin/node' : null,
+        'node',
+    ]);
+
+    foreach ($candidates as $candidate) {
+        if ($candidate === 'node' || is_executable($candidate)) {
+            return $candidate;
+        }
+    }
+
+    return 'node';
+}
