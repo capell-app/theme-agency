@@ -2,19 +2,28 @@
 
 declare(strict_types=1);
 
+use Capell\Core\Contracts\Extensions\ChecksExtensionHealth;
+use Capell\Core\Contracts\Extensions\ExtensionContribution;
+use Capell\Core\Contracts\Extensions\RegistersExtensionSetting;
 use Capell\Newsletter\Actions\BuildNewsletterSendHandoffPayloadAction;
 use Capell\Newsletter\Actions\ResolveUtmAttributionAction;
 use Capell\Newsletter\Actions\ScheduleNewsletterSendAction;
 use Capell\Newsletter\Actions\SubscribeFromPublicRequestAction;
 use Capell\Newsletter\Actions\UpdatePreferenceCenterAction;
+use Capell\Newsletter\Console\Commands\RequeueDueProviderSyncAttemptsCommand;
 use Capell\Newsletter\Filament\Resources\NewsletterSends\NewsletterSendResource;
 use Capell\Newsletter\Filament\Resources\Segments\SegmentResource;
 use Capell\Newsletter\Filament\Resources\Subscribers\SubscriberResource;
+use Capell\Newsletter\Health\NewsletterHealthCheck;
 use Capell\Newsletter\Manifest\NewsletterAdminResourcesContribution;
+use Capell\Newsletter\Manifest\NewsletterConsoleCommandsContribution;
 use Capell\Newsletter\Manifest\NewsletterFrontendRoutesContribution;
+use Capell\Newsletter\Manifest\NewsletterHealthContribution;
 use Capell\Newsletter\Manifest\NewsletterOverviewStatsContribution;
 use Capell\Newsletter\Manifest\NewsletterOverviewWidgetContribution;
+use Capell\Newsletter\Manifest\NewsletterSettingsContribution;
 use Capell\Newsletter\Manifest\NewsletterSyncRetryScheduleContribution;
+use Capell\Newsletter\Settings\NewsletterSettings;
 
 function newsletterManifest(): array
 {
@@ -34,14 +43,23 @@ it('declares implemented newsletter package contributions', function (): void {
             NewsletterOverviewStatsContribution::class,
             NewsletterFrontendRoutesContribution::class,
             NewsletterSyncRetryScheduleContribution::class,
+            NewsletterConsoleCommandsContribution::class,
+            NewsletterSettingsContribution::class,
+            NewsletterHealthContribution::class,
         );
 
     $adminResources = $contributions->firstWhere('class', NewsletterAdminResourcesContribution::class);
     $routes = $contributions->firstWhere('class', NewsletterFrontendRoutesContribution::class);
     $scheduledJob = $contributions->firstWhere('class', NewsletterSyncRetryScheduleContribution::class);
+    $consoleCommand = $contributions->firstWhere('class', NewsletterConsoleCommandsContribution::class);
+    $settings = $contributions->firstWhere('class', NewsletterSettingsContribution::class);
+    $healthCheck = $contributions->firstWhere('class', NewsletterHealthContribution::class);
     throw_unless(is_array($adminResources), RuntimeException::class, 'Expected newsletter admin resource contribution.');
     throw_unless(is_array($routes), RuntimeException::class, 'Expected newsletter route contribution.');
     throw_unless(is_array($scheduledJob), RuntimeException::class, 'Expected newsletter scheduled job contribution.');
+    throw_unless(is_array($consoleCommand), RuntimeException::class, 'Expected newsletter console command contribution.');
+    throw_unless(is_array($settings), RuntimeException::class, 'Expected newsletter settings contribution.');
+    throw_unless(is_array($healthCheck), RuntimeException::class, 'Expected newsletter health check contribution.');
 
     expect($adminResources['resourceClasses'])->toContain(
         SubscriberResource::class,
@@ -56,7 +74,17 @@ it('declares implemented newsletter package contributions', function (): void {
             'capell-newsletter.preferences.update',
             'capell-newsletter.provider-webhook',
         )
-        ->and($scheduledJob['command'])->toBe('newsletter:sync-retry-due');
+        ->and($scheduledJob['command'])->toBe('newsletter:sync-retry-due')
+        ->and($manifest['commands']['syncRetry'])->toBe('newsletter:sync-retry-due')
+        ->and($manifest['settings'])->toContain(NewsletterSettings::class)
+        ->and($consoleCommand['commands'])->toBe(['newsletter:sync-retry-due'])
+        ->and($consoleCommand['commandClasses'])->toBe([RequeueDueProviderSyncAttemptsCommand::class])
+        ->and($settings['settingsClass'])->toBe(NewsletterSettings::class)
+        ->and($settings['settingsGroup'])->toBe('newsletter')
+        ->and($healthCheck['checkClass'])->toBe(NewsletterHealthCheck::class)
+        ->and(class_implements(NewsletterConsoleCommandsContribution::class))->toContain(ExtensionContribution::class)
+        ->and(class_implements(NewsletterSettingsContribution::class))->toContain(RegistersExtensionSetting::class)
+        ->and(class_implements(NewsletterHealthContribution::class))->toContain(ChecksExtensionHealth::class);
 });
 
 it('declares newsletter segmentation, preference center, campaign send, and attribution actions', function (): void {
