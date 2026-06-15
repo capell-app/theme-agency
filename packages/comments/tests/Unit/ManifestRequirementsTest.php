@@ -60,6 +60,8 @@ it('declares comments as optional for supported companion packages', function ()
 it('declares implemented comments contribution surfaces', function (): void {
     $manifest = json_decode(File::get(__DIR__ . '/../../capell.json'), true, flags: JSON_THROW_ON_ERROR);
 
+    throw_unless(is_array($manifest), RuntimeException::class, 'Comments manifest must be an array.');
+
     $contributions = $manifest['contributes'] ?? [];
 
     throw_unless(is_array($contributions), RuntimeException::class, 'Comments contributions must be an array.');
@@ -73,7 +75,21 @@ it('declares implemented comments contribution surfaces', function (): void {
     $settings = $contributions->firstWhere('class', CommentSettingsContribution::class);
     $components = $contributions->firstWhere('class', CommentFrontendComponentsContribution::class);
 
-    expect($manifest['contributionTraceability']['deferredContributions'])->toBe([])
+    throw_unless(is_array($widgets), RuntimeException::class, 'Comments widget contribution must be an array.');
+    throw_unless(is_array($resources), RuntimeException::class, 'Comments resource contribution must be an array.');
+    throw_unless(is_array($models), RuntimeException::class, 'Comments model contribution must be an array.');
+    throw_unless(is_array($routes), RuntimeException::class, 'Comments route contribution must be an array.');
+    throw_unless(is_array($settings), RuntimeException::class, 'Comments settings contribution must be an array.');
+    throw_unless(is_array($components), RuntimeException::class, 'Comments component contribution must be an array.');
+
+    $traceability = $manifest['contributionTraceability'] ?? null;
+    $security = $manifest['security'] ?? null;
+
+    throw_unless(is_array($traceability), RuntimeException::class, 'Comments traceability metadata must be an array.');
+    throw_unless(is_array($security), RuntimeException::class, 'Comments security metadata must be an array.');
+    throw_unless(is_array($security['publicSurface'] ?? null), RuntimeException::class, 'Comments public surface metadata must be an array.');
+
+    expect($traceability['deferredContributions'])->toBe([])
         ->and($widgets['widgetClasses'])->toContain(CommentStatsWidget::class, LatestCommentsWidget::class)
         ->and($resources['resourceClasses'])->toContain(CommentResource::class, CommentAuthorResource::class)
         ->and($models['modelClasses'])->toContain(
@@ -83,7 +99,7 @@ it('declares implemented comments contribution surfaces', function (): void {
             CommentModerationEvent::class,
             CommentReaction::class,
         )
-        ->and($routes['routes'])->toBe($manifest['security']['publicSurface']['routeNames'])
+        ->and($routes['routes'])->toBe($security['publicSurface']['routeNames'])
         ->and($settings['settingsClass'])->toBe(CommentSettings::class)
         ->and($components['componentClasses'])->toContain('Capell\\Comments\\Livewire\\CommentThreadComponent');
 });

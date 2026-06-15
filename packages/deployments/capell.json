@@ -28,7 +28,34 @@
         "admin": ["Capell\\Deployments\\Providers\\DeploymentsServiceProvider"],
         "frontend": []
     },
-    "contributes": [],
+    "contributes": [
+        {
+            "type": "admin-page",
+            "class": "Capell\\Deployments\\Manifest\\DeploymentsAdminPageContribution",
+            "pageClass": "Capell\\Deployments\\Filament\\Pages\\DeploymentConnectionPage",
+            "labelKey": "capell-deployments::plugins.deployment_connection.nav_label",
+            "surface": "admin"
+        },
+        {
+            "type": "route",
+            "class": "Capell\\Deployments\\Manifest\\DeploymentsRoutesContribution",
+            "routes": [
+                "capell-deployments.oauth.bitbucket",
+                "capell-deployments.oauth.github",
+                "capell-deployments.oauth.gitlab"
+            ],
+            "prefix": "capell/oauth",
+            "middleware": ["web", "auth"],
+            "surface": "admin"
+        },
+        {
+            "type": "dashboard-widget",
+            "class": "Capell\\Deployments\\Manifest\\DeploymentsDashboardWidgetContribution",
+            "widgetClass": "Capell\\Deployments\\Filament\\Widgets\\DeploymentConnectionWidget",
+            "dashboard": "system-health",
+            "surface": "admin"
+        }
+    ],
     "database": {
         "migrations": true,
         "settings": false,
@@ -61,7 +88,7 @@
                 "capell-deployments.oauth.github",
                 "capell-deployments.oauth.gitlab"
             ],
-            "auth": "public",
+            "auth": "authenticated",
             "csrfExemptRoutes": [],
             "signedRoutes": [],
             "tokenizedRoutes": [],
@@ -94,7 +121,10 @@
                 "Capell\\Deployments\\Actions\\RefreshProviderTokenAction",
                 "Capell\\Deployments\\Http\\Controllers\\OAuth\\BitbucketCallbackController",
                 "Capell\\Deployments\\Http\\Controllers\\OAuth\\GitHubCallbackController",
-                "Capell\\Deployments\\Http\\Controllers\\OAuth\\GitLabCallbackController"
+                "Capell\\Deployments\\Http\\Controllers\\OAuth\\GitLabCallbackController",
+                "Capell\\Deployments\\Services\\GitProvider\\BitbucketProvider",
+                "Capell\\Deployments\\Services\\GitProvider\\GitHubProvider",
+                "Capell\\Deployments\\Services\\GitProvider\\GitLabProvider"
             ]
         },
         "adminSurface": {
@@ -154,6 +184,6 @@
         "categories": ["admin", "operations"]
     },
     "contributionTraceability": {
-        "deferredContributions": ["admin-page", "route", "dashboard-widget"]
+        "deferredContributions": []
     }
 }

@@ -25,10 +25,11 @@ final class GitHubProvider implements GitProviderContract
             ->json();
 
         $rawContent = str_replace(["\n", "\r", ' '], '', $response['content']);
+        $decodedContent = base64_decode($rawContent, strict: true);
 
         return new RepoFile(
             path: $path,
-            content: base64_decode($rawContent, strict: true) !== false ? base64_decode($rawContent, strict: true) : '',
+            content: $decodedContent !== false ? $decodedContent : '',
             sha: $response['sha'],
         );
     }
@@ -274,7 +275,7 @@ final class GitHubProvider implements GitProviderContract
             ->withHeader('Accept', 'application/vnd.github+json')
             ->withHeader('X-GitHub-Api-Version', '2022-11-28')
             ->retry(2, 200, throw: false)
-            ->timeout(10)
+            ->timeout($this->httpTimeout())
             ->connectTimeout(5);
     }
 
@@ -286,8 +287,19 @@ final class GitHubProvider implements GitProviderContract
             ->withHeader('Accept', 'application/vnd.github+json')
             ->withHeader('X-GitHub-Api-Version', '2022-11-28')
             ->retry(2, 200, throw: false)
-            ->timeout(10)
+            ->timeout($this->httpTimeout())
             ->connectTimeout(5);
+    }
+
+    private function httpTimeout(): int
+    {
+        $timeout = config('capell-deployments.http_timeout', 10);
+
+        if (is_numeric($timeout)) {
+            return max(1, (int) $timeout);
+        }
+
+        return 10;
     }
 
     /**

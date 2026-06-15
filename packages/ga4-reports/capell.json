@@ -26,11 +26,94 @@
         "admin": ["Capell\\GA4Reports\\Providers\\AdminServiceProvider"],
         "frontend": []
     },
-    "contributes": [],
+    "contributes": [
+        {
+            "type": "admin-page",
+            "class": "Capell\\GA4Reports\\Manifest\\GA4ReportsAdminPageContribution",
+            "pageClass": "Capell\\GA4Reports\\Filament\\Pages\\GA4ReportsPage",
+            "labelKey": "capell-ga4-reports::widgets.ga4_reports",
+            "descriptionKey": "capell-ga4-reports::widgets.ga4_reports_hint",
+            "permission": "View:GA4ReportsPage"
+        },
+        {
+            "type": "dashboard-widget",
+            "class": "Capell\\GA4Reports\\Manifest\\GA4ReportsDashboardWidgetsContribution",
+            "widgetClasses": [
+                "Capell\\GA4Reports\\Filament\\Widgets\\GA4ReportsTrafficTrendWidget",
+                "Capell\\GA4Reports\\Filament\\Widgets\\GA4ReportsTopPagesWidget",
+                "Capell\\GA4Reports\\Filament\\Widgets\\GA4ReportsSetupStatusWidget"
+            ],
+            "settingsKeys": [
+                "ga4_reports_traffic_trend",
+                "ga4_reports_top_pages",
+                "ga4_reports_sync_status"
+            ]
+        },
+        {
+            "type": "dashboard-widget",
+            "class": "Capell\\GA4Reports\\Manifest\\GA4ReportsDashboardWidgetsContribution",
+            "widgetClasses": [
+                "Capell\\GA4Reports\\Filament\\Widgets\\GA4ReportsOverviewStatsWidget",
+                "Capell\\GA4Reports\\Filament\\Widgets\\GA4ReportsTopPagesTableWidget"
+            ],
+            "surface": "admin-page",
+            "pageClass": "Capell\\GA4Reports\\Filament\\Pages\\GA4ReportsPage"
+        },
+        {
+            "type": "overview-stat",
+            "class": "Capell\\GA4Reports\\Manifest\\GA4ReportsOverviewStatsContribution",
+            "keys": [
+                "ga4_reports_overview",
+                "ga4_reports_overview.sessions",
+                "ga4_reports_overview.engagement_rate"
+            ],
+            "settingsKey": "ga4_reports_overview"
+        },
+        {
+            "type": "model",
+            "class": "Capell\\GA4Reports\\Manifest\\GA4ReportsModelsContribution",
+            "modelClasses": [
+                "Capell\\GA4Reports\\Models\\GA4ReportsDailyMetric",
+                "Capell\\GA4Reports\\Models\\GA4ReportsPageMetric",
+                "Capell\\GA4Reports\\Models\\GA4ReportsSyncRun"
+            ]
+        },
+        {
+            "type": "scheduled-job",
+            "class": "Capell\\GA4Reports\\Manifest\\GA4ReportsScheduledSyncContribution",
+            "command": "capell:ga4-reports-sync",
+            "name": "capell-ga4-reports-sync",
+            "frequencyConfig": "capell-ga4-reports.sync_cron"
+        },
+        {
+            "type": "console-command",
+            "class": "Capell\\GA4Reports\\Manifest\\GA4ReportsConsoleCommandsContribution",
+            "commands": ["capell:ga4-reports-sync", "ga4-reports:sync"],
+            "commandClasses": [
+                "Capell\\GA4Reports\\Console\\Commands\\SyncGA4ReportsCommand"
+            ]
+        },
+        {
+            "type": "setting",
+            "class": "Capell\\GA4Reports\\Manifest\\GA4ReportsSettingsContribution",
+            "settingsClass": "Capell\\GA4Reports\\Settings\\GA4ReportsSettings",
+            "settingsGroup": "ga4_reports",
+            "schemaClass": "Capell\\GA4Reports\\Filament\\Settings\\GA4ReportsSettingsSchema"
+        },
+        {
+            "type": "health-check",
+            "class": "Capell\\GA4Reports\\Manifest\\GA4ReportsHealthContribution",
+            "checkClass": "Capell\\GA4Reports\\Health\\Ga4ReportsHealthCheck"
+        }
+    ],
     "database": {
         "migrations": true,
         "settings": true,
-        "requiredTables": []
+        "requiredTables": [
+            "ga4_reports_sync_runs",
+            "ga4_reports_daily_metrics",
+            "ga4_reports_page_metrics"
+        ]
     },
     "commands": {
         "install": null,
@@ -38,7 +121,7 @@
         "demo": null,
         "doctor": "capell:ga4-reports-sync"
     },
-    "settings": [],
+    "settings": ["Capell\\GA4Reports\\Settings\\GA4ReportsSettings"],
     "permissions": [],
     "capabilities": ["ga4-reports", "ga4-reports-admin", "ga4-reports-console"],
     "security": {
@@ -146,12 +229,6 @@
         "categories": ["admin", "console", "growth"]
     },
     "contributionTraceability": {
-        "deferredContributions": [
-            "admin-page",
-            "dashboard-widget",
-            "model",
-            "overview-stat",
-            "scheduled-job"
-        ]
+        "deferredContributions": []
     }
 }

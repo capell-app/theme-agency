@@ -2,6 +2,13 @@
 
 declare(strict_types=1);
 
+use Capell\Core\Contracts\Extensions\ExtensionContribution;
+use Capell\Core\Contracts\Extensions\RegistersExtensionRoute;
+use Capell\Core\Contracts\Extensions\RegistersExtensionWidget;
+use Capell\Deployments\Manifest\DeploymentsAdminPageContribution;
+use Capell\Deployments\Manifest\DeploymentsDashboardWidgetContribution;
+use Capell\Deployments\Manifest\DeploymentsRoutesContribution;
+
 /**
  * @return array<string, mixed>
  */
@@ -36,6 +43,68 @@ it('declares only shipped deployment surfaces and capabilities', function (): vo
             'demo' => null,
             'doctor' => null,
         ]);
+});
+
+it('declares shipped deployments contributions and no longer defers them', function (): void {
+    $manifest = deploymentsPackageManifest();
+
+    expect($manifest['contributes'] ?? [])->toBe([
+        [
+            'type' => 'admin-page',
+            'class' => DeploymentsAdminPageContribution::class,
+            'pageClass' => 'Capell\\Deployments\\Filament\\Pages\\DeploymentConnectionPage',
+            'labelKey' => 'capell-deployments::plugins.deployment_connection.nav_label',
+            'surface' => 'admin',
+        ],
+        [
+            'type' => 'route',
+            'class' => DeploymentsRoutesContribution::class,
+            'routes' => [
+                'capell-deployments.oauth.bitbucket',
+                'capell-deployments.oauth.github',
+                'capell-deployments.oauth.gitlab',
+            ],
+            'prefix' => 'capell/oauth',
+            'middleware' => ['web', 'auth'],
+            'surface' => 'admin',
+        ],
+        [
+            'type' => 'dashboard-widget',
+            'class' => DeploymentsDashboardWidgetContribution::class,
+            'widgetClass' => 'Capell\\Deployments\\Filament\\Widgets\\DeploymentConnectionWidget',
+            'dashboard' => 'system-health',
+            'surface' => 'admin',
+        ],
+    ])
+        ->and($manifest['contributionTraceability']['deferredContributions'] ?? null)->toBe([])
+        ->and(class_implements(DeploymentsAdminPageContribution::class))->toContain(ExtensionContribution::class)
+        ->and(class_implements(DeploymentsRoutesContribution::class))->toContain(ExtensionContribution::class)
+        ->and(class_implements(DeploymentsRoutesContribution::class))->toContain(RegistersExtensionRoute::class)
+        ->and(class_implements(DeploymentsDashboardWidgetContribution::class))->toContain(ExtensionContribution::class)
+        ->and(class_implements(DeploymentsDashboardWidgetContribution::class))->toContain(RegistersExtensionWidget::class)
+        ->and(DeploymentsAdminPageContribution::compatibleCapellApiVersion())->toBe('^4.0')
+        ->and(DeploymentsRoutesContribution::compatibleCapellApiVersion())->toBe('^4.0')
+        ->and(DeploymentsDashboardWidgetContribution::compatibleCapellApiVersion())->toBe('^4.0');
+});
+
+it('describes authenticated oauth routes and all deployments http clients', function (): void {
+    $manifest = deploymentsPackageManifest();
+
+    expect($manifest['security']['publicSurface']['auth'] ?? null)->toBe('authenticated')
+        ->and($manifest['security']['publicSurface']['routeNames'] ?? [])->toBe([
+            'capell-deployments.oauth.bitbucket',
+            'capell-deployments.oauth.github',
+            'capell-deployments.oauth.gitlab',
+        ])
+        ->and($manifest['security']['externalHttpClients']['clients'] ?? [])->toContain(
+            'Capell\\Deployments\\Actions\\RefreshProviderTokenAction',
+            'Capell\\Deployments\\Http\\Controllers\\OAuth\\BitbucketCallbackController',
+            'Capell\\Deployments\\Http\\Controllers\\OAuth\\GitHubCallbackController',
+            'Capell\\Deployments\\Http\\Controllers\\OAuth\\GitLabCallbackController',
+            'Capell\\Deployments\\Services\\GitProvider\\BitbucketProvider',
+            'Capell\\Deployments\\Services\\GitProvider\\GitHubProvider',
+            'Capell\\Deployments\\Services\\GitProvider\\GitLabProvider',
+        );
 });
 
 it('keeps marketplace screenshots aligned with committed deployment media', function (): void {

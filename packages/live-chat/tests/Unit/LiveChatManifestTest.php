@@ -241,7 +241,9 @@ it('declares the live chat package manifest contract', function (): void {
             'live-chat-knowledge-documents',
             'live-chat-knowledge-gaps',
         )
-        ->and($contributionTraceability['deferredContributions'] ?? null)->toBe([]);
+        ->and($contributionTraceability['deferredContributions'] ?? null)->toBe([
+            'agent-capability',
+        ]);
 });
 
 it('declares committed marketplace assets and screenshot fallbacks', function (): void {

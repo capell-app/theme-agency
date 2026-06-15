@@ -1,18 +1,21 @@
 # Event Extension Points
 
-Events registers an `event` page type, Filament resources, calendar feed routes, Blaze-optimized views, Livewire components, SEO schema hooks, and Publishing Studio workspace support when the package is installed.
+Events registers an `event` page type, Filament resources, calendar feed routes, Blade views, Livewire components, SEO schema hooks, and Publishing Studio workspace support when the package is installed.
 
 ## Runtime Surface
 
 | Surface            | Code                                                                                                |
 | ------------------ | --------------------------------------------------------------------------------------------------- |
 | Install command    | `capell:events-install`                                                                             |
+| Doctor command     | `capell:events-doctor`                                                                              |
 | Page type          | `CapellCore::registerPageType(name: event)`                                                         |
-| Public feed routes | `events.ics`, `events/{listingPage}/feed.ics`                                                       |
+| Page variation     | `CapellCore::registerPageVariation(name: event, model: Event::class)`                               |
+| Public feed routes | `capell-events.calendar-feed`, `capell-events.listing-calendar-feed`                                |
 | Render hooks       | `RegisterEventSchemaHooks`                                                                          |
 | SEO schema         | `SchemaTemplateRegistry::registerIfMissing(SchemaTemplateTypeEnum::Event, new EventSchemaTemplate)` |
 | Publishing Studio  | `WorkspaceRegistry::register(Event::class)`                                                         |
-| Livewire           | `EventCalendar` via `LivewireComponentEnum`                                                         |
+| Scheduled jobs     | `capell-events:process-notifications`, `capell-events:reconcile-waitlists`                          |
+| Livewire           | `EventCalendar`, `EventsCalendarPage`, `EventsListingPage` via `LivewireComponentEnum`              |
 
 ## Native Registration
 
