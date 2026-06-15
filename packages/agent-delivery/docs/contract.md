@@ -47,3 +47,5 @@ Packages can tag focused contributor contracts:
 - `AgentDeliveryContributor::TAG` remains supported as a legacy aggregate contributor for metadata and chunks.
 
 Contributors must not include admin/editor state, model IDs, signed URLs, prompts, permissions, package internals, field paths, unpublished content, or hidden authoring markers. Metadata contributors are sanitised recursively before output; specialised metadata contributors override aggregate contributors by explicit registration order.
+
+Contributor exceptions are isolated to the failed surface. Agent Delivery logs a warning, skips the failing contributor result, and continues building the public response from core data and other registered contributors.

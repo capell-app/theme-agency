@@ -16,6 +16,8 @@ Tag implementations in the service container with the contract `TAG` constant.
 
 Specialised metadata contributors and aggregate contributors are merged in explicit registration order; when keys collide, the later registered contributor wins. Keep keys namespaced enough to avoid accidental overwrites.
 
+Contributor failures are isolated per contribution surface. If a contributor throws while building metadata, chunks, references, or related URLs, Agent Delivery logs a warning with the contributor type and surface, skips that failed contribution, and continues returning safe output from other contributors and the core page builder.
+
 ## Public Safety Rules
 
 Contributors must only return content already safe for anonymous public visitors.

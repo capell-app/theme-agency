@@ -17,6 +17,7 @@ use Capell\Core\Models\Language;
 use Capell\Core\Models\Page;
 use Capell\Core\Models\Site;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Log;
 
 uses(AgentDeliveryTestCase::class);
 
@@ -125,6 +126,127 @@ it('collects focused package-aware delivery contributors', function (): void {
         ->and($registry->references($page, $site, $language))
         ->toBe([
             ['title' => 'Source', 'url' => 'https://source.example/reference'],
+        ])
+        ->and($registry->relatedUrls($page, $site, $language))
+        ->toBe(['https://example.com/related']);
+});
+
+it('skips failing contributors while preserving safe public output', function (): void {
+    $registry = new AgentDeliveryRegistry;
+    $page = (new Page)->forceFill(['id' => 5]);
+    $site = (new Site)->forceFill(['id' => 7]);
+    $language = (new Language)->forceFill(['id' => 9, 'code' => 'en', 'locale' => 'en']);
+
+    Log::shouldReceive('warning')
+        ->times(4)
+        ->with(
+            'capell-agent-delivery: skipped failing contributor.',
+            Mockery::on(static fn (array $context): bool => in_array($context['surface'] ?? null, [
+                'metadata',
+                'chunks',
+                'references',
+                'related_urls',
+            ], true) && ($context['exception'] ?? null) === RuntimeException::class),
+        );
+
+    $registry
+        ->register(new class implements AgentDeliveryContributor
+        {
+            /**
+             * @param  Pageable<Model>  $page
+             * @return array<string, mixed>
+             */
+            public function metadata(Pageable $page, Site $site, Language $language): array
+            {
+                throw new RuntimeException('metadata failure');
+            }
+
+            /**
+             * @param  Pageable<Model>  $page
+             * @return list<AgentDeliveryChunkData>
+             */
+            public function chunks(Pageable $page, Site $site, Language $language): array
+            {
+                throw new RuntimeException('chunk failure');
+            }
+        })
+        ->registerMetadataContributor(new class implements AgentDeliveryMetadataContributor
+        {
+            /**
+             * @param  Pageable<Model>  $page
+             * @return array<string, mixed>
+             */
+            public function metadata(Pageable $page, Site $site, Language $language): array
+            {
+                return ['author' => ['name' => 'Editorial']];
+            }
+        })
+        ->registerChunkContributor(new class implements AgentDeliveryChunkContributor
+        {
+            /**
+             * @param  Pageable<Model>  $page
+             * @return list<AgentDeliveryChunkData>
+             */
+            public function chunks(Pageable $page, Site $site, Language $language): array
+            {
+                return [
+                    new AgentDeliveryChunkData('safe-chunk', 'Safe Chunk', 'https://example.com#safe', null, 'Safe body', 1),
+                ];
+            }
+        })
+        ->registerReferenceContributor(new class implements AgentDeliveryReferenceContributor
+        {
+            /**
+             * @param  Pageable<Model>  $page
+             * @return list<array<string, string>>
+             */
+            public function references(Pageable $page, Site $site, Language $language): array
+            {
+                throw new RuntimeException('reference failure');
+            }
+        })
+        ->registerReferenceContributor(new class implements AgentDeliveryReferenceContributor
+        {
+            /**
+             * @param  Pageable<Model>  $page
+             * @return list<array<string, string>>
+             */
+            public function references(Pageable $page, Site $site, Language $language): array
+            {
+                return [
+                    ['title' => 'Safe source', 'url' => 'https://source.example/safe'],
+                ];
+            }
+        })
+        ->registerRelatedUrlContributor(new class implements AgentDeliveryRelatedUrlContributor
+        {
+            /**
+             * @param  Pageable<Model>  $page
+             * @return list<string>
+             */
+            public function relatedUrls(Pageable $page, Site $site, Language $language): array
+            {
+                throw new RuntimeException('related URL failure');
+            }
+        })
+        ->registerRelatedUrlContributor(new class implements AgentDeliveryRelatedUrlContributor
+        {
+            /**
+             * @param  Pageable<Model>  $page
+             * @return list<string>
+             */
+            public function relatedUrls(Pageable $page, Site $site, Language $language): array
+            {
+                return ['https://example.com/related'];
+            }
+        });
+
+    expect($registry->metadata($page, $site, $language))->toBe(['author' => ['name' => 'Editorial']])
+        ->and(array_map(static fn (AgentDeliveryChunkData $chunk): string => $chunk->id, $registry->chunks($page, $site, $language)))
+        ->toBe(['safe-chunk'])
+        ->and($registry->references($page, $site, $language))
+        ->toBe([
+            ['title' => 'Safe source', 'url' => 'https://source.example/safe'],
         ])
         ->and($registry->relatedUrls($page, $site, $language))
         ->toBe(['https://example.com/related']);

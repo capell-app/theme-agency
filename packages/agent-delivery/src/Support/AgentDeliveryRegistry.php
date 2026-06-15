@@ -14,6 +14,8 @@ use Capell\Core\Contracts\Pageable;
 use Capell\Core\Models\Language;
 use Capell\Core\Models\Site;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Log;
+use Throwable;
 
 final class AgentDeliveryRegistry
 {
@@ -120,11 +122,19 @@ final class AgentDeliveryRegistry
         $metadata = [];
 
         foreach ($this->contributors as $contributor) {
-            $metadata = array_replace_recursive($metadata, $contributor->metadata($page, $site, $language));
+            try {
+                $metadata = array_replace_recursive($metadata, $contributor->metadata($page, $site, $language));
+            } catch (Throwable $throwable) {
+                $this->reportContributorFailure($contributor, 'metadata', $throwable);
+            }
         }
 
         foreach ($this->metadataContributors as $contributor) {
-            $metadata = array_replace_recursive($metadata, $contributor->metadata($page, $site, $language));
+            try {
+                $metadata = array_replace_recursive($metadata, $contributor->metadata($page, $site, $language));
+            } catch (Throwable $throwable) {
+                $this->reportContributorFailure($contributor, 'metadata', $throwable);
+            }
         }
 
         return $this->sanitiseMetadata($metadata);
@@ -139,14 +149,22 @@ final class AgentDeliveryRegistry
         $chunks = [];
 
         foreach ($this->contributors as $contributor) {
-            foreach ($contributor->chunks($page, $site, $language) as $chunk) {
-                $chunks[] = $chunk;
+            try {
+                foreach ($contributor->chunks($page, $site, $language) as $chunk) {
+                    $chunks[] = $chunk;
+                }
+            } catch (Throwable $throwable) {
+                $this->reportContributorFailure($contributor, 'chunks', $throwable);
             }
         }
 
         foreach ($this->chunkContributors as $contributor) {
-            foreach ($contributor->chunks($page, $site, $language) as $chunk) {
-                $chunks[] = $chunk;
+            try {
+                foreach ($contributor->chunks($page, $site, $language) as $chunk) {
+                    $chunks[] = $chunk;
+                }
+            } catch (Throwable $throwable) {
+                $this->reportContributorFailure($contributor, 'chunks', $throwable);
             }
         }
 
@@ -167,13 +185,17 @@ final class AgentDeliveryRegistry
         $references = [];
 
         foreach ($this->referenceContributors as $contributor) {
-            foreach ($contributor->references($page, $site, $language) as $reference) {
-                if ($this->isPublicUrl($reference['url'] ?? null)) {
-                    $references[] = array_filter(
-                        $reference,
-                        static fn (string $value): bool => $value !== '',
-                    );
+            try {
+                foreach ($contributor->references($page, $site, $language) as $reference) {
+                    if ($this->isPublicUrl($reference['url'] ?? null)) {
+                        $references[] = array_filter(
+                            $reference,
+                            static fn (string $value): bool => $value !== '',
+                        );
+                    }
                 }
+            } catch (Throwable $throwable) {
+                $this->reportContributorFailure($contributor, 'references', $throwable);
             }
         }
 
@@ -189,10 +211,14 @@ final class AgentDeliveryRegistry
         $urls = [];
 
         foreach ($this->relatedUrlContributors as $contributor) {
-            foreach ($contributor->relatedUrls($page, $site, $language) as $url) {
-                if ($this->isPublicUrl($url)) {
-                    $urls[] = $url;
+            try {
+                foreach ($contributor->relatedUrls($page, $site, $language) as $url) {
+                    if ($this->isPublicUrl($url)) {
+                        $urls[] = $url;
+                    }
                 }
+            } catch (Throwable $throwable) {
+                $this->reportContributorFailure($contributor, 'related_urls', $throwable);
             }
         }
 
@@ -253,5 +279,14 @@ final class AgentDeliveryRegistry
     {
         return is_string($url)
             && (str_starts_with($url, 'https://') || str_starts_with($url, 'http://'));
+    }
+
+    private function reportContributorFailure(object $contributor, string $surface, Throwable $throwable): void
+    {
+        Log::warning('capell-agent-delivery: skipped failing contributor.', [
+            'contributor' => get_debug_type($contributor),
+            'surface' => $surface,
+            'exception' => $throwable::class,
+        ]);
     }
 }

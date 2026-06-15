@@ -67,6 +67,8 @@ Implementation slice 1 exposed public JSON routes, contributor contracts, and he
 
 Implementation slice 2 closed the deferred public-api-endpoint traceability gap by declaring the public JSON API metadata on the route contribution, recording the throttled route names in security metadata, and documenting the public API contract for buyers, admins, and package authors.
 
+Implementation slice 3 isolated contributor failures at the registry boundary. Metadata, chunk, reference, and related URL contributors are skipped and logged when they throw, while core public output and other safe contributors continue to render.
+
 ```bash
 vendor/bin/pest packages/agent-delivery/tests --configuration=phpunit.xml
 ```
@@ -84,6 +86,7 @@ vendor/bin/pest packages/agent-delivery/tests/Feature/Http packages/agent-delive
 - [x] Capell audience pass completed for AI consumers, developers, and Marketplace buyers.
 - [x] Approved implementation slice 1 shipped: route/contract manifest metadata and health diagnostics.
 - [x] Public API endpoint traceability gap closed in manifest metadata, tests, and docs.
+- [x] Contributor failures isolated and covered for metadata, chunks, references, and related URLs.
 - [x] Focused Agent Delivery verification passed.
 - [x] Package tests passed.
 - [x] Scoped Agent Delivery manifest/preflight check passed; broad manifest audit is blocked by unrelated `content-sections` traceability drift.
