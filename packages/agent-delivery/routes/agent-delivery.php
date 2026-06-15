@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Capell\AgentDelivery\Http\Controllers\DiscoveryController;
 use Capell\AgentDelivery\Http\Controllers\PageChunksController;
 use Capell\AgentDelivery\Http\Controllers\PageIndexController;
 use Capell\AgentDelivery\Http\Controllers\PageManifestController;
@@ -36,6 +37,9 @@ $apiMiddleware = [
 Route::middleware($apiMiddleware)
     ->prefix('api/capell/agent/v1')
     ->group(function (): void {
+        Route::get('discovery', DiscoveryController::class)
+            ->name('capell-agent-delivery.discovery');
+
         Route::get('pages', PageIndexController::class)
             ->name('capell-agent-delivery.pages.index');
 

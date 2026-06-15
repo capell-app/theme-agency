@@ -33,18 +33,21 @@ it('declares shipped agent delivery manifest contributions', function (): void {
         ->toHaveKey('name', 'capell-app/agent-delivery')
         ->toHaveKey('namespace', 'Capell\\AgentDelivery')
         ->and(data_get($manifest, 'security.publicSurface.routeNames'))->toBe([
+            'capell-agent-delivery.discovery',
             'capell-agent-delivery.pages.chunks',
             'capell-agent-delivery.pages.index',
             'capell-agent-delivery.pages.manifest',
         ])
         ->and(data_get($manifest, 'security.publicSurface.auth'))->toBe('public')
         ->and(data_get($manifest, 'security.publicSurface.throttledRoutes'))->toBe([
+            'capell-agent-delivery.discovery',
             'capell-agent-delivery.pages.chunks',
             'capell-agent-delivery.pages.index',
             'capell-agent-delivery.pages.manifest',
         ])
         ->and(data_get($manifest, 'performance.cacheSafety.cacheable'))->toBeTrue()
         ->and(data_get($manifest, 'performance.cacheSafety.variesBy'))->toBe(['site', 'language', 'url', 'page'])
+        ->and(data_get($manifest, 'capabilities'))->toContain('public-agent-discovery')
         ->and(data_get($manifest, 'healthChecks.0.class'))->toBe(AgentDeliveryHealthCheck::class)
         ->and(data_get($manifest, 'contributionTraceability.deferredContributions'))->toBe([]);
 
@@ -71,6 +74,7 @@ it('declares shipped agent delivery manifest contributions', function (): void {
                 'Last-Modified',
             ],
             'routes' => [
+                'capell-agent-delivery.discovery',
                 'capell-agent-delivery.pages.index',
                 'capell-agent-delivery.pages.manifest',
                 'capell-agent-delivery.pages.chunks',

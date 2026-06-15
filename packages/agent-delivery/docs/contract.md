@@ -5,6 +5,7 @@
 - `GET /api/capell/agent/v1/pages`
 - `GET /api/capell/agent/v1/pages/manifest?url=/example`
 - `GET /api/capell/agent/v1/pages/chunks?url=/example`
+- `GET /api/capell/agent/v1/discovery`
 
 All routes resolve the site from the request host and only serve content that Core resolves as public. Pass `?locale=en` when the caller needs a specific language instead of the host/domain default.
 
@@ -23,6 +24,10 @@ Successful responses include:
 Requests with a matching `If-None-Match` return `304`.
 
 Cacheable responses declare `site,language,url,page` variation dimensions and `Vary: Host` because the same route names resolve different public content for different site domains. The variation header lists dimensions only; it does not expose model identifiers or authoring metadata.
+
+## Discovery
+
+`GET /discovery` returns the Agent Delivery API version, public capabilities, endpoint URLs, URI templates for manifest/chunks lookups, and cache variation metadata. It deliberately lives under the versioned package prefix instead of claiming host-level `/llms.txt`, so sites can decide whether and how to expose a root discovery document.
 
 ## Page Index
 

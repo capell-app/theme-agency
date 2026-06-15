@@ -186,6 +186,7 @@ final class AgentDeliveryHealthCheck implements ChecksExtensionHealth
     private function publicRouteNames(): array
     {
         return [
+            'capell-agent-delivery.discovery',
             'capell-agent-delivery.pages.index',
             'capell-agent-delivery.pages.manifest',
             'capell-agent-delivery.pages.chunks',

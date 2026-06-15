@@ -4,7 +4,7 @@
 
 ## 1. Snapshot
 
-Agent Delivery exposes published Capell pages as public-safe JSON manifests and semantic chunks for AI agents, RAG systems, and answer engines. It owns frontend API routes under `api/capell/agent/v1`, a contributor registry for metadata/chunks/references/related URLs, rate limiting, ETag/conditional request handling, chunk budget diagnostics, Site Discovery coverage integration, JSON screenshots, and route/controller tests. The Marketplace intentionally has no buyer-facing screenshots because raw JSON output is not product UI.
+Agent Delivery exposes published Capell pages as public-safe JSON manifests and semantic chunks for AI agents, RAG systems, and answer engines. It owns frontend API routes under `api/capell/agent/v1`, a versioned discovery document, a contributor registry for metadata/chunks/references/related URLs, rate limiting, ETag/conditional request handling, chunk budget diagnostics, Site Discovery coverage integration, JSON screenshots, and route/controller tests. The Marketplace intentionally has no buyer-facing screenshots because raw JSON output is not product UI.
 
 ## 2. Improvements (existing functionality)
 
@@ -23,7 +23,7 @@ Capabilities declared: `agent-delivery`, `public-page-manifest`, and `public-pag
 - **No styled endpoint explorer.** Raw JSON screenshots are useful evidence, but not buyer-facing Marketplace media.
 - **Done/Shipped: ETag/conditional request support.** Agent clients can poll manifests and chunks with stable `ETag` headers and `If-None-Match` `304` responses.
 - **Done/Shipped: chunk budget diagnostics.** Chunk responses now include `meta.budget`, and health checks validate target, overlap, and recommended maximum chunk-count configuration.
-- **No discovery document bridge.** A host-level `llms.txt` or answer-engine discovery endpoint would make the package easier for crawlers to find.
+- **Done/Shipped: versioned discovery document bridge.** `GET /api/capell/agent/v1/discovery` exposes capabilities, endpoint URLs, URI templates, and cache variation metadata without claiming host-level `/llms.txt`.
 
 ## 4. Issues / Risks
 
@@ -57,7 +57,7 @@ Agent Delivery should be positioned as controlled AI/answer-engine distribution 
 | Document JSON screenshot evidence as non-marketplace media  | Done   | S      | Medium | §2.4, §4.4  |
 | Add ETag/conditional request support                        | Done   | M      | Medium | §3          |
 | Add chunk budget diagnostics                                | Done   | M      | Medium | §3          |
-| Add `llms.txt` or agent discovery bridge                    | Next   | M      | Medium | §3, §5      |
+| Add `llms.txt` or agent discovery bridge                    | Done   | M      | Medium | §3, §5      |
 | Build a styled endpoint explorer for Marketplace proof      | Later  | L      | Medium | §3, §5      |
 | Add optional authenticated premium agent endpoints          | Later  | L      | Medium | §5          |
 
@@ -70,6 +70,8 @@ Implementation slice 2 closed the deferred public-api-endpoint traceability gap 
 Implementation slice 3 isolated contributor failures at the registry boundary. Metadata, chunk, reference, and related URL contributors are skipped and logged when they throw, while core public output and other safe contributors continue to render.
 
 Implementation slice 4 reconciles already-shipped ETag support and adds chunk budget diagnostics. `/pages/chunks` now reports `meta.budget` with chunk count, target words, max recommended chunks, max chunk size, over-target count, status, and warning codes; package health also validates chunk target, overlap, and recommended maximum configuration.
+
+Implementation slice 5 adds a conservative discovery bridge at `/api/capell/agent/v1/discovery`. It returns the API version, public capabilities, endpoint URLs/templates, and cache variation metadata under the package prefix instead of owning host-level `/llms.txt`.
 
 ```bash
 vendor/bin/pest packages/agent-delivery/tests --configuration=phpunit.xml

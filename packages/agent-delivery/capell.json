@@ -51,6 +51,7 @@
                 "Last-Modified"
             ],
             "routes": [
+                "capell-agent-delivery.discovery",
                 "capell-agent-delivery.pages.index",
                 "capell-agent-delivery.pages.manifest",
                 "capell-agent-delivery.pages.chunks"
@@ -90,12 +91,14 @@
     "capabilities": [
         "agent-delivery",
         "public-page-manifest",
-        "public-page-chunks"
+        "public-page-chunks",
+        "public-agent-discovery"
     ],
     "security": {
         "riskTier": "critical",
         "publicSurface": {
             "routeNames": [
+                "capell-agent-delivery.discovery",
                 "capell-agent-delivery.pages.chunks",
                 "capell-agent-delivery.pages.index",
                 "capell-agent-delivery.pages.manifest"
@@ -106,6 +109,7 @@
             "tokenizedRoutes": [],
             "webhookRoutes": [],
             "throttledRoutes": [
+                "capell-agent-delivery.discovery",
                 "capell-agent-delivery.pages.chunks",
                 "capell-agent-delivery.pages.index",
                 "capell-agent-delivery.pages.manifest"

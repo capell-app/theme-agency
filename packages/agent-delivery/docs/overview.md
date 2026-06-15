@@ -27,8 +27,9 @@ Status details:
 
 ## Public API Surface
 
-Agent Delivery contributes three versioned `GET` JSON endpoints under `/api/capell/agent/v1`. They are public by default, throttled with `throttle:capell-agent-delivery`, and only return content that Capell already resolves as published public output for the request host and locale.
+Agent Delivery contributes four versioned `GET` JSON endpoints under `/api/capell/agent/v1`. They are public by default, throttled with `throttle:capell-agent-delivery`, and only return discovery metadata or content that Capell already resolves as published public output for the request host and locale.
 
+- `capell-agent-delivery.discovery`
 - `capell-agent-delivery.pages.index`
 - `capell-agent-delivery.pages.manifest`
 - `capell-agent-delivery.pages.chunks`
