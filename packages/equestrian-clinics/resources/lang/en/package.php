@@ -9,6 +9,14 @@ return [
     'riders' => 'Riders',
     'horses' => 'Horses',
     'facility_resources' => 'Facility resources',
+    'commands' => [
+        'expire_holds' => [
+            'summary' => 'Expired :count stale Equestrian Clinics checkout holds.',
+        ],
+        'expire_waitlist_offers' => [
+            'summary' => 'Expired :count stale Equestrian Clinics waitlist offers.',
+        ],
+    ],
     'tour_day_statuses' => [
         'draft' => 'Draft',
         'published' => 'Published',

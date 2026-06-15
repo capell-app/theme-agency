@@ -82,6 +82,30 @@
             "type": "health-check",
             "class": "Capell\\EquestrianClinics\\Manifest\\EquestrianClinicsHealthContribution",
             "checkClass": "Capell\\EquestrianClinics\\Health\\EquestrianClinicsHealthCheck"
+        },
+        {
+            "type": "scheduled-job",
+            "class": "Capell\\EquestrianClinics\\Manifest\\EquestrianClinicsExpireHoldsScheduleContribution",
+            "command": "capell:equestrian-clinics-expire-holds",
+            "frequency": "everyFiveMinutes"
+        },
+        {
+            "type": "scheduled-job",
+            "class": "Capell\\EquestrianClinics\\Manifest\\EquestrianClinicsExpireWaitlistOffersScheduleContribution",
+            "command": "capell:equestrian-clinics-expire-waitlist-offers",
+            "frequency": "everyFiveMinutes"
+        },
+        {
+            "type": "console-command",
+            "class": "Capell\\EquestrianClinics\\Manifest\\EquestrianClinicsConsoleCommandsContribution",
+            "commands": [
+                "capell:equestrian-clinics-expire-holds",
+                "capell:equestrian-clinics-expire-waitlist-offers"
+            ],
+            "commandClasses": [
+                "Capell\\EquestrianClinics\\Console\\Commands\\ExpireSlotBookingHoldsCommand",
+                "Capell\\EquestrianClinics\\Console\\Commands\\ExpireWaitlistOffersCommand"
+            ]
         }
     ],
     "database": {
@@ -114,7 +138,9 @@
         "install": null,
         "setup": null,
         "demo": null,
-        "doctor": null
+        "doctor": null,
+        "expireHolds": "capell:equestrian-clinics-expire-holds",
+        "expireWaitlistOffers": "capell:equestrian-clinics-expire-waitlist-offers"
     },
     "actions": {
         "generateTourDaySlots": "Capell\\EquestrianClinics\\Actions\\GenerateTourDaySlotsAction",
@@ -335,10 +361,6 @@
             {
                 "type": "admin-resource",
                 "reason": "Core Filament resources for tour days, venues, riders, horses, bookings, waitlists, facility resources, and care tasks are planned but not shipped yet."
-            },
-            {
-                "type": "scheduled-job",
-                "reason": "Expiry Actions exist for checkout holds and waitlist offers, but package console commands and schedule metadata are planned for a later slice."
             }
         ]
     }

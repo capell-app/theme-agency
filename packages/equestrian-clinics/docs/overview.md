@@ -42,7 +42,7 @@ Screenshot contract: `screenshots.json`.
 - Route files: `packages/equestrian-clinics/routes/web.php`.
 - Actions: `AllocateHorseToSlotAction`, `BuildClinicDiscoveryAction`, `BuildCoachTimetableAction`, `BuildFacilityReportAction`, `BuildOpenSlotDemandHeatmapAction`, `BuildStaffCareWorklistAction`, `CancelSlotBookingAction`, `ClaimWaitlistOfferAction`, `CompleteHorseCareTaskAction`, `ConfirmSlotBookingPaymentAction`, `CreateBillingEntryAction`, `CreateCommercialProductAction`, `and 15 more`.
 - Data objects: `EquestrianBookingQuoteData`, `EquestrianFacilityReportData`, `EquestrianSlotTemplateData`.
-- Manifest contributions: `model: Capell\EquestrianClinics\Manifest\EquestrianClinicsModelsContribution`.
+- Manifest contributions: `model: Capell\EquestrianClinics\Manifest\EquestrianClinicsModelsContribution`, `route: Capell\EquestrianClinics\Manifest\EquestrianClinicsRoutesContribution`, `health-check: Capell\EquestrianClinics\Manifest\EquestrianClinicsHealthContribution`, scheduled expiry jobs, and console commands.
 - Health checks: `Capell\EquestrianClinics\Health\EquestrianClinicsHealthCheck`.
 - Blade views: `packages/equestrian-clinics/resources/views/coach-timetable.blade.php`, `packages/equestrian-clinics/resources/views/discovery.blade.php`.
 - Cache tags: `equestrian-clinics`.
@@ -62,9 +62,9 @@ Screenshot contract: `screenshots.json`.
 - Public routes: route files exist and must be reviewed before public enablement.
 - Database changes: package migrations are declared.
 - Settings: no package settings declared.
-- Queues or schedules: none detected in standard package paths.
+- Queues or schedules: checkout hold and waitlist offer expiry commands run every five minutes when the package is installed.
 - Cache tags: `equestrian-clinics`.
-- Commands: none declared; expiry Actions exist for checkout holds and waitlist offers, but scheduled command wiring is deferred.
+- Commands: `capell:equestrian-clinics-expire-holds`, `capell:equestrian-clinics-expire-waitlist-offers`.
 
 ## Common Pitfalls
 

@@ -6,6 +6,8 @@ namespace Capell\EquestrianClinics\Providers;
 
 use Capell\Core\Facades\CapellCore;
 use Capell\Core\Support\Packages\AbstractPackageServiceProvider;
+use Capell\EquestrianClinics\Console\Commands\ExpireSlotBookingHoldsCommand;
+use Capell\EquestrianClinics\Console\Commands\ExpireWaitlistOffersCommand;
 use Capell\EquestrianClinics\Models\EquestrianBillingEntry;
 use Capell\EquestrianClinics\Models\EquestrianClinicCredit;
 use Capell\EquestrianClinics\Models\EquestrianCommercialProduct;
@@ -26,6 +28,7 @@ use Capell\EquestrianClinics\Models\EquestrianTourDaySlot;
 use Capell\EquestrianClinics\Models\EquestrianVenue;
 use Capell\EquestrianClinics\Models\EquestrianWaiverSignature;
 use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
@@ -70,6 +73,25 @@ final class EquestrianClinicsServiceProvider extends AbstractPackageServiceProvi
         if (! $this->isPackageInstalled()) {
             return;
         }
+
+        if ($this->app->runningInConsole()) {
+            $this->commands([
+                ExpireSlotBookingHoldsCommand::class,
+                ExpireWaitlistOffersCommand::class,
+            ]);
+        }
+
+        $this->callAfterResolving(Schedule::class, function (Schedule $schedule): void {
+            $schedule->command('capell:equestrian-clinics-expire-holds')
+                ->everyFiveMinutes()
+                ->withoutOverlapping()
+                ->onOneServer();
+
+            $schedule->command('capell:equestrian-clinics-expire-waitlist-offers')
+                ->everyFiveMinutes()
+                ->withoutOverlapping()
+                ->onOneServer();
+        });
 
         $this->loadRoutesFrom(__DIR__ . '/../../routes/web.php');
     }

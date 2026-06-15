@@ -5,7 +5,13 @@ declare(strict_types=1);
 use Capell\Core\Contracts\Extensions\ChecksExtensionHealth;
 use Capell\Core\Contracts\Extensions\ExtensionContribution;
 use Capell\Core\Contracts\Extensions\RegistersExtensionRoute;
+use Capell\Core\Contracts\Extensions\RunsScheduledExtensionJob;
+use Capell\EquestrianClinics\Console\Commands\ExpireSlotBookingHoldsCommand;
+use Capell\EquestrianClinics\Console\Commands\ExpireWaitlistOffersCommand;
 use Capell\EquestrianClinics\Health\EquestrianClinicsHealthCheck;
+use Capell\EquestrianClinics\Manifest\EquestrianClinicsConsoleCommandsContribution;
+use Capell\EquestrianClinics\Manifest\EquestrianClinicsExpireHoldsScheduleContribution;
+use Capell\EquestrianClinics\Manifest\EquestrianClinicsExpireWaitlistOffersScheduleContribution;
 use Capell\EquestrianClinics\Manifest\EquestrianClinicsHealthContribution;
 use Capell\EquestrianClinics\Manifest\EquestrianClinicsModelsContribution;
 use Capell\EquestrianClinics\Manifest\EquestrianClinicsRoutesContribution;
@@ -101,6 +107,8 @@ it('declares shipped route, model, and health contributions without claiming adm
     $routeContribution = findContributionEntry($contributions, 'route');
     $modelContribution = findContributionEntry($contributions, 'model');
     $healthContribution = findContributionEntry($contributions, 'health-check');
+    $scheduledJobs = collect(findContributionEntries($contributions, 'scheduled-job'))->keyBy('command');
+    $consoleCommandContribution = findContributionEntry($contributions, 'console-command');
 
     expect(stringListValue($manifest, 'surfaces'))->toBe(['admin', 'frontend'])
         ->and(stringListValue($manifest, 'permissions'))->toBe([])
@@ -108,7 +116,7 @@ it('declares shipped route, model, and health contributions without claiming adm
         ->and(collect($contributions)->contains(
             static fn (mixed $contribution): bool => is_array($contribution) && ($contribution['type'] ?? null) === 'admin-resource',
         ))->toBeFalse()
-        ->and(collect(listValue(arrayValue($manifest, 'contributionTraceability'), 'deferredContributions'))->pluck('type')->all())->toContain('admin-resource', 'scheduled-job');
+        ->and(collect(listValue(arrayValue($manifest, 'contributionTraceability'), 'deferredContributions'))->pluck('type')->all())->toBe(['admin-resource']);
 
     expect($modelContribution)->toMatchArray([
         'type' => 'model',
@@ -155,9 +163,36 @@ it('declares shipped route, model, and health contributions without claiming adm
         'checkClass' => EquestrianClinicsHealthCheck::class,
     ]);
 
+    expect($scheduledJobs->get('capell:equestrian-clinics-expire-holds'))->toMatchArray([
+        'type' => 'scheduled-job',
+        'class' => EquestrianClinicsExpireHoldsScheduleContribution::class,
+        'frequency' => 'everyFiveMinutes',
+    ])
+        ->and($scheduledJobs->get('capell:equestrian-clinics-expire-waitlist-offers'))->toMatchArray([
+            'type' => 'scheduled-job',
+            'class' => EquestrianClinicsExpireWaitlistOffersScheduleContribution::class,
+            'frequency' => 'everyFiveMinutes',
+        ]);
+
+    expect($consoleCommandContribution)->toMatchArray([
+        'type' => 'console-command',
+        'class' => EquestrianClinicsConsoleCommandsContribution::class,
+        'commands' => [
+            'capell:equestrian-clinics-expire-holds',
+            'capell:equestrian-clinics-expire-waitlist-offers',
+        ],
+        'commandClasses' => [
+            ExpireSlotBookingHoldsCommand::class,
+            ExpireWaitlistOffersCommand::class,
+        ],
+    ]);
+
     expect(class_implements(EquestrianClinicsModelsContribution::class))->toContain(ExtensionContribution::class)
         ->and(class_implements(EquestrianClinicsRoutesContribution::class))->toContain(RegistersExtensionRoute::class)
-        ->and(class_implements(EquestrianClinicsHealthContribution::class))->toContain(ChecksExtensionHealth::class);
+        ->and(class_implements(EquestrianClinicsHealthContribution::class))->toContain(ChecksExtensionHealth::class)
+        ->and(class_implements(EquestrianClinicsConsoleCommandsContribution::class))->toContain(ExtensionContribution::class)
+        ->and(class_implements(EquestrianClinicsExpireHoldsScheduleContribution::class))->toContain(RunsScheduledExtensionJob::class)
+        ->and(class_implements(EquestrianClinicsExpireWaitlistOffersScheduleContribution::class))->toContain(RunsScheduledExtensionJob::class);
 });
 
 /**
@@ -305,4 +340,21 @@ function findContributionEntry(array $contributions, string $type): array
     }
 
     throw new RuntimeException('Manifest contribution entry was not found.');
+}
+
+/**
+ * @param  list<mixed>  $contributions
+ * @return list<array<string, mixed>>
+ */
+function findContributionEntries(array $contributions, string $type): array
+{
+    $matches = [];
+
+    foreach ($contributions as $contribution) {
+        if (is_array($contribution) && ($contribution['type'] ?? null) === $type) {
+            $matches[] = arrayEntry([$contribution], 0);
+        }
+    }
+
+    return $matches;
 }

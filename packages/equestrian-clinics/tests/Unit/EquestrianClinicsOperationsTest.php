@@ -43,11 +43,16 @@ use Capell\EquestrianClinics\Enums\EquestrianWaitlistStatusEnum;
 use Capell\EquestrianClinics\Models\EquestrianFacilityResource;
 use Capell\EquestrianClinics\Models\EquestrianHorseProfile;
 use Capell\EquestrianClinics\Models\EquestrianRiderProfile;
+use Capell\EquestrianClinics\Models\EquestrianSlotBooking;
+use Capell\EquestrianClinics\Models\EquestrianSlotWaitlistEntry;
 use Capell\EquestrianClinics\Models\EquestrianStaffMember;
 use Capell\EquestrianClinics\Models\EquestrianTourDay;
 use Capell\EquestrianClinics\Models\EquestrianVenue;
+use Capell\EquestrianClinics\Providers\EquestrianClinicsServiceProvider;
 use Capell\Payments\Enums\PaymentProvider;
 use Carbon\CarbonImmutable;
+use Illuminate\Console\Scheduling\Event as ScheduledEvent;
+use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Validation\ValidationException;
 
 it('generates tour day slots from a template and quotes legal-safe payment fees', function (): void {
@@ -402,6 +407,79 @@ it('promotes waitlisted riders into private claim windows', function (): void {
     expect($expiringEntry->refresh()->status)->toBe(EquestrianWaitlistStatusEnum::Expired)
         ->and($secondOffer->refresh()->status)->toBe(EquestrianWaitlistStatusEnum::Expired)
         ->and($expiredOffers)->toBeGreaterThanOrEqual(1);
+});
+
+it('registers expiry commands and schedules them every five minutes', function (): void {
+    $schedule = new Schedule;
+    app()->instance(Schedule::class, $schedule);
+
+    (new EquestrianClinicsServiceProvider(app()))->packageBooted();
+
+    $holdEvent = collect($schedule->events())
+        ->first(fn (mixed $scheduledEvent): bool => str_contains((string) $scheduledEvent->command, 'capell:equestrian-clinics-expire-holds'));
+    $waitlistEvent = collect($schedule->events())
+        ->first(fn (mixed $scheduledEvent): bool => str_contains((string) $scheduledEvent->command, 'capell:equestrian-clinics-expire-waitlist-offers'));
+
+    throw_unless($holdEvent instanceof ScheduledEvent, RuntimeException::class, 'Expected stale hold expiry schedule to be registered.');
+    throw_unless($waitlistEvent instanceof ScheduledEvent, RuntimeException::class, 'Expected waitlist offer expiry schedule to be registered.');
+
+    expect($holdEvent->expression)->toBe('*/5 * * * *')
+        ->and($holdEvent->withoutOverlapping)->toBeTrue()
+        ->and($holdEvent->onOneServer)->toBeTrue()
+        ->and($waitlistEvent->expression)->toBe('*/5 * * * *')
+        ->and($waitlistEvent->withoutOverlapping)->toBeTrue()
+        ->and($waitlistEvent->onOneServer)->toBeTrue();
+});
+
+it('expires stale holds and waitlist offers through console commands', function (): void {
+    $slot = GenerateTourDaySlotsAction::run(createTourDay(), new EquestrianSlotTemplateData(
+        title: 'Command expiry private',
+        archetype: EquestrianSlotArchetypeEnum::Private,
+        durationMinutes: 45,
+        gapMinutes: 0,
+        capacityMin: 1,
+        capacityMax: 1,
+        pricePence: 4500,
+        skillTier: 'novice',
+    ))->firstOrFail();
+    $now = CarbonImmutable::parse('2026-06-18 08:00:00');
+
+    EquestrianSlotBooking::query()->create([
+        'tour_day_slot_id' => $slot->getKey(),
+        'rider_profile_id' => createRider('Command Held Rider')->getKey(),
+        'horse_profile_id' => createHorse('Command Held Horse')->getKey(),
+        'status' => EquestrianSlotBookingStatusEnum::Held,
+        'payment_provider' => PaymentProvider::PayPal,
+        'payment_status' => EquestrianPaymentStatusEnum::Pending,
+        'cash_payment' => false,
+        'quoted_total_pence' => 4500,
+        'hold_expires_at' => $now->subMinute(),
+    ]);
+    EquestrianSlotWaitlistEntry::query()->create([
+        'tour_day_slot_id' => $slot->getKey(),
+        'rider_profile_id' => createRider('Command Waiting Rider')->getKey(),
+        'horse_profile_id' => createHorse('Command Waiting Horse')->getKey(),
+        'status' => EquestrianWaitlistStatusEnum::Offered,
+        'quoted_total_pence' => 4500,
+        'offered_at' => $now->subHours(3),
+        'offer_expires_at' => $now->subMinute(),
+    ]);
+
+    CarbonImmutable::setTestNow($now);
+
+    try {
+        $this->artisan('capell:equestrian-clinics-expire-holds', ['--json' => true])
+            ->expectsOutput('{"expired_holds":1}')
+            ->assertSuccessful();
+        $this->artisan('capell:equestrian-clinics-expire-waitlist-offers', ['--json' => true])
+            ->expectsOutput('{"expired_offers":1}')
+            ->assertSuccessful();
+    } finally {
+        CarbonImmutable::setTestNow();
+    }
+
+    expect(EquestrianSlotBooking::query()->firstOrFail()->status)->toBe(EquestrianSlotBookingStatusEnum::Expired)
+        ->and(EquestrianSlotWaitlistEntry::query()->firstOrFail()->status)->toBe(EquestrianWaitlistStatusEnum::Expired);
 });
 
 it('tracks staff care tasks, commercial products, and broadcast recipients', function (): void {
