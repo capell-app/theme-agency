@@ -102,8 +102,14 @@ it('declares the dashboard report export command', function (): void {
 it('declares dashboard widget contribution metadata', function (): void {
     $packagePath = dirname(__DIR__, 3);
     $manifest = capell_json_file_array($packagePath . '/capell.json');
-    $contributions = collect(data_get($manifest, 'contributes', []));
+    $contributes = data_get($manifest, 'contributes', []);
+
+    throw_unless(is_array($contributes), RuntimeException::class, 'Dashboard Reports contributions must be an array.');
+
+    $contributions = collect($contributes);
     $dashboardWidgets = $contributions->firstWhere('class', DashboardReportsDashboardWidgetsContribution::class);
+
+    throw_unless(is_array($dashboardWidgets), RuntimeException::class, 'Dashboard Reports widget contribution must be an array.');
 
     expect($dashboardWidgets)->toBeArray()
         ->and($dashboardWidgets['type'])->toBe('dashboard-widget')

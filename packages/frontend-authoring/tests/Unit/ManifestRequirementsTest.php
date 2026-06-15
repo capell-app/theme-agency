@@ -79,6 +79,8 @@ describe('frontend authoring capell.json manifest', function (): void {
         $manifest = $authoringManifest();
         $publicSurface = data_get($manifest, 'security.publicSurface', []);
 
+        throw_unless(is_array($publicSurface), RuntimeException::class, 'Expected frontend authoring public surface metadata array.');
+
         expect($publicSurface['routeNames'] ?? null)->toBe([
             'capell-frontend.authoring.edit',
             'capell-frontend.beacon',

@@ -54,6 +54,10 @@ it('declares admin manifest contributions and package requirements', function ()
         flags: JSON_THROW_ON_ERROR,
     );
 
+    throw_unless(is_array($manifest), RuntimeException::class, 'Expected experiments manifest array.');
+    throw_unless(is_array($manifest['contributes'] ?? null), RuntimeException::class, 'Expected experiments contributions array.');
+    throw_unless(is_array($manifest['commands'] ?? null), RuntimeException::class, 'Expected experiments commands array.');
+
     expect($manifest['dependencies']['requires'])->toContain('capell-app/admin', 'capell-app/core')
         ->and(array_keys($composer['require'] ?? []))->toContain('capell-app/admin', 'capell-app/core', 'filament/filament')
         ->and($manifest['providers']['admin'])->toContain(ExperimentsServiceProvider::class)

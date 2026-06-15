@@ -97,7 +97,7 @@ it('declares the shipped admin resources, frontend widget, and schema-owned mode
         ->and(class_implements(SocialFeedsSyncScheduleContribution::class))->toContain(RunsScheduledExtensionJob::class)
         ->and($manifest['surfaces'])->toContain('console')
         ->and($manifest['capabilities'])->toContain('social-feeds-console')
-        ->and($manifest['database']['settings'])->toBeFalse()
+        ->and(data_get($manifest, 'database.settings'))->toBeFalse()
         ->and($manifest['settings'])->toBe([])
         ->and($manifest['contributionTraceability']['deferredContributions'])->toBe([]);
 });

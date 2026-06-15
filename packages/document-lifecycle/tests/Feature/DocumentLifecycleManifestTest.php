@@ -121,9 +121,17 @@ it('declares the retention command as a scheduled job contribution', function ()
 it('declares model and migration contributions for install diagnostics', function (): void {
     $manifest = documentLifecycleManifest();
     $contributions = collect(documentLifecycleManifestList($manifest, 'contributes'));
+    $database = $manifest['database'] ?? null;
+    $contributionTraceability = $manifest['contributionTraceability'] ?? null;
+
+    throw_unless(is_array($database), RuntimeException::class, 'Expected document lifecycle database metadata array.');
+    throw_unless(is_array($contributionTraceability), RuntimeException::class, 'Expected document lifecycle contribution traceability array.');
 
     $models = $contributions->firstWhere('class', DocumentLifecycleModelsContribution::class);
     $migrations = $contributions->firstWhere('class', DocumentLifecycleMigrationsContribution::class);
+
+    throw_unless(is_array($models), RuntimeException::class, 'Expected document lifecycle model contribution array.');
+    throw_unless(is_array($migrations), RuntimeException::class, 'Expected document lifecycle migration contribution array.');
 
     expect($models)->toBeArray()
         ->and($models['type'])->toBe('model')
@@ -145,8 +153,8 @@ it('declares model and migration contributions for install diagnostics', functio
             '2026_05_10_190868_03_extend_legal_acceptances_for_document_lifecycle',
             '2026_06_06_000001_add_review_dates_to_document_lifecycle_documents_table',
         ])
-        ->and($migrations['requiredTables'])->toBe($manifest['database']['requiredTables'])
-        ->and($manifest['contributionTraceability']['deferredContributions'])->toBe([])
+        ->and($migrations['requiredTables'])->toBe($database['requiredTables'])
+        ->and($contributionTraceability['deferredContributions'])->toBe([])
         ->and(class_implements(DocumentLifecycleMigrationsContribution::class))->toContain(RunsExtensionMigration::class);
 });
 

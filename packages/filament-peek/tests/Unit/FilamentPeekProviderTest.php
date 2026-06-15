@@ -63,8 +63,16 @@ it('declares the signed preview route contribution in the manifest', function ()
         flags: JSON_THROW_ON_ERROR,
     );
 
-    $routeContribution = collect($manifest['contributes'] ?? [])
+    throw_unless(is_array($manifest), RuntimeException::class, 'Expected Filament Peek manifest array.');
+    throw_unless(is_array($manifest['contributes'] ?? null), RuntimeException::class, 'Expected Filament Peek contributions array.');
+    throw_unless(is_array($manifest['security'] ?? null), RuntimeException::class, 'Expected Filament Peek security metadata array.');
+    throw_unless(is_array($manifest['security']['publicSurface'] ?? null), RuntimeException::class, 'Expected Filament Peek public surface metadata array.');
+    throw_unless(is_array($manifest['contributionTraceability'] ?? null), RuntimeException::class, 'Expected Filament Peek contribution traceability array.');
+
+    $routeContribution = collect($manifest['contributes'])
         ->firstWhere('class', FilamentPeekRoutesContribution::class);
+
+    throw_unless(is_array($routeContribution), RuntimeException::class, 'Expected Filament Peek route contribution array.');
 
     expect($routeContribution)->toBeArray()
         ->and($routeContribution['type'])->toBe('route')

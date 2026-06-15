@@ -27,6 +27,9 @@ function deploymentsPackageManifest(): array
 
 it('declares only shipped deployment surfaces and capabilities', function (): void {
     $manifest = deploymentsPackageManifest();
+    $contributionTraceability = $manifest['contributionTraceability'] ?? null;
+
+    throw_unless(is_array($contributionTraceability), RuntimeException::class, 'Expected deployments contribution traceability array.');
 
     expect($manifest['surfaces'] ?? null)->toBe(['admin'])
         ->and($manifest['capabilities'] ?? [])->toBe([
@@ -47,6 +50,9 @@ it('declares only shipped deployment surfaces and capabilities', function (): vo
 
 it('declares shipped deployments contributions and no longer defers them', function (): void {
     $manifest = deploymentsPackageManifest();
+    $contributionTraceability = $manifest['contributionTraceability'] ?? null;
+
+    throw_unless(is_array($contributionTraceability), RuntimeException::class, 'Expected deployments contribution traceability array.');
 
     expect($manifest['contributes'] ?? [])->toBe([
         [
@@ -76,7 +82,7 @@ it('declares shipped deployments contributions and no longer defers them', funct
             'surface' => 'admin',
         ],
     ])
-        ->and($manifest['contributionTraceability']['deferredContributions'] ?? null)->toBe([])
+        ->and($contributionTraceability['deferredContributions'] ?? null)->toBe([])
         ->and(class_implements(DeploymentsAdminPageContribution::class))->toContain(ExtensionContribution::class)
         ->and(class_implements(DeploymentsRoutesContribution::class))->toContain(ExtensionContribution::class)
         ->and(class_implements(DeploymentsRoutesContribution::class))->toContain(RegistersExtensionRoute::class)
@@ -89,14 +95,19 @@ it('declares shipped deployments contributions and no longer defers them', funct
 
 it('describes authenticated oauth routes and all deployments http clients', function (): void {
     $manifest = deploymentsPackageManifest();
+    $security = $manifest['security'] ?? null;
 
-    expect($manifest['security']['publicSurface']['auth'] ?? null)->toBe('authenticated')
-        ->and($manifest['security']['publicSurface']['routeNames'] ?? [])->toBe([
+    throw_unless(is_array($security), RuntimeException::class, 'Expected deployments security metadata array.');
+    throw_unless(is_array($security['publicSurface'] ?? null), RuntimeException::class, 'Expected deployments public surface metadata array.');
+    throw_unless(is_array($security['externalHttpClients'] ?? null), RuntimeException::class, 'Expected deployments external HTTP client metadata array.');
+
+    expect($security['publicSurface']['auth'] ?? null)->toBe('authenticated')
+        ->and($security['publicSurface']['routeNames'] ?? [])->toBe([
             'capell-deployments.oauth.bitbucket',
             'capell-deployments.oauth.github',
             'capell-deployments.oauth.gitlab',
         ])
-        ->and($manifest['security']['externalHttpClients']['clients'] ?? [])->toContain(
+        ->and($security['externalHttpClients']['clients'] ?? [])->toContain(
             'Capell\\Deployments\\Actions\\RefreshProviderTokenAction',
             'Capell\\Deployments\\Http\\Controllers\\OAuth\\BitbucketCallbackController',
             'Capell\\Deployments\\Http\\Controllers\\OAuth\\GitHubCallbackController',

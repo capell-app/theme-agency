@@ -78,7 +78,11 @@ it('keeps package manifest requirements aligned with composer requirements', fun
 it('declares implemented GA4 reporting contributions and validates manifest contracts', function (): void {
     $manifest = File::json(dirname(__DIR__, 3) . '/capell.json');
     $composer = File::json(dirname(__DIR__, 3) . '/composer.json');
-    $contributions = collect($manifest['contributes']);
+    $contributes = $manifest['contributes'] ?? [];
+
+    throw_unless(is_array($contributes), RuntimeException::class, 'Expected GA4 Reports contributions array.');
+
+    $contributions = collect($contributes);
 
     (new ManifestValidator)->validate($manifest, $composer, 'capell-app/ga4-reports', 'ga4-reports test manifest');
 
