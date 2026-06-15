@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace Capell\AgentBridge\Models;
 
+use Capell\AgentBridge\Enums\AgentBridgeTokenLifecycleStatus;
 use Carbon\CarbonImmutable;
 use Illuminate\Contracts\Auth\Authenticatable;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -24,6 +26,7 @@ use Override;
  * @property string|null $created_from_ip
  * @property CarbonImmutable|null $last_used_at
  * @property CarbonImmutable|null $expires_at
+ * @property-read AgentBridgeTokenLifecycleStatus $lifecycle_status
  * @property Authenticatable|null $user
  */
 final class CapellAgentBridgeToken extends Model
@@ -106,6 +109,53 @@ final class CapellAgentBridgeToken extends Model
     public function isUsable(): bool
     {
         return $this->is_enabled && ! $this->isRevoked() && ! $this->isExpired();
+    }
+
+    public function lifecycleStatus(): AgentBridgeTokenLifecycleStatus
+    {
+        if ($this->isRevoked() || ! $this->is_enabled) {
+            return AgentBridgeTokenLifecycleStatus::Revoked;
+        }
+
+        if ($this->isExpired()) {
+            return AgentBridgeTokenLifecycleStatus::Expired;
+        }
+
+        return AgentBridgeTokenLifecycleStatus::Active;
+    }
+
+    public function getLifecycleStatusAttribute(): AgentBridgeTokenLifecycleStatus
+    {
+        return $this->lifecycleStatus();
+    }
+
+    /**
+     * @param  Builder<self>  $query
+     * @return Builder<self>
+     */
+    public function scopeWithLifecycleStatus(Builder $query, AgentBridgeTokenLifecycleStatus $status): Builder
+    {
+        return match ($status) {
+            AgentBridgeTokenLifecycleStatus::Active => $query
+                ->where('is_enabled', true)
+                ->whereNull('revoked_at')
+                ->where(function (Builder $query): void {
+                    $query
+                        ->whereNull('expires_at')
+                        ->orWhere('expires_at', '>', now());
+                }),
+            AgentBridgeTokenLifecycleStatus::Expired => $query
+                ->where('is_enabled', true)
+                ->whereNull('revoked_at')
+                ->whereNotNull('expires_at')
+                ->where('expires_at', '<=', now()),
+            AgentBridgeTokenLifecycleStatus::Revoked => $query
+                ->where(function (Builder $query): void {
+                    $query
+                        ->where('is_enabled', false)
+                        ->orWhereNotNull('revoked_at');
+                }),
+        };
     }
 
     /** @return MorphTo<Model, $this> */

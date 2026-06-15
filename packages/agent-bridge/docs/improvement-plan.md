@@ -4,7 +4,7 @@
 
 ## 1. Snapshot
 
-Agent Bridge connects AI agents and MCP clients to Capell through scoped tokens, MCP server routes, read-only knowledge/site capabilities, preview-then-confirm execution, saved prompts, audit entries, settings, Boost integration, an admin prompt-builder surface, and a read-only capability catalog resource. It already has a meaningful health check and preview/confirm tests. The current risk has shifted from route/config hardening to operator UX depth around token lifecycle and marketplace media.
+Agent Bridge connects AI agents and MCP clients to Capell through scoped tokens, MCP server routes, read-only knowledge/site capabilities, preview-then-confirm execution, saved prompts, audit entries, settings, Boost integration, an admin prompt-builder surface, a token lifecycle filter, and a read-only capability catalog resource. It already has a meaningful health check and preview/confirm tests. The current risk has shifted from route/config hardening to marketplace media and deeper policy diagnostics.
 
 ## 2. Improvements (existing functionality)
 
@@ -23,6 +23,7 @@ Capabilities declared: `agent-bridge` and `agent-bridge-admin`.
 - **No first-class token management manifest contribution.** Admin surfaces exist through bridge/extension page registration, but manifest traceability is thin.
 - **No explicit audit retention command in marketplace metadata.** Pruning exists in code but is not surfaced in `capell.json`.
 - **Done/Shipped: operator-facing capability catalog.** `BuildAgentBridgeCapabilityCatalogAction` and `capell://agent-bridge/capabilities` expose registered capability scope, risk, server, preview, confirmation, required package, and policy ability metadata outside the prompt builder.
+- **Done/Shipped: token lifecycle review controls.** Token records now expose a reusable lifecycle status enum and the user relation manager can filter active, expired, and revoked tokens without leaking token secrets.
 - **No screenshot recapture for token/audit/server surfaces.** Current tracker notes only prompt-builder media is trustworthy.
 
 ## 4. Issues / Risks
@@ -56,7 +57,7 @@ Agent Bridge should be positioned as a governed AI operations bridge, not a gene
 | Surface audit/token pruning command in manifest/docs          | Done   | M      | Medium | §2.3        |
 | Add central audit payload/result redaction                    | Done   | M      | High   | §2.4, §4.2  |
 | Add capability catalog/admin inventory surface                | Done   | M      | Medium | §3, §5      |
-| Add token scope lifecycle UI and tests                        | Next   | M      | Medium | §3          |
+| Add token scope lifecycle UI and tests                        | Done   | M      | Medium | §3          |
 | Recapture token/audit/server health marketplace screenshots   | Next   | M      | Medium | §3, §5      |
 | Add server-specific RBAC and policy diagnostics               | Later  | L      | Medium | §3          |
 | Add richer MCP schema export and compatibility tests          | Later  | M      | Medium | §5          |

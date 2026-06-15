@@ -7,6 +7,7 @@ use Capell\AgentBridge\Actions\PruneAgentBridgeAuditEntriesAction;
 use Capell\AgentBridge\Actions\QueryAgentBridgeAuditEntriesAction;
 use Capell\AgentBridge\Actions\RevokeAgentBridgeTokenAction;
 use Capell\AgentBridge\Actions\RotateAgentBridgeTokenAction;
+use Capell\AgentBridge\Enums\AgentBridgeTokenLifecycleStatus;
 use Capell\AgentBridge\Filament\Resources\Users\RelationManagers\AgentBridgeAuditEntriesRelationManager;
 use Capell\AgentBridge\Filament\Resources\Users\RelationManagers\AgentBridgeTokensRelationManager;
 use Capell\AgentBridge\Models\CapellAgentBridgeAuditEntry;
@@ -54,6 +55,37 @@ it('exposes scope options for admin token creation', function (): void {
         'capell.pages.read',
         'capell.pages.write',
     ]);
+});
+
+it('classifies and filters token lifecycle states for admin review', function (): void {
+    $user = User::query()->create([
+        'name' => 'Token Lifecycle Filter User',
+        'email' => 'token-lifecycle-filter@example.test',
+        'password' => 'secret',
+    ]);
+
+    $activeToken = createLifecycleToken($user, 'Active token', 'active-token', true, null, CarbonImmutable::now()->addDay());
+    $nonExpiringToken = createLifecycleToken($user, 'Non-expiring token', 'non-expiring-token');
+    $expiredToken = createLifecycleToken($user, 'Expired token', 'expired-token', true, null, CarbonImmutable::now()->subDay());
+    $disabledToken = createLifecycleToken($user, 'Disabled token', 'disabled-token', false);
+    $revokedToken = createLifecycleToken($user, 'Revoked token', 'revoked-token', true, CarbonImmutable::now());
+
+    expect($activeToken->lifecycleStatus())->toBe(AgentBridgeTokenLifecycleStatus::Active)
+        ->and($nonExpiringToken->lifecycleStatus())->toBe(AgentBridgeTokenLifecycleStatus::Active)
+        ->and($expiredToken->lifecycleStatus())->toBe(AgentBridgeTokenLifecycleStatus::Expired)
+        ->and($disabledToken->lifecycleStatus())->toBe(AgentBridgeTokenLifecycleStatus::Revoked)
+        ->and($revokedToken->lifecycleStatus())->toBe(AgentBridgeTokenLifecycleStatus::Revoked);
+
+    $baseQuery = AgentBridgeTokensRelationManager::scopedQueryForUser(CapellAgentBridgeToken::query(), $user);
+
+    expect(AgentBridgeTokensRelationManager::applyLifecycleStatusFilter(clone $baseQuery, 'active')->pluck('name')->all())
+        ->toEqualCanonicalizing(['Active token', 'Non-expiring token'])
+        ->and(AgentBridgeTokensRelationManager::applyLifecycleStatusFilter(clone $baseQuery, 'expired')->pluck('name')->all())
+        ->toBe(['Expired token'])
+        ->and(AgentBridgeTokensRelationManager::applyLifecycleStatusFilter(clone $baseQuery, 'revoked')->pluck('name')->all())
+        ->toEqualCanonicalizing(['Disabled token', 'Revoked token'])
+        ->and(AgentBridgeTokensRelationManager::applyLifecycleStatusFilter(clone $baseQuery, 'unknown')->count())
+        ->toBe(5);
 });
 
 it('queries and prunes audit entries with retention boundaries', function (): void {
@@ -118,4 +150,28 @@ function createLifecycleAuditEntry(User $user, CapellAgentBridgeToken $token, st
     $entry->save();
 
     return $entry;
+}
+
+function createLifecycleToken(
+    User $user,
+    string $name,
+    string $plainTextToken,
+    bool $isEnabled = true,
+    ?CarbonImmutable $revokedAt = null,
+    ?CarbonImmutable $expiresAt = null,
+): CapellAgentBridgeToken {
+    $token = new CapellAgentBridgeToken([
+        'name' => $name,
+        'token_hash' => CapellAgentBridgeToken::hashPlainTextToken($plainTextToken),
+        'scopes' => ['*'],
+        'is_enabled' => $isEnabled,
+        'expires_at' => $expiresAt,
+    ]);
+    $token->forceFill([
+        'revoked_at' => $revokedAt,
+    ]);
+    $token->user()->associate($user);
+    $token->save();
+
+    return $token;
 }

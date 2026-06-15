@@ -8,6 +8,7 @@ use BackedEnum;
 use Capell\AgentBridge\Actions\CreateAgentBridgeTokenAction;
 use Capell\AgentBridge\Actions\RevokeAgentBridgeTokenAction;
 use Capell\AgentBridge\Actions\RotateAgentBridgeTokenAction;
+use Capell\AgentBridge\Enums\AgentBridgeTokenLifecycleStatus;
 use Capell\AgentBridge\Models\CapellAgentBridgeToken;
 use Carbon\CarbonImmutable;
 use DateTimeInterface;
@@ -19,6 +20,7 @@ use Filament\Notifications\Notification;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Builder;
@@ -62,6 +64,25 @@ final class AgentBridgeTokensRelationManager extends RelationManager
     }
 
     /**
+     * @param  Builder<CapellAgentBridgeToken>  $query
+     * @return Builder<CapellAgentBridgeToken>
+     */
+    public static function applyLifecycleStatusFilter(Builder $query, mixed $status): Builder
+    {
+        if (! is_string($status) || $status === '') {
+            return $query;
+        }
+
+        $lifecycleStatus = AgentBridgeTokenLifecycleStatus::tryFrom($status);
+
+        if (! $lifecycleStatus instanceof AgentBridgeTokenLifecycleStatus) {
+            return $query;
+        }
+
+        return $query->withLifecycleStatus($lifecycleStatus);
+    }
+
+    /**
      * @return Builder<CapellAgentBridgeToken>
      */
     #[Override]
@@ -84,7 +105,9 @@ final class AgentBridgeTokensRelationManager extends RelationManager
                     ->wrap(),
                 TextColumn::make('status')
                     ->label(__('capell-agent-bridge::admin.token_status'))
-                    ->state(fn (CapellAgentBridgeToken $record): string => $this->statusLabel($record)),
+                    ->state(fn (CapellAgentBridgeToken $record): string => $record->lifecycleStatus()->getLabel())
+                    ->badge()
+                    ->color(fn (CapellAgentBridgeToken $record): string => $record->lifecycleStatus()->getColor()),
                 TextColumn::make('created_from_ip')
                     ->label(__('capell-agent-bridge::admin.created_from_ip'))
                     ->toggleable(),
@@ -106,6 +129,12 @@ final class AgentBridgeTokensRelationManager extends RelationManager
                     ->label(__('capell-agent-bridge::admin.expires_at'))
                     ->dateTime()
                     ->sortable(),
+            ])
+            ->filters([
+                SelectFilter::make('lifecycle_status')
+                    ->label(__('capell-agent-bridge::admin.token_status'))
+                    ->options(AgentBridgeTokenLifecycleStatus::class)
+                    ->query(fn (Builder $query, array $data): Builder => self::applyLifecycleStatusFilter($query, $data['value'] ?? null)),
             ])
             ->recordActions([
                 Action::make('rotate')
@@ -187,18 +216,5 @@ final class AgentBridgeTokensRelationManager extends RelationManager
     protected function canCreate(): bool
     {
         return false;
-    }
-
-    private function statusLabel(CapellAgentBridgeToken $token): string
-    {
-        if ($token->isRevoked() || ! $token->is_enabled) {
-            return (string) __('capell-agent-bridge::admin.token_revoked');
-        }
-
-        if ($token->isExpired()) {
-            return (string) __('capell-agent-bridge::admin.token_expired');
-        }
-
-        return (string) __('capell-agent-bridge::admin.token_active');
     }
 }
