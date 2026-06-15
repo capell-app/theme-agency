@@ -2,9 +2,12 @@
 
 declare(strict_types=1);
 
+use Capell\Core\Contracts\Extensions\ChecksExtensionHealth;
 use Capell\Core\Contracts\Extensions\RegistersExtensionAsset;
 use Capell\Core\Support\Manifest\ManifestValidator;
+use Capell\RecordSwitcher\Health\RecordSwitcherHealthCheck;
 use Capell\RecordSwitcher\Manifest\RecordSwitcherAssetsContribution;
+use Capell\RecordSwitcher\Manifest\RecordSwitcherHealthContribution;
 use Illuminate\Support\Facades\File;
 
 describe('record-switcher manifest', function (): void {
@@ -47,13 +50,25 @@ describe('record-switcher manifest', function (): void {
     });
 
     it('declares the shipped admin asset contribution contract', function () use ($manifest): void {
-        $contribution = $manifest()['contributes'][0] ?? [];
+        $contributions = collect($manifest()['contributes'] ?? []);
+        $contribution = $contributions->firstWhere('class', RecordSwitcherAssetsContribution::class) ?? [];
         $contributionClass = $contribution['class'] ?? null;
 
         expect($contribution['type'])->toBe('asset')
             ->and($contribution['class'])->toBe(RecordSwitcherAssetsContribution::class)
             ->and(is_string($contributionClass) && is_subclass_of($contributionClass, RegistersExtensionAsset::class))->toBeTrue()
             ->and(RecordSwitcherAssetsContribution::compatibleCapellApiVersion())->toBe('^4.0');
+    });
+
+    it('declares the shipped diagnostics contribution contract', function () use ($manifest): void {
+        $contributions = collect($manifest()['contributes'] ?? []);
+        $contribution = $contributions->firstWhere('class', RecordSwitcherHealthContribution::class) ?? [];
+        $contributionClass = $contribution['class'] ?? null;
+
+        expect($contribution['type'])->toBe('health-check')
+            ->and($contribution['checkClass'])->toBe(RecordSwitcherHealthCheck::class)
+            ->and(is_string($contributionClass) && is_subclass_of($contributionClass, ChecksExtensionHealth::class))->toBeTrue()
+            ->and(RecordSwitcherHealthContribution::compatibleCapellApiVersion())->toBe('^4.0');
     });
 
     it('keeps marketplace screenshots readable and backed by committed files', function () use ($manifest, $packagePath): void {

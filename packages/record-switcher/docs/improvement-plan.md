@@ -14,9 +14,11 @@ Record Switcher is a small admin-only productivity package for Filament edit pag
 
 3. **Replace generic generated docs copy.** README and overview still say "admins get package-owned management or reporting surfaces inside Capell" and "document extension points here if..." even though this package contributes a heading extension, not a management/reporting surface. Rewrite the docs around the edit-page switcher workflow, no-schema install impact, supported resources, and troubleshooting for missing assets or empty suggestions. Evidence: `README.md`, `docs/overview.md`. - **S** - **Done 2026-06-14:** README, overview, and docs index now describe the edit-page heading workflow and troubleshooting paths.
 
-4. **Add query-budget and resource edge-case coverage.** Manifest `adminQueryBudget` is 10, but tests only cover a simple Page option label. Add tests for page hierarchy eager loading, non-Page resources with searchable attributes, empty searchable attributes, and ensuring option rendering stays inside a bounded query count. Evidence: `src/Livewire/RecordSwitcher.php`, `tests/Unit/RecordSwitcherOptionsTest.php`, `capell.json performance.adminQueryBudget`. - **M**
+4. **Add query-budget and resource edge-case coverage.** Manifest `adminQueryBudget` is 10, but tests only covered a simple Page option label. Coverage now verifies page hierarchy eager loading stays inside the manifest budget, generic resources search declared attributes, empty searchable attributes do not break loading, and package-owned test fixtures stay PSR-4. Evidence: `src/Livewire/RecordSwitcher.php`, `tests/Unit/RecordSwitcherOptionsTest.php`, `tests/Fixtures/*`, `capell.json performance.adminQueryBudget`. - **M** - **Done 2026-06-15**
 
-5. **Make the heading replacement opt-out friendly.** `RecordSwitcherHeadingExtender::supports()` currently returns true for every `EditRecord` page. That is acceptable as a foundation default, but packages/resources with unusual headings or sensitive records need a documented opt-out seam. Add a support method convention, config deny-list, or documented resource override before wider adoption. Evidence: `src/Filament/RecordSwitcherHeadingExtender.php`. - **M**
+5. **Make the heading replacement opt-out friendly.** `RecordSwitcherHeadingExtender::supports()` now respects a resource-level `recordSwitcherEnabled(): bool` convention, and the README/overview documents when custom resources should return `false`. Evidence: `src/Filament/RecordSwitcherHeadingExtender.php`, `tests/Unit/RecordSwitcherOptionsTest.php`, `README.md`, `docs/overview.md`. - **M** - **Done 2026-06-15**
+
+6. **Declare diagnostics in manifest contributions.** The package already shipped `RecordSwitcherHealthCheck`, but `contributes[]` only exposed the admin asset. The manifest now includes a `health-check` contribution backed by a marker class and manifest test. Evidence: `capell.json`, `src/Manifest/RecordSwitcherHealthContribution.php`, `tests/Unit/ManifestRequirementsTest.php`. - **S** - **Done 2026-06-15**
 
 ## 3. Missing Features (gaps)
 
@@ -35,7 +37,7 @@ Capabilities declared: admin record switching, searchable edit-page navigation, 
 
 3. **Improvement: generic docs weaken buyer/operator confidence.** The package is small and useful, but generated copy makes it sound like an admin resource package. Recommended fix: rewrite docs to the actual workflow and failure modes. - **P3**
 
-4. **Improvement: unbounded resource support can surprise custom resources.** `supports()` always true means any edit page gets the heading switcher. Recommended fix: add a simple opt-out convention and docs before this reaches more specialized resources. - **P3**
+4. **Done/Shipped: unbounded resource support can surprise custom resources.** Resources can now opt out with `recordSwitcherEnabled(): false`, and docs call out that seam for unusual headings or sensitive workflows. - **P3**
 
 ## 5. Marketplace & Positioning
 
@@ -58,8 +60,9 @@ Record Switcher belongs in the free Foundation bundle because it improves every 
 | Add explicit `capell-app/core` Composer dependency and keep overlays aligned if needed      | Done   | S      | High   | §2.1, §4.1  |
 | Extend health checks to verify extender tag, Livewire namespace, and Filament asset handles | Done   | S      | Medium | §2.2, §4.2  |
 | Rewrite README and overview around the real heading-switcher workflow                       | Done   | S      | Medium | §2.3, §5    |
-| Add query-budget and resource edge-case coverage for option loading                         | Next   | M      | Medium | §2.4        |
-| Add a documented opt-out/config seam for unsupported resources                              | Next   | M      | Low    | §2.5, §4.4  |
+| Add query-budget and resource edge-case coverage for option loading                         | Done   | M      | Medium | §2.4        |
+| Add a documented opt-out/config seam for unsupported resources                              | Done   | M      | Low    | §2.5, §4.4  |
+| Declare health-check contribution metadata                                                  | Done   | S      | Medium | §2.6        |
 | Add browser-level keyboard/accessibility coverage for Tab/Escape/focus behavior             | Later  | M      | Medium | §3          |
 | Add recency/sibling/same-site ordering as an editor productivity enhancement                | Later  | M      | Medium | §3          |
 

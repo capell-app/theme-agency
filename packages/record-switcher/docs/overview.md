@@ -6,9 +6,9 @@
 
 Record Switcher is an **Available**, **No schema impact** Capell package in the **Capell Foundation** product group. It ships as `capell-app/record-switcher` and extends these surfaces: admin.
 
-Fast Filament edit-page record switching for Capell admins, with searchable suggestions and keyboard selection.
+Record Switcher adds a compact searchable switcher to Filament edit-page headings so editors can jump to nearby editable records without returning to table views.
 
-After install, admins get package-owned management or reporting surfaces inside Capell.
+After install, eligible edit pages render the first-party Livewire heading switcher and admin assets. Resources can opt out by defining `public static function recordSwitcherEnabled(): bool` and returning `false`.
 
 Status details:
 
@@ -21,7 +21,7 @@ Status details:
 
 ## Why It Matters
 
-**For developers:** The package gives developers package-owned service providers, Filament classes, and Blade views instead of pushing this behaviour into core or application code.
+**For developers:** The package uses Capell Admin's heading extension point, Livewire, and first-party assets instead of app-level Filament resource overrides.
 
 **For teams:** Jump between editable Capell records directly from the page heading with fast suggestions and Tab-to-accept keyboard flow.
 
@@ -36,7 +36,7 @@ Screenshot contract: `screenshots.json`.
 - Service providers: `Capell\RecordSwitcher\Providers\RecordSwitcherServiceProvider`.
 - Filament classes: `RecordSwitcherHeadingExtender`.
 - Livewire components: `RecordSwitcher`.
-- Manifest contributions: `asset: Capell\RecordSwitcher\Manifest\RecordSwitcherAssetsContribution`.
+- Manifest contributions: `asset: Capell\RecordSwitcher\Manifest\RecordSwitcherAssetsContribution`, `health-check: Capell\RecordSwitcher\Manifest\RecordSwitcherHealthContribution`.
 - Health checks: `Capell\RecordSwitcher\Health\RecordSwitcherHealthCheck`.
 - Blade views: `packages/record-switcher/resources/views/components/record-switcher.blade.php`.
 
@@ -44,11 +44,11 @@ Screenshot contract: `screenshots.json`.
 
 This package has no schema impact. It does not declare package-owned migrations or required tables.
 
-Docs gap: document extension points here if the package delegates persistence to a host package.
+Record Switcher reads existing resource queries only. It does not own or mutate content records.
 
 ## Install Impact
 
-- Admin navigation: adds package-owned Filament classes when registered.
+- Admin navigation: no menu entry; edit-page headings are extended through `EditRecordHeadingExtender`.
 - Permissions: none declared in `capell.json`.
 - Public routes: none detected in package route files.
 - Database changes: no package migrations declared.
@@ -60,6 +60,8 @@ Docs gap: document extension points here if the package delegates persistence to
 ## Common Pitfalls
 
 - Verify the package is installed before expecting its provider, views, or extension contributions to run.
+- If a custom resource has an unusual heading or sensitive record workflow, add `recordSwitcherEnabled(): bool` to that resource and return `false`.
+- Empty suggestions usually mean the resource query, global-search attributes, or current user's resource access rules leave no sibling records to show.
 - Keep `composer.json`, `composer.local.json`, `capell.json`, docs, screenshots, and tests aligned when the package surface changes.
 
 ## Troubleshooting
@@ -67,6 +69,8 @@ Docs gap: document extension points here if the package delegates persistence to
 | Symptom | Likely cause | Check | Fix |
 | --- | --- | --- | --- |
 | Package surface is missing after install | Provider or manifest is not loaded | Confirm `capell.json`, package `composer.json`, and provider registration | Reinstall the package, refresh Composer autoload, and clear host caches |
+| Heading switcher is absent on one resource | Resource opted out or does not render a standard Filament edit page heading | Check `recordSwitcherEnabled()` and the page class | Remove the opt-out or leave the resource on its custom heading |
+| Suggestions are empty | Resource query, search attributes, or access scope filters out records | Check `getEloquentQuery()`, `getGloballySearchableAttributes()`, and current user access | Adjust the resource query/search attributes or create another editable record |
 
 ## Quick Start
 
