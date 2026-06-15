@@ -9,6 +9,7 @@ use Capell\AgentBridge\Data\AuthenticatedAgentBridgeClientData;
 use Capell\AgentBridge\Data\CapabilityData;
 use Capell\AgentBridge\Enums\CapabilityRiskEnum;
 use Capell\AgentBridge\Enums\CapabilityServerEnum;
+use Capell\AgentBridge\Models\CapellAgentBridgeAuditEntry;
 use Capell\AgentBridge\Models\CapellAgentBridgeConfirmation;
 use Capell\AgentBridge\Support\CapellAgentBridgeCapabilityRegistry;
 use Capell\AgentBridge\Tests\Fixtures\FakeCapabilityAction;
@@ -113,6 +114,78 @@ it('rejects confirmation when the payload changes after preview', function (): v
         user: $user,
     );
 })->throws(AuthorizationException::class, 'The Agent Bridge confirmation payload has changed.');
+
+it('redacts sensitive payload and result fragments before writing audit entries', function (): void {
+    registerFakeCapability();
+
+    $user = User::query()->create([
+        'name' => 'Audit User',
+        'email' => 'audit-redaction@example.com',
+        'password' => 'secret',
+    ]);
+
+    $created = CreateAgentBridgeTokenAction::run($user, 'Audit client', ['capell.fake.write']);
+    $client = new AuthenticatedAgentBridgeClientData(
+        tokenId: (int) $created['token']->getKey(),
+        name: 'Audit client',
+        scopes: ['capell.fake.write'],
+    );
+
+    $payload = [
+        'name' => 'Example',
+        'tokenId' => (int) $created['token']->getKey(),
+        'accessToken' => 'secret-access-token',
+        'password' => 'secret-password',
+        'authorization' => 'Bearer secret-header-token',
+        'adminUrl' => 'https://example.test/admin/pages/1/edit?expires=123&signature=abc',
+        'prompt' => [
+            'is_private' => true,
+            'prompt' => 'Private launch instructions',
+        ],
+    ];
+
+    $preview = InvokeAgentBridgeCapabilityPreviewAction::run(
+        capabilityKey: 'capell.fake.write',
+        payload: $payload,
+        client: $client,
+        token: $created['token'],
+        user: $user,
+    );
+
+    $result = ConfirmAgentBridgeCapabilityAction::run(
+        confirmationToken: $preview['confirmationToken'],
+        payload: $payload,
+        client: $client,
+        token: $created['token'],
+        user: $user,
+    );
+
+    expect($result['result']['data']['payload']['accessToken'])->toBe('secret-access-token');
+
+    $auditEntries = CapellAgentBridgeAuditEntry::query()
+        ->orderBy('id')
+        ->get();
+
+    expect($auditEntries)->toHaveCount(2);
+
+    foreach ($auditEntries as $auditEntry) {
+        expect($auditEntry->payload)
+            ->toMatchArray([
+                'name' => 'Example',
+                'tokenId' => (int) $created['token']->getKey(),
+                'accessToken' => '[redacted]',
+                'password' => '[redacted]',
+                'authorization' => '[redacted]',
+                'adminUrl' => '[redacted]',
+                'prompt' => ['[redacted]'],
+            ])
+            ->and($auditEntry->result['data']['payload']['accessToken'])->toBe('[redacted]')
+            ->and($auditEntry->result['data']['payload']['password'])->toBe('[redacted]')
+            ->and($auditEntry->result['data']['payload']['authorization'])->toBe('[redacted]')
+            ->and($auditEntry->result['data']['payload']['adminUrl'])->toBe('[redacted]')
+            ->and($auditEntry->result['data']['payload']['prompt'])->toBe(['[redacted]']);
+    }
+});
 
 it('rejects confirmation replay across users', function (): void {
     registerFakeCapability();

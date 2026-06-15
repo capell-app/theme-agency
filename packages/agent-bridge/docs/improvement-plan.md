@@ -14,7 +14,7 @@ Agent Bridge connects AI agents and MCP clients to Capell through scoped tokens,
 
 3. **Add audit/token retention automation to manifest and docs.** The provider registers `PruneAgentBridgeAuditEntriesCommand`, but `capell.json commands` does not expose install/setup/doctor/prune information and docs should explain retention defaults. Evidence: `src/Providers/AgentBridgeServiceProvider.php`, `src/Actions/PruneAgentBridgeAuditEntriesAction.php`, `capell.json`. - **M**
 
-4. **Harden audit payload redaction.** Preview/execute/confirm flows audit payloads and results. Add a sanitizer that strips secrets, access tokens, passwords, prompts marked private, and signed admin URLs before persistence. Evidence: `src/Actions/AuditAgentBridgeCapabilityAction.php`, `InvokeAgentBridgeCapabilityPreviewAction`, `ConfirmAgentBridgeCapabilityAction`. - **M**
+4. **Harden audit payload redaction.** Preview/execute/confirm flows audit payloads and results. Add a sanitizer that strips secrets, access tokens, passwords, prompts marked private, and signed admin URLs before persistence. Evidence: `src/Actions/AuditAgentBridgeCapabilityAction.php`, `src/Support/AgentBridgeAuditSanitizer.php`, `tests/Feature/PreviewConfirmWorkflowTest.php`. - **M** **Shipped in slice 2.**
 
 ## 3. Missing Features (gaps)
 
@@ -54,7 +54,7 @@ Agent Bridge should be positioned as a governed AI operations bridge, not a gene
 | Disable or namespace the default home route                   | Now    | S      | High   | §2.1, §4.1  |
 | Fix health remediation copy away from host-app migration text | Now    | S      | Medium | §2.2, §4.3  |
 | Surface audit/token pruning command in manifest/docs          | Now    | M      | Medium | §2.3        |
-| Add central audit payload/result redaction                    | Now    | M      | High   | §2.4, §4.2  |
+| Add central audit payload/result redaction                    | Done   | M      | High   | §2.4, §4.2  |
 | Add capability catalog/admin inventory surface                | Next   | M      | Medium | §3, §5      |
 | Add token scope lifecycle UI and tests                        | Next   | M      | Medium | §3          |
 | Recapture token/audit/server health marketplace screenshots   | Next   | M      | Medium | §3, §5      |
@@ -75,12 +75,20 @@ For route/health changes, include:
 vendor/bin/pest packages/agent-bridge/tests/Feature/HomeRouteTest.php packages/agent-bridge/tests/Unit/AgentBridgeHealthCheckTest.php --configuration=phpunit.xml
 ```
 
+Implementation slice 2 adds centralized audit redaction before persistence while preserving capability execution and confirmation hashing. It redacts secret-like keys, bearer/token strings, private prompt payloads, and signed admin URLs from audit payloads and results. Verify with:
+
+```bash
+vendor/bin/pest packages/agent-bridge/tests/Feature/PreviewConfirmWorkflowTest.php --configuration=phpunit.xml
+vendor/bin/pest packages/agent-bridge/tests --configuration=phpunit.xml
+COMPOSER=composer.local.json composer preflight
+```
+
 ## 8. Completion Checklist
 
 - [x] Package plan created from current code, manifest, docs, screenshots, and tests.
 - [x] Comprehensive local review pass completed for routes, provider, health, capability execution, audits, docs, and marketplace media.
 - [x] Capell audience pass completed for operators, AI-agent developers, and buyers.
 - [x] Approved implementation slice 1 shipped: route hardening, health remediation, and manifest contribution metadata.
-- [ ] Focused Agent Bridge verification passed.
-- [ ] Package tests passed.
-- [ ] Repo preflight passed for changed files.
+- [x] Focused Agent Bridge verification passed for audit redaction.
+- [x] Package tests passed.
+- [x] Repo preflight passed for changed files.

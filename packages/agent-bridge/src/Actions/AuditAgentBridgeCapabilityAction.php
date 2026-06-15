@@ -7,6 +7,7 @@ namespace Capell\AgentBridge\Actions;
 use Capell\AgentBridge\Data\CapabilityResultData;
 use Capell\AgentBridge\Models\CapellAgentBridgeAuditEntry;
 use Capell\AgentBridge\Models\CapellAgentBridgeToken;
+use Capell\AgentBridge\Support\AgentBridgeAuditSanitizer;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Model;
 use Lorisleiva\Actions\Concerns\AsAction;
@@ -31,14 +32,16 @@ final class AuditAgentBridgeCapabilityAction
         ?Authenticatable $user = null,
     ): CapellAgentBridgeAuditEntry {
         $request = request();
+        $sanitizer = resolve(AgentBridgeAuditSanitizer::class);
+        $resultPayload = $result?->toPayload();
 
         $entry = new CapellAgentBridgeAuditEntry([
             'agent_bridge_token_id' => $token?->getKey(),
             'event' => $event,
             'capability_key' => $capabilityKey,
             'scope' => $scope,
-            'payload' => $payload === [] ? null : $payload,
-            'result' => $result?->toPayload(),
+            'payload' => $payload === [] ? null : $sanitizer->sanitize($payload),
+            'result' => $resultPayload === null ? null : $sanitizer->sanitize($resultPayload),
             'ip_address' => $request->ip(),
             'user_agent' => $request->userAgent(),
         ]);
