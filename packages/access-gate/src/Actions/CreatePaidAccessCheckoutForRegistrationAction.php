@@ -24,6 +24,8 @@ final class CreatePaidAccessCheckoutForRegistrationAction
     public function handle(Registration $registration, CreatePaidAccessCheckoutData $data): CheckoutSession
     {
         $this->validate($data);
+        $registrationId = $this->modelKey($registration);
+        $areaId = is_scalar($registration->access_area_id) ? (string) $registration->access_area_id : '';
 
         return CreateCheckoutSessionAction::run(new CreateCheckoutSessionData(
             successUrl: $data->successUrl,
@@ -37,8 +39,8 @@ final class CreatePaidAccessCheckoutForRegistrationAction
                     description: $data->lineItemDescription,
                     providerPriceId: $data->providerPriceId,
                     metadata: [
-                        'access_gate_registration_id' => (string) $registration->getKey(),
-                        'access_gate_area_id' => (string) $registration->access_area_id,
+                        'access_gate_registration_id' => $registrationId,
+                        'access_gate_area_id' => $areaId,
                     ],
                 ),
             ],
@@ -49,14 +51,14 @@ final class CreatePaidAccessCheckoutForRegistrationAction
             customerEmail: $registration->email,
             customerName: $data->customerName,
             payableType: 'access-gate.registration',
-            payableId: (string) $registration->getKey(),
+            payableId: $registrationId,
             sourceType: 'access-gate.registration',
-            sourceId: (string) $registration->getKey(),
-            referenceId: $data->referenceId ?? 'access-gate-registration-' . $registration->getKey(),
-            idempotencyKey: $data->idempotencyKey ?? 'access-gate-registration-' . $registration->getKey(),
+            sourceId: $registrationId,
+            referenceId: $data->referenceId ?? 'access-gate-registration-' . $registrationId,
+            idempotencyKey: $data->idempotencyKey ?? 'access-gate-registration-' . $registrationId,
             metadata: array_replace($data->metadata, [
-                'access_gate_registration_id' => (string) $registration->getKey(),
-                'access_gate_area_id' => (string) $registration->access_area_id,
+                'access_gate_registration_id' => $registrationId,
+                'access_gate_area_id' => $areaId,
                 'access_gate_area_key' => $registration->area?->key,
             ]),
         ));
@@ -75,6 +77,15 @@ final class CreatePaidAccessCheckoutForRegistrationAction
     private function normalizedCurrency(string $currency): string
     {
         return strtolower($currency);
+    }
+
+    private function modelKey(Registration $registration): string
+    {
+        $key = $registration->getKey();
+
+        throw_unless(is_scalar($key), InvalidArgumentException::class, 'Paid access registration must have a scalar key.');
+
+        return (string) $key;
     }
 
     private function isAbsoluteHttpUrl(string $url): bool

@@ -102,7 +102,9 @@ final class AgentBridgeAuditSanitizer
             return true;
         }
 
-        if (str_starts_with($trimmed, (string) config('capell-agent-bridge.token_prefix', 'cagent-bridge_'))) {
+        $tokenPrefix = config('capell-agent-bridge.token_prefix', 'cagent-bridge_');
+
+        if (is_string($tokenPrefix) && str_starts_with($trimmed, $tokenPrefix)) {
             return true;
         }
 

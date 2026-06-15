@@ -38,6 +38,7 @@ final class PruneAccessGateRecordsAction
     }
 
     /**
+     * @param  array<string, int|null>  $retentionDays
      * @return Builder<BrowserToken>
      */
     private function staleBrowserTokensQuery(array $retentionDays): Builder
@@ -62,6 +63,7 @@ final class PruneAccessGateRecordsAction
     }
 
     /**
+     * @param  array<string, int|null>  $retentionDays
      * @return Builder<ClaimToken>
      */
     private function staleClaimTokensQuery(array $retentionDays): Builder
@@ -87,6 +89,7 @@ final class PruneAccessGateRecordsAction
     }
 
     /**
+     * @param  array<string, int|null>  $retentionDays
      * @return Builder<Registration>
      */
     private function staleRegistrationsQuery(array $retentionDays): Builder
@@ -100,6 +103,7 @@ final class PruneAccessGateRecordsAction
     }
 
     /**
+     * @param  array<string, int|null>  $retentionDays
      * @return Builder<Event>
      */
     private function staleEventsQuery(array $retentionDays): Builder
@@ -135,9 +139,9 @@ final class PruneAccessGateRecordsAction
     private function countOrDelete(Builder $query, bool $dryRun): int
     {
         if ($dryRun) {
-            return $query->count();
+            return (int) $query->count();
         }
 
-        return $query->delete();
+        return (int) $query->delete();
     }
 }
