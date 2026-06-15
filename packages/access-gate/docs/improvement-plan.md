@@ -4,7 +4,7 @@
 
 ## 1. Snapshot
 
-Access Gate is a schema-owning operations package for page, download, member-area, guest-link, schedule, and paid-access gating. It owns admin resources for areas, registrations, grants, browser tokens, claim tokens, and events; public request, claim, logout, and optional status routes; customer-portal and payments bridges; diagnostics; announcement-bar hooks; and screenshot coverage for admin and public workflows. The code is already Action-heavy and has broad focused tests, but the remaining risk is operational depth: stale tokens/registrations/events can accumulate, duplicate public submissions need stronger idempotency guarantees, and the public cache/privacy boundaries should be documented as first-class product behavior.
+Access Gate is a schema-owning operations package for page, download, member-area, guest-link, schedule, and paid-access gating. It owns admin resources for areas, registrations, grants, browser tokens, claim tokens, and events; public request, claim, logout, and optional status routes; customer-portal and payments bridges; diagnostics; announcement-bar hooks; and screenshot coverage for admin and public workflows. The paid-access checkout slice is now explicit: Access Gate creates Payments `gated_access` checkout sessions for registrations, and the Payments fulfillment handler approves the registration after completion. The code is already Action-heavy and has broad focused tests, but the remaining risk is operational depth: stale tokens/registrations/events can accumulate, duplicate public submissions need stronger idempotency guarantees, and the public cache/privacy boundaries should be documented as first-class product behavior.
 
 ## 2. Improvements (existing functionality)
 
@@ -16,9 +16,11 @@ Access Gate is a schema-owning operations package for page, download, member-are
 
 4. **Document public caching and privacy boundaries.** Public Blade views and announcement hooks are cache-sensitive. README/overview should state that anonymous gated responses may be cacheable only when no registration, grant, browser token, or admin metadata leaks into HTML. Evidence: `resources/views/request.blade.php`, `resources/views/message.blade.php`, `src/Support/RenderHooks/RegisterAnnouncementBarHook.php`. - **S**
 
+5. **Done/Shipped: paid-access checkout creation manifest gap is closed.** `CreatePaidAccessCheckoutForRegistrationAction` creates a Payments `gated_access` checkout session from a concrete registration with stable idempotency, registration metadata, and input validation; `PaidAccessCheckoutCreationContribution` is declared in manifest actions for traceability; `contributionTraceability.deferredContributions` is empty. Evidence: `src/Actions/CreatePaidAccessCheckoutForRegistrationAction.php`, `src/Data/CreatePaidAccessCheckoutData.php`, `src/Manifest/PaidAccessCheckoutCreationContribution.php`, `capell.json`, `tests/Unit/Payments/AccessGatePaymentFulfillmentHandlerTest.php`, `tests/Unit/ManifestRequirementsTest.php`. - **S**
+
 ## 3. Missing Features (gaps)
 
-Capabilities declared: `access-gating`, `registration-approval`, `claim-token-management`, `paid-gated-access-fulfillment`, and `access-gate-customer-portal-gated-resource-feed`.
+Capabilities declared: `access-gating`, `registration-approval`, `claim-token-management`, `paid-gated-access-checkout-creation`, `paid-gated-access-fulfillment`, and `access-gate-customer-portal-gated-resource-feed`.
 
 - **No retention automation.** Expired registrations and tokens can be marked unusable, but package-owned cleanup is not exposed as a command/schedule.
 - **No export/report workflow for access audits.** Events are visible in admin, but support teams often need CSV evidence of access grants, denials, and revocations.
@@ -33,11 +35,11 @@ Capabilities declared: `access-gating`, `registration-approval`, `claim-token-ma
 
 3. **Important risk: cache and authoring boundaries are spread across code, docs, and tests.** Public output must not expose grants, model IDs, signed claim links, or editor surfaces. Recommended fix: add a dedicated public-output safety test matrix and document caching rules. - **P2**
 
-4. **Improvement: paid-access fulfillment deserves more operator visibility.** The Payments bridge is valuable, but admins need a clear audit trail from checkout to grant. Recommended fix: add docs and tests linking fulfillment events to grant/event records. - **P3**
+4. **Improvement: paid-access fulfillment deserves more operator visibility.** The Payments bridge now has explicit checkout creation and fulfillment tests, but admins still need richer reporting from checkout to grant. Recommended fix: add operator-facing lifecycle reporting once Payments exposes the desired reporting seam. - **P3**
 
 ## 5. Marketplace & Positioning
 
-Access Gate should be positioned as a serious access-control layer for Capell operators, not just a "password page" feature. For teams, emphasize controlled content launches, member areas, private downloads, paid access, and auditability. For developers, emphasize Actions, policy-backed admin resources, public-safe routes, and extension points for registration fields and access methods.
+Access Gate should be positioned as a serious access-control layer for Capell operators, not just a "password page" feature. For teams, emphasize controlled content launches, member areas, private downloads, paid access through Payments, and auditability. For developers, emphasize Actions, policy-backed admin resources, public-safe routes, and extension points for registration fields, access methods, and Payments-backed checkout handoff.
 
 **Current summary:** "Gate any Capell page, download, or member area behind login, email approval, guest links, schedules, or paid checkout - with full request, grant, and audit management in the admin."
 
@@ -59,6 +61,7 @@ Access Gate should be positioned as a serious access-control layer for Capell op
 | Expand Customer Portal self-service for active grants and browser tokens    | Next   | M      | Medium | §3          |
 | Add approval-limit concurrency coverage                                     | Next   | M      | High   | §3          |
 | Add richer paid-access lifecycle reporting                                  | Later  | L      | Medium | §4.4, §5    |
+| Close paid-access checkout creation manifest gap                            | Done   | S      | High   | §2.5        |
 | Add segmented launch/waitlist campaign templates                            | Later  | M      | Medium | §5          |
 
 ## 7. Verification

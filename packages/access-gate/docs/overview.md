@@ -6,7 +6,7 @@
 
 Access Gate is an **Available**, **Schema-owning** Capell package in the **Capell Operations** product group. It ships as `capell-app/access-gate` and extends these surfaces: admin, frontend, console.
 
-Gate any Capell page, download, or member area behind login, email approval, guest links, schedules, or paid checkout - with full request, grant, and audit management in the admin.
+Gate any Capell page, download, or member area behind login, email approval, guest links, schedules, or Payments-backed paid checkout - with full request, grant, and audit management in the admin.
 
 After install, admins get package-owned management surfaces and public users may see package-owned frontend output or routes.
 
@@ -23,7 +23,7 @@ Status details:
 
 **For developers:** The package gives developers package-owned service providers, Actions, Data objects, models, Laravel routes, Filament classes, and Blade views instead of pushing this behaviour into core or application code.
 
-**For teams:** Gate any Capell page, download, or member area behind login, email approval, guest links, schedules, or paid checkout - with full request, grant, and audit management in the admin.
+**For teams:** Gate any Capell page, download, or member area behind login, email approval, guest links, schedules, or paid checkout through the Payments package - with full request, grant, and audit management in the admin.
 
 ## Screens And Workflow
 
@@ -51,11 +51,11 @@ Screenshot contract: `screenshots.json`.
 - Policies: `AbstractAccessGateResourcePolicy`, `AccessAreaPolicy`, `AccessGateEventPolicy`, `BrowserTokenPolicy`, `ClaimTokenPolicy`, `GrantPolicy`, `RegistrationPolicy`.
 - Events: `RegistrationApproved`.
 - Listeners: `NotifyAdminsOfAccessRequest`.
-- Actions: `ApproveNextRegistrationsAction`, `ApproveRegistrationAction`, `AreaIsCurrentlyGatingAction`, `ConsumeAccessGateClaimTokenAction`, `CreateAccessGateBrowserTokenAction`, `CreateAccessGateClaimTokenAction`, `CreateAccessGateGrantAction`, `CreateRegistrationAction`, `EnsureAccessGateGrantCanIssueTokenAction`, `ExpireRegistrationAction`, `InstallAccessGatePackageAction`, `ListAccessRequestMethodsAction`, `and 14 more`.
-- Data objects: `AccessGateAccessResultData`, `AccessRequestMethodData`, `AnnouncementBarData`, `IssuedAccessGateTokenData`, `RegistrationFieldValue`.
+- Actions: `ApproveNextRegistrationsAction`, `ApproveRegistrationAction`, `AreaIsCurrentlyGatingAction`, `ConsumeAccessGateClaimTokenAction`, `CreateAccessGateBrowserTokenAction`, `CreateAccessGateClaimTokenAction`, `CreateAccessGateGrantAction`, `CreatePaidAccessCheckoutForRegistrationAction`, `CreateRegistrationAction`, `EnsureAccessGateGrantCanIssueTokenAction`, `ExpireRegistrationAction`, `InstallAccessGatePackageAction`, `and 15 more`.
+- Data objects: `AccessGateAccessResultData`, `AccessRequestMethodData`, `AnnouncementBarData`, `CreatePaidAccessCheckoutData`, `IssuedAccessGateTokenData`, `RegistrationFieldValue`.
 - Command signatures: `capell:access-gate-doctor`, `capell:access-gate-install`, `capell:access-gate-setup`.
 - Console command classes: `AccessGateDoctorCommand`, `AccessGateInstallCommand`, `AccessGateSetupCommand`.
-- Manifest contributions: `admin-resource: Capell\AccessGate\Manifest\AccessAreaResourceContribution`, `admin-resource: Capell\AccessGate\Manifest\AccessGateEventResourceContribution`, `admin-resource: Capell\AccessGate\Manifest\BrowserTokenResourceContribution`, `admin-resource: Capell\AccessGate\Manifest\ClaimTokenResourceContribution`, `admin-resource: Capell\AccessGate\Manifest\GrantResourceContribution`, `admin-resource: Capell\AccessGate\Manifest\RegistrationResourceContribution`, `console-command: Capell\AccessGate\Manifest\AccessGateConsoleCommandsContribution`, `dashboard-widget: Capell\AccessGate\Manifest\PendingAccessRequestsWidgetContribution`, `health-check: Capell\AccessGate\Manifest\AccessGateHealthContribution`, `model: Capell\AccessGate\Manifest\AccessGateModelsContribution`, `route: Capell\AccessGate\Manifest\AccessGateRoutesContribution`.
+- Manifest contributions: `admin-resource: Capell\AccessGate\Manifest\AccessAreaResourceContribution`, `admin-resource: Capell\AccessGate\Manifest\AccessGateEventResourceContribution`, `admin-resource: Capell\AccessGate\Manifest\BrowserTokenResourceContribution`, `admin-resource: Capell\AccessGate\Manifest\ClaimTokenResourceContribution`, `admin-resource: Capell\AccessGate\Manifest\GrantResourceContribution`, `admin-resource: Capell\AccessGate\Manifest\RegistrationResourceContribution`, `console-command: Capell\AccessGate\Manifest\AccessGateConsoleCommandsContribution`, `dashboard-widget: Capell\AccessGate\Manifest\PendingAccessRequestsWidgetContribution`, `health-check: Capell\AccessGate\Manifest\AccessGateHealthContribution`, `model: Capell\AccessGate\Manifest\AccessGateModelsContribution`, `route: Capell\AccessGate\Manifest\AccessGateRoutesContribution`. Paid access checkout creation is declared under manifest actions as `CreatePaidAccessCheckoutForRegistrationAction` with `PaidAccessCheckoutCreationContribution` traceability.
 - Health checks: `Capell\AccessGate\Health\AccessGateHealthCheck`.
 - Blade views: `packages/access-gate/resources/views/claimed.blade.php`, `packages/access-gate/resources/views/components/announcement-bar.blade.php`, `packages/access-gate/resources/views/components/request-cta.blade.php`, `packages/access-gate/resources/views/message.blade.php`, `packages/access-gate/resources/views/request.blade.php`.
 
@@ -77,6 +77,7 @@ Screenshot contract: `screenshots.json`.
 - Queues or schedules: none detected in standard package paths.
 - Cache tags: none declared.
 - Commands: `capell:access-gate-doctor`, `capell:access-gate-install`, `capell:access-gate-setup`.
+- Paid checkout: requires `capell-app/payments`; Access Gate creates a `gated_access` checkout session for a registration and Payments fulfills the completed checkout into an approved grant.
 
 ## Common Pitfalls
 

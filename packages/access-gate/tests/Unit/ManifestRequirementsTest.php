@@ -22,6 +22,7 @@ use Capell\AccessGate\Manifest\AccessGateRoutesContribution;
 use Capell\AccessGate\Manifest\BrowserTokenResourceContribution;
 use Capell\AccessGate\Manifest\ClaimTokenResourceContribution;
 use Capell\AccessGate\Manifest\GrantResourceContribution;
+use Capell\AccessGate\Manifest\PaidAccessCheckoutCreationContribution;
 use Capell\AccessGate\Manifest\PendingAccessRequestsWidgetContribution;
 use Capell\AccessGate\Manifest\RegistrationResourceContribution;
 use Capell\AccessGate\Models\Area;
@@ -53,6 +54,7 @@ it('declares the shipped access gate package manifest surfaces', function (): vo
         ->toHaveKey('namespace', 'Capell\\AccessGate')
         ->and(data_get($manifest, 'surfaces', []))->toContain('admin', 'frontend', 'console')
         ->and(data_get($manifest, 'providers.runtime', []))->toContain('Capell\\AccessGate\\Providers\\AccessGateServiceProvider')
+        ->and(data_get($manifest, 'capabilities', []))->toContain('paid-gated-access-checkout-creation', 'paid-gated-access-fulfillment')
         ->and(data_get($manifest, 'database.migrations'))->toBeTrue()
         ->and(data_get($manifest, 'commands.install'))->toBe('capell:access-gate-install')
         ->and(data_get($manifest, 'commands.setup'))->toBe('capell:access-gate-setup')
@@ -68,9 +70,9 @@ it('declares the shipped access gate package manifest surfaces', function (): vo
         ->and(data_get($manifest, 'security.publicSurface.tokenizedRoutes', []))->toBe([
             'capell-access-gate.claim',
         ])
-        ->and(data_get($manifest, 'contributionTraceability.deferredContributions'))->toBe([
-            'paid-access-checkout-creation',
-        ]);
+        ->and(data_get($manifest, 'actions.paidAccessCheckout'))->toBe('Capell\\AccessGate\\Actions\\CreatePaidAccessCheckoutForRegistrationAction')
+        ->and(data_get($manifest, 'actions.paidAccessCheckoutContribution'))->toBe(PaidAccessCheckoutCreationContribution::class)
+        ->and(data_get($manifest, 'contributionTraceability.deferredContributions'))->toBe([]);
 
     expect($contributions)
         ->toContain([
@@ -170,6 +172,7 @@ it('declares the shipped access gate package manifest surfaces', function (): vo
         ->and(class_implements(AccessGateRoutesContribution::class))->toContain(RegistersExtensionRoute::class)
         ->and(class_implements(AccessGateConsoleCommandsContribution::class))->toContain(ExtensionContribution::class)
         ->and(class_implements(AccessGateModelsContribution::class))->toContain(ExtensionContribution::class)
+        ->and(class_implements(PaidAccessCheckoutCreationContribution::class))->toContain(ExtensionContribution::class)
         ->and(class_implements(AccessGateHealthContribution::class))->toContain(ChecksExtensionHealth::class);
 
     expect(__('capell-access-gate::filament.widgets.pending_access_requests'))->toBe('Pending access requests');

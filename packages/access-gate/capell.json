@@ -131,7 +131,9 @@
         "doctor": "capell:access-gate-doctor"
     },
     "actions": {
-        "install": "Capell\\AccessGate\\Actions\\InstallAccessGatePackageAction"
+        "install": "Capell\\AccessGate\\Actions\\InstallAccessGatePackageAction",
+        "paidAccessCheckout": "Capell\\AccessGate\\Actions\\CreatePaidAccessCheckoutForRegistrationAction",
+        "paidAccessCheckoutContribution": "Capell\\AccessGate\\Manifest\\PaidAccessCheckoutCreationContribution"
     },
     "settings": [],
     "permissions": [
@@ -152,6 +154,7 @@
         "access-gating",
         "registration-approval",
         "claim-token-management",
+        "paid-gated-access-checkout-creation",
         "paid-gated-access-fulfillment",
         "access-gate-customer-portal-gated-resource-feed"
     ],
@@ -301,6 +304,6 @@
         "categories": ["admin", "operations"]
     },
     "contributionTraceability": {
-        "deferredContributions": ["paid-access-checkout-creation"]
+        "deferredContributions": []
     }
 }
