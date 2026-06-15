@@ -19,6 +19,7 @@ use Capell\SeoSuite\Models\AiDiscoveryCrawlerRule;
 use Capell\SeoSuite\Models\AiDiscoveryPageProfile;
 use Capell\SeoSuite\Models\AiDiscoverySiteProfile;
 use Capell\SeoSuite\Models\AiDiscoverySnapshot;
+use Capell\SeoSuite\Providers\SeoSuiteServiceProvider;
 use Composer\Autoload\ClassLoader;
 
 $composerAutoloader = require getcwd() . '/vendor/autoload.php';
@@ -155,6 +156,13 @@ it('casts site profile and crawler rule enum fields', function (): void {
 });
 
 it('exposes translated enum labels and registers ai discovery models', function (): void {
+    $provider = app()->getProvider(SeoSuiteServiceProvider::class);
+
+    throw_unless($provider instanceof SeoSuiteServiceProvider, RuntimeException::class, 'SEO Suite service provider must be registered for model surface assertions.');
+
+    $bootInstalledPackage = new ReflectionMethod(SeoSuiteServiceProvider::class, 'registerModels');
+    $bootInstalledPackage->invoke($provider);
+
     expect(AiDiscoveryCrawlerPurposeEnum::Training->getLabel())->toBe('Training')
         ->and(AiDiscoveryCrawlerDirectiveEnum::Disallow->getLabel())->toBe('Disallow')
         ->and(AiDiscoverySnapshotKindEnum::LlmsFullTxt->getLabel())->toBe('llms-full.txt')

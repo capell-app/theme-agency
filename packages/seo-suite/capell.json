@@ -17,6 +17,7 @@
     "dependencies": {
         "requires": [
             "capell-app/admin",
+            "capell-app/core",
             "capell-app/frontend",
             "capell-app/insights",
             "capell-app/site-discovery"
@@ -84,6 +85,85 @@
                 "capell-frontend.page-markdown-home",
                 "capell-frontend.page-markdown"
             ]
+        },
+        {
+            "type": "model",
+            "class": "Capell\\SeoSuite\\Manifest\\SeoSuiteModelsContribution",
+            "modelClasses": [
+                "Capell\\SeoSuite\\Models\\AIGenerationHistory",
+                "Capell\\SeoSuite\\Models\\AiCreatorContext",
+                "Capell\\SeoSuite\\Models\\AiCreatorSession",
+                "Capell\\SeoSuite\\Models\\AiDiscoverySiteProfile",
+                "Capell\\SeoSuite\\Models\\AiDiscoveryPageProfile",
+                "Capell\\SeoSuite\\Models\\AiDiscoveryCrawlerRule",
+                "Capell\\SeoSuite\\Models\\AiDiscoverySnapshot",
+                "Capell\\SeoSuite\\Models\\BrokenLink",
+                "Capell\\SeoSuite\\Models\\PageSpeedAuditRun",
+                "Capell\\SeoSuite\\Models\\PageSpeedAuditResult",
+                "Capell\\SeoSuite\\Models\\PageSeoSnapshot",
+                "Capell\\SeoSuite\\Models\\SearchConsoleUrlMetric",
+                "Capell\\SeoSuite\\Models\\SearchConsoleQueryMetric"
+            ]
+        },
+        {
+            "type": "dashboard-widget",
+            "class": "Capell\\SeoSuite\\Manifest\\SeoSuiteDashboardWidgetsContribution",
+            "widgetClasses": [
+                "Capell\\SeoSuite\\Filament\\Widgets\\SearchConsoleOverviewWidget",
+                "Capell\\SeoSuite\\Filament\\Widgets\\TopSearchPagesWidget",
+                "Capell\\SeoSuite\\Filament\\Widgets\\SearchMovementWidget",
+                "Capell\\SeoSuite\\Filament\\Widgets\\SeoOpportunitiesWidget",
+                "Capell\\SeoSuite\\Filament\\Widgets\\SearchIntelligenceWidget",
+                "Capell\\SeoSuite\\Filament\\Widgets\\AiDiscoveryCoverageWidget"
+            ]
+        },
+        {
+            "type": "scheduled-job",
+            "class": "Capell\\SeoSuite\\Manifest\\SeoSuitePageSpeedScheduleContribution",
+            "command": "capell:seo-suite:pagespeed-audit --notify",
+            "name": "capell-seo-suite-pagespeed-audit",
+            "frequency": "weeklyOn:1:06:00",
+            "enabledWhen": "capell-seo-suite.pagespeed.enabled and seo_suite.pagespeed_audit_enabled"
+        },
+        {
+            "type": "console-command",
+            "class": "Capell\\SeoSuite\\Manifest\\SeoSuiteConsoleCommandsContribution",
+            "commands": [
+                "capell:admin-clear-ai-cache",
+                "capell:seo-suite-doctor",
+                "capell:seo-suite-install",
+                "capell:admin-monitor-ai-usage",
+                "capell:seo-suite:pagespeed-audit",
+                "capell:seo-suite:refresh-ai-discovery-markdown",
+                "capell:seo-suite-setup",
+                "capell:seo-suite-sync-search-console",
+                "capell:admin-test-openai"
+            ],
+            "commandClasses": [
+                "Capell\\SeoSuite\\Console\\Commands\\ClearAiCacheCommand",
+                "Capell\\SeoSuite\\Console\\Commands\\DoctorCommand",
+                "Capell\\SeoSuite\\Console\\Commands\\InstallCommand",
+                "Capell\\SeoSuite\\Console\\Commands\\MonitorAiUsageCommand",
+                "Capell\\SeoSuite\\Console\\Commands\\PageSpeedAuditCommand",
+                "Capell\\SeoSuite\\Console\\Commands\\RefreshAiDiscoveryMarkdownCommand",
+                "Capell\\SeoSuite\\Console\\Commands\\SetupCommand",
+                "Capell\\SeoSuite\\Console\\Commands\\SyncSearchConsoleCommand",
+                "Capell\\SeoSuite\\Console\\Commands\\TestOpenAiConnectionCommand"
+            ]
+        },
+        {
+            "type": "setting",
+            "class": "Capell\\SeoSuite\\Manifest\\SeoSuiteSettingsContribution",
+            "settingsClasses": [
+                "Capell\\SeoSuite\\Settings\\AIOrchestratorSettings",
+                "Capell\\SeoSuite\\Settings\\SeoSuiteSettings"
+            ],
+            "settingsGroups": ["ai-orchestrator", "seo_suite", "frontend"]
+        },
+        {
+            "type": "health-check",
+            "class": "Capell\\SeoSuite\\Manifest\\SeoSuiteHealthContribution",
+            "checkClass": "Capell\\SeoSuite\\Health\\SeoSuiteHealthCheck"
         }
     ],
     "database": {
@@ -106,10 +186,16 @@
         ]
     },
     "commands": {
-        "install": null,
-        "setup": null,
+        "install": "capell:seo-suite-install",
+        "setup": "capell:seo-suite-setup",
         "demo": null,
-        "doctor": "capell:seo-suite-doctor"
+        "doctor": "capell:seo-suite-doctor",
+        "clearAiCache": "capell:admin-clear-ai-cache",
+        "monitorAiUsage": "capell:admin-monitor-ai-usage",
+        "pageSpeedAudit": "capell:seo-suite:pagespeed-audit",
+        "refreshAiDiscoveryMarkdown": "capell:seo-suite:refresh-ai-discovery-markdown",
+        "syncSearchConsole": "capell:seo-suite-sync-search-console",
+        "testOpenAiConnection": "capell:admin-test-openai"
     },
     "actions": {
         "buildCrawlerPreviewReport": "Capell\\SeoSuite\\Actions\\BuildCrawlerPreviewReportAction",
@@ -163,8 +249,14 @@
     "security": {
         "riskTier": "sensitive",
         "publicSurface": {
-            "routeNames": [],
-            "auth": "none",
+            "routeNames": [
+                "capell-frontend.llms-txt",
+                "capell-frontend.llms-full-txt",
+                "capell-frontend.robots-txt",
+                "capell-frontend.page-markdown-home",
+                "capell-frontend.page-markdown"
+            ],
+            "auth": "public",
             "csrfExemptRoutes": [],
             "signedRoutes": [],
             "tokenizedRoutes": [],
@@ -305,6 +397,6 @@
         "categories": ["admin", "console", "frontend", "search-seo"]
     },
     "contributionTraceability": {
-        "deferredContributions": ["dashboard-widget", "model", "scheduled-job"]
+        "deferredContributions": []
     }
 }
