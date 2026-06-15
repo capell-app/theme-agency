@@ -5,6 +5,7 @@ declare(strict_types=1);
 require_once __DIR__ . '/../Support/ThemeFrontendTestSupport.php';
 
 use Capell\Core\Facades\CapellCore;
+use Capell\HtmlCache\Enums\HtmlCacheEligibilityReason;
 use Capell\HtmlCache\Providers\HtmlCacheServiceProvider;
 use Capell\HtmlCache\Support\Extensions\ExtensionCacheSafetyResolver;
 use Illuminate\Support\Facades\Route;
@@ -80,16 +81,19 @@ it('caches public theme route output without authoring surface', function (): vo
             return true;
         }
 
+        /** @return list<string> */
         public function blockingPackageNames(): array
         {
             return [];
         }
 
+        /** @return list<HtmlCacheEligibilityReason> */
         public function blockingReasonCodes(): array
         {
             return [];
         }
 
+        /** @return list<string> */
         public function cacheTags(): array
         {
             return [];
