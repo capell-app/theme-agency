@@ -63,7 +63,7 @@ Agent Delivery should be positioned as controlled AI/answer-engine distribution 
 
 ## 7. Verification
 
-Plan-writing review only; no commands were run for this package in this pass. First implementation slice should start with:
+Implementation slice 1 exposed public JSON routes, contributor contracts, and health checks as manifest contributions, and made `AgentDeliveryHealthCheck` verify route registration, rate limiting, registry binding, and optional Site Discovery coverage registration. Verify with:
 
 ```bash
 vendor/bin/pest packages/agent-delivery/tests --configuration=phpunit.xml
@@ -80,7 +80,7 @@ vendor/bin/pest packages/agent-delivery/tests/Feature/Http packages/agent-delive
 - [x] Package plan created from current code, manifest, docs, screenshots, and tests.
 - [x] Comprehensive local review pass completed for routes, provider, registry, Actions, docs, screenshots, and public JSON boundaries.
 - [x] Capell audience pass completed for AI consumers, developers, and Marketplace buyers.
-- [ ] Approved implementation slices shipped.
+- [x] Approved implementation slice 1 shipped: route/contract manifest metadata and health diagnostics.
 - [ ] Focused Agent Delivery verification passed.
 - [ ] Package tests passed.
 - [ ] Repo preflight passed for changed files.
