@@ -65,6 +65,8 @@ Agent Delivery should be positioned as controlled AI/answer-engine distribution 
 
 Implementation slice 1 exposed public JSON routes, contributor contracts, and health checks as manifest contributions, and made `AgentDeliveryHealthCheck` verify route registration, rate limiting, registry binding, and optional Site Discovery coverage registration. Verify with:
 
+Implementation slice 2 closed the deferred public-api-endpoint traceability gap by declaring the public JSON API metadata on the route contribution, recording the throttled route names in security metadata, and documenting the public API contract for buyers, admins, and package authors.
+
 ```bash
 vendor/bin/pest packages/agent-delivery/tests --configuration=phpunit.xml
 ```
@@ -81,6 +83,7 @@ vendor/bin/pest packages/agent-delivery/tests/Feature/Http packages/agent-delive
 - [x] Comprehensive local review pass completed for routes, provider, registry, Actions, docs, screenshots, and public JSON boundaries.
 - [x] Capell audience pass completed for AI consumers, developers, and Marketplace buyers.
 - [x] Approved implementation slice 1 shipped: route/contract manifest metadata and health diagnostics.
-- [ ] Focused Agent Delivery verification passed.
-- [ ] Package tests passed.
-- [ ] Repo preflight passed for changed files.
+- [x] Public API endpoint traceability gap closed in manifest metadata, tests, and docs.
+- [x] Focused Agent Delivery verification passed.
+- [x] Package tests passed.
+- [x] Scoped Agent Delivery manifest/preflight check passed; broad manifest audit is blocked by unrelated `content-sections` traceability drift.

@@ -23,7 +23,17 @@ Status details:
 
 **For developers:** The package gives developers package-owned service providers, Actions, Data objects, and Laravel routes instead of pushing this behaviour into core or application code.
 
-**For teams:** Serve your published Capell pages to AI agents and answer engines as clean, public-safe JSON manifests and RAG-ready semantic chunks - no scraping, no admin leakage.
+**For teams:** Agent Delivery gives AI agents, RAG pipelines, and answer engines a controlled way to consume published site content without scraping pages or exposing anything from the admin workspace.
+
+## Public API Surface
+
+Agent Delivery contributes three versioned `GET` JSON endpoints under `/api/capell/agent/v1`. They are public by default, throttled with `throttle:capell-agent-delivery`, and only return content that Capell already resolves as published public output for the request host and locale.
+
+- `capell-agent-delivery.pages.index`
+- `capell-agent-delivery.pages.manifest`
+- `capell-agent-delivery.pages.chunks`
+
+The endpoints expose cache headers, ETags, and package cache tags so API consumers can poll responsibly. They do not expose admin URLs, editor state, model IDs, signed preview links, permissions, field paths, prompts, or unpublished content.
 
 ## Screens And Workflow
 
@@ -39,7 +49,7 @@ Screenshot contract: `screenshots.json`.
 - Route files: `packages/agent-delivery/routes/agent-delivery.php`.
 - Actions: `BuildAgentDeliveryChunksAction`, `BuildAgentDeliveryPageAction`, `BuildAgentDeliveryPageIndexAction`, `ResolveAgentDeliveryPageAction`.
 - Data objects: `AgentDeliveryChunkData`, `AgentDeliveryPageData`, `AgentDeliveryPageIndexEntryData`, `ResolvedAgentDeliveryPageData`.
-- Manifest contributions: `agent-capability: Capell\AgentDelivery\Manifest\AgentDeliveryContractsContribution`, `health-check: Capell\AgentDelivery\Health\AgentDeliveryHealthCheck`, `route: Capell\AgentDelivery\Manifest\AgentDeliveryRoutesContribution`.
+- Manifest contributions: `agent-capability: Capell\AgentDelivery\Manifest\AgentDeliveryContractsContribution`, `health-check: Capell\AgentDelivery\Health\AgentDeliveryHealthCheck`, `route/public-api-endpoint: Capell\AgentDelivery\Manifest\AgentDeliveryRoutesContribution`.
 - Health checks: `Capell\AgentDelivery\Health\AgentDeliveryHealthCheck`.
 - Cache tags: `agent-delivery`.
 
@@ -53,7 +63,7 @@ Docs gap: document extension points here if the package delegates persistence to
 
 - Admin navigation: no admin surface declared.
 - Permissions: none declared in `capell.json`.
-- Public routes: route files exist and must be reviewed before public enablement.
+- Public routes: versioned public JSON endpoints are declared in `capell.json`, throttled by default, and limited to already-published page content.
 - Database changes: no package migrations declared.
 - Settings: no package settings declared.
 - Queues or schedules: none detected in standard package paths.

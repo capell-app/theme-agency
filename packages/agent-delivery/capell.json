@@ -32,6 +32,14 @@
         {
             "type": "route",
             "class": "Capell\\AgentDelivery\\Manifest\\AgentDeliveryRoutesContribution",
+            "apiSurface": "public-json",
+            "endpointType": "public-api-endpoint",
+            "version": "v1",
+            "methods": ["GET"],
+            "contentType": "application/json",
+            "auth": "public",
+            "cachePolicy": "short-lived-public-json",
+            "conditionalRequests": true,
             "routes": [
                 "capell-agent-delivery.pages.index",
                 "capell-agent-delivery.pages.manifest",
@@ -87,7 +95,11 @@
             "signedRoutes": [],
             "tokenizedRoutes": [],
             "webhookRoutes": [],
-            "throttledRoutes": []
+            "throttledRoutes": [
+                "capell-agent-delivery.pages.chunks",
+                "capell-agent-delivery.pages.index",
+                "capell-agent-delivery.pages.manifest"
+            ]
         },
         "sensitiveData": {
             "encryptedFields": [],
@@ -155,6 +167,6 @@
         "categories": ["frontend", "publishing-pro", "ai"]
     },
     "contributionTraceability": {
-        "deferredContributions": ["public-api-endpoint"]
+        "deferredContributions": []
     }
 }

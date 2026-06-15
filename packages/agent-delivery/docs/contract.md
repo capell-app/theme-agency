@@ -8,6 +8,8 @@
 
 All routes resolve the site from the request host and only serve content that Core resolves as public. Pass `?locale=en` when the caller needs a specific language instead of the host/domain default.
 
+The package manifest marks these routes as the shipped `public-api-endpoint` surface. They are public `GET` JSON endpoints, use the `api` middleware group and `throttle:capell-agent-delivery` by default, and can be wrapped in host auth middleware through `capell-agent-delivery.public_pages.auth_middleware` when a site wants private agent access.
+
 Successful responses include:
 
 - `X-Capell-Agent-Delivery-Version`

@@ -37,15 +37,27 @@ it('declares shipped agent delivery manifest contributions', function (): void {
             'capell-agent-delivery.pages.index',
             'capell-agent-delivery.pages.manifest',
         ])
+        ->and(data_get($manifest, 'security.publicSurface.auth'))->toBe('public')
+        ->and(data_get($manifest, 'security.publicSurface.throttledRoutes'))->toBe([
+            'capell-agent-delivery.pages.chunks',
+            'capell-agent-delivery.pages.index',
+            'capell-agent-delivery.pages.manifest',
+        ])
         ->and(data_get($manifest, 'healthChecks.0.class'))->toBe(AgentDeliveryHealthCheck::class)
-        ->and(data_get($manifest, 'contributionTraceability.deferredContributions'))->toBe([
-            'public-api-endpoint',
-        ]);
+        ->and(data_get($manifest, 'contributionTraceability.deferredContributions'))->toBe([]);
 
     expect($contributions)
         ->toContain([
             'type' => 'route',
             'class' => AgentDeliveryRoutesContribution::class,
+            'apiSurface' => 'public-json',
+            'endpointType' => 'public-api-endpoint',
+            'version' => 'v1',
+            'methods' => ['GET'],
+            'contentType' => 'application/json',
+            'auth' => 'public',
+            'cachePolicy' => 'short-lived-public-json',
+            'conditionalRequests' => true,
             'routes' => [
                 'capell-agent-delivery.pages.index',
                 'capell-agent-delivery.pages.manifest',
