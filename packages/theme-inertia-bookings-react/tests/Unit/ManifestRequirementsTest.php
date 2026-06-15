@@ -115,3 +115,23 @@ it('keeps the react booking request validation and loading states screenshotable
         ->and($component)->toContain('clearErrors(field)')
         ->and($component)->not->toContain('                            </form>');
 });
+
+it('keeps react raw html rendering behind the public html sanitizer', function (): void {
+    $basePath = dirname(__DIR__, 2);
+    $pageComponent = (string) file_get_contents($basePath . '/resources/js/Pages/Capell/Page.jsx');
+    $contentWidget = (string) file_get_contents($basePath . '/resources/js/Components/Capell/Widgets/Content.jsx');
+    $sanitizer = (string) file_get_contents($basePath . '/resources/js/Support/publicHtml.js');
+
+    expect($pageComponent)->toContain('sanitizePublicHtml(page.content)')
+        ->and($contentWidget)->toContain('sanitizePublicHtml(widget.data.content)')
+        ->and(substr_count($pageComponent . $contentWidget, 'dangerouslySetInnerHTML'))->toBe(2)
+        ->and($sanitizer)->toContain('data-capell-authoring')
+        ->and($sanitizer)->toContain('signed[-_]editor')
+        ->and($sanitizer)->toContain('field_path')
+        ->and($sanitizer)->toContain('model_id')
+        ->and($sanitizer)->toContain('permission')
+        ->and($sanitizer)->toContain('capell-app\\/[a-z0-9-]+')
+        ->and($sanitizer)->toContain('javascript:')
+        ->and($sanitizer)->toContain('signature')
+        ->and($sanitizer)->toContain('admin');
+});

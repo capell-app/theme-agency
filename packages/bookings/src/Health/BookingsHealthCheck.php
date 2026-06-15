@@ -84,6 +84,7 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
+use Throwable;
 
 final class BookingsHealthCheck implements ChecksExtensionHealth
 {
@@ -293,8 +294,14 @@ final class BookingsHealthCheck implements ChecksExtensionHealth
 
     public function publicRendererCheck(): DoctorCheckResultData
     {
-        $renderer = app(PublicBookingRequestRenderer::class);
-        $passed = $renderer instanceof PublicBookingRequestRenderer;
+        $passed = false;
+
+        try {
+            $renderer = app()->make(PublicBookingRequestRenderer::class);
+            $passed = $renderer instanceof PublicBookingRequestRenderer;
+        } catch (Throwable) {
+            $passed = false;
+        }
 
         return new DoctorCheckResultData(
             label: (string) __('capell-bookings::package.health.public_renderer.label'),

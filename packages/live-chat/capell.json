@@ -97,10 +97,7 @@
             "actionClass": "Capell\\LiveChat\\Integrations\\AgentBridge\\RunLiveChatAgentBridgeCapabilityAction",
             "requiresPackage": "capell-app/agent-bridge",
             "server": "site",
-            "scopes": [
-                "capell.live-chat.read",
-                "capell.live-chat.write"
-            ],
+            "scopes": ["capell.live-chat.read", "capell.live-chat.write"],
             "capabilities": [
                 "capell.live-chat.conversations.list",
                 "capell.live-chat.conversations.inspect",

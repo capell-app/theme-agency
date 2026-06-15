@@ -9,7 +9,7 @@
         "no-unused-vars": [
             "error",
             {
-                "varsIgnorePattern": "^(Deferred|FieldError)$"
+                "varsIgnorePattern": "^(Deferred|FieldError|WidgetComponent)$"
             }
         ]
     }

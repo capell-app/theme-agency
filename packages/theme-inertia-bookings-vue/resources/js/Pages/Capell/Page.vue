@@ -2,6 +2,7 @@
 import ContentWidget from '../../Components/Capell/Widgets/Content.vue'
 import ImageWidget from '../../Components/Capell/Widgets/Image.vue'
 import TitleWidget from '../../Components/Capell/Widgets/Title.vue'
+import { sanitizePublicHtml } from '../../Support/publicHtml.js'
 
 defineProps({
     page: {
@@ -26,7 +27,7 @@ const widgets = {
             <h1>{{ page.title }}</h1>
             <div
                 v-if="typeof page.content === 'string'"
-                v-html="page.content"
+                v-html="sanitizePublicHtml(page.content)"
             />
             <a href="/bookings">Request appointment</a>
         </section>

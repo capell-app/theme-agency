@@ -78,23 +78,11 @@ This theme has no schema impact. It relies on core Capell site, page, locale, an
 
 ## Quick Start
 
-In a host Capell app, install the package with its Foundation Theme dependency:
+In a host Capell app, install the package with its Foundation Theme dependency using `composer require capell-app/foundation-theme capell-app/theme-liquid-glass`.
 
-```bash
-composer require capell-app/foundation-theme capell-app/theme-liquid-glass
-```
+Then run the optional demo command from the host app, not from this package monorepo: `php artisan capell:theme-liquid-glass-demo`.
 
-Then run the optional demo command from the host app, not from this package monorepo:
-
-```bash
-php artisan capell:theme-liquid-glass-demo
-```
-
-For package development in this repository, use package-local Pest commands such as:
-
-```bash
-vendor/bin/pest packages/theme-liquid-glass/tests --configuration=phpunit.xml
-```
+For package development in this repository, use package-local Pest commands such as `vendor/bin/pest packages/theme-liquid-glass/tests --configuration=phpunit.xml`.
 
 ## Next Steps
 

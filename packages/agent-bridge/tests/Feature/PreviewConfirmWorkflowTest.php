@@ -57,6 +57,15 @@ function agentBridgeConfirmationToken(array $preview): string
     return $confirmationToken;
 }
 
+function agentBridgeTokenId(CapellAgentBridgeToken $token): int
+{
+    $key = $token->getKey();
+
+    throw_unless(is_numeric($key), RuntimeException::class, 'Expected numeric agent bridge token key.');
+
+    return (int) $key;
+}
+
 it('previews and confirms a mutating capability with the same payload', function (): void {
     registerFakeCapability();
 
@@ -69,7 +78,7 @@ it('previews and confirms a mutating capability with the same payload', function
     $created = CreateAgentBridgeTokenAction::run($user, 'Test client', ['capell.fake.write']);
     $token = agentBridgeCreatedToken($created);
     $client = new AuthenticatedAgentBridgeClientData(
-        tokenId: (int) $token->getKey(),
+        tokenId: agentBridgeTokenId($token),
         name: 'Test client',
         scopes: ['capell.fake.write'],
     );
@@ -120,7 +129,7 @@ it('rejects confirmation when the payload changes after preview', function (): v
     $created = CreateAgentBridgeTokenAction::run($user, 'Test client', ['capell.fake.write']);
     $token = agentBridgeCreatedToken($created);
     $client = new AuthenticatedAgentBridgeClientData(
-        tokenId: (int) $token->getKey(),
+        tokenId: agentBridgeTokenId($token),
         name: 'Test client',
         scopes: ['capell.fake.write'],
     );
@@ -154,14 +163,14 @@ it('redacts sensitive payload and result fragments before writing audit entries'
     $created = CreateAgentBridgeTokenAction::run($user, 'Audit client', ['capell.fake.write']);
     $token = agentBridgeCreatedToken($created);
     $client = new AuthenticatedAgentBridgeClientData(
-        tokenId: (int) $token->getKey(),
+        tokenId: agentBridgeTokenId($token),
         name: 'Audit client',
         scopes: ['capell.fake.write'],
     );
 
     $payload = [
         'name' => 'Example',
-        'tokenId' => (int) $token->getKey(),
+        'tokenId' => agentBridgeTokenId($token),
         'accessToken' => 'secret-access-token',
         'password' => 'secret-password',
         'authorization' => 'Bearer secret-header-token',
@@ -208,7 +217,7 @@ it('redacts sensitive payload and result fragments before writing audit entries'
         expect($auditEntry->payload)
             ->toMatchArray([
                 'name' => 'Example',
-                'tokenId' => (int) $token->getKey(),
+                'tokenId' => agentBridgeTokenId($token),
                 'accessToken' => '[redacted]',
                 'password' => '[redacted]',
                 'authorization' => '[redacted]',
@@ -240,7 +249,7 @@ it('rejects confirmation replay across users', function (): void {
     $created = CreateAgentBridgeTokenAction::run($user, 'Original client', ['capell.fake.write']);
     $token = agentBridgeCreatedToken($created);
     $client = new AuthenticatedAgentBridgeClientData(
-        tokenId: (int) $token->getKey(),
+        tokenId: agentBridgeTokenId($token),
         name: 'Original client',
         scopes: ['capell.fake.write'],
     );
@@ -274,7 +283,7 @@ it('rejects policy protected capability previews when no authenticated user is a
     ]), 'Test client', ['capell.fake.write']);
     $token = agentBridgeCreatedToken($created);
     $client = new AuthenticatedAgentBridgeClientData(
-        tokenId: (int) $token->getKey(),
+        tokenId: agentBridgeTokenId($token),
         name: 'Test client',
         scopes: ['capell.fake.write'],
     );

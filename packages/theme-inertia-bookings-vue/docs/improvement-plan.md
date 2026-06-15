@@ -14,7 +14,7 @@ Theme Inertia Bookings Vue is the Vue component pack for the base Theme Inertia 
 
 3. **Document and test the generic Vue adapter suppression boundary.** The generic `inertia-vue-adapter` should not compete with this package's booking-specific component pack. This package should explain that it owns the full Vue component pack for bookings and should test the condition handoff from both sides where practical. Evidence: provider asset condition, `capell.json` dependency on `capell-app/inertia-vue-adapter`. - **S**
 
-4. **Partly done: Audit public HTML injection points.** `Page.vue` and `Content.vue` use `v-html` only for server-provided portable HTML props. The README/overview now state the sanitized prop contract, and package tests pin the two allowed raw HTML bindings plus basic public-output metadata exclusions. Browser-level fixture coverage is still a future hardening step. Evidence: `resources/js/Pages/Capell/Page.vue`, `resources/js/Components/Capell/Widgets/Content.vue`, `tests/Feature/InertiaBookingsVueServiceProviderTest.php`. - **M**
+4. **Shipped: guard public HTML injection points.** `Page.vue` and `Content.vue` now pass page/widget content through `sanitizePublicHtml()` before `v-html`, while the base renderer remains responsible for server-side portable HTML projection. Tests pin blocked authoring/package metadata, admin/signed URL, and unsafe-scheme markers. Evidence: `resources/js/Support/publicHtml.js`, `resources/js/Pages/Capell/Page.vue`, `resources/js/Components/Capell/Widgets/Content.vue`, `tests/Feature/InertiaBookingsVueServiceProviderTest.php`. - **M**
 
 5. **Keep screenshot media blocked until recapture.** Existing PNG files may be useful evidence, but the earlier screenshot-quality audit kept React/Vue adapter marketplace media card-only until the runner installs the adapter packages and renders real Capell/Inertia assets. Keep marketplace media conservative until validation/loading selectors and recapture work. - **S**
 
@@ -26,7 +26,7 @@ Theme Inertia Bookings Vue is the Vue component pack for the base Theme Inertia 
 
 Capabilities declared: `theme-inertia-bookings-vue`.
 
-- **Validation UI is absent.** The form can post, but server validation feedback is not rendered.
+- **Component-map coverage is still shallow.** The adapter now renders validation/loading states, but source-file to manifest contribution drift still needs a focused test.
 - **No success/confirmation state.** The form submits through Inertia but does not document or display a successful appointment request state.
 - **Widget support is minimal.** Only Content, Image, and Title widgets are implemented; richer Layout Builder widgets fall back to Content.
 - **No browser-level Vue test.** Current tests inspect files and provider registration, not actual rendered component behavior.
@@ -34,13 +34,13 @@ Capabilities declared: `theme-inertia-bookings-vue`.
 
 ## 4. Issues / Risks
 
-1. **Important gap: screenshot contract waits for states the component does not render.** Validation/loading screenshots cannot be trusted until `.error` and `.slots` states exist. Recommended fix: add the states and recapture. - **P2**
+1. **Important gap: screenshot contract still waits on runner recapture.** `.error` and `.slots` states now exist, but marketplace media should stay card-only until the runner installs the adapter and captures real Vue states. Recommended fix: recapture and visually verify desktop/mobile states. - **P2**
 
-2. **Important gap: validation errors are invisible to users.** Failed booking submissions need accessible inline messages. Recommended fix: render `form.errors` under each field and a summary if needed. - **P2**
+2. **Important gap: health checks remain mostly file-presence based.** Installer health should catch broken build entrypoints and contribution metadata before runtime. Recommended fix: assert build entrypoint, component contribution class, and vendor asset condition. - **P2**
 
-3. **Important gap: raw HTML rendering contract is implicit.** Vue components rely on sanitized server props before `v-html`. Recommended fix: document and test the public prop boundary. - **P2**
+3. **Important gap: component-map drift can still hide missing components.** Recommended fix: compare declared component contributions with committed Vue component files. - **P2**
 
-4. **Improvement: docs under-explain the adapter split.** The package is technical and should be clear for frontend developers deciding which adapter to install. - **P3**
+4. **Improvement: browser-level component smoke coverage is absent.** Recommended fix: add a runner-backed Vue interaction smoke once the screenshot app can install the adapter. - **P3**
 
 ## 5. Marketplace & Positioning
 
@@ -64,7 +64,7 @@ The Vue adapter should be sold as part of the Inertia Bookings theme family, not
 | ------------------------------------------------------------------------------------------ | ------ | ------ | ------ | ---------------- |
 | Add accessible validation errors and `.error` screenshot state                             | Done   | S      | High   | §2.1, §4.1, §4.2 |
 | Add `.slots` loading region and stable deferred slot state                                 | Done   | S      | High   | §2.1, §4.1       |
-| Rewrite README/overview around base theme, Vue adapter, and generic adapter suppression    | Now    | S      | Medium | §2.6             |
+| Rewrite README/overview around base theme, Vue adapter, and generic adapter suppression    | Done   | S      | Medium | §2.6             |
 | Add component-map drift tests for source files and manifest component declarations         | Now    | S      | Medium | §2.2             |
 | Strengthen health check coverage beyond file presence                                      | Now    | S      | Medium | §2.7             |
 | Document/test sanitized prop boundary for `v-html` usage                                   | Done   | M      | High   | §2.4, §4.3       |
@@ -75,17 +75,7 @@ The Vue adapter should be sold as part of the Inertia Bookings theme family, not
 
 ## 7. Verification
 
-Plan-writing review only; no commands were run for this package yet. First implementation slice should start with:
-
-```bash
-vendor/bin/pest packages/theme-inertia-bookings-vue/tests --configuration=phpunit.xml
-```
-
-For adapter handoff changes, include:
-
-```bash
-vendor/bin/pest packages/inertia-vue-adapter/tests packages/theme-inertia-bookings/tests --configuration=phpunit.xml
-```
+Focused verification for the current slice: `vendor/bin/pest packages/theme-inertia-bookings-vue/tests --configuration=phpunit.xml` passed, and changed-file preflight passed. For broader adapter handoff changes, include `vendor/bin/pest packages/inertia-vue-adapter/tests packages/theme-inertia-bookings/tests --configuration=phpunit.xml`.
 
 ## 8. Completion Checklist
 
@@ -94,6 +84,6 @@ vendor/bin/pest packages/inertia-vue-adapter/tests packages/theme-inertia-bookin
 - [x] Capell audience pass completed for frontend developers and package adopters.
 - [x] Validation/loading state implementation slice shipped.
 - [x] Sanitized raw HTML prop contract documented and covered with focused tests.
-- [ ] Focused Theme Inertia Bookings Vue verification passed.
-- [ ] Package tests passed.
-- [ ] Repo preflight passed for changed files.
+- [x] Focused Theme Inertia Bookings Vue verification passed.
+- [x] Package tests passed.
+- [x] Repo preflight passed for changed files.

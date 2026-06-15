@@ -80,12 +80,19 @@ it('keeps raw html rendering limited to sanitized server prop boundaries', funct
     $basePath = dirname(__DIR__, 2);
     $pageComponent = (string) file_get_contents($basePath . '/resources/js/Pages/Capell/Page.vue');
     $contentWidget = (string) file_get_contents($basePath . '/resources/js/Components/Capell/Widgets/Content.vue');
+    $sanitizer = (string) file_get_contents($basePath . '/resources/js/Support/publicHtml.js');
 
-    expect($pageComponent)->toContain('v-html="page.content"')
+    expect($pageComponent)->toContain('v-html="sanitizePublicHtml(page.content)"')
         ->and($pageComponent)->toContain('v-if="typeof page.content === \'string\'"')
-        ->and($contentWidget)->toContain('v-html="widget.data.content"')
+        ->and($contentWidget)->toContain('v-html="sanitizePublicHtml(widget.data.content)"')
         ->and(substr_count($pageComponent . $contentWidget, 'v-html='))->toBe(2)
-        ->and($pageComponent . $contentWidget)->not->toContain('signed')
-        ->and($pageComponent . $contentWidget)->not->toContain('admin')
-        ->and($pageComponent . $contentWidget)->not->toContain('editor');
+        ->and($sanitizer)->toContain('data-capell-authoring')
+        ->and($sanitizer)->toContain('signed[-_]editor')
+        ->and($sanitizer)->toContain('field_path')
+        ->and($sanitizer)->toContain('model_id')
+        ->and($sanitizer)->toContain('permission')
+        ->and($sanitizer)->toContain('capell-app\\/[a-z0-9-]+')
+        ->and($sanitizer)->toContain('javascript:')
+        ->and($sanitizer)->toContain('signature')
+        ->and($sanitizer)->toContain('admin');
 });

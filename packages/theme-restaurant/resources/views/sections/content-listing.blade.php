@@ -3,6 +3,7 @@
     $summary = $section->summary ?? ($summary ?? __('capell-theme-restaurant::generic.listing_summary'));
     $items = $section->items ?? ($items ?? []);
     $blogAvailable ??= false;
+    $publicThemeUrl = 'Capell\\ThemeStudio\\Restaurant\\Support\\PublicThemeUrl';
 
     if (! is_array($items) || $items === []) {
         $items = [
@@ -48,9 +49,13 @@
                         </p>
                     @endif
 
-                    @if (is_string($listingItem['url'] ?? null) && trim($listingItem['url']) !== '' && trim($listingItem['url']) !== '#')
+                    @php
+                        $listingItemUrl = $publicThemeUrl::link($listingItem['url'] ?? null);
+                    @endphp
+
+                    @if ($listingItemUrl !== null)
                         <a
-                            href="{{ $listingItem['url'] }}"
+                            href="{{ $listingItemUrl }}"
                             class="restaurant-inline-link mt-5"
                         >
                             {{ __('capell-theme-restaurant::generic.read_more_label') }}

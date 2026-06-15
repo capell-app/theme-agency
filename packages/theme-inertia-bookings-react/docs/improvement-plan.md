@@ -14,7 +14,7 @@ Theme Inertia Bookings React is the React component pack for the base Theme Iner
 
 3. **Document and test the generic React adapter suppression boundary.** The generic `inertia-react-adapter` disables its build when this package is installed. This package should explain that it owns the full React component pack for bookings and should test the condition handoff from both sides where practical. Evidence: `packages/inertia-react-adapter/docs/improvement-plan.md`, provider condition. - **S**
 
-4. **Audit public HTML injection points.** `Page.jsx` and `Content.jsx` use `dangerouslySetInnerHTML` for page/widget content. That can be safe if server props are already sanitized portable HTML, but the adapter docs and tests should state that contract and include a fixture proving authoring/package metadata is not rendered. Evidence: `resources/js/Pages/Capell/Page.jsx`, `resources/js/Components/Capell/Widgets/Content.jsx`. - **M**
+4. **Shipped: guard public HTML injection points.** `Page.jsx` and `Content.jsx` now pass page/widget content through `sanitizePublicHtml()` before `dangerouslySetInnerHTML`, while the base renderer remains responsible for server-side portable HTML projection. Tests pin blocked authoring/package metadata, admin/signed URL, and unsafe-scheme markers. Evidence: `resources/js/Support/publicHtml.js`, `resources/js/Pages/Capell/Page.jsx`, `resources/js/Components/Capell/Widgets/Content.jsx`, `tests/Unit/ManifestRequirementsTest.php`. - **M**
 
 5. **Keep screenshot media blocked until recapture.** Existing PNG files may be useful evidence, but the earlier screenshot-quality audit kept React/Vue adapter marketplace media card-only until the runner installs the adapter packages and renders real Capell/Inertia assets. Keep marketplace media conservative until validation/loading selectors and recapture work. - **S**
 
@@ -36,7 +36,7 @@ Capabilities declared: `theme-inertia-bookings-react`.
 
 2. **Resolved gap: validation errors are visible to users.** Failed booking submissions now render accessible inline messages and a summary through Inertia form errors. Keep package tests around this public state. - **P2**
 
-3. **Important gap: raw HTML rendering contract is implicit.** React components rely on sanitized server props. Recommended fix: document and test the public prop boundary. - **P2**
+3. **Important gap: component-map drift can still hide missing components.** Recommended fix: compare declared component contributions with committed React component files. - **P2**
 
 4. **Improvement: docs under-explain the adapter split.** The package is technical and should be clear for frontend developers deciding which adapter to install. - **P3**
 
@@ -62,9 +62,9 @@ The React adapter should be sold as part of the Inertia Bookings theme family, n
 | ------------------------------------------------------------------------------------------ | ------ | ------ | ------ | ---------------- |
 | Add accessible validation errors and `.error` screenshot state                             | Done   | S      | High   | §2.1, §4.1, §4.2 |
 | Add `.slots` loading region and stable deferred slot state                                 | Done   | S      | High   | §2.1, §4.1       |
-| Rewrite README/overview around base theme, React adapter, and generic adapter suppression  | Now    | S      | Medium | §2.6             |
+| Rewrite README/overview around base theme, React adapter, and generic adapter suppression  | Done   | S      | Medium | §2.6             |
 | Add component-map drift tests for source files and manifest component declarations         | Now    | S      | Medium | §2.2             |
-| Document/test sanitized prop boundary for `dangerouslySetInnerHTML` usage                  | Next   | M      | High   | §2.4, §4.3       |
+| Document/test sanitized prop boundary for `dangerouslySetInnerHTML` usage                  | Done   | M      | High   | §2.4, §4.3       |
 | Coordinate screenshot runner recapture and keep marketplace media card-only until verified | Next   | M      | Medium | §2.5             |
 | Add browser-level component smoke coverage for booking request interactions                | Later  | M      | Medium | §3               |
 | Expand widget component coverage beyond Content/Image/Title                                | Later  | M      | Medium | §3               |
@@ -72,17 +72,7 @@ The React adapter should be sold as part of the Inertia Bookings theme family, n
 
 ## 7. Verification
 
-Plan-writing review only; no commands were run for this package yet. First implementation slice should start with:
-
-```bash
-vendor/bin/pest packages/theme-inertia-bookings-react/tests --configuration=phpunit.xml
-```
-
-For adapter handoff changes, include:
-
-```bash
-vendor/bin/pest packages/inertia-react-adapter/tests packages/theme-inertia-bookings/tests --configuration=phpunit.xml
-```
+Focused verification for the current slice: `vendor/bin/pest packages/theme-inertia-bookings-react/tests --configuration=phpunit.xml` passed, and changed-file preflight passed. For broader adapter handoff changes, include `vendor/bin/pest packages/inertia-react-adapter/tests packages/theme-inertia-bookings/tests --configuration=phpunit.xml`.
 
 ## 8. Completion Checklist
 
@@ -90,6 +80,6 @@ vendor/bin/pest packages/inertia-react-adapter/tests packages/theme-inertia-book
 - [x] Comprehensive local review pass completed for provider, health check, React components, screenshot contract, docs, and adapter boundary.
 - [x] Capell audience pass completed for frontend developers and package adopters.
 - [x] Accessible validation/loading implementation slice shipped.
-- [ ] Focused Theme Inertia Bookings React verification passed.
-- [ ] Package tests passed.
-- [ ] Repo preflight passed for changed files.
+- [x] Focused Theme Inertia Bookings React verification passed.
+- [x] Package tests passed.
+- [x] Repo preflight passed for changed files.

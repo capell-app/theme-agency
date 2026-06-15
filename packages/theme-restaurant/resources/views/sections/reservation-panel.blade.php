@@ -1,8 +1,9 @@
 @php
+    $publicThemeUrl = 'Capell\\ThemeStudio\\Restaurant\\Support\\PublicThemeUrl';
     $heading = $section->heading ?? ($heading ?? __('capell-theme-restaurant::generic.reservation_heading'));
     $summary = $section->summary ?? ($summary ?? __('capell-theme-restaurant::generic.reservation_summary'));
     $formAction = $section->form_action ?? ($formAction ?? ($form_action ?? null));
-    $formAction = is_string($formAction) && trim($formAction) !== '' && trim($formAction) !== '#' ? $formAction : null;
+    $formAction = $publicThemeUrl::formAction($formAction);
     $formBuilderAvailable ??= false;
     $bookingsAvailable ??= false;
 @endphp

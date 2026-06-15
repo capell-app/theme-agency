@@ -1,6 +1,7 @@
 @php
     $brandName = $section->brandName ?? ($brandName ?? __('capell-theme-restaurant::generic.brand_name'));
     $items = $section->items ?? ($items ?? []);
+    $publicThemeUrl = 'Capell\\ThemeStudio\\Restaurant\\Support\\PublicThemeUrl';
 @endphp
 
 <footer class="restaurant-footer px-6 py-10">
@@ -13,9 +14,13 @@
         </div>
         <div class="flex flex-wrap gap-5 text-sm font-bold">
             @foreach ($items as $item)
-                @if (is_string($item['url'] ?? null) && trim($item['url']) !== '' && trim($item['url']) !== '#')
+                @php
+                    $itemUrl = $publicThemeUrl::link($item['url'] ?? null);
+                @endphp
+
+                @if ($itemUrl !== null)
                     <a
-                        href="{{ $item['url'] }}"
+                        href="{{ $itemUrl }}"
                         class="text-white/75 hover:text-white"
                     >
                         {{ $item['label'] ?? $item['title'] ?? '' }}

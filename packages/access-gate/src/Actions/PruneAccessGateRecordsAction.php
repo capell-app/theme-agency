@@ -119,7 +119,7 @@ final class PruneAccessGateRecordsAction
      */
     private function retentionDays(array $retentionDays, string $key): int
     {
-        $configured = $retentionDays[$key] ?? config("access-gate.pruning.retention_days.{$key}");
+        $configured = $retentionDays[$key] ?? config('access-gate.pruning.retention_days.' . $key);
 
         if (is_numeric($configured)) {
             return max(0, (int) $configured);

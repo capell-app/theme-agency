@@ -1,4 +1,6 @@
 <script setup>
+import { sanitizePublicHtml } from '../../../Support/publicHtml.js'
+
 defineProps({
     widget: {
         type: Object,
@@ -18,7 +20,7 @@ defineProps({
         <h2 v-if="widget.data?.title">{{ widget.data.title }}</h2>
         <div
             v-if="widget.data?.content"
-            v-html="widget.data.content"
+            v-html="sanitizePublicHtml(widget.data.content)"
         />
     </article>
 </template>

@@ -161,6 +161,73 @@ it('renders the reservation form only when a safe public action is supplied', fu
         ->not->toContain('capell-app/theme-restaurant');
 });
 
+it('rejects unsafe public urls before rendering restaurant links or form actions', function (): void {
+    CapellCore::clearPackages();
+    CapellCore::forcePackageInstalled(RestaurantThemeServiceProvider::$packageName);
+
+    $registry = new ThemeRegistry;
+    (new RestaurantThemeServiceProvider($this->app))->boot($registry);
+
+    $navigationRenderer = $registry->sectionRenderer('restaurant', 'navigation');
+    $reservationRenderer = $registry->sectionRenderer('restaurant', 'reservation-panel');
+    $listingRenderer = $registry->sectionRenderer('restaurant', 'content-listing');
+    $footerRenderer = $registry->sectionRenderer('restaurant', 'footer');
+
+    assert($navigationRenderer instanceof SectionRenderer);
+    assert($reservationRenderer instanceof SectionRenderer);
+    assert($listingRenderer instanceof SectionRenderer);
+    assert($footerRenderer instanceof SectionRenderer);
+
+    $navigationHtml = $navigationRenderer->render(restaurantThemeSection('navigation', [
+        'reservationUrl' => '/admin/pages/1?signature=abc',
+        'items' => [
+            ['label' => 'Menu', 'url' => '/menu'],
+            ['label' => 'Unsafe script', 'url' => 'javascript:alert(1)'],
+            ['label' => 'Protocol relative', 'url' => '//example.test/menu'],
+        ],
+    ]));
+
+    $reservationHtml = $reservationRenderer->render(restaurantThemeSection('reservation-panel', [
+        'form_action' => '/admin/reservations?signature=abc',
+    ]));
+
+    $listingHtml = $listingRenderer->render(restaurantThemeSection('content-listing', [
+        'items' => [
+            ['title' => 'Public guide', 'summary' => 'Safe listing.', 'type' => 'Guide', 'url' => 'https://example.test/guide'],
+            ['title' => 'Signed guide', 'summary' => 'Unsafe listing.', 'type' => 'Guide', 'url' => '/guides/private?signature=abc'],
+        ],
+    ]));
+
+    $footerHtml = $footerRenderer->render(restaurantThemeSection('footer', [
+        'items' => [
+            ['label' => 'Opening hours', 'url' => '#hours'],
+            ['label' => 'Internal admin', 'url' => '/admin/settings'],
+        ],
+    ]));
+
+    expect($navigationHtml)
+        ->toContain('href="/menu"')
+        ->toContain('href="#reservations"')
+        ->not->toContain('javascript:')
+        ->not->toContain('//example.test')
+        ->not->toContain('/admin/pages')
+        ->not->toContain('signature=');
+
+    expect($reservationHtml)
+        ->not->toContain('<form')
+        ->not->toContain('/admin/reservations')
+        ->not->toContain('signature=');
+
+    expect($listingHtml)
+        ->toContain('href="https://example.test/guide"')
+        ->not->toContain('/guides/private')
+        ->not->toContain('signature=');
+
+    expect($footerHtml)
+        ->toContain('href="#hours"')
+        ->not->toContain('/admin/settings');
+});
+
 it('passes optional package availability into restaurant sections', function (): void {
     CapellCore::clearPackages();
     CapellCore::forcePackageInstalled(RestaurantThemeServiceProvider::$packageName);

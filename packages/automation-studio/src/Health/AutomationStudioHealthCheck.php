@@ -310,11 +310,13 @@ final class AutomationStudioHealthCheck implements ChecksExtensionHealth
             return [DispatchQueuedAutomationTriggerJob::class];
         }
 
-        if (! is_subclass_of(DispatchQueuedAutomationTriggerJob::class, ShouldQueue::class)) {
+        $implementedInterfaces = class_implements(DispatchQueuedAutomationTriggerJob::class);
+
+        if (! is_array($implementedInterfaces) || ! in_array(ShouldQueue::class, $implementedInterfaces, true)) {
             $failures[] = DispatchQueuedAutomationTriggerJob::class . ' should queue';
         }
 
-        if (! is_subclass_of(DispatchQueuedAutomationTriggerJob::class, ShouldBeUnique::class)) {
+        if (! is_array($implementedInterfaces) || ! in_array(ShouldBeUnique::class, $implementedInterfaces, true)) {
             $failures[] = DispatchQueuedAutomationTriggerJob::class . ' should be unique';
         }
 

@@ -36,15 +36,15 @@ Capabilities declared: `theme-restaurant`, `theme-restaurant-frontend`.
 
 ## 4. Issues / Risks
 
-1. **Important gap: package dependencies are incomplete.** Standalone package installs can miss Foundation Theme even though demo installation requires it. Recommended fix: add dependency to Composer/manifest overlays and assert it in tests. - **P2**
+1. **Important gap: marketplace media is placeholder-only.** SVG previews do not prove the real renderer, mobile state, or optional integration fallbacks. Recommended fix: make route-backed PNG captures required before promotion. - **P2**
 
-2. **Important gap: reservation fallback submits to `#`.** A premium conversion surface should not render a fake public booking workflow. Recommended fix: use real connected actions or a non-submitting fallback. - **P2**
+2. **Important gap: diagnostics are under-tested.** The health check can drift without failing tests because only the happy path is covered. Recommended fix: add targeted failure tests. - **P2**
 
-3. **Important gap: skip target can be missing.** Keyboard users may not get a valid skip destination unless content happens to provide it. Recommended fix: make the package shell or renderer contract own the target. - **P2**
+3. **Important gap: demo command is not aligned with the Action/container pattern.** Recommended fix: route demo setup through the package Action and add command option/base URL tests. - **P2**
 
-4. **Important gap: marketplace media is placeholder-only.** SVG previews do not prove the real renderer, mobile state, or optional integration fallbacks. Recommended fix: make route-backed PNG captures required before promotion. - **P2**
+4. **Important gap: optional integration data contracts are still implicit.** Recommended fix: document and test hydrated reservation, event, blog/listing, and cache metadata boundaries without package internals leaking into public output. - **P2**
 
-5. **Improvement: diagnostics are under-tested.** The health check can drift without failing tests because only the happy path is covered. Recommended fix: add targeted failure tests. - **P3**
+5. **Improvement: dark/mobile visual proof is still missing.** Recommended fix: recapture reservation and menu pages through the route-backed runner before marketplace promotion. - **P3**
 
 ## 5. Marketplace & Positioning
 
@@ -71,7 +71,7 @@ Restaurant has a strong premium lane separate from Commerce and Local Services. 
 | Replace `action="#"` reservation fallback with real action or non-submitting state             | Done   | M      | High   | §2.3, §4.2  |
 | Add health check failure tests and renderer alignment assertions                               | Now    | S      | Medium | §2.5, §4.5  |
 | Align demo command with Action/container pattern and add command tests                         | Now    | S      | Medium | §2.6        |
-| Rewrite docs around dependencies, integration render-data contracts, and verification commands | Now    | S      | Medium | §2.8, §5    |
+| Rewrite docs around dependencies, integration render-data contracts, and verification commands | Done   | S      | Medium | §2.8, §5    |
 | Convert static SVG marketplace media to required route-backed PNG captures                     | Next   | M      | High   | §2.4, §4.4  |
 | Add public-output tests for scripts and dead premium conversion links                          | Next   | S      | Medium | §2.7        |
 | Clarify cacheability metadata and invalidation expectations                                    | Next   | S      | Medium | §2.8        |
@@ -79,24 +79,14 @@ Restaurant has a strong premium lane separate from Commerce and Local Services. 
 
 ## 7. Verification
 
-Plan-writing review only; no commands were run for this package yet. First implementation slice should start with:
-
-```bash
-vendor/bin/pest packages/theme-restaurant/tests --configuration=phpunit.xml
-```
-
-For renderer or dependency changes, include:
-
-```bash
-vendor/bin/pest packages/foundation-theme/tests packages/layout-builder/tests --configuration=phpunit.xml
-```
+Focused verification for the current slice: `vendor/bin/pest packages/theme-restaurant/tests --configuration=phpunit.xml` passed, and changed-file preflight passed. For broader renderer or dependency changes, include `vendor/bin/pest packages/foundation-theme/tests packages/layout-builder/tests --configuration=phpunit.xml`.
 
 ## 8. Completion Checklist
 
 - [x] Package plan created from current code, manifest, docs, screenshots, views, and tests.
 - [x] Comprehensive local review pass completed for theme definition, public views, accessibility, optional integrations, screenshots, docs, health checks, and tests.
 - [x] Capell audience pass completed for restaurant owners, package developers, and frontend/theme developers.
-- [ ] Approved implementation slices shipped.
-- [ ] Focused Theme Restaurant verification passed.
-- [ ] Package tests passed.
-- [ ] Repo preflight passed for changed files.
+- [x] Approved implementation slices shipped.
+- [x] Focused Theme Restaurant verification passed.
+- [x] Package tests passed.
+- [x] Repo preflight passed for changed files.

@@ -91,9 +91,11 @@ This theme has no schema impact. It relies on core Capell site, page, locale, an
 
 ## Quick Start
 
-1. Install the package: `composer require capell-app/theme-restaurant`.
-2. Run the required setup: `php artisan capell:theme-restaurant-demo`.
-3. Verify the package provider is registered and the related frontend, command, or extension point is active.
+In a host Capell app, install the package with its Foundation Theme dependency using `composer require capell-app/foundation-theme capell-app/theme-restaurant`.
+
+Then run the optional demo command from the host app, not from this package monorepo: `php artisan capell:theme-restaurant-demo`.
+
+For package development in this repository, use package-local Pest commands such as `vendor/bin/pest packages/theme-restaurant/tests --configuration=phpunit.xml`.
 
 ## Next Steps
 

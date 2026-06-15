@@ -1,7 +1,9 @@
 @php
+    $publicThemeUrl = 'Capell\\ThemeStudio\\Restaurant\\Support\\PublicThemeUrl';
     $brandName = $section->brandName ?? ($brandName ?? __('capell-theme-restaurant::generic.brand_name'));
     $items = $section->items ?? ($items ?? []);
     $reservationUrl = $section->reservationUrl ?? ($reservationUrl ?? '#reservations');
+    $reservationUrl = $publicThemeUrl::link($reservationUrl) ?? '#reservations';
 @endphp
 
 <nav
@@ -19,9 +21,13 @@
 
         <div class="flex flex-wrap items-center gap-5 text-sm font-bold">
             @foreach ($items as $item)
-                @if (is_string($item['url'] ?? null) && trim($item['url']) !== '' && trim($item['url']) !== '#')
+                @php
+                    $itemUrl = $publicThemeUrl::link($item['url'] ?? null);
+                @endphp
+
+                @if ($itemUrl !== null)
                     <a
-                        href="{{ $item['url'] }}"
+                        href="{{ $itemUrl }}"
                         class="restaurant-link"
                     >
                         {{ $item['label'] ?? $item['title'] ?? '' }}

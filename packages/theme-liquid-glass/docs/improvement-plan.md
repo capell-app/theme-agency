@@ -64,9 +64,9 @@ Liquid Glass belongs in the free foundation lane: it should be the modern visual
 
 | Item                                                                                         | Bucket | Effort | Impact | Section ref |
 | -------------------------------------------------------------------------------------------- | ------ | ------ | ------ | ----------- |
-| Add explicit Foundation Theme dependency in Composer/manifest/tests                          | Now    | S      | High   | §2.1, §4.1  |
-| Fix skip link and default CTA anchor targets                                                 | Now    | S      | High   | §2.2, §4.2  |
-| Rewrite README/overview with package-repo versus host-app command context                    | Now    | S      | Medium | §2.4, §4.5  |
+| Add explicit Foundation Theme dependency in Composer/manifest/tests                          | Done   | S      | High   | §2.1, §4.1  |
+| Fix skip link and default CTA anchor targets                                                 | Done   | S      | High   | §2.2, §4.2  |
+| Rewrite README/overview with package-repo versus host-app command context                    | Done   | S      | Medium | §2.4, §4.5  |
 | Strengthen health check coverage for CSS, dependency classes, and section renderer alignment | Now    | S      | Medium | §2.5, §4.4  |
 | Convert static SVG screenshot contract to required route-backed PNG captures                 | Next   | M      | High   | §2.3, §4.3  |
 | Clarify cacheability metadata and invalidation expectations                                  | Next   | S      | Medium | §2.6        |
