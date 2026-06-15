@@ -41,8 +41,14 @@ it('returns chunks with a meta envelope for a published page', function (): void
         ->assertJsonPath('data.0.sourceUrl', 'http://example.com/guides/chunked#section')
         ->assertJsonPath('data.0.body', 'Section Body text for chunking.')
         ->assertJsonPath('meta.count', 1)
+        ->assertJsonPath('meta.budget.chunkCount', 1)
+        ->assertJsonPath('meta.budget.targetWords', 160)
+        ->assertJsonPath('meta.budget.maxRecommendedChunks', 40)
+        ->assertJsonPath('meta.budget.overTargetChunks', 0)
+        ->assertJsonPath('meta.budget.isWithinBudget', true)
+        ->assertJsonPath('meta.budget.warnings', [])
         ->assertJsonPath('meta.canonicalUrl', 'http://example.com/guides/chunked')
-        ->assertJsonStructure(['meta' => ['count', 'canonicalUrl', 'generatedAt']]);
+        ->assertJsonStructure(['meta' => ['count', 'budget', 'canonicalUrl', 'generatedAt']]);
 });
 
 it('returns 404 without cache-tag headers when page is missing', function (): void {
@@ -76,6 +82,58 @@ it('returns empty chunks array for a page with no body content', function (): vo
         ->assertOk()
         ->assertJsonPath('data', [])
         ->assertJsonPath('meta.count', 0);
+});
+
+it('reports chunk budget warnings when generated chunks exceed configured limits', function (): void {
+    config()->set('capell-agent-delivery.public_pages.chunk_target_words', 3);
+    config()->set('capell-agent-delivery.public_pages.chunk_overlap_words', 0);
+    config()->set('capell-agent-delivery.public_pages.chunk_max_recommended_chunks', 1);
+
+    [$pageUrl] = createChunksTestPage('/budget-warning', [
+        'title' => 'Budget Warning Page',
+        'content' => '<p>One two three four five six seven eight nine ten eleven twelve.</p>',
+    ]);
+
+    getJson(chunksTestUrl('capell-agent-delivery.pages.chunks', ['url' => $pageUrl->url]))
+        ->assertOk()
+        ->assertJsonPath('meta.budget.targetWords', 3)
+        ->assertJsonPath('meta.budget.maxRecommendedChunks', 1)
+        ->assertJsonPath('meta.budget.maxChunkWords', 3)
+        ->assertJsonPath('meta.budget.overTargetChunks', 0)
+        ->assertJsonPath('meta.budget.isWithinBudget', false)
+        ->assertJsonPath('meta.budget.warnings', ['chunk_count_exceeds_recommended_max']);
+});
+
+it('reports over-target contributor chunks in the budget diagnostics', function (): void {
+    config()->set('capell-agent-delivery.public_pages.chunk_target_words', 3);
+
+    [$pageUrl] = createChunksTestPage('/contributor-budget-warning', [
+        'title' => 'Contributor Budget Warning Page',
+        'content' => '<p>Some content</p>',
+    ]);
+
+    /** @var AgentDeliveryRegistry $registry */
+    $registry = resolve(AgentDeliveryRegistry::class);
+    $registry->registerChunkContributor(new class implements AgentDeliveryChunkContributor
+    {
+        /**
+         * @param  Pageable<Model>  $page
+         * @return list<AgentDeliveryChunkData>
+         */
+        public function chunks(Pageable $page, Site $site, Language $language): array
+        {
+            return [
+                new AgentDeliveryChunkData('oversized', 'Oversized', 'https://example.com#oversized', null, 'one two three four', 1),
+            ];
+        }
+    });
+
+    getJson(chunksTestUrl('capell-agent-delivery.pages.chunks', ['url' => $pageUrl->url]))
+        ->assertOk()
+        ->assertJsonPath('meta.budget.maxChunkWords', 4)
+        ->assertJsonPath('meta.budget.overTargetChunks', 1)
+        ->assertJsonPath('meta.budget.isWithinBudget', false)
+        ->assertJsonPath('meta.budget.warnings', ['chunk_body_exceeds_target_words']);
 });
 
 it('returns contributor chunks in stable sort order', function (): void {

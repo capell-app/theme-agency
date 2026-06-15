@@ -42,3 +42,5 @@ Each chunk should include:
 - A canonical `sourceUrl`, including an anchor when useful.
 - Plain text or Markdown-safe `body`.
 - `dependsOn` entries such as `url:https://example.com/page` for cache invalidation.
+
+Keep contributor chunks close to `capell-agent-delivery.public_pages.chunk_target_words`. Oversized chunks are still returned, but the chunks endpoint reports `chunk_body_exceeds_target_words` in `meta.budget.warnings` so operators can identify package contributors that need tighter splitting.

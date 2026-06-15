@@ -34,6 +34,7 @@ final class AgentDeliveryHealthCheck implements ChecksExtensionHealth
             $check->routeRegistrationCheck(),
             $check->rateLimiterCheck(),
             $check->jsonResponseHeaderCheck(),
+            $check->chunkBudgetConfigurationCheck(),
             $check->registryBindingCheck(),
             $check->siteDiscoveryCoverageCheck(),
         ]);
@@ -97,6 +98,29 @@ final class AgentDeliveryHealthCheck implements ChecksExtensionHealth
             remediation: $bound
                 ? null
                 : 'Ensure AgentDeliveryServiceProvider registers AgentDeliveryRegistry as a singleton.',
+        );
+    }
+
+    public function chunkBudgetConfigurationCheck(): DoctorCheckResultData
+    {
+        $targetWords = config('capell-agent-delivery.public_pages.chunk_target_words', 160);
+        $overlapWords = config('capell-agent-delivery.public_pages.chunk_overlap_words', 30);
+        $maxRecommendedChunks = config('capell-agent-delivery.public_pages.chunk_max_recommended_chunks', 40);
+
+        $passed = $this->isPositiveInteger($targetWords)
+            && $this->isNonNegativeInteger($overlapWords)
+            && (int) $overlapWords < (int) $targetWords
+            && $this->isPositiveInteger($maxRecommendedChunks);
+
+        return new DoctorCheckResultData(
+            label: 'Agent Delivery chunk budget configuration',
+            passed: $passed,
+            message: $passed
+                ? 'Agent Delivery chunk target, overlap, and recommended maximum chunk count are valid.'
+                : 'Agent Delivery chunk budget configuration is invalid.',
+            remediation: $passed
+                ? null
+                : 'Keep chunk_target_words above zero, chunk_overlap_words at zero or above but below the target, and chunk_max_recommended_chunks above zero.',
         );
     }
 
@@ -185,5 +209,15 @@ final class AgentDeliveryHealthCheck implements ChecksExtensionHealth
         $controllerClass = explode('@', $controller, 2)[0];
 
         return is_a($controllerClass, AbstractAgentDeliveryController::class, true);
+    }
+
+    private function isPositiveInteger(mixed $value): bool
+    {
+        return is_int($value) ? $value > 0 : is_numeric($value) && (int) $value > 0;
+    }
+
+    private function isNonNegativeInteger(mixed $value): bool
+    {
+        return is_int($value) ? $value >= 0 : is_numeric($value) && (int) $value >= 0;
     }
 }

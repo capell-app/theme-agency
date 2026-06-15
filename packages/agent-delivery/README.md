@@ -33,7 +33,7 @@ Agent Delivery contributes three versioned `GET` JSON endpoints under `/api/cape
 - `capell-agent-delivery.pages.manifest`
 - `capell-agent-delivery.pages.chunks`
 
-The endpoints expose cache headers, ETags, and package cache tags so API consumers can poll responsibly. They do not expose admin URLs, editor state, model IDs, signed preview links, permissions, field paths, prompts, or unpublished content.
+The endpoints expose cache headers, ETags, package cache tags, and chunk budget diagnostics so API consumers can poll responsibly and spot overlarge chunk output. They do not expose admin URLs, editor state, model IDs, signed preview links, permissions, field paths, prompts, or unpublished content.
 
 ## Screens And Workflow
 
@@ -50,7 +50,7 @@ The JSON captures in `docs/screenshots.json` are runner evidence for endpoint be
 - Config files: `packages/agent-delivery/config/capell-agent-delivery.php`.
 - Route files: `packages/agent-delivery/routes/agent-delivery.php`.
 - Actions: `BuildAgentDeliveryChunksAction`, `BuildAgentDeliveryPageAction`, `BuildAgentDeliveryPageIndexAction`, `ResolveAgentDeliveryPageAction`.
-- Data objects: `AgentDeliveryChunkData`, `AgentDeliveryPageData`, `AgentDeliveryPageIndexEntryData`, `ResolvedAgentDeliveryPageData`.
+- Data objects: `AgentDeliveryChunkBudgetData`, `AgentDeliveryChunkData`, `AgentDeliveryPageData`, `AgentDeliveryPageIndexEntryData`, `ResolvedAgentDeliveryPageData`.
 - Manifest contributions: `agent-capability: Capell\AgentDelivery\Manifest\AgentDeliveryContractsContribution`, `health-check: Capell\AgentDelivery\Health\AgentDeliveryHealthCheck`, `route/public-api-endpoint: Capell\AgentDelivery\Manifest\AgentDeliveryRoutesContribution`.
 - Health checks: `Capell\AgentDelivery\Health\AgentDeliveryHealthCheck`.
 - Cache tags: `agent-delivery`.
@@ -66,6 +66,7 @@ Docs gap: document extension points here if the package delegates persistence to
 - Admin navigation: no admin surface declared.
 - Permissions: none declared in `capell.json`.
 - Public routes: versioned public JSON endpoints are declared in `capell.json`, throttled by default, and limited to already-published page content.
+- Chunk budgets: `chunk_target_words`, `chunk_overlap_words`, and `chunk_max_recommended_chunks` control default chunking and the diagnostics returned in the chunks response.
 - Database changes: no package migrations declared.
 - Settings: no package settings declared.
 - Queues or schedules: none detected in standard package paths.

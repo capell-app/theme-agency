@@ -20,6 +20,7 @@ it('registers the agent delivery package metadata', function (): void {
 it('loads host-configurable public middleware defaults', function (): void {
     expect(config('capell-agent-delivery.middleware'))->toBe(['api'])
         ->and(config('capell-agent-delivery.public_pages.auth_middleware'))->toBeNull()
+        ->and(config('capell-agent-delivery.public_pages.chunk_max_recommended_chunks'))->toBe(40)
         ->and(config('capell-agent-delivery.public_pages.rate_limit_middleware'))->toBe('throttle:capell-agent-delivery')
         ->and(config('capell-agent-delivery.public_pages.rate_limit_per_minute'))->toBe(60)
         ->and(config('capell-agent-delivery.public_pages.max_candidate_sites'))->toBe(50)
@@ -46,14 +47,28 @@ it('applies the documented rate limiter to public endpoints by default', functio
 it('reports actionable package health diagnostics', function (): void {
     $results = AgentDeliveryHealthCheck::runDiagnostics();
 
-    expect($results)->toHaveCount(5)
+    expect($results)->toHaveCount(6)
         ->and($results->every(fn (DoctorCheckResultData $result): bool => $result->passed))->toBeTrue()
         ->and(AgentDeliveryHealthCheck::passed())->toBeTrue()
         ->and($results->pluck('label')->all())->toBe([
             'Agent Delivery public routes',
             'Agent Delivery rate limiting',
             'Agent Delivery JSON response headers',
+            'Agent Delivery chunk budget configuration',
             'Agent Delivery contributor registry',
             'Agent Delivery Site Discovery coverage',
         ]);
+});
+
+it('reports invalid chunk budget configuration', function (): void {
+    config()->set('capell-agent-delivery.public_pages.chunk_target_words', 10);
+    config()->set('capell-agent-delivery.public_pages.chunk_overlap_words', 10);
+    config()->set('capell-agent-delivery.public_pages.chunk_max_recommended_chunks', 0);
+
+    $result = (new AgentDeliveryHealthCheck)->chunkBudgetConfigurationCheck();
+
+    expect($result->passed)->toBeFalse()
+        ->and($result->label)->toBe('Agent Delivery chunk budget configuration')
+        ->and($result->message)->toContain('invalid')
+        ->and($result->remediation)->toContain('chunk_target_words');
 });

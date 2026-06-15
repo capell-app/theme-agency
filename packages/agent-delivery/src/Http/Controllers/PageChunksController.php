@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Capell\AgentDelivery\Http\Controllers;
 
+use Capell\AgentDelivery\Actions\AnalyzeAgentDeliveryChunkBudgetAction;
 use Capell\AgentDelivery\Actions\BuildAgentDeliveryChunksAction;
 use Capell\AgentDelivery\Actions\ResolveAgentDeliveryPageAction;
 use Capell\AgentDelivery\Data\AgentDeliveryChunkData;
@@ -25,6 +26,7 @@ final class PageChunksController extends AbstractAgentDeliveryController
         }
 
         $chunks = BuildAgentDeliveryChunksAction::run($resolved->page, $resolved->site, $resolved->language, $resolved->delivery);
+        $budget = AnalyzeAgentDeliveryChunkBudgetAction::run($chunks);
 
         return $this->cacheableJson($request, [
             'data' => array_map(
@@ -33,6 +35,7 @@ final class PageChunksController extends AbstractAgentDeliveryController
             ),
             'meta' => [
                 'count' => count($chunks),
+                'budget' => $budget->toArray(),
                 'canonicalUrl' => $resolved->delivery->canonicalUrl,
                 'generatedAt' => $resolved->delivery->lastUpdatedAt ?? now()->toIso8601String(),
             ],

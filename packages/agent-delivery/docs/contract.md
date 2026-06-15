@@ -36,6 +36,10 @@ Cacheable responses declare `site,language,url,page` variation dimensions and `V
 
 `GET /pages/chunks` returns `data[]` chunk records and a `meta` envelope. Package contributors can provide custom chunks; otherwise Agent Delivery builds heading-aware default chunks using the configured word target and overlap.
 
+The chunks response includes `meta.budget` with `chunkCount`, `targetWords`, `maxRecommendedChunks`, `maxChunkWords`, `overTargetChunks`, `isWithinBudget`, and `warnings`.
+
+Warnings are stable machine-readable codes. `chunk_count_exceeds_recommended_max` means the page produced more chunks than `capell-agent-delivery.public_pages.chunk_max_recommended_chunks`. `chunk_body_exceeds_target_words` means at least one contributor or generated chunk body is larger than `chunk_target_words`.
+
 ## Opt-out
 
 A public page is excluded from Agent Delivery when page or translation metadata has `agent_delivery.enabled: false`, `agent_delivery.exclude: true`, or a `noai` robots directive.

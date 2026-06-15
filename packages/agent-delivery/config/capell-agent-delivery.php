@@ -8,6 +8,7 @@ return [
     'public_pages' => [
         'auth_middleware' => null,
         'cache_max_age_seconds' => 300,
+        'chunk_max_recommended_chunks' => 40,
         'chunk_overlap_words' => 30,
         'chunk_target_words' => 160,
         'rate_limit_middleware' => 'throttle:capell-agent-delivery',
