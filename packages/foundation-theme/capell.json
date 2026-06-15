@@ -173,6 +173,6 @@
     "extends": null,
     "themeKey": "default",
     "contributionTraceability": {
-        "deferredContributions": ["route"]
+        "deferredContributions": []
     }
 }

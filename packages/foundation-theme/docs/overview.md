@@ -80,6 +80,7 @@ This theme has no schema impact. It relies on core Capell site, page, locale, an
 - Admin navigation: adds package-owned Filament classes when registered.
 - Permissions: none declared in `capell.json`.
 - Public routes: none detected in package route files.
+- Deferred route contributions: none; Foundation Theme contributes presentation/runtime theme surfaces, not package-owned routes.
 - Database changes: no package migrations declared.
 - Settings: settings classes or settings migrations exist; verify the install flow registers them.
 - Queues or schedules: none detected in standard package paths.

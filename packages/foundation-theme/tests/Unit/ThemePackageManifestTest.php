@@ -32,6 +32,15 @@ it('registers only the shipped foundation theme service provider', function (): 
         ]);
 });
 
+it('does not declare deferred route contributions because the theme ships no routes', function (): void {
+    $manifest = themePackageManifest('foundation-theme');
+
+    expect(data_get($manifest, 'contributes'))->toBe([])
+        ->and(data_get($manifest, 'security.publicSurface.routeNames'))->toBe([])
+        ->and(data_get($manifest, 'contributionTraceability.deferredContributions'))->toBe([])
+        ->and(glob(dirname(__DIR__, 2) . '/routes/*.php') ?: [])->toBe([]);
+});
+
 it('defines the Foundation Theme Studio parent contract', function (): void {
     $definition = FoundationThemeServiceProvider::definition();
 

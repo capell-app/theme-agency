@@ -6,6 +6,7 @@
 
 - **2026-06-04:** Defined the advertised `frontend-authoring.edit` Gate as a package-owned deny-by-default ability that host apps can override, while preserving existing `editContent` / `update` pageable policy fallbacks. Focused coverage proves the ability is registered, denies by default, can be overridden, and does not suppress fallback authorization.
 - **2026-06-04:** Guarded the optional Publishing Studio approval workspace branch behind the package install state and removed the catch-all fallback that converted approval failures into `in_review` saves. Focused coverage proves unavailable Publishing Studio returns a 409 without creating a workspace, installed approval still creates an in-review workspace, and approval submission failures now surface.
+- **2026-06-15:** Closed route contribution traceability drift. `capell.json` now declares the package-owned beacon and signed editor routes through `FrontendAuthoringRoutesContribution`, `deferredContributions` is empty, and focused manifest tests compare route security metadata with the registered Laravel routes.
 
 ## 1. Snapshot
 
@@ -38,6 +39,7 @@ Tie-back to `capabilities: [authoring-surface, preview-only, beacon, cache-block
 
 - Anonymous/non-admin no-leak coverage **exists and is solid**: `tests/Feature/BeaconControllerTest.php` covers guest (`returns only csrf token for guest`), authenticated non-admin (`does not return authoring scripts or metadata for non-admin authenticated user`), admin-without-permission, cross-origin admin (`does not return authoring scripts for cross-origin admin beacons`), posted-URL/origin mismatch, and **cached-HTML leakage** (`page data does not render authoring metadata into cached html`, line 383). `tests/Unit/ManifestRequirementsTest.php:54` enforces a declared browser test `anonymous-users-receive-no-authoring-surface`, and `docs/screenshots.json` codifies the assertions ("no `CapellFrontendAuthoring` global, no `capell-authoring` DOM, no `edit_url`/`recordKey`/`model`/field path/selector/label/signed URL"). This is the model other packages should copy.
 - **html-cache interaction is correct by construction**: editor HTML is injected client-side by the beacon _after_ load, never rendered into Blade, so cached pages stay clean. The manifest correctly sets `cacheSafety.cacheable: false`. The risk is regression — any future change that moves a region marker, selector, or signed URL into server-rendered Blade (`resources/views/components/page-data.blade.php` is the only public-injected view and it emits only the generic beacon fetch, no authoring data) would break this. Keep the line-383 cached-HTML test and the arch/browser contract as guardrails.
+- **Route metadata is now explicit and covered.** The manifest route contribution lists `capell-frontend.beacon` and `capell-frontend.authoring.edit`; the security surface continues to classify the beacon as throttled/CSRF-middleware-disabled and the editor as signed/authenticated. The route tests pin those claims against `routes/web.php`.
 
 **Bugs / tech debt.**
 

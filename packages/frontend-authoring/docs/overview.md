@@ -57,7 +57,7 @@ Docs gap: document extension points here if the package delegates persistence to
 
 - Admin navigation: no admin surface declared.
 - Permissions: `frontend-authoring.edit`.
-- Public routes: route files exist and must be reviewed before public enablement.
+- Public routes: `capell-frontend.beacon` (`POST /beacon`, same-origin admin beacon, throttled and CSRF middleware disabled) and `capell-frontend.authoring.edit` (`GET /authoring/regions/{payload}`, authenticated signed editor iframe).
 - Database changes: no package migrations declared.
 - Settings: no package settings declared.
 - Queues or schedules: none detected in standard package paths.
@@ -66,7 +66,7 @@ Docs gap: document extension points here if the package delegates persistence to
 
 ## Common Pitfalls
 
-- Review route middleware, throttling, signed URLs, and public-output safety before exposing routes.
+- Keep route metadata aligned with `routes/web.php`: the beacon stays throttled and same-origin gated, and the editor route stays authenticated, signed, and payload-validated.
 - Keep public Blade and cached HTML free of authoring markers, model IDs, permissions, signed editor URLs, and lazy database queries.
 - Run package commands from the host app; in this repository use `vendor/bin/pest` for package tests.
 - Keep `composer.json`, `composer.local.json`, `capell.json`, docs, screenshots, and tests aligned when the package surface changes.
