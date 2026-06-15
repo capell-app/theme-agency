@@ -96,6 +96,29 @@
             "componentClasses": [
                 "Capell\\CampaignStudio\\View\\Components\\Widget\\CampaignCtaWidget"
             ]
+        },
+        {
+            "type": "route",
+            "class": "Capell\\CampaignStudio\\Manifest\\CampaignStudioConversionRouteContribution",
+            "routes": ["capell-campaigns.conversions"],
+            "prefix": "capell/campaigns",
+            "methods": ["POST"],
+            "middleware": ["web", "throttle:60,1"],
+            "csrfExempt": true
+        },
+        {
+            "type": "scheduled-job",
+            "class": "Capell\\CampaignStudio\\Manifest\\CampaignStudioStatusScheduleContribution",
+            "command": "capell:campaign-studio-sync-statuses",
+            "frequency": "everyFiveMinutes"
+        },
+        {
+            "type": "console-command",
+            "class": "Capell\\CampaignStudio\\Manifest\\CampaignStudioConsoleCommandsContribution",
+            "commands": ["capell:campaign-studio-sync-statuses"],
+            "commandClasses": [
+                "Capell\\CampaignStudio\\Console\\Commands\\SyncCampaignStatusesCommand"
+            ]
         }
     ],
     "database": {
@@ -255,6 +278,6 @@
         "categories": ["admin", "frontend", "growth"]
     },
     "contributionTraceability": {
-        "deferredContributions": ["route", "scheduled-job"]
+        "deferredContributions": []
     }
 }
