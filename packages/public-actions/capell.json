@@ -32,11 +32,72 @@
         "admin": [],
         "frontend": []
     },
-    "contributes": [],
+    "contributes": [
+        {
+            "type": "admin-resource",
+            "class": "Capell\\PublicActions\\Manifest\\PublicActionsAdminResourcesContribution",
+            "resourceClasses": [
+                "Capell\\PublicActions\\Filament\\Resources\\PublicActions\\PublicActionResource",
+                "Capell\\PublicActions\\Filament\\Resources\\Destinations\\PublicActionDestinationResource",
+                "Capell\\PublicActions\\Filament\\Resources\\Submissions\\PublicActionSubmissionResource",
+                "Capell\\PublicActions\\Filament\\Resources\\DispatchAttempts\\PublicActionDispatchAttemptResource",
+                "Capell\\PublicActions\\Filament\\Resources\\IntegrationTokens\\PublicActionIntegrationTokenResource"
+            ]
+        },
+        {
+            "type": "model",
+            "class": "Capell\\PublicActions\\Manifest\\PublicActionsModelsContribution",
+            "modelClasses": [
+                "Capell\\PublicActions\\Models\\PublicAction",
+                "Capell\\PublicActions\\Models\\PublicActionDestination",
+                "Capell\\PublicActions\\Models\\PublicActionSubmission",
+                "Capell\\PublicActions\\Models\\PublicActionDispatchAttempt",
+                "Capell\\PublicActions\\Models\\PublicActionIntegrationToken"
+            ]
+        },
+        {
+            "type": "route",
+            "class": "Capell\\PublicActions\\Manifest\\PublicActionsRoutesContribution",
+            "routes": [
+                "capell-public-actions.show",
+                "capell-public-actions.submit",
+                "capell-public-actions.zapier.me",
+                "capell-public-actions.zapier.actions",
+                "capell-public-actions.zapier.actions.submit",
+                "capell-public-actions.zapier.submissions"
+            ]
+        },
+        {
+            "type": "console-command",
+            "class": "Capell\\PublicActions\\Manifest\\PublicActionsConsoleCommandsContribution",
+            "commands": ["capell:public-actions:prune-submissions"],
+            "commandClasses": [
+                "Capell\\PublicActions\\Console\\Commands\\PrunePublicActionSubmissionsCommand"
+            ]
+        },
+        {
+            "type": "health-check",
+            "class": "Capell\\PublicActions\\Manifest\\PublicActionsHealthContribution",
+            "checkClass": "Capell\\PublicActions\\Health\\PublicActionsHealthCheck"
+        }
+    ],
     "database": {
         "migrations": true,
         "settings": false,
-        "requiredTables": []
+        "requiredTables": [
+            "public_actions",
+            "public_action_destinations",
+            "public_action_submissions",
+            "public_action_dispatch_attempts",
+            "public_action_integration_tokens"
+        ],
+        "protectedTables": [
+            "public_actions",
+            "public_action_destinations",
+            "public_action_submissions",
+            "public_action_dispatch_attempts",
+            "public_action_integration_tokens"
+        ]
     },
     "commands": {
         "install": null,
@@ -204,6 +265,6 @@
         "categories": ["admin", "automation", "console", "frontend"]
     },
     "contributionTraceability": {
-        "deferredContributions": ["admin-resource", "model", "route"]
+        "deferredContributions": []
     }
 }
