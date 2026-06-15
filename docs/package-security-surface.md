@@ -24,7 +24,7 @@ Cache posture uses three terms: `safe` means public output is expected to avoid 
 
 | Package | Risk | Public routes | Webhooks | Throttled | Signed/tokenized | Sensitive fields | Admin authorization | Cache posture |
 | --- | --- | ---: | --- | --- | --- | --- | --- | --- |
-| capell-app/access-gate | sensitive | 5 | - | claim<br>logout<br>request.store<br>status | claim | - | permissions; 12 permissions | safe; not cacheable; no sensitive output; varies by none |
+| capell-app/access-gate | sensitive | 5 | - | capell-access-gate.claim<br>capell-access-gate.logout<br>capell-access-gate.request.store<br>capell-access-gate.status | capell-access-gate.claim | - | permissions; 12 permissions | safe; not cacheable; no sensitive output; varies by none |
 | capell-app/address | standard | 0 | - | - | - | - | policies | safe; not cacheable; no sensitive output; varies by none |
 | capell-app/agent-bridge | critical | 1 | - | - | - | capell_agent_bridge_confirmations.payload_hash<br>capell_agent_bridge_confirmations.token<br>capell_agent_bridge_tokens.token_hash | permissions; 2 permissions | safe; not cacheable; no sensitive output; varies by none |
 | capell-app/agent-delivery | critical | 3 | - | - | - | - | none | safe; not cacheable; no sensitive output; varies by site, locale, url |

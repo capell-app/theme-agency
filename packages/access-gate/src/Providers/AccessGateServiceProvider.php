@@ -338,14 +338,17 @@ class AccessGateServiceProvider extends AbstractPackageServiceProvider
 
     private function registerModels(): self
     {
-        $this->surface()->models([
+        $models = [
             Area::class,
             Registration::class,
             Grant::class,
             ClaimToken::class,
             BrowserToken::class,
             Event::class,
-        ]);
+        ];
+
+        $this->surface()->models($models);
+        CapellCore::registerModels($models);
 
         return $this;
     }

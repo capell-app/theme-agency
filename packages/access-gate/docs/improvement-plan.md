@@ -63,7 +63,7 @@ Access Gate should be positioned as a serious access-control layer for Capell op
 
 ## 7. Verification
 
-Plan-writing review only; no commands were run for this package in this pass. First implementation slice should start with:
+Implementation slice 1 exposed the already-shipped models, public routes, console commands, dashboard widget, and health check as manifest contributions, and hardened provider model registration for Core discovery. Verify with:
 
 ```bash
 vendor/bin/pest packages/access-gate/tests --configuration=phpunit.xml
@@ -80,7 +80,7 @@ vendor/bin/pest packages/access-gate/tests/Feature/AccessGateMiddlewareTest.php 
 - [x] Package plan created from current code, manifest, docs, screenshots, and tests.
 - [x] Comprehensive local review pass completed for routes, provider, Actions, health, docs, and public surfaces.
 - [x] Capell audience pass completed for operators, developers, and buyers.
-- [ ] Approved implementation slices shipped.
+- [x] Approved implementation slice 1 shipped: manifest contribution metadata and Core model registration.
 - [ ] Focused Access Gate verification passed.
 - [ ] Package tests passed.
 - [ ] Repo preflight passed for changed files.

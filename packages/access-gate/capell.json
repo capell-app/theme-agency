@@ -62,6 +62,54 @@
             "type": "admin-resource",
             "class": "Capell\\AccessGate\\Manifest\\AccessGateEventResourceContribution",
             "resourceClass": "Capell\\AccessGate\\Filament\\Resources\\Events\\AccessGateEventResource"
+        },
+        {
+            "type": "dashboard-widget",
+            "class": "Capell\\AccessGate\\Manifest\\PendingAccessRequestsWidgetContribution",
+            "widgetClass": "Capell\\AccessGate\\Filament\\Widgets\\PendingAccessRequestsWidget",
+            "labelKey": "capell-access-gate::filament.widgets.pending_access_requests"
+        },
+        {
+            "type": "model",
+            "class": "Capell\\AccessGate\\Manifest\\AccessGateModelsContribution",
+            "modelClasses": [
+                "Capell\\AccessGate\\Models\\Area",
+                "Capell\\AccessGate\\Models\\Registration",
+                "Capell\\AccessGate\\Models\\Grant",
+                "Capell\\AccessGate\\Models\\ClaimToken",
+                "Capell\\AccessGate\\Models\\BrowserToken",
+                "Capell\\AccessGate\\Models\\Event"
+            ]
+        },
+        {
+            "type": "route",
+            "class": "Capell\\AccessGate\\Manifest\\AccessGateRoutesContribution",
+            "routes": [
+                "capell-access-gate.request",
+                "capell-access-gate.request.store",
+                "capell-access-gate.claim",
+                "capell-access-gate.logout",
+                "capell-access-gate.status"
+            ]
+        },
+        {
+            "type": "console-command",
+            "class": "Capell\\AccessGate\\Manifest\\AccessGateConsoleCommandsContribution",
+            "commands": [
+                "capell:access-gate-install",
+                "capell:access-gate-setup",
+                "capell:access-gate-doctor"
+            ],
+            "commandClasses": [
+                "Capell\\AccessGate\\Console\\Commands\\AccessGateInstallCommand",
+                "Capell\\AccessGate\\Console\\Commands\\AccessGateSetupCommand",
+                "Capell\\AccessGate\\Console\\Commands\\AccessGateDoctorCommand"
+            ]
+        },
+        {
+            "type": "health-check",
+            "class": "Capell\\AccessGate\\Manifest\\AccessGateHealthContribution",
+            "checkClass": "Capell\\AccessGate\\Health\\AccessGateHealthCheck"
         }
     ],
     "database": {
@@ -111,18 +159,23 @@
         "riskTier": "sensitive",
         "publicSurface": {
             "routeNames": [
-                "claim",
-                "logout",
-                "request",
-                "request.store",
-                "status"
+                "capell-access-gate.claim",
+                "capell-access-gate.logout",
+                "capell-access-gate.request",
+                "capell-access-gate.request.store",
+                "capell-access-gate.status"
             ],
             "auth": "public",
             "csrfExemptRoutes": [],
             "signedRoutes": [],
-            "tokenizedRoutes": ["claim"],
+            "tokenizedRoutes": ["capell-access-gate.claim"],
             "webhookRoutes": [],
-            "throttledRoutes": ["claim", "logout", "request.store", "status"]
+            "throttledRoutes": [
+                "capell-access-gate.claim",
+                "capell-access-gate.logout",
+                "capell-access-gate.request.store",
+                "capell-access-gate.status"
+            ]
         },
         "sensitiveData": {
             "encryptedFields": [],
@@ -248,10 +301,6 @@
         "categories": ["admin", "operations"]
     },
     "contributionTraceability": {
-        "deferredContributions": [
-            "paid-access-checkout-creation",
-            "model",
-            "route"
-        ]
+        "deferredContributions": ["paid-access-checkout-creation"]
     }
 }
