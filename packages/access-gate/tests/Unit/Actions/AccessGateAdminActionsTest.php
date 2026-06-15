@@ -187,3 +187,59 @@ it('approves the next pending registrations within approval capacity', function 
         ->and($secondRegistration->refresh()->status)->toBe(RegistrationStatus::Approved)
         ->and($thirdRegistration->refresh()->status)->toBe(RegistrationStatus::Pending);
 });
+
+it('does not exceed approval limits across repeated approval batches', function (): void {
+    Notification::fake();
+
+    $area = Area::factory()->create([
+        'approval_limit' => 2,
+    ]);
+
+    $firstRegistration = Registration::factory()->for($area, 'area')->create([
+        'position' => 1,
+    ]);
+    $secondRegistration = Registration::factory()->for($area, 'area')->create([
+        'position' => 2,
+    ]);
+    $thirdRegistration = Registration::factory()->for($area, 'area')->create([
+        'position' => 3,
+    ]);
+
+    $firstBatch = ApproveNextRegistrationsAction::run($area, 1, approvedByUserId: 42);
+    $secondBatch = ApproveNextRegistrationsAction::run($area, 10, approvedByUserId: 43);
+    $thirdBatch = ApproveNextRegistrationsAction::run($area, 10, approvedByUserId: 44);
+
+    expect($firstBatch)->toHaveCount(1)
+        ->and($secondBatch)->toHaveCount(1)
+        ->and($thirdBatch)->toHaveCount(0)
+        ->and($firstRegistration->refresh()->status)->toBe(RegistrationStatus::Approved)
+        ->and($secondRegistration->refresh()->status)->toBe(RegistrationStatus::Approved)
+        ->and($thirdRegistration->refresh()->status)->toBe(RegistrationStatus::Pending);
+});
+
+it('counts claimed registrations against approval capacity', function (): void {
+    Notification::fake();
+
+    $area = Area::factory()->create([
+        'approval_limit' => 2,
+    ]);
+
+    Registration::factory()->for($area, 'area')->create([
+        'status' => RegistrationStatus::Claimed,
+        'approved_at' => now()->subDay(),
+        'claimed_at' => now()->subHour(),
+        'position' => 1,
+    ]);
+    $pendingRegistration = Registration::factory()->for($area, 'area')->create([
+        'position' => 2,
+    ]);
+    $overflowRegistration = Registration::factory()->for($area, 'area')->create([
+        'position' => 3,
+    ]);
+
+    $approved = ApproveNextRegistrationsAction::run($area, 10, approvedByUserId: 42);
+
+    expect($approved)->toHaveCount(1)
+        ->and($pendingRegistration->refresh()->status)->toBe(RegistrationStatus::Approved)
+        ->and($overflowRegistration->refresh()->status)->toBe(RegistrationStatus::Pending);
+});

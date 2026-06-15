@@ -4,7 +4,7 @@
 
 ## 1. Snapshot
 
-Access Gate is a schema-owning operations package for page, download, member-area, guest-link, schedule, and paid-access gating. It owns admin resources for areas, registrations, grants, browser tokens, claim tokens, and events; public request, claim, logout, and optional status routes; customer-portal and payments bridges; diagnostics; announcement-bar hooks; and screenshot coverage for admin and public workflows. The paid-access checkout slice is now explicit: Access Gate creates Payments `gated_access` checkout sessions for registrations, and the Payments fulfillment handler approves the registration after completion. The current operations wave has also added retention pruning, duplicate public-request idempotency, broader diagnostics, documented public cache/privacy boundaries, CSV audit export for support evidence, and Customer Portal visibility for active browser access. The remaining risk is approval-limit race coverage.
+Access Gate is a schema-owning operations package for page, download, member-area, guest-link, schedule, and paid-access gating. It owns admin resources for areas, registrations, grants, browser tokens, claim tokens, and events; public request, claim, logout, and optional status routes; customer-portal and payments bridges; diagnostics; announcement-bar hooks; and screenshot coverage for admin and public workflows. The paid-access checkout slice is now explicit: Access Gate creates Payments `gated_access` checkout sessions for registrations, and the Payments fulfillment handler approves the registration after completion. The current operations wave has also added retention pruning, duplicate public-request idempotency, broader diagnostics, documented public cache/privacy boundaries, CSV audit export for support evidence, Customer Portal visibility for active browser access, and approval-limit regression coverage.
 
 ## 2. Improvements (existing functionality)
 
@@ -25,7 +25,7 @@ Capabilities declared: `access-gating`, `registration-approval`, `claim-token-ma
 - **No retention automation.** Expired registrations and tokens can be marked unusable, but package-owned cleanup is not exposed as a command/schedule.
 - **Done/Shipped: audit CSV export support.** `capell:access-gate-audit-export` exports events with area, registration, grant, token, actor, subject, payload, and metadata columns; operators can filter by area key, event type, date range, and limit, then write to a path or stdout.
 - **Done/Shipped: Customer Portal active access visibility.** Customer Portal self-service items now include active grants, pending registrations, and active browser-token sessions scoped to the portal account email and site; revoked and expired browser tokens stay out of the feed.
-- **No plan-backed load/concurrency tests.** Approval limits and queued registrations are sensitive to race conditions; tests should cover concurrent approval batches.
+- **Done/Shipped: approval-limit batch coverage.** Repeated approval batches and claimed registrations are now covered so approval limits cannot silently over-approve queued registrations.
 
 ## 4. Issues / Risks
 
@@ -59,7 +59,7 @@ Access Gate should be positioned as a serious access-control layer for Capell op
 | Document cache/privacy boundaries for public gated output                   | Done   | S      | Medium | §2.4, §4.3  |
 | Add audit CSV/export support                                                | Done   | M      | Medium | §3, §4.4    |
 | Expand Customer Portal self-service for active grants and browser tokens    | Done   | M      | Medium | §3          |
-| Add approval-limit concurrency coverage                                     | Next   | M      | High   | §3          |
+| Add approval-limit concurrency coverage                                     | Done   | M      | High   | §3          |
 | Add richer paid-access lifecycle reporting                                  | Later  | L      | Medium | §4.4, §5    |
 | Close paid-access checkout creation manifest gap                            | Done   | S      | High   | §2.5        |
 | Add segmented launch/waitlist campaign templates                            | Later  | M      | Medium | §5          |
