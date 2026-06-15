@@ -87,6 +87,14 @@
             ]
         },
         {
+            "type": "scheduled-job",
+            "class": "Capell\\AgentBridge\\Manifest\\AgentBridgeAuditPruneScheduleContribution",
+            "command": "capell:agent-bridge-prune-audit",
+            "name": "capell-agent-bridge-prune-audit",
+            "frequency": "daily",
+            "retentionDaysConfig": "capell-agent-bridge.audit_retention_days"
+        },
+        {
             "type": "agent-capability",
             "class": "Capell\\AgentBridge\\Manifest\\AgentBridgeBuiltInCapabilitiesContribution",
             "capabilities": [

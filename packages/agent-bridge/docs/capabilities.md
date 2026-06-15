@@ -94,10 +94,12 @@ Keep side effects in `execute()`. `preview()` should not write.
 | ------------------------------------------------- | -------------------------------------------------------------------------- |
 | `capell-agent-bridge.routes.*`                    | Route registration switches. Set a route to `null` to stop registering it. |
 | `capell-agent-bridge.confirmation_ttl_minutes`    | Lifetime of confirmation tokens for mutating capabilities.                 |
+| `capell-agent-bridge.audit_retention_days`        | Audit retention window used by the pruning command. Defaults to 90 days.   |
 | `capell-agent-bridge.public_docs_paths`           | Documentation paths exposed to knowledge tools.                            |
 | `capell-agent-bridge.enable_user_resource_bridge` | Adds token and bridge controls to the user admin resource.                 |
-| `capell-agent-bridge.home`                        | Home route content.                                                        |
-| `capell-agent-bridge.knowledge`                   | Knowledge server settings.                                                 |
+| `capell-agent-bridge.routes.home`                 | Optional discovery document route. Disabled by default.                    |
+| `capell-agent-bridge.routes.knowledge`            | Optional knowledge server route. Disabled by default.                      |
+| `capell-agent-bridge.routes.site`                 | Authenticated site MCP server route. Enabled by default.                   |
 
 Token, confirmation, and audit table names are migration concerns. Keep them out of public setup docs unless a host app overrides storage.
 

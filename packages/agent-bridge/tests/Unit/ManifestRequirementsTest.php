@@ -8,6 +8,7 @@ use Capell\AgentBridge\Filament\Pages\CapellAgentBridgePromptBuilderPage;
 use Capell\AgentBridge\Filament\Settings\AgentBridgeSettingsSchema;
 use Capell\AgentBridge\Health\AgentBridgeHealthCheck;
 use Capell\AgentBridge\Manifest\AgentBridgeAdminPageContribution;
+use Capell\AgentBridge\Manifest\AgentBridgeAuditPruneScheduleContribution;
 use Capell\AgentBridge\Manifest\AgentBridgeBuiltInCapabilitiesContribution;
 use Capell\AgentBridge\Manifest\AgentBridgeConsoleCommandsContribution;
 use Capell\AgentBridge\Manifest\AgentBridgeMigrationsContribution;
@@ -25,6 +26,7 @@ use Capell\Core\Contracts\Extensions\ExtensionContribution;
 use Capell\Core\Contracts\Extensions\RegistersExtensionRoute;
 use Capell\Core\Contracts\Extensions\RegistersExtensionSetting;
 use Capell\Core\Contracts\Extensions\RunsExtensionMigration;
+use Capell\Core\Contracts\Extensions\RunsScheduledExtensionJob;
 use Capell\Core\Support\Manifest\ManifestValidator;
 use Illuminate\Support\Facades\File;
 
@@ -165,6 +167,14 @@ describe('agent-bridge capell.json manifest', function (): void {
                 'commandClasses' => [PruneAgentBridgeAuditEntriesCommand::class],
             ])
             ->toContain([
+                'type' => 'scheduled-job',
+                'class' => AgentBridgeAuditPruneScheduleContribution::class,
+                'command' => 'capell:agent-bridge-prune-audit',
+                'name' => 'capell-agent-bridge-prune-audit',
+                'frequency' => 'daily',
+                'retentionDaysConfig' => 'capell-agent-bridge.audit_retention_days',
+            ])
+            ->toContain([
                 'type' => 'agent-capability',
                 'class' => AgentBridgeBuiltInCapabilitiesContribution::class,
                 'capabilities' => [
@@ -187,8 +197,33 @@ describe('agent-bridge capell.json manifest', function (): void {
             ->and(class_implements(AgentBridgeAdminPageContribution::class))->toContain(ExtensionContribution::class)
             ->and(class_implements(AgentBridgeBuiltInCapabilitiesContribution::class))->toContain(ExtensionContribution::class)
             ->and(class_implements(AgentBridgeConsoleCommandsContribution::class))->toContain(ExtensionContribution::class)
+            ->and(class_implements(AgentBridgeAuditPruneScheduleContribution::class))->toContain(RunsScheduledExtensionJob::class)
             ->and(class_implements(AgentBridgeModelsContribution::class))->toContain(ExtensionContribution::class)
             ->and(class_implements(AgentBridgeUserSchemaExtenderContribution::class))->toContain(ExtensionContribution::class)
             ->and(class_implements(AgentBridgeHealthCheck::class))->toContain(ChecksExtensionHealth::class);
+    });
+
+    it('documents audit retention and package-safe setup guidance', function () use ($packagePath): void {
+        $readme = File::get($packagePath . '/README.md');
+        $overview = File::get($packagePath . '/docs/overview.md');
+        $capabilities = File::get($packagePath . '/docs/capabilities.md');
+
+        foreach ([$readme, $overview] as $document) {
+            expect($document)
+                ->toContain('CAPELL_AGENT_BRIDGE_AUDIT_RETENTION_DAYS')
+                ->toContain('capell:agent-bridge-prune-audit')
+                ->toContain('capell-agent-bridge-prune-audit')
+                ->toContain('Capell package install/migration flow')
+                ->not->toContain('php artisan migrate')
+                ->not->toContain('Deletion/retention behaviour: Docs gap');
+        }
+
+        expect($capabilities)
+            ->toContain('capell-agent-bridge.audit_retention_days')
+            ->toContain('capell-agent-bridge.routes.home')
+            ->toContain('capell-agent-bridge.routes.knowledge')
+            ->toContain('capell-agent-bridge.routes.site')
+            ->not->toContain('capell-agent-bridge.home')
+            ->not->toContain('capell-agent-bridge.knowledge');
     });
 });

@@ -60,7 +60,7 @@ Screenshot contract: `screenshots.json`.
 - Models: `CapellAgentBridgeAuditEntry`, `CapellAgentBridgeConfirmation`, `CapellAgentBridgeSavedPrompt`, `CapellAgentBridgeToken`.
 - Migration files: `2026_05_10_190840_01_create_capell_agent-bridge_tokens_table.php`, `2026_05_10_190840_02_create_capell_agent-bridge_confirmations_table.php`, `2026_05_10_190840_03_create_capell_agent-bridge_audit_entries_table.php`, `2026_05_27_000001_create_capell_agent-bridge_saved_prompts_table.php`.
 - Migration impact: run host migrations through the package install flow before opening package surfaces.
-- Deletion/retention behaviour: Docs gap unless the package has an explicit pruning command, retention setting, or tested cascade path.
+- Deletion/retention behaviour: audit entries are pruned by `capell:agent-bridge-prune-audit`, using `capell-agent-bridge.audit_retention_days` / `CAPELL_AGENT_BRIDGE_AUDIT_RETENTION_DAYS` with a 90-day default.
 
 ## Install Impact
 
@@ -69,9 +69,15 @@ Screenshot contract: `screenshots.json`.
 - Public routes: route files exist and must be reviewed before public enablement.
 - Database changes: package migrations are declared.
 - Settings: `Capell\AgentBridge\Settings\AgentBridgeSettings`.
-- Queues or schedules: none detected in standard package paths.
+- Queues or schedules: daily audit pruning is declared as `capell-agent-bridge-prune-audit`.
 - Cache tags: none declared.
 - Commands: `capell:agent-bridge-prune-audit`.
+
+## Audit Retention
+
+Agent Bridge stores capability audit entries so operators can review scoped AI-agent activity without exposing reusable secrets. The package redacts sensitive payload fragments before persistence, then keeps audit rows for 90 days by default.
+
+Set `CAPELL_AGENT_BRIDGE_AUDIT_RETENTION_DAYS` or `capell-agent-bridge.audit_retention_days` to change the default window. The pruning command is `capell:agent-bridge-prune-audit`; pass `--days=30` for a one-off override. The manifest also declares a daily scheduled-job contribution named `capell-agent-bridge-prune-audit` so host installs can surface retention automation alongside the package command.
 
 ## Common Pitfalls
 
@@ -86,7 +92,7 @@ Screenshot contract: `screenshots.json`.
 | Symptom | Likely cause | Check | Fix |
 | --- | --- | --- | --- |
 | Package surface is missing after install | Provider or manifest is not loaded | Confirm `capell.json`, package `composer.json`, and provider registration | Reinstall the package, refresh Composer autoload, and clear host caches |
-| Admin screen or command fails on missing table | Package migrations have not run | Check the tables listed in `Data Model` | Run host migrations and rerun the focused package test |
+| Admin screen or command fails on missing table | Package migrations have not run | Check the tables listed in `Data Model` | Run the Capell package install/migration flow, then rerun the focused package test |
 | Route returns unexpected output | Route cache, middleware, or signed URL setup does not match the package route file | Check the route files listed in `Technical Shape` | Clear route cache and verify middleware before exposing public routes |
 | Background work does not run | Queue worker or scheduled command is not active | Check package jobs, commands, and host scheduler configuration | Start the queue or scheduler, then run the focused command or package test |
 | Public output leaks unexpected state | Render data, cache variation, or authoring boundary has regressed | Check public Blade, cache tags, and public-output safety tests | Move data loading out of Blade and rerun the package public-output tests |
@@ -94,7 +100,7 @@ Screenshot contract: `screenshots.json`.
 ## Quick Start
 
 1. Install the package: `composer require capell-app/agent-bridge`.
-2. Run the required setup: `php artisan migrate`.
+2. Run the Capell package install/migration flow for installed packages.
 3. Open the related Capell admin surface and verify Agent Bridge appears.
 
 ## Next Steps
