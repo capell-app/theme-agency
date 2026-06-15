@@ -15,6 +15,10 @@ Start with the [package README](../README.md) for install impact, public route b
 
 Same-site public writes require an active installation, same-site request origin, and visitor-token continuity. External embeds require a public key and an allowed domain. Conversation/message/handoff API responses are private `no-store` responses and must not be served from HTML cache.
 
+## AI And Agent Notes
+
+Live Chat uses AI Orchestrator as the provider-backed AI boundary for classification, approved-source replies, operator summaries, human reply suggestions, lead-detail extraction, and knowledge-gap detection. Agent Bridge integration is optional and is declared as an `agent-capability` contribution in `capell.json`: agents can read or preview conversation state, while escalation and close operations require preview confirmation and audited write scopes.
+
 ## Related Packages
 
 | Package                                            | Why it matters                                       |

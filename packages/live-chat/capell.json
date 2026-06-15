@@ -89,6 +89,35 @@
             "type": "health-check",
             "class": "Capell\\LiveChat\\Manifest\\LiveChatHealthContribution",
             "checkClass": "Capell\\LiveChat\\Health\\LiveChatHealthCheck"
+        },
+        {
+            "type": "agent-capability",
+            "class": "Capell\\LiveChat\\Manifest\\LiveChatAgentBridgeCapabilitiesContribution",
+            "providerClass": "Capell\\LiveChat\\Integrations\\AgentBridge\\LiveChatAgentBridgeCapabilityProvider",
+            "actionClass": "Capell\\LiveChat\\Integrations\\AgentBridge\\RunLiveChatAgentBridgeCapabilityAction",
+            "requiresPackage": "capell-app/agent-bridge",
+            "server": "site",
+            "scopes": [
+                "capell.live-chat.read",
+                "capell.live-chat.write"
+            ],
+            "capabilities": [
+                "capell.live-chat.conversations.list",
+                "capell.live-chat.conversations.inspect",
+                "capell.live-chat.summary.preview",
+                "capell.live-chat.reply.preview",
+                "capell.live-chat.escalation.preview",
+                "capell.live-chat.escalate",
+                "capell.live-chat.close"
+            ],
+            "requiresPreviewConfirmation": [
+                "capell.live-chat.escalate",
+                "capell.live-chat.close"
+            ],
+            "auditEvents": {
+                "capell.live-chat.escalate": "capell_agent-bridge.live-chat.escalated",
+                "capell.live-chat.close": "capell_agent-bridge.live-chat.closed"
+            }
         }
     ],
     "database": {
@@ -353,6 +382,6 @@
         "categories": ["frontend", "crm", "support", "ai"]
     },
     "contributionTraceability": {
-        "deferredContributions": ["agent-capability"]
+        "deferredContributions": []
     }
 }

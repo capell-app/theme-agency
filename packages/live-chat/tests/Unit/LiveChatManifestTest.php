@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/../Pest.php';
 
+use Capell\Core\Contracts\Extensions\ExtensionContribution;
 use Capell\Core\Contracts\Extensions\RegistersExtensionFrontendComponent;
 use Capell\Core\Contracts\Extensions\RegistersExtensionRoute;
 use Capell\LiveChat\Actions\BuildLiveChatAnalyticsAction;
@@ -31,7 +32,10 @@ use Capell\LiveChat\Filament\Resources\EscalationRules\EscalationRuleResource;
 use Capell\LiveChat\Filament\Resources\Installations\InstallationResource;
 use Capell\LiveChat\Filament\Resources\KnowledgeSources\KnowledgeSourceResource;
 use Capell\LiveChat\Health\LiveChatHealthCheck;
+use Capell\LiveChat\Integrations\AgentBridge\LiveChatAgentBridgeCapabilityProvider;
+use Capell\LiveChat\Integrations\AgentBridge\RunLiveChatAgentBridgeCapabilityAction;
 use Capell\LiveChat\Manifest\LiveChatAdminResourcesContribution;
+use Capell\LiveChat\Manifest\LiveChatAgentBridgeCapabilitiesContribution;
 use Capell\LiveChat\Manifest\LiveChatFrontendRoutesContribution;
 use Capell\LiveChat\Manifest\LiveChatModelsContribution;
 use Capell\LiveChat\Manifest\LiveChatWidgetContribution;
@@ -205,6 +209,36 @@ it('declares the live chat package manifest contract', function (): void {
         ])
         ->and(class_implements(LiveChatFrontendRoutesContribution::class))->toContain(RegistersExtensionRoute::class)
         ->and(class_implements(LiveChatWidgetContribution::class))->toContain(RegistersExtensionFrontendComponent::class)
+        ->and(class_implements(LiveChatAgentBridgeCapabilitiesContribution::class))->toContain(ExtensionContribution::class)
+        ->and(live_chat_array_list($manifest, 'contributes'))->toContain([
+            'type' => 'agent-capability',
+            'class' => LiveChatAgentBridgeCapabilitiesContribution::class,
+            'providerClass' => LiveChatAgentBridgeCapabilityProvider::class,
+            'actionClass' => RunLiveChatAgentBridgeCapabilityAction::class,
+            'requiresPackage' => 'capell-app/agent-bridge',
+            'server' => 'site',
+            'scopes' => [
+                'capell.live-chat.read',
+                'capell.live-chat.write',
+            ],
+            'capabilities' => [
+                'capell.live-chat.conversations.list',
+                'capell.live-chat.conversations.inspect',
+                'capell.live-chat.summary.preview',
+                'capell.live-chat.reply.preview',
+                'capell.live-chat.escalation.preview',
+                'capell.live-chat.escalate',
+                'capell.live-chat.close',
+            ],
+            'requiresPreviewConfirmation' => [
+                'capell.live-chat.escalate',
+                'capell.live-chat.close',
+            ],
+            'auditEvents' => [
+                'capell.live-chat.escalate' => 'capell_agent-bridge.live-chat.escalated',
+                'capell.live-chat.close' => 'capell_agent-bridge.live-chat.closed',
+            ],
+        ])
         ->and(live_chat_array($manifest, 'actions'))->toMatchArray([
             'buildLiveChatAnalytics' => BuildLiveChatAnalyticsAction::class,
             'buildLiveChatOperatorState' => BuildLiveChatOperatorStateAction::class,
@@ -241,9 +275,7 @@ it('declares the live chat package manifest contract', function (): void {
             'live-chat-knowledge-documents',
             'live-chat-knowledge-gaps',
         )
-        ->and($contributionTraceability['deferredContributions'] ?? null)->toBe([
-            'agent-capability',
-        ]);
+        ->and($contributionTraceability['deferredContributions'] ?? null)->toBe([]);
 });
 
 it('declares committed marketplace assets and screenshot fallbacks', function (): void {

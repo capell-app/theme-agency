@@ -20,6 +20,8 @@ Live Chat is a premium Capell Growth package that adds a public website chat wid
 
 6. **Done/Shipped: make public route docs explicit about cache and privacy boundaries.** The README/docs index now state that only the widget shell/script may be cached briefly, while conversation, message, and handoff responses are private `no-store` API responses. Evidence: `README.md`, `docs/README.md`, controller `Cache-Control` headers. - **S**
 
+7. **Done/Shipped: close the Agent Bridge capability manifest gap.** Live Chat now declares its optional `agent-capability` contribution, marker class, provider/action contract, site scopes, capability keys, confirmation-required mutating operations, and audit events. The deferred contribution traceability entry is empty again, and README/docs copy explains the AI Orchestrator and Agent Bridge boundary for package adopters. Evidence: `capell.json`, `LiveChatAgentBridgeCapabilitiesContribution`, `LiveChatManifestTest`, `README.md`, `docs/README.md`. - **S**
+
 ## 3. Missing Features (gaps)
 
 Capabilities declared: `live-chat`, `live-chat-widget`, external embeds, domain allow-list, message/details-first flows, AI responder contract, Contacts sync, office hours, after-hours response, human handoff, escalation rules, proactive prompts, file uploads, transcripts, analytics, knowledge sources, AI Orchestrator, Agent Bridge, operator summaries, suggested replies, AI audit, knowledge gaps, and knowledge documents.
@@ -66,6 +68,7 @@ Live Chat belongs in `Capell Growth` as a premium lead capture and support triag
 | Remove public database message IDs from conversation/message API responses                               | Done   | M      | High   | §2.2, §4.2       |
 | Add package README and docs index in the standard Capell shape                                           | Done   | S      | Medium | §2.5, §5         |
 | Extend `LiveChatHealthCheck` to verify routes, admin resources, widget renderer, and public hook binding | Done   | S      | Medium | §2.4             |
+| Declare Agent Bridge capability contribution metadata and remove deferred manifest traceability          | Done   | S      | Medium | §2.7, §5         |
 | Make attachment storage and assistant/contact side effects failure-safe                                  | Next   | M      | Medium | §2.3, §4.3, §4.4 |
 | Recapture and promote runner-backed widget and conversation inbox screenshots                            | Next   | S      | High   | §3, §5           |
 | Build the operator inbox workflow around reply/assign/read/close/export actions                          | Later  | L      | High   | §3               |
