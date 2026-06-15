@@ -34,7 +34,41 @@
         ],
         "frontend": []
     },
-    "contributes": [],
+    "contributes": [
+        {
+            "type": "configurator",
+            "class": "Capell\\FrontendOptimizer\\Manifest\\FrontendOptimizerConfiguratorContribution",
+            "configuratorClass": "Capell\\FrontendOptimizer\\Filament\\Configurators\\Types\\FrontendOptimizerPageTypeConfigurator",
+            "group": "blueprint"
+        },
+        {
+            "type": "model",
+            "class": "Capell\\FrontendOptimizer\\Manifest\\FrontendOptimizerModelsContribution",
+            "modelClasses": [
+                "Capell\\FrontendOptimizer\\Models\\FrontendRenderProfile",
+                "Capell\\FrontendOptimizer\\Models\\FrontendOptimizationRun"
+            ]
+        },
+        {
+            "type": "console-command",
+            "class": "Capell\\FrontendOptimizer\\Manifest\\FrontendOptimizerConsoleCommandsContribution",
+            "commands": ["capell:frontend-optimizer:prune-profiles"],
+            "commandClasses": [
+                "Capell\\FrontendOptimizer\\Console\\Commands\\PruneRenderProfilesCommand"
+            ]
+        },
+        {
+            "type": "setting",
+            "class": "Capell\\FrontendOptimizer\\Manifest\\FrontendOptimizerSettingsContribution",
+            "settingsClass": "Capell\\FrontendOptimizer\\Settings\\FrontendOptimizerSettings",
+            "settingsGroup": "frontend_optimizer"
+        },
+        {
+            "type": "health-check",
+            "class": "Capell\\FrontendOptimizer\\Manifest\\FrontendOptimizerHealthContribution",
+            "checkClass": "Capell\\FrontendOptimizer\\Health\\FrontendOptimizerHealthCheck"
+        }
+    ],
     "database": {
         "migrations": true,
         "settings": true,
@@ -137,6 +171,6 @@
     },
     "scopes": ["frontend"],
     "contributionTraceability": {
-        "deferredContributions": ["configurator"]
+        "deferredContributions": []
     }
 }

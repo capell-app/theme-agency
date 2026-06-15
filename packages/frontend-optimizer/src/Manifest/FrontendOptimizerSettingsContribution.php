@@ -1,0 +1,15 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Capell\FrontendOptimizer\Manifest;
+
+use Capell\Core\Contracts\Extensions\RegistersExtensionSetting;
+
+final class FrontendOptimizerSettingsContribution implements RegistersExtensionSetting
+{
+    public static function compatibleCapellApiVersion(): string
+    {
+        return '^4.0';
+    }
+}

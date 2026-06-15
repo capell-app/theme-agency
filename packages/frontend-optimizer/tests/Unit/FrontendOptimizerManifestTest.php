@@ -2,7 +2,20 @@
 
 declare(strict_types=1);
 
+use Capell\Core\Contracts\Extensions\ChecksExtensionHealth;
+use Capell\Core\Contracts\Extensions\ExtensionContribution;
+use Capell\Core\Contracts\Extensions\RegistersExtensionSetting;
+use Capell\FrontendOptimizer\Console\Commands\PruneRenderProfilesCommand;
+use Capell\FrontendOptimizer\Filament\Configurators\Types\FrontendOptimizerPageTypeConfigurator;
+use Capell\FrontendOptimizer\Health\FrontendOptimizerHealthCheck;
+use Capell\FrontendOptimizer\Manifest\FrontendOptimizerConfiguratorContribution;
+use Capell\FrontendOptimizer\Manifest\FrontendOptimizerConsoleCommandsContribution;
+use Capell\FrontendOptimizer\Manifest\FrontendOptimizerHealthContribution;
+use Capell\FrontendOptimizer\Manifest\FrontendOptimizerModelsContribution;
+use Capell\FrontendOptimizer\Manifest\FrontendOptimizerSettingsContribution;
+use Capell\FrontendOptimizer\Models\FrontendOptimizationRun;
 use Capell\FrontendOptimizer\Models\FrontendRenderProfile;
+use Capell\FrontendOptimizer\Settings\FrontendOptimizerSettings;
 
 it('keeps marketplace screenshots aligned with the committed runner captures', function (): void {
     $manifest = frontendOptimizerPackageManifest();
@@ -80,6 +93,51 @@ it('declares image optimization and media library pairings', function (): void {
 
     expect($dependencies['supports'] ?? [])->toContain('capell-app/media-library')
         ->and($manifest['capabilities'] ?? [])->toContain('frontend-optimizer-images');
+});
+
+it('declares shipped admin configurator and operational contribution metadata', function (): void {
+    $manifest = frontendOptimizerPackageManifest();
+    $contributes = frontendOptimizerManifestArray($manifest, 'contributes');
+
+    expect($contributes)->toContain([
+        'type' => 'configurator',
+        'class' => FrontendOptimizerConfiguratorContribution::class,
+        'configuratorClass' => FrontendOptimizerPageTypeConfigurator::class,
+        'group' => 'blueprint',
+    ])
+        ->and($contributes)->toContain([
+            'type' => 'model',
+            'class' => FrontendOptimizerModelsContribution::class,
+            'modelClasses' => [
+                FrontendRenderProfile::class,
+                FrontendOptimizationRun::class,
+            ],
+        ])
+        ->and($contributes)->toContain([
+            'type' => 'console-command',
+            'class' => FrontendOptimizerConsoleCommandsContribution::class,
+            'commands' => ['capell:frontend-optimizer:prune-profiles'],
+            'commandClasses' => [
+                PruneRenderProfilesCommand::class,
+            ],
+        ])
+        ->and($contributes)->toContain([
+            'type' => 'setting',
+            'class' => FrontendOptimizerSettingsContribution::class,
+            'settingsClass' => FrontendOptimizerSettings::class,
+            'settingsGroup' => 'frontend_optimizer',
+        ])
+        ->and($contributes)->toContain([
+            'type' => 'health-check',
+            'class' => FrontendOptimizerHealthContribution::class,
+            'checkClass' => FrontendOptimizerHealthCheck::class,
+        ])
+        ->and(data_get($manifest, 'contributionTraceability.deferredContributions'))->toBe([])
+        ->and(class_implements(FrontendOptimizerConfiguratorContribution::class))->toContain(ExtensionContribution::class)
+        ->and(class_implements(FrontendOptimizerModelsContribution::class))->toContain(ExtensionContribution::class)
+        ->and(class_implements(FrontendOptimizerConsoleCommandsContribution::class))->toContain(ExtensionContribution::class)
+        ->and(class_implements(FrontendOptimizerSettingsContribution::class))->toContain(RegistersExtensionSetting::class)
+        ->and(class_implements(FrontendOptimizerHealthContribution::class))->toContain(ChecksExtensionHealth::class);
 });
 
 /**

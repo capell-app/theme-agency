@@ -24,6 +24,8 @@ Frontend Optimizer overrides Capell's `FrontendAssetManifestRenderer` contract t
 
 8. **`composer.json` PHP floor (`^8.3`) contradicts repo standard (8.4).** The skill states PHP 8.4 / typed constants; `RenderProfileAssetRenderer` already uses a typed `private const string`. Align the constraint to avoid a package that won't install on the documented baseline mismatch the other way. — `composer.json:7` — S
 
+9. **Done/Shipped: contribution metadata is accurate.** `capell.json` now declares the shipped Blueprint configurator, render-profile models, prune console command, settings, and health-check surfaces with package-owned marker classes, and `contributionTraceability.deferredContributions` is empty instead of claiming the configurator is still deferred. Evidence: `src/Manifest/*Contribution.php`, `tests/Unit/FrontendOptimizerManifestTest.php`. — S
+
 ## 3. Missing Features (gaps)
 
 Manifest `capabilities[]`: `frontend-optimizer`, `frontend-optimizer-frontend`, `frontend-assets`, `cache-blocking`.
@@ -96,6 +98,7 @@ Differentiator vs table-stakes: minify/bundle, font/image optimization, and prel
 | Shipped 2026-06-08: add image optimization seam (responsive/lazy/eager/AVIF-WebP candidates) paired with media-library URLs                                   | Done   | M      | High   | §3             |
 | Add preload/preconnect/fetchpriority + font optimization hints                                                                                                | Done   | M      | High   | §3             |
 | Add profile/critical-CSS GC (prune on layout/theme delete + stale signatures)                                                                                 | Done   | M      | Med    | §2.7           |
+| Declare shipped configurator, model, console-command, setting, and health-check contribution metadata                                                         | Done   | S      | Med    | §2.9, §4       |
 | Cover listener, job, settings, health in tests                                                                                                                | Done   | M      | Med    | §4 (test gaps) |
 | Implement page-level (`PageUrl`) scope for hero-heavy landing pages                                                                                           | Later  | L      | Med    | §3             |
 | Add CWV/RUM before-after reporting panel (headline sales asset)                                                                                               | Later  | L      | High   | §3, §5         |
