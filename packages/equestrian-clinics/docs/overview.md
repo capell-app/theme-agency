@@ -4,11 +4,11 @@
 
 ## What This Plugin Adds
 
-Equestrian Clinics is an **Available**, **Schema-owning** Capell plugin in the **Capell Operations** product group. It ships as `capell-app/equestrian-clinics` and extends these surfaces: admin, frontend, console.
+Equestrian Clinics is an **Available**, **Schema-owning** Capell plugin in the **Capell Operations** product group. It ships as `capell-app/equestrian-clinics` and extends these surfaces: frontend and admin diagnostics.
 
 Equestrian Clinics turns Capell into a full equestrian operations platform for travelling coaches, riding schools, clinics, venues, riders, horses, waivers, payments, credits, resources, and mobile day-of delivery.
 
-After install, the package contributes admin-facing extension points and may affect public output or routes. Docs gap: no concrete Filament resource or page was detected.
+After install, the package contributes domain models, public routes, and a package health check. It does not yet ship concrete Filament resources or admin navigation.
 
 Status details:
 
@@ -57,14 +57,14 @@ Screenshot contract: `screenshots.json`.
 
 ## Install Impact
 
-- Admin navigation: admin-facing extension points are declared, but no concrete Filament class was detected.
-- Permissions: `ViewAny:EquestrianTourDay`, `View:EquestrianTourDay`, `Create:EquestrianTourDay`, `Update:EquestrianTourDay`, `Delete:EquestrianTourDay`, `ViewAny:EquestrianRiderProfile`, `ViewAny:EquestrianHorseProfile`, `ViewAny:EquestrianVenue`.
+- Admin navigation: no concrete Filament resource or page is shipped yet; the admin surface is limited to diagnostics/health metadata.
+- Permissions: none declared until concrete admin resources ship.
 - Public routes: route files exist and must be reviewed before public enablement.
 - Database changes: package migrations are declared.
 - Settings: no package settings declared.
 - Queues or schedules: none detected in standard package paths.
 - Cache tags: `equestrian-clinics`.
-- Commands: none declared.
+- Commands: none declared; expiry Actions exist for checkout holds and waitlist offers, but scheduled command wiring is deferred.
 
 ## Common Pitfalls
 

@@ -13,7 +13,7 @@
         "bundle": "operations"
     },
     "namespace": "Capell\\EquestrianClinics",
-    "surfaces": ["admin", "frontend", "console"],
+    "surfaces": ["admin", "frontend"],
     "dependencies": {
         "requires": [
             "capell-app/address",
@@ -43,7 +43,45 @@
     "contributes": [
         {
             "type": "model",
-            "class": "Capell\\EquestrianClinics\\Manifest\\EquestrianClinicsModelsContribution"
+            "class": "Capell\\EquestrianClinics\\Manifest\\EquestrianClinicsModelsContribution",
+            "modelClasses": [
+                "Capell\\EquestrianClinics\\Models\\EquestrianVenue",
+                "Capell\\EquestrianClinics\\Models\\EquestrianTourDay",
+                "Capell\\EquestrianClinics\\Models\\EquestrianTourDaySlot",
+                "Capell\\EquestrianClinics\\Models\\EquestrianStaffMember",
+                "Capell\\EquestrianClinics\\Models\\EquestrianRiderProfile",
+                "Capell\\EquestrianClinics\\Models\\EquestrianHorseProfile",
+                "Capell\\EquestrianClinics\\Models\\EquestrianSlotBooking",
+                "Capell\\EquestrianClinics\\Models\\EquestrianSlotWaitlistEntry",
+                "Capell\\EquestrianClinics\\Models\\EquestrianHorseCareTask",
+                "Capell\\EquestrianClinics\\Models\\EquestrianHorseHealthRecord",
+                "Capell\\EquestrianClinics\\Models\\EquestrianCompetitionResult",
+                "Capell\\EquestrianClinics\\Models\\EquestrianFacilityResource",
+                "Capell\\EquestrianClinics\\Models\\EquestrianFacilityBooking",
+                "Capell\\EquestrianClinics\\Models\\EquestrianWaiverSignature",
+                "Capell\\EquestrianClinics\\Models\\EquestrianClinicCredit",
+                "Capell\\EquestrianClinics\\Models\\EquestrianCommercialProduct",
+                "Capell\\EquestrianClinics\\Models\\EquestrianBillingEntry",
+                "Capell\\EquestrianClinics\\Models\\EquestrianCommunicationLog",
+                "Capell\\EquestrianClinics\\Models\\EquestrianHostRequest"
+            ]
+        },
+        {
+            "type": "route",
+            "class": "Capell\\EquestrianClinics\\Manifest\\EquestrianClinicsRoutesContribution",
+            "routeNames": [
+                "capell-equestrian-clinics.discovery",
+                "capell-equestrian-clinics.host-request.store",
+                "capell-equestrian-clinics.coach.timetable"
+            ],
+            "public": true,
+            "signedRoutes": ["capell-equestrian-clinics.coach.timetable"],
+            "throttledRoutes": ["capell-equestrian-clinics.host-request.store"]
+        },
+        {
+            "type": "health-check",
+            "class": "Capell\\EquestrianClinics\\Manifest\\EquestrianClinicsHealthContribution",
+            "checkClass": "Capell\\EquestrianClinics\\Health\\EquestrianClinicsHealthCheck"
         }
     ],
     "database": {
@@ -106,16 +144,7 @@
         "buildOpenSlotDemandHeatmap": "Capell\\EquestrianClinics\\Actions\\BuildOpenSlotDemandHeatmapAction"
     },
     "settings": [],
-    "permissions": [
-        "ViewAny:EquestrianTourDay",
-        "View:EquestrianTourDay",
-        "Create:EquestrianTourDay",
-        "Update:EquestrianTourDay",
-        "Delete:EquestrianTourDay",
-        "ViewAny:EquestrianRiderProfile",
-        "ViewAny:EquestrianHorseProfile",
-        "ViewAny:EquestrianVenue"
-    ],
+    "permissions": [],
     "capabilities": [
         "equestrian-clinics",
         "equestrian-tour-days",
@@ -193,17 +222,8 @@
             ]
         },
         "adminSurface": {
-            "authorization": "permissions",
-            "permissions": [
-                "ViewAny:EquestrianTourDay",
-                "View:EquestrianTourDay",
-                "Create:EquestrianTourDay",
-                "Update:EquestrianTourDay",
-                "Delete:EquestrianTourDay",
-                "ViewAny:EquestrianRiderProfile",
-                "ViewAny:EquestrianHorseProfile",
-                "ViewAny:EquestrianVenue"
-            ]
+            "authorization": "panel-auth",
+            "permissions": []
         }
     },
     "performance": {
@@ -308,6 +328,18 @@
                 "caption": "Marketplace card for the Equestrian Clinics operations package."
             }
         ],
-        "categories": ["admin", "bookings", "commerce", "operations"]
+        "categories": ["bookings", "commerce", "operations"]
+    },
+    "contributionTraceability": {
+        "deferredContributions": [
+            {
+                "type": "admin-resource",
+                "reason": "Core Filament resources for tour days, venues, riders, horses, bookings, waitlists, facility resources, and care tasks are planned but not shipped yet."
+            },
+            {
+                "type": "scheduled-job",
+                "reason": "Expiry Actions exist for checkout holds and waitlist offers, but package console commands and schedule metadata are planned for a later slice."
+            }
+        ]
     }
 }

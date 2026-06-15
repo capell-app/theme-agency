@@ -2,7 +2,32 @@
 
 declare(strict_types=1);
 
+use Capell\Core\Contracts\Extensions\ChecksExtensionHealth;
+use Capell\Core\Contracts\Extensions\ExtensionContribution;
+use Capell\Core\Contracts\Extensions\RegistersExtensionRoute;
 use Capell\EquestrianClinics\Health\EquestrianClinicsHealthCheck;
+use Capell\EquestrianClinics\Manifest\EquestrianClinicsHealthContribution;
+use Capell\EquestrianClinics\Manifest\EquestrianClinicsModelsContribution;
+use Capell\EquestrianClinics\Manifest\EquestrianClinicsRoutesContribution;
+use Capell\EquestrianClinics\Models\EquestrianBillingEntry;
+use Capell\EquestrianClinics\Models\EquestrianClinicCredit;
+use Capell\EquestrianClinics\Models\EquestrianCommercialProduct;
+use Capell\EquestrianClinics\Models\EquestrianCommunicationLog;
+use Capell\EquestrianClinics\Models\EquestrianCompetitionResult;
+use Capell\EquestrianClinics\Models\EquestrianFacilityBooking;
+use Capell\EquestrianClinics\Models\EquestrianFacilityResource;
+use Capell\EquestrianClinics\Models\EquestrianHorseCareTask;
+use Capell\EquestrianClinics\Models\EquestrianHorseHealthRecord;
+use Capell\EquestrianClinics\Models\EquestrianHorseProfile;
+use Capell\EquestrianClinics\Models\EquestrianHostRequest;
+use Capell\EquestrianClinics\Models\EquestrianRiderProfile;
+use Capell\EquestrianClinics\Models\EquestrianSlotBooking;
+use Capell\EquestrianClinics\Models\EquestrianSlotWaitlistEntry;
+use Capell\EquestrianClinics\Models\EquestrianStaffMember;
+use Capell\EquestrianClinics\Models\EquestrianTourDay;
+use Capell\EquestrianClinics\Models\EquestrianTourDaySlot;
+use Capell\EquestrianClinics\Models\EquestrianVenue;
+use Capell\EquestrianClinics\Models\EquestrianWaiverSignature;
 use Capell\EquestrianClinics\Providers\EquestrianClinicsServiceProvider;
 use Illuminate\Support\Facades\File;
 
@@ -67,6 +92,72 @@ it('declares committed marketplace assets and a health check', function (): void
         ->and(stringValue($marketplaceScreenshot, 'path'))->toBe('docs/assets/marketplace/extension-card.svg')
         ->and($marketplaceAsset['screenshotPath'])->toBe('packages/equestrian-clinics/docs/screenshots/equestrian-clinics-extension-card.svg')
         ->and((new EquestrianClinicsHealthCheck)->passes())->toBeTrue();
+});
+
+it('declares shipped route, model, and health contributions without claiming admin resources', function (): void {
+    $packagePath = dirname(__DIR__, 2);
+    $manifest = loadPackageJsonArray($packagePath . '/capell.json');
+    $contributions = listValue($manifest, 'contributes');
+    $routeContribution = findContributionEntry($contributions, 'route');
+    $modelContribution = findContributionEntry($contributions, 'model');
+    $healthContribution = findContributionEntry($contributions, 'health-check');
+
+    expect(stringListValue($manifest, 'surfaces'))->toBe(['admin', 'frontend'])
+        ->and(stringListValue($manifest, 'permissions'))->toBe([])
+        ->and(stringListValue(arrayValue(arrayValue($manifest, 'security'), 'adminSurface'), 'permissions'))->toBe([])
+        ->and(collect($contributions)->contains(
+            static fn (mixed $contribution): bool => is_array($contribution) && ($contribution['type'] ?? null) === 'admin-resource',
+        ))->toBeFalse()
+        ->and(collect(listValue(arrayValue($manifest, 'contributionTraceability'), 'deferredContributions'))->pluck('type')->all())->toContain('admin-resource', 'scheduled-job');
+
+    expect($modelContribution)->toMatchArray([
+        'type' => 'model',
+        'class' => EquestrianClinicsModelsContribution::class,
+        'modelClasses' => [
+            EquestrianVenue::class,
+            EquestrianTourDay::class,
+            EquestrianTourDaySlot::class,
+            EquestrianStaffMember::class,
+            EquestrianRiderProfile::class,
+            EquestrianHorseProfile::class,
+            EquestrianSlotBooking::class,
+            EquestrianSlotWaitlistEntry::class,
+            EquestrianHorseCareTask::class,
+            EquestrianHorseHealthRecord::class,
+            EquestrianCompetitionResult::class,
+            EquestrianFacilityResource::class,
+            EquestrianFacilityBooking::class,
+            EquestrianWaiverSignature::class,
+            EquestrianClinicCredit::class,
+            EquestrianCommercialProduct::class,
+            EquestrianBillingEntry::class,
+            EquestrianCommunicationLog::class,
+            EquestrianHostRequest::class,
+        ],
+    ]);
+
+    expect($routeContribution)->toMatchArray([
+        'type' => 'route',
+        'class' => EquestrianClinicsRoutesContribution::class,
+        'routeNames' => [
+            'capell-equestrian-clinics.discovery',
+            'capell-equestrian-clinics.host-request.store',
+            'capell-equestrian-clinics.coach.timetable',
+        ],
+        'public' => true,
+        'signedRoutes' => ['capell-equestrian-clinics.coach.timetable'],
+        'throttledRoutes' => ['capell-equestrian-clinics.host-request.store'],
+    ]);
+
+    expect($healthContribution)->toMatchArray([
+        'type' => 'health-check',
+        'class' => EquestrianClinicsHealthContribution::class,
+        'checkClass' => EquestrianClinicsHealthCheck::class,
+    ]);
+
+    expect(class_implements(EquestrianClinicsModelsContribution::class))->toContain(ExtensionContribution::class)
+        ->and(class_implements(EquestrianClinicsRoutesContribution::class))->toContain(RegistersExtensionRoute::class)
+        ->and(class_implements(EquestrianClinicsHealthContribution::class))->toContain(ChecksExtensionHealth::class);
 });
 
 /**
@@ -199,4 +290,19 @@ function findScreenshotEntry(array $screenshots, string $id): array
     }
 
     throw new RuntimeException('Screenshot entry was not found.');
+}
+
+/**
+ * @param  list<mixed>  $contributions
+ * @return array<string, mixed>
+ */
+function findContributionEntry(array $contributions, string $type): array
+{
+    foreach ($contributions as $contribution) {
+        if (is_array($contribution) && ($contribution['type'] ?? null) === $type) {
+            return arrayEntry([$contribution], 0);
+        }
+    }
+
+    throw new RuntimeException('Manifest contribution entry was not found.');
 }
