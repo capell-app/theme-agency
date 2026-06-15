@@ -76,13 +76,16 @@ final class ShopifyCommerceServiceProvider extends AbstractPackageServiceProvide
 
     private function registerModels(): self
     {
-        $this->surface()->models([
+        $models = [
             ShopifyConnection::class,
             ShopifyCustomer::class,
             ShopifyOAuthState::class,
             ShopifyProduct::class,
             ShopifyProductVariant::class,
-        ]);
+        ];
+
+        $this->surface()->models($models);
+        CapellCore::registerModels($models);
 
         return $this;
     }

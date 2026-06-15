@@ -46,8 +46,9 @@ Screenshot contract: `docs/screenshots.json`.
 - Events: `ShopifyCustomerSynced`.
 - Actions: `BuildShopifyCatalogThemeDataAction`, `ContinueShopifyProductBulkSyncAction`, `FetchShopifyProductAction`, `ImportShopifyProductBulkSyncAction`, `InvalidateShopifyProductSearchCacheAction`, `PersistShopifyProductAction`, `PollShopifyProductBulkSyncAction`, `SanitizeShopifySyncErrorAction`, `SearchShopifyProductsAction`, `StartShopifyProductBulkSyncAction`, `SyncShopifyProductsAction`, `SyncShopifyCustomersAction`, `and 16 more`.
 - Data objects: `ShopifyCallbackQueryData`, `ShopifyCatalogProductThemeData`, `ShopifyCatalogSummaryThemeData`, `ShopifyCatalogThemeData`, `ShopifyCatalogVariantThemeData`, `ShopifyProductData`, `ShopifyProductOptionData`, `ShopifyProductVariantData`, `ShopifyTokenExchangeResponseData`.
-- Command signatures: `capell-shopify-commerce:install`, `capell-shopify-commerce:prune-oauth-states`, `capell-shopify-commerce:sync-customers`.
+- Command signatures: `capell-shopify-commerce:install`, `capell-shopify-commerce:prune-oauth-states`, `capell-shopify-commerce:sync-customers`, `capell-shopify-commerce:sync`.
 - Console command classes: `InstallShopifyCommerceCommand`, `PruneExpiredShopifyOAuthStatesCommand`, `SyncShopifyCustomersCommand`, `SyncShopifyProductsCommand`.
+- Manifest contributions: `admin-page: Capell\ShopifyCommerce\Manifest\ShopifyConnectionPageContribution`, `route: Capell\ShopifyCommerce\Manifest\ShopifyCommerceRoutesContribution`, `model: Capell\ShopifyCommerce\Manifest\ShopifyCommerceModelsContribution`, `scheduled-job: Capell\ShopifyCommerce\Manifest\ShopifyProductSyncScheduleContribution`, `scheduled-job: Capell\ShopifyCommerce\Manifest\ShopifyOAuthStatePruneScheduleContribution`, `console-command: Capell\ShopifyCommerce\Manifest\ShopifyCommerceConsoleCommandsContribution`, `setting: Capell\ShopifyCommerce\Manifest\ShopifyCommerceSettingsContribution`, `health-check: Capell\ShopifyCommerce\Manifest\ShopifyCommerceHealthContribution`.
 - Health checks: `Capell\ShopifyCommerce\Health\ShopifyCommerceHealthCheck`.
 - Blade views: `packages/shopify-commerce/resources/views/filament/pages/connection.blade.php`.
 - Cache tags: `shopify-commerce`.
@@ -59,18 +60,18 @@ Screenshot contract: `docs/screenshots.json`.
 - Models: `ShopifyConnection`, `ShopifyCustomer`, `ShopifyOAuthState`, `ShopifyProduct`, `ShopifyProductVariant`.
 - Migration files: `2026_05_22_000001_create_shopify_connections_table.php`, `2026_05_22_000002_create_shopify_oauth_states_table.php`, `2026_05_22_000003_create_shopify_products_table.php`, `2026_05_22_000004_create_shopify_product_variants_table.php`, `2026_06_01_000001_create_shopify_customers_table.php`.
 - Migration impact: run host migrations through the package install flow before opening package surfaces.
-- Deletion/retention behaviour: Docs gap unless the package has an explicit pruning command, retention setting, or tested cascade path.
+- Deletion/retention behaviour: expired OAuth states are pruned by `capell-shopify-commerce:prune-oauth-states`, scheduled hourly while the package is installed.
 
 ## Install Impact
 
 - Admin navigation: adds package-owned Filament classes when registered.
 - Permissions: `shopify-commerce.manage`.
-- Public routes: route files exist and must be reviewed before public enablement.
+- Public routes: authenticated OAuth install/callback routes plus the throttled Shopify webhook endpoint.
 - Database changes: package migrations are declared.
 - Settings: `Capell\ShopifyCommerce\Settings\ShopifyCommerceSettings`.
-- Queues or schedules: none detected in standard package paths.
+- Queues or schedules: syncs active product catalogs every fifteen minutes when scheduled sync is enabled, and prunes expired OAuth states hourly.
 - Cache tags: `shopify-commerce`.
-- Commands: `capell-shopify-commerce:install`, `capell-shopify-commerce:prune-oauth-states`, `capell-shopify-commerce:sync-customers`.
+- Commands: `capell-shopify-commerce:install`, `capell-shopify-commerce:prune-oauth-states`, `capell-shopify-commerce:sync-customers`, `capell-shopify-commerce:sync`.
 
 ## Common Pitfalls
 
@@ -92,7 +93,7 @@ Screenshot contract: `docs/screenshots.json`.
 ## Quick Start
 
 1. Install the package: `composer require capell-app/shopify-commerce`.
-2. Run the required setup: `php artisan capell-shopify-commerce:install`.
+2. Run the package install command from the installed Capell app.
 3. Open the related Capell admin surface and verify Shopify Commerce appears.
 
 ## Next Steps
