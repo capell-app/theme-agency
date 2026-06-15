@@ -181,7 +181,7 @@
                             :alt="$assetRenderData->alt"
                             :width="$width"
                             :height="$height"
-                            sizes="(max-width: 640px) 80vw, 20w"
+                            sizes="(min-width: 1024px) 20rem, (min-width: 640px) 33vw, 80vw"
                             lightbox="true"
                             rounded="true"
                         />

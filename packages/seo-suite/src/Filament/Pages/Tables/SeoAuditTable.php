@@ -342,7 +342,19 @@ class SeoAuditTable implements TableConfigurator
     {
         $cache = $request->attributes->get(self::REQUEST_SNAPSHOT_CACHE_KEY, []);
 
-        return is_array($cache) ? $cache : [];
+        if (! is_array($cache)) {
+            return [];
+        }
+
+        $typedCache = [];
+
+        foreach ($cache as $key => $snapshot) {
+            if (is_string($key) && ($snapshot === null || $snapshot instanceof PageSeoSnapshot)) {
+                $typedCache[$key] = $snapshot;
+            }
+        }
+
+        return $typedCache;
     }
 
     private static function currentRequest(): ?Request

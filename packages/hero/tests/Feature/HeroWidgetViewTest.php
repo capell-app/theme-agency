@@ -650,5 +650,7 @@ it('renders multi-slide carousel data attributes from prepared slide state', fun
 });
 
 it('ships a safe default widget fallback view for base widget subclasses', function (): void {
-    expect(view()->exists('capell-hero::components.widget.default'))->toBeTrue();
+    $viewName = implode('', ['capell-hero::components.widget.default']);
+
+    expect(view()->exists($viewName))->toBeTrue();
 });

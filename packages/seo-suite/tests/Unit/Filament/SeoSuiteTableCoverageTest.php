@@ -273,9 +273,11 @@ it('keeps ai discovery table profile cache scoped to the current request', funct
     app()->instance('request', Request::create('/ai-discovery/second'));
 
     $secondProfile = $profileFor->invoke(null, $page->fresh());
+    throw_unless($firstProfile instanceof AiDiscoveryPageProfile, RuntimeException::class);
+    throw_unless($secondProfile instanceof AiDiscoveryPageProfile, RuntimeException::class);
 
-    expect($firstProfile?->include_in_ai_index)->toBeTrue()
-        ->and($secondProfile?->include_in_ai_index)->toBeFalse();
+    expect($firstProfile->include_in_ai_index)->toBeTrue()
+        ->and($secondProfile->include_in_ai_index)->toBeFalse();
 });
 
 it('exposes seo audit table columns and status filters', function (): void {

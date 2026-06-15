@@ -22,10 +22,21 @@ use Illuminate\Support\Facades\File;
 
 uses(TestCase::class);
 
+/**
+ * @return array<string, mixed>
+ */
+function socialFeedsManifest(string $file): array
+{
+    $decoded = json_decode(File::get($file), true, flags: JSON_THROW_ON_ERROR);
+    throw_unless(is_array($decoded), RuntimeException::class, 'Social Feeds manifest must decode to an array.');
+
+    return collect($decoded)->all();
+}
+
 it('declares valid Capell extension manifest metadata', function (): void {
     $packagePath = dirname(__DIR__, 2);
-    $manifest = json_decode(File::get($packagePath . '/capell.json'), true, flags: JSON_THROW_ON_ERROR);
-    $composer = json_decode(File::get($packagePath . '/composer.json'), true, flags: JSON_THROW_ON_ERROR);
+    $manifest = socialFeedsManifest($packagePath . '/capell.json');
+    $composer = socialFeedsManifest($packagePath . '/composer.json');
 
     (new ManifestValidator)->validate($manifest, $composer, 'capell-app/social-feeds', $packagePath . '/capell.json');
 
@@ -36,23 +47,20 @@ it('declares valid Capell extension manifest metadata', function (): void {
 });
 
 it('declares the shipped admin resources, frontend widget, and schema-owned model contributions', function (): void {
-    $manifest = json_decode(
-        File::get(dirname(__DIR__, 2) . '/capell.json'),
-        true,
-        flags: JSON_THROW_ON_ERROR,
-    );
+    $manifest = socialFeedsManifest(dirname(__DIR__, 2) . '/capell.json');
+    $contributions = data_get($manifest, 'contributes', []);
 
-    expect($manifest['contributes'])->toContain([
+    expect($contributions)->toContain([
         'type' => 'admin-resource',
         'class' => SocialFeedConnectionResourceContribution::class,
         'resourceClass' => SocialFeedConnectionResource::class,
     ])
-        ->and($manifest['contributes'])->toContain([
+        ->and($contributions)->toContain([
             'type' => 'admin-resource',
             'class' => SocialFeedItemResourceContribution::class,
             'resourceClass' => SocialFeedItemResource::class,
         ])
-        ->and($manifest['contributes'])->toContain([
+        ->and($contributions)->toContain([
             'type' => 'frontend-component',
             'class' => SocialFeedWidgetContribution::class,
             'blockKey' => 'social-feed',
@@ -60,12 +68,12 @@ it('declares the shipped admin resources, frontend widget, and schema-owned mode
             'rendererClass' => SocialFeedBlockRenderer::class,
             'surface' => 'frontend',
         ])
-        ->and($manifest['contributes'])->toContain([
+        ->and($contributions)->toContain([
             'type' => 'model',
             'class' => SocialFeedConnectionModelContribution::class,
             'modelClass' => SocialFeedConnection::class,
         ])
-        ->and($manifest['contributes'])->toContain([
+        ->and($contributions)->toContain([
             'type' => 'model',
             'class' => SocialFeedItemModelContribution::class,
             'modelClass' => SocialFeedItem::class,

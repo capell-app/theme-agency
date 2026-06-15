@@ -69,6 +69,7 @@ it('builds dashboard table widgets from their package query actions', function (
                 totalUsers: 345,
                 sessions: 234,
                 screenPageViews: 1234,
+                eventCount: 56,
                 conversions: 12,
                 engagementRate: 0.456,
                 averageSessionDuration: 98.4,
@@ -78,6 +79,9 @@ it('builds dashboard table widgets from their package query actions', function (
 
     app()->instance(BuildTopCampaignStudioQueryAction::class, new class
     {
+        /**
+         * @return Collection<int, CampaignConversionSummaryData>
+         */
         public function handle(int $limit, mixed $startsAt, mixed $endsAt): Collection
         {
             expect($limit)->toBe(5);
@@ -96,6 +100,9 @@ it('builds dashboard table widgets from their package query actions', function (
 
     app()->instance(BuildSeoIntelligenceRowsAction::class, new class
     {
+        /**
+         * @return Collection<int, array{id: string, type: string, query: string, url: string, message: string, priority: int, impressions: int, clicks: int, ctr: float, average_position: string}>
+         */
         public function handle(int $limit): Collection
         {
             expect($limit)->toBe(5);
@@ -128,7 +135,7 @@ it('builds dashboard table widgets from their package query actions', function (
 
     expect($ga4Widget->table(packageDashboardWidgetTable())->getColumns())->toHaveCount(3)
         ->and($ga4Records)->toBeInstanceOf(Collection::class)
-        ->and($ga4Records->pluck('value')->all())->toBe(['1,234', '234', '345', '45.6%', '12'])
+        ->and($ga4Records->pluck('value')->all())->toBe(['1,234', '234', '345', '56', '45.6%', '98.4s', '12'])
         ->and($campaignWidget->table(packageDashboardWidgetTable())->getColumns())->toHaveCount(4)
         ->and($campaignRecords)->toBeInstanceOf(Collection::class)
         ->and($campaignRecords->first())->toMatchArray([
@@ -145,6 +152,9 @@ it('builds dashboard table widgets from their package query actions', function (
 it('builds campaign dashboard overview and landing page widgets from package actions', function (): void {
     app()->instance(BuildCampaignOverviewStatsAction::class, new class
     {
+        /**
+         * @return array<string, int|float>
+         */
         public function handle(mixed $startsAt = null, mixed $endsAt = null): array
         {
             return [
@@ -157,6 +167,9 @@ it('builds campaign dashboard overview and landing page widgets from package act
 
     app()->instance(BuildTopLandingPagesQueryAction::class, new class
     {
+        /**
+         * @return Collection<int, CampaignLandingPageSummaryData>
+         */
         public function handle(int $limit, mixed $startsAt, mixed $endsAt): Collection
         {
             expect($limit)->toBe(5);
@@ -192,6 +205,9 @@ it('builds campaign dashboard overview and landing page widgets from package act
 it('builds insights dashboard table widgets from their analytics actions', function (): void {
     app()->instance(BuildInsightsOverviewStatsAction::class, new class
     {
+        /**
+         * @return Collection<int, array{id: string, label: string, value: int}>
+         */
         public function handle(mixed $window): Collection
         {
             return collect([
@@ -201,6 +217,9 @@ it('builds insights dashboard table widgets from their analytics actions', funct
     });
     app()->instance(BuildPopularPagesQueryAction::class, new class
     {
+        /**
+         * @return Collection<int, array{path: string, page_views: int, unique_visits: int, clicks: int}>
+         */
         public function handle(mixed $window, int $limit): Collection
         {
             expect($limit)->toBe(5);
@@ -212,6 +231,9 @@ it('builds insights dashboard table widgets from their analytics actions', funct
     });
     app()->instance(BuildTrendingPagesQueryAction::class, new class
     {
+        /**
+         * @return Collection<int, array{path: string, current_page_views: int, previous_page_views: int, change: int, change_percentage: float}>
+         */
         public function handle(mixed $window, int $limit): Collection
         {
             expect($limit)->toBe(5);
@@ -223,6 +245,9 @@ it('builds insights dashboard table widgets from their analytics actions', funct
     });
     app()->instance(BuildTopActionsQueryAction::class, new class
     {
+        /**
+         * @return Collection<int, array{action: string, events: int}>
+         */
         public function handle(mixed $window, int $limit): Collection
         {
             expect($limit)->toBe(5);
@@ -234,6 +259,9 @@ it('builds insights dashboard table widgets from their analytics actions', funct
     });
     app()->instance(BuildRecentJourneysQueryAction::class, new class
     {
+        /**
+         * @return Collection<int, array{id: string, visit: string, steps: int, last_path: string}>
+         */
         public function handle(int $limit, mixed $window): Collection
         {
             expect($limit)->toBe(5);
@@ -245,6 +273,9 @@ it('builds insights dashboard table widgets from their analytics actions', funct
     });
     app()->instance(BuildLiveInsightsStatsAction::class, new class
     {
+        /**
+         * @return Collection<int, array{metric: string, value: string}>
+         */
         public function handle(int $minutes): Collection
         {
             expect($minutes)->toBe(15);
@@ -275,6 +306,9 @@ it('builds insights dashboard table widgets from their analytics actions', funct
 it('builds search dashboard widgets from top trending and zero result search actions', function (): void {
     app()->instance(BuildTopSearchesQueryAction::class, new class
     {
+        /**
+         * @return Collection<int, SearchTermSummaryData>
+         */
         public function handle(mixed $window, ?int $limit = null): Collection
         {
             return collect($limit === null ? [
@@ -287,6 +321,9 @@ it('builds search dashboard widgets from top trending and zero result search act
     });
     app()->instance(BuildTrendingSearchesQueryAction::class, new class
     {
+        /**
+         * @return Collection<int, SearchTermSummaryData>
+         */
         public function handle(mixed $window, int $limit): Collection
         {
             expect($limit)->toBe(5);
@@ -298,6 +335,9 @@ it('builds search dashboard widgets from top trending and zero result search act
     });
     app()->instance(BuildZeroResultSearchesQueryAction::class, new class
     {
+        /**
+         * @return Collection<int, SearchTermSummaryData>
+         */
         public function handle(mixed $window, ?int $limit = null): Collection
         {
             return collect([
@@ -341,6 +381,9 @@ it('builds html cache seo and diagnostics dashboard widgets from operational rep
     });
     app()->instance(BuildHtmlCacheUrlRowsAction::class, new class
     {
+        /**
+         * @return Collection<int, array{state: string, url: string, site: string, hits: int, last_seen: string}>
+         */
         public function handle(string $mode, int $limit): Collection
         {
             expect($mode)->toBe('coverage')
@@ -353,6 +396,9 @@ it('builds html cache seo and diagnostics dashboard widgets from operational rep
     });
     app()->instance(BuildHtmlCacheStaleQueueRowsAction::class, new class
     {
+        /**
+         * @return Collection<int, array{url: string, status: string, attempts: int, reason: string, updated: string}>
+         */
         public function handle(int $limit): Collection
         {
             expect($limit)->toBe(5);
@@ -381,6 +427,9 @@ it('builds html cache seo and diagnostics dashboard widgets from operational rep
     });
     app()->instance(BuildAiDiscoveryCoverageStatsAction::class, new class
     {
+        /**
+         * @return array<string, int>
+         */
         public function handle(): array
         {
             return [
@@ -393,6 +442,9 @@ it('builds html cache seo and diagnostics dashboard widgets from operational rep
     });
     app()->instance(BuildSeoOpportunityRowsAction::class, new class
     {
+        /**
+         * @return Collection<int, array{page: string, score: int, critical_count: int, warning_count: int, notices: int}>
+         */
         public function handle(int $limit): Collection
         {
             expect($limit)->toBe(5);
@@ -442,6 +494,9 @@ it('builds html cache seo and diagnostics dashboard widgets from operational rep
 it('builds the login audit dashboard widget from the audit query action', function (): void {
     app()->instance(BuildLoginAuditsQueryAction::class, new class
     {
+        /**
+         * @return Builder<LoginAudit>
+         */
         public function handle(): Builder
         {
             return LoginAudit::query();

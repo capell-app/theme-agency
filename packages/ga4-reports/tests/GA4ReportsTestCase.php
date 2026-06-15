@@ -14,6 +14,7 @@ use Illuminate\Foundation\Application;
 use Livewire\LivewireServiceProvider;
 use Override;
 use ReflectionMethod;
+use RuntimeException;
 
 class GA4ReportsTestCase extends AbstractTestCase
 {
@@ -23,6 +24,8 @@ class GA4ReportsTestCase extends AbstractTestCase
 
         CapellCore::markPackageInstalled(CapellAdminServiceProvider::$packageName);
         CapellCore::markPackageInstalled(GA4ReportsServiceProvider::$packageName);
+
+        throw_unless($this->app instanceof Application, RuntimeException::class);
 
         $provider = new GA4ReportsServiceProvider($this->app);
         foreach (['registerModels', 'registerSettings', 'registerProtectedTables'] as $methodName) {

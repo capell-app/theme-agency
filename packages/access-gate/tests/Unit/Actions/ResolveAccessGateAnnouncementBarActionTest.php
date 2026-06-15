@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Capell\AccessGate\Actions\ResolveAccessGateAnnouncementBarAction;
+use Capell\AccessGate\Data\AnnouncementBarData;
 use Capell\AccessGate\Models\Area;
 use Illuminate\Http\Request;
 
@@ -23,6 +24,7 @@ it('resolves an enabled announcement for matching public paths', function (): vo
     ]);
 
     $announcement = ResolveAccessGateAnnouncementBarAction::run(Request::create('/extensions/themes'));
+    throw_unless($announcement instanceof AnnouncementBarData, RuntimeException::class);
 
     expect($announcement)->not->toBeNull()
         ->and($announcement->message)->toBe('Launch offer: 50% off all extensions.')
@@ -45,6 +47,7 @@ it('allows http and https announcement links', function (string $url): void {
     ]);
 
     $announcement = ResolveAccessGateAnnouncementBarAction::run(Request::create('/extensions/themes'));
+    throw_unless($announcement instanceof AnnouncementBarData, RuntimeException::class);
 
     expect($announcement)->not->toBeNull()
         ->and($announcement->linkLabel)->toBe('Claim launch offer')
@@ -67,6 +70,7 @@ it('does not render unsafe announcement links', function (string $url): void {
     ]);
 
     $announcement = ResolveAccessGateAnnouncementBarAction::run(Request::create('/extensions/themes'));
+    throw_unless($announcement instanceof AnnouncementBarData, RuntimeException::class);
 
     expect($announcement)->not->toBeNull()
         ->and($announcement->linkLabel)->toBeNull()
@@ -91,6 +95,7 @@ it('does not render orphan announcement link labels or urls', function (): void 
     ]);
 
     $announcement = ResolveAccessGateAnnouncementBarAction::run(Request::create('/extensions/themes'));
+    throw_unless($announcement instanceof AnnouncementBarData, RuntimeException::class);
 
     expect($announcement)->not->toBeNull()
         ->and($announcement->linkLabel)->toBeNull()

@@ -39,7 +39,7 @@ it('declares implemented password policy package contributions', function (): vo
     throw_unless(is_array($manifestContributions), RuntimeException::class, 'Password Policy contributions must be arrays.');
     $contributions = collect($manifestContributions);
 
-    expect($manifest['contributionTraceability']['deferredContributions'])->toBe([])
+    expect(data_get($manifest, 'contributionTraceability.deferredContributions'))->toBe([])
         ->and($contributions->pluck('class')->all())->toContain(
             PasswordPolicyAdminPagesContribution::class,
             PasswordPolicyAdminExtendersContribution::class,
@@ -100,6 +100,6 @@ it('declares implemented password policy package contributions', function (): vo
 it('declares password policy storage required by health checks', function (): void {
     $manifest = passwordPolicyManifest();
 
-    expect($manifest['database']['requiredTables'])->toBe(['password_policy_password_histories'])
-        ->and($manifest['database']['requiredUserColumns'])->toBe(['password_changed_at', 'must_change_password']);
+    expect(data_get($manifest, 'database.requiredTables'))->toBe(['password_policy_password_histories'])
+        ->and(data_get($manifest, 'database.requiredUserColumns'))->toBe(['password_changed_at', 'must_change_password']);
 });

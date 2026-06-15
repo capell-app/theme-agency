@@ -49,7 +49,7 @@ it('builds login audit queries filtered by time window ordered newest first and 
         'login_at' => $trackedAt->subHours(8),
     ]);
 
-    $records = BuildLoginAuditsQueryAction::run(hours: 6, limit: 3)->get();
+    $records = (new BuildLoginAuditsQueryAction)->handle(hours: 6, limit: 3)->get();
 
     expect($records->modelKeys())->toBe([
         $newestAudit->getKey(),
@@ -75,7 +75,7 @@ it('builds default login audit queries from the latest records without a time fl
         'login_at' => $trackedAt->subDays(13),
     ]);
 
-    $records = BuildLoginAuditsQueryAction::run(limit: 2)->get();
+    $records = (new BuildLoginAuditsQueryAction)->handle(limit: 2)->get();
 
     expect($records->modelKeys())->toBe([
         $newestAudit->getKey(),

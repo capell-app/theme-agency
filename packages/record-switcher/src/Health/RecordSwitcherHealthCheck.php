@@ -14,7 +14,6 @@ use Filament\Support\Assets\AlpineComponent;
 use Filament\Support\Assets\Css;
 use Filament\Support\Facades\FilamentAsset;
 use Illuminate\Support\Collection;
-use Livewire\Component;
 use Throwable;
 
 final class RecordSwitcherHealthCheck implements ChecksExtensionHealth
@@ -135,7 +134,7 @@ final class RecordSwitcherHealthCheck implements ChecksExtensionHealth
 
     public function livewireNamespaceIsRegistered(): bool
     {
-        if (! class_exists(RecordSwitcher::class) || ! is_subclass_of(RecordSwitcher::class, Component::class)) {
+        if (! class_exists(RecordSwitcher::class)) {
             return false;
         }
 

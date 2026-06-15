@@ -36,7 +36,7 @@ it('installs compact natural home hero defaults', function (): void {
     $containers = $homeLayout->containers ?? [];
 
     capell_expect(array_keys($containers))->toBe(['hero', 'main'])
-        ->and($containers['hero']['widgets'] ?? null)->toBe([
+        ->and(data_get($containers, 'hero.widgets'))->toBe([
             ['widget_key' => 'hero'],
         ])
         ->and($homeLayout->widgets)->toBe(['hero', 'page-content'])
@@ -180,8 +180,8 @@ it('force updates an existing hero container without replacing custom home copy'
     throw_unless($translation instanceof Translation, RuntimeException::class, 'Expected custom home page translation to be loaded.');
 
     expect($result)->toBe(['created' => 0, 'updated' => 1, 'skipped' => 0])
-        ->and($containers['hero']['widgets'] ?? null)->toBe([['widget_key' => 'hero']])
-        ->and($containers['main']['widgets'] ?? null)->toBe([['widget_key' => 'page-content']])
+        ->and(data_get($containers, 'hero.widgets'))->toBe([['widget_key' => 'hero']])
+        ->and(data_get($containers, 'main.widgets'))->toBe([['widget_key' => 'page-content']])
         ->and($translation->getMeta('hero_title'))->toBe('Custom headline')
         ->and($translation->getMeta('hero'))->toBe('<p>Custom hero copy.</p>')
         ->and($translation->content)->toBe('<p>Custom body copy.</p>');

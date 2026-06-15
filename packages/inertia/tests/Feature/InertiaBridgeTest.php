@@ -43,15 +43,19 @@ it('shares namespaced capell inertia props through the middleware', function ():
     config()->set('capell-inertia.adapter', 'react');
 
     $shared = resolve(HandleInertiaRequests::class)->share(request());
+    $capell = $shared['capell'] ?? null;
+    throw_unless(is_array($capell), RuntimeException::class, 'Expected shared Capell inertia props.');
 
     expect($shared)->toHaveKey('capell')
-        ->and($shared['capell']['adapter'])->toBe('react');
+        ->and($capell['adapter'] ?? null)->toBe('react');
 
     config()->set('capell-inertia.adapter', ['invalid']);
 
     $shared = resolve(HandleInertiaRequests::class)->share(request());
+    $capell = $shared['capell'] ?? null;
+    throw_unless(is_array($capell), RuntimeException::class, 'Expected shared Capell inertia props.');
 
-    expect($shared['capell']['adapter'])->toBe('vue');
+    expect($capell['adapter'] ?? null)->toBe('vue');
 });
 
 it('tracks registered inertia adapters and resolves the configured active adapter', function (): void {

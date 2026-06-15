@@ -839,7 +839,19 @@ class AiDiscoveryTable implements TableConfigurator
     {
         $cache = $request->attributes->get(self::REQUEST_PROFILE_CACHE_KEY, []);
 
-        return is_array($cache) ? $cache : [];
+        if (! is_array($cache)) {
+            return [];
+        }
+
+        $typedCache = [];
+
+        foreach ($cache as $key => $profile) {
+            if (is_string($key) && ($profile === null || $profile instanceof AiDiscoveryPageProfile)) {
+                $typedCache[$key] = $profile;
+            }
+        }
+
+        return $typedCache;
     }
 
     /**
@@ -849,7 +861,19 @@ class AiDiscoveryTable implements TableConfigurator
     {
         $cache = $request->attributes->get(self::REQUEST_SITE_PROFILE_CACHE_KEY, []);
 
-        return is_array($cache) ? $cache : [];
+        if (! is_array($cache)) {
+            return [];
+        }
+
+        $typedCache = [];
+
+        foreach ($cache as $key => $profile) {
+            if (is_string($key) && ($profile === null || $profile instanceof AiDiscoverySiteProfile)) {
+                $typedCache[$key] = $profile;
+            }
+        }
+
+        return $typedCache;
     }
 
     /**
@@ -859,7 +883,19 @@ class AiDiscoveryTable implements TableConfigurator
     {
         $cache = $request->attributes->get(self::REQUEST_READINESS_ISSUE_COUNT_CACHE_KEY, []);
 
-        return is_array($cache) ? $cache : [];
+        if (! is_array($cache)) {
+            return [];
+        }
+
+        $typedCache = [];
+
+        foreach ($cache as $key => $count) {
+            if (is_string($key) && is_int($count)) {
+                $typedCache[$key] = $count;
+            }
+        }
+
+        return $typedCache;
     }
 
     /**
@@ -869,7 +905,19 @@ class AiDiscoveryTable implements TableConfigurator
     {
         $cache = $request->attributes->get(self::REQUEST_MARKDOWN_DISCOVERABILITY_CACHE_KEY, []);
 
-        return is_array($cache) ? $cache : [];
+        if (! is_array($cache)) {
+            return [];
+        }
+
+        $typedCache = [];
+
+        foreach ($cache as $key => $discoverable) {
+            if (is_string($key) && is_bool($discoverable)) {
+                $typedCache[$key] = $discoverable;
+            }
+        }
+
+        return $typedCache;
     }
 
     private static function forgetRequestCacheValue(Request $request, string $attribute, string $cacheKey): void

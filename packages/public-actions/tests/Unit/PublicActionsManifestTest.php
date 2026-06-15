@@ -34,7 +34,11 @@ it('does not advertise cache dependency blocking without an implementation', fun
 
 it('declares implemented public action package contributions', function (): void {
     $manifest = capell_json_file_array(__DIR__ . '/../../capell.json');
-    $contributions = collect(data_get($manifest, 'contributes'));
+    $contributes = data_get($manifest, 'contributes');
+
+    throw_unless(is_array($contributes), RuntimeException::class, 'Expected public actions manifest contributions.');
+
+    $contributions = collect($contributes);
 
     $adminResources = $contributions->firstWhere('class', PublicActionsAdminResourcesContribution::class);
     $models = $contributions->firstWhere('class', PublicActionsModelsContribution::class);

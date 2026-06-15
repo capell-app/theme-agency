@@ -28,9 +28,12 @@ use Capell\Payments\Tests\TestCase;
 
 uses(TestCase::class);
 
+/**
+ * @return array<string, mixed>
+ */
 function paymentsManifest(): array
 {
-    return capell_json_file_array(__DIR__ . '/../../capell.json');
+    return collect(capell_json_file_array(__DIR__ . '/../../capell.json'))->all();
 }
 
 it('declares implemented payments package contributions', function (): void {
@@ -39,7 +42,7 @@ it('declares implemented payments package contributions', function (): void {
     throw_unless(is_array($manifestContributions), RuntimeException::class, 'Payments contributions must be arrays.');
     $contributions = collect($manifestContributions);
 
-    expect($manifest['contributionTraceability']['deferredContributions'])->toBe([])
+    expect(data_get($manifest, 'contributionTraceability.deferredContributions'))->toBe([])
         ->and($contributions->pluck('class')->all())->toContain(
             PaymentsModelsContribution::class,
             PaymentsFrontendRoutesContribution::class,
@@ -78,8 +81,8 @@ it('declares implemented payments package contributions', function (): void {
         ->and($settings['settingsClass'])->toBe(PaymentsSettings::class)
         ->and($settings['settingsGroup'])->toBe('payments')
         ->and($settings['settingsSchema'])->toBe(PaymentsSettingsSchema::class)
-        ->and($manifest['commands']['webhookReconcile'])->toBe('capell:payments:webhooks:reconcile')
-        ->and($manifest['commands']['webhookReprocess'])->toBe('capell:payments:webhooks:reprocess')
+        ->and(data_get($manifest, 'commands.webhookReconcile'))->toBe('capell:payments:webhooks:reconcile')
+        ->and(data_get($manifest, 'commands.webhookReprocess'))->toBe('capell:payments:webhooks:reprocess')
         ->and($consoleCommands['commands'])->toBe([
             'capell:payments:webhooks:reconcile',
             'capell:payments:webhooks:reprocess',

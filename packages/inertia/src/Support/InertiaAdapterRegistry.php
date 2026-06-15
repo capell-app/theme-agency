@@ -26,7 +26,9 @@ class InertiaAdapterRegistry
 
     public function active(): ?InertiaAdapterData
     {
-        return $this->get(ResolveInertiaAdapterKeyAction::run());
+        $key = ResolveInertiaAdapterKeyAction::run();
+
+        return is_string($key) ? $this->get($key) : null;
     }
 
     /**

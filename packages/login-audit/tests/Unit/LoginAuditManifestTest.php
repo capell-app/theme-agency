@@ -35,7 +35,7 @@ function login_audit_manifest(): array
 
     throw_unless(is_array($decoded), RuntimeException::class, 'Login Audit manifest must decode to an object.');
 
-    return $decoded;
+    return collect($decoded)->all();
 }
 
 it('declares the login audit extension surfaces in the manifest', function (): void {
@@ -43,12 +43,12 @@ it('declares the login audit extension surfaces in the manifest', function (): v
 
     expect($manifest)
         ->toHaveKey('name', 'capell-app/login-audit')
-        ->and($manifest['database']['requiredTables'] ?? [])->toBe(['login_audit'])
+        ->and(data_get($manifest, 'database.requiredTables', []))->toBe(['login_audit'])
         ->and($manifest['settings'] ?? [])->toContain(LoginAuditSettings::class)
         ->and($manifest['permissions'] ?? [])->toContain('View:LoginAudit')
-        ->and($manifest['security']['adminSurface']['permissions'] ?? [])->toContain('View:LoginAudit')
-        ->and($manifest['contributionTraceability']['deferredContributions'] ?? null)->toBe([])
-        ->and($manifest['actions']['buildLoginAuditsQuery'] ?? null)->toBe(BuildLoginAuditsQueryAction::class);
+        ->and(data_get($manifest, 'security.adminSurface.permissions', []))->toContain('View:LoginAudit')
+        ->and(data_get($manifest, 'contributionTraceability.deferredContributions'))->toBe([])
+        ->and(data_get($manifest, 'actions.buildLoginAuditsQuery'))->toBe(BuildLoginAuditsQueryAction::class);
 
     expect($manifest['contributes'] ?? [])->toContain(
         [

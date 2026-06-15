@@ -11,6 +11,8 @@ use Capell\Core\Models\Page;
 use Capell\Core\Models\PageUrl;
 use Capell\Core\Models\Site;
 use Capell\Core\Models\Theme;
+use Capell\Core\Support\Manifest\CapellManifestData;
+use Capell\Core\Support\PackageRegistry\CapellPackageRegistry;
 use Capell\Core\ThemeStudio\Contracts\SectionRenderer;
 use Capell\Core\ThemeStudio\Contracts\ThemePageAdapter;
 use Capell\Core\ThemeStudio\Contracts\ThemeRuntimeSettings;
@@ -95,6 +97,7 @@ function themeFrontendRegisterFoundationRenderer(): void
 {
     $registry = resolve(ThemeRegistry::class);
     View::addNamespace('theme-frontend-test', dirname(__DIR__) . '/Fixtures/theme-frontend-route');
+    themeFrontendRegisterFoundationPackageManifest();
 
     if ($registry->has('default')) {
         return;
@@ -130,6 +133,45 @@ function themeFrontendRegisterFoundationRenderer(): void
         themeRenderer: new BladeThemeRenderer('default', 'theme-frontend-test::theme-layout', $sectionRenderers),
         sectionRenderers: array_values($sectionRenderers),
     );
+}
+
+function themeFrontendRegisterFoundationPackageManifest(): void
+{
+    $manifestPath = dirname(__DIR__, 3) . '/packages/foundation-theme/capell.json';
+    $manifest = json_decode((string) file_get_contents($manifestPath), true, flags: JSON_THROW_ON_ERROR);
+
+    throw_unless(is_array($manifest), RuntimeException::class, 'Foundation theme manifest must decode to an array.');
+
+    $manifestData = CapellManifestData::fromArray(
+        themeFrontendStringKeyedArray($manifest),
+        dirname($manifestPath),
+    );
+
+    CapellCore::registerManifestPackage($manifestData);
+    CapellCore::forcePackageInstalled(FoundationThemeServiceProvider::$packageName);
+
+    $packageRegistry = resolve(CapellPackageRegistry::class);
+    $packageRegistry->fill([
+        ...$packageRegistry->all(),
+        FoundationThemeServiceProvider::$packageName => $manifestData,
+        'default' => $manifestData,
+    ]);
+}
+
+/**
+ * @return array<string, mixed>
+ */
+function themeFrontendStringKeyedArray(array $items): array
+{
+    $stringKeyedItems = [];
+
+    foreach ($items as $key => $value) {
+        throw_unless(is_string($key), RuntimeException::class, 'Expected manifest keys to be strings.');
+
+        $stringKeyedItems[$key] = $value;
+    }
+
+    return $stringKeyedItems;
 }
 
 function themeFrontendRegisterStringRendererForTheme(string $themeKey): void

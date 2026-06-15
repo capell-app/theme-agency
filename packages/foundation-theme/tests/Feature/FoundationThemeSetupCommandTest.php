@@ -64,10 +64,11 @@ it('keeps home page content defaults stable on repeated setup', function (): voi
 
     $homeLayout = Layout::query()->where('key', LayoutEnum::Home->value)->firstOrFail();
     $mainContainer = foundationThemeSetupMainContainer($homeLayout);
+    $containers = $homeLayout->containers ?? [];
 
-    expect($homeLayout->containers)->toHaveKey('hero')
-        ->and($homeLayout->containers)->toHaveKey('main')
-        ->and(array_keys($homeLayout->containers))->toBe(['hero', 'main'])
+    expect($containers)->toHaveKey('hero')
+        ->and($containers)->toHaveKey('main')
+        ->and(array_keys($containers))->toBe(['hero', 'main'])
         ->and($mainContainer['meta']['colspan'] ?? null)->toBe(12)
         ->and($mainContainer['widgets'])->toBe([
             ['widget_key' => 'page-content'],
@@ -103,7 +104,7 @@ it('repairs custom page layouts that are missing page content without inserting 
     $containers = $layout->containers ?? [];
 
     expect(array_keys($containers))->toBe(['hero', 'main'])
-        ->and($containers['main']['widgets'] ?? null)->toBe([
+        ->and(data_get($containers, 'main.widgets'))->toBe([
             ['widget_key' => 'page-content'],
             ['widget_key' => 'custom-feature'],
         ])

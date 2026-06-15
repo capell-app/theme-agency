@@ -58,7 +58,11 @@ async function captureEntry(entry) {
         )
         const scrollStep = Math.max(Math.floor(viewportHeight * 0.8), 1)
 
-        for (let position = 0; position <= documentHeight; position += scrollStep) {
+        for (
+            let position = 0;
+            position <= documentHeight;
+            position += scrollStep
+        ) {
             window.scrollTo(0, position)
             await new Promise((resolve) => setTimeout(resolve, 50))
         }
@@ -82,6 +86,21 @@ async function captureEntry(entry) {
             }),
         )
     })
+    await page
+        .waitForFunction(
+            () =>
+                Array.from(document.images).every(
+                    (image) =>
+                        image.complete &&
+                        image.naturalWidth > 0 &&
+                        image.naturalHeight > 0,
+                ),
+            null,
+            { timeout: 10000 },
+        )
+        .catch(() => {
+            // Result metadata records any images that still failed to load.
+        })
 
     await fs.promises.mkdir(path.dirname(entry.screenshotPath), {
         recursive: true,

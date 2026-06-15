@@ -139,7 +139,7 @@ final class AccessAreaResource extends Resource
                     ->maxLength(120),
                 TextInput::make('announcement_link_label')
                     ->label(__('capell-access-gate::filament.fields.announcement_link_label'))
-                    ->required(fn (Get $get): bool => trim((string) $get('announcement_link_url')) !== '')
+                    ->required(fn (Get $get): bool => filled($get('announcement_link_url')))
                     ->maxLength(120),
                 TextInput::make('announcement_link_short_label')
                     ->label(__('capell-access-gate::filament.fields.announcement_link_short_label'))
@@ -147,15 +147,15 @@ final class AccessAreaResource extends Resource
                 TextInput::make('announcement_link_url')
                     ->label(__('capell-access-gate::filament.fields.announcement_link_url'))
                     ->helperText(__('capell-access-gate::filament.fields.announcement_link_url_help'))
-                    ->required(fn (Get $get): bool => trim((string) $get('announcement_link_label')) !== '')
+                    ->required(fn (Get $get): bool => filled($get('announcement_link_label')))
                     ->maxLength(2048)
                     ->rules([
                         static fn (): Closure => static function (string $attribute, mixed $value, Closure $fail): void {
-                            if ($value === null || trim((string) $value) === '') {
+                            if (! is_string($value) || trim($value) === '') {
                                 return;
                             }
 
-                            if (! AnnouncementLinkUrl::isAllowed((string) $value)) {
+                            if (! AnnouncementLinkUrl::isAllowed($value)) {
                                 $fail(__('capell-access-gate::filament.validation.announcement_link_url'));
                             }
                         },

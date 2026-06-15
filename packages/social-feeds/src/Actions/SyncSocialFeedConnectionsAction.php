@@ -8,6 +8,9 @@ use Capell\SocialFeeds\Enums\SocialFeedConnectionStatus;
 use Capell\SocialFeeds\Models\SocialFeedConnection;
 use Lorisleiva\Actions\Concerns\AsAction;
 
+/**
+ * @method static int run(?int $connectionId = null, ?int $limit = null)
+ */
 final class SyncSocialFeedConnectionsAction
 {
     use AsAction;
@@ -21,7 +24,7 @@ final class SyncSocialFeedConnectionsAction
             );
         }
 
-        return SocialFeedConnection::query()
+        return (int) SocialFeedConnection::query()
             ->where('status', SocialFeedConnectionStatus::Connected)
             ->orderBy('id')
             ->get()

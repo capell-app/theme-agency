@@ -36,19 +36,18 @@ it('runs the full live -> draft -> publish cycle', function (): void {
         ->callAction('saveAsDraft', data: ['location' => 'new'])
         ->assertHasNoActionErrors();
 
-    $workspace = Workspace::query()
-        ->where('kind', WorkspaceKindEnum::SinglePageDraft)
-        ->latest('id')
-        ->first();
-
-    $workspace = publishingStudioTestInstance($workspace, Workspace::class);
-
     $draft = Page::query()->withoutGlobalScopes()
         ->where('uuid', $page->uuid)
-        ->where('workspace_id', $workspace->id)
+        ->where('workspace_id', '>', 0)
         ->first();
 
     $draft = publishingStudioTestInstance($draft, Page::class);
+    $workspace = Workspace::query()
+        ->whereKey($draft->workspace_id)
+        ->where('kind', WorkspaceKindEnum::SinglePageDraft)
+        ->first();
+
+    $workspace = publishingStudioTestInstance($workspace, Workspace::class);
 
     // The Publisher only accepts Approved/Scheduled. A freshly saved draft
     // starts in Open — approve it here so publish can proceed. In the real UI

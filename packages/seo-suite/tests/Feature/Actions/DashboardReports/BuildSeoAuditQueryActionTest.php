@@ -128,6 +128,7 @@ it('uses the site language for snapshot backed audit columns', function (): void
     $reflectionMethod = new ReflectionMethod(SeoAuditTable::class, 'snapshotFor');
 
     $snapshot = $reflectionMethod->invoke(null, $auditedPage);
+    throw_unless($snapshot instanceof PageSeoSnapshot, RuntimeException::class);
 
     expect($snapshot)->toBeInstanceOf(PageSeoSnapshot::class)
         ->and($snapshot->language_id)->toBe($english->getKey())
@@ -175,6 +176,7 @@ it('uses eager loaded snapshots for seo audit table state', function (): void {
     });
 
     $snapshot = $reflectionMethod->invoke(null, $auditedPage);
+    throw_unless($snapshot instanceof PageSeoSnapshot, RuntimeException::class);
 
     expect($snapshot)->toBeInstanceOf(PageSeoSnapshot::class)
         ->and($snapshot->score)->toBe(88)
@@ -226,9 +228,11 @@ it('keeps seo audit table snapshot cache scoped to the current request', functio
         ->whereKey($page->getKey())
         ->firstOrFail();
     $secondSnapshot = $reflectionMethod->invoke(null, $secondRequestPage);
+    throw_unless($firstSnapshot instanceof PageSeoSnapshot, RuntimeException::class);
+    throw_unless($secondSnapshot instanceof PageSeoSnapshot, RuntimeException::class);
 
-    expect($firstSnapshot?->score)->toBe(20)
-        ->and($secondSnapshot?->score)->toBe(91);
+    expect($firstSnapshot->score)->toBe(20)
+        ->and($secondSnapshot->score)->toBe(91);
 });
 
 it('does not query per row when eager loaded seo snapshots are empty', function (): void {

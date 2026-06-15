@@ -4,21 +4,21 @@
 
 ## 1. Snapshot
 
-Theme Inertia Bookings is the base premium Inertia theme for appointment-led service businesses: services, clinics, consultants, classes, locations, FAQs, and public booking requests. It registers theme key `inertia-bookings`, runtime `FrontendRuntime::Inertia`, CSS vendor assets, a Theme management page contribution, and a binding that replaces Bookings' public request renderer with `InertiaPublicBookingRequestRenderer`. The booking request renderer is real: it calls `CapellInertia::render('Capell/Bookings/Request', BuildPublicBookingRequestPropsAction::run($request, lazySlots: true))`. The package also ships runner-backed PNG screenshots for homepage, services, locations, booking request, and mobile request flows. The critical defect is that `InertiaBookingsThemeRenderer::render()` returns an empty string, so the theme itself does not render public Inertia pages even though screenshots and docs describe homepage/services/location sections.
+Theme Inertia Bookings is the base premium Inertia theme for appointment-led service businesses: services, clinics, consultants, classes, locations, FAQs, and public booking requests. It registers theme key `inertia-bookings`, runtime `FrontendRuntime::Inertia`, CSS vendor assets, a Theme management page contribution, and a binding that replaces Bookings' public request renderer with `InertiaPublicBookingRequestRenderer`. The booking request renderer is real: it calls `CapellInertia::render('Capell/Bookings/Request', BuildPublicBookingRequestPropsAction::run($request, lazySlots: true))`. The package also ships runner-backed PNG screenshots for homepage, services, locations, booking request, and mobile request flows. The current implementation slice now gives `InertiaBookingsThemeRenderer` a real `Capell/Page` payload path, makes adapter prerequisites explicit in health/docs, and leaves framework-specific component assets in the React/Vue adapter packages.
 
 ## 2. Improvements (existing functionality)
 
-1. **Implement the Inertia theme page renderer.** `InertiaBookingsThemeRenderer::render()` currently returns `''`. It should render a real Inertia page/component with hydrated public-safe page props, or delegate through the shared Inertia runtime contract used by `capell-app/inertia`. Add tests proving homepage/services/location page props render without authoring metadata. Evidence: `src/Rendering/InertiaBookingsThemeRenderer.php`, screenshot contract entries for homepage/services/locations. - **M**
+1. **Shipped: implement the Inertia theme page renderer.** `InertiaBookingsThemeRenderer::render()` now renders the configured `capell-inertia.page_component` with hydrated public-safe page props derived from `ThemePageData`. Tests prove homepage/services props are not blank and do not include authoring metadata, signed editor fields, package names, or model IDs. Evidence: `src/Rendering/InertiaBookingsThemeRenderer.php`, `tests/Unit/ThemeInertiaBookingsPackageTest.php`. - **M**
 
-2. **Make adapter prerequisites explicit in health and docs.** The base package requires `capell-app/inertia` and supports Vue/React adapters, but it does not require either adapter. If the generic Inertia adapter is enough, document that. If a concrete adapter is required for public components, health checks should report missing adapter/component registration before the theme is selected. Evidence: `capell.json dependencies`, adapter docs, provider registers missing `resources/js/**/*.vue` and `resources/js/**/*.jsx` globs. - **S**
+2. **Shipped: make adapter prerequisites explicit in health and docs.** The base package requires `capell-app/inertia` and `capell-app/bookings`; health now also requires the configured `CAPELL_INERTIA_ADAPTER` package (`capell-app/inertia-vue-adapter` or `capell-app/inertia-react-adapter`) to be installed. README/overview explain that theme-specific React/Vue packages provide component implementations. Evidence: `ThemeInertiaBookingsHealthCheck`, README, docs overview. - **S**
 
-3. **Fix vendor asset source registration.** The provider registers Tailwind source globs under `resources/js/**/*.vue` and `resources/js/**/*.jsx`, but the base package has no `resources/js` directory. Either remove those globs from the base package and let React/Vue adapters own them, or add real shared components. Evidence: `InertiaBookingsThemeServiceProvider::registerVendorAssets()`, package file tree. - **S**
+3. **Shipped: fix vendor asset source registration.** The base provider now registers only `resources/css/theme-inertia-bookings.css`; adapter packages own Vue/JSX source globs and build assets. Evidence: `InertiaBookingsThemeServiceProvider::registerVendorAssets()`, registration tests. - **S**
 
 4. **Promote runner-backed screenshots consistently.** The package has `docs/screenshots/*.png`, but `capell.json` promotes `docs/assets/marketplace/*.png` copies. Prefer promoting runner-backed `docs/screenshots/` files, or document why curated marketplace crops are intentionally separate and keep both in sync with tests. Evidence: `capell.json marketplace.screenshots`, `docs/screenshots.json`, tests. - **S**
 
-5. **Rewrite docs around the actual Inertia contract.** README/overview are generic and do not explain the split between base theme, Bookings renderer override, shared Inertia runtime, and React/Vue adapter packages. Add a concise architecture and install path so package adopters know which packages are required for a working page. - **S**
+5. **Shipped: rewrite docs around the actual Inertia contract.** README/overview now explain the split between base theme, Bookings renderer override, shared Inertia runtime, and React/Vue adapter packages, including the required install path. - **S**
 
-6. **Add public-output and prop-safety coverage.** Current tests validate manifest/screenshot/registration, but do not inspect rendered Inertia props for authoring metadata, package names, signed URLs, model IDs, or private booking internals. Add renderer-level tests for `InertiaPublicBookingRequestRenderer` and the theme renderer once implemented. - **M**
+6. **Shipped: add public-output and prop-safety coverage.** Tests now inspect theme renderer props and the booking request renderer facade call for public-only keys, avoiding authoring metadata, package names, signed editor URLs, model IDs, and admin-only fields. - **M**
 
 ## 3. Missing Features (gaps)
 
@@ -32,13 +32,13 @@ Capabilities declared: theme-inertia-bookings and Inertia bookings frontend.
 
 ## 4. Issues / Risks
 
-1. **Critical risk: the registered theme renderer outputs an empty response body.** The package can be installed and selected while public theme pages render nothing. Recommended fix: implement renderer and add a failing test before any other product depth work. - **P1**
+1. **Closed: the registered theme renderer previously output an empty response body.** The renderer now delegates through Capell Inertia and returns the response body for the configured page component. - **P1**
 
-2. **Important gap: adapter requirements are ambiguous.** A Capell site may install the base theme without a concrete React/Vue adapter and get missing components or blank output. Recommended fix: health diagnostics should verify adapter/component registration or docs should require a supported adapter. - **P2**
+2. **Closed for the base package: adapter requirements were ambiguous.** Health now fails when the configured generic Inertia adapter package is missing, and docs explain when to install the theme-specific React/Vue component packages. Adapter component-depth checks remain in the adapter package plans. - **P2**
 
-3. **Important gap: asset globs point to files that do not exist.** This can mislead the Tailwind asset pipeline and package authors. Recommended fix: move framework component source ownership to adapter packages. - **P2**
+3. **Closed: asset globs pointed to files that did not exist.** Framework source ownership is now explicit in adapter packages. - **P2**
 
-4. **Important gap: docs are too generic for a cross-runtime package.** The split between base theme, Inertia runtime, Bookings public route, and adapter component packs is the product boundary; it needs to be explicit. - **P2**
+4. **Closed: docs were too generic for a cross-runtime package.** README and overview now document the base/runtime/adapter boundary. - **P2**
 
 5. **Improvement: screenshot promotion uses duplicate marketplace assets.** The committed runner files are stronger evidence. Recommended fix: promote `docs/screenshots/` or add tests that assert marketplace crops correspond to runner captures. - **P3**
 
@@ -60,25 +60,22 @@ Theme Inertia Bookings is a premium lane for appointment-led businesses using Ca
 
 ## 6. Prioritized Roadmap
 
-| Item                                                                                        | Bucket | Effort | Impact | Section ref |
-| ------------------------------------------------------------------------------------------- | ------ | ------ | ------ | ----------- |
-| Implement `InertiaBookingsThemeRenderer::render()` with public-safe Inertia page props      | Now    | M      | High   | §2.1, §4.1  |
-| Add renderer/prop safety tests for theme pages and booking request output                   | Now    | M      | High   | §2.6        |
-| Make adapter prerequisites explicit in health/docs                                          | Now    | S      | Medium | §2.2, §4.2  |
-| Remove or relocate nonexistent JS vendor asset globs                                        | Now    | S      | Medium | §2.3, §4.3  |
-| Rewrite README/overview around base theme, Inertia runtime, Bookings renderer, and adapters | Now    | S      | Medium | §2.5        |
-| Promote runner-backed screenshots or assert marketplace crop parity                         | Next   | S      | Medium | §2.4        |
-| Add demo command/fixture coverage for homepage, services, locations, and request journey    | Next   | M      | Medium | §3          |
-| Add adapter-specific health checks for booking request component availability               | Next   | M      | Medium | §3          |
-| Add layout graph consumption for richer Inertia page composition                            | Later  | L      | Medium | §3, §5      |
+| Item                                                                                     | Bucket | Effort | Impact | Section ref |
+| ---------------------------------------------------------------------------------------- | ------ | ------ | ------ | ----------- |
+| Promote runner-backed screenshots or assert marketplace crop parity                      | Next   | S      | Medium | §2.4        |
+| Add demo command/fixture coverage for homepage, services, locations, and request journey | Next   | M      | Medium | §3          |
+| Add adapter-specific health checks for booking request component availability            | Next   | M      | Medium | §3          |
+| Add layout graph consumption for richer Inertia page composition                         | Later  | L      | Medium | §3, §5      |
 
 ## 7. Verification
 
-Plan-writing review only; no commands were run for this package yet. First implementation slice should start with:
+Current implementation slice verification:
 
 ```bash
 vendor/bin/pest packages/theme-inertia-bookings/tests --configuration=phpunit.xml
 ```
+
+Passed on 2026-06-14: 8 tests, 81 assertions.
 
 When renderer behavior changes, include Inertia and Bookings focused suites:
 
@@ -91,7 +88,7 @@ vendor/bin/pest packages/inertia/tests packages/bookings/tests/Feature/PublicBoo
 - [x] Package plan created from current code, manifest, docs, screenshots, and tests.
 - [x] Comprehensive local review pass completed for provider, renderer, Bookings override, health check, screenshots, docs, and adapter boundaries.
 - [x] Capell audience pass completed for service owners, frontend developers, and package adopters.
-- [ ] Approved implementation slices shipped.
-- [ ] Focused Theme Inertia Bookings verification passed.
-- [ ] Package tests passed.
+- [x] Approved implementation slices shipped.
+- [x] Focused Theme Inertia Bookings verification passed.
+- [x] Package tests passed.
 - [ ] Repo preflight passed for changed files.
