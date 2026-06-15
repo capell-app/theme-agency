@@ -61,3 +61,31 @@ it('ships the shared inertia component contract for the bookings theme', functio
         ->and(file_exists($basePath . '/resources/js/Components/Capell/Widgets/Title.vue'))->toBeTrue()
         ->and((new InertiaBookingsVueHealthCheck)->passes())->toBeTrue();
 });
+
+it('exposes accessible booking validation and slot loading states for screenshot capture', function (): void {
+    $component = (string) file_get_contents(dirname(__DIR__, 2) . '/resources/js/Pages/Capell/Bookings/Request.vue');
+
+    expect($component)->toContain('class="error"')
+        ->and($component)->toContain('role="alert"')
+        ->and($component)->toContain(':aria-invalid="hasError(')
+        ->and($component)->toContain(':aria-describedby="describedBy(')
+        ->and($component)->toContain('class="field slots"')
+        ->and($component)->toContain('class="slots-loading"')
+        ->and($component)->toContain('role="status"')
+        ->and($component)->toContain('form.processing')
+        ->and($component)->toContain('Sending request...');
+});
+
+it('keeps raw html rendering limited to sanitized server prop boundaries', function (): void {
+    $basePath = dirname(__DIR__, 2);
+    $pageComponent = (string) file_get_contents($basePath . '/resources/js/Pages/Capell/Page.vue');
+    $contentWidget = (string) file_get_contents($basePath . '/resources/js/Components/Capell/Widgets/Content.vue');
+
+    expect($pageComponent)->toContain('v-html="page.content"')
+        ->and($pageComponent)->toContain('v-if="typeof page.content === \'string\'"')
+        ->and($contentWidget)->toContain('v-html="widget.data.content"')
+        ->and(substr_count($pageComponent . $contentWidget, 'v-html='))->toBe(2)
+        ->and($pageComponent . $contentWidget)->not->toContain('signed')
+        ->and($pageComponent . $contentWidget)->not->toContain('admin')
+        ->and($pageComponent . $contentWidget)->not->toContain('editor');
+});

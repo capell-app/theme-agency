@@ -8,13 +8,13 @@ Theme Inertia Bookings Vue is the Vue component pack for the base Theme Inertia 
 
 ## 2. Improvements (existing functionality)
 
-1. **Add real validation and loading states matching the screenshot contract.** `docs/screenshots.json` waits for `.error` and `.slots`, but `Request.vue` renders no validation errors and no `.slots` wrapper. Use `useForm().errors`, add accessible error messages, and wrap the deferred slot select in a stable `.slots` region with loading copy. Evidence: `resources/js/Pages/Capell/Bookings/Request.vue`, `docs/screenshots.json`. - **S**
+1. **Done: Add real validation and loading states matching the screenshot contract.** `Request.vue` now renders `useForm().errors` through accessible inline `.error` messages, a validation summary, and a stable `.slots` region with deferred loading copy for screenshot capture. Evidence: `resources/js/Pages/Capell/Bookings/Request.vue`, `tests/Feature/InertiaBookingsVueServiceProviderTest.php`, `docs/screenshots.json`. - **S**
 
 2. **Add component-map drift coverage.** `app.js` manually maps `Capell/Page` and `Capell/Bookings/Request`; manifest contribution declares only `Capell/Bookings/Request`. Add a test that every declared provider/component route has a matching source file and that the shared `Capell/Page` fallback stays present. Evidence: `resources/js/app.js`, `capell.json contributes`, `InertiaBookingsVueServiceProvider`. - **S**
 
 3. **Document and test the generic Vue adapter suppression boundary.** The generic `inertia-vue-adapter` should not compete with this package's booking-specific component pack. This package should explain that it owns the full Vue component pack for bookings and should test the condition handoff from both sides where practical. Evidence: provider asset condition, `capell.json` dependency on `capell-app/inertia-vue-adapter`. - **S**
 
-4. **Audit public HTML injection points.** `Page.vue` and `Content.vue` use `v-html` for page/widget content. That can be safe if server props are already sanitized portable HTML, but the adapter docs and tests should state that contract and include a fixture proving authoring/package metadata is not rendered. Evidence: `resources/js/Pages/Capell/Page.vue`, `resources/js/Components/Capell/Widgets/Content.vue`. - **M**
+4. **Partly done: Audit public HTML injection points.** `Page.vue` and `Content.vue` use `v-html` only for server-provided portable HTML props. The README/overview now state the sanitized prop contract, and package tests pin the two allowed raw HTML bindings plus basic public-output metadata exclusions. Browser-level fixture coverage is still a future hardening step. Evidence: `resources/js/Pages/Capell/Page.vue`, `resources/js/Components/Capell/Widgets/Content.vue`, `tests/Feature/InertiaBookingsVueServiceProviderTest.php`. - **M**
 
 5. **Keep screenshot media blocked until recapture.** Existing PNG files may be useful evidence, but the earlier screenshot-quality audit kept React/Vue adapter marketplace media card-only until the runner installs the adapter packages and renders real Capell/Inertia assets. Keep marketplace media conservative until validation/loading selectors and recapture work. - **S**
 
@@ -62,12 +62,12 @@ The Vue adapter should be sold as part of the Inertia Bookings theme family, not
 
 | Item                                                                                       | Bucket | Effort | Impact | Section ref      |
 | ------------------------------------------------------------------------------------------ | ------ | ------ | ------ | ---------------- |
-| Add accessible validation errors and `.error` screenshot state                             | Now    | S      | High   | §2.1, §4.1, §4.2 |
-| Add `.slots` loading region and stable deferred slot state                                 | Now    | S      | High   | §2.1, §4.1       |
+| Add accessible validation errors and `.error` screenshot state                             | Done   | S      | High   | §2.1, §4.1, §4.2 |
+| Add `.slots` loading region and stable deferred slot state                                 | Done   | S      | High   | §2.1, §4.1       |
 | Rewrite README/overview around base theme, Vue adapter, and generic adapter suppression    | Now    | S      | Medium | §2.6             |
 | Add component-map drift tests for source files and manifest component declarations         | Now    | S      | Medium | §2.2             |
 | Strengthen health check coverage beyond file presence                                      | Now    | S      | Medium | §2.7             |
-| Document/test sanitized prop boundary for `v-html` usage                                   | Next   | M      | High   | §2.4, §4.3       |
+| Document/test sanitized prop boundary for `v-html` usage                                   | Done   | M      | High   | §2.4, §4.3       |
 | Coordinate screenshot runner recapture and keep marketplace media card-only until verified | Next   | M      | Medium | §2.5             |
 | Add browser-level component smoke coverage for booking request interactions                | Later  | M      | Medium | §3               |
 | Expand widget component coverage beyond Content/Image/Title                                | Later  | M      | Medium | §3               |
@@ -92,7 +92,8 @@ vendor/bin/pest packages/inertia-vue-adapter/tests packages/theme-inertia-bookin
 - [x] Package plan created from current code, manifest, docs, screenshots, and tests.
 - [x] Comprehensive local review pass completed for provider, health check, Vue components, screenshot contract, docs, and adapter boundary.
 - [x] Capell audience pass completed for frontend developers and package adopters.
-- [ ] Approved implementation slices shipped.
+- [x] Validation/loading state implementation slice shipped.
+- [x] Sanitized raw HTML prop contract documented and covered with focused tests.
 - [ ] Focused Theme Inertia Bookings Vue verification passed.
 - [ ] Package tests passed.
 - [ ] Repo preflight passed for changed files.
