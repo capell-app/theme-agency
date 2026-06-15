@@ -79,6 +79,7 @@ it('prunes stale access records without deleting active grants', function (): vo
     $dryRun = PruneAccessGateRecordsAction::run(dryRun: true);
 
     expect($dryRun)->toBeInstanceOf(PrunedAccessGateRecordsData::class);
+    throw_unless($dryRun instanceof PrunedAccessGateRecordsData, RuntimeException::class);
 
     expect($dryRun->toArray())->toMatchArray([
         'browser_tokens' => 2,
@@ -95,6 +96,7 @@ it('prunes stale access records without deleting active grants', function (): vo
     $pruned = PruneAccessGateRecordsAction::run();
 
     expect($pruned)->toBeInstanceOf(PrunedAccessGateRecordsData::class);
+    throw_unless($pruned instanceof PrunedAccessGateRecordsData, RuntimeException::class);
 
     expect($pruned->total())->toBe(6)
         ->and(BrowserToken::query()->whereKey($oldExpiredBrowserToken->getKey())->exists())->toBeFalse()
