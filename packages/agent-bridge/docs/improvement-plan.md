@@ -63,7 +63,7 @@ Agent Bridge should be positioned as a governed AI operations bridge, not a gene
 
 ## 7. Verification
 
-Plan-writing review only; no commands were run for this package in this pass. First implementation slice should start with:
+Implementation slice 1 hardened route defaults so discovery remains disabled unless configured, fixed migration-health remediation copy, and exposed the shipped admin page, user schema extender, models, routes, settings, migrations, prune command, built-in capabilities, and health check as manifest contributions. Verify with:
 
 ```bash
 vendor/bin/pest packages/agent-bridge/tests --configuration=phpunit.xml
@@ -80,7 +80,7 @@ vendor/bin/pest packages/agent-bridge/tests/Feature/HomeRouteTest.php packages/a
 - [x] Package plan created from current code, manifest, docs, screenshots, and tests.
 - [x] Comprehensive local review pass completed for routes, provider, health, capability execution, audits, docs, and marketplace media.
 - [x] Capell audience pass completed for operators, AI-agent developers, and buyers.
-- [ ] Approved implementation slices shipped.
+- [x] Approved implementation slice 1 shipped: route hardening, health remediation, and manifest contribution metadata.
 - [ ] Focused Agent Bridge verification passed.
 - [ ] Package tests passed.
 - [ ] Repo preflight passed for changed files.

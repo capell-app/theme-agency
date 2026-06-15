@@ -81,7 +81,7 @@ final class AgentBridgeHealthCheck implements ChecksExtensionHealth
                 label: 'Agent Bridge database tables',
                 passed: false,
                 message: 'Missing tables: ' . $missingTables->implode(', ') . '.',
-                remediation: 'Run: php artisan migrate',
+                remediation: 'Install or migrate the Agent Bridge package so its token, confirmation, audit, and saved prompt tables exist.',
             );
         }
 

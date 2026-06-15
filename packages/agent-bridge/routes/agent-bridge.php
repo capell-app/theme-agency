@@ -9,8 +9,8 @@ use Capell\AgentBridge\Servers\CapellSiteServer;
 use Illuminate\Support\Facades\Route;
 use Laravel\Mcp\Facades\Mcp;
 
-$homeRoute = config('capell-agent-bridge.routes.home', '/');
-$knowledgeRoute = config('capell-agent-bridge.routes.knowledge', 'agent-bridge/capell/knowledge');
+$homeRoute = config('capell-agent-bridge.routes.home');
+$knowledgeRoute = config('capell-agent-bridge.routes.knowledge');
 $siteRoute = config('capell-agent-bridge.routes.site', 'agent-bridge/capell');
 
 if (is_string($homeRoute) && $homeRoute !== '') {

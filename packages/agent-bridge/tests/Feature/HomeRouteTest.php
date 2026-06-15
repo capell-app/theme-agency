@@ -15,6 +15,17 @@ it('does not expose agent-bridge discovery or knowledge routes by default', func
         ->assertNotFound();
 });
 
+it('does not fall back to the host homepage when route config is missing', function (): void {
+    config()->set('capell-agent-bridge.routes', [
+        'site' => 'agent-bridge/capell',
+    ]);
+
+    require __DIR__ . '/../../routes/agent-bridge.php';
+
+    $this->get('/')
+        ->assertNotFound();
+});
+
 it('can return agent-bridge discovery details from a configured home route', function (): void {
     config()->set('capell-agent-bridge.routes.home', 'agent-bridge/capell/discover');
     config()->set('capell-agent-bridge.routes.knowledge', 'agent-bridge/capell/knowledge');

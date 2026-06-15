@@ -28,6 +28,10 @@ use Capell\AgentBridge\Extenders\AgentBridgeUserSchemaExtender;
 use Capell\AgentBridge\Filament\Pages\CapellAgentBridgePromptBuilderPage;
 use Capell\AgentBridge\Filament\Settings\AgentBridgeSettingsSchema;
 use Capell\AgentBridge\Livewire\PromptBuilderToolbarAction;
+use Capell\AgentBridge\Models\CapellAgentBridgeAuditEntry;
+use Capell\AgentBridge\Models\CapellAgentBridgeConfirmation;
+use Capell\AgentBridge\Models\CapellAgentBridgeSavedPrompt;
+use Capell\AgentBridge\Models\CapellAgentBridgeToken;
 use Capell\AgentBridge\Settings\AgentBridgeSettings;
 use Capell\AgentBridge\Support\CapabilitySchemas;
 use Capell\AgentBridge\Support\CapellAgentBridgeCapabilityRegistry;
@@ -76,6 +80,7 @@ final class AgentBridgeServiceProvider extends ServiceProvider
 
         $this->loadRoutesFrom(__DIR__ . '/../../routes/agent-bridge.php');
 
+        $this->registerModels();
         $this->registerSettingsIntegration();
         $this->registerAdminIntegration();
         $this->registerBoostIntegration();
@@ -107,6 +112,16 @@ final class AgentBridgeServiceProvider extends ServiceProvider
                 ListBoostCapabilitiesTool::class,
                 PreviewBoostCapabilityTool::class,
             ])),
+        ]);
+    }
+
+    private function registerModels(): void
+    {
+        CapellCore::registerModels([
+            CapellAgentBridgeToken::class,
+            CapellAgentBridgeConfirmation::class,
+            CapellAgentBridgeAuditEntry::class,
+            CapellAgentBridgeSavedPrompt::class,
         ]);
     }
 

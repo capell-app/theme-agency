@@ -10,8 +10,11 @@ use Capell\AgentBridge\Actions\RotateAgentBridgeTokenAction;
 use Capell\AgentBridge\Filament\Resources\Users\RelationManagers\AgentBridgeAuditEntriesRelationManager;
 use Capell\AgentBridge\Filament\Resources\Users\RelationManagers\AgentBridgeTokensRelationManager;
 use Capell\AgentBridge\Models\CapellAgentBridgeAuditEntry;
+use Capell\AgentBridge\Models\CapellAgentBridgeConfirmation;
+use Capell\AgentBridge\Models\CapellAgentBridgeSavedPrompt;
 use Capell\AgentBridge\Models\CapellAgentBridgeToken;
 use Capell\AgentBridge\Tests\Fixtures\User;
+use Capell\Core\Facades\CapellCore;
 use Carbon\CarbonImmutable;
 use Illuminate\Testing\PendingCommand;
 
@@ -86,6 +89,15 @@ it('registers the audit pruning command', function (): void {
     throw_unless($command instanceof PendingCommand, RuntimeException::class, 'Agent Bridge audit pruning command did not return a pending command.');
 
     $command->assertSuccessful();
+});
+
+it('registers agent bridge models with core discovery', function (): void {
+    expect(array_values(CapellCore::getModels()))->toContain(
+        CapellAgentBridgeToken::class,
+        CapellAgentBridgeConfirmation::class,
+        CapellAgentBridgeAuditEntry::class,
+        CapellAgentBridgeSavedPrompt::class,
+    );
 });
 
 function createLifecycleAuditEntry(User $user, CapellAgentBridgeToken $token, string $event, CarbonImmutable $createdAt): CapellAgentBridgeAuditEntry

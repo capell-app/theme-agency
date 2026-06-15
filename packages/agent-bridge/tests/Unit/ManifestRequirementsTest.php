@@ -2,6 +2,30 @@
 
 declare(strict_types=1);
 
+use Capell\AgentBridge\Console\Commands\PruneAgentBridgeAuditEntriesCommand;
+use Capell\AgentBridge\Extenders\AgentBridgeUserSchemaExtender;
+use Capell\AgentBridge\Filament\Pages\CapellAgentBridgePromptBuilderPage;
+use Capell\AgentBridge\Filament\Settings\AgentBridgeSettingsSchema;
+use Capell\AgentBridge\Health\AgentBridgeHealthCheck;
+use Capell\AgentBridge\Manifest\AgentBridgeAdminPageContribution;
+use Capell\AgentBridge\Manifest\AgentBridgeBuiltInCapabilitiesContribution;
+use Capell\AgentBridge\Manifest\AgentBridgeConsoleCommandsContribution;
+use Capell\AgentBridge\Manifest\AgentBridgeMigrationsContribution;
+use Capell\AgentBridge\Manifest\AgentBridgeModelsContribution;
+use Capell\AgentBridge\Manifest\AgentBridgeRoutesContribution;
+use Capell\AgentBridge\Manifest\AgentBridgeSettingsContribution;
+use Capell\AgentBridge\Manifest\AgentBridgeUserSchemaExtenderContribution;
+use Capell\AgentBridge\Models\CapellAgentBridgeAuditEntry;
+use Capell\AgentBridge\Models\CapellAgentBridgeConfirmation;
+use Capell\AgentBridge\Models\CapellAgentBridgeSavedPrompt;
+use Capell\AgentBridge\Models\CapellAgentBridgeToken;
+use Capell\AgentBridge\Settings\AgentBridgeSettings;
+use Capell\Core\Contracts\Extensions\ChecksExtensionHealth;
+use Capell\Core\Contracts\Extensions\ExtensionContribution;
+use Capell\Core\Contracts\Extensions\RegistersExtensionRoute;
+use Capell\Core\Contracts\Extensions\RegistersExtensionSetting;
+use Capell\Core\Contracts\Extensions\RunsExtensionMigration;
+use Capell\Core\Support\Manifest\ManifestValidator;
 use Illuminate\Support\Facades\File;
 
 describe('agent-bridge capell.json manifest', function (): void {
@@ -58,5 +82,113 @@ describe('agent-bridge capell.json manifest', function (): void {
                 ->and(strlen(trim((string) $screenshot['alt'])))->toBeGreaterThanOrEqual(12)
                 ->and(strlen(trim((string) $screenshot['caption'])))->toBeGreaterThanOrEqual(12);
         }
+    });
+
+    it('declares shipped extension contributions', function () use ($packagePath): void {
+        $manifestData = capell_json_file_array($packagePath . '/capell.json');
+        $composerData = capell_json_file_array($packagePath . '/composer.json');
+        $contributions = data_get($manifestData, 'contributes');
+
+        throw_unless(is_array($contributions), RuntimeException::class, 'Expected Agent Bridge manifest contributions.');
+
+        (new ManifestValidator)->validate($manifestData, $composerData, 'capell-app/agent-bridge', $packagePath . '/capell.json');
+
+        expect($manifestData)
+            ->toHaveKey('manifest-version', 3)
+            ->toHaveKey('name', 'capell-app/agent-bridge')
+            ->toHaveKey('namespace', 'Capell\\AgentBridge')
+            ->and(data_get($manifestData, 'database.requiredTables', []))->toBe([
+                'capell_agent_bridge_tokens',
+                'capell_agent_bridge_confirmations',
+                'capell_agent_bridge_audit_entries',
+                'capell_agent_bridge_saved_prompts',
+            ])
+            ->and(data_get($manifestData, 'commands.pruneAudit'))->toBe('capell:agent-bridge-prune-audit')
+            ->and(data_get($manifestData, 'settings'))->toBe([AgentBridgeSettings::class])
+            ->and(data_get($manifestData, 'healthChecks.0.class'))->toBe(AgentBridgeHealthCheck::class)
+            ->and(data_get($manifestData, 'contributionTraceability.deferredContributions'))->toBe([]);
+
+        expect($contributions)
+            ->toContain([
+                'type' => 'admin-page',
+                'class' => AgentBridgeAdminPageContribution::class,
+                'pageClass' => CapellAgentBridgePromptBuilderPage::class,
+                'labelKey' => 'capell-agent-bridge::admin.prompt_builder_title',
+            ])
+            ->toContain([
+                'type' => 'schema-extender',
+                'class' => AgentBridgeUserSchemaExtenderContribution::class,
+                'extenderClass' => AgentBridgeUserSchemaExtender::class,
+                'tag' => 'capell-admin:user-schema-extenders',
+            ])
+            ->toContain([
+                'type' => 'model',
+                'class' => AgentBridgeModelsContribution::class,
+                'modelClasses' => [
+                    CapellAgentBridgeToken::class,
+                    CapellAgentBridgeConfirmation::class,
+                    CapellAgentBridgeAuditEntry::class,
+                    CapellAgentBridgeSavedPrompt::class,
+                ],
+            ])
+            ->toContain([
+                'type' => 'route',
+                'class' => AgentBridgeRoutesContribution::class,
+                'routes' => [
+                    'capell-agent-bridge.home',
+                    'agent-bridge/capell/knowledge',
+                    'agent-bridge/capell',
+                ],
+                'defaultEnabledRoutes' => ['agent-bridge/capell'],
+            ])
+            ->toContain([
+                'type' => 'setting',
+                'class' => AgentBridgeSettingsContribution::class,
+                'settingsClass' => AgentBridgeSettings::class,
+                'settingsGroup' => 'agent_bridge',
+                'settingsSchema' => AgentBridgeSettingsSchema::class,
+            ])
+            ->toContain([
+                'type' => 'migration',
+                'class' => AgentBridgeMigrationsContribution::class,
+                'tables' => [
+                    'capell_agent_bridge_tokens',
+                    'capell_agent_bridge_confirmations',
+                    'capell_agent_bridge_audit_entries',
+                    'capell_agent_bridge_saved_prompts',
+                ],
+            ])
+            ->toContain([
+                'type' => 'console-command',
+                'class' => AgentBridgeConsoleCommandsContribution::class,
+                'commands' => ['capell:agent-bridge-prune-audit'],
+                'commandClasses' => [PruneAgentBridgeAuditEntriesCommand::class],
+            ])
+            ->toContain([
+                'type' => 'agent-capability',
+                'class' => AgentBridgeBuiltInCapabilitiesContribution::class,
+                'capabilities' => [
+                    'capell.cache.clear',
+                    'capell.pages.create_draft',
+                    'capell.pages.update_draft',
+                    'capell.pages.disable',
+                    'capell.pages.inspect_readiness',
+                ],
+                'requiresPreviewConfirmation' => true,
+            ])
+            ->toContain([
+                'type' => 'health-check',
+                'class' => AgentBridgeHealthCheck::class,
+            ]);
+
+        expect(class_implements(AgentBridgeRoutesContribution::class))->toContain(RegistersExtensionRoute::class)
+            ->and(class_implements(AgentBridgeSettingsContribution::class))->toContain(RegistersExtensionSetting::class)
+            ->and(class_implements(AgentBridgeMigrationsContribution::class))->toContain(RunsExtensionMigration::class)
+            ->and(class_implements(AgentBridgeAdminPageContribution::class))->toContain(ExtensionContribution::class)
+            ->and(class_implements(AgentBridgeBuiltInCapabilitiesContribution::class))->toContain(ExtensionContribution::class)
+            ->and(class_implements(AgentBridgeConsoleCommandsContribution::class))->toContain(ExtensionContribution::class)
+            ->and(class_implements(AgentBridgeModelsContribution::class))->toContain(ExtensionContribution::class)
+            ->and(class_implements(AgentBridgeUserSchemaExtenderContribution::class))->toContain(ExtensionContribution::class)
+            ->and(class_implements(AgentBridgeHealthCheck::class))->toContain(ChecksExtensionHealth::class);
     });
 });
