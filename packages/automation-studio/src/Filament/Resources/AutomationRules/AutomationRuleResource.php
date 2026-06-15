@@ -6,6 +6,7 @@ namespace Capell\AutomationStudio\Filament\Resources\AutomationRules;
 
 use BackedEnum;
 use Capell\AutomationStudio\Enums\AutomationActionType;
+use Capell\AutomationStudio\Enums\AutomationRuleConditionOperator;
 use Capell\AutomationStudio\Enums\AutomationRuleStatus;
 use Capell\AutomationStudio\Enums\AutomationTriggerType;
 use Capell\AutomationStudio\Filament\Resources\AutomationRules\Pages\CreateAutomationRule;
@@ -45,7 +46,24 @@ final class AutomationRuleResource extends Resource
                     TextInput::make('name')->label(__('capell-automation-studio::generic.fields.name'))->required()->maxLength(255),
                     Select::make('trigger_type')->label(__('capell-automation-studio::generic.fields.trigger'))->options(self::triggerOptions())->required(),
                     Select::make('status')->label(__('capell-automation-studio::generic.fields.status'))->options(self::statusOptions())->required()->default(AutomationRuleStatus::Active->value),
-                    KeyValue::make('conditions')->label(__('capell-automation-studio::generic.fields.conditions'))->columnSpanFull(),
+                    Repeater::make('conditions')
+                        ->label(__('capell-automation-studio::generic.fields.conditions'))
+                        ->schema([
+                            TextInput::make('field')
+                                ->label(__('capell-automation-studio::generic.fields.condition_field'))
+                                ->required()
+                                ->maxLength(120),
+                            Select::make('operator')
+                                ->label(__('capell-automation-studio::generic.fields.condition_operator'))
+                                ->options(self::conditionOperatorOptions())
+                                ->required()
+                                ->default(AutomationRuleConditionOperator::Equals->value),
+                            TextInput::make('value')
+                                ->label(__('capell-automation-studio::generic.fields.condition_value'))
+                                ->maxLength(255),
+                        ])
+                        ->columns(3)
+                        ->columnSpanFull(),
                     Repeater::make('actions')
                         ->label(__('capell-automation-studio::generic.fields.actions'))
                         ->schema([
@@ -141,6 +159,16 @@ final class AutomationRuleResource extends Resource
     {
         return collect(AutomationRuleStatus::cases())
             ->mapWithKeys(static fn (AutomationRuleStatus $status): array => [$status->value => $status->getLabel()])
+            ->all();
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    private static function conditionOperatorOptions(): array
+    {
+        return collect(AutomationRuleConditionOperator::cases())
+            ->mapWithKeys(static fn (AutomationRuleConditionOperator $operator): array => [$operator->value => $operator->getLabel()])
             ->all();
     }
 }

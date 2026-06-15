@@ -19,7 +19,7 @@ use Override;
 /**
  * @property AutomationTriggerType $trigger_type
  * @property AutomationRuleStatus $status
- * @property array<string, mixed>|null $conditions
+ * @property array<int|string, mixed>|null $conditions
  * @property list<array<string, mixed>> $actions
  * @property array<string, mixed>|null $settings
  */

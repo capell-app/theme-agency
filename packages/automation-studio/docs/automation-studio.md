@@ -23,6 +23,7 @@ This slice creates the domain foundation, persistence layer, initial admin surfa
 - `AutomationTriggerRegistry`, `AutomationActionRegistry`, and `AutomationRuleRegistry` support package-local registration.
 - `DryRunAutomationRulesAction` previews which active persisted rules and actions match a sample trigger payload without invoking handlers or writing runs.
 - `DispatchAutomationTriggerAction` executes active matching rules and returns per-action results.
+- Rule conditions support structured payload filters with equals, does-not-equal, filled, and blank operators. Existing key/value equality condition maps remain valid.
 - `DispatchPublicActionAutomationActionHandler` delegates to Public Actions when a rule uses `public_action`.
 - Runtime listeners normalize known package events by string class names, so optional packages remain optional.
 - Persisted `AutomationRule` and `AutomationRun` models are implemented with migrations, encrypted action/settings/context payloads, site scope, statuses, protected-table registration, and manifest table ownership.

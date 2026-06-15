@@ -4,7 +4,7 @@
 
 ## 1. Snapshot
 
-Automation Studio provides persisted rule-based workflow orchestration for Capell package events, native actions, Public Actions, contact/newsletter/email integrations, and queued agent capabilities. It owns automation rule/run tables, admin resources, registries, queued trigger jobs, event listeners, native action handlers, dry-run rule testing, admin run replay, screenshot coverage, and focused unit tests. The package has strong domain breadth; the remaining Next row focuses on richer rule authoring ergonomics.
+Automation Studio provides persisted rule-based workflow orchestration for Capell package events, native actions, Public Actions, contact/newsletter/email integrations, and queued agent capabilities. It owns automation rule/run tables, admin resources, registries, queued trigger jobs, event listeners, native action handlers, dry-run rule testing, structured condition building, admin run replay, screenshot coverage, and focused unit tests. The package has strong domain breadth; remaining roadmap work is Later product depth.
 
 ## 2. Improvements (existing functionality)
 
@@ -23,7 +23,7 @@ Capabilities declared include automation rules, triggers, native actions, persis
 - **No meaningful health pass/fail.** Marketplace cannot tell whether tables, registries, admin resources, or handlers are available.
 - **Done/Shipped: admin replay/retry flow.** Pending, skipped, and failed run rows can be replayed from the Automation Runs table through `ReplayAutomationRunAction`, preserving the original run and writing a new replay attempt.
 - **Done/Shipped: rule test mode.** Admins can dry-run active persisted rules against a selected trigger type and sample payload without invoking handlers or recording runs.
-- **No condition/filter builder.** Rules appear trigger/action focused; richer conditions are a natural next product layer.
+- **Done/Shipped: condition/filter builder.** Rule forms now use structured condition rows with field/operator/value, and runtime matching supports equals, does-not-equal, filled, and blank operators while preserving legacy key/value equality rules.
 
 ## 4. Issues / Risks
 
@@ -57,7 +57,7 @@ Automation Studio should be positioned as the workflow fabric for Capell package
 | Rewrite docs around registries, queues, and optional bridges | Done   | S      | Medium | §2.4, §4.4  |
 | Add admin replay/retry workflow                              | Done   | M      | High   | §3          |
 | Add dry-run rule test mode                                   | Done   | M      | Medium | §3          |
-| Add condition/filter builder                                 | Next   | L      | Medium | §3, §5      |
+| Add condition/filter builder                                 | Done   | L      | Medium | §3, §5      |
 | Add visual rule builder                                      | Later  | L      | Medium | §5          |
 | Add scheduled automation templates                           | Later  | M      | Medium | §5          |
 
@@ -85,6 +85,12 @@ Dry-run workflow coverage:
 
 ```bash
 vendor/bin/pest packages/automation-studio/tests/Unit/Actions/DryRunAutomationRulesActionTest.php packages/automation-studio/tests/Unit/AdminSurfaceTest.php --configuration=phpunit.xml
+```
+
+Condition builder coverage:
+
+```bash
+vendor/bin/pest packages/automation-studio/tests/Unit/Support/AutomationStudioRegistryTest.php packages/automation-studio/tests/Unit/AdminSurfaceTest.php --configuration=phpunit.xml
 ```
 
 ## 8. Completion Checklist

@@ -97,6 +97,7 @@
         "automation-idempotency",
         "automation-run-replay",
         "automation-rule-dry-run",
+        "automation-condition-builder",
         "trigger-form-submitted",
         "trigger-access-approved",
         "trigger-page-published",

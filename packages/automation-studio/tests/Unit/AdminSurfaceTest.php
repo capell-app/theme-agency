@@ -60,5 +60,5 @@ it('declares admin manifest contributions and composer requirements', function (
         ->and(class_implements(AutomationRunResourceContribution::class))->toContain(RegistersExtensionAdminResource::class)
         ->and($manifest['actions']['dryRunAutomationRules'] ?? null)->toBe(DryRunAutomationRulesAction::class)
         ->and($manifest['actions']['replayAutomationRun'] ?? null)->toBe(ReplayAutomationRunAction::class)
-        ->and($manifest['capabilities'])->toContain('automation-admin', 'automation-rule-dry-run', 'automation-run-replay');
+        ->and($manifest['capabilities'])->toContain('automation-admin', 'automation-rule-dry-run', 'automation-run-replay', 'automation-condition-builder');
 });

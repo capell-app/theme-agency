@@ -8,9 +8,11 @@ use Capell\AutomationStudio\Contracts\AutomationActionHandler;
 use Capell\AutomationStudio\Data\AutomationActionDefinitionData;
 use Capell\AutomationStudio\Data\AutomationActionResultData;
 use Capell\AutomationStudio\Data\AutomationRuleActionData;
+use Capell\AutomationStudio\Data\AutomationRuleData;
 use Capell\AutomationStudio\Data\AutomationTriggerDefinitionData;
 use Capell\AutomationStudio\Data\AutomationTriggerEventData;
 use Capell\AutomationStudio\Enums\AutomationActionType;
+use Capell\AutomationStudio\Enums\AutomationRuleConditionOperator;
 use Capell\AutomationStudio\Enums\AutomationTriggerType;
 use Capell\AutomationStudio\Support\AutomationActionRegistry;
 use Capell\AutomationStudio\Support\AutomationRuleRegistry;
@@ -64,6 +66,95 @@ it('resolves registered object action handlers', function (): void {
     $actions->registerHandler(AutomationActionType::SendEmail, $handler);
 
     expect($actions->handler(AutomationActionType::SendEmail))->toBe($handler);
+});
+
+it('matches legacy equality conditions and structured condition builder rows', function (): void {
+    $rules = new AutomationRuleRegistry;
+    $actions = [
+        new AutomationRuleActionData(
+            key: 'send',
+            type: AutomationActionType::SendEmail,
+        ),
+    ];
+
+    $rules->register(new AutomationRuleData(
+        key: 'legacy-contact',
+        name: 'Legacy contact',
+        triggerType: AutomationTriggerType::FormSubmitted,
+        actions: $actions,
+        conditions: ['form_handle' => 'contact'],
+    ));
+
+    $rules->register(new AutomationRuleData(
+        key: 'structured-contact',
+        name: 'Structured contact',
+        triggerType: AutomationTriggerType::FormSubmitted,
+        actions: $actions,
+        conditions: [
+            [
+                'field' => 'form_handle',
+                'operator' => AutomationRuleConditionOperator::Equals->value,
+                'value' => 'contact',
+            ],
+            [
+                'field' => 'email',
+                'operator' => AutomationRuleConditionOperator::Filled->value,
+            ],
+            [
+                'field' => 'spam_score',
+                'operator' => AutomationRuleConditionOperator::NotEquals->value,
+                'value' => 'high',
+            ],
+            [
+                'field' => 'honeypot',
+                'operator' => AutomationRuleConditionOperator::Blank->value,
+            ],
+        ],
+    ));
+
+    $matches = $rules->matching(new AutomationTriggerEventData(
+        triggerType: AutomationTriggerType::FormSubmitted,
+        sourceType: 'form-builder.form',
+        payload: [
+            'form_handle' => 'contact',
+            'email' => 'person@example.test',
+            'spam_score' => 'low',
+            'honeypot' => '',
+        ],
+    ));
+
+    expect(collect($matches)->pluck('key')->all())->toBe([
+        'legacy-contact',
+        'structured-contact',
+    ]);
+});
+
+it('rejects structured condition rows when an operator does not match', function (): void {
+    $rules = new AutomationRuleRegistry;
+    $rules->register(new AutomationRuleData(
+        key: 'non-contact',
+        name: 'Non-contact',
+        triggerType: AutomationTriggerType::FormSubmitted,
+        actions: [
+            new AutomationRuleActionData(
+                key: 'send',
+                type: AutomationActionType::SendEmail,
+            ),
+        ],
+        conditions: [
+            [
+                'field' => 'form_handle',
+                'operator' => AutomationRuleConditionOperator::NotEquals->value,
+                'value' => 'contact',
+            ],
+        ],
+    ));
+
+    expect($rules->matching(new AutomationTriggerEventData(
+        triggerType: AutomationTriggerType::FormSubmitted,
+        sourceType: 'form-builder.form',
+        payload: ['form_handle' => 'contact'],
+    )))->toBe([]);
 });
 
 it('registers native automation handlers by default', function (): void {

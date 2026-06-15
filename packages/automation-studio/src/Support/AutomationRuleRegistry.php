@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace Capell\AutomationStudio\Support;
 
+use Capell\AutomationStudio\Data\AutomationRuleConditionData;
 use Capell\AutomationStudio\Data\AutomationRuleData;
 use Capell\AutomationStudio\Data\AutomationTriggerEventData;
+use Capell\AutomationStudio\Enums\AutomationRuleConditionOperator;
 use Capell\AutomationStudio\Enums\AutomationRuleStatus;
 use Illuminate\Support\Arr;
 
@@ -63,16 +65,69 @@ final class AutomationRuleRegistry
             return false;
         }
 
-        foreach ($rule->conditions as $payloadKey => $expectedValue) {
-            if (! is_string($payloadKey)) {
-                return false;
-            }
-
-            if (Arr::get($event->payload, $payloadKey) !== $expectedValue) {
+        foreach ($this->conditions($rule->conditions) as $condition) {
+            if (! $this->conditionMatches($condition, $event->payload)) {
                 return false;
             }
         }
 
         return true;
+    }
+
+    /**
+     * @param  array<int|string, mixed>  $conditions
+     * @return list<AutomationRuleConditionData>
+     */
+    private function conditions(array $conditions): array
+    {
+        if ($this->isStructuredConditionList($conditions)) {
+            return collect($conditions)
+                ->map(static fn (mixed $condition): ?AutomationRuleConditionData => is_array($condition)
+                    ? AutomationRuleConditionData::fromArray($condition)
+                    : null)
+                ->filter(static fn (?AutomationRuleConditionData $condition): bool => $condition instanceof AutomationRuleConditionData)
+                ->values()
+                ->all();
+        }
+
+        return collect($conditions)
+            ->map(static fn (mixed $expectedValue, int|string $payloadKey): ?AutomationRuleConditionData => is_string($payloadKey)
+                ? new AutomationRuleConditionData(
+                    field: $payloadKey,
+                    operator: AutomationRuleConditionOperator::Equals,
+                    value: $expectedValue,
+                )
+                : null)
+            ->filter(static fn (?AutomationRuleConditionData $condition): bool => $condition instanceof AutomationRuleConditionData)
+            ->values()
+            ->all();
+    }
+
+    /**
+     * @param  array<string, mixed>  $payload
+     */
+    private function conditionMatches(AutomationRuleConditionData $condition, array $payload): bool
+    {
+        $actualValue = Arr::get($payload, $condition->field);
+
+        return match ($condition->operator) {
+            AutomationRuleConditionOperator::Equals => $actualValue === $condition->value,
+            AutomationRuleConditionOperator::NotEquals => $actualValue !== $condition->value,
+            AutomationRuleConditionOperator::Filled => ! in_array($actualValue, [null, ''], true),
+            AutomationRuleConditionOperator::Blank => in_array($actualValue, [null, ''], true),
+        };
+    }
+
+    /**
+     * @param  array<int|string, mixed>  $conditions
+     */
+    private function isStructuredConditionList(array $conditions): bool
+    {
+        if ($conditions === []) {
+            return false;
+        }
+
+        return array_is_list($conditions)
+            && collect($conditions)->every(static fn (mixed $condition): bool => is_array($condition) && array_key_exists('field', $condition));
     }
 }

@@ -12,7 +12,7 @@ final class AutomationRuleData extends Data
 {
     /**
      * @param  list<AutomationRuleActionData>  $actions
-     * @param  array<string, mixed>  $conditions
+     * @param  array<int|string, mixed>  $conditions
      */
     public function __construct(
         public readonly string $key,

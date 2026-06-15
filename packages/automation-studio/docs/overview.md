@@ -32,6 +32,7 @@ Screenshot contract: `screenshots.json`.
 - Automation rules admin index (admin, required).
 - Automation rule edit screen (admin, required).
 - Automation runs admin index (admin, required).
+- Structured condition builder for rule payload filters (admin).
 - Test rules header action for dry-run rule matching (admin).
 - Replay action on pending, skipped, or failed automation runs (admin).
 
@@ -93,6 +94,10 @@ The Automation Runs table exposes a confirmed Replay action for pending, skipped
 ## Rule Test Mode
 
 The Automation Rules list includes a Test rules action. It accepts a trigger type and sample payload, evaluates active persisted rules, reports matching rule/action counts, and does not invoke handlers or write run rows.
+
+## Condition Builder
+
+Rule conditions are stored as structured rows with a payload field, operator, and value. The runtime supports equals, does-not-equal, filled, and blank operators while preserving older key/value equality rules.
 
 ## Quick Start
 
