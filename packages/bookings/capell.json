@@ -155,6 +155,22 @@
             "name": "capell-bookings-prune-retention-data",
             "command": "capell:bookings:prune-retention-data",
             "frequency": "daily"
+        },
+        {
+            "type": "console-command",
+            "class": "Capell\\Bookings\\Manifest\\BookingsConsoleCommandsContribution",
+            "commands": [
+                "capell:bookings:send-due-reminders",
+                "capell:bookings:expire-workflow-state",
+                "capell:bookings:schedule-review-requests",
+                "capell:bookings:prune-retention-data"
+            ],
+            "commandClasses": [
+                "Capell\\Bookings\\Console\\SendDueAppointmentRemindersCommand",
+                "Capell\\Bookings\\Console\\ExpireBookingWorkflowStateCommand",
+                "Capell\\Bookings\\Console\\ScheduleBookingReviewRequestsCommand",
+                "Capell\\Bookings\\Console\\PruneBookingRetentionDataCommand"
+            ]
         }
     ],
     "database": {
@@ -191,7 +207,11 @@
         "install": null,
         "setup": null,
         "demo": null,
-        "doctor": null
+        "doctor": null,
+        "sendDueReminders": "capell:bookings:send-due-reminders",
+        "expireWorkflowState": "capell:bookings:expire-workflow-state",
+        "scheduleReviewRequests": "capell:bookings:schedule-review-requests",
+        "pruneRetentionData": "capell:bookings:prune-retention-data"
     },
     "actions": {
         "createAvailabilityException": "Capell\\Bookings\\Actions\\CreateAvailabilityExceptionAction",

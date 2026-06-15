@@ -48,6 +48,7 @@ use Capell\Bookings\Actions\ResolveReviewRequestTokenAction;
 use Capell\Bookings\Actions\ScheduleReviewRequestsAction;
 use Capell\Bookings\Actions\ScoreBookingRiskAction;
 use Capell\Bookings\Actions\ShouldSuppressReviewRequestAction;
+use Capell\Bookings\Contracts\PublicBookingRequestRenderer;
 use Capell\Bookings\Models\AppointmentAuditLog;
 use Capell\Bookings\Models\AppointmentRequest;
 use Capell\Bookings\Models\BookingAvailabilityException;
@@ -72,8 +73,15 @@ use Capell\Bookings\Models\BookingWorkZone;
 use Capell\Bookings\Models\LessonNote;
 use Capell\Bookings\Models\LessonSeries;
 use Capell\Bookings\Models\MessagingConsent;
+use Capell\Bookings\Settings\BookingsSettings;
 use Capell\Core\Contracts\Extensions\ChecksExtensionHealth;
+use Capell\Core\Data\Diagnostics\DoctorCheckResultData;
+use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 
@@ -127,6 +135,22 @@ final class BookingsHealthCheck implements ChecksExtensionHealth
         ShouldSuppressReviewRequestAction::class,
     ];
 
+    /** @var list<string> */
+    private const array COMMANDS = [
+        'capell:bookings:send-due-reminders',
+        'capell:bookings:expire-workflow-state',
+        'capell:bookings:schedule-review-requests',
+        'capell:bookings:prune-retention-data',
+    ];
+
+    /** @var array<string, string> */
+    private const array SCHEDULE_EXPRESSIONS = [
+        'capell:bookings:send-due-reminders' => '*/5 * * * *',
+        'capell:bookings:expire-workflow-state' => '*/5 * * * *',
+        'capell:bookings:schedule-review-requests' => '0 * * * *',
+        'capell:bookings:prune-retention-data' => '0 0 * * *',
+    ];
+
     /** @var array<string, class-string> */
     private const array MODELS_BY_TABLE = [
         'booking_services' => BookingService::class,
@@ -160,11 +184,181 @@ final class BookingsHealthCheck implements ChecksExtensionHealth
         return '^4.0';
     }
 
+    /**
+     * @return Collection<int, DoctorCheckResultData>
+     */
+    public static function runDiagnostics(): Collection
+    {
+        $check = new self;
+
+        return collect([
+            $check->storageTablesCheck(),
+            $check->morphMapCheck(),
+            $check->actionsCheck(),
+            $check->publicRoutesCheck(),
+            $check->publicRendererCheck(),
+            $check->scheduledCommandsCheck(),
+            $check->settingsMigrationCheck(),
+            $check->consoleCommandsCheck(),
+        ]);
+    }
+
+    public static function passed(): bool
+    {
+        return self::runDiagnostics()
+            ->every(static fn (DoctorCheckResultData $result): bool => $result->passed);
+    }
+
     public function passes(): bool
     {
-        return $this->missingTables() === []
-            && $this->missingMorphAliases() === []
-            && $this->unresolvableActions() === [];
+        return self::passed();
+    }
+
+    public function storageTablesCheck(): DoctorCheckResultData
+    {
+        $missingTables = $this->missingTables();
+
+        return new DoctorCheckResultData(
+            label: (string) __('capell-bookings::package.health.storage_tables.label'),
+            passed: $missingTables === [],
+            message: $missingTables === []
+                ? (string) __('capell-bookings::package.health.storage_tables.passed')
+                : (string) __('capell-bookings::package.health.storage_tables.failed', ['tables' => implode(', ', $missingTables)]),
+            remediation: $missingTables === []
+                ? null
+                : (string) __('capell-bookings::package.health.storage_tables.remediation'),
+        );
+    }
+
+    public function morphMapCheck(): DoctorCheckResultData
+    {
+        $missingAliases = $this->missingMorphAliases();
+
+        return new DoctorCheckResultData(
+            label: (string) __('capell-bookings::package.health.morph_map.label'),
+            passed: $missingAliases === [],
+            message: $missingAliases === []
+                ? (string) __('capell-bookings::package.health.morph_map.passed')
+                : (string) __('capell-bookings::package.health.morph_map.failed', ['aliases' => implode(', ', $missingAliases)]),
+            remediation: $missingAliases === []
+                ? null
+                : (string) __('capell-bookings::package.health.morph_map.remediation'),
+        );
+    }
+
+    public function actionsCheck(): DoctorCheckResultData
+    {
+        $unresolvableActions = $this->unresolvableActions();
+
+        return new DoctorCheckResultData(
+            label: (string) __('capell-bookings::package.health.actions.label'),
+            passed: $unresolvableActions === [],
+            message: $unresolvableActions === []
+                ? (string) __('capell-bookings::package.health.actions.passed', ['count' => count(self::ACTIONS)])
+                : (string) __('capell-bookings::package.health.actions.failed', ['actions' => implode(', ', $unresolvableActions)]),
+            remediation: $unresolvableActions === []
+                ? null
+                : (string) __('capell-bookings::package.health.actions.remediation'),
+        );
+    }
+
+    public function publicRoutesCheck(): DoctorCheckResultData
+    {
+        $missingRoutes = array_values(array_filter(
+            [
+                'capell-bookings.request',
+                'capell-bookings.request.store',
+                'capell-bookings.calendar.staff',
+                'capell-bookings.portal.lessons',
+                'capell-bookings.portal.consent',
+                'capell-bookings.portal.proposal',
+                'capell-bookings.portal.review',
+                'capell-bookings.portal.review-participant',
+                'capell-bookings.webhook.store',
+            ],
+            static fn (string $routeName): bool => ! Route::has($routeName),
+        ));
+
+        return new DoctorCheckResultData(
+            label: (string) __('capell-bookings::package.health.public_routes.label'),
+            passed: $missingRoutes === [],
+            message: $missingRoutes === []
+                ? (string) __('capell-bookings::package.health.public_routes.passed')
+                : (string) __('capell-bookings::package.health.public_routes.failed', ['routes' => implode(', ', $missingRoutes)]),
+            remediation: $missingRoutes === []
+                ? null
+                : (string) __('capell-bookings::package.health.public_routes.remediation'),
+        );
+    }
+
+    public function publicRendererCheck(): DoctorCheckResultData
+    {
+        $renderer = app(PublicBookingRequestRenderer::class);
+        $passed = $renderer instanceof PublicBookingRequestRenderer;
+
+        return new DoctorCheckResultData(
+            label: (string) __('capell-bookings::package.health.public_renderer.label'),
+            passed: $passed,
+            message: $passed
+                ? (string) __('capell-bookings::package.health.public_renderer.passed')
+                : (string) __('capell-bookings::package.health.public_renderer.failed'),
+            remediation: $passed
+                ? null
+                : (string) __('capell-bookings::package.health.public_renderer.remediation'),
+        );
+    }
+
+    public function scheduledCommandsCheck(): DoctorCheckResultData
+    {
+        $missingSchedules = $this->missingScheduledCommands();
+
+        return new DoctorCheckResultData(
+            label: (string) __('capell-bookings::package.health.scheduled_commands.label'),
+            passed: $missingSchedules === [],
+            message: $missingSchedules === []
+                ? (string) __('capell-bookings::package.health.scheduled_commands.passed')
+                : (string) __('capell-bookings::package.health.scheduled_commands.failed', ['commands' => implode(', ', $missingSchedules)]),
+            remediation: $missingSchedules === []
+                ? null
+                : (string) __('capell-bookings::package.health.scheduled_commands.remediation'),
+        );
+    }
+
+    public function settingsMigrationCheck(): DoctorCheckResultData
+    {
+        $settingsRegistered = in_array(BookingsSettings::class, config('settings.settings', []), true);
+        $migrationExists = File::exists(dirname(__DIR__, 2) . '/database/settings/2026_06_13_000001_create_bookings_settings.php');
+        $passed = $settingsRegistered && $migrationExists;
+
+        return new DoctorCheckResultData(
+            label: (string) __('capell-bookings::package.health.settings_migration.label'),
+            passed: $passed,
+            message: $passed
+                ? (string) __('capell-bookings::package.health.settings_migration.passed')
+                : (string) __('capell-bookings::package.health.settings_migration.failed'),
+            remediation: $passed
+                ? null
+                : (string) __('capell-bookings::package.health.settings_migration.remediation'),
+        );
+    }
+
+    public function consoleCommandsCheck(): DoctorCheckResultData
+    {
+        $missingCommands = array_values(array_filter(
+            self::COMMANDS,
+            static fn (string $command): bool => ! array_key_exists($command, Artisan::all()),
+        ));
+
+        return new DoctorCheckResultData(
+            label: (string) __('capell-bookings::package.health.console_commands.label'),
+            passed: $missingCommands === [],
+            message: $missingCommands === []
+                ? (string) __('capell-bookings::package.health.console_commands.passed')
+                : (string) __('capell-bookings::package.health.console_commands.failed', ['commands' => implode(', ', $missingCommands)]),
+            remediation: $missingCommands === []
+                ? null
+                : (string) __('capell-bookings::package.health.console_commands.remediation'),
+        );
     }
 
     /**
@@ -204,5 +398,30 @@ final class BookingsHealthCheck implements ChecksExtensionHealth
         }
 
         return $actions;
+    }
+
+    /**
+     * @return list<string>
+     */
+    private function missingScheduledCommands(): array
+    {
+        $events = app(Schedule::class)->events();
+
+        return array_values(array_filter(
+            array_keys(self::SCHEDULE_EXPRESSIONS),
+            static function (string $command) use ($events): bool {
+                foreach ($events as $event) {
+                    if (
+                        is_string($event->command)
+                        && str_contains($event->command, $command)
+                        && $event->getExpression() === self::SCHEDULE_EXPRESSIONS[$command]
+                    ) {
+                        return false;
+                    }
+                }
+
+                return true;
+            },
+        ));
     }
 }

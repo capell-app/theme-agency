@@ -30,6 +30,10 @@ use Capell\Bookings\Actions\RemindPendingReviewParticipantsAction;
 use Capell\Bookings\Actions\ResolvePortalAccessTokenAction;
 use Capell\Bookings\Actions\ResolveReviewParticipantTokenAction;
 use Capell\Bookings\Actions\ResolveReviewRequestTokenAction;
+use Capell\Bookings\Console\ExpireBookingWorkflowStateCommand;
+use Capell\Bookings\Console\PruneBookingRetentionDataCommand;
+use Capell\Bookings\Console\ScheduleBookingReviewRequestsCommand;
+use Capell\Bookings\Console\SendDueAppointmentRemindersCommand;
 use Capell\Bookings\Enums\AppointmentRequestStatusEnum;
 use Capell\Bookings\Enums\BookingAvailabilityStatusEnum;
 use Capell\Bookings\Enums\BookingLocationTypeEnum;
@@ -45,6 +49,7 @@ use Capell\Bookings\Manifest\BookingLocationResourceContribution;
 use Capell\Bookings\Manifest\BookingMessageLogResourceContribution;
 use Capell\Bookings\Manifest\BookingOwnerPromptResourceContribution;
 use Capell\Bookings\Manifest\BookingReviewRequestResourceContribution;
+use Capell\Bookings\Manifest\BookingsConsoleCommandsContribution;
 use Capell\Bookings\Manifest\BookingServiceResourceContribution;
 use Capell\Bookings\Manifest\BookingsFrontendRoutesContribution;
 use Capell\Bookings\Manifest\BookingsModelsContribution;
@@ -66,6 +71,7 @@ use Capell\Bookings\Settings\BookingsSettings;
 use Capell\Bookings\Support\BookingsModelRegistrar;
 use Capell\Core\Contracts\Extensions\RegistersExtensionRoute;
 use Capell\Core\Contracts\Extensions\RunsScheduledExtensionJob;
+use Capell\Core\Data\Diagnostics\DoctorCheckResultData;
 use Illuminate\Support\Facades\File;
 
 it('keeps package manifest requirements aligned with composer requirements', function (): void {
@@ -255,6 +261,28 @@ it('declares implemented bookings contributions and feature capabilities', funct
         ->and($contributions->contains(fn (array $contribution): bool => ($contribution['type'] ?? null) === 'scheduled-job'
             && ($contribution['class'] ?? null) === BookingsReminderScheduleContribution::class
             && ($contribution['command'] ?? null) === 'capell:bookings:prune-retention-data'))->toBeTrue()
+        ->and($manifest['commands'])->toMatchArray([
+            'sendDueReminders' => 'capell:bookings:send-due-reminders',
+            'expireWorkflowState' => 'capell:bookings:expire-workflow-state',
+            'scheduleReviewRequests' => 'capell:bookings:schedule-review-requests',
+            'pruneRetentionData' => 'capell:bookings:prune-retention-data',
+        ])
+        ->and($manifest['contributes'])->toContain([
+            'type' => 'console-command',
+            'class' => BookingsConsoleCommandsContribution::class,
+            'commands' => [
+                'capell:bookings:send-due-reminders',
+                'capell:bookings:expire-workflow-state',
+                'capell:bookings:schedule-review-requests',
+                'capell:bookings:prune-retention-data',
+            ],
+            'commandClasses' => [
+                SendDueAppointmentRemindersCommand::class,
+                ExpireBookingWorkflowStateCommand::class,
+                ScheduleBookingReviewRequestsCommand::class,
+                PruneBookingRetentionDataCommand::class,
+            ],
+        ])
         ->and(class_implements(BookingsReminderScheduleContribution::class))->toContain(RunsScheduledExtensionJob::class)
         ->and(class_implements(BookingsFrontendRoutesContribution::class))->toContain(RegistersExtensionRoute::class)
         ->and($manifest['capabilities'])->toContain(
@@ -321,6 +349,19 @@ it('checks bookings tables morph aliases and actions are discoverable', function
         ->and($healthCheck->missingTables())->toBe([])
         ->and($healthCheck->missingMorphAliases())->toBe([])
         ->and($healthCheck->unresolvableActions())->toBe([])
+        ->and(BookingsHealthCheck::runDiagnostics())->toHaveCount(8)
+        ->and(BookingsHealthCheck::runDiagnostics()->every(static fn (DoctorCheckResultData $result): bool => $result->passed))->toBeTrue()
+        ->and(BookingsHealthCheck::runDiagnostics()->pluck('label')->all())->toBe([
+            'Bookings database tables',
+            'Bookings model morph aliases',
+            'Bookings domain actions',
+            'Bookings public routes',
+            'Bookings public request renderer',
+            'Bookings scheduled maintenance',
+            'Bookings settings migration',
+            'Bookings console commands',
+        ])
+        ->and(BookingsHealthCheck::passed())->toBeTrue()
         ->and($healthCheck->passes())->toBeTrue();
 });
 
