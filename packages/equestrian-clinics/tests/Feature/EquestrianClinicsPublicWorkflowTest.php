@@ -5,12 +5,18 @@ declare(strict_types=1);
 use Capell\EquestrianClinics\Actions\GenerateTourDaySlotsAction;
 use Capell\EquestrianClinics\Data\EquestrianSlotTemplateData;
 use Capell\EquestrianClinics\Enums\EquestrianFacilityResourceTypeEnum;
+use Capell\EquestrianClinics\Enums\EquestrianPaymentStatusEnum;
 use Capell\EquestrianClinics\Enums\EquestrianSlotArchetypeEnum;
+use Capell\EquestrianClinics\Enums\EquestrianSlotBookingStatusEnum;
 use Capell\EquestrianClinics\Enums\EquestrianTourDayStatusEnum;
 use Capell\EquestrianClinics\Models\EquestrianFacilityResource;
+use Capell\EquestrianClinics\Models\EquestrianHorseProfile;
+use Capell\EquestrianClinics\Models\EquestrianRiderProfile;
+use Capell\EquestrianClinics\Models\EquestrianSlotBooking;
 use Capell\EquestrianClinics\Models\EquestrianTourDay;
 use Capell\EquestrianClinics\Models\EquestrianVenue;
 use Carbon\CarbonImmutable;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\URL;
 
 it('renders public clinic discovery with venue and postcode filtering without authoring leakage', function (): void {
@@ -70,6 +76,71 @@ it('sorts public clinic discovery by distance when coordinates are supplied', fu
         ->assertOk()
         ->assertSeeInOrder(['Nearby Polework Day', 'Distant Gridwork Day'])
         ->assertSee('miles');
+
+    CarbonImmutable::setTestNow();
+});
+
+it('keeps discovery output public-safe and query bounded when private bookings exist', function (): void {
+    CarbonImmutable::setTestNow(CarbonImmutable::parse('2026-06-13 10:00:00'));
+
+    $tourDay = createPublishedClinicTourDay(
+        venueName: 'Willow Farm Arena',
+        postalCode: 'YO1 1AA',
+        title: 'Willow Farm Tour Day',
+    );
+    $slot = $tourDay->slots()->firstOrFail();
+    $rider = EquestrianRiderProfile::query()->create([
+        'name' => 'Private Rider',
+        'email' => 'private-rider@example.com',
+        'date_of_birth' => CarbonImmutable::parse('2014-04-12'),
+        'emergency_contact_name' => 'Private Guardian',
+        'emergency_contact_phone' => '07700 900111',
+        'medical_disclosures' => 'Private medical disclosure',
+        'guardian_email' => 'guardian@example.com',
+    ]);
+    $horse = EquestrianHorseProfile::query()->create([
+        'name' => 'Private Horse',
+        'notes' => 'Private horse care notes',
+    ]);
+
+    EquestrianSlotBooking::query()->create([
+        'tour_day_slot_id' => $slot->getKey(),
+        'rider_profile_id' => $rider->getKey(),
+        'horse_profile_id' => $horse->getKey(),
+        'status' => EquestrianSlotBookingStatusEnum::Confirmed,
+        'payment_status' => EquestrianPaymentStatusEnum::Paid,
+        'quoted_total_pence' => 3500,
+        'confirmed_at' => CarbonImmutable::now(),
+        'notes' => 'Private booking note',
+        'meta' => ['gateway_reference' => 'pi_private_secret'],
+    ]);
+
+    DB::flushQueryLog();
+    DB::enableQueryLog();
+
+    $response = $this->get(route('capell-equestrian-clinics.discovery'));
+    $queryCount = count(DB::getQueryLog());
+    DB::disableQueryLog();
+
+    $response
+        ->assertOk()
+        ->assertSee('Willow Farm Tour Day')
+        ->assertSee('Willow Farm Arena')
+        ->assertDontSee('Private Rider')
+        ->assertDontSee('private-rider@example.com')
+        ->assertDontSee('Private Guardian')
+        ->assertDontSee('07700 900111')
+        ->assertDontSee('Private medical disclosure')
+        ->assertDontSee('guardian@example.com')
+        ->assertDontSee('Private Horse')
+        ->assertDontSee('Private horse care notes')
+        ->assertDontSee('Private booking note')
+        ->assertDontSee('pi_private_secret')
+        ->assertDontSee('filament')
+        ->assertDontSee('wire:id')
+        ->assertDontSee('signed editor');
+
+    expect($queryCount)->toBeLessThanOrEqual(6);
 
     CarbonImmutable::setTestNow();
 });

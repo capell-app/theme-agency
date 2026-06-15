@@ -51,10 +51,10 @@ Equestrian Clinics should be positioned as a specialized vertical operations sui
 
 | Item                                                              | Bucket | Effort | Impact | Section ref |
 | ----------------------------------------------------------------- | ------ | ------ | ------ | ----------- |
-| Add core admin resources or correct manifest/admin claims         | Now    | L      | High   | §2.1, §4.1  |
-| Expand health checks for routes, morph map, deps, and rate limits | Now    | M      | High   | §2.2        |
-| Add expiry commands/schedule metadata for holds and waitlists     | Now    | M      | High   | §2.3, §4.2  |
-| Add public discovery privacy and query-budget tests               | Now    | M      | High   | §2.4, §4.3  |
+| Add core admin resources or correct manifest/admin claims         | Done   | L      | High   | §2.1, §4.1  |
+| Expand health checks for routes, morph map, deps, and rate limits | Done   | M      | High   | §2.2        |
+| Add expiry commands/schedule metadata for holds and waitlists     | Done   | M      | High   | §2.3, §4.2  |
+| Add public discovery privacy and query-budget tests               | Done   | M      | High   | §2.4, §4.3  |
 | Add payment checkout handoff docs/tests                           | Next   | M      | High   | §3          |
 | Add customer portal rider/horse profile surfaces                  | Next   | L      | High   | §3, §5      |
 | Promote verified public screenshots                               | Next   | S      | Medium | §3, §4.4    |
@@ -63,7 +63,7 @@ Equestrian Clinics should be positioned as a specialized vertical operations sui
 
 ## 7. Verification
 
-Plan-writing review only; no commands were run for this package in this pass. First implementation slice should start with:
+Implementation slices shipped the current Now rows. Re-run the package verification with:
 
 ```bash
 vendor/bin/pest packages/equestrian-clinics/tests --configuration=phpunit.xml
@@ -80,7 +80,7 @@ vendor/bin/pest packages/equestrian-clinics/tests/Feature/EquestrianClinicsPubli
 - [x] Package plan created from current code, manifest, docs, screenshots, and tests.
 - [x] Comprehensive local review pass completed for provider, routes, health, Actions, public views, manifest, docs, screenshots, and tests.
 - [x] Capell audience pass completed for equestrian operators, developers, and buyers.
-- [ ] Approved implementation slices shipped.
-- [ ] Focused Equestrian Clinics verification passed.
-- [ ] Package tests passed.
-- [ ] Repo preflight passed for changed files.
+- [x] Approved implementation slices shipped.
+- [x] Focused Equestrian Clinics verification passed.
+- [x] Package tests passed.
+- [x] Repo preflight passed for changed files.

@@ -51,10 +51,10 @@ Automation Studio should be positioned as the workflow fabric for Capell package
 
 | Item                                                         | Bucket | Effort | Impact | Section ref |
 | ------------------------------------------------------------ | ------ | ------ | ------ | ----------- |
-| Add table, registry, admin, queue, and handler diagnostics   | Now    | M      | High   | §2.1, §4.1  |
-| Prove retry/idempotency behavior for queued triggers         | Now    | M      | High   | §2.2, §4.2  |
-| Add handler timeout/redaction docs and failure tests         | Now    | M      | High   | §2.3, §4.3  |
-| Rewrite docs around registries, queues, and optional bridges | Now    | S      | Medium | §2.4, §4.4  |
+| Add table, registry, admin, queue, and handler diagnostics   | Done   | M      | High   | §2.1, §4.1  |
+| Prove retry/idempotency behavior for queued triggers         | Done   | M      | High   | §2.2, §4.2  |
+| Add handler timeout/redaction docs and failure tests         | Done   | M      | High   | §2.3, §4.3  |
+| Rewrite docs around registries, queues, and optional bridges | Done   | S      | Medium | §2.4, §4.4  |
 | Add admin replay/retry workflow                              | Next   | M      | High   | §3          |
 | Add dry-run rule test mode                                   | Next   | M      | Medium | §3          |
 | Add condition/filter builder                                 | Next   | L      | Medium | §3, §5      |
@@ -63,7 +63,7 @@ Automation Studio should be positioned as the workflow fabric for Capell package
 
 ## 7. Verification
 
-Plan-writing review only; no commands were run for this package in this pass. First implementation slice should start with:
+Implementation slices shipped the current Now rows. Re-run the package verification with:
 
 ```bash
 vendor/bin/pest packages/automation-studio/tests --configuration=phpunit.xml
@@ -80,7 +80,7 @@ vendor/bin/pest packages/automation-studio/tests/Unit/Actions/QueueAutomationTri
 - [x] Package plan created from current code, manifest, docs, screenshots, and tests.
 - [x] Comprehensive local review pass completed for provider, health, Actions, jobs, registries, listeners, docs, and screenshots.
 - [x] Capell audience pass completed for operators, automation authors, and developers.
-- [ ] Approved implementation slices shipped.
-- [ ] Focused Automation Studio verification passed.
-- [ ] Package tests passed.
-- [ ] Repo preflight passed for changed files.
+- [x] Approved implementation slices shipped.
+- [x] Focused Automation Studio verification passed.
+- [x] Package tests passed.
+- [x] Repo preflight passed for changed files.

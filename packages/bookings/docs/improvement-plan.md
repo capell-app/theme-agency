@@ -51,10 +51,10 @@ Bookings should be positioned as a serious operations workflow, not just a form.
 
 | Item                                                           | Bucket | Effort | Impact | Section ref |
 | -------------------------------------------------------------- | ------ | ------ | ------ | ----------- |
-| Add diagnostic health output with remediation                  | Now    | M      | High   | §2.1, §4.1  |
-| Align manifest commands and scheduled-job metadata             | Now    | M      | High   | §2.2, §4.2  |
-| Add duplicate/hold/payment public request idempotency coverage | Now    | M      | High   | §2.3, §4.3  |
-| Add public renderer prop/output safety coverage                | Now    | M      | High   | §2.4, §4.4  |
+| Add diagnostic health output with remediation                  | Done   | M      | High   | §2.1, §4.1  |
+| Align manifest commands and scheduled-job metadata             | Done   | M      | High   | §2.2, §4.2  |
+| Add duplicate/hold/payment public request idempotency coverage | Done   | M      | High   | §2.3, §4.3  |
+| Add public renderer prop/output safety coverage                | Done   | M      | High   | §2.4, §4.4  |
 | Add demo/setup command and fixtures                            | Next   | M      | Medium | §3, §5      |
 | Add failed message/webhook retry admin workflow                | Next   | L      | High   | §3          |
 | Add public success/confirmation component contract             | Next   | M      | Medium | §3          |
@@ -63,7 +63,7 @@ Bookings should be positioned as a serious operations workflow, not just a form.
 
 ## 7. Verification
 
-Plan-writing review only; no commands were run for this package in this pass. First implementation slice should start with:
+Implementation slices shipped the current Now rows. Re-run the package verification with:
 
 ```bash
 vendor/bin/pest packages/bookings/tests --configuration=phpunit.xml
@@ -80,7 +80,7 @@ vendor/bin/pest packages/bookings/tests/Feature/PublicBookingRequestTest.php pac
 - [x] Package plan created from current code, manifest, docs, screenshots, and tests.
 - [x] Comprehensive local review pass completed for provider, health, public routes, Actions, renderer, docs, screenshots, and tests.
 - [x] Capell audience pass completed for operators, service businesses, and developers.
-- [ ] Approved implementation slices shipped.
-- [ ] Focused Bookings verification passed.
-- [ ] Package tests passed.
-- [ ] Repo preflight passed for changed files.
+- [x] Approved implementation slices shipped.
+- [x] Focused Bookings verification passed.
+- [x] Package tests passed.
+- [x] Repo preflight passed for changed files.
