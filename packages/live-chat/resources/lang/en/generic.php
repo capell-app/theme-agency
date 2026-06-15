@@ -252,4 +252,12 @@ return [
         6 => 'Saturday',
         7 => 'Sunday',
     ],
+    'validation' => [
+        'attachments' => [
+            'disk' => 'Live chat attachments are not configured correctly.',
+            'invalid' => 'The attachment could not be uploaded.',
+            'max' => 'Attachments may not be greater than :max kilobytes.',
+            'mime_type' => 'The attachment type is not allowed.',
+        ],
+    ],
 ];

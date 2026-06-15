@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Capell\LiveChat\Http\Requests;
 
+use Capell\LiveChat\Actions\ValidateLiveChatAttachmentAction;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -40,22 +41,10 @@ final class StoreLiveChatConversationRequest extends FormRequest
             'attachments' => ['nullable', 'array', 'max:' . $this->configInt('capell-live-chat.max_attachment_count', 5)],
             'attachments.*' => [
                 'file',
-                'max:' . $this->configInt('capell-live-chat.attachments.max_kilobytes', 10240),
-                'mimes:' . implode(',', $this->attachmentMimes()),
+                'max:' . ValidateLiveChatAttachmentAction::maximumKilobytes(),
+                'mimetypes:' . implode(',', ValidateLiveChatAttachmentAction::allowedMimeTypes()),
             ],
         ];
-    }
-
-    /**
-     * @return list<string>
-     */
-    private function attachmentMimes(): array
-    {
-        $mimes = config('capell-live-chat.attachments.mimes', []);
-
-        return is_array($mimes)
-            ? array_values(array_filter($mimes, static fn (mixed $mime): bool => is_string($mime) && $mime !== ''))
-            : ['jpg', 'jpeg', 'png', 'webp', 'gif', 'pdf', 'txt', 'csv', 'doc', 'docx'];
     }
 
     private function configInt(string $key, int $fallback): int

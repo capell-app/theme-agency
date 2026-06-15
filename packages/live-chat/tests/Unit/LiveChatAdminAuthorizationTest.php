@@ -41,14 +41,13 @@ use Illuminate\Support\Facades\DB;
 /**
  * @param  list<string>  $permissions
  * @param  list<string>  $roles
+ * @param  SupportCollection<int, int>|null  $assignedSiteIds
  */
 function liveChatAdminActor(array $permissions = [], array $roles = [], ?SupportCollection $assignedSiteIds = null): LiveChatPolicyTestUser
 {
-    /** @var list<int> $siteIds */
-    $siteIds = ($assignedSiteIds ?? collect([10]))
-        ->map(static fn (mixed $siteId): int => (int) $siteId)
-        ->values()
-        ->all();
+    $siteIds = $assignedSiteIds === null
+        ? [10]
+        : array_values($assignedSiteIds->all());
 
     return new LiveChatPolicyTestUser(
         permissions: $permissions,
@@ -57,12 +56,12 @@ function liveChatAdminActor(array $permissions = [], array $roles = [], ?Support
     );
 }
 
-/**
- * @param  class-string<Model>  $modelClass
- */
 function liveChatPolicyRecord(string $modelClass, int $siteId): Model
 {
-    /** @var Model $record */
+    if (! is_a($modelClass, Model::class, true)) {
+        throw new RuntimeException('Live chat policy test records must be Eloquent models.');
+    }
+
     $record = new $modelClass;
 
     if ($record instanceof LiveChatAIRun) {
@@ -76,6 +75,21 @@ function liveChatPolicyRecord(string $modelClass, int $siteId): Model
     $record->setAttribute('site_id', $siteId);
 
     return $record;
+}
+
+function liveChatModelKey(Model $model): int
+{
+    $modelKey = $model->getKey();
+
+    if (is_int($modelKey)) {
+        return $modelKey;
+    }
+
+    if (is_string($modelKey) && ctype_digit($modelKey)) {
+        return (int) $modelKey;
+    }
+
+    throw new RuntimeException('Live chat admin authorization tests require integer model keys.');
 }
 
 function liveChatShieldPermission(string $ability, string $subject): string
@@ -152,8 +166,8 @@ it('scopes live chat admin resources and form persistence to assigned sites', fu
         ['id' => 20],
     ]);
 
-    $assignedInstallation = test()->createLiveChatInstallation(siteId: 10);
-    test()->createLiveChatInstallation(siteId: 20);
+    $assignedInstallation = $this->createLiveChatInstallation(siteId: 10);
+    $this->createLiveChatInstallation(siteId: 20);
 
     $assignedConversation = LiveChatConversation::query()->create([
         'site_id' => 10,
@@ -217,11 +231,11 @@ it('scopes live chat admin resources and form persistence to assigned sites', fu
 
     auth()->setUser(liveChatAdminActor(assignedSiteIds: collect([10])));
 
-    expect(InstallationResource::getEloquentQuery()->pluck('id')->all())->toBe([(int) $assignedInstallation->getKey()])
-        ->and(ConversationResource::getEloquentQuery()->pluck('id')->all())->toBe([(int) $assignedConversation->getKey()])
-        ->and(AvailabilityWindowResource::getEloquentQuery()->pluck('id')->all())->toBe([(int) $assignedWindow->getKey()])
-        ->and(EscalationRuleResource::getEloquentQuery()->pluck('id')->all())->toBe([(int) $assignedRule->getKey()])
-        ->and(KnowledgeSourceResource::getEloquentQuery()->pluck('id')->all())->toBe([(int) $assignedSource->getKey()]);
+    expect(InstallationResource::getEloquentQuery()->pluck('id')->all())->toBe([liveChatModelKey($assignedInstallation)])
+        ->and(ConversationResource::getEloquentQuery()->pluck('id')->all())->toBe([liveChatModelKey($assignedConversation)])
+        ->and(AvailabilityWindowResource::getEloquentQuery()->pluck('id')->all())->toBe([liveChatModelKey($assignedWindow)])
+        ->and(EscalationRuleResource::getEloquentQuery()->pluck('id')->all())->toBe([liveChatModelKey($assignedRule)])
+        ->and(KnowledgeSourceResource::getEloquentQuery()->pluck('id')->all())->toBe([liveChatModelKey($assignedSource)]);
 
     expect(InstallationResource::prepareFormDataForPersistence(['site_id' => 10]))->toMatchArray(['site_id' => 10])
         ->and(fn (): array => InstallationResource::prepareFormDataForPersistence(['site_id' => 20]))->toThrow(AuthorizationException::class)

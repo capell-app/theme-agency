@@ -24,7 +24,18 @@ return [
     'attachments' => [
         'disk' => 'local',
         'max_kilobytes' => 10240,
-        'mimes' => ['jpg', 'jpeg', 'png', 'webp', 'gif', 'pdf', 'txt', 'csv', 'doc', 'docx'],
+        'mime_types' => [
+            'image/jpeg',
+            'image/png',
+            'image/webp',
+            'image/gif',
+            'application/pdf',
+            'text/plain',
+            'text/csv',
+            'application/csv',
+            'application/msword',
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        ],
     ],
 
     'tables' => [

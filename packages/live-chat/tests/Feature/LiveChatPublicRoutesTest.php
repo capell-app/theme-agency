@@ -10,12 +10,17 @@ use Capell\LiveChat\Actions\BuildLiveChatWidgetConfigAction;
 use Capell\LiveChat\Actions\GuardLiveChatInstallationOriginAction;
 use Capell\LiveChat\Actions\ResolveLiveChatConversationForInstallationAction;
 use Capell\LiveChat\Actions\StartLiveChatConversationAction;
+use Capell\LiveChat\Actions\ValidateLiveChatAttachmentAction;
 use Capell\LiveChat\Data\IncomingLiveChatMessageData;
 use Capell\LiveChat\Models\LiveChatConversation;
+use Capell\LiveChat\Models\LiveChatMessage;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 it('renders the public widget without exposing admin internals', function (): void {
@@ -226,6 +231,77 @@ it('requires an active installation and same-site origin for local conversation 
         ->and($conversation->visitor_token_hash)->toBe(LiveChatConversation::hashVisitorToken('local-visitor-token'))
         ->and($response->json('messages.0'))->not->toHaveKey('id')
         ->and($response->json('messages.1'))->not->toHaveKey('id');
+});
+
+it('stores allowed public conversation attachments after server-side mime validation', function (): void {
+    Storage::fake('local');
+
+    $siteId = $this->createLiveChatSite();
+    $installation = $this->createLiveChatInstallation(siteId: $siteId);
+    $attachment = UploadedFile::fake()->createWithContent('chat-note.txt', 'Please review this attachment.');
+
+    $this
+        ->withHeader('Accept', 'application/json')
+        ->withHeader('Origin', 'http://localhost')
+        ->post(route('capell-live-chat.conversations.store'), [
+            'body' => 'Can you review this?',
+            'visitor_token' => 'local-visitor-token',
+            'attachments' => [$attachment],
+        ])
+        ->assertOk();
+
+    $message = LiveChatMessage::query()
+        ->where('conversation_id', LiveChatConversation::query()->latest('id')->firstOrFail()->getKey())
+        ->where('role', 'visitor')
+        ->firstOrFail();
+    $storedAttachment = $message->attachments[0] ?? null;
+
+    expect($storedAttachment)->toBeArray();
+
+    if (! is_array($storedAttachment)) {
+        return;
+    }
+
+    expect($message->conversation->installation_id)->toBe($installation->getKey())
+        ->and($storedAttachment['mime'] ?? null)->toBe('text/plain')
+        ->and($storedAttachment['disk'] ?? null)->toBe('local');
+
+    $attachmentPath = $storedAttachment['path'] ?? null;
+
+    expect($attachmentPath)->toBeString();
+
+    if (! is_string($attachmentPath)) {
+        return;
+    }
+
+    Storage::disk('local')->assertExists($attachmentPath);
+});
+
+it('rejects public conversation attachments with disallowed server-side mime types', function (): void {
+    $siteId = $this->createLiveChatSite();
+    $this->createLiveChatInstallation(siteId: $siteId);
+    $attachment = UploadedFile::fake()->create('payload.exe', 1, 'application/x-msdownload');
+
+    $this
+        ->withHeader('Accept', 'application/json')
+        ->withHeader('Origin', 'http://localhost')
+        ->post(route('capell-live-chat.conversations.store'), [
+            'body' => 'Please check this file.',
+            'visitor_token' => 'local-visitor-token',
+            'attachments' => [$attachment],
+        ])
+        ->assertUnprocessable()
+        ->assertJsonValidationErrors(['attachments.0']);
+});
+
+it('rejects attachment storage when the configured disk does not exist', function (): void {
+    config()->set('capell-live-chat.attachments.disk', 'missing-live-chat-disk');
+
+    expect(function (): void {
+        ValidateLiveChatAttachmentAction::run(
+            UploadedFile::fake()->createWithContent('chat-note.txt', 'Please review this attachment.'),
+        );
+    })->toThrow(ValidationException::class);
 });
 
 it('enforces local visitor token continuity for message writes and hides message ids', function (): void {

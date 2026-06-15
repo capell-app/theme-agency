@@ -9,7 +9,9 @@ use Capell\Core\Models\Site;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Schema as DatabaseSchema;
+use LogicException;
 
 trait ScopesLiveChatResourcesToSites
 {
@@ -49,6 +51,12 @@ trait ScopesLiveChatResourcesToSites
         return $data;
     }
 
+    /**
+     * @template TModel of Model
+     *
+     * @param  Builder<TModel>  $query
+     * @return Builder<TModel>
+     */
     protected static function scopeLiveChatQueryToActorSites(Builder $query): Builder
     {
         return self::canScopeLiveChatToSites()
@@ -67,7 +75,8 @@ trait ScopesLiveChatResourcesToSites
 
         return SiteScope::applyForCurrentActor(Site::query()->select(['name', 'id']), 'id', true)
             ->ordered()
-            ->pluck('name', 'id')
+            ->get()
+            ->mapWithKeys(static fn (Site $site): array => [self::siteOptionKey($site) => self::siteOptionLabel($site)])
             ->all();
     }
 
@@ -85,5 +94,27 @@ trait ScopesLiveChatResourcesToSites
         throw_unless(is_int($siteId) || is_numeric($siteId), AuthorizationException::class);
 
         return (int) $siteId;
+    }
+
+    private static function siteOptionKey(Site $site): int
+    {
+        $siteId = $site->getAttribute('id');
+
+        if (is_int($siteId)) {
+            return $siteId;
+        }
+
+        if (is_string($siteId) && ctype_digit($siteId)) {
+            return (int) $siteId;
+        }
+
+        throw new LogicException('Site options require an integer site id.');
+    }
+
+    private static function siteOptionLabel(Site $site): string
+    {
+        $siteName = $site->getAttribute('name');
+
+        return is_string($siteName) ? $siteName : '';
     }
 }
