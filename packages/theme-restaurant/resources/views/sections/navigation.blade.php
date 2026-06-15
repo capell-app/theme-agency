@@ -19,12 +19,18 @@
 
         <div class="flex flex-wrap items-center gap-5 text-sm font-bold">
             @foreach ($items as $item)
-                <a
-                    href="{{ $item['url'] ?? '#' }}"
-                    class="restaurant-link"
-                >
-                    {{ $item['label'] ?? $item['title'] ?? '' }}
-                </a>
+                @if (is_string($item['url'] ?? null) && trim($item['url']) !== '' && trim($item['url']) !== '#')
+                    <a
+                        href="{{ $item['url'] }}"
+                        class="restaurant-link"
+                    >
+                        {{ $item['label'] ?? $item['title'] ?? '' }}
+                    </a>
+                @else
+                    <span class="restaurant-link">
+                        {{ $item['label'] ?? $item['title'] ?? '' }}
+                    </span>
+                @endif
             @endforeach
         </div>
 

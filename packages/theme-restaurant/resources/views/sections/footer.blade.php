@@ -13,12 +13,18 @@
         </div>
         <div class="flex flex-wrap gap-5 text-sm font-bold">
             @foreach ($items as $item)
-                <a
-                    href="{{ $item['url'] ?? '#' }}"
-                    class="text-white/75 hover:text-white"
-                >
-                    {{ $item['label'] ?? $item['title'] ?? '' }}
-                </a>
+                @if (is_string($item['url'] ?? null) && trim($item['url']) !== '' && trim($item['url']) !== '#')
+                    <a
+                        href="{{ $item['url'] }}"
+                        class="text-white/75 hover:text-white"
+                    >
+                        {{ $item['label'] ?? $item['title'] ?? '' }}
+                    </a>
+                @else
+                    <span class="text-white/75">
+                        {{ $item['label'] ?? $item['title'] ?? '' }}
+                    </span>
+                @endif
             @endforeach
         </div>
     </div>

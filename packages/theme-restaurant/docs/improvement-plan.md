@@ -8,11 +8,11 @@ Theme Restaurant is a premium Blade child theme for hospitality sites built arou
 
 ## 2. Improvements (existing functionality)
 
-1. **Require Foundation Theme explicitly.** The demo Action imports `Capell\FoundationTheme\Support\Demo\ThemeDemoPageInstaller`, and the theme extends the default renderer, but `composer.json` and `capell.json` only require Core and Frontend. Add `capell-app/foundation-theme` to Composer/manifest dependencies and update manifest tests/docs to prevent install-order drift. Evidence: `InstallRestaurantThemeDemoAction`, `capell.json dependencies.requires`, `composer.json require`. - **S**
+1. **Require Foundation Theme explicitly.** Shipped. The package now requires `capell-app/foundation-theme` in Composer and the manifest, health checks assert the dependency, and README/overview docs describe the Foundation dependency contract. Evidence: `composer.json`, `capell.json dependencies.requires`, `ThemeRestaurantHealthCheck`, `ManifestRequirementsTest`. - **S**
 
-2. **Fix the skip link target.** `page.blade.php` renders a skip link to `#main-content`, but the package shell does not render that target itself. Add a deterministic semantic target or ensure the renderer contract always emits one, then test rendered output. Evidence: `resources/views/page.blade.php`, `rg main-content packages/theme-restaurant`. - **S**
+2. **Fix the skip link target.** Shipped. `page.blade.php` now owns a deterministic `<main id="main-content">` wrapper and rendered shell coverage asserts the skip destination. Evidence: `resources/views/page.blade.php`, `RestaurantThemeDefinitionTest`. - **S**
 
-3. **Replace fake reservation and listing fallbacks with real or non-submitting states.** `reservation-panel.blade.php` posts a public GET form to `#` unless `form_action` is supplied; Bookings/Form Builder availability only changes status copy. `content-listing.blade.php`, footer, and navigation can also emit `href="#"` fallback links. Connected states should use safe URLs/actions supplied by render data; disconnected states should render CTAs/copy that do not pretend to submit. Evidence: `sections/reservation-panel.blade.php`, `sections/content-listing.blade.php`, `sections/navigation.blade.php`, `sections/footer.blade.php`. - **M**
+3. **Replace fake reservation and listing fallbacks with real or non-submitting states.** Partially shipped for the high-risk public targets. The reservation panel now renders a form only when render data supplies a safe `form_action`, default listings no longer include fake URLs, and navigation/footer/listing item fallbacks render non-link text when URLs are missing or `#`. Evidence: `sections/reservation-panel.blade.php`, `sections/content-listing.blade.php`, `sections/navigation.blade.php`, `sections/footer.blade.php`, `PublicOutputSafetyTest`. - **M**
 
 4. **Promote only route-backed marketplace screenshots.** The screenshot contract expects five PNG captures under `docs/screenshots/`, but no screenshot directory/files are present and `capell.json` promotes static SVGs. Make homepage, menu, reservation, private dining, and events captures required, commit real runner PNGs, and update manifest media only after browser verification. Evidence: `docs/screenshots.json`, `capell.json marketplace.screenshots`, `docs/assets/marketplace/*.svg`. - **M**
 
@@ -66,9 +66,9 @@ Restaurant has a strong premium lane separate from Commerce and Local Services. 
 
 | Item                                                                                           | Bucket | Effort | Impact | Section ref |
 | ---------------------------------------------------------------------------------------------- | ------ | ------ | ------ | ----------- |
-| Add explicit Foundation Theme dependency in Composer/manifest/tests                            | Now    | S      | High   | §2.1, §4.1  |
-| Fix skip link target and add rendered shell coverage                                           | Now    | S      | High   | §2.2, §4.3  |
-| Replace `action="#"` reservation fallback with real action or non-submitting state             | Now    | M      | High   | §2.3, §4.2  |
+| Add explicit Foundation Theme dependency in Composer/manifest/tests                            | Done   | S      | High   | §2.1, §4.1  |
+| Fix skip link target and add rendered shell coverage                                           | Done   | S      | High   | §2.2, §4.3  |
+| Replace `action="#"` reservation fallback with real action or non-submitting state             | Done   | M      | High   | §2.3, §4.2  |
 | Add health check failure tests and renderer alignment assertions                               | Now    | S      | Medium | §2.5, §4.5  |
 | Align demo command with Action/container pattern and add command tests                         | Now    | S      | Medium | §2.6        |
 | Rewrite docs around dependencies, integration render-data contracts, and verification commands | Now    | S      | Medium | §2.8, §5    |

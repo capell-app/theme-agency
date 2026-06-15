@@ -62,3 +62,14 @@ it('keeps restaurant public Blade free of database query calls', function (): vo
         ->not->toContain('->media->')
         ->not->toContain('find(');
 });
+
+it('keeps restaurant public Blade free of fake submission targets', function (): void {
+    $blade = restaurantThemeBladeViews();
+
+    expect($blade)
+        ->not->toContain('action="#"')
+        ->not->toContain('href="#"')
+        ->not->toContain('Bookings')
+        ->not->toContain('Form Builder')
+        ->not->toContain('wire:');
+});

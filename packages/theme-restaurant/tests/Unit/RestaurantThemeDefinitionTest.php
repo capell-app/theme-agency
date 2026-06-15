@@ -104,12 +104,60 @@ it('renders restaurant-owned hospitality sections through the registry', functio
         ->toContain('Reserve the table')
         ->toContain('Request-led fallback')
         ->toContain('Static enquiry route')
+        ->toContain('Reservation requests are not connected yet.')
+        ->not->toContain('<form')
+        ->not->toContain('action="#"')
         ->not->toContain('capell-app/theme-restaurant');
 
     expect($privateDiningHtml)
         ->toContain('Book a private room')
         ->toContain('Cellar room')
         ->toContain('18')
+        ->not->toContain('capell-app/theme-restaurant');
+});
+
+it('renders a deterministic main content target for the skip link', function (): void {
+    $html = view()->file(__DIR__ . '/../../resources/views/page.blade.php', [
+        'brand' => new readonly class
+        {
+            /**
+             * @return array<string, string>
+             */
+            public function tokens(): array
+            {
+                return ['--restaurant-bg' => '#ffffff'];
+            }
+        },
+        'content' => '<section>Restaurant content</section>',
+    ])->render();
+
+    expect($html)
+        ->toContain('href="#main-content"')
+        ->toContain('<main id="main-content">')
+        ->toContain('<section>Restaurant content</section>');
+});
+
+it('renders the reservation form only when a safe public action is supplied', function (): void {
+    CapellCore::clearPackages();
+    CapellCore::forcePackageInstalled(RestaurantThemeServiceProvider::$packageName);
+
+    $registry = new ThemeRegistry;
+    (new RestaurantThemeServiceProvider($this->app))->boot($registry);
+
+    $reservationRenderer = $registry->sectionRenderer('restaurant', 'reservation-panel');
+
+    assert($reservationRenderer instanceof SectionRenderer);
+
+    $html = $reservationRenderer->render(restaurantThemeSection('reservation-panel', [
+        'heading' => 'Reserve with a public action',
+        'form_action' => '/reservations/request',
+    ]));
+
+    expect($html)
+        ->toContain('<form')
+        ->toContain('action="/reservations/request"')
+        ->toContain('Check tables')
+        ->not->toContain('action="#"')
         ->not->toContain('capell-app/theme-restaurant');
 });
 

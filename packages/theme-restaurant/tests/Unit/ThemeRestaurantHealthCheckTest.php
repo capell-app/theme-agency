@@ -8,3 +8,10 @@ it('reports the Restaurant theme package as healthy', function (): void {
     expect(ThemeRestaurantHealthCheck::compatibleCapellApiVersion())->toBe('^4.0')
         ->and(ThemeRestaurantHealthCheck::passed())->toBeTrue();
 });
+
+it('requires Foundation Theme in the manifest health check', function (): void {
+    $check = new ThemeRestaurantHealthCheck(__DIR__ . '/../Fixtures/missing-foundation-dependency');
+
+    expect($check->marketplaceManifestIssues())
+        ->toContain('Manifest must require Foundation Theme for the inherited default renderer and demo installer.');
+});

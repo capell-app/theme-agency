@@ -6,8 +6,8 @@
 
     if (! is_array($items) || $items === []) {
         $items = [
-            ['title' => __('capell-theme-restaurant::generic.listing_one'), 'summary' => __('capell-theme-restaurant::generic.listing_one_summary'), 'type' => __('capell-theme-restaurant::generic.guide_label'), 'url' => '#'],
-            ['title' => __('capell-theme-restaurant::generic.listing_two'), 'summary' => __('capell-theme-restaurant::generic.listing_two_summary'), 'type' => __('capell-theme-restaurant::generic.event_label'), 'url' => '#'],
+            ['title' => __('capell-theme-restaurant::generic.listing_one'), 'summary' => __('capell-theme-restaurant::generic.listing_one_summary'), 'type' => __('capell-theme-restaurant::generic.guide_label')],
+            ['title' => __('capell-theme-restaurant::generic.listing_two'), 'summary' => __('capell-theme-restaurant::generic.listing_two_summary'), 'type' => __('capell-theme-restaurant::generic.event_label')],
         ];
     }
 @endphp
@@ -48,12 +48,18 @@
                         </p>
                     @endif
 
-                    <a
-                        href="{{ $listingItem['url'] ?? '#' }}"
-                        class="restaurant-inline-link mt-5"
-                    >
-                        {{ __('capell-theme-restaurant::generic.read_more_label') }}
-                    </a>
+                    @if (is_string($listingItem['url'] ?? null) && trim($listingItem['url']) !== '' && trim($listingItem['url']) !== '#')
+                        <a
+                            href="{{ $listingItem['url'] }}"
+                            class="restaurant-inline-link mt-5"
+                        >
+                            {{ __('capell-theme-restaurant::generic.read_more_label') }}
+                        </a>
+                    @else
+                        <p class="restaurant-small-label mt-5">
+                            {{ __('capell-theme-restaurant::generic.read_more_unavailable_label') }}
+                        </p>
+                    @endif
                 </article>
             @endforeach
         </div>

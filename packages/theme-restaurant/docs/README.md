@@ -2,6 +2,8 @@
 
 Theme Restaurant is a premium hospitality renderer for Capell sites. It owns public presentation for menu highlights, reservations, private dining, events, opening hours, location guidance, chef story, proof, listings, CTA, navigation, and footer sections.
 
+It extends the `default` theme key at runtime and requires `capell-app/foundation-theme` plus `capell-app/frontend`. Reservation forms render only when hydrated render data supplies a safe public `form_action`; otherwise the reservation panel shows a non-submitting setup state.
+
 ## Files
 
 - [Overview](overview.md)

@@ -54,7 +54,11 @@ Product group:
 - Product group: `Capell Themes`
 - Manifest extends: `default`
 - Runtime extends: `default`
-- Restaurant runtime inheritance uses `extends: default` and requires `capell-app/frontend` for the built-in default fallback.
+- Restaurant runtime inheritance uses `extends: default` and requires `capell-app/foundation-theme` plus `capell-app/frontend` for Foundation Theme rendering and public frontend output.
+
+## Integration Contract
+
+Reservation capture stays in hydrated render data. Pass a public `form_action` URL from Bookings, Form Builder, or host application code to render the reservation form. When no safe action is supplied, the reservation panel renders a non-submitting setup state instead of a fake form target.
 
 ## Data Model
 
@@ -99,7 +103,7 @@ This theme has no schema impact. It relies on core Capell site, page, locale, an
 - [Capell content language plan](../../../docs/CONTENT_LANGUAGE_PLAN.md)
 - [Capell documentation design system](../../../docs/DESIGN_SYSTEM.md)
 - [Capell and package ERD notes](../../../docs/erd/capell-and-package-erds.md)
-- Related packages: [Blog](../../blog/README.md), [Bookings](../../bookings/README.md), [Events](../../events/README.md), [Form Builder](../../form-builder/README.md), [Seo Suite](../../seo-suite/README.md).
+- Related packages: [Foundation Theme](../../foundation-theme/README.md), [Blog](../../blog/README.md), [Bookings](../../bookings/README.md), [Events](../../events/README.md), [Form Builder](../../form-builder/README.md), [Seo Suite](../../seo-suite/README.md).
 - Focused tests: `vendor/bin/pest packages/theme-restaurant/tests --configuration=phpunit.xml`.
 
 <!-- prettier-ignore-end -->
