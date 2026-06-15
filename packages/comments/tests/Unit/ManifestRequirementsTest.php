@@ -10,9 +10,23 @@ use Capell\Comments\Actions\ToggleCommentReactionAction;
 use Capell\Comments\Console\Commands\InstallCommentsCommand;
 use Capell\Comments\Console\Commands\PruneCommentPrivacyDataCommand;
 use Capell\Comments\Contracts\CommentSpamProvider;
+use Capell\Comments\Filament\Resources\CommentAuthors\CommentAuthorResource;
+use Capell\Comments\Filament\Resources\Comments\CommentResource;
 use Capell\Comments\Filament\Widgets\CommentStatsWidget;
 use Capell\Comments\Filament\Widgets\LatestCommentsWidget;
+use Capell\Comments\Manifest\CommentAdminResourcesContribution;
+use Capell\Comments\Manifest\CommentDashboardWidgetsContribution;
+use Capell\Comments\Manifest\CommentFrontendComponentsContribution;
+use Capell\Comments\Manifest\CommentModelsContribution;
+use Capell\Comments\Manifest\CommentRoutesContribution;
+use Capell\Comments\Manifest\CommentSettingsContribution;
+use Capell\Comments\Models\Comment;
+use Capell\Comments\Models\CommentAuthor;
+use Capell\Comments\Models\CommentModerationEvent;
+use Capell\Comments\Models\CommentReaction;
+use Capell\Comments\Models\CommentToken;
 use Capell\Comments\Providers\CommentsServiceProvider;
+use Capell\Comments\Settings\CommentSettings;
 use Capell\Comments\Support\Spam\ConfiguredCommentSpamProvider;
 use Capell\Comments\Support\Spam\LocalCommentSpamProvider;
 use Illuminate\Support\Facades\File;
@@ -43,21 +57,35 @@ it('declares comments as optional for supported companion packages', function ()
         ->and(class_exists(PruneCommentPrivacyDataCommand::class))->toBeTrue();
 });
 
-it('declares every registered dashboard widget in the manifest contributes list', function (): void {
+it('declares implemented comments contribution surfaces', function (): void {
     $manifest = json_decode(File::get(__DIR__ . '/../../capell.json'), true, flags: JSON_THROW_ON_ERROR);
 
     $contributions = $manifest['contributes'] ?? [];
 
     throw_unless(is_array($contributions), RuntimeException::class, 'Comments contributions must be an array.');
 
-    $contributedWidgetClasses = collect($contributions)
-        ->where('type', 'dashboard-widget')
-        ->pluck('class')
-        ->all();
+    $contributions = collect($contributions);
 
-    expect($contributedWidgetClasses)
-        ->toContain(CommentStatsWidget::class)
-        ->toContain(LatestCommentsWidget::class);
+    $widgets = $contributions->firstWhere('class', CommentDashboardWidgetsContribution::class);
+    $resources = $contributions->firstWhere('class', CommentAdminResourcesContribution::class);
+    $models = $contributions->firstWhere('class', CommentModelsContribution::class);
+    $routes = $contributions->firstWhere('class', CommentRoutesContribution::class);
+    $settings = $contributions->firstWhere('class', CommentSettingsContribution::class);
+    $components = $contributions->firstWhere('class', CommentFrontendComponentsContribution::class);
+
+    expect($manifest['contributionTraceability']['deferredContributions'])->toBe([])
+        ->and($widgets['widgetClasses'])->toContain(CommentStatsWidget::class, LatestCommentsWidget::class)
+        ->and($resources['resourceClasses'])->toContain(CommentResource::class, CommentAuthorResource::class)
+        ->and($models['modelClasses'])->toContain(
+            CommentAuthor::class,
+            Comment::class,
+            CommentToken::class,
+            CommentModerationEvent::class,
+            CommentReaction::class,
+        )
+        ->and($routes['routes'])->toBe($manifest['security']['publicSurface']['routeNames'])
+        ->and($settings['settingsClass'])->toBe(CommentSettings::class)
+        ->and($components['componentClasses'])->toContain('Capell\\Comments\\Livewire\\CommentThreadComponent');
 });
 
 it('declares committed marketplace gallery assets for every required screenshot capture target', function (): void {

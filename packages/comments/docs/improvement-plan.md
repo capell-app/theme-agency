@@ -10,6 +10,7 @@ Current marketplace `summary`: _"Add moderated, threaded discussion to any Capel
 
 ## Completed Improvement Slices
 
+- **2026-06-15:** Exposed admin resources, dashboard widgets, frontend component, models, public routes, and settings through manifest contribution marker classes instead of pointing directly at runtime widgets/components.
 - **2026-06-03:** Rewrote marketplace/Composer copy, declared `LatestCommentsWidget` in manifest contributions, and added manifest coverage for registered dashboard widgets.
 - **2026-06-04:** Added public comment form bot-trap controls: a hidden honeypot field, configurable minimum form age, action-level rejection before persistence, component state reset, and action/Livewire tests.
 - **2026-06-04:** Implemented real `CommentsHealthCheck` diagnostics for required storage tables, settings registration, the public thread route, and the public thread Livewire component, with focused failure-mode tests.

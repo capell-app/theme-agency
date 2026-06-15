@@ -37,18 +37,58 @@
     "contributes": [
         {
             "type": "frontend-component",
-            "class": "Capell\\Comments\\Livewire\\CommentThreadComponent",
+            "class": "Capell\\Comments\\Manifest\\CommentFrontendComponentsContribution",
+            "componentClasses": [
+                "Capell\\Comments\\Livewire\\CommentThreadComponent"
+            ],
             "surface": "frontend"
         },
         {
             "type": "dashboard-widget",
-            "class": "Capell\\Comments\\Filament\\Widgets\\CommentStatsWidget",
+            "class": "Capell\\Comments\\Manifest\\CommentDashboardWidgetsContribution",
+            "widgetClasses": [
+                "Capell\\Comments\\Filament\\Widgets\\CommentStatsWidget",
+                "Capell\\Comments\\Filament\\Widgets\\LatestCommentsWidget"
+            ],
             "surface": "admin"
         },
         {
-            "type": "dashboard-widget",
-            "class": "Capell\\Comments\\Filament\\Widgets\\LatestCommentsWidget",
-            "surface": "admin"
+            "type": "admin-resource",
+            "class": "Capell\\Comments\\Manifest\\CommentAdminResourcesContribution",
+            "resourceClasses": [
+                "Capell\\Comments\\Filament\\Resources\\Comments\\CommentResource",
+                "Capell\\Comments\\Filament\\Resources\\CommentAuthors\\CommentAuthorResource"
+            ]
+        },
+        {
+            "type": "model",
+            "class": "Capell\\Comments\\Manifest\\CommentModelsContribution",
+            "modelClasses": [
+                "Capell\\Comments\\Models\\CommentAuthor",
+                "Capell\\Comments\\Models\\Comment",
+                "Capell\\Comments\\Models\\CommentToken",
+                "Capell\\Comments\\Models\\CommentModerationEvent",
+                "Capell\\Comments\\Models\\CommentReaction"
+            ]
+        },
+        {
+            "type": "route",
+            "class": "Capell\\Comments\\Manifest\\CommentRoutesContribution",
+            "routes": [
+                "capell-comments.reply-notifications.disable",
+                "capell-comments.thread",
+                "capell-comments.verify",
+                "capell-comments.verify.store"
+            ],
+            "prefix": "capell/comments",
+            "middleware": ["web", "throttle:comments-verification"]
+        },
+        {
+            "type": "setting",
+            "class": "Capell\\Comments\\Manifest\\CommentSettingsContribution",
+            "settingsClass": "Capell\\Comments\\Settings\\CommentSettings",
+            "settingsGroup": "comments",
+            "settingsSchema": "Capell\\Comments\\Filament\\Settings\\CommentSettingsSchema"
         }
     ],
     "database": {
@@ -215,13 +255,6 @@
         "categories": ["admin", "engagement", "frontend"]
     },
     "contributionTraceability": {
-        "deferredContributions": [
-            "admin-resource",
-            "dashboard-widget",
-            "frontend-component",
-            "model",
-            "route",
-            "settings"
-        ]
+        "deferredContributions": []
     }
 }
