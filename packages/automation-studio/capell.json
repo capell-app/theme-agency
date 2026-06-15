@@ -72,6 +72,7 @@
     "settings": [],
     "actions": {
         "dispatchAutomationTrigger": "Capell\\AutomationStudio\\Actions\\DispatchAutomationTriggerAction",
+        "dryRunAutomationRules": "Capell\\AutomationStudio\\Actions\\DryRunAutomationRulesAction",
         "loadPersistedAutomationRules": "Capell\\AutomationStudio\\Actions\\LoadPersistedAutomationRulesAction",
         "persistAutomationTriggerResults": "Capell\\AutomationStudio\\Actions\\PersistAutomationTriggerResultsAction",
         "queueAutomationTrigger": "Capell\\AutomationStudio\\Actions\\QueueAutomationTriggerAction",
@@ -95,6 +96,7 @@
         "automation-queue",
         "automation-idempotency",
         "automation-run-replay",
+        "automation-rule-dry-run",
         "trigger-form-submitted",
         "trigger-access-approved",
         "trigger-page-published",

@@ -23,7 +23,7 @@ Status details:
 
 **For developers:** The package gives developers package-owned service providers, Actions, Data objects, models, and Filament classes instead of pushing this behaviour into core or application code.
 
-**For teams:** Automation Studio connects Capell package events to rule-based native actions, Public Actions, and agent capability workflows. Operators can replay pending, skipped, or failed run actions from the run history without overwriting the original audit row.
+**For teams:** Automation Studio connects Capell package events to rule-based native actions, Public Actions, and agent capability workflows. Operators can test rule matching against sample payloads and replay pending, skipped, or failed run actions from the run history without overwriting the original audit row.
 
 ## Screens And Workflow
 
@@ -32,6 +32,7 @@ Screenshot contract: `screenshots.json`.
 - Automation rules admin index (admin, required).
 - Automation rule edit screen (admin, required).
 - Automation runs admin index (admin, required).
+- Test rules header action for dry-run rule matching (admin).
 - Replay action on pending, skipped, or failed automation runs (admin).
 
 ## Technical Shape
@@ -41,7 +42,7 @@ Screenshot contract: `screenshots.json`.
 - Models: `AutomationRule`, `AutomationRun`.
 - Filament classes: `AutomationRuleResource`, `CreateAutomationRule`, `EditAutomationRule`, `ListAutomationRules`, `AutomationRunResource`, `ListAutomationRuns`.
 - Listeners: `DispatchAutomationFromAccessApproval`, `DispatchAutomationFromCampaignConversion`, `DispatchAutomationFromFormSubmission`, `DispatchAutomationFromWorkspaceStateChanged`.
-- Actions: `DispatchAutomationTriggerAction`, `LoadPersistedAutomationRulesAction`, `PersistAutomationTriggerResultsAction`, `QueueAutomationTriggerAction`, `RecordAutomationRunAction`, `RegisterAutomationStudioDefaultsAction`, `ReplayAutomationRunAction`.
+- Actions: `DispatchAutomationTriggerAction`, `DryRunAutomationRulesAction`, `LoadPersistedAutomationRulesAction`, `PersistAutomationTriggerResultsAction`, `QueueAutomationTriggerAction`, `RecordAutomationRunAction`, `RegisterAutomationStudioDefaultsAction`, `ReplayAutomationRunAction`.
 - Data objects: `AutomationActionDefinitionData`, `AutomationActionResultData`, `AutomationRuleActionData`, `AutomationRuleData`, `AutomationTriggerDefinitionData`, `AutomationTriggerEventData`.
 - Jobs: `DispatchQueuedAutomationTriggerJob`.
 - Manifest contributions: `admin-resource: Capell\AutomationStudio\Manifest\AutomationRuleResourceContribution`, `admin-resource: Capell\AutomationStudio\Manifest\AutomationRunResourceContribution`, `model: Capell\AutomationStudio\Manifest\AutomationStudioModelsContribution`.
@@ -88,6 +89,10 @@ Automation Studio delegates native action delivery to the owning packages. Publi
 ## Replay Safety
 
 The Automation Runs table exposes a confirmed Replay action for pending, skipped, and failed action rows. Replay rebuilds the original trigger event from the persisted run payload, executes only the original rule action, and writes a new run row with a replay-specific idempotency key so the original audit record remains intact.
+
+## Rule Test Mode
+
+The Automation Rules list includes a Test rules action. It accepts a trigger type and sample payload, evaluates active persisted rules, reports matching rule/action counts, and does not invoke handlers or write run rows.
 
 ## Quick Start
 

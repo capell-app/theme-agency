@@ -32,6 +32,14 @@ return [
         'agent_bridge_unavailable' => 'Agent Bridge is not available.',
         'agent_capability_key_required' => 'An Agent Bridge capability key is required.',
     ],
+    'dry_run' => [
+        'action' => 'Test rules',
+        'completed' => 'Automation rule test completed.',
+        'payload' => 'Sample payload',
+        'payload_key' => 'Payload key',
+        'payload_value' => 'Payload value',
+        'summary' => ':rules matching rule(s), :actions planned action(s). No actions were executed.',
+    ],
     'fields' => [
         'action' => 'Action',
         'action_type' => 'Action type',

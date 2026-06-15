@@ -21,6 +21,7 @@ This slice creates the domain foundation, persistence layer, initial admin surfa
     - `public_action`
 - `AutomationRuleData`, `AutomationRuleActionData`, and `AutomationTriggerEventData` define structured runtime boundaries.
 - `AutomationTriggerRegistry`, `AutomationActionRegistry`, and `AutomationRuleRegistry` support package-local registration.
+- `DryRunAutomationRulesAction` previews which active persisted rules and actions match a sample trigger payload without invoking handlers or writing runs.
 - `DispatchAutomationTriggerAction` executes active matching rules and returns per-action results.
 - `DispatchPublicActionAutomationActionHandler` delegates to Public Actions when a rule uses `public_action`.
 - Runtime listeners normalize known package events by string class names, so optional packages remain optional.
@@ -44,6 +45,7 @@ This slice creates the domain foundation, persistence layer, initial admin surfa
 - Native handlers should return only operational identifiers that are safe for admins to see, such as message ids, subscriber ids, contact ids, action keys, redirect URLs, tags, and status values.
 - Queued trigger retries keep the same per-action idempotency identity. A previously successful action is reported as already completed instead of invoking the downstream handler again.
 - Manual run replay uses a replay-specific idempotency key and writes a new run row. The original failed, skipped, or pending audit row is preserved.
+- Rule dry-runs are side-effect free. They do not call native handlers, queue jobs, or persist `automation_runs` records.
 
 ## Integration Notes
 
