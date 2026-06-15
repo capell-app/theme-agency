@@ -8,13 +8,13 @@ Theme Liquid Glass is a free Blade child theme for modern launch, editorial, dir
 
 ## 2. Improvements (existing functionality)
 
-1. **Require Foundation Theme explicitly.** The demo Action and command import `Capell\FoundationTheme\...` classes, and the theme extends the default renderer, but `composer.json` and `capell.json` only require Core and Frontend. Add `capell-app/foundation-theme` to Composer/manifest dependencies and update tests/docs so standalone package installs cannot miss the demo dependency. Evidence: `InstallLiquidGlassThemeDemoAction`, `DemoCommand`, `capell.json dependencies.requires`, `composer.json require`. - **S**
+1. **Require Foundation Theme explicitly.** The demo Action and command import `Capell\FoundationTheme\...` classes, and the theme extends the default renderer, but `composer.json` and `capell.json` only require Core and Frontend. Add `capell-app/foundation-theme` to Composer/manifest dependencies and update tests/docs so standalone package installs cannot miss the demo dependency. Evidence: `InstallLiquidGlassThemeDemoAction`, `DemoCommand`, `capell.json dependencies.requires`, `composer.json require`. - **S** - **Shipped**
 
-2. **Fix skip/CTA anchor targets.** `page.blade.php` renders a skip link to `#main-content`; current tests pass that id through fixture content, but the package wrapper does not enforce the target. Hero and CTA fallback actions point to `#content`, while `content-listing.blade.php` has no `id="content"`. Add deterministic anchors or adjust fallback links so keyboard users and CTA clicks always land on real public sections. Evidence: `resources/views/page.blade.php`, `sections/hero.blade.php`, `sections/cta.blade.php`, `sections/content-listing.blade.php`. - **S**
+2. **Fix skip/CTA anchor targets.** `page.blade.php` renders a skip link to `#main-content`; current tests pass that id through fixture content, but the package wrapper does not enforce the target. Hero and CTA fallback actions point to `#content`, while `content-listing.blade.php` has no `id="content"`. Add deterministic anchors or adjust fallback links so keyboard users and CTA clicks always land on real public sections. Evidence: `resources/views/page.blade.php`, `sections/hero.blade.php`, `sections/cta.blade.php`, `sections/content-listing.blade.php`. - **S** - **Shipped**
 
 3. **Replace static marketplace SVGs with route-backed captures.** The screenshot contract declares `outputDirectory: packages/theme-liquid-glass/docs/screenshots`, but each entry points at `docs/assets/marketplace/*.svg` and is `required: false`. Convert homepage, landing, listing, search, and contact captures to required PNG entries under `docs/screenshots/`, then promote only verified media in `capell.json`. Evidence: `docs/screenshots.json`, `capell.json marketplace.screenshots`, `docs/assets/marketplace/*.svg`. - **M**
 
-4. **Update setup docs for package and host context.** README/overview tell readers to run `php artisan capell:theme-liquid-glass-demo`; repo-local package workflow forbids `php artisan`, and host-app setup should be explicit about where the command runs. Rewrite docs to separate package tests from installed Capell app demo commands, and include the Foundation Theme dependency. Evidence: `README.md`, `docs/overview.md`, repository AGENTS instructions. - **S**
+4. **Update setup docs for package and host context.** README/overview tell readers to run `php artisan capell:theme-liquid-glass-demo`; repo-local package workflow forbids `php artisan`, and host-app setup should be explicit about where the command runs. Rewrite docs to separate package tests from installed Capell app demo commands, and include the Foundation Theme dependency. Evidence: `README.md`, `docs/overview.md`, repository AGENTS instructions. - **S** - **Shipped**
 
 5. **Strengthen health checks for install dependencies and assets.** The current health check verifies registry definition, view files, and marketplace media file existence. It should also catch missing demo dependency classes, missing CSS asset path, and mismatch between `definition()->includedSections` and registered section renderers. Evidence: `ThemeLiquidGlassHealthCheck`, `LiquidGlassThemeServiceProvider::definition()`, `sectionRenderers()`. - **S**
 
@@ -92,7 +92,7 @@ vendor/bin/pest packages/foundation-theme/tests packages/layout-builder/tests --
 - [x] Package plan created from current code, manifest, docs, screenshots, views, and tests.
 - [x] Comprehensive local review pass completed for theme definition, demo command, public views, accessibility, screenshots, docs, health checks, and tests.
 - [x] Capell audience pass completed for site owners, package developers, and frontend/theme developers.
-- [ ] Approved implementation slices shipped.
-- [ ] Focused Theme Liquid Glass verification passed.
-- [ ] Package tests passed.
-- [ ] Repo preflight passed for changed files.
+- [x] Approved implementation slices shipped for dependency alignment, skip/CTA anchors, and setup docs.
+- [x] Focused Theme Liquid Glass verification passed.
+- [x] Package tests passed.
+- [ ] Repo preflight passed for changed files. Focused Pint and Composer path checks passed; full changed-file preflight remains open because the worktree has unrelated dirty files.

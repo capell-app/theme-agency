@@ -2,7 +2,7 @@
     $actions = $section->actions !== []
         ? $section->actions
         : [
-            ['label' => __('capell-theme-liquid-glass::generic.cta_primary_action'), 'url' => '#content', 'style' => 'primary'],
+            ['label' => __('capell-theme-liquid-glass::generic.cta_primary_action'), 'url' => '#main-content', 'style' => 'primary'],
             ['label' => __('capell-theme-liquid-glass::generic.cta_secondary_action'), 'url' => '#proof', 'style' => 'secondary'],
         ];
 @endphp

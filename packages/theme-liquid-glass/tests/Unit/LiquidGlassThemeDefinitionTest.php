@@ -6,6 +6,7 @@ use Capell\Core\Enums\VendorAssetEnum;
 use Capell\Core\Facades\CapellCore;
 use Capell\Core\ThemeStudio\Data\BrandProfileData;
 use Capell\Core\ThemeStudio\Data\ContentListingSectionData;
+use Capell\Core\ThemeStudio\Data\CtaSectionData;
 use Capell\Core\ThemeStudio\Data\HeroSectionData;
 use Capell\Core\ThemeStudio\Data\NavigationData;
 use Capell\Core\ThemeStudio\Rendering\ViewSectionRenderer;
@@ -133,7 +134,7 @@ it('drives the Liquid Glass shell and card surfaces from theme tokens', function
             surfaceColor: '#f3fbfa',
             foregroundColor: '#10202a',
         ),
-        'content' => '<main id="main-content">Preview</main>',
+        'content' => '<main>Preview</main>',
     ])->render();
 
     $css = file_get_contents(__DIR__ . '/../../resources/css/theme-liquid-glass.css') ?: '';
@@ -147,6 +148,9 @@ it('drives the Liquid Glass shell and card surfaces from theme tokens', function
         ->toContain('--theme-accent:#f97316')
         ->toContain('--theme-surface:#f3fbfa')
         ->toContain('--theme-foreground:#10202a')
+        ->toContain('href="#main-content"')
+        ->toContain('id="main-content"')
+        ->toContain('tabindex="-1"')
         ->toContain('class="site-theme-shell liquid-glass-shell min-h-screen antialiased"');
 
     expect($css)
@@ -160,6 +164,35 @@ it('drives the Liquid Glass shell and card surfaces from theme tokens', function
         ->toContain('liquid-glass-panel')
         ->toContain('liquid-glass-card')
         ->toContain('liquid-glass-button');
+});
+
+it('renders Liquid Glass fallback action anchors to package-owned public targets', function (): void {
+    View::addNamespace('capell-theme-liquid-glass', __DIR__ . '/../../resources/views');
+    Lang::addNamespace('capell-theme-liquid-glass', __DIR__ . '/../../resources/lang');
+
+    $heroHtml = view('capell-theme-liquid-glass::sections.hero', [
+        'section' => new HeroSectionData(
+            heading: 'Launch with a glass interface',
+            summary: 'Translucent sections for modern teams.',
+        ),
+    ])->render();
+
+    $ctaHtml = view('capell-theme-liquid-glass::sections.cta', [
+        'section' => new CtaSectionData(
+            heading: 'Start with Liquid Glass',
+            summary: 'Use a polished public theme without custom schema.',
+        ),
+    ])->render();
+
+    expect($heroHtml)
+        ->toContain('href="#main-content"')
+        ->toContain('href="#proof"')
+        ->not->toContain('href="#content"');
+
+    expect($ctaHtml)
+        ->toContain('href="#main-content"')
+        ->toContain('href="#proof"')
+        ->not->toContain('href="#content"');
 });
 
 it('renders content listing items without package metadata', function (): void {

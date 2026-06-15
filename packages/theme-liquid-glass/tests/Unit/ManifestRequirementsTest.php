@@ -51,6 +51,19 @@ describe('theme Liquid Glass capell.json manifest', function (): void {
             ->and($commands['demoParams'] ?? null)->toBe(['url', 'languages', 'sites']);
     });
 
+    it('requires Foundation Theme in its manifest and package composer metadata', function (): void {
+        $manifest = liquidGlassThemeMarketplaceManifest();
+        $dependencies = liquidGlassThemeManifestArray($manifest['dependencies'] ?? null, 'dependencies');
+        $requires = liquidGlassThemeManifestStringList($dependencies['requires'] ?? null, 'dependencies.requires');
+        $composer = liquidGlassThemeComposerManifest();
+        $composerRequires = liquidGlassThemeManifestArray($composer['require'] ?? null, 'composer.require');
+
+        expect($requires)->toContain('capell-app/core')
+            ->and($requires)->toContain('capell-app/foundation-theme')
+            ->and($requires)->toContain('capell-app/frontend')
+            ->and($composerRequires['capell-app/foundation-theme'] ?? null)->toBe('^4.0 || 4.x-dev');
+    });
+
     it('declares public-output safety and theme metadata', function (): void {
         $manifest = liquidGlassThemeMarketplaceManifest();
 
@@ -78,6 +91,30 @@ function liquidGlassThemeMarketplaceManifest(): array
     );
 
     throw_unless(is_array($manifest), RuntimeException::class, 'Theme Liquid Glass manifest must decode to an array.');
+
+    $stringKeyedManifest = [];
+
+    foreach ($manifest as $key => $value) {
+        if (is_string($key)) {
+            $stringKeyedManifest[$key] = $value;
+        }
+    }
+
+    return $stringKeyedManifest;
+}
+
+/**
+ * @return array<string, mixed>
+ */
+function liquidGlassThemeComposerManifest(): array
+{
+    $manifest = json_decode(
+        File::get(__DIR__ . '/../../composer.json'),
+        associative: true,
+        flags: JSON_THROW_ON_ERROR,
+    );
+
+    throw_unless(is_array($manifest), RuntimeException::class, 'Theme Liquid Glass composer manifest must decode to an array.');
 
     $stringKeyedManifest = [];
 
@@ -135,4 +172,26 @@ function liquidGlassThemeManifestString(mixed $value, string $key): string
     }
 
     return $value;
+}
+
+/**
+ * @return list<string>
+ */
+function liquidGlassThemeManifestStringList(mixed $value, string $key): array
+{
+    if (! is_array($value)) {
+        throw new RuntimeException(sprintf('Theme Liquid Glass manifest [%s] must be a list of strings.', $key));
+    }
+
+    $items = [];
+
+    foreach ($value as $item) {
+        if (! is_string($item)) {
+            throw new RuntimeException(sprintf('Theme Liquid Glass manifest [%s] must contain only strings.', $key));
+        }
+
+        $items[] = $item;
+    }
+
+    return $items;
 }

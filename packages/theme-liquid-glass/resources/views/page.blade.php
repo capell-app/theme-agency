@@ -6,6 +6,8 @@
 </a>
 
 <div
+    id="main-content"
+    tabindex="-1"
     style="{{ collect($brand->tokens())->map(fn (mixed $value, string $token): string => $token . ':' . $value)->implode(';') }}"
     class="site-theme-shell liquid-glass-shell min-h-screen antialiased"
 >

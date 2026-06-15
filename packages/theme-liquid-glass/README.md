@@ -16,6 +16,7 @@ Status details:
 - Tier: free
 - Bundle: foundation
 - Composer package: `capell-app/theme-liquid-glass`
+- Required package: `capell-app/foundation-theme`
 - Namespace: `Capell\ThemeStudio\LiquidGlass`
 - Theme key: `liquid-glass`
 
@@ -52,6 +53,7 @@ This theme has no schema impact. It relies on core Capell site, page, locale, an
 
 ## Install Impact
 
+- Composer dependencies: `capell-app/core`, `capell-app/foundation-theme`, and `capell-app/frontend`.
 - Admin navigation: contributes admin extension points through `capell.json`.
 - Permissions: none declared in `capell.json`.
 - Public routes: none detected in package route files.
@@ -76,9 +78,23 @@ This theme has no schema impact. It relies on core Capell site, page, locale, an
 
 ## Quick Start
 
-1. Install the package: `composer require capell-app/theme-liquid-glass`.
-2. Run the required setup: `php artisan capell:theme-liquid-glass-demo`.
-3. Verify the package provider is registered and the related frontend, command, or extension point is active.
+In a host Capell app, install the package with its Foundation Theme dependency:
+
+```bash
+composer require capell-app/foundation-theme capell-app/theme-liquid-glass
+```
+
+Then run the optional demo command from the host app, not from this package monorepo:
+
+```bash
+php artisan capell:theme-liquid-glass-demo
+```
+
+For package development in this repository, use package-local Pest commands such as:
+
+```bash
+vendor/bin/pest packages/theme-liquid-glass/tests --configuration=phpunit.xml
+```
 
 ## Next Steps
 

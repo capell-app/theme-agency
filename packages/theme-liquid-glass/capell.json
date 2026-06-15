@@ -15,7 +15,11 @@
     "namespace": "Capell\\ThemeStudio\\LiquidGlass",
     "surfaces": ["frontend"],
     "dependencies": {
-        "requires": ["capell-app/core", "capell-app/frontend"],
+        "requires": [
+            "capell-app/core",
+            "capell-app/foundation-theme",
+            "capell-app/frontend"
+        ],
         "supports": [],
         "conflicts": []
     },
