@@ -45,6 +45,12 @@ describe('agent-bridge capell.json manifest', function (): void {
         flags: JSON_THROW_ON_ERROR,
     );
 
+    $screenshotsContract = fn (): array => json_decode(
+        File::get($packagePath . '/docs/screenshots.json'),
+        associative: true,
+        flags: JSON_THROW_ON_ERROR,
+    );
+
     it('uses buyer-facing app extension content', function () use ($manifest, $composer): void {
         $manifestData = $manifest();
         $composerData = $composer();
@@ -73,6 +79,26 @@ describe('agent-bridge capell.json manifest', function (): void {
             'docs/screenshots/agent-bridge-prompt-builder-page.png',
             'docs/screenshots/agent-bridge-prompt-builder-page-dark.png',
         ]);
+    });
+
+    it('keeps duplicated runner captures out of required marketplace screenshot slots', function () use ($screenshotsContract): void {
+        $contractData = $screenshotsContract();
+        $entries = collect($contractData['entries'] ?? [])->keyBy('id');
+
+        foreach ([
+            'token-management-or-setup-surface',
+            'capability-preview-and-confirmation-flow',
+            'audit-entry-review',
+            'agent-bridge-server-health-output',
+        ] as $blockedEntryId) {
+            $entry = $entries->get($blockedEntryId);
+
+            throw_unless(is_array($entry), RuntimeException::class, sprintf('Missing Agent Bridge screenshot entry [%s].', $blockedEntryId));
+
+            expect($entry['required'] ?? null)->toBeFalse()
+                ->and($entry['notes'] ?? '')->toContain('Blocked from marketplace promotion')
+                ->and($entry['notes'] ?? '')->toContain('duplicates the prompt builder');
+        }
     });
 
     it('keeps marketplace screenshots readable and backed by files', function () use ($manifest, $packagePath): void {

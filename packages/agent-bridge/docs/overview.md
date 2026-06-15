@@ -30,10 +30,12 @@ Status details:
 Screenshot contract: `screenshots.json`.
 
 - Agent Bridge prompt builder page (admin, required).
-- Token management or setup surface (admin, required).
-- Capability preview and confirmation flow (admin, required).
-- Audit entry review (admin, required).
-- Agent Bridge server health output (admin, required).
+- Token management or setup surface (admin, optional runner target; blocked from marketplace promotion until a seeded user edit relation-manager capture exists).
+- Capability preview and confirmation flow (admin, optional runner target; blocked until a seeded confirmation capture exists).
+- Audit entry review (admin, optional runner target; blocked until a seeded audit relation-manager capture exists).
+- Agent Bridge server health output (admin, optional runner target; blocked until a real health/Diagnostics surface capture exists).
+
+Marketplace media currently promotes only the verified light/dark prompt-builder captures. The other committed PNGs are retained as runner evidence and must not be promoted while they duplicate the prompt-builder screen.
 
 ## Technical Shape
 
