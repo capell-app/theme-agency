@@ -1,6 +1,6 @@
 # SEO Suite — Improvement & Growth Plan
 
-> Package: capell-app/seo-suite · Kind: package · Tier: premium · Product group: Capell Search & SEO · Bundle: search-seo · Status: Draft
+> Package: capell-app/seo-suite · Kind: package · Tier: premium · Product group: Capell Search & SEO · Bundle: search-seo · Status: Complete
 
 ## 1. Snapshot
 
@@ -71,9 +71,9 @@ SEO Suite is the premium search/SEO package for the Capell CMS. It bolts metadat
 
 - **Done/Shipped: manifest settings, permissions, PageSpeed, models, widgets, schedules, commands, and shipped admin/public surfaces are declared.** `capell.json` lists `AIOrchestratorSettings` and `SeoSuiteSettings`, page/settings/AI permissions, Search Rankings and Translation Coverage admin-page contributions, AI Discovery routes, supported Blog/Publishing Studio/URL Manager integrations, model/widget/schedule/command/settings/health contributions, and PageSpeed audit/digest capabilities. Marketplace/automation can now read the shipped SEO Suite surface area from the manifest. **`capell.json`.**
 
-- **Empty CHANGELOG.** `CHANGELOG.md` has only a placeholder "Prepared package metadata…" line. A premium first-party paid package with priority support needs real release notes. **`CHANGELOG.md`.**
+- **Done/Shipped: CHANGELOG now records the major 4.x package slices.** The changelog covers full SEO check wiring, AI Discovery public-output safety, Prism breaker/usage hardening, PageSpeed recipient filtering, manifest/cache metadata, weighted scoring, on-page/focus-keyword reporting, media metadata schema fallback, AI authorization/cost tracking, and operational metadata. **`CHANGELOG.md`.**
 
-- **Docs drift.** `docs/overview.md` lists migrations dated `2026_04_18_*` and omits `RobotsTxtController` in one place / PageSpeed tables; actual migrations are `2026_05_10_*` and `2026_05_29_*`. **`docs/overview.md`.**
+- **Done/Shipped: docs overview matches the current install/runtime surface.** `docs/overview.md` now lists the current `2026_05_10_*`, `2026_05_29_*`, and `2026_06_08_*` migrations, PageSpeed tables, AI Discovery public routes including `robots.txt`, PageSpeed schedule/job behavior, and current command signatures. **`docs/overview.md`.**
 
 - **i18n completeness unverified for new strings.** Only `resources/lang/en/` exists. Every new check label, doctor message, and PageSpeed/notification string must resolve via `__()` keys (`capell-seo-suite::generic.seo_check_*`); there is no second locale to prove keys exist and no test asserting all `SeoCheckKeyEnum` labels have translations. **`resources/lang/en/*`, `src/Enums/SeoCheckKeyEnum.php`.**
 

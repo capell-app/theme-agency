@@ -71,10 +71,10 @@ Screenshot contract: `screenshots.json`.
 
 - Admin navigation: adds package-owned Filament classes when registered.
 - Permissions: `View:SeoAuditPage`, `View:BrokenLinksPage`, `Manage:BrokenLinks`, `View:NotFoundUrlsPage`, `Manage:NotFoundUrls`, `View:AiDiscoveryPage`, `Manage:AiDiscovery`, `View:SearchRankingsPage`, `View:TranslationCoveragePage`, `Manage:SeoSuiteSettings`, `Use:AiCreator`.
-- Public routes: none detected in package route files.
+- Public routes: `capell-frontend.llms-txt`, `capell-frontend.llms-full-txt`, `capell-frontend.robots-txt`, `capell-frontend.page-markdown-home`, and `capell-frontend.page-markdown`.
 - Database changes: package migrations are declared.
 - Settings: `Capell\SeoSuite\Settings\AIOrchestratorSettings`, `Capell\SeoSuite\Settings\SeoSuiteSettings`.
-- Queues or schedules: review package jobs or schedules before install.
+- Queues or schedules: `RunPageSpeedAuditJob`; weekly PageSpeed digest via `capell:seo-suite:pagespeed-audit --notify` when PageSpeed audits are enabled.
 - Cache tags: `seo-suite`.
 - Commands: `capell:admin-clear-ai-cache`, `capell:admin-monitor-ai-usage`, `capell:admin-test-openai`, `capell:seo-suite-doctor`, `capell:seo-suite-install`, `capell:seo-suite-setup`, `capell:seo-suite-sync-search-console`, `capell:seo-suite:pagespeed-audit`, `capell:seo-suite:refresh-ai-discovery-markdown`.
 

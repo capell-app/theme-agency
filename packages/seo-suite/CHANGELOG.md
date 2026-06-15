@@ -9,6 +9,9 @@ All notable changes to `capell-app/seo-suite` will be documented in this file.
 - Scoped Prism AI circuit breakers per provider and guarded missing token-usage telemetry.
 - Resolved default PageSpeed digest recipients through the user role relation when available.
 - Corrected the manifest settings, permissions, supported integrations, PageSpeed capabilities, and cache invalidation metadata.
+- Added weighted SEO score breakdowns, on-page content analysis, focus-keyword report grading, and Media Library/Media AI image metadata fallback for schema output.
+- Added user-level AI generation authorization, persisted AI cost estimates, and dashboard spend totals.
+- Completed SEO Suite operational metadata for models, widgets, schedules, commands, settings, health checks, dependencies, and public AI Discovery routes.
 - Prepared package metadata and documentation for ongoing Capell 4.x package work.
 
 ## 2026-06-03
