@@ -18,8 +18,11 @@ use Override;
  * @property AutomationActionType|null $action_type
  * @property AutomationRunStatus $status
  * @property int|null $automation_rule_id
+ * @property int|null $site_id
  * @property string|null $rule_key
  * @property string|null $action_key
+ * @property string|null $source_type
+ * @property string|null $source_id
  * @property string|null $idempotency_key
  * @property int|null $attempt_number
  * @property int|null $max_attempts

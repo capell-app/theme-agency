@@ -4,7 +4,7 @@
 
 ## 1. Snapshot
 
-Automation Studio provides persisted rule-based workflow orchestration for Capell package events, native actions, Public Actions, contact/newsletter/email integrations, and queued agent capabilities. It owns automation rule/run tables, admin resources, registries, queued trigger jobs, event listeners, native action handlers, screenshot coverage, and focused unit tests. The package has strong domain breadth, but its health check is a placeholder and idempotency/persistence behavior should be hardened so queued and event-driven automations are safe under retries.
+Automation Studio provides persisted rule-based workflow orchestration for Capell package events, native actions, Public Actions, contact/newsletter/email integrations, and queued agent capabilities. It owns automation rule/run tables, admin resources, registries, queued trigger jobs, event listeners, native action handlers, admin run replay, screenshot coverage, and focused unit tests. The package has strong domain breadth; the remaining Next rows focus on authoring ergonomics rather than core runtime safety.
 
 ## 2. Improvements (existing functionality)
 
@@ -21,7 +21,7 @@ Automation Studio provides persisted rule-based workflow orchestration for Capel
 Capabilities declared include automation rules, triggers, native actions, persistence, queue, idempotency, optional package bridges, and agent capability queueing.
 
 - **No meaningful health pass/fail.** Marketplace cannot tell whether tables, registries, admin resources, or handlers are available.
-- **No admin replay/retry flow.** Runs are recorded, but operators need safe retry/replay for failed actions.
+- **Done/Shipped: admin replay/retry flow.** Pending, skipped, and failed run rows can be replayed from the Automation Runs table through `ReplayAutomationRunAction`, preserving the original run and writing a new replay attempt.
 - **No rule test mode.** Admins need a dry-run preview of matching rules/actions against sample events.
 - **No condition/filter builder.** Rules appear trigger/action focused; richer conditions are a natural next product layer.
 
@@ -55,7 +55,7 @@ Automation Studio should be positioned as the workflow fabric for Capell package
 | Prove retry/idempotency behavior for queued triggers         | Done   | M      | High   | §2.2, §4.2  |
 | Add handler timeout/redaction docs and failure tests         | Done   | M      | High   | §2.3, §4.3  |
 | Rewrite docs around registries, queues, and optional bridges | Done   | S      | Medium | §2.4, §4.4  |
-| Add admin replay/retry workflow                              | Next   | M      | High   | §3          |
+| Add admin replay/retry workflow                              | Done   | M      | High   | §3          |
 | Add dry-run rule test mode                                   | Next   | M      | Medium | §3          |
 | Add condition/filter builder                                 | Next   | L      | Medium | §3, §5      |
 | Add visual rule builder                                      | Later  | L      | Medium | §5          |
@@ -73,6 +73,12 @@ For idempotency or queue changes, include:
 
 ```bash
 vendor/bin/pest packages/automation-studio/tests/Unit/Actions/QueueAutomationTriggerActionTest.php packages/automation-studio/tests/Unit/Jobs/DispatchQueuedAutomationTriggerJobTest.php --configuration=phpunit.xml
+```
+
+Replay workflow coverage:
+
+```bash
+vendor/bin/pest packages/automation-studio/tests/Unit/Actions/ReplayAutomationRunActionTest.php packages/automation-studio/tests/Unit/AdminSurfaceTest.php --configuration=phpunit.xml
 ```
 
 ## 8. Completion Checklist

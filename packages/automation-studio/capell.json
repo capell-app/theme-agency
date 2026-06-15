@@ -76,6 +76,7 @@
         "persistAutomationTriggerResults": "Capell\\AutomationStudio\\Actions\\PersistAutomationTriggerResultsAction",
         "queueAutomationTrigger": "Capell\\AutomationStudio\\Actions\\QueueAutomationTriggerAction",
         "registerAutomationStudioDefaults": "Capell\\AutomationStudio\\Actions\\RegisterAutomationStudioDefaultsAction",
+        "replayAutomationRun": "Capell\\AutomationStudio\\Actions\\ReplayAutomationRunAction",
         "recordAutomationRun": "Capell\\AutomationStudio\\Actions\\RecordAutomationRunAction"
     },
     "permissions": [
@@ -93,6 +94,7 @@
         "automation-admin",
         "automation-queue",
         "automation-idempotency",
+        "automation-run-replay",
         "trigger-form-submitted",
         "trigger-access-approved",
         "trigger-page-published",

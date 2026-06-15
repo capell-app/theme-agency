@@ -27,6 +27,7 @@ This slice creates the domain foundation, persistence layer, initial admin surfa
 - Persisted `AutomationRule` and `AutomationRun` models are implemented with migrations, encrypted action/settings/context payloads, site scope, statuses, protected-table registration, and manifest table ownership.
 - `LoadPersistedAutomationRulesAction` loads active persisted rules into the runtime registry.
 - `RecordAutomationRunAction` records pending, succeeded, and failed automation runs from trigger/action execution context.
+- `ReplayAutomationRunAction` lets operators replay a pending, skipped, or failed persisted action from the Automation Runs table.
 - Filament admin resources are implemented for mutable automation rules and read-only automation run history, with manifest contributions and package permissions.
 - `QueueAutomationTriggerAction` queues trigger dispatch through `DispatchQueuedAutomationTriggerJob`.
 - Queued execution uses stable idempotency keys, unique jobs, retry attempt metadata, and per-action run rows so repeated delivery updates the same run identity instead of creating duplicates.
@@ -42,6 +43,7 @@ This slice creates the domain foundation, persistence layer, initial admin surfa
 - If a native handler catches a downstream exception, the persisted automation result must use the generic `handler_failed` context and translated failure message. Raw exception messages, exception class names, API tokens, provider payloads, and transport details belong in application logs, not in `automation_runs.context` or admin-visible run messages.
 - Native handlers should return only operational identifiers that are safe for admins to see, such as message ids, subscriber ids, contact ids, action keys, redirect URLs, tags, and status values.
 - Queued trigger retries keep the same per-action idempotency identity. A previously successful action is reported as already completed instead of invoking the downstream handler again.
+- Manual run replay uses a replay-specific idempotency key and writes a new run row. The original failed, skipped, or pending audit row is preserved.
 
 ## Integration Notes
 

@@ -83,6 +83,14 @@ return [
         'rules' => 'Automation rules',
         'runs' => 'Automation runs',
     ],
+    'replay' => [
+        'action' => 'Replay',
+        'action_missing' => 'The original automation action can no longer be found.',
+        'failed' => 'Automation replay failed.',
+        'not_replayable' => 'Only pending, skipped, or failed automation runs with rule and action keys can be replayed.',
+        'rule_missing' => 'The original automation rule can no longer be found.',
+        'succeeded' => 'Automation replay completed.',
+    ],
     'rules' => [
         'status' => [
             'active' => 'Active',

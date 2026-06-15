@@ -5,10 +5,14 @@ declare(strict_types=1);
 namespace Capell\AutomationStudio\Filament\Resources\AutomationRuns;
 
 use BackedEnum;
+use Capell\AutomationStudio\Actions\ReplayAutomationRunAction;
+use Capell\AutomationStudio\Data\AutomationActionResultData;
 use Capell\AutomationStudio\Filament\Resources\AutomationRuns\Pages\ListAutomationRuns;
 use Capell\AutomationStudio\Models\AutomationRun;
 use Capell\AutomationStudio\Providers\AutomationStudioServiceProvider;
 use Capell\Core\Facades\CapellCore;
+use Filament\Actions\Action;
+use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
@@ -27,17 +31,38 @@ final class AutomationRunResource extends Resource
     #[Override]
     public static function table(Table $table): Table
     {
-        return $table->columns([
-            TextColumn::make('rule_key')->label(__('capell-automation-studio::generic.fields.rule'))->searchable()->sortable(),
-            TextColumn::make('action_key')->label(__('capell-automation-studio::generic.fields.action'))->searchable()->toggleable(),
-            TextColumn::make('idempotency_key')->label(__('capell-automation-studio::generic.fields.idempotency_key'))->searchable()->toggleable(isToggledHiddenByDefault: true),
-            TextColumn::make('trigger_type')->label(__('capell-automation-studio::generic.fields.trigger'))->badge()->sortable(),
-            TextColumn::make('action_type')->label(__('capell-automation-studio::generic.fields.action_type'))->badge()->sortable(),
-            TextColumn::make('status')->label(__('capell-automation-studio::generic.fields.status'))->badge()->sortable(),
-            TextColumn::make('message')->label(__('capell-automation-studio::generic.fields.message'))->limit(80)->toggleable(),
-            TextColumn::make('started_at')->label(__('capell-automation-studio::generic.fields.started_at'))->dateTime()->sortable(),
-            TextColumn::make('finished_at')->label(__('capell-automation-studio::generic.fields.finished_at'))->dateTime()->sortable(),
-        ]);
+        return $table
+            ->columns([
+                TextColumn::make('rule_key')->label(__('capell-automation-studio::generic.fields.rule'))->searchable()->sortable(),
+                TextColumn::make('action_key')->label(__('capell-automation-studio::generic.fields.action'))->searchable()->toggleable(),
+                TextColumn::make('idempotency_key')->label(__('capell-automation-studio::generic.fields.idempotency_key'))->searchable()->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('trigger_type')->label(__('capell-automation-studio::generic.fields.trigger'))->badge()->sortable(),
+                TextColumn::make('action_type')->label(__('capell-automation-studio::generic.fields.action_type'))->badge()->sortable(),
+                TextColumn::make('status')->label(__('capell-automation-studio::generic.fields.status'))->badge()->sortable(),
+                TextColumn::make('message')->label(__('capell-automation-studio::generic.fields.message'))->limit(80)->toggleable(),
+                TextColumn::make('started_at')->label(__('capell-automation-studio::generic.fields.started_at'))->dateTime()->sortable(),
+                TextColumn::make('finished_at')->label(__('capell-automation-studio::generic.fields.finished_at'))->dateTime()->sortable(),
+            ])
+            ->recordActions([
+                Action::make('replay')
+                    ->label(__('capell-automation-studio::generic.replay.action'))
+                    ->icon(Heroicon::ArrowPath)
+                    ->visible(fn (AutomationRun $record): bool => ReplayAutomationRunAction::make()->canReplay($record))
+                    ->requiresConfirmation()
+                    ->action(function (AutomationRun $record): void {
+                        $results = ReplayAutomationRunAction::run($record);
+                        $success = collect($results)->every(
+                            static fn (mixed $result): bool => $result instanceof AutomationActionResultData && $result->success,
+                        );
+
+                        $notification = Notification::make('automation-studio-run-replayed')
+                            ->title($success
+                                ? __('capell-automation-studio::generic.replay.succeeded')
+                                : __('capell-automation-studio::generic.replay.failed'));
+
+                        ($success ? $notification->success() : $notification->danger())->send();
+                    }),
+            ]);
     }
 
     #[Override]

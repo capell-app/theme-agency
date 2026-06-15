@@ -23,7 +23,7 @@ Status details:
 
 **For developers:** The package gives developers package-owned service providers, Actions, Data objects, models, and Filament classes instead of pushing this behaviour into core or application code.
 
-**For teams:** Automation Studio connects Capell package events to rule-based native actions, Public Actions, and agent capability workflows.
+**For teams:** Automation Studio connects Capell package events to rule-based native actions, Public Actions, and agent capability workflows. Operators can replay pending, skipped, or failed run actions from the run history without overwriting the original audit row.
 
 ## Screens And Workflow
 
@@ -32,6 +32,7 @@ Screenshot contract: `screenshots.json`.
 - Automation rules admin index (admin, required).
 - Automation rule edit screen (admin, required).
 - Automation runs admin index (admin, required).
+- Replay action on pending, skipped, or failed automation runs (admin).
 
 ## Technical Shape
 
@@ -40,7 +41,7 @@ Screenshot contract: `screenshots.json`.
 - Models: `AutomationRule`, `AutomationRun`.
 - Filament classes: `AutomationRuleResource`, `CreateAutomationRule`, `EditAutomationRule`, `ListAutomationRules`, `AutomationRunResource`, `ListAutomationRuns`.
 - Listeners: `DispatchAutomationFromAccessApproval`, `DispatchAutomationFromCampaignConversion`, `DispatchAutomationFromFormSubmission`, `DispatchAutomationFromWorkspaceStateChanged`.
-- Actions: `DispatchAutomationTriggerAction`, `LoadPersistedAutomationRulesAction`, `PersistAutomationTriggerResultsAction`, `QueueAutomationTriggerAction`, `RecordAutomationRunAction`, `RegisterAutomationStudioDefaultsAction`.
+- Actions: `DispatchAutomationTriggerAction`, `LoadPersistedAutomationRulesAction`, `PersistAutomationTriggerResultsAction`, `QueueAutomationTriggerAction`, `RecordAutomationRunAction`, `RegisterAutomationStudioDefaultsAction`, `ReplayAutomationRunAction`.
 - Data objects: `AutomationActionDefinitionData`, `AutomationActionResultData`, `AutomationRuleActionData`, `AutomationRuleData`, `AutomationTriggerDefinitionData`, `AutomationTriggerEventData`.
 - Jobs: `DispatchQueuedAutomationTriggerJob`.
 - Manifest contributions: `admin-resource: Capell\AutomationStudio\Manifest\AutomationRuleResourceContribution`, `admin-resource: Capell\AutomationStudio\Manifest\AutomationRunResourceContribution`, `model: Capell\AutomationStudio\Manifest\AutomationStudioModelsContribution`.
@@ -83,6 +84,10 @@ Screenshot contract: `screenshots.json`.
 ## Handler Failure Safety
 
 Automation Studio delegates native action delivery to the owning packages. Public Actions, Email Studio, Agent Bridge, Contacts, and Newsletter own their transport timeout and retry settings. Automation Studio records safe run results only: downstream exceptions become a translated handler failure with `handler_failed` context, while raw exception messages, exception classes, API tokens, provider payloads, and transport details stay out of admin-visible run history.
+
+## Replay Safety
+
+The Automation Runs table exposes a confirmed Replay action for pending, skipped, and failed action rows. Replay rebuilds the original trigger event from the persisted run payload, executes only the original rule action, and writes a new run row with a replay-specific idempotency key so the original audit record remains intact.
 
 ## Quick Start
 
