@@ -80,6 +80,38 @@ it('does not duplicate hero defaults on repeated setup', function (): void {
         ->and(Widget::query()->where('key', 'hero')->count())->toBe(1);
 });
 
+it('repairs page content below an existing hero container', function (): void {
+    resolve(LayoutCreator::class)->setup();
+
+    $homeLayout = Layout::query()
+        ->where('key', LayoutEnum::Home->value)
+        ->firstOrFail();
+
+    Widget::query()->where('key', 'hero')->delete();
+
+    $homeLayout->update([
+        'containers' => [
+            'hero' => [
+                'widgets' => [
+                    ['widget_key' => 'hero'],
+                ],
+            ],
+        ],
+    ]);
+
+    $result = InstallHeroLayoutDefaultsAction::run();
+
+    $homeLayout->refresh();
+    $containers = $homeLayout->containers ?? [];
+
+    expect($result)->toBe(['created' => 0, 'updated' => 1, 'skipped' => 0])
+        ->and(array_keys($containers))->toBe(['hero', 'main'])
+        ->and($containers['main']['widgets'] ?? null)->toBe([
+            ['widget_key' => 'page-content'],
+        ])
+        ->and($homeLayout->widgets)->toBe(['hero', 'page-content']);
+});
+
 it('installs hero defaults when home layout containers are null', function (): void {
     resolve(LayoutCreator::class)->setup();
 
