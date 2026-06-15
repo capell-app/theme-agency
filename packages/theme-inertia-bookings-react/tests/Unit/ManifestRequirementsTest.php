@@ -97,3 +97,21 @@ it('keeps the react booking request form explicitly labelled', function (): void
     expect(substr_count($component, '<label>'))->toBeGreaterThanOrEqual(8)
         ->and($component)->not->toContain('placeholder=');
 });
+
+it('keeps the react booking request validation and loading states screenshotable', function (): void {
+    $component = (string) file_get_contents(__DIR__ . '/../../resources/js/Pages/Capell/Bookings/Request.jsx');
+
+    expect(substr_count($component, 'export default function Request'))->toBe(1)
+        ->and($component)->toContain('errors, clearErrors')
+        ->and($component)->toContain('className="error"')
+        ->and($component)->toContain('role="alert"')
+        ->and($component)->toContain("aria-describedby={describedBy('service_id')}")
+        ->and($component)->toContain('requested_starts_at')
+        ->and($component)->toContain("aria-invalid={errors?.service_id ? 'true' : undefined}")
+        ->and($component)->toContain('className="slots"')
+        ->and($component)->toContain('aria-live="polite"')
+        ->and($component)->toContain('aria-busy="true"')
+        ->and($component)->toContain('Loading available times')
+        ->and($component)->toContain('clearErrors(field)')
+        ->and($component)->not->toContain('                            </form>');
+});

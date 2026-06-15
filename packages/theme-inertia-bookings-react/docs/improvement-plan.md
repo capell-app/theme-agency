@@ -4,11 +4,11 @@
 
 ## 1. Snapshot
 
-Theme Inertia Bookings React is the React component pack for the base Theme Inertia Bookings package. It requires `capell-app/theme-inertia-bookings` and `capell-app/inertia-react-adapter`, registers React Tailwind/build assets behind a vendor asset condition, contributes the `Capell/Bookings/Request` frontend component, and ships React implementations for `Capell/Page`, the public booking request form, and three basic widget components. Tests prove provider asset registration, component file existence, manifest contribution shape, and explicit form labels. Required screenshot PNG files exist under `docs/screenshots/`, but the marketplace intentionally promotes only the extension card until runner recapture is trustworthy.
+Theme Inertia Bookings React is the React component pack for the base Theme Inertia Bookings package. It requires `capell-app/theme-inertia-bookings` and `capell-app/inertia-react-adapter`, registers React Tailwind/build assets behind a vendor asset condition, contributes the `Capell/Bookings/Request` frontend component, and ships React implementations for `Capell/Page`, the public booking request form, and three basic widget components. Tests prove provider asset registration, component file existence, manifest contribution shape, explicit form labels, and the accessible validation/loading selectors required by the screenshot contract. Required screenshot PNG files exist under `docs/screenshots/`, but the marketplace intentionally promotes only the extension card until runner recapture is trustworthy.
 
 ## 2. Improvements (existing functionality)
 
-1. **Add real validation and loading states matching the screenshot contract.** `docs/screenshots.json` waits for `.error` and `.slots`, but `Request.jsx` renders no validation errors and no `.slots` wrapper. Use `useForm().errors`, add accessible error messages, and wrap the deferred slot select in a stable `.slots` region with loading copy. Evidence: `resources/js/Pages/Capell/Bookings/Request.jsx`, `docs/screenshots.json`. - **S**
+1. **Shipped: real validation and loading states matching the screenshot contract.** `Request.jsx` now reads `useForm().errors`, renders accessible `.error` messages, and wraps the deferred slot select in a stable `.slots` region with loading copy. Focused tests lock the selectors and accessibility attributes against drift. Evidence: `resources/js/Pages/Capell/Bookings/Request.jsx`, `tests/Unit/ManifestRequirementsTest.php`, `docs/screenshots.json`. - **S**
 
 2. **Add component-map drift coverage.** `app.jsx` manually maps `Capell/Page` and `Capell/Bookings/Request`; manifest contribution declares only `Capell/Bookings/Request`. Add a test that every declared provider/component route has a matching source file and that the shared `Capell/Page` fallback stays present. Evidence: `resources/js/app.jsx`, `capell.json contributes`, `InertiaBookingsReactServiceProvider`. - **S**
 
@@ -24,7 +24,7 @@ Theme Inertia Bookings React is the React component pack for the base Theme Iner
 
 Capabilities declared: `theme-inertia-bookings-react`.
 
-- **Validation UI is absent.** The form can post, but server validation feedback is not rendered.
+- **Validation UI is present but not browser-recaptured.** The form renders server validation feedback through Inertia errors, but the screenshot runner still needs a fresh capture before marketplace media is promoted.
 - **No success/confirmation state.** The form submits through Inertia but does not document or display a successful appointment request state.
 - **Widget support is minimal.** Only Content, Image, and Title widgets are implemented; richer Layout Builder widgets fall back to Content.
 - **No browser-level React test.** Current tests inspect files and provider registration, not actual rendered component behavior.
@@ -32,9 +32,9 @@ Capabilities declared: `theme-inertia-bookings-react`.
 
 ## 4. Issues / Risks
 
-1. **Important gap: screenshot contract waits for states the component does not render.** Validation/loading screenshots cannot be trusted until `.error` and `.slots` states exist. Recommended fix: add the states and recapture. - **P2**
+1. **Important gap: screenshot contract selectors now exist but need recapture.** Validation/loading screenshots cannot be promoted until the runner captures the React adapter with `.error` and `.slots` states from real fixtures. Recommended fix: recapture after the runner installs the adapter packages. - **P2**
 
-2. **Important gap: validation errors are invisible to users.** Failed booking submissions need accessible inline messages. Recommended fix: render `errors` under each field and a summary if needed. - **P2**
+2. **Resolved gap: validation errors are visible to users.** Failed booking submissions now render accessible inline messages and a summary through Inertia form errors. Keep package tests around this public state. - **P2**
 
 3. **Important gap: raw HTML rendering contract is implicit.** React components rely on sanitized server props. Recommended fix: document and test the public prop boundary. - **P2**
 
@@ -60,8 +60,8 @@ The React adapter should be sold as part of the Inertia Bookings theme family, n
 
 | Item                                                                                       | Bucket | Effort | Impact | Section ref      |
 | ------------------------------------------------------------------------------------------ | ------ | ------ | ------ | ---------------- |
-| Add accessible validation errors and `.error` screenshot state                             | Now    | S      | High   | §2.1, §4.1, §4.2 |
-| Add `.slots` loading region and stable deferred slot state                                 | Now    | S      | High   | §2.1, §4.1       |
+| Add accessible validation errors and `.error` screenshot state                             | Done   | S      | High   | §2.1, §4.1, §4.2 |
+| Add `.slots` loading region and stable deferred slot state                                 | Done   | S      | High   | §2.1, §4.1       |
 | Rewrite README/overview around base theme, React adapter, and generic adapter suppression  | Now    | S      | Medium | §2.6             |
 | Add component-map drift tests for source files and manifest component declarations         | Now    | S      | Medium | §2.2             |
 | Document/test sanitized prop boundary for `dangerouslySetInnerHTML` usage                  | Next   | M      | High   | §2.4, §4.3       |
@@ -89,7 +89,7 @@ vendor/bin/pest packages/inertia-react-adapter/tests packages/theme-inertia-book
 - [x] Package plan created from current code, manifest, docs, screenshots, and tests.
 - [x] Comprehensive local review pass completed for provider, health check, React components, screenshot contract, docs, and adapter boundary.
 - [x] Capell audience pass completed for frontend developers and package adopters.
-- [ ] Approved implementation slices shipped.
+- [x] Accessible validation/loading implementation slice shipped.
 - [ ] Focused Theme Inertia Bookings React verification passed.
 - [ ] Package tests passed.
 - [ ] Repo preflight passed for changed files.

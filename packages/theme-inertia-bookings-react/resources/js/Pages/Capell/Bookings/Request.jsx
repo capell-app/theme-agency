@@ -302,71 +302,9 @@ export default function Request({
                     disabled={processing}
                     type="submit"
                 >
-                    {processing ? 'Requesting appointment' : 'Request appointment'}
-                </button>
-            </form>
-        </main>
-    )
-}
-                                >
-                                    {slot.label}
-                                </option>
-                            ))}
-                        </select>
-                    </Deferred>
-                </label>
-
-                <label>
-                    Name
-                    <input
-                        autoComplete="name"
-                        type="text"
-                        value={data.customer_name}
-                        onChange={(event) =>
-                            updateField('customer_name', event.target.value)
-                        }
-                    />
-                </label>
-
-                <label>
-                    Email
-                    <input
-                        autoComplete="email"
-                        type="email"
-                        value={data.customer_email}
-                        onChange={(event) =>
-                            updateField('customer_email', event.target.value)
-                        }
-                    />
-                </label>
-
-                <label>
-                    Phone
-                    <input
-                        autoComplete="tel"
-                        type="tel"
-                        value={data.customer_phone}
-                        onChange={(event) =>
-                            updateField('customer_phone', event.target.value)
-                        }
-                    />
-                </label>
-
-                <label>
-                    Notes
-                    <textarea
-                        value={data.notes}
-                        onChange={(event) =>
-                            updateField('notes', event.target.value)
-                        }
-                    />
-                </label>
-
-                <button
-                    disabled={processing}
-                    type="submit"
-                >
-                    Request appointment
+                    {processing
+                        ? 'Requesting appointment'
+                        : 'Request appointment'}
                 </button>
             </form>
         </main>
