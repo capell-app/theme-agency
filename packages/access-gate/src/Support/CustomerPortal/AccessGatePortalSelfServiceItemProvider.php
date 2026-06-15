@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace Capell\AccessGate\Support\CustomerPortal;
 
+use Capell\AccessGate\Enums\BrowserTokenStatus;
 use Capell\AccessGate\Enums\GrantStatus;
 use Capell\AccessGate\Enums\RegistrationStatus;
+use Capell\AccessGate\Models\BrowserToken;
 use Capell\AccessGate\Models\Grant;
 use Capell\AccessGate\Models\Registration;
 use Capell\CustomerPortal\Contracts\PortalSelfServiceItemProvider;
@@ -29,6 +31,7 @@ final class AccessGatePortalSelfServiceItemProvider implements PortalSelfService
 
         return [
             ...$this->grantItems($portalAccount, $email),
+            ...$this->browserTokenItems($portalAccount, $email),
             ...$this->registrationItems($portalAccount, $email),
         ];
     }
@@ -59,6 +62,47 @@ final class AccessGatePortalSelfServiceItemProvider implements PortalSelfService
                     'grant_id' => (int) $grant->getKey(),
                     'area_id' => (int) $grant->access_area_id,
                     'status' => $grant->status->value,
+                ],
+            ))
+            ->all();
+    }
+
+    /**
+     * @return list<PortalSelfServiceItemData>
+     */
+    private function browserTokenItems(PortalAccount $portalAccount, string $email): array
+    {
+        return BrowserToken::query()
+            ->with(['area', 'grant.registration'])
+            ->where('status', BrowserTokenStatus::Active->value)
+            ->where(function (Builder $query): void {
+                $query
+                    ->whereNull('expires_at')
+                    ->orWhere('expires_at', '>', now());
+            })
+            ->whereHas('grant', function (Builder $query) use ($email): void {
+                $query
+                    ->where('status', GrantStatus::Active->value)
+                    ->whereRaw('lower(email) = ?', [$email]);
+            })
+            ->whereHas('area', fn (Builder $query): Builder => $this->scopeAreaToPortal($query, $portalAccount))
+            ->latest('last_used_at')
+            ->latest('id')
+            ->limit(10)
+            ->get()
+            ->map(fn (BrowserToken $browserToken): PortalSelfServiceItemData => new PortalSelfServiceItemData(
+                key: 'access-gate.browser-token.' . $browserToken->getKey(),
+                type: PortalSelfServiceItemType::GatedResource,
+                label: $browserToken->area?->name ?? __('capell-access-gate::public.portal.gated_resource'),
+                description: $this->browserTokenDescription($browserToken),
+                url: $browserToken->grant?->registration?->requested_url,
+                status: __('capell-access-gate::public.portal.browser_token_status.' . $browserToken->status->value),
+                occurredAt: $browserToken->last_used_at ?? $browserToken->updated_at,
+                meta: [
+                    'browser_token_id' => (int) $browserToken->getKey(),
+                    'grant_id' => (int) $browserToken->grant_id,
+                    'area_id' => (int) $browserToken->access_area_id,
+                    'status' => $browserToken->status->value,
                 ],
             ))
             ->all();
@@ -118,6 +162,17 @@ final class AccessGatePortalSelfServiceItemProvider implements PortalSelfService
 
         return __('capell-access-gate::public.portal.grant_expires_description', [
             'date' => $grant->expires_at->toFormattedDateString(),
+        ]);
+    }
+
+    private function browserTokenDescription(BrowserToken $browserToken): string
+    {
+        if ($browserToken->expires_at === null) {
+            return __('capell-access-gate::public.portal.browser_token_description');
+        }
+
+        return __('capell-access-gate::public.portal.browser_token_expires_description', [
+            'date' => $browserToken->expires_at->toFormattedDateString(),
         ]);
     }
 

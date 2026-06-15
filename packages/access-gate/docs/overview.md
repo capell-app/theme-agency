@@ -89,6 +89,8 @@ Payment-gated flows should render public CTAs and create checkout or approval se
 
 Audit exports are available through `capell:access-gate-audit-export`. Use `--area`, `--type`, `--from`, `--to`, and `--limit` to narrow evidence for a support case, and pass `--path=/absolute/path/access-gate-audit.csv` when the CSV should be written to disk instead of stdout.
 
+When Customer Portal is installed, Access Gate contributes self-service items for active grants, pending access requests, and active browser sessions. Browser-token items are scoped by the portal account email and site, and expired or revoked sessions are excluded.
+
 ## Common Pitfalls
 
 - Run migrations before opening package resources or public routes.

@@ -16,6 +16,13 @@ return [
         'back' => 'Request a new link',
     ],
     'portal' => [
+        'browser_token_description' => 'A browser session currently has access.',
+        'browser_token_expires_description' => 'A browser session has access until :date.',
+        'browser_token_status' => [
+            'active' => 'Browser access active',
+            'expired' => 'Browser access expired',
+            'revoked' => 'Browser access revoked',
+        ],
         'gated_resource' => 'Gated resource',
         'grant_description' => 'Access is currently available.',
         'grant_expires_description' => 'Access is available until :date.',
