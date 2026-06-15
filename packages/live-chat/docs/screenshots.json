@@ -7,7 +7,6 @@
             "label": "Live chat widget",
             "required": false,
             "route": "/?without_html_cache=1",
-            "screenshotPath": "packages/live-chat/docs/screenshots/live-chat-widget.png",
             "fallbackAsset": "packages/live-chat/docs/assets/marketplace/extension-card.svg"
         },
         {
@@ -15,7 +14,6 @@
             "label": "Conversation inbox",
             "required": false,
             "route": "/admin/live-chat/conversations",
-            "screenshotPath": "packages/live-chat/docs/screenshots/live-chat-conversations-admin.png",
             "fallbackAsset": "packages/live-chat/docs/assets/marketplace/extension-card.svg"
         }
     ]

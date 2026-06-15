@@ -51,9 +51,7 @@
             "waitFor": "table",
             "required": false,
             "notes": "Capture after registering static templates from Email Studio and Comments so package, status, and variable columns are populated.",
-            "useCase": "An admin reviews package-provided templates and starts customization from a static default.",
-            "screenshotPath": "packages/email-studio/docs/screenshots/email-templates-index.png",
-            "darkScreenshotPath": "packages/email-studio/docs/screenshots/email-templates-index-dark.png"
+            "useCase": "An admin reviews package-provided templates and starts customization from a static default."
         },
         {
             "id": "email-template-themes",
@@ -67,9 +65,7 @@
             "waitFor": "table",
             "required": false,
             "notes": "Capture after seeding the default theme and at least one site-scoped branded theme.",
-            "useCase": "An admin edits the branding tokens used by themed transactional email templates.",
-            "screenshotPath": "packages/email-studio/docs/screenshots/email-template-themes.png",
-            "darkScreenshotPath": "packages/email-studio/docs/screenshots/email-template-themes-dark.png"
+            "useCase": "An admin edits the branding tokens used by themed transactional email templates."
         }
     ]
 }
