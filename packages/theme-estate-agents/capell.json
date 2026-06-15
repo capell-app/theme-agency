@@ -134,32 +134,35 @@
                 "caption": "Property search homepage with valuation and viewing intent."
             },
             {
-                "path": "docs/assets/marketplace/estate-homepage.svg",
+                "path": "docs/screenshots/estate-homepage-layout.png",
                 "alt": "Theme Estate Agents homepage preview",
                 "caption": "Agency homepage with search, featured property, and proof."
             },
             {
-                "path": "docs/assets/marketplace/estate-search.svg",
+                "path": "docs/screenshots/estate-search-layout.png",
                 "alt": "Theme Estate Agents property search preview",
                 "caption": "Property search band and listing filters."
             },
             {
-                "path": "docs/assets/marketplace/estate-valuation.svg",
+                "path": "docs/screenshots/estate-valuation-layout.png",
                 "alt": "Theme Estate Agents valuation preview",
                 "caption": "Vendor valuation and appraisal conversion surface."
             },
             {
-                "path": "docs/assets/marketplace/estate-local-guide.svg",
+                "path": "docs/screenshots/estate-local-guide-layout.png",
                 "alt": "Theme Estate Agents local guide preview",
                 "caption": "Area-guide layout with agent proof and neighbourhood context."
             },
             {
-                "path": "docs/assets/marketplace/estate-property-detail.svg",
+                "path": "docs/screenshots/estate-viewing-layout.png",
                 "alt": "Theme Estate Agents property detail preview",
                 "caption": "Property detail page with photography, features, and viewing intent."
             }
         ],
         "categories": ["frontend", "themes", "property"]
+    },
+    "contributionTraceability": {
+        "deferredContributions": ["route"]
     },
     "extends": "default",
     "themeKey": "estate-agents"

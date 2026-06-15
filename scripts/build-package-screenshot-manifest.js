@@ -47,12 +47,19 @@ for (const packageName of packageNames) {
         : {}
     const commands = capellManifest.commands ?? {}
     const composerName = packageManifest.composerName ?? null
+    const composerRequires = Array.isArray(packageManifest.composerRequires)
+        ? packageManifest.composerRequires
+        : []
     const packageEntries = packageManifest.entries ?? []
     const packageBrowserTests = packageManifest.browserTests ?? []
 
     packages.push({
         package: packageManifest.package ?? packageName,
         composerName,
+        composerRequires,
+        requiresInstalledPackage:
+            packageManifest.requiresInstalledPackage ??
+            composerRequires.length > 0,
         installCommand: commands.install ?? null,
         setupCommand: commands.setup ?? null,
         demoCommand: commands.demo ?? null,

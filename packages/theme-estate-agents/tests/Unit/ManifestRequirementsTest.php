@@ -51,3 +51,23 @@ it('declares only estate agents marketplace screenshots that exist in the packag
         expect(File::exists(__DIR__ . '/../../' . $screenshot['path']))->toBeTrue();
     }
 });
+
+it('requires route backed screenshot captures for marketplace proof', function (): void {
+    $manifest = capell_json_file_array(__DIR__ . '/../../docs/screenshots.json');
+    $entries = data_get($manifest, 'entries', []);
+
+    throw_unless(is_array($entries), RuntimeException::class, 'Theme Estate Agents screenshot entries must be an array.');
+
+    expect($entries)->toHaveCount(5);
+
+    foreach ($entries as $entry) {
+        throw_if(! is_array($entry), RuntimeException::class, 'Theme Estate Agents screenshot entry must be an array.');
+
+        $screenshotPath = $entry['screenshotPath'] ?? null;
+
+        expect($entry['required'] ?? null)->toBeTrue()
+            ->and($entry['url'] ?? '')->toStartWith('/screenshot-fixtures/theme-estate-agents/')
+            ->and($screenshotPath)->toBeString()
+            ->and(File::exists(getcwd() . '/' . $screenshotPath))->toBeTrue();
+    }
+});

@@ -4,7 +4,7 @@
 
 ## 1. Snapshot
 
-Theme Estate Agents is a premium Blade child theme for property agencies, lettings teams, valuations, area guides, agent proof, and viewing-request journeys. It registers theme key `estate-agents`, runtime inheritance `extends: default`, one preset, a package page wrapper, 14 section renderers, a demo command, and a critical health check that verifies definition/manifest/files. The theme stays thin: no migrations, models, routes, permissions, settings, or admin resources. Optional integrations are passed into sections for Search, Address, and Form Builder, but current views mostly use static form/search markup with connected labels. The package has solid public-output and no-query source tests. Marketplace media is still static SVG preview art, while `docs/screenshots.json` declares route-backed fixture entries that are optional and not committed as PNG captures.
+Theme Estate Agents is a premium Blade child theme for property agencies, lettings teams, valuations, area guides, agent proof, and viewing-request journeys. It registers theme key `estate-agents`, runtime inheritance `extends: default`, one preset, a package page wrapper, 14 section renderers, a demo command, opt-in screenshot fixture routes, and a critical health check that verifies definition/manifest/files. The theme stays thin: no migrations, models, permissions, settings, or admin resources. Optional integrations are passed into sections for Search, Address, and Form Builder, but current views mostly use static form/search markup with connected labels. The package has solid public-output and no-query source tests. Marketplace media now includes five route-backed PNG captures for homepage, property search, valuation, local-guide, and viewing-request journeys.
 
 ## 2. Improvements (existing functionality)
 
@@ -12,7 +12,7 @@ Theme Estate Agents is a premium Blade child theme for property agencies, lettin
 
 2. **Fix the broken skip link target.** `page.blade.php` renders a skip link to `#main-content`, but no element in the theme views has that id. Add `id="main-content"` to the main public wrapper or render a semantic `<main>` so keyboard users have a working skip target. Evidence: `resources/views/page.blade.php`, `rg main-content`. - **S** - **Done 2026-06-14:** the page wrapper is now a semantic `<main id="main-content">` and public-output tests lock the skip target.
 
-3. **Replace static marketplace SVGs with route-backed captures.** Premium themes need at least five real frontend screenshots. This package promotes five SVG previews and marks runner entries `required: false`; no `docs/screenshots/*.png` captures are committed. Capture homepage, property search/listing, valuation, local guide, and viewing-request fixtures as required runner screenshots before completion. Evidence: `capell.json marketplace.screenshots`, `docs/screenshots.json`, `docs/assets/marketplace/*.svg`. - **M**
+3. **Replace static marketplace SVGs with route-backed captures.** Premium themes need at least five real frontend screenshots. This package promotes five route-backed PNG captures for homepage, property search/listing, valuation, local guide, and viewing-request fixtures and marks the runner entries required. Evidence: `capell.json marketplace.screenshots`, `docs/screenshots.json`, `docs/screenshots/*.png`, `routes/screenshot-fixtures.php`. - **M** - **Done 2026-06-15:** opt-in screenshot fixture routes render the real Estate Agents Blade sections with safe static data, and Capell runner captures are committed as required marketplace PNGs.
 
 4. **Wire or clarify optional integration forms/search.** Search/Form Builder availability changes labels, but property search, valuation, and viewing sections still render plain GET forms to `#` unless `form_action` is supplied. For a premium theme, connected Search/Form Builder states should use real public-safe URLs/actions from render data, or the fallback should be explicitly non-submitting CTA markup. Evidence: `sections/property-search.blade.php`, `valuation-cta.blade.php`, `viewing-request.blade.php`. - **M**
 
@@ -26,8 +26,8 @@ Capabilities declared: estate-agents theme and frontend renderer.
 
 - **No real property data/search package integration.** The theme intentionally does not own property records, but there is no companion property-listings package or Search contract for structured property filters.
 - **Valuation and viewing capture are static by default.** Form Builder availability is detected, but the theme does not render a package-owned form component or documented form action contract.
-- **No route-backed demo depth.** Demo install delegates to Foundation's generic `ThemeDemoPageInstaller`, so estate-specific homepage/search/valuation/local-guide/viewing fixture content may be thinner than the marketplace lane implies.
-- **No dark/mobile screenshot proof.** Premium property sites are sold visually; current proof is static SVG only.
+- **Demo install remains generic.** Demo install delegates to Foundation's generic `ThemeDemoPageInstaller`; estate-specific screenshot routes now cover marketplace proof, but a deeper installed-demo page set is still a Next-row improvement.
+- **No dark/mobile screenshot proof.** Premium property sites are sold visually; current committed proof covers desktop light-mode routes only.
 
 ## 4. Issues / Risks
 
@@ -35,7 +35,7 @@ Capabilities declared: estate-agents theme and frontend renderer.
 
 2. **Important gap: skip link is broken.** This is a real accessibility defect in every rendered page. Recommended fix: add the target and test it. - **P2**
 
-3. **Important gap: premium screenshots are placeholders.** Static SVG previews do not prove the real renderer, content depth, or responsive state. Recommended fix: make route-backed captures required and promote committed PNGs. - **P2**
+3. **Resolved: premium screenshots are now route-backed.** Static SVG planning art has been replaced by five required Capell runner PNG captures for the real Estate Agents Blade sections. Remaining visual proof depth is dark/mobile coverage. - **P2**
 
 4. **Important gap: connected forms/search are labels, not workflows.** Visitors can submit forms to `#` unless host content supplies actions. Recommended fix: either wire safe optional package actions or render CTA links/fallback copy when disconnected. - **P2**
 
@@ -51,7 +51,7 @@ Estate Agents has a distinct premium lane: buyer search, vendor valuation, local
 
 **Improved description:** "Theme Estate Agents gives property teams a polished public renderer for the two journeys every agency site needs: buyers searching for homes and vendors deciding who to trust with a valuation. It provides search bands, featured-property cards, area-guide sections, market proof, agent credibility, valuation CTAs, and viewing-request layouts while keeping property records and enquiries in companion packages or Capell content. Optional Search, Address, SEO Suite, Blog, and Form Builder integrations have safe static fallbacks. Built for agencies that want a premium property brochure without hardcoding listing data into theme views."
 
-**Media status:** Placeholder SVGs are useful planning assets only. Completion requires real route-backed screenshots for homepage, search/listing, valuation, local guide, and viewing request.
+**Media status:** Marketplace media now uses route-backed PNG captures for homepage, search/listing, valuation, local guide, and viewing request. The extension-card SVG remains a compact marketplace card preview.
 
 **Cross-sell:** Search should power property discovery. Address should support branch/area context. Form Builder should own valuation/viewing capture. Blog and SEO Suite should support market reports and area guides. A future Property Listings package would be the natural structured data companion.
 
@@ -63,7 +63,7 @@ Estate Agents has a distinct premium lane: buyer search, vendor valuation, local
 | --------------------------------------------------------------------------------- | ------ | ------ | ------ | ----------- |
 | Add explicit Foundation Theme dependency in Composer/manifest/tests               | Done   | S      | High   | §2.1, §4.1  |
 | Fix skip link target and add source/render test coverage                          | Done   | S      | High   | §2.2, §4.2  |
-| Convert static SVG screenshot contract to five required route-backed PNG captures | Now    | M      | High   | §2.3, §4.3  |
+| Convert static SVG screenshot contract to five required route-backed PNG captures | Done   | M      | High   | §2.3, §4.3  |
 | Rewrite README/overview with current theme-scale install/screenshot expectations  | Done   | S      | Medium | §5          |
 | Wire connected Search/Form Builder actions or render non-submitting CTA fallbacks | Next   | M      | High   | §2.4, §4.4  |
 | Add required page-set/demo fixture coverage                                       | Next   | M      | Medium | §2.5        |

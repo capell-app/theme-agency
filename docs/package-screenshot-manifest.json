@@ -15,6 +15,8 @@
         {
             "package": "access-gate",
             "composerName": "capell-app/access-gate",
+            "composerRequires": [],
+            "requiresInstalledPackage": true,
             "installCommand": "capell:access-gate-install",
             "setupCommand": "capell:access-gate-setup",
             "demoCommand": null,
@@ -26,7 +28,9 @@
         {
             "package": "address",
             "composerName": "capell-app/address",
-            "installCommand": null,
+            "composerRequires": [],
+            "requiresInstalledPackage": true,
+            "installCommand": "capell:address-install",
             "setupCommand": null,
             "demoCommand": "capell:address-demo",
             "demoParams": ["sites"],
@@ -37,6 +41,8 @@
         {
             "package": "agent-bridge",
             "composerName": "capell-app/agent-bridge",
+            "composerRequires": [],
+            "requiresInstalledPackage": true,
             "installCommand": null,
             "setupCommand": null,
             "demoCommand": null,
@@ -48,6 +54,8 @@
         {
             "package": "agent-delivery",
             "composerName": "capell-app/agent-delivery",
+            "composerRequires": [],
+            "requiresInstalledPackage": true,
             "installCommand": null,
             "setupCommand": null,
             "demoCommand": null,
@@ -59,6 +67,8 @@
         {
             "package": "ai-orchestrator",
             "composerName": "capell-app/ai-orchestrator",
+            "composerRequires": [],
+            "requiresInstalledPackage": true,
             "installCommand": null,
             "setupCommand": null,
             "demoCommand": null,
@@ -70,6 +80,8 @@
         {
             "package": "api",
             "composerName": "capell-app/api",
+            "composerRequires": [],
+            "requiresInstalledPackage": true,
             "installCommand": null,
             "setupCommand": null,
             "demoCommand": null,
@@ -81,6 +93,8 @@
         {
             "package": "automation-studio",
             "composerName": "capell-app/automation-studio",
+            "composerRequires": [],
+            "requiresInstalledPackage": true,
             "installCommand": null,
             "setupCommand": null,
             "demoCommand": null,
@@ -92,6 +106,8 @@
         {
             "package": "block-library",
             "composerName": "capell-app/block-library",
+            "composerRequires": [],
+            "requiresInstalledPackage": true,
             "installCommand": null,
             "setupCommand": null,
             "demoCommand": null,
@@ -103,6 +119,8 @@
         {
             "package": "blog",
             "composerName": "capell-app/blog",
+            "composerRequires": [],
+            "requiresInstalledPackage": true,
             "installCommand": "capell:blog-install",
             "setupCommand": "capell:blog-setup",
             "demoCommand": "capell:blog-demo",
@@ -114,6 +132,8 @@
         {
             "package": "bookings",
             "composerName": "capell-app/bookings",
+            "composerRequires": ["capell-app/bookings"],
+            "requiresInstalledPackage": true,
             "installCommand": null,
             "setupCommand": null,
             "demoCommand": null,
@@ -125,6 +145,8 @@
         {
             "package": "campaign-studio",
             "composerName": "capell-app/campaign-studio",
+            "composerRequires": [],
+            "requiresInstalledPackage": true,
             "installCommand": null,
             "setupCommand": null,
             "demoCommand": null,
@@ -136,6 +158,11 @@
         {
             "package": "comments",
             "composerName": "capell-app/comments",
+            "composerRequires": [
+                "capell-app/comments",
+                "capell-app/block-library"
+            ],
+            "requiresInstalledPackage": true,
             "installCommand": "capell-comments:install",
             "setupCommand": null,
             "demoCommand": null,
@@ -147,6 +174,8 @@
         {
             "package": "contacts",
             "composerName": "capell-app/contacts",
+            "composerRequires": [],
+            "requiresInstalledPackage": true,
             "installCommand": null,
             "setupCommand": null,
             "demoCommand": null,
@@ -158,6 +187,8 @@
         {
             "package": "content-sections",
             "composerName": "capell-app/content-sections",
+            "composerRequires": [],
+            "requiresInstalledPackage": true,
             "installCommand": null,
             "setupCommand": null,
             "demoCommand": null,
@@ -169,6 +200,8 @@
         {
             "package": "customer-portal",
             "composerName": "capell-app/customer-portal",
+            "composerRequires": [],
+            "requiresInstalledPackage": true,
             "installCommand": null,
             "setupCommand": null,
             "demoCommand": null,
@@ -180,6 +213,11 @@
         {
             "package": "dashboard-reports",
             "composerName": "capell-app/dashboard-reports",
+            "composerRequires": [
+                "capell-app/dashboard-reports",
+                "capell-app/block-library"
+            ],
+            "requiresInstalledPackage": true,
             "installCommand": null,
             "setupCommand": null,
             "demoCommand": null,
@@ -191,6 +229,8 @@
         {
             "package": "demo-kit",
             "composerName": "capell-app/demo-kit",
+            "composerRequires": [],
+            "requiresInstalledPackage": true,
             "installCommand": null,
             "setupCommand": null,
             "demoCommand": "capell:demo-kit-full-demo",
@@ -201,10 +241,12 @@
                 "sites",
                 "site-count",
                 "page-count",
+                "packages",
                 "theme",
                 "seed",
                 "quick",
                 "reset",
+                "skip-demo-users",
                 "allow-production",
                 "force"
             ],
@@ -215,6 +257,8 @@
         {
             "package": "deployments",
             "composerName": "capell-app/deployments",
+            "composerRequires": [],
+            "requiresInstalledPackage": true,
             "installCommand": null,
             "setupCommand": null,
             "demoCommand": null,
@@ -226,6 +270,8 @@
         {
             "package": "diagnostics",
             "composerName": "capell-app/diagnostics",
+            "composerRequires": [],
+            "requiresInstalledPackage": true,
             "installCommand": null,
             "setupCommand": null,
             "demoCommand": null,
@@ -237,6 +283,8 @@
         {
             "package": "document-lifecycle",
             "composerName": "capell-app/document-lifecycle",
+            "composerRequires": [],
+            "requiresInstalledPackage": true,
             "installCommand": null,
             "setupCommand": null,
             "demoCommand": null,
@@ -248,17 +296,21 @@
         {
             "package": "email-studio",
             "composerName": "capell-app/email-studio",
+            "composerRequires": [],
+            "requiresInstalledPackage": true,
             "installCommand": null,
             "setupCommand": null,
             "demoCommand": null,
             "demoParams": [],
             "doctorCommand": null,
-            "entryCount": 2,
+            "entryCount": 4,
             "browserTestCount": 0
         },
         {
             "package": "equestrian-clinics",
             "composerName": "capell-app/equestrian-clinics",
+            "composerRequires": ["capell-app/equestrian-clinics"],
+            "requiresInstalledPackage": true,
             "installCommand": null,
             "setupCommand": null,
             "demoCommand": null,
@@ -270,6 +322,8 @@
         {
             "package": "events",
             "composerName": "capell-app/events",
+            "composerRequires": [],
+            "requiresInstalledPackage": true,
             "installCommand": "capell:events-install",
             "setupCommand": null,
             "demoCommand": null,
@@ -281,6 +335,8 @@
         {
             "package": "exception-reports",
             "composerName": "capell-app/exception-reports",
+            "composerRequires": [],
+            "requiresInstalledPackage": true,
             "installCommand": null,
             "setupCommand": null,
             "demoCommand": null,
@@ -292,6 +348,8 @@
         {
             "package": "experiments",
             "composerName": "capell-app/experiments",
+            "composerRequires": [],
+            "requiresInstalledPackage": true,
             "installCommand": null,
             "setupCommand": null,
             "demoCommand": null,
@@ -303,6 +361,8 @@
         {
             "package": "filament-peek",
             "composerName": "capell-app/filament-peek",
+            "composerRequires": [],
+            "requiresInstalledPackage": true,
             "installCommand": null,
             "setupCommand": null,
             "demoCommand": null,
@@ -314,6 +374,8 @@
         {
             "package": "form-builder",
             "composerName": "capell-app/form-builder",
+            "composerRequires": [],
+            "requiresInstalledPackage": true,
             "installCommand": null,
             "setupCommand": null,
             "demoCommand": null,
@@ -325,6 +387,8 @@
         {
             "package": "foundation-theme",
             "composerName": "capell-app/foundation-theme",
+            "composerRequires": [],
+            "requiresInstalledPackage": true,
             "installCommand": null,
             "setupCommand": "capell:foundation-theme-setup",
             "demoCommand": "capell:foundation-theme-demo",
@@ -336,6 +400,14 @@
         {
             "package": "frontend-authoring",
             "composerName": "capell-app/frontend-authoring",
+            "composerRequires": [
+                "capell-app/core",
+                "capell-app/admin",
+                "capell-app/frontend",
+                "capell-app/foundation-theme",
+                "capell-app/frontend-authoring"
+            ],
+            "requiresInstalledPackage": true,
             "installCommand": null,
             "setupCommand": null,
             "demoCommand": null,
@@ -347,6 +419,8 @@
         {
             "package": "frontend-optimizer",
             "composerName": "capell-app/frontend-optimizer",
+            "composerRequires": [],
+            "requiresInstalledPackage": true,
             "installCommand": null,
             "setupCommand": null,
             "demoCommand": null,
@@ -358,6 +432,8 @@
         {
             "package": "ga4-reports",
             "composerName": "capell-app/ga4-reports",
+            "composerRequires": [],
+            "requiresInstalledPackage": true,
             "installCommand": null,
             "setupCommand": null,
             "demoCommand": null,
@@ -369,6 +445,8 @@
         {
             "package": "hero",
             "composerName": "capell-app/hero",
+            "composerRequires": [],
+            "requiresInstalledPackage": true,
             "installCommand": null,
             "setupCommand": "capell:hero-setup",
             "demoCommand": null,
@@ -380,6 +458,8 @@
         {
             "package": "html-cache",
             "composerName": "capell-app/html-cache",
+            "composerRequires": [],
+            "requiresInstalledPackage": true,
             "installCommand": null,
             "setupCommand": null,
             "demoCommand": null,
@@ -391,6 +471,8 @@
         {
             "package": "insights",
             "composerName": "capell-app/insights",
+            "composerRequires": [],
+            "requiresInstalledPackage": true,
             "installCommand": null,
             "setupCommand": null,
             "demoCommand": null,
@@ -402,6 +484,8 @@
         {
             "package": "knowledge-base",
             "composerName": "capell-app/knowledge-base",
+            "composerRequires": [],
+            "requiresInstalledPackage": true,
             "installCommand": null,
             "setupCommand": null,
             "demoCommand": "capell:knowledge-base-demo",
@@ -413,6 +497,8 @@
         {
             "package": "layout-builder",
             "composerName": "capell-app/layout-builder",
+            "composerRequires": [],
+            "requiresInstalledPackage": true,
             "installCommand": "capell:layout-builder-install",
             "setupCommand": null,
             "demoCommand": null,
@@ -424,6 +510,8 @@
         {
             "package": "live-chat",
             "composerName": null,
+            "composerRequires": ["capell-app/live-chat"],
+            "requiresInstalledPackage": true,
             "installCommand": null,
             "setupCommand": null,
             "demoCommand": null,
@@ -435,6 +523,8 @@
         {
             "package": "login-audit",
             "composerName": "capell-app/login-audit",
+            "composerRequires": [],
+            "requiresInstalledPackage": true,
             "installCommand": null,
             "setupCommand": null,
             "demoCommand": null,
@@ -446,6 +536,8 @@
         {
             "package": "media-ai",
             "composerName": "capell-app/media-ai",
+            "composerRequires": [],
+            "requiresInstalledPackage": true,
             "installCommand": null,
             "setupCommand": null,
             "demoCommand": null,
@@ -457,6 +549,8 @@
         {
             "package": "media-library",
             "composerName": "capell-app/media-library",
+            "composerRequires": [],
+            "requiresInstalledPackage": true,
             "installCommand": null,
             "setupCommand": null,
             "demoCommand": null,
@@ -468,6 +562,8 @@
         {
             "package": "migration-assistant",
             "composerName": "capell-app/migration-assistant",
+            "composerRequires": [],
+            "requiresInstalledPackage": true,
             "installCommand": null,
             "setupCommand": null,
             "demoCommand": null,
@@ -479,6 +575,8 @@
         {
             "package": "navigation",
             "composerName": "capell-app/navigation",
+            "composerRequires": [],
+            "requiresInstalledPackage": true,
             "installCommand": null,
             "setupCommand": "capell:navigation-setup",
             "demoCommand": "capell:navigation-demo",
@@ -490,6 +588,8 @@
         {
             "package": "newsletter",
             "composerName": "capell-app/newsletter",
+            "composerRequires": [],
+            "requiresInstalledPackage": true,
             "installCommand": null,
             "setupCommand": null,
             "demoCommand": null,
@@ -501,6 +601,8 @@
         {
             "package": "notes",
             "composerName": "capell-app/notes",
+            "composerRequires": [],
+            "requiresInstalledPackage": true,
             "installCommand": null,
             "setupCommand": null,
             "demoCommand": "capell:notes-demo",
@@ -512,6 +614,8 @@
         {
             "package": "password-policy",
             "composerName": "capell-app/password-policy",
+            "composerRequires": [],
+            "requiresInstalledPackage": true,
             "installCommand": null,
             "setupCommand": null,
             "demoCommand": null,
@@ -523,6 +627,8 @@
         {
             "package": "payments",
             "composerName": "capell-app/payments",
+            "composerRequires": [],
+            "requiresInstalledPackage": true,
             "installCommand": null,
             "setupCommand": null,
             "demoCommand": null,
@@ -534,6 +640,8 @@
         {
             "package": "privacy-center",
             "composerName": "capell-app/privacy-center",
+            "composerRequires": [],
+            "requiresInstalledPackage": true,
             "installCommand": null,
             "setupCommand": null,
             "demoCommand": null,
@@ -545,6 +653,8 @@
         {
             "package": "public-actions",
             "composerName": "capell-app/public-actions",
+            "composerRequires": [],
+            "requiresInstalledPackage": true,
             "installCommand": null,
             "setupCommand": null,
             "demoCommand": null,
@@ -556,6 +666,8 @@
         {
             "package": "publishing-studio",
             "composerName": "capell-app/publishing-studio",
+            "composerRequires": [],
+            "requiresInstalledPackage": true,
             "installCommand": null,
             "setupCommand": null,
             "demoCommand": null,
@@ -567,6 +679,8 @@
         {
             "package": "record-switcher",
             "composerName": "capell-app/record-switcher",
+            "composerRequires": ["capell-app/record-switcher"],
+            "requiresInstalledPackage": true,
             "installCommand": null,
             "setupCommand": null,
             "demoCommand": null,
@@ -578,6 +692,8 @@
         {
             "package": "search",
             "composerName": "capell-app/search",
+            "composerRequires": [],
+            "requiresInstalledPackage": true,
             "installCommand": null,
             "setupCommand": null,
             "demoCommand": null,
@@ -589,8 +705,10 @@
         {
             "package": "seo-suite",
             "composerName": "capell-app/seo-suite",
-            "installCommand": null,
-            "setupCommand": null,
+            "composerRequires": [],
+            "requiresInstalledPackage": true,
+            "installCommand": "capell:seo-suite-install",
+            "setupCommand": "capell:seo-suite-setup",
             "demoCommand": null,
             "demoParams": [],
             "doctorCommand": "capell:seo-suite-doctor",
@@ -600,6 +718,8 @@
         {
             "package": "shopify-commerce",
             "composerName": "capell-app/shopify-commerce",
+            "composerRequires": [],
+            "requiresInstalledPackage": true,
             "installCommand": "capell-shopify-commerce:install",
             "setupCommand": null,
             "demoCommand": null,
@@ -611,6 +731,8 @@
         {
             "package": "site-discovery",
             "composerName": "capell-app/site-discovery",
+            "composerRequires": [],
+            "requiresInstalledPackage": true,
             "installCommand": null,
             "setupCommand": null,
             "demoCommand": null,
@@ -622,6 +744,8 @@
         {
             "package": "site-monitor",
             "composerName": "capell-app/site-monitor",
+            "composerRequires": [],
+            "requiresInstalledPackage": true,
             "installCommand": null,
             "setupCommand": null,
             "demoCommand": null,
@@ -633,6 +757,11 @@
         {
             "package": "social-feeds",
             "composerName": "capell-app/social-feeds",
+            "composerRequires": [
+                "capell-app/social-feeds",
+                "capell-app/block-library"
+            ],
+            "requiresInstalledPackage": true,
             "installCommand": null,
             "setupCommand": null,
             "demoCommand": null,
@@ -644,6 +773,12 @@
         {
             "package": "structured-content-library",
             "composerName": "capell-app/structured-content-library",
+            "composerRequires": [
+                "capell-app/structured-content-library",
+                "capell-app/content-sections",
+                "capell-app/foundation-theme"
+            ],
+            "requiresInstalledPackage": true,
             "installCommand": null,
             "setupCommand": null,
             "demoCommand": null,
@@ -655,6 +790,8 @@
         {
             "package": "tags",
             "composerName": "capell-app/tags",
+            "composerRequires": [],
+            "requiresInstalledPackage": true,
             "installCommand": "capell:tags-install",
             "setupCommand": null,
             "demoCommand": null,
@@ -666,6 +803,8 @@
         {
             "package": "theme-agency",
             "composerName": "capell-app/theme-agency",
+            "composerRequires": [],
+            "requiresInstalledPackage": true,
             "installCommand": null,
             "setupCommand": null,
             "demoCommand": "capell:theme-agency-demo",
@@ -677,6 +816,8 @@
         {
             "package": "theme-commerce",
             "composerName": "capell-app/theme-commerce",
+            "composerRequires": [],
+            "requiresInstalledPackage": true,
             "installCommand": null,
             "setupCommand": null,
             "demoCommand": "capell:theme-commerce-demo",
@@ -688,6 +829,8 @@
         {
             "package": "theme-corporate",
             "composerName": "capell-app/theme-corporate",
+            "composerRequires": [],
+            "requiresInstalledPackage": true,
             "installCommand": null,
             "setupCommand": null,
             "demoCommand": "capell:theme-corporate-demo",
@@ -699,6 +842,8 @@
         {
             "package": "theme-education",
             "composerName": "capell-app/theme-education",
+            "composerRequires": [],
+            "requiresInstalledPackage": true,
             "installCommand": null,
             "setupCommand": null,
             "demoCommand": "capell:theme-education-demo",
@@ -710,6 +855,8 @@
         {
             "package": "theme-estate-agents",
             "composerName": "capell-app/theme-estate-agents",
+            "composerRequires": ["capell-app/theme-estate-agents"],
+            "requiresInstalledPackage": true,
             "installCommand": null,
             "setupCommand": null,
             "demoCommand": "capell:theme-estate-agents-demo",
@@ -721,6 +868,8 @@
         {
             "package": "theme-healthcare",
             "composerName": "capell-app/theme-healthcare",
+            "composerRequires": [],
+            "requiresInstalledPackage": true,
             "installCommand": null,
             "setupCommand": null,
             "demoCommand": "capell:theme-healthcare-demo",
@@ -732,6 +881,12 @@
         {
             "package": "theme-inertia-bookings",
             "composerName": "capell-app/theme-inertia-bookings",
+            "composerRequires": [
+                "capell-app/theme-inertia-bookings",
+                "capell-app/bookings",
+                "capell-app/inertia"
+            ],
+            "requiresInstalledPackage": true,
             "installCommand": null,
             "setupCommand": null,
             "demoCommand": null,
@@ -743,6 +898,12 @@
         {
             "package": "theme-inertia-bookings-react",
             "composerName": "capell-app/theme-inertia-bookings-react",
+            "composerRequires": [
+                "capell-app/theme-inertia-bookings-react",
+                "capell-app/theme-inertia-bookings",
+                "capell-app/inertia-react-adapter"
+            ],
+            "requiresInstalledPackage": true,
             "installCommand": null,
             "setupCommand": null,
             "demoCommand": null,
@@ -754,6 +915,12 @@
         {
             "package": "theme-inertia-bookings-vue",
             "composerName": "capell-app/theme-inertia-bookings-vue",
+            "composerRequires": [
+                "capell-app/theme-inertia-bookings-vue",
+                "capell-app/theme-inertia-bookings",
+                "capell-app/inertia-vue-adapter"
+            ],
+            "requiresInstalledPackage": true,
             "installCommand": null,
             "setupCommand": null,
             "demoCommand": null,
@@ -765,6 +932,8 @@
         {
             "package": "theme-knowledge",
             "composerName": "capell-app/theme-knowledge",
+            "composerRequires": [],
+            "requiresInstalledPackage": true,
             "installCommand": null,
             "setupCommand": null,
             "demoCommand": "capell:theme-knowledge-demo",
@@ -776,6 +945,8 @@
         {
             "package": "theme-liquid-glass",
             "composerName": "capell-app/theme-liquid-glass",
+            "composerRequires": [],
+            "requiresInstalledPackage": true,
             "installCommand": null,
             "setupCommand": null,
             "demoCommand": "capell:theme-liquid-glass-demo",
@@ -787,6 +958,8 @@
         {
             "package": "theme-local-services",
             "composerName": "capell-app/theme-local-services",
+            "composerRequires": [],
+            "requiresInstalledPackage": true,
             "installCommand": null,
             "setupCommand": null,
             "demoCommand": "capell:theme-local-services-demo",
@@ -798,6 +971,8 @@
         {
             "package": "theme-nonprofit",
             "composerName": "capell-app/theme-nonprofit",
+            "composerRequires": [],
+            "requiresInstalledPackage": true,
             "installCommand": null,
             "setupCommand": null,
             "demoCommand": "capell:theme-nonprofit-demo",
@@ -809,6 +984,8 @@
         {
             "package": "theme-portfolio",
             "composerName": "capell-app/theme-portfolio",
+            "composerRequires": [],
+            "requiresInstalledPackage": true,
             "installCommand": null,
             "setupCommand": null,
             "demoCommand": "capell:theme-portfolio-demo",
@@ -820,6 +997,8 @@
         {
             "package": "theme-restaurant",
             "composerName": "capell-app/theme-restaurant",
+            "composerRequires": [],
+            "requiresInstalledPackage": true,
             "installCommand": null,
             "setupCommand": null,
             "demoCommand": "capell:theme-restaurant-demo",
@@ -831,6 +1010,8 @@
         {
             "package": "theme-saas",
             "composerName": "capell-app/theme-saas",
+            "composerRequires": [],
+            "requiresInstalledPackage": true,
             "installCommand": null,
             "setupCommand": null,
             "demoCommand": "capell:theme-saas-demo",
@@ -842,6 +1023,8 @@
         {
             "package": "translation-manager",
             "composerName": "capell-app/translation-manager",
+            "composerRequires": [],
+            "requiresInstalledPackage": true,
             "installCommand": null,
             "setupCommand": null,
             "demoCommand": null,
@@ -853,6 +1036,8 @@
         {
             "package": "url-manager",
             "composerName": "capell-app/url-manager",
+            "composerRequires": [],
+            "requiresInstalledPackage": true,
             "installCommand": null,
             "setupCommand": null,
             "demoCommand": null,
@@ -864,6 +1049,8 @@
         {
             "package": "welcome-tour",
             "composerName": "capell-app/welcome-tour",
+            "composerRequires": [],
+            "requiresInstalledPackage": true,
             "installCommand": null,
             "setupCommand": null,
             "demoCommand": null,
@@ -875,6 +1062,8 @@
         {
             "package": "wordpress-importer",
             "composerName": "capell-app/wordpress-importer",
+            "composerRequires": [],
+            "requiresInstalledPackage": true,
             "installCommand": null,
             "setupCommand": null,
             "demoCommand": null,
@@ -1197,7 +1386,7 @@
             "targetType": "admin-surface",
             "target": null,
             "required": false,
-            "notes": "Optional because this package registers services and actions but no standalone Filament UI. Capture only through a consuming package that renders registered `AIOrchestratorCapabilityData` entries.",
+            "notes": "Optional because this package is headless infrastructure and does not ship a standalone Filament UI. Capture only through a consuming package that renders registered `AIOrchestratorCapabilityData` entries.",
             "useCase": "A developer verifies that installed AI Orchestrator modules expose the expected capability labels and approval levels.",
             "screenshotPath": "packages/ai-orchestrator/docs/screenshots/capability-list-or-prompt-surface-where-provided-by-a-consuming-package.png",
             "darkScreenshotPath": "packages/ai-orchestrator/docs/screenshots/capability-list-or-prompt-surface-where-provided-by-a-consuming-package-dark.png",
@@ -1211,7 +1400,7 @@
             "targetType": "admin-surface",
             "target": null,
             "required": false,
-            "notes": "Optional and blocked until a Layout Builder consuming UI exposes `LayoutBuilderAIOrchestratorModule`; this package only provides the integration module and preview action.",
+            "notes": "Optional and blocked until a Layout Builder consuming UI exposes `LayoutBuilderAIOrchestratorModule`; this package only provides the headless integration module and preview action.",
             "useCase": "An editor previews an AI-generated Layout Builder plan before any layout content is applied.",
             "screenshotPath": "packages/ai-orchestrator/docs/screenshots/layout-builder-layout-preview-workflow-if-layout-builder-integration-is-enabled.png",
             "darkScreenshotPath": "packages/ai-orchestrator/docs/screenshots/layout-builder-layout-preview-workflow-if-layout-builder-integration-is-enabled-dark.png",
@@ -1225,7 +1414,7 @@
             "targetType": "admin-surface",
             "target": null,
             "required": false,
-            "notes": "Optional and requires a consuming package that persists or displays review-required capability runs. AI Orchestrator itself keeps run state in data objects.",
+            "notes": "Optional and requires a consuming package that persists or displays review-required capability runs. AI Orchestrator itself keeps run state in data objects until first-class approval persistence ships.",
             "useCase": "A reviewer sees that an AI capability result needs human approval before the consuming package acts on it.",
             "screenshotPath": "packages/ai-orchestrator/docs/screenshots/approval-state-where-a-capability-requires-review.png",
             "darkScreenshotPath": "packages/ai-orchestrator/docs/screenshots/approval-state-where-a-capability-requires-review-dark.png",
@@ -2169,6 +2358,36 @@
             "useCase": "A support user opens an immutable sent email snapshot to inspect metadata, headers, tracked URLs, and stored HTML output.",
             "screenshotPath": "packages/email-studio/docs/screenshots/sent-email-view.png",
             "darkScreenshotPath": "packages/email-studio/docs/screenshots/sent-email-view-dark.png",
+            "composerName": "capell-app/email-studio"
+        },
+        {
+            "id": "email-templates-index",
+            "title": "Registered email templates index.",
+            "package": "email-studio",
+            "surface": "admin",
+            "targetType": "admin-resource",
+            "target": "EmailTemplateResource",
+            "scenario": "admin-index",
+            "url": "/email-studio/templates",
+            "waitFor": "table",
+            "required": false,
+            "notes": "Capture after registering static templates from Email Studio and Comments so package, status, and variable columns are populated.",
+            "useCase": "An admin reviews package-provided templates and starts customization from a static default.",
+            "composerName": "capell-app/email-studio"
+        },
+        {
+            "id": "email-template-themes",
+            "title": "Email template themes.",
+            "package": "email-studio",
+            "surface": "admin",
+            "targetType": "admin-resource",
+            "target": "EmailTemplateThemeResource",
+            "scenario": "admin-index",
+            "url": "/email-studio/template-themes",
+            "waitFor": "table",
+            "required": false,
+            "notes": "Capture after seeding the default theme and at least one site-scoped branded theme.",
+            "useCase": "An admin edits the branding tokens used by themed transactional email templates.",
             "composerName": "capell-app/email-studio"
         },
         {
@@ -3329,9 +3548,8 @@
         {
             "id": "live-chat-widget",
             "label": "Live chat widget",
-            "required": true,
+            "required": false,
             "route": "/?without_html_cache=1",
-            "screenshotPath": "packages/live-chat/docs/screenshots/live-chat-widget.png",
             "fallbackAsset": "packages/live-chat/docs/assets/marketplace/extension-card.svg",
             "package": "live-chat",
             "composerName": null
@@ -3339,9 +3557,8 @@
         {
             "id": "live-chat-conversations-admin",
             "label": "Conversation inbox",
-            "required": true,
+            "required": false,
             "route": "/admin/live-chat/conversations",
-            "screenshotPath": "packages/live-chat/docs/screenshots/live-chat-conversations-admin.png",
             "fallbackAsset": "packages/live-chat/docs/assets/marketplace/extension-card.svg",
             "package": "live-chat",
             "composerName": null
@@ -5648,10 +5865,10 @@
             "surface": "frontend",
             "targetType": "frontend-url",
             "target": "/theme-estate-agents",
+            "screenshotPath": "packages/theme-estate-agents/docs/screenshots/estate-homepage-layout.png",
             "required": false,
             "notes": "Capture search, featured property, valuation, local proof, and viewing paths.",
             "useCase": "An estate agency reviews the first viewport and dual buyer/vendor conversion model.",
-            "screenshotPath": "packages/theme-estate-agents/docs/screenshots/estate-homepage-layout.png",
             "scenario": "frontend-page",
             "url": "/screenshot-fixtures/theme-estate-agents/estate-homepage-layout",
             "waitFor": ".estate-shell",
@@ -5666,10 +5883,10 @@
             "surface": "frontend",
             "targetType": "frontend-url",
             "target": "/theme-estate-agents-search",
+            "screenshotPath": "packages/theme-estate-agents/docs/screenshots/estate-search-layout.png",
             "required": false,
             "notes": "Capture public search band and featured listing rhythm.",
             "useCase": "A buyer can begin discovery without the theme owning listing records.",
-            "screenshotPath": "packages/theme-estate-agents/docs/screenshots/estate-search-layout.png",
             "scenario": "frontend-page",
             "url": "/screenshot-fixtures/theme-estate-agents/estate-search-layout",
             "waitFor": ".estate-shell",
@@ -5684,10 +5901,10 @@
             "surface": "frontend",
             "targetType": "frontend-url",
             "target": "/theme-estate-agents-valuation",
+            "screenshotPath": "packages/theme-estate-agents/docs/screenshots/estate-valuation-layout.png",
             "required": false,
             "notes": "Capture valuation CTA, postcode intake, and market proof.",
             "useCase": "A vendor sees a premium appraisal path before submitting an enquiry.",
-            "screenshotPath": "packages/theme-estate-agents/docs/screenshots/estate-valuation-layout.png",
             "scenario": "frontend-page",
             "url": "/screenshot-fixtures/theme-estate-agents/estate-valuation-layout",
             "waitFor": ".estate-shell",
@@ -5702,10 +5919,10 @@
             "surface": "frontend",
             "targetType": "frontend-url",
             "target": "/theme-estate-agents-local-guide",
+            "screenshotPath": "packages/theme-estate-agents/docs/screenshots/estate-local-guide-layout.png",
             "required": false,
             "notes": "Capture schools, commute, market, and branch guidance.",
             "useCase": "A buyer or seller sees local expertise as part of the conversion path.",
-            "screenshotPath": "packages/theme-estate-agents/docs/screenshots/estate-local-guide-layout.png",
             "scenario": "frontend-page",
             "url": "/screenshot-fixtures/theme-estate-agents/estate-local-guide-layout",
             "waitFor": ".estate-shell",
@@ -5720,10 +5937,10 @@
             "surface": "frontend",
             "targetType": "frontend-url",
             "target": "/theme-estate-agents-viewing",
+            "screenshotPath": "packages/theme-estate-agents/docs/screenshots/estate-viewing-layout.png",
             "required": false,
             "notes": "Capture viewing request form with property context attached.",
             "useCase": "A buyer can request a viewing without losing listing context.",
-            "screenshotPath": "packages/theme-estate-agents/docs/screenshots/estate-viewing-layout.png",
             "scenario": "frontend-page",
             "url": "/screenshot-fixtures/theme-estate-agents/estate-viewing-layout",
             "waitFor": ".estate-shell",
@@ -6784,7 +7001,6 @@
             "required": false,
             "notes": "Capture a menu-led hospitality homepage with reservation, private dining, events, proof, and footer sections.",
             "useCase": "A restaurant reviews the first viewport and booking path before activating the premium theme.",
-            "screenshotPath": "packages/theme-restaurant/docs/screenshots/restaurant-homepage-layout.png",
             "scenario": "frontend-page",
             "url": "/screenshot-fixtures/theme-restaurant/restaurant-homepage-layout",
             "waitFor": ".restaurant-shell",
@@ -6802,7 +7018,6 @@
             "required": false,
             "notes": "Capture editorial menu rows with dish notes, prices, and CTA placement.",
             "useCase": "A hospitality team checks that menus are scannable and premium without storing presentation markup.",
-            "screenshotPath": "packages/theme-restaurant/docs/screenshots/restaurant-menu-layout.png",
             "scenario": "frontend-page",
             "url": "/screenshot-fixtures/theme-restaurant/restaurant-menu-layout",
             "waitFor": ".restaurant-shell",
@@ -6820,7 +7035,6 @@
             "required": false,
             "notes": "Capture reservation controls with Bookings/Form Builder fallback messaging.",
             "useCase": "A restaurant confirms the booking path feels like part of the venue experience.",
-            "screenshotPath": "packages/theme-restaurant/docs/screenshots/restaurant-reservation-layout.png",
             "scenario": "frontend-page",
             "url": "/screenshot-fixtures/theme-restaurant/restaurant-reservation-layout",
             "waitFor": ".restaurant-shell",
@@ -6838,7 +7052,6 @@
             "required": false,
             "notes": "Capture room capacity, event positioning, and group enquiry flow.",
             "useCase": "A venue validates that private dining feels like a premium conversion path.",
-            "screenshotPath": "packages/theme-restaurant/docs/screenshots/restaurant-private-dining-layout.png",
             "scenario": "frontend-page",
             "url": "/screenshot-fixtures/theme-restaurant/restaurant-private-dining-layout",
             "waitFor": ".restaurant-shell",
@@ -6856,7 +7069,6 @@
             "required": false,
             "notes": "Capture event rows for producer dinners, menu launches, and seasonal occasions.",
             "useCase": "A venue checks that event content is promoted without turning the theme into an events package.",
-            "screenshotPath": "packages/theme-restaurant/docs/screenshots/restaurant-events-layout.png",
             "scenario": "frontend-page",
             "url": "/screenshot-fixtures/theme-restaurant/restaurant-events-layout",
             "waitFor": ".restaurant-shell",
