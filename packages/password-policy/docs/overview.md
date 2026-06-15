@@ -8,7 +8,7 @@ Password Policy is an **Available**, **Schema-owning** Capell package in the **C
 
 Enforce admin password expiry, forced resets, reuse history, and breach (HIBP) checks across your Capell panels - configured from one settings screen, no code.
 
-After install, admins get package-owned management or reporting surfaces inside Capell.
+After install, admins get the Password Policy settings page, forced-change page, Users table/form extenders, health diagnostics, and password maintenance commands inside Capell Admin.
 
 Status details:
 
@@ -46,25 +46,27 @@ Screenshot contract: `screenshots.json`.
 - Data objects: `PasswordChangeData`, `PasswordPolicyStatusData`, `PasswordSecurityPostureReportData`, `ResolvedPasswordPolicySettingsData`.
 - Command signatures: `capell:password-policy:doctor`.
 - Console command classes: `ExpireStalePasswordsCommand`, `PasswordPolicyDoctorCommand`, `PrunePasswordHistoryCommand`, `RequirePasswordChangeCommand`.
+- Manifest contributions: `admin-action-extender: Capell\PasswordPolicy\Manifest\PasswordPolicyAdminExtendersContribution`, `admin-page: Capell\PasswordPolicy\Manifest\PasswordPolicyAdminPagesContribution`, `console-command: Capell\PasswordPolicy\Manifest\PasswordPolicyConsoleCommandsContribution`, `health-check: Capell\PasswordPolicy\Manifest\PasswordPolicyHealthContribution`, `setting: Capell\PasswordPolicy\Manifest\PasswordPolicySettingsContribution`.
 - Health checks: `Capell\PasswordPolicy\Health\PasswordPolicyHealthCheck`.
 - Blade views: `packages/password-policy/resources/views/filament/pages/forced-password-change.blade.php`.
 
 ## Data Model
 
 - Migration files: `2026_05_10_190863_01_add_password_policy_columns_to_users_table.php`, `2026_05_10_190863_02_create_password_policy_password_histories_table.php`.
+- Required storage: `password_policy_password_histories`, plus `users.password_changed_at` and `users.must_change_password`.
 - Migration impact: run host migrations through the package install flow before opening package surfaces.
 - Deletion/retention behaviour: Docs gap unless the package has an explicit pruning command, retention setting, or tested cascade path.
 
 ## Install Impact
 
-- Admin navigation: adds package-owned Filament classes when registered.
+- Admin navigation: adds Password Policy settings and forced-change pages when registered.
 - Permissions: none declared in `capell.json`.
 - Public routes: none detected in package route files.
 - Database changes: package migrations are declared.
 - Settings: `Capell\PasswordPolicy\Settings\PasswordPolicySettings`.
-- Queues or schedules: none detected in standard package paths.
+- Queues or schedules: none declared.
 - Cache tags: none declared.
-- Commands: `capell:password-policy:doctor`.
+- Commands: `capell:password-policy:expire-stale`, `capell:password-policy:doctor`, `capell:password-policy:prune-history`, `capell:password-policy:require-change`.
 
 ## Common Pitfalls
 
@@ -84,7 +86,7 @@ Screenshot contract: `screenshots.json`.
 ## Quick Start
 
 1. Install the package: `composer require capell-app/password-policy`.
-2. Run the required setup: `php artisan migrate`.
+2. Run the host application's package install and migration flow.
 3. Open the related Capell admin surface and verify Password Policy appears.
 
 ## Next Steps
