@@ -35,7 +35,16 @@
             "Capell\\FilamentPeek\\Providers\\FilamentPeekServiceProvider"
         ]
     },
-    "contributes": [],
+    "contributes": [
+        {
+            "type": "route",
+            "class": "Capell\\FilamentPeek\\Manifest\\FilamentPeekRoutesContribution",
+            "routes": ["capell-filament-peek.preview"],
+            "prefix": "capell-filament-peek",
+            "middleware": ["web", "signed"],
+            "tokenized": true
+        }
+    ],
     "database": {
         "migrations": false,
         "settings": false,
@@ -132,6 +141,6 @@
         "categories": ["admin", "editorial"]
     },
     "contributionTraceability": {
-        "deferredContributions": ["route"]
+        "deferredContributions": []
     }
 }
