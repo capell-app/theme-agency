@@ -51,9 +51,9 @@ Agent Delivery should be positioned as controlled AI/answer-engine distribution 
 
 | Item                                                        | Bucket | Effort | Impact | Section ref |
 | ----------------------------------------------------------- | ------ | ------ | ------ | ----------- |
-| Add route, middleware, registry, rate-limit health checks   | Now    | M      | High   | §2.1, §4.1  |
-| Isolate/log failing contributors                            | Now    | M      | High   | §2.2, §4.2  |
-| Add explicit cache/variation headers or documented no-cache | Now    | M      | Medium | §2.3, §4.3  |
+| Add route, middleware, registry, rate-limit health checks   | Done   | M      | High   | §2.1, §4.1  |
+| Isolate/log failing contributors                            | Done   | M      | High   | §2.2, §4.2  |
+| Add explicit cache/variation headers or documented no-cache | Done   | M      | Medium | §2.3, §4.3  |
 | Document JSON screenshot evidence as non-marketplace media  | Now    | S      | Medium | §2.4, §4.4  |
 | Add ETag/conditional request support                        | Next   | M      | Medium | §3          |
 | Add chunk budget diagnostics                                | Next   | M      | Medium | §3          |
