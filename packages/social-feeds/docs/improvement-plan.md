@@ -4,7 +4,7 @@
 
 ## 1. Snapshot
 
-Social Feeds is a premium growth package that contributes a `social-feed` Block Library frontend component backed by local cached feed items. It owns connection, item, and OAuth state tables, provider contracts/registry, RSS and configured-feed provider classes, render Data objects, a Blade block view, sync/upsert Actions, and screenshot evidence for a seeded frontend carousel, RSS sync state, and provider registry. The strongest shipped path is RSS/Atom: the driver validates absolute HTTP(S) URLs, resolves DNS, blocks private hosts by default, pins cURL resolution, disables redirects, parses XML with `LIBXML_NONET`, sanitizes public links/media URLs, and stores cached items for query-backed rendering. Current gaps are reachability and admin operations: there are no concrete Filament resources, settings, commands, scheduler, or queue jobs for creating connections and running syncs, even though the manifest declares admin and cached-feed capabilities.
+Social Feeds is a premium growth package that contributes a `social-feed` Block Library frontend component backed by local cached feed items. It owns connection, item, and OAuth state tables, provider contracts/registry, RSS and configured-feed provider classes, render Data objects, a Blade block view, sync/upsert Actions, Filament connection/item resources, a `capell:social-feeds:sync` command, an opt-in hourly schedule, and screenshot evidence for a seeded frontend carousel, RSS sync state, and provider registry. The strongest shipped path is RSS/Atom: the driver validates absolute HTTP(S) URLs, resolves DNS, blocks private hosts by default, pins cURL resolution, disables redirects, parses XML with `LIBXML_NONET`, sanitizes public links/media URLs, and stores cached items for query-backed rendering. Remaining gaps are product depth rather than package reachability: there is no package Settings surface, no OAuth callback flow, no cached item pruning policy, no moderation workflow, and no native provider API clients beyond RSS-compatible feeds.
 
 ## 2. Improvements (existing functionality)
 
@@ -14,7 +14,7 @@ Social Feeds is a premium growth package that contributes a `social-feed` Block 
 
 3. **Reconcile provider marketing with provider reality.** RSS is fully implemented. TikTok, YouTube, Bluesky, Instagram, Facebook, LinkedIn, and X extend `AbstractConfiguredProvider`, which requires `feed_url` and delegates to the RSS driver until native API bridges exist. Update marketplace/docs to say "RSS-compatible feeds for these providers today" or implement native provider clients. Evidence: `AbstractConfiguredProvider`, provider classes, manifest marketplace summary. - **S** - **Done 2026-06-14:** README, overview, and marketplace summary now describe RSS-compatible feeds and provider registry extensibility instead of native social API depth.
 
-4. **Clean manifest traceability drift.** `contributionTraceability.deferredContributions` still lists `frontend-component` even though the package contributes `SocialFeedWidgetContribution`, and lists `admin-resource`/`settings` without plan context. Update traceability when admin resources/settings are added or explicitly deferred. Evidence: `capell.json contributionTraceability`. - **S** - **Done 2026-06-14:** admin and frontend contributions are now shipped in `capell.json`, with only settings left deferred.
+4. **Clean manifest traceability drift.** `contributionTraceability.deferredContributions` still listed shipped contribution types after admin resources, the frontend widget, and the scheduled sync path landed. Update traceability when package surfaces ship or are intentionally deferred. Evidence: `capell.json contributionTraceability`. - **S** - **Done 2026-06-15:** admin, frontend, model, and scheduled-job contributions are declared in `capell.json`; the package has no Settings class, so `database.settings`, `settings`, and deferred contributions now all consistently report no settings surface.
 
 5. **Add render budget and no-query Blade coverage.** `FetchSocialFeedRenderDataAction` queries local items and the Blade view renders prepared Data; that matches the public Blade safety rule. Add a zero-query Blade render test after hydrating `SocialFeedRenderData` and a bounded query test for the Action. Evidence: `FetchSocialFeedRenderDataAction`, `resources/views/blocks/social-feed.blade.php`, `SocialFeedBlockRenderTest`. - **S**
 
@@ -32,15 +32,15 @@ Capabilities declared: social feeds, admin, frontend, provider registry, and cac
 
 ## 4. Issues / Risks
 
-1. **Important gap: advertised admin capability has no concrete admin surface.** Buyers/operators cannot create connections or run syncs from Capell admin. Recommended fix: add connection/item resources and manual sync action. - **P2**
+1. **Done/Shipped: advertised admin capability has concrete admin resources.** Buyers/operators can manage connections, inspect cached items, and run manual syncs from Capell admin. - **P2**
 
-2. **Important gap: cached rendering can go stale forever without a sync runner.** The Action works, but no production command or schedule calls it. Recommended fix: add command/schedule/job and health check stale-sync detection. - **P2**
+2. **Done/Shipped: cached rendering has a command and opt-in schedule.** `capell:social-feeds:sync` can sync all connected feeds or one connection, and `capell-social-feeds.sync_schedule_enabled` enables hourly scheduled sync. Remaining recommendation: add stale-sync health diagnostics. - **P2**
 
 3. **Important gap: provider list can over-sell native integrations.** Provider names are registered, but most providers are feed-url wrappers. Recommended fix: align docs/copy or implement native API clients. - **P2**
 
-4. **Improvement: manifest traceability contradicts shipped contribution state.** Deferred `frontend-component` is stale and can confuse Marketplace validation. Recommended fix: update traceability alongside admin/sync work. - **P3**
+4. **Done/Shipped: manifest traceability matches shipped contribution state.** Deferred contributions are empty, scheduled-job metadata is explicit, and settings metadata accurately says no package Settings class ships. - **P3**
 
-5. **Improvement: docs still contain generated admin-resource caveats.** README says no concrete Filament class was detected instead of explaining the intended connection workflow. Recommended fix: rewrite docs after deciding build vs de-scope. - **P3**
+5. **Done/Shipped: docs explain admin, command, schedule, and settings state.** README and overview list the Filament resources, command, scheduled-job contribution, opt-in config flag, and absence of package settings. - **P3**
 
 ## 5. Marketplace & Positioning
 
@@ -66,6 +66,7 @@ Social Feeds belongs in `Capell Growth` because it turns external social proof i
 | Add `capell:social-feeds:sync` command plus optional scheduled/queued sync      | Done   | M      | High   | §2.2, §4.2  |
 | Align provider docs/marketplace copy with RSS-compatible implementation reality | Done   | S      | Medium | §2.3, §4.3  |
 | Fix `contributionTraceability` for shipped/deferred surfaces                    | Done   | S      | Medium | §2.4        |
+| Align scheduled-job/settings metadata and docs                                  | Done   | S      | Medium | §2.4, §4    |
 | Add stale-sync health diagnostics                                               | Next   | S      | Medium | §2.2, §4.2  |
 | Add render budget/no-query public Blade coverage                                | Next   | S      | Medium | §2.5        |
 | Add cached item pruning/retention                                               | Next   | M      | Medium | §3          |

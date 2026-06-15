@@ -4,7 +4,7 @@
 
 ## What This Plugin Adds
 
-Social Feeds is an **Available**, **Schema-owning** Capell package in the **Capell Growth** product group. It ships as `capell-app/social-feeds` and extends these surfaces: admin, frontend.
+Social Feeds is an **Available**, **Schema-owning** Capell package in the **Capell Growth** product group. It ships as `capell-app/social-feeds` and extends these surfaces: admin, frontend, console.
 
 Premium social feed widgets for Capell with cached public rendering, provider extensibility, and configurable list, slideshow, carousel, and paginated layouts.
 
@@ -44,7 +44,7 @@ Screenshot contract: `screenshots.json`.
 - Data objects: `ResolvedFeedEndpointData`, `SocialFeedPostData`, `SocialFeedRenderData`, `SocialFeedRenderItemData`, `SocialFeedWidgetConfigData`.
 - Command signatures: `capell:social-feeds:sync`.
 - Console command classes: `SyncSocialFeedsCommand`.
-- Manifest contributions: `admin-resource: Capell\SocialFeeds\Manifest\SocialFeedConnectionResourceContribution`, `admin-resource: Capell\SocialFeeds\Manifest\SocialFeedItemResourceContribution`, `frontend-component: Capell\SocialFeeds\Manifest\SocialFeedWidgetContribution`, `model: Capell\SocialFeeds\Manifest\SocialFeedConnectionModelContribution`, `model: Capell\SocialFeeds\Manifest\SocialFeedItemModelContribution`.
+- Manifest contributions: `admin-resource: Capell\SocialFeeds\Manifest\SocialFeedConnectionResourceContribution`, `admin-resource: Capell\SocialFeeds\Manifest\SocialFeedItemResourceContribution`, `frontend-component: Capell\SocialFeeds\Manifest\SocialFeedWidgetContribution`, `model: Capell\SocialFeeds\Manifest\SocialFeedConnectionModelContribution`, `model: Capell\SocialFeeds\Manifest\SocialFeedItemModelContribution`, `scheduled-job: Capell\SocialFeeds\Manifest\SocialFeedsSyncScheduleContribution`.
 - Health checks: `Capell\SocialFeeds\Health\SocialFeedsHealthCheck`.
 - Blade views: `packages/social-feeds/resources/views/blocks/social-feed.blade.php`.
 - Cache tags: `social-feeds`.
@@ -64,7 +64,7 @@ Screenshot contract: `screenshots.json`.
 - Public routes: none detected in package route files.
 - Database changes: package migrations are declared.
 - Settings: no package settings declared.
-- Queues or schedules: none detected in standard package paths.
+- Queues or schedules: optional hourly `capell:social-feeds:sync --all` scheduler is disabled by default and controlled by `capell-social-feeds.sync_schedule_enabled`.
 - Cache tags: `social-feeds`.
 - Commands: `capell:social-feeds:sync`.
 

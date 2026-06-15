@@ -13,7 +13,7 @@
         "group": "Capell Growth"
     },
     "namespace": "Capell\\SocialFeeds",
-    "surfaces": ["admin", "frontend"],
+    "surfaces": ["admin", "frontend", "console"],
     "dependencies": {
         "requires": [
             "capell-app/admin",
@@ -60,6 +60,15 @@
             "type": "model",
             "class": "Capell\\SocialFeeds\\Manifest\\SocialFeedItemModelContribution",
             "modelClass": "Capell\\SocialFeeds\\Models\\SocialFeedItem"
+        },
+        {
+            "type": "scheduled-job",
+            "class": "Capell\\SocialFeeds\\Manifest\\SocialFeedsSyncScheduleContribution",
+            "command": "capell:social-feeds:sync --all",
+            "name": "capell-social-feeds:sync",
+            "frequencyConfig": "capell-social-feeds.sync_schedule_enabled",
+            "defaultFrequency": "hourly",
+            "enabledWhen": "capell-social-feeds.sync_schedule_enabled=true"
         }
     ],
     "database": {
@@ -88,6 +97,7 @@
     "capabilities": [
         "social-feeds",
         "social-feeds-admin",
+        "social-feeds-console",
         "social-feeds-frontend",
         "social-feed-provider-registry",
         "social-feed-cached-rendering"
@@ -204,9 +214,9 @@
                 "caption": "Provider registry extension surface"
             }
         ],
-        "categories": ["admin", "frontend", "growth"]
+        "categories": ["admin", "console", "frontend", "growth"]
     },
     "contributionTraceability": {
-        "deferredContributions": ["settings", "scheduled-job"]
+        "deferredContributions": []
     }
 }

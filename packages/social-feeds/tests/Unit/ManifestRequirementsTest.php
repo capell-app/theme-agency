@@ -5,6 +5,7 @@ declare(strict_types=1);
 use Capell\Core\Contracts\Extensions\ExtensionContribution;
 use Capell\Core\Contracts\Extensions\RegistersExtensionAdminResource;
 use Capell\Core\Contracts\Extensions\RegistersExtensionFrontendComponent;
+use Capell\Core\Contracts\Extensions\RunsScheduledExtensionJob;
 use Capell\Core\Support\Manifest\ManifestValidator;
 use Capell\SocialFeeds\Blocks\SocialFeedBlockDefinitionProvider;
 use Capell\SocialFeeds\Blocks\SocialFeedBlockRenderer;
@@ -14,6 +15,7 @@ use Capell\SocialFeeds\Manifest\SocialFeedConnectionModelContribution;
 use Capell\SocialFeeds\Manifest\SocialFeedConnectionResourceContribution;
 use Capell\SocialFeeds\Manifest\SocialFeedItemModelContribution;
 use Capell\SocialFeeds\Manifest\SocialFeedItemResourceContribution;
+use Capell\SocialFeeds\Manifest\SocialFeedsSyncScheduleContribution;
 use Capell\SocialFeeds\Manifest\SocialFeedWidgetContribution;
 use Capell\SocialFeeds\Models\SocialFeedConnection;
 use Capell\SocialFeeds\Models\SocialFeedItem;
@@ -78,12 +80,26 @@ it('declares the shipped admin resources, frontend widget, and schema-owned mode
             'class' => SocialFeedItemModelContribution::class,
             'modelClass' => SocialFeedItem::class,
         ])
+        ->and($contributions)->toContain([
+            'type' => 'scheduled-job',
+            'class' => SocialFeedsSyncScheduleContribution::class,
+            'command' => 'capell:social-feeds:sync --all',
+            'name' => 'capell-social-feeds:sync',
+            'frequencyConfig' => 'capell-social-feeds.sync_schedule_enabled',
+            'defaultFrequency' => 'hourly',
+            'enabledWhen' => 'capell-social-feeds.sync_schedule_enabled=true',
+        ])
         ->and(class_implements(SocialFeedConnectionResourceContribution::class))->toContain(RegistersExtensionAdminResource::class)
         ->and(class_implements(SocialFeedItemResourceContribution::class))->toContain(RegistersExtensionAdminResource::class)
         ->and(class_implements(SocialFeedWidgetContribution::class))->toContain(RegistersExtensionFrontendComponent::class)
         ->and(class_implements(SocialFeedConnectionModelContribution::class))->toContain(ExtensionContribution::class)
         ->and(class_implements(SocialFeedItemModelContribution::class))->toContain(ExtensionContribution::class)
-        ->and($manifest['contributionTraceability']['deferredContributions'])->not->toContain('admin-resource', 'model', 'frontend-component');
+        ->and(class_implements(SocialFeedsSyncScheduleContribution::class))->toContain(RunsScheduledExtensionJob::class)
+        ->and($manifest['surfaces'])->toContain('console')
+        ->and($manifest['capabilities'])->toContain('social-feeds-console')
+        ->and($manifest['database']['settings'])->toBeFalse()
+        ->and($manifest['settings'])->toBe([])
+        ->and($manifest['contributionTraceability']['deferredContributions'])->toBe([]);
 });
 
 it('declares committed marketplace assets for every required screenshot capture target', function (): void {
