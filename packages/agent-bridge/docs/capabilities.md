@@ -2,6 +2,8 @@
 
 Agent Bridge exposes small, auditable capabilities to the Laravel Boost server and the authenticated Capell Site Agent Bridge server. Capabilities must be registered through `CapellAgentBridgeCapabilityRegistry`; do not expose arbitrary services or controllers as tools.
 
+The read-only knowledge server also exposes `capell://agent-bridge/capabilities`, a capability catalog for operators and reviewers. It lists each registered capability with its scope, server visibility, risk, preview support, confirmation requirement, required package, and policy ability. Use it as the governance inventory when reviewing token scopes or deciding whether a capability should be available to an agent client.
+
 ## Register a Capability Provider
 
 Packages can register a provider by tagging it with `CapellAgentBridgeCapabilityProvider::class`.

@@ -4,7 +4,7 @@
 
 ## 1. Snapshot
 
-Agent Bridge connects AI agents and MCP clients to Capell through scoped tokens, MCP server routes, read-only knowledge/site capabilities, preview-then-confirm execution, saved prompts, audit entries, settings, Boost integration, and an admin prompt-builder surface. It already has a meaningful health check and preview/confirm tests. The biggest current risk is route/config hardening: the home route defaults to `/`, health remediation references a host-app migration command instead of package install guidance, and the package needs clearer token retention, audit redaction, and marketplace media boundaries for AI-agent administrators.
+Agent Bridge connects AI agents and MCP clients to Capell through scoped tokens, MCP server routes, read-only knowledge/site capabilities, preview-then-confirm execution, saved prompts, audit entries, settings, Boost integration, an admin prompt-builder surface, and a read-only capability catalog resource. It already has a meaningful health check and preview/confirm tests. The current risk has shifted from route/config hardening to operator UX depth around token lifecycle and marketplace media.
 
 ## 2. Improvements (existing functionality)
 
@@ -22,7 +22,7 @@ Capabilities declared: `agent-bridge` and `agent-bridge-admin`.
 
 - **No first-class token management manifest contribution.** Admin surfaces exist through bridge/extension page registration, but manifest traceability is thin.
 - **No explicit audit retention command in marketplace metadata.** Pruning exists in code but is not surfaced in `capell.json`.
-- **No operator-facing capability catalog outside the prompt builder.** Capabilities can be registered and listed, but buyers need a clear admin inventory of scope, risk, server, and confirmation requirements.
+- **Done/Shipped: operator-facing capability catalog.** `BuildAgentBridgeCapabilityCatalogAction` and `capell://agent-bridge/capabilities` expose registered capability scope, risk, server, preview, confirmation, required package, and policy ability metadata outside the prompt builder.
 - **No screenshot recapture for token/audit/server surfaces.** Current tracker notes only prompt-builder media is trustworthy.
 
 ## 4. Issues / Risks
@@ -55,7 +55,7 @@ Agent Bridge should be positioned as a governed AI operations bridge, not a gene
 | Fix health remediation copy away from host-app migration text | Done   | S      | Medium | §2.2, §4.3  |
 | Surface audit/token pruning command in manifest/docs          | Done   | M      | Medium | §2.3        |
 | Add central audit payload/result redaction                    | Done   | M      | High   | §2.4, §4.2  |
-| Add capability catalog/admin inventory surface                | Next   | M      | Medium | §3, §5      |
+| Add capability catalog/admin inventory surface                | Done   | M      | Medium | §3, §5      |
 | Add token scope lifecycle UI and tests                        | Next   | M      | Medium | §3          |
 | Recapture token/audit/server health marketplace screenshots   | Next   | M      | Medium | §3, §5      |
 | Add server-specific RBAC and policy diagnostics               | Later  | L      | Medium | §3          |

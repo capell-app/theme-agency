@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Capell\AgentBridge\Actions\BuildAgentBridgeCapabilityCatalogAction;
 use Capell\AgentBridge\Actions\InvokeAgentBridgeCapabilityPreviewAction;
 use Capell\AgentBridge\Data\AuthenticatedAgentBridgeClientData;
 use Capell\AgentBridge\Data\Capabilities\CreateDraftPageCapabilityInputData;
@@ -12,6 +13,7 @@ use Capell\AgentBridge\Enums\CapabilityServerEnum;
 use Capell\AgentBridge\Facades\CapellAgentBridge;
 use Capell\AgentBridge\Models\CapellAgentBridgeAuditEntry;
 use Capell\AgentBridge\Models\CapellAgentBridgeToken;
+use Capell\AgentBridge\Resources\CapellAgentBridgeCapabilityCatalogResource;
 use Capell\AgentBridge\Resources\CapellAgentBridgeOverviewResource;
 use Capell\AgentBridge\Support\CapabilitySchemas;
 use Capell\AgentBridge\Support\CapellAgentBridgeCapabilityRegistry;
@@ -410,6 +412,41 @@ it('exposes the agent bridge overview resource as markdown text', function (): v
         ->toContain('Capell Agent Bridge')
         ->toContain('CapellKnowledgeServer')
         ->toContain('CapellSiteServer');
+});
+
+it('builds and renders a capability governance catalog', function (): void {
+    $registry = new CapellAgentBridgeCapabilityRegistry;
+    $registry->register(new CapabilityData(
+        key: 'capell.fake.write',
+        name: 'Fake write',
+        description: 'Write fake capability.',
+        scope: 'capell.fake.write',
+        server: CapabilityServerEnum::Site,
+        risk: CapabilityRiskEnum::High,
+        actionClass: FakeCapabilityAction::class,
+        requiredPackage: 'capell-app/fake',
+        policyAbility: 'updateFake',
+    ));
+
+    app()->instance(CapellAgentBridgeCapabilityRegistry::class, $registry);
+
+    $catalog = BuildAgentBridgeCapabilityCatalogAction::run();
+    $markdown = (string) (new CapellAgentBridgeCapabilityCatalogResource)->handle()->content();
+
+    expect($catalog)->toHaveCount(1)
+        ->and($catalog[0])->toMatchArray([
+            'key' => 'capell.fake.write',
+            'scope' => 'capell.fake.write',
+            'server' => CapabilityServerEnum::Site->value,
+            'risk' => CapabilityRiskEnum::High->value,
+            'requires_confirmation' => true,
+            'required_package' => 'capell-app/fake',
+            'policy_ability' => 'updateFake',
+        ])
+        ->and($markdown)->toContain('Capell Agent Bridge Capability Catalog')
+        ->and($markdown)->toContain('`capell.fake.write`')
+        ->and($markdown)->toContain('capell-app/fake')
+        ->and($markdown)->toContain('updateFake');
 });
 
 it('resolves the capability registry through the facade', function (): void {

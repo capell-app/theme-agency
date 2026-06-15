@@ -77,6 +77,8 @@ Screenshot contract: `docs/screenshots.json`.
 
 Agent Bridge stores capability audit entries so operators can review scoped AI-agent activity without exposing reusable secrets. The package redacts sensitive payload fragments before persistence, then keeps audit rows for 90 days by default.
 
+The knowledge server exposes a read-only capability catalog at `capell://agent-bridge/capabilities`. Operators can review scope, server visibility, risk, preview support, confirmation requirements, required packages, and policy abilities before issuing token scopes.
+
 Set `CAPELL_AGENT_BRIDGE_AUDIT_RETENTION_DAYS` or `capell-agent-bridge.audit_retention_days` to change the default window. The pruning command is `capell:agent-bridge-prune-audit`; pass `--days=30` for a one-off override. The manifest also declares a daily scheduled-job contribution named `capell-agent-bridge-prune-audit` so host installs can surface retention automation alongside the package command.
 
 ## Common Pitfalls
