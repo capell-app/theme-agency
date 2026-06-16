@@ -3312,6 +3312,7 @@ function themeDemoScreenshotThemeCssPath(string $themeKey): ?string
         'education' => themeDemoRepositoryPath('packages/theme-education/resources/css/theme-education.css'),
         'healthcare' => themeDemoRepositoryPath('packages/theme-healthcare/resources/css/theme-healthcare.css'),
         'knowledge' => themeDemoRepositoryPath('packages/theme-knowledge/resources/css/theme-knowledge.css'),
+        'liquid-glass' => themeDemoRepositoryPath('packages/theme-liquid-glass/resources/css/theme-liquid-glass.css'),
         'local-services' => themeDemoRepositoryPath('packages/theme-local-services/resources/css/theme-local-services.css'),
         'nonprofit' => themeDemoRepositoryPath('packages/theme-nonprofit/resources/css/theme-nonprofit.css'),
         'portfolio' => themeDemoRepositoryPath('packages/theme-portfolio/resources/css/theme-portfolio.css'),

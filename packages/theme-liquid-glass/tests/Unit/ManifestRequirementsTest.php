@@ -40,6 +40,7 @@ describe('theme Liquid Glass capell.json manifest', function (): void {
             'docs/screenshots/liquid-glass-listing.png',
             'docs/screenshots/liquid-glass-search.png',
             'docs/screenshots/liquid-glass-contact.png',
+            'docs/screenshots/liquid-glass-graphite-mobile.png',
         ]);
     });
 

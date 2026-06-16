@@ -54,7 +54,7 @@ Liquid Glass belongs in the free foundation lane: it should be the modern visual
 
 **Improved description:** "Theme Liquid Glass gives Capell sites a modern translucent interface without adding package-owned schema or custom public routes. It extends the default Blade renderer, ships seven standard section views, and uses Theme Studio presets for bright launch pages, editorial glass layouts, and darker graphite surfaces. Install it when a site needs a polished free visual system that keeps public HTML cache-safe and free of authoring metadata."
 
-**Media status:** Route-rendered PNG captures are committed and promoted for homepage, landing sections, listing, detail/search-style, and contact pages. Mobile/dark preset visual proof remains a follow-up.
+**Media status:** Route-rendered PNG captures are committed and promoted for homepage, landing sections, listing, detail/search-style, and contact pages. Package-view captures now add Clarity, Prism, and Graphite preset proof, including a Graphite mobile navigation screenshot.
 
 **Cross-sell:** Requires Foundation Theme. Complements Frontend, Layout Builder, Search, Form Builder, Blog, and SEO Suite depending on site content.
 
@@ -70,7 +70,7 @@ Liquid Glass belongs in the free foundation lane: it should be the modern visual
 | Strengthen health check coverage for CSS, dependency classes, and section renderer alignment | Done   | S      | Medium | §2.5, §4.4  |
 | Convert static SVG screenshot contract to required route-backed PNG captures                 | Done   | M      | High   | §2.3, §4.3  |
 | Clarify cacheability metadata and invalidation expectations                                  | Done   | S      | Medium | §2.6        |
-| Add preset/dark/mobile visual proof                                                          | Next   | M      | Medium | §2.7        |
+| Add preset/dark/mobile visual proof                                                          | Done   | M      | Medium | §2.7        |
 | Add Liquid Glass-specific demo content depth for route-backed screenshots                    | Later  | M      | Medium | §3, §5      |
 
 ## 7. Verification

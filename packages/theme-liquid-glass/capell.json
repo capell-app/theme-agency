@@ -168,6 +168,11 @@
                 "path": "docs/screenshots/liquid-glass-contact.png",
                 "alt": "Theme Liquid Glass contact page rendered with conversion-focused actions.",
                 "caption": "Runner-backed contact preview with conversion-focused actions."
+            },
+            {
+                "path": "docs/screenshots/liquid-glass-graphite-mobile.png",
+                "alt": "Theme Liquid Glass Graphite preset rendered in a mobile viewport with compact navigation.",
+                "caption": "Mobile Graphite preset proof with dark glass surfaces and compact navigation."
             }
         ],
         "categories": ["frontend", "themes"]
