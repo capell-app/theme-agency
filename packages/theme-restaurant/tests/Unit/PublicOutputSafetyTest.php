@@ -26,6 +26,13 @@ function restaurantThemePublicOutputAssets(): string
     ));
 }
 
+function restaurantThemeSectionSource(string $section): string
+{
+    $path = __DIR__ . "/../../resources/views/sections/{$section}.blade.php";
+
+    return file_get_contents($path) ?: '';
+}
+
 it('keeps restaurant public Blade free of authoring or package metadata', function (): void {
     $publicOutput = restaurantThemePublicOutputAssets();
 
@@ -42,6 +49,20 @@ it('keeps restaurant public Blade free of authoring or package metadata', functi
         ->not->toContain('field_path')
         ->not->toContain('model_id')
         ->not->toContain('permission');
+});
+
+it('keeps restaurant public Blade free of inline scripts and inline event handlers', function (): void {
+    $publicOutput = restaurantThemePublicOutputAssets();
+
+    expect($publicOutput)
+        ->not->toContain('<script')
+        ->not->toContain('</script>')
+        ->not->toContain('@push(\'scripts')
+        ->not->toContain('@push("scripts')
+        ->not->toContain('javascript:')
+        ->not->toContain(' onclick=')
+        ->not->toContain(' onsubmit=')
+        ->not->toContain(' onload=');
 });
 
 it('keeps restaurant public Blade free of database query calls', function (): void {
@@ -73,3 +94,23 @@ it('keeps restaurant public Blade free of fake submission targets', function ():
         ->not->toContain('Form Builder')
         ->not->toContain('wire:');
 });
+
+it('keeps premium conversion sections free of dead public actions', function (string $section): void {
+    $source = restaurantThemeSectionSource($section);
+
+    expect($source)
+        ->not->toContain('action="#"')
+        ->not->toContain('href="#"')
+        ->not->toContain('javascript:')
+        ->not->toContain('signed')
+        ->not->toContain('wire:');
+})->with([
+    'reservation-panel',
+    'cta',
+    'hero',
+    'navigation',
+    'footer',
+    'content-listing',
+    'private-dining',
+    'events-calendar',
+]);

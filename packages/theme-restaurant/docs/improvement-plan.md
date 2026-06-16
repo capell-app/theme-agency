@@ -20,7 +20,7 @@ Theme Restaurant is a premium Blade child theme for hospitality sites built arou
 
 6. **Align the demo command with package Action patterns.** `DemoCommand` instantiates `new InstallRestaurantThemeDemoAction` directly, which bypasses the container and makes command behavior harder to fake than Liquid Glass. Resolve the Action through the container or use `InstallRestaurantThemeDemoAction::run()`, then add focused command tests for option parsing and base URL fallback. Evidence: `src/Console/Commands/DemoCommand.php`, `packages/theme-liquid-glass/src/Console/Commands/DemoCommand.php`. - **S**
 
-7. **Expand public-output safety coverage.** Current public-output tests check authoring metadata and DB-query strings, but not inline scripts, dead form actions, or package-owned public links. Add tests proving public Blade remains script-free and does not ship `action="#"` or avoidable `href="#"` defaults in premium conversion sections. Evidence: `PublicOutputSafetyTest`, public Blade views. - **S**
+7. **Expand public-output safety coverage.** Current public-output tests check authoring metadata and DB-query strings, but not inline scripts, dead form actions, or package-owned public links. Add tests proving public Blade remains script-free and does not ship `action="#"` or avoidable `href="#"` defaults in premium conversion sections. Evidence: `PublicOutputSafetyTest`, public Blade views. - **S** - **Done 2026-06-16:** source-level public-output tests now cover inline script/event-handler absence and assert reservation, CTA, hero, navigation, footer, listing, private dining, and events sections do not ship dead form/link actions or editor-only wiring.
 
 8. **Clarify cacheability and integration docs.** Manifest public-output safety says cache-safe, but `performance.cacheSafety.cacheable` is `false`; docs explain optional integrations at a high level without defining the render-data contract for actions/URLs. Decide cache metadata, then document how Bookings/Form Builder/Events/Blog data reaches the views without package-owned queries. Evidence: `capell.json performance.cacheSafety`, `docs/overview.md`, `README.md`. - **S**
 
@@ -73,7 +73,7 @@ Restaurant has a strong premium lane separate from Commerce and Local Services. 
 | Align demo command with Action/container pattern and add command tests                         | Done   | S      | Medium | §2.6        |
 | Rewrite docs around dependencies, integration render-data contracts, and verification commands | Done   | S      | Medium | §2.8, §5    |
 | Convert static SVG marketplace media to required route-backed PNG captures                     | Next   | M      | High   | §2.4, §4.4  |
-| Add public-output tests for scripts and dead premium conversion links                          | Next   | S      | Medium | §2.7        |
+| Add public-output tests for scripts and dead premium conversion links                          | Done   | S      | Medium | §2.7        |
 | Clarify cacheability metadata and invalidation expectations                                    | Next   | S      | Medium | §2.8        |
 | Add mobile/dark visual proof for reservation and menu pages                                    | Later  | M      | Medium | §3, §5      |
 
