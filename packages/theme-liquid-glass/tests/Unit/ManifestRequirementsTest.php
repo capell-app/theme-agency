@@ -35,12 +35,32 @@ describe('theme Liquid Glass capell.json manifest', function (): void {
 
         expect(collect($screenshots)->pluck('path')->all())->toBe([
             'docs/assets/marketplace/extension-card.svg',
-            'docs/assets/marketplace/liquid-glass-homepage.svg',
-            'docs/assets/marketplace/liquid-glass-landing.svg',
-            'docs/assets/marketplace/liquid-glass-listing.svg',
-            'docs/assets/marketplace/liquid-glass-search.svg',
-            'docs/assets/marketplace/liquid-glass-contact.svg',
+            'docs/screenshots/liquid-glass-homepage.png',
+            'docs/screenshots/liquid-glass-landing.png',
+            'docs/screenshots/liquid-glass-listing.png',
+            'docs/screenshots/liquid-glass-search.png',
+            'docs/screenshots/liquid-glass-contact.png',
         ]);
+    });
+
+    it('requires committed runner backed screenshot outputs', function (): void {
+        $manifest = json_decode(
+            File::get(__DIR__ . '/../../docs/screenshots.json'),
+            associative: true,
+            flags: JSON_THROW_ON_ERROR,
+        );
+
+        throw_unless(is_array($manifest), RuntimeException::class, 'Theme Liquid Glass screenshot manifest must decode to an array.');
+
+        $entries = liquidGlassThemeManifestArrayList($manifest['entries'] ?? null, 'screenshots.entries');
+
+        foreach ($entries as $entry) {
+            $screenshotPath = liquidGlassThemeManifestString($entry['screenshotPath'] ?? null, 'screenshots.entries.screenshotPath');
+
+            expect($entry['required'] ?? null)->toBeTrue()
+                ->and(str_starts_with($screenshotPath, 'packages/theme-liquid-glass/docs/screenshots/'))->toBeTrue()
+                ->and(File::exists(dirname(__DIR__, 4) . '/' . $screenshotPath))->toBeTrue();
+        }
     });
 
     it('declares its demo command for package demo installs', function (): void {

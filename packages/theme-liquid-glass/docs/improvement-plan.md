@@ -4,7 +4,7 @@
 
 ## 1. Snapshot
 
-Theme Liquid Glass is a free Blade child theme for modern launch, editorial, directory, search, and contact pages. It registers theme key `liquid-glass`, runtime inheritance `extends: default`, three presets, a package page wrapper, seven section renderers, a demo command, and a critical health check that verifies the theme definition, required views, and marketplace media paths. The theme has no migrations, models, routes, permissions, settings, or admin resources. It already has public-output safety tests for authoring metadata, inline scripts, and database query calls in public Blade. Marketplace media is still static SVG preview art, while `docs/screenshots.json` declares optional route-backed entries that point at those SVG assets instead of committed runner PNG captures.
+Theme Liquid Glass is a free Blade child theme for modern launch, editorial, directory, search, and contact pages. It registers theme key `liquid-glass`, runtime inheritance `extends: default`, three presets, a package page wrapper, seven section renderers, a demo command, and a critical health check that verifies the theme definition, required views, and marketplace media paths. The theme has no migrations, models, routes, permissions, settings, or admin resources. It already has public-output safety tests for authoring metadata, inline scripts, and database query calls in public Blade. Marketplace media now promotes committed route-rendered PNG captures from the theme-demo fixture set for homepage, landing sections, listing, detail/search-style, and contact surfaces.
 
 ## 2. Improvements (existing functionality)
 
@@ -12,7 +12,7 @@ Theme Liquid Glass is a free Blade child theme for modern launch, editorial, dir
 
 2. **Fix skip/CTA anchor targets.** `page.blade.php` renders a skip link to `#main-content`; current tests pass that id through fixture content, but the package wrapper does not enforce the target. Hero and CTA fallback actions point to `#content`, while `content-listing.blade.php` has no `id="content"`. Add deterministic anchors or adjust fallback links so keyboard users and CTA clicks always land on real public sections. Evidence: `resources/views/page.blade.php`, `sections/hero.blade.php`, `sections/cta.blade.php`, `sections/content-listing.blade.php`. - **S** - **Shipped**
 
-3. **Replace static marketplace SVGs with route-backed captures.** The screenshot contract declares `outputDirectory: packages/theme-liquid-glass/docs/screenshots`, but each entry points at `docs/assets/marketplace/*.svg` and is `required: false`. Convert homepage, landing, listing, search, and contact captures to required PNG entries under `docs/screenshots/`, then promote only verified media in `capell.json`. Evidence: `docs/screenshots.json`, `capell.json marketplace.screenshots`, `docs/assets/marketplace/*.svg`. - **M**
+3. **Shipped: replace static marketplace SVGs with route-backed captures.** The screenshot contract now requires committed PNG captures under `docs/screenshots/`, and `capell.json` promotes those runner-backed outputs while keeping the extension card SVG as listing artwork. Evidence: `docs/screenshots.json`, `capell.json marketplace.screenshots`, `tests/Packages/Fixtures/theme-demo-layout-screenshots/liquid-glass/*.png`. - **M**
 
 4. **Update setup docs for package and host context.** README/overview tell readers to run `php artisan capell:theme-liquid-glass-demo`; repo-local package workflow forbids `php artisan`, and host-app setup should be explicit about where the command runs. Rewrite docs to separate package tests from installed Capell app demo commands, and include the Foundation Theme dependency. Evidence: `README.md`, `docs/overview.md`, repository AGENTS instructions. - **S** - **Shipped**
 
@@ -26,7 +26,7 @@ Theme Liquid Glass is a free Blade child theme for modern launch, editorial, dir
 
 Capabilities declared: `theme-liquid-glass`, `theme-liquid-glass-frontend`.
 
-- **No route-backed marketplace proof.** Static SVGs do not prove the actual Blade renderer, seeded content, or responsive states.
+- **Shipped: route-backed marketplace proof.** Homepage, landing sections, listing, detail/search-style, and contact captures now use committed route-rendered PNGs.
 - **Demo content is generic.** Demo install delegates to Foundation's generic `ThemeDemoPageInstaller`, so the package does not yet prove Liquid Glass-specific homepage, landing, listing, search, and contact content depth.
 - **No enforced main-content target.** Accessibility depends on render content providing an id that the shell links to.
 - **No preset/browser visual QA.** Current tests do not render the theme in real browser viewports or assert dark/mobile readability.
@@ -38,7 +38,7 @@ Capabilities declared: `theme-liquid-glass`, `theme-liquid-glass-frontend`.
 
 2. **Important gap: default anchors can be broken.** Skip and CTA navigation should not rely on host content conventions or missing section ids. Recommended fix: add the target id(s) in package-owned views and test rendered output. - **P2**
 
-3. **Important gap: marketplace screenshots are placeholders.** SVG previews do not prove the real theme renderer. Recommended fix: make route-backed PNG captures required before promoting visual marketplace media. - **P2**
+3. **Closed: marketplace screenshots were placeholders.** The manifest now promotes committed route-rendered PNG captures and tests require the docs screenshot outputs to exist. - **P2**
 
 4. **Improvement: health check does not cover assets/dependencies.** Diagnostics can pass while CSS or demo dependency wiring is broken. Recommended fix: add dependency, asset, and renderer alignment checks. - **P3**
 
@@ -54,7 +54,7 @@ Liquid Glass belongs in the free foundation lane: it should be the modern visual
 
 **Improved description:** "Theme Liquid Glass gives Capell sites a modern translucent interface without adding package-owned schema or custom public routes. It extends the default Blade renderer, ships seven standard section views, and uses Theme Studio presets for bright launch pages, editorial glass layouts, and darker graphite surfaces. Install it when a site needs a polished free visual system that keeps public HTML cache-safe and free of authoring metadata."
 
-**Media status:** Placeholder SVGs are useful planning assets only. Completion requires real route-backed screenshots for homepage, landing, listing, search, and contact pages, plus mobile proof.
+**Media status:** Route-rendered PNG captures are committed and promoted for homepage, landing sections, listing, detail/search-style, and contact pages. Mobile/dark preset visual proof remains a follow-up.
 
 **Cross-sell:** Requires Foundation Theme. Complements Frontend, Layout Builder, Search, Form Builder, Blog, and SEO Suite depending on site content.
 
@@ -68,7 +68,7 @@ Liquid Glass belongs in the free foundation lane: it should be the modern visual
 | Fix skip link and default CTA anchor targets                                                 | Done   | S      | High   | §2.2, §4.2  |
 | Rewrite README/overview with package-repo versus host-app command context                    | Done   | S      | Medium | §2.4, §4.5  |
 | Strengthen health check coverage for CSS, dependency classes, and section renderer alignment | Done   | S      | Medium | §2.5, §4.4  |
-| Convert static SVG screenshot contract to required route-backed PNG captures                 | Next   | M      | High   | §2.3, §4.3  |
+| Convert static SVG screenshot contract to required route-backed PNG captures                 | Done   | M      | High   | §2.3, §4.3  |
 | Clarify cacheability metadata and invalidation expectations                                  | Done   | S      | Medium | §2.6        |
 | Add preset/dark/mobile visual proof                                                          | Next   | M      | Medium | §2.7        |
 | Add Liquid Glass-specific demo content depth for route-backed screenshots                    | Later  | M      | Medium | §3, §5      |

@@ -145,29 +145,29 @@
                 "caption": "Theme Liquid Glass free theme card."
             },
             {
-                "path": "docs/assets/marketplace/liquid-glass-homepage.svg",
-                "alt": "Theme Liquid Glass homepage preview.",
-                "caption": "Homepage preview with layered glass panels."
+                "path": "docs/screenshots/liquid-glass-homepage.png",
+                "alt": "Theme Liquid Glass homepage rendered through the package theme shell.",
+                "caption": "Runner-backed homepage preview with layered glass panels."
             },
             {
-                "path": "docs/assets/marketplace/liquid-glass-landing.svg",
-                "alt": "Theme Liquid Glass landing page preview.",
-                "caption": "Landing page preview with product-focused glass sections."
+                "path": "docs/screenshots/liquid-glass-landing.png",
+                "alt": "Theme Liquid Glass landing sections rendered with hero, feature, proof, and CTA rhythm.",
+                "caption": "Runner-backed landing sections with product-focused glass panels."
             },
             {
-                "path": "docs/assets/marketplace/liquid-glass-listing.svg",
-                "alt": "Theme Liquid Glass listing preview.",
-                "caption": "Listing preview with translucent cards."
+                "path": "docs/screenshots/liquid-glass-listing.png",
+                "alt": "Theme Liquid Glass listing page rendered with translucent content cards.",
+                "caption": "Runner-backed listing preview with translucent cards."
             },
             {
-                "path": "docs/assets/marketplace/liquid-glass-search.svg",
-                "alt": "Theme Liquid Glass search preview.",
-                "caption": "Search preview with clear result grouping."
+                "path": "docs/screenshots/liquid-glass-search.png",
+                "alt": "Theme Liquid Glass detail and search-style page rendered inside clear glass panels.",
+                "caption": "Runner-backed detail/search proof with clear result grouping."
             },
             {
-                "path": "docs/assets/marketplace/liquid-glass-contact.svg",
-                "alt": "Theme Liquid Glass contact preview.",
-                "caption": "Contact preview with conversion-focused actions."
+                "path": "docs/screenshots/liquid-glass-contact.png",
+                "alt": "Theme Liquid Glass contact page rendered with conversion-focused actions.",
+                "caption": "Runner-backed contact preview with conversion-focused actions."
             }
         ],
         "categories": ["frontend", "themes"]
