@@ -26,7 +26,7 @@ Capabilities declared: social feeds, admin, frontend, provider registry, and cac
 
 - **Connection lifecycle is not operator-ready.** There is no admin creation/edit/testing workflow for credentials, feed URLs, provider selection, sync errors, or stale connections.
 - **OAuth states exist but no OAuth route/controller is visible.** The `social_feed_oauth_states` table implies future OAuth support, but no callback/start flow ships.
-- **No pruning/retention policy for cached items.** Cached feed items can grow indefinitely unless upsert logic replaces or the host cleans them.
+- **Shipped 2026-06-16: cached item retention is enforced per connection.** `UpsertSocialFeedItemsAction` keeps the newest `capell-social-feeds.retention_items` records after successful upserts and focused tests now pin the pruning behavior.
 - **No moderation/approval flow.** Public render uses latest cached items directly; there is no "hide this post", pinned posts, or approve-before-display path.
 - **No provider-native API depth.** API key/handle schema exists, but configured providers currently require `feed_url` and use RSS semantics.
 
@@ -69,7 +69,7 @@ Social Feeds belongs in `Capell Growth` because it turns external social proof i
 | Align scheduled-job/settings metadata and docs                                  | Done   | S      | Medium | §2.4, §4    |
 | Add stale-sync health diagnostics                                               | Done   | S      | Medium | §2.2, §4.2  |
 | Add render budget/no-query public Blade coverage                                | Done   | S      | Medium | §2.5        |
-| Add cached item pruning/retention                                               | Next   | M      | Medium | §3          |
+| Add cached item pruning/retention                                               | Done   | M      | Medium | §3          |
 | Add image alt strategy for media-heavy feeds                                    | Done   | S      | Low    | §2.6        |
 | Add moderation/approval/pinning controls                                        | Later  | M      | Medium | §3          |
 | Add OAuth flow or remove OAuth state table from active docs until used          | Later  | L      | Medium | §3          |

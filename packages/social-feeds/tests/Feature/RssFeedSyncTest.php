@@ -3,8 +3,11 @@
 declare(strict_types=1);
 
 use Capell\SocialFeeds\Actions\SyncSocialFeedConnectionAction;
+use Capell\SocialFeeds\Actions\UpsertSocialFeedItemsAction;
 use Capell\SocialFeeds\Contracts\SocialFeedHostResolver;
+use Capell\SocialFeeds\Data\SocialFeedPostData;
 use Capell\SocialFeeds\Enums\SocialFeedConnectionStatus;
+use Capell\SocialFeeds\Enums\SocialFeedItemType;
 use Capell\SocialFeeds\Models\SocialFeedConnection;
 use Capell\SocialFeeds\Models\SocialFeedItem;
 use Capell\SocialFeeds\Tests\Fixtures\StaticSocialFeedHostResolver;
@@ -232,3 +235,42 @@ it('marks configured social providers as errored when feed url is missing', func
         ->and($connection->refresh()->status)->toBe(SocialFeedConnectionStatus::Error)
         ->and($connection->last_sync_error)->toContain('requires a feed_url credential');
 });
+
+it('prunes cached feed items beyond the configured per-connection retention limit', function (): void {
+    config()->set('capell-social-feeds.retention_items', 2);
+
+    $connection = SocialFeedConnection::query()->create([
+        'provider' => 'rss',
+        'name' => 'Example Updates',
+        'status' => SocialFeedConnectionStatus::Connected,
+        'credentials' => ['feed_url' => 'https://example.test/feed.xml'],
+    ]);
+
+    $synced = UpsertSocialFeedItemsAction::run($connection, [
+        socialFeedPost('old-post', 'Old post', 3),
+        socialFeedPost('middle-post', 'Middle post', 2),
+        socialFeedPost('new-post', 'New post', 1),
+    ]);
+
+    expect($synced)->toBe(3)
+        ->and(SocialFeedItem::query()->where('connection_id', $connection->getKey())->count())->toBe(2)
+        ->and(SocialFeedItem::query()->where('external_id', 'old-post')->exists())->toBeFalse()
+        ->and(SocialFeedItem::query()->where('external_id', 'middle-post')->exists())->toBeTrue()
+        ->and(SocialFeedItem::query()->where('external_id', 'new-post')->exists())->toBeTrue();
+});
+
+function socialFeedPost(string $externalId, string $text, int $daysAgo): SocialFeedPostData
+{
+    return new SocialFeedPostData(
+        externalId: $externalId,
+        type: SocialFeedItemType::Link,
+        text: $text,
+        permalink: "https://example.test/posts/{$externalId}",
+        mediaUrl: null,
+        thumbnailUrl: null,
+        authorName: 'Example Author',
+        authorAvatarUrl: null,
+        publishedAt: now()->subDays($daysAgo)->toImmutable(),
+        raw: [],
+    );
+}

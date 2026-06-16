@@ -55,7 +55,7 @@ Screenshot contract: `screenshots.json`.
 - Models: `SocialFeedConnection`, `SocialFeedItem`, `SocialFeedOAuthState`.
 - Migration files: `2026_06_04_000001_create_social_feed_connections_table.php`, `2026_06_04_000002_create_social_feed_items_table.php`, `2026_06_04_000003_create_social_feed_oauth_states_table.php`.
 - Migration impact: run host migrations through the package install flow before opening package surfaces.
-- Deletion/retention behaviour: Docs gap unless the package has an explicit pruning command, retention setting, or tested cascade path.
+- Deletion/retention behaviour: `UpsertSocialFeedItemsAction` keeps the newest `capell-social-feeds.retention_items` cached items per connection and prunes older cached items after successful syncs.
 
 ## Install Impact
 

@@ -103,7 +103,8 @@
         "social-feed-cached-rendering",
         "social-feed-stale-sync-health",
         "social-feed-render-budget",
-        "social-feed-media-alt-strategy"
+        "social-feed-media-alt-strategy",
+        "social-feed-cached-item-retention"
     ],
     "security": {
         "riskTier": "sensitive",
