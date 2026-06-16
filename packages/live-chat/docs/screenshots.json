@@ -1,20 +1,43 @@
 {
+    "package": "live-chat",
+    "composerName": "capell-app/live-chat",
     "generatedFor": "deployment-screenshot-runner",
+    "requiresInstalledPackage": true,
     "composerRequires": ["capell-app/live-chat"],
+    "outputDirectory": "packages/live-chat/docs/screenshots",
     "entries": [
         {
             "id": "live-chat-widget",
-            "label": "Live chat widget",
+            "title": "Live Chat widget.",
+            "package": "live-chat",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/live-chat/widget",
             "required": false,
-            "route": "/?without_html_cache=1",
-            "fallbackAsset": "packages/live-chat/docs/assets/marketplace/extension-card.svg"
+            "notes": "Capture the public chat widget shell after the package is installed with a seeded active installation.",
+            "useCase": "A growth team reviews the public chat widget before enabling live visitor conversations.",
+            "screenshotPath": "packages/live-chat/docs/screenshots/live-chat-widget.png",
+            "scenario": "frontend-page",
+            "url": "/live-chat/widget",
+            "waitFor": "[data-capell-live-chat-widget]",
+            "colorSchemes": ["light"],
+            "user": false
         },
         {
             "id": "live-chat-conversations-admin",
-            "label": "Conversation inbox",
+            "title": "Live Chat conversation inbox.",
+            "package": "live-chat",
+            "surface": "admin",
+            "targetType": "admin-surface",
+            "target": "ConversationResource",
             "required": false,
-            "route": "/admin/live-chat/conversations",
-            "fallbackAsset": "packages/live-chat/docs/assets/marketplace/extension-card.svg"
+            "notes": "Capture the admin conversation inbox after seeding visitor and assistant messages.",
+            "useCase": "An operator reviews incoming conversations, handoff state, and CRM context.",
+            "screenshotPath": "packages/live-chat/docs/screenshots/live-chat-conversations-admin.png",
+            "scenario": "admin-index",
+            "url": "/admin/live-chat/conversations",
+            "waitFor": ".fi-ta, table",
+            "colorSchemes": ["light"]
         }
     ]
 }

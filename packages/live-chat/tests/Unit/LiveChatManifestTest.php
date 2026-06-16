@@ -293,14 +293,16 @@ it('declares committed marketplace assets and screenshot fallbacks', function ()
             ->and(strlen(trim(live_chat_string($screenshot, 'caption'))))->toBeGreaterThanOrEqual(12);
     }
 
-    expect($screenshotContract['generatedFor'] ?? null)->toBe('deployment-screenshot-runner')
+    expect($screenshotContract['package'] ?? null)->toBe('live-chat')
+        ->and($screenshotContract['composerName'] ?? null)->toBe('capell-app/live-chat')
+        ->and($screenshotContract['generatedFor'] ?? null)->toBe('deployment-screenshot-runner')
         ->and(live_chat_string_list($screenshotContract, 'composerRequires'))->toContain('capell-app/live-chat');
 
     foreach (live_chat_array_list($screenshotContract, 'entries') as $entry) {
-        $fallbackAsset = live_chat_string($entry, 'fallbackAsset');
+        $screenshotPath = live_chat_string($entry, 'screenshotPath');
 
-        expect($fallbackAsset)->toBeString()
-            ->and(File::exists($packagePath . '/' . str_replace('packages/live-chat/', '', $fallbackAsset)))->toBeTrue();
+        expect($screenshotPath)->toStartWith('packages/live-chat/docs/screenshots/')
+            ->and($entry['required'] ?? null)->toBeFalse();
     }
 });
 
