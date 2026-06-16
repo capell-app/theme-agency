@@ -72,6 +72,13 @@ Live Chat supports AI Orchestrator for message classification, approved-source a
 - Cache tags: `live-chat`.
 - Commands: none declared.
 
+## Operational Safeguards
+
+- Public conversation and message writes run conversation/message/assistant persistence inside a transaction.
+- If the assistant responder fails, Live Chat records a fallback assistant message, marks the conversation as waiting for a human, and preserves the visitor flow instead of leaving a half-written chat.
+- Contacts sync runs after the chat write and logs failures without breaking the public response.
+- Uploaded attachment files are deleted when downstream conversation/message creation fails after storage.
+
 ## Common Pitfalls
 
 - Run migrations before opening package resources or public routes.

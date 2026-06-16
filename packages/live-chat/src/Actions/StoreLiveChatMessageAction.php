@@ -5,12 +5,18 @@ declare(strict_types=1);
 namespace Capell\LiveChat\Actions;
 
 use Capell\LiveChat\Data\IncomingLiveChatMessageData;
+use Capell\LiveChat\Enums\ConversationStatus;
+use Capell\LiveChat\Enums\EscalationReason;
+use Capell\LiveChat\Enums\LiveChatPriority;
 use Capell\LiveChat\Enums\MessageRole;
 use Capell\LiveChat\Models\LiveChatConversation;
 use Capell\LiveChat\Models\LiveChatMessage;
 use Carbon\CarbonImmutable;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Lorisleiva\Actions\Concerns\AsAction;
+use Throwable;
 
 final class StoreLiveChatMessageAction
 {
@@ -21,40 +27,48 @@ final class StoreLiveChatMessageAction
      */
     public function handle(LiveChatConversation $conversation, IncomingLiveChatMessageData $data): array
     {
-        $visitor = $data->visitor;
+        $result = DB::transaction(function () use ($conversation, $data): array {
+            $visitor = $data->visitor;
 
-        if ($visitor !== null) {
-            $conversation->fill([
-                'visitor_name' => $visitor->name ?? $conversation->visitor_name,
-                'visitor_email' => $visitor->email ?? $conversation->visitor_email,
-                'visitor_phone' => $visitor->phone ?? $conversation->visitor_phone,
-                'visitor_company' => $visitor->company ?? $conversation->visitor_company,
-                'preferred_callback_at' => $visitor->preferredCallbackAt ?? $conversation->preferred_callback_at,
-                'processing_consent' => $visitor->processingConsent || $conversation->processing_consent,
-                'marketing_consent' => $visitor->marketingConsent || $conversation->marketing_consent,
+            if ($visitor !== null) {
+                $conversation->fill([
+                    'visitor_name' => $visitor->name ?? $conversation->visitor_name,
+                    'visitor_email' => $visitor->email ?? $conversation->visitor_email,
+                    'visitor_phone' => $visitor->phone ?? $conversation->visitor_phone,
+                    'visitor_company' => $visitor->company ?? $conversation->visitor_company,
+                    'preferred_callback_at' => $visitor->preferredCallbackAt ?? $conversation->preferred_callback_at,
+                    'processing_consent' => $visitor->processingConsent || $conversation->processing_consent,
+                    'marketing_consent' => $visitor->marketingConsent || $conversation->marketing_consent,
+                ]);
+            }
+
+            $conversation->forceFill([
+                'last_page_url' => $this->pageValue($data->page, 'url') ?? $conversation->last_page_url,
+                'last_message_at' => CarbonImmutable::now(),
+            ])->save();
+
+            $visitorMessage = $conversation->messages()->create([
+                'role' => MessageRole::Visitor,
+                'body' => $this->trimBody($data->body),
+                'attachments' => $data->attachments,
             ]);
-        }
 
-        $conversation->forceFill([
-            'last_page_url' => $this->pageValue($data->page, 'url') ?? $conversation->last_page_url,
-            'last_message_at' => CarbonImmutable::now(),
-        ])->save();
+            try {
+                $assistantMessage = app(ReplyToLiveChatMessageAction::class)->handle($conversation, $visitorMessage);
+            } catch (Throwable $replyFailure) {
+                $assistantMessage = $this->createFallbackAssistantMessage($conversation, $replyFailure);
+            }
 
-        $visitorMessage = $conversation->messages()->create([
-            'role' => MessageRole::Visitor,
-            'body' => $this->trimBody($data->body),
-            'attachments' => $data->attachments,
-        ]);
+            return [
+                'conversation' => $conversation->fresh() ?? $conversation,
+                'visitor_message' => $visitorMessage,
+                'assistant_message' => $assistantMessage,
+            ];
+        });
 
-        $assistantMessage = app(ReplyToLiveChatMessageAction::class)->handle($conversation, $visitorMessage);
+        $this->syncContactSafely($result['conversation']);
 
-        SyncLiveChatConversationContactAction::run($conversation);
-
-        return [
-            'conversation' => $conversation->fresh() ?? $conversation,
-            'visitor_message' => $visitorMessage,
-            'assistant_message' => $assistantMessage,
-        ];
+        return $result;
     }
 
     private function trimBody(string $body): string
@@ -79,5 +93,53 @@ final class StoreLiveChatMessageAction
         $value = config($key);
 
         return is_int($value) || (is_string($value) && ctype_digit($value)) ? (int) $value : $fallback;
+    }
+
+    private function configString(string $key, string $fallback): string
+    {
+        $value = config($key);
+
+        return is_string($value) && $value !== '' ? $value : $fallback;
+    }
+
+    private function createFallbackAssistantMessage(LiveChatConversation $conversation, Throwable $replyFailure): LiveChatMessage
+    {
+        Log::warning('Live Chat assistant reply failed; routing conversation to a human.', [
+            'conversation_uuid' => $conversation->uuid,
+            'exception' => $replyFailure::class,
+            'message' => Str::limit($replyFailure->getMessage(), 500, '...'),
+        ]);
+
+        $conversation->forceFill([
+            'status' => ConversationStatus::WaitingForHuman,
+            'priority' => LiveChatPriority::High,
+            'assignment_queue' => $this->configString('capell-live-chat.escalation.default_queue', 'support'),
+            'escalation_reason' => EscalationReason::RepeatedFailure,
+            'escalated_at' => $conversation->escalated_at ?? CarbonImmutable::now(),
+            'last_message_at' => CarbonImmutable::now(),
+        ])->save();
+
+        return $conversation->messages()->create([
+            'role' => MessageRole::Assistant,
+            'body' => (string) __('capell-live-chat::generic.responses.assistant_unavailable'),
+            'requires_contact' => true,
+            'metadata' => [
+                'ai_disclosure' => true,
+                'fallback_reason' => 'assistant_reply_failed',
+            ],
+        ]);
+    }
+
+    private function syncContactSafely(LiveChatConversation $conversation): void
+    {
+        try {
+            SyncLiveChatConversationContactAction::run($conversation);
+        } catch (Throwable $contactFailure) {
+            Log::warning('Live Chat contact sync failed after conversation write.', [
+                'conversation_uuid' => $conversation->uuid,
+                'exception' => $contactFailure::class,
+                'message' => Str::limit($contactFailure->getMessage(), 500, '...'),
+            ]);
+        }
     }
 }

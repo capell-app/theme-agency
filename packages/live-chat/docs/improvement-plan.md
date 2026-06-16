@@ -12,7 +12,7 @@ Live Chat is a premium Capell Growth package that adds a public website chat wid
 
 2. **Done/Shipped: stop returning internal message IDs to the browser.** Public conversation and message JSON responses no longer include `messages[].id`; focused public-route tests assert the response shape stays free of message primary keys. Evidence: `StoreLiveChatConversationController::messagePayload()`, `StoreLiveChatMessageController::messagePayload()`, `LiveChatPublicRoutesTest`. - **M**
 
-3. **Wrap conversation writes, assistant reply, contact sync, and attachment storage in a failure-safe boundary.** Attachments are written before the conversation/message Action runs, and message Actions synchronously create visitor messages, generate assistant replies, and sync Contacts. A failed reply/contact sync can leave orphan files or partial conversation state. Move storage metadata and DB writes behind a transaction/cleanup boundary, and decide which downstream work should be queued after commit. Evidence: `StoreLiveChatAttachmentsAction`, `StartLiveChatConversationAction`, `StoreLiveChatMessageAction`. - **M**
+3. **Done/Shipped: wrap conversation writes, assistant reply, contact sync, and attachment storage in a failure-safe boundary.** Conversation/message/assistant persistence now runs inside transactions; responder failures create a human-handoff fallback assistant message; Contacts sync runs after the chat write and logs failures; stored attachments are deleted when downstream conversation/message creation fails. Evidence: `DeleteLiveChatAttachmentsAction`, `StartLiveChatConversationAction`, `StoreLiveChatMessageAction`, public-route and conversation-flow tests. - **M**
 
 4. **Done/Shipped: make `LiveChatHealthCheck` match its critical label.** The check now verifies required tables, morph aliases, declared Actions, public route names, admin resource classes, widget views, widget renderer binding, and the public render-hook class. Manifest coverage pins the expanded health probes. Evidence: `src/Health/LiveChatHealthCheck.php`, `capell.json healthChecks[0]`, `LiveChatManifestTest`. - **S**
 
@@ -38,9 +38,9 @@ Capabilities declared: `live-chat`, `live-chat-widget`, external embeds, domain 
 
 2. **Resolved: public API leaks database primary keys for messages.** Public conversation/message JSON now omits internal message IDs, and tests assert the response shape. Evidence: public route controllers, `LiveChatPublicRoutesTest`. - **P2**
 
-3. **Important gap: synchronous AI/contact work can make chat writes fragile.** Assistant reply generation and Contacts sync run inline during the public request. Recommended fix: keep the first response deterministic, persist a pending assistant state when needed, and dispatch slower work after commit. - **P2**
+3. **Resolved: synchronous assistant/contact failures can make chat writes fragile.** Responder failures now produce a deterministic human-handoff fallback inside the chat write, while Contacts sync runs after the write and logs failures without breaking the visitor response. Evidence: `StartLiveChatConversationAction`, `StoreLiveChatMessageAction`, `LiveChatConversationFlowTest`. - **P2**
 
-4. **Important gap: attachment cleanup is not failure-safe.** Files are stored before DB work succeeds and no cleanup path is visible. Recommended fix: transact DB writes first where possible, store through a pending path, or delete stored files on downstream failure. - **P2**
+4. **Resolved: attachment cleanup is failure-safe.** Public controllers delete stored attachment files if downstream conversation/message creation throws after upload. Evidence: `DeleteLiveChatAttachmentsAction`, public-route cleanup coverage. - **P2**
 
 5. **Improvement: docs under-explain the package boundary.** The current overview is buyer-friendly but does not list real routes, models, Actions, queues, privacy implications, or the public-key embed contract. Recommended fix: add README/docs index and a troubleshooting table. - **P3**
 
@@ -69,7 +69,7 @@ Live Chat belongs in `Capell Growth` as a premium lead capture and support triag
 | Add package README and docs index in the standard Capell shape                                           | Done   | S      | Medium | §2.5, §5         |
 | Extend `LiveChatHealthCheck` to verify routes, admin resources, widget renderer, and public hook binding | Done   | S      | Medium | §2.4             |
 | Declare Agent Bridge capability contribution metadata and remove deferred manifest traceability          | Done   | S      | Medium | §2.7, §5         |
-| Make attachment storage and assistant/contact side effects failure-safe                                  | Next   | M      | Medium | §2.3, §4.3, §4.4 |
+| Make attachment storage and assistant/contact side effects failure-safe                                  | Done   | M      | Medium | §2.3, §4.3, §4.4 |
 | Recapture and promote runner-backed widget and conversation inbox screenshots                            | Next   | S      | High   | §3, §5           |
 | Build the operator inbox workflow around reply/assign/read/close/export actions                          | Later  | L      | High   | §3               |
 | Add async/realtime delivery states for slow AI and human replies                                         | Later  | L      | Medium | §3               |

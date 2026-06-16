@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Capell\LiveChat\Http\Controllers;
 
 use Capell\LiveChat\Actions\ApplyLiveChatCorsHeadersAction;
+use Capell\LiveChat\Actions\DeleteLiveChatAttachmentsAction;
 use Capell\LiveChat\Actions\GuardLiveChatInstallationOriginAction;
 use Capell\LiveChat\Actions\GuardLiveChatSameSiteRequestAction;
 use Capell\LiveChat\Actions\ResolveLiveChatInstallationAction;
@@ -17,6 +18,7 @@ use Capell\LiveChat\Models\LiveChatMessage;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Str;
+use Throwable;
 
 final class StoreLiveChatConversationController
 {
@@ -53,7 +55,13 @@ final class StoreLiveChatConversationController
             $attachments,
         );
 
-        $result = (new StartLiveChatConversationAction)->handle($data, $installation->site_id, $installation);
+        try {
+            $result = app(StartLiveChatConversationAction::class)->handle($data, $installation->site_id, $installation);
+        } catch (Throwable $exception) {
+            DeleteLiveChatAttachmentsAction::run($attachments);
+
+            throw $exception;
+        }
 
         return $this->publicResponse(response()->json($this->responsePayload(
             $result['conversation'],

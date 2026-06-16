@@ -14,6 +14,7 @@ use Capell\LiveChat\Actions\ValidateLiveChatAttachmentAction;
 use Capell\LiveChat\Data\IncomingLiveChatMessageData;
 use Capell\LiveChat\Models\LiveChatConversation;
 use Capell\LiveChat\Models\LiveChatMessage;
+use Capell\LiveChat\Tests\Fixtures\FailingStartLiveChatConversationAction;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Http\Request;
@@ -292,6 +293,27 @@ it('rejects public conversation attachments with disallowed server-side mime typ
         ])
         ->assertUnprocessable()
         ->assertJsonValidationErrors(['attachments.0']);
+});
+
+it('deletes stored attachments when conversation creation fails after upload', function (): void {
+    Storage::fake('local');
+    app()->bind(StartLiveChatConversationAction::class, FailingStartLiveChatConversationAction::class);
+
+    $siteId = $this->createLiveChatSite();
+    $this->createLiveChatInstallation(siteId: $siteId);
+    $attachment = UploadedFile::fake()->createWithContent('chat-note.txt', 'Please review this attachment.');
+
+    $this
+        ->withHeader('Accept', 'application/json')
+        ->withHeader('Origin', 'http://localhost')
+        ->post(route('capell-live-chat.conversations.store'), [
+            'body' => 'Can you review this?',
+            'visitor_token' => 'local-visitor-token',
+            'attachments' => [$attachment],
+        ])
+        ->assertServerError();
+
+    expect(Storage::disk('local')->allFiles('live-chat'))->toBe([]);
 });
 
 it('rejects attachment storage when the configured disk does not exist', function (): void {

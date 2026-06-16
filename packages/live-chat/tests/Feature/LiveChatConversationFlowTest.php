@@ -10,6 +10,7 @@ use Capell\Contacts\Models\Lead;
 use Capell\LiveChat\Actions\RequestLiveChatHandoffAction;
 use Capell\LiveChat\Actions\ResolveLiveChatAvailabilityAction;
 use Capell\LiveChat\Actions\StartLiveChatConversationAction;
+use Capell\LiveChat\Contracts\LiveChatResponder;
 use Capell\LiveChat\Data\IncomingLiveChatMessageData;
 use Capell\LiveChat\Data\LiveChatVisitorData;
 use Capell\LiveChat\Enums\ConversationStatus;
@@ -19,6 +20,7 @@ use Capell\LiveChat\Models\LiveChatAvailabilityException;
 use Capell\LiveChat\Models\LiveChatConversation;
 use Capell\LiveChat\Models\LiveChatEscalationRule;
 use Capell\LiveChat\Models\LiveChatKnowledgeSource;
+use Capell\LiveChat\Tests\Fixtures\FailingLiveChatResponder;
 use Carbon\CarbonImmutable;
 
 beforeEach(function (): void {
@@ -87,6 +89,36 @@ it('keeps anonymous message-first chats out of contacts until details are useful
     expect(LiveChatConversation::query()->count())->toBe(1)
         ->and(Contact::query()->count())->toBe(0)
         ->and(Lead::query()->count())->toBe(0);
+});
+
+it('routes conversations to a human when the assistant responder fails', function (): void {
+    app()->bind(LiveChatResponder::class, FailingLiveChatResponder::class);
+
+    $siteId = $this->createLiveChatSite();
+
+    $result = StartLiveChatConversationAction::run(new IncomingLiveChatMessageData(
+        body: 'Can someone help with a quote?',
+        visitorToken: 'fallback-token',
+        visitor: new LiveChatVisitorData(
+            name: 'Ava Morgan',
+            email: 'ava@example.test',
+            processingConsent: true,
+        ),
+        flow: 'message_first',
+        timezone: 'Europe/London',
+    ), $siteId);
+
+    $conversation = $result['conversation'];
+    $assistantMessage = $result['assistant_message'];
+
+    expect($conversation->status)->toBe(ConversationStatus::WaitingForHuman)
+        ->and($conversation->priority->value)->toBe('high')
+        ->and($conversation->assignment_queue)->toBe('support')
+        ->and($conversation->escalation_reason)->toBe(EscalationReason::RepeatedFailure)
+        ->and($conversation->messages()->count())->toBe(2)
+        ->and($conversation->contact_id)->not->toBeNull()
+        ->and($assistantMessage->requires_contact)->toBeTrue()
+        ->and($assistantMessage->body)->toContain('passed this conversation to a person');
 });
 
 it('applies after-hours handling with a custom message', function (): void {
