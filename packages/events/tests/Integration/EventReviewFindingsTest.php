@@ -11,6 +11,7 @@ use Capell\Core\Models\Site;
 use Capell\Core\Models\SiteDomain;
 use Capell\Core\Models\Theme;
 use Capell\Events\Actions\BuildCalendarFeedAction;
+use Capell\Events\Actions\BuildEventOccurrenceUrlAction;
 use Capell\Events\Actions\BuildEventSchemaAction;
 use Capell\Events\Actions\ProcessDueEventNotificationLogsAction;
 use Capell\Events\Actions\QueryPublicEventOccurrencesAction;
@@ -85,6 +86,62 @@ it('uses an event page url plus occurrence date for public occurrence urls and f
 
     expect($occurrence->load('event.pageUrl')->occurrenceUrl())->toEndWith('/events/community-event/2026-06-10')
         ->and(BuildCalendarFeedAction::run($site))->toContain('/events/community-event/2026-06-10');
+});
+
+it('builds occurrence urls from persisted page urls and event timezone date segments', function (): void {
+    $event = Event::factory()->create([
+        'visible_from' => CarbonImmutable::parse('2026-01-01 00:00:00', 'UTC'),
+        'visible_until' => null,
+        'visibility' => EventVisibilityEnum::Public,
+    ]);
+    $site = $event->site;
+    $language = Language::factory()->english()->create();
+    SiteDomain::factory()->for($site)->for($language)->default()->create([
+        'domain' => 'events.example.test',
+        'scheme' => 'https',
+    ]);
+
+    PageUrl::factory()
+        ->page($event)
+        ->site($site)
+        ->language($language)
+        ->state(['url' => '/events/late-show'])
+        ->create();
+
+    $occurrence = EventOccurrence::factory()->create([
+        'event_id' => $event->getKey(),
+        'starts_at' => CarbonImmutable::parse('2026-06-10 23:30:00', 'UTC'),
+        'timezone' => 'Europe/London',
+        'occurrence_key' => '20260610T233000',
+    ]);
+
+    expect(BuildEventOccurrenceUrlAction::run($occurrence->load('event.pageUrl')))
+        ->toBe('https://events.example.test/events/late-show/2026-06-11');
+});
+
+it('does not build occurrence urls for non-public occurrences or missing page urls', function (): void {
+    $event = Event::factory()->create([
+        'visible_from' => CarbonImmutable::parse('2026-01-01 00:00:00', 'UTC'),
+        'visible_until' => null,
+        'visibility' => EventVisibilityEnum::Public,
+    ]);
+    $privateOccurrence = EventOccurrence::factory()->create([
+        'event_id' => $event->getKey(),
+        'visibility' => EventVisibilityEnum::Private,
+        'starts_at' => CarbonImmutable::parse('2026-06-10 10:00:00', 'UTC'),
+        'occurrence_key' => '20260610T100000',
+    ]);
+
+    expect(BuildEventOccurrenceUrlAction::run($privateOccurrence->load('event.pageUrl')))->toBeNull();
+
+    $publicOccurrenceWithoutUrl = EventOccurrence::factory()->create([
+        'event_id' => $event->getKey(),
+        'visibility' => EventVisibilityEnum::Public,
+        'starts_at' => CarbonImmutable::parse('2026-06-11 10:00:00', 'UTC'),
+        'occurrence_key' => '20260611T100000',
+    ]);
+
+    expect(BuildEventOccurrenceUrlAction::run($publicOccurrenceWithoutUrl->load('event.pageUrl')))->toBeNull();
 });
 
 it('serves calendar feeds with freshness headers and conditional etag support', function (): void {

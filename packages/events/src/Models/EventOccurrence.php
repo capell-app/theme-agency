@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Capell\Events\Models;
 
-use Capell\Core\Models\PageUrl;
+use Capell\Events\Actions\BuildEventOccurrenceUrlAction;
 use Capell\Events\Database\Factories\EventOccurrenceFactory;
 use Capell\Events\Enums\EventBookingModeEnum;
 use Capell\Events\Enums\EventLocationModeEnum;
@@ -99,23 +99,7 @@ class EventOccurrence extends Model
 
     public function occurrenceUrl(): ?string
     {
-        if (! $this->isPubliclyVisible()) {
-            return null;
-        }
-
-        $pageUrlModel = $this->event->getRelationValue('pageUrl');
-
-        if (! $pageUrlModel instanceof PageUrl || ! $pageUrlModel->exists) {
-            return null;
-        }
-
-        $pageUrl = $pageUrlModel->full_url;
-
-        if ($pageUrl === null || $pageUrl === '') {
-            return null;
-        }
-
-        return rtrim($pageUrl, '/') . '/' . $this->starts_at->setTimezone($this->timezone)->toDateString();
+        return BuildEventOccurrenceUrlAction::run($this);
     }
 
     public function isPubliclyVisible(): bool

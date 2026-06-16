@@ -4,6 +4,7 @@ All notable changes to `capell-app/events` will be documented in this file.
 
 ## Unreleased
 
+- Event occurrence URLs now resolve through a package Action backed by persisted page URLs and timezone-aware date segments.
 - Capacity reads now trust the denormalized `registration_count` column instead of recomputing registration quantity aggregates on the hot path.
 
 - Added configurable recurrence sync window bounds and DST-crossing recurrence coverage.
