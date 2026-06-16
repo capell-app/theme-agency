@@ -14,6 +14,7 @@ use Capell\Deployments\Data\PublishComposerChangeResultData;
 use Capell\Deployments\Filament\Pages\DeploymentConnectionPage;
 use Capell\Deployments\Filament\Widgets\DeploymentConnectionWidget;
 use Capell\Deployments\Models\DeploymentConnection;
+use Capell\Deployments\Support\DeploymentPublishHookRegistry;
 use LogicException;
 use Spatie\LaravelPackageTools\Package;
 
@@ -35,6 +36,8 @@ class DeploymentsServiceProvider extends AbstractPackageServiceProvider
 
     public function registeringPackage(): void
     {
+        $this->app->singleton(DeploymentPublishHookRegistry::class);
+
         $this->app->bind(PublishesComposerChanges::class, fn (): object => new class implements PublishesComposerChanges
         {
             public function publish(ComposerRequirementData $requirement): PublishComposerChangeResultData

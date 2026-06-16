@@ -4,6 +4,7 @@ All notable changes to `capell-app/deployments` will be documented in this file.
 
 ## Unreleased
 
+- Added `DeploymentPublishHookRegistry` before/after/failure hooks for deployment maintenance coordination around Composer requirement publishes.
 - Emits `DeploymentPublishSucceeded` and `DeploymentPublishFailed` around Composer requirement publishes so install workflows, Diagnostics, and other Operations packages can react to deployment lifecycle outcomes.
 
 ### 2026-06-04

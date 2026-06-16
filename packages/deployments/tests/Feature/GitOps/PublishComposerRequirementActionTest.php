@@ -17,6 +17,7 @@ use Capell\Deployments\Events\DeploymentPublishSucceeded;
 use Capell\Deployments\Models\DeploymentConnection;
 use Capell\Deployments\Models\DeploymentPublication;
 use Capell\Deployments\Services\GitProvider\GitHubProvider;
+use Capell\Deployments\Support\DeploymentPublishHookRegistry;
 use Capell\Deployments\Tests\Fixtures\Autoload\FakeComposerPublisher;
 use Illuminate\Support\Facades\Event;
 
@@ -94,6 +95,43 @@ it('emits a deployment publish succeeded event after recording a publish result'
     Event::assertNotDispatched(DeploymentPublishFailed::class);
 });
 
+it('runs deployment publish hooks around successful publishes', function (): void {
+    $provider = new FakeComposerPublisher;
+    app()->instance(GitHubProvider::class, $provider);
+    $connection = DeploymentConnection::factory()->github()->create([
+        'install_policy' => InstallPolicy::DirectCommit,
+        'default_branch' => '4.x',
+    ]);
+    $requirement = new ComposerRequirementData(
+        composerName: 'capell/hooked-extension',
+        versionConstraint: '^2.0',
+    );
+    $calls = [];
+
+    $hooks = app(DeploymentPublishHookRegistry::class);
+    $hooks->beforePublish(function (DeploymentConnection $hookConnection, ComposerRequirementData $hookRequirement) use (&$calls, $connection, $requirement): void {
+        $calls[] = 'before:' . $hookRequirement->composerName;
+
+        expect($hookConnection->is($connection))->toBeTrue()
+            ->and($hookRequirement)->toBe($requirement);
+    });
+    $hooks->afterPublish(function (
+        DeploymentConnection $hookConnection,
+        ComposerRequirementData $hookRequirement,
+        PublishComposerChangeResultData $result,
+        ?string $status,
+    ) use (&$calls, $connection, $requirement): void {
+        $calls[] = 'after:' . $result->commitSha . ':' . $status;
+
+        expect($hookConnection->is($connection))->toBeTrue()
+            ->and($hookRequirement)->toBe($requirement);
+    });
+
+    PublishComposerRequirementAction::run($requirement, $connection);
+
+    expect($calls)->toBe(['before:capell/hooked-extension', 'after:commit-sha:success']);
+});
+
 it('emits a deployment publish failed event before rethrowing provider failures', function (): void {
     Event::fake([DeploymentPublishSucceeded::class, DeploymentPublishFailed::class]);
 
@@ -154,6 +192,18 @@ it('emits a deployment publish failed event before rethrowing provider failures'
         composerName: 'capell/failing-extension',
         versionConstraint: '^2.0',
     );
+    $calls = [];
+
+    app(DeploymentPublishHookRegistry::class)->publishFailed(function (
+        DeploymentConnection $hookConnection,
+        ComposerRequirementData $hookRequirement,
+        Throwable $exception,
+    ) use (&$calls, $connection, $requirement): void {
+        $calls[] = 'failed:' . $exception->getMessage();
+
+        expect($hookConnection->is($connection))->toBeTrue()
+            ->and($hookRequirement)->toBe($requirement);
+    });
 
     expect(fn (): PublishComposerChangeResultData => PublishComposerRequirementAction::run($requirement, $connection))
         ->toThrow(RuntimeException::class, 'Provider refused the commit.');
@@ -166,6 +216,7 @@ it('emits a deployment publish failed event before rethrowing provider failures'
             && $event->message === 'Provider refused the commit.',
     );
     Event::assertNotDispatched(DeploymentPublishSucceeded::class);
+    expect($calls)->toBe(['failed:Provider refused the commit.']);
 });
 
 it('dry runs direct composer requirement publishes without committing to the default branch', function (): void {

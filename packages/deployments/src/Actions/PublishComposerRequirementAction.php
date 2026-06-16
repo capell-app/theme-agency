@@ -13,6 +13,7 @@ use Capell\Deployments\Events\DeploymentPublishFailed;
 use Capell\Deployments\Events\DeploymentPublishSucceeded;
 use Capell\Deployments\Models\DeploymentConnection;
 use Capell\Deployments\Services\GitProvider\GitProviderFactory;
+use Capell\Deployments\Support\DeploymentPublishHookRegistry;
 use Lorisleiva\Actions\Concerns\AsAction;
 use Throwable;
 
@@ -30,20 +31,30 @@ final class PublishComposerRequirementAction
         DeploymentConnection $connection,
         bool $dryRun = false,
     ): PublishComposerChangeResultData {
+        $hooks = app(DeploymentPublishHookRegistry::class);
+
         try {
-            return $this->publish($requirement, $connection, $dryRun);
+            $hooks->runBeforePublish($connection, $requirement);
+            $publication = $this->publish($requirement, $connection, $dryRun);
+            $hooks->runAfterPublish($connection, $requirement, $publication['result'], $publication['status']);
+
+            return $publication['result'];
         } catch (Throwable $exception) {
+            $hooks->runPublishFailed($connection, $requirement, $exception);
             event(DeploymentPublishFailed::fromThrowable($connection, $requirement, $exception));
 
             throw $exception;
         }
     }
 
+    /**
+     * @return array{result: PublishComposerChangeResultData, status: string|null}
+     */
     private function publish(
         ComposerRequirementData $requirement,
         DeploymentConnection $connection,
         bool $dryRun,
-    ): PublishComposerChangeResultData {
+    ): array {
         $provider = $this->factory->for($connection);
         $slug = str($requirement->label ?? $requirement->composerName)->afterLast('/')->slug()->toString();
 
@@ -57,7 +68,7 @@ final class PublishComposerRequirementAction
                 RecordDeploymentPublicationAction::run($connection, $requirement, $result);
                 event(new DeploymentPublishSucceeded($connection, $requirement, $result));
 
-                return $result;
+                return ['result' => $result, 'status' => null];
             }
 
             $sha = $provider->commitFiles(
@@ -73,7 +84,7 @@ final class PublishComposerRequirementAction
             RecordDeploymentPublicationAction::run($connection, $requirement, $result, $status);
             event(new DeploymentPublishSucceeded($connection, $requirement, $result, $status));
 
-            return $result;
+            return ['result' => $result, 'status' => $status];
         }
 
         $branchName = 'capell/add-extension-' . $slug;
@@ -100,7 +111,7 @@ final class PublishComposerRequirementAction
             RecordDeploymentPublicationAction::run($connection, $requirement, $result, $status);
             event(new DeploymentPublishSucceeded($connection, $requirement, $result, $status));
 
-            return $result;
+            return ['result' => $result, 'status' => $status];
         }
 
         if ($dryRun) {
@@ -109,7 +120,7 @@ final class PublishComposerRequirementAction
             RecordDeploymentPublicationAction::run($connection, $requirement, $result);
             event(new DeploymentPublishSucceeded($connection, $requirement, $result));
 
-            return $result;
+            return ['result' => $result, 'status' => null];
         }
 
         $this->ensureBranchExists($provider, $connection, $branchName);
@@ -139,7 +150,7 @@ final class PublishComposerRequirementAction
         RecordDeploymentPublicationAction::run($connection, $requirement, $result, $status);
         event(new DeploymentPublishSucceeded($connection, $requirement, $result, $status));
 
-        return $result;
+        return ['result' => $result, 'status' => $status];
     }
 
     private function ensureBranchExists(GitProviderContract $provider, DeploymentConnection $connection, string $branchName): void
