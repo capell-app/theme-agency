@@ -24,6 +24,7 @@ Capabilities declared: `agent-bridge` and `agent-bridge-admin`.
 - **No explicit audit retention command in marketplace metadata.** Pruning exists in code but is not surfaced in `capell.json`.
 - **Done/Shipped: operator-facing capability catalog.** `BuildAgentBridgeCapabilityCatalogAction` and `capell://agent-bridge/capabilities` expose registered capability scope, risk, server, preview, confirmation, required package, and policy ability metadata outside the prompt builder.
 - **Done/Shipped: token lifecycle review controls.** Token records now expose a reusable lifecycle status enum and the user relation manager can filter active, expired, and revoked tokens without leaking token secrets.
+- **Done/Shipped: server-specific RBAC and policy diagnostics.** `AgentBridgeHealthCheck` now reports site-server policy coverage by verifying registered site capabilities have token scopes and mutating capabilities require confirmation, while also surfacing how many capabilities add host policy abilities. — `src/Health/AgentBridgeHealthCheck.php`, `tests/Unit/AgentBridgeHealthCheckTest.php`
 - **Screenshot recapture for token/audit/server surfaces is deferred.** Visual review confirmed the committed token, confirmation, audit, and health PNGs duplicate the prompt-builder page. They remain runner evidence only; marketplace media promotes only verified prompt-builder captures until user-resource and health-panel runner fixtures exist.
 
 ## 4. Issues / Risks
@@ -50,17 +51,17 @@ Agent Bridge should be positioned as a governed AI operations bridge, not a gene
 
 ## 6. Prioritized Roadmap
 
-| Item                                                          | Bucket | Effort | Impact | Section ref |
-| ------------------------------------------------------------- | ------ | ------ | ------ | ----------- |
-| Disable or namespace the default home route                   | Done   | S      | High   | §2.1, §4.1  |
-| Fix health remediation copy away from host-app migration text | Done   | S      | Medium | §2.2, §4.3  |
-| Surface audit/token pruning command in manifest/docs          | Done   | M      | Medium | §2.3        |
-| Add central audit payload/result redaction                    | Done   | M      | High   | §2.4, §4.2  |
-| Add capability catalog/admin inventory surface                | Done   | M      | Medium | §3, §5      |
-| Add token scope lifecycle UI and tests                        | Done   | M      | Medium | §3          |
-| Recapture token/audit/server health marketplace screenshots   | Later  | M      | Medium | §3, §5      |
-| Add server-specific RBAC and policy diagnostics               | Later  | L      | Medium | §3          |
-| Add richer MCP schema export and compatibility tests          | Later  | M      | Medium | §5          |
+| Item                                                                                                                                                                                                                                       | Bucket | Effort | Impact | Section ref |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------ | ------ | ------ | ----------- |
+| Disable or namespace the default home route                                                                                                                                                                                                | Done   | S      | High   | §2.1, §4.1  |
+| Fix health remediation copy away from host-app migration text                                                                                                                                                                              | Done   | S      | Medium | §2.2, §4.3  |
+| Surface audit/token pruning command in manifest/docs                                                                                                                                                                                       | Done   | M      | Medium | §2.3        |
+| Add central audit payload/result redaction                                                                                                                                                                                                 | Done   | M      | High   | §2.4, §4.2  |
+| Add capability catalog/admin inventory surface                                                                                                                                                                                             | Done   | M      | Medium | §3, §5      |
+| Add token scope lifecycle UI and tests                                                                                                                                                                                                     | Done   | M      | Medium | §3          |
+| Recapture token/audit/server health marketplace screenshots                                                                                                                                                                                | Later  | M      | Medium | §3, §5      |
+| Done/Shipped: Add server-specific RBAC and policy diagnostics. Evidence: health diagnostics verify site capabilities have token scopes, mutating capabilities require confirmation, and policy ability coverage is surfaced for operators. | Done   | M      | Medium | §3          |
+| Add richer MCP schema export and compatibility tests                                                                                                                                                                                       | Later  | M      | Medium | §5          |
 
 ## 7. Verification
 

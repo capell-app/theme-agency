@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Capell\AgentBridge\Health;
 
+use Capell\AgentBridge\Data\CapabilityData;
+use Capell\AgentBridge\Enums\CapabilityRiskEnum;
+use Capell\AgentBridge\Enums\CapabilityServerEnum;
 use Capell\AgentBridge\Settings\AgentBridgeSettings;
 use Capell\AgentBridge\Support\CapellAgentBridgeCapabilityRegistry;
 use Capell\Core\Contracts\Extensions\ChecksExtensionHealth;
@@ -29,6 +32,7 @@ final class AgentBridgeHealthCheck implements ChecksExtensionHealth
             self::checkMcpPackage(),
             self::checkTables(),
             self::checkCapabilityRegistry(),
+            self::checkServerPolicyCoverage(),
             self::checkSettings(),
             self::checkRoutes(),
         ]);
@@ -119,6 +123,58 @@ final class AgentBridgeHealthCheck implements ChecksExtensionHealth
             label: 'Agent Bridge capability registry',
             passed: true,
             message: sprintf('Capability registry is resolvable with %d capability(ies) registered.', $capabilityCount),
+        );
+    }
+
+    private static function checkServerPolicyCoverage(): DoctorCheckResultData
+    {
+        try {
+            $capabilities = resolve(CapellAgentBridgeCapabilityRegistry::class)->all();
+        } catch (Throwable $throwable) {
+            return new DoctorCheckResultData(
+                label: 'Agent Bridge server policy coverage',
+                passed: false,
+                message: 'Unable to inspect registered capability policies.',
+                remediation: $throwable->getMessage(),
+            );
+        }
+
+        $siteCapabilities = $capabilities
+            ->filter(fn (CapabilityData $capability): bool => $capability->server->isVisibleOn(CapabilityServerEnum::Site));
+
+        $missingScopes = $siteCapabilities
+            ->filter(fn (CapabilityData $capability): bool => trim($capability->scope) === '')
+            ->pluck('key');
+
+        $mutatingWithoutConfirmation = $siteCapabilities
+            ->filter(fn (CapabilityData $capability): bool => $capability->risk !== CapabilityRiskEnum::Read && ! $capability->needsConfirmation())
+            ->pluck('key');
+
+        if ($missingScopes->isNotEmpty() || $mutatingWithoutConfirmation->isNotEmpty()) {
+            return new DoctorCheckResultData(
+                label: 'Agent Bridge server policy coverage',
+                passed: false,
+                message: sprintf(
+                    'Capability policy coverage is incomplete. Missing scopes: %s. Mutating without confirmation: %s.',
+                    $missingScopes->isEmpty() ? 'none' : $missingScopes->implode(', '),
+                    $mutatingWithoutConfirmation->isEmpty() ? 'none' : $mutatingWithoutConfirmation->implode(', '),
+                ),
+                remediation: 'Ensure every site capability has a token scope and every mutating capability requires confirmation or a risk level that forces confirmation.',
+            );
+        }
+
+        $withPolicyAbility = $siteCapabilities
+            ->filter(fn (CapabilityData $capability): bool => $capability->policyAbility !== null && $capability->policyAbility !== '')
+            ->count();
+
+        return new DoctorCheckResultData(
+            label: 'Agent Bridge server policy coverage',
+            passed: true,
+            message: sprintf(
+                'Site server policy coverage is valid for %d capability(ies): scopes and confirmation gates are present; %d declare host policy abilities.',
+                $siteCapabilities->count(),
+                $withPolicyAbility,
+            ),
         );
     }
 

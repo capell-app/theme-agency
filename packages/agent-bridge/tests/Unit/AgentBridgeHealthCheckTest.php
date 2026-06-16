@@ -13,7 +13,7 @@ it('returns a compatible capell api version', function (): void {
 it('runs diagnostics and returns a collection of check results', function (): void {
     $results = AgentBridgeHealthCheck::runDiagnostics();
 
-    expect($results)->toHaveCount(5)
+    expect($results)->toHaveCount(6)
         ->and($results->every(fn (mixed $check): bool => $check instanceof DoctorCheckResultData))->toBeTrue();
 });
 
@@ -77,6 +77,19 @@ it('checks route configuration status', function (): void {
     expect($routeCheck)->not->toBeNull()
         ->and($routeCheck->passed)->toBeTrue()
         ->and($routeCheck->message)->toContain('site');
+});
+
+it('reports server policy coverage for scoped site capabilities', function (): void {
+    $results = AgentBridgeHealthCheck::runDiagnostics();
+
+    $policyCheck = $results->first(fn (DoctorCheckResultData $check): bool => $check->label === 'Agent Bridge server policy coverage');
+
+    throw_unless($policyCheck instanceof DoctorCheckResultData, RuntimeException::class, 'Agent Bridge server policy coverage health check was not returned.');
+
+    expect($policyCheck)->not->toBeNull()
+        ->and($policyCheck->passed)->toBeTrue()
+        ->and($policyCheck->message)->toContain('Site server policy coverage is valid')
+        ->and($policyCheck->message)->toContain('declare host policy abilities');
 });
 
 it('reports failed routes check when all routes are disabled', function (): void {
