@@ -24,7 +24,7 @@ Capabilities declared cover tour days, slot generation, public calendar discover
 - **No scheduled expiry commands.** Holds/waitlists require maintenance.
 - **Shipped 2026-06-16: payment checkout handoff contract.** `BuildSlotBookingCheckoutSessionDataAction` turns an active online hold into Payments `CreateCheckoutSessionData` with provider, customer, line item, payable linkage, reference ID, and metadata.
 - **Shipped 2026-06-16: customer portal rider/horse surfaces.** The package now contributes Customer Portal profile, dashboard, and self-service items for active rider profiles, horse profiles, and upcoming bookings without exposing medical disclosures, guardian/emergency contact details, or private horse notes.
-- **Marketplace media is card-only despite public PNG screenshots.** Promote route-backed PNGs only after visual verification.
+- **Shipped 2026-06-16: verified public screenshots promoted.** Route-backed public discovery and coach timetable PNGs were visually checked and promoted to Marketplace media alongside the extension card.
 
 ## 4. Issues / Risks
 
@@ -44,7 +44,7 @@ Equestrian Clinics should be positioned as a specialized vertical operations sui
 
 **Improved summary:** "A vertical Capell operations suite for equestrian clinics, combining tour days, riders, horses, waivers, payments, waitlists, facilities, coach timetables, and public clinic discovery."
 
-**Media status:** Keep Marketplace card-only until public discovery and coach timetable screenshots are verified against real route output and promoted intentionally.
+**Media status:** Public discovery and coach timetable PNGs are verified route-backed captures and promoted in Marketplace media alongside the extension card.
 
 **Cross-sell:** Bookings, Payments, Address, Customer Portal, Events, Media Library, Automation Studio, Theme Inertia Bookings.
 
@@ -58,7 +58,7 @@ Equestrian Clinics should be positioned as a specialized vertical operations sui
 | Add public discovery privacy and query-budget tests               | Done   | M      | High   | §2.4, §4.3  |
 | Add payment checkout handoff docs/tests                           | Done   | M      | High   | §3          |
 | Add customer portal rider/horse profile surfaces                  | Done   | L      | High   | §3, §5      |
-| Promote verified public screenshots                               | Next   | S      | Medium | §3, §4.4    |
+| Promote verified public screenshots                               | Done   | S      | Medium | §3, §4.4    |
 | Add coach mobile dashboard beyond signed timetable                | Later  | L      | Medium | §3, §5      |
 | Add analytics/BI export and AI assistant workflows                | Later  | L      | Medium | §5          |
 

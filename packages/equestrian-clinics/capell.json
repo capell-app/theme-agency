@@ -350,6 +350,16 @@
         ],
         "screenshots": [
             {
+                "path": "docs/screenshots/equestrian-clinics-public-discovery.png",
+                "alt": "Public Equestrian Clinics discovery page showing tour days, open slots, waitlist state, host request form, and demand heatmap",
+                "caption": "Riders and parents can find suitable clinics, inspect slot availability, join waitlists, and request new host areas."
+            },
+            {
+                "path": "docs/screenshots/equestrian-clinics-coach-timetable.png",
+                "alt": "Mobile coach timetable showing clinic viability, venue notes, slot schedule, payment and waiver reminder, and resource reservations",
+                "caption": "Coaches get a day-of timetable with venue notes, minimum viable clinic status, slot capacity, and operational reminders."
+            },
+            {
                 "path": "docs/assets/marketplace/extension-card.svg",
                 "alt": "Equestrian Clinics extension card showing tour day operations",
                 "caption": "Marketplace card for the Equestrian Clinics operations package."

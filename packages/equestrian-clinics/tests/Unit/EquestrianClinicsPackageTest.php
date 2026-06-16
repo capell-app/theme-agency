@@ -92,10 +92,24 @@ it('declares committed marketplace assets and a health check', function (): void
     $manifest = loadPackageJsonArray($packagePath . '/capell.json');
     $screenshots = loadPackageJsonArray($packagePath . '/docs/screenshots.json');
     $marketplaceAsset = findScreenshotEntry($screenshots, 'equestrian-clinics-extension-card');
-    $marketplaceScreenshot = arrayEntry(listValue(arrayValue($manifest, 'marketplace'), 'screenshots'), 0);
+    $marketplaceScreenshotPaths = collect(listValue(arrayValue($manifest, 'marketplace'), 'screenshots'))
+        ->map(static function (mixed $screenshot): string {
+            if (! is_array($screenshot)) {
+                throw new RuntimeException('Expected marketplace screenshot entry to be an object.');
+            }
+
+            return stringValue($screenshot, 'path');
+        })
+        ->all();
 
     expect(File::exists($packagePath . '/docs/assets/marketplace/extension-card.svg'))->toBeTrue()
-        ->and(stringValue($marketplaceScreenshot, 'path'))->toBe('docs/assets/marketplace/extension-card.svg')
+        ->and(File::exists($packagePath . '/docs/screenshots/equestrian-clinics-public-discovery.png'))->toBeTrue()
+        ->and(File::exists($packagePath . '/docs/screenshots/equestrian-clinics-coach-timetable.png'))->toBeTrue()
+        ->and($marketplaceScreenshotPaths)->toBe([
+            'docs/screenshots/equestrian-clinics-public-discovery.png',
+            'docs/screenshots/equestrian-clinics-coach-timetable.png',
+            'docs/assets/marketplace/extension-card.svg',
+        ])
         ->and($marketplaceAsset['screenshotPath'])->toBe('packages/equestrian-clinics/docs/screenshots/equestrian-clinics-extension-card.svg')
         ->and((new EquestrianClinicsHealthCheck)->passes())->toBeTrue();
 });
