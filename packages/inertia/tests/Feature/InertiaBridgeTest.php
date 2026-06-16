@@ -162,6 +162,9 @@ it('reports inertia bridge health from registered renderer and middleware servic
         ->and($health->rendererRegistered())->toBeTrue()
         ->and($health->middlewareRegistered())->toBeTrue()
         ->and($health->adapterReadinessCheck()->passed)->toBeTrue()
+        ->and($health->adapterReadinessCheck()->message)->toContain('resources/js/app.js')
+        ->and($health->adapterReadinessCheck()->message)->toContain('1 component')
+        ->and($health->adapterReadinessCheck()->message)->toContain('1 npm dependency')
         ->and($diagnostics)->toHaveCount(3)
         ->and($health->passes())->toBeTrue();
 });

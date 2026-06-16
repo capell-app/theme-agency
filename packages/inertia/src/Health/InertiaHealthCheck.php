@@ -61,7 +61,15 @@ final class InertiaHealthCheck implements ChecksExtensionHealth
             label: 'Inertia adapter',
             passed: $adapter !== null,
             message: $adapter !== null
-                ? sprintf('Configured Inertia adapter [%s] is registered by %s.', $configuredAdapter, $adapter->packageName)
+                ? sprintf(
+                    'Configured Inertia adapter [%s] is registered by %s with build [%s/%s], %d component(s), and %d npm dependency(ies).',
+                    $configuredAdapter,
+                    $adapter->packageName,
+                    $adapter->buildPath,
+                    $adapter->entrypoint,
+                    count($adapter->components),
+                    count($adapter->npmDependencies),
+                )
                 : sprintf('Configured Inertia adapter [%s] is not registered.', $configuredAdapter),
             remediation: $adapter !== null
                 ? null

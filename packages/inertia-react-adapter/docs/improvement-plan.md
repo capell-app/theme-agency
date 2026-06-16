@@ -18,7 +18,7 @@ The React adapter registers the `react` adapter with the shared Capell Inertia b
 
 3. **Done/Shipped: component-map drift tests.** The provider-declared React components are now checked against `resources/js/app.jsx`: each component name must have a matching file under `resources/js/Pages` and a `pages` map entry in the generic app. This catches provider/component-map drift before the generic build breaks. — `src/Providers/InertiaReactAdapterServiceProvider.php`, `resources/js/app.jsx`, `tests/Feature/InertiaReactAdapterServiceProviderTest.php` — S
 
-4. **Surface adapter diagnostics through the bridge.** Once the Inertia bridge exposes adapter readiness details, report React package/version/build metadata there too. — `src/Health/InertiaReactAdapterHealthCheck.php`, `packages/inertia/src/Health/InertiaHealthCheck.php` — M
+4. **Done/Shipped: bridge-visible adapter diagnostics.** The shared Inertia bridge health check now reports the configured adapter key, registering package, build path, entrypoint, component count, and npm dependency count. React adapter readiness is therefore visible through the bridge as well as the package-local health check. — `packages/inertia/src/Health/InertiaHealthCheck.php`, `tests/Feature/InertiaBridgeTest.php` — M
 
 ## 3. Missing Features
 
@@ -44,5 +44,5 @@ Audience: frontend/package developers. Position this package as the included Rea
 | Strengthen adapter health readiness            | Done   | S      | Medium | §2  |
 | Add package-local improvement plan             | Done   | S      | Medium | §1  |
 | Add component-map drift tests                  | Done   | S      | Medium | §2  |
-| Add bridge-visible adapter diagnostics         | Later  | M      | Medium | §2  |
+| Add bridge-visible adapter diagnostics         | Done   | M      | Medium | §2  |
 | Add explicit SSR entrypoint when SSR is needed | Later  | M      | Medium | §3  |
