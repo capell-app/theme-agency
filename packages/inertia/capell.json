@@ -47,7 +47,8 @@
     "capabilities": [
         "inertia-runtime",
         "inertia-frontend",
-        "sanitized-inertia-config"
+        "sanitized-inertia-config",
+        "adapter-readiness-diagnostics"
     ],
     "security": {
         "riskTier": "low",
@@ -111,7 +112,7 @@
     },
     "marketplace": {
         "summary": "Connect Capell public rendering to Inertia adapters with one root view, middleware stack, safe runtime props, and an adapter registry for package-owned Vue or React frontends.",
-        "description": "Registers the Inertia renderer, root view, middleware, sanitized public runtime props, sanitized render configuration, and adapter registry for Capell frontend runtimes.",
+        "description": "Registers the Inertia renderer, root view, middleware, sanitized public runtime props, sanitized render configuration, adapter readiness diagnostics, and adapter registry for Capell frontend runtimes.",
         "screenshots": [],
         "categories": ["frontend", "developer-tools"]
     }

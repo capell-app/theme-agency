@@ -146,12 +146,34 @@ it('uses sanitized root view and component values for public page rendering', fu
 });
 
 it('reports inertia bridge health from registered renderer and middleware services', function (): void {
+    resolve(InertiaAdapterRegistry::class)->register(new InertiaAdapterData(
+        key: 'vue',
+        packageName: 'capell-app/theme-inertia-bookings-vue',
+        npmDependencies: ['@inertiajs/vue3' => '^2.0'],
+        buildPath: 'resources/js/app.js',
+        entrypoint: 'resources/js/app.js',
+        components: ['Capell/Page' => 'resources/js/Pages/Capell/Page.vue'],
+    ));
+
     $health = new InertiaHealthCheck;
+    $diagnostics = $health->runDiagnostics();
 
     expect(InertiaHealthCheck::compatibleCapellApiVersion())->toBe('^4.0')
         ->and($health->rendererRegistered())->toBeTrue()
         ->and($health->middlewareRegistered())->toBeTrue()
+        ->and($health->adapterReadinessCheck()->passed)->toBeTrue()
+        ->and($diagnostics)->toHaveCount(3)
         ->and($health->passes())->toBeTrue();
+});
+
+it('reports a missing configured inertia adapter in health diagnostics', function (): void {
+    config()->set('capell-inertia.adapter', 'react');
+
+    $check = (new InertiaHealthCheck)->adapterReadinessCheck();
+
+    expect($check->passed)->toBeFalse()
+        ->and($check->message)->toContain('react')
+        ->and($check->remediation)->not->toBeNull();
 });
 
 it('renders package route responses through the capell inertia helper', function (): void {

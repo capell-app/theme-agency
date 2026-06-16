@@ -18,7 +18,7 @@ Capell Inertia is the frontend runtime bridge that lets Capell render public pag
 
 3. **Done/Shipped: validate configured component/root-view values.** `ResolveInertiaRootViewAction` and `ResolveInertiaComponentNameAction` now sanitize root-view and component names for middleware, public page rendering, and package-route helper rendering. Bad config falls back to `capell-inertia::app` and `Capell/Page` without PHP string-cast surprises. — `src/Actions/ResolveInertiaRootViewAction.php`, `src/Actions/ResolveInertiaComponentNameAction.php`, `src/Rendering/CapellInertiaResponseRenderer.php`, `src/Support/CapellInertiaManager.php`, `tests/Feature/InertiaBridgeTest.php` — S
 
-4. **Health check should report adapter readiness.** Current health only verifies renderer and middleware registration. Add adapter registry/config diagnostics so operators can see whether the configured adapter is installed and what package registered it. — `src/Health/InertiaHealthCheck.php`, `src/Support/InertiaAdapterRegistry.php` — M
+4. **Done/Shipped: health check reports adapter readiness.** `InertiaHealthCheck` now returns concrete diagnostics for renderer registration, middleware registration, and the configured adapter key. The adapter diagnostic reports the registering package when ready and returns remediation when `capell-inertia.adapter` points at a missing adapter. — `src/Health/InertiaHealthCheck.php`, `src/Support/InertiaAdapterRegistry.php`, `tests/Feature/InertiaBridgeTest.php` — M
 
 ## 3. Missing Features
 
@@ -48,5 +48,5 @@ Suggested summary: "Connect Capell public rendering to Inertia adapters with one
 | Add package-local improvement plan                     | Done   | S      | Medium | §1  |
 | Extract shared Inertia response builder                | Done   | S      | Low    | §2  |
 | Validate root view and page component config           | Done   | S      | Medium | §2  |
-| Add adapter readiness diagnostics to health check      | Later  | M      | Medium | §2  |
+| Add adapter readiness diagnostics to health check      | Done   | M      | Medium | §2  |
 | Surface SSR/client manifest diagnostics through bridge | Later  | M      | Medium | §3  |

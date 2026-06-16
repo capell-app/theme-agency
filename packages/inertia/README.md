@@ -35,7 +35,7 @@ This bridge has no owned visual workflow. Public screenshots should live in adap
 - Config files: `packages/inertia/config/capell-inertia.php`.
 - Actions: `BuildInertiaPagePropsAction`, `RenderInertiaResponseAction`, `ResolveInertiaAdapterKeyAction`, `ResolveInertiaComponentNameAction`, `ResolveInertiaRootViewAction`.
 - Data objects: `InertiaAdapterData`.
-- Health checks: `Capell\Inertia\Health\InertiaHealthCheck`.
+- Health checks: `Capell\Inertia\Health\InertiaHealthCheck` verifies renderer registration, middleware registration, and the configured adapter registration.
 - Blade views: `packages/inertia/resources/views/app.blade.php`.
 - Cache tags: `inertia`.
 
@@ -65,6 +65,7 @@ This package has no schema impact. It does not declare package-owned migrations 
 | Symptom | Likely cause | Check | Fix |
 | --- | --- | --- | --- |
 | Inertia renderer or middleware is missing | Provider or manifest is not loaded | Confirm `capell.json`, package `composer.json`, and provider registration | Reinstall the package, refresh Composer autoload, and clear host caches |
+| Health reports a missing adapter | `capell-inertia.adapter` points at an adapter key no package registered | Check installed adapter/theme packages and their service providers | Install/enable the matching adapter package or change the adapter key |
 | Page renders with the default component or root view | Invalid `capell-inertia.page_component` or `capell-inertia.root_view` config | Check the published config values are non-empty strings | Correct the config or rely on the safe defaults |
 | Public output leaks unexpected state | Render data, cache variation, or authoring boundary has regressed | Check public Blade, cache tags, and public-output safety tests | Move data loading out of Blade and rerun the package public-output tests |
 
