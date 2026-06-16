@@ -29,13 +29,10 @@ class KitProviderAdapter implements NewsletterProviderAdapter
 
     public function listAudiences(ProviderConnection $connection): array
     {
-        $response = Http::withHeaders($this->headers($connection))
-            ->timeout((int) config('capell-newsletter.http.timeout', 15))
-            ->retry(
-                (int) config('capell-newsletter.http.retry_times', 3),
-                (int) config('capell-newsletter.http.retry_delay_ms', 500),
-                throw: false,
-            )
+        $response = ProviderHttpRetry::apply(
+            Http::withHeaders($this->headers($connection))
+                ->timeout((int) config('capell-newsletter.http.timeout', 15)),
+        )
             ->get('https://api.kit.com/v4/forms');
 
         if (! $response->successful()) {
@@ -70,23 +67,17 @@ class KitProviderAdapter implements NewsletterProviderAdapter
             ], static fn (mixed $value): bool => $value !== null && $value !== ''),
         ];
 
-        $response = Http::withHeaders($this->headers($connection))
-            ->timeout((int) config('capell-newsletter.http.timeout', 15))
-            ->retry(
-                (int) config('capell-newsletter.http.retry_times', 3),
-                (int) config('capell-newsletter.http.retry_delay_ms', 500),
-                throw: false,
-            )
+        $response = ProviderHttpRetry::apply(
+            Http::withHeaders($this->headers($connection))
+                ->timeout((int) config('capell-newsletter.http.timeout', 15)),
+        )
             ->post('https://api.kit.com/v4/forms/' . $audience->remote_id . '/subscribers', $payload);
 
         foreach ($subscriber->interests as $interest) {
-            Http::withHeaders($this->headers($connection))
-                ->timeout((int) config('capell-newsletter.http.timeout', 15))
-                ->retry(
-                    (int) config('capell-newsletter.http.retry_times', 3),
-                    (int) config('capell-newsletter.http.retry_delay_ms', 500),
-                    throw: false,
-                )
+            ProviderHttpRetry::apply(
+                Http::withHeaders($this->headers($connection))
+                    ->timeout((int) config('capell-newsletter.http.timeout', 15)),
+            )
                 ->post('https://api.kit.com/v4/tags/' . $interest->remoteId . '/subscribers', [
                     'email_address' => $subscriber->email,
                 ]);

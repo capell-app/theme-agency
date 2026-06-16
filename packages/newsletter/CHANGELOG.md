@@ -4,6 +4,7 @@ All notable changes to `capell-app/newsletter` will be documented in this file.
 
 ## Unreleased
 
+- Added shared provider HTTP retry handling that honors ESP `Retry-After` responses for Mailchimp, Kit, and Campaign Monitor rate limits.
 - Prepared package metadata and documentation for ongoing Capell 4.x package work.
 - Added expiry to unsubscribe and preference-center public tokens via `capell-newsletter.public_tokens.token_expiry_hours`.
 - Added RFC 8058 List-Unsubscribe headers and a one-click unsubscribe POST route backed by the existing token burn, consent ledger, provider sync, Contacts sync, and lifecycle event flow.

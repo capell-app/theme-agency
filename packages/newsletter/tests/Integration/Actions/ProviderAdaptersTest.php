@@ -181,6 +181,75 @@ it('maps Campaign Monitor audiences, subscriber sync payloads, and webhook state
         ->and($webhook?->remoteId)->toBe('reader@example.com');
 });
 
+it('honours Mailchimp Retry-After responses before returning synced subscribers', function (): void {
+    config()->set('capell-newsletter.http.retry_times', 2);
+    config()->set('capell-newsletter.http.retry_after_max_ms', 1);
+    Http::fake([
+        'https://us21.api.mailchimp.com/3.0/lists/audience-a/members/*' => Http::sequence()
+            ->push(['error' => 'rate limited'], 429, ['Retry-After' => '1'])
+            ->push(['status' => 'subscribed']),
+    ]);
+    $connection = providerConnection(ProviderType::Mailchimp, [
+        'credentials' => ['api_key' => 'abc-us21'],
+    ]);
+
+    $result = (new MailchimpProviderAdapter)->syncSubscriber(
+        $connection,
+        providerAudience($connection, 'audience-a'),
+        providerSubscriber(),
+    );
+
+    expect($result->successful)->toBeTrue();
+
+    Http::assertSentCount(2);
+});
+
+it('honours Kit Retry-After responses before returning audiences', function (): void {
+    config()->set('capell-newsletter.http.retry_times', 2);
+    config()->set('capell-newsletter.http.retry_after_max_ms', 1);
+    Http::fake([
+        'https://api.kit.com/v4/forms' => Http::sequence()
+            ->push(['error' => 'rate limited'], 429, ['Retry-After' => '1'])
+            ->push(['forms' => [['id' => 123, 'name' => 'Newsletter']]]),
+    ]);
+    $connection = providerConnection(ProviderType::Kit, [
+        'oauth_tokens' => ['access_token' => 'kit-oauth-token'],
+    ]);
+
+    $audiences = (new KitProviderAdapter)->listAudiences($connection);
+
+    expect($audiences)->toHaveCount(1)
+        ->and($audiences[0]->remoteId)->toBe('123');
+
+    Http::assertSentCount(2);
+});
+
+it('honours Campaign Monitor Retry-After responses before returning synced subscribers', function (): void {
+    config()->set('capell-newsletter.http.retry_times', 2);
+    config()->set('capell-newsletter.http.retry_after_max_ms', 1);
+    Http::fake([
+        'https://api.createsend.com/api/v3.3/subscribers/list-a.json' => Http::sequence()
+            ->push(['error' => 'rate limited'], 429, ['Retry-After' => '1'])
+            ->push([], 201),
+    ]);
+    $connection = providerConnection(ProviderType::CampaignMonitor, [
+        'credentials' => [
+            'api_key' => 'campaign-monitor-key',
+            'client_id' => 'client-a',
+        ],
+    ]);
+
+    $result = (new CampaignMonitorProviderAdapter)->syncSubscriber(
+        $connection,
+        providerAudience($connection, 'list-a'),
+        providerSubscriber(),
+    );
+
+    expect($result->successful)->toBeTrue();
+
+    Http::assertSentCount(2);
+});
+
 /**
  * @param  array<string, mixed>  $attributes
  */

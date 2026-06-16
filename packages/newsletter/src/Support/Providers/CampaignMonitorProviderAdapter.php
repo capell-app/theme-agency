@@ -35,13 +35,10 @@ class CampaignMonitorProviderAdapter implements NewsletterProviderAdapter
             return [];
         }
 
-        $response = Http::withBasicAuth($this->apiKey($connection), '')
-            ->timeout((int) config('capell-newsletter.http.timeout', 15))
-            ->retry(
-                (int) config('capell-newsletter.http.retry_times', 3),
-                (int) config('capell-newsletter.http.retry_delay_ms', 500),
-                throw: false,
-            )
+        $response = ProviderHttpRetry::apply(
+            Http::withBasicAuth($this->apiKey($connection), '')
+                ->timeout((int) config('capell-newsletter.http.timeout', 15)),
+        )
             ->get('https://api.createsend.com/api/v3.3/clients/' . $clientId . '/lists.json');
 
         if (! $response->successful()) {
@@ -84,13 +81,10 @@ class CampaignMonitorProviderAdapter implements NewsletterProviderAdapter
                 ->all(),
         ];
 
-        $response = Http::withBasicAuth($this->apiKey($connection), '')
-            ->timeout((int) config('capell-newsletter.http.timeout', 15))
-            ->retry(
-                (int) config('capell-newsletter.http.retry_times', 3),
-                (int) config('capell-newsletter.http.retry_delay_ms', 500),
-                throw: false,
-            )
+        $response = ProviderHttpRetry::apply(
+            Http::withBasicAuth($this->apiKey($connection), '')
+                ->timeout((int) config('capell-newsletter.http.timeout', 15)),
+        )
             ->post('https://api.createsend.com/api/v3.3/subscribers/' . $audience->remote_id . '.json', $payload);
 
         return new ProviderSyncResultData(

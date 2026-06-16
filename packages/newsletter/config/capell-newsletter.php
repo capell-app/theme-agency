@@ -57,5 +57,6 @@ return [
         'timeout' => 15,
         'retry_times' => 3,
         'retry_delay_ms' => 500,
+        'retry_after_max_ms' => 60000,
     ],
 ];

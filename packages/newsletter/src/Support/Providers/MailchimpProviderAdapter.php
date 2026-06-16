@@ -29,13 +29,10 @@ class MailchimpProviderAdapter implements NewsletterProviderAdapter
 
     public function listAudiences(ProviderConnection $connection): array
     {
-        $response = Http::withBasicAuth('capell', $this->apiKey($connection))
-            ->timeout((int) config('capell-newsletter.http.timeout', 15))
-            ->retry(
-                (int) config('capell-newsletter.http.retry_times', 3),
-                (int) config('capell-newsletter.http.retry_delay_ms', 500),
-                throw: false,
-            )
+        $response = ProviderHttpRetry::apply(
+            Http::withBasicAuth('capell', $this->apiKey($connection))
+                ->timeout((int) config('capell-newsletter.http.timeout', 15)),
+        )
             ->get($this->baseUrl($connection) . '/lists');
 
         if (! $response->successful()) {
@@ -76,13 +73,10 @@ class MailchimpProviderAdapter implements NewsletterProviderAdapter
         ];
 
         $subscriberHash = hash('md5', mb_strtolower($subscriber->email));
-        $response = Http::withBasicAuth('capell', $this->apiKey($connection))
-            ->timeout((int) config('capell-newsletter.http.timeout', 15))
-            ->retry(
-                (int) config('capell-newsletter.http.retry_times', 3),
-                (int) config('capell-newsletter.http.retry_delay_ms', 500),
-                throw: false,
-            )
+        $response = ProviderHttpRetry::apply(
+            Http::withBasicAuth('capell', $this->apiKey($connection))
+                ->timeout((int) config('capell-newsletter.http.timeout', 15)),
+        )
             ->put($this->baseUrl($connection) . '/lists/' . $audience->remote_id . '/members/' . $subscriberHash, $payload);
 
         return new ProviderSyncResultData(
