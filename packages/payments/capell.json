@@ -6,7 +6,7 @@
     "kind": "package",
     "capellApiVersion": "^4.0",
     "version": "4.x-dev",
-    "description": "Payments gives Capell a first-party way to charge customers without depending on an external store. It ships native Stripe Checkout for one-off purchases, recurring subscriptions, donations, paid file downloads, and fulfillment-backed gated-access handoffs, plus signed webhook intake that keeps payments, subscriptions, refunds, and disputes in sync automatically. Every record is stored behind a provider-neutral model layer, so admins get read-only audit resources, customers get a self-service billing portal, and Form Builder fields can collect payment inline. Designed for revenue-generating sites that want checkout, fulfilment, and reconciliation handled inside the CMS.",
+    "description": "Payments gives Capell a first-party way to charge customers without depending on an external store. It ships native Stripe Checkout and PayPal Checkout for one-off purchases, donations, paid file downloads, and fulfillment-backed gated-access handoffs, plus Stripe subscriptions, billing portal sessions, and signed webhook intake. Every record is stored behind a provider-neutral model layer, so admins get read-only audit resources, customers get self-service billing, and Form Builder fields can collect payment inline. Designed for revenue-generating sites that want checkout, fulfilment, and reconciliation handled inside the CMS.",
     "product": {
         "group": "Capell Commerce",
         "tier": "premium",
@@ -167,6 +167,7 @@
     ],
     "capabilities": [
         "stripe-checkout",
+        "paypal-checkout",
         "one-off-payments",
         "subscriptions",
         "donations",
@@ -274,7 +275,7 @@
         "privateDocsRequested": true
     },
     "marketplace": {
-        "summary": "Take one-off payments, donations, subscriptions, paid downloads, and fulfillment-backed gated-access handoffs through Stripe Checkout — with a provider-neutral record layer built to add more gateways later.",
+        "summary": "Take one-off payments, donations, paid downloads, and fulfillment-backed gated-access handoffs through Stripe or PayPal Checkout — with subscriptions and billing workflows on Stripe.",
         "screenshots": [
             {
                 "path": "docs/screenshots/payments-checkout-sessions.png",

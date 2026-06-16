@@ -52,6 +52,29 @@ final class PaymentsSettingsSchema implements HasSchema
                         ->label(__('capell-payments::settings.stripe_connect_timeout'))
                         ->integer()
                         ->minValue(1),
+                    HelperText::apply(
+                        TextInput::make('paypal_client_id')
+                            ->label(__('capell-payments::settings.paypal_client_id')),
+                        'capell-payments::settings.paypal_client_id_helper',
+                    ),
+                    HelperText::apply(
+                        TextInput::make('paypal_client_secret')
+                            ->label(__('capell-payments::settings.paypal_client_secret'))
+                            ->password()
+                            ->revealable(),
+                        'capell-payments::settings.paypal_client_secret_helper',
+                    ),
+                    TextInput::make('paypal_api_base_url')
+                        ->label(__('capell-payments::settings.paypal_api_base_url'))
+                        ->url(),
+                    TextInput::make('paypal_timeout')
+                        ->label(__('capell-payments::settings.paypal_timeout'))
+                        ->integer()
+                        ->minValue(1),
+                    TextInput::make('paypal_connect_timeout')
+                        ->label(__('capell-payments::settings.paypal_connect_timeout'))
+                        ->integer()
+                        ->minValue(1),
                 ]),
         ];
     }

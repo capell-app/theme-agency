@@ -98,3 +98,9 @@ it('declares implemented payments package contributions', function (): void {
         ->and(class_implements(PaymentsConsoleCommandsContribution::class))->toContain(ExtensionContribution::class)
         ->and(class_implements(PaymentsHealthContribution::class))->toContain(ChecksExtensionHealth::class);
 });
+
+it('declares the shipped Stripe and PayPal checkout capabilities', function (): void {
+    $capabilities = data_get(paymentsManifest(), 'capabilities');
+
+    expect($capabilities)->toContain('stripe-checkout', 'paypal-checkout');
+});

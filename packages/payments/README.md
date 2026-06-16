@@ -6,7 +6,7 @@
 
 Payments is an **Available**, **Schema-owning** Capell package in the **Capell Commerce** product group. It ships as `capell-app/payments` and extends these surfaces: admin, frontend, console.
 
-Payments gives Capell a first-party way to charge customers without depending on an external store. It ships native Stripe Checkout for one-off purchases, recurring subscriptions, donations, paid file downloads, and fulfillment-backed gated-access handoffs, plus signed webhook intake that keeps payments, subscriptions, refunds, and disputes in sync automatically. Every record is stored behind a provider-neutral model layer, so admins get read-only audit resources, customers get a self-service billing portal, and Form Builder fields can collect payment inline. Designed for revenue-generating sites that want checkout, fulfilment, and reconciliation handled inside the CMS.
+Payments gives Capell a first-party way to charge customers without depending on an external store. It ships native Stripe Checkout and PayPal Checkout for one-off purchases, donations, paid file downloads, and fulfillment-backed gated-access handoffs, plus Stripe subscriptions, billing portal sessions, and signed webhook intake. Every record is stored behind a provider-neutral model layer, so admins get read-only audit resources, customers get self-service billing, and Form Builder fields can collect payment inline. Designed for revenue-generating sites that want checkout, fulfilment, and reconciliation handled inside the CMS.
 
 After install, admins get package-owned management surfaces and public users may see package-owned frontend output or routes.
 
@@ -23,7 +23,7 @@ Status details:
 
 **For developers:** The package gives developers package-owned service providers, Actions, Data objects, models, Laravel routes, and Filament classes instead of pushing this behaviour into core or application code.
 
-**For teams:** Take one-off payments, donations, subscriptions, paid downloads, and fulfillment-backed gated-access handoffs through Stripe Checkout - with a provider-neutral record layer built to add more gateways later.
+**For teams:** Take one-off payments, donations, paid downloads, and fulfillment-backed gated-access handoffs through Stripe or PayPal Checkout - with subscriptions and billing workflows on Stripe.
 
 ## Screens And Workflow
 

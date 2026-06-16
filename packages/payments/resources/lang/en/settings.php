@@ -13,5 +13,12 @@ return [
     'stripe_api_version' => 'Stripe API version',
     'stripe_timeout' => 'Stripe timeout',
     'stripe_connect_timeout' => 'Stripe connection timeout',
+    'paypal_client_id' => 'PayPal client ID',
+    'paypal_client_id_helper' => 'Used for PayPal Checkout API requests when PAYPAL_CLIENT_ID is not set.',
+    'paypal_client_secret' => 'PayPal client secret',
+    'paypal_client_secret_helper' => 'Used for PayPal Checkout API requests when PAYPAL_CLIENT_SECRET is not set.',
+    'paypal_api_base_url' => 'PayPal API base URL',
+    'paypal_timeout' => 'PayPal timeout',
+    'paypal_connect_timeout' => 'PayPal connection timeout',
     'webhook_freshness_hours' => 'Webhook freshness window',
 ];

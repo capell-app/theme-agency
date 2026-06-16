@@ -4,6 +4,7 @@ All notable changes to `capell-app/payments` will be documented in this file.
 
 ## Unreleased
 
+- Exposed PayPal Checkout as a manifest capability and admin-configurable gateway setting surface, aligning package copy with the shipped PayPal gateway.
 - Prepared package metadata and documentation for ongoing Capell 4.x package work.
 - Locked stored Stripe webhook events before processing so duplicate deliveries cannot concurrently run fulfillment for the same provider event.
 - Added host allow-list validation for Form Builder payment checkout success/cancel return URLs via `capell-payments.form_builder.allowed_return_hosts`.
