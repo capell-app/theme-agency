@@ -9,6 +9,8 @@ return [
     'horse_workload_limit_exceeded' => 'This horse would exceed its configured daily workload limit.',
     'facility_capacity_exceeded' => 'This facility resource is not available in the requested quantity for that time.',
     'cash_payment_requires_approval' => 'Cash payment is only available after this rider has been approved by the coach.',
+    'checkout_handoff_not_available' => 'Checkout can only be started for an active online payment hold.',
+    'checkout_url_invalid' => 'Checkout success and cancellation URLs must be absolute HTTP URLs.',
     'payment_provider_required' => 'Choose Stripe or PayPal before placing this booking hold.',
     'slot_capacity_exceeded' => 'This slot no longer has enough remaining capacity.',
     'booking_window_closed' => 'Online booking is closed for this tour day.',

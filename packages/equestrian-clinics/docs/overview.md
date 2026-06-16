@@ -65,6 +65,7 @@ Screenshot contract: `screenshots.json`.
 - Queues or schedules: checkout hold and waitlist offer expiry commands run every five minutes when the package is installed.
 - Cache tags: `equestrian-clinics`.
 - Commands: `capell:equestrian-clinics-expire-holds`, `capell:equestrian-clinics-expire-waitlist-offers`.
+- Checkout handoff: `BuildSlotBookingCheckoutSessionDataAction` turns an active online hold into Payments `CreateCheckoutSessionData`; provider webhooks should call `ConfirmSlotBookingPaymentAction` after completion.
 
 ## Common Pitfalls
 

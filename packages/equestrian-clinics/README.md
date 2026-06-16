@@ -40,7 +40,7 @@ Screenshot contract: `docs/screenshots.json`.
 - Migrations: `packages/equestrian-clinics/database/migrations/2026_06_13_000001_create_equestrian_clinics_tables.php`.
 - Models: `EquestrianBillingEntry`, `EquestrianClinicCredit`, `EquestrianCommercialProduct`, `EquestrianCommunicationLog`, `EquestrianCompetitionResult`, `EquestrianFacilityBooking`, `EquestrianFacilityResource`, `EquestrianHorseCareTask`, `EquestrianHorseHealthRecord`, `EquestrianHorseProfile`, `EquestrianHostRequest`, `EquestrianRiderProfile`, `EquestrianSlotBooking`, `EquestrianSlotWaitlistEntry`, `EquestrianStaffMember`, `EquestrianTourDay`, `EquestrianTourDaySlot`, `EquestrianVenue`, `EquestrianWaiverSignature`.
 - Route files: `packages/equestrian-clinics/routes/web.php`.
-- Actions: `AllocateHorseToSlotAction`, `BuildClinicDiscoveryAction`, `BuildCoachTimetableAction`, `BuildFacilityReportAction`, `BuildOpenSlotDemandHeatmapAction`, `BuildStaffCareWorklistAction`, `CancelSlotBookingAction`, `ClaimWaitlistOfferAction`, `CompleteHorseCareTaskAction`, `ConfirmSlotBookingPaymentAction`, `CreateBillingEntryAction`, `CreateCommercialProductAction`, `and 15 more`.
+- Actions: `AllocateHorseToSlotAction`, `BuildClinicDiscoveryAction`, `BuildCoachTimetableAction`, `BuildFacilityReportAction`, `BuildOpenSlotDemandHeatmapAction`, `BuildSlotBookingCheckoutSessionDataAction`, `BuildStaffCareWorklistAction`, `CancelSlotBookingAction`, `ClaimWaitlistOfferAction`, `CompleteHorseCareTaskAction`, `ConfirmSlotBookingPaymentAction`, `CreateBillingEntryAction`, `CreateCommercialProductAction`, `and 15 more`.
 - Data objects: `EquestrianBookingQuoteData`, `EquestrianFacilityReportData`, `EquestrianSlotTemplateData`.
 - Manifest contributions: `model: Capell\EquestrianClinics\Manifest\EquestrianClinicsModelsContribution`, `route: Capell\EquestrianClinics\Manifest\EquestrianClinicsRoutesContribution`, `health-check: Capell\EquestrianClinics\Manifest\EquestrianClinicsHealthContribution`, scheduled expiry jobs, and console commands.
 - Health checks: `Capell\EquestrianClinics\Health\EquestrianClinicsHealthCheck`.
@@ -65,6 +65,10 @@ Screenshot contract: `docs/screenshots.json`.
 - Queues or schedules: checkout hold and waitlist offer expiry commands run every five minutes when the package is installed.
 - Cache tags: `equestrian-clinics`.
 - Commands: `capell:equestrian-clinics-expire-holds`, `capell:equestrian-clinics-expire-waitlist-offers`.
+
+## Payment Checkout Handoff
+
+Online slot requests create a held `EquestrianSlotBooking` with `payment_status=pending` and a provider of Stripe or PayPal. Host apps can pass that hold to `BuildSlotBookingCheckoutSessionDataAction::run($booking, $successUrl, $cancelUrl)` to receive a Payments `CreateCheckoutSessionData` DTO with the line item, customer, payable linkage, provider, reference ID, and metadata needed by `capell-app/payments`. Confirm the booking only after provider completion by calling `ConfirmSlotBookingPaymentAction`.
 
 ## Common Pitfalls
 

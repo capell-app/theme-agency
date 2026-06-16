@@ -8,6 +8,7 @@ use Capell\Core\Contracts\Extensions\ChecksExtensionHealth;
 use Capell\EquestrianClinics\Actions\AllocateHorseToSlotAction;
 use Capell\EquestrianClinics\Actions\BuildFacilityReportAction;
 use Capell\EquestrianClinics\Actions\BuildOpenSlotDemandHeatmapAction;
+use Capell\EquestrianClinics\Actions\BuildSlotBookingCheckoutSessionDataAction;
 use Capell\EquestrianClinics\Actions\BuildStaffCareWorklistAction;
 use Capell\EquestrianClinics\Actions\CancelSlotBookingAction;
 use Capell\EquestrianClinics\Actions\ClaimWaitlistOfferAction;
@@ -61,6 +62,7 @@ final class EquestrianClinicsHealthCheck implements ChecksExtensionHealth
     private const array ACTIONS = [
         GenerateTourDaySlotsAction::class,
         QuoteTourDaySlotBookingAction::class,
+        BuildSlotBookingCheckoutSessionDataAction::class,
         RequestSlotBookingAction::class,
         ConfirmSlotBookingPaymentAction::class,
         ExpireSlotBookingHoldsAction::class,

@@ -145,6 +145,7 @@
     "actions": {
         "generateTourDaySlots": "Capell\\EquestrianClinics\\Actions\\GenerateTourDaySlotsAction",
         "quoteTourDaySlotBooking": "Capell\\EquestrianClinics\\Actions\\QuoteTourDaySlotBookingAction",
+        "buildSlotBookingCheckoutSessionData": "Capell\\EquestrianClinics\\Actions\\BuildSlotBookingCheckoutSessionDataAction",
         "requestSlotBooking": "Capell\\EquestrianClinics\\Actions\\RequestSlotBookingAction",
         "confirmSlotBookingPayment": "Capell\\EquestrianClinics\\Actions\\ConfirmSlotBookingPaymentAction",
         "expireSlotBookingHolds": "Capell\\EquestrianClinics\\Actions\\ExpireSlotBookingHoldsAction",

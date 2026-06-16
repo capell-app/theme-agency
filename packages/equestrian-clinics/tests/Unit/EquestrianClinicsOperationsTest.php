@@ -5,6 +5,7 @@ declare(strict_types=1);
 use Capell\EquestrianClinics\Actions\AllocateHorseToSlotAction;
 use Capell\EquestrianClinics\Actions\BuildFacilityReportAction;
 use Capell\EquestrianClinics\Actions\BuildOpenSlotDemandHeatmapAction;
+use Capell\EquestrianClinics\Actions\BuildSlotBookingCheckoutSessionDataAction;
 use Capell\EquestrianClinics\Actions\BuildStaffCareWorklistAction;
 use Capell\EquestrianClinics\Actions\CancelSlotBookingAction;
 use Capell\EquestrianClinics\Actions\ClaimWaitlistOfferAction;
@@ -49,7 +50,9 @@ use Capell\EquestrianClinics\Models\EquestrianStaffMember;
 use Capell\EquestrianClinics\Models\EquestrianTourDay;
 use Capell\EquestrianClinics\Models\EquestrianVenue;
 use Capell\EquestrianClinics\Providers\EquestrianClinicsServiceProvider;
+use Capell\Payments\Enums\CheckoutMode;
 use Capell\Payments\Enums\PaymentProvider;
+use Capell\Payments\Enums\PaymentPurpose;
 use Carbon\CarbonImmutable;
 use Illuminate\Console\Scheduling\Event as ScheduledEvent;
 use Illuminate\Console\Scheduling\Schedule;
@@ -262,6 +265,86 @@ it('holds online checkout for Stripe or PayPal and confirms only from provider s
         ->and($confirmed->payment_status)->toBe(EquestrianPaymentStatusEnum::Paid)
         ->and($confirmed->hold_expires_at)->toBeNull()
         ->and($slot->refresh()->booked_count)->toBe(1);
+});
+
+it('builds a Payments checkout handoff from an active online slot hold', function (): void {
+    config()->set('capell-equestrian-clinics.checkout_hold_minutes', 10);
+
+    $tourDay = createTourDay();
+    $tourDay->forceFill(['site_id' => 12])->save();
+    $slot = GenerateTourDaySlotsAction::run($tourDay, new EquestrianSlotTemplateData(
+        title: 'Semi-private clinic',
+        archetype: EquestrianSlotArchetypeEnum::SemiPrivate,
+        durationMinutes: 60,
+        gapMinutes: 0,
+        capacityMin: 2,
+        capacityMax: 2,
+        pricePence: 5500,
+        skillTier: 'novice',
+    ))->firstOrFail();
+    $rider = createRider('Checkout Rider');
+    $horse = createHorse('Checkout Horse');
+    $now = CarbonImmutable::parse('2026-06-18 08:00:00');
+    $booking = RequestSlotBookingAction::run(
+        slot: $slot,
+        riderProfile: $rider,
+        horseProfile: $horse,
+        provider: PaymentProvider::Stripe,
+        quotedTotalPence: 5750,
+        now: $now,
+    );
+
+    $checkoutData = BuildSlotBookingCheckoutSessionDataAction::run(
+        booking: $booking,
+        successUrl: 'https://example.test/clinics/checkout/success',
+        cancelUrl: 'https://example.test/clinics/checkout/cancel',
+        now: $now,
+    );
+
+    expect($checkoutData->provider)->toBe(PaymentProvider::Stripe)
+        ->and($checkoutData->purpose)->toBe(PaymentPurpose::OneOff)
+        ->and($checkoutData->mode)->toBe(CheckoutMode::Payment)
+        ->and($checkoutData->siteId)->toBe(12)
+        ->and($checkoutData->customerEmail)->toBe('checkout-rider@example.com')
+        ->and($checkoutData->customerName)->toBe('Checkout Rider')
+        ->and($checkoutData->payableType)->toBe(EquestrianSlotBooking::class)
+        ->and($checkoutData->payableId)->toBe((string) $booking->getKey())
+        ->and($checkoutData->referenceId)->toBe('equestrian-slot-booking-' . $booking->getKey())
+        ->and($checkoutData->lineItems)->toHaveCount(1)
+        ->and($checkoutData->lineItems[0]->name)->toBe('Semi-private clinic - Willow Farm Tour Day')
+        ->and($checkoutData->lineItems[0]->amount)->toBe(5750)
+        ->and($checkoutData->lineItems[0]->currency)->toBe('gbp')
+        ->and($checkoutData->lineItems[0]->description)->toBe('Checkout Rider with Checkout Horse')
+        ->and($checkoutData->metadata['equestrian_slot_booking_id'] ?? null)->toBe($booking->getKey())
+        ->and($checkoutData->metadata['hold_expires_at'] ?? null)->toBe($now->addMinutes(10)->toIso8601String());
+});
+
+it('rejects checkout handoff for expired, cash, or already confirmed bookings', function (): void {
+    $slot = GenerateTourDaySlotsAction::run(createTourDay(), new EquestrianSlotTemplateData(
+        title: 'Private checkout',
+        archetype: EquestrianSlotArchetypeEnum::Private,
+        durationMinutes: 45,
+        gapMinutes: 0,
+        capacityMin: 1,
+        capacityMax: 3,
+        pricePence: 4500,
+        skillTier: 'novice',
+    ))->firstOrFail();
+    $now = CarbonImmutable::parse('2026-06-18 08:00:00');
+    $expiredHold = RequestSlotBookingAction::run($slot, createRider('Expired Rider'), createHorse('Expired Horse'), PaymentProvider::PayPal, false, 4500, $now);
+    $confirmedHold = RequestSlotBookingAction::run($slot, createRider('Confirmed Rider'), createHorse('Confirmed Horse'), PaymentProvider::Stripe, false, 4500, $now);
+    $cashBooking = RequestSlotBookingAction::run($slot, createRider('Cash Rider', $now), createHorse('Cash Horse'), null, true, 4500, $now);
+
+    ConfirmSlotBookingPaymentAction::run($confirmedHold, $now->addMinute());
+
+    foreach ([$expiredHold, $confirmedHold, $cashBooking] as $booking) {
+        expect(fn (): mixed => BuildSlotBookingCheckoutSessionDataAction::run(
+            booking: $booking->refresh(),
+            successUrl: 'https://example.test/success',
+            cancelUrl: 'https://example.test/cancel',
+            now: $now->addMinutes(11),
+        ))->toThrow(ValidationException::class);
+    }
 });
 
 it('expires stale checkout holds and permits approved cash customers', function (): void {
