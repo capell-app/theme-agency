@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Capell\Contacts\Actions;
 
+use Capell\Contacts\Actions\Concerns\CoercesContactSourceValues;
 use Capell\Contacts\Data\ContactSourceRecordData;
 use Capell\Contacts\Data\ContactSourceSyncResultData;
 use Capell\Contacts\Enums\ContactActivityType;
@@ -14,6 +15,7 @@ use Lorisleiva\Actions\Concerns\AsAction;
 final class SyncShopifyCustomerContactAction
 {
     use AsAction;
+    use CoercesContactSourceValues;
 
     public function handle(object $event): ?ContactSourceSyncResultData
     {
@@ -24,7 +26,7 @@ final class SyncShopifyCustomerContactAction
         }
 
         $customerId = $this->intValue($customer->getKey());
-        $connection = $this->relatedModel($customer, 'connection');
+        $connection = $this->relatedModel($customer, 'connection', allowLazyLoad: false);
         $siteId = $this->intValue($connection?->getAttribute('site_id'));
 
         if ($customerId === null || $siteId === null) {
@@ -70,28 +72,5 @@ final class SyncShopifyCustomerContactAction
             ),
             $customer,
         );
-    }
-
-    private function relatedModel(Model $model, string $relation): ?Model
-    {
-        $loaded = $model->relationLoaded($relation) ? $model->getRelation($relation) : null;
-
-        return $loaded instanceof Model ? $loaded : null;
-    }
-
-    private function stringValue(mixed $value): ?string
-    {
-        if (! is_string($value) && ! is_numeric($value)) {
-            return null;
-        }
-
-        $value = trim((string) $value);
-
-        return $value === '' ? null : $value;
-    }
-
-    private function intValue(mixed $value): ?int
-    {
-        return is_numeric($value) ? (int) $value : null;
     }
 }

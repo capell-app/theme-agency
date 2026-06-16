@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Capell\Contacts\Actions;
 
+use Capell\Contacts\Actions\Concerns\CoercesContactSourceValues;
 use Capell\Contacts\Data\ContactSourceRecordData;
 use Capell\Contacts\Data\ContactSourceSyncResultData;
 use Capell\Contacts\Enums\ContactActivityType;
@@ -14,6 +15,7 @@ use Lorisleiva\Actions\Concerns\AsAction;
 final class SyncCommentContactAction
 {
     use AsAction;
+    use CoercesContactSourceValues;
 
     public function handle(object $event): ?ContactSourceSyncResultData
     {
@@ -64,38 +66,5 @@ final class SyncCommentContactAction
             ),
             $comment,
         );
-    }
-
-    private function relatedModel(Model $model, string $relation): ?Model
-    {
-        $loaded = $model->relationLoaded($relation) ? $model->getRelation($relation) : null;
-
-        if ($loaded instanceof Model) {
-            return $loaded;
-        }
-
-        if (! $model->exists || ! method_exists($model, $relation)) {
-            return null;
-        }
-
-        $related = $model->{$relation}()->first();
-
-        return $related instanceof Model ? $related : null;
-    }
-
-    private function stringValue(mixed $value): ?string
-    {
-        if (! is_string($value) && ! is_numeric($value)) {
-            return null;
-        }
-
-        $value = trim((string) $value);
-
-        return $value === '' ? null : $value;
-    }
-
-    private function intValue(mixed $value): ?int
-    {
-        return is_numeric($value) ? (int) $value : null;
     }
 }
