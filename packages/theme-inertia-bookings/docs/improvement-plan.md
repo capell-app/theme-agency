@@ -25,7 +25,7 @@ Theme Inertia Bookings is the base premium Inertia theme for appointment-led ser
 Capabilities declared: theme-inertia-bookings and Inertia bookings frontend.
 
 - **Shipped: theme page renderer.** The renderer now returns a public-safe `Capell/Page` Inertia response with hydrated page/theme/layout props.
-- **No demo command.** Premium themes commonly ship a demo install path; this package has screenshots but no `capell:theme-inertia-bookings-demo` command.
+- **Shipped 2026-06-16: demo command.** The theme now ships `capell:theme-inertia-bookings-demo`, delegated through `InstallInertiaBookingsThemeDemoAction` and the shared Foundation Theme demo installer with coverage for URL, site, language, and force options.
 - **No required page-set contract.** Homepage/services/locations/request screenshots exist, but there is no test proving the theme covers search/list/contact/detail equivalents for theme-scale requirements.
 - **No fallback when Bookings is not installed.** Bookings is a hard dependency, which is reasonable for this theme, but docs should explain that it is not a generic service theme.
 - **Shipped 2026-06-16: adapter-specific component health.** The base health check now verifies the configured generic adapter package and the matching `theme-inertia-bookings-vue` or `theme-inertia-bookings-react` component pack health, including the booking request component contract.
@@ -63,7 +63,7 @@ Theme Inertia Bookings is a premium lane for appointment-led businesses using Ca
 | Item                                                                                     | Bucket | Effort | Impact | Section ref |
 | ---------------------------------------------------------------------------------------- | ------ | ------ | ------ | ----------- |
 | Promote runner-backed screenshots or assert marketplace crop parity                      | Next   | S      | Medium | §2.4        |
-| Add demo command/fixture coverage for homepage, services, locations, and request journey | Next   | M      | Medium | §3          |
+| Add demo command/fixture coverage for homepage, services, locations, and request journey | Done   | M      | Medium | §3          |
 | Add adapter-specific health checks for booking request component availability            | Done   | M      | Medium | §3          |
 | Add layout graph consumption for richer Inertia page composition                         | Later  | L      | Medium | §3, §5      |
 

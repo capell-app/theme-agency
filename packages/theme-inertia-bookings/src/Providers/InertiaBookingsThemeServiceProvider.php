@@ -12,6 +12,7 @@ use Capell\Core\Support\Packages\AbstractPackageServiceProvider;
 use Capell\Core\ThemeStudio\Data\ThemeDefinitionData;
 use Capell\Core\ThemeStudio\Data\ThemePresetData;
 use Capell\Core\ThemeStudio\Theme\ThemeRegistry;
+use Capell\ThemeStudio\InertiaBookings\Console\Commands\DemoCommand;
 use Capell\ThemeStudio\InertiaBookings\Rendering\InertiaBookingsThemeRenderer;
 use Capell\ThemeStudio\InertiaBookings\Rendering\InertiaPublicBookingRequestRenderer;
 use Override;
@@ -74,6 +75,10 @@ class InertiaBookingsThemeServiceProvider extends AbstractPackageServiceProvider
         $this->app->bind(PublicBookingRequestRenderer::class, InertiaPublicBookingRequestRenderer::class);
         $this->registerTheme();
         $this->registerVendorAssets();
+
+        if ($this->app->runningInConsole()) {
+            $this->commands([DemoCommand::class]);
+        }
     }
 
     #[Override]

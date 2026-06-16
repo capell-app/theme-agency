@@ -17,6 +17,7 @@ use Capell\Inertia\Facades\CapellInertia;
 use Capell\Inertia\Support\CapellInertiaManager;
 use Capell\Marketplace\Filament\Pages\ThemeExtensionPage;
 use Capell\Tests\Packages\PackagesTestCase;
+use Capell\ThemeStudio\InertiaBookings\Console\Commands\DemoCommand;
 use Capell\ThemeStudio\InertiaBookings\Health\ThemeInertiaBookingsHealthCheck;
 use Capell\ThemeStudio\InertiaBookings\Manifest\ThemeManagementPageContribution;
 use Capell\ThemeStudio\InertiaBookings\Providers\InertiaBookingsThemeServiceProvider;
@@ -60,8 +61,11 @@ it('declares valid Capell extension manifest metadata', function (): void {
         ->and(ThemeManagementPageContribution::compatibleCapellApiVersion())->toBe('^4.0')
         ->and(ThemeManagementPageContribution::themeKey())->toBe(InertiaBookingsThemeServiceProvider::THEME_KEY)
         ->and(data_get($manifest, 'product.tier'))->toBe('premium')
+        ->and(data_get($manifest, 'commands.demo'))->toBe('capell:theme-inertia-bookings-demo')
+        ->and(data_get($manifest, 'commands.demoParams'))->toBe(['url', 'languages', 'sites'])
         ->and(data_get($manifest, 'healthChecks.0.class'))->toBe(ThemeInertiaBookingsHealthCheck::class)
-        ->and(ThemeInertiaBookingsHealthCheck::compatibleCapellApiVersion())->toBe('^4.0');
+        ->and(ThemeInertiaBookingsHealthCheck::compatibleCapellApiVersion())->toBe('^4.0')
+        ->and(class_exists(DemoCommand::class))->toBeTrue();
 });
 
 it('defines the inertia bookings theme contract', function (): void {

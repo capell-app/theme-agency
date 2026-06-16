@@ -38,6 +38,8 @@ Screenshot contract: `screenshots.json`.
 ## Technical Shape
 
 - Service providers: `Capell\ThemeStudio\InertiaBookings\Providers\InertiaBookingsThemeServiceProvider`.
+- Command signatures: `capell:theme-inertia-bookings-demo`.
+- Console command classes: `DemoCommand`.
 - Manifest contributions: `admin-page: Capell\ThemeStudio\InertiaBookings\Manifest\ThemeManagementPageContribution`.
 - Health checks: `Capell\ThemeStudio\InertiaBookings\Health\ThemeInertiaBookingsHealthCheck`.
 - Cache tags: `theme-inertia-bookings`.
@@ -55,7 +57,7 @@ This theme has no schema impact. It relies on core Capell site, page, locale, an
 - Settings: no package settings declared.
 - Queues or schedules: none detected in standard package paths.
 - Cache tags: `theme-inertia-bookings`.
-- Commands: none declared.
+- Commands: `capell:theme-inertia-bookings-demo`.
 - Required runtime path: install `capell-app/inertia`, `capell-app/bookings`, the configured generic Inertia adapter, and the matching `theme-inertia-bookings-vue` or `theme-inertia-bookings-react` component pack.
 - Health checks: verify the selected adapter package and the matching booking request component pack expose the required `Capell/Page` and `Capell/Bookings/Request` components.
 
@@ -76,7 +78,7 @@ This theme has no schema impact. It relies on core Capell site, page, locale, an
 
 1. Install the package: `composer require capell-app/theme-inertia-bookings`.
 2. Run the required setup: no package migrations are declared; clear cached config and routes if the host app uses caches.
-3. Verify the package provider is registered and the related frontend, command, or extension point is active.
+3. Optionally run `capell:theme-inertia-bookings-demo` from the host app to seed demo preview pages.
 
 ## Next Steps
 
