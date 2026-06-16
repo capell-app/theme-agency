@@ -22,6 +22,7 @@ it('normalises editor state into bounded widget config', function (): void {
         'autoplay' => true,
         'transition_ms' => 9999,
         'aspect_ratio' => 'landscape',
+        'media_alt_strategy' => 'caption',
         'empty_state' => 'message',
     ]);
 
@@ -35,5 +36,6 @@ it('normalises editor state into bounded widget config', function (): void {
         ->and($config->autoplay)->toBeTrue()
         ->and($config->transitionMs)->toBe(5000)
         ->and($config->aspectRatio)->toBe('landscape')
+        ->and($config->mediaAltStrategy)->toBe('caption')
         ->and($config->emptyState)->toBe('message');
 });

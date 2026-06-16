@@ -32,7 +32,7 @@
                         >
                             <img
                                 src="{{ $item->thumbnailUrl ?? $item->mediaUrl }}"
-                                alt=""
+                                alt="{{ $feed->config->mediaAltText($item) }}"
                                 loading="lazy"
                             />
                         </a>

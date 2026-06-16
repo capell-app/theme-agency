@@ -102,7 +102,8 @@
         "social-feed-provider-registry",
         "social-feed-cached-rendering",
         "social-feed-stale-sync-health",
-        "social-feed-render-budget"
+        "social-feed-render-budget",
+        "social-feed-media-alt-strategy"
     ],
     "security": {
         "riskTier": "sensitive",

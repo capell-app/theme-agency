@@ -21,6 +21,7 @@ return [
                 'autoplay' => 'Autoplay',
                 'transition_ms' => 'Transition speed',
                 'aspect_ratio' => 'Media ratio',
+                'media_alt_strategy' => 'Media alt text',
                 'empty_state' => 'Empty state',
             ],
             'variants' => [
@@ -38,6 +39,11 @@ return [
             'empty_states' => [
                 'hidden' => 'Hidden',
                 'message' => 'Message',
+            ],
+            'media_alt_strategies' => [
+                'auto' => 'Auto',
+                'caption' => 'Use caption text',
+                'decorative' => 'Decorative',
             ],
         ],
     ],

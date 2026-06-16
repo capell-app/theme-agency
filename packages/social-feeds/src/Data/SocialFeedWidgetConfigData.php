@@ -23,6 +23,7 @@ final readonly class SocialFeedWidgetConfigData
         public bool $autoplay,
         public int $transitionMs,
         public string $aspectRatio,
+        public string $mediaAltStrategy,
         public string $emptyState,
     ) {}
 
@@ -49,8 +50,34 @@ final readonly class SocialFeedWidgetConfigData
             autoplay: (bool) Arr::get($state, 'autoplay', false),
             transitionMs: self::clamp((int) Arr::get($state, 'transition_ms', 450), 100, 5000),
             aspectRatio: self::aspectRatio(Arr::get($state, 'aspect_ratio', 'square')),
+            mediaAltStrategy: self::mediaAltStrategy(Arr::get($state, 'media_alt_strategy', 'auto')),
             emptyState: self::emptyState(Arr::get($state, 'empty_state', 'hidden')),
         );
+    }
+
+    public function mediaAltText(SocialFeedRenderItemData $item): string
+    {
+        if ($this->mediaAltStrategy === 'decorative') {
+            return '';
+        }
+
+        $caption = self::compactText($item->text);
+
+        if ($this->mediaAltStrategy === 'auto' && $this->showCaption && $caption !== null) {
+            return '';
+        }
+
+        if ($caption !== null) {
+            return self::limitText($caption);
+        }
+
+        $authorName = self::compactText($item->authorName);
+
+        if ($authorName !== null) {
+            return sprintf('Social post image by %s', self::limitText($authorName, 80));
+        }
+
+        return sprintf('%s social post image', ucfirst($item->provider));
     }
 
     private static function clamp(int $value, int $min, int $max): int
@@ -63,8 +90,33 @@ final readonly class SocialFeedWidgetConfigData
         return in_array($value, ['square', 'landscape', 'portrait', 'natural'], true) ? (string) $value : 'square';
     }
 
+    private static function mediaAltStrategy(mixed $value): string
+    {
+        return in_array($value, ['auto', 'caption', 'decorative'], true) ? (string) $value : 'auto';
+    }
+
     private static function emptyState(mixed $value): string
     {
         return in_array($value, ['hidden', 'message'], true) ? (string) $value : 'hidden';
+    }
+
+    private static function compactText(?string $value): ?string
+    {
+        if ($value === null) {
+            return null;
+        }
+
+        $text = preg_replace('/\s+/', ' ', trim(strip_tags($value)));
+
+        return is_string($text) && $text !== '' ? $text : null;
+    }
+
+    private static function limitText(string $value, int $limit = 120): string
+    {
+        if (strlen($value) <= $limit) {
+            return $value;
+        }
+
+        return rtrim(substr($value, 0, max(1, $limit - 3))) . '...';
     }
 }

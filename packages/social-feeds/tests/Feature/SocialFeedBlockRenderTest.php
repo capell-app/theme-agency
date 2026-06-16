@@ -21,7 +21,7 @@ it('registers a safe premium social feed block definition', function (): void {
 
     expect($definition->safeForPublicOutput)->toBeTrue()
         ->and($definition->variantKeys())->toBe(['list', 'slideshow', 'carousel', 'paginated'])
-        ->and($definition->settings)->toHaveCount(14);
+        ->and($definition->settings)->toHaveCount(15);
 });
 
 it('renders cached items without leaking private connection details or raw html', function (): void {
@@ -125,4 +125,59 @@ it('renders prepared social feed data in Blade without database queries', functi
     expect($queryCount)->toBe(0)
         ->and($html)->toContain('Prepared post')
         ->and($html)->toContain('Prepared Author');
+});
+
+it('derives social feed media alt text when captions are hidden', function (): void {
+    $renderData = new SocialFeedRenderData(
+        config: SocialFeedWidgetConfigData::fromState([
+            'layout' => 'list',
+            'limit' => 1,
+            'show_caption' => false,
+        ]),
+        items: [
+            new SocialFeedRenderItemData(
+                provider: 'rss',
+                type: 'image',
+                text: 'Image-focused launch',
+                permalink: 'https://example.test/posts/image-focused',
+                mediaUrl: 'https://example.test/images/image-focused.jpg',
+                thumbnailUrl: null,
+                authorName: 'Example Author',
+                authorAvatarUrl: null,
+                publishedAt: now()->toImmutable(),
+            ),
+        ],
+    );
+
+    $html = view('capell-social-feeds::blocks.social-feed', ['feed' => $renderData])->render();
+
+    expect($html)->toContain('alt="Image-focused launch"')
+        ->and($html)->not->toContain('capell-social-feed__caption');
+});
+
+it('keeps social feed media decorative when configured', function (): void {
+    $renderData = new SocialFeedRenderData(
+        config: SocialFeedWidgetConfigData::fromState([
+            'layout' => 'carousel',
+            'limit' => 1,
+            'media_alt_strategy' => 'decorative',
+        ]),
+        items: [
+            new SocialFeedRenderItemData(
+                provider: 'rss',
+                type: 'image',
+                text: 'Decorative repeat',
+                permalink: 'https://example.test/posts/decorative-repeat',
+                mediaUrl: 'https://example.test/images/decorative-repeat.jpg',
+                thumbnailUrl: null,
+                authorName: 'Example Author',
+                authorAvatarUrl: null,
+                publishedAt: now()->toImmutable(),
+            ),
+        ],
+    );
+
+    $html = view('capell-social-feeds::blocks.social-feed', ['feed' => $renderData])->render();
+
+    expect($html)->toContain('alt=""');
 });

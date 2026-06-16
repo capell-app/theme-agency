@@ -18,7 +18,7 @@ Social Feeds is a premium growth package that contributes a `social-feed` Block 
 
 5. **Add render budget and no-query Blade coverage.** `FetchSocialFeedRenderDataAction` queries local items and the Blade view renders prepared Data; that matches the public Blade safety rule. Add a zero-query Blade render test after hydrating `SocialFeedRenderData` and a bounded query test for the Action. Evidence: `FetchSocialFeedRenderDataAction`, `resources/views/blocks/social-feed.blade.php`, `SocialFeedBlockRenderTest`. - **S** - **Done 2026-06-16:** focused tests now prove render data fetching stays inside a small query budget and package Blade renders prepared data with zero database queries.
 
-6. **Improve public image accessibility.** The block renders feed media images with empty `alt`, which is defensible for decorative thumbnails but weak when captions are hidden or the image is the main content. Add a config option/derived alt text from caption/provider where appropriate, while preserving decorative alt for repeated previews. Evidence: `resources/views/blocks/social-feed.blade.php`. - **S**
+6. **Improve public image accessibility.** The block renders feed media images with empty `alt`, which is defensible for decorative thumbnails but weak when captions are hidden or the image is the main content. Add a config option/derived alt text from caption/provider where appropriate, while preserving decorative alt for repeated previews. Evidence: `resources/views/blocks/social-feed.blade.php`. - **S** - **Done 2026-06-16:** widgets now support `media_alt_strategy` (`auto`, `caption`, `decorative`), derive alt text from post text/author/provider when captions are hidden, and preserve decorative media when configured.
 
 ## 3. Missing Features (gaps)
 
@@ -70,7 +70,7 @@ Social Feeds belongs in `Capell Growth` because it turns external social proof i
 | Add stale-sync health diagnostics                                               | Done   | S      | Medium | §2.2, §4.2  |
 | Add render budget/no-query public Blade coverage                                | Done   | S      | Medium | §2.5        |
 | Add cached item pruning/retention                                               | Next   | M      | Medium | §3          |
-| Add image alt strategy for media-heavy feeds                                    | Next   | S      | Low    | §2.6        |
+| Add image alt strategy for media-heavy feeds                                    | Done   | S      | Low    | §2.6        |
 | Add moderation/approval/pinning controls                                        | Later  | M      | Medium | §3          |
 | Add OAuth flow or remove OAuth state table from active docs until used          | Later  | L      | Medium | §3          |
 | Add native provider clients for the highest-value networks                      | Later  | L      | High   | §3, §5      |
