@@ -56,6 +56,8 @@ This theme has no schema impact. It relies on core Capell site, page, locale, an
 - Queues or schedules: none detected in standard package paths.
 - Cache tags: `theme-inertia-bookings`.
 - Commands: none declared.
+- Required runtime path: install `capell-app/inertia`, `capell-app/bookings`, the configured generic Inertia adapter, and the matching `theme-inertia-bookings-vue` or `theme-inertia-bookings-react` component pack.
+- Health checks: verify the selected adapter package and the matching booking request component pack expose the required `Capell/Page` and `Capell/Bookings/Request` components.
 
 ## Common Pitfalls
 
@@ -67,6 +69,7 @@ This theme has no schema impact. It relies on core Capell site, page, locale, an
 | Symptom | Likely cause | Check | Fix |
 | --- | --- | --- | --- |
 | Package surface is missing after install | Provider or manifest is not loaded | Confirm `capell.json`, package `composer.json`, and provider registration | Reinstall the package, refresh Composer autoload, and clear host caches |
+| Health fails for adapter components | `CAPELL_INERTIA_ADAPTER` is set to an adapter whose theme component pack is not installed or whose component map is incomplete | Check the configured adapter and matching `theme-inertia-bookings-*` package health | Install the matching Vue or React component pack and rebuild frontend assets |
 | Public output leaks unexpected state | Render data, cache variation, or authoring boundary has regressed | Check public Blade, cache tags, and public-output safety tests | Move data loading out of Blade and rerun the package public-output tests |
 
 ## Quick Start

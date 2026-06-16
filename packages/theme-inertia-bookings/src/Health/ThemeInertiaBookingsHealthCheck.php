@@ -24,6 +24,20 @@ final class ThemeInertiaBookingsHealthCheck implements ChecksExtensionHealth
         'vue' => 'capell-app/inertia-vue-adapter',
     ];
 
+    /**
+     * @var array<string, array{package: string, health: class-string}>
+     */
+    private const array ADAPTER_COMPONENT_PACKS = [
+        'react' => [
+            'package' => 'capell-app/theme-inertia-bookings-react',
+            'health' => 'Capell\\ThemeStudio\\InertiaBookingsReact\\Health\\InertiaBookingsReactHealthCheck',
+        ],
+        'vue' => [
+            'package' => 'capell-app/theme-inertia-bookings-vue',
+            'health' => 'Capell\\ThemeStudio\\InertiaBookingsVue\\Health\\InertiaBookingsVueHealthCheck',
+        ],
+    ];
+
     public static function compatibleCapellApiVersion(): string
     {
         return '^4.0';
@@ -33,6 +47,7 @@ final class ThemeInertiaBookingsHealthCheck implements ChecksExtensionHealth
     {
         return $this->inertiaBridgeAvailable()
             && $this->configuredAdapterInstalled()
+            && $this->configuredAdapterBookingComponentAvailable()
             && $this->themeRegistered()
             && $this->bookingRendererBound();
     }
@@ -44,11 +59,29 @@ final class ThemeInertiaBookingsHealthCheck implements ChecksExtensionHealth
 
     public function configuredAdapterInstalled(): bool
     {
-        $configuredAdapter = config('capell-inertia.adapter', 'vue');
-        $adapter = is_string($configuredAdapter) ? $configuredAdapter : 'vue';
-        $packageName = self::ADAPTER_PACKAGES[$adapter] ?? null;
+        $packageName = self::ADAPTER_PACKAGES[$this->configuredAdapter()] ?? null;
 
         return is_string($packageName) && CapellCore::isPackageInstalled($packageName);
+    }
+
+    public function configuredAdapterBookingComponentAvailable(): bool
+    {
+        $componentPack = self::ADAPTER_COMPONENT_PACKS[$this->configuredAdapter()] ?? null;
+
+        if (! is_array($componentPack)) {
+            return false;
+        }
+
+        $packageName = $componentPack['package'];
+        $healthClass = $componentPack['health'];
+
+        if (! CapellCore::isPackageInstalled($packageName) || ! class_exists($healthClass)) {
+            return false;
+        }
+
+        $healthCheck = new $healthClass;
+
+        return method_exists($healthCheck, 'passes') && $healthCheck->passes();
     }
 
     public function themeRegistered(): bool
@@ -66,5 +99,12 @@ final class ThemeInertiaBookingsHealthCheck implements ChecksExtensionHealth
     public function bookingRendererBound(): bool
     {
         return app()->make(PublicBookingRequestRenderer::class) instanceof InertiaPublicBookingRequestRenderer;
+    }
+
+    private function configuredAdapter(): string
+    {
+        $configuredAdapter = config('capell-inertia.adapter', 'vue');
+
+        return is_string($configuredAdapter) ? $configuredAdapter : 'vue';
     }
 }

@@ -161,6 +161,7 @@ it('registers the theme, booking renderer, and inertia theme assets when install
     CapellCore::clearPackages();
     CapellCore::forcePackageInstalled(InertiaBookingsThemeServiceProvider::$packageName);
     CapellCore::forcePackageInstalled('capell-app/inertia-vue-adapter');
+    CapellCore::forcePackageInstalled('capell-app/theme-inertia-bookings-vue');
 
     $registry = new ThemeRegistry;
     $this->app->instance(ThemeRegistry::class, $registry);
@@ -188,7 +189,7 @@ it('registers the theme, booking renderer, and inertia theme assets when install
         ->and((new ThemeInertiaBookingsHealthCheck)->passes())->toBeTrue();
 });
 
-it('requires the configured inertia adapter package for health', function (): void {
+it('requires the configured inertia adapter and booking component pack for health', function (): void {
     CapellCore::clearPackages();
     CapellCore::forcePackageInstalled(InertiaBookingsThemeServiceProvider::$packageName);
 
@@ -203,9 +204,42 @@ it('requires the configured inertia adapter package for health', function (): vo
 
     expect($healthCheck->inertiaBridgeAvailable())->toBeTrue()
         ->and($healthCheck->configuredAdapterInstalled())->toBeFalse()
+        ->and($healthCheck->configuredAdapterBookingComponentAvailable())->toBeFalse()
         ->and($healthCheck->themeRegistered())->toBeTrue()
         ->and($healthCheck->bookingRendererBound())->toBeTrue()
         ->and($healthCheck->passes())->toBeFalse();
+
+    CapellCore::forcePackageInstalled('capell-app/inertia-vue-adapter');
+
+    expect($healthCheck->configuredAdapterInstalled())->toBeTrue()
+        ->and($healthCheck->configuredAdapterBookingComponentAvailable())->toBeFalse()
+        ->and($healthCheck->passes())->toBeFalse();
+
+    CapellCore::forcePackageInstalled('capell-app/theme-inertia-bookings-vue');
+
+    expect($healthCheck->configuredAdapterBookingComponentAvailable())->toBeTrue()
+        ->and($healthCheck->passes())->toBeTrue();
+});
+
+it('checks the configured react booking component pack for health', function (): void {
+    config()->set('capell-inertia.adapter', 'react');
+    CapellCore::clearPackages();
+    CapellCore::forcePackageInstalled(InertiaBookingsThemeServiceProvider::$packageName);
+    CapellCore::forcePackageInstalled('capell-app/inertia-react-adapter');
+    CapellCore::forcePackageInstalled('capell-app/theme-inertia-bookings-react');
+
+    $registry = new ThemeRegistry;
+    $this->app->instance(ThemeRegistry::class, $registry);
+
+    $provider = new InertiaBookingsThemeServiceProvider($this->app);
+    $provider->register();
+    $provider->packageBooted();
+
+    $healthCheck = new ThemeInertiaBookingsHealthCheck;
+
+    expect($healthCheck->configuredAdapterInstalled())->toBeTrue()
+        ->and($healthCheck->configuredAdapterBookingComponentAvailable())->toBeTrue()
+        ->and($healthCheck->passes())->toBeTrue();
 });
 
 it('builds public safe inertia page props from theme page data', function (): void {

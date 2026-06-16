@@ -4,7 +4,7 @@
 
 ## 1. Snapshot
 
-Theme Inertia Bookings is the base premium Inertia theme for appointment-led service businesses: services, clinics, consultants, classes, locations, FAQs, and public booking requests. It registers theme key `inertia-bookings`, runtime `FrontendRuntime::Inertia`, CSS vendor assets, a Theme management page contribution, and a binding that replaces Bookings' public request renderer with `InertiaPublicBookingRequestRenderer`. The booking request renderer is real: it calls `CapellInertia::render('Capell/Bookings/Request', BuildPublicBookingRequestPropsAction::run($request, lazySlots: true))`. The package also ships runner-backed PNG screenshots for homepage, services, locations, booking request, and mobile request flows. The current implementation slice now gives `InertiaBookingsThemeRenderer` a real `Capell/Page` payload path, makes adapter prerequisites explicit in health/docs, and leaves framework-specific component assets in the React/Vue adapter packages.
+Theme Inertia Bookings is the base premium Inertia theme for appointment-led service businesses: services, clinics, consultants, classes, locations, FAQs, and public booking requests. It registers theme key `inertia-bookings`, runtime `FrontendRuntime::Inertia`, CSS vendor assets, a Theme management page contribution, and a binding that replaces Bookings' public request renderer with `InertiaPublicBookingRequestRenderer`. The booking request renderer is real: it calls `CapellInertia::render('Capell/Bookings/Request', BuildPublicBookingRequestPropsAction::run($request, lazySlots: true))`. The package also ships runner-backed PNG screenshots for homepage, services, locations, booking request, and mobile request flows. Current implementation gives `InertiaBookingsThemeRenderer` a real `Capell/Page` payload path, makes adapter prerequisites explicit in health/docs, and verifies the selected React/Vue component pack exposes the required booking request component.
 
 ## 2. Improvements (existing functionality)
 
@@ -24,17 +24,17 @@ Theme Inertia Bookings is the base premium Inertia theme for appointment-led ser
 
 Capabilities declared: theme-inertia-bookings and Inertia bookings frontend.
 
-- **Theme page renderer is missing.** This is the central functional gap for a theme package.
+- **Shipped: theme page renderer.** The renderer now returns a public-safe `Capell/Page` Inertia response with hydrated page/theme/layout props.
 - **No demo command.** Premium themes commonly ship a demo install path; this package has screenshots but no `capell:theme-inertia-bookings-demo` command.
 - **No required page-set contract.** Homepage/services/locations/request screenshots exist, but there is no test proving the theme covers search/list/contact/detail equivalents for theme-scale requirements.
 - **No fallback when Bookings is not installed.** Bookings is a hard dependency, which is reasonable for this theme, but docs should explain that it is not a generic service theme.
-- **No adapter-specific visual health.** React/Vue adapter packages own components, but the base theme health check cannot tell whether the selected adapter has the booking request component available.
+- **Shipped 2026-06-16: adapter-specific component health.** The base health check now verifies the configured generic adapter package and the matching `theme-inertia-bookings-vue` or `theme-inertia-bookings-react` component pack health, including the booking request component contract.
 
 ## 4. Issues / Risks
 
 1. **Closed: the registered theme renderer previously output an empty response body.** The renderer now delegates through Capell Inertia and returns the response body for the configured page component. - **P1**
 
-2. **Closed for the base package: adapter requirements were ambiguous.** Health now fails when the configured generic Inertia adapter package is missing, and docs explain when to install the theme-specific React/Vue component packages. Adapter component-depth checks remain in the adapter package plans. - **P2**
+2. **Closed for the base package: adapter requirements were ambiguous.** Health now fails when the configured generic Inertia adapter package or matching theme-specific React/Vue component pack is missing or incomplete. - **P2**
 
 3. **Closed: asset globs pointed to files that did not exist.** Framework source ownership is now explicit in adapter packages. - **P2**
 
@@ -64,7 +64,7 @@ Theme Inertia Bookings is a premium lane for appointment-led businesses using Ca
 | ---------------------------------------------------------------------------------------- | ------ | ------ | ------ | ----------- |
 | Promote runner-backed screenshots or assert marketplace crop parity                      | Next   | S      | Medium | §2.4        |
 | Add demo command/fixture coverage for homepage, services, locations, and request journey | Next   | M      | Medium | §3          |
-| Add adapter-specific health checks for booking request component availability            | Next   | M      | Medium | §3          |
+| Add adapter-specific health checks for booking request component availability            | Done   | M      | Medium | §3          |
 | Add layout graph consumption for richer Inertia page composition                         | Later  | L      | Medium | §3, §5      |
 
 ## 7. Verification
