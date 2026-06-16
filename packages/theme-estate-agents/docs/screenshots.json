@@ -5,6 +5,20 @@
     "composerRequires": ["capell-app/theme-estate-agents"],
     "requiresInstalledPackage": true,
     "outputDirectory": "packages/theme-estate-agents/docs/screenshots",
+    "visualProof": {
+        "tokenInputs": [
+            "primaryColor",
+            "accentColor",
+            "surfaceColor",
+            "foregroundColor"
+        ],
+        "captureProfiles": [
+            "desktop-light",
+            "mobile-light",
+            "dark-token-readiness"
+        ],
+        "notes": "CSS surfaces, buttons, focus rings, cards, and dark proof panels are driven by theme tokens and include a mobile breakpoint before runner recapture."
+    },
     "entries": [
         {
             "id": "estate-homepage-layout",

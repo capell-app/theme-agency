@@ -7,16 +7,20 @@
     --estate-lime: var(--theme-accent, #c7f464);
     --estate-charcoal: #1a1c1f;
     --estate-surface: var(--theme-surface, #f6f8f4);
-    --estate-mist: #eaf0ec;
-    --estate-paper: #ffffff;
+    --estate-mist: color-mix(
+        in srgb,
+        var(--estate-surface) 88%,
+        var(--estate-green) 12%
+    );
+    --estate-paper: var(--theme-paper, #ffffff);
     --estate-border: rgb(23 76 63 / 18%);
 
     background:
         linear-gradient(
             180deg,
-            #ffffff 0%,
+            var(--estate-paper) 0%,
             var(--estate-surface) 52%,
-            #eaf0ec 100%
+            var(--estate-mist) 100%
         ),
         linear-gradient(90deg, rgb(23 76 63 / 5%) 1px, transparent 1px);
     background-size:
@@ -30,13 +34,13 @@
 }
 
 .estate-shell :where(a, button, input, textarea, select):focus-visible {
-    outline: 3px solid rgb(199 244 100 / 90%);
+    outline: 3px solid color-mix(in srgb, var(--estate-lime) 90%, transparent);
     outline-offset: 3px;
 }
 
 .estate-skip-link {
     background: var(--estate-charcoal);
-    color: #ffffff;
+    color: var(--estate-paper);
     font-weight: 800;
     left: 1rem;
     padding: 0.75rem 1rem;
@@ -78,11 +82,11 @@
 
 .estate-button-primary {
     background: var(--estate-green);
-    color: #ffffff;
+    color: var(--estate-paper);
 }
 
 .estate-button-secondary {
-    background: #ffffff;
+    background: var(--estate-paper);
     border-color: var(--estate-border);
     color: var(--estate-ink);
 }
@@ -104,7 +108,7 @@
 .estate-hero {
     background:
         linear-gradient(135deg, rgb(199 244 100 / 20%), transparent 42%),
-        linear-gradient(90deg, #ffffff, var(--estate-surface));
+        linear-gradient(90deg, var(--estate-paper), var(--estate-surface));
 }
 
 .estate-property-frame,
@@ -128,7 +132,7 @@
     background:
         linear-gradient(135deg, var(--estate-green), var(--estate-charcoal)),
         var(--estate-charcoal);
-    color: #ffffff;
+    color: var(--estate-paper);
 }
 
 .estate-listing-strip {
@@ -178,7 +182,7 @@
 .estate-proof-card,
 .estate-listing-card,
 .estate-agent-card {
-    background: #ffffff;
+    background: var(--estate-paper);
 }
 
 .estate-property-image {
@@ -196,7 +200,7 @@
 }
 
 .estate-guide-row {
-    background: #ffffff;
+    background: var(--estate-paper);
     border: 1px solid var(--estate-border);
     display: grid;
     gap: 1rem;
@@ -220,8 +224,8 @@
 }
 
 .estate-dark-card {
-    border: 1px solid rgb(255 255 255 / 18%);
-    background: rgb(255 255 255 / 8%);
+    border: 1px solid color-mix(in srgb, var(--estate-paper) 18%, transparent);
+    background: color-mix(in srgb, var(--estate-paper) 8%, transparent);
     padding: 1.5rem;
 }
 
@@ -231,4 +235,29 @@
     font-size: 0.875rem;
     font-weight: 900;
     text-decoration: none;
+}
+
+@media (max-width: 48rem) {
+    .estate-shell {
+        background-size:
+            auto,
+            1.25rem 1.25rem;
+    }
+
+    .estate-button-primary,
+    .estate-button-secondary,
+    .estate-button-light {
+        justify-content: center;
+        width: 100%;
+    }
+
+    .estate-guide-row {
+        grid-template-columns: 1fr;
+        padding: 1rem;
+    }
+
+    .estate-listing-strip div + div {
+        border-left: 0;
+        border-top: 1px solid var(--estate-border);
+    }
 }

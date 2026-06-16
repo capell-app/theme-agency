@@ -18,7 +18,7 @@ Theme Estate Agents is a premium Blade child theme for property agencies, lettin
 
 5. **Add required page-set coverage.** Theme scale expects homepage, landing/conversion page, list page with pagination, search results, contact/conversion form, and a detail/resource page. Current tests cover individual section rendering and source safety, but not the required page set or screenshot fixture contract. Add tests around demo install output or fixture route metadata. - **M** - **Done 2026-06-16:** screenshot fixture metadata now declares every required page-set role, docs explain the coverage contract, and tests assert the route-backed required fixtures cover the full theme set.
 
-6. **Strengthen token/dark-mode coverage.** CSS uses theme variables for primary/accent/surface but still hardcodes several whites, mists, and dark gradients. Add tests or visual fixtures proving the preset tokens recolor key buttons, panels, and dark cards, plus define dark-mode expectations if marketplace captures include dark variants later. Evidence: `resources/css/theme-estate-agents.css`. - **M**
+6. **Strengthen token/dark-mode coverage.** CSS uses theme variables for primary/accent/surface but still hardcodes several whites, mists, and dark gradients. Add tests or visual fixtures proving the preset tokens recolor key buttons, panels, and dark cards, plus define dark-mode expectations if marketplace captures include dark variants later. Evidence: `resources/css/theme-estate-agents.css`. - **M** - **Done 2026-06-16:** CSS surfaces now route paper, mist, buttons, focus rings, and dark cards through theme variables, mobile layout guards are defined, and screenshot metadata/tests pin desktop-light, mobile-light, and dark token-readiness profiles.
 
 ## 3. Missing Features (gaps)
 
@@ -67,7 +67,7 @@ Estate Agents has a distinct premium lane: buyer search, vendor valuation, local
 | Rewrite README/overview with current theme-scale install/screenshot expectations  | Done   | S      | Medium | §5          |
 | Wire connected Search/Form Builder actions or render non-submitting CTA fallbacks | Done   | M      | High   | §2.4, §4.4  |
 | Add required page-set/demo fixture coverage                                       | Done   | M      | Medium | §2.5        |
-| Add token/dark/mobile visual proof                                                | Next   | M      | Medium | §2.6        |
+| Add token/dark/mobile visual proof                                                | Done   | M      | Medium | §2.6        |
 | Define property-listings companion package boundary or documented Search contract | Later  | L      | High   | §3, §5      |
 
 ## 7. Verification

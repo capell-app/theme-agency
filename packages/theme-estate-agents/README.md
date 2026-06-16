@@ -39,6 +39,8 @@ Screenshot contract: `docs/screenshots.json`.
 
 The screenshot fixture contract also records page-set roles for the required theme coverage: homepage, landing/conversion page, list page with pagination, search results, contact/conversion form, and detail/resource page.
 
+Visual proof metadata in `docs/screenshots.json` pins desktop light, mobile light, and dark token-readiness expectations. The CSS keeps key surfaces, buttons, focus rings, cards, and dark proof panels tied to theme tokens so a future recapture can verify the same routes across viewport profiles.
+
 ## Technical Shape
 
 - Service providers: `Capell\ThemeStudio\EstateAgents\EstateAgentsThemeServiceProvider`.

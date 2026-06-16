@@ -55,10 +55,23 @@ it('declares only estate agents marketplace screenshots that exist in the packag
 it('requires route backed screenshot captures for marketplace proof', function (): void {
     $manifest = capell_json_file_array(__DIR__ . '/../../docs/screenshots.json');
     $entries = data_get($manifest, 'entries', []);
+    $visualProof = data_get($manifest, 'visualProof', []);
 
     throw_unless(is_array($entries), RuntimeException::class, 'Theme Estate Agents screenshot entries must be an array.');
+    throw_unless(is_array($visualProof), RuntimeException::class, 'Theme Estate Agents visual proof metadata must be an array.');
 
     expect($entries)->toHaveCount(5);
+    expect(data_get($visualProof, 'tokenInputs', []))->toContain(
+        'primaryColor',
+        'accentColor',
+        'surfaceColor',
+        'foregroundColor',
+    )
+        ->and(data_get($visualProof, 'captureProfiles', []))->toContain(
+            'desktop-light',
+            'mobile-light',
+            'dark-token-readiness',
+        );
 
     foreach ($entries as $entry) {
         throw_if(! is_array($entry), RuntimeException::class, 'Theme Estate Agents screenshot entry must be an array.');

@@ -26,6 +26,11 @@ function estateAgentsThemePublicOutputAssets(): string
     ));
 }
 
+function estateAgentsThemeCss(): string
+{
+    return file_get_contents(__DIR__ . '/../../resources/css/theme-estate-agents.css') ?: '';
+}
+
 it('keeps estate agents public Blade free of authoring or package metadata', function (): void {
     $publicOutput = estateAgentsThemePublicOutputAssets();
 
@@ -81,4 +86,22 @@ it('keeps estate agents public Blade free of dead form actions', function (): vo
         ->not->toContain('javascript:')
         ->not->toContain('signed')
         ->not->toContain('wire:');
+});
+
+it('keeps estate agents CSS tied to theme tokens with dark and mobile proof hooks', function (): void {
+    $css = estateAgentsThemeCss();
+
+    expect($css)
+        ->toContain('--estate-ink: var(--theme-foreground')
+        ->toContain('--estate-green: var(--theme-primary')
+        ->toContain('--estate-lime: var(--theme-accent')
+        ->toContain('--estate-surface: var(--theme-surface')
+        ->toContain('--estate-paper: var(--theme-paper')
+        ->toContain('color-mix(in srgb, var(--estate-lime) 90%, transparent)')
+        ->toContain('.estate-dark-card')
+        ->toContain('color-mix(in srgb, var(--estate-paper) 8%, transparent)')
+        ->toContain('@media (max-width: 48rem)')
+        ->toContain('grid-template-columns: 1fr')
+        ->not->toContain('background: #ffffff')
+        ->not->toContain('color: #ffffff');
 });
