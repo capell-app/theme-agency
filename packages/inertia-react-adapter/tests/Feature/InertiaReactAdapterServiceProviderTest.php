@@ -10,6 +10,7 @@ use Capell\Inertia\Support\InertiaAdapterRegistry;
 use Capell\InertiaReactAdapter\Health\InertiaReactAdapterHealthCheck;
 use Capell\InertiaReactAdapter\Providers\InertiaReactAdapterServiceProvider;
 use Capell\InertiaReactAdapter\Tests\InertiaReactAdapterTestCase;
+use Illuminate\Support\Facades\File;
 
 require_once __DIR__ . '/../../../inertia/src/Data/InertiaAdapterData.php';
 require_once __DIR__ . '/../../../inertia/src/Support/InertiaAdapterRegistry.php';
@@ -66,6 +67,22 @@ it('registers npm dependencies and the react build entrypoint as vendor assets',
         'path' => InertiaReactAdapterServiceProvider::BUILD_PATH,
         'file' => InertiaReactAdapterServiceProvider::ENTRYPOINT,
     ]);
+});
+
+it('keeps declared react components aligned with the generic app component map', function (): void {
+    $adapter = resolve(InertiaAdapterRegistry::class)->get(InertiaReactAdapterServiceProvider::ADAPTER_KEY);
+    throw_if($adapter === null, RuntimeException::class, 'React adapter was not registered.');
+
+    $packagePath = dirname(__DIR__, 2);
+    $entrypoint = $packagePath . '/' . InertiaReactAdapterServiceProvider::ENTRYPOINT;
+    $appSource = File::get($entrypoint);
+
+    foreach ($adapter->components as $componentName) {
+        $componentPath = dirname($entrypoint) . '/Pages/' . $componentName . '.jsx';
+
+        expect(File::exists($componentPath))->toBeTrue()
+            ->and($appSource)->toContain("'" . $componentName . "':");
+    }
 });
 
 it('disables the generic react build condition when the bookings react component pack is installed', function (): void {

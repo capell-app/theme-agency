@@ -16,7 +16,7 @@ The React adapter registers the `react` adapter with the shared Capell Inertia b
 
 2. **Shipped 2026-06-14: strengthen health readiness.** Health now verifies the registered adapter's package name, build path, and entrypoint, not only that a `react` key exists. — `src/Health/InertiaReactAdapterHealthCheck.php`, `tests/Feature/InertiaReactAdapterServiceProviderTest.php` — S
 
-3. **Add component-map drift tests.** The provider declares `Capell/Page` and `Capell/Bookings/Request`; `resources/js/app.jsx` imports matching files manually. Add a small file-existence or manifest test so a component map change cannot silently break the generic build. — `src/Providers/InertiaReactAdapterServiceProvider.php`, `resources/js/app.jsx` — S
+3. **Done/Shipped: component-map drift tests.** The provider-declared React components are now checked against `resources/js/app.jsx`: each component name must have a matching file under `resources/js/Pages` and a `pages` map entry in the generic app. This catches provider/component-map drift before the generic build breaks. — `src/Providers/InertiaReactAdapterServiceProvider.php`, `resources/js/app.jsx`, `tests/Feature/InertiaReactAdapterServiceProviderTest.php` — S
 
 4. **Surface adapter diagnostics through the bridge.** Once the Inertia bridge exposes adapter readiness details, report React package/version/build metadata there too. — `src/Health/InertiaReactAdapterHealthCheck.php`, `packages/inertia/src/Health/InertiaHealthCheck.php` — M
 
@@ -43,6 +43,6 @@ Audience: frontend/package developers. Position this package as the included Rea
 | Align asset condition with sanitized config    | Done   | S      | Medium | §2  |
 | Strengthen adapter health readiness            | Done   | S      | Medium | §2  |
 | Add package-local improvement plan             | Done   | S      | Medium | §1  |
-| Add component-map drift tests                  | Later  | S      | Medium | §2  |
+| Add component-map drift tests                  | Done   | S      | Medium | §2  |
 | Add bridge-visible adapter diagnostics         | Later  | M      | Medium | §2  |
 | Add explicit SSR entrypoint when SSR is needed | Later  | M      | Medium | §3  |
