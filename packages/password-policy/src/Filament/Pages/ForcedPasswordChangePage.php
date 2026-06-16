@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Capell\PasswordPolicy\Filament\Pages;
 
 use BackedEnum;
+use Capell\PasswordPolicy\Actions\EvaluatePasswordPolicyAction;
 use Capell\PasswordPolicy\Actions\UpdatePasswordAction;
 use Capell\PasswordPolicy\Data\PasswordChangeData;
 use Filament\Facades\Filament;
@@ -15,10 +16,11 @@ use Filament\Notifications\Notification;
 use Filament\Pages\Page;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
-use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Redirect;
+use Livewire\Features\SupportRedirects\Redirector;
 use Override;
 
 /**
@@ -42,7 +44,15 @@ class ForcedPasswordChangePage extends Page implements HasForms
     #[Override]
     public static function canAccess(): bool
     {
-        return auth()->user() instanceof Authenticatable;
+        $user = auth()->user();
+
+        if (! $user instanceof Model) {
+            return false;
+        }
+
+        $status = EvaluatePasswordPolicyAction::run($user);
+
+        return $status->mustChangePassword || $status->passwordExpired;
     }
 
     public function mount(): void
@@ -80,7 +90,7 @@ class ForcedPasswordChangePage extends Page implements HasForms
             ->statePath('data');
     }
 
-    public function updatePassword(): RedirectResponse
+    public function updatePassword(): RedirectResponse|Redirector
     {
         $user = auth()->user();
 
@@ -103,8 +113,8 @@ class ForcedPasswordChangePage extends Page implements HasForms
             ->title(__('capell-password-policy::password_change.updated'))
             ->send();
 
-        $panelPath = Filament::getCurrentPanel()?->getPath() ?? 'admin';
+        $panelUrl = Filament::getCurrentPanel()?->getUrl() ?? url('/admin');
 
-        return redirect('/' . trim($panelPath, '/'));
+        return Redirect::to($panelUrl);
     }
 }

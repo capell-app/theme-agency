@@ -28,8 +28,10 @@ use Capell\PasswordPolicy\Settings\PasswordPolicySettings;
 use Capell\Tests\Fixtures\Policies\UserPolicy;
 use Capell\Tests\Support\Concerns\CreatesAdminUser;
 use Capell\Tests\Support\LegacyAdminBridgeFallbackHost;
+use Filament\Facades\Filament;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
@@ -395,9 +397,51 @@ it('hides force-change table actions when force-change enforcement is disabled',
 });
 
 it('renders the forced password change page through Filament', function (): void {
+    $settings = PasswordPolicySettings::instance();
+    $settings->force_change_enabled = true;
+    $settings->save();
+
+    MarkUserForPasswordChangeAction::run(auth()->user());
+
     Livewire::test(ForcedPasswordChangePage::class)
         ->assertSuccessful()
         ->assertSee(__('capell-password-policy::password_change.description'));
+});
+
+it('only allows non-compliant users to access the forced password change page', function (): void {
+    expect(ForcedPasswordChangePage::canAccess())->toBeFalse();
+
+    $settings = PasswordPolicySettings::instance();
+    $settings->force_change_enabled = true;
+    $settings->save();
+
+    MarkUserForPasswordChangeAction::run(auth()->user());
+
+    expect(ForcedPasswordChangePage::canAccess())->toBeTrue();
+});
+
+it('redirects to the current panel URL after a forced password change', function (): void {
+    $settings = PasswordPolicySettings::instance();
+    $settings->force_change_enabled = true;
+    $settings->save();
+
+    $adminUser = auth()->user();
+
+    throw_unless($adminUser instanceof Model, RuntimeException::class, 'Expected password policy admin user to be a model.');
+
+    $adminUser->forceFill([
+        'password' => Hash::make('current-password'),
+        'must_change_password' => true,
+    ])->save();
+
+    Livewire::test(ForcedPasswordChangePage::class)
+        ->fillForm([
+            'current_password' => 'current-password',
+            'password' => 'changed-password',
+            'password_confirmation' => 'changed-password',
+        ])
+        ->call('updatePassword')
+        ->assertRedirect(Filament::getCurrentPanel()?->getUrl() ?? url('/admin'));
 });
 
 it('does not promote mock password policy captures as marketplace screenshots', function (): void {

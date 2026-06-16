@@ -4,6 +4,7 @@ All notable changes to `capell-app/password-policy` will be documented in this f
 
 ## Unreleased
 
+- Restricted the forced password change page to users whose evaluated password policy status requires it, and redirected successful changes through the current Filament panel URL.
 - Added configurable password complexity settings for minimum length, mixed case, numbers, and symbols, and wired them into the password validator.
 - Moved admin user-edit password history recording to the post-save path so exactly the previous hash is stored after a successful password change.
 - Removed the unimplemented console surface/capability from package metadata.
