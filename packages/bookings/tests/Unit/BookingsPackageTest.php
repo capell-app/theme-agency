@@ -31,6 +31,7 @@ use Capell\Bookings\Actions\ResolvePortalAccessTokenAction;
 use Capell\Bookings\Actions\ResolveReviewParticipantTokenAction;
 use Capell\Bookings\Actions\ResolveReviewRequestTokenAction;
 use Capell\Bookings\Console\ExpireBookingWorkflowStateCommand;
+use Capell\Bookings\Console\InstallBookingsDemoCommand;
 use Capell\Bookings\Console\PruneBookingRetentionDataCommand;
 use Capell\Bookings\Console\ScheduleBookingReviewRequestsCommand;
 use Capell\Bookings\Console\SendDueAppointmentRemindersCommand;
@@ -262,6 +263,7 @@ it('declares implemented bookings contributions and feature capabilities', funct
             && ($contribution['class'] ?? null) === BookingsReminderScheduleContribution::class
             && ($contribution['command'] ?? null) === 'capell:bookings:prune-retention-data'))->toBeTrue()
         ->and($manifest['commands'])->toMatchArray([
+            'demo' => 'capell:bookings-demo',
             'sendDueReminders' => 'capell:bookings:send-due-reminders',
             'expireWorkflowState' => 'capell:bookings:expire-workflow-state',
             'scheduleReviewRequests' => 'capell:bookings:schedule-review-requests',
@@ -271,12 +273,14 @@ it('declares implemented bookings contributions and feature capabilities', funct
             'type' => 'console-command',
             'class' => BookingsConsoleCommandsContribution::class,
             'commands' => [
+                'capell:bookings-demo',
                 'capell:bookings:send-due-reminders',
                 'capell:bookings:expire-workflow-state',
                 'capell:bookings:schedule-review-requests',
                 'capell:bookings:prune-retention-data',
             ],
             'commandClasses' => [
+                InstallBookingsDemoCommand::class,
                 SendDueAppointmentRemindersCommand::class,
                 ExpireBookingWorkflowStateCommand::class,
                 ScheduleBookingReviewRequestsCommand::class,

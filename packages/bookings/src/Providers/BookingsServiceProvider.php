@@ -8,6 +8,7 @@ use Capell\Admin\Data\AdminSurfaceContributionData;
 use Capell\Admin\Data\Extensions\ExtensionManagementSurfaceData;
 use Capell\Admin\Facades\CapellAdmin;
 use Capell\Bookings\Console\ExpireBookingWorkflowStateCommand;
+use Capell\Bookings\Console\InstallBookingsDemoCommand;
 use Capell\Bookings\Console\PruneBookingRetentionDataCommand;
 use Capell\Bookings\Console\ScheduleBookingReviewRequestsCommand;
 use Capell\Bookings\Console\SendDueAppointmentRemindersCommand;
@@ -77,6 +78,7 @@ class BookingsServiceProvider extends AbstractPackageServiceProvider
             ->hasConfigFile()
             ->hasTranslations()
             ->hasViews(self::$name)
+            ->hasCommand(InstallBookingsDemoCommand::class)
             ->hasCommand(ExpireBookingWorkflowStateCommand::class)
             ->hasCommand(PruneBookingRetentionDataCommand::class)
             ->hasCommand(ScheduleBookingReviewRequestsCommand::class)

@@ -74,7 +74,11 @@ Screenshot contract: `docs/screenshots.json`.
 - Settings: `Capell\Bookings\Settings\BookingsSettings`.
 - Queues or schedules: none detected in standard package paths.
 - Cache tags: `bookings`.
-- Commands: console command classes detected: `ExpireBookingWorkflowStateCommand`, `PruneBookingRetentionDataCommand`, `ScheduleBookingReviewRequestsCommand`, `SendDueAppointmentRemindersCommand`.
+- Commands: console command classes detected: `InstallBookingsDemoCommand`, `ExpireBookingWorkflowStateCommand`, `PruneBookingRetentionDataCommand`, `ScheduleBookingReviewRequestsCommand`, `SendDueAppointmentRemindersCommand`.
+
+## Demo Fixtures
+
+Run `capell:bookings-demo` from the host app to install an idempotent demo consultation service, staff member, location, weekly availability window, and appointment request. The fixture is intentionally small so operators can verify the public request form and admin queue without importing a full business calendar.
 
 ## Common Pitfalls
 

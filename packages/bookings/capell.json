@@ -160,12 +160,14 @@
             "type": "console-command",
             "class": "Capell\\Bookings\\Manifest\\BookingsConsoleCommandsContribution",
             "commands": [
+                "capell:bookings-demo",
                 "capell:bookings:send-due-reminders",
                 "capell:bookings:expire-workflow-state",
                 "capell:bookings:schedule-review-requests",
                 "capell:bookings:prune-retention-data"
             ],
             "commandClasses": [
+                "Capell\\Bookings\\Console\\InstallBookingsDemoCommand",
                 "Capell\\Bookings\\Console\\SendDueAppointmentRemindersCommand",
                 "Capell\\Bookings\\Console\\ExpireBookingWorkflowStateCommand",
                 "Capell\\Bookings\\Console\\ScheduleBookingReviewRequestsCommand",
@@ -206,7 +208,7 @@
     "commands": {
         "install": null,
         "setup": null,
-        "demo": null,
+        "demo": "capell:bookings-demo",
         "doctor": null,
         "sendDueReminders": "capell:bookings:send-due-reminders",
         "expireWorkflowState": "capell:bookings:expire-workflow-state",

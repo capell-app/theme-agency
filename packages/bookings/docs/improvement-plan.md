@@ -20,7 +20,7 @@ Bookings is a large operations package for appointment requests, availability, h
 
 Capabilities declared span availability, requests, reminders, calendar feeds, portal lesson records, messaging, travel, waitlists, group clinics, reviews, AI prompts, GDPR, and retention.
 
-- **No demo/setup command.** The package is feature-rich but lacks an installable demo fixture path in `capell.json`.
+- **Shipped 2026-06-16: demo command and fixtures.** `capell:bookings-demo` installs an idempotent demo service, staff member, location, availability window, and appointment request, and `capell.json` now advertises the demo path.
 - **No admin retry/replay for failed messages/webhooks.** Message logs and webhook events exist, but operator remediation needs to be clearer.
 - **No public success/confirmation component contract beyond current route output.** Theme/Inertia packages need a stable success state.
 - **No single workflow test covering request -> hold -> payment -> confirmation -> reminder -> review.** Unit tests cover slices, but the end-to-end operations story needs a package smoke test.
@@ -55,7 +55,7 @@ Bookings should be positioned as a serious operations workflow, not just a form.
 | Align manifest commands and scheduled-job metadata             | Done   | M      | High   | §2.2, §4.2  |
 | Add duplicate/hold/payment public request idempotency coverage | Done   | M      | High   | §2.3, §4.3  |
 | Add public renderer prop/output safety coverage                | Done   | M      | High   | §2.4, §4.4  |
-| Add demo/setup command and fixtures                            | Next   | M      | Medium | §3, §5      |
+| Add demo/setup command and fixtures                            | Done   | M      | Medium | §3, §5      |
 | Add failed message/webhook retry admin workflow                | Next   | L      | High   | §3          |
 | Add public success/confirmation component contract             | Next   | M      | Medium | §3          |
 | Add end-to-end booking workflow smoke test                     | Later  | L      | High   | §3          |
