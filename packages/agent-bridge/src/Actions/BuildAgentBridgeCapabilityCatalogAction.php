@@ -36,6 +36,10 @@ final class BuildAgentBridgeCapabilityCatalogAction
                 'required_package' => $capability->requiredPackage,
                 'policy_ability' => $capability->policyAbility,
                 'audit_event' => $capability->auditEvent,
+                'input_data_class' => $capability->inputDataClass,
+                'output_data_class' => $capability->outputDataClass,
+                'input_schema' => $capability->inputSchema,
+                'output_schema' => $capability->outputSchema,
             ])
             ->values()
             ->all();

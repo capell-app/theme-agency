@@ -14,6 +14,7 @@ use Capell\AgentBridge\Facades\CapellAgentBridge;
 use Capell\AgentBridge\Models\CapellAgentBridgeAuditEntry;
 use Capell\AgentBridge\Models\CapellAgentBridgeToken;
 use Capell\AgentBridge\Resources\CapellAgentBridgeCapabilityCatalogResource;
+use Capell\AgentBridge\Resources\CapellAgentBridgeCapabilitySchemaResource;
 use Capell\AgentBridge\Resources\CapellAgentBridgeOverviewResource;
 use Capell\AgentBridge\Support\CapabilitySchemas;
 use Capell\AgentBridge\Support\CapellAgentBridgeCapabilityRegistry;
@@ -447,6 +448,52 @@ it('builds and renders a capability governance catalog', function (): void {
         ->and($markdown)->toContain('`capell.fake.write`')
         ->and($markdown)->toContain('capell-app/fake')
         ->and($markdown)->toContain('updateFake');
+});
+
+it('exports a machine-readable MCP capability schema catalog', function (): void {
+    $registry = new CapellAgentBridgeCapabilityRegistry;
+    $registry->register(new CapabilityData(
+        key: 'capell.pages.create_draft',
+        name: 'Create draft page',
+        description: 'Create a draft-like unpublished page record for an existing site, type, and layout.',
+        scope: 'capell.pages.write',
+        server: CapabilityServerEnum::Site,
+        risk: CapabilityRiskEnum::High,
+        actionClass: FakeCapabilityAction::class,
+        inputDataClass: CreateDraftPageCapabilityInputData::class,
+        outputDataClass: CapabilityResultData::class,
+        inputSchema: CapabilitySchemas::createDraftPageInput(),
+        outputSchema: CapabilitySchemas::capabilityResultOutput(),
+        policyAbility: 'createPage',
+    ));
+
+    app()->instance(CapellAgentBridgeCapabilityRegistry::class, $registry);
+
+    $payload = json_decode(
+        (string) (new CapellAgentBridgeCapabilitySchemaResource)->handle()->content(),
+        true,
+        flags: JSON_THROW_ON_ERROR,
+    );
+
+    expect($payload)
+        ->toBeArray()
+        ->and($payload['schemaVersion'])->toBe('1.0')
+        ->and($payload['capabilities'])->toHaveCount(1)
+        ->and($payload['capabilities'][0])->toMatchArray([
+            'key' => 'capell.pages.create_draft',
+            'scope' => 'capell.pages.write',
+            'server' => CapabilityServerEnum::Site->value,
+            'risk' => CapabilityRiskEnum::High->value,
+            'requires_confirmation' => true,
+            'supports_preview' => true,
+            'policy_ability' => 'createPage',
+            'input_data_class' => CreateDraftPageCapabilityInputData::class,
+            'output_data_class' => CapabilityResultData::class,
+        ])
+        ->and($payload['capabilities'][0]['input_schema']['required'])
+        ->toBe(['name', 'site_id', 'blueprint_id', 'layout_id'])
+        ->and($payload['capabilities'][0]['output_schema']['properties'])
+        ->toHaveKeys(['ok', 'message', 'data', 'warnings']);
 });
 
 it('resolves the capability registry through the facade', function (): void {

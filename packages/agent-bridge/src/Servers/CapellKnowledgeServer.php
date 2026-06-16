@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Capell\AgentBridge\Servers;
 
 use Capell\AgentBridge\Resources\CapellAgentBridgeCapabilityCatalogResource;
+use Capell\AgentBridge\Resources\CapellAgentBridgeCapabilitySchemaResource;
 use Capell\AgentBridge\Resources\CapellAgentBridgeOverviewResource;
 use Capell\AgentBridge\Tools\Knowledge\ListKnowledgePackagesTool;
 use Capell\AgentBridge\Tools\Knowledge\ReadKnowledgeDocumentTool;
@@ -27,6 +28,7 @@ final class CapellKnowledgeServer extends Server
 
     protected array $resources = [
         CapellAgentBridgeCapabilityCatalogResource::class,
+        CapellAgentBridgeCapabilitySchemaResource::class,
         CapellAgentBridgeOverviewResource::class,
     ];
 }
