@@ -33,6 +33,12 @@ it('declares the required first-party restaurant theme manifest boundaries', fun
         ->and(data_get($manifest, 'database.migrations'))->toBeFalse()
         ->and(data_get($manifest, 'providers.runtime'))->toContain(RestaurantThemeServiceProvider::class)
         ->and(data_get($manifest, 'commands.demo'))->toBe('capell:theme-restaurant-demo')
+        ->and(data_get($manifest, 'performance.cacheSafety.cacheable'))->toBeTrue()
+        ->and(data_get($manifest, 'performance.cacheSafety.variesBy'))->toBe(['site', 'locale'])
+        ->and(data_get($manifest, 'performance.cacheSafety.invalidationSources'))->toHaveCount(4)
+        ->and(data_get($manifest, 'performance.cacheSafety.invalidationSources.0.model'))->toBe('Capell\\Core\\Models\\Page')
+        ->and($overview)->toContain('Theme Restaurant output is cacheable for public HTML')
+        ->and($readme)->toContain('Restaurant sections do not query Bookings, Form Builder, Events, Blog, or SEO Suite directly')
         ->and(data_get($manifest, 'marketplace.summary'))->toBe('A premium hospitality theme for menu-led restaurants, bars, private dining venues, and event-led dining businesses.')
         ->and(data_get($manifest, 'marketplace.description'))->toBe(data_get($manifest, 'description'))
         ->and(data_get($composer, 'description'))->toBe(data_get($manifest, 'marketplace.summary'));

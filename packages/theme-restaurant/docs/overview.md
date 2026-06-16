@@ -60,6 +60,12 @@ Product group:
 
 Reservation capture stays in hydrated render data. Pass a public `form_action` URL from Bookings, Form Builder, or host application code to render the reservation form. When no safe action is supplied, the reservation panel renders a non-submitting setup state instead of a fake form target.
 
+Restaurant sections do not query Bookings, Form Builder, Events, Blog, or SEO Suite directly. Host controllers, page payload builders, theme composers, or companion package adapters must hydrate public-safe arrays for reservation actions, event cards, listing items, opening hours, menu highlights, and local proof before Blade renders.
+
+## Cacheability
+
+Theme Restaurant output is cacheable for public HTML because package Blade is query-free, secret-free, and authoring-free. Cache entries vary by site and locale. Invalidation should be driven by the host content/theme pipeline when site, page, theme, menu, reservation, event, blog/listing, or other hydrated render data changes; this theme does not queue package-owned invalidation work.
+
 ## Data Model
 
 This theme has no schema impact. It relies on core Capell site, page, locale, and theme records instead of declaring package-owned tables.
@@ -72,7 +78,7 @@ This theme has no schema impact. It relies on core Capell site, page, locale, an
 - Database changes: no package migrations declared.
 - Settings: no package settings declared.
 - Queues or schedules: none detected in standard package paths.
-- Cache tags: `theme-restaurant`.
+- Cache tags: `theme-restaurant`; public output varies by site and locale.
 - Commands: `capell:theme-restaurant-demo`.
 
 ## Common Pitfalls

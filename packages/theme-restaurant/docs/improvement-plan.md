@@ -22,7 +22,7 @@ Theme Restaurant is a premium Blade child theme for hospitality sites built arou
 
 7. **Expand public-output safety coverage.** Current public-output tests check authoring metadata and DB-query strings, but not inline scripts, dead form actions, or package-owned public links. Add tests proving public Blade remains script-free and does not ship `action="#"` or avoidable `href="#"` defaults in premium conversion sections. Evidence: `PublicOutputSafetyTest`, public Blade views. - **S** - **Done 2026-06-16:** source-level public-output tests now cover inline script/event-handler absence and assert reservation, CTA, hero, navigation, footer, listing, private dining, and events sections do not ship dead form/link actions or editor-only wiring.
 
-8. **Clarify cacheability and integration docs.** Manifest public-output safety says cache-safe, but `performance.cacheSafety.cacheable` is `false`; docs explain optional integrations at a high level without defining the render-data contract for actions/URLs. Decide cache metadata, then document how Bookings/Form Builder/Events/Blog data reaches the views without package-owned queries. Evidence: `capell.json performance.cacheSafety`, `docs/overview.md`, `README.md`. - **S**
+8. **Clarify cacheability and integration docs.** Manifest public-output safety says cache-safe, but `performance.cacheSafety.cacheable` is `false`; docs explain optional integrations at a high level without defining the render-data contract for actions/URLs. Decide cache metadata, then document how Bookings/Form Builder/Events/Blog data reaches the views without package-owned queries. Evidence: `capell.json performance.cacheSafety`, `docs/overview.md`, `README.md`. - **S** - **Done 2026-06-16:** manifest metadata now marks public theme output cacheable by site/locale with content/theme/hydrated-data invalidation sources, and README/overview document the render-data contract plus host-owned invalidation expectations.
 
 ## 3. Missing Features (gaps)
 
@@ -74,7 +74,7 @@ Restaurant has a strong premium lane separate from Commerce and Local Services. 
 | Rewrite docs around dependencies, integration render-data contracts, and verification commands | Done   | S      | Medium | §2.8, §5    |
 | Convert static SVG marketplace media to required route-backed PNG captures                     | Next   | M      | High   | §2.4, §4.4  |
 | Add public-output tests for scripts and dead premium conversion links                          | Done   | S      | Medium | §2.7        |
-| Clarify cacheability metadata and invalidation expectations                                    | Next   | S      | Medium | §2.8        |
+| Clarify cacheability metadata and invalidation expectations                                    | Done   | S      | Medium | §2.8        |
 | Add mobile/dark visual proof for reservation and menu pages                                    | Later  | M      | Medium | §3, §5      |
 
 ## 7. Verification
