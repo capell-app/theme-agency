@@ -63,6 +63,10 @@ This theme has no schema impact. It relies on core Capell site, page, locale, an
 - Cache tags: `theme-estate-agents`.
 - Commands: `capell:theme-estate-agents-demo`.
 
+## Search And Form Actions
+
+Search, valuation, and viewing sections render public forms only when hydrated render data supplies a safe `form_action`. Search and Form Builder adapters should pass root-relative or `http(s)` public URLs. Missing or unsafe actions render non-submitting setup panels, so public output never posts to `#`, signed admin URLs, Livewire endpoints, or other authoring surfaces.
+
 ## Common Pitfalls
 
 - Keep public Blade and cached HTML free of authoring markers, model IDs, permissions, signed editor URLs, and lazy database queries.

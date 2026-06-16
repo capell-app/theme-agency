@@ -71,3 +71,14 @@ it('renders a working skip link target in the public page wrapper', function ():
         ->toContain('id="main-content"')
         ->toContain('<main');
 });
+
+it('keeps estate agents public Blade free of dead form actions', function (): void {
+    $blade = estateAgentsThemeBladeViews();
+
+    expect($blade)
+        ->not->toContain('action="#"')
+        ->not->toContain('href="#"')
+        ->not->toContain('javascript:')
+        ->not->toContain('signed')
+        ->not->toContain('wire:');
+});

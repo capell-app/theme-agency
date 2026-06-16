@@ -14,7 +14,7 @@ Theme Estate Agents is a premium Blade child theme for property agencies, lettin
 
 3. **Replace static marketplace SVGs with route-backed captures.** Premium themes need at least five real frontend screenshots. This package promotes five route-backed PNG captures for homepage, property search/listing, valuation, local guide, and viewing-request fixtures and marks the runner entries required. Evidence: `capell.json marketplace.screenshots`, `docs/screenshots.json`, `docs/screenshots/*.png`, `routes/screenshot-fixtures.php`. - **M** - **Done 2026-06-15:** opt-in screenshot fixture routes render the real Estate Agents Blade sections with safe static data, and Capell runner captures are committed as required marketplace PNGs.
 
-4. **Wire or clarify optional integration forms/search.** Search/Form Builder availability changes labels, but property search, valuation, and viewing sections still render plain GET forms to `#` unless `form_action` is supplied. For a premium theme, connected Search/Form Builder states should use real public-safe URLs/actions from render data, or the fallback should be explicitly non-submitting CTA markup. Evidence: `sections/property-search.blade.php`, `valuation-cta.blade.php`, `viewing-request.blade.php`. - **M**
+4. **Wire or clarify optional integration forms/search.** Search/Form Builder availability changes labels, but property search, valuation, and viewing sections still render plain GET forms to `#` unless `form_action` is supplied. For a premium theme, connected Search/Form Builder states should use real public-safe URLs/actions from render data, or the fallback should be explicitly non-submitting CTA markup. Evidence: `sections/property-search.blade.php`, `valuation-cta.blade.php`, `viewing-request.blade.php`. - **M** - **Done 2026-06-16:** property search, valuation, and viewing sections now sanitize public action URLs and render non-submitting setup panels when no safe action is provided.
 
 5. **Add required page-set coverage.** Theme scale expects homepage, landing/conversion page, list page with pagination, search results, contact/conversion form, and a detail/resource page. Current tests cover individual section rendering and source safety, but not the required page set or screenshot fixture contract. Add tests around demo install output or fixture route metadata. - **M**
 
@@ -65,7 +65,7 @@ Estate Agents has a distinct premium lane: buyer search, vendor valuation, local
 | Fix skip link target and add source/render test coverage                          | Done   | S      | High   | §2.2, §4.2  |
 | Convert static SVG screenshot contract to five required route-backed PNG captures | Done   | M      | High   | §2.3, §4.3  |
 | Rewrite README/overview with current theme-scale install/screenshot expectations  | Done   | S      | Medium | §5          |
-| Wire connected Search/Form Builder actions or render non-submitting CTA fallbacks | Next   | M      | High   | §2.4, §4.4  |
+| Wire connected Search/Form Builder actions or render non-submitting CTA fallbacks | Done   | M      | High   | §2.4, §4.4  |
 | Add required page-set/demo fixture coverage                                       | Next   | M      | Medium | §2.5        |
 | Add token/dark/mobile visual proof                                                | Next   | M      | Medium | §2.6        |
 | Define property-listings companion package boundary or documented Search contract | Later  | L      | High   | §3, §5      |

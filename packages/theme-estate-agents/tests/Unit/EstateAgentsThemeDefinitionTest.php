@@ -105,7 +105,8 @@ it('renders estate-owned property sections through the registry', function (): v
 
     expect($valuationHtml)
         ->toContain('Value before you list')
-        ->toContain('Start valuation')
+        ->toContain('Connect a public valuation form action')
+        ->not->toContain('<form')
         ->not->toContain('capell-app/theme-estate-agents');
 });
 
@@ -146,7 +147,71 @@ it('passes optional package availability into estate agency sections', function 
     ])))
         ->toContain('Form Builder connected')
         ->toContain('Connected viewing request')
+        ->toContain('Connect a public viewing request form action')
+        ->not->toContain('<form')
         ->not->toContain('capell-app/theme-estate-agents');
+});
+
+it('renders estate agency forms only when safe public actions are supplied', function (): void {
+    CapellCore::clearPackages();
+    CapellCore::forcePackageInstalled(EstateAgentsThemeServiceProvider::$packageName);
+
+    $registry = new ThemeRegistry;
+    (new EstateAgentsThemeServiceProvider($this->app))->boot($registry);
+
+    $searchRenderer = $registry->sectionRenderer('estate-agents', 'property-search');
+    $valuationRenderer = $registry->sectionRenderer('estate-agents', 'valuation-cta');
+    $viewingRenderer = $registry->sectionRenderer('estate-agents', 'viewing-request');
+
+    assert($searchRenderer instanceof SectionRenderer);
+    assert($valuationRenderer instanceof SectionRenderer);
+    assert($viewingRenderer instanceof SectionRenderer);
+
+    expect($searchRenderer->render(estateAgentsThemeSection('property-search', [
+        'form_action' => '/properties/search',
+    ])))
+        ->toContain('action="/properties/search"')
+        ->toContain('name="location"');
+
+    expect($valuationRenderer->render(estateAgentsThemeSection('valuation-cta', [
+        'form_action' => 'https://example.test/value-my-home',
+    ])))
+        ->toContain('action="https://example.test/value-my-home"')
+        ->toContain('Start valuation');
+
+    expect($viewingRenderer->render(estateAgentsThemeSection('viewing-request', [
+        'form_action' => '/viewings/request',
+    ])))
+        ->toContain('action="/viewings/request"')
+        ->toContain('Request viewing');
+});
+
+it('rejects unsafe estate agency form actions before rendering public forms', function (): void {
+    CapellCore::clearPackages();
+    CapellCore::forcePackageInstalled(EstateAgentsThemeServiceProvider::$packageName);
+
+    $registry = new ThemeRegistry;
+    (new EstateAgentsThemeServiceProvider($this->app))->boot($registry);
+
+    $searchRenderer = $registry->sectionRenderer('estate-agents', 'property-search');
+    $valuationRenderer = $registry->sectionRenderer('estate-agents', 'valuation-cta');
+
+    assert($searchRenderer instanceof SectionRenderer);
+    assert($valuationRenderer instanceof SectionRenderer);
+
+    expect($searchRenderer->render(estateAgentsThemeSection('property-search', [
+        'form_action' => '#',
+    ])))
+        ->toContain('Connect a public search route')
+        ->not->toContain('<form')
+        ->not->toContain('action="#"');
+
+    expect($valuationRenderer->render(estateAgentsThemeSection('valuation-cta', [
+        'form_action' => '/admin/forms/1?signature=abc',
+    ])))
+        ->toContain('Connect a public valuation form action')
+        ->not->toContain('<form')
+        ->not->toContain('signature=abc');
 });
 
 /**

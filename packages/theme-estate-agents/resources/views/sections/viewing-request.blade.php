@@ -1,7 +1,8 @@
 @php
+    $publicThemeUrl = 'Capell\\ThemeStudio\\EstateAgents\\Support\\PublicThemeUrl';
     $heading = $section->heading ?? ($heading ?? __('capell-theme-estate-agents::generic.viewing_heading'));
     $summary = $section->summary ?? ($summary ?? __('capell-theme-estate-agents::generic.viewing_summary'));
-    $formAction = $section->form_action ?? ($formAction ?? '#');
+    $formAction = $publicThemeUrl::formAction($form_action ?? ($formAction ?? ($section->form_action ?? null)));
     $formBuilderAvailable ??= false;
 @endphp
 
@@ -20,35 +21,43 @@
                 </p>
             @endif
         </div>
-        <form
-            action="{{ $formAction }}"
-            method="GET"
-            class="estate-panel bg-white p-5"
-        >
-            <div class="grid gap-4 sm:grid-cols-2">
-                <label class="estate-form-label">
-                    {{ __('capell-theme-estate-agents::generic.property_label') }}
-                    <input
-                        type="text"
-                        name="property"
-                        class="estate-form-input"
-                    />
-                </label>
-                <label class="estate-form-label">
-                    {{ __('capell-theme-estate-agents::generic.date_label') }}
-                    <input
-                        type="date"
-                        name="date"
-                        class="estate-form-input"
-                    />
-                </label>
-            </div>
-            <button
-                type="submit"
-                class="estate-button-primary mt-4 w-full justify-center"
+        @if ($formAction !== null)
+            <form
+                action="{{ $formAction }}"
+                method="GET"
+                class="estate-panel bg-white p-5"
             >
-                {{ __('capell-theme-estate-agents::generic.request_viewing_label') }}
-            </button>
-        </form>
+                <div class="grid gap-4 sm:grid-cols-2">
+                    <label class="estate-form-label">
+                        {{ __('capell-theme-estate-agents::generic.property_label') }}
+                        <input
+                            type="text"
+                            name="property"
+                            class="estate-form-input"
+                        />
+                    </label>
+                    <label class="estate-form-label">
+                        {{ __('capell-theme-estate-agents::generic.date_label') }}
+                        <input
+                            type="date"
+                            name="date"
+                            class="estate-form-input"
+                        />
+                    </label>
+                </div>
+                <button
+                    type="submit"
+                    class="estate-button-primary mt-4 w-full justify-center"
+                >
+                    {{ __('capell-theme-estate-agents::generic.request_viewing_label') }}
+                </button>
+            </form>
+        @else
+            <div class="estate-panel bg-white p-5">
+                <p class="text-sm leading-6 text-[var(--estate-muted)]">
+                    {{ __('capell-theme-estate-agents::generic.viewing_static_summary') }}
+                </p>
+            </div>
+        @endif
     </div>
 </section>

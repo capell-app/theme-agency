@@ -1,7 +1,8 @@
 @php
+    $publicThemeUrl = 'Capell\\ThemeStudio\\EstateAgents\\Support\\PublicThemeUrl';
     $heading = $section->heading ?? ($heading ?? __('capell-theme-estate-agents::generic.valuation_heading'));
     $summary = $section->summary ?? ($summary ?? __('capell-theme-estate-agents::generic.valuation_summary'));
-    $formAction = $section->form_action ?? ($formAction ?? '#');
+    $formAction = $publicThemeUrl::formAction($form_action ?? ($formAction ?? ($section->form_action ?? null)));
     $formBuilderAvailable ??= false;
 @endphp
 
@@ -27,25 +28,33 @@
                 </p>
             @endif
         </div>
-        <form
-            action="{{ $formAction }}"
-            method="GET"
-            class="estate-panel bg-white p-5"
-        >
-            <label class="estate-form-label">
-                {{ __('capell-theme-estate-agents::generic.postcode_label') }}
-                <input
-                    type="text"
-                    name="postcode"
-                    class="estate-form-input"
-                />
-            </label>
-            <button
-                type="submit"
-                class="estate-button-primary mt-4 w-full justify-center"
+        @if ($formAction !== null)
+            <form
+                action="{{ $formAction }}"
+                method="GET"
+                class="estate-panel bg-white p-5"
             >
-                {{ __('capell-theme-estate-agents::generic.start_valuation_label') }}
-            </button>
-        </form>
+                <label class="estate-form-label">
+                    {{ __('capell-theme-estate-agents::generic.postcode_label') }}
+                    <input
+                        type="text"
+                        name="postcode"
+                        class="estate-form-input"
+                    />
+                </label>
+                <button
+                    type="submit"
+                    class="estate-button-primary mt-4 w-full justify-center"
+                >
+                    {{ __('capell-theme-estate-agents::generic.start_valuation_label') }}
+                </button>
+            </form>
+        @else
+            <div class="estate-panel bg-white p-5">
+                <p class="text-sm leading-6 text-[var(--estate-muted)]">
+                    {{ __('capell-theme-estate-agents::generic.valuation_static_summary') }}
+                </p>
+            </div>
+        @endif
     </div>
 </section>
