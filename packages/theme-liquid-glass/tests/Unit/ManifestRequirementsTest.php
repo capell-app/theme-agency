@@ -66,6 +66,8 @@ describe('theme Liquid Glass capell.json manifest', function (): void {
 
     it('declares public-output safety and theme metadata', function (): void {
         $manifest = liquidGlassThemeMarketplaceManifest();
+        $performance = liquidGlassThemeManifestArray($manifest['performance'] ?? null, 'performance');
+        $cacheSafety = liquidGlassThemeManifestArray($performance['cacheSafety'] ?? null, 'performance.cacheSafety');
 
         expect($manifest['kind'])->toBe('theme')
             ->and($manifest['themeKey'])->toBe('liquid-glass')
@@ -75,7 +77,11 @@ describe('theme Liquid Glass capell.json manifest', function (): void {
                 'forbidAuthoringSurface' => true,
                 'forbidSecrets' => true,
                 'forbidPublicBladeQueries' => true,
-            ]);
+            ])
+            ->and($cacheSafety['cacheable'] ?? null)->toBeTrue()
+            ->and($cacheSafety['variesBy'] ?? null)->toBe(['site', 'locale'])
+            ->and(liquidGlassThemeManifestArrayList($cacheSafety['invalidationSources'] ?? null, 'performance.cacheSafety.invalidationSources'))->toHaveCount(4)
+            ->and($cacheSafety['queueInvalidation'] ?? null)->toBeFalse();
     });
 });
 

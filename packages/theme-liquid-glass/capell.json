@@ -96,11 +96,28 @@
         "adminQueryBudget": 0,
         "cacheTags": ["theme-liquid-glass"],
         "cacheSafety": {
-            "cacheable": false,
+            "cacheable": true,
             "variesBy": ["site", "locale"],
             "sensitiveOutput": false,
-            "invalidationSources": [],
-            "queueInvalidation": true
+            "invalidationSources": [
+                {
+                    "model": "Capell\\Core\\Models\\Page",
+                    "events": ["saved", "deleted"]
+                },
+                {
+                    "model": "Capell\\Core\\Models\\PageUrl",
+                    "events": ["saved", "deleted"]
+                },
+                {
+                    "model": "Capell\\Core\\Models\\SiteDomain",
+                    "events": ["saved", "deleted"]
+                },
+                {
+                    "model": "Capell\\Core\\Models\\Translation",
+                    "events": ["saved", "deleted"]
+                }
+            ],
+            "queueInvalidation": false
         }
     },
     "healthChecks": [

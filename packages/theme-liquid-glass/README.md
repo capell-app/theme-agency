@@ -51,6 +51,10 @@ Screenshot contract: `docs/screenshots.json`.
 
 This theme has no schema impact. It relies on core Capell site, page, locale, and theme records instead of declaring package-owned tables.
 
+## Cacheability
+
+Theme Liquid Glass output is cacheable for public HTML because package Blade is query-free, secret-free, and authoring-free. Cache entries vary by site and locale. Invalidation should come from the host content/theme pipeline when site, page, URL, translation, preset, or hydrated render data changes; the theme does not queue package-owned invalidation work.
+
 ## Install Impact
 
 - Composer dependencies: `capell-app/core`, `capell-app/foundation-theme`, and `capell-app/frontend`.
@@ -60,7 +64,7 @@ This theme has no schema impact. It relies on core Capell site, page, locale, an
 - Database changes: no package migrations declared.
 - Settings: no package settings declared.
 - Queues or schedules: none detected in standard package paths.
-- Cache tags: `theme-liquid-glass`.
+- Cache tags: `theme-liquid-glass`; public output varies by site and locale.
 - Commands: `capell:theme-liquid-glass-demo`.
 
 ## Common Pitfalls

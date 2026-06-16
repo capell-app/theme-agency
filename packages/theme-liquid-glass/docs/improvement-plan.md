@@ -18,7 +18,7 @@ Theme Liquid Glass is a free Blade child theme for modern launch, editorial, dir
 
 5. **Strengthen health checks for install dependencies and assets.** The current health check verifies registry definition, view files, and marketplace media file existence. It should also catch missing demo dependency classes, missing CSS asset path, and mismatch between `definition()->includedSections` and registered section renderers. Evidence: `ThemeLiquidGlassHealthCheck`, `LiquidGlassThemeServiceProvider::definition()`, `sectionRenderers()`. - **S**
 
-6. **Align cache metadata with public-output safety.** Manifest public-output safety says the theme is cache-safe, but `performance.cacheSafety.cacheable` is `false` and invalidation sources are empty. Decide whether Liquid Glass should inherit Foundation cacheability or explicitly document why this theme is not cacheable. Evidence: `capell.json performance.cacheSafety`, `PublicOutputSafetyTest`. - **S**
+6. **Align cache metadata with public-output safety.** Manifest public-output safety says the theme is cache-safe, but `performance.cacheSafety.cacheable` is `false` and invalidation sources are empty. Decide whether Liquid Glass should inherit Foundation cacheability or explicitly document why this theme is not cacheable. Evidence: `capell.json performance.cacheSafety`, `PublicOutputSafetyTest`. - **S** - **Done 2026-06-16:** manifest metadata now marks public theme output cacheable by site/locale with core page, URL, domain, and translation invalidation sources; README/overview document host-owned content/theme invalidation and no package-owned invalidation queue.
 
 7. **Add darker/mobile visual proof around the presets.** CSS defines a dark surface override and three presets, but tests mostly cover source strings and one rendered shell. Add fixture/screenshot coverage proving primary/accent/surface tokens remain legible across Clarity, Prism, and Graphite, including mobile navigation. Evidence: `resources/css/theme-liquid-glass.css`, `LiquidGlassThemeServiceProvider::definition()`. - **M**
 
@@ -69,7 +69,7 @@ Liquid Glass belongs in the free foundation lane: it should be the modern visual
 | Rewrite README/overview with package-repo versus host-app command context                    | Done   | S      | Medium | §2.4, §4.5  |
 | Strengthen health check coverage for CSS, dependency classes, and section renderer alignment | Done   | S      | Medium | §2.5, §4.4  |
 | Convert static SVG screenshot contract to required route-backed PNG captures                 | Next   | M      | High   | §2.3, §4.3  |
-| Clarify cacheability metadata and invalidation expectations                                  | Next   | S      | Medium | §2.6        |
+| Clarify cacheability metadata and invalidation expectations                                  | Done   | S      | Medium | §2.6        |
 | Add preset/dark/mobile visual proof                                                          | Next   | M      | Medium | §2.7        |
 | Add Liquid Glass-specific demo content depth for route-backed screenshots                    | Later  | M      | Medium | §3, §5      |
 
