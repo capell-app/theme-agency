@@ -95,6 +95,20 @@ it('declares its installable database migrations', function (): void {
     ]);
 });
 
+it('declares its password policy console commands', function (): void {
+    $package = new Package;
+
+    (new PasswordPolicyServiceProvider(app()))->configurePackage($package);
+
+    expect($package->commands)->toContain(
+        'Capell\PasswordPolicy\Console\Commands\ExpireStalePasswordsCommand',
+        'Capell\PasswordPolicy\Console\Commands\PasswordPolicyDoctorCommand',
+        'Capell\PasswordPolicy\Console\Commands\PrunePasswordHistoryCommand',
+        'Capell\PasswordPolicy\Console\Commands\RequirePasswordChangeCommand',
+        'Capell\PasswordPolicy\Console\Commands\SendExpiryWarningsCommand',
+    );
+});
+
 it('backfills password change timestamps for existing users when installing columns', function (): void {
     Schema::table('users', function (Blueprint $table): void {
         if (Schema::hasColumn('users', 'must_change_password')) {
@@ -205,6 +219,8 @@ it('saves password security settings from the package settings page', function (
         ->fillForm([
             'password_expiry_enabled' => true,
             'password_expiry_days' => 45,
+            'password_expiry_warning_notifications_enabled' => true,
+            'password_expiry_warning_days' => 10,
             'force_change_enabled' => true,
             'minimum_password_length' => 12,
             'require_mixed_case' => true,
@@ -221,6 +237,8 @@ it('saves password security settings from the package settings page', function (
 
     expect($settings->password_expiry_enabled)->toBeTrue()
         ->and($settings->password_expiry_days)->toBe(45)
+        ->and($settings->password_expiry_warning_notifications_enabled)->toBeTrue()
+        ->and($settings->password_expiry_warning_days)->toBe(10)
         ->and($settings->force_change_enabled)->toBeTrue()
         ->and($settings->minimum_password_length)->toBe(12)
         ->and($settings->require_mixed_case)->toBeTrue()

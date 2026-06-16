@@ -18,6 +18,8 @@ class PasswordPolicySettingsResolver
             return new ResolvedPasswordPolicySettingsData(
                 passwordExpiryEnabled: $settings->password_expiry_enabled,
                 passwordExpiryDays: $settings->password_expiry_days,
+                passwordExpiryWarningNotificationsEnabled: $settings->password_expiry_warning_notifications_enabled,
+                passwordExpiryWarningDays: $settings->password_expiry_warning_days,
                 forceChangeEnabled: $settings->force_change_enabled,
                 minimumPasswordLength: $settings->minimum_password_length,
                 requireMixedCase: $settings->require_mixed_case,

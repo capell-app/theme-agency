@@ -26,6 +26,15 @@ class PasswordPolicySettingsSchema implements HasSchema
                         ->minValue(1)
                         ->required()
                         ->visible(fn (callable $get): bool => (bool) $get('password_expiry_enabled')),
+                    Toggle::make('password_expiry_warning_notifications_enabled')
+                        ->label(__('capell-password-policy::settings.password_expiry_warning_notifications_enabled'))
+                        ->visible(fn (callable $get): bool => (bool) $get('password_expiry_enabled')),
+                    TextInput::make('password_expiry_warning_days')
+                        ->label(__('capell-password-policy::settings.password_expiry_warning_days'))
+                        ->integer()
+                        ->minValue(1)
+                        ->required()
+                        ->visible(fn (callable $get): bool => (bool) $get('password_expiry_enabled') && (bool) $get('password_expiry_warning_notifications_enabled')),
                 ]),
             Grid::make(2)
                 ->columnSpanFull()

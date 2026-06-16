@@ -5,11 +5,15 @@ declare(strict_types=1);
 use Capell\Core\Database\Factories\UserFactory;
 use Capell\PasswordPolicy\Actions\BuildPasswordSecurityPostureReportAction;
 use Capell\PasswordPolicy\Actions\EvaluatePasswordPolicyAction;
+use Capell\PasswordPolicy\Actions\SendPasswordExpiryWarningNotificationsAction;
 use Capell\PasswordPolicy\Actions\UpdatePasswordAction;
 use Capell\PasswordPolicy\Data\PasswordChangeData;
 use Capell\PasswordPolicy\Health\PasswordPolicyHealthCheck;
+use Capell\PasswordPolicy\Notifications\PasswordExpiryWarningNotification;
 use Capell\PasswordPolicy\Settings\PasswordPolicySettings;
+use Carbon\CarbonImmutable;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Validation\ValidationException;
 
 uses()->group('password-policy');
@@ -149,4 +153,60 @@ it('reports password security posture and panel-aware forced change urls', funct
         ->and($report->forcedChangeUrls['admin'] ?? null)->toContain('/admin/password-policy/change-password')
         ->and((new PasswordPolicyHealthCheck)->securityPosture(['admin'])->forcedChangeUrls)
         ->toHaveKey('admin');
+});
+
+it('sends password expiry warning notifications for users inside the warning window', function (): void {
+    Notification::fake();
+
+    $settings = PasswordPolicySettings::instance();
+    $settings->password_expiry_enabled = true;
+    $settings->password_expiry_days = 30;
+    $settings->password_expiry_warning_notifications_enabled = true;
+    $settings->password_expiry_warning_days = 7;
+    $settings->save();
+
+    $now = CarbonImmutable::parse('2026-06-16 12:00:00', 'UTC');
+    $matchedUser = UserFactory::new()->create([
+        'password_changed_at' => $now->subDays(27),
+        'must_change_password' => false,
+    ]);
+    $freshUser = UserFactory::new()->create([
+        'password_changed_at' => $now->subDays(10),
+        'must_change_password' => false,
+    ]);
+    $flaggedUser = UserFactory::new()->create([
+        'password_changed_at' => $now->subDays(27),
+        'must_change_password' => true,
+    ]);
+    $expiredUser = UserFactory::new()->create([
+        'password_changed_at' => $now->subDays(31),
+        'must_change_password' => false,
+    ]);
+
+    $sent = SendPasswordExpiryWarningNotificationsAction::run($now);
+
+    expect($sent)->toBe(1);
+
+    Notification::assertSentTo($matchedUser, PasswordExpiryWarningNotification::class);
+    Notification::assertNotSentTo($freshUser, PasswordExpiryWarningNotification::class);
+    Notification::assertNotSentTo($flaggedUser, PasswordExpiryWarningNotification::class);
+    Notification::assertNotSentTo($expiredUser, PasswordExpiryWarningNotification::class);
+});
+
+it('does not send password expiry warnings when warning notifications are disabled', function (): void {
+    Notification::fake();
+
+    $settings = PasswordPolicySettings::instance();
+    $settings->password_expiry_enabled = true;
+    $settings->password_expiry_warning_notifications_enabled = false;
+    $settings->save();
+
+    $user = UserFactory::new()->create([
+        'password_changed_at' => CarbonImmutable::parse('2026-06-16 12:00:00', 'UTC')->subDays(27),
+        'must_change_password' => false,
+    ]);
+
+    expect(SendPasswordExpiryWarningNotificationsAction::run(CarbonImmutable::parse('2026-06-16 12:00:00', 'UTC')))->toBe(0);
+
+    Notification::assertNotSentTo($user, PasswordExpiryWarningNotification::class);
 });

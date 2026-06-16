@@ -16,6 +16,10 @@ class PasswordPolicySettings extends Settings implements SettingsContract, Setti
 
     public int $password_expiry_days;
 
+    public bool $password_expiry_warning_notifications_enabled;
+
+    public int $password_expiry_warning_days;
+
     public bool $force_change_enabled;
 
     public int $minimum_password_length;

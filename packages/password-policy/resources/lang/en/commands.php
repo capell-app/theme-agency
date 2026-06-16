@@ -12,4 +12,5 @@ return [
     'require_change_complete' => 'Matched :count users for password change.',
     'require_change_scope_required' => 'Pass exactly one of --user-id or --all.',
     'require_change_unavailable' => 'Forced password-change column is not installed.',
+    'send_expiry_warnings_complete' => 'Sent :count password expiry warning notifications.',
 ];

@@ -8,6 +8,8 @@ return [
     'minimum_password_length' => 'Minimum password length',
     'password_expiry_days' => 'Expiry interval in days',
     'password_expiry_enabled' => 'Expire passwords automatically',
+    'password_expiry_warning_days' => 'Warning window in days',
+    'password_expiry_warning_notifications_enabled' => 'Send expiry warning emails',
     'password_history_count' => 'Remembered passwords',
     'password_history_enabled' => 'Prevent password reuse',
     'require_mixed_case' => 'Require uppercase and lowercase letters',

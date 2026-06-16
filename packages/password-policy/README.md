@@ -38,14 +38,15 @@ Screenshot contract: `docs/screenshots.json`.
 - Service providers: `Capell\PasswordPolicy\Providers\PasswordPolicyServiceProvider`.
 - Config files: `packages/password-policy/config/capell-password-policy.php`.
 - Migrations: `packages/password-policy/database/migrations/2026_05_10_190863_01_add_password_policy_columns_to_users_table.php`, `packages/password-policy/database/migrations/2026_05_10_190863_02_create_password_policy_password_histories_table.php`.
-- Settings migrations: `packages/password-policy/database/settings/2026_05_10_190864_01_create_password_policy_settings.php`, `packages/password-policy/database/settings/2026_06_04_000001_01_add_password_complexity_settings.php`.
+- Settings migrations: `packages/password-policy/database/settings/2026_05_10_190864_01_create_password_policy_settings.php`, `packages/password-policy/database/settings/2026_06_04_000001_01_add_password_complexity_settings.php`, `packages/password-policy/database/settings/2026_06_16_000001_01_add_password_expiry_warning_settings.php`.
 - Settings classes: `PasswordPolicySettings`.
 - Filament classes: `PasswordPolicyPanelExtender`, `PasswordPolicyUserFormExtender`, `PasswordPolicyUserTableExtender`, `ForcedPasswordChangePage`, `PasswordPolicySettingsPage`, `PasswordPolicySettingsSchema`.
 - Events: `PasswordChanged`, `PasswordExpired`, `UserMarkedForPasswordChange`.
-- Actions: `BuildPasswordSecurityPostureReportAction`, `EvaluatePasswordPolicyAction`, `MarkUserForPasswordChangeAction`, `NotifyPasswordPolicyLifecycleEventAction`, `PrunePasswordHistoryAction`, `RecordPasswordHistoryAction`, `UpdatePasswordAction`, `ValidatePasswordChangeAction`.
+- Actions: `BuildPasswordSecurityPostureReportAction`, `EvaluatePasswordPolicyAction`, `MarkUserForPasswordChangeAction`, `NotifyPasswordPolicyLifecycleEventAction`, `PrunePasswordHistoryAction`, `RecordPasswordHistoryAction`, `SendPasswordExpiryWarningNotificationsAction`, `UpdatePasswordAction`, `ValidatePasswordChangeAction`.
 - Data objects: `PasswordChangeData`, `PasswordPolicyStatusData`, `PasswordSecurityPostureReportData`, `ResolvedPasswordPolicySettingsData`.
-- Command signatures: `capell:password-policy:doctor`, `capell:password-policy:expire-stale`, `capell:password-policy:prune-history`, `capell:password-policy:require-change`.
-- Console command classes: `ExpireStalePasswordsCommand`, `PasswordPolicyDoctorCommand`, `PrunePasswordHistoryCommand`, `RequirePasswordChangeCommand`.
+- Notifications: `PasswordExpiryWarningNotification`.
+- Command signatures: `capell:password-policy:doctor`, `capell:password-policy:expire-stale`, `capell:password-policy:prune-history`, `capell:password-policy:require-change`, `capell:password-policy:send-expiry-warnings`.
+- Console command classes: `ExpireStalePasswordsCommand`, `PasswordPolicyDoctorCommand`, `PrunePasswordHistoryCommand`, `RequirePasswordChangeCommand`, `SendExpiryWarningsCommand`.
 - Manifest contributions: `admin-action-extender: Capell\PasswordPolicy\Manifest\PasswordPolicyAdminExtendersContribution`, `admin-page: Capell\PasswordPolicy\Manifest\PasswordPolicyAdminPagesContribution`, `console-command: Capell\PasswordPolicy\Manifest\PasswordPolicyConsoleCommandsContribution`, `health-check: Capell\PasswordPolicy\Manifest\PasswordPolicyHealthContribution`, `setting: Capell\PasswordPolicy\Manifest\PasswordPolicySettingsContribution`.
 - Health checks: `Capell\PasswordPolicy\Health\PasswordPolicyHealthCheck`.
 - Blade views: `packages/password-policy/resources/views/filament/pages/forced-password-change.blade.php`.
@@ -64,9 +65,9 @@ Screenshot contract: `docs/screenshots.json`.
 - Public routes: none detected in package route files.
 - Database changes: package migrations are declared.
 - Settings: `Capell\PasswordPolicy\Settings\PasswordPolicySettings`.
-- Queues or schedules: none detected in standard package paths.
+- Queues or schedules: expiry warning notifications are queued mail notifications; schedule `capell:password-policy:send-expiry-warnings` from the host app when the warning setting is enabled.
 - Cache tags: none declared.
-- Commands: `capell:password-policy:doctor`, `capell:password-policy:expire-stale`, `capell:password-policy:prune-history`, `capell:password-policy:require-change`.
+- Commands: `capell:password-policy:doctor`, `capell:password-policy:expire-stale`, `capell:password-policy:prune-history`, `capell:password-policy:require-change`, `capell:password-policy:send-expiry-warnings`.
 
 ## Common Pitfalls
 

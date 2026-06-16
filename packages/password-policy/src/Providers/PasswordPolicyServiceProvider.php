@@ -19,6 +19,7 @@ use Capell\PasswordPolicy\Console\Commands\ExpireStalePasswordsCommand;
 use Capell\PasswordPolicy\Console\Commands\PasswordPolicyDoctorCommand;
 use Capell\PasswordPolicy\Console\Commands\PrunePasswordHistoryCommand;
 use Capell\PasswordPolicy\Console\Commands\RequirePasswordChangeCommand;
+use Capell\PasswordPolicy\Console\Commands\SendExpiryWarningsCommand;
 use Capell\PasswordPolicy\Filament\Extenders\PasswordPolicyPanelExtender;
 use Capell\PasswordPolicy\Filament\Extenders\PasswordPolicyUserFormExtender;
 use Capell\PasswordPolicy\Filament\Extenders\PasswordPolicyUserTableExtender;
@@ -48,6 +49,7 @@ class PasswordPolicyServiceProvider extends AbstractPackageServiceProvider
                 PasswordPolicyDoctorCommand::class,
                 PrunePasswordHistoryCommand::class,
                 RequirePasswordChangeCommand::class,
+                SendExpiryWarningsCommand::class,
             ])
             ->hasMigrations([
                 '2026_05_10_190863_01_add_password_policy_columns_to_users_table',

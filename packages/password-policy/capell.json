@@ -76,13 +76,15 @@
                 "capell:password-policy:expire-stale",
                 "capell:password-policy:doctor",
                 "capell:password-policy:prune-history",
-                "capell:password-policy:require-change"
+                "capell:password-policy:require-change",
+                "capell:password-policy:send-expiry-warnings"
             ],
             "commandClasses": [
                 "Capell\\PasswordPolicy\\Console\\Commands\\ExpireStalePasswordsCommand",
                 "Capell\\PasswordPolicy\\Console\\Commands\\PasswordPolicyDoctorCommand",
                 "Capell\\PasswordPolicy\\Console\\Commands\\PrunePasswordHistoryCommand",
-                "Capell\\PasswordPolicy\\Console\\Commands\\RequirePasswordChangeCommand"
+                "Capell\\PasswordPolicy\\Console\\Commands\\RequirePasswordChangeCommand",
+                "Capell\\PasswordPolicy\\Console\\Commands\\SendExpiryWarningsCommand"
             ]
         },
         {
@@ -104,7 +106,8 @@
         "doctor": "capell:password-policy:doctor",
         "expireStale": "capell:password-policy:expire-stale",
         "pruneHistory": "capell:password-policy:prune-history",
-        "requireChange": "capell:password-policy:require-change"
+        "requireChange": "capell:password-policy:require-change",
+        "sendExpiryWarnings": "capell:password-policy:send-expiry-warnings"
     },
     "settings": ["Capell\\PasswordPolicy\\Settings\\PasswordPolicySettings"],
     "permissions": [],

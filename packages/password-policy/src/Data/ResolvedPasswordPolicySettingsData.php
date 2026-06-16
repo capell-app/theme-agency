@@ -11,6 +11,8 @@ class ResolvedPasswordPolicySettingsData extends Data
     public function __construct(
         public bool $passwordExpiryEnabled = false,
         public int $passwordExpiryDays = 90,
+        public bool $passwordExpiryWarningNotificationsEnabled = false,
+        public int $passwordExpiryWarningDays = 7,
         public bool $forceChangeEnabled = false,
         public int $minimumPasswordLength = 8,
         public bool $requireMixedCase = false,

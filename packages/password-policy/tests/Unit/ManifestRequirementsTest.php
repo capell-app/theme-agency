@@ -9,6 +9,7 @@ use Capell\PasswordPolicy\Console\Commands\ExpireStalePasswordsCommand;
 use Capell\PasswordPolicy\Console\Commands\PasswordPolicyDoctorCommand;
 use Capell\PasswordPolicy\Console\Commands\PrunePasswordHistoryCommand;
 use Capell\PasswordPolicy\Console\Commands\RequirePasswordChangeCommand;
+use Capell\PasswordPolicy\Console\Commands\SendExpiryWarningsCommand;
 use Capell\PasswordPolicy\Filament\Extenders\PasswordPolicyPanelExtender;
 use Capell\PasswordPolicy\Filament\Extenders\PasswordPolicyUserFormExtender;
 use Capell\PasswordPolicy\Filament\Extenders\PasswordPolicyUserTableExtender;
@@ -82,12 +83,14 @@ it('declares implemented password policy package contributions', function (): vo
             'capell:password-policy:doctor',
             'capell:password-policy:prune-history',
             'capell:password-policy:require-change',
+            'capell:password-policy:send-expiry-warnings',
         ])
         ->and($consoleCommands['commandClasses'])->toBe([
             ExpireStalePasswordsCommand::class,
             PasswordPolicyDoctorCommand::class,
             PrunePasswordHistoryCommand::class,
             RequirePasswordChangeCommand::class,
+            SendExpiryWarningsCommand::class,
         ])
         ->and($healthCheck['checkClass'])->toBe(PasswordPolicyHealthCheck::class)
         ->and(class_implements(PasswordPolicyAdminPagesContribution::class))->toContain(ExtensionContribution::class)
