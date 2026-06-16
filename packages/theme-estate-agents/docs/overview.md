@@ -37,6 +37,8 @@ Screenshot contract: `screenshots.json`.
 - Local guide (frontend, optional).
 - Viewing request (frontend, optional).
 
+The screenshot fixture contract also records page-set roles for the required theme coverage: homepage, landing/conversion page, list page with pagination, search results, contact/conversion form, and detail/resource page.
+
 ## Technical Shape
 
 - Service providers: `Capell\ThemeStudio\EstateAgents\EstateAgentsThemeServiceProvider`.

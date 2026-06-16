@@ -39,3 +39,42 @@ it('keeps screenshot fixture routes behind an explicit environment flag', functi
         ->and($routes)
         ->toContain('/screenshot-fixtures/theme-estate-agents/{screen}');
 });
+
+it('declares route backed fixtures for the required estate agents page set', function (): void {
+    $contract = json_decode(
+        file_get_contents(__DIR__ . '/../../docs/screenshots.json') ?: '[]',
+        true,
+        512,
+        JSON_THROW_ON_ERROR,
+    );
+
+    throw_unless(is_array($contract), RuntimeException::class, 'Estate Agents screenshot contract must decode to an array.');
+
+    $entries = $contract['entries'] ?? [];
+
+    throw_unless(is_array($entries), RuntimeException::class, 'Estate Agents screenshot entries must be an array.');
+
+    $roles = collect($entries)
+        ->flatMap(function (array $entry): array {
+            $pageSetRoles = $entry['pageSetRoles'] ?? [];
+
+            expect($entry['required'] ?? false)->toBeTrue()
+                ->and($entry['url'] ?? '')->toStartWith('/screenshot-fixtures/theme-estate-agents/')
+                ->and($entry['waitFor'] ?? '')->toBe('.estate-shell')
+                ->and($pageSetRoles)->toBeArray()->not->toBeEmpty();
+
+            return $pageSetRoles;
+        })
+        ->unique()
+        ->values()
+        ->all();
+
+    expect($roles)->toContain(
+        'homepage',
+        'landing-conversion-page',
+        'list-with-pagination',
+        'search-results',
+        'contact-conversion-form',
+        'detail-resource-page',
+    );
+});
