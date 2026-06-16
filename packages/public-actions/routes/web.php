@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use Capell\PublicActions\Http\Controllers\ShowPublicActionController;
 use Capell\PublicActions\Http\Controllers\SubmitPublicActionController;
+use Capell\PublicActions\Http\Controllers\SubmitTrustedPublicActionController;
 use Capell\PublicActions\Http\Controllers\Zapier\ListZapierPublicActionsController;
 use Capell\PublicActions\Http\Controllers\Zapier\ListZapierPublicActionSubmissionsController;
 use Capell\PublicActions\Http\Controllers\Zapier\ShowZapierAccountController;
@@ -31,4 +32,12 @@ Route::middleware(['api', PublicActionZapierAuthMiddleware::class, 'throttle:pub
         Route::get('/actions', ListZapierPublicActionsController::class)->name('actions');
         Route::post('/actions/{action}/submissions', SubmitZapierPublicActionController::class)->name('actions.submit');
         Route::get('/submissions', ListZapierPublicActionSubmissionsController::class)->name('submissions');
+    });
+
+Route::middleware(['api', 'throttle:public-actions-submit'])
+    ->prefix(config('capell-public-actions.api_route_prefix', 'api/public-actions') . '/trusted')
+    ->as('capell-public-actions.trusted.')
+    ->group(function (): void {
+        Route::post('/actions/{action}/submissions', SubmitTrustedPublicActionController::class)
+            ->name('actions.submit');
     });

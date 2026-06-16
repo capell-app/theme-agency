@@ -29,6 +29,7 @@ it('does not advertise cache dependency blocking without an implementation', fun
 
     expect(data_get($manifest, 'capabilities'))->not->toContain('cache-blocking')
         ->and(data_get($manifest, 'capabilities'))->toContain('captcha-spam-protection')
+        ->and(data_get($manifest, 'capabilities'))->toContain('trusted-inbound-submissions')
         ->and(data_get($manifest, 'performance.cacheSafety.cacheable'))->toBeFalse()
         ->and(data_get($manifest, 'performance.cacheSafety.invalidationSources'))->toBe([]);
 });
@@ -81,6 +82,7 @@ it('declares implemented public action package contributions', function (): void
             'capell-public-actions.zapier.actions',
             'capell-public-actions.zapier.actions.submit',
             'capell-public-actions.zapier.submissions',
+            'capell-public-actions.trusted.actions.submit',
         ])
         ->and($consoleCommand['commands'])->toBe(['capell:public-actions:prune-submissions'])
         ->and($consoleCommand['commandClasses'])->toBe([PrunePublicActionSubmissionsCommand::class])

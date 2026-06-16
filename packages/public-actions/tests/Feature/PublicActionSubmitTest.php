@@ -275,6 +275,104 @@ it('rejects recaptcha responses below the configured score', function (): void {
     expect(PublicActionSubmission::query()->count())->toBe(0);
 });
 
+it('accepts trusted inbound submissions with a valid hmac signature', function (): void {
+    config()->set('capell-public-actions.spam_protection.enabled', ['honeypot']);
+
+    PublicAction::factory()->create([
+        'key' => 'trusted-hmac-action',
+        'handler_key' => 'test.handler',
+        'settings' => [
+            'trusted_submission_secret' => 'trusted-secret',
+        ],
+        'payload_schema' => [
+            'fields' => [
+                ['key' => 'email', 'type' => 'email', 'required' => true],
+            ],
+        ],
+    ]);
+
+    $payload = json_encode([
+        'email' => 'person@example.test',
+        '_hp' => 'trusted callers skip browser spam fields',
+    ], JSON_THROW_ON_ERROR);
+    $timestamp = (string) now()->timestamp;
+    $signature = hash_hmac('sha256', $timestamp . '.' . $payload, 'trusted-secret');
+
+    $this->call(
+        'POST',
+        '/api/public-actions/trusted/actions/trusted-hmac-action/submissions',
+        [],
+        [],
+        [],
+        [
+            'CONTENT_TYPE' => 'application/json',
+            'HTTP_ACCEPT' => 'application/json',
+            'HTTP_X_CAPELL_TIMESTAMP' => $timestamp,
+            'HTTP_X_CAPELL_SIGNATURE' => 'sha256=' . $signature,
+            'REMOTE_ADDR' => '203.0.113.8',
+        ],
+        $payload,
+    )
+        ->assertOk()
+        ->assertJson(['success' => true]);
+
+    $submission = PublicActionSubmission::query()->firstOrFail();
+
+    expect($submission->payload)->toBe(['email' => 'person@example.test'])
+        ->and($submission->source_type)->toBe('trusted_webhook')
+        ->and($submission->metadata['ip_hash'] ?? null)->toBe(hash('sha256', '203.0.113.8'));
+});
+
+it('accepts trusted inbound submissions with a configured bearer token', function (): void {
+    config()->set('capell-public-actions.trusted_submissions.secrets.trusted-bearer-action', 'bearer-secret');
+
+    PublicAction::factory()->create([
+        'key' => 'trusted-bearer-action',
+        'handler_key' => 'test.handler',
+    ]);
+
+    $this
+        ->withToken('bearer-secret')
+        ->postJson('/api/public-actions/trusted/actions/trusted-bearer-action/submissions', [
+            'email' => 'person@example.test',
+        ])
+        ->assertOk()
+        ->assertJson(['success' => true]);
+
+    expect(PublicActionSubmission::query()->firstOrFail()->source_type)->toBe('trusted_webhook');
+});
+
+it('rejects trusted inbound submissions without a valid fresh signature', function (): void {
+    PublicAction::factory()->create([
+        'key' => 'trusted-reject-action',
+        'handler_key' => 'test.handler',
+        'settings' => [
+            'trusted_submission_secret' => 'trusted-secret',
+        ],
+    ]);
+
+    $payload = json_encode(['email' => 'person@example.test'], JSON_THROW_ON_ERROR);
+    $timestamp = (string) now()->subMinutes(10)->timestamp;
+    $signature = hash_hmac('sha256', $timestamp . '.' . $payload, 'trusted-secret');
+
+    $this->call(
+        'POST',
+        '/api/public-actions/trusted/actions/trusted-reject-action/submissions',
+        [],
+        [],
+        [],
+        [
+            'CONTENT_TYPE' => 'application/json',
+            'HTTP_ACCEPT' => 'application/json',
+            'HTTP_X_CAPELL_TIMESTAMP' => $timestamp,
+            'HTTP_X_CAPELL_SIGNATURE' => $signature,
+        ],
+        $payload,
+    )->assertUnauthorized();
+
+    expect(PublicActionSubmission::query()->count())->toBe(0);
+});
+
 it('ignores public payload redirects to other hosts', function (): void {
     PublicAction::factory()->create([
         'key' => 'redirect-action',

@@ -23,6 +23,10 @@ return [
         'providers' => [],
         'tokens' => [],
     ],
+    'trusted_submissions' => [
+        'timestamp_tolerance_seconds' => 300,
+        'secrets' => [],
+    ],
     'form_builder' => [
         'mappings' => [],
     ],

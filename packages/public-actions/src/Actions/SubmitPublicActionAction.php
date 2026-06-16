@@ -36,7 +36,7 @@ use Lorisleiva\Actions\Concerns\AsAction;
 use Throwable;
 
 /**
- * @method static PublicActionResultData run(PublicAction|string $action, array<string, mixed> $input, ?Request $request = null)
+ * @method static PublicActionResultData run(PublicAction|string $action, array<string, mixed> $input, ?Request $request = null, bool $trusted = false)
  */
 final class SubmitPublicActionAction
 {
@@ -59,12 +59,15 @@ final class SubmitPublicActionAction
      *
      * @throws ValidationException
      */
-    public function handle(PublicAction|string $action, array $input, ?Request $request = null): PublicActionResultData
+    public function handle(PublicAction|string $action, array $input, ?Request $request = null, bool $trusted = false): PublicActionResultData
     {
         $publicAction = $this->resolve($action, $request);
 
         $this->assertActionIsAvailable($publicAction);
-        $this->assertSpamProtectionPasses($input, $request);
+
+        if (! $trusted) {
+            $this->assertSpamProtectionPasses($input, $request);
+        }
 
         $payload = $this->validatedPayload($publicAction, $input);
         $idempotencyKey = $this->idempotencyKey($input, $request);

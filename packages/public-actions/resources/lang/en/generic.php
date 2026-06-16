@@ -7,6 +7,7 @@ return [
     'heading' => 'Submit request',
     'submitted' => 'Your request has been submitted.',
     'unavailable' => 'This action is not available.',
+    'invalid_signature' => 'This submission signature could not be verified.',
     'schema_required' => 'This action has no payload schema configured. Add a non-empty payload_schema.fields list before submissions can be accepted.',
     'spam_detected' => 'This submission could not be verified.',
     'submit' => 'Submit',
