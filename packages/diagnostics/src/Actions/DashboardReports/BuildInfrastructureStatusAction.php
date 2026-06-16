@@ -53,7 +53,9 @@ final class BuildInfrastructureStatusAction
         }
 
         $driver = $storeConfig['driver'] ?? $defaultStore;
-        $status = in_array($driver, ['array', 'null'], true) ? 'warning' : 'ok';
+        $status = $this->driverNeedsWarning($driver, 'capell-diagnostics.infrastructure.warning_cache_drivers')
+            ? 'warning'
+            : 'ok';
 
         return $this->status(
             key: 'cache',
@@ -91,7 +93,9 @@ final class BuildInfrastructureStatusAction
         }
 
         $driver = $connectionConfig['driver'] ?? $defaultConnection;
-        $status = in_array($driver, ['sync', 'null'], true) ? 'warning' : 'ok';
+        $status = $this->driverNeedsWarning($driver, 'capell-diagnostics.infrastructure.warning_queue_drivers')
+            ? 'warning'
+            : 'ok';
 
         return $this->status(
             key: 'queue',
@@ -129,7 +133,9 @@ final class BuildInfrastructureStatusAction
         }
 
         $transport = $mailerConfig['transport'] ?? $defaultMailer;
-        $status = in_array($transport, ['array', 'log'], true) ? 'warning' : 'ok';
+        $status = $this->driverNeedsWarning($transport, 'capell-diagnostics.infrastructure.warning_mail_transports')
+            ? 'warning'
+            : 'ok';
 
         return $this->status(
             key: 'mail',
@@ -210,5 +216,20 @@ final class BuildInfrastructureStatusAction
             status: $status,
             detail: $detail,
         );
+    }
+
+    private function driverNeedsWarning(mixed $driver, string $configKey): bool
+    {
+        if (! is_string($driver)) {
+            return false;
+        }
+
+        $warningDrivers = config($configKey);
+
+        if (! is_array($warningDrivers)) {
+            return false;
+        }
+
+        return in_array($driver, array_filter($warningDrivers, is_string(...)), true);
     }
 }

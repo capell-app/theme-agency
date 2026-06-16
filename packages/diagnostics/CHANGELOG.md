@@ -10,6 +10,7 @@ All notable changes to `capell-app/diagnostics` will be documented in this file.
 - Dynamic `capell:*` palette commands now use an explicit risk map and require confirmation by default when they are not mapped.
 - Added the `capell:diagnostics:health` doctor command to run extension health checks from the console with table or JSON output.
 - `DiagnosticsHealthCheck` can run assertions by manifest key so the package's four declared health checks map to addressable checks.
+- Infrastructure status warning drivers are now configurable so environments that intentionally use local-only cache, queue, or mail transports can avoid false warnings.
 
 ## 2026-06-03
 

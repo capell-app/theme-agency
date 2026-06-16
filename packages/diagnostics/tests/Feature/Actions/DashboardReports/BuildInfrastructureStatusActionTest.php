@@ -47,6 +47,24 @@ it('warns for local-only cache queue and mail transports and errors for missing 
         ->and($statuses->get('storage')?->status)->toBe('error');
 });
 
+it('allows infrastructure warning drivers to be configured per environment', function (): void {
+    config()->set('capell-diagnostics.infrastructure.warning_cache_drivers', []);
+    config()->set('capell-diagnostics.infrastructure.warning_queue_drivers', []);
+    config()->set('capell-diagnostics.infrastructure.warning_mail_transports', []);
+    config()->set('cache.default', 'array');
+    config()->set('cache.stores.array', ['driver' => 'array']);
+    config()->set('queue.default', 'sync');
+    config()->set('queue.connections.sync', ['driver' => 'sync']);
+    config()->set('mail.default', 'log');
+    config()->set('mail.mailers.log', ['transport' => 'log']);
+
+    $statuses = collect(BuildInfrastructureStatusAction::run())->keyBy('key');
+
+    expect($statuses->get('cache')?->status)->toBe('ok')
+        ->and($statuses->get('queue')?->status)->toBe('ok')
+        ->and($statuses->get('mail')?->status)->toBe('ok');
+});
+
 it('errors when cache stores or queue connections are missing', function (): void {
     config()->set('cache.default', 'missing');
     config()->set('cache.stores.missing');

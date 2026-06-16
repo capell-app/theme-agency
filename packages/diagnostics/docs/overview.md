@@ -75,6 +75,7 @@ Screenshot contract: `screenshots.json`.
 
 - Run migrations before opening package resources or public routes.
 - Run package commands from the host app; in this repository use `vendor/bin/pest` for package tests.
+- Configure `capell-diagnostics.infrastructure.warning_*` drivers when a development or test environment intentionally uses local-only cache, queue, or mail transports.
 - Keep `composer.json`, `composer.local.json`, `capell.json`, docs, screenshots, and tests aligned when the package surface changes.
 
 ## Troubleshooting

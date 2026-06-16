@@ -9,6 +9,12 @@ return [
         'local_packages_path' => null,
     ],
 
+    'infrastructure' => [
+        'warning_cache_drivers' => ['array', 'null'],
+        'warning_queue_drivers' => ['sync', 'null'],
+        'warning_mail_transports' => ['array', 'log'],
+    ],
+
     'queue_monitor' => [
         'retention_days' => 14,
         'queues' => [
