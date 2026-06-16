@@ -57,4 +57,28 @@ it('declares only restaurant marketplace screenshots that exist in the package',
 
         expect(File::exists(__DIR__ . '/../../' . $screenshot['path']))->toBeTrue();
     }
+
+    expect(collect($screenshots)->pluck('path')->all())->toBe([
+        'docs/assets/marketplace/extension-card.svg',
+        'docs/screenshots/restaurant-homepage-layout.png',
+        'docs/screenshots/restaurant-menu-layout.png',
+        'docs/screenshots/restaurant-reservation-layout.png',
+        'docs/screenshots/restaurant-events-layout.png',
+        'docs/screenshots/restaurant-private-dining-layout.png',
+    ]);
+});
+
+it('requires committed restaurant screenshot outputs', function (): void {
+    $manifest = capell_json_file_array(__DIR__ . '/../../docs/screenshots.json');
+    $entries = data_get($manifest, 'entries', []);
+
+    throw_unless(is_array($entries), RuntimeException::class, 'Theme Restaurant screenshot entries must be an array.');
+
+    foreach ($entries as $entry) {
+        throw_if(! is_array($entry) || ! is_string($entry['screenshotPath'] ?? null), RuntimeException::class, 'Theme Restaurant screenshot path must be a string.');
+
+        expect($entry['required'] ?? null)->toBeTrue()
+            ->and(str_starts_with($entry['screenshotPath'], 'packages/theme-restaurant/docs/screenshots/'))->toBeTrue()
+            ->and(File::exists(dirname(__DIR__, 4) . '/' . $entry['screenshotPath']))->toBeTrue();
+    }
 });

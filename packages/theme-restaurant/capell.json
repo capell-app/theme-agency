@@ -151,29 +151,29 @@
                 "caption": "Menu-led restaurant homepage and reservation surface."
             },
             {
-                "path": "docs/assets/marketplace/restaurant-homepage.svg",
-                "alt": "Theme Restaurant homepage preview",
-                "caption": "Venue homepage with menu highlights and booking intent."
+                "path": "docs/screenshots/restaurant-homepage-layout.png",
+                "alt": "Theme Restaurant homepage rendered through the premium package shell.",
+                "caption": "Runner-backed restaurant homepage with menu highlights, booking intent, private dining, events, and proof."
             },
             {
-                "path": "docs/assets/marketplace/restaurant-menu.svg",
-                "alt": "Theme Restaurant menu layout preview",
-                "caption": "Editorial menu section for courses, tasting notes, and prices."
+                "path": "docs/screenshots/restaurant-menu-layout.png",
+                "alt": "Theme Restaurant menu page rendered with editorial dish content and prices.",
+                "caption": "Runner-backed menu layout for courses, tasting notes, and premium hospitality rhythm."
             },
             {
-                "path": "docs/assets/marketplace/restaurant-reservations.svg",
-                "alt": "Theme Restaurant reservation layout preview",
-                "caption": "Reservation and private dining conversion surface."
+                "path": "docs/screenshots/restaurant-reservation-layout.png",
+                "alt": "Theme Restaurant reservation surface rendered with safe fallback booking states.",
+                "caption": "Runner-backed reservation surface with conversion copy and non-submitting fallback behavior."
             },
             {
-                "path": "docs/assets/marketplace/restaurant-events.svg",
-                "alt": "Theme Restaurant events layout preview",
-                "caption": "Seasonal events, chef nights, and ticketed dining previews."
+                "path": "docs/screenshots/restaurant-events-layout.png",
+                "alt": "Theme Restaurant events listing rendered for seasonal dining occasions.",
+                "caption": "Runner-backed events preview for seasonal dinners, launches, and venue programming."
             },
             {
-                "path": "docs/assets/marketplace/restaurant-private-dining.svg",
-                "alt": "Theme Restaurant private dining preview",
-                "caption": "Private dining page with room options, menus, and enquiry intent."
+                "path": "docs/screenshots/restaurant-private-dining-layout.png",
+                "alt": "Theme Restaurant private dining sections rendered with premium venue proof.",
+                "caption": "Runner-backed private dining preview with room options, group enquiry intent, and venue proof."
             }
         ],
         "categories": ["frontend", "themes", "hospitality"]

@@ -3315,6 +3315,7 @@ function themeDemoScreenshotThemeCssPath(string $themeKey): ?string
         'local-services' => themeDemoRepositoryPath('packages/theme-local-services/resources/css/theme-local-services.css'),
         'nonprofit' => themeDemoRepositoryPath('packages/theme-nonprofit/resources/css/theme-nonprofit.css'),
         'portfolio' => themeDemoRepositoryPath('packages/theme-portfolio/resources/css/theme-portfolio.css'),
+        'restaurant' => themeDemoRepositoryPath('packages/theme-restaurant/resources/css/theme-restaurant.css'),
         'saas' => themeDemoRepositoryPath('packages/theme-saas/resources/css/theme-saas.css'),
         default => null,
     };

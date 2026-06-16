@@ -4,7 +4,7 @@
 
 ## 1. Snapshot
 
-Theme Restaurant is a premium Blade child theme for hospitality sites built around menu discovery, reservation intent, private dining, events, opening hours, location confidence, chef story, proof, and editorial listing sections. It registers theme key `restaurant`, runtime inheritance `extends: default`, one preset, 14 section renderers, a demo command, optional integration flags for Bookings/Form Builder/Events/Blog, and a critical health check for package files and manifest wiring. The theme stays thin: no migrations, models, routes, permissions, settings, or admin resources. Public Blade has source-level tests for authoring metadata and database query safety. Marketplace media still promotes static SVG preview art; `docs/screenshots.json` points at route-backed PNG captures under `docs/screenshots/`, but those files are not committed and the entries are marked optional.
+Theme Restaurant is a premium Blade child theme for hospitality sites built around menu discovery, reservation intent, private dining, events, opening hours, location confidence, chef story, proof, and editorial listing sections. It registers theme key `restaurant`, runtime inheritance `extends: default`, one preset, 14 section renderers, a demo command, optional integration flags for Bookings/Form Builder/Events/Blog, and a critical health check for package files and manifest wiring. The theme stays thin: no migrations, models, routes, permissions, settings, or admin resources. Public Blade has source-level tests for authoring metadata and database query safety. Marketplace media now promotes committed route-rendered PNG captures for homepage, menu, reservation, private dining, and events states.
 
 ## 2. Improvements (existing functionality)
 
@@ -14,7 +14,7 @@ Theme Restaurant is a premium Blade child theme for hospitality sites built arou
 
 3. **Replace fake reservation and listing fallbacks with real or non-submitting states.** Partially shipped for the high-risk public targets. The reservation panel now renders a form only when render data supplies a safe `form_action`, default listings no longer include fake URLs, and navigation/footer/listing item fallbacks render non-link text when URLs are missing or `#`. Evidence: `sections/reservation-panel.blade.php`, `sections/content-listing.blade.php`, `sections/navigation.blade.php`, `sections/footer.blade.php`, `PublicOutputSafetyTest`. - **M**
 
-4. **Promote only route-backed marketplace screenshots.** The screenshot contract expects five PNG captures under `docs/screenshots/`, but no screenshot directory/files are present and `capell.json` promotes static SVGs. Make homepage, menu, reservation, private dining, and events captures required, commit real runner PNGs, and update manifest media only after browser verification. Evidence: `docs/screenshots.json`, `capell.json marketplace.screenshots`, `docs/assets/marketplace/*.svg`. - **M**
+4. **Shipped: promote only route-backed marketplace screenshots.** Homepage, menu, reservation, private dining, and events captures are now required PNGs under `docs/screenshots/`, generated through the theme-demo browser fixture flow and promoted in `capell.json`. Evidence: `docs/screenshots.json`, `capell.json marketplace.screenshots`, `tests/Packages/Feature/ThemeDemoLayouts/RestaurantThemeDemoLayoutScreenshotTest.php`. - **M**
 
 5. **Strengthen health checks and failure coverage.** `ThemeRestaurantHealthCheck` has useful internal checks, but tests only assert `passed()` is true. Add failure tests for missing section/view files, missing stylesheet, manifest drift, missing marketplace media, and Foundation dependency. Also verify included sections match registered renderers. Evidence: `ThemeRestaurantHealthCheck`, `ThemeRestaurantHealthCheckTest`, `RestaurantThemeServiceProvider::sectionRenderers()`. - **S**
 
@@ -30,13 +30,13 @@ Capabilities declared: `theme-restaurant`, `theme-restaurant-frontend`.
 
 - **No real reservation workflow.** The theme can display a form, but it does not own or resolve a booking/enquiry action when Bookings or Form Builder is installed.
 - **No events or blog data contract.** Optional Events/Blog availability changes labels, but the theme does not define a hydrated item contract or source loader.
-- **No route-backed screenshot proof.** Static SVGs are the only committed media even though premium theme captures are declared.
+- **Shipped: route-backed screenshot proof.** Premium marketplace media now points at committed browser-captured PNGs for the core venue journeys.
 - **No demo command tests.** Restaurant lacks the focused command option/base URL tests present in newer theme packages.
 - **No dark/mobile visual proof.** Premium hospitality sites need mobile reservation/menu proof; current tests are source/render-string checks only.
 
 ## 4. Issues / Risks
 
-1. **Important gap: marketplace media is placeholder-only.** SVG previews do not prove the real renderer, mobile state, or optional integration fallbacks. Recommended fix: make route-backed PNG captures required before promotion. - **P2**
+1. **Closed: marketplace media was placeholder-only.** The package now commits browser-captured PNGs for the main venue journeys and tests require the screenshot outputs. - **P2**
 
 2. **Important gap: diagnostics are under-tested.** The health check can drift without failing tests because only the happy path is covered. Recommended fix: add targeted failure tests. - **P2**
 
@@ -56,7 +56,7 @@ Restaurant has a strong premium lane separate from Commerce and Local Services. 
 
 **Improved description:** "Theme Restaurant gives hospitality teams a premium Capell renderer for the public journeys that matter before a guest books: reading the menu, checking service windows, finding the venue, exploring private dining, and discovering seasonal events. It keeps restaurant records and enquiries in companion packages or Capell content, while package-owned Blade views provide the visual rhythm and safe static fallbacks. Pair it with Bookings or Form Builder for reservations, Events for ticketed dining, Blog for venue stories, and SEO Suite for local discovery."
 
-**Media status:** Placeholder SVGs are useful planning assets only. Completion requires real route-backed screenshots for homepage, menu, reservation, private dining, and events states, with mobile reservation/menu proof before marketplace promotion.
+**Media status:** Route-backed PNG screenshots are committed and promoted for homepage, menu, reservation, private dining, and events states. Mobile reservation/menu proof remains a later enhancement.
 
 **Cross-sell:** Bookings or Form Builder should own reservations and private dining capture. Events should own event records. Blog should own dining guides and venue stories. SEO Suite should own local hospitality metadata.
 
@@ -72,7 +72,7 @@ Restaurant has a strong premium lane separate from Commerce and Local Services. 
 | Add health check failure tests and renderer alignment assertions                               | Done   | S      | Medium | §2.5, §4.5  |
 | Align demo command with Action/container pattern and add command tests                         | Done   | S      | Medium | §2.6        |
 | Rewrite docs around dependencies, integration render-data contracts, and verification commands | Done   | S      | Medium | §2.8, §5    |
-| Convert static SVG marketplace media to required route-backed PNG captures                     | Next   | M      | High   | §2.4, §4.4  |
+| Convert static SVG marketplace media to required route-backed PNG captures                     | Done   | M      | High   | §2.4, §4.4  |
 | Add public-output tests for scripts and dead premium conversion links                          | Done   | S      | Medium | §2.7        |
 | Clarify cacheability metadata and invalidation expectations                                    | Done   | S      | Medium | §2.8        |
 | Add mobile/dark visual proof for reservation and menu pages                                    | Later  | M      | Medium | §3, §5      |
