@@ -4,6 +4,10 @@ All notable changes to `capell-app/contacts` will be documented in this file.
 
 ## Unreleased
 
+### 2026-06-16
+
+- Added regression coverage for Contacts source Action contracts and the Contact resource list query budget.
+
 ### 2026-06-07
 
 - Added manual contact merging through `MergeContactsAction` and a Contact table action, moving related CRM records and recording a merge activity.

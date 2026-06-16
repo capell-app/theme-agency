@@ -4,7 +4,15 @@ declare(strict_types=1);
 
 use Capell\Admin\Contracts\CapellWidgetContract;
 use Capell\Contacts\Actions\BuildContactsOverviewStatsAction;
+use Capell\Contacts\Actions\SyncAccessGateRegistrationContactAction;
+use Capell\Contacts\Actions\SyncCampaignConversionContactAction;
+use Capell\Contacts\Actions\SyncCommentContactAction;
+use Capell\Contacts\Actions\SyncContactSourceRecordAction;
+use Capell\Contacts\Actions\SyncEventRegistrationContactAction;
+use Capell\Contacts\Actions\SyncFormSubmissionContactAction;
+use Capell\Contacts\Actions\SyncShopifyCustomerContactAction;
 use Capell\Contacts\Actions\UpdateLeadStatusAction;
+use Capell\Contacts\Data\ContactSourceSyncResultData;
 use Capell\Contacts\Enums\ContactActivityType;
 use Capell\Contacts\Enums\LeadStatus;
 use Capell\Contacts\Enums\ResourceEnum;
@@ -16,6 +24,7 @@ use Capell\Contacts\Filament\Resources\Organisations\OrganisationResource;
 use Capell\Contacts\Filament\Widgets\ContactsOverviewStatsWidget;
 use Capell\Contacts\Models\Contact;
 use Capell\Contacts\Models\ContactActivity;
+use Capell\Contacts\Models\ContactTag;
 use Capell\Contacts\Models\Lead;
 use Capell\Contacts\Models\Organisation;
 use Capell\Contacts\Policies\ContactActivityPolicy;
@@ -26,7 +35,11 @@ use Capell\Contacts\Tests\ContactsTestCase;
 use Filament\Actions\ActionGroup;
 use Filament\Tables\Contracts\HasTable;
 use Filament\Tables\Table;
+use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Foundation\Auth\User;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
+use Lorisleiva\Actions\Concerns\AsAction;
 
 require_once __DIR__ . '/../autoload.php';
 
@@ -119,6 +132,70 @@ it('keeps contacts admin policies read only by default', function (): void {
         ->and((new OrganisationPolicy)->create($user))->toBeFalse()
         ->and((new LeadPolicy)->create($user))->toBeFalse()
         ->and((new ContactActivityPolicy)->create($user))->toBeFalse();
+});
+
+it('keeps source sync entrypoints as typed actions', function (): void {
+    $actions = [
+        SyncAccessGateRegistrationContactAction::class,
+        SyncCampaignConversionContactAction::class,
+        SyncCommentContactAction::class,
+        SyncContactSourceRecordAction::class,
+        SyncEventRegistrationContactAction::class,
+        SyncFormSubmissionContactAction::class,
+        SyncShopifyCustomerContactAction::class,
+    ];
+
+    foreach ($actions as $action) {
+        $returnType = (new ReflectionMethod($action, 'handle'))->getReturnType();
+
+        expect(class_uses_recursive($action))->toContain(AsAction::class)
+            ->and((string) $returnType)->toContain(ContactSourceSyncResultData::class);
+    }
+});
+
+it('keeps the contact resource list query under the declared admin query budget', function (): void {
+    if (! Schema::hasColumn('sites', 'deleted_at')) {
+        Schema::table('sites', function (Blueprint $table): void {
+            $table->timestamp('deleted_at')->nullable();
+        });
+    }
+
+    $siteId = $this->createContactsSite();
+    $tag = ContactTag::query()->create([
+        'site_id' => $siteId,
+        'name' => 'VIP',
+        'slug' => 'vip',
+    ]);
+
+    foreach (range(1, 12) as $contactNumber) {
+        $contact = Contact::query()->create([
+            'site_id' => $siteId,
+            'email' => 'person-' . $contactNumber . '@example.test',
+            'display_name' => 'Person ' . $contactNumber,
+            'last_seen_at' => now()->subMinutes($contactNumber),
+        ]);
+
+        $contact->tags()->attach($tag);
+    }
+
+    DB::flushQueryLog();
+    DB::enableQueryLog();
+
+    $contacts = ContactResource::getEloquentQuery()
+        ->orderByDesc('last_seen_at')
+        ->limit(12)
+        ->get();
+
+    $contacts->each(function (Contact $contact): void {
+        $contact->site?->getKey();
+        $contact->tags->pluck('slug')->all();
+    });
+
+    $queryCount = count(DB::getQueryLog());
+    DB::disableQueryLog();
+
+    expect($contacts)->toHaveCount(12)
+        ->and($queryCount)->toBeLessThanOrEqual(5);
 });
 
 it('builds contacts overview widget stats from crm records', function (): void {
