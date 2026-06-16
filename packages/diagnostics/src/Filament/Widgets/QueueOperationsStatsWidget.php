@@ -37,10 +37,12 @@ final class QueueOperationsStatsWidget extends StatsOverviewWidget
                 ->chart($stats->dailyFailures)
                 ->color($stats->failedJobs > 0 ? 'danger' : 'gray'),
             Stat::make(__('capell-diagnostics::package.queue_operations_pending_jobs'), Number::format($stats->pendingJobs))
-                ->description(__('capell-diagnostics::package.queue_operations_average_runtime', [
+                ->description(__('capell-diagnostics::package.queue_operations_liveness', [
+                    'status' => __('capell-diagnostics::package.queue_liveness_' . $stats->queueLivenessStatus),
+                    'age' => $stats->oldestPendingJobAgeSeconds === null ? '-' : Number::format($stats->oldestPendingJobAgeSeconds),
                     'seconds' => Number::format($stats->averageRuntimeSeconds),
                 ]))
-                ->color($stats->runningJobs > 0 ? 'warning' : 'gray'),
+                ->color($stats->queueLivenessStatus === 'stale' ? 'danger' : ($stats->runningJobs > 0 ? 'warning' : 'gray')),
         ];
     }
 }

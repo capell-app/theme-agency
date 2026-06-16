@@ -4,6 +4,7 @@ All notable changes to `capell-app/diagnostics` will be documented in this file.
 
 ## Unreleased
 
+- Queue operations stats now report oldest pending job age and liveness status so operators can spot stale queues.
 - Prepared package metadata and documentation for ongoing Capell 4.x package work.
 - Package health reporting now reflects declared health-check classes and shows implemented/stub/broken counts instead of presenting raw manifest counts as health.
 - Command palette output is redacted before it is returned or persisted to `command_palette_runs.output`.

@@ -18,6 +18,8 @@ final class QueueOperationsStatsData extends Data
         public readonly int $failedJobs,
         public readonly int $runningJobs,
         public readonly int $pendingJobs,
+        public readonly ?int $oldestPendingJobAgeSeconds,
+        public readonly string $queueLivenessStatus,
         public readonly int $averageRuntimeSeconds,
         public readonly array $dailyTotals,
         public readonly array $dailyFailures,

@@ -5,7 +5,10 @@ declare(strict_types=1);
 namespace Capell\Diagnostics\Actions\DashboardReports;
 
 use Capell\Diagnostics\Data\QueueOperationsStatsData;
+use Capell\Diagnostics\Models\PendingQueueJob;
 use Capell\Diagnostics\Models\QueueMonitor;
+use Carbon\CarbonImmutable;
+use Carbon\CarbonInterface;
 use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\Facades\Schema;
 use Lorisleiva\Actions\Action;
@@ -19,7 +22,7 @@ final class BuildQueueOperationsStatsAction extends Action
         $model = new QueueMonitor;
 
         if (! Schema::connection($model->getConnectionName())->hasTable($model->getTable())) {
-            return new QueueOperationsStatsData(0, 0, 0, 0, 0, 0, array_fill(0, $days, 0), array_fill(0, $days, 0));
+            return new QueueOperationsStatsData(0, 0, 0, 0, 0, null, 'idle', 0, array_fill(0, $days, 0), array_fill(0, $days, 0));
         }
 
         $summary = QueueMonitor::query()
@@ -30,12 +33,17 @@ final class BuildQueueOperationsStatsAction extends Action
             ->selectRaw($this->averageRuntimeExpression($model) . ' as average_runtime_seconds')
             ->first();
 
+        $runningJobs = (int) ($summary?->getAttribute('running_jobs') ?? 0);
+        $pendingStats = $this->pendingJobStats();
+
         return new QueueOperationsStatsData(
             totalJobs: (int) ($summary?->getAttribute('total_jobs') ?? 0),
             succeededJobs: (int) ($summary?->getAttribute('succeeded_jobs') ?? 0),
             failedJobs: (int) ($summary?->getAttribute('failed_jobs') ?? 0),
-            runningJobs: (int) ($summary?->getAttribute('running_jobs') ?? 0),
-            pendingJobs: $this->pendingJobs(),
+            runningJobs: $runningJobs,
+            pendingJobs: $pendingStats['count'],
+            oldestPendingJobAgeSeconds: $pendingStats['oldest_age_seconds'],
+            queueLivenessStatus: $this->queueLivenessStatus($runningJobs, $pendingStats['count'], $pendingStats['oldest_age_seconds']),
             averageRuntimeSeconds: (int) ceil((float) ($summary?->getAttribute('average_runtime_seconds') ?? 0)),
             dailyTotals: $this->dailyTrend($days, 'total'),
             dailyFailures: $this->dailyTrend($days, 'failed'),
@@ -79,11 +87,43 @@ final class BuildQueueOperationsStatsAction extends Action
         return $trend;
     }
 
-    private function pendingJobs(): int
+    /**
+     * @return array{count: int, oldest_age_seconds: int|null}
+     */
+    private function pendingJobStats(): array
+    {
+        $pendingModel = new PendingQueueJob;
+        $connection = $pendingModel->getConnectionName();
+        $table = $pendingModel->getTable();
+        $queues = DiscoverQueueMonitorQueuesAction::run();
+
+        if (Schema::connection($connection)->hasTable($table)) {
+            $query = PendingQueueJob::query()
+                ->forConfiguredQueues($queues)
+                ->whereNull('reserved_at');
+
+            $oldestCreatedAt = (clone $query)->min('created_at');
+
+            return [
+                'count' => (int) $query->count(),
+                'oldest_age_seconds' => $this->ageInSeconds($oldestCreatedAt),
+            ];
+        }
+
+        return [
+            'count' => $this->pendingJobsFromQueueSize($queues),
+            'oldest_age_seconds' => null,
+        ];
+    }
+
+    /**
+     * @param  list<string>  $queues
+     */
+    private function pendingJobsFromQueueSize(array $queues): int
     {
         $total = 0;
 
-        foreach (DiscoverQueueMonitorQueuesAction::run() as $queue) {
+        foreach ($queues as $queue) {
             try {
                 $total += Queue::size($queue);
             } catch (Throwable) {
@@ -92,5 +132,39 @@ final class BuildQueueOperationsStatsAction extends Action
         }
 
         return $total;
+    }
+
+    private function queueLivenessStatus(int $runningJobs, int $pendingJobs, ?int $oldestPendingJobAgeSeconds): string
+    {
+        if ($runningJobs > 0) {
+            return 'active';
+        }
+
+        if ($pendingJobs === 0) {
+            return 'idle';
+        }
+
+        $staleAfterSeconds = max(1, (int) config('capell-diagnostics.queue_monitor.stale_pending_seconds', 300));
+
+        return $oldestPendingJobAgeSeconds !== null && $oldestPendingJobAgeSeconds >= $staleAfterSeconds
+            ? 'stale'
+            : 'waiting';
+    }
+
+    private function ageInSeconds(mixed $value): ?int
+    {
+        if (is_numeric($value)) {
+            return max(0, now()->timestamp - (int) $value);
+        }
+
+        if ($value instanceof CarbonInterface) {
+            return max(0, (int) now()->diffInSeconds($value, true));
+        }
+
+        if (is_string($value) && trim($value) !== '') {
+            return max(0, (int) now()->diffInSeconds(CarbonImmutable::parse($value), true));
+        }
+
+        return null;
     }
 }

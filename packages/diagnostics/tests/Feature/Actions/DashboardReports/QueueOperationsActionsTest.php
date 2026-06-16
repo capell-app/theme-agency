@@ -113,6 +113,55 @@ it('builds queue operation stats from grouped monitor data', function (): void {
         ->and($stats->averageRuntimeSeconds)->toBeGreaterThan(0);
 });
 
+it('reports stale pending job age when no worker appears active', function (): void {
+    config(['capell-diagnostics.queue_monitor.stale_pending_seconds' => 300]);
+
+    PendingQueueJob::query()->create([
+        'queue' => 'default',
+        'payload' => json_encode(['displayName' => 'StalePendingJob'], JSON_THROW_ON_ERROR),
+        'attempts' => 0,
+        'reserved_at' => null,
+        'available_at' => now()->subMinutes(10)->timestamp,
+        'created_at' => now()->subMinutes(10)->timestamp,
+    ]);
+
+    $stats = BuildQueueOperationsStatsAction::run(1);
+
+    expect($stats->pendingJobs)->toBe(1)
+        ->and($stats->oldestPendingJobAgeSeconds)->toBeGreaterThanOrEqual(600)
+        ->and($stats->queueLivenessStatus)->toBe('stale');
+});
+
+it('reports active queue liveness when monitored jobs are running', function (): void {
+    PendingQueueJob::query()->create([
+        'queue' => 'default',
+        'payload' => json_encode(['displayName' => 'PendingJob'], JSON_THROW_ON_ERROR),
+        'attempts' => 0,
+        'reserved_at' => null,
+        'available_at' => now()->timestamp,
+        'created_at' => now()->timestamp,
+    ]);
+
+    QueueMonitor::query()->create([
+        'job_id' => 'running-job',
+        'name' => 'RunningJob',
+        'queue' => 'default',
+        'started_at' => now(),
+        'finished_at' => null,
+        'failed' => false,
+        'attempt' => 1,
+        'progress' => 25,
+        'created_at' => now(),
+        'updated_at' => now(),
+    ]);
+
+    $stats = BuildQueueOperationsStatsAction::run(1);
+
+    expect($stats->runningJobs)->toBe(1)
+        ->and($stats->pendingJobs)->toBe(1)
+        ->and($stats->queueLivenessStatus)->toBe('active');
+});
+
 it('retries individual and selected failed jobs by uuid', function (): void {
     FailedJob::query()->create([
         'uuid' => 'failed-job-1',

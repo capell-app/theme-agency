@@ -31,5 +31,6 @@ return [
         'delete_pending_enabled' => true,
         'prune_enabled' => true,
         'trend_days' => 7,
+        'stale_pending_seconds' => 300,
     ],
 ];
