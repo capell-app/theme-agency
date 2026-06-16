@@ -26,12 +26,17 @@ use Capell\Bookings\Actions\ProposeWeatherCancellationAction;
 use Capell\Bookings\Actions\RecordBookingWebhookEventAction;
 use Capell\Bookings\Actions\RecordLessonNoteAction;
 use Capell\Bookings\Actions\RecordLessonSkillAssessmentAction;
+use Capell\Bookings\Actions\ReplayBookingWebhookEventAction;
+use Capell\Bookings\Actions\RetryBookingMessageAction;
 use Capell\Bookings\Actions\ScoreBookingRiskAction;
 use Capell\Bookings\Actions\ShouldSuppressReviewRequestAction;
+use Capell\Bookings\Contracts\BookingMessageChannel;
+use Capell\Bookings\Data\BookingMessageResultData;
 use Capell\Bookings\Enums\AppointmentRequestStatusEnum;
 use Capell\Bookings\Enums\BookingLessonBundleStatusEnum;
 use Capell\Bookings\Enums\BookingLessonSkillStatusEnum;
 use Capell\Bookings\Enums\BookingMessageChannelEnum;
+use Capell\Bookings\Enums\BookingMessageStatusEnum;
 use Capell\Bookings\Enums\BookingReviewParticipantStatusEnum;
 use Capell\Bookings\Enums\BookingReviewRequestStatusEnum;
 use Capell\Bookings\Enums\BookingWaitlistStatusEnum;
@@ -45,6 +50,7 @@ use Capell\Bookings\Models\BookingReviewParticipant;
 use Capell\Bookings\Models\BookingReviewRequest;
 use Capell\Bookings\Models\BookingService;
 use Capell\Bookings\Models\MessagingConsent;
+use Capell\Bookings\Tests\Fixtures\RecordingBookingMessageChannel;
 use Capell\CustomerPortal\Models\PortalAccount;
 use Carbon\CarbonImmutable;
 use Illuminate\Support\Facades\DB;
@@ -388,6 +394,66 @@ it('records webhook events idempotently and processes waitlist offers', function
         ->and($entry->customer_email)->toBe('jordan@example.com')
         ->and(ExpireWaitlistOffersAction::run())->toBe(1)
         ->and($entry->refresh()->status)->toBe(BookingWaitlistStatusEnum::Expired);
+});
+
+it('retries failed booking message logs in place for operator remediation', function (): void {
+    CarbonImmutable::setTestNow(CarbonImmutable::parse('2026-07-01 09:00:00', 'Europe/London'));
+
+    $appointmentRequest = AppointmentRequest::factory()->create([
+        'customer_email' => 'jordan@example.com',
+    ]);
+    $messageLog = BookingMessageLog::query()->create([
+        'appointment_request_id' => $appointmentRequest->getKey(),
+        'site_id' => $appointmentRequest->site_id,
+        'portal_account_id' => $appointmentRequest->portal_account_id,
+        'channel' => BookingMessageChannelEnum::Email,
+        'type' => 'confirmation',
+        'status' => BookingMessageStatusEnum::Failed,
+        'recipient' => 'jordan@example.com',
+        'subject' => 'Confirmed',
+        'body' => 'Your booking is confirmed.',
+        'error' => 'Provider timed out',
+        'meta' => ['original' => true],
+    ]);
+    $channel = new RecordingBookingMessageChannel(new BookingMessageResultData(
+        sent: true,
+        providerMessageId: 'retry-123',
+        meta: ['provider' => 'fake'],
+    ));
+
+    app()->instance(BookingMessageChannel::class, $channel);
+
+    $retriedMessageLog = RetryBookingMessageAction::run($messageLog);
+
+    expect($retriedMessageLog->is($messageLog))->toBeTrue()
+        ->and($retriedMessageLog->status)->toBe(BookingMessageStatusEnum::Sent)
+        ->and($retriedMessageLog->provider_message_id)->toBe('retry-123')
+        ->and($retriedMessageLog->error)->toBeNull()
+        ->and($retriedMessageLog->meta['retry_count'] ?? null)->toBe(1)
+        ->and($retriedMessageLog->meta['original'] ?? null)->toBeTrue()
+        ->and($channel->messages)->toHaveCount(1)
+        ->and($channel->messages[0]->recipient)->toBe('jordan@example.com')
+        ->and($channel->messages[0]->context['retry'] ?? null)->toBeTrue();
+});
+
+it('resets processed webhook events for replay without duplicating provider events', function (): void {
+    CarbonImmutable::setTestNow(CarbonImmutable::parse('2026-07-01 09:00:00', 'Europe/London'));
+
+    $webhookEvent = MarkBookingWebhookEventProcessedAction::run(
+        RecordBookingWebhookEventAction::run('stripe', 'evt_replay_123', 'checkout.session.completed', ['amount_total' => 7500]),
+    );
+
+    expect($webhookEvent->status)->toBe('processed')
+        ->and($webhookEvent->processed_at)->not->toBeNull();
+
+    $replayedWebhookEvent = ReplayBookingWebhookEventAction::run($webhookEvent);
+    $duplicateWebhookEvent = RecordBookingWebhookEventAction::run('stripe', 'evt_replay_123', 'checkout.session.completed', ['amount_total' => 9999]);
+
+    expect($replayedWebhookEvent->is($webhookEvent))->toBeTrue()
+        ->and($replayedWebhookEvent->status)->toBe('received')
+        ->and($replayedWebhookEvent->processed_at)->toBeNull()
+        ->and($duplicateWebhookEvent->is($webhookEvent))->toBeTrue()
+        ->and(DB::table('booking_webhook_events')->where('provider_event_id', 'evt_replay_123')->count())->toBe(1);
 });
 
 it('accepts configured webhook route events without exposing an open ingestion endpoint', function (): void {

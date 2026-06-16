@@ -28,10 +28,12 @@ return [
     'actions' => [
         'cancel' => 'Cancel',
         'confirm' => 'Confirm',
+        'retry_message' => 'Retry message',
     ],
     'messages' => [
         'appointment_cancelled' => 'Appointment request cancelled.',
         'appointment_confirmed' => 'Appointment request confirmed.',
+        'message_retried' => 'Message retry queued.',
     ],
     'fields' => [
         'active' => 'Active',

@@ -110,6 +110,12 @@ it('exposes appointment request workflow actions and audit log relation', functi
         ->and(AppointmentAuditLogsRelationManager::getRelationshipName())->toBe('auditLogs');
 });
 
+it('exposes a retry action for failed booking message logs', function (): void {
+    $table = BookingMessageLogResource::table(bookingsAdminTableForCoverage());
+
+    expect(bookingsAdminActionNames($table->getRecordActions()))->toContain('retry');
+});
+
 it('exposes review participant detail from review requests', function (): void {
     expect(BookingReviewRequestResource::getRelations())->toBe([ReviewParticipantsRelationManager::class])
         ->and(ReviewParticipantsRelationManager::getRelationshipName())->toBe('participants');

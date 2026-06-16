@@ -5,8 +5,12 @@ declare(strict_types=1);
 namespace Capell\Bookings\Filament\Resources\BookingMessageLogs;
 
 use BackedEnum;
+use Capell\Bookings\Actions\RetryBookingMessageAction;
+use Capell\Bookings\Enums\BookingMessageStatusEnum;
 use Capell\Bookings\Filament\Resources\BookingMessageLogs\Pages\ListBookingMessageLogs;
 use Capell\Bookings\Models\BookingMessageLog;
+use Filament\Actions\Action;
+use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
@@ -29,7 +33,28 @@ final class BookingMessageLogResource extends Resource
             TextColumn::make('recipient')->label(__('capell-bookings::admin.fields.recipient'))->searchable()->toggleable(),
             TextColumn::make('sent_at')->label(__('capell-bookings::admin.fields.sent_at'))->dateTime()->sortable(),
             TextColumn::make('created_at')->label(__('capell-bookings::admin.fields.created_at'))->dateTime()->sortable(),
+        ])->recordActions([
+            self::retryRecordAction(),
         ]);
+    }
+
+    public static function retryRecordAction(): Action
+    {
+        return Action::make('retry')
+            ->label(__('capell-bookings::admin.actions.retry_message'))
+            ->icon('heroicon-o-arrow-path')
+            ->color('warning')
+            ->authorize('update')
+            ->visible(fn (BookingMessageLog $record): bool => $record->status === BookingMessageStatusEnum::Failed)
+            ->requiresConfirmation()
+            ->action(function (BookingMessageLog $record): void {
+                RetryBookingMessageAction::run($record);
+
+                Notification::make('booking-message-retried')
+                    ->title(__('capell-bookings::admin.messages.message_retried'))
+                    ->success()
+                    ->send();
+            });
     }
 
     #[Override]

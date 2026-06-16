@@ -28,6 +28,7 @@ return [
     'lesson_skill_confidence_range' => 'Lesson skill confidence must be between 1 and 5.',
     'location_outside_work_zone' => 'The booking location is outside the active work zone.',
     'location_unavailable' => 'The selected booking location is unavailable.',
+    'message_log_not_retryable' => 'Only failed booking messages can be retried.',
     'messaging_consent_required' => 'Messaging consent is required for this channel.',
     'payment_amount_insufficient' => 'The payment amount is below the required booking amount.',
     'payment_required_before_confirmation' => 'Payment must be verified before this appointment can be confirmed.',
