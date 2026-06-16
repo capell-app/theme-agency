@@ -4,6 +4,8 @@ All notable changes to `capell-app/events` will be documented in this file.
 
 ## Unreleased
 
+- Capacity reads now trust the denormalized `registration_count` column instead of recomputing registration quantity aggregates on the hot path.
+
 - Added configurable recurrence sync window bounds and DST-crossing recurrence coverage.
 - Switched public event listing/calendar views to hydrated view data and separated the public calendar label from the admin calendar label.
 - Added listing-page scoped `.ics` feeds using page metadata filters for venues and events.

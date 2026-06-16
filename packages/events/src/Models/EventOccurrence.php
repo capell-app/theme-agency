@@ -87,7 +87,7 @@ class EventOccurrence extends Model
             return null;
         }
 
-        return max(0, $this->capacity - $this->confirmedRegistrationQuantity());
+        return max(0, $this->capacity - $this->registration_count);
     }
 
     public function isFullForQuantity(int $quantity): bool

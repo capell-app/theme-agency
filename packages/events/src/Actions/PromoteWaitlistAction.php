@@ -19,7 +19,9 @@ class PromoteWaitlistAction
 
     public function handle(EventOccurrence $occurrence): ?EventRegistration
     {
-        if ($occurrence->remainingCapacity() !== null && $occurrence->remainingCapacity() < 1) {
+        $remainingCapacity = $occurrence->remainingCapacity();
+
+        if ($remainingCapacity !== null && $remainingCapacity < 1) {
             return null;
         }
 

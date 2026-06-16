@@ -92,6 +92,20 @@ it('covers event model relationships and casts', function (): void {
         ->and($log->getAttribute('payload'))->toBe(['subject' => 'Reminder']);
 });
 
+it('uses the denormalized registration count for occurrence capacity reads', function (): void {
+    $occurrence = EventOccurrence::factory()->create([
+        'capacity' => 5,
+        'registration_count' => 2,
+    ]);
+
+    EventRegistration::factory()->for($occurrence, 'occurrence')->count(4)->create();
+
+    expect($occurrence->refresh()->remainingCapacity())->toBe(3)
+        ->and($occurrence->isFullForQuantity(3))->toBeFalse()
+        ->and($occurrence->isFullForQuantity(4))->toBeTrue()
+        ->and($occurrence->confirmedRegistrationQuantity())->toBe(4);
+});
+
 it('covers event model page helpers and publish metadata', function (): void {
     $language = Language::factory()->english()->create();
     $site = Site::factory()->withTranslations($language)->create();
