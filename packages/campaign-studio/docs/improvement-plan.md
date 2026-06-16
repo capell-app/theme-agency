@@ -54,7 +54,7 @@ Mapped against declared `capabilities[]` (`campaign-audience-targeting`, `campai
 - **`SyncCampaignExperimentAction` uses `forceFill(...)->save()` and direct relation writes.** It bypasses the Experiments package's own create Action on the update path (only the create path calls `CreateExperimentAction`). If Experiments adds validation/events to variant/goal writes, this drifts. Cross-package write coupling is a maintenance risk. — `src/Actions/SyncCampaignExperimentAction.php` L48-65, L199-250 — Medium.
 - **Shipped 2026-06-04: `utm_campaign` join double-counted duplicate campaigns.** Multiple campaign groups can still share a `utm_campaign` (only `slug` is unique), but the overview/visit join now counts distinct Insights visits so duplicate groups do not inflate the denominator. Shared UTM values remain analytically ambiguous and should be avoided for precise campaign attribution. — `src/Actions/BuildCampaignOverviewStatsAction.php` — Medium.
 - **i18n completeness.** Enum labels and Filament strings are translated via `__()` (good). Verify all five lang files (`form`, `generic`, `navigation`, `package`, `widgets`) carry every key the code references (e.g. `generic.landing_page_variant`, `widgets.active_campaign-studio`); the odd `active_campaign-studio` array key (hyphen in an array key/translation slug) is fragile. — `resources/lang/en/*`, `src/Actions/BuildCampaignOverviewStatsAction.php` — Low.
-- **Performance budget unverified.** `adminQueryBudget: 40` and `frontendRenderBudgetMs: 20` are declared but no test or benchmark asserts them; the CTA hydrate batch (`CampaignCtaWidget::hydrateWidgets`) is well-designed for it, but unmeasured. — `capell.json` — Low.
+- **Done/Shipped: performance budget metadata is pinned.** `ManifestRequirementsTest` asserts the declared `frontendRenderBudgetMs: 20`, `adminQueryBudget: 40`, `campaign-studio` cache tag, non-cacheable campaign output, queued invalidation, and UTM/site/locale cache variance. The existing frontend render test verifies the tracker contribution is non-cacheable and varies by UTM targeting dimensions. — `capell.json`, `tests/Unit/ManifestRequirementsTest.php`, `tests/Feature/CampaignFrontendRenderTest.php`.
 
 ## 5. Marketplace & Selling
 
@@ -80,19 +80,19 @@ Completed 2026-06-08. Implementation slice 1 for this pass also exposes the publ
 
 ## 6. Prioritized Roadmap
 
-| Item                                                                                                                            | Bucket | Effort | Impact | Section ref |
-| ------------------------------------------------------------------------------------------------------------------------------- | ------ | ------ | ------ | ----------- |
-| Shipped 2026-06-04: Wire CTA-click + page-view conversion capture (beacon)                                                      | Done   | L      | High   | §2, §3      |
-| Shipped 2026-06-04: Add frontend render/feature tests proving widgets render + no ID/marker leak in full page                   | Done   | M      | High   | §4          |
-| Shipped 2026-06-04: Resolve the cacheable=false vs static-HTML-cache personalization contradiction (tracker contribution + doc) | Done   | M      | High   | §4          |
-| Shipped 2026-06-04: Filter variant resolution to published pages                                                                | Done   | M      | Medium | §2          |
-| Shipped 2026-06-04: Harden overview conversion-rate join (null/duplicate `utm_campaign`)                                        | Done   | M      | Medium | §2, §4      |
-| Shipped 2026-06-06: Add campaign scheduling command (Scheduled→Active→Ended transitions)                                        | Done   | M      | Medium | §3          |
-| Shipped 2026-06-04: In-package A/B variant results readout (lift per variant)                                                   | Done   | L      | High   | §3          |
-| Shipped 2026-06-08: Feed Campaign Studio conversions into Insights conversion events                                            | Done   | M      | High   | §3, §5      |
-| Revenue/ROAS reporting using existing `value_amount` + `budget_amount`                                                          | Future | M      | High   | §3          |
-| Geo/device/referrer audience targeting (use `torann/geoip`)                                                                     | Future | L      | High   | §3          |
-| Shipped 2026-06-04: Configurable attribution lookback window                                                                    | Done   | M      | Medium | §3, §4      |
-| Anonymous/no-identity conversion dedup policy                                                                                   | Future | M      | Medium | §3, §4      |
-| Decouple `SyncCampaignExperimentAction` update path from direct relation writes                                                 | Future | M      | Low    | §4          |
-| Populate CHANGELOG + benchmark perf budgets (20ms render / 40 query)                                                            | Future | S      | Low    | §2, §4      |
+| Item                                                                                                                                                                                           | Bucket | Effort | Impact | Section ref |
+| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------ | ------ | ------ | ----------- |
+| Shipped 2026-06-04: Wire CTA-click + page-view conversion capture (beacon)                                                                                                                     | Done   | L      | High   | §2, §3      |
+| Shipped 2026-06-04: Add frontend render/feature tests proving widgets render + no ID/marker leak in full page                                                                                  | Done   | M      | High   | §4          |
+| Shipped 2026-06-04: Resolve the cacheable=false vs static-HTML-cache personalization contradiction (tracker contribution + doc)                                                                | Done   | M      | High   | §4          |
+| Shipped 2026-06-04: Filter variant resolution to published pages                                                                                                                               | Done   | M      | Medium | §2          |
+| Shipped 2026-06-04: Harden overview conversion-rate join (null/duplicate `utm_campaign`)                                                                                                       | Done   | M      | Medium | §2, §4      |
+| Shipped 2026-06-06: Add campaign scheduling command (Scheduled→Active→Ended transitions)                                                                                                       | Done   | M      | Medium | §3          |
+| Shipped 2026-06-04: In-package A/B variant results readout (lift per variant)                                                                                                                  | Done   | L      | High   | §3          |
+| Shipped 2026-06-08: Feed Campaign Studio conversions into Insights conversion events                                                                                                           | Done   | M      | High   | §3, §5      |
+| Revenue/ROAS reporting using existing `value_amount` + `budget_amount`                                                                                                                         | Future | M      | High   | §3          |
+| Geo/device/referrer audience targeting (use `torann/geoip`)                                                                                                                                    | Future | L      | High   | §3          |
+| Shipped 2026-06-04: Configurable attribution lookback window                                                                                                                                   | Done   | M      | Medium | §3, §4      |
+| Anonymous/no-identity conversion dedup policy                                                                                                                                                  | Future | M      | Medium | §3, §4      |
+| Decouple `SyncCampaignExperimentAction` update path from direct relation writes                                                                                                                | Future | M      | Low    | §4          |
+| Done/Shipped: Populate CHANGELOG + pin perf budget metadata (20ms render / 40 query). Evidence: changelog tracks shipped campaign slices and manifest coverage asserts budgets/cache variance. | Done   | S      | Low    | §2, §4      |

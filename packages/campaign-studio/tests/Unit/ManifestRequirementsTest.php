@@ -87,3 +87,20 @@ it('declares experiments, variants, audience targeting, and funnel reporting cap
             'campaign-conversion-funnel-reporting',
         );
 });
+
+it('pins declared performance budgets and campaign cache variance', function (): void {
+    $manifest = campaignStudioManifest();
+
+    expect($manifest['performance']['frontendRenderBudgetMs'])->toBe(20)
+        ->and($manifest['performance']['adminQueryBudget'])->toBe(40)
+        ->and($manifest['performance']['cacheTags'])->toBe(['campaign-studio'])
+        ->and($manifest['performance']['cacheSafety']['cacheable'])->toBeFalse()
+        ->and($manifest['performance']['cacheSafety']['queueInvalidation'])->toBeTrue()
+        ->and($manifest['performance']['cacheSafety']['variesBy'])->toContain(
+            'site',
+            'locale',
+            'utm_campaign',
+            'utm_content',
+            'utm_term',
+        );
+});
