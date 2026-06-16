@@ -33,7 +33,7 @@ This bridge has no owned visual workflow. Public screenshots should live in adap
 
 - Service providers: `Capell\Inertia\Providers\InertiaServiceProvider`.
 - Config files: `packages/inertia/config/capell-inertia.php`.
-- Actions: `BuildInertiaPagePropsAction`, `ResolveInertiaAdapterKeyAction`, `ResolveInertiaComponentNameAction`, `ResolveInertiaRootViewAction`.
+- Actions: `BuildInertiaPagePropsAction`, `RenderInertiaResponseAction`, `ResolveInertiaAdapterKeyAction`, `ResolveInertiaComponentNameAction`, `ResolveInertiaRootViewAction`.
 - Data objects: `InertiaAdapterData`.
 - Health checks: `Capell\Inertia\Health\InertiaHealthCheck`.
 - Blade views: `packages/inertia/resources/views/app.blade.php`.

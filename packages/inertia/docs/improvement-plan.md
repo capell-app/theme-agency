@@ -14,7 +14,7 @@ Capell Inertia is the frontend runtime bridge that lets Capell render public pag
 
 1. **Shipped 2026-06-14: sanitize the configured adapter key.** `capell-inertia.adapter` is public runtime state. It now resolves through one action with a `vue` fallback when config is non-string or blank, and tests cover middleware props, page props, registry lookup, trimming, and invalid config. — `src/Actions/ResolveInertiaAdapterKeyAction.php`, `src/Http/Middleware/HandleInertiaRequests.php`, `src/Actions/BuildInertiaPagePropsAction.php`, `src/Support/InertiaAdapterRegistry.php`, `tests/Feature/InertiaBridgeTest.php` — S
 
-2. **Extract shared root-view rendering.** `CapellInertiaResponseRenderer` and `CapellInertiaManager` both set the root view, render an Inertia response, apply an optional status, and run public HTML safety inspection. A small internal response builder would remove duplication and keep package-route rendering aligned with page rendering. — `src/Rendering/CapellInertiaResponseRenderer.php`, `src/Support/CapellInertiaManager.php` — S
+2. **Done/Shipped: shared Inertia response rendering.** `RenderInertiaResponseAction` now owns root-view resolution, component-name sanitization, Inertia rendering, optional status application, and public HTML safety inspection for both page rendering and package-route helper rendering. This keeps `CapellInertiaResponseRenderer` and `CapellInertiaManager` aligned through one response path. — `src/Actions/RenderInertiaResponseAction.php`, `src/Rendering/CapellInertiaResponseRenderer.php`, `src/Support/CapellInertiaManager.php`, `tests/Feature/InertiaBridgeTest.php` — S
 
 3. **Done/Shipped: validate configured component/root-view values.** `ResolveInertiaRootViewAction` and `ResolveInertiaComponentNameAction` now sanitize root-view and component names for middleware, public page rendering, and package-route helper rendering. Bad config falls back to `capell-inertia::app` and `Capell/Page` without PHP string-cast surprises. — `src/Actions/ResolveInertiaRootViewAction.php`, `src/Actions/ResolveInertiaComponentNameAction.php`, `src/Rendering/CapellInertiaResponseRenderer.php`, `src/Support/CapellInertiaManager.php`, `tests/Feature/InertiaBridgeTest.php` — S
 
@@ -46,7 +46,7 @@ Suggested summary: "Connect Capell public rendering to Inertia adapters with one
 | ------------------------------------------------------ | ------ | ------ | ------ | --- |
 | Sanitize configured adapter key                        | Done   | S      | Medium | §2  |
 | Add package-local improvement plan                     | Done   | S      | Medium | §1  |
-| Extract shared Inertia response builder                | Later  | S      | Low    | §2  |
+| Extract shared Inertia response builder                | Done   | S      | Low    | §2  |
 | Validate root view and page component config           | Done   | S      | Medium | §2  |
 | Add adapter readiness diagnostics to health check      | Later  | M      | Medium | §2  |
 | Surface SSR/client manifest diagnostics through bridge | Later  | M      | Medium | §3  |

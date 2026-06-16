@@ -6,13 +6,10 @@ namespace Capell\Inertia\Rendering;
 
 use Capell\Core\Contracts\Pageable;
 use Capell\Core\Enums\FrontendRuntime;
-use Capell\Frontend\Actions\AssertPublicHtmlContainsNoAuthoringSurfaceAction;
 use Capell\Frontend\Contracts\FrontendResponseRenderer;
 use Capell\Frontend\Data\FrontendRenderContextData;
 use Capell\Inertia\Actions\BuildInertiaPagePropsAction;
-use Capell\Inertia\Actions\ResolveInertiaComponentNameAction;
-use Capell\Inertia\Actions\ResolveInertiaRootViewAction;
-use Inertia\Inertia;
+use Capell\Inertia\Actions\RenderInertiaResponseAction;
 use Symfony\Component\HttpFoundation\Response;
 
 final class CapellInertiaResponseRenderer implements FrontendResponseRenderer
@@ -28,19 +25,10 @@ final class CapellInertiaResponseRenderer implements FrontendResponseRenderer
             return response()->noContent($context->status ?? 404);
         }
 
-        Inertia::setRootView(ResolveInertiaRootViewAction::run());
-
-        $response = Inertia::render(
-            ResolveInertiaComponentNameAction::run(),
+        return RenderInertiaResponseAction::run(
+            config('capell-inertia.page_component'),
             BuildInertiaPagePropsAction::run($context),
-        )->toResponse(request());
-
-        if ($context->status !== null) {
-            $response->setStatusCode($context->status);
-        }
-
-        AssertPublicHtmlContainsNoAuthoringSurfaceAction::run($response);
-
-        return $response;
+            $context->status,
+        );
     }
 }

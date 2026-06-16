@@ -186,6 +186,17 @@ it('uses sanitized root view and component values for package route responses', 
     expect(resolve(HandleInertiaRequests::class)->rootView(request()))->toBe('capell-inertia::app');
 });
 
+it('applies optional response status through the shared inertia response renderer', function (): void {
+    Route::middleware([HandleInertiaRequests::class])->get('/_test/inertia-status', fn (): Response => CapellInertia::render('Capell/Test', [
+        'message' => 'accepted',
+    ], 202));
+
+    get('/_test/inertia-status', ['X-Inertia' => 'true'])
+        ->assertStatus(202)
+        ->assertJsonPath('component', 'Capell/Test')
+        ->assertJsonPath('props.message', 'accepted');
+});
+
 it('rejects package route initial html when inertia props expose authoring markers', function (): void {
     $this->withoutExceptionHandling();
     View::addNamespace('inertia-test', __DIR__ . '/../Fixtures/views');
