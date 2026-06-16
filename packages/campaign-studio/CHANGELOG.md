@@ -4,6 +4,10 @@ All notable changes to `capell-app/campaign-studio` will be documented in this f
 
 ## Unreleased
 
+### 2026-06-16
+
+- Changed Campaign Studio's Site Discovery public URL contributor to scan landing pages in chunks and dedupe canonical URLs during sitemap discovery.
+
 ### 2026-06-06
 
 - Added `SyncCampaignStatusesAction`, the `capell:campaign-studio-sync-statuses` command, and an every-five-minutes schedule so campaign windows automatically move groups from Scheduled to Active and from Active to Ended.

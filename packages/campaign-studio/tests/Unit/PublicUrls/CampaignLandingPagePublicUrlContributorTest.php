@@ -41,6 +41,32 @@ it('contributes campaign landing page URLs to the public URL registry contract',
         ->and($urls->first()?->title)->toBe($page->translation->label ?? $page->name);
 });
 
+it('deduplicates campaign landing page URLs while scanning landing pages in chunks', function (): void {
+    $firstCampaignGroup = CampaignGroup::factory()->create();
+    $secondCampaignGroup = CampaignGroup::factory()->create();
+    $page = Page::factory()->create();
+
+    $pageUrl = PageUrl::factory()
+        ->page($page)
+        ->create([
+            'site_id' => $page->site_id,
+            'url' => '/campaign/shared',
+        ]);
+
+    CampaignLandingPage::factory()
+        ->for($firstCampaignGroup, 'campaignGroup')
+        ->create(['page_id' => $page->getKey()]);
+
+    CampaignLandingPage::factory()
+        ->for($secondCampaignGroup, 'campaignGroup')
+        ->create(['page_id' => $page->getKey()]);
+
+    $urls = (new CampaignLandingPagePublicUrlContributor)->publicUrls();
+
+    expect($urls->pluck('canonicalUrl')->all())
+        ->toBe([$pageUrl->full_url]);
+});
+
 it('registers the campaign landing page public URL contributor when Site Discovery is available', function (): void {
     $contributors = collect(app()->tagged(PublicUrlContributor::TAG));
 

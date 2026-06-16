@@ -21,12 +21,20 @@ final class CampaignLandingPagePublicUrlContributor implements PublicUrlContribu
      */
     public function publicUrls(): Collection
     {
-        return CampaignLandingPage::query()
+        /** @var Collection<string, PublicUrlData> $urls */
+        $urls = collect();
+
+        CampaignLandingPage::query()
             ->with(['page.pageUrls.siteDomain', 'page.pageUrls.language', 'page.site', 'page.translation'])
-            ->get()
-            ->flatMap(fn (CampaignLandingPage $landingPage): Collection => $this->publicUrlsForLandingPage($landingPage))
-            ->unique(fn (PublicUrlData $url): string => $url->site->getKey() . '|' . $url->language->getKey() . '|' . $url->canonicalUrl)
-            ->values();
+            ->chunkById(100, function (Collection $landingPages) use ($urls): void {
+                $landingPages
+                    ->flatMap(fn (CampaignLandingPage $landingPage): Collection => $this->publicUrlsForLandingPage($landingPage))
+                    ->each(function (PublicUrlData $url) use ($urls): void {
+                        $urls->put($this->urlKey($url), $url);
+                    });
+            });
+
+        return $urls->values();
     }
 
     /**
@@ -63,5 +71,10 @@ final class CampaignLandingPagePublicUrlContributor implements PublicUrlContribu
             })
             ->filter(fn (?PublicUrlData $url): bool => $url instanceof PublicUrlData)
             ->values();
+    }
+
+    private function urlKey(PublicUrlData $url): string
+    {
+        return $url->site->getKey() . '|' . $url->language->getKey() . '|' . $url->canonicalUrl;
     }
 }
