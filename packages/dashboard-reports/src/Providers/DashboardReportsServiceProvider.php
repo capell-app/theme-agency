@@ -6,6 +6,7 @@ namespace Capell\DashboardReports\Providers;
 
 use Capell\Core\Support\Packages\AbstractPackageServiceProvider;
 use Capell\DashboardReports\Console\Commands\ExportDashboardReportCommand;
+use Capell\DashboardReports\Console\Commands\SendDashboardReportDigestCommand;
 use Capell\DashboardReports\Support\Dashboard\DashboardReportWidgetRegistry;
 use Spatie\LaravelPackageTools\Package;
 
@@ -22,7 +23,10 @@ final class DashboardReportsServiceProvider extends AbstractPackageServiceProvid
             ->hasConfigFile(self::$name)
             ->hasTranslations()
             ->hasViews(self::$name)
-            ->hasCommand(ExportDashboardReportCommand::class);
+            ->hasCommands([
+                ExportDashboardReportCommand::class,
+                SendDashboardReportDigestCommand::class,
+            ]);
     }
 
     public function registeringPackage(): void

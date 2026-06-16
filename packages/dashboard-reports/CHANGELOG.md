@@ -4,6 +4,7 @@ All notable changes to `capell-app/dashboard-reports` will be documented in this
 
 ## Unreleased
 
+- Digests: added `capell:dashboard-reports:send-digest`, a scoped email digest Action, queued notification, configurable recipients, and manifest capability metadata.
 - Diagnostics: added real Dashboard Reports health checks for install state, content-health provider binding, dashboard widgets, settings contribution, and page-list filter registration.
 - Drill-downs: content-health issue counts now deep-link to the Page resource with a package-owned Content Health filter for scheduled, expired, URL-less, and stale pages.
 - Publishing trend: the widget now passes the admin dashboard's resolved date range into the Action, and `totalScheduled` is scoped to the same selected range as the scheduled chart series.

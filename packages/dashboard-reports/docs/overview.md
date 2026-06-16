@@ -39,10 +39,10 @@ Screenshot contract: `screenshots.json`.
 - Config files: `packages/dashboard-reports/config/capell-dashboard-reports.php`.
 - Filament classes: `DashboardReportsPageTableExtender`, `DashboardReportsDashboardSettingsContributor`, `ContentHealthWidget`, `PublishingTrendChartWidget`.
 - Extension points: sibling packages can resolve `Capell\DashboardReports\Support\Dashboard\DashboardReportWidgetRegistry` and call `register($widgetClass, DashboardEnum::Main)` during package registration to add dashboard report widgets without bypassing the package's registration path.
-- Actions: `BuildDefaultContentHealthAction`, `BuildPublishingTrendAction`, `ExportContentHealthCsvAction`, `ExportPublishingTrendCsvAction`.
+- Actions: `BuildDefaultContentHealthAction`, `BuildPublishingTrendAction`, `ExportContentHealthCsvAction`, `ExportPublishingTrendCsvAction`, `SendDashboardReportDigestAction`.
 - Data objects: `PublishingTrendData`, `PublishingTrendPointData`, `ResolvedDashboardReportsSettingsData`.
-- Command signatures: `capell:dashboard-reports:export`.
-- Console command classes: `ExportDashboardReportCommand`.
+- Command signatures: `capell:dashboard-reports:export`, `capell:dashboard-reports:send-digest`.
+- Console command classes: `ExportDashboardReportCommand`, `SendDashboardReportDigestCommand`.
 - Health checks: `Capell\DashboardReports\Health\DashboardReportsHealthCheck`.
 - Blade views: `packages/dashboard-reports/resources/views/widgets/content-health.blade.php`.
 
@@ -59,9 +59,9 @@ Docs gap: document extension points here if the package delegates persistence to
 - Public routes: none detected in package route files.
 - Database changes: no package migrations declared.
 - Settings: no package settings declared.
-- Queues or schedules: none detected in standard package paths.
+- Queues or schedules: hosts can schedule `capell:dashboard-reports:send-digest`; digest notifications are queued and only send to configured emails that match Capell users.
 - Cache tags: none declared.
-- Commands: `capell:dashboard-reports:export`.
+- Commands: `capell:dashboard-reports:export`, `capell:dashboard-reports:send-digest`.
 
 ## Common Pitfalls
 

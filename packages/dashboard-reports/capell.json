@@ -50,13 +50,15 @@
         "setup": null,
         "demo": null,
         "doctor": null,
-        "export": "capell:dashboard-reports:export"
+        "export": "capell:dashboard-reports:export",
+        "digest": "capell:dashboard-reports:send-digest"
     },
     "settings": [],
     "permissions": [],
     "capabilities": [
         "dashboard-reports",
         "dashboard-reports-admin",
+        "dashboard-report-digests",
         "dashboard-report-widget-registry"
     ],
     "security": {

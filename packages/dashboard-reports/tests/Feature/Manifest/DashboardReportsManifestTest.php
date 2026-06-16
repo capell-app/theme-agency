@@ -92,18 +92,21 @@ it('keeps marketplace and package descriptions focused on shipped dashboard repo
         ->and($docsIndex)->not->toContain('generic CMS reporting widgets');
 });
 
-it('declares the dashboard report export command', function (): void {
+it('declares the dashboard report console commands', function (): void {
     $packagePath = dirname(__DIR__, 3);
     $manifest = capell_json_file_array($packagePath . '/capell.json');
 
-    expect(data_get($manifest, 'commands.export'))->toBe('capell:dashboard-reports:export');
+    expect(data_get($manifest, 'commands.export'))->toBe('capell:dashboard-reports:export')
+        ->and(data_get($manifest, 'commands.digest'))->toBe('capell:dashboard-reports:send-digest');
 });
 
-it('declares the dashboard report widget registry capability', function (): void {
+it('declares dashboard report extension capabilities', function (): void {
     $packagePath = dirname(__DIR__, 3);
     $manifest = capell_json_file_array($packagePath . '/capell.json');
 
-    expect(data_get($manifest, 'capabilities'))->toContain('dashboard-report-widget-registry');
+    expect(data_get($manifest, 'capabilities'))
+        ->toContain('dashboard-report-widget-registry')
+        ->toContain('dashboard-report-digests');
 });
 
 it('declares dashboard widget contribution metadata', function (): void {
