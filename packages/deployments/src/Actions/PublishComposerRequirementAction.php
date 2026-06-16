@@ -9,6 +9,8 @@ use Capell\Deployments\Data\ComposerRequirementData;
 use Capell\Deployments\Data\PublishComposerChangeResultData;
 use Capell\Deployments\Data\PullRequestData;
 use Capell\Deployments\Enums\InstallPolicy;
+use Capell\Deployments\Events\DeploymentPublishFailed;
+use Capell\Deployments\Events\DeploymentPublishSucceeded;
 use Capell\Deployments\Models\DeploymentConnection;
 use Capell\Deployments\Services\GitProvider\GitProviderFactory;
 use Lorisleiva\Actions\Concerns\AsAction;
@@ -28,6 +30,20 @@ final class PublishComposerRequirementAction
         DeploymentConnection $connection,
         bool $dryRun = false,
     ): PublishComposerChangeResultData {
+        try {
+            return $this->publish($requirement, $connection, $dryRun);
+        } catch (Throwable $exception) {
+            event(DeploymentPublishFailed::fromThrowable($connection, $requirement, $exception));
+
+            throw $exception;
+        }
+    }
+
+    private function publish(
+        ComposerRequirementData $requirement,
+        DeploymentConnection $connection,
+        bool $dryRun,
+    ): PublishComposerChangeResultData {
         $provider = $this->factory->for($connection);
         $slug = str($requirement->label ?? $requirement->composerName)->afterLast('/')->slug()->toString();
 
@@ -39,6 +55,7 @@ final class PublishComposerRequirementAction
                 $result = new PublishComposerChangeResultData(provider: $connection->provider, dryRun: true);
 
                 RecordDeploymentPublicationAction::run($connection, $requirement, $result);
+                event(new DeploymentPublishSucceeded($connection, $requirement, $result));
 
                 return $result;
             }
@@ -54,6 +71,7 @@ final class PublishComposerRequirementAction
             $status = $provider->getDeployStatus($connection, $sha);
 
             RecordDeploymentPublicationAction::run($connection, $requirement, $result, $status);
+            event(new DeploymentPublishSucceeded($connection, $requirement, $result, $status));
 
             return $result;
         }
@@ -80,6 +98,7 @@ final class PublishComposerRequirementAction
             );
 
             RecordDeploymentPublicationAction::run($connection, $requirement, $result, $status);
+            event(new DeploymentPublishSucceeded($connection, $requirement, $result, $status));
 
             return $result;
         }
@@ -88,6 +107,7 @@ final class PublishComposerRequirementAction
             $result = new PublishComposerChangeResultData(provider: $connection->provider, dryRun: true, branchName: $branchName);
 
             RecordDeploymentPublicationAction::run($connection, $requirement, $result);
+            event(new DeploymentPublishSucceeded($connection, $requirement, $result));
 
             return $result;
         }
@@ -117,6 +137,7 @@ final class PublishComposerRequirementAction
         }
 
         RecordDeploymentPublicationAction::run($connection, $requirement, $result, $status);
+        event(new DeploymentPublishSucceeded($connection, $requirement, $result, $status));
 
         return $result;
     }

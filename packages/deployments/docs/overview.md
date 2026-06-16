@@ -41,6 +41,7 @@ Screenshot contract: `screenshots.json`.
 - Route files: `packages/deployments/routes/oauth.php`.
 - Actions: `CancelDeploymentPublicationAction`, `ConnectDeploymentAction`, `ConsumeOAuthStateAction`, `CreateOAuthStateAction`, `ValidateOAuthStateAction`, `PrepareComposerRequirementCommitAction`, `PublishComposerRequirementAction`, `RecordDeploymentPublicationAction`, `RefreshDeploymentPublicationStatusAction`, `RefreshProviderTokenAction`.
 - Data objects: `ComposerRequirementData`, `OAuthConnectionData`, `PublishComposerChangeResultData`, `PullRequestData`, `RepoFile`.
+- Events: `DeploymentPublishSucceeded`, `DeploymentPublishFailed`.
 - Health checks: `Capell\Deployments\Health\DeploymentsHealthCheck`.
 - Blade views: `packages/deployments/resources/views/filament/pages/deployment-connection.blade.php`, `packages/deployments/resources/views/filament/widgets/deployment-connection.blade.php`.
 
@@ -66,6 +67,7 @@ Screenshot contract: `screenshots.json`.
 ## Common Pitfalls
 
 - Run migrations before opening package resources or OAuth callback routes.
+- Listen for `DeploymentPublishSucceeded` and `DeploymentPublishFailed` when a consuming install workflow needs to notify operators, update Diagnostics, or refresh external deployment state.
 - Keep OAuth routes behind the configured `web` and `auth` middleware unless the callback flow is redesigned with a signed, tokenized handoff.
 - Keep `composer.json`, `composer.local.json`, `capell.json`, docs, screenshots, and tests aligned when the package surface changes.
 

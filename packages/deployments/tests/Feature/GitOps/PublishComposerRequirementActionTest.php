@@ -5,15 +5,20 @@ declare(strict_types=1);
 use Capell\Deployments\Actions\CancelDeploymentPublicationAction;
 use Capell\Deployments\Actions\PrepareComposerRequirementCommitAction;
 use Capell\Deployments\Actions\PublishComposerRequirementAction;
+use Capell\Deployments\Contracts\GitProviderContract;
 use Capell\Deployments\Contracts\PublishesComposerChanges;
 use Capell\Deployments\Data\ComposerRequirementData;
+use Capell\Deployments\Data\PublishComposerChangeResultData;
 use Capell\Deployments\Data\PullRequestData;
 use Capell\Deployments\Data\RepoFile;
 use Capell\Deployments\Enums\InstallPolicy;
+use Capell\Deployments\Events\DeploymentPublishFailed;
+use Capell\Deployments\Events\DeploymentPublishSucceeded;
 use Capell\Deployments\Models\DeploymentConnection;
 use Capell\Deployments\Models\DeploymentPublication;
 use Capell\Deployments\Services\GitProvider\GitHubProvider;
 use Capell\Deployments\Tests\Fixtures\Autoload\FakeComposerPublisher;
+use Illuminate\Support\Facades\Event;
 
 it('prepares composer requirement commits with package requirements and missing vcs repositories', function (): void {
     $patched = PrepareComposerRequirementCommitAction::run(
@@ -61,6 +66,106 @@ it('publishes composer requirements directly when the connection uses direct com
         ->and($provider->commits)->toHaveCount(1)
         ->and($provider->commits[0]['branch'])->toBe('4.x')
         ->and($provider->commits[0]['message'])->toBe('Add extension capell/direct-extension');
+});
+
+it('emits a deployment publish succeeded event after recording a publish result', function (): void {
+    Event::fake([DeploymentPublishSucceeded::class, DeploymentPublishFailed::class]);
+
+    $provider = new FakeComposerPublisher;
+    app()->instance(GitHubProvider::class, $provider);
+    $connection = DeploymentConnection::factory()->github()->create([
+        'install_policy' => InstallPolicy::DirectCommit,
+        'default_branch' => '4.x',
+    ]);
+    $requirement = new ComposerRequirementData(
+        composerName: 'capell/evented-extension',
+        versionConstraint: '^2.0',
+    );
+
+    $result = PublishComposerRequirementAction::run($requirement, $connection);
+
+    Event::assertDispatched(
+        DeploymentPublishSucceeded::class,
+        static fn (DeploymentPublishSucceeded $event): bool => $event->connection->is($connection)
+            && $event->requirement === $requirement
+            && $event->result === $result
+            && $event->status === 'success',
+    );
+    Event::assertNotDispatched(DeploymentPublishFailed::class);
+});
+
+it('emits a deployment publish failed event before rethrowing provider failures', function (): void {
+    Event::fake([DeploymentPublishSucceeded::class, DeploymentPublishFailed::class]);
+
+    $provider = new class implements GitProviderContract
+    {
+        public function getFile(DeploymentConnection $conn, string $path): RepoFile
+        {
+            return new RepoFile(
+                path: $path,
+                content: '{"require":{"php":"^8.3"}}',
+                sha: 'composer-sha',
+            );
+        }
+
+        public function getBranchCommitSha(DeploymentConnection $conn, string $branch): string
+        {
+            return 'branch-commit-sha';
+        }
+
+        public function commitFiles(DeploymentConnection $conn, string $branch, string $commitMessage, array $files): string
+        {
+            throw new RuntimeException('Provider refused the commit.');
+        }
+
+        public function createBranch(DeploymentConnection $conn, string $branchName, string $fromCommitSha): void {}
+
+        public function openPullRequest(DeploymentConnection $conn, string $headBranch, string $title, string $body): PullRequestData
+        {
+            throw new RuntimeException('Provider refused the pull request.');
+        }
+
+        public function findOpenPullRequestForBranch(DeploymentConnection $conn, string $headBranch): ?PullRequestData
+        {
+            return null;
+        }
+
+        public function enableAutoMerge(DeploymentConnection $conn, int|string $pullRequestId): void {}
+
+        public function getPullRequest(DeploymentConnection $conn, int|string $pullRequestId): PullRequestData
+        {
+            throw new RuntimeException('Provider refused the pull request lookup.');
+        }
+
+        public function closePullRequest(DeploymentConnection $conn, int|string $pullRequestId): void {}
+
+        public function getDeployStatus(DeploymentConnection $conn, string $commitSha): string
+        {
+            return 'pending';
+        }
+    };
+
+    app()->instance(GitHubProvider::class, $provider);
+    $connection = DeploymentConnection::factory()->github()->create([
+        'install_policy' => InstallPolicy::DirectCommit,
+        'default_branch' => '4.x',
+    ]);
+    $requirement = new ComposerRequirementData(
+        composerName: 'capell/failing-extension',
+        versionConstraint: '^2.0',
+    );
+
+    expect(fn (): PublishComposerChangeResultData => PublishComposerRequirementAction::run($requirement, $connection))
+        ->toThrow(RuntimeException::class, 'Provider refused the commit.');
+
+    Event::assertDispatched(
+        DeploymentPublishFailed::class,
+        static fn (DeploymentPublishFailed $event): bool => $event->connection->is($connection)
+            && $event->requirement === $requirement
+            && $event->exceptionClass === RuntimeException::class
+            && $event->message === 'Provider refused the commit.',
+    );
+    Event::assertNotDispatched(DeploymentPublishSucceeded::class);
 });
 
 it('dry runs direct composer requirement publishes without committing to the default branch', function (): void {

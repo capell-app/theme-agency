@@ -4,6 +4,8 @@ All notable changes to `capell-app/deployments` will be documented in this file.
 
 ## Unreleased
 
+- Emits `DeploymentPublishSucceeded` and `DeploymentPublishFailed` around Composer requirement publishes so install workflows, Diagnostics, and other Operations packages can react to deployment lifecycle outcomes.
+
 ### 2026-06-04
 
 - Registered `DeploymentConnectionWidget` on the System Health dashboard and gated it with the same deployment page view/manage permissions so repository coordinates are not shown to unauthorised dashboard users.
