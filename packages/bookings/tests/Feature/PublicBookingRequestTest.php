@@ -154,6 +154,12 @@ it('builds hydrated public booking request props with available slots', function
 
     expect($props['postUrl'])->toBe(route('capell-bookings.request.store'))
         ->and($props['timezone'])->toBe('Europe/London')
+        ->and($props['success'])->toBe([
+            'submitted' => false,
+            'status' => null,
+            'message' => null,
+            'reference' => null,
+        ])
         ->and($props['timezoneOptions'])->toContain('Europe/London')
         ->and($props['options']['services'])->toHaveCount(1)
         ->and($props['slots'])->toHaveCount(2)
@@ -235,6 +241,12 @@ it('stores public appointment requests through the booking action', function ():
     ]);
 
     $response->assertRedirect(route('capell-bookings.request'));
+    $response->assertSessionHas('booking_request_success', fn (mixed $success): bool => is_array($success)
+            && ($success['submitted'] ?? null) === true
+            && ($success['status'] ?? null) === 'received'
+            && ($success['message'] ?? null) === __('capell-bookings::generic.frontend.request_submitted')
+            && is_string($success['reference'] ?? null)
+            && strlen($success['reference']) === 10);
 
     $appointmentRequest = AppointmentRequest::query()->firstOrFail();
 
@@ -244,6 +256,30 @@ it('stores public appointment requests through the booking action', function ():
         ->and($appointmentRequest->customer_email)->toBe('morgan@example.test')
         ->and($appointmentRequest->source)->toBe('bookings-public')
         ->and($appointmentRequest->payload)->toBe(['submitted_from' => 'public-booking-request']);
+});
+
+it('normalizes public booking success state without exposing model identifiers', function (): void {
+    $request = Request::create('/bookings');
+    $request->setLaravelSession(app('session')->driver());
+    $request->session()->flash('booking_request_success', [
+        'submitted' => true,
+        'status' => 'received',
+        'message' => 'Your appointment request has been received.',
+        'reference' => 'ABC123EFGH',
+        'appointment_request_id' => 42,
+        'calendar_uid' => 'private-calendar-uid',
+        'admin_url' => 'https://admin.example.test/bookings/42',
+    ]);
+
+    $props = BuildPublicBookingRequestPropsAction::run($request, false);
+
+    expect($props['success'])->toBe([
+        'submitted' => true,
+        'status' => 'received',
+        'message' => 'Your appointment request has been received.',
+        'reference' => 'ABC123EFGH',
+    ])
+        ->and(json_encode($props['success'], JSON_THROW_ON_ERROR))->not->toContain('appointment_request_id', 'private-calendar-uid', 'admin.example.test');
 });
 
 it('rejects public appointment requests with invalid timezone identifiers', function (): void {

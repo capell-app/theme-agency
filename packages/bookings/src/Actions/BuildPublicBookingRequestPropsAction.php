@@ -11,14 +11,14 @@ use Inertia\Inertia;
 use Lorisleiva\Actions\Concerns\AsAction;
 
 /**
- * @method static array{options: array<string, mixed>, slots: mixed, postUrl: string, timezone: string, timezoneOptions: list<string>} run(Request $request, bool $lazySlots = true)
+ * @method static array{options: array<string, mixed>, slots: mixed, postUrl: string, success: array{submitted: bool, status: ?string, message: ?string, reference: ?string}, timezone: string, timezoneOptions: list<string>} run(Request $request, bool $lazySlots = true)
  */
 class BuildPublicBookingRequestPropsAction
 {
     use AsAction;
 
     /**
-     * @return array{options: array<string, mixed>, slots: mixed, postUrl: string, timezone: string, timezoneOptions: list<string>}
+     * @return array{options: array<string, mixed>, slots: mixed, postUrl: string, success: array{submitted: bool, status: ?string, message: ?string, reference: ?string}, timezone: string, timezoneOptions: list<string>}
      */
     public function handle(Request $request, bool $lazySlots = true): array
     {
@@ -38,6 +38,7 @@ class BuildPublicBookingRequestPropsAction
             'postUrl' => Route::has('capell-bookings.request.store')
                 ? route('capell-bookings.request.store')
                 : '/' . trim((string) config('capell-bookings.public_path_prefix', 'bookings'), '/'),
+            'success' => $this->successState($request),
             'timezone' => $timezone,
             'timezoneOptions' => DateTimeZone::listIdentifiers(),
         ];
@@ -60,5 +61,40 @@ class BuildPublicBookingRequestPropsAction
         }
 
         return (string) config('app.timezone', 'UTC');
+    }
+
+    /**
+     * @return array{submitted: bool, status: ?string, message: ?string, reference: ?string}
+     */
+    private function successState(Request $request): array
+    {
+        if (! $request->hasSession()) {
+            return [
+                'submitted' => false,
+                'status' => null,
+                'message' => null,
+                'reference' => null,
+            ];
+        }
+
+        $success = $request->session()->get('booking_request_success');
+
+        if (is_array($success)) {
+            return [
+                'submitted' => (bool) ($success['submitted'] ?? false),
+                'status' => $this->optionalString($success['status'] ?? null),
+                'message' => $this->optionalString($success['message'] ?? null),
+                'reference' => $this->optionalString($success['reference'] ?? null),
+            ];
+        }
+
+        $legacyMessage = $this->optionalString($request->session()->get('booking_request_status'));
+
+        return [
+            'submitted' => $legacyMessage !== null,
+            'status' => $legacyMessage === null ? null : 'received',
+            'message' => $legacyMessage,
+            'reference' => null,
+        ];
     }
 }

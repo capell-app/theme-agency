@@ -136,12 +136,12 @@
                 </p>
             </header>
 
-            @if (session('booking_request_status'))
+            @if ($success['submitted'])
                 <div
                     class="status"
                     role="status"
                 >
-                    {{ session('booking_request_status') }}
+                    {{ $success['message'] }}
                 </div>
             @endif
 

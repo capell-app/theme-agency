@@ -22,7 +22,7 @@ Capabilities declared span availability, requests, reminders, calendar feeds, po
 
 - **Shipped 2026-06-16: demo command and fixtures.** `capell:bookings-demo` installs an idempotent demo service, staff member, location, availability window, and appointment request, and `capell.json` now advertises the demo path.
 - **Shipped 2026-06-16: failed message retry and webhook replay Actions.** Failed message logs can be retried from the admin resource, and processed webhook events can be reset for replay without duplicating provider event records.
-- **No public success/confirmation component contract beyond current route output.** Theme/Inertia packages need a stable success state.
+- **Shipped 2026-06-16: public success/confirmation component contract.** Public booking props now include a stable `success` state with submitted/status/message/reference fields for Blade and alternate renderers.
 - **No single workflow test covering request -> hold -> payment -> confirmation -> reminder -> review.** Unit tests cover slices, but the end-to-end operations story needs a package smoke test.
 
 ## 4. Issues / Risks
@@ -57,7 +57,7 @@ Bookings should be positioned as a serious operations workflow, not just a form.
 | Add public renderer prop/output safety coverage                | Done   | M      | High   | §2.4, §4.4  |
 | Add demo/setup command and fixtures                            | Done   | M      | Medium | §3, §5      |
 | Add failed message/webhook retry admin workflow                | Done   | L      | High   | §3          |
-| Add public success/confirmation component contract             | Next   | M      | Medium | §3          |
+| Add public success/confirmation component contract             | Done   | M      | Medium | §3          |
 | Add end-to-end booking workflow smoke test                     | Later  | L      | High   | §3          |
 | Add richer analytics/reporting dashboard                       | Later  | L      | Medium | §5          |
 
