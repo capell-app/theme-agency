@@ -2,6 +2,11 @@
 
 declare(strict_types=1);
 
+use Capell\CustomerPortal\Actions\ResolvePortalDashboardItemsAction;
+use Capell\CustomerPortal\Actions\ResolvePortalProfileAction;
+use Capell\CustomerPortal\Actions\ResolvePortalSelfServiceItemsAction;
+use Capell\CustomerPortal\Enums\PortalAccountStatus;
+use Capell\CustomerPortal\Models\PortalAccount;
 use Capell\EquestrianClinics\Actions\AllocateHorseToSlotAction;
 use Capell\EquestrianClinics\Actions\BuildFacilityReportAction;
 use Capell\EquestrianClinics\Actions\BuildOpenSlotDemandHeatmapAction;
@@ -56,6 +61,7 @@ use Capell\Payments\Enums\PaymentPurpose;
 use Carbon\CarbonImmutable;
 use Illuminate\Console\Scheduling\Event as ScheduledEvent;
 use Illuminate\Console\Scheduling\Schedule;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 
 it('generates tour day slots from a template and quotes legal-safe payment fees', function (): void {
@@ -345,6 +351,104 @@ it('rejects checkout handoff for expired, cash, or already confirmed bookings', 
             now: $now->addMinutes(11),
         ))->toThrow(ValidationException::class);
     }
+});
+
+it('contributes rider horse and booking surfaces to the customer portal without private care details', function (): void {
+    CarbonImmutable::setTestNow(CarbonImmutable::parse('2026-06-18 08:00:00'));
+
+    $siteId = (int) DB::table('sites')->insertGetId([]);
+    $portalAccount = PortalAccount::query()->create([
+        'site_id' => $siteId,
+        'email' => 'portal-rider@example.com',
+        'display_name' => 'Portal Rider',
+        'status' => PortalAccountStatus::Active,
+    ]);
+    $otherPortalAccount = PortalAccount::query()->create([
+        'site_id' => $siteId,
+        'email' => 'other-rider@example.com',
+        'display_name' => 'Other Rider',
+        'status' => PortalAccountStatus::Active,
+    ]);
+    $rider = EquestrianRiderProfile::query()->create([
+        'site_id' => $siteId,
+        'portal_account_id' => $portalAccount->getKey(),
+        'name' => 'Jordan Rider',
+        'email' => 'portal-rider@example.com',
+        'emergency_contact_name' => 'Private Guardian',
+        'emergency_contact_phone' => '07111111111',
+        'medical_disclosures' => 'Private medical notes',
+        'skill_tiers' => ['novice'],
+        'cash_approved_at' => CarbonImmutable::now(),
+        'active' => true,
+    ]);
+    $horse = EquestrianHorseProfile::query()->create([
+        'site_id' => $siteId,
+        'portal_account_id' => $portalAccount->getKey(),
+        'name' => 'Quiet Cob',
+        'fitness_status' => 'fit',
+        'notes' => 'Private horse notes',
+        'daily_workload_limit_minutes' => 240,
+        'suitable_skill_tiers' => ['novice'],
+        'active' => true,
+    ]);
+    EquestrianRiderProfile::query()->create([
+        'site_id' => $siteId,
+        'portal_account_id' => $otherPortalAccount->getKey(),
+        'name' => 'Other Private Rider',
+        'email' => 'other-rider@example.com',
+        'active' => true,
+    ]);
+    $tourDay = createTourDay();
+    $tourDay->forceFill(['site_id' => $siteId])->save();
+    $slot = GenerateTourDaySlotsAction::run($tourDay, new EquestrianSlotTemplateData(
+        title: 'Portal clinic',
+        archetype: EquestrianSlotArchetypeEnum::Private,
+        durationMinutes: 45,
+        gapMinutes: 0,
+        capacityMin: 1,
+        capacityMax: 1,
+        pricePence: 4500,
+        skillTier: 'novice',
+    ))->firstOrFail();
+
+    RequestSlotBookingAction::run(
+        slot: $slot,
+        riderProfile: $rider,
+        horseProfile: $horse,
+        cashPayment: true,
+        quotedTotalPence: 4500,
+        now: CarbonImmutable::now(),
+    );
+
+    $profile = ResolvePortalProfileAction::run($portalAccount);
+    $dashboardItems = ResolvePortalDashboardItemsAction::run($portalAccount);
+    $selfServiceItems = ResolvePortalSelfServiceItemsAction::run($portalAccount);
+    $surfaceJson = json_encode([
+        'profile' => $profile->profile,
+        'dashboard' => $dashboardItems,
+        'self_service' => $selfServiceItems,
+    ], JSON_THROW_ON_ERROR);
+
+    expect($profile->profile['equestrian']['riders'][0]['name'] ?? null)->toBe('Jordan Rider')
+        ->and($profile->profile['equestrian']['horses'][0]['name'] ?? null)->toBe('Quiet Cob')
+        ->and($dashboardItems)->toHaveCount(1)
+        ->and($dashboardItems[0]->key)->toBe('equestrian-clinics.profile')
+        ->and($dashboardItems[0]->count)->toBe(1)
+        ->and(collect($selfServiceItems)->pluck('key')->all())->toContain(
+            'equestrian-clinics.rider.' . $rider->getKey(),
+            'equestrian-clinics.horse.' . $horse->getKey(),
+        )
+        ->and($surfaceJson)->toContain('Portal clinic')
+        ->and($surfaceJson)->not->toContain(
+            'Private Guardian',
+            '07111111111',
+            'Private medical notes',
+            'Private horse notes',
+            'Other Private Rider',
+            'other-rider@example.com',
+        );
+
+    CarbonImmutable::setTestNow();
 });
 
 it('expires stale checkout holds and permits approved cash customers', function (): void {

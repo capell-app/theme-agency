@@ -43,6 +43,7 @@ Screenshot contract: `docs/screenshots.json`.
 - Actions: `AllocateHorseToSlotAction`, `BuildClinicDiscoveryAction`, `BuildCoachTimetableAction`, `BuildFacilityReportAction`, `BuildOpenSlotDemandHeatmapAction`, `BuildSlotBookingCheckoutSessionDataAction`, `BuildStaffCareWorklistAction`, `CancelSlotBookingAction`, `ClaimWaitlistOfferAction`, `CompleteHorseCareTaskAction`, `ConfirmSlotBookingPaymentAction`, `CreateBillingEntryAction`, `CreateCommercialProductAction`, `and 15 more`.
 - Data objects: `EquestrianBookingQuoteData`, `EquestrianFacilityReportData`, `EquestrianSlotTemplateData`.
 - Manifest contributions: `model: Capell\EquestrianClinics\Manifest\EquestrianClinicsModelsContribution`, `route: Capell\EquestrianClinics\Manifest\EquestrianClinicsRoutesContribution`, `health-check: Capell\EquestrianClinics\Manifest\EquestrianClinicsHealthContribution`, scheduled expiry jobs, and console commands.
+- Customer Portal integration: rider and horse summaries, upcoming booking dashboard count, and self-service rows via the Customer Portal profile, dashboard, and self-service registries.
 - Health checks: `Capell\EquestrianClinics\Health\EquestrianClinicsHealthCheck`.
 - Blade views: `packages/equestrian-clinics/resources/views/coach-timetable.blade.php`, `packages/equestrian-clinics/resources/views/discovery.blade.php`.
 - Cache tags: `equestrian-clinics`.
@@ -69,6 +70,10 @@ Screenshot contract: `docs/screenshots.json`.
 ## Payment Checkout Handoff
 
 Online slot requests create a held `EquestrianSlotBooking` with `payment_status=pending` and a provider of Stripe or PayPal. Host apps can pass that hold to `BuildSlotBookingCheckoutSessionDataAction::run($booking, $successUrl, $cancelUrl)` to receive a Payments `CreateCheckoutSessionData` DTO with the line item, customer, payable linkage, provider, reference ID, and metadata needed by `capell-app/payments`. Confirm the booking only after provider completion by calling `ConfirmSlotBookingPaymentAction`.
+
+## Customer Portal
+
+When Customer Portal is installed, Equestrian Clinics registers a portal provider for rider and horse profile summaries, a dashboard tile for upcoming clinic bookings, and self-service rows for active rider profiles, horse profiles, and upcoming bookings. The portal payload intentionally omits medical disclosures, guardian/emergency contact details, private horse notes, and cross-account rider data.
 
 ## Common Pitfalls
 

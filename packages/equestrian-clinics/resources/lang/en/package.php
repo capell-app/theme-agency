@@ -17,6 +17,13 @@ return [
             'summary' => 'Expired :count stale Equestrian Clinics waitlist offers.',
         ],
     ],
+    'portal' => [
+        'dashboard_label' => 'Equestrian clinics',
+        'dashboard_description' => ':bookings upcoming bookings and :horses horse profiles.',
+        'rider_profile_description' => 'Rider profile',
+        'horse_profile_description' => 'Horse profile',
+        'cash_approved' => 'Cash approved',
+    ],
     'tour_day_statuses' => [
         'draft' => 'Draft',
         'published' => 'Published',

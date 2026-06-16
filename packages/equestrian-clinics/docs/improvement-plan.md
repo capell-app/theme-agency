@@ -23,6 +23,7 @@ Capabilities declared cover tour days, slot generation, public calendar discover
 - **No concrete admin resources.** This is the biggest product gap for a schema-heavy operations plugin.
 - **No scheduled expiry commands.** Holds/waitlists require maintenance.
 - **Shipped 2026-06-16: payment checkout handoff contract.** `BuildSlotBookingCheckoutSessionDataAction` turns an active online hold into Payments `CreateCheckoutSessionData` with provider, customer, line item, payable linkage, reference ID, and metadata.
+- **Shipped 2026-06-16: customer portal rider/horse surfaces.** The package now contributes Customer Portal profile, dashboard, and self-service items for active rider profiles, horse profiles, and upcoming bookings without exposing medical disclosures, guardian/emergency contact details, or private horse notes.
 - **Marketplace media is card-only despite public PNG screenshots.** Promote route-backed PNGs only after visual verification.
 
 ## 4. Issues / Risks
@@ -56,7 +57,7 @@ Equestrian Clinics should be positioned as a specialized vertical operations sui
 | Add expiry commands/schedule metadata for holds and waitlists     | Done   | M      | High   | §2.3, §4.2  |
 | Add public discovery privacy and query-budget tests               | Done   | M      | High   | §2.4, §4.3  |
 | Add payment checkout handoff docs/tests                           | Done   | M      | High   | §3          |
-| Add customer portal rider/horse profile surfaces                  | Next   | L      | High   | §3, §5      |
+| Add customer portal rider/horse profile surfaces                  | Done   | L      | High   | §3, §5      |
 | Promote verified public screenshots                               | Next   | S      | Medium | §3, §4.4    |
 | Add coach mobile dashboard beyond signed timetable                | Later  | L      | Medium | §3, §5      |
 | Add analytics/BI export and AI assistant workflows                | Later  | L      | Medium | §5          |

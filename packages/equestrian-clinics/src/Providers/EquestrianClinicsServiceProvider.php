@@ -6,6 +6,9 @@ namespace Capell\EquestrianClinics\Providers;
 
 use Capell\Core\Facades\CapellCore;
 use Capell\Core\Support\Packages\AbstractPackageServiceProvider;
+use Capell\CustomerPortal\Support\PortalDashboardItemRegistry;
+use Capell\CustomerPortal\Support\PortalProfileProviderRegistry;
+use Capell\CustomerPortal\Support\PortalSelfServiceItemRegistry;
 use Capell\EquestrianClinics\Console\Commands\ExpireSlotBookingHoldsCommand;
 use Capell\EquestrianClinics\Console\Commands\ExpireWaitlistOffersCommand;
 use Capell\EquestrianClinics\Models\EquestrianBillingEntry;
@@ -27,6 +30,7 @@ use Capell\EquestrianClinics\Models\EquestrianTourDay;
 use Capell\EquestrianClinics\Models\EquestrianTourDaySlot;
 use Capell\EquestrianClinics\Models\EquestrianVenue;
 use Capell\EquestrianClinics\Models\EquestrianWaiverSignature;
+use Capell\EquestrianClinics\Support\CustomerPortal\EquestrianClinicsPortalProvider;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Database\Eloquent\Relations\Relation;
@@ -93,7 +97,25 @@ final class EquestrianClinicsServiceProvider extends AbstractPackageServiceProvi
                 ->onOneServer();
         });
 
+        $this->registerCustomerPortalIntegrations();
+
         $this->loadRoutesFrom(__DIR__ . '/../../routes/web.php');
+    }
+
+    private function registerCustomerPortalIntegrations(): void
+    {
+        if (! class_exists(PortalProfileProviderRegistry::class)
+            || ! class_exists(PortalDashboardItemRegistry::class)
+            || ! class_exists(PortalSelfServiceItemRegistry::class)) {
+            return;
+        }
+
+        $this->app->make(PortalProfileProviderRegistry::class)
+            ->register('equestrian-clinics.profile', EquestrianClinicsPortalProvider::class);
+        $this->app->make(PortalDashboardItemRegistry::class)
+            ->register('equestrian-clinics.dashboard', EquestrianClinicsPortalProvider::class);
+        $this->app->make(PortalSelfServiceItemRegistry::class)
+            ->register('equestrian-clinics.self-service', EquestrianClinicsPortalProvider::class);
     }
 
     private function registerMorphMap(): void

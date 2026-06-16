@@ -66,6 +66,7 @@ Screenshot contract: `screenshots.json`.
 - Cache tags: `equestrian-clinics`.
 - Commands: `capell:equestrian-clinics-expire-holds`, `capell:equestrian-clinics-expire-waitlist-offers`.
 - Checkout handoff: `BuildSlotBookingCheckoutSessionDataAction` turns an active online hold into Payments `CreateCheckoutSessionData`; provider webhooks should call `ConfirmSlotBookingPaymentAction` after completion.
+- Customer Portal: rider/horse profile summaries, upcoming booking dashboard counts, and self-service rows are contributed through Customer Portal registries without exposing medical disclosures, emergency contacts, or private horse notes.
 
 ## Common Pitfalls
 
