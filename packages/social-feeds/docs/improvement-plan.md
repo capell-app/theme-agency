@@ -34,7 +34,7 @@ Capabilities declared: social feeds, admin, frontend, provider registry, and cac
 
 1. **Done/Shipped: advertised admin capability has concrete admin resources.** Buyers/operators can manage connections, inspect cached items, and run manual syncs from Capell admin. - **P2**
 
-2. **Done/Shipped: cached rendering has a command and opt-in schedule.** `capell:social-feeds:sync` can sync all connected feeds or one connection, and `capell-social-feeds.sync_schedule_enabled` enables hourly scheduled sync. Remaining recommendation: add stale-sync health diagnostics. - **P2**
+2. **Done/Shipped: cached rendering has a command, opt-in schedule, and stale-sync diagnostics.** `capell:social-feeds:sync` can sync all connected feeds or one connection, `capell-social-feeds.sync_schedule_enabled` enables hourly scheduled sync, and the package health check reports connected feeds that never synced or exceeded the configured freshness window. - **P2**
 
 3. **Important gap: provider list can over-sell native integrations.** Provider names are registered, but most providers are feed-url wrappers. Recommended fix: align docs/copy or implement native API clients. - **P2**
 
@@ -67,7 +67,7 @@ Social Feeds belongs in `Capell Growth` because it turns external social proof i
 | Align provider docs/marketplace copy with RSS-compatible implementation reality | Done   | S      | Medium | §2.3, §4.3  |
 | Fix `contributionTraceability` for shipped/deferred surfaces                    | Done   | S      | Medium | §2.4        |
 | Align scheduled-job/settings metadata and docs                                  | Done   | S      | Medium | §2.4, §4    |
-| Add stale-sync health diagnostics                                               | Next   | S      | Medium | §2.2, §4.2  |
+| Add stale-sync health diagnostics                                               | Done   | S      | Medium | §2.2, §4.2  |
 | Add render budget/no-query public Blade coverage                                | Next   | S      | Medium | §2.5        |
 | Add cached item pruning/retention                                               | Next   | M      | Medium | §3          |
 | Add image alt strategy for media-heavy feeds                                    | Next   | S      | Low    | §2.6        |

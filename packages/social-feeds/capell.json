@@ -100,7 +100,8 @@
         "social-feeds-console",
         "social-feeds-frontend",
         "social-feed-provider-registry",
-        "social-feed-cached-rendering"
+        "social-feed-cached-rendering",
+        "social-feed-stale-sync-health"
     ],
     "security": {
         "riskTier": "sensitive",
