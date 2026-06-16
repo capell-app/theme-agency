@@ -4,7 +4,7 @@
 
 ## 1. Snapshot
 
-Theme Inertia Bookings React is the React component pack for the base Theme Inertia Bookings package. It requires `capell-app/theme-inertia-bookings` and `capell-app/inertia-react-adapter`, registers React Tailwind/build assets behind a vendor asset condition, contributes the `Capell/Bookings/Request` frontend component, and ships React implementations for `Capell/Page`, the public booking request form, and three basic widget components. Tests prove provider asset registration, component file existence, manifest contribution shape, explicit form labels, and the accessible validation/loading selectors required by the screenshot contract. Required screenshot PNG files exist under `docs/screenshots/`, but the marketplace intentionally promotes only the extension card until runner recapture is trustworthy.
+Theme Inertia Bookings React is the React component pack for the base Theme Inertia Bookings package. It requires `capell-app/theme-inertia-bookings` and `capell-app/inertia-react-adapter`, registers React Tailwind/build assets behind a vendor asset condition, contributes the `Capell/Bookings/Request` frontend component, and ships React implementations for `Capell/Page`, the public booking request form, and three basic widget components. Tests prove provider asset registration, component file existence, manifest contribution shape, explicit form labels, and the accessible validation/loading selectors required by the screenshot contract. Required screenshot PNG files exist under `docs/screenshots/` and are now promoted in marketplace media after a successful local runner recapture.
 
 ## 2. Improvements (existing functionality)
 
@@ -16,7 +16,7 @@ Theme Inertia Bookings React is the React component pack for the base Theme Iner
 
 4. **Shipped: guard public HTML injection points.** `Page.jsx` and `Content.jsx` now pass page/widget content through `sanitizePublicHtml()` before `dangerouslySetInnerHTML`, while the base renderer remains responsible for server-side portable HTML projection. Tests pin blocked authoring/package metadata, admin/signed URL, and unsafe-scheme markers. Evidence: `resources/js/Support/publicHtml.js`, `resources/js/Pages/Capell/Page.jsx`, `resources/js/Components/Capell/Widgets/Content.jsx`, `tests/Unit/ManifestRequirementsTest.php`. - **M**
 
-5. **Keep screenshot media blocked until recapture.** Existing PNG files may be useful evidence, but the earlier screenshot-quality audit kept React/Vue adapter marketplace media card-only until the runner installs the adapter packages and renders real Capell/Inertia assets. Keep marketplace media conservative until validation/loading selectors and recapture work. - **S**
+5. **Shipped: promote screenshot media after recapture.** The local screenshot runner captured React request, services, loading, validation, and mobile states through the adapter package; `capell.json` now promotes those required docs screenshots alongside the extension card. - **S**
 
 6. **Improve docs from generated copy to adapter architecture.** README/overview say only "React components for Theme Inertia Bookings." Add the actual package split: base theme registers Inertia/Bookings renderer, React adapter supplies components/build entrypoint, generic adapter is suppressed, no schema/routes are owned here. - **S**
 
@@ -24,15 +24,15 @@ Theme Inertia Bookings React is the React component pack for the base Theme Iner
 
 Capabilities declared: `theme-inertia-bookings-react`.
 
-- **Validation UI is present but not browser-recaptured.** The form renders server validation feedback through Inertia errors, but the screenshot runner still needs a fresh capture before marketplace media is promoted.
+- **Shipped: validation UI is browser-recaptured.** The runner captured validation and loading states with the React adapter installed.
 - **No success/confirmation state.** The form submits through Inertia but does not document or display a successful appointment request state.
 - **Widget support is minimal.** Only Content, Image, and Title widgets are implemented; richer Layout Builder widgets fall back to Content.
 - **No browser-level React test.** Current tests inspect files and provider registration, not actual rendered component behavior.
-- **No marketplace-ready media until runner recapture.** Required screenshots exist, but card-only marketplace media is currently the correct conservative state.
+- **Shipped: marketplace-ready media after runner recapture.** Required docs screenshots are promoted in the package manifest.
 
 ## 4. Issues / Risks
 
-1. **Important gap: screenshot contract selectors now exist but need recapture.** Validation/loading screenshots cannot be promoted until the runner captures the React adapter with `.error` and `.slots` states from real fixtures. Recommended fix: recapture after the runner installs the adapter packages. - **P2**
+1. **Closed: screenshot contract selectors needed recapture.** React adapter screenshots were recaptured through the local package runner and promoted from `docs/screenshots/`. - **P2**
 
 2. **Resolved gap: validation errors are visible to users.** Failed booking submissions now render accessible inline messages and a summary through Inertia form errors. Keep package tests around this public state. - **P2**
 
@@ -50,7 +50,7 @@ The React adapter should be sold as part of the Inertia Bookings theme family, n
 
 **Improved description:** "Theme Inertia Bookings React supplies the React components and build entrypoint for Capell's Inertia Bookings theme. It renders the shared `Capell/Page` and `Capell/Bookings/Request` contracts, registers package build assets only when the React adapter is active, and lets the base theme own booking renderer binding. Install it when the host Capell/Inertia frontend uses React and needs the booking request flow to render with first-party components."
 
-**Media status:** Keep marketplace media card-only until the runner can install this adapter, render validation/loading/mobile states with real assets, and recapture trustworthy PNGs.
+**Media status:** Runner-backed PNGs are promoted for React request components, services, slot loading, validation, and mobile request states.
 
 **Cross-sell:** Requires Theme Inertia Bookings and Inertia React Adapter. Complements Bookings and the base Inertia package.
 
@@ -65,7 +65,7 @@ The React adapter should be sold as part of the Inertia Bookings theme family, n
 | Rewrite README/overview around base theme, React adapter, and generic adapter suppression  | Done   | S      | Medium | §2.6             |
 | Add component-map drift tests for source files and manifest component declarations         | Done   | S      | Medium | §2.2             |
 | Document/test sanitized prop boundary for `dangerouslySetInnerHTML` usage                  | Done   | M      | High   | §2.4, §4.3       |
-| Coordinate screenshot runner recapture and keep marketplace media card-only until verified | Next   | M      | Medium | §2.5             |
+| Coordinate screenshot runner recapture and keep marketplace media card-only until verified | Done   | M      | Medium | §2.5             |
 | Add browser-level component smoke coverage for booking request interactions                | Later  | M      | Medium | §3               |
 | Expand widget component coverage beyond Content/Image/Title                                | Later  | M      | Medium | §3               |
 | Add success/confirmation UI contract                                                       | Later  | M      | Medium | §3               |

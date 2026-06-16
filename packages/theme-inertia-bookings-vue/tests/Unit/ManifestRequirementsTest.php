@@ -85,10 +85,17 @@ it('keeps the package manifest aligned with the vue component pack', function ()
         throw_unless(is_string($screenshotPath), RuntimeException::class, 'Required Vue component pack screenshot entries must have screenshot paths.');
 
         expect(file_exists(dirname(__DIR__, 4) . '/' . $screenshotPath))->toBeTrue()
-            ->and($marketplaceScreenshotPaths)->not->toContain(str_replace('packages/theme-inertia-bookings-vue/', '', $screenshotPath));
+            ->and($marketplaceScreenshotPaths)->toContain(str_replace('packages/theme-inertia-bookings-vue/', '', $screenshotPath));
     }
 
-    expect($marketplaceScreenshotPaths)->toContain('docs/assets/marketplace/extension-card.svg');
+    expect($marketplaceScreenshotPaths)->toBe([
+        'docs/assets/marketplace/extension-card.svg',
+        'docs/screenshots/vue-booking-components.png',
+        'docs/screenshots/vue-booking-services.png',
+        'docs/screenshots/vue-booking-slot-loading.png',
+        'docs/screenshots/vue-booking-validation.png',
+        'docs/screenshots/vue-booking-mobile.png',
+    ]);
 });
 
 it('keeps vue component map entries aligned with source files and manifest declarations', function (): void {

@@ -122,6 +122,31 @@
                 "path": "docs/assets/marketplace/extension-card.svg",
                 "alt": "Theme Inertia Bookings Vue marketplace card.",
                 "caption": "Theme Inertia Bookings Vue extension card."
+            },
+            {
+                "path": "docs/screenshots/vue-booking-components.png",
+                "alt": "Theme Inertia Bookings Vue request components rendered through the adapter.",
+                "caption": "Runner-backed Vue booking request component pack."
+            },
+            {
+                "path": "docs/screenshots/vue-booking-services.png",
+                "alt": "Theme Inertia Bookings Vue services sections rendered with booking-focused cards.",
+                "caption": "Runner-backed Vue services layout for appointment-led businesses."
+            },
+            {
+                "path": "docs/screenshots/vue-booking-slot-loading.png",
+                "alt": "Theme Inertia Bookings Vue slot loading state with stable public selectors.",
+                "caption": "Runner-backed Vue deferred slot loading state."
+            },
+            {
+                "path": "docs/screenshots/vue-booking-validation.png",
+                "alt": "Theme Inertia Bookings Vue validation state with accessible inline errors.",
+                "caption": "Runner-backed Vue validation state for failed booking requests."
+            },
+            {
+                "path": "docs/screenshots/vue-booking-mobile.png",
+                "alt": "Theme Inertia Bookings Vue mobile booking request layout.",
+                "caption": "Runner-backed Vue mobile booking request flow."
             }
         ],
         "categories": ["frontend", "themes"]

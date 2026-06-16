@@ -4,7 +4,7 @@
 
 ## 1. Snapshot
 
-Theme Inertia Bookings Vue is the Vue component pack for the base Theme Inertia Bookings package. It requires `capell-app/theme-inertia-bookings` and `capell-app/inertia-vue-adapter`, registers Vue Tailwind/build assets behind a vendor asset condition, contributes the `Capell/Bookings/Request` frontend component, and ships Vue implementations for `Capell/Page`, the public booking request form, and three basic widget components. Tests prove provider asset registration, component file existence, manifest contribution shape, and required screenshot files. Required screenshot PNG files exist under `docs/screenshots/`, but the marketplace promotes only the extension card until runner recapture is trustworthy.
+Theme Inertia Bookings Vue is the Vue component pack for the base Theme Inertia Bookings package. It requires `capell-app/theme-inertia-bookings` and `capell-app/inertia-vue-adapter`, registers Vue Tailwind/build assets behind a vendor asset condition, contributes the `Capell/Bookings/Request` frontend component, and ships Vue implementations for `Capell/Page`, the public booking request form, and three basic widget components. Tests prove provider asset registration, component file existence, manifest contribution shape, and required screenshot files. Required screenshot PNG files exist under `docs/screenshots/` and are now promoted in marketplace media after a successful local runner recapture.
 
 ## 2. Improvements (existing functionality)
 
@@ -16,7 +16,7 @@ Theme Inertia Bookings Vue is the Vue component pack for the base Theme Inertia 
 
 4. **Shipped: guard public HTML injection points.** `Page.vue` and `Content.vue` now pass page/widget content through `sanitizePublicHtml()` before `v-html`, while the base renderer remains responsible for server-side portable HTML projection. Tests pin blocked authoring/package metadata, admin/signed URL, and unsafe-scheme markers. Evidence: `resources/js/Support/publicHtml.js`, `resources/js/Pages/Capell/Page.vue`, `resources/js/Components/Capell/Widgets/Content.vue`, `tests/Feature/InertiaBookingsVueServiceProviderTest.php`. - **M**
 
-5. **Keep screenshot media blocked until recapture.** Existing PNG files may be useful evidence, but the earlier screenshot-quality audit kept React/Vue adapter marketplace media card-only until the runner installs the adapter packages and renders real Capell/Inertia assets. Keep marketplace media conservative until validation/loading selectors and recapture work. - **S**
+5. **Shipped: promote screenshot media after recapture.** The local screenshot runner captured Vue request, services, loading, validation, and mobile states through the adapter package; `capell.json` now promotes those required docs screenshots alongside the extension card. - **S**
 
 6. **Improve docs from generated copy to adapter architecture.** README/overview say only "Vue components for Theme Inertia Bookings." Add the actual package split: base theme registers Inertia/Bookings renderer, Vue adapter supplies components/build entrypoint, generic adapter is suppressed, no schema/routes are owned here. - **S**
 
@@ -30,11 +30,11 @@ Capabilities declared: `theme-inertia-bookings-vue`.
 - **No success/confirmation state.** The form submits through Inertia but does not document or display a successful appointment request state.
 - **Widget support is minimal.** Only Content, Image, and Title widgets are implemented; richer Layout Builder widgets fall back to Content.
 - **No browser-level Vue test.** Current tests inspect files and provider registration, not actual rendered component behavior.
-- **No marketplace-ready media until runner recapture.** Required screenshots exist, but card-only marketplace media is currently the correct conservative state.
+- **Shipped: marketplace-ready media after runner recapture.** Required docs screenshots are promoted in the package manifest.
 
 ## 4. Issues / Risks
 
-1. **Important gap: screenshot contract still waits on runner recapture.** `.error` and `.slots` states now exist, but marketplace media should stay card-only until the runner installs the adapter and captures real Vue states. Recommended fix: recapture and visually verify desktop/mobile states. - **P2**
+1. **Closed: screenshot contract waited on runner recapture.** Vue adapter screenshots were recaptured through the local package runner and promoted from `docs/screenshots/`. - **P2**
 
 2. **Important gap: health checks remain mostly file-presence based.** Installer health should catch broken build entrypoints and contribution metadata before runtime. Recommended fix: assert build entrypoint, component contribution class, and vendor asset condition. - **P2**
 
@@ -52,7 +52,7 @@ The Vue adapter should be sold as part of the Inertia Bookings theme family, not
 
 **Improved description:** "Theme Inertia Bookings Vue supplies the Vue components and build entrypoint for Capell's Inertia Bookings theme. It renders the shared `Capell/Page` and `Capell/Bookings/Request` contracts, registers package build assets only when the Vue adapter is active, and lets the base theme own booking renderer binding. Install it when the host Capell/Inertia frontend uses Vue and needs the booking request flow to render with first-party components."
 
-**Media status:** Keep marketplace media card-only until the runner can install this adapter, render validation/loading/mobile states with real assets, and recapture trustworthy PNGs.
+**Media status:** Runner-backed PNGs are promoted for Vue request components, services, slot loading, validation, and mobile request states.
 
 **Cross-sell:** Requires Theme Inertia Bookings and Inertia Vue Adapter. Complements Bookings and the base Inertia package.
 
@@ -68,7 +68,7 @@ The Vue adapter should be sold as part of the Inertia Bookings theme family, not
 | Add component-map drift tests for source files and manifest component declarations         | Done   | S      | Medium | §2.2             |
 | Strengthen health check coverage beyond file presence                                      | Done   | S      | Medium | §2.7             |
 | Document/test sanitized prop boundary for `v-html` usage                                   | Done   | M      | High   | §2.4, §4.3       |
-| Coordinate screenshot runner recapture and keep marketplace media card-only until verified | Next   | M      | Medium | §2.5             |
+| Coordinate screenshot runner recapture and keep marketplace media card-only until verified | Done   | M      | Medium | §2.5             |
 | Add browser-level component smoke coverage for booking request interactions                | Later  | M      | Medium | §3               |
 | Expand widget component coverage beyond Content/Image/Title                                | Later  | M      | Medium | §3               |
 | Add success/confirmation UI contract                                                       | Later  | M      | Medium | §3               |

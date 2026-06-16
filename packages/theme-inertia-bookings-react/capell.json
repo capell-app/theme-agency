@@ -122,6 +122,31 @@
                 "path": "docs/assets/marketplace/extension-card.svg",
                 "alt": "Theme Inertia Bookings React marketplace card.",
                 "caption": "Theme Inertia Bookings React extension card."
+            },
+            {
+                "path": "docs/screenshots/react-booking-components.png",
+                "alt": "Theme Inertia Bookings React request components rendered through the adapter.",
+                "caption": "Runner-backed React booking request component pack."
+            },
+            {
+                "path": "docs/screenshots/react-booking-services.png",
+                "alt": "Theme Inertia Bookings React services sections rendered with booking-focused cards.",
+                "caption": "Runner-backed React services layout for appointment-led businesses."
+            },
+            {
+                "path": "docs/screenshots/react-booking-slot-loading.png",
+                "alt": "Theme Inertia Bookings React slot loading state with stable public selectors.",
+                "caption": "Runner-backed React deferred slot loading state."
+            },
+            {
+                "path": "docs/screenshots/react-booking-validation.png",
+                "alt": "Theme Inertia Bookings React validation state with accessible inline errors.",
+                "caption": "Runner-backed React validation state for failed booking requests."
+            },
+            {
+                "path": "docs/screenshots/react-booking-mobile.png",
+                "alt": "Theme Inertia Bookings React mobile booking request layout.",
+                "caption": "Runner-backed React mobile booking request flow."
             }
         ],
         "categories": ["frontend", "themes"]

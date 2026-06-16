@@ -85,10 +85,17 @@ it('keeps the package manifest aligned with the react component pack', function 
         throw_unless(is_string($screenshotPath), RuntimeException::class, 'Required React component pack screenshot entries must have screenshot paths.');
 
         expect(file_exists(dirname(__DIR__, 4) . '/' . $screenshotPath))->toBeTrue()
-            ->and($marketplaceScreenshotPaths)->not->toContain(str_replace('packages/theme-inertia-bookings-react/', '', $screenshotPath));
+            ->and($marketplaceScreenshotPaths)->toContain(str_replace('packages/theme-inertia-bookings-react/', '', $screenshotPath));
     }
 
-    expect($marketplaceScreenshotPaths)->toContain('docs/assets/marketplace/extension-card.svg');
+    expect($marketplaceScreenshotPaths)->toBe([
+        'docs/assets/marketplace/extension-card.svg',
+        'docs/screenshots/react-booking-components.png',
+        'docs/screenshots/react-booking-services.png',
+        'docs/screenshots/react-booking-slot-loading.png',
+        'docs/screenshots/react-booking-validation.png',
+        'docs/screenshots/react-booking-mobile.png',
+    ]);
 });
 
 it('keeps the react booking request form explicitly labelled', function (): void {
