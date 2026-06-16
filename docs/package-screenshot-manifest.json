@@ -889,8 +889,8 @@
             "requiresInstalledPackage": true,
             "installCommand": null,
             "setupCommand": null,
-            "demoCommand": null,
-            "demoParams": [],
+            "demoCommand": "capell:theme-inertia-bookings-demo",
+            "demoParams": ["url", "languages", "sites"],
             "doctorCommand": null,
             "entryCount": 5,
             "browserTestCount": 0

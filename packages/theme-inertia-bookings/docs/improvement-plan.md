@@ -14,7 +14,7 @@ Theme Inertia Bookings is the base premium Inertia theme for appointment-led ser
 
 3. **Shipped: fix vendor asset source registration.** The base provider now registers only `resources/css/theme-inertia-bookings.css`; adapter packages own Vue/JSX source globs and build assets. Evidence: `InertiaBookingsThemeServiceProvider::registerVendorAssets()`, registration tests. - **S**
 
-4. **Promote runner-backed screenshots consistently.** The package has `docs/screenshots/*.png`, but `capell.json` promotes `docs/assets/marketplace/*.png` copies. Prefer promoting runner-backed `docs/screenshots/` files, or document why curated marketplace crops are intentionally separate and keep both in sync with tests. Evidence: `capell.json marketplace.screenshots`, `docs/screenshots.json`, tests. - **S**
+4. **Shipped: promote runner-backed screenshots consistently.** The marketplace manifest now promotes the committed `docs/screenshots/*.png` runner outputs directly, keeping the static extension card as the only marketplace-art asset. Tests assert the promoted paths match the required screenshot contract. Evidence: `capell.json marketplace.screenshots`, `docs/screenshots.json`, tests. - **S**
 
 5. **Shipped: rewrite docs around the actual Inertia contract.** README/overview now explain the split between base theme, Bookings renderer override, shared Inertia runtime, and React/Vue adapter packages, including the required install path. - **S**
 
@@ -40,7 +40,7 @@ Capabilities declared: theme-inertia-bookings and Inertia bookings frontend.
 
 4. **Closed: docs were too generic for a cross-runtime package.** README and overview now document the base/runtime/adapter boundary. - **P2**
 
-5. **Improvement: screenshot promotion uses duplicate marketplace assets.** The committed runner files are stronger evidence. Recommended fix: promote `docs/screenshots/` or add tests that assert marketplace crops correspond to runner captures. - **P3**
+5. **Closed: screenshot promotion used duplicate marketplace assets.** The marketplace now points at committed runner-backed captures for homepage, request, services, locations, and mobile request states, with tests pinning the contract. - **P3**
 
 ## 5. Marketplace & Positioning
 
@@ -52,7 +52,7 @@ Theme Inertia Bookings is a premium lane for appointment-led businesses using Ca
 
 **Improved description:** "Theme Inertia Bookings gives service businesses a Capell/Inertia public journey built around services, trust proof, locations, FAQs, and appointment requests. The base package registers the `inertia-bookings` theme and swaps Bookings' public request route onto an Inertia renderer with lazy slot loading. React and Vue adapter packages provide framework-specific components, while the Bookings package remains the source of appointment data and submission behavior. Built for teams that want a modern Inertia frontend without moving booking logic into the theme."
 
-**Media status:** The package has useful committed PNG evidence. Once the renderer is implemented, recapture or visually verify homepage/services/location screenshots so they prove real output rather than stale fixture output.
+**Media status:** The package promotes committed runner-backed PNG evidence for homepage, request, services, locations, and mobile request states, with the extension card kept as static marketplace artwork.
 
 **Cross-sell:** Bookings is required. Inertia is required. React/Vue adapters provide component implementation. Layout Builder can provide public composition if the Inertia renderer consumes layout graph data in the future.
 
@@ -62,7 +62,7 @@ Theme Inertia Bookings is a premium lane for appointment-led businesses using Ca
 
 | Item                                                                                     | Bucket | Effort | Impact | Section ref |
 | ---------------------------------------------------------------------------------------- | ------ | ------ | ------ | ----------- |
-| Promote runner-backed screenshots or assert marketplace crop parity                      | Next   | S      | Medium | §2.4        |
+| Promote runner-backed screenshots or assert marketplace crop parity                      | Done   | S      | Medium | §2.4        |
 | Add demo command/fixture coverage for homepage, services, locations, and request journey | Done   | M      | Medium | §3          |
 | Add adapter-specific health checks for booking request component availability            | Done   | M      | Medium | §3          |
 | Add layout graph consumption for richer Inertia page composition                         | Later  | L      | Medium | §3, §5      |
@@ -91,4 +91,4 @@ vendor/bin/pest packages/inertia/tests packages/bookings/tests/Feature/PublicBoo
 - [x] Approved implementation slices shipped.
 - [x] Focused Theme Inertia Bookings verification passed.
 - [x] Package tests passed.
-- [ ] Repo preflight passed for changed files.
+- [x] Repo preflight passed for changed files.

@@ -134,29 +134,29 @@
                 "caption": "Theme Inertia Bookings extension card."
             },
             {
-                "path": "docs/assets/marketplace/inertia-bookings-request-form.png",
-                "alt": "Theme Inertia Bookings desktop appointment request form with service, staff, location, and slot fields.",
-                "caption": "Desktop booking request form with labelled controls, appointment slots, and customer details."
+                "path": "docs/screenshots/inertia-bookings-request-flow.png",
+                "alt": "Theme Inertia Bookings appointment request flow with service, staff, location, slot, and customer fields.",
+                "caption": "Runner-backed booking request flow with labelled controls, appointment slots, and customer details."
             },
             {
-                "path": "docs/assets/marketplace/inertia-bookings-mobile-request.png",
-                "alt": "Theme Inertia Bookings mobile booking request flow with labelled controls and appointment CTA.",
-                "caption": "Mobile booking request flow with service controls, available slots, and appointment actions."
+                "path": "docs/screenshots/inertia-bookings-mobile-request.png",
+                "alt": "Theme Inertia Bookings mobile appointment request flow with service controls and available slots.",
+                "caption": "Runner-backed mobile booking request flow with available slots and appointment actions."
             },
             {
-                "path": "docs/assets/marketplace/inertia-bookings-homepage.png",
+                "path": "docs/screenshots/inertia-bookings-homepage.png",
                 "alt": "Theme Inertia Bookings homepage with service-led booking content and appointment calls to action.",
-                "caption": "Homepage experience for service businesses using the Inertia Bookings theme."
+                "caption": "Runner-backed homepage experience for service businesses using the Inertia Bookings theme."
             },
             {
-                "path": "docs/assets/marketplace/inertia-bookings-services.png",
+                "path": "docs/screenshots/inertia-bookings-services.png",
                 "alt": "Theme Inertia Bookings services listing with appointment-focused service cards.",
-                "caption": "Services listing with booking-oriented content cards and clear appointment paths."
+                "caption": "Runner-backed services listing with booking-oriented content cards and appointment paths."
             },
             {
-                "path": "docs/assets/marketplace/inertia-bookings-locations.png",
+                "path": "docs/screenshots/inertia-bookings-locations.png",
                 "alt": "Theme Inertia Bookings locations page with clinic and service-location details.",
-                "caption": "Locations page for multi-location booking businesses."
+                "caption": "Runner-backed locations page for multi-location booking businesses."
             }
         ],
         "categories": ["frontend", "themes", "bookings"]

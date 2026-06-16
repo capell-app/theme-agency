@@ -98,11 +98,11 @@ it('promotes buyer safe marketplace screenshots backed by the runner contract', 
     $contractEntries = $screenshotContract['entries'] ?? [];
     $expectedMarketplaceScreenshotPaths = [
         'docs/assets/marketplace/extension-card.svg',
-        'docs/assets/marketplace/inertia-bookings-request-form.png',
-        'docs/assets/marketplace/inertia-bookings-mobile-request.png',
-        'docs/assets/marketplace/inertia-bookings-homepage.png',
-        'docs/assets/marketplace/inertia-bookings-services.png',
-        'docs/assets/marketplace/inertia-bookings-locations.png',
+        'docs/screenshots/inertia-bookings-request-flow.png',
+        'docs/screenshots/inertia-bookings-mobile-request.png',
+        'docs/screenshots/inertia-bookings-homepage.png',
+        'docs/screenshots/inertia-bookings-services.png',
+        'docs/screenshots/inertia-bookings-locations.png',
     ];
     $expectedRunnerScreenshotPaths = [
         'docs/screenshots/inertia-bookings-homepage.png',
@@ -130,7 +130,7 @@ it('promotes buyer safe marketplace screenshots backed by the runner contract', 
 
         $marketplaceScreenshotPaths[] = $path;
 
-        expect(str_starts_with($path, 'docs/assets/marketplace/') || str_starts_with($path, 'docs/screenshots/'))->toBeTrue()
+        expect($path === 'docs/assets/marketplace/extension-card.svg' || str_starts_with($path, 'docs/screenshots/'))->toBeTrue()
             ->and(File::exists($packagePath . '/' . $path))->toBeTrue()
             ->and(strlen(trim($alt)))->toBeGreaterThanOrEqual(12)
             ->and(strlen(trim($caption)))->toBeGreaterThanOrEqual(12);
