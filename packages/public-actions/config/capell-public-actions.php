@@ -34,6 +34,14 @@ return [
         'turnstile' => [
             'secret' => null,
         ],
+        'hcaptcha' => [
+            'secret' => null,
+        ],
+        'recaptcha' => [
+            'secret' => null,
+            'minimum_score' => 0.5,
+            'action' => null,
+        ],
     ],
     'tables' => [
         'actions' => 'public_actions',

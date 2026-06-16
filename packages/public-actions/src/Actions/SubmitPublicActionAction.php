@@ -201,6 +201,7 @@ final class SubmitPublicActionAction
             '_method',
             'g-recaptcha-response',
             'cf-turnstile-response',
+            'h-captcha-response',
             '_hp',
             'idempotency_key',
             'source_type',

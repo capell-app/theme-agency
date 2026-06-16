@@ -4,6 +4,7 @@ All notable changes to `capell-app/public-actions` will be documented in this fi
 
 ## Unreleased
 
+- Added hCaptcha and reCAPTCHA v3 spam-protection adapters alongside honeypot and Turnstile.
 - Added durable destination fan-out preparation so successful submissions create pending dispatch-attempt rows before sync or queued delivery begins.
 - Added `capell:public-actions:prune-submissions` for retention-based submission and dispatch-attempt pruning with dry-run and JSON output.
 - Added configurable submit and Zapier API rate-limit overrides, including per-action and per-integration-token limits.

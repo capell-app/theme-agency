@@ -6,7 +6,7 @@
     "kind": "package",
     "capellApiVersion": "^4.0",
     "version": "4.x-dev",
-    "description": "Public Actions gives Capell a safe boundary for untrusted public input: submissions are validated against a per-action schema, screened for spam (honeypot + Turnstile), de-duplicated by idempotency key, and persisted before anything fires. Successful submissions fan out to configured destinations over signed HTTP webhooks (HMAC-SHA256) with SSRF protection, encrypted secrets, durable retry, and a complete per-attempt dispatch audit. Native presets cover Zapier, Make, n8n, Pipedream, and generic endpoints, and a registry lets other packages plug in their own handlers, destination adapters, and spam guards. An authenticated Zapier-style JSON API exposes discoverable actions and submissions for no-code automation builders.",
+    "description": "Public Actions gives Capell a safe boundary for untrusted public input: submissions are validated against a per-action schema, screened for spam through honeypot, Turnstile, hCaptcha, or reCAPTCHA checks, de-duplicated by idempotency key, and persisted before anything fires. Successful submissions fan out to configured destinations over signed HTTP webhooks (HMAC-SHA256) with SSRF protection, encrypted secrets, durable retry, and a complete per-attempt dispatch audit. Native presets cover Zapier, Make, n8n, Pipedream, and generic endpoints, and a registry lets other packages plug in their own handlers, destination adapters, and spam guards. An authenticated Zapier-style JSON API exposes discoverable actions and submissions for no-code automation builders.",
     "product": {
         "group": "Capell Automation",
         "tier": "premium",
@@ -114,6 +114,7 @@
         "configurable-rate-limits",
         "manual-dispatch-replay",
         "submission-retention-pruning",
+        "captcha-spam-protection",
         "public-form",
         "public-actions",
         "submit-actions",

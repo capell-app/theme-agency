@@ -29,7 +29,9 @@ use Capell\PublicActions\Support\PublicActionDestinationAdapterRegistry;
 use Capell\PublicActions\Support\PublicActionHandlerRegistry;
 use Capell\PublicActions\Support\PublicActionProviderPresetRegistry;
 use Capell\PublicActions\Support\PublicActionSpamProtectionAdapterRegistry;
+use Capell\PublicActions\Support\SpamProtection\HCaptchaPublicActionSpamProtectionAdapter;
 use Capell\PublicActions\Support\SpamProtection\HoneypotPublicActionSpamProtectionAdapter;
+use Capell\PublicActions\Support\SpamProtection\ReCaptchaPublicActionSpamProtectionAdapter;
 use Capell\PublicActions\Support\SpamProtection\TurnstilePublicActionSpamProtectionAdapter;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Contracts\Container\Container;
@@ -83,6 +85,8 @@ class PublicActionsServiceProvider extends AbstractPackageServiceProvider
             $registry = new PublicActionSpamProtectionAdapterRegistry($app);
             $registry->register('honeypot', HoneypotPublicActionSpamProtectionAdapter::class);
             $registry->register('turnstile', TurnstilePublicActionSpamProtectionAdapter::class);
+            $registry->register('hcaptcha', HCaptchaPublicActionSpamProtectionAdapter::class);
+            $registry->register('recaptcha', ReCaptchaPublicActionSpamProtectionAdapter::class);
 
             return $registry;
         });

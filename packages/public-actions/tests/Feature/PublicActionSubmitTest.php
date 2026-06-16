@@ -198,6 +198,83 @@ it('supports turnstile spam protection adapters when configured', function (): v
         ->not->toHaveKey('cf-turnstile-response');
 });
 
+it('supports hcaptcha spam protection adapters when configured', function (): void {
+    config()->set('capell-public-actions.spam_protection.enabled', ['hcaptcha']);
+    config()->set('capell-public-actions.spam_protection.hcaptcha.secret', 'secret-key');
+
+    Http::fake([
+        'https://hcaptcha.com/siteverify' => Http::response(['success' => true]),
+    ]);
+
+    PublicAction::factory()->create([
+        'key' => 'hcaptcha-action',
+        'handler_key' => 'test.handler',
+    ]);
+
+    $this->postJson('/actions/hcaptcha-action', [
+        'email' => 'person@example.test',
+        'h-captcha-response' => 'token',
+    ])->assertOk();
+
+    expect(PublicActionSubmission::query()->firstOrFail()->payload)
+        ->not->toHaveKey('h-captcha-response');
+});
+
+it('supports recaptcha spam protection adapters when configured', function (): void {
+    config()->set('capell-public-actions.spam_protection.enabled', ['recaptcha']);
+    config()->set('capell-public-actions.spam_protection.recaptcha.secret', 'secret-key');
+    config()->set('capell-public-actions.spam_protection.recaptcha.minimum_score', 0.7);
+    config()->set('capell-public-actions.spam_protection.recaptcha.action', 'public_action');
+
+    Http::fake([
+        'https://www.google.com/recaptcha/api/siteverify' => Http::response([
+            'success' => true,
+            'score' => 0.9,
+            'action' => 'public_action',
+        ]),
+    ]);
+
+    PublicAction::factory()->create([
+        'key' => 'recaptcha-action',
+        'handler_key' => 'test.handler',
+    ]);
+
+    $this->postJson('/actions/recaptcha-action', [
+        'email' => 'person@example.test',
+        'g-recaptcha-response' => 'token',
+    ])->assertOk();
+
+    expect(PublicActionSubmission::query()->firstOrFail()->payload)
+        ->not->toHaveKey('g-recaptcha-response');
+});
+
+it('rejects recaptcha responses below the configured score', function (): void {
+    config()->set('capell-public-actions.spam_protection.enabled', ['recaptcha']);
+    config()->set('capell-public-actions.spam_protection.recaptcha.secret', 'secret-key');
+    config()->set('capell-public-actions.spam_protection.recaptcha.minimum_score', 0.7);
+
+    Http::fake([
+        'https://www.google.com/recaptcha/api/siteverify' => Http::response([
+            'success' => true,
+            'score' => 0.2,
+        ]),
+    ]);
+
+    PublicAction::factory()->create([
+        'key' => 'recaptcha-reject-action',
+        'handler_key' => 'test.handler',
+    ]);
+
+    $this->postJson('/actions/recaptcha-reject-action', [
+        'email' => 'person@example.test',
+        'g-recaptcha-response' => 'token',
+    ])
+        ->assertUnprocessable()
+        ->assertJsonValidationErrors(['g-recaptcha-response']);
+
+    expect(PublicActionSubmission::query()->count())->toBe(0);
+});
+
 it('ignores public payload redirects to other hosts', function (): void {
     PublicAction::factory()->create([
         'key' => 'redirect-action',
