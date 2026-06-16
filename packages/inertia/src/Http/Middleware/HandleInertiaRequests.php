@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Capell\Inertia\Http\Middleware;
 
 use Capell\Inertia\Actions\ResolveInertiaAdapterKeyAction;
+use Capell\Inertia\Actions\ResolveInertiaRootViewAction;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 use Override;
@@ -17,9 +18,7 @@ class HandleInertiaRequests extends Middleware
     #[Override]
     public function rootView(Request $request): string
     {
-        $rootView = config('capell-inertia.root_view', $this->rootView);
-
-        return is_string($rootView) && $rootView !== '' ? $rootView : $this->rootView;
+        return ResolveInertiaRootViewAction::run(config('capell-inertia.root_view', $this->rootView));
     }
 
     /**

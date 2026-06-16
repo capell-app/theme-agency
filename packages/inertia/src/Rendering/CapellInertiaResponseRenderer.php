@@ -10,6 +10,8 @@ use Capell\Frontend\Actions\AssertPublicHtmlContainsNoAuthoringSurfaceAction;
 use Capell\Frontend\Contracts\FrontendResponseRenderer;
 use Capell\Frontend\Data\FrontendRenderContextData;
 use Capell\Inertia\Actions\BuildInertiaPagePropsAction;
+use Capell\Inertia\Actions\ResolveInertiaComponentNameAction;
+use Capell\Inertia\Actions\ResolveInertiaRootViewAction;
 use Inertia\Inertia;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -26,10 +28,10 @@ final class CapellInertiaResponseRenderer implements FrontendResponseRenderer
             return response()->noContent($context->status ?? 404);
         }
 
-        Inertia::setRootView((string) config('capell-inertia.root_view', 'capell-inertia::app'));
+        Inertia::setRootView(ResolveInertiaRootViewAction::run());
 
         $response = Inertia::render(
-            (string) config('capell-inertia.page_component', 'Capell/Page'),
+            ResolveInertiaComponentNameAction::run(),
             BuildInertiaPagePropsAction::run($context),
         )->toResponse(request());
 

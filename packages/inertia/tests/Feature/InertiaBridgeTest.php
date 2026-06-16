@@ -3,17 +3,23 @@
 declare(strict_types=1);
 
 use Capell\Core\Enums\FrontendRuntime;
+use Capell\Core\Models\Blueprint;
+use Capell\Core\Models\Page;
 use Capell\Frontend\Data\FrontendRenderContextData;
 use Capell\Frontend\Support\Render\FrontendResponseRendererRegistry;
 use Capell\Frontend\Support\Routing\FrontendRouteMiddlewareRegistry;
 use Capell\Inertia\Actions\BuildInertiaPagePropsAction;
 use Capell\Inertia\Actions\ResolveInertiaAdapterKeyAction;
+use Capell\Inertia\Actions\ResolveInertiaComponentNameAction;
+use Capell\Inertia\Actions\ResolveInertiaRootViewAction;
 use Capell\Inertia\Data\InertiaAdapterData;
 use Capell\Inertia\Facades\CapellInertia;
 use Capell\Inertia\Health\InertiaHealthCheck;
 use Capell\Inertia\Http\Middleware\HandleInertiaRequests;
+use Capell\Inertia\Rendering\CapellInertiaResponseRenderer;
 use Capell\Inertia\Support\InertiaAdapterRegistry;
 use Capell\Inertia\Tests\InertiaTestCase;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\View;
 use Illuminate\Testing\TestResponse;
@@ -92,6 +98,17 @@ it('tracks registered inertia adapters and resolves the configured active adapte
         ->and(ResolveInertiaAdapterKeyAction::run(' react '))->toBe('react');
 });
 
+it('sanitizes root view and component config values', function (): void {
+    config()->set('capell-inertia.root_view', ['invalid']);
+
+    expect(ResolveInertiaRootViewAction::run(['invalid']))->toBe('capell-inertia::app')
+        ->and(ResolveInertiaRootViewAction::run(' inertia-test::app '))->toBe('inertia-test::app')
+        ->and(ResolveInertiaComponentNameAction::run(['invalid']))->toBe('Capell/Page')
+        ->and(ResolveInertiaComponentNameAction::run(' Capell/CustomPage '))->toBe('Capell/CustomPage')
+        ->and(ResolveInertiaComponentNameAction::run('', 'Capell/Fallback'))->toBe('Capell/Fallback')
+        ->and(resolve(HandleInertiaRequests::class)->rootView(request()))->toBe('capell-inertia::app');
+});
+
 it('uses a sanitized adapter key in public page props', function (): void {
     config()->set('capell-inertia.adapter', ['invalid']);
 
@@ -104,6 +121,28 @@ it('uses a sanitized adapter key in public page props', function (): void {
     ));
 
     expect(data_get($props, 'runtime.adapter'))->toBe('vue');
+});
+
+it('uses sanitized root view and component values for public page rendering', function (): void {
+    config()->set('capell-inertia.root_view', ['invalid']);
+    config()->set('capell-inertia.page_component', ['invalid']);
+
+    $pageType = Blueprint::factory()->page()->default()->create();
+    $page = Page::factory()->type($pageType)->create(['name' => 'Inertia Page']);
+    $request = Request::create('/inertia-page', 'GET', server: ['HTTP_X_INERTIA' => 'true']);
+    app()->instance('request', $request);
+
+    $response = (new CapellInertiaResponseRenderer)->render(new FrontendRenderContextData(
+        page: $page,
+        site: null,
+        language: null,
+        layout: null,
+        theme: null,
+    ));
+
+    $payload = json_decode((string) $response->getContent(), associative: true, flags: JSON_THROW_ON_ERROR);
+
+    expect($payload['component'] ?? null)->toBe('Capell/Page');
 });
 
 it('reports inertia bridge health from registered renderer and middleware services', function (): void {
@@ -130,6 +169,21 @@ it('renders package route responses through the capell inertia helper', function
         ->assertOk()
         ->assertJsonPath('component', 'Capell/Test')
         ->assertJsonPath('props.message', 'ok');
+});
+
+it('uses sanitized root view and component values for package route responses', function (): void {
+    config()->set('capell-inertia.root_view', ['invalid']);
+
+    Route::middleware([HandleInertiaRequests::class])->get('/_test/inertia-sanitized', fn (): Response => CapellInertia::render(' Capell/Test ', [
+        'message' => 'ok',
+    ]));
+
+    get('/_test/inertia-sanitized', ['X-Inertia' => 'true'])
+        ->assertOk()
+        ->assertJsonPath('component', 'Capell/Test')
+        ->assertJsonPath('props.message', 'ok');
+
+    expect(resolve(HandleInertiaRequests::class)->rootView(request()))->toBe('capell-inertia::app');
 });
 
 it('rejects package route initial html when inertia props expose authoring markers', function (): void {
