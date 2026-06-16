@@ -16,7 +16,7 @@ Social Feeds is a premium growth package that contributes a `social-feed` Block 
 
 4. **Clean manifest traceability drift.** `contributionTraceability.deferredContributions` still listed shipped contribution types after admin resources, the frontend widget, and the scheduled sync path landed. Update traceability when package surfaces ship or are intentionally deferred. Evidence: `capell.json contributionTraceability`. - **S** - **Done 2026-06-15:** admin, frontend, model, and scheduled-job contributions are declared in `capell.json`; the package has no Settings class, so `database.settings`, `settings`, and deferred contributions now all consistently report no settings surface.
 
-5. **Add render budget and no-query Blade coverage.** `FetchSocialFeedRenderDataAction` queries local items and the Blade view renders prepared Data; that matches the public Blade safety rule. Add a zero-query Blade render test after hydrating `SocialFeedRenderData` and a bounded query test for the Action. Evidence: `FetchSocialFeedRenderDataAction`, `resources/views/blocks/social-feed.blade.php`, `SocialFeedBlockRenderTest`. - **S**
+5. **Add render budget and no-query Blade coverage.** `FetchSocialFeedRenderDataAction` queries local items and the Blade view renders prepared Data; that matches the public Blade safety rule. Add a zero-query Blade render test after hydrating `SocialFeedRenderData` and a bounded query test for the Action. Evidence: `FetchSocialFeedRenderDataAction`, `resources/views/blocks/social-feed.blade.php`, `SocialFeedBlockRenderTest`. - **S** - **Done 2026-06-16:** focused tests now prove render data fetching stays inside a small query budget and package Blade renders prepared data with zero database queries.
 
 6. **Improve public image accessibility.** The block renders feed media images with empty `alt`, which is defensible for decorative thumbnails but weak when captions are hidden or the image is the main content. Add a config option/derived alt text from caption/provider where appropriate, while preserving decorative alt for repeated previews. Evidence: `resources/views/blocks/social-feed.blade.php`. - **S**
 
@@ -68,7 +68,7 @@ Social Feeds belongs in `Capell Growth` because it turns external social proof i
 | Fix `contributionTraceability` for shipped/deferred surfaces                    | Done   | S      | Medium | §2.4        |
 | Align scheduled-job/settings metadata and docs                                  | Done   | S      | Medium | §2.4, §4    |
 | Add stale-sync health diagnostics                                               | Done   | S      | Medium | §2.2, §4.2  |
-| Add render budget/no-query public Blade coverage                                | Next   | S      | Medium | §2.5        |
+| Add render budget/no-query public Blade coverage                                | Done   | S      | Medium | §2.5        |
 | Add cached item pruning/retention                                               | Next   | M      | Medium | §3          |
 | Add image alt strategy for media-heavy feeds                                    | Next   | S      | Low    | §2.6        |
 | Add moderation/approval/pinning controls                                        | Later  | M      | Medium | §3          |

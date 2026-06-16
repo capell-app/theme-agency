@@ -101,7 +101,8 @@
         "social-feeds-frontend",
         "social-feed-provider-registry",
         "social-feed-cached-rendering",
-        "social-feed-stale-sync-health"
+        "social-feed-stale-sync-health",
+        "social-feed-render-budget"
     ],
     "security": {
         "riskTier": "sensitive",

@@ -3,11 +3,16 @@
 declare(strict_types=1);
 
 use Capell\BlockLibrary\Support\BlockRegistry;
+use Capell\SocialFeeds\Actions\FetchSocialFeedRenderDataAction;
 use Capell\SocialFeeds\Blocks\SocialFeedBlockRenderer;
+use Capell\SocialFeeds\Data\SocialFeedRenderData;
+use Capell\SocialFeeds\Data\SocialFeedRenderItemData;
+use Capell\SocialFeeds\Data\SocialFeedWidgetConfigData;
 use Capell\SocialFeeds\Enums\SocialFeedConnectionStatus;
 use Capell\SocialFeeds\Models\SocialFeedConnection;
 use Capell\SocialFeeds\Models\SocialFeedItem;
 use Capell\SocialFeeds\Tests\TestCase;
+use Illuminate\Support\Facades\DB;
 
 uses(TestCase::class);
 
@@ -51,4 +56,73 @@ it('renders cached items without leaking private connection details or raw html'
         ->and($html)->not->toContain('secret-token')
         ->and($html)->not->toContain('connection_id')
         ->and($html)->not->toContain('<script>alert("x")</script>');
+});
+
+it('fetches render data within a bounded query budget', function (): void {
+    $connection = SocialFeedConnection::query()->create([
+        'provider' => 'rss',
+        'name' => 'Campaign Feed',
+        'status' => SocialFeedConnectionStatus::Connected,
+        'credentials' => ['feed_url' => 'https://example.test/feed.xml'],
+    ]);
+
+    foreach (range(1, 5) as $postNumber) {
+        SocialFeedItem::query()->create([
+            'connection_id' => $connection->getKey(),
+            'provider' => 'rss',
+            'external_id' => "budget-post-{$postNumber}",
+            'type' => 'link',
+            'text' => "Budget post {$postNumber}",
+            'permalink' => "https://example.test/posts/budget-{$postNumber}",
+            'author_name' => 'Example Author',
+            'published_at' => now()->subMinutes($postNumber),
+        ]);
+    }
+
+    $queryCount = 0;
+    DB::listen(static function () use (&$queryCount): void {
+        $queryCount++;
+    });
+
+    $renderData = FetchSocialFeedRenderDataAction::run(SocialFeedWidgetConfigData::fromState([
+        'connection_id' => $connection->getKey(),
+        'layout' => 'carousel',
+        'limit' => 3,
+    ]));
+
+    expect($queryCount)->toBeLessThanOrEqual(2)
+        ->and($renderData->items)->toHaveCount(3);
+});
+
+it('renders prepared social feed data in Blade without database queries', function (): void {
+    $renderData = new SocialFeedRenderData(
+        config: SocialFeedWidgetConfigData::fromState([
+            'layout' => 'list',
+            'limit' => 1,
+        ]),
+        items: [
+            new SocialFeedRenderItemData(
+                provider: 'rss',
+                type: 'image',
+                text: 'Prepared post',
+                permalink: 'https://example.test/posts/prepared',
+                mediaUrl: 'https://example.test/images/prepared.jpg',
+                thumbnailUrl: null,
+                authorName: 'Prepared Author',
+                authorAvatarUrl: null,
+                publishedAt: now()->toImmutable(),
+            ),
+        ],
+    );
+
+    $queryCount = 0;
+    DB::listen(static function () use (&$queryCount): void {
+        $queryCount++;
+    });
+
+    $html = view('capell-social-feeds::blocks.social-feed', ['feed' => $renderData])->render();
+
+    expect($queryCount)->toBe(0)
+        ->and($html)->toContain('Prepared post')
+        ->and($html)->toContain('Prepared Author');
 });
