@@ -99,6 +99,13 @@ it('declares the dashboard report export command', function (): void {
     expect(data_get($manifest, 'commands.export'))->toBe('capell:dashboard-reports:export');
 });
 
+it('declares the dashboard report widget registry capability', function (): void {
+    $packagePath = dirname(__DIR__, 3);
+    $manifest = capell_json_file_array($packagePath . '/capell.json');
+
+    expect(data_get($manifest, 'capabilities'))->toContain('dashboard-report-widget-registry');
+});
+
 it('declares dashboard widget contribution metadata', function (): void {
     $packagePath = dirname(__DIR__, 3);
     $manifest = capell_json_file_array($packagePath . '/capell.json');

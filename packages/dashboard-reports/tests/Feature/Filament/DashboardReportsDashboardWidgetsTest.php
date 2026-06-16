@@ -14,6 +14,7 @@ use Capell\DashboardReports\Filament\Widgets\PublishingTrendChartWidget;
 use Capell\DashboardReports\Providers\AdminServiceProvider;
 use Capell\DashboardReports\Support\Dashboard\DashboardReportsContentHealthDataProvider;
 use Capell\DashboardReports\Support\Dashboard\DashboardReportsSettingsResolver;
+use Capell\DashboardReports\Support\Dashboard\DashboardReportWidgetRegistry;
 use Capell\DashboardReports\Tests\DashboardReportsTestCase;
 use Capell\Tests\Support\Concerns\CreatesAdminUser;
 
@@ -32,6 +33,40 @@ it('registers dashboard-dashboard_reports dashboard widgets on the main dashboar
     expect(CapellAdmin::getDashboardWidgets(DashboardEnum::Main))
         ->toContain(PublishingTrendChartWidget::class)
         ->toContain(ContentHealthWidget::class);
+});
+
+it('exposes dashboard report widget registrations through a package registry', function (): void {
+    $registrations = resolve(DashboardReportWidgetRegistry::class)->registrations();
+
+    expect($registrations->pluck('widget')->all())
+        ->toContain(PublishingTrendChartWidget::class)
+        ->toContain(ContentHealthWidget::class)
+        ->and($registrations->firstWhere('widget', PublishingTrendChartWidget::class)['dashboards'])
+        ->toBe([DashboardEnum::Main])
+        ->and($registrations->firstWhere('widget', ContentHealthWidget::class)['dashboards'])
+        ->toBe([DashboardEnum::Main]);
+});
+
+it('allows sibling packages to register dashboard report widgets without duplicate entries', function (): void {
+    $registry = new DashboardReportWidgetRegistry;
+    $registry
+        ->register(ContentHealthWidget::class, DashboardEnum::Main)
+        ->register(ContentHealthWidget::class, DashboardEnum::SystemHealth);
+
+    app()->instance(DashboardReportWidgetRegistry::class, $registry);
+
+    $method = new ReflectionMethod(AdminServiceProvider::class, 'registerDashboardWidgets');
+    $method->invoke(new AdminServiceProvider(app()));
+
+    expect(CapellAdmin::getDashboardWidgets(DashboardEnum::Main))
+        ->toContain(PublishingTrendChartWidget::class)
+        ->toContain(ContentHealthWidget::class)
+        ->and(CapellAdmin::getDashboardWidgets(DashboardEnum::SystemHealth))
+        ->toContain(ContentHealthWidget::class)
+        ->and($registry->registrations()->filter(
+            static fn (array $registration): bool => $registration['widget'] === ContentHealthWidget::class
+                && $registration['dashboards'] === [DashboardEnum::Main],
+        )->count())->toBe(1);
 });
 
 it('binds dashboard-dashboard_reports content health as the installed content health provider', function (): void {

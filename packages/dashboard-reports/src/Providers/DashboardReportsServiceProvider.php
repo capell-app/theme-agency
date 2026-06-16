@@ -6,6 +6,7 @@ namespace Capell\DashboardReports\Providers;
 
 use Capell\Core\Support\Packages\AbstractPackageServiceProvider;
 use Capell\DashboardReports\Console\Commands\ExportDashboardReportCommand;
+use Capell\DashboardReports\Support\Dashboard\DashboardReportWidgetRegistry;
 use Spatie\LaravelPackageTools\Package;
 
 final class DashboardReportsServiceProvider extends AbstractPackageServiceProvider
@@ -29,5 +30,8 @@ final class DashboardReportsServiceProvider extends AbstractPackageServiceProvid
         $this->app->register(AdminServiceProvider::class);
     }
 
-    public function packageRegistered(): void {}
+    public function packageRegistered(): void
+    {
+        $this->app->singleton(DashboardReportWidgetRegistry::class);
+    }
 }

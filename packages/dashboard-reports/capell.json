@@ -54,7 +54,11 @@
     },
     "settings": [],
     "permissions": [],
-    "capabilities": ["dashboard-reports", "dashboard-reports-admin"],
+    "capabilities": [
+        "dashboard-reports",
+        "dashboard-reports-admin",
+        "dashboard-report-widget-registry"
+    ],
     "security": {
         "riskTier": "low",
         "publicSurface": {

@@ -38,6 +38,7 @@ Screenshot contract: `docs/screenshots.json`.
 - Service providers: `Capell\DashboardReports\Providers\DashboardReportsServiceProvider`, `Capell\DashboardReports\Providers\AdminServiceProvider`.
 - Config files: `packages/dashboard-reports/config/capell-dashboard-reports.php`.
 - Filament classes: `DashboardReportsPageTableExtender`, `DashboardReportsDashboardSettingsContributor`, `ContentHealthWidget`, `PublishingTrendChartWidget`.
+- Extension points: sibling packages can resolve `Capell\DashboardReports\Support\Dashboard\DashboardReportWidgetRegistry` and call `register($widgetClass, DashboardEnum::Main)` during package registration to add dashboard report widgets without bypassing the package's registration path.
 - Actions: `BuildDefaultContentHealthAction`, `BuildPublishingTrendAction`, `ExportContentHealthCsvAction`, `ExportPublishingTrendCsvAction`.
 - Data objects: `PublishingTrendData`, `PublishingTrendPointData`, `ResolvedDashboardReportsSettingsData`.
 - Command signatures: `capell:dashboard-reports:export`.
