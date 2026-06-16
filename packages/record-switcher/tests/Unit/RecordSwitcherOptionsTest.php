@@ -71,6 +71,58 @@ it('keeps empty searchable attributes from breaking generic option loading', fun
         ->and($options[0]['label'])->toBe('Beta');
 });
 
+it('prioritizes recently updated generic records before older records', function (): void {
+    recordSwitcherCreateFixtureRecordsTable();
+
+    $currentRecord = RecordSwitcherTestRecord::query()->create(['name' => 'Current', 'code' => 'current']);
+    RecordSwitcherTestRecord::query()->create([
+        'name' => 'Older',
+        'code' => 'older',
+        'updated_at' => now()->subDays(2),
+    ]);
+    RecordSwitcherTestRecord::query()->create([
+        'name' => 'Recent',
+        'code' => 'recent',
+        'updated_at' => now()->subMinute(),
+    ]);
+
+    $switcher = new RecordSwitcher;
+    $switcher->resourceClass = RecordSwitcherTestRecordResource::class;
+    $switcher->recordKey = recordSwitcherRouteKey($currentRecord);
+    $switcher->label = 'Current';
+
+    $options = $switcher->getOptions();
+
+    expect($options)->toHaveCount(2)
+        ->and($options[0]['label'])->toBe('Recent')
+        ->and($options[1]['label'])->toBe('Older');
+});
+
+it('prioritizes page siblings before same-site and other-site pages', function (): void {
+    $pageType = Blueprint::factory()->page()->default()->create();
+    $primarySite = Site::factory()->create(['name' => 'Primary site']);
+    $secondarySite = Site::factory()->create(['name' => 'Secondary site']);
+    $parentPage = Page::factory()->site($primarySite)->type($pageType)->create(['name' => 'Section']);
+    $currentPage = Page::factory()->site($primarySite)->type($pageType)->parent($parentPage)->create(['name' => 'Current']);
+    Page::factory()->site($secondarySite)->type($pageType)->create(['name' => 'Aardvark other site']);
+    Page::factory()->site($primarySite)->type($pageType)->parent($parentPage)->create(['name' => 'Beta sibling']);
+    Page::factory()->site($primarySite)->type($pageType)->create(['name' => 'Zulu same site']);
+    Page::query()->fixTree();
+
+    $switcher = new RecordSwitcher;
+    $switcher->resourceClass = PageResource::class;
+    $switcher->recordKey = (string) $currentPage->getRouteKey();
+    $switcher->label = 'Current';
+
+    $options = $switcher->getOptions();
+
+    expect($options)->toHaveCount(4)
+        ->and($options[0]['label'])->toContain('Beta sibling')
+        ->and($options[1]['label'])->toContain('Section')
+        ->and($options[2]['label'])->toContain('Zulu same site')
+        ->and($options[3]['label'])->toContain('Aardvark other site');
+});
+
 it('keeps page option rendering inside the manifest admin query budget', function (): void {
     $pageType = Blueprint::factory()->page()->default()->create();
     $site = Site::factory()->withTranslations(siteDomainData: [

@@ -35,9 +35,12 @@ describe('record-switcher manifest', function (): void {
         $manifestData = $manifest();
         $product = recordSwitcherArrayValue($manifestData, 'product');
         $commercial = recordSwitcherArrayValue($manifestData, 'commercial');
+        $capabilities = $manifestData['capabilities'] ?? [];
+        throw_unless(is_array($capabilities), RuntimeException::class, 'Expected Record Switcher capabilities.');
 
         expect($product['tier'] ?? null)->toBe('free')
             ->and($product['bundle'] ?? null)->toBe('foundation')
+            ->and($capabilities)->toContain('same-site-sibling-prioritization')
             ->and($commercial['proposedLicense'] ?? null)->toBe('free')
             ->and($commercial['requestedCertification'] ?? null)->toBe('first-party')
             ->and($commercial['supportPolicy'] ?? null)->toBe('capell-first-party')

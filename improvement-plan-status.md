@@ -10,7 +10,7 @@ The current repository contains 56 package improvement plans. Their roadmap rows
 | ------ | ---: |
 | Now    |    0 |
 | Next   |   61 |
-| Later  |   93 |
+| Later  |   92 |
 
 The work is not complete until every package plan has been reviewed against current code, required features are implemented or intentionally deferred, new behavior is documented, and focused verification passes for each changed package.
 

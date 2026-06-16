@@ -83,15 +83,25 @@ final class RecordSwitcher extends Component
         $modelClass = $this->resourceClass::getModel();
 
         if ($modelClass !== Page::class && ! is_subclass_of($modelClass, Page::class)) {
-            return $query
-                ->whereKeyNot($this->recordKey)
-                ->orderBy($query->getModel()->getKeyName());
+            $query->whereKeyNot($this->recordKey);
+
+            $updatedAtColumn = $query->getModel()->getUpdatedAtColumn();
+
+            if ($query->getModel()->usesTimestamps() && is_string($updatedAtColumn)) {
+                $query->orderByDesc($query->getModel()->qualifyColumn($updatedAtColumn));
+            }
+
+            return $query->orderBy($query->getModel()->getKeyName());
         }
 
         $hasPageHierarchy = method_exists($this->resourceClass, 'hasPageHierarchy')
             && (bool) $this->resourceClass::hasPageHierarchy();
+        $currentPage = Page::query()
+            ->select(['id', 'site_id', 'parent_id'])
+            ->whereKey($this->recordKey)
+            ->first();
 
-        return $query->select([
+        $query->select([
             'pages.id',
             'pages.name',
             'pages.blueprint_id',
@@ -110,8 +120,33 @@ final class RecordSwitcher extends Component
                 'type',
                 fn (BuilderContract $query): BuilderContract => $query->adminResource($this->resourceName()),
             )
-            ->whereNot('id', $this->recordKey)
-            ->orderBy('pages.name');
+            ->whereNot('id', $this->recordKey);
+
+        $this->applyPagePriorityOrdering($query, $currentPage);
+
+        return $query->orderBy('pages.name');
+    }
+
+    /**
+     * @param  Builder<Model>  $query
+     */
+    private function applyPagePriorityOrdering(Builder $query, ?Page $currentPage): Builder
+    {
+        if (! $currentPage instanceof Page) {
+            return $query;
+        }
+
+        if ($currentPage->parent_id === null) {
+            return $query->orderByRaw(
+                'case when pages.parent_id is null then 0 when pages.site_id = ? then 1 else 2 end',
+                [$currentPage->site_id],
+            );
+        }
+
+        return $query->orderByRaw(
+            'case when pages.parent_id = ? then 0 when pages.site_id = ? then 1 else 2 end',
+            [$currentPage->parent_id, $currentPage->site_id],
+        );
     }
 
     private function resourceName(): string

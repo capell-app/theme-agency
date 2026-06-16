@@ -4,7 +4,7 @@
 
 ## 1. Snapshot
 
-Record Switcher is a small admin-only productivity package for Filament edit pages. It tags `RecordSwitcherHeadingExtender` into Capell Admin's `EditRecordHeadingExtender` extension point, replaces edit-page headings with a Livewire `RecordSwitcher` component, and loads first-party CSS/Alpine assets for searchable heading suggestions. It has no migrations, settings, commands, public routes, or permissions. The Livewire component builds options from the current Filament resource query, with special Page handling that loads site, URL, and optional ancestry data so editors can distinguish records without returning to table views. The marketplace already promotes runner-backed light/dark admin screenshots for the heading switcher workflow.
+Record Switcher is a small admin-only productivity package for Filament edit pages. It tags `RecordSwitcherHeadingExtender` into Capell Admin's `EditRecordHeadingExtender` extension point, replaces edit-page headings with a Livewire `RecordSwitcher` component, and loads first-party CSS/Alpine assets for searchable heading suggestions. It has no migrations, settings, commands, public routes, or permissions. The Livewire component builds options from the current Filament resource query, prioritizing recently updated generic records and, for Pages, same-parent siblings before same-site and other-site records. Special Page handling loads site, URL, and optional ancestry data so editors can distinguish records without returning to table views. The marketplace already promotes runner-backed light/dark admin screenshots for the heading switcher workflow.
 
 ## 2. Improvements (existing functionality)
 
@@ -25,7 +25,7 @@ Record Switcher is a small admin-only productivity package for Filament edit pag
 Capabilities declared: admin record switching, searchable edit-page navigation, Tab-to-accept, Filament heading switcher, and first-party admin assets.
 
 - **No per-resource configuration.** There is no package config for excluded resources, custom labels, result limits, or search attributes. The package leans entirely on Filament resource defaults.
-- **No "recent records" or "same parent/site" prioritization.** The switcher sorts Page records by name and generic records by key. Editors often need nearby sibling pages, recently edited records, or same-site grouping first.
+- **Done/Shipped: recent, sibling, and same-site prioritization.** Generic resource suggestions now sort recently updated records first before falling back to key order. Page suggestions prioritize same-parent siblings, then records on the same site, then other-site pages, while preserving the existing bounded query and enriched Page labels. — `src/Livewire/RecordSwitcher.php`, `tests/Unit/RecordSwitcherOptionsTest.php`
 - **Keyboard behavior is present in the JS asset but not covered by a browser test.** Unit tests do not prove Tab-to-accept, focus behavior, loading states, or dark-mode styling in a real browser.
 - **No accessibility verification.** The custom Choices/heading UI should be checked for label announcement, focus trap behavior, Escape handling, and touch target size.
 
@@ -64,7 +64,7 @@ Record Switcher belongs in the free Foundation bundle because it improves every 
 | Add a documented opt-out/config seam for unsupported resources                              | Done   | M      | Low    | §2.5, §4.4  |
 | Declare health-check contribution metadata                                                  | Done   | S      | Medium | §2.6        |
 | Add browser-level keyboard/accessibility coverage for Tab/Escape/focus behavior             | Later  | M      | Medium | §3          |
-| Add recency/sibling/same-site ordering as an editor productivity enhancement                | Later  | M      | Medium | §3          |
+| Done/Shipped: add recency/sibling/same-site ordering as an editor productivity enhancement  | Done   | M      | Medium | §3          |
 
 ## 7. Verification
 

@@ -6,7 +6,7 @@
     "kind": "package",
     "capellApiVersion": "^4.0",
     "version": "4.x-dev",
-    "description": "Fast Filament edit-page record switching for Capell admins, with searchable suggestions and keyboard selection.",
+    "description": "Fast Filament edit-page record switching for Capell admins, with searchable suggestions, sibling and same-site prioritization, recent-record ordering, and keyboard selection.",
     "product": {
         "group": "Capell Foundation",
         "tier": "free",
@@ -58,6 +58,7 @@
     "capabilities": [
         "admin-record-switching",
         "edit-page-searchable-record-navigation",
+        "same-site-sibling-prioritization",
         "keyboard-tab-suggestion-acceptance",
         "filament-heading-switcher",
         "first-party-admin-assets"
@@ -124,7 +125,7 @@
     },
     "marketplace": {
         "summary": "Jump between editable Capell records directly from the page heading with fast suggestions and Tab-to-accept keyboard flow.",
-        "description": "Record Switcher keeps editors moving across pages, layouts, widgets, sections, and navigation records without returning to table views. It ships first-party admin assets, a Livewire heading component, and Capell-owned styling that matches the admin surface.",
+        "description": "Record Switcher keeps editors moving across pages, layouts, widgets, sections, and navigation records without returning to table views. It prioritizes nearby page siblings, same-site pages, and recently updated records so the next useful edit target appears first. It ships first-party admin assets, a Livewire heading component, and Capell-owned styling that matches the admin surface.",
         "screenshots": [
             {
                 "path": "docs/screenshots/admin-heading-switcher.png",
