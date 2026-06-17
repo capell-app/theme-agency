@@ -90,6 +90,6 @@ vendor/bin/pest packages/access-gate/tests/Feature/AccessGateDoctorCommandTest.p
 - [x] Comprehensive local review pass completed for routes, provider, Actions, health, docs, and public surfaces.
 - [x] Capell audience pass completed for operators, developers, and buyers.
 - [x] Approved implementation slice 1 shipped: manifest contribution metadata and Core model registration.
-- [ ] Focused Access Gate verification passed.
-- [ ] Package tests passed.
-- [ ] Repo preflight passed for changed files.
+- [x] Focused Access Gate verification passed.
+- [x] Package tests passed.
+- [x] Repo preflight passed for changed files.

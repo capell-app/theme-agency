@@ -94,4 +94,4 @@ vendor/bin/pest packages/foundation-theme/tests packages/layout-builder/tests --
 - [x] Approved implementation slices shipped.
 - [x] Focused Theme Estate Agents verification passed.
 - [x] Package tests passed.
-- [ ] Repo preflight passed for changed files.
+- [x] Repo preflight passed for changed files.

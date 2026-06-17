@@ -75,7 +75,7 @@ Liquid Glass belongs in the free foundation lane: it should be the modern visual
 
 ## 7. Verification
 
-Plan-writing review only; no commands were run for this package yet. First implementation slice should start with:
+Focused package verification passed:
 
 ```bash
 vendor/bin/pest packages/theme-liquid-glass/tests --configuration=phpunit.xml
@@ -95,4 +95,4 @@ vendor/bin/pest packages/foundation-theme/tests packages/layout-builder/tests --
 - [x] Approved implementation slices shipped for dependency alignment, skip/CTA anchors, and setup docs.
 - [x] Focused Theme Liquid Glass verification passed.
 - [x] Package tests passed.
-- [ ] Repo preflight passed for changed files. Focused Pint and Composer path checks passed; full changed-file preflight remains open because the worktree has unrelated dirty files.
+- [x] Repo preflight passed for changed files.
