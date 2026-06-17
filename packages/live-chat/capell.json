@@ -374,6 +374,18 @@
                 "label": "Live Chat extension card",
                 "alt": "Live Chat extension preview showing Lara answering a pricing question and syncing the conversation to Contacts.",
                 "caption": "Add an AI first chat widget that captures leads, escalates sensitive requests, and keeps Contacts as the CRM record of truth."
+            },
+            {
+                "path": "docs/screenshots/live-chat-widget.png",
+                "label": "Live Chat widget",
+                "alt": "Live Chat public widget opened with AI disclosure, message-first capture, details capture, and human handoff controls.",
+                "caption": "Package-rendered widget proof with the public chat panel open."
+            },
+            {
+                "path": "docs/screenshots/live-chat-conversations-admin.png",
+                "label": "Live Chat conversation inbox",
+                "alt": "Live Chat operator inbox showing incoming conversations, visitor intent, handoff state, selected thread, and CRM context.",
+                "caption": "Operator inbox proof for reviewing chat handoffs and qualified leads."
             }
         ],
         "categories": ["frontend", "crm", "support", "ai"]

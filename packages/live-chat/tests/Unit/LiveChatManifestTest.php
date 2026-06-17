@@ -278,14 +278,16 @@ it('declares the live chat package manifest contract', function (): void {
         ->and($contributionTraceability['deferredContributions'] ?? null)->toBe([]);
 });
 
-it('declares committed marketplace assets and screenshot fallbacks', function (): void {
+it('declares committed marketplace assets and screenshot proof outputs', function (): void {
     $packagePath = dirname(__DIR__, 2);
     $manifest = live_chat_json_file_array($packagePath . '/capell.json');
     $screenshotContract = live_chat_json_file_array($packagePath . '/docs/screenshots.json');
     $marketplace = live_chat_array($manifest, 'marketplace');
+    $marketplaceScreenshotPaths = [];
 
     foreach (live_chat_array_list($marketplace, 'screenshots') as $screenshot) {
         $path = live_chat_string($screenshot, 'path');
+        $marketplaceScreenshotPaths[] = $path;
 
         expect($path)->toBeString()
             ->and(File::exists($packagePath . '/' . $path))->toBeTrue()
@@ -300,9 +302,12 @@ it('declares committed marketplace assets and screenshot fallbacks', function ()
 
     foreach (live_chat_array_list($screenshotContract, 'entries') as $entry) {
         $screenshotPath = live_chat_string($entry, 'screenshotPath');
+        $packageRelativePath = str_replace('packages/live-chat/', '', $screenshotPath);
 
         expect($screenshotPath)->toStartWith('packages/live-chat/docs/screenshots/')
-            ->and($entry['required'] ?? null)->toBeFalse();
+            ->and(File::exists(dirname(__DIR__, 4) . '/' . $screenshotPath))->toBeTrue()
+            ->and($entry['required'] ?? null)->toBeTrue()
+            ->and($marketplaceScreenshotPaths)->toContain($packageRelativePath);
     }
 });
 

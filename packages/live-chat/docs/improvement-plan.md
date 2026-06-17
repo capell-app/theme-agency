@@ -54,7 +54,7 @@ Live Chat belongs in `Capell Growth` as a premium lead capture and support triag
 
 **Improved description:** "Live Chat adds a public website chat widget that can answer from approved knowledge, capture visitor details only when needed, and escalate sensitive or high-intent conversations to a person. Operators manage installations, office hours, escalation rules, knowledge sources, and conversation history from Capell admin while Contacts remains the CRM record of truth. External embeds use public keys and allowed domains, and visitor messages/contact fields are encrypted at rest. Built for growth teams that want chat to create useful leads without leaking admin state into the public site."
 
-**Media status:** Keep the static extension card as listing artwork, but do not call the package marketplace-ready until runner-backed widget and admin conversation screenshots are committed and promoted.
+**Media status:** The static extension card remains listing artwork. Committed package-rendered proof PNGs now cover the public widget and operator conversation inbox so Marketplace metadata no longer depends on missing optional runner outputs from the package workbench.
 
 **Cross-sell:** Contacts is a hard dependency and should be positioned as the CRM record. Knowledge Base supplies approved answers. AI Orchestrator supplies provider-backed responses. Agent Bridge exposes controlled capabilities. Email Studio should become the notification/escalation channel. Privacy Center should own retention/export/erasure integration.
 
@@ -70,7 +70,7 @@ Live Chat belongs in `Capell Growth` as a premium lead capture and support triag
 | Extend `LiveChatHealthCheck` to verify routes, admin resources, widget renderer, and public hook binding | Done   | S      | Medium | §2.4             |
 | Declare Agent Bridge capability contribution metadata and remove deferred manifest traceability          | Done   | S      | Medium | §2.7, §5         |
 | Make attachment storage and assistant/contact side effects failure-safe                                  | Done   | M      | Medium | §2.3, §4.3, §4.4 |
-| Recapture and promote runner-backed widget and conversation inbox screenshots                            | Next   | S      | High   | §3, §5           |
+| Recapture and promote widget and conversation inbox screenshots                                          | Done   | S      | High   | §3, §5           |
 | Build the operator inbox workflow around reply/assign/read/close/export actions                          | Later  | L      | High   | §3               |
 | Add async/realtime delivery states for slow AI and human replies                                         | Later  | L      | Medium | §3               |
 | Add Privacy Center retention/export/erasure bridge                                                       | Later  | M      | Medium | §3, §5           |
