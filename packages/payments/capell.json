@@ -194,11 +194,19 @@
                 "capell-payments.stripe-webhook"
             ],
             "auth": "public",
-            "csrfExemptRoutes": ["capell-payments.stripe-webhook"],
-            "signedRoutes": ["capell-payments.paid-downloads.show"],
+            "csrfExemptRoutes": [
+                "capell-payments.stripe-webhook"
+            ],
+            "signedRoutes": [
+                "capell-payments.paid-downloads.show"
+            ],
             "tokenizedRoutes": [],
-            "webhookRoutes": ["capell-payments.stripe-webhook"],
-            "throttledRoutes": ["capell-payments.stripe-webhook"]
+            "webhookRoutes": [
+                "capell-payments.stripe-webhook"
+            ],
+            "throttledRoutes": [
+                "capell-payments.stripe-webhook"
+            ]
         },
         "sensitiveData": {
             "encryptedFields": [
@@ -231,6 +239,7 @@
             "clients": [
                 "Capell\\Payments\\Actions\\CreateBillingPortalSessionAction",
                 "Capell\\Payments\\Actions\\IssuePaymentRefundAction",
+                "Capell\\Payments\\Support\\Gateways\\PayPalPaymentGateway",
                 "Capell\\Payments\\Support\\Gateways\\StripePaymentGateway"
             ]
         },

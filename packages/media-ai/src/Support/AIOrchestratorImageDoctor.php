@@ -10,6 +10,7 @@ use Capell\Core\Models\Media;
 use Capell\MediaAI\Contracts\ImageDoctor;
 use Capell\MediaAI\Data\ImageDoctorRequest;
 use Capell\MediaAI\Data\ImageDoctorResult;
+use Illuminate\Support\Facades\Storage;
 use Throwable;
 
 final class AIOrchestratorImageDoctor implements ImageDoctor
@@ -17,6 +18,12 @@ final class AIOrchestratorImageDoctor implements ImageDoctor
     private const string RUN_ACTION_CLASS = RunAIOrchestratorCapabilityAction::class;
 
     private const string RUN_DATA_CLASS = AIOrchestratorRunData::class;
+
+    /**
+     * Lifetime of the signed URL handed to the third-party AI orchestrator for
+     * private media. Kept short so the credential expires soon after the run.
+     */
+    private const int PRIVATE_URL_LIFETIME_MINUTES = 5;
 
     public function doctor(Media $media, ImageDoctorRequest $request): ImageDoctorResult
     {
@@ -84,13 +91,56 @@ final class AIOrchestratorImageDoctor implements ImageDoctor
                 'model_id' => $media->model_id,
                 'collection_name' => $media->collection_name,
                 'name' => $media->name,
-                'file_name' => $media->file_name,
                 'mime_type' => $media->mime_type,
-                'disk' => $media->disk,
                 'size' => $media->size,
-                'url' => $media->getFullUrl(),
+                'url' => $this->resolveMediaUrl($media),
             ],
         ];
+    }
+
+    /**
+     * Resolve a URL safe to hand to the third-party orchestrator.
+     *
+     * For public-visibility media a normal (permanent) URL is acceptable. For
+     * private/non-public media a permanent URL would leak indefinitely, so a
+     * short-lived signed/temporary URL is issued instead. If the disk cannot
+     * mint a temporary URL the URL is omitted entirely rather than leaking the
+     * permanent one.
+     */
+    private function resolveMediaUrl(Media $media): ?string
+    {
+        if (! $this->isPrivateMedia($media)) {
+            return $media->getFullUrl();
+        }
+
+        try {
+            $temporaryUrl = $media->getTemporaryUrl(
+                now()->addMinutes(self::PRIVATE_URL_LIFETIME_MINUTES),
+            );
+        } catch (Throwable) {
+            return null;
+        }
+
+        return $temporaryUrl !== '' ? $temporaryUrl : null;
+    }
+
+    private function isPrivateMedia(Media $media): bool
+    {
+        $disk = $media->disk;
+
+        if (! is_string($disk) || $disk === '') {
+            return false;
+        }
+
+        if (config("filesystems.disks.{$disk}.visibility") === 'private') {
+            return true;
+        }
+
+        try {
+            return Storage::disk($disk)->getVisibility($media->getPathRelativeToRoot()) === 'private';
+        } catch (Throwable) {
+            return false;
+        }
     }
 
     private function result(mixed $result): ImageDoctorResult

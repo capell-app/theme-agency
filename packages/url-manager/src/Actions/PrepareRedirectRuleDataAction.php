@@ -9,6 +9,7 @@ use Capell\UrlManager\Data\RedirectRuleData;
 use Capell\UrlManager\Enums\RedirectMatchType;
 use Capell\UrlManager\Enums\RedirectRuleStatus;
 use Capell\UrlManager\Models\RedirectRule;
+use Capell\UrlManager\Support\Redirects\RedirectTargetHostGuard;
 use Illuminate\Database\Eloquent\Builder;
 use InvalidArgumentException;
 use Lorisleiva\Actions\Concerns\AsAction;
@@ -71,13 +72,13 @@ final class PrepareRedirectRuleDataAction
 
     private function assertAllowedTargetUrl(string $targetUrl): void
     {
-        $host = parse_url($targetUrl, PHP_URL_HOST);
-
-        if (! is_string($host) || $host === '') {
+        if (RedirectTargetHostGuard::isAllowedTargetUrl($targetUrl)) {
             return;
         }
 
-        throw_unless(in_array(strtolower($host), $this->allowedAbsoluteTargetHosts(), true), InvalidArgumentException::class, __('capell-url-manager::validation.absolute_target_host_not_allowed', ['host' => $host]));
+        $host = parse_url($targetUrl, PHP_URL_HOST);
+
+        throw new InvalidArgumentException((string) __('capell-url-manager::validation.absolute_target_host_not_allowed', ['host' => is_string($host) ? $host : '']));
     }
 
     private function assertNotSelfRedirect(RedirectMatchType $matchType, string $sourceUrl, string $targetUrl): void
@@ -133,33 +134,6 @@ final class PrepareRedirectRuleDataAction
             ->first();
 
         return $redirectRule;
-    }
-
-    /**
-     * @return list<string>
-     */
-    private function allowedAbsoluteTargetHosts(): array
-    {
-        $configuredHosts = [];
-        $configuredHostValues = config('capell-url-manager.redirects.absolute_target_allowed_hosts', []);
-
-        if (is_array($configuredHostValues)) {
-            foreach ($configuredHostValues as $host) {
-                if (is_string($host) && trim($host) !== '') {
-                    $configuredHosts[] = strtolower(trim($host));
-                }
-            }
-        }
-
-        if ((bool) config('capell-url-manager.redirects.allow_app_url_host', true)) {
-            $appHost = parse_url((string) config('app.url'), PHP_URL_HOST);
-
-            if (is_string($appHost) && $appHost !== '') {
-                $configuredHosts[] = strtolower($appHost);
-            }
-        }
-
-        return array_values(array_unique($configuredHosts));
     }
 
     /**

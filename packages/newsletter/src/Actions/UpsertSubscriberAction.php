@@ -71,6 +71,18 @@ class UpsertSubscriberAction
         SubscriberStatus $requestedStatus,
         ?ConsentEvidenceData $evidence,
     ): SubscriberStatus {
+        // Never downgrade an already-confirmed subscriber to Pending. A public,
+        // anonymous request (which always asks for Pending under double opt-in) must
+        // not be able to silently strip a confirmed subscriber from sends and
+        // re-trigger a double opt-in email. Keep them Subscribed.
+        if (
+            $requestedStatus === SubscriberStatus::Pending
+            && $existingSubscriber instanceof Subscriber
+            && $existingSubscriber->status === SubscriberStatus::Subscribed
+        ) {
+            return SubscriberStatus::Subscribed;
+        }
+
         if ($requestedStatus !== SubscriberStatus::Subscribed) {
             return $requestedStatus;
         }
@@ -81,6 +93,19 @@ class UpsertSubscriberAction
 
         if ($existingSubscriber->status->isGloballySuppressed()) {
             return $existingSubscriber->status;
+        }
+
+        // An already-confirmed subscriber must never be silently downgraded by an
+        // anonymous public request that arrives without consent evidence. Doing so
+        // would remove a confirmed subscriber from sends and re-trigger double opt-in.
+        if ($existingSubscriber->status === SubscriberStatus::Subscribed) {
+            return SubscriberStatus::Subscribed;
+        }
+
+        // An existing Pending subscriber stays Pending unless genuine consent evidence
+        // upgrades them. Repeated anonymous requests must not reset their established state.
+        if ($existingSubscriber->status === SubscriberStatus::Pending) {
+            return $evidence instanceof ConsentEvidenceData ? SubscriberStatus::Subscribed : SubscriberStatus::Pending;
         }
 
         if (! in_array($existingSubscriber->status, [

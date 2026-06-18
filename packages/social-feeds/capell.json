@@ -93,7 +93,13 @@
         "upsertItems": "Capell\\SocialFeeds\\Actions\\UpsertSocialFeedItemsAction"
     },
     "settings": [],
-    "permissions": [],
+    "permissions": [
+        "View:SocialFeedConnection",
+        "Create:SocialFeedConnection",
+        "Update:SocialFeedConnection",
+        "Delete:SocialFeedConnection",
+        "View:SocialFeedItem"
+    ],
     "capabilities": [
         "social-feeds",
         "social-feeds-admin",
@@ -142,8 +148,14 @@
             ]
         },
         "adminSurface": {
-            "authorization": "panel-auth",
-            "permissions": []
+            "authorization": "permissions",
+            "permissions": [
+                "View:SocialFeedConnection",
+                "Create:SocialFeedConnection",
+                "Update:SocialFeedConnection",
+                "Delete:SocialFeedConnection",
+                "View:SocialFeedItem"
+            ]
         }
     },
     "performance": {

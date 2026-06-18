@@ -148,6 +148,27 @@ class SchedulerEvent extends Model
         $this->save();
     }
 
+    /**
+     * Mark the event as skipped because the release window is closed and push
+     * its next attempt forward to when the window reopens. Without moving
+     * scheduled_for the event would stay due (scheduled_for <= now) and be
+     * re-claimed every scheduler tick, silently re-skipping forever and never
+     * publishing the editor's content at the intended time.
+     */
+    public function markSkippedUntilReleaseWindowOpens(string $reason, ?CarbonImmutable $nextOpensAt): void
+    {
+        $this->state = SchedulerEventStateEnum::SkippedReleaseWindow;
+        $this->skipped_reason = $reason;
+        $this->last_attempted_at = CarbonImmutable::now();
+        $this->claimed_at = null;
+
+        if ($nextOpensAt instanceof CarbonImmutable && $nextOpensAt->greaterThan($this->scheduled_for)) {
+            $this->scheduled_for = $nextOpensAt;
+        }
+
+        $this->save();
+    }
+
     public function markExecuted(): void
     {
         $this->state = SchedulerEventStateEnum::Executed;

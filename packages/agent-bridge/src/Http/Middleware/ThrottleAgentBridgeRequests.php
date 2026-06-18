@@ -41,8 +41,10 @@ final class ThrottleAgentBridgeRequests
         if (RateLimiter::tooManyAttempts($rateLimitKey, $maxAttempts)) {
             $retryAfter = RateLimiter::availableIn($rateLimitKey);
 
-            return response('Agent Bridge rate limit exceeded. Try again in ' . $retryAfter . ' seconds.', 429)
-                ->header('Retry-After', (string) $retryAfter);
+            return response(
+                __('capell-agent-bridge::messages.rate_limited', ['seconds' => $retryAfter]),
+                429,
+            )->header('Retry-After', (string) $retryAfter);
         }
 
         RateLimiter::hit($rateLimitKey, 60);

@@ -391,51 +391,48 @@
         "publicSurface": {
             "routeNames": [
                 "calendar.staff",
-                "request",
-                "request.store",
-                "portal.lessons",
                 "portal.consent",
                 "portal.consent.update",
+                "portal.lessons",
                 "portal.proposal",
                 "portal.proposal.respond",
                 "portal.review",
-                "portal.review.store",
                 "portal.review-participant",
                 "portal.review-participant.store",
+                "portal.review.store",
+                "request",
+                "request.store",
                 "webhook.store"
             ],
             "auth": "public",
             "csrfExemptRoutes": [],
-            "signedRoutes": [
-                "portal.lessons",
-                "portal.consent",
-                "portal.consent.update",
-                "portal.proposal",
-                "portal.proposal.respond",
-                "portal.review",
-                "portal.review.store",
-                "portal.review-participant",
-                "portal.review-participant.store"
-            ],
+            "signedRoutes": [],
             "tokenizedRoutes": [
                 "calendar.staff",
+                "portal.consent",
+                "portal.consent.update",
+                "portal.lessons",
                 "portal.proposal",
                 "portal.proposal.respond",
                 "portal.review",
-                "portal.review.store",
                 "portal.review-participant",
                 "portal.review-participant.store",
+                "portal.review.store"
+            ],
+            "webhookRoutes": [
                 "webhook.store"
             ],
-            "webhookRoutes": ["webhook.store"],
-            "throttledRoutes": ["request.store", "webhook.store"]
+            "throttledRoutes": [
+                "request.store",
+                "webhook.store"
+            ]
         },
         "sensitiveData": {
             "encryptedFields": [],
             "hashedTokenFields": [
-                "booking_change_proposal_parties.token_hash",
-                "booking_review_requests.token_hash",
-                "booking_review_participants.token_hash"
+                "booking_change_proposals.token_hash",
+                "booking_review_participants.token_hash",
+                "booking_review_requests.token_hash"
             ],
             "redactedOutputClasses": [],
             "plaintextJustifications": [

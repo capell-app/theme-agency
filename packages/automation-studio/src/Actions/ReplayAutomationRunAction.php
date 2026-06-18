@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Capell\AutomationStudio\Actions;
 
+use Capell\Admin\Support\SiteScope;
 use Capell\AutomationStudio\Data\AutomationActionResultData;
 use Capell\AutomationStudio\Data\AutomationRuleActionData;
 use Capell\AutomationStudio\Data\AutomationRuleData;
@@ -15,6 +16,8 @@ use Capell\AutomationStudio\Models\AutomationRun;
 use Capell\AutomationStudio\Support\AutomationActionRegistry;
 use Capell\AutomationStudio\Support\AutomationRuleRegistry;
 use Carbon\CarbonImmutable;
+use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Lorisleiva\Actions\Concerns\AsAction;
 use RuntimeException;
 
@@ -32,6 +35,8 @@ final class ReplayAutomationRunAction
      */
     public function handle(AutomationRun $run): array
     {
+        $this->authorizeReplay($run);
+
         throw_unless($this->canReplay($run), RuntimeException::class, $this->notReplayableMessage());
 
         $rule = $this->ruleForRun($run);
@@ -80,6 +85,33 @@ final class ReplayAutomationRunAction
             && $run->action_key !== '';
     }
 
+    /**
+     * Ensure the authenticated actor (if any) is allowed to replay this run's
+     * site. When invoked from a system context (no authenticated actor, e.g. a
+     * queued retry) replay proceeds, but an interactive actor scoped to other
+     * sites is denied so replay cannot re-fire another site's automations.
+     */
+    private function authorizeReplay(AutomationRun $run): void
+    {
+        $actor = auth()->user();
+
+        if (! $actor instanceof Authenticatable) {
+            return;
+        }
+
+        if (SiteScope::isGlobalActor($actor)) {
+            return;
+        }
+
+        $siteId = is_int($run->site_id) ? $run->site_id : null;
+
+        throw_unless(
+            $siteId !== null && $actor->getAssignedSiteIds()->contains($siteId),
+            AuthorizationException::class,
+            $this->replayDeniedMessage(),
+        );
+    }
+
     private function ruleForRun(AutomationRun $run): ?AutomationRule
     {
         if ($run->relationLoaded('rule') && $run->rule instanceof AutomationRule) {
@@ -119,6 +151,11 @@ final class ReplayAutomationRunAction
     private function notReplayableMessage(): string
     {
         return (string) __('capell-automation-studio::generic.replay.not_replayable');
+    }
+
+    private function replayDeniedMessage(): string
+    {
+        return (string) __('capell-automation-studio::generic.replay.denied');
     }
 
     private function missingRuleMessage(): string

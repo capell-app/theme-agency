@@ -36,6 +36,7 @@ Route::middleware(['web'])
         };
 
         Route::options('/api/{public_key}/conversations', $preflight)
+            ->middleware('throttle:capell-live-chat')
             ->withoutMiddleware([VerifyCsrfToken::class])
             ->name('api.preflight');
         Route::options('/api/{public_key}/conversations/{conversation}/messages', $preflight)

@@ -134,7 +134,9 @@
     "security": {
         "riskTier": "critical",
         "publicSurface": {
-            "routeNames": ["capell-agent-bridge.home"],
+            "routeNames": [
+                "capell-agent-bridge.home"
+            ],
             "auth": "public",
             "csrfExemptRoutes": [],
             "signedRoutes": [],
@@ -148,7 +150,9 @@
                 "capell_agent_bridge_confirmations.payload_hash",
                 "capell_agent_bridge_tokens.token_hash"
             ],
-            "redactedOutputClasses": [],
+            "redactedOutputClasses": [
+                "Capell\\AgentBridge\\Support\\AgentBridgeAuditSanitizer"
+            ],
             "plaintextJustifications": [
                 "capell_agent_bridge_confirmations.token: Reviewed package field; not stored as a reusable secret by this package contract."
             ]

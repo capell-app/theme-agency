@@ -144,9 +144,9 @@
             "forbidPublicBladeQueries": true
         },
         "externalHttpClients": {
-            "requiresTimeouts": true,
-            "requiresSecretRedaction": true,
-            "clients": ["public-actions-webhook"]
+            "requiresTimeouts": false,
+            "requiresSecretRedaction": false,
+            "clients": []
         },
         "adminSurface": {
             "authorization": "permissions",

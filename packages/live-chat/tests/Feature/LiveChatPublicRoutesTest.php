@@ -83,6 +83,7 @@ it('declares the public conversation API as throttled and csrf-exempt', function
     $this->createLiveChatSite();
     $route = Route::getRoutes()->getByName('capell-live-chat.conversations.store');
     $externalRoute = Route::getRoutes()->getByName('capell-live-chat.api.conversations.store');
+    $externalPreflightRoute = Route::getRoutes()->getByName('capell-live-chat.api.preflight');
 
     expect($route)->not->toBeNull()
         ->and($route?->methods())->toContain('POST')
@@ -92,7 +93,11 @@ it('declares the public conversation API as throttled and csrf-exempt', function
         ->and($externalRoute?->uri())->toBe('live-chat/api/{public_key}/conversations')
         ->and($externalRoute?->methods())->toContain('POST')
         ->and($externalRoute?->gatherMiddleware())->toContain('throttle:capell-live-chat')
-        ->and($externalRoute?->excludedMiddleware())->toContain(VerifyCsrfToken::class);
+        ->and($externalRoute?->excludedMiddleware())->toContain(VerifyCsrfToken::class)
+        ->and($externalPreflightRoute)->not->toBeNull()
+        ->and($externalPreflightRoute?->methods())->toContain('OPTIONS')
+        ->and($externalPreflightRoute?->gatherMiddleware())->toContain('throttle:capell-live-chat')
+        ->and($externalPreflightRoute?->excludedMiddleware())->toContain(VerifyCsrfToken::class);
 });
 
 it('serves an external widget script for active public keys and allowed domains', function (): void {

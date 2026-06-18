@@ -143,13 +143,21 @@
     "security": {
         "riskTier": "sensitive",
         "publicSurface": {
-            "routeNames": ["capell-email-studio.provider-events"],
+            "routeNames": [
+                "capell-email-studio.provider-events"
+            ],
             "auth": "public",
             "csrfExemptRoutes": [],
             "signedRoutes": [],
-            "tokenizedRoutes": ["capell-email-studio.provider-events"],
-            "webhookRoutes": ["capell-email-studio.provider-events"],
-            "throttledRoutes": ["capell-email-studio.provider-events"]
+            "tokenizedRoutes": [
+                "capell-email-studio.provider-events"
+            ],
+            "webhookRoutes": [
+                "capell-email-studio.provider-events"
+            ],
+            "throttledRoutes": [
+                "capell-email-studio.provider-events"
+            ]
         },
         "sensitiveData": {
             "encryptedFields": [],

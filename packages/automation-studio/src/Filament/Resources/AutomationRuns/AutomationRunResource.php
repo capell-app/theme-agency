@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Capell\AutomationStudio\Filament\Resources\AutomationRuns;
 
 use BackedEnum;
+use Capell\Admin\Support\SiteScope;
 use Capell\AutomationStudio\Actions\ReplayAutomationRunAction;
 use Capell\AutomationStudio\Data\AutomationActionResultData;
 use Capell\AutomationStudio\Filament\Resources\AutomationRuns\Pages\ListAutomationRuns;
@@ -17,7 +18,9 @@ use Filament\Resources\Resource;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Gate;
 use Override;
 
 final class AutomationRunResource extends Resource
@@ -47,6 +50,7 @@ final class AutomationRunResource extends Resource
                 Action::make('replay')
                     ->label(__('capell-automation-studio::generic.replay.action'))
                     ->icon(Heroicon::ArrowPath)
+                    ->authorize('update')
                     ->visible(fn (AutomationRun $record): bool => ReplayAutomationRunAction::make()->canReplay($record))
                     ->requiresConfirmation()
                     ->action(function (AutomationRun $record): void {
@@ -74,7 +78,23 @@ final class AutomationRunResource extends Resource
     #[Override]
     public static function getEloquentQuery(): Builder
     {
-        return parent::getEloquentQuery()->with('rule')->latest('started_at');
+        return SiteScope::applyForCurrentActor(parent::getEloquentQuery())->with('rule')->latest('started_at');
+    }
+
+    #[Override]
+    public static function canAccess(): bool
+    {
+        $user = auth()->user();
+
+        return $user instanceof Authenticatable && Gate::forUser($user)->allows('viewAny', AutomationRun::class);
+    }
+
+    #[Override]
+    public static function canViewAny(): bool
+    {
+        $user = auth()->user();
+
+        return $user instanceof Authenticatable && Gate::forUser($user)->allows('viewAny', AutomationRun::class);
     }
 
     #[Override]

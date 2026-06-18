@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use Capell\AgentBridge\Http\Middleware\AuthenticateCapellAgentBridgeToken;
 use Capell\AgentBridge\Http\Middleware\ThrottleAgentBridgeRequests;
+use Capell\AgentBridge\Http\Middleware\ThrottleAgentBridgeRequestsByIp;
 use Capell\AgentBridge\Servers\CapellKnowledgeServer;
 use Capell\AgentBridge\Servers\CapellSiteServer;
 use Illuminate\Support\Facades\Route;
@@ -34,11 +35,19 @@ if (is_string($homeRoute) && $homeRoute !== '') {
 if (class_exists(Mcp::class)) {
     if (is_string($knowledgeRoute) && $knowledgeRoute !== '') {
         Mcp::web($knowledgeRoute, CapellKnowledgeServer::class)
-            ->middleware([AuthenticateCapellAgentBridgeToken::class, ThrottleAgentBridgeRequests::class]);
+            ->middleware([
+                ThrottleAgentBridgeRequestsByIp::class,
+                AuthenticateCapellAgentBridgeToken::class,
+                ThrottleAgentBridgeRequests::class,
+            ]);
     }
 
     if (is_string($siteRoute) && $siteRoute !== '') {
         Mcp::web($siteRoute, CapellSiteServer::class)
-            ->middleware([AuthenticateCapellAgentBridgeToken::class, ThrottleAgentBridgeRequests::class]);
+            ->middleware([
+                ThrottleAgentBridgeRequestsByIp::class,
+                AuthenticateCapellAgentBridgeToken::class,
+                ThrottleAgentBridgeRequests::class,
+            ]);
     }
 }

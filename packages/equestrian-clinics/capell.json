@@ -209,19 +209,23 @@
         "equestrian-calendar-payments-maps-integrations"
     ],
     "security": {
-        "riskTier": "sensitive",
+        "riskTier": "standard",
         "publicSurface": {
             "routeNames": [
-                "capell-equestrian-clinics.discovery",
-                "capell-equestrian-clinics.host-request.store",
-                "capell-equestrian-clinics.coach.timetable"
+                "coach.timetable",
+                "discovery",
+                "host-request.store"
             ],
             "auth": "public",
             "csrfExemptRoutes": [],
-            "signedRoutes": ["capell-equestrian-clinics.coach.timetable"],
+            "signedRoutes": [
+                "coach.timetable"
+            ],
             "tokenizedRoutes": [],
             "webhookRoutes": [],
-            "throttledRoutes": ["capell-equestrian-clinics.host-request.store"]
+            "throttledRoutes": [
+                "host-request.store"
+            ]
         },
         "sensitiveData": {
             "encryptedFields": [],
@@ -230,23 +234,15 @@
             "plaintextJustifications": []
         },
         "publicOutput": {
-            "cacheSafe": true,
+            "cacheSafe": false,
             "forbidAuthoringSurface": true,
             "forbidSecrets": true,
             "forbidPublicBladeQueries": true
         },
         "externalHttpClients": {
-            "requiresTimeouts": true,
-            "requiresSecretRedaction": true,
-            "clients": [
-                "stripe",
-                "paypal",
-                "maps",
-                "sms",
-                "whatsapp",
-                "meta",
-                "ai"
-            ]
+            "requiresTimeouts": false,
+            "requiresSecretRedaction": false,
+            "clients": []
         },
         "adminSurface": {
             "authorization": "panel-auth",

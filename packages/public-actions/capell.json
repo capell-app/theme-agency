@@ -131,15 +131,16 @@
                 "me",
                 "show",
                 "submissions",
-                "submit",
-                "trusted.actions.submit"
+                "submit"
             ],
             "auth": "public",
             "csrfExemptRoutes": [],
-            "signedRoutes": ["trusted.actions.submit"],
-            "tokenizedRoutes": ["trusted.actions.submit"],
-            "webhookRoutes": ["trusted.actions.submit"],
-            "throttledRoutes": ["submit", "trusted.actions.submit"]
+            "signedRoutes": [],
+            "tokenizedRoutes": [],
+            "webhookRoutes": [],
+            "throttledRoutes": [
+                "submit"
+            ]
         },
         "sensitiveData": {
             "encryptedFields": [
