@@ -221,7 +221,9 @@
                 "capell-newsletter.unsubscribe",
                 "capell-newsletter.unsubscribe.one-click"
             ],
-            "webhookRoutes": ["capell-newsletter.provider-webhook"],
+            "webhookRoutes": [
+                "capell-newsletter.provider-webhook"
+            ],
             "throttledRoutes": [
                 "capell-newsletter.preferences.update",
                 "capell-newsletter.provider-webhook",

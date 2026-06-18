@@ -88,7 +88,7 @@
                 "capell-deployments.oauth.github",
                 "capell-deployments.oauth.gitlab"
             ],
-            "auth": "authenticated",
+            "auth": "public",
             "csrfExemptRoutes": [],
             "signedRoutes": [],
             "tokenizedRoutes": [],
@@ -121,10 +121,7 @@
                 "Capell\\Deployments\\Actions\\RefreshProviderTokenAction",
                 "Capell\\Deployments\\Http\\Controllers\\OAuth\\BitbucketCallbackController",
                 "Capell\\Deployments\\Http\\Controllers\\OAuth\\GitHubCallbackController",
-                "Capell\\Deployments\\Http\\Controllers\\OAuth\\GitLabCallbackController",
-                "Capell\\Deployments\\Services\\GitProvider\\BitbucketProvider",
-                "Capell\\Deployments\\Services\\GitProvider\\GitHubProvider",
-                "Capell\\Deployments\\Services\\GitProvider\\GitLabProvider"
+                "Capell\\Deployments\\Http\\Controllers\\OAuth\\GitLabCallbackController"
             ]
         },
         "adminSurface": {

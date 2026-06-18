@@ -120,11 +120,7 @@
             "encryptedFields": [],
             "hashedTokenFields": [],
             "redactedOutputClasses": [],
-            "plaintextJustifications": [
-                "login_audit.ip_address is retained for security incident review and can be disabled with track_user_ip_addresses.",
-                "login_audit.user_agent is retained as device/browser evidence for access investigations.",
-                "login_audit.location is optional vendor geo metadata controlled by enable_geo_location."
-            ]
+            "plaintextJustifications": []
         },
         "publicOutput": {
             "cacheSafe": true,
@@ -138,8 +134,10 @@
             "clients": []
         },
         "adminSurface": {
-            "authorization": "policies",
-            "permissions": ["View:LoginAudit"]
+            "authorization": "permissions",
+            "permissions": [
+                "View:LoginAudit"
+            ]
         }
     },
     "performance": {

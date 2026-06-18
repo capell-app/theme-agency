@@ -108,12 +108,7 @@
             "signedRoutes": [],
             "tokenizedRoutes": [],
             "webhookRoutes": [],
-            "throttledRoutes": [
-                "capell-agent-delivery.discovery",
-                "capell-agent-delivery.pages.chunks",
-                "capell-agent-delivery.pages.index",
-                "capell-agent-delivery.pages.manifest"
-            ]
+            "throttledRoutes": []
         },
         "sensitiveData": {
             "encryptedFields": [],

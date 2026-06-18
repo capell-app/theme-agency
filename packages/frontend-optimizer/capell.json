@@ -106,7 +106,9 @@
         },
         "sensitiveData": {
             "encryptedFields": [],
-            "hashedTokenFields": ["frontend_render_profiles.hash"],
+            "hashedTokenFields": [
+                "frontend_render_profiles.hash"
+            ],
             "redactedOutputClasses": [],
             "plaintextJustifications": []
         },

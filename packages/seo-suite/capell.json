@@ -249,14 +249,8 @@
     "security": {
         "riskTier": "sensitive",
         "publicSurface": {
-            "routeNames": [
-                "capell-frontend.llms-txt",
-                "capell-frontend.llms-full-txt",
-                "capell-frontend.robots-txt",
-                "capell-frontend.page-markdown-home",
-                "capell-frontend.page-markdown"
-            ],
-            "auth": "public",
+            "routeNames": [],
+            "auth": "none",
             "csrfExemptRoutes": [],
             "signedRoutes": [],
             "tokenizedRoutes": [],

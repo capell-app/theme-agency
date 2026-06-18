@@ -223,45 +223,44 @@
         "live-chat-knowledge-documents"
     ],
     "security": {
-        "riskTier": "sensitive",
+        "riskTier": "standard",
         "publicSurface": {
             "routeNames": [
-                "capell-live-chat.widget",
-                "capell-live-chat.widget.script",
-                "capell-live-chat.api.preflight",
-                "capell-live-chat.api.conversations.store",
-                "capell-live-chat.api.messages.store",
-                "capell-live-chat.api.handoff.store",
-                "capell-live-chat.conversations.store",
-                "capell-live-chat.messages.store",
-                "capell-live-chat.handoff.store"
+                "api.conversations.store",
+                "api.handoff.store",
+                "api.messages.store",
+                "api.preflight",
+                "conversations.store",
+                "handoff.store",
+                "messages.store",
+                "widget",
+                "widget.script"
             ],
             "auth": "public",
             "csrfExemptRoutes": [
-                "capell-live-chat.api.conversations.store",
-                "capell-live-chat.api.messages.store",
-                "capell-live-chat.api.handoff.store",
-                "capell-live-chat.conversations.store",
-                "capell-live-chat.messages.store",
-                "capell-live-chat.handoff.store"
+                "api.conversations.store",
+                "api.handoff.store",
+                "api.messages.store",
+                "api.preflight",
+                "conversations.store",
+                "handoff.store",
+                "messages.store"
             ],
             "signedRoutes": [],
             "tokenizedRoutes": [],
             "webhookRoutes": [],
             "throttledRoutes": [
-                "capell-live-chat.api.conversations.store",
-                "capell-live-chat.api.messages.store",
-                "capell-live-chat.api.handoff.store",
-                "capell-live-chat.conversations.store",
-                "capell-live-chat.messages.store",
-                "capell-live-chat.handoff.store"
+                "api.conversations.store",
+                "api.handoff.store",
+                "api.messages.store",
+                "api.preflight",
+                "conversations.store",
+                "handoff.store",
+                "messages.store"
             ]
         },
         "sensitiveData": {
             "encryptedFields": [
-                "Capell\\LiveChat\\Models\\LiveChatInstallation::$allowed_domains",
-                "Capell\\LiveChat\\Models\\LiveChatInstallation::$metadata",
-                "Capell\\LiveChat\\Models\\LiveChatInstallation::$widget_settings",
                 "Capell\\LiveChat\\Models\\LiveChatAIRun::$error_message",
                 "Capell\\LiveChat\\Models\\LiveChatAIRun::$input_payload",
                 "Capell\\LiveChat\\Models\\LiveChatAIRun::$output_payload",
@@ -272,33 +271,25 @@
                 "Capell\\LiveChat\\Models\\LiveChatConversation::$visitor_email",
                 "Capell\\LiveChat\\Models\\LiveChatConversation::$visitor_name",
                 "Capell\\LiveChat\\Models\\LiveChatConversation::$visitor_phone",
-                "Capell\\LiveChat\\Models\\LiveChatMessage::$attachments",
-                "Capell\\LiveChat\\Models\\LiveChatMessage::$body",
-                "Capell\\LiveChat\\Models\\LiveChatMessage::$metadata",
                 "Capell\\LiveChat\\Models\\LiveChatEscalationRule::$metadata",
+                "Capell\\LiveChat\\Models\\LiveChatInstallation::$allowed_domains",
+                "Capell\\LiveChat\\Models\\LiveChatInstallation::$metadata",
+                "Capell\\LiveChat\\Models\\LiveChatInstallation::$widget_settings",
                 "Capell\\LiveChat\\Models\\LiveChatKnowledgeDocument::$metadata",
                 "Capell\\LiveChat\\Models\\LiveChatKnowledgeGap::$metadata",
                 "Capell\\LiveChat\\Models\\LiveChatKnowledgeGap::$question",
                 "Capell\\LiveChat\\Models\\LiveChatKnowledgeSource::$content",
-                "Capell\\LiveChat\\Models\\LiveChatKnowledgeSource::$metadata"
+                "Capell\\LiveChat\\Models\\LiveChatKnowledgeSource::$metadata",
+                "Capell\\LiveChat\\Models\\LiveChatMessage::$attachments",
+                "Capell\\LiveChat\\Models\\LiveChatMessage::$body",
+                "Capell\\LiveChat\\Models\\LiveChatMessage::$metadata"
             ],
-            "hashedTokenFields": [
-                "live_chat_conversations.visitor_token_hash",
-                "live_chat_conversations.visitor_email_hash",
-                "live_chat_conversations.visitor_phone_hash",
-                "live_chat_conversations.user_agent_hash",
-                "live_chat_conversations.ip_hash"
-            ],
+            "hashedTokenFields": [],
             "redactedOutputClasses": [],
-            "plaintextJustifications": [
-                "live_chat_conversations.uuid: Public opaque conversation identifier used by the browser widget.",
-                "live_chat_knowledge_documents.content: Normalized public/support knowledge text must remain searchable for lexical retrieval.",
-                "live_chat_messages.role: Non-sensitive routing metadata for transcript ordering.",
-                "live_chat_messages.intent: Non-sensitive classification metadata for reporting."
-            ]
+            "plaintextJustifications": []
         },
         "publicOutput": {
-            "cacheSafe": true,
+            "cacheSafe": false,
             "forbidAuthoringSurface": true,
             "forbidSecrets": true,
             "forbidPublicBladeQueries": true
