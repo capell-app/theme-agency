@@ -84,6 +84,8 @@ it('hashes agent bridge tokens with the application key', function (): void {
 });
 
 it('authenticates legacy sha256 token hashes and upgrades them on use', function (): void {
+    config()->set('capell-agent-bridge.accept_legacy_token_hashes', true);
+
     $user = User::query()->create([
         'name' => 'Legacy Middleware User',
         'email' => 'legacy-middleware@example.test',

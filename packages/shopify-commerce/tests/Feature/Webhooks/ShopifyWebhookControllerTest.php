@@ -143,5 +143,6 @@ function shopifyWebhookPost(string $topic, array $payload): TestResponse
         'X-Shopify-Hmac-Sha256' => $hmac,
         'X-Shopify-Shop-Domain' => 'foo.myshopify.com',
         'X-Shopify-Topic' => $topic,
+        'X-Shopify-Webhook-Id' => 'test-webhook-' . $topic,
     ]);
 }

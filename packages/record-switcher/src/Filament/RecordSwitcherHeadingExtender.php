@@ -18,7 +18,7 @@ final class RecordSwitcherHeadingExtender implements EditRecordHeadingExtender
         $resourceClass = $page::getResource();
         $enabled = [$resourceClass, 'recordSwitcherEnabled'];
 
-        if (is_callable($enabled)) {
+        if (method_exists($resourceClass, 'recordSwitcherEnabled')) {
             return (bool) $enabled();
         }
 
