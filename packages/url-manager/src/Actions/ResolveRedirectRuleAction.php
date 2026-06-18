@@ -8,6 +8,7 @@ use Capell\UrlManager\Data\RedirectResolutionData;
 use Capell\UrlManager\Enums\RedirectMatchType;
 use Capell\UrlManager\Enums\RedirectRuleStatus;
 use Capell\UrlManager\Models\RedirectRule;
+use Capell\UrlManager\Support\Redirects\RedirectTargetHostGuard;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Foundation\Application;
 use Lorisleiva\Actions\Concerns\AsAction;
@@ -38,6 +39,31 @@ final class ResolveRedirectRuleAction
             return null;
         }
 
+        $resolvedTargetUrl = $this->targetUrl($redirectRule, $sourceUrl);
+
+        // Defence in depth: the save-time host allowlist only sees the literal
+        // rule template. A regex target template may contain backreferences
+        // (e.g. "https://$1.example/") whose host only becomes concrete once the
+        // backreference is substituted at request time. Re-validate the resolved
+        // absolute target host here and refuse to honour off-allowlist hosts.
+        if (! RedirectTargetHostGuard::isAllowedTargetUrl($resolvedTargetUrl)) {
+            return null;
+        }
+
+        // Runtime self-redirect guard: a regex rule whose substituted target
+        // resolves back to the same request URL would loop indefinitely. The
+        // save-time guard skips regex rules (their template never equals the
+        // pattern literally), so guard against it at the point of redirecting.
+        // Only relative targets can collide with the (relative) source URL.
+        if (
+            $resolvedTargetUrl !== ''
+            && $redirectRule->status_code !== 410
+            && parse_url($resolvedTargetUrl, PHP_URL_HOST) === null
+            && NormalizeManagedUrlAction::run($resolvedTargetUrl) === $sourceUrl
+        ) {
+            return null;
+        }
+
         if ($recordHit) {
             $this->recordHit($redirectRule, $sourceUrl, $refererUrl, $userAgent, $ipAddress);
         }
@@ -45,7 +71,7 @@ final class ResolveRedirectRuleAction
         return new RedirectResolutionData(
             redirectRuleId: (int) $redirectRule->getKey(),
             sourceUrl: $redirectRule->source_url,
-            targetUrl: $this->targetUrl($redirectRule, $sourceUrl),
+            targetUrl: $resolvedTargetUrl,
             statusCode: $redirectRule->status_code,
             matchType: $redirectRule->match_type,
             preserveQuery: $redirectRule->preserve_query,

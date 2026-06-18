@@ -9,6 +9,13 @@ final class AgentBridgeAuditSanitizer
     private const string REDACTED = '[redacted]';
 
     /**
+     * Opaque strings at or beyond this length are treated as potential secrets and masked,
+     * even when they live under an unrecognised key. Normal prose and short identifiers
+     * (names, slugs, ids) stay well below this threshold.
+     */
+    private const int OPAQUE_STRING_LENGTH_THRESHOLD = 80;
+
+    /**
      * @param  array<array-key, mixed>  $payload
      * @return array<array-key, mixed>
      */
@@ -50,7 +57,37 @@ final class AgentBridgeAuditSanitizer
             return self::REDACTED;
         }
 
+        if (is_string($value) && $this->isOpaqueSecretLikeString($value)) {
+            return $this->maskOpaqueString($value);
+        }
+
         return $value;
+    }
+
+    /**
+     * A long, single-token string with no whitespace is almost never legitimate audit prose:
+     * it is far more likely to be an API key, JWT, signed URL, or other opaque secret that
+     * slipped through under an unrecognised key. Such values are masked as a backstop so the
+     * allow-by-default key/string matching cannot leak cleartext secrets.
+     */
+    private function isOpaqueSecretLikeString(string $value): bool
+    {
+        $trimmed = trim($value);
+
+        if (mb_strlen($trimmed) < self::OPAQUE_STRING_LENGTH_THRESHOLD) {
+            return false;
+        }
+
+        return ! str_contains($trimmed, ' ') && ! str_contains($trimmed, "\n");
+    }
+
+    /**
+     * Replace an opaque secret-like string with a stable, non-reversible fingerprint so audit
+     * entries remain correlatable across requests without persisting the cleartext value.
+     */
+    private function maskOpaqueString(string $value): string
+    {
+        return self::REDACTED . ':' . substr(hash('sha256', $value), 0, 12);
     }
 
     private function isSensitiveKey(mixed $key): bool

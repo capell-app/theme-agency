@@ -70,7 +70,7 @@ final class CapellAgentBridgeToken extends Model
             return $token;
         }
 
-        if (! (bool) config('capell-agent-bridge.accept_legacy_token_hashes', true)) {
+        if (! (bool) config('capell-agent-bridge.accept_legacy_token_hashes', false)) {
             return null;
         }
 

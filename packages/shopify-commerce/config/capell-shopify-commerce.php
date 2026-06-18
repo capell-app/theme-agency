@@ -16,4 +16,9 @@ return [
     'health_max_catalog_sync_age_hours' => env('CAPELL_SHOPIFY_COMMERCE_HEALTH_MAX_CATALOG_SYNC_AGE_HOURS', 24),
     'state_ttl_seconds' => 600,
     'default_currency' => 'USD',
+
+    // Maximum age (in seconds) of a webhook delivery, measured against the
+    // X-Shopify-Triggered-At header, before it is rejected as stale. Mirrors the
+    // tolerance approach used by the Stripe webhook signature verification.
+    'webhook_freshness_tolerance_seconds' => env('CAPELL_SHOPIFY_COMMERCE_WEBHOOK_FRESHNESS_TOLERANCE_SECONDS', 300),
 ];

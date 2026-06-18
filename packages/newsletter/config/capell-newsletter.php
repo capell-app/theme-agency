@@ -25,6 +25,9 @@ return [
         'enabled_by_default' => true,
         'default_confirmation_mode' => ConfirmationMode::CapellOwned->value,
         'token_expiry_hours' => 72,
+        // When a usable confirmation token already exists and was issued within this
+        // window, reuse it instead of minting and re-sending a new confirmation email.
+        'resend_cooldown_minutes' => 10,
     ],
     'public_tokens' => [
         'token_expiry_hours' => 72,

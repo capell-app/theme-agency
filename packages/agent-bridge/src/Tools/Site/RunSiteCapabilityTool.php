@@ -21,7 +21,10 @@ use Override;
 #[Name('capell-site-run-capability')]
 #[Title('Run Site Capability Preview')]
 #[Description('Preview or directly execute a registered Capell site capability. Mutating capabilities return a confirmation token.')]
-#[IsDestructive(false)]
+// This tool can reach destructive capabilities: read-risk / no-confirmation capabilities execute directly,
+// while mutating ones return a confirmation token. The annotation reflects the worst-case reachable behaviour
+// so MCP clients treat the tool as destructive rather than trusting an understated read-only hint.
+#[IsDestructive]
 final class RunSiteCapabilityTool extends Tool
 {
     #[Override]

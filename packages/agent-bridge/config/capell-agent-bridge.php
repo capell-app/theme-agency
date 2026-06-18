@@ -18,11 +18,13 @@ return [
 
     'rate_limit_per_minute' => env('CAPELL_AGENT_BRIDGE_RATE_LIMIT_PER_MINUTE', 60),
 
+    'rate_limit_per_ip_per_minute' => env('CAPELL_AGENT_BRIDGE_RATE_LIMIT_PER_IP_PER_MINUTE', 120),
+
     'rate_limit_enabled' => env('CAPELL_AGENT_BRIDGE_RATE_LIMIT_ENABLED', true),
 
     'last_used_throttle_minutes' => env('CAPELL_AGENT_BRIDGE_LAST_USED_THROTTLE_MINUTES', 5),
 
-    'accept_legacy_token_hashes' => env('CAPELL_AGENT_BRIDGE_ACCEPT_LEGACY_TOKEN_HASHES', true),
+    'accept_legacy_token_hashes' => env('CAPELL_AGENT_BRIDGE_ACCEPT_LEGACY_TOKEN_HASHES', false),
 
     'inspect_app_runtime' => env('CAPELL_AGENT_BRIDGE_INSPECT_APP_RUNTIME', false),
 

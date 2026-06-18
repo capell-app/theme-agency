@@ -13,6 +13,7 @@ use Capell\PublishingStudio\Models\Workspace;
 use Capell\PublishingStudio\Publisher;
 use Carbon\CarbonImmutable;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Lorisleiva\Actions\Concerns\AsAction;
 use Throwable;
 
@@ -59,8 +60,18 @@ final class ExecuteSchedulerEventAction
             };
         } catch (EmbargoActiveException) {
             $event->markSkipped(SchedulerEventStateEnum::SkippedEmbargo, 'embargo_active');
-        } catch (ReleaseWindowClosedException) {
-            $event->markSkipped(SchedulerEventStateEnum::SkippedReleaseWindow, 'release_window_closed');
+        } catch (ReleaseWindowClosedException $releaseWindowClosed) {
+            $nextOpensAt = $releaseWindowClosed->nextOpensAt;
+            $originallyScheduledFor = $event->scheduled_for;
+
+            $event->markSkippedUntilReleaseWindowOpens('release_window_closed', $nextOpensAt);
+
+            Log::warning('Scheduled publish deferred: release window closed.', [
+                'scheduler_event_id' => $event->getKey(),
+                'workspace_id' => $event->workspace_id,
+                'originally_scheduled_for' => $originallyScheduledFor->toDateTimeString(),
+                'next_opens_at' => $nextOpensAt?->toDateTimeString(),
+            ]);
         } catch (Throwable $failure) {
             $event->markFailed($failure);
             report($failure);

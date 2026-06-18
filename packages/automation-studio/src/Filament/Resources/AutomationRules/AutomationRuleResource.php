@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Capell\AutomationStudio\Filament\Resources\AutomationRules;
 
 use BackedEnum;
+use Capell\Admin\Support\SiteScope;
 use Capell\AutomationStudio\Enums\AutomationActionType;
 use Capell\AutomationStudio\Enums\AutomationRuleConditionOperator;
 use Capell\AutomationStudio\Enums\AutomationRuleStatus;
@@ -25,7 +26,9 @@ use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Gate;
 use Override;
 
 final class AutomationRuleResource extends Resource
@@ -101,7 +104,23 @@ final class AutomationRuleResource extends Resource
     #[Override]
     public static function getEloquentQuery(): Builder
     {
-        return parent::getEloquentQuery()->withCount('runs');
+        return SiteScope::applyForCurrentActor(parent::getEloquentQuery())->withCount('runs');
+    }
+
+    #[Override]
+    public static function canAccess(): bool
+    {
+        $user = auth()->user();
+
+        return $user instanceof Authenticatable && Gate::forUser($user)->allows('viewAny', AutomationRule::class);
+    }
+
+    #[Override]
+    public static function canViewAny(): bool
+    {
+        $user = auth()->user();
+
+        return $user instanceof Authenticatable && Gate::forUser($user)->allows('viewAny', AutomationRule::class);
     }
 
     #[Override]

@@ -15,6 +15,7 @@ use Capell\ShopifyCommerce\Models\ShopifyCustomer;
 use Capell\ShopifyCommerce\Models\ShopifyOAuthState;
 use Capell\ShopifyCommerce\Models\ShopifyProduct;
 use Capell\ShopifyCommerce\Models\ShopifyProductVariant;
+use Capell\ShopifyCommerce\Models\ShopifyWebhookEvent;
 use Capell\ShopifyCommerce\Settings\ShopifyCommerceSettings;
 use Filament\Support\Icons\Heroicon;
 use Illuminate\Cache\RateLimiting\Limit;
@@ -43,6 +44,7 @@ final class ShopifyCommerceServiceProvider extends AbstractPackageServiceProvide
                 '2026_05_22_000003_create_shopify_products_table',
                 '2026_05_22_000004_create_shopify_product_variants_table',
                 '2026_06_01_000001_create_shopify_customers_table',
+                '2026_06_18_000001_create_shopify_webhook_events_table',
             ]);
     }
 
@@ -82,6 +84,7 @@ final class ShopifyCommerceServiceProvider extends AbstractPackageServiceProvide
             ShopifyOAuthState::class,
             ShopifyProduct::class,
             ShopifyProductVariant::class,
+            ShopifyWebhookEvent::class,
         ];
 
         $this->surface()->models($models);
@@ -120,6 +123,7 @@ final class ShopifyCommerceServiceProvider extends AbstractPackageServiceProvide
         CapellCore::registerProtectedTable('shopify_products');
         CapellCore::registerProtectedTable('shopify_product_variants');
         CapellCore::registerProtectedTable('shopify_customers');
+        CapellCore::registerProtectedTable('shopify_webhook_events');
 
         return $this;
     }

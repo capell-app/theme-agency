@@ -11,12 +11,15 @@ use Capell\AutomationStudio\Listeners\DispatchAutomationFromFormSubmission;
 use Capell\AutomationStudio\Listeners\DispatchAutomationFromWorkspaceStateChanged;
 use Capell\AutomationStudio\Models\AutomationRule;
 use Capell\AutomationStudio\Models\AutomationRun;
+use Capell\AutomationStudio\Policies\AutomationRulePolicy;
+use Capell\AutomationStudio\Policies\AutomationRunPolicy;
 use Capell\AutomationStudio\Support\AutomationActionRegistry;
 use Capell\AutomationStudio\Support\AutomationRuleRegistry;
 use Capell\AutomationStudio\Support\AutomationTriggerRegistry;
 use Capell\Core\Facades\CapellCore;
 use Capell\Core\Support\Packages\AbstractPackageServiceProvider;
 use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Gate;
 use Override;
 use Spatie\LaravelPackageTools\Package;
 
@@ -56,6 +59,7 @@ final class AutomationStudioServiceProvider extends AbstractPackageServiceProvid
 
         $this
             ->registerModels()
+            ->registerPolicies()
             ->registerProtectedTables();
 
         $this->registerPackageEventListeners();
@@ -81,6 +85,14 @@ final class AutomationStudioServiceProvider extends AbstractPackageServiceProvid
             AutomationRule::class,
             AutomationRun::class,
         ]);
+
+        return $this;
+    }
+
+    private function registerPolicies(): self
+    {
+        Gate::policy(AutomationRule::class, AutomationRulePolicy::class);
+        Gate::policy(AutomationRun::class, AutomationRunPolicy::class);
 
         return $this;
     }

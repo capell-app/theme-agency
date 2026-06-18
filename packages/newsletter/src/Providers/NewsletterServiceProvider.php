@@ -201,12 +201,20 @@ class NewsletterServiceProvider extends AbstractPackageServiceProvider
 
     private function registerRateLimiters(): void
     {
-        RateLimiter::for('capell-newsletter-subscribe', static function (Request $request): Limit {
+        RateLimiter::for('capell-newsletter-subscribe', static function (Request $request): array {
             $email = $request->input('email');
-            $normalizedEmail = is_string($email) ? strtolower($email) : '';
+            $normalizedEmail = is_string($email) ? strtolower(trim($email)) : '';
 
-            return Limit::perMinute(6)
+            // Per email + IP: the existing budget for a single client.
+            $perEmailAndIp = Limit::perMinute(6)
                 ->by(hash('sha256', $normalizedEmail . '|' . ($request->ip() ?? 'unknown')));
+
+            // Per email alone (IP-independent): caps the total confirmation emails a
+            // single victim address can be sent, so rotating IPs cannot email-bomb it.
+            $perEmail = Limit::perMinutes(10, 3)
+                ->by('email:' . hash('sha256', $normalizedEmail));
+
+            return [$perEmailAndIp, $perEmail];
         });
 
         RateLimiter::for('capell-newsletter-one-click-unsubscribe', static fn (Request $request): Limit => Limit::perMinute(12)

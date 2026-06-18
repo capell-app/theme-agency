@@ -103,6 +103,7 @@ return [
     'replay' => [
         'action' => 'Replay',
         'action_missing' => 'The original automation action can no longer be found.',
+        'denied' => 'You are not authorised to replay this automation run.',
         'failed' => 'Automation replay failed.',
         'not_replayable' => 'Only pending, skipped, or failed automation runs with rule and action keys can be replayed.',
         'rule_missing' => 'The original automation rule can no longer be found.',
