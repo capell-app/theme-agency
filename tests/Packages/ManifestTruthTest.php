@@ -131,6 +131,48 @@ it('declares health checks that resolve to the Diagnostics health contract', fun
     );
 });
 
+it('declares critical health checks with runnable diagnostics', function (): void {
+    $invalid = [];
+
+    foreach (manifest_truth_package_manifests() as $manifestPath => $entry) {
+        $healthChecks = $entry['manifest']['healthChecks'] ?? [];
+
+        if (! is_array($healthChecks)) {
+            continue;
+        }
+
+        foreach ($healthChecks as $index => $healthCheck) {
+            if (! is_array($healthCheck) || strtolower((string) ($healthCheck['severity'] ?? '')) !== 'critical') {
+                continue;
+            }
+
+            $className = $healthCheck['class'] ?? null;
+
+            if (! is_string($className) || $className === '' || ! class_exists($className)) {
+                continue;
+            }
+
+            if (! method_exists($className, 'runDiagnostics')) {
+                $invalid[$manifestPath][] = sprintf('healthChecks.%d.class must expose public static runDiagnostics() [%s]', $index, $className);
+
+                continue;
+            }
+
+            $method = new ReflectionMethod($className, 'runDiagnostics');
+
+            if (! $method->isPublic() || ! $method->isStatic()) {
+                $invalid[$manifestPath][] = sprintf('healthChecks.%d.class runDiagnostics() must be public static [%s]', $index, $className);
+            }
+        }
+    }
+
+    expect($invalid)->toBe(
+        [],
+        'Critical health checks must expose runnable diagnostics instead of contract-only stubs: ' .
+        json_encode($invalid, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES),
+    );
+});
+
 it('keeps theme manifest parent metadata aligned with provider definitions', function (): void {
     $invalid = [];
     $manifests = capell_theme_manifest_entries();

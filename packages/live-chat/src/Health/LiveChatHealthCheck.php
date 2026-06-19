@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Capell\LiveChat\Health;
 
 use Capell\Core\Contracts\Extensions\ChecksExtensionHealth;
+use Capell\Core\Data\Diagnostics\DoctorCheckResultData;
 use Capell\LiveChat\Actions\ApplyLiveChatCorsHeadersAction;
 use Capell\LiveChat\Actions\BuildLiveChatAnalyticsAction;
 use Capell\LiveChat\Actions\BuildLiveChatOperatorStateAction;
@@ -46,6 +47,7 @@ use Capell\LiveChat\Models\LiveChatKnowledgeSource;
 use Capell\LiveChat\Models\LiveChatMessage;
 use Capell\LiveChat\Support\RenderHooks\RegisterLiveChatWidgetHook;
 use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Schema;
 use Throwable;
@@ -113,6 +115,65 @@ final class LiveChatHealthCheck implements ChecksExtensionHealth
     public static function compatibleCapellApiVersion(): string
     {
         return '^4.0';
+    }
+
+    /**
+     * @return Collection<int, DoctorCheckResultData>
+     */
+    public static function runDiagnostics(): Collection
+    {
+        $healthCheck = new self;
+        $missingTables = $healthCheck->missingTables();
+        $unregisteredMorphAliases = $healthCheck->unregisteredMorphAliases();
+        $unresolvableActions = $healthCheck->unresolvableActions();
+        $missingRoutes = $healthCheck->missingRoutes();
+        $missingAdminResources = $healthCheck->missingAdminResources();
+        $unresolvableWidgetSurfaces = $healthCheck->unresolvableWidgetSurfaces();
+
+        return collect([
+            self::result(
+                'Live Chat tables',
+                $missingTables,
+                'Required Live Chat tables are present.',
+                'Missing Live Chat table(s): %s.',
+                'Run the Live Chat migrations.',
+            ),
+            self::result(
+                'Live Chat morph aliases',
+                $unregisteredMorphAliases,
+                'Live Chat morph aliases are registered.',
+                'Unregistered Live Chat morph alias(es): %s.',
+                'Verify the Live Chat service provider morph map registration.',
+            ),
+            self::result(
+                'Live Chat actions',
+                $unresolvableActions,
+                'Live Chat actions resolve from the container.',
+                'Unresolvable Live Chat action(s): %s.',
+                'Refresh Composer autoloading and verify package provider registration.',
+            ),
+            self::result(
+                'Live Chat routes',
+                $missingRoutes,
+                'Live Chat routes are registered.',
+                'Missing Live Chat route(s): %s.',
+                'Verify the Live Chat route contribution and route provider registration.',
+            ),
+            self::result(
+                'Live Chat admin resources',
+                $missingAdminResources,
+                'Live Chat admin resources are loadable.',
+                'Missing Live Chat admin resource(s): %s.',
+                'Verify the Live Chat admin provider registration.',
+            ),
+            self::result(
+                'Live Chat widget surfaces',
+                $unresolvableWidgetSurfaces,
+                'Live Chat widget renderer and views are available.',
+                'Missing Live Chat widget surface(s): %s.',
+                'Verify the Live Chat widget renderer binding and published views.',
+            ),
+        ]);
     }
 
     public function passes(): bool
@@ -215,6 +276,24 @@ final class LiveChatHealthCheck implements ChecksExtensionHealth
         }
 
         return $missing;
+    }
+
+    /**
+     * @param  list<string>  $failures
+     */
+    private static function result(
+        string $label,
+        array $failures,
+        string $passingMessage,
+        string $failingMessage,
+        string $remediation,
+    ): DoctorCheckResultData {
+        return new DoctorCheckResultData(
+            label: $label,
+            passed: $failures === [],
+            message: $failures === [] ? $passingMessage : sprintf($failingMessage, implode(', ', $failures)),
+            remediation: $failures === [] ? null : $remediation,
+        );
     }
 
     /**

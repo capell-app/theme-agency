@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Capell\EquestrianClinics\Health;
 
 use Capell\Core\Contracts\Extensions\ChecksExtensionHealth;
+use Capell\Core\Data\Diagnostics\DoctorCheckResultData;
 use Capell\EquestrianClinics\Actions\AllocateHorseToSlotAction;
 use Capell\EquestrianClinics\Actions\BuildFacilityReportAction;
 use Capell\EquestrianClinics\Actions\BuildOpenSlotDemandHeatmapAction;
@@ -31,6 +32,7 @@ use Capell\EquestrianClinics\Actions\RecordHostRequestAction;
 use Capell\EquestrianClinics\Actions\RequestSlotBookingAction;
 use Capell\EquestrianClinics\Actions\ReserveFacilityResourceAction;
 use Capell\EquestrianClinics\Actions\ValidateRiderHorseEligibilityAction;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Schema;
 
 final class EquestrianClinicsHealthCheck implements ChecksExtensionHealth
@@ -91,6 +93,35 @@ final class EquestrianClinicsHealthCheck implements ChecksExtensionHealth
     public static function compatibleCapellApiVersion(): string
     {
         return '^4.0';
+    }
+
+    /**
+     * @return Collection<int, DoctorCheckResultData>
+     */
+    public static function runDiagnostics(): Collection
+    {
+        $healthCheck = new self;
+        $missingTables = $healthCheck->missingTables();
+        $unresolvableActions = $healthCheck->unresolvableActions();
+
+        return collect([
+            new DoctorCheckResultData(
+                label: 'Equestrian Clinics tables',
+                passed: $missingTables === [],
+                message: $missingTables === []
+                    ? 'Required Equestrian Clinics tables are present.'
+                    : sprintf('Missing Equestrian Clinics table(s): %s.', implode(', ', $missingTables)),
+                remediation: $missingTables === [] ? null : 'Run the Equestrian Clinics migrations.',
+            ),
+            new DoctorCheckResultData(
+                label: 'Equestrian Clinics actions',
+                passed: $unresolvableActions === [],
+                message: $unresolvableActions === []
+                    ? 'Equestrian Clinics actions resolve from the container.'
+                    : sprintf('Unresolvable Equestrian Clinics action(s): %s.', implode(', ', $unresolvableActions)),
+                remediation: $unresolvableActions === [] ? null : 'Refresh Composer autoloading and verify package provider registration.',
+            ),
+        ]);
     }
 
     public function passes(): bool

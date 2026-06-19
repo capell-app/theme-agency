@@ -6,6 +6,7 @@ namespace Capell\ThemeStudio\InertiaBookings\Health;
 
 use Capell\Bookings\Contracts\PublicBookingRequestRenderer;
 use Capell\Core\Contracts\Extensions\ChecksExtensionHealth;
+use Capell\Core\Data\Diagnostics\DoctorCheckResultData;
 use Capell\Core\Enums\FrontendRuntime;
 use Capell\Core\Facades\CapellCore;
 use Capell\Core\ThemeStudio\Theme\ThemeRegistry;
@@ -13,6 +14,7 @@ use Capell\Inertia\Facades\CapellInertia;
 use Capell\Inertia\Support\CapellInertiaManager;
 use Capell\ThemeStudio\InertiaBookings\Providers\InertiaBookingsThemeServiceProvider;
 use Capell\ThemeStudio\InertiaBookings\Rendering\InertiaPublicBookingRequestRenderer;
+use Illuminate\Support\Collection;
 
 final class ThemeInertiaBookingsHealthCheck implements ChecksExtensionHealth
 {
@@ -41,6 +43,57 @@ final class ThemeInertiaBookingsHealthCheck implements ChecksExtensionHealth
     public static function compatibleCapellApiVersion(): string
     {
         return '^4.0';
+    }
+
+    /**
+     * @return Collection<int, DoctorCheckResultData>
+     */
+    public static function runDiagnostics(): Collection
+    {
+        $healthCheck = new self;
+
+        return collect([
+            new DoctorCheckResultData(
+                label: 'Inertia bridge',
+                passed: $healthCheck->inertiaBridgeAvailable(),
+                message: $healthCheck->inertiaBridgeAvailable()
+                    ? 'The Capell Inertia bridge is available.'
+                    : 'The Capell Inertia bridge classes are missing.',
+                remediation: $healthCheck->inertiaBridgeAvailable() ? null : 'Install capell-app/inertia before enabling this theme.',
+            ),
+            new DoctorCheckResultData(
+                label: 'Configured Inertia adapter',
+                passed: $healthCheck->configuredAdapterInstalled(),
+                message: $healthCheck->configuredAdapterInstalled()
+                    ? sprintf('The configured [%s] Inertia adapter package is installed.', $healthCheck->configuredAdapter())
+                    : sprintf('The configured [%s] Inertia adapter package is missing.', $healthCheck->configuredAdapter()),
+                remediation: $healthCheck->configuredAdapterInstalled() ? null : 'Install the matching Inertia adapter package or change capell-inertia.adapter.',
+            ),
+            new DoctorCheckResultData(
+                label: 'Booking adapter component pack',
+                passed: $healthCheck->configuredAdapterBookingComponentAvailable(),
+                message: $healthCheck->configuredAdapterBookingComponentAvailable()
+                    ? 'The configured adapter booking component pack is healthy.'
+                    : 'The configured adapter booking component pack is missing or unhealthy.',
+                remediation: $healthCheck->configuredAdapterBookingComponentAvailable() ? null : 'Install and verify the matching theme-inertia-bookings adapter package.',
+            ),
+            new DoctorCheckResultData(
+                label: 'Inertia bookings theme registration',
+                passed: $healthCheck->themeRegistered(),
+                message: $healthCheck->themeRegistered()
+                    ? 'The Inertia bookings theme is registered with the Inertia runtime.'
+                    : 'The Inertia bookings theme is not registered with the Inertia runtime.',
+                remediation: $healthCheck->themeRegistered() ? null : 'Verify the theme service provider is loaded.',
+            ),
+            new DoctorCheckResultData(
+                label: 'Public booking renderer',
+                passed: $healthCheck->bookingRendererBound(),
+                message: $healthCheck->bookingRendererBound()
+                    ? 'The public booking request renderer is bound to the Inertia renderer.'
+                    : 'The public booking request renderer is not bound to the Inertia renderer.',
+                remediation: $healthCheck->bookingRendererBound() ? null : 'Verify the theme service provider registers the booking renderer binding.',
+            ),
+        ]);
     }
 
     public function passes(): bool
@@ -101,7 +154,7 @@ final class ThemeInertiaBookingsHealthCheck implements ChecksExtensionHealth
         return app()->make(PublicBookingRequestRenderer::class) instanceof InertiaPublicBookingRequestRenderer;
     }
 
-    private function configuredAdapter(): string
+    public function configuredAdapter(): string
     {
         $configuredAdapter = config('capell-inertia.adapter', 'vue');
 

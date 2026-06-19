@@ -21,23 +21,19 @@ final class InertiaHealthCheck implements ChecksExtensionHealth
         return '^4.0';
     }
 
-    public function passes(): bool
-    {
-        return $this->runDiagnostics()->every(
-            static fn (DoctorCheckResultData $result): bool => $result->passed,
-        );
-    }
-
     /**
      * @return Collection<int, DoctorCheckResultData>
      */
-    public function runDiagnostics(): Collection
+    public static function runDiagnostics(): Collection
     {
-        return collect([
-            $this->rendererCheck(),
-            $this->middlewareCheck(),
-            $this->adapterReadinessCheck(),
-        ]);
+        return (new self)->diagnostics();
+    }
+
+    public function passes(): bool
+    {
+        return self::runDiagnostics()->every(
+            static fn (DoctorCheckResultData $result): bool => $result->passed,
+        );
     }
 
     public function rendererRegistered(): bool
@@ -75,6 +71,18 @@ final class InertiaHealthCheck implements ChecksExtensionHealth
                 ? null
                 : 'Install and boot an Inertia adapter package, or set capell-inertia.adapter to a registered adapter key.',
         );
+    }
+
+    /**
+     * @return Collection<int, DoctorCheckResultData>
+     */
+    private function diagnostics(): Collection
+    {
+        return collect([
+            $this->rendererCheck(),
+            $this->middlewareCheck(),
+            $this->adapterReadinessCheck(),
+        ]);
     }
 
     private function rendererCheck(): DoctorCheckResultData
