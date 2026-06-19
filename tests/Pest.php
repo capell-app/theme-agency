@@ -225,6 +225,7 @@ extendCapellPackageTests(PackagesTestCase::class, 'theme-interactive-builder', '
 extendCapellPackageTests(PackagesTestCase::class, 'theme-developer-infrastructure', 'theme-developer-infrastructure');
 extendCapellPackageTests(PackagesTestCase::class, 'theme-dark-product-system', 'theme-dark-product-system');
 extendCapellPackageTests(PackagesTestCase::class, 'theme-premium-infrastructure', 'theme-premium-infrastructure');
+extendCapellPackageTests(PackagesTestCase::class, 'theme-one-page-showcase', 'theme-one-page-showcase');
 extendCapellPackageTests(PackagesTestCase::class, 'theme-quiet-luxury-retail', 'theme-quiet-luxury-retail');
 extendCapellPackageTests(PackagesTestCase::class, 'theme-automotive-dealer', 'theme-automotive-dealer');
 extendCapellPackageTests(PackagesTestCase::class, 'theme-property-developer', 'theme-property-developer');

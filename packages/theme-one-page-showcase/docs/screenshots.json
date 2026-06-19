@@ -1,0 +1,79 @@
+{
+    "package": "theme-one-page-showcase",
+    "composerName": "capell-app/theme-one-page-showcase",
+    "generatedFor": "deployment-screenshot-runner",
+    "requiresInstalledPackage": true,
+    "outputDirectory": "packages/theme-one-page-showcase/docs/screenshots",
+    "entries": [
+        {
+            "id": "one-page-showcase-homepage",
+            "title": "One Page Showcase Homepage",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-one-page-showcase/docs/screenshots/one-page-showcase-homepage.png",
+            "required": false,
+            "user": false,
+            "notes": "Homepage with showcase hero, category tabs, one-page grid, templates and sections, tools and sponsors, build resources, and newsletter paths.",
+            "useCase": "One Page Showcase preview",
+            "package": "theme-one-page-showcase"
+        },
+        {
+            "id": "one-page-showcase-landing-page",
+            "title": "One Page Showcase Landing page",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-one-page-showcase/docs/screenshots/one-page-showcase-landing.png",
+            "required": false,
+            "user": false,
+            "notes": "One-page gallery homepage, template page, section library, tool recommendation, sponsor page, resource guide, or submit landing page.",
+            "useCase": "One Page Showcase feature preview",
+            "package": "theme-one-page-showcase"
+        },
+        {
+            "id": "one-page-showcase-list-page",
+            "title": "One Page Showcase List page",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-one-page-showcase/docs/screenshots/one-page-showcase-listing.png",
+            "required": false,
+            "user": false,
+            "notes": "One-pager, template, page section, tool recommendation, sponsor post, build guide, or resource article.",
+            "useCase": "One Page Showcase archive preview",
+            "package": "theme-one-page-showcase"
+        },
+        {
+            "id": "one-page-showcase-search-results",
+            "title": "One Page Showcase Search results",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-one-page-showcase/docs/screenshots/one-page-showcase-search.png",
+            "required": false,
+            "user": false,
+            "notes": "Search results for one-pagers, templates, page sections, tools, stacks, platforms, sponsors, and resources.",
+            "useCase": "One Page Showcase discovery preview",
+            "package": "theme-one-page-showcase"
+        },
+        {
+            "id": "one-page-showcase-contact-form",
+            "title": "One Page Showcase Contact form",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-one-page-showcase/docs/screenshots/one-page-showcase-contact.png",
+            "required": false,
+            "user": false,
+            "notes": "Newsletter, site submission, sponsor inquiry, template submission, resource pitch, or contact conversion form.",
+            "useCase": "One Page Showcase conversion preview",
+            "package": "theme-one-page-showcase"
+        }
+    ]
+}
