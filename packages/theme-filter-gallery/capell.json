@@ -1,0 +1,156 @@
+{
+    "manifest-version": 3,
+    "name": "capell-app/theme-filter-gallery",
+    "slug": "theme-filter-gallery",
+    "displayName": "Theme Filter Gallery",
+    "kind": "theme",
+    "capellApiVersion": "^4.0",
+    "version": "4.x-dev",
+    "description": "Filter Gallery extends the default Capell frontend with a broad inspiration-library direction, portable demo content, cache-safe public Blade rendering, and theme tokens tuned for clean white pages, dense taxonomy filters, selected-filter chips, saved views, category mega menus, editor picks, latest designs, blog modules, mission content, FAQ, quick actions, and scalable pagination.",
+    "product": {
+        "group": "Capell Themes",
+        "tier": "premium",
+        "bundle": "themes"
+    },
+    "namespace": "Capell\\ThemeStudio\\FilterGallery",
+    "surfaces": ["frontend"],
+    "dependencies": {
+        "requires": ["capell-app/core", "capell-app/frontend"],
+        "supports": [
+            "capell-app/blog",
+            "capell-app/form-builder",
+            "capell-app/newsletter",
+            "capell-app/shopify-commerce"
+        ],
+        "conflicts": []
+    },
+    "providers": {
+        "metadata": [],
+        "install": [],
+        "runtime": [
+            "Capell\\ThemeStudio\\FilterGallery\\FilterGalleryThemeServiceProvider"
+        ],
+        "admin": [],
+        "frontend": []
+    },
+    "contributes": [
+        {
+            "type": "admin-page",
+            "class": "Capell\\ThemeStudio\\FilterGallery\\Manifest\\ThemeManagementPageContribution",
+            "pageClass": "Capell\\Marketplace\\Filament\\Pages\\ThemeExtensionPage",
+            "pageParameters": {
+                "themeKey": "filter-gallery"
+            },
+            "labelKey": "capell-marketplace::marketplace.theme_extension.management_entry_label"
+        }
+    ],
+    "database": {
+        "migrations": false,
+        "settings": false,
+        "requiredTables": []
+    },
+    "commands": {
+        "install": null,
+        "setup": null,
+        "demo": "capell:theme-filter-gallery-demo",
+        "demoParams": ["url", "languages", "sites"],
+        "doctor": null
+    },
+    "settings": [],
+    "permissions": [],
+    "capabilities": ["theme-filter-gallery", "theme-filter-gallery-frontend"],
+    "security": {
+        "riskTier": "low",
+        "publicSurface": {
+            "routeNames": [],
+            "auth": "none",
+            "csrfExemptRoutes": [],
+            "signedRoutes": [],
+            "tokenizedRoutes": [],
+            "webhookRoutes": [],
+            "throttledRoutes": []
+        },
+        "sensitiveData": {
+            "encryptedFields": [],
+            "hashedTokenFields": [],
+            "redactedOutputClasses": [],
+            "plaintextJustifications": []
+        },
+        "publicOutput": {
+            "cacheSafe": true,
+            "forbidAuthoringSurface": true,
+            "forbidSecrets": true,
+            "forbidPublicBladeQueries": true
+        },
+        "externalHttpClients": {
+            "requiresTimeouts": false,
+            "requiresSecretRedaction": false,
+            "clients": []
+        },
+        "adminSurface": {
+            "authorization": "none",
+            "permissions": []
+        }
+    },
+    "performance": {
+        "frontendRenderBudgetMs": 20,
+        "adminQueryBudget": 0,
+        "cacheTags": ["theme-filter-gallery"],
+        "cacheSafety": {
+            "cacheable": false,
+            "variesBy": ["site", "locale"],
+            "sensitiveOutput": false,
+            "invalidationSources": [],
+            "queueInvalidation": false
+        }
+    },
+    "healthChecks": [
+        {
+            "key": "theme-filter-gallery.package-health",
+            "label": "Filter Gallery package surfaces, providers, and install health are discoverable by Diagnostics.",
+            "class": "Capell\\ThemeStudio\\FilterGallery\\Health\\ThemeFilterGalleryHealthCheck",
+            "severity": "critical",
+            "surface": "frontend"
+        }
+    ],
+    "commercial": {
+        "proposedLicense": "paid",
+        "requestedCertification": "first-party",
+        "supportPolicy": "priority",
+        "privateDocsRequested": true
+    },
+    "marketplace": {
+        "summary": "A clean Capell theme for large inspiration libraries with dense filters, selected chips, saved views, editor picks, latest designs, category mega menus, and pagination.",
+        "description": "Filter Gallery provides a distinct theme definition, demo command, marketplace metadata, and public-safe Blade views for broad inspiration libraries that need prominent search, expandable taxonomy groups, selected-filter chips, saved views, editor picks, latest-design grids, blog modules, mission content, FAQ, alphabetized category mega menus, consistent thumbnails, quick actions, result counts, and pagination that scales to thousands of entries.",
+        "screenshots": [
+            {
+                "path": "docs/screenshots/filter-gallery-homepage.png",
+                "alt": "Filter Gallery homepage preview",
+                "caption": "Filter Gallery Homepage"
+            },
+            {
+                "path": "docs/screenshots/filter-gallery-landing.png",
+                "alt": "Filter Gallery landing page preview",
+                "caption": "Filter Gallery Landing page"
+            },
+            {
+                "path": "docs/screenshots/filter-gallery-listing.png",
+                "alt": "Filter Gallery list page preview",
+                "caption": "Filter Gallery Filter archive"
+            },
+            {
+                "path": "docs/screenshots/filter-gallery-search.png",
+                "alt": "Filter Gallery search results preview",
+                "caption": "Filter Gallery Search results"
+            },
+            {
+                "path": "docs/screenshots/filter-gallery-contact.png",
+                "alt": "Filter Gallery contact form preview",
+                "caption": "Filter Gallery Contact form"
+            }
+        ],
+        "categories": ["frontend", "themes"]
+    },
+    "extends": "default",
+    "themeKey": "filter-gallery"
+}
