@@ -1,0 +1,156 @@
+{
+    "manifest-version": 3,
+    "name": "capell-app/theme-landing-gallery",
+    "slug": "theme-landing-gallery",
+    "displayName": "Theme Landing Gallery",
+    "kind": "theme",
+    "capellApiVersion": "^4.0",
+    "version": "4.x-dev",
+    "description": "Landing Gallery extends the default Capell frontend with a polished landing-page gallery direction, portable demo content, cache-safe public Blade rendering, and theme tokens tuned for warm near-white surfaces, refined spacing, rounded screenshot cards, pro and template upsells, latest sites, paid templates, partner blocks, curated rows, votes, comments, prices, and saved-state actions.",
+    "product": {
+        "group": "Capell Themes",
+        "tier": "premium",
+        "bundle": "themes"
+    },
+    "namespace": "Capell\\ThemeStudio\\LandingGallery",
+    "surfaces": ["frontend"],
+    "dependencies": {
+        "requires": ["capell-app/core", "capell-app/frontend"],
+        "supports": [
+            "capell-app/blog",
+            "capell-app/form-builder",
+            "capell-app/newsletter",
+            "capell-app/shopify-commerce"
+        ],
+        "conflicts": []
+    },
+    "providers": {
+        "metadata": [],
+        "install": [],
+        "runtime": [
+            "Capell\\ThemeStudio\\LandingGallery\\LandingGalleryThemeServiceProvider"
+        ],
+        "admin": [],
+        "frontend": []
+    },
+    "contributes": [
+        {
+            "type": "admin-page",
+            "class": "Capell\\ThemeStudio\\LandingGallery\\Manifest\\ThemeManagementPageContribution",
+            "pageClass": "Capell\\Marketplace\\Filament\\Pages\\ThemeExtensionPage",
+            "pageParameters": {
+                "themeKey": "landing-gallery"
+            },
+            "labelKey": "capell-marketplace::marketplace.theme_extension.management_entry_label"
+        }
+    ],
+    "database": {
+        "migrations": false,
+        "settings": false,
+        "requiredTables": []
+    },
+    "commands": {
+        "install": null,
+        "setup": null,
+        "demo": "capell:theme-landing-gallery-demo",
+        "demoParams": ["url", "languages", "sites"],
+        "doctor": null
+    },
+    "settings": [],
+    "permissions": [],
+    "capabilities": ["theme-landing-gallery", "theme-landing-gallery-frontend"],
+    "security": {
+        "riskTier": "low",
+        "publicSurface": {
+            "routeNames": [],
+            "auth": "none",
+            "csrfExemptRoutes": [],
+            "signedRoutes": [],
+            "tokenizedRoutes": [],
+            "webhookRoutes": [],
+            "throttledRoutes": []
+        },
+        "sensitiveData": {
+            "encryptedFields": [],
+            "hashedTokenFields": [],
+            "redactedOutputClasses": [],
+            "plaintextJustifications": []
+        },
+        "publicOutput": {
+            "cacheSafe": true,
+            "forbidAuthoringSurface": true,
+            "forbidSecrets": true,
+            "forbidPublicBladeQueries": true
+        },
+        "externalHttpClients": {
+            "requiresTimeouts": false,
+            "requiresSecretRedaction": false,
+            "clients": []
+        },
+        "adminSurface": {
+            "authorization": "none",
+            "permissions": []
+        }
+    },
+    "performance": {
+        "frontendRenderBudgetMs": 20,
+        "adminQueryBudget": 0,
+        "cacheTags": ["theme-landing-gallery"],
+        "cacheSafety": {
+            "cacheable": false,
+            "variesBy": ["site", "locale"],
+            "sensitiveOutput": false,
+            "invalidationSources": [],
+            "queueInvalidation": false
+        }
+    },
+    "healthChecks": [
+        {
+            "key": "theme-landing-gallery.package-health",
+            "label": "Landing Gallery package surfaces, providers, and install health are discoverable by Diagnostics.",
+            "class": "Capell\\ThemeStudio\\LandingGallery\\Health\\ThemeLandingGalleryHealthCheck",
+            "severity": "critical",
+            "surface": "frontend"
+        }
+    ],
+    "commercial": {
+        "proposedLicense": "paid",
+        "requestedCertification": "first-party",
+        "supportPolicy": "priority",
+        "privateDocsRequested": true
+    },
+    "marketplace": {
+        "summary": "A polished Capell theme for SaaS, ecommerce, and startup landing-page galleries with premium cards, search, templates, partners, pro upsells, and curated rows.",
+        "description": "Landing Gallery provides a distinct theme definition, demo command, marketplace metadata, and public-safe Blade views for landing-page galleries that need a concise value proposition, immediate search, category shortcuts, pro and template upsell blocks, rounded screenshot cards, latest-site grids, paid templates, partner blocks, curated category rows, votes, comments, prices, saved-state actions, newsletter capture, and strong archive pages.",
+        "screenshots": [
+            {
+                "path": "docs/screenshots/landing-gallery-homepage.png",
+                "alt": "Landing Gallery homepage preview",
+                "caption": "Landing Gallery Homepage"
+            },
+            {
+                "path": "docs/screenshots/landing-gallery-landing.png",
+                "alt": "Landing Gallery landing page preview",
+                "caption": "Landing Gallery Landing page"
+            },
+            {
+                "path": "docs/screenshots/landing-gallery-listing.png",
+                "alt": "Landing Gallery list page preview",
+                "caption": "Landing Gallery Archive page"
+            },
+            {
+                "path": "docs/screenshots/landing-gallery-search.png",
+                "alt": "Landing Gallery search results preview",
+                "caption": "Landing Gallery Search results"
+            },
+            {
+                "path": "docs/screenshots/landing-gallery-contact.png",
+                "alt": "Landing Gallery contact form preview",
+                "caption": "Landing Gallery Contact form"
+            }
+        ],
+        "categories": ["frontend", "themes"]
+    },
+    "extends": "default",
+    "themeKey": "landing-gallery"
+}
