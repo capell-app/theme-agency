@@ -1,0 +1,79 @@
+{
+    "package": "theme-interactive-builder",
+    "composerName": "capell-app/theme-interactive-builder",
+    "generatedFor": "deployment-screenshot-runner",
+    "requiresInstalledPackage": true,
+    "outputDirectory": "packages/theme-interactive-builder/docs/screenshots",
+    "entries": [
+        {
+            "id": "interactive-builder-homepage",
+            "title": "Interactive Builder Homepage",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-interactive-builder/docs/screenshots/interactive-builder-homepage.png",
+            "required": false,
+            "user": false,
+            "notes": "Homepage with canvas workspace, builder capabilities, templates, collaboration comments, community showcase, publishing controls, and newsletter paths.",
+            "useCase": "Interactive Builder preview",
+            "package": "theme-interactive-builder"
+        },
+        {
+            "id": "interactive-builder-landing-page",
+            "title": "Interactive Builder Landing page",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-interactive-builder/docs/screenshots/interactive-builder-landing.png",
+            "required": false,
+            "user": false,
+            "notes": "Canvas workspace, template page, community showcase, collaboration flow, AI helper panel, publishing page, or pricing landing page.",
+            "useCase": "Interactive Builder feature preview",
+            "package": "theme-interactive-builder"
+        },
+        {
+            "id": "interactive-builder-list-page",
+            "title": "Interactive Builder List page",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-interactive-builder/docs/screenshots/interactive-builder-listing.png",
+            "required": false,
+            "user": false,
+            "notes": "Template, community build, product update, canvas workflow, publishing guide, collaboration note, or company page.",
+            "useCase": "Interactive Builder archive preview",
+            "package": "theme-interactive-builder"
+        },
+        {
+            "id": "interactive-builder-search-results",
+            "title": "Interactive Builder Search results",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-interactive-builder/docs/screenshots/interactive-builder-search.png",
+            "required": false,
+            "user": false,
+            "notes": "Search results for templates, assets, showcase builds, product updates, publishing guides, community entries, and docs.",
+            "useCase": "Interactive Builder discovery preview",
+            "package": "theme-interactive-builder"
+        },
+        {
+            "id": "interactive-builder-contact-form",
+            "title": "Interactive Builder Contact form",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-interactive-builder/docs/screenshots/interactive-builder-contact.png",
+            "required": false,
+            "user": false,
+            "notes": "Newsletter, template submission, product demo request, community build submission, publishing question, or contact conversion form.",
+            "useCase": "Interactive Builder conversion preview",
+            "package": "theme-interactive-builder"
+        }
+    ]
+}
