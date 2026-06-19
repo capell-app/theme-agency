@@ -1,0 +1,79 @@
+{
+    "package": "theme-dense-news-analysis",
+    "composerName": "capell-app/theme-dense-news-analysis",
+    "generatedFor": "deployment-screenshot-runner",
+    "requiresInstalledPackage": true,
+    "outputDirectory": "packages/theme-dense-news-analysis/docs/screenshots",
+    "entries": [
+        {
+            "id": "dense-news-analysis-homepage",
+            "title": "Dense News Analysis Homepage",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-dense-news-analysis/docs/screenshots/dense-news-analysis-homepage.png",
+            "required": false,
+            "user": false,
+            "notes": "Homepage with top stories, live brief, topic navigation, opinion and analysis, video row, missed-it recap, and newsletter paths.",
+            "useCase": "Dense news analysis marketplace preview",
+            "package": "theme-dense-news-analysis"
+        },
+        {
+            "id": "dense-news-analysis-landing-page",
+            "title": "Dense News Analysis Landing page",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-dense-news-analysis/docs/screenshots/dense-news-analysis-landing.png",
+            "required": false,
+            "user": false,
+            "notes": "Lead news story, live coverage, analysis package, opinion page, video article, or topic landing page.",
+            "useCase": "Dense news feature preview",
+            "package": "theme-dense-news-analysis"
+        },
+        {
+            "id": "dense-news-analysis-list-page",
+            "title": "Dense News Analysis List page",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-dense-news-analysis/docs/screenshots/dense-news-analysis-listing.png",
+            "required": false,
+            "user": false,
+            "notes": "News, analysis, opinion, video, live coverage, missed-it, or topic listing page.",
+            "useCase": "Dense News Analysis archive preview",
+            "package": "theme-dense-news-analysis"
+        },
+        {
+            "id": "dense-news-analysis-search-results",
+            "title": "Dense News Analysis Search results",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-dense-news-analysis/docs/screenshots/dense-news-analysis-search.png",
+            "required": false,
+            "user": false,
+            "notes": "Search results for stories, topics, authors, live updates, opinion pieces, and videos.",
+            "useCase": "Dense News Analysis discovery preview",
+            "package": "theme-dense-news-analysis"
+        },
+        {
+            "id": "dense-news-analysis-contact-form",
+            "title": "Dense News Analysis Contact form",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-dense-news-analysis/docs/screenshots/dense-news-analysis-contact.png",
+            "required": false,
+            "user": false,
+            "notes": "Newsletter, breaking alert, membership, correction, tip, or contact conversion form.",
+            "useCase": "Dense News Analysis conversion preview",
+            "package": "theme-dense-news-analysis"
+        }
+    ]
+}
