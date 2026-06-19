@@ -1,0 +1,79 @@
+{
+    "package": "theme-scoreboard-showcase",
+    "composerName": "capell-app/theme-scoreboard-showcase",
+    "generatedFor": "deployment-screenshot-runner",
+    "requiresInstalledPackage": true,
+    "outputDirectory": "packages/theme-scoreboard-showcase/docs/screenshots",
+    "entries": [
+        {
+            "id": "scoreboard-showcase-homepage",
+            "title": "Scoreboard Showcase Homepage",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-scoreboard-showcase/docs/screenshots/scoreboard-showcase-homepage.png",
+            "required": false,
+            "user": false,
+            "notes": "Homepage with winner-of-the-day hero, score criteria, newest nominees, previous winners, voting status, creator credits, and newsletter paths.",
+            "useCase": "Scoreboard Showcase preview",
+            "package": "theme-scoreboard-showcase"
+        },
+        {
+            "id": "scoreboard-showcase-landing-page",
+            "title": "Scoreboard Showcase Landing page",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-scoreboard-showcase/docs/screenshots/scoreboard-showcase-landing.png",
+            "required": false,
+            "user": false,
+            "notes": "Feature page for winner details, score breakdowns, nominee cards, previous winners, public voting, or creator credits.",
+            "useCase": "Scoreboard Showcase feature preview",
+            "package": "theme-scoreboard-showcase"
+        },
+        {
+            "id": "scoreboard-showcase-list-page",
+            "title": "Scoreboard Showcase Awards archive",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-scoreboard-showcase/docs/screenshots/scoreboard-showcase-listing.png",
+            "required": false,
+            "user": false,
+            "notes": "Archive page for winners, nominees, countries, categories, score ranges, judging years, public vote states, or related projects.",
+            "useCase": "Scoreboard Showcase archive preview",
+            "package": "theme-scoreboard-showcase"
+        },
+        {
+            "id": "scoreboard-showcase-search-results",
+            "title": "Scoreboard Showcase Search results",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-scoreboard-showcase/docs/screenshots/scoreboard-showcase-search.png",
+            "required": false,
+            "user": false,
+            "notes": "Search results for winners, nominees, categories, countries, creators, score ranges, judging criteria, and voting states.",
+            "useCase": "Scoreboard Showcase discovery preview",
+            "package": "theme-scoreboard-showcase"
+        },
+        {
+            "id": "scoreboard-showcase-contact-form",
+            "title": "Scoreboard Showcase Contact form",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-scoreboard-showcase/docs/screenshots/scoreboard-showcase-contact.png",
+            "required": false,
+            "user": false,
+            "notes": "Newsletter signup, nominee submission, voting reminder, creator contact, awards inquiry, or judging update form.",
+            "useCase": "Scoreboard Showcase conversion preview",
+            "package": "theme-scoreboard-showcase"
+        }
+    ]
+}
