@@ -1,0 +1,159 @@
+{
+    "manifest-version": 3,
+    "name": "capell-app/theme-premium-infrastructure",
+    "slug": "theme-premium-infrastructure",
+    "displayName": "Theme Premium Infrastructure",
+    "kind": "theme",
+    "capellApiVersion": "^4.0",
+    "version": "4.x-dev",
+    "description": "Premium Infrastructure extends the default Capell frontend with a premium infrastructure direction, portable demo content, cache-safe public Blade rendering, and theme tokens tuned for product panels, solutions, global scale, developer tools, case studies, news, trust, compliance, metrics strips, code/product split sections, and layered UI mockups.",
+    "product": {
+        "group": "Capell Themes",
+        "tier": "premium",
+        "bundle": "themes"
+    },
+    "namespace": "Capell\\ThemeStudio\\PremiumInfrastructure",
+    "surfaces": ["frontend"],
+    "dependencies": {
+        "requires": ["capell-app/core", "capell-app/frontend"],
+        "supports": [
+            "capell-app/blog",
+            "capell-app/form-builder",
+            "capell-app/newsletter",
+            "capell-app/shopify-commerce"
+        ],
+        "conflicts": []
+    },
+    "providers": {
+        "metadata": [],
+        "install": [],
+        "runtime": [
+            "Capell\\ThemeStudio\\PremiumInfrastructure\\PremiumInfrastructureThemeServiceProvider"
+        ],
+        "admin": [],
+        "frontend": []
+    },
+    "contributes": [
+        {
+            "type": "admin-page",
+            "class": "Capell\\ThemeStudio\\PremiumInfrastructure\\Manifest\\ThemeManagementPageContribution",
+            "pageClass": "Capell\\Marketplace\\Filament\\Pages\\ThemeExtensionPage",
+            "pageParameters": {
+                "themeKey": "premium-infrastructure"
+            },
+            "labelKey": "capell-marketplace::marketplace.theme_extension.management_entry_label"
+        }
+    ],
+    "database": {
+        "migrations": false,
+        "settings": false,
+        "requiredTables": []
+    },
+    "commands": {
+        "install": null,
+        "setup": null,
+        "demo": "capell:theme-premium-infrastructure-demo",
+        "demoParams": ["url", "languages", "sites"],
+        "doctor": null
+    },
+    "settings": [],
+    "permissions": [],
+    "capabilities": [
+        "theme-premium-infrastructure",
+        "theme-premium-infrastructure-frontend"
+    ],
+    "security": {
+        "riskTier": "low",
+        "publicSurface": {
+            "routeNames": [],
+            "auth": "none",
+            "csrfExemptRoutes": [],
+            "signedRoutes": [],
+            "tokenizedRoutes": [],
+            "webhookRoutes": [],
+            "throttledRoutes": []
+        },
+        "sensitiveData": {
+            "encryptedFields": [],
+            "hashedTokenFields": [],
+            "redactedOutputClasses": [],
+            "plaintextJustifications": []
+        },
+        "publicOutput": {
+            "cacheSafe": true,
+            "forbidAuthoringSurface": true,
+            "forbidSecrets": true,
+            "forbidPublicBladeQueries": true
+        },
+        "externalHttpClients": {
+            "requiresTimeouts": false,
+            "requiresSecretRedaction": false,
+            "clients": []
+        },
+        "adminSurface": {
+            "authorization": "none",
+            "permissions": []
+        }
+    },
+    "performance": {
+        "frontendRenderBudgetMs": 20,
+        "adminQueryBudget": 0,
+        "cacheTags": ["theme-premium-infrastructure"],
+        "cacheSafety": {
+            "cacheable": false,
+            "variesBy": ["site", "locale"],
+            "sensitiveOutput": false,
+            "invalidationSources": [],
+            "queueInvalidation": false
+        }
+    },
+    "healthChecks": [
+        {
+            "key": "theme-premium-infrastructure.package-health",
+            "label": "Premium Infrastructure package surfaces, providers, and install health are discoverable by Diagnostics.",
+            "class": "Capell\\ThemeStudio\\PremiumInfrastructure\\Health\\ThemePremiumInfrastructureHealthCheck",
+            "severity": "critical",
+            "surface": "frontend"
+        }
+    ],
+    "commercial": {
+        "proposedLicense": "paid",
+        "requestedCertification": "first-party",
+        "supportPolicy": "priority",
+        "privateDocsRequested": true
+    },
+    "marketplace": {
+        "summary": "A premium Capell theme for complex infrastructure platforms, B2B SaaS, developer tool companies, global fintech products, enterprise APIs, and trust-heavy product marketing.",
+        "description": "Premium Infrastructure provides a distinct theme definition, demo command, marketplace metadata, and public-safe Blade views for infrastructure platforms, complex B2B SaaS products, developer tool companies, global fintech products, enterprise API platforms, and technical buyers that need layered product panels, dashboards, API logs, workflow states, global scale, developer tools, metrics, customer proof, news, trust, and compliance.",
+        "screenshots": [
+            {
+                "path": "docs/screenshots/premium-infrastructure-homepage.png",
+                "alt": "Premium Infrastructure homepage preview",
+                "caption": "Premium Infrastructure Homepage"
+            },
+            {
+                "path": "docs/screenshots/premium-infrastructure-landing.png",
+                "alt": "Premium Infrastructure landing page preview",
+                "caption": "Premium Infrastructure Landing page"
+            },
+            {
+                "path": "docs/screenshots/premium-infrastructure-listing.png",
+                "alt": "Premium Infrastructure list page preview",
+                "caption": "Premium Infrastructure List page"
+            },
+            {
+                "path": "docs/screenshots/premium-infrastructure-search.png",
+                "alt": "Premium Infrastructure search results preview",
+                "caption": "Premium Infrastructure Search results"
+            },
+            {
+                "path": "docs/screenshots/premium-infrastructure-contact.png",
+                "alt": "Premium Infrastructure contact form preview",
+                "caption": "Premium Infrastructure Contact form"
+            }
+        ],
+        "categories": ["frontend", "themes"]
+    },
+    "extends": "default",
+    "themeKey": "premium-infrastructure"
+}
