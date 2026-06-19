@@ -1,14 +1,14 @@
 .luxury-shell {
-    --luxury-ink: var(--theme-foreground, #111111);
+    --luxury-ink: var(--theme-foreground, #2a2520);
     --luxury-muted: color-mix(in srgb, var(--luxury-ink) 58%, transparent);
     --luxury-line: color-mix(in srgb, var(--luxury-ink) 14%, transparent);
     --luxury-field: color-mix(
         in srgb,
-        var(--theme-accent, #76716a) 8%,
-        var(--theme-surface, #f8f7f3)
+        var(--theme-accent, #8a765f) 10%,
+        var(--theme-surface, #f3eee6)
     );
-    --luxury-night: #111111;
-    --luxury-paper: var(--theme-surface, #f8f7f3);
+    --luxury-night: #2a2520;
+    --luxury-paper: var(--theme-surface, #f3eee6);
     background: var(--luxury-paper);
     color: var(--luxury-ink);
     font-family: var(--theme-body-font, inter), system-ui, sans-serif;
@@ -23,7 +23,7 @@
 }
 
 .luxury-skip-link {
-    background: var(--luxury-night, #11170f);
+    background: var(--luxury-night, #2a2520);
     color: #ffffff;
     left: 1rem;
     padding: 0.75rem 1rem;
@@ -49,7 +49,7 @@
 .luxury-section-dark h1,
 .luxury-section-dark h2,
 .luxury-section-dark h3 {
-    color: #fffdf4;
+    color: #ffffff;
 }
 
 .luxury-section-inner {
@@ -59,7 +59,7 @@
 }
 
 .luxury-kicker {
-    color: var(--theme-accent, #76716a);
+    color: var(--theme-accent, #8a765f);
     font-size: 0.78rem;
     font-weight: 700;
     letter-spacing: 0.08em;
@@ -101,8 +101,8 @@
 
 .luxury-button {
     align-items: center;
-    background: var(--theme-primary, #111111);
-    border: 1px solid var(--theme-primary, #111111);
+    background: var(--theme-primary, #33281f);
+    border: 1px solid var(--theme-primary, #33281f);
     border-radius: var(--theme-radius, 0.25rem);
     color: #ffffff;
     display: inline-flex;
@@ -115,9 +115,9 @@
 
 .luxury-button:hover,
 .luxury-button:focus-visible {
-    background: color-mix(in srgb, var(--theme-primary, #111111) 82%, white);
+    background: color-mix(in srgb, var(--theme-primary, #33281f) 82%, white);
     outline: 3px solid
-        color-mix(in srgb, var(--theme-accent, #76716a) 42%, transparent);
+        color-mix(in srgb, var(--theme-accent, #8a765f) 42%, transparent);
     outline-offset: 3px;
 }
 

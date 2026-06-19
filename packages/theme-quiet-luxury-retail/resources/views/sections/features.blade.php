@@ -2,9 +2,9 @@
     $heading = data_get($section, 'heading', __('capell-theme-quiet-luxury-retail::sections.features.heading'));
     $summary = data_get($section, 'summary', __('capell-theme-quiet-luxury-retail::sections.features.summary'));
     $items = data_get($section, 'items', [
-        ['title' => __('capell-theme-quiet-luxury-retail::sections.features.coat_title'), 'summary' => __('capell-theme-quiet-luxury-retail::sections.features.coat_summary'), 'meta' => __('capell-theme-quiet-luxury-retail::sections.features.coat_meta')],
-        ['title' => __('capell-theme-quiet-luxury-retail::sections.features.shirt_title'), 'summary' => __('capell-theme-quiet-luxury-retail::sections.features.shirt_summary'), 'meta' => __('capell-theme-quiet-luxury-retail::sections.features.shirt_meta')],
-        ['title' => __('capell-theme-quiet-luxury-retail::sections.features.trouser_title'), 'summary' => __('capell-theme-quiet-luxury-retail::sections.features.trouser_summary'), 'meta' => __('capell-theme-quiet-luxury-retail::sections.features.trouser_meta')],
+        ['title' => __('capell-theme-quiet-luxury-retail::sections.features.serum_title'), 'summary' => __('capell-theme-quiet-luxury-retail::sections.features.serum_summary'), 'meta' => __('capell-theme-quiet-luxury-retail::sections.features.serum_meta')],
+        ['title' => __('capell-theme-quiet-luxury-retail::sections.features.scent_title'), 'summary' => __('capell-theme-quiet-luxury-retail::sections.features.scent_summary'), 'meta' => __('capell-theme-quiet-luxury-retail::sections.features.scent_meta')],
+        ['title' => __('capell-theme-quiet-luxury-retail::sections.features.wash_title'), 'summary' => __('capell-theme-quiet-luxury-retail::sections.features.wash_summary'), 'meta' => __('capell-theme-quiet-luxury-retail::sections.features.wash_meta')],
     ]);
 @endphp
 

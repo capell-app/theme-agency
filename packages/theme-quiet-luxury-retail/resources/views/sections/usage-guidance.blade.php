@@ -1,8 +1,8 @@
 @php
     $items = data_get($section, 'items', [
-        ['title' => __('capell-theme-quiet-luxury-retail::sections.care.fabric_title'), 'summary' => __('capell-theme-quiet-luxury-retail::sections.care.fabric_summary')],
-        ['title' => __('capell-theme-quiet-luxury-retail::sections.care.alter_title'), 'summary' => __('capell-theme-quiet-luxury-retail::sections.care.alter_summary')],
-        ['title' => __('capell-theme-quiet-luxury-retail::sections.care.store_title'), 'summary' => __('capell-theme-quiet-luxury-retail::sections.care.store_summary')],
+        ['title' => __('capell-theme-quiet-luxury-retail::sections.usage.apply_title'), 'summary' => __('capell-theme-quiet-luxury-retail::sections.usage.apply_summary')],
+        ['title' => __('capell-theme-quiet-luxury-retail::sections.usage.pair_title'), 'summary' => __('capell-theme-quiet-luxury-retail::sections.usage.pair_summary')],
+        ['title' => __('capell-theme-quiet-luxury-retail::sections.usage.assist_title'), 'summary' => __('capell-theme-quiet-luxury-retail::sections.usage.assist_summary')],
     ]);
 @endphp
 
@@ -12,13 +12,13 @@
 >
     <div class="luxury-section-inner">
         <p class="luxury-kicker">
-            {{ __('capell-theme-quiet-luxury-retail::sections.care.kicker') }}
+            {{ __('capell-theme-quiet-luxury-retail::sections.usage.kicker') }}
         </p>
         <h2>
-            {{ data_get($section, 'heading', __('capell-theme-quiet-luxury-retail::sections.care.heading')) }}
+            {{ data_get($section, 'heading', __('capell-theme-quiet-luxury-retail::sections.usage.heading')) }}
         </h2>
         <p class="luxury-lede">
-            {{ data_get($section, 'summary', __('capell-theme-quiet-luxury-retail::sections.care.summary')) }}
+            {{ data_get($section, 'summary', __('capell-theme-quiet-luxury-retail::sections.usage.summary')) }}
         </p>
         <div class="luxury-grid">
             @foreach ($items as $item)

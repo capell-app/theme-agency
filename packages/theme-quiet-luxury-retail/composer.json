@@ -1,6 +1,6 @@
 {
     "name": "capell-app/theme-quiet-luxury-retail",
-    "description": "Quiet Luxury Retail is a first-party Capell theme for restrained fashion retail, seasonal collections, lookbooks, product care, and quiet conversion.",
+    "description": "Quiet Luxury Retail is a first-party Capell theme for guided luxury retail, skincare, fragrance, hospitality products, ingredient notes, rituals, and store consultation.",
     "type": "library",
     "license": "MIT",
     "require": {

@@ -6,7 +6,7 @@
     "kind": "theme",
     "capellApiVersion": "^4.0",
     "version": "4.x-dev",
-    "description": "Quiet Luxury Retail extends the default Capell frontend with a restrained fashion retail direction, portable demo content, cache-safe public Blade rendering, and theme tokens tuned for seasonal collections, sparse category paths, lookbooks, product care, materials, store assistance, and newsletter conversion.",
+    "description": "Quiet Luxury Retail extends the default Capell frontend with a restrained luxury retail direction, portable demo content, cache-safe public Blade rendering, and theme tokens tuned for product families, guided rituals, ingredient notes, usage guidance, store assistance, pairings, and newsletter conversion.",
     "product": {
         "group": "Capell Themes",
         "tier": "premium",
@@ -123,8 +123,8 @@
         "privateDocsRequested": true
     },
     "marketplace": {
-        "summary": "A premium Capell theme for restrained fashion retail, seasonal collections, lookbooks, product care, and quiet conversion.",
-        "description": "Quiet Luxury Retail provides a distinct theme definition, demo command, marketplace metadata, and public-safe Blade views for restrained retail brands.",
+        "summary": "A premium Capell theme for guided luxury retail, skincare, fragrance, hospitality products, ingredient notes, rituals, and store consultation.",
+        "description": "Quiet Luxury Retail provides a distinct theme definition, demo command, marketplace metadata, and public-safe Blade views for skincare, fragrance, apothecary, and hospitality retail brands.",
         "screenshots": [
             {
                 "path": "docs/screenshots/quiet-luxury-retail-homepage.png",

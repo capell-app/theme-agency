@@ -6,7 +6,7 @@
 
 Theme Quiet Luxury Retail is an **Available**, **No schema impact** Capell theme in the **Capell Themes** product group. It ships as `capell-app/theme-quiet-luxury-retail` and extends these surfaces: frontend.
 
-Quiet Luxury Retail extends the default Capell frontend with a restrained fashion retail direction, portable demo content, cache-safe public Blade rendering, and theme tokens tuned for seasonal collections, sparse category paths, lookbooks, product care, materials, store assistance, and newsletter conversion.
+Quiet Luxury Retail extends the default Capell frontend with a restrained luxury retail direction, portable demo content, cache-safe public Blade rendering, and theme tokens tuned for product families, guided rituals, ingredient notes, usage guidance, store assistance, pairings, and newsletter conversion.
 
 After install, admins can select the theme through the core theme management surface. Editors keep using normal Capell content workflows while the package controls public presentation.
 
@@ -23,7 +23,7 @@ Status details:
 
 **For developers:** The package gives developers package-owned service providers, Actions, and Blade views instead of pushing this behaviour into core or application code.
 
-**For teams:** A premium Capell theme for restrained fashion retail, seasonal collections, lookbooks, product care, and quiet conversion.
+**For teams:** A premium Capell theme for guided luxury retail, skincare, fragrance, hospitality products, ingredient notes, rituals, and store consultation.
 
 ## Screens And Workflow
 

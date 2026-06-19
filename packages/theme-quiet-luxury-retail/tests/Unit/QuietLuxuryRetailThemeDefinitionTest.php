@@ -13,7 +13,7 @@ it('defines the quiet-luxury-retail renderer contract', function (): void {
         ->and($definition->name)->toBe('Quiet Luxury Retail')
         ->and($definition->description)->toContain('luxury retail')
         ->and($definition->tags)->toContain('Luxury Retail', 'Skincare', 'Fragrance', 'Hospitality', 'Consultation')
-        ->and($definition->bestFit)->toContain('Skincare retailers', 'Fragrance houses', 'Design-led product catalogues')
+        ->and($definition->bestFit)->toContain('Skincare retailers', 'Fragrance houses', 'Apothecary brands')
         ->and($definition->includedSections)->toContain(
             'navigation',
             'hero',

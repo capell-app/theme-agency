@@ -15,7 +15,7 @@
             "screenshotPath": "packages/theme-quiet-luxury-retail/docs/screenshots/quiet-luxury-retail-homepage.png",
             "required": false,
             "user": false,
-            "notes": "Homepage with seasonal collections, category paths, lookbook, product care, and newsletter paths.",
+            "notes": "Homepage with guided rituals, product families, ingredient notes, store consultation, and newsletter paths.",
             "useCase": "Minimal fashion retail marketplace preview",
             "package": "theme-quiet-luxury-retail"
         },
@@ -29,7 +29,7 @@
             "screenshotPath": "packages/theme-quiet-luxury-retail/docs/screenshots/quiet-luxury-retail-landing.png",
             "required": false,
             "user": false,
-            "notes": "Seasonal collection or lookbook landing page.",
+            "notes": "Consultation or ritual landing page.",
             "useCase": "Minimal fashion collection preview",
             "package": "theme-quiet-luxury-retail"
         },
@@ -43,7 +43,7 @@
             "screenshotPath": "packages/theme-quiet-luxury-retail/docs/screenshots/quiet-luxury-retail-listing.png",
             "required": false,
             "user": false,
-            "notes": "Product, collection, article, or lookbook listing page.",
+            "notes": "Product, ritual, ingredient, or store story listing page.",
             "useCase": "Quiet Luxury Retail archive preview",
             "package": "theme-quiet-luxury-retail"
         },
@@ -57,7 +57,7 @@
             "screenshotPath": "packages/theme-quiet-luxury-retail/docs/screenshots/quiet-luxury-retail-search.png",
             "required": false,
             "user": false,
-            "notes": "Search results for products, collections, lookbooks, and care guides.",
+            "notes": "Search results for products, rituals, ingredient notes, and store guidance.",
             "useCase": "Quiet Luxury Retail discovery preview",
             "package": "theme-quiet-luxury-retail"
         },
@@ -71,7 +71,7 @@
             "screenshotPath": "packages/theme-quiet-luxury-retail/docs/screenshots/quiet-luxury-retail-contact.png",
             "required": false,
             "user": false,
-            "notes": "Newsletter, product-care, store assistance, or contact conversion form.",
+            "notes": "Newsletter, consultation, refill, or store assistance form.",
             "useCase": "Quiet Luxury Retail conversion preview",
             "package": "theme-quiet-luxury-retail"
         }

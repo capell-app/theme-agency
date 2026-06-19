@@ -1,18 +1,18 @@
 @php
     $stories = data_get($section, 'items', data_get($section, 'stories', [
-        ['title' => __('capell-theme-quiet-luxury-retail::sections.materials.linen_title'), 'summary' => __('capell-theme-quiet-luxury-retail::sections.materials.linen_summary'), 'meta' => __('capell-theme-quiet-luxury-retail::sections.materials.linen_meta')],
-        ['title' => __('capell-theme-quiet-luxury-retail::sections.materials.wool_title'), 'summary' => __('capell-theme-quiet-luxury-retail::sections.materials.wool_summary'), 'meta' => __('capell-theme-quiet-luxury-retail::sections.materials.wool_meta')],
-        ['title' => __('capell-theme-quiet-luxury-retail::sections.materials.scent_title'), 'summary' => __('capell-theme-quiet-luxury-retail::sections.materials.scent_summary'), 'meta' => __('capell-theme-quiet-luxury-retail::sections.materials.scent_meta')],
+        ['title' => __('capell-theme-quiet-luxury-retail::sections.ingredients.botanical_title'), 'summary' => __('capell-theme-quiet-luxury-retail::sections.ingredients.botanical_summary'), 'meta' => __('capell-theme-quiet-luxury-retail::sections.ingredients.botanical_meta')],
+        ['title' => __('capell-theme-quiet-luxury-retail::sections.ingredients.glass_title'), 'summary' => __('capell-theme-quiet-luxury-retail::sections.ingredients.glass_summary'), 'meta' => __('capell-theme-quiet-luxury-retail::sections.ingredients.glass_meta')],
+        ['title' => __('capell-theme-quiet-luxury-retail::sections.ingredients.scent_title'), 'summary' => __('capell-theme-quiet-luxury-retail::sections.ingredients.scent_summary'), 'meta' => __('capell-theme-quiet-luxury-retail::sections.ingredients.scent_meta')],
     ]));
 @endphp
 
 <section class="luxury-section">
     <div class="luxury-section-inner">
         <p class="luxury-kicker">
-            {{ __('capell-theme-quiet-luxury-retail::sections.materials.kicker') }}
+            {{ __('capell-theme-quiet-luxury-retail::sections.ingredients.kicker') }}
         </p>
         <h2>
-            {{ data_get($section, 'heading', __('capell-theme-quiet-luxury-retail::sections.materials.heading')) }}
+            {{ data_get($section, 'heading', __('capell-theme-quiet-luxury-retail::sections.ingredients.heading')) }}
         </h2>
         <div class="luxury-grid">
             @foreach ($stories as $story)

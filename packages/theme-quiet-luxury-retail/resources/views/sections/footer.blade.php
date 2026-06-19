@@ -1,8 +1,8 @@
 @php
     $columns = data_get($section, 'items', [
-        ['title' => __('capell-theme-quiet-luxury-retail::sections.footer.shop'), 'links' => [__('capell-theme-quiet-luxury-retail::sections.footer.women'), __('capell-theme-quiet-luxury-retail::sections.footer.men'), __('capell-theme-quiet-luxury-retail::sections.footer.accessories')]],
-        ['title' => __('capell-theme-quiet-luxury-retail::sections.footer.service'), 'links' => [__('capell-theme-quiet-luxury-retail::sections.footer.care'), __('capell-theme-quiet-luxury-retail::sections.footer.alterations'), __('capell-theme-quiet-luxury-retail::sections.footer.stores')]],
-        ['title' => __('capell-theme-quiet-luxury-retail::sections.footer.editorial'), 'links' => [__('capell-theme-quiet-luxury-retail::sections.footer.lookbook'), __('capell-theme-quiet-luxury-retail::sections.footer.materials'), __('capell-theme-quiet-luxury-retail::sections.footer.newsletter')]],
+        ['title' => __('capell-theme-quiet-luxury-retail::sections.footer.shop'), 'links' => [__('capell-theme-quiet-luxury-retail::sections.footer.skin'), __('capell-theme-quiet-luxury-retail::sections.footer.fragrance'), __('capell-theme-quiet-luxury-retail::sections.footer.home')]],
+        ['title' => __('capell-theme-quiet-luxury-retail::sections.footer.service'), 'links' => [__('capell-theme-quiet-luxury-retail::sections.footer.consultation'), __('capell-theme-quiet-luxury-retail::sections.footer.refills'), __('capell-theme-quiet-luxury-retail::sections.footer.stores')]],
+        ['title' => __('capell-theme-quiet-luxury-retail::sections.footer.editorial'), 'links' => [__('capell-theme-quiet-luxury-retail::sections.footer.rituals'), __('capell-theme-quiet-luxury-retail::sections.footer.ingredients'), __('capell-theme-quiet-luxury-retail::sections.footer.newsletter')]],
     ]);
 @endphp
 

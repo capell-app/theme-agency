@@ -1,11 +1,11 @@
 @php
     $links = data_get($section, 'items', [
         ['label' => __('capell-theme-quiet-luxury-retail::sections.navigation.shop'), 'url' => '/'],
-        ['label' => __('capell-theme-quiet-luxury-retail::sections.navigation.women'), 'url' => '/'],
-        ['label' => __('capell-theme-quiet-luxury-retail::sections.navigation.men'), 'url' => '/'],
-        ['label' => __('capell-theme-quiet-luxury-retail::sections.navigation.lookbook'), 'url' => '/'],
-        ['label' => __('capell-theme-quiet-luxury-retail::sections.navigation.care'), 'url' => '/'],
+        ['label' => __('capell-theme-quiet-luxury-retail::sections.navigation.skin'), 'url' => '/'],
+        ['label' => __('capell-theme-quiet-luxury-retail::sections.navigation.fragrance'), 'url' => '/'],
+        ['label' => __('capell-theme-quiet-luxury-retail::sections.navigation.rituals'), 'url' => '/'],
         ['label' => __('capell-theme-quiet-luxury-retail::sections.navigation.stores'), 'url' => '/'],
+        ['label' => __('capell-theme-quiet-luxury-retail::sections.navigation.journal'), 'url' => '/'],
     ]);
 @endphp
 

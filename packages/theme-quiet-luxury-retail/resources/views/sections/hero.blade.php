@@ -6,9 +6,9 @@
     $secondaryLabel = data_get($section, 'secondary_label', __('capell-theme-quiet-luxury-retail::sections.hero.secondary_label'));
     $secondaryUrl = data_get($section, 'secondary_url', data_get($section, 'secondary.href', '/'));
     $notes = data_get($section, 'notes', [
-        __('capell-theme-quiet-luxury-retail::sections.hero.note_fit'),
-        __('capell-theme-quiet-luxury-retail::sections.hero.note_materials'),
-        __('capell-theme-quiet-luxury-retail::sections.hero.note_pace'),
+        __('capell-theme-quiet-luxury-retail::sections.hero.note_consultation'),
+        __('capell-theme-quiet-luxury-retail::sections.hero.note_ingredients'),
+        __('capell-theme-quiet-luxury-retail::sections.hero.note_store'),
     ]);
 @endphp
 

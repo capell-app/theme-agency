@@ -1,6 +1,6 @@
 # Theme Quiet Luxury Retail Docs
 
-A premium Capell theme for restrained fashion retail, seasonal collections, lookbooks, product care, and quiet conversion.
+A premium Capell theme for guided luxury retail, skincare, fragrance, hospitality products, ingredient notes, rituals, and store consultation.
 
 Start at the [package README](../README.md) when deciding whether to install this package. Use the docs below for setup, extension, debugging, and verification details.
 

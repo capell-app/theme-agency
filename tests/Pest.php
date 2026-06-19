@@ -208,6 +208,7 @@ extendCapellPackageTests(PackagesTestCase::class, 'theme-beauty-spa', 'theme-bea
 extendCapellPackageTests(PackagesTestCase::class, 'theme-travel-tourism', 'theme-travel-tourism');
 extendCapellPackageTests(PackagesTestCase::class, 'theme-outdoor-mission', 'theme-outdoor-mission');
 extendCapellPackageTests(PackagesTestCase::class, 'theme-minimal-fashion', 'theme-minimal-fashion');
+extendCapellPackageTests(PackagesTestCase::class, 'theme-quiet-luxury-retail', 'theme-quiet-luxury-retail');
 extendCapellPackageTests(PackagesTestCase::class, 'theme-automotive-dealer', 'theme-automotive-dealer');
 extendCapellPackageTests(PackagesTestCase::class, 'theme-property-developer', 'theme-property-developer');
 extendCapellPackageTests(PackagesTestCase::class, 'theme-recruitment-jobs', 'theme-recruitment-jobs');
