@@ -1,0 +1,79 @@
+{
+    "package": "theme-premium-portfolio-collection",
+    "composerName": "capell-app/theme-premium-portfolio-collection",
+    "generatedFor": "deployment-screenshot-runner",
+    "requiresInstalledPackage": true,
+    "outputDirectory": "packages/theme-premium-portfolio-collection/docs/screenshots",
+    "entries": [
+        {
+            "id": "premium-portfolio-collection-homepage",
+            "title": "Premium Portfolio Collection Homepage",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-premium-portfolio-collection/docs/screenshots/premium-portfolio-collection-homepage.png",
+            "required": false,
+            "user": false,
+            "notes": "Homepage with featured portfolios, taxonomy filters, portfolio grid, awarded profiles, creator directory, education upsell, and newsletter paths.",
+            "useCase": "Premium portfolio collection marketplace preview",
+            "package": "theme-premium-portfolio-collection"
+        },
+        {
+            "id": "premium-portfolio-collection-landing-page",
+            "title": "Premium Portfolio Collection Landing page",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-premium-portfolio-collection/docs/screenshots/premium-portfolio-collection-landing.png",
+            "required": false,
+            "user": false,
+            "notes": "Featured portfolio, creator profile, awarded collection, gallery detail, or educational resource landing page.",
+            "useCase": "Premium portfolio feature preview",
+            "package": "theme-premium-portfolio-collection"
+        },
+        {
+            "id": "premium-portfolio-collection-list-page",
+            "title": "Premium Portfolio Collection List page",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-premium-portfolio-collection/docs/screenshots/premium-portfolio-collection-listing.png",
+            "required": false,
+            "user": false,
+            "notes": "Portfolio, creator, winner, technology, country, font, color, style, or collection listing page.",
+            "useCase": "Premium Portfolio Collection archive preview",
+            "package": "theme-premium-portfolio-collection"
+        },
+        {
+            "id": "premium-portfolio-collection-search-results",
+            "title": "Premium Portfolio Collection Search results",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-premium-portfolio-collection/docs/screenshots/premium-portfolio-collection-search.png",
+            "required": false,
+            "user": false,
+            "notes": "Search results for portfolios, creators, agencies, countries, technologies, awards, and tags.",
+            "useCase": "Premium Portfolio Collection discovery preview",
+            "package": "theme-premium-portfolio-collection"
+        },
+        {
+            "id": "premium-portfolio-collection-contact-form",
+            "title": "Premium Portfolio Collection Contact form",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-premium-portfolio-collection/docs/screenshots/premium-portfolio-collection-contact.png",
+            "required": false,
+            "user": false,
+            "notes": "Newsletter, portfolio submission, profile claim, resource signup, or contact conversion form.",
+            "useCase": "Premium Portfolio Collection conversion preview",
+            "package": "theme-premium-portfolio-collection"
+        }
+    ]
+}
