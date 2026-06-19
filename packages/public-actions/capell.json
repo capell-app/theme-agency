@@ -138,9 +138,7 @@
             "signedRoutes": [],
             "tokenizedRoutes": [],
             "webhookRoutes": [],
-            "throttledRoutes": [
-                "submit"
-            ]
+            "throttledRoutes": ["submit"]
         },
         "sensitiveData": {
             "encryptedFields": [

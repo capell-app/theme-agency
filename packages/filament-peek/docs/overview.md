@@ -31,18 +31,6 @@ Screenshot contract: `screenshots.json`.
 
 - Page edit preview actions (admin, required).
 
-## Screenshot Evidence
-
-These captures are the package-owned visual contract for the admin pages, public pages, actions, workflows, and feature surfaces described above. Keep this section aligned with `docs/screenshots.json` whenever the package surface changes.
-
-### Page edit preview actions
-
-![Page edit preview actions](screenshots/page-edit-preview-actions.png)
-
-- Surface: admin · Target: PageResource/EditPage.
-- Documents: An editor chooses between a temporary unsaved preview and the saved public page.
-- Capture notes: Capture the Page edit header with the Preview group showing the separate `Changes` and `Live page` actions.
-
 ## Technical Shape
 
 - Service providers: `Capell\FilamentPeek\Providers\FilamentPeekServiceProvider`.
@@ -51,6 +39,7 @@ These captures are the package-owned visual contract for the admin pages, public
 - Route files: `packages/filament-peek/routes/web.php`.
 - Actions: `CreatePagePreviewSnapshotAction`, `FindPagePreviewSnapshotAction`, `RegisterLayoutBuilderPreviewWidgetsAction`, `RenderPagePreviewSnapshotAction`, `StoreLayoutBuilderPreviewStateAction`.
 - Data objects: `LayoutBuilderPreviewStateData`, `PagePreviewSnapshotData`.
+- Manifest contributions: `route: Capell\FilamentPeek\Manifest\FilamentPeekRoutesContribution`.
 - Health checks: `Capell\FilamentPeek\Health\FilamentPeekHealthCheck`.
 - Blade views: `packages/filament-peek/resources/views/preview-error.blade.php`, `packages/filament-peek/resources/views/preview-ribbon.blade.php`.
 - Cache tags: `filament-peek-preview`.

@@ -6,7 +6,7 @@
 
 Access Gate is an **Available**, **Schema-owning** Capell package in the **Capell Operations** product group. It ships as `capell-app/access-gate` and extends these surfaces: admin, frontend, console.
 
-Gate any Capell page, download, or member area behind login, email approval, guest links, schedules, or Payments-backed paid checkout - with full request, grant, and audit management in the admin.
+Gate any Capell page, download, or member area behind login, email approval, guest links, schedules, or paid checkout - with full request, grant, and audit management in the admin.
 
 After install, admins get package-owned management surfaces and public users may see package-owned frontend output or routes.
 
@@ -23,7 +23,7 @@ Status details:
 
 **For developers:** The package gives developers package-owned service providers, Actions, Data objects, models, Laravel routes, Filament classes, and Blade views instead of pushing this behaviour into core or application code.
 
-**For teams:** Gate any Capell page, download, or member area behind login, email approval, guest links, schedules, or paid checkout through the Payments package - with full request, grant, and audit management in the admin.
+**For teams:** Gate any Capell page, download, or member area behind login, email approval, guest links, schedules, or paid checkout - with full request, grant, and audit management in the admin.
 
 ## Screens And Workflow
 
@@ -51,11 +51,11 @@ Screenshot contract: `docs/screenshots.json`.
 - Policies: `AbstractAccessGateResourcePolicy`, `AccessAreaPolicy`, `AccessGateEventPolicy`, `BrowserTokenPolicy`, `ClaimTokenPolicy`, `GrantPolicy`, `RegistrationPolicy`.
 - Events: `RegistrationApproved`.
 - Listeners: `NotifyAdminsOfAccessRequest`.
-- Actions: `ApproveNextRegistrationsAction`, `ApproveRegistrationAction`, `AreaIsCurrentlyGatingAction`, `ConsumeAccessGateClaimTokenAction`, `CreateAccessGateBrowserTokenAction`, `CreateAccessGateClaimTokenAction`, `CreateAccessGateGrantAction`, `CreatePaidAccessCheckoutForRegistrationAction`, `CreateRegistrationAction`, `EnsureAccessGateGrantCanIssueTokenAction`, `ExpireRegistrationAction`, `InstallAccessGatePackageAction`, `and 15 more`.
-- Data objects: `AccessGateAccessResultData`, `AccessRequestMethodData`, `AnnouncementBarData`, `CreatePaidAccessCheckoutData`, `IssuedAccessGateTokenData`, `RegistrationFieldValue`.
+- Actions: `ApproveNextRegistrationsAction`, `ApproveRegistrationAction`, `AreaIsCurrentlyGatingAction`, `ConsumeAccessGateClaimTokenAction`, `CreateAccessGateBrowserTokenAction`, `CreateAccessGateClaimTokenAction`, `CreateAccessGateGrantAction`, `CreatePaidAccessCheckoutForRegistrationAction`, `CreateRegistrationAction`, `EnsureAccessGateGrantCanIssueTokenAction`, `ExpireRegistrationAction`, `ExportAccessGateAuditCsvAction`, `and 17 more`.
+- Data objects: `AccessGateAccessResultData`, `AccessRequestMethodData`, `AnnouncementBarData`, `CreatePaidAccessCheckoutData`, `IssuedAccessGateTokenData`, `PrunedAccessGateRecordsData`, `RegistrationFieldValue`.
 - Command signatures: `capell:access-gate-audit-export`, `capell:access-gate-doctor`, `capell:access-gate-install`, `capell:access-gate-prune`, `capell:access-gate-setup`.
 - Console command classes: `AccessGateAuditExportCommand`, `AccessGateDoctorCommand`, `AccessGateInstallCommand`, `AccessGatePruneCommand`, `AccessGateSetupCommand`.
-- Manifest contributions: `admin-resource: Capell\AccessGate\Manifest\AccessAreaResourceContribution`, `admin-resource: Capell\AccessGate\Manifest\AccessGateEventResourceContribution`, `admin-resource: Capell\AccessGate\Manifest\BrowserTokenResourceContribution`, `admin-resource: Capell\AccessGate\Manifest\ClaimTokenResourceContribution`, `admin-resource: Capell\AccessGate\Manifest\GrantResourceContribution`, `admin-resource: Capell\AccessGate\Manifest\RegistrationResourceContribution`, `console-command: Capell\AccessGate\Manifest\AccessGateConsoleCommandsContribution`, `dashboard-widget: Capell\AccessGate\Manifest\PendingAccessRequestsWidgetContribution`, `health-check: Capell\AccessGate\Manifest\AccessGateHealthContribution`, `model: Capell\AccessGate\Manifest\AccessGateModelsContribution`, `route: Capell\AccessGate\Manifest\AccessGateRoutesContribution`. Paid access checkout creation is declared under manifest actions as `CreatePaidAccessCheckoutForRegistrationAction` with `PaidAccessCheckoutCreationContribution` traceability.
+- Manifest contributions: `admin-resource: Capell\AccessGate\Manifest\AccessAreaResourceContribution`, `admin-resource: Capell\AccessGate\Manifest\AccessGateEventResourceContribution`, `admin-resource: Capell\AccessGate\Manifest\BrowserTokenResourceContribution`, `admin-resource: Capell\AccessGate\Manifest\ClaimTokenResourceContribution`, `admin-resource: Capell\AccessGate\Manifest\GrantResourceContribution`, `admin-resource: Capell\AccessGate\Manifest\RegistrationResourceContribution`, `console-command: Capell\AccessGate\Manifest\AccessGateConsoleCommandsContribution`, `dashboard-widget: Capell\AccessGate\Manifest\PendingAccessRequestsWidgetContribution`, `health-check: Capell\AccessGate\Manifest\AccessGateHealthContribution`, `model: Capell\AccessGate\Manifest\AccessGateModelsContribution`, `route: Capell\AccessGate\Manifest\AccessGateRoutesContribution`.
 - Health checks: `Capell\AccessGate\Health\AccessGateHealthCheck`.
 - Blade views: `packages/access-gate/resources/views/claimed.blade.php`, `packages/access-gate/resources/views/components/announcement-bar.blade.php`, `packages/access-gate/resources/views/components/request-cta.blade.php`, `packages/access-gate/resources/views/message.blade.php`, `packages/access-gate/resources/views/request.blade.php`.
 
@@ -77,26 +77,12 @@ Screenshot contract: `docs/screenshots.json`.
 - Queues or schedules: none detected in standard package paths.
 - Cache tags: none declared.
 - Commands: `capell:access-gate-audit-export`, `capell:access-gate-doctor`, `capell:access-gate-install`, `capell:access-gate-prune`, `capell:access-gate-setup`.
-- Paid checkout: requires `capell-app/payments`; Access Gate creates a `gated_access` checkout session for a registration and Payments fulfills the completed checkout into an approved grant.
-
-## Public Cache And Privacy Boundaries
-
-Access Gate public output must stay safe for anonymous HTML caches. Public gated sections may show generic availability, pricing, waitlist, or request-access prompts, but they must not render grant IDs, pending registration IDs, buyer emails, payment references, browser tokens, signed admin URLs, permissions, or editor metadata.
-
-Cache variation belongs at the controller/render-data boundary. Vary gated public output by site, language, route, access method, and the minimum anonymous state needed to decide whether a gate is visible. Do not vary static HTML on raw user IDs or private grant records; resolve active grants after the public page load through authenticated Customer Portal or package-owned endpoints.
-
-Paid access handoff should keep checkout/session state out of cached markup. Render a public CTA, then create payment or approval sessions through POST routes that are throttled, CSRF-protected, and tied to package Actions.
-
-Audit exports are available through `capell:access-gate-audit-export`. Use `--area`, `--type`, `--from`, `--to`, and `--limit` to narrow evidence for a support case, and pass `--path=/absolute/path/access-gate-audit.csv` when the CSV should be written to disk instead of stdout.
-
-When Customer Portal is installed, Access Gate contributes self-service items for active grants, pending access requests, and active browser sessions. Browser-token items are scoped by the portal account email and site, and expired or revoked sessions are excluded.
 
 ## Common Pitfalls
 
 - Run migrations before opening package resources or public routes.
 - Review route middleware, throttling, signed URLs, and public-output safety before exposing routes.
 - Keep public Blade and cached HTML free of authoring markers, model IDs, permissions, signed editor URLs, and lazy database queries.
-- Never place active grants, browser tokens, pending-registration identifiers, or payment provider references in public cached HTML.
 - Run package commands from the host app; in this repository use `vendor/bin/pest` for package tests.
 - Keep `composer.json`, `composer.local.json`, `capell.json`, docs, screenshots, and tests aligned when the package surface changes.
 

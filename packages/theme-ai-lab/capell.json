@@ -117,29 +117,59 @@
         "description": "AI Lab provides a distinct theme definition, demo command, marketplace metadata, and public-safe Blade views for Lumen AI.",
         "screenshots": [
             {
+                "path": "docs/assets/marketplace/extension-card.jpg",
+                "alt": "AI Lab marketplace card preview",
+                "caption": "AI Lab premium theme card"
+            },
+            {
                 "path": "docs/screenshots/ai-lab-homepage.png",
-                "alt": "AI Lab homepage preview",
+                "alt": "AI Lab Homepage demo page screenshot",
                 "caption": "AI Lab Homepage"
             },
             {
-                "path": "docs/screenshots/ai-lab-landing.png",
-                "alt": "AI Lab landing page preview",
-                "caption": "AI Lab Landing page"
+                "path": "docs/screenshots/ai-lab-directory.png",
+                "alt": "AI Lab Directory demo page screenshot",
+                "caption": "AI Lab Directory page"
             },
             {
-                "path": "docs/screenshots/ai-lab-listing.png",
-                "alt": "AI Lab list page preview",
-                "caption": "AI Lab List page"
-            },
-            {
-                "path": "docs/screenshots/ai-lab-search.png",
-                "alt": "AI Lab search results preview",
-                "caption": "AI Lab Search results"
+                "path": "docs/screenshots/ai-lab-detail.png",
+                "alt": "AI Lab Detail demo page screenshot",
+                "caption": "AI Lab Detail page"
             },
             {
                 "path": "docs/screenshots/ai-lab-contact.png",
-                "alt": "AI Lab contact form preview",
-                "caption": "AI Lab Contact form"
+                "alt": "AI Lab Contact demo page screenshot",
+                "caption": "AI Lab Contact page"
+            },
+            {
+                "path": "docs/screenshots/ai-lab-empty.png",
+                "alt": "AI Lab Empty State demo page screenshot",
+                "caption": "AI Lab Empty State page"
+            },
+            {
+                "path": "docs/screenshots/ai-lab-not-found.png",
+                "alt": "AI Lab 404 State demo page screenshot",
+                "caption": "AI Lab 404 State page"
+            },
+            {
+                "path": "docs/screenshots/ai-lab-cta.png",
+                "alt": "AI Lab Conversion CTA demo page screenshot",
+                "caption": "AI Lab Conversion CTA page"
+            },
+            {
+                "path": "docs/screenshots/ai-lab-model-suite.png",
+                "alt": "AI Lab Model Suite demo page screenshot",
+                "caption": "AI Lab Model Suite page"
+            },
+            {
+                "path": "docs/screenshots/ai-lab-research-library.png",
+                "alt": "AI Lab Research Library demo page screenshot",
+                "caption": "AI Lab Research Library page"
+            },
+            {
+                "path": "docs/screenshots/ai-lab-playground-preview.png",
+                "alt": "AI Lab Playground Preview demo page screenshot",
+                "caption": "AI Lab Playground Preview page"
             }
         ],
         "categories": ["frontend", "themes"]

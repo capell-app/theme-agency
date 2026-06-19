@@ -33,34 +33,6 @@ Screenshot contract: `screenshots.json`.
 - Forced password change form (admin, required).
 - User table password policy columns and filters (admin, required).
 
-## Screenshot Evidence
-
-These captures are the package-owned visual contract for the admin pages, public pages, actions, workflows, and feature surfaces described above. Keep this section aligned with `docs/screenshots.json` whenever the package surface changes.
-
-### Password Policy settings page
-
-![Password Policy settings page](screenshots/password-policy-settings.png)
-
-- Surface: admin · Target: PasswordPolicySettingsPage.
-- Documents: An administrator configures password age, reuse, complexity, and enforcement rules.
-- Capture notes: Capture the package settings page after the package is installed and settings migrations have run.
-
-### Forced password change form
-
-![Forced password change form](screenshots/forced-password-change.png)
-
-- Surface: admin · Target: ForcedPasswordChangePage.
-- Documents: A flagged administrator is forced through the password-change form before continuing in the admin panel.
-- Capture notes: Capture with a user flagged for password change so the form is visible.
-
-### User table password policy columns and filters
-
-![User table password policy columns and filters](screenshots/user-password-policy-columns.png)
-
-- Surface: admin · Target: UserResource.
-- Documents: An administrator reviews password status columns, filters users by policy state, and triggers require-password-change actions.
-- Capture notes: Capture the core Users table with package-added password status columns, filters, and require-password-change action.
-
 ## Technical Shape
 
 - Service providers: `Capell\PasswordPolicy\Providers\PasswordPolicyServiceProvider`.
@@ -72,7 +44,6 @@ These captures are the package-owned visual contract for the admin pages, public
 - Events: `PasswordChanged`, `PasswordExpired`, `UserMarkedForPasswordChange`.
 - Actions: `BuildPasswordSecurityPostureReportAction`, `EvaluatePasswordPolicyAction`, `MarkUserForPasswordChangeAction`, `NotifyPasswordPolicyLifecycleEventAction`, `PrunePasswordHistoryAction`, `RecordPasswordHistoryAction`, `SendPasswordExpiryWarningNotificationsAction`, `UpdatePasswordAction`, `ValidatePasswordChangeAction`.
 - Data objects: `PasswordChangeData`, `PasswordPolicyStatusData`, `PasswordSecurityPostureReportData`, `ResolvedPasswordPolicySettingsData`.
-- Notifications: `PasswordExpiryWarningNotification`.
 - Command signatures: `capell:password-policy:doctor`, `capell:password-policy:expire-stale`, `capell:password-policy:prune-history`, `capell:password-policy:require-change`, `capell:password-policy:send-expiry-warnings`.
 - Console command classes: `ExpireStalePasswordsCommand`, `PasswordPolicyDoctorCommand`, `PrunePasswordHistoryCommand`, `RequirePasswordChangeCommand`, `SendExpiryWarningsCommand`.
 - Manifest contributions: `admin-action-extender: Capell\PasswordPolicy\Manifest\PasswordPolicyAdminExtendersContribution`, `admin-page: Capell\PasswordPolicy\Manifest\PasswordPolicyAdminPagesContribution`, `console-command: Capell\PasswordPolicy\Manifest\PasswordPolicyConsoleCommandsContribution`, `health-check: Capell\PasswordPolicy\Manifest\PasswordPolicyHealthContribution`, `setting: Capell\PasswordPolicy\Manifest\PasswordPolicySettingsContribution`.
@@ -93,7 +64,7 @@ These captures are the package-owned visual contract for the admin pages, public
 - Public routes: none detected in package route files.
 - Database changes: package migrations are declared.
 - Settings: `Capell\PasswordPolicy\Settings\PasswordPolicySettings`.
-- Queues or schedules: expiry warning notifications are queued mail notifications; schedule `capell:password-policy:send-expiry-warnings` from the host app when the warning setting is enabled.
+- Queues or schedules: none detected in standard package paths.
 - Cache tags: none declared.
 - Commands: `capell:password-policy:doctor`, `capell:password-policy:expire-stale`, `capell:password-policy:prune-history`, `capell:password-policy:require-change`, `capell:password-policy:send-expiry-warnings`.
 

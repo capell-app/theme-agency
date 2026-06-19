@@ -35,7 +35,7 @@ Screenshot contract: `docs/screenshots.json`.
 - Governance page (frontend, optional).
 - Resources listing (frontend, optional).
 - Thought leadership article (frontend, optional).
-- Contact form page (frontend, optional).
+- contact form (frontend, optional).
 - Locations page (frontend, optional).
 - Search results page (frontend, optional).
 - Event detail page (frontend, optional).

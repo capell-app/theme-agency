@@ -102,7 +102,10 @@
             "useCase": "A developer verifies the bright preset keeps glass panels and actions legible.",
             "screenshotPath": "packages/theme-liquid-glass/docs/screenshots/liquid-glass-clarity-preset.png",
             "scenario": "static-html",
-            "viewport": { "width": 960, "height": 1200 },
+            "viewport": {
+                "width": 960,
+                "height": 1200
+            },
             "colorSchemes": ["light"],
             "user": false
         },
@@ -118,7 +121,10 @@
             "useCase": "A developer verifies the cyan/rose preset keeps cards, type, and actions legible.",
             "screenshotPath": "packages/theme-liquid-glass/docs/screenshots/liquid-glass-prism-preset.png",
             "scenario": "static-html",
-            "viewport": { "width": 960, "height": 1200 },
+            "viewport": {
+                "width": 960,
+                "height": 1200
+            },
             "colorSchemes": ["light"],
             "user": false
         },
@@ -134,7 +140,10 @@
             "useCase": "A developer verifies the dark preset works in the compact navigation viewport.",
             "screenshotPath": "packages/theme-liquid-glass/docs/screenshots/liquid-glass-graphite-mobile.png",
             "scenario": "static-html",
-            "viewport": { "width": 390, "height": 1200 },
+            "viewport": {
+                "width": 390,
+                "height": 1200
+            },
             "colorSchemes": ["dark"],
             "user": false
         }

@@ -419,13 +419,8 @@
                 "portal.review-participant.store",
                 "portal.review.store"
             ],
-            "webhookRoutes": [
-                "webhook.store"
-            ],
-            "throttledRoutes": [
-                "request.store",
-                "webhook.store"
-            ]
+            "webhookRoutes": ["webhook.store"],
+            "throttledRoutes": ["request.store", "webhook.store"]
         },
         "sensitiveData": {
             "encryptedFields": [],

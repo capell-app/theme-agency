@@ -122,29 +122,59 @@
         "description": "Automotive Dealer provides a distinct theme definition, demo command, marketplace metadata, and public-safe Blade views for Apex Motors.",
         "screenshots": [
             {
+                "path": "docs/assets/marketplace/extension-card.jpg",
+                "alt": "Automotive Dealer marketplace card preview",
+                "caption": "Automotive Dealer premium theme card"
+            },
+            {
                 "path": "docs/screenshots/automotive-dealer-homepage.png",
-                "alt": "Automotive Dealer homepage preview",
-                "caption": "Automotive Dealer Homepage"
+                "alt": "Automotive Dealer Homepage demo page screenshot",
+                "caption": "Automotive Dealer Homepage page"
             },
             {
-                "path": "docs/screenshots/automotive-dealer-landing.png",
-                "alt": "Automotive Dealer landing page preview",
-                "caption": "Automotive Dealer Landing page"
+                "path": "docs/screenshots/automotive-dealer-directory.png",
+                "alt": "Automotive Dealer Directory demo page screenshot",
+                "caption": "Automotive Dealer Directory page"
             },
             {
-                "path": "docs/screenshots/automotive-dealer-listing.png",
-                "alt": "Automotive Dealer list page preview",
-                "caption": "Automotive Dealer List page"
-            },
-            {
-                "path": "docs/screenshots/automotive-dealer-search.png",
-                "alt": "Automotive Dealer search results preview",
-                "caption": "Automotive Dealer Search results"
+                "path": "docs/screenshots/automotive-dealer-detail.png",
+                "alt": "Automotive Dealer Detail demo page screenshot",
+                "caption": "Automotive Dealer Detail page"
             },
             {
                 "path": "docs/screenshots/automotive-dealer-contact.png",
-                "alt": "Automotive Dealer contact form preview",
-                "caption": "Automotive Dealer Contact form"
+                "alt": "Automotive Dealer Contact demo page screenshot",
+                "caption": "Automotive Dealer Contact page"
+            },
+            {
+                "path": "docs/screenshots/automotive-dealer-empty.png",
+                "alt": "Automotive Dealer Empty State demo page screenshot",
+                "caption": "Automotive Dealer Empty State page"
+            },
+            {
+                "path": "docs/screenshots/automotive-dealer-not-found.png",
+                "alt": "Automotive Dealer 404 State demo page screenshot",
+                "caption": "Automotive Dealer 404 State page"
+            },
+            {
+                "path": "docs/screenshots/automotive-dealer-cta.png",
+                "alt": "Automotive Dealer Conversion CTA demo page screenshot",
+                "caption": "Automotive Dealer Conversion CTA page"
+            },
+            {
+                "path": "docs/screenshots/automotive-dealer-inventory.png",
+                "alt": "Automotive Dealer Inventory demo page screenshot",
+                "caption": "Automotive Dealer Inventory page"
+            },
+            {
+                "path": "docs/screenshots/automotive-dealer-vehicle-detail.png",
+                "alt": "Automotive Dealer Vehicle Detail demo page screenshot",
+                "caption": "Automotive Dealer Vehicle Detail page"
+            },
+            {
+                "path": "docs/screenshots/automotive-dealer-finance.png",
+                "alt": "Automotive Dealer Finance demo page screenshot",
+                "caption": "Automotive Dealer Finance page"
             }
         ],
         "categories": ["frontend", "themes"]

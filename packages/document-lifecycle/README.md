@@ -45,7 +45,7 @@ Screenshot contract: `docs/screenshots.json`.
 - Data objects: `DocumentLifecycleHealthReportData`.
 - Command signatures: `capell:document-lifecycle:archive-expired`.
 - Console command classes: `ArchiveExpiredDocumentsCommand`.
-- Manifest contributions: `admin-resource: Capell\DocumentLifecycle\Manifest\DocumentResourceContribution`, `scheduled-job: Capell\DocumentLifecycle\Manifest\DocumentLifecycleRetentionScheduleContribution`.
+- Manifest contributions: `admin-resource: Capell\DocumentLifecycle\Manifest\DocumentResourceContribution`, `migration: Capell\DocumentLifecycle\Manifest\DocumentLifecycleMigrationsContribution`, `model: Capell\DocumentLifecycle\Manifest\DocumentLifecycleModelsContribution`, `scheduled-job: Capell\DocumentLifecycle\Manifest\DocumentLifecycleRetentionScheduleContribution`.
 - Health checks: `Capell\DocumentLifecycle\Health\DocumentLifecycleHealthCheck`.
 
 ## Data Model

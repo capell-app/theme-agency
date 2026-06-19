@@ -167,12 +167,8 @@
             "csrfExemptRoutes": [],
             "signedRoutes": [],
             "tokenizedRoutes": [],
-            "webhookRoutes": [
-                "capell-shopify-commerce.webhooks.shopify"
-            ],
-            "throttledRoutes": [
-                "capell-shopify-commerce.webhooks.shopify"
-            ]
+            "webhookRoutes": ["capell-shopify-commerce.webhooks.shopify"],
+            "throttledRoutes": ["capell-shopify-commerce.webhooks.shopify"]
         },
         "sensitiveData": {
             "encryptedFields": [
@@ -182,9 +178,7 @@
                 "Capell\\ShopifyCommerce\\Models\\ShopifyCustomer::$last_name",
                 "Capell\\ShopifyCommerce\\Models\\ShopifyCustomer::$phone"
             ],
-            "hashedTokenFields": [
-                "shopify_customers.email_hash"
-            ],
+            "hashedTokenFields": ["shopify_customers.email_hash"],
             "redactedOutputClasses": [
                 "Capell\\ShopifyCommerce\\Actions\\Catalog\\SanitizeShopifySyncErrorAction"
             ],
@@ -207,9 +201,7 @@
         },
         "adminSurface": {
             "authorization": "permissions",
-            "permissions": [
-                "shopify-commerce.manage"
-            ]
+            "permissions": ["shopify-commerce.manage"]
         }
     },
     "performance": {

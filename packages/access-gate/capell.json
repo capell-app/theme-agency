@@ -177,16 +177,9 @@
             "auth": "public",
             "csrfExemptRoutes": [],
             "signedRoutes": [],
-            "tokenizedRoutes": [
-                "claim"
-            ],
+            "tokenizedRoutes": ["claim"],
             "webhookRoutes": [],
-            "throttledRoutes": [
-                "claim",
-                "logout",
-                "request.store",
-                "status"
-            ]
+            "throttledRoutes": ["claim", "logout", "request.store", "status"]
         },
         "sensitiveData": {
             "encryptedFields": [],

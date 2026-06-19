@@ -39,6 +39,7 @@ Screenshot contract: `docs/screenshots.json`.
 - Route files: `packages/filament-peek/routes/web.php`.
 - Actions: `CreatePagePreviewSnapshotAction`, `FindPagePreviewSnapshotAction`, `RegisterLayoutBuilderPreviewWidgetsAction`, `RenderPagePreviewSnapshotAction`, `StoreLayoutBuilderPreviewStateAction`.
 - Data objects: `LayoutBuilderPreviewStateData`, `PagePreviewSnapshotData`.
+- Manifest contributions: `route: Capell\FilamentPeek\Manifest\FilamentPeekRoutesContribution`.
 - Health checks: `Capell\FilamentPeek\Health\FilamentPeekHealthCheck`.
 - Blade views: `packages/filament-peek/resources/views/preview-error.blade.php`, `packages/filament-peek/resources/views/preview-ribbon.blade.php`.
 - Cache tags: `filament-peek-preview`.

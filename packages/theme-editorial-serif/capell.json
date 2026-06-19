@@ -119,29 +119,59 @@
         "description": "Editorial Serif provides a distinct theme definition, demo command, marketplace metadata, and public-safe Blade views for Quarter Press.",
         "screenshots": [
             {
+                "path": "docs/assets/marketplace/extension-card.jpg",
+                "alt": "Editorial Serif marketplace card preview",
+                "caption": "Editorial Serif premium theme card"
+            },
+            {
                 "path": "docs/screenshots/editorial-serif-homepage.png",
-                "alt": "Editorial Serif homepage preview",
-                "caption": "Editorial Serif Homepage"
+                "alt": "Editorial Serif Homepage demo page screenshot",
+                "caption": "Editorial Serif Homepage page"
             },
             {
-                "path": "docs/screenshots/editorial-serif-landing.png",
-                "alt": "Editorial Serif landing page preview",
-                "caption": "Editorial Serif Landing page"
+                "path": "docs/screenshots/editorial-serif-directory.png",
+                "alt": "Editorial Serif Directory demo page screenshot",
+                "caption": "Editorial Serif Directory page"
             },
             {
-                "path": "docs/screenshots/editorial-serif-listing.png",
-                "alt": "Editorial Serif list page preview",
-                "caption": "Editorial Serif List page"
-            },
-            {
-                "path": "docs/screenshots/editorial-serif-search.png",
-                "alt": "Editorial Serif search results preview",
-                "caption": "Editorial Serif Search results"
+                "path": "docs/screenshots/editorial-serif-detail.png",
+                "alt": "Editorial Serif Detail demo page screenshot",
+                "caption": "Editorial Serif Detail page"
             },
             {
                 "path": "docs/screenshots/editorial-serif-contact.png",
-                "alt": "Editorial Serif contact form preview",
-                "caption": "Editorial Serif Contact form"
+                "alt": "Editorial Serif Contact demo page screenshot",
+                "caption": "Editorial Serif Contact page"
+            },
+            {
+                "path": "docs/screenshots/editorial-serif-empty.png",
+                "alt": "Editorial Serif Empty State demo page screenshot",
+                "caption": "Editorial Serif Empty State page"
+            },
+            {
+                "path": "docs/screenshots/editorial-serif-not-found.png",
+                "alt": "Editorial Serif 404 State demo page screenshot",
+                "caption": "Editorial Serif 404 State page"
+            },
+            {
+                "path": "docs/screenshots/editorial-serif-cta.png",
+                "alt": "Editorial Serif Conversion CTA demo page screenshot",
+                "caption": "Editorial Serif Conversion CTA page"
+            },
+            {
+                "path": "docs/screenshots/editorial-serif-essays.png",
+                "alt": "Editorial Serif Essays demo page screenshot",
+                "caption": "Editorial Serif Essays page"
+            },
+            {
+                "path": "docs/screenshots/editorial-serif-archive.png",
+                "alt": "Editorial Serif Archive demo page screenshot",
+                "caption": "Editorial Serif Archive page"
+            },
+            {
+                "path": "docs/screenshots/editorial-serif-about.png",
+                "alt": "Editorial Serif About the Publication demo page screenshot",
+                "caption": "Editorial Serif About the Publication page"
             }
         ],
         "categories": ["frontend", "themes"]

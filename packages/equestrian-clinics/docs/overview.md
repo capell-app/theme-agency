@@ -4,11 +4,11 @@
 
 ## What This Plugin Adds
 
-Equestrian Clinics is an **Available**, **Schema-owning** Capell plugin in the **Capell Operations** product group. It ships as `capell-app/equestrian-clinics` and extends these surfaces: frontend and admin diagnostics.
+Equestrian Clinics is an **Available**, **Schema-owning** Capell plugin in the **Capell Operations** product group. It ships as `capell-app/equestrian-clinics` and extends these surfaces: admin, frontend.
 
 Equestrian Clinics turns Capell into a full equestrian operations platform for travelling coaches, riding schools, clinics, venues, riders, horses, waivers, payments, credits, resources, and mobile day-of delivery.
 
-After install, the package contributes domain models, public routes, and a package health check. It does not yet ship concrete Filament resources or admin navigation.
+After install, the package contributes admin-facing extension points and may affect public output or routes. Docs gap: no concrete Filament resource or page was detected.
 
 Status details:
 
@@ -33,32 +33,6 @@ Screenshot contract: `screenshots.json`.
 - Equestrian Clinics coach timetable (frontend, optional).
 - Equestrian Clinics marketplace card (marketplace, required).
 
-## Screenshot Evidence
-
-These captures are the package-owned visual contract for the admin pages, public pages, actions, workflows, and feature surfaces described above. Keep this section aligned with `docs/screenshots.json` whenever the package surface changes.
-
-### Equestrian Clinics public discovery
-
-![Equestrian Clinics public discovery](screenshots/equestrian-clinics-public-discovery.png)
-
-- Surface: frontend · Target: /equestrian-clinics.
-- Documents: A rider or parent finds a suitable clinic near them and can request a new area when nothing fits.
-- Capture notes: Capture public clinic search with venue, postcode, tour day slots, waitlist state, host request form, and demand heatmap visible.
-
-### Equestrian Clinics coach timetable
-
-![Equestrian Clinics coach timetable](screenshots/equestrian-clinics-coach-timetable.png)
-
-- Surface: frontend · Target: /equestrian-clinics/coach/tour-days/{tourDay}/timetable.
-- Documents: A coach uses the day-of surface outdoors without exposing rider medical data or admin URLs.
-- Capture notes: Capture a signed mobile-friendly coach timetable with minimum viable clinic status, venue notes, resource reservations, and slot capacity visible.
-
-### Equestrian Clinics marketplace card
-
-![Equestrian Clinics marketplace card](screenshots/equestrian-clinics-extension-card.svg)
-
-- Surface: marketplace · Target: marketplace-asset.
-
 ## Technical Shape
 
 - Service providers: `Capell\EquestrianClinics\Providers\EquestrianClinicsServiceProvider`.
@@ -66,9 +40,11 @@ These captures are the package-owned visual contract for the admin pages, public
 - Migrations: `packages/equestrian-clinics/database/migrations/2026_06_13_000001_create_equestrian_clinics_tables.php`.
 - Models: `EquestrianBillingEntry`, `EquestrianClinicCredit`, `EquestrianCommercialProduct`, `EquestrianCommunicationLog`, `EquestrianCompetitionResult`, `EquestrianFacilityBooking`, `EquestrianFacilityResource`, `EquestrianHorseCareTask`, `EquestrianHorseHealthRecord`, `EquestrianHorseProfile`, `EquestrianHostRequest`, `EquestrianRiderProfile`, `EquestrianSlotBooking`, `EquestrianSlotWaitlistEntry`, `EquestrianStaffMember`, `EquestrianTourDay`, `EquestrianTourDaySlot`, `EquestrianVenue`, `EquestrianWaiverSignature`.
 - Route files: `packages/equestrian-clinics/routes/web.php`.
-- Actions: `AllocateHorseToSlotAction`, `BuildClinicDiscoveryAction`, `BuildCoachTimetableAction`, `BuildFacilityReportAction`, `BuildOpenSlotDemandHeatmapAction`, `BuildStaffCareWorklistAction`, `CancelSlotBookingAction`, `ClaimWaitlistOfferAction`, `CompleteHorseCareTaskAction`, `ConfirmSlotBookingPaymentAction`, `CreateBillingEntryAction`, `CreateCommercialProductAction`, `and 15 more`.
+- Actions: `AllocateHorseToSlotAction`, `BuildClinicDiscoveryAction`, `BuildCoachTimetableAction`, `BuildFacilityReportAction`, `BuildOpenSlotDemandHeatmapAction`, `BuildSlotBookingCheckoutSessionDataAction`, `BuildStaffCareWorklistAction`, `CancelSlotBookingAction`, `ClaimWaitlistOfferAction`, `CompleteHorseCareTaskAction`, `ConfirmSlotBookingPaymentAction`, `CreateBillingEntryAction`, `and 16 more`.
 - Data objects: `EquestrianBookingQuoteData`, `EquestrianFacilityReportData`, `EquestrianSlotTemplateData`.
-- Manifest contributions: `model: Capell\EquestrianClinics\Manifest\EquestrianClinicsModelsContribution`, `route: Capell\EquestrianClinics\Manifest\EquestrianClinicsRoutesContribution`, `health-check: Capell\EquestrianClinics\Manifest\EquestrianClinicsHealthContribution`, scheduled expiry jobs, and console commands.
+- Command signatures: `capell:equestrian-clinics-expire-holds`, `capell:equestrian-clinics-expire-waitlist-offers`.
+- Console command classes: `ExpireSlotBookingHoldsCommand`, `ExpireWaitlistOffersCommand`.
+- Manifest contributions: `console-command: Capell\EquestrianClinics\Manifest\EquestrianClinicsConsoleCommandsContribution`, `health-check: Capell\EquestrianClinics\Manifest\EquestrianClinicsHealthContribution`, `model: Capell\EquestrianClinics\Manifest\EquestrianClinicsModelsContribution`, `route: Capell\EquestrianClinics\Manifest\EquestrianClinicsRoutesContribution`, `scheduled-job: Capell\EquestrianClinics\Manifest\EquestrianClinicsExpireHoldsScheduleContribution`, `scheduled-job: Capell\EquestrianClinics\Manifest\EquestrianClinicsExpireWaitlistOffersScheduleContribution`.
 - Health checks: `Capell\EquestrianClinics\Health\EquestrianClinicsHealthCheck`.
 - Blade views: `packages/equestrian-clinics/resources/views/coach-timetable.blade.php`, `packages/equestrian-clinics/resources/views/discovery.blade.php`.
 - Cache tags: `equestrian-clinics`.
@@ -83,23 +59,20 @@ These captures are the package-owned visual contract for the admin pages, public
 
 ## Install Impact
 
-- Admin navigation: no concrete Filament resource or page is shipped yet; the admin surface is limited to diagnostics/health metadata.
-- Permissions: none declared until concrete admin resources ship.
+- Admin navigation: admin-facing extension points are declared, but no concrete Filament class was detected.
+- Permissions: none declared in `capell.json`.
 - Public routes: route files exist and must be reviewed before public enablement.
 - Database changes: package migrations are declared.
 - Settings: no package settings declared.
-- Queues or schedules: checkout hold and waitlist offer expiry commands run every five minutes when the package is installed.
+- Queues or schedules: none detected in standard package paths.
 - Cache tags: `equestrian-clinics`.
 - Commands: `capell:equestrian-clinics-expire-holds`, `capell:equestrian-clinics-expire-waitlist-offers`.
-- Checkout handoff: `BuildSlotBookingCheckoutSessionDataAction` turns an active online hold into Payments `CreateCheckoutSessionData`; provider webhooks should call `ConfirmSlotBookingPaymentAction` after completion.
-- Customer Portal: rider/horse profile summaries, upcoming booking dashboard counts, and self-service rows are contributed through Customer Portal registries without exposing medical disclosures, emergency contacts, or private horse notes.
 
 ## Common Pitfalls
 
 - Run migrations before opening package resources or public routes.
 - Review route middleware, throttling, signed URLs, and public-output safety before exposing routes.
 - Keep public Blade and cached HTML free of authoring markers, model IDs, permissions, signed editor URLs, and lazy database queries.
-- Run package commands from the host app; in this repository use `vendor/bin/pest` for package tests.
 - Keep `composer.json`, `composer.local.json`, `capell.json`, docs, screenshots, and tests aligned when the package surface changes.
 
 ## Troubleshooting
@@ -109,6 +82,7 @@ These captures are the package-owned visual contract for the admin pages, public
 | Package surface is missing after install | Provider or manifest is not loaded | Confirm `capell.json`, package `composer.json`, and provider registration | Reinstall the package, refresh Composer autoload, and clear host caches |
 | Admin screen or command fails on missing table | Package migrations have not run | Check the tables listed in `Data Model` | Run host migrations and rerun the focused package test |
 | Route returns unexpected output | Route cache, middleware, or signed URL setup does not match the package route file | Check the route files listed in `Technical Shape` | Clear route cache and verify middleware before exposing public routes |
+| Background work does not run | Queue worker or scheduled command is not active | Check package jobs, commands, and host scheduler configuration | Start the queue or scheduler, then run the focused command or package test |
 | Public output leaks unexpected state | Render data, cache variation, or authoring boundary has regressed | Check public Blade, cache tags, and public-output safety tests | Move data loading out of Blade and rerun the package public-output tests |
 
 ## Quick Start

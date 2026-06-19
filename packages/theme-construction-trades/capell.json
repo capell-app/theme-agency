@@ -122,29 +122,59 @@
         "description": "Construction Trades provides a distinct theme definition, demo command, marketplace metadata, and public-safe Blade views for Granite Build Co.",
         "screenshots": [
             {
+                "path": "docs/assets/marketplace/extension-card.jpg",
+                "alt": "Construction Trades marketplace card preview",
+                "caption": "Construction Trades premium theme card"
+            },
+            {
                 "path": "docs/screenshots/construction-trades-homepage.png",
-                "alt": "Construction Trades homepage preview",
+                "alt": "Construction Trades Homepage demo page screenshot",
                 "caption": "Construction Trades Homepage"
             },
             {
-                "path": "docs/screenshots/construction-trades-landing.png",
-                "alt": "Construction Trades landing page preview",
-                "caption": "Construction Trades Landing page"
+                "path": "docs/screenshots/construction-trades-directory.png",
+                "alt": "Construction Trades Directory demo page screenshot",
+                "caption": "Construction Trades Directory page"
             },
             {
-                "path": "docs/screenshots/construction-trades-listing.png",
-                "alt": "Construction Trades list page preview",
-                "caption": "Construction Trades List page"
-            },
-            {
-                "path": "docs/screenshots/construction-trades-search.png",
-                "alt": "Construction Trades search results preview",
-                "caption": "Construction Trades Search results"
+                "path": "docs/screenshots/construction-trades-detail.png",
+                "alt": "Construction Trades Detail demo page screenshot",
+                "caption": "Construction Trades Detail page"
             },
             {
                 "path": "docs/screenshots/construction-trades-contact.png",
-                "alt": "Construction Trades contact form preview",
-                "caption": "Construction Trades Contact form"
+                "alt": "Construction Trades Contact demo page screenshot",
+                "caption": "Construction Trades Contact page"
+            },
+            {
+                "path": "docs/screenshots/construction-trades-empty.png",
+                "alt": "Construction Trades Empty State demo page screenshot",
+                "caption": "Construction Trades Empty State page"
+            },
+            {
+                "path": "docs/screenshots/construction-trades-not-found.png",
+                "alt": "Construction Trades 404 State demo page screenshot",
+                "caption": "Construction Trades 404 State page"
+            },
+            {
+                "path": "docs/screenshots/construction-trades-cta.png",
+                "alt": "Construction Trades Conversion CTA demo page screenshot",
+                "caption": "Construction Trades Conversion CTA page"
+            },
+            {
+                "path": "docs/screenshots/construction-trades-services.png",
+                "alt": "Construction Trades Services demo page screenshot",
+                "caption": "Construction Trades Services page"
+            },
+            {
+                "path": "docs/screenshots/construction-trades-projects.png",
+                "alt": "Construction Trades Projects demo page screenshot",
+                "caption": "Construction Trades Projects page"
+            },
+            {
+                "path": "docs/screenshots/construction-trades-quote.png",
+                "alt": "Construction Trades Quote Request demo page screenshot",
+                "caption": "Construction Trades Quote Request page"
             }
         ],
         "categories": ["frontend", "themes"]

@@ -43,8 +43,9 @@ Screenshot contract: `docs/screenshots.json`.
 - Filament classes: `ExperimentAudienceRuleResource`, `CreateExperimentAudienceRule`, `EditExperimentAudienceRule`, `ListExperimentAudienceRules`, `ExperimentGoalResource`, `CreateExperimentGoal`, `EditExperimentGoal`, `ListExperimentGoals`, `ExperimentVariantResource`, `CreateExperimentVariant`, `EditExperimentVariant`, `ListExperimentVariants`, `and 5 more`.
 - Actions: `AllocateVariantAction`, `BuildWinnerReportAction`, `CreateExperimentAction`, `DeclareExperimentWinnerAction`, `EvaluateAudienceRulesAction`, `RecordGoalEventAction`, `ResolveExperimentVariantForContextAction`, `SyncExperimentStatusesAction`.
 - Data objects: `ExperimentAudienceRuleData`, `ExperimentContextData`, `ExperimentData`, `ExperimentGoalData`, `ExperimentGoalEventData`, `ExperimentStatusSyncResultData`, `ExperimentVariantData`, `ResolvedExperimentVariantData`, `VariantAllocationData`, `WinnerReportData`, `WinnerVariantReportData`.
+- Command signatures: `capell:experiments:sync-statuses`.
 - Console command classes: `SyncExperimentStatusesCommand`.
-- Manifest contributions: `admin-resource: Capell\Experiments\Manifest\ExperimentAudienceRuleResourceContribution`, `admin-resource: Capell\Experiments\Manifest\ExperimentGoalResourceContribution`, `admin-resource: Capell\Experiments\Manifest\ExperimentResourceContribution`, `admin-resource: Capell\Experiments\Manifest\ExperimentVariantResourceContribution`, `model: Capell\Experiments\Manifest\ExperimentsModelsContribution`.
+- Manifest contributions: `admin-resource: Capell\Experiments\Manifest\ExperimentAudienceRuleResourceContribution`, `admin-resource: Capell\Experiments\Manifest\ExperimentGoalResourceContribution`, `admin-resource: Capell\Experiments\Manifest\ExperimentResourceContribution`, `admin-resource: Capell\Experiments\Manifest\ExperimentVariantResourceContribution`, `model: Capell\Experiments\Manifest\ExperimentsModelsContribution`, `scheduled-job: Capell\Experiments\Manifest\ExperimentsStatusSyncScheduleContribution`.
 - Health checks: `Capell\Experiments\Health\ExperimentsHealthCheck`.
 - Blade views: `packages/experiments/resources/views/filament/experiments/results-page.blade.php`, `packages/experiments/resources/views/filament/experiments/results.blade.php`.
 - Cache tags: `experiments`.
@@ -66,7 +67,7 @@ Screenshot contract: `docs/screenshots.json`.
 - Settings: no package settings declared.
 - Queues or schedules: none detected in standard package paths.
 - Cache tags: `experiments`.
-- Commands: console command classes detected: `SyncExperimentStatusesCommand`.
+- Commands: `capell:experiments:sync-statuses`.
 
 ## Common Pitfalls
 
@@ -79,6 +80,7 @@ Screenshot contract: `docs/screenshots.json`.
 | --- | --- | --- | --- |
 | Package surface is missing after install | Provider or manifest is not loaded | Confirm `capell.json`, package `composer.json`, and provider registration | Reinstall the package, refresh Composer autoload, and clear host caches |
 | Admin screen or command fails on missing table | Package migrations have not run | Check the tables listed in `Data Model` | Run host migrations and rerun the focused package test |
+| Background work does not run | Queue worker or scheduled command is not active | Check package jobs, commands, and host scheduler configuration | Start the queue or scheduler, then run the focused command or package test |
 
 ## Quick Start
 

@@ -32,26 +32,6 @@ Screenshot contract: `screenshots.json`.
 - Frontend Optimizer profile asset output (frontend, required).
 - Frontend Optimizer critical CSS output (frontend, required).
 
-## Screenshot Evidence
-
-These captures are the package-owned visual contract for the admin pages, public pages, actions, workflows, and feature surfaces described above. Keep this section aligned with `docs/screenshots.json` whenever the package surface changes.
-
-### Frontend Optimizer profile asset output
-
-![Frontend Optimizer profile asset output](screenshots/frontend-optimizer-profile-assets.png)
-
-- Surface: frontend · Target: frontend-url.
-- Documents: A developer verifies a render profile emits the expected CSS and JavaScript assets.
-- Capture notes: Capture a public page whose theme calls @frontendOptimizerAssets(...) and verify the emitted CSS and JavaScript tags match the seeded render profile.
-
-### Frontend Optimizer critical CSS output
-
-![Frontend Optimizer critical CSS output](screenshots/frontend-optimizer-critical-css-output.png)
-
-- Surface: frontend · Target: artifact.
-- Documents: A developer reviews generated critical CSS or its manifest artifact for a seeded render profile.
-- Capture notes: Capture the generated critical CSS or manifest artifact for a seeded render profile after the optimizer has run.
-
 ## Technical Shape
 
 - Service providers: `Capell\FrontendOptimizer\Providers\FrontendOptimizerServiceProvider`.
@@ -67,6 +47,7 @@ These captures are the package-owned visual contract for the admin pages, public
 - Jobs: `GenerateCriticalCssJob`.
 - Command signatures: `capell:frontend-optimizer:prune-profiles`.
 - Console command classes: `PruneRenderProfilesCommand`.
+- Manifest contributions: `configurator: Capell\FrontendOptimizer\Manifest\FrontendOptimizerConfiguratorContribution`, `console-command: Capell\FrontendOptimizer\Manifest\FrontendOptimizerConsoleCommandsContribution`, `health-check: Capell\FrontendOptimizer\Manifest\FrontendOptimizerHealthContribution`, `model: Capell\FrontendOptimizer\Manifest\FrontendOptimizerModelsContribution`, `setting: Capell\FrontendOptimizer\Manifest\FrontendOptimizerSettingsContribution`.
 - Health checks: `Capell\FrontendOptimizer\Health\FrontendOptimizerHealthCheck`.
 - Cache tags: `frontend-optimizer`.
 

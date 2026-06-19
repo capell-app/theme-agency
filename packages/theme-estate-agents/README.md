@@ -21,7 +21,7 @@ Status details:
 
 ## Why It Matters
 
-**For developers:** The package gives developers package-owned service providers, Actions, and Blade views instead of pushing this behaviour into core or application code.
+**For developers:** The package gives developers package-owned service providers, Actions, Laravel routes, and Blade views instead of pushing this behaviour into core or application code.
 
 **For teams:** A premium property theme for estate agencies, lettings teams, valuations, local guides, and viewing-led enquiry journeys.
 
@@ -31,25 +31,22 @@ runtime inheritance uses `extends: default`, so the theme keeps Foundation Theme
 
 Screenshot contract: `docs/screenshots.json`.
 
-- Estate agency homepage (frontend, optional).
-- Property search (frontend, optional).
-- Vendor valuation (frontend, optional).
-- Local guide (frontend, optional).
-- Viewing request (frontend, optional).
-
-The screenshot fixture contract also records page-set roles for the required theme coverage: homepage, landing/conversion page, list page with pagination, search results, contact/conversion form, and detail/resource page.
-
-Visual proof metadata in `docs/screenshots.json` pins desktop light, mobile light, and dark token-readiness expectations. The CSS keeps key surfaces, buttons, focus rings, cards, and dark proof panels tied to theme tokens so a future recapture can verify the same routes across viewport profiles.
+- Estate agency homepage (frontend, required).
+- Property search (frontend, required).
+- Vendor valuation (frontend, required).
+- Local guide (frontend, required).
+- Viewing request (frontend, required).
 
 ## Technical Shape
 
 - Service providers: `Capell\ThemeStudio\EstateAgents\EstateAgentsThemeServiceProvider`.
+- Route files: `packages/theme-estate-agents/routes/screenshot-fixtures.php`.
 - Actions: `InstallEstateAgentsThemeDemoAction`.
 - Command signatures: `capell:theme-estate-agents-demo`.
 - Console command classes: `DemoCommand`.
 - Manifest contributions: `admin-page: Capell\ThemeStudio\EstateAgents\Manifest\ThemeManagementPageContribution`.
 - Health checks: `Capell\ThemeStudio\EstateAgents\Health\ThemeEstateAgentsHealthCheck`.
-- Blade views: `packages/theme-estate-agents/resources/views/page.blade.php`, `packages/theme-estate-agents/resources/views/sections/agent-team.blade.php`, `packages/theme-estate-agents/resources/views/sections/content-listing.blade.php`, `packages/theme-estate-agents/resources/views/sections/cta.blade.php`, `packages/theme-estate-agents/resources/views/sections/featured-properties.blade.php`, `packages/theme-estate-agents/resources/views/sections/features.blade.php`, `packages/theme-estate-agents/resources/views/sections/footer.blade.php`, `packages/theme-estate-agents/resources/views/sections/hero.blade.php`, `packages/theme-estate-agents/resources/views/sections/local-guide.blade.php`, `packages/theme-estate-agents/resources/views/sections/market-proof.blade.php`, `packages/theme-estate-agents/resources/views/sections/navigation.blade.php`, `packages/theme-estate-agents/resources/views/sections/proof.blade.php`, `and 3 more`.
+- Blade views: `packages/theme-estate-agents/resources/views/page.blade.php`, `packages/theme-estate-agents/resources/views/screenshots/fixture.blade.php`, `packages/theme-estate-agents/resources/views/sections/agent-team.blade.php`, `packages/theme-estate-agents/resources/views/sections/content-listing.blade.php`, `packages/theme-estate-agents/resources/views/sections/cta.blade.php`, `packages/theme-estate-agents/resources/views/sections/featured-properties.blade.php`, `packages/theme-estate-agents/resources/views/sections/features.blade.php`, `packages/theme-estate-agents/resources/views/sections/footer.blade.php`, `packages/theme-estate-agents/resources/views/sections/hero.blade.php`, `packages/theme-estate-agents/resources/views/sections/local-guide.blade.php`, `packages/theme-estate-agents/resources/views/sections/market-proof.blade.php`, `packages/theme-estate-agents/resources/views/sections/navigation.blade.php`, `and 4 more`.
 - Cache tags: `theme-estate-agents`.
 
 ## Data Model
@@ -60,19 +57,16 @@ This theme has no schema impact. It relies on core Capell site, page, locale, an
 
 - Admin navigation: contributes admin extension points through `capell.json`.
 - Permissions: none declared in `capell.json`.
-- Public routes: none detected in package route files.
+- Public routes: route files exist and must be reviewed before public enablement.
 - Database changes: no package migrations declared.
 - Settings: no package settings declared.
 - Queues or schedules: none detected in standard package paths.
 - Cache tags: `theme-estate-agents`.
 - Commands: `capell:theme-estate-agents-demo`.
 
-## Search And Form Actions
-
-Search, valuation, and viewing sections render public forms only when hydrated render data supplies a safe `form_action`. Search and Form Builder adapters should pass root-relative or `http(s)` public URLs. Missing or unsafe actions render non-submitting setup panels, so public output never posts to `#`, signed admin URLs, Livewire endpoints, or other authoring surfaces.
-
 ## Common Pitfalls
 
+- Review route middleware, throttling, signed URLs, and public-output safety before exposing routes.
 - Keep public Blade and cached HTML free of authoring markers, model IDs, permissions, signed editor URLs, and lazy database queries.
 - Run package commands from the host app; in this repository use `vendor/bin/pest` for package tests.
 - Keep `composer.json`, `composer.local.json`, `capell.json`, docs, screenshots, and tests aligned when the package surface changes.
@@ -82,6 +76,7 @@ Search, valuation, and viewing sections render public forms only when hydrated r
 | Symptom | Likely cause | Check | Fix |
 | --- | --- | --- | --- |
 | Package surface is missing after install | Provider or manifest is not loaded | Confirm `capell.json`, package `composer.json`, and provider registration | Reinstall the package, refresh Composer autoload, and clear host caches |
+| Route returns unexpected output | Route cache, middleware, or signed URL setup does not match the package route file | Check the route files listed in `Technical Shape` | Clear route cache and verify middleware before exposing public routes |
 | Background work does not run | Queue worker or scheduled command is not active | Check package jobs, commands, and host scheduler configuration | Start the queue or scheduler, then run the focused command or package test |
 | Public output leaks unexpected state | Render data, cache variation, or authoring boundary has regressed | Check public Blade, cache tags, and public-output safety tests | Move data loading out of Blade and rerun the package public-output tests |
 

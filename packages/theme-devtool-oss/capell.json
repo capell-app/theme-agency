@@ -119,29 +119,59 @@
         "description": "Devtool OSS provides a distinct theme definition, demo command, marketplace metadata, and public-safe Blade views for Scheduler OSS.",
         "screenshots": [
             {
+                "path": "docs/assets/marketplace/extension-card.jpg",
+                "alt": "Devtool OSS marketplace card preview",
+                "caption": "Devtool OSS premium theme card"
+            },
+            {
                 "path": "docs/screenshots/devtool-oss-homepage.png",
-                "alt": "Devtool OSS homepage preview",
-                "caption": "Devtool OSS Homepage"
+                "alt": "Devtool OSS Homepage demo page screenshot",
+                "caption": "Devtool OSS Homepage page"
             },
             {
-                "path": "docs/screenshots/devtool-oss-landing.png",
-                "alt": "Devtool OSS landing page preview",
-                "caption": "Devtool OSS Landing page"
+                "path": "docs/screenshots/devtool-oss-directory.png",
+                "alt": "Devtool OSS Directory demo page screenshot",
+                "caption": "Devtool OSS Directory page"
             },
             {
-                "path": "docs/screenshots/devtool-oss-listing.png",
-                "alt": "Devtool OSS list page preview",
-                "caption": "Devtool OSS List page"
-            },
-            {
-                "path": "docs/screenshots/devtool-oss-search.png",
-                "alt": "Devtool OSS search results preview",
-                "caption": "Devtool OSS Search results"
+                "path": "docs/screenshots/devtool-oss-detail.png",
+                "alt": "Devtool OSS Detail demo page screenshot",
+                "caption": "Devtool OSS Detail page"
             },
             {
                 "path": "docs/screenshots/devtool-oss-contact.png",
-                "alt": "Devtool OSS contact form preview",
-                "caption": "Devtool OSS Contact form"
+                "alt": "Devtool OSS Contact demo page screenshot",
+                "caption": "Devtool OSS Contact page"
+            },
+            {
+                "path": "docs/screenshots/devtool-oss-empty.png",
+                "alt": "Devtool OSS Empty State demo page screenshot",
+                "caption": "Devtool OSS Empty State page"
+            },
+            {
+                "path": "docs/screenshots/devtool-oss-not-found.png",
+                "alt": "Devtool OSS 404 State demo page screenshot",
+                "caption": "Devtool OSS 404 State page"
+            },
+            {
+                "path": "docs/screenshots/devtool-oss-cta.png",
+                "alt": "Devtool OSS Conversion CTA demo page screenshot",
+                "caption": "Devtool OSS Conversion CTA page"
+            },
+            {
+                "path": "docs/screenshots/devtool-oss-install.png",
+                "alt": "Devtool OSS Install demo page screenshot",
+                "caption": "Devtool OSS Install page"
+            },
+            {
+                "path": "docs/screenshots/devtool-oss-community.png",
+                "alt": "Devtool OSS Community demo page screenshot",
+                "caption": "Devtool OSS Community page"
+            },
+            {
+                "path": "docs/screenshots/devtool-oss-cloud.png",
+                "alt": "Devtool OSS Cloud vs Self-host demo page screenshot",
+                "caption": "Devtool OSS Cloud vs Self-host page"
             }
         ],
         "categories": ["frontend", "themes"]

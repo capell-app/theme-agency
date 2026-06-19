@@ -33,34 +33,6 @@ Screenshot contract: `screenshots.json`.
 - Privacy request workflow actions (admin, required).
 - Privacy retention rules admin list (admin, required).
 
-## Screenshot Evidence
-
-These captures are the package-owned visual contract for the admin pages, public pages, actions, workflows, and feature surfaces described above. Keep this section aligned with `docs/screenshots.json` whenever the package surface changes.
-
-### Privacy requests admin queue
-
-![Privacy requests admin queue](screenshots/privacy-requests-index.png)
-
-- Surface: admin · Target: PrivacyRequestResource.
-- Documents: An operator triages access, export, and deletion requests from a single compliance queue.
-- Capture notes: Captured from a seeded Capell admin runner app with capell-app/privacy-center installed.
-
-### Privacy request workflow actions
-
-![Privacy request workflow actions](screenshots/privacy-request-edit-actions.png)
-
-- Surface: admin · Target: PrivacyRequestResource.edit.
-- Documents: An operator verifies and completes a data-subject request through audited Capell Actions.
-- Capture notes: Captured from a seeded Capell admin runner app with a stable data-subject request record.
-
-### Privacy retention rules admin list
-
-![Privacy retention rules admin list](screenshots/retention-rules-index.png)
-
-- Surface: admin · Target: RetentionRuleResource.
-- Documents: An operator reviews automated data minimisation rules and their retention windows.
-- Capture notes: Captured from a seeded Capell admin runner app with active retention rules.
-
 ## Technical Shape
 
 - Service providers: `Capell\PrivacyCenter\Providers\PrivacyCenterServiceProvider`, `Capell\PrivacyCenter\Providers\AdminServiceProvider`.

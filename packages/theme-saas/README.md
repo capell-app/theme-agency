@@ -37,7 +37,7 @@ Screenshot contract: `docs/screenshots.json`.
 - SaaS detail page (frontend, required).
 - SaaS contact page (frontend, required).
 - SaaS empty state page (frontend, required).
-- SaaS CTA page (frontend, required).
+- SaaS CTA (frontend, required).
 
 ## Technical Shape
 

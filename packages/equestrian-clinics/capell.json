@@ -218,14 +218,10 @@
             ],
             "auth": "public",
             "csrfExemptRoutes": [],
-            "signedRoutes": [
-                "coach.timetable"
-            ],
+            "signedRoutes": ["coach.timetable"],
             "tokenizedRoutes": [],
             "webhookRoutes": [],
-            "throttledRoutes": [
-                "host-request.store"
-            ]
+            "throttledRoutes": ["host-request.store"]
         },
         "sensitiveData": {
             "encryptedFields": [],

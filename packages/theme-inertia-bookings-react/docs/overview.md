@@ -6,7 +6,7 @@
 
 Theme Inertia Bookings React is an **Available**, **No schema impact** Capell plugin in the **Capell Themes** product group. It ships as `capell-app/theme-inertia-bookings-react` and extends these surfaces: frontend.
 
-React component pack for the Inertia Bookings theme, including the shared page renderer, the public booking request form, and booking-focused widget components.
+React component pack for Theme Inertia Bookings.
 
 After install, the package affects public rendering, public routes, or frontend runtime behaviour.
 
@@ -21,9 +21,9 @@ Status details:
 
 ## Why It Matters
 
-**For developers:** The package gives React/Inertia applications a package-owned component pack and build entrypoint for the Inertia Bookings theme instead of pushing framework-specific rendering into core or the base theme.
+**For developers:** The package gives developers package-owned service providers instead of pushing this behaviour into core or application code.
 
-**For teams:** React appointment-request components for service, staff, location, and slot selection, with public validation and loading states that match the screenshot contract.
+**For teams:** React components for Theme Inertia Bookings.
 
 ## Screens And Workflow
 
@@ -34,50 +34,6 @@ Screenshot contract: `screenshots.json`.
 - React booking slot loading state (frontend, required).
 - React booking validation state (frontend, required).
 - React booking mobile layout (frontend, required).
-
-## Screenshot Evidence
-
-These captures are the package-owned visual contract for the admin pages, public pages, actions, workflows, and feature surfaces described above. Keep this section aligned with `docs/screenshots.json` whenever the package surface changes.
-
-### React booking component pack
-
-![React booking component pack](screenshots/react-booking-components.png)
-
-- Surface: frontend · Target: /bookings.
-- Documents: A buyer confirms the React pack renders the page, widgets, and booking request contract.
-- Capture notes: Capture the React adapter runtime with Theme Inertia Bookings installed and the labelled booking request form visible.
-
-### React themed booking services
-
-![React themed booking services](screenshots/react-booking-services.png)
-
-- Surface: frontend · Target: /theme-inertia-bookings-demo#services.
-- Documents: A buyer verifies the React adapter covers the marketing sections, not only the booking form.
-- Capture notes: Capture React-rendered service cards and appointment CTAs from the themed component pack.
-
-### React booking slot loading state
-
-![React booking slot loading state](screenshots/react-booking-slot-loading.png)
-
-- Surface: frontend · Target: /bookings.
-- Documents: A buyer checks that async slot selection has an understandable React loading state.
-- Capture notes: Capture the public request form while available slots are loading or refreshing.
-
-### React booking validation state
-
-![React booking validation state](screenshots/react-booking-validation.png)
-
-- Surface: frontend · Target: /bookings.
-- Documents: A buyer confirms the React pack presents booking errors without relying on placeholders.
-- Capture notes: Capture validation feedback on required customer fields and service/slot selection.
-
-### React booking mobile layout
-
-![React booking mobile layout](screenshots/react-booking-mobile.png)
-
-- Surface: frontend · Target: /bookings.
-- Documents: A buyer verifies the React component pack works for phone-based appointment requests.
-- Capture notes: Capture the React booking request page at a mobile viewport with labels and CTA visible.
 
 ## Technical Shape
 
@@ -90,13 +46,7 @@ These captures are the package-owned visual contract for the admin pages, public
 
 This package has no schema impact. It does not declare package-owned migrations or required tables.
 
-Booking persistence, validation, and request props are owned by the Bookings and Theme Inertia Bookings packages. This adapter owns only React component registration, the React build entrypoint, and public-safe rendering of the server-provided Inertia props.
-
-## Adapter Boundary
-
-Install this package when the host Capell/Inertia frontend uses React and the Inertia Bookings theme is installed. The base theme owns the booking renderer binding, `capell-app/inertia-react-adapter` provides the generic React runtime, and this package supplies the first-party booking components that override the generic fallback.
-
-The public booking request form renders inline `.error` messages from Inertia validation errors and a stable `.slots` region while available times are deferred or refreshed. These selectors are intentionally public presentation state for screenshots and accessibility; they must not contain admin/editor metadata, signed URLs, model IDs, field paths, package internals, or authoring controls.
+Docs gap: document extension points here if the package delegates persistence to a host package.
 
 ## Install Impact
 

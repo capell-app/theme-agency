@@ -34,42 +34,6 @@ Screenshot contract: `screenshots.json`.
 - Document publications relation manager (admin, required).
 - Document acceptances relation manager (admin, required).
 
-## Screenshot Evidence
-
-These captures are the package-owned visual contract for the admin pages, public pages, actions, workflows, and feature surfaces described above. Keep this section aligned with `docs/screenshots.json` whenever the package surface changes.
-
-### Controlled documents index
-
-![Controlled documents index](screenshots/controlled-documents-index.png)
-
-- Surface: admin · Target: DocumentResource:index.
-- Documents: An administrator reviews controlled documents and sees which policy or legal records have published versions.
-- Capture notes: Capture with at least one active document and one draft or archived document so status badges and publication counts are visible.
-
-### Controlled document edit form
-
-![Controlled document edit form](screenshots/controlled-document-edit.png)
-
-- Surface: admin · Target: DocumentResource:edit.
-- Documents: An administrator updates the title, lifecycle status, or metadata for a controlled document.
-- Capture notes: Requires a seeded Document record. The key field is disabled; title, status, metadata, and relation manager tabs should be visible.
-
-### Document publications relation manager
-
-![Document publications relation manager](screenshots/controlled-document-publications.png)
-
-- Surface: admin · Target: PublicationsRelationManager.
-- Documents: A compliance reviewer checks immutable publication versions, hashes, revision IDs, and publish timestamps for a document.
-- Capture notes: Requires at least one DocumentPublication, ideally one created from a Publishing Studio revision so published_revision_id is populated.
-
-### Document acceptances relation manager
-
-![Document acceptances relation manager](screenshots/controlled-document-acceptances.png)
-
-- Surface: admin · Target: AcceptancesRelationManager.
-- Documents: A compliance reviewer confirms which version a user or workflow accepted and when that acceptance was recorded.
-- Capture notes: Requires seeded DocumentAcceptance rows linked to the controlled document. Include at least one context such as registration or account_update.
-
 ## Technical Shape
 
 - Service providers: `Capell\DocumentLifecycle\Providers\DocumentLifecycleServiceProvider`.
@@ -81,7 +45,7 @@ These captures are the package-owned visual contract for the admin pages, public
 - Data objects: `DocumentLifecycleHealthReportData`.
 - Command signatures: `capell:document-lifecycle:archive-expired`.
 - Console command classes: `ArchiveExpiredDocumentsCommand`.
-- Manifest contributions: `admin-resource: Capell\DocumentLifecycle\Manifest\DocumentResourceContribution`, `scheduled-job: Capell\DocumentLifecycle\Manifest\DocumentLifecycleRetentionScheduleContribution`.
+- Manifest contributions: `admin-resource: Capell\DocumentLifecycle\Manifest\DocumentResourceContribution`, `migration: Capell\DocumentLifecycle\Manifest\DocumentLifecycleMigrationsContribution`, `model: Capell\DocumentLifecycle\Manifest\DocumentLifecycleModelsContribution`, `scheduled-job: Capell\DocumentLifecycle\Manifest\DocumentLifecycleRetentionScheduleContribution`.
 - Health checks: `Capell\DocumentLifecycle\Health\DocumentLifecycleHealthCheck`.
 
 ## Data Model

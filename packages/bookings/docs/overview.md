@@ -39,50 +39,6 @@ Screenshot contract: `screenshots.json`.
 - Equi Dynamics public booking form on mobile (frontend, required).
 - Equi Dynamics successful booking submission (frontend, required).
 
-## Screenshot Evidence
-
-These captures are the package-owned visual contract for the admin pages, public pages, actions, workflows, and feature surfaces described above. Keep this section aligned with `docs/screenshots.json` whenever the package surface changes.
-
-### Public booking request form
-
-![Public booking request form](screenshots/public-booking-request.png)
-
-- Surface: frontend · Target: /bookings.
-- Documents: A buyer confirms visitors can request appointments without seeing admin or authoring surfaces.
-- Capture notes: Capture a seeded public booking request route with services, staff, locations, timezone options, and visible validation-ready customer fields.
-
-### Appointment request admin queue
-
-![Appointment request admin queue](screenshots/appointment-requests-admin.png)
-
-- Surface: admin · Target: AppointmentRequestResource:index.
-- Documents: An operator checks incoming appointment requests and manages confirmation or cancellation safely.
-- Capture notes: Capture requested and confirmed appointments with service, staff, location, customer, status, and audit context visible.
-
-### Equi Dynamics public booking form on desktop
-
-![Equi Dynamics public booking form on desktop](screenshots/equi-dynamics-public-booking-desktop.png)
-
-- Surface: frontend · Target: http://127.0.0.1:8013/bookings.
-- Documents: A buyer confirms Bookings renders correctly inside a branded Capell customer site.
-- Capture notes: Capture the consuming Equi Dynamics site booking form at a desktop viewport with seeded services, staff, location, timezone, and customer fields visible.
-
-### Equi Dynamics public booking form on mobile
-
-![Equi Dynamics public booking form on mobile](screenshots/equi-dynamics-public-booking-mobile.png)
-
-- Surface: frontend · Target: http://127.0.0.1:8013/bookings.
-- Documents: A buyer confirms the public booking workflow is usable on a phone-sized viewport.
-- Capture notes: Capture the consuming Equi Dynamics site booking form at a mobile viewport and verify there is no horizontal overflow.
-
-### Equi Dynamics successful booking submission
-
-![Equi Dynamics successful booking submission](screenshots/equi-dynamics-booking-submitted.png)
-
-- Surface: frontend · Target: http://127.0.0.1:8013/bookings.
-- Documents: A buyer confirms the rendered booking form can submit through the package action end to end.
-- Capture notes: Capture the success state after submitting a valid seeded Equi Dynamics booking request with fake QA contact details.
-
 ## Technical Shape
 
 - Service providers: `Capell\Bookings\Providers\BookingsServiceProvider`.
@@ -93,10 +49,11 @@ These captures are the package-owned visual contract for the admin pages, public
 - Models: `AppointmentAuditLog`, `AppointmentRequest`, `BookingAvailabilityException`, `BookingAvailabilityWindow`, `BookingChangeProposal`, `BookingChangeProposalParty`, `BookingGroupSession`, `BookingLessonBundle`, `BookingLessonSkillAssessment`, `BookingLocation`, `BookingMessageLog`, `BookingOwnerPrompt`, `BookingReviewParticipant`, `BookingReviewRequest`, `BookingService`, `BookingStaffMember`, `BookingTravelAdjustment`, `BookingTravelObservation`, `BookingWaitlistEntry`, `BookingWebhookEvent`, `BookingWorkZone`, `LessonNote`, `LessonSeries`, `MessagingConsent`.
 - Filament classes: `AppointmentRequestResource`, `EditAppointmentRequest`, `ListAppointmentRequests`, `AppointmentAuditLogsRelationManager`, `LessonNotesRelationManager`, `BookingAvailabilityExceptionResource`, `CreateBookingAvailabilityException`, `EditBookingAvailabilityException`, `ListBookingAvailabilityExceptions`, `BookingAvailabilityWindowResource`, `CreateBookingAvailabilityWindow`, `EditBookingAvailabilityWindow`, `and 45 more`.
 - Route files: `packages/bookings/routes/web.php`.
-- Actions: `AcknowledgeFuelAllowanceAction`, `AddReviewParticipantAction`, `ApplyBookingChangeAction`, `ApplyLessonBundleCreditAction`, `AssignGroupSlotTimesAction`, `AttachLessonPhotoAction`, `BuildAvailableBookingSlotsAction`, `BuildDayPlanAction`, `BuildInstructorFuelReportAction`, `BuildOwnerDigestAction`, `BuildPortalLessonRowsAction`, `BuildPublicBookingRequestOptionsAction`, `and 74 more`.
+- Actions: `AcknowledgeFuelAllowanceAction`, `AddReviewParticipantAction`, `ApplyBookingChangeAction`, `ApplyLessonBundleCreditAction`, `AssignGroupSlotTimesAction`, `AttachLessonPhotoAction`, `BuildAvailableBookingSlotsAction`, `BuildDayPlanAction`, `BuildInstructorFuelReportAction`, `BuildOwnerDigestAction`, `BuildPortalLessonRowsAction`, `BuildPublicBookingRequestOptionsAction`, `and 77 more`.
 - Data objects: `AppointmentRequestData`, `AvailabilityExceptionData`, `AvailabilityWindowData`, `BookingMessageData`, `BookingMessageResultData`, `DayPlanData`, `DayPlanStopData`, `PortalLessonRowData`, `TravelEstimateData`.
-- Console command classes: `ExpireBookingWorkflowStateCommand`, `PruneBookingRetentionDataCommand`, `ScheduleBookingReviewRequestsCommand`, `SendDueAppointmentRemindersCommand`.
-- Manifest contributions: `admin-resource: Capell\Bookings\Manifest\AppointmentRequestResourceContribution`, `admin-resource: Capell\Bookings\Manifest\BookingAvailabilityExceptionResourceContribution`, `admin-resource: Capell\Bookings\Manifest\BookingAvailabilityWindowResourceContribution`, `admin-resource: Capell\Bookings\Manifest\BookingChangeProposalResourceContribution`, `admin-resource: Capell\Bookings\Manifest\BookingDayPlannerResourceContribution`, `admin-resource: Capell\Bookings\Manifest\BookingGroupSessionResourceContribution`, `admin-resource: Capell\Bookings\Manifest\BookingLocationResourceContribution`, `admin-resource: Capell\Bookings\Manifest\BookingMessageLogResourceContribution`, `admin-resource: Capell\Bookings\Manifest\BookingOwnerPromptResourceContribution`, `admin-resource: Capell\Bookings\Manifest\BookingReviewRequestResourceContribution`, `admin-resource: Capell\Bookings\Manifest\BookingServiceResourceContribution`, `admin-resource: Capell\Bookings\Manifest\BookingStaffMemberResourceContribution`, `admin-resource: Capell\Bookings\Manifest\BookingTravelObservationResourceContribution`, `admin-resource: Capell\Bookings\Manifest\BookingWaitlistEntryResourceContribution`, `admin-resource: Capell\Bookings\Manifest\BookingWorkZoneResourceContribution`, `admin-resource: Capell\Bookings\Manifest\LessonSeriesResourceContribution`, `model: Capell\Bookings\Manifest\BookingsModelsContribution`, `route: Capell\Bookings\Manifest\BookingsFrontendRoutesContribution`, `scheduled-job: Capell\Bookings\Manifest\BookingsReminderScheduleContribution`.
+- Command signatures: `capell:bookings-demo`, `capell:bookings:expire-workflow-state`, `capell:bookings:prune-retention-data`, `capell:bookings:schedule-review-requests`, `capell:bookings:send-due-reminders`.
+- Console command classes: `ExpireBookingWorkflowStateCommand`, `InstallBookingsDemoCommand`, `PruneBookingRetentionDataCommand`, `ScheduleBookingReviewRequestsCommand`, `SendDueAppointmentRemindersCommand`.
+- Manifest contributions: `admin-resource: Capell\Bookings\Manifest\AppointmentRequestResourceContribution`, `admin-resource: Capell\Bookings\Manifest\BookingAvailabilityExceptionResourceContribution`, `admin-resource: Capell\Bookings\Manifest\BookingAvailabilityWindowResourceContribution`, `admin-resource: Capell\Bookings\Manifest\BookingChangeProposalResourceContribution`, `admin-resource: Capell\Bookings\Manifest\BookingDayPlannerResourceContribution`, `admin-resource: Capell\Bookings\Manifest\BookingGroupSessionResourceContribution`, `admin-resource: Capell\Bookings\Manifest\BookingLocationResourceContribution`, `admin-resource: Capell\Bookings\Manifest\BookingMessageLogResourceContribution`, `admin-resource: Capell\Bookings\Manifest\BookingOwnerPromptResourceContribution`, `admin-resource: Capell\Bookings\Manifest\BookingReviewRequestResourceContribution`, `admin-resource: Capell\Bookings\Manifest\BookingServiceResourceContribution`, `admin-resource: Capell\Bookings\Manifest\BookingStaffMemberResourceContribution`, `admin-resource: Capell\Bookings\Manifest\BookingTravelObservationResourceContribution`, `admin-resource: Capell\Bookings\Manifest\BookingWaitlistEntryResourceContribution`, `admin-resource: Capell\Bookings\Manifest\BookingWorkZoneResourceContribution`, `admin-resource: Capell\Bookings\Manifest\LessonSeriesResourceContribution`, `console-command: Capell\Bookings\Manifest\BookingsConsoleCommandsContribution`, `model: Capell\Bookings\Manifest\BookingsModelsContribution`, `route: Capell\Bookings\Manifest\BookingsFrontendRoutesContribution`, `scheduled-job: Capell\Bookings\Manifest\BookingsReminderScheduleContribution`.
 - Health checks: `Capell\Bookings\Health\BookingsHealthCheck`.
 - Blade views: `packages/bookings/resources/views/portal/consent.blade.php`, `packages/bookings/resources/views/portal/lessons.blade.php`, `packages/bookings/resources/views/portal/proposal.blade.php`, `packages/bookings/resources/views/portal/review-participant.blade.php`, `packages/bookings/resources/views/portal/review.blade.php`, `packages/bookings/resources/views/request.blade.php`.
 - Cache tags: `bookings`.
@@ -118,11 +75,7 @@ These captures are the package-owned visual contract for the admin pages, public
 - Settings: `Capell\Bookings\Settings\BookingsSettings`.
 - Queues or schedules: none detected in standard package paths.
 - Cache tags: `bookings`.
-- Commands: console command classes detected: `InstallBookingsDemoCommand`, `ExpireBookingWorkflowStateCommand`, `PruneBookingRetentionDataCommand`, `ScheduleBookingReviewRequestsCommand`, `SendDueAppointmentRemindersCommand`.
-
-## Demo Fixtures
-
-Run `capell:bookings-demo` from the host app to install an idempotent demo consultation service, staff member, location, weekly availability window, and appointment request. The fixture is intentionally small so operators can verify the public request form and admin queue without importing a full business calendar.
+- Commands: `capell:bookings-demo`, `capell:bookings:expire-workflow-state`, `capell:bookings:prune-retention-data`, `capell:bookings:schedule-review-requests`, `capell:bookings:send-due-reminders`.
 
 ## Common Pitfalls
 
@@ -140,12 +93,13 @@ Run `capell:bookings-demo` from the host app to install an idempotent demo consu
 | Package surface is missing after install | Provider or manifest is not loaded | Confirm `capell.json`, package `composer.json`, and provider registration | Reinstall the package, refresh Composer autoload, and clear host caches |
 | Admin screen or command fails on missing table | Package migrations have not run | Check the tables listed in `Data Model` | Run host migrations and rerun the focused package test |
 | Route returns unexpected output | Route cache, middleware, or signed URL setup does not match the package route file | Check the route files listed in `Technical Shape` | Clear route cache and verify middleware before exposing public routes |
+| Background work does not run | Queue worker or scheduled command is not active | Check package jobs, commands, and host scheduler configuration | Start the queue or scheduler, then run the focused command or package test |
 | Public output leaks unexpected state | Render data, cache variation, or authoring boundary has regressed | Check public Blade, cache tags, and public-output safety tests | Move data loading out of Blade and rerun the package public-output tests |
 
 ## Quick Start
 
 1. Install the package: `composer require capell-app/bookings`.
-2. Run the required setup: `php artisan migrate`.
+2. Run the required setup: `php artisan capell:bookings-demo`.
 3. Open the related Capell admin surface and verify Bookings appears.
 
 ## Next Steps

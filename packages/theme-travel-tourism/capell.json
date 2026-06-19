@@ -119,29 +119,59 @@
         "description": "Travel & Tourism provides a distinct theme definition, demo command, marketplace metadata, and public-safe Blade views for Meridian Travel.",
         "screenshots": [
             {
+                "path": "docs/assets/marketplace/extension-card.jpg",
+                "alt": "Travel Tourism marketplace card preview",
+                "caption": "Travel Tourism premium theme card"
+            },
+            {
                 "path": "docs/screenshots/travel-tourism-homepage.png",
-                "alt": "Travel & Tourism homepage preview",
-                "caption": "Travel & Tourism Homepage"
+                "alt": "Travel Tourism Homepage demo page screenshot",
+                "caption": "Travel Tourism Homepage page"
             },
             {
-                "path": "docs/screenshots/travel-tourism-landing.png",
-                "alt": "Travel & Tourism landing page preview",
-                "caption": "Travel & Tourism Landing page"
+                "path": "docs/screenshots/travel-tourism-directory.png",
+                "alt": "Travel Tourism Directory demo page screenshot",
+                "caption": "Travel Tourism Directory page"
             },
             {
-                "path": "docs/screenshots/travel-tourism-listing.png",
-                "alt": "Travel & Tourism list page preview",
-                "caption": "Travel & Tourism List page"
-            },
-            {
-                "path": "docs/screenshots/travel-tourism-search.png",
-                "alt": "Travel & Tourism search results preview",
-                "caption": "Travel & Tourism Search results"
+                "path": "docs/screenshots/travel-tourism-detail.png",
+                "alt": "Travel Tourism Detail demo page screenshot",
+                "caption": "Travel Tourism Detail page"
             },
             {
                 "path": "docs/screenshots/travel-tourism-contact.png",
-                "alt": "Travel & Tourism contact form preview",
-                "caption": "Travel & Tourism Contact form"
+                "alt": "Travel Tourism Contact demo page screenshot",
+                "caption": "Travel Tourism Contact page"
+            },
+            {
+                "path": "docs/screenshots/travel-tourism-empty.png",
+                "alt": "Travel Tourism Empty State demo page screenshot",
+                "caption": "Travel Tourism Empty State page"
+            },
+            {
+                "path": "docs/screenshots/travel-tourism-not-found.png",
+                "alt": "Travel Tourism 404 State demo page screenshot",
+                "caption": "Travel Tourism 404 State page"
+            },
+            {
+                "path": "docs/screenshots/travel-tourism-cta.png",
+                "alt": "Travel Tourism Conversion CTA demo page screenshot",
+                "caption": "Travel Tourism Conversion CTA page"
+            },
+            {
+                "path": "docs/screenshots/travel-tourism-destinations.png",
+                "alt": "Travel Tourism Destinations demo page screenshot",
+                "caption": "Travel Tourism Destinations page"
+            },
+            {
+                "path": "docs/screenshots/travel-tourism-itineraries.png",
+                "alt": "Travel Tourism Itineraries demo page screenshot",
+                "caption": "Travel Tourism Itineraries page"
+            },
+            {
+                "path": "docs/screenshots/travel-tourism-enquiry.png",
+                "alt": "Travel Tourism Travel Enquiry demo page screenshot",
+                "caption": "Travel Tourism Travel Enquiry page"
             }
         ],
         "categories": ["frontend", "themes"]

@@ -23,7 +23,7 @@ Status details:
 
 **For developers:** The package gives developers package-owned service providers, Actions, Data objects, models, and Filament classes instead of pushing this behaviour into core or application code.
 
-**For teams:** Automation Studio connects Capell package events to rule-based native actions, Public Actions, and agent capability workflows. Operators can test rule matching against sample payloads and replay pending, skipped, or failed run actions from the run history without overwriting the original audit row.
+**For teams:** Automation Studio connects Capell package events to rule-based native actions, Public Actions, and agent capability workflows.
 
 ## Screens And Workflow
 
@@ -32,9 +32,6 @@ Screenshot contract: `docs/screenshots.json`.
 - Automation rules admin index (admin, required).
 - Automation rule edit screen (admin, required).
 - Automation runs admin index (admin, required).
-- Structured condition builder for rule payload filters (admin).
-- Test rules header action for dry-run rule matching (admin).
-- Replay action on pending, skipped, or failed automation runs (admin).
 
 ## Technical Shape
 
@@ -42,9 +39,10 @@ Screenshot contract: `docs/screenshots.json`.
 - Migrations: `packages/automation-studio/database/migrations/2026_05_31_170000_01_create_automation_rules_table.php`, `packages/automation-studio/database/migrations/2026_05_31_170000_02_create_automation_runs_table.php`.
 - Models: `AutomationRule`, `AutomationRun`.
 - Filament classes: `AutomationRuleResource`, `CreateAutomationRule`, `EditAutomationRule`, `ListAutomationRules`, `AutomationRunResource`, `ListAutomationRuns`.
+- Policies: `AbstractAutomationStudioResourcePolicy`, `AutomationRulePolicy`, `AutomationRunPolicy`.
 - Listeners: `DispatchAutomationFromAccessApproval`, `DispatchAutomationFromCampaignConversion`, `DispatchAutomationFromFormSubmission`, `DispatchAutomationFromWorkspaceStateChanged`.
-- Actions: `DispatchAutomationTriggerAction`, `DryRunAutomationRulesAction`, `LoadPersistedAutomationRulesAction`, `PersistAutomationTriggerResultsAction`, `QueueAutomationTriggerAction`, `RecordAutomationRunAction`, `RegisterAutomationStudioDefaultsAction`, `ReplayAutomationRunAction`.
-- Data objects: `AutomationActionDefinitionData`, `AutomationActionResultData`, `AutomationRuleActionData`, `AutomationRuleData`, `AutomationTriggerDefinitionData`, `AutomationTriggerEventData`.
+- Actions: `BuildSafeAutomationActionFailureResultAction`, `DispatchAutomationTriggerAction`, `DryRunAutomationRulesAction`, `LoadPersistedAutomationRulesAction`, `PersistAutomationTriggerResultsAction`, `QueueAutomationTriggerAction`, `RecordAutomationRunAction`, `RegisterAutomationStudioDefaultsAction`, `ReplayAutomationRunAction`.
+- Data objects: `AutomationActionDefinitionData`, `AutomationActionResultData`, `AutomationRuleActionData`, `AutomationRuleConditionData`, `AutomationRuleData`, `AutomationRuleDryRunResultData`, `AutomationTriggerDefinitionData`, `AutomationTriggerEventData`.
 - Jobs: `DispatchQueuedAutomationTriggerJob`.
 - Manifest contributions: `admin-resource: Capell\AutomationStudio\Manifest\AutomationRuleResourceContribution`, `admin-resource: Capell\AutomationStudio\Manifest\AutomationRunResourceContribution`, `model: Capell\AutomationStudio\Manifest\AutomationStudioModelsContribution`.
 - Health checks: `Capell\AutomationStudio\Health\AutomationStudioHealthCheck`.
@@ -82,22 +80,6 @@ Screenshot contract: `docs/screenshots.json`.
 | Package surface is missing after install | Provider or manifest is not loaded | Confirm `capell.json`, package `composer.json`, and provider registration | Reinstall the package, refresh Composer autoload, and clear host caches |
 | Admin screen or command fails on missing table | Package migrations have not run | Check the tables listed in `Data Model` | Run host migrations and rerun the focused package test |
 | Background work does not run | Queue worker or scheduled command is not active | Check package jobs, commands, and host scheduler configuration | Start the queue or scheduler, then run the focused command or package test |
-
-## Handler Failure Safety
-
-Automation Studio delegates native action delivery to the owning packages. Public Actions, Email Studio, Agent Bridge, Contacts, and Newsletter own their transport timeout and retry settings. Automation Studio records safe run results only: downstream exceptions become a translated handler failure with `handler_failed` context, while raw exception messages, exception classes, API tokens, provider payloads, and transport details stay out of admin-visible run history.
-
-## Replay Safety
-
-The Automation Runs table exposes a confirmed Replay action for pending, skipped, and failed action rows. Replay rebuilds the original trigger event from the persisted run payload, executes only the original rule action, and writes a new run row with a replay-specific idempotency key so the original audit record remains intact.
-
-## Rule Test Mode
-
-The Automation Rules list includes a Test rules action. It accepts a trigger type and sample payload, evaluates active persisted rules, reports matching rule/action counts, and does not invoke handlers or write run rows.
-
-## Condition Builder
-
-Rule conditions are stored as structured rows with a payload field, operator, and value. The runtime supports equals, does-not-equal, filled, and blank operators while preserving older key/value equality rules.
 
 ## Quick Start
 

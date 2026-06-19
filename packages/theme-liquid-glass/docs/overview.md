@@ -16,7 +16,6 @@ Status details:
 - Tier: free
 - Bundle: foundation
 - Composer package: `capell-app/theme-liquid-glass`
-- Required package: `capell-app/foundation-theme`
 - Namespace: `Capell\ThemeStudio\LiquidGlass`
 - Theme key: `liquid-glass`
 
@@ -30,79 +29,14 @@ Status details:
 
 Screenshot contract: `screenshots.json`.
 
-- Liquid Glass homepage (frontend, optional).
-- Liquid Glass landing page (frontend, optional).
-- Liquid Glass listing page (frontend, optional).
-- Liquid Glass search results (frontend, optional).
-- Liquid Glass contact page (frontend, optional).
-
-## Screenshot Evidence
-
-These captures are the package-owned visual contract for the admin pages, public pages, actions, workflows, and feature surfaces described above. Keep this section aligned with `docs/screenshots.json` whenever the package surface changes.
-
-### Liquid Glass homepage
-
-![Liquid Glass homepage](screenshots/liquid-glass-homepage.png)
-
-- Surface: frontend · Target: /theme-liquid-glass.
-- Documents: A site owner reviews Liquid Glass as a free modern theme for launch and service pages.
-- Capture notes: Committed route-rendered demo fixture for the Liquid Glass homepage.
-
-### Liquid Glass landing page
-
-![Liquid Glass landing page](screenshots/liquid-glass-landing.png)
-
-- Surface: frontend · Target: /theme-liquid-glass-landing.
-- Documents: A campaign team checks the hero, feature, proof, and CTA rhythm.
-- Capture notes: Committed route-rendered demo fixture covering the Liquid Glass section rhythm.
-
-### Liquid Glass listing page
-
-![Liquid Glass listing page](screenshots/liquid-glass-listing.png)
-
-- Surface: frontend · Target: /theme-liquid-glass-directory.
-- Documents: A visitor can browse content cards without leaving the glass visual system.
-- Capture notes: Committed route-rendered demo fixture for listing/result cards.
-
-### Liquid Glass search results
-
-![Liquid Glass search results](screenshots/liquid-glass-search.png)
-
-- Surface: frontend · Target: /theme-liquid-glass-search.
-- Documents: A visitor can scan result groups inside clear translucent panels.
-- Capture notes: Committed route-rendered demo fixture for a content-detail/search-style review page.
-
-### Liquid Glass contact page
-
-![Liquid Glass contact page](screenshots/liquid-glass-contact.png)
-
-- Surface: frontend · Target: /theme-liquid-glass-contact.
-- Documents: A lead path stays visually polished while using normal public page data.
-- Capture notes: Committed route-rendered demo fixture for the contact/system page surface.
-
-### Liquid Glass Clarity preset proof
-
-![Liquid Glass Clarity preset proof](screenshots/liquid-glass-clarity-preset.png)
-
-- Surface: frontend · Target: clarity-preset.
-- Documents: A developer verifies the bright preset keeps glass panels and actions legible.
-- Capture notes: Committed package-view capture proving Clarity preset token readability.
-
-### Liquid Glass Prism preset proof
-
-![Liquid Glass Prism preset proof](screenshots/liquid-glass-prism-preset.png)
-
-- Surface: frontend · Target: prism-preset.
-- Documents: A developer verifies the cyan/rose preset keeps cards, type, and actions legible.
-- Capture notes: Committed package-view capture proving Prism preset token readability.
-
-### Liquid Glass Graphite mobile proof
-
-![Liquid Glass Graphite mobile proof](screenshots/liquid-glass-graphite-mobile.png)
-
-- Surface: frontend · Target: graphite-mobile.
-- Documents: A developer verifies the dark preset works in the compact navigation viewport.
-- Capture notes: Committed package-view capture proving Graphite dark surface and mobile navigation readability.
+- Liquid Glass homepage (frontend, required).
+- Liquid Glass landing page (frontend, required).
+- Liquid Glass listing page (frontend, required).
+- Liquid Glass search results (frontend, required).
+- Liquid Glass contact page (frontend, required).
+- Liquid Glass Clarity preset proof (frontend, required).
+- Liquid Glass Prism preset proof (frontend, required).
+- Liquid Glass Graphite mobile proof (frontend, required).
 
 ## Technical Shape
 
@@ -119,20 +53,15 @@ These captures are the package-owned visual contract for the admin pages, public
 
 This theme has no schema impact. It relies on core Capell site, page, locale, and theme records instead of declaring package-owned tables.
 
-## Cacheability
-
-Theme Liquid Glass output is cacheable for public HTML because package Blade is query-free, secret-free, and authoring-free. Cache entries vary by site and locale. Invalidation should come from the host content/theme pipeline when site, page, URL, translation, preset, or hydrated render data changes; the theme does not queue package-owned invalidation work.
-
 ## Install Impact
 
-- Composer dependencies: `capell-app/core`, `capell-app/foundation-theme`, and `capell-app/frontend`.
 - Admin navigation: contributes admin extension points through `capell.json`.
 - Permissions: none declared in `capell.json`.
 - Public routes: none detected in package route files.
 - Database changes: no package migrations declared.
 - Settings: no package settings declared.
 - Queues or schedules: none detected in standard package paths.
-- Cache tags: `theme-liquid-glass`; public output varies by site and locale.
+- Cache tags: `theme-liquid-glass`.
 - Commands: `capell:theme-liquid-glass-demo`.
 
 ## Common Pitfalls
@@ -150,11 +79,9 @@ Theme Liquid Glass output is cacheable for public HTML because package Blade is 
 
 ## Quick Start
 
-In a host Capell app, install the package with its Foundation Theme dependency using `composer require capell-app/foundation-theme capell-app/theme-liquid-glass`.
-
-Then run the optional demo command from the host app, not from this package monorepo: `php artisan capell:theme-liquid-glass-demo`.
-
-For package development in this repository, use package-local Pest commands such as `vendor/bin/pest packages/theme-liquid-glass/tests --configuration=phpunit.xml`.
+1. Install the package: `composer require capell-app/theme-liquid-glass`.
+2. Run the required setup: `php artisan capell:theme-liquid-glass-demo`.
+3. Verify the package provider is registered and the related frontend, command, or extension point is active.
 
 ## Next Steps
 
@@ -164,6 +91,7 @@ For package development in this repository, use package-local Pest commands such
 - [Capell content language plan](../../../docs/CONTENT_LANGUAGE_PLAN.md)
 - [Capell documentation design system](../../../docs/DESIGN_SYSTEM.md)
 - [Capell and package ERD notes](../../../docs/erd/capell-and-package-erds.md)
+- Related packages: [Foundation Theme](../../foundation-theme/README.md).
 - Focused tests: `vendor/bin/pest packages/theme-liquid-glass/tests --configuration=phpunit.xml`.
 
 <!-- prettier-ignore-end -->

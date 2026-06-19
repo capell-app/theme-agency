@@ -29,11 +29,11 @@ Status details:
 
 Screenshot contract: `docs/screenshots.json`.
 
-- Restaurant homepage (frontend, optional).
-- Menu highlights (frontend, optional).
-- Reservation panel (frontend, optional).
-- Private dining (frontend, optional).
-- Restaurant events (frontend, optional).
+- Restaurant homepage (frontend, required).
+- Menu highlights (frontend, required).
+- Reservation panel (frontend, required).
+- Private dining (frontend, required).
+- Restaurant events (frontend, required).
 
 ## Technical Shape
 
@@ -54,17 +54,7 @@ Product group:
 - Product group: `Capell Themes`
 - Manifest extends: `default`
 - Runtime extends: `default`
-- Restaurant runtime inheritance uses `extends: default` and requires `capell-app/foundation-theme` plus `capell-app/frontend` for Foundation Theme rendering and public frontend output.
-
-## Integration Contract
-
-Reservation capture stays in hydrated render data. Pass a public `form_action` URL from Bookings, Form Builder, or host application code to render the reservation form. When no safe action is supplied, the reservation panel renders a non-submitting setup state instead of a fake form target.
-
-Restaurant sections do not query Bookings, Form Builder, Events, Blog, or SEO Suite directly. Host controllers, page payload builders, theme composers, or companion package adapters must hydrate public-safe arrays for reservation actions, event cards, listing items, opening hours, menu highlights, and local proof before Blade renders.
-
-## Cacheability
-
-Theme Restaurant output is cacheable for public HTML because package Blade is query-free, secret-free, and authoring-free. Cache entries vary by site and locale. Invalidation should be driven by the host content/theme pipeline when site, page, theme, menu, reservation, event, blog/listing, or other hydrated render data changes; this theme does not queue package-owned invalidation work.
+- Restaurant runtime inheritance uses `extends: default` and requires `capell-app/frontend` for the built-in default fallback.
 
 ## Data Model
 
@@ -78,7 +68,7 @@ This theme has no schema impact. It relies on core Capell site, page, locale, an
 - Database changes: no package migrations declared.
 - Settings: no package settings declared.
 - Queues or schedules: none detected in standard package paths.
-- Cache tags: `theme-restaurant`; public output varies by site and locale.
+- Cache tags: `theme-restaurant`.
 - Commands: `capell:theme-restaurant-demo`.
 
 ## Common Pitfalls
@@ -97,11 +87,9 @@ This theme has no schema impact. It relies on core Capell site, page, locale, an
 
 ## Quick Start
 
-In a host Capell app, install the package with its Foundation Theme dependency using `composer require capell-app/foundation-theme capell-app/theme-restaurant`.
-
-Then run the optional demo command from the host app, not from this package monorepo: `php artisan capell:theme-restaurant-demo`.
-
-For package development in this repository, use package-local Pest commands such as `vendor/bin/pest packages/theme-restaurant/tests --configuration=phpunit.xml`.
+1. Install the package: `composer require capell-app/theme-restaurant`.
+2. Run the required setup: `php artisan capell:theme-restaurant-demo`.
+3. Verify the package provider is registered and the related frontend, command, or extension point is active.
 
 ## Next Steps
 

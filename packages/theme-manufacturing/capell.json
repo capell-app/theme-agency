@@ -119,29 +119,59 @@
         "description": "Manufacturing provides a distinct theme definition, demo command, marketplace metadata, and public-safe Blade views for Forge Industries.",
         "screenshots": [
             {
+                "path": "docs/assets/marketplace/extension-card.jpg",
+                "alt": "Manufacturing marketplace card preview",
+                "caption": "Manufacturing premium theme card"
+            },
+            {
                 "path": "docs/screenshots/manufacturing-homepage.png",
-                "alt": "Manufacturing homepage preview",
-                "caption": "Manufacturing Homepage"
+                "alt": "Manufacturing Homepage demo page screenshot",
+                "caption": "Manufacturing Homepage page"
             },
             {
-                "path": "docs/screenshots/manufacturing-landing.png",
-                "alt": "Manufacturing landing page preview",
-                "caption": "Manufacturing Landing page"
+                "path": "docs/screenshots/manufacturing-directory.png",
+                "alt": "Manufacturing Directory demo page screenshot",
+                "caption": "Manufacturing Directory page"
             },
             {
-                "path": "docs/screenshots/manufacturing-listing.png",
-                "alt": "Manufacturing list page preview",
-                "caption": "Manufacturing List page"
-            },
-            {
-                "path": "docs/screenshots/manufacturing-search.png",
-                "alt": "Manufacturing search results preview",
-                "caption": "Manufacturing Search results"
+                "path": "docs/screenshots/manufacturing-detail.png",
+                "alt": "Manufacturing Detail demo page screenshot",
+                "caption": "Manufacturing Detail page"
             },
             {
                 "path": "docs/screenshots/manufacturing-contact.png",
-                "alt": "Manufacturing contact form preview",
-                "caption": "Manufacturing Contact form"
+                "alt": "Manufacturing Contact demo page screenshot",
+                "caption": "Manufacturing Contact page"
+            },
+            {
+                "path": "docs/screenshots/manufacturing-empty.png",
+                "alt": "Manufacturing Empty State demo page screenshot",
+                "caption": "Manufacturing Empty State page"
+            },
+            {
+                "path": "docs/screenshots/manufacturing-not-found.png",
+                "alt": "Manufacturing 404 State demo page screenshot",
+                "caption": "Manufacturing 404 State page"
+            },
+            {
+                "path": "docs/screenshots/manufacturing-cta.png",
+                "alt": "Manufacturing Conversion CTA demo page screenshot",
+                "caption": "Manufacturing Conversion CTA page"
+            },
+            {
+                "path": "docs/screenshots/manufacturing-capabilities.png",
+                "alt": "Manufacturing Capabilities demo page screenshot",
+                "caption": "Manufacturing Capabilities page"
+            },
+            {
+                "path": "docs/screenshots/manufacturing-case-studies.png",
+                "alt": "Manufacturing Case Studies demo page screenshot",
+                "caption": "Manufacturing Case Studies page"
+            },
+            {
+                "path": "docs/screenshots/manufacturing-rfq.png",
+                "alt": "Manufacturing RFQ demo page screenshot",
+                "caption": "Manufacturing RFQ page"
             }
         ],
         "categories": ["frontend", "themes"]

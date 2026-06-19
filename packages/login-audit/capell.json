@@ -135,9 +135,7 @@
         },
         "adminSurface": {
             "authorization": "permissions",
-            "permissions": [
-                "View:LoginAudit"
-            ]
+            "permissions": ["View:LoginAudit"]
         }
     },
     "performance": {

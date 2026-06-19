@@ -33,34 +33,6 @@ Screenshot contract: `screenshots.json`.
 - GA4 Reports setup status widget (admin, required).
 - GA4 Reports settings (admin, required).
 
-## Screenshot Evidence
-
-These captures are the package-owned visual contract for the admin pages, public pages, actions, workflows, and feature surfaces described above. Keep this section aligned with `docs/screenshots.json` whenever the package surface changes.
-
-### GA4 Reports dashboard page
-
-![GA4 Reports dashboard page](screenshots/ga4-reports-dashboard-page.png)
-
-- Surface: admin · Target: /admin/ga4-reports.
-- Documents: An administrator reviews GA4 overview stats, traffic trends, top pages, and setup status.
-- Capture notes: Capture the extension page with overview stats, traffic trend, top pages, and setup status widgets.
-
-### GA4 Reports setup status widget
-
-![GA4 Reports setup status widget](screenshots/ga4-reports-setup-status.png)
-
-- Surface: admin · Target: /admin/ga4-reports.
-- Documents: A site owner distinguishes not-configured and configured GA4 states before enabling sync.
-- Capture notes: Capture the not-configured and configured states if the screenshot runner can seed both.
-
-### GA4 Reports settings
-
-![GA4 Reports settings](screenshots/ga4-reports-settings.png)
-
-- Surface: admin · Target: /admin/settings.
-- Documents: A site owner configures property ID, credentials path, route slug, sync window, and enabled state.
-- Capture notes: Capture the settings section for property ID, credentials path, route slug, sync window, and enabled state.
-
 ## Technical Shape
 
 - Service providers: `Capell\GA4Reports\Providers\GA4ReportsServiceProvider`, `Capell\GA4Reports\Providers\AdminServiceProvider`.
@@ -74,16 +46,18 @@ These captures are the package-owned visual contract for the admin pages, public
 - Data objects: `GA4ReportsConfigData`, `GA4ReportsCredentialsStatusData`, `GA4ReportsDailyMetricData`, `GA4ReportsDigestData`, `GA4ReportsOverviewData`, `GA4ReportsPageMetricData`, `GA4ReportsSyncResultData`, `GA4ReportsTopPageData`, `GA4ReportsTrendPointData`, `GA4ReportsWindowData`.
 - Command signatures: `capell:ga4-reports-sync`.
 - Console command classes: `SyncGA4ReportsCommand`.
+- Manifest contributions: `admin-page: Capell\GA4Reports\Manifest\GA4ReportsAdminPageContribution`, `console-command: Capell\GA4Reports\Manifest\GA4ReportsConsoleCommandsContribution`, `dashboard-widget: Capell\GA4Reports\Manifest\GA4ReportsDashboardWidgetsContribution`, `health-check: Capell\GA4Reports\Manifest\GA4ReportsHealthContribution`, `model: Capell\GA4Reports\Manifest\GA4ReportsModelsContribution`, `overview-stat: Capell\GA4Reports\Manifest\GA4ReportsOverviewStatsContribution`, `scheduled-job: Capell\GA4Reports\Manifest\GA4ReportsScheduledSyncContribution`, `setting: Capell\GA4Reports\Manifest\GA4ReportsSettingsContribution`.
 - Health checks: `Capell\GA4Reports\Health\Ga4ReportsHealthCheck`.
 - Blade views: `packages/ga4-reports/resources/views/filament/pages/ga4-reports.blade.php`.
 - Cache tags: `ga4-reports`.
 
 ## Data Model
 
+- Required tables: `ga4_reports_sync_runs`, `ga4_reports_daily_metrics`, `ga4_reports_page_metrics`.
 - Models: `GA4ReportsDailyMetric`, `GA4ReportsPageMetric`, `GA4ReportsSyncRun`.
 - Migration files: `2026_05_10_190852_01_create_ga4_reports_daily_metrics_table.php`, `2026_05_10_190852_02_create_ga4_reports_page_metrics_table.php`, `2026_05_10_190852_03_create_ga4_reports_sync_runs_table.php`.
 - Migration impact: run host migrations through the package install flow before opening package surfaces.
-- Deletion/retention behaviour: each sync refreshes the configured reporting window (`sync_days`, default 30) for the configured GA4 property and replaces local daily/page snapshots for that window. Sync run history is retained for operational audit.
+- Deletion/retention behaviour: Docs gap unless the package has an explicit pruning command, retention setting, or tested cascade path.
 
 ## Install Impact
 
@@ -91,14 +65,15 @@ These captures are the package-owned visual contract for the admin pages, public
 - Permissions: none declared in `capell.json`.
 - Public routes: none detected in package route files.
 - Database changes: package migrations are declared.
-- Settings: settings classes or settings migrations exist; verify the install flow registers them.
-- Queues or schedules: registers `capell:ga4-reports-sync` on the host scheduler using `capell-ga4-reports.sync_cron` / the GA4 Reports settings cron expression, with overlap protection.
+- Settings: `Capell\GA4Reports\Settings\GA4ReportsSettings`.
+- Queues or schedules: none detected in standard package paths.
 - Cache tags: `ga4-reports`.
 - Commands: `capell:ga4-reports-sync`.
 
 ## Common Pitfalls
 
 - Run migrations before opening package resources or public routes.
+- Configure package settings before testing production-like workflows.
 - Run package commands from the host app; in this repository use `vendor/bin/pest` for package tests.
 - Keep `composer.json`, `composer.local.json`, `capell.json`, docs, screenshots, and tests aligned when the package surface changes.
 
@@ -109,7 +84,6 @@ These captures are the package-owned visual contract for the admin pages, public
 | Package surface is missing after install | Provider or manifest is not loaded | Confirm `capell.json`, package `composer.json`, and provider registration | Reinstall the package, refresh Composer autoload, and clear host caches |
 | Admin screen or command fails on missing table | Package migrations have not run | Check the tables listed in `Data Model` | Run host migrations and rerun the focused package test |
 | Background work does not run | Queue worker or scheduled command is not active | Check package jobs, commands, and host scheduler configuration | Start the queue or scheduler, then run the focused command or package test |
-| Dashboard data looks stale | The scheduled sync has not completed recently or GA4 credentials are unreadable | Check the GA4 Reports setup status widget and package health check | Fix the property/credentials settings, then run `capell:ga4-reports-sync` |
 
 ## Quick Start
 

@@ -55,16 +55,16 @@ Screenshot contract: `docs/screenshots.json`.
 - Models: `SocialFeedConnection`, `SocialFeedItem`, `SocialFeedOAuthState`.
 - Migration files: `2026_06_04_000001_create_social_feed_connections_table.php`, `2026_06_04_000002_create_social_feed_items_table.php`, `2026_06_04_000003_create_social_feed_oauth_states_table.php`.
 - Migration impact: run host migrations through the package install flow before opening package surfaces.
-- Deletion/retention behaviour: `UpsertSocialFeedItemsAction` keeps the newest `capell-social-feeds.retention_items` cached items per connection and prunes older cached items after successful syncs.
+- Deletion/retention behaviour: Docs gap unless the package has an explicit pruning command, retention setting, or tested cascade path.
 
 ## Install Impact
 
 - Admin navigation: adds package-owned Filament classes when registered.
-- Permissions: none declared in `capell.json`.
+- Permissions: `View:SocialFeedConnection`, `Create:SocialFeedConnection`, `Update:SocialFeedConnection`, `Delete:SocialFeedConnection`, `View:SocialFeedItem`.
 - Public routes: none detected in package route files.
 - Database changes: package migrations are declared.
 - Settings: no package settings declared.
-- Queues or schedules: optional hourly `capell:social-feeds:sync --all` scheduler is disabled by default and controlled by `capell-social-feeds.sync_schedule_enabled`; stale connected feeds are reported by health diagnostics after `capell-social-feeds.stale_sync_minutes`.
+- Queues or schedules: none detected in standard package paths.
 - Cache tags: `social-feeds`.
 - Commands: `capell:social-feeds:sync`.
 
@@ -72,6 +72,7 @@ Screenshot contract: `docs/screenshots.json`.
 
 - Run migrations before opening package resources or public routes.
 - Keep public Blade and cached HTML free of authoring markers, model IDs, permissions, signed editor URLs, and lazy database queries.
+- Run package commands from the host app; in this repository use `vendor/bin/pest` for package tests.
 - Keep `composer.json`, `composer.local.json`, `capell.json`, docs, screenshots, and tests aligned when the package surface changes.
 
 ## Troubleshooting
@@ -80,7 +81,7 @@ Screenshot contract: `docs/screenshots.json`.
 | --- | --- | --- | --- |
 | Package surface is missing after install | Provider or manifest is not loaded | Confirm `capell.json`, package `composer.json`, and provider registration | Reinstall the package, refresh Composer autoload, and clear host caches |
 | Admin screen or command fails on missing table | Package migrations have not run | Check the tables listed in `Data Model` | Run host migrations and rerun the focused package test |
-| Background work does not run | Queue worker or scheduled command is not active | Check package jobs, commands, host scheduler configuration, and stale-sync health diagnostics | Start the queue or scheduler, then run `capell:social-feeds:sync --all` |
+| Background work does not run | Queue worker or scheduled command is not active | Check package jobs, commands, and host scheduler configuration | Start the queue or scheduler, then run the focused command or package test |
 | Public output leaks unexpected state | Render data, cache variation, or authoring boundary has regressed | Check public Blade, cache tags, and public-output safety tests | Move data loading out of Blade and rerun the package public-output tests |
 
 ## Quick Start

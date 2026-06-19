@@ -119,29 +119,59 @@
         "description": "Product Studio provides a distinct theme definition, demo command, marketplace metadata, and public-safe Blade views for Northbound Studio.",
         "screenshots": [
             {
+                "path": "docs/assets/marketplace/extension-card.jpg",
+                "alt": "Product Studio marketplace card preview",
+                "caption": "Product Studio premium theme card"
+            },
+            {
                 "path": "docs/screenshots/product-studio-homepage.png",
-                "alt": "Product Studio homepage preview",
-                "caption": "Product Studio Homepage"
+                "alt": "Product Studio Homepage demo page screenshot",
+                "caption": "Product Studio Homepage page"
             },
             {
-                "path": "docs/screenshots/product-studio-landing.png",
-                "alt": "Product Studio landing page preview",
-                "caption": "Product Studio Landing page"
+                "path": "docs/screenshots/product-studio-directory.png",
+                "alt": "Product Studio Directory demo page screenshot",
+                "caption": "Product Studio Directory page"
             },
             {
-                "path": "docs/screenshots/product-studio-listing.png",
-                "alt": "Product Studio list page preview",
-                "caption": "Product Studio List page"
-            },
-            {
-                "path": "docs/screenshots/product-studio-search.png",
-                "alt": "Product Studio search results preview",
-                "caption": "Product Studio Search results"
+                "path": "docs/screenshots/product-studio-detail.png",
+                "alt": "Product Studio Detail demo page screenshot",
+                "caption": "Product Studio Detail page"
             },
             {
                 "path": "docs/screenshots/product-studio-contact.png",
-                "alt": "Product Studio contact form preview",
-                "caption": "Product Studio Contact form"
+                "alt": "Product Studio Contact demo page screenshot",
+                "caption": "Product Studio Contact page"
+            },
+            {
+                "path": "docs/screenshots/product-studio-empty.png",
+                "alt": "Product Studio Empty State demo page screenshot",
+                "caption": "Product Studio Empty State page"
+            },
+            {
+                "path": "docs/screenshots/product-studio-not-found.png",
+                "alt": "Product Studio 404 State demo page screenshot",
+                "caption": "Product Studio 404 State page"
+            },
+            {
+                "path": "docs/screenshots/product-studio-cta.png",
+                "alt": "Product Studio Conversion CTA demo page screenshot",
+                "caption": "Product Studio Conversion CTA page"
+            },
+            {
+                "path": "docs/screenshots/product-studio-case-studies.png",
+                "alt": "Product Studio Case Studies demo page screenshot",
+                "caption": "Product Studio Case Studies page"
+            },
+            {
+                "path": "docs/screenshots/product-studio-engagements.png",
+                "alt": "Product Studio Engagement Models demo page screenshot",
+                "caption": "Product Studio Engagement Models page"
+            },
+            {
+                "path": "docs/screenshots/product-studio-stack.png",
+                "alt": "Product Studio Tech Stack demo page screenshot",
+                "caption": "Product Studio Tech Stack page"
             }
         ],
         "categories": ["frontend", "themes"]

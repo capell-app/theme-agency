@@ -122,29 +122,59 @@
         "description": "Fitness & Wellness provides a distinct theme definition, demo command, marketplace metadata, and public-safe Blade views for Forge Fitness.",
         "screenshots": [
             {
+                "path": "docs/assets/marketplace/extension-card.jpg",
+                "alt": "Fitness Wellness marketplace card preview",
+                "caption": "Fitness Wellness premium theme card"
+            },
+            {
                 "path": "docs/screenshots/fitness-wellness-homepage.png",
-                "alt": "Fitness & Wellness homepage preview",
-                "caption": "Fitness & Wellness Homepage"
+                "alt": "Fitness Wellness Homepage demo page screenshot",
+                "caption": "Fitness Wellness Homepage"
             },
             {
-                "path": "docs/screenshots/fitness-wellness-landing.png",
-                "alt": "Fitness & Wellness landing page preview",
-                "caption": "Fitness & Wellness Landing page"
+                "path": "docs/screenshots/fitness-wellness-directory.png",
+                "alt": "Fitness Wellness Directory demo page screenshot",
+                "caption": "Fitness Wellness Directory page"
             },
             {
-                "path": "docs/screenshots/fitness-wellness-listing.png",
-                "alt": "Fitness & Wellness list page preview",
-                "caption": "Fitness & Wellness List page"
-            },
-            {
-                "path": "docs/screenshots/fitness-wellness-search.png",
-                "alt": "Fitness & Wellness search results preview",
-                "caption": "Fitness & Wellness Search results"
+                "path": "docs/screenshots/fitness-wellness-detail.png",
+                "alt": "Fitness Wellness Detail demo page screenshot",
+                "caption": "Fitness Wellness Detail page"
             },
             {
                 "path": "docs/screenshots/fitness-wellness-contact.png",
-                "alt": "Fitness & Wellness contact form preview",
-                "caption": "Fitness & Wellness Contact form"
+                "alt": "Fitness Wellness Contact demo page screenshot",
+                "caption": "Fitness Wellness Contact page"
+            },
+            {
+                "path": "docs/screenshots/fitness-wellness-empty.png",
+                "alt": "Fitness Wellness Empty State demo page screenshot",
+                "caption": "Fitness Wellness Empty State page"
+            },
+            {
+                "path": "docs/screenshots/fitness-wellness-not-found.png",
+                "alt": "Fitness Wellness 404 State demo page screenshot",
+                "caption": "Fitness Wellness 404 State page"
+            },
+            {
+                "path": "docs/screenshots/fitness-wellness-cta.png",
+                "alt": "Fitness Wellness Conversion CTA demo page screenshot",
+                "caption": "Fitness Wellness Conversion CTA page"
+            },
+            {
+                "path": "docs/screenshots/fitness-wellness-classes.png",
+                "alt": "Fitness Wellness Classes demo page screenshot",
+                "caption": "Fitness Wellness Classes page"
+            },
+            {
+                "path": "docs/screenshots/fitness-wellness-coaches.png",
+                "alt": "Fitness Wellness Coaches demo page screenshot",
+                "caption": "Fitness Wellness Coaches page"
+            },
+            {
+                "path": "docs/screenshots/fitness-wellness-membership.png",
+                "alt": "Fitness Wellness Membership demo page screenshot",
+                "caption": "Fitness Wellness Membership page"
             }
         ],
         "categories": ["frontend", "themes"]

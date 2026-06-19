@@ -262,17 +262,13 @@
             "auth": "public",
             "csrfExemptRoutes": [],
             "signedRoutes": [],
-            "tokenizedRoutes": [
-                "capell-publishing-studio.scheduler.ical"
-            ],
+            "tokenizedRoutes": ["capell-publishing-studio.scheduler.ical"],
             "webhookRoutes": [],
             "throttledRoutes": []
         },
         "sensitiveData": {
             "encryptedFields": [],
-            "hashedTokenFields": [
-                "publishing_scheduler_events.token_hash"
-            ],
+            "hashedTokenFields": ["publishing_scheduler_events.token_hash"],
             "redactedOutputClasses": [],
             "plaintextJustifications": [
                 "preview_links.token: Reviewed package field; not stored as a reusable secret by this package contract."

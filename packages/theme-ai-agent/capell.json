@@ -119,29 +119,59 @@
         "description": "AI Agent provides a distinct theme definition, demo command, marketplace metadata, and public-safe Blade views for Aria Agents.",
         "screenshots": [
             {
+                "path": "docs/assets/marketplace/extension-card.jpg",
+                "alt": "AI Agent marketplace card preview",
+                "caption": "AI Agent premium theme card"
+            },
+            {
                 "path": "docs/screenshots/ai-agent-homepage.png",
-                "alt": "AI Agent homepage preview",
-                "caption": "AI Agent Homepage"
+                "alt": "AI Agent Homepage demo page screenshot",
+                "caption": "AI Agent Homepage page"
             },
             {
-                "path": "docs/screenshots/ai-agent-landing.png",
-                "alt": "AI Agent landing page preview",
-                "caption": "AI Agent Landing page"
+                "path": "docs/screenshots/ai-agent-directory.png",
+                "alt": "AI Agent Directory demo page screenshot",
+                "caption": "AI Agent Directory page"
             },
             {
-                "path": "docs/screenshots/ai-agent-listing.png",
-                "alt": "AI Agent list page preview",
-                "caption": "AI Agent List page"
-            },
-            {
-                "path": "docs/screenshots/ai-agent-search.png",
-                "alt": "AI Agent search results preview",
-                "caption": "AI Agent Search results"
+                "path": "docs/screenshots/ai-agent-detail.png",
+                "alt": "AI Agent Detail demo page screenshot",
+                "caption": "AI Agent Detail page"
             },
             {
                 "path": "docs/screenshots/ai-agent-contact.png",
-                "alt": "AI Agent contact form preview",
-                "caption": "AI Agent Contact form"
+                "alt": "AI Agent Contact demo page screenshot",
+                "caption": "AI Agent Contact page"
+            },
+            {
+                "path": "docs/screenshots/ai-agent-empty.png",
+                "alt": "AI Agent Empty State demo page screenshot",
+                "caption": "AI Agent Empty State page"
+            },
+            {
+                "path": "docs/screenshots/ai-agent-not-found.png",
+                "alt": "AI Agent 404 State demo page screenshot",
+                "caption": "AI Agent 404 State page"
+            },
+            {
+                "path": "docs/screenshots/ai-agent-cta.png",
+                "alt": "AI Agent Conversion CTA demo page screenshot",
+                "caption": "AI Agent Conversion CTA page"
+            },
+            {
+                "path": "docs/screenshots/ai-agent-use-cases.png",
+                "alt": "AI Agent Use Cases demo page screenshot",
+                "caption": "AI Agent Use Cases page"
+            },
+            {
+                "path": "docs/screenshots/ai-agent-integrations.png",
+                "alt": "AI Agent Integrations demo page screenshot",
+                "caption": "AI Agent Integrations page"
+            },
+            {
+                "path": "docs/screenshots/ai-agent-roi.png",
+                "alt": "AI Agent ROI Calculator demo page screenshot",
+                "caption": "AI Agent ROI Calculator page"
             }
         ],
         "categories": ["frontend", "themes"]

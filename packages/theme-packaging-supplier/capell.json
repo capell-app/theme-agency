@@ -122,29 +122,59 @@
         "description": "Packaging Supplier provides a distinct theme definition, demo command, marketplace metadata, and public-safe Blade views for Verda Packaging.",
         "screenshots": [
             {
+                "path": "docs/assets/marketplace/extension-card.jpg",
+                "alt": "Packaging Supplier marketplace card preview",
+                "caption": "Packaging Supplier premium theme card"
+            },
+            {
                 "path": "docs/screenshots/packaging-supplier-homepage.png",
-                "alt": "Packaging Supplier homepage preview",
-                "caption": "Packaging Supplier Homepage"
+                "alt": "Packaging Supplier Homepage demo page screenshot",
+                "caption": "Packaging Supplier Homepage page"
             },
             {
-                "path": "docs/screenshots/packaging-supplier-landing.png",
-                "alt": "Packaging Supplier landing page preview",
-                "caption": "Packaging Supplier Landing page"
+                "path": "docs/screenshots/packaging-supplier-directory.png",
+                "alt": "Packaging Supplier Directory demo page screenshot",
+                "caption": "Packaging Supplier Directory page"
             },
             {
-                "path": "docs/screenshots/packaging-supplier-listing.png",
-                "alt": "Packaging Supplier list page preview",
-                "caption": "Packaging Supplier List page"
-            },
-            {
-                "path": "docs/screenshots/packaging-supplier-search.png",
-                "alt": "Packaging Supplier search results preview",
-                "caption": "Packaging Supplier Search results"
+                "path": "docs/screenshots/packaging-supplier-detail.png",
+                "alt": "Packaging Supplier Detail demo page screenshot",
+                "caption": "Packaging Supplier Detail page"
             },
             {
                 "path": "docs/screenshots/packaging-supplier-contact.png",
-                "alt": "Packaging Supplier contact form preview",
-                "caption": "Packaging Supplier Contact form"
+                "alt": "Packaging Supplier Contact demo page screenshot",
+                "caption": "Packaging Supplier Contact page"
+            },
+            {
+                "path": "docs/screenshots/packaging-supplier-empty.png",
+                "alt": "Packaging Supplier Empty State demo page screenshot",
+                "caption": "Packaging Supplier Empty State page"
+            },
+            {
+                "path": "docs/screenshots/packaging-supplier-not-found.png",
+                "alt": "Packaging Supplier 404 State demo page screenshot",
+                "caption": "Packaging Supplier 404 State page"
+            },
+            {
+                "path": "docs/screenshots/packaging-supplier-cta.png",
+                "alt": "Packaging Supplier Conversion CTA demo page screenshot",
+                "caption": "Packaging Supplier Conversion CTA page"
+            },
+            {
+                "path": "docs/screenshots/packaging-supplier-products.png",
+                "alt": "Packaging Supplier Product Range demo page screenshot",
+                "caption": "Packaging Supplier Product Range page"
+            },
+            {
+                "path": "docs/screenshots/packaging-supplier-sustainability.png",
+                "alt": "Packaging Supplier Sustainability demo page screenshot",
+                "caption": "Packaging Supplier Sustainability page"
+            },
+            {
+                "path": "docs/screenshots/packaging-supplier-samples.png",
+                "alt": "Packaging Supplier Sample Request demo page screenshot",
+                "caption": "Packaging Supplier Sample Request page"
             }
         ],
         "categories": ["frontend", "themes"]

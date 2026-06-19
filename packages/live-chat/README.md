@@ -29,8 +29,8 @@ Status details:
 
 Screenshot contract: `docs/screenshots.json`.
 
-- live-chat-widget (optional).
-- live-chat-conversations-admin (optional).
+- Live Chat widget (frontend, required).
+- Live Chat conversation inbox (admin, required).
 
 ## Technical Shape
 
@@ -41,16 +41,12 @@ Screenshot contract: `docs/screenshots.json`.
 - Filament classes: `AvailabilityWindowResource`, `CreateAvailabilityWindow`, `EditAvailabilityWindow`, `ListAvailabilityWindows`, `ScopesLiveChatResourcesToSites`, `ConversationResource`, `EditConversation`, `ListConversations`, `EscalationRuleResource`, `CreateEscalationRule`, `EditEscalationRule`, `ListEscalationRules`, `and 8 more`.
 - Route files: `packages/live-chat/routes/web.php`.
 - Policies: `AbstractLiveChatResourcePolicy`, `LiveChatAIRunPolicy`, `LiveChatAvailabilityExceptionPolicy`, `LiveChatAvailabilityWindowPolicy`, `LiveChatConversationPolicy`, `LiveChatEscalationRulePolicy`, `LiveChatInstallationPolicy`, `LiveChatKnowledgeDocumentPolicy`, `LiveChatKnowledgeGapPolicy`, `LiveChatKnowledgeSourcePolicy`.
-- Actions: `ApplyLiveChatCorsHeadersAction`, `BuildLiveChatAnalyticsAction`, `BuildLiveChatOperatorStateAction`, `BuildLiveChatSuggestedReplyAction`, `BuildLiveChatTranscriptAction`, `BuildLiveChatWidgetConfigAction`, `CloseLiveChatConversationAction`, `DetectLiveChatIntentAction`, `DetermineLiveChatEscalationAction`, `GenerateLiveChatSummaryAction`, `GuardLiveChatInstallationOriginAction`, `GuardLiveChatSameSiteRequestAction`, `and 16 more`.
+- Actions: `ApplyLiveChatCorsHeadersAction`, `BuildLiveChatAnalyticsAction`, `BuildLiveChatOperatorStateAction`, `BuildLiveChatSuggestedReplyAction`, `BuildLiveChatTranscriptAction`, `BuildLiveChatWidgetConfigAction`, `CloseLiveChatConversationAction`, `DeleteLiveChatAttachmentsAction`, `DetectLiveChatIntentAction`, `DetermineLiveChatEscalationAction`, `GenerateLiveChatSummaryAction`, `GuardLiveChatInstallationOriginAction`, `and 17 more`.
 - Data objects: `IncomingLiveChatMessageData`, `LiveChatAIRunData`, `LiveChatAvailabilityData`, `LiveChatEscalationDecisionData`, `LiveChatKnowledgeDocumentData`, `LiveChatKnowledgeSearchResultData`, `LiveChatResponseData`, `LiveChatVisitorData`, `LiveChatWidgetConfigData`.
 - Manifest contributions: `admin-resource: Capell\LiveChat\Manifest\LiveChatAdminResourcesContribution`, `agent-capability: Capell\LiveChat\Manifest\LiveChatAgentBridgeCapabilitiesContribution`, `frontend-component: Capell\LiveChat\Manifest\LiveChatWidgetContribution`, `health-check: Capell\LiveChat\Manifest\LiveChatHealthContribution`, `model: Capell\LiveChat\Manifest\LiveChatModelsContribution`, `route: Capell\LiveChat\Manifest\LiveChatFrontendRoutesContribution`.
 - Health checks: `Capell\LiveChat\Health\LiveChatHealthCheck`.
 - Blade views: `packages/live-chat/resources/views/script.blade.php`, `packages/live-chat/resources/views/widget.blade.php`.
 - Cache tags: `live-chat`.
-
-## AI And Agent Contracts
-
-Live Chat supports AI Orchestrator for message classification, approved-source answers, summaries, suggested replies, lead-detail extraction, and knowledge-gap detection. When Agent Bridge is installed, Live Chat contributes site-scoped capabilities for listing and inspecting conversations, previewing summaries/replies/escalations, and confirmed escalation or close operations. Mutating agent operations require preview confirmation and write audit events; read operations stay scoped to `capell.live-chat.read`.
 
 ## Data Model
 
@@ -65,19 +61,11 @@ Live Chat supports AI Orchestrator for message classification, approved-source a
 - Admin navigation: adds package-owned Filament classes when registered.
 - Permissions: `View:LiveChatInstallation`, `Create:LiveChatInstallation`, `Update:LiveChatInstallation`, `Delete:LiveChatInstallation`, `View:LiveChatAIRun`, `View:LiveChatKnowledgeDocument`, `Create:LiveChatKnowledgeDocument`, `Update:LiveChatKnowledgeDocument`, `Delete:LiveChatKnowledgeDocument`, `View:LiveChatKnowledgeGap`, `Update:LiveChatKnowledgeGap`, `View:LiveChatConversation`, `Update:LiveChatConversation`, `View:LiveChatAvailabilityWindow`, `Create:LiveChatAvailabilityWindow`, `Update:LiveChatAvailabilityWindow`, `Delete:LiveChatAvailabilityWindow`, `View:LiveChatEscalationRule`, `Create:LiveChatEscalationRule`, `Update:LiveChatEscalationRule`, `Delete:LiveChatEscalationRule`, `View:LiveChatKnowledgeSource`, `Create:LiveChatKnowledgeSource`, `Update:LiveChatKnowledgeSource`, `Delete:LiveChatKnowledgeSource`.
 - Public routes: route files exist and must be reviewed before public enablement.
-- Agent capabilities: declared for optional Agent Bridge integration; confirmed escalation and close operations require preview confirmation.
 - Database changes: package migrations are declared.
 - Settings: no package settings declared.
 - Queues or schedules: none detected in standard package paths.
 - Cache tags: `live-chat`.
 - Commands: none declared.
-
-## Operational Safeguards
-
-- Public conversation and message writes run conversation/message/assistant persistence inside a transaction.
-- If the assistant responder fails, Live Chat records a fallback assistant message, marks the conversation as waiting for a human, and preserves the visitor flow instead of leaving a half-written chat.
-- Contacts sync runs after the chat write and logs failures without breaking the public response.
-- Uploaded attachment files are deleted when downstream conversation/message creation fails after storage.
 
 ## Common Pitfalls
 

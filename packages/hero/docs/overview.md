@@ -32,26 +32,6 @@ Screenshot contract: `screenshots.json`.
 - Insights consent priming capture (frontend, optional).
 - Hero home widget rendered on a public page (frontend, required).
 
-## Screenshot Evidence
-
-These captures are the package-owned visual contract for the admin pages, public pages, actions, workflows, and feature surfaces described above. Keep this section aligned with `docs/screenshots.json` whenever the package surface changes.
-
-### Insights consent priming capture
-
-![Insights consent priming capture](screenshots/hero-consent-prime.png)
-
-- Surface: frontend · Target: frontend-url.
-- Documents: The screenshot runner sets anonymous visitor consent state so Hero captures do not include analytics consent chrome.
-- Capture notes: Runner-only warm-up capture that dismisses the Insights consent banner before marketplace-facing Hero screenshots are taken.
-
-### Hero home widget rendered on a public page
-
-![Hero home widget rendered on a public page](screenshots/hero-home-widget.png)
-
-- Surface: frontend · Target: frontend-url.
-- Documents: A visitor sees the seeded hero widget rendered through Layout Builder and the active frontend theme.
-- Capture notes: Runs capell:hero-setup --force before capture and waits for the public home page to render the Hero widget.
-
 ## Technical Shape
 
 - Service providers: `Capell\Hero\Providers\HeroServiceProvider`.

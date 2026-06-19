@@ -119,29 +119,59 @@
         "description": "Crypto DeFi provides a distinct theme definition, demo command, marketplace metadata, and public-safe Blade views for Helix Protocol.",
         "screenshots": [
             {
+                "path": "docs/assets/marketplace/extension-card.jpg",
+                "alt": "Crypto DeFi marketplace card preview",
+                "caption": "Crypto DeFi premium theme card"
+            },
+            {
                 "path": "docs/screenshots/crypto-defi-homepage.png",
-                "alt": "Crypto DeFi homepage preview",
-                "caption": "Crypto DeFi Homepage"
+                "alt": "Crypto DeFi Homepage demo page screenshot",
+                "caption": "Crypto DeFi Homepage page"
             },
             {
-                "path": "docs/screenshots/crypto-defi-landing.png",
-                "alt": "Crypto DeFi landing page preview",
-                "caption": "Crypto DeFi Landing page"
+                "path": "docs/screenshots/crypto-defi-directory.png",
+                "alt": "Crypto DeFi Directory demo page screenshot",
+                "caption": "Crypto DeFi Directory page"
             },
             {
-                "path": "docs/screenshots/crypto-defi-listing.png",
-                "alt": "Crypto DeFi list page preview",
-                "caption": "Crypto DeFi List page"
-            },
-            {
-                "path": "docs/screenshots/crypto-defi-search.png",
-                "alt": "Crypto DeFi search results preview",
-                "caption": "Crypto DeFi Search results"
+                "path": "docs/screenshots/crypto-defi-detail.png",
+                "alt": "Crypto DeFi Detail demo page screenshot",
+                "caption": "Crypto DeFi Detail page"
             },
             {
                 "path": "docs/screenshots/crypto-defi-contact.png",
-                "alt": "Crypto DeFi contact form preview",
-                "caption": "Crypto DeFi Contact form"
+                "alt": "Crypto DeFi Contact demo page screenshot",
+                "caption": "Crypto DeFi Contact page"
+            },
+            {
+                "path": "docs/screenshots/crypto-defi-empty.png",
+                "alt": "Crypto DeFi Empty State demo page screenshot",
+                "caption": "Crypto DeFi Empty State page"
+            },
+            {
+                "path": "docs/screenshots/crypto-defi-not-found.png",
+                "alt": "Crypto DeFi 404 State demo page screenshot",
+                "caption": "Crypto DeFi 404 State page"
+            },
+            {
+                "path": "docs/screenshots/crypto-defi-cta.png",
+                "alt": "Crypto DeFi Conversion CTA demo page screenshot",
+                "caption": "Crypto DeFi Conversion CTA page"
+            },
+            {
+                "path": "docs/screenshots/crypto-defi-markets.png",
+                "alt": "Crypto DeFi Markets demo page screenshot",
+                "caption": "Crypto DeFi Markets page"
+            },
+            {
+                "path": "docs/screenshots/crypto-defi-how-it-works.png",
+                "alt": "Crypto DeFi How It Works demo page screenshot",
+                "caption": "Crypto DeFi How It Works page"
+            },
+            {
+                "path": "docs/screenshots/crypto-defi-audit.png",
+                "alt": "Crypto DeFi Audit & Risk demo page screenshot",
+                "caption": "Crypto DeFi Audit & Risk page"
             }
         ],
         "categories": ["frontend", "themes"]

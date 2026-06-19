@@ -23,18 +23,7 @@ Status details:
 
 **For developers:** The package gives developers package-owned service providers, Actions, Data objects, and Laravel routes instead of pushing this behaviour into core or application code.
 
-**For teams:** Agent Delivery gives AI agents, RAG pipelines, and answer engines a controlled way to consume published site content without scraping pages or exposing anything from the admin workspace.
-
-## Public API Surface
-
-Agent Delivery contributes four versioned `GET` JSON endpoints under `/api/capell/agent/v1`. They are public by default, throttled with `throttle:capell-agent-delivery`, and only return discovery metadata or content that Capell already resolves as published public output for the request host and locale.
-
-- `capell-agent-delivery.discovery`
-- `capell-agent-delivery.pages.index`
-- `capell-agent-delivery.pages.manifest`
-- `capell-agent-delivery.pages.chunks`
-
-The endpoints expose cache headers, ETags, package cache tags, and chunk budget diagnostics so API consumers can poll responsibly and spot overlarge chunk output. They do not expose admin URLs, editor state, model IDs, signed preview links, permissions, field paths, prompts, or unpublished content.
+**For teams:** Serve your published Capell pages to AI agents and answer engines as clean, public-safe JSON manifests and RAG-ready semantic chunks - no scraping, no admin leakage.
 
 ## Screens And Workflow
 
@@ -43,36 +32,14 @@ Screenshot contract: `screenshots.json`.
 - Public page manifest JSON response (frontend, required).
 - Public page chunks JSON response (frontend, required).
 
-These JSON captures prove endpoint behavior for the deployment screenshot runner. They should not be promoted as Marketplace screenshots because raw response bodies do not show a Capell buyer workflow. Keep Marketplace media empty until a styled endpoint explorer, admin page, or comparable visual surface exists.
-
-## Screenshot Evidence
-
-These captures are the package-owned visual contract for the admin pages, public pages, actions, workflows, and feature surfaces described above. Keep this section aligned with `docs/screenshots.json` whenever the package surface changes.
-
-### Public page manifest JSON response
-
-![Public page manifest JSON response](screenshots/page-manifest-json-response.png)
-
-- Surface: frontend · Target: capell-agent-delivery.pages.manifest.
-- Documents: A search assistant reads a stable public page manifest without needing admin access.
-- Capture notes: Requires Agent Delivery installed and a seeded published page. Capture the JSON body for `?url=/path` and verify it only includes already-public page content.
-
-### Public page chunks JSON response
-
-![Public page chunks JSON response](screenshots/page-chunks-json-response.png)
-
-- Surface: frontend · Target: capell-agent-delivery.pages.chunks.
-- Documents: An agent consumes stable semantic chunks for a published Capell page.
-- Capture notes: Requires Agent Delivery installed and a seeded published page with enough text to produce chunk records. Capture the JSON body for `?url=/path`.
-
 ## Technical Shape
 
 - Service providers: `Capell\AgentDelivery\Providers\AgentDeliveryServiceProvider`.
 - Config files: `packages/agent-delivery/config/capell-agent-delivery.php`.
 - Route files: `packages/agent-delivery/routes/agent-delivery.php`.
-- Actions: `BuildAgentDeliveryChunksAction`, `BuildAgentDeliveryPageAction`, `BuildAgentDeliveryPageIndexAction`, `ResolveAgentDeliveryPageAction`.
+- Actions: `AnalyzeAgentDeliveryChunkBudgetAction`, `BuildAgentDeliveryChunksAction`, `BuildAgentDeliveryPageAction`, `BuildAgentDeliveryPageIndexAction`, `ResolveAgentDeliveryPageAction`.
 - Data objects: `AgentDeliveryChunkBudgetData`, `AgentDeliveryChunkData`, `AgentDeliveryPageData`, `AgentDeliveryPageIndexEntryData`, `ResolvedAgentDeliveryPageData`.
-- Manifest contributions: `agent-capability: Capell\AgentDelivery\Manifest\AgentDeliveryContractsContribution`, `health-check: Capell\AgentDelivery\Health\AgentDeliveryHealthCheck`, `route/public-api-endpoint: Capell\AgentDelivery\Manifest\AgentDeliveryRoutesContribution`.
+- Manifest contributions: `agent-capability: Capell\AgentDelivery\Manifest\AgentDeliveryContractsContribution`, `health-check: Capell\AgentDelivery\Health\AgentDeliveryHealthCheck`, `route: Capell\AgentDelivery\Manifest\AgentDeliveryRoutesContribution`.
 - Health checks: `Capell\AgentDelivery\Health\AgentDeliveryHealthCheck`.
 - Cache tags: `agent-delivery`.
 
@@ -86,8 +53,7 @@ Docs gap: document extension points here if the package delegates persistence to
 
 - Admin navigation: no admin surface declared.
 - Permissions: none declared in `capell.json`.
-- Public routes: versioned public JSON endpoints are declared in `capell.json`, throttled by default, and limited to already-published page content.
-- Chunk budgets: `chunk_target_words`, `chunk_overlap_words`, and `chunk_max_recommended_chunks` control default chunking and the diagnostics returned in the chunks response.
+- Public routes: route files exist and must be reviewed before public enablement.
 - Database changes: no package migrations declared.
 - Settings: no package settings declared.
 - Queues or schedules: none detected in standard package paths.
@@ -98,7 +64,6 @@ Docs gap: document extension points here if the package delegates persistence to
 
 - Review route middleware, throttling, signed URLs, and public-output safety before exposing routes.
 - Keep public Blade and cached HTML free of authoring markers, model IDs, permissions, signed editor URLs, and lazy database queries.
-- Keep JSON captures as runner evidence; do not use them as buyer-facing Marketplace media.
 - Keep `composer.json`, `composer.local.json`, `capell.json`, docs, screenshots, and tests aligned when the package surface changes.
 
 ## Troubleshooting

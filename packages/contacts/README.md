@@ -41,7 +41,7 @@ Screenshot contract: `docs/screenshots.json`.
 - Filament classes: `ContactActivityResource`, `ListContactActivities`, `ContactResource`, `ListContacts`, `ViewContact`, `LeadResource`, `ListLeads`, `OrganisationResource`, `ListOrganisations`, `ContactsOverviewStatsWidget`.
 - Policies: `AbstractContactsResourcePolicy`, `ContactActivityPolicy`, `ContactPolicy`, `LeadPolicy`, `OrganisationPolicy`.
 - Listeners: `RunsQueuedContactSourceSync`, `SyncContactFromAccessGateRegistration`, `SyncContactFromCampaignConversion`, `SyncContactFromComment`, `SyncContactFromEventRegistration`, `SyncContactFromFormSubmission`, `SyncContactFromShopifyCustomer`.
-- Actions: `AnonymizeContactAction`, `AnonymizeContactWithAuditAction`, `AuditContactPrivacyExportAction`, `BuildContactPrivacyExportAction`, `BuildContactsOverviewStatsAction`, `FindOrCreateContactAction`, `MergeContactsAction`, `RecordContactActivityAction`, `SyncAccessGateRegistrationContactAction`, `SyncCampaignConversionContactAction`, `SyncCommentContactAction`, `SyncContactSourceRecordAction`, `and 5 more`.
+- Actions: `AnonymizeContactAction`, `AnonymizeContactWithAuditAction`, `AuditContactPrivacyExportAction`, `BuildContactPrivacyExportAction`, `BuildContactsOverviewStatsAction`, `CoercesContactSourceValues`, `FindOrCreateContactAction`, `MergeContactsAction`, `RecordContactActivityAction`, `SyncAccessGateRegistrationContactAction`, `SyncCampaignConversionContactAction`, `SyncCommentContactAction`, `and 6 more`.
 - Data objects: `ContactActivityData`, `ContactIdentityData`, `ContactSourceRecordData`, `ContactSourceSyncResultData`.
 - Command signatures: `capell-contacts:privacy`.
 - Console command classes: `ContactPrivacyCommand`.

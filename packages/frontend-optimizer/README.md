@@ -47,6 +47,7 @@ Screenshot contract: `docs/screenshots.json`.
 - Jobs: `GenerateCriticalCssJob`.
 - Command signatures: `capell:frontend-optimizer:prune-profiles`.
 - Console command classes: `PruneRenderProfilesCommand`.
+- Manifest contributions: `configurator: Capell\FrontendOptimizer\Manifest\FrontendOptimizerConfiguratorContribution`, `console-command: Capell\FrontendOptimizer\Manifest\FrontendOptimizerConsoleCommandsContribution`, `health-check: Capell\FrontendOptimizer\Manifest\FrontendOptimizerHealthContribution`, `model: Capell\FrontendOptimizer\Manifest\FrontendOptimizerModelsContribution`, `setting: Capell\FrontendOptimizer\Manifest\FrontendOptimizerSettingsContribution`.
 - Health checks: `Capell\FrontendOptimizer\Health\FrontendOptimizerHealthCheck`.
 - Cache tags: `frontend-optimizer`.
 

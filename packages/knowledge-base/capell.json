@@ -109,20 +109,13 @@
     "security": {
         "riskTier": "standard",
         "publicSurface": {
-            "routeNames": [
-                "ai-output",
-                "article",
-                "article.feedback",
-                "index"
-            ],
+            "routeNames": ["ai-output", "article", "article.feedback", "index"],
             "auth": "public",
             "csrfExemptRoutes": [],
             "signedRoutes": [],
             "tokenizedRoutes": [],
             "webhookRoutes": [],
-            "throttledRoutes": [
-                "article.feedback"
-            ]
+            "throttledRoutes": ["article.feedback"]
         },
         "sensitiveData": {
             "encryptedFields": [],

@@ -62,15 +62,11 @@
     "security": {
         "riskTier": "standard",
         "publicSurface": {
-            "routeNames": [
-                "capell-filament-peek.preview"
-            ],
+            "routeNames": ["capell-filament-peek.preview"],
             "auth": "public",
             "csrfExemptRoutes": [],
             "signedRoutes": [],
-            "tokenizedRoutes": [
-                "capell-filament-peek.preview"
-            ],
+            "tokenizedRoutes": ["capell-filament-peek.preview"],
             "webhookRoutes": [],
             "throttledRoutes": []
         },

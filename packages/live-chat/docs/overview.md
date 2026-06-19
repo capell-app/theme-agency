@@ -29,28 +29,8 @@ Status details:
 
 Screenshot contract: `screenshots.json`.
 
-- live-chat-widget (optional).
-- live-chat-conversations-admin (optional).
-
-## Screenshot Evidence
-
-These captures are the package-owned visual contract for the admin pages, public pages, actions, workflows, and feature surfaces described above. Keep this section aligned with `docs/screenshots.json` whenever the package surface changes.
-
-### Live Chat widget
-
-![Live Chat widget](screenshots/live-chat-widget.png)
-
-- Surface: frontend · Target: live-chat-widget.
-- Documents: A growth team reviews the public chat widget before enabling live visitor conversations.
-- Capture notes: Committed package-rendered widget proof captured from the Live Chat widget script and seeded config.
-
-### Live Chat conversation inbox
-
-![Live Chat conversation inbox](screenshots/live-chat-conversations-admin.png)
-
-- Surface: admin · Target: conversation-inbox-proof.
-- Documents: An operator reviews incoming conversations, handoff state, and CRM context.
-- Capture notes: Committed data-backed operator inbox proof for conversation, handoff, and CRM context review.
+- Live Chat widget (frontend, required).
+- Live Chat conversation inbox (admin, required).
 
 ## Technical Shape
 
@@ -61,9 +41,9 @@ These captures are the package-owned visual contract for the admin pages, public
 - Filament classes: `AvailabilityWindowResource`, `CreateAvailabilityWindow`, `EditAvailabilityWindow`, `ListAvailabilityWindows`, `ScopesLiveChatResourcesToSites`, `ConversationResource`, `EditConversation`, `ListConversations`, `EscalationRuleResource`, `CreateEscalationRule`, `EditEscalationRule`, `ListEscalationRules`, `and 8 more`.
 - Route files: `packages/live-chat/routes/web.php`.
 - Policies: `AbstractLiveChatResourcePolicy`, `LiveChatAIRunPolicy`, `LiveChatAvailabilityExceptionPolicy`, `LiveChatAvailabilityWindowPolicy`, `LiveChatConversationPolicy`, `LiveChatEscalationRulePolicy`, `LiveChatInstallationPolicy`, `LiveChatKnowledgeDocumentPolicy`, `LiveChatKnowledgeGapPolicy`, `LiveChatKnowledgeSourcePolicy`.
-- Actions: `ApplyLiveChatCorsHeadersAction`, `BuildLiveChatAnalyticsAction`, `BuildLiveChatOperatorStateAction`, `BuildLiveChatSuggestedReplyAction`, `BuildLiveChatTranscriptAction`, `BuildLiveChatWidgetConfigAction`, `CloseLiveChatConversationAction`, `DetectLiveChatIntentAction`, `DetermineLiveChatEscalationAction`, `GenerateLiveChatSummaryAction`, `GuardLiveChatInstallationOriginAction`, `GuardLiveChatSameSiteRequestAction`, `and 16 more`.
+- Actions: `ApplyLiveChatCorsHeadersAction`, `BuildLiveChatAnalyticsAction`, `BuildLiveChatOperatorStateAction`, `BuildLiveChatSuggestedReplyAction`, `BuildLiveChatTranscriptAction`, `BuildLiveChatWidgetConfigAction`, `CloseLiveChatConversationAction`, `DeleteLiveChatAttachmentsAction`, `DetectLiveChatIntentAction`, `DetermineLiveChatEscalationAction`, `GenerateLiveChatSummaryAction`, `GuardLiveChatInstallationOriginAction`, `and 17 more`.
 - Data objects: `IncomingLiveChatMessageData`, `LiveChatAIRunData`, `LiveChatAvailabilityData`, `LiveChatEscalationDecisionData`, `LiveChatKnowledgeDocumentData`, `LiveChatKnowledgeSearchResultData`, `LiveChatResponseData`, `LiveChatVisitorData`, `LiveChatWidgetConfigData`.
-- Manifest contributions: `admin-resource: Capell\LiveChat\Manifest\LiveChatAdminResourcesContribution`, `frontend-component: Capell\LiveChat\Manifest\LiveChatWidgetContribution`, `health-check: Capell\LiveChat\Manifest\LiveChatHealthContribution`, `model: Capell\LiveChat\Manifest\LiveChatModelsContribution`, `route: Capell\LiveChat\Manifest\LiveChatFrontendRoutesContribution`.
+- Manifest contributions: `admin-resource: Capell\LiveChat\Manifest\LiveChatAdminResourcesContribution`, `agent-capability: Capell\LiveChat\Manifest\LiveChatAgentBridgeCapabilitiesContribution`, `frontend-component: Capell\LiveChat\Manifest\LiveChatWidgetContribution`, `health-check: Capell\LiveChat\Manifest\LiveChatHealthContribution`, `model: Capell\LiveChat\Manifest\LiveChatModelsContribution`, `route: Capell\LiveChat\Manifest\LiveChatFrontendRoutesContribution`.
 - Health checks: `Capell\LiveChat\Health\LiveChatHealthCheck`.
 - Blade views: `packages/live-chat/resources/views/script.blade.php`, `packages/live-chat/resources/views/widget.blade.php`.
 - Cache tags: `live-chat`.
@@ -86,13 +66,6 @@ These captures are the package-owned visual contract for the admin pages, public
 - Queues or schedules: none detected in standard package paths.
 - Cache tags: `live-chat`.
 - Commands: none declared.
-
-## Operational Safeguards
-
-- Public conversation and message writes run conversation/message/assistant persistence inside a transaction.
-- If the assistant responder fails, Live Chat records a fallback assistant message, marks the conversation as waiting for a human, and preserves the visitor flow instead of leaving a half-written chat.
-- Contacts sync runs after the chat write and logs failures without breaking the public response.
-- Uploaded attachment files are deleted when downstream conversation/message creation fails after storage.
 
 ## Common Pitfalls
 

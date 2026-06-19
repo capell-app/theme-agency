@@ -122,29 +122,59 @@
         "description": "Creator Newsletter provides a distinct theme definition, demo command, marketplace metadata, and public-safe Blade views for The Long Game.",
         "screenshots": [
             {
+                "path": "docs/assets/marketplace/extension-card.jpg",
+                "alt": "Creator Newsletter marketplace card preview",
+                "caption": "Creator Newsletter premium theme card"
+            },
+            {
                 "path": "docs/screenshots/creator-newsletter-homepage.png",
-                "alt": "Creator Newsletter homepage preview",
-                "caption": "Creator Newsletter Homepage"
+                "alt": "Creator Newsletter Homepage demo page screenshot",
+                "caption": "Creator Newsletter Homepage page"
             },
             {
-                "path": "docs/screenshots/creator-newsletter-landing.png",
-                "alt": "Creator Newsletter landing page preview",
-                "caption": "Creator Newsletter Landing page"
+                "path": "docs/screenshots/creator-newsletter-directory.png",
+                "alt": "Creator Newsletter Directory demo page screenshot",
+                "caption": "Creator Newsletter Directory page"
             },
             {
-                "path": "docs/screenshots/creator-newsletter-listing.png",
-                "alt": "Creator Newsletter list page preview",
-                "caption": "Creator Newsletter List page"
-            },
-            {
-                "path": "docs/screenshots/creator-newsletter-search.png",
-                "alt": "Creator Newsletter search results preview",
-                "caption": "Creator Newsletter Search results"
+                "path": "docs/screenshots/creator-newsletter-detail.png",
+                "alt": "Creator Newsletter Detail demo page screenshot",
+                "caption": "Creator Newsletter Detail page"
             },
             {
                 "path": "docs/screenshots/creator-newsletter-contact.png",
-                "alt": "Creator Newsletter contact form preview",
-                "caption": "Creator Newsletter Contact form"
+                "alt": "Creator Newsletter Contact demo page screenshot",
+                "caption": "Creator Newsletter Contact page"
+            },
+            {
+                "path": "docs/screenshots/creator-newsletter-empty.png",
+                "alt": "Creator Newsletter Empty State demo page screenshot",
+                "caption": "Creator Newsletter Empty State page"
+            },
+            {
+                "path": "docs/screenshots/creator-newsletter-not-found.png",
+                "alt": "Creator Newsletter 404 State demo page screenshot",
+                "caption": "Creator Newsletter 404 State page"
+            },
+            {
+                "path": "docs/screenshots/creator-newsletter-cta.png",
+                "alt": "Creator Newsletter Conversion CTA demo page screenshot",
+                "caption": "Creator Newsletter Conversion CTA page"
+            },
+            {
+                "path": "docs/screenshots/creator-newsletter-archive.png",
+                "alt": "Creator Newsletter Archive demo page screenshot",
+                "caption": "Creator Newsletter Archive page"
+            },
+            {
+                "path": "docs/screenshots/creator-newsletter-author.png",
+                "alt": "Creator Newsletter Author demo page screenshot",
+                "caption": "Creator Newsletter Author page"
+            },
+            {
+                "path": "docs/screenshots/creator-newsletter-subscribe.png",
+                "alt": "Creator Newsletter Subscribe demo page screenshot",
+                "caption": "Creator Newsletter Subscribe page"
             }
         ],
         "categories": ["frontend", "themes"]

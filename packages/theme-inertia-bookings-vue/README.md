@@ -6,7 +6,7 @@
 
 Theme Inertia Bookings Vue is an **Available**, **No schema impact** Capell plugin in the **Capell Themes** product group. It ships as `capell-app/theme-inertia-bookings-vue` and extends these surfaces: frontend.
 
-Vue component pack for the Inertia Bookings theme, including the booking request form, page renderer, and booking-focused widget components.
+Vue component pack for Theme Inertia Bookings.
 
 After install, the package affects public rendering, public routes, or frontend runtime behaviour.
 
@@ -21,9 +21,9 @@ Status details:
 
 ## Why It Matters
 
-**For developers:** The package supplies the Vue build entrypoint and component map for Capell's booking-specific Inertia contracts. The base `theme-inertia-bookings` package owns the renderer binding, and the generic `inertia-vue-adapter` provides the Vue adapter this component pack builds on.
+**For developers:** The package gives developers package-owned service providers instead of pushing this behaviour into core or application code.
 
-**For teams:** Vue sites can install the booking theme without rebuilding the public booking journey from scratch. The request form renders accessible validation errors, loading states for deferred slots, and the same server-owned booking props used by the base theme.
+**For teams:** Vue components for Theme Inertia Bookings.
 
 ## Screens And Workflow
 
@@ -41,12 +41,12 @@ Screenshot contract: `docs/screenshots.json`.
 - Manifest contributions: `frontend-component: Capell\ThemeStudio\InertiaBookingsVue\Manifest\InertiaBookingsVueComponentContribution`.
 - Health checks: `Capell\ThemeStudio\InertiaBookingsVue\Health\InertiaBookingsVueHealthCheck`.
 - Cache tags: `theme-inertia-bookings-vue`.
-- Vue components: `Capell/Page` fallback, `Capell/Bookings/Request`, and booking widget renderers for Content, Image, and Title.
-- Raw HTML contract: `Page.vue` and `Content.vue` use `v-html` only for server-provided portable HTML props (`page.content` and `widget.data.content`). Those props must already be sanitized by the Capell render pipeline and must not contain authoring metadata, admin URLs, signed editor URLs, model IDs, field paths, permissions, or package internals.
 
 ## Data Model
 
-This package has no schema impact. It does not declare package-owned migrations or required tables. Booking records, validation, slot availability, and request props are owned by the Bookings package and the base Inertia Bookings theme.
+This package has no schema impact. It does not declare package-owned migrations or required tables.
+
+Docs gap: document extension points here if the package delegates persistence to a host package.
 
 ## Install Impact
 

@@ -119,29 +119,59 @@
         "description": "Fintech Trust provides a distinct theme definition, demo command, marketplace metadata, and public-safe Blade views for Tessera Verify.",
         "screenshots": [
             {
+                "path": "docs/assets/marketplace/extension-card.jpg",
+                "alt": "Fintech Trust marketplace card preview",
+                "caption": "Fintech Trust premium theme card"
+            },
+            {
                 "path": "docs/screenshots/fintech-trust-homepage.png",
-                "alt": "Fintech Trust homepage preview",
-                "caption": "Fintech Trust Homepage"
+                "alt": "Fintech Trust Homepage demo page screenshot",
+                "caption": "Fintech Trust Homepage page"
             },
             {
-                "path": "docs/screenshots/fintech-trust-landing.png",
-                "alt": "Fintech Trust landing page preview",
-                "caption": "Fintech Trust Landing page"
+                "path": "docs/screenshots/fintech-trust-directory.png",
+                "alt": "Fintech Trust Directory demo page screenshot",
+                "caption": "Fintech Trust Directory page"
             },
             {
-                "path": "docs/screenshots/fintech-trust-listing.png",
-                "alt": "Fintech Trust list page preview",
-                "caption": "Fintech Trust List page"
-            },
-            {
-                "path": "docs/screenshots/fintech-trust-search.png",
-                "alt": "Fintech Trust search results preview",
-                "caption": "Fintech Trust Search results"
+                "path": "docs/screenshots/fintech-trust-detail.png",
+                "alt": "Fintech Trust Detail demo page screenshot",
+                "caption": "Fintech Trust Detail page"
             },
             {
                 "path": "docs/screenshots/fintech-trust-contact.png",
-                "alt": "Fintech Trust contact form preview",
-                "caption": "Fintech Trust Contact form"
+                "alt": "Fintech Trust Contact demo page screenshot",
+                "caption": "Fintech Trust Contact page"
+            },
+            {
+                "path": "docs/screenshots/fintech-trust-empty.png",
+                "alt": "Fintech Trust Empty State demo page screenshot",
+                "caption": "Fintech Trust Empty State page"
+            },
+            {
+                "path": "docs/screenshots/fintech-trust-not-found.png",
+                "alt": "Fintech Trust 404 State demo page screenshot",
+                "caption": "Fintech Trust 404 State page"
+            },
+            {
+                "path": "docs/screenshots/fintech-trust-cta.png",
+                "alt": "Fintech Trust Conversion CTA demo page screenshot",
+                "caption": "Fintech Trust Conversion CTA page"
+            },
+            {
+                "path": "docs/screenshots/fintech-trust-verification-flow.png",
+                "alt": "Fintech Trust Verification Flow demo page screenshot",
+                "caption": "Fintech Trust Verification Flow page"
+            },
+            {
+                "path": "docs/screenshots/fintech-trust-security.png",
+                "alt": "Fintech Trust Security Architecture demo page screenshot",
+                "caption": "Fintech Trust Security Architecture page"
+            },
+            {
+                "path": "docs/screenshots/fintech-trust-compliance.png",
+                "alt": "Fintech Trust Compliance Hub demo page screenshot",
+                "caption": "Fintech Trust Compliance Hub page"
             }
         ],
         "categories": ["frontend", "themes"]

@@ -6,7 +6,7 @@
 
 Theme Inertia Bookings Vue is an **Available**, **No schema impact** Capell plugin in the **Capell Themes** product group. It ships as `capell-app/theme-inertia-bookings-vue` and extends these surfaces: frontend.
 
-Vue component pack for the Inertia Bookings theme, including the booking request form, page renderer, and booking-focused widget components.
+Vue component pack for Theme Inertia Bookings.
 
 After install, the package affects public rendering, public routes, or frontend runtime behaviour.
 
@@ -21,9 +21,9 @@ Status details:
 
 ## Why It Matters
 
-**For developers:** The package supplies the Vue build entrypoint and component map for Capell's booking-specific Inertia contracts. The base `theme-inertia-bookings` package owns the renderer binding, and the generic `inertia-vue-adapter` provides the Vue adapter this component pack builds on.
+**For developers:** The package gives developers package-owned service providers instead of pushing this behaviour into core or application code.
 
-**For teams:** Vue sites can install the booking theme without rebuilding the public booking journey from scratch. The request form renders accessible validation errors, loading states for deferred slots, and the same server-owned booking props used by the base theme.
+**For teams:** Vue components for Theme Inertia Bookings.
 
 ## Screens And Workflow
 
@@ -35,62 +35,18 @@ Screenshot contract: `screenshots.json`.
 - Vue booking validation state (frontend, required).
 - Vue booking mobile layout (frontend, required).
 
-## Screenshot Evidence
-
-These captures are the package-owned visual contract for the admin pages, public pages, actions, workflows, and feature surfaces described above. Keep this section aligned with `docs/screenshots.json` whenever the package surface changes.
-
-### Vue booking component pack
-
-![Vue booking component pack](screenshots/vue-booking-components.png)
-
-- Surface: frontend · Target: /bookings.
-- Documents: A buyer confirms the Vue pack renders the page, widgets, and booking request contract.
-- Capture notes: Capture the Vue adapter runtime with Theme Inertia Bookings installed and the labelled booking request form visible.
-
-### Vue themed booking services
-
-![Vue themed booking services](screenshots/vue-booking-services.png)
-
-- Surface: frontend · Target: /theme-inertia-bookings-demo#services.
-- Documents: A buyer verifies the Vue adapter covers the marketing sections, not only the booking form.
-- Capture notes: Capture Vue-rendered service cards and appointment CTAs from the themed component pack.
-
-### Vue booking slot loading state
-
-![Vue booking slot loading state](screenshots/vue-booking-slot-loading.png)
-
-- Surface: frontend · Target: /bookings.
-- Documents: A buyer checks that async slot selection has an understandable Vue loading state.
-- Capture notes: Capture the public request form while available slots are loading or refreshing.
-
-### Vue booking validation state
-
-![Vue booking validation state](screenshots/vue-booking-validation.png)
-
-- Surface: frontend · Target: /bookings.
-- Documents: A buyer confirms the Vue pack presents booking errors without relying on placeholders.
-- Capture notes: Capture validation feedback on required customer fields and service/slot selection.
-
-### Vue booking mobile layout
-
-![Vue booking mobile layout](screenshots/vue-booking-mobile.png)
-
-- Surface: frontend · Target: /bookings.
-- Documents: A buyer verifies the Vue component pack works for phone-based appointment requests.
-- Capture notes: Capture the Vue booking request page at a mobile viewport with labels and CTA visible.
-
 ## Technical Shape
 
 - Service providers: `Capell\ThemeStudio\InertiaBookingsVue\Providers\InertiaBookingsVueServiceProvider`.
 - Manifest contributions: `frontend-component: Capell\ThemeStudio\InertiaBookingsVue\Manifest\InertiaBookingsVueComponentContribution`.
 - Health checks: `Capell\ThemeStudio\InertiaBookingsVue\Health\InertiaBookingsVueHealthCheck`.
 - Cache tags: `theme-inertia-bookings-vue`.
-- Vue components: `Capell/Page` fallback, `Capell/Bookings/Request`, and booking widget renderers for Content, Image, and Title.
-- Raw HTML contract: `Page.vue` and `Content.vue` use `v-html` only for server-provided portable HTML props (`page.content` and `widget.data.content`). Those props must already be sanitized by the Capell render pipeline and must not contain authoring metadata, admin URLs, signed editor URLs, model IDs, field paths, permissions, or package internals.
 
 ## Data Model
 
-This package has no schema impact. It does not declare package-owned migrations or required tables. Booking records, validation, slot availability, and request props are owned by the Bookings package and the base Inertia Bookings theme.
+This package has no schema impact. It does not declare package-owned migrations or required tables.
+
+Docs gap: document extension points here if the package delegates persistence to a host package.
 
 ## Install Impact
 

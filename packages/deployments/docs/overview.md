@@ -31,18 +31,6 @@ Screenshot contract: `screenshots.json`.
 
 - Deployment connection page before a repository is connected (admin, required).
 
-## Screenshot Evidence
-
-These captures are the package-owned visual contract for the admin pages, public pages, actions, workflows, and feature surfaces described above. Keep this section aligned with `docs/screenshots.json` whenever the package surface changes.
-
-### Deployment connection page before a repository is connected
-
-![Deployment connection page before a repository is connected](screenshots/deployment-connection-page.png)
-
-- Surface: admin · Target: DeploymentConnectionPage.
-- Documents: An operator starts the Git provider OAuth flow used to connect the repository for package install pull requests.
-- Capture notes: Capture as a user with View:DeploymentConnectionPage. This committed capture shows the pre-connection state with GitHub, GitLab, and Bitbucket OAuth entry points.
-
 ## Technical Shape
 
 - Service providers: `Capell\Deployments\Providers\DeploymentsServiceProvider`.
@@ -51,9 +39,10 @@ These captures are the package-owned visual contract for the admin pages, public
 - Models: `DeploymentConnection`, `DeploymentPublication`.
 - Filament classes: `DeploymentConnectionPage`, `DeploymentConnectionWidget`.
 - Route files: `packages/deployments/routes/oauth.php`.
+- Events: `DeploymentPublishFailed`, `DeploymentPublishSucceeded`.
 - Actions: `CancelDeploymentPublicationAction`, `ConnectDeploymentAction`, `ConsumeOAuthStateAction`, `CreateOAuthStateAction`, `ValidateOAuthStateAction`, `PrepareComposerRequirementCommitAction`, `PublishComposerRequirementAction`, `RecordDeploymentPublicationAction`, `RefreshDeploymentPublicationStatusAction`, `RefreshProviderTokenAction`.
 - Data objects: `ComposerRequirementData`, `OAuthConnectionData`, `PublishComposerChangeResultData`, `PullRequestData`, `RepoFile`.
-- Events: `DeploymentPublishSucceeded`, `DeploymentPublishFailed`.
+- Manifest contributions: `admin-page: Capell\Deployments\Manifest\DeploymentsAdminPageContribution`, `dashboard-widget: Capell\Deployments\Manifest\DeploymentsDashboardWidgetContribution`, `route: Capell\Deployments\Manifest\DeploymentsRoutesContribution`.
 - Health checks: `Capell\Deployments\Health\DeploymentsHealthCheck`.
 - Blade views: `packages/deployments/resources/views/filament/pages/deployment-connection.blade.php`, `packages/deployments/resources/views/filament/widgets/deployment-connection.blade.php`.
 
@@ -69,7 +58,7 @@ These captures are the package-owned visual contract for the admin pages, public
 
 - Admin navigation: adds package-owned Filament classes when registered.
 - Permissions: `View:DeploymentConnectionPage`, `Manage:DeploymentConnectionPage`.
-- Authenticated OAuth routes: `capell/oauth/*/callback` routes use `web` and `auth` middleware for provider callbacks initiated from the admin page.
+- Public routes: route files exist and must be reviewed before public enablement.
 - Database changes: package migrations are declared.
 - Settings: no package settings declared.
 - Queues or schedules: none detected in standard package paths.
@@ -78,9 +67,8 @@ These captures are the package-owned visual contract for the admin pages, public
 
 ## Common Pitfalls
 
-- Run migrations before opening package resources or OAuth callback routes.
-- Listen for `DeploymentPublishSucceeded` and `DeploymentPublishFailed` when a consuming install workflow needs to notify operators, update Diagnostics, or refresh external deployment state.
-- Keep OAuth routes behind the configured `web` and `auth` middleware unless the callback flow is redesigned with a signed, tokenized handoff.
+- Run migrations before opening package resources or public routes.
+- Review route middleware, throttling, signed URLs, and public-output safety before exposing routes.
 - Keep `composer.json`, `composer.local.json`, `capell.json`, docs, screenshots, and tests aligned when the package surface changes.
 
 ## Troubleshooting
@@ -89,7 +77,7 @@ These captures are the package-owned visual contract for the admin pages, public
 | --- | --- | --- | --- |
 | Package surface is missing after install | Provider or manifest is not loaded | Confirm `capell.json`, package `composer.json`, and provider registration | Reinstall the package, refresh Composer autoload, and clear host caches |
 | Admin screen or command fails on missing table | Package migrations have not run | Check the tables listed in `Data Model` | Run host migrations and rerun the focused package test |
-| Route returns unexpected output | Route cache or middleware setup does not match the package route file | Check the route files listed in `Technical Shape` | Clear route cache and verify `web` and `auth` middleware are applied |
+| Route returns unexpected output | Route cache, middleware, or signed URL setup does not match the package route file | Check the route files listed in `Technical Shape` | Clear route cache and verify middleware before exposing public routes |
 
 ## Quick Start
 

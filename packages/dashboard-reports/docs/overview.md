@@ -33,44 +33,16 @@ Screenshot contract: `screenshots.json`.
 - Content health dashboard widget (admin, required).
 - Dashboard report visibility settings (admin, required).
 
-## Screenshot Evidence
-
-These captures are the package-owned visual contract for the admin pages, public pages, actions, workflows, and feature surfaces described above. Keep this section aligned with `docs/screenshots.json` whenever the package surface changes.
-
-### Publishing trend dashboard widget
-
-![Publishing trend dashboard widget](screenshots/publishing-trend-dashboard-widget.png)
-
-- Surface: admin · Target: PublishingTrendChartWidget.
-- Documents: An administrator checks whether publishing and scheduling activity changed during the current reporting window.
-- Capture notes: Capture on the main admin dashboard with seeded published and scheduled page counts across the selected date window.
-
-### Content health dashboard widget
-
-![Content health dashboard widget](screenshots/content-health-dashboard-widget.png)
-
-- Surface: admin · Target: ContentHealthWidget.
-- Documents: An editor spots page health issues that need attention before the next publishing review.
-- Capture notes: Capture on the main admin dashboard with at least one scheduled, expired, URL-less, or stale page so canView() keeps the widget visible.
-
-### Dashboard report visibility settings
-
-![Dashboard report visibility settings](screenshots/dashboard-report-settings.png)
-
-- Surface: admin · Target: DashboardReportsDashboardSettingsContributor.
-- Documents: A site owner confirms the Dashboard Reports widgets can be enabled or hidden through dashboard settings.
-- Capture notes: Capture the shared dashboard settings screen after this package contributes the publishing trend and content health visibility keys.
-
 ## Technical Shape
 
 - Service providers: `Capell\DashboardReports\Providers\DashboardReportsServiceProvider`, `Capell\DashboardReports\Providers\AdminServiceProvider`.
 - Config files: `packages/dashboard-reports/config/capell-dashboard-reports.php`.
 - Filament classes: `DashboardReportsPageTableExtender`, `DashboardReportsDashboardSettingsContributor`, `ContentHealthWidget`, `PublishingTrendChartWidget`.
-- Extension points: sibling packages can resolve `Capell\DashboardReports\Support\Dashboard\DashboardReportWidgetRegistry` and call `register($widgetClass, DashboardEnum::Main)` during package registration to add dashboard report widgets without bypassing the package's registration path.
 - Actions: `BuildDefaultContentHealthAction`, `BuildPublishingTrendAction`, `ExportContentHealthCsvAction`, `ExportPublishingTrendCsvAction`, `SendDashboardReportDigestAction`.
 - Data objects: `PublishingTrendData`, `PublishingTrendPointData`, `ResolvedDashboardReportsSettingsData`.
 - Command signatures: `capell:dashboard-reports:export`, `capell:dashboard-reports:send-digest`.
 - Console command classes: `ExportDashboardReportCommand`, `SendDashboardReportDigestCommand`.
+- Manifest contributions: `dashboard-widget: Capell\DashboardReports\Manifest\DashboardReportsDashboardWidgetsContribution`.
 - Health checks: `Capell\DashboardReports\Health\DashboardReportsHealthCheck`.
 - Blade views: `packages/dashboard-reports/resources/views/widgets/content-health.blade.php`.
 
@@ -87,7 +59,7 @@ Docs gap: document extension points here if the package delegates persistence to
 - Public routes: none detected in package route files.
 - Database changes: no package migrations declared.
 - Settings: no package settings declared.
-- Queues or schedules: hosts can schedule `capell:dashboard-reports:send-digest`; digest notifications are queued and only send to configured emails that match Capell users.
+- Queues or schedules: none detected in standard package paths.
 - Cache tags: none declared.
 - Commands: `capell:dashboard-reports:export`, `capell:dashboard-reports:send-digest`.
 

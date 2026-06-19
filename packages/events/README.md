@@ -53,10 +53,11 @@ Screenshot contract: `docs/screenshots.json`.
 - Policies: `AbstractEventResourcePolicy`, `EventOccurrencePolicy`, `EventPolicy`, `EventRegistrationPolicy`, `EventVenuePolicy`.
 - Events: `EventRegistrationCancelled`, `EventRegistrationCreated`.
 - Listeners: `PromoteWaitlistAfterRegistrationCancelled`.
-- Actions: `BuildCalendarFeedAction`, `BuildEventOccurrenceViewDataAction`, `BuildEventSchemaAction`, `CancelOccurrenceAction`, `EnsureEventPublishingDefaultsAction`, `EnsureEventPublishingSurfaceAction`, `ExpandEventRecurrenceAction`, `InstallEventsPackageAction`, `InstallPackageAction`, `ProcessDueEventNotificationLogsAction`, `PromoteWaitlistAction`, `QueryPublicEventOccurrencesAction`, `and 8 more`.
+- Actions: `BuildCalendarFeedAction`, `BuildEventOccurrenceUrlAction`, `BuildEventOccurrenceViewDataAction`, `BuildEventSchemaAction`, `CancelOccurrenceAction`, `EnsureEventPublishingDefaultsAction`, `EnsureEventPublishingSurfaceAction`, `ExpandEventRecurrenceAction`, `InstallEventsPackageAction`, `InstallPackageAction`, `ProcessDueEventNotificationLogsAction`, `PromoteWaitlistAction`, `and 9 more`.
 - Data objects: `EventOccurrenceData`, `EventOccurrenceViewData`, `EventRegistrationData`.
 - Command signatures: `capell:events-doctor`, `capell:events-install`.
 - Console command classes: `EventsDoctorCommand`, `InstallCommand`.
+- Manifest contributions: `admin-page: Capell\Events\Manifest\EventsAdminPageContribution`, `admin-resource: Capell\Events\Manifest\EventsAdminResourcesContribution`, `console-command: Capell\Events\Manifest\EventsConsoleCommandsContribution`, `dashboard-widget: Capell\Events\Manifest\EventsDashboardWidgetsContribution`, `frontend-component: Capell\Events\Manifest\EventsFrontendComponentsContribution`, `health-check: Capell\Events\Health\EventsHealthCheck`, `migration: Capell\Events\Manifest\EventsMigrationsContribution`, `model: Capell\Events\Manifest\EventsModelsContribution`, `page-type: Capell\Events\Manifest\EventsPageTypesContribution`, `page-variation: Capell\Events\Manifest\EventsPageTypesContribution`, `render-hook: Capell\Events\Manifest\EventsRenderHookContribution`, `route: Capell\Events\Manifest\EventsRoutesContribution`, `scheduled-job: Capell\Events\Manifest\EventsScheduleContribution`.
 - Health checks: `Capell\Events\Health\EventsHealthCheck`.
 - Blade views: `packages/events/resources/views/filament/widgets/event-calendar.blade.php`, `packages/events/resources/views/livewire/event-calendar.blade.php`, `packages/events/resources/views/livewire/page/events-calendar.blade.php`, `packages/events/resources/views/livewire/page/events-listing.blade.php`.
 - Cache tags: `events`.
@@ -76,7 +77,7 @@ Screenshot contract: `docs/screenshots.json`.
 - Public routes: route files exist and must be reviewed before public enablement.
 - Database changes: package migrations are declared.
 - Settings: no package settings declared.
-- Queues or schedules: registers `capell-events:process-notifications` every minute and `capell-events:reconcile-waitlists` every fifteen minutes.
+- Queues or schedules: none detected in standard package paths.
 - Cache tags: `events`.
 - Commands: `capell:events-doctor`, `capell:events-install`.
 

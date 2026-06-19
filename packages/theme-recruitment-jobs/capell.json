@@ -122,29 +122,59 @@
         "description": "Recruitment & Jobs provides a distinct theme definition, demo command, marketplace metadata, and public-safe Blade views for Beacon Talent.",
         "screenshots": [
             {
+                "path": "docs/assets/marketplace/extension-card.jpg",
+                "alt": "Recruitment Jobs marketplace card preview",
+                "caption": "Recruitment Jobs premium theme card"
+            },
+            {
                 "path": "docs/screenshots/recruitment-jobs-homepage.png",
-                "alt": "Recruitment & Jobs homepage preview",
-                "caption": "Recruitment & Jobs Homepage"
+                "alt": "Recruitment Jobs Homepage demo page screenshot",
+                "caption": "Recruitment Jobs Homepage page"
             },
             {
-                "path": "docs/screenshots/recruitment-jobs-landing.png",
-                "alt": "Recruitment & Jobs landing page preview",
-                "caption": "Recruitment & Jobs Landing page"
+                "path": "docs/screenshots/recruitment-jobs-directory.png",
+                "alt": "Recruitment Jobs Directory demo page screenshot",
+                "caption": "Recruitment Jobs Directory page"
             },
             {
-                "path": "docs/screenshots/recruitment-jobs-listing.png",
-                "alt": "Recruitment & Jobs list page preview",
-                "caption": "Recruitment & Jobs List page"
-            },
-            {
-                "path": "docs/screenshots/recruitment-jobs-search.png",
-                "alt": "Recruitment & Jobs search results preview",
-                "caption": "Recruitment & Jobs Search results"
+                "path": "docs/screenshots/recruitment-jobs-detail.png",
+                "alt": "Recruitment Jobs Detail demo page screenshot",
+                "caption": "Recruitment Jobs Detail page"
             },
             {
                 "path": "docs/screenshots/recruitment-jobs-contact.png",
-                "alt": "Recruitment & Jobs contact form preview",
-                "caption": "Recruitment & Jobs Contact form"
+                "alt": "Recruitment Jobs Contact demo page screenshot",
+                "caption": "Recruitment Jobs Contact page"
+            },
+            {
+                "path": "docs/screenshots/recruitment-jobs-empty.png",
+                "alt": "Recruitment Jobs Empty State demo page screenshot",
+                "caption": "Recruitment Jobs Empty State page"
+            },
+            {
+                "path": "docs/screenshots/recruitment-jobs-not-found.png",
+                "alt": "Recruitment Jobs 404 State demo page screenshot",
+                "caption": "Recruitment Jobs 404 State page"
+            },
+            {
+                "path": "docs/screenshots/recruitment-jobs-cta.png",
+                "alt": "Recruitment Jobs Conversion CTA demo page screenshot",
+                "caption": "Recruitment Jobs Conversion CTA page"
+            },
+            {
+                "path": "docs/screenshots/recruitment-jobs-jobs.png",
+                "alt": "Recruitment Jobs Jobs demo page screenshot",
+                "caption": "Recruitment Jobs Jobs page"
+            },
+            {
+                "path": "docs/screenshots/recruitment-jobs-employers.png",
+                "alt": "Recruitment Jobs Employers demo page screenshot",
+                "caption": "Recruitment Jobs Employers page"
+            },
+            {
+                "path": "docs/screenshots/recruitment-jobs-candidate-advice.png",
+                "alt": "Recruitment Jobs Candidate Advice demo page screenshot",
+                "caption": "Recruitment Jobs Candidate Advice page"
             }
         ],
         "categories": ["frontend", "themes"]

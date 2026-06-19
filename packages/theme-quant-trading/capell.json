@@ -119,29 +119,59 @@
         "description": "Quant Trading provides a distinct theme definition, demo command, marketplace metadata, and public-safe Blade views for Meridian Quant.",
         "screenshots": [
             {
+                "path": "docs/assets/marketplace/extension-card.jpg",
+                "alt": "Quant Trading marketplace card preview",
+                "caption": "Quant Trading premium theme card"
+            },
+            {
                 "path": "docs/screenshots/quant-trading-homepage.png",
-                "alt": "Quant Trading homepage preview",
-                "caption": "Quant Trading Homepage"
+                "alt": "Quant Trading Homepage demo page screenshot",
+                "caption": "Quant Trading Homepage page"
             },
             {
-                "path": "docs/screenshots/quant-trading-landing.png",
-                "alt": "Quant Trading landing page preview",
-                "caption": "Quant Trading Landing page"
+                "path": "docs/screenshots/quant-trading-directory.png",
+                "alt": "Quant Trading Directory demo page screenshot",
+                "caption": "Quant Trading Directory page"
             },
             {
-                "path": "docs/screenshots/quant-trading-listing.png",
-                "alt": "Quant Trading list page preview",
-                "caption": "Quant Trading List page"
-            },
-            {
-                "path": "docs/screenshots/quant-trading-search.png",
-                "alt": "Quant Trading search results preview",
-                "caption": "Quant Trading Search results"
+                "path": "docs/screenshots/quant-trading-detail.png",
+                "alt": "Quant Trading Detail demo page screenshot",
+                "caption": "Quant Trading Detail page"
             },
             {
                 "path": "docs/screenshots/quant-trading-contact.png",
-                "alt": "Quant Trading contact form preview",
-                "caption": "Quant Trading Contact form"
+                "alt": "Quant Trading Contact demo page screenshot",
+                "caption": "Quant Trading Contact page"
+            },
+            {
+                "path": "docs/screenshots/quant-trading-empty.png",
+                "alt": "Quant Trading Empty State demo page screenshot",
+                "caption": "Quant Trading Empty State page"
+            },
+            {
+                "path": "docs/screenshots/quant-trading-not-found.png",
+                "alt": "Quant Trading 404 State demo page screenshot",
+                "caption": "Quant Trading 404 State page"
+            },
+            {
+                "path": "docs/screenshots/quant-trading-cta.png",
+                "alt": "Quant Trading Conversion CTA demo page screenshot",
+                "caption": "Quant Trading Conversion CTA page"
+            },
+            {
+                "path": "docs/screenshots/quant-trading-performance.png",
+                "alt": "Quant Trading Performance demo page screenshot",
+                "caption": "Quant Trading Performance page"
+            },
+            {
+                "path": "docs/screenshots/quant-trading-strategies.png",
+                "alt": "Quant Trading Strategies demo page screenshot",
+                "caption": "Quant Trading Strategies page"
+            },
+            {
+                "path": "docs/screenshots/quant-trading-risk.png",
+                "alt": "Quant Trading Risk Disclosure demo page screenshot",
+                "caption": "Quant Trading Risk Disclosure page"
             }
         ],
         "categories": ["frontend", "themes"]

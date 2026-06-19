@@ -119,29 +119,59 @@
         "description": "Law Firm provides a distinct theme definition, demo command, marketplace metadata, and public-safe Blade views for Harlow & Finch LLP.",
         "screenshots": [
             {
+                "path": "docs/assets/marketplace/extension-card.jpg",
+                "alt": "Law Firm marketplace card preview",
+                "caption": "Law Firm premium theme card"
+            },
+            {
                 "path": "docs/screenshots/law-firm-homepage.png",
-                "alt": "Law Firm homepage preview",
-                "caption": "Law Firm Homepage"
+                "alt": "Law Firm Homepage demo page screenshot",
+                "caption": "Law Firm Homepage page"
             },
             {
-                "path": "docs/screenshots/law-firm-landing.png",
-                "alt": "Law Firm landing page preview",
-                "caption": "Law Firm Landing page"
+                "path": "docs/screenshots/law-firm-directory.png",
+                "alt": "Law Firm Directory demo page screenshot",
+                "caption": "Law Firm Directory page"
             },
             {
-                "path": "docs/screenshots/law-firm-listing.png",
-                "alt": "Law Firm list page preview",
-                "caption": "Law Firm List page"
-            },
-            {
-                "path": "docs/screenshots/law-firm-search.png",
-                "alt": "Law Firm search results preview",
-                "caption": "Law Firm Search results"
+                "path": "docs/screenshots/law-firm-detail.png",
+                "alt": "Law Firm Detail demo page screenshot",
+                "caption": "Law Firm Detail page"
             },
             {
                 "path": "docs/screenshots/law-firm-contact.png",
-                "alt": "Law Firm contact form preview",
-                "caption": "Law Firm Contact form"
+                "alt": "Law Firm Contact demo page screenshot",
+                "caption": "Law Firm Contact page"
+            },
+            {
+                "path": "docs/screenshots/law-firm-empty.png",
+                "alt": "Law Firm Empty State demo page screenshot",
+                "caption": "Law Firm Empty State page"
+            },
+            {
+                "path": "docs/screenshots/law-firm-not-found.png",
+                "alt": "Law Firm 404 State demo page screenshot",
+                "caption": "Law Firm 404 State page"
+            },
+            {
+                "path": "docs/screenshots/law-firm-cta.png",
+                "alt": "Law Firm Conversion CTA demo page screenshot",
+                "caption": "Law Firm Conversion CTA page"
+            },
+            {
+                "path": "docs/screenshots/law-firm-practice-areas.png",
+                "alt": "Law Firm Practice Areas demo page screenshot",
+                "caption": "Law Firm Practice Areas page"
+            },
+            {
+                "path": "docs/screenshots/law-firm-attorneys.png",
+                "alt": "Law Firm Attorneys demo page screenshot",
+                "caption": "Law Firm Attorneys page"
+            },
+            {
+                "path": "docs/screenshots/law-firm-consultation.png",
+                "alt": "Law Firm Consultation demo page screenshot",
+                "caption": "Law Firm Consultation page"
             }
         ],
         "categories": ["frontend", "themes"]

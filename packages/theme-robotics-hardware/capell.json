@@ -122,29 +122,59 @@
         "description": "Robotics Hardware provides a distinct theme definition, demo command, marketplace metadata, and public-safe Blade views for Atelier One.",
         "screenshots": [
             {
+                "path": "docs/assets/marketplace/extension-card.jpg",
+                "alt": "Robotics Hardware marketplace card preview",
+                "caption": "Robotics Hardware premium theme card"
+            },
+            {
                 "path": "docs/screenshots/robotics-hardware-homepage.png",
-                "alt": "Robotics Hardware homepage preview",
-                "caption": "Robotics Hardware Homepage"
+                "alt": "Robotics Hardware Homepage demo page screenshot",
+                "caption": "Robotics Hardware Homepage page"
             },
             {
-                "path": "docs/screenshots/robotics-hardware-landing.png",
-                "alt": "Robotics Hardware landing page preview",
-                "caption": "Robotics Hardware Landing page"
+                "path": "docs/screenshots/robotics-hardware-directory.png",
+                "alt": "Robotics Hardware Directory demo page screenshot",
+                "caption": "Robotics Hardware Directory page"
             },
             {
-                "path": "docs/screenshots/robotics-hardware-listing.png",
-                "alt": "Robotics Hardware list page preview",
-                "caption": "Robotics Hardware List page"
-            },
-            {
-                "path": "docs/screenshots/robotics-hardware-search.png",
-                "alt": "Robotics Hardware search results preview",
-                "caption": "Robotics Hardware Search results"
+                "path": "docs/screenshots/robotics-hardware-detail.png",
+                "alt": "Robotics Hardware Detail demo page screenshot",
+                "caption": "Robotics Hardware Detail page"
             },
             {
                 "path": "docs/screenshots/robotics-hardware-contact.png",
-                "alt": "Robotics Hardware contact form preview",
-                "caption": "Robotics Hardware Contact form"
+                "alt": "Robotics Hardware Contact demo page screenshot",
+                "caption": "Robotics Hardware Contact page"
+            },
+            {
+                "path": "docs/screenshots/robotics-hardware-empty.png",
+                "alt": "Robotics Hardware Empty State demo page screenshot",
+                "caption": "Robotics Hardware Empty State page"
+            },
+            {
+                "path": "docs/screenshots/robotics-hardware-not-found.png",
+                "alt": "Robotics Hardware 404 State demo page screenshot",
+                "caption": "Robotics Hardware 404 State page"
+            },
+            {
+                "path": "docs/screenshots/robotics-hardware-cta.png",
+                "alt": "Robotics Hardware Conversion CTA demo page screenshot",
+                "caption": "Robotics Hardware Conversion CTA page"
+            },
+            {
+                "path": "docs/screenshots/robotics-hardware-product.png",
+                "alt": "Robotics Hardware Product demo page screenshot",
+                "caption": "Robotics Hardware Product page"
+            },
+            {
+                "path": "docs/screenshots/robotics-hardware-specs.png",
+                "alt": "Robotics Hardware Specs demo page screenshot",
+                "caption": "Robotics Hardware Specs page"
+            },
+            {
+                "path": "docs/screenshots/robotics-hardware-preorder.png",
+                "alt": "Robotics Hardware Preorder demo page screenshot",
+                "caption": "Robotics Hardware Preorder page"
             }
         ],
         "categories": ["frontend", "themes"]

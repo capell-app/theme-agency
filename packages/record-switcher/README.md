@@ -8,7 +8,7 @@ Record Switcher is an **Available**, **No schema impact** Capell package in the 
 
 Fast Filament edit-page record switching for Capell admins, with searchable suggestions, sibling and same-site prioritization, recent-record ordering, and keyboard selection.
 
-After install, edit-page headings can show a compact switcher that lets admins move to nearby records without returning to a table view.
+After install, admins get package-owned management or reporting surfaces inside Capell.
 
 Status details:
 
@@ -21,9 +21,9 @@ Status details:
 
 ## Why It Matters
 
-**For developers:** The package gives developers a package-owned heading extender, Livewire component, and admin assets instead of pushing this behaviour into core or application code.
+**For developers:** The package gives developers package-owned service providers, Filament classes, and Blade views instead of pushing this behaviour into core or application code.
 
-**For teams:** Jump between editable Capell records directly from the page heading with fast suggestions, nearby page ordering, and Tab-to-accept keyboard flow.
+**For teams:** Jump between editable Capell records directly from the page heading with fast suggestions and Tab-to-accept keyboard flow.
 
 ## Screens And Workflow
 
@@ -44,9 +44,11 @@ Screenshot contract: `docs/screenshots.json`.
 
 This package has no schema impact. It does not declare package-owned migrations or required tables.
 
+Docs gap: document extension points here if the package delegates persistence to a host package.
+
 ## Install Impact
 
-- Admin navigation: replaces supported edit-page headings through the Capell Admin heading extender.
+- Admin navigation: adds package-owned Filament classes when registered.
 - Permissions: none declared in `capell.json`.
 - Public routes: none detected in package route files.
 - Database changes: no package migrations declared.
@@ -57,16 +59,14 @@ This package has no schema impact. It does not declare package-owned migrations 
 
 ## Common Pitfalls
 
-- Verify the package is installed before expecting its provider, views, Livewire component, or heading extension contribution to run.
-- Custom Filament resources can opt out with `recordSwitcherEnabled(): false` when a heading workflow is sensitive or unusual.
+- Verify the package is installed before expecting its provider, views, or extension contributions to run.
 - Keep `composer.json`, `composer.local.json`, `capell.json`, docs, screenshots, and tests aligned when the package surface changes.
 
 ## Troubleshooting
 
 | Symptom | Likely cause | Check | Fix |
 | --- | --- | --- | --- |
-| Switcher is missing from edit headings | Provider or heading extender is not loaded, or the resource opted out | Confirm `capell.json`, provider registration, and `recordSwitcherEnabled()` on the resource | Reinstall the package, refresh Composer autoload, clear host caches, or remove the opt-out |
-| Suggestions are empty | The resource query has no other editable records or no searchable attributes | Check the resource query, record count, and globally searchable attributes | Add editable records or define searchable attributes on the resource |
+| Package surface is missing after install | Provider or manifest is not loaded | Confirm `capell.json`, package `composer.json`, and provider registration | Reinstall the package, refresh Composer autoload, and clear host caches |
 
 ## Quick Start
 

@@ -70,17 +70,11 @@
                 "capell-frontend.beacon"
             ],
             "auth": "mixed",
-            "csrfExemptRoutes": [
-                "capell-frontend.beacon"
-            ],
-            "signedRoutes": [
-                "capell-frontend.authoring.edit"
-            ],
+            "csrfExemptRoutes": ["capell-frontend.beacon"],
+            "signedRoutes": ["capell-frontend.authoring.edit"],
             "tokenizedRoutes": [],
             "webhookRoutes": [],
-            "throttledRoutes": [
-                "capell-frontend.beacon"
-            ]
+            "throttledRoutes": ["capell-frontend.beacon"]
         },
         "sensitiveData": {
             "encryptedFields": [],
@@ -101,9 +95,7 @@
         },
         "adminSurface": {
             "authorization": "permissions",
-            "permissions": [
-                "frontend-authoring.edit"
-            ]
+            "permissions": ["frontend-authoring.edit"]
         }
     },
     "performance": {

@@ -122,29 +122,59 @@
         "description": "Financial Advisory provides a distinct theme definition, demo command, marketplace metadata, and public-safe Blade views for Sterling & Vale Advisors.",
         "screenshots": [
             {
+                "path": "docs/assets/marketplace/extension-card.jpg",
+                "alt": "Financial Advisory marketplace card preview",
+                "caption": "Financial Advisory premium theme card"
+            },
+            {
                 "path": "docs/screenshots/financial-advisory-homepage.png",
-                "alt": "Financial Advisory homepage preview",
-                "caption": "Financial Advisory Homepage"
+                "alt": "Financial Advisory Homepage demo page screenshot",
+                "caption": "Financial Advisory Homepage page"
             },
             {
-                "path": "docs/screenshots/financial-advisory-landing.png",
-                "alt": "Financial Advisory landing page preview",
-                "caption": "Financial Advisory Landing page"
+                "path": "docs/screenshots/financial-advisory-directory.png",
+                "alt": "Financial Advisory Directory demo page screenshot",
+                "caption": "Financial Advisory Directory page"
             },
             {
-                "path": "docs/screenshots/financial-advisory-listing.png",
-                "alt": "Financial Advisory list page preview",
-                "caption": "Financial Advisory List page"
-            },
-            {
-                "path": "docs/screenshots/financial-advisory-search.png",
-                "alt": "Financial Advisory search results preview",
-                "caption": "Financial Advisory Search results"
+                "path": "docs/screenshots/financial-advisory-detail.png",
+                "alt": "Financial Advisory Detail demo page screenshot",
+                "caption": "Financial Advisory Detail page"
             },
             {
                 "path": "docs/screenshots/financial-advisory-contact.png",
-                "alt": "Financial Advisory contact form preview",
-                "caption": "Financial Advisory Contact form"
+                "alt": "Financial Advisory Contact demo page screenshot",
+                "caption": "Financial Advisory Contact page"
+            },
+            {
+                "path": "docs/screenshots/financial-advisory-empty.png",
+                "alt": "Financial Advisory Empty State demo page screenshot",
+                "caption": "Financial Advisory Empty State page"
+            },
+            {
+                "path": "docs/screenshots/financial-advisory-not-found.png",
+                "alt": "Financial Advisory 404 State demo page screenshot",
+                "caption": "Financial Advisory 404 State page"
+            },
+            {
+                "path": "docs/screenshots/financial-advisory-cta.png",
+                "alt": "Financial Advisory Conversion CTA demo page screenshot",
+                "caption": "Financial Advisory Conversion CTA page"
+            },
+            {
+                "path": "docs/screenshots/financial-advisory-services.png",
+                "alt": "Financial Advisory Services demo page screenshot",
+                "caption": "Financial Advisory Services page"
+            },
+            {
+                "path": "docs/screenshots/financial-advisory-advisors.png",
+                "alt": "Financial Advisory Advisors demo page screenshot",
+                "caption": "Financial Advisory Advisors page"
+            },
+            {
+                "path": "docs/screenshots/financial-advisory-calculators.png",
+                "alt": "Financial Advisory Calculators demo page screenshot",
+                "caption": "Financial Advisory Calculators page"
             }
         ],
         "categories": ["frontend", "themes"]

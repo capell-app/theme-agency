@@ -116,32 +116,62 @@
     },
     "marketplace": {
         "summary": "A premium Capell theme for day spas, beauty clinics.",
-        "description": "Beauty & Spa provides a distinct theme definition, demo command, marketplace metadata, and public-safe Blade views for Lumi\u00e8re Spa.",
+        "description": "Beauty & Spa provides a distinct theme definition, demo command, marketplace metadata, and public-safe Blade views for Lumière Spa.",
         "screenshots": [
             {
+                "path": "docs/assets/marketplace/extension-card.jpg",
+                "alt": "Beauty & Spa marketplace card preview",
+                "caption": "Beauty & Spa premium theme card"
+            },
+            {
                 "path": "docs/screenshots/beauty-spa-homepage.png",
-                "alt": "Beauty & Spa homepage preview",
-                "caption": "Beauty & Spa Homepage"
+                "alt": "Beauty & Spa Homepage demo page screenshot",
+                "caption": "Beauty & Spa Homepage page"
             },
             {
-                "path": "docs/screenshots/beauty-spa-landing.png",
-                "alt": "Beauty & Spa landing page preview",
-                "caption": "Beauty & Spa Landing page"
+                "path": "docs/screenshots/beauty-spa-directory.png",
+                "alt": "Beauty & Spa Directory demo page screenshot",
+                "caption": "Beauty & Spa Directory page"
             },
             {
-                "path": "docs/screenshots/beauty-spa-listing.png",
-                "alt": "Beauty & Spa list page preview",
-                "caption": "Beauty & Spa List page"
-            },
-            {
-                "path": "docs/screenshots/beauty-spa-search.png",
-                "alt": "Beauty & Spa search results preview",
-                "caption": "Beauty & Spa Search results"
+                "path": "docs/screenshots/beauty-spa-detail.png",
+                "alt": "Beauty & Spa Detail demo page screenshot",
+                "caption": "Beauty & Spa Detail page"
             },
             {
                 "path": "docs/screenshots/beauty-spa-contact.png",
-                "alt": "Beauty & Spa contact form preview",
-                "caption": "Beauty & Spa Contact form"
+                "alt": "Beauty & Spa Contact demo page screenshot",
+                "caption": "Beauty & Spa Contact page"
+            },
+            {
+                "path": "docs/screenshots/beauty-spa-empty.png",
+                "alt": "Beauty & Spa Empty State demo page screenshot",
+                "caption": "Beauty & Spa Empty State page"
+            },
+            {
+                "path": "docs/screenshots/beauty-spa-not-found.png",
+                "alt": "Beauty & Spa 404 State demo page screenshot",
+                "caption": "Beauty & Spa 404 State page"
+            },
+            {
+                "path": "docs/screenshots/beauty-spa-cta.png",
+                "alt": "Beauty & Spa Conversion CTA demo page screenshot",
+                "caption": "Beauty & Spa Conversion CTA page"
+            },
+            {
+                "path": "docs/screenshots/beauty-spa-treatments.png",
+                "alt": "Beauty & Spa Treatments demo page screenshot",
+                "caption": "Beauty & Spa Treatments page"
+            },
+            {
+                "path": "docs/screenshots/beauty-spa-packages.png",
+                "alt": "Beauty & Spa Packages demo page screenshot",
+                "caption": "Beauty & Spa Packages page"
+            },
+            {
+                "path": "docs/screenshots/beauty-spa-booking.png",
+                "alt": "Beauty & Spa Booking demo page screenshot",
+                "caption": "Beauty & Spa Booking page"
             }
         ],
         "categories": ["frontend", "themes"]

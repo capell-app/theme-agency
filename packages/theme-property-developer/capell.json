@@ -122,29 +122,59 @@
         "description": "Property Developer provides a distinct theme definition, demo command, marketplace metadata, and public-safe Blade views for Crestwood Developments.",
         "screenshots": [
             {
+                "path": "docs/assets/marketplace/extension-card.jpg",
+                "alt": "Property Developer marketplace card preview",
+                "caption": "Property Developer premium theme card"
+            },
+            {
                 "path": "docs/screenshots/property-developer-homepage.png",
-                "alt": "Property Developer homepage preview",
-                "caption": "Property Developer Homepage"
+                "alt": "Property Developer Homepage demo page screenshot",
+                "caption": "Property Developer Homepage page"
             },
             {
-                "path": "docs/screenshots/property-developer-landing.png",
-                "alt": "Property Developer landing page preview",
-                "caption": "Property Developer Landing page"
+                "path": "docs/screenshots/property-developer-directory.png",
+                "alt": "Property Developer Directory demo page screenshot",
+                "caption": "Property Developer Directory page"
             },
             {
-                "path": "docs/screenshots/property-developer-listing.png",
-                "alt": "Property Developer list page preview",
-                "caption": "Property Developer List page"
-            },
-            {
-                "path": "docs/screenshots/property-developer-search.png",
-                "alt": "Property Developer search results preview",
-                "caption": "Property Developer Search results"
+                "path": "docs/screenshots/property-developer-detail.png",
+                "alt": "Property Developer Detail demo page screenshot",
+                "caption": "Property Developer Detail page"
             },
             {
                 "path": "docs/screenshots/property-developer-contact.png",
-                "alt": "Property Developer contact form preview",
-                "caption": "Property Developer Contact form"
+                "alt": "Property Developer Contact demo page screenshot",
+                "caption": "Property Developer Contact page"
+            },
+            {
+                "path": "docs/screenshots/property-developer-empty.png",
+                "alt": "Property Developer Empty State demo page screenshot",
+                "caption": "Property Developer Empty State page"
+            },
+            {
+                "path": "docs/screenshots/property-developer-not-found.png",
+                "alt": "Property Developer 404 State demo page screenshot",
+                "caption": "Property Developer 404 State page"
+            },
+            {
+                "path": "docs/screenshots/property-developer-cta.png",
+                "alt": "Property Developer Conversion CTA demo page screenshot",
+                "caption": "Property Developer Conversion CTA page"
+            },
+            {
+                "path": "docs/screenshots/property-developer-developments.png",
+                "alt": "Property Developer Developments demo page screenshot",
+                "caption": "Property Developer Developments page"
+            },
+            {
+                "path": "docs/screenshots/property-developer-floorplans.png",
+                "alt": "Property Developer Floorplans demo page screenshot",
+                "caption": "Property Developer Floorplans page"
+            },
+            {
+                "path": "docs/screenshots/property-developer-location.png",
+                "alt": "Property Developer Location demo page screenshot",
+                "caption": "Property Developer Location page"
             }
         ],
         "categories": ["frontend", "themes"]

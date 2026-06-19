@@ -58,7 +58,7 @@
             "required": true,
             "user": false,
             "notes": "Newsroom Magazine Contact seeded demo surface",
-            "useCase": "A buyer reviews the Newsroom Magazine contact before selecting theme-newsroom-magazine.",
+            "useCase": "A buyer reviews the Newsroom Magazine contact page before selecting theme-newsroom-magazine.",
             "package": "theme-newsroom-magazine"
         },
         {
@@ -73,6 +73,76 @@
             "user": false,
             "notes": "Newsroom Magazine Empty State seeded demo surface",
             "useCase": "A buyer reviews the Newsroom Magazine empty state page before selecting theme-newsroom-magazine.",
+            "package": "theme-newsroom-magazine"
+        },
+        {
+            "id": "newsroom-magazine-not-found",
+            "title": "Newsroom Magazine 404 State",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/theme-newsroom-magazine-404",
+            "url": "/theme-newsroom-magazine-404",
+            "screenshotPath": "packages/theme-newsroom-magazine/docs/screenshots/newsroom-magazine-not-found.png",
+            "required": true,
+            "user": false,
+            "notes": "Newsroom Magazine 404 State seeded demo surface",
+            "useCase": "A buyer reviews the Newsroom Magazine 404 state page before selecting theme-newsroom-magazine.",
+            "package": "theme-newsroom-magazine"
+        },
+        {
+            "id": "newsroom-magazine-cta",
+            "title": "Newsroom Magazine Conversion CTA",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/theme-newsroom-magazine-cta",
+            "url": "/theme-newsroom-magazine-cta",
+            "screenshotPath": "packages/theme-newsroom-magazine/docs/screenshots/newsroom-magazine-cta.png",
+            "required": true,
+            "user": false,
+            "notes": "Newsroom Magazine Conversion CTA seeded demo surface",
+            "useCase": "A buyer reviews the Newsroom Magazine conversion cta page before selecting theme-newsroom-magazine.",
+            "package": "theme-newsroom-magazine"
+        },
+        {
+            "id": "newsroom-magazine-front-page",
+            "title": "Newsroom Magazine Front Page",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/theme-newsroom-magazine-front-page",
+            "url": "/theme-newsroom-magazine-front-page",
+            "screenshotPath": "packages/theme-newsroom-magazine/docs/screenshots/newsroom-magazine-front-page.png",
+            "required": true,
+            "user": false,
+            "notes": "Newsroom Magazine Front Page seeded demo surface",
+            "useCase": "A buyer reviews the Newsroom Magazine front page before selecting theme-newsroom-magazine.",
+            "package": "theme-newsroom-magazine"
+        },
+        {
+            "id": "newsroom-magazine-contributors",
+            "title": "Newsroom Magazine Contributors",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/theme-newsroom-magazine-contributors",
+            "url": "/theme-newsroom-magazine-contributors",
+            "screenshotPath": "packages/theme-newsroom-magazine/docs/screenshots/newsroom-magazine-contributors.png",
+            "required": true,
+            "user": false,
+            "notes": "Newsroom Magazine Contributors seeded demo surface",
+            "useCase": "A buyer reviews the Newsroom Magazine contributors page before selecting theme-newsroom-magazine.",
+            "package": "theme-newsroom-magazine"
+        },
+        {
+            "id": "newsroom-magazine-newsletter",
+            "title": "Newsroom Magazine Newsletter",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/theme-newsroom-magazine-newsletter",
+            "url": "/theme-newsroom-magazine-newsletter",
+            "screenshotPath": "packages/theme-newsroom-magazine/docs/screenshots/newsroom-magazine-newsletter.png",
+            "required": true,
+            "user": false,
+            "notes": "Newsroom Magazine Newsletter seeded demo surface",
+            "useCase": "A buyer reviews the Newsroom Magazine newsletter page before selecting theme-newsroom-magazine.",
             "package": "theme-newsroom-magazine"
         }
     ]

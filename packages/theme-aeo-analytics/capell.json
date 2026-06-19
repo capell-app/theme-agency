@@ -119,29 +119,59 @@
         "description": "AEO Analytics provides a distinct theme definition, demo command, marketplace metadata, and public-safe Blade views for Visible AEO.",
         "screenshots": [
             {
+                "path": "docs/assets/marketplace/extension-card.jpg",
+                "alt": "AEO Analytics marketplace card preview",
+                "caption": "AEO Analytics premium theme card"
+            },
+            {
                 "path": "docs/screenshots/aeo-analytics-homepage.png",
-                "alt": "AEO Analytics homepage preview",
-                "caption": "AEO Analytics Homepage"
+                "alt": "AEO Analytics Homepage demo page screenshot",
+                "caption": "AEO Analytics Homepage page"
             },
             {
-                "path": "docs/screenshots/aeo-analytics-landing.png",
-                "alt": "AEO Analytics landing page preview",
-                "caption": "AEO Analytics Landing page"
+                "path": "docs/screenshots/aeo-analytics-directory.png",
+                "alt": "AEO Analytics Directory demo page screenshot",
+                "caption": "AEO Analytics Directory page"
             },
             {
-                "path": "docs/screenshots/aeo-analytics-listing.png",
-                "alt": "AEO Analytics list page preview",
-                "caption": "AEO Analytics List page"
-            },
-            {
-                "path": "docs/screenshots/aeo-analytics-search.png",
-                "alt": "AEO Analytics search results preview",
-                "caption": "AEO Analytics Search results"
+                "path": "docs/screenshots/aeo-analytics-detail.png",
+                "alt": "AEO Analytics Detail demo page screenshot",
+                "caption": "AEO Analytics Detail page"
             },
             {
                 "path": "docs/screenshots/aeo-analytics-contact.png",
-                "alt": "AEO Analytics contact form preview",
-                "caption": "AEO Analytics Contact form"
+                "alt": "AEO Analytics Contact demo page screenshot",
+                "caption": "AEO Analytics Contact page"
+            },
+            {
+                "path": "docs/screenshots/aeo-analytics-empty.png",
+                "alt": "AEO Analytics Empty State demo page screenshot",
+                "caption": "AEO Analytics Empty State page"
+            },
+            {
+                "path": "docs/screenshots/aeo-analytics-not-found.png",
+                "alt": "AEO Analytics 404 State demo page screenshot",
+                "caption": "AEO Analytics 404 State page"
+            },
+            {
+                "path": "docs/screenshots/aeo-analytics-cta.png",
+                "alt": "AEO Analytics Conversion CTA demo page screenshot",
+                "caption": "AEO Analytics Conversion CTA page"
+            },
+            {
+                "path": "docs/screenshots/aeo-analytics-dashboard.png",
+                "alt": "AEO Analytics Dashboard demo page screenshot",
+                "caption": "AEO Analytics Dashboard page"
+            },
+            {
+                "path": "docs/screenshots/aeo-analytics-reports.png",
+                "alt": "AEO Analytics Reports demo page screenshot",
+                "caption": "AEO Analytics Reports page"
+            },
+            {
+                "path": "docs/screenshots/aeo-analytics-integrations.png",
+                "alt": "AEO Analytics Integrations demo page screenshot",
+                "caption": "AEO Analytics Integrations page"
             }
         ],
         "categories": ["frontend", "themes"]

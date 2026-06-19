@@ -122,29 +122,59 @@
         "description": "Conference Event provides a distinct theme definition, demo command, marketplace metadata, and public-safe Blade views for Forge Summit 2026.",
         "screenshots": [
             {
+                "path": "docs/assets/marketplace/extension-card.jpg",
+                "alt": "Conference Event marketplace card preview",
+                "caption": "Conference Event premium theme card"
+            },
+            {
                 "path": "docs/screenshots/conference-event-homepage.png",
-                "alt": "Conference Event homepage preview",
-                "caption": "Conference Event Homepage"
+                "alt": "Conference Event Homepage demo page screenshot",
+                "caption": "Conference Event Homepage page"
             },
             {
-                "path": "docs/screenshots/conference-event-landing.png",
-                "alt": "Conference Event landing page preview",
-                "caption": "Conference Event Landing page"
+                "path": "docs/screenshots/conference-event-directory.png",
+                "alt": "Conference Event Directory demo page screenshot",
+                "caption": "Conference Event Directory page"
             },
             {
-                "path": "docs/screenshots/conference-event-listing.png",
-                "alt": "Conference Event list page preview",
-                "caption": "Conference Event List page"
-            },
-            {
-                "path": "docs/screenshots/conference-event-search.png",
-                "alt": "Conference Event search results preview",
-                "caption": "Conference Event Search results"
+                "path": "docs/screenshots/conference-event-detail.png",
+                "alt": "Conference Event Detail demo page screenshot",
+                "caption": "Conference Event Detail page"
             },
             {
                 "path": "docs/screenshots/conference-event-contact.png",
-                "alt": "Conference Event contact form preview",
-                "caption": "Conference Event Contact form"
+                "alt": "Conference Event Contact demo page screenshot",
+                "caption": "Conference Event Contact page"
+            },
+            {
+                "path": "docs/screenshots/conference-event-empty.png",
+                "alt": "Conference Event Empty State demo page screenshot",
+                "caption": "Conference Event Empty State page"
+            },
+            {
+                "path": "docs/screenshots/conference-event-not-found.png",
+                "alt": "Conference Event 404 State demo page screenshot",
+                "caption": "Conference Event 404 State page"
+            },
+            {
+                "path": "docs/screenshots/conference-event-cta.png",
+                "alt": "Conference Event Conversion CTA demo page screenshot",
+                "caption": "Conference Event Conversion CTA page"
+            },
+            {
+                "path": "docs/screenshots/conference-event-agenda.png",
+                "alt": "Conference Event Agenda demo page screenshot",
+                "caption": "Conference Event Agenda page"
+            },
+            {
+                "path": "docs/screenshots/conference-event-tickets.png",
+                "alt": "Conference Event Tickets demo page screenshot",
+                "caption": "Conference Event Tickets page"
+            },
+            {
+                "path": "docs/screenshots/conference-event-speakers.png",
+                "alt": "Conference Event Speakers demo page screenshot",
+                "caption": "Conference Event Speakers page"
             }
         ],
         "categories": ["frontend", "themes"]

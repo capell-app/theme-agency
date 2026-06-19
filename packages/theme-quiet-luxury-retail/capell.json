@@ -1,0 +1,159 @@
+{
+    "manifest-version": 3,
+    "name": "capell-app/theme-quiet-luxury-retail",
+    "slug": "theme-quiet-luxury-retail",
+    "displayName": "Theme Quiet Luxury Retail",
+    "kind": "theme",
+    "capellApiVersion": "^4.0",
+    "version": "4.x-dev",
+    "description": "Quiet Luxury Retail extends the default Capell frontend with a restrained fashion retail direction, portable demo content, cache-safe public Blade rendering, and theme tokens tuned for seasonal collections, sparse category paths, lookbooks, product care, materials, store assistance, and newsletter conversion.",
+    "product": {
+        "group": "Capell Themes",
+        "tier": "premium",
+        "bundle": "themes"
+    },
+    "namespace": "Capell\\ThemeStudio\\QuietLuxuryRetail",
+    "surfaces": ["frontend"],
+    "dependencies": {
+        "requires": ["capell-app/core", "capell-app/frontend"],
+        "supports": [
+            "capell-app/blog",
+            "capell-app/form-builder",
+            "capell-app/newsletter",
+            "capell-app/shopify-commerce"
+        ],
+        "conflicts": []
+    },
+    "providers": {
+        "metadata": [],
+        "install": [],
+        "runtime": [
+            "Capell\\ThemeStudio\\QuietLuxuryRetail\\QuietLuxuryRetailThemeServiceProvider"
+        ],
+        "admin": [],
+        "frontend": []
+    },
+    "contributes": [
+        {
+            "type": "admin-page",
+            "class": "Capell\\ThemeStudio\\QuietLuxuryRetail\\Manifest\\ThemeManagementPageContribution",
+            "pageClass": "Capell\\Marketplace\\Filament\\Pages\\ThemeExtensionPage",
+            "pageParameters": {
+                "themeKey": "quiet-luxury-retail"
+            },
+            "labelKey": "capell-marketplace::marketplace.theme_extension.management_entry_label"
+        }
+    ],
+    "database": {
+        "migrations": false,
+        "settings": false,
+        "requiredTables": []
+    },
+    "commands": {
+        "install": null,
+        "setup": null,
+        "demo": "capell:theme-quiet-luxury-retail-demo",
+        "demoParams": ["url", "languages", "sites"],
+        "doctor": null
+    },
+    "settings": [],
+    "permissions": [],
+    "capabilities": [
+        "theme-quiet-luxury-retail",
+        "theme-quiet-luxury-retail-frontend"
+    ],
+    "security": {
+        "riskTier": "low",
+        "publicSurface": {
+            "routeNames": [],
+            "auth": "none",
+            "csrfExemptRoutes": [],
+            "signedRoutes": [],
+            "tokenizedRoutes": [],
+            "webhookRoutes": [],
+            "throttledRoutes": []
+        },
+        "sensitiveData": {
+            "encryptedFields": [],
+            "hashedTokenFields": [],
+            "redactedOutputClasses": [],
+            "plaintextJustifications": []
+        },
+        "publicOutput": {
+            "cacheSafe": true,
+            "forbidAuthoringSurface": true,
+            "forbidSecrets": true,
+            "forbidPublicBladeQueries": true
+        },
+        "externalHttpClients": {
+            "requiresTimeouts": false,
+            "requiresSecretRedaction": false,
+            "clients": []
+        },
+        "adminSurface": {
+            "authorization": "none",
+            "permissions": []
+        }
+    },
+    "performance": {
+        "frontendRenderBudgetMs": 20,
+        "adminQueryBudget": 0,
+        "cacheTags": ["theme-quiet-luxury-retail"],
+        "cacheSafety": {
+            "cacheable": false,
+            "variesBy": ["site", "locale"],
+            "sensitiveOutput": false,
+            "invalidationSources": [],
+            "queueInvalidation": false
+        }
+    },
+    "healthChecks": [
+        {
+            "key": "theme-quiet-luxury-retail.package-health",
+            "label": "Quiet Luxury Retail package surfaces, providers, and install health are discoverable by Diagnostics.",
+            "class": "Capell\\ThemeStudio\\QuietLuxuryRetail\\Health\\ThemeQuietLuxuryRetailHealthCheck",
+            "severity": "critical",
+            "surface": "frontend"
+        }
+    ],
+    "commercial": {
+        "proposedLicense": "paid",
+        "requestedCertification": "first-party",
+        "supportPolicy": "priority",
+        "privateDocsRequested": true
+    },
+    "marketplace": {
+        "summary": "A premium Capell theme for restrained fashion retail, seasonal collections, lookbooks, product care, and quiet conversion.",
+        "description": "Quiet Luxury Retail provides a distinct theme definition, demo command, marketplace metadata, and public-safe Blade views for restrained retail brands.",
+        "screenshots": [
+            {
+                "path": "docs/screenshots/quiet-luxury-retail-homepage.png",
+                "alt": "Quiet Luxury Retail homepage preview",
+                "caption": "Quiet Luxury Retail Homepage"
+            },
+            {
+                "path": "docs/screenshots/quiet-luxury-retail-landing.png",
+                "alt": "Quiet Luxury Retail landing page preview",
+                "caption": "Quiet Luxury Retail Landing page"
+            },
+            {
+                "path": "docs/screenshots/quiet-luxury-retail-listing.png",
+                "alt": "Quiet Luxury Retail list page preview",
+                "caption": "Quiet Luxury Retail List page"
+            },
+            {
+                "path": "docs/screenshots/quiet-luxury-retail-search.png",
+                "alt": "Quiet Luxury Retail search results preview",
+                "caption": "Quiet Luxury Retail Search results"
+            },
+            {
+                "path": "docs/screenshots/quiet-luxury-retail-contact.png",
+                "alt": "Quiet Luxury Retail contact form preview",
+                "caption": "Quiet Luxury Retail Contact form"
+            }
+        ],
+        "categories": ["frontend", "themes"]
+    },
+    "extends": "default",
+    "themeKey": "quiet-luxury-retail"
+}

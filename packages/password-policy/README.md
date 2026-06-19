@@ -44,7 +44,6 @@ Screenshot contract: `docs/screenshots.json`.
 - Events: `PasswordChanged`, `PasswordExpired`, `UserMarkedForPasswordChange`.
 - Actions: `BuildPasswordSecurityPostureReportAction`, `EvaluatePasswordPolicyAction`, `MarkUserForPasswordChangeAction`, `NotifyPasswordPolicyLifecycleEventAction`, `PrunePasswordHistoryAction`, `RecordPasswordHistoryAction`, `SendPasswordExpiryWarningNotificationsAction`, `UpdatePasswordAction`, `ValidatePasswordChangeAction`.
 - Data objects: `PasswordChangeData`, `PasswordPolicyStatusData`, `PasswordSecurityPostureReportData`, `ResolvedPasswordPolicySettingsData`.
-- Notifications: `PasswordExpiryWarningNotification`.
 - Command signatures: `capell:password-policy:doctor`, `capell:password-policy:expire-stale`, `capell:password-policy:prune-history`, `capell:password-policy:require-change`, `capell:password-policy:send-expiry-warnings`.
 - Console command classes: `ExpireStalePasswordsCommand`, `PasswordPolicyDoctorCommand`, `PrunePasswordHistoryCommand`, `RequirePasswordChangeCommand`, `SendExpiryWarningsCommand`.
 - Manifest contributions: `admin-action-extender: Capell\PasswordPolicy\Manifest\PasswordPolicyAdminExtendersContribution`, `admin-page: Capell\PasswordPolicy\Manifest\PasswordPolicyAdminPagesContribution`, `console-command: Capell\PasswordPolicy\Manifest\PasswordPolicyConsoleCommandsContribution`, `health-check: Capell\PasswordPolicy\Manifest\PasswordPolicyHealthContribution`, `setting: Capell\PasswordPolicy\Manifest\PasswordPolicySettingsContribution`.
@@ -65,7 +64,7 @@ Screenshot contract: `docs/screenshots.json`.
 - Public routes: none detected in package route files.
 - Database changes: package migrations are declared.
 - Settings: `Capell\PasswordPolicy\Settings\PasswordPolicySettings`.
-- Queues or schedules: expiry warning notifications are queued mail notifications; schedule `capell:password-policy:send-expiry-warnings` from the host app when the warning setting is enabled.
+- Queues or schedules: none detected in standard package paths.
 - Cache tags: none declared.
 - Commands: `capell:password-policy:doctor`, `capell:password-policy:expire-stale`, `capell:password-policy:prune-history`, `capell:password-policy:require-change`, `capell:password-policy:send-expiry-warnings`.
 

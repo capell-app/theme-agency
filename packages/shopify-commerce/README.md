@@ -37,14 +37,14 @@ Screenshot contract: `docs/screenshots.json`.
 
 - Service providers: `Capell\ShopifyCommerce\Providers\ShopifyCommerceServiceProvider`, `Capell\ShopifyCommerce\Providers\AdminServiceProvider`.
 - Config files: `packages/shopify-commerce/config/capell-shopify-commerce.php`.
-- Migrations: `packages/shopify-commerce/database/migrations/2026_05_22_000001_create_shopify_connections_table.php`, `packages/shopify-commerce/database/migrations/2026_05_22_000002_create_shopify_oauth_states_table.php`, `packages/shopify-commerce/database/migrations/2026_05_22_000003_create_shopify_products_table.php`, `packages/shopify-commerce/database/migrations/2026_05_22_000004_create_shopify_product_variants_table.php`, `packages/shopify-commerce/database/migrations/2026_06_01_000001_create_shopify_customers_table.php`.
+- Migrations: `packages/shopify-commerce/database/migrations/2026_05_22_000001_create_shopify_connections_table.php`, `packages/shopify-commerce/database/migrations/2026_05_22_000002_create_shopify_oauth_states_table.php`, `packages/shopify-commerce/database/migrations/2026_05_22_000003_create_shopify_products_table.php`, `packages/shopify-commerce/database/migrations/2026_05_22_000004_create_shopify_product_variants_table.php`, `packages/shopify-commerce/database/migrations/2026_06_01_000001_create_shopify_customers_table.php`, `packages/shopify-commerce/database/migrations/2026_06_18_000001_create_shopify_webhook_events_table.php`.
 - Settings migrations: `packages/shopify-commerce/database/settings/2026_05_22_000001_create_shopify_commerce_settings.php`.
 - Settings classes: `ShopifyCommerceSettings`.
-- Models: `ShopifyConnection`, `ShopifyCustomer`, `ShopifyOAuthState`, `ShopifyProduct`, `ShopifyProductVariant`.
+- Models: `ShopifyConnection`, `ShopifyCustomer`, `ShopifyOAuthState`, `ShopifyProduct`, `ShopifyProductVariant`, `ShopifyWebhookEvent`.
 - Filament classes: `ShopifyConnectionPage`, `ShopifyCommerceSettingsSchema`.
 - Route files: `packages/shopify-commerce/routes/oauth.php`.
 - Events: `ShopifyCustomerSynced`.
-- Actions: `BuildShopifyCatalogThemeDataAction`, `ContinueShopifyProductBulkSyncAction`, `FetchShopifyProductAction`, `ImportShopifyProductBulkSyncAction`, `InvalidateShopifyProductSearchCacheAction`, `PersistShopifyProductAction`, `PollShopifyProductBulkSyncAction`, `SanitizeShopifySyncErrorAction`, `SearchShopifyProductsAction`, `StartShopifyProductBulkSyncAction`, `SyncShopifyProductsAction`, `SyncShopifyCustomersAction`, `and 16 more`.
+- Actions: `BuildShopifyCatalogThemeDataAction`, `ContinueShopifyProductBulkSyncAction`, `FetchShopifyProductAction`, `ImportShopifyProductBulkSyncAction`, `InvalidateShopifyProductSearchCacheAction`, `PersistShopifyProductAction`, `PollShopifyProductBulkSyncAction`, `SanitizeShopifySyncErrorAction`, `SearchShopifyProductsAction`, `StartShopifyProductBulkSyncAction`, `SyncShopifyProductsAction`, `SyncShopifyCustomersAction`, `and 17 more`.
 - Data objects: `ShopifyCallbackQueryData`, `ShopifyCatalogProductThemeData`, `ShopifyCatalogSummaryThemeData`, `ShopifyCatalogThemeData`, `ShopifyCatalogVariantThemeData`, `ShopifyProductData`, `ShopifyProductOptionData`, `ShopifyProductVariantData`, `ShopifyTokenExchangeResponseData`.
 - Command signatures: `capell-shopify-commerce:install`, `capell-shopify-commerce:prune-oauth-states`, `capell-shopify-commerce:sync`, `capell-shopify-commerce:sync-customers`.
 - Console command classes: `InstallShopifyCommerceCommand`, `PruneExpiredShopifyOAuthStatesCommand`, `SyncShopifyCustomersCommand`, `SyncShopifyProductsCommand`.
@@ -57,8 +57,8 @@ Screenshot contract: `docs/screenshots.json`.
 
 - Required tables: `shopify_connections`, `shopify_oauth_states`, `shopify_products`, `shopify_product_variants`, `shopify_customers`.
 - Protected tables: `shopify_connections`, `shopify_oauth_states`, `shopify_products`, `shopify_product_variants`, `shopify_customers`.
-- Models: `ShopifyConnection`, `ShopifyCustomer`, `ShopifyOAuthState`, `ShopifyProduct`, `ShopifyProductVariant`.
-- Migration files: `2026_05_22_000001_create_shopify_connections_table.php`, `2026_05_22_000002_create_shopify_oauth_states_table.php`, `2026_05_22_000003_create_shopify_products_table.php`, `2026_05_22_000004_create_shopify_product_variants_table.php`, `2026_06_01_000001_create_shopify_customers_table.php`.
+- Models: `ShopifyConnection`, `ShopifyCustomer`, `ShopifyOAuthState`, `ShopifyProduct`, `ShopifyProductVariant`, `ShopifyWebhookEvent`.
+- Migration files: `2026_05_22_000001_create_shopify_connections_table.php`, `2026_05_22_000002_create_shopify_oauth_states_table.php`, `2026_05_22_000003_create_shopify_products_table.php`, `2026_05_22_000004_create_shopify_product_variants_table.php`, `2026_06_01_000001_create_shopify_customers_table.php`, `2026_06_18_000001_create_shopify_webhook_events_table.php`.
 - Migration impact: run host migrations through the package install flow before opening package surfaces.
 - Deletion/retention behaviour: Docs gap unless the package has an explicit pruning command, retention setting, or tested cascade path.
 

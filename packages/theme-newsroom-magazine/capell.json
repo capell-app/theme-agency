@@ -122,29 +122,59 @@
         "description": "Newsroom Magazine provides a distinct theme definition, demo command, marketplace metadata, and public-safe Blade views for The Mainframe.",
         "screenshots": [
             {
+                "path": "docs/assets/marketplace/extension-card.jpg",
+                "alt": "Newsroom Magazine marketplace card preview",
+                "caption": "Newsroom Magazine premium theme card"
+            },
+            {
                 "path": "docs/screenshots/newsroom-magazine-homepage.png",
-                "alt": "Newsroom Magazine homepage preview",
+                "alt": "Newsroom Magazine Homepage demo page screenshot",
                 "caption": "Newsroom Magazine Homepage"
             },
             {
-                "path": "docs/screenshots/newsroom-magazine-landing.png",
-                "alt": "Newsroom Magazine landing page preview",
-                "caption": "Newsroom Magazine Landing page"
+                "path": "docs/screenshots/newsroom-magazine-directory.png",
+                "alt": "Newsroom Magazine Directory demo page screenshot",
+                "caption": "Newsroom Magazine Directory page"
             },
             {
-                "path": "docs/screenshots/newsroom-magazine-listing.png",
-                "alt": "Newsroom Magazine list page preview",
-                "caption": "Newsroom Magazine List page"
-            },
-            {
-                "path": "docs/screenshots/newsroom-magazine-search.png",
-                "alt": "Newsroom Magazine search results preview",
-                "caption": "Newsroom Magazine Search results"
+                "path": "docs/screenshots/newsroom-magazine-detail.png",
+                "alt": "Newsroom Magazine Detail demo page screenshot",
+                "caption": "Newsroom Magazine Detail page"
             },
             {
                 "path": "docs/screenshots/newsroom-magazine-contact.png",
-                "alt": "Newsroom Magazine contact form preview",
-                "caption": "Newsroom Magazine Contact form"
+                "alt": "Newsroom Magazine Contact demo page screenshot",
+                "caption": "Newsroom Magazine Contact page"
+            },
+            {
+                "path": "docs/screenshots/newsroom-magazine-empty.png",
+                "alt": "Newsroom Magazine Empty State demo page screenshot",
+                "caption": "Newsroom Magazine Empty State page"
+            },
+            {
+                "path": "docs/screenshots/newsroom-magazine-not-found.png",
+                "alt": "Newsroom Magazine 404 State demo page screenshot",
+                "caption": "Newsroom Magazine 404 State page"
+            },
+            {
+                "path": "docs/screenshots/newsroom-magazine-cta.png",
+                "alt": "Newsroom Magazine Conversion CTA demo page screenshot",
+                "caption": "Newsroom Magazine Conversion CTA page"
+            },
+            {
+                "path": "docs/screenshots/newsroom-magazine-front-page.png",
+                "alt": "Newsroom Magazine Front Page demo page screenshot",
+                "caption": "Newsroom Magazine Front Page page"
+            },
+            {
+                "path": "docs/screenshots/newsroom-magazine-contributors.png",
+                "alt": "Newsroom Magazine Contributors demo page screenshot",
+                "caption": "Newsroom Magazine Contributors page"
+            },
+            {
+                "path": "docs/screenshots/newsroom-magazine-newsletter.png",
+                "alt": "Newsroom Magazine Newsletter demo page screenshot",
+                "caption": "Newsroom Magazine Newsletter page"
             }
         ],
         "categories": ["frontend", "themes"]

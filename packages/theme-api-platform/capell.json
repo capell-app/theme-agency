@@ -119,29 +119,59 @@
         "description": "API Platform provides a distinct theme definition, demo command, marketplace metadata, and public-safe Blade views for Sonari API.",
         "screenshots": [
             {
+                "path": "docs/assets/marketplace/extension-card.jpg",
+                "alt": "API Platform marketplace card preview",
+                "caption": "API Platform premium theme card"
+            },
+            {
                 "path": "docs/screenshots/api-platform-homepage.png",
-                "alt": "API Platform homepage preview",
-                "caption": "API Platform Homepage"
+                "alt": "API Platform Homepage demo page screenshot",
+                "caption": "API Platform Homepage page"
             },
             {
-                "path": "docs/screenshots/api-platform-landing.png",
-                "alt": "API Platform landing page preview",
-                "caption": "API Platform Landing page"
+                "path": "docs/screenshots/api-platform-directory.png",
+                "alt": "API Platform Directory demo page screenshot",
+                "caption": "API Platform Directory page"
             },
             {
-                "path": "docs/screenshots/api-platform-listing.png",
-                "alt": "API Platform list page preview",
-                "caption": "API Platform List page"
-            },
-            {
-                "path": "docs/screenshots/api-platform-search.png",
-                "alt": "API Platform search results preview",
-                "caption": "API Platform Search results"
+                "path": "docs/screenshots/api-platform-detail.png",
+                "alt": "API Platform Detail demo page screenshot",
+                "caption": "API Platform Detail page"
             },
             {
                 "path": "docs/screenshots/api-platform-contact.png",
-                "alt": "API Platform contact form preview",
-                "caption": "API Platform Contact form"
+                "alt": "API Platform Contact demo page screenshot",
+                "caption": "API Platform Contact page"
+            },
+            {
+                "path": "docs/screenshots/api-platform-empty.png",
+                "alt": "API Platform Empty State demo page screenshot",
+                "caption": "API Platform Empty State page"
+            },
+            {
+                "path": "docs/screenshots/api-platform-not-found.png",
+                "alt": "API Platform 404 State demo page screenshot",
+                "caption": "API Platform 404 State page"
+            },
+            {
+                "path": "docs/screenshots/api-platform-cta.png",
+                "alt": "API Platform Conversion CTA demo page screenshot",
+                "caption": "API Platform Conversion CTA page"
+            },
+            {
+                "path": "docs/screenshots/api-platform-quickstart.png",
+                "alt": "API Platform Quickstart demo page screenshot",
+                "caption": "API Platform Quickstart page"
+            },
+            {
+                "path": "docs/screenshots/api-platform-api-reference.png",
+                "alt": "API Platform API Reference demo page screenshot",
+                "caption": "API Platform API Reference page"
+            },
+            {
+                "path": "docs/screenshots/api-platform-status.png",
+                "alt": "API Platform Status & Trust demo page screenshot",
+                "caption": "API Platform Status & Trust page"
             }
         ],
         "categories": ["frontend", "themes"]

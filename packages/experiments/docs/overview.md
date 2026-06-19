@@ -34,42 +34,6 @@ Screenshot contract: `screenshots.json`.
 - Experiment goals admin index (admin, required).
 - Experiment audience rules admin index (admin, required).
 
-## Screenshot Evidence
-
-These captures are the package-owned visual contract for the admin pages, public pages, actions, workflows, and feature surfaces described above. Keep this section aligned with `docs/screenshots.json` whenever the package surface changes.
-
-### Experiments admin index
-
-![Experiments admin index](screenshots/experiments-index.png)
-
-- Surface: admin · Target: ExperimentResource.
-- Documents: A growth operator reviews active and scheduled experiments from the Capell admin.
-- Capture notes: Captured from the seeded Capell screenshot runner app after installing capell-app/experiments and migrating the package tables.
-
-### Experiment variants admin index
-
-![Experiment variants admin index](screenshots/experiment-variants-index.png)
-
-- Surface: admin · Target: ExperimentVariantResource.
-- Documents: A growth operator compares variant weights and control state before launching a test.
-- Capture notes: Captured from the seeded Capell screenshot runner app with control and challenger variants plus allocation weights.
-
-### Experiment goals admin index
-
-![Experiment goals admin index](screenshots/experiment-goals-index.png)
-
-- Surface: admin · Target: ExperimentGoalResource.
-- Documents: A growth operator verifies the primary conversion goals used for winner reporting.
-- Capture notes: Captured from the seeded Capell screenshot runner app with a primary demo-request conversion goal.
-
-### Experiment audience rules admin index
-
-![Experiment audience rules admin index](screenshots/experiment-audience-rules-index.png)
-
-- Surface: admin · Target: ExperimentAudienceRuleResource.
-- Documents: A growth operator confirms which visitors are eligible for an experiment.
-- Capture notes: Captured from the seeded Capell screenshot runner app with a path-based audience rule.
-
 ## Technical Shape
 
 - Service providers: `Capell\Experiments\Providers\ExperimentsServiceProvider`.
@@ -79,8 +43,9 @@ These captures are the package-owned visual contract for the admin pages, public
 - Filament classes: `ExperimentAudienceRuleResource`, `CreateExperimentAudienceRule`, `EditExperimentAudienceRule`, `ListExperimentAudienceRules`, `ExperimentGoalResource`, `CreateExperimentGoal`, `EditExperimentGoal`, `ListExperimentGoals`, `ExperimentVariantResource`, `CreateExperimentVariant`, `EditExperimentVariant`, `ListExperimentVariants`, `and 5 more`.
 - Actions: `AllocateVariantAction`, `BuildWinnerReportAction`, `CreateExperimentAction`, `DeclareExperimentWinnerAction`, `EvaluateAudienceRulesAction`, `RecordGoalEventAction`, `ResolveExperimentVariantForContextAction`, `SyncExperimentStatusesAction`.
 - Data objects: `ExperimentAudienceRuleData`, `ExperimentContextData`, `ExperimentData`, `ExperimentGoalData`, `ExperimentGoalEventData`, `ExperimentStatusSyncResultData`, `ExperimentVariantData`, `ResolvedExperimentVariantData`, `VariantAllocationData`, `WinnerReportData`, `WinnerVariantReportData`.
+- Command signatures: `capell:experiments:sync-statuses`.
 - Console command classes: `SyncExperimentStatusesCommand`.
-- Manifest contributions: `admin-resource: Capell\Experiments\Manifest\ExperimentAudienceRuleResourceContribution`, `admin-resource: Capell\Experiments\Manifest\ExperimentGoalResourceContribution`, `admin-resource: Capell\Experiments\Manifest\ExperimentResourceContribution`, `admin-resource: Capell\Experiments\Manifest\ExperimentVariantResourceContribution`, `model: Capell\Experiments\Manifest\ExperimentsModelsContribution`.
+- Manifest contributions: `admin-resource: Capell\Experiments\Manifest\ExperimentAudienceRuleResourceContribution`, `admin-resource: Capell\Experiments\Manifest\ExperimentGoalResourceContribution`, `admin-resource: Capell\Experiments\Manifest\ExperimentResourceContribution`, `admin-resource: Capell\Experiments\Manifest\ExperimentVariantResourceContribution`, `model: Capell\Experiments\Manifest\ExperimentsModelsContribution`, `scheduled-job: Capell\Experiments\Manifest\ExperimentsStatusSyncScheduleContribution`.
 - Health checks: `Capell\Experiments\Health\ExperimentsHealthCheck`.
 - Blade views: `packages/experiments/resources/views/filament/experiments/results-page.blade.php`, `packages/experiments/resources/views/filament/experiments/results.blade.php`.
 - Cache tags: `experiments`.
@@ -102,7 +67,7 @@ These captures are the package-owned visual contract for the admin pages, public
 - Settings: no package settings declared.
 - Queues or schedules: none detected in standard package paths.
 - Cache tags: `experiments`.
-- Commands: console command classes detected: `SyncExperimentStatusesCommand`.
+- Commands: `capell:experiments:sync-statuses`.
 
 ## Common Pitfalls
 
@@ -115,6 +80,7 @@ These captures are the package-owned visual contract for the admin pages, public
 | --- | --- | --- | --- |
 | Package surface is missing after install | Provider or manifest is not loaded | Confirm `capell.json`, package `composer.json`, and provider registration | Reinstall the package, refresh Composer autoload, and clear host caches |
 | Admin screen or command fails on missing table | Package migrations have not run | Check the tables listed in `Data Model` | Run host migrations and rerun the focused package test |
+| Background work does not run | Queue worker or scheduled command is not active | Check package jobs, commands, and host scheduler configuration | Start the queue or scheduler, then run the focused command or package test |
 
 ## Quick Start
 

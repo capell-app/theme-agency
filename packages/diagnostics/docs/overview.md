@@ -36,58 +36,6 @@ Screenshot contract: `screenshots.json`.
 - Permission audit page (admin, required).
 - Queue Operations page (admin, required).
 
-## Screenshot Evidence
-
-These captures are the package-owned visual contract for the admin pages, public pages, actions, workflows, and feature surfaces described above. Keep this section aligned with `docs/screenshots.json` whenever the package surface changes.
-
-### Developer tools dashboard
-
-![Developer tools dashboard](screenshots/diagnostics-dashboard.png)
-
-- Surface: admin · Target: DiagnosticsPage.
-- Documents: A developer inspects package maker safety, registered configurators, components, and blocks from the diagnostics dashboard.
-- Capture notes: Capture as a super admin or a user with diagnostics access after the runner app has installed packages, command providers, and registry inspector data available.
-
-### Health widgets on the admin dashboard
-
-![Health widgets on the admin dashboard](screenshots/health-widgets-on-the-admin-dashboard.png)
-
-- Surface: admin · Target: DiagnosticsPage.
-- Documents: An operator checks the installed site's health widgets before investigating a deployment or publishing issue.
-- Capture notes: Capture the main admin dashboard or System Health dashboard after diagnostics widgets register and the runner app has package, migration, cache, Tailwind, or content graph state to report.
-
-### Command palette page
-
-![Command palette page](screenshots/command-palette-page.png)
-
-- Surface: admin · Target: CommandPalettePage.
-- Documents: A developer searches trusted diagnostics and capell:* commands, reviews required parameters, and sees confirmation state before execution.
-- Capture notes: Capture as a super admin or diagnostics user. Select a safe navigation command if the runner can preserve selected-command state; avoid executing destructive capell:* commands during screenshot capture.
-
-### System health page
-
-![System health page](screenshots/system-health-page.png)
-
-- Surface: admin · Target: SystemHealthPage.
-- Documents: A super admin reviews system health panels before changing package setup or publishing configuration.
-- Capture notes: Requires a super admin role and capell.dashboard.system_health_enabled=true. Widget detail depends on host setup, migration, package, registry, content graph, cache, config, and Tailwind state.
-
-### Permission audit page
-
-![Permission audit page](screenshots/permission-audit-page.png)
-
-- Surface: admin · Target: PermissionAuditPage.
-- Documents: An administrator audits registered permissions and role coverage after installing or removing packages.
-- Capture notes: Requires a user with the viewPermissionAuditPage diagnostics permission and registered permissions/roles in the host app.
-
-### Queue Operations page
-
-![Queue Operations page](screenshots/queue-health-page.png)
-
-- Surface: admin · Target: QueueHealthPage.
-- Documents: An operator reviews queue monitor history, failed jobs, pending jobs, and retry/delete controls before debugging background work.
-- Capture notes: Capture with seeded queue monitor history, failed job rows, and database pending jobs. This page credits croustibat/filament-jobs-monitor as the upstream telemetry source while showing the Capell-owned operations UX.
-
 ## Technical Shape
 
 - Service providers: `Capell\Diagnostics\Providers\DiagnosticsServiceProvider`, `Capell\Diagnostics\Providers\AdminServiceProvider`.
@@ -127,7 +75,6 @@ These captures are the package-owned visual contract for the admin pages, public
 
 - Run migrations before opening package resources or public routes.
 - Run package commands from the host app; in this repository use `vendor/bin/pest` for package tests.
-- Configure `capell-diagnostics.infrastructure.warning_*` drivers when a development or test environment intentionally uses local-only cache, queue, or mail transports.
 - Keep `composer.json`, `composer.local.json`, `capell.json`, docs, screenshots, and tests aligned when the package surface changes.
 
 ## Troubleshooting

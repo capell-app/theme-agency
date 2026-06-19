@@ -119,29 +119,59 @@
         "description": "Podcast Show provides a distinct theme definition, demo command, marketplace metadata, and public-safe Blade views for Signal & Noise.",
         "screenshots": [
             {
+                "path": "docs/assets/marketplace/extension-card.jpg",
+                "alt": "Podcast Show marketplace card preview",
+                "caption": "Podcast Show premium theme card"
+            },
+            {
                 "path": "docs/screenshots/podcast-show-homepage.png",
-                "alt": "Podcast Show homepage preview",
-                "caption": "Podcast Show Homepage"
+                "alt": "Podcast Show Homepage demo page screenshot",
+                "caption": "Podcast Show Homepage page"
             },
             {
-                "path": "docs/screenshots/podcast-show-landing.png",
-                "alt": "Podcast Show landing page preview",
-                "caption": "Podcast Show Landing page"
+                "path": "docs/screenshots/podcast-show-directory.png",
+                "alt": "Podcast Show Directory demo page screenshot",
+                "caption": "Podcast Show Directory page"
             },
             {
-                "path": "docs/screenshots/podcast-show-listing.png",
-                "alt": "Podcast Show list page preview",
-                "caption": "Podcast Show List page"
-            },
-            {
-                "path": "docs/screenshots/podcast-show-search.png",
-                "alt": "Podcast Show search results preview",
-                "caption": "Podcast Show Search results"
+                "path": "docs/screenshots/podcast-show-detail.png",
+                "alt": "Podcast Show Detail demo page screenshot",
+                "caption": "Podcast Show Detail page"
             },
             {
                 "path": "docs/screenshots/podcast-show-contact.png",
-                "alt": "Podcast Show contact form preview",
-                "caption": "Podcast Show Contact form"
+                "alt": "Podcast Show Contact demo page screenshot",
+                "caption": "Podcast Show Contact page"
+            },
+            {
+                "path": "docs/screenshots/podcast-show-empty.png",
+                "alt": "Podcast Show Empty State demo page screenshot",
+                "caption": "Podcast Show Empty State page"
+            },
+            {
+                "path": "docs/screenshots/podcast-show-not-found.png",
+                "alt": "Podcast Show 404 State demo page screenshot",
+                "caption": "Podcast Show 404 State page"
+            },
+            {
+                "path": "docs/screenshots/podcast-show-cta.png",
+                "alt": "Podcast Show Conversion CTA demo page screenshot",
+                "caption": "Podcast Show Conversion CTA page"
+            },
+            {
+                "path": "docs/screenshots/podcast-show-episodes.png",
+                "alt": "Podcast Show Episodes demo page screenshot",
+                "caption": "Podcast Show Episodes page"
+            },
+            {
+                "path": "docs/screenshots/podcast-show-guests.png",
+                "alt": "Podcast Show Guests demo page screenshot",
+                "caption": "Podcast Show Guests page"
+            },
+            {
+                "path": "docs/screenshots/podcast-show-sponsors.png",
+                "alt": "Podcast Show Sponsors demo page screenshot",
+                "caption": "Podcast Show Sponsors page"
             }
         ],
         "categories": ["frontend", "themes"]

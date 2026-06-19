@@ -1,0 +1,79 @@
+{
+    "package": "theme-quiet-luxury-retail",
+    "composerName": "capell-app/theme-quiet-luxury-retail",
+    "generatedFor": "deployment-screenshot-runner",
+    "requiresInstalledPackage": true,
+    "outputDirectory": "packages/theme-quiet-luxury-retail/docs/screenshots",
+    "entries": [
+        {
+            "id": "quiet-luxury-retail-homepage",
+            "title": "Quiet Luxury Retail Homepage",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-quiet-luxury-retail/docs/screenshots/quiet-luxury-retail-homepage.png",
+            "required": false,
+            "user": false,
+            "notes": "Homepage with seasonal collections, category paths, lookbook, product care, and newsletter paths.",
+            "useCase": "Minimal fashion retail marketplace preview",
+            "package": "theme-quiet-luxury-retail"
+        },
+        {
+            "id": "quiet-luxury-retail-landing-page",
+            "title": "Quiet Luxury Retail Landing page",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-quiet-luxury-retail/docs/screenshots/quiet-luxury-retail-landing.png",
+            "required": false,
+            "user": false,
+            "notes": "Seasonal collection or lookbook landing page.",
+            "useCase": "Minimal fashion collection preview",
+            "package": "theme-quiet-luxury-retail"
+        },
+        {
+            "id": "quiet-luxury-retail-list-page",
+            "title": "Quiet Luxury Retail List page",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-quiet-luxury-retail/docs/screenshots/quiet-luxury-retail-listing.png",
+            "required": false,
+            "user": false,
+            "notes": "Product, collection, article, or lookbook listing page.",
+            "useCase": "Quiet Luxury Retail archive preview",
+            "package": "theme-quiet-luxury-retail"
+        },
+        {
+            "id": "quiet-luxury-retail-search-results",
+            "title": "Quiet Luxury Retail Search results",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-quiet-luxury-retail/docs/screenshots/quiet-luxury-retail-search.png",
+            "required": false,
+            "user": false,
+            "notes": "Search results for products, collections, lookbooks, and care guides.",
+            "useCase": "Quiet Luxury Retail discovery preview",
+            "package": "theme-quiet-luxury-retail"
+        },
+        {
+            "id": "quiet-luxury-retail-contact-form",
+            "title": "Quiet Luxury Retail Contact form",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-quiet-luxury-retail/docs/screenshots/quiet-luxury-retail-contact.png",
+            "required": false,
+            "user": false,
+            "notes": "Newsletter, product-care, store assistance, or contact conversion form.",
+            "useCase": "Quiet Luxury Retail conversion preview",
+            "package": "theme-quiet-luxury-retail"
+        }
+    ]
+}

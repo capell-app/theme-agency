@@ -179,9 +179,7 @@
             "signedRoutes": [],
             "tokenizedRoutes": [],
             "webhookRoutes": [],
-            "throttledRoutes": [
-                "capell-privacy-center.consent.store"
-            ]
+            "throttledRoutes": ["capell-privacy-center.consent.store"]
         },
         "sensitiveData": {
             "encryptedFields": [],

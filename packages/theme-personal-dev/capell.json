@@ -119,29 +119,59 @@
         "description": "Personal Dev provides a distinct theme definition, demo command, marketplace metadata, and public-safe Blade views for Jonah Vance.",
         "screenshots": [
             {
+                "path": "docs/assets/marketplace/extension-card.jpg",
+                "alt": "Personal Dev marketplace card preview",
+                "caption": "Personal Dev premium theme card"
+            },
+            {
                 "path": "docs/screenshots/personal-dev-homepage.png",
-                "alt": "Personal Dev homepage preview",
-                "caption": "Personal Dev Homepage"
+                "alt": "Personal Dev Homepage demo page screenshot",
+                "caption": "Personal Dev Homepage page"
             },
             {
-                "path": "docs/screenshots/personal-dev-landing.png",
-                "alt": "Personal Dev landing page preview",
-                "caption": "Personal Dev Landing page"
+                "path": "docs/screenshots/personal-dev-directory.png",
+                "alt": "Personal Dev Directory demo page screenshot",
+                "caption": "Personal Dev Directory page"
             },
             {
-                "path": "docs/screenshots/personal-dev-listing.png",
-                "alt": "Personal Dev list page preview",
-                "caption": "Personal Dev List page"
-            },
-            {
-                "path": "docs/screenshots/personal-dev-search.png",
-                "alt": "Personal Dev search results preview",
-                "caption": "Personal Dev Search results"
+                "path": "docs/screenshots/personal-dev-detail.png",
+                "alt": "Personal Dev Detail demo page screenshot",
+                "caption": "Personal Dev Detail page"
             },
             {
                 "path": "docs/screenshots/personal-dev-contact.png",
-                "alt": "Personal Dev contact form preview",
-                "caption": "Personal Dev Contact form"
+                "alt": "Personal Dev Contact demo page screenshot",
+                "caption": "Personal Dev Contact page"
+            },
+            {
+                "path": "docs/screenshots/personal-dev-empty.png",
+                "alt": "Personal Dev Empty State demo page screenshot",
+                "caption": "Personal Dev Empty State page"
+            },
+            {
+                "path": "docs/screenshots/personal-dev-not-found.png",
+                "alt": "Personal Dev 404 State demo page screenshot",
+                "caption": "Personal Dev 404 State page"
+            },
+            {
+                "path": "docs/screenshots/personal-dev-cta.png",
+                "alt": "Personal Dev Conversion CTA demo page screenshot",
+                "caption": "Personal Dev Conversion CTA page"
+            },
+            {
+                "path": "docs/screenshots/personal-dev-writing.png",
+                "alt": "Personal Dev Writing demo page screenshot",
+                "caption": "Personal Dev Writing page"
+            },
+            {
+                "path": "docs/screenshots/personal-dev-projects.png",
+                "alt": "Personal Dev Projects demo page screenshot",
+                "caption": "Personal Dev Projects page"
+            },
+            {
+                "path": "docs/screenshots/personal-dev-now.png",
+                "alt": "Personal Dev Now Page demo page screenshot",
+                "caption": "Personal Dev Now Page page"
             }
         ],
         "categories": ["frontend", "themes"]
