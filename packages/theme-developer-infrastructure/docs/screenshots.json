@@ -1,0 +1,79 @@
+{
+    "package": "theme-developer-infrastructure",
+    "composerName": "capell-app/theme-developer-infrastructure",
+    "generatedFor": "deployment-screenshot-runner",
+    "requiresInstalledPackage": true,
+    "outputDirectory": "packages/theme-developer-infrastructure/docs/screenshots",
+    "entries": [
+        {
+            "id": "developer-infrastructure-homepage",
+            "title": "Developer Infrastructure Homepage",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-developer-infrastructure/docs/screenshots/developer-infrastructure-homepage.png",
+            "required": false,
+            "user": false,
+            "notes": "Homepage with platform pillars, command blocks, deploy timeline, docs and changelog, integrations, architecture and enterprise, and newsletter paths.",
+            "useCase": "Developer Infrastructure preview",
+            "package": "theme-developer-infrastructure"
+        },
+        {
+            "id": "developer-infrastructure-landing-page",
+            "title": "Developer Infrastructure Landing page",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-developer-infrastructure/docs/screenshots/developer-infrastructure-landing.png",
+            "required": false,
+            "user": false,
+            "notes": "Developer platform homepage, docs page, deployment workflow, integration page, architecture page, changelog entry, or enterprise landing page.",
+            "useCase": "Developer Infrastructure feature preview",
+            "package": "theme-developer-infrastructure"
+        },
+        {
+            "id": "developer-infrastructure-list-page",
+            "title": "Developer Infrastructure List page",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-developer-infrastructure/docs/screenshots/developer-infrastructure-listing.png",
+            "required": false,
+            "user": false,
+            "notes": "Deploy note, docs page, changelog entry, integration page, architecture guide, customer story, or company page.",
+            "useCase": "Developer Infrastructure archive preview",
+            "package": "theme-developer-infrastructure"
+        },
+        {
+            "id": "developer-infrastructure-search-results",
+            "title": "Developer Infrastructure Search results",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-developer-infrastructure/docs/screenshots/developer-infrastructure-search.png",
+            "required": false,
+            "user": false,
+            "notes": "Search results for docs, APIs, deploys, changelog entries, integrations, architecture guides, status updates, and enterprise resources.",
+            "useCase": "Developer Infrastructure discovery preview",
+            "package": "theme-developer-infrastructure"
+        },
+        {
+            "id": "developer-infrastructure-contact-form",
+            "title": "Developer Infrastructure Contact form",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-developer-infrastructure/docs/screenshots/developer-infrastructure-contact.png",
+            "required": false,
+            "user": false,
+            "notes": "Newsletter, demo request, enterprise inquiry, integration request, docs feedback, or contact conversion form.",
+            "useCase": "Developer Infrastructure conversion preview",
+            "package": "theme-developer-infrastructure"
+        }
+    ]
+}
