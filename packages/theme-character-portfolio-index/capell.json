@@ -1,0 +1,159 @@
+{
+    "manifest-version": 3,
+    "name": "capell-app/theme-character-portfolio-index",
+    "slug": "theme-character-portfolio-index",
+    "displayName": "Theme Character Portfolio Index",
+    "kind": "theme",
+    "capellApiVersion": "^4.0",
+    "version": "4.x-dev",
+    "description": "Character Portfolio Index extends the default Capell frontend with a selective, slightly playful portfolio index direction, portable demo content, cache-safe public Blade rendering, and theme tokens tuned for showcase headlines, category tabs, curated grids, standout notes, creator summaries, recommendations, and newsletters.",
+    "product": {
+        "group": "Capell Themes",
+        "tier": "premium",
+        "bundle": "themes"
+    },
+    "namespace": "Capell\\ThemeStudio\\CharacterPortfolioIndex",
+    "surfaces": ["frontend"],
+    "dependencies": {
+        "requires": ["capell-app/core", "capell-app/frontend"],
+        "supports": [
+            "capell-app/blog",
+            "capell-app/form-builder",
+            "capell-app/newsletter",
+            "capell-app/shopify-commerce"
+        ],
+        "conflicts": []
+    },
+    "providers": {
+        "metadata": [],
+        "install": [],
+        "runtime": [
+            "Capell\\ThemeStudio\\CharacterPortfolioIndex\\CharacterPortfolioIndexThemeServiceProvider"
+        ],
+        "admin": [],
+        "frontend": []
+    },
+    "contributes": [
+        {
+            "type": "admin-page",
+            "class": "Capell\\ThemeStudio\\CharacterPortfolioIndex\\Manifest\\ThemeManagementPageContribution",
+            "pageClass": "Capell\\Marketplace\\Filament\\Pages\\ThemeExtensionPage",
+            "pageParameters": {
+                "themeKey": "character-portfolio-index"
+            },
+            "labelKey": "capell-marketplace::marketplace.theme_extension.management_entry_label"
+        }
+    ],
+    "database": {
+        "migrations": false,
+        "settings": false,
+        "requiredTables": []
+    },
+    "commands": {
+        "install": null,
+        "setup": null,
+        "demo": "capell:theme-character-portfolio-index-demo",
+        "demoParams": ["url", "languages", "sites"],
+        "doctor": null
+    },
+    "settings": [],
+    "permissions": [],
+    "capabilities": [
+        "theme-character-portfolio-index",
+        "theme-character-portfolio-index-frontend"
+    ],
+    "security": {
+        "riskTier": "low",
+        "publicSurface": {
+            "routeNames": [],
+            "auth": "none",
+            "csrfExemptRoutes": [],
+            "signedRoutes": [],
+            "tokenizedRoutes": [],
+            "webhookRoutes": [],
+            "throttledRoutes": []
+        },
+        "sensitiveData": {
+            "encryptedFields": [],
+            "hashedTokenFields": [],
+            "redactedOutputClasses": [],
+            "plaintextJustifications": []
+        },
+        "publicOutput": {
+            "cacheSafe": true,
+            "forbidAuthoringSurface": true,
+            "forbidSecrets": true,
+            "forbidPublicBladeQueries": true
+        },
+        "externalHttpClients": {
+            "requiresTimeouts": false,
+            "requiresSecretRedaction": false,
+            "clients": []
+        },
+        "adminSurface": {
+            "authorization": "none",
+            "permissions": []
+        }
+    },
+    "performance": {
+        "frontendRenderBudgetMs": 20,
+        "adminQueryBudget": 0,
+        "cacheTags": ["theme-character-portfolio-index"],
+        "cacheSafety": {
+            "cacheable": false,
+            "variesBy": ["site", "locale"],
+            "sensitiveOutput": false,
+            "invalidationSources": [],
+            "queueInvalidation": false
+        }
+    },
+    "healthChecks": [
+        {
+            "key": "theme-character-portfolio-index.package-health",
+            "label": "Character Portfolio Index package surfaces, providers, and install health are discoverable by Diagnostics.",
+            "class": "Capell\\ThemeStudio\\CharacterPortfolioIndex\\Health\\ThemeCharacterPortfolioIndexHealthCheck",
+            "severity": "critical",
+            "surface": "frontend"
+        }
+    ],
+    "commercial": {
+        "proposedLicense": "paid",
+        "requestedCertification": "first-party",
+        "supportPolicy": "priority",
+        "privateDocsRequested": true
+    },
+    "marketplace": {
+        "summary": "A characterful Capell theme for curated portfolio indexes, creator summaries, standout notes, category tabs, and related recommendations.",
+        "description": "Character Portfolio Index provides a distinct theme definition, demo command, marketplace metadata, and public-safe Blade views for selective personal, company, design, development, and video portfolio collections that need editorial blurbs, screenshots, creator summaries, standout qualities, and practical recommendations.",
+        "screenshots": [
+            {
+                "path": "docs/screenshots/character-portfolio-index-homepage.png",
+                "alt": "Character Portfolio Index homepage preview",
+                "caption": "Character Portfolio Index Homepage"
+            },
+            {
+                "path": "docs/screenshots/character-portfolio-index-landing.png",
+                "alt": "Character Portfolio Index landing page preview",
+                "caption": "Character Portfolio Index Landing page"
+            },
+            {
+                "path": "docs/screenshots/character-portfolio-index-listing.png",
+                "alt": "Character Portfolio Index list page preview",
+                "caption": "Character Portfolio Index List page"
+            },
+            {
+                "path": "docs/screenshots/character-portfolio-index-search.png",
+                "alt": "Character Portfolio Index search results preview",
+                "caption": "Character Portfolio Index Search results"
+            },
+            {
+                "path": "docs/screenshots/character-portfolio-index-contact.png",
+                "alt": "Character Portfolio Index contact form preview",
+                "caption": "Character Portfolio Index Contact form"
+            }
+        ],
+        "categories": ["frontend", "themes"]
+    },
+    "extends": "default",
+    "themeKey": "character-portfolio-index"
+}
