@@ -1,0 +1,79 @@
+{
+    "package": "theme-product-company-editorial",
+    "composerName": "capell-app/theme-product-company-editorial",
+    "generatedFor": "deployment-screenshot-runner",
+    "requiresInstalledPackage": true,
+    "outputDirectory": "packages/theme-product-company-editorial/docs/screenshots",
+    "entries": [
+        {
+            "id": "product-company-editorial-homepage",
+            "title": "Product Company Editorial Homepage",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-product-company-editorial/docs/screenshots/product-company-editorial-homepage.png",
+            "required": false,
+            "user": false,
+            "notes": "Homepage with dark masthead, featured editorial package, topic areas, story cards, product updates, templates, and newsletter paths.",
+            "useCase": "Product-company editorial marketplace preview",
+            "package": "theme-product-company-editorial"
+        },
+        {
+            "id": "product-company-editorial-landing-page",
+            "title": "Product Company Editorial Landing page",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-product-company-editorial/docs/screenshots/product-company-editorial-landing.png",
+            "required": false,
+            "user": false,
+            "notes": "Featured product update, design essay, engineering post, template story, or culture landing page.",
+            "useCase": "Product-company featured story preview",
+            "package": "theme-product-company-editorial"
+        },
+        {
+            "id": "product-company-editorial-list-page",
+            "title": "Product Company Editorial List page",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-product-company-editorial/docs/screenshots/product-company-editorial-listing.png",
+            "required": false,
+            "user": false,
+            "notes": "Product update, design essay, engineering post, template, company story, or author listing page.",
+            "useCase": "Product Company Editorial archive preview",
+            "package": "theme-product-company-editorial"
+        },
+        {
+            "id": "product-company-editorial-search-results",
+            "title": "Product Company Editorial Search results",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-product-company-editorial/docs/screenshots/product-company-editorial-search.png",
+            "required": false,
+            "user": false,
+            "notes": "Search results for topics, authors, product areas, templates, and editorial formats.",
+            "useCase": "Product Company Editorial discovery preview",
+            "package": "theme-product-company-editorial"
+        },
+        {
+            "id": "product-company-editorial-contact-form",
+            "title": "Product Company Editorial Contact form",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-product-company-editorial/docs/screenshots/product-company-editorial-contact.png",
+            "required": false,
+            "user": false,
+            "notes": "Newsletter, event, template download, product update, or contact conversion form.",
+            "useCase": "Product Company Editorial conversion preview",
+            "package": "theme-product-company-editorial"
+        }
+    ]
+}
