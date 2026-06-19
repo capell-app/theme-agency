@@ -1,0 +1,79 @@
+{
+    "package": "theme-creative-culture-editorial",
+    "composerName": "capell-app/theme-creative-culture-editorial",
+    "generatedFor": "deployment-screenshot-runner",
+    "requiresInstalledPackage": true,
+    "outputDirectory": "packages/theme-creative-culture-editorial/docs/screenshots",
+    "entries": [
+        {
+            "id": "creative-culture-editorial-homepage",
+            "title": "Creative Culture Editorial Homepage",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-creative-culture-editorial/docs/screenshots/creative-culture-editorial-homepage.png",
+            "required": false,
+            "user": false,
+            "notes": "Homepage with must-reads, project stories, opinion block, advice and culture modules, events, popular tags, discipline browsing, and newsletter paths.",
+            "useCase": "Creative culture editorial marketplace preview",
+            "package": "theme-creative-culture-editorial"
+        },
+        {
+            "id": "creative-culture-editorial-landing-page",
+            "title": "Creative Culture Editorial Landing page",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-creative-culture-editorial/docs/screenshots/creative-culture-editorial-landing.png",
+            "required": false,
+            "user": false,
+            "notes": "Project feature, opinion essay, advice piece, culture story, event page, or discipline landing page.",
+            "useCase": "Creative editorial feature preview",
+            "package": "theme-creative-culture-editorial"
+        },
+        {
+            "id": "creative-culture-editorial-list-page",
+            "title": "Creative Culture Editorial List page",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-creative-culture-editorial/docs/screenshots/creative-culture-editorial-listing.png",
+            "required": false,
+            "user": false,
+            "notes": "Project, opinion, advice, culture, event, tag, discipline, or must-read listing page.",
+            "useCase": "Creative Culture Editorial archive preview",
+            "package": "theme-creative-culture-editorial"
+        },
+        {
+            "id": "creative-culture-editorial-search-results",
+            "title": "Creative Culture Editorial Search results",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-creative-culture-editorial/docs/screenshots/creative-culture-editorial-search.png",
+            "required": false,
+            "user": false,
+            "notes": "Search results for projects, disciplines, tags, events, authors, and editorial formats.",
+            "useCase": "Creative Culture Editorial discovery preview",
+            "package": "theme-creative-culture-editorial"
+        },
+        {
+            "id": "creative-culture-editorial-contact-form",
+            "title": "Creative Culture Editorial Contact form",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-creative-culture-editorial/docs/screenshots/creative-culture-editorial-contact.png",
+            "required": false,
+            "user": false,
+            "notes": "Newsletter, event signup, opportunity submission, tag alert, or contact conversion form.",
+            "useCase": "Creative Culture Editorial conversion preview",
+            "package": "theme-creative-culture-editorial"
+        }
+    ]
+}
