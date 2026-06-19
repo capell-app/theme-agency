@@ -158,6 +158,8 @@ jobs:
             repository_name: theme-liquid-glass
           - package_directory: packages/theme-local-services
             repository_name: theme-local-services
+          - package_directory: packages/theme-dog-walkers
+            repository_name: theme-dog-walkers
           - package_directory: packages/theme-nonprofit
             repository_name: theme-nonprofit
           - package_directory: packages/theme-portfolio
