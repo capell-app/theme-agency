@@ -33,7 +33,7 @@ final class AutomotiveDealerThemeServiceProvider extends ServiceProvider
             previewImage: '/vendor/capell/themes/automotive-dealer.jpg',
             tags: ['Automotive', 'Dealership', 'Inventory', 'Dark', 'Performance'],
             bestFit: ['Car dealerships', 'Used-car retailers', 'Automotive specialists', 'Performance & prestige cars', 'Multi-franchise dealers'],
-            includedSections: ['navigation', 'hero', 'features', 'proof', 'content-listing', 'cta', 'footer'],
+            includedSections: ['navigation', 'hero', 'inventory-grid', 'vehicle-detail', 'finance-options', 'part-exchange', 'test-drive-panel', 'features', 'proof', 'content-listing', 'cta', 'footer'],
             presets: [
                 new ThemePresetData(
                     key: self::THEME_KEY,
@@ -111,6 +111,11 @@ final class AutomotiveDealerThemeServiceProvider extends ServiceProvider
         return [
             'navigation' => new ViewSectionRenderer(self::THEME_KEY, 'navigation', 'capell-theme-automotive-dealer::sections.navigation', failLoudly: true),
             'hero' => new ViewSectionRenderer(self::THEME_KEY, 'hero', 'capell-theme-automotive-dealer::sections.hero', failLoudly: true),
+            'inventory-grid' => new ViewSectionRenderer(self::THEME_KEY, 'inventory-grid', 'capell-theme-automotive-dealer::sections.inventory-grid', failLoudly: true),
+            'vehicle-detail' => new ViewSectionRenderer(self::THEME_KEY, 'vehicle-detail', 'capell-theme-automotive-dealer::sections.vehicle-detail', failLoudly: true),
+            'finance-options' => new ViewSectionRenderer(self::THEME_KEY, 'finance-options', 'capell-theme-automotive-dealer::sections.finance-options', failLoudly: true),
+            'part-exchange' => new ViewSectionRenderer(self::THEME_KEY, 'part-exchange', 'capell-theme-automotive-dealer::sections.part-exchange', failLoudly: true),
+            'test-drive-panel' => new ViewSectionRenderer(self::THEME_KEY, 'test-drive-panel', 'capell-theme-automotive-dealer::sections.test-drive-panel', failLoudly: true),
             'features' => new ViewSectionRenderer(self::THEME_KEY, 'features', 'capell-theme-automotive-dealer::sections.features', failLoudly: true),
             'proof' => new ViewSectionRenderer(self::THEME_KEY, 'proof', 'capell-theme-automotive-dealer::sections.proof', failLoudly: true),
             'content-listing' => new ViewSectionRenderer(self::THEME_KEY, 'content-listing', 'capell-theme-automotive-dealer::sections.content-listing', failLoudly: true),

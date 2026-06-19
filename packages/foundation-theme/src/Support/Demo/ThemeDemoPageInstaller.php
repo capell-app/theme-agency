@@ -310,7 +310,7 @@ final class ThemeDemoPageInstaller
             ],
         ];
 
-        return [
+        $definitions = [
             new ThemeDemoPageDefinition(
                 surface: 'homepage',
                 name: $brandName . ' Home',
@@ -444,6 +444,192 @@ final class ThemeDemoPageInstaller
                 ],
             ),
         ];
+
+        return [
+            ...$definitions,
+            ...$this->premiumDefinitions($themeKey, $themeName, $brandName, $baseUrl),
+        ];
+    }
+
+    /**
+     * @return array<int, ThemeDemoPageDefinition>
+     */
+    private function premiumDefinitions(string $themeKey, string $themeName, string $brandName, string $baseUrl): array
+    {
+        $surfaces = $this->premiumSurfaceProfiles()[$themeKey] ?? [];
+
+        return array_map(
+            fn (array $surface, int $index): ThemeDemoPageDefinition => $this->premiumDefinition($surface, $themeKey, $themeName, $brandName, $baseUrl, $index),
+            $surfaces,
+            array_keys($surfaces),
+        );
+    }
+
+    /**
+     * @param  array{surface: string, title: string, summary: string, sections: list<string>, items: list<array{title: string, summary: string, type?: string}>}  $surface
+     */
+    private function premiumDefinition(array $surface, string $themeKey, string $themeName, string $brandName, string $baseUrl, int $index): ThemeDemoPageDefinition
+    {
+        $media = ThemeDemoMedia::groupedForTheme($themeKey);
+        $imageUrl = $media['listing'][$index % count($media['listing'])] ?? $media['hero'][0];
+        $slug = 'theme-' . $themeKey . '-' . $surface['surface'];
+        $actions = [
+            ['label' => 'View details', 'url' => rtrim($baseUrl, '/') . '#' . $surface['surface'], 'style' => 'primary'],
+            ['label' => 'Contact team', 'url' => '#contact', 'style' => 'secondary'],
+        ];
+
+        return new ThemeDemoPageDefinition(
+            surface: $surface['surface'],
+            name: $brandName . ' ' . $surface['title'],
+            title: $brandName . ' ' . $surface['title'],
+            slug: $slug,
+            content: $this->content($surface['title'], $surface['summary'], $imageUrl),
+            renderData: [
+                'summary' => $surface['summary'],
+                'navigation' => ['brandName' => $brandName, 'items' => $this->premiumNavigation($themeKey), 'ctaLabel' => 'Contact', 'ctaUrl' => '#contact'],
+                'hero' => [
+                    'heading' => $surface['title'],
+                    'eyebrow' => $themeName,
+                    'summary' => $surface['summary'],
+                    'actions' => $actions,
+                    'mediaUrl' => $imageUrl,
+                    'mediaAlt' => sprintf('%s %s demo media', $themeName, $surface['title']),
+                ],
+                'sections' => $surface['sections'],
+                'items_heading' => $surface['title'],
+                'items_summary' => $surface['summary'],
+                'items_variant' => 'gallery',
+                'items' => $this->premiumItems($surface['items'], $media['listing'], rtrim($baseUrl, '/')),
+                'features_heading' => $surface['title'] . ' modules',
+                'features_summary' => 'Domain-specific render data for a premium theme page surface.',
+                'features' => $surface['items'],
+                'proof' => [
+                    'heading' => $surface['title'] . ' proof',
+                    'summary' => 'Static proof content stays portable and query-free for public rendering.',
+                    'items' => $this->proof($media['proof'], $this->proofForSurface($surface['title'])),
+                ],
+                'cta' => ['heading' => 'Move forward with ' . $surface['title'], 'summary' => 'This page is seeded as portable Capell content with theme-owned presentation.', 'actions' => $actions],
+                'footer' => ['brandName' => $brandName, 'summary' => $themeName . ' premium demo pages.', 'columns' => $this->premiumFooter($themeKey)],
+            ],
+            layout: $index === 0 ? LayoutEnum::Results : LayoutEnum::Default,
+        );
+    }
+
+    /**
+     * @return list<array{title: string, summary: string, type?: string, url: string, image: string, imageUrl: string}>
+     */
+    private function premiumItems(array $items, array $imageUrls, string $baseUrl): array
+    {
+        return array_map(
+            static fn (array $item, int $index): array => [
+                'title' => $item['title'],
+                'summary' => $item['summary'],
+                'type' => $item['type'] ?? 'Page section',
+                'url' => $baseUrl . '#premium-' . ($index + 1),
+                'image' => $imageUrls[$index % count($imageUrls)] ?? '',
+                'imageUrl' => $imageUrls[$index % count($imageUrls)] ?? '',
+            ],
+            $items,
+            array_keys($items),
+        );
+    }
+
+    /**
+     * @return list<array{metric: string, name: string, quote: string}>
+     */
+    private function proofForSurface(string $title): array
+    {
+        return [
+            ['metric' => '3+', 'name' => 'Premium page surfaces', 'quote' => $title . ' includes enough structure to preview more than one homepage.'],
+            ['metric' => '0', 'name' => 'Public queries', 'quote' => 'Demo render data is hydrated before Blade and stays safe for cached output.'],
+            ['metric' => '7+', 'name' => 'Reusable sections', 'quote' => 'Editors can combine standard and vertical sections without storing designed markup.'],
+        ];
+    }
+
+    /**
+     * @return list<array{label: string, url: string}>
+     */
+    private function premiumNavigation(string $themeKey): array
+    {
+        return [
+            ['label' => 'Home', 'url' => '#home'],
+            ['label' => 'Pages', 'url' => '#pages'],
+            ['label' => Str::headline($themeKey), 'url' => '#theme'],
+            ['label' => 'Contact', 'url' => '#contact'],
+        ];
+    }
+
+    /**
+     * @return list<array{heading: string, links: list<array{label: string, url: string}>}>
+     */
+    private function premiumFooter(string $themeKey): array
+    {
+        return [
+            ['heading' => 'Theme pages', 'links' => [['label' => 'Homepage', 'url' => '#home'], ['label' => 'Directory', 'url' => '#directory']]],
+            ['heading' => Str::headline($themeKey), 'links' => [['label' => 'Landing', 'url' => '#landing'], ['label' => 'Detail', 'url' => '#detail']]],
+            ['heading' => 'Conversion', 'links' => [['label' => 'Contact', 'url' => '#contact'], ['label' => 'CTA', 'url' => '#cta']]],
+        ];
+    }
+
+    /**
+     * @return array<string, list<array{surface: string, title: string, summary: string, sections: list<string>, items: list<array{title: string, summary: string, type?: string}>}>>
+     */
+    private function premiumSurfaceProfiles(): array
+    {
+        return [
+            'ai-lab' => $this->premiumSurfaces(['model-suite', 'Model Suite', 'Compare frontier, mini, code, and embedding models with context windows, modalities, and availability.', ['model-cards', 'benchmarks', 'playground']], ['research-library', 'Research Library', 'Publish papers, evaluations, changelog notes, and reproducible benchmark context.', ['research-index', 'content-listing', 'proof']], ['playground-preview', 'Playground Preview', 'Show a static prompt and response journey without making public API calls.', ['playground', 'features', 'cta']]),
+            'api-platform' => $this->premiumSurfaces(['quickstart', 'Quickstart', 'Help developers move from key creation to the first successful API call.', ['code-hero', 'quickstart', 'sdk-grid']], ['api-reference', 'API Reference', 'Document endpoints, SDKs, uptime, and implementation routes for technical buyers.', ['api-reference-teaser', 'status-uptime', 'content-listing']], ['status', 'Status & Trust', 'Show uptime, changelog, support guarantees, and production readiness.', ['status-uptime', 'proof', 'cta']]),
+            'ai-agent' => $this->premiumSurfaces(['use-cases', 'Use Cases', 'Route support, operations, and manufacturing workflows into agent-ready journeys.', ['use-cases', 'agent-in-action', 'outcome-metrics']], ['integrations', 'Integrations', 'Show the systems the agent reads, writes, and resolves across.', ['integrations-grid', 'features', 'proof']], ['roi', 'ROI Calculator', 'Present static savings, queue reduction, and handoff assumptions for evaluation.', ['roi-calculator', 'proof', 'cta']]),
+            'aeo-analytics' => $this->premiumSurfaces(['dashboard', 'Dashboard', 'Preview visibility scorecards, answer-engine coverage, and narrative monitoring.', ['dashboard-preview', 'metric-cards', 'coverage-map']], ['reports', 'Reports', 'Package board-ready reports, recommendation logs, and competitor tracking.', ['report-gallery', 'content-listing', 'proof']], ['integrations', 'Integrations', 'Show supported answer engines, analytics tools, and export workflows.', ['integrations-grid', 'features', 'cta']]),
+            'fintech-trust' => $this->premiumSurfaces(['verification-flow', 'Verification Flow', 'Explain business identity checks, ownership paths, sanctions screening, and review states.', ['verification-flow', 'compliance-badges', 'metric-cards']], ['security', 'Security Architecture', 'Show audit trails, compliance posture, and operational controls for regulated buyers.', ['security-architecture', 'coverage-map', 'proof']], ['compliance', 'Compliance Hub', 'Collect policy, audit, risk, and support content into a high-trust resource surface.', ['compliance-badges', 'content-listing', 'cta']]),
+            'crypto-defi' => $this->premiumSurfaces(['markets', 'Markets', 'Show protocol stats, collateral assets, APY examples, and liquidity context.', ['protocol-stats', 'token-metrics', 'wallet-cta']], ['how-it-works', 'How It Works', 'Explain lending, borrowing, risk, and settlement in a public-safe flow.', ['how-it-works', 'audit-badges', 'proof']], ['audit', 'Audit & Risk', 'Surface audits, disclaimers, risk controls, and governance links.', ['audit-badges', 'content-listing', 'cta']]),
+            'quant-trading' => $this->premiumSurfaces(['performance', 'Performance', 'Present static equity curves, drawdown context, and strategy summaries with risk disclosure.', ['performance-chart', 'track-record-table', 'risk-disclosure']], ['strategies', 'Strategies', 'Group systematic strategy cards, markets, and research notes.', ['strategy-cards', 'metric-cards', 'content-listing']], ['risk', 'Risk Disclosure', 'Make risk language, methodology, and investor qualification visible.', ['risk-disclosure', 'proof', 'cta']]),
+            'devtool-oss' => $this->premiumSurfaces(['install', 'Install', 'Lead with install commands, self-host options, and SDK entry points.', ['install-hero', 'quickstart', 'sdk-grid']], ['community', 'Community', 'Show GitHub proof, contributors, changelog, and governance routes.', ['github-proof', 'contributors', 'changelog']], ['cloud', 'Cloud vs Self-host', 'Compare hosted and self-hosted paths for evaluation.', ['self-host-vs-cloud', 'features', 'cta']]),
+            'robotics-hardware' => $this->premiumSurfaces(['product', 'Product', 'Show a hardware product story with capability cards, preorder CTA, and video-ready media.', ['video-hero', 'capabilities', 'preorder-cta']], ['specs', 'Specs', 'Publish dimensions, reach, battery, safety, and support details.', ['spec-sheet', 'tech-deep-dive', 'proof']], ['preorder', 'Preorder', 'Guide buyers from product confidence into reservation or demo interest.', ['preorder-cta', 'features', 'cta']]),
+            'manufacturing' => $this->premiumSurfaces(['capabilities', 'Capabilities', 'Show machining, fabrication, QA, and fulfilment capabilities.', ['capabilities-grid', 'facility-stats', 'certifications']], ['case-studies', 'Case Studies', 'Present production examples, tolerances, lead times, and results.', ['case-studies', 'spec-downloads', 'proof']], ['rfq', 'RFQ', 'Create a conversion path for drawings, materials, volumes, and timelines.', ['rfq-form', 'features', 'cta']]),
+            'packaging-supplier' => $this->premiumSurfaces(['products', 'Product Range', 'Group cartons, mailers, labels, inserts, and custom packaging choices.', ['product-range', 'materials', 'industries']], ['sustainability', 'Sustainability', 'Show materials, certifications, lifecycle claims, and responsible sourcing.', ['sustainability', 'proof', 'content-listing']], ['samples', 'Sample Request', 'Route buyers into sample kits, MOQ questions, and quote requests.', ['sample-request', 'features', 'cta']]),
+            'conference-event' => $this->premiumSurfaces(['agenda', 'Agenda', 'Show schedule blocks, session tracks, and conference flow.', ['event-hero', 'agenda', 'speakers']], ['tickets', 'Tickets', 'Present ticket tiers, venue details, sponsors, and conversion actions.', ['ticket-tiers', 'venue', 'sponsors']], ['speakers', 'Speakers', 'Feature speakers, sessions, sponsor proof, and content recaps.', ['speakers', 'content-listing', 'proof']]),
+            'podcast-show' => $this->premiumSurfaces(['episodes', 'Episodes', 'List latest episodes, guests, hosts, and listening routes.', ['latest-episode', 'episode-list', 'subscribe-platforms']], ['guests', 'Guests', 'Show guest profiles, topics, and featured conversations.', ['guests', 'hosts', 'proof']], ['sponsors', 'Sponsors', 'Give sponsors placements, packages, and audience proof.', ['sponsors', 'features', 'cta']]),
+            'newsroom-magazine' => $this->premiumSurfaces(['front-page', 'Front Page', 'Lead with featured stories, category nav, most-read content, and newsletter signup.', ['featured-story', 'category-nav', 'story-grid']], ['contributors', 'Contributors', 'Show writers, editors, beats, and editorial credibility.', ['contributors', 'most-read', 'proof']], ['newsletter', 'Newsletter', 'Convert readers through newsletter value, archive proof, and story pathways.', ['newsletter-signup', 'content-listing', 'cta']]),
+            'design-studio' => $this->premiumSurfaces(['projects', 'Projects', 'Present interiors, hospitality spaces, and project outcomes with a gallery rhythm.', ['project-gallery', 'services', 'awards']], ['studio', 'Studio', 'Explain design philosophy, services, awards, and consultation flow.', ['services', 'awards', 'proof']], ['case-study', 'Case Study', 'Show one project through brief, constraints, material choices, and result.', ['project-gallery', 'content-listing', 'cta']]),
+            'product-studio' => $this->premiumSurfaces(['case-studies', 'Case Studies', 'Show shipped products, measurable outcomes, and engagement context.', ['case-studies', 'tech-stack', 'process']], ['engagements', 'Engagement Models', 'Compare sprint, retainer, and build-partner working models.', ['engagement-models', 'process', 'proof']], ['stack', 'Tech Stack', 'Present tools, frameworks, delivery principles, and maintenance support.', ['tech-stack', 'features', 'cta']]),
+            'personal-dev' => $this->premiumSurfaces(['writing', 'Writing', 'Show essays, notes, project updates, and newsletter entry points.', ['writing-index', 'newsletter-inline', 'now']], ['projects', 'Projects', 'Present selected work, open-source projects, and case notes.', ['projects', 'about-intro', 'proof']], ['now', 'Now Page', 'Give a personal site a current-status page with focus, availability, and links.', ['now', 'features', 'cta']]),
+            'creator-newsletter' => $this->premiumSurfaces(['archive', 'Archive', 'Show issue archives, subscription value, testimonials, and sponsor slots.', ['subscribe-hero', 'archive', 'testimonials']], ['author', 'Author', 'Build trust with author background, sponsors, and reader proof.', ['about-author', 'sponsors', 'proof']], ['subscribe', 'Subscribe', 'Create a dedicated conversion page for the newsletter offer.', ['subscribe-hero', 'features', 'cta']]),
+            'law-firm' => $this->premiumSurfaces(['practice-areas', 'Practice Areas', 'Show legal services, credentials, attorneys, and consultation routes.', ['practice-areas', 'credentials', 'attorneys']], ['attorneys', 'Attorneys', 'Present partner profiles, expertise, admissions, and case context.', ['attorneys', 'case-results', 'proof']], ['consultation', 'Consultation', 'Route prospects into intake topics and next-step expectations.', ['consultation-cta', 'features', 'cta']]),
+            'financial-advisory' => $this->premiumSurfaces(['services', 'Services', 'Group advisory, tax, audit, and planning services for high-trust browsing.', ['services', 'credentials', 'client-segments']], ['advisors', 'Advisors', 'Feature advisory team profiles, credentials, and specialisms.', ['advisors', 'proof', 'content-listing']], ['calculators', 'Calculators', 'Show static planning calculators, assumptions, and consultation CTAs.', ['calculators', 'features', 'cta']]),
+            'construction-trades' => $this->premiumSurfaces(['services', 'Services', 'Show renovation, extension, repair, and trade service routes.', ['services', 'service-areas', 'accreditations']], ['projects', 'Projects', 'Present project portfolio, process, proof, and before-after style evidence.', ['project-portfolio', 'process', 'proof']], ['quote', 'Quote Request', 'Guide visitors into a quote path with scope, area, and timing expectations.', ['quote-cta', 'features', 'cta']]),
+            'fitness-wellness' => $this->premiumSurfaces(['classes', 'Classes', 'Show class types, training blocks, membership paths, and schedule expectations.', ['class-schedule', 'coach-profiles', 'challenge-board']], ['coaches', 'Coaches', 'Feature coaches, specialties, proof, and onboarding routes.', ['coach-profiles', 'nutrition-guides', 'proof']], ['membership', 'Membership', 'Present membership options, conversion copy, and studio proof.', ['membership-plans', 'features', 'cta']]),
+            'beauty-spa' => $this->premiumSurfaces(['treatments', 'Treatments', 'Show treatment menus, packages, durations, and suitability notes.', ['treatment-menu', 'therapist-profiles', 'before-after-proof']], ['packages', 'Packages', 'Present spa packages, seasonal offers, and booking routes.', ['package-grid', 'treatment-menu', 'proof']], ['booking', 'Booking', 'Give visitors a calm conversion page for appointment requests.', ['booking-panel', 'features', 'cta']]),
+            'travel-tourism' => $this->premiumSurfaces(['destinations', 'Destinations', 'Show destination cards, itinerary styles, and trip proof.', ['destination-grid', 'guide-profiles', 'trip-inclusions']], ['itineraries', 'Itineraries', 'Present day-by-day trip structures, inclusions, and enquiry routes.', ['itinerary-builder', 'destination-grid', 'proof']], ['enquiry', 'Travel Enquiry', 'Guide travellers into a quote or planning conversation.', ['enquiry-panel', 'features', 'cta']]),
+            'automotive-dealer' => $this->premiumSurfaces(['inventory', 'Inventory', 'Show vehicle listings, specs, finance cues, and enquiry actions.', ['inventory-grid', 'finance-options', 'test-drive-panel']], ['vehicle-detail', 'Vehicle Detail', 'Present a vehicle story with highlights, condition, specs, and CTA.', ['vehicle-detail', 'part-exchange', 'proof']], ['finance', 'Finance', 'Explain finance options, part exchange, and buying confidence.', ['finance-options', 'features', 'cta']]),
+            'property-developer' => $this->premiumSurfaces(['developments', 'Developments', 'Show development cards, availability, local proof, and launch status.', ['development-grid', 'availability-table', 'location-guide']], ['floorplans', 'Floorplans', 'Present home types, layouts, specifications, and availability CTAs.', ['floorplans', 'development-grid', 'proof']], ['location', 'Location', 'Sell the neighbourhood, travel links, amenities, and lifestyle proof.', ['location-guide', 'viewing-panel', 'cta']]),
+            'recruitment-jobs' => $this->premiumSurfaces(['jobs', 'Jobs', 'Show roles, sectors, filters, salary context, and apply CTAs.', ['job-board', 'sector-specialisms', 'application-panel']], ['employers', 'Employers', 'Present hiring services, process, proof, and consultation routes.', ['employer-services', 'sector-specialisms', 'proof']], ['candidate-advice', 'Candidate Advice', 'Publish advice, interview guides, and sector insights.', ['candidate-advice', 'content-listing', 'cta']]),
+            'editorial-serif' => $this->premiumSurfaces(['essays', 'Essays', 'Show long-form editorial pages, issue framing, and reading pathways.', ['essay-index', 'author-profiles', 'editorial-statement']], ['archive', 'Archive', 'Present an archive, categories, series, and contributor proof.', ['issue-archive', 'essay-index', 'proof']], ['about', 'About the Publication', 'Introduce editorial principles, contributors, and subscription actions.', ['editorial-statement', 'subscription-panel', 'cta']]),
+        ];
+    }
+
+    /**
+     * @return list<array{surface: string, title: string, summary: string, sections: list<string>, items: list<array{title: string, summary: string, type?: string}>}>
+     */
+    private function premiumSurfaces(array $first, array $second, array $third): array
+    {
+        return array_map(
+            static fn (array $surface): array => [
+                'surface' => $surface[0],
+                'title' => $surface[1],
+                'summary' => $surface[2],
+                'sections' => $surface[3],
+                'items' => array_map(
+                    static fn (string $section): array => [
+                        'title' => Str::headline($section),
+                        'summary' => sprintf('A %s section tailored for this premium page surface.', Str::headline($section)),
+                        'type' => 'Section',
+                    ],
+                    $surface[3],
+                ),
+            ],
+            [$first, $second, $third],
+        );
     }
 
     private function content(string $heading, string $summary, string $imageUrl): string

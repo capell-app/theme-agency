@@ -33,7 +33,7 @@ final class BeautySpaThemeServiceProvider extends ServiceProvider
             previewImage: '/vendor/capell/themes/beauty-spa.jpg',
             tags: ['Spa', 'Beauty', 'Wellness', 'Luxury', 'Editorial'],
             bestFit: ['Day spas', 'Beauty clinics', 'Nail & skincare studios', 'Wellness retreats', 'Salons'],
-            includedSections: ['navigation', 'hero', 'features', 'proof', 'content-listing', 'cta', 'footer'],
+            includedSections: ['navigation', 'hero', 'treatment-menu', 'therapist-profiles', 'package-grid', 'before-after-proof', 'booking-panel', 'features', 'proof', 'content-listing', 'cta', 'footer'],
             presets: [
                 new ThemePresetData(
                     key: self::THEME_KEY,
@@ -111,6 +111,11 @@ final class BeautySpaThemeServiceProvider extends ServiceProvider
         return [
             'navigation' => new ViewSectionRenderer(self::THEME_KEY, 'navigation', 'capell-theme-beauty-spa::sections.navigation', failLoudly: true),
             'hero' => new ViewSectionRenderer(self::THEME_KEY, 'hero', 'capell-theme-beauty-spa::sections.hero', failLoudly: true),
+            'treatment-menu' => new ViewSectionRenderer(self::THEME_KEY, 'treatment-menu', 'capell-theme-beauty-spa::sections.treatment-menu', failLoudly: true),
+            'therapist-profiles' => new ViewSectionRenderer(self::THEME_KEY, 'therapist-profiles', 'capell-theme-beauty-spa::sections.therapist-profiles', failLoudly: true),
+            'package-grid' => new ViewSectionRenderer(self::THEME_KEY, 'package-grid', 'capell-theme-beauty-spa::sections.package-grid', failLoudly: true),
+            'before-after-proof' => new ViewSectionRenderer(self::THEME_KEY, 'before-after-proof', 'capell-theme-beauty-spa::sections.before-after-proof', failLoudly: true),
+            'booking-panel' => new ViewSectionRenderer(self::THEME_KEY, 'booking-panel', 'capell-theme-beauty-spa::sections.booking-panel', failLoudly: true),
             'features' => new ViewSectionRenderer(self::THEME_KEY, 'features', 'capell-theme-beauty-spa::sections.features', failLoudly: true),
             'proof' => new ViewSectionRenderer(self::THEME_KEY, 'proof', 'capell-theme-beauty-spa::sections.proof', failLoudly: true),
             'content-listing' => new ViewSectionRenderer(self::THEME_KEY, 'content-listing', 'capell-theme-beauty-spa::sections.content-listing', failLoudly: true),

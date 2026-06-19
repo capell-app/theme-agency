@@ -33,7 +33,7 @@ final class RecruitmentJobsThemeServiceProvider extends ServiceProvider
             previewImage: '/vendor/capell/themes/recruitment-jobs.jpg',
             tags: ['Recruitment', 'Jobs', 'Hiring', 'Two-sided', 'Structured'],
             bestFit: ['Recruitment agencies', 'Job boards', 'Specialist recruiters', 'Exec search', 'In-house talent teams'],
-            includedSections: ['navigation', 'hero', 'features', 'proof', 'content-listing', 'cta', 'footer'],
+            includedSections: ['navigation', 'hero', 'job-board', 'employer-services', 'candidate-advice', 'sector-specialisms', 'application-panel', 'features', 'proof', 'content-listing', 'cta', 'footer'],
             presets: [
                 new ThemePresetData(
                     key: self::THEME_KEY,
@@ -111,6 +111,11 @@ final class RecruitmentJobsThemeServiceProvider extends ServiceProvider
         return [
             'navigation' => new ViewSectionRenderer(self::THEME_KEY, 'navigation', 'capell-theme-recruitment-jobs::sections.navigation', failLoudly: true),
             'hero' => new ViewSectionRenderer(self::THEME_KEY, 'hero', 'capell-theme-recruitment-jobs::sections.hero', failLoudly: true),
+            'job-board' => new ViewSectionRenderer(self::THEME_KEY, 'job-board', 'capell-theme-recruitment-jobs::sections.job-board', failLoudly: true),
+            'employer-services' => new ViewSectionRenderer(self::THEME_KEY, 'employer-services', 'capell-theme-recruitment-jobs::sections.employer-services', failLoudly: true),
+            'candidate-advice' => new ViewSectionRenderer(self::THEME_KEY, 'candidate-advice', 'capell-theme-recruitment-jobs::sections.candidate-advice', failLoudly: true),
+            'sector-specialisms' => new ViewSectionRenderer(self::THEME_KEY, 'sector-specialisms', 'capell-theme-recruitment-jobs::sections.sector-specialisms', failLoudly: true),
+            'application-panel' => new ViewSectionRenderer(self::THEME_KEY, 'application-panel', 'capell-theme-recruitment-jobs::sections.application-panel', failLoudly: true),
             'features' => new ViewSectionRenderer(self::THEME_KEY, 'features', 'capell-theme-recruitment-jobs::sections.features', failLoudly: true),
             'proof' => new ViewSectionRenderer(self::THEME_KEY, 'proof', 'capell-theme-recruitment-jobs::sections.proof', failLoudly: true),
             'content-listing' => new ViewSectionRenderer(self::THEME_KEY, 'content-listing', 'capell-theme-recruitment-jobs::sections.content-listing', failLoudly: true),

@@ -33,7 +33,7 @@ final class EditorialSerifThemeServiceProvider extends ServiceProvider
             previewImage: '/vendor/capell/themes/editorial-serif.jpg',
             tags: ['Editorial', 'Serif', 'Typography', 'Style', 'Print'],
             bestFit: ['Publications & journals', 'Writers & essayists', 'Design studios', 'Editorial brands', 'Any site wanting a print-grade serif voice'],
-            includedSections: ['navigation', 'hero', 'features', 'proof', 'content-listing', 'cta', 'footer'],
+            includedSections: ['navigation', 'hero', 'essay-index', 'issue-archive', 'author-profiles', 'subscription-panel', 'editorial-statement', 'features', 'proof', 'content-listing', 'cta', 'footer'],
             presets: [
                 new ThemePresetData(
                     key: self::THEME_KEY,
@@ -111,6 +111,11 @@ final class EditorialSerifThemeServiceProvider extends ServiceProvider
         return [
             'navigation' => new ViewSectionRenderer(self::THEME_KEY, 'navigation', 'capell-theme-editorial-serif::sections.navigation', failLoudly: true),
             'hero' => new ViewSectionRenderer(self::THEME_KEY, 'hero', 'capell-theme-editorial-serif::sections.hero', failLoudly: true),
+            'essay-index' => new ViewSectionRenderer(self::THEME_KEY, 'essay-index', 'capell-theme-editorial-serif::sections.essay-index', failLoudly: true),
+            'issue-archive' => new ViewSectionRenderer(self::THEME_KEY, 'issue-archive', 'capell-theme-editorial-serif::sections.issue-archive', failLoudly: true),
+            'author-profiles' => new ViewSectionRenderer(self::THEME_KEY, 'author-profiles', 'capell-theme-editorial-serif::sections.author-profiles', failLoudly: true),
+            'subscription-panel' => new ViewSectionRenderer(self::THEME_KEY, 'subscription-panel', 'capell-theme-editorial-serif::sections.subscription-panel', failLoudly: true),
+            'editorial-statement' => new ViewSectionRenderer(self::THEME_KEY, 'editorial-statement', 'capell-theme-editorial-serif::sections.editorial-statement', failLoudly: true),
             'features' => new ViewSectionRenderer(self::THEME_KEY, 'features', 'capell-theme-editorial-serif::sections.features', failLoudly: true),
             'proof' => new ViewSectionRenderer(self::THEME_KEY, 'proof', 'capell-theme-editorial-serif::sections.proof', failLoudly: true),
             'content-listing' => new ViewSectionRenderer(self::THEME_KEY, 'content-listing', 'capell-theme-editorial-serif::sections.content-listing', failLoudly: true),

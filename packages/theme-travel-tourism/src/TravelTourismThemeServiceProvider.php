@@ -33,7 +33,7 @@ final class TravelTourismThemeServiceProvider extends ServiceProvider
             previewImage: '/vendor/capell/themes/travel-tourism.jpg',
             tags: ['Travel', 'Tourism', 'Itineraries', 'Immersive', 'Adventure'],
             bestFit: ['Tour operators', 'Travel agencies', 'Destination brands', 'Boutique adventure travel', 'Honeymoon & luxury travel'],
-            includedSections: ['navigation', 'hero', 'features', 'proof', 'content-listing', 'cta', 'footer'],
+            includedSections: ['navigation', 'hero', 'destination-grid', 'itinerary-builder', 'guide-profiles', 'trip-inclusions', 'enquiry-panel', 'features', 'proof', 'content-listing', 'cta', 'footer'],
             presets: [
                 new ThemePresetData(
                     key: self::THEME_KEY,
@@ -111,6 +111,11 @@ final class TravelTourismThemeServiceProvider extends ServiceProvider
         return [
             'navigation' => new ViewSectionRenderer(self::THEME_KEY, 'navigation', 'capell-theme-travel-tourism::sections.navigation', failLoudly: true),
             'hero' => new ViewSectionRenderer(self::THEME_KEY, 'hero', 'capell-theme-travel-tourism::sections.hero', failLoudly: true),
+            'destination-grid' => new ViewSectionRenderer(self::THEME_KEY, 'destination-grid', 'capell-theme-travel-tourism::sections.destination-grid', failLoudly: true),
+            'itinerary-builder' => new ViewSectionRenderer(self::THEME_KEY, 'itinerary-builder', 'capell-theme-travel-tourism::sections.itinerary-builder', failLoudly: true),
+            'guide-profiles' => new ViewSectionRenderer(self::THEME_KEY, 'guide-profiles', 'capell-theme-travel-tourism::sections.guide-profiles', failLoudly: true),
+            'trip-inclusions' => new ViewSectionRenderer(self::THEME_KEY, 'trip-inclusions', 'capell-theme-travel-tourism::sections.trip-inclusions', failLoudly: true),
+            'enquiry-panel' => new ViewSectionRenderer(self::THEME_KEY, 'enquiry-panel', 'capell-theme-travel-tourism::sections.enquiry-panel', failLoudly: true),
             'features' => new ViewSectionRenderer(self::THEME_KEY, 'features', 'capell-theme-travel-tourism::sections.features', failLoudly: true),
             'proof' => new ViewSectionRenderer(self::THEME_KEY, 'proof', 'capell-theme-travel-tourism::sections.proof', failLoudly: true),
             'content-listing' => new ViewSectionRenderer(self::THEME_KEY, 'content-listing', 'capell-theme-travel-tourism::sections.content-listing', failLoudly: true),

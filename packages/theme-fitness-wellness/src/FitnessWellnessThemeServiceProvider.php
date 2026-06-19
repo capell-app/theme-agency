@@ -33,7 +33,7 @@ final class FitnessWellnessThemeServiceProvider extends ServiceProvider
             previewImage: '/vendor/capell/themes/fitness-wellness.jpg',
             tags: ['Fitness', 'Gym', 'Membership', 'Dark', 'Energetic'],
             bestFit: ['Boutique gyms', 'Fitness studios', 'CrossFit boxes', 'Personal trainers', 'Yoga & wellness studios'],
-            includedSections: ['navigation', 'hero', 'features', 'proof', 'content-listing', 'cta', 'footer'],
+            includedSections: ['navigation', 'hero', 'class-schedule', 'coach-profiles', 'membership-plans', 'nutrition-guides', 'challenge-board', 'features', 'proof', 'content-listing', 'cta', 'footer'],
             presets: [
                 new ThemePresetData(
                     key: self::THEME_KEY,
@@ -111,6 +111,11 @@ final class FitnessWellnessThemeServiceProvider extends ServiceProvider
         return [
             'navigation' => new ViewSectionRenderer(self::THEME_KEY, 'navigation', 'capell-theme-fitness-wellness::sections.navigation', failLoudly: true),
             'hero' => new ViewSectionRenderer(self::THEME_KEY, 'hero', 'capell-theme-fitness-wellness::sections.hero', failLoudly: true),
+            'class-schedule' => new ViewSectionRenderer(self::THEME_KEY, 'class-schedule', 'capell-theme-fitness-wellness::sections.class-schedule', failLoudly: true),
+            'coach-profiles' => new ViewSectionRenderer(self::THEME_KEY, 'coach-profiles', 'capell-theme-fitness-wellness::sections.coach-profiles', failLoudly: true),
+            'membership-plans' => new ViewSectionRenderer(self::THEME_KEY, 'membership-plans', 'capell-theme-fitness-wellness::sections.membership-plans', failLoudly: true),
+            'nutrition-guides' => new ViewSectionRenderer(self::THEME_KEY, 'nutrition-guides', 'capell-theme-fitness-wellness::sections.nutrition-guides', failLoudly: true),
+            'challenge-board' => new ViewSectionRenderer(self::THEME_KEY, 'challenge-board', 'capell-theme-fitness-wellness::sections.challenge-board', failLoudly: true),
             'features' => new ViewSectionRenderer(self::THEME_KEY, 'features', 'capell-theme-fitness-wellness::sections.features', failLoudly: true),
             'proof' => new ViewSectionRenderer(self::THEME_KEY, 'proof', 'capell-theme-fitness-wellness::sections.proof', failLoudly: true),
             'content-listing' => new ViewSectionRenderer(self::THEME_KEY, 'content-listing', 'capell-theme-fitness-wellness::sections.content-listing', failLoudly: true),
