@@ -1,0 +1,79 @@
+{
+    "package": "theme-editorial-crm",
+    "composerName": "capell-app/theme-editorial-crm",
+    "generatedFor": "deployment-screenshot-runner",
+    "requiresInstalledPackage": true,
+    "outputDirectory": "packages/theme-editorial-crm/docs/screenshots",
+    "entries": [
+        {
+            "id": "editorial-crm-homepage",
+            "title": "Editorial CRM Homepage",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-editorial-crm/docs/screenshots/editorial-crm-homepage.png",
+            "required": false,
+            "user": false,
+            "notes": "Homepage with product dashboard, data model, workflow automation, collaboration, integrations and reporting, customer stories, and newsletter paths.",
+            "useCase": "Editorial CRM preview",
+            "package": "theme-editorial-crm"
+        },
+        {
+            "id": "editorial-crm-landing-page",
+            "title": "Editorial CRM Landing page",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-editorial-crm/docs/screenshots/editorial-crm-landing.png",
+            "required": false,
+            "user": false,
+            "notes": "Product dashboard, customer record, automation flow, reporting module, customer story, integration view, or pricing landing page.",
+            "useCase": "Editorial CRM feature preview",
+            "package": "theme-editorial-crm"
+        },
+        {
+            "id": "editorial-crm-list-page",
+            "title": "Editorial CRM List page",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-editorial-crm/docs/screenshots/editorial-crm-listing.png",
+            "required": false,
+            "user": false,
+            "notes": "Product update, customer story, integration, dashboard, automation, report, workflow, or company page.",
+            "useCase": "Editorial CRM archive preview",
+            "package": "theme-editorial-crm"
+        },
+        {
+            "id": "editorial-crm-search-results",
+            "title": "Editorial CRM Search results",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-editorial-crm/docs/screenshots/editorial-crm-search.png",
+            "required": false,
+            "user": false,
+            "notes": "Search results for product updates, records, workflows, integrations, reports, customers, and resources.",
+            "useCase": "Editorial CRM discovery preview",
+            "package": "theme-editorial-crm"
+        },
+        {
+            "id": "editorial-crm-contact-form",
+            "title": "Editorial CRM Contact form",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-editorial-crm/docs/screenshots/editorial-crm-contact.png",
+            "required": false,
+            "user": false,
+            "notes": "Newsletter, demo request, product update signup, customer story inquiry, integration request, or contact conversion form.",
+            "useCase": "Editorial CRM conversion preview",
+            "package": "theme-editorial-crm"
+        }
+    ]
+}

@@ -1,0 +1,156 @@
+{
+    "manifest-version": 3,
+    "name": "capell-app/theme-editorial-crm",
+    "slug": "theme-editorial-crm",
+    "displayName": "Theme Editorial CRM",
+    "kind": "theme",
+    "capellApiVersion": "^4.0",
+    "version": "4.x-dev",
+    "description": "Editorial CRM extends the default Capell frontend with a editorial CRM product direction, portable demo content, cache-safe public Blade rendering, and theme tokens tuned for product dashboards, data models, workflow automation, collaboration, integrations, reporting, customer stories, neutral product fields, crisp interface modules, and flexible dashboards.",
+    "product": {
+        "group": "Capell Themes",
+        "tier": "premium",
+        "bundle": "themes"
+    },
+    "namespace": "Capell\\ThemeStudio\\EditorialCrm",
+    "surfaces": ["frontend"],
+    "dependencies": {
+        "requires": ["capell-app/core", "capell-app/frontend"],
+        "supports": [
+            "capell-app/blog",
+            "capell-app/form-builder",
+            "capell-app/newsletter",
+            "capell-app/shopify-commerce"
+        ],
+        "conflicts": []
+    },
+    "providers": {
+        "metadata": [],
+        "install": [],
+        "runtime": [
+            "Capell\\ThemeStudio\\EditorialCrm\\EditorialCrmThemeServiceProvider"
+        ],
+        "admin": [],
+        "frontend": []
+    },
+    "contributes": [
+        {
+            "type": "admin-page",
+            "class": "Capell\\ThemeStudio\\EditorialCrm\\Manifest\\ThemeManagementPageContribution",
+            "pageClass": "Capell\\Marketplace\\Filament\\Pages\\ThemeExtensionPage",
+            "pageParameters": {
+                "themeKey": "editorial-crm"
+            },
+            "labelKey": "capell-marketplace::marketplace.theme_extension.management_entry_label"
+        }
+    ],
+    "database": {
+        "migrations": false,
+        "settings": false,
+        "requiredTables": []
+    },
+    "commands": {
+        "install": null,
+        "setup": null,
+        "demo": "capell:theme-editorial-crm-demo",
+        "demoParams": ["url", "languages", "sites"],
+        "doctor": null
+    },
+    "settings": [],
+    "permissions": [],
+    "capabilities": ["theme-editorial-crm", "theme-editorial-crm-frontend"],
+    "security": {
+        "riskTier": "low",
+        "publicSurface": {
+            "routeNames": [],
+            "auth": "none",
+            "csrfExemptRoutes": [],
+            "signedRoutes": [],
+            "tokenizedRoutes": [],
+            "webhookRoutes": [],
+            "throttledRoutes": []
+        },
+        "sensitiveData": {
+            "encryptedFields": [],
+            "hashedTokenFields": [],
+            "redactedOutputClasses": [],
+            "plaintextJustifications": []
+        },
+        "publicOutput": {
+            "cacheSafe": true,
+            "forbidAuthoringSurface": true,
+            "forbidSecrets": true,
+            "forbidPublicBladeQueries": true
+        },
+        "externalHttpClients": {
+            "requiresTimeouts": false,
+            "requiresSecretRedaction": false,
+            "clients": []
+        },
+        "adminSurface": {
+            "authorization": "none",
+            "permissions": []
+        }
+    },
+    "performance": {
+        "frontendRenderBudgetMs": 20,
+        "adminQueryBudget": 0,
+        "cacheTags": ["theme-editorial-crm"],
+        "cacheSafety": {
+            "cacheable": false,
+            "variesBy": ["site", "locale"],
+            "sensitiveOutput": false,
+            "invalidationSources": [],
+            "queueInvalidation": false
+        }
+    },
+    "healthChecks": [
+        {
+            "key": "theme-editorial-crm.package-health",
+            "label": "Editorial CRM package surfaces, providers, and install health are discoverable by Diagnostics.",
+            "class": "Capell\\ThemeStudio\\EditorialCrm\\Health\\ThemeEditorialCrmHealthCheck",
+            "severity": "critical",
+            "surface": "frontend"
+        }
+    ],
+    "commercial": {
+        "proposedLicense": "paid",
+        "requestedCertification": "first-party",
+        "supportPolicy": "priority",
+        "privateDocsRequested": true
+    },
+    "marketplace": {
+        "summary": "A polished Capell theme for CRM, revenue operations, customer data, automation, collaboration, integrations, reporting, and modern SaaS product storytelling.",
+        "description": "Editorial CRM provides a distinct theme definition, demo command, marketplace metadata, and public-safe Blade views for CRM platforms, revenue operations products, customer data platforms, workflow automation tools, and modern SaaS teams that need relationship records, product dashboards, notes, pipeline states, automation flows, integrations, reporting modules, customer stories, and flexible dashboards.",
+        "screenshots": [
+            {
+                "path": "docs/screenshots/editorial-crm-homepage.png",
+                "alt": "Editorial CRM homepage preview",
+                "caption": "Editorial CRM Homepage"
+            },
+            {
+                "path": "docs/screenshots/editorial-crm-landing.png",
+                "alt": "Editorial CRM landing page preview",
+                "caption": "Editorial CRM Landing page"
+            },
+            {
+                "path": "docs/screenshots/editorial-crm-listing.png",
+                "alt": "Editorial CRM list page preview",
+                "caption": "Editorial CRM List page"
+            },
+            {
+                "path": "docs/screenshots/editorial-crm-search.png",
+                "alt": "Editorial CRM search results preview",
+                "caption": "Editorial CRM Search results"
+            },
+            {
+                "path": "docs/screenshots/editorial-crm-contact.png",
+                "alt": "Editorial CRM contact form preview",
+                "caption": "Editorial CRM Contact form"
+            }
+        ],
+        "categories": ["frontend", "themes"]
+    },
+    "extends": "default",
+    "themeKey": "editorial-crm"
+}
