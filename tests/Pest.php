@@ -217,6 +217,7 @@ extendCapellPackageTests(PackagesTestCase::class, 'theme-dense-news-analysis', '
 extendCapellPackageTests(PackagesTestCase::class, 'theme-creative-culture-editorial', 'theme-creative-culture-editorial');
 extendCapellPackageTests(PackagesTestCase::class, 'theme-premium-portfolio-collection', 'theme-premium-portfolio-collection');
 extendCapellPackageTests(PackagesTestCase::class, 'theme-character-portfolio-index', 'theme-character-portfolio-index');
+extendCapellPackageTests(PackagesTestCase::class, 'theme-case-study-platform', 'theme-case-study-platform');
 extendCapellPackageTests(PackagesTestCase::class, 'theme-quiet-luxury-retail', 'theme-quiet-luxury-retail');
 extendCapellPackageTests(PackagesTestCase::class, 'theme-automotive-dealer', 'theme-automotive-dealer');
 extendCapellPackageTests(PackagesTestCase::class, 'theme-property-developer', 'theme-property-developer');

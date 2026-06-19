@@ -1,0 +1,79 @@
+{
+    "package": "theme-case-study-platform",
+    "composerName": "capell-app/theme-case-study-platform",
+    "generatedFor": "deployment-screenshot-runner",
+    "requiresInstalledPackage": true,
+    "outputDirectory": "packages/theme-case-study-platform/docs/screenshots",
+    "entries": [
+        {
+            "id": "case-study-platform-homepage",
+            "title": "Case Study Platform Homepage",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-case-study-platform/docs/screenshots/case-study-platform-homepage.png",
+            "required": false,
+            "user": false,
+            "notes": "Homepage with creator hero, discipline filters, project feed, process notes, related projects, credits and tools, and newsletter paths.",
+            "useCase": "Case study platform marketplace preview",
+            "package": "theme-case-study-platform"
+        },
+        {
+            "id": "case-study-platform-landing-page",
+            "title": "Case Study Platform Landing page",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-case-study-platform/docs/screenshots/case-study-platform-landing.png",
+            "required": false,
+            "user": false,
+            "notes": "Featured case study, creator profile, long media stack, process notes, credits, tools, or hiring landing page.",
+            "useCase": "Case study feature preview",
+            "package": "theme-case-study-platform"
+        },
+        {
+            "id": "case-study-platform-list-page",
+            "title": "Case Study Platform List page",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-case-study-platform/docs/screenshots/case-study-platform-listing.png",
+            "required": false,
+            "user": false,
+            "notes": "Project, creator, discipline, technology, media type, appreciation, save state, or collection listing page.",
+            "useCase": "Case Study Platform archive preview",
+            "package": "theme-case-study-platform"
+        },
+        {
+            "id": "case-study-platform-search-results",
+            "title": "Case Study Platform Search results",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-case-study-platform/docs/screenshots/case-study-platform-search.png",
+            "required": false,
+            "user": false,
+            "notes": "Search results for projects, creators, studios, media types, technologies, tools, and disciplines.",
+            "useCase": "Case Study Platform discovery preview",
+            "package": "theme-case-study-platform"
+        },
+        {
+            "id": "case-study-platform-contact-form",
+            "title": "Case Study Platform Contact form",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-case-study-platform/docs/screenshots/case-study-platform-contact.png",
+            "required": false,
+            "user": false,
+            "notes": "Newsletter, project submission, talent profile claim, hiring inquiry, or contact conversion form.",
+            "useCase": "Case Study Platform conversion preview",
+            "package": "theme-case-study-platform"
+        }
+    ]
+}
