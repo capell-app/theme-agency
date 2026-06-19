@@ -1,0 +1,79 @@
+{
+    "package": "theme-outdoor-mission",
+    "composerName": "capell-app/theme-outdoor-mission",
+    "generatedFor": "deployment-screenshot-runner",
+    "requiresInstalledPackage": true,
+    "outputDirectory": "packages/theme-outdoor-mission/docs/screenshots",
+    "entries": [
+        {
+            "id": "outdoor-mission-homepage",
+            "title": "Outdoor Mission Homepage",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-outdoor-mission/docs/screenshots/outdoor-mission-homepage.png",
+            "required": false,
+            "user": false,
+            "notes": "Homepage with gear discovery, sport categories, action campaigns, stories, and newsletter paths.",
+            "useCase": "Outdoor mission-commerce marketplace preview",
+            "package": "theme-outdoor-mission"
+        },
+        {
+            "id": "outdoor-mission-landing-page",
+            "title": "Outdoor Mission Landing page",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-outdoor-mission/docs/screenshots/outdoor-mission-landing.png",
+            "required": false,
+            "user": false,
+            "notes": "Campaign or seasonal collection landing page.",
+            "useCase": "Outdoor action or collection preview",
+            "package": "theme-outdoor-mission"
+        },
+        {
+            "id": "outdoor-mission-list-page",
+            "title": "Outdoor Mission List page",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-outdoor-mission/docs/screenshots/outdoor-mission-listing.png",
+            "required": false,
+            "user": false,
+            "notes": "Story, guide, collection, or campaign listing page.",
+            "useCase": "Outdoor archive preview",
+            "package": "theme-outdoor-mission"
+        },
+        {
+            "id": "outdoor-mission-search-results",
+            "title": "Outdoor Mission Search results",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-outdoor-mission/docs/screenshots/outdoor-mission-search.png",
+            "required": false,
+            "user": false,
+            "notes": "Search results for gear, stories, guides, and campaigns.",
+            "useCase": "Outdoor discovery preview",
+            "package": "theme-outdoor-mission"
+        },
+        {
+            "id": "outdoor-mission-contact-form",
+            "title": "Outdoor Mission Contact form",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-outdoor-mission/docs/screenshots/outdoor-mission-contact.png",
+            "required": false,
+            "user": false,
+            "notes": "Newsletter, repair request, petition, or contact conversion form.",
+            "useCase": "Outdoor conversion preview",
+            "package": "theme-outdoor-mission"
+        }
+    ]
+}

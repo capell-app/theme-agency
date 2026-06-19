@@ -1,0 +1,157 @@
+{
+    "manifest-version": 3,
+    "name": "capell-app/theme-outdoor-mission",
+    "slug": "theme-outdoor-mission",
+    "displayName": "Theme Outdoor Mission",
+    "kind": "theme",
+    "capellApiVersion": "^4.0",
+    "version": "4.x-dev",
+    "description": "Outdoor Mission extends the default Capell frontend with a rugged outdoor mission-commerce direction, portable demo content, cache-safe public Blade rendering, and theme tokens tuned for gear, sports, campaigns, stories, repair, and newsletter conversion.",
+    "product": {
+        "group": "Capell Themes",
+        "tier": "premium",
+        "bundle": "themes"
+    },
+    "namespace": "Capell\\ThemeStudio\\OutdoorMission",
+    "surfaces": ["frontend"],
+    "dependencies": {
+        "requires": ["capell-app/core", "capell-app/frontend"],
+        "supports": [
+            "capell-app/blog",
+            "capell-app/campaign-studio",
+            "capell-app/form-builder",
+            "capell-app/newsletter",
+            "capell-app/shopify-commerce"
+        ],
+        "conflicts": []
+    },
+    "providers": {
+        "metadata": [],
+        "install": [],
+        "runtime": [
+            "Capell\\ThemeStudio\\OutdoorMission\\OutdoorMissionThemeServiceProvider"
+        ],
+        "admin": [],
+        "frontend": []
+    },
+    "contributes": [
+        {
+            "type": "admin-page",
+            "class": "Capell\\ThemeStudio\\OutdoorMission\\Manifest\\ThemeManagementPageContribution",
+            "pageClass": "Capell\\Marketplace\\Filament\\Pages\\ThemeExtensionPage",
+            "pageParameters": {
+                "themeKey": "outdoor-mission"
+            },
+            "labelKey": "capell-marketplace::marketplace.theme_extension.management_entry_label"
+        }
+    ],
+    "database": {
+        "migrations": false,
+        "settings": false,
+        "requiredTables": []
+    },
+    "commands": {
+        "install": null,
+        "setup": null,
+        "demo": "capell:theme-outdoor-mission-demo",
+        "demoParams": ["url", "languages", "sites"],
+        "doctor": null
+    },
+    "settings": [],
+    "permissions": [],
+    "capabilities": ["theme-outdoor-mission", "theme-outdoor-mission-frontend"],
+    "security": {
+        "riskTier": "low",
+        "publicSurface": {
+            "routeNames": [],
+            "auth": "none",
+            "csrfExemptRoutes": [],
+            "signedRoutes": [],
+            "tokenizedRoutes": [],
+            "webhookRoutes": [],
+            "throttledRoutes": []
+        },
+        "sensitiveData": {
+            "encryptedFields": [],
+            "hashedTokenFields": [],
+            "redactedOutputClasses": [],
+            "plaintextJustifications": []
+        },
+        "publicOutput": {
+            "cacheSafe": true,
+            "forbidAuthoringSurface": true,
+            "forbidSecrets": true,
+            "forbidPublicBladeQueries": true
+        },
+        "externalHttpClients": {
+            "requiresTimeouts": false,
+            "requiresSecretRedaction": false,
+            "clients": []
+        },
+        "adminSurface": {
+            "authorization": "none",
+            "permissions": []
+        }
+    },
+    "performance": {
+        "frontendRenderBudgetMs": 20,
+        "adminQueryBudget": 0,
+        "cacheTags": ["theme-outdoor-mission"],
+        "cacheSafety": {
+            "cacheable": false,
+            "variesBy": ["site", "locale"],
+            "sensitiveOutput": false,
+            "invalidationSources": [],
+            "queueInvalidation": false
+        }
+    },
+    "healthChecks": [
+        {
+            "key": "theme-outdoor-mission.package-health",
+            "label": "Outdoor Mission package surfaces, providers, and install health are discoverable by Diagnostics.",
+            "class": "Capell\\ThemeStudio\\OutdoorMission\\Health\\ThemeOutdoorMissionHealthCheck",
+            "severity": "critical",
+            "surface": "frontend"
+        }
+    ],
+    "commercial": {
+        "proposedLicense": "paid",
+        "requestedCertification": "first-party",
+        "supportPolicy": "priority",
+        "privateDocsRequested": true
+    },
+    "marketplace": {
+        "summary": "A premium Capell theme for outdoor commerce, field storytelling, repair-led product language, and environmental action.",
+        "description": "Outdoor Mission provides a distinct theme definition, demo command, marketplace metadata, and public-safe Blade views for outdoor retailers and mission-driven product teams.",
+        "screenshots": [
+            {
+                "path": "docs/screenshots/outdoor-mission-homepage.png",
+                "alt": "Outdoor Mission homepage preview",
+                "caption": "Outdoor Mission Homepage"
+            },
+            {
+                "path": "docs/screenshots/outdoor-mission-landing.png",
+                "alt": "Outdoor Mission landing page preview",
+                "caption": "Outdoor Mission Landing page"
+            },
+            {
+                "path": "docs/screenshots/outdoor-mission-listing.png",
+                "alt": "Outdoor Mission list page preview",
+                "caption": "Outdoor Mission List page"
+            },
+            {
+                "path": "docs/screenshots/outdoor-mission-search.png",
+                "alt": "Outdoor Mission search results preview",
+                "caption": "Outdoor Mission Search results"
+            },
+            {
+                "path": "docs/screenshots/outdoor-mission-contact.png",
+                "alt": "Outdoor Mission contact form preview",
+                "caption": "Outdoor Mission Contact form"
+            }
+        ],
+        "categories": ["frontend", "themes"]
+    },
+    "extends": "default",
+    "themeKey": "outdoor-mission"
+}

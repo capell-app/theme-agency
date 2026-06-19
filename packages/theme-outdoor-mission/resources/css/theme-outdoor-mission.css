@@ -1,0 +1,164 @@
+.outdoor-shell {
+    --outdoor-ink: var(--theme-foreground, #172018);
+    --outdoor-muted: color-mix(in srgb, var(--outdoor-ink) 66%, transparent);
+    --outdoor-line: color-mix(in srgb, var(--outdoor-ink) 18%, transparent);
+    --outdoor-field: color-mix(
+        in srgb,
+        var(--theme-primary, #2f5d3a) 12%,
+        var(--theme-surface, #f4f1e8)
+    );
+    --outdoor-night: #11170f;
+    --outdoor-paper: var(--theme-surface, #f4f1e8);
+    background:
+        linear-gradient(
+            180deg,
+            color-mix(in srgb, var(--outdoor-paper) 88%, white),
+            var(--outdoor-paper) 28rem
+        ),
+        var(--outdoor-paper);
+    color: var(--outdoor-ink);
+    font-family: var(--theme-body-font, inter), system-ui, sans-serif;
+}
+
+.outdoor-shell h1,
+.outdoor-shell h2,
+.outdoor-shell h3 {
+    color: var(--outdoor-ink);
+    font-family: var(--theme-heading-font, sora), system-ui, sans-serif;
+    letter-spacing: 0;
+}
+
+.outdoor-skip-link {
+    background: var(--outdoor-night, #11170f);
+    color: #fffdf4;
+    left: 1rem;
+    padding: 0.75rem 1rem;
+    position: fixed;
+    top: 1rem;
+    transform: translateY(-150%);
+    z-index: 50;
+}
+
+.outdoor-skip-link:focus {
+    transform: translateY(0);
+}
+
+.outdoor-section {
+    border-top: 1px solid var(--outdoor-line);
+}
+
+.outdoor-section-dark {
+    background: var(--outdoor-night);
+    color: #fffdf4;
+}
+
+.outdoor-section-dark h1,
+.outdoor-section-dark h2,
+.outdoor-section-dark h3 {
+    color: #fffdf4;
+}
+
+.outdoor-section-inner {
+    margin-inline: auto;
+    max-width: 78rem;
+    padding: 4.75rem 1.25rem;
+}
+
+.outdoor-kicker {
+    color: var(--theme-accent, #b4512a);
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.outdoor-lede {
+    color: var(--outdoor-muted);
+    font-size: clamp(1.05rem, 1vw + 0.9rem, 1.35rem);
+    line-height: 1.6;
+    max-width: 46rem;
+}
+
+.outdoor-grid {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr));
+}
+
+.outdoor-card {
+    background: color-mix(in srgb, var(--outdoor-paper) 86%, white);
+    border: 1px solid var(--outdoor-line);
+    border-radius: var(--theme-radius, 0.25rem);
+    min-height: 100%;
+    padding: 1.15rem;
+}
+
+.outdoor-card h3 {
+    font-size: 1.05rem;
+    line-height: 1.25;
+    margin: 0;
+}
+
+.outdoor-card p,
+.outdoor-meta {
+    color: var(--outdoor-muted);
+    line-height: 1.55;
+}
+
+.outdoor-button {
+    align-items: center;
+    background: var(--theme-primary, #2f5d3a);
+    border: 1px solid var(--theme-primary, #2f5d3a);
+    border-radius: var(--theme-radius, 0.25rem);
+    color: #fffdf4;
+    display: inline-flex;
+    font-weight: 700;
+    gap: 0.5rem;
+    min-height: 2.75rem;
+    padding: 0.75rem 1rem;
+    text-decoration: none;
+}
+
+.outdoor-button:hover,
+.outdoor-button:focus-visible {
+    background: color-mix(in srgb, var(--theme-primary, #2f5d3a) 82%, black);
+    outline: 3px solid
+        color-mix(in srgb, var(--theme-accent, #b4512a) 42%, transparent);
+    outline-offset: 3px;
+}
+
+.outdoor-button-secondary {
+    background: transparent;
+    color: var(--outdoor-ink);
+}
+
+.outdoor-section-dark .outdoor-button-secondary {
+    color: #fffdf4;
+    border-color: color-mix(in srgb, #fffdf4 55%, transparent);
+}
+
+.outdoor-product-card {
+    display: grid;
+    gap: 1rem;
+}
+
+.outdoor-product-specs {
+    border-top: 1px solid var(--outdoor-line);
+    display: grid;
+    gap: 0.45rem;
+    padding-top: 0.9rem;
+}
+
+.outdoor-product-specs span {
+    color: var(--outdoor-muted);
+    font-size: 0.9rem;
+}
+
+@media (min-width: 768px) {
+    .outdoor-hero-grid,
+    .outdoor-split {
+        display: grid;
+        gap: 2rem;
+        grid-template-columns: minmax(0, 1.1fr) minmax(18rem, 0.9fr);
+    }
+}
