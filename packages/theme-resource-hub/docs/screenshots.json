@@ -1,0 +1,79 @@
+{
+    "package": "theme-resource-hub",
+    "composerName": "capell-app/theme-resource-hub",
+    "generatedFor": "deployment-screenshot-runner",
+    "requiresInstalledPackage": true,
+    "outputDirectory": "packages/theme-resource-hub/docs/screenshots",
+    "entries": [
+        {
+            "id": "resource-hub-homepage",
+            "title": "Resource Hub Homepage",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-resource-hub/docs/screenshots/resource-hub-homepage.png",
+            "required": false,
+            "user": false,
+            "notes": "Homepage with search-led hero, category shortcuts, website examples, social images, templates, courses, books, learning resources, newsletter paths, and archive proof.",
+            "useCase": "Resource Hub preview",
+            "package": "theme-resource-hub"
+        },
+        {
+            "id": "resource-hub-landing-page",
+            "title": "Resource Hub Landing page",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-resource-hub/docs/screenshots/resource-hub-landing.png",
+            "required": false,
+            "user": false,
+            "notes": "Landing resource page for examples, templates, courses, books, learning guides, consent-friendly embeds, or submission flows.",
+            "useCase": "Resource Hub feature preview",
+            "package": "theme-resource-hub"
+        },
+        {
+            "id": "resource-hub-list-page",
+            "title": "Resource Hub Archive page",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-resource-hub/docs/screenshots/resource-hub-listing.png",
+            "required": false,
+            "user": false,
+            "notes": "Archive page for website examples, social images, templates, courses, books, learning resources, saved collections, or teardowns.",
+            "useCase": "Resource Hub archive preview",
+            "package": "theme-resource-hub"
+        },
+        {
+            "id": "resource-hub-search-results",
+            "title": "Resource Hub Search results",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-resource-hub/docs/screenshots/resource-hub-search.png",
+            "required": false,
+            "user": false,
+            "notes": "Search results for landing-page examples, social images, templates, courses, books, learning resources, categories, platforms, and saved collections.",
+            "useCase": "Resource Hub discovery preview",
+            "package": "theme-resource-hub"
+        },
+        {
+            "id": "resource-hub-contact-form",
+            "title": "Resource Hub Contact form",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-resource-hub/docs/screenshots/resource-hub-contact.png",
+            "required": false,
+            "user": false,
+            "notes": "Newsletter signup, resource submission, template pitch, course suggestion, book recommendation, education partner inquiry, or contact conversion form.",
+            "useCase": "Resource Hub conversion preview",
+            "package": "theme-resource-hub"
+        }
+    ]
+}

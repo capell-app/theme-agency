@@ -1,0 +1,156 @@
+{
+    "manifest-version": 3,
+    "name": "capell-app/theme-resource-hub",
+    "slug": "theme-resource-hub",
+    "displayName": "Theme Resource Hub",
+    "kind": "theme",
+    "capellApiVersion": "^4.0",
+    "version": "4.x-dev",
+    "description": "Resource Hub extends the default Capell frontend with a bright landing-page inspiration and education direction, portable demo content, cache-safe public Blade rendering, and theme tokens tuned for search-led heroes, category shortcuts, website examples, social images, templates, courses, books, consent-friendly embeds, and resource archives.",
+    "product": {
+        "group": "Capell Themes",
+        "tier": "premium",
+        "bundle": "themes"
+    },
+    "namespace": "Capell\\ThemeStudio\\ResourceHub",
+    "surfaces": ["frontend"],
+    "dependencies": {
+        "requires": ["capell-app/core", "capell-app/frontend"],
+        "supports": [
+            "capell-app/blog",
+            "capell-app/form-builder",
+            "capell-app/newsletter",
+            "capell-app/shopify-commerce"
+        ],
+        "conflicts": []
+    },
+    "providers": {
+        "metadata": [],
+        "install": [],
+        "runtime": [
+            "Capell\\ThemeStudio\\ResourceHub\\ResourceHubThemeServiceProvider"
+        ],
+        "admin": [],
+        "frontend": []
+    },
+    "contributes": [
+        {
+            "type": "admin-page",
+            "class": "Capell\\ThemeStudio\\ResourceHub\\Manifest\\ThemeManagementPageContribution",
+            "pageClass": "Capell\\Marketplace\\Filament\\Pages\\ThemeExtensionPage",
+            "pageParameters": {
+                "themeKey": "resource-hub"
+            },
+            "labelKey": "capell-marketplace::marketplace.theme_extension.management_entry_label"
+        }
+    ],
+    "database": {
+        "migrations": false,
+        "settings": false,
+        "requiredTables": []
+    },
+    "commands": {
+        "install": null,
+        "setup": null,
+        "demo": "capell:theme-resource-hub-demo",
+        "demoParams": ["url", "languages", "sites"],
+        "doctor": null
+    },
+    "settings": [],
+    "permissions": [],
+    "capabilities": ["theme-resource-hub", "theme-resource-hub-frontend"],
+    "security": {
+        "riskTier": "low",
+        "publicSurface": {
+            "routeNames": [],
+            "auth": "none",
+            "csrfExemptRoutes": [],
+            "signedRoutes": [],
+            "tokenizedRoutes": [],
+            "webhookRoutes": [],
+            "throttledRoutes": []
+        },
+        "sensitiveData": {
+            "encryptedFields": [],
+            "hashedTokenFields": [],
+            "redactedOutputClasses": [],
+            "plaintextJustifications": []
+        },
+        "publicOutput": {
+            "cacheSafe": true,
+            "forbidAuthoringSurface": true,
+            "forbidSecrets": true,
+            "forbidPublicBladeQueries": true
+        },
+        "externalHttpClients": {
+            "requiresTimeouts": false,
+            "requiresSecretRedaction": false,
+            "clients": []
+        },
+        "adminSurface": {
+            "authorization": "none",
+            "permissions": []
+        }
+    },
+    "performance": {
+        "frontendRenderBudgetMs": 20,
+        "adminQueryBudget": 0,
+        "cacheTags": ["theme-resource-hub"],
+        "cacheSafety": {
+            "cacheable": false,
+            "variesBy": ["site", "locale"],
+            "sensitiveOutput": false,
+            "invalidationSources": [],
+            "queueInvalidation": false
+        }
+    },
+    "healthChecks": [
+        {
+            "key": "theme-resource-hub.package-health",
+            "label": "Resource Hub package surfaces, providers, and install health are discoverable by Diagnostics.",
+            "class": "Capell\\ThemeStudio\\ResourceHub\\Health\\ThemeResourceHubHealthCheck",
+            "severity": "critical",
+            "surface": "frontend"
+        }
+    ],
+    "commercial": {
+        "proposedLicense": "paid",
+        "requestedCertification": "first-party",
+        "supportPolicy": "priority",
+        "privateDocsRequested": true
+    },
+    "marketplace": {
+        "summary": "A bright Capell theme for landing-page inspiration hubs, website example libraries, template directories, course catalogs, book lists, and practical marketing education archives.",
+        "description": "Resource Hub provides a distinct theme definition, demo command, marketplace metadata, and public-safe Blade views for resource hubs that need immediate search, category shortcuts, large proof counts, full-page screenshot cards, video thumbnail support, category labels, visit actions, social image collections, templates, courses, books, learning resources, newsletter capture, consent-friendly embed language, and archive pages for each resource type.",
+        "screenshots": [
+            {
+                "path": "docs/screenshots/resource-hub-homepage.png",
+                "alt": "Resource Hub homepage preview",
+                "caption": "Resource Hub Homepage"
+            },
+            {
+                "path": "docs/screenshots/resource-hub-landing.png",
+                "alt": "Resource Hub landing page preview",
+                "caption": "Resource Hub Landing page"
+            },
+            {
+                "path": "docs/screenshots/resource-hub-listing.png",
+                "alt": "Resource Hub list page preview",
+                "caption": "Resource Hub List page"
+            },
+            {
+                "path": "docs/screenshots/resource-hub-search.png",
+                "alt": "Resource Hub search results preview",
+                "caption": "Resource Hub Search results"
+            },
+            {
+                "path": "docs/screenshots/resource-hub-contact.png",
+                "alt": "Resource Hub contact form preview",
+                "caption": "Resource Hub Contact form"
+            }
+        ],
+        "categories": ["frontend", "themes"]
+    },
+    "extends": "default",
+    "themeKey": "resource-hub"
+}
