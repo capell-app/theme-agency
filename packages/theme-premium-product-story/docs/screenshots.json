@@ -1,0 +1,79 @@
+{
+    "package": "theme-premium-product-story",
+    "composerName": "capell-app/theme-premium-product-story",
+    "generatedFor": "deployment-screenshot-runner",
+    "requiresInstalledPackage": true,
+    "outputDirectory": "packages/theme-premium-product-story/docs/screenshots",
+    "entries": [
+        {
+            "id": "premium-product-story-homepage",
+            "title": "Premium Product Story Homepage",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-premium-product-story/docs/screenshots/premium-product-story-homepage.png",
+            "required": false,
+            "user": false,
+            "notes": "Homepage with hero launch, product families, feature highlights, gallery strip, spec comparison, ecosystem story, and purchase paths.",
+            "useCase": "Premium product storytelling marketplace preview",
+            "package": "theme-premium-product-story"
+        },
+        {
+            "id": "premium-product-story-landing-page",
+            "title": "Premium Product Story Landing page",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-premium-product-story/docs/screenshots/premium-product-story-landing.png",
+            "required": false,
+            "user": false,
+            "notes": "Product launch, model family, feature story, or ecosystem landing page.",
+            "useCase": "Premium product launch preview",
+            "package": "theme-premium-product-story"
+        },
+        {
+            "id": "premium-product-story-list-page",
+            "title": "Premium Product Story List page",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-premium-product-story/docs/screenshots/premium-product-story-listing.png",
+            "required": false,
+            "user": false,
+            "notes": "Product, model, comparison, launch update, or support article listing page.",
+            "useCase": "Premium Product Story archive preview",
+            "package": "theme-premium-product-story"
+        },
+        {
+            "id": "premium-product-story-search-results",
+            "title": "Premium Product Story Search results",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-premium-product-story/docs/screenshots/premium-product-story-search.png",
+            "required": false,
+            "user": false,
+            "notes": "Search results for products, models, specs, launch stories, and support notes.",
+            "useCase": "Premium Product Story discovery preview",
+            "package": "theme-premium-product-story"
+        },
+        {
+            "id": "premium-product-story-contact-form",
+            "title": "Premium Product Story Contact form",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-premium-product-story/docs/screenshots/premium-product-story-contact.png",
+            "required": false,
+            "user": false,
+            "notes": "Product update, availability alert, support, financing, or contact conversion form.",
+            "useCase": "Premium Product Story conversion preview",
+            "package": "theme-premium-product-story"
+        }
+    ]
+}

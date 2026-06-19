@@ -1,0 +1,53 @@
+{
+    "name": "capell-app/theme-premium-product-story",
+    "description": "Premium Product Story is a first-party Capell theme for consumer product launches, feature storytelling, model comparison, ecosystem content, and purchase CTAs.",
+    "type": "library",
+    "license": "MIT",
+    "require": {
+        "php": "^8.3",
+        "capell-app/core": "^4.0 || 4.x-dev",
+        "capell-app/frontend": "^4.0 || 4.x-dev"
+    },
+    "require-dev": {
+        "pestphp/pest": "^3.0|^4.0",
+        "phpunit/phpunit": "^10.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Capell\\ThemeStudio\\PremiumProductStory\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Capell\\ThemeStudio\\PremiumProductStory\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Capell\\ThemeStudio\\PremiumProductStory\\PremiumProductStoryThemeServiceProvider"
+            ]
+        },
+        "branch-alias": {
+            "dev-main": "4.x-dev"
+        }
+    },
+    "homepage": "https://github.com/capell-app/theme-premium-product-story",
+    "keywords": [
+        "capell",
+        "cms",
+        "laravel",
+        "theme"
+    ],
+    "authors": [
+        {
+            "name": "Capell Team",
+            "email": "team@capell.app",
+            "role": "Developer"
+        }
+    ],
+    "support": {
+        "source": "https://github.com/capell-app/capell-packages",
+        "docs": "https://docs.capell.app/packages/theme-premium-product-story"
+    }
+}
