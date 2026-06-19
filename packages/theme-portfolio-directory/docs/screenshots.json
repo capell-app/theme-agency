@@ -1,0 +1,79 @@
+{
+    "package": "theme-portfolio-directory",
+    "composerName": "capell-app/theme-portfolio-directory",
+    "generatedFor": "deployment-screenshot-runner",
+    "requiresInstalledPackage": true,
+    "outputDirectory": "packages/theme-portfolio-directory/docs/screenshots",
+    "entries": [
+        {
+            "id": "portfolio-directory-homepage",
+            "title": "Portfolio Directory Homepage",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-portfolio-directory/docs/screenshots/portfolio-directory-homepage.png",
+            "required": false,
+            "user": false,
+            "notes": "Homepage with directory hero, role filters, portfolio grid, resume resources, curated lists, profile detail, and newsletter paths.",
+            "useCase": "Portfolio directory preview",
+            "package": "theme-portfolio-directory"
+        },
+        {
+            "id": "portfolio-directory-landing-page",
+            "title": "Portfolio Directory Landing page",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-portfolio-directory/docs/screenshots/portfolio-directory-landing.png",
+            "required": false,
+            "user": false,
+            "notes": "Portfolio detail, creator profile, gallery stack, resume resource, article page, curated list, or related portfolio landing page.",
+            "useCase": "Portfolio directory feature preview",
+            "package": "theme-portfolio-directory"
+        },
+        {
+            "id": "portfolio-directory-list-page",
+            "title": "Portfolio Directory List page",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-portfolio-directory/docs/screenshots/portfolio-directory-listing.png",
+            "required": false,
+            "user": false,
+            "notes": "Portfolio, creator, discipline, role, medium, style, career stage, tag, or curated-list page.",
+            "useCase": "Portfolio Directory archive preview",
+            "package": "theme-portfolio-directory"
+        },
+        {
+            "id": "portfolio-directory-search-results",
+            "title": "Portfolio Directory Search results",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-portfolio-directory/docs/screenshots/portfolio-directory-search.png",
+            "required": false,
+            "user": false,
+            "notes": "Search results for designers, developers, studios, disciplines, media, styles, career stages, and tags.",
+            "useCase": "Portfolio Directory discovery preview",
+            "package": "theme-portfolio-directory"
+        },
+        {
+            "id": "portfolio-directory-contact-form",
+            "title": "Portfolio Directory Contact form",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-portfolio-directory/docs/screenshots/portfolio-directory-contact.png",
+            "required": false,
+            "user": false,
+            "notes": "Newsletter, portfolio submission, creator profile claim, resume resource signup, article pitch, or contact conversion form.",
+            "useCase": "Portfolio Directory conversion preview",
+            "package": "theme-portfolio-directory"
+        }
+    ]
+}

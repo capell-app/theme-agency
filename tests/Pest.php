@@ -219,6 +219,7 @@ extendCapellPackageTests(PackagesTestCase::class, 'theme-premium-portfolio-colle
 extendCapellPackageTests(PackagesTestCase::class, 'theme-character-portfolio-index', 'theme-character-portfolio-index');
 extendCapellPackageTests(PackagesTestCase::class, 'theme-case-study-platform', 'theme-case-study-platform');
 extendCapellPackageTests(PackagesTestCase::class, 'theme-creative-marketplace', 'theme-creative-marketplace');
+extendCapellPackageTests(PackagesTestCase::class, 'theme-portfolio-directory', 'theme-portfolio-directory');
 extendCapellPackageTests(PackagesTestCase::class, 'theme-quiet-luxury-retail', 'theme-quiet-luxury-retail');
 extendCapellPackageTests(PackagesTestCase::class, 'theme-automotive-dealer', 'theme-automotive-dealer');
 extendCapellPackageTests(PackagesTestCase::class, 'theme-property-developer', 'theme-property-developer');
