@@ -1,0 +1,53 @@
+{
+    "name": "capell-app/theme-global-culture-magazine",
+    "description": "Global Culture Magazine is a first-party Capell theme for global magazines covering affairs, travel, culture, radio, city guides, books, shops, and columnists.",
+    "type": "library",
+    "license": "MIT",
+    "require": {
+        "php": "^8.3",
+        "capell-app/core": "^4.0 || 4.x-dev",
+        "capell-app/frontend": "^4.0 || 4.x-dev"
+    },
+    "require-dev": {
+        "pestphp/pest": "^3.0|^4.0",
+        "phpunit/phpunit": "^10.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Capell\\ThemeStudio\\GlobalCultureMagazine\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Capell\\ThemeStudio\\GlobalCultureMagazine\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Capell\\ThemeStudio\\GlobalCultureMagazine\\GlobalCultureMagazineThemeServiceProvider"
+            ]
+        },
+        "branch-alias": {
+            "dev-main": "4.x-dev"
+        }
+    },
+    "homepage": "https://github.com/capell-app/theme-global-culture-magazine",
+    "keywords": [
+        "capell",
+        "cms",
+        "laravel",
+        "theme"
+    ],
+    "authors": [
+        {
+            "name": "Capell Team",
+            "email": "team@capell.app",
+            "role": "Developer"
+        }
+    ],
+    "support": {
+        "source": "https://github.com/capell-app/capell-packages",
+        "docs": "https://docs.capell.app/packages/theme-global-culture-magazine"
+    }
+}

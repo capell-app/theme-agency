@@ -1,0 +1,79 @@
+{
+    "package": "theme-global-culture-magazine",
+    "composerName": "capell-app/theme-global-culture-magazine",
+    "generatedFor": "deployment-screenshot-runner",
+    "requiresInstalledPackage": true,
+    "outputDirectory": "packages/theme-global-culture-magazine/docs/screenshots",
+    "entries": [
+        {
+            "id": "global-culture-magazine-homepage",
+            "title": "Global Culture Magazine Homepage",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-global-culture-magazine/docs/screenshots/global-culture-magazine-homepage.png",
+            "required": false,
+            "user": false,
+            "notes": "Homepage with lead dispatch, radio row, city guides, travel and culture stories, shop/books, columnists, and newsletter paths.",
+            "useCase": "Global culture magazine marketplace preview",
+            "package": "theme-global-culture-magazine"
+        },
+        {
+            "id": "global-culture-magazine-landing-page",
+            "title": "Global Culture Magazine Landing page",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-global-culture-magazine/docs/screenshots/global-culture-magazine-landing.png",
+            "required": false,
+            "user": false,
+            "notes": "Lead dispatch, city guide, radio episode, travel feature, culture story, or books landing page.",
+            "useCase": "Global magazine feature preview",
+            "package": "theme-global-culture-magazine"
+        },
+        {
+            "id": "global-culture-magazine-list-page",
+            "title": "Global Culture Magazine List page",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-global-culture-magazine/docs/screenshots/global-culture-magazine-listing.png",
+            "required": false,
+            "user": false,
+            "notes": "Affairs, travel, culture, radio, city guide, books, shop, or columnist listing page.",
+            "useCase": "Global Culture Magazine archive preview",
+            "package": "theme-global-culture-magazine"
+        },
+        {
+            "id": "global-culture-magazine-search-results",
+            "title": "Global Culture Magazine Search results",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-global-culture-magazine/docs/screenshots/global-culture-magazine-search.png",
+            "required": false,
+            "user": false,
+            "notes": "Search results for places, departments, episodes, columnists, books, products, and guides.",
+            "useCase": "Global Culture Magazine discovery preview",
+            "package": "theme-global-culture-magazine"
+        },
+        {
+            "id": "global-culture-magazine-contact-form",
+            "title": "Global Culture Magazine Contact form",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-global-culture-magazine/docs/screenshots/global-culture-magazine-contact.png",
+            "required": false,
+            "user": false,
+            "notes": "Newsletter, subscriber offer, radio signup, shop inquiry, event, or contact conversion form.",
+            "useCase": "Global Culture Magazine conversion preview",
+            "package": "theme-global-culture-magazine"
+        }
+    ]
+}
