@@ -1,0 +1,79 @@
+{
+    "package": "theme-bold-sport-commerce",
+    "composerName": "capell-app/theme-bold-sport-commerce",
+    "generatedFor": "deployment-screenshot-runner",
+    "requiresInstalledPackage": true,
+    "outputDirectory": "packages/theme-bold-sport-commerce/docs/screenshots",
+    "entries": [
+        {
+            "id": "bold-sport-commerce-homepage",
+            "title": "Bold Sport Commerce Homepage",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-bold-sport-commerce/docs/screenshots/bold-sport-commerce-homepage.png",
+            "required": false,
+            "user": false,
+            "notes": "Homepage with campaign launch, fast category jumps, product wall, community offer, training stories, and drop-alert paths.",
+            "useCase": "Bold sport commerce marketplace preview",
+            "package": "theme-bold-sport-commerce"
+        },
+        {
+            "id": "bold-sport-commerce-landing-page",
+            "title": "Bold Sport Commerce Landing page",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-bold-sport-commerce/docs/screenshots/bold-sport-commerce-landing.png",
+            "required": false,
+            "user": false,
+            "notes": "Campaign drop, event kit, team store, or community offer landing page.",
+            "useCase": "Sport campaign landing preview",
+            "package": "theme-bold-sport-commerce"
+        },
+        {
+            "id": "bold-sport-commerce-list-page",
+            "title": "Bold Sport Commerce List page",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-bold-sport-commerce/docs/screenshots/bold-sport-commerce-listing.png",
+            "required": false,
+            "user": false,
+            "notes": "Product, collection, training story, event kit, or teamwear listing page.",
+            "useCase": "Bold Sport Commerce archive preview",
+            "package": "theme-bold-sport-commerce"
+        },
+        {
+            "id": "bold-sport-commerce-search-results",
+            "title": "Bold Sport Commerce Search results",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-bold-sport-commerce/docs/screenshots/bold-sport-commerce-search.png",
+            "required": false,
+            "user": false,
+            "notes": "Search results for products, campaigns, training edits, and teamwear.",
+            "useCase": "Bold Sport Commerce discovery preview",
+            "package": "theme-bold-sport-commerce"
+        },
+        {
+            "id": "bold-sport-commerce-contact-form",
+            "title": "Bold Sport Commerce Contact form",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-bold-sport-commerce/docs/screenshots/bold-sport-commerce-contact.png",
+            "required": false,
+            "user": false,
+            "notes": "Drop-alert, club-pricing, team inquiry, or contact conversion form.",
+            "useCase": "Bold Sport Commerce conversion preview",
+            "package": "theme-bold-sport-commerce"
+        }
+    ]
+}

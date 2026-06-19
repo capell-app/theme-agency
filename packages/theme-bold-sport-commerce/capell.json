@@ -1,0 +1,159 @@
+{
+    "manifest-version": 3,
+    "name": "capell-app/theme-bold-sport-commerce",
+    "slug": "theme-bold-sport-commerce",
+    "displayName": "Theme Bold Sport Commerce",
+    "kind": "theme",
+    "capellApiVersion": "^4.0",
+    "version": "4.x-dev",
+    "description": "Bold Sport Commerce extends the default Capell frontend with a high-energy sport retail direction, portable demo content, cache-safe public Blade rendering, and theme tokens tuned for campaign launches, quick category jumps, product walls, fit details, training stories, community offers, and drop-alert conversion.",
+    "product": {
+        "group": "Capell Themes",
+        "tier": "premium",
+        "bundle": "themes"
+    },
+    "namespace": "Capell\\ThemeStudio\\BoldSportCommerce",
+    "surfaces": ["frontend"],
+    "dependencies": {
+        "requires": ["capell-app/core", "capell-app/frontend"],
+        "supports": [
+            "capell-app/blog",
+            "capell-app/form-builder",
+            "capell-app/newsletter",
+            "capell-app/shopify-commerce"
+        ],
+        "conflicts": []
+    },
+    "providers": {
+        "metadata": [],
+        "install": [],
+        "runtime": [
+            "Capell\\ThemeStudio\\BoldSportCommerce\\BoldSportCommerceThemeServiceProvider"
+        ],
+        "admin": [],
+        "frontend": []
+    },
+    "contributes": [
+        {
+            "type": "admin-page",
+            "class": "Capell\\ThemeStudio\\BoldSportCommerce\\Manifest\\ThemeManagementPageContribution",
+            "pageClass": "Capell\\Marketplace\\Filament\\Pages\\ThemeExtensionPage",
+            "pageParameters": {
+                "themeKey": "bold-sport-commerce"
+            },
+            "labelKey": "capell-marketplace::marketplace.theme_extension.management_entry_label"
+        }
+    ],
+    "database": {
+        "migrations": false,
+        "settings": false,
+        "requiredTables": []
+    },
+    "commands": {
+        "install": null,
+        "setup": null,
+        "demo": "capell:theme-bold-sport-commerce-demo",
+        "demoParams": ["url", "languages", "sites"],
+        "doctor": null
+    },
+    "settings": [],
+    "permissions": [],
+    "capabilities": [
+        "theme-bold-sport-commerce",
+        "theme-bold-sport-commerce-frontend"
+    ],
+    "security": {
+        "riskTier": "low",
+        "publicSurface": {
+            "routeNames": [],
+            "auth": "none",
+            "csrfExemptRoutes": [],
+            "signedRoutes": [],
+            "tokenizedRoutes": [],
+            "webhookRoutes": [],
+            "throttledRoutes": []
+        },
+        "sensitiveData": {
+            "encryptedFields": [],
+            "hashedTokenFields": [],
+            "redactedOutputClasses": [],
+            "plaintextJustifications": []
+        },
+        "publicOutput": {
+            "cacheSafe": true,
+            "forbidAuthoringSurface": true,
+            "forbidSecrets": true,
+            "forbidPublicBladeQueries": true
+        },
+        "externalHttpClients": {
+            "requiresTimeouts": false,
+            "requiresSecretRedaction": false,
+            "clients": []
+        },
+        "adminSurface": {
+            "authorization": "none",
+            "permissions": []
+        }
+    },
+    "performance": {
+        "frontendRenderBudgetMs": 20,
+        "adminQueryBudget": 0,
+        "cacheTags": ["theme-bold-sport-commerce"],
+        "cacheSafety": {
+            "cacheable": false,
+            "variesBy": ["site", "locale"],
+            "sensitiveOutput": false,
+            "invalidationSources": [],
+            "queueInvalidation": false
+        }
+    },
+    "healthChecks": [
+        {
+            "key": "theme-bold-sport-commerce.package-health",
+            "label": "Bold Sport Commerce package surfaces, providers, and install health are discoverable by Diagnostics.",
+            "class": "Capell\\ThemeStudio\\BoldSportCommerce\\Health\\ThemeBoldSportCommerceHealthCheck",
+            "severity": "critical",
+            "surface": "frontend"
+        }
+    ],
+    "commercial": {
+        "proposedLicense": "paid",
+        "requestedCertification": "first-party",
+        "supportPolicy": "priority",
+        "privateDocsRequested": true
+    },
+    "marketplace": {
+        "summary": "A premium Capell theme for sport retailers, campaign drops, product walls, team offers, and training-led commerce.",
+        "description": "Bold Sport Commerce provides a distinct theme definition, demo command, marketplace metadata, and public-safe Blade views for athletic retailers that need energetic campaign pages with direct shopping paths.",
+        "screenshots": [
+            {
+                "path": "docs/screenshots/bold-sport-commerce-homepage.png",
+                "alt": "Bold Sport Commerce homepage preview",
+                "caption": "Bold Sport Commerce Homepage"
+            },
+            {
+                "path": "docs/screenshots/bold-sport-commerce-landing.png",
+                "alt": "Bold Sport Commerce landing page preview",
+                "caption": "Bold Sport Commerce Landing page"
+            },
+            {
+                "path": "docs/screenshots/bold-sport-commerce-listing.png",
+                "alt": "Bold Sport Commerce list page preview",
+                "caption": "Bold Sport Commerce List page"
+            },
+            {
+                "path": "docs/screenshots/bold-sport-commerce-search.png",
+                "alt": "Bold Sport Commerce search results preview",
+                "caption": "Bold Sport Commerce Search results"
+            },
+            {
+                "path": "docs/screenshots/bold-sport-commerce-contact.png",
+                "alt": "Bold Sport Commerce contact form preview",
+                "caption": "Bold Sport Commerce Contact form"
+            }
+        ],
+        "categories": ["frontend", "themes"]
+    },
+    "extends": "default",
+    "themeKey": "bold-sport-commerce"
+}
