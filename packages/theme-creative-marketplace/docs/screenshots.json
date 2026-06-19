@@ -1,0 +1,79 @@
+{
+    "package": "theme-creative-marketplace",
+    "composerName": "capell-app/theme-creative-marketplace",
+    "generatedFor": "deployment-screenshot-runner",
+    "requiresInstalledPackage": true,
+    "outputDirectory": "packages/theme-creative-marketplace/docs/screenshots",
+    "entries": [
+        {
+            "id": "creative-marketplace-homepage",
+            "title": "Creative Marketplace Homepage",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-creative-marketplace/docs/screenshots/creative-marketplace-homepage.png",
+            "required": false,
+            "user": false,
+            "notes": "Homepage with service hero, category chips, shot grid, briefs and pricing, agencies, services, profile availability, and newsletter paths.",
+            "useCase": "Creative marketplace preview",
+            "package": "theme-creative-marketplace"
+        },
+        {
+            "id": "creative-marketplace-landing-page",
+            "title": "Creative Marketplace Landing page",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-creative-marketplace/docs/screenshots/creative-marketplace-landing.png",
+            "required": false,
+            "user": false,
+            "notes": "Designer profile, service landing page, agency profile, shot collection, pricing snippet, availability state, or hiring landing page.",
+            "useCase": "Creative marketplace feature preview",
+            "package": "theme-creative-marketplace"
+        },
+        {
+            "id": "creative-marketplace-list-page",
+            "title": "Creative Marketplace List page",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-creative-marketplace/docs/screenshots/creative-marketplace-listing.png",
+            "required": false,
+            "user": false,
+            "notes": "Shot, creator, service, agency, style, budget, availability, save state, or collection listing page.",
+            "useCase": "Creative Marketplace archive preview",
+            "package": "theme-creative-marketplace"
+        },
+        {
+            "id": "creative-marketplace-search-results",
+            "title": "Creative Marketplace Search results",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-creative-marketplace/docs/screenshots/creative-marketplace-search.png",
+            "required": false,
+            "user": false,
+            "notes": "Search results for designers, agencies, services, styles, budgets, availability, saved profiles, and shots.",
+            "useCase": "Creative Marketplace discovery preview",
+            "package": "theme-creative-marketplace"
+        },
+        {
+            "id": "creative-marketplace-contact-form",
+            "title": "Creative Marketplace Contact form",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-creative-marketplace/docs/screenshots/creative-marketplace-contact.png",
+            "required": false,
+            "user": false,
+            "notes": "Newsletter, designer submission, talent profile claim, hiring inquiry, brief intake, or contact conversion form.",
+            "useCase": "Creative Marketplace conversion preview",
+            "package": "theme-creative-marketplace"
+        }
+    ]
+}
