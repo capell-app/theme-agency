@@ -1,0 +1,79 @@
+{
+    "package": "theme-dark-product-system",
+    "composerName": "capell-app/theme-dark-product-system",
+    "generatedFor": "deployment-screenshot-runner",
+    "requiresInstalledPackage": true,
+    "outputDirectory": "packages/theme-dark-product-system/docs/screenshots",
+    "entries": [
+        {
+            "id": "dark-product-system-homepage",
+            "title": "Dark Product System Homepage",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-dark-product-system/docs/screenshots/dark-product-system-homepage.png",
+            "required": false,
+            "user": false,
+            "notes": "Homepage with system hero, workflow rails, agents and automation, planning roadmap, changelog and integrations, security proof, and newsletter paths.",
+            "useCase": "Dark Product System preview",
+            "package": "theme-dark-product-system"
+        },
+        {
+            "id": "dark-product-system-landing-page",
+            "title": "Dark Product System Landing page",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-dark-product-system/docs/screenshots/dark-product-system-landing.png",
+            "required": false,
+            "user": false,
+            "notes": "Product system homepage, workflow page, automation page, roadmap view, changelog entry, integration page, or security landing page.",
+            "useCase": "Dark Product System feature preview",
+            "package": "theme-dark-product-system"
+        },
+        {
+            "id": "dark-product-system-list-page",
+            "title": "Dark Product System List page",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-dark-product-system/docs/screenshots/dark-product-system-listing.png",
+            "required": false,
+            "user": false,
+            "notes": "Workflow update, automation note, roadmap item, changelog entry, integration page, security note, or customer story.",
+            "useCase": "Dark Product System archive preview",
+            "package": "theme-dark-product-system"
+        },
+        {
+            "id": "dark-product-system-search-results",
+            "title": "Dark Product System Search results",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-dark-product-system/docs/screenshots/dark-product-system-search.png",
+            "required": false,
+            "user": false,
+            "notes": "Search results for inbox items, issues, roadmaps, automation runs, changelog entries, integrations, security notes, and customer proof.",
+            "useCase": "Dark Product System discovery preview",
+            "package": "theme-dark-product-system"
+        },
+        {
+            "id": "dark-product-system-contact-form",
+            "title": "Dark Product System Contact form",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-dark-product-system/docs/screenshots/dark-product-system-contact.png",
+            "required": false,
+            "user": false,
+            "notes": "Newsletter, demo request, workflow inquiry, automation question, security review, or contact conversion form.",
+            "useCase": "Dark Product System conversion preview",
+            "package": "theme-dark-product-system"
+        }
+    ]
+}
