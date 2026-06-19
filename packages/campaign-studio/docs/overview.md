@@ -36,6 +36,58 @@ Screenshot contract: `screenshots.json`.
 - Campaign dashboard widgets (admin, required).
 - Frontend landing page with campaign widgets (frontend, required).
 
+## Screenshot Evidence
+
+These captures are the package-owned visual contract for the admin pages, public pages, actions, workflows, and feature surfaces described above. Keep this section aligned with `docs/screenshots.json` whenever the package surface changes.
+
+### Campaign groups index
+
+![Campaign groups index](screenshots/campaign-groups-index.png)
+
+- Surface: admin · Target: CampaignGroupResource.
+- Documents: A marketer reviews active campaign groups before managing landing pages, CTAs, and goals.
+- Capture notes: Requires Campaign Studio plus required Capell extensions installed, package migrations, and seeded campaign groups linked to sites.
+
+### Campaign landing pages index
+
+![Campaign landing pages index](screenshots/campaign-landing-pages-index.png)
+
+- Surface: admin · Target: CampaignLandingPageResource.
+- Documents: A marketer checks which public pages are attached to campaigns and which goal each page should optimize for.
+- Capture notes: Requires seeded campaign groups, target pages, primary goals, and campaign URLs. The batch harness still needs dependency extension state fixed before final install screenshots.
+
+### Campaign conversion goals form
+
+![Campaign conversion goals form](screenshots/campaign-conversion-goals-form.png)
+
+- Surface: admin · Target: CampaignConversionGoalResource.create.
+- Documents: A marketer defines the measurable outcome that campaign landing pages and conversions report against.
+- Capture notes: Requires at least one seeded campaign group. Include goal type, attribution model, and active/inactive state fields in the capture.
+
+### CTA widget form
+
+![CTA widget form](screenshots/cta-block-form.png)
+
+- Surface: admin · Target: CampaignCtaWidgetResource.create.
+- Documents: A marketer creates a reusable campaign CTA widget with conversion tracking metadata.
+- Capture notes: Requires a seeded campaign group and target URL or target page. Capture title, body, button/action, style, and tracking fields.
+
+### Campaign dashboard widgets
+
+![Campaign dashboard widgets](screenshots/campaign-dashboard-widgets.png)
+
+- Surface: admin · Target: CampaignOverviewStatsWidget.
+- Documents: A marketer reviews campaign performance, top campaign groups, and top landing pages from the admin dashboard.
+- Capture notes: Requires the host dashboard to register Campaign Studio widgets and seeded visits, events, landing pages, goals, and conversions.
+
+### Frontend landing page with campaign widgets
+
+![Frontend landing page with campaign widgets](screenshots/frontend-landing-page-with-campaign-widgets.png)
+
+- Surface: frontend · Target: frontend-url.
+- Documents: A visitor lands on a campaign page with tracked hero, CTA, and lead-capture content.
+- Capture notes: Requires a seeded public page using campaign hero, CTA, or lead-form widgets plus Form Builder and Layout Builder. Verify public HTML does not expose admin-only campaign metadata.
+
 ## Technical Shape
 
 - Service providers: `Capell\CampaignStudio\Providers\CampaignStudioServiceProvider`, `Capell\CampaignStudio\Providers\AdminServiceProvider`, `Capell\CampaignStudio\Providers\FrontendServiceProvider`.

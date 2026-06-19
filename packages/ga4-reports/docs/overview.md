@@ -33,6 +33,34 @@ Screenshot contract: `screenshots.json`.
 - GA4 Reports setup status widget (admin, required).
 - GA4 Reports settings (admin, required).
 
+## Screenshot Evidence
+
+These captures are the package-owned visual contract for the admin pages, public pages, actions, workflows, and feature surfaces described above. Keep this section aligned with `docs/screenshots.json` whenever the package surface changes.
+
+### GA4 Reports dashboard page
+
+![GA4 Reports dashboard page](screenshots/ga4-reports-dashboard-page.png)
+
+- Surface: admin · Target: /admin/ga4-reports.
+- Documents: An administrator reviews GA4 overview stats, traffic trends, top pages, and setup status.
+- Capture notes: Capture the extension page with overview stats, traffic trend, top pages, and setup status widgets.
+
+### GA4 Reports setup status widget
+
+![GA4 Reports setup status widget](screenshots/ga4-reports-setup-status.png)
+
+- Surface: admin · Target: /admin/ga4-reports.
+- Documents: A site owner distinguishes not-configured and configured GA4 states before enabling sync.
+- Capture notes: Capture the not-configured and configured states if the screenshot runner can seed both.
+
+### GA4 Reports settings
+
+![GA4 Reports settings](screenshots/ga4-reports-settings.png)
+
+- Surface: admin · Target: /admin/settings.
+- Documents: A site owner configures property ID, credentials path, route slug, sync window, and enabled state.
+- Capture notes: Capture the settings section for property ID, credentials path, route slug, sync window, and enabled state.
+
 ## Technical Shape
 
 - Service providers: `Capell\GA4Reports\Providers\GA4ReportsServiceProvider`, `Capell\GA4Reports\Providers\AdminServiceProvider`.

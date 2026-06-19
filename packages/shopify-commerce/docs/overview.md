@@ -33,6 +33,34 @@ Screenshot contract: `screenshots.json`.
 - Shopify catalog sync state (admin, required).
 - Shopify product search (admin, required).
 
+## Screenshot Evidence
+
+These captures are the package-owned visual contract for the admin pages, public pages, actions, workflows, and feature surfaces described above. Keep this section aligned with `docs/screenshots.json` whenever the package surface changes.
+
+### Shopify connection page
+
+![Shopify connection page](screenshots/shopify-connection-page.png)
+
+- Surface: admin · Target: ShopifyConnectionPage.
+- Documents: An administrator connects or reviews the Shopify store connection for a Capell site.
+- Capture notes: Capture as an authorized admin with Shopify Commerce enabled. Use safe demo credentials/state; never expose real Shopify access tokens.
+
+### Shopify catalog sync state
+
+![Shopify catalog sync state](screenshots/shopify-catalog-sync-state.png)
+
+- Surface: admin · Target: ShopifyConnectionPage.
+- Documents: An operator checks whether the local product catalog is connected and recently synced.
+- Capture notes: Capture after seeding a demo connection with sync status, product count, and last sync timestamps.
+
+### Shopify product search
+
+![Shopify product search](screenshots/shopify-product-search.png)
+
+- Surface: admin · Target: ShopifyConnectionPage.
+- Documents: An editor searches synced Shopify products from inside Capell Admin.
+- Capture notes: Capture local catalog search with seeded demo products. Product data should be fake or fixture data, not a real merchant catalog.
+
 ## Technical Shape
 
 - Service providers: `Capell\ShopifyCommerce\Providers\ShopifyCommerceServiceProvider`, `Capell\ShopifyCommerce\Providers\AdminServiceProvider`.

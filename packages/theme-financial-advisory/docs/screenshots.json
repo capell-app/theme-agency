@@ -1,4 +1,9 @@
 {
+    "package": "theme-financial-advisory",
+    "composerName": "capell-app/theme-financial-advisory",
+    "generatedFor": "deployment-screenshot-runner",
+    "requiresInstalledPackage": true,
+    "outputDirectory": "packages/theme-financial-advisory/docs/screenshots",
     "entries": [
         {
             "id": "financial-advisory-homepage",

@@ -21,7 +21,10 @@
             "notes": "Capture after seeding MailTracker sent email rows with subjects, sender/recipient addresses, opens, clicks, and stored content state.",
             "useCase": "A support user reviews sent transactional emails and delivery engagement signals in the Capell admin.",
             "screenshotPath": "packages/email-studio/docs/screenshots/sent-emails-index.png",
-            "darkScreenshotPath": "packages/email-studio/docs/screenshots/sent-emails-index-dark.png"
+            "darkScreenshotPath": "packages/email-studio/docs/screenshots/sent-emails-index-dark.png",
+            "covers": [
+                "packages/email-studio/src/Filament/Resources/EmailTemplateVariants/EmailTemplateVariantResource.php"
+            ]
         },
         {
             "id": "sent-email-view",
@@ -51,7 +54,10 @@
             "waitFor": "table",
             "required": false,
             "notes": "Capture after registering static templates from Email Studio and Comments so package, status, and variable columns are populated.",
-            "useCase": "An admin reviews package-provided templates and starts customization from a static default."
+            "useCase": "An admin reviews package-provided templates and starts customization from a static default.",
+            "covers": [
+                "packages/email-studio/src/Filament/Resources/EmailTemplates/EmailTemplateResource.php"
+            ]
         },
         {
             "id": "email-template-themes",
@@ -65,7 +71,10 @@
             "waitFor": "table",
             "required": false,
             "notes": "Capture after seeding the default theme and at least one site-scoped branded theme.",
-            "useCase": "An admin edits the branding tokens used by themed transactional email templates."
+            "useCase": "An admin edits the branding tokens used by themed transactional email templates.",
+            "covers": [
+                "packages/email-studio/src/Filament/Resources/EmailTemplateThemes/EmailTemplateThemeResource.php"
+            ]
         }
     ]
 }

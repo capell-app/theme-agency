@@ -1,4 +1,9 @@
 {
+    "package": "theme-automotive-dealer",
+    "composerName": "capell-app/theme-automotive-dealer",
+    "generatedFor": "deployment-screenshot-runner",
+    "requiresInstalledPackage": true,
+    "outputDirectory": "packages/theme-automotive-dealer/docs/screenshots",
     "entries": [
         {
             "id": "automotive-dealer-homepage",

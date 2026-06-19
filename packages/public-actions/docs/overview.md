@@ -38,6 +38,74 @@ Screenshot contract: `screenshots.json`.
 - Public Action frontend form (frontend, required).
 - Zapier action discovery API (frontend, required).
 
+## Screenshot Evidence
+
+These captures are the package-owned visual contract for the admin pages, public pages, actions, workflows, and feature surfaces described above. Keep this section aligned with `docs/screenshots.json` whenever the package surface changes.
+
+### Public Actions admin index
+
+![Public Actions admin index](screenshots/public-actions-admin-index.png)
+
+- Surface: admin · Target: PublicActionResource.
+- Documents: An administrator reviews configured public actions and their enabled/site state.
+- Capture notes: Capture the configured actions list with at least one active action.
+
+### Public Action create/edit form
+
+![Public Action create/edit form](screenshots/public-action-form.png)
+
+- Surface: admin · Target: PublicActionResource.
+- Documents: An administrator configures handler, site scope, redirect/messages, API/Zapier toggles, and payload schema fields.
+- Capture notes: Show handler, site scope, redirect/messages, API/Zapier toggles, and payload schema fields.
+
+### Public Action destinations
+
+![Public Action destinations](screenshots/public-action-destinations.png)
+
+- Surface: admin · Target: PublicActionDestinationResource.
+- Documents: An administrator configures outbound destinations while secrets stay redacted.
+- Capture notes: Capture the destination list or form with secrets redacted.
+
+### Public Action submissions
+
+![Public Action submissions](screenshots/public-action-submissions.png)
+
+- Surface: admin · Target: PublicActionSubmissionResource.
+- Documents: An administrator reviews received submissions and processing status.
+- Capture notes: Capture received submissions and status after demo data is prepared.
+
+### Public Action dispatch attempts
+
+![Public Action dispatch attempts](screenshots/public-action-dispatch-attempts.png)
+
+- Surface: admin · Target: PublicActionDispatchAttemptResource.
+- Documents: An operator reviews outbound dispatch status, adapter, response status, and dispatch timing.
+- Capture notes: Capture outbound dispatch status, adapter, response status, and dispatch time.
+
+### Public Action integration tokens
+
+![Public Action integration tokens](screenshots/public-action-integration-tokens.png)
+
+- Surface: admin · Target: PublicActionIntegrationTokenResource.
+- Documents: An administrator creates or reviews integration tokens without exposing token values.
+- Capture notes: Capture the token list and create-token modal without exposing token values.
+
+### Public Action frontend form
+
+![Public Action frontend form](screenshots/public-action-frontend-form.png)
+
+- Surface: frontend · Target: /actions/{action}.
+- Documents: A visitor submits an active public action form with no admin-only metadata visible.
+- Capture notes: Capture the public form for an active action with no admin-only metadata visible.
+
+### Zapier action discovery API
+
+![Zapier action discovery API](screenshots/public-action-zapier-discovery.png)
+
+- Surface: frontend · Target: /api/public-actions/zapier/actions.
+- Documents: An integration client verifies the authenticated Zapier action discovery response shape with a demo token.
+- Capture notes: Capture or assert the authenticated API response shape using a demo token.
+
 ## Technical Shape
 
 - Service providers: `Capell\PublicActions\Providers\PublicActionsServiceProvider`.

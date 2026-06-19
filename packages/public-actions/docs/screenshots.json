@@ -19,7 +19,10 @@
             "scenario": "admin-index",
             "url": "/screenshot-fixtures/public-actions/public-actions-admin-index",
             "waitFor": ".public-actions-fixture",
-            "colorSchemes": ["light"]
+            "colorSchemes": ["light"],
+            "covers": [
+                "packages/public-actions/src/Filament/Resources/IntegrationTokens/Pages/ListPublicActionIntegrationTokens.php"
+            ]
         },
         {
             "id": "public-action-form",
@@ -83,7 +86,10 @@
             "scenario": "admin-index",
             "url": "/screenshot-fixtures/public-actions/public-action-dispatch-attempts",
             "waitFor": ".public-actions-fixture",
-            "colorSchemes": ["light"]
+            "colorSchemes": ["light"],
+            "covers": [
+                "packages/public-actions/src/Filament/Resources/DispatchAttempts/PublicActionDispatchAttemptResource.php"
+            ]
         },
         {
             "id": "public-action-integration-tokens",
@@ -99,7 +105,10 @@
             "scenario": "admin-index",
             "url": "/screenshot-fixtures/public-actions/public-action-integration-tokens",
             "waitFor": ".public-actions-fixture",
-            "colorSchemes": ["light"]
+            "colorSchemes": ["light"],
+            "covers": [
+                "packages/public-actions/src/Filament/Resources/IntegrationTokens/PublicActionIntegrationTokenResource.php"
+            ]
         },
         {
             "id": "public-action-frontend-form",

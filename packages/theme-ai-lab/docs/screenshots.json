@@ -1,4 +1,9 @@
 {
+    "package": "theme-ai-lab",
+    "composerName": "capell-app/theme-ai-lab",
+    "generatedFor": "deployment-screenshot-runner",
+    "requiresInstalledPackage": true,
+    "outputDirectory": "packages/theme-ai-lab/docs/screenshots",
     "entries": [
         {
             "id": "ai-lab-homepage",

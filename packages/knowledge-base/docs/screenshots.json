@@ -17,7 +17,10 @@
             "required": true,
             "notes": "Captured from the seeded Capell screenshot runner app after installing capell-app/knowledge-base and migrating the package tables.",
             "useCase": "An author reviews docs articles, publication status, collection, feedback, and version state from Capell admin.",
-            "screenshotPath": "packages/knowledge-base/docs/screenshots/knowledge-base-articles-index.png"
+            "screenshotPath": "packages/knowledge-base/docs/screenshots/knowledge-base-articles-index.png",
+            "covers": [
+                "packages/knowledge-base/src/Filament/Resources/Articles/RelationManagers/RelatedArticlesRelationManager.php"
+            ]
         },
         {
             "id": "knowledge-base-article-edit-version-history",

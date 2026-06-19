@@ -1,4 +1,9 @@
 {
+    "package": "theme-recruitment-jobs",
+    "composerName": "capell-app/theme-recruitment-jobs",
+    "generatedFor": "deployment-screenshot-runner",
+    "requiresInstalledPackage": true,
+    "outputDirectory": "packages/theme-recruitment-jobs/docs/screenshots",
     "entries": [
         {
             "id": "recruitment-&-jobs-homepage",

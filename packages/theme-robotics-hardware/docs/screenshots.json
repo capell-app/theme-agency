@@ -1,4 +1,9 @@
 {
+    "package": "theme-robotics-hardware",
+    "composerName": "capell-app/theme-robotics-hardware",
+    "generatedFor": "deployment-screenshot-runner",
+    "requiresInstalledPackage": true,
+    "outputDirectory": "packages/theme-robotics-hardware/docs/screenshots",
     "entries": [
         {
             "id": "robotics-hardware-homepage",

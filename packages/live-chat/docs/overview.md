@@ -32,6 +32,26 @@ Screenshot contract: `screenshots.json`.
 - live-chat-widget (optional).
 - live-chat-conversations-admin (optional).
 
+## Screenshot Evidence
+
+These captures are the package-owned visual contract for the admin pages, public pages, actions, workflows, and feature surfaces described above. Keep this section aligned with `docs/screenshots.json` whenever the package surface changes.
+
+### Live Chat widget
+
+![Live Chat widget](screenshots/live-chat-widget.png)
+
+- Surface: frontend · Target: live-chat-widget.
+- Documents: A growth team reviews the public chat widget before enabling live visitor conversations.
+- Capture notes: Committed package-rendered widget proof captured from the Live Chat widget script and seeded config.
+
+### Live Chat conversation inbox
+
+![Live Chat conversation inbox](screenshots/live-chat-conversations-admin.png)
+
+- Surface: admin · Target: conversation-inbox-proof.
+- Documents: An operator reviews incoming conversations, handoff state, and CRM context.
+- Capture notes: Committed data-backed operator inbox proof for conversation, handoff, and CRM context review.
+
 ## Technical Shape
 
 - Service providers: `Capell\LiveChat\Providers\LiveChatServiceProvider`.

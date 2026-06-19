@@ -39,6 +39,50 @@ Screenshot contract: `screenshots.json`.
 - Equi Dynamics public booking form on mobile (frontend, required).
 - Equi Dynamics successful booking submission (frontend, required).
 
+## Screenshot Evidence
+
+These captures are the package-owned visual contract for the admin pages, public pages, actions, workflows, and feature surfaces described above. Keep this section aligned with `docs/screenshots.json` whenever the package surface changes.
+
+### Public booking request form
+
+![Public booking request form](screenshots/public-booking-request.png)
+
+- Surface: frontend · Target: /bookings.
+- Documents: A buyer confirms visitors can request appointments without seeing admin or authoring surfaces.
+- Capture notes: Capture a seeded public booking request route with services, staff, locations, timezone options, and visible validation-ready customer fields.
+
+### Appointment request admin queue
+
+![Appointment request admin queue](screenshots/appointment-requests-admin.png)
+
+- Surface: admin · Target: AppointmentRequestResource:index.
+- Documents: An operator checks incoming appointment requests and manages confirmation or cancellation safely.
+- Capture notes: Capture requested and confirmed appointments with service, staff, location, customer, status, and audit context visible.
+
+### Equi Dynamics public booking form on desktop
+
+![Equi Dynamics public booking form on desktop](screenshots/equi-dynamics-public-booking-desktop.png)
+
+- Surface: frontend · Target: http://127.0.0.1:8013/bookings.
+- Documents: A buyer confirms Bookings renders correctly inside a branded Capell customer site.
+- Capture notes: Capture the consuming Equi Dynamics site booking form at a desktop viewport with seeded services, staff, location, timezone, and customer fields visible.
+
+### Equi Dynamics public booking form on mobile
+
+![Equi Dynamics public booking form on mobile](screenshots/equi-dynamics-public-booking-mobile.png)
+
+- Surface: frontend · Target: http://127.0.0.1:8013/bookings.
+- Documents: A buyer confirms the public booking workflow is usable on a phone-sized viewport.
+- Capture notes: Capture the consuming Equi Dynamics site booking form at a mobile viewport and verify there is no horizontal overflow.
+
+### Equi Dynamics successful booking submission
+
+![Equi Dynamics successful booking submission](screenshots/equi-dynamics-booking-submitted.png)
+
+- Surface: frontend · Target: http://127.0.0.1:8013/bookings.
+- Documents: A buyer confirms the rendered booking form can submit through the package action end to end.
+- Capture notes: Capture the success state after submitting a valid seeded Equi Dynamics booking request with fake QA contact details.
+
 ## Technical Shape
 
 - Service providers: `Capell\Bookings\Providers\BookingsServiceProvider`.

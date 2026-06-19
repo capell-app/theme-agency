@@ -16,7 +16,11 @@
             "notes": "Requires `capell-app/agent-bridge` installed, settings migrated, and an admin session. This page is available at the Filament slug `capell-agent-bridge/prompt-builder`.",
             "useCase": "An administrator builds a scoped prompt for an external agent using the installed Capell package context.",
             "screenshotPath": "packages/agent-bridge/docs/screenshots/agent-bridge-prompt-builder-page.png",
-            "darkScreenshotPath": "packages/agent-bridge/docs/screenshots/agent-bridge-prompt-builder-page-dark.png"
+            "darkScreenshotPath": "packages/agent-bridge/docs/screenshots/agent-bridge-prompt-builder-page-dark.png",
+            "covers": [
+                "packages/agent-bridge/src/Filament/Pages/CapellAgentBridgePromptBuilderPage.php",
+                "packages/agent-bridge/src/Filament/Resources/Users/RelationManagers/AgentBridgeTokensRelationManager.php"
+            ]
         },
         {
             "id": "token-management-or-setup-surface",

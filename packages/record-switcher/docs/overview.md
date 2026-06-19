@@ -31,6 +31,18 @@ Screenshot contract: `screenshots.json`.
 
 - Record Switcher admin heading suggestions (admin, required).
 
+## Screenshot Evidence
+
+These captures are the package-owned visual contract for the admin pages, public pages, actions, workflows, and feature surfaces described above. Keep this section aligned with `docs/screenshots.json` whenever the package surface changes.
+
+### Record Switcher admin heading suggestions
+
+![Record Switcher admin heading suggestions](screenshots/admin-heading-switcher.png)
+
+- Surface: admin · Target: RecordSwitcherHeadingExtender.
+- Documents: An editor jumps between related editable records without returning to the table view.
+- Capture notes: Capture a Capell admin edit page heading with record-switcher page suggestions loaded.
+
 ## Technical Shape
 
 - Service providers: `Capell\RecordSwitcher\Providers\RecordSwitcherServiceProvider`.

@@ -1,4 +1,9 @@
 {
+    "package": "theme-conference-event",
+    "composerName": "capell-app/theme-conference-event",
+    "generatedFor": "deployment-screenshot-runner",
+    "requiresInstalledPackage": true,
+    "outputDirectory": "packages/theme-conference-event/docs/screenshots",
     "entries": [
         {
             "id": "conference-event-homepage",

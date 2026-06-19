@@ -1,4 +1,9 @@
 {
+    "package": "theme-personal-dev",
+    "composerName": "capell-app/theme-personal-dev",
+    "generatedFor": "deployment-screenshot-runner",
+    "requiresInstalledPackage": true,
+    "outputDirectory": "packages/theme-personal-dev/docs/screenshots",
     "entries": [
         {
             "id": "personal-dev-homepage",

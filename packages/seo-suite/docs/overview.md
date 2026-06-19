@@ -37,6 +37,66 @@ Screenshot contract: `screenshots.json`.
 - Sitemap page (admin, required).
 - Translation coverage page (admin, required).
 
+## Screenshot Evidence
+
+These captures are the package-owned visual contract for the admin pages, public pages, actions, workflows, and feature surfaces described above. Keep this section aligned with `docs/screenshots.json` whenever the package surface changes.
+
+### Page SEO panel
+
+![Page SEO panel](screenshots/page-seo-panel.png)
+
+- Surface: admin · Target: EditPage.
+- Documents: An editor edits page-level metadata, canonical state, social metadata, and SEO checks.
+- Capture notes: Committed Capell runner capture promoted in marketplace media. Open a seeded Page edit screen and capture the SEO tab/panel added by SEO Suite.
+
+### SEO audit page
+
+![SEO audit page](screenshots/seo-audit-page.png)
+
+- Surface: admin · Target: SeoAuditPage.
+- Documents: An administrator reviews SEO audit scores and remediation state for seeded pages.
+- Capture notes: Committed Capell runner capture promoted in marketplace media. Seed at least one page_seo_snapshots row so score, severity, and status columns are visible.
+
+### Search Console insights panel
+
+![Search Console insights panel](screenshots/search-console-insights-panel.png)
+
+- Surface: admin · Target: Dashboard.
+- Documents: An administrator reviews Search Console-style performance panels when metrics are seeded.
+- Capture notes: Committed Capell runner capture promoted in marketplace media. Seed search_console_url_metrics so dashboard widgets show clicks, impressions, movement, and opportunities.
+
+### Broken links page
+
+![Broken links page](screenshots/broken-links-page.png)
+
+- Surface: admin · Target: BrokenLinksPage.
+- Documents: An administrator reviews broken link findings and their source pages.
+- Capture notes: Committed Capell runner capture promoted in marketplace media. Seed a broken_links row connected to a page so the source page, target URL, status, and redirect action are visible.
+
+### AI Creator action modal
+
+![AI Creator action modal](screenshots/ai-creator-action-modal.png)
+
+- Surface: admin · Target: EditPage.
+- Documents: An editor reviews AI-assisted metadata creation before accepting generated copy.
+- Capture notes: Committed Capell runner capture promoted in marketplace media. Open a seeded Page edit screen and capture the SEO Suite AI Creator action modal with safe fixture content.
+
+### Sitemap page
+
+![Sitemap page](screenshots/sitemap-page.png)
+
+- Surface: admin · Target: SitemapPage.
+- Documents: An administrator reviews sitemap coverage and crawler-ready URL state.
+- Capture notes: Committed Capell runner capture promoted in marketplace media. Seed sitemap state through Site Discovery/SEO Suite integration so sitemap rows and status are visible.
+
+### Translation coverage page
+
+![Translation coverage page](screenshots/translation-coverage-page.png)
+
+- Surface: admin · Target: TranslationCoveragePage.
+- Documents: An administrator reviews missing or stale translation coverage for SEO-relevant content.
+- Capture notes: Committed Capell runner capture promoted in marketplace media. Seed at least one site/page/language combination so translation coverage rows are visible.
+
 ## Technical Shape
 
 - Service providers: `Capell\SeoSuite\Providers\SeoSuiteServiceProvider`.

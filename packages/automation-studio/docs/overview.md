@@ -36,6 +36,34 @@ Screenshot contract: `screenshots.json`.
 - Test rules header action for dry-run rule matching (admin).
 - Replay action on pending, skipped, or failed automation runs (admin).
 
+## Screenshot Evidence
+
+These captures are the package-owned visual contract for the admin pages, public pages, actions, workflows, and feature surfaces described above. Keep this section aligned with `docs/screenshots.json` whenever the package surface changes.
+
+### Automation rules admin index
+
+![Automation rules admin index](screenshots/automation-rules-index.png)
+
+- Surface: admin · Target: AutomationRuleResource.
+- Documents: An operator reviews active automations that connect Capell package events to native actions.
+- Capture notes: Captured from a seeded Capell admin runner app with capell-app/automation-studio installed.
+
+### Automation rule edit screen
+
+![Automation rule edit screen](screenshots/automation-rule-edit.png)
+
+- Surface: admin · Target: AutomationRuleResource.edit.
+- Documents: An operator edits trigger conditions, action payload, and execution status for a workflow.
+- Capture notes: Captured from a seeded Capell admin runner app with a stable automation rule record.
+
+### Automation runs admin index
+
+![Automation runs admin index](screenshots/automation-runs-index.png)
+
+- Surface: admin · Target: AutomationRunResource.
+- Documents: An operator audits workflow execution status, trigger type, action type, and timing.
+- Capture notes: Captured from a seeded Capell admin runner app with automation execution history.
+
 ## Technical Shape
 
 - Service providers: `Capell\AutomationStudio\Providers\AutomationStudioServiceProvider`, `Capell\AutomationStudio\Providers\AdminServiceProvider`.

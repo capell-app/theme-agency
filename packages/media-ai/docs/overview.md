@@ -31,6 +31,18 @@ Screenshot contract: `screenshots.json`.
 
 - Doctor image action on the Media edit page (admin, required).
 
+## Screenshot Evidence
+
+These captures are the package-owned visual contract for the admin pages, public pages, actions, workflows, and feature surfaces described above. Keep this section aligned with `docs/screenshots.json` whenever the package surface changes.
+
+### Doctor image action on the Media edit page
+
+![Doctor image action on the Media edit page](screenshots/media-ai-doctor-image.png)
+
+- Surface: admin · Target: MediaAIEditActionExtender.
+- Documents: An administrator opens an image media record and uses the Doctor image action when an image doctor provider is bound.
+- Capture notes: Capture the media surface where the Doctor image action appears when an image doctor provider is bound.
+
 ## Technical Shape
 
 - Service providers: `Capell\MediaAI\Providers\MediaAIServiceProvider`.

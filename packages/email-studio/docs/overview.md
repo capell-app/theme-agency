@@ -34,6 +34,26 @@ Screenshot contract: `screenshots.json`.
 - Registered email templates index (admin, optional).
 - Email template themes (admin, optional).
 
+## Screenshot Evidence
+
+These captures are the package-owned visual contract for the admin pages, public pages, actions, workflows, and feature surfaces described above. Keep this section aligned with `docs/screenshots.json` whenever the package surface changes.
+
+### Sent emails admin index
+
+![Sent emails admin index](screenshots/sent-emails-index.png)
+
+- Surface: admin · Target: SentEmailResource.
+- Documents: A support user reviews sent transactional emails and delivery engagement signals in the Capell admin.
+- Capture notes: Capture after seeding MailTracker sent email rows with subjects, sender/recipient addresses, opens, clicks, and stored content state.
+
+### Sent email detail view
+
+![Sent email detail view](screenshots/sent-email-view.png)
+
+- Surface: admin · Target: SentEmailResource/ViewSentEmail.
+- Documents: A support user opens an immutable sent email snapshot to inspect metadata, headers, tracked URLs, and stored HTML output.
+- Capture notes: Capture after seeding a MailTracker sent email record with headers, stored HTML content, and at least one tracked URL click row.
+
 ## Technical Shape
 
 - Service providers: `Capell\EmailStudio\Providers\AuthEmailServiceProvider`, `Capell\EmailStudio\Providers\EmailStudioServiceProvider`, `Capell\EmailStudio\Providers\AdminServiceProvider`, `Capell\EmailStudio\Providers\FrontendServiceProvider`.

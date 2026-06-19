@@ -1,0 +1,9 @@
+{
+    "package": "inertia",
+    "composerName": "capell-app/inertia",
+    "generatedFor": "deployment-screenshot-runner",
+    "requiresInstalledPackage": true,
+    "outputDirectory": "packages/inertia/docs/screenshots",
+    "entries": [],
+    "notes": "This bridge package owns no admin page, public page, or deterministic visual workflow. Screenshot proof belongs to adapter and theme packages that render actual Inertia pages."
+}

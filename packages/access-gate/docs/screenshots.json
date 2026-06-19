@@ -15,7 +15,11 @@
             "required": true,
             "notes": "Requires package migrations plus at least one seeded access area with a known route key, status, registration policy, and token policy.",
             "useCase": "An administrator reviews which protected areas are active and how each area accepts or blocks access requests.",
-            "screenshotPath": "packages/access-gate/docs/screenshots/access-areas-admin-index.png"
+            "screenshotPath": "packages/access-gate/docs/screenshots/access-areas-admin-index.png",
+            "covers": [
+                "packages/access-gate/src/Filament/Resources/AccessAreas/Pages/EditAccessArea.php",
+                "packages/access-gate/src/Filament/Widgets/PendingAccessRequestsWidget.php"
+            ]
         },
         {
             "id": "access-area-create-edit-form",
@@ -39,7 +43,10 @@
             "required": true,
             "notes": "Requires seeded pending, approved, rejected, and expired registrations tied to an access area so table filters and row actions are visible.",
             "useCase": "An administrator triages access requests and uses approve, reject, resend claim, expire, or grant actions.",
-            "screenshotPath": "packages/access-gate/docs/screenshots/registrations-admin-index.png"
+            "screenshotPath": "packages/access-gate/docs/screenshots/registrations-admin-index.png",
+            "covers": [
+                "packages/access-gate/src/Filament/Resources/Registrations/RegistrationResource.php"
+            ]
         },
         {
             "id": "grants-admin-index",
@@ -51,7 +58,10 @@
             "required": true,
             "notes": "Requires seeded active, expired, and revoked grants across at least one subject type.",
             "useCase": "An administrator audits who currently has access and revokes grants that should no longer unlock protected content.",
-            "screenshotPath": "packages/access-gate/docs/screenshots/grants-admin-index.png"
+            "screenshotPath": "packages/access-gate/docs/screenshots/grants-admin-index.png",
+            "covers": [
+                "packages/access-gate/src/Filament/Resources/Grants/GrantResource.php"
+            ]
         },
         {
             "id": "claim-tokens-admin-index",
@@ -75,7 +85,10 @@
             "required": true,
             "notes": "Requires seeded active, expired, and revoked browser tokens tied to grants.",
             "useCase": "An administrator reviews browser-bound access and revokes a token after device loss or policy change.",
-            "screenshotPath": "packages/access-gate/docs/screenshots/browser-tokens-admin-index.png"
+            "screenshotPath": "packages/access-gate/docs/screenshots/browser-tokens-admin-index.png",
+            "covers": [
+                "packages/access-gate/src/Filament/Resources/BrowserTokens/BrowserTokenResource.php"
+            ]
         },
         {
             "id": "access-events-admin-index",

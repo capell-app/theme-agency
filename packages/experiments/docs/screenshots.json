@@ -17,7 +17,11 @@
             "required": true,
             "notes": "Captured from the seeded Capell screenshot runner app after installing capell-app/experiments and migrating the package tables.",
             "useCase": "A growth operator reviews active and scheduled experiments from the Capell admin.",
-            "screenshotPath": "packages/experiments/docs/screenshots/experiments-index.png"
+            "screenshotPath": "packages/experiments/docs/screenshots/experiments-index.png",
+            "covers": [
+                "packages/experiments/src/Filament/Resources/Experiments/ExperimentResource.php",
+                "packages/experiments/src/Filament/Resources/Experiments/Pages/ExperimentResultsPage.php"
+            ]
         },
         {
             "id": "experiment-variants-index",

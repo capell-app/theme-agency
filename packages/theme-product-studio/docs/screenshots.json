@@ -1,4 +1,9 @@
 {
+    "package": "theme-product-studio",
+    "composerName": "capell-app/theme-product-studio",
+    "generatedFor": "deployment-screenshot-runner",
+    "requiresInstalledPackage": true,
+    "outputDirectory": "packages/theme-product-studio/docs/screenshots",
     "entries": [
         {
             "id": "product-studio-homepage",

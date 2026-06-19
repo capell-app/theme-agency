@@ -33,6 +33,34 @@ Screenshot contract: `screenshots.json`.
 - Forced password change form (admin, required).
 - User table password policy columns and filters (admin, required).
 
+## Screenshot Evidence
+
+These captures are the package-owned visual contract for the admin pages, public pages, actions, workflows, and feature surfaces described above. Keep this section aligned with `docs/screenshots.json` whenever the package surface changes.
+
+### Password Policy settings page
+
+![Password Policy settings page](screenshots/password-policy-settings.png)
+
+- Surface: admin · Target: PasswordPolicySettingsPage.
+- Documents: An administrator configures password age, reuse, complexity, and enforcement rules.
+- Capture notes: Capture the package settings page after the package is installed and settings migrations have run.
+
+### Forced password change form
+
+![Forced password change form](screenshots/forced-password-change.png)
+
+- Surface: admin · Target: ForcedPasswordChangePage.
+- Documents: A flagged administrator is forced through the password-change form before continuing in the admin panel.
+- Capture notes: Capture with a user flagged for password change so the form is visible.
+
+### User table password policy columns and filters
+
+![User table password policy columns and filters](screenshots/user-password-policy-columns.png)
+
+- Surface: admin · Target: UserResource.
+- Documents: An administrator reviews password status columns, filters users by policy state, and triggers require-password-change actions.
+- Capture notes: Capture the core Users table with package-added password status columns, filters, and require-password-change action.
+
 ## Technical Shape
 
 - Service providers: `Capell\PasswordPolicy\Providers\PasswordPolicyServiceProvider`.

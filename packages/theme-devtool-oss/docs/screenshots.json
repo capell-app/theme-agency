@@ -1,4 +1,9 @@
 {
+    "package": "theme-devtool-oss",
+    "composerName": "capell-app/theme-devtool-oss",
+    "generatedFor": "deployment-screenshot-runner",
+    "requiresInstalledPackage": true,
+    "outputDirectory": "packages/theme-devtool-oss/docs/screenshots",
     "entries": [
         {
             "id": "devtool-oss-homepage",

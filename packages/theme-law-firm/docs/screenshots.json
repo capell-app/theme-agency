@@ -1,4 +1,9 @@
 {
+    "package": "theme-law-firm",
+    "composerName": "capell-app/theme-law-firm",
+    "generatedFor": "deployment-screenshot-runner",
+    "requiresInstalledPackage": true,
+    "outputDirectory": "packages/theme-law-firm/docs/screenshots",
     "entries": [
         {
             "id": "law-firm-homepage",

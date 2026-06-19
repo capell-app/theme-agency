@@ -34,6 +34,42 @@ Screenshot contract: `screenshots.json`.
 - Experiment goals admin index (admin, required).
 - Experiment audience rules admin index (admin, required).
 
+## Screenshot Evidence
+
+These captures are the package-owned visual contract for the admin pages, public pages, actions, workflows, and feature surfaces described above. Keep this section aligned with `docs/screenshots.json` whenever the package surface changes.
+
+### Experiments admin index
+
+![Experiments admin index](screenshots/experiments-index.png)
+
+- Surface: admin · Target: ExperimentResource.
+- Documents: A growth operator reviews active and scheduled experiments from the Capell admin.
+- Capture notes: Captured from the seeded Capell screenshot runner app after installing capell-app/experiments and migrating the package tables.
+
+### Experiment variants admin index
+
+![Experiment variants admin index](screenshots/experiment-variants-index.png)
+
+- Surface: admin · Target: ExperimentVariantResource.
+- Documents: A growth operator compares variant weights and control state before launching a test.
+- Capture notes: Captured from the seeded Capell screenshot runner app with control and challenger variants plus allocation weights.
+
+### Experiment goals admin index
+
+![Experiment goals admin index](screenshots/experiment-goals-index.png)
+
+- Surface: admin · Target: ExperimentGoalResource.
+- Documents: A growth operator verifies the primary conversion goals used for winner reporting.
+- Capture notes: Captured from the seeded Capell screenshot runner app with a primary demo-request conversion goal.
+
+### Experiment audience rules admin index
+
+![Experiment audience rules admin index](screenshots/experiment-audience-rules-index.png)
+
+- Surface: admin · Target: ExperimentAudienceRuleResource.
+- Documents: A growth operator confirms which visitors are eligible for an experiment.
+- Capture notes: Captured from the seeded Capell screenshot runner app with a path-based audience rule.
+
 ## Technical Shape
 
 - Service providers: `Capell\Experiments\Providers\ExperimentsServiceProvider`.

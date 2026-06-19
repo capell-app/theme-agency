@@ -1,4 +1,9 @@
 {
+    "package": "theme-property-developer",
+    "composerName": "capell-app/theme-property-developer",
+    "generatedFor": "deployment-screenshot-runner",
+    "requiresInstalledPackage": true,
+    "outputDirectory": "packages/theme-property-developer/docs/screenshots",
     "entries": [
         {
             "id": "property-developer-homepage",

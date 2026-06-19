@@ -45,6 +45,26 @@ Screenshot contract: `screenshots.json`.
 
 These JSON captures prove endpoint behavior for the deployment screenshot runner. They should not be promoted as Marketplace screenshots because raw response bodies do not show a Capell buyer workflow. Keep Marketplace media empty until a styled endpoint explorer, admin page, or comparable visual surface exists.
 
+## Screenshot Evidence
+
+These captures are the package-owned visual contract for the admin pages, public pages, actions, workflows, and feature surfaces described above. Keep this section aligned with `docs/screenshots.json` whenever the package surface changes.
+
+### Public page manifest JSON response
+
+![Public page manifest JSON response](screenshots/page-manifest-json-response.png)
+
+- Surface: frontend · Target: capell-agent-delivery.pages.manifest.
+- Documents: A search assistant reads a stable public page manifest without needing admin access.
+- Capture notes: Requires Agent Delivery installed and a seeded published page. Capture the JSON body for `?url=/path` and verify it only includes already-public page content.
+
+### Public page chunks JSON response
+
+![Public page chunks JSON response](screenshots/page-chunks-json-response.png)
+
+- Surface: frontend · Target: capell-agent-delivery.pages.chunks.
+- Documents: An agent consumes stable semantic chunks for a published Capell page.
+- Capture notes: Requires Agent Delivery installed and a seeded published page with enough text to produce chunk records. Capture the JSON body for `?url=/path`.
+
 ## Technical Shape
 
 - Service providers: `Capell\AgentDelivery\Providers\AgentDeliveryServiceProvider`.

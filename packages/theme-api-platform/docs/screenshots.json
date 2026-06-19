@@ -1,4 +1,9 @@
 {
+    "package": "theme-api-platform",
+    "composerName": "capell-app/theme-api-platform",
+    "generatedFor": "deployment-screenshot-runner",
+    "requiresInstalledPackage": true,
+    "outputDirectory": "packages/theme-api-platform/docs/screenshots",
     "entries": [
         {
             "id": "api-platform-homepage",

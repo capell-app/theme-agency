@@ -1,4 +1,9 @@
 {
+    "package": "theme-newsroom-magazine",
+    "composerName": "capell-app/theme-newsroom-magazine",
+    "generatedFor": "deployment-screenshot-runner",
+    "requiresInstalledPackage": true,
+    "outputDirectory": "packages/theme-newsroom-magazine/docs/screenshots",
     "entries": [
         {
             "id": "newsroom-magazine-homepage",

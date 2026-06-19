@@ -83,7 +83,10 @@
             "scenario": "admin-index",
             "url": "/screenshot-fixtures/events/event-occurrences",
             "waitFor": ".events-fixture",
-            "colorSchemes": ["light"]
+            "colorSchemes": ["light"],
+            "covers": [
+                "packages/events/src/Filament/Resources/Occurrences/EventOccurrenceResource.php"
+            ]
         },
         {
             "id": "event-registrations",
@@ -99,7 +102,10 @@
             "scenario": "admin-index",
             "url": "/screenshot-fixtures/events/event-registrations",
             "waitFor": ".events-fixture",
-            "colorSchemes": ["light"]
+            "colorSchemes": ["light"],
+            "covers": [
+                "packages/events/src/Filament/Resources/Registrations/EventRegistrationResource.php"
+            ]
         },
         {
             "id": "event-calendar-admin-page",

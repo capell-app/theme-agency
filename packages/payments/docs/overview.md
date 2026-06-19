@@ -35,6 +35,50 @@ Screenshot contract: `screenshots.json`.
 - Payments customer portal billing (frontend, required).
 - Payments Form Builder checkout (frontend, required).
 
+## Screenshot Evidence
+
+These captures are the package-owned visual contract for the admin pages, public pages, actions, workflows, and feature surfaces described above. Keep this section aligned with `docs/screenshots.json` whenever the package surface changes.
+
+### Payments checkout sessions
+
+![Payments checkout sessions](screenshots/payments-checkout-sessions.png)
+
+- Surface: admin · Target: CheckoutSessionResource.
+- Documents: An administrator monitors checkout session status, mode, amount, and fulfillment state.
+- Capture notes: Capture the admin checkout sessions resource with paid, open, and expired statuses visible.
+
+### Payments webhook events
+
+![Payments webhook events](screenshots/payments-webhook-events.png)
+
+- Surface: admin · Target: PaymentWebhookEventResource.
+- Documents: An operator verifies Stripe webhook intake health and processing status.
+- Capture notes: Capture webhook event processing state, freshness, and retry information.
+
+### Payments settings
+
+![Payments settings](screenshots/payments-settings.png)
+
+- Surface: admin · Target: PaymentsSettings.
+- Documents: An administrator configures Stripe Checkout and webhook settings before launch.
+- Capture notes: Capture Stripe mode, publishable key, webhook secret state, checkout defaults, and allowed return hosts.
+
+### Payments customer portal billing
+
+![Payments customer portal billing](screenshots/payments-customer-portal.png)
+
+- Surface: frontend · Target: CustomerPortalBilling.
+- Documents: A customer reviews billing, subscriptions, payments, and paid-download entitlements.
+- Capture notes: Capture billing portal state with subscriptions, completed payments, and paid downloads visible.
+
+### Payments Form Builder checkout
+
+![Payments Form Builder checkout](screenshots/payments-form-builder-checkout.png)
+
+- Surface: frontend · Target: FormBuilderPaymentField.
+- Documents: A visitor submits a Form Builder payment field and is sent to Stripe Checkout.
+- Capture notes: Capture a public form with payment field state and Stripe Checkout handoff copy.
+
 ## Technical Shape
 
 - Service providers: `Capell\Payments\Providers\PaymentsServiceProvider`, `Capell\Payments\Providers\AdminServiceProvider`.

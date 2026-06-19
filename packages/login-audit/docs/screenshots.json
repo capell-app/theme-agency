@@ -16,7 +16,11 @@
             "notes": "Captured in the Laravel 13 demo harness after publishing the package migration and seeding three login audit rows.",
             "screenshotPath": "packages/login-audit/docs/screenshots/login-audits-admin-index.png",
             "useCase": "An administrator reviews successful and failed authentication events for the demo admin user.",
-            "darkScreenshotPath": "packages/login-audit/docs/screenshots/login-audits-admin-index-dark.png"
+            "darkScreenshotPath": "packages/login-audit/docs/screenshots/login-audits-admin-index-dark.png",
+            "covers": [
+                "packages/login-audit/src/Filament/Resources/LoginAudits/Tables/LoginAuditsTable.php",
+                "packages/login-audit/src/Filament/Widgets/LoginAuditsWidget.php"
+            ]
         },
         {
             "id": "login-audit-table-filters",
@@ -87,7 +91,10 @@
             "required": true,
             "notes": "Route-backed Capell fixture for the user-owned authentication history relation manager, including trusted-device and last-activity columns.",
             "screenshotPath": "packages/login-audit/docs/screenshots/user-login-audits-relation-manager.png",
-            "useCase": "An administrator opens the user-owned authentication history when the host user model supports the authentication log relation."
+            "useCase": "An administrator opens the user-owned authentication history when the host user model supports the authentication log relation.",
+            "covers": [
+                "packages/login-audit/src/Filament/Resources/Users/RelationManagers/LoginAuditsRelationManager.php"
+            ]
         }
     ]
 }

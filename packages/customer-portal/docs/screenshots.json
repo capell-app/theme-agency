@@ -51,7 +51,10 @@
             "required": true,
             "notes": "Route-backed Capell admin fixture showing site-scoped support requests with status and priority indicators.",
             "useCase": "Staff triage customer support requests from the Capell admin panel.",
-            "screenshotPath": "packages/customer-portal/docs/screenshots/portal-support-triage-list.png"
+            "screenshotPath": "packages/customer-portal/docs/screenshots/portal-support-triage-list.png",
+            "covers": [
+                "packages/customer-portal/src/Filament/Resources/PortalSupportRequests/PortalSupportRequestResource.php"
+            ]
         },
         {
             "id": "portal-support-triage-edit",

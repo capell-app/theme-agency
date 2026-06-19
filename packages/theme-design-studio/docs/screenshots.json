@@ -1,4 +1,9 @@
 {
+    "package": "theme-design-studio",
+    "composerName": "capell-app/theme-design-studio",
+    "generatedFor": "deployment-screenshot-runner",
+    "requiresInstalledPackage": true,
+    "outputDirectory": "packages/theme-design-studio/docs/screenshots",
     "entries": [
         {
             "id": "design-studio-homepage",

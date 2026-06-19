@@ -1,4 +1,9 @@
 {
+    "package": "theme-construction-trades",
+    "composerName": "capell-app/theme-construction-trades",
+    "generatedFor": "deployment-screenshot-runner",
+    "requiresInstalledPackage": true,
+    "outputDirectory": "packages/theme-construction-trades/docs/screenshots",
     "entries": [
         {
             "id": "construction-trades-homepage",

@@ -19,7 +19,10 @@
             "scenario": "admin-index",
             "url": "/screenshot-fixtures/document-lifecycle/controlled-documents-index",
             "waitFor": ".document-lifecycle",
-            "colorSchemes": ["light"]
+            "colorSchemes": ["light"],
+            "covers": [
+                "packages/document-lifecycle/src/Filament/Resources/Documents/DocumentResource.php"
+            ]
         },
         {
             "id": "controlled-document-edit",
@@ -51,7 +54,10 @@
             "scenario": "admin-index",
             "url": "/screenshot-fixtures/document-lifecycle/controlled-document-publications",
             "waitFor": ".document-lifecycle",
-            "colorSchemes": ["light"]
+            "colorSchemes": ["light"],
+            "covers": [
+                "packages/document-lifecycle/src/Filament/Resources/Documents/RelationManagers/PublicationsRelationManager.php"
+            ]
         },
         {
             "id": "controlled-document-acceptances",
@@ -67,7 +73,10 @@
             "scenario": "admin-index",
             "url": "/screenshot-fixtures/document-lifecycle/controlled-document-acceptances",
             "waitFor": ".document-lifecycle",
-            "colorSchemes": ["light"]
+            "colorSchemes": ["light"],
+            "covers": [
+                "packages/document-lifecycle/src/Filament/Resources/Documents/RelationManagers/AcceptancesRelationManager.php"
+            ]
         }
     ]
 }

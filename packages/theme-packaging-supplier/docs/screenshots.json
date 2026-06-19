@@ -1,4 +1,9 @@
 {
+    "package": "theme-packaging-supplier",
+    "composerName": "capell-app/theme-packaging-supplier",
+    "generatedFor": "deployment-screenshot-runner",
+    "requiresInstalledPackage": true,
+    "outputDirectory": "packages/theme-packaging-supplier/docs/screenshots",
     "entries": [
         {
             "id": "packaging-supplier-homepage",

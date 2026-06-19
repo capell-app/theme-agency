@@ -20,7 +20,10 @@
             "required": true,
             "notes": "Capture as an admin user after seeding pending, approved, rejected, and spam comments.",
             "useCase": "An editor reviews incoming comments and decides which public replies should appear.",
-            "screenshotPath": "packages/comments/docs/screenshots/comment-moderation-inbox.png"
+            "screenshotPath": "packages/comments/docs/screenshots/comment-moderation-inbox.png",
+            "covers": [
+                "packages/comments/src/Filament/Resources/Comments/Tables/CommentsTable.php"
+            ]
         },
         {
             "id": "comments-admin-resource",
@@ -52,7 +55,10 @@
             "required": true,
             "notes": "Capture the author table without exposing raw verification tokens or visitor hashes.",
             "useCase": "An administrator reviews public display names and author moderation state.",
-            "screenshotPath": "packages/comments/docs/screenshots/comment-authors-admin-resource.png"
+            "screenshotPath": "packages/comments/docs/screenshots/comment-authors-admin-resource.png",
+            "covers": [
+                "packages/comments/src/Filament/Resources/CommentAuthors/CommentAuthorResource.php"
+            ]
         },
         {
             "id": "public-comment-thread",

@@ -37,6 +37,50 @@ Screenshot contract: `screenshots.json`.
 
 Marketplace media currently promotes only the verified light/dark prompt-builder captures. The other committed PNGs are retained as runner evidence and must not be promoted while they duplicate the prompt-builder screen.
 
+## Screenshot Evidence
+
+These captures are the package-owned visual contract for the admin pages, public pages, actions, workflows, and feature surfaces described above. Keep this section aligned with `docs/screenshots.json` whenever the package surface changes.
+
+### Agent Bridge prompt builder page
+
+![Agent Bridge prompt builder page](screenshots/agent-bridge-prompt-builder-page.png)
+
+- Surface: admin · Target: CapellAgentBridgePromptBuilderPage.
+- Documents: An administrator builds a scoped prompt for an external agent using the installed Capell package context.
+- Capture notes: Requires `capell-app/agent-bridge` installed, settings migrated, and an admin session. This page is available at the Filament slug `capell-agent-bridge/prompt-builder`.
+
+### Token management or setup surface
+
+![Token management or setup surface](screenshots/token-management-or-setup-surface.png)
+
+- Surface: admin · Target: CapellAgentBridgePromptBuilderPage.
+- Documents: An administrator creates or reviews a token used by a trusted Agent Bridge client.
+- Capture notes: Blocked from marketplace promotion until the screenshot runner can open a seeded host user edit screen with the Agent Bridge token relation manager visible. Existing committed output is runner evidence only and must not be promoted while it duplicates the prompt builder.
+
+### Capability preview and confirmation flow
+
+![Capability preview and confirmation flow](screenshots/capability-preview-and-confirmation-flow.png)
+
+- Surface: admin · Target: CapellAgentBridgePromptBuilderPage.
+- Documents: An administrator reviews a proposed capability run before confirming that an agent may execute it.
+- Capture notes: Blocked from marketplace promotion until the screenshot runner can seed and display a pending `CapellAgentBridgeConfirmation`. Existing committed output is runner evidence only and must not be promoted while it duplicates the prompt builder.
+
+### Audit entry review
+
+![Audit entry review](screenshots/audit-entry-review.png)
+
+- Surface: admin · Target: CapellAgentBridgePromptBuilderPage.
+- Documents: An administrator reviews what an Agent Bridge client previewed, confirmed, or ran for a user.
+- Capture notes: Blocked from marketplace promotion until the screenshot runner can open the user-resource audit relation manager after seeding capability invocation records. Existing committed output is runner evidence only and must not be promoted while it duplicates the prompt builder.
+
+### Agent Bridge server health output
+
+![Agent Bridge server health output](screenshots/agent-bridge-server-health-output.png)
+
+- Surface: admin · Target: CapellAgentBridgePromptBuilderPage.
+- Documents: An operator confirms which Agent Bridge endpoints are enabled and whether token-authenticated requests can reach them.
+- Capture notes: Blocked from marketplace promotion until the screenshot runner can expose a real route/config health panel or Diagnostics health surface for Agent Bridge. Existing committed output is runner evidence only and must not be promoted while it duplicates the prompt builder.
+
 ## Technical Shape
 
 - Service providers: `Capell\AgentBridge\Providers\AgentBridgeServiceProvider`.

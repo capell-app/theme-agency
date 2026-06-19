@@ -1,4 +1,9 @@
 {
+    "package": "theme-beauty-spa",
+    "composerName": "capell-app/theme-beauty-spa",
+    "generatedFor": "deployment-screenshot-runner",
+    "requiresInstalledPackage": true,
+    "outputDirectory": "packages/theme-beauty-spa/docs/screenshots",
     "entries": [
         {
             "id": "beauty-&-spa-homepage",

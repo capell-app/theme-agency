@@ -33,6 +33,34 @@ Screenshot contract: `screenshots.json`.
 - Content health dashboard widget (admin, required).
 - Dashboard report visibility settings (admin, required).
 
+## Screenshot Evidence
+
+These captures are the package-owned visual contract for the admin pages, public pages, actions, workflows, and feature surfaces described above. Keep this section aligned with `docs/screenshots.json` whenever the package surface changes.
+
+### Publishing trend dashboard widget
+
+![Publishing trend dashboard widget](screenshots/publishing-trend-dashboard-widget.png)
+
+- Surface: admin · Target: PublishingTrendChartWidget.
+- Documents: An administrator checks whether publishing and scheduling activity changed during the current reporting window.
+- Capture notes: Capture on the main admin dashboard with seeded published and scheduled page counts across the selected date window.
+
+### Content health dashboard widget
+
+![Content health dashboard widget](screenshots/content-health-dashboard-widget.png)
+
+- Surface: admin · Target: ContentHealthWidget.
+- Documents: An editor spots page health issues that need attention before the next publishing review.
+- Capture notes: Capture on the main admin dashboard with at least one scheduled, expired, URL-less, or stale page so canView() keeps the widget visible.
+
+### Dashboard report visibility settings
+
+![Dashboard report visibility settings](screenshots/dashboard-report-settings.png)
+
+- Surface: admin · Target: DashboardReportsDashboardSettingsContributor.
+- Documents: A site owner confirms the Dashboard Reports widgets can be enabled or hidden through dashboard settings.
+- Capture notes: Capture the shared dashboard settings screen after this package contributes the publishing trend and content health visibility keys.
+
 ## Technical Shape
 
 - Service providers: `Capell\DashboardReports\Providers\DashboardReportsServiceProvider`, `Capell\DashboardReports\Providers\AdminServiceProvider`.

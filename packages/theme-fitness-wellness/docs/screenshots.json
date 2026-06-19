@@ -1,4 +1,9 @@
 {
+    "package": "theme-fitness-wellness",
+    "composerName": "capell-app/theme-fitness-wellness",
+    "generatedFor": "deployment-screenshot-runner",
+    "requiresInstalledPackage": true,
+    "outputDirectory": "packages/theme-fitness-wellness/docs/screenshots",
     "entries": [
         {
             "id": "fitness-&-wellness-homepage",

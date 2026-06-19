@@ -34,6 +34,42 @@ Screenshot contract: `screenshots.json`.
 - Comment authors admin resource (admin, required).
 - Public comment thread (frontend, required).
 
+## Screenshot Evidence
+
+These captures are the package-owned visual contract for the admin pages, public pages, actions, workflows, and feature surfaces described above. Keep this section aligned with `docs/screenshots.json` whenever the package surface changes.
+
+### Comment moderation inbox
+
+![Comment moderation inbox](screenshots/comment-moderation-inbox.png)
+
+- Surface: admin · Target: CommentModerationInbox.
+- Documents: An editor reviews incoming comments and decides which public replies should appear.
+- Capture notes: Capture as an admin user after seeding pending, approved, rejected, and spam comments.
+
+### Comments admin resource
+
+![Comments admin resource](screenshots/comments-admin-resource.png)
+
+- Surface: admin · Target: CommentResource.
+- Documents: An administrator audits comment status and moderation activity.
+- Capture notes: Capture the comments table with seeded authors, statuses, nesting, and moderation timestamps.
+
+### Comment authors admin resource
+
+![Comment authors admin resource](screenshots/comment-authors-admin-resource.png)
+
+- Surface: admin · Target: CommentAuthorResource.
+- Documents: An administrator reviews public display names and author moderation state.
+- Capture notes: Capture the author table without exposing raw verification tokens or visitor hashes.
+
+### Public comment thread
+
+![Public comment thread](screenshots/public-comment-thread.png)
+
+- Surface: frontend · Target: frontend-url.
+- Documents: A visitor reads and replies to an approved public discussion thread.
+- Capture notes: Capture a seeded public page after the comment thread loads. Verify the output excludes moderation status, model IDs, author email, tokens, and admin URLs.
+
 ## Technical Shape
 
 - Service providers: `Capell\Comments\Providers\CommentsServiceProvider`, `Capell\Comments\Providers\AdminServiceProvider`, `Capell\Comments\Providers\FrontendServiceProvider`.

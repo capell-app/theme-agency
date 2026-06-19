@@ -33,6 +33,34 @@ Screenshot contract: `screenshots.json`.
 - RSS feed sync and cached items (admin, required).
 - Provider registry extension surface (shared, required).
 
+## Screenshot Evidence
+
+These captures are the package-owned visual contract for the admin pages, public pages, actions, workflows, and feature surfaces described above. Keep this section aligned with `docs/screenshots.json` whenever the package surface changes.
+
+### Social feed carousel widget
+
+![Social feed carousel widget](screenshots/social-feed-carousel-widget.png)
+
+- Surface: frontend · Target: social-feed.
+- Documents: A visitor sees a branded carousel of social posts without exposing feed connection internals.
+- Capture notes: Capture a public page with seeded cached feed items rendered through the social-feed block using the carousel layout.
+
+### RSS feed sync and cached items
+
+![RSS feed sync and cached items](screenshots/social-feed-rss-sync.png)
+
+- Surface: admin · Target: social_feed_items.
+- Documents: An administrator verifies an RSS feed is connected and producing cached social feed items.
+- Capture notes: Capture after creating an RSS connection, running the sync action, and confirming cached items exist for render.
+
+### Provider registry extension surface
+
+![Provider registry extension surface](screenshots/social-feed-provider-registry.png)
+
+- Surface: shared · Target: SocialFeedProviderRegistry.
+- Documents: A developer confirms social feeds can be extended without coupling their provider package to package internals.
+- Capture notes: Capture package documentation or diagnostics output showing built-in RSS, TikTok, YouTube, Bluesky, Instagram, Facebook, LinkedIn, X, and a custom provider.
+
 ## Technical Shape
 
 - Service providers: `Capell\SocialFeeds\Providers\SocialFeedsServiceProvider`, `Capell\SocialFeeds\Providers\AdminServiceProvider`, `AbstractConfiguredProvider`, `BlueskyFeedProvider`, `FacebookFeedProvider`, `InstagramFeedProvider`, `LinkedInFeedProvider`, `RssFeedProvider`, `TikTokFeedProvider`, `XFeedProvider`, `YouTubeFeedProvider`.

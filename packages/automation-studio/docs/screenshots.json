@@ -17,7 +17,10 @@
             "required": true,
             "notes": "Captured from a seeded Capell admin runner app with capell-app/automation-studio installed.",
             "useCase": "An operator reviews active automations that connect Capell package events to native actions.",
-            "screenshotPath": "packages/automation-studio/docs/screenshots/automation-rules-index.png"
+            "screenshotPath": "packages/automation-studio/docs/screenshots/automation-rules-index.png",
+            "covers": [
+                "packages/automation-studio/src/Filament/Resources/AutomationRules/Pages/ListAutomationRules.php"
+            ]
         },
         {
             "id": "automation-rule-edit",
@@ -45,7 +48,10 @@
             "required": true,
             "notes": "Captured from a seeded Capell admin runner app with automation execution history.",
             "useCase": "An operator audits workflow execution status, trigger type, action type, and timing.",
-            "screenshotPath": "packages/automation-studio/docs/screenshots/automation-runs-index.png"
+            "screenshotPath": "packages/automation-studio/docs/screenshots/automation-runs-index.png",
+            "covers": [
+                "packages/automation-studio/src/Filament/Resources/AutomationRuns/AutomationRunResource.php"
+            ]
         }
     ]
 }

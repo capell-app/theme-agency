@@ -1,4 +1,9 @@
 {
+    "package": "theme-quant-trading",
+    "composerName": "capell-app/theme-quant-trading",
+    "generatedFor": "deployment-screenshot-runner",
+    "requiresInstalledPackage": true,
+    "outputDirectory": "packages/theme-quant-trading/docs/screenshots",
     "entries": [
         {
             "id": "quant-trading-homepage",

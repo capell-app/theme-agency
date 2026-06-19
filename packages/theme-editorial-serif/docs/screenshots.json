@@ -1,4 +1,9 @@
 {
+    "package": "theme-editorial-serif",
+    "composerName": "capell-app/theme-editorial-serif",
+    "generatedFor": "deployment-screenshot-runner",
+    "requiresInstalledPackage": true,
+    "outputDirectory": "packages/theme-editorial-serif/docs/screenshots",
     "entries": [
         {
             "id": "editorial-serif-homepage",

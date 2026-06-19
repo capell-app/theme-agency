@@ -17,7 +17,10 @@
             "required": true,
             "notes": "Captured from a seeded Capell admin runner app with capell-app/privacy-center installed.",
             "useCase": "An operator triages access, export, and deletion requests from a single compliance queue.",
-            "screenshotPath": "packages/privacy-center/docs/screenshots/privacy-requests-index.png"
+            "screenshotPath": "packages/privacy-center/docs/screenshots/privacy-requests-index.png",
+            "covers": [
+                "packages/privacy-center/src/Filament/Resources/PrivacyRequests/PrivacyRequestResource.php"
+            ]
         },
         {
             "id": "privacy-request-edit-actions",
@@ -45,7 +48,10 @@
             "required": true,
             "notes": "Captured from a seeded Capell admin runner app with active retention rules.",
             "useCase": "An operator reviews automated data minimisation rules and their retention windows.",
-            "screenshotPath": "packages/privacy-center/docs/screenshots/retention-rules-index.png"
+            "screenshotPath": "packages/privacy-center/docs/screenshots/retention-rules-index.png",
+            "covers": [
+                "packages/privacy-center/src/Filament/Resources/RetentionRules/RetentionRuleResource.php"
+            ]
         }
     ]
 }

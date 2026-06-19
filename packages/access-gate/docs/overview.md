@@ -40,6 +40,90 @@ Screenshot contract: `screenshots.json`.
 - Public gated message (frontend, required).
 - Public request CTA component (frontend, required).
 
+## Screenshot Evidence
+
+These captures are the package-owned visual contract for the admin pages, public pages, actions, workflows, and feature surfaces described above. Keep this section aligned with `docs/screenshots.json` whenever the package surface changes.
+
+### Access areas admin index
+
+![Access areas admin index](screenshots/access-areas-admin-index.png)
+
+- Surface: admin · Target: AccessAreaResource.
+- Documents: An administrator reviews which protected areas are active and how each area accepts or blocks access requests.
+- Capture notes: Requires package migrations plus at least one seeded access area with a known route key, status, registration policy, and token policy.
+
+### Access area create/edit form
+
+![Access area create/edit form](screenshots/access-area-create-edit-form.png)
+
+- Surface: admin · Target: AccessAreaResource.create.
+- Documents: An administrator configures a protected area before routing private content through the access-gate middleware.
+- Capture notes: Capture the key, status, schedule, registration policy, token policy, approval limit, allowlist, and metadata fields. The batch harness still needs install-flow verification for access-gate migrations.
+
+### Registrations admin index with review actions
+
+![Registrations admin index with review actions](screenshots/registrations-admin-index.png)
+
+- Surface: admin · Target: RegistrationResource.
+- Documents: An administrator triages access requests and uses approve, reject, resend claim, expire, or grant actions.
+- Capture notes: Requires seeded pending, approved, rejected, and expired registrations tied to an access area so table filters and row actions are visible.
+
+### Grants admin index
+
+![Grants admin index](screenshots/grants-admin-index.png)
+
+- Surface: admin · Target: GrantResource.
+- Documents: An administrator audits who currently has access and revokes grants that should no longer unlock protected content.
+- Capture notes: Requires seeded active, expired, and revoked grants across at least one subject type.
+
+### Claim tokens admin index
+
+![Claim tokens admin index](screenshots/claim-tokens-admin-index.png)
+
+- Surface: admin · Target: ClaimTokenResource.
+- Documents: An administrator checks whether approval links were issued, claimed, or expired.
+- Capture notes: Requires seeded pending, consumed, and expired claim tokens linked to registrations or grants.
+
+### Browser tokens admin index
+
+![Browser tokens admin index](screenshots/browser-tokens-admin-index.png)
+
+- Surface: admin · Target: BrowserTokenResource.
+- Documents: An administrator reviews browser-bound access and revokes a token after device loss or policy change.
+- Capture notes: Requires seeded active, expired, and revoked browser tokens tied to grants.
+
+### Access events admin index
+
+![Access events admin index](screenshots/access-events-admin-index.png)
+
+- Surface: admin · Target: AccessGateEventResource.
+- Documents: An administrator investigates the history of an access request or failed protected-page visit.
+- Capture notes: Requires seeded request, approval, rejection, claim, grant, revoke, and middleware-denied events.
+
+### Public access request form
+
+![Public access request form](screenshots/public-access-request-form.png)
+
+- Surface: frontend · Target: capell-access-gate.request.
+- Documents: A visitor requests access to a protected area by submitting the configured public registration fields.
+- Capture notes: Capture anonymously against a seeded area that allows public registration. Verify the HTML contains no authoring markers, editor URLs, model IDs, or admin-only labels.
+
+### Public gated message
+
+![Public gated message](screenshots/public-gated-message.png)
+
+- Surface: frontend · Target: capell-access-gate::message.
+- Documents: A visitor without an active grant sees the blocked state instead of the protected content.
+- Capture notes: Requires a seeded protected route using `access-gate:{area}` middleware and no active grant for the current visitor.
+
+### Public request CTA component
+
+![Public request CTA component](screenshots/public-request-cta.png)
+
+- Surface: frontend · Target: capell-access-gate::components.request-cta.
+- Documents: A visitor follows an inline request CTA from a protected page or teaser block.
+- Capture notes: Capture direct access-gate submission in the base package. Capture the Public Actions variant only in a separate run with `capell-app/public-actions` installed.
+
 ## Technical Shape
 
 - Service providers: `Capell\AccessGate\Providers\AccessGateServiceProvider`.

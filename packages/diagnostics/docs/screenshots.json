@@ -26,7 +26,12 @@
             "notes": "Capture as a super admin or a user with diagnostics access after the runner app has installed packages, command providers, and registry inspector data available.",
             "screenshotPath": "packages/diagnostics/docs/screenshots/diagnostics-dashboard.png",
             "darkScreenshotPath": "packages/diagnostics/docs/screenshots/diagnostics-dashboard-dark.png",
-            "useCase": "A developer inspects package maker safety, registered configurators, components, and blocks from the diagnostics dashboard."
+            "useCase": "A developer inspects package maker safety, registered configurators, components, and blocks from the diagnostics dashboard.",
+            "covers": [
+                "packages/diagnostics/src/Filament/Pages/DiagnosticsPage.php",
+                "packages/diagnostics/src/Filament/Pages/Tables/QueueHealthTable.php",
+                "packages/diagnostics/src/Filament/Widgets/Health/AlertsWidgetAbstract.php"
+            ]
         },
         {
             "id": "health-widgets-on-the-admin-dashboard",

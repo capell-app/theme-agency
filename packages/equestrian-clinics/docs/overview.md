@@ -33,6 +33,32 @@ Screenshot contract: `screenshots.json`.
 - Equestrian Clinics coach timetable (frontend, optional).
 - Equestrian Clinics marketplace card (marketplace, required).
 
+## Screenshot Evidence
+
+These captures are the package-owned visual contract for the admin pages, public pages, actions, workflows, and feature surfaces described above. Keep this section aligned with `docs/screenshots.json` whenever the package surface changes.
+
+### Equestrian Clinics public discovery
+
+![Equestrian Clinics public discovery](screenshots/equestrian-clinics-public-discovery.png)
+
+- Surface: frontend · Target: /equestrian-clinics.
+- Documents: A rider or parent finds a suitable clinic near them and can request a new area when nothing fits.
+- Capture notes: Capture public clinic search with venue, postcode, tour day slots, waitlist state, host request form, and demand heatmap visible.
+
+### Equestrian Clinics coach timetable
+
+![Equestrian Clinics coach timetable](screenshots/equestrian-clinics-coach-timetable.png)
+
+- Surface: frontend · Target: /equestrian-clinics/coach/tour-days/{tourDay}/timetable.
+- Documents: A coach uses the day-of surface outdoors without exposing rider medical data or admin URLs.
+- Capture notes: Capture a signed mobile-friendly coach timetable with minimum viable clinic status, venue notes, resource reservations, and slot capacity visible.
+
+### Equestrian Clinics marketplace card
+
+![Equestrian Clinics marketplace card](screenshots/equestrian-clinics-extension-card.svg)
+
+- Surface: marketplace · Target: marketplace-asset.
+
 ## Technical Shape
 
 - Service providers: `Capell\EquestrianClinics\Providers\EquestrianClinicsServiceProvider`.

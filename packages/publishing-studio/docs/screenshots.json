@@ -15,7 +15,14 @@
             "required": true,
             "notes": "Show the flagship timeline entry point with active drafts, review status, publish readiness, and recent workflow activity.",
             "useCase": "An editor reviews active drafts, review status, publish readiness, and recent workflow activity.",
-            "screenshotPath": "packages/publishing-studio/docs/screenshots/editorial-timeline-dashboard.png"
+            "screenshotPath": "packages/publishing-studio/docs/screenshots/editorial-timeline-dashboard.png",
+            "covers": [
+                "packages/publishing-studio/src/Filament/Pages/Tables/ScheduledPublishingTable.php",
+                "packages/publishing-studio/src/Filament/Pages/Tables/StaleDraftsTable.php",
+                "packages/publishing-studio/src/Filament/Resources/PreviewLinks/Tables/PreviewLinksTable.php",
+                "packages/publishing-studio/src/Filament/Resources/PublishingStudio/Tables/PublishingStudioTable.php",
+                "packages/publishing-studio/src/Filament/Widgets/PageAlertsWidget.php"
+            ]
         },
         {
             "id": "editor-responsibility",
@@ -147,7 +154,10 @@
             "required": true,
             "notes": "Show version history with restore context, rollback lineage, and the currently live version.",
             "useCase": "An administrator reviews version history, rollback lineage, and the currently live version before restore.",
-            "screenshotPath": "packages/publishing-studio/docs/screenshots/rollback-restore.png"
+            "screenshotPath": "packages/publishing-studio/docs/screenshots/rollback-restore.png",
+            "covers": [
+                "packages/publishing-studio/src/Filament/Resources/Pages/Pages/PageVersionHistoryPage.php"
+            ]
         },
         {
             "id": "preview-banner",

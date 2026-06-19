@@ -1,4 +1,9 @@
 {
+    "package": "theme-manufacturing",
+    "composerName": "capell-app/theme-manufacturing",
+    "generatedFor": "deployment-screenshot-runner",
+    "requiresInstalledPackage": true,
+    "outputDirectory": "packages/theme-manufacturing/docs/screenshots",
     "entries": [
         {
             "id": "manufacturing-homepage",

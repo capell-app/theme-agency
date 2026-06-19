@@ -31,6 +31,18 @@ Screenshot contract: `screenshots.json`.
 
 - Deployment connection page before a repository is connected (admin, required).
 
+## Screenshot Evidence
+
+These captures are the package-owned visual contract for the admin pages, public pages, actions, workflows, and feature surfaces described above. Keep this section aligned with `docs/screenshots.json` whenever the package surface changes.
+
+### Deployment connection page before a repository is connected
+
+![Deployment connection page before a repository is connected](screenshots/deployment-connection-page.png)
+
+- Surface: admin · Target: DeploymentConnectionPage.
+- Documents: An operator starts the Git provider OAuth flow used to connect the repository for package install pull requests.
+- Capture notes: Capture as a user with View:DeploymentConnectionPage. This committed capture shows the pre-connection state with GitHub, GitLab, and Bitbucket OAuth entry points.
+
 ## Technical Shape
 
 - Service providers: `Capell\Deployments\Providers\DeploymentsServiceProvider`.

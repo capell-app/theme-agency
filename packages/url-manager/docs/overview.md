@@ -34,6 +34,42 @@ Screenshot contract: `screenshots.json`.
 - Redirect export workflow (admin, required).
 - Redirect health snapshot output (admin, required).
 
+## Screenshot Evidence
+
+These captures are the package-owned visual contract for the admin pages, public pages, actions, workflows, and feature surfaces described above. Keep this section aligned with `docs/screenshots.json` whenever the package surface changes.
+
+### Create and edit redirect rule form
+
+![Create and edit redirect rule form](screenshots/create-edit-redirect-form.png)
+
+- Surface: admin · Target: RedirectRulesPage.
+- Documents: An editor creates or updates redirect rules without touching server configuration.
+- Capture notes: Capture the redirect rules admin page with the create or edit redirect form open, showing source URL, target URL, match type, status, query preservation, and notes fields.
+
+### Redirect import workflow
+
+![Redirect import workflow](screenshots/redirect-import-workflow.png)
+
+- Surface: admin · Target: RedirectRulesPage/importRedirectRules.
+- Documents: A migration team imports redirect mappings in bulk after a site restructure.
+- Capture notes: Capture the redirect import action or resulting import preview state for CSV-based bulk redirect migrations.
+
+### Redirect export workflow
+
+![Redirect export workflow](screenshots/redirect-export-workflow.png)
+
+- Surface: admin · Target: RedirectRulesPage/exportRedirectRules.
+- Documents: An SEO manager exports redirect rules for review, migration handoff, or audit evidence.
+- Capture notes: Capture the redirect export action or CSV export state from the redirect rules table.
+
+### Redirect health snapshot output
+
+![Redirect health snapshot output](screenshots/redirect-health-snapshot-output.png)
+
+- Surface: admin · Target: RedirectRulesPage.
+- Documents: An operator verifies URL Manager is installed, tracking redirect health, and ready for SEO remediation work.
+- Capture notes: Capture the redirect rules table or package health snapshot showing active redirects, status, and recent hit evidence.
+
 ## Technical Shape
 
 - Service providers: `Capell\UrlManager\Providers\UrlManagerServiceProvider`.

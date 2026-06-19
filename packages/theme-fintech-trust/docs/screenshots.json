@@ -1,4 +1,9 @@
 {
+    "package": "theme-fintech-trust",
+    "composerName": "capell-app/theme-fintech-trust",
+    "generatedFor": "deployment-screenshot-runner",
+    "requiresInstalledPackage": true,
+    "outputDirectory": "packages/theme-fintech-trust/docs/screenshots",
     "entries": [
         {
             "id": "fintech-trust-homepage",

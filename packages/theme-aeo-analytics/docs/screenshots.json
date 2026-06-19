@@ -1,4 +1,9 @@
 {
+    "package": "theme-aeo-analytics",
+    "composerName": "capell-app/theme-aeo-analytics",
+    "generatedFor": "deployment-screenshot-runner",
+    "requiresInstalledPackage": true,
+    "outputDirectory": "packages/theme-aeo-analytics/docs/screenshots",
     "entries": [
         {
             "id": "aeo-analytics-homepage",

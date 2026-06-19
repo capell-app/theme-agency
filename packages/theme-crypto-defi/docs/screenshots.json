@@ -1,4 +1,9 @@
 {
+    "package": "theme-crypto-defi",
+    "composerName": "capell-app/theme-crypto-defi",
+    "generatedFor": "deployment-screenshot-runner",
+    "requiresInstalledPackage": true,
+    "outputDirectory": "packages/theme-crypto-defi/docs/screenshots",
     "entries": [
         {
             "id": "crypto-defi-homepage",

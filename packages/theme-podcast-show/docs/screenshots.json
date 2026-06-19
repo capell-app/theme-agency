@@ -1,4 +1,9 @@
 {
+    "package": "theme-podcast-show",
+    "composerName": "capell-app/theme-podcast-show",
+    "generatedFor": "deployment-screenshot-runner",
+    "requiresInstalledPackage": true,
+    "outputDirectory": "packages/theme-podcast-show/docs/screenshots",
     "entries": [
         {
             "id": "podcast-show-homepage",

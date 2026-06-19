@@ -1,4 +1,9 @@
 {
+    "package": "theme-travel-tourism",
+    "composerName": "capell-app/theme-travel-tourism",
+    "generatedFor": "deployment-screenshot-runner",
+    "requiresInstalledPackage": true,
+    "outputDirectory": "packages/theme-travel-tourism/docs/screenshots",
     "entries": [
         {
             "id": "travel-&-tourism-homepage",

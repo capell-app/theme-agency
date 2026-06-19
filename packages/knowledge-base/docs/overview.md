@@ -34,6 +34,42 @@ Screenshot contract: `screenshots.json`.
 - Knowledge Base public docs index (frontend, required).
 - Knowledge Base public article (frontend, required).
 
+## Screenshot Evidence
+
+These captures are the package-owned visual contract for the admin pages, public pages, actions, workflows, and feature surfaces described above. Keep this section aligned with `docs/screenshots.json` whenever the package surface changes.
+
+### Knowledge Base articles admin index
+
+![Knowledge Base articles admin index](screenshots/knowledge-base-articles-index.png)
+
+- Surface: admin · Target: KnowledgeBaseArticleResource.
+- Documents: An author reviews docs articles, publication status, collection, feedback, and version state from Capell admin.
+- Capture notes: Captured from the seeded Capell screenshot runner app after installing capell-app/knowledge-base and migrating the package tables.
+
+### Knowledge Base article edit and version history
+
+![Knowledge Base article edit and version history](screenshots/knowledge-base-article-edit-version-history.png)
+
+- Surface: admin · Target: KnowledgeBaseArticleResource.edit.
+- Documents: An author edits an article and reviews prior versions before publishing the next revision.
+- Capture notes: Captured from the seeded Capell screenshot runner app with the shipped article edit form, current body, and next version field.
+
+### Knowledge Base public docs index
+
+![Knowledge Base public docs index](screenshots/knowledge-base-public-index.png)
+
+- Surface: frontend · Target: capell-knowledge-base.index.
+- Documents: A visitor browses help-centre collections from the public docs landing page.
+- Capture notes: Captured from the seeded runner public /docs route as route evidence. This plain frontend runner view is not promoted to marketplace media because it is not a Capell admin screenshot.
+
+### Knowledge Base public article
+
+![Knowledge Base public article](screenshots/knowledge-base-public-article.png)
+
+- Surface: frontend · Target: capell-knowledge-base.article.
+- Documents: A visitor reads a help article and can submit whether the answer was helpful.
+- Capture notes: Captured from the seeded runner public article route as route evidence. This plain frontend runner view is not promoted to marketplace media because it is not a Capell admin screenshot.
+
 ## Technical Shape
 
 - Service providers: `Capell\KnowledgeBase\Providers\KnowledgeBaseServiceProvider`, `Capell\KnowledgeBase\Providers\AdminServiceProvider`.

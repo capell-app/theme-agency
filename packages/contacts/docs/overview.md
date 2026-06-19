@@ -32,6 +32,26 @@ Screenshot contract: `screenshots.json`.
 - Contacts admin index (admin, required).
 - Contact activities admin index (admin, required).
 
+## Screenshot Evidence
+
+These captures are the package-owned visual contract for the admin pages, public pages, actions, workflows, and feature surfaces described above. Keep this section aligned with `docs/screenshots.json` whenever the package surface changes.
+
+### Contacts admin index
+
+![Contacts admin index](screenshots/contacts-contact-index.png)
+
+- Surface: admin · Target: ContactResource.
+- Documents: An operator reviews encrypted customer records captured from first-party Capell packages.
+- Capture notes: Captured from the seeded Capell screenshot runner app after installing capell-app/contacts and migrating the package tables.
+
+### Contact activities admin index
+
+![Contact activities admin index](screenshots/contacts-activity-index.png)
+
+- Surface: admin · Target: ContactActivityResource.
+- Documents: An operator reviews the CRM activity timeline created by package source adapters.
+- Capture notes: Captured from the seeded Capell screenshot runner app with package-specific contact, organisation, lead, and activity data.
+
 ## Technical Shape
 
 - Service providers: `Capell\Contacts\Providers\ContactsServiceProvider`, `Capell\Contacts\Providers\AdminServiceProvider`.

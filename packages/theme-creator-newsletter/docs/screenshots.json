@@ -1,4 +1,9 @@
 {
+    "package": "theme-creator-newsletter",
+    "composerName": "capell-app/theme-creator-newsletter",
+    "generatedFor": "deployment-screenshot-runner",
+    "requiresInstalledPackage": true,
+    "outputDirectory": "packages/theme-creator-newsletter/docs/screenshots",
     "entries": [
         {
             "id": "creator-newsletter-homepage",

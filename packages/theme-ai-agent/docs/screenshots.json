@@ -1,4 +1,9 @@
 {
+    "package": "theme-ai-agent",
+    "composerName": "capell-app/theme-ai-agent",
+    "generatedFor": "deployment-screenshot-runner",
+    "requiresInstalledPackage": true,
+    "outputDirectory": "packages/theme-ai-agent/docs/screenshots",
     "entries": [
         {
             "id": "ai-agent-homepage",

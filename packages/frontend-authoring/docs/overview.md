@@ -35,6 +35,50 @@ Screenshot contract: `screenshots.json`.
 - Beacon network request (admin, required).
 - Frontend authoring enabled/disabled configuration proof (admin, required).
 
+## Screenshot Evidence
+
+These captures are the package-owned visual contract for the admin pages, public pages, actions, workflows, and feature surfaces described above. Keep this section aligned with `docs/screenshots.json` whenever the package surface changes.
+
+### Frontend page with authoring enabled for admins
+
+![Frontend page with authoring enabled for admins](screenshots/frontend-page-with-authoring-enabled.png)
+
+- Surface: frontend · Target: frontend-url.
+- Documents: An authenticated admin opens a public page and sees post-load editable regions after the beacon succeeds.
+- Capture notes: Authenticated frontend capture. The runner logs in as an admin, opens the public Capell app homepage, waits for the beacon to decorate editable regions, and hovers the first editable region so the authoring control is visible.
+
+### Capell app frontend authoring working on the public homepage
+
+![Capell app frontend authoring working on the public homepage](screenshots/capell-app-frontend-authoring-working.png)
+
+- Surface: frontend · Target: frontend-url.
+- Documents: An authenticated admin verifies inline authoring controls against a real Capell app homepage.
+- Capture notes: Documentation proof that capell-app renders the frontend authoring package working: an authenticated admin beacon decorates the public homepage with editable regions and visible edit controls.
+
+### Capell app frontend authoring working on mobile
+
+![Capell app frontend authoring working on mobile](screenshots/capell-app-frontend-authoring-mobile.png)
+
+- Surface: frontend · Target: frontend-url.
+- Documents: An authenticated admin verifies the authoring overlay remains usable on a mobile viewport.
+- Capture notes: Mobile proof that the authoring overlay works against the Capell app frontend without adding public authoring metadata to cached HTML.
+
+### Beacon network request
+
+![Beacon network request](screenshots/beacon-network-request.png)
+
+- Surface: admin · Target: admin-surface.
+- Documents: A developer verifies the beacon request returns authoring data only for authenticated admins.
+- Capture notes: Capture after installing capell-app/frontend-authoring in the isolated demo harness and seeding the data required for this use case.
+
+### Frontend authoring enabled/disabled configuration proof
+
+![Frontend authoring enabled/disabled configuration proof](screenshots/frontend-authoring-enabled-disabled-configuration-proof.png)
+
+- Surface: admin · Target: admin-surface.
+- Documents: A site owner confirms authoring can be enabled or disabled without leaking controls to public users.
+- Capture notes: Capture after installing capell-app/frontend-authoring in the isolated demo harness and seeding the data required for this use case.
+
 ## Technical Shape
 
 - Service providers: `Capell\FrontendAuthoring\Providers\FrontendAuthoringServiceProvider`.
