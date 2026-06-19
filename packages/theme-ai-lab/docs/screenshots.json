@@ -1,0 +1,69 @@
+{
+    "entries": [
+        {
+            "id": "ai-lab-homepage",
+            "title": "AI Lab Homepage",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-ai-lab/docs/screenshots/ai-lab-homepage.png",
+            "required": false,
+            "user": false,
+            "notes": "AI Lab Homepage",
+            "useCase": "Theme marketplace preview"
+        },
+        {
+            "id": "ai-lab-landing-page",
+            "title": "AI Lab Landing page",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-ai-lab/docs/screenshots/ai-lab-landing.png",
+            "required": false,
+            "user": false,
+            "notes": "AI Lab Landing page",
+            "useCase": "Theme marketplace preview"
+        },
+        {
+            "id": "ai-lab-list-page",
+            "title": "AI Lab List page",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-ai-lab/docs/screenshots/ai-lab-listing.png",
+            "required": false,
+            "user": false,
+            "notes": "AI Lab List page",
+            "useCase": "Theme marketplace preview"
+        },
+        {
+            "id": "ai-lab-search-results",
+            "title": "AI Lab Search results",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-ai-lab/docs/screenshots/ai-lab-search.png",
+            "required": false,
+            "user": false,
+            "notes": "AI Lab Search results",
+            "useCase": "Theme marketplace preview"
+        },
+        {
+            "id": "ai-lab-contact-form",
+            "title": "AI Lab Contact form",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-ai-lab/docs/screenshots/ai-lab-contact.png",
+            "required": false,
+            "user": false,
+            "notes": "AI Lab Contact form",
+            "useCase": "Theme marketplace preview"
+        }
+    ]
+}

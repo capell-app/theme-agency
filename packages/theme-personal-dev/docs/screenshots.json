@@ -1,0 +1,69 @@
+{
+    "entries": [
+        {
+            "id": "personal-dev-homepage",
+            "title": "Personal Dev Homepage",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-personal-dev/docs/screenshots/personal-dev-homepage.png",
+            "required": false,
+            "user": false,
+            "notes": "Personal Dev Homepage",
+            "useCase": "Theme marketplace preview"
+        },
+        {
+            "id": "personal-dev-landing-page",
+            "title": "Personal Dev Landing page",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-personal-dev/docs/screenshots/personal-dev-landing.png",
+            "required": false,
+            "user": false,
+            "notes": "Personal Dev Landing page",
+            "useCase": "Theme marketplace preview"
+        },
+        {
+            "id": "personal-dev-list-page",
+            "title": "Personal Dev List page",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-personal-dev/docs/screenshots/personal-dev-listing.png",
+            "required": false,
+            "user": false,
+            "notes": "Personal Dev List page",
+            "useCase": "Theme marketplace preview"
+        },
+        {
+            "id": "personal-dev-search-results",
+            "title": "Personal Dev Search results",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-personal-dev/docs/screenshots/personal-dev-search.png",
+            "required": false,
+            "user": false,
+            "notes": "Personal Dev Search results",
+            "useCase": "Theme marketplace preview"
+        },
+        {
+            "id": "personal-dev-contact-form",
+            "title": "Personal Dev Contact form",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-personal-dev/docs/screenshots/personal-dev-contact.png",
+            "required": false,
+            "user": false,
+            "notes": "Personal Dev Contact form",
+            "useCase": "Theme marketplace preview"
+        }
+    ]
+}

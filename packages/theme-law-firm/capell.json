@@ -1,0 +1,151 @@
+{
+    "manifest-version": 3,
+    "name": "capell-app/theme-law-firm",
+    "slug": "theme-law-firm",
+    "displayName": "Theme Law Firm",
+    "kind": "theme",
+    "capellApiVersion": "^4.0",
+    "version": "4.x-dev",
+    "description": "Law Firm extends the default Capell frontend with a law firm visual direction, portable demo content, cache-safe public Blade rendering, and theme tokens tuned for law firms, barristers' chambers.",
+    "product": {
+        "group": "Capell Themes",
+        "tier": "premium",
+        "bundle": "themes"
+    },
+    "namespace": "Capell\\ThemeStudio\\LawFirm",
+    "surfaces": ["frontend"],
+    "dependencies": {
+        "requires": ["capell-app/core", "capell-app/frontend"],
+        "supports": [],
+        "conflicts": []
+    },
+    "providers": {
+        "metadata": [],
+        "install": [],
+        "runtime": [
+            "Capell\\ThemeStudio\\LawFirm\\LawFirmThemeServiceProvider"
+        ],
+        "admin": [],
+        "frontend": []
+    },
+    "contributes": [
+        {
+            "type": "admin-page",
+            "class": "Capell\\ThemeStudio\\LawFirm\\Manifest\\ThemeManagementPageContribution",
+            "pageClass": "Capell\\Marketplace\\Filament\\Pages\\ThemeExtensionPage",
+            "pageParameters": {
+                "themeKey": "law-firm"
+            },
+            "labelKey": "capell-marketplace::marketplace.theme_extension.management_entry_label"
+        }
+    ],
+    "database": {
+        "migrations": false,
+        "settings": false,
+        "requiredTables": []
+    },
+    "commands": {
+        "install": null,
+        "setup": null,
+        "demo": "capell:theme-law-firm-demo",
+        "demoParams": ["url", "languages", "sites"],
+        "doctor": null
+    },
+    "settings": [],
+    "permissions": [],
+    "capabilities": ["theme-law-firm", "theme-law-firm-frontend"],
+    "security": {
+        "riskTier": "low",
+        "publicSurface": {
+            "routeNames": [],
+            "auth": "none",
+            "csrfExemptRoutes": [],
+            "signedRoutes": [],
+            "tokenizedRoutes": [],
+            "webhookRoutes": [],
+            "throttledRoutes": []
+        },
+        "sensitiveData": {
+            "encryptedFields": [],
+            "hashedTokenFields": [],
+            "redactedOutputClasses": [],
+            "plaintextJustifications": []
+        },
+        "publicOutput": {
+            "cacheSafe": true,
+            "forbidAuthoringSurface": true,
+            "forbidSecrets": true,
+            "forbidPublicBladeQueries": true
+        },
+        "externalHttpClients": {
+            "requiresTimeouts": false,
+            "requiresSecretRedaction": false,
+            "clients": []
+        },
+        "adminSurface": {
+            "authorization": "none",
+            "permissions": []
+        }
+    },
+    "performance": {
+        "frontendRenderBudgetMs": 20,
+        "adminQueryBudget": 0,
+        "cacheTags": ["theme-law-firm"],
+        "cacheSafety": {
+            "cacheable": false,
+            "variesBy": ["site", "locale"],
+            "sensitiveOutput": false,
+            "invalidationSources": [],
+            "queueInvalidation": false
+        }
+    },
+    "healthChecks": [
+        {
+            "key": "theme-law-firm.package-health",
+            "label": "Law Firm package surfaces, providers, and install health are discoverable by Diagnostics.",
+            "class": "Capell\\ThemeStudio\\LawFirm\\Health\\ThemeLawFirmHealthCheck",
+            "severity": "critical",
+            "surface": "frontend"
+        }
+    ],
+    "commercial": {
+        "proposedLicense": "paid",
+        "requestedCertification": "first-party",
+        "supportPolicy": "priority",
+        "privateDocsRequested": true
+    },
+    "marketplace": {
+        "summary": "A premium Capell theme for law firms, barristers' chambers.",
+        "description": "Law Firm provides a distinct theme definition, demo command, marketplace metadata, and public-safe Blade views for Harlow & Finch LLP.",
+        "screenshots": [
+            {
+                "path": "docs/screenshots/law-firm-homepage.png",
+                "alt": "Law Firm homepage preview",
+                "caption": "Law Firm Homepage"
+            },
+            {
+                "path": "docs/screenshots/law-firm-landing.png",
+                "alt": "Law Firm landing page preview",
+                "caption": "Law Firm Landing page"
+            },
+            {
+                "path": "docs/screenshots/law-firm-listing.png",
+                "alt": "Law Firm list page preview",
+                "caption": "Law Firm List page"
+            },
+            {
+                "path": "docs/screenshots/law-firm-search.png",
+                "alt": "Law Firm search results preview",
+                "caption": "Law Firm Search results"
+            },
+            {
+                "path": "docs/screenshots/law-firm-contact.png",
+                "alt": "Law Firm contact form preview",
+                "caption": "Law Firm Contact form"
+            }
+        ],
+        "categories": ["frontend", "themes"]
+    },
+    "extends": "default",
+    "themeKey": "law-firm"
+}

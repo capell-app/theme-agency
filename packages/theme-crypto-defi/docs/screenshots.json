@@ -1,0 +1,69 @@
+{
+    "entries": [
+        {
+            "id": "crypto-defi-homepage",
+            "title": "Crypto DeFi Homepage",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-crypto-defi/docs/screenshots/crypto-defi-homepage.png",
+            "required": false,
+            "user": false,
+            "notes": "Crypto DeFi Homepage",
+            "useCase": "Theme marketplace preview"
+        },
+        {
+            "id": "crypto-defi-landing-page",
+            "title": "Crypto DeFi Landing page",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-crypto-defi/docs/screenshots/crypto-defi-landing.png",
+            "required": false,
+            "user": false,
+            "notes": "Crypto DeFi Landing page",
+            "useCase": "Theme marketplace preview"
+        },
+        {
+            "id": "crypto-defi-list-page",
+            "title": "Crypto DeFi List page",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-crypto-defi/docs/screenshots/crypto-defi-listing.png",
+            "required": false,
+            "user": false,
+            "notes": "Crypto DeFi List page",
+            "useCase": "Theme marketplace preview"
+        },
+        {
+            "id": "crypto-defi-search-results",
+            "title": "Crypto DeFi Search results",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-crypto-defi/docs/screenshots/crypto-defi-search.png",
+            "required": false,
+            "user": false,
+            "notes": "Crypto DeFi Search results",
+            "useCase": "Theme marketplace preview"
+        },
+        {
+            "id": "crypto-defi-contact-form",
+            "title": "Crypto DeFi Contact form",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-crypto-defi/docs/screenshots/crypto-defi-contact.png",
+            "required": false,
+            "user": false,
+            "notes": "Crypto DeFi Contact form",
+            "useCase": "Theme marketplace preview"
+        }
+    ]
+}

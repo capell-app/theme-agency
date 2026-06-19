@@ -40,6 +40,90 @@ Screenshot contract: `screenshots.json`.
 - Product search page (frontend, optional).
 - Promotion campaign page (frontend, optional).
 
+## Screenshot Evidence
+
+These captures are the package-owned visual contract for the admin pages, public pages, actions, workflows, and feature surfaces described above. Keep this section aligned with `docs/screenshots.json` whenever the package surface changes.
+
+### Frontend page rendered with commerce theme
+
+![Frontend page rendered with commerce theme](screenshots/frontend-page-rendered-with-commerce-theme.png)
+
+- Surface: frontend · Target: /theme-commerce.
+- Documents: A visitor sees a seeded product page rendered through the commerce navigation, hero, product finder, collections, product grid, catalog, proof, blog teaser, CTA, and footer sections.
+- Capture notes: Capture the seeded package theme route instead of the shared theme-gallery route. Optional until the Capell runner can browser-capture seeded package theme routes without navigation failures.
+
+### Commerce homepage
+
+![Commerce homepage](screenshots/commerce-homepage-layout.png)
+
+- Surface: frontend · Target: /theme-commerce.
+- Documents: A retailer checks that the theme feels like a buying journey rather than a plain catalogue wrapper.
+- Capture notes: Capture the seeded package theme route instead of the shared theme-gallery route. Optional until the Capell runner can browser-capture seeded package theme routes without navigation failures.
+
+### Collection listing
+
+![Collection listing](screenshots/commerce-collection-layout.png)
+
+- Surface: frontend · Target: /theme-commerce-directory.
+- Documents: A retailer reviews whether shoppers can scan ranges, campaigns, and stock signals quickly.
+- Capture notes: Capture the seeded package theme route instead of the shared theme-gallery route. Optional until the Capell runner can browser-capture seeded package theme routes without navigation failures.
+
+### Product detail page
+
+![Product detail page](screenshots/commerce-product-layout.png)
+
+- Surface: frontend · Target: /theme-commerce-detail.
+- Documents: A retailer checks that product pages keep purchase intent, proof, and merchandising context together.
+- Capture notes: Capture the seeded package theme route instead of the shared theme-gallery route. Optional until the Capell runner can browser-capture seeded package theme routes without navigation failures.
+
+### Lookbook page
+
+![Lookbook page](screenshots/commerce-lookbook-layout.png)
+
+- Surface: frontend · Target: /theme-commerce-directory.
+- Documents: A retailer can sell a range visually without the page becoming Portfolio's work gallery.
+- Capture notes: Capture the seeded package theme route instead of the shared theme-gallery route. Optional until the Capell runner can browser-capture seeded package theme routes without navigation failures.
+
+### Buying guide article
+
+![Buying guide article](screenshots/commerce-buying-guide-layout.png)
+
+- Surface: frontend · Target: /theme-commerce-directory.
+- Documents: A retailer checks that advice content supports purchase decisions instead of becoming a plain blog.
+- Capture notes: Capture the seeded package theme route instead of the shared theme-gallery route. Optional until the Capell runner can browser-capture seeded package theme routes without navigation failures.
+
+### Newsletter capture page
+
+![Newsletter capture page](screenshots/commerce-newsletter-layout.png)
+
+- Surface: frontend · Target: /theme-commerce-cta.
+- Documents: A retailer reviews how the theme converts browsing intent into owned-audience growth.
+- Capture notes: Capture the seeded package theme route instead of the shared theme-gallery route. Optional until the Capell runner can browser-capture seeded package theme routes without navigation failures.
+
+### Retail event page
+
+![Retail event page](screenshots/commerce-store-event-layout.png)
+
+- Surface: frontend · Target: /theme-commerce-cta.
+- Documents: A retailer can promote launches and in-store events without leaving the merchandising lane.
+- Capture notes: Capture the seeded package theme route instead of the shared theme-gallery route. Optional until the Capell runner can browser-capture seeded package theme routes without navigation failures.
+
+### Product search page
+
+![Product search page](screenshots/commerce-search-layout.png)
+
+- Surface: frontend · Target: /theme-commerce-directory.
+- Documents: A shopper can refine buying paths without the page looking like Knowledge search or a standard directory.
+- Capture notes: Capture the seeded package theme route instead of the shared theme-gallery route. Optional until the Capell runner can browser-capture seeded package theme routes without navigation failures.
+
+### Promotion campaign page
+
+![Promotion campaign page](screenshots/commerce-campaign-layout.png)
+
+- Surface: frontend · Target: /theme-commerce-cta.
+- Documents: A retailer checks that campaigns stay tied to buying paths rather than becoming Agency launch pages.
+- Capture notes: Capture the seeded package theme route instead of the shared theme-gallery route. Optional until the Capell runner can browser-capture seeded package theme routes without navigation failures.
+
 ## Technical Shape
 
 - Service providers: `Capell\ThemeStudio\Commerce\CommerceThemeServiceProvider`.

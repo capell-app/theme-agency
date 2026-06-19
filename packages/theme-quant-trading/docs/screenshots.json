@@ -1,0 +1,69 @@
+{
+    "entries": [
+        {
+            "id": "quant-trading-homepage",
+            "title": "Quant Trading Homepage",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-quant-trading/docs/screenshots/quant-trading-homepage.png",
+            "required": false,
+            "user": false,
+            "notes": "Quant Trading Homepage",
+            "useCase": "Theme marketplace preview"
+        },
+        {
+            "id": "quant-trading-landing-page",
+            "title": "Quant Trading Landing page",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-quant-trading/docs/screenshots/quant-trading-landing.png",
+            "required": false,
+            "user": false,
+            "notes": "Quant Trading Landing page",
+            "useCase": "Theme marketplace preview"
+        },
+        {
+            "id": "quant-trading-list-page",
+            "title": "Quant Trading List page",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-quant-trading/docs/screenshots/quant-trading-listing.png",
+            "required": false,
+            "user": false,
+            "notes": "Quant Trading List page",
+            "useCase": "Theme marketplace preview"
+        },
+        {
+            "id": "quant-trading-search-results",
+            "title": "Quant Trading Search results",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-quant-trading/docs/screenshots/quant-trading-search.png",
+            "required": false,
+            "user": false,
+            "notes": "Quant Trading Search results",
+            "useCase": "Theme marketplace preview"
+        },
+        {
+            "id": "quant-trading-contact-form",
+            "title": "Quant Trading Contact form",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-quant-trading/docs/screenshots/quant-trading-contact.png",
+            "required": false,
+            "user": false,
+            "notes": "Quant Trading Contact form",
+            "useCase": "Theme marketplace preview"
+        }
+    ]
+}

@@ -1,0 +1,69 @@
+{
+    "entries": [
+        {
+            "id": "ai-agent-homepage",
+            "title": "AI Agent Homepage",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-ai-agent/docs/screenshots/ai-agent-homepage.png",
+            "required": false,
+            "user": false,
+            "notes": "AI Agent Homepage",
+            "useCase": "Theme marketplace preview"
+        },
+        {
+            "id": "ai-agent-landing-page",
+            "title": "AI Agent Landing page",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-ai-agent/docs/screenshots/ai-agent-landing.png",
+            "required": false,
+            "user": false,
+            "notes": "AI Agent Landing page",
+            "useCase": "Theme marketplace preview"
+        },
+        {
+            "id": "ai-agent-list-page",
+            "title": "AI Agent List page",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-ai-agent/docs/screenshots/ai-agent-listing.png",
+            "required": false,
+            "user": false,
+            "notes": "AI Agent List page",
+            "useCase": "Theme marketplace preview"
+        },
+        {
+            "id": "ai-agent-search-results",
+            "title": "AI Agent Search results",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-ai-agent/docs/screenshots/ai-agent-search.png",
+            "required": false,
+            "user": false,
+            "notes": "AI Agent Search results",
+            "useCase": "Theme marketplace preview"
+        },
+        {
+            "id": "ai-agent-contact-form",
+            "title": "AI Agent Contact form",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-ai-agent/docs/screenshots/ai-agent-contact.png",
+            "required": false,
+            "user": false,
+            "notes": "AI Agent Contact form",
+            "useCase": "Theme marketplace preview"
+        }
+    ]
+}

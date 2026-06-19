@@ -1,0 +1,69 @@
+{
+    "entries": [
+        {
+            "id": "law-firm-homepage",
+            "title": "Law Firm Homepage",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-law-firm/docs/screenshots/law-firm-homepage.png",
+            "required": false,
+            "user": false,
+            "notes": "Law Firm Homepage",
+            "useCase": "Theme marketplace preview"
+        },
+        {
+            "id": "law-firm-landing-page",
+            "title": "Law Firm Landing page",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-law-firm/docs/screenshots/law-firm-landing.png",
+            "required": false,
+            "user": false,
+            "notes": "Law Firm Landing page",
+            "useCase": "Theme marketplace preview"
+        },
+        {
+            "id": "law-firm-list-page",
+            "title": "Law Firm List page",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-law-firm/docs/screenshots/law-firm-listing.png",
+            "required": false,
+            "user": false,
+            "notes": "Law Firm List page",
+            "useCase": "Theme marketplace preview"
+        },
+        {
+            "id": "law-firm-search-results",
+            "title": "Law Firm Search results",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-law-firm/docs/screenshots/law-firm-search.png",
+            "required": false,
+            "user": false,
+            "notes": "Law Firm Search results",
+            "useCase": "Theme marketplace preview"
+        },
+        {
+            "id": "law-firm-contact-form",
+            "title": "Law Firm Contact form",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-law-firm/docs/screenshots/law-firm-contact.png",
+            "required": false,
+            "user": false,
+            "notes": "Law Firm Contact form",
+            "useCase": "Theme marketplace preview"
+        }
+    ]
+}

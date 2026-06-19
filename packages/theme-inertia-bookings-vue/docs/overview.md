@@ -35,6 +35,50 @@ Screenshot contract: `screenshots.json`.
 - Vue booking validation state (frontend, required).
 - Vue booking mobile layout (frontend, required).
 
+## Screenshot Evidence
+
+These captures are the package-owned visual contract for the admin pages, public pages, actions, workflows, and feature surfaces described above. Keep this section aligned with `docs/screenshots.json` whenever the package surface changes.
+
+### Vue booking component pack
+
+![Vue booking component pack](screenshots/vue-booking-components.png)
+
+- Surface: frontend · Target: /bookings.
+- Documents: A buyer confirms the Vue pack renders the page, widgets, and booking request contract.
+- Capture notes: Capture the Vue adapter runtime with Theme Inertia Bookings installed and the labelled booking request form visible.
+
+### Vue themed booking services
+
+![Vue themed booking services](screenshots/vue-booking-services.png)
+
+- Surface: frontend · Target: /theme-inertia-bookings-demo#services.
+- Documents: A buyer verifies the Vue adapter covers the marketing sections, not only the booking form.
+- Capture notes: Capture Vue-rendered service cards and appointment CTAs from the themed component pack.
+
+### Vue booking slot loading state
+
+![Vue booking slot loading state](screenshots/vue-booking-slot-loading.png)
+
+- Surface: frontend · Target: /bookings.
+- Documents: A buyer checks that async slot selection has an understandable Vue loading state.
+- Capture notes: Capture the public request form while available slots are loading or refreshing.
+
+### Vue booking validation state
+
+![Vue booking validation state](screenshots/vue-booking-validation.png)
+
+- Surface: frontend · Target: /bookings.
+- Documents: A buyer confirms the Vue pack presents booking errors without relying on placeholders.
+- Capture notes: Capture validation feedback on required customer fields and service/slot selection.
+
+### Vue booking mobile layout
+
+![Vue booking mobile layout](screenshots/vue-booking-mobile.png)
+
+- Surface: frontend · Target: /bookings.
+- Documents: A buyer verifies the Vue component pack works for phone-based appointment requests.
+- Capture notes: Capture the Vue booking request page at a mobile viewport with labels and CTA visible.
+
 ## Technical Shape
 
 - Service providers: `Capell\ThemeStudio\InertiaBookingsVue\Providers\InertiaBookingsVueServiceProvider`.

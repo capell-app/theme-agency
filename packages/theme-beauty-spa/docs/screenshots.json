@@ -1,0 +1,69 @@
+{
+    "entries": [
+        {
+            "id": "beauty-&-spa-homepage",
+            "title": "Beauty & Spa Homepage",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-beauty-spa/docs/screenshots/beauty-spa-homepage.png",
+            "required": false,
+            "user": false,
+            "notes": "Beauty & Spa Homepage",
+            "useCase": "Theme marketplace preview"
+        },
+        {
+            "id": "beauty-&-spa-landing-page",
+            "title": "Beauty & Spa Landing page",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-beauty-spa/docs/screenshots/beauty-spa-landing.png",
+            "required": false,
+            "user": false,
+            "notes": "Beauty & Spa Landing page",
+            "useCase": "Theme marketplace preview"
+        },
+        {
+            "id": "beauty-&-spa-list-page",
+            "title": "Beauty & Spa List page",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-beauty-spa/docs/screenshots/beauty-spa-listing.png",
+            "required": false,
+            "user": false,
+            "notes": "Beauty & Spa List page",
+            "useCase": "Theme marketplace preview"
+        },
+        {
+            "id": "beauty-&-spa-search-results",
+            "title": "Beauty & Spa Search results",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-beauty-spa/docs/screenshots/beauty-spa-search.png",
+            "required": false,
+            "user": false,
+            "notes": "Beauty & Spa Search results",
+            "useCase": "Theme marketplace preview"
+        },
+        {
+            "id": "beauty-&-spa-contact-form",
+            "title": "Beauty & Spa Contact form",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-beauty-spa/docs/screenshots/beauty-spa-contact.png",
+            "required": false,
+            "user": false,
+            "notes": "Beauty & Spa Contact form",
+            "useCase": "Theme marketplace preview"
+        }
+    ]
+}

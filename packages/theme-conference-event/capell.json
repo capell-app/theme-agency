@@ -1,0 +1,154 @@
+{
+    "manifest-version": 3,
+    "name": "capell-app/theme-conference-event",
+    "slug": "theme-conference-event",
+    "displayName": "Theme Conference Event",
+    "kind": "theme",
+    "capellApiVersion": "^4.0",
+    "version": "4.x-dev",
+    "description": "Conference Event extends the default Capell frontend with a conference event visual direction, portable demo content, cache-safe public Blade rendering, and theme tokens tuned for conferences and summits, multi-track events.",
+    "product": {
+        "group": "Capell Themes",
+        "tier": "premium",
+        "bundle": "themes"
+    },
+    "namespace": "Capell\\ThemeStudio\\ConferenceEvent",
+    "surfaces": ["frontend"],
+    "dependencies": {
+        "requires": ["capell-app/core", "capell-app/frontend"],
+        "supports": [],
+        "conflicts": []
+    },
+    "providers": {
+        "metadata": [],
+        "install": [],
+        "runtime": [
+            "Capell\\ThemeStudio\\ConferenceEvent\\ConferenceEventThemeServiceProvider"
+        ],
+        "admin": [],
+        "frontend": []
+    },
+    "contributes": [
+        {
+            "type": "admin-page",
+            "class": "Capell\\ThemeStudio\\ConferenceEvent\\Manifest\\ThemeManagementPageContribution",
+            "pageClass": "Capell\\Marketplace\\Filament\\Pages\\ThemeExtensionPage",
+            "pageParameters": {
+                "themeKey": "conference-event"
+            },
+            "labelKey": "capell-marketplace::marketplace.theme_extension.management_entry_label"
+        }
+    ],
+    "database": {
+        "migrations": false,
+        "settings": false,
+        "requiredTables": []
+    },
+    "commands": {
+        "install": null,
+        "setup": null,
+        "demo": "capell:theme-conference-event-demo",
+        "demoParams": ["url", "languages", "sites"],
+        "doctor": null
+    },
+    "settings": [],
+    "permissions": [],
+    "capabilities": [
+        "theme-conference-event",
+        "theme-conference-event-frontend"
+    ],
+    "security": {
+        "riskTier": "low",
+        "publicSurface": {
+            "routeNames": [],
+            "auth": "none",
+            "csrfExemptRoutes": [],
+            "signedRoutes": [],
+            "tokenizedRoutes": [],
+            "webhookRoutes": [],
+            "throttledRoutes": []
+        },
+        "sensitiveData": {
+            "encryptedFields": [],
+            "hashedTokenFields": [],
+            "redactedOutputClasses": [],
+            "plaintextJustifications": []
+        },
+        "publicOutput": {
+            "cacheSafe": true,
+            "forbidAuthoringSurface": true,
+            "forbidSecrets": true,
+            "forbidPublicBladeQueries": true
+        },
+        "externalHttpClients": {
+            "requiresTimeouts": false,
+            "requiresSecretRedaction": false,
+            "clients": []
+        },
+        "adminSurface": {
+            "authorization": "none",
+            "permissions": []
+        }
+    },
+    "performance": {
+        "frontendRenderBudgetMs": 20,
+        "adminQueryBudget": 0,
+        "cacheTags": ["theme-conference-event"],
+        "cacheSafety": {
+            "cacheable": false,
+            "variesBy": ["site", "locale"],
+            "sensitiveOutput": false,
+            "invalidationSources": [],
+            "queueInvalidation": false
+        }
+    },
+    "healthChecks": [
+        {
+            "key": "theme-conference-event.package-health",
+            "label": "Conference Event package surfaces, providers, and install health are discoverable by Diagnostics.",
+            "class": "Capell\\ThemeStudio\\ConferenceEvent\\Health\\ThemeConferenceEventHealthCheck",
+            "severity": "critical",
+            "surface": "frontend"
+        }
+    ],
+    "commercial": {
+        "proposedLicense": "paid",
+        "requestedCertification": "first-party",
+        "supportPolicy": "priority",
+        "privateDocsRequested": true
+    },
+    "marketplace": {
+        "summary": "A premium Capell theme for conferences and summits, multi-track events.",
+        "description": "Conference Event provides a distinct theme definition, demo command, marketplace metadata, and public-safe Blade views for Forge Summit 2026.",
+        "screenshots": [
+            {
+                "path": "docs/screenshots/conference-event-homepage.png",
+                "alt": "Conference Event homepage preview",
+                "caption": "Conference Event Homepage"
+            },
+            {
+                "path": "docs/screenshots/conference-event-landing.png",
+                "alt": "Conference Event landing page preview",
+                "caption": "Conference Event Landing page"
+            },
+            {
+                "path": "docs/screenshots/conference-event-listing.png",
+                "alt": "Conference Event list page preview",
+                "caption": "Conference Event List page"
+            },
+            {
+                "path": "docs/screenshots/conference-event-search.png",
+                "alt": "Conference Event search results preview",
+                "caption": "Conference Event Search results"
+            },
+            {
+                "path": "docs/screenshots/conference-event-contact.png",
+                "alt": "Conference Event contact form preview",
+                "caption": "Conference Event Contact form"
+            }
+        ],
+        "categories": ["frontend", "themes"]
+    },
+    "extends": "default",
+    "themeKey": "conference-event"
+}

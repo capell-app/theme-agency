@@ -1,0 +1,69 @@
+{
+    "entries": [
+        {
+            "id": "manufacturing-homepage",
+            "title": "Manufacturing Homepage",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-manufacturing/docs/screenshots/manufacturing-homepage.png",
+            "required": false,
+            "user": false,
+            "notes": "Manufacturing Homepage",
+            "useCase": "Theme marketplace preview"
+        },
+        {
+            "id": "manufacturing-landing-page",
+            "title": "Manufacturing Landing page",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-manufacturing/docs/screenshots/manufacturing-landing.png",
+            "required": false,
+            "user": false,
+            "notes": "Manufacturing Landing page",
+            "useCase": "Theme marketplace preview"
+        },
+        {
+            "id": "manufacturing-list-page",
+            "title": "Manufacturing List page",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-manufacturing/docs/screenshots/manufacturing-listing.png",
+            "required": false,
+            "user": false,
+            "notes": "Manufacturing List page",
+            "useCase": "Theme marketplace preview"
+        },
+        {
+            "id": "manufacturing-search-results",
+            "title": "Manufacturing Search results",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-manufacturing/docs/screenshots/manufacturing-search.png",
+            "required": false,
+            "user": false,
+            "notes": "Manufacturing Search results",
+            "useCase": "Theme marketplace preview"
+        },
+        {
+            "id": "manufacturing-contact-form",
+            "title": "Manufacturing Contact form",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-manufacturing/docs/screenshots/manufacturing-contact.png",
+            "required": false,
+            "user": false,
+            "notes": "Manufacturing Contact form",
+            "useCase": "Theme marketplace preview"
+        }
+    ]
+}

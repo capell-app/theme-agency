@@ -1,0 +1,151 @@
+{
+    "manifest-version": 3,
+    "name": "capell-app/theme-aeo-analytics",
+    "slug": "theme-aeo-analytics",
+    "displayName": "Theme AEO Analytics",
+    "kind": "theme",
+    "capellApiVersion": "^4.0",
+    "version": "4.x-dev",
+    "description": "AEO Analytics extends the default Capell frontend with a aeo analytics visual direction, portable demo content, cache-safe public Blade rendering, and theme tokens tuned for aeo/geo analytics saas, brand visibility tools.",
+    "product": {
+        "group": "Capell Themes",
+        "tier": "premium",
+        "bundle": "themes"
+    },
+    "namespace": "Capell\\ThemeStudio\\AeoAnalytics",
+    "surfaces": ["frontend"],
+    "dependencies": {
+        "requires": ["capell-app/core", "capell-app/frontend"],
+        "supports": [],
+        "conflicts": []
+    },
+    "providers": {
+        "metadata": [],
+        "install": [],
+        "runtime": [
+            "Capell\\ThemeStudio\\AeoAnalytics\\AeoAnalyticsThemeServiceProvider"
+        ],
+        "admin": [],
+        "frontend": []
+    },
+    "contributes": [
+        {
+            "type": "admin-page",
+            "class": "Capell\\ThemeStudio\\AeoAnalytics\\Manifest\\ThemeManagementPageContribution",
+            "pageClass": "Capell\\Marketplace\\Filament\\Pages\\ThemeExtensionPage",
+            "pageParameters": {
+                "themeKey": "aeo-analytics"
+            },
+            "labelKey": "capell-marketplace::marketplace.theme_extension.management_entry_label"
+        }
+    ],
+    "database": {
+        "migrations": false,
+        "settings": false,
+        "requiredTables": []
+    },
+    "commands": {
+        "install": null,
+        "setup": null,
+        "demo": "capell:theme-aeo-analytics-demo",
+        "demoParams": ["url", "languages", "sites"],
+        "doctor": null
+    },
+    "settings": [],
+    "permissions": [],
+    "capabilities": ["theme-aeo-analytics", "theme-aeo-analytics-frontend"],
+    "security": {
+        "riskTier": "low",
+        "publicSurface": {
+            "routeNames": [],
+            "auth": "none",
+            "csrfExemptRoutes": [],
+            "signedRoutes": [],
+            "tokenizedRoutes": [],
+            "webhookRoutes": [],
+            "throttledRoutes": []
+        },
+        "sensitiveData": {
+            "encryptedFields": [],
+            "hashedTokenFields": [],
+            "redactedOutputClasses": [],
+            "plaintextJustifications": []
+        },
+        "publicOutput": {
+            "cacheSafe": true,
+            "forbidAuthoringSurface": true,
+            "forbidSecrets": true,
+            "forbidPublicBladeQueries": true
+        },
+        "externalHttpClients": {
+            "requiresTimeouts": false,
+            "requiresSecretRedaction": false,
+            "clients": []
+        },
+        "adminSurface": {
+            "authorization": "none",
+            "permissions": []
+        }
+    },
+    "performance": {
+        "frontendRenderBudgetMs": 20,
+        "adminQueryBudget": 0,
+        "cacheTags": ["theme-aeo-analytics"],
+        "cacheSafety": {
+            "cacheable": false,
+            "variesBy": ["site", "locale"],
+            "sensitiveOutput": false,
+            "invalidationSources": [],
+            "queueInvalidation": false
+        }
+    },
+    "healthChecks": [
+        {
+            "key": "theme-aeo-analytics.package-health",
+            "label": "AEO Analytics package surfaces, providers, and install health are discoverable by Diagnostics.",
+            "class": "Capell\\ThemeStudio\\AeoAnalytics\\Health\\ThemeAeoAnalyticsHealthCheck",
+            "severity": "critical",
+            "surface": "frontend"
+        }
+    ],
+    "commercial": {
+        "proposedLicense": "paid",
+        "requestedCertification": "first-party",
+        "supportPolicy": "priority",
+        "privateDocsRequested": true
+    },
+    "marketplace": {
+        "summary": "A premium Capell theme for aeo/geo analytics saas, brand visibility tools.",
+        "description": "AEO Analytics provides a distinct theme definition, demo command, marketplace metadata, and public-safe Blade views for Visible AEO.",
+        "screenshots": [
+            {
+                "path": "docs/screenshots/aeo-analytics-homepage.png",
+                "alt": "AEO Analytics homepage preview",
+                "caption": "AEO Analytics Homepage"
+            },
+            {
+                "path": "docs/screenshots/aeo-analytics-landing.png",
+                "alt": "AEO Analytics landing page preview",
+                "caption": "AEO Analytics Landing page"
+            },
+            {
+                "path": "docs/screenshots/aeo-analytics-listing.png",
+                "alt": "AEO Analytics list page preview",
+                "caption": "AEO Analytics List page"
+            },
+            {
+                "path": "docs/screenshots/aeo-analytics-search.png",
+                "alt": "AEO Analytics search results preview",
+                "caption": "AEO Analytics Search results"
+            },
+            {
+                "path": "docs/screenshots/aeo-analytics-contact.png",
+                "alt": "AEO Analytics contact form preview",
+                "caption": "AEO Analytics Contact form"
+            }
+        ],
+        "categories": ["frontend", "themes"]
+    },
+    "extends": "default",
+    "themeKey": "aeo-analytics"
+}

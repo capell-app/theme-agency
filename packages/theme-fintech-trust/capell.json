@@ -1,0 +1,151 @@
+{
+    "manifest-version": 3,
+    "name": "capell-app/theme-fintech-trust",
+    "slug": "theme-fintech-trust",
+    "displayName": "Theme Fintech Trust",
+    "kind": "theme",
+    "capellApiVersion": "^4.0",
+    "version": "4.x-dev",
+    "description": "Fintech Trust extends the default Capell frontend with a fintech trust visual direction, portable demo content, cache-safe public Blade rendering, and theme tokens tuned for fintech infrastructure, identity verification / kyb.",
+    "product": {
+        "group": "Capell Themes",
+        "tier": "premium",
+        "bundle": "themes"
+    },
+    "namespace": "Capell\\ThemeStudio\\FintechTrust",
+    "surfaces": ["frontend"],
+    "dependencies": {
+        "requires": ["capell-app/core", "capell-app/frontend"],
+        "supports": [],
+        "conflicts": []
+    },
+    "providers": {
+        "metadata": [],
+        "install": [],
+        "runtime": [
+            "Capell\\ThemeStudio\\FintechTrust\\FintechTrustThemeServiceProvider"
+        ],
+        "admin": [],
+        "frontend": []
+    },
+    "contributes": [
+        {
+            "type": "admin-page",
+            "class": "Capell\\ThemeStudio\\FintechTrust\\Manifest\\ThemeManagementPageContribution",
+            "pageClass": "Capell\\Marketplace\\Filament\\Pages\\ThemeExtensionPage",
+            "pageParameters": {
+                "themeKey": "fintech-trust"
+            },
+            "labelKey": "capell-marketplace::marketplace.theme_extension.management_entry_label"
+        }
+    ],
+    "database": {
+        "migrations": false,
+        "settings": false,
+        "requiredTables": []
+    },
+    "commands": {
+        "install": null,
+        "setup": null,
+        "demo": "capell:theme-fintech-trust-demo",
+        "demoParams": ["url", "languages", "sites"],
+        "doctor": null
+    },
+    "settings": [],
+    "permissions": [],
+    "capabilities": ["theme-fintech-trust", "theme-fintech-trust-frontend"],
+    "security": {
+        "riskTier": "low",
+        "publicSurface": {
+            "routeNames": [],
+            "auth": "none",
+            "csrfExemptRoutes": [],
+            "signedRoutes": [],
+            "tokenizedRoutes": [],
+            "webhookRoutes": [],
+            "throttledRoutes": []
+        },
+        "sensitiveData": {
+            "encryptedFields": [],
+            "hashedTokenFields": [],
+            "redactedOutputClasses": [],
+            "plaintextJustifications": []
+        },
+        "publicOutput": {
+            "cacheSafe": true,
+            "forbidAuthoringSurface": true,
+            "forbidSecrets": true,
+            "forbidPublicBladeQueries": true
+        },
+        "externalHttpClients": {
+            "requiresTimeouts": false,
+            "requiresSecretRedaction": false,
+            "clients": []
+        },
+        "adminSurface": {
+            "authorization": "none",
+            "permissions": []
+        }
+    },
+    "performance": {
+        "frontendRenderBudgetMs": 20,
+        "adminQueryBudget": 0,
+        "cacheTags": ["theme-fintech-trust"],
+        "cacheSafety": {
+            "cacheable": false,
+            "variesBy": ["site", "locale"],
+            "sensitiveOutput": false,
+            "invalidationSources": [],
+            "queueInvalidation": false
+        }
+    },
+    "healthChecks": [
+        {
+            "key": "theme-fintech-trust.package-health",
+            "label": "Fintech Trust package surfaces, providers, and install health are discoverable by Diagnostics.",
+            "class": "Capell\\ThemeStudio\\FintechTrust\\Health\\ThemeFintechTrustHealthCheck",
+            "severity": "critical",
+            "surface": "frontend"
+        }
+    ],
+    "commercial": {
+        "proposedLicense": "paid",
+        "requestedCertification": "first-party",
+        "supportPolicy": "priority",
+        "privateDocsRequested": true
+    },
+    "marketplace": {
+        "summary": "A premium Capell theme for fintech infrastructure, identity verification / kyb.",
+        "description": "Fintech Trust provides a distinct theme definition, demo command, marketplace metadata, and public-safe Blade views for Tessera Verify.",
+        "screenshots": [
+            {
+                "path": "docs/screenshots/fintech-trust-homepage.png",
+                "alt": "Fintech Trust homepage preview",
+                "caption": "Fintech Trust Homepage"
+            },
+            {
+                "path": "docs/screenshots/fintech-trust-landing.png",
+                "alt": "Fintech Trust landing page preview",
+                "caption": "Fintech Trust Landing page"
+            },
+            {
+                "path": "docs/screenshots/fintech-trust-listing.png",
+                "alt": "Fintech Trust list page preview",
+                "caption": "Fintech Trust List page"
+            },
+            {
+                "path": "docs/screenshots/fintech-trust-search.png",
+                "alt": "Fintech Trust search results preview",
+                "caption": "Fintech Trust Search results"
+            },
+            {
+                "path": "docs/screenshots/fintech-trust-contact.png",
+                "alt": "Fintech Trust contact form preview",
+                "caption": "Fintech Trust Contact form"
+            }
+        ],
+        "categories": ["frontend", "themes"]
+    },
+    "extends": "default",
+    "themeKey": "fintech-trust"
+}

@@ -1,0 +1,69 @@
+{
+    "entries": [
+        {
+            "id": "newsroom-magazine-homepage",
+            "title": "Newsroom Magazine Homepage",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-newsroom-magazine/docs/screenshots/newsroom-magazine-homepage.png",
+            "required": false,
+            "user": false,
+            "notes": "Newsroom Magazine Homepage",
+            "useCase": "Theme marketplace preview"
+        },
+        {
+            "id": "newsroom-magazine-landing-page",
+            "title": "Newsroom Magazine Landing page",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-newsroom-magazine/docs/screenshots/newsroom-magazine-landing.png",
+            "required": false,
+            "user": false,
+            "notes": "Newsroom Magazine Landing page",
+            "useCase": "Theme marketplace preview"
+        },
+        {
+            "id": "newsroom-magazine-list-page",
+            "title": "Newsroom Magazine List page",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-newsroom-magazine/docs/screenshots/newsroom-magazine-listing.png",
+            "required": false,
+            "user": false,
+            "notes": "Newsroom Magazine List page",
+            "useCase": "Theme marketplace preview"
+        },
+        {
+            "id": "newsroom-magazine-search-results",
+            "title": "Newsroom Magazine Search results",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-newsroom-magazine/docs/screenshots/newsroom-magazine-search.png",
+            "required": false,
+            "user": false,
+            "notes": "Newsroom Magazine Search results",
+            "useCase": "Theme marketplace preview"
+        },
+        {
+            "id": "newsroom-magazine-contact-form",
+            "title": "Newsroom Magazine Contact form",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-newsroom-magazine/docs/screenshots/newsroom-magazine-contact.png",
+            "required": false,
+            "user": false,
+            "notes": "Newsroom Magazine Contact form",
+            "useCase": "Theme marketplace preview"
+        }
+    ]
+}

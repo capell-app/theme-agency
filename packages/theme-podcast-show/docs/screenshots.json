@@ -1,0 +1,69 @@
+{
+    "entries": [
+        {
+            "id": "podcast-show-homepage",
+            "title": "Podcast Show Homepage",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-podcast-show/docs/screenshots/podcast-show-homepage.png",
+            "required": false,
+            "user": false,
+            "notes": "Podcast Show Homepage",
+            "useCase": "Theme marketplace preview"
+        },
+        {
+            "id": "podcast-show-landing-page",
+            "title": "Podcast Show Landing page",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-podcast-show/docs/screenshots/podcast-show-landing.png",
+            "required": false,
+            "user": false,
+            "notes": "Podcast Show Landing page",
+            "useCase": "Theme marketplace preview"
+        },
+        {
+            "id": "podcast-show-list-page",
+            "title": "Podcast Show List page",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-podcast-show/docs/screenshots/podcast-show-listing.png",
+            "required": false,
+            "user": false,
+            "notes": "Podcast Show List page",
+            "useCase": "Theme marketplace preview"
+        },
+        {
+            "id": "podcast-show-search-results",
+            "title": "Podcast Show Search results",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-podcast-show/docs/screenshots/podcast-show-search.png",
+            "required": false,
+            "user": false,
+            "notes": "Podcast Show Search results",
+            "useCase": "Theme marketplace preview"
+        },
+        {
+            "id": "podcast-show-contact-form",
+            "title": "Podcast Show Contact form",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-podcast-show/docs/screenshots/podcast-show-contact.png",
+            "required": false,
+            "user": false,
+            "notes": "Podcast Show Contact form",
+            "useCase": "Theme marketplace preview"
+        }
+    ]
+}

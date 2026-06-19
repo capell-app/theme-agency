@@ -1,0 +1,151 @@
+{
+    "manifest-version": 3,
+    "name": "capell-app/theme-api-platform",
+    "slug": "theme-api-platform",
+    "displayName": "Theme API Platform",
+    "kind": "theme",
+    "capellApiVersion": "^4.0",
+    "version": "4.x-dev",
+    "description": "API Platform extends the default Capell frontend with a api platform visual direction, portable demo content, cache-safe public Blade rendering, and theme tokens tuned for developer api products, voice/auth/infra platforms.",
+    "product": {
+        "group": "Capell Themes",
+        "tier": "premium",
+        "bundle": "themes"
+    },
+    "namespace": "Capell\\ThemeStudio\\ApiPlatform",
+    "surfaces": ["frontend"],
+    "dependencies": {
+        "requires": ["capell-app/core", "capell-app/frontend"],
+        "supports": [],
+        "conflicts": []
+    },
+    "providers": {
+        "metadata": [],
+        "install": [],
+        "runtime": [
+            "Capell\\ThemeStudio\\ApiPlatform\\ApiPlatformThemeServiceProvider"
+        ],
+        "admin": [],
+        "frontend": []
+    },
+    "contributes": [
+        {
+            "type": "admin-page",
+            "class": "Capell\\ThemeStudio\\ApiPlatform\\Manifest\\ThemeManagementPageContribution",
+            "pageClass": "Capell\\Marketplace\\Filament\\Pages\\ThemeExtensionPage",
+            "pageParameters": {
+                "themeKey": "api-platform"
+            },
+            "labelKey": "capell-marketplace::marketplace.theme_extension.management_entry_label"
+        }
+    ],
+    "database": {
+        "migrations": false,
+        "settings": false,
+        "requiredTables": []
+    },
+    "commands": {
+        "install": null,
+        "setup": null,
+        "demo": "capell:theme-api-platform-demo",
+        "demoParams": ["url", "languages", "sites"],
+        "doctor": null
+    },
+    "settings": [],
+    "permissions": [],
+    "capabilities": ["theme-api-platform", "theme-api-platform-frontend"],
+    "security": {
+        "riskTier": "low",
+        "publicSurface": {
+            "routeNames": [],
+            "auth": "none",
+            "csrfExemptRoutes": [],
+            "signedRoutes": [],
+            "tokenizedRoutes": [],
+            "webhookRoutes": [],
+            "throttledRoutes": []
+        },
+        "sensitiveData": {
+            "encryptedFields": [],
+            "hashedTokenFields": [],
+            "redactedOutputClasses": [],
+            "plaintextJustifications": []
+        },
+        "publicOutput": {
+            "cacheSafe": true,
+            "forbidAuthoringSurface": true,
+            "forbidSecrets": true,
+            "forbidPublicBladeQueries": true
+        },
+        "externalHttpClients": {
+            "requiresTimeouts": false,
+            "requiresSecretRedaction": false,
+            "clients": []
+        },
+        "adminSurface": {
+            "authorization": "none",
+            "permissions": []
+        }
+    },
+    "performance": {
+        "frontendRenderBudgetMs": 20,
+        "adminQueryBudget": 0,
+        "cacheTags": ["theme-api-platform"],
+        "cacheSafety": {
+            "cacheable": false,
+            "variesBy": ["site", "locale"],
+            "sensitiveOutput": false,
+            "invalidationSources": [],
+            "queueInvalidation": false
+        }
+    },
+    "healthChecks": [
+        {
+            "key": "theme-api-platform.package-health",
+            "label": "API Platform package surfaces, providers, and install health are discoverable by Diagnostics.",
+            "class": "Capell\\ThemeStudio\\ApiPlatform\\Health\\ThemeApiPlatformHealthCheck",
+            "severity": "critical",
+            "surface": "frontend"
+        }
+    ],
+    "commercial": {
+        "proposedLicense": "paid",
+        "requestedCertification": "first-party",
+        "supportPolicy": "priority",
+        "privateDocsRequested": true
+    },
+    "marketplace": {
+        "summary": "A premium Capell theme for developer api products, voice/auth/infra platforms.",
+        "description": "API Platform provides a distinct theme definition, demo command, marketplace metadata, and public-safe Blade views for Sonari API.",
+        "screenshots": [
+            {
+                "path": "docs/screenshots/api-platform-homepage.png",
+                "alt": "API Platform homepage preview",
+                "caption": "API Platform Homepage"
+            },
+            {
+                "path": "docs/screenshots/api-platform-landing.png",
+                "alt": "API Platform landing page preview",
+                "caption": "API Platform Landing page"
+            },
+            {
+                "path": "docs/screenshots/api-platform-listing.png",
+                "alt": "API Platform list page preview",
+                "caption": "API Platform List page"
+            },
+            {
+                "path": "docs/screenshots/api-platform-search.png",
+                "alt": "API Platform search results preview",
+                "caption": "API Platform Search results"
+            },
+            {
+                "path": "docs/screenshots/api-platform-contact.png",
+                "alt": "API Platform contact form preview",
+                "caption": "API Platform Contact form"
+            }
+        ],
+        "categories": ["frontend", "themes"]
+    },
+    "extends": "default",
+    "themeKey": "api-platform"
+}

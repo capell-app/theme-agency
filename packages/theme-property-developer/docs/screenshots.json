@@ -1,0 +1,69 @@
+{
+    "entries": [
+        {
+            "id": "property-developer-homepage",
+            "title": "Property Developer Homepage",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-property-developer/docs/screenshots/property-developer-homepage.png",
+            "required": false,
+            "user": false,
+            "notes": "Property Developer Homepage",
+            "useCase": "Theme marketplace preview"
+        },
+        {
+            "id": "property-developer-landing-page",
+            "title": "Property Developer Landing page",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-property-developer/docs/screenshots/property-developer-landing.png",
+            "required": false,
+            "user": false,
+            "notes": "Property Developer Landing page",
+            "useCase": "Theme marketplace preview"
+        },
+        {
+            "id": "property-developer-list-page",
+            "title": "Property Developer List page",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-property-developer/docs/screenshots/property-developer-listing.png",
+            "required": false,
+            "user": false,
+            "notes": "Property Developer List page",
+            "useCase": "Theme marketplace preview"
+        },
+        {
+            "id": "property-developer-search-results",
+            "title": "Property Developer Search results",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-property-developer/docs/screenshots/property-developer-search.png",
+            "required": false,
+            "user": false,
+            "notes": "Property Developer Search results",
+            "useCase": "Theme marketplace preview"
+        },
+        {
+            "id": "property-developer-contact-form",
+            "title": "Property Developer Contact form",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-property-developer/docs/screenshots/property-developer-contact.png",
+            "required": false,
+            "user": false,
+            "notes": "Property Developer Contact form",
+            "useCase": "Theme marketplace preview"
+        }
+    ]
+}

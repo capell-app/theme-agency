@@ -1,0 +1,69 @@
+{
+    "entries": [
+        {
+            "id": "travel-&-tourism-homepage",
+            "title": "Travel & Tourism Homepage",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-travel-tourism/docs/screenshots/travel-tourism-homepage.png",
+            "required": false,
+            "user": false,
+            "notes": "Travel & Tourism Homepage",
+            "useCase": "Theme marketplace preview"
+        },
+        {
+            "id": "travel-&-tourism-landing-page",
+            "title": "Travel & Tourism Landing page",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-travel-tourism/docs/screenshots/travel-tourism-landing.png",
+            "required": false,
+            "user": false,
+            "notes": "Travel & Tourism Landing page",
+            "useCase": "Theme marketplace preview"
+        },
+        {
+            "id": "travel-&-tourism-list-page",
+            "title": "Travel & Tourism List page",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-travel-tourism/docs/screenshots/travel-tourism-listing.png",
+            "required": false,
+            "user": false,
+            "notes": "Travel & Tourism List page",
+            "useCase": "Theme marketplace preview"
+        },
+        {
+            "id": "travel-&-tourism-search-results",
+            "title": "Travel & Tourism Search results",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-travel-tourism/docs/screenshots/travel-tourism-search.png",
+            "required": false,
+            "user": false,
+            "notes": "Travel & Tourism Search results",
+            "useCase": "Theme marketplace preview"
+        },
+        {
+            "id": "travel-&-tourism-contact-form",
+            "title": "Travel & Tourism Contact form",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-travel-tourism/docs/screenshots/travel-tourism-contact.png",
+            "required": false,
+            "user": false,
+            "notes": "Travel & Tourism Contact form",
+            "useCase": "Theme marketplace preview"
+        }
+    ]
+}

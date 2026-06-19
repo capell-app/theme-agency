@@ -1,0 +1,69 @@
+{
+    "entries": [
+        {
+            "id": "recruitment-&-jobs-homepage",
+            "title": "Recruitment & Jobs Homepage",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-recruitment-jobs/docs/screenshots/recruitment-jobs-homepage.png",
+            "required": false,
+            "user": false,
+            "notes": "Recruitment & Jobs Homepage",
+            "useCase": "Theme marketplace preview"
+        },
+        {
+            "id": "recruitment-&-jobs-landing-page",
+            "title": "Recruitment & Jobs Landing page",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-recruitment-jobs/docs/screenshots/recruitment-jobs-landing.png",
+            "required": false,
+            "user": false,
+            "notes": "Recruitment & Jobs Landing page",
+            "useCase": "Theme marketplace preview"
+        },
+        {
+            "id": "recruitment-&-jobs-list-page",
+            "title": "Recruitment & Jobs List page",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-recruitment-jobs/docs/screenshots/recruitment-jobs-listing.png",
+            "required": false,
+            "user": false,
+            "notes": "Recruitment & Jobs List page",
+            "useCase": "Theme marketplace preview"
+        },
+        {
+            "id": "recruitment-&-jobs-search-results",
+            "title": "Recruitment & Jobs Search results",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-recruitment-jobs/docs/screenshots/recruitment-jobs-search.png",
+            "required": false,
+            "user": false,
+            "notes": "Recruitment & Jobs Search results",
+            "useCase": "Theme marketplace preview"
+        },
+        {
+            "id": "recruitment-&-jobs-contact-form",
+            "title": "Recruitment & Jobs Contact form",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-recruitment-jobs/docs/screenshots/recruitment-jobs-contact.png",
+            "required": false,
+            "user": false,
+            "notes": "Recruitment & Jobs Contact form",
+            "useCase": "Theme marketplace preview"
+        }
+    ]
+}

@@ -1,0 +1,154 @@
+{
+    "manifest-version": 3,
+    "name": "capell-app/theme-property-developer",
+    "slug": "theme-property-developer",
+    "displayName": "Theme Property Developer",
+    "kind": "theme",
+    "capellApiVersion": "^4.0",
+    "version": "4.x-dev",
+    "description": "Property Developer extends the default Capell frontend with a property developer visual direction, portable demo content, cache-safe public Blade rendering, and theme tokens tuned for new-build developers, housebuilders.",
+    "product": {
+        "group": "Capell Themes",
+        "tier": "premium",
+        "bundle": "themes"
+    },
+    "namespace": "Capell\\ThemeStudio\\PropertyDeveloper",
+    "surfaces": ["frontend"],
+    "dependencies": {
+        "requires": ["capell-app/core", "capell-app/frontend"],
+        "supports": [],
+        "conflicts": []
+    },
+    "providers": {
+        "metadata": [],
+        "install": [],
+        "runtime": [
+            "Capell\\ThemeStudio\\PropertyDeveloper\\PropertyDeveloperThemeServiceProvider"
+        ],
+        "admin": [],
+        "frontend": []
+    },
+    "contributes": [
+        {
+            "type": "admin-page",
+            "class": "Capell\\ThemeStudio\\PropertyDeveloper\\Manifest\\ThemeManagementPageContribution",
+            "pageClass": "Capell\\Marketplace\\Filament\\Pages\\ThemeExtensionPage",
+            "pageParameters": {
+                "themeKey": "property-developer"
+            },
+            "labelKey": "capell-marketplace::marketplace.theme_extension.management_entry_label"
+        }
+    ],
+    "database": {
+        "migrations": false,
+        "settings": false,
+        "requiredTables": []
+    },
+    "commands": {
+        "install": null,
+        "setup": null,
+        "demo": "capell:theme-property-developer-demo",
+        "demoParams": ["url", "languages", "sites"],
+        "doctor": null
+    },
+    "settings": [],
+    "permissions": [],
+    "capabilities": [
+        "theme-property-developer",
+        "theme-property-developer-frontend"
+    ],
+    "security": {
+        "riskTier": "low",
+        "publicSurface": {
+            "routeNames": [],
+            "auth": "none",
+            "csrfExemptRoutes": [],
+            "signedRoutes": [],
+            "tokenizedRoutes": [],
+            "webhookRoutes": [],
+            "throttledRoutes": []
+        },
+        "sensitiveData": {
+            "encryptedFields": [],
+            "hashedTokenFields": [],
+            "redactedOutputClasses": [],
+            "plaintextJustifications": []
+        },
+        "publicOutput": {
+            "cacheSafe": true,
+            "forbidAuthoringSurface": true,
+            "forbidSecrets": true,
+            "forbidPublicBladeQueries": true
+        },
+        "externalHttpClients": {
+            "requiresTimeouts": false,
+            "requiresSecretRedaction": false,
+            "clients": []
+        },
+        "adminSurface": {
+            "authorization": "none",
+            "permissions": []
+        }
+    },
+    "performance": {
+        "frontendRenderBudgetMs": 20,
+        "adminQueryBudget": 0,
+        "cacheTags": ["theme-property-developer"],
+        "cacheSafety": {
+            "cacheable": false,
+            "variesBy": ["site", "locale"],
+            "sensitiveOutput": false,
+            "invalidationSources": [],
+            "queueInvalidation": false
+        }
+    },
+    "healthChecks": [
+        {
+            "key": "theme-property-developer.package-health",
+            "label": "Property Developer package surfaces, providers, and install health are discoverable by Diagnostics.",
+            "class": "Capell\\ThemeStudio\\PropertyDeveloper\\Health\\ThemePropertyDeveloperHealthCheck",
+            "severity": "critical",
+            "surface": "frontend"
+        }
+    ],
+    "commercial": {
+        "proposedLicense": "paid",
+        "requestedCertification": "first-party",
+        "supportPolicy": "priority",
+        "privateDocsRequested": true
+    },
+    "marketplace": {
+        "summary": "A premium Capell theme for new-build developers, housebuilders.",
+        "description": "Property Developer provides a distinct theme definition, demo command, marketplace metadata, and public-safe Blade views for Crestwood Developments.",
+        "screenshots": [
+            {
+                "path": "docs/screenshots/property-developer-homepage.png",
+                "alt": "Property Developer homepage preview",
+                "caption": "Property Developer Homepage"
+            },
+            {
+                "path": "docs/screenshots/property-developer-landing.png",
+                "alt": "Property Developer landing page preview",
+                "caption": "Property Developer Landing page"
+            },
+            {
+                "path": "docs/screenshots/property-developer-listing.png",
+                "alt": "Property Developer list page preview",
+                "caption": "Property Developer List page"
+            },
+            {
+                "path": "docs/screenshots/property-developer-search.png",
+                "alt": "Property Developer search results preview",
+                "caption": "Property Developer Search results"
+            },
+            {
+                "path": "docs/screenshots/property-developer-contact.png",
+                "alt": "Property Developer contact form preview",
+                "caption": "Property Developer Contact form"
+            }
+        ],
+        "categories": ["frontend", "themes"]
+    },
+    "extends": "default",
+    "themeKey": "property-developer"
+}

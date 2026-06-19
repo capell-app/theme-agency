@@ -39,6 +39,82 @@ Screenshot contract: `screenshots.json`.
 - Audience and newsletter path (frontend, required).
 - Signed admin preview route (admin, required).
 
+## Screenshot Evidence
+
+These captures are the package-owned visual contract for the admin pages, public pages, actions, workflows, and feature surfaces described above. Keep this section aligned with `docs/screenshots.json` whenever the package surface changes.
+
+### Theme admin list showing Portfolio
+
+![Theme admin list showing Portfolio](screenshots/theme-admin-list-showing-portfolio.png)
+
+- Surface: admin · Target: ThemeResource:index.
+- Documents: An administrator confirms the Portfolio theme is available for a premium studio or case-study site.
+- Capture notes: Capture with Capell Frontend default theme, Layout Builder, and capell-app/theme-portfolio installed in the isolated demo harness.
+
+### Frontend page rendered with Portfolio theme
+
+![Frontend page rendered with Portfolio theme](screenshots/frontend-page-rendered-with-portfolio-theme.png)
+
+- Surface: frontend · Target: /theme-portfolio-demo.
+- Documents: A studio, consultant, or creator sees how the theme sells work outcomes without overlapping Agency's campaign preset.
+- Capture notes: Capture a seeded studio page with work grid, case studies, services, proof, testimonials, media kit, newsletter, CTA, and footer.
+
+### Portfolio homepage
+
+![Portfolio homepage](screenshots/portfolio-homepage-layout.png)
+
+- Surface: frontend · Target: /portfolio-homepage-layout.
+- Documents: A premium studio reviews whether the first viewport feels like a serious case-study product rather than a basic creative preset.
+- Capture notes: Capture work-led hero, case-file proof, selected work, audience path, and enquiry CTA.
+
+### Selected work board
+
+![Selected work board](screenshots/portfolio-work-grid-layout.png)
+
+- Surface: frontend · Target: /portfolio-work-grid-layout.
+- Documents: A visitor can scan relevant work without the theme feeling like a blog, gallery, or Agency services grid.
+- Capture notes: Capture dense work cards with media treatment, role/scope metadata, outcome labels, and filtering rhythm.
+
+### Case-study detail
+
+![Case-study detail](screenshots/portfolio-case-study-layout.png)
+
+- Surface: frontend · Target: /portfolio-case-study-layout.
+- Documents: A studio proves premium value through measurable work outcomes instead of broad testimonials.
+- Capture notes: Capture outcome ledger, challenge/approach/result sections, scope cards, and next-project CTA.
+
+### Studio capabilities
+
+![Studio capabilities](screenshots/portfolio-services-layout.png)
+
+- Surface: frontend · Target: /portfolio-services-layout.
+- Documents: A visitor understands what can be bought without the theme becoming a local-services page.
+- Capture notes: Capture studio service cards, engagement shape, process hints, and proof-linked capabilities.
+
+### Media kit and speaking package
+
+![Media kit and speaking package](screenshots/portfolio-media-kit-layout.png)
+
+- Surface: frontend · Target: /portfolio-media-kit-layout.
+- Documents: A creator or consultant can sell authority and audience-building without needing a separate knowledge theme.
+- Capture notes: Capture speaking, press, audience, and newsletter paths with compact credibility proof.
+
+### Audience and newsletter path
+
+![Audience and newsletter path](screenshots/portfolio-newsletter-layout.png)
+
+- Surface: frontend · Target: /portfolio-newsletter-layout.
+- Documents: A studio checks that audience growth supports the portfolio lane without becoming Knowledge's resource archive.
+- Capture notes: Capture newsletter CTA, audience proof, and work-to-subscriber conversion copy.
+
+### Signed admin preview route
+
+![Signed admin preview route](screenshots/theme-preview-url-output.png)
+
+- Surface: admin · Target: capell.admin.theme-preview.
+- Documents: An administrator previews a case-study page with the Portfolio theme applied before publishing the theme choice.
+- Capture notes: Capture a signed preview URL generated for the seeded Portfolio theme, site, and page.
+
 ## Technical Shape
 
 - Service providers: `Capell\ThemeStudio\Portfolio\PortfolioThemeServiceProvider`.

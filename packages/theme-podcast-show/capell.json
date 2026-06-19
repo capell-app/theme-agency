@@ -1,0 +1,151 @@
+{
+    "manifest-version": 3,
+    "name": "capell-app/theme-podcast-show",
+    "slug": "theme-podcast-show",
+    "displayName": "Theme Podcast Show",
+    "kind": "theme",
+    "capellApiVersion": "^4.0",
+    "version": "4.x-dev",
+    "description": "Podcast Show extends the default Capell frontend with a podcast show visual direction, portable demo content, cache-safe public Blade rendering, and theme tokens tuned for podcasts and audio shows, interview series.",
+    "product": {
+        "group": "Capell Themes",
+        "tier": "premium",
+        "bundle": "themes"
+    },
+    "namespace": "Capell\\ThemeStudio\\PodcastShow",
+    "surfaces": ["frontend"],
+    "dependencies": {
+        "requires": ["capell-app/core", "capell-app/frontend"],
+        "supports": [],
+        "conflicts": []
+    },
+    "providers": {
+        "metadata": [],
+        "install": [],
+        "runtime": [
+            "Capell\\ThemeStudio\\PodcastShow\\PodcastShowThemeServiceProvider"
+        ],
+        "admin": [],
+        "frontend": []
+    },
+    "contributes": [
+        {
+            "type": "admin-page",
+            "class": "Capell\\ThemeStudio\\PodcastShow\\Manifest\\ThemeManagementPageContribution",
+            "pageClass": "Capell\\Marketplace\\Filament\\Pages\\ThemeExtensionPage",
+            "pageParameters": {
+                "themeKey": "podcast-show"
+            },
+            "labelKey": "capell-marketplace::marketplace.theme_extension.management_entry_label"
+        }
+    ],
+    "database": {
+        "migrations": false,
+        "settings": false,
+        "requiredTables": []
+    },
+    "commands": {
+        "install": null,
+        "setup": null,
+        "demo": "capell:theme-podcast-show-demo",
+        "demoParams": ["url", "languages", "sites"],
+        "doctor": null
+    },
+    "settings": [],
+    "permissions": [],
+    "capabilities": ["theme-podcast-show", "theme-podcast-show-frontend"],
+    "security": {
+        "riskTier": "low",
+        "publicSurface": {
+            "routeNames": [],
+            "auth": "none",
+            "csrfExemptRoutes": [],
+            "signedRoutes": [],
+            "tokenizedRoutes": [],
+            "webhookRoutes": [],
+            "throttledRoutes": []
+        },
+        "sensitiveData": {
+            "encryptedFields": [],
+            "hashedTokenFields": [],
+            "redactedOutputClasses": [],
+            "plaintextJustifications": []
+        },
+        "publicOutput": {
+            "cacheSafe": true,
+            "forbidAuthoringSurface": true,
+            "forbidSecrets": true,
+            "forbidPublicBladeQueries": true
+        },
+        "externalHttpClients": {
+            "requiresTimeouts": false,
+            "requiresSecretRedaction": false,
+            "clients": []
+        },
+        "adminSurface": {
+            "authorization": "none",
+            "permissions": []
+        }
+    },
+    "performance": {
+        "frontendRenderBudgetMs": 20,
+        "adminQueryBudget": 0,
+        "cacheTags": ["theme-podcast-show"],
+        "cacheSafety": {
+            "cacheable": false,
+            "variesBy": ["site", "locale"],
+            "sensitiveOutput": false,
+            "invalidationSources": [],
+            "queueInvalidation": false
+        }
+    },
+    "healthChecks": [
+        {
+            "key": "theme-podcast-show.package-health",
+            "label": "Podcast Show package surfaces, providers, and install health are discoverable by Diagnostics.",
+            "class": "Capell\\ThemeStudio\\PodcastShow\\Health\\ThemePodcastShowHealthCheck",
+            "severity": "critical",
+            "surface": "frontend"
+        }
+    ],
+    "commercial": {
+        "proposedLicense": "paid",
+        "requestedCertification": "first-party",
+        "supportPolicy": "priority",
+        "privateDocsRequested": true
+    },
+    "marketplace": {
+        "summary": "A premium Capell theme for podcasts and audio shows, interview series.",
+        "description": "Podcast Show provides a distinct theme definition, demo command, marketplace metadata, and public-safe Blade views for Signal & Noise.",
+        "screenshots": [
+            {
+                "path": "docs/screenshots/podcast-show-homepage.png",
+                "alt": "Podcast Show homepage preview",
+                "caption": "Podcast Show Homepage"
+            },
+            {
+                "path": "docs/screenshots/podcast-show-landing.png",
+                "alt": "Podcast Show landing page preview",
+                "caption": "Podcast Show Landing page"
+            },
+            {
+                "path": "docs/screenshots/podcast-show-listing.png",
+                "alt": "Podcast Show list page preview",
+                "caption": "Podcast Show List page"
+            },
+            {
+                "path": "docs/screenshots/podcast-show-search.png",
+                "alt": "Podcast Show search results preview",
+                "caption": "Podcast Show Search results"
+            },
+            {
+                "path": "docs/screenshots/podcast-show-contact.png",
+                "alt": "Podcast Show contact form preview",
+                "caption": "Podcast Show Contact form"
+            }
+        ],
+        "categories": ["frontend", "themes"]
+    },
+    "extends": "default",
+    "themeKey": "podcast-show"
+}

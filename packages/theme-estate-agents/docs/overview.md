@@ -41,6 +41,50 @@ The screenshot fixture contract also records page-set roles for the required the
 
 Visual proof metadata in `screenshots.json` pins desktop light, mobile light, and dark token-readiness expectations. The CSS keeps key surfaces, buttons, focus rings, cards, and dark proof panels tied to theme tokens so a future recapture can verify the same routes across viewport profiles.
 
+## Screenshot Evidence
+
+These captures are the package-owned visual contract for the admin pages, public pages, actions, workflows, and feature surfaces described above. Keep this section aligned with `docs/screenshots.json` whenever the package surface changes.
+
+### Estate agency homepage
+
+![Estate agency homepage](screenshots/estate-homepage-layout.png)
+
+- Surface: frontend · Target: /theme-estate-agents.
+- Documents: An estate agency reviews the first viewport and dual buyer/vendor conversion model.
+- Capture notes: Capture search, featured property, valuation, local proof, and viewing paths.
+
+### Property search
+
+![Property search](screenshots/estate-search-layout.png)
+
+- Surface: frontend · Target: /theme-estate-agents-search.
+- Documents: A buyer can begin discovery without the theme owning listing records.
+- Capture notes: Capture public search band and featured listing rhythm.
+
+### Vendor valuation
+
+![Vendor valuation](screenshots/estate-valuation-layout.png)
+
+- Surface: frontend · Target: /theme-estate-agents-valuation.
+- Documents: A vendor sees a premium appraisal path before submitting an enquiry.
+- Capture notes: Capture valuation CTA, postcode intake, and market proof.
+
+### Local guide
+
+![Local guide](screenshots/estate-local-guide-layout.png)
+
+- Surface: frontend · Target: /theme-estate-agents-local-guide.
+- Documents: A buyer or seller sees local expertise as part of the conversion path.
+- Capture notes: Capture schools, commute, market, and branch guidance.
+
+### Viewing request
+
+![Viewing request](screenshots/estate-viewing-layout.png)
+
+- Surface: frontend · Target: /theme-estate-agents-viewing.
+- Documents: A buyer can request a viewing without losing listing context.
+- Capture notes: Capture viewing request form with property context attached.
+
 ## Technical Shape
 
 - Service providers: `Capell\ThemeStudio\EstateAgents\EstateAgentsThemeServiceProvider`.

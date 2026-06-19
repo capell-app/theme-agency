@@ -1,0 +1,69 @@
+{
+    "entries": [
+        {
+            "id": "product-studio-homepage",
+            "title": "Product Studio Homepage",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-product-studio/docs/screenshots/product-studio-homepage.png",
+            "required": false,
+            "user": false,
+            "notes": "Product Studio Homepage",
+            "useCase": "Theme marketplace preview"
+        },
+        {
+            "id": "product-studio-landing-page",
+            "title": "Product Studio Landing page",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-product-studio/docs/screenshots/product-studio-landing.png",
+            "required": false,
+            "user": false,
+            "notes": "Product Studio Landing page",
+            "useCase": "Theme marketplace preview"
+        },
+        {
+            "id": "product-studio-list-page",
+            "title": "Product Studio List page",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-product-studio/docs/screenshots/product-studio-listing.png",
+            "required": false,
+            "user": false,
+            "notes": "Product Studio List page",
+            "useCase": "Theme marketplace preview"
+        },
+        {
+            "id": "product-studio-search-results",
+            "title": "Product Studio Search results",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-product-studio/docs/screenshots/product-studio-search.png",
+            "required": false,
+            "user": false,
+            "notes": "Product Studio Search results",
+            "useCase": "Theme marketplace preview"
+        },
+        {
+            "id": "product-studio-contact-form",
+            "title": "Product Studio Contact form",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-product-studio/docs/screenshots/product-studio-contact.png",
+            "required": false,
+            "user": false,
+            "notes": "Product Studio Contact form",
+            "useCase": "Theme marketplace preview"
+        }
+    ]
+}

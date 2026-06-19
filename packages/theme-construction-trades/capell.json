@@ -1,0 +1,154 @@
+{
+    "manifest-version": 3,
+    "name": "capell-app/theme-construction-trades",
+    "slug": "theme-construction-trades",
+    "displayName": "Theme Construction Trades",
+    "kind": "theme",
+    "capellApiVersion": "^4.0",
+    "version": "4.x-dev",
+    "description": "Construction Trades extends the default Capell frontend with a construction trades visual direction, portable demo content, cache-safe public Blade rendering, and theme tokens tuned for builders & contractors, construction firms.",
+    "product": {
+        "group": "Capell Themes",
+        "tier": "premium",
+        "bundle": "themes"
+    },
+    "namespace": "Capell\\ThemeStudio\\ConstructionTrades",
+    "surfaces": ["frontend"],
+    "dependencies": {
+        "requires": ["capell-app/core", "capell-app/frontend"],
+        "supports": [],
+        "conflicts": []
+    },
+    "providers": {
+        "metadata": [],
+        "install": [],
+        "runtime": [
+            "Capell\\ThemeStudio\\ConstructionTrades\\ConstructionTradesThemeServiceProvider"
+        ],
+        "admin": [],
+        "frontend": []
+    },
+    "contributes": [
+        {
+            "type": "admin-page",
+            "class": "Capell\\ThemeStudio\\ConstructionTrades\\Manifest\\ThemeManagementPageContribution",
+            "pageClass": "Capell\\Marketplace\\Filament\\Pages\\ThemeExtensionPage",
+            "pageParameters": {
+                "themeKey": "construction-trades"
+            },
+            "labelKey": "capell-marketplace::marketplace.theme_extension.management_entry_label"
+        }
+    ],
+    "database": {
+        "migrations": false,
+        "settings": false,
+        "requiredTables": []
+    },
+    "commands": {
+        "install": null,
+        "setup": null,
+        "demo": "capell:theme-construction-trades-demo",
+        "demoParams": ["url", "languages", "sites"],
+        "doctor": null
+    },
+    "settings": [],
+    "permissions": [],
+    "capabilities": [
+        "theme-construction-trades",
+        "theme-construction-trades-frontend"
+    ],
+    "security": {
+        "riskTier": "low",
+        "publicSurface": {
+            "routeNames": [],
+            "auth": "none",
+            "csrfExemptRoutes": [],
+            "signedRoutes": [],
+            "tokenizedRoutes": [],
+            "webhookRoutes": [],
+            "throttledRoutes": []
+        },
+        "sensitiveData": {
+            "encryptedFields": [],
+            "hashedTokenFields": [],
+            "redactedOutputClasses": [],
+            "plaintextJustifications": []
+        },
+        "publicOutput": {
+            "cacheSafe": true,
+            "forbidAuthoringSurface": true,
+            "forbidSecrets": true,
+            "forbidPublicBladeQueries": true
+        },
+        "externalHttpClients": {
+            "requiresTimeouts": false,
+            "requiresSecretRedaction": false,
+            "clients": []
+        },
+        "adminSurface": {
+            "authorization": "none",
+            "permissions": []
+        }
+    },
+    "performance": {
+        "frontendRenderBudgetMs": 20,
+        "adminQueryBudget": 0,
+        "cacheTags": ["theme-construction-trades"],
+        "cacheSafety": {
+            "cacheable": false,
+            "variesBy": ["site", "locale"],
+            "sensitiveOutput": false,
+            "invalidationSources": [],
+            "queueInvalidation": false
+        }
+    },
+    "healthChecks": [
+        {
+            "key": "theme-construction-trades.package-health",
+            "label": "Construction Trades package surfaces, providers, and install health are discoverable by Diagnostics.",
+            "class": "Capell\\ThemeStudio\\ConstructionTrades\\Health\\ThemeConstructionTradesHealthCheck",
+            "severity": "critical",
+            "surface": "frontend"
+        }
+    ],
+    "commercial": {
+        "proposedLicense": "paid",
+        "requestedCertification": "first-party",
+        "supportPolicy": "priority",
+        "privateDocsRequested": true
+    },
+    "marketplace": {
+        "summary": "A premium Capell theme for builders & contractors, construction firms.",
+        "description": "Construction Trades provides a distinct theme definition, demo command, marketplace metadata, and public-safe Blade views for Granite Build Co.",
+        "screenshots": [
+            {
+                "path": "docs/screenshots/construction-trades-homepage.png",
+                "alt": "Construction Trades homepage preview",
+                "caption": "Construction Trades Homepage"
+            },
+            {
+                "path": "docs/screenshots/construction-trades-landing.png",
+                "alt": "Construction Trades landing page preview",
+                "caption": "Construction Trades Landing page"
+            },
+            {
+                "path": "docs/screenshots/construction-trades-listing.png",
+                "alt": "Construction Trades list page preview",
+                "caption": "Construction Trades List page"
+            },
+            {
+                "path": "docs/screenshots/construction-trades-search.png",
+                "alt": "Construction Trades search results preview",
+                "caption": "Construction Trades Search results"
+            },
+            {
+                "path": "docs/screenshots/construction-trades-contact.png",
+                "alt": "Construction Trades contact form preview",
+                "caption": "Construction Trades Contact form"
+            }
+        ],
+        "categories": ["frontend", "themes"]
+    },
+    "extends": "default",
+    "themeKey": "construction-trades"
+}

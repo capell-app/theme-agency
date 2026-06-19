@@ -1,0 +1,69 @@
+{
+    "entries": [
+        {
+            "id": "fitness-&-wellness-homepage",
+            "title": "Fitness & Wellness Homepage",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-fitness-wellness/docs/screenshots/fitness-wellness-homepage.png",
+            "required": false,
+            "user": false,
+            "notes": "Fitness & Wellness Homepage",
+            "useCase": "Theme marketplace preview"
+        },
+        {
+            "id": "fitness-&-wellness-landing-page",
+            "title": "Fitness & Wellness Landing page",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-fitness-wellness/docs/screenshots/fitness-wellness-landing.png",
+            "required": false,
+            "user": false,
+            "notes": "Fitness & Wellness Landing page",
+            "useCase": "Theme marketplace preview"
+        },
+        {
+            "id": "fitness-&-wellness-list-page",
+            "title": "Fitness & Wellness List page",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-fitness-wellness/docs/screenshots/fitness-wellness-listing.png",
+            "required": false,
+            "user": false,
+            "notes": "Fitness & Wellness List page",
+            "useCase": "Theme marketplace preview"
+        },
+        {
+            "id": "fitness-&-wellness-search-results",
+            "title": "Fitness & Wellness Search results",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-fitness-wellness/docs/screenshots/fitness-wellness-search.png",
+            "required": false,
+            "user": false,
+            "notes": "Fitness & Wellness Search results",
+            "useCase": "Theme marketplace preview"
+        },
+        {
+            "id": "fitness-&-wellness-contact-form",
+            "title": "Fitness & Wellness Contact form",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-fitness-wellness/docs/screenshots/fitness-wellness-contact.png",
+            "required": false,
+            "user": false,
+            "notes": "Fitness & Wellness Contact form",
+            "useCase": "Theme marketplace preview"
+        }
+    ]
+}

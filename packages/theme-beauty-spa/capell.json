@@ -1,0 +1,151 @@
+{
+    "manifest-version": 3,
+    "name": "capell-app/theme-beauty-spa",
+    "slug": "theme-beauty-spa",
+    "displayName": "Theme Beauty & Spa",
+    "kind": "theme",
+    "capellApiVersion": "^4.0",
+    "version": "4.x-dev",
+    "description": "Beauty & Spa extends the default Capell frontend with a beauty & spa visual direction, portable demo content, cache-safe public Blade rendering, and theme tokens tuned for day spas, beauty clinics.",
+    "product": {
+        "group": "Capell Themes",
+        "tier": "premium",
+        "bundle": "themes"
+    },
+    "namespace": "Capell\\ThemeStudio\\BeautySpa",
+    "surfaces": ["frontend"],
+    "dependencies": {
+        "requires": ["capell-app/core", "capell-app/frontend"],
+        "supports": [],
+        "conflicts": []
+    },
+    "providers": {
+        "metadata": [],
+        "install": [],
+        "runtime": [
+            "Capell\\ThemeStudio\\BeautySpa\\BeautySpaThemeServiceProvider"
+        ],
+        "admin": [],
+        "frontend": []
+    },
+    "contributes": [
+        {
+            "type": "admin-page",
+            "class": "Capell\\ThemeStudio\\BeautySpa\\Manifest\\ThemeManagementPageContribution",
+            "pageClass": "Capell\\Marketplace\\Filament\\Pages\\ThemeExtensionPage",
+            "pageParameters": {
+                "themeKey": "beauty-spa"
+            },
+            "labelKey": "capell-marketplace::marketplace.theme_extension.management_entry_label"
+        }
+    ],
+    "database": {
+        "migrations": false,
+        "settings": false,
+        "requiredTables": []
+    },
+    "commands": {
+        "install": null,
+        "setup": null,
+        "demo": "capell:theme-beauty-spa-demo",
+        "demoParams": ["url", "languages", "sites"],
+        "doctor": null
+    },
+    "settings": [],
+    "permissions": [],
+    "capabilities": ["theme-beauty-spa", "theme-beauty-spa-frontend"],
+    "security": {
+        "riskTier": "low",
+        "publicSurface": {
+            "routeNames": [],
+            "auth": "none",
+            "csrfExemptRoutes": [],
+            "signedRoutes": [],
+            "tokenizedRoutes": [],
+            "webhookRoutes": [],
+            "throttledRoutes": []
+        },
+        "sensitiveData": {
+            "encryptedFields": [],
+            "hashedTokenFields": [],
+            "redactedOutputClasses": [],
+            "plaintextJustifications": []
+        },
+        "publicOutput": {
+            "cacheSafe": true,
+            "forbidAuthoringSurface": true,
+            "forbidSecrets": true,
+            "forbidPublicBladeQueries": true
+        },
+        "externalHttpClients": {
+            "requiresTimeouts": false,
+            "requiresSecretRedaction": false,
+            "clients": []
+        },
+        "adminSurface": {
+            "authorization": "none",
+            "permissions": []
+        }
+    },
+    "performance": {
+        "frontendRenderBudgetMs": 20,
+        "adminQueryBudget": 0,
+        "cacheTags": ["theme-beauty-spa"],
+        "cacheSafety": {
+            "cacheable": false,
+            "variesBy": ["site", "locale"],
+            "sensitiveOutput": false,
+            "invalidationSources": [],
+            "queueInvalidation": false
+        }
+    },
+    "healthChecks": [
+        {
+            "key": "theme-beauty-spa.package-health",
+            "label": "Beauty & Spa package surfaces, providers, and install health are discoverable by Diagnostics.",
+            "class": "Capell\\ThemeStudio\\BeautySpa\\Health\\ThemeBeautySpaHealthCheck",
+            "severity": "critical",
+            "surface": "frontend"
+        }
+    ],
+    "commercial": {
+        "proposedLicense": "paid",
+        "requestedCertification": "first-party",
+        "supportPolicy": "priority",
+        "privateDocsRequested": true
+    },
+    "marketplace": {
+        "summary": "A premium Capell theme for day spas, beauty clinics.",
+        "description": "Beauty & Spa provides a distinct theme definition, demo command, marketplace metadata, and public-safe Blade views for Lumi\u00e8re Spa.",
+        "screenshots": [
+            {
+                "path": "docs/screenshots/beauty-spa-homepage.png",
+                "alt": "Beauty & Spa homepage preview",
+                "caption": "Beauty & Spa Homepage"
+            },
+            {
+                "path": "docs/screenshots/beauty-spa-landing.png",
+                "alt": "Beauty & Spa landing page preview",
+                "caption": "Beauty & Spa Landing page"
+            },
+            {
+                "path": "docs/screenshots/beauty-spa-listing.png",
+                "alt": "Beauty & Spa list page preview",
+                "caption": "Beauty & Spa List page"
+            },
+            {
+                "path": "docs/screenshots/beauty-spa-search.png",
+                "alt": "Beauty & Spa search results preview",
+                "caption": "Beauty & Spa Search results"
+            },
+            {
+                "path": "docs/screenshots/beauty-spa-contact.png",
+                "alt": "Beauty & Spa contact form preview",
+                "caption": "Beauty & Spa Contact form"
+            }
+        ],
+        "categories": ["frontend", "themes"]
+    },
+    "extends": "default",
+    "themeKey": "beauty-spa"
+}

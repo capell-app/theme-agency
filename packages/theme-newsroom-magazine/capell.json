@@ -1,0 +1,154 @@
+{
+    "manifest-version": 3,
+    "name": "capell-app/theme-newsroom-magazine",
+    "slug": "theme-newsroom-magazine",
+    "displayName": "Theme Newsroom Magazine",
+    "kind": "theme",
+    "capellApiVersion": "^4.0",
+    "version": "4.x-dev",
+    "description": "Newsroom Magazine extends the default Capell frontend with a newsroom magazine visual direction, portable demo content, cache-safe public Blade rendering, and theme tokens tuned for news and magazine publications, editorial and opinion sites.",
+    "product": {
+        "group": "Capell Themes",
+        "tier": "premium",
+        "bundle": "themes"
+    },
+    "namespace": "Capell\\ThemeStudio\\NewsroomMagazine",
+    "surfaces": ["frontend"],
+    "dependencies": {
+        "requires": ["capell-app/core", "capell-app/frontend"],
+        "supports": [],
+        "conflicts": []
+    },
+    "providers": {
+        "metadata": [],
+        "install": [],
+        "runtime": [
+            "Capell\\ThemeStudio\\NewsroomMagazine\\NewsroomMagazineThemeServiceProvider"
+        ],
+        "admin": [],
+        "frontend": []
+    },
+    "contributes": [
+        {
+            "type": "admin-page",
+            "class": "Capell\\ThemeStudio\\NewsroomMagazine\\Manifest\\ThemeManagementPageContribution",
+            "pageClass": "Capell\\Marketplace\\Filament\\Pages\\ThemeExtensionPage",
+            "pageParameters": {
+                "themeKey": "newsroom-magazine"
+            },
+            "labelKey": "capell-marketplace::marketplace.theme_extension.management_entry_label"
+        }
+    ],
+    "database": {
+        "migrations": false,
+        "settings": false,
+        "requiredTables": []
+    },
+    "commands": {
+        "install": null,
+        "setup": null,
+        "demo": "capell:theme-newsroom-magazine-demo",
+        "demoParams": ["url", "languages", "sites"],
+        "doctor": null
+    },
+    "settings": [],
+    "permissions": [],
+    "capabilities": [
+        "theme-newsroom-magazine",
+        "theme-newsroom-magazine-frontend"
+    ],
+    "security": {
+        "riskTier": "low",
+        "publicSurface": {
+            "routeNames": [],
+            "auth": "none",
+            "csrfExemptRoutes": [],
+            "signedRoutes": [],
+            "tokenizedRoutes": [],
+            "webhookRoutes": [],
+            "throttledRoutes": []
+        },
+        "sensitiveData": {
+            "encryptedFields": [],
+            "hashedTokenFields": [],
+            "redactedOutputClasses": [],
+            "plaintextJustifications": []
+        },
+        "publicOutput": {
+            "cacheSafe": true,
+            "forbidAuthoringSurface": true,
+            "forbidSecrets": true,
+            "forbidPublicBladeQueries": true
+        },
+        "externalHttpClients": {
+            "requiresTimeouts": false,
+            "requiresSecretRedaction": false,
+            "clients": []
+        },
+        "adminSurface": {
+            "authorization": "none",
+            "permissions": []
+        }
+    },
+    "performance": {
+        "frontendRenderBudgetMs": 20,
+        "adminQueryBudget": 0,
+        "cacheTags": ["theme-newsroom-magazine"],
+        "cacheSafety": {
+            "cacheable": false,
+            "variesBy": ["site", "locale"],
+            "sensitiveOutput": false,
+            "invalidationSources": [],
+            "queueInvalidation": false
+        }
+    },
+    "healthChecks": [
+        {
+            "key": "theme-newsroom-magazine.package-health",
+            "label": "Newsroom Magazine package surfaces, providers, and install health are discoverable by Diagnostics.",
+            "class": "Capell\\ThemeStudio\\NewsroomMagazine\\Health\\ThemeNewsroomMagazineHealthCheck",
+            "severity": "critical",
+            "surface": "frontend"
+        }
+    ],
+    "commercial": {
+        "proposedLicense": "paid",
+        "requestedCertification": "first-party",
+        "supportPolicy": "priority",
+        "privateDocsRequested": true
+    },
+    "marketplace": {
+        "summary": "A premium Capell theme for news and magazine publications, editorial and opinion sites.",
+        "description": "Newsroom Magazine provides a distinct theme definition, demo command, marketplace metadata, and public-safe Blade views for The Mainframe.",
+        "screenshots": [
+            {
+                "path": "docs/screenshots/newsroom-magazine-homepage.png",
+                "alt": "Newsroom Magazine homepage preview",
+                "caption": "Newsroom Magazine Homepage"
+            },
+            {
+                "path": "docs/screenshots/newsroom-magazine-landing.png",
+                "alt": "Newsroom Magazine landing page preview",
+                "caption": "Newsroom Magazine Landing page"
+            },
+            {
+                "path": "docs/screenshots/newsroom-magazine-listing.png",
+                "alt": "Newsroom Magazine list page preview",
+                "caption": "Newsroom Magazine List page"
+            },
+            {
+                "path": "docs/screenshots/newsroom-magazine-search.png",
+                "alt": "Newsroom Magazine search results preview",
+                "caption": "Newsroom Magazine Search results"
+            },
+            {
+                "path": "docs/screenshots/newsroom-magazine-contact.png",
+                "alt": "Newsroom Magazine contact form preview",
+                "caption": "Newsroom Magazine Contact form"
+            }
+        ],
+        "categories": ["frontend", "themes"]
+    },
+    "extends": "default",
+    "themeKey": "newsroom-magazine"
+}

@@ -1,0 +1,69 @@
+{
+    "entries": [
+        {
+            "id": "conference-event-homepage",
+            "title": "Conference Event Homepage",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-conference-event/docs/screenshots/conference-event-homepage.png",
+            "required": false,
+            "user": false,
+            "notes": "Conference Event Homepage",
+            "useCase": "Theme marketplace preview"
+        },
+        {
+            "id": "conference-event-landing-page",
+            "title": "Conference Event Landing page",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-conference-event/docs/screenshots/conference-event-landing.png",
+            "required": false,
+            "user": false,
+            "notes": "Conference Event Landing page",
+            "useCase": "Theme marketplace preview"
+        },
+        {
+            "id": "conference-event-list-page",
+            "title": "Conference Event List page",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-conference-event/docs/screenshots/conference-event-listing.png",
+            "required": false,
+            "user": false,
+            "notes": "Conference Event List page",
+            "useCase": "Theme marketplace preview"
+        },
+        {
+            "id": "conference-event-search-results",
+            "title": "Conference Event Search results",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-conference-event/docs/screenshots/conference-event-search.png",
+            "required": false,
+            "user": false,
+            "notes": "Conference Event Search results",
+            "useCase": "Theme marketplace preview"
+        },
+        {
+            "id": "conference-event-contact-form",
+            "title": "Conference Event Contact form",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-conference-event/docs/screenshots/conference-event-contact.png",
+            "required": false,
+            "user": false,
+            "notes": "Conference Event Contact form",
+            "useCase": "Theme marketplace preview"
+        }
+    ]
+}

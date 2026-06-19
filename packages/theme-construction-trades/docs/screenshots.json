@@ -1,0 +1,69 @@
+{
+    "entries": [
+        {
+            "id": "construction-trades-homepage",
+            "title": "Construction Trades Homepage",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-construction-trades/docs/screenshots/construction-trades-homepage.png",
+            "required": false,
+            "user": false,
+            "notes": "Construction Trades Homepage",
+            "useCase": "Theme marketplace preview"
+        },
+        {
+            "id": "construction-trades-landing-page",
+            "title": "Construction Trades Landing page",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-construction-trades/docs/screenshots/construction-trades-landing.png",
+            "required": false,
+            "user": false,
+            "notes": "Construction Trades Landing page",
+            "useCase": "Theme marketplace preview"
+        },
+        {
+            "id": "construction-trades-list-page",
+            "title": "Construction Trades List page",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-construction-trades/docs/screenshots/construction-trades-listing.png",
+            "required": false,
+            "user": false,
+            "notes": "Construction Trades List page",
+            "useCase": "Theme marketplace preview"
+        },
+        {
+            "id": "construction-trades-search-results",
+            "title": "Construction Trades Search results",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-construction-trades/docs/screenshots/construction-trades-search.png",
+            "required": false,
+            "user": false,
+            "notes": "Construction Trades Search results",
+            "useCase": "Theme marketplace preview"
+        },
+        {
+            "id": "construction-trades-contact-form",
+            "title": "Construction Trades Contact form",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-construction-trades/docs/screenshots/construction-trades-contact.png",
+            "required": false,
+            "user": false,
+            "notes": "Construction Trades Contact form",
+            "useCase": "Theme marketplace preview"
+        }
+    ]
+}

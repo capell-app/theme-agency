@@ -1,0 +1,154 @@
+{
+    "manifest-version": 3,
+    "name": "capell-app/theme-fitness-wellness",
+    "slug": "theme-fitness-wellness",
+    "displayName": "Theme Fitness & Wellness",
+    "kind": "theme",
+    "capellApiVersion": "^4.0",
+    "version": "4.x-dev",
+    "description": "Fitness & Wellness extends the default Capell frontend with a fitness & wellness visual direction, portable demo content, cache-safe public Blade rendering, and theme tokens tuned for boutique gyms, fitness studios.",
+    "product": {
+        "group": "Capell Themes",
+        "tier": "premium",
+        "bundle": "themes"
+    },
+    "namespace": "Capell\\ThemeStudio\\FitnessWellness",
+    "surfaces": ["frontend"],
+    "dependencies": {
+        "requires": ["capell-app/core", "capell-app/frontend"],
+        "supports": [],
+        "conflicts": []
+    },
+    "providers": {
+        "metadata": [],
+        "install": [],
+        "runtime": [
+            "Capell\\ThemeStudio\\FitnessWellness\\FitnessWellnessThemeServiceProvider"
+        ],
+        "admin": [],
+        "frontend": []
+    },
+    "contributes": [
+        {
+            "type": "admin-page",
+            "class": "Capell\\ThemeStudio\\FitnessWellness\\Manifest\\ThemeManagementPageContribution",
+            "pageClass": "Capell\\Marketplace\\Filament\\Pages\\ThemeExtensionPage",
+            "pageParameters": {
+                "themeKey": "fitness-wellness"
+            },
+            "labelKey": "capell-marketplace::marketplace.theme_extension.management_entry_label"
+        }
+    ],
+    "database": {
+        "migrations": false,
+        "settings": false,
+        "requiredTables": []
+    },
+    "commands": {
+        "install": null,
+        "setup": null,
+        "demo": "capell:theme-fitness-wellness-demo",
+        "demoParams": ["url", "languages", "sites"],
+        "doctor": null
+    },
+    "settings": [],
+    "permissions": [],
+    "capabilities": [
+        "theme-fitness-wellness",
+        "theme-fitness-wellness-frontend"
+    ],
+    "security": {
+        "riskTier": "low",
+        "publicSurface": {
+            "routeNames": [],
+            "auth": "none",
+            "csrfExemptRoutes": [],
+            "signedRoutes": [],
+            "tokenizedRoutes": [],
+            "webhookRoutes": [],
+            "throttledRoutes": []
+        },
+        "sensitiveData": {
+            "encryptedFields": [],
+            "hashedTokenFields": [],
+            "redactedOutputClasses": [],
+            "plaintextJustifications": []
+        },
+        "publicOutput": {
+            "cacheSafe": true,
+            "forbidAuthoringSurface": true,
+            "forbidSecrets": true,
+            "forbidPublicBladeQueries": true
+        },
+        "externalHttpClients": {
+            "requiresTimeouts": false,
+            "requiresSecretRedaction": false,
+            "clients": []
+        },
+        "adminSurface": {
+            "authorization": "none",
+            "permissions": []
+        }
+    },
+    "performance": {
+        "frontendRenderBudgetMs": 20,
+        "adminQueryBudget": 0,
+        "cacheTags": ["theme-fitness-wellness"],
+        "cacheSafety": {
+            "cacheable": false,
+            "variesBy": ["site", "locale"],
+            "sensitiveOutput": false,
+            "invalidationSources": [],
+            "queueInvalidation": false
+        }
+    },
+    "healthChecks": [
+        {
+            "key": "theme-fitness-wellness.package-health",
+            "label": "Fitness & Wellness package surfaces, providers, and install health are discoverable by Diagnostics.",
+            "class": "Capell\\ThemeStudio\\FitnessWellness\\Health\\ThemeFitnessWellnessHealthCheck",
+            "severity": "critical",
+            "surface": "frontend"
+        }
+    ],
+    "commercial": {
+        "proposedLicense": "paid",
+        "requestedCertification": "first-party",
+        "supportPolicy": "priority",
+        "privateDocsRequested": true
+    },
+    "marketplace": {
+        "summary": "A premium Capell theme for boutique gyms, fitness studios.",
+        "description": "Fitness & Wellness provides a distinct theme definition, demo command, marketplace metadata, and public-safe Blade views for Forge Fitness.",
+        "screenshots": [
+            {
+                "path": "docs/screenshots/fitness-wellness-homepage.png",
+                "alt": "Fitness & Wellness homepage preview",
+                "caption": "Fitness & Wellness Homepage"
+            },
+            {
+                "path": "docs/screenshots/fitness-wellness-landing.png",
+                "alt": "Fitness & Wellness landing page preview",
+                "caption": "Fitness & Wellness Landing page"
+            },
+            {
+                "path": "docs/screenshots/fitness-wellness-listing.png",
+                "alt": "Fitness & Wellness list page preview",
+                "caption": "Fitness & Wellness List page"
+            },
+            {
+                "path": "docs/screenshots/fitness-wellness-search.png",
+                "alt": "Fitness & Wellness search results preview",
+                "caption": "Fitness & Wellness Search results"
+            },
+            {
+                "path": "docs/screenshots/fitness-wellness-contact.png",
+                "alt": "Fitness & Wellness contact form preview",
+                "caption": "Fitness & Wellness Contact form"
+            }
+        ],
+        "categories": ["frontend", "themes"]
+    },
+    "extends": "default",
+    "themeKey": "fitness-wellness"
+}

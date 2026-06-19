@@ -1,0 +1,69 @@
+{
+    "entries": [
+        {
+            "id": "fintech-trust-homepage",
+            "title": "Fintech Trust Homepage",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-fintech-trust/docs/screenshots/fintech-trust-homepage.png",
+            "required": false,
+            "user": false,
+            "notes": "Fintech Trust Homepage",
+            "useCase": "Theme marketplace preview"
+        },
+        {
+            "id": "fintech-trust-landing-page",
+            "title": "Fintech Trust Landing page",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-fintech-trust/docs/screenshots/fintech-trust-landing.png",
+            "required": false,
+            "user": false,
+            "notes": "Fintech Trust Landing page",
+            "useCase": "Theme marketplace preview"
+        },
+        {
+            "id": "fintech-trust-list-page",
+            "title": "Fintech Trust List page",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-fintech-trust/docs/screenshots/fintech-trust-listing.png",
+            "required": false,
+            "user": false,
+            "notes": "Fintech Trust List page",
+            "useCase": "Theme marketplace preview"
+        },
+        {
+            "id": "fintech-trust-search-results",
+            "title": "Fintech Trust Search results",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-fintech-trust/docs/screenshots/fintech-trust-search.png",
+            "required": false,
+            "user": false,
+            "notes": "Fintech Trust Search results",
+            "useCase": "Theme marketplace preview"
+        },
+        {
+            "id": "fintech-trust-contact-form",
+            "title": "Fintech Trust Contact form",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-fintech-trust/docs/screenshots/fintech-trust-contact.png",
+            "required": false,
+            "user": false,
+            "notes": "Fintech Trust Contact form",
+            "useCase": "Theme marketplace preview"
+        }
+    ]
+}

@@ -1,0 +1,35 @@
+.site-theme-shell {
+    background: var(--theme-surface, #fdf7f3);
+    color: var(--theme-foreground, #2a1e2e);
+    font-family: var(--theme-body-font, inter), system-ui, sans-serif;
+}
+
+.site-theme-shell h1,
+.site-theme-shell h2,
+.site-theme-shell h3 {
+    color: var(--theme-foreground, #2a1e2e);
+    font-family: var(--theme-heading-font, sora), system-ui, sans-serif;
+}
+
+.theme-section-inner {
+    margin-inline: auto;
+    max-width: 72rem;
+    padding: 4rem 1.5rem;
+}
+
+.theme-card-grid {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+}
+
+.theme-card {
+    border: 1px solid
+        color-mix(in srgb, var(--theme-neutral, #2a1e2e) 20%, transparent);
+    border-radius: var(--theme-radius, 0.75rem);
+    padding: 1.25rem;
+}
+
+.theme-card h3 {
+    color: var(--theme-primary, #9333ea);
+}

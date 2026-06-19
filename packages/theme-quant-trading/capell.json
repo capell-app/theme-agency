@@ -1,0 +1,151 @@
+{
+    "manifest-version": 3,
+    "name": "capell-app/theme-quant-trading",
+    "slug": "theme-quant-trading",
+    "displayName": "Theme Quant Trading",
+    "kind": "theme",
+    "capellApiVersion": "^4.0",
+    "version": "4.x-dev",
+    "description": "Quant Trading extends the default Capell frontend with a quant trading visual direction, portable demo content, cache-safe public Blade rendering, and theme tokens tuned for quant trading firms, algorithmic strategy products.",
+    "product": {
+        "group": "Capell Themes",
+        "tier": "premium",
+        "bundle": "themes"
+    },
+    "namespace": "Capell\\ThemeStudio\\QuantTrading",
+    "surfaces": ["frontend"],
+    "dependencies": {
+        "requires": ["capell-app/core", "capell-app/frontend"],
+        "supports": [],
+        "conflicts": []
+    },
+    "providers": {
+        "metadata": [],
+        "install": [],
+        "runtime": [
+            "Capell\\ThemeStudio\\QuantTrading\\QuantTradingThemeServiceProvider"
+        ],
+        "admin": [],
+        "frontend": []
+    },
+    "contributes": [
+        {
+            "type": "admin-page",
+            "class": "Capell\\ThemeStudio\\QuantTrading\\Manifest\\ThemeManagementPageContribution",
+            "pageClass": "Capell\\Marketplace\\Filament\\Pages\\ThemeExtensionPage",
+            "pageParameters": {
+                "themeKey": "quant-trading"
+            },
+            "labelKey": "capell-marketplace::marketplace.theme_extension.management_entry_label"
+        }
+    ],
+    "database": {
+        "migrations": false,
+        "settings": false,
+        "requiredTables": []
+    },
+    "commands": {
+        "install": null,
+        "setup": null,
+        "demo": "capell:theme-quant-trading-demo",
+        "demoParams": ["url", "languages", "sites"],
+        "doctor": null
+    },
+    "settings": [],
+    "permissions": [],
+    "capabilities": ["theme-quant-trading", "theme-quant-trading-frontend"],
+    "security": {
+        "riskTier": "low",
+        "publicSurface": {
+            "routeNames": [],
+            "auth": "none",
+            "csrfExemptRoutes": [],
+            "signedRoutes": [],
+            "tokenizedRoutes": [],
+            "webhookRoutes": [],
+            "throttledRoutes": []
+        },
+        "sensitiveData": {
+            "encryptedFields": [],
+            "hashedTokenFields": [],
+            "redactedOutputClasses": [],
+            "plaintextJustifications": []
+        },
+        "publicOutput": {
+            "cacheSafe": true,
+            "forbidAuthoringSurface": true,
+            "forbidSecrets": true,
+            "forbidPublicBladeQueries": true
+        },
+        "externalHttpClients": {
+            "requiresTimeouts": false,
+            "requiresSecretRedaction": false,
+            "clients": []
+        },
+        "adminSurface": {
+            "authorization": "none",
+            "permissions": []
+        }
+    },
+    "performance": {
+        "frontendRenderBudgetMs": 20,
+        "adminQueryBudget": 0,
+        "cacheTags": ["theme-quant-trading"],
+        "cacheSafety": {
+            "cacheable": false,
+            "variesBy": ["site", "locale"],
+            "sensitiveOutput": false,
+            "invalidationSources": [],
+            "queueInvalidation": false
+        }
+    },
+    "healthChecks": [
+        {
+            "key": "theme-quant-trading.package-health",
+            "label": "Quant Trading package surfaces, providers, and install health are discoverable by Diagnostics.",
+            "class": "Capell\\ThemeStudio\\QuantTrading\\Health\\ThemeQuantTradingHealthCheck",
+            "severity": "critical",
+            "surface": "frontend"
+        }
+    ],
+    "commercial": {
+        "proposedLicense": "paid",
+        "requestedCertification": "first-party",
+        "supportPolicy": "priority",
+        "privateDocsRequested": true
+    },
+    "marketplace": {
+        "summary": "A premium Capell theme for quant trading firms, algorithmic strategy products.",
+        "description": "Quant Trading provides a distinct theme definition, demo command, marketplace metadata, and public-safe Blade views for Meridian Quant.",
+        "screenshots": [
+            {
+                "path": "docs/screenshots/quant-trading-homepage.png",
+                "alt": "Quant Trading homepage preview",
+                "caption": "Quant Trading Homepage"
+            },
+            {
+                "path": "docs/screenshots/quant-trading-landing.png",
+                "alt": "Quant Trading landing page preview",
+                "caption": "Quant Trading Landing page"
+            },
+            {
+                "path": "docs/screenshots/quant-trading-listing.png",
+                "alt": "Quant Trading list page preview",
+                "caption": "Quant Trading List page"
+            },
+            {
+                "path": "docs/screenshots/quant-trading-search.png",
+                "alt": "Quant Trading search results preview",
+                "caption": "Quant Trading Search results"
+            },
+            {
+                "path": "docs/screenshots/quant-trading-contact.png",
+                "alt": "Quant Trading contact form preview",
+                "caption": "Quant Trading Contact form"
+            }
+        ],
+        "categories": ["frontend", "themes"]
+    },
+    "extends": "default",
+    "themeKey": "quant-trading"
+}

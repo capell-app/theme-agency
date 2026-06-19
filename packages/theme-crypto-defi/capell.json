@@ -1,0 +1,151 @@
+{
+    "manifest-version": 3,
+    "name": "capell-app/theme-crypto-defi",
+    "slug": "theme-crypto-defi",
+    "displayName": "Theme Crypto DeFi",
+    "kind": "theme",
+    "capellApiVersion": "^4.0",
+    "version": "4.x-dev",
+    "description": "Crypto DeFi extends the default Capell frontend with a crypto defi visual direction, portable demo content, cache-safe public Blade rendering, and theme tokens tuned for defi protocols, on-chain lending markets.",
+    "product": {
+        "group": "Capell Themes",
+        "tier": "premium",
+        "bundle": "themes"
+    },
+    "namespace": "Capell\\ThemeStudio\\CryptoDefi",
+    "surfaces": ["frontend"],
+    "dependencies": {
+        "requires": ["capell-app/core", "capell-app/frontend"],
+        "supports": [],
+        "conflicts": []
+    },
+    "providers": {
+        "metadata": [],
+        "install": [],
+        "runtime": [
+            "Capell\\ThemeStudio\\CryptoDefi\\CryptoDefiThemeServiceProvider"
+        ],
+        "admin": [],
+        "frontend": []
+    },
+    "contributes": [
+        {
+            "type": "admin-page",
+            "class": "Capell\\ThemeStudio\\CryptoDefi\\Manifest\\ThemeManagementPageContribution",
+            "pageClass": "Capell\\Marketplace\\Filament\\Pages\\ThemeExtensionPage",
+            "pageParameters": {
+                "themeKey": "crypto-defi"
+            },
+            "labelKey": "capell-marketplace::marketplace.theme_extension.management_entry_label"
+        }
+    ],
+    "database": {
+        "migrations": false,
+        "settings": false,
+        "requiredTables": []
+    },
+    "commands": {
+        "install": null,
+        "setup": null,
+        "demo": "capell:theme-crypto-defi-demo",
+        "demoParams": ["url", "languages", "sites"],
+        "doctor": null
+    },
+    "settings": [],
+    "permissions": [],
+    "capabilities": ["theme-crypto-defi", "theme-crypto-defi-frontend"],
+    "security": {
+        "riskTier": "low",
+        "publicSurface": {
+            "routeNames": [],
+            "auth": "none",
+            "csrfExemptRoutes": [],
+            "signedRoutes": [],
+            "tokenizedRoutes": [],
+            "webhookRoutes": [],
+            "throttledRoutes": []
+        },
+        "sensitiveData": {
+            "encryptedFields": [],
+            "hashedTokenFields": [],
+            "redactedOutputClasses": [],
+            "plaintextJustifications": []
+        },
+        "publicOutput": {
+            "cacheSafe": true,
+            "forbidAuthoringSurface": true,
+            "forbidSecrets": true,
+            "forbidPublicBladeQueries": true
+        },
+        "externalHttpClients": {
+            "requiresTimeouts": false,
+            "requiresSecretRedaction": false,
+            "clients": []
+        },
+        "adminSurface": {
+            "authorization": "none",
+            "permissions": []
+        }
+    },
+    "performance": {
+        "frontendRenderBudgetMs": 20,
+        "adminQueryBudget": 0,
+        "cacheTags": ["theme-crypto-defi"],
+        "cacheSafety": {
+            "cacheable": false,
+            "variesBy": ["site", "locale"],
+            "sensitiveOutput": false,
+            "invalidationSources": [],
+            "queueInvalidation": false
+        }
+    },
+    "healthChecks": [
+        {
+            "key": "theme-crypto-defi.package-health",
+            "label": "Crypto DeFi package surfaces, providers, and install health are discoverable by Diagnostics.",
+            "class": "Capell\\ThemeStudio\\CryptoDefi\\Health\\ThemeCryptoDefiHealthCheck",
+            "severity": "critical",
+            "surface": "frontend"
+        }
+    ],
+    "commercial": {
+        "proposedLicense": "paid",
+        "requestedCertification": "first-party",
+        "supportPolicy": "priority",
+        "privateDocsRequested": true
+    },
+    "marketplace": {
+        "summary": "A premium Capell theme for defi protocols, on-chain lending markets.",
+        "description": "Crypto DeFi provides a distinct theme definition, demo command, marketplace metadata, and public-safe Blade views for Helix Protocol.",
+        "screenshots": [
+            {
+                "path": "docs/screenshots/crypto-defi-homepage.png",
+                "alt": "Crypto DeFi homepage preview",
+                "caption": "Crypto DeFi Homepage"
+            },
+            {
+                "path": "docs/screenshots/crypto-defi-landing.png",
+                "alt": "Crypto DeFi landing page preview",
+                "caption": "Crypto DeFi Landing page"
+            },
+            {
+                "path": "docs/screenshots/crypto-defi-listing.png",
+                "alt": "Crypto DeFi list page preview",
+                "caption": "Crypto DeFi List page"
+            },
+            {
+                "path": "docs/screenshots/crypto-defi-search.png",
+                "alt": "Crypto DeFi search results preview",
+                "caption": "Crypto DeFi Search results"
+            },
+            {
+                "path": "docs/screenshots/crypto-defi-contact.png",
+                "alt": "Crypto DeFi contact form preview",
+                "caption": "Crypto DeFi Contact form"
+            }
+        ],
+        "categories": ["frontend", "themes"]
+    },
+    "extends": "default",
+    "themeKey": "crypto-defi"
+}

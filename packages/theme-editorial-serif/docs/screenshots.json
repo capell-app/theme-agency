@@ -1,0 +1,69 @@
+{
+    "entries": [
+        {
+            "id": "editorial-serif-homepage",
+            "title": "Editorial Serif Homepage",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-editorial-serif/docs/screenshots/editorial-serif-homepage.png",
+            "required": false,
+            "user": false,
+            "notes": "Editorial Serif Homepage",
+            "useCase": "Theme marketplace preview"
+        },
+        {
+            "id": "editorial-serif-landing-page",
+            "title": "Editorial Serif Landing page",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-editorial-serif/docs/screenshots/editorial-serif-landing.png",
+            "required": false,
+            "user": false,
+            "notes": "Editorial Serif Landing page",
+            "useCase": "Theme marketplace preview"
+        },
+        {
+            "id": "editorial-serif-list-page",
+            "title": "Editorial Serif List page",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-editorial-serif/docs/screenshots/editorial-serif-listing.png",
+            "required": false,
+            "user": false,
+            "notes": "Editorial Serif List page",
+            "useCase": "Theme marketplace preview"
+        },
+        {
+            "id": "editorial-serif-search-results",
+            "title": "Editorial Serif Search results",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-editorial-serif/docs/screenshots/editorial-serif-search.png",
+            "required": false,
+            "user": false,
+            "notes": "Editorial Serif Search results",
+            "useCase": "Theme marketplace preview"
+        },
+        {
+            "id": "editorial-serif-contact-form",
+            "title": "Editorial Serif Contact form",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-editorial-serif/docs/screenshots/editorial-serif-contact.png",
+            "required": false,
+            "user": false,
+            "notes": "Editorial Serif Contact form",
+            "useCase": "Theme marketplace preview"
+        }
+    ]
+}

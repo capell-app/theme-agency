@@ -1,0 +1,69 @@
+{
+    "entries": [
+        {
+            "id": "automotive-dealer-homepage",
+            "title": "Automotive Dealer Homepage",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-automotive-dealer/docs/screenshots/automotive-dealer-homepage.png",
+            "required": false,
+            "user": false,
+            "notes": "Automotive Dealer Homepage",
+            "useCase": "Theme marketplace preview"
+        },
+        {
+            "id": "automotive-dealer-landing-page",
+            "title": "Automotive Dealer Landing page",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-automotive-dealer/docs/screenshots/automotive-dealer-landing.png",
+            "required": false,
+            "user": false,
+            "notes": "Automotive Dealer Landing page",
+            "useCase": "Theme marketplace preview"
+        },
+        {
+            "id": "automotive-dealer-list-page",
+            "title": "Automotive Dealer List page",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-automotive-dealer/docs/screenshots/automotive-dealer-listing.png",
+            "required": false,
+            "user": false,
+            "notes": "Automotive Dealer List page",
+            "useCase": "Theme marketplace preview"
+        },
+        {
+            "id": "automotive-dealer-search-results",
+            "title": "Automotive Dealer Search results",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-automotive-dealer/docs/screenshots/automotive-dealer-search.png",
+            "required": false,
+            "user": false,
+            "notes": "Automotive Dealer Search results",
+            "useCase": "Theme marketplace preview"
+        },
+        {
+            "id": "automotive-dealer-contact-form",
+            "title": "Automotive Dealer Contact form",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-automotive-dealer/docs/screenshots/automotive-dealer-contact.png",
+            "required": false,
+            "user": false,
+            "notes": "Automotive Dealer Contact form",
+            "useCase": "Theme marketplace preview"
+        }
+    ]
+}

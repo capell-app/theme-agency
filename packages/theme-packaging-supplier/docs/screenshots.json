@@ -1,0 +1,69 @@
+{
+    "entries": [
+        {
+            "id": "packaging-supplier-homepage",
+            "title": "Packaging Supplier Homepage",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-packaging-supplier/docs/screenshots/packaging-supplier-homepage.png",
+            "required": false,
+            "user": false,
+            "notes": "Packaging Supplier Homepage",
+            "useCase": "Theme marketplace preview"
+        },
+        {
+            "id": "packaging-supplier-landing-page",
+            "title": "Packaging Supplier Landing page",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-packaging-supplier/docs/screenshots/packaging-supplier-landing.png",
+            "required": false,
+            "user": false,
+            "notes": "Packaging Supplier Landing page",
+            "useCase": "Theme marketplace preview"
+        },
+        {
+            "id": "packaging-supplier-list-page",
+            "title": "Packaging Supplier List page",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-packaging-supplier/docs/screenshots/packaging-supplier-listing.png",
+            "required": false,
+            "user": false,
+            "notes": "Packaging Supplier List page",
+            "useCase": "Theme marketplace preview"
+        },
+        {
+            "id": "packaging-supplier-search-results",
+            "title": "Packaging Supplier Search results",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-packaging-supplier/docs/screenshots/packaging-supplier-search.png",
+            "required": false,
+            "user": false,
+            "notes": "Packaging Supplier Search results",
+            "useCase": "Theme marketplace preview"
+        },
+        {
+            "id": "packaging-supplier-contact-form",
+            "title": "Packaging Supplier Contact form",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-packaging-supplier/docs/screenshots/packaging-supplier-contact.png",
+            "required": false,
+            "user": false,
+            "notes": "Packaging Supplier Contact form",
+            "useCase": "Theme marketplace preview"
+        }
+    ]
+}

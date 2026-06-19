@@ -1,0 +1,149 @@
+{
+    "manifest-version": 3,
+    "name": "capell-app/theme-ai-lab",
+    "slug": "theme-ai-lab",
+    "displayName": "Theme AI Lab",
+    "kind": "theme",
+    "capellApiVersion": "^4.0",
+    "version": "4.x-dev",
+    "description": "AI Lab extends the default Capell frontend with a ai lab visual direction, portable demo content, cache-safe public Blade rendering, and theme tokens tuned for ai research labs, foundation model providers.",
+    "product": {
+        "group": "Capell Themes",
+        "tier": "premium",
+        "bundle": "themes"
+    },
+    "namespace": "Capell\\ThemeStudio\\AiLab",
+    "surfaces": ["frontend"],
+    "dependencies": {
+        "requires": ["capell-app/core", "capell-app/frontend"],
+        "supports": [],
+        "conflicts": []
+    },
+    "providers": {
+        "metadata": [],
+        "install": [],
+        "runtime": ["Capell\\ThemeStudio\\AiLab\\AiLabThemeServiceProvider"],
+        "admin": [],
+        "frontend": []
+    },
+    "contributes": [
+        {
+            "type": "admin-page",
+            "class": "Capell\\ThemeStudio\\AiLab\\Manifest\\ThemeManagementPageContribution",
+            "pageClass": "Capell\\Marketplace\\Filament\\Pages\\ThemeExtensionPage",
+            "pageParameters": {
+                "themeKey": "ai-lab"
+            },
+            "labelKey": "capell-marketplace::marketplace.theme_extension.management_entry_label"
+        }
+    ],
+    "database": {
+        "migrations": false,
+        "settings": false,
+        "requiredTables": []
+    },
+    "commands": {
+        "install": null,
+        "setup": null,
+        "demo": "capell:theme-ai-lab-demo",
+        "demoParams": ["url", "languages", "sites"],
+        "doctor": null
+    },
+    "settings": [],
+    "permissions": [],
+    "capabilities": ["theme-ai-lab", "theme-ai-lab-frontend"],
+    "security": {
+        "riskTier": "low",
+        "publicSurface": {
+            "routeNames": [],
+            "auth": "none",
+            "csrfExemptRoutes": [],
+            "signedRoutes": [],
+            "tokenizedRoutes": [],
+            "webhookRoutes": [],
+            "throttledRoutes": []
+        },
+        "sensitiveData": {
+            "encryptedFields": [],
+            "hashedTokenFields": [],
+            "redactedOutputClasses": [],
+            "plaintextJustifications": []
+        },
+        "publicOutput": {
+            "cacheSafe": true,
+            "forbidAuthoringSurface": true,
+            "forbidSecrets": true,
+            "forbidPublicBladeQueries": true
+        },
+        "externalHttpClients": {
+            "requiresTimeouts": false,
+            "requiresSecretRedaction": false,
+            "clients": []
+        },
+        "adminSurface": {
+            "authorization": "none",
+            "permissions": []
+        }
+    },
+    "performance": {
+        "frontendRenderBudgetMs": 20,
+        "adminQueryBudget": 0,
+        "cacheTags": ["theme-ai-lab"],
+        "cacheSafety": {
+            "cacheable": false,
+            "variesBy": ["site", "locale"],
+            "sensitiveOutput": false,
+            "invalidationSources": [],
+            "queueInvalidation": false
+        }
+    },
+    "healthChecks": [
+        {
+            "key": "theme-ai-lab.package-health",
+            "label": "AI Lab package surfaces, providers, and install health are discoverable by Diagnostics.",
+            "class": "Capell\\ThemeStudio\\AiLab\\Health\\ThemeAiLabHealthCheck",
+            "severity": "critical",
+            "surface": "frontend"
+        }
+    ],
+    "commercial": {
+        "proposedLicense": "paid",
+        "requestedCertification": "first-party",
+        "supportPolicy": "priority",
+        "privateDocsRequested": true
+    },
+    "marketplace": {
+        "summary": "A premium Capell theme for ai research labs, foundation model providers.",
+        "description": "AI Lab provides a distinct theme definition, demo command, marketplace metadata, and public-safe Blade views for Lumen AI.",
+        "screenshots": [
+            {
+                "path": "docs/screenshots/ai-lab-homepage.png",
+                "alt": "AI Lab homepage preview",
+                "caption": "AI Lab Homepage"
+            },
+            {
+                "path": "docs/screenshots/ai-lab-landing.png",
+                "alt": "AI Lab landing page preview",
+                "caption": "AI Lab Landing page"
+            },
+            {
+                "path": "docs/screenshots/ai-lab-listing.png",
+                "alt": "AI Lab list page preview",
+                "caption": "AI Lab List page"
+            },
+            {
+                "path": "docs/screenshots/ai-lab-search.png",
+                "alt": "AI Lab search results preview",
+                "caption": "AI Lab Search results"
+            },
+            {
+                "path": "docs/screenshots/ai-lab-contact.png",
+                "alt": "AI Lab contact form preview",
+                "caption": "AI Lab Contact form"
+            }
+        ],
+        "categories": ["frontend", "themes"]
+    },
+    "extends": "default",
+    "themeKey": "ai-lab"
+}

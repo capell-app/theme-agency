@@ -1,0 +1,69 @@
+{
+    "entries": [
+        {
+            "id": "financial-advisory-homepage",
+            "title": "Financial Advisory Homepage",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-financial-advisory/docs/screenshots/financial-advisory-homepage.png",
+            "required": false,
+            "user": false,
+            "notes": "Financial Advisory Homepage",
+            "useCase": "Theme marketplace preview"
+        },
+        {
+            "id": "financial-advisory-landing-page",
+            "title": "Financial Advisory Landing page",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-financial-advisory/docs/screenshots/financial-advisory-landing.png",
+            "required": false,
+            "user": false,
+            "notes": "Financial Advisory Landing page",
+            "useCase": "Theme marketplace preview"
+        },
+        {
+            "id": "financial-advisory-list-page",
+            "title": "Financial Advisory List page",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-financial-advisory/docs/screenshots/financial-advisory-listing.png",
+            "required": false,
+            "user": false,
+            "notes": "Financial Advisory List page",
+            "useCase": "Theme marketplace preview"
+        },
+        {
+            "id": "financial-advisory-search-results",
+            "title": "Financial Advisory Search results",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-financial-advisory/docs/screenshots/financial-advisory-search.png",
+            "required": false,
+            "user": false,
+            "notes": "Financial Advisory Search results",
+            "useCase": "Theme marketplace preview"
+        },
+        {
+            "id": "financial-advisory-contact-form",
+            "title": "Financial Advisory Contact form",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-financial-advisory/docs/screenshots/financial-advisory-contact.png",
+            "required": false,
+            "user": false,
+            "notes": "Financial Advisory Contact form",
+            "useCase": "Theme marketplace preview"
+        }
+    ]
+}

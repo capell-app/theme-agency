@@ -1,0 +1,151 @@
+{
+    "manifest-version": 3,
+    "name": "capell-app/theme-personal-dev",
+    "slug": "theme-personal-dev",
+    "displayName": "Theme Personal Dev",
+    "kind": "theme",
+    "capellApiVersion": "^4.0",
+    "version": "4.x-dev",
+    "description": "Personal Dev extends the default Capell frontend with a personal dev visual direction, portable demo content, cache-safe public Blade rendering, and theme tokens tuned for developer personal sites, writers & bloggers.",
+    "product": {
+        "group": "Capell Themes",
+        "tier": "premium",
+        "bundle": "themes"
+    },
+    "namespace": "Capell\\ThemeStudio\\PersonalDev",
+    "surfaces": ["frontend"],
+    "dependencies": {
+        "requires": ["capell-app/core", "capell-app/frontend"],
+        "supports": [],
+        "conflicts": []
+    },
+    "providers": {
+        "metadata": [],
+        "install": [],
+        "runtime": [
+            "Capell\\ThemeStudio\\PersonalDev\\PersonalDevThemeServiceProvider"
+        ],
+        "admin": [],
+        "frontend": []
+    },
+    "contributes": [
+        {
+            "type": "admin-page",
+            "class": "Capell\\ThemeStudio\\PersonalDev\\Manifest\\ThemeManagementPageContribution",
+            "pageClass": "Capell\\Marketplace\\Filament\\Pages\\ThemeExtensionPage",
+            "pageParameters": {
+                "themeKey": "personal-dev"
+            },
+            "labelKey": "capell-marketplace::marketplace.theme_extension.management_entry_label"
+        }
+    ],
+    "database": {
+        "migrations": false,
+        "settings": false,
+        "requiredTables": []
+    },
+    "commands": {
+        "install": null,
+        "setup": null,
+        "demo": "capell:theme-personal-dev-demo",
+        "demoParams": ["url", "languages", "sites"],
+        "doctor": null
+    },
+    "settings": [],
+    "permissions": [],
+    "capabilities": ["theme-personal-dev", "theme-personal-dev-frontend"],
+    "security": {
+        "riskTier": "low",
+        "publicSurface": {
+            "routeNames": [],
+            "auth": "none",
+            "csrfExemptRoutes": [],
+            "signedRoutes": [],
+            "tokenizedRoutes": [],
+            "webhookRoutes": [],
+            "throttledRoutes": []
+        },
+        "sensitiveData": {
+            "encryptedFields": [],
+            "hashedTokenFields": [],
+            "redactedOutputClasses": [],
+            "plaintextJustifications": []
+        },
+        "publicOutput": {
+            "cacheSafe": true,
+            "forbidAuthoringSurface": true,
+            "forbidSecrets": true,
+            "forbidPublicBladeQueries": true
+        },
+        "externalHttpClients": {
+            "requiresTimeouts": false,
+            "requiresSecretRedaction": false,
+            "clients": []
+        },
+        "adminSurface": {
+            "authorization": "none",
+            "permissions": []
+        }
+    },
+    "performance": {
+        "frontendRenderBudgetMs": 20,
+        "adminQueryBudget": 0,
+        "cacheTags": ["theme-personal-dev"],
+        "cacheSafety": {
+            "cacheable": false,
+            "variesBy": ["site", "locale"],
+            "sensitiveOutput": false,
+            "invalidationSources": [],
+            "queueInvalidation": false
+        }
+    },
+    "healthChecks": [
+        {
+            "key": "theme-personal-dev.package-health",
+            "label": "Personal Dev package surfaces, providers, and install health are discoverable by Diagnostics.",
+            "class": "Capell\\ThemeStudio\\PersonalDev\\Health\\ThemePersonalDevHealthCheck",
+            "severity": "critical",
+            "surface": "frontend"
+        }
+    ],
+    "commercial": {
+        "proposedLicense": "paid",
+        "requestedCertification": "first-party",
+        "supportPolicy": "priority",
+        "privateDocsRequested": true
+    },
+    "marketplace": {
+        "summary": "A premium Capell theme for developer personal sites, writers & bloggers.",
+        "description": "Personal Dev provides a distinct theme definition, demo command, marketplace metadata, and public-safe Blade views for Jonah Vance.",
+        "screenshots": [
+            {
+                "path": "docs/screenshots/personal-dev-homepage.png",
+                "alt": "Personal Dev homepage preview",
+                "caption": "Personal Dev Homepage"
+            },
+            {
+                "path": "docs/screenshots/personal-dev-landing.png",
+                "alt": "Personal Dev landing page preview",
+                "caption": "Personal Dev Landing page"
+            },
+            {
+                "path": "docs/screenshots/personal-dev-listing.png",
+                "alt": "Personal Dev list page preview",
+                "caption": "Personal Dev List page"
+            },
+            {
+                "path": "docs/screenshots/personal-dev-search.png",
+                "alt": "Personal Dev search results preview",
+                "caption": "Personal Dev Search results"
+            },
+            {
+                "path": "docs/screenshots/personal-dev-contact.png",
+                "alt": "Personal Dev contact form preview",
+                "caption": "Personal Dev Contact form"
+            }
+        ],
+        "categories": ["frontend", "themes"]
+    },
+    "extends": "default",
+    "themeKey": "personal-dev"
+}

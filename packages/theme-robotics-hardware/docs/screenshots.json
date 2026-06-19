@@ -1,0 +1,69 @@
+{
+    "entries": [
+        {
+            "id": "robotics-hardware-homepage",
+            "title": "Robotics Hardware Homepage",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-robotics-hardware/docs/screenshots/robotics-hardware-homepage.png",
+            "required": false,
+            "user": false,
+            "notes": "Robotics Hardware Homepage",
+            "useCase": "Theme marketplace preview"
+        },
+        {
+            "id": "robotics-hardware-landing-page",
+            "title": "Robotics Hardware Landing page",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-robotics-hardware/docs/screenshots/robotics-hardware-landing.png",
+            "required": false,
+            "user": false,
+            "notes": "Robotics Hardware Landing page",
+            "useCase": "Theme marketplace preview"
+        },
+        {
+            "id": "robotics-hardware-list-page",
+            "title": "Robotics Hardware List page",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-robotics-hardware/docs/screenshots/robotics-hardware-listing.png",
+            "required": false,
+            "user": false,
+            "notes": "Robotics Hardware List page",
+            "useCase": "Theme marketplace preview"
+        },
+        {
+            "id": "robotics-hardware-search-results",
+            "title": "Robotics Hardware Search results",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-robotics-hardware/docs/screenshots/robotics-hardware-search.png",
+            "required": false,
+            "user": false,
+            "notes": "Robotics Hardware Search results",
+            "useCase": "Theme marketplace preview"
+        },
+        {
+            "id": "robotics-hardware-contact-form",
+            "title": "Robotics Hardware Contact form",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-robotics-hardware/docs/screenshots/robotics-hardware-contact.png",
+            "required": false,
+            "user": false,
+            "notes": "Robotics Hardware Contact form",
+            "useCase": "Theme marketplace preview"
+        }
+    ]
+}

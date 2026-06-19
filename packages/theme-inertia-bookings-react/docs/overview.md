@@ -35,6 +35,50 @@ Screenshot contract: `screenshots.json`.
 - React booking validation state (frontend, required).
 - React booking mobile layout (frontend, required).
 
+## Screenshot Evidence
+
+These captures are the package-owned visual contract for the admin pages, public pages, actions, workflows, and feature surfaces described above. Keep this section aligned with `docs/screenshots.json` whenever the package surface changes.
+
+### React booking component pack
+
+![React booking component pack](screenshots/react-booking-components.png)
+
+- Surface: frontend · Target: /bookings.
+- Documents: A buyer confirms the React pack renders the page, widgets, and booking request contract.
+- Capture notes: Capture the React adapter runtime with Theme Inertia Bookings installed and the labelled booking request form visible.
+
+### React themed booking services
+
+![React themed booking services](screenshots/react-booking-services.png)
+
+- Surface: frontend · Target: /theme-inertia-bookings-demo#services.
+- Documents: A buyer verifies the React adapter covers the marketing sections, not only the booking form.
+- Capture notes: Capture React-rendered service cards and appointment CTAs from the themed component pack.
+
+### React booking slot loading state
+
+![React booking slot loading state](screenshots/react-booking-slot-loading.png)
+
+- Surface: frontend · Target: /bookings.
+- Documents: A buyer checks that async slot selection has an understandable React loading state.
+- Capture notes: Capture the public request form while available slots are loading or refreshing.
+
+### React booking validation state
+
+![React booking validation state](screenshots/react-booking-validation.png)
+
+- Surface: frontend · Target: /bookings.
+- Documents: A buyer confirms the React pack presents booking errors without relying on placeholders.
+- Capture notes: Capture validation feedback on required customer fields and service/slot selection.
+
+### React booking mobile layout
+
+![React booking mobile layout](screenshots/react-booking-mobile.png)
+
+- Surface: frontend · Target: /bookings.
+- Documents: A buyer verifies the React component pack works for phone-based appointment requests.
+- Capture notes: Capture the React booking request page at a mobile viewport with labels and CTA visible.
+
 ## Technical Shape
 
 - Service providers: `Capell\ThemeStudio\InertiaBookingsReact\Providers\InertiaBookingsReactServiceProvider`.

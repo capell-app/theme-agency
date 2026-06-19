@@ -1,0 +1,154 @@
+{
+    "manifest-version": 3,
+    "name": "capell-app/theme-financial-advisory",
+    "slug": "theme-financial-advisory",
+    "displayName": "Theme Financial Advisory",
+    "kind": "theme",
+    "capellApiVersion": "^4.0",
+    "version": "4.x-dev",
+    "description": "Financial Advisory extends the default Capell frontend with a financial advisory visual direction, portable demo content, cache-safe public Blade rendering, and theme tokens tuned for financial advisors, accountants.",
+    "product": {
+        "group": "Capell Themes",
+        "tier": "premium",
+        "bundle": "themes"
+    },
+    "namespace": "Capell\\ThemeStudio\\FinancialAdvisory",
+    "surfaces": ["frontend"],
+    "dependencies": {
+        "requires": ["capell-app/core", "capell-app/frontend"],
+        "supports": [],
+        "conflicts": []
+    },
+    "providers": {
+        "metadata": [],
+        "install": [],
+        "runtime": [
+            "Capell\\ThemeStudio\\FinancialAdvisory\\FinancialAdvisoryThemeServiceProvider"
+        ],
+        "admin": [],
+        "frontend": []
+    },
+    "contributes": [
+        {
+            "type": "admin-page",
+            "class": "Capell\\ThemeStudio\\FinancialAdvisory\\Manifest\\ThemeManagementPageContribution",
+            "pageClass": "Capell\\Marketplace\\Filament\\Pages\\ThemeExtensionPage",
+            "pageParameters": {
+                "themeKey": "financial-advisory"
+            },
+            "labelKey": "capell-marketplace::marketplace.theme_extension.management_entry_label"
+        }
+    ],
+    "database": {
+        "migrations": false,
+        "settings": false,
+        "requiredTables": []
+    },
+    "commands": {
+        "install": null,
+        "setup": null,
+        "demo": "capell:theme-financial-advisory-demo",
+        "demoParams": ["url", "languages", "sites"],
+        "doctor": null
+    },
+    "settings": [],
+    "permissions": [],
+    "capabilities": [
+        "theme-financial-advisory",
+        "theme-financial-advisory-frontend"
+    ],
+    "security": {
+        "riskTier": "low",
+        "publicSurface": {
+            "routeNames": [],
+            "auth": "none",
+            "csrfExemptRoutes": [],
+            "signedRoutes": [],
+            "tokenizedRoutes": [],
+            "webhookRoutes": [],
+            "throttledRoutes": []
+        },
+        "sensitiveData": {
+            "encryptedFields": [],
+            "hashedTokenFields": [],
+            "redactedOutputClasses": [],
+            "plaintextJustifications": []
+        },
+        "publicOutput": {
+            "cacheSafe": true,
+            "forbidAuthoringSurface": true,
+            "forbidSecrets": true,
+            "forbidPublicBladeQueries": true
+        },
+        "externalHttpClients": {
+            "requiresTimeouts": false,
+            "requiresSecretRedaction": false,
+            "clients": []
+        },
+        "adminSurface": {
+            "authorization": "none",
+            "permissions": []
+        }
+    },
+    "performance": {
+        "frontendRenderBudgetMs": 20,
+        "adminQueryBudget": 0,
+        "cacheTags": ["theme-financial-advisory"],
+        "cacheSafety": {
+            "cacheable": false,
+            "variesBy": ["site", "locale"],
+            "sensitiveOutput": false,
+            "invalidationSources": [],
+            "queueInvalidation": false
+        }
+    },
+    "healthChecks": [
+        {
+            "key": "theme-financial-advisory.package-health",
+            "label": "Financial Advisory package surfaces, providers, and install health are discoverable by Diagnostics.",
+            "class": "Capell\\ThemeStudio\\FinancialAdvisory\\Health\\ThemeFinancialAdvisoryHealthCheck",
+            "severity": "critical",
+            "surface": "frontend"
+        }
+    ],
+    "commercial": {
+        "proposedLicense": "paid",
+        "requestedCertification": "first-party",
+        "supportPolicy": "priority",
+        "privateDocsRequested": true
+    },
+    "marketplace": {
+        "summary": "A premium Capell theme for financial advisors, accountants.",
+        "description": "Financial Advisory provides a distinct theme definition, demo command, marketplace metadata, and public-safe Blade views for Sterling & Vale Advisors.",
+        "screenshots": [
+            {
+                "path": "docs/screenshots/financial-advisory-homepage.png",
+                "alt": "Financial Advisory homepage preview",
+                "caption": "Financial Advisory Homepage"
+            },
+            {
+                "path": "docs/screenshots/financial-advisory-landing.png",
+                "alt": "Financial Advisory landing page preview",
+                "caption": "Financial Advisory Landing page"
+            },
+            {
+                "path": "docs/screenshots/financial-advisory-listing.png",
+                "alt": "Financial Advisory list page preview",
+                "caption": "Financial Advisory List page"
+            },
+            {
+                "path": "docs/screenshots/financial-advisory-search.png",
+                "alt": "Financial Advisory search results preview",
+                "caption": "Financial Advisory Search results"
+            },
+            {
+                "path": "docs/screenshots/financial-advisory-contact.png",
+                "alt": "Financial Advisory contact form preview",
+                "caption": "Financial Advisory Contact form"
+            }
+        ],
+        "categories": ["frontend", "themes"]
+    },
+    "extends": "default",
+    "themeKey": "financial-advisory"
+}

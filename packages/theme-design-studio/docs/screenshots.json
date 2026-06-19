@@ -1,0 +1,69 @@
+{
+    "entries": [
+        {
+            "id": "design-studio-homepage",
+            "title": "Design Studio Homepage",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-design-studio/docs/screenshots/design-studio-homepage.png",
+            "required": false,
+            "user": false,
+            "notes": "Design Studio Homepage",
+            "useCase": "Theme marketplace preview"
+        },
+        {
+            "id": "design-studio-landing-page",
+            "title": "Design Studio Landing page",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-design-studio/docs/screenshots/design-studio-landing.png",
+            "required": false,
+            "user": false,
+            "notes": "Design Studio Landing page",
+            "useCase": "Theme marketplace preview"
+        },
+        {
+            "id": "design-studio-list-page",
+            "title": "Design Studio List page",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-design-studio/docs/screenshots/design-studio-listing.png",
+            "required": false,
+            "user": false,
+            "notes": "Design Studio List page",
+            "useCase": "Theme marketplace preview"
+        },
+        {
+            "id": "design-studio-search-results",
+            "title": "Design Studio Search results",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-design-studio/docs/screenshots/design-studio-search.png",
+            "required": false,
+            "user": false,
+            "notes": "Design Studio Search results",
+            "useCase": "Theme marketplace preview"
+        },
+        {
+            "id": "design-studio-contact-form",
+            "title": "Design Studio Contact form",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-design-studio/docs/screenshots/design-studio-contact.png",
+            "required": false,
+            "user": false,
+            "notes": "Design Studio Contact form",
+            "useCase": "Theme marketplace preview"
+        }
+    ]
+}

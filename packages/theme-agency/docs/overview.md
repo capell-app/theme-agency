@@ -40,6 +40,90 @@ Screenshot contract: `screenshots.json`.
 - Campaign page (frontend, optional).
 - Search results page (frontend, optional).
 
+## Screenshot Evidence
+
+These captures are the package-owned visual contract for the admin pages, public pages, actions, workflows, and feature surfaces described above. Keep this section aligned with `docs/screenshots.json` whenever the package surface changes.
+
+### Frontend page rendered with Agency theme
+
+![Frontend page rendered with Agency theme](screenshots/frontend-page-rendered-with-agency-theme.png)
+
+- Surface: frontend · Target: /theme-agency.
+- Documents: A visitor sees a seeded public page rendered through every Agency theme section.
+- Capture notes: Capture the seeded package theme route instead of the shared theme-gallery route. Optional until the Capell runner can browser-capture seeded package theme routes without navigation failures.
+
+### Agency homepage
+
+![Agency homepage](screenshots/agency-homepage-layout.png)
+
+- Surface: frontend · Target: /theme-agency.
+- Documents: A creative team reviews the premium Agency theme as a campaign launch surface, not a quiet creator portfolio.
+- Capture notes: Capture the seeded package theme route instead of the shared theme-gallery route. Optional until the Capell runner can browser-capture seeded package theme routes without navigation failures.
+
+### Services page
+
+![Services page](screenshots/agency-services-layout.png)
+
+- Surface: frontend · Target: /theme-agency-directory.
+- Documents: A studio or campaign team checks that services stay focused on campaign delivery rather than broad consulting.
+- Capture notes: Capture the seeded package theme route instead of the shared theme-gallery route. Optional until the Capell runner can browser-capture seeded package theme routes without navigation failures.
+
+### Campaign work board
+
+![Campaign work board](screenshots/agency-portfolio-layout.png)
+
+- Surface: frontend · Target: /theme-agency-directory.
+- Documents: A buyer sees recent campaign assets without Agency overlapping Portfolio's premium case-file workflow.
+- Capture notes: Capture the seeded package theme route instead of the shared theme-gallery route. Optional until the Capell runner can browser-capture seeded package theme routes without navigation failures.
+
+### Launch recap detail
+
+![Launch recap detail](screenshots/agency-case-study-layout.png)
+
+- Surface: frontend · Target: /theme-agency-detail.
+- Documents: A campaign team can show delivery proof while leaving deep outcome-led case studies to Portfolio.
+- Capture notes: Capture the seeded package theme route instead of the shared theme-gallery route. Optional until the Capell runner can browser-capture seeded package theme routes without navigation failures.
+
+### Insights article
+
+![Insights article](screenshots/agency-insights-layout.png)
+
+- Surface: frontend · Target: /theme-agency-directory.
+- Documents: A creative team checks that editorial content supports campaigns instead of becoming a knowledge-base theme.
+- Capture notes: Capture the seeded package theme route instead of the shared theme-gallery route. Optional until the Capell runner can browser-capture seeded package theme routes without navigation failures.
+
+### Event landing page
+
+![Event landing page](screenshots/agency-event-landing-layout.png)
+
+- Surface: frontend · Target: /theme-agency-cta.
+- Documents: A campaign team can promote launches and webinars without requiring a premium SaaS or Events-specific layout.
+- Capture notes: Capture the seeded package theme route instead of the shared theme-gallery route. Optional until the Capell runner can browser-capture seeded package theme routes without navigation failures.
+
+### Lead generation page
+
+![Lead generation page](screenshots/agency-lead-form-layout.png)
+
+- Surface: frontend · Target: /theme-agency-contact.
+- Documents: A creative team checks that the preset converts campaign interest into a usable brief.
+- Capture notes: Capture the seeded package theme route instead of the shared theme-gallery route. Optional until the Capell runner can browser-capture seeded package theme routes without navigation failures.
+
+### Campaign page
+
+![Campaign page](screenshots/agency-campaign-layout.png)
+
+- Surface: frontend · Target: /theme-agency-cta.
+- Documents: A buyer sees Agency's strongest lane: fast campaign and launch pages with basic creative polish.
+- Capture notes: Capture the seeded package theme route instead of the shared theme-gallery route. Optional until the Capell runner can browser-capture seeded package theme routes without navigation failures.
+
+### Search results page
+
+![Search results page](screenshots/agency-search-layout.png)
+
+- Surface: frontend · Target: /theme-agency-directory.
+- Documents: A visitor can find campaigns, briefs, and resources without the page feeling like Knowledge's archive search.
+- Capture notes: Capture the seeded package theme route instead of the shared theme-gallery route. Optional until the Capell runner can browser-capture seeded package theme routes without navigation failures.
+
 ## Technical Shape
 
 - Service providers: `Capell\ThemeStudio\Agency\AgencyThemeServiceProvider`.

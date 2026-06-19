@@ -37,6 +37,66 @@ Screenshot contract: `screenshots.json`.
 - Research digest signup (frontend, optional).
 - Author bench (frontend, optional).
 
+## Screenshot Evidence
+
+These captures are the package-owned visual contract for the admin pages, public pages, actions, workflows, and feature surfaces described above. Keep this section aligned with `docs/screenshots.json` whenever the package surface changes.
+
+### Frontend page rendered with Knowledge theme
+
+![Frontend page rendered with Knowledge theme](screenshots/frontend-page-rendered-with-knowledge-theme.png)
+
+- Surface: frontend · Target: /theme-knowledge.
+- Documents: A publisher sees how the theme turns a content archive into a searchable reader journey.
+- Capture notes: Capture the seeded package theme route instead of the shared theme-gallery route. Optional until the Capell runner can browser-capture seeded package theme routes without navigation failures.
+
+### Knowledge homepage
+
+![Knowledge homepage](screenshots/knowledge-homepage-layout.png)
+
+- Surface: frontend · Target: /theme-knowledge.
+- Documents: A resource-site buyer checks whether the first viewport feels like a serious library rather than a blog skin.
+- Capture notes: Capture the seeded package theme route instead of the shared theme-gallery route. Optional until the Capell runner can browser-capture seeded package theme routes without navigation failures.
+
+### Search results and facets
+
+![Search results and facets](screenshots/knowledge-search-layout.png)
+
+- Surface: frontend · Target: /theme-knowledge-directory.
+- Documents: A reader can find guides, research notes, and templates without the page collapsing into a plain listing.
+- Capture notes: Capture the seeded package theme route instead of the shared theme-gallery route. Optional until the Capell runner can browser-capture seeded package theme routes without navigation failures.
+
+### Topic hubs
+
+![Topic hubs](screenshots/knowledge-topic-hubs-layout.png)
+
+- Surface: frontend · Target: /theme-knowledge-directory.
+- Documents: An editorial team reviews how the theme makes deep archives browseable by subject.
+- Capture notes: Capture the seeded package theme route instead of the shared theme-gallery route. Optional until the Capell runner can browser-capture seeded package theme routes without navigation failures.
+
+### Featured research
+
+![Featured research](screenshots/knowledge-featured-content-layout.png)
+
+- Surface: frontend · Target: /theme-knowledge-directory.
+- Documents: A publisher checks that high-value research can be promoted without looking like a standard news card.
+- Capture notes: Capture the seeded package theme route instead of the shared theme-gallery route. Optional until the Capell runner can browser-capture seeded package theme routes without navigation failures.
+
+### Research digest signup
+
+![Research digest signup](screenshots/knowledge-newsletter-layout.png)
+
+- Surface: frontend · Target: /theme-knowledge-cta.
+- Documents: A publisher checks how the theme turns reading intent into an owned-audience signup.
+- Capture notes: Capture the seeded package theme route instead of the shared theme-gallery route. Optional until the Capell runner can browser-capture seeded package theme routes without navigation failures.
+
+### Author bench
+
+![Author bench](screenshots/knowledge-author-bench-layout.png)
+
+- Surface: frontend · Target: /theme-knowledge-directory.
+- Documents: A research site can prove expertise without moving into portfolio or agency territory.
+- Capture notes: Capture the seeded package theme route instead of the shared theme-gallery route. Optional until the Capell runner can browser-capture seeded package theme routes without navigation failures.
+
 ## Technical Shape
 
 - Service providers: `Capell\ThemeStudio\Knowledge\KnowledgeThemeServiceProvider`.

@@ -1,0 +1,69 @@
+{
+    "entries": [
+        {
+            "id": "devtool-oss-homepage",
+            "title": "Devtool OSS Homepage",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-devtool-oss/docs/screenshots/devtool-oss-homepage.png",
+            "required": false,
+            "user": false,
+            "notes": "Devtool OSS Homepage",
+            "useCase": "Theme marketplace preview"
+        },
+        {
+            "id": "devtool-oss-landing-page",
+            "title": "Devtool OSS Landing page",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-devtool-oss/docs/screenshots/devtool-oss-landing.png",
+            "required": false,
+            "user": false,
+            "notes": "Devtool OSS Landing page",
+            "useCase": "Theme marketplace preview"
+        },
+        {
+            "id": "devtool-oss-list-page",
+            "title": "Devtool OSS List page",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-devtool-oss/docs/screenshots/devtool-oss-listing.png",
+            "required": false,
+            "user": false,
+            "notes": "Devtool OSS List page",
+            "useCase": "Theme marketplace preview"
+        },
+        {
+            "id": "devtool-oss-search-results",
+            "title": "Devtool OSS Search results",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-devtool-oss/docs/screenshots/devtool-oss-search.png",
+            "required": false,
+            "user": false,
+            "notes": "Devtool OSS Search results",
+            "useCase": "Theme marketplace preview"
+        },
+        {
+            "id": "devtool-oss-contact-form",
+            "title": "Devtool OSS Contact form",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-devtool-oss/docs/screenshots/devtool-oss-contact.png",
+            "required": false,
+            "user": false,
+            "notes": "Devtool OSS Contact form",
+            "useCase": "Theme marketplace preview"
+        }
+    ]
+}

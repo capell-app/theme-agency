@@ -1,0 +1,69 @@
+{
+    "entries": [
+        {
+            "id": "api-platform-homepage",
+            "title": "API Platform Homepage",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-api-platform/docs/screenshots/api-platform-homepage.png",
+            "required": false,
+            "user": false,
+            "notes": "API Platform Homepage",
+            "useCase": "Theme marketplace preview"
+        },
+        {
+            "id": "api-platform-landing-page",
+            "title": "API Platform Landing page",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-api-platform/docs/screenshots/api-platform-landing.png",
+            "required": false,
+            "user": false,
+            "notes": "API Platform Landing page",
+            "useCase": "Theme marketplace preview"
+        },
+        {
+            "id": "api-platform-list-page",
+            "title": "API Platform List page",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-api-platform/docs/screenshots/api-platform-listing.png",
+            "required": false,
+            "user": false,
+            "notes": "API Platform List page",
+            "useCase": "Theme marketplace preview"
+        },
+        {
+            "id": "api-platform-search-results",
+            "title": "API Platform Search results",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-api-platform/docs/screenshots/api-platform-search.png",
+            "required": false,
+            "user": false,
+            "notes": "API Platform Search results",
+            "useCase": "Theme marketplace preview"
+        },
+        {
+            "id": "api-platform-contact-form",
+            "title": "API Platform Contact form",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-api-platform/docs/screenshots/api-platform-contact.png",
+            "required": false,
+            "user": false,
+            "notes": "API Platform Contact form",
+            "useCase": "Theme marketplace preview"
+        }
+    ]
+}

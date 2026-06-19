@@ -1,0 +1,154 @@
+{
+    "manifest-version": 3,
+    "name": "capell-app/theme-packaging-supplier",
+    "slug": "theme-packaging-supplier",
+    "displayName": "Theme Packaging Supplier",
+    "kind": "theme",
+    "capellApiVersion": "^4.0",
+    "version": "4.x-dev",
+    "description": "Packaging Supplier extends the default Capell frontend with a packaging supplier visual direction, portable demo content, cache-safe public Blade rendering, and theme tokens tuned for sustainable packaging suppliers, food & produce packaging.",
+    "product": {
+        "group": "Capell Themes",
+        "tier": "premium",
+        "bundle": "themes"
+    },
+    "namespace": "Capell\\ThemeStudio\\PackagingSupplier",
+    "surfaces": ["frontend"],
+    "dependencies": {
+        "requires": ["capell-app/core", "capell-app/frontend"],
+        "supports": [],
+        "conflicts": []
+    },
+    "providers": {
+        "metadata": [],
+        "install": [],
+        "runtime": [
+            "Capell\\ThemeStudio\\PackagingSupplier\\PackagingSupplierThemeServiceProvider"
+        ],
+        "admin": [],
+        "frontend": []
+    },
+    "contributes": [
+        {
+            "type": "admin-page",
+            "class": "Capell\\ThemeStudio\\PackagingSupplier\\Manifest\\ThemeManagementPageContribution",
+            "pageClass": "Capell\\Marketplace\\Filament\\Pages\\ThemeExtensionPage",
+            "pageParameters": {
+                "themeKey": "packaging-supplier"
+            },
+            "labelKey": "capell-marketplace::marketplace.theme_extension.management_entry_label"
+        }
+    ],
+    "database": {
+        "migrations": false,
+        "settings": false,
+        "requiredTables": []
+    },
+    "commands": {
+        "install": null,
+        "setup": null,
+        "demo": "capell:theme-packaging-supplier-demo",
+        "demoParams": ["url", "languages", "sites"],
+        "doctor": null
+    },
+    "settings": [],
+    "permissions": [],
+    "capabilities": [
+        "theme-packaging-supplier",
+        "theme-packaging-supplier-frontend"
+    ],
+    "security": {
+        "riskTier": "low",
+        "publicSurface": {
+            "routeNames": [],
+            "auth": "none",
+            "csrfExemptRoutes": [],
+            "signedRoutes": [],
+            "tokenizedRoutes": [],
+            "webhookRoutes": [],
+            "throttledRoutes": []
+        },
+        "sensitiveData": {
+            "encryptedFields": [],
+            "hashedTokenFields": [],
+            "redactedOutputClasses": [],
+            "plaintextJustifications": []
+        },
+        "publicOutput": {
+            "cacheSafe": true,
+            "forbidAuthoringSurface": true,
+            "forbidSecrets": true,
+            "forbidPublicBladeQueries": true
+        },
+        "externalHttpClients": {
+            "requiresTimeouts": false,
+            "requiresSecretRedaction": false,
+            "clients": []
+        },
+        "adminSurface": {
+            "authorization": "none",
+            "permissions": []
+        }
+    },
+    "performance": {
+        "frontendRenderBudgetMs": 20,
+        "adminQueryBudget": 0,
+        "cacheTags": ["theme-packaging-supplier"],
+        "cacheSafety": {
+            "cacheable": false,
+            "variesBy": ["site", "locale"],
+            "sensitiveOutput": false,
+            "invalidationSources": [],
+            "queueInvalidation": false
+        }
+    },
+    "healthChecks": [
+        {
+            "key": "theme-packaging-supplier.package-health",
+            "label": "Packaging Supplier package surfaces, providers, and install health are discoverable by Diagnostics.",
+            "class": "Capell\\ThemeStudio\\PackagingSupplier\\Health\\ThemePackagingSupplierHealthCheck",
+            "severity": "critical",
+            "surface": "frontend"
+        }
+    ],
+    "commercial": {
+        "proposedLicense": "paid",
+        "requestedCertification": "first-party",
+        "supportPolicy": "priority",
+        "privateDocsRequested": true
+    },
+    "marketplace": {
+        "summary": "A premium Capell theme for sustainable packaging suppliers, food & produce packaging.",
+        "description": "Packaging Supplier provides a distinct theme definition, demo command, marketplace metadata, and public-safe Blade views for Verda Packaging.",
+        "screenshots": [
+            {
+                "path": "docs/screenshots/packaging-supplier-homepage.png",
+                "alt": "Packaging Supplier homepage preview",
+                "caption": "Packaging Supplier Homepage"
+            },
+            {
+                "path": "docs/screenshots/packaging-supplier-landing.png",
+                "alt": "Packaging Supplier landing page preview",
+                "caption": "Packaging Supplier Landing page"
+            },
+            {
+                "path": "docs/screenshots/packaging-supplier-listing.png",
+                "alt": "Packaging Supplier list page preview",
+                "caption": "Packaging Supplier List page"
+            },
+            {
+                "path": "docs/screenshots/packaging-supplier-search.png",
+                "alt": "Packaging Supplier search results preview",
+                "caption": "Packaging Supplier Search results"
+            },
+            {
+                "path": "docs/screenshots/packaging-supplier-contact.png",
+                "alt": "Packaging Supplier contact form preview",
+                "caption": "Packaging Supplier Contact form"
+            }
+        ],
+        "categories": ["frontend", "themes"]
+    },
+    "extends": "default",
+    "themeKey": "packaging-supplier"
+}

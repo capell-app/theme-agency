@@ -1,0 +1,69 @@
+{
+    "entries": [
+        {
+            "id": "aeo-analytics-homepage",
+            "title": "AEO Analytics Homepage",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-aeo-analytics/docs/screenshots/aeo-analytics-homepage.png",
+            "required": false,
+            "user": false,
+            "notes": "AEO Analytics Homepage",
+            "useCase": "Theme marketplace preview"
+        },
+        {
+            "id": "aeo-analytics-landing-page",
+            "title": "AEO Analytics Landing page",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-aeo-analytics/docs/screenshots/aeo-analytics-landing.png",
+            "required": false,
+            "user": false,
+            "notes": "AEO Analytics Landing page",
+            "useCase": "Theme marketplace preview"
+        },
+        {
+            "id": "aeo-analytics-list-page",
+            "title": "AEO Analytics List page",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-aeo-analytics/docs/screenshots/aeo-analytics-listing.png",
+            "required": false,
+            "user": false,
+            "notes": "AEO Analytics List page",
+            "useCase": "Theme marketplace preview"
+        },
+        {
+            "id": "aeo-analytics-search-results",
+            "title": "AEO Analytics Search results",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-aeo-analytics/docs/screenshots/aeo-analytics-search.png",
+            "required": false,
+            "user": false,
+            "notes": "AEO Analytics Search results",
+            "useCase": "Theme marketplace preview"
+        },
+        {
+            "id": "aeo-analytics-contact-form",
+            "title": "AEO Analytics Contact form",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-aeo-analytics/docs/screenshots/aeo-analytics-contact.png",
+            "required": false,
+            "user": false,
+            "notes": "AEO Analytics Contact form",
+            "useCase": "Theme marketplace preview"
+        }
+    ]
+}

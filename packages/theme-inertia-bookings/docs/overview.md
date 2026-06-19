@@ -35,6 +35,50 @@ Screenshot contract: `screenshots.json`.
 - Inertia bookings locations and FAQ (frontend, required).
 - Inertia bookings mobile request flow (frontend, required).
 
+## Screenshot Evidence
+
+These captures are the package-owned visual contract for the admin pages, public pages, actions, workflows, and feature surfaces described above. Keep this section aligned with `docs/screenshots.json` whenever the package surface changes.
+
+### Inertia bookings homepage
+
+![Inertia bookings homepage](screenshots/inertia-bookings-homepage.png)
+
+- Surface: frontend · Target: /theme-inertia-bookings-demo.
+- Documents: A booking business sees how the theme moves visitors from service evaluation to appointment request.
+- Capture notes: Capture a seeded appointment-led homepage with hero, service proof, booking CTA, locations, FAQ, and footer sections.
+
+### Inertia public booking request
+
+![Inertia public booking request](screenshots/inertia-bookings-request-flow.png)
+
+- Surface: frontend · Target: /bookings.
+- Documents: A buyer confirms the theme connects into the real Bookings public request workflow.
+- Capture notes: Capture the Inertia-rendered public booking request route with lazy slot loading and labelled form fields.
+
+### Inertia bookings service sections
+
+![Inertia bookings service sections](screenshots/inertia-bookings-services.png)
+
+- Surface: frontend · Target: /theme-inertia-bookings-demo#services.
+- Documents: A buyer evaluates the theme's appointment-led service presentation before the booking step.
+- Capture notes: Capture service cards, proof blocks, and appointment CTAs in the themed public page.
+
+### Inertia bookings locations and FAQ
+
+![Inertia bookings locations and FAQ](screenshots/inertia-bookings-locations.png)
+
+- Surface: frontend · Target: /theme-inertia-bookings-demo#locations.
+- Documents: A buyer confirms the theme covers local-service trust and decision support sections.
+- Capture notes: Capture location, FAQ, and final request-action sections with public theme styling.
+
+### Inertia bookings mobile request flow
+
+![Inertia bookings mobile request flow](screenshots/inertia-bookings-mobile-request.png)
+
+- Surface: frontend · Target: /bookings.
+- Documents: A buyer verifies the theme remains usable for appointment requests on phones.
+- Capture notes: Capture the public booking request flow at a mobile viewport with labels, slot state, and CTA visible.
+
 ## Technical Shape
 
 - Service providers: `Capell\ThemeStudio\InertiaBookings\Providers\InertiaBookingsThemeServiceProvider`.

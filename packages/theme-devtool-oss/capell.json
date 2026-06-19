@@ -1,0 +1,151 @@
+{
+    "manifest-version": 3,
+    "name": "capell-app/theme-devtool-oss",
+    "slug": "theme-devtool-oss",
+    "displayName": "Theme Devtool OSS",
+    "kind": "theme",
+    "capellApiVersion": "^4.0",
+    "version": "4.x-dev",
+    "description": "Devtool OSS extends the default Capell frontend with a devtool oss visual direction, portable demo content, cache-safe public Blade rendering, and theme tokens tuned for open-source developer tools, self-host + cloud products.",
+    "product": {
+        "group": "Capell Themes",
+        "tier": "premium",
+        "bundle": "themes"
+    },
+    "namespace": "Capell\\ThemeStudio\\DevtoolOss",
+    "surfaces": ["frontend"],
+    "dependencies": {
+        "requires": ["capell-app/core", "capell-app/frontend"],
+        "supports": [],
+        "conflicts": []
+    },
+    "providers": {
+        "metadata": [],
+        "install": [],
+        "runtime": [
+            "Capell\\ThemeStudio\\DevtoolOss\\DevtoolOssThemeServiceProvider"
+        ],
+        "admin": [],
+        "frontend": []
+    },
+    "contributes": [
+        {
+            "type": "admin-page",
+            "class": "Capell\\ThemeStudio\\DevtoolOss\\Manifest\\ThemeManagementPageContribution",
+            "pageClass": "Capell\\Marketplace\\Filament\\Pages\\ThemeExtensionPage",
+            "pageParameters": {
+                "themeKey": "devtool-oss"
+            },
+            "labelKey": "capell-marketplace::marketplace.theme_extension.management_entry_label"
+        }
+    ],
+    "database": {
+        "migrations": false,
+        "settings": false,
+        "requiredTables": []
+    },
+    "commands": {
+        "install": null,
+        "setup": null,
+        "demo": "capell:theme-devtool-oss-demo",
+        "demoParams": ["url", "languages", "sites"],
+        "doctor": null
+    },
+    "settings": [],
+    "permissions": [],
+    "capabilities": ["theme-devtool-oss", "theme-devtool-oss-frontend"],
+    "security": {
+        "riskTier": "low",
+        "publicSurface": {
+            "routeNames": [],
+            "auth": "none",
+            "csrfExemptRoutes": [],
+            "signedRoutes": [],
+            "tokenizedRoutes": [],
+            "webhookRoutes": [],
+            "throttledRoutes": []
+        },
+        "sensitiveData": {
+            "encryptedFields": [],
+            "hashedTokenFields": [],
+            "redactedOutputClasses": [],
+            "plaintextJustifications": []
+        },
+        "publicOutput": {
+            "cacheSafe": true,
+            "forbidAuthoringSurface": true,
+            "forbidSecrets": true,
+            "forbidPublicBladeQueries": true
+        },
+        "externalHttpClients": {
+            "requiresTimeouts": false,
+            "requiresSecretRedaction": false,
+            "clients": []
+        },
+        "adminSurface": {
+            "authorization": "none",
+            "permissions": []
+        }
+    },
+    "performance": {
+        "frontendRenderBudgetMs": 20,
+        "adminQueryBudget": 0,
+        "cacheTags": ["theme-devtool-oss"],
+        "cacheSafety": {
+            "cacheable": false,
+            "variesBy": ["site", "locale"],
+            "sensitiveOutput": false,
+            "invalidationSources": [],
+            "queueInvalidation": false
+        }
+    },
+    "healthChecks": [
+        {
+            "key": "theme-devtool-oss.package-health",
+            "label": "Devtool OSS package surfaces, providers, and install health are discoverable by Diagnostics.",
+            "class": "Capell\\ThemeStudio\\DevtoolOss\\Health\\ThemeDevtoolOssHealthCheck",
+            "severity": "critical",
+            "surface": "frontend"
+        }
+    ],
+    "commercial": {
+        "proposedLicense": "paid",
+        "requestedCertification": "first-party",
+        "supportPolicy": "priority",
+        "privateDocsRequested": true
+    },
+    "marketplace": {
+        "summary": "A premium Capell theme for open-source developer tools, self-host + cloud products.",
+        "description": "Devtool OSS provides a distinct theme definition, demo command, marketplace metadata, and public-safe Blade views for Scheduler OSS.",
+        "screenshots": [
+            {
+                "path": "docs/screenshots/devtool-oss-homepage.png",
+                "alt": "Devtool OSS homepage preview",
+                "caption": "Devtool OSS Homepage"
+            },
+            {
+                "path": "docs/screenshots/devtool-oss-landing.png",
+                "alt": "Devtool OSS landing page preview",
+                "caption": "Devtool OSS Landing page"
+            },
+            {
+                "path": "docs/screenshots/devtool-oss-listing.png",
+                "alt": "Devtool OSS list page preview",
+                "caption": "Devtool OSS List page"
+            },
+            {
+                "path": "docs/screenshots/devtool-oss-search.png",
+                "alt": "Devtool OSS search results preview",
+                "caption": "Devtool OSS Search results"
+            },
+            {
+                "path": "docs/screenshots/devtool-oss-contact.png",
+                "alt": "Devtool OSS contact form preview",
+                "caption": "Devtool OSS Contact form"
+            }
+        ],
+        "categories": ["frontend", "themes"]
+    },
+    "extends": "default",
+    "themeKey": "devtool-oss"
+}

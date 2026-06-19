@@ -35,6 +35,50 @@ Screenshot contract: `screenshots.json`.
 - Private dining (frontend, optional).
 - Restaurant events (frontend, optional).
 
+## Screenshot Evidence
+
+These captures are the package-owned visual contract for the admin pages, public pages, actions, workflows, and feature surfaces described above. Keep this section aligned with `docs/screenshots.json` whenever the package surface changes.
+
+### Restaurant homepage
+
+![Restaurant homepage](screenshots/restaurant-homepage-layout.png)
+
+- Surface: frontend · Target: /theme-restaurant.
+- Documents: A restaurant reviews the first viewport and booking path before activating the premium theme.
+- Capture notes: Committed route-rendered restaurant homepage fixture with menu, reservation, private dining, events, and proof sections.
+
+### Menu highlights
+
+![Menu highlights](screenshots/restaurant-menu-layout.png)
+
+- Surface: frontend · Target: /theme-restaurant-menu.
+- Documents: A hospitality team checks that menus are scannable and premium without storing presentation markup.
+- Capture notes: Committed route-rendered menu/detail fixture with editorial dish content.
+
+### Reservation panel
+
+![Reservation panel](screenshots/restaurant-reservation-layout.png)
+
+- Surface: frontend · Target: /theme-restaurant-reservations.
+- Documents: A restaurant confirms the booking path feels like part of the venue experience.
+- Capture notes: Committed route-rendered reservation CTA fixture proving non-submitting fallback states.
+
+### Private dining
+
+![Private dining](screenshots/restaurant-private-dining-layout.png)
+
+- Surface: frontend · Target: /theme-restaurant-private-dining.
+- Documents: A venue validates that private dining feels like a premium conversion path.
+- Capture notes: Committed route-rendered visual review fixture covering private dining and premium venue sections.
+
+### Restaurant events
+
+![Restaurant events](screenshots/restaurant-events-layout.png)
+
+- Surface: frontend · Target: /theme-restaurant-events.
+- Documents: A venue checks that event content is promoted without turning the theme into an events package.
+- Capture notes: Committed route-rendered directory/events fixture covering seasonal listings.
+
 ## Technical Shape
 
 - Service providers: `Capell\ThemeStudio\Restaurant\RestaurantThemeServiceProvider`.
