@@ -211,6 +211,7 @@ extendCapellPackageTests(PackagesTestCase::class, 'theme-minimal-fashion', 'them
 extendCapellPackageTests(PackagesTestCase::class, 'theme-bold-sport-commerce', 'theme-bold-sport-commerce');
 extendCapellPackageTests(PackagesTestCase::class, 'theme-premium-product-story', 'theme-premium-product-story');
 extendCapellPackageTests(PackagesTestCase::class, 'theme-product-company-editorial', 'theme-product-company-editorial');
+extendCapellPackageTests(PackagesTestCase::class, 'theme-design-led-magazine', 'theme-design-led-magazine');
 extendCapellPackageTests(PackagesTestCase::class, 'theme-quiet-luxury-retail', 'theme-quiet-luxury-retail');
 extendCapellPackageTests(PackagesTestCase::class, 'theme-automotive-dealer', 'theme-automotive-dealer');
 extendCapellPackageTests(PackagesTestCase::class, 'theme-property-developer', 'theme-property-developer');
