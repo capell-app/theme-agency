@@ -1,0 +1,158 @@
+.fashion-shell {
+    --fashion-ink: var(--theme-foreground, #111111);
+    --fashion-muted: color-mix(in srgb, var(--fashion-ink) 58%, transparent);
+    --fashion-line: color-mix(in srgb, var(--fashion-ink) 14%, transparent);
+    --fashion-field: color-mix(
+        in srgb,
+        var(--theme-accent, #76716a) 8%,
+        var(--theme-surface, #f8f7f3)
+    );
+    --fashion-night: #111111;
+    --fashion-paper: var(--theme-surface, #f8f7f3);
+    background: var(--fashion-paper);
+    color: var(--fashion-ink);
+    font-family: var(--theme-body-font, inter), system-ui, sans-serif;
+}
+
+.fashion-shell h1,
+.fashion-shell h2,
+.fashion-shell h3 {
+    color: var(--fashion-ink);
+    font-family: var(--theme-heading-font, sora), system-ui, sans-serif;
+    letter-spacing: 0;
+}
+
+.fashion-skip-link {
+    background: var(--fashion-night, #11170f);
+    color: #ffffff;
+    left: 1rem;
+    padding: 0.75rem 1rem;
+    position: fixed;
+    top: 1rem;
+    transform: translateY(-150%);
+    z-index: 50;
+}
+
+.fashion-skip-link:focus {
+    transform: translateY(0);
+}
+
+.fashion-section {
+    border-top: 1px solid var(--fashion-line);
+}
+
+.fashion-section-dark {
+    background: var(--fashion-night);
+    color: #ffffff;
+}
+
+.fashion-section-dark h1,
+.fashion-section-dark h2,
+.fashion-section-dark h3 {
+    color: #fffdf4;
+}
+
+.fashion-section-inner {
+    margin-inline: auto;
+    max-width: 78rem;
+    padding: 5.5rem 1.25rem;
+}
+
+.fashion-kicker {
+    color: var(--theme-accent, #76716a);
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.fashion-lede {
+    color: var(--fashion-muted);
+    font-size: clamp(1.05rem, 1vw + 0.9rem, 1.35rem);
+    line-height: 1.6;
+    max-width: 46rem;
+}
+
+.fashion-grid {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr));
+}
+
+.fashion-card {
+    background: color-mix(in srgb, var(--fashion-paper) 92%, white);
+    border: 1px solid var(--fashion-line);
+    border-radius: var(--theme-radius, 0.25rem);
+    min-height: 100%;
+    padding: 1.15rem;
+}
+
+.fashion-card h3 {
+    font-size: 1.05rem;
+    line-height: 1.25;
+    margin: 0;
+}
+
+.fashion-card p,
+.fashion-meta {
+    color: var(--fashion-muted);
+    line-height: 1.55;
+}
+
+.fashion-button {
+    align-items: center;
+    background: var(--theme-primary, #111111);
+    border: 1px solid var(--theme-primary, #111111);
+    border-radius: var(--theme-radius, 0.25rem);
+    color: #ffffff;
+    display: inline-flex;
+    font-weight: 700;
+    gap: 0.5rem;
+    min-height: 2.75rem;
+    padding: 0.75rem 1rem;
+    text-decoration: none;
+}
+
+.fashion-button:hover,
+.fashion-button:focus-visible {
+    background: color-mix(in srgb, var(--theme-primary, #111111) 82%, white);
+    outline: 3px solid
+        color-mix(in srgb, var(--theme-accent, #76716a) 42%, transparent);
+    outline-offset: 3px;
+}
+
+.fashion-button-secondary {
+    background: transparent;
+    color: var(--fashion-ink);
+}
+
+.fashion-section-dark .fashion-button-secondary {
+    color: #ffffff;
+    border-color: color-mix(in srgb, #ffffff 55%, transparent);
+}
+
+.fashion-product-card {
+    display: grid;
+    gap: 1rem;
+}
+
+.fashion-product-specs {
+    border-top: 1px solid var(--fashion-line);
+    display: grid;
+    gap: 0.45rem;
+    padding-top: 0.9rem;
+}
+
+.fashion-product-specs span {
+    color: var(--fashion-muted);
+    font-size: 0.9rem;
+}
+
+@media (min-width: 768px) {
+    .fashion-hero-grid,
+    .fashion-split {
+        display: grid;
+        gap: 2rem;
+        grid-template-columns: minmax(0, 1.1fr) minmax(18rem, 0.9fr);
+    }
+}

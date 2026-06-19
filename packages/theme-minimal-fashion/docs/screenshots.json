@@ -1,0 +1,79 @@
+{
+    "package": "theme-minimal-fashion",
+    "composerName": "capell-app/theme-minimal-fashion",
+    "generatedFor": "deployment-screenshot-runner",
+    "requiresInstalledPackage": true,
+    "outputDirectory": "packages/theme-minimal-fashion/docs/screenshots",
+    "entries": [
+        {
+            "id": "minimal-fashion-homepage",
+            "title": "Minimal Fashion Homepage",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-minimal-fashion/docs/screenshots/minimal-fashion-homepage.png",
+            "required": false,
+            "user": false,
+            "notes": "Homepage with seasonal collections, category paths, lookbook, product care, and newsletter paths.",
+            "useCase": "Minimal fashion retail marketplace preview",
+            "package": "theme-minimal-fashion"
+        },
+        {
+            "id": "minimal-fashion-landing-page",
+            "title": "Minimal Fashion Landing page",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-minimal-fashion/docs/screenshots/minimal-fashion-landing.png",
+            "required": false,
+            "user": false,
+            "notes": "Seasonal collection or lookbook landing page.",
+            "useCase": "Minimal fashion collection preview",
+            "package": "theme-minimal-fashion"
+        },
+        {
+            "id": "minimal-fashion-list-page",
+            "title": "Minimal Fashion List page",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-minimal-fashion/docs/screenshots/minimal-fashion-listing.png",
+            "required": false,
+            "user": false,
+            "notes": "Product, collection, article, or lookbook listing page.",
+            "useCase": "Minimal Fashion archive preview",
+            "package": "theme-minimal-fashion"
+        },
+        {
+            "id": "minimal-fashion-search-results",
+            "title": "Minimal Fashion Search results",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-minimal-fashion/docs/screenshots/minimal-fashion-search.png",
+            "required": false,
+            "user": false,
+            "notes": "Search results for products, collections, lookbooks, and care guides.",
+            "useCase": "Minimal Fashion discovery preview",
+            "package": "theme-minimal-fashion"
+        },
+        {
+            "id": "minimal-fashion-contact-form",
+            "title": "Minimal Fashion Contact form",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-minimal-fashion/docs/screenshots/minimal-fashion-contact.png",
+            "required": false,
+            "user": false,
+            "notes": "Newsletter, product-care, store assistance, or contact conversion form.",
+            "useCase": "Minimal Fashion conversion preview",
+            "package": "theme-minimal-fashion"
+        }
+    ]
+}
