@@ -19,10 +19,7 @@
             "scenario": "admin-index",
             "url": "/screenshot-fixtures/ga4-reports/ga4-reports-dashboard-page",
             "waitFor": ".ga4-reports",
-            "colorSchemes": ["light"],
-            "covers": [
-                "packages/ga4-reports/src/Filament/Pages/GA4ReportsPage.php"
-            ]
+            "colorSchemes": ["light"]
         },
         {
             "id": "ga4-reports-setup-status",

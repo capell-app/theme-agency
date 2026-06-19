@@ -28,9 +28,7 @@
             "darkScreenshotPath": "packages/diagnostics/docs/screenshots/diagnostics-dashboard-dark.png",
             "useCase": "A developer inspects package maker safety, registered configurators, components, and blocks from the diagnostics dashboard.",
             "covers": [
-                "packages/diagnostics/src/Filament/Pages/DiagnosticsPage.php",
-                "packages/diagnostics/src/Filament/Pages/Tables/QueueHealthTable.php",
-                "packages/diagnostics/src/Filament/Widgets/Health/AlertsWidgetAbstract.php"
+                "packages/diagnostics/src/Filament/Pages/DiagnosticsPage.php"
             ]
         },
         {

@@ -19,10 +19,7 @@
             "scenario": "admin-index",
             "url": "/screenshot-fixtures/public-actions/public-actions-admin-index",
             "waitFor": ".public-actions-fixture",
-            "colorSchemes": ["light"],
-            "covers": [
-                "packages/public-actions/src/Filament/Resources/IntegrationTokens/Pages/ListPublicActionIntegrationTokens.php"
-            ]
+            "colorSchemes": ["light"]
         },
         {
             "id": "public-action-form",

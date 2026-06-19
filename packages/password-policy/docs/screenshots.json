@@ -19,10 +19,7 @@
             "notes": "Capture the package settings page after the package is installed and settings migrations have run.",
             "useCase": "An administrator configures password age, reuse, complexity, and enforcement rules.",
             "screenshotPath": "packages/password-policy/docs/screenshots/password-policy-settings.png",
-            "darkScreenshotPath": "packages/password-policy/docs/screenshots/password-policy-settings-dark.png",
-            "covers": [
-                "packages/password-policy/src/Filament/Extenders/PasswordPolicyUserTableExtender.php"
-            ]
+            "darkScreenshotPath": "packages/password-policy/docs/screenshots/password-policy-settings-dark.png"
         },
         {
             "id": "forced-password-change",

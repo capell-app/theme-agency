@@ -19,10 +19,7 @@
             "scenario": "admin-index",
             "url": "/screenshot-fixtures/payments/payments-checkout-sessions",
             "waitFor": ".payments-fixture",
-            "colorSchemes": ["light"],
-            "covers": [
-                "packages/payments/src/Filament/Resources/PaymentIntents/PaymentIntentResource.php"
-            ]
+            "colorSchemes": ["light"]
         },
         {
             "id": "payments-webhook-events",

@@ -20,10 +20,7 @@
             "required": true,
             "notes": "Capture as an admin user after seeding pending, approved, rejected, and spam comments.",
             "useCase": "An editor reviews incoming comments and decides which public replies should appear.",
-            "screenshotPath": "packages/comments/docs/screenshots/comment-moderation-inbox.png",
-            "covers": [
-                "packages/comments/src/Filament/Resources/Comments/Tables/CommentsTable.php"
-            ]
+            "screenshotPath": "packages/comments/docs/screenshots/comment-moderation-inbox.png"
         },
         {
             "id": "comments-admin-resource",

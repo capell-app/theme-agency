@@ -36,10 +36,7 @@
             "required": true,
             "notes": "Capture after creating an RSS connection, running the sync action, and confirming cached items exist for render.",
             "useCase": "An administrator verifies an RSS feed is connected and producing cached social feed items.",
-            "screenshotPath": "packages/social-feeds/docs/screenshots/social-feed-rss-sync.png",
-            "covers": [
-                "packages/social-feeds/src/Filament/Resources/SocialFeedConnections/SocialFeedConnectionResource.php"
-            ]
+            "screenshotPath": "packages/social-feeds/docs/screenshots/social-feed-rss-sync.png"
         },
         {
             "id": "social-feed-provider-registry",

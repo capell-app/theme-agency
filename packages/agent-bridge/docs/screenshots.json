@@ -18,8 +18,7 @@
             "screenshotPath": "packages/agent-bridge/docs/screenshots/agent-bridge-prompt-builder-page.png",
             "darkScreenshotPath": "packages/agent-bridge/docs/screenshots/agent-bridge-prompt-builder-page-dark.png",
             "covers": [
-                "packages/agent-bridge/src/Filament/Pages/CapellAgentBridgePromptBuilderPage.php",
-                "packages/agent-bridge/src/Filament/Resources/Users/RelationManagers/AgentBridgeTokensRelationManager.php"
+                "packages/agent-bridge/src/Filament/Pages/CapellAgentBridgePromptBuilderPage.php"
             ]
         },
         {

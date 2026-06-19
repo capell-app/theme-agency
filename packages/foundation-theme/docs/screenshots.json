@@ -87,7 +87,7 @@
             "target": "/foundation-standard-page-layout",
             "required": true,
             "notes": "Capture Foundation Theme standard content page with header, breadcrumbs, rich content, related links. No additional package note required.",
-            "useCase": "A buyer reviews how Foundation Theme handles the standard content page page layout before installing the theme.",
+            "useCase": "A buyer reviews how Foundation Theme handles the standard content page layout before installing the theme.",
             "screenshotPath": "packages/foundation-theme/docs/screenshots/foundation-standard-page-layout.png",
             "scenario": "frontend-page",
             "url": "/screenshot-fixtures/foundation-theme/foundation-standard-page-layout",

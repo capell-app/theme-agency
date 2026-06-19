@@ -18,12 +18,7 @@
             "notes": "Capture the redirect rules admin page with the create or edit redirect form open, showing source URL, target URL, match type, status, query preservation, and notes fields.",
             "screenshotPath": "packages/url-manager/docs/screenshots/create-edit-redirect-form.png",
             "useCase": "An editor creates or updates redirect rules without touching server configuration.",
-            "darkScreenshotPath": "packages/url-manager/docs/screenshots/create-edit-redirect-form-dark.png",
-            "covers": [
-                "packages/url-manager/src/Filament/Pages/Schemas/RedirectRuleForm.php",
-                "packages/url-manager/src/Filament/Pages/Tables/NotFoundOpportunitiesTable.php",
-                "packages/url-manager/src/Filament/Pages/Tables/RedirectRulesTable.php"
-            ]
+            "darkScreenshotPath": "packages/url-manager/docs/screenshots/create-edit-redirect-form-dark.png"
         },
         {
             "id": "redirect-import-workflow",

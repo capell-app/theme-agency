@@ -16,11 +16,7 @@
             "notes": "Captured in the Laravel 13 demo harness after publishing the package migration and seeding three login audit rows.",
             "screenshotPath": "packages/login-audit/docs/screenshots/login-audits-admin-index.png",
             "useCase": "An administrator reviews successful and failed authentication events for the demo admin user.",
-            "darkScreenshotPath": "packages/login-audit/docs/screenshots/login-audits-admin-index-dark.png",
-            "covers": [
-                "packages/login-audit/src/Filament/Resources/LoginAudits/Tables/LoginAuditsTable.php",
-                "packages/login-audit/src/Filament/Widgets/LoginAuditsWidget.php"
-            ]
+            "darkScreenshotPath": "packages/login-audit/docs/screenshots/login-audits-admin-index-dark.png"
         },
         {
             "id": "login-audit-table-filters",

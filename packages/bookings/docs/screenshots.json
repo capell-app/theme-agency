@@ -28,11 +28,7 @@
             "required": true,
             "notes": "Capture requested and confirmed appointments with service, staff, location, customer, status, and audit context visible.",
             "useCase": "An operator checks incoming appointment requests and manages confirmation or cancellation safely.",
-            "screenshotPath": "packages/bookings/docs/screenshots/appointment-requests-admin.png",
-            "covers": [
-                "packages/bookings/src/Filament/Resources/AppointmentRequests/AppointmentRequestResource.php",
-                "packages/bookings/src/Filament/Resources/BookingMessageLogs/BookingMessageLogResource.php"
-            ]
+            "screenshotPath": "packages/bookings/docs/screenshots/appointment-requests-admin.png"
         },
         {
             "id": "equi-dynamics-public-booking-desktop",

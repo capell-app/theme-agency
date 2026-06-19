@@ -118,7 +118,7 @@
         },
         {
             "id": "saas-cta-layout",
-            "title": "SaaS CTA page.",
+            "title": "SaaS CTA.",
             "target": "/theme-saas-cta",
             "notes": "Capture the seeded SaaS CTA surface for focused conversion moments.",
             "useCase": "A product team can direct high-intent visitors toward the next sales or trial action.",

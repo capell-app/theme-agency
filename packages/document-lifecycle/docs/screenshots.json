@@ -19,10 +19,7 @@
             "scenario": "admin-index",
             "url": "/screenshot-fixtures/document-lifecycle/controlled-documents-index",
             "waitFor": ".document-lifecycle",
-            "colorSchemes": ["light"],
-            "covers": [
-                "packages/document-lifecycle/src/Filament/Resources/Documents/DocumentResource.php"
-            ]
+            "colorSchemes": ["light"]
         },
         {
             "id": "controlled-document-edit",

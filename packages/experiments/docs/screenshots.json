@@ -19,8 +19,7 @@
             "useCase": "A growth operator reviews active and scheduled experiments from the Capell admin.",
             "screenshotPath": "packages/experiments/docs/screenshots/experiments-index.png",
             "covers": [
-                "packages/experiments/src/Filament/Resources/Experiments/ExperimentResource.php",
-                "packages/experiments/src/Filament/Resources/Experiments/Pages/ExperimentResultsPage.php"
+                "packages/experiments/src/Filament/Resources/Experiments/ExperimentResource.php"
             ]
         },
         {

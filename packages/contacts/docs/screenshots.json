@@ -19,9 +19,7 @@
             "useCase": "An operator reviews encrypted customer records captured from first-party Capell packages.",
             "screenshotPath": "packages/contacts/docs/screenshots/contacts-contact-index.png",
             "covers": [
-                "packages/contacts/src/Filament/Resources/Contacts/ContactResource.php",
-                "packages/contacts/src/Filament/Resources/Contacts/Pages/ViewContact.php",
-                "packages/contacts/src/Filament/Resources/Leads/LeadResource.php"
+                "packages/contacts/src/Filament/Resources/Contacts/ContactResource.php"
             ]
         },
         {

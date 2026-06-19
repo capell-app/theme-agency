@@ -21,10 +21,7 @@
             "notes": "Capture after seeding MailTracker sent email rows with subjects, sender/recipient addresses, opens, clicks, and stored content state.",
             "useCase": "A support user reviews sent transactional emails and delivery engagement signals in the Capell admin.",
             "screenshotPath": "packages/email-studio/docs/screenshots/sent-emails-index.png",
-            "darkScreenshotPath": "packages/email-studio/docs/screenshots/sent-emails-index-dark.png",
-            "covers": [
-                "packages/email-studio/src/Filament/Resources/EmailTemplateVariants/EmailTemplateVariantResource.php"
-            ]
+            "darkScreenshotPath": "packages/email-studio/docs/screenshots/sent-emails-index-dark.png"
         },
         {
             "id": "sent-email-view",

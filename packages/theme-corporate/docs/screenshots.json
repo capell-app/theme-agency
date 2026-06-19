@@ -109,7 +109,7 @@
         },
         {
             "id": "corporate-contact-layout",
-            "title": "Contact form page.",
+            "title": "contact form.",
             "package": "theme-corporate",
             "surface": "frontend",
             "targetType": "frontend-url",

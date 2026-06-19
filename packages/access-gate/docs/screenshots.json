@@ -15,11 +15,7 @@
             "required": true,
             "notes": "Requires package migrations plus at least one seeded access area with a known route key, status, registration policy, and token policy.",
             "useCase": "An administrator reviews which protected areas are active and how each area accepts or blocks access requests.",
-            "screenshotPath": "packages/access-gate/docs/screenshots/access-areas-admin-index.png",
-            "covers": [
-                "packages/access-gate/src/Filament/Resources/AccessAreas/Pages/EditAccessArea.php",
-                "packages/access-gate/src/Filament/Widgets/PendingAccessRequestsWidget.php"
-            ]
+            "screenshotPath": "packages/access-gate/docs/screenshots/access-areas-admin-index.png"
         },
         {
             "id": "access-area-create-edit-form",

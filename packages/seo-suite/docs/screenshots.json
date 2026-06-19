@@ -16,15 +16,7 @@
             "notes": "Committed Capell runner capture promoted in marketplace media. Open a seeded Page edit screen and capture the SEO tab/panel added by SEO Suite.",
             "useCase": "An editor edits page-level metadata, canonical state, social metadata, and SEO checks.",
             "screenshotPath": "packages/seo-suite/docs/screenshots/page-seo-panel.png",
-            "darkScreenshotPath": "packages/seo-suite/docs/screenshots/page-seo-panel-dark.png",
-            "covers": [
-                "packages/seo-suite/src/Filament/Actions/AiContentBriefAction.php",
-                "packages/seo-suite/src/Filament/Actions/AiCreatorAction.php",
-                "packages/seo-suite/src/Filament/Actions/AiImageGeneratorAction.php",
-                "packages/seo-suite/src/Filament/Components/Forms/Page/PageSeoPanel.php",
-                "packages/seo-suite/src/Filament/Pages/Tables/AiDiscoveryTable.php",
-                "packages/seo-suite/src/Filament/Pages/Tables/BrokenLinksTable.php"
-            ]
+            "darkScreenshotPath": "packages/seo-suite/docs/screenshots/page-seo-panel-dark.png"
         },
         {
             "id": "seo-audit-page",

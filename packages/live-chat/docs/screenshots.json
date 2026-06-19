@@ -35,10 +35,7 @@
             "screenshotPath": "packages/live-chat/docs/screenshots/live-chat-conversations-admin.png",
             "scenario": "static-html",
             "waitFor": ".fi-ta, table",
-            "colorSchemes": ["light"],
-            "covers": [
-                "packages/live-chat/src/Filament/Resources/Conversations/ConversationResource.php"
-            ]
+            "colorSchemes": ["light"]
         }
     ]
 }

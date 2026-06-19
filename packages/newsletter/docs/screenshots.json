@@ -15,12 +15,7 @@
             "required": true,
             "notes": "Shows subscriber status, site scope, consent-related columns, filters, and table actions.",
             "useCase": "A marketer reviews subscriber status, consent, site scope, tags, and filters.",
-            "screenshotPath": "packages/newsletter/docs/screenshots/subscribers-admin-index.png",
-            "covers": [
-                "packages/newsletter/src/Filament/Resources/ImportBatches/Pages/ListImportBatches.php",
-                "packages/newsletter/src/Filament/Resources/Segments/Pages/ListSegments.php",
-                "packages/newsletter/src/Filament/Resources/Subscribers/Pages/ListSubscribers.php"
-            ]
+            "screenshotPath": "packages/newsletter/docs/screenshots/subscribers-admin-index.png"
         },
         {
             "id": "create-edit-subscriber-form",
