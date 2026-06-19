@@ -1,0 +1,79 @@
+{
+    "package": "theme-quiet-web-gallery",
+    "composerName": "capell-app/theme-quiet-web-gallery",
+    "generatedFor": "deployment-screenshot-runner",
+    "requiresInstalledPackage": true,
+    "outputDirectory": "packages/theme-quiet-web-gallery/docs/screenshots",
+    "entries": [
+        {
+            "id": "quiet-web-gallery-homepage",
+            "title": "Quiet Web Gallery Homepage",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-quiet-web-gallery/docs/screenshots/quiet-web-gallery-homepage.png",
+            "required": false,
+            "user": false,
+            "notes": "Homepage with browse, follow or subscribe, submit, and blog panels, latest showcase entries, sponsor space, random picks, and newsletter paths.",
+            "useCase": "Quiet Web Gallery preview",
+            "package": "theme-quiet-web-gallery"
+        },
+        {
+            "id": "quiet-web-gallery-landing-page",
+            "title": "Quiet Web Gallery Landing page",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-quiet-web-gallery/docs/screenshots/quiet-web-gallery-landing.png",
+            "required": false,
+            "user": false,
+            "notes": "Feature page for latest entries, sponsor space, style archives, type archives, random picks, best-of lists, or simple editorial posts.",
+            "useCase": "Quiet Web Gallery feature preview",
+            "package": "theme-quiet-web-gallery"
+        },
+        {
+            "id": "quiet-web-gallery-list-page",
+            "title": "Quiet Web Gallery Category archive",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-quiet-web-gallery/docs/screenshots/quiet-web-gallery-listing.png",
+            "required": false,
+            "user": false,
+            "notes": "Archive page for style, type, category, date, random picks, best-of lists, sponsor notes, blog posts, or latest entries.",
+            "useCase": "Quiet Web Gallery archive preview",
+            "package": "theme-quiet-web-gallery"
+        },
+        {
+            "id": "quiet-web-gallery-search-results",
+            "title": "Quiet Web Gallery Search results",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-quiet-web-gallery/docs/screenshots/quiet-web-gallery-search.png",
+            "required": false,
+            "user": false,
+            "notes": "Search results for gallery entries, styles, types, categories, dates, comments, random picks, best-of lists, and posts.",
+            "useCase": "Quiet Web Gallery discovery preview",
+            "package": "theme-quiet-web-gallery"
+        },
+        {
+            "id": "quiet-web-gallery-contact-form",
+            "title": "Quiet Web Gallery Contact form",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-quiet-web-gallery/docs/screenshots/quiet-web-gallery-contact.png",
+            "required": false,
+            "user": false,
+            "notes": "Newsletter signup, site submission, sponsor inquiry, blog contact, category suggestion, or quiet conversion form.",
+            "useCase": "Quiet Web Gallery conversion preview",
+            "package": "theme-quiet-web-gallery"
+        }
+    ]
+}
