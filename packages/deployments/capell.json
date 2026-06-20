@@ -50,8 +50,8 @@
         },
         {
             "type": "dashboard-widget",
-            "class": "Capell\\Deployments\\Manifest\\DeploymentsDashboardWidgetContribution",
-            "widgetClass": "Capell\\Deployments\\Filament\\Widgets\\DeploymentConnectionWidget",
+            "class": "Capell\\Deployments\\Manifest\\DeploymentsDashboardFilamentWidgetContribution",
+            "widgetClass": "Capell\\Deployments\\Filament\\Widgets\\DeploymentConnectionFilamentWidget",
             "dashboard": "system-health",
             "surface": "admin"
         }

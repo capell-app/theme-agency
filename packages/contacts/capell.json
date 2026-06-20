@@ -58,8 +58,8 @@
         },
         {
             "type": "dashboard-widget",
-            "class": "Capell\\Contacts\\Manifest\\ContactsOverviewWidgetContribution",
-            "widgetClass": "Capell\\Contacts\\Filament\\Widgets\\ContactsOverviewStatsWidget"
+            "class": "Capell\\Contacts\\Manifest\\ContactsOverviewFilamentWidgetContribution",
+            "widgetClass": "Capell\\Contacts\\Filament\\Widgets\\ContactsOverviewStatsFilamentWidget"
         }
     ],
     "database": {

@@ -73,7 +73,7 @@ final class SystemHealthPage extends Dashboard
     public function getWidgets(): array
     {
         /** @var array<class-string<Widget>|WidgetConfiguration> $widgets */
-        $widgets = CapellAdmin::getDashboardWidgets(DashboardEnum::SystemHealth);
+        $widgets = CapellAdmin::getDashboardFilamentWidgets(DashboardEnum::SystemHealth);
 
         return $widgets;
     }

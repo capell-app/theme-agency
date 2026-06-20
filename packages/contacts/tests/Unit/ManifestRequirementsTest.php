@@ -14,12 +14,12 @@ use Capell\Contacts\Filament\Resources\Activities\ContactActivityResource;
 use Capell\Contacts\Filament\Resources\Contacts\ContactResource;
 use Capell\Contacts\Filament\Resources\Leads\LeadResource;
 use Capell\Contacts\Filament\Resources\Organisations\OrganisationResource;
-use Capell\Contacts\Filament\Widgets\ContactsOverviewStatsWidget;
+use Capell\Contacts\Filament\Widgets\ContactsOverviewStatsFilamentWidget;
 use Capell\Contacts\Manifest\ContactsAdminResourcesContribution;
 use Capell\Contacts\Manifest\ContactsModelsContribution;
-use Capell\Contacts\Manifest\ContactsOverviewWidgetContribution;
+use Capell\Contacts\Manifest\ContactsOverviewFilamentWidgetContribution;
 use Capell\Contacts\Providers\AdminServiceProvider;
-use Capell\Core\Contracts\Extensions\RegistersExtensionWidget;
+use Capell\Core\Contracts\Extensions\RegistersExtensionFilamentWidget;
 
 require_once __DIR__ . '/../autoload.php';
 
@@ -66,9 +66,9 @@ it('declares the contacts package manifest contract', function (): void {
         ->and($contributions->contains(fn (array $contribution): bool => ($contribution['type'] ?? null) === 'model'
             && ($contribution['class'] ?? null) === ContactsModelsContribution::class))->toBeTrue()
         ->and($contributions->contains(fn (array $contribution): bool => ($contribution['type'] ?? null) === 'dashboard-widget'
-            && ($contribution['class'] ?? null) === ContactsOverviewWidgetContribution::class
-            && ($contribution['widgetClass'] ?? null) === ContactsOverviewStatsWidget::class))->toBeTrue()
-        ->and(class_implements(ContactsOverviewWidgetContribution::class))->toContain(RegistersExtensionWidget::class)
+            && ($contribution['class'] ?? null) === ContactsOverviewFilamentWidgetContribution::class
+            && ($contribution['widgetClass'] ?? null) === ContactsOverviewStatsFilamentWidget::class))->toBeTrue()
+        ->and(class_implements(ContactsOverviewFilamentWidgetContribution::class))->toContain(RegistersExtensionFilamentWidget::class)
         ->and($manifest['actions']['anonymizeContact'])->toBe(AnonymizeContactAction::class)
         ->and($manifest['actions']['anonymizeContactWithAudit'])->toBe(AnonymizeContactWithAuditAction::class)
         ->and($manifest['actions']['auditContactPrivacyExport'])->toBe(AuditContactPrivacyExportAction::class)

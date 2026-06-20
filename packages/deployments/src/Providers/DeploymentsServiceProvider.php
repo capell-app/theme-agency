@@ -12,7 +12,7 @@ use Capell\Deployments\Contracts\PublishesComposerChanges;
 use Capell\Deployments\Data\ComposerRequirementData;
 use Capell\Deployments\Data\PublishComposerChangeResultData;
 use Capell\Deployments\Filament\Pages\DeploymentConnectionPage;
-use Capell\Deployments\Filament\Widgets\DeploymentConnectionWidget;
+use Capell\Deployments\Filament\Widgets\DeploymentConnectionFilamentWidget;
 use Capell\Deployments\Models\DeploymentConnection;
 use Capell\Deployments\Support\DeploymentPublishHookRegistry;
 use LogicException;
@@ -57,7 +57,7 @@ class DeploymentsServiceProvider extends AbstractPackageServiceProvider
 
         if (config('capell-deployments.enabled', true) === true) {
             CapellAdmin::registerExtensionPage(static::$packageName, DeploymentConnectionPage::class);
-            CapellAdmin::registerDashboardWidget(DeploymentConnectionWidget::class, DashboardEnum::SystemHealth);
+            CapellAdmin::registerDashboardFilamentWidget(DeploymentConnectionFilamentWidget::class, DashboardEnum::SystemHealth);
         }
     }
 }

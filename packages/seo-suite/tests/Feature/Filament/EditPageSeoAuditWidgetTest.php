@@ -5,10 +5,10 @@ declare(strict_types=1);
 use Capell\Core\Models\Language;
 use Capell\Core\Models\Page;
 use Capell\Core\Models\Site;
-use Capell\SeoSuite\Filament\Widgets\EditPageAuditTabsWidget;
+use Capell\SeoSuite\Filament\Widgets\EditPageAuditTabsFilamentWidget;
 use Capell\SeoSuite\Filament\Widgets\EditPagePageSpeedAuditBadge;
 use Capell\SeoSuite\Filament\Widgets\EditPageSeoAuditBadge;
-use Capell\SeoSuite\Filament\Widgets\EditPageSeoAuditWidget;
+use Capell\SeoSuite\Filament\Widgets\EditPageSeoAuditFilamentWidget;
 use Capell\SeoSuite\Support\Admin\PageSeoAuditPageEditExtender;
 use Capell\Tests\Support\Concerns\CreatesAdminUser;
 use Illuminate\Support\Collection as SupportCollection;
@@ -47,7 +47,7 @@ it('switches edit page audit tabs without loading both tab bodies up front', fun
         ->withTranslations($language, slug: 'home')
         ->create();
 
-    Livewire::test(EditPageAuditTabsWidget::class, ['record' => $page])
+    Livewire::test(EditPageAuditTabsFilamentWidget::class, ['record' => $page])
         ->assertSet('activeTab', 'seo')
         ->assertSeeText(__('capell-seo-suite::generic.seo_audit'))
         ->assertSeeText(__('capell-seo-suite::generic.pagespeed_audit'))
@@ -56,7 +56,7 @@ it('switches edit page audit tabs without loading both tab bodies up front', fun
 });
 
 it('renders no checks when report context is unavailable', function (): void {
-    Livewire::test(EditPageSeoAuditWidget::class)
+    Livewire::test(EditPageSeoAuditFilamentWidget::class)
         ->assertSeeText(__('capell-seo-suite::generic.no_checks'));
 });
 
@@ -72,7 +72,7 @@ it('passes the meta description check when description is present', function ():
         ->withTranslations($language, ['description' => 'A useful description for this page that gives search engines enough context.'], slug: 'home')
         ->create();
 
-    Livewire::test(EditPageSeoAuditWidget::class, ['record' => $page])
+    Livewire::test(EditPageSeoAuditFilamentWidget::class, ['record' => $page])
         ->assertSet('checks', fn (SupportCollection $checks): bool => $checks['meta_description']->pass === true);
 });
 

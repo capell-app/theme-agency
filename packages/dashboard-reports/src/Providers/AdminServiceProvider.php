@@ -28,7 +28,7 @@ final class AdminServiceProvider extends ServiceProvider
             ->registerDashboardDataProviders()
             ->registerPageTableExtender()
             ->registerDashboardSettingsContributor()
-            ->registerDashboardWidgets();
+            ->registerDashboardFilamentWidgets();
     }
 
     private function isPackageInstalled(): bool
@@ -68,12 +68,12 @@ final class AdminServiceProvider extends ServiceProvider
         return $this;
     }
 
-    private function registerDashboardWidgets(): self
+    private function registerDashboardFilamentWidgets(): self
     {
         app(DashboardReportWidgetRegistry::class)
             ->registrations()
             ->each(function (array $registration): void {
-                CapellAdmin::registerDashboardWidget($registration['widget'], ...$registration['dashboards']);
+                CapellAdmin::registerDashboardFilamentWidget($registration['widget'], ...$registration['dashboards']);
             });
 
         return $this;

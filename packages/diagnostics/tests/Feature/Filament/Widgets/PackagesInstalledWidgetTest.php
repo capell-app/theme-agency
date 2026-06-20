@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Capell\Diagnostics\Filament\Widgets\Health\PackagesInstalledWidgetAbstract as PackagesInstalledWidget;
+use Capell\Diagnostics\Filament\Widgets\Health\PackagesInstalledFilamentWidget as PackagesInstalledWidget;
 use Capell\Tests\Support\Concerns\CreatesAdminUser;
 
 use function Pest\Livewire\livewire;

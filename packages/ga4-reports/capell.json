@@ -37,11 +37,11 @@
         },
         {
             "type": "dashboard-widget",
-            "class": "Capell\\GA4Reports\\Manifest\\GA4ReportsDashboardWidgetsContribution",
+            "class": "Capell\\GA4Reports\\Manifest\\GA4ReportsDashboardFilamentWidgetsContribution",
             "widgetClasses": [
-                "Capell\\GA4Reports\\Filament\\Widgets\\GA4ReportsTrafficTrendWidget",
-                "Capell\\GA4Reports\\Filament\\Widgets\\GA4ReportsTopPagesWidget",
-                "Capell\\GA4Reports\\Filament\\Widgets\\GA4ReportsSetupStatusWidget"
+                "Capell\\GA4Reports\\Filament\\Widgets\\GA4ReportsTrafficTrendFilamentWidget",
+                "Capell\\GA4Reports\\Filament\\Widgets\\GA4ReportsTopPagesFilamentWidget",
+                "Capell\\GA4Reports\\Filament\\Widgets\\GA4ReportsSetupStatusFilamentWidget"
             ],
             "settingsKeys": [
                 "ga4_reports_traffic_trend",
@@ -51,10 +51,10 @@
         },
         {
             "type": "dashboard-widget",
-            "class": "Capell\\GA4Reports\\Manifest\\GA4ReportsDashboardWidgetsContribution",
+            "class": "Capell\\GA4Reports\\Manifest\\GA4ReportsDashboardFilamentWidgetsContribution",
             "widgetClasses": [
-                "Capell\\GA4Reports\\Filament\\Widgets\\GA4ReportsOverviewStatsWidget",
-                "Capell\\GA4Reports\\Filament\\Widgets\\GA4ReportsTopPagesTableWidget"
+                "Capell\\GA4Reports\\Filament\\Widgets\\GA4ReportsOverviewStatsFilamentWidget",
+                "Capell\\GA4Reports\\Filament\\Widgets\\GA4ReportsTopPagesTableFilamentWidget"
             ],
             "surface": "admin-page",
             "pageClass": "Capell\\GA4Reports\\Filament\\Pages\\GA4ReportsPage"

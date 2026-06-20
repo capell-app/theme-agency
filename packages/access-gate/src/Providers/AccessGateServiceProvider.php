@@ -13,7 +13,7 @@ use Capell\AccessGate\Console\Commands\AccessGateSetupCommand;
 use Capell\AccessGate\Contracts\AccessRequestMethod;
 use Capell\AccessGate\Contracts\RegistrationField;
 use Capell\AccessGate\Enums\ResourceEnum;
-use Capell\AccessGate\Filament\Widgets\PendingAccessRequestsWidget;
+use Capell\AccessGate\Filament\Widgets\PendingAccessRequestsFilamentWidget;
 use Capell\AccessGate\Frontend\Rules\AccessGateAreaStatusCondition;
 use Capell\AccessGate\Frontend\Rules\AccessGateRegistrationStatusCondition;
 use Capell\AccessGate\Frontend\Rules\HasActiveAccessGateGrantCondition;
@@ -383,7 +383,7 @@ class AccessGateServiceProvider extends AbstractPackageServiceProvider
         }
 
         CapellAdmin::contributeToAdminSurface(AdminSurfaceContributionData::widget(
-            PendingAccessRequestsWidget::class,
+            PendingAccessRequestsFilamentWidget::class,
         ));
 
         return $this;

@@ -13,7 +13,7 @@ final class LegacyAdminBridgeFallbackHost
     public array $surfaceContributions = [];
 
     /** @var array<class-string, list<DashboardEnum>> */
-    public array $dashboardWidgets = [];
+    public array $dashboardFilamentWidgets = [];
 
     /** @var array<string, list<class-string>> */
     public array $extensionPages = [];
@@ -26,9 +26,9 @@ final class LegacyAdminBridgeFallbackHost
     /**
      * @param  class-string  $widget
      */
-    public function registerDashboardWidget(string $widget, DashboardEnum ...$dashboards): void
+    public function registerDashboardFilamentWidget(string $widget, DashboardEnum ...$dashboards): void
     {
-        $this->dashboardWidgets[$widget] = array_values($dashboards);
+        $this->dashboardFilamentWidgets[$widget] = array_values($dashboards);
     }
 
     /**

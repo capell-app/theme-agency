@@ -9,7 +9,7 @@ All notable changes to `capell-app/deployments` will be documented in this file.
 
 ### 2026-06-04
 
-- Registered `DeploymentConnectionWidget` on the System Health dashboard and gated it with the same deployment page view/manage permissions so repository coordinates are not shown to unauthorised dashboard users.
+- Registered `DeploymentConnectionFilamentWidget` on the System Health dashboard and gated it with the same deployment page view/manage permissions so repository coordinates are not shown to unauthorised dashboard users.
 - Replaced the OAuth `repo_name = app` placeholder flow with repository owner/name entry before OAuth; callbacks now consume those coordinates from one-time OAuth state.
 - Disabled connect buttons until repository coordinates are present and the selected provider has an OAuth client id configured.
 - Made the bound `PublishesComposerChanges` publisher fail loudly when multiple active deployment connections exist, and documented the explicit-connection action path for consuming install flows.

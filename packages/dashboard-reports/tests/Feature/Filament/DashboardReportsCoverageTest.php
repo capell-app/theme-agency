@@ -5,7 +5,7 @@ declare(strict_types=1);
 use Capell\Admin\Contracts\Extenders\PageTableExtender;
 use Capell\Core\Models\Page;
 use Capell\DashboardReports\Filament\Extenders\DashboardReportsPageTableExtender;
-use Capell\DashboardReports\Filament\Widgets\PublishingTrendChartWidget;
+use Capell\DashboardReports\Filament\Widgets\PublishingTrendChartFilamentWidget;
 use Capell\DashboardReports\Health\DashboardReportsHealthCheck;
 use Capell\DashboardReports\Providers\DashboardReportsServiceProvider;
 use Capell\DashboardReports\Tests\DashboardReportsTestCase;
@@ -34,7 +34,7 @@ it('builds publishing trend widget chart datasets from action data', function ()
         'visible_from' => CarbonImmutable::parse('2026-05-04 09:00:00'),
     ]);
 
-    $widget = new PublishingTrendChartWidget;
+    $widget = new PublishingTrendChartFilamentWidget;
     $data = (new ReflectionMethod($widget, 'getData'))->invoke($widget);
 
     throw_unless(is_array($data), RuntimeException::class, 'Publishing trend chart data must be an array.');

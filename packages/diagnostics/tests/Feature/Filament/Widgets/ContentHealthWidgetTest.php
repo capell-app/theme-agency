@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Capell\Diagnostics\Filament\Widgets\Health\ContentHealthWidgetAbstract as ContentHealthWidget;
+use Capell\Diagnostics\Filament\Widgets\Health\ContentHealthFilamentWidget;
 use Capell\Tests\Support\Concerns\CreatesAdminUser;
 
 use function Pest\Livewire\livewire;
@@ -22,5 +22,5 @@ it('renders for an authenticated editor', function (): void {
 
     $this->actingAs($user);
 
-    livewire(ContentHealthWidget::class)->assertOk();
+    livewire(ContentHealthFilamentWidget::class)->assertOk();
 });

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 use Capell\Core\Models\Page;
 use Capell\PublishingStudio\Actions\CopyOnWriteAction;
-use Capell\PublishingStudio\Filament\Widgets\PageAlertsWidget;
+use Capell\PublishingStudio\Filament\Widgets\PageAlertsFilamentWidget;
 use Capell\PublishingStudio\Models\Workspace;
 use Capell\Tests\Support\Concerns\CreatesAdminUser;
 use Livewire\Livewire;
@@ -27,7 +27,7 @@ it('includes a draft status alert with workspace name when in a workspace', func
         $workspace,
     );
 
-    Livewire::test(PageAlertsWidget::class, ['record' => $draft->fresh()])
+    Livewire::test(PageAlertsFilamentWidget::class, ['record' => $draft->fresh()])
         ->assertSee('Draft in')
         ->assertSee('Sprint 2');
 });
@@ -40,6 +40,6 @@ it('renders an Open workspace action on the draft alert', function (): void {
         $workspace,
     );
 
-    Livewire::test(PageAlertsWidget::class, ['record' => $draft->fresh()])
+    Livewire::test(PageAlertsFilamentWidget::class, ['record' => $draft->fresh()])
         ->assertSee('Open workspace');
 });

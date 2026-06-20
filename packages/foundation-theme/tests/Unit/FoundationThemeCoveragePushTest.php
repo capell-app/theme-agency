@@ -618,7 +618,7 @@ it('hydrates livewire page widgets from opaque references and skips empty select
     ]);
     $layout->containers = [
         'main' => [
-            'widgets' => [
+            'layout_widgets' => [
                 [
                     'widget_key' => $widget->key,
                     'occurrence' => 1,

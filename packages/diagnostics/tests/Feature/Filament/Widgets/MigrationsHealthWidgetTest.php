@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Capell\Diagnostics\Filament\Widgets\Health\MigrationsHealthWidgetAbstract as MigrationsHealthWidget;
+use Capell\Diagnostics\Filament\Widgets\Health\MigrationsHealthFilamentWidget as MigrationsHealthWidget;
 use Capell\Tests\Support\Concerns\CreatesAdminUser;
 
 use function Pest\Livewire\livewire;

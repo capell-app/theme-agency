@@ -80,12 +80,12 @@
         },
         {
             "type": "dashboard-widget",
-            "class": "Capell\\PublishingStudio\\Manifest\\PublishingStudioDashboardWidgetsContribution",
+            "class": "Capell\\PublishingStudio\\Manifest\\PublishingStudioDashboardFilamentWidgetsContribution",
             "widgetClasses": [
-                "Capell\\PublishingStudio\\Filament\\Widgets\\ContentSchedulerCalendarWidget",
-                "Capell\\PublishingStudio\\Filament\\Widgets\\ContentSchedulerOverviewWidget",
-                "Capell\\PublishingStudio\\Filament\\Widgets\\WorkspaceActivityWidgetAbstract",
-                "Capell\\PublishingStudio\\Filament\\Widgets\\WorkspaceMergeHistoryWidgetAbstract"
+                "Capell\\PublishingStudio\\Filament\\Widgets\\ContentSchedulerCalendarFilamentWidget",
+                "Capell\\PublishingStudio\\Filament\\Widgets\\ContentSchedulerOverviewFilamentWidget",
+                "Capell\\PublishingStudio\\Filament\\Widgets\\WorkspaceActivityFilamentWidget",
+                "Capell\\PublishingStudio\\Filament\\Widgets\\WorkspaceMergeHistoryFilamentWidget"
             ]
         },
         {

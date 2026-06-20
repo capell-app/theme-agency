@@ -59,7 +59,7 @@
             "package": "campaign-studio",
             "surface": "admin",
             "targetType": "admin-surface",
-            "target": "CampaignOverviewStatsWidget",
+            "target": "CampaignOverviewStatsFilamentWidget",
             "required": true,
             "notes": "Requires the host dashboard to register Campaign Studio widgets and seeded visits, events, landing pages, goals, and conversions.",
             "useCase": "A marketer reviews campaign performance, top campaign groups, and top landing pages from the admin dashboard.",

@@ -1237,13 +1237,13 @@ parameters:
 			path: ../packages/layout-builder/tests/Unit/Livewire/LayoutBuilderActionFactoryCoverageTest.php
 
 		-
-			rawMessage: 'Cannot call method setRelation() on Capell\LayoutBuilder\Models\Widget|null.'
+			rawMessage: 'Cannot call method setRelation() on Capell\LayoutBuilder\Models\LayoutWidget|null.'
 			identifier: method.nonObject
 			count: 1
 			path: ../packages/layout-builder/tests/Unit/Livewire/LayoutBuilderActionFactoryCoverageTest.php
 
 		-
-			rawMessage: 'Method LayoutBuilderActionFlowHarness::getContainerBlock() should return Capell\LayoutBuilder\Models\Widget but returns Capell\LayoutBuilder\Models\Widget|null.'
+			rawMessage: 'Method LayoutBuilderActionFlowHarness::getContainerBlock() should return Capell\LayoutBuilder\Models\LayoutWidget but returns Capell\LayoutBuilder\Models\LayoutWidget|null.'
 			identifier: return.type
 			count: 1
 			path: ../packages/layout-builder/tests/Unit/Livewire/LayoutBuilderActionFactoryCoverageTest.php
@@ -1903,124 +1903,124 @@ parameters:
 			path: ../tests/Packages/Feature/AdminSurfaceSchemaBuildTest.php
 
 		-
-			rawMessage: 'Function packageDashboardWidgetRecords() return type with generic class Illuminate\Support\Collection does not specify its types: TKey, TValue'
+			rawMessage: 'Function packageDashboardFilamentWidgetRecords() return type with generic class Illuminate\Support\Collection does not specify its types: TKey, TValue'
 			identifier: missingType.generics
 			count: 1
-			path: ../tests/Packages/Feature/DashboardWidgetSurfaceCoverageTest.php
+			path: ../tests/Packages/Feature/DashboardFilamentWidgetSurfaceCoverageTest.php
 
 		-
-			rawMessage: 'Method class@anonymous/tests/Packages/Feature/DashboardWidgetSurfaceCoverageTest.php:146::handle() return type has no value type specified in iterable type array.'
+			rawMessage: 'Method class@anonymous/tests/Packages/Feature/DashboardFilamentWidgetSurfaceCoverageTest.php:146::handle() return type has no value type specified in iterable type array.'
 			identifier: missingType.iterableValue
 			count: 1
-			path: ../tests/Packages/Feature/DashboardWidgetSurfaceCoverageTest.php
+			path: ../tests/Packages/Feature/DashboardFilamentWidgetSurfaceCoverageTest.php
 
 		-
-			rawMessage: 'Method class@anonymous/tests/Packages/Feature/DashboardWidgetSurfaceCoverageTest.php:158::handle() return type with generic class Illuminate\Support\Collection does not specify its types: TKey, TValue'
+			rawMessage: 'Method class@anonymous/tests/Packages/Feature/DashboardFilamentWidgetSurfaceCoverageTest.php:158::handle() return type with generic class Illuminate\Support\Collection does not specify its types: TKey, TValue'
 			identifier: missingType.generics
 			count: 1
-			path: ../tests/Packages/Feature/DashboardWidgetSurfaceCoverageTest.php
+			path: ../tests/Packages/Feature/DashboardFilamentWidgetSurfaceCoverageTest.php
 
 		-
-			rawMessage: 'Method class@anonymous/tests/Packages/Feature/DashboardWidgetSurfaceCoverageTest.php:193::handle() return type with generic class Illuminate\Support\Collection does not specify its types: TKey, TValue'
+			rawMessage: 'Method class@anonymous/tests/Packages/Feature/DashboardFilamentWidgetSurfaceCoverageTest.php:193::handle() return type with generic class Illuminate\Support\Collection does not specify its types: TKey, TValue'
 			identifier: missingType.generics
 			count: 1
-			path: ../tests/Packages/Feature/DashboardWidgetSurfaceCoverageTest.php
+			path: ../tests/Packages/Feature/DashboardFilamentWidgetSurfaceCoverageTest.php
 
 		-
-			rawMessage: 'Method class@anonymous/tests/Packages/Feature/DashboardWidgetSurfaceCoverageTest.php:202::handle() return type with generic class Illuminate\Support\Collection does not specify its types: TKey, TValue'
+			rawMessage: 'Method class@anonymous/tests/Packages/Feature/DashboardFilamentWidgetSurfaceCoverageTest.php:202::handle() return type with generic class Illuminate\Support\Collection does not specify its types: TKey, TValue'
 			identifier: missingType.generics
 			count: 1
-			path: ../tests/Packages/Feature/DashboardWidgetSurfaceCoverageTest.php
+			path: ../tests/Packages/Feature/DashboardFilamentWidgetSurfaceCoverageTest.php
 
 		-
-			rawMessage: 'Method class@anonymous/tests/Packages/Feature/DashboardWidgetSurfaceCoverageTest.php:213::handle() return type with generic class Illuminate\Support\Collection does not specify its types: TKey, TValue'
+			rawMessage: 'Method class@anonymous/tests/Packages/Feature/DashboardFilamentWidgetSurfaceCoverageTest.php:213::handle() return type with generic class Illuminate\Support\Collection does not specify its types: TKey, TValue'
 			identifier: missingType.generics
 			count: 1
-			path: ../tests/Packages/Feature/DashboardWidgetSurfaceCoverageTest.php
+			path: ../tests/Packages/Feature/DashboardFilamentWidgetSurfaceCoverageTest.php
 
 		-
-			rawMessage: 'Method class@anonymous/tests/Packages/Feature/DashboardWidgetSurfaceCoverageTest.php:224::handle() return type with generic class Illuminate\Support\Collection does not specify its types: TKey, TValue'
+			rawMessage: 'Method class@anonymous/tests/Packages/Feature/DashboardFilamentWidgetSurfaceCoverageTest.php:224::handle() return type with generic class Illuminate\Support\Collection does not specify its types: TKey, TValue'
 			identifier: missingType.generics
 			count: 1
-			path: ../tests/Packages/Feature/DashboardWidgetSurfaceCoverageTest.php
+			path: ../tests/Packages/Feature/DashboardFilamentWidgetSurfaceCoverageTest.php
 
 		-
-			rawMessage: 'Method class@anonymous/tests/Packages/Feature/DashboardWidgetSurfaceCoverageTest.php:235::handle() return type with generic class Illuminate\Support\Collection does not specify its types: TKey, TValue'
+			rawMessage: 'Method class@anonymous/tests/Packages/Feature/DashboardFilamentWidgetSurfaceCoverageTest.php:235::handle() return type with generic class Illuminate\Support\Collection does not specify its types: TKey, TValue'
 			identifier: missingType.generics
 			count: 1
-			path: ../tests/Packages/Feature/DashboardWidgetSurfaceCoverageTest.php
+			path: ../tests/Packages/Feature/DashboardFilamentWidgetSurfaceCoverageTest.php
 
 		-
-			rawMessage: 'Method class@anonymous/tests/Packages/Feature/DashboardWidgetSurfaceCoverageTest.php:246::handle() return type with generic class Illuminate\Support\Collection does not specify its types: TKey, TValue'
+			rawMessage: 'Method class@anonymous/tests/Packages/Feature/DashboardFilamentWidgetSurfaceCoverageTest.php:246::handle() return type with generic class Illuminate\Support\Collection does not specify its types: TKey, TValue'
 			identifier: missingType.generics
 			count: 1
-			path: ../tests/Packages/Feature/DashboardWidgetSurfaceCoverageTest.php
+			path: ../tests/Packages/Feature/DashboardFilamentWidgetSurfaceCoverageTest.php
 
 		-
-			rawMessage: 'Method class@anonymous/tests/Packages/Feature/DashboardWidgetSurfaceCoverageTest.php:276::handle() return type with generic class Illuminate\Support\Collection does not specify its types: TKey, TValue'
+			rawMessage: 'Method class@anonymous/tests/Packages/Feature/DashboardFilamentWidgetSurfaceCoverageTest.php:276::handle() return type with generic class Illuminate\Support\Collection does not specify its types: TKey, TValue'
 			identifier: missingType.generics
 			count: 1
-			path: ../tests/Packages/Feature/DashboardWidgetSurfaceCoverageTest.php
+			path: ../tests/Packages/Feature/DashboardFilamentWidgetSurfaceCoverageTest.php
 
 		-
-			rawMessage: 'Method class@anonymous/tests/Packages/Feature/DashboardWidgetSurfaceCoverageTest.php:288::handle() return type with generic class Illuminate\Support\Collection does not specify its types: TKey, TValue'
+			rawMessage: 'Method class@anonymous/tests/Packages/Feature/DashboardFilamentWidgetSurfaceCoverageTest.php:288::handle() return type with generic class Illuminate\Support\Collection does not specify its types: TKey, TValue'
 			identifier: missingType.generics
 			count: 1
-			path: ../tests/Packages/Feature/DashboardWidgetSurfaceCoverageTest.php
+			path: ../tests/Packages/Feature/DashboardFilamentWidgetSurfaceCoverageTest.php
 
 		-
-			rawMessage: 'Method class@anonymous/tests/Packages/Feature/DashboardWidgetSurfaceCoverageTest.php:299::handle() return type with generic class Illuminate\Support\Collection does not specify its types: TKey, TValue'
+			rawMessage: 'Method class@anonymous/tests/Packages/Feature/DashboardFilamentWidgetSurfaceCoverageTest.php:299::handle() return type with generic class Illuminate\Support\Collection does not specify its types: TKey, TValue'
 			identifier: missingType.generics
 			count: 1
-			path: ../tests/Packages/Feature/DashboardWidgetSurfaceCoverageTest.php
+			path: ../tests/Packages/Feature/DashboardFilamentWidgetSurfaceCoverageTest.php
 
 		-
-			rawMessage: 'Method class@anonymous/tests/Packages/Feature/DashboardWidgetSurfaceCoverageTest.php:342::handle() return type with generic class Illuminate\Support\Collection does not specify its types: TKey, TValue'
+			rawMessage: 'Method class@anonymous/tests/Packages/Feature/DashboardFilamentWidgetSurfaceCoverageTest.php:342::handle() return type with generic class Illuminate\Support\Collection does not specify its types: TKey, TValue'
 			identifier: missingType.generics
 			count: 1
-			path: ../tests/Packages/Feature/DashboardWidgetSurfaceCoverageTest.php
+			path: ../tests/Packages/Feature/DashboardFilamentWidgetSurfaceCoverageTest.php
 
 		-
-			rawMessage: 'Method class@anonymous/tests/Packages/Feature/DashboardWidgetSurfaceCoverageTest.php:354::handle() return type with generic class Illuminate\Support\Collection does not specify its types: TKey, TValue'
+			rawMessage: 'Method class@anonymous/tests/Packages/Feature/DashboardFilamentWidgetSurfaceCoverageTest.php:354::handle() return type with generic class Illuminate\Support\Collection does not specify its types: TKey, TValue'
 			identifier: missingType.generics
 			count: 1
-			path: ../tests/Packages/Feature/DashboardWidgetSurfaceCoverageTest.php
+			path: ../tests/Packages/Feature/DashboardFilamentWidgetSurfaceCoverageTest.php
 
 		-
-			rawMessage: 'Method class@anonymous/tests/Packages/Feature/DashboardWidgetSurfaceCoverageTest.php:382::handle() return type has no value type specified in iterable type array.'
+			rawMessage: 'Method class@anonymous/tests/Packages/Feature/DashboardFilamentWidgetSurfaceCoverageTest.php:382::handle() return type has no value type specified in iterable type array.'
 			identifier: missingType.iterableValue
 			count: 1
-			path: ../tests/Packages/Feature/DashboardWidgetSurfaceCoverageTest.php
+			path: ../tests/Packages/Feature/DashboardFilamentWidgetSurfaceCoverageTest.php
 
 		-
-			rawMessage: 'Method class@anonymous/tests/Packages/Feature/DashboardWidgetSurfaceCoverageTest.php:394::handle() return type with generic class Illuminate\Support\Collection does not specify its types: TKey, TValue'
+			rawMessage: 'Method class@anonymous/tests/Packages/Feature/DashboardFilamentWidgetSurfaceCoverageTest.php:394::handle() return type with generic class Illuminate\Support\Collection does not specify its types: TKey, TValue'
 			identifier: missingType.generics
 			count: 1
-			path: ../tests/Packages/Feature/DashboardWidgetSurfaceCoverageTest.php
+			path: ../tests/Packages/Feature/DashboardFilamentWidgetSurfaceCoverageTest.php
 
 		-
-			rawMessage: 'Method class@anonymous/tests/Packages/Feature/DashboardWidgetSurfaceCoverageTest.php:443::handle() return type with generic class Illuminate\Database\Eloquent\Builder does not specify its types: TModel'
+			rawMessage: 'Method class@anonymous/tests/Packages/Feature/DashboardFilamentWidgetSurfaceCoverageTest.php:443::handle() return type with generic class Illuminate\Database\Eloquent\Builder does not specify its types: TModel'
 			identifier: missingType.generics
 			count: 1
-			path: ../tests/Packages/Feature/DashboardWidgetSurfaceCoverageTest.php
+			path: ../tests/Packages/Feature/DashboardFilamentWidgetSurfaceCoverageTest.php
 
 		-
-			rawMessage: 'Method class@anonymous/tests/Packages/Feature/DashboardWidgetSurfaceCoverageTest.php:79::handle() return type with generic class Illuminate\Support\Collection does not specify its types: TKey, TValue'
+			rawMessage: 'Method class@anonymous/tests/Packages/Feature/DashboardFilamentWidgetSurfaceCoverageTest.php:79::handle() return type with generic class Illuminate\Support\Collection does not specify its types: TKey, TValue'
 			identifier: missingType.generics
 			count: 1
-			path: ../tests/Packages/Feature/DashboardWidgetSurfaceCoverageTest.php
+			path: ../tests/Packages/Feature/DashboardFilamentWidgetSurfaceCoverageTest.php
 
 		-
-			rawMessage: 'Method class@anonymous/tests/Packages/Feature/DashboardWidgetSurfaceCoverageTest.php:97::handle() return type with generic class Illuminate\Support\Collection does not specify its types: TKey, TValue'
+			rawMessage: 'Method class@anonymous/tests/Packages/Feature/DashboardFilamentWidgetSurfaceCoverageTest.php:97::handle() return type with generic class Illuminate\Support\Collection does not specify its types: TKey, TValue'
 			identifier: missingType.generics
 			count: 1
-			path: ../tests/Packages/Feature/DashboardWidgetSurfaceCoverageTest.php
+			path: ../tests/Packages/Feature/DashboardFilamentWidgetSurfaceCoverageTest.php
 
 		-
 			rawMessage: Trying to invoke Closure|null but it might not be a callable.
 			identifier: callable.nonCallable
 			count: 2
-			path: ../tests/Packages/Feature/DashboardWidgetSurfaceCoverageTest.php
+			path: ../tests/Packages/Feature/DashboardFilamentWidgetSurfaceCoverageTest.php
 
 		-
 			rawMessage: 'Class PackagePolicyCoverageUser uses generic trait Illuminate\Database\Eloquent\Factories\HasFactory but does not specify its types: TFactory'

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Capell\Diagnostics\Filament\Widgets\Health\RegistryHealthWidgetAbstract as RegistryHealthWidget;
+use Capell\Diagnostics\Filament\Widgets\Health\RegistryHealthFilamentWidget as RegistryHealthWidget;
 use Capell\Tests\Support\Concerns\CreatesAdminUser;
 
 use function Pest\Livewire\livewire;

@@ -5,7 +5,7 @@ declare(strict_types=1);
 use Capell\Admin\Actions\ReplicatePageAction;
 use Capell\Core\Actions\PageSavedAction;
 use Capell\Core\Models\Page;
-use Capell\PublishingStudio\Filament\Widgets\WorkspaceMergeHistoryWidgetAbstract as WorkspaceMergeHistoryWidget;
+use Capell\PublishingStudio\Filament\Widgets\WorkspaceMergeHistoryFilamentWidget as WorkspaceMergeHistoryWidget;
 use Illuminate\Support\Facades\Cache;
 
 beforeEach(function (): void {

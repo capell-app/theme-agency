@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-use Capell\Core\Contracts\Extensions\RegistersExtensionWidget;
+use Capell\Core\Contracts\Extensions\RegistersExtensionFilamentWidget;
 use Capell\DashboardReports\Filament\Settings\Contributors\DashboardReportsDashboardSettingsContributor;
-use Capell\DashboardReports\Filament\Widgets\ContentHealthWidget;
-use Capell\DashboardReports\Filament\Widgets\PublishingTrendChartWidget;
-use Capell\DashboardReports\Manifest\DashboardReportsDashboardWidgetsContribution;
+use Capell\DashboardReports\Filament\Widgets\ContentHealthFilamentWidget;
+use Capell\DashboardReports\Filament\Widgets\PublishingTrendChartFilamentWidget;
+use Capell\DashboardReports\Manifest\DashboardReportsDashboardFilamentWidgetsContribution;
 use Capell\DashboardReports\Tests\DashboardReportsTestCase;
 use Illuminate\Support\Facades\File;
 
@@ -117,18 +117,18 @@ it('declares dashboard widget contribution metadata', function (): void {
     throw_unless(is_array($contributes), RuntimeException::class, 'Dashboard Reports contributions must be an array.');
 
     $contributions = collect($contributes);
-    $dashboardWidgets = $contributions->firstWhere('class', DashboardReportsDashboardWidgetsContribution::class);
+    $dashboardFilamentWidgets = $contributions->firstWhere('class', DashboardReportsDashboardFilamentWidgetsContribution::class);
 
-    throw_unless(is_array($dashboardWidgets), RuntimeException::class, 'Dashboard Reports widget contribution must be an array.');
+    throw_unless(is_array($dashboardFilamentWidgets), RuntimeException::class, 'Dashboard Reports widget contribution must be an array.');
 
-    expect($dashboardWidgets)->toBeArray()
-        ->and($dashboardWidgets['type'])->toBe('dashboard-widget')
-        ->and($dashboardWidgets['dashboard'])->toBe('main')
-        ->and($dashboardWidgets['widgetClasses'])->toBe([
-            PublishingTrendChartWidget::class,
-            ContentHealthWidget::class,
+    expect($dashboardFilamentWidgets)->toBeArray()
+        ->and($dashboardFilamentWidgets['type'])->toBe('dashboard-widget')
+        ->and($dashboardFilamentWidgets['dashboard'])->toBe('main')
+        ->and($dashboardFilamentWidgets['widgetClasses'])->toBe([
+            PublishingTrendChartFilamentWidget::class,
+            ContentHealthFilamentWidget::class,
         ])
-        ->and($dashboardWidgets['settingsContributor'])->toBe(DashboardReportsDashboardSettingsContributor::class)
+        ->and($dashboardFilamentWidgets['settingsContributor'])->toBe(DashboardReportsDashboardSettingsContributor::class)
         ->and(data_get($manifest, 'contributionTraceability.deferredContributions'))->toBe([])
-        ->and(class_implements(DashboardReportsDashboardWidgetsContribution::class))->toContain(RegistersExtensionWidget::class);
+        ->and(class_implements(DashboardReportsDashboardFilamentWidgetsContribution::class))->toContain(RegistersExtensionFilamentWidget::class);
 });

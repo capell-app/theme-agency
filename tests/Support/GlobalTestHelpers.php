@@ -143,7 +143,7 @@ if (! function_exists('blogTestContainerWidgets')) {
     function blogTestContainerWidgets(array $containers, string $container): array
     {
         $containerData = blogTestArray($containers[$container] ?? null);
-        $widgets = $containerData['widgets'] ?? [];
+        $widgets = $containerData['layout_widgets'] ?? [];
 
         throw_unless(is_array($widgets), RuntimeException::class, 'Expected container widgets.');
 

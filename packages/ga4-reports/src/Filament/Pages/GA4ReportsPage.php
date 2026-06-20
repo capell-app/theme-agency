@@ -8,11 +8,11 @@ use BackedEnum;
 use BezhanSalleh\FilamentShield\Traits\HasPageShield;
 use Capell\GA4Reports\Actions\ResolveGA4ReportsConfigAction;
 use Capell\GA4Reports\Actions\SyncGA4ReportsMetricsAction;
-use Capell\GA4Reports\Filament\Widgets\GA4ReportsOverviewStatsWidget;
-use Capell\GA4Reports\Filament\Widgets\GA4ReportsSetupStatusWidget;
-use Capell\GA4Reports\Filament\Widgets\GA4ReportsTopPagesTableWidget;
-use Capell\GA4Reports\Filament\Widgets\GA4ReportsTopPagesWidget;
-use Capell\GA4Reports\Filament\Widgets\GA4ReportsTrafficTrendWidget;
+use Capell\GA4Reports\Filament\Widgets\GA4ReportsOverviewStatsFilamentWidget;
+use Capell\GA4Reports\Filament\Widgets\GA4ReportsSetupStatusFilamentWidget;
+use Capell\GA4Reports\Filament\Widgets\GA4ReportsTopPagesFilamentWidget;
+use Capell\GA4Reports\Filament\Widgets\GA4ReportsTopPagesTableFilamentWidget;
+use Capell\GA4Reports\Filament\Widgets\GA4ReportsTrafficTrendFilamentWidget;
 use Filament\Actions\Action;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
@@ -68,10 +68,10 @@ final class GA4ReportsPage extends Page
     protected function getHeaderWidgets(): array
     {
         return [
-            GA4ReportsOverviewStatsWidget::class,
-            GA4ReportsTrafficTrendWidget::class,
-            GA4ReportsTopPagesWidget::class,
-            GA4ReportsSetupStatusWidget::class,
+            GA4ReportsOverviewStatsFilamentWidget::class,
+            GA4ReportsTrafficTrendFilamentWidget::class,
+            GA4ReportsTopPagesFilamentWidget::class,
+            GA4ReportsSetupStatusFilamentWidget::class,
         ];
     }
 
@@ -79,7 +79,7 @@ final class GA4ReportsPage extends Page
     protected function getFooterWidgets(): array
     {
         return [
-            GA4ReportsTopPagesTableWidget::class,
+            GA4ReportsTopPagesTableFilamentWidget::class,
         ];
     }
 

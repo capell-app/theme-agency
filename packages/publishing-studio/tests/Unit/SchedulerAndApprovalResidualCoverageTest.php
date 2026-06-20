@@ -14,7 +14,7 @@ use Capell\PublishingStudio\Enums\SchedulerEventTypeEnum;
 use Capell\PublishingStudio\Enums\WorkspaceApprovalActionEnum;
 use Capell\PublishingStudio\Enums\WorkspaceStatusEnum;
 use Capell\PublishingStudio\Filament\Pages\Tables\ScheduledPublishingTable;
-use Capell\PublishingStudio\Filament\Widgets\PageAlertsWidget;
+use Capell\PublishingStudio\Filament\Widgets\PageAlertsFilamentWidget;
 use Capell\PublishingStudio\Livewire\PageApprovalStatus;
 use Capell\PublishingStudio\Livewire\WorkspaceApprovalHistory;
 use Capell\PublishingStudio\Models\SchedulerEvent;
@@ -551,9 +551,9 @@ function scheduledPublishingTableRecordForCoverage(SchedulerEvent $event): array
     ];
 }
 
-function pageAlertsWidgetForCoverage(?Page $page): PageAlertsWidget
+function pageAlertsWidgetForCoverage(?Page $page): PageAlertsFilamentWidget
 {
-    return new class($page) extends PageAlertsWidget
+    return new class($page) extends PageAlertsFilamentWidget
     {
         public function __construct(?Page $page)
         {

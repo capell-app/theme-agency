@@ -42,7 +42,7 @@ Screenshot contract: `screenshots.json`.
 - Settings migrations: `packages/comments/database/settings/2026_05_24_000005_create_comments_settings.php`.
 - Settings classes: `CommentSettings`.
 - Models: `Comment`, `CommentAuthor`, `CommentModerationEvent`, `CommentReaction`, `CommentToken`.
-- Filament classes: `CommentModerationInbox`, `CommentAuthorResource`, `ListCommentAuthors`, `CommentResource`, `ListComments`, `CommentsTable`, `CommentSettingsSchema`, `CommentsDashboardSettingsContributor`, `CommentStatsWidget`, `LatestCommentsWidget`.
+- Filament classes: `CommentModerationInbox`, `CommentAuthorResource`, `ListCommentAuthors`, `CommentResource`, `ListComments`, `CommentsTable`, `CommentSettingsSchema`, `CommentsDashboardSettingsContributor`, `CommentStatsFilamentWidget`, `LatestCommentsFilamentWidget`.
 - Livewire components: `CommentThreadComponent`.
 - Route files: `packages/comments/routes/web.php`.
 - Policies: `CommentAuthorPolicy`, `CommentPolicy`.
@@ -52,7 +52,7 @@ Screenshot contract: `screenshots.json`.
 - Data objects: `CommentEmailTemplateData`, `CommentPrivacyRetentionResultData`, `CommentReactionResultData`, `CommentSpamCheckData`, `CommentSpamScoreData`, `CommentableTypeData`, `CreateCommentData`, `PublicCommentData`, `PublicCommentableThreadData`.
 - Command signatures: `capell-comments:install`, `capell-comments:privacy-retention`.
 - Console command classes: `InstallCommentsCommand`, `PruneCommentPrivacyDataCommand`.
-- Manifest contributions: `admin-resource: Capell\Comments\Manifest\CommentAdminResourcesContribution`, `dashboard-widget: Capell\Comments\Manifest\CommentDashboardWidgetsContribution`, `frontend-component: Capell\Comments\Manifest\CommentFrontendComponentsContribution`, `model: Capell\Comments\Manifest\CommentModelsContribution`, `route: Capell\Comments\Manifest\CommentRoutesContribution`, `setting: Capell\Comments\Manifest\CommentSettingsContribution`.
+- Manifest contributions: `admin-resource: Capell\Comments\Manifest\CommentAdminResourcesContribution`, `dashboard-widget: Capell\Comments\Manifest\CommentDashboardFilamentWidgetsContribution`, `frontend-component: Capell\Comments\Manifest\CommentFrontendComponentsContribution`, `model: Capell\Comments\Manifest\CommentModelsContribution`, `route: Capell\Comments\Manifest\CommentRoutesContribution`, `setting: Capell\Comments\Manifest\CommentSettingsContribution`.
 - Health checks: `Capell\Comments\Health\CommentsHealthCheck`.
 - Blade views: `packages/comments/resources/views/emails/approved.blade.php`, `packages/comments/resources/views/emails/pending-moderation.blade.php`, `packages/comments/resources/views/emails/rejected.blade.php`, `packages/comments/resources/views/emails/reply-notification.blade.php`, `packages/comments/resources/views/emails/verify-email.blade.php`, `packages/comments/resources/views/filament/comment-context.blade.php`, `packages/comments/resources/views/filament/moderation-inbox.blade.php`, `packages/comments/resources/views/livewire/partials/comment-list.blade.php`, `packages/comments/resources/views/livewire/thread-livewire.blade.php`, `packages/comments/resources/views/livewire/thread-shell.blade.php`, `packages/comments/resources/views/livewire/thread.blade.php`, `packages/comments/resources/views/reply-notifications-disabled.blade.php`, `and 1 more`.
 - Cache tags: `comments`.

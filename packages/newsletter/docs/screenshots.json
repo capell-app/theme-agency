@@ -131,7 +131,7 @@
             "package": "newsletter",
             "surface": "admin",
             "targetType": "admin-surface",
-            "target": "NewsletterOverviewStatsWidget",
+            "target": "NewsletterOverviewStatsFilamentWidget",
             "required": true,
             "notes": "Capture dashboard stats for subscribed, pending, and sync failures.",
             "useCase": "A marketer checks subscribed, pending, and sync-failure dashboard stats.",

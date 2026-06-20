@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Capell\PublishingStudio\Filament\Widgets\WorkspaceActivityWidgetAbstract as WorkspaceActivityWidget;
+use Capell\PublishingStudio\Filament\Widgets\WorkspaceActivityFilamentWidget as WorkspaceActivityWidget;
 use Capell\Tests\Support\Concerns\CreatesAdminUser;
 
 use function Pest\Livewire\livewire;

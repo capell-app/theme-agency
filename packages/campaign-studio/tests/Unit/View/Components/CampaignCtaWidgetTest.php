@@ -15,8 +15,8 @@ use Illuminate\Contracts\View\View;
 it('hydrates CTA widgets for campaign widgets in one batch', function (): void {
     $firstCtaWidget = CampaignCtaWidget::factory()->create(['headline' => 'First CTA']);
     $secondCtaWidget = CampaignCtaWidget::factory()->create(['headline' => 'Second CTA']);
-    $firstWidget = Widget::factory()->create(['meta' => ['cta_widget_id' => $firstCtaWidget->getKey()]]);
-    $secondWidget = Widget::factory()->create(['meta' => ['cta_widget_id' => $secondCtaWidget->getKey()]]);
+    $firstWidget = Widget::factory()->create(['meta' => ['cta_layout_widget_id' => $firstCtaWidget->getKey()]]);
+    $secondWidget = Widget::factory()->create(['meta' => ['cta_layout_widget_id' => $secondCtaWidget->getKey()]]);
 
     CampaignCtaWidgetComponent::hydrateWidgets(collect([$firstWidget, $secondWidget]));
 
@@ -44,9 +44,9 @@ it('hydrates only active CTA widgets for the current frontend site', function ()
         'is_active' => false,
         'headline' => 'Inactive CTA',
     ]);
-    $siteWidget = Widget::factory()->create(['meta' => ['cta_widget_id' => $siteCtaWidget->getKey()]]);
-    $hiddenWidget = Widget::factory()->create(['meta' => ['cta_widget_id' => $hiddenCtaWidget->getKey()]]);
-    $inactiveWidget = Widget::factory()->create(['meta' => ['cta_widget_id' => $inactiveCtaWidget->getKey()]]);
+    $siteWidget = Widget::factory()->create(['meta' => ['cta_layout_widget_id' => $siteCtaWidget->getKey()]]);
+    $hiddenWidget = Widget::factory()->create(['meta' => ['cta_layout_widget_id' => $hiddenCtaWidget->getKey()]]);
+    $inactiveWidget = Widget::factory()->create(['meta' => ['cta_layout_widget_id' => $inactiveCtaWidget->getKey()]]);
 
     CampaignCtaWidgetComponent::hydrateWidgets(collect([$siteWidget, $hiddenWidget, $inactiveWidget]));
 
@@ -63,7 +63,7 @@ it('renders public CTA tracking attributes without leaking numeric campaign ids'
             'key' => 'primary-cta',
             'headline' => 'Start today',
         ]);
-    $widget = Widget::factory()->create(['meta' => ['cta_widget_id' => $ctaWidget->getKey()]]);
+    $widget = Widget::factory()->create(['meta' => ['cta_layout_widget_id' => $ctaWidget->getKey()]]);
 
     CampaignCtaWidgetComponent::hydrateWidgets(collect([$widget]));
 

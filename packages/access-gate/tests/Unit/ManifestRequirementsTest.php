@@ -13,7 +13,7 @@ use Capell\AccessGate\Filament\Resources\ClaimTokens\ClaimTokenResource;
 use Capell\AccessGate\Filament\Resources\Events\AccessGateEventResource;
 use Capell\AccessGate\Filament\Resources\Grants\GrantResource;
 use Capell\AccessGate\Filament\Resources\Registrations\RegistrationResource;
-use Capell\AccessGate\Filament\Widgets\PendingAccessRequestsWidget;
+use Capell\AccessGate\Filament\Widgets\PendingAccessRequestsFilamentWidget;
 use Capell\AccessGate\Health\AccessGateHealthCheck;
 use Capell\AccessGate\Manifest\AccessAreaResourceContribution;
 use Capell\AccessGate\Manifest\AccessGateConsoleCommandsContribution;
@@ -36,8 +36,8 @@ use Capell\AccessGate\Models\Registration;
 use Capell\Core\Contracts\Extensions\ChecksExtensionHealth;
 use Capell\Core\Contracts\Extensions\ExtensionContribution;
 use Capell\Core\Contracts\Extensions\RegistersExtensionAdminResource;
+use Capell\Core\Contracts\Extensions\RegistersExtensionFilamentWidget;
 use Capell\Core\Contracts\Extensions\RegistersExtensionRoute;
-use Capell\Core\Contracts\Extensions\RegistersExtensionWidget;
 use Capell\Core\Support\Manifest\ManifestValidator;
 
 it('declares the shipped access gate package manifest surfaces', function (): void {
@@ -111,7 +111,7 @@ it('declares the shipped access gate package manifest surfaces', function (): vo
         ->toContain([
             'type' => 'dashboard-widget',
             'class' => PendingAccessRequestsWidgetContribution::class,
-            'widgetClass' => PendingAccessRequestsWidget::class,
+            'widgetClass' => PendingAccessRequestsFilamentWidget::class,
             'labelKey' => 'capell-access-gate::filament.widgets.pending_access_requests',
         ])
         ->toContain([
@@ -175,7 +175,7 @@ it('declares the shipped access gate package manifest surfaces', function (): vo
         ->and(class_implements(BrowserTokenResourceContribution::class))->toContain(RegistersExtensionAdminResource::class)
         ->and(class_implements(ClaimTokenResourceContribution::class))->toContain(RegistersExtensionAdminResource::class)
         ->and(class_implements(AccessGateEventResourceContribution::class))->toContain(RegistersExtensionAdminResource::class)
-        ->and(class_implements(PendingAccessRequestsWidgetContribution::class))->toContain(RegistersExtensionWidget::class)
+        ->and(class_implements(PendingAccessRequestsWidgetContribution::class))->toContain(RegistersExtensionFilamentWidget::class)
         ->and(class_implements(AccessGateRoutesContribution::class))->toContain(RegistersExtensionRoute::class)
         ->and(class_implements(AccessGateConsoleCommandsContribution::class))->toContain(ExtensionContribution::class)
         ->and(class_implements(AccessGateModelsContribution::class))->toContain(ExtensionContribution::class)

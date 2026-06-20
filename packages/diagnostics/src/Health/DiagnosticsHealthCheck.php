@@ -9,7 +9,7 @@ use Capell\Core\Data\Diagnostics\DoctorCheckResultData;
 use Capell\Diagnostics\Actions\Dashboard\BuildPackagesInstalledAction;
 use Capell\Diagnostics\Filament\Pages\QueueHealthPage;
 use Capell\Diagnostics\Filament\Pages\SystemHealthPage;
-use Capell\Diagnostics\Filament\Widgets\Health\PackagesInstalledWidgetAbstract;
+use Capell\Diagnostics\Filament\Widgets\Health\PackagesInstalledFilamentWidget;
 use Capell\Diagnostics\Models\FailedJob;
 use Illuminate\Support\Collection;
 use Throwable;
@@ -94,7 +94,7 @@ final class DiagnosticsHealthCheck implements ChecksExtensionHealth
 
     private function systemHealthWidgetsCheck(): DoctorCheckResultData
     {
-        $registered = class_exists(PackagesInstalledWidgetAbstract::class)
+        $registered = class_exists(PackagesInstalledFilamentWidget::class)
             && class_exists(SystemHealthPage::class);
 
         return new DoctorCheckResultData(

@@ -131,7 +131,7 @@ return [
         'same_contact' => 'Choose two different contacts to merge.',
         'target_not_found' => 'The selected target contact could not be found.',
     ],
-    'widgets' => [
+    'layout_widgets' => [
         'activities' => 'Activities',
         'contacts' => 'Contacts',
         'open_leads' => 'Open leads',

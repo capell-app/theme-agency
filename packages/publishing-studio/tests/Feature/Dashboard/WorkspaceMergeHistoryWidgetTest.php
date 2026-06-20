@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 use Capell\PublishingStudio\Data\Dashboard\MergeHistoryEntryData;
 use Capell\PublishingStudio\Data\Dashboard\WorkspaceMergeHistoryData;
-use Capell\PublishingStudio\Filament\Widgets\WorkspaceMergeHistoryWidgetAbstract as WorkspaceMergeHistoryWidget;
+use Capell\PublishingStudio\Filament\Widgets\WorkspaceMergeHistoryFilamentWidget as WorkspaceMergeHistoryWidget;
 use Capell\PublishingStudio\Models\Workspace;
 use Illuminate\Support\Facades\Cache;
 use Spatie\LaravelData\DataCollection;

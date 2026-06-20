@@ -9,7 +9,7 @@ use Capell\Admin\Enums\DashboardEnum;
 use Capell\Admin\Facades\CapellAdmin;
 use Capell\Admin\Support\CapellAdminManager;
 use Capell\Contacts\Enums\ResourceEnum;
-use Capell\Contacts\Filament\Widgets\ContactsOverviewStatsWidget;
+use Capell\Contacts\Filament\Widgets\ContactsOverviewStatsFilamentWidget;
 use Capell\Contacts\Models\Contact;
 use Capell\Contacts\Models\ContactActivity;
 use Capell\Contacts\Models\Lead;
@@ -36,7 +36,7 @@ final class AdminServiceProvider extends ServiceProvider
             $this
                 ->registerPolicies()
                 ->registerResources()
-                ->registerDashboardWidgets();
+                ->registerDashboardFilamentWidgets();
         });
     }
 
@@ -67,9 +67,9 @@ final class AdminServiceProvider extends ServiceProvider
         return $this;
     }
 
-    private function registerDashboardWidgets(): self
+    private function registerDashboardFilamentWidgets(): self
     {
-        CapellAdmin::registerDashboardWidget(ContactsOverviewStatsWidget::class, DashboardEnum::Main);
+        CapellAdmin::registerDashboardFilamentWidget(ContactsOverviewStatsFilamentWidget::class, DashboardEnum::Main);
 
         return $this;
     }

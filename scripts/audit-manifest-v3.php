@@ -146,7 +146,7 @@ const CAPELL_MANIFEST_V3_MIGRATION_GROUPS = [
 
 const CAPELL_MANIFEST_V3_CONTRIBUTION_PATTERNS = [
     'admin-page' => 'registerExtensionPage',
-    'dashboard-widget' => 'registerDashboardWidget',
+    'dashboard-widget' => 'registerDashboardFilamentWidget',
     'overview-stat' => 'registerOverviewStat',
     'admin-resource' => 'AdminSurfaceContributionData::resource',
     'configurator' => 'AdminSurfaceContributionData::configurator',

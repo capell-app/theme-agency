@@ -37,7 +37,7 @@ it('renders full public campaign output without authoring or numeric campaign ma
                 ),
             ],
         ]);
-    $widget = Widget::factory()->create(['meta' => ['cta_widget_id' => $ctaWidget->getKey()]]);
+    $widget = Widget::factory()->create(['meta' => ['cta_layout_widget_id' => $ctaWidget->getKey()]]);
 
     CampaignCtaWidgetComponent::hydrateWidgets(collect([$widget]));
 
@@ -54,13 +54,13 @@ it('renders full public campaign output without authoring or numeric campaign ma
         ->toContain('data-campaign-tracker')
         ->toContain('/capell/campaigns/conversions')
         ->not->toContain('campaign_group_id')
-        ->not->toContain('campaign_cta_widget_id')
+        ->not->toContain('campaign_cta_layout_widget_id')
         ->not->toContain('data-campaign-id')
         ->not->toContain('field_path')
         ->not->toContain('model_id')
         ->not->toContain('signed-editor')
         ->not->toContain('campaign_group_id="' . $campaign->getKey() . '"')
-        ->not->toContain('campaign_cta_widget_id="' . $ctaWidget->getKey() . '"');
+        ->not->toContain('campaign_cta_layout_widget_id="' . $ctaWidget->getKey() . '"');
 });
 
 it('marks the campaign tracker as non-cacheable frontend output', function (): void {

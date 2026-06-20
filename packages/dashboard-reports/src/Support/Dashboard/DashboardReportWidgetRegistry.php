@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Capell\DashboardReports\Support\Dashboard;
 
 use Capell\Admin\Enums\DashboardEnum;
-use Capell\DashboardReports\Filament\Widgets\ContentHealthWidget;
-use Capell\DashboardReports\Filament\Widgets\PublishingTrendChartWidget;
+use Capell\DashboardReports\Filament\Widgets\ContentHealthFilamentWidget;
+use Capell\DashboardReports\Filament\Widgets\PublishingTrendChartFilamentWidget;
 use Illuminate\Support\Collection;
 
 final class DashboardReportWidgetRegistry
@@ -18,8 +18,8 @@ final class DashboardReportWidgetRegistry
 
     public function __construct()
     {
-        $this->register(PublishingTrendChartWidget::class, DashboardEnum::Main);
-        $this->register(ContentHealthWidget::class, DashboardEnum::Main);
+        $this->register(PublishingTrendChartFilamentWidget::class, DashboardEnum::Main);
+        $this->register(ContentHealthFilamentWidget::class, DashboardEnum::Main);
     }
 
     /**

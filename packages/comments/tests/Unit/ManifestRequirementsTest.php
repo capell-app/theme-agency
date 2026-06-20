@@ -12,10 +12,10 @@ use Capell\Comments\Console\Commands\PruneCommentPrivacyDataCommand;
 use Capell\Comments\Contracts\CommentSpamProvider;
 use Capell\Comments\Filament\Resources\CommentAuthors\CommentAuthorResource;
 use Capell\Comments\Filament\Resources\Comments\CommentResource;
-use Capell\Comments\Filament\Widgets\CommentStatsWidget;
-use Capell\Comments\Filament\Widgets\LatestCommentsWidget;
+use Capell\Comments\Filament\Widgets\CommentStatsFilamentWidget;
+use Capell\Comments\Filament\Widgets\LatestCommentsFilamentWidget;
 use Capell\Comments\Manifest\CommentAdminResourcesContribution;
-use Capell\Comments\Manifest\CommentDashboardWidgetsContribution;
+use Capell\Comments\Manifest\CommentDashboardFilamentWidgetsContribution;
 use Capell\Comments\Manifest\CommentFrontendComponentsContribution;
 use Capell\Comments\Manifest\CommentModelsContribution;
 use Capell\Comments\Manifest\CommentRoutesContribution;
@@ -68,7 +68,7 @@ it('declares implemented comments contribution surfaces', function (): void {
 
     $contributions = collect($contributions);
 
-    $widgets = $contributions->firstWhere('class', CommentDashboardWidgetsContribution::class);
+    $widgets = $contributions->firstWhere('class', CommentDashboardFilamentWidgetsContribution::class);
     $resources = $contributions->firstWhere('class', CommentAdminResourcesContribution::class);
     $models = $contributions->firstWhere('class', CommentModelsContribution::class);
     $routes = $contributions->firstWhere('class', CommentRoutesContribution::class);
@@ -90,7 +90,7 @@ it('declares implemented comments contribution surfaces', function (): void {
     throw_unless(is_array($security['publicSurface'] ?? null), RuntimeException::class, 'Comments public surface metadata must be an array.');
 
     expect($traceability['deferredContributions'])->toBe([])
-        ->and($widgets['widgetClasses'])->toContain(CommentStatsWidget::class, LatestCommentsWidget::class)
+        ->and($widgets['widgetClasses'])->toContain(CommentStatsFilamentWidget::class, LatestCommentsFilamentWidget::class)
         ->and($resources['resourceClasses'])->toContain(CommentResource::class, CommentAuthorResource::class)
         ->and($models['modelClasses'])->toContain(
             CommentAuthor::class,

@@ -11,7 +11,7 @@ use Capell\SeoSuite\Contracts\PageSpeedInsightsClientInterface;
 use Capell\SeoSuite\Data\PageSpeedAuditResultData;
 use Capell\SeoSuite\Enums\PageSpeedStrategyEnum;
 use Capell\SeoSuite\Filament\Extenders\PageSpeed\PageSpeedPageTableExtender;
-use Capell\SeoSuite\Filament\Widgets\EditPagePageSpeedAuditWidget;
+use Capell\SeoSuite\Filament\Widgets\EditPagePageSpeedAuditFilamentWidget;
 use Capell\SeoSuite\Jobs\RunPageSpeedAuditJob;
 use Capell\SeoSuite\Models\PageSpeedAuditResult;
 use Capell\SeoSuite\Models\PageSpeedAuditRun;
@@ -165,7 +165,7 @@ it('renders page speed results on the edit page widget', function (): void {
         'fetched_at' => now(),
     ]);
 
-    Livewire::test(EditPagePageSpeedAuditWidget::class, ['record' => $page])
+    Livewire::test(EditPagePageSpeedAuditFilamentWidget::class, ['record' => $page])
         ->assertSeeText(__('capell-seo-suite::generic.pagespeed_audit'))
         ->assertSeeText('42')
         ->assertSeeText('Serve images in next-gen formats');
@@ -194,7 +194,7 @@ it('queues a manual page speed audit from the widget', function (): void {
 
     [, , $page] = createPageSpeedWidgetPage('/manual');
 
-    Livewire::test(EditPagePageSpeedAuditWidget::class, ['record' => $page])
+    Livewire::test(EditPagePageSpeedAuditFilamentWidget::class, ['record' => $page])
         ->call('runAudit')
         ->assertHasNoErrors();
 

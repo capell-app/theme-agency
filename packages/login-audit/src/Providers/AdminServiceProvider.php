@@ -19,7 +19,7 @@ use Capell\LoginAudit\Extenders\LoginAuditUserSchemaExtender;
 use Capell\LoginAudit\Filament\Extenders\LoginAuditAdminPanelExtender;
 use Capell\LoginAudit\Filament\Resources\LoginAudits\LoginAuditResource;
 use Capell\LoginAudit\Filament\Settings\Contributors\LoginAuditDashboardSettingsContributor;
-use Capell\LoginAudit\Filament\Widgets\LoginAuditsWidget;
+use Capell\LoginAudit\Filament\Widgets\LoginAuditsFilamentWidget;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\ServiceProvider;
@@ -79,7 +79,7 @@ class AdminServiceProvider extends ServiceProvider
             class: LoginAuditResource::class,
             group: 'LoginAudit',
         ));
-        CapellAdmin::registerDashboardWidget(LoginAuditsWidget::class, DashboardEnum::SystemHealth);
+        CapellAdmin::registerDashboardFilamentWidget(LoginAuditsFilamentWidget::class, DashboardEnum::SystemHealth);
     }
 
     private function registerSchedule(): void

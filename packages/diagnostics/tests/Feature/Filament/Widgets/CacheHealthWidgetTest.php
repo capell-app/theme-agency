@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 use Capell\Core\Models\Site;
-use Capell\Diagnostics\Filament\Widgets\Health\CacheHealthWidgetAbstract as CacheHealthWidget;
+use Capell\Diagnostics\Filament\Widgets\Health\CacheHealthFilamentWidget as CacheHealthWidget;
 use Capell\Tests\Support\Concerns\CreatesAdminUser;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Panel;

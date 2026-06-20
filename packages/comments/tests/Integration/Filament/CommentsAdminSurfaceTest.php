@@ -7,8 +7,8 @@ use Capell\Comments\Filament\Resources\CommentAuthors\CommentAuthorResource;
 use Capell\Comments\Filament\Resources\Comments\CommentResource;
 use Capell\Comments\Filament\Resources\Comments\Tables\CommentsTable;
 use Capell\Comments\Filament\Settings\Contributors\CommentsDashboardSettingsContributor;
-use Capell\Comments\Filament\Widgets\CommentStatsWidget;
-use Capell\Comments\Filament\Widgets\LatestCommentsWidget;
+use Capell\Comments\Filament\Widgets\CommentStatsFilamentWidget;
+use Capell\Comments\Filament\Widgets\LatestCommentsFilamentWidget;
 use Capell\Comments\Models\Comment;
 use Capell\Comments\Models\CommentAuthor;
 use Capell\Comments\Models\CommentModerationEvent;
@@ -190,21 +190,21 @@ it('builds comment moderation stats from real comment states', function (): void
     Comment::factory()->spam()->create($commentDefaults);
     Comment::factory()->spam()->create($commentDefaults);
 
-    $widget = new CommentStatsWidget;
-    $stats = (new ReflectionMethod(CommentStatsWidget::class, 'getStats'))->invoke($widget);
+    $widget = new CommentStatsFilamentWidget;
+    $stats = (new ReflectionMethod(CommentStatsFilamentWidget::class, 'getStats'))->invoke($widget);
 
     expect($stats)->toHaveCount(3)
         ->and((string) $stats[0]->getValue())->toBe('1')
         ->and((string) $stats[1]->getValue())->toBe('1')
         ->and((string) $stats[2]->getValue())->toBe('2')
-        ->and(CommentStatsWidget::compatibleCapellApiVersion())->toBe('^4.0');
+        ->and(CommentStatsFilamentWidget::compatibleCapellApiVersion())->toBe('^4.0');
 });
 
 it('declares comment dashboard settings and latest comments table metadata', function (): void {
     Gate::before(fn (): bool => true);
 
     $entries = (new CommentsDashboardSettingsContributor)->settingsKeys();
-    $table = (new LatestCommentsWidget)->table(commentAdminTableForCoverage());
+    $table = (new LatestCommentsFilamentWidget)->table(commentAdminTableForCoverage());
     $site = $this->createCommentsSite();
     $author = CommentAuthor::factory()->create(['site_id' => $site->getKey(), 'name' => 'Taylor Editor']);
     $comment = Comment::factory()->create([
@@ -254,8 +254,8 @@ it('keeps admin comment widgets inside the declared query budget', function (): 
         $queryCount++;
     });
 
-    $stats = (new ReflectionMethod(CommentStatsWidget::class, 'getStats'))->invoke(new CommentStatsWidget);
-    $table = (new LatestCommentsWidget)->table(commentAdminTableForCoverage());
+    $stats = (new ReflectionMethod(CommentStatsFilamentWidget::class, 'getStats'))->invoke(new CommentStatsFilamentWidget);
+    $table = (new LatestCommentsFilamentWidget)->table(commentAdminTableForCoverage());
     $records = $table->getQuery()?->limit(10)->get();
 
     expect($queryCount)->toBeLessThanOrEqual($budget)

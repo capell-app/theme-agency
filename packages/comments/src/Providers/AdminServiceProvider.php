@@ -11,8 +11,8 @@ use Capell\Admin\Facades\CapellAdmin;
 use Capell\Comments\Enums\ResourceEnum;
 use Capell\Comments\Filament\Pages\CommentModerationInbox;
 use Capell\Comments\Filament\Settings\Contributors\CommentsDashboardSettingsContributor;
-use Capell\Comments\Filament\Widgets\CommentStatsWidget;
-use Capell\Comments\Filament\Widgets\LatestCommentsWidget;
+use Capell\Comments\Filament\Widgets\CommentStatsFilamentWidget;
+use Capell\Comments\Filament\Widgets\LatestCommentsFilamentWidget;
 use Capell\Core\Facades\CapellCore;
 use Illuminate\Support\ServiceProvider;
 
@@ -27,7 +27,7 @@ class AdminServiceProvider extends ServiceProvider
         $this
             ->registerResources()
             ->registerPages()
-            ->registerDashboardWidgets()
+            ->registerDashboardFilamentWidgets()
             ->registerDashboardSettingsContributor();
     }
 
@@ -59,10 +59,10 @@ class AdminServiceProvider extends ServiceProvider
         return $this;
     }
 
-    private function registerDashboardWidgets(): self
+    private function registerDashboardFilamentWidgets(): self
     {
-        CapellAdmin::registerDashboardWidget(CommentStatsWidget::class, DashboardEnum::Main);
-        CapellAdmin::registerDashboardWidget(LatestCommentsWidget::class, DashboardEnum::Main);
+        CapellAdmin::registerDashboardFilamentWidget(CommentStatsFilamentWidget::class, DashboardEnum::Main);
+        CapellAdmin::registerDashboardFilamentWidget(LatestCommentsFilamentWidget::class, DashboardEnum::Main);
 
         return $this;
     }

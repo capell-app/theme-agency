@@ -64,8 +64,8 @@
         },
         {
             "type": "dashboard-widget",
-            "class": "Capell\\Events\\Manifest\\EventsDashboardWidgetsContribution",
-            "widgetClass": "Capell\\Events\\Filament\\Widgets\\EventCalendarWidget"
+            "class": "Capell\\Events\\Manifest\\EventsDashboardFilamentWidgetsContribution",
+            "widgetClass": "Capell\\Events\\Filament\\Widgets\\EventCalendarFilamentWidget"
         },
         {
             "type": "model",

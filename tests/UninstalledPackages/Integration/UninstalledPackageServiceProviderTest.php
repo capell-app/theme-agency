@@ -19,7 +19,7 @@ use Capell\CampaignStudio\Filament\Resources\CampaignConversionGoals\CampaignCon
 use Capell\CampaignStudio\Filament\Resources\CampaignCtaWidgets\CampaignCtaWidgetResource;
 use Capell\CampaignStudio\Filament\Resources\CampaignGroups\CampaignGroupResource;
 use Capell\CampaignStudio\Filament\Resources\CampaignLandingPages\CampaignLandingPageResource;
-use Capell\CampaignStudio\Filament\Widgets\CampaignOverviewStatsWidget;
+use Capell\CampaignStudio\Filament\Widgets\CampaignOverviewStatsFilamentWidget;
 use Capell\CampaignStudio\Models\CampaignConversion;
 use Capell\CampaignStudio\Models\CampaignConversionGoal;
 use Capell\CampaignStudio\Models\CampaignCtaWidget;
@@ -31,13 +31,13 @@ use Capell\ContentSections\Models\Section;
 use Capell\Core\Enums\VendorAssetEnum;
 use Capell\Core\Facades\CapellCore;
 use Capell\Diagnostics\Filament\Pages\DiagnosticsPage;
-use Capell\Diagnostics\Filament\Widgets\Health\SiteHealthWidgetAbstract;
+use Capell\Diagnostics\Filament\Widgets\Health\SiteHealthFilamentWidget;
 use Capell\FormBuilder\Filament\Resources\Submissions\SubmissionResource;
 use Capell\FormBuilder\Models\Form;
 use Capell\FormBuilder\Models\Submission;
 use Capell\FormBuilder\Providers\FormBuilderServiceProvider;
 use Capell\FrontendAuthoring\Providers\FrontendAuthoringServiceProvider;
-use Capell\Insights\Filament\Widgets\InsightsOverviewStatsWidget;
+use Capell\Insights\Filament\Widgets\InsightsOverviewStatsFilamentWidget;
 use Capell\Insights\Models\InsightsConsent;
 use Capell\Insights\Models\InsightsEvent;
 use Capell\Insights\Models\InsightsVisit;
@@ -47,7 +47,7 @@ use Capell\LayoutBuilder\Filament\Resources\Widgets\WidgetResource;
 use Capell\LayoutBuilder\Models\Widget;
 use Capell\LayoutBuilder\Models\WidgetAsset;
 use Capell\LoginAudit\Filament\Resources\LoginAudits\LoginAuditResource;
-use Capell\LoginAudit\Filament\Widgets\LoginAuditsWidget;
+use Capell\LoginAudit\Filament\Widgets\LoginAuditsFilamentWidget;
 use Capell\LoginAudit\Models\LoginAudit;
 use Capell\LoginAudit\Providers\LoginAuditServiceProvider;
 use Capell\MediaLibrary\Filament\Pages\MediaHealthPage;
@@ -67,7 +67,7 @@ use Capell\PublishingStudio\Models\PreviewLink;
 use Capell\PublishingStudio\Models\Version;
 use Capell\PublishingStudio\Models\Workspace;
 use Capell\PublishingStudio\Providers\PublishingStudioServiceProvider;
-use Capell\Search\Filament\Widgets\SearchOverviewStatsWidget;
+use Capell\Search\Filament\Widgets\SearchOverviewStatsFilamentWidget;
 use Capell\Search\Models\SearchLog;
 use Capell\Search\Providers\SearchServiceProvider;
 use Capell\SeoSuite\Filament\Pages\BrokenLinksPage;
@@ -212,14 +212,14 @@ it('does not expose admin resources, pages, widgets, or routes for uninstalled p
         SeoAuditPage::class,
     );
 
-    expect(CapellAdmin::getDashboardWidgets(DashboardEnum::Main))->not->toContain(
-        InsightsOverviewStatsWidget::class,
-        CampaignOverviewStatsWidget::class,
-        SiteHealthWidgetAbstract::class,
-        SearchOverviewStatsWidget::class,
+    expect(CapellAdmin::getDashboardFilamentWidgets(DashboardEnum::Main))->not->toContain(
+        InsightsOverviewStatsFilamentWidget::class,
+        CampaignOverviewStatsFilamentWidget::class,
+        SiteHealthFilamentWidget::class,
+        SearchOverviewStatsFilamentWidget::class,
     );
 
-    expect(CapellAdmin::getDashboardWidgets(DashboardEnum::SystemHealth))->not->toContain(LoginAuditsWidget::class);
+    expect(CapellAdmin::getDashboardFilamentWidgets(DashboardEnum::SystemHealth))->not->toContain(LoginAuditsFilamentWidget::class);
 
     expect(Route::getMiddleware())->not->toHaveKey('frontend.minify')
         ->and(Route::getMiddleware())->not->toHaveKey('frontend.activity')

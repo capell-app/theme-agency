@@ -8,7 +8,7 @@ use BackedEnum;
 use BadMethodCallException;
 use Capell\Diagnostics\Enums\DiagnosticsPermission;
 use Capell\Diagnostics\Filament\Pages\Tables\QueueHealthTable;
-use Capell\Diagnostics\Filament\Widgets\QueueOperationsStatsWidget;
+use Capell\Diagnostics\Filament\Widgets\QueueOperationsStatsFilamentWidget;
 use Capell\Diagnostics\Models\FailedJob;
 use Capell\Diagnostics\Models\PendingQueueJob;
 use Filament\Actions\Concerns\InteractsWithActions;
@@ -156,7 +156,7 @@ class QueueHealthPage extends Page implements HasActions, HasTable
     protected function getHeaderWidgets(): array
     {
         return [
-            QueueOperationsStatsWidget::class,
+            QueueOperationsStatsFilamentWidget::class,
         ];
     }
 }

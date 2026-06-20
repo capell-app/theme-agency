@@ -3,10 +3,10 @@
 declare(strict_types=1);
 
 use Capell\Core\Contracts\Extensions\ExtensionContribution;
+use Capell\Core\Contracts\Extensions\RegistersExtensionFilamentWidget;
 use Capell\Core\Contracts\Extensions\RegistersExtensionRoute;
-use Capell\Core\Contracts\Extensions\RegistersExtensionWidget;
 use Capell\Deployments\Manifest\DeploymentsAdminPageContribution;
-use Capell\Deployments\Manifest\DeploymentsDashboardWidgetContribution;
+use Capell\Deployments\Manifest\DeploymentsDashboardFilamentWidgetContribution;
 use Capell\Deployments\Manifest\DeploymentsRoutesContribution;
 
 /**
@@ -76,8 +76,8 @@ it('declares shipped deployments contributions and no longer defers them', funct
         ],
         [
             'type' => 'dashboard-widget',
-            'class' => DeploymentsDashboardWidgetContribution::class,
-            'widgetClass' => 'Capell\\Deployments\\Filament\\Widgets\\DeploymentConnectionWidget',
+            'class' => DeploymentsDashboardFilamentWidgetContribution::class,
+            'widgetClass' => 'Capell\\Deployments\\Filament\\Widgets\\DeploymentConnectionFilamentWidget',
             'dashboard' => 'system-health',
             'surface' => 'admin',
         ],
@@ -86,11 +86,11 @@ it('declares shipped deployments contributions and no longer defers them', funct
         ->and(class_implements(DeploymentsAdminPageContribution::class))->toContain(ExtensionContribution::class)
         ->and(class_implements(DeploymentsRoutesContribution::class))->toContain(ExtensionContribution::class)
         ->and(class_implements(DeploymentsRoutesContribution::class))->toContain(RegistersExtensionRoute::class)
-        ->and(class_implements(DeploymentsDashboardWidgetContribution::class))->toContain(ExtensionContribution::class)
-        ->and(class_implements(DeploymentsDashboardWidgetContribution::class))->toContain(RegistersExtensionWidget::class)
+        ->and(class_implements(DeploymentsDashboardFilamentWidgetContribution::class))->toContain(ExtensionContribution::class)
+        ->and(class_implements(DeploymentsDashboardFilamentWidgetContribution::class))->toContain(RegistersExtensionFilamentWidget::class)
         ->and(DeploymentsAdminPageContribution::compatibleCapellApiVersion())->toBe('^4.0')
         ->and(DeploymentsRoutesContribution::compatibleCapellApiVersion())->toBe('^4.0')
-        ->and(DeploymentsDashboardWidgetContribution::compatibleCapellApiVersion())->toBe('^4.0');
+        ->and(DeploymentsDashboardFilamentWidgetContribution::compatibleCapellApiVersion())->toBe('^4.0');
 });
 
 it('describes authenticated oauth routes and all deployments http clients', function (): void {

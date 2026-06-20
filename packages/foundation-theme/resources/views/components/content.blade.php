@@ -200,7 +200,7 @@
     @endif
 
     @if ($contentType === ContentStructure::Blocks)
-        <x-capell::widgets
+        <x-capell-layout-builder::layout-widgets
             :widgets="$content"
             :layout="$layout"
             :page="$page"

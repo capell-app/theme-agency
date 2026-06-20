@@ -19,8 +19,8 @@ use Capell\Newsletter\Manifest\NewsletterAdminResourcesContribution;
 use Capell\Newsletter\Manifest\NewsletterConsoleCommandsContribution;
 use Capell\Newsletter\Manifest\NewsletterFrontendRoutesContribution;
 use Capell\Newsletter\Manifest\NewsletterHealthContribution;
+use Capell\Newsletter\Manifest\NewsletterOverviewFilamentWidgetContribution;
 use Capell\Newsletter\Manifest\NewsletterOverviewStatsContribution;
-use Capell\Newsletter\Manifest\NewsletterOverviewWidgetContribution;
 use Capell\Newsletter\Manifest\NewsletterSettingsContribution;
 use Capell\Newsletter\Manifest\NewsletterSyncRetryScheduleContribution;
 use Capell\Newsletter\Settings\NewsletterSettings;
@@ -39,7 +39,7 @@ it('declares implemented newsletter package contributions', function (): void {
     expect($manifest['contributionTraceability']['deferredContributions'])->toBe([])
         ->and($contributions->pluck('class')->all())->toContain(
             NewsletterAdminResourcesContribution::class,
-            NewsletterOverviewWidgetContribution::class,
+            NewsletterOverviewFilamentWidgetContribution::class,
             NewsletterOverviewStatsContribution::class,
             NewsletterFrontendRoutesContribution::class,
             NewsletterSyncRetryScheduleContribution::class,

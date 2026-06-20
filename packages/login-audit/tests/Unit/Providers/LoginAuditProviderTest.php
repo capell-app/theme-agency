@@ -21,7 +21,7 @@ use Capell\LoginAudit\Filament\Extenders\LoginAuditAdminPanelExtender;
 use Capell\LoginAudit\Filament\Resources\LoginAudits\LoginAuditResource;
 use Capell\LoginAudit\Filament\Settings\Contributors\LoginAuditDashboardSettingsContributor;
 use Capell\LoginAudit\Filament\Settings\LoginAuditSettingsSchema;
-use Capell\LoginAudit\Filament\Widgets\LoginAuditsWidget;
+use Capell\LoginAudit\Filament\Widgets\LoginAuditsFilamentWidget;
 use Capell\LoginAudit\Models\LoginAudit;
 use Capell\LoginAudit\Providers\AdminServiceProvider;
 use Capell\LoginAudit\Providers\LoginAuditServiceProvider;
@@ -104,8 +104,8 @@ it('does not register admin surfaces when login-audit is not installed', functio
 
     expect(CapellAdmin::getAdminSurfaceRegistry()->resources())
         ->not->toContain(LoginAuditResource::class)
-        ->and(CapellAdmin::getDashboardWidgets(DashboardEnum::SystemHealth))
-        ->not->toContain(LoginAuditsWidget::class);
+        ->and(CapellAdmin::getDashboardFilamentWidgets(DashboardEnum::SystemHealth))
+        ->not->toContain(LoginAuditsFilamentWidget::class);
 
     CapellCore::forcePackageInstalled(LoginAuditServiceProvider::$packageName);
 });
@@ -121,8 +121,8 @@ it('registers admin surfaces when login-audit is installed', function (): void {
 
     expect(CapellAdmin::getAdminSurfaceRegistry()->resources())
         ->toContain(LoginAuditResource::class)
-        ->and(CapellAdmin::getDashboardWidgets(DashboardEnum::SystemHealth))
-        ->toContain(LoginAuditsWidget::class);
+        ->and(CapellAdmin::getDashboardFilamentWidgets(DashboardEnum::SystemHealth))
+        ->toContain(LoginAuditsFilamentWidget::class);
 });
 
 it('registers daily login audit purge against the vendor command', function (): void {
@@ -169,7 +169,7 @@ it('registers the current login-audit admin bridge surface', function (): void {
     expect($surfaceRegistry->schemaExtendersForTag(UserSchemaExtender::TAG))->toContain(LoginAuditUserSchemaExtender::class)
         ->and($surfaceRegistry->panelExtenders())->toContain(LoginAuditAdminPanelExtender::class)
         ->and($surfaceRegistry->resources())->toContain(LoginAuditResource::class)
-        ->and(CapellAdmin::getDashboardWidgets(DashboardEnum::SystemHealth))->toContain(LoginAuditsWidget::class)
+        ->and(CapellAdmin::getDashboardFilamentWidgets(DashboardEnum::SystemHealth))->toContain(LoginAuditsFilamentWidget::class)
         ->and(collect(app()->tagged(DashboardSettingsContributor::TAG))->contains(
             fn (object $contributor): bool => $contributor instanceof LoginAuditDashboardSettingsContributor,
         ))->toBeTrue();
@@ -193,7 +193,7 @@ it('keeps the legacy admin fallback when the bridge host is unavailable', functi
             ->and($adminPanelExtenders)->toContain(LoginAuditAdminPanelExtender::class)
             ->and($dashboardContributors)->toContain(LoginAuditDashboardSettingsContributor::class)
             ->and(collect($host->surfaceContributions)->pluck('class'))->toContain(LoginAuditResource::class)
-            ->and(array_keys($host->dashboardWidgets))->toContain(LoginAuditsWidget::class);
+            ->and(array_keys($host->dashboardFilamentWidgets))->toContain(LoginAuditsFilamentWidget::class);
     } finally {
         app()->forgetInstance(CapellAdminManager::class);
         CapellAdmin::clearResolvedInstance(CapellAdminManager::class);

@@ -37,7 +37,7 @@ it('registers preview layout blocks with unsaved widget asset state for public r
         layoutId: (int) $layout->getKey(),
         containers: [
             'main' => [
-                'widgets' => [
+                'layout_widgets' => [
                     ['widget_key' => $block->key, 'occurrence' => 1],
                 ],
             ],

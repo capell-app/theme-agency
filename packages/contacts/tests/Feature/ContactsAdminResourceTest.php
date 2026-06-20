@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Capell\Admin\Contracts\CapellWidgetContract;
+use Capell\Admin\Contracts\CapellFilamentWidgetContract;
 use Capell\Contacts\Actions\BuildContactsOverviewStatsAction;
 use Capell\Contacts\Actions\SyncAccessGateRegistrationContactAction;
 use Capell\Contacts\Actions\SyncCampaignConversionContactAction;
@@ -21,7 +21,7 @@ use Capell\Contacts\Filament\Resources\Contacts\ContactResource;
 use Capell\Contacts\Filament\Resources\Contacts\Pages\ViewContact;
 use Capell\Contacts\Filament\Resources\Leads\LeadResource;
 use Capell\Contacts\Filament\Resources\Organisations\OrganisationResource;
-use Capell\Contacts\Filament\Widgets\ContactsOverviewStatsWidget;
+use Capell\Contacts\Filament\Widgets\ContactsOverviewStatsFilamentWidget;
 use Capell\Contacts\Models\Contact;
 use Capell\Contacts\Models\ContactActivity;
 use Capell\Contacts\Models\ContactTag;
@@ -234,7 +234,7 @@ it('builds contacts overview widget stats from crm records', function (): void {
         'organisations' => 1,
         'open_leads' => 1,
         'activities' => 1,
-    ])->and(class_implements(ContactsOverviewStatsWidget::class))->toContain(CapellWidgetContract::class);
+    ])->and(class_implements(ContactsOverviewStatsFilamentWidget::class))->toContain(CapellFilamentWidgetContract::class);
 });
 
 it('can scope contacts overview widget stats to a site', function (): void {

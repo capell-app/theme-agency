@@ -122,7 +122,7 @@ final class InstallFoundationThemeLayoutDefaultsAction
         }
 
         $main = $containers['main'];
-        $widgets = is_array($main['widgets'] ?? null) ? $main['widgets'] : [];
+        $widgets = is_array($main['layout_widgets'] ?? null) ? $main['layout_widgets'] : [];
         $heroWidgetIndex = $this->lastHeroWidgetIndex($widgets);
 
         if ($heroWidgetIndex === null) {
@@ -131,7 +131,7 @@ final class InstallFoundationThemeLayoutDefaultsAction
             array_splice($widgets, $heroWidgetIndex + 1, 0, [['widget_key' => 'page-content']]);
         }
 
-        $main['widgets'] = array_values($widgets);
+        $main['layout_widgets'] = array_values($widgets);
         $containers['main'] = $main;
 
         $layout->update([
@@ -263,7 +263,7 @@ final class InstallFoundationThemeLayoutDefaultsAction
                 'padding' => ['md'],
                 'html_class' => 'sidebar-sticky space-y-8',
             ],
-            'widgets' => $widgets,
+            'layout_widgets' => $widgets,
         ];
     }
 
@@ -277,7 +277,7 @@ final class InstallFoundationThemeLayoutDefaultsAction
             'meta' => [
                 'colspan' => $colspan,
             ],
-            'widgets' => $widgets,
+            'layout_widgets' => $widgets,
         ];
     }
 }

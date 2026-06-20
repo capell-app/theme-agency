@@ -44,11 +44,11 @@ Screenshot contract: `screenshots.json`.
 - Settings migrations: `packages/login-audit/database/settings/2026_05_10_190858_01_add_login_audit_settings.php`, `packages/login-audit/database/settings/2026_06_06_000001_add_login_audit_suspicious_detection_settings.php`, `packages/login-audit/database/settings/2026_06_06_000002_add_login_audit_alert_settings.php`, `packages/login-audit/database/settings/2026_06_06_000003_add_login_audit_geo_location_setting.php`.
 - Settings classes: `LoginAuditSettings`.
 - Models: `LoginAudit`.
-- Filament classes: `LoginAuditAdminPanelExtender`, `LoginAuditResource`, `LoginAuditsTable`, `LoginAuditsRelationManager`, `LoginAuditDashboardSettingsContributor`, `LoginAuditSettingsSchema`, `LoginAuditsWidget`.
+- Filament classes: `LoginAuditAdminPanelExtender`, `LoginAuditResource`, `LoginAuditsTable`, `LoginAuditsRelationManager`, `LoginAuditDashboardSettingsContributor`, `LoginAuditSettingsSchema`, `LoginAuditsFilamentWidget`.
 - Policies: `LoginAuditPolicy`.
 - Listeners: `DetectSuspiciousLoginFromAuthEvent`.
 - Actions: `ApplyLoginAuditSettingsAction`, `BuildLoginAuditsCsvAction`, `BuildLoginAuditsQueryAction`, `DetectSuspiciousLoginAction`, `RecordLoginAuditPurgeAction`, `ResolveLoginAuditIpAddressAction`, `SendLoginAuditAdminAlertAction`, `ShouldTrackAdminActivityAction`, `ShouldTrackUserIpAddressesAction`, `UpdateLastSeenForActorAction`.
-- Manifest contributions: `admin-resource: Capell\LoginAudit\Manifest\LoginAuditAdminResourcesContribution`, `dashboard-widget: Capell\LoginAudit\Manifest\LoginAuditDashboardWidgetContribution`, `health-check: Capell\LoginAudit\Manifest\LoginAuditHealthContribution`, `model: Capell\LoginAudit\Manifest\LoginAuditModelsContribution`, `permission: Capell\LoginAudit\Manifest\LoginAuditPermissionsContribution`, `scheduled-job: Capell\LoginAudit\Manifest\LoginAuditPurgeScheduleContribution`, `setting: Capell\LoginAudit\Manifest\LoginAuditSettingsContribution`.
+- Manifest contributions: `admin-resource: Capell\LoginAudit\Manifest\LoginAuditAdminResourcesContribution`, `dashboard-widget: Capell\LoginAudit\Manifest\LoginAuditDashboardFilamentWidgetContribution`, `health-check: Capell\LoginAudit\Manifest\LoginAuditHealthContribution`, `model: Capell\LoginAudit\Manifest\LoginAuditModelsContribution`, `permission: Capell\LoginAudit\Manifest\LoginAuditPermissionsContribution`, `scheduled-job: Capell\LoginAudit\Manifest\LoginAuditPurgeScheduleContribution`, `setting: Capell\LoginAudit\Manifest\LoginAuditSettingsContribution`.
 - Health checks: `Capell\LoginAudit\Health\LoginAuditHealthCheck`.
 
 ## Data Model

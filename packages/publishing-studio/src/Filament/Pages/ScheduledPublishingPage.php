@@ -9,8 +9,8 @@ use BezhanSalleh\FilamentShield\Traits\HasPageShield;
 use Capell\Admin\Filament\Concerns\HasNavigationBadge;
 use Capell\PublishingStudio\Actions\DashboardReports\BuildVisibleEditorialCalendarEventsAction;
 use Capell\PublishingStudio\Filament\Pages\Tables\ScheduledPublishingTable;
-use Capell\PublishingStudio\Filament\Widgets\ContentSchedulerCalendarWidget;
-use Capell\PublishingStudio\Filament\Widgets\ContentSchedulerOverviewWidget;
+use Capell\PublishingStudio\Filament\Widgets\ContentSchedulerCalendarFilamentWidget;
+use Capell\PublishingStudio\Filament\Widgets\ContentSchedulerOverviewFilamentWidget;
 use Filament\Actions\Concerns\InteractsWithActions;
 use Filament\Actions\Contracts\HasActions;
 use Filament\Pages\Page;
@@ -79,8 +79,8 @@ class ScheduledPublishingPage extends Page implements HasActions, HasTable
     protected function getHeaderWidgets(): array
     {
         return [
-            ContentSchedulerOverviewWidget::class,
-            ContentSchedulerCalendarWidget::class,
+            ContentSchedulerOverviewFilamentWidget::class,
+            ContentSchedulerCalendarFilamentWidget::class,
         ];
     }
 }

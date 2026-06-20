@@ -17,9 +17,9 @@ use Capell\GA4Reports\Console\Commands\SyncGA4ReportsCommand;
 use Capell\GA4Reports\Data\GA4ReportsOverviewData;
 use Capell\GA4Reports\Filament\Pages\GA4ReportsPage;
 use Capell\GA4Reports\Filament\Settings\Contributors\GA4ReportsDashboardSettingsContributor;
-use Capell\GA4Reports\Filament\Widgets\GA4ReportsSetupStatusWidget;
-use Capell\GA4Reports\Filament\Widgets\GA4ReportsTopPagesWidget;
-use Capell\GA4Reports\Filament\Widgets\GA4ReportsTrafficTrendWidget;
+use Capell\GA4Reports\Filament\Widgets\GA4ReportsSetupStatusFilamentWidget;
+use Capell\GA4Reports\Filament\Widgets\GA4ReportsTopPagesFilamentWidget;
+use Capell\GA4Reports\Filament\Widgets\GA4ReportsTrafficTrendFilamentWidget;
 use Capell\GA4Reports\Settings\GA4ReportsSettings;
 use Carbon\CarbonImmutable;
 use Illuminate\Console\Scheduling\Schedule;
@@ -39,7 +39,7 @@ final class AdminServiceProvider extends ServiceProvider
             ->registerCommands()
             ->registerPages()
             ->registerOverviewStats()
-            ->registerDashboardWidgets()
+            ->registerDashboardFilamentWidgets()
             ->registerMarketingStudioActions()
             ->registerSchedule();
     }
@@ -80,11 +80,11 @@ final class AdminServiceProvider extends ServiceProvider
         return $this;
     }
 
-    private function registerDashboardWidgets(): self
+    private function registerDashboardFilamentWidgets(): self
     {
-        CapellAdmin::registerDashboardWidget(GA4ReportsTrafficTrendWidget::class, DashboardEnum::Main, DashboardEnum::MarketingStudio);
-        CapellAdmin::registerDashboardWidget(GA4ReportsTopPagesWidget::class, DashboardEnum::Main, DashboardEnum::MarketingStudio);
-        CapellAdmin::registerDashboardWidget(GA4ReportsSetupStatusWidget::class, DashboardEnum::Main, DashboardEnum::MarketingStudio);
+        CapellAdmin::registerDashboardFilamentWidget(GA4ReportsTrafficTrendFilamentWidget::class, DashboardEnum::Main, DashboardEnum::MarketingStudio);
+        CapellAdmin::registerDashboardFilamentWidget(GA4ReportsTopPagesFilamentWidget::class, DashboardEnum::Main, DashboardEnum::MarketingStudio);
+        CapellAdmin::registerDashboardFilamentWidget(GA4ReportsSetupStatusFilamentWidget::class, DashboardEnum::Main, DashboardEnum::MarketingStudio);
 
         return $this;
     }

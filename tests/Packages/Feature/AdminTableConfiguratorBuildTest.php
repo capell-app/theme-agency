@@ -249,7 +249,7 @@ it('builds the layout builder layouts table with widget inventory filters and in
     $layout = Layout::factory()->create([
         'containers' => [
             'main' => [
-                'widgets' => [
+                'layout_widgets' => [
                     ['widget_key' => $hero->key],
                     ['widget_key' => $cards->key],
                 ],
@@ -259,7 +259,7 @@ it('builds the layout builder layouts table with widget inventory filters and in
     Layout::factory()->create([
         'containers' => [
             'main' => [
-                'widgets' => [
+                'layout_widgets' => [
                     ['widget_key' => 'other-widget'],
                 ],
             ],

@@ -142,7 +142,7 @@ return [
             'retention_run' => 'Retention rule applied.',
             'retention_result' => 'Matched :matched record(s); affected :affected record(s).',
         ],
-        'widgets' => [
+        'layout_widgets' => [
             'active_retention_rules' => 'Active retention rules',
             'consent_records' => 'Consent records',
             'granted_consents' => 'Granted consents',

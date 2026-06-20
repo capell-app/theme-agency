@@ -107,14 +107,14 @@
         },
         {
             "type": "dashboard-widget",
-            "class": "Capell\\SeoSuite\\Manifest\\SeoSuiteDashboardWidgetsContribution",
+            "class": "Capell\\SeoSuite\\Manifest\\SeoSuiteDashboardFilamentWidgetsContribution",
             "widgetClasses": [
-                "Capell\\SeoSuite\\Filament\\Widgets\\SearchConsoleOverviewWidget",
-                "Capell\\SeoSuite\\Filament\\Widgets\\TopSearchPagesWidget",
-                "Capell\\SeoSuite\\Filament\\Widgets\\SearchMovementWidget",
-                "Capell\\SeoSuite\\Filament\\Widgets\\SeoOpportunitiesWidget",
-                "Capell\\SeoSuite\\Filament\\Widgets\\SearchIntelligenceWidget",
-                "Capell\\SeoSuite\\Filament\\Widgets\\AiDiscoveryCoverageWidget"
+                "Capell\\SeoSuite\\Filament\\Widgets\\SearchConsoleOverviewFilamentWidget",
+                "Capell\\SeoSuite\\Filament\\Widgets\\TopSearchPagesFilamentWidget",
+                "Capell\\SeoSuite\\Filament\\Widgets\\SearchMovementFilamentWidget",
+                "Capell\\SeoSuite\\Filament\\Widgets\\SeoOpportunitiesFilamentWidget",
+                "Capell\\SeoSuite\\Filament\\Widgets\\SearchIntelligenceFilamentWidget",
+                "Capell\\SeoSuite\\Filament\\Widgets\\AiDiscoveryCoverageFilamentWidget"
             ]
         },
         {

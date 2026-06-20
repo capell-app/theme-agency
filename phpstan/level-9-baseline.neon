@@ -1570,31 +1570,31 @@ parameters:
 			rawMessage: 'Parameter $name of class Capell\Blog\Data\Dashboard\TagCountData constructor expects string, mixed given.'
 			identifier: argument.type
 			count: 1
-			path: ../packages/blog/src/Filament/Widgets/ArticleHealthWidgetAbstract.php
+			path: ../packages/blog/src/Filament/Widgets/ArticleHealthFilamentWidget.php
 
 		-
 			rawMessage: Anonymous function should return string|null but returns mixed.
 			identifier: return.type
 			count: 1
-			path: ../packages/blog/src/Filament/Widgets/ListArticlesWidget.php
+			path: ../packages/blog/src/Filament/Widgets/ListArticlesFilamentWidget.php
 
 		-
-			rawMessage: 'Method Capell\Blog\Filament\Widgets\ListArticlesWidget::paginateTableQuery() should return Illuminate\Contracts\Pagination\CursorPaginator<(int|string), mixed> but returns Illuminate\Pagination\CursorPaginator<int, Illuminate\Database\Eloquent\Model>.'
+			rawMessage: 'Method Capell\Blog\Filament\Widgets\ListArticlesFilamentWidget::paginateTableQuery() should return Illuminate\Contracts\Pagination\CursorPaginator<(int|string), mixed> but returns Illuminate\Pagination\CursorPaginator<int, Illuminate\Database\Eloquent\Model>.'
 			identifier: return.type
 			count: 1
-			path: ../packages/blog/src/Filament/Widgets/ListArticlesWidget.php
+			path: ../packages/blog/src/Filament/Widgets/ListArticlesFilamentWidget.php
 
 		-
 			rawMessage: 'Parameter #1 $components of method Filament\Tables\Table::columns() expects array<Filament\Tables\Columns\Column|Filament\Tables\Columns\ColumnGroup|Filament\Tables\Columns\Layout\Component>, array<int, mixed> given.'
 			identifier: argument.type
 			count: 1
-			path: ../packages/blog/src/Filament/Widgets/ListArticlesWidget.php
+			path: ../packages/blog/src/Filament/Widgets/ListArticlesFilamentWidget.php
 
 		-
 			rawMessage: Cannot cast mixed to int.
 			identifier: cast.int
 			count: 2
-			path: ../packages/blog/src/Filament/Widgets/TrafficChartWidgetAbstract.php
+			path: ../packages/blog/src/Filament/Widgets/TrafficChartFilamentWidget.php
 
 		-
 			rawMessage: Cannot access offset 'cacheSafety' on mixed.
@@ -2986,43 +2986,43 @@ parameters:
 			rawMessage: Binary operation "." between mixed and '%%' results in an error.
 			identifier: binaryOp.invalid
 			count: 1
-			path: ../packages/campaign-studio/src/Filament/Widgets/CampaignOverviewStatsWidget.php
+			path: ../packages/campaign-studio/src/Filament/Widgets/CampaignOverviewStatsFilamentWidget.php
 
 		-
 			rawMessage: Cannot access offset 'active_campaign-studio' on mixed.
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
-			path: ../packages/campaign-studio/src/Filament/Widgets/CampaignOverviewStatsWidget.php
+			path: ../packages/campaign-studio/src/Filament/Widgets/CampaignOverviewStatsFilamentWidget.php
 
 		-
 			rawMessage: Cannot access offset 'conversion_rate' on mixed.
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
-			path: ../packages/campaign-studio/src/Filament/Widgets/CampaignOverviewStatsWidget.php
+			path: ../packages/campaign-studio/src/Filament/Widgets/CampaignOverviewStatsFilamentWidget.php
 
 		-
 			rawMessage: Cannot access offset 'conversions' on mixed.
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
-			path: ../packages/campaign-studio/src/Filament/Widgets/CampaignOverviewStatsWidget.php
+			path: ../packages/campaign-studio/src/Filament/Widgets/CampaignOverviewStatsFilamentWidget.php
 
 		-
 			rawMessage: Cannot cast mixed to string.
 			identifier: cast.string
 			count: 2
-			path: ../packages/campaign-studio/src/Filament/Widgets/CampaignOverviewStatsWidget.php
+			path: ../packages/campaign-studio/src/Filament/Widgets/CampaignOverviewStatsFilamentWidget.php
 
 		-
 			rawMessage: 'Cannot call method map() on mixed.'
 			identifier: method.nonObject
 			count: 1
-			path: ../packages/campaign-studio/src/Filament/Widgets/TopCampaignStudioWidget.php
+			path: ../packages/campaign-studio/src/Filament/Widgets/TopCampaignStudioFilamentWidget.php
 
 		-
 			rawMessage: 'Cannot call method map() on mixed.'
 			identifier: method.nonObject
 			count: 1
-			path: ../packages/campaign-studio/src/Filament/Widgets/TopLandingPagesWidget.php
+			path: ../packages/campaign-studio/src/Filament/Widgets/TopLandingPagesFilamentWidget.php
 
 		-
 			rawMessage: Cannot access property $eventLabel on mixed.
@@ -3319,7 +3319,7 @@ parameters:
 			path: ../packages/campaign-studio/tests/Unit/Actions/InstallCampaignLayoutsActionTest.php
 
 		-
-			rawMessage: Cannot access offset 'widgets' on mixed.
+			rawMessage: Cannot access offset 'layout_widgets' on mixed.
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
 			path: ../packages/campaign-studio/tests/Unit/Actions/InstallCampaignLayoutsActionTest.php
@@ -3634,7 +3634,7 @@ parameters:
 			rawMessage: Cannot cast mixed to string.
 			identifier: cast.string
 			count: 1
-			path: ../packages/comments/src/Filament/Widgets/LatestCommentsWidget.php
+			path: ../packages/comments/src/Filament/Widgets/LatestCommentsFilamentWidget.php
 
 		-
 			rawMessage: Cannot access offset 'id' on mixed.
@@ -4426,31 +4426,31 @@ parameters:
 			rawMessage: Cannot access offset 'activities' on mixed.
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
-			path: ../packages/contacts/src/Filament/Widgets/ContactsOverviewStatsWidget.php
+			path: ../packages/contacts/src/Filament/Widgets/ContactsOverviewStatsFilamentWidget.php
 
 		-
 			rawMessage: Cannot access offset 'contacts' on mixed.
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
-			path: ../packages/contacts/src/Filament/Widgets/ContactsOverviewStatsWidget.php
+			path: ../packages/contacts/src/Filament/Widgets/ContactsOverviewStatsFilamentWidget.php
 
 		-
 			rawMessage: Cannot access offset 'open_leads' on mixed.
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
-			path: ../packages/contacts/src/Filament/Widgets/ContactsOverviewStatsWidget.php
+			path: ../packages/contacts/src/Filament/Widgets/ContactsOverviewStatsFilamentWidget.php
 
 		-
 			rawMessage: Cannot access offset 'organisations' on mixed.
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
-			path: ../packages/contacts/src/Filament/Widgets/ContactsOverviewStatsWidget.php
+			path: ../packages/contacts/src/Filament/Widgets/ContactsOverviewStatsFilamentWidget.php
 
 		-
 			rawMessage: 'Parameter #1 $num of function number_format expects float, mixed given.'
 			identifier: argument.type
 			count: 4
-			path: ../packages/contacts/src/Filament/Widgets/ContactsOverviewStatsWidget.php
+			path: ../packages/contacts/src/Filament/Widgets/ContactsOverviewStatsFilamentWidget.php
 
 		-
 			rawMessage: Cannot cast mixed to string.
@@ -5230,25 +5230,25 @@ parameters:
 			rawMessage: Cannot cast mixed to string.
 			identifier: cast.string
 			count: 2
-			path: ../packages/content-sections/src/Support/SectionPublicWidgetPayloadContributor.php
+			path: ../packages/content-sections/src/Support/SectionPublicLayoutWidgetPayloadContributor.php
 
 		-
-			rawMessage: 'Method Capell\ContentSections\Support\SectionPublicWidgetPayloadContributor::componentFor() should return string but returns mixed.'
+			rawMessage: 'Method Capell\ContentSections\Support\SectionPublicLayoutWidgetPayloadContributor::componentFor() should return string but returns mixed.'
 			identifier: return.type
 			count: 1
-			path: ../packages/content-sections/src/Support/SectionPublicWidgetPayloadContributor.php
+			path: ../packages/content-sections/src/Support/SectionPublicLayoutWidgetPayloadContributor.php
 
 		-
-			rawMessage: 'Method Capell\ContentSections\Support\SectionPublicWidgetPayloadContributor::sectionAssets() should return Illuminate\Support\Collection<int, Capell\LayoutBuilder\Models\WidgetAsset> but returns Illuminate\Support\Collection<int, mixed>.'
+			rawMessage: 'Method Capell\ContentSections\Support\SectionPublicLayoutWidgetPayloadContributor::sectionAssets() should return Illuminate\Support\Collection<int, Capell\LayoutBuilder\Models\LayoutWidgetAsset> but returns Illuminate\Support\Collection<int, mixed>.'
 			identifier: return.type
 			count: 1
-			path: ../packages/content-sections/src/Support/SectionPublicWidgetPayloadContributor.php
+			path: ../packages/content-sections/src/Support/SectionPublicLayoutWidgetPayloadContributor.php
 
 		-
-			rawMessage: 'Method Capell\ContentSections\Support\SectionPublicWidgetPayloadContributor::summaryFor() should return string|null but returns mixed.'
+			rawMessage: 'Method Capell\ContentSections\Support\SectionPublicLayoutWidgetPayloadContributor::summaryFor() should return string|null but returns mixed.'
 			identifier: return.type
 			count: 2
-			path: ../packages/content-sections/src/Support/SectionPublicWidgetPayloadContributor.php
+			path: ../packages/content-sections/src/Support/SectionPublicLayoutWidgetPayloadContributor.php
 
 		-
 			rawMessage: Cannot access offset 'dependencies' on mixed.
@@ -5842,7 +5842,7 @@ parameters:
 			rawMessage: Cannot access property $points on mixed.
 			identifier: property.nonObject
 			count: 3
-			path: ../packages/dashboard-reports/src/Filament/Widgets/PublishingTrendChartWidget.php
+			path: ../packages/dashboard-reports/src/Filament/Widgets/PublishingTrendChartFilamentWidget.php
 
 		-
 			rawMessage: 'Method Capell\DashboardReports\Support\Dashboard\DashboardReportsContentHealthDataProvider::build() should return Capell\Admin\Data\Dashboard\ContentHealthData but returns mixed.'
@@ -5938,13 +5938,13 @@ parameters:
 			rawMessage: 'Parameter #1 $name of static method Spatie\Permission\Models\Role::findOrCreate() expects string, mixed given.'
 			identifier: argument.type
 			count: 1
-			path: ../packages/dashboard-reports/tests/Feature/Filament/DashboardReportsDashboardWidgetsTest.php
+			path: ../packages/dashboard-reports/tests/Feature/Filament/DashboardReportsDashboardFilamentWidgetsTest.php
 
 		-
 			rawMessage: 'Parameter #1 $role of method PHPUnit\Framework\TestCase<object>::actingAsRole() expects string, mixed given.'
 			identifier: argument.type
 			count: 4
-			path: ../packages/dashboard-reports/tests/Feature/Filament/DashboardReportsDashboardWidgetsTest.php
+			path: ../packages/dashboard-reports/tests/Feature/Filament/DashboardReportsDashboardFilamentWidgetsTest.php
 
 		-
 			rawMessage: Cannot access offset 'entries' on mixed.
@@ -6184,49 +6184,49 @@ parameters:
 			rawMessage: 'Call to function is_string() with non-empty-string will always evaluate to true.'
 			identifier: function.alreadyNarrowedType
 			count: 1
-			path: ../packages/demo-kit/src/Support/KitchenSinkPublicWidgetPayloadContributor.php
+			path: ../packages/demo-kit/src/Support/KitchenSinkPublicLayoutWidgetPayloadContributor.php
 
 		-
 			rawMessage: 'Cannot call method first() on mixed.'
 			identifier: method.nonObject
 			count: 2
-			path: ../packages/demo-kit/src/Support/KitchenSinkPublicWidgetPayloadContributor.php
+			path: ../packages/demo-kit/src/Support/KitchenSinkPublicLayoutWidgetPayloadContributor.php
 
 		-
 			rawMessage: 'Cannot call method firstWhere() on mixed.'
 			identifier: method.nonObject
 			count: 2
-			path: ../packages/demo-kit/src/Support/KitchenSinkPublicWidgetPayloadContributor.php
+			path: ../packages/demo-kit/src/Support/KitchenSinkPublicLayoutWidgetPayloadContributor.php
 
 		-
 			rawMessage: Cannot cast mixed to string.
 			identifier: cast.string
 			count: 7
-			path: ../packages/demo-kit/src/Support/KitchenSinkPublicWidgetPayloadContributor.php
+			path: ../packages/demo-kit/src/Support/KitchenSinkPublicLayoutWidgetPayloadContributor.php
 
 		-
 			rawMessage: 'Offset ''source'' on array{0: non-falsy-string, source: non-empty-string, 1: non-empty-string} on left side of ?? always exists and is not nullable.'
 			identifier: nullCoalesce.offset
 			count: 1
-			path: ../packages/demo-kit/src/Support/KitchenSinkPublicWidgetPayloadContributor.php
+			path: ../packages/demo-kit/src/Support/KitchenSinkPublicLayoutWidgetPayloadContributor.php
 
 		-
-			rawMessage: 'Parameter #1 $section of method Capell\DemoKit\Support\KitchenSinkPublicWidgetPayloadContributor::sectionHtml() expects array<string, mixed>, array<mixed, mixed> given.'
+			rawMessage: 'Parameter #1 $section of method Capell\DemoKit\Support\KitchenSinkPublicLayoutWidgetPayloadContributor::sectionHtml() expects array<string, mixed>, array<mixed, mixed> given.'
 			identifier: argument.type
 			count: 1
-			path: ../packages/demo-kit/src/Support/KitchenSinkPublicWidgetPayloadContributor.php
+			path: ../packages/demo-kit/src/Support/KitchenSinkPublicLayoutWidgetPayloadContributor.php
 
 		-
 			rawMessage: Using nullsafe property access "?->content" on left side of ?? is unnecessary. Use -> instead.
 			identifier: nullsafe.neverNull
 			count: 1
-			path: ../packages/demo-kit/src/Support/KitchenSinkPublicWidgetPayloadContributor.php
+			path: ../packages/demo-kit/src/Support/KitchenSinkPublicLayoutWidgetPayloadContributor.php
 
 		-
 			rawMessage: Using nullsafe property access "?->title" on left side of ?? is unnecessary. Use -> instead.
 			identifier: nullsafe.neverNull
 			count: 1
-			path: ../packages/demo-kit/src/Support/KitchenSinkPublicWidgetPayloadContributor.php
+			path: ../packages/demo-kit/src/Support/KitchenSinkPublicLayoutWidgetPayloadContributor.php
 
 		-
 			rawMessage: 'Cannot call method assertExitCode() on mixed.'
@@ -7405,88 +7405,88 @@ parameters:
 			path: ../packages/diagnostics/src/Filament/Pages/Tables/QueueHealthTable.php
 
 		-
-			rawMessage: 'Property Capell\Diagnostics\Filament\Widgets\Health\CacheHealthWidgetAbstract::$selectedSiteId (int|null) does not accept mixed.'
+			rawMessage: 'Property Capell\Diagnostics\Filament\Widgets\Health\CacheHealthFilamentWidget::$selectedSiteId (int|null) does not accept mixed.'
 			identifier: assign.propertyType
 			count: 1
-			path: ../packages/diagnostics/src/Filament/Widgets/Health/CacheHealthWidgetAbstract.php
+			path: ../packages/diagnostics/src/Filament/Widgets/Health/CacheHealthFilamentWidget.php
 
 		-
-			rawMessage: 'Method Capell\Diagnostics\Filament\Widgets\Health\ContentGraphHealthWidgetAbstract::data() should return Capell\Diagnostics\Data\Dashboard\ContentGraphHealthData but returns mixed.'
+			rawMessage: 'Method Capell\Diagnostics\Filament\Widgets\Health\ContentGraphHealthFilamentWidget::data() should return Capell\Diagnostics\Data\Dashboard\ContentGraphHealthData but returns mixed.'
 			identifier: return.type
 			count: 1
-			path: ../packages/diagnostics/src/Filament/Widgets/Health/ContentGraphHealthWidgetAbstract.php
+			path: ../packages/diagnostics/src/Filament/Widgets/Health/ContentGraphHealthFilamentWidget.php
 
 		-
-			rawMessage: 'Method Capell\Diagnostics\Filament\Widgets\Health\RegistryHealthWidgetAbstract::data() should return Capell\Diagnostics\Data\Dashboard\RegistryHealthData but returns mixed.'
+			rawMessage: 'Method Capell\Diagnostics\Filament\Widgets\Health\RegistryHealthFilamentWidget::data() should return Capell\Diagnostics\Data\Dashboard\RegistryHealthData but returns mixed.'
 			identifier: return.type
 			count: 1
-			path: ../packages/diagnostics/src/Filament/Widgets/Health/RegistryHealthWidgetAbstract.php
+			path: ../packages/diagnostics/src/Filament/Widgets/Health/RegistryHealthFilamentWidget.php
 
 		-
 			rawMessage: Cannot access property $allGreen on mixed.
 			identifier: property.nonObject
 			count: 1
-			path: ../packages/diagnostics/src/Filament/Widgets/Health/SetupHealthWidgetAbstract.php
+			path: ../packages/diagnostics/src/Filament/Widgets/Health/SetupHealthFilamentWidget.php
 
 		-
-			rawMessage: 'Method Capell\Diagnostics\Filament\Widgets\Health\SetupHealthWidgetAbstract::data() should return Capell\Diagnostics\Data\Dashboard\SetupHealthData but returns mixed.'
+			rawMessage: 'Method Capell\Diagnostics\Filament\Widgets\Health\SetupHealthFilamentWidget::data() should return Capell\Diagnostics\Data\Dashboard\SetupHealthData but returns mixed.'
 			identifier: return.type
 			count: 1
-			path: ../packages/diagnostics/src/Filament/Widgets/Health/SetupHealthWidgetAbstract.php
+			path: ../packages/diagnostics/src/Filament/Widgets/Health/SetupHealthFilamentWidget.php
 
 		-
-			rawMessage: 'Method Capell\Diagnostics\Filament\Widgets\Health\SiteHealthWidgetAbstract::setupHealth() should return Capell\Diagnostics\Data\Dashboard\SetupHealthData but returns mixed.'
+			rawMessage: 'Method Capell\Diagnostics\Filament\Widgets\Health\SiteHealthFilamentWidget::setupHealth() should return Capell\Diagnostics\Data\Dashboard\SetupHealthData but returns mixed.'
 			identifier: return.type
 			count: 1
-			path: ../packages/diagnostics/src/Filament/Widgets/Health/SiteHealthWidgetAbstract.php
+			path: ../packages/diagnostics/src/Filament/Widgets/Health/SiteHealthFilamentWidget.php
 
 		-
 			rawMessage: Cannot access property $averageRuntimeSeconds on mixed.
 			identifier: property.nonObject
 			count: 1
-			path: ../packages/diagnostics/src/Filament/Widgets/QueueOperationsStatsWidget.php
+			path: ../packages/diagnostics/src/Filament/Widgets/QueueOperationsStatsFilamentWidget.php
 
 		-
 			rawMessage: Cannot access property $dailyFailures on mixed.
 			identifier: property.nonObject
 			count: 1
-			path: ../packages/diagnostics/src/Filament/Widgets/QueueOperationsStatsWidget.php
+			path: ../packages/diagnostics/src/Filament/Widgets/QueueOperationsStatsFilamentWidget.php
 
 		-
 			rawMessage: Cannot access property $dailyTotals on mixed.
 			identifier: property.nonObject
 			count: 1
-			path: ../packages/diagnostics/src/Filament/Widgets/QueueOperationsStatsWidget.php
+			path: ../packages/diagnostics/src/Filament/Widgets/QueueOperationsStatsFilamentWidget.php
 
 		-
 			rawMessage: Cannot access property $failedJobs on mixed.
 			identifier: property.nonObject
 			count: 2
-			path: ../packages/diagnostics/src/Filament/Widgets/QueueOperationsStatsWidget.php
+			path: ../packages/diagnostics/src/Filament/Widgets/QueueOperationsStatsFilamentWidget.php
 
 		-
 			rawMessage: Cannot access property $pendingJobs on mixed.
 			identifier: property.nonObject
 			count: 1
-			path: ../packages/diagnostics/src/Filament/Widgets/QueueOperationsStatsWidget.php
+			path: ../packages/diagnostics/src/Filament/Widgets/QueueOperationsStatsFilamentWidget.php
 
 		-
 			rawMessage: Cannot access property $runningJobs on mixed.
 			identifier: property.nonObject
 			count: 1
-			path: ../packages/diagnostics/src/Filament/Widgets/QueueOperationsStatsWidget.php
+			path: ../packages/diagnostics/src/Filament/Widgets/QueueOperationsStatsFilamentWidget.php
 
 		-
 			rawMessage: Cannot access property $succeededJobs on mixed.
 			identifier: property.nonObject
 			count: 1
-			path: ../packages/diagnostics/src/Filament/Widgets/QueueOperationsStatsWidget.php
+			path: ../packages/diagnostics/src/Filament/Widgets/QueueOperationsStatsFilamentWidget.php
 
 		-
 			rawMessage: Cannot access property $totalJobs on mixed.
 			identifier: property.nonObject
 			count: 1
-			path: ../packages/diagnostics/src/Filament/Widgets/QueueOperationsStatsWidget.php
+			path: ../packages/diagnostics/src/Filament/Widgets/QueueOperationsStatsFilamentWidget.php
 
 		-
 			rawMessage: 'Method Capell\Diagnostics\Models\FailedJob::getConnectionName() should return string|null but returns mixed.'
@@ -9433,7 +9433,7 @@ parameters:
 			path: ../packages/filament-peek/tests/Unit/SnapshotActionTest.php
 
 		-
-			rawMessage: Cannot access offset 'widgets' on mixed.
+			rawMessage: Cannot access offset 'layout_widgets' on mixed.
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
 			path: ../packages/filament-peek/tests/Unit/SnapshotActionTest.php
@@ -9841,7 +9841,7 @@ parameters:
 			path: ../packages/foundation-theme/src/Livewire/Widget/AbstractWidget.php
 
 		-
-			rawMessage: 'Method Capell\FoundationTheme\Livewire\Widget\AbstractWidget::getWidgetByKey() should return Capell\LayoutBuilder\Models\Widget|null but returns mixed.'
+			rawMessage: 'Method Capell\FoundationTheme\Livewire\Widget\AbstractWidget::getWidgetByKey() should return Capell\LayoutBuilder\Models\LayoutWidget|null but returns mixed.'
 			identifier: return.type
 			count: 1
 			path: ../packages/foundation-theme/src/Livewire/Widget/AbstractWidget.php
@@ -11374,115 +11374,115 @@ parameters:
 			rawMessage: Cannot access property $conversions on mixed.
 			identifier: property.nonObject
 			count: 1
-			path: ../packages/ga4-reports/src/Filament/Widgets/GA4ReportsOverviewStatsWidget.php
+			path: ../packages/ga4-reports/src/Filament/Widgets/GA4ReportsOverviewStatsFilamentWidget.php
 
 		-
 			rawMessage: Cannot access property $engagementRate on mixed.
 			identifier: property.nonObject
 			count: 1
-			path: ../packages/ga4-reports/src/Filament/Widgets/GA4ReportsOverviewStatsWidget.php
+			path: ../packages/ga4-reports/src/Filament/Widgets/GA4ReportsOverviewStatsFilamentWidget.php
 
 		-
 			rawMessage: Cannot access property $screenPageViews on mixed.
 			identifier: property.nonObject
 			count: 1
-			path: ../packages/ga4-reports/src/Filament/Widgets/GA4ReportsOverviewStatsWidget.php
+			path: ../packages/ga4-reports/src/Filament/Widgets/GA4ReportsOverviewStatsFilamentWidget.php
 
 		-
 			rawMessage: Cannot access property $sessions on mixed.
 			identifier: property.nonObject
 			count: 1
-			path: ../packages/ga4-reports/src/Filament/Widgets/GA4ReportsOverviewStatsWidget.php
+			path: ../packages/ga4-reports/src/Filament/Widgets/GA4ReportsOverviewStatsFilamentWidget.php
 
 		-
 			rawMessage: Cannot access property $totalUsers on mixed.
 			identifier: property.nonObject
 			count: 1
-			path: ../packages/ga4-reports/src/Filament/Widgets/GA4ReportsOverviewStatsWidget.php
+			path: ../packages/ga4-reports/src/Filament/Widgets/GA4ReportsOverviewStatsFilamentWidget.php
 
 		-
-			rawMessage: 'Method Capell\GA4Reports\Filament\Widgets\GA4ReportsOverviewStatsWidget::getGA4ReportsWindow() should return Capell\GA4Reports\Data\GA4ReportsWindowData|null but returns mixed.'
+			rawMessage: 'Method Capell\GA4Reports\Filament\Widgets\GA4ReportsOverviewStatsFilamentWidget::getGA4ReportsWindow() should return Capell\GA4Reports\Data\GA4ReportsWindowData|null but returns mixed.'
 			identifier: return.type
 			count: 1
-			path: ../packages/ga4-reports/src/Filament/Widgets/GA4ReportsOverviewStatsWidget.php
+			path: ../packages/ga4-reports/src/Filament/Widgets/GA4ReportsOverviewStatsFilamentWidget.php
 
 		-
-			rawMessage: 'Method Capell\GA4Reports\Filament\Widgets\GA4ReportsOverviewStatsWidget::getRecords() should return Illuminate\Support\Collection<(int|string), mixed> but returns Illuminate\Support\Collection<int, array{id: string, label: string, value: string}>.'
+			rawMessage: 'Method Capell\GA4Reports\Filament\Widgets\GA4ReportsOverviewStatsFilamentWidget::getRecords() should return Illuminate\Support\Collection<(int|string), mixed> but returns Illuminate\Support\Collection<int, array{id: string, label: string, value: string}>.'
 			identifier: return.type
 			count: 1
-			path: ../packages/ga4-reports/src/Filament/Widgets/GA4ReportsOverviewStatsWidget.php
+			path: ../packages/ga4-reports/src/Filament/Widgets/GA4ReportsOverviewStatsFilamentWidget.php
 
 		-
 			rawMessage: Cannot access property $credentialsPath on mixed.
 			identifier: property.nonObject
 			count: 1
-			path: ../packages/ga4-reports/src/Filament/Widgets/GA4ReportsSetupStatusWidget.php
+			path: ../packages/ga4-reports/src/Filament/Widgets/GA4ReportsSetupStatusFilamentWidget.php
 
 		-
 			rawMessage: Cannot access property $enabled on mixed.
 			identifier: property.nonObject
 			count: 1
-			path: ../packages/ga4-reports/src/Filament/Widgets/GA4ReportsSetupStatusWidget.php
+			path: ../packages/ga4-reports/src/Filament/Widgets/GA4ReportsSetupStatusFilamentWidget.php
 
 		-
 			rawMessage: Cannot access property $propertyId on mixed.
 			identifier: property.nonObject
 			count: 3
-			path: ../packages/ga4-reports/src/Filament/Widgets/GA4ReportsSetupStatusWidget.php
+			path: ../packages/ga4-reports/src/Filament/Widgets/GA4ReportsSetupStatusFilamentWidget.php
 
 		-
-			rawMessage: 'Method Capell\GA4Reports\Filament\Widgets\GA4ReportsSetupStatusWidget::getRecords() should return Illuminate\Support\Collection<(int|string), mixed> but returns Illuminate\Support\Collection<int, array{id: string, label: string, value: string}>.'
+			rawMessage: 'Method Capell\GA4Reports\Filament\Widgets\GA4ReportsSetupStatusFilamentWidget::getRecords() should return Illuminate\Support\Collection<(int|string), mixed> but returns Illuminate\Support\Collection<int, array{id: string, label: string, value: string}>.'
 			identifier: return.type
 			count: 1
-			path: ../packages/ga4-reports/src/Filament/Widgets/GA4ReportsSetupStatusWidget.php
+			path: ../packages/ga4-reports/src/Filament/Widgets/GA4ReportsSetupStatusFilamentWidget.php
 
 		-
-			rawMessage: 'Method Capell\GA4Reports\Filament\Widgets\GA4ReportsTopPagesTableWidget::getGA4ReportsWindow() should return Capell\GA4Reports\Data\GA4ReportsWindowData|null but returns mixed.'
+			rawMessage: 'Method Capell\GA4Reports\Filament\Widgets\GA4ReportsTopPagesTableFilamentWidget::getGA4ReportsWindow() should return Capell\GA4Reports\Data\GA4ReportsWindowData|null but returns mixed.'
 			identifier: return.type
 			count: 1
-			path: ../packages/ga4-reports/src/Filament/Widgets/GA4ReportsTopPagesTableWidget.php
+			path: ../packages/ga4-reports/src/Filament/Widgets/GA4ReportsTopPagesTableFilamentWidget.php
 
 		-
-			rawMessage: 'Method Capell\GA4Reports\Filament\Widgets\GA4ReportsTopPagesTableWidget::getRecords() should return Illuminate\Support\Collection<(int|string), mixed> but returns Illuminate\Support\Collection<int, array{id: string, page_path: string, page_title: string|null, screen_page_views: int, sessions: int, total_users: int, conversions: int}>.'
+			rawMessage: 'Method Capell\GA4Reports\Filament\Widgets\GA4ReportsTopPagesTableFilamentWidget::getRecords() should return Illuminate\Support\Collection<(int|string), mixed> but returns Illuminate\Support\Collection<int, array{id: string, page_path: string, page_title: string|null, screen_page_views: int, sessions: int, total_users: int, conversions: int}>.'
 			identifier: return.type
 			count: 1
-			path: ../packages/ga4-reports/src/Filament/Widgets/GA4ReportsTopPagesTableWidget.php
+			path: ../packages/ga4-reports/src/Filament/Widgets/GA4ReportsTopPagesTableFilamentWidget.php
 
 		-
-			rawMessage: 'Method Capell\GA4Reports\Filament\Widgets\GA4ReportsTopPagesWidget::getGA4ReportsWindow() should return Capell\GA4Reports\Data\GA4ReportsWindowData|null but returns mixed.'
+			rawMessage: 'Method Capell\GA4Reports\Filament\Widgets\GA4ReportsTopPagesFilamentWidget::getGA4ReportsWindow() should return Capell\GA4Reports\Data\GA4ReportsWindowData|null but returns mixed.'
 			identifier: return.type
 			count: 1
-			path: ../packages/ga4-reports/src/Filament/Widgets/GA4ReportsTopPagesWidget.php
+			path: ../packages/ga4-reports/src/Filament/Widgets/GA4ReportsTopPagesFilamentWidget.php
 
 		-
-			rawMessage: 'Method Capell\GA4Reports\Filament\Widgets\GA4ReportsTopPagesWidget::getRecords() should return Illuminate\Support\Collection<(int|string), mixed> but returns Illuminate\Support\Collection<int, array{id: string, page_path: string, page_title: string|null, screen_page_views: int, sessions: int, total_users: int, conversions: int}>.'
+			rawMessage: 'Method Capell\GA4Reports\Filament\Widgets\GA4ReportsTopPagesFilamentWidget::getRecords() should return Illuminate\Support\Collection<(int|string), mixed> but returns Illuminate\Support\Collection<int, array{id: string, page_path: string, page_title: string|null, screen_page_views: int, sessions: int, total_users: int, conversions: int}>.'
 			identifier: return.type
 			count: 1
-			path: ../packages/ga4-reports/src/Filament/Widgets/GA4ReportsTopPagesWidget.php
+			path: ../packages/ga4-reports/src/Filament/Widgets/GA4ReportsTopPagesFilamentWidget.php
 
 		-
-			rawMessage: 'Method Capell\GA4Reports\Filament\Widgets\GA4ReportsTrafficTrendWidget::getGA4ReportsWindow() should return Capell\GA4Reports\Data\GA4ReportsWindowData|null but returns mixed.'
+			rawMessage: 'Method Capell\GA4Reports\Filament\Widgets\GA4ReportsTrafficTrendFilamentWidget::getGA4ReportsWindow() should return Capell\GA4Reports\Data\GA4ReportsWindowData|null but returns mixed.'
 			identifier: return.type
 			count: 1
-			path: ../packages/ga4-reports/src/Filament/Widgets/GA4ReportsTrafficTrendWidget.php
+			path: ../packages/ga4-reports/src/Filament/Widgets/GA4ReportsTrafficTrendFilamentWidget.php
 
 		-
 			rawMessage: 'Parameter #1 $callback of function array_map expects (callable(mixed): mixed)|null, Closure(Capell\GA4Reports\Data\GA4ReportsTrendPointData): int given.'
 			identifier: argument.type
 			count: 2
-			path: ../packages/ga4-reports/src/Filament/Widgets/GA4ReportsTrafficTrendWidget.php
+			path: ../packages/ga4-reports/src/Filament/Widgets/GA4ReportsTrafficTrendFilamentWidget.php
 
 		-
 			rawMessage: 'Parameter #1 $callback of function array_map expects (callable(mixed): mixed)|null, Closure(Capell\GA4Reports\Data\GA4ReportsTrendPointData): string given.'
 			identifier: argument.type
 			count: 1
-			path: ../packages/ga4-reports/src/Filament/Widgets/GA4ReportsTrafficTrendWidget.php
+			path: ../packages/ga4-reports/src/Filament/Widgets/GA4ReportsTrafficTrendFilamentWidget.php
 
 		-
 			rawMessage: 'Parameter #2 $array of function array_map expects array, mixed given.'
 			identifier: argument.type
 			count: 3
-			path: ../packages/ga4-reports/src/Filament/Widgets/GA4ReportsTrafficTrendWidget.php
+			path: ../packages/ga4-reports/src/Filament/Widgets/GA4ReportsTrafficTrendFilamentWidget.php
 
 		-
 			rawMessage: 'Method Capell\GA4Reports\Health\Ga4ReportsHealthCheck::resolveConfig() should return Capell\GA4Reports\Data\GA4ReportsConfigData|null but returns mixed.'
@@ -11623,7 +11623,7 @@ parameters:
 			path: ../packages/hero/src/Actions/ResolveHeroMediaDataAction.php
 
 		-
-			rawMessage: 'Method Capell\Hero\Actions\ResolveHeroMediaDataAction::layers() should return list<array{model: Capell\Core\Models\Theme|Capell\LayoutBuilder\Models\Widget|Capell\LayoutBuilder\Models\WidgetAsset, settings: array<string, mixed>}> but returns list<array{model: Capell\Core\Models\Theme|Capell\LayoutBuilder\Models\Widget|Capell\LayoutBuilder\Models\WidgetAsset, settings: array<mixed, mixed>}>.'
+			rawMessage: 'Method Capell\Hero\Actions\ResolveHeroMediaDataAction::layers() should return list<array{model: Capell\Core\Models\Theme|Capell\LayoutBuilder\Models\LayoutWidget|Capell\LayoutBuilder\Models\LayoutWidgetAsset, settings: array<string, mixed>}> but returns list<array{model: Capell\Core\Models\Theme|Capell\LayoutBuilder\Models\LayoutWidget|Capell\LayoutBuilder\Models\LayoutWidgetAsset, settings: array<mixed, mixed>}>.'
 			identifier: return.type
 			count: 1
 			path: ../packages/hero/src/Actions/ResolveHeroMediaDataAction.php
@@ -11683,7 +11683,7 @@ parameters:
 			path: ../packages/hero/src/View/Components/Widget/Hero.php
 
 		-
-			rawMessage: Cannot access offset 'widgets' on mixed.
+			rawMessage: Cannot access offset 'layout_widgets' on mixed.
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 3
 			path: ../packages/hero/tests/Feature/HeroSetupCommandTest.php
@@ -11971,10 +11971,10 @@ parameters:
 			path: ../packages/html-cache/tests/Feature/HtmlCacheAdminTest.php
 
 		-
-			rawMessage: 'Property Illuminate\Foundation\Auth\User@anonymous/packages/html-cache/tests/Feature/HtmlCacheDashboardWidgetsTest.php:38::$assignedSiteIds (Illuminate\Support\Collection<int, int>) does not accept Illuminate\Support\Collection<(int|string), mixed>.'
+			rawMessage: 'Property Illuminate\Foundation\Auth\User@anonymous/packages/html-cache/tests/Feature/HtmlCacheDashboardFilamentWidgetsTest.php:38::$assignedSiteIds (Illuminate\Support\Collection<int, int>) does not accept Illuminate\Support\Collection<(int|string), mixed>.'
 			identifier: assign.propertyType
 			count: 1
-			path: ../packages/html-cache/tests/Feature/HtmlCacheDashboardWidgetsTest.php
+			path: ../packages/html-cache/tests/Feature/HtmlCacheDashboardFilamentWidgetsTest.php
 
 		-
 			rawMessage: 'Cannot call method reasonCodes() on mixed.'
@@ -12313,46 +12313,46 @@ parameters:
 			path: ../packages/insights/src/Console/Commands/PurgeInsightsDataCommand.php
 
 		-
-			rawMessage: 'Method Capell\Insights\Filament\Widgets\InsightsOverviewStatsWidget::getRecords() should return Illuminate\Support\Collection<int, array{id: string, label: string, value: int}> but returns mixed.'
+			rawMessage: 'Method Capell\Insights\Filament\Widgets\InsightsOverviewStatsFilamentWidget::getRecords() should return Illuminate\Support\Collection<int, array{id: string, label: string, value: int}> but returns mixed.'
 			identifier: return.type
 			count: 1
-			path: ../packages/insights/src/Filament/Widgets/InsightsOverviewStatsWidget.php
+			path: ../packages/insights/src/Filament/Widgets/InsightsOverviewStatsFilamentWidget.php
 
 		-
 			rawMessage: Anonymous function should return Illuminate\Support\Collection but returns mixed.
 			identifier: return.type
 			count: 1
-			path: ../packages/insights/src/Filament/Widgets/LiveInsightsStatsWidget.php
+			path: ../packages/insights/src/Filament/Widgets/LiveInsightsStatsFilamentWidget.php
 
 		-
 			rawMessage: 'Cannot call method map() on mixed.'
 			identifier: method.nonObject
 			count: 1
-			path: ../packages/insights/src/Filament/Widgets/PopularPagesWidget.php
+			path: ../packages/insights/src/Filament/Widgets/PopularPagesFilamentWidget.php
 
 		-
 			rawMessage: 'Cannot call method map() on mixed.'
 			identifier: method.nonObject
 			count: 1
-			path: ../packages/insights/src/Filament/Widgets/RecentJourneysWidget.php
+			path: ../packages/insights/src/Filament/Widgets/RecentJourneysFilamentWidget.php
 
 		-
 			rawMessage: 'Cannot call method map() on mixed.'
 			identifier: method.nonObject
 			count: 1
-			path: ../packages/insights/src/Filament/Widgets/TopActionsWidget.php
+			path: ../packages/insights/src/Filament/Widgets/TopActionsFilamentWidget.php
 
 		-
 			rawMessage: 'Cannot call method map() on mixed.'
 			identifier: method.nonObject
 			count: 1
-			path: ../packages/insights/src/Filament/Widgets/TrendingPagesWidget.php
+			path: ../packages/insights/src/Filament/Widgets/TrendingPagesFilamentWidget.php
 
 		-
 			rawMessage: Cannot cast mixed to float.
 			identifier: cast.double
 			count: 1
-			path: ../packages/insights/src/Filament/Widgets/TrendingPagesWidget.php
+			path: ../packages/insights/src/Filament/Widgets/TrendingPagesFilamentWidget.php
 
 		-
 			rawMessage: Cannot access property $categories on mixed.
@@ -12805,7 +12805,7 @@ parameters:
 			path: ../packages/layout-builder/src/Actions/AddWidgetToLayoutContainerAction.php
 
 		-
-			rawMessage: Cannot access offset 'widgets' on mixed.
+			rawMessage: Cannot access offset 'layout_widgets' on mixed.
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
 			path: ../packages/layout-builder/src/Actions/AddWidgetToLayoutContainerAction.php
@@ -13093,7 +13093,7 @@ parameters:
 			path: ../packages/layout-builder/src/Actions/CreateLayoutBuilderDemoSiteAction.php
 
 		-
-			rawMessage: Cannot access offset 'widgets' on mixed.
+			rawMessage: Cannot access offset 'layout_widgets' on mixed.
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
 			path: ../packages/layout-builder/src/Actions/CreateLayoutBuilderDemoSiteAction.php
@@ -13267,7 +13267,7 @@ parameters:
 			path: ../packages/layout-builder/src/Actions/Mutations/NormalizeLayoutBuilderStateAction.php
 
 		-
-			rawMessage: Cannot access offset 'widgets' on mixed.
+			rawMessage: Cannot access offset 'layout_widgets' on mixed.
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 3
 			path: ../packages/layout-builder/src/Actions/Mutations/NormalizeLayoutBuilderStateAction.php
@@ -13321,7 +13321,7 @@ parameters:
 			path: ../packages/layout-builder/src/Actions/Mutations/PasteLayoutFragmentAction.php
 
 		-
-			rawMessage: Cannot access offset 'widgets' on mixed.
+			rawMessage: Cannot access offset 'layout_widgets' on mixed.
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 2
 			path: ../packages/layout-builder/src/Actions/Mutations/PasteLayoutFragmentAction.php
@@ -13363,7 +13363,7 @@ parameters:
 			path: ../packages/layout-builder/src/Actions/Mutations/ReorderLayoutWidgetAction.php
 
 		-
-			rawMessage: Cannot access offset 'widgets' on mixed.
+			rawMessage: Cannot access offset 'layout_widgets' on mixed.
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 9
 			path: ../packages/layout-builder/src/Actions/Mutations/ReorderLayoutWidgetAction.php
@@ -13519,7 +13519,7 @@ parameters:
 			path: ../packages/layout-builder/src/Actions/SaveLayoutPresetAction.php
 
 		-
-			rawMessage: Cannot access offset 'widgets' on mixed.
+			rawMessage: Cannot access offset 'layout_widgets' on mixed.
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
 			path: ../packages/layout-builder/src/Actions/SaveLayoutPresetAction.php
@@ -14107,7 +14107,7 @@ parameters:
 			path: ../packages/layout-builder/src/Livewire/Filament/LayoutBuilder.php
 
 		-
-			rawMessage: Cannot access offset 'original_widget_id' on mixed.
+			rawMessage: Cannot access offset 'original_layout_widget_id' on mixed.
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 2
 			path: ../packages/layout-builder/src/Livewire/Filament/LayoutBuilder.php
@@ -14137,7 +14137,7 @@ parameters:
 			path: ../packages/layout-builder/src/Livewire/Filament/LayoutBuilder.php
 
 		-
-			rawMessage: Cannot access offset 'widget_id' on mixed.
+			rawMessage: Cannot access offset 'layout_widget_id' on mixed.
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
 			path: ../packages/layout-builder/src/Livewire/Filament/LayoutBuilder.php
@@ -14149,7 +14149,7 @@ parameters:
 			path: ../packages/layout-builder/src/Livewire/Filament/LayoutBuilder.php
 
 		-
-			rawMessage: Cannot access offset 'widgets' on mixed.
+			rawMessage: Cannot access offset 'layout_widgets' on mixed.
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 28
 			path: ../packages/layout-builder/src/Livewire/Filament/LayoutBuilder.php
@@ -14263,7 +14263,7 @@ parameters:
 			path: ../packages/layout-builder/src/Livewire/Filament/LayoutBuilder.php
 
 		-
-			rawMessage: 'Method Capell\LayoutBuilder\Livewire\Filament\LayoutBuilder::getContainerWidget() should return Capell\LayoutBuilder\Models\Widget but returns mixed.'
+			rawMessage: 'Method Capell\LayoutBuilder\Livewire\Filament\LayoutBuilder::getContainerWidget() should return Capell\LayoutBuilder\Models\LayoutWidget but returns mixed.'
 			identifier: return.type
 			count: 1
 			path: ../packages/layout-builder/src/Livewire/Filament/LayoutBuilder.php
@@ -14305,7 +14305,7 @@ parameters:
 			path: ../packages/layout-builder/src/Livewire/Filament/LayoutBuilder.php
 
 		-
-			rawMessage: 'Method Capell\LayoutBuilder\Livewire\Filament\LayoutBuilder::selectedWidget() should return Capell\LayoutBuilder\Models\Widget|null but returns mixed.'
+			rawMessage: 'Method Capell\LayoutBuilder\Livewire\Filament\LayoutBuilder::selectedWidget() should return Capell\LayoutBuilder\Models\LayoutWidget|null but returns mixed.'
 			identifier: return.type
 			count: 1
 			path: ../packages/layout-builder/src/Livewire/Filament/LayoutBuilder.php
@@ -14395,13 +14395,13 @@ parameters:
 			path: ../packages/layout-builder/src/Livewire/Filament/LayoutBuilder.php
 
 		-
-			rawMessage: 'Parameter #1 $callback of method Illuminate\Support\Collection<int,mixed>::map() expects callable(mixed, int): Capell\LayoutBuilder\Models\WidgetAsset, Closure(array): Capell\LayoutBuilder\Models\WidgetAsset given.'
+			rawMessage: 'Parameter #1 $callback of method Illuminate\Support\Collection<int,mixed>::map() expects callable(mixed, int): Capell\LayoutBuilder\Models\LayoutWidgetAsset, Closure(array): Capell\LayoutBuilder\Models\LayoutWidgetAsset given.'
 			identifier: argument.type
 			count: 1
 			path: ../packages/layout-builder/src/Livewire/Filament/LayoutBuilder.php
 
 		-
-			rawMessage: 'Parameter #1 $column of method Illuminate\Database\Eloquent\Builder<Capell\LayoutBuilder\Models\WidgetAsset>::orWhereIn() expects Illuminate\Contracts\Database\Query\Expression|string, mixed given.'
+			rawMessage: 'Parameter #1 $column of method Illuminate\Database\Eloquent\Builder<Capell\LayoutBuilder\Models\LayoutWidgetAsset>::orWhereIn() expects Illuminate\Contracts\Database\Query\Expression|string, mixed given.'
 			identifier: argument.type
 			count: 1
 			path: ../packages/layout-builder/src/Livewire/Filament/LayoutBuilder.php
@@ -14605,31 +14605,31 @@ parameters:
 			path: ../packages/layout-builder/src/Livewire/Filament/LayoutBuilder.php
 
 		-
-			rawMessage: 'Property Capell\LayoutBuilder\Models\WidgetAsset::$meta (array<string, mixed>|null) does not accept mixed.'
+			rawMessage: 'Property Capell\LayoutBuilder\Models\LayoutWidgetAsset::$meta (array<string, mixed>|null) does not accept mixed.'
 			identifier: assign.propertyType
 			count: 2
 			path: ../packages/layout-builder/src/Livewire/Filament/LayoutBuilder.php
 
 		-
-			rawMessage: 'Property Capell\LayoutBuilder\Models\WidgetAsset::$occurrence (int<0, max>|null) does not accept mixed.'
+			rawMessage: 'Property Capell\LayoutBuilder\Models\LayoutWidgetAsset::$occurrence (int<0, max>|null) does not accept mixed.'
 			identifier: assign.propertyType
 			count: 1
 			path: ../packages/layout-builder/src/Livewire/Filament/LayoutBuilder.php
 
 		-
-			rawMessage: 'Property Capell\LayoutBuilder\Models\WidgetAsset::$order (int<0, max>) does not accept mixed.'
+			rawMessage: 'Property Capell\LayoutBuilder\Models\LayoutWidgetAsset::$order (int<0, max>) does not accept mixed.'
 			identifier: assign.propertyType
 			count: 1
 			path: ../packages/layout-builder/src/Livewire/Filament/LayoutBuilder.php
 
 		-
-			rawMessage: 'Property Capell\LayoutBuilder\Models\WidgetAsset::$pageable_id (int<0, max>|null) does not accept mixed.'
+			rawMessage: 'Property Capell\LayoutBuilder\Models\LayoutWidgetAsset::$pageable_id (int<0, max>|null) does not accept mixed.'
 			identifier: assign.propertyType
 			count: 3
 			path: ../packages/layout-builder/src/Livewire/Filament/LayoutBuilder.php
 
 		-
-			rawMessage: 'Property Capell\LayoutBuilder\Models\WidgetAsset::$pageable_type (string|null) does not accept mixed.'
+			rawMessage: 'Property Capell\LayoutBuilder\Models\LayoutWidgetAsset::$pageable_type (string|null) does not accept mixed.'
 			identifier: assign.propertyType
 			count: 1
 			path: ../packages/layout-builder/src/Livewire/Filament/LayoutBuilder.php
@@ -14653,7 +14653,7 @@ parameters:
 			path: ../packages/layout-builder/src/Livewire/Filament/Support/LayoutBuilderActionFactory.php
 
 		-
-			rawMessage: Cannot access offset 'widgets' on mixed.
+			rawMessage: Cannot access offset 'layout_widgets' on mixed.
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
 			path: ../packages/layout-builder/src/Livewire/Filament/Support/LayoutBuilderActionFactory.php
@@ -14851,7 +14851,7 @@ parameters:
 			path: ../packages/layout-builder/src/Livewire/Filament/Support/LayoutBuilderActionFactory.php
 
 		-
-			rawMessage: 'Property Capell\LayoutBuilder\Models\WidgetAsset::$asset_id (string) does not accept mixed.'
+			rawMessage: 'Property Capell\LayoutBuilder\Models\LayoutWidgetAsset::$asset_id (string) does not accept mixed.'
 			identifier: assign.propertyType
 			count: 2
 			path: ../packages/layout-builder/src/Livewire/Filament/Support/LayoutBuilderActionFactory.php
@@ -14881,7 +14881,7 @@ parameters:
 			path: ../packages/layout-builder/src/Support/CapellLayoutManager.php
 
 		-
-			rawMessage: 'Method Capell\LayoutBuilder\Support\CapellLayoutManager::getStoredContainerWidget() should return Capell\LayoutBuilder\Models\Widget|null but returns mixed.'
+			rawMessage: 'Method Capell\LayoutBuilder\Support\CapellLayoutManager::getStoredContainerWidget() should return Capell\LayoutBuilder\Models\LayoutWidget|null but returns mixed.'
 			identifier: return.type
 			count: 1
 			path: ../packages/layout-builder/src/Support/CapellLayoutManager.php
@@ -15046,13 +15046,13 @@ parameters:
 			rawMessage: Cannot access property $content on mixed.
 			identifier: property.nonObject
 			count: 1
-			path: ../packages/layout-builder/src/Support/DefaultPublicWidgetPayloadResolver.php
+			path: ../packages/layout-builder/src/Support/DefaultPublicLayoutWidgetPayloadResolver.php
 
 		-
 			rawMessage: Cannot access property $title on mixed.
 			identifier: property.nonObject
 			count: 1
-			path: ../packages/layout-builder/src/Support/DefaultPublicWidgetPayloadResolver.php
+			path: ../packages/layout-builder/src/Support/DefaultPublicLayoutWidgetPayloadResolver.php
 
 		-
 			rawMessage: Cannot cast mixed to int.
@@ -15187,7 +15187,7 @@ parameters:
 			path: ../packages/layout-builder/src/Support/LayoutWidgetResourceUsageContributor.php
 
 		-
-			rawMessage: 'Parameter $presentation of class Capell\Frontend\Data\Assets\WidgetResourceUsageData constructor expects Capell\Core\Data\Presentation\PresentationSettingsData, mixed given.'
+			rawMessage: 'Parameter $presentation of class Capell\LayoutBuilder\Data\Assets\LayoutWidgetResourceUsageData constructor expects Capell\Core\Data\Presentation\PresentationSettingsData, mixed given.'
 			identifier: argument.type
 			count: 1
 			path: ../packages/layout-builder/src/Support/LayoutWidgetResourceUsageContributor.php
@@ -15217,7 +15217,7 @@ parameters:
 			path: ../packages/layout-builder/src/Support/Loader/LayoutLoader.php
 
 		-
-			rawMessage: 'Method Capell\LayoutBuilder\Support\Loader\LayoutLoader::loadWidget() should return Capell\LayoutBuilder\Models\Widget|null but returns mixed.'
+			rawMessage: 'Method Capell\LayoutBuilder\Support\Loader\LayoutLoader::loadWidget() should return Capell\LayoutBuilder\Models\LayoutWidget|null but returns mixed.'
 			identifier: return.type
 			count: 1
 			path: ../packages/layout-builder/src/Support/Loader/LayoutLoader.php
@@ -15250,7 +15250,7 @@ parameters:
 			rawMessage: 'Cannot call method toArray() on mixed.'
 			identifier: method.nonObject
 			count: 1
-			path: ../packages/layout-builder/src/Support/WidgetPresentationPublicWidgetPayloadContributor.php
+			path: ../packages/layout-builder/src/Support/WidgetPresentationPublicLayoutWidgetPayloadContributor.php
 
 		-
 			rawMessage: 'Parameter #1 $callback of method Illuminate\Support\Collection<(int|string),mixed>::filter() expects (callable(mixed, int|string): bool)|null, Closure(SplFileInfo): bool given.'
@@ -15457,7 +15457,7 @@ parameters:
 			path: ../packages/layout-builder/tests/Unit/AnalyzeLayoutHealthActionTest.php
 
 		-
-			rawMessage: Cannot access offset 'widgets' on mixed.
+			rawMessage: Cannot access offset 'layout_widgets' on mixed.
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
 			path: ../packages/layout-builder/tests/Unit/AnalyzeLayoutHealthActionTest.php
@@ -15565,7 +15565,7 @@ parameters:
 			path: ../packages/layout-builder/tests/Unit/LayoutBuilderThirdRoundResidualCoverageTest.php
 
 		-
-			rawMessage: Cannot access offset 'widgets' on mixed.
+			rawMessage: Cannot access offset 'layout_widgets' on mixed.
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
 			path: ../packages/layout-builder/tests/Unit/LayoutBuilderThirdRoundResidualCoverageTest.php
@@ -15649,7 +15649,7 @@ parameters:
 			path: ../packages/layout-builder/tests/Unit/LayoutBuilderThirdRoundResidualCoverageTest.php
 
 		-
-			rawMessage: Cannot access property $widget_id on mixed.
+			rawMessage: Cannot access property $layout_widget_id on mixed.
 			identifier: property.nonObject
 			count: 1
 			path: ../packages/layout-builder/tests/Unit/LayoutBuilderThirdRoundResidualCoverageTest.php
@@ -15703,7 +15703,7 @@ parameters:
 			path: ../packages/layout-builder/tests/Unit/LayoutMutationHistoryTest.php
 
 		-
-			rawMessage: Cannot access offset 'widgets' on mixed.
+			rawMessage: Cannot access offset 'layout_widgets' on mixed.
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 3
 			path: ../packages/layout-builder/tests/Unit/LayoutMutationHistoryTest.php
@@ -15817,7 +15817,7 @@ parameters:
 			path: ../packages/layout-builder/tests/Unit/Livewire/LayoutBuilderActionFactoryCoverageTest.php
 
 		-
-			rawMessage: Cannot access offset 'widgets' on mixed.
+			rawMessage: Cannot access offset 'layout_widgets' on mixed.
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
 			path: ../packages/layout-builder/tests/Unit/Livewire/LayoutBuilderActionFactoryCoverageTest.php
@@ -16132,31 +16132,31 @@ parameters:
 			rawMessage: Anonymous function should return bool but returns mixed.
 			identifier: return.type
 			count: 1
-			path: ../packages/login-audit/src/Filament/Widgets/LoginAuditsWidget.php
+			path: ../packages/login-audit/src/Filament/Widgets/LoginAuditsFilamentWidget.php
 
 		-
 			rawMessage: Cannot cast mixed to string.
 			identifier: cast.string
 			count: 2
-			path: ../packages/login-audit/src/Filament/Widgets/LoginAuditsWidget.php
+			path: ../packages/login-audit/src/Filament/Widgets/LoginAuditsFilamentWidget.php
 
 		-
-			rawMessage: 'Method Capell\LoginAudit\Filament\Widgets\LoginAuditsWidget::getTableQuery() should return Illuminate\Database\Eloquent\Builder<Illuminate\Database\Eloquent\Model> but returns mixed.'
+			rawMessage: 'Method Capell\LoginAudit\Filament\Widgets\LoginAuditsFilamentWidget::getTableQuery() should return Illuminate\Database\Eloquent\Builder<Illuminate\Database\Eloquent\Model> but returns mixed.'
 			identifier: return.type
 			count: 1
-			path: ../packages/login-audit/src/Filament/Widgets/LoginAuditsWidget.php
+			path: ../packages/login-audit/src/Filament/Widgets/LoginAuditsFilamentWidget.php
 
 		-
-			rawMessage: 'Method Capell\LoginAudit\Filament\Widgets\LoginAuditsWidget::paginateTableQuery() should return Illuminate\Contracts\Pagination\CursorPaginator<(int|string), mixed> but returns Illuminate\Pagination\CursorPaginator<int, Illuminate\Database\Eloquent\Model>.'
+			rawMessage: 'Method Capell\LoginAudit\Filament\Widgets\LoginAuditsFilamentWidget::paginateTableQuery() should return Illuminate\Contracts\Pagination\CursorPaginator<(int|string), mixed> but returns Illuminate\Pagination\CursorPaginator<int, Illuminate\Database\Eloquent\Model>.'
 			identifier: return.type
 			count: 1
-			path: ../packages/login-audit/src/Filament/Widgets/LoginAuditsWidget.php
+			path: ../packages/login-audit/src/Filament/Widgets/LoginAuditsFilamentWidget.php
 
 		-
 			rawMessage: 'Parameter #1 $components of method Filament\Tables\Table::columns() expects array<Filament\Tables\Columns\Column|Filament\Tables\Columns\ColumnGroup|Filament\Tables\Columns\Layout\Component>, array<int, mixed> given.'
 			identifier: argument.type
 			count: 1
-			path: ../packages/login-audit/src/Filament/Widgets/LoginAuditsWidget.php
+			path: ../packages/login-audit/src/Filament/Widgets/LoginAuditsFilamentWidget.php
 
 		-
 			rawMessage: Anonymous function should return string but returns mixed.
@@ -19918,31 +19918,31 @@ parameters:
 			rawMessage: Cannot access offset 'active_retention_rules' on mixed.
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
-			path: ../packages/privacy-center/src/Filament/Widgets/PrivacyCenterOverviewWidget.php
+			path: ../packages/privacy-center/src/Filament/Widgets/PrivacyCenterOverviewFilamentWidget.php
 
 		-
 			rawMessage: Cannot access offset 'consent_records' on mixed.
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
-			path: ../packages/privacy-center/src/Filament/Widgets/PrivacyCenterOverviewWidget.php
+			path: ../packages/privacy-center/src/Filament/Widgets/PrivacyCenterOverviewFilamentWidget.php
 
 		-
 			rawMessage: Cannot access offset 'granted_consents' on mixed.
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
-			path: ../packages/privacy-center/src/Filament/Widgets/PrivacyCenterOverviewWidget.php
+			path: ../packages/privacy-center/src/Filament/Widgets/PrivacyCenterOverviewFilamentWidget.php
 
 		-
 			rawMessage: Cannot access offset 'open_privacy_requests' on mixed.
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
-			path: ../packages/privacy-center/src/Filament/Widgets/PrivacyCenterOverviewWidget.php
+			path: ../packages/privacy-center/src/Filament/Widgets/PrivacyCenterOverviewFilamentWidget.php
 
 		-
 			rawMessage: 'Parameter #1 $num of function number_format expects float, mixed given.'
 			identifier: argument.type
 			count: 4
-			path: ../packages/privacy-center/src/Filament/Widgets/PrivacyCenterOverviewWidget.php
+			path: ../packages/privacy-center/src/Filament/Widgets/PrivacyCenterOverviewFilamentWidget.php
 
 		-
 			rawMessage: Cannot access offset 'affected_records' on mixed.
@@ -21016,31 +21016,31 @@ parameters:
 			rawMessage: 'Cannot call method groupBy() on mixed.'
 			identifier: method.nonObject
 			count: 1
-			path: ../packages/publishing-studio/src/Filament/Widgets/ContentSchedulerCalendarWidget.php
+			path: ../packages/publishing-studio/src/Filament/Widgets/ContentSchedulerCalendarFilamentWidget.php
 
 		-
 			rawMessage: 'Cannot call method filter() on mixed.'
 			identifier: method.nonObject
 			count: 2
-			path: ../packages/publishing-studio/src/Filament/Widgets/ContentSchedulerOverviewWidget.php
+			path: ../packages/publishing-studio/src/Filament/Widgets/ContentSchedulerOverviewFilamentWidget.php
 
 		-
 			rawMessage: 'Parameter #1 $callback of method Illuminate\Support\Collection<int,mixed>::filter() expects (callable(mixed, int): bool)|null, Closure(Capell\PublishingStudio\Data\SchedulerEventData): bool given.'
 			identifier: argument.type
 			count: 1
-			path: ../packages/publishing-studio/src/Filament/Widgets/ContentSchedulerOverviewWidget.php
+			path: ../packages/publishing-studio/src/Filament/Widgets/ContentSchedulerOverviewFilamentWidget.php
 
 		-
-			rawMessage: 'Parameter #1 $events of method Capell\PublishingStudio\Filament\Widgets\ContentSchedulerOverviewWidget::stat() expects Illuminate\Support\Collection<int, mixed>, mixed given.'
+			rawMessage: 'Parameter #1 $events of method Capell\PublishingStudio\Filament\Widgets\ContentSchedulerOverviewFilamentWidget::stat() expects Illuminate\Support\Collection<int, mixed>, mixed given.'
 			identifier: argument.type
 			count: 4
-			path: ../packages/publishing-studio/src/Filament/Widgets/ContentSchedulerOverviewWidget.php
+			path: ../packages/publishing-studio/src/Filament/Widgets/ContentSchedulerOverviewFilamentWidget.php
 
 		-
 			rawMessage: Cannot cast mixed to int.
 			identifier: cast.int
 			count: 4
-			path: ../packages/publishing-studio/src/Filament/Widgets/PageAlertsWidget.php
+			path: ../packages/publishing-studio/src/Filament/Widgets/PageAlertsFilamentWidget.php
 
 		-
 			rawMessage: Cannot cast mixed to string.
@@ -22414,37 +22414,37 @@ parameters:
 			rawMessage: 'Cannot call method count() on mixed.'
 			identifier: method.nonObject
 			count: 1
-			path: ../packages/search/src/Filament/Widgets/SearchOverviewStatsWidget.php
+			path: ../packages/search/src/Filament/Widgets/SearchOverviewStatsFilamentWidget.php
 
 		-
 			rawMessage: 'Cannot call method sum() on mixed.'
 			identifier: method.nonObject
 			count: 4
-			path: ../packages/search/src/Filament/Widgets/SearchOverviewStatsWidget.php
+			path: ../packages/search/src/Filament/Widgets/SearchOverviewStatsFilamentWidget.php
 
 		-
 			rawMessage: 'Cannot call method map() on mixed.'
 			identifier: method.nonObject
 			count: 1
-			path: ../packages/search/src/Filament/Widgets/TopSearchesWidget.php
+			path: ../packages/search/src/Filament/Widgets/TopSearchesFilamentWidget.php
 
 		-
 			rawMessage: 'Cannot call method map() on mixed.'
 			identifier: method.nonObject
 			count: 1
-			path: ../packages/search/src/Filament/Widgets/TrendingSearchesWidget.php
+			path: ../packages/search/src/Filament/Widgets/TrendingSearchesFilamentWidget.php
 
 		-
 			rawMessage: Cannot cast mixed to float.
 			identifier: cast.double
 			count: 1
-			path: ../packages/search/src/Filament/Widgets/TrendingSearchesWidget.php
+			path: ../packages/search/src/Filament/Widgets/TrendingSearchesFilamentWidget.php
 
 		-
 			rawMessage: 'Cannot call method map() on mixed.'
 			identifier: method.nonObject
 			count: 1
-			path: ../packages/search/src/Filament/Widgets/ZeroResultSearchesWidget.php
+			path: ../packages/search/src/Filament/Widgets/ZeroResultSearchesFilamentWidget.php
 
 		-
 			rawMessage: 'Parameter #2 ...$values of function sprintf expects bool|float|int|string|null, mixed given.'
@@ -23896,19 +23896,19 @@ parameters:
 			rawMessage: 'Parameter $feature of class Capell\SeoSuite\Data\Dashboard\FeatureUsageData constructor expects string, mixed given.'
 			identifier: argument.type
 			count: 1
-			path: ../packages/seo-suite/src/Filament/Widgets/AiMetricsWidgetAbstract.php
+			path: ../packages/seo-suite/src/Filament/Widgets/AiMetricsFilamentWidget.php
 
 		-
 			rawMessage: 'Parameter $windowLimitSeconds of class Capell\SeoSuite\Data\Dashboard\AiMetricsData constructor expects int, mixed given.'
 			identifier: argument.type
 			count: 1
-			path: ../packages/seo-suite/src/Filament/Widgets/AiMetricsWidgetAbstract.php
+			path: ../packages/seo-suite/src/Filament/Widgets/AiMetricsFilamentWidget.php
 
 		-
 			rawMessage: Cannot cast mixed to int.
 			identifier: cast.int
 			count: 3
-			path: ../packages/seo-suite/src/Filament/Widgets/EditPageAuditTabsWidget.php
+			path: ../packages/seo-suite/src/Filament/Widgets/EditPageAuditTabsFilamentWidget.php
 
 		-
 			rawMessage: Cannot cast mixed to int.
@@ -23920,7 +23920,7 @@ parameters:
 			rawMessage: Cannot cast mixed to int.
 			identifier: cast.int
 			count: 4
-			path: ../packages/seo-suite/src/Filament/Widgets/EditPagePageSpeedAuditWidget.php
+			path: ../packages/seo-suite/src/Filament/Widgets/EditPagePageSpeedAuditFilamentWidget.php
 
 		-
 			rawMessage: Cannot cast mixed to int.
@@ -23932,25 +23932,25 @@ parameters:
 			rawMessage: Cannot cast mixed to int.
 			identifier: cast.int
 			count: 3
-			path: ../packages/seo-suite/src/Filament/Widgets/EditPageSeoAuditWidget.php
+			path: ../packages/seo-suite/src/Filament/Widgets/EditPageSeoAuditFilamentWidget.php
 
 		-
 			rawMessage: 'Parameter $detail of class Capell\SeoSuite\Data\SeoCheckData constructor expects string|null, mixed given.'
 			identifier: argument.type
 			count: 1
-			path: ../packages/seo-suite/src/Filament/Widgets/EditPageSeoAuditWidget.php
+			path: ../packages/seo-suite/src/Filament/Widgets/EditPageSeoAuditFilamentWidget.php
 
 		-
 			rawMessage: Cannot cast mixed to float.
 			identifier: cast.double
 			count: 1
-			path: ../packages/seo-suite/src/Filament/Widgets/SearchMovementWidget.php
+			path: ../packages/seo-suite/src/Filament/Widgets/SearchMovementFilamentWidget.php
 
 		-
 			rawMessage: Cannot cast mixed to float.
 			identifier: cast.double
 			count: 1
-			path: ../packages/seo-suite/src/Filament/Widgets/TopSearchPagesWidget.php
+			path: ../packages/seo-suite/src/Filament/Widgets/TopSearchPagesFilamentWidget.php
 
 		-
 			rawMessage: 'Parameter #2 ...$values of function sprintf expects bool|float|int|string|null, mixed given.'
@@ -24967,10 +24967,10 @@ parameters:
 			path: ../packages/seo-suite/tests/Feature/Filament/Resources/Page/Widgets/SeoAuditWidgetTest.php
 
 		-
-			rawMessage: 'Property Illuminate\Foundation\Auth\User@anonymous/packages/seo-suite/tests/Feature/Filament/SeoSuiteDashboardWidgetsTest.php:38::$assignedSiteIds (Illuminate\Support\Collection<int, int>) does not accept Illuminate\Support\Collection<(int|string), mixed>.'
+			rawMessage: 'Property Illuminate\Foundation\Auth\User@anonymous/packages/seo-suite/tests/Feature/Filament/SeoSuiteDashboardFilamentWidgetsTest.php:38::$assignedSiteIds (Illuminate\Support\Collection<int, int>) does not accept Illuminate\Support\Collection<(int|string), mixed>.'
 			identifier: assign.propertyType
 			count: 1
-			path: ../packages/seo-suite/tests/Feature/Filament/SeoSuiteDashboardWidgetsTest.php
+			path: ../packages/seo-suite/tests/Feature/Filament/SeoSuiteDashboardFilamentWidgetsTest.php
 
 		-
 			rawMessage: 'Cannot call method pluck() on mixed.'
@@ -29155,10 +29155,10 @@ parameters:
 			path: ../packages/welcome-tour/src/Filament/Pages/WelcomeTourDashboard.php
 
 		-
-			rawMessage: 'Method Capell\WelcomeTour\Filament\Widgets\WelcomeTourChecklistWidget::items() should return list<Capell\WelcomeTour\Data\WelcomeTourChecklistItemData> but returns mixed.'
+			rawMessage: 'Method Capell\WelcomeTour\Filament\Widgets\WelcomeTourChecklistFilamentWidget::items() should return list<Capell\WelcomeTour\Data\WelcomeTourChecklistItemData> but returns mixed.'
 			identifier: return.type
 			count: 1
-			path: ../packages/welcome-tour/src/Filament/Widgets/WelcomeTourChecklistWidget.php
+			path: ../packages/welcome-tour/src/Filament/Widgets/WelcomeTourChecklistFilamentWidget.php
 
 		-
 			rawMessage: 'Method Capell\WelcomeTour\Support\WelcomeTourStepRegistrar::isVisible() should return bool but returns mixed.'
@@ -29698,49 +29698,49 @@ parameters:
 			rawMessage: Cannot access offset 0 on mixed.
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 5
-			path: ../tests/Packages/Feature/DashboardWidgetSurfaceCoverageTest.php
+			path: ../tests/Packages/Feature/DashboardFilamentWidgetSurfaceCoverageTest.php
 
 		-
 			rawMessage: Cannot access offset 1 on mixed.
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
-			path: ../tests/Packages/Feature/DashboardWidgetSurfaceCoverageTest.php
+			path: ../tests/Packages/Feature/DashboardFilamentWidgetSurfaceCoverageTest.php
 
 		-
 			rawMessage: Cannot access offset 2 on mixed.
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
-			path: ../tests/Packages/Feature/DashboardWidgetSurfaceCoverageTest.php
+			path: ../tests/Packages/Feature/DashboardFilamentWidgetSurfaceCoverageTest.php
 
 		-
 			rawMessage: Cannot access offset 3 on mixed.
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 2
-			path: ../tests/Packages/Feature/DashboardWidgetSurfaceCoverageTest.php
+			path: ../tests/Packages/Feature/DashboardFilamentWidgetSurfaceCoverageTest.php
 
 		-
 			rawMessage: 'Cannot call method first() on mixed.'
 			identifier: method.nonObject
 			count: 1
-			path: ../tests/Packages/Feature/DashboardWidgetSurfaceCoverageTest.php
+			path: ../tests/Packages/Feature/DashboardFilamentWidgetSurfaceCoverageTest.php
 
 		-
 			rawMessage: 'Cannot call method getModel() on mixed.'
 			identifier: method.nonObject
 			count: 1
-			path: ../tests/Packages/Feature/DashboardWidgetSurfaceCoverageTest.php
+			path: ../tests/Packages/Feature/DashboardFilamentWidgetSurfaceCoverageTest.php
 
 		-
 			rawMessage: 'Cannot call method getValue() on mixed.'
 			identifier: method.nonObject
 			count: 9
-			path: ../tests/Packages/Feature/DashboardWidgetSurfaceCoverageTest.php
+			path: ../tests/Packages/Feature/DashboardFilamentWidgetSurfaceCoverageTest.php
 
 		-
 			rawMessage: 'Cannot call method pluck() on mixed.'
 			identifier: method.nonObject
 			count: 1
-			path: ../tests/Packages/Feature/DashboardWidgetSurfaceCoverageTest.php
+			path: ../tests/Packages/Feature/DashboardFilamentWidgetSurfaceCoverageTest.php
 
 		-
 			rawMessage: 'Only iterables can be unpacked, mixed given.'

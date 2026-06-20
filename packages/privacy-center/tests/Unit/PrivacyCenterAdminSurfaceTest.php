@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Capell\Admin\Contracts\CapellWidgetContract;
+use Capell\Admin\Contracts\CapellFilamentWidgetContract;
 use Capell\PrivacyCenter\Actions\BuildPrivacyCenterOverviewStatsAction;
 use Capell\PrivacyCenter\Enums\ConsentDecision;
 use Capell\PrivacyCenter\Enums\CookieCategory;
@@ -17,7 +17,7 @@ use Capell\PrivacyCenter\Filament\Resources\PolicyAcceptances\PolicyAcceptanceRe
 use Capell\PrivacyCenter\Filament\Resources\PrivacyRequests\Pages\EditPrivacyRequest;
 use Capell\PrivacyCenter\Filament\Resources\PrivacyRequests\PrivacyRequestResource;
 use Capell\PrivacyCenter\Filament\Resources\RetentionRules\RetentionRuleResource;
-use Capell\PrivacyCenter\Filament\Widgets\PrivacyCenterOverviewWidget;
+use Capell\PrivacyCenter\Filament\Widgets\PrivacyCenterOverviewFilamentWidget;
 use Capell\PrivacyCenter\Models\ConsentPolicy;
 use Capell\PrivacyCenter\Models\ConsentRecord;
 use Capell\PrivacyCenter\Models\PolicyAcceptance;
@@ -292,7 +292,7 @@ it('builds privacy center overview widget stats from package-owned records', fun
         'granted_consents' => 1,
         'open_privacy_requests' => 1,
         'active_retention_rules' => 1,
-    ])->and(class_implements(PrivacyCenterOverviewWidget::class))->toContain(CapellWidgetContract::class);
+    ])->and(class_implements(PrivacyCenterOverviewFilamentWidget::class))->toContain(CapellFilamentWidgetContract::class);
 });
 
 /**

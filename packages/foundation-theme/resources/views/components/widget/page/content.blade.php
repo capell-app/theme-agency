@@ -70,7 +70,7 @@
                     </{{ $headingTag }}>
                 @endif
 
-                <x-capell::widgets
+                <x-capell-layout-builder::layout-widgets
                     :widgets="$pageContentRenderData->content"
                     :$layout
                     :$containerKey

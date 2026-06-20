@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Capell\Diagnostics\Filament\Widgets\Health\ContentGraphHealthWidgetAbstract as ContentGraphHealthWidget;
+use Capell\Diagnostics\Filament\Widgets\Health\ContentGraphHealthFilamentWidget as ContentGraphHealthWidget;
 use Capell\Tests\Support\Concerns\CreatesAdminUser;
 
 use function Pest\Livewire\livewire;

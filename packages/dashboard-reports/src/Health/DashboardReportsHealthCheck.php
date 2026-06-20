@@ -15,8 +15,8 @@ use Capell\Core\Data\Diagnostics\DoctorCheckResultData;
 use Capell\Core\Facades\CapellCore;
 use Capell\DashboardReports\Filament\Extenders\DashboardReportsPageTableExtender;
 use Capell\DashboardReports\Filament\Settings\Contributors\DashboardReportsDashboardSettingsContributor;
-use Capell\DashboardReports\Filament\Widgets\ContentHealthWidget;
-use Capell\DashboardReports\Filament\Widgets\PublishingTrendChartWidget;
+use Capell\DashboardReports\Filament\Widgets\ContentHealthFilamentWidget;
+use Capell\DashboardReports\Filament\Widgets\PublishingTrendChartFilamentWidget;
 use Capell\DashboardReports\Providers\DashboardReportsServiceProvider;
 use Illuminate\Contracts\Translation\Translator;
 use Illuminate\Support\Collection;
@@ -28,8 +28,8 @@ final class DashboardReportsHealthCheck implements ChecksExtensionHealth
      * @var list<class-string>
      */
     private const array REQUIRED_DASHBOARD_WIDGETS = [
-        PublishingTrendChartWidget::class,
-        ContentHealthWidget::class,
+        PublishingTrendChartFilamentWidget::class,
+        ContentHealthFilamentWidget::class,
     ];
 
     /**
@@ -55,7 +55,7 @@ final class DashboardReportsHealthCheck implements ChecksExtensionHealth
         return collect([
             $check->packageInstalledCheck(),
             $check->contentHealthProviderCheck(),
-            $check->dashboardWidgetsCheck(),
+            $check->dashboardFilamentWidgetsCheck(),
             $check->dashboardSettingsContributorCheck(),
             $check->pageTableFilterExtenderCheck(),
         ]);
@@ -99,16 +99,16 @@ final class DashboardReportsHealthCheck implements ChecksExtensionHealth
         );
     }
 
-    public function dashboardWidgetsCheck(): DoctorCheckResultData
+    public function dashboardFilamentWidgetsCheck(): DoctorCheckResultData
     {
-        $missingWidgets = $this->missingDashboardWidgets();
+        $missingWidgets = $this->missingDashboardFilamentWidgets();
 
         return new DoctorCheckResultData(
             label: $this->translation('capell-dashboard-reports::dashboard.health_dashboard_widgets_label'),
             passed: $missingWidgets === [],
             message: $missingWidgets === []
                 ? $this->translation('capell-dashboard-reports::dashboard.health_dashboard_widgets_passed')
-                : $this->translation('capell-dashboard-reports::dashboard.health_dashboard_widgets_failed', ['widgets' => implode(', ', $missingWidgets)]),
+                : $this->translation('capell-dashboard-reports::dashboard.health_dashboard_widgets_failed', ['layout_widgets' => implode(', ', $missingWidgets)]),
             remediation: $missingWidgets === []
                 ? null
                 : $this->translation('capell-dashboard-reports::dashboard.health_dashboard_widgets_remediation'),
@@ -165,10 +165,10 @@ final class DashboardReportsHealthCheck implements ChecksExtensionHealth
     /**
      * @return list<string>
      */
-    public function missingDashboardWidgets(): array
+    public function missingDashboardFilamentWidgets(): array
     {
         try {
-            $registeredWidgets = CapellAdmin::getDashboardWidgets(DashboardEnum::Main);
+            $registeredWidgets = CapellAdmin::getDashboardFilamentWidgets(DashboardEnum::Main);
         } catch (Throwable) {
             return self::REQUIRED_DASHBOARD_WIDGETS;
         }

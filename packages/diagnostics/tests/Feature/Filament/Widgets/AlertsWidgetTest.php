@@ -8,7 +8,7 @@ use Capell\Core\Models\Blueprint;
 use Capell\Core\Models\Language;
 use Capell\Core\Models\Site;
 use Capell\Core\Models\Theme;
-use Capell\Diagnostics\Filament\Widgets\Health\AlertsWidgetAbstract as AlertsWidget;
+use Capell\Diagnostics\Filament\Widgets\Health\AlertsFilamentWidget as AlertsWidget;
 use Capell\Installer\Providers\InstallerServiceProvider;
 use Capell\Tests\Support\Concerns\CreatesAdminUser;
 use Illuminate\Support\Arr;

@@ -45,10 +45,10 @@
         },
         {
             "type": "dashboard-widget",
-            "class": "Capell\\Comments\\Manifest\\CommentDashboardWidgetsContribution",
+            "class": "Capell\\Comments\\Manifest\\CommentDashboardFilamentWidgetsContribution",
             "widgetClasses": [
-                "Capell\\Comments\\Filament\\Widgets\\CommentStatsWidget",
-                "Capell\\Comments\\Filament\\Widgets\\LatestCommentsWidget"
+                "Capell\\Comments\\Filament\\Widgets\\CommentStatsFilamentWidget",
+                "Capell\\Comments\\Filament\\Widgets\\LatestCommentsFilamentWidget"
             ],
             "surface": "admin"
         },

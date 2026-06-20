@@ -40,8 +40,8 @@
         },
         {
             "type": "dashboard-widget",
-            "class": "Capell\\LoginAudit\\Manifest\\LoginAuditDashboardWidgetContribution",
-            "widgetClass": "Capell\\LoginAudit\\Filament\\Widgets\\LoginAuditsWidget",
+            "class": "Capell\\LoginAudit\\Manifest\\LoginAuditDashboardFilamentWidgetContribution",
+            "widgetClass": "Capell\\LoginAudit\\Filament\\Widgets\\LoginAuditsFilamentWidget",
             "dashboard": "system-health"
         },
         {

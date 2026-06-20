@@ -31,11 +31,11 @@
     "contributes": [
         {
             "type": "dashboard-widget",
-            "class": "Capell\\DashboardReports\\Manifest\\DashboardReportsDashboardWidgetsContribution",
+            "class": "Capell\\DashboardReports\\Manifest\\DashboardReportsDashboardFilamentWidgetsContribution",
             "dashboard": "main",
             "widgetClasses": [
-                "Capell\\DashboardReports\\Filament\\Widgets\\PublishingTrendChartWidget",
-                "Capell\\DashboardReports\\Filament\\Widgets\\ContentHealthWidget"
+                "Capell\\DashboardReports\\Filament\\Widgets\\PublishingTrendChartFilamentWidget",
+                "Capell\\DashboardReports\\Filament\\Widgets\\ContentHealthFilamentWidget"
             ],
             "settingsContributor": "Capell\\DashboardReports\\Filament\\Settings\\Contributors\\DashboardReportsDashboardSettingsContributor"
         }

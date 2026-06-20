@@ -14,17 +14,17 @@ use Capell\Diagnostics\Filament\Pages\DiagnosticsPage;
 use Capell\Diagnostics\Filament\Pages\PermissionAuditPage;
 use Capell\Diagnostics\Filament\Pages\QueueHealthPage;
 use Capell\Diagnostics\Filament\Pages\SystemHealthPage;
-use Capell\Diagnostics\Filament\Widgets\Health\AlertsWidgetAbstract;
-use Capell\Diagnostics\Filament\Widgets\Health\CacheHealthWidgetAbstract;
-use Capell\Diagnostics\Filament\Widgets\Health\ConfigDriftWidgetAbstract;
-use Capell\Diagnostics\Filament\Widgets\Health\ContentGraphHealthWidgetAbstract;
-use Capell\Diagnostics\Filament\Widgets\Health\ContentHealthWidgetAbstract;
-use Capell\Diagnostics\Filament\Widgets\Health\MigrationsHealthWidgetAbstract;
-use Capell\Diagnostics\Filament\Widgets\Health\PackagesInstalledWidgetAbstract;
-use Capell\Diagnostics\Filament\Widgets\Health\RegistryHealthWidgetAbstract;
-use Capell\Diagnostics\Filament\Widgets\Health\SetupHealthWidgetAbstract;
-use Capell\Diagnostics\Filament\Widgets\Health\SiteHealthWidgetAbstract;
-use Capell\Diagnostics\Filament\Widgets\Health\TailwindBuildStatusWidgetAbstract;
+use Capell\Diagnostics\Filament\Widgets\Health\AlertsFilamentWidget;
+use Capell\Diagnostics\Filament\Widgets\Health\CacheHealthFilamentWidget;
+use Capell\Diagnostics\Filament\Widgets\Health\ConfigDriftFilamentWidget;
+use Capell\Diagnostics\Filament\Widgets\Health\ContentGraphHealthFilamentWidget;
+use Capell\Diagnostics\Filament\Widgets\Health\ContentHealthFilamentWidget;
+use Capell\Diagnostics\Filament\Widgets\Health\MigrationsHealthFilamentWidget;
+use Capell\Diagnostics\Filament\Widgets\Health\PackagesInstalledFilamentWidget;
+use Capell\Diagnostics\Filament\Widgets\Health\RegistryHealthFilamentWidget;
+use Capell\Diagnostics\Filament\Widgets\Health\SetupHealthFilamentWidget;
+use Capell\Diagnostics\Filament\Widgets\Health\SiteHealthFilamentWidget;
+use Capell\Diagnostics\Filament\Widgets\Health\TailwindBuildStatusFilamentWidget;
 use Capell\Diagnostics\Palette\CapellArtisanPaletteCommandProvider;
 use Capell\Diagnostics\Palette\DiagnosticsPaletteCommandProvider;
 use Illuminate\Support\ServiceProvider;
@@ -46,7 +46,7 @@ final class AdminServiceProvider extends ServiceProvider
 
         $this
             ->registerPages()
-            ->registerDashboardWidgets();
+            ->registerDashboardFilamentWidgets();
     }
 
     public function boot(): void
@@ -57,7 +57,7 @@ final class AdminServiceProvider extends ServiceProvider
 
         $this
             ->registerPages()
-            ->registerDashboardWidgets()
+            ->registerDashboardFilamentWidgets()
             ->ensurePermissions();
     }
 
@@ -107,24 +107,24 @@ final class AdminServiceProvider extends ServiceProvider
         return $this;
     }
 
-    private function registerDashboardWidgets(): self
+    private function registerDashboardFilamentWidgets(): self
     {
         if (! class_exists(CapellAdmin::class) || ! class_exists(DashboardEnum::class)) {
             return $this;
         }
 
-        CapellAdmin::registerDashboardWidget(SiteHealthWidgetAbstract::class, DashboardEnum::Main);
+        CapellAdmin::registerDashboardFilamentWidget(SiteHealthFilamentWidget::class, DashboardEnum::Main);
 
-        CapellAdmin::registerDashboardWidget(SetupHealthWidgetAbstract::class, DashboardEnum::SystemHealth);
-        CapellAdmin::registerDashboardWidget(AlertsWidgetAbstract::class, DashboardEnum::SystemHealth);
-        CapellAdmin::registerDashboardWidget(ContentHealthWidgetAbstract::class, DashboardEnum::SystemHealth);
-        CapellAdmin::registerDashboardWidget(ContentGraphHealthWidgetAbstract::class, DashboardEnum::SystemHealth);
-        CapellAdmin::registerDashboardWidget(RegistryHealthWidgetAbstract::class, DashboardEnum::SystemHealth);
-        CapellAdmin::registerDashboardWidget(MigrationsHealthWidgetAbstract::class, DashboardEnum::SystemHealth);
-        CapellAdmin::registerDashboardWidget(PackagesInstalledWidgetAbstract::class, DashboardEnum::SystemHealth);
-        CapellAdmin::registerDashboardWidget(ConfigDriftWidgetAbstract::class, DashboardEnum::SystemHealth);
-        CapellAdmin::registerDashboardWidget(CacheHealthWidgetAbstract::class, DashboardEnum::SystemHealth);
-        CapellAdmin::registerDashboardWidget(TailwindBuildStatusWidgetAbstract::class, DashboardEnum::SystemHealth);
+        CapellAdmin::registerDashboardFilamentWidget(SetupHealthFilamentWidget::class, DashboardEnum::SystemHealth);
+        CapellAdmin::registerDashboardFilamentWidget(AlertsFilamentWidget::class, DashboardEnum::SystemHealth);
+        CapellAdmin::registerDashboardFilamentWidget(ContentHealthFilamentWidget::class, DashboardEnum::SystemHealth);
+        CapellAdmin::registerDashboardFilamentWidget(ContentGraphHealthFilamentWidget::class, DashboardEnum::SystemHealth);
+        CapellAdmin::registerDashboardFilamentWidget(RegistryHealthFilamentWidget::class, DashboardEnum::SystemHealth);
+        CapellAdmin::registerDashboardFilamentWidget(MigrationsHealthFilamentWidget::class, DashboardEnum::SystemHealth);
+        CapellAdmin::registerDashboardFilamentWidget(PackagesInstalledFilamentWidget::class, DashboardEnum::SystemHealth);
+        CapellAdmin::registerDashboardFilamentWidget(ConfigDriftFilamentWidget::class, DashboardEnum::SystemHealth);
+        CapellAdmin::registerDashboardFilamentWidget(CacheHealthFilamentWidget::class, DashboardEnum::SystemHealth);
+        CapellAdmin::registerDashboardFilamentWidget(TailwindBuildStatusFilamentWidget::class, DashboardEnum::SystemHealth);
 
         return $this;
     }

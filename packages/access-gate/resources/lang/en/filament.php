@@ -93,7 +93,7 @@ return [
     'validation' => [
         'announcement_link_url' => 'Use a relative path or an http/https URL.',
     ],
-    'widgets' => [
+    'layout_widgets' => [
         'pending_access_requests' => 'Pending access requests',
         'pending_access_requests_empty' => 'No pending access requests',
         'review' => 'Review',

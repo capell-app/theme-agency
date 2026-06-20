@@ -47,7 +47,7 @@ it('fails the home layout defaults check when the hero container is missing', fu
     Layout::query()
         ->where('key', LayoutEnum::Home->value)
         ->firstOrFail()
-        ->update(['containers' => ['main' => ['widgets' => [['widget_key' => 'page-content']]]]]);
+        ->update(['containers' => ['main' => ['layout_widgets' => [['widget_key' => 'page-content']]]]]);
 
     $check = new HeroHealthCheck;
 

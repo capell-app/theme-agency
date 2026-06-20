@@ -11,8 +11,8 @@ use Capell\Admin\Support\Dashboard\NullContentHealthDataProvider;
 use Capell\Core\Data\Diagnostics\DoctorCheckResultData;
 use Capell\Core\Facades\CapellCore;
 use Capell\DashboardReports\Filament\Settings\Contributors\DashboardReportsDashboardSettingsContributor;
-use Capell\DashboardReports\Filament\Widgets\ContentHealthWidget;
-use Capell\DashboardReports\Filament\Widgets\PublishingTrendChartWidget;
+use Capell\DashboardReports\Filament\Widgets\ContentHealthFilamentWidget;
+use Capell\DashboardReports\Filament\Widgets\PublishingTrendChartFilamentWidget;
 use Capell\DashboardReports\Health\DashboardReportsHealthCheck;
 use Capell\DashboardReports\Providers\DashboardReportsServiceProvider;
 use Capell\DashboardReports\Tests\DashboardReportsTestCase;
@@ -23,12 +23,12 @@ uses(DashboardReportsTestCase::class);
 /**
  * @param  list<class-string>  $widgets
  */
-function dashboardReportsHealthSetMainDashboardWidgets(array $widgets): void
+function dashboardReportsHealthSetMainDashboardFilamentWidgets(array $widgets): void
 {
     $manager = CapellAdmin::getFacadeRoot();
     throw_unless($manager instanceof CapellAdminManager, RuntimeException::class);
 
-    $property = new ReflectionProperty($manager, 'dashboardWidgets');
+    $property = new ReflectionProperty($manager, 'dashboardFilamentWidgets');
 
     $property->setValue($manager, [
         DashboardEnum::Main->value => $widgets,
@@ -53,7 +53,7 @@ it('runs real diagnostics for dashboard reports installation health', function (
     expect($results)->toHaveCount(5)
         ->and($results->every(static fn (mixed $result): bool => $result instanceof DoctorCheckResultData))->toBeTrue()
         ->and(DashboardReportsHealthCheck::passed())->toBeTrue()
-        ->and($check->missingDashboardWidgets())->toBe([])
+        ->and($check->missingDashboardFilamentWidgets())->toBe([])
         ->and($check->missingDashboardSettingsKeys())->toBe([])
         ->and($results->first()?->label)->toBe(__('capell-dashboard-reports::dashboard.health_package_installed_label'))
         ->and($results->first()?->message)->toBe(__('capell-dashboard-reports::dashboard.health_package_installed_passed'));
@@ -84,16 +84,16 @@ it('fails when the content health provider binding cannot be resolved', function
 });
 
 it('fails when dashboard report widgets are missing from the main dashboard registry', function (): void {
-    dashboardReportsHealthSetMainDashboardWidgets([
-        PublishingTrendChartWidget::class,
+    dashboardReportsHealthSetMainDashboardFilamentWidgets([
+        PublishingTrendChartFilamentWidget::class,
     ]);
 
     $check = new DashboardReportsHealthCheck;
-    $result = $check->dashboardWidgetsCheck();
+    $result = $check->dashboardFilamentWidgetsCheck();
 
-    expect($check->missingDashboardWidgets())->toBe([ContentHealthWidget::class])
+    expect($check->missingDashboardFilamentWidgets())->toBe([ContentHealthFilamentWidget::class])
         ->and($result->passed)->toBeFalse()
-        ->and($result->message)->toContain(ContentHealthWidget::class)
+        ->and($result->message)->toContain(ContentHealthFilamentWidget::class)
         ->and($result->remediation)->toBe(__('capell-dashboard-reports::dashboard.health_dashboard_widgets_remediation'))
         ->and(DashboardReportsHealthCheck::passed())->toBeFalse();
 });

@@ -5,8 +5,8 @@ declare(strict_types=1);
 use Capell\Core\Contracts\Extensions\ChecksExtensionHealth;
 use Capell\Core\Contracts\Extensions\ExtensionContribution;
 use Capell\Core\Contracts\Extensions\RegistersExtensionAdminResource;
+use Capell\Core\Contracts\Extensions\RegistersExtensionFilamentWidget;
 use Capell\Core\Contracts\Extensions\RegistersExtensionRoute;
-use Capell\Core\Contracts\Extensions\RegistersExtensionWidget;
 use Capell\Core\Contracts\Extensions\RunsScheduledExtensionJob;
 use Capell\PrivacyCenter\Actions\AnonymizePrivacySubjectAction;
 use Capell\PrivacyCenter\Actions\ApplyRetentionRulesAction;
@@ -25,7 +25,7 @@ use Capell\PrivacyCenter\Filament\Resources\ConsentRecords\ConsentRecordResource
 use Capell\PrivacyCenter\Filament\Resources\PolicyAcceptances\PolicyAcceptanceResource;
 use Capell\PrivacyCenter\Filament\Resources\PrivacyRequests\PrivacyRequestResource;
 use Capell\PrivacyCenter\Filament\Resources\RetentionRules\RetentionRuleResource;
-use Capell\PrivacyCenter\Filament\Widgets\PrivacyCenterOverviewWidget;
+use Capell\PrivacyCenter\Filament\Widgets\PrivacyCenterOverviewFilamentWidget;
 use Capell\PrivacyCenter\Health\PrivacyCenterHealthCheck;
 use Capell\PrivacyCenter\Manifest\ConsentPolicyResourceContribution;
 use Capell\PrivacyCenter\Manifest\ConsentRecordResourceContribution;
@@ -33,7 +33,7 @@ use Capell\PrivacyCenter\Manifest\PolicyAcceptanceResourceContribution;
 use Capell\PrivacyCenter\Manifest\PrivacyCenterConsoleCommandsContribution;
 use Capell\PrivacyCenter\Manifest\PrivacyCenterHealthContribution;
 use Capell\PrivacyCenter\Manifest\PrivacyCenterModelsContribution;
-use Capell\PrivacyCenter\Manifest\PrivacyCenterOverviewWidgetContribution;
+use Capell\PrivacyCenter\Manifest\PrivacyCenterOverviewFilamentWidgetContribution;
 use Capell\PrivacyCenter\Manifest\PrivacyCenterRoutesContribution;
 use Capell\PrivacyCenter\Manifest\PrivacyRequestResourceContribution;
 use Capell\PrivacyCenter\Manifest\PrivacyRetentionScheduleContribution;
@@ -100,8 +100,8 @@ it('declares privacy center manifest ownership and cache safety', function (): v
         ])
         ->and(data_get($manifest, 'contributes'))->toContain([
             'type' => 'dashboard-widget',
-            'class' => PrivacyCenterOverviewWidgetContribution::class,
-            'widgetClass' => PrivacyCenterOverviewWidget::class,
+            'class' => PrivacyCenterOverviewFilamentWidgetContribution::class,
+            'widgetClass' => PrivacyCenterOverviewFilamentWidget::class,
         ])
         ->and(data_get($manifest, 'contributes'))->toContain([
             'type' => 'model',
@@ -148,7 +148,7 @@ it('declares privacy center manifest ownership and cache safety', function (): v
         ->and(class_implements(PolicyAcceptanceResourceContribution::class))->toContain(RegistersExtensionAdminResource::class)
         ->and(class_implements(PrivacyRequestResourceContribution::class))->toContain(RegistersExtensionAdminResource::class)
         ->and(class_implements(RetentionRuleResourceContribution::class))->toContain(RegistersExtensionAdminResource::class)
-        ->and(class_implements(PrivacyCenterOverviewWidgetContribution::class))->toContain(RegistersExtensionWidget::class)
+        ->and(class_implements(PrivacyCenterOverviewFilamentWidgetContribution::class))->toContain(RegistersExtensionFilamentWidget::class)
         ->and(class_implements(PrivacyRetentionScheduleContribution::class))->toContain(RunsScheduledExtensionJob::class)
         ->and(class_implements(PrivacyCenterModelsContribution::class))->toContain(ExtensionContribution::class)
         ->and(class_implements(PrivacyCenterRoutesContribution::class))->toContain(RegistersExtensionRoute::class)

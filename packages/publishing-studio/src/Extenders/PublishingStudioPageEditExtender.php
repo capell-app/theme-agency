@@ -8,7 +8,7 @@ use Capell\Admin\Contracts\Extenders\PageEditExtender;
 use Capell\PublishingStudio\Filament\Resources\Pages\Actions\PublishPageAction;
 use Capell\PublishingStudio\Filament\Resources\Pages\Actions\ResubmitForReviewAction;
 use Capell\PublishingStudio\Filament\Resources\Pages\Actions\SaveAsDraftFormAction;
-use Capell\PublishingStudio\Filament\Widgets\PageAlertsWidget;
+use Capell\PublishingStudio\Filament\Widgets\PageAlertsFilamentWidget;
 use Capell\PublishingStudio\Livewire\PageApprovalStatus;
 use Filament\Actions\Action;
 
@@ -28,7 +28,7 @@ class PublishingStudioPageEditExtender implements PageEditExtender
     public function getHeaderWidgets(): array
     {
         return [
-            PageAlertsWidget::class,
+            PageAlertsFilamentWidget::class,
             PageApprovalStatus::class,
         ];
     }

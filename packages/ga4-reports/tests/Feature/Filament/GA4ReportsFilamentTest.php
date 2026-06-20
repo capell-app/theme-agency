@@ -11,11 +11,11 @@ use Capell\Core\Support\Settings\SettingsSchemaRegistry;
 use Capell\GA4Reports\Filament\Pages\GA4ReportsPage;
 use Capell\GA4Reports\Filament\Settings\Contributors\GA4ReportsDashboardSettingsContributor;
 use Capell\GA4Reports\Filament\Settings\GA4ReportsSettingsSchema;
-use Capell\GA4Reports\Filament\Widgets\GA4ReportsOverviewStatsWidget;
-use Capell\GA4Reports\Filament\Widgets\GA4ReportsSetupStatusWidget;
-use Capell\GA4Reports\Filament\Widgets\GA4ReportsTopPagesTableWidget;
-use Capell\GA4Reports\Filament\Widgets\GA4ReportsTopPagesWidget;
-use Capell\GA4Reports\Filament\Widgets\GA4ReportsTrafficTrendWidget;
+use Capell\GA4Reports\Filament\Widgets\GA4ReportsOverviewStatsFilamentWidget;
+use Capell\GA4Reports\Filament\Widgets\GA4ReportsSetupStatusFilamentWidget;
+use Capell\GA4Reports\Filament\Widgets\GA4ReportsTopPagesFilamentWidget;
+use Capell\GA4Reports\Filament\Widgets\GA4ReportsTopPagesTableFilamentWidget;
+use Capell\GA4Reports\Filament\Widgets\GA4ReportsTrafficTrendFilamentWidget;
 use Capell\GA4Reports\Models\GA4ReportsDailyMetric;
 use Capell\GA4Reports\Models\GA4ReportsPageMetric;
 use Capell\GA4Reports\Settings\GA4ReportsSettings;
@@ -60,15 +60,15 @@ it('registers GA4 dashboard widgets and settings contributor', function (): void
         ->map(fn (DashboardSettingsContributor $contributor): string => $contributor::class);
 
     expect($contributors)->toContain(GA4ReportsDashboardSettingsContributor::class)
-        ->and(CapellAdmin::getDashboardWidgets(DashboardEnum::Main))
-        ->toContain(GA4ReportsTrafficTrendWidget::class)
-        ->toContain(GA4ReportsTopPagesWidget::class)
-        ->toContain(GA4ReportsSetupStatusWidget::class);
+        ->and(CapellAdmin::getDashboardFilamentWidgets(DashboardEnum::Main))
+        ->toContain(GA4ReportsTrafficTrendFilamentWidget::class)
+        ->toContain(GA4ReportsTopPagesFilamentWidget::class)
+        ->toContain(GA4ReportsSetupStatusFilamentWidget::class);
 
-    expect(CapellAdmin::getDashboardWidgets(DashboardEnum::MarketingStudio))
-        ->toContain(GA4ReportsTrafficTrendWidget::class)
-        ->toContain(GA4ReportsTopPagesWidget::class)
-        ->toContain(GA4ReportsSetupStatusWidget::class);
+    expect(CapellAdmin::getDashboardFilamentWidgets(DashboardEnum::MarketingStudio))
+        ->toContain(GA4ReportsTrafficTrendFilamentWidget::class)
+        ->toContain(GA4ReportsTopPagesFilamentWidget::class)
+        ->toContain(GA4ReportsSetupStatusFilamentWidget::class);
 
     expect(collect(CapellAdmin::getOverviewStats(false))->pluck('key')->all())
         ->toContain('ga4_reports_overview')
@@ -169,11 +169,11 @@ it('renders GA4 dashboard widgets with empty and seeded data', function (string 
 
     Livewire::test($widgetClass)->assertOk();
 })->with([
-    GA4ReportsOverviewStatsWidget::class,
-    GA4ReportsTrafficTrendWidget::class,
-    GA4ReportsTopPagesWidget::class,
-    GA4ReportsTopPagesTableWidget::class,
-    GA4ReportsSetupStatusWidget::class,
+    GA4ReportsOverviewStatsFilamentWidget::class,
+    GA4ReportsTrafficTrendFilamentWidget::class,
+    GA4ReportsTopPagesFilamentWidget::class,
+    GA4ReportsTopPagesTableFilamentWidget::class,
+    GA4ReportsSetupStatusFilamentWidget::class,
 ]);
 
 it('surfaces stored event count and average session duration in overview stats', function (): void {
@@ -193,7 +193,7 @@ it('surfaces stored event count and average session duration in overview stats',
         'conversions' => 2,
     ]);
 
-    Livewire::test(GA4ReportsOverviewStatsWidget::class)
+    Livewire::test(GA4ReportsOverviewStatsFilamentWidget::class)
         ->assertOk()
         ->assertSee('Events')
         ->assertSee('50')
@@ -219,7 +219,7 @@ it('reports service account credential readiness without exposing the path', fun
     $settings->credentials_path = $credentialsPath;
 
     try {
-        Livewire::test(GA4ReportsSetupStatusWidget::class)
+        Livewire::test(GA4ReportsSetupStatusFilamentWidget::class)
             ->assertOk()
             ->assertSee('Credentials file')
             ->assertSee('Readable service-account JSON')

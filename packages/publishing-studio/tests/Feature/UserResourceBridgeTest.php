@@ -8,8 +8,8 @@ use Capell\Admin\Data\Bridges\AdminBridgeContextData;
 use Capell\Admin\Data\Schemas\UserSchemaContextData;
 use Capell\Admin\Enums\DashboardEnum;
 use Capell\Admin\Facades\CapellAdmin;
-use Capell\Admin\Filament\Widgets\Dashboard\MyWorkQueueWidget;
-use Capell\Admin\Filament\Widgets\Dashboard\RecentlyPublishedWidget;
+use Capell\Admin\Filament\Widgets\Dashboard\MyWorkQueueFilamentWidget;
+use Capell\Admin\Filament\Widgets\Dashboard\RecentlyPublishedFilamentWidget;
 use Capell\Admin\Settings\AdminSettings;
 use Capell\Admin\Support\Bridges\AdminBridgeRegistrar;
 use Capell\Admin\Support\CapellAdminManager;
@@ -33,7 +33,7 @@ use Capell\PublishingStudio\Filament\Resources\Users\RelationManagers\WorkspaceF
 use Capell\PublishingStudio\Filament\Resources\Users\RelationManagers\WorkspaceReviewAssignmentsRelationManager;
 use Capell\PublishingStudio\Filament\Resources\Users\RelationManagers\WorkspacesRelationManager;
 use Capell\PublishingStudio\Filament\Settings\PublishingStudioSettingsSchema;
-use Capell\PublishingStudio\Filament\Widgets\WorkspaceActivityWidgetAbstract;
+use Capell\PublishingStudio\Filament\Widgets\WorkspaceActivityFilamentWidget;
 use Capell\PublishingStudio\Models\PreviewLink;
 use Capell\PublishingStudio\Models\Version;
 use Capell\PublishingStudio\Models\Workspace;
@@ -176,9 +176,9 @@ it('registers the current publishing studio admin bridge surface', function (): 
     $extensionPages = resolve(ExtensionPageRegistry::class)->entries();
 
     expect($surfaceRegistry->schemaExtendersForTag(UserSchemaExtender::TAG))->toContain(PublishingStudioUserSchemaExtender::class)
-        ->and(CapellAdmin::getDashboardWidgets(DashboardEnum::Main))->toContain(MyWorkQueueWidget::class)
-        ->and(CapellAdmin::getDashboardWidgets(DashboardEnum::Main))->toContain(RecentlyPublishedWidget::class)
-        ->and(CapellAdmin::getDashboardWidgets(DashboardEnum::Main))->toContain(WorkspaceActivityWidgetAbstract::class)
+        ->and(CapellAdmin::getDashboardFilamentWidgets(DashboardEnum::Main))->toContain(MyWorkQueueFilamentWidget::class)
+        ->and(CapellAdmin::getDashboardFilamentWidgets(DashboardEnum::Main))->toContain(RecentlyPublishedFilamentWidget::class)
+        ->and(CapellAdmin::getDashboardFilamentWidgets(DashboardEnum::Main))->toContain(WorkspaceActivityFilamentWidget::class)
         ->and($surfaceRegistry->resources())->toContain(WorkspaceResource::class)
         ->and($surfaceRegistry->resources())->toContain(PreviewLinkResource::class)
         ->and($extensionPages)->toContain([
@@ -207,10 +207,10 @@ it('keeps the legacy admin fallback when the bridge host is unavailable', functi
         $registeredSurfaceClasses = collect($host->surfaceContributions)->pluck('class');
 
         expect($taggedExtenders)->toContain(PublishingStudioUserSchemaExtender::class)
-            ->and(array_keys($host->dashboardWidgets))->toContain(MyWorkQueueWidget::class)
-            ->and(array_keys($host->dashboardWidgets))->toContain(RecentlyPublishedWidget::class)
-            ->and(array_keys($host->dashboardWidgets))->toContain(WorkspaceActivityWidgetAbstract::class)
-            ->and($host->dashboardWidgets[MyWorkQueueWidget::class])->toContain(DashboardEnum::Main)
+            ->and(array_keys($host->dashboardFilamentWidgets))->toContain(MyWorkQueueFilamentWidget::class)
+            ->and(array_keys($host->dashboardFilamentWidgets))->toContain(RecentlyPublishedFilamentWidget::class)
+            ->and(array_keys($host->dashboardFilamentWidgets))->toContain(WorkspaceActivityFilamentWidget::class)
+            ->and($host->dashboardFilamentWidgets[MyWorkQueueFilamentWidget::class])->toContain(DashboardEnum::Main)
             ->and($registeredSurfaceClasses)->toContain(WorkspaceResource::class)
             ->and($registeredSurfaceClasses)->toContain(PreviewLinkResource::class)
             ->and($registeredSurfaceClasses)->toContain(PublishingWorkflowPage::class)

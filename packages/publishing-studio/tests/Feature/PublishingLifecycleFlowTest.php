@@ -14,12 +14,12 @@ use Capell\PublishingStudio\Console\Commands\PruneAbandonedPublishingStudioComma
 use Capell\PublishingStudio\Filament\Pages\PublishingWorkflowPage;
 use Capell\PublishingStudio\Filament\Pages\ScheduledPublishingPage;
 use Capell\PublishingStudio\Filament\Resources\PublishingStudio\WorkspaceResource;
-use Capell\PublishingStudio\Filament\Widgets\ContentSchedulerCalendarWidget;
+use Capell\PublishingStudio\Filament\Widgets\ContentSchedulerCalendarFilamentWidget;
 use Capell\PublishingStudio\Health\PublishingStudioHealthCheck;
 use Capell\PublishingStudio\Manifest\ContentSchedulerOverviewStatsContribution;
 use Capell\PublishingStudio\Manifest\PublishingStudioAdminResourcesContribution;
 use Capell\PublishingStudio\Manifest\PublishingStudioConsoleCommandsContribution;
-use Capell\PublishingStudio\Manifest\PublishingStudioDashboardWidgetsContribution;
+use Capell\PublishingStudio\Manifest\PublishingStudioDashboardFilamentWidgetsContribution;
 use Capell\PublishingStudio\Manifest\PublishingStudioHealthContribution;
 use Capell\PublishingStudio\Manifest\PublishingStudioPruneScheduleContribution;
 use Capell\PublishingStudio\Manifest\PublishingStudioRoutesContribution;
@@ -93,8 +93,8 @@ it('declares editorial calendar surfaces across scheduler and package contributo
             && in_array(WorkspaceResource::class, $contribution['resourceClasses'] ?? [], true)))
         ->toBeTrue()
         ->and($contributions->contains(fn (array $contribution): bool => ($contribution['type'] ?? null) === 'dashboard-widget'
-            && ($contribution['class'] ?? null) === PublishingStudioDashboardWidgetsContribution::class
-            && in_array(ContentSchedulerCalendarWidget::class, $contribution['widgetClasses'] ?? [], true)))
+            && ($contribution['class'] ?? null) === PublishingStudioDashboardFilamentWidgetsContribution::class
+            && in_array(ContentSchedulerCalendarFilamentWidget::class, $contribution['widgetClasses'] ?? [], true)))
         ->toBeTrue()
         ->and($contributions->contains(fn (array $contribution): bool => ($contribution['type'] ?? null) === 'overview-stat'
             && ($contribution['class'] ?? null) === ContentSchedulerOverviewStatsContribution::class

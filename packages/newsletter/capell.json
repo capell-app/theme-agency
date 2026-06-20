@@ -51,8 +51,8 @@
         },
         {
             "type": "dashboard-widget",
-            "class": "Capell\\Newsletter\\Manifest\\NewsletterOverviewWidgetContribution",
-            "widgetClass": "Capell\\Newsletter\\Filament\\Widgets\\NewsletterOverviewStatsWidget"
+            "class": "Capell\\Newsletter\\Manifest\\NewsletterOverviewFilamentWidgetContribution",
+            "widgetClass": "Capell\\Newsletter\\Filament\\Widgets\\NewsletterOverviewStatsFilamentWidget"
         },
         {
             "type": "overview-stat",

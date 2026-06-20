@@ -17,7 +17,7 @@ use Capell\Newsletter\Filament\Resources\Segments\SegmentResource;
 use Capell\Newsletter\Filament\Resources\Subscribers\SubscriberResource;
 use Capell\Newsletter\Filament\Resources\SyncAttempts\SyncAttemptResource;
 use Capell\Newsletter\Filament\Settings\NewsletterSettingsSchema;
-use Capell\Newsletter\Filament\Widgets\NewsletterOverviewStatsWidget;
+use Capell\Newsletter\Filament\Widgets\NewsletterOverviewStatsFilamentWidget;
 use Capell\Newsletter\Jobs\SyncSubscriberToProviderJob;
 use Capell\Newsletter\Models\FormMapping;
 use Capell\Newsletter\Models\ProviderAudience;
@@ -184,7 +184,7 @@ it('summarizes newsletter overview stats for current records', function (): void
         'attempts' => 1,
     ]);
 
-    $widget = new class extends NewsletterOverviewStatsWidget
+    $widget = new class extends NewsletterOverviewStatsFilamentWidget
     {
         /**
          * @return array<int, Stat>

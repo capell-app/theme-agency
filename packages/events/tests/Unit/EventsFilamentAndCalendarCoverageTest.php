@@ -7,7 +7,7 @@ use Capell\Core\Models\Language;
 use Capell\Core\Models\Site;
 use Capell\Events\Filament\Resources\Events\EventResource;
 use Capell\Events\Filament\Resources\Events\Schemas\EventForm;
-use Capell\Events\Filament\Widgets\EventCalendarWidget;
+use Capell\Events\Filament\Widgets\EventCalendarFilamentWidget;
 use Capell\Events\Models\Event;
 use Capell\Events\Models\EventOccurrence;
 use Capell\Events\Support\Calendar\CalendarMonth;
@@ -99,7 +99,7 @@ it('groups upcoming event occurrences by calendar date', function (): void {
     ]);
 
     try {
-        $groups = (new EventCalendarWidget)->occurrencesByDate();
+        $groups = (new EventCalendarFilamentWidget)->occurrencesByDate();
 
         expect($groups->keys()->all())->toBe(['2026-06-05'])
             ->and($groups->get('2026-06-05'))->toHaveCount(2);

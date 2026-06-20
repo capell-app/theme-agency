@@ -6,7 +6,7 @@ use Capell\Core\Models\Blueprint;
 use Capell\Core\Models\Language;
 use Capell\Core\Models\Site;
 use Capell\Core\Models\Theme;
-use Capell\Diagnostics\Filament\Widgets\Health\SetupHealthWidgetAbstract as SetupHealthWidget;
+use Capell\Diagnostics\Filament\Widgets\Health\SetupHealthFilamentWidget as SetupHealthWidget;
 use Capell\Tests\Support\Concerns\CreatesAdminUser;
 
 use function Pest\Livewire\livewire;

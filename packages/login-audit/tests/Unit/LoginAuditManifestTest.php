@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 use Capell\Core\Contracts\Extensions\ChecksExtensionHealth;
 use Capell\Core\Contracts\Extensions\RegistersExtensionAdminResource;
+use Capell\Core\Contracts\Extensions\RegistersExtensionFilamentWidget;
 use Capell\Core\Contracts\Extensions\RegistersExtensionPermission;
 use Capell\Core\Contracts\Extensions\RegistersExtensionSetting;
-use Capell\Core\Contracts\Extensions\RegistersExtensionWidget;
 use Capell\Core\Contracts\Extensions\RunsScheduledExtensionJob;
 use Capell\LoginAudit\Actions\BuildLoginAuditsQueryAction;
 use Capell\LoginAudit\Filament\Resources\LoginAudits\LoginAuditResource;
-use Capell\LoginAudit\Filament\Widgets\LoginAuditsWidget;
+use Capell\LoginAudit\Filament\Widgets\LoginAuditsFilamentWidget;
 use Capell\LoginAudit\Health\LoginAuditHealthCheck;
 use Capell\LoginAudit\Manifest\LoginAuditAdminResourcesContribution;
-use Capell\LoginAudit\Manifest\LoginAuditDashboardWidgetContribution;
+use Capell\LoginAudit\Manifest\LoginAuditDashboardFilamentWidgetContribution;
 use Capell\LoginAudit\Manifest\LoginAuditHealthContribution;
 use Capell\LoginAudit\Manifest\LoginAuditModelsContribution;
 use Capell\LoginAudit\Manifest\LoginAuditPermissionsContribution;
@@ -58,8 +58,8 @@ it('declares the login audit extension surfaces in the manifest', function (): v
         ],
         [
             'type' => 'dashboard-widget',
-            'class' => LoginAuditDashboardWidgetContribution::class,
-            'widgetClass' => LoginAuditsWidget::class,
+            'class' => LoginAuditDashboardFilamentWidgetContribution::class,
+            'widgetClass' => LoginAuditsFilamentWidget::class,
             'dashboard' => 'system-health',
         ],
         [
@@ -94,7 +94,7 @@ it('declares the login audit extension surfaces in the manifest', function (): v
 
 it('keeps login audit manifest contribution classes on core extension contracts', function (): void {
     expect(class_implements(LoginAuditAdminResourcesContribution::class))->toContain(RegistersExtensionAdminResource::class)
-        ->and(class_implements(LoginAuditDashboardWidgetContribution::class))->toContain(RegistersExtensionWidget::class)
+        ->and(class_implements(LoginAuditDashboardFilamentWidgetContribution::class))->toContain(RegistersExtensionFilamentWidget::class)
         ->and(class_implements(LoginAuditSettingsContribution::class))->toContain(RegistersExtensionSetting::class)
         ->and(class_implements(LoginAuditPermissionsContribution::class))->toContain(RegistersExtensionPermission::class)
         ->and(class_implements(LoginAuditPurgeScheduleContribution::class))->toContain(RunsScheduledExtensionJob::class)

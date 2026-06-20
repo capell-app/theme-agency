@@ -8,15 +8,15 @@ use Capell\GA4Reports\Console\Commands\SyncGA4ReportsCommand;
 use Capell\GA4Reports\Contracts\GA4ReportsDataClientInterface;
 use Capell\GA4Reports\Filament\Pages\GA4ReportsPage;
 use Capell\GA4Reports\Filament\Settings\GA4ReportsSettingsSchema;
-use Capell\GA4Reports\Filament\Widgets\GA4ReportsOverviewStatsWidget;
-use Capell\GA4Reports\Filament\Widgets\GA4ReportsSetupStatusWidget;
-use Capell\GA4Reports\Filament\Widgets\GA4ReportsTopPagesTableWidget;
-use Capell\GA4Reports\Filament\Widgets\GA4ReportsTopPagesWidget;
-use Capell\GA4Reports\Filament\Widgets\GA4ReportsTrafficTrendWidget;
+use Capell\GA4Reports\Filament\Widgets\GA4ReportsOverviewStatsFilamentWidget;
+use Capell\GA4Reports\Filament\Widgets\GA4ReportsSetupStatusFilamentWidget;
+use Capell\GA4Reports\Filament\Widgets\GA4ReportsTopPagesFilamentWidget;
+use Capell\GA4Reports\Filament\Widgets\GA4ReportsTopPagesTableFilamentWidget;
+use Capell\GA4Reports\Filament\Widgets\GA4ReportsTrafficTrendFilamentWidget;
 use Capell\GA4Reports\Health\Ga4ReportsHealthCheck;
 use Capell\GA4Reports\Manifest\GA4ReportsAdminPageContribution;
 use Capell\GA4Reports\Manifest\GA4ReportsConsoleCommandsContribution;
-use Capell\GA4Reports\Manifest\GA4ReportsDashboardWidgetsContribution;
+use Capell\GA4Reports\Manifest\GA4ReportsDashboardFilamentWidgetsContribution;
 use Capell\GA4Reports\Manifest\GA4ReportsHealthContribution;
 use Capell\GA4Reports\Manifest\GA4ReportsModelsContribution;
 use Capell\GA4Reports\Manifest\GA4ReportsOverviewStatsContribution;
@@ -91,14 +91,14 @@ it('declares implemented GA4 reporting contributions and validates manifest cont
             && ($contribution['class'] ?? null) === GA4ReportsAdminPageContribution::class
             && ($contribution['pageClass'] ?? null) === GA4ReportsPage::class))->toBeTrue()
         ->and($contributions->contains(fn (array $contribution): bool => ($contribution['type'] ?? null) === 'dashboard-widget'
-            && ($contribution['class'] ?? null) === GA4ReportsDashboardWidgetsContribution::class
-            && in_array(GA4ReportsTrafficTrendWidget::class, $contribution['widgetClasses'] ?? [], true)
-            && in_array(GA4ReportsTopPagesWidget::class, $contribution['widgetClasses'] ?? [], true)
-            && in_array(GA4ReportsSetupStatusWidget::class, $contribution['widgetClasses'] ?? [], true)))->toBeTrue()
+            && ($contribution['class'] ?? null) === GA4ReportsDashboardFilamentWidgetsContribution::class
+            && in_array(GA4ReportsTrafficTrendFilamentWidget::class, $contribution['widgetClasses'] ?? [], true)
+            && in_array(GA4ReportsTopPagesFilamentWidget::class, $contribution['widgetClasses'] ?? [], true)
+            && in_array(GA4ReportsSetupStatusFilamentWidget::class, $contribution['widgetClasses'] ?? [], true)))->toBeTrue()
         ->and($contributions->contains(fn (array $contribution): bool => ($contribution['type'] ?? null) === 'dashboard-widget'
-            && ($contribution['class'] ?? null) === GA4ReportsDashboardWidgetsContribution::class
-            && in_array(GA4ReportsOverviewStatsWidget::class, $contribution['widgetClasses'] ?? [], true)
-            && in_array(GA4ReportsTopPagesTableWidget::class, $contribution['widgetClasses'] ?? [], true)))->toBeTrue()
+            && ($contribution['class'] ?? null) === GA4ReportsDashboardFilamentWidgetsContribution::class
+            && in_array(GA4ReportsOverviewStatsFilamentWidget::class, $contribution['widgetClasses'] ?? [], true)
+            && in_array(GA4ReportsTopPagesTableFilamentWidget::class, $contribution['widgetClasses'] ?? [], true)))->toBeTrue()
         ->and($contributions->contains(fn (array $contribution): bool => ($contribution['type'] ?? null) === 'overview-stat'
             && ($contribution['class'] ?? null) === GA4ReportsOverviewStatsContribution::class
             && ($contribution['keys'] ?? []) === [

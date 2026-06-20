@@ -201,7 +201,7 @@ test('public livewire widgets resolve the scoped layout widget clone', function 
     $layout = Layout::factory()->site($site)->create([
         'containers' => [
             'main' => [
-                'widgets' => [
+                'layout_widgets' => [
                     ['widget_key' => $widget->key, 'occurrence' => 1],
                     ['widget_key' => $widget->key, 'occurrence' => 2, 'meta' => ['show_page_title' => true]],
                 ],
@@ -263,7 +263,7 @@ test('public livewire widgets resolve the scoped layout widget clone', function 
 
     $renderData = sidebarPageWidgetStyleView($component->render())->getData();
 
-    expect($renderData['container'])->toHaveKey('widgets')
+    expect($renderData['container'])->toHaveKey('layout_widgets')
         ->and($renderData['widgetData']['meta']['show_page_title'])->toBeTrue()
         ->and($renderData['widgetData']['occurrence'])->toBe(2);
 
@@ -311,7 +311,7 @@ test('public livewire widgets reject references without scoped page and site ids
     $layout = Layout::factory()->site($site)->create([
         'containers' => [
             'main' => [
-                'widgets' => [
+                'layout_widgets' => [
                     ['widget_key' => $widget->key, 'occurrence' => 1],
                 ],
             ],
@@ -345,7 +345,7 @@ test('public livewire widgets can hydrate widgets from global layouts', function
         'site_id' => null,
         'containers' => [
             'main' => [
-                'widgets' => [
+                'layout_widgets' => [
                     [
                         'widget_key' => $widget->key,
                         'occurrence' => 1,
@@ -405,7 +405,7 @@ test('public livewire widgets reject global layout references replayed under ano
         'site_id' => null,
         'containers' => [
             'main' => [
-                'widgets' => [
+                'layout_widgets' => [
                     ['widget_key' => $widget->key, 'occurrence' => 1],
                 ],
             ],
@@ -457,7 +457,7 @@ test('public livewire page content widgets render from encrypted context without
     $layout = Layout::factory()->site($site)->create([
         'containers' => [
             'main' => [
-                'widgets' => [
+                'layout_widgets' => [
                     ['widget_key' => $widget->key, 'occurrence' => 1],
                 ],
             ],
@@ -654,7 +654,7 @@ test('public livewire widgets reject references from another frontend site', fun
     $layout = Layout::factory()->site($otherSite)->create([
         'containers' => [
             'main' => [
-                'widgets' => [
+                'layout_widgets' => [
                     ['widget_key' => $widget->key, 'occurrence' => 1],
                 ],
             ],

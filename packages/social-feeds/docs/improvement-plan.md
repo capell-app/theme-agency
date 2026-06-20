@@ -56,7 +56,7 @@ Social Feeds belongs in `Capell Growth` because it turns external social proof i
 
 **Cross-sell:** Block Library is the required rendering surface. Frontend Optimizer benefits from cached/no-third-party public output. Privacy Center can document social content/privacy boundaries. Site Monitor can monitor feed endpoints. AI Orchestrator could summarize social posts later.
 
-**Keywords/tags:** `social-feeds`, `rss`, `social-proof`, `cached-rendering`, `block-library`, `carousel`, `provider-registry`, `frontend`, `growth`, `widgets`.
+**Keywords/tags:** `social-feeds`, `rss`, `social-proof`, `cached-rendering`, `block-library`, `carousel`, `provider-registry`, `frontend`, `growth`, `layout_widgets`.
 
 ## 6. Prioritized Roadmap
 

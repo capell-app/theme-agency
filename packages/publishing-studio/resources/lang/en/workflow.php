@@ -79,7 +79,7 @@ return [
     ],
     'subheading' => 'Draft, review, schedule, publish, and recover content from one workflow.',
     'title' => 'Publishing Workflow',
-    'widgets' => [
+    'layout_widgets' => [
         'workspace_activity' => [
             'heading' => 'Workspace activity',
             'no_recent_activity' => 'No recent activity.',

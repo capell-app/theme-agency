@@ -38,14 +38,14 @@ Screenshot contract: `screenshots.json`.
 - Config files: `packages/contacts/config/capell-contacts.php`.
 - Migrations: `packages/contacts/database/migrations/2026_05_31_000001_create_contacts_table.php`, `packages/contacts/database/migrations/2026_05_31_000002_create_contact_organisations_table.php`, `packages/contacts/database/migrations/2026_05_31_000003_create_contact_organisation_memberships_table.php`, `packages/contacts/database/migrations/2026_05_31_000004_create_contact_leads_table.php`, `packages/contacts/database/migrations/2026_05_31_000005_create_contact_activities_table.php`, `packages/contacts/database/migrations/2026_05_31_000006_add_source_identity_to_contacts_table.php`, `packages/contacts/database/migrations/2026_06_06_000001_add_site_last_seen_index_to_contacts_table.php`, `packages/contacts/database/migrations/2026_06_07_000001_create_contact_tags_tables.php`.
 - Models: `Contact`, `ContactActivity`, `ContactTag`, `Lead`, `Organisation`.
-- Filament classes: `ContactActivityResource`, `ListContactActivities`, `ContactResource`, `ListContacts`, `ViewContact`, `LeadResource`, `ListLeads`, `OrganisationResource`, `ListOrganisations`, `ContactsOverviewStatsWidget`.
+- Filament classes: `ContactActivityResource`, `ListContactActivities`, `ContactResource`, `ListContacts`, `ViewContact`, `LeadResource`, `ListLeads`, `OrganisationResource`, `ListOrganisations`, `ContactsOverviewStatsFilamentWidget`.
 - Policies: `AbstractContactsResourcePolicy`, `ContactActivityPolicy`, `ContactPolicy`, `LeadPolicy`, `OrganisationPolicy`.
 - Listeners: `RunsQueuedContactSourceSync`, `SyncContactFromAccessGateRegistration`, `SyncContactFromCampaignConversion`, `SyncContactFromComment`, `SyncContactFromEventRegistration`, `SyncContactFromFormSubmission`, `SyncContactFromShopifyCustomer`.
 - Actions: `AnonymizeContactAction`, `AnonymizeContactWithAuditAction`, `AuditContactPrivacyExportAction`, `BuildContactPrivacyExportAction`, `BuildContactsOverviewStatsAction`, `CoercesContactSourceValues`, `FindOrCreateContactAction`, `MergeContactsAction`, `RecordContactActivityAction`, `SyncAccessGateRegistrationContactAction`, `SyncCampaignConversionContactAction`, `SyncCommentContactAction`, `and 6 more`.
 - Data objects: `ContactActivityData`, `ContactIdentityData`, `ContactSourceRecordData`, `ContactSourceSyncResultData`.
 - Command signatures: `capell-contacts:privacy`.
 - Console command classes: `ContactPrivacyCommand`.
-- Manifest contributions: `admin-resource: Capell\Contacts\Manifest\ContactsAdminResourcesContribution`, `dashboard-widget: Capell\Contacts\Manifest\ContactsOverviewWidgetContribution`, `model: Capell\Contacts\Manifest\ContactsModelsContribution`.
+- Manifest contributions: `admin-resource: Capell\Contacts\Manifest\ContactsAdminResourcesContribution`, `dashboard-widget: Capell\Contacts\Manifest\ContactsOverviewFilamentWidgetContribution`, `model: Capell\Contacts\Manifest\ContactsModelsContribution`.
 - Health checks: `Capell\Contacts\Health\ContactsHealthCheck`.
 - Blade views: `packages/contacts/resources/views/filament/contacts/activity-timeline.blade.php`.
 - Cache tags: `contacts`.

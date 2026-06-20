@@ -70,17 +70,17 @@ use Capell\SeoSuite\Filament\Settings\AIOrchestratorSettingsSchema;
 use Capell\SeoSuite\Filament\Settings\Contributors\SeoSuiteDashboardSettingsContributor;
 use Capell\SeoSuite\Filament\Settings\SeoSettingsSchema;
 use Capell\SeoSuite\Filament\Settings\StructuredDataSettingsSchema;
-use Capell\SeoSuite\Filament\Widgets\AiDiscoveryCoverageWidget;
-use Capell\SeoSuite\Filament\Widgets\EditPageAuditTabsWidget;
+use Capell\SeoSuite\Filament\Widgets\AiDiscoveryCoverageFilamentWidget;
+use Capell\SeoSuite\Filament\Widgets\EditPageAuditTabsFilamentWidget;
 use Capell\SeoSuite\Filament\Widgets\EditPagePageSpeedAuditBadge;
-use Capell\SeoSuite\Filament\Widgets\EditPagePageSpeedAuditWidget;
+use Capell\SeoSuite\Filament\Widgets\EditPagePageSpeedAuditFilamentWidget;
 use Capell\SeoSuite\Filament\Widgets\EditPageSeoAuditBadge;
-use Capell\SeoSuite\Filament\Widgets\EditPageSeoAuditWidget;
-use Capell\SeoSuite\Filament\Widgets\SearchConsoleOverviewWidget;
-use Capell\SeoSuite\Filament\Widgets\SearchIntelligenceWidget;
-use Capell\SeoSuite\Filament\Widgets\SearchMovementWidget;
-use Capell\SeoSuite\Filament\Widgets\SeoOpportunitiesWidget;
-use Capell\SeoSuite\Filament\Widgets\TopSearchPagesWidget;
+use Capell\SeoSuite\Filament\Widgets\EditPageSeoAuditFilamentWidget;
+use Capell\SeoSuite\Filament\Widgets\SearchConsoleOverviewFilamentWidget;
+use Capell\SeoSuite\Filament\Widgets\SearchIntelligenceFilamentWidget;
+use Capell\SeoSuite\Filament\Widgets\SearchMovementFilamentWidget;
+use Capell\SeoSuite\Filament\Widgets\SeoOpportunitiesFilamentWidget;
+use Capell\SeoSuite\Filament\Widgets\TopSearchPagesFilamentWidget;
 use Capell\SeoSuite\Handlers\ClearCircuitBreakerHandler;
 use Capell\SeoSuite\Http\Controllers\LlmsFullTxtController;
 use Capell\SeoSuite\Http\Controllers\LlmsTxtController;
@@ -437,14 +437,14 @@ class SeoSuiteServiceProvider extends AbstractPackageServiceProvider
         return $this;
     }
 
-    protected function registerDashboardWidgets(): self
+    protected function registerDashboardFilamentWidgets(): self
     {
-        CapellAdmin::registerDashboardWidget(SearchConsoleOverviewWidget::class, DashboardEnum::Main);
-        CapellAdmin::registerDashboardWidget(TopSearchPagesWidget::class, DashboardEnum::Main);
-        CapellAdmin::registerDashboardWidget(SearchMovementWidget::class, DashboardEnum::Main);
-        CapellAdmin::registerDashboardWidget(SeoOpportunitiesWidget::class, DashboardEnum::Main);
-        CapellAdmin::registerDashboardWidget(SearchIntelligenceWidget::class, DashboardEnum::Main);
-        CapellAdmin::registerDashboardWidget(AiDiscoveryCoverageWidget::class, DashboardEnum::Main);
+        CapellAdmin::registerDashboardFilamentWidget(SearchConsoleOverviewFilamentWidget::class, DashboardEnum::Main);
+        CapellAdmin::registerDashboardFilamentWidget(TopSearchPagesFilamentWidget::class, DashboardEnum::Main);
+        CapellAdmin::registerDashboardFilamentWidget(SearchMovementFilamentWidget::class, DashboardEnum::Main);
+        CapellAdmin::registerDashboardFilamentWidget(SeoOpportunitiesFilamentWidget::class, DashboardEnum::Main);
+        CapellAdmin::registerDashboardFilamentWidget(SearchIntelligenceFilamentWidget::class, DashboardEnum::Main);
+        CapellAdmin::registerDashboardFilamentWidget(AiDiscoveryCoverageFilamentWidget::class, DashboardEnum::Main);
 
         return $this;
     }
@@ -566,9 +566,9 @@ class SeoSuiteServiceProvider extends AbstractPackageServiceProvider
 
     private function registerLivewireComponents(): void
     {
-        Livewire::component('capell-seo-suite.edit-page-audit-tabs', EditPageAuditTabsWidget::class);
-        Livewire::component('capell-seo-suite.edit-page-seo-audit', EditPageSeoAuditWidget::class);
-        Livewire::component('capell-seo-suite.edit-page-pagespeed-audit', EditPagePageSpeedAuditWidget::class);
+        Livewire::component('capell-seo-suite.edit-page-audit-tabs', EditPageAuditTabsFilamentWidget::class);
+        Livewire::component('capell-seo-suite.edit-page-seo-audit', EditPageSeoAuditFilamentWidget::class);
+        Livewire::component('capell-seo-suite.edit-page-pagespeed-audit', EditPagePageSpeedAuditFilamentWidget::class);
         Livewire::component('capell-seo-suite.edit-page-seo-audit-badge', EditPageSeoAuditBadge::class);
         Livewire::component('capell-seo-suite.edit-page-pagespeed-audit-badge', EditPagePageSpeedAuditBadge::class);
     }
@@ -603,7 +603,7 @@ class SeoSuiteServiceProvider extends AbstractPackageServiceProvider
             ->registerFrontendRuntimeManifestContributors()
             ->registerFilamentPages()
             ->registerDashboardSettingsContributor()
-            ->registerDashboardWidgets()
+            ->registerDashboardFilamentWidgets()
             ->registerPageSpeedSchedule()
             ->registerFrontendViews()
             ->registerRenderHooks()

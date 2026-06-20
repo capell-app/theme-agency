@@ -27,7 +27,7 @@ SEO Suite is the premium search/SEO package for the Capell CMS. It bolts metadat
 
 - **Make `defaultPageSpeedDigestRecipients()` query-efficient.** It calls `$userModel::query()->get()` and filters every user in PHP via `hasRole`/`isGlobalAdmin`. On a large user table this loads the whole table into memory each schedule resolve. Push the role filter into the query (`whereHas('roles', …)` / role scope). `src/Providers/SeoSuiteServiceProvider.php` (L849-868). **Effort: S**
 
-- **Persist AI cost, not just tokens.** `RecordAiGenerationAction` stores `prompt_tokens`/`completion_tokens`/`total_tokens`/`duration` but no monetary cost and no model-price table; `PrismProvider::chat()` logs token metrics at `debug` only. Buyers expect a spend dashboard. Add a cost column/derivation and roll it into `AiUsageWidget`. `src/Actions/Ai/RecordAiGenerationAction.php`, `src/Support/PrismProvider.php`. **Effort: M**
+- **Persist AI cost, not just tokens.** `RecordAiGenerationAction` stores `prompt_tokens`/`completion_tokens`/`total_tokens`/`duration` but no monetary cost and no model-price table; `PrismProvider::chat()` logs token metrics at `debug` only. Buyers expect a spend dashboard. Add a cost column/derivation and roll it into `AiUsageFilamentWidget`. `src/Actions/Ai/RecordAiGenerationAction.php`, `src/Support/PrismProvider.php`. **Effort: M**
 
 - **Scope the AI circuit breaker per provider/site.** `PrismProvider` uses a single global cache key `ai_circuit_breaker_state`; one site's provider outage trips AI generation for every site and provider. Key it by provider (and optionally site). `src/Support/PrismProvider.php` (`CIRCUIT_BREAKER_KEY`). **Effort: S**
 

@@ -19,7 +19,7 @@ final class CampaignCtaWidgetWidgetConfigurator extends DefaultWidgetConfigurato
         return Tab::make('campaign_cta')
             ->label(__('capell-campaign-studio::generic.cta_widget'))
             ->schema([
-                Select::make('meta.cta_widget_id')
+                Select::make('meta.cta_layout_widget_id')
                     ->label(__('capell-campaign-studio::form.cta_widget'))
                     ->options(fn (): array => SiteScope::applyForCurrentActor(CampaignCtaWidget::query())
                         ->where('is_active', true)

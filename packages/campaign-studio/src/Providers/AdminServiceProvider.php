@@ -16,8 +16,8 @@ use Capell\CampaignStudio\Filament\Resources\CampaignConversionGoals\CampaignCon
 use Capell\CampaignStudio\Filament\Resources\CampaignCtaWidgets\CampaignCtaWidgetResource;
 use Capell\CampaignStudio\Filament\Resources\CampaignGroups\CampaignGroupResource;
 use Capell\CampaignStudio\Filament\Resources\CampaignLandingPages\CampaignLandingPageResource;
-use Capell\CampaignStudio\Filament\Widgets\TopCampaignStudioWidget;
-use Capell\CampaignStudio\Filament\Widgets\TopLandingPagesWidget;
+use Capell\CampaignStudio\Filament\Widgets\TopCampaignStudioFilamentWidget;
+use Capell\CampaignStudio\Filament\Widgets\TopLandingPagesFilamentWidget;
 use Capell\Core\Facades\CapellCore;
 use Capell\LayoutBuilder\Enums\ConfiguratorTypeEnum;
 use Carbon\CarbonImmutable;
@@ -53,7 +53,7 @@ final class AdminServiceProvider extends ServiceProvider
 
         $this
             ->registerOverviewStats()
-            ->registerDashboardWidgets()
+            ->registerDashboardFilamentWidgets()
             ->registerMarketingStudioActions();
     }
 
@@ -97,10 +97,10 @@ final class AdminServiceProvider extends ServiceProvider
         return $this;
     }
 
-    private function registerDashboardWidgets(): self
+    private function registerDashboardFilamentWidgets(): self
     {
-        CapellAdmin::registerDashboardWidget(TopCampaignStudioWidget::class, DashboardEnum::Main, DashboardEnum::MarketingStudio);
-        CapellAdmin::registerDashboardWidget(TopLandingPagesWidget::class, DashboardEnum::Main, DashboardEnum::MarketingStudio);
+        CapellAdmin::registerDashboardFilamentWidget(TopCampaignStudioFilamentWidget::class, DashboardEnum::Main, DashboardEnum::MarketingStudio);
+        CapellAdmin::registerDashboardFilamentWidget(TopLandingPagesFilamentWidget::class, DashboardEnum::Main, DashboardEnum::MarketingStudio);
 
         return $this;
     }

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Capell\Deployments\Filament\Widgets\DeploymentConnectionWidget;
+use Capell\Deployments\Filament\Widgets\DeploymentConnectionFilamentWidget;
 use Capell\Deployments\Models\DeploymentConnection;
 use Capell\Tests\Support\Concerns\CreatesAdminUser;
 use Illuminate\Support\Facades\Schema;
@@ -11,26 +11,26 @@ use Spatie\Permission\Models\Permission;
 
 uses(CreatesAdminUser::class);
 
-it('DeploymentConnectionWidget class exists', function (): void {
-    expect(class_exists(DeploymentConnectionWidget::class))->toBeTrue();
+it('DeploymentConnectionFilamentWidget class exists', function (): void {
+    expect(class_exists(DeploymentConnectionFilamentWidget::class))->toBeTrue();
 });
 
 it('hides deployment connection widget data from users without page access', function (): void {
     $connection = DeploymentConnection::factory()->github()->create(['is_active' => true]);
 
-    expect(DeploymentConnectionWidget::canView())->toBeFalse()
-        ->and((new DeploymentConnectionWidget)->getConnection())->toBeNull();
+    expect(DeploymentConnectionFilamentWidget::canView())->toBeFalse()
+        ->and((new DeploymentConnectionFilamentWidget)->getConnection())->toBeNull();
 
-    Livewire::test(DeploymentConnectionWidget::class)
+    Livewire::test(DeploymentConnectionFilamentWidget::class)
         ->assertDontSee($connection->repoCoordinate())
         ->assertDontSee($connection->provider->getLabel());
 
     test()->actingAsUser();
 
-    expect(DeploymentConnectionWidget::canView())->toBeFalse()
-        ->and((new DeploymentConnectionWidget)->getConnection())->toBeNull();
+    expect(DeploymentConnectionFilamentWidget::canView())->toBeFalse()
+        ->and((new DeploymentConnectionFilamentWidget)->getConnection())->toBeNull();
 
-    Livewire::test(DeploymentConnectionWidget::class)
+    Livewire::test(DeploymentConnectionFilamentWidget::class)
         ->assertDontSee($connection->repoCoordinate())
         ->assertDontSee($connection->provider->getLabel());
 });
@@ -41,10 +41,10 @@ it('allows deployment connection widget data for deployment page viewers', funct
 
     test()->actingAs(test()->createUserWithPermission('View:DeploymentConnectionPage'));
 
-    expect(DeploymentConnectionWidget::canView())->toBeTrue()
-        ->and((new DeploymentConnectionWidget)->getConnection()?->is($connection))->toBeTrue();
+    expect(DeploymentConnectionFilamentWidget::canView())->toBeTrue()
+        ->and((new DeploymentConnectionFilamentWidget)->getConnection()?->is($connection))->toBeTrue();
 
-    Livewire::test(DeploymentConnectionWidget::class)
+    Livewire::test(DeploymentConnectionFilamentWidget::class)
         ->assertSee($connection->repoCoordinate())
         ->assertSee($connection->provider->getLabel());
 });
@@ -55,5 +55,5 @@ it('does not fail when the deployment connection widget renders before migration
 
     Schema::dropIfExists('deployment_connections');
 
-    expect((new DeploymentConnectionWidget)->getConnection())->toBeNull();
+    expect((new DeploymentConnectionFilamentWidget)->getConnection())->toBeNull();
 });

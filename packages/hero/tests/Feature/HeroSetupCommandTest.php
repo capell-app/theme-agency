@@ -92,7 +92,7 @@ it('repairs page content below an existing hero container', function (): void {
     $homeLayout->update([
         'containers' => [
             'hero' => [
-                'widgets' => [
+                'layout_widgets' => [
                     ['widget_key' => 'hero'],
                 ],
             ],
@@ -106,7 +106,7 @@ it('repairs page content below an existing hero container', function (): void {
 
     expect($result)->toBe(['created' => 0, 'updated' => 1, 'skipped' => 0])
         ->and(array_keys($containers))->toBe(['hero', 'main'])
-        ->and($containers['main']['widgets'] ?? null)->toBe([
+        ->and($containers['main']['layout_widgets'] ?? null)->toBe([
             ['widget_key' => 'page-content'],
         ])
         ->and($homeLayout->widgets)->toBe(['hero', 'page-content']);
@@ -145,11 +145,11 @@ it('force updates an existing hero container without replacing custom home copy'
         'containers' => [
             'hero' => [
                 'meta' => ['container' => 'narrow'],
-                'widgets' => [['widget_key' => 'legacy-hero']],
+                'layout_widgets' => [['widget_key' => 'legacy-hero']],
             ],
             'main' => [
                 'meta' => ['container' => 'content'],
-                'widgets' => [['widget_key' => 'custom-body']],
+                'layout_widgets' => [['widget_key' => 'custom-body']],
             ],
         ],
     ]);

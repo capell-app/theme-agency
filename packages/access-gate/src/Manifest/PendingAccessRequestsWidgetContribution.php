@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Capell\AccessGate\Manifest;
 
 use Capell\Core\Contracts\Extensions\ExtensionContribution;
-use Capell\Core\Contracts\Extensions\RegistersExtensionWidget;
+use Capell\Core\Contracts\Extensions\RegistersExtensionFilamentWidget;
 
-final class PendingAccessRequestsWidgetContribution implements ExtensionContribution, RegistersExtensionWidget
+final class PendingAccessRequestsWidgetContribution implements ExtensionContribution, RegistersExtensionFilamentWidget
 {
     public static function compatibleCapellApiVersion(): string
     {

@@ -59,10 +59,10 @@
         },
         {
             "type": "dashboard-widget",
-            "class": "Capell\\CampaignStudio\\Manifest\\CampaignStudioDashboardWidgetsContribution",
+            "class": "Capell\\CampaignStudio\\Manifest\\CampaignStudioDashboardFilamentWidgetsContribution",
             "widgetClasses": [
-                "Capell\\CampaignStudio\\Filament\\Widgets\\TopCampaignStudioWidget",
-                "Capell\\CampaignStudio\\Filament\\Widgets\\TopLandingPagesWidget"
+                "Capell\\CampaignStudio\\Filament\\Widgets\\TopCampaignStudioFilamentWidget",
+                "Capell\\CampaignStudio\\Filament\\Widgets\\TopLandingPagesFilamentWidget"
             ]
         },
         {

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Capell\Core\Contracts\Extensions\RegistersExtensionWidget;
+use Capell\Core\Contracts\Extensions\RegistersExtensionFilamentWidget;
 use Capell\Diagnostics\Actions\Dashboard\BuildPackagesInstalledAction;
 use Capell\Diagnostics\Actions\DashboardReports\BuildInfrastructureStatusAction;
 use Capell\Diagnostics\Actions\DashboardReports\BuildPublicOutputSafetyReportAction;
@@ -13,7 +13,7 @@ use Capell\Diagnostics\Filament\Pages\DiagnosticsPage;
 use Capell\Diagnostics\Filament\Pages\PermissionAuditPage;
 use Capell\Diagnostics\Filament\Pages\QueueHealthPage;
 use Capell\Diagnostics\Filament\Pages\SystemHealthPage;
-use Capell\Diagnostics\Filament\Widgets\Health\SiteHealthWidgetAbstract;
+use Capell\Diagnostics\Filament\Widgets\Health\SiteHealthFilamentWidget;
 use Capell\Diagnostics\Manifest\CommandPalettePageContribution;
 use Capell\Diagnostics\Manifest\DiagnosticsPageContribution;
 use Capell\Diagnostics\Manifest\PermissionAuditPageContribution;
@@ -89,10 +89,10 @@ describe('diagnostics capell.json manifest', function (): void {
             ->and($manifest['contributes'])->toContain([
                 'type' => 'dashboard-widget',
                 'class' => SiteHealthWidgetContribution::class,
-                'widgetClass' => SiteHealthWidgetAbstract::class,
+                'widgetClass' => SiteHealthFilamentWidget::class,
             ])
-            ->and(class_implements(SiteHealthWidgetContribution::class))->toContain(RegistersExtensionWidget::class)
-            ->and(class_implements(SystemHealthWidgetsContribution::class))->toContain(RegistersExtensionWidget::class)
+            ->and(class_implements(SiteHealthWidgetContribution::class))->toContain(RegistersExtensionFilamentWidget::class)
+            ->and(class_implements(SystemHealthWidgetsContribution::class))->toContain(RegistersExtensionFilamentWidget::class)
             ->and($manifest['actions'])->toHaveKey('buildPackagesInstalled', BuildPackagesInstalledAction::class)
             ->and($manifest['actions'])->toHaveKey('buildInfrastructureStatus', BuildInfrastructureStatusAction::class)
             ->and($manifest['actions'])->toHaveKey('buildPublicOutputSafetyReport', BuildPublicOutputSafetyReportAction::class)

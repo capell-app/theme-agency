@@ -14,8 +14,8 @@ use Capell\Admin\Data\AdminSurfaceContributionData;
 use Capell\Admin\Data\Extensions\ExtensionManagementSurfaceData;
 use Capell\Admin\Enums\DashboardEnum;
 use Capell\Admin\Facades\CapellAdmin;
-use Capell\Admin\Filament\Widgets\Dashboard\MyWorkQueueWidget;
-use Capell\Admin\Filament\Widgets\Dashboard\RecentlyPublishedWidget;
+use Capell\Admin\Filament\Widgets\Dashboard\MyWorkQueueFilamentWidget;
+use Capell\Admin\Filament\Widgets\Dashboard\RecentlyPublishedFilamentWidget;
 use Capell\Admin\Support\Bridges\AdminBridgeRegistrar;
 use Capell\Admin\Support\Dashboard\DefaultSiteStatsDataProvider;
 use Capell\Admin\Support\Dashboard\NullContentHealthDataProvider;
@@ -42,7 +42,7 @@ use Capell\PublishingStudio\Filament\Resources\PublishingStudio\WorkspaceResourc
 use Capell\PublishingStudio\Filament\Settings\Contributors\DefaultDashboardSettingsContributor;
 use Capell\PublishingStudio\Filament\Settings\Contributors\SystemHealthSettingsContributor;
 use Capell\PublishingStudio\Filament\Settings\PublishingStudioSettingsSchema;
-use Capell\PublishingStudio\Filament\Widgets\WorkspaceActivityWidgetAbstract;
+use Capell\PublishingStudio\Filament\Widgets\WorkspaceActivityFilamentWidget;
 use Capell\PublishingStudio\Listeners\SendWorkspaceStateNotification;
 use Capell\PublishingStudio\Livewire\DiffPanel;
 use Capell\PublishingStudio\Livewire\FieldCommentThread;
@@ -240,9 +240,9 @@ class AdminServiceProvider extends ServiceProvider
             UserSchemaExtender::TAG,
         );
 
-        CapellAdmin::registerDashboardWidget(MyWorkQueueWidget::class, DashboardEnum::Main);
-        CapellAdmin::registerDashboardWidget(RecentlyPublishedWidget::class, DashboardEnum::Main);
-        CapellAdmin::registerDashboardWidget(WorkspaceActivityWidgetAbstract::class, DashboardEnum::Main);
+        CapellAdmin::registerDashboardFilamentWidget(MyWorkQueueFilamentWidget::class, DashboardEnum::Main);
+        CapellAdmin::registerDashboardFilamentWidget(RecentlyPublishedFilamentWidget::class, DashboardEnum::Main);
+        CapellAdmin::registerDashboardFilamentWidget(WorkspaceActivityFilamentWidget::class, DashboardEnum::Main);
         CapellAdmin::contributeToAdminSurface(AdminSurfaceContributionData::resource(WorkspaceResource::class, group: 'Workspace'));
         CapellAdmin::contributeToAdminSurface(AdminSurfaceContributionData::resource(PreviewLinkResource::class, group: 'PreviewLink'));
         CapellAdmin::contributeToAdminSurface(AdminSurfaceContributionData::page(PublishingWorkflowPage::class));

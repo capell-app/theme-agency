@@ -13,7 +13,7 @@ use Capell\CampaignStudio\Manifest\CampaignOverviewStatsContribution;
 use Capell\CampaignStudio\Manifest\CampaignStudioAdminResourcesContribution;
 use Capell\CampaignStudio\Manifest\CampaignStudioConsoleCommandsContribution;
 use Capell\CampaignStudio\Manifest\CampaignStudioConversionRouteContribution;
-use Capell\CampaignStudio\Manifest\CampaignStudioDashboardWidgetsContribution;
+use Capell\CampaignStudio\Manifest\CampaignStudioDashboardFilamentWidgetsContribution;
 use Capell\CampaignStudio\Manifest\CampaignStudioModelsContribution;
 use Capell\CampaignStudio\Manifest\CampaignStudioStatusScheduleContribution;
 use Capell\CampaignStudio\Manifest\CampaignWidgetConfiguratorsContribution;
@@ -41,7 +41,7 @@ it('declares implemented campaign studio contribution surfaces', function (): vo
         ->and($contributions->pluck('class')->all())->toContain(
             CampaignStudioAdminResourcesContribution::class,
             CampaignWidgetConfiguratorsContribution::class,
-            CampaignStudioDashboardWidgetsContribution::class,
+            CampaignStudioDashboardFilamentWidgetsContribution::class,
             CampaignOverviewStatsContribution::class,
             CampaignStudioModelsContribution::class,
             CampaignStudioConversionRouteContribution::class,

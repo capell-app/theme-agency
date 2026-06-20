@@ -37,12 +37,12 @@ Screenshot contract: `docs/screenshots.json`.
 - Config files: `packages/deployments/config/capell-deployments.php`.
 - Migrations: `packages/deployments/database/migrations/2026_05_10_190845_01_create_deployment_connections_table.php`, `packages/deployments/database/migrations/2026_06_07_090000_02_create_deployment_publications_table.php`.
 - Models: `DeploymentConnection`, `DeploymentPublication`.
-- Filament classes: `DeploymentConnectionPage`, `DeploymentConnectionWidget`.
+- Filament classes: `DeploymentConnectionPage`, `DeploymentConnectionFilamentWidget`.
 - Route files: `packages/deployments/routes/oauth.php`.
 - Events: `DeploymentPublishFailed`, `DeploymentPublishSucceeded`.
 - Actions: `CancelDeploymentPublicationAction`, `ConnectDeploymentAction`, `ConsumeOAuthStateAction`, `CreateOAuthStateAction`, `ValidateOAuthStateAction`, `PrepareComposerRequirementCommitAction`, `PublishComposerRequirementAction`, `RecordDeploymentPublicationAction`, `RefreshDeploymentPublicationStatusAction`, `RefreshProviderTokenAction`.
 - Data objects: `ComposerRequirementData`, `OAuthConnectionData`, `PublishComposerChangeResultData`, `PullRequestData`, `RepoFile`.
-- Manifest contributions: `admin-page: Capell\Deployments\Manifest\DeploymentsAdminPageContribution`, `dashboard-widget: Capell\Deployments\Manifest\DeploymentsDashboardWidgetContribution`, `route: Capell\Deployments\Manifest\DeploymentsRoutesContribution`.
+- Manifest contributions: `admin-page: Capell\Deployments\Manifest\DeploymentsAdminPageContribution`, `dashboard-widget: Capell\Deployments\Manifest\DeploymentsDashboardFilamentWidgetContribution`, `route: Capell\Deployments\Manifest\DeploymentsRoutesContribution`.
 - Health checks: `Capell\Deployments\Health\DeploymentsHealthCheck`.
 - Blade views: `packages/deployments/resources/views/filament/pages/deployment-connection.blade.php`, `packages/deployments/resources/views/filament/widgets/deployment-connection.blade.php`.
 

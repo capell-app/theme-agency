@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 use Capell\SeoSuite\Data\Dashboard\AiMetricsData;
 use Capell\SeoSuite\Data\Dashboard\FeatureUsageData;
-use Capell\SeoSuite\Filament\Widgets\AiMetricsWidgetAbstract;
+use Capell\SeoSuite\Filament\Widgets\AiMetricsFilamentWidget;
 use Capell\SeoSuite\Models\AIGenerationHistory;
 use Capell\SeoSuite\Settings\AIOrchestratorSettings;
 use Capell\SeoSuite\Support\AiRateLimiter;
@@ -76,8 +76,8 @@ it('builds ai metrics widget data from history rows, settings, and rate limits',
         'failed' => false,
     ]);
 
-    $method = new ReflectionMethod(AiMetricsWidgetAbstract::class, 'getViewData');
-    $viewData = $method->invoke(new AiMetricsWidgetAbstract);
+    $method = new ReflectionMethod(AiMetricsFilamentWidget::class, 'getViewData');
+    $viewData = $method->invoke(new AiMetricsFilamentWidget);
 
     expect($viewData)->toHaveKey('data')
         ->and($viewData['data'])->toBeInstanceOf(AiMetricsData::class);

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Capell\Diagnostics\Filament\Widgets\Health\TailwindBuildStatusWidgetAbstract as TailwindBuildStatusWidget;
+use Capell\Diagnostics\Filament\Widgets\Health\TailwindBuildStatusFilamentWidget as TailwindBuildStatusWidget;
 use Capell\Tests\Support\Concerns\CreatesAdminUser;
 
 use function Pest\Livewire\livewire;

@@ -304,7 +304,7 @@ it('renders the inherited theme hero background without public admin metadata', 
         ->not->toContain('capell-hero')
         ->not->toContain('theme_id')
         ->not->toContain('site_id')
-        ->not->toContain('widget_id');
+        ->not->toContain('layout_widget_id');
 
     expect($html)->toBe(renderHeroWidgetHtml($widget));
 });
@@ -646,7 +646,7 @@ it('renders multi-slide carousel data attributes from prepared slide state', fun
         ->toContain('First feature')
         ->toContain('Second feature')
         ->not->toContain('capell-hero')
-        ->not->toContain('widget_id');
+        ->not->toContain('layout_widget_id');
 });
 
 it('ships a safe default widget fallback view for base widget subclasses', function (): void {

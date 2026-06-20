@@ -8,8 +8,8 @@ use Capell\Admin\Contracts\Bridges\AdminBridge;
 use Capell\Admin\Contracts\Extenders\UserSchemaExtender;
 use Capell\Admin\Data\Bridges\AdminBridgeContextData;
 use Capell\Admin\Enums\DashboardEnum;
-use Capell\Admin\Filament\Widgets\Dashboard\MyWorkQueueWidget;
-use Capell\Admin\Filament\Widgets\Dashboard\RecentlyPublishedWidget;
+use Capell\Admin\Filament\Widgets\Dashboard\MyWorkQueueFilamentWidget;
+use Capell\Admin\Filament\Widgets\Dashboard\RecentlyPublishedFilamentWidget;
 use Capell\Admin\Support\Bridges\AdminBridgeRegistrar;
 use Capell\PublishingStudio\Extenders\PublishingStudioUserSchemaExtender;
 use Capell\PublishingStudio\Filament\Pages\ActivityTrailPage;
@@ -18,7 +18,7 @@ use Capell\PublishingStudio\Filament\Pages\ScheduledPublishingPage;
 use Capell\PublishingStudio\Filament\Pages\StaleDraftsPage;
 use Capell\PublishingStudio\Filament\Resources\PreviewLinks\PreviewLinkResource;
 use Capell\PublishingStudio\Filament\Resources\PublishingStudio\WorkspaceResource;
-use Capell\PublishingStudio\Filament\Widgets\WorkspaceActivityWidgetAbstract;
+use Capell\PublishingStudio\Filament\Widgets\WorkspaceActivityFilamentWidget;
 
 final class PublishingStudioAdminBridge implements AdminBridge
 {
@@ -30,9 +30,9 @@ final class PublishingStudioAdminBridge implements AdminBridge
     public function register(AdminBridgeRegistrar $registrar, AdminBridgeContextData $context): void
     {
         $registrar->schemaExtender(PublishingStudioUserSchemaExtender::class, UserSchemaExtender::TAG);
-        $registrar->dashboardWidget(MyWorkQueueWidget::class, DashboardEnum::Main);
-        $registrar->dashboardWidget(RecentlyPublishedWidget::class, DashboardEnum::Main);
-        $registrar->dashboardWidget(WorkspaceActivityWidgetAbstract::class, DashboardEnum::Main);
+        $registrar->filamentDashboardWidget(MyWorkQueueFilamentWidget::class, DashboardEnum::Main);
+        $registrar->filamentDashboardWidget(RecentlyPublishedFilamentWidget::class, DashboardEnum::Main);
+        $registrar->filamentDashboardWidget(WorkspaceActivityFilamentWidget::class, DashboardEnum::Main);
         $registrar->resource(WorkspaceResource::class, group: 'Workspace');
         $registrar->resource(PreviewLinkResource::class, group: 'PreviewLink');
 

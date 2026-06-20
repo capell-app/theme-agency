@@ -25,7 +25,7 @@ use Capell\Newsletter\Filament\Resources\ProviderInterestMappings\ProviderIntere
 use Capell\Newsletter\Filament\Resources\Segments\SegmentResource;
 use Capell\Newsletter\Filament\Resources\Subscribers\SubscriberResource;
 use Capell\Newsletter\Filament\Resources\SyncAttempts\SyncAttemptResource;
-use Capell\Newsletter\Filament\Widgets\NewsletterOverviewStatsWidget;
+use Capell\Newsletter\Filament\Widgets\NewsletterOverviewStatsFilamentWidget;
 use Capell\Newsletter\Models\FormMapping;
 use Capell\Newsletter\Models\ImportBatch;
 use Capell\Newsletter\Models\NewsletterSend;
@@ -80,7 +80,7 @@ class AdminServiceProvider extends ServiceProvider
 
         $this
             ->registerOverviewStats()
-            ->registerDashboardWidgets()
+            ->registerDashboardFilamentWidgets()
             ->registerMarketingStudioActions();
 
         $this->callAfterResolving(Schedule::class, function (Schedule $schedule): void {
@@ -171,9 +171,9 @@ class AdminServiceProvider extends ServiceProvider
         return $this;
     }
 
-    private function registerDashboardWidgets(): self
+    private function registerDashboardFilamentWidgets(): self
     {
-        CapellAdmin::registerDashboardWidget(NewsletterOverviewStatsWidget::class, DashboardEnum::MarketingStudio);
+        CapellAdmin::registerDashboardFilamentWidget(NewsletterOverviewStatsFilamentWidget::class, DashboardEnum::MarketingStudio);
 
         return $this;
     }

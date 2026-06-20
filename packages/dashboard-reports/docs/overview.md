@@ -37,12 +37,12 @@ Screenshot contract: `screenshots.json`.
 
 - Service providers: `Capell\DashboardReports\Providers\DashboardReportsServiceProvider`, `Capell\DashboardReports\Providers\AdminServiceProvider`.
 - Config files: `packages/dashboard-reports/config/capell-dashboard-reports.php`.
-- Filament classes: `DashboardReportsPageTableExtender`, `DashboardReportsDashboardSettingsContributor`, `ContentHealthWidget`, `PublishingTrendChartWidget`.
+- Filament classes: `DashboardReportsPageTableExtender`, `DashboardReportsDashboardSettingsContributor`, `ContentHealthFilamentWidget`, `PublishingTrendChartFilamentWidget`.
 - Actions: `BuildDefaultContentHealthAction`, `BuildPublishingTrendAction`, `ExportContentHealthCsvAction`, `ExportPublishingTrendCsvAction`, `SendDashboardReportDigestAction`.
 - Data objects: `PublishingTrendData`, `PublishingTrendPointData`, `ResolvedDashboardReportsSettingsData`.
 - Command signatures: `capell:dashboard-reports:export`, `capell:dashboard-reports:send-digest`.
 - Console command classes: `ExportDashboardReportCommand`, `SendDashboardReportDigestCommand`.
-- Manifest contributions: `dashboard-widget: Capell\DashboardReports\Manifest\DashboardReportsDashboardWidgetsContribution`.
+- Manifest contributions: `dashboard-widget: Capell\DashboardReports\Manifest\DashboardReportsDashboardFilamentWidgetsContribution`.
 - Health checks: `Capell\DashboardReports\Health\DashboardReportsHealthCheck`.
 - Blade views: `packages/dashboard-reports/resources/views/widgets/content-health.blade.php`.
 

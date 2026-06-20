@@ -13,7 +13,7 @@ use Capell\LoginAudit\Extenders\LoginAuditUserSchemaExtender;
 use Capell\LoginAudit\Filament\Extenders\LoginAuditAdminPanelExtender;
 use Capell\LoginAudit\Filament\Resources\LoginAudits\LoginAuditResource;
 use Capell\LoginAudit\Filament\Settings\Contributors\LoginAuditDashboardSettingsContributor;
-use Capell\LoginAudit\Filament\Widgets\LoginAuditsWidget;
+use Capell\LoginAudit\Filament\Widgets\LoginAuditsFilamentWidget;
 
 final class LoginAuditAdminBridge implements AdminBridge
 {
@@ -27,7 +27,7 @@ final class LoginAuditAdminBridge implements AdminBridge
         $registrar->schemaExtender(LoginAuditUserSchemaExtender::class, UserSchemaExtender::TAG);
         $registrar->panelExtender(LoginAuditAdminPanelExtender::class);
         $registrar->resource(LoginAuditResource::class, group: 'LoginAudit');
-        $registrar->dashboardWidget(LoginAuditsWidget::class, DashboardEnum::SystemHealth);
+        $registrar->filamentDashboardWidget(LoginAuditsFilamentWidget::class, DashboardEnum::SystemHealth);
 
         $registrar->dashboardSettingsContributor(LoginAuditDashboardSettingsContributor::class);
     }

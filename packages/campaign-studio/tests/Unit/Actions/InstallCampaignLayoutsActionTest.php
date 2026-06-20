@@ -15,7 +15,7 @@ it('installs campaign layouts with layout-builder compatible widget references',
 
     expect($result)->toBe(['created' => 3, 'updated' => 0, 'skipped' => 0])
         ->and($containers)->toHaveKeys(['hero', 'proof', 'form'])
-        ->and($containers['hero']['widgets'][0])->toMatchArray([
+        ->and($containers['hero']['layout_widgets'][0])->toMatchArray([
             'widget_key' => 'campaign-lead-generation-campaign-hero',
             'occurrence' => 1,
         ])

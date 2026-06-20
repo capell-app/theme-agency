@@ -7,7 +7,7 @@ use Capell\LoginAudit\Bridges\LoginAuditAdminBridge;
 use Capell\LoginAudit\Filament\Extenders\LoginAuditAdminPanelExtender;
 use Capell\LoginAudit\Filament\Resources\LoginAudits\LoginAuditResource;
 use Capell\LoginAudit\Filament\Settings\Contributors\LoginAuditDashboardSettingsContributor;
-use Capell\LoginAudit\Filament\Widgets\LoginAuditsWidget;
+use Capell\LoginAudit\Filament\Widgets\LoginAuditsFilamentWidget;
 use Capell\LoginAudit\Http\Middleware\AdminActivityMiddleware;
 use Capell\LoginAudit\Models\LoginAudit;
 use Filament\Panel;
@@ -31,7 +31,7 @@ it('declares login audit resource labels and pages', function (): void {
 });
 
 it('builds login audit widget table metadata and missing-authenticatable row state', function (): void {
-    $widget = (new ReflectionClass(LoginAuditsWidget::class))->newInstanceWithoutConstructor();
+    $widget = (new ReflectionClass(LoginAuditsFilamentWidget::class))->newInstanceWithoutConstructor();
 
     expect(invokeLoginAuditsWidgetMethod($widget, 'getTableQuery')->getModel())->toBeInstanceOf(LoginAudit::class)
         ->and(invokeLoginAuditsWidgetMethod($widget, 'getTableColumns'))->toHaveCount(1)
@@ -57,9 +57,9 @@ it('registers authentication log plugin and admin activity middleware on panels'
 /**
  * @param  list<mixed>  $parameters
  */
-function invokeLoginAuditsWidgetMethod(LoginAuditsWidget $widget, string $methodName, array $parameters = []): mixed
+function invokeLoginAuditsWidgetMethod(LoginAuditsFilamentWidget $widget, string $methodName, array $parameters = []): mixed
 {
-    $reflectionMethod = new ReflectionMethod(LoginAuditsWidget::class, $methodName);
+    $reflectionMethod = new ReflectionMethod(LoginAuditsFilamentWidget::class, $methodName);
 
     return $reflectionMethod->invokeArgs($widget, $parameters);
 }

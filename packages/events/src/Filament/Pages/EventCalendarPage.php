@@ -6,7 +6,7 @@ namespace Capell\Events\Filament\Pages;
 
 use BackedEnum;
 use BezhanSalleh\FilamentShield\Traits\HasPageShield;
-use Capell\Events\Filament\Widgets\EventCalendarWidget;
+use Capell\Events\Filament\Widgets\EventCalendarFilamentWidget;
 use Filament\Pages\Page;
 use Filament\Support\Icons\Heroicon;
 use Filament\Widgets\Widget;
@@ -61,7 +61,7 @@ class EventCalendarPage extends Page
     protected function getHeaderWidgets(): array
     {
         return [
-            EventCalendarWidget::class,
+            EventCalendarFilamentWidget::class,
         ];
     }
 }

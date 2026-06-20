@@ -66,22 +66,22 @@
         {
             "type": "dashboard-widget",
             "class": "Capell\\Diagnostics\\Manifest\\SiteHealthWidgetContribution",
-            "widgetClass": "Capell\\Diagnostics\\Filament\\Widgets\\Health\\SiteHealthWidgetAbstract"
+            "widgetClass": "Capell\\Diagnostics\\Filament\\Widgets\\Health\\SiteHealthFilamentWidget"
         },
         {
             "type": "dashboard-widget",
             "class": "Capell\\Diagnostics\\Manifest\\SystemHealthWidgetsContribution",
             "widgetClasses": [
-                "Capell\\Diagnostics\\Filament\\Widgets\\Health\\SetupHealthWidgetAbstract",
-                "Capell\\Diagnostics\\Filament\\Widgets\\Health\\AlertsWidgetAbstract",
-                "Capell\\Diagnostics\\Filament\\Widgets\\Health\\ContentHealthWidgetAbstract",
-                "Capell\\Diagnostics\\Filament\\Widgets\\Health\\ContentGraphHealthWidgetAbstract",
-                "Capell\\Diagnostics\\Filament\\Widgets\\Health\\RegistryHealthWidgetAbstract",
-                "Capell\\Diagnostics\\Filament\\Widgets\\Health\\MigrationsHealthWidgetAbstract",
-                "Capell\\Diagnostics\\Filament\\Widgets\\Health\\PackagesInstalledWidgetAbstract",
-                "Capell\\Diagnostics\\Filament\\Widgets\\Health\\ConfigDriftWidgetAbstract",
-                "Capell\\Diagnostics\\Filament\\Widgets\\Health\\CacheHealthWidgetAbstract",
-                "Capell\\Diagnostics\\Filament\\Widgets\\Health\\TailwindBuildStatusWidgetAbstract"
+                "Capell\\Diagnostics\\Filament\\Widgets\\Health\\SetupHealthFilamentWidget",
+                "Capell\\Diagnostics\\Filament\\Widgets\\Health\\AlertsFilamentWidget",
+                "Capell\\Diagnostics\\Filament\\Widgets\\Health\\ContentHealthFilamentWidget",
+                "Capell\\Diagnostics\\Filament\\Widgets\\Health\\ContentGraphHealthFilamentWidget",
+                "Capell\\Diagnostics\\Filament\\Widgets\\Health\\RegistryHealthFilamentWidget",
+                "Capell\\Diagnostics\\Filament\\Widgets\\Health\\MigrationsHealthFilamentWidget",
+                "Capell\\Diagnostics\\Filament\\Widgets\\Health\\PackagesInstalledFilamentWidget",
+                "Capell\\Diagnostics\\Filament\\Widgets\\Health\\ConfigDriftFilamentWidget",
+                "Capell\\Diagnostics\\Filament\\Widgets\\Health\\CacheHealthFilamentWidget",
+                "Capell\\Diagnostics\\Filament\\Widgets\\Health\\TailwindBuildStatusFilamentWidget"
             ]
         }
     ],

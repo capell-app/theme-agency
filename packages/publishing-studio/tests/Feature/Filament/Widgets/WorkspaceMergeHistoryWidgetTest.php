@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Capell\PublishingStudio\Filament\Widgets\WorkspaceMergeHistoryWidgetAbstract as WorkspaceMergeHistoryWidget;
+use Capell\PublishingStudio\Filament\Widgets\WorkspaceMergeHistoryFilamentWidget as WorkspaceMergeHistoryWidget;
 use Capell\Tests\Support\Concerns\CreatesAdminUser;
 
 use function Pest\Livewire\livewire;

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 use Capell\Core\Contracts\Extensions\ChecksExtensionHealth;
 use Capell\Core\Contracts\Extensions\ExtensionContribution;
+use Capell\Core\Contracts\Extensions\RegistersExtensionFilamentWidget;
 use Capell\Core\Contracts\Extensions\RegistersExtensionSetting;
-use Capell\Core\Contracts\Extensions\RegistersExtensionWidget;
 use Capell\Core\Contracts\Extensions\RunsScheduledExtensionJob;
 use Capell\Core\Models\Page;
 use Capell\SeoSuite\Actions\BuildCrawlerPreviewReportAction;
@@ -30,12 +30,12 @@ use Capell\SeoSuite\Filament\Pages\NotFoundUrlsPage;
 use Capell\SeoSuite\Filament\Pages\SearchRankingsPage;
 use Capell\SeoSuite\Filament\Pages\SeoAuditPage;
 use Capell\SeoSuite\Filament\Pages\TranslationCoveragePage;
-use Capell\SeoSuite\Filament\Widgets\AiDiscoveryCoverageWidget;
-use Capell\SeoSuite\Filament\Widgets\SearchConsoleOverviewWidget;
-use Capell\SeoSuite\Filament\Widgets\SearchIntelligenceWidget;
-use Capell\SeoSuite\Filament\Widgets\SearchMovementWidget;
-use Capell\SeoSuite\Filament\Widgets\SeoOpportunitiesWidget;
-use Capell\SeoSuite\Filament\Widgets\TopSearchPagesWidget;
+use Capell\SeoSuite\Filament\Widgets\AiDiscoveryCoverageFilamentWidget;
+use Capell\SeoSuite\Filament\Widgets\SearchConsoleOverviewFilamentWidget;
+use Capell\SeoSuite\Filament\Widgets\SearchIntelligenceFilamentWidget;
+use Capell\SeoSuite\Filament\Widgets\SearchMovementFilamentWidget;
+use Capell\SeoSuite\Filament\Widgets\SeoOpportunitiesFilamentWidget;
+use Capell\SeoSuite\Filament\Widgets\TopSearchPagesFilamentWidget;
 use Capell\SeoSuite\Health\SeoSuiteHealthCheck;
 use Capell\SeoSuite\Manifest\AiDiscoveryPageContribution;
 use Capell\SeoSuite\Manifest\AiDiscoveryRoutesContribution;
@@ -44,7 +44,7 @@ use Capell\SeoSuite\Manifest\NotFoundUrlsPageContribution;
 use Capell\SeoSuite\Manifest\SearchRankingsPageContribution;
 use Capell\SeoSuite\Manifest\SeoAuditPageContribution;
 use Capell\SeoSuite\Manifest\SeoSuiteConsoleCommandsContribution;
-use Capell\SeoSuite\Manifest\SeoSuiteDashboardWidgetsContribution;
+use Capell\SeoSuite\Manifest\SeoSuiteDashboardFilamentWidgetsContribution;
 use Capell\SeoSuite\Manifest\SeoSuiteHealthContribution;
 use Capell\SeoSuite\Manifest\SeoSuiteModelsContribution;
 use Capell\SeoSuite\Manifest\SeoSuitePageSpeedScheduleContribution;
@@ -248,14 +248,14 @@ it('declares implemented admin pages routes and no longer defers core seo suite 
         ])
         ->and($contributes)->toContain([
             'type' => 'dashboard-widget',
-            'class' => SeoSuiteDashboardWidgetsContribution::class,
+            'class' => SeoSuiteDashboardFilamentWidgetsContribution::class,
             'widgetClasses' => [
-                SearchConsoleOverviewWidget::class,
-                TopSearchPagesWidget::class,
-                SearchMovementWidget::class,
-                SeoOpportunitiesWidget::class,
-                SearchIntelligenceWidget::class,
-                AiDiscoveryCoverageWidget::class,
+                SearchConsoleOverviewFilamentWidget::class,
+                TopSearchPagesFilamentWidget::class,
+                SearchMovementFilamentWidget::class,
+                SeoOpportunitiesFilamentWidget::class,
+                SearchIntelligenceFilamentWidget::class,
+                AiDiscoveryCoverageFilamentWidget::class,
             ],
         ])
         ->and($contributes)->toContain([
@@ -316,7 +316,7 @@ it('declares implemented admin pages routes and no longer defers core seo suite 
         expect(is_string($class) ? class_implements($class) : [])->toContain(ExtensionContribution::class);
     }
 
-    expect(class_implements(SeoSuiteDashboardWidgetsContribution::class))->toContain(RegistersExtensionWidget::class)
+    expect(class_implements(SeoSuiteDashboardFilamentWidgetsContribution::class))->toContain(RegistersExtensionFilamentWidget::class)
         ->and(class_implements(SeoSuitePageSpeedScheduleContribution::class))->toContain(RunsScheduledExtensionJob::class)
         ->and(class_implements(SeoSuiteSettingsContribution::class))->toContain(RegistersExtensionSetting::class)
         ->and(class_implements(SeoSuiteHealthContribution::class))->toContain(ChecksExtensionHealth::class);

@@ -142,7 +142,7 @@ it('builds package-owned admin configurator schemas for representative workflows
     'campaign cta widget' => [
         CampaignCtaWidgetWidgetConfigurator::class,
         ['edit'],
-        ['meta.cta_widget_id'],
+        ['meta.cta_layout_widget_id'],
     ],
     'campaign hero widget' => [
         CampaignHeroWidgetConfigurator::class,

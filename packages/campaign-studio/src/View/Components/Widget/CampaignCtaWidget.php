@@ -47,7 +47,7 @@ class CampaignCtaWidget extends Component
     public static function hydrateWidgets(Collection $widgets): void
     {
         $ctaWidgetIds = $widgets
-            ->map(fn (Widget $widget): mixed => $widget->getMeta('cta_widget_id'))
+            ->map(fn (Widget $widget): mixed => $widget->getMeta('cta_layout_widget_id'))
             ->filter(fn (mixed $id): bool => is_numeric($id))
             ->map(fn (mixed $id): int => (int) $id)
             ->unique()
@@ -76,7 +76,7 @@ class CampaignCtaWidget extends Component
             ->keyBy(fn (CampaignCtaWidgetModel $ctaWidget): int => (int) $ctaWidget->getKey());
 
         $widgets->each(function (Widget $widget) use ($ctaWidgets): void {
-            $ctaWidgetId = $widget->getMeta('cta_widget_id');
+            $ctaWidgetId = $widget->getMeta('cta_layout_widget_id');
 
             $widget->setRelation(
                 'campaignCtaWidget',

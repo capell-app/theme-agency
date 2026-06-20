@@ -5,11 +5,11 @@ declare(strict_types=1);
 use Capell\Core\Contracts\Extensions\ChecksExtensionHealth;
 use Capell\Core\Contracts\Extensions\ExtensionContribution;
 use Capell\Core\Contracts\Extensions\RegistersExtensionAdminResource;
+use Capell\Core\Contracts\Extensions\RegistersExtensionFilamentWidget;
 use Capell\Core\Contracts\Extensions\RegistersExtensionFrontendComponent;
 use Capell\Core\Contracts\Extensions\RegistersExtensionPageType;
 use Capell\Core\Contracts\Extensions\RegistersExtensionRenderHook;
 use Capell\Core\Contracts\Extensions\RegistersExtensionRoute;
-use Capell\Core\Contracts\Extensions\RegistersExtensionWidget;
 use Capell\Core\Contracts\Extensions\RunsExtensionMigration;
 use Capell\Core\Contracts\Extensions\RunsScheduledExtensionJob;
 use Capell\Core\Support\Manifest\ManifestValidator;
@@ -22,7 +22,7 @@ use Capell\Events\Filament\Resources\Events\EventResource;
 use Capell\Events\Filament\Resources\Occurrences\EventOccurrenceResource;
 use Capell\Events\Filament\Resources\Registrations\EventRegistrationResource;
 use Capell\Events\Filament\Resources\Venues\EventVenueResource;
-use Capell\Events\Filament\Widgets\EventCalendarWidget;
+use Capell\Events\Filament\Widgets\EventCalendarFilamentWidget;
 use Capell\Events\Health\EventsHealthCheck;
 use Capell\Events\Livewire\EventCalendar;
 use Capell\Events\Livewire\Page\EventsCalendarPage;
@@ -30,7 +30,7 @@ use Capell\Events\Livewire\Page\EventsListingPage;
 use Capell\Events\Manifest\EventsAdminPageContribution;
 use Capell\Events\Manifest\EventsAdminResourcesContribution;
 use Capell\Events\Manifest\EventsConsoleCommandsContribution;
-use Capell\Events\Manifest\EventsDashboardWidgetsContribution;
+use Capell\Events\Manifest\EventsDashboardFilamentWidgetsContribution;
 use Capell\Events\Manifest\EventsFrontendComponentsContribution;
 use Capell\Events\Manifest\EventsMigrationsContribution;
 use Capell\Events\Manifest\EventsModelsContribution;
@@ -86,8 +86,8 @@ it('declares shipped events package contribution surfaces', function (): void {
             ],
             [
                 'type' => 'dashboard-widget',
-                'class' => EventsDashboardWidgetsContribution::class,
-                'widgetClass' => EventCalendarWidget::class,
+                'class' => EventsDashboardFilamentWidgetsContribution::class,
+                'widgetClass' => EventCalendarFilamentWidget::class,
             ],
             [
                 'type' => 'model',
@@ -192,7 +192,7 @@ it('declares shipped events package contribution surfaces', function (): void {
 it('uses contribution contracts that match the manifest contribution types', function (): void {
     expect(class_implements(EventsAdminPageContribution::class))->toContain(ExtensionContribution::class)
         ->and(class_implements(EventsAdminResourcesContribution::class))->toContain(RegistersExtensionAdminResource::class)
-        ->and(class_implements(EventsDashboardWidgetsContribution::class))->toContain(RegistersExtensionWidget::class)
+        ->and(class_implements(EventsDashboardFilamentWidgetsContribution::class))->toContain(RegistersExtensionFilamentWidget::class)
         ->and(class_implements(EventsModelsContribution::class))->toContain(ExtensionContribution::class)
         ->and(class_implements(EventsPageTypesContribution::class))->toContain(RegistersExtensionPageType::class)
         ->and(class_implements(EventsFrontendComponentsContribution::class))->toContain(RegistersExtensionFrontendComponent::class)

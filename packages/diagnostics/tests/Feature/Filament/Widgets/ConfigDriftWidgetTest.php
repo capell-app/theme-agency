@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 use Capell\Admin\Enums\DashboardEnum;
 use Capell\Admin\Facades\CapellAdmin;
-use Capell\Diagnostics\Filament\Widgets\Health\ConfigDriftWidgetAbstract as ConfigDriftWidget;
+use Capell\Diagnostics\Filament\Widgets\Health\ConfigDriftFilamentWidget as ConfigDriftWidget;
 use Capell\Tests\Support\Concerns\CreatesAdminUser;
 
 use function Pest\Livewire\livewire;
@@ -19,7 +19,7 @@ beforeEach(function (): void {
 });
 
 it('is registered on the system health dashboard', function (): void {
-    expect(CapellAdmin::getDashboardWidgets(DashboardEnum::SystemHealth))
+    expect(CapellAdmin::getDashboardFilamentWidgets(DashboardEnum::SystemHealth))
         ->toContain(ConfigDriftWidget::class);
 });
 
