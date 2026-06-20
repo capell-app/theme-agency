@@ -1,0 +1,156 @@
+{
+    "manifest-version": 3,
+    "name": "capell-app/theme-motion-archive",
+    "slug": "theme-motion-archive",
+    "displayName": "Theme Motion Archive",
+    "kind": "theme",
+    "capellApiVersion": "^4.0",
+    "version": "4.x-dev",
+    "description": "Motion Archive extends the default Capell frontend with a digital-awards archive direction, portable demo content, cache-safe public Blade rendering, and theme tokens tuned for muted grey pages, black typography, condensed headings, left-side date filters, winner lists, featured project panels, jury and score explainers, sharp media frames, technical labels, credits, technology stacks, awards, media galleries, and historical links.",
+    "product": {
+        "group": "Capell Themes",
+        "tier": "premium",
+        "bundle": "themes"
+    },
+    "namespace": "Capell\\ThemeStudio\\MotionArchive",
+    "surfaces": ["frontend"],
+    "dependencies": {
+        "requires": ["capell-app/core", "capell-app/frontend"],
+        "supports": [
+            "capell-app/blog",
+            "capell-app/form-builder",
+            "capell-app/newsletter",
+            "capell-app/shopify-commerce"
+        ],
+        "conflicts": []
+    },
+    "providers": {
+        "metadata": [],
+        "install": [],
+        "runtime": [
+            "Capell\\ThemeStudio\\MotionArchive\\MotionArchiveThemeServiceProvider"
+        ],
+        "admin": [],
+        "frontend": []
+    },
+    "contributes": [
+        {
+            "type": "admin-page",
+            "class": "Capell\\ThemeStudio\\MotionArchive\\Manifest\\ThemeManagementPageContribution",
+            "pageClass": "Capell\\Marketplace\\Filament\\Pages\\ThemeExtensionPage",
+            "pageParameters": {
+                "themeKey": "motion-archive"
+            },
+            "labelKey": "capell-marketplace::marketplace.theme_extension.management_entry_label"
+        }
+    ],
+    "database": {
+        "migrations": false,
+        "settings": false,
+        "requiredTables": []
+    },
+    "commands": {
+        "install": null,
+        "setup": null,
+        "demo": "capell:theme-motion-archive-demo",
+        "demoParams": ["url", "languages", "sites"],
+        "doctor": null
+    },
+    "settings": [],
+    "permissions": [],
+    "capabilities": ["theme-motion-archive", "theme-motion-archive-frontend"],
+    "security": {
+        "riskTier": "low",
+        "publicSurface": {
+            "routeNames": [],
+            "auth": "none",
+            "csrfExemptRoutes": [],
+            "signedRoutes": [],
+            "tokenizedRoutes": [],
+            "webhookRoutes": [],
+            "throttledRoutes": []
+        },
+        "sensitiveData": {
+            "encryptedFields": [],
+            "hashedTokenFields": [],
+            "redactedOutputClasses": [],
+            "plaintextJustifications": []
+        },
+        "publicOutput": {
+            "cacheSafe": true,
+            "forbidAuthoringSurface": true,
+            "forbidSecrets": true,
+            "forbidPublicBladeQueries": true
+        },
+        "externalHttpClients": {
+            "requiresTimeouts": false,
+            "requiresSecretRedaction": false,
+            "clients": []
+        },
+        "adminSurface": {
+            "authorization": "none",
+            "permissions": []
+        }
+    },
+    "performance": {
+        "frontendRenderBudgetMs": 20,
+        "adminQueryBudget": 0,
+        "cacheTags": ["theme-motion-archive"],
+        "cacheSafety": {
+            "cacheable": false,
+            "variesBy": ["site", "locale"],
+            "sensitiveOutput": false,
+            "invalidationSources": [],
+            "queueInvalidation": false
+        }
+    },
+    "healthChecks": [
+        {
+            "key": "theme-motion-archive.package-health",
+            "label": "Motion Archive package surfaces, providers, and install health are discoverable by Diagnostics.",
+            "class": "Capell\\ThemeStudio\\MotionArchive\\Health\\ThemeMotionArchiveHealthCheck",
+            "severity": "critical",
+            "surface": "frontend"
+        }
+    ],
+    "commercial": {
+        "proposedLicense": "paid",
+        "requestedCertification": "first-party",
+        "supportPolicy": "priority",
+        "privateDocsRequested": true
+    },
+    "marketplace": {
+        "summary": "An industrial Capell theme for digital-awards archives with date filters, winner lists, featured project panels, jury scores, technical labels, media galleries, and credits.",
+        "description": "Motion Archive provides a distinct theme definition, demo command, marketplace metadata, and public-safe Blade views for motion-heavy awards archives that need month and year filters, winner lists, featured project panels, jury and score explanations, rectangular media frames, small numeric counters, technical labels, synopsis copy, credits, technology stacks, awards, media galleries, and next or previous project links.",
+        "screenshots": [
+            {
+                "path": "docs/screenshots/motion-archive-homepage.png",
+                "alt": "Motion Archive homepage preview",
+                "caption": "Motion Archive Homepage"
+            },
+            {
+                "path": "docs/screenshots/motion-archive-landing.png",
+                "alt": "Motion Archive landing page preview",
+                "caption": "Motion Archive Landing page"
+            },
+            {
+                "path": "docs/screenshots/motion-archive-listing.png",
+                "alt": "Motion Archive list page preview",
+                "caption": "Motion Archive Winner archive"
+            },
+            {
+                "path": "docs/screenshots/motion-archive-search.png",
+                "alt": "Motion Archive search results preview",
+                "caption": "Motion Archive Search results"
+            },
+            {
+                "path": "docs/screenshots/motion-archive-contact.png",
+                "alt": "Motion Archive contact form preview",
+                "caption": "Motion Archive Contact form"
+            }
+        ],
+        "categories": ["frontend", "themes"]
+    },
+    "extends": "default",
+    "themeKey": "motion-archive"
+}

@@ -1,0 +1,53 @@
+{
+    "name": "capell-app/theme-motion-archive",
+    "description": "Motion Archive is a first-party Capell theme for digital-awards archives with date filters, winner lists, featured project panels, jury score explainers, sharp media frames, credits, technology stacks, awards, and historical links.",
+    "type": "library",
+    "license": "MIT",
+    "require": {
+        "php": "^8.3",
+        "capell-app/core": "^4.0 || 4.x-dev",
+        "capell-app/frontend": "^4.0 || 4.x-dev"
+    },
+    "require-dev": {
+        "pestphp/pest": "^3.0|^4.0",
+        "phpunit/phpunit": "^10.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Capell\\ThemeStudio\\MotionArchive\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Capell\\ThemeStudio\\MotionArchive\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Capell\\ThemeStudio\\MotionArchive\\MotionArchiveThemeServiceProvider"
+            ]
+        },
+        "branch-alias": {
+            "dev-main": "4.x-dev"
+        }
+    },
+    "homepage": "https://github.com/capell-app/theme-motion-archive",
+    "keywords": [
+        "capell",
+        "cms",
+        "laravel",
+        "theme"
+    ],
+    "authors": [
+        {
+            "name": "Capell Team",
+            "email": "team@capell.app",
+            "role": "Developer"
+        }
+    ],
+    "support": {
+        "source": "https://github.com/capell-app/capell-packages",
+        "docs": "https://docs.capell.app/packages/theme-motion-archive"
+    }
+}

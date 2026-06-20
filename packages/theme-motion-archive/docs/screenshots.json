@@ -1,0 +1,79 @@
+{
+    "package": "theme-motion-archive",
+    "composerName": "capell-app/theme-motion-archive",
+    "generatedFor": "deployment-screenshot-runner",
+    "requiresInstalledPackage": true,
+    "outputDirectory": "packages/theme-motion-archive/docs/screenshots",
+    "entries": [
+        {
+            "id": "motion-archive-homepage",
+            "title": "Motion Archive Homepage",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-motion-archive/docs/screenshots/motion-archive-homepage.png",
+            "required": false,
+            "user": false,
+            "notes": "Homepage with archive hero, date filter rail, winner list, featured project, jury score explainer, media credits, and newsletter paths.",
+            "useCase": "Motion Archive preview",
+            "package": "theme-motion-archive"
+        },
+        {
+            "id": "motion-archive-landing-page",
+            "title": "Motion Archive Landing page",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-motion-archive/docs/screenshots/motion-archive-landing.png",
+            "required": false,
+            "user": false,
+            "notes": "Feature page for project synopsis, credits, technology stack, awards, score table, media gallery, and next or previous links.",
+            "useCase": "Motion Archive feature preview",
+            "package": "theme-motion-archive"
+        },
+        {
+            "id": "motion-archive-list-page",
+            "title": "Motion Archive Winner archive",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-motion-archive/docs/screenshots/motion-archive-listing.png",
+            "required": false,
+            "user": false,
+            "notes": "Archive page for years, months, winners, nominees, categories, jury rounds, technology stacks, awards, and media types.",
+            "useCase": "Motion Archive archive preview",
+            "package": "theme-motion-archive"
+        },
+        {
+            "id": "motion-archive-search-results",
+            "title": "Motion Archive Search results",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-motion-archive/docs/screenshots/motion-archive-search.png",
+            "required": false,
+            "user": false,
+            "notes": "Search results for winners, projects, credits, technology labels, awards, dates, scores, media, and archive periods.",
+            "useCase": "Motion Archive discovery preview",
+            "package": "theme-motion-archive"
+        },
+        {
+            "id": "motion-archive-contact-form",
+            "title": "Motion Archive Contact form",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-motion-archive/docs/screenshots/motion-archive-contact.png",
+            "required": false,
+            "user": false,
+            "notes": "Newsletter signup, project submission, jury update, award inquiry, credits correction, or archive contact form.",
+            "useCase": "Motion Archive conversion preview",
+            "package": "theme-motion-archive"
+        }
+    ]
+}
