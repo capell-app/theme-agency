@@ -126,7 +126,7 @@ it('resolves package-owned filament resource metadata forms and tables', functio
                 'model' => $className::getModel(),
                 'pages' => $className::getPages(),
                 'relations' => $className::getRelations(),
-                'layout_widgets' => $className::getWidgets(),
+                'widgets' => $className::getWidgets(),
                 'navigation_label' => $className::getNavigationLabel(),
                 'model_label' => $className::getModelLabel(),
                 'plural_model_label' => $className::getPluralModelLabel(),
@@ -147,7 +147,7 @@ it('resolves package-owned filament resource metadata forms and tables', functio
             expect($metadata['model'])->toBeString()
                 ->and($metadata['pages'])->toBeArray()
                 ->and($metadata['relations'])->toBeArray()
-                ->and($metadata['layout_widgets'])->toBeArray()
+                ->and($metadata['widgets'])->toBeArray()
                 ->and($metadata['navigation_label'])->toBeString()
                 ->and($metadata['model_label'])->toBeString()
                 ->and($metadata['plural_model_label'])->toBeString();

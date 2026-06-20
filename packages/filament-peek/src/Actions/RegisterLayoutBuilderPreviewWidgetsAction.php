@@ -58,7 +58,7 @@ final class RegisterLayoutBuilderPreviewWidgetsAction
                 continue;
             }
 
-            foreach (LayoutWidgetData::normalizeMany($container['layout_widgets'] ?? []) as $widgetIndex => $widgetData) {
+            foreach (LayoutWidgetData::normalizeMany($container['widgets'] ?? []) as $widgetIndex => $widgetData) {
                 $widgetKey = LayoutWidgetData::key($widgetData);
 
                 if ($widgetKey === null) {
@@ -109,7 +109,7 @@ final class RegisterLayoutBuilderPreviewWidgetsAction
     {
         return collect($containers)
             ->filter(fn (mixed $container): bool => is_array($container))
-            ->flatMap(fn (array $container): array => LayoutWidgetData::normalizeMany($container['layout_widgets'] ?? []))
+            ->flatMap(fn (array $container): array => LayoutWidgetData::normalizeMany($container['widgets'] ?? []))
             ->map(static fn (array $widgetData): ?string => LayoutWidgetData::key($widgetData))
             ->filter()
             ->unique()

@@ -155,7 +155,7 @@ it('mounts the livewire pages widget around selected page assets', function (): 
     $layout = Layout::factory()->site($site)->create([
         'containers' => [
             'main' => [
-                'layout_widgets' => [
+                'widgets' => [
                     ['widget_key' => 'selected-pages'],
                 ],
             ],

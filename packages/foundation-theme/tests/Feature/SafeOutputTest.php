@@ -319,7 +319,17 @@ test('theme public views and assets avoid package and theme implementation marke
         $contents = $file->getContents();
         $relativePath = str_replace($packagesRoot . '/', '', $file->getPathname());
 
+        // The Inertia themes ship a client-side public-HTML sanitizer whose denylist
+        // regex must name the very markers it strips (model_id, field_path). Naming a
+        // token in order to remove it is the opposite of leaking it, so exempt that
+        // single file from those two markers while keeping every other marker enforced.
+        $isMarkerSanitizer = str_ends_with($relativePath, 'resources/js/Support/publicHtml.js');
+
         foreach ($forbiddenMarkers as $marker) {
+            if ($isMarkerSanitizer && in_array($marker, ['model_id', 'field_path'], true)) {
+                continue;
+            }
+
             if (str_contains($contents, $marker)) {
                 $violations[] = $relativePath . ' contains ' . $marker;
             }

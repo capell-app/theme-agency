@@ -153,7 +153,7 @@ final class InstallCampaignLayoutsAction
             }
 
             $containers[$containerKey] = [
-                'layout_widgets' => [],
+                'widgets' => [],
                 'meta' => [
                     'container' => $containerDefinition['width'] ?? null,
                 ],
@@ -179,7 +179,7 @@ final class InstallCampaignLayoutsAction
                 continue;
             }
 
-            $containers[$containerKey]['layout_widgets'][] = [
+            $containers[$containerKey]['widgets'][] = [
                 'widget_key' => $widgets[$widgetType]->key,
                 'occurrence' => 1,
             ];

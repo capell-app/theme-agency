@@ -375,7 +375,7 @@ abstract class AbstractWidget extends Component
             'occurrence' => $this->occurrence,
         ];
 
-        foreach (LayoutWidgetData::normalizeMany($this->containerData()['layout_widgets'] ?? []) as $layoutWidgetData) {
+        foreach (LayoutWidgetData::normalizeMany($this->containerData()['widgets'] ?? []) as $layoutWidgetData) {
             if (
                 LayoutWidgetData::key($layoutWidgetData) === $this->widgetKey
                 && LayoutWidgetData::occurrence($layoutWidgetData) === $this->occurrence

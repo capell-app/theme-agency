@@ -15,11 +15,11 @@ function foundationThemeSetupMainContainer(Layout $layout): array
     $containers = $layout->containers;
     $main = is_array($containers) ? ($containers['main'] ?? null) : null;
     $meta = is_array($main) && is_array($main['meta'] ?? null) ? $main['meta'] : null;
-    $widgets = is_array($main) && is_array($main['layout_widgets'] ?? null) ? $main['layout_widgets'] : null;
+    $widgets = is_array($main) && is_array($main['widgets'] ?? null) ? $main['widgets'] : null;
 
     throw_if(! is_array($meta) || ! is_array($widgets), RuntimeException::class, 'Expected the foundation home layout to have a main container.');
 
-    return ['meta' => $meta, 'layout_widgets' => $widgets];
+    return ['meta' => $meta, 'widgets' => $widgets];
 }
 
 it('installs Foundation theme layout defaults without owning the home hero', function (): void {
@@ -39,7 +39,7 @@ it('installs Foundation theme layout defaults without owning the home hero', fun
     expect($homeLayout->containers)->not->toHaveKey('hero')
         ->and($homeLayout->containers)->toHaveKey('main')
         ->and($mainContainer['meta']['colspan'] ?? null)->toBe(12)
-        ->and($mainContainer['layout_widgets'])->toBe([
+        ->and($mainContainer['widgets'])->toBe([
             ['widget_key' => 'page-content'],
         ])
         ->and($homeLayout->widgets)->toBe(['page-content'])
@@ -52,7 +52,7 @@ it('keeps home page content defaults stable on repeated setup', function (): voi
         ->update([
             'containers' => [
                 'hero' => [
-                    'layout_widgets' => [
+                    'widgets' => [
                         ['widget_key' => 'hero'],
                     ],
                 ],
@@ -70,7 +70,7 @@ it('keeps home page content defaults stable on repeated setup', function (): voi
         ->and($containers)->toHaveKey('main')
         ->and(array_keys($containers))->toBe(['hero', 'main'])
         ->and($mainContainer['meta']['colspan'] ?? null)->toBe(12)
-        ->and($mainContainer['layout_widgets'])->toBe([
+        ->and($mainContainer['widgets'])->toBe([
             ['widget_key' => 'page-content'],
         ])
         ->and($homeLayout->widgets)->toBe(['hero', 'page-content']);
@@ -85,13 +85,13 @@ it('repairs custom page layouts that are missing page content without inserting 
         'group' => 'default',
         'containers' => [
             'hero' => [
-                'layout_widgets' => [
+                'widgets' => [
                     ['widget_key' => 'hero'],
                 ],
             ],
             'main' => [
                 'meta' => ['colspan' => 12],
-                'layout_widgets' => [
+                'widgets' => [
                     ['widget_key' => 'custom-feature'],
                 ],
             ],

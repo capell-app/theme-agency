@@ -44,7 +44,7 @@ class InertiaBookingsThemeRenderer implements ThemeRenderer
                     'containers' => [
                         [
                             'key' => 'theme-sections',
-                            'layout_widgets' => $this->widgets($page),
+                            'widgets' => $this->widgets($page),
                         ],
                     ],
                 ],

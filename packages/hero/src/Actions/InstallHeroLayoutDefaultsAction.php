@@ -70,7 +70,7 @@ final class InstallHeroLayoutDefaultsAction
                         'colspan' => 12,
                         'container' => ContainerWidthEnum::Full,
                     ],
-                    'layout_widgets' => [
+                    'widgets' => [
                         ['widget_key' => $heroWidget->key],
                     ],
                 ],
@@ -100,9 +100,9 @@ final class InstallHeroLayoutDefaultsAction
             $main = [];
         }
 
-        $main['layout_widgets'] = [
+        $main['widgets'] = [
             ['widget_key' => 'page-content'],
-            ...(is_array($main['layout_widgets'] ?? null) ? $main['layout_widgets'] : []),
+            ...(is_array($main['widgets'] ?? null) ? $main['widgets'] : []),
         ];
 
         $containers['main'] = $main;
@@ -159,7 +159,7 @@ final class InstallHeroLayoutDefaultsAction
         return [
             'main' => [
                 ...$main,
-                'layout_widgets' => [
+                'widgets' => [
                     ['widget_key' => 'page-content'],
                 ],
             ],
