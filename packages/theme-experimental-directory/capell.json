@@ -1,0 +1,159 @@
+{
+    "manifest-version": 3,
+    "name": "capell-app/theme-experimental-directory",
+    "slug": "theme-experimental-directory",
+    "displayName": "Theme Experimental Directory",
+    "kind": "theme",
+    "capellApiVersion": "^4.0",
+    "version": "4.x-dev",
+    "description": "Experimental Directory extends the default Capell frontend with a creative industry directory direction, portable demo content, cache-safe public Blade rendering, and theme tokens tuned for pale neutral pages, confident black text, tight grid rules, oversized project titles, compact metadata, status badges, large image-led feature blocks, latest submissions, winners, collections, profiles, resources, sponsor modules, score chips, and metadata reveals.",
+    "product": {
+        "group": "Capell Themes",
+        "tier": "premium",
+        "bundle": "themes"
+    },
+    "namespace": "Capell\\ThemeStudio\\ExperimentalDirectory",
+    "surfaces": ["frontend"],
+    "dependencies": {
+        "requires": ["capell-app/core", "capell-app/frontend"],
+        "supports": [
+            "capell-app/blog",
+            "capell-app/form-builder",
+            "capell-app/newsletter",
+            "capell-app/shopify-commerce"
+        ],
+        "conflicts": []
+    },
+    "providers": {
+        "metadata": [],
+        "install": [],
+        "runtime": [
+            "Capell\\ThemeStudio\\ExperimentalDirectory\\ExperimentalDirectoryThemeServiceProvider"
+        ],
+        "admin": [],
+        "frontend": []
+    },
+    "contributes": [
+        {
+            "type": "admin-page",
+            "class": "Capell\\ThemeStudio\\ExperimentalDirectory\\Manifest\\ThemeManagementPageContribution",
+            "pageClass": "Capell\\Marketplace\\Filament\\Pages\\ThemeExtensionPage",
+            "pageParameters": {
+                "themeKey": "experimental-directory"
+            },
+            "labelKey": "capell-marketplace::marketplace.theme_extension.management_entry_label"
+        }
+    ],
+    "database": {
+        "migrations": false,
+        "settings": false,
+        "requiredTables": []
+    },
+    "commands": {
+        "install": null,
+        "setup": null,
+        "demo": "capell:theme-experimental-directory-demo",
+        "demoParams": ["url", "languages", "sites"],
+        "doctor": null
+    },
+    "settings": [],
+    "permissions": [],
+    "capabilities": [
+        "theme-experimental-directory",
+        "theme-experimental-directory-frontend"
+    ],
+    "security": {
+        "riskTier": "low",
+        "publicSurface": {
+            "routeNames": [],
+            "auth": "none",
+            "csrfExemptRoutes": [],
+            "signedRoutes": [],
+            "tokenizedRoutes": [],
+            "webhookRoutes": [],
+            "throttledRoutes": []
+        },
+        "sensitiveData": {
+            "encryptedFields": [],
+            "hashedTokenFields": [],
+            "redactedOutputClasses": [],
+            "plaintextJustifications": []
+        },
+        "publicOutput": {
+            "cacheSafe": true,
+            "forbidAuthoringSurface": true,
+            "forbidSecrets": true,
+            "forbidPublicBladeQueries": true
+        },
+        "externalHttpClients": {
+            "requiresTimeouts": false,
+            "requiresSecretRedaction": false,
+            "clients": []
+        },
+        "adminSurface": {
+            "authorization": "none",
+            "permissions": []
+        }
+    },
+    "performance": {
+        "frontendRenderBudgetMs": 20,
+        "adminQueryBudget": 0,
+        "cacheTags": ["theme-experimental-directory"],
+        "cacheSafety": {
+            "cacheable": false,
+            "variesBy": ["site", "locale"],
+            "sensitiveOutput": false,
+            "invalidationSources": [],
+            "queueInvalidation": false
+        }
+    },
+    "healthChecks": [
+        {
+            "key": "theme-experimental-directory.package-health",
+            "label": "Experimental Directory package surfaces, providers, and install health are discoverable by Diagnostics.",
+            "class": "Capell\\ThemeStudio\\ExperimentalDirectory\\Health\\ThemeExperimentalDirectoryHealthCheck",
+            "severity": "critical",
+            "surface": "frontend"
+        }
+    ],
+    "commercial": {
+        "proposedLicense": "paid",
+        "requestedCertification": "first-party",
+        "supportPolicy": "priority",
+        "privateDocsRequested": true
+    },
+    "marketplace": {
+        "summary": "A tight Capell theme for creative industry directories with featured-today modules, large project slabs, submissions, winners, collections, profiles, resources, sponsors, and metadata badges.",
+        "description": "Experimental Directory provides a distinct theme definition, demo command, marketplace metadata, and public-safe Blade views for creative directories that need a featured-today hero, latest submissions, winners, collections, profiles, resources, sponsor modules, oversized project titles, compact metadata, status badges, country and category labels, score chips, quick filters, image slabs, list rows, profile tiles, hover metadata reveals, and detail pages with galleries and related projects.",
+        "screenshots": [
+            {
+                "path": "docs/screenshots/experimental-directory-homepage.png",
+                "alt": "Experimental Directory homepage preview",
+                "caption": "Experimental Directory Homepage"
+            },
+            {
+                "path": "docs/screenshots/experimental-directory-landing.png",
+                "alt": "Experimental Directory landing page preview",
+                "caption": "Experimental Directory Landing page"
+            },
+            {
+                "path": "docs/screenshots/experimental-directory-listing.png",
+                "alt": "Experimental Directory list page preview",
+                "caption": "Experimental Directory Project archive"
+            },
+            {
+                "path": "docs/screenshots/experimental-directory-search.png",
+                "alt": "Experimental Directory search results preview",
+                "caption": "Experimental Directory Search results"
+            },
+            {
+                "path": "docs/screenshots/experimental-directory-contact.png",
+                "alt": "Experimental Directory contact form preview",
+                "caption": "Experimental Directory Contact form"
+            }
+        ],
+        "categories": ["frontend", "themes"]
+    },
+    "extends": "default",
+    "themeKey": "experimental-directory"
+}

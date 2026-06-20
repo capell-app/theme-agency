@@ -1,0 +1,79 @@
+{
+    "package": "theme-experimental-directory",
+    "composerName": "capell-app/theme-experimental-directory",
+    "generatedFor": "deployment-screenshot-runner",
+    "requiresInstalledPackage": true,
+    "outputDirectory": "packages/theme-experimental-directory/docs/screenshots",
+    "entries": [
+        {
+            "id": "experimental-directory-homepage",
+            "title": "Experimental Directory Homepage",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-experimental-directory/docs/screenshots/experimental-directory-homepage.png",
+            "required": false,
+            "user": false,
+            "notes": "Homepage with featured-today hero, metadata filters, latest submissions, winners, collections, profiles, resources, sponsor modules, and newsletter paths.",
+            "useCase": "Experimental Directory preview",
+            "package": "theme-experimental-directory"
+        },
+        {
+            "id": "experimental-directory-landing-page",
+            "title": "Experimental Directory Landing page",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-experimental-directory/docs/screenshots/experimental-directory-landing.png",
+            "required": false,
+            "user": false,
+            "notes": "Feature page for oversized project title, image slab, compact metadata, status badge, project gallery, credits, and related entries.",
+            "useCase": "Experimental Directory feature preview",
+            "package": "theme-experimental-directory"
+        },
+        {
+            "id": "experimental-directory-list-page",
+            "title": "Experimental Directory Project archive",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-experimental-directory/docs/screenshots/experimental-directory-listing.png",
+            "required": false,
+            "user": false,
+            "notes": "Archive page for latest submissions, winners, collections, profiles, resources, sponsors, categories, countries, score chips, and statuses.",
+            "useCase": "Experimental Directory archive preview",
+            "package": "theme-experimental-directory"
+        },
+        {
+            "id": "experimental-directory-search-results",
+            "title": "Experimental Directory Search results",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-experimental-directory/docs/screenshots/experimental-directory-search.png",
+            "required": false,
+            "user": false,
+            "notes": "Search results for projects, studios, countries, categories, mediums, statuses, winners, collections, profiles, and resources.",
+            "useCase": "Experimental Directory discovery preview",
+            "package": "theme-experimental-directory"
+        },
+        {
+            "id": "experimental-directory-contact-form",
+            "title": "Experimental Directory Contact form",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-experimental-directory/docs/screenshots/experimental-directory-contact.png",
+            "required": false,
+            "user": false,
+            "notes": "Newsletter signup, project submission, sponsor inquiry, profile update, resource suggestion, or directory contact form.",
+            "useCase": "Experimental Directory conversion preview",
+            "package": "theme-experimental-directory"
+        }
+    ]
+}
