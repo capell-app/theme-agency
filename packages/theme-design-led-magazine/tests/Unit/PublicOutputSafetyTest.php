@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-function premiumProductStoryThemeBladeViews(): string
+function designLedMagazineThemeBladeViews(): string
 {
     $paths = array_values(array_unique(array_merge(
         glob(__DIR__ . '/../../resources/views/*.blade.php') ?: [],
@@ -13,7 +13,7 @@ function premiumProductStoryThemeBladeViews(): string
 }
 
 it('keeps public Blade free of authoring or package metadata', function (): void {
-    $publicOutput = premiumProductStoryThemeBladeViews();
+    $publicOutput = designLedMagazineThemeBladeViews();
 
     expect($publicOutput)
         ->not->toContain('capell-app/theme-design-led-magazine')
@@ -31,7 +31,7 @@ it('keeps public Blade free of authoring or package metadata', function (): void
 });
 
 it('keeps public Blade free of database query calls', function (): void {
-    expect(premiumProductStoryThemeBladeViews())
+    expect(designLedMagazineThemeBladeViews())
         ->not->toContain('::query(')
         ->not->toContain('DB::')
         ->not->toContain('loadMissing(')

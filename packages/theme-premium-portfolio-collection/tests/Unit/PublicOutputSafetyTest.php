@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-function premiumProductStoryThemeBladeViews(): string
+function premiumPortfolioCollectionThemeBladeViews(): string
 {
     $paths = array_values(array_unique(array_merge(
         glob(__DIR__ . '/../../resources/views/*.blade.php') ?: [],
@@ -13,7 +13,7 @@ function premiumProductStoryThemeBladeViews(): string
 }
 
 it('keeps public Blade free of authoring or package metadata', function (): void {
-    $publicOutput = premiumProductStoryThemeBladeViews();
+    $publicOutput = premiumPortfolioCollectionThemeBladeViews();
 
     expect($publicOutput)
         ->not->toContain('capell-app/theme-premium-portfolio-collection')
@@ -31,7 +31,7 @@ it('keeps public Blade free of authoring or package metadata', function (): void
 });
 
 it('keeps public Blade free of database query calls', function (): void {
-    expect(premiumProductStoryThemeBladeViews())
+    expect(premiumPortfolioCollectionThemeBladeViews())
         ->not->toContain('::query(')
         ->not->toContain('DB::')
         ->not->toContain('loadMissing(')
