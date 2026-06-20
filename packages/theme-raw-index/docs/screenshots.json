@@ -1,0 +1,79 @@
+{
+    "package": "theme-raw-index",
+    "composerName": "capell-app/theme-raw-index",
+    "generatedFor": "deployment-screenshot-runner",
+    "requiresInstalledPackage": true,
+    "outputDirectory": "packages/theme-raw-index/docs/screenshots",
+    "entries": [
+        {
+            "id": "raw-index-homepage",
+            "title": "Raw Index Homepage",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-raw-index/docs/screenshots/raw-index-homepage.png",
+            "required": false,
+            "user": false,
+            "notes": "Homepage with raw archive wall, underlined links, submission route, interview markers, archive dates, zine annotations, and RSS or newsletter paths.",
+            "useCase": "Raw Index preview",
+            "package": "theme-raw-index"
+        },
+        {
+            "id": "raw-index-landing-page",
+            "title": "Raw Index Landing page",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-raw-index/docs/screenshots/raw-index-landing.png",
+            "required": false,
+            "user": false,
+            "notes": "Feature page for long index entries, irregular media, submission notes, interview labels, sponsor markers, language notes, or corrections.",
+            "useCase": "Raw Index feature preview",
+            "package": "theme-raw-index"
+        },
+        {
+            "id": "raw-index-list-page",
+            "title": "Raw Index Archive",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-raw-index/docs/screenshots/raw-index-listing.png",
+            "required": false,
+            "user": false,
+            "notes": "Archive page for dates, markers, interviews, submissions, language labels, sponsor notes, issue numbers, or source collections.",
+            "useCase": "Raw Index archive preview",
+            "package": "theme-raw-index"
+        },
+        {
+            "id": "raw-index-search-results",
+            "title": "Raw Index Search results",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-raw-index/docs/screenshots/raw-index-search.png",
+            "required": false,
+            "user": false,
+            "notes": "Search results for archive entries, dates, markers, languages, interviews, issue notes, annotations, and direct links.",
+            "useCase": "Raw Index discovery preview",
+            "package": "theme-raw-index"
+        },
+        {
+            "id": "raw-index-contact-form",
+            "title": "Raw Index Contact form",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-raw-index/docs/screenshots/raw-index-contact.png",
+            "required": false,
+            "user": false,
+            "notes": "Newsletter signup, RSS prompt, submission form, correction note, sponsor inquiry, or archive contact form.",
+            "useCase": "Raw Index conversion preview",
+            "package": "theme-raw-index"
+        }
+    ]
+}
