@@ -1,0 +1,159 @@
+{
+    "manifest-version": 3,
+    "name": "capell-app/theme-minimal-curation-feed",
+    "slug": "theme-minimal-curation-feed",
+    "displayName": "Theme Minimal Curation Feed",
+    "kind": "theme",
+    "capellApiVersion": "^4.0",
+    "version": "4.x-dev",
+    "description": "Minimal Curation Feed extends the default Capell frontend with a calm daily curation direction, portable demo content, cache-safe public Blade rendering, and theme tokens tuned for white pages, system sans typography, hairline borders, tiny labels, loose masonry columns, screenshot cards, maker/source/rating/platform metadata, live update indicators, category tabs, search, newsletter signup, best-of lists, latest feeds, apps, websites, and icons.",
+    "product": {
+        "group": "Capell Themes",
+        "tier": "premium",
+        "bundle": "themes"
+    },
+    "namespace": "Capell\\ThemeStudio\\MinimalCurationFeed",
+    "surfaces": ["frontend"],
+    "dependencies": {
+        "requires": ["capell-app/core", "capell-app/frontend"],
+        "supports": [
+            "capell-app/blog",
+            "capell-app/form-builder",
+            "capell-app/newsletter",
+            "capell-app/shopify-commerce"
+        ],
+        "conflicts": []
+    },
+    "providers": {
+        "metadata": [],
+        "install": [],
+        "runtime": [
+            "Capell\\ThemeStudio\\MinimalCurationFeed\\MinimalCurationFeedThemeServiceProvider"
+        ],
+        "admin": [],
+        "frontend": []
+    },
+    "contributes": [
+        {
+            "type": "admin-page",
+            "class": "Capell\\ThemeStudio\\MinimalCurationFeed\\Manifest\\ThemeManagementPageContribution",
+            "pageClass": "Capell\\Marketplace\\Filament\\Pages\\ThemeExtensionPage",
+            "pageParameters": {
+                "themeKey": "minimal-curation-feed"
+            },
+            "labelKey": "capell-marketplace::marketplace.theme_extension.management_entry_label"
+        }
+    ],
+    "database": {
+        "migrations": false,
+        "settings": false,
+        "requiredTables": []
+    },
+    "commands": {
+        "install": null,
+        "setup": null,
+        "demo": "capell:theme-minimal-curation-feed-demo",
+        "demoParams": ["url", "languages", "sites"],
+        "doctor": null
+    },
+    "settings": [],
+    "permissions": [],
+    "capabilities": [
+        "theme-minimal-curation-feed",
+        "theme-minimal-curation-feed-frontend"
+    ],
+    "security": {
+        "riskTier": "low",
+        "publicSurface": {
+            "routeNames": [],
+            "auth": "none",
+            "csrfExemptRoutes": [],
+            "signedRoutes": [],
+            "tokenizedRoutes": [],
+            "webhookRoutes": [],
+            "throttledRoutes": []
+        },
+        "sensitiveData": {
+            "encryptedFields": [],
+            "hashedTokenFields": [],
+            "redactedOutputClasses": [],
+            "plaintextJustifications": []
+        },
+        "publicOutput": {
+            "cacheSafe": true,
+            "forbidAuthoringSurface": true,
+            "forbidSecrets": true,
+            "forbidPublicBladeQueries": true
+        },
+        "externalHttpClients": {
+            "requiresTimeouts": false,
+            "requiresSecretRedaction": false,
+            "clients": []
+        },
+        "adminSurface": {
+            "authorization": "none",
+            "permissions": []
+        }
+    },
+    "performance": {
+        "frontendRenderBudgetMs": 20,
+        "adminQueryBudget": 0,
+        "cacheTags": ["theme-minimal-curation-feed"],
+        "cacheSafety": {
+            "cacheable": false,
+            "variesBy": ["site", "locale"],
+            "sensitiveOutput": false,
+            "invalidationSources": [],
+            "queueInvalidation": false
+        }
+    },
+    "healthChecks": [
+        {
+            "key": "theme-minimal-curation-feed.package-health",
+            "label": "Minimal Curation Feed package surfaces, providers, and install health are discoverable by Diagnostics.",
+            "class": "Capell\\ThemeStudio\\MinimalCurationFeed\\Health\\ThemeMinimalCurationFeedHealthCheck",
+            "severity": "critical",
+            "surface": "frontend"
+        }
+    ],
+    "commercial": {
+        "proposedLicense": "paid",
+        "requestedCertification": "first-party",
+        "supportPolicy": "priority",
+        "privateDocsRequested": true
+    },
+    "marketplace": {
+        "summary": "A minimal Capell theme for daily inspiration feeds with screenshots, app and website references, icon views, tiny labels, category tabs, search, and newsletter signup.",
+        "description": "Minimal Curation Feed provides a distinct theme definition, demo command, marketplace metadata, and public-safe Blade views for curation sites that need a short hero, live update indicator, category tabs, search, newsletter signup, screenshot cards, maker/source/rating/platform metadata, topic tags, best-of views, latest feeds, apps, websites, icons, and infinite-feed-friendly archive pages.",
+        "screenshots": [
+            {
+                "path": "docs/screenshots/minimal-curation-feed-homepage.png",
+                "alt": "Minimal Curation Feed homepage preview",
+                "caption": "Minimal Curation Feed Homepage"
+            },
+            {
+                "path": "docs/screenshots/minimal-curation-feed-landing.png",
+                "alt": "Minimal Curation Feed landing page preview",
+                "caption": "Minimal Curation Feed Landing page"
+            },
+            {
+                "path": "docs/screenshots/minimal-curation-feed-listing.png",
+                "alt": "Minimal Curation Feed list page preview",
+                "caption": "Minimal Curation Feed Latest feed"
+            },
+            {
+                "path": "docs/screenshots/minimal-curation-feed-search.png",
+                "alt": "Minimal Curation Feed search results preview",
+                "caption": "Minimal Curation Feed Search results"
+            },
+            {
+                "path": "docs/screenshots/minimal-curation-feed-contact.png",
+                "alt": "Minimal Curation Feed contact form preview",
+                "caption": "Minimal Curation Feed Contact form"
+            }
+        ],
+        "categories": ["frontend", "themes"]
+    },
+    "extends": "default",
+    "themeKey": "minimal-curation-feed"
+}
