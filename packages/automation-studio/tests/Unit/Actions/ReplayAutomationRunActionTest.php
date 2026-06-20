@@ -24,7 +24,7 @@ it('replays a failed automation run as a new persisted attempt', function (): vo
         {
             return new AutomationActionResultData(
                 success: true,
-                message: 'Replayed ' . (string) ($event->payload['email'] ?? ''),
+                message: 'Replayed ' . (is_string($event->payload['email'] ?? null) ? $event->payload['email'] : ''),
                 context: ['replayed_action' => $action->key],
             );
         }
@@ -47,7 +47,7 @@ it('replays a failed automation run as a new persisted attempt', function (): vo
         ->and($results[0]->message)->toBe('Replayed person@example.test')
         ->and($replayedRun->status)->toBe(AutomationRunStatus::Succeeded)
         ->and($replayedRun->attempt_number)->toBe(2)
-        ->and($replayedRun->idempotency_key)->toBe('replay:' . $run->getKey() . ':2:lead-nurture:send-thank-you')
+        ->and($replayedRun->idempotency_key)->toBe('replay:' . $run->id . ':2:lead-nurture:send-thank-you')
         ->and($replayedRun->payload)->toMatchArray(['email' => 'person@example.test']);
 });
 

@@ -15,7 +15,7 @@ final class ThemeDemoMedia
     }
 
     /**
-     * @return array{hero: array<int, string>, listing: array<int, string>, detail: array<int, string>, proof: array<int, string>, contact: array<int, string>, cta: array<int, string>}
+     * @return array{hero: list<string>, listing: list<string>, detail: list<string>, proof: list<string>, contact: list<string>, cta: list<string>}
      */
     public static function groupedForTheme(string $themeKey): array
     {
@@ -30,8 +30,8 @@ final class ThemeDemoMedia
     }
 
     /**
-     * @param  array{hero: array<int, string>, listing: array<int, string>, detail: array<int, string>, proof: array<int, string>, contact: array<int, string>, cta: array<int, string>}  $media
-     * @return array{hero: array<int, string>, listing: array<int, string>, detail: array<int, string>, proof: array<int, string>, contact: array<int, string>, cta: array<int, string>}
+     * @param  array{hero: list<string>, listing: list<string>, detail: list<string>, proof: list<string>, contact: list<string>, cta: list<string>}  $media
+     * @return array{hero: list<string>, listing: list<string>, detail: list<string>, proof: list<string>, contact: list<string>, cta: list<string>}
      */
     private static function withMinimumPreviewMedia(array $media): array
     {
@@ -51,7 +51,7 @@ final class ThemeDemoMedia
     }
 
     /**
-     * @return array<string, array{hero: array<int, string>, listing: array<int, string>, detail: array<int, string>, proof: array<int, string>, contact: array<int, string>, cta: array<int, string>}>
+     * @return array<string, array{hero: list<string>, listing: list<string>, detail: list<string>, proof: list<string>, contact: list<string>, cta: list<string>}>
      */
     private static function catalogue(): array
     {

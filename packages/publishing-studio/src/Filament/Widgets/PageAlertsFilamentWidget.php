@@ -9,7 +9,7 @@ use Capell\Admin\Enums\AlertTypeEnum;
 use Capell\Admin\Enums\ResourceEnum;
 use Capell\Admin\Filament\Resources\Pages\PageResource;
 use Capell\Admin\Filament\Resources\Sites\SiteResource;
-use Capell\Admin\Filament\Widgets\ResourceAlertsWidget;
+use Capell\Admin\Filament\Widgets\ResourceAlertsFilamentWidget;
 use Capell\Core\Actions\GetResourceFromBlueprintAction;
 use Capell\Core\Contracts\Pageable;
 use Capell\Core\Enums\PublishStatusEnum;
@@ -24,7 +24,7 @@ use Filament\Support\Enums\Size;
 use Illuminate\Contracts\Database\Eloquent\Builder as BuilderContract;
 use Illuminate\Support\Collection;
 
-class PageAlertsFilamentWidget extends ResourceAlertsWidget
+class PageAlertsFilamentWidget extends ResourceAlertsFilamentWidget
 {
     public ?Pageable $record = null;
 

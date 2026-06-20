@@ -182,5 +182,7 @@ it('declares the shipped access gate package manifest surfaces', function (): vo
         ->and(class_implements(PaidAccessCheckoutCreationContribution::class))->toContain(ExtensionContribution::class)
         ->and(class_implements(AccessGateHealthContribution::class))->toContain(ChecksExtensionHealth::class);
 
-    expect(__('capell-access-gate::filament.widgets.pending_access_requests'))->toBe('Pending access requests');
+    $filamentTranslations = require $packagePath . '/resources/lang/en/filament.php';
+
+    expect(data_get($filamentTranslations, 'widgets.pending_access_requests'))->toBe('Pending access requests');
 });

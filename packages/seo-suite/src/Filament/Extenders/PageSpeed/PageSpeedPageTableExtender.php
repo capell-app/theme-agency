@@ -137,7 +137,7 @@ final class PageSpeedPageTableExtender implements PageTableExtender
                     ->filter(fn (mixed $record): bool => $record instanceof Page)
                     ->each(function (Page $page) use ($strategies, $requestedBy): void {
                         dispatch(new RunPageSpeedAuditJob(
-                            pageId: (int) $page->getKey(),
+                            pageId: $page->id,
                             strategies: $strategies,
                             requestedBy: $requestedBy,
                         ));

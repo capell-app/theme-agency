@@ -19,6 +19,8 @@ use Capell\Bookings\Models\BookingStaffMember;
 use Capell\Bookings\Providers\BookingsServiceProvider;
 use Carbon\CarbonImmutable;
 use Illuminate\Http\Request;
+use Illuminate\Session\ArraySessionHandler;
+use Illuminate\Session\Store;
 use Illuminate\Support\Facades\Route;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -260,7 +262,7 @@ it('stores public appointment requests through the booking action', function ():
 
 it('normalizes public booking success state without exposing model identifiers', function (): void {
     $request = Request::create('/bookings');
-    $request->setLaravelSession(app('session')->driver());
+    $request->setLaravelSession(new Store('test', new ArraySessionHandler(30)));
     $request->session()->flash('booking_request_success', [
         'submitted' => true,
         'status' => 'received',

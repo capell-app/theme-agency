@@ -9,7 +9,6 @@ use Capell\Core\Models\Language;
 use Capell\Core\Models\Layout;
 use Capell\Core\Models\Media;
 use Capell\Core\Models\Page;
-use Capell\Core\Models\PageUrl;
 use Capell\Core\Models\Site;
 use Capell\Core\Models\SiteDomain;
 use Capell\Core\Models\Theme;
@@ -174,11 +173,6 @@ it('mounts the livewire pages widget around selected page assets', function (): 
         ->published()
         ->withTranslations($language, ['title' => 'Selected page'], slug: 'selected-livewire-page')
         ->create();
-    PageUrl::factory()
-        ->page($selectedPage)
-        ->site($site)
-        ->language($language)
-        ->create(['url' => '/selected-livewire-page']);
     $widget = Widget::factory()->create([
         'key' => 'selected-pages',
         'meta' => [

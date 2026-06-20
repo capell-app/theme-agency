@@ -15,6 +15,9 @@ use Capell\Core\Models\Translation;
 use Capell\Frontend\Data\FrontendRenderContextData;
 use Lorisleiva\Actions\Concerns\AsObject;
 
+/**
+ * @method static array<string, mixed> run(FrontendRenderContextData $context)
+ */
 class BuildInertiaPagePropsAction
 {
     use AsObject;

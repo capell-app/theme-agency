@@ -54,9 +54,9 @@ final class AutomationRunResource extends Resource
                     ->visible(fn (AutomationRun $record): bool => ReplayAutomationRunAction::make()->canReplay($record))
                     ->requiresConfirmation()
                     ->action(function (AutomationRun $record): void {
-                        $results = ReplayAutomationRunAction::run($record);
+                        $results = ReplayAutomationRunAction::make()->handle($record);
                         $success = collect($results)->every(
-                            static fn (mixed $result): bool => $result instanceof AutomationActionResultData && $result->success,
+                            static fn (AutomationActionResultData $result): bool => $result->success,
                         );
 
                         $notification = Notification::make('automation-studio-run-replayed')

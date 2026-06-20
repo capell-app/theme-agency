@@ -17,6 +17,10 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Override;
 
 /**
+ * @property int $id
+ * @property int|null $site_id
+ * @property string $key
+ * @property string $name
  * @property AutomationTriggerType $trigger_type
  * @property AutomationRuleStatus $status
  * @property array<int|string, mixed>|null $conditions

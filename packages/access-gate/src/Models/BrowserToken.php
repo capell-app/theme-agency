@@ -25,6 +25,8 @@ use Override;
  * @property CarbonInterface|null $last_used_at
  * @property CarbonInterface|null $revoked_at
  * @property array<array-key, mixed>|null $metadata
+ * @property CarbonInterface|null $created_at
+ * @property CarbonInterface|null $updated_at
  * @property-read Grant|null $grant
  */
 class BrowserToken extends AccessGateModel

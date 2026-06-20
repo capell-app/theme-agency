@@ -17,6 +17,7 @@ use Illuminate\Support\Str;
 use Override;
 
 /**
+ * @property int $id
  * @property int $site_id
  * @property string|null $owner_type
  * @property int|null $owner_id

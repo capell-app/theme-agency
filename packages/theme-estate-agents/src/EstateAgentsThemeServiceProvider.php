@@ -125,7 +125,7 @@ final class EstateAgentsThemeServiceProvider extends ServiceProvider
 
     private function loadScreenshotFixtureRoutes(): void
     {
-        if (filter_var(env('CAPELL_THEME_ESTATE_AGENTS_SCREENSHOT_FIXTURES_ENABLED', false), FILTER_VALIDATE_BOOL) !== true) {
+        if (filter_var(getenv('CAPELL_THEME_ESTATE_AGENTS_SCREENSHOT_FIXTURES_ENABLED'), FILTER_VALIDATE_BOOL) !== true) {
             return;
         }
 

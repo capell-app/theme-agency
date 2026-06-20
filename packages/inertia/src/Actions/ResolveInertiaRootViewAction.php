@@ -6,6 +6,9 @@ namespace Capell\Inertia\Actions;
 
 use Lorisleiva\Actions\Concerns\AsObject;
 
+/**
+ * @method static string run(mixed $configuredRootView = null)
+ */
 final class ResolveInertiaRootViewAction
 {
     use AsObject;

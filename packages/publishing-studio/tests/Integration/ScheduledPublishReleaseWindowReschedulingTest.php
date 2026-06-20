@@ -80,15 +80,15 @@ it('reschedules a closed-window scheduled publish to the next window open instea
     $processedBeforeReopen = RunDueSchedulerEventsAction::run();
 
     expect($processedBeforeReopen)->toBe(0)
-        ->and($workspace->fresh()->status)->toBe(WorkspaceStatusEnum::Scheduled);
+        ->and($workspace->refresh()->status)->toBe(WorkspaceStatusEnum::Scheduled);
 
     // Once the window reopens (Monday 09:00) the deferred publish fires.
     CarbonImmutable::setTestNow(CarbonImmutable::parse('2026-04-20 09:30:00', 'UTC'));
 
     RunDueSchedulerEventsAction::run();
 
-    $publishedEvent = $publishEvent->fresh();
+    $publishedEvent = $publishEvent->refresh();
 
     expect($publishedEvent->state)->toBe(SchedulerEventStateEnum::Executed)
-        ->and($workspace->fresh()->status)->toBe(WorkspaceStatusEnum::Published);
+        ->and($workspace->refresh()->status)->toBe(WorkspaceStatusEnum::Published);
 });

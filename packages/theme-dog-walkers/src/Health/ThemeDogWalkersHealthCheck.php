@@ -195,7 +195,7 @@ final class ThemeDogWalkersHealthCheck implements ChecksExtensionHealth
             $issues[] = 'Frontend surface is not declared.';
         }
 
-        $runtimeProviders = $manifest['providers']['runtime'] ?? [];
+        $runtimeProviders = data_get($manifest, 'providers.runtime', []);
 
         if (! is_array($runtimeProviders) || ! in_array(DogWalkersThemeServiceProvider::class, $runtimeProviders, true)) {
             $issues[] = 'Runtime provider is not declared.';
@@ -209,11 +209,15 @@ final class ThemeDogWalkersHealthCheck implements ChecksExtensionHealth
             $issues[] = 'Health check class is not declared.';
         }
 
-        if (! is_string($manifest['marketplace']['summary'] ?? null) || $manifest['marketplace']['summary'] === '') {
+        $marketplaceSummary = data_get($manifest, 'marketplace.summary');
+
+        if (! is_string($marketplaceSummary) || $marketplaceSummary === '') {
             $issues[] = 'Marketplace summary is missing.';
         }
 
-        if (! is_string($manifest['marketplace']['description'] ?? null) || $manifest['marketplace']['description'] === '') {
+        $marketplaceDescription = data_get($manifest, 'marketplace.description');
+
+        if (! is_string($marketplaceDescription) || $marketplaceDescription === '') {
             $issues[] = 'Marketplace description is missing.';
         }
 
@@ -268,7 +272,19 @@ final class ThemeDogWalkersHealthCheck implements ChecksExtensionHealth
             return null;
         }
 
-        return is_array($manifest) ? $manifest : null;
+        if (! is_array($manifest)) {
+            return null;
+        }
+
+        $stringKeyedManifest = [];
+
+        foreach ($manifest as $key => $value) {
+            if (is_string($key)) {
+                $stringKeyedManifest[$key] = $value;
+            }
+        }
+
+        return $stringKeyedManifest;
     }
 
     /**
@@ -277,7 +293,7 @@ final class ThemeDogWalkersHealthCheck implements ChecksExtensionHealth
      */
     private function marketplaceScreenshotPaths(array $manifest): array
     {
-        $screenshots = $manifest['marketplace']['screenshots'] ?? [];
+        $screenshots = data_get($manifest, 'marketplace.screenshots', []);
 
         if (! is_array($screenshots)) {
             return [];

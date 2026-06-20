@@ -107,7 +107,12 @@ it('exposes ai discovery table columns, filters, row actions, and bulk actions',
 
 it('exposes page speed bulk audit actions for selected pages', function (): void {
     $actions = collect((new PageSpeedPageTableExtender)->getBulkActions())
-        ->keyBy(fn (BulkAction $action): string => $action->getName());
+        ->keyBy(function (BulkAction $action): string {
+            $name = $action->getName();
+            throw_unless(is_string($name), RuntimeException::class, 'Expected a named bulk action.');
+
+            return $name;
+        });
 
     expect($actions->keys()->all())->toBe([
         'run-mobile-page-speed',
@@ -274,10 +279,14 @@ it('configures and drives ai discovery table actions through profile workflows',
     evaluateSeoSuiteTableAction($includeAction, $page->fresh());
     expect($profile->refresh()->include_in_ai_index)->toBeTrue();
 
-    evaluateSeoSuiteBulkAction($bulkExcludeAction, new EloquentCollection([$page->fresh()]));
+    $excludeRecord = $page->fresh();
+    throw_unless($excludeRecord instanceof Page, RuntimeException::class, 'Expected a refreshed page record.');
+    evaluateSeoSuiteBulkAction($bulkExcludeAction, new EloquentCollection([$excludeRecord]));
     expect($profile->refresh()->include_in_ai_index)->toBeFalse();
 
-    evaluateSeoSuiteBulkAction($bulkIncludeAction, new EloquentCollection([$page->fresh()]));
+    $includeRecord = $page->fresh();
+    throw_unless($includeRecord instanceof Page, RuntimeException::class, 'Expected a refreshed page record.');
+    evaluateSeoSuiteBulkAction($bulkIncludeAction, new EloquentCollection([$includeRecord]));
     expect($profile->refresh()->include_in_ai_index)->toBeTrue();
 });
 

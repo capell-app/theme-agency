@@ -41,7 +41,7 @@ final class ListAutomationRules extends ListRecords
                         ->valueLabel(__('capell-automation-studio::generic.dry_run.payload_value')),
                 ])
                 ->action(function (array $data): void {
-                    $results = DryRunAutomationRulesAction::run(new AutomationTriggerEventData(
+                    $results = DryRunAutomationRulesAction::make()->handle(new AutomationTriggerEventData(
                         triggerType: AutomationTriggerType::from((string) $data['trigger_type']),
                         sourceType: 'automation-studio.dry-run',
                         payload: $this->payloadFromFormData($data['payload'] ?? []),

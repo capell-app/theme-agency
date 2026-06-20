@@ -5,6 +5,7 @@ declare(strict_types=1);
 require_once __DIR__ . '/../Pest.php';
 
 use Capell\Bookings\Actions\InstallBookingsDemoAction;
+use Capell\Bookings\Console\InstallBookingsDemoCommand;
 use Capell\Bookings\Models\AppointmentRequest;
 use Capell\Bookings\Models\BookingAvailabilityWindow;
 use Capell\Bookings\Models\BookingLocation;
@@ -36,9 +37,9 @@ it('installs idempotent bookings demo fixtures', function (): void {
 it('registers and runs the bookings demo command', function (): void {
     expect(Artisan::all())->toHaveKey('capell:bookings-demo');
 
-    $this->artisan('capell:bookings-demo')
-        ->assertSuccessful();
+    $exitCode = Artisan::call('capell:bookings-demo');
 
-    expect(BookingService::query()->where('name', 'Demo consultation')->exists())->toBeTrue()
+    expect($exitCode)->toBe(InstallBookingsDemoCommand::SUCCESS)
+        ->and(BookingService::query()->where('name', 'Demo consultation')->exists())->toBeTrue()
         ->and(AppointmentRequest::query()->where('source', 'bookings-demo')->exists())->toBeTrue();
 });

@@ -26,7 +26,7 @@ final class EquestrianClinicsPortalProvider implements PortalDashboardItemProvid
     public function profileFor(PortalAccount $portalAccount): PortalProfileData
     {
         return new PortalProfileData(
-            accountId: (int) $portalAccount->getKey(),
+            accountId: (int) $portalAccount->id,
             siteId: (int) $portalAccount->site_id,
             email: null,
             displayName: null,
@@ -35,7 +35,7 @@ final class EquestrianClinicsPortalProvider implements PortalDashboardItemProvid
                 'equestrian' => [
                     'riders' => $this->riders($portalAccount)
                         ->map(fn (EquestrianRiderProfile $riderProfile): array => [
-                            'id' => (int) $riderProfile->getKey(),
+                            'id' => (int) $riderProfile->id,
                             'name' => $riderProfile->name,
                             'skill_tiers' => $riderProfile->skill_tiers ?? [],
                             'cash_approved' => $riderProfile->isCashApproved(),
@@ -44,7 +44,7 @@ final class EquestrianClinicsPortalProvider implements PortalDashboardItemProvid
                         ->all(),
                     'horses' => $this->horses($portalAccount)
                         ->map(fn (EquestrianHorseProfile $horseProfile): array => [
-                            'id' => (int) $horseProfile->getKey(),
+                            'id' => (int) $horseProfile->id,
                             'name' => $horseProfile->name,
                             'fitness_status' => $horseProfile->fitness_status,
                             'vaccinated_until' => $horseProfile->vaccinated_until?->toDateString(),
@@ -176,22 +176,27 @@ final class EquestrianClinicsPortalProvider implements PortalDashboardItemProvid
      */
     private function riderItems(PortalAccount $portalAccount): array
     {
-        return $this->riders($portalAccount)
-            ->map(fn (EquestrianRiderProfile $riderProfile): PortalSelfServiceItemData => new PortalSelfServiceItemData(
-                key: 'equestrian-clinics.rider.' . $riderProfile->getKey(),
-                type: PortalSelfServiceItemType::GatedResource,
-                label: $riderProfile->name,
-                description: __('capell-equestrian-clinics::package.portal.rider_profile_description'),
-                status: $riderProfile->isCashApproved()
-                    ? __('capell-equestrian-clinics::package.portal.cash_approved')
-                    : null,
-                meta: [
-                    'rider_profile_id' => (int) $riderProfile->getKey(),
-                    'skill_tiers' => $riderProfile->skill_tiers ?? [],
-                ],
-            ))
-            ->values()
-            ->all();
+        return array_values(
+            $this->riders($portalAccount)
+                ->map(function (EquestrianRiderProfile $riderProfile): PortalSelfServiceItemData {
+                    $cashApprovedLabel = __('capell-equestrian-clinics::package.portal.cash_approved');
+
+                    return new PortalSelfServiceItemData(
+                        key: 'equestrian-clinics.rider.' . $riderProfile->id,
+                        type: PortalSelfServiceItemType::GatedResource,
+                        label: $riderProfile->name,
+                        description: __('capell-equestrian-clinics::package.portal.rider_profile_description'),
+                        status: $riderProfile->isCashApproved() && is_string($cashApprovedLabel)
+                            ? $cashApprovedLabel
+                            : null,
+                        meta: [
+                            'rider_profile_id' => (int) $riderProfile->id,
+                            'skill_tiers' => $riderProfile->skill_tiers ?? [],
+                        ],
+                    );
+                })
+                ->all(),
+        );
     }
 
     /**
@@ -199,21 +204,22 @@ final class EquestrianClinicsPortalProvider implements PortalDashboardItemProvid
      */
     private function horseItems(PortalAccount $portalAccount): array
     {
-        return $this->horses($portalAccount)
-            ->map(fn (EquestrianHorseProfile $horseProfile): PortalSelfServiceItemData => new PortalSelfServiceItemData(
-                key: 'equestrian-clinics.horse.' . $horseProfile->getKey(),
-                type: PortalSelfServiceItemType::GatedResource,
-                label: $horseProfile->name,
-                description: __('capell-equestrian-clinics::package.portal.horse_profile_description'),
-                status: $horseProfile->fitness_status,
-                meta: [
-                    'horse_profile_id' => (int) $horseProfile->getKey(),
-                    'vaccinated_until' => $horseProfile->vaccinated_until?->toDateString(),
-                    'suitable_skill_tiers' => $horseProfile->suitable_skill_tiers ?? [],
-                ],
-            ))
-            ->values()
-            ->all();
+        return array_values(
+            $this->horses($portalAccount)
+                ->map(fn (EquestrianHorseProfile $horseProfile): PortalSelfServiceItemData => new PortalSelfServiceItemData(
+                    key: 'equestrian-clinics.horse.' . $horseProfile->id,
+                    type: PortalSelfServiceItemType::GatedResource,
+                    label: $horseProfile->name,
+                    description: __('capell-equestrian-clinics::package.portal.horse_profile_description'),
+                    status: $horseProfile->fitness_status,
+                    meta: [
+                        'horse_profile_id' => (int) $horseProfile->id,
+                        'vaccinated_until' => $horseProfile->vaccinated_until?->toDateString(),
+                        'suitable_skill_tiers' => $horseProfile->suitable_skill_tiers ?? [],
+                    ],
+                ))
+                ->all(),
+        );
     }
 
     /**
@@ -221,23 +227,24 @@ final class EquestrianClinicsPortalProvider implements PortalDashboardItemProvid
      */
     private function bookingItems(PortalAccount $portalAccount): array
     {
-        return $this->upcomingBookings($portalAccount)
-            ->map(fn (EquestrianSlotBooking $booking): PortalSelfServiceItemData => new PortalSelfServiceItemData(
-                key: 'equestrian-clinics.booking.' . $booking->getKey(),
-                type: PortalSelfServiceItemType::EventRegistration,
-                label: $booking->slot->title,
-                description: $booking->horseProfile === null
-                    ? $booking->slot->tourDay->title
-                    : $booking->slot->tourDay->title . ' - ' . $booking->horseProfile->name,
-                status: $booking->status->getLabel(),
-                occurredAt: $booking->slot->starts_at,
-                meta: [
-                    'slot_booking_id' => (int) $booking->getKey(),
-                    'payment_status' => $booking->payment_status->value,
-                    'starts_at' => $booking->slot->starts_at->toIso8601String(),
-                ],
-            ))
-            ->values()
-            ->all();
+        return array_values(
+            $this->upcomingBookings($portalAccount)
+                ->map(fn (EquestrianSlotBooking $booking): PortalSelfServiceItemData => new PortalSelfServiceItemData(
+                    key: 'equestrian-clinics.booking.' . $booking->id,
+                    type: PortalSelfServiceItemType::EventRegistration,
+                    label: $booking->slot->title,
+                    description: $booking->horseProfile === null
+                        ? $booking->slot->tourDay->title
+                        : $booking->slot->tourDay->title . ' - ' . $booking->horseProfile->name,
+                    status: $booking->status->getLabel(),
+                    occurredAt: $booking->slot->starts_at,
+                    meta: [
+                        'slot_booking_id' => (int) $booking->id,
+                        'payment_status' => $booking->payment_status->value,
+                        'starts_at' => $booking->slot->starts_at->toIso8601String(),
+                    ],
+                ))
+                ->all(),
+        );
     }
 }

@@ -94,10 +94,12 @@ abstract class AbstractWidget extends Component
     {
         $cacheKey = self::WIDGET_BY_KEY_CACHE_PREFIX . $widgetKey;
 
-        return self::getCached(
+        $widget = self::getCached(
             $cacheKey,
-            fn () => Widget::query()->firstWhere('key', $widgetKey),
+            fn (): ?Widget => Widget::query()->firstWhere('key', $widgetKey),
         );
+
+        return $widget instanceof Widget ? $widget : null;
     }
 
     public function hydrate(): void

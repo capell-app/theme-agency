@@ -69,10 +69,10 @@ final class BuildSlotBookingCheckoutSessionDataAction
             customerEmail: $booking->riderProfile->email,
             customerName: $booking->riderProfile->name,
             payableType: EquestrianSlotBooking::class,
-            payableId: (string) $booking->getKey(),
+            payableId: (string) $booking->id,
             sourceType: 'capell-equestrian-clinics',
-            sourceId: (string) $booking->slot->tourDay->getKey(),
-            referenceId: 'equestrian-slot-booking-' . $booking->getKey(),
+            sourceId: (string) $booking->slot->tourDay->id,
+            referenceId: 'equestrian-slot-booking-' . $booking->id,
             metadata: [
                 'package' => 'capell-app/equestrian-clinics',
                 'equestrian_slot_booking_id' => $booking->getKey(),

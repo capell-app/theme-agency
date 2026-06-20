@@ -30,16 +30,18 @@ it('adds premium demo page surfaces for every prompt-built theme', function (str
         ->and($surfaces)->not->toContain('premium-1', 'premium-2', 'premium-3');
 
     foreach ($premiumDefinitions as $definition) {
+        $heroHeading = data_get($definition->renderData, 'hero.heading');
+
         expect($definition->renderData['sections'] ?? null)
             ->toBeArray()
             ->toHaveCount(3)
             ->and($definition->renderData['items'] ?? null)
             ->toBeArray()
             ->toHaveCount(3)
-            ->and($definition->renderData['hero']['heading'] ?? null)
+            ->and($heroHeading)
             ->toBeString()
             ->and($definition->title)
-            ->toEndWith((string) $definition->renderData['hero']['heading']);
+            ->toEndWith(is_string($heroHeading) && $heroHeading !== '' ? $heroHeading : 'x');
     }
 })->with([
     ['ai-lab', 'AI Lab'],

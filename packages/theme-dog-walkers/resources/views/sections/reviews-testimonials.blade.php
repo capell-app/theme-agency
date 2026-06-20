@@ -36,7 +36,7 @@
                             <span aria-hidden="true">★</span>
                         @endfor
                     </div>
-                    <blockenquiry class="mt-4 text-sm leading-7 text-slate-700">
+                    <blockquote class="mt-4 text-sm leading-7 text-slate-700">
                         {{ $item['quote'] ?? $item['summary'] ?? __('capell-theme-dog-walkers::generic.review_ready') }}
                     </blockquote>
                     <figcaption

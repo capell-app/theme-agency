@@ -69,11 +69,7 @@
     padding-block: clamp(4rem, 7vw, 7rem);
 }
 
-:where(
-    .dog-walkers-shell h1,
-    .dog-walkers-shell h2,
-    .dog-walkers-shell h3
-) {
+:where(.dog-walkers-shell h1, .dog-walkers-shell h2, .dog-walkers-shell h3) {
     color: var(--dog-walkers-ink);
     letter-spacing: 0;
 }
@@ -137,8 +133,7 @@
     position: relative;
 }
 
-.dog-walkers-shell
-    :where(.theme-section-cta, .theme-section-contact)::before {
+.dog-walkers-shell :where(.theme-section-cta, .theme-section-contact)::before {
     background: linear-gradient(
         90deg,
         var(--dog-walkers-primary),

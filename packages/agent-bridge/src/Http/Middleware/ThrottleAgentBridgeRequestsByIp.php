@@ -33,10 +33,14 @@ final class ThrottleAgentBridgeRequestsByIp
             return $next($request);
         }
 
-        $maxAttempts = (int) config(
+        $configuredMaxAttempts = config(
             'capell-agent-bridge.rate_limit_per_ip_per_minute',
             self::DEFAULT_MAX_ATTEMPTS_PER_MINUTE,
         );
+
+        $maxAttempts = is_numeric($configuredMaxAttempts)
+            ? (int) $configuredMaxAttempts
+            : self::DEFAULT_MAX_ATTEMPTS_PER_MINUTE;
 
         if ($maxAttempts <= 0) {
             return $next($request);

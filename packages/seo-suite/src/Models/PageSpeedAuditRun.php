@@ -12,6 +12,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Override;
 
+/**
+ * @property int $id
+ */
 class PageSpeedAuditRun extends Model
 {
     /** @use HasFactory<Factory<static>> */

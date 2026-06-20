@@ -51,7 +51,7 @@ final class QueueAgentCapabilityAutomationActionHandler implements AutomationAct
                 user: null,
             );
         } catch (Throwable) {
-            return BuildSafeAutomationActionFailureResultAction::run($action->type);
+            return BuildSafeAutomationActionFailureResultAction::make()->handle($action->type);
         }
 
         return new AutomationActionResultData(

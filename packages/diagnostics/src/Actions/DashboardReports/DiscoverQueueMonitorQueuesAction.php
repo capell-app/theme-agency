@@ -7,6 +7,9 @@ namespace Capell\Diagnostics\Actions\DashboardReports;
 use Illuminate\Support\Arr;
 use Lorisleiva\Actions\Action;
 
+/**
+ * @method static list<string> run()
+ */
 final class DiscoverQueueMonitorQueuesAction extends Action
 {
     /**

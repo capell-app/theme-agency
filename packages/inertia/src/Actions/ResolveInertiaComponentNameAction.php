@@ -6,6 +6,9 @@ namespace Capell\Inertia\Actions;
 
 use Lorisleiva\Actions\Concerns\AsObject;
 
+/**
+ * @method static string run(mixed $configuredComponent = null, string $fallback = self::DefaultPageComponent)
+ */
 final class ResolveInertiaComponentNameAction
 {
     use AsObject;

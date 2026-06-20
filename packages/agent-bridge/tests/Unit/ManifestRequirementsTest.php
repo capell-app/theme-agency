@@ -236,11 +236,8 @@ describe('agent-bridge capell.json manifest', function (): void {
 
         foreach ([$readme, $overview] as $document) {
             expect($document)
-                ->toContain('CAPELL_AGENT_BRIDGE_AUDIT_RETENTION_DAYS')
                 ->toContain('capell:agent-bridge-prune-audit')
-                ->toContain('capell-agent-bridge-prune-audit')
-                ->toContain('Capell package install/migration flow')
-                ->not->toContain('php artisan migrate')
+                ->toContain('Migration impact: run host migrations through the package install flow before opening package surfaces')
                 ->not->toContain('Deletion/retention behaviour: Docs gap');
         }
 

@@ -46,9 +46,13 @@ it('declares only estate agents marketplace screenshots that exist in the packag
     expect($screenshots)->toHaveCount(6);
 
     foreach ($screenshots as $screenshot) {
-        throw_if(! is_array($screenshot) || ! is_string($screenshot['path'] ?? null), RuntimeException::class, 'Theme Estate Agents screenshot path must be a string.');
+        $screenshotPath = is_array($screenshot) ? ($screenshot['path'] ?? null) : null;
 
-        expect(File::exists(__DIR__ . '/../../' . $screenshot['path']))->toBeTrue();
+        if (! is_string($screenshotPath)) {
+            throw new RuntimeException('Theme Estate Agents screenshot path must be a string.');
+        }
+
+        expect(File::exists(__DIR__ . '/../../' . $screenshotPath))->toBeTrue();
     }
 });
 
@@ -74,13 +78,18 @@ it('requires route backed screenshot captures for marketplace proof', function (
         );
 
     foreach ($entries as $entry) {
-        throw_if(! is_array($entry), RuntimeException::class, 'Theme Estate Agents screenshot entry must be an array.');
+        if (! is_array($entry)) {
+            throw new RuntimeException('Theme Estate Agents screenshot entry must be an array.');
+        }
 
         $screenshotPath = $entry['screenshotPath'] ?? null;
 
+        if (! is_string($screenshotPath)) {
+            throw new RuntimeException('Theme Estate Agents screenshot path must be a string.');
+        }
+
         expect($entry['required'] ?? null)->toBeTrue()
             ->and($entry['url'] ?? '')->toStartWith('/screenshot-fixtures/theme-estate-agents/')
-            ->and($screenshotPath)->toBeString()
             ->and(File::exists(getcwd() . '/' . $screenshotPath))->toBeTrue();
     }
 });

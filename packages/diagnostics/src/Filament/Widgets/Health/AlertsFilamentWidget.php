@@ -10,7 +10,7 @@ use Capell\Admin\Filament\Resources\Blueprints\BlueprintResource;
 use Capell\Admin\Filament\Resources\Languages\LanguageResource;
 use Capell\Admin\Filament\Resources\Sites\SiteResource;
 use Capell\Admin\Filament\Resources\Themes\ThemeResource;
-use Capell\Admin\Filament\Widgets\ResourceAlertsWidget;
+use Capell\Admin\Filament\Widgets\ResourceAlertsFilamentWidget;
 use Capell\Core\Enums\BlueprintSubjectEnum;
 use Capell\Core\Models\Blueprint;
 use Capell\Core\Models\Language;
@@ -23,7 +23,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Route;
 use Override;
 
-final class AlertsFilamentWidget extends ResourceAlertsWidget
+final class AlertsFilamentWidget extends ResourceAlertsFilamentWidget
 {
     protected static ?int $sort = -1;
 

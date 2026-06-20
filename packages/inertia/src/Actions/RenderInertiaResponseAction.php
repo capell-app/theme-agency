@@ -9,6 +9,9 @@ use Inertia\Inertia;
 use Lorisleiva\Actions\Concerns\AsObject;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * @method static Response run(mixed $component, array<string, mixed> $props = [], ?int $status = null)
+ */
 final class RenderInertiaResponseAction
 {
     use AsObject;

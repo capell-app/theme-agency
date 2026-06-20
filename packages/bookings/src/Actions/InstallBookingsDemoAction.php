@@ -18,6 +18,9 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 use Lorisleiva\Actions\Concerns\AsObject;
 
+/**
+ * @method static array{services: int, staff: int, locations: int, availability_windows: int, appointment_requests: int} run()
+ */
 final class InstallBookingsDemoAction
 {
     use AsObject;

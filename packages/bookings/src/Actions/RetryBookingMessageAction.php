@@ -45,7 +45,7 @@ class RetryBookingMessageAction
                 channel: $lockedMessageLog->channel,
                 recipient: $lockedMessageLog->recipient,
                 type: $lockedMessageLog->type,
-                body: (string) $lockedMessageLog->body,
+                body: $lockedMessageLog->body ?? '',
                 subject: $lockedMessageLog->subject,
                 sendAt: null,
                 context: array_merge(

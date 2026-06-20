@@ -61,6 +61,7 @@ final class ThemeCharacterPortfolioIndexHealthCheck implements ChecksExtensionHe
         );
     }
 
+    /** @param list<string>|null $requiredViewFiles */
     public function requiredViewsCheck(?array $requiredViewFiles = null): DoctorCheckResultData
     {
         $missingViewFiles = $this->missingRequiredViewFiles($requiredViewFiles);
@@ -73,6 +74,7 @@ final class ThemeCharacterPortfolioIndexHealthCheck implements ChecksExtensionHe
         );
     }
 
+    /** @param list<string>|null $screenshotPaths */
     public function marketplaceScreenshotsCheck(?array $screenshotPaths = null): DoctorCheckResultData
     {
         $missingScreenshotFiles = $this->missingMarketplaceScreenshotFiles($screenshotPaths);
@@ -85,13 +87,19 @@ final class ThemeCharacterPortfolioIndexHealthCheck implements ChecksExtensionHe
         );
     }
 
-    /** @param list<string>|null $requiredViewFiles @return list<string> */
+    /**
+     * @param  list<string>|null  $requiredViewFiles
+     * @return list<string>
+     */
     public function missingRequiredViewFiles(?array $requiredViewFiles = null): array
     {
         return array_values(collect($requiredViewFiles ?? self::REQUIRED_VIEW_FILES)->reject(fn (string $relativePath): bool => is_file($this->packagePath($relativePath)))->values()->all());
     }
 
-    /** @param list<string>|null $screenshotPaths @return list<string> */
+    /**
+     * @param  list<string>|null  $screenshotPaths
+     * @return list<string>
+     */
     public function missingMarketplaceScreenshotFiles(?array $screenshotPaths = null): array
     {
         $paths = $screenshotPaths ?? $this->marketplaceScreenshotPaths();

@@ -55,7 +55,7 @@ it('previews matching persisted rules without executing actions or recording run
         ],
     ]);
 
-    $results = DryRunAutomationRulesAction::run(new AutomationTriggerEventData(
+    $results = DryRunAutomationRulesAction::make()->handle(new AutomationTriggerEventData(
         triggerType: AutomationTriggerType::FormSubmitted,
         sourceType: 'automation-studio.dry-run',
         payload: ['form_handle' => 'contact'],
@@ -113,7 +113,7 @@ it('scopes dry-run previews to global and selected site rules', function (): voi
         ],
     ]);
 
-    $results = DryRunAutomationRulesAction::run(new AutomationTriggerEventData(
+    $results = DryRunAutomationRulesAction::make()->handle(new AutomationTriggerEventData(
         triggerType: AutomationTriggerType::CampaignConverted,
         sourceType: 'automation-studio.dry-run',
     ), siteId: 10);

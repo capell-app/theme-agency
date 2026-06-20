@@ -59,8 +59,10 @@ use Capell\Payments\Enums\CheckoutMode;
 use Capell\Payments\Enums\PaymentProvider;
 use Capell\Payments\Enums\PaymentPurpose;
 use Carbon\CarbonImmutable;
+use Illuminate\Console\Command;
 use Illuminate\Console\Scheduling\Event as ScheduledEvent;
 use Illuminate\Console\Scheduling\Schedule;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 
@@ -314,8 +316,8 @@ it('builds a Payments checkout handoff from an active online slot hold', functio
         ->and($checkoutData->customerEmail)->toBe('checkout-rider@example.com')
         ->and($checkoutData->customerName)->toBe('Checkout Rider')
         ->and($checkoutData->payableType)->toBe(EquestrianSlotBooking::class)
-        ->and($checkoutData->payableId)->toBe((string) $booking->getKey())
-        ->and($checkoutData->referenceId)->toBe('equestrian-slot-booking-' . $booking->getKey())
+        ->and($checkoutData->payableId)->toBe((string) $booking->id)
+        ->and($checkoutData->referenceId)->toBe('equestrian-slot-booking-' . $booking->id)
         ->and($checkoutData->lineItems)->toHaveCount(1)
         ->and($checkoutData->lineItems[0]->name)->toBe('Semi-private clinic - Willow Farm Tour Day')
         ->and($checkoutData->lineItems[0]->amount)->toBe(5750)
@@ -429,14 +431,14 @@ it('contributes rider horse and booking surfaces to the customer portal without 
         'self_service' => $selfServiceItems,
     ], JSON_THROW_ON_ERROR);
 
-    expect($profile->profile['equestrian']['riders'][0]['name'] ?? null)->toBe('Jordan Rider')
-        ->and($profile->profile['equestrian']['horses'][0]['name'] ?? null)->toBe('Quiet Cob')
+    expect(data_get($profile->profile, 'equestrian.riders.0.name'))->toBe('Jordan Rider')
+        ->and(data_get($profile->profile, 'equestrian.horses.0.name'))->toBe('Quiet Cob')
         ->and($dashboardItems)->toHaveCount(1)
         ->and($dashboardItems[0]->key)->toBe('equestrian-clinics.profile')
         ->and($dashboardItems[0]->count)->toBe(1)
         ->and(collect($selfServiceItems)->pluck('key')->all())->toContain(
-            'equestrian-clinics.rider.' . $rider->getKey(),
-            'equestrian-clinics.horse.' . $horse->getKey(),
+            'equestrian-clinics.rider.' . $rider->id,
+            'equestrian-clinics.horse.' . $horse->id,
         )
         ->and($surfaceJson)->toContain('Portal clinic')
         ->and($surfaceJson)->not->toContain(
@@ -655,12 +657,13 @@ it('expires stale holds and waitlist offers through console commands', function 
     CarbonImmutable::setTestNow($now);
 
     try {
-        $this->artisan('capell:equestrian-clinics-expire-holds', ['--json' => true])
-            ->expectsOutput('{"expired_holds":1}')
-            ->assertSuccessful();
-        $this->artisan('capell:equestrian-clinics-expire-waitlist-offers', ['--json' => true])
-            ->expectsOutput('{"expired_offers":1}')
-            ->assertSuccessful();
+        expect(Artisan::call('capell:equestrian-clinics-expire-holds', ['--json' => true]))
+            ->toBe(Command::SUCCESS)
+            ->and(trim(Artisan::output()))->toBe('{"expired_holds":1}');
+
+        expect(Artisan::call('capell:equestrian-clinics-expire-waitlist-offers', ['--json' => true]))
+            ->toBe(Command::SUCCESS)
+            ->and(trim(Artisan::output()))->toBe('{"expired_offers":1}');
     } finally {
         CarbonImmutable::setTestNow();
     }

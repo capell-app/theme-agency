@@ -11,6 +11,8 @@ use Capell\SeoSuite\Actions\RunPageSpeedAuditAction;
 use Capell\SeoSuite\Contracts\PageSpeedInsightsClientInterface;
 use Capell\SeoSuite\Data\PageSpeedAuditItemData;
 use Capell\SeoSuite\Data\PageSpeedAuditResultData;
+use Capell\SeoSuite\Data\PageSpeedAuditSummaryData;
+use Capell\SeoSuite\Data\PageSpeedAuditTargetData;
 use Capell\SeoSuite\Enums\PageSpeedAuditRunStatusEnum;
 use Capell\SeoSuite\Enums\PageSpeedAuditTriggerEnum;
 use Capell\SeoSuite\Enums\PageSpeedStrategyEnum;
@@ -119,10 +121,16 @@ it('prefers generated public page urls when resolving one PageSpeed target per l
             'type' => null,
         ]);
 
-    $targets = ResolvePageSpeedAuditTargetsAction::run(pageId: (int) $page->getKey());
+    $targets = ResolvePageSpeedAuditTargetsAction::run(pageId: $page->id);
+
+    throw_unless(is_array($targets), RuntimeException::class, 'Expected an array of audit targets.');
+
+    $firstTarget = $targets[0] ?? null;
+
+    throw_unless($firstTarget instanceof PageSpeedAuditTargetData, RuntimeException::class, 'Expected a resolved audit target.');
 
     expect($targets)->toHaveCount(1)
-        ->and($targets[0]->url)->toBe('https://example.test/about');
+        ->and($firstTarget->url)->toBe('https://example.test/about');
 });
 
 it('summarizes worst scores, low scores, and score drops for digests', function (): void {
@@ -168,6 +176,8 @@ it('summarizes worst scores, low scores, and score drops for digests', function 
         trigger: PageSpeedAuditTriggerEnum::Command,
         strategies: [PageSpeedStrategyEnum::Mobile],
     );
+
+    throw_unless($summary instanceof PageSpeedAuditSummaryData, RuntimeException::class, 'Expected a PageSpeed audit summary.');
 
     expect($summary->worstMobileResults[0]->score)->toBe(42)
         ->and($summary->belowThresholdResults[0]->score)->toBe(42)
@@ -225,16 +235,21 @@ it('stores a completion notification for the requester with average score and lo
         ->where('notifiable_id', $requester->getKey())
         ->first();
 
-    expect($notification)->not->toBeNull();
+    throw_unless(is_object($notification), RuntimeException::class, 'Expected a stored notification.');
 
-    $data = json_decode((string) $notification->data, associative: true, flags: JSON_THROW_ON_ERROR);
+    $rawData = $notification->data ?? null;
+    $decoded = json_decode(is_string($rawData) ? $rawData : '', associative: true, flags: JSON_THROW_ON_ERROR);
+    $data = is_array($decoded) ? $decoded : [];
     $encodedData = json_encode($data, JSON_THROW_ON_ERROR);
+
+    $actions = is_array($data['actions'] ?? null) ? $data['actions'] : [];
+    $firstAction = is_array($actions[0] ?? null) ? $actions[0] : [];
 
     expect($data['title'] ?? null)->toBe(__('capell-seo-suite::generic.pagespeed_complete_title'))
         ->and($data['body'] ?? null)->toContain('2 page(s) audited')
         ->and($data['body'] ?? null)->toContain('Average performance score: 60')
         ->and($encodedData)->toContain('Slow Page')
-        ->and($data['actions'][0]['url'] ?? null)->toContain('/admin/pages/' . $slowPage->getKey() . '/edit')
+        ->and($firstAction['url'] ?? null)->toContain('/admin/pages/' . $slowPage->id . '/edit')
         ->and($encodedData)->toContain('40');
 });
 

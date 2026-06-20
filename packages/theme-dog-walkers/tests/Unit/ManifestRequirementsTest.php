@@ -62,7 +62,15 @@ function dogWalkersThemeManifest(): array
 
     throw_unless(is_array($manifest), RuntimeException::class, 'Theme Dog Walkers manifest must decode to an array.');
 
-    return $manifest;
+    $stringKeyedManifest = [];
+
+    foreach ($manifest as $key => $value) {
+        if (is_string($key)) {
+            $stringKeyedManifest[$key] = $value;
+        }
+    }
+
+    return $stringKeyedManifest;
 }
 
 /**
@@ -78,5 +86,13 @@ function dogWalkersThemeComposer(): array
 
     throw_unless(is_array($composer), RuntimeException::class, 'Theme Dog Walkers composer data must decode to an array.');
 
-    return $composer;
+    $stringKeyedComposer = [];
+
+    foreach ($composer as $key => $value) {
+        if (is_string($key)) {
+            $stringKeyedComposer[$key] = $value;
+        }
+    }
+
+    return $stringKeyedComposer;
 }

@@ -9,8 +9,10 @@ it('keeps every prompt-built theme marketplace-ready', function (string $themeKe
     $packagePath = dirname(__DIR__, 3) . '/' . $packageName;
     $manifest = capell_json_file_array($packagePath . '/capell.json');
     $screenshots = capell_json_file_array($packagePath . '/docs/screenshots.json');
-    $marketplaceScreenshots = data_get($manifest, 'marketplace.screenshots', []);
-    $screenshotEntries = data_get($screenshots, 'entries', []);
+    $marketplaceScreenshotsValue = data_get($manifest, 'marketplace.screenshots', []);
+    $screenshotEntriesValue = data_get($screenshots, 'entries', []);
+    $marketplaceScreenshots = is_array($marketplaceScreenshotsValue) ? array_values($marketplaceScreenshotsValue) : [];
+    $screenshotEntries = is_array($screenshotEntriesValue) ? array_values($screenshotEntriesValue) : [];
     $expectedSurfaces = [
         'homepage',
         'directory',
@@ -32,32 +34,41 @@ it('keeps every prompt-built theme marketplace-ready', function (string $themeKe
         ->and($marketplaceScreenshots)->toHaveCount(11);
 
     $entrySurfaces = array_map(
-        static fn (array $entry): string => str_replace($themeKey . '-', '', (string) $entry['id']),
+        static function (mixed $entry) use ($themeKey): string {
+            $entryId = data_get($entry, 'id');
+
+            return str_replace($themeKey . '-', '', is_string($entryId) ? $entryId : '');
+        },
         $screenshotEntries,
     );
 
     expect($entrySurfaces)->toEqual($expectedSurfaces)
         ->and(array_filter(
             $screenshotEntries,
-            static fn (array $entry): bool => ($entry['required'] ?? false) === true,
+            static fn (mixed $entry): bool => data_get($entry, 'required', false) === true,
         ))->toHaveCount(10)
         ->and(data_get($marketplaceScreenshots, '0.path'))->toBe('docs/assets/marketplace/extension-card.jpg');
 
     foreach ($marketplaceScreenshots as $marketplaceScreenshot) {
-        expect($marketplaceScreenshot['alt'] ?? null)->toBeString()
-            ->and(strlen(trim((string) $marketplaceScreenshot['alt'])))->toBeGreaterThanOrEqual(12)
-            ->and($marketplaceScreenshot['caption'] ?? null)->toBeString()
-            ->and(strlen(trim((string) $marketplaceScreenshot['caption'])))->toBeGreaterThanOrEqual(12)
-            ->and(File::exists($packagePath . '/' . $marketplaceScreenshot['path']))->toBeTrue();
+        $altText = data_get($marketplaceScreenshot, 'alt');
+        $captionText = data_get($marketplaceScreenshot, 'caption');
+        $screenshotRelativePath = data_get($marketplaceScreenshot, 'path');
+
+        expect($altText)->toBeString()
+            ->and(strlen(trim(is_string($altText) ? $altText : '')))->toBeGreaterThanOrEqual(12)
+            ->and($captionText)->toBeString()
+            ->and(strlen(trim(is_string($captionText) ? $captionText : '')))->toBeGreaterThanOrEqual(12)
+            ->and(File::exists($packagePath . '/' . (is_string($screenshotRelativePath) ? $screenshotRelativePath : '')))->toBeTrue();
     }
 
     foreach ($screenshotEntries as $screenshotEntry) {
-        $screenshotPath = dirname(__DIR__, 4) . '/' . $screenshotEntry['screenshotPath'];
+        $screenshotRelativePath = data_get($screenshotEntry, 'screenshotPath');
+        $screenshotPath = dirname(__DIR__, 4) . '/' . (is_string($screenshotRelativePath) ? $screenshotRelativePath : '');
 
-        expect($screenshotEntry['targetType'])->toBe('frontend-url')
-            ->and($screenshotEntry['surface'])->toBe('frontend')
-            ->and($screenshotEntry['target'])->toBeString()
-            ->and($screenshotEntry['target'])->not->toBe('/')
+        expect(data_get($screenshotEntry, 'targetType'))->toBe('frontend-url')
+            ->and(data_get($screenshotEntry, 'surface'))->toBe('frontend')
+            ->and(data_get($screenshotEntry, 'target'))->toBeString()
+            ->and(data_get($screenshotEntry, 'target'))->not->toBe('/')
             ->and(File::exists($screenshotPath))->toBeTrue()
             ->and(File::size($screenshotPath))->toBeGreaterThan(1024);
     }

@@ -16,6 +16,7 @@ const blockedTextPatterns = [
 function isSafePublicUrl(value) {
     const candidate = String(value).trim()
 
+    // eslint-disable-next-line no-control-regex -- intentionally reject URLs starting with control characters
     if (candidate === '' || /^[\u0000-\u001F\u007F]/.test(candidate)) {
         return false
     }

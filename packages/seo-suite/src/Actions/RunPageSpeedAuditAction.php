@@ -181,7 +181,7 @@ final class RunPageSpeedAuditAction
             return;
         }
 
-        $notification = Notification::make('seo-suite-pagespeed-audit-complete-' . $summary->run->getKey())
+        $notification = Notification::make('seo-suite-pagespeed-audit-complete-' . $summary->run->id)
             ->title(__('capell-seo-suite::generic.pagespeed_complete_title'))
             ->body(__('capell-seo-suite::generic.pagespeed_complete_body', [
                 'pages' => $summary->auditedPages,
@@ -224,7 +224,7 @@ final class RunPageSpeedAuditAction
      */
     private function lowRatedPageActions(Collection $results): array
     {
-        return $results
+        return array_values($results
             ->filter(fn (PageSpeedAuditResult $result): bool => $result->status === 'succeeded'
                 && $result->performance_score !== null
                 && $result->performance_score < 50)
@@ -240,11 +240,11 @@ final class RunPageSpeedAuditAction
 
                 $url = GetEditPageResourceUrlAction::run($page);
 
-                if ($url === null) {
+                if (! is_string($url)) {
                     return null;
                 }
 
-                return Action::make('openLowRatedPage' . $page->getKey())
+                return Action::make('openLowRatedPage' . $page->id)
                     ->label(__('capell-seo-suite::generic.pagespeed_open_low_rated_page', [
                         'page' => $page->name,
                         'score' => $result->performance_score,
@@ -256,7 +256,7 @@ final class RunPageSpeedAuditAction
             })
             ->filter()
             ->values()
-            ->all();
+            ->all());
     }
 
     /**

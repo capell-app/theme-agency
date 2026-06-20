@@ -294,7 +294,12 @@ function accessGateCsvRows(string $csv): array
             continue;
         }
 
-        $rows[] = str_getcsv($line);
+        $fields = str_getcsv($line);
+
+        $rows[] = array_map(
+            static fn (?string $field): string => $field ?? '',
+            $fields,
+        );
     }
 
     return $rows;

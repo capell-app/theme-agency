@@ -15,7 +15,11 @@ it('declares the property-developer theme manifest contract', function (): void 
         ->and($manifest['capabilities'])->toContain('theme-property-developer', 'theme-property-developer-frontend')
         ->and(data_get($manifest, 'security.publicOutput.cacheSafe'))->toBeTrue();
 
-    foreach (data_get($manifest, 'marketplace.screenshots', []) as $screenshot) {
-        expect(File::exists(__DIR__ . '/../../' . $screenshot['path']))->toBeTrue();
+    $screenshots = data_get($manifest, 'marketplace.screenshots', []);
+
+    foreach (is_array($screenshots) ? $screenshots : [] as $screenshot) {
+        $screenshotPath = is_array($screenshot) ? ($screenshot['path'] ?? null) : null;
+
+        expect(File::exists(__DIR__ . '/../../' . (is_string($screenshotPath) ? $screenshotPath : '')))->toBeTrue();
     }
 });

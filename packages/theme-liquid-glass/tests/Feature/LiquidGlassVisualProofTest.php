@@ -54,12 +54,19 @@ it('captures Liquid Glass preset and mobile visual proof from rendered package v
             'entries' => $manifestEntries,
         ]);
 
-        expect($result['entries'])->toHaveCount(count($manifestEntries));
+        $resultEntries = $result['entries'] ?? null;
+        $resultEntries = is_array($resultEntries) ? $resultEntries : [];
 
-        foreach ($result['entries'] as $resultEntry) {
-            expect($resultEntry['blank'])->toBeFalse()
-                ->and($resultEntry['horizontalOverflow'])->toBeFalse(
-                    'Screenshot has top-level horizontal overflow: ' . json_encode($resultEntry['overflowingElements'] ?? [], JSON_THROW_ON_ERROR),
+        expect($resultEntries)->toHaveCount(count($manifestEntries));
+
+        foreach ($resultEntries as $resultEntry) {
+            $isBlank = is_array($resultEntry) ? ($resultEntry['blank'] ?? null) : null;
+            $hasHorizontalOverflow = is_array($resultEntry) ? ($resultEntry['horizontalOverflow'] ?? null) : null;
+            $overflowingElements = is_array($resultEntry) ? ($resultEntry['overflowingElements'] ?? []) : [];
+
+            expect($isBlank)->toBeFalse()
+                ->and($hasHorizontalOverflow)->toBeFalse(
+                    'Screenshot has top-level horizontal overflow: ' . json_encode($overflowingElements, JSON_THROW_ON_ERROR),
                 );
         }
     }
@@ -95,7 +102,7 @@ function liquidGlassVisualProofEntries(): array
     $desktopViewport = ['width' => 960, 'height' => 1200];
     $mobileViewport = ['width' => 390, 'height' => 1200];
 
-    return collect($definition->presets)
+    return array_values(collect($definition->presets)
         ->map(function (ThemePresetData $preset) use ($desktopViewport, $mobileViewport): array {
             $presetValues = $preset->values;
             $isMobile = $preset->key === 'graphite';
@@ -120,7 +127,7 @@ function liquidGlassVisualProofEntries(): array
             ];
         })
         ->values()
-        ->all();
+        ->all());
 }
 
 /**

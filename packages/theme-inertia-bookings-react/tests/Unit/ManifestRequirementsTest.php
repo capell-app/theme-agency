@@ -114,7 +114,11 @@ it('keeps react component map entries aligned with source files and manifest dec
     );
     $entrypoint = (string) file_get_contents($basePath . '/resources/js/app.jsx');
 
-    $declaredComponents = collect($manifest['contributes'] ?? [])
+    $contributes = is_array($manifest) && isset($manifest['contributes']) && is_array($manifest['contributes'])
+        ? $manifest['contributes']
+        : [];
+
+    $declaredComponents = collect($contributes)
         ->filter(static fn (mixed $contribution): bool => is_array($contribution) && ($contribution['type'] ?? null) === 'frontend-component')
         ->map(static fn (array $contribution): string => (string) $contribution['component'])
         ->values();

@@ -14,11 +14,15 @@ use Illuminate\Support\Facades\Schema;
 use Lorisleiva\Actions\Action;
 use Throwable;
 
+/**
+ * @method static QueueOperationsStatsData run(?int $days = null)
+ */
 final class BuildQueueOperationsStatsAction extends Action
 {
     public function handle(?int $days = null): QueueOperationsStatsData
     {
-        $days = max(1, $days ?? (int) config('capell-diagnostics.queue_monitor.trend_days', 7));
+        $configuredTrendDays = config('capell-diagnostics.queue_monitor.trend_days', 7);
+        $days = max(1, $days ?? (is_numeric($configuredTrendDays) ? (int) $configuredTrendDays : 7));
         $model = new QueueMonitor;
 
         if (! Schema::connection($model->getConnectionName())->hasTable($model->getTable())) {
@@ -144,7 +148,8 @@ final class BuildQueueOperationsStatsAction extends Action
             return 'idle';
         }
 
-        $staleAfterSeconds = max(1, (int) config('capell-diagnostics.queue_monitor.stale_pending_seconds', 300));
+        $configuredStaleSeconds = config('capell-diagnostics.queue_monitor.stale_pending_seconds', 300);
+        $staleAfterSeconds = max(1, is_numeric($configuredStaleSeconds) ? (int) $configuredStaleSeconds : 300);
 
         return $oldestPendingJobAgeSeconds !== null && $oldestPendingJobAgeSeconds >= $staleAfterSeconds
             ? 'stale'
@@ -154,7 +159,7 @@ final class BuildQueueOperationsStatsAction extends Action
     private function ageInSeconds(mixed $value): ?int
     {
         if (is_numeric($value)) {
-            return max(0, now()->timestamp - (int) $value);
+            return max(0, now()->getTimestamp() - (int) $value);
         }
 
         if ($value instanceof CarbonInterface) {

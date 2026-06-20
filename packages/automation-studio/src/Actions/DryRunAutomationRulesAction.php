@@ -26,24 +26,22 @@ final class DryRunAutomationRulesAction
         $registry = new AutomationRuleRegistry;
         $registry->registerMany($this->rules($siteId));
 
-        return collect($registry->matching($event))
-            ->map(static fn (AutomationRuleData $rule): AutomationRuleDryRunResultData => new AutomationRuleDryRunResultData(
+        return array_values(array_map(
+            static fn (AutomationRuleData $rule): AutomationRuleDryRunResultData => new AutomationRuleDryRunResultData(
                 ruleKey: $rule->key,
                 ruleName: $rule->name,
                 triggerType: $rule->triggerType,
-                actionKeys: collect($rule->actions)
-                    ->pluck('key')
-                    ->filter(static fn (mixed $key): bool => is_string($key) && $key !== '')
-                    ->values()
-                    ->all(),
-                actionTypes: collect($rule->actions)
-                    ->map(static fn (mixed $action): ?string => $action instanceof AutomationRuleActionData ? $action->type->value : null)
-                    ->filter(static fn (?string $type): bool => $type !== null)
-                    ->values()
-                    ->all(),
-            ))
-            ->values()
-            ->all();
+                actionKeys: array_values(array_filter(
+                    array_map(static fn (AutomationRuleActionData $action): string => $action->key, $rule->actions),
+                    static fn (string $key): bool => $key !== '',
+                )),
+                actionTypes: array_values(array_map(
+                    static fn (AutomationRuleActionData $action): string => $action->type->value,
+                    $rule->actions,
+                )),
+            ),
+            $registry->matching($event),
+        ));
     }
 
     /**
@@ -51,7 +49,7 @@ final class DryRunAutomationRulesAction
      */
     private function rules(?int $siteId): array
     {
-        return AutomationRule::query()
+        return array_values(AutomationRule::query()
             ->where('status', AutomationRuleStatus::Active)
             ->when($siteId !== null, function (Builder $query) use ($siteId): void {
                 $query->where(function (Builder $siteQuery) use ($siteId): void {
@@ -63,7 +61,6 @@ final class DryRunAutomationRulesAction
             ->orderBy('id')
             ->get()
             ->map(static fn (AutomationRule $rule): AutomationRuleData => $rule->toRuleData())
-            ->values()
-            ->all();
+            ->all());
     }
 }

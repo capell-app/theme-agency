@@ -60,7 +60,7 @@ Screenshot contract: `docs/screenshots.json`.
 - Models: `CapellAgentBridgeAuditEntry`, `CapellAgentBridgeConfirmation`, `CapellAgentBridgeSavedPrompt`, `CapellAgentBridgeToken`.
 - Migration files: `2026_05_10_190840_01_create_capell_agent-bridge_tokens_table.php`, `2026_05_10_190840_02_create_capell_agent-bridge_confirmations_table.php`, `2026_05_10_190840_03_create_capell_agent-bridge_audit_entries_table.php`, `2026_05_27_000001_create_capell_agent-bridge_saved_prompts_table.php`.
 - Migration impact: run host migrations through the package install flow before opening package surfaces.
-- Deletion/retention behaviour: Docs gap unless the package has an explicit pruning command, retention setting, or tested cascade path.
+- Deletion/retention behaviour: `capell:agent-bridge-prune-audit` prunes audit entries according to `capell-agent-bridge.audit_retention_days`.
 
 ## Install Impact
 
@@ -94,7 +94,7 @@ Screenshot contract: `docs/screenshots.json`.
 ## Quick Start
 
 1. Install the package: `composer require capell-app/agent-bridge`.
-2. Run the required setup: `php artisan migrate`.
+2. Run the required setup through the Capell package install/migration flow.
 3. Open the related Capell admin surface and verify Agent Bridge appears.
 
 ## Next Steps

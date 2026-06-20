@@ -80,7 +80,7 @@ final class SendEmailAutomationActionHandler implements AutomationActionHandler
                 locale: $this->stringSetting($event, $action, 'locale'),
             ));
         } catch (Throwable) {
-            return BuildSafeAutomationActionFailureResultAction::run($action->type);
+            return BuildSafeAutomationActionFailureResultAction::make()->handle($action->type);
         }
 
         return new AutomationActionResultData(

@@ -134,7 +134,7 @@ final class ThemeInertiaBookingsHealthCheck implements ChecksExtensionHealth
 
         $healthCheck = new $healthClass;
 
-        return method_exists($healthCheck, 'passes') && $healthCheck->passes();
+        return $healthCheck->passes();
     }
 
     public function themeRegistered(): bool

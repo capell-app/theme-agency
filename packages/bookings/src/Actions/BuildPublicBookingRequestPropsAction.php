@@ -11,14 +11,14 @@ use Inertia\Inertia;
 use Lorisleiva\Actions\Concerns\AsAction;
 
 /**
- * @method static array{options: array<string, mixed>, slots: mixed, postUrl: string, success: array{submitted: bool, status: ?string, message: ?string, reference: ?string}, timezone: string, timezoneOptions: list<string>} run(Request $request, bool $lazySlots = true)
+ * @method static array{options: array{services: list<array<string, mixed>>, staff: list<array<string, mixed>>, locations: list<array<string, mixed>>}, slots: mixed, postUrl: string, success: array{submitted: bool, status: ?string, message: ?string, reference: ?string}, timezone: string, timezoneOptions: list<string>} run(Request $request, bool $lazySlots = true)
  */
 class BuildPublicBookingRequestPropsAction
 {
     use AsAction;
 
     /**
-     * @return array{options: array<string, mixed>, slots: mixed, postUrl: string, success: array{submitted: bool, status: ?string, message: ?string, reference: ?string}, timezone: string, timezoneOptions: list<string>}
+     * @return array{options: array{services: list<array<string, mixed>>, staff: list<array<string, mixed>>, locations: list<array<string, mixed>>}, slots: mixed, postUrl: string, success: array{submitted: bool, status: ?string, message: ?string, reference: ?string}, timezone: string, timezoneOptions: list<string>}
      */
     public function handle(Request $request, bool $lazySlots = true): array
     {

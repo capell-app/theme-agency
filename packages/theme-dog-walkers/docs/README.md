@@ -12,14 +12,14 @@ and neighbourhood pet-care teams that need trust-led enquiry pages.
 
 ## Developer Starting Points
 
-| Need                                       | Start Here                                                                                    |
-| ------------------------------------------ | --------------------------------------------------------------------------------------------- |
+| Need                                       | Start Here                                                                                 |
+| ------------------------------------------ | ------------------------------------------------------------------------------------------ |
 | Theme definition and optional integrations | `src/DogWalkersThemeServiceProvider.php`                                                   |
 | Demo content install                       | `src/Console/Commands/DemoCommand.php`, `src/Actions/InstallDogWalkersThemeDemoAction.php` |
-| Optional integration flags                 | Core `ViewSectionRenderer` extra view data                                                    |
-| Theme management entry                     | `src/Manifest/ThemeManagementPageContribution.php`                                            |
+| Optional integration flags                 | Core `ViewSectionRenderer` extra view data                                                 |
+| Theme management entry                     | `src/Manifest/ThemeManagementPageContribution.php`                                         |
 | Health diagnostics                         | `src/Health/ThemeDogWalkersHealthCheck.php`                                                |
-| Public output checks                       | `tests/Unit/PublicOutputSafetyTest.php`                                                       |
+| Public output checks                       | `tests/Unit/PublicOutputSafetyTest.php`                                                    |
 
 ## Section Integrations
 

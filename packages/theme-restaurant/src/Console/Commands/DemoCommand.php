@@ -17,7 +17,7 @@ final class DemoCommand extends Command
 
     public function handle(): int
     {
-        return InstallRestaurantThemeDemoAction::run(new ThemeDemoInstallData(
+        return (new InstallRestaurantThemeDemoAction)->handle(new ThemeDemoInstallData(
             siteNames: $this->parseCsvOption('sites'),
             languageCodes: $this->parseCsvOption('languages'),
             baseUrl: $this->resolveBaseUrl(),
@@ -35,7 +35,7 @@ final class DemoCommand extends Command
         if (is_array($value)) {
             return array_values(array_filter(
                 array_map(
-                    static fn (mixed $item): string => trim((string) $item),
+                    static fn (mixed $item): string => is_scalar($item) ? trim((string) $item) : '',
                     $value,
                 ),
                 static fn (string $item): bool => $item !== '',

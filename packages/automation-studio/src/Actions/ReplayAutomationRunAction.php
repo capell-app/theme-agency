@@ -143,8 +143,8 @@ final class ReplayAutomationRunAction
     {
         return implode(':', [
             'replay',
-            $run->getKey(),
-            max(1, ($run->attempt_number ?? 1) + 1),
+            (string) $run->id,
+            (string) max(1, ($run->attempt_number ?? 1) + 1),
         ]);
     }
 

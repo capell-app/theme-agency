@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Capell\ThemeStudio\EstateAgents\Support\Screenshots;
 
 use Capell\Core\ThemeStudio\Data\BrandProfileData;
+use Illuminate\Contracts\View\Factory as ViewFactory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\HtmlString;
 
@@ -18,8 +19,10 @@ final class EstateAgentsScreenshotRenderer
 
         abort_if($sections === [], 404);
 
+        $viewFactory = app(ViewFactory::class);
+
         $content = collect($sections)
-            ->map(fn (EstateAgentsScreenshotSection $section): string => view(
+            ->map(fn (EstateAgentsScreenshotSection $section): string => $viewFactory->make(
                 self::VIEW_PREFIX . $section->key(),
                 $section->toViewData(),
             )->render())

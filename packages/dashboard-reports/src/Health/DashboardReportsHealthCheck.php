@@ -108,7 +108,7 @@ final class DashboardReportsHealthCheck implements ChecksExtensionHealth
             passed: $missingWidgets === [],
             message: $missingWidgets === []
                 ? $this->translation('capell-dashboard-reports::dashboard.health_dashboard_widgets_passed')
-                : $this->translation('capell-dashboard-reports::dashboard.health_dashboard_widgets_failed', ['layout_widgets' => implode(', ', $missingWidgets)]),
+                : $this->translation('capell-dashboard-reports::dashboard.health_dashboard_widgets_failed', ['widgets' => implode(', ', $missingWidgets)]),
             remediation: $missingWidgets === []
                 ? null
                 : $this->translation('capell-dashboard-reports::dashboard.health_dashboard_widgets_remediation'),

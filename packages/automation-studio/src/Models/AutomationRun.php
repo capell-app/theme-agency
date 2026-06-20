@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Override;
 
 /**
+ * @property int $id
  * @property AutomationTriggerType $trigger_type
  * @property AutomationActionType|null $action_type
  * @property AutomationRunStatus $status

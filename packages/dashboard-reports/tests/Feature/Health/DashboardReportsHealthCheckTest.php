@@ -28,7 +28,7 @@ function dashboardReportsHealthSetMainDashboardFilamentWidgets(array $widgets): 
     $manager = CapellAdmin::getFacadeRoot();
     throw_unless($manager instanceof CapellAdminManager, RuntimeException::class);
 
-    $property = new ReflectionProperty($manager, 'dashboardFilamentWidgets');
+    $property = new ReflectionProperty($manager, 'filamentDashboardWidgets');
 
     $property->setValue($manager, [
         DashboardEnum::Main->value => $widgets,

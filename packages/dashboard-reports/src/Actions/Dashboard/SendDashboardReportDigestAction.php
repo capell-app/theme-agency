@@ -6,6 +6,7 @@ namespace Capell\DashboardReports\Actions\Dashboard;
 
 use Capell\DashboardReports\Notifications\DashboardReportDigestNotification;
 use Carbon\CarbonImmutable;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Notification;
@@ -32,7 +33,7 @@ final class SendDashboardReportDigestAction
             foreach ($this->normalizeRecipients($recipients) as $email) {
                 $actor = $this->resolveActor($email);
 
-                if (! $actor instanceof Model) {
+                if (! $actor instanceof Authenticatable) {
                     $skipped++;
 
                     continue;
@@ -49,7 +50,7 @@ final class SendDashboardReportDigestAction
                 $sent++;
             }
         } finally {
-            if ($previousUser instanceof Model) {
+            if ($previousUser instanceof Authenticatable) {
                 Auth::guard()->setUser($previousUser);
             } else {
                 Auth::guard()->logout();
@@ -81,19 +82,18 @@ final class SendDashboardReportDigestAction
         return array_values(array_unique($emails));
     }
 
-    private function resolveActor(string $email): ?Model
+    private function resolveActor(string $email): ?Authenticatable
     {
         $modelClass = config('auth.providers.users.model');
 
-        if (! is_string($modelClass) || ! is_subclass_of($modelClass, Model::class)) {
+        if (! is_string($modelClass) || ! is_subclass_of($modelClass, Model::class) || ! is_subclass_of($modelClass, Authenticatable::class)) {
             return null;
         }
 
-        /** @var Model|null $actor */
         $actor = $modelClass::query()
             ->where('email', $email)
             ->first();
 
-        return $actor;
+        return $actor instanceof Authenticatable ? $actor : null;
     }
 }

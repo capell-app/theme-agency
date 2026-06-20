@@ -16,7 +16,7 @@ final class DemoCommand extends Command
 
     public function handle(): int
     {
-        return InstallDogWalkersThemeDemoAction::run(new ThemeDemoInstallData(
+        return app(InstallDogWalkersThemeDemoAction::class)->handle(new ThemeDemoInstallData(
             siteNames: $this->parseCsvOption('sites'),
             languageCodes: $this->parseCsvOption('languages'),
             baseUrl: $this->resolveBaseUrl(),
@@ -33,7 +33,7 @@ final class DemoCommand extends Command
 
         if (is_array($value)) {
             return array_values(array_filter(
-                array_map(static fn (mixed $item): string => trim((string) $item), $value),
+                array_map(static fn (mixed $item): string => is_scalar($item) ? trim((string) $item) : '', $value),
                 static fn (string $item): bool => $item !== '',
             ));
         }
@@ -56,6 +56,8 @@ final class DemoCommand extends Command
             return $url;
         }
 
-        return (string) config('app.url');
+        $configuredUrl = config('app.url');
+
+        return is_string($configuredUrl) ? $configuredUrl : '';
     }
 }

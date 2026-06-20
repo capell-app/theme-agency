@@ -7,12 +7,13 @@ namespace Capell\DashboardReports\Support\Dashboard;
 use Capell\Admin\Enums\DashboardEnum;
 use Capell\DashboardReports\Filament\Widgets\ContentHealthFilamentWidget;
 use Capell\DashboardReports\Filament\Widgets\PublishingTrendChartFilamentWidget;
+use Filament\Widgets\Widget;
 use Illuminate\Support\Collection;
 
 final class DashboardReportWidgetRegistry
 {
     /**
-     * @var array<string, array{widget: class-string, dashboards: list<DashboardEnum>}>
+     * @var array<string, array{widget: class-string<Widget>, dashboards: list<DashboardEnum>}>
      */
     private array $widgets = [];
 
@@ -23,7 +24,7 @@ final class DashboardReportWidgetRegistry
     }
 
     /**
-     * @param  class-string  $widget
+     * @param  class-string<Widget>  $widget
      */
     public function register(string $widget, DashboardEnum ...$dashboards): self
     {
@@ -38,7 +39,7 @@ final class DashboardReportWidgetRegistry
     }
 
     /**
-     * @return Collection<int, array{widget: class-string, dashboards: list<DashboardEnum>}>
+     * @return Collection<int, array{widget: class-string<Widget>, dashboards: list<DashboardEnum>}>
      */
     public function registrations(): Collection
     {
@@ -46,7 +47,7 @@ final class DashboardReportWidgetRegistry
     }
 
     /**
-     * @param  class-string  $widget
+     * @param  class-string<Widget>  $widget
      * @param  list<DashboardEnum>  $dashboards
      */
     private function key(string $widget, array $dashboards): string

@@ -59,8 +59,8 @@ final class AccessGatePortalSelfServiceItemProvider implements PortalSelfService
                 status: __('capell-access-gate::public.portal.grant_status.' . $grant->status->value),
                 occurredAt: $grant->starts_at ?? $grant->updated_at,
                 meta: [
-                    'grant_id' => (int) $grant->getKey(),
-                    'area_id' => (int) $grant->access_area_id,
+                    'grant_id' => $grant->id,
+                    'area_id' => $grant->access_area_id,
                     'status' => $grant->status->value,
                 ],
             ))
@@ -72,7 +72,7 @@ final class AccessGatePortalSelfServiceItemProvider implements PortalSelfService
      */
     private function browserTokenItems(PortalAccount $portalAccount, string $email): array
     {
-        return BrowserToken::query()
+        return array_values(BrowserToken::query()
             ->with(['area', 'grant.registration'])
             ->where('status', BrowserTokenStatus::Active->value)
             ->where(function (Builder $query): void {
@@ -91,7 +91,7 @@ final class AccessGatePortalSelfServiceItemProvider implements PortalSelfService
             ->limit(10)
             ->get()
             ->map(fn (BrowserToken $browserToken): PortalSelfServiceItemData => new PortalSelfServiceItemData(
-                key: 'access-gate.browser-token.' . $browserToken->getKey(),
+                key: 'access-gate.browser-token.' . $browserToken->id,
                 type: PortalSelfServiceItemType::GatedResource,
                 label: $browserToken->area?->name ?? __('capell-access-gate::public.portal.gated_resource'),
                 description: $this->browserTokenDescription($browserToken),
@@ -99,13 +99,13 @@ final class AccessGatePortalSelfServiceItemProvider implements PortalSelfService
                 status: __('capell-access-gate::public.portal.browser_token_status.' . $browserToken->status->value),
                 occurredAt: $browserToken->last_used_at ?? $browserToken->updated_at,
                 meta: [
-                    'browser_token_id' => (int) $browserToken->getKey(),
-                    'grant_id' => (int) $browserToken->grant_id,
-                    'area_id' => (int) $browserToken->access_area_id,
+                    'browser_token_id' => $browserToken->id,
+                    'grant_id' => $browserToken->grant_id,
+                    'area_id' => $browserToken->access_area_id,
                     'status' => $browserToken->status->value,
                 ],
             ))
-            ->all();
+            ->all());
     }
 
     /**
@@ -131,14 +131,14 @@ final class AccessGatePortalSelfServiceItemProvider implements PortalSelfService
             ->map(fn (Registration $registration): PortalSelfServiceItemData => new PortalSelfServiceItemData(
                 key: 'access-gate.registration.' . $registration->getKey(),
                 type: PortalSelfServiceItemType::GatedResource,
-                label: $registration->area?->name ?? __('capell-access-gate::public.portal.gated_resource'),
+                label: $registration->area->name ?? __('capell-access-gate::public.portal.gated_resource'),
                 description: __('capell-access-gate::public.portal.registration_description'),
                 url: $registration->requested_url,
                 status: __('capell-access-gate::public.portal.registration_status.' . $registration->status->value),
                 occurredAt: $registration->approved_at ?? $registration->requested_at,
                 meta: [
-                    'registration_id' => (int) $registration->getKey(),
-                    'area_id' => (int) $registration->access_area_id,
+                    'registration_id' => $registration->id,
+                    'area_id' => $registration->access_area_id,
                     'status' => $registration->status->value,
                 ],
             ))

@@ -13,7 +13,11 @@ it('declares the premium-portfolio-collection theme manifest contract', function
         ->and($manifest['capabilities'])->toContain('theme-premium-portfolio-collection', 'theme-premium-portfolio-collection-frontend')
         ->and(data_get($manifest, 'security.publicOutput.cacheSafe'))->toBeTrue();
 
-    foreach (data_get($manifest, 'marketplace.screenshots', []) as $screenshot) {
-        expect(is_file(__DIR__ . '/../../' . $screenshot['path']))->toBeTrue();
+    $screenshots = data_get($manifest, 'marketplace.screenshots', []);
+
+    foreach (is_array($screenshots) ? $screenshots : [] as $screenshot) {
+        $screenshotPath = is_array($screenshot) ? ($screenshot['path'] ?? null) : null;
+
+        expect(is_file(__DIR__ . '/../../' . (is_string($screenshotPath) ? $screenshotPath : '')))->toBeTrue();
     }
 });

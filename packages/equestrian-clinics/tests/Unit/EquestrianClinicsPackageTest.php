@@ -313,7 +313,7 @@ function arrayEntry(array $entries, int $index): array
 }
 
 /**
- * @param  array<string, mixed>  $payload
+ * @param  array<array-key, mixed>  $payload
  */
 function stringValue(array $payload, string $key): string
 {

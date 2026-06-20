@@ -130,6 +130,8 @@ class AccessGateServiceProvider extends AbstractPackageServiceProvider
 
     public function packageBooted(): void
     {
+        $this->loadTranslationsFrom(__DIR__ . '/../../resources/lang', self::$name);
+
         if (! $this->hasCapellCore()) {
             return;
         }

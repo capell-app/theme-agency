@@ -142,7 +142,9 @@ it('uses sanitized root view and component values for public page rendering', fu
 
     $payload = json_decode((string) $response->getContent(), associative: true, flags: JSON_THROW_ON_ERROR);
 
-    expect($payload['component'] ?? null)->toBe('Capell/Page');
+    $payloadData = is_array($payload) ? $payload : [];
+
+    expect($payloadData['component'] ?? null)->toBe('Capell/Page');
 });
 
 it('reports inertia bridge health from registered renderer and middleware services', function (): void {

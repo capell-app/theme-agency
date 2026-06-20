@@ -8,6 +8,7 @@ use Capell\Bookings\Enums\BookingMessageChannelEnum;
 use Capell\Bookings\Enums\BookingMessageStatusEnum;
 use Capell\Core\Models\Site;
 use Capell\CustomerPortal\Models\PortalAccount;
+use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Override;
@@ -21,6 +22,13 @@ use Override;
  * @property BookingMessageStatusEnum $status
  * @property string $type
  * @property string $recipient
+ * @property string|null $subject
+ * @property string|null $body
+ * @property CarbonImmutable|null $scheduled_for
+ * @property CarbonImmutable|null $sent_at
+ * @property string|null $provider_message_id
+ * @property string|null $error
+ * @property array<string, mixed>|null $meta
  */
 class BookingMessageLog extends Model
 {

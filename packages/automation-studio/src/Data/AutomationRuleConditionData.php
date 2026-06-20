@@ -16,7 +16,7 @@ final class AutomationRuleConditionData extends Data
     ) {}
 
     /**
-     * @param  array<string, mixed>  $condition
+     * @param  array<array-key, mixed>  $condition
      */
     public static function fromArray(array $condition): ?self
     {
@@ -32,7 +32,7 @@ final class AutomationRuleConditionData extends Data
             field: trim($field),
             operator: $operator instanceof AutomationRuleConditionOperator
                 ? $operator
-                : AutomationRuleConditionOperator::tryFrom((string) $operator) ?? AutomationRuleConditionOperator::Equals,
+                : AutomationRuleConditionOperator::tryFrom(is_scalar($operator) ? (string) $operator : '') ?? AutomationRuleConditionOperator::Equals,
             value: $condition['value'] ?? null,
         );
     }

@@ -38,12 +38,19 @@ it('registers dashboard-dashboard_reports dashboard widgets on the main dashboar
 it('exposes dashboard report widget registrations through a package registry', function (): void {
     $registrations = resolve(DashboardReportWidgetRegistry::class)->registrations();
 
+    $publishingTrendRegistration = $registrations->firstWhere('widget', PublishingTrendChartFilamentWidget::class);
+    $contentHealthRegistration = $registrations->firstWhere('widget', ContentHealthFilamentWidget::class);
+
+    if ($publishingTrendRegistration === null || $contentHealthRegistration === null) {
+        $this->fail('Expected both dashboard report widgets to be registered.');
+    }
+
     expect($registrations->pluck('widget')->all())
         ->toContain(PublishingTrendChartFilamentWidget::class)
         ->toContain(ContentHealthFilamentWidget::class)
-        ->and($registrations->firstWhere('widget', PublishingTrendChartFilamentWidget::class)['dashboards'])
+        ->and($publishingTrendRegistration['dashboards'])
         ->toBe([DashboardEnum::Main])
-        ->and($registrations->firstWhere('widget', ContentHealthFilamentWidget::class)['dashboards'])
+        ->and($contentHealthRegistration['dashboards'])
         ->toBe([DashboardEnum::Main]);
 });
 

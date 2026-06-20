@@ -31,7 +31,7 @@ it('contributes a PageSpeed column and filter to the page table extender', funct
 
     expect($extender->getColumns())->toHaveCount(1)
         ->and($extender->getFilters())->toHaveCount(1)
-        ->and(collect($extender->getBulkActions())->map(fn (BulkAction $action): string => $action->getName())->all())->toBe([
+        ->and(collect($extender->getBulkActions())->map(fn (BulkAction $action): ?string => $action->getName())->all())->toBe([
             'run-mobile-page-speed',
             'run-desktop-page-speed',
             'run-page-speed',

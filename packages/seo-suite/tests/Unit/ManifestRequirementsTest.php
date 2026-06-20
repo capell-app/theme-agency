@@ -162,8 +162,8 @@ it('declares settings permissions supported integrations and cache invalidation 
             'model' => AiDiscoveryCrawlerRule::class,
             'events' => ['saved', 'deleted'],
         ])
-        ->and(data_get($manifest, 'security.publicSurface.auth'))->toBe('public')
-        ->and(data_get($manifest, 'security.publicSurface.routeNames', []))->toContain(
+        ->and(data_get($manifest, 'security.publicSurface.auth'))->toBe('none')
+        ->and(data_get($manifest, 'routes.public', []))->toContain(
             'capell-frontend.llms-txt',
             'capell-frontend.llms-full-txt',
             'capell-frontend.robots-txt',

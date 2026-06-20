@@ -83,7 +83,7 @@ final class DispatchAutomationTriggerAction
                         'source_id' => $event->sourceId,
                     ]);
 
-                    $result = BuildSafeAutomationActionFailureResultAction::run($ruleAction->type);
+                    $result = BuildSafeAutomationActionFailureResultAction::make()->handle($ruleAction->type);
                 }
 
                 $results[] = new AutomationActionResultData(

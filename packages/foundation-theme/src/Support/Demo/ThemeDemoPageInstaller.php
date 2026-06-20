@@ -516,6 +516,8 @@ final class ThemeDemoPageInstaller
     }
 
     /**
+     * @param  list<array{title: string, summary: string, type?: string}>  $items
+     * @param  list<string>  $imageUrls
      * @return list<array{title: string, summary: string, type?: string, url: string, image: string, imageUrl: string}>
      */
     private function premiumItems(array $items, array $imageUrls, string $baseUrl): array
@@ -609,6 +611,9 @@ final class ThemeDemoPageInstaller
     }
 
     /**
+     * @param  array{0: string, 1: string, 2: string, 3: list<string>}  $first
+     * @param  array{0: string, 1: string, 2: string, 3: list<string>}  $second
+     * @param  array{0: string, 1: string, 2: string, 3: list<string>}  $third
      * @return list<array{surface: string, title: string, summary: string, sections: list<string>, items: list<array{title: string, summary: string, type?: string}>}>
      */
     private function premiumSurfaces(array $first, array $second, array $third): array
@@ -619,14 +624,14 @@ final class ThemeDemoPageInstaller
                 'title' => $surface[1],
                 'summary' => $surface[2],
                 'sections' => $surface[3],
-                'items' => array_map(
+                'items' => array_values(array_map(
                     static fn (string $section): array => [
                         'title' => Str::headline($section),
                         'summary' => sprintf('A %s section tailored for this premium page surface.', Str::headline($section)),
                         'type' => 'Section',
                     ],
                     $surface[3],
-                ),
+                )),
             ],
             [$first, $second, $third],
         );
@@ -780,6 +785,7 @@ HTML;
             'ctaSummary' => 'CTA copy is stored as data, not presentation markup.',
         ];
 
+        /** @var array<string, array{summary: string, heroHeading: string, heroSummary: string, featuresHeading: string, featuresSummary: string, features: list<array{title: string, summary: string, type: string}>, ctaHeading: string, ctaSummary: string}> $profiles */
         $profiles = [
             'agency' => [
                 'summary' => 'A high-contrast agency homepage with campaign proof, project cards, and decisive conversion paths.',

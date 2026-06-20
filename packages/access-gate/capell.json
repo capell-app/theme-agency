@@ -168,18 +168,23 @@
         "riskTier": "sensitive",
         "publicSurface": {
             "routeNames": [
-                "claim",
-                "logout",
-                "request",
-                "request.store",
-                "status"
+                "capell-access-gate.claim",
+                "capell-access-gate.logout",
+                "capell-access-gate.request",
+                "capell-access-gate.request.store",
+                "capell-access-gate.status"
             ],
             "auth": "public",
             "csrfExemptRoutes": [],
             "signedRoutes": [],
-            "tokenizedRoutes": ["claim"],
+            "tokenizedRoutes": ["capell-access-gate.claim"],
             "webhookRoutes": [],
-            "throttledRoutes": ["claim", "logout", "request.store", "status"]
+            "throttledRoutes": [
+                "capell-access-gate.claim",
+                "capell-access-gate.logout",
+                "capell-access-gate.request.store",
+                "capell-access-gate.status"
+            ]
         },
         "sensitiveData": {
             "encryptedFields": [],

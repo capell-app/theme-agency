@@ -182,10 +182,10 @@ function dogWalkersThemeSection(string $key, array $viewData): ThemeSection
  */
 function dogWalkersOwnedSectionKeys(): array
 {
-    return collect(DogWalkersThemeServiceProvider::definition()->includedSections)
+    return array_values(collect(DogWalkersThemeServiceProvider::definition()->includedSections)
         ->reject(static fn (string $sectionKey): bool => in_array($sectionKey, ['navigation', 'footer'], true))
         ->values()
-        ->all();
+        ->all());
 }
 
 /**

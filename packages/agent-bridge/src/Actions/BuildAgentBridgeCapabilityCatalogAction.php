@@ -22,7 +22,7 @@ final class BuildAgentBridgeCapabilityCatalogAction
     {
         $registry ??= resolve(CapellAgentBridgeCapabilityRegistry::class);
 
-        return $registry
+        return array_values($registry
             ->all()
             ->sortBy(fn (CapabilityData $capability): string => $capability->server->value . ':' . $capability->scope . ':' . $capability->key)
             ->map(fn (CapabilityData $capability): array => [
@@ -42,6 +42,6 @@ final class BuildAgentBridgeCapabilityCatalogAction
                 'output_schema' => $capability->outputSchema,
             ])
             ->values()
-            ->all();
+            ->all());
     }
 }

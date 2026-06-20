@@ -20,6 +20,9 @@ use Illuminate\Support\Str;
 use Lorisleiva\Actions\Concerns\AsAction;
 use Throwable;
 
+/**
+ * @method static array{conversation: LiveChatConversation, visitor_message: LiveChatMessage, assistant_message: LiveChatMessage} run(IncomingLiveChatMessageData $data, int $siteId, ?LiveChatInstallation $installation = null)
+ */
 final class StartLiveChatConversationAction
 {
     use AsAction;

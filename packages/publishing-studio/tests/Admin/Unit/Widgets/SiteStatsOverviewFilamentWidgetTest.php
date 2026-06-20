@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 use Capell\Admin\Contracts\Dashboard\SiteStatsDataProvider;
 use Capell\Admin\Data\Dashboard\SiteStatsData;
-use Capell\Admin\Filament\Widgets\Dashboard\SiteStatsOverviewWidget;
+use Capell\Admin\Filament\Widgets\Dashboard\SiteStatsOverviewFilamentWidget;
 use Capell\Admin\Settings\AdminSettings;
 use Capell\PublishingStudio\Actions\Dashboard\BuildSiteStatsAction;
 use Capell\PublishingStudio\Support\Dashboard\WorkspaceSiteStatsDataProvider;
@@ -37,14 +37,14 @@ it('accepts all valid period keys', function (string $period): void {
 })->with(['today', 'yesterday', 'last_7_days', 'this_month', 'last_30_days', 'this_year']);
 
 it('is hidden when unauthenticated', function (): void {
-    expect(SiteStatsOverviewWidget::canView())->toBeFalse();
+    expect(SiteStatsOverviewFilamentWidget::canView())->toBeFalse();
 });
 
 it('is visible when authenticated', function (): void {
     $user = User::factory()->create();
     $this->actingAs($user);
 
-    expect(SiteStatsOverviewWidget::canView())->toBeTrue();
+    expect(SiteStatsOverviewFilamentWidget::canView())->toBeTrue();
 });
 
 it('is hidden when settings key is disabled', function (): void {
@@ -55,5 +55,5 @@ it('is hidden when settings key is disabled', function (): void {
     $settings->enabled_widgets = ['site_stats_overview' => false];
     $settings->save();
 
-    expect(SiteStatsOverviewWidget::canView())->toBeFalse();
+    expect(SiteStatsOverviewFilamentWidget::canView())->toBeFalse();
 });

@@ -81,16 +81,15 @@ final class AutomationRuleRegistry
     private function conditions(array $conditions): array
     {
         if ($this->isStructuredConditionList($conditions)) {
-            return collect($conditions)
+            return array_values(collect($conditions)
                 ->map(static fn (mixed $condition): ?AutomationRuleConditionData => is_array($condition)
                     ? AutomationRuleConditionData::fromArray($condition)
                     : null)
                 ->filter(static fn (?AutomationRuleConditionData $condition): bool => $condition instanceof AutomationRuleConditionData)
-                ->values()
-                ->all();
+                ->all());
         }
 
-        return collect($conditions)
+        return array_values(collect($conditions)
             ->map(static fn (mixed $expectedValue, int|string $payloadKey): ?AutomationRuleConditionData => is_string($payloadKey)
                 ? new AutomationRuleConditionData(
                     field: $payloadKey,
@@ -99,8 +98,7 @@ final class AutomationRuleRegistry
                 )
                 : null)
             ->filter(static fn (?AutomationRuleConditionData $condition): bool => $condition instanceof AutomationRuleConditionData)
-            ->values()
-            ->all();
+            ->all());
     }
 
     /**

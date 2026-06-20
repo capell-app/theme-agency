@@ -55,7 +55,11 @@ it('declares route backed fixtures for the required estate agents page set', fun
     throw_unless(is_array($entries), RuntimeException::class, 'Estate Agents screenshot entries must be an array.');
 
     $roles = collect($entries)
-        ->flatMap(function (array $entry): array {
+        ->flatMap(function (mixed $entry): array {
+            if (! is_array($entry)) {
+                throw new RuntimeException('Estate Agents screenshot entry must be an array.');
+            }
+
             $pageSetRoles = $entry['pageSetRoles'] ?? [];
 
             expect($entry['required'] ?? false)->toBeTrue()
@@ -63,7 +67,7 @@ it('declares route backed fixtures for the required estate agents page set', fun
                 ->and($entry['waitFor'] ?? '')->toBe('.estate-shell')
                 ->and($pageSetRoles)->toBeArray()->not->toBeEmpty();
 
-            return $pageSetRoles;
+            return is_array($pageSetRoles) ? $pageSetRoles : [];
         })
         ->unique()
         ->values()
