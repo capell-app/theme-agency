@@ -7,14 +7,18 @@ namespace Capell\SeoSuite\Filament\Extenders\PageSpeed;
 use Capell\Admin\Contracts\Extenders\PageTableExtender;
 use Capell\Core\Models\Page;
 use Capell\SeoSuite\Enums\PageSpeedStrategyEnum;
+use Capell\SeoSuite\Jobs\RunPageSpeedAuditJob;
 use Capell\SeoSuite\Models\PageSpeedAuditResult;
 use Capell\SeoSuite\Settings\SeoSuiteSettings;
 use Filament\Actions\BulkAction;
+use Filament\Notifications\Notification;
+use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\Column;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\BaseFilter;
 use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Support\HtmlString;
@@ -42,7 +46,26 @@ final class PageSpeedPageTableExtender implements PageTableExtender
      */
     public function getBulkActions(): array
     {
-        return [];
+        return [
+            $this->runAuditBulkAction(
+                name: 'run-mobile-page-speed',
+                label: __('capell-seo-suite::generic.pagespeed_run_mobile_audit'),
+                strategies: [PageSpeedStrategyEnum::Mobile],
+                icon: Heroicon::OutlinedDevicePhoneMobile,
+            ),
+            $this->runAuditBulkAction(
+                name: 'run-desktop-page-speed',
+                label: __('capell-seo-suite::generic.pagespeed_run_desktop_audit'),
+                strategies: [PageSpeedStrategyEnum::Desktop],
+                icon: Heroicon::OutlinedComputerDesktop,
+            ),
+            $this->runAuditBulkAction(
+                name: 'run-page-speed',
+                label: __('capell-seo-suite::generic.pagespeed_run_all_audits'),
+                strategies: PageSpeedStrategyEnum::cases(),
+                icon: Heroicon::OutlinedRocketLaunch,
+            ),
+        ];
     }
 
     /**
@@ -92,6 +115,37 @@ final class PageSpeedPageTableExtender implements PageTableExtender
             $this->badge(PageSpeedStrategyEnum::Mobile, $mobile),
             $this->badge(PageSpeedStrategyEnum::Desktop, $desktop),
         ));
+    }
+
+    /**
+     * @param  list<PageSpeedStrategyEnum>  $strategies
+     */
+    private function runAuditBulkAction(string $name, string $label, array $strategies, Heroicon $icon): BulkAction
+    {
+        return BulkAction::make($name)
+            ->label($label)
+            ->icon($icon)
+            ->color('gray')
+            ->requiresConfirmation()
+            ->modalHeading($label)
+            ->modalDescription(__('capell-seo-suite::generic.pagespeed_bulk_audit_confirmation'))
+            ->action(function (EloquentCollection $records) use ($strategies): void {
+                $records
+                    ->filter(fn (mixed $record): bool => $record instanceof Page)
+                    ->each(function (Page $page) use ($strategies): void {
+                        dispatch(new RunPageSpeedAuditJob(
+                            pageId: (int) $page->getKey(),
+                            strategies: $strategies,
+                        ));
+                    });
+
+                Notification::make('pagespeed-bulk-audit-queued')
+                    ->title(__('capell-seo-suite::generic.pagespeed_bulk_audit_queued', [
+                        'count' => $records->count(),
+                    ]))
+                    ->success()
+                    ->send();
+            });
     }
 
     private function badge(PageSpeedStrategyEnum $strategy, ?PageSpeedAuditResult $result): string

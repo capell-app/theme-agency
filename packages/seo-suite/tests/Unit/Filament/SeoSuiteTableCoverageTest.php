@@ -10,11 +10,14 @@ use Capell\Core\Models\Site;
 use Capell\Core\Models\Translation;
 use Capell\SeoSuite\Actions\ResolveAiDiscoveryProfileAction;
 use Capell\SeoSuite\Actions\UpdateAiDiscoveryPageInclusionAction;
+use Capell\SeoSuite\Enums\PageSpeedStrategyEnum;
 use Capell\SeoSuite\Enums\SeoCheckKeyEnum;
+use Capell\SeoSuite\Filament\Extenders\PageSpeed\PageSpeedPageTableExtender;
 use Capell\SeoSuite\Filament\Pages\SearchRankingsPage;
 use Capell\SeoSuite\Filament\Pages\Tables\AiDiscoveryTable;
 use Capell\SeoSuite\Filament\Pages\Tables\SeoAuditTable;
 use Capell\SeoSuite\Filament\Pages\Tables\TranslationCoverageTable;
+use Capell\SeoSuite\Jobs\RunPageSpeedAuditJob;
 use Capell\SeoSuite\Models\AiDiscoveryPageProfile;
 use Capell\SeoSuite\Models\PageSeoSnapshot;
 use Capell\SeoSuite\Models\SearchConsoleQueryMetric;
@@ -25,6 +28,7 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Queue;
 
 it('exposes translation coverage table columns for page, language completeness, missing languages, and author', function (): void {
     $method = new ReflectionMethod(TranslationCoverageTable::class, 'configure');
@@ -96,6 +100,71 @@ it('exposes ai discovery table columns, filters, row actions, and bulk actions',
             'edit_page',
         ])
         ->and($bulkActionNames)->toBe(['include_ai_index', 'exclude_ai_index']);
+});
+
+it('exposes page speed bulk audit actions for selected pages', function (): void {
+    $actions = collect((new PageSpeedPageTableExtender)->getBulkActions())
+        ->keyBy(fn (BulkAction $action): string => $action->getName());
+
+    expect($actions->keys()->all())->toBe([
+        'run-mobile-page-speed',
+        'run-desktop-page-speed',
+        'run-page-speed',
+    ])
+        ->and($actions->get('run-mobile-page-speed')?->isConfirmationRequired())->toBeTrue()
+        ->and($actions->get('run-desktop-page-speed')?->getLabel())->toBe(__('capell-seo-suite::generic.pagespeed_run_desktop_audit'));
+});
+
+it('queues page speed audits for selected pages from bulk actions', function (): void {
+    Queue::fake();
+
+    $site = Site::factory()->create();
+    $type = Blueprint::factory()->page()->create(['status' => true]);
+    $firstPage = Page::factory()->site($site)->type($type)->create();
+    $secondPage = Page::factory()->site($site)->type($type)->create();
+
+    $mobileAction = collect((new PageSpeedPageTableExtender)->getBulkActions())
+        ->first(fn (BulkAction $action): bool => $action->getName() === 'run-mobile-page-speed');
+
+    evaluateSeoSuiteBulkAction(
+        seoSuiteBulkAction($mobileAction),
+        new EloquentCollection([$firstPage, $secondPage]),
+    );
+
+    Queue::assertPushed(RunPageSpeedAuditJob::class, 2);
+    Queue::assertPushed(
+        RunPageSpeedAuditJob::class,
+        fn (RunPageSpeedAuditJob $job): bool => pageSpeedAuditJobProperty($job, 'pageId') === $firstPage->getKey()
+            && pageSpeedAuditJobProperty($job, 'strategies') === [PageSpeedStrategyEnum::Mobile],
+    );
+    Queue::assertPushed(
+        RunPageSpeedAuditJob::class,
+        fn (RunPageSpeedAuditJob $job): bool => pageSpeedAuditJobProperty($job, 'pageId') === $secondPage->getKey()
+            && pageSpeedAuditJobProperty($job, 'strategies') === [PageSpeedStrategyEnum::Mobile],
+    );
+});
+
+it('queues both page speed strategies from the combined bulk action', function (): void {
+    Queue::fake();
+
+    $page = Page::factory()
+        ->site(Site::factory()->create())
+        ->type(Blueprint::factory()->page()->create(['status' => true]))
+        ->create();
+
+    $bothAction = collect((new PageSpeedPageTableExtender)->getBulkActions())
+        ->first(fn (BulkAction $action): bool => $action->getName() === 'run-page-speed');
+
+    evaluateSeoSuiteBulkAction(
+        seoSuiteBulkAction($bothAction),
+        new EloquentCollection([$page]),
+    );
+
+    Queue::assertPushed(
+        RunPageSpeedAuditJob::class,
+        fn (RunPageSpeedAuditJob $job): bool => pageSpeedAuditJobProperty($job, 'pageId') === $page->getKey()
+            && pageSpeedAuditJobProperty($job, 'strategies') === PageSpeedStrategyEnum::cases(),
+    );
 });
 
 it('configures and drives ai discovery table actions through profile workflows', function (): void {
@@ -409,6 +478,13 @@ function evaluateSeoSuiteBulkAction(BulkAction $action, EloquentCollection $reco
         ['records' => $records],
         [EloquentCollection::class => $records],
     );
+}
+
+function pageSpeedAuditJobProperty(RunPageSpeedAuditJob $job, string $propertyName): mixed
+{
+    $property = new ReflectionProperty($job, $propertyName);
+
+    return $property->getValue($job);
 }
 
 it('uses translation metadata before labels for seo audit search preview titles', function (): void {
