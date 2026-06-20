@@ -13,6 +13,7 @@ use Capell\SeoSuite\Jobs\RunPageSpeedAuditJob;
 use Capell\SeoSuite\Models\PageSpeedAuditResult;
 use Filament\Notifications\Notification;
 use Filament\Widgets\Widget;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\On;
@@ -54,9 +55,13 @@ class EditPagePageSpeedAuditFilamentWidget extends Widget
             return;
         }
 
+        $requestedBy = auth()->user();
+        $requestedBy = $requestedBy instanceof Model ? $requestedBy : null;
+
         dispatch(new RunPageSpeedAuditJob(
             pageId: (int) $record->getKey(),
             strategies: PageSpeedStrategyEnum::cases(),
+            requestedBy: $requestedBy,
         ));
 
         unset($this->latestResults);

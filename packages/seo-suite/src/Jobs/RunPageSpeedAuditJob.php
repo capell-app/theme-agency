@@ -8,6 +8,7 @@ use Capell\SeoSuite\Actions\RunPageSpeedAuditAction;
 use Capell\SeoSuite\Enums\PageSpeedAuditTriggerEnum;
 use Capell\SeoSuite\Enums\PageSpeedStrategyEnum;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Queue\Queueable as FoundationQueueable;
 
 final class RunPageSpeedAuditJob implements ShouldQueue
@@ -23,6 +24,7 @@ final class RunPageSpeedAuditJob implements ShouldQueue
         private readonly ?int $pageId = null,
         private readonly array $strategies = [],
         private readonly ?int $limit = null,
+        private readonly ?Model $requestedBy = null,
         private readonly bool $notify = false,
     ) {}
 
@@ -35,6 +37,7 @@ final class RunPageSpeedAuditJob implements ShouldQueue
             pageId: $this->pageId,
             strategies: $this->strategies,
             limit: $this->limit,
+            requestedBy: $this->requestedBy,
             notify: $this->notify,
         );
     }

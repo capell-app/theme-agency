@@ -16,6 +16,7 @@ use Capell\SeoSuite\Jobs\RunPageSpeedAuditJob;
 use Capell\SeoSuite\Models\PageSpeedAuditResult;
 use Capell\SeoSuite\Models\PageSpeedAuditRun;
 use Capell\Tests\Support\Concerns\CreatesAdminUser;
+use Filament\Actions\BulkAction;
 use Illuminate\Support\Facades\Queue;
 use Livewire\Livewire;
 
@@ -30,7 +31,11 @@ it('contributes a PageSpeed column and filter to the page table extender', funct
 
     expect($extender->getColumns())->toHaveCount(1)
         ->and($extender->getFilters())->toHaveCount(1)
-        ->and($extender->getBulkActions())->toBe([]);
+        ->and(collect($extender->getBulkActions())->map(fn (BulkAction $action): string => $action->getName())->all())->toBe([
+            'run-mobile-page-speed',
+            'run-desktop-page-speed',
+            'run-page-speed',
+        ]);
 });
 
 it('adds the PageSpeed filter to the CMS pages table', function (): void {
@@ -193,12 +198,16 @@ it('queues a manual page speed audit from the widget', function (): void {
     });
 
     [, , $page] = createPageSpeedWidgetPage('/manual');
+    $requester = auth()->user();
 
     Livewire::test(EditPagePageSpeedAuditFilamentWidget::class, ['record' => $page])
         ->call('runAudit')
         ->assertHasNoErrors();
 
-    Queue::assertPushed(RunPageSpeedAuditJob::class);
+    Queue::assertPushed(
+        RunPageSpeedAuditJob::class,
+        fn (RunPageSpeedAuditJob $job): bool => pageSpeedWidgetAuditJobProperty($job, 'requestedBy') === $requester,
+    );
     expect(PageSpeedAuditResult::query()->where('page_id', $page->getKey())->count())->toBe(0);
 });
 
@@ -236,6 +245,13 @@ function createPageSpeedWidgetPage(string $url): array
     }
 
     return [$site, $language, $page];
+}
+
+function pageSpeedWidgetAuditJobProperty(RunPageSpeedAuditJob $job, string $propertyName): mixed
+{
+    $property = new ReflectionProperty($job, $propertyName);
+
+    return $property->getValue($job);
 }
 
 function createPageSpeedAuditRunId(): int

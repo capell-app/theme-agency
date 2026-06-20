@@ -130,12 +130,16 @@ final class PageSpeedPageTableExtender implements PageTableExtender
             ->modalHeading($label)
             ->modalDescription(__('capell-seo-suite::generic.pagespeed_bulk_audit_confirmation'))
             ->action(function (EloquentCollection $records) use ($strategies): void {
+                $requestedBy = auth()->user();
+                $requestedBy = $requestedBy instanceof Model ? $requestedBy : null;
+
                 $records
                     ->filter(fn (mixed $record): bool => $record instanceof Page)
-                    ->each(function (Page $page) use ($strategies): void {
+                    ->each(function (Page $page) use ($strategies, $requestedBy): void {
                         dispatch(new RunPageSpeedAuditJob(
                             pageId: (int) $page->getKey(),
                             strategies: $strategies,
+                            requestedBy: $requestedBy,
                         ));
                     });
 

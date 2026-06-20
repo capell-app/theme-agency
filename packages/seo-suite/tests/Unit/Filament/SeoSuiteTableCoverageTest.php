@@ -21,6 +21,7 @@ use Capell\SeoSuite\Jobs\RunPageSpeedAuditJob;
 use Capell\SeoSuite\Models\AiDiscoveryPageProfile;
 use Capell\SeoSuite\Models\PageSeoSnapshot;
 use Capell\SeoSuite\Models\SearchConsoleQueryMetric;
+use Capell\Tests\Support\Concerns\CreatesAdminUser;
 use Filament\Actions\Action;
 use Filament\Actions\BulkAction;
 use Filament\Tables\Contracts\HasTable;
@@ -29,6 +30,8 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Queue;
+
+uses(CreatesAdminUser::class);
 
 it('exposes translation coverage table columns for page, language completeness, missing languages, and author', function (): void {
     $method = new ReflectionMethod(TranslationCoverageTable::class, 'configure');
@@ -117,6 +120,8 @@ it('exposes page speed bulk audit actions for selected pages', function (): void
 
 it('queues page speed audits for selected pages from bulk actions', function (): void {
     Queue::fake();
+    test()->actingAsAdmin();
+    $requester = auth()->user();
 
     $site = Site::factory()->create();
     $type = Blueprint::factory()->page()->create(['status' => true]);
@@ -135,7 +140,8 @@ it('queues page speed audits for selected pages from bulk actions', function ():
     Queue::assertPushed(
         RunPageSpeedAuditJob::class,
         fn (RunPageSpeedAuditJob $job): bool => pageSpeedAuditJobProperty($job, 'pageId') === $firstPage->getKey()
-            && pageSpeedAuditJobProperty($job, 'strategies') === [PageSpeedStrategyEnum::Mobile],
+            && pageSpeedAuditJobProperty($job, 'strategies') === [PageSpeedStrategyEnum::Mobile]
+            && pageSpeedAuditJobProperty($job, 'requestedBy') === $requester,
     );
     Queue::assertPushed(
         RunPageSpeedAuditJob::class,

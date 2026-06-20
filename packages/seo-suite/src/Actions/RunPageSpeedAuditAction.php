@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Capell\SeoSuite\Actions;
 
+use Capell\Core\Actions\GetEditPageResourceUrlAction;
+use Capell\Core\Models\Page;
 use Capell\SeoSuite\Contracts\PageSpeedInsightsClientInterface;
 use Capell\SeoSuite\Data\PageSpeedAuditDigestFindingData;
 use Capell\SeoSuite\Data\PageSpeedAuditResultData;
@@ -13,8 +15,13 @@ use Capell\SeoSuite\Enums\PageSpeedAuditTriggerEnum;
 use Capell\SeoSuite\Enums\PageSpeedStrategyEnum;
 use Capell\SeoSuite\Models\PageSpeedAuditResult;
 use Capell\SeoSuite\Models\PageSpeedAuditRun;
+use Filament\Actions\Action;
+use Filament\Notifications\Notification;
+use Filament\Support\Icons\Heroicon;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Schema;
 use Lorisleiva\Actions\Concerns\AsAction;
 use Throwable;
 
@@ -130,6 +137,10 @@ final class RunPageSpeedAuditAction
             $run->update(['notification_status' => 'not_sent_failed']);
         }
 
+        if (! $notify) {
+            $this->notifyRequester($summary, $runResults, $requestedBy);
+        }
+
         return $summary;
     }
 
@@ -156,8 +167,96 @@ final class RunPageSpeedAuditAction
     {
         return PageSpeedAuditResult::query()
             ->where('page_speed_audit_run_id', $run->getKey())
+            ->with('page.type')
             ->orderBy('performance_score')
             ->get();
+    }
+
+    /**
+     * @param  Collection<int, PageSpeedAuditResult>  $results
+     */
+    private function notifyRequester(PageSpeedAuditSummaryData $summary, Collection $results, ?Model $requestedBy): void
+    {
+        if (! $requestedBy instanceof Authenticatable || ! Schema::hasTable('notifications')) {
+            return;
+        }
+
+        $notification = Notification::make('seo-suite-pagespeed-audit-complete-' . $summary->run->getKey())
+            ->title(__('capell-seo-suite::generic.pagespeed_complete_title'))
+            ->body(__('capell-seo-suite::generic.pagespeed_complete_body', [
+                'pages' => $summary->auditedPages,
+                'average' => $this->averagePerformanceScoreLabel($results),
+                'failed' => $summary->failedResults,
+            ]))
+            ->icon(Heroicon::OutlinedBolt)
+            ->success()
+            ->persistent()
+            ->actions($this->lowRatedPageActions($results));
+
+        try {
+            $notification->broadcast($requestedBy);
+            $notification->sendToDatabase($requestedBy);
+        } catch (Throwable $throwable) {
+            report($throwable);
+        }
+    }
+
+    /**
+     * @param  Collection<int, PageSpeedAuditResult>  $results
+     */
+    private function averagePerformanceScoreLabel(Collection $results): string
+    {
+        $average = $results
+            ->filter(fn (PageSpeedAuditResult $result): bool => $result->status === 'succeeded'
+                && $result->performance_score !== null)
+            ->avg('performance_score');
+
+        if ($average === null) {
+            return (string) __('capell-seo-suite::generic.pagespeed_average_unavailable');
+        }
+
+        return (string) round((float) $average);
+    }
+
+    /**
+     * @param  Collection<int, PageSpeedAuditResult>  $results
+     * @return list<Action>
+     */
+    private function lowRatedPageActions(Collection $results): array
+    {
+        return $results
+            ->filter(fn (PageSpeedAuditResult $result): bool => $result->status === 'succeeded'
+                && $result->performance_score !== null
+                && $result->performance_score < 50)
+            ->sortBy('performance_score')
+            ->unique('page_id')
+            ->take(3)
+            ->map(function (PageSpeedAuditResult $result): ?Action {
+                $page = $result->page;
+
+                if (! $page instanceof Page) {
+                    return null;
+                }
+
+                $url = GetEditPageResourceUrlAction::run($page);
+
+                if ($url === null) {
+                    return null;
+                }
+
+                return Action::make('openLowRatedPage' . $page->getKey())
+                    ->label(__('capell-seo-suite::generic.pagespeed_open_low_rated_page', [
+                        'page' => $page->name,
+                        'score' => $result->performance_score,
+                    ]))
+                    ->icon(Heroicon::OutlinedArrowTopRightOnSquare)
+                    ->link()
+                    ->close()
+                    ->url($url);
+            })
+            ->filter()
+            ->values()
+            ->all();
     }
 
     /**

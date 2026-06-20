@@ -16,6 +16,13 @@ use Capell\SeoSuite\Enums\PageSpeedAuditTriggerEnum;
 use Capell\SeoSuite\Enums\PageSpeedStrategyEnum;
 use Capell\SeoSuite\Models\PageSpeedAuditResult;
 use Capell\SeoSuite\Models\PageSpeedAuditRun;
+use Capell\Tests\Support\Concerns\CreatesAdminUser;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
+
+uses(CreatesAdminUser::class);
 
 it('audits published public page urls and persists mobile and desktop results', function (): void {
     app()->instance(PageSpeedInsightsClientInterface::class, new class implements PageSpeedInsightsClientInterface
@@ -166,6 +173,69 @@ it('summarizes worst scores, low scores, and score drops for digests', function 
         ->and($summary->belowThresholdResults[0]->score)->toBe(42)
         ->and($summary->biggestDrops[0]->previousScore)->toBe(90)
         ->and($summary->biggestDrops[0]->drop)->toBe(48);
+});
+
+it('stores a completion notification for the requester with average score and low page links', function (): void {
+    Schema::create('notifications', function (Blueprint $table): void {
+        $table->uuid('id')->primary();
+        $table->string('type');
+        $table->morphs('notifiable');
+        $table->text('data');
+        $table->timestamp('read_at')->nullable();
+        $table->timestamps();
+    });
+
+    app()->instance(PageSpeedInsightsClientInterface::class, new class implements PageSpeedInsightsClientInterface
+    {
+        public function isConfigured(): bool
+        {
+            return true;
+        }
+
+        public function analyze(string $url, PageSpeedStrategyEnum $strategy): PageSpeedAuditResultData
+        {
+            return new PageSpeedAuditResultData(
+                strategy: $strategy,
+                url: $url,
+                successful: true,
+                categoryScores: [
+                    'performance' => str_contains($url, '/slow') ? 40 : 80,
+                ],
+            );
+        }
+    });
+
+    test()->actingAsAdmin();
+    $requester = auth()->user();
+
+    throw_unless($requester instanceof Model, RuntimeException::class, 'Expected authenticated requester model.');
+
+    [, , $slowPage] = createPageSpeedAuditPage('/slow');
+    $slowPage->update(['name' => 'Slow Page']);
+    createPageSpeedAuditPage('/fast');
+
+    RunPageSpeedAuditAction::run(
+        trigger: PageSpeedAuditTriggerEnum::Manual,
+        strategies: [PageSpeedStrategyEnum::Mobile],
+        requestedBy: $requester,
+    );
+
+    $notification = DB::table('notifications')
+        ->where('notifiable_type', $requester->getMorphClass())
+        ->where('notifiable_id', $requester->getKey())
+        ->first();
+
+    expect($notification)->not->toBeNull();
+
+    $data = json_decode((string) $notification->data, associative: true, flags: JSON_THROW_ON_ERROR);
+    $encodedData = json_encode($data, JSON_THROW_ON_ERROR);
+
+    expect($data['title'] ?? null)->toBe(__('capell-seo-suite::generic.pagespeed_complete_title'))
+        ->and($data['body'] ?? null)->toContain('2 page(s) audited')
+        ->and($data['body'] ?? null)->toContain('Average performance score: 60')
+        ->and($encodedData)->toContain('Slow Page')
+        ->and($data['actions'][0]['url'] ?? null)->toContain('/admin/pages/' . $slowPage->getKey() . '/edit')
+        ->and($encodedData)->toContain('40');
 });
 
 /**
