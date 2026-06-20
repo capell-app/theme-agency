@@ -80,6 +80,8 @@ temp/
 .superpowers/
 
 # Local review / planning artifacts
+/CONTEXT-MAP.md
+/improvement-plan-status.md
 /docs/internal/
 /docs/*plan*.md
 /docs/*review*.md
