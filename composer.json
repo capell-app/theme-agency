@@ -52,7 +52,7 @@
         ],
         "security:contracts": [
             "@php scripts/audit-package-security.php",
-            "@php -d memory_limit=1G vendor/bin/pest tests/Packages/Security --configuration=phpunit.xml",
+            "@php -d memory_limit=1536M vendor/bin/pest tests/Packages/Security --configuration=phpunit.xml",
             "@security:surface-report:check"
         ],
         "security:surface-report": "@php scripts/generate-package-security-surface-report.php",
@@ -98,28 +98,33 @@
             "@security:audit",
             "@php -r \"echo PHP_EOL . 'Running package security contracts...' . PHP_EOL;\"",
             "@security:contracts",
+            "@check:pest-shards",
             "@php -r \"echo PHP_EOL . 'Running Pest...' . PHP_EOL;\"",
-            "@test"
+            "@test:preflight"
         ],
         "quality:all": [
             "@preflight:all",
             "@coverage",
             "@test:mutate:ci"
         ],
-        "test:unit": "@php -d memory_limit=1G -d max_execution_time=0 -d pcov.enabled=0 vendor/bin/pest --colors=always --compact --configuration=phpunit.xml",
-        "test:group": "@php -d memory_limit=1G -d max_execution_time=0 -d pcov.enabled=0 vendor/bin/pest --colors=always --compact --group=${PEST_GROUP:-unit} --configuration=phpunit.xml",
-        "test:debug": "@php -d memory_limit=1G -d max_execution_time=0 -d pcov.enabled=0 vendor/bin/pest --colors=always --debug --stop-on-defect --configuration=phpunit.xml",
-        "test:debug:group": "@php -d memory_limit=1G -d max_execution_time=0 -d pcov.enabled=0 vendor/bin/pest --colors=always --debug --stop-on-defect --group=${PEST_GROUP:-unit} --configuration=phpunit.xml",
-        "test:fast": "@php -d memory_limit=1G -d max_execution_time=0 -d pcov.enabled=0 vendor/bin/pest --colors=always --compact --shard=${PEST_SHARD:-1/1} --stop-on-error --stop-on-failure --configuration=phpunit.xml",
-        "test:fast:ci": "@php -d memory_limit=1G -d max_execution_time=0 -d pcov.enabled=0 vendor/bin/pest --colors=always --compact --shard=${PEST_SHARD:-1/1} --configuration=phpunit.xml",
-        "test:all": "@php -d memory_limit=1G -d max_execution_time=0 -d pcov.enabled=0 vendor/bin/pest --colors=always --compact --stop-on-error --stop-on-failure --configuration=phpunit.xml",
-        "test:all:ci": "@php -d memory_limit=1G -d max_execution_time=0 -d pcov.enabled=0 vendor/bin/pest --colors=always --compact --configuration=phpunit.xml",
-        "test:shards": "@php -d memory_limit=1G -d max_execution_time=0 -d pcov.enabled=0 vendor/bin/pest --colors=always --compact --update-shards --configuration=phpunit.xml",
+        "test:unit": "@php -d memory_limit=1536M -d max_execution_time=0 -d pcov.enabled=0 vendor/bin/pest --colors=always --compact --configuration=phpunit.xml",
+        "test:group": "@php -d memory_limit=1536M -d max_execution_time=0 -d pcov.enabled=0 vendor/bin/pest --colors=always --compact --group=${PEST_GROUP:-unit} --configuration=phpunit.xml",
+        "test:debug": "@php -d memory_limit=1536M -d max_execution_time=0 -d pcov.enabled=0 vendor/bin/pest --colors=always --debug --stop-on-defect --configuration=phpunit.xml",
+        "test:debug:group": "@php -d memory_limit=1536M -d max_execution_time=0 -d pcov.enabled=0 vendor/bin/pest --colors=always --debug --stop-on-defect --group=${PEST_GROUP:-unit} --configuration=phpunit.xml",
+        "test:fast": "@php -d memory_limit=1536M -d max_execution_time=0 -d pcov.enabled=0 vendor/bin/pest --colors=always --compact --shard=${PEST_SHARD:-1/1} --stop-on-error --stop-on-failure --configuration=phpunit.xml",
+        "test:fast:ci": "@php -d memory_limit=1536M -d max_execution_time=0 -d pcov.enabled=0 vendor/bin/pest --colors=always --compact --shard=${PEST_SHARD:-1/1} --configuration=phpunit.xml",
+        "test:preflight": "@php scripts/run-pest-shards.php",
+        "test:preflight:serial": "@php -d memory_limit=1536M -d max_execution_time=0 -d pcov.enabled=0 vendor/bin/pest --colors=always --compact --stop-on-error --stop-on-failure --configuration=phpunit.xml",
+        "test:all": "@php -d memory_limit=1536M -d max_execution_time=0 -d pcov.enabled=0 vendor/bin/pest --colors=always --compact --stop-on-error --stop-on-failure --configuration=phpunit.xml",
+        "test:all:ci": "@php -d memory_limit=1536M -d max_execution_time=0 -d pcov.enabled=0 vendor/bin/pest --colors=always --compact --configuration=phpunit.xml",
+        "test:shards": "@php -d memory_limit=1536M -d max_execution_time=0 -d pcov.enabled=0 vendor/bin/pest --colors=always --compact --update-shards --configuration=phpunit.xml",
+        "test:profile": "@php scripts/profile-pest-tests.php",
+        "check:pest-shards": "@php -r \"return file_exists('tests/.pest/shards.json') ? 0 : 1;\"",
         "test:types": "@php vendor/bin/pest --configuration=phpunit.xml --type-coverage",
         "test": [
             "@clear",
             "@prepare",
-            "@test:all"
+            "@test:preflight"
         ],
         "coverage:blade": "@php -d memory_limit=4G -d max_execution_time=0 vendor/bin/pest --blade-coverage --parallel --processes=${PEST_PROCESSES:-4} --colors=always --configuration=phpunit.xml",
         "coverage": [

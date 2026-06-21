@@ -22,6 +22,8 @@ Use the narrowest useful Pest command while editing:
 vendor/bin/pest packages/<package>/tests --configuration=phpunit.xml
 ```
 
+Local preflight uses `COMPOSER=composer.local.json composer test:preflight`, which runs balanced Pest shards concurrently. Use focused package/file Pest commands while developing. Use `COMPOSER=composer.local.json composer test:all:ci` only when an exhaustive serial run is needed for release investigation.
+
 After adding or moving fixture classes, refresh the optimized autoloader and confirm there are no PSR-4 warnings:
 
 ```bash
