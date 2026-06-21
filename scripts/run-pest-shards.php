@@ -2,11 +2,12 @@
 
 declare(strict_types=1);
 
-$shards = max(1, (int) ($_SERVER['PEST_SHARDS'] ?? getenv('PEST_SHARDS') ?: 6));
+$shards = max(1, (int) ($_SERVER['PEST_SHARDS'] ?? getenv('PEST_SHARDS') ?: 10));
 $phpBinary = PHP_BINARY;
 $configuration = 'phpunit.xml';
+$scope = (string) ($argv[1] ?? $_SERVER['PEST_PREFLIGHT_SCOPE'] ?? getenv('PEST_PREFLIGHT_SCOPE') ?: 'focused');
 try {
-    $files = testFiles();
+    $files = testFiles($scope);
 } catch (Throwable $throwable) {
     fwrite(STDERR, $throwable->getMessage() . PHP_EOL);
 
@@ -14,8 +15,16 @@ try {
 }
 $timings = shardTimings();
 $partitions = partitionFiles($files, $timings, $shards);
+$partitionWeights = partitionWeights($partitions, $timings);
 $processes = [];
 $exitCode = 0;
+$startedAt = microtime(true);
+
+printf("[pest-shards] Scope: %s; files: %d; shards: %d.\n", $scope, count($files), $shards);
+
+if (count(array_unique(array_values($timings))) <= 1) {
+    echo '[pest-shards] Timing manifest is unweighted; run composer test:profile for slow-file evidence.' . PHP_EOL;
+}
 
 foreach ($partitions as $index => $partitionFiles) {
     $shard = $index + 1;
@@ -62,9 +71,17 @@ foreach ($partitions as $index => $partitionFiles) {
     $processes[$shard] = [
         'process' => $process,
         'pipes' => $pipes,
+        'started_at' => microtime(true),
+        'files' => count($partitionFiles),
+        'weight' => $partitionWeights[$index] ?? 0.0,
     ];
 
-    echo "[shard {$shard}] Running " . count($partitionFiles) . ' test files.' . PHP_EOL;
+    printf(
+        "[shard %d] Running %d test files; estimated weight %.2f.\n",
+        $shard,
+        count($partitionFiles),
+        $partitionWeights[$index] ?? 0.0,
+    );
 }
 
 while ($processes !== []) {
@@ -99,18 +116,27 @@ while ($processes !== []) {
             $exitCode = $code;
         }
 
+        printf(
+            "[shard %d] Finished in %.2fs with exit code %d.\n",
+            $index,
+            microtime(true) - $process['started_at'],
+            $code,
+        );
+
         unset($processes[$index]);
     }
 
     usleep(100_000);
 }
 
+printf("[pest-shards] Finished %d shards in %.2fs.\n", $shards, microtime(true) - $startedAt);
+
 return $exitCode;
 
 /**
  * @return list<string>
  */
-function testFiles(): array
+function testFiles(string $scope): array
 {
     $files = [];
 
@@ -133,8 +159,17 @@ function testFiles(): array
     }
 
     sort($files);
+    $files = array_values(array_unique($files));
 
-    return array_values(array_unique($files));
+    if ($scope === 'full') {
+        return $files;
+    }
+
+    if ($scope !== 'focused') {
+        throw new InvalidArgumentException("Unsupported Pest preflight scope [{$scope}].");
+    }
+
+    return focusedPreflightFiles($files);
 }
 
 /**
@@ -199,4 +234,70 @@ function partitionFiles(array $files, array $timings, int $shards): array
     }
 
     return $partitions;
+}
+
+/**
+ * @param  list<list<string>>  $partitions
+ * @param  array<string, float>  $timings
+ * @return list<float>
+ */
+function partitionWeights(array $partitions, array $timings): array
+{
+    return array_map(
+        static fn (array $files): float => array_reduce(
+            $files,
+            static fn (float $weight, string $file): float => $weight + (float) ($timings[$file] ?? 1.0),
+            0.0,
+        ),
+        $partitions,
+    );
+}
+
+/**
+ * @param  list<string>  $files
+ * @return list<string>
+ */
+function focusedPreflightFiles(array $files): array
+{
+    $patterns = [
+        'tests/Feature/Manifest*Test.php',
+        'tests/Packages/Arch/*Test.php',
+        'tests/Packages/Security/*Test.php',
+        'tests/Packages/BoostResourcesTest.php',
+        'tests/Packages/Feature/Admin*Test.php',
+        'tests/Packages/Feature/CoverageGapBehaviorTest.php',
+        'tests/Packages/Feature/Package*Test.php',
+        'tests/Packages/Feature/PremiumThemeContractTest.php',
+        'tests/Packages/Feature/ThemeFrontend*Test.php',
+        'tests/Packages/Integration/CrossPackageBootTest.php',
+        'tests/Packages/Integration/FilamentPackageNavigationTest.php',
+        'tests/Packages/ManifestTruthTest.php',
+        'packages/*/tests/Arch/*Test.php',
+        'packages/*/tests/*/ManifestRequirementsTest.php',
+        'packages/*/tests/*/*/ManifestRequirementsTest.php',
+        'packages/*/tests/*/*/*/ManifestRequirementsTest.php',
+        'packages/*/tests/*/*HealthCheckTest.php',
+        'packages/*/tests/*/*/*HealthCheckTest.php',
+        'packages/*/tests/*/Providers/*ServiceProviderTest.php',
+        'packages/*/tests/*/*/Providers/*ServiceProviderTest.php',
+    ];
+
+    return array_values(array_filter(
+        $files,
+        static fn (string $file): bool => matchesAnyPattern($file, $patterns),
+    ));
+}
+
+/**
+ * @param  list<string>  $patterns
+ */
+function matchesAnyPattern(string $file, array $patterns): bool
+{
+    foreach ($patterns as $pattern) {
+        if (fnmatch($pattern, $file)) {
+            return true;
+        }
+    }
+
+    return false;
 }

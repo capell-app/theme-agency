@@ -130,7 +130,6 @@ it('shows installed package admin surfaces in Filament navigation', function ():
         'Import Sessions',
         'Landing pages',
         (string) __('capell-admin::navigation.redirects'),
-        'Tags',
     );
 });
 

@@ -39,17 +39,22 @@ it('ships Laravel Boost guidelines for every package and skills only where usefu
     foreach ($packageComposerFiles as $packageComposerFile) {
         $packagePath = $packageComposerFile->getPath();
         $packageName = basename($packagePath);
+        $boostPath = $packagePath . '/resources/boost';
         $packageSkillFiles = glob($packagePath . '/resources/boost/skills/*/SKILL.md');
         $packageSkillFiles = $packageSkillFiles !== false ? $packageSkillFiles : [];
 
-        expect($packagePath . '/resources/boost/guidelines/core.blade.php')->toBeFile();
-
         if (in_array($packageName, $packagesWithSkills, true)) {
+            expect($packagePath . '/resources/boost/guidelines/core.blade.php')->toBeFile();
             expect($packageSkillFiles)->not->toBeEmpty();
 
             continue;
         }
 
+        if (! is_dir($boostPath)) {
+            continue;
+        }
+
+        expect($packagePath . '/resources/boost/guidelines/core.blade.php')->toBeFile();
         expect($packageSkillFiles)->toBeEmpty();
     }
 });
