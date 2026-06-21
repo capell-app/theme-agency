@@ -26,14 +26,13 @@ use Capell\Newsletter\Models\ProviderInterestMapping;
 use Capell\Newsletter\Models\Subscriber;
 use Capell\Newsletter\Models\SyncAttempt;
 use Capell\Tags\Models\Tag;
+use Capell\Tests\Support\Filament\AdminSurfaceAssertions;
 use Filament\Forms\Components\KeyValue;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Schema;
-use Filament\Tables\Contracts\HasTable;
-use Filament\Tables\Table;
 use Filament\Widgets\StatsOverviewWidget\Stat;
 
 it('declares newsletter mapping resource forms, pages, and settings schema', function (): void {
@@ -99,16 +98,16 @@ it('only offers the fake provider in allowed environments', function (): void {
 });
 
 it('declares newsletter tag and sync attempt table columns and navigation metadata', function (): void {
-    $formMappingTable = FormMappingResource::table(newsletterCoverageTable());
-    $importBatchTable = ImportBatchResource::table(newsletterCoverageTable());
-    $newsletterSendTable = NewsletterSendResource::table(newsletterCoverageTable());
-    $providerAudienceTable = ProviderAudienceResource::table(newsletterCoverageTable());
-    $providerConnectionTable = ProviderConnectionResource::table(newsletterCoverageTable());
-    $providerInterestTable = ProviderInterestMappingResource::table(newsletterCoverageTable());
-    $segmentTable = SegmentResource::table(newsletterCoverageTable());
-    $subscriberTable = SubscriberResource::table(newsletterCoverageTable());
-    $tagTable = NewsletterTagResource::table(newsletterCoverageTable());
-    $syncAttemptTable = SyncAttemptResource::table(newsletterCoverageTable());
+    $formMappingTable = FormMappingResource::table(AdminSurfaceAssertions::table());
+    $importBatchTable = ImportBatchResource::table(AdminSurfaceAssertions::table());
+    $newsletterSendTable = NewsletterSendResource::table(AdminSurfaceAssertions::table());
+    $providerAudienceTable = ProviderAudienceResource::table(AdminSurfaceAssertions::table());
+    $providerConnectionTable = ProviderConnectionResource::table(AdminSurfaceAssertions::table());
+    $providerInterestTable = ProviderInterestMappingResource::table(AdminSurfaceAssertions::table());
+    $segmentTable = SegmentResource::table(AdminSurfaceAssertions::table());
+    $subscriberTable = SubscriberResource::table(AdminSurfaceAssertions::table());
+    $tagTable = NewsletterTagResource::table(AdminSurfaceAssertions::table());
+    $syncAttemptTable = SyncAttemptResource::table(AdminSurfaceAssertions::table());
 
     expect(array_keys($formMappingTable->getColumns()))->toBe(['name', 'form_handle', 'email_field', 'updated_at'])
         ->and(array_keys($formMappingTable->getFilters()))->toContain('site_id')
@@ -207,14 +206,6 @@ function newsletterCoverageGridComponents(Grid $grid): array
     $childComponents = $reflectionProperty->getValue($grid);
 
     return $childComponents['default'] ?? [];
-}
-
-function newsletterCoverageTable(): Table
-{
-    $livewire = Mockery::mock(HasTable::class);
-    $livewire->shouldReceive('makeFilamentTranslatableContentDriver')->andReturn(null);
-
-    return Table::make($livewire);
 }
 
 /**

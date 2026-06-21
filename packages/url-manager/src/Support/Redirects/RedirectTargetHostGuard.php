@@ -50,7 +50,8 @@ final class RedirectTargetHostGuard
         }
 
         if ((bool) config('capell-url-manager.redirects.allow_app_url_host', true)) {
-            $appHost = parse_url((string) config('app.url'), PHP_URL_HOST);
+            $appUrl = config('app.url');
+            $appHost = is_string($appUrl) ? parse_url($appUrl, PHP_URL_HOST) : null;
 
             if (is_string($appHost) && $appHost !== '') {
                 $configuredHosts[] = strtolower($appHost);

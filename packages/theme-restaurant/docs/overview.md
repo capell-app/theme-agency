@@ -54,7 +54,9 @@ Product group:
 - Product group: `Capell Themes`
 - Manifest extends: `default`
 - Runtime extends: `default`
-- Restaurant runtime inheritance uses `extends: default` and requires `capell-app/frontend` for the built-in default fallback.
+- Restaurant runtime inheritance uses `extends: default` and requires `capell-app/foundation-theme` plus `capell-app/frontend` for the built-in default fallback.
+- Theme Restaurant output is cacheable for public HTML with site and locale variation.
+- Restaurant sections do not query Bookings, Form Builder, Events, Blog, or SEO Suite directly; optional package integrations render safe static fallbacks when unavailable.
 
 ## Data Model
 

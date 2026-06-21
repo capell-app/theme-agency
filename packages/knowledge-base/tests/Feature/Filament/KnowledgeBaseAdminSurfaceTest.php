@@ -29,6 +29,7 @@ use Capell\KnowledgeBase\Models\KnowledgeBaseArticleVersion;
 use Capell\KnowledgeBase\Models\KnowledgeBaseCollection;
 use Capell\KnowledgeBase\Providers\AdminServiceProvider;
 use Capell\KnowledgeBase\Tests\KnowledgeBaseTestCase;
+use Capell\Tests\Support\Filament\AdminSurfaceAssertions;
 use Filament\Actions\CreateAction;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
@@ -37,9 +38,7 @@ use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Contracts\HasTable;
 use Filament\Tables\Filters\SelectFilter;
-use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\File;
 
@@ -64,25 +63,6 @@ function knowledgeBaseManifestArray(array $array, string $key): array
  * @param  array<array-key, object>  $actions
  * @return list<string>
  */
-function knowledgeBaseFilamentActionNames(array $actions): array
-{
-    $names = [];
-
-    foreach ($actions as $action) {
-        if (! method_exists($action, 'getName')) {
-            continue;
-        }
-
-        $name = (new ReflectionMethod($action, 'getName'))->invoke($action);
-
-        if (is_string($name)) {
-            $names[] = $name;
-        }
-    }
-
-    return $names;
-}
-
 it('exposes translated collection and article admin resources', function (): void {
     $collectionPages = KnowledgeBaseCollectionResource::getPages();
     $articlePages = KnowledgeBaseArticleResource::getPages();
@@ -184,13 +164,13 @@ it('declares admin providers, resources, and owned tables in the manifest', func
         ->toBe(BuildKnowledgeBaseArticleSchemaAction::class)
         ->and($commands['demo'] ?? null)->toBe('capell:knowledge-base-demo')
         ->and($publicSurface['routeNames'] ?? null)->toBe([
-            'capell-knowledge-base.ai-output',
-            'capell-knowledge-base.article',
-            'capell-knowledge-base.article.feedback',
-            'capell-knowledge-base.index',
+            'ai-output',
+            'article',
+            'article.feedback',
+            'index',
         ])
         ->and($publicSurface['throttledRoutes'] ?? null)->toBe([
-            'capell-knowledge-base.article.feedback',
+            'article.feedback',
         ])
         ->and($sensitiveData['hashedTokenFields'] ?? null)->toBe([
             'knowledge_base_article_feedback.user_agent_hash',
@@ -239,7 +219,7 @@ it('builds knowledge base resource forms and tables with configured controls', f
             TextInput::class,
             Select::class,
         ])
-        ->and(array_keys(KnowledgeBaseCollectionResource::table(knowledgeBaseAdminTableForCoverage())->getColumns()))->toBe([
+        ->and(array_keys(KnowledgeBaseCollectionResource::table(AdminSurfaceAssertions::table())->getColumns()))->toBe([
             'title',
             'slug',
             'is_public',
@@ -248,7 +228,7 @@ it('builds knowledge base resource forms and tables with configured controls', f
         ])
         ->and(array_map(
             static fn (object $column): string => $column::class,
-            array_values(KnowledgeBaseCollectionResource::table(knowledgeBaseAdminTableForCoverage())->getColumns()),
+            array_values(KnowledgeBaseCollectionResource::table(AdminSurfaceAssertions::table())->getColumns()),
         ))->toBe([
             TextColumn::class,
             TextColumn::class,
@@ -256,7 +236,7 @@ it('builds knowledge base resource forms and tables with configured controls', f
             TextColumn::class,
             TextColumn::class,
         ])
-        ->and(array_keys(KnowledgeBaseArticleResource::table(knowledgeBaseAdminTableForCoverage())->getColumns()))->toBe([
+        ->and(array_keys(KnowledgeBaseArticleResource::table(AdminSurfaceAssertions::table())->getColumns()))->toBe([
             'title',
             'collection.title',
             'status',
@@ -266,17 +246,17 @@ it('builds knowledge base resource forms and tables with configured controls', f
             'helpful_feedback_rate',
             'published_at',
         ])
-        ->and(array_keys(KnowledgeBaseArticleResource::table(knowledgeBaseAdminTableForCoverage())->getFilters()))->toBe([
+        ->and(array_keys(KnowledgeBaseArticleResource::table(AdminSurfaceAssertions::table())->getFilters()))->toBe([
             'status',
             'collection_id',
         ])
-        ->and(KnowledgeBaseArticleResource::table(knowledgeBaseAdminTableForCoverage())->getFilters()['status'])->toBeInstanceOf(SelectFilter::class)
+        ->and(KnowledgeBaseArticleResource::table(AdminSurfaceAssertions::table())->getFilters()['status'])->toBeInstanceOf(SelectFilter::class)
         ->and(KnowledgeBaseArticleStatus::Archived->getLabel())->toBe(__('capell-knowledge-base::generic.article_status.archived'));
 });
 
 it('exposes article version history in the article edit surface', function (): void {
     $relationManager = new ArticleVersionsRelationManager;
-    $table = $relationManager->table(knowledgeBaseAdminTableForCoverage());
+    $table = $relationManager->table(AdminSurfaceAssertions::table());
 
     expect(ArticleVersionsRelationManager::getTitle(KnowledgeBaseArticle::factory()->make(), EditKnowledgeBaseArticle::class))
         ->toBe(__('capell-knowledge-base::generic.admin.relations.versions'))
@@ -301,7 +281,7 @@ it('exposes article version history in the article edit surface', function (): v
 
 it('exposes related article editing in the article edit surface', function (): void {
     $relationManager = new RelatedArticlesRelationManager;
-    $table = $relationManager->table(knowledgeBaseAdminTableForCoverage());
+    $table = $relationManager->table(AdminSurfaceAssertions::table());
 
     expect(RelatedArticlesRelationManager::getTitle(KnowledgeBaseArticle::factory()->make(), EditKnowledgeBaseArticle::class))
         ->toBe(__('capell-knowledge-base::generic.admin.relations.related_articles'))
@@ -322,8 +302,8 @@ it('exposes related article editing in the article edit surface', function (): v
             TextColumn::class,
             TextColumn::class,
         ])
-        ->and(knowledgeBaseFilamentActionNames($table->getHeaderActions()))->toBe(['relate_article'])
-        ->and(knowledgeBaseFilamentActionNames($table->getRecordActions()))->toBe(['update_relation']);
+        ->and(AdminSurfaceAssertions::actionNames($table->getHeaderActions()))->toBe(['relate_article'])
+        ->and(AdminSurfaceAssertions::actionNames($table->getRecordActions()))->toBe(['update_relation']);
 });
 
 it('saves article edits as published versions through the edit page adapter', function (): void {
@@ -412,18 +392,6 @@ function knowledgeBaseAdminChildComponents(object $component): array
     $childComponents = $reflectionProperty->getValue($component);
 
     return array_values($childComponents['default'] ?? []);
-}
-
-function knowledgeBaseAdminTableForCoverage(): Table
-{
-    $livewire = Mockery::mock(HasTable::class);
-    $livewire->shouldIgnoreMissing();
-    $livewire->shouldReceive('makeFilamentTranslatableContentDriver')->andReturn(null)->byDefault();
-    $livewire->shouldReceive('getTableFilterState')->andReturn([])->byDefault();
-    $livewire->shouldReceive('isTableLoaded')->andReturnTrue()->byDefault();
-    $livewire->shouldReceive('getTableArguments')->andReturn([])->byDefault();
-
-    return Table::make($livewire);
 }
 
 /**

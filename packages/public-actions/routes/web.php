@@ -12,6 +12,11 @@ use Capell\PublicActions\Http\Controllers\Zapier\SubmitZapierPublicActionControl
 use Capell\PublicActions\Http\Middleware\PublicActionZapierAuthMiddleware;
 use Illuminate\Support\Facades\Route;
 
+/** @var string $publicActionsApiPrefix */
+$publicActionsApiPrefix = is_string(config('capell-public-actions.api_route_prefix', 'api/public-actions'))
+    ? config('capell-public-actions.api_route_prefix', 'api/public-actions')
+    : 'api/public-actions';
+
 Route::middleware(['web'])
     ->prefix(config('capell-public-actions.route_prefix', 'actions'))
     ->as('capell-public-actions.')
@@ -25,7 +30,7 @@ Route::middleware(['web'])
     });
 
 Route::middleware(['api', PublicActionZapierAuthMiddleware::class, 'throttle:public-actions-api'])
-    ->prefix(config('capell-public-actions.api_route_prefix', 'api/public-actions') . '/zapier')
+    ->prefix($publicActionsApiPrefix . '/zapier')
     ->as('capell-public-actions.zapier.')
     ->group(function (): void {
         Route::get('/me', ShowZapierAccountController::class)->name('me');
@@ -35,7 +40,7 @@ Route::middleware(['api', PublicActionZapierAuthMiddleware::class, 'throttle:pub
     });
 
 Route::middleware(['api', 'throttle:public-actions-submit'])
-    ->prefix(config('capell-public-actions.api_route_prefix', 'api/public-actions') . '/trusted')
+    ->prefix($publicActionsApiPrefix . '/trusted')
     ->as('capell-public-actions.trusted.')
     ->group(function (): void {
         Route::post('/actions/{action}/submissions', SubmitTrustedPublicActionController::class)

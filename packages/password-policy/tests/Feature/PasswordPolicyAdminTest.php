@@ -10,7 +10,7 @@ use Capell\Admin\Facades\CapellAdmin;
 use Capell\Admin\Filament\Pages\SettingsPage;
 use Capell\Admin\Filament\Resources\Users\Pages\CreateUser;
 use Capell\Admin\Filament\Resources\Users\Pages\EditUser;
-use Capell\Admin\Filament\Widgets\Extensions\InstalledExtensionsWidget;
+use Capell\Admin\Filament\Widgets\Extensions\InstalledExtensionsFilamentWidget;
 use Capell\Admin\Support\Bridges\AdminBridgeRegistrar;
 use Capell\Admin\Support\CapellAdminManager;
 use Capell\Admin\Support\Extensions\ExtensionManagementSurfaceRegistry;
@@ -172,7 +172,7 @@ it('opens password policy settings from the extensions page action modal', funct
     resetPasswordPolicyAdminBridgeState();
     invokePasswordPolicyProviderMethod(new PasswordPolicyServiceProvider(app()), 'registerAdminSurface');
 
-    Livewire::test(InstalledExtensionsWidget::class)
+    Livewire::test(InstalledExtensionsFilamentWidget::class)
         ->assertSuccessful()
         ->mountTableAction('manageExtension', PasswordPolicyServiceProvider::$packageName);
 

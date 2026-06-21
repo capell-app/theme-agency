@@ -99,7 +99,9 @@ class EventOccurrence extends Model
 
     public function occurrenceUrl(): ?string
     {
-        return BuildEventOccurrenceUrlAction::run($this);
+        $url = BuildEventOccurrenceUrlAction::run($this);
+
+        return is_string($url) ? $url : null;
     }
 
     public function isPubliclyVisible(): bool

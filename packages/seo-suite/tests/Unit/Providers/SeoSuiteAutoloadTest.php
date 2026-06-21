@@ -9,6 +9,7 @@ use Capell\SeoSuite\Handlers\ClearCircuitBreakerHandler;
 use Capell\SeoSuite\Providers\SeoSuiteServiceProvider;
 use Capell\SeoSuite\Settings\SeoSuiteSettings;
 use Capell\SeoSuite\Targets\FlatJsonTarget;
+use Illuminate\Console\Scheduling\Event;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Support\Facades\Schema;
 
@@ -75,8 +76,10 @@ it('registers scheduled PageSpeed audits with overlap and single-server guards',
     $event = collect($schedule->events())
         ->first(fn (mixed $scheduledEvent): bool => str_contains((string) $scheduledEvent->command, 'capell:seo-suite:pagespeed-audit'));
 
-    expect($event)->not->toBeNull()
-        ->and($event->onOneServer)->toBeTrue()
+    expect($event instanceof Event)->toBeTrue();
+    assert($event instanceof Event);
+
+    expect($event->onOneServer)->toBeTrue()
         ->and($event->withoutOverlapping)->toBeTrue()
         ->and($event->command)->toContain('--limit=7');
 });

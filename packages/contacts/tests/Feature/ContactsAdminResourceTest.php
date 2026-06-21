@@ -186,7 +186,9 @@ it('keeps the contact resource list query under the declared admin query budget'
         ->limit(12)
         ->get();
 
-    $contacts->each(function (Contact $contact): void {
+    $contacts->each(function ($contact): void {
+        throw_unless($contact instanceof Contact, RuntimeException::class, 'Expected contact model instance.');
+
         $contact->site?->getKey();
         $contact->tags->pluck('slug')->all();
     });

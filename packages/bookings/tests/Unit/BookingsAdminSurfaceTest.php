@@ -40,9 +40,7 @@ use Capell\Bookings\Models\BookingTravelObservation;
 use Capell\Bookings\Models\BookingWaitlistEntry;
 use Capell\Bookings\Models\BookingWorkZone;
 use Capell\Bookings\Models\LessonSeries;
-use Filament\Actions\ActionGroup;
-use Filament\Tables\Contracts\HasTable;
-use Filament\Tables\Table;
+use Capell\Tests\Support\Filament\AdminSurfaceAssertions;
 
 it('declares admin resources for all bookings operator records', function (): void {
     expect(ResourceEnum::cases())->toHaveCount(16)
@@ -100,66 +98,26 @@ it('exposes list create edit pages for mutable booking setup resources', functio
 });
 
 it('exposes appointment request workflow actions and audit log relation', function (): void {
-    $table = AppointmentRequestResource::table(bookingsAdminTableForCoverage());
+    $table = AppointmentRequestResource::table(AdminSurfaceAssertions::table());
     $page = new EditAppointmentRequest;
 
-    expect(bookingsAdminActionNames($table->getRecordActions()))->toContain('confirm', 'cancel')
-        ->and(bookingsAdminActionNames(bookingsAdminEditAppointmentHeaderActions($page)))->toBe(['confirm', 'cancel'])
+    expect(AdminSurfaceAssertions::actionNames($table->getRecordActions()))->toContain('confirm', 'cancel')
+        ->and(AdminSurfaceAssertions::actionNames(bookingsAdminEditAppointmentHeaderActions($page)))->toBe(['confirm', 'cancel'])
         ->and(AppointmentRequestResource::getRelations())->toBe([LessonNotesRelationManager::class, AppointmentAuditLogsRelationManager::class])
         ->and(LessonNotesRelationManager::getRelationshipName())->toBe('lessonNotes')
         ->and(AppointmentAuditLogsRelationManager::getRelationshipName())->toBe('auditLogs');
 });
 
 it('exposes a retry action for failed booking message logs', function (): void {
-    $table = BookingMessageLogResource::table(bookingsAdminTableForCoverage());
+    $table = BookingMessageLogResource::table(AdminSurfaceAssertions::table());
 
-    expect(bookingsAdminActionNames($table->getRecordActions()))->toContain('retry');
+    expect(AdminSurfaceAssertions::actionNames($table->getRecordActions()))->toContain('retry');
 });
 
 it('exposes review participant detail from review requests', function (): void {
     expect(BookingReviewRequestResource::getRelations())->toBe([ReviewParticipantsRelationManager::class])
         ->and(ReviewParticipantsRelationManager::getRelationshipName())->toBe('participants');
 });
-
-function bookingsAdminTableForCoverage(): Table
-{
-    $livewire = Mockery::mock(HasTable::class);
-    $livewire->shouldIgnoreMissing();
-    $livewire->shouldReceive('makeFilamentTranslatableContentDriver')->andReturn(null)->byDefault();
-    $livewire->shouldReceive('getTableFilterState')->andReturn([])->byDefault();
-    $livewire->shouldReceive('isTableLoaded')->andReturnTrue()->byDefault();
-    $livewire->shouldReceive('getTableArguments')->andReturn([])->byDefault();
-
-    return Table::make($livewire);
-}
-
-/**
- * @param  array<array-key, mixed>  $actions
- * @return array<int, string>
- */
-function bookingsAdminActionNames(array $actions): array
-{
-    return collect($actions)
-        ->flatMap(fn (mixed $action): array => bookingsAdminFlattenActionNames($action))
-        ->values()
-        ->all();
-}
-
-/**
- * @return array<int, string>
- */
-function bookingsAdminFlattenActionNames(mixed $action): array
-{
-    if ($action instanceof ActionGroup) {
-        return bookingsAdminActionNames($action->getActions());
-    }
-
-    if (is_object($action) && method_exists($action, 'getName')) {
-        return [(string) $action->getName()];
-    }
-
-    return [];
-}
 
 /**
  * @return array<array-key, mixed>

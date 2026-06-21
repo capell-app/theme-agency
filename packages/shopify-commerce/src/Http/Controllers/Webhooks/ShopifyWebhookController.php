@@ -97,7 +97,7 @@ final class ShopifyWebhookController
             return true;
         }
 
-        $toleranceSeconds = (int) config('capell-shopify-commerce.webhook_freshness_tolerance_seconds', 300);
+        $toleranceSeconds = $this->integerConfig('capell-shopify-commerce.webhook_freshness_tolerance_seconds', 300);
 
         return abs(CarbonImmutable::now()->getTimestamp() - $triggeredAt->getTimestamp()) <= $toleranceSeconds;
     }
@@ -132,5 +132,12 @@ final class ShopifyWebhookController
         }
 
         return $result;
+    }
+
+    private function integerConfig(string $key, int $default): int
+    {
+        $value = config($key, $default);
+
+        return is_numeric($value) ? (int) $value : $default;
     }
 }

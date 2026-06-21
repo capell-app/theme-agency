@@ -8,6 +8,7 @@ use BackedEnum;
 use Capell\PasswordPolicy\Actions\EvaluatePasswordPolicyAction;
 use Capell\PasswordPolicy\Actions\UpdatePasswordAction;
 use Capell\PasswordPolicy\Data\PasswordChangeData;
+use Capell\PasswordPolicy\Data\PasswordPolicyStatusData;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Concerns\InteractsWithForms;
@@ -50,9 +51,12 @@ class ForcedPasswordChangePage extends Page implements HasForms
             return false;
         }
 
-        $status = EvaluatePasswordPolicyAction::run($user);
+        $status = resolve(EvaluatePasswordPolicyAction::class)->handle($user);
+        abort_unless($status instanceof PasswordPolicyStatusData, 403);
+        $mustChangePassword = $status->mustChangePassword;
+        $passwordExpired = $status->passwordExpired;
 
-        return $status->mustChangePassword || $status->passwordExpired;
+        return $mustChangePassword || $passwordExpired;
     }
 
     public function mount(): void

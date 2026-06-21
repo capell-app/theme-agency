@@ -120,8 +120,8 @@
         "sensitiveData": {
             "encryptedFields": [],
             "hashedTokenFields": [
-                "knowledge_base_collections.user_agent_hash",
-                "knowledge_base_collections.visitor_hash"
+                "knowledge_base_article_feedback.user_agent_hash",
+                "knowledge_base_article_feedback.visitor_hash"
             ],
             "redactedOutputClasses": [],
             "plaintextJustifications": []

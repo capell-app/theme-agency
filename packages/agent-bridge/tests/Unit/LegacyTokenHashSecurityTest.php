@@ -64,8 +64,11 @@ it('rehashes a legacy token to the hmac scheme on successful use while the flag 
 
     $token->refresh();
 
+    $resolvedToken = CapellAgentBridgeToken::findForPlainTextToken('rehash-me');
+
     expect($response->getStatusCode())->toBe(200)
         ->and($token->token_hash)->toBe(CapellAgentBridgeToken::hashPlainTextToken('rehash-me'))
         ->and($token->token_hash)->not->toBe($legacyHash)
-        ->and(CapellAgentBridgeToken::findForPlainTextToken('rehash-me')->is($token))->toBeTrue();
+        ->and($resolvedToken)->toBeInstanceOf(CapellAgentBridgeToken::class)
+        ->and($resolvedToken?->is($token))->toBeTrue();
 });

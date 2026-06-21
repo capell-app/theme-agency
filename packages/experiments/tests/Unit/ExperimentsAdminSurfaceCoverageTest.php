@@ -28,6 +28,7 @@ use Capell\Experiments\Manifest\ExperimentGoalResourceContribution;
 use Capell\Experiments\Manifest\ExperimentResourceContribution;
 use Capell\Experiments\Manifest\ExperimentsModelsContribution;
 use Capell\Experiments\Manifest\ExperimentVariantResourceContribution;
+use Capell\Tests\Support\Filament\AdminSurfaceAssertions;
 use Filament\Actions\CreateAction;
 use Filament\Forms\Components\KeyValue;
 use Filament\Forms\Components\Select;
@@ -37,8 +38,6 @@ use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Contracts\HasTable;
-use Filament\Tables\Table;
 use Illuminate\Support\Facades\Schema as SchemaFacade;
 
 it('builds experiments resource forms with configured fields and enum option labels', function (): void {
@@ -114,7 +113,7 @@ it('builds experiments resource tables with expected columns', function (
     array $expectedColumnNames,
     array $expectedColumnClasses,
 ): void {
-    $table = $resourceClass::table(experimentsResourceTableForCoverage());
+    $table = $resourceClass::table(AdminSurfaceAssertions::table());
     $columns = $table->getColumns();
 
     expect(array_keys($columns))->toBe($expectedColumnNames)
@@ -194,18 +193,6 @@ function experimentsResourceChildComponents(object $component): array
     $childComponents = $reflectionProperty->getValue($component);
 
     return array_values($childComponents['default'] ?? []);
-}
-
-function experimentsResourceTableForCoverage(): Table
-{
-    $livewire = Mockery::mock(HasTable::class);
-    $livewire->shouldIgnoreMissing();
-    $livewire->shouldReceive('makeFilamentTranslatableContentDriver')->andReturn(null)->byDefault();
-    $livewire->shouldReceive('getTableFilterState')->andReturn([])->byDefault();
-    $livewire->shouldReceive('isTableLoaded')->andReturnTrue()->byDefault();
-    $livewire->shouldReceive('getTableArguments')->andReturn([])->byDefault();
-
-    return Table::make($livewire);
 }
 
 /**

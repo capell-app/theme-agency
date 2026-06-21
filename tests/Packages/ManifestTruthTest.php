@@ -142,7 +142,7 @@ it('declares critical health checks with runnable diagnostics', function (): voi
         }
 
         foreach ($healthChecks as $index => $healthCheck) {
-            if (! is_array($healthCheck) || strtolower((string) ($healthCheck['severity'] ?? '')) !== 'critical') {
+            if (! is_array($healthCheck) || manifest_truth_health_check_severity($healthCheck) !== 'critical') {
                 continue;
             }
 
@@ -231,6 +231,16 @@ function manifest_truth_package_manifests(): array
     ksort($manifests);
 
     return $manifests;
+}
+
+/**
+ * @param  array<mixed>  $healthCheck
+ */
+function manifest_truth_health_check_severity(array $healthCheck): string
+{
+    $severity = $healthCheck['severity'] ?? null;
+
+    return is_string($severity) ? strtolower($severity) : '';
 }
 
 /**

@@ -163,13 +163,7 @@ it('declares settings permissions supported integrations and cache invalidation 
             'events' => ['saved', 'deleted'],
         ])
         ->and(data_get($manifest, 'security.publicSurface.auth'))->toBe('none')
-        ->and(data_get($manifest, 'routes.public', []))->toContain(
-            'capell-frontend.llms-txt',
-            'capell-frontend.llms-full-txt',
-            'capell-frontend.robots-txt',
-            'capell-frontend.page-markdown-home',
-            'capell-frontend.page-markdown',
-        );
+        ->and(data_get($manifest, 'security.publicSurface.routeNames', []))->toBe([]);
 });
 
 it('declares implemented admin pages routes and no longer defers core seo suite surfaces', function (): void {

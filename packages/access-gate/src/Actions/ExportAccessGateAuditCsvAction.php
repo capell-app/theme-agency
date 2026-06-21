@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Capell\AccessGate\Actions;
 
 use Capell\AccessGate\Enums\EventType;
+use Capell\AccessGate\Models\Area;
 use Capell\AccessGate\Models\Event;
 use Carbon\CarbonInterface;
 use Illuminate\Database\Eloquent\Builder;
@@ -28,7 +29,7 @@ final class ExportAccessGateAuditCsvAction
     ): string {
         $query = Event::query()
             ->with(['area', 'registration', 'grant'])
-            ->orderByDesc('occurred_at')
+            ->latest('occurred_at')
             ->orderByDesc('id');
 
         if (is_string($areaKey) && trim($areaKey) !== '') {
@@ -82,13 +83,15 @@ final class ExportAccessGateAuditCsvAction
                     return false;
                 }
 
+                $area = $event->area;
+
                 $rows[] = [
                     $event->occurred_at->toIso8601String(),
                     (string) $event->id,
                     $event->type->value,
                     $event->access_area_id === null ? '' : (string) $event->access_area_id,
-                    $event->area->key,
-                    $event->area->name,
+                    $area instanceof Area ? $area->key : '',
+                    $area instanceof Area ? $area->name : '',
                     $event->registration_id === null ? '' : (string) $event->registration_id,
                     $event->registration->email ?? '',
                     $event->grant_id === null ? '' : (string) $event->grant_id,

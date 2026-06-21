@@ -74,10 +74,19 @@ it('caches the latest layout builder preview state per user and page', function 
     $state = resolve(StoreLayoutBuilderPreviewStateAction::class)->resolve($page, $user);
 
     throw_unless($state instanceof LayoutBuilderPreviewStateData, RuntimeException::class, 'Expected layout builder preview state to resolve.');
+    $mainContainer = $state->containers['main'] ?? null;
+
+    throw_unless(is_array($mainContainer), RuntimeException::class, 'Expected main preview container array.');
+    $widgets = $mainContainer['widgets'] ?? null;
+
+    throw_unless(is_array($widgets), RuntimeException::class, 'Expected main preview widgets array.');
+    $firstWidget = $widgets[0] ?? null;
+
+    throw_unless(is_array($firstWidget), RuntimeException::class, 'Expected first preview widget array.');
 
     expect($state)->not->toBeNull()
         ->and($state->layoutId)->toBe($layout->id)
-        ->and($state->containers['main']['widgets'][0]['widget_key'])->toBe('hero')
+        ->and($firstWidget['widget_key'] ?? null)->toBe('hero')
         ->and($state->signature)->toBeString();
 
     Cache::store('array')->flush();

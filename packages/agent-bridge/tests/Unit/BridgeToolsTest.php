@@ -48,9 +48,11 @@ it('lists boost capabilities visible through the site server', function (): void
     $response = (new ListBoostCapabilitiesTool)->handle($registry);
     $structuredContent = agentBridgeStructuredContent($response);
 
+    $capabilities = capabilityList($structuredContent);
+
     expect($structuredContent)
         ->toHaveKey('confirmation')
-        ->and($structuredContent['capabilities'][0]['key'])->toBe('capell.fake.preview');
+        ->and($capabilities[0]['key'])->toBe('capell.fake.preview');
 });
 
 it('previews a boost capability through the registry', function (): void {
@@ -185,17 +187,14 @@ it('lists built-in capability schemas for agent discovery', function (): void {
         new AuthenticatedAgentBridgeClientData(tokenId: 1, name: 'Schema client', scopes: ['capell.pages.write']),
     );
 
-    $capabilities = agentBridgeStructuredContent($response)['capabilities'] ?? [];
+    $capabilities = capabilityList(agentBridgeStructuredContent($response));
 
-    throw_unless(is_array($capabilities), RuntimeException::class, 'Agent Bridge capabilities response must be an array.');
-
-    $createDraft = collect($capabilities)->firstWhere('key', 'capell.pages.create_draft');
+    $createDraft = firstCapabilityByKey($capabilities, 'capell.pages.create_draft');
 
     expect($createDraft)
-        ->toBeArray()
-        ->and($createDraft['inputDataClass'])->toBe(CreateDraftPageCapabilityInputData::class)
-        ->and($createDraft['outputDataClass'])->toBe(CapabilityResultData::class)
-        ->and($createDraft['inputSchema']['required'])->toContain('name', 'site_id', 'blueprint_id', 'layout_id');
+        ->and($createDraft['inputDataClass'] ?? null)->toBe(CreateDraftPageCapabilityInputData::class)
+        ->and($createDraft['outputDataClass'] ?? null)->toBe(CapabilityResultData::class)
+        ->and(requiredSchemaFields($createDraft['inputSchema'] ?? null))->toContain('name', 'site_id', 'blueprint_id', 'layout_id');
 });
 
 it('queries audit entries for the authenticated token', function (): void {
@@ -368,6 +367,95 @@ function agentBridgeStructuredContent(ResponseFactory $response): array
     return $structuredContent;
 }
 
+/**
+ * @return array<string, mixed>
+ */
+function decodedJsonResourcePayload(string $json): array
+{
+    $payload = json_decode($json, true, flags: JSON_THROW_ON_ERROR);
+
+    throw_unless(is_array($payload), RuntimeException::class, 'Expected JSON resource payload array.');
+
+    $normalized = [];
+
+    foreach ($payload as $key => $value) {
+        if (is_string($key)) {
+            $normalized[$key] = $value;
+        }
+    }
+
+    return $normalized;
+}
+
+/**
+ * @param  array<string, mixed>  $structuredContent
+ * @return list<array<string, mixed>>
+ */
+function capabilityList(array $structuredContent): array
+{
+    $capabilities = $structuredContent['capabilities'] ?? null;
+
+    throw_unless(is_array($capabilities), RuntimeException::class, 'Expected capabilities list.');
+
+    return array_values(array_map(
+        static fn (array $capability): array => $capability,
+        array_filter($capabilities, static fn (mixed $capability): bool => is_array($capability)),
+    ));
+}
+
+/**
+ * @param  list<array<string, mixed>>  $capabilities
+ * @return array<string, mixed>
+ */
+function firstCapabilityByKey(array $capabilities, string $key): array
+{
+    foreach ($capabilities as $capability) {
+        if (($capability['key'] ?? null) === $key) {
+            return $capability;
+        }
+    }
+
+    throw new RuntimeException(sprintf('Capability [%s] was not found.', $key));
+}
+
+/**
+ * @return list<string>
+ */
+function requiredSchemaFields(mixed $schema): array
+{
+    if (! is_array($schema)) {
+        throw new RuntimeException('Expected schema array.');
+    }
+
+    $required = $schema['required'] ?? null;
+
+    throw_unless(is_array($required), RuntimeException::class, 'Expected required schema fields array.');
+
+    return array_values(array_map(
+        static fn (string $field): string => $field,
+        array_filter($required, static fn (mixed $field): bool => is_string($field)),
+    ));
+}
+
+/**
+ * @return array<string, mixed>
+ */
+function schemaProperties(mixed $schema): array
+{
+    if (! is_array($schema)) {
+        throw new RuntimeException('Expected schema array.');
+    }
+
+    $properties = $schema['properties'] ?? null;
+
+    throw_unless(is_array($properties), RuntimeException::class, 'Expected schema properties array.');
+
+    return array_map(
+        static fn (mixed $value): mixed => $value,
+        $properties,
+    );
+}
+
 it('hashes nested capability payload objects deterministically while preserving list order', function (): void {
     expect(InvokeAgentBridgeCapabilityPreviewAction::payloadHash([
         'filters' => [
@@ -469,17 +557,16 @@ it('exports a machine-readable MCP capability schema catalog', function (): void
 
     app()->instance(CapellAgentBridgeCapabilityRegistry::class, $registry);
 
-    $payload = json_decode(
+    $payload = decodedJsonResourcePayload(
         (string) (new CapellAgentBridgeCapabilitySchemaResource)->handle()->content(),
-        true,
-        flags: JSON_THROW_ON_ERROR,
     );
+    $capabilities = capabilityList($payload);
 
     expect($payload)
         ->toBeArray()
         ->and($payload['schemaVersion'])->toBe('1.0')
-        ->and($payload['capabilities'])->toHaveCount(1)
-        ->and($payload['capabilities'][0])->toMatchArray([
+        ->and($capabilities)->toHaveCount(1)
+        ->and($capabilities[0])->toMatchArray([
             'key' => 'capell.pages.create_draft',
             'scope' => 'capell.pages.write',
             'server' => CapabilityServerEnum::Site->value,
@@ -490,9 +577,9 @@ it('exports a machine-readable MCP capability schema catalog', function (): void
             'input_data_class' => CreateDraftPageCapabilityInputData::class,
             'output_data_class' => CapabilityResultData::class,
         ])
-        ->and($payload['capabilities'][0]['input_schema']['required'])
+        ->and(requiredSchemaFields($capabilities[0]['input_schema'] ?? null))
         ->toBe(['name', 'site_id', 'blueprint_id', 'layout_id'])
-        ->and($payload['capabilities'][0]['output_schema']['properties'])
+        ->and(schemaProperties($capabilities[0]['output_schema'] ?? null))
         ->toHaveKeys(['ok', 'message', 'data', 'warnings']);
 });
 

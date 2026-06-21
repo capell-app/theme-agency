@@ -464,6 +464,8 @@ it('builds html cache seo and diagnostics dashboard widgets from operational rep
                 failedJobs: 10,
                 runningJobs: 2,
                 pendingJobs: 48,
+                oldestPendingJobAgeSeconds: 180,
+                queueLivenessStatus: 'healthy',
                 averageRuntimeSeconds: 12,
                 dailyTotals: [100, 200],
                 dailyFailures: [1, 2],

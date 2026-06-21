@@ -46,7 +46,7 @@ final class ThrottleAgentBridgeRequestsByIp
             return $next($request);
         }
 
-        $rateLimitKey = 'capell-agent-bridge:ip:' . sha1((string) $request->ip());
+        $rateLimitKey = 'capell-agent-bridge:ip:' . hash('sha256', (string) $request->ip());
 
         if (RateLimiter::tooManyAttempts($rateLimitKey, $maxAttempts)) {
             $retryAfter = RateLimiter::availableIn($rateLimitKey);

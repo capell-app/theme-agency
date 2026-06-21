@@ -504,30 +504,45 @@ it('reports agent delivery coverage only for active page urls that are indexable
     $page = Page::factory()
         ->site($site)
         ->withTranslations($language, ['title' => 'Covered'], slug: 'covered')
-        ->create();
+        ->create([
+            'meta' => [
+                'agent_delivery' => [
+                    'enabled' => true,
+                    'exclude' => false,
+                ],
+            ],
+        ]);
     $inactivePage = Page::factory()
         ->site($site)
         ->withTranslations($language, ['title' => 'Inactive'], slug: 'inactive-page')
         ->create();
 
-    PageUrl::query()->create([
-        'site_id' => $site->getKey(),
-        'language_id' => $language->getKey(),
-        'status' => true,
-        'type' => null,
-        'url' => '/covered',
-        'pageable_type' => Page::class,
-        'pageable_id' => $page->getKey(),
-    ]);
-    PageUrl::query()->create([
-        'site_id' => $site->getKey(),
-        'language_id' => $language->getKey(),
-        'status' => false,
-        'type' => null,
-        'url' => '/inactive',
-        'pageable_type' => Page::class,
-        'pageable_id' => $inactivePage->getKey(),
-    ]);
+    PageUrl::query()->updateOrCreate(
+        [
+            'site_id' => $site->getKey(),
+            'language_id' => $language->getKey(),
+            'url' => '/covered',
+        ],
+        [
+            'status' => true,
+            'type' => null,
+            'pageable_type' => $page->getMorphClass(),
+            'pageable_id' => $page->getKey(),
+        ],
+    );
+    PageUrl::query()->updateOrCreate(
+        [
+            'site_id' => $site->getKey(),
+            'language_id' => $language->getKey(),
+            'url' => '/inactive',
+        ],
+        [
+            'status' => false,
+            'type' => null,
+            'pageable_type' => $inactivePage->getMorphClass(),
+            'pageable_id' => $inactivePage->getKey(),
+        ],
+    );
 
     $source = new AgentDeliveryGeneratedOutputCoverageSource;
     $urls = $source->coveredUrls(collect([

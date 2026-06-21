@@ -89,9 +89,11 @@ it('fetches render data within a bounded query budget', function (): void {
         'layout' => 'carousel',
         'limit' => 3,
     ]));
+    throw_unless($renderData instanceof SocialFeedRenderData, RuntimeException::class, 'Expected social feed render data.');
+    $items = $renderData->items;
 
     expect($queryCount)->toBeLessThanOrEqual(2)
-        ->and($renderData->items)->toHaveCount(3);
+        ->and($items)->toHaveCount(3);
 });
 
 it('renders prepared social feed data in Blade without database queries', function (): void {

@@ -81,8 +81,9 @@ final class VerifyTrustedPublicActionSubmissionRequestAction
     private function timestampIsFresh(int $timestamp): bool
     {
         $tolerance = config('capell-public-actions.trusted_submissions.timestamp_tolerance_seconds', 300);
-        $tolerance = is_numeric($tolerance) && (int) $tolerance > 0 ? (int) $tolerance : 300;
+        $tolerance = is_numeric($tolerance) ? (int) $tolerance : 300;
+        $tolerance = $tolerance > 0 ? $tolerance : 300;
 
-        return abs(now()->timestamp - $timestamp) <= $tolerance;
+        return abs(now()->getTimestamp() - $timestamp) <= $tolerance;
     }
 }

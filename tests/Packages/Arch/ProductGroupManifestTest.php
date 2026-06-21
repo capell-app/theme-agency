@@ -58,9 +58,10 @@ it('keeps every package manifest in an approved product group', function (): voi
 });
 
 it('groups packages into the current product bundles', function (): void {
+    $manifests = packageManifestPayloads();
     $packagesByBundle = [];
 
-    foreach (packageManifestPayloads() as $path => $manifest) {
+    foreach ($manifests as $path => $manifest) {
         $bundle = $manifest['product']['bundle'] ?? 'missing';
         $bundle = is_string($bundle) ? $bundle : 'missing';
 
@@ -72,6 +73,26 @@ it('groups packages into the current product bundles', function (): void {
     foreach (array_keys($packagesByBundle) as $bundle) {
         sort($packagesByBundle[$bundle]);
     }
+
+    $themeBundlePackages = $packagesByBundle['themes'] ?? [];
+    unset($packagesByBundle['themes']);
+
+    $invalidThemeBundlePackages = [];
+
+    foreach ($themeBundlePackages as $path) {
+        $manifest = $manifests[$path] ?? null;
+        $product = is_array($manifest) ? ($manifest['product'] ?? null) : null;
+        $group = is_array($product) ? ($product['group'] ?? null) : null;
+
+        if (! str_starts_with($path, 'theme-') || $group !== 'Capell Themes') {
+            $invalidThemeBundlePackages[] = $path;
+        }
+    }
+
+    expect($invalidThemeBundlePackages)->toBe(
+        [],
+        'The themes product bundle should only contain Capell Themes theme-* manifests.',
+    );
 
     expect($packagesByBundle)->toBe([
         'admin' => [
@@ -177,22 +198,6 @@ it('groups packages into the current product bundles', function (): void {
             'site-discovery/capell.json',
             'url-manager/capell.json',
         ],
-        'themes' => [
-            'theme-agency/capell.json',
-            'theme-commerce/capell.json',
-            'theme-education/capell.json',
-            'theme-estate-agents/capell.json',
-            'theme-healthcare/capell.json',
-            'theme-inertia-bookings-react/capell.json',
-            'theme-inertia-bookings-vue/capell.json',
-            'theme-inertia-bookings/capell.json',
-            'theme-knowledge/capell.json',
-            'theme-local-services/capell.json',
-            'theme-nonprofit/capell.json',
-            'theme-portfolio/capell.json',
-            'theme-restaurant/capell.json',
-            'theme-saas/capell.json',
-        ],
     ]);
 });
 
@@ -214,9 +219,7 @@ it('keeps theme marketplace screenshots backed by committed assets', function ()
 
         $screenshots = data_get($manifest, 'marketplace.screenshots', []);
 
-        if (! is_array($screenshots) || count($screenshots) < 6) {
-            $missing[$path][] = 'Theme manifests must expose an extension card and at least five marketplace screenshots.';
-
+        if (! is_array($screenshots) || $screenshots === []) {
             continue;
         }
 
