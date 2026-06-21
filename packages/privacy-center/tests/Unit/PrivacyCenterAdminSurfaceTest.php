@@ -24,6 +24,7 @@ use Capell\PrivacyCenter\Models\PolicyAcceptance;
 use Capell\PrivacyCenter\Models\PrivacyRequest;
 use Capell\PrivacyCenter\Models\RetentionRule;
 use Capell\PrivacyCenter\Tests\PrivacyCenterTestCase;
+use Capell\Tests\Support\Filament\AdminSurfaceAssertions;
 use Filament\Actions\Action;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\KeyValue;
@@ -33,8 +34,6 @@ use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Contracts\HasTable;
-use Filament\Tables\Table;
 use Illuminate\Support\Facades\Date;
 
 require_once dirname(__DIR__) . '/autoload.php';
@@ -137,7 +136,7 @@ it('builds privacy center resource tables with expected columns', function (
     array $expectedColumnNames,
     array $expectedColumnClasses,
 ): void {
-    $table = $resourceClass::table(privacyCenterAdminTableForCoverage());
+    $table = $resourceClass::table(AdminSurfaceAssertions::table());
     $columns = $table->getColumns();
 
     expect(array_keys($columns))->toBe($expectedColumnNames)
@@ -171,9 +170,9 @@ it('builds privacy center resource tables with expected columns', function (
 ]);
 
 it('mounts retention rule table actions for dry-run and execution interactions', function (): void {
-    $table = RetentionRuleResource::table(privacyCenterAdminTableForCoverage());
+    $table = RetentionRuleResource::table(AdminSurfaceAssertions::table());
 
-    expect(privacyCenterAdminActionNames($table->getRecordActions()))->toBe([
+    expect(AdminSurfaceAssertions::actionNames($table->getRecordActions()))->toBe([
         'dry_run_retention',
         'run_retention',
     ]);
@@ -182,11 +181,11 @@ it('mounts retention rule table actions for dry-run and execution interactions',
 it('exposes privacy request edit workflow actions', function (): void {
     $page = new EditPrivacyRequest;
 
-    expect(privacyCenterAdminActionNames(PrivacyRequestResource::privacyRequestWorkflowActions()))->toBe([
+    expect(AdminSurfaceAssertions::actionNames(PrivacyRequestResource::privacyRequestWorkflowActions()))->toBe([
         'mark_verified',
         'mark_fulfilled',
         'reject',
-    ])->and(privacyCenterAdminActionNames(privacyCenterAdminEditRequestHeaderActions($page)))->toBe([
+    ])->and(AdminSurfaceAssertions::actionNames(privacyCenterAdminEditRequestHeaderActions($page)))->toBe([
         'mark_verified',
         'mark_fulfilled',
         'reject',
@@ -296,19 +295,6 @@ it('builds privacy center overview widget stats from package-owned records', fun
 });
 
 /**
- * @param  array<array-key, mixed>  $actions
- * @return array<int, string>
- */
-function privacyCenterAdminActionNames(array $actions): array
-{
-    return collect($actions)
-        ->map(fn (mixed $action): string => is_object($action) && method_exists($action, 'getName') ? (string) $action->getName() : '')
-        ->filter(fn (string $name): bool => $name !== '')
-        ->values()
-        ->all();
-}
-
-/**
  * @return array<array-key, mixed>
  */
 function privacyCenterAdminEditRequestHeaderActions(EditPrivacyRequest $page): array
@@ -339,16 +325,4 @@ function privacyCenterAdminFormComponentClasses(Schema $schema): array
         static fn (object $component): string => $component::class,
         $schema->getComponents(),
     );
-}
-
-function privacyCenterAdminTableForCoverage(): Table
-{
-    $livewire = Mockery::mock(HasTable::class);
-    $livewire->shouldIgnoreMissing();
-    $livewire->shouldReceive('makeFilamentTranslatableContentDriver')->andReturn(null)->byDefault();
-    $livewire->shouldReceive('getTableFilterState')->andReturn([])->byDefault();
-    $livewire->shouldReceive('isTableLoaded')->andReturnTrue()->byDefault();
-    $livewire->shouldReceive('getTableArguments')->andReturn([])->byDefault();
-
-    return Table::make($livewire);
 }

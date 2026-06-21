@@ -48,8 +48,7 @@ use Capell\SeoSuite\Filament\Pages\Tables\BrokenLinksTable;
 use Capell\SeoSuite\Filament\Pages\Tables\SeoAuditTable;
 use Capell\SeoSuite\Filament\Pages\Tables\TranslationCoverageTable;
 use Capell\Tags\Filament\Resources\Tags\Tables\TagsTable;
-use Filament\Tables\Contracts\HasTable;
-use Filament\Tables\Table;
+use Capell\Tests\Support\Filament\AdminSurfaceAssertions;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -64,14 +63,14 @@ it('builds package admin table configurators with the expected editor-facing con
     expect(is_a($configuratorClass, TableConfigurator::class, true))->toBeTrue();
 
     /** @var class-string<TableConfigurator> $configuratorClass */
-    $table = $configuratorClass::configure(packageAdminTableForCoverage());
+    $table = $configuratorClass::configure(AdminSurfaceAssertions::table());
 
     $columnNames = array_keys($table->getColumns());
     $filterNames = array_keys($table->getFilters());
-    $actionNames = packageAdminTableActionNames($table->getRecordActions());
+    $actionNames = AdminSurfaceAssertions::actionNames($table->getRecordActions());
     $toolbarActionNames = method_exists($table, 'getToolbarActions')
-        ? packageAdminTableActionNames($table->getToolbarActions())
-        : packageAdminTableActionNames($table->getToolbarActions());
+        ? AdminSurfaceAssertions::actionNames($table->getToolbarActions())
+        : AdminSurfaceAssertions::actionNames($table->getToolbarActions());
 
     expect($columnNames)->toContain(...$requiredColumns)
         ->and($filterNames)->toContain(...$requiredFilters)
@@ -175,7 +174,7 @@ it('builds the remaining package table configurators used by package admin pages
     expect(is_a($configuratorClass, TableConfigurator::class, true))->toBeTrue();
 
     /** @var class-string<TableConfigurator> $configuratorClass */
-    $table = $configuratorClass::configure(packageAdminTableForCoverage());
+    $table = $configuratorClass::configure(AdminSurfaceAssertions::table());
 
     expect($table->getColumns())->not->toBeEmpty();
 })->with([
@@ -230,7 +229,7 @@ it('builds the html cache map table and searches by canonical url hash', functio
         'last_seen_at' => now(),
     ]);
 
-    $table = CachedModelUrlsTable::configure(packageAdminTableForCoverage(), CachedModelUrl::query());
+    $table = CachedModelUrlsTable::configure(AdminSurfaceAssertions::table(), CachedModelUrl::query());
     $search = new ReflectionMethod(CachedModelUrlsTable::class, 'applyUrlHashSearch');
 
     /** @var Builder<CachedModelUrl> $query */
@@ -239,7 +238,7 @@ it('builds the html cache map table and searches by canonical url hash', functio
 
     expect(array_keys($table->getColumns()))->toContain('url', 'cacheable_type', 'cacheable', 'site.name', 'last_seen_at')
         ->and(array_keys($table->getFilters()))->toContain('site_id', 'language_id', 'cacheable_type')
-        ->and(packageAdminTableActionNames($table->getRecordActions()))->toContain('open_url', 'clear')
+        ->and(AdminSurfaceAssertions::actionNames($table->getRecordActions()))->toContain('open_url', 'clear')
         ->and($query->pluck('id')->all())->toBe([$matchingRecord->getKey()]);
 });
 
@@ -266,7 +265,7 @@ it('builds the layout builder layouts table with widget inventory filters and in
         ],
     ]);
 
-    $table = LayoutBuilderLayoutsTable::configure(packageAdminTableForCoverage());
+    $table = LayoutBuilderLayoutsTable::configure(AdminSurfaceAssertions::table());
     $widgetWidgetsForLayout = new ReflectionMethod(LayoutBuilderLayoutsTable::class, 'widgetWidgetsForLayout');
     $whereContainsWidgetKey = new ReflectionMethod(LayoutBuilderLayoutsTable::class, 'whereContainsWidgetKey');
 
@@ -275,7 +274,7 @@ it('builds the layout builder layouts table with widget inventory filters and in
 
     expect($table->getColumns())->not->toBeEmpty()
         ->and(array_keys($table->getFilters()))->toContain('widget_key')
-        ->and(packageAdminTableActionNames($table->getRecordActions()))->toContain('info')
+        ->and(AdminSurfaceAssertions::actionNames($table->getRecordActions()))->toContain('info')
         ->and($widgetWidgetsForLayout->invoke(null, $layout)->pluck('name')->all())->toBe(['Hero widget', 'Cards widget'])
         ->and($matchingQuery->pluck('id')->all())->toBe([$layout->getKey()]);
 });
@@ -286,10 +285,10 @@ it('builds package resource tables with their expected operational columns and a
     array $requiredFilters,
     array $requiredActions,
 ): void {
-    $table = $resourceClass::table(packageAdminTableForCoverage());
+    $table = $resourceClass::table(AdminSurfaceAssertions::table());
     $columnNames = array_keys($table->getColumns());
     $filterNames = array_keys($table->getFilters());
-    $actionNames = packageAdminTableActionNames($table->getRecordActions());
+    $actionNames = AdminSurfaceAssertions::actionNames($table->getRecordActions());
 
     expect($columnNames)->toContain(...$requiredColumns);
 
@@ -368,29 +367,3 @@ it('registers the public action integration token resource with its admin naviga
         ->and($resource::getNavigationParentItem())->toBeString()
         ->and($resource::shouldRegisterNavigation())->toBeTrue();
 });
-
-function packageAdminTableForCoverage(): Table
-{
-    $livewire = Mockery::mock(HasTable::class);
-    $livewire->shouldIgnoreMissing();
-    $livewire->shouldReceive('makeFilamentTranslatableContentDriver')->andReturn(null)->byDefault();
-    $livewire->shouldReceive('getTableFilterState')->andReturn([])->byDefault();
-    $livewire->shouldReceive('isTableLoaded')->andReturnTrue()->byDefault();
-    $livewire->shouldReceive('getTableArguments')->andReturn([])->byDefault();
-
-    return Table::make($livewire);
-}
-
-/**
- * @param  array<array-key, mixed>  $actions
- * @return array<int, string>
- */
-function packageAdminTableActionNames(array $actions): array
-{
-    return collect($actions)
-        ->flatten()
-        ->filter(fn (mixed $action): bool => is_object($action) && method_exists($action, 'getName'))
-        ->map(fn (object $action): string => $action->getName())
-        ->values()
-        ->all();
-}
