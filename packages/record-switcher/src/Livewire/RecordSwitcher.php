@@ -129,6 +129,7 @@ final class RecordSwitcher extends Component
 
     /**
      * @param  Builder<Model>  $query
+     * @return Builder<Model>
      */
     private function applyPagePriorityOrdering(Builder $query, ?Page $currentPage): Builder
     {

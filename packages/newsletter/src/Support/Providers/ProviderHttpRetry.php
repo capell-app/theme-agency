@@ -22,7 +22,7 @@ final class ProviderHttpRetry
 
     private static function retryTimes(): int
     {
-        return max(1, (int) config('capell-newsletter.http.retry_times', 3));
+        return max(1, self::integerConfig('capell-newsletter.http.retry_times', 3));
     }
 
     private static function delay(int $attempt, mixed $exception): int
@@ -61,11 +61,18 @@ final class ProviderHttpRetry
 
     private static function fallbackDelay(): int
     {
-        return max(0, (int) config('capell-newsletter.http.retry_delay_ms', 500));
+        return max(0, self::integerConfig('capell-newsletter.http.retry_delay_ms', 500));
     }
 
     private static function maxRetryAfterDelay(): int
     {
-        return max(0, (int) config('capell-newsletter.http.retry_after_max_ms', 60000));
+        return max(0, self::integerConfig('capell-newsletter.http.retry_after_max_ms', 60000));
+    }
+
+    private static function integerConfig(string $key, int $default): int
+    {
+        $value = config($key, $default);
+
+        return is_numeric($value) ? (int) $value : $default;
     }
 }

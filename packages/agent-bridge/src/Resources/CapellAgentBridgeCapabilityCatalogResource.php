@@ -32,16 +32,20 @@ final class CapellAgentBridgeCapabilityCatalogResource extends Resource
         ];
 
         foreach ($rows as $row) {
+            if (! is_array($row)) {
+                continue;
+            }
+
             $markdown[] = sprintf(
                 '| %s | `%s` | %s | %s | %s | %s | %s | %s |',
-                $this->cell((string) $row['name']),
-                $this->cell((string) $row['scope']),
-                $this->cell((string) $row['server']),
-                $this->cell((string) $row['risk']),
-                $row['requires_confirmation'] === true ? 'yes' : 'no',
-                $row['supports_preview'] === true ? 'yes' : 'no',
-                $this->cell((string) ($row['required_package'] ?? '')),
-                $this->cell((string) ($row['policy_ability'] ?? '')),
+                $this->cell($this->stringValue($row, 'name')),
+                $this->cell($this->stringValue($row, 'scope')),
+                $this->cell($this->stringValue($row, 'server')),
+                $this->cell($this->stringValue($row, 'risk')),
+                ($row['requires_confirmation'] ?? false) === true ? 'yes' : 'no',
+                ($row['supports_preview'] ?? false) === true ? 'yes' : 'no',
+                $this->cell($this->stringValue($row, 'required_package')),
+                $this->cell($this->stringValue($row, 'policy_ability')),
             );
         }
 
@@ -53,5 +57,15 @@ final class CapellAgentBridgeCapabilityCatalogResource extends Resource
         $value = trim($value);
 
         return $value === '' ? '-' : str_replace('|', '\\|', $value);
+    }
+
+    /**
+     * @param  array<string, mixed>  $row
+     */
+    private function stringValue(array $row, string $key): string
+    {
+        $value = $row[$key] ?? null;
+
+        return is_string($value) ? $value : '';
     }
 }

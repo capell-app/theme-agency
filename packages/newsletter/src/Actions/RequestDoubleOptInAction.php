@@ -11,6 +11,7 @@ use Capell\Newsletter\Enums\SubscriberStatus;
 use Capell\Newsletter\Models\PublicToken;
 use Capell\Newsletter\Models\Subscriber;
 use Capell\Newsletter\Notifications\ConfirmNewsletterSubscriptionNotification;
+use Carbon\CarbonInterface;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Str;
 use Lorisleiva\Actions\Concerns\AsAction;
@@ -86,7 +87,7 @@ final class RequestDoubleOptInAction
 
     private function withinResendCooldown(PublicToken $publicToken): bool
     {
-        $cooldownMinutes = (int) config('capell-newsletter.double_opt_in.resend_cooldown_minutes', 10);
+        $cooldownMinutes = $this->integerConfig('capell-newsletter.double_opt_in.resend_cooldown_minutes', 10);
 
         if ($cooldownMinutes <= 0) {
             return false;
@@ -94,10 +95,17 @@ final class RequestDoubleOptInAction
 
         $createdAt = $publicToken->getAttribute('created_at');
 
-        if ($createdAt === null) {
+        if (! $createdAt instanceof CarbonInterface) {
             return false;
         }
 
         return $createdAt->copy()->addMinutes($cooldownMinutes)->isFuture();
+    }
+
+    private function integerConfig(string $key, int $default): int
+    {
+        $value = config($key, $default);
+
+        return is_numeric($value) ? (int) $value : $default;
     }
 }

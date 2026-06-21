@@ -33,32 +33,23 @@ use Illuminate\Support\Facades\File;
 describe('agent-bridge capell.json manifest', function (): void {
     $packagePath = dirname(__DIR__, 2);
 
-    $manifest = fn (): array => json_decode(
-        File::get($packagePath . '/capell.json'),
-        associative: true,
-        flags: JSON_THROW_ON_ERROR,
-    );
+    $manifest = fn (): array => manifestJsonFileArray($packagePath . '/capell.json');
 
-    $composer = fn (): array => json_decode(
-        File::get($packagePath . '/composer.json'),
-        associative: true,
-        flags: JSON_THROW_ON_ERROR,
-    );
+    $composer = fn (): array => manifestJsonFileArray($packagePath . '/composer.json');
 
-    $screenshotsContract = fn (): array => json_decode(
-        File::get($packagePath . '/docs/screenshots.json'),
-        associative: true,
-        flags: JSON_THROW_ON_ERROR,
-    );
+    $screenshotsContract = fn (): array => manifestJsonFileArray($packagePath . '/docs/screenshots.json');
 
     it('uses buyer-facing app extension content', function () use ($manifest, $composer): void {
         $manifestData = $manifest();
         $composerData = $composer();
 
+        $marketplace = manifestMarketplace($manifestData);
+        $marketplaceSummary = manifestString($marketplace, 'summary');
+
         expect($manifestData['description'])->toContain('preview-then-confirm')
             ->and($manifestData['description'])->toContain('audited operations')
-            ->and($manifestData['marketplace']['summary'])->toContain('scoped tokens')
-            ->and($manifestData['marketplace']['summary'])->toContain('full audit trail')
+            ->and($marketplaceSummary)->toContain('scoped tokens')
+            ->and($marketplaceSummary)->toContain('full audit trail')
             ->and($composerData['description'])->toContain('Scoped MCP access')
             ->and($composerData['keywords'])->toContain('model-context-protocol')
             ->and($composerData['keywords'])->toContain('scoped-access');
@@ -66,9 +57,7 @@ describe('agent-bridge capell.json manifest', function (): void {
 
     it('declares only buyer-facing generated screenshots for marketplace display', function () use ($manifest): void {
         $manifestData = $manifest();
-        $screenshots = $manifestData['marketplace']['screenshots'] ?? [];
-
-        throw_unless(is_array($screenshots), RuntimeException::class, 'Agent Bridge marketplace screenshots must be an array.');
+        $screenshots = manifestScreenshots($manifestData);
 
         $screenshotPaths = collect($screenshots)
             ->pluck('path')
@@ -83,7 +72,7 @@ describe('agent-bridge capell.json manifest', function (): void {
 
     it('keeps duplicated runner captures out of required marketplace screenshot slots', function () use ($screenshotsContract): void {
         $contractData = $screenshotsContract();
-        $entries = collect($contractData['entries'] ?? [])->keyBy('id');
+        $entries = collect(manifestEntries($contractData))->keyBy('id');
 
         foreach ([
             'token-management-or-setup-surface',
@@ -104,11 +93,15 @@ describe('agent-bridge capell.json manifest', function (): void {
     it('keeps marketplace screenshots readable and backed by files', function () use ($manifest, $packagePath): void {
         $manifestData = $manifest();
 
-        foreach ($manifestData['marketplace']['screenshots'] ?? [] as $screenshot) {
-            expect($screenshot['path'])->toStartWith('docs/screenshots/')
-                ->and(File::exists($packagePath . '/' . $screenshot['path']))->toBeTrue()
-                ->and(strlen(trim((string) $screenshot['alt'])))->toBeGreaterThanOrEqual(12)
-                ->and(strlen(trim((string) $screenshot['caption'])))->toBeGreaterThanOrEqual(12);
+        foreach (manifestScreenshots($manifestData) as $screenshot) {
+            $path = manifestString($screenshot, 'path');
+            $alt = manifestString($screenshot, 'alt');
+            $caption = manifestString($screenshot, 'caption');
+
+            expect($path)->toStartWith('docs/screenshots/')
+                ->and(File::exists($packagePath . '/' . $path))->toBeTrue()
+                ->and(strlen(trim($alt)))->toBeGreaterThanOrEqual(12)
+                ->and(strlen(trim($caption)))->toBeGreaterThanOrEqual(12);
         }
     });
 
@@ -250,3 +243,90 @@ describe('agent-bridge capell.json manifest', function (): void {
             ->not->toContain('capell-agent-bridge.knowledge');
     });
 });
+
+/**
+ * @return array<string, mixed>
+ */
+function manifestJsonFileArray(string $path): array
+{
+    $decoded = json_decode(
+        File::get($path),
+        associative: true,
+        flags: JSON_THROW_ON_ERROR,
+    );
+
+    throw_unless(is_array($decoded), RuntimeException::class, sprintf('Expected [%s] to decode to an array.', $path));
+
+    $normalized = [];
+
+    foreach ($decoded as $key => $value) {
+        if (is_string($key)) {
+            $normalized[$key] = $value;
+        }
+    }
+
+    return $normalized;
+}
+
+/**
+ * @param  array<string, mixed>  $manifest
+ * @return list<array<string, mixed>>
+ */
+function manifestEntries(array $manifest): array
+{
+    $entries = $manifest['entries'] ?? null;
+
+    throw_unless(is_array($entries), RuntimeException::class, 'Expected manifest entries array.');
+
+    return array_values(array_map(
+        static fn (array $entry): array => $entry,
+        array_filter($entries, static fn (mixed $entry): bool => is_array($entry)),
+    ));
+}
+
+/**
+ * @param  array<string, mixed>  $manifest
+ * @return array<string, mixed>
+ */
+function manifestMarketplace(array $manifest): array
+{
+    $marketplace = $manifest['marketplace'] ?? null;
+
+    throw_unless(is_array($marketplace), RuntimeException::class, 'Expected marketplace manifest array.');
+
+    $normalized = [];
+
+    foreach ($marketplace as $key => $value) {
+        if (is_string($key)) {
+            $normalized[$key] = $value;
+        }
+    }
+
+    return $normalized;
+}
+
+/**
+ * @param  array<string, mixed>  $manifest
+ * @return list<array<string, mixed>>
+ */
+function manifestScreenshots(array $manifest): array
+{
+    $screenshots = manifestMarketplace($manifest)['screenshots'] ?? null;
+
+    throw_unless(is_array($screenshots), RuntimeException::class, 'Expected marketplace screenshots array.');
+
+    return array_values(array_map(
+        static fn (array $screenshot): array => $screenshot,
+        array_filter($screenshots, static fn (mixed $screenshot): bool => is_array($screenshot)),
+    ));
+}
+
+/**
+ * @param  array<string, mixed>  $values
+ */
+function manifestString(array $values, string $key): string
+{
+    $value = $values[$key] ?? null;
+
+    return is_string($value) ? $value : '';
+}

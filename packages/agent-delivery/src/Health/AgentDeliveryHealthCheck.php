@@ -109,7 +109,7 @@ final class AgentDeliveryHealthCheck implements ChecksExtensionHealth
 
         $passed = $this->isPositiveInteger($targetWords)
             && $this->isNonNegativeInteger($overlapWords)
-            && (int) $overlapWords < (int) $targetWords
+            && $this->integerValue($overlapWords) < $this->integerValue($targetWords)
             && $this->isPositiveInteger($maxRecommendedChunks);
 
         return new DoctorCheckResultData(
@@ -214,11 +214,16 @@ final class AgentDeliveryHealthCheck implements ChecksExtensionHealth
 
     private function isPositiveInteger(mixed $value): bool
     {
-        return is_int($value) ? $value > 0 : is_numeric($value) && (int) $value > 0;
+        return is_int($value) ? $value > 0 : is_numeric($value) && $this->integerValue($value) > 0;
     }
 
     private function isNonNegativeInteger(mixed $value): bool
     {
-        return is_int($value) ? $value >= 0 : is_numeric($value) && (int) $value >= 0;
+        return is_int($value) ? $value >= 0 : is_numeric($value) && $this->integerValue($value) >= 0;
+    }
+
+    private function integerValue(mixed $value): int
+    {
+        return (int) (is_scalar($value) ? $value : 0);
     }
 }

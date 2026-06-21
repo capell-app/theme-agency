@@ -32,8 +32,17 @@ function buildImageDoctorContext(Media $media): array
     );
 
     expect($context)->toBeArray();
+    throw_unless(is_array($context), RuntimeException::class, 'Expected image doctor context array.');
 
-    return $context;
+    $normalized = [];
+
+    foreach ($context as $key => $value) {
+        if (is_string($key)) {
+            $normalized[$key] = $value;
+        }
+    }
+
+    return $normalized;
 }
 
 it('never sends raw storage disk or path for any media', function (): void {
@@ -59,8 +68,11 @@ it('hands a short-lived temporary url and no permanent public url for private me
     Storage::disk('private')->put($media->getPathRelativeToRoot(), 'binary-image-bytes');
 
     $context = buildImageDoctorContext($media);
+    $mediaContext = $context['media'] ?? null;
 
-    $url = $context['media']['url'];
+    throw_unless(is_array($mediaContext), RuntimeException::class, 'Expected media context array.');
+
+    $url = $mediaContext['url'] ?? null;
     $permanentUrl = $media->getFullUrl();
 
     // Either a temporary/signed URL is issued, or the URL is omitted entirely.
@@ -78,6 +90,9 @@ it('sends a normal full url for public media', function (): void {
     $media = Media::factory()->model(Page::factory()->create())->create(['disk' => 'public', 'conversions_disk' => 'public']);
 
     $context = buildImageDoctorContext($media);
+    $mediaContext = $context['media'] ?? null;
 
-    expect($context['media']['url'])->toBe($media->getFullUrl());
+    throw_unless(is_array($mediaContext), RuntimeException::class, 'Expected media context array.');
+
+    expect($mediaContext['url'] ?? null)->toBe($media->getFullUrl());
 });

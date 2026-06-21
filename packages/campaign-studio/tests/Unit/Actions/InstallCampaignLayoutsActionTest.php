@@ -13,9 +13,20 @@ it('installs campaign layouts with layout-builder compatible widget references',
     $containers = $layout->getAttribute('containers');
     $widgets = $layout->widgets;
 
+    throw_unless(is_array($containers), RuntimeException::class, 'Expected campaign layout containers array.');
+    $heroContainer = $containers['hero'] ?? null;
+
+    throw_unless(is_array($heroContainer), RuntimeException::class, 'Expected hero campaign container array.');
+    $heroWidgets = $heroContainer['widgets'] ?? null;
+
+    throw_unless(is_array($heroWidgets), RuntimeException::class, 'Expected hero campaign widgets array.');
+    $firstHeroWidget = $heroWidgets[0] ?? null;
+
+    throw_unless(is_array($firstHeroWidget), RuntimeException::class, 'Expected first hero campaign widget array.');
+
     expect($result)->toBe(['created' => 3, 'updated' => 0, 'skipped' => 0])
         ->and($containers)->toHaveKeys(['hero', 'proof', 'form'])
-        ->and($containers['hero']['widgets'][0])->toMatchArray([
+        ->and($firstHeroWidget)->toMatchArray([
             'widget_key' => 'campaign-lead-generation-campaign-hero',
             'occurrence' => 1,
         ])

@@ -164,13 +164,13 @@ it('declares admin providers, resources, and owned tables in the manifest', func
         ->toBe(BuildKnowledgeBaseArticleSchemaAction::class)
         ->and($commands['demo'] ?? null)->toBe('capell:knowledge-base-demo')
         ->and($publicSurface['routeNames'] ?? null)->toBe([
-            'capell-knowledge-base.ai-output',
-            'capell-knowledge-base.article',
-            'capell-knowledge-base.article.feedback',
-            'capell-knowledge-base.index',
+            'ai-output',
+            'article',
+            'article.feedback',
+            'index',
         ])
         ->and($publicSurface['throttledRoutes'] ?? null)->toBe([
-            'capell-knowledge-base.article.feedback',
+            'article.feedback',
         ])
         ->and($sensitiveData['hashedTokenFields'] ?? null)->toBe([
             'knowledge_base_article_feedback.user_agent_hash',

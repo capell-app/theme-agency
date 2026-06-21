@@ -10,13 +10,20 @@ use Capell\Newsletter\Models\Subscriber;
 use Capell\Newsletter\Notifications\ConfirmNewsletterSubscriptionNotification;
 use Illuminate\Support\Facades\Notification;
 
+function newsletterSiteKey(object $site): int
+{
+    $siteKey = method_exists($site, 'getKey') ? $site->getKey() : null;
+
+    return is_numeric($siteKey) ? (int) $siteKey : 0;
+}
+
 it('does not downgrade an already-subscribed email or send a fresh confirmation', function (): void {
     Notification::fake();
 
     $site = $this->createNewsletterSite();
     resolve(FrontendState::class)->withSite($site);
 
-    $siteId = (int) $site->getKey();
+    $siteId = newsletterSiteKey($site);
 
     $subscriber = Subscriber::query()->create([
         'site_id' => $siteId,
@@ -52,7 +59,7 @@ it('does not send a second confirmation for a rapid repeat subscribe of the same
     $site = $this->createNewsletterSite();
     resolve(FrontendState::class)->withSite($site);
 
-    $siteId = (int) $site->getKey();
+    $siteId = newsletterSiteKey($site);
 
     $payload = [
         'email' => 'newcomer@gmail.com',

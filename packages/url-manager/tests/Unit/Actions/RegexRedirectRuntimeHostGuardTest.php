@@ -16,15 +16,15 @@ use Capell\UrlManager\Models\RedirectRule;
 function makeRegexRedirectRule(string $sourcePattern, string $targetTemplate): RedirectRule
 {
     $redirectRule = new RedirectRule;
-    $redirectRule->source_url = $sourcePattern;
-    $redirectRule->source_hash = hash('sha256', $sourcePattern);
-    $redirectRule->target_url = $targetTemplate;
-    $redirectRule->target_hash = hash('sha256', $targetTemplate);
-    $redirectRule->status_code = 301;
-    $redirectRule->match_type = RedirectMatchType::Regex;
-    $redirectRule->status = RedirectRuleStatus::Active;
-    $redirectRule->priority = 0;
-    $redirectRule->preserve_query = false;
+    $redirectRule->setAttribute('source_url', $sourcePattern);
+    $redirectRule->setAttribute('source_hash', hash('sha256', $sourcePattern));
+    $redirectRule->setAttribute('target_url', $targetTemplate);
+    $redirectRule->setAttribute('target_hash', hash('sha256', $targetTemplate));
+    $redirectRule->setAttribute('status_code', 301);
+    $redirectRule->setAttribute('match_type', RedirectMatchType::Regex);
+    $redirectRule->setAttribute('status', RedirectRuleStatus::Active);
+    $redirectRule->setAttribute('priority', 0);
+    $redirectRule->setAttribute('preserve_query', false);
     $redirectRule->save();
 
     return $redirectRule;

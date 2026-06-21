@@ -93,7 +93,19 @@ final class ResolveHeroMediaDataAction
                     ? $this->widgetMeta($model, 'hero_media', [])
                     : $model->getMeta('hero_media', []);
 
-                return is_array($settings) ? ['model' => $model, 'settings' => $settings] : null;
+                if (! is_array($settings)) {
+                    return null;
+                }
+
+                $normalizedSettings = [];
+
+                foreach ($settings as $key => $value) {
+                    if (is_string($key)) {
+                        $normalizedSettings[$key] = $value;
+                    }
+                }
+
+                return ['model' => $model, 'settings' => $normalizedSettings];
             })
             ->filter()
             ->values()

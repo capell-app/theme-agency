@@ -86,7 +86,7 @@ final class AccessGateAuditExportCommand extends Command
     {
         $value = $this->option('limit');
 
-        if ($value === null || $value === false || $value === '') {
+        if (in_array($value, [null, false, ''], true)) {
             return null;
         }
 

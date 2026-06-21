@@ -17,9 +17,9 @@ final class DemoCommand extends Command
 
     public function handle(): int
     {
-        return (new InstallRestaurantThemeDemoAction)->handle(new ThemeDemoInstallData(
+        return app(InstallRestaurantThemeDemoAction::class)->handle(new ThemeDemoInstallData(
             siteNames: $this->parseCsvOption('sites'),
-            languageCodes: $this->parseCsvOption('languages'),
+            languageCodes: array_map(strtolower(...), $this->parseCsvOption('languages')),
             baseUrl: $this->resolveBaseUrl(),
             force: (bool) $this->option('force'),
         ));
@@ -57,9 +57,9 @@ final class DemoCommand extends Command
         $url = $this->option('url');
 
         if (is_string($url) && $url !== '') {
-            return $url;
+            return rtrim($url, '/');
         }
 
-        return Config::string('app.url');
+        return rtrim(Config::string('app.url'), '/');
     }
 }

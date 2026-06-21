@@ -103,10 +103,15 @@ it('repairs page content below an existing hero container', function (): void {
 
     $homeLayout->refresh();
     $containers = $homeLayout->containers ?? [];
+    throw_unless(is_array($containers), RuntimeException::class, 'Expected repaired hero layout containers array.');
+    $mainContainer = $containers['main'] ?? null;
+    throw_unless(is_array($mainContainer), RuntimeException::class, 'Expected repaired main container array.');
+    $mainWidgets = $mainContainer['widgets'] ?? null;
+    throw_unless(is_array($mainWidgets), RuntimeException::class, 'Expected repaired main widgets array.');
 
     expect($result)->toBe(['created' => 0, 'updated' => 1, 'skipped' => 0])
         ->and(array_keys($containers))->toBe(['hero', 'main'])
-        ->and($containers['main']['widgets'] ?? null)->toBe([
+        ->and($mainWidgets)->toBe([
             ['widget_key' => 'page-content'],
         ])
         ->and($homeLayout->widgets)->toBe(['hero', 'page-content']);
@@ -126,6 +131,7 @@ it('installs hero defaults when home layout containers are null', function (): v
 
     $homeLayout = Layout::query()->where('key', LayoutEnum::Home->value)->firstOrFail();
     $containers = $homeLayout->containers ?? [];
+    throw_unless(is_array($containers), RuntimeException::class, 'Expected hero layout containers array.');
 
     capell_expect(array_keys($containers))->toBe(['hero', 'main'])
         ->and($homeLayout->widgets)->toBe(['hero', 'page-content']);
