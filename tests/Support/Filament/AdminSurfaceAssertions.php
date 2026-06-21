@@ -29,10 +29,15 @@ final class AdminSurfaceAssertions
      */
     public static function actionNames(array $actions): array
     {
-        return collect($actions)
-            ->flatMap(static fn (mixed $action): array => self::flattenActionNames($action))
-            ->values()
-            ->all();
+        $names = [];
+
+        foreach ($actions as $action) {
+            foreach (self::flattenActionNames($action) as $name) {
+                $names[] = $name;
+            }
+        }
+
+        return $names;
     }
 
     /**

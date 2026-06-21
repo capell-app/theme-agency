@@ -80,7 +80,11 @@ it('groups packages into the current product bundles', function (): void {
     $invalidThemeBundlePackages = [];
 
     foreach ($themeBundlePackages as $path) {
-        if (! str_starts_with($path, 'theme-') || ($manifests[$path]['product']['group'] ?? null) !== 'Capell Themes') {
+        $manifest = $manifests[$path] ?? null;
+        $product = is_array($manifest) ? ($manifest['product'] ?? null) : null;
+        $group = is_array($product) ? ($product['group'] ?? null) : null;
+
+        if (! str_starts_with($path, 'theme-') || $group !== 'Capell Themes') {
             $invalidThemeBundlePackages[] = $path;
         }
     }

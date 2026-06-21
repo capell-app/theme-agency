@@ -303,7 +303,7 @@ final class AccessGateDiagnosticsService
             'access-gate-logout' => $this->hasRateLimiter('access-gate-logout')
                 && $this->routeUsesMiddleware($router, 'capell-access-gate.logout', 'throttle:access-gate-logout'),
         ])
-            ->filter(static fn (bool $configured): bool => ! $configured)
+            ->reject(static fn (bool $configured): bool => $configured)
             ->keys()
             ->all();
 
@@ -367,7 +367,7 @@ final class AccessGateDiagnosticsService
             );
         }
 
-        $registered = collect(app(PortalSelfServiceItemRegistry::class)->providers())
+        $registered = collect(resolve(PortalSelfServiceItemRegistry::class)->providers())
             ->contains(static fn (PortalSelfServiceItemProvider $provider): bool => $provider instanceof AccessGatePortalSelfServiceItemProvider);
 
         if (! $registered) {
@@ -396,7 +396,7 @@ final class AccessGateDiagnosticsService
             );
         }
 
-        $bodyStartContributions = app(RenderHookRegistry::class)->contributions()[RenderHookLocation::BodyStart->value] ?? [];
+        $bodyStartContributions = resolve(RenderHookRegistry::class)->contributions()[RenderHookLocation::BodyStart->value] ?? [];
         $registeredCacheSafeHook = collect($bodyStartContributions)
             ->contains(static fn (array $contribution): bool => ($contribution['owner'] ?? null) === AccessGateServiceProvider::$packageName
                 && ($contribution['key'] ?? null) === 'announcement-bar'
