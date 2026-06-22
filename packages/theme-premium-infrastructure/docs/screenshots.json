@@ -20,6 +20,48 @@
             "package": "theme-premium-infrastructure"
         },
         {
+            "id": "premium-infrastructure-hero-base",
+            "title": "Premium Infrastructure Hero base",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-premium-infrastructure/docs/screenshots/premium-infrastructure-hero-base.png",
+            "required": false,
+            "user": false,
+            "notes": "Base hero variation with infrastructure copy, CTAs, and modular product-system notes.",
+            "useCase": "Premium Infrastructure hero variation coverage",
+            "package": "theme-premium-infrastructure"
+        },
+        {
+            "id": "premium-infrastructure-hero-looping-video",
+            "title": "Premium Infrastructure Hero looping video",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-premium-infrastructure/docs/screenshots/premium-infrastructure-hero-looping-video.png",
+            "required": false,
+            "user": false,
+            "notes": "Hero variation with a muted autoplaying loop preview in the side panel and a large header image below.",
+            "useCase": "Premium Infrastructure video hero variation coverage",
+            "package": "theme-premium-infrastructure"
+        },
+        {
+            "id": "premium-infrastructure-hero-looping-gif",
+            "title": "Premium Infrastructure Hero looping GIF",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-premium-infrastructure/docs/screenshots/premium-infrastructure-hero-looping-gif.png",
+            "required": false,
+            "user": false,
+            "notes": "Hero variation with an animated GIF-style preview in the side panel and a large header image below.",
+            "useCase": "Premium Infrastructure GIF hero variation coverage",
+            "package": "theme-premium-infrastructure"
+        },
+        {
             "id": "premium-infrastructure-landing-page",
             "title": "Premium Infrastructure Landing page",
             "surface": "frontend",

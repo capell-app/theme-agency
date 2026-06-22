@@ -127,6 +127,38 @@
     line-height: 1.55;
 }
 
+.editorial-hero-preview {
+    background: color-mix(in srgb, var(--editorial-paper) 82%, white);
+    border: 1px solid var(--editorial-line);
+    border-radius: max(var(--theme-radius, 1rem), 1rem);
+    margin: 0 0 1.25rem;
+    overflow: hidden;
+}
+
+.editorial-hero-preview img,
+.editorial-hero-preview video {
+    aspect-ratio: 16 / 10;
+    display: block;
+    height: auto;
+    object-fit: cover;
+    width: 100%;
+}
+
+.editorial-hero-header-image {
+    margin: clamp(2rem, 4vw, 3.5rem) auto 0;
+    max-width: 82rem;
+    padding-inline: 1.25rem;
+}
+
+.editorial-hero-header-image img {
+    aspect-ratio: 16 / 7;
+    border: 1px solid color-mix(in srgb, #ffffff 15%, transparent);
+    border-radius: max(var(--theme-radius, 1rem), 1.25rem);
+    display: block;
+    object-fit: cover;
+    width: 100%;
+}
+
 .editorial-button {
     align-items: center;
     background: var(--theme-primary, #111111);

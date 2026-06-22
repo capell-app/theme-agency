@@ -10,6 +10,8 @@ return [
         'primary_label' => 'Buy now',
         'secondary_label' => 'Compare models',
         'panel_kicker' => 'Launch sequence',
+        'preview_alt' => 'Looping product preview',
+        'header_image_alt' => 'Large product header image',
         'note_families' => 'Hero, product families, feature highlights, gallery, specs, and CTA sections stay modular.',
         'note_bands' => 'Alternating light and dark product bands create focus without decorative clutter.',
         'note_purchase' => 'Product cards support price, color, capacity, availability, and purchase paths.',

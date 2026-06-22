@@ -10,6 +10,8 @@ return [
         'primary_label' => 'Explore platform',
         'secondary_label' => 'Contact sales',
         'panel_kicker' => 'Infrastructure view',
+        'preview_alt' => 'Looping infrastructure product preview',
+        'header_image_alt' => 'Large infrastructure platform header image',
         'note_featured' => 'Product panels, solutions, global scale, developer tools, case studies, news, trust, compliance, proof, newsletter, and CTA modules stay modular.',
         'note_metadata' => 'Cards support transactions, dashboards, API logs, workflow state, regions, metrics, code snippets, customer proof, and compliance signals.',
         'note_newsletter' => 'Product news, architecture guides, customer stories, and compliance updates keep technical buyers engaged.',

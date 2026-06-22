@@ -20,6 +20,48 @@
             "package": "theme-premium-product-story"
         },
         {
+            "id": "premium-product-story-hero-base",
+            "title": "Premium Product Story Hero base",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-premium-product-story/docs/screenshots/premium-product-story-hero-base.png",
+            "required": false,
+            "user": false,
+            "notes": "Base hero variation with centered launch copy, CTAs, and modular launch notes.",
+            "useCase": "Premium Product Story hero variation coverage",
+            "package": "theme-premium-product-story"
+        },
+        {
+            "id": "premium-product-story-hero-looping-video",
+            "title": "Premium Product Story Hero looping video",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-premium-product-story/docs/screenshots/premium-product-story-hero-looping-video.png",
+            "required": false,
+            "user": false,
+            "notes": "Hero variation with a muted autoplaying loop preview in the side panel and a large header image below.",
+            "useCase": "Premium Product Story video hero variation coverage",
+            "package": "theme-premium-product-story"
+        },
+        {
+            "id": "premium-product-story-hero-looping-gif",
+            "title": "Premium Product Story Hero looping GIF",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-premium-product-story/docs/screenshots/premium-product-story-hero-looping-gif.png",
+            "required": false,
+            "user": false,
+            "notes": "Hero variation with an animated GIF-style preview in the side panel and a large header image below.",
+            "useCase": "Premium Product Story GIF hero variation coverage",
+            "package": "theme-premium-product-story"
+        },
+        {
             "id": "premium-product-story-landing-page",
             "title": "Premium Product Story Landing page",
             "surface": "frontend",

@@ -10,6 +10,8 @@ return [
         'primary_label' => 'Browse portfolios',
         'secondary_label' => 'Explore winners',
         'panel_kicker' => 'Collection system',
+        'preview_alt' => 'Looping portfolio preview',
+        'header_image_alt' => 'Large portfolio collection header image',
         'note_featured' => 'Featured portfolios, filters, grids, awards, creator directories, education, and newsletter modules stay modular.',
         'note_metadata' => 'Cards support author, agency, country, category, technology, award status, and hover-preview language.',
         'note_newsletter' => 'Education and newsletter modules help turn browsing into a repeat audience.',

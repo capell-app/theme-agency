@@ -20,6 +20,48 @@
             "package": "theme-premium-portfolio-collection"
         },
         {
+            "id": "premium-portfolio-collection-hero-base",
+            "title": "Premium Portfolio Collection Hero base",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-premium-portfolio-collection/docs/screenshots/premium-portfolio-collection-hero-base.png",
+            "required": false,
+            "user": false,
+            "notes": "Base hero variation with collection copy, CTAs, and modular collection-system notes.",
+            "useCase": "Premium Portfolio Collection hero variation coverage",
+            "package": "theme-premium-portfolio-collection"
+        },
+        {
+            "id": "premium-portfolio-collection-hero-looping-video",
+            "title": "Premium Portfolio Collection Hero looping video",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-premium-portfolio-collection/docs/screenshots/premium-portfolio-collection-hero-looping-video.png",
+            "required": false,
+            "user": false,
+            "notes": "Hero variation with a muted autoplaying loop preview in the side panel and a large header image below.",
+            "useCase": "Premium Portfolio Collection video hero variation coverage",
+            "package": "theme-premium-portfolio-collection"
+        },
+        {
+            "id": "premium-portfolio-collection-hero-looping-gif",
+            "title": "Premium Portfolio Collection Hero looping GIF",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/",
+            "url": "/",
+            "screenshotPath": "packages/theme-premium-portfolio-collection/docs/screenshots/premium-portfolio-collection-hero-looping-gif.png",
+            "required": false,
+            "user": false,
+            "notes": "Hero variation with an animated GIF-style preview in the side panel and a large header image below.",
+            "useCase": "Premium Portfolio Collection GIF hero variation coverage",
+            "package": "theme-premium-portfolio-collection"
+        },
+        {
             "id": "premium-portfolio-collection-landing-page",
             "title": "Premium Portfolio Collection Landing page",
             "surface": "frontend",
