@@ -7,8 +7,9 @@ namespace Capell\AiCreator\AgentBridge;
 use Capell\AgentBridge\Contracts\CapellAgentBridgeCapabilityAction;
 use Capell\AgentBridge\Data\CapabilityInvocationData;
 use Capell\AgentBridge\Data\CapabilityResultData;
-use Capell\AiCreator\Actions\PreviewAiCreatorSessionAction;
+use Capell\AiCreator\Actions\BuildAiCreatorSessionPreviewAction;
 use Capell\AiCreator\Models\AiCreatorSession;
+use Capell\AiCreator\Support\AiCreatorSessionAccess;
 use Illuminate\Support\Arr;
 
 final class PreviewAiCreatorSessionCapabilityAction implements CapellAgentBridgeCapabilityAction
@@ -26,7 +27,8 @@ final class PreviewAiCreatorSessionCapabilityAction implements CapellAgentBridge
     private function result(CapabilityInvocationData $invocation): CapabilityResultData
     {
         $session = $this->sessionFromPayload($invocation->payload);
-        $preview = PreviewAiCreatorSessionAction::run($session);
+        AiCreatorSessionAccess::authorizeSession($invocation->user, $session);
+        $preview = BuildAiCreatorSessionPreviewAction::run($session);
 
         return new CapabilityResultData(
             ok: true,
@@ -40,7 +42,11 @@ final class PreviewAiCreatorSessionCapabilityAction implements CapellAgentBridge
      */
     private function sessionFromPayload(array $payload): AiCreatorSession
     {
-        $sessionId = Arr::get($payload, 'session_id');
+        $validated = validator($payload, [
+            'session_id' => ['required', 'integer'],
+        ])->validate();
+
+        $sessionId = Arr::get($validated, 'session_id');
 
         return AiCreatorSession::query()->findOrFail((int) $sessionId);
     }

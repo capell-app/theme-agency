@@ -9,19 +9,20 @@ use Capell\AgentBridge\Data\CapabilityInvocationData;
 use Capell\AgentBridge\Data\CapabilityResultData;
 use Capell\AiCreator\Actions\StartAiCreatorSessionAction;
 use Capell\AiCreator\Data\AiCreatorStartSessionData;
-use Illuminate\Support\Arr;
+use Capell\AiCreator\Support\AiCreatorSessionAccess;
 
 final class StartAiCreatorSessionCapabilityAction implements CapellAgentBridgeCapabilityAction
 {
     public function preview(CapabilityInvocationData $invocation): CapabilityResultData
     {
-        $intent = $this->intentFromPayload($invocation->payload);
+        $payload = $this->validatedPayload($invocation->payload);
+        AiCreatorSessionAccess::authorizeStart($invocation->user, $payload['site_id'] ?? null);
 
         return new CapabilityResultData(
             ok: true,
             message: __('capell-ai-creator::package.capability_start_preview'),
             data: [
-                'intent' => $intent,
+                'intent' => $payload['intent'],
                 'willCreateSession' => true,
             ],
         );
@@ -29,13 +30,15 @@ final class StartAiCreatorSessionCapabilityAction implements CapellAgentBridgeCa
 
     public function execute(CapabilityInvocationData $invocation): CapabilityResultData
     {
-        $payload = $invocation->payload;
+        $payload = $this->validatedPayload($invocation->payload);
+        AiCreatorSessionAccess::authorizeStart($invocation->user, $payload['site_id'] ?? null);
+
         $session = StartAiCreatorSessionAction::run(new AiCreatorStartSessionData(
-            intent: $this->intentFromPayload($payload),
-            siteId: $this->nullableInteger($payload, 'site_id'),
-            workspaceId: $this->nullableInteger($payload, 'workspace_id'),
-            userId: $invocation->user !== null ? (int) $invocation->user->getAuthIdentifier() : $this->nullableInteger($payload, 'user_id'),
-            answers: $this->arrayPayload($payload, 'answers'),
+            intent: $payload['intent'],
+            siteId: $payload['site_id'] ?? null,
+            workspaceId: $payload['workspace_id'] ?? null,
+            userId: $invocation->user !== null ? (int) $invocation->user->getAuthIdentifier() : null,
+            answers: $payload['answers'] ?? [],
         ));
 
         return new CapabilityResultData(
@@ -51,32 +54,32 @@ final class StartAiCreatorSessionCapabilityAction implements CapellAgentBridgeCa
 
     /**
      * @param  array<string, mixed>  $payload
+     * @return array{intent: string, site_id?: int|null, workspace_id?: int|null, answers?: array<string, mixed>}
      */
-    private function intentFromPayload(array $payload): string
+    private function validatedPayload(array $payload): array
     {
-        $intent = Arr::get($payload, 'intent');
+        $validated = validator($payload, [
+            'intent' => ['required', 'string', 'max:2000'],
+            'site_id' => ['nullable', 'integer'],
+            'workspace_id' => ['nullable', 'integer'],
+            'answers' => ['nullable', 'array'],
+        ])->validate();
 
-        return is_string($intent) && trim($intent) !== '' ? trim($intent) : 'Create Capell content';
-    }
+        /** @var array{intent: string, site_id?: int|null, workspace_id?: int|null, answers?: array<string, mixed>} $validated */
+        $validated['intent'] = trim($validated['intent']);
 
-    /**
-     * @param  array<string, mixed>  $payload
-     */
-    private function nullableInteger(array $payload, string $key): ?int
-    {
-        $value = Arr::get($payload, $key);
+        if ($validated['intent'] === '') {
+            validator(['intent' => null], ['intent' => ['required']])->validate();
+        }
 
-        return is_numeric($value) ? (int) $value : null;
-    }
+        if (array_key_exists('site_id', $validated) && $validated['site_id'] !== null) {
+            $validated['site_id'] = (int) $validated['site_id'];
+        }
 
-    /**
-     * @param  array<string, mixed>  $payload
-     * @return array<string, mixed>
-     */
-    private function arrayPayload(array $payload, string $key): array
-    {
-        $value = Arr::get($payload, $key, []);
+        if (array_key_exists('workspace_id', $validated) && $validated['workspace_id'] !== null) {
+            $validated['workspace_id'] = (int) $validated['workspace_id'];
+        }
 
-        return is_array($value) ? $value : [];
+        return $validated;
     }
 }

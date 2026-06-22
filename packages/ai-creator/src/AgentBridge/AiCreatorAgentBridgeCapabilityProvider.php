@@ -6,9 +6,12 @@ namespace Capell\AiCreator\AgentBridge;
 
 use Capell\AgentBridge\Contracts\CapellAgentBridgeCapabilityProvider;
 use Capell\AgentBridge\Data\CapabilityData;
+use Capell\AgentBridge\Data\CapabilityResultData;
 use Capell\AgentBridge\Enums\CapabilityRiskEnum;
 use Capell\AgentBridge\Enums\CapabilityServerEnum;
+use Capell\AgentBridge\Support\CapabilitySchemas;
 use Capell\AgentBridge\Support\CapellAgentBridgeCapabilityRegistry;
+use Capell\AiCreator\Support\AiCreatorCapabilitySchemas;
 
 final class AiCreatorAgentBridgeCapabilityProvider implements CapellAgentBridgeCapabilityProvider
 {
@@ -38,6 +41,9 @@ final class AiCreatorAgentBridgeCapabilityProvider implements CapellAgentBridgeC
                 risk: CapabilityRiskEnum::Low,
                 actionClass: StartAiCreatorSessionCapabilityAction::class,
                 requiredPackage: 'capell-app/ai-creator',
+                outputDataClass: CapabilityResultData::class,
+                inputSchema: AiCreatorCapabilitySchemas::startSessionInput(),
+                outputSchema: CapabilitySchemas::capabilityResultOutput(),
                 supportsPreview: true,
                 requiresConfirmation: false,
                 auditEvent: 'ai-creator.sessions.start',
@@ -51,6 +57,9 @@ final class AiCreatorAgentBridgeCapabilityProvider implements CapellAgentBridgeC
                 risk: CapabilityRiskEnum::Read,
                 actionClass: PreviewAiCreatorSessionCapabilityAction::class,
                 requiredPackage: 'capell-app/ai-creator',
+                outputDataClass: CapabilityResultData::class,
+                inputSchema: AiCreatorCapabilitySchemas::sessionIdInput(),
+                outputSchema: CapabilitySchemas::capabilityResultOutput(),
                 supportsPreview: true,
                 requiresConfirmation: false,
                 auditEvent: 'ai-creator.sessions.preview',
@@ -64,6 +73,9 @@ final class AiCreatorAgentBridgeCapabilityProvider implements CapellAgentBridgeC
                 risk: CapabilityRiskEnum::High,
                 actionClass: ApplyAiCreatorSessionCapabilityAction::class,
                 requiredPackage: 'capell-app/ai-creator',
+                outputDataClass: CapabilityResultData::class,
+                inputSchema: AiCreatorCapabilitySchemas::sessionIdInput(),
+                outputSchema: CapabilitySchemas::capabilityResultOutput(),
                 supportsPreview: true,
                 requiresConfirmation: true,
                 auditEvent: 'ai-creator.sessions.apply',

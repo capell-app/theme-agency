@@ -15,15 +15,7 @@ final class PreviewAiCreatorSessionAction
 
     public function handle(AiCreatorSession $session): AiCreatorPreviewData
     {
-        $recommendations = $session->package_recommendations;
-        $requirements = $session->package_requirements;
-
-        $preview = new AiCreatorPreviewData(
-            sessionId: (int) $session->getKey(),
-            intent: $session->intent,
-            recommendations: is_array($recommendations) ? $recommendations : [],
-            requiredPackages: is_array($requirements) ? $requirements : [],
-        );
+        $preview = BuildAiCreatorSessionPreviewAction::run($session);
 
         $session->forceFill([
             'preview_output' => $preview->toPayload(),

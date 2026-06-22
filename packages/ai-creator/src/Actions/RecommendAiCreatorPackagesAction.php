@@ -55,7 +55,7 @@ final class RecommendAiCreatorPackagesAction
     {
         $recommendations = [];
 
-        if ($this->mentionsAny($intent, ['section', 'testimonial', 'faq', 'feature', 'service block', 'landing'])) {
+        if ($this->mentionsAny($intent, ['section', 'testimonial', 'faq', 'faqs', 'feature', 'service block', 'landing'])) {
             $recommendations[] = new AiCreatorPackageRecommendationData(
                 package: 'capell-app/content-sections',
                 level: AiCreatorRecommendationLevel::Recommended,
@@ -73,7 +73,7 @@ final class RecommendAiCreatorPackagesAction
             );
         }
 
-        if ($this->mentionsAny($intent, ['article', 'blog', 'news', 'insight', 'author', 'archive'])) {
+        if ($this->mentionsAny($intent, ['article', 'articles', 'blog', 'news', 'insight', 'author', 'archive'])) {
             $recommendations[] = new AiCreatorPackageRecommendationData(
                 package: 'capell-app/blog',
                 level: AiCreatorRecommendationLevel::Recommended,
@@ -239,7 +239,9 @@ final class RecommendAiCreatorPackagesAction
     private function mentionsAny(string $intent, array $needles): bool
     {
         foreach ($needles as $needle) {
-            if (str_contains($intent, $needle)) {
+            $pattern = sprintf('/(?<![[:alnum:]])%s(?![[:alnum:]])/u', preg_quote($needle, '/'));
+
+            if (preg_match($pattern, $intent) === 1) {
                 return true;
             }
         }

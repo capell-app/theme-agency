@@ -20,4 +20,11 @@ it('registers ai creator agent bridge capabilities with confirmation on apply', 
     expect($applyCapability->scope)->toBe('capell.ai-creator.apply')
         ->and($applyCapability->risk)->toBe(CapabilityRiskEnum::High)
         ->and($applyCapability->needsConfirmation())->toBeTrue();
+
+    $startCapability = $registry->get('capell.ai-creator.sessions.start');
+    $previewCapability = $registry->get('capell.ai-creator.sessions.preview_apply');
+
+    expect($startCapability->inputSchema)->toHaveKey('required', ['intent'])
+        ->and($previewCapability->inputSchema)->toHaveKey('required', ['session_id'])
+        ->and($applyCapability->inputSchema)->toHaveKey('required', ['session_id']);
 });

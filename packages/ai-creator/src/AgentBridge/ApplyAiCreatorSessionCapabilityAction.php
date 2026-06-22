@@ -8,8 +8,9 @@ use Capell\AgentBridge\Contracts\CapellAgentBridgeCapabilityAction;
 use Capell\AgentBridge\Data\CapabilityInvocationData;
 use Capell\AgentBridge\Data\CapabilityResultData;
 use Capell\AiCreator\Actions\ApplyAiCreatorSessionAction;
-use Capell\AiCreator\Actions\PreviewAiCreatorSessionAction;
+use Capell\AiCreator\Actions\BuildAiCreatorSessionPreviewAction;
 use Capell\AiCreator\Models\AiCreatorSession;
+use Capell\AiCreator\Support\AiCreatorSessionAccess;
 use Illuminate\Support\Arr;
 
 final class ApplyAiCreatorSessionCapabilityAction implements CapellAgentBridgeCapabilityAction
@@ -17,7 +18,8 @@ final class ApplyAiCreatorSessionCapabilityAction implements CapellAgentBridgeCa
     public function preview(CapabilityInvocationData $invocation): CapabilityResultData
     {
         $session = $this->sessionFromPayload($invocation->payload);
-        $preview = PreviewAiCreatorSessionAction::run($session);
+        AiCreatorSessionAccess::authorizeSession($invocation->user, $session);
+        $preview = BuildAiCreatorSessionPreviewAction::run($session);
 
         return new CapabilityResultData(
             ok: true,
@@ -28,7 +30,9 @@ final class ApplyAiCreatorSessionCapabilityAction implements CapellAgentBridgeCa
 
     public function execute(CapabilityInvocationData $invocation): CapabilityResultData
     {
-        $session = ApplyAiCreatorSessionAction::run($this->sessionFromPayload($invocation->payload));
+        $session = $this->sessionFromPayload($invocation->payload);
+        AiCreatorSessionAccess::authorizeSession($invocation->user, $session);
+        $session = ApplyAiCreatorSessionAction::run($session);
 
         return new CapabilityResultData(
             ok: true,
@@ -46,7 +50,11 @@ final class ApplyAiCreatorSessionCapabilityAction implements CapellAgentBridgeCa
      */
     private function sessionFromPayload(array $payload): AiCreatorSession
     {
-        $sessionId = Arr::get($payload, 'session_id');
+        $validated = validator($payload, [
+            'session_id' => ['required', 'integer'],
+        ])->validate();
+
+        $sessionId = Arr::get($validated, 'session_id');
 
         return AiCreatorSession::query()->findOrFail((int) $sessionId);
     }

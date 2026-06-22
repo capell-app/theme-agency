@@ -24,3 +24,12 @@ it('recommends growth and visibility packages for post launch measurement', func
         ->and($packages)->toHaveKey('capell-app/ga4-reports')
         ->and($packages)->toHaveKey('capell-app/site-monitor');
 });
+
+it('does not recommend blog just because the request mentions newsletter', function (): void {
+    $recommendations = RecommendAiCreatorPackagesAction::run('Create a newsletter signup form for audience capture.');
+    $packages = collect($recommendations)->keyBy('package');
+
+    expect($packages)->toHaveKey('capell-app/newsletter')
+        ->and($packages)->toHaveKey('capell-app/form-builder')
+        ->and($packages)->not->toHaveKey('capell-app/blog');
+});

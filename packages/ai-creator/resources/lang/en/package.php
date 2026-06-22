@@ -9,4 +9,6 @@ return [
     'capability_preview_ready' => 'AI Creator preview is ready.',
     'capability_apply_preview' => 'AI Creator session is ready for confirmation.',
     'capability_apply_executed' => 'AI Creator session applied.',
+    'session_forbidden' => 'You do not have access to this AI Creator session.',
+    'session_requires_user' => 'AI Creator sessions require an authenticated user.',
 ];
