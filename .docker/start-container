@@ -29,9 +29,18 @@ done
 
 mkdir -p /home/capell/.config/composer /home/capell/.npm
 mkdir -p /home/capell/current/bootstrap/cache /home/capell/current/database/migrations /home/capell/current/database/settings /home/capell/current/public/page-cache /home/capell/current/public/vendor /home/capell/current/storage/framework/cache/data /home/capell/current/storage/framework/sessions /home/capell/current/storage/framework/views /home/capell/current/storage/logs
-chown "${WWWUSER:-1000}:capell" /home/capell
-chown -R "${WWWUSER:-1000}:capell" /home/capell/.config /home/capell/.npm
-chown -R "${WWWUSER:-1000}:capell" /home/capell/current/bootstrap/cache /home/capell/current/database /home/capell/current/public/page-cache /home/capell/current/public/vendor /home/capell/current/storage
-chmod -R ug+rwX /home/capell/current/bootstrap/cache /home/capell/current/database /home/capell/current/public/page-cache /home/capell/current/public/vendor /home/capell/current/storage
+# These ownership/permission fix-ups are best-effort: when the container is
+# started as a non-root user (e.g. `./capell exec --user capell`) chown of the
+# host-mounted caches is denied, and that must not abort the entrypoint.
+chown "${WWWUSER:-1000}:capell" /home/capell 2>/dev/null || true
+chown -R "${WWWUSER:-1000}:capell" /home/capell/.config /home/capell/.npm 2>/dev/null || true
+chown -R "${WWWUSER:-1000}:capell" /home/capell/current/bootstrap/cache /home/capell/current/database /home/capell/current/public/page-cache /home/capell/current/public/vendor /home/capell/current/storage 2>/dev/null || true
+chmod -R ug+rwX /home/capell/current/bootstrap/cache /home/capell/current/database /home/capell/current/public/page-cache /home/capell/current/public/vendor /home/capell/current/storage 2>/dev/null || true
+
+# If we are already running as the target user, gosu is unnecessary (and would
+# fail without privileges); otherwise drop from root to the web user.
+if [ "$(id -u)" = "${WWWUSER:-1000}" ]; then
+    exec "$@"
+fi
 
 exec gosu "${WWWUSER:-1000}" "$@"

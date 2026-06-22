@@ -10,6 +10,11 @@ services:
     volumes:
       - .:/home/capell/current
       - ..:/home/capell/packages/capell:cached
+      # Companion repo (capell-app/capell). The vendor/capell-app/* path
+      # symlinks resolve to /home/capell/capell-4/packages/* inside the
+      # container, so mount the sibling checkout there or those classes
+      # (e.g. Capell\Admin\Facades\CapellAdmin) fail to autoload.
+      - ../capell-4:/home/capell/capell-4:cached
       - ~/.ssh:/home/capell/.ssh:ro
       - ~/.config/composer:/home/capell/.config/composer
     environment:
