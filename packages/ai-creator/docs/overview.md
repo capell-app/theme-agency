@@ -32,4 +32,4 @@ AI Creator recommends packages as required, recommended, or optional. Layout Bui
 
 ## Screenshot notes
 
-Marketplace screenshots are deferred until the Filament session UI is implemented. The current slice is infrastructure-first: persistence, recommendations, Agent Bridge registration, and focused tests.
+Committed marketplace assets live in `docs/assets/marketplace/`, and the documentation screenshot contract lives in `docs/screenshots.json`. The current screenshots are interim product-documentation previews for the session and Agent Bridge confirmation flows; replace them with route-backed Filament captures when the package-owned UI ships.

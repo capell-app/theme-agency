@@ -144,7 +144,18 @@
     },
     "marketplace": {
         "summary": "AI Creator helps editors create Capell content, pages, and plans while recommending the extensions that make each result stronger.",
-        "screenshots": [],
+        "screenshots": [
+            {
+                "path": "docs/assets/marketplace/extension-card.jpg",
+                "alt": "AI Creator session preview showing a reviewed Capell content plan with extension recommendations.",
+                "caption": "Create content, page, layout, and record plans for a normal Capell site with review before apply."
+            },
+            {
+                "path": "docs/assets/marketplace/tile-square.jpg",
+                "alt": "AI Creator Agent Bridge confirmation preview for applying a reviewed creation plan.",
+                "caption": "Agent Bridge integrations keep AI Creator apply steps behind explicit admin confirmation."
+            }
+        ],
         "categories": ["admin", "ai", "commercial"]
     }
 }

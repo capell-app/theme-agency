@@ -40,6 +40,8 @@ AI Creator does not silently install optional packages. Recommendations are mark
 - `database/migrations`: `capell_ai_creator_sessions`.
 - `resources/lang/en`: user-facing strings.
 - `tests`: package-local Pest coverage.
+- `docs/assets/marketplace`: marketplace card, hero, thumbnail, and tile images.
+- `docs/screenshots.json`: documentation screenshot contract for the session and Agent Bridge confirmation flows.
 
 ## Safety
 
