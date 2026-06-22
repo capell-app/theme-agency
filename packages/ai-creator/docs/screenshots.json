@@ -1,0 +1,20 @@
+{
+    "package": "ai-creator",
+    "composerName": "capell-app/ai-creator",
+    "entries": [
+        {
+            "slug": "ai-creator-session-preview",
+            "title": "AI Creator session preview",
+            "required": false,
+            "target": null,
+            "notes": "Capture once the Filament AI Creator session UI is implemented. Show the intent, deterministic preview, dependency checklist, and Works better with package recommendations."
+        },
+        {
+            "slug": "ai-creator-agent-bridge-confirmation",
+            "title": "AI Creator Agent Bridge confirmation",
+            "required": false,
+            "target": null,
+            "notes": "Capture once Agent Bridge UI can invoke AI Creator capabilities. Show apply confirmation and audit context."
+        }
+    ]
+}

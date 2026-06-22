@@ -24,6 +24,8 @@ jobs:
             repository_name: agent-delivery
           - package_directory: packages/ai-orchestrator
             repository_name: ai-orchestrator
+          - package_directory: packages/ai-creator
+            repository_name: ai-creator
           - package_directory: packages/api
             repository_name: api
           - package_directory: packages/automation-studio

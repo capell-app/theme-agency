@@ -1,0 +1,150 @@
+{
+    "manifest-version": 3,
+    "name": "capell-app/ai-creator",
+    "slug": "ai-creator",
+    "displayName": "AI Creator",
+    "kind": "package",
+    "capellApiVersion": "^4.0",
+    "version": "4.x-dev",
+    "description": "Reviewed AI-assisted creation sessions for Capell content, pages, layouts, and extension recommendations.",
+    "product": {
+        "group": "Capell Commercial",
+        "tier": "premium",
+        "bundle": "commercial"
+    },
+    "namespace": "Capell\\AiCreator",
+    "surfaces": ["admin"],
+    "dependencies": {
+        "requires": [
+            "capell-app/admin",
+            "capell-app/agent-bridge",
+            "capell-app/ai-orchestrator",
+            "capell-app/core"
+        ],
+        "supports": [
+            "capell-app/block-library",
+            "capell-app/blog",
+            "capell-app/campaign-studio",
+            "capell-app/content-sections",
+            "capell-app/events",
+            "capell-app/form-builder",
+            "capell-app/foundation-theme",
+            "capell-app/frontend-authoring",
+            "capell-app/frontend-optimizer",
+            "capell-app/ga4-reports",
+            "capell-app/html-cache",
+            "capell-app/insights",
+            "capell-app/layout-builder",
+            "capell-app/media-ai",
+            "capell-app/media-library",
+            "capell-app/navigation",
+            "capell-app/newsletter",
+            "capell-app/publishing-studio",
+            "capell-app/search",
+            "capell-app/seo-suite",
+            "capell-app/site-monitor",
+            "capell-app/structured-content-library"
+        ],
+        "conflicts": []
+    },
+    "providers": {
+        "metadata": [],
+        "install": [],
+        "runtime": ["Capell\\AiCreator\\Providers\\AiCreatorServiceProvider"],
+        "admin": [],
+        "frontend": []
+    },
+    "contributes": [
+        {
+            "type": "admin-page",
+            "class": "Capell\\AiCreator\\Manifest\\AiCreatorAdminPageContribution",
+            "pageClass": null,
+            "labelKey": "capell-ai-creator::package.admin_title"
+        },
+        {
+            "type": "model",
+            "class": "Capell\\AiCreator\\Manifest\\AiCreatorModelsContribution",
+            "models": ["Capell\\AiCreator\\Models\\AiCreatorSession"]
+        },
+        {
+            "type": "agent-capability",
+            "class": "Capell\\AiCreator\\Manifest\\AiCreatorAgentBridgeCapabilitiesContribution",
+            "providerClass": "Capell\\AiCreator\\AgentBridge\\AiCreatorAgentBridgeCapabilityProvider"
+        }
+    ],
+    "database": {
+        "migrations": true,
+        "settings": false,
+        "requiredTables": ["capell_ai_creator_sessions"]
+    },
+    "commands": {
+        "install": null,
+        "setup": null,
+        "demo": null,
+        "doctor": null
+    },
+    "settings": [],
+    "permissions": [],
+    "capabilities": [
+        "ai-creator",
+        "ai-creator-agent-bridge",
+        "ai-creator-package-recommendations"
+    ],
+    "security": {
+        "riskTier": "medium",
+        "publicSurface": {
+            "routeNames": [],
+            "auth": "none",
+            "csrfExemptRoutes": [],
+            "signedRoutes": [],
+            "tokenizedRoutes": [],
+            "webhookRoutes": [],
+            "throttledRoutes": []
+        },
+        "sensitiveData": {
+            "encryptedFields": [],
+            "hashedTokenFields": [],
+            "redactedOutputClasses": [],
+            "plaintextJustifications": []
+        },
+        "publicOutput": {
+            "cacheSafe": true,
+            "forbidAuthoringSurface": true,
+            "forbidSecrets": true,
+            "forbidPublicBladeQueries": true
+        },
+        "externalHttpClients": {
+            "requiresTimeouts": false,
+            "requiresSecretRedaction": true,
+            "clients": []
+        },
+        "adminSurface": {
+            "authorization": "panel-auth",
+            "permissions": []
+        }
+    },
+    "performance": {
+        "frontendRenderBudgetMs": 0,
+        "adminQueryBudget": 40,
+        "cacheTags": [],
+        "cacheSafety": {
+            "cacheable": false,
+            "variesBy": [],
+            "sensitiveOutput": false,
+            "invalidationSources": [],
+            "queueInvalidation": false
+        }
+    },
+    "healthChecks": [],
+    "commercial": {
+        "proposedLicense": "paid",
+        "requestedCertification": "first-party",
+        "supportPolicy": "priority",
+        "privateDocsRequested": true
+    },
+    "marketplace": {
+        "summary": "AI Creator helps editors create Capell content, pages, and plans while recommending the extensions that make each result stronger.",
+        "screenshots": [],
+        "categories": ["admin", "ai", "commercial"]
+    }
+}
