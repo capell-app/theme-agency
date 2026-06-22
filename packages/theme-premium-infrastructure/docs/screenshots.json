@@ -20,45 +20,135 @@
             "package": "theme-premium-infrastructure"
         },
         {
-            "id": "premium-infrastructure-hero-base",
-            "title": "Premium Infrastructure Hero base",
+            "id": "premium-infrastructure-hero-base-desktop",
+            "title": "Premium Infrastructure Hero base desktop",
             "surface": "frontend",
             "targetType": "frontend-url",
-            "target": "/",
-            "url": "/",
-            "screenshotPath": "packages/theme-premium-infrastructure/docs/screenshots/premium-infrastructure-hero-base.png",
+            "target": "/screenshot-fixtures/theme-premium-infrastructure/hero-base-desktop",
+            "url": "/screenshot-fixtures/theme-premium-infrastructure/hero-base-desktop",
+            "screenshotPath": "packages/theme-premium-infrastructure/docs/screenshots/premium-infrastructure-hero-base-desktop.png",
             "required": false,
             "user": false,
-            "notes": "Base hero variation with infrastructure copy, CTAs, and modular product-system notes.",
-            "useCase": "Premium Infrastructure hero variation coverage",
+            "scenario": "frontend-page",
+            "waitFor": ".editorial-shell",
+            "colorSchemes": ["light"],
+            "viewport": {
+                "width": 1440,
+                "height": 1200
+            },
+            "pageSetRoles": ["homepage", "hero-base", "desktop"],
+            "notes": "Desktop capture of the base hero with no media fields, proving the original copy and note-card layout still works.",
+            "useCase": "Premium Infrastructure hero media variation coverage",
             "package": "theme-premium-infrastructure"
         },
         {
-            "id": "premium-infrastructure-hero-looping-video",
-            "title": "Premium Infrastructure Hero looping video",
+            "id": "premium-infrastructure-hero-base-mobile",
+            "title": "Premium Infrastructure Hero base mobile",
             "surface": "frontend",
             "targetType": "frontend-url",
-            "target": "/",
-            "url": "/",
-            "screenshotPath": "packages/theme-premium-infrastructure/docs/screenshots/premium-infrastructure-hero-looping-video.png",
+            "target": "/screenshot-fixtures/theme-premium-infrastructure/hero-base-mobile",
+            "url": "/screenshot-fixtures/theme-premium-infrastructure/hero-base-mobile",
+            "screenshotPath": "packages/theme-premium-infrastructure/docs/screenshots/premium-infrastructure-hero-base-mobile.png",
             "required": false,
             "user": false,
-            "notes": "Hero variation with a muted autoplaying loop preview in the side panel and a large header image below.",
-            "useCase": "Premium Infrastructure video hero variation coverage",
+            "scenario": "frontend-page",
+            "waitFor": ".editorial-shell",
+            "colorSchemes": ["light"],
+            "viewport": {
+                "width": 390,
+                "height": 1200
+            },
+            "pageSetRoles": ["homepage", "hero-base", "mobile"],
+            "notes": "Mobile capture of the base hero with no media fields, proving the fallback first viewport stays readable on narrow screens.",
+            "useCase": "Premium Infrastructure hero media variation coverage",
             "package": "theme-premium-infrastructure"
         },
         {
-            "id": "premium-infrastructure-hero-looping-gif",
-            "title": "Premium Infrastructure Hero looping GIF",
+            "id": "premium-infrastructure-hero-looping-video-desktop",
+            "title": "Premium Infrastructure Hero looping video desktop",
             "surface": "frontend",
             "targetType": "frontend-url",
-            "target": "/",
-            "url": "/",
-            "screenshotPath": "packages/theme-premium-infrastructure/docs/screenshots/premium-infrastructure-hero-looping-gif.png",
+            "target": "/screenshot-fixtures/theme-premium-infrastructure/hero-looping-video-desktop",
+            "url": "/screenshot-fixtures/theme-premium-infrastructure/hero-looping-video-desktop",
+            "screenshotPath": "packages/theme-premium-infrastructure/docs/screenshots/premium-infrastructure-hero-looping-video-desktop.png",
             "required": false,
             "user": false,
-            "notes": "Hero variation with an animated GIF-style preview in the side panel and a large header image below.",
-            "useCase": "Premium Infrastructure GIF hero variation coverage",
+            "scenario": "frontend-page",
+            "waitFor": ".editorial-shell",
+            "colorSchemes": ["light"],
+            "viewport": {
+                "width": 1440,
+                "height": 1300
+            },
+            "pageSetRoles": ["hero-video", "header-image", "desktop"],
+            "notes": "Desktop capture of a hero with muted looping video markup, poster fallback, and the large header image underneath.",
+            "useCase": "Premium Infrastructure hero media variation coverage",
+            "package": "theme-premium-infrastructure"
+        },
+        {
+            "id": "premium-infrastructure-hero-looping-video-mobile",
+            "title": "Premium Infrastructure Hero looping video mobile",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/screenshot-fixtures/theme-premium-infrastructure/hero-looping-video-mobile",
+            "url": "/screenshot-fixtures/theme-premium-infrastructure/hero-looping-video-mobile",
+            "screenshotPath": "packages/theme-premium-infrastructure/docs/screenshots/premium-infrastructure-hero-looping-video-mobile.png",
+            "required": false,
+            "user": false,
+            "scenario": "frontend-page",
+            "waitFor": ".editorial-shell",
+            "colorSchemes": ["light"],
+            "viewport": {
+                "width": 390,
+                "height": 1400
+            },
+            "pageSetRoles": ["hero-video", "header-image", "mobile"],
+            "notes": "Mobile capture of a hero with muted looping video markup, poster fallback, and the large header image stacked underneath.",
+            "useCase": "Premium Infrastructure hero media variation coverage",
+            "package": "theme-premium-infrastructure"
+        },
+        {
+            "id": "premium-infrastructure-hero-looping-gif-desktop",
+            "title": "Premium Infrastructure Hero looping GIF desktop",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/screenshot-fixtures/theme-premium-infrastructure/hero-looping-gif-desktop",
+            "url": "/screenshot-fixtures/theme-premium-infrastructure/hero-looping-gif-desktop",
+            "screenshotPath": "packages/theme-premium-infrastructure/docs/screenshots/premium-infrastructure-hero-looping-gif-desktop.png",
+            "required": false,
+            "user": false,
+            "scenario": "frontend-page",
+            "waitFor": ".editorial-shell",
+            "colorSchemes": ["light"],
+            "viewport": {
+                "width": 1440,
+                "height": 1300
+            },
+            "pageSetRoles": ["hero-gif", "header-image", "desktop"],
+            "notes": "Desktop capture of a hero with GIF-style repeating preview media and the large header image underneath.",
+            "useCase": "Premium Infrastructure hero media variation coverage",
+            "package": "theme-premium-infrastructure"
+        },
+        {
+            "id": "premium-infrastructure-hero-image-only-desktop",
+            "title": "Premium Infrastructure Hero image-only desktop",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/screenshot-fixtures/theme-premium-infrastructure/hero-image-only-desktop",
+            "url": "/screenshot-fixtures/theme-premium-infrastructure/hero-image-only-desktop",
+            "screenshotPath": "packages/theme-premium-infrastructure/docs/screenshots/premium-infrastructure-hero-image-only-desktop.png",
+            "required": false,
+            "user": false,
+            "scenario": "frontend-page",
+            "waitFor": ".editorial-shell",
+            "colorSchemes": ["light"],
+            "viewport": {
+                "width": 1440,
+                "height": 1300
+            },
+            "pageSetRoles": ["hero-image-fallback", "header-image", "desktop"],
+            "notes": "Desktop capture of a hero using still-image preview fallback plus the large header image, proving non-video media stays polished.",
+            "useCase": "Premium Infrastructure hero media variation coverage",
             "package": "theme-premium-infrastructure"
         },
         {
@@ -117,5 +207,21 @@
             "useCase": "Premium Infrastructure conversion preview",
             "package": "theme-premium-infrastructure"
         }
-    ]
+    ],
+    "visualProof": {
+        "tokenInputs": [
+            "primaryColor",
+            "accentColor",
+            "surfaceColor",
+            "foregroundColor"
+        ],
+        "captureProfiles": [
+            "desktop-light",
+            "mobile-light",
+            "hero-video",
+            "hero-gif",
+            "image-fallback"
+        ],
+        "heroVariations": ["base", "looping-video", "looping-gif", "image-only"]
+    }
 }
