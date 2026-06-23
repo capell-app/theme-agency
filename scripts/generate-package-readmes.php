@@ -10,9 +10,19 @@ $changedFiles = [];
 foreach (capell_docs_package_paths($packagesPath) as $packageSlug => $packagePath) {
     $manifest = capell_docs_read_json($packagePath . '/capell.json');
     $composer = capell_docs_read_json($packagePath . '/composer.json');
+
+    // The README is always the generated developer document (technical shape, data model,
+    // install impact). A package opts into an admin-first overview by adding a hand-authored
+    // docs/overview.admin.md fragment; the generator then wraps that fragment into overview.md.
+    // Packages without the fragment keep the generated developer-shaped overview, so the
+    // rollout across packages is incremental and non-destructive.
+    $overview = is_file($packagePath . '/docs/overview.admin.md')
+        ? capell_docs_admin_overview_markdown($packageSlug, $packagePath, $manifest)
+        : capell_docs_package_markdown($rootPath, $packageSlug, $packagePath, $manifest, $composer, true);
+
     $documents = [
         'README.md' => capell_docs_package_markdown($rootPath, $packageSlug, $packagePath, $manifest, $composer, false),
-        'docs/overview.md' => capell_docs_package_markdown($rootPath, $packageSlug, $packagePath, $manifest, $composer, true),
+        'docs/overview.md' => $overview,
     ];
 
     foreach ($documents as $relativeDocumentPath => $document) {
@@ -181,6 +191,59 @@ function capell_docs_package_markdown(string $rootPath, string $packageSlug, str
         '## Next Steps',
         '',
         ...capell_docs_next_steps($packageSlug, $packagePath, $manifest, $isPipeline, $forOverview),
+        '',
+        '<!-- prettier-ignore-end -->',
+        '',
+    ];
+
+    return implode("\n", $lines);
+}
+
+/**
+ * Build the admin-first docs/overview.md from a hand-authored fragment.
+ *
+ * The fragment (docs/overview.admin.md) holds the admin sections only, in plain editor
+ * language. This wraps it with the package H1 (kept in sync with displayName) and a footer
+ * pointing editors at the admin guide and developers at the README and reference docs. The
+ * developer-shaped content is not lost: it remains the generated README.md.
+ *
+ * @param  array<string, mixed>  $manifest
+ */
+function capell_docs_admin_overview_markdown(string $packageSlug, string $packagePath, array $manifest): string
+{
+    $displayName = capell_docs_string($manifest['displayName'] ?? null)
+        ?? capell_docs_title_from_slug($packageSlug);
+
+    $fragment = trim((string) file_get_contents($packagePath . '/docs/overview.admin.md'));
+
+    $footer = [];
+
+    if (is_file($packagePath . '/docs/admin-guide.md')) {
+        $footer[] = 'For how to use ' . $displayName . ', see the [admin guide](admin-guide.md).';
+    }
+
+    $developerLinks = '[README](../README.md)';
+
+    if (is_file($packagePath . '/docs/' . $packageSlug . '-api.md')) {
+        $developerLinks .= ', [' . $packageSlug . '-api.md](' . $packageSlug . '-api.md)';
+    }
+
+    if (is_file($packagePath . '/docs/' . $packageSlug . '-database.md')) {
+        $developerLinks .= ', [' . $packageSlug . '-database.md](' . $packageSlug . '-database.md)';
+    }
+
+    $footer[] = 'For developers: see the ' . $developerLinks . '.';
+
+    $lines = [
+        '# ' . $displayName,
+        '',
+        '<!-- prettier-ignore-start -->',
+        '',
+        $fragment,
+        '',
+        '---',
+        '',
+        implode("\n", $footer),
         '',
         '<!-- prettier-ignore-end -->',
         '',

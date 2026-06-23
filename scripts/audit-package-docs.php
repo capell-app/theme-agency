@@ -499,7 +499,13 @@ function checkTroubleshootingHeadings(string $rootPath, array &$warnings): void
             continue;
         }
 
-        foreach (['README.md', 'docs/overview.md'] as $relativeFile) {
+        // When a package ships an admin-first overview, its editor troubleshooting moves to
+        // docs/admin-guide.md, so check there instead of the trimmed overview.
+        $overviewFile = is_file($packagePath . '/docs/overview.admin.md')
+            ? 'docs/admin-guide.md'
+            : 'docs/overview.md';
+
+        foreach (['README.md', $overviewFile] as $relativeFile) {
             $readmePath = $packagePath . '/' . $relativeFile;
 
             if (! is_file($readmePath)) {
@@ -508,7 +514,13 @@ function checkTroubleshootingHeadings(string $rootPath, array &$warnings): void
 
             $contents = file_get_contents($readmePath) ?: '';
 
-            if (! preg_match('/^#{2,3}\s+Troubleshooting\b/mi', $contents)) {
+            // Tier 2 admin guides use the documented operator shape ("What to do when...")
+            // instead of a Troubleshooting heading; accept either in docs/admin-guide.md.
+            $pattern = $relativeFile === 'docs/admin-guide.md'
+                ? '/^#{2,3}\s+(Troubleshooting\b|What to do when)/mi'
+                : '/^#{2,3}\s+Troubleshooting\b/mi';
+
+            if (! preg_match($pattern, $contents)) {
                 addWarning($warnings, 'packages/' . $packageName . '/' . $relativeFile . ' has operational surfaces but no Troubleshooting heading');
             }
         }
@@ -573,6 +585,50 @@ function checkRequiredMarkdownStructure(string $rootPath, string $packageName, s
         }
 
         addWarning($warnings, $message);
+    }
+}
+
+/**
+ * Validate an admin-first docs/overview.md (a package that ships docs/overview.admin.md).
+ *
+ * The admin overview must read for non-technical editors: it must keep an H1, must not carry
+ * the developer-only sections (those live in README.md), and must not show install commands or
+ * fenced code on the first screen. Per-tier section names are intentionally not pinned here so
+ * full-guide, theme, and behind-the-scenes overviews can each use their own plain headings.
+ */
+function checkAdminOverviewStructure(string $rootPath, string $packageName, array &$warnings, array &$failures, bool $strictStructure): void
+{
+    $relativeFile = 'docs/overview.md';
+    $readmePath = $rootPath . '/packages/' . $packageName . '/' . $relativeFile;
+
+    if (! is_file($readmePath)) {
+        return;
+    }
+
+    $contents = file_get_contents($readmePath) ?: '';
+
+    if (! preg_match('/^#\s+.+/m', $contents)) {
+        addFailure($failures, 'packages/' . $packageName . '/' . $relativeFile . ' is missing an H1 title');
+    }
+
+    $developerOnlyHeadings = [
+        'What This Plugin Adds',
+        'Technical Shape',
+        'Data Model',
+        'Install Impact',
+        'Quick Start',
+    ];
+
+    foreach (markdownHeadings($contents) as $heading) {
+        if (in_array($heading, $developerOnlyHeadings, true)) {
+            $message = 'packages/' . $packageName . '/' . $relativeFile . ' is admin-first but still carries developer heading "' . $heading . '" (keep it in README.md)';
+
+            $strictStructure ? addFailure($failures, $message) : addWarning($warnings, $message);
+        }
+    }
+
+    if (preg_match('/\bcomposer require\b/i', $contents) === 1 || preg_match('/\bphp artisan\b/i', $contents) === 1) {
+        addFailure($failures, 'packages/' . $packageName . '/' . $relativeFile . ' is admin-first but mentions an install command (composer/artisan); keep those in README.md');
     }
 }
 
@@ -700,7 +756,12 @@ foreach ($packageNames as $packageName) {
     }
 
     checkRequiredMarkdownStructure($rootPath, $packageName, 'README.md', $warnings, $failures, $strictStructure);
-    checkRequiredMarkdownStructure($rootPath, $packageName, 'docs/overview.md', $warnings, $failures, $strictStructure);
+
+    if (is_file($packagePath . '/docs/overview.admin.md')) {
+        checkAdminOverviewStructure($rootPath, $packageName, $warnings, $failures, $strictStructure);
+    } else {
+        checkRequiredMarkdownStructure($rootPath, $packageName, 'docs/overview.md', $warnings, $failures, $strictStructure);
+    }
     checkReadmeVoiceRules($rootPath, $packageName, $failures);
     checkMarkdownOutputRules($rootPath, $packageName, 'README.md', $manifest, $failures);
     checkMarkdownOutputRules($rootPath, $packageName, 'docs/overview.md', $manifest, $failures);
