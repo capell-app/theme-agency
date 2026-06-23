@@ -45,6 +45,7 @@ use Capell\PublishingStudio\Filament\Settings\PublishingStudioSettingsSchema;
 use Capell\PublishingStudio\Filament\Widgets\WorkspaceActivityFilamentWidget;
 use Capell\PublishingStudio\Listeners\SendWorkspaceStateNotification;
 use Capell\PublishingStudio\Livewire\DiffPanel;
+use Capell\PublishingStudio\Livewire\EditorialTimeline;
 use Capell\PublishingStudio\Livewire\FieldCommentThread;
 use Capell\PublishingStudio\Livewire\ReleaseWorkspaceSummaryPanel;
 use Capell\PublishingStudio\Livewire\WorkspaceApprovalHistory;
@@ -181,6 +182,7 @@ class AdminServiceProvider extends ServiceProvider
         Livewire::component('capell-publishing-studio::workspace-approval-history', WorkspaceApprovalHistory::class);
         Livewire::component('capell-publishing-studio::release-workspace-summary-panel', ReleaseWorkspaceSummaryPanel::class);
         Livewire::component('capell-publishing-studio::field-comment-thread', FieldCommentThread::class);
+        Livewire::component('capell-publishing-studio::editorial-timeline', EditorialTimeline::class);
         Livewire::component('capell-publishing-studio::diff-panel', DiffPanel::class);
 
         if (method_exists(Livewire::getFacadeRoot(), 'addNamespace')) {
