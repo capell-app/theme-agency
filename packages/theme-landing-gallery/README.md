@@ -23,7 +23,7 @@ Status details:
 
 **For developers:** The package gives developers package-owned service providers, Actions, and Blade views instead of pushing this behaviour into core or application code.
 
-**For teams:** A polished Capell theme for SaaS, ecommerce, and startup landing-page galleries with premium cards, search, paid templates, partner blocks, pro upsells, curated rows, votes, comments, prices, and saved-state actions.
+**For teams:** A polished Capell theme for SaaS, ecommerce, and startup landing-page galleries with premium cards, search, templates, partners, pro upsells, and curated rows.
 
 ## Screens And Workflow
 
@@ -43,7 +43,7 @@ Screenshot contract: `docs/screenshots.json`.
 - Console command classes: `DemoCommand`.
 - Manifest contributions: `admin-page: Capell\ThemeStudio\LandingGallery\Manifest\ThemeManagementPageContribution`.
 - Health checks: `Capell\ThemeStudio\LandingGallery\Health\ThemeLandingGalleryHealthCheck`.
-- Blade views: `packages/theme-landing-gallery/resources/views/livewire/page/page.blade.php`, `packages/theme-landing-gallery/resources/views/page.blade.php`, `packages/theme-landing-gallery/resources/views/sections/category-navigation.blade.php`, `packages/theme-landing-gallery/resources/views/sections/content-listing.blade.php`, `packages/theme-landing-gallery/resources/views/sections/cta.blade.php`, `packages/theme-landing-gallery/resources/views/sections/website-examples.blade.php`, `packages/theme-landing-gallery/resources/views/sections/footer.blade.php`, `packages/theme-landing-gallery/resources/views/sections/hero.blade.php`, `packages/theme-landing-gallery/resources/views/sections/paid-templates.blade.php`, `packages/theme-landing-gallery/resources/views/sections/partner-blocks.blade.php`, `packages/theme-landing-gallery/resources/views/sections/navigation.blade.php`, `packages/theme-landing-gallery/resources/views/sections/newsletter.blade.php`, `and 3 more`.
+- Blade views: `packages/theme-landing-gallery/resources/views/livewire/page/page.blade.php`, `packages/theme-landing-gallery/resources/views/page.blade.php`, `packages/theme-landing-gallery/resources/views/sections/category-navigation.blade.php`, `packages/theme-landing-gallery/resources/views/sections/content-listing.blade.php`, `packages/theme-landing-gallery/resources/views/sections/cta.blade.php`, `packages/theme-landing-gallery/resources/views/sections/footer.blade.php`, `packages/theme-landing-gallery/resources/views/sections/gallery-system.blade.php`, `packages/theme-landing-gallery/resources/views/sections/hero.blade.php`, `packages/theme-landing-gallery/resources/views/sections/navigation.blade.php`, `packages/theme-landing-gallery/resources/views/sections/newsletter.blade.php`, `packages/theme-landing-gallery/resources/views/sections/paid-templates.blade.php`, `packages/theme-landing-gallery/resources/views/sections/partner-blocks.blade.php`, `and 3 more`.
 - Cache tags: `theme-landing-gallery`.
 
 ## Data Model

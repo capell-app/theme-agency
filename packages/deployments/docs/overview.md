@@ -2,97 +2,33 @@
 
 <!-- prettier-ignore-start -->
 
-## What This Plugin Adds
+## What it does for you
 
-Deployments is an **Available**, **Schema-owning** Capell package in the **Capell Operations** product group. It ships as `capell-app/deployments` and extends these surfaces: admin.
+Deployments shows you the status of your site's releases, so you can see whether the latest update went out cleanly. As an owner you mostly watch the status and know who to tell if one fails.
 
-Deployments lets site operators connect GitHub, GitLab, or Bitbucket repositories from the Capell admin and publish Composer requirement changes without server shell access. OAuth-backed connections store encrypted tokens, remember the repository owner/name, and let extension install flows open pull requests, auto-merge them, or make direct commits according to policy. It is the Operations bundle bridge between Marketplace installs and reviewed repository changes.
+## Your screens
 
-After install, admins get package-owned management or reporting surfaces inside Capell.
+- **Deployment Repository**: the list of releases and their status.
 
-Status details:
+## What you can do
 
-- Status: Available
-- Tier: premium
-- Bundle: operations
-- Composer package: `capell-app/deployments`
-- Namespace: `Capell\Deployments`
-- Theme key: not applicable
+- See the status of the latest release.
+- Tell whether a release succeeded or failed.
+- Know who to contact on a failure.
 
-## Why It Matters
+## Where to find it
 
-**For developers:** The package gives developers package-owned service providers, Actions, Data objects, models, Laravel routes, Filament classes, and Blade views instead of pushing this behaviour into core or application code.
+Go to **Deployment Repository** in the admin to see release status.
 
-**For teams:** Connect a Git repository once, then install or update Capell extensions from admin workflows that publish composer.json changes as reviewed pull requests.
+## Good to know
 
-## Screens And Workflow
+- See the status of the latest release at a glance.
+- A **Failed** status means the release needs attention from your developer.
+- A dry run checks a release without applying it.
 
-Screenshot contract: `screenshots.json`.
+---
 
-- Deployment connection page before a repository is connected (admin, required).
-
-## Technical Shape
-
-- Service providers: `Capell\Deployments\Providers\DeploymentsServiceProvider`.
-- Config files: `packages/deployments/config/capell-deployments.php`.
-- Migrations: `packages/deployments/database/migrations/2026_05_10_190845_01_create_deployment_connections_table.php`, `packages/deployments/database/migrations/2026_06_07_090000_02_create_deployment_publications_table.php`.
-- Models: `DeploymentConnection`, `DeploymentPublication`.
-- Filament classes: `DeploymentConnectionPage`, `DeploymentConnectionFilamentWidget`.
-- Route files: `packages/deployments/routes/oauth.php`.
-- Events: `DeploymentPublishFailed`, `DeploymentPublishSucceeded`.
-- Actions: `CancelDeploymentPublicationAction`, `ConnectDeploymentAction`, `ConsumeOAuthStateAction`, `CreateOAuthStateAction`, `ValidateOAuthStateAction`, `PrepareComposerRequirementCommitAction`, `PublishComposerRequirementAction`, `RecordDeploymentPublicationAction`, `RefreshDeploymentPublicationStatusAction`, `RefreshProviderTokenAction`.
-- Data objects: `ComposerRequirementData`, `OAuthConnectionData`, `PublishComposerChangeResultData`, `PullRequestData`, `RepoFile`.
-- Manifest contributions: `admin-page: Capell\Deployments\Manifest\DeploymentsAdminPageContribution`, `dashboard-widget: Capell\Deployments\Manifest\DeploymentsDashboardFilamentWidgetContribution`, `route: Capell\Deployments\Manifest\DeploymentsRoutesContribution`.
-- Health checks: `Capell\Deployments\Health\DeploymentsHealthCheck`.
-- Blade views: `packages/deployments/resources/views/filament/pages/deployment-connection.blade.php`, `packages/deployments/resources/views/filament/widgets/deployment-connection.blade.php`.
-
-## Data Model
-
-- Required tables: `deployment_connections`, `deployment_publications`.
-- Models: `DeploymentConnection`, `DeploymentPublication`.
-- Migration files: `2026_05_10_190845_01_create_deployment_connections_table.php`, `2026_06_07_090000_02_create_deployment_publications_table.php`.
-- Migration impact: run host migrations through the package install flow before opening package surfaces.
-- Deletion/retention behaviour: Docs gap unless the package has an explicit pruning command, retention setting, or tested cascade path.
-
-## Install Impact
-
-- Admin navigation: adds package-owned Filament classes when registered.
-- Permissions: `View:DeploymentConnectionPage`, `Manage:DeploymentConnectionPage`.
-- Public routes: route files exist and must be reviewed before public enablement.
-- Database changes: package migrations are declared.
-- Settings: no package settings declared.
-- Queues or schedules: none detected in standard package paths.
-- Cache tags: none declared.
-- Commands: none declared.
-
-## Common Pitfalls
-
-- Run migrations before opening package resources or public routes.
-- Review route middleware, throttling, signed URLs, and public-output safety before exposing routes.
-- Keep `composer.json`, `composer.local.json`, `capell.json`, docs, screenshots, and tests aligned when the package surface changes.
-
-## Troubleshooting
-
-| Symptom | Likely cause | Check | Fix |
-| --- | --- | --- | --- |
-| Package surface is missing after install | Provider or manifest is not loaded | Confirm `capell.json`, package `composer.json`, and provider registration | Reinstall the package, refresh Composer autoload, and clear host caches |
-| Admin screen or command fails on missing table | Package migrations have not run | Check the tables listed in `Data Model` | Run host migrations and rerun the focused package test |
-| Route returns unexpected output | Route cache, middleware, or signed URL setup does not match the package route file | Check the route files listed in `Technical Shape` | Clear route cache and verify middleware before exposing public routes |
-
-## Quick Start
-
-1. Install the package: `composer require capell-app/deployments`.
-2. Run the required setup: `php artisan migrate`.
-3. Open the related Capell admin surface and verify Deployments appears.
-
-## Next Steps
-
-- [Package docs index](README.md)
-- [Screenshot contract](screenshots.json)
-- [Marketplace assets](assets/marketplace/)
-- [Capell content language plan](../../../docs/CONTENT_LANGUAGE_PLAN.md)
-- [Capell documentation design system](../../../docs/DESIGN_SYSTEM.md)
-- [Capell and package ERD notes](../../../docs/erd/capell-and-package-erds.md)
-- Focused tests: `vendor/bin/pest packages/deployments/tests --configuration=phpunit.xml`.
+For how to use Deployments, see the [admin guide](admin-guide.md).
+For developers: see the [README](../README.md).
 
 <!-- prettier-ignore-end -->

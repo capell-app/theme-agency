@@ -23,7 +23,7 @@ Status details:
 
 **For developers:** The package gives developers package-owned service providers, Actions, and Blade views instead of pushing this behaviour into core or application code.
 
-**For teams:** A clean Capell theme for large inspiration libraries with dense filters, selected chips, saved views, editor picks, latest designs, category mega menus, quick actions, and pagination.
+**For teams:** A clean Capell theme for large inspiration libraries with dense filters, selected chips, saved views, editor picks, latest designs, category mega menus, and pagination.
 
 ## Screens And Workflow
 
@@ -43,7 +43,7 @@ Screenshot contract: `docs/screenshots.json`.
 - Console command classes: `DemoCommand`.
 - Manifest contributions: `admin-page: Capell\ThemeStudio\FilterGallery\Manifest\ThemeManagementPageContribution`.
 - Health checks: `Capell\ThemeStudio\FilterGallery\Health\ThemeFilterGalleryHealthCheck`.
-- Blade views: `packages/theme-filter-gallery/resources/views/livewire/page/page.blade.php`, `packages/theme-filter-gallery/resources/views/page.blade.php`, `packages/theme-filter-gallery/resources/views/sections/taxonomy-navigation.blade.php`, `packages/theme-filter-gallery/resources/views/sections/content-listing.blade.php`, `packages/theme-filter-gallery/resources/views/sections/cta.blade.php`, `packages/theme-filter-gallery/resources/views/sections/editor-picks.blade.php`, `packages/theme-filter-gallery/resources/views/sections/footer.blade.php`, `packages/theme-filter-gallery/resources/views/sections/hero.blade.php`, `packages/theme-filter-gallery/resources/views/sections/latest-designs.blade.php`, `packages/theme-filter-gallery/resources/views/sections/blog-mission.blade.php`, `packages/theme-filter-gallery/resources/views/sections/navigation.blade.php`, `packages/theme-filter-gallery/resources/views/sections/newsletter.blade.php`, `and 3 more`.
+- Blade views: `packages/theme-filter-gallery/resources/views/livewire/page/page.blade.php`, `packages/theme-filter-gallery/resources/views/page.blade.php`, `packages/theme-filter-gallery/resources/views/sections/blog-mission.blade.php`, `packages/theme-filter-gallery/resources/views/sections/content-listing.blade.php`, `packages/theme-filter-gallery/resources/views/sections/cta.blade.php`, `packages/theme-filter-gallery/resources/views/sections/editor-picks.blade.php`, `packages/theme-filter-gallery/resources/views/sections/faq-archives.blade.php`, `packages/theme-filter-gallery/resources/views/sections/filter-hero.blade.php`, `packages/theme-filter-gallery/resources/views/sections/footer.blade.php`, `packages/theme-filter-gallery/resources/views/sections/hero.blade.php`, `packages/theme-filter-gallery/resources/views/sections/latest-designs.blade.php`, `packages/theme-filter-gallery/resources/views/sections/navigation.blade.php`, `and 3 more`.
 - Cache tags: `theme-filter-gallery`.
 
 ## Data Model

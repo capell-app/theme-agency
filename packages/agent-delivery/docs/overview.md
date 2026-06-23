@@ -2,93 +2,25 @@
 
 <!-- prettier-ignore-start -->
 
-## What This Plugin Adds
+## What it does
 
-Agent Delivery is an **Available**, **No schema impact** Capell package in the **Capell Publishing Pro** product group. It ships as `capell-app/agent-delivery` and extends these surfaces: frontend.
+Agent Delivery prepares your content so AI agents and assistants can read it cleanly, helping your site be understood by AI tools.
 
-Serve your published Capell pages to AI agents and answer engines as clean, public-safe JSON manifests and RAG-ready semantic chunks - no scraping, no admin leakage.
+## Do I need to do anything?
 
-After install, the package affects public rendering, public routes, or frontend runtime behaviour.
+Usually no. It works automatically once installed. You will see its effect in how AI tools read and represent your content.
 
-Status details:
+## Where it shows up
 
-- Status: Available
-- Tier: premium
-- Bundle: publishing-pro
-- Composer package: `capell-app/agent-delivery`
-- Namespace: `Capell\AgentDelivery`
-- Theme key: not applicable
+Behind the scenes in how your public content is delivered to AI agents; there is no screen to operate.
 
-## Why It Matters
+## Good to know
 
-**For developers:** The package gives developers package-owned service providers, Actions, Data objects, and Laravel routes instead of pushing this behaviour into core or application code.
+- There is nothing to switch on day to day.
+- It works alongside SEO and discovery features to make your content AI-readable.
 
-**For teams:** Serve your published Capell pages to AI agents and answer engines as clean, public-safe JSON manifests and RAG-ready semantic chunks - no scraping, no admin leakage.
+---
 
-## Screens And Workflow
-
-Screenshot contract: `screenshots.json`.
-
-- Public page manifest JSON response (frontend, required).
-- Public page chunks JSON response (frontend, required).
-
-## Technical Shape
-
-- Service providers: `Capell\AgentDelivery\Providers\AgentDeliveryServiceProvider`.
-- Config files: `packages/agent-delivery/config/capell-agent-delivery.php`.
-- Route files: `packages/agent-delivery/routes/agent-delivery.php`.
-- Actions: `AnalyzeAgentDeliveryChunkBudgetAction`, `BuildAgentDeliveryChunksAction`, `BuildAgentDeliveryPageAction`, `BuildAgentDeliveryPageIndexAction`, `ResolveAgentDeliveryPageAction`.
-- Data objects: `AgentDeliveryChunkBudgetData`, `AgentDeliveryChunkData`, `AgentDeliveryPageData`, `AgentDeliveryPageIndexEntryData`, `ResolvedAgentDeliveryPageData`.
-- Manifest contributions: `agent-capability: Capell\AgentDelivery\Manifest\AgentDeliveryContractsContribution`, `health-check: Capell\AgentDelivery\Health\AgentDeliveryHealthCheck`, `route: Capell\AgentDelivery\Manifest\AgentDeliveryRoutesContribution`.
-- Health checks: `Capell\AgentDelivery\Health\AgentDeliveryHealthCheck`.
-- Cache tags: `agent-delivery`.
-
-## Data Model
-
-This package has no schema impact. It does not declare package-owned migrations or required tables.
-
-Docs gap: document extension points here if the package delegates persistence to a host package.
-
-## Install Impact
-
-- Admin navigation: no admin surface declared.
-- Permissions: none declared in `capell.json`.
-- Public routes: route files exist and must be reviewed before public enablement.
-- Database changes: no package migrations declared.
-- Settings: no package settings declared.
-- Queues or schedules: none detected in standard package paths.
-- Cache tags: `agent-delivery`.
-- Commands: none declared.
-
-## Common Pitfalls
-
-- Review route middleware, throttling, signed URLs, and public-output safety before exposing routes.
-- Keep public Blade and cached HTML free of authoring markers, model IDs, permissions, signed editor URLs, and lazy database queries.
-- Keep `composer.json`, `composer.local.json`, `capell.json`, docs, screenshots, and tests aligned when the package surface changes.
-
-## Troubleshooting
-
-| Symptom | Likely cause | Check | Fix |
-| --- | --- | --- | --- |
-| Package surface is missing after install | Provider or manifest is not loaded | Confirm `capell.json`, package `composer.json`, and provider registration | Reinstall the package, refresh Composer autoload, and clear host caches |
-| Route returns unexpected output | Route cache, middleware, or signed URL setup does not match the package route file | Check the route files listed in `Technical Shape` | Clear route cache and verify middleware before exposing public routes |
-| Public output leaks unexpected state | Render data, cache variation, or authoring boundary has regressed | Check public Blade, cache tags, and public-output safety tests | Move data loading out of Blade and rerun the package public-output tests |
-
-## Quick Start
-
-1. Install the package: `composer require capell-app/agent-delivery`.
-2. Run the required setup: no package migrations are declared; clear cached config and routes if the host app uses caches.
-3. Verify the package provider is registered and the related frontend, command, or extension point is active.
-
-## Next Steps
-
-- [Package docs index](README.md)
-- [Screenshot contract](screenshots.json)
-- [Marketplace assets](assets/marketplace/)
-- [Capell content language plan](../../../docs/CONTENT_LANGUAGE_PLAN.md)
-- [Capell documentation design system](../../../docs/DESIGN_SYSTEM.md)
-- [Capell and package ERD notes](../../../docs/erd/capell-and-package-erds.md)
-- Related packages: [Site Discovery](../../site-discovery/README.md).
-- Focused tests: `vendor/bin/pest packages/agent-delivery/tests --configuration=phpunit.xml`.
+For developers: see the [README](../README.md).
 
 <!-- prettier-ignore-end -->

@@ -6,7 +6,7 @@
 
 Theme Restaurant is an **Available**, **No schema impact** Capell theme in the **Capell Themes** product group. It ships as `capell-app/theme-restaurant` and extends these surfaces: frontend, console.
 
-Theme Restaurant gives hospitality teams a premium venue website built around menu discovery, reservation intent, private dining, events, opening hours, and location confidence. It extends the built-in default frontend theme, keeps restaurant copy and menu items in portable Capell content, and lets the package own the visual rhythm: editorial menu panels, service windows, private-room selling, event previews, and map-adjacent venue proof. It pairs with Bookings or Form Builder for reservation capture, Events for ticketed or seasonal occasions, and Blog for reviews or dining guides while rendering safe static fallbacks when those packages are absent.
+Theme Restaurant gives hospitality teams a premium venue website built around menu discovery, reservation intent, private dining, events, opening hours, and location confidence. It extends the built-in default frontend theme, keeps restaurant copy and menu items in portable Capell content, and lets the package own the visual rhythm: editorial menu panels, service windows, private-room selling, event previews, and map-adjacent venue proof. It pairs with Bookings or Form Builder for reservation capture, Events for ticketed or seasonal occasions, and Blog for reviews or dining guides while rendering safe static fallbacks when those packages are absent. Restaurant sections do not query Bookings, Form Builder, Events, Blog, or SEO Suite directly.
 
 After install, admins can select the theme through the core theme management surface. Editors keep using normal Capell content workflows while the package controls public presentation.
 
@@ -54,9 +54,7 @@ Product group:
 - Product group: `Capell Themes`
 - Manifest extends: `default`
 - Runtime extends: `default`
-- Restaurant runtime inheritance uses `extends: default` and requires `capell-app/foundation-theme` plus `capell-app/frontend` for the built-in default fallback.
-- Theme Restaurant output is cacheable for public HTML with site and locale variation.
-- Restaurant sections do not query Bookings, Form Builder, Events, Blog, or SEO Suite directly; optional package integrations render safe static fallbacks when unavailable.
+- Restaurant runtime inheritance uses `extends: default` and requires `capell-app/frontend` for the built-in default fallback.
 
 ## Data Model
 

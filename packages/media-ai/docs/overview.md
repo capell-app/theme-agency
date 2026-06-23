@@ -2,92 +2,34 @@
 
 <!-- prettier-ignore-start -->
 
-## What This Plugin Adds
+## What it does for you
 
-Media AI is an **Available**, **No schema impact** Capell package in the **Capell Media** product group. It ships as `capell-app/media-ai` and extends these surfaces: admin, console.
+Media AI helps you improve images with a Doctor tool. You run Doctor on an image to enhance or analyse it, compare the result with the original, and replace the image if you are happy.
 
-Media AI adds a provider-backed "Doctor image" action to image records in the Capell Admin media library, letting editors improve images, remove backgrounds or objects, restore damaged assets, and request upscales without leaving the CMS. It ships the `ImageDoctor` contract and a safe null implementation rather than a production AI provider; bind an implementation directly or through AI Orchestrator, and the action stays hidden until one is configured. Media AI is positioned as a premium Capell Media add-on to the free Media Library workflow, with no public frontend output and no database writes of its own.
+## Your screens
 
-After install, admins get package-owned management or reporting surfaces inside Capell.
+- **Doctor image**: the tool that enhances or analyses an image.
+- **Compare view**: the new version next to the original.
 
-Status details:
+## What you can do
 
-- Status: Available
-- Tier: premium
-- Bundle: media
-- Composer package: `capell-app/media-ai`
-- Namespace: `Capell\MediaAI`
-- Theme key: not applicable
+- Run Doctor on an image.
+- Compare the result with the original.
+- Replace the image with the improved version.
 
-## Why It Matters
+## Where to find it
 
-**For developers:** The package gives developers package-owned service providers, Actions, Data objects, and Filament classes instead of pushing this behaviour into core or application code.
+Open an image and choose **Doctor image** to enhance or analyse it.
 
-**For teams:** Provider-backed image editing inside Capell's media library: improve images, remove backgrounds or objects, restore, and upscale through a Doctor image action that stays hidden until configured.
+## Good to know
 
-## Screens And Workflow
+- Click **Doctor** to enhance or analyse an image.
+- Compare with the original before replacing it.
+- A Doctor request may be queued for a moment before it completes.
 
-Screenshot contract: `screenshots.json`.
+---
 
-- Doctor image action on the Media edit page (admin, required).
-
-## Technical Shape
-
-- Service providers: `Capell\MediaAI\Providers\MediaAIServiceProvider`.
-- Config files: `packages/media-ai/config/capell-media-ai.php`.
-- Filament classes: `MediaAIEditActionExtender`.
-- Actions: `ApplyImageDoctorMetadataAction`, `QueueBatchImageDoctorRequestsAction`.
-- Data objects: `ImageDoctorRequest`, `ImageDoctorResult`.
-- Jobs: `RunImageDoctorJob`.
-- Command signatures: `media-ai:doctor-batch`.
-- Console command classes: `QueueImageDoctorBatchCommand`.
-- Manifest contributions: `configurator: Capell\MediaAI\Manifest\MediaAIBatchCommandContribution`, `configurator: Capell\MediaAI\Manifest\MediaAIEditActionContribution`, `health-check: Capell\MediaAI\Manifest\MediaAIHealthContribution`.
-- Health checks: `Capell\MediaAI\Health\MediaAIHealthCheck`.
-
-## Data Model
-
-This package has no schema impact. It does not declare package-owned migrations or required tables.
-
-Docs gap: document extension points here if the package delegates persistence to a host package.
-
-## Install Impact
-
-- Admin navigation: adds package-owned Filament classes when registered.
-- Permissions: none declared in `capell.json`.
-- Public routes: none detected in package route files.
-- Database changes: no package migrations declared.
-- Settings: no package settings declared.
-- Queues or schedules: review package jobs or schedules before install.
-- Cache tags: none declared.
-- Commands: `media-ai:doctor-batch`.
-
-## Common Pitfalls
-
-- Run package commands from the host app; in this repository use `vendor/bin/pest` for package tests.
-- Keep `composer.json`, `composer.local.json`, `capell.json`, docs, screenshots, and tests aligned when the package surface changes.
-
-## Troubleshooting
-
-| Symptom | Likely cause | Check | Fix |
-| --- | --- | --- | --- |
-| Package surface is missing after install | Provider or manifest is not loaded | Confirm `capell.json`, package `composer.json`, and provider registration | Reinstall the package, refresh Composer autoload, and clear host caches |
-| Background work does not run | Queue worker or scheduled command is not active | Check package jobs, commands, and host scheduler configuration | Start the queue or scheduler, then run the focused command or package test |
-
-## Quick Start
-
-1. Install the package: `composer require capell-app/media-ai`.
-2. Run the required setup: no package migrations are declared; clear cached config and routes if the host app uses caches.
-3. Open the related Capell admin surface and verify Media AI appears.
-
-## Next Steps
-
-- [Package docs index](README.md)
-- [Screenshot contract](screenshots.json)
-- [Marketplace assets](assets/marketplace/)
-- [Capell content language plan](../../../docs/CONTENT_LANGUAGE_PLAN.md)
-- [Capell documentation design system](../../../docs/DESIGN_SYSTEM.md)
-- [Capell and package ERD notes](../../../docs/erd/capell-and-package-erds.md)
-- Related packages: [Ai Orchestrator](../../ai-orchestrator/README.md), [Media Library](../../media-library/README.md), [Seo Suite](../../seo-suite/README.md).
-- Focused tests: `vendor/bin/pest packages/media-ai/tests --configuration=phpunit.xml`.
+For how to use Media AI, see the [admin guide](admin-guide.md).
+For developers: see the [README](../README.md).
 
 <!-- prettier-ignore-end -->

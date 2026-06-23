@@ -6,6 +6,8 @@ namespace Capell\UrlManager\Tests;
 
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Schema;
 use Orchestra\Testbench\TestCase;
@@ -26,9 +28,17 @@ class UrlManagerTestCase extends TestCase
      * @return array<int, class-string>
      */
     #[Override]
-    protected function getPackageProviders($app): array
+    protected function getPackageProviders(mixed $app): array
     {
         return [];
+    }
+
+    #[Override]
+    protected function defineEnvironment(mixed $app): void
+    {
+        Config::set('database.default', 'sqlite');
+        Config::set('database.connections.sqlite.database', ':memory:');
+        Config::set('database.connections.sqlite.url');
     }
 
     #[Override]
@@ -45,6 +55,20 @@ class UrlManagerTestCase extends TestCase
         Schema::create('languages', function (Blueprint $table): void {
             $table->id();
         });
+
+        DB::table('users')->insert([
+            ['id' => 30],
+        ]);
+        DB::table('sites')->insert([
+            ['id' => 1],
+            ['id' => 10],
+            ['id' => 12],
+        ]);
+        DB::table('languages')->insert([
+            ['id' => 1],
+            ['id' => 2],
+            ['id' => 20],
+        ]);
 
         $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
     }

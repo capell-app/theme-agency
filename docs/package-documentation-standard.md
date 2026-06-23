@@ -9,7 +9,7 @@ Every package needs both a non-technical overview and a developer deep dive. The
 | Reader                         | What they need                                                                                                                                       |
 | ------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Site owner, buyer, or operator | What workflow the package adds, which bundle it belongs to, which screens or public routes appear, and what operational risk it reduces.             |
-| Editor or admin user           | What they can create, review, approve, publish, inspect, recover, or hand off without custom development.                                            |
+| Editor or admin user           | What they can create, review, approve, publish, inspect, recover, or hand off without custom development. Editors read `docs/overview.md` and, for Tier 1 and Tier 2 packages, `docs/admin-guide.md`. |
 | Developer                      | Real package boundaries: Actions, Data objects, providers, routes, models, settings, extension points, tests, and unsafe integration paths to avoid. |
 
 Use this split when writing examples:
@@ -52,6 +52,43 @@ Use the shared language guides before rewriting package docs:
 - [Capell Documentation Design System](DESIGN_SYSTEM.md)
 - [Capell and package ERD notes](erd/capell-and-package-erds.md)
 - [Package Documentation Audience Review](package-documentation-audience-review.md)
+
+## Admin Documentation
+
+The README is the developer and owner front door. The admin docs are the editor and operator front door, written in plain language for someone who runs the feature but does not change the code. Follow the admin voice in the [Content Language Plan](CONTENT_LANGUAGE_PLAN.md#admin-voice-overviewmd-and-admin-guidemd): real on-screen labels in bold, the user's goal first, the nav path named, no class/table/Action names, no `composer`/`artisan`, no fenced code, and no non-ASCII punctuation.
+
+### Admin-first `overview.md`
+
+When a package ships an admin-first overview, it adds a hand-authored fragment at `docs/overview.admin.md` (admin sections only, no H1, no footer). The generator wraps that fragment into `docs/overview.md` with the package H1 and a footer linking the admin guide and developer docs. The developer-shaped content is not lost: it stays in the generated `README.md`. The strict audit then validates `overview.md` in admin mode (H1 required; the developer headings `What This Plugin Adds`, `Technical Shape`, `Data Model`, `Install Impact`, and `Quick Start` are forbidden; install commands are forbidden). Keep the fragment short (about 40 to 70 lines) using plain headings such as:
+
+| Section | Purpose |
+| --- | --- |
+| `What it does for you` | Two to four sentences, concrete, in editor language. No class names. |
+| `Your screens` | The actual admin nav items and pages, in plain words. |
+| `What you can do` | Three to six verbs the user performs: create, schedule, approve, preview, export. |
+| `Where to find it` | The nav path, for example "Content > Articles" or "Settings > SEO". |
+| `Good to know` | One to three gotchas in plain language, such as "Drafts stay private until published". |
+
+Themes and behind-the-scenes packages use their own short headings (see the tier table) rather than this exact set.
+
+### `admin-guide.md` (Tier 1 and Tier 2)
+
+A longer how-to with three parts in one document:
+
+| Section | Purpose |
+| --- | --- |
+| Using `<Package>` (editor how-to) | Numbered tasks with real button labels, each titled by the user's goal ("How to schedule an article for later"). |
+| Rolling out `<Package>` (for owners) | What to turn on first, what to add when needed (a Need to Enable table), what not to enable yet, and who does what (role to first useful screen). |
+| Troubleshooting for editors | A What you see / What it means / What to do table in plain language. |
+
+### Coverage tiers
+
+| Tier | Treatment |
+| --- | --- |
+| 1 (full guide) | Admin-first `overview.md` plus a full `admin-guide.md` (how-to, adoption, troubleshooting). |
+| 2 (operator note) | Admin-first `overview.md` plus a lighter `admin-guide.md` (what you are looking at, what to do when X, settings and retention). |
+| 3 (theme template) | One shared admin-first `overview.md` shape per theme: what this theme gives you, how to use it, what it adds, good to know. No per-theme `admin-guide.md`. |
+| 4 (behind-the-scenes note) | Admin-first `overview.md` only: what it does, do I need to do anything, where it shows up. No `admin-guide.md`. |
 
 ## Workflow Value Rules
 

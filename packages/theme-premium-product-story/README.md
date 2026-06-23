@@ -21,7 +21,7 @@ Status details:
 
 ## Why It Matters
 
-**For developers:** The package gives developers package-owned service providers, Actions, and Blade views instead of pushing this behaviour into core or application code.
+**For developers:** The package gives developers package-owned service providers, Actions, Laravel routes, and Blade views instead of pushing this behaviour into core or application code.
 
 **For teams:** A premium Capell theme for consumer product launches, feature storytelling, model comparison, ecosystem content, and purchase CTAs.
 
@@ -30,6 +30,12 @@ Status details:
 Screenshot contract: `docs/screenshots.json`.
 
 - Premium Product Story Homepage (frontend, optional).
+- Premium Product Story Hero base desktop (frontend, optional).
+- Premium Product Story Hero base mobile (frontend, optional).
+- Premium Product Story Hero looping video desktop (frontend, optional).
+- Premium Product Story Hero looping video mobile (frontend, optional).
+- Premium Product Story Hero looping GIF desktop (frontend, optional).
+- Premium Product Story Hero image-only desktop (frontend, optional).
 - Premium Product Story Landing page (frontend, optional).
 - Premium Product Story List page (frontend, optional).
 - Premium Product Story Search results (frontend, optional).
@@ -38,12 +44,13 @@ Screenshot contract: `docs/screenshots.json`.
 ## Technical Shape
 
 - Service providers: `Capell\ThemeStudio\PremiumProductStory\PremiumProductStoryThemeServiceProvider`.
+- Route files: `packages/theme-premium-product-story/routes/screenshot-fixtures.php`.
 - Actions: `InstallPremiumProductStoryThemeDemoAction`.
 - Command signatures: `capell:theme-premium-product-story-demo`.
 - Console command classes: `DemoCommand`.
 - Manifest contributions: `admin-page: Capell\ThemeStudio\PremiumProductStory\Manifest\ThemeManagementPageContribution`.
 - Health checks: `Capell\ThemeStudio\PremiumProductStory\Health\ThemePremiumProductStoryHealthCheck`.
-- Blade views: `packages/theme-premium-product-story/resources/views/livewire/page/page.blade.php`, `packages/theme-premium-product-story/resources/views/page.blade.php`, `packages/theme-premium-product-story/resources/views/sections/feature-highlights.blade.php`, `packages/theme-premium-product-story/resources/views/sections/content-listing.blade.php`, `packages/theme-premium-product-story/resources/views/sections/cta.blade.php`, `packages/theme-premium-product-story/resources/views/sections/features.blade.php`, `packages/theme-premium-product-story/resources/views/sections/footer.blade.php`, `packages/theme-premium-product-story/resources/views/sections/hero.blade.php`, `packages/theme-premium-product-story/resources/views/sections/ecosystem-story.blade.php`, `packages/theme-premium-product-story/resources/views/sections/gallery-strip.blade.php`, `packages/theme-premium-product-story/resources/views/sections/navigation.blade.php`, `packages/theme-premium-product-story/resources/views/sections/newsletter.blade.php`, `and 3 more`.
+- Blade views: `packages/theme-premium-product-story/resources/views/livewire/page/page.blade.php`, `packages/theme-premium-product-story/resources/views/page.blade.php`, `packages/theme-premium-product-story/resources/views/screenshots/fixture.blade.php`, `packages/theme-premium-product-story/resources/views/sections/content-listing.blade.php`, `packages/theme-premium-product-story/resources/views/sections/cta.blade.php`, `packages/theme-premium-product-story/resources/views/sections/ecosystem-story.blade.php`, `packages/theme-premium-product-story/resources/views/sections/feature-highlights.blade.php`, `packages/theme-premium-product-story/resources/views/sections/features.blade.php`, `packages/theme-premium-product-story/resources/views/sections/footer.blade.php`, `packages/theme-premium-product-story/resources/views/sections/gallery-strip.blade.php`, `packages/theme-premium-product-story/resources/views/sections/hero.blade.php`, `packages/theme-premium-product-story/resources/views/sections/navigation.blade.php`, `and 4 more`.
 - Cache tags: `theme-premium-product-story`.
 
 ## Data Model
@@ -54,7 +61,7 @@ This theme has no schema impact. It relies on core Capell site, page, locale, an
 
 - Admin navigation: contributes admin extension points through `capell.json`.
 - Permissions: none declared in `capell.json`.
-- Public routes: none detected in package route files.
+- Public routes: route files exist and must be reviewed before public enablement.
 - Database changes: no package migrations declared.
 - Settings: no package settings declared.
 - Queues or schedules: none detected in standard package paths.
@@ -63,6 +70,7 @@ This theme has no schema impact. It relies on core Capell site, page, locale, an
 
 ## Common Pitfalls
 
+- Review route middleware, throttling, signed URLs, and public-output safety before exposing routes.
 - Keep public Blade and cached HTML free of authoring markers, model IDs, permissions, signed editor URLs, and lazy database queries.
 - Keep `composer.json`, `composer.local.json`, `capell.json`, docs, screenshots, and tests aligned when the package surface changes.
 
@@ -71,6 +79,7 @@ This theme has no schema impact. It relies on core Capell site, page, locale, an
 | Symptom | Likely cause | Check | Fix |
 | --- | --- | --- | --- |
 | Package surface is missing after install | Provider or manifest is not loaded | Confirm `capell.json`, package `composer.json`, and provider registration | Reinstall the package, refresh Composer autoload, and clear host caches |
+| Route returns unexpected output | Route cache, middleware, or signed URL setup does not match the package route file | Check the route files listed in `Technical Shape` | Clear route cache and verify middleware before exposing public routes |
 | Background work does not run | Queue worker or scheduled command is not active | Check package jobs, commands, and host scheduler configuration | Start the queue or scheduler, then run the focused command or package test |
 | Public output leaks unexpected state | Render data, cache variation, or authoring boundary has regressed | Check public Blade, cache tags, and public-output safety tests | Move data loading out of Blade and rerun the package public-output tests |
 

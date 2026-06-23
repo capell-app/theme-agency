@@ -6,7 +6,7 @@
 
 Theme Resource Hub is an **Available**, **No schema impact** Capell theme in the **Capell Themes** product group. It ships as `capell-app/theme-resource-hub` and extends these surfaces: frontend.
 
-Resource Hub extends the default Capell frontend with a bright landing-page inspiration and education direction, portable demo content, cache-safe public Blade rendering, and theme tokens tuned for search-led heroes, category shortcuts, website examples, social images, templates, courses, books, consent-friendly embeds, learning resources, newsletter capture, and archive pages.
+Resource Hub extends the default Capell frontend with a bright landing-page inspiration and education direction, portable demo content, cache-safe public Blade rendering, and theme tokens tuned for search-led heroes, category shortcuts, website examples, social images, templates, courses, books, consent-friendly embeds, and resource archives.
 
 After install, admins can select the theme through the core theme management surface. Editors keep using normal Capell content workflows while the package controls public presentation.
 
@@ -23,7 +23,7 @@ Status details:
 
 **For developers:** The package gives developers package-owned service providers, Actions, and Blade views instead of pushing this behaviour into core or application code.
 
-**For teams:** A bright Capell theme for landing-page inspiration hubs, website example libraries, template directories, course catalogs, book lists, social image collections, and practical marketing education archives.
+**For teams:** A bright Capell theme for landing-page inspiration hubs, website example libraries, template directories, course catalogs, book lists, and practical marketing education archives.
 
 ## Screens And Workflow
 
@@ -43,7 +43,7 @@ Screenshot contract: `docs/screenshots.json`.
 - Console command classes: `DemoCommand`.
 - Manifest contributions: `admin-page: Capell\ThemeStudio\ResourceHub\Manifest\ThemeManagementPageContribution`.
 - Health checks: `Capell\ThemeStudio\ResourceHub\Health\ThemeResourceHubHealthCheck`.
-- Blade views: `packages/theme-resource-hub/resources/views/livewire/page/page.blade.php`, `packages/theme-resource-hub/resources/views/page.blade.php`, `packages/theme-resource-hub/resources/views/sections/category-navigation.blade.php`, `packages/theme-resource-hub/resources/views/sections/content-listing.blade.php`, `packages/theme-resource-hub/resources/views/sections/cta.blade.php`, `packages/theme-resource-hub/resources/views/sections/website-examples.blade.php`, `packages/theme-resource-hub/resources/views/sections/footer.blade.php`, `packages/theme-resource-hub/resources/views/sections/hero.blade.php`, `packages/theme-resource-hub/resources/views/sections/social-templates.blade.php`, `packages/theme-resource-hub/resources/views/sections/courses-books.blade.php`, `packages/theme-resource-hub/resources/views/sections/navigation.blade.php`, `packages/theme-resource-hub/resources/views/sections/newsletter.blade.php`, `and 3 more`.
+- Blade views: `packages/theme-resource-hub/resources/views/livewire/page/page.blade.php`, `packages/theme-resource-hub/resources/views/page.blade.php`, `packages/theme-resource-hub/resources/views/sections/category-navigation.blade.php`, `packages/theme-resource-hub/resources/views/sections/content-listing.blade.php`, `packages/theme-resource-hub/resources/views/sections/courses-books.blade.php`, `packages/theme-resource-hub/resources/views/sections/cta.blade.php`, `packages/theme-resource-hub/resources/views/sections/footer.blade.php`, `packages/theme-resource-hub/resources/views/sections/hero.blade.php`, `packages/theme-resource-hub/resources/views/sections/learning-resources.blade.php`, `packages/theme-resource-hub/resources/views/sections/navigation.blade.php`, `packages/theme-resource-hub/resources/views/sections/newsletter.blade.php`, `packages/theme-resource-hub/resources/views/sections/proof.blade.php`, `and 3 more`.
 - Cache tags: `theme-resource-hub`.
 
 ## Data Model

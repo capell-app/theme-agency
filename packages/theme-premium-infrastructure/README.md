@@ -21,7 +21,7 @@ Status details:
 
 ## Why It Matters
 
-**For developers:** The package gives developers package-owned service providers, Actions, and Blade views instead of pushing this behaviour into core or application code.
+**For developers:** The package gives developers package-owned service providers, Actions, Laravel routes, and Blade views instead of pushing this behaviour into core or application code.
 
 **For teams:** A premium Capell theme for complex infrastructure platforms, B2B SaaS, developer tool companies, global fintech products, enterprise APIs, and trust-heavy product marketing.
 
@@ -30,6 +30,12 @@ Status details:
 Screenshot contract: `docs/screenshots.json`.
 
 - Premium Infrastructure Homepage (frontend, optional).
+- Premium Infrastructure Hero base desktop (frontend, optional).
+- Premium Infrastructure Hero base mobile (frontend, optional).
+- Premium Infrastructure Hero looping video desktop (frontend, optional).
+- Premium Infrastructure Hero looping video mobile (frontend, optional).
+- Premium Infrastructure Hero looping GIF desktop (frontend, optional).
+- Premium Infrastructure Hero image-only desktop (frontend, optional).
 - Premium Infrastructure Landing page (frontend, optional).
 - Premium Infrastructure List page (frontend, optional).
 - Premium Infrastructure Search results (frontend, optional).
@@ -38,12 +44,13 @@ Screenshot contract: `docs/screenshots.json`.
 ## Technical Shape
 
 - Service providers: `Capell\ThemeStudio\PremiumInfrastructure\PremiumInfrastructureThemeServiceProvider`.
+- Route files: `packages/theme-premium-infrastructure/routes/screenshot-fixtures.php`.
 - Actions: `InstallPremiumInfrastructureThemeDemoAction`.
 - Command signatures: `capell:theme-premium-infrastructure-demo`.
 - Console command classes: `DemoCommand`.
 - Manifest contributions: `admin-page: Capell\ThemeStudio\PremiumInfrastructure\Manifest\ThemeManagementPageContribution`.
 - Health checks: `Capell\ThemeStudio\PremiumInfrastructure\Health\ThemePremiumInfrastructureHealthCheck`.
-- Blade views: `packages/theme-premium-infrastructure/resources/views/livewire/page/page.blade.php`, `packages/theme-premium-infrastructure/resources/views/page.blade.php`, `packages/theme-premium-infrastructure/resources/views/sections/solutions.blade.php`, `packages/theme-premium-infrastructure/resources/views/sections/content-listing.blade.php`, `packages/theme-premium-infrastructure/resources/views/sections/cta.blade.php`, `packages/theme-premium-infrastructure/resources/views/sections/global-scale.blade.php`, `packages/theme-premium-infrastructure/resources/views/sections/footer.blade.php`, `packages/theme-premium-infrastructure/resources/views/sections/hero.blade.php`, `packages/theme-premium-infrastructure/resources/views/sections/developer-tools.blade.php`, `packages/theme-premium-infrastructure/resources/views/sections/case-studies-news.blade.php`, `packages/theme-premium-infrastructure/resources/views/sections/navigation.blade.php`, `packages/theme-premium-infrastructure/resources/views/sections/newsletter.blade.php`, `and 3 more`.
+- Blade views: `packages/theme-premium-infrastructure/resources/views/livewire/page/page.blade.php`, `packages/theme-premium-infrastructure/resources/views/page.blade.php`, `packages/theme-premium-infrastructure/resources/views/screenshots/fixture.blade.php`, `packages/theme-premium-infrastructure/resources/views/sections/case-studies-news.blade.php`, `packages/theme-premium-infrastructure/resources/views/sections/content-listing.blade.php`, `packages/theme-premium-infrastructure/resources/views/sections/cta.blade.php`, `packages/theme-premium-infrastructure/resources/views/sections/developer-tools.blade.php`, `packages/theme-premium-infrastructure/resources/views/sections/footer.blade.php`, `packages/theme-premium-infrastructure/resources/views/sections/global-scale.blade.php`, `packages/theme-premium-infrastructure/resources/views/sections/hero.blade.php`, `packages/theme-premium-infrastructure/resources/views/sections/navigation.blade.php`, `packages/theme-premium-infrastructure/resources/views/sections/newsletter.blade.php`, `and 4 more`.
 - Cache tags: `theme-premium-infrastructure`.
 
 ## Data Model
@@ -54,7 +61,7 @@ This theme has no schema impact. It relies on core Capell site, page, locale, an
 
 - Admin navigation: contributes admin extension points through `capell.json`.
 - Permissions: none declared in `capell.json`.
-- Public routes: none detected in package route files.
+- Public routes: route files exist and must be reviewed before public enablement.
 - Database changes: no package migrations declared.
 - Settings: no package settings declared.
 - Queues or schedules: none detected in standard package paths.
@@ -63,6 +70,7 @@ This theme has no schema impact. It relies on core Capell site, page, locale, an
 
 ## Common Pitfalls
 
+- Review route middleware, throttling, signed URLs, and public-output safety before exposing routes.
 - Keep public Blade and cached HTML free of authoring markers, model IDs, permissions, signed editor URLs, and lazy database queries.
 - Keep `composer.json`, `composer.local.json`, `capell.json`, docs, screenshots, and tests aligned when the package surface changes.
 
@@ -71,6 +79,7 @@ This theme has no schema impact. It relies on core Capell site, page, locale, an
 | Symptom | Likely cause | Check | Fix |
 | --- | --- | --- | --- |
 | Package surface is missing after install | Provider or manifest is not loaded | Confirm `capell.json`, package `composer.json`, and provider registration | Reinstall the package, refresh Composer autoload, and clear host caches |
+| Route returns unexpected output | Route cache, middleware, or signed URL setup does not match the package route file | Check the route files listed in `Technical Shape` | Clear route cache and verify middleware before exposing public routes |
 | Background work does not run | Queue worker or scheduled command is not active | Check package jobs, commands, and host scheduler configuration | Start the queue or scheduler, then run the focused command or package test |
 | Public output leaks unexpected state | Render data, cache variation, or authoring boundary has regressed | Check public Blade, cache tags, and public-output safety tests | Move data loading out of Blade and rerun the package public-output tests |
 

@@ -2,97 +2,31 @@
 
 <!-- prettier-ignore-start -->
 
-## What This Plugin Adds
+## What this theme gives you
 
-Theme Newsroom Magazine is an **Available**, **No schema impact** Capell theme in the **Capell Themes** product group. It ships as `capell-app/theme-newsroom-magazine` and extends these surfaces: frontend.
+A classic newsroom look for news and magazine publications. It gives your site an editorial, headline-led direction.
 
-Newsroom Magazine extends the default Capell frontend with a newsroom magazine visual direction, portable demo content, cache-safe public Blade rendering, and theme tokens tuned for news and magazine publications, editorial and opinion sites.
+## How to use it
 
-After install, admins can select the theme through the core theme management surface. Editors keep using normal Capell content workflows while the package controls public presentation.
+1. Go to **Appearance > Themes** (or **Settings > Theme**).
+2. Choose **Newsroom Magazine** and **Activate**.
+3. Open **Theme settings** to set your logo, colours, and fonts.
+4. **Preview** before making it live.
 
-Status details:
+## What it adds
 
-- Status: Available
-- Tier: premium
-- Bundle: themes
-- Composer package: `capell-app/theme-newsroom-magazine`
-- Namespace: `Capell\ThemeStudio\NewsroomMagazine`
-- Theme key: `newsroom-magazine`
+- Page styles suited to a news or magazine site.
+- Portable demo content to start from.
+- Colours and fonts tuned for the newsroom look, all editable in Theme settings.
 
-## Why It Matters
+## Good to know
 
-**For developers:** The package gives developers package-owned service providers, Actions, and Blade views instead of pushing this behaviour into core or application code.
+- Built on **Foundation Theme** - install that first.
+- **Preview** to see it before visitors do.
+- Pairs well with Blog for your articles.
 
-**For teams:** A premium Capell theme for news and magazine publications, editorial and opinion sites.
+---
 
-## Screens And Workflow
-
-Screenshot contract: `screenshots.json`.
-
-- Newsroom Magazine Homepage (frontend, required).
-- Newsroom Magazine Directory (frontend, required).
-- Newsroom Magazine Detail (frontend, required).
-- Newsroom Magazine Contact (frontend, required).
-- Newsroom Magazine Empty State (frontend, required).
-- Newsroom Magazine 404 State (frontend, required).
-- Newsroom Magazine Conversion CTA (frontend, required).
-- Newsroom Magazine Front Page (frontend, required).
-- Newsroom Magazine Contributors (frontend, required).
-- Newsroom Magazine Newsletter (frontend, required).
-
-## Technical Shape
-
-- Service providers: `Capell\ThemeStudio\NewsroomMagazine\NewsroomMagazineThemeServiceProvider`.
-- Actions: `InstallNewsroomMagazineThemeDemoAction`.
-- Command signatures: `capell:theme-newsroom-magazine-demo`.
-- Console command classes: `DemoCommand`.
-- Manifest contributions: `admin-page: Capell\ThemeStudio\NewsroomMagazine\Manifest\ThemeManagementPageContribution`.
-- Health checks: `Capell\ThemeStudio\NewsroomMagazine\Health\ThemeNewsroomMagazineHealthCheck`.
-- Blade views: `packages/theme-newsroom-magazine/resources/views/livewire/page/page.blade.php`, `packages/theme-newsroom-magazine/resources/views/page.blade.php`, `packages/theme-newsroom-magazine/resources/views/sections/category-nav.blade.php`, `packages/theme-newsroom-magazine/resources/views/sections/content-listing.blade.php`, `packages/theme-newsroom-magazine/resources/views/sections/contributors.blade.php`, `packages/theme-newsroom-magazine/resources/views/sections/cta.blade.php`, `packages/theme-newsroom-magazine/resources/views/sections/featured-story.blade.php`, `packages/theme-newsroom-magazine/resources/views/sections/features.blade.php`, `packages/theme-newsroom-magazine/resources/views/sections/footer.blade.php`, `packages/theme-newsroom-magazine/resources/views/sections/hero.blade.php`, `packages/theme-newsroom-magazine/resources/views/sections/most-read.blade.php`, `packages/theme-newsroom-magazine/resources/views/sections/navigation.blade.php`, `and 3 more`.
-- Cache tags: `theme-newsroom-magazine`.
-
-## Data Model
-
-This theme has no schema impact. It relies on core Capell site, page, locale, and theme records instead of declaring package-owned tables.
-
-## Install Impact
-
-- Admin navigation: contributes admin extension points through `capell.json`.
-- Permissions: none declared in `capell.json`.
-- Public routes: none detected in package route files.
-- Database changes: no package migrations declared.
-- Settings: no package settings declared.
-- Queues or schedules: none detected in standard package paths.
-- Cache tags: `theme-newsroom-magazine`.
-- Commands: `capell:theme-newsroom-magazine-demo`.
-
-## Common Pitfalls
-
-- Keep public Blade and cached HTML free of authoring markers, model IDs, permissions, signed editor URLs, and lazy database queries.
-- Keep `composer.json`, `composer.local.json`, `capell.json`, docs, screenshots, and tests aligned when the package surface changes.
-
-## Troubleshooting
-
-| Symptom | Likely cause | Check | Fix |
-| --- | --- | --- | --- |
-| Package surface is missing after install | Provider or manifest is not loaded | Confirm `capell.json`, package `composer.json`, and provider registration | Reinstall the package, refresh Composer autoload, and clear host caches |
-| Background work does not run | Queue worker or scheduled command is not active | Check package jobs, commands, and host scheduler configuration | Start the queue or scheduler, then run the focused command or package test |
-| Public output leaks unexpected state | Render data, cache variation, or authoring boundary has regressed | Check public Blade, cache tags, and public-output safety tests | Move data loading out of Blade and rerun the package public-output tests |
-
-## Quick Start
-
-1. Install the package: `composer require capell-app/theme-newsroom-magazine`.
-2. Run the required setup: `php artisan capell:theme-newsroom-magazine-demo`.
-3. Verify the package provider is registered and the related frontend, command, or extension point is active.
-
-## Next Steps
-
-- [Package docs index](README.md)
-- [Screenshot contract](screenshots.json)
-- [Marketplace assets](assets/marketplace/)
-- [Capell content language plan](../../../docs/CONTENT_LANGUAGE_PLAN.md)
-- [Capell documentation design system](../../../docs/DESIGN_SYSTEM.md)
-- [Capell and package ERD notes](../../../docs/erd/capell-and-package-erds.md)
-- Focused tests: `vendor/bin/pest packages/theme-newsroom-magazine/tests --configuration=phpunit.xml`.
+For developers: see the [README](../README.md).
 
 <!-- prettier-ignore-end -->

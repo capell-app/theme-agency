@@ -2,96 +2,31 @@
 
 <!-- prettier-ignore-start -->
 
-## What This Plugin Adds
+## What this theme gives you
 
-Theme Liquid Glass is an **Available**, **No schema impact** Capell theme in the **Capell Foundation** product group. It ships as `capell-app/theme-liquid-glass` and extends these surfaces: frontend.
+A modern glass look with translucent panels, crisp type, and warm accent buttons. Three presets cover bright product launches, editorial glass pages, and darker graphite surfaces.
 
-Theme Liquid Glass gives Capell sites a free modern glass interface with translucent panels, crisp typography, warm accent actions, and polished standard sections. Three presets cover bright product launches, editorial glass pages, and darker graphite surfaces while staying fully driven by Theme Studio tokens. It extends the default frontend runtime, keeps public output cache-safe and editor-free, and adds a polished alternative to the Foundation and Corporate free lanes.
+## How to use it
 
-After install, admins can select the theme through the core theme management surface. Editors keep using normal Capell content workflows while the package controls public presentation.
+1. Go to **Appearance > Themes** (or **Settings > Theme**).
+2. Choose **Theme Liquid Glass** and **Activate**.
+3. Open **Theme settings** to set your logo, colours, and fonts, and pick a preset.
+4. **Preview** before making it live.
 
-Status details:
+## What it adds
 
-- Status: Available
-- Tier: free
-- Bundle: foundation
-- Composer package: `capell-app/theme-liquid-glass`
-- Namespace: `Capell\ThemeStudio\LiquidGlass`
-- Theme key: `liquid-glass`
+- Translucent glass sections and polished standard layouts.
+- Three presets that restyle the whole site with no code.
+- Portable demo content to start from.
 
-## Why It Matters
+## Good to know
 
-**For developers:** The package gives developers package-owned service providers, Actions, and Blade views instead of pushing this behaviour into core or application code.
+- Built on **Foundation Theme** - install that first.
+- A free, polished alternative to the Foundation and Corporate looks.
+- **Preview** to see it before visitors do.
 
-**For teams:** A free glass interface theme for modern Capell sites with translucent panels, sharp content rhythm, and three token-driven presets.
+---
 
-## Screens And Workflow
-
-Screenshot contract: `screenshots.json`.
-
-- Liquid Glass homepage (frontend, required).
-- Liquid Glass landing page (frontend, required).
-- Liquid Glass listing page (frontend, required).
-- Liquid Glass search results (frontend, required).
-- Liquid Glass contact page (frontend, required).
-- Liquid Glass Clarity preset proof (frontend, required).
-- Liquid Glass Prism preset proof (frontend, required).
-- Liquid Glass Graphite mobile proof (frontend, required).
-
-## Technical Shape
-
-- Service providers: `Capell\ThemeStudio\LiquidGlass\LiquidGlassThemeServiceProvider`.
-- Actions: `InstallLiquidGlassThemeDemoAction`.
-- Command signatures: `capell:theme-liquid-glass-demo`.
-- Console command classes: `DemoCommand`.
-- Manifest contributions: `admin-page: Capell\ThemeStudio\LiquidGlass\Manifest\ThemeManagementPageContribution`.
-- Health checks: `Capell\ThemeStudio\LiquidGlass\Health\ThemeLiquidGlassHealthCheck`.
-- Blade views: `packages/theme-liquid-glass/resources/views/livewire/page/page.blade.php`, `packages/theme-liquid-glass/resources/views/page.blade.php`, `packages/theme-liquid-glass/resources/views/sections/content-listing.blade.php`, `packages/theme-liquid-glass/resources/views/sections/cta.blade.php`, `packages/theme-liquid-glass/resources/views/sections/features.blade.php`, `packages/theme-liquid-glass/resources/views/sections/footer.blade.php`, `packages/theme-liquid-glass/resources/views/sections/hero.blade.php`, `packages/theme-liquid-glass/resources/views/sections/navigation.blade.php`, `packages/theme-liquid-glass/resources/views/sections/proof.blade.php`.
-- Cache tags: `theme-liquid-glass`.
-
-## Data Model
-
-This theme has no schema impact. It relies on core Capell site, page, locale, and theme records instead of declaring package-owned tables.
-
-## Install Impact
-
-- Admin navigation: contributes admin extension points through `capell.json`.
-- Permissions: none declared in `capell.json`.
-- Public routes: none detected in package route files.
-- Database changes: no package migrations declared.
-- Settings: no package settings declared.
-- Queues or schedules: none detected in standard package paths.
-- Cache tags: `theme-liquid-glass`.
-- Commands: `capell:theme-liquid-glass-demo`.
-
-## Common Pitfalls
-
-- Keep public Blade and cached HTML free of authoring markers, model IDs, permissions, signed editor URLs, and lazy database queries.
-- Keep `composer.json`, `composer.local.json`, `capell.json`, docs, screenshots, and tests aligned when the package surface changes.
-
-## Troubleshooting
-
-| Symptom | Likely cause | Check | Fix |
-| --- | --- | --- | --- |
-| Package surface is missing after install | Provider or manifest is not loaded | Confirm `capell.json`, package `composer.json`, and provider registration | Reinstall the package, refresh Composer autoload, and clear host caches |
-| Background work does not run | Queue worker or scheduled command is not active | Check package jobs, commands, and host scheduler configuration | Start the queue or scheduler, then run the focused command or package test |
-| Public output leaks unexpected state | Render data, cache variation, or authoring boundary has regressed | Check public Blade, cache tags, and public-output safety tests | Move data loading out of Blade and rerun the package public-output tests |
-
-## Quick Start
-
-1. Install the package: `composer require capell-app/theme-liquid-glass`.
-2. Run the required setup: `php artisan capell:theme-liquid-glass-demo`.
-3. Verify the package provider is registered and the related frontend, command, or extension point is active.
-
-## Next Steps
-
-- [Package docs index](README.md)
-- [Screenshot contract](screenshots.json)
-- [Marketplace assets](assets/marketplace/)
-- [Capell content language plan](../../../docs/CONTENT_LANGUAGE_PLAN.md)
-- [Capell documentation design system](../../../docs/DESIGN_SYSTEM.md)
-- [Capell and package ERD notes](../../../docs/erd/capell-and-package-erds.md)
-- Related packages: [Foundation Theme](../../foundation-theme/README.md).
-- Focused tests: `vendor/bin/pest packages/theme-liquid-glass/tests --configuration=phpunit.xml`.
+For developers: see the [README](../README.md).
 
 <!-- prettier-ignore-end -->

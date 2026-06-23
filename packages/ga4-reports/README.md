@@ -41,7 +41,7 @@ Screenshot contract: `docs/screenshots.json`.
 - Settings migrations: `packages/ga4-reports/database/settings/2026_05_10_190853_01_create_ga4_reports_settings.php`.
 - Settings classes: `GA4ReportsSettings`, `GA4ReportsSettingsMigrationProvider`.
 - Models: `GA4ReportsDailyMetric`, `GA4ReportsPageMetric`, `GA4ReportsSyncRun`.
-- Filament classes: `GA4ReportsPage`, `GA4ReportsDashboardSettingsContributor`, `GA4ReportsSettingsSchema`, `BuildsGA4ReportsDashboardWindow`, `GA4ReportsOverviewStatsFilamentWidget`, `GA4ReportsSetupStatusFilamentWidget`, `GA4ReportsTopPagesTableFilamentWidget`, `GA4ReportsTopPagesFilamentWidget`, `GA4ReportsTrafficTrendFilamentWidget`.
+- Filament classes: `GA4ReportsPage`, `GA4ReportsDashboardSettingsContributor`, `GA4ReportsSettingsSchema`, `BuildsGA4ReportsDashboardWindow`, `GA4ReportsOverviewStatsFilamentWidget`, `GA4ReportsSetupStatusFilamentWidget`, `GA4ReportsTopPagesFilamentWidget`, `GA4ReportsTopPagesTableFilamentWidget`, `GA4ReportsTrafficTrendFilamentWidget`.
 - Actions: `BuildGA4ReportsDigestAction`, `BuildGA4ReportsOverviewAction`, `BuildGA4ReportsTrendAction`, `BuildGA4ReportsWindowAction`, `BuildTopGA4ReportsPagesAction`, `CheckGA4ReportsCredentialsPathAction`, `ExportGA4ReportsDigestCsvAction`, `PersistGA4ReportsDailyMetricAction`, `PersistGA4ReportsPageMetricAction`, `RedactGA4ReportsSyncErrorMessageAction`, `ResolveGA4ReportsConfigAction`, `SyncGA4ReportsMetricsAction`.
 - Data objects: `GA4ReportsConfigData`, `GA4ReportsCredentialsStatusData`, `GA4ReportsDailyMetricData`, `GA4ReportsDigestData`, `GA4ReportsOverviewData`, `GA4ReportsPageMetricData`, `GA4ReportsSyncResultData`, `GA4ReportsTopPageData`, `GA4ReportsTrendPointData`, `GA4ReportsWindowData`.
 - Command signatures: `capell:ga4-reports-sync`.

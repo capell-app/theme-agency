@@ -2,106 +2,36 @@
 
 <!-- prettier-ignore-start -->
 
-## What This Plugin Adds
+## What this theme gives you
 
-Theme Restaurant is an **Available**, **No schema impact** Capell theme in the **Capell Themes** product group. It ships as `capell-app/theme-restaurant` and extends these surfaces: frontend, console.
+A premium look for restaurants and hospitality venues, built around menu discovery and reservations. It gives your site an appetising, booking-led direction.
 
-Theme Restaurant gives hospitality teams a premium venue website built around menu discovery, reservation intent, private dining, events, opening hours, and location confidence. It extends the built-in default frontend theme, keeps restaurant copy and menu items in portable Capell content, and lets the package own the visual rhythm: editorial menu panels, service windows, private-room selling, event previews, and map-adjacent venue proof. It pairs with Bookings or Form Builder for reservation capture, Events for ticketed or seasonal occasions, and Blog for reviews or dining guides while rendering safe static fallbacks when those packages are absent.
+## How to use it
 
-After install, admins can select the theme through the core theme management surface. Editors keep using normal Capell content workflows while the package controls public presentation.
+1. Go to **Appearance > Themes** (or **Settings > Theme**).
+2. Choose **Theme Restaurant** and **Activate**.
+3. Open **Theme settings** to set your logo, colours, and fonts.
+4. **Preview** before making it live.
 
-Status details:
+## What it adds
 
-- Status: Available
-- Tier: premium
-- Bundle: themes
-- Composer package: `capell-app/theme-restaurant`
-- Namespace: `Capell\ThemeStudio\Restaurant`
-- Theme key: `restaurant`
+- Editorial menu panels, service windows, and private-dining sections.
+- Event previews and venue proof with a map.
+- Portable demo content that renders safely even without related packages.
 
-## Why It Matters
+## Good to know
 
-**For developers:** The package gives developers package-owned service providers, Actions, and Blade views instead of pushing this behaviour into core or application code.
-
-**For teams:** A premium hospitality theme for menu-led restaurants, bars, private dining venues, and event-led dining businesses.
-
-## Screens And Workflow
-
-Screenshot contract: `screenshots.json`.
-
-- Restaurant homepage (frontend, required).
-- Menu highlights (frontend, required).
-- Reservation panel (frontend, required).
-- Private dining (frontend, required).
-- Restaurant events (frontend, required).
-
-## Technical Shape
-
-- Service providers: `Capell\ThemeStudio\Restaurant\RestaurantThemeServiceProvider`.
-- Actions: `InstallRestaurantThemeDemoAction`.
-- Command signatures: `capell:theme-restaurant-demo`.
-- Console command classes: `DemoCommand`.
-- Manifest contributions: `admin-page: Capell\ThemeStudio\Restaurant\Manifest\ThemeManagementPageContribution`.
-- Health checks: `Capell\ThemeStudio\Restaurant\Health\ThemeRestaurantHealthCheck`.
-- Blade views: `packages/theme-restaurant/resources/views/page.blade.php`, `packages/theme-restaurant/resources/views/sections/chef-story.blade.php`, `packages/theme-restaurant/resources/views/sections/content-listing.blade.php`, `packages/theme-restaurant/resources/views/sections/cta.blade.php`, `packages/theme-restaurant/resources/views/sections/events-calendar.blade.php`, `packages/theme-restaurant/resources/views/sections/features.blade.php`, `packages/theme-restaurant/resources/views/sections/footer.blade.php`, `packages/theme-restaurant/resources/views/sections/hero.blade.php`, `packages/theme-restaurant/resources/views/sections/location-guide.blade.php`, `packages/theme-restaurant/resources/views/sections/menu-highlights.blade.php`, `packages/theme-restaurant/resources/views/sections/navigation.blade.php`, `packages/theme-restaurant/resources/views/sections/opening-hours.blade.php`, `and 3 more`.
-- Cache tags: `theme-restaurant`.
-
-## Theme Inheritance Contract
-
-Product group:
+- Built on **Foundation Theme** - install that first.
+- Product group:
 **Capell Themes**
+- Theme runtime inheritance uses `extends: default`.
+- Theme requires `capell-app/foundation-theme` and `capell-app/frontend`.
+- Theme Restaurant output is cacheable for public HTML.
+- Pairs with Bookings or Form Builder for reservations, Events for occasions, and Blog for dining guides.
+- **Preview** to see it before visitors do.
 
-- Product group: `Capell Themes`
-- Manifest extends: `default`
-- Runtime extends: `default`
-- Restaurant runtime inheritance uses `extends: default` and requires `capell-app/foundation-theme` plus `capell-app/frontend` for the built-in default fallback.
-- Theme Restaurant output is cacheable for public HTML with site and locale variation.
-- Restaurant sections do not query Bookings, Form Builder, Events, Blog, or SEO Suite directly; optional package integrations render safe static fallbacks when unavailable.
+---
 
-## Data Model
-
-This theme has no schema impact. It relies on core Capell site, page, locale, and theme records instead of declaring package-owned tables.
-
-## Install Impact
-
-- Admin navigation: contributes admin extension points through `capell.json`.
-- Permissions: none declared in `capell.json`.
-- Public routes: none detected in package route files.
-- Database changes: no package migrations declared.
-- Settings: no package settings declared.
-- Queues or schedules: none detected in standard package paths.
-- Cache tags: `theme-restaurant`.
-- Commands: `capell:theme-restaurant-demo`.
-
-## Common Pitfalls
-
-- Keep public Blade and cached HTML free of authoring markers, model IDs, permissions, signed editor URLs, and lazy database queries.
-- Run package commands from the host app; in this repository use `vendor/bin/pest` for package tests.
-- Keep `composer.json`, `composer.local.json`, `capell.json`, docs, screenshots, and tests aligned when the package surface changes.
-
-## Troubleshooting
-
-| Symptom | Likely cause | Check | Fix |
-| --- | --- | --- | --- |
-| Package surface is missing after install | Provider or manifest is not loaded | Confirm `capell.json`, package `composer.json`, and provider registration | Reinstall the package, refresh Composer autoload, and clear host caches |
-| Background work does not run | Queue worker or scheduled command is not active | Check package jobs, commands, and host scheduler configuration | Start the queue or scheduler, then run the focused command or package test |
-| Public output leaks unexpected state | Render data, cache variation, or authoring boundary has regressed | Check public Blade, cache tags, and public-output safety tests | Move data loading out of Blade and rerun the package public-output tests |
-
-## Quick Start
-
-1. Install the package: `composer require capell-app/theme-restaurant`.
-2. Run the required setup: `php artisan capell:theme-restaurant-demo`.
-3. Verify the package provider is registered and the related frontend, command, or extension point is active.
-
-## Next Steps
-
-- [Package docs index](README.md)
-- [Screenshot contract](screenshots.json)
-- [Marketplace assets](assets/marketplace/)
-- [Capell content language plan](../../../docs/CONTENT_LANGUAGE_PLAN.md)
-- [Capell documentation design system](../../../docs/DESIGN_SYSTEM.md)
-- [Capell and package ERD notes](../../../docs/erd/capell-and-package-erds.md)
-- Related packages: [Foundation Theme](../../foundation-theme/README.md), [Blog](../../blog/README.md), [Bookings](../../bookings/README.md), [Events](../../events/README.md), [Form Builder](../../form-builder/README.md), [Seo Suite](../../seo-suite/README.md).
-- Focused tests: `vendor/bin/pest packages/theme-restaurant/tests --configuration=phpunit.xml`.
+For developers: see the [README](../README.md).
 
 <!-- prettier-ignore-end -->

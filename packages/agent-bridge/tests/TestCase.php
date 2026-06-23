@@ -19,10 +19,12 @@ use Filament\Tables\TablesServiceProvider;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Schema;
 use Laravel\Mcp\Server\McpServiceProvider as LaravelMcpServiceProvider;
 use Livewire\LivewireServiceProvider;
 use Orchestra\Testbench\TestCase as OrchestraTestCase;
+use Override;
 use Spatie\LaravelSettings\LaravelSettingsServiceProvider;
 
 abstract class TestCase extends OrchestraTestCase
@@ -41,7 +43,8 @@ abstract class TestCase extends OrchestraTestCase
     /**
      * @return array<int, class-string>
      */
-    protected function getPackageProviders($app): array
+    #[Override]
+    protected function getPackageProviders(mixed $app): array
     {
         $providers = [
             BladeIconsServiceProvider::class,
@@ -64,6 +67,15 @@ abstract class TestCase extends OrchestraTestCase
         }
 
         return $providers;
+    }
+
+    #[Override]
+    protected function defineEnvironment(mixed $app): void
+    {
+        Config::set('database.default', 'sqlite');
+        Config::set('database.connections.sqlite.database', ':memory:');
+        Config::set('database.connections.sqlite.url');
+        Config::set('app.key', 'base64:' . base64_encode(str_repeat('x', 32)));
     }
 
     protected function defineDatabaseMigrations(): void
