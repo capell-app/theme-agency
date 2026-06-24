@@ -1,13 +1,6 @@
-# Theme Agency
-
-<!-- prettier-ignore-start -->
-
 ## What this theme gives you
 
 A confident, expressive look for creative studios and agencies, built to make your work look like the work, not a template. Three presets (Signal, Gallery, Atelier) reskin every section from high-contrast and energetic to refined editorial neutrals.
-
-Tier: **premium**
-Product group: **Capell Themes**
 
 ## How to use it
 
@@ -27,9 +20,3 @@ Product group: **Capell Themes**
 - Built on **Foundation Theme** - install that first.
 - Pick a preset in **Theme settings** to change the whole feel at once.
 - **Preview** to see it before visitors do.
-
----
-
-For developers: see the [README](../README.md).
-
-<!-- prettier-ignore-end -->
