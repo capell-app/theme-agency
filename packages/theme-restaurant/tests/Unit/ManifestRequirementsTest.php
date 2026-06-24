@@ -33,6 +33,8 @@ it('declares the required first-party restaurant theme manifest boundaries', fun
         ->and(data_get($manifest, 'database.migrations'))->toBeFalse()
         ->and(data_get($manifest, 'providers.runtime'))->toContain(RestaurantThemeServiceProvider::class)
         ->and(data_get($manifest, 'commands.demo'))->toBe('capell:theme-restaurant-demo')
+        ->and(data_get($manifest, 'performance.criticalCss.required'))->toBeTrue()
+        ->and(data_get($manifest, 'performance.criticalCss.parityViewports'))->toBe(['mobile', 'tablet', 'desktop'])
         ->and(data_get($manifest, 'performance.cacheSafety.cacheable'))->toBeTrue()
         ->and(data_get($manifest, 'performance.cacheSafety.variesBy'))->toBe(['site', 'locale'])
         ->and(data_get($manifest, 'performance.cacheSafety.invalidationSources'))->toHaveCount(4)

@@ -88,6 +88,10 @@
         }
     },
     "performance": {
+        "criticalCss": {
+            "required": true,
+            "parityViewports": ["mobile", "tablet", "desktop"]
+        },
         "frontendRenderBudgetMs": 20,
         "adminQueryBudget": 0,
         "cacheTags": ["theme-manufacturing"],

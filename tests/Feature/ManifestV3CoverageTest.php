@@ -169,6 +169,30 @@ it('declares class-backed package health checks for diagnostics', function (): v
     );
 });
 
+it('requires every theme manifest to declare critical CSS parity support', function (): void {
+    $invalid = [];
+
+    foreach (capell_package_manifest_payloads() as $path => $manifest) {
+        if (data_get($manifest, 'kind') !== 'theme') {
+            continue;
+        }
+
+        if (data_get($manifest, 'performance.criticalCss.required') !== true) {
+            $invalid[$path][] = 'performance.criticalCss.required must be true';
+        }
+
+        if (data_get($manifest, 'performance.criticalCss.parityViewports') !== ['mobile', 'tablet', 'desktop']) {
+            $invalid[$path][] = 'performance.criticalCss.parityViewports must be ["mobile", "tablet", "desktop"]';
+        }
+    }
+
+    expect($invalid)->toBe(
+        [],
+        'Theme manifests must declare critical CSS parity support: ' .
+        json_encode($invalid, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES),
+    );
+});
+
 /**
  * @return array<string, array<string, mixed>>
  */
