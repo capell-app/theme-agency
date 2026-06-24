@@ -163,7 +163,7 @@
                 "capell-shopify-commerce.oauth.install",
                 "capell-shopify-commerce.webhooks.shopify"
             ],
-            "auth": "public",
+            "auth": "mixed",
             "csrfExemptRoutes": [],
             "signedRoutes": [],
             "tokenizedRoutes": [],

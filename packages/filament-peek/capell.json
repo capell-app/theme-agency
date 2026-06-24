@@ -65,7 +65,7 @@
             "routeNames": ["capell-filament-peek.preview"],
             "auth": "public",
             "csrfExemptRoutes": [],
-            "signedRoutes": [],
+            "signedRoutes": ["capell-filament-peek.preview"],
             "tokenizedRoutes": ["capell-filament-peek.preview"],
             "webhookRoutes": [],
             "throttledRoutes": []

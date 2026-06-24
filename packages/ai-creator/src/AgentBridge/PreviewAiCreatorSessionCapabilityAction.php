@@ -28,7 +28,7 @@ final class PreviewAiCreatorSessionCapabilityAction implements CapellAgentBridge
     {
         $session = $this->sessionFromPayload($invocation->payload);
         AiCreatorSessionAccess::authorizeSession($invocation->user, $session);
-        $preview = BuildAiCreatorSessionPreviewAction::run($session);
+        $preview = BuildAiCreatorSessionPreviewAction::make()->handle($session);
 
         return new CapabilityResultData(
             ok: true,
@@ -48,6 +48,6 @@ final class PreviewAiCreatorSessionCapabilityAction implements CapellAgentBridge
 
         $sessionId = Arr::get($validated, 'session_id');
 
-        return AiCreatorSession::query()->findOrFail((int) $sessionId);
+        return AiCreatorSession::query()->findOrFail(is_numeric($sessionId) ? (int) $sessionId : 0);
     }
 }

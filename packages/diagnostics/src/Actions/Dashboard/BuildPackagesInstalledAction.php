@@ -13,7 +13,7 @@ use ReflectionClass;
 use Spatie\LaravelData\DataCollection;
 
 /**
- * @phpstan-type PackageMetadata array{short: string, config: ?string, docs: ?string, display?: ?string, bundle?: ?string, health_checks?: int, health_checks_declared?: int, health_checks_implemented?: int, health_checks_stub?: int, health_checks_broken?: int, install?: ?string, doctor?: ?string}
+ * @phpstan-type PackageMetadata array{short: string, config: ?string, docs: ?string, documentation?: ?string, display?: ?string, bundle?: ?string, health_checks?: int, health_checks_declared?: int, health_checks_implemented?: int, health_checks_stub?: int, health_checks_broken?: int, install?: ?string, doctor?: ?string}
  * @phpstan-type ManifestMetadata array{composer: string, values: PackageMetadata}
  *
  * @method static PackagesInstalledData run()
@@ -117,6 +117,7 @@ final class BuildPackagesInstalledAction
                 'short' => str($composerName)->after('capell-app/')->toString(),
                 'config' => null,
                 'docs' => null,
+                'documentation' => null,
                 'display' => null,
                 'bundle' => null,
                 'health_checks' => 0,
@@ -132,6 +133,7 @@ final class BuildPackagesInstalledAction
                 configPublished: File::exists($configPath),
                 configPath: $configPath,
                 docsUrl: $meta['docs'],
+                documentationUrl: $meta['documentation'] ?? null,
                 displayName: $meta['display'] ?? null,
                 bundle: $meta['bundle'] ?? null,
                 healthCheckCount: $meta['health_checks'] ?? 0,
@@ -268,6 +270,7 @@ final class BuildPackagesInstalledAction
                 'short' => $slug,
                 'config' => $this->configNameFor($packagePath),
                 'docs' => 'https://github.com/capell-app/capell-packages/blob/4.x/packages/' . $slug . '/README.md',
+                'documentation' => $this->documentationUrlFor($manifest, $packagePath),
                 'display' => is_string($manifest['displayName'] ?? null) ? $manifest['displayName'] : null,
                 'bundle' => $this->bundleFor($manifest),
                 ...$this->healthCheckCountsFor($manifest),
@@ -275,6 +278,47 @@ final class BuildPackagesInstalledAction
                 'doctor' => $this->commandFor($manifest, 'doctor'),
             ],
         ];
+    }
+
+    /**
+     * Resolve the non-technical admin documentation URL, declared in the manifest
+     * (`documentationUrl`) or the package's composer.json (`support.docs`).
+     *
+     * @param  array<string, mixed>  $manifest
+     */
+    private function documentationUrlFor(array $manifest, string $packagePath): ?string
+    {
+        $manifestUrl = $this->trimmedString($manifest['documentationUrl'] ?? null);
+
+        if ($manifestUrl !== null) {
+            return $manifestUrl;
+        }
+
+        $composerPath = $packagePath . '/composer.json';
+
+        if (! File::exists($composerPath)) {
+            return null;
+        }
+
+        /** @var array<string, mixed>|null $composer */
+        $composer = json_decode(File::get($composerPath), true);
+
+        if (! is_array($composer) || ! is_array($composer['support'] ?? null)) {
+            return null;
+        }
+
+        return $this->trimmedString($composer['support']['docs'] ?? null);
+    }
+
+    private function trimmedString(mixed $value): ?string
+    {
+        if (! is_string($value)) {
+            return null;
+        }
+
+        $trimmed = trim($value);
+
+        return $trimmed !== '' ? $trimmed : null;
     }
 
     private function configNameFor(string $packagePath): ?string

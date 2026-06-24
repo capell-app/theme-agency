@@ -18,6 +18,17 @@ This guide is for editors who write help content and owners deciding how to stru
 3. Put it in a **Collection** so visitors can find it.
 4. Set it to **Public** and publish it when it is ready for customers.
 
+![Review articles, publication status, collection, feedback, and version state from the admin.](screenshots/knowledge-base-articles-index.png)
+
+### How to edit an article and review past versions
+
+1. Open an article to edit it.
+2. Update its title and body.
+3. Check the earlier versions listed for the article before you publish the next revision.
+4. Save and publish when you are happy.
+
+![Edit an article and review prior versions before publishing the next revision.](screenshots/knowledge-base-article-edit-version-history.png)
+
 ### How to organise articles
 
 1. Open an article.
@@ -37,10 +48,10 @@ This guide is for editors who write help content and owners deciding how to stru
 
 ### Add when needed
 
-| Need | Enable |
-| --- | --- |
-| Group related help content | A **Collection** per topic |
-| Connect related articles | Related articles on each article |
+| Need                       | Enable                           |
+| -------------------------- | -------------------------------- |
+| Group related help content | A **Collection** per topic       |
+| Connect related articles   | Related articles on each article |
 
 ### Don't enable yet
 
@@ -48,16 +59,16 @@ This guide is for editors who write help content and owners deciding how to stru
 
 ### Who does what
 
-| Role | First useful screen |
-| --- | --- |
-| Editor | **Articles**: write and publish help content |
-| Site owner | **Collections**: keep the structure clear |
+| Role       | First useful screen                          |
+| ---------- | -------------------------------------------- |
+| Editor     | **Articles**: write and publish help content |
+| Site owner | **Collections**: keep the structure clear    |
 
 ## Troubleshooting for editors
 
-| What you see | What it means | What to do |
-| --- | --- | --- |
-| My article isn't on the site | It isn't **Public** yet, or isn't published | Open it, set it **Public**, and publish |
-| An article is hard to find | It isn't in a collection, or the collection is unclear | Assign it to the right **Collection** and name collections clearly |
-| Articles appear in the wrong order | Their sort order needs setting | Open each article and set its sort order within the collection |
-| Visitors can't search an article | It is unpublished or not public | Confirm it is **Public** and published |
+| What you see                       | What it means                                          | What to do                                                         |
+| ---------------------------------- | ------------------------------------------------------ | ------------------------------------------------------------------ |
+| My article isn't on the site       | It isn't **Public** yet, or isn't published            | Open it, set it **Public**, and publish                            |
+| An article is hard to find         | It isn't in a collection, or the collection is unclear | Assign it to the right **Collection** and name collections clearly |
+| Articles appear in the wrong order | Their sort order needs setting                         | Open each article and set its sort order within the collection     |
+| Visitors can't search an article   | It is unpublished or not public                        | Confirm it is **Public** and published                             |

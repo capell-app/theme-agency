@@ -126,19 +126,27 @@
         "riskTier": "critical",
         "publicSurface": {
             "routeNames": [
-                "actions",
-                "actions.submit",
-                "me",
-                "show",
-                "submissions",
-                "submit"
+                "capell-public-actions.show",
+                "capell-public-actions.submit",
+                "capell-public-actions.trusted.actions.submit",
+                "capell-public-actions.zapier.actions",
+                "capell-public-actions.zapier.actions.submit",
+                "capell-public-actions.zapier.me",
+                "capell-public-actions.zapier.submissions"
             ],
             "auth": "public",
             "csrfExemptRoutes": [],
             "signedRoutes": [],
             "tokenizedRoutes": [],
             "webhookRoutes": [],
-            "throttledRoutes": ["submit"]
+            "throttledRoutes": [
+                "capell-public-actions.submit",
+                "capell-public-actions.trusted.actions.submit",
+                "capell-public-actions.zapier.actions",
+                "capell-public-actions.zapier.actions.submit",
+                "capell-public-actions.zapier.me",
+                "capell-public-actions.zapier.submissions"
+            ]
         },
         "sensitiveData": {
             "encryptedFields": [

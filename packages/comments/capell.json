@@ -147,7 +147,12 @@
                 "capell-comments.verify.store"
             ],
             "webhookRoutes": [],
-            "throttledRoutes": []
+            "throttledRoutes": [
+                "capell-comments.reply-notifications.disable",
+                "capell-comments.thread",
+                "capell-comments.verify",
+                "capell-comments.verify.store"
+            ]
         },
         "sensitiveData": {
             "encryptedFields": [

@@ -15,7 +15,7 @@ final class PreviewAiCreatorSessionAction
 
     public function handle(AiCreatorSession $session): AiCreatorPreviewData
     {
-        $preview = BuildAiCreatorSessionPreviewAction::run($session);
+        $preview = BuildAiCreatorSessionPreviewAction::make()->handle($session);
 
         $session->forceFill([
             'preview_output' => $preview->toPayload(),

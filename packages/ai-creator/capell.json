@@ -70,6 +70,10 @@
             "type": "agent-capability",
             "class": "Capell\\AiCreator\\Manifest\\AiCreatorAgentBridgeCapabilitiesContribution",
             "providerClass": "Capell\\AiCreator\\AgentBridge\\AiCreatorAgentBridgeCapabilityProvider"
+        },
+        {
+            "type": "health-check",
+            "class": "Capell\\AiCreator\\Health\\AiCreatorHealthCheck"
         }
     ],
     "database": {
@@ -91,7 +95,7 @@
         "ai-creator-package-recommendations"
     ],
     "security": {
-        "riskTier": "medium",
+        "riskTier": "standard",
         "publicSurface": {
             "routeNames": [],
             "auth": "none",
@@ -115,7 +119,7 @@
         },
         "externalHttpClients": {
             "requiresTimeouts": false,
-            "requiresSecretRedaction": true,
+            "requiresSecretRedaction": false,
             "clients": []
         },
         "adminSurface": {
@@ -135,7 +139,15 @@
             "queueInvalidation": false
         }
     },
-    "healthChecks": [],
+    "healthChecks": [
+        {
+            "key": "ai-creator",
+            "label": "AI Creator",
+            "class": "Capell\\AiCreator\\Health\\AiCreatorHealthCheck",
+            "severity": "warning",
+            "surface": "admin"
+        }
+    ],
     "commercial": {
         "proposedLicense": "paid",
         "requestedCertification": "first-party",

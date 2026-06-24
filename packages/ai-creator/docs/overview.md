@@ -1,35 +1,36 @@
-# AI Creator Overview
+# AI Creator
 
-AI Creator is a premium first-party Capell extension for reviewed AI-assisted content creation on an ordinary existing Capell site.
+<!-- prettier-ignore-start -->
 
-It is intentionally not positioned as a standalone site builder. The primary workflow is helping editors and admins create better pages, content plans, layout plans, reusable sections, and structured records inside the site they already manage. Site, domain, and app-local theme creation can be added where the installed package set supports those operations.
+## What it does for you
 
-## Buyer value
+AI Creator helps you create content, pages, layouts, and records from a plain-language request. You describe what you want, it prepares a reviewed plan, and nothing is applied until you confirm it. Along the way it points out the extensions that would make the result stronger.
 
-- Start a guided creation session from a plain-language intent.
-- See a deterministic preview before anything is applied.
-- Understand which Capell extensions make the requested outcome better.
-- Keep AI-generated output behind reviewed Actions instead of executing generated code.
-- Preserve Capell public-output safety rules for cached HTML and anonymous visitors.
+## Your screens
 
-## Extension surfaces
+- **AI Creator**: where you start a session, describe your intent, and review the plan.
+- **Confirmation**: the step where you approve a requested change before it is applied.
 
-- Admin: AI Creator session list and reviewed creation workflow.
-- Agent Bridge: start, preview, and apply session capabilities.
-- Persistence: `capell_ai_creator_sessions`.
+## What you can do
 
-## Works better with
+- Start a creation session from a plain-language description.
+- Review the plan before anything is created.
+- See which Capell packages would improve the result.
+- Confirm a requested change before it is applied.
 
-AI Creator recommends packages as required, recommended, or optional. Layout Builder is required for complex page composition. Content Sections, Structured Content Library, Media Library, Media AI, SEO Suite, Publishing Studio, Navigation, Search, Blog, Form Builder, Newsletter, Events, Campaign Studio, Frontend Authoring, HTML Cache, Frontend Optimizer, Insights, GA4 Reports, and Site Monitor are recommended when the session intent makes them useful.
+## Where to find it
 
-## Safety caveats
+Open **AI Creator** in the admin to start a reviewed creation session.
 
-- v1 must not silently install optional packages.
-- AI output may generate drafts and plans, but deterministic Actions apply changes.
-- No raw AI-generated PHP or Blade may execute directly.
-- App-local theme file writes stay disabled in production by default.
-- Public Blade and cached HTML must never leak authoring metadata.
+## Good to know
 
-## Screenshot notes
+- Nothing is applied until you confirm it, so you stay in control.
+- Plans are reviewed first, so you can check the result before it goes live.
+- Recommended packages are suggestions; you decide whether to add them.
 
-Committed marketplace assets live in `docs/assets/marketplace/`, and the documentation screenshot contract lives in `docs/screenshots.json`. The current screenshots are interim product-documentation previews for the session and Agent Bridge confirmation flows; replace them with route-backed Filament captures when the package-owned UI ships.
+---
+
+For how to use AI Creator, see the [admin guide](admin-guide.md).
+For developers: see the [README](../README.md).
+
+<!-- prettier-ignore-end -->

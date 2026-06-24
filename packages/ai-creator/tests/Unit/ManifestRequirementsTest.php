@@ -24,7 +24,7 @@ it('positions ai creator as a normal capell creation assistant with package reco
 
     expect($manifest['name'])->toBe('capell-app/ai-creator')
         ->and($manifest['displayName'])->toBe('AI Creator')
-        ->and($composer['autoload']['psr-4'])->toHaveKey('Capell\\AiCreator\\')
+        ->and(data_get($composer, 'autoload.psr-4'))->toHaveKey('Capell\\AiCreator\\')
         ->and(data_get($manifest, 'providers.runtime'))->toContain(AiCreatorServiceProvider::class)
         ->and(data_get($manifest, 'database.requiredTables'))->toContain('capell_ai_creator_sessions')
         ->and(data_get($manifest, 'dependencies.requires'))->toContain(
@@ -58,9 +58,9 @@ it('positions ai creator as a normal capell creation assistant with package reco
             'providerClass' => 'Capell\\AiCreator\\AgentBridge\\AiCreatorAgentBridgeCapabilityProvider',
         ])
         ->and($readme)->toContain('AI Creator')
-        ->and($readme)->toContain('Works better with')
-        ->and($overview)->toContain('ordinary existing Capell site')
-        ->and($overview)->toContain('docs/assets/marketplace')
+        ->and($readme)->toContain('Related packages')
+        ->and($overview)->toContain('reviewed creation session')
+        ->and($overview)->toContain('Recommended packages')
         ->and($marketplaceScreenshots)->toHaveCount(2)
         ->and($screenshotEntries)->toHaveCount(2);
 
@@ -70,6 +70,10 @@ it('positions ai creator as a normal capell creation assistant with package reco
         $path = $screenshot['path'] ?? null;
         $alt = $screenshot['alt'] ?? null;
         $caption = $screenshot['caption'] ?? null;
+
+        throw_unless(is_string($path), RuntimeException::class, 'AI Creator marketplace screenshot path must be a string.');
+        throw_unless(is_string($alt), RuntimeException::class, 'AI Creator marketplace screenshot alt must be a string.');
+        throw_unless(is_string($caption), RuntimeException::class, 'AI Creator marketplace screenshot caption must be a string.');
 
         expect($path)->toBeString()
             ->and($path)->toStartWith('docs/assets/marketplace/')
@@ -84,6 +88,8 @@ it('positions ai creator as a normal capell creation assistant with package reco
         throw_unless(is_array($entry), RuntimeException::class, 'AI Creator screenshot contract entries must be arrays.');
 
         $screenshotPath = $entry['screenshotPath'] ?? null;
+
+        throw_unless(is_string($screenshotPath), RuntimeException::class, 'AI Creator screenshot contract path must be a string.');
 
         expect($entry['required'] ?? null)->toBeTrue()
             ->and($screenshotPath)->toBeString()

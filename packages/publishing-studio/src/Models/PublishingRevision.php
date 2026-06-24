@@ -55,6 +55,7 @@ class PublishingRevision extends Model
         'actor_type',
         'actor_id',
         'notes',
+        'created_at',
     ];
 
     /**

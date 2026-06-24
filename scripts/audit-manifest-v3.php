@@ -98,6 +98,7 @@ const CAPELL_MANIFEST_V3_MIGRATION_GROUPS = [
     'content-product' => [
         'address',
         'agent-bridge',
+        'ai-creator',
         'ai-orchestrator',
         'automation-studio',
         'campaign-studio',

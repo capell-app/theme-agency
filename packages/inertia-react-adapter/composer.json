@@ -38,5 +38,9 @@
         "capell",
         "inertia",
         "react"
-    ]
+    ],
+    "support": {
+        "source": "https://github.com/capell-app/capell-packages",
+        "docs": "https://docs.capell.app/packages/inertia-react-adapter"
+    }
 }

@@ -243,10 +243,7 @@
     "security": {
         "riskTier": "standard",
         "publicSurface": {
-            "routeNames": [
-                "capell-events.calendar-feed",
-                "capell-events.listing-calendar-feed"
-            ],
+            "routeNames": ["calendar-feed", "listing-calendar-feed"],
             "auth": "public",
             "csrfExemptRoutes": [],
             "signedRoutes": [],

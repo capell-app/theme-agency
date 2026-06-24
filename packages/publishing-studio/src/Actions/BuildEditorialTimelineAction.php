@@ -115,14 +115,14 @@ final class BuildEditorialTimelineAction
             ->map(fn (PreviewLink $previewLink): EditorialTimelineEntryData => new EditorialTimelineEntryData(
                 type: EditorialTimelineEntryTypeEnum::Preview,
                 title: __('capell-publishing-studio::editorial_timeline.entries.preview_link_created'),
-                description: $previewLink->isRevoked()
-                    ? __('capell-publishing-studio::editorial_timeline.entries.preview_link_revoked')
+                description: $previewLink->isRevoked() && is_string($revokedDescription = __('capell-publishing-studio::editorial_timeline.entries.preview_link_revoked'))
+                    ? $revokedDescription
                     : null,
                 occurredAt: CarbonImmutable::instance($previewLink->issued_at ?? $previewLink->created_at ?? now()),
                 actorName: $this->modelName($previewLink->issuedBy),
                 workspaceId: $workspace->id,
                 metadata: [
-                    'expires_at' => $previewLink->expires_at?->toIso8601String(),
+                    'expires_at' => $previewLink->expires_at->toIso8601String(),
                     'revoked_at' => $previewLink->revoked_at?->toIso8601String(),
                 ],
             ));

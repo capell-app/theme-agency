@@ -6,16 +6,16 @@ use Capell\AiCreator\Actions\RecommendAiCreatorPackagesAction;
 use Capell\AiCreator\Enums\AiCreatorRecommendationLevel;
 
 it('requires layout builder for complex page composition', function (): void {
-    $recommendations = RecommendAiCreatorPackagesAction::run('Create a landing page with reusable sections, testimonials, and a contact form.');
+    $recommendations = RecommendAiCreatorPackagesAction::make()->handle('Create a landing page with reusable sections, testimonials, and a contact form.');
     $packages = collect($recommendations)->keyBy('package');
 
-    expect($packages->get('capell-app/layout-builder')->level)->toBe(AiCreatorRecommendationLevel::Required)
+    expect($packages->get('capell-app/layout-builder')?->level)->toBe(AiCreatorRecommendationLevel::Required)
         ->and($packages)->toHaveKey('capell-app/content-sections')
         ->and($packages)->toHaveKey('capell-app/form-builder');
 });
 
 it('recommends growth and visibility packages for post launch measurement', function (): void {
-    $recommendations = RecommendAiCreatorPackagesAction::run('Launch a campaign page with SEO metadata, analytics reporting, and traffic visibility.');
+    $recommendations = RecommendAiCreatorPackagesAction::make()->handle('Launch a campaign page with SEO metadata, analytics reporting, and traffic visibility.');
     $packages = collect($recommendations)->keyBy('package');
 
     expect($packages)->toHaveKey('capell-app/seo-suite')
@@ -26,7 +26,7 @@ it('recommends growth and visibility packages for post launch measurement', func
 });
 
 it('does not recommend blog just because the request mentions newsletter', function (): void {
-    $recommendations = RecommendAiCreatorPackagesAction::run('Create a newsletter signup form for audience capture.');
+    $recommendations = RecommendAiCreatorPackagesAction::make()->handle('Create a newsletter signup form for audience capture.');
     $packages = collect($recommendations)->keyBy('package');
 
     expect($packages)->toHaveKey('capell-app/newsletter')

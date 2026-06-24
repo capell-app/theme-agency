@@ -390,37 +390,40 @@
         "riskTier": "sensitive",
         "publicSurface": {
             "routeNames": [
-                "calendar.staff",
-                "portal.consent",
-                "portal.consent.update",
-                "portal.lessons",
-                "portal.proposal",
-                "portal.proposal.respond",
-                "portal.review",
-                "portal.review-participant",
-                "portal.review-participant.store",
-                "portal.review.store",
-                "request",
-                "request.store",
-                "webhook.store"
+                "capell-bookings.calendar.staff",
+                "capell-bookings.portal.consent",
+                "capell-bookings.portal.consent.update",
+                "capell-bookings.portal.lessons",
+                "capell-bookings.portal.proposal",
+                "capell-bookings.portal.proposal.respond",
+                "capell-bookings.portal.review",
+                "capell-bookings.portal.review-participant",
+                "capell-bookings.portal.review-participant.store",
+                "capell-bookings.portal.review.store",
+                "capell-bookings.request",
+                "capell-bookings.request.store",
+                "capell-bookings.webhook.store"
             ],
             "auth": "public",
             "csrfExemptRoutes": [],
             "signedRoutes": [],
             "tokenizedRoutes": [
-                "calendar.staff",
-                "portal.consent",
-                "portal.consent.update",
-                "portal.lessons",
-                "portal.proposal",
-                "portal.proposal.respond",
-                "portal.review",
-                "portal.review-participant",
-                "portal.review-participant.store",
-                "portal.review.store"
+                "capell-bookings.calendar.staff",
+                "capell-bookings.portal.consent",
+                "capell-bookings.portal.consent.update",
+                "capell-bookings.portal.lessons",
+                "capell-bookings.portal.proposal",
+                "capell-bookings.portal.proposal.respond",
+                "capell-bookings.portal.review",
+                "capell-bookings.portal.review-participant",
+                "capell-bookings.portal.review-participant.store",
+                "capell-bookings.portal.review.store"
             ],
-            "webhookRoutes": ["webhook.store"],
-            "throttledRoutes": ["request.store", "webhook.store"]
+            "webhookRoutes": ["capell-bookings.webhook.store"],
+            "throttledRoutes": [
+                "capell-bookings.request.store",
+                "capell-bookings.webhook.store"
+            ]
         },
         "sensitiveData": {
             "encryptedFields": [],

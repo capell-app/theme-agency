@@ -46,5 +46,9 @@
         "cms",
         "shopify",
         "commerce"
-    ]
+    ],
+    "support": {
+        "source": "https://github.com/capell-app/capell-packages",
+        "docs": "https://docs.capell.app/packages/shopify-commerce"
+    }
 }

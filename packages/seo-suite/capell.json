@@ -249,8 +249,14 @@
     "security": {
         "riskTier": "sensitive",
         "publicSurface": {
-            "routeNames": [],
-            "auth": "none",
+            "routeNames": [
+                "capell-frontend.llms-full-txt",
+                "capell-frontend.llms-txt",
+                "capell-frontend.page-markdown",
+                "capell-frontend.page-markdown-home",
+                "capell-frontend.robots-txt"
+            ],
+            "auth": "public",
             "csrfExemptRoutes": [],
             "signedRoutes": [],
             "tokenizedRoutes": [],
@@ -282,6 +288,7 @@
             "requiresTimeouts": true,
             "requiresSecretRedaction": true,
             "clients": [
+                "Capell\\SeoSuite\\Actions\\BuildSeoSuiteDoctorReportAction",
                 "Capell\\SeoSuite\\Support\\PageSpeed\\GooglePageSpeedInsightsClient",
                 "Capell\\SeoSuite\\Support\\SearchConsole\\GoogleSearchConsoleClient"
             ]

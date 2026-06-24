@@ -10,6 +10,23 @@ if (is_file($autoload)) {
     require_once $autoload;
 }
 
+// Package config files are plain `return [...]` arrays that may reference framework helpers.
+// Provide minimal fallbacks so they can be safely included to resolve config-driven middleware
+// without booting the full framework.
+if (! function_exists('env')) {
+    function env(string $key, mixed $default = null): mixed
+    {
+        return $default;
+    }
+}
+
+if (! function_exists('value')) {
+    function value(mixed $value, mixed ...$args): mixed
+    {
+        return $value instanceof Closure ? $value(...$args) : $value;
+    }
+}
+
 const CAPELL_SECURITY_RISK_TIERS = [
     'low',
     'standard',
@@ -139,19 +156,37 @@ function capell_security_manifest_payloads(string $root): array
  */
 function capell_security_route_records(string $packagePath): array
 {
-    $routesPath = rtrim($packagePath, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . 'routes';
+    $base = rtrim($packagePath, DIRECTORY_SEPARATOR);
+    $sources = [];
 
-    if (! is_dir($routesPath)) {
+    $routesPath = $base . DIRECTORY_SEPARATOR . 'routes';
+
+    if (is_dir($routesPath)) {
+        foreach ((new Finder)->files()->in($routesPath)->name('*.php')->sortByName() as $file) {
+            $sources[] = $file->getPathname();
+        }
+    }
+
+    // Packages may register routes inside their service provider instead of a routes/ file
+    // (for example a feed endpoint or a public fragment route).
+    $srcPath = $base . DIRECTORY_SEPARATOR . 'src';
+
+    if (is_dir($srcPath)) {
+        foreach ((new Finder)->files()->in($srcPath)->name('*ServiceProvider.php')->sortByName() as $file) {
+            $sources[] = $file->getPathname();
+        }
+    }
+
+    if ($sources === []) {
         return [];
     }
 
     $records = [];
-    $files = (new Finder)->files()->in($routesPath)->name('*.php')->sortByName();
 
-    foreach ($files as $file) {
+    foreach ($sources as $source) {
         $records = [
             ...$records,
-            ...capell_security_route_records_from_file($file->getPathname(), $packagePath),
+            ...capell_security_route_records_from_file($source, $packagePath),
         ];
     }
 
@@ -180,15 +215,21 @@ function capell_security_route_records_from_file(string $filePath, string $packa
         return [];
     }
 
+    // Route groups frequently apply name prefixes and middleware (auth, throttle, csrf) that
+    // their child routes inherit. Some packages build that middleware from a local variable
+    // whose value comes from config(), so resolve those variables up front.
+    $middlewareVariables = capell_security_route_middleware_variables($contents, $packagePath);
+
     $records = [];
     $depth = 0;
     $chain = '';
+
+    // Each frame: ['depth' => int, 'prefix' => string, 'middleware' => string].
     $groups = [];
-    $prefixes = [];
 
     foreach ($contents as $line) {
         $trimmed = trim((string) $line);
-        $delta = substr_count($line, '{') - substr_count($line, '}');
+        $delta = capell_security_route_brace_delta($line);
 
         if ($chain === '' && str_contains($trimmed, 'Route::')) {
             $chain = $line;
@@ -197,16 +238,24 @@ function capell_security_route_records_from_file(string $filePath, string $packa
         }
 
         if ($chain !== '' && str_contains($chain, '->group(')) {
+            $parentPrefix = capell_security_route_active_prefix($groups);
             $prefix = capell_security_route_group_prefix($chain);
 
-            if ($prefix !== '') {
-                $prefixes[] = capell_security_route_prefix($prefixes) . $prefix;
-                $groups[] = $depth + $delta;
-            }
+            $groups[] = [
+                'depth' => $depth + $delta,
+                'prefix' => $prefix === '' ? $parentPrefix : $parentPrefix . $prefix,
+                'middleware' => capell_security_route_resolve_middleware($chain, $middlewareVariables),
+            ];
 
             $chain = '';
         } elseif ($chain !== '' && str_contains($line, ';')) {
-            $record = capell_security_route_record_from_chain($chain, capell_security_route_prefix($prefixes), $filePath, $packagePath);
+            $record = capell_security_route_record_from_chain(
+                $chain,
+                capell_security_route_active_prefix($groups),
+                capell_security_route_active_middleware($groups),
+                $filePath,
+                $packagePath,
+            );
 
             if ($record !== null) {
                 $records[] = $record;
@@ -217,27 +266,154 @@ function capell_security_route_records_from_file(string $filePath, string $packa
 
         $depth += $delta;
 
-        while ($groups !== [] && $depth < $groups[array_key_last($groups)]) {
+        while ($groups !== [] && $depth < (int) $groups[array_key_last($groups)]['depth']) {
             array_pop($groups);
-            array_pop($prefixes);
         }
     }
 
     return $records;
 }
 
-function capell_security_route_prefix(array $prefixes): string
+function capell_security_route_brace_delta(string $line): int
 {
-    if ($prefixes === []) {
+    return substr_count($line, '{') - substr_count($line, '}');
+}
+
+/**
+ * @param  list<array{depth: int, prefix: string, middleware: string}>  $groups
+ */
+function capell_security_route_active_prefix(array $groups): string
+{
+    if ($groups === []) {
         return '';
     }
 
-    return (string) $prefixes[array_key_last($prefixes)];
+    return (string) $groups[array_key_last($groups)]['prefix'];
+}
+
+/**
+ * @param  list<array{depth: int, prefix: string, middleware: string}>  $groups
+ */
+function capell_security_route_active_middleware(array $groups): string
+{
+    return implode("\n", array_map(static fn (array $group): string => (string) $group['middleware'], $groups));
+}
+
+/**
+ * Returns the middleware text that applies to a route group, expanding any local variable
+ * (for example `->middleware($apiMiddleware)`) to its resolved definition.
+ *
+ * @param  array<string, string>  $middlewareVariables
+ */
+function capell_security_route_resolve_middleware(string $chain, array $middlewareVariables): string
+{
+    $resolved = $chain;
+
+    if (preg_match_all('/(?:Route::|->)middleware\(\s*\$(\w+)/', $chain, $matches) === false) {
+        return $resolved;
+    }
+
+    foreach ($matches[1] ?? [] as $variableName) {
+        if (isset($middlewareVariables[$variableName])) {
+            $resolved .= "\n" . $middlewareVariables[$variableName];
+        }
+    }
+
+    return $resolved;
+}
+
+/**
+ * Resolves local middleware-array variables in a route file, expanding config() references
+ * to the package's configured defaults so config-driven middleware (auth, throttle) is visible.
+ *
+ * @param  list<string>  $contents
+ * @return array<string, string>
+ */
+function capell_security_route_middleware_variables(array $contents, string $packagePath): array
+{
+    $source = implode("\n", $contents);
+    $variables = [];
+
+    if (preg_match_all('/\$(\w+)\s*=\s*\[(.*?)\];/s', $source, $matches, PREG_SET_ORDER) === false) {
+        return $variables;
+    }
+
+    foreach ($matches as $match) {
+        $body = (string) $match[2];
+
+        if (! str_contains($body, 'middleware') && ! str_contains($body, 'config(') && ! str_contains($body, 'throttle') && ! str_contains($body, 'auth')) {
+            continue;
+        }
+
+        $resolved = $body;
+
+        if (preg_match_all('/config\(\s*[\'"]([^\'"]+)[\'"]\s*(?:,\s*([^)]*))?\)/', $body, $configMatches, PREG_SET_ORDER) !== false) {
+            foreach ($configMatches as $configMatch) {
+                $resolved .= ' ' . capell_security_resolve_config_value($packagePath, (string) $configMatch[1]);
+            }
+        }
+
+        $variables[(string) $match[1]] = $resolved;
+    }
+
+    return $variables;
+}
+
+/**
+ * Reads a package config value (for example `capell-agent-delivery.public_pages.rate_limit_middleware`)
+ * and flattens it to a string so middleware tokens can be detected.
+ */
+function capell_security_resolve_config_value(string $packagePath, string $key): string
+{
+    $segments = explode('.', $key);
+    $fileName = array_shift($segments);
+
+    if ($fileName === null) {
+        return '';
+    }
+
+    $configFile = rtrim($packagePath, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . $fileName . '.php';
+
+    if (! is_file($configFile)) {
+        return '';
+    }
+
+    try {
+        $config = include $configFile;
+    } catch (Throwable) {
+        return '';
+    }
+
+    $value = $config;
+
+    foreach ($segments as $segment) {
+        if (! is_array($value) || ! array_key_exists($segment, $value)) {
+            return '';
+        }
+
+        $value = $value[$segment];
+    }
+
+    return capell_security_flatten_to_string($value);
+}
+
+function capell_security_flatten_to_string(mixed $value): string
+{
+    if (is_string($value)) {
+        return $value;
+    }
+
+    if (is_array($value)) {
+        return implode(' ', array_map(static fn (mixed $item): string => capell_security_flatten_to_string($item), $value));
+    }
+
+    return '';
 }
 
 function capell_security_route_group_prefix(string $chain): string
 {
-    preg_match_all('/(?:Route::|->)name\(\s*[\'"]([^\'"]+)[\'"]\s*\)/', $chain, $matches);
+    // Route groups name their prefix with either ->name('foo.') or its alias ->as('foo.').
+    preg_match_all('/(?:Route::|->)(?:name|as)\(\s*[\'"]([^\'"]+)[\'"]\s*\)/', $chain, $matches);
 
     if (($matches[1] ?? []) === []) {
         return '';
@@ -260,7 +436,7 @@ function capell_security_route_group_prefix(string $chain): string
  *     authenticated: bool
  * }|null
  */
-function capell_security_route_record_from_chain(string $chain, string $prefix, string $filePath, string $packagePath): ?array
+function capell_security_route_record_from_chain(string $chain, string $prefix, string $groupMiddleware, string $filePath, string $packagePath): ?array
 {
     preg_match_all('/(?:Route::|->)name\(\s*[\'"]([^\'"]+)[\'"]\s*\)/', $chain, $matches);
 
@@ -278,13 +454,16 @@ function capell_security_route_record_from_chain(string $chain, string $prefix, 
         $name = $prefix . $name;
     }
 
-    $lowerChain = mb_strtolower($chain);
+    // Middleware applied by an enclosing route group (auth, throttle, signed, csrf) is inherited
+    // by the child route, so flag detection must consider the group context as well as the route.
+    $flagSource = $chain . "\n" . $groupMiddleware;
+    $lowerChain = mb_strtolower($flagSource);
     $relativeFile = str_replace(rtrim($packagePath, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR, '', $filePath);
 
     return [
         'name' => $name,
         'file' => $relativeFile,
-        'csrfExempt' => str_contains($chain, 'VerifyCsrfToken::class') || str_contains($chain, 'withoutMiddleware'),
+        'csrfExempt' => str_contains($flagSource, 'VerifyCsrfToken::class') || str_contains($flagSource, 'withoutMiddleware'),
         'signed' => str_contains($lowerChain, "'signed'") || str_contains($lowerChain, '"signed"') || str_contains($lowerChain, 'middleware(\'signed') || str_contains($lowerChain, 'middleware("signed'),
         'throttled' => str_contains($lowerChain, 'throttle:'),
         'tokenized' => str_contains($lowerChain, '{token}') || str_contains($lowerChain, 'token}'),
@@ -471,7 +650,14 @@ function capell_security_http_client_classes(string $packagePath): array
     foreach ((new Finder)->files()->in($srcPath)->name('*.php') as $file) {
         $contents = $file->getContents();
 
-        if (! str_contains($contents, 'Http::')) {
+        // Detect both the Http facade and the underlying client (Factory / PendingRequest)
+        // and Guzzle, since services often type-hint an injected client instead of the facade.
+        if (
+            ! str_contains($contents, 'Http::')
+            && ! str_contains($contents, 'Http\\Client\\Factory')
+            && ! str_contains($contents, 'Http\\Client\\PendingRequest')
+            && ! str_contains($contents, 'GuzzleHttp\\')
+        ) {
             continue;
         }
 

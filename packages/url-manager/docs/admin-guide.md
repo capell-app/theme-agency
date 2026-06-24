@@ -11,6 +11,16 @@ This guide is for editors who keep links working and owners deciding how to hand
 3. Enter the old URL (the address that should move) and the new URL (where it should go).
 4. **Activate redirect** and save. Visitors to the old address now land on the new one.
 
+![An editor creates or updates redirect rules without touching server configuration.](screenshots/create-edit-redirect-form.png)
+
+### How to check your redirects are working
+
+1. Go to **URL Manager** and review the list of redirects.
+2. Check each one shows as **Active**, and look at the **Hits** and **Last hit** columns to confirm real traffic is being redirected.
+3. Use this view to confirm URL Manager is installed and tracking redirect health before any SEO clean-up work.
+
+![An operator verifies URL Manager is installed, tracking redirect health, and ready for SEO remediation work.](screenshots/redirect-health-snapshot-output.png)
+
 ### How to fix a link that moved
 
 1. Find the old address under **404 opportunities** or create a redirect directly.
@@ -24,10 +34,14 @@ This guide is for editors who keep links working and owners deciding how to hand
 3. Fill it in, then **Preview import** to check it before applying.
 4. **Import redirects** to add them all.
 
+![A migration team imports redirect mappings in bulk after a site restructure.](screenshots/redirect-import-workflow.png)
+
 ### How to export your redirects
 
 1. In **URL Manager**, choose **Export redirects**.
 2. Save the file as a backup or to review your redirects in a spreadsheet.
+
+![An SEO manager exports redirect rules for review, migration handoff, or audit evidence.](screenshots/redirect-export-workflow.png)
 
 ## Rolling out URL Manager (for owners)
 
@@ -37,10 +51,10 @@ This guide is for editors who keep links working and owners deciding how to hand
 
 ### Add when needed
 
-| Need | Enable |
-| --- | --- |
-| Recover visitors from dead links | **404 opportunities** to redirect |
-| Migrate many URLs at once | **Import redirects** from a spreadsheet |
+| Need                             | Enable                                  |
+| -------------------------------- | --------------------------------------- |
+| Recover visitors from dead links | **404 opportunities** to redirect       |
+| Migrate many URLs at once        | **Import redirects** from a spreadsheet |
 
 ### Don't enable yet
 
@@ -48,16 +62,16 @@ This guide is for editors who keep links working and owners deciding how to hand
 
 ### Who does what
 
-| Role | First useful screen |
-| --- | --- |
-| Editor | **Create redirect** and **404 opportunities** |
+| Role       | First useful screen                                |
+| ---------- | -------------------------------------------------- |
+| Editor     | **Create redirect** and **404 opportunities**      |
 | Site owner | The **Redirects** list: keep it tidy and loop-free |
 
 ## Troubleshooting for editors
 
-| What you see | What it means | What to do |
-| --- | --- | --- |
-| A redirect isn't working | It isn't active | Open it and **Activate redirect** |
-| The page keeps reloading or errors | A redirect loop (two redirects point at each other) | Remove one side of the loop so the chain ends at a real page |
-| A bulk import didn't apply | The file format was wrong, or preview wasn't confirmed | Use **Download template**, fix the file, **Preview import**, then import |
-| Visitors still hit a 404 | The old URL has no redirect yet | Find it in **404 opportunities** and add a redirect |
+| What you see                       | What it means                                          | What to do                                                               |
+| ---------------------------------- | ------------------------------------------------------ | ------------------------------------------------------------------------ |
+| A redirect isn't working           | It isn't active                                        | Open it and **Activate redirect**                                        |
+| The page keeps reloading or errors | A redirect loop (two redirects point at each other)    | Remove one side of the loop so the chain ends at a real page             |
+| A bulk import didn't apply         | The file format was wrong, or preview wasn't confirmed | Use **Download template**, fix the file, **Preview import**, then import |
+| Visitors still hit a 404           | The old URL has no redirect yet                        | Find it in **404 opportunities** and add a redirect                      |

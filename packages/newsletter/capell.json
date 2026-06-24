@@ -266,7 +266,8 @@
             "clients": [
                 "Capell\\Newsletter\\Support\\Providers\\CampaignMonitorProviderAdapter",
                 "Capell\\Newsletter\\Support\\Providers\\KitProviderAdapter",
-                "Capell\\Newsletter\\Support\\Providers\\MailchimpProviderAdapter"
+                "Capell\\Newsletter\\Support\\Providers\\MailchimpProviderAdapter",
+                "Capell\\Newsletter\\Support\\Providers\\ProviderHttpRetry"
             ]
         },
         "adminSurface": {

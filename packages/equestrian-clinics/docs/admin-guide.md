@@ -31,10 +31,10 @@ This guide is for staff who run clinics and owners deciding whether to enable th
 
 ### Add when needed
 
-| Need | Enable |
-| --- | --- |
-| Group sessions | Group clinic types |
-| Let riders propose clinics | Host requests |
+| Need                       | Enable             |
+| -------------------------- | ------------------ |
+| Group sessions             | Group clinic types |
+| Let riders propose clinics | Host requests      |
 
 ### Don't enable yet
 
@@ -42,15 +42,15 @@ This guide is for staff who run clinics and owners deciding whether to enable th
 
 ### Who does what
 
-| Role | First useful screen |
-| --- | --- |
-| Clinic organiser | **Clinics** and **Attendees** |
-| Site owner | Decide whether clinics are part of the site |
+| Role             | First useful screen                         |
+| ---------------- | ------------------------------------------- |
+| Clinic organiser | **Clinics** and **Attendees**               |
+| Site owner       | Decide whether clinics are part of the site |
 
 ## Troubleshooting for editors
 
-| What you see | What it means | What to do |
-| --- | --- | --- |
-| A clinic can't be booked | Its date or capacity isn't set | Open the clinic and set its date and capacity |
-| A clinic won't run | It is below the minimum number of attendees | Promote it, or adjust the minimum |
-| A rider can't request a slot | The clinic is full or not open for requests | Check capacity and that requests are open |
+| What you see                 | What it means                               | What to do                                    |
+| ---------------------------- | ------------------------------------------- | --------------------------------------------- |
+| A clinic can't be booked     | Its date or capacity isn't set              | Open the clinic and set its date and capacity |
+| A clinic won't run           | It is below the minimum number of attendees | Promote it, or adjust the minimum             |
+| A rider can't request a slot | The clinic is full or not open for requests | Check capacity and that requests are open     |

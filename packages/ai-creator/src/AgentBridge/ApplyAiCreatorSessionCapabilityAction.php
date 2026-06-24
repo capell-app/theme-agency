@@ -19,7 +19,7 @@ final class ApplyAiCreatorSessionCapabilityAction implements CapellAgentBridgeCa
     {
         $session = $this->sessionFromPayload($invocation->payload);
         AiCreatorSessionAccess::authorizeSession($invocation->user, $session);
-        $preview = BuildAiCreatorSessionPreviewAction::run($session);
+        $preview = BuildAiCreatorSessionPreviewAction::make()->handle($session);
 
         return new CapabilityResultData(
             ok: true,
@@ -32,13 +32,13 @@ final class ApplyAiCreatorSessionCapabilityAction implements CapellAgentBridgeCa
     {
         $session = $this->sessionFromPayload($invocation->payload);
         AiCreatorSessionAccess::authorizeSession($invocation->user, $session);
-        $session = ApplyAiCreatorSessionAction::run($session);
+        $session = ApplyAiCreatorSessionAction::make()->handle($session);
 
         return new CapabilityResultData(
             ok: true,
             message: __('capell-ai-creator::package.capability_apply_executed'),
             data: [
-                'sessionId' => (int) $session->getKey(),
+                'sessionId' => $session->id,
                 'status' => $session->status->value,
                 'appliedAt' => $session->applied_at?->toIso8601String(),
             ],
@@ -56,6 +56,6 @@ final class ApplyAiCreatorSessionCapabilityAction implements CapellAgentBridgeCa
 
         $sessionId = Arr::get($validated, 'session_id');
 
-        return AiCreatorSession::query()->findOrFail((int) $sessionId);
+        return AiCreatorSession::query()->findOrFail(is_numeric($sessionId) ? (int) $sessionId : 0);
     }
 }

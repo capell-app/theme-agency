@@ -17,7 +17,7 @@ final class StartAiCreatorSessionAction
 
     public function handle(AiCreatorStartSessionData $data): AiCreatorSession
     {
-        $recommendations = RecommendAiCreatorPackagesAction::run($data->intent);
+        $recommendations = RecommendAiCreatorPackagesAction::make()->handle($data->intent);
         $recommendationPayload = array_map(
             static fn (AiCreatorPackageRecommendationData $recommendation): array => $recommendation->toPayload(),
             $recommendations,

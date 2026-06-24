@@ -205,15 +205,30 @@
                                     @endif
                                 </td>
                                 <td class="py-2">
-                                    @if ($package->docsUrl !== null)
-                                        <a
-                                            href="{{ $package->docsUrl }}"
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            class="text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300 text-xs underline"
-                                        >
-                                            {{ __('capell-diagnostics::package.packages_installed_readme') }}
-                                        </a>
+                                    @if ($package->docsUrl !== null || $package->documentationUrl !== null)
+                                        <div class="flex flex-col gap-1">
+                                            @if ($package->documentationUrl !== null)
+                                                <a
+                                                    href="{{ $package->documentationUrl }}"
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    class="text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300 text-xs underline"
+                                                >
+                                                    {{ __('capell-diagnostics::package.packages_installed_guide') }}
+                                                </a>
+                                            @endif
+
+                                            @if ($package->docsUrl !== null)
+                                                <a
+                                                    href="{{ $package->docsUrl }}"
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    class="text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300 text-xs underline"
+                                                >
+                                                    {{ __('capell-diagnostics::package.packages_installed_readme') }}
+                                                </a>
+                                            @endif
+                                        </div>
                                     @else
                                         <span class="text-xs text-gray-400">
                                             —

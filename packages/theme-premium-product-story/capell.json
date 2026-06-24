@@ -158,6 +158,9 @@
         ],
         "categories": ["frontend", "themes"]
     },
+    "contributionTraceability": {
+        "deferredContributions": ["route"]
+    },
     "extends": "default",
     "themeKey": "premium-product-story"
 }

@@ -27,6 +27,8 @@ This guide is for the team who answer chats and owners deciding staffed hours. E
 2. Inspect a conversation to read what was said.
 3. Follow up on any that need a reply.
 
+![An operator reviews incoming conversations, handoff state, and visitor context.](screenshots/live-chat-conversations-admin.png)
+
 ## Rolling out Live Chat (for owners)
 
 ### Turn on first
@@ -35,10 +37,10 @@ This guide is for the team who answer chats and owners deciding staffed hours. E
 
 ### Add when needed
 
-| Need | Enable |
-| --- | --- |
-| Capture enquiries after hours | An offline message that collects details |
-| Send chats to the right person | Routing or escalation |
+| Need                           | Enable                                   |
+| ------------------------------ | ---------------------------------------- |
+| Capture enquiries after hours  | An offline message that collects details |
+| Send chats to the right person | Routing or escalation                    |
 
 ### Don't enable yet
 
@@ -46,16 +48,16 @@ This guide is for the team who answer chats and owners deciding staffed hours. E
 
 ### Who does what
 
-| Role | First useful screen |
-| --- | --- |
-| Support team | **Conversations**: answer and follow up |
-| Site owner | **Availability windows** and the offline message |
+| Role         | First useful screen                              |
+| ------------ | ------------------------------------------------ |
+| Support team | **Conversations**: answer and follow up          |
+| Site owner   | **Availability windows** and the offline message |
 
 ## Troubleshooting for editors
 
-| What you see | What it means | What to do |
-| --- | --- | --- |
-| Visitors say no one replies | Chat shows available outside staffed hours | Set realistic **Availability windows** |
-| Chat box doesn't appear | Chat isn't turned on for the site | Add the site under **Chat sites** and enable it |
-| After-hours enquiries are lost | No offline message collects details | Set an offline message that asks for contact details |
-| A chat needs a specialist | It should be escalated | Escalate the conversation to the right person |
+| What you see                   | What it means                              | What to do                                           |
+| ------------------------------ | ------------------------------------------ | ---------------------------------------------------- |
+| Visitors say no one replies    | Chat shows available outside staffed hours | Set realistic **Availability windows**               |
+| Chat box doesn't appear        | Chat isn't turned on for the site          | Add the site under **Chat sites** and enable it      |
+| After-hours enquiries are lost | No offline message collects details        | Set an offline message that asks for contact details |
+| A chat needs a specialist      | It should be escalated                     | Escalate the conversation to the right person        |

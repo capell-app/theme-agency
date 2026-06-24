@@ -85,7 +85,7 @@ it('builds a newest first editorial timeline for a workspace', function (): void
             EditorialTimelineEntryTypeEnum::Submitted,
             EditorialTimelineEntryTypeEnum::Draft,
         ])
-        ->and($entries->first()->workspaceId)->toBe($workspace->id)
+        ->and($entries->first()?->workspaceId)->toBe($workspace->id)
         ->and($entries->where('type', EditorialTimelineEntryTypeEnum::Approved)->first()?->actorName)->toBe('Ben Johnson')
         ->and($entries->where('type', EditorialTimelineEntryTypeEnum::Comment)->first()?->metadata)->toHaveKey('field_path', 'title');
 });

@@ -78,6 +78,54 @@ it('hydrates installed package health metadata from local package manifests', fu
     }
 });
 
+it('resolves the admin documentation url from the manifest or composer support docs', function (): void {
+    $temporaryRoot = sys_get_temp_dir() . '/capell_packages_installed_' . uniqid();
+    $installedJsonPath = $temporaryRoot . '/vendor/composer/installed.json';
+    $packagesPath = $temporaryRoot . '/packages';
+    $manifestPackagePath = $packagesPath . '/events';
+    $composerPackagePath = $packagesPath . '/forms';
+
+    File::ensureDirectoryExists(dirname($installedJsonPath));
+    File::ensureDirectoryExists($manifestPackagePath);
+    File::ensureDirectoryExists($composerPackagePath);
+
+    File::put($installedJsonPath, json_encode([
+        'packages' => [
+            ['name' => 'capell-app/events', 'version' => '4.x-dev'],
+            ['name' => 'capell-app/forms', 'version' => '4.x-dev'],
+        ],
+    ], JSON_THROW_ON_ERROR));
+
+    File::put($manifestPackagePath . '/capell.json', json_encode([
+        'name' => 'capell-app/events',
+        'slug' => 'events',
+        'displayName' => 'Events',
+        'documentationUrl' => 'https://docs.capell.app/packages/events',
+    ], JSON_THROW_ON_ERROR));
+
+    File::put($composerPackagePath . '/capell.json', json_encode([
+        'name' => 'capell-app/forms',
+        'slug' => 'forms',
+        'displayName' => 'Forms',
+    ], JSON_THROW_ON_ERROR));
+    File::put($composerPackagePath . '/composer.json', json_encode([
+        'name' => 'capell-app/forms',
+        'support' => ['docs' => 'https://docs.capell.app/packages/forms'],
+    ], JSON_THROW_ON_ERROR));
+
+    try {
+        $result = (new BuildPackagesInstalledAction($installedJsonPath, $packagesPath))->handle();
+        $packages = $result->packages->toCollection()->keyBy('composerName');
+
+        expect(diagnosticsPackageInfo($packages->get('capell-app/events'))->documentationUrl)
+            ->toBe('https://docs.capell.app/packages/events')
+            ->and(diagnosticsPackageInfo($packages->get('capell-app/forms'))->documentationUrl)
+            ->toBe('https://docs.capell.app/packages/forms');
+    } finally {
+        File::deleteDirectory($temporaryRoot);
+    }
+});
+
 it('still lists unknown capell packages when no local manifest is available', function (): void {
     $temporaryRoot = sys_get_temp_dir() . '/capell_packages_installed_' . uniqid();
     $installedJsonPath = $temporaryRoot . '/vendor/composer/installed.json';

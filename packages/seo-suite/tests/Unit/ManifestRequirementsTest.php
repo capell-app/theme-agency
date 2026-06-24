@@ -162,8 +162,14 @@ it('declares settings permissions supported integrations and cache invalidation 
             'model' => AiDiscoveryCrawlerRule::class,
             'events' => ['saved', 'deleted'],
         ])
-        ->and(data_get($manifest, 'security.publicSurface.auth'))->toBe('none')
-        ->and(data_get($manifest, 'security.publicSurface.routeNames', []))->toBe([]);
+        ->and(data_get($manifest, 'security.publicSurface.auth'))->toBe('public')
+        ->and(data_get($manifest, 'security.publicSurface.routeNames', []))->toBe([
+            'capell-frontend.llms-full-txt',
+            'capell-frontend.llms-txt',
+            'capell-frontend.page-markdown',
+            'capell-frontend.page-markdown-home',
+            'capell-frontend.robots-txt',
+        ]);
 });
 
 it('declares implemented admin pages routes and no longer defers core seo suite surfaces', function (): void {

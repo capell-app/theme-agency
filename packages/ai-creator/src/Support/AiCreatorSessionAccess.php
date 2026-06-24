@@ -36,7 +36,10 @@ final class AiCreatorSessionAccess
             return;
         }
 
-        if (self::isGlobalAdmin($user) || (int) $session->user_id === (int) $user->getAuthIdentifier()) {
+        $userIdentifier = $user->getAuthIdentifier();
+
+        if (self::isGlobalAdmin($user)
+            || (is_numeric($userIdentifier) && (int) $session->user_id === (int) $userIdentifier)) {
             return;
         }
 

@@ -113,6 +113,7 @@ it('groups packages into the current product bundles', function (): void {
             'shopify-commerce/capell.json',
         ],
         'commercial' => [
+            'ai-creator/capell.json',
             'ai-orchestrator/capell.json',
         ],
         'communications' => [

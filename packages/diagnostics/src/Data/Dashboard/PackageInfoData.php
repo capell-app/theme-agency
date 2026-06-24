@@ -15,6 +15,7 @@ final class PackageInfoData extends Data
         public readonly bool $configPublished,
         public readonly string $configPath,
         public readonly ?string $docsUrl,
+        public readonly ?string $documentationUrl = null,
         public readonly ?string $displayName = null,
         public readonly ?string $bundle = null,
         public readonly int $healthCheckCount = 0,

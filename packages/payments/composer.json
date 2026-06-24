@@ -49,5 +49,9 @@
         "payments",
         "stripe",
         "paypal"
-    ]
+    ],
+    "support": {
+        "source": "https://github.com/capell-app/capell-packages",
+        "docs": "https://docs.capell.app/packages/payments"
+    }
 }

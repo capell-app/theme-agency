@@ -1,55 +1,94 @@
 # AI Creator
 
-AI Creator is a **Draft** first-party Capell package in the **Capell Commercial** product group. It ships as `capell-app/ai-creator` and adds reviewed AI-assisted creation sessions for normal Capell content work.
+<!-- prettier-ignore-start -->
 
-## At a glance
+## What This Plugin Adds
 
+AI Creator is an **Available**, **Schema-owning** Capell package in the **Capell Commercial** product group. It ships as `capell-app/ai-creator` and extends these surfaces: admin.
+
+Reviewed AI-assisted creation sessions for Capell content, pages, layouts, and extension recommendations.
+
+After install, the package contributes admin-facing extension points. Docs gap: no concrete Filament resource or page was detected.
+
+Status details:
+
+- Status: Available
+- Tier: premium
+- Bundle: commercial
 - Composer package: `capell-app/ai-creator`
 - Namespace: `Capell\AiCreator`
-- Runtime surfaces: admin, Agent Bridge
-- Service provider: `Capell\AiCreator\Providers\AiCreatorServiceProvider`
-- Required packages: `capell-app/admin`, `capell-app/agent-bridge`, `capell-app/ai-orchestrator`, `capell-app/core`
+- Theme key: not applicable
 
-## What it adds
+## Why It Matters
 
-AI Creator starts from an existing Capell site or workspace and creates a reviewed session for content, pages, layouts, reusable sections, structured records, navigation suggestions, SEO drafts, and optional site/theme setup. The first implementation slice persists creator sessions, computes deterministic extension recommendations, exposes Agent Bridge capabilities, and keeps apply behavior behind confirmation.
+**For developers:** The package gives developers package-owned service providers, Actions, Data objects, and models instead of pushing this behaviour into core or application code.
 
-AI output is planning input only. Deterministic Actions own persistence and apply state, and no raw AI-generated PHP or Blade is executed directly.
+**For teams:** AI Creator helps editors create Capell content, pages, and plans while recommending the extensions that make each result stronger.
 
-## Works better with
+## Screens And Workflow
 
-AI Creator recommends extensions during planning and preview:
+Screenshot contract: `docs/screenshots.json`.
 
-- `capell-app/layout-builder` for complex page composition, reusable layouts, widgets, and scoped widget assets.
-- `capell-app/content-sections` for reusable service blocks, testimonials, FAQs, feature rows, and landing sections.
-- `capell-app/structured-content-library` for services, locations, team members, case studies, resources, and other reusable business records.
-- `capell-app/media-library` and `capell-app/media-ai` for managed assets, alt text, metadata, and media cleanup.
-- `capell-app/seo-suite`, `capell-app/insights`, `capell-app/ga4-reports`, and `capell-app/site-monitor` for search readiness and post-launch visibility.
-- `capell-app/publishing-studio` for approvals, scheduling, release workspaces, and controlled publishing.
-- `capell-app/navigation`, `capell-app/search`, `capell-app/blog`, `capell-app/form-builder`, `capell-app/newsletter`, `capell-app/events`, and `capell-app/campaign-studio` when the requested content needs those workflows.
+- AI Creator session preview (admin, required).
+- AI Creator Agent Bridge confirmation (admin, required).
 
-AI Creator does not silently install optional packages. Recommendations are marked required, recommended, or optional so admins can decide what to install before applying a plan.
+## Technical Shape
 
-## Code map
+- Service providers: `Capell\AiCreator\Providers\AiCreatorServiceProvider`.
+- Migrations: `packages/ai-creator/database/migrations/2026_06_22_000001_create_capell_ai_creator_sessions_table.php`.
+- Models: `AiCreatorSession`.
+- Actions: `ApplyAiCreatorSessionAction`, `BuildAiCreatorSessionPreviewAction`, `PreviewAiCreatorSessionAction`, `RecommendAiCreatorPackagesAction`, `StartAiCreatorSessionAction`.
+- Data objects: `AiCreatorPackageRecommendationData`, `AiCreatorPreviewData`, `AiCreatorStartSessionData`.
+- Manifest contributions: `admin-page: Capell\AiCreator\Manifest\AiCreatorAdminPageContribution`, `agent-capability: Capell\AiCreator\Manifest\AiCreatorAgentBridgeCapabilitiesContribution`, `health-check: Capell\AiCreator\Health\AiCreatorHealthCheck`, `model: Capell\AiCreator\Manifest\AiCreatorModelsContribution`.
+- Health checks: `Capell\AiCreator\Health\AiCreatorHealthCheck`.
 
-- `src/Actions`: deterministic session and recommendation operations.
-- `src/AgentBridge`: Agent Bridge capability provider and capability actions.
-- `src/Data`: structured input/output payloads.
-- `src/Enums`: session and recommendation states.
-- `src/Models`: package-owned persisted creator sessions.
-- `database/migrations`: `capell_ai_creator_sessions`.
-- `resources/lang/en`: user-facing strings.
-- `tests`: package-local Pest coverage.
-- `docs/assets/marketplace`: marketplace card, hero, thumbnail, and tile images.
-- `docs/screenshots.json`: documentation screenshot contract for the session and Agent Bridge confirmation flows.
+## Data Model
 
-## Safety
+- Required tables: `capell_ai_creator_sessions`.
+- Models: `AiCreatorSession`.
+- Migration files: `2026_06_22_000001_create_capell_ai_creator_sessions_table.php`.
+- Migration impact: run host migrations through the package install flow before opening package surfaces.
+- Deletion/retention behaviour: Docs gap unless the package has an explicit pruning command, retention setting, or tested cascade path.
 
-Public output must not expose authoring metadata, model IDs, signed URLs, field paths, selectors, package internals, or editor controls. The package stores plans and recommendations in admin-owned session state; public rendering remains owned by the target packages and deterministic Capell Actions.
+## Install Impact
 
-## Verification
+- Admin navigation: contributes admin extension points through `capell.json`.
+- Permissions: none declared in `capell.json`.
+- Public routes: none detected in package route files.
+- Database changes: package migrations are declared.
+- Settings: no package settings declared.
+- Queues or schedules: none detected in standard package paths.
+- Cache tags: none declared.
+- Commands: none declared.
 
-```bash
-vendor/bin/pest packages/ai-creator/tests --configuration=phpunit.xml
-COMPOSER=composer.local.json composer preflight
-```
+## Common Pitfalls
+
+- Run migrations before opening package resources or public routes.
+- Keep `composer.json`, `composer.local.json`, `capell.json`, docs, screenshots, and tests aligned when the package surface changes.
+
+## Troubleshooting
+
+| Symptom | Likely cause | Check | Fix |
+| --- | --- | --- | --- |
+| Package surface is missing after install | Provider or manifest is not loaded | Confirm `capell.json`, package `composer.json`, and provider registration | Reinstall the package, refresh Composer autoload, and clear host caches |
+| Admin screen or command fails on missing table | Package migrations have not run | Check the tables listed in `Data Model` | Run host migrations and rerun the focused package test |
+
+## Quick Start
+
+1. Install the package: `composer require capell-app/ai-creator`.
+2. Run the required setup: `php artisan migrate`.
+3. Verify the package provider is registered and the related frontend, command, or extension point is active.
+
+## Next Steps
+
+- [Package docs](docs/README.md)
+- [Overview](docs/overview.md)
+- [Screenshot contract](docs/screenshots.json)
+- [Marketplace assets](docs/assets/marketplace/)
+- [Capell content language plan](../../docs/CONTENT_LANGUAGE_PLAN.md)
+- [Capell documentation design system](../../docs/DESIGN_SYSTEM.md)
+- [Capell and package ERD notes](../../docs/erd/capell-and-package-erds.md)
+- Related packages: [Agent Bridge](../agent-bridge/README.md), [Ai Orchestrator](../ai-orchestrator/README.md), [Block Library](../block-library/README.md), [Blog](../blog/README.md), [Campaign Studio](../campaign-studio/README.md), [Content Sections](../content-sections/README.md), [Events](../events/README.md), [Form Builder](../form-builder/README.md), [Foundation Theme](../foundation-theme/README.md), [Frontend Authoring](../frontend-authoring/README.md), [Frontend Optimizer](../frontend-optimizer/README.md), [Ga4 Reports](../ga4-reports/README.md), [Html Cache](../html-cache/README.md), [Insights](../insights/README.md), [Layout Builder](../layout-builder/README.md), [Media Ai](../media-ai/README.md), [Media Library](../media-library/README.md), [Navigation](../navigation/README.md), [Newsletter](../newsletter/README.md), [Publishing Studio](../publishing-studio/README.md), [Search](../search/README.md), [Seo Suite](../seo-suite/README.md), [Site Monitor](../site-monitor/README.md), [Structured Content Library](../structured-content-library/README.md).
+- Focused tests: `vendor/bin/pest packages/ai-creator/tests --configuration=phpunit.xml`.
+
+<!-- prettier-ignore-end -->

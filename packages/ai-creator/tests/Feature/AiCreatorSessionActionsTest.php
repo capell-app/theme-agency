@@ -10,7 +10,7 @@ use Capell\AiCreator\Enums\AiCreatorSessionStatus;
 use Capell\AiCreator\Models\AiCreatorSession;
 
 it('starts a creator session with deterministic package recommendations', function (): void {
-    $session = StartAiCreatorSessionAction::run(new AiCreatorStartSessionData(
+    $session = StartAiCreatorSessionAction::make()->handle(new AiCreatorStartSessionData(
         intent: 'Create a resource library landing page with search, articles, media, and SEO metadata.',
         siteId: 10,
         workspaceId: 20,
@@ -33,18 +33,18 @@ it('starts a creator session with deterministic package recommendations', functi
 });
 
 it('previews then applies a creator session without applying generated code', function (): void {
-    $session = StartAiCreatorSessionAction::run(new AiCreatorStartSessionData(
+    $session = StartAiCreatorSessionAction::make()->handle(new AiCreatorStartSessionData(
         intent: 'Create a campaign landing page with analytics reporting.',
     ));
 
-    $preview = PreviewAiCreatorSessionAction::run($session);
+    $preview = PreviewAiCreatorSessionAction::make()->handle($session);
     $session->refresh();
 
-    expect($preview->sessionId)->toBe((int) $session->getKey())
+    expect($preview->sessionId)->toBe($session->id)
         ->and($session->status)->toBe(AiCreatorSessionStatus::Previewed)
         ->and($session->preview_output)->toHaveKey('recommendations');
 
-    $appliedSession = ApplyAiCreatorSessionAction::run($session);
+    $appliedSession = ApplyAiCreatorSessionAction::make()->handle($session);
 
     expect($appliedSession->status)->toBe(AiCreatorSessionStatus::Applied)
         ->and($appliedSession->applied_at)->not->toBeNull();

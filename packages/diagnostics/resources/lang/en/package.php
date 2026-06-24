@@ -117,6 +117,7 @@ return [
     'packages_installed_config_published' => 'Config published',
     'packages_installed_docs' => 'Docs',
     'packages_installed_empty_prefix' => 'No Capell packages detected in',
+    'packages_installed_guide' => 'Admin guide',
     'packages_installed_health' => 'Health',
     'packages_installed_health_implemented' => ':implemented/:declared implemented',
     'packages_installed_health_stub_broken' => ':stub stub, :broken broken',

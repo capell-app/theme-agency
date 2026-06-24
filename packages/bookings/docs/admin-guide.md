@@ -18,6 +18,8 @@ This guide is for the team who handle appointments and owners deciding how much 
 3. Click to confirm it. Its status becomes **Confirmed** and the customer is notified.
 4. If you can't take it, **decline** it instead.
 
+![Check incoming appointment requests and manage confirmation or cancellation safely.](screenshots/appointment-requests-admin.png)
+
 ### How to complete or mark a no-show
 
 1. After the appointment, open the request.
@@ -44,15 +46,15 @@ This gives the core outcome: customers request appointments through the site, an
 
 ### Add when needed
 
-| Need | Add |
-| --- | --- |
-| Customers need history or lesson feedback | Portal lesson links and review requests |
-| Customers need to approve changes | Change proposals |
-| Missed messages are a problem | Consent-aware reminders and message logs |
-| Capacity fills up | Waitlist entries and expiring offers |
-| Travel affects the day | Travel planning and the day planner |
-| Clinics or group sessions matter | Group sessions and attendance import |
-| Payment must gate confirmation | Provisional holds and payment fulfilment |
+| Need                                      | Add                                      |
+| ----------------------------------------- | ---------------------------------------- |
+| Customers need history or lesson feedback | Portal lesson links and review requests  |
+| Customers need to approve changes         | Change proposals                         |
+| Missed messages are a problem             | Consent-aware reminders and message logs |
+| Capacity fills up                         | Waitlist entries and expiring offers     |
+| Travel affects the day                    | Travel planning and the day planner      |
+| Clinics or group sessions matter          | Group sessions and attendance import     |
+| Payment must gate confirmation            | Provisional holds and payment fulfilment |
 
 ### Don't enable yet
 
@@ -61,16 +63,16 @@ This gives the core outcome: customers request appointments through the site, an
 
 ### Who does what
 
-| Role | First useful screen |
-| --- | --- |
-| Front desk / operator | **Appointment requests**: confirm, decline, complete |
-| Site owner | Services, staff, and availability; then the add-ons above |
+| Role                  | First useful screen                                       |
+| --------------------- | --------------------------------------------------------- |
+| Front desk / operator | **Appointment requests**: confirm, decline, complete      |
+| Site owner            | Services, staff, and availability; then the add-ons above |
 
 ## Troubleshooting for editors
 
-| What you see | What it means | What to do |
-| --- | --- | --- |
-| A request shows as Provisional | It hasn't been confirmed yet | Open it in **Appointment requests** and confirm it |
-| A provisional hold expired | It wasn't confirmed in time | Ask the customer to request again, or confirm quickly next time |
-| The customer didn't get a confirmation | Messaging isn't set up, or consent was skipped | Check message logs and that reminders are configured |
-| No slots are available to book | Availability windows aren't set | Add **availability** for the staff and service |
+| What you see                           | What it means                                  | What to do                                                      |
+| -------------------------------------- | ---------------------------------------------- | --------------------------------------------------------------- |
+| A request shows as Provisional         | It hasn't been confirmed yet                   | Open it in **Appointment requests** and confirm it              |
+| A provisional hold expired             | It wasn't confirmed in time                    | Ask the customer to request again, or confirm quickly next time |
+| The customer didn't get a confirmation | Messaging isn't set up, or consent was skipped | Check message logs and that reminders are configured            |
+| No slots are available to book         | Availability windows aren't set                | Add **availability** for the staff and service                  |

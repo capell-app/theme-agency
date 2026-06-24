@@ -212,16 +212,16 @@
         "riskTier": "standard",
         "publicSurface": {
             "routeNames": [
-                "coach.timetable",
-                "discovery",
-                "host-request.store"
+                "capell-equestrian-clinics.coach.timetable",
+                "capell-equestrian-clinics.discovery",
+                "capell-equestrian-clinics.host-request.store"
             ],
             "auth": "public",
             "csrfExemptRoutes": [],
-            "signedRoutes": ["coach.timetable"],
+            "signedRoutes": ["capell-equestrian-clinics.coach.timetable"],
             "tokenizedRoutes": [],
             "webhookRoutes": [],
-            "throttledRoutes": ["host-request.store"]
+            "throttledRoutes": ["capell-equestrian-clinics.host-request.store"]
         },
         "sensitiveData": {
             "encryptedFields": [],

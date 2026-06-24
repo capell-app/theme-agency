@@ -15,12 +15,12 @@ use Capell\AiCreator\Tests\Fixtures\SiteScopedAgentBridgeUser;
 use Illuminate\Validation\ValidationException;
 
 it('keeps agent bridge preview calls non mutating', function (): void {
-    $session = StartAiCreatorSessionAction::run(new AiCreatorStartSessionData(
+    $session = StartAiCreatorSessionAction::make()->handle(new AiCreatorStartSessionData(
         intent: 'Create a landing page with analytics reporting.',
         userId: 11,
     ));
     $user = new SiteScopedAgentBridgeUser(identifier: 11, assignedSiteIds: []);
-    $payload = ['session_id' => (int) $session->getKey()];
+    $payload = ['session_id' => $session->id];
 
     $previewCapability = ai_creator_capability('capell.ai-creator.sessions.preview_apply');
     $applyCapability = ai_creator_capability('capell.ai-creator.sessions.apply');
@@ -45,7 +45,7 @@ it('keeps agent bridge preview calls non mutating', function (): void {
 });
 
 it('rejects agent bridge session access for non owners', function (): void {
-    $session = StartAiCreatorSessionAction::run(new AiCreatorStartSessionData(
+    $session = StartAiCreatorSessionAction::make()->handle(new AiCreatorStartSessionData(
         intent: 'Create content.',
         userId: 11,
     ));
@@ -54,13 +54,13 @@ it('rejects agent bridge session access for non owners', function (): void {
 
     (new PreviewAiCreatorSessionCapabilityAction)->preview(new CapabilityInvocationData(
         capability: $capability,
-        payload: ['session_id' => (int) $session->getKey()],
+        payload: ['session_id' => $session->id],
         user: $otherUser,
     ));
 })->throws(ValidationException::class);
 
 it('authorizes site scoped sessions against assigned sites', function (): void {
-    $session = StartAiCreatorSessionAction::run(new AiCreatorStartSessionData(
+    $session = StartAiCreatorSessionAction::make()->handle(new AiCreatorStartSessionData(
         intent: 'Create site content.',
         siteId: 10,
         userId: 11,
@@ -72,7 +72,7 @@ it('authorizes site scoped sessions against assigned sites', function (): void {
 
     $result = (new PreviewAiCreatorSessionCapabilityAction)->preview(new CapabilityInvocationData(
         capability: $capability,
-        payload: ['session_id' => (int) $session->getKey()],
+        payload: ['session_id' => $session->id],
         user: $allowedUser,
     ));
 
@@ -80,7 +80,7 @@ it('authorizes site scoped sessions against assigned sites', function (): void {
 
     (new PreviewAiCreatorSessionCapabilityAction)->preview(new CapabilityInvocationData(
         capability: $capability,
-        payload: ['session_id' => (int) $session->getKey()],
+        payload: ['session_id' => $session->id],
         user: $forbiddenUser,
     ));
 })->throws(ValidationException::class);

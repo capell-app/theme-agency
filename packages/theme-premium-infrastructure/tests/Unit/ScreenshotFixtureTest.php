@@ -52,7 +52,7 @@ it('declares route backed screenshot coverage for every premium infrastructure h
     throw_unless(is_array($entries), RuntimeException::class, 'Premium Infrastructure screenshot entries must be an array.');
 
     $heroEntries = collect($entries)
-        ->filter(static fn (mixed $entry): bool => is_array($entry) && str_starts_with((string) ($entry['id'] ?? ''), 'premium-infrastructure-hero-'))
+        ->filter(static fn (mixed $entry): bool => is_array($entry) && is_string($entryId = $entry['id'] ?? null) && str_starts_with($entryId, 'premium-infrastructure-hero-'))
         ->values();
 
     expect($heroEntries)->toHaveCount(6)

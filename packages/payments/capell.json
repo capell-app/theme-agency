@@ -193,9 +193,12 @@
                 "capell-payments.portal.billing",
                 "capell-payments.stripe-webhook"
             ],
-            "auth": "public",
+            "auth": "mixed",
             "csrfExemptRoutes": ["capell-payments.stripe-webhook"],
-            "signedRoutes": ["capell-payments.paid-downloads.show"],
+            "signedRoutes": [
+                "capell-payments.form-builder.checkout",
+                "capell-payments.paid-downloads.show"
+            ],
             "tokenizedRoutes": [],
             "webhookRoutes": ["capell-payments.stripe-webhook"],
             "throttledRoutes": ["capell-payments.stripe-webhook"]

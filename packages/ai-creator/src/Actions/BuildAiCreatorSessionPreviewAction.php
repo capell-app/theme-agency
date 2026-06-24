@@ -14,14 +14,26 @@ final class BuildAiCreatorSessionPreviewAction
 
     public function handle(AiCreatorSession $session): AiCreatorPreviewData
     {
-        $recommendations = $session->package_recommendations;
-        $requirements = $session->package_requirements;
+        $recommendations = array_values(array_map(
+            static fn (array $recommendation): array => [
+                'package' => (string) ($recommendation['package'] ?? ''),
+                'level' => (string) ($recommendation['level'] ?? ''),
+                'reason' => (string) ($recommendation['reason'] ?? ''),
+                'consequence' => (string) ($recommendation['consequence'] ?? ''),
+            ],
+            array_filter($session->package_recommendations ?? [], 'is_array'),
+        ));
+
+        $requiredPackages = array_values(array_map(
+            static fn (mixed $package): string => (string) $package,
+            array_filter($session->package_requirements ?? [], 'is_scalar'),
+        ));
 
         return new AiCreatorPreviewData(
-            sessionId: (int) $session->getKey(),
+            sessionId: $session->id,
             intent: $session->intent,
-            recommendations: is_array($recommendations) ? $recommendations : [],
-            requiredPackages: is_array($requirements) ? $requirements : [],
+            recommendations: $recommendations,
+            requiredPackages: $requiredPackages,
         );
     }
 }

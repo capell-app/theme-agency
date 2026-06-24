@@ -33,11 +33,13 @@ final class StartAiCreatorSessionCapabilityAction implements CapellAgentBridgeCa
         $payload = $this->validatedPayload($invocation->payload);
         AiCreatorSessionAccess::authorizeStart($invocation->user, $payload['site_id'] ?? null);
 
-        $session = StartAiCreatorSessionAction::run(new AiCreatorStartSessionData(
+        $userIdentifier = $invocation->user?->getAuthIdentifier();
+
+        $session = StartAiCreatorSessionAction::make()->handle(new AiCreatorStartSessionData(
             intent: $payload['intent'],
             siteId: $payload['site_id'] ?? null,
             workspaceId: $payload['workspace_id'] ?? null,
-            userId: $invocation->user !== null ? (int) $invocation->user->getAuthIdentifier() : null,
+            userId: is_numeric($userIdentifier) ? (int) $userIdentifier : null,
             answers: $payload['answers'] ?? [],
         ));
 
@@ -45,7 +47,7 @@ final class StartAiCreatorSessionCapabilityAction implements CapellAgentBridgeCa
             ok: true,
             message: __('capell-ai-creator::package.capability_start_executed'),
             data: [
-                'sessionId' => (int) $session->getKey(),
+                'sessionId' => $session->id,
                 'recommendations' => $session->package_recommendations ?? [],
                 'requiredPackages' => $session->package_requirements ?? [],
             ],

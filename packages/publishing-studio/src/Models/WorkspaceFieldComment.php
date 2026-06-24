@@ -45,6 +45,7 @@ class WorkspaceFieldComment extends Model
         'author_id',
         'body',
         'resolved_at',
+        'created_at',
     ];
 
     /**

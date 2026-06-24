@@ -1,8 +1,5 @@
 # Package extension platform
 
-> Migrating existing packages onto this platform? See the hand-off control
-> document: [`package-extension-platform-migration-plan.md`](package-extension-platform-migration-plan.md).
-
 Capell packages contribute behaviour through three canonical registrars. Reach
 for these instead of facades, raw container tags, or `afterResolving` hooks.
 The manifest (`capell.json`) remains the declarative source of truth; the

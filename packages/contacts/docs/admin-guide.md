@@ -10,6 +10,8 @@ This guide is for staff who manage contacts and owners deciding how to segment t
 2. Add a new contact and fill in their details.
 3. Save. The contact appears in your list.
 
+![Review customer records captured from first-party Capell packages.](screenshots/contacts-contact-index.png)
+
 ### How to import contacts from a spreadsheet
 
 1. In **Contacts**, open the import tool.
@@ -33,6 +35,14 @@ This guide is for staff who manage contacts and owners deciding how to segment t
 1. Filter to the contacts you want.
 2. Export the list to a spreadsheet.
 
+### How to review contact activity
+
+1. Go to **Activities**.
+2. Review the timeline of activity recorded for your contacts, such as form submissions and event registrations.
+3. Use it to see how each contact has engaged over time.
+
+![Review the activity timeline created from connected packages.](screenshots/contacts-activity-index.png)
+
 ## Rolling out Contacts (for owners)
 
 ### Turn on first
@@ -41,10 +51,10 @@ This guide is for staff who manage contacts and owners deciding how to segment t
 
 ### Add when needed
 
-| Need | Enable |
-| --- | --- |
-| Target groups of people | More **tags** for segmentation |
-| Bring in an existing list | Import from a spreadsheet |
+| Need                      | Enable                         |
+| ------------------------- | ------------------------------ |
+| Target groups of people   | More **tags** for segmentation |
+| Bring in an existing list | Import from a spreadsheet      |
 
 ### Don't enable yet
 
@@ -52,15 +62,15 @@ This guide is for staff who manage contacts and owners deciding how to segment t
 
 ### Who does what
 
-| Role | First useful screen |
-| --- | --- |
-| Staff | **Contacts**: add, tag, and import |
+| Role       | First useful screen                  |
+| ---------- | ------------------------------------ |
+| Staff      | **Contacts**: add, tag, and import   |
 | Site owner | **Tags**: keep the segmentation tidy |
 
 ## Troubleshooting for editors
 
-| What you see | What it means | What to do |
-| --- | --- | --- |
-| I have duplicate contacts | The same person was added or imported twice | Merge the duplicates into one record |
-| An import put data in the wrong field | The columns weren't matched correctly | Re-import with the columns mapped to the right fields |
-| I can't find a segment | The contacts aren't tagged | Add **tags** so you can filter them |
+| What you see                          | What it means                               | What to do                                            |
+| ------------------------------------- | ------------------------------------------- | ----------------------------------------------------- |
+| I have duplicate contacts             | The same person was added or imported twice | Merge the duplicates into one record                  |
+| An import put data in the wrong field | The columns weren't matched correctly       | Re-import with the columns mapped to the right fields |
+| I can't find a segment                | The contacts aren't tagged                  | Add **tags** so you can filter them                   |

@@ -108,20 +108,20 @@
         "riskTier": "sensitive",
         "publicSurface": {
             "routeNames": [
-                "dashboard",
-                "preferences.update",
-                "support.replies.store",
-                "support.store"
+                "capell-customer-portal.dashboard",
+                "capell-customer-portal.preferences.update",
+                "capell-customer-portal.support.replies.store",
+                "capell-customer-portal.support.store"
             ],
-            "auth": "public",
+            "auth": "authenticated",
             "csrfExemptRoutes": [],
             "signedRoutes": [],
             "tokenizedRoutes": [],
             "webhookRoutes": [],
             "throttledRoutes": [
-                "preferences.update",
-                "support.replies.store",
-                "support.store"
+                "capell-customer-portal.preferences.update",
+                "capell-customer-portal.support.replies.store",
+                "capell-customer-portal.support.store"
             ]
         },
         "sensitiveData": {

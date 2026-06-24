@@ -47,14 +47,16 @@
             "targetType": "admin-resource",
             "target": "EmailTemplateResource",
             "scenario": "admin-index",
-            "url": "/email-studio/templates",
+            "url": "/admin/email-studio/templates",
             "waitFor": "table",
             "required": false,
             "notes": "Capture after registering static templates from Email Studio and Comments so package, status, and variable columns are populated.",
             "useCase": "An admin reviews package-provided templates and starts customization from a static default.",
             "covers": [
                 "packages/email-studio/src/Filament/Resources/EmailTemplates/EmailTemplateResource.php"
-            ]
+            ],
+            "screenshotPath": "packages/email-studio/docs/screenshots/email-templates-index.png",
+            "darkScreenshotPath": "packages/email-studio/docs/screenshots/email-templates-index-dark.png"
         },
         {
             "id": "email-template-themes",
@@ -64,14 +66,16 @@
             "targetType": "admin-resource",
             "target": "EmailTemplateThemeResource",
             "scenario": "admin-index",
-            "url": "/email-studio/template-themes",
+            "url": "/admin/email-studio/template-themes",
             "waitFor": "table",
             "required": false,
             "notes": "Capture after seeding the default theme and at least one site-scoped branded theme.",
             "useCase": "An admin edits the branding tokens used by themed transactional email templates.",
             "covers": [
                 "packages/email-studio/src/Filament/Resources/EmailTemplateThemes/EmailTemplateThemeResource.php"
-            ]
+            ],
+            "screenshotPath": "packages/email-studio/docs/screenshots/email-template-themes.png",
+            "darkScreenshotPath": "packages/email-studio/docs/screenshots/email-template-themes-dark.png"
         }
     ]
 }

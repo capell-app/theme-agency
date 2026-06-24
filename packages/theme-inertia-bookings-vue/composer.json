@@ -39,5 +39,9 @@
         "inertia",
         "bookings",
         "vue"
-    ]
+    ],
+    "support": {
+        "source": "https://github.com/capell-app/capell-packages",
+        "docs": "https://docs.capell.app/packages/theme-inertia-bookings-vue"
+    }
 }

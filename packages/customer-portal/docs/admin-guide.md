@@ -29,10 +29,10 @@ This guide is for staff who manage the portal and owners deciding what to expose
 
 ### Add when needed
 
-| Need | Enable |
-| --- | --- |
+| Need                             | Enable                                             |
+| -------------------------------- | -------------------------------------------------- |
 | Let customers manage preferences | Preference cards (for example **Product updates**) |
-| Reduce inbound support | More **self-service links** |
+| Reduce inbound support           | More **self-service links**                        |
 
 ### Don't enable yet
 
@@ -40,15 +40,15 @@ This guide is for staff who manage the portal and owners deciding what to expose
 
 ### Who does what
 
-| Role | First useful screen |
-| --- | --- |
-| Support staff | **Support requests** |
-| Site owner | **Self-service** links: decide what is exposed |
+| Role          | First useful screen                            |
+| ------------- | ---------------------------------------------- |
+| Support staff | **Support requests**                           |
+| Site owner    | **Self-service** links: decide what is exposed |
 
 ## Troubleshooting for editors
 
-| What you see | What it means | What to do |
-| --- | --- | --- |
-| The portal looks empty | No cards or links are enabled | Enable **self-service links** and cards |
+| What you see                    | What it means                         | What to do                                        |
+| ------------------------------- | ------------------------------------- | ------------------------------------------------- |
+| The portal looks empty          | No cards or links are enabled         | Enable **self-service links** and cards           |
 | A customer can't see the portal | They aren't signed in, or lack access | Confirm they are signed in with the right account |
-| A support request has no reply | It hasn't been actioned | Open **Support requests** and follow up |
+| A support request has no reply  | It hasn't been actioned               | Open **Support requests** and follow up           |
