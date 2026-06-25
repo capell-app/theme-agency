@@ -57,7 +57,7 @@ final class AiMetricsFilamentWidget extends Widget implements CapellFilamentWidg
         $currency = $this->stringValue(AIGenerationHistory::query()
             ->whereNotNull('cost_currency')
             ->latest('id')
-            ->value('cost_currency'), $this->stringValue(config('capell-seo-suite.ai_costs.currency', 'USD'), 'USD'));
+            ->value('cost_currency'), $this->stringValue(config('capell-ai-orchestrator.ai_costs.currency', 'USD'), 'USD'));
         $failedGenerations = AIGenerationHistory::query()
             ->whereNotNull('error_message')
             ->count();

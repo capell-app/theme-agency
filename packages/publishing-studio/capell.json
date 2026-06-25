@@ -344,6 +344,61 @@
                 "path": "docs/screenshots/reviewer-responsibility.png",
                 "alt": "Reviewer approving, rejecting, or requesting changes before publish",
                 "caption": "Review and approval before publish"
+            },
+            {
+                "path": "docs/screenshots/editorial-timeline-dashboard.png",
+                "alt": "Editorial timeline showing active drafts, review status, publish readiness, and recent workflow activity",
+                "caption": "Editorial timeline dashboard with active drafts, review status, and publish readiness"
+            },
+            {
+                "path": "docs/screenshots/live-preview.png",
+                "alt": "Signed preview URL rendering draft content before it reaches the live page",
+                "caption": "Signed preview URL rendering draft content before publish"
+            },
+            {
+                "path": "docs/screenshots/preview-link-management.png",
+                "alt": "Issued preview links showing expiry, revocation, last accessed time, and access count",
+                "caption": "Preview link management with expiry, revocation, and access tracking"
+            },
+            {
+                "path": "docs/screenshots/compare-readiness.png",
+                "alt": "Side-by-side field changes, comments, and publish checks before approval or release",
+                "caption": "Compare changes and publish-readiness checks before release"
+            },
+            {
+                "path": "docs/screenshots/approval-history.png",
+                "alt": "Reviewer assignments and approve, reject, or request-changes decisions in timeline order",
+                "caption": "Approval history of reviewer assignments and decisions"
+            },
+            {
+                "path": "docs/screenshots/scheduled-publishing.png",
+                "alt": "Scheduled release timing, embargo-aware publishing windows, and queue state",
+                "caption": "Scheduled publishing with embargo-aware release windows"
+            },
+            {
+                "path": "docs/screenshots/scheduler-metadata.png",
+                "alt": "Unpublish dates, embargo windows, and review reminders attached to a workspace",
+                "caption": "Scheduler metadata for unpublish dates and review reminders"
+            },
+            {
+                "path": "docs/screenshots/stale-drafts.png",
+                "alt": "Stale workspace detection, review nudges, and cleanup actions for unfinished drafts",
+                "caption": "Stale draft detection with review nudges and cleanup actions"
+            },
+            {
+                "path": "docs/screenshots/activity-history.png",
+                "alt": "Audit-friendly content history across previews, comments, approvals, publishing, and rollback events",
+                "caption": "Activity history across previews, comments, approvals, and rollbacks"
+            },
+            {
+                "path": "docs/screenshots/rollback-restore.png",
+                "alt": "Version history with restore context, rollback lineage, and the currently live version",
+                "caption": "Rollback and restore from version history"
+            },
+            {
+                "path": "docs/screenshots/preview-banner.png",
+                "alt": "Frontend workspace banner confirming draft preview mode with an exit path",
+                "caption": "Frontend preview banner confirming draft mode"
             }
         ],
         "categories": ["admin", "console", "publishing-pro"]

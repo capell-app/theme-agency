@@ -24,8 +24,8 @@ class GenerateAiImageAction
     public function handle(AiImageData $data): string
     {
         $startedAt = microtime(true);
-        $providerName = $data->provider ?? config('capell-seo-suite.prism.image_provider', 'openai');
-        $model = $data->model ?? config('capell-seo-suite.prism.image_model', 'dall-e-3');
+        $providerName = $data->provider ?? config('capell-ai-orchestrator.prism.image_provider', 'openai');
+        $model = $data->model ?? config('capell-ai-orchestrator.prism.image_model', 'dall-e-3');
 
         try {
             $this->rateLimiter->checkLimit('global', 'image_generation');

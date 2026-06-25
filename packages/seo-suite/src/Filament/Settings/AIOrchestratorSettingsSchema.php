@@ -28,7 +28,7 @@ class AIOrchestratorSettingsSchema implements HasSchema
                     TextInput::make('rate_limiting_requests_per_minute')
                         ->label(__('capell-seo-suite::form.rate_limiting'))
                         ->helperText(__('capell-seo-suite::generic.rate_limiting_info'))
-                        ->placeholder((string) config('capell-seo-suite.rate_limiting.requests_per_minute')),
+                        ->placeholder((string) config('capell-ai-orchestrator.rate_limiting.requests_per_minute')),
                     Grid::make(2)
                         ->columnSpanFull()
                         ->schema([

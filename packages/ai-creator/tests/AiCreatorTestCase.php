@@ -9,10 +9,14 @@ use Capell\AgentBridge\Providers\AgentBridgeServiceProvider;
 use Capell\AiCreator\Providers\AiCreatorServiceProvider;
 use Capell\AIOrchestrator\Providers\AIOrchestratorServiceProvider;
 use Capell\Core\Facades\CapellCore;
+use Capell\FoundationTheme\Providers\FoundationThemeServiceProvider;
+use Capell\Frontend\Providers\FrontendServiceProvider;
+use Capell\LayoutBuilder\LayoutBuilderServiceProvider;
 use Capell\Tests\AbstractTestCase;
 use Illuminate\Foundation\Application;
 use Livewire\LivewireServiceProvider;
 use Override;
+use Spatie\EventSourcing\EventSourcingServiceProvider;
 
 class AiCreatorTestCase extends AbstractTestCase
 {
@@ -30,10 +34,14 @@ class AiCreatorTestCase extends AbstractTestCase
     {
         return [
             ...parent::getPackageProviders($app),
+            EventSourcingServiceProvider::class,
             AdminServiceProvider::class,
             AgentBridgeServiceProvider::class,
             AIOrchestratorServiceProvider::class,
             AiCreatorServiceProvider::class,
+            LayoutBuilderServiceProvider::class,
+            FrontendServiceProvider::class,
+            FoundationThemeServiceProvider::class,
             LivewireServiceProvider::class,
         ];
     }
@@ -50,5 +58,8 @@ class AiCreatorTestCase extends AbstractTestCase
         CapellCore::forcePackageInstalled(AgentBridgeServiceProvider::$packageName);
         CapellCore::forcePackageInstalled(AIOrchestratorServiceProvider::$packageName);
         CapellCore::forcePackageInstalled(AiCreatorServiceProvider::$packageName);
+        CapellCore::forcePackageInstalled(LayoutBuilderServiceProvider::$packageName);
+        CapellCore::forcePackageInstalled(FrontendServiceProvider::$packageName);
+        CapellCore::forcePackageInstalled(FoundationThemeServiceProvider::$packageName);
     }
 }

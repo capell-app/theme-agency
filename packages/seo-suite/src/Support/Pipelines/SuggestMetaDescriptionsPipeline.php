@@ -93,12 +93,12 @@ class SuggestMetaDescriptionsPipeline
         ]);
 
         $params = [
-            'model' => (string) ($prompt['model'] ?? config('capell-seo-suite.prism.model')),
+            'model' => (string) ($prompt['model'] ?? config('capell-ai-orchestrator.prism.model')),
             'messages' => [
                 ['role' => 'system', 'content' => (string) ($prompt['system'] ?? '')],
                 ['role' => 'user', 'content' => $userMessage . "\nPlease provide 3 meta description options as a simple bullet list."],
             ],
-            'max_tokens' => config('capell-seo-suite.prism.max_tokens', 128),
+            'max_tokens' => config('capell-ai-orchestrator.prism.max_tokens', 128),
             'temperature' => 0.7,
         ];
 

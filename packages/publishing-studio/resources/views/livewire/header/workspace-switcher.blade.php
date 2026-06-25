@@ -26,7 +26,7 @@
                     style="background-color: {{ $triggerColor }}"
                 ></span>
             @else
-                @svg(Heroicon::OutlinedCheckCircle->getIconForSize(IconSize::Small), 'h-4 w-4 text-gray-400 dark:text-gray-500')
+                @svg(Heroicon::OutlinedGlobeAlt->getIconForSize(IconSize::Small), 'h-4 w-4 text-gray-400 dark:text-gray-500')
             @endif
 
             <span class="max-w-[10rem] truncate font-medium">
@@ -39,17 +39,28 @@
         {{ __('capell-admin::workspace.switcher.header') }}
     </x-filament::dropdown.header>
 
+    <p
+        class="-mt-1 px-4 pb-2 text-xs leading-snug text-gray-500 dark:text-gray-400"
+    >
+        {{ __('capell-admin::workspace.switcher.header_description') }}
+    </p>
+
     <x-filament::dropdown.list>
         <button
-            class="fi-dropdown-list-item fi-dropdown-list-item-color-gray flex w-full items-center gap-2 rounded-md p-2 text-sm whitespace-nowrap transition-colors duration-75 outline-none hover:bg-gray-50 focus:bg-gray-50 dark:hover:bg-white/5 dark:focus:bg-white/5"
+            class="fi-dropdown-list-item fi-dropdown-list-item-color-gray flex w-full items-start gap-2 rounded-md p-2 text-sm whitespace-nowrap transition-colors duration-75 outline-none hover:bg-gray-50 focus:bg-gray-50 dark:hover:bg-white/5 dark:focus:bg-white/5"
             type="button"
             wire:click="returnToLive"
             @disabled($current === null)
         >
-            @svg(Heroicon::OutlinedCheckCircle->getIconForSize(IconSize::Small), 'fi-dropdown-list-item-icon h-5 w-5 text-gray-400 dark:text-gray-500')
-            {{ __('capell-admin::workspace.switcher.live') }}
+            @svg(Heroicon::OutlinedGlobeAlt->getIconForSize(IconSize::Small), 'fi-dropdown-list-item-icon mt-0.5 h-5 w-5 flex-shrink-0 text-gray-400 dark:text-gray-500')
+            <span class="flex flex-1 flex-col">
+                <span>{{ __('capell-admin::workspace.switcher.live') }}</span>
+                <span class="text-xs text-gray-400 dark:text-gray-500">
+                    {{ __('capell-admin::workspace.switcher.live_description') }}
+                </span>
+            </span>
             @if ($current === null)
-                @svg(Heroicon::Check->getIconForSize(IconSize::Small), 'text-primary-500 ml-auto h-4 w-4')
+                @svg(Heroicon::Check->getIconForSize(IconSize::Small), 'text-primary-500 mt-0.5 ml-auto h-4 w-4 flex-shrink-0')
             @endif
         </button>
 

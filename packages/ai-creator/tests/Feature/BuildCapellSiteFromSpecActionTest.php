@@ -17,7 +17,6 @@ use Capell\Core\Models\PageUrl;
 use Capell\Core\Models\Site;
 use Capell\Core\Models\Theme;
 use Capell\FoundationTheme\Actions\InstallFoundationThemeLayoutDefaultsAction;
-use RuntimeException;
 
 beforeEach(function (): void {
     // Seed the install defaults the builder assumes (home/default layouts +

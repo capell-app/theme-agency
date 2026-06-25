@@ -32,4 +32,56 @@ final class AiCreatorCapabilitySchemas
             ],
         ];
     }
+
+    /**
+     * Input schema for the input-free discovery catalogue tools.
+     *
+     * @return array<string, mixed>
+     */
+    public static function noInput(): array
+    {
+        return [
+            'type' => 'object',
+            'properties' => [],
+            'additionalProperties' => false,
+        ];
+    }
+
+    /** @return array<string, mixed> */
+    public static function validateSiteSpecInput(): array
+    {
+        return [
+            'type' => 'object',
+            'required' => ['spec'],
+            'properties' => [
+                'spec' => CapellSiteSpecSchema::toArray(),
+            ],
+        ];
+    }
+
+    /** @return array<string, mixed> */
+    public static function buildPreviewInput(): array
+    {
+        return [
+            'type' => 'object',
+            'required' => ['session_id', 'spec'],
+            'properties' => [
+                'session_id' => ['type' => 'integer'],
+                'spec' => CapellSiteSpecSchema::toArray(),
+            ],
+        ];
+    }
+
+    /** @return array<string, mixed> */
+    public static function exportSiteInput(): array
+    {
+        return [
+            'type' => 'object',
+            'required' => ['spec'],
+            'properties' => [
+                'spec' => CapellSiteSpecSchema::toArray(),
+                'project_name' => ['type' => ['string', 'null']],
+            ],
+        ];
+    }
 }
