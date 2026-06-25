@@ -83,6 +83,7 @@ use RuntimeException;
 use Saade\FilamentAdjacencyList\FilamentAdjacencyListServiceProvider;
 use Sinnbeck\DomAssertions\DomAssertionsServiceProvider;
 use Spatie\Activitylog\ActivitylogServiceProvider;
+use Spatie\EventSourcing\EventSourcingServiceProvider;
 use Spatie\ImageOptimizer\Optimizers\Svgo;
 use Spatie\LaravelData\LaravelDataServiceProvider;
 use Spatie\LaravelSettings\LaravelSettingsServiceProvider;
@@ -289,6 +290,12 @@ abstract class AbstractTestCase extends TestCase
             IconPickerServiceProvider::class,
             DomAssertionsServiceProvider::class,
             SpatieLaravelSettingsPluginServiceProvider::class,
+            // Testbench disables Laravel package auto-discovery, so Spatie's
+            // event-sourcing provider (registered transitively via core's
+            // composer.json in a real app) must be listed explicitly here.
+            // Without it, CapellServiceProvider's projector/reactor wiring
+            // resolves an unbound EventSerializer and any model write throws.
+            EventSourcingServiceProvider::class,
             CapellServiceProvider::class,
             BlazeServiceProvider::class,
             MediaLibraryServiceProvider::class,
