@@ -58,7 +58,7 @@ final class EstimateAiGenerationCostAction
             return $metadataCurrency;
         }
 
-        $configuredCurrency = config('capell-seo-suite.ai_costs.currency', 'USD');
+        $configuredCurrency = config('capell-ai-orchestrator.ai_costs.currency', 'USD');
 
         return is_string($configuredCurrency) && preg_match('/^[A-Z]{3}$/', $configuredCurrency) === 1
             ? $configuredCurrency
@@ -82,7 +82,7 @@ final class EstimateAiGenerationCostAction
             return [];
         }
 
-        $prices = config('capell-seo-suite.ai_costs.models', []);
+        $prices = config('capell-ai-orchestrator.ai_costs.models', []);
 
         if (! is_array($prices)) {
             return [];

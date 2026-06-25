@@ -56,7 +56,7 @@ class AiImageGeneratorAction extends Action
                                 try {
                                     $data = new AiImageData(
                                         prompt: $state['prompt'],
-                                        size: config('capell-seo-suite.prism.image_size', '1024x1024'),
+                                        size: config('capell-ai-orchestrator.prism.image_size', '1024x1024'),
                                     );
 
                                     $url = resolve(GenerateAiImageAction::class)->handle($data);

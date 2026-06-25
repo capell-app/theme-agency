@@ -9,10 +9,12 @@ use Capell\Admin\Filament\Components\Forms\Page\BlueprintSelect;
 use Capell\Admin\Filament\Components\Forms\Page\LayoutSelect;
 use Capell\Admin\Filament\Components\Forms\SiteSelect;
 use Capell\Admin\Filament\Contracts\FormConfigurator;
+use Capell\Admin\Filament\Livewire\PublishStatusPanel;
 use Capell\Events\Enums\EventBookingModeEnum;
 use Capell\Events\Enums\EventLocationModeEnum;
 use Capell\Events\Enums\EventVisibilityEnum;
 use Capell\Events\Enums\ResourceEnum;
+use Capell\Events\Models\Event;
 use Capell\Events\Models\EventVenue;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Select;
@@ -20,6 +22,7 @@ use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
+use Filament\Schemas\Components\Livewire;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 
@@ -29,6 +32,7 @@ class EventForm implements FormConfigurator
     {
         return $schema
             ->components([
+                ...self::publishPanel($schema),
                 Section::make(__('capell-events::form.event_details'))
                     ->schema([
                         SiteSelect::make('site_id'),
@@ -107,5 +111,29 @@ class EventForm implements FormConfigurator
                     ->columns(),
             ])
             ->columns();
+    }
+
+    /**
+     * The shared WordPress-style publish panel, pinned to the top of the event
+     * editor. Edit only — on create there is no record to act on yet.
+     *
+     * @return array<int, Livewire>
+     */
+    protected static function publishPanel(Schema $schema): array
+    {
+        $record = $schema->getRecord();
+
+        if (! $record instanceof Event || $schema->getOperation() !== 'edit') {
+            return [];
+        }
+
+        $key = $record->getKey();
+
+        return [
+            Livewire::make(PublishStatusPanel::class, [
+                'recordClass' => Event::class,
+                'recordId' => is_scalar($key) ? (int) $key : 0,
+            ])->columnSpanFull(),
+        ];
     }
 }

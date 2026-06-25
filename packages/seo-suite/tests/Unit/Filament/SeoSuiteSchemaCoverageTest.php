@@ -169,7 +169,7 @@ it('keeps ai discovery boolean settings as checkbox components', function (): vo
 
 it('builds ai orchestrator prompt settings with gated prompt templates', function (): void {
     config()->set('capell-seo-suite.openai.default_model', 'gpt-4o-mini');
-    config()->set('capell-seo-suite.rate_limiting.requests_per_minute', 25);
+    config()->set('capell-ai-orchestrator.rate_limiting.requests_per_minute', 25);
 
     $schema = AIOrchestratorSettingsSchema::make(Schema::make());
 

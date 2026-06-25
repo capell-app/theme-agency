@@ -198,7 +198,7 @@ it('generates sanitized page content through the action seam and records history
 });
 
 it('suggests page titles with rendered prompt parameters and persisted parsed output', function (): void {
-    config(['capell-seo-suite.prism.max_tokens' => 128]);
+    config(['capell-ai-orchestrator.prism.max_tokens' => 128]);
 
     app()->instance(PromptRepository::class, new PromptRepository([
         'title_generation' => [
@@ -238,7 +238,7 @@ it('suggests page titles with rendered prompt parameters and persisted parsed ou
 });
 
 it('suggests meta descriptions with rendered prompt parameters and persisted parsed output', function (): void {
-    config(['capell-seo-suite.prism.max_tokens' => 160]);
+    config(['capell-ai-orchestrator.prism.max_tokens' => 160]);
 
     app()->instance(PromptRepository::class, new PromptRepository([
         'meta_description' => [

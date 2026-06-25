@@ -8,6 +8,7 @@ use Capell\Admin\Data\AdminSurfaceContributionData;
 use Capell\Admin\Facades\CapellAdmin;
 use Capell\Admin\Providers\AdminServiceProvider;
 use Capell\Admin\Providers\Filament\AdminPanelProvider;
+use Capell\AIOrchestrator\Providers\AIOrchestratorServiceProvider;
 use Capell\Core\Facades\CapellCore;
 use Capell\Frontend\Contracts\FrontendContextReader;
 use Capell\Frontend\Providers\FrontendServiceProvider;
@@ -47,6 +48,7 @@ class SeoSuiteTestCase extends AbstractTestCase
             AdminServiceProvider::class,
             InsightsServiceProvider::class,
             SiteDiscoveryServiceProvider::class,
+            AIOrchestratorServiceProvider::class,
             SeoSuiteServiceProvider::class,
             AdminPanelProvider::class,
             FrontendServiceProvider::class,
@@ -78,6 +80,7 @@ class SeoSuiteTestCase extends AbstractTestCase
         CapellCore::forcePackageInstalled(InsightsServiceProvider::$packageName);
         CapellCore::forcePackageInstalled(FrontendServiceProvider::$packageName);
         CapellCore::forcePackageInstalled(SiteDiscoveryServiceProvider::$packageName);
+        CapellCore::forcePackageInstalled(AIOrchestratorServiceProvider::$packageName);
         CapellCore::forcePackageInstalled(SeoSuiteServiceProvider::$packageName);
 
         CapellAdmin::contributeToAdminSurface(AdminSurfaceContributionData::page(NotFoundUrlsPage::class));

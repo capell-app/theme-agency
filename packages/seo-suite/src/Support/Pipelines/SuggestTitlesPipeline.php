@@ -99,9 +99,9 @@ class SuggestTitlesPipeline
         ];
 
         $params = [
-            'model' => (string) ($prompt['model'] ?? config('capell-seo-suite.prism.model')),
+            'model' => (string) ($prompt['model'] ?? config('capell-ai-orchestrator.prism.model')),
             'messages' => $messages,
-            'max_tokens' => config('capell-seo-suite.prism.max_tokens', 128),
+            'max_tokens' => config('capell-ai-orchestrator.prism.max_tokens', 128),
             'temperature' => 0.7,
         ];
 

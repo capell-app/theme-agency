@@ -55,12 +55,12 @@ final class GenerateAiContentBriefAction
         ]);
 
         $params = [
-            'model' => (string) ($prompt['model'] ?? config('capell-seo-suite.prism.model')),
+            'model' => (string) ($prompt['model'] ?? config('capell-ai-orchestrator.prism.model')),
             'messages' => [
                 ['role' => 'system', 'content' => (string) ($prompt['system'] ?? '')],
                 ['role' => 'user', 'content' => $userMessage],
             ],
-            'max_tokens' => (int) ($prompt['max_tokens'] ?? config('capell-seo-suite.prism.max_tokens', 4096)),
+            'max_tokens' => (int) ($prompt['max_tokens'] ?? config('capell-ai-orchestrator.prism.max_tokens', 4096)),
             'temperature' => (float) ($prompt['temperature'] ?? 0.3),
         ];
 

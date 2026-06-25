@@ -166,7 +166,7 @@ class AiCreatorPipeline
         ]);
 
         $response = $this->provider->chat([
-            'model' => config('capell-seo-suite.features.ai_creator.model', 'gpt-4o'),
+            'model' => config('capell-ai-orchestrator.features.ai_creator.model', 'gpt-4o'),
             'messages' => [
                 ['role' => 'system', 'content' => $prompt['system']],
                 ['role' => 'user', 'content' => $userMessage],
@@ -179,7 +179,7 @@ class AiCreatorPipeline
             ['role' => 'user', 'content' => $userMessage],
         ];
         $payload['ai_params'] = [
-            'model' => config('capell-seo-suite.features.ai_creator.model', 'gpt-4o'),
+            'model' => config('capell-ai-orchestrator.features.ai_creator.model', 'gpt-4o'),
             'messages' => $payload['ai_messages'],
         ];
 

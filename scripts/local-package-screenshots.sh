@@ -113,13 +113,13 @@ if [[ "${REUSE_APP}" != true || ! -d "${RUNNER_PATH}/node_modules/playwright" ]]
 fi
 
 if [[ "${DRY_RUN}" == true ]]; then
-  npm run screenshots:validate -- "${ONLY_ARGS[@]}"
-  npm run screenshots:capture:check -- --runner "${RUNNER_PATH}" --repo "${ROOT}" --dry-run --skip-build "${ONLY_ARGS[@]}"
+  npm run screenshots:validate -- ${ONLY_ARGS[@]+"${ONLY_ARGS[@]}"}
+  npm run screenshots:capture:check -- --runner "${RUNNER_PATH}" --repo "${ROOT}" --dry-run --skip-build ${ONLY_ARGS[@]+"${ONLY_ARGS[@]}"}
   exit $?
 fi
 
 npm run screenshots:manifest
-npm run screenshots:validate -- "${ONLY_ARGS[@]}"
+npm run screenshots:validate -- ${ONLY_ARGS[@]+"${ONLY_ARGS[@]}"}
 
 if [[ "${REUSE_APP}" != true ]]; then
   npm run install:browsers --prefix "${RUNNER_PATH}"
@@ -133,7 +133,7 @@ if [[ "${REUSE_APP}" == true ]]; then
   find "${RUNNER_PATH}/storage/framework/cache/data" -type f ! -name '.gitignore' -delete
 fi
 
-SCREENSHOT_ARGS=(--runner "${RUNNER_PATH}" --repo "${ROOT}" "${ONLY_ARGS[@]}")
+SCREENSHOT_ARGS=(--runner "${RUNNER_PATH}" --repo "${ROOT}" ${ONLY_ARGS[@]+"${ONLY_ARGS[@]}"})
 
 if [[ "${SKIP_BUILD}" == true ]]; then
   SCREENSHOT_ARGS+=(--skip-build)

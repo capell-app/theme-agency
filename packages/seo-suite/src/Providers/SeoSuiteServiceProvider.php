@@ -236,24 +236,24 @@ final class SeoSuiteServiceProvider extends AbstractPackageServiceProvider
 
     protected function registerAiServices(): self
     {
-        $this->app->singleton(PrismProvider::class, fn (Application $app): PrismProvider => new PrismProvider(config('capell-seo-suite.prism', [])));
+        $this->app->singleton(PrismProvider::class, fn (Application $app): PrismProvider => new PrismProvider(config('capell-ai-orchestrator.prism', [])));
 
-        $this->app->singleton(PromptRepository::class, fn (Application $app): PromptRepository => new PromptRepository(config('capell-seo-suite.prompts', [])));
+        $this->app->singleton(PromptRepository::class, fn (Application $app): PromptRepository => new PromptRepository(config('capell-ai-orchestrator.prompts', [])));
 
         $this->app->singleton(AiResponseParser::class, fn (): AiResponseParser => new AiResponseParser);
 
         $this->app->singleton(AiRateLimiter::class, fn (Application $app): AiRateLimiter => new AiRateLimiter(
             $app->make(RateLimitCache::class),
-            config('capell-seo-suite.rate_limiting', ['enabled' => false, 'requests_per_minute' => 60]),
+            config('capell-ai-orchestrator.rate_limiting', ['enabled' => false, 'requests_per_minute' => 60]),
         ));
 
         $this->app->singleton(AiTokenCounter::class, fn (): AiTokenCounter => new AiTokenCounter);
 
-        $this->app->singleton(AiFeatureRegistry::class, fn (Application $app): AiFeatureRegistry => new AiFeatureRegistry(config('capell-seo-suite.features', [])));
+        $this->app->singleton(AiFeatureRegistry::class, fn (Application $app): AiFeatureRegistry => new AiFeatureRegistry(config('capell-ai-orchestrator.features', [])));
 
         $this->app->singleton(AIGenerationCache::class, fn (Application $app): AIGenerationCache => new AIGenerationCache(
             config('cache.default'),
-            config('capell-seo-suite.cache.ttl', 86400),
+            config('capell-ai-orchestrator.cache.ttl', 86400),
         ));
 
         $this->app->singleton(RateLimitCache::class, fn (\Illuminate\Foundation\Application $app): RateLimitCache => new RateLimitCache((string) config('cache.default')));
@@ -286,7 +286,7 @@ final class SeoSuiteServiceProvider extends AbstractPackageServiceProvider
 
         /** @var AiFeatureRegistry $registry */
         $registry = $this->app->make(AiFeatureRegistry::class);
-        foreach (config('capell-seo-suite.features', []) as $name => $feature) {
+        foreach (config('capell-ai-orchestrator.features', []) as $name => $feature) {
             if (is_array($feature)) {
                 $registry->register($name, $feature);
             }
