@@ -4,10 +4,7 @@ declare(strict_types=1);
 
 use Capell\PublishingStudio\Data\EditorialTimelineEntryData;
 use Capell\PublishingStudio\Enums\EditorialTimelineEntryTypeEnum;
-use Capell\PublishingStudio\Tests\PublishingStudioTestCase;
 use Carbon\CarbonImmutable;
-
-uses(PublishingStudioTestCase::class);
 
 it('creates a timeline entry with type label color and metadata', function (): void {
     $occurredAt = CarbonImmutable::parse('2026-05-04 10:15:00');
