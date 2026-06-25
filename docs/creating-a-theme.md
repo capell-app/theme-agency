@@ -559,6 +559,122 @@ installed, Marketplace publishes the Composer change through the deployment
 publisher. Without Deployments, it shows the Composer command so the change can
 be applied manually.
 
+## Add Active-Theme Layout Container Settings
+
+Themes can add fields to the Layout Builder container editor without adding core
+columns or leaking admin schema details into public HTML. Layout Builder stores
+these values on the container itself under
+`containers.{containerKey}.meta.theme_settings.{themeKey}` and only shows the
+fields when the edited layout resolves to the active theme key.
+
+Register the extender through the admin bridge in your theme provider:
+
+```php
+<?php
+
+declare(strict_types=1);
+
+namespace Vendor\ClientTheme\Providers;
+
+use Capell\Admin\Support\Bridges\AdminBridgeRegistrar;
+use Capell\Core\Facades\CapellCore;
+use Illuminate\Support\ServiceProvider;
+use Vendor\ClientTheme\Filament\Extenders\ClientLayoutContainerSchemaExtender;
+
+final class ClientThemeServiceProvider extends ServiceProvider
+{
+    public function boot(AdminBridgeRegistrar $admin): void
+    {
+        if (! CapellCore::isPackageInstalled('vendor/theme-client')) {
+            return;
+        }
+
+        $admin->schemaExtender(
+            ClientLayoutContainerSchemaExtender::class,
+            ClientLayoutContainerSchemaExtender::TAG,
+        );
+    }
+}
+```
+
+The extender returns only the fields. Layout Builder wraps them in a labelled
+**Theme settings: Client** section and applies the state path:
+
+```php
+<?php
+
+declare(strict_types=1);
+
+namespace Vendor\ClientTheme\Filament\Extenders;
+
+use Capell\LayoutBuilder\Contracts\Extenders\LayoutContainerSchemaExtender;
+use Capell\LayoutBuilder\Data\LayoutContainerSchemaContextData;
+use Filament\Forms\Components\Select;
+use Filament\Schemas\Schema;
+
+final class ClientLayoutContainerSchemaExtender implements LayoutContainerSchemaExtender
+{
+    public function themeKey(): string
+    {
+        return 'client';
+    }
+
+    public function themeLabel(): string
+    {
+        return __('client-theme::generic.theme_label');
+    }
+
+    public function supports(LayoutContainerSchemaContextData $context): bool
+    {
+        return $context->themeKey === $this->themeKey();
+    }
+
+    public function extendContainerComponents(Schema $schema, LayoutContainerSchemaContextData $context): array
+    {
+        return [
+            Select::make('surface_tone')
+                ->label(__('client-theme::form.surface_tone'))
+                ->options([
+                    'default' => __('client-theme::form.surface_tone_default'),
+                    'muted' => __('client-theme::form.surface_tone_muted'),
+                    'contrast' => __('client-theme::form.surface_tone_contrast'),
+                ])
+                ->default('default')
+                ->native(false),
+        ];
+    }
+}
+```
+
+Read the value from hydrated layout container data in public Blade or a theme
+renderer. Do not dump raw meta, schema labels, package names, signed URLs, model
+IDs, field paths, or permissions:
+
+```blade
+@php
+    $clientSettings = data_get($container, 'meta.theme_settings.client', []);
+    $surfaceTone = is_array($clientSettings)
+        ? ($clientSettings['surface_tone'] ?? 'default')
+        : 'default';
+@endphp
+
+<section
+    @class([
+        'layout-band',
+        'layout-band-muted' => $surfaceTone === 'muted',
+        'layout-band-contrast' => $surfaceTone === 'contrast',
+    ])
+>
+    {{ $slot }}
+</section>
+```
+
+Use this path for per-container presentation choices such as emphasis, section
+tone, editorial rhythm, or theme-specific visual modes. If the theme needs real
+records, reporting state, or reusable business data, create a companion package
+with migrations and render that data through a public-safe Action or payload
+contributor instead.
+
 ## 11. Test The Theme
 
 At minimum, add tests for:

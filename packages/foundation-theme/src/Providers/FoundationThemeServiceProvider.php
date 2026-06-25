@@ -25,6 +25,7 @@ use Capell\Core\ThemeStudio\Theme\ThemeRegistry;
 use Capell\FoundationTheme\Console\Commands\DemoCommand;
 use Capell\FoundationTheme\Console\Commands\SetupCommand;
 use Capell\FoundationTheme\Enums\FoundationThemeAssetEnum;
+use Capell\FoundationTheme\Filament\Extenders\FoundationLayoutContainerSchemaExtender;
 use Capell\FoundationTheme\Filament\Settings\FoundationThemeSettingsSchema;
 use Capell\FoundationTheme\Listeners\RunTailwindAssetsOnPackageChange;
 use Capell\FoundationTheme\Livewire\Assets\Table\PageAssets;
@@ -53,6 +54,7 @@ use Capell\Frontend\Contracts\FrontendComponentRegistryInterface;
 use Capell\Frontend\Contracts\FrontendRuntimeManifestContributor;
 use Capell\Frontend\Data\FrontendAssetContextData;
 use Capell\Frontend\Data\FrontendAssetData;
+use Capell\LayoutBuilder\Contracts\Extenders\LayoutContainerSchemaExtender;
 use Capell\LayoutBuilder\Enums\FrontendComponentKeyEnum;
 use Capell\LayoutBuilder\Support\LayoutAreas\LayoutAreaRegistry;
 use Illuminate\Contracts\View\Factory as ViewFactory;
@@ -147,6 +149,7 @@ final class FoundationThemeServiceProvider extends AbstractPackageServiceProvide
         $this->registerModelInterceptors();
         $this->registerSettingsSchemas();
         $this->registerLayoutAreas();
+        $this->registerLayoutContainerSchemaExtenders();
         $this->registerThemeChromeComponents();
         $this->registerThemeStudioDefinition();
     }
@@ -312,6 +315,23 @@ final class FoundationThemeServiceProvider extends AbstractPackageServiceProvide
         if ($this->app->resolved(LayoutAreaRegistry::class)) {
             $register($this->app->make(LayoutAreaRegistry::class));
         }
+    }
+
+    private function registerLayoutContainerSchemaExtenders(): void
+    {
+        if (! interface_exists(LayoutContainerSchemaExtender::class)) {
+            return;
+        }
+
+        $alreadyTagged = collect($this->app->tagged(LayoutContainerSchemaExtender::TAG))
+            ->contains(fn (object $extender): bool => $extender instanceof FoundationLayoutContainerSchemaExtender);
+
+        if ($alreadyTagged) {
+            return;
+        }
+
+        $this->app->singleton(FoundationLayoutContainerSchemaExtender::class);
+        $this->app->tag(FoundationLayoutContainerSchemaExtender::class, LayoutContainerSchemaExtender::TAG);
     }
 
     private function registerModelInterceptors(): void

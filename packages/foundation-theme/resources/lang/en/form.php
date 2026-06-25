@@ -10,6 +10,12 @@ return [
     'border_color' => 'Border colour',
     'border_strong_color' => 'Strong border colour',
     'card_background_color' => 'Card background colour',
+    'container_surface_tone' => 'Container surface tone',
+    'container_surface_tone_options' => [
+        'contrast' => 'Contrast',
+        'default' => 'Default',
+        'muted' => 'Muted',
+    ],
     'dark_band_accent_background_color' => 'Dark accent band background colour',
     'dark_band_alternate_background_color' => 'Dark alternate band background colour',
     'dark_band_background_color' => 'Dark band background colour',

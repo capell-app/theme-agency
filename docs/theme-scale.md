@@ -69,7 +69,11 @@ Use Layout Builder when:
 - A theme area needs editable content outside the main page loop.
 - A preset should duplicate structure and presentation settings without duplicating client content.
 
+Per-container visual choices such as spacing, padding, margin, border, background, and active-theme-only presentation toggles belong in Layout Builder container `meta`. Theme packages can add active-theme-scoped container fields through Layout Builder schema extenders, and Layout Builder stores those values under `meta.theme_settings.{themeKey}`. Keep the values small, typed, and presentation-focused.
+
 Use page assets and widget assets for content that belongs to a rendered instance. Keep portable editorial content in the database and keep design wrappers in Blade. Demo creators should seed minimal editable copy and attach configured widgets, not save full designed HTML.
+
+Do not use theme container settings for real domain records. If a theme needs persistent business data, reporting state, or reusable records, put that behaviour in a companion package with normal migrations and let the theme render it through public-safe data.
 
 Public renderers should use `BuildPublicLayoutGraphAction` or existing renderer components. Do not query from public views.
 
