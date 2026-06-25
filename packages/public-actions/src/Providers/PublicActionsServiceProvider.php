@@ -45,7 +45,7 @@ use Illuminate\View\Compilers\BladeCompiler;
 use Override;
 use Spatie\LaravelPackageTools\Package;
 
-class PublicActionsServiceProvider extends AbstractPackageServiceProvider
+final class PublicActionsServiceProvider extends AbstractPackageServiceProvider
 {
     public static string $name = 'capell-public-actions';
 

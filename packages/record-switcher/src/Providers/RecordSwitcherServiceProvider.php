@@ -13,7 +13,7 @@ use Filament\Support\Facades\FilamentAsset;
 use Livewire\Livewire;
 use Spatie\LaravelPackageTools\Package;
 
-class RecordSwitcherServiceProvider extends AbstractPackageServiceProvider
+final class RecordSwitcherServiceProvider extends AbstractPackageServiceProvider
 {
     public static string $name = 'capell-record-switcher';
 

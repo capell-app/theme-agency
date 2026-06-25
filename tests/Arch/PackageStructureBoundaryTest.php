@@ -4,41 +4,12 @@ declare(strict_types=1);
 
 namespace Capell\Tests\Arch;
 
-use Capell\AccessGate\Providers\AccessGateServiceProvider;
-use Capell\Address\Providers\AddressServiceProvider;
 use Capell\AgentBridge\Providers\AgentBridgeServiceProvider;
-use Capell\AIOrchestrator\Providers\AIOrchestratorServiceProvider;
-use Capell\Blog\Providers\BlogServiceProvider;
-use Capell\Bookings\Providers\BookingsServiceProvider;
-use Capell\Comments\Providers\CommentsServiceProvider;
-use Capell\ContentSections\Providers\ContentSectionsServiceProvider;
-use Capell\Deployments\Providers\DeploymentsServiceProvider;
-use Capell\DocumentLifecycle\Providers\DocumentLifecycleServiceProvider;
-use Capell\EmailStudio\Providers\EmailStudioServiceProvider;
-use Capell\Events\Providers\EventsServiceProvider;
-use Capell\FormBuilder\Providers\FormBuilderServiceProvider;
 use Capell\FrontendAuthoring\Providers\FrontendAuthoringServiceProvider;
-use Capell\Inertia\Providers\InertiaServiceProvider;
-use Capell\InertiaReactAdapter\Providers\InertiaReactAdapterServiceProvider;
-use Capell\InertiaVueAdapter\Providers\InertiaVueAdapterServiceProvider;
-use Capell\Insights\Providers\InsightsServiceProvider;
-use Capell\LayoutBuilder\LayoutBuilderServiceProvider;
-use Capell\LoginAudit\Providers\LoginAuditServiceProvider;
 use Capell\MediaLibrary\MediaLibraryServiceProvider;
-use Capell\MigrationAssistant\Providers\MigrationAssistantServiceProvider;
 use Capell\Navigation\Providers\NavigationServiceProvider;
-use Capell\Newsletter\Providers\NewsletterServiceProvider;
-use Capell\Notes\Providers\NotesServiceProvider;
-use Capell\PasswordPolicy\Providers\PasswordPolicyServiceProvider;
-use Capell\PublicActions\Providers\PublicActionsServiceProvider;
 use Capell\PublishingStudio\Providers\ConsoleServiceProvider;
 use Capell\PublishingStudio\Providers\PublishingStudioServiceProvider;
-use Capell\RecordSwitcher\Providers\RecordSwitcherServiceProvider;
-use Capell\SeoSuite\Providers\SeoSuiteServiceProvider;
-use Capell\StructuredContentLibrary\Providers\StructuredContentLibraryServiceProvider;
-use Capell\Tags\Providers\TagsServiceProvider;
-use Capell\WelcomeTour\Providers\WelcomeTourServiceProvider;
-use Capell\WordPressImporter\Providers\WordPressImporterServiceProvider;
 
 /*
 |--------------------------------------------------------------------------
@@ -54,8 +25,9 @@ use Capell\WordPressImporter\Providers\WordPressImporterServiceProvider;
 |   2. The provider class is final (or abstract) — package providers are not an
 |      extension point.
 |
-| Both rules start with a documented burn-down baseline of the packages that
-| predate them. As an offender is migrated, delete its entry. The themes
+| Rule 2 (final) is fully enforced — every non-theme provider was marked final.
+| Rule 1 (extends base) keeps a documented burn-down baseline of the providers
+| that predate it; as each is migrated, delete its entry. The themes
 | (Capell\ThemeStudio\*) are a distinct provider category with their own
 | registration shape and are excluded wholesale rather than line-by-line.
 |
@@ -89,45 +61,15 @@ function capellStructProvidersNotExtendingBase(): array
  * Service providers that are not yet final. Burn down — do not grow.
  * (Themes are excluded by namespace, see below.)
  *
+ * Fully burnt down: all 33 non-theme feature-package providers were marked final
+ * once a static scan confirmed none are extended or mocked anywhere in the three
+ * repos. New non-final providers (outside the theme namespace) now fail the test.
+ *
  * @return list<string>
  */
 function capellStructProvidersNotFinal(): array
 {
-    return [
-        AIOrchestratorServiceProvider::class,
-        AccessGateServiceProvider::class,
-        AddressServiceProvider::class,
-        BlogServiceProvider::class,
-        BookingsServiceProvider::class,
-        CommentsServiceProvider::class,
-        ContentSectionsServiceProvider::class,
-        DeploymentsServiceProvider::class,
-        DocumentLifecycleServiceProvider::class,
-        EmailStudioServiceProvider::class,
-        EventsServiceProvider::class,
-        FormBuilderServiceProvider::class,
-        FrontendAuthoringServiceProvider::class,
-        InertiaReactAdapterServiceProvider::class,
-        InertiaVueAdapterServiceProvider::class,
-        InertiaServiceProvider::class,
-        InsightsServiceProvider::class,
-        LayoutBuilderServiceProvider::class,
-        LoginAuditServiceProvider::class,
-        MigrationAssistantServiceProvider::class,
-        NavigationServiceProvider::class,
-        NewsletterServiceProvider::class,
-        NotesServiceProvider::class,
-        PasswordPolicyServiceProvider::class,
-        PublicActionsServiceProvider::class,
-        ConsoleServiceProvider::class,
-        PublishingStudioServiceProvider::class,
-        RecordSwitcherServiceProvider::class,
-        SeoSuiteServiceProvider::class,
-        StructuredContentLibraryServiceProvider::class,
-        TagsServiceProvider::class,
-        WelcomeTourServiceProvider::class,
-        WordPressImporterServiceProvider::class,
-    ];
+    return [];
 }
 
 /**

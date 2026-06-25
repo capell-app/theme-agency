@@ -23,7 +23,7 @@ use Illuminate\Support\ServiceProvider;
 use Livewire\Livewire;
 use Override;
 
-class FrontendAuthoringServiceProvider extends ServiceProvider
+final class FrontendAuthoringServiceProvider extends ServiceProvider
 {
     public static string $packageName = 'capell-app/frontend-authoring';
 
@@ -59,7 +59,7 @@ class FrontendAuthoringServiceProvider extends ServiceProvider
 
     protected function isPackageInstalled(): bool
     {
-        return CapellCore::isPackageInstalled(static::$packageName);
+        return CapellCore::isPackageInstalled(self::$packageName);
     }
 
     private function registerFallbackMiddlewareAliases(): void

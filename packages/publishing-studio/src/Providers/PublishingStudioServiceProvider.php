@@ -71,7 +71,7 @@ use Illuminate\Support\ServiceProvider;
 use Override;
 use Spatie\Activitylog\Models\Activity;
 
-class PublishingStudioServiceProvider extends ServiceProvider
+final class PublishingStudioServiceProvider extends ServiceProvider
 {
     public static string $packageName = 'capell-app/publishing-studio';
 
@@ -129,7 +129,7 @@ class PublishingStudioServiceProvider extends ServiceProvider
 
     protected function isPackageInstalled(): bool
     {
-        return CapellCore::isPackageInstalled(static::$packageName);
+        return CapellCore::isPackageInstalled(self::$packageName);
     }
 
     private function registerModels(): self

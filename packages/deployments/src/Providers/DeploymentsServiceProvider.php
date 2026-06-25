@@ -18,7 +18,7 @@ use Capell\Deployments\Support\DeploymentPublishHookRegistry;
 use LogicException;
 use Spatie\LaravelPackageTools\Package;
 
-class DeploymentsServiceProvider extends AbstractPackageServiceProvider
+final class DeploymentsServiceProvider extends AbstractPackageServiceProvider
 {
     public static string $name = 'capell-deployments';
 
@@ -56,7 +56,7 @@ class DeploymentsServiceProvider extends AbstractPackageServiceProvider
         });
 
         if (config('capell-deployments.enabled', true) === true) {
-            CapellAdmin::registerExtensionPage(static::$packageName, DeploymentConnectionPage::class);
+            CapellAdmin::registerExtensionPage(self::$packageName, DeploymentConnectionPage::class);
             CapellAdmin::registerDashboardFilamentWidget(DeploymentConnectionFilamentWidget::class, DashboardEnum::SystemHealth);
         }
     }

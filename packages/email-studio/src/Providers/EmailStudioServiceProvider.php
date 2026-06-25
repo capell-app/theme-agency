@@ -43,7 +43,7 @@ use Illuminate\Support\Facades\Schema;
 use Override;
 use Spatie\LaravelPackageTools\Package;
 
-class EmailStudioServiceProvider extends AbstractPackageServiceProvider
+final class EmailStudioServiceProvider extends AbstractPackageServiceProvider
 {
     public static string $name = 'capell-email-studio';
 

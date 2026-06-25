@@ -30,7 +30,7 @@ use Override;
 use Rappasoft\LaravelAuthenticationLog\Models\AuthenticationLog as VendorLoginAudit;
 use Spatie\LaravelPackageTools\Package;
 
-class LoginAuditServiceProvider extends AbstractPackageServiceProvider
+final class LoginAuditServiceProvider extends AbstractPackageServiceProvider
 {
     public static string $name = 'capell-login-audit';
 
@@ -84,7 +84,7 @@ class LoginAuditServiceProvider extends AbstractPackageServiceProvider
     #[Override]
     protected function isPackageInstalled(): bool
     {
-        return CapellCore::isPackageInstalled(static::$packageName);
+        return CapellCore::isPackageInstalled(self::$packageName);
     }
 
     private function registerModels(): self

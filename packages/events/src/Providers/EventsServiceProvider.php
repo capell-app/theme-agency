@@ -54,7 +54,7 @@ use Livewire\Livewire;
 use Override;
 use Spatie\LaravelPackageTools\Package;
 
-class EventsServiceProvider extends AbstractPackageServiceProvider
+final class EventsServiceProvider extends AbstractPackageServiceProvider
 {
     public static string $name = 'capell-events';
 
@@ -102,7 +102,7 @@ class EventsServiceProvider extends AbstractPackageServiceProvider
     #[Override]
     protected function isPackageInstalled(): bool
     {
-        return CapellCore::getPackage(static::$packageName)->isInstalled();
+        return CapellCore::getPackage(self::$packageName)->isInstalled();
     }
 
     #[Override]
@@ -149,11 +149,11 @@ class EventsServiceProvider extends AbstractPackageServiceProvider
             return 'dev';
         }
 
-        if (! InstalledVersions::isInstalled(static::$packageName)) {
+        if (! InstalledVersions::isInstalled(self::$packageName)) {
             return 'dev';
         }
 
-        return InstalledVersions::getPrettyVersion(static::$packageName) ?? 'dev';
+        return InstalledVersions::getPrettyVersion(self::$packageName) ?? 'dev';
     }
 
     private function registerModels(): self
@@ -175,7 +175,7 @@ class EventsServiceProvider extends AbstractPackageServiceProvider
 
     private function registerAdminResources(): self
     {
-        CapellAdmin::registerExtensionPage(static::$packageName, EventCalendarPage::class);
+        CapellAdmin::registerExtensionPage(self::$packageName, EventCalendarPage::class);
 
         foreach (ResourceEnum::cases() as $resourceEnum) {
             CapellAdmin::contributeToAdminSurface(AdminSurfaceContributionData::resource(
@@ -204,7 +204,7 @@ class EventsServiceProvider extends AbstractPackageServiceProvider
     private function registerPackageAssets(): self
     {
         CapellCore::registerVendorAsset(
-            VendorAssetData::tailwindSource('resources/views/**/*.blade.php', static::$packageName),
+            VendorAssetData::tailwindSource('resources/views/**/*.blade.php', self::$packageName),
         );
 
         return $this;

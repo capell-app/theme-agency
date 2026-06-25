@@ -35,7 +35,7 @@ use Illuminate\Support\Facades\RateLimiter;
 use Override;
 use Spatie\LaravelPackageTools\Package;
 
-class CommentsServiceProvider extends AbstractPackageServiceProvider
+final class CommentsServiceProvider extends AbstractPackageServiceProvider
 {
     public static string $name = 'capell-comments';
 
@@ -110,7 +110,7 @@ class CommentsServiceProvider extends AbstractPackageServiceProvider
     #[Override]
     protected function isPackageInstalled(): bool
     {
-        return CapellCore::isPackageInstalled(static::$packageName);
+        return CapellCore::isPackageInstalled(self::$packageName);
     }
 
     private function registerModels(): self

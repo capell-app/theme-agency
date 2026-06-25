@@ -62,7 +62,7 @@ use Illuminate\Support\Str;
 use Override;
 use Spatie\LaravelPackageTools\Package;
 
-class AccessGateServiceProvider extends AbstractPackageServiceProvider
+final class AccessGateServiceProvider extends AbstractPackageServiceProvider
 {
     public static string $name = 'capell-access-gate';
 
@@ -155,7 +155,7 @@ class AccessGateServiceProvider extends AbstractPackageServiceProvider
     #[Override]
     protected function isPackageInstalled(): bool
     {
-        return CapellCore::isPackageInstalled(static::$packageName);
+        return CapellCore::isPackageInstalled(self::$packageName);
     }
 
     private function registerAccessRequestNotifications(): self

@@ -166,7 +166,7 @@ use Livewire\Livewire;
 use Override;
 use Spatie\LaravelPackageTools\Package;
 
-class SeoSuiteServiceProvider extends AbstractPackageServiceProvider
+final class SeoSuiteServiceProvider extends AbstractPackageServiceProvider
 {
     public static string $name = 'capell-seo-suite';
 
@@ -403,7 +403,7 @@ class SeoSuiteServiceProvider extends AbstractPackageServiceProvider
             icon: Heroicon::OutlinedMagnifyingGlass,
             navigationGroup: 'capell-admin::navigation.group_system',
             navigationSort: 94,
-            packageName: static::$packageName,
+            packageName: self::$packageName,
         ));
 
         return $this;
@@ -414,18 +414,18 @@ class SeoSuiteServiceProvider extends AbstractPackageServiceProvider
         /** @var CapellAdminManager $adminManager */
         $adminManager = $this->app->make(CapellAdminManager::class);
 
-        $adminManager->registerExtensionPage(static::$packageName, NotFoundUrlsPage::class);
-        $adminManager->registerExtensionPage(static::$packageName, BrokenLinksPage::class);
-        $adminManager->registerExtensionPage(static::$packageName, SeoAuditPage::class);
-        $adminManager->registerExtensionPage(static::$packageName, SearchRankingsPage::class);
-        $adminManager->registerExtensionPage(static::$packageName, AiDiscoveryPage::class);
+        $adminManager->registerExtensionPage(self::$packageName, NotFoundUrlsPage::class);
+        $adminManager->registerExtensionPage(self::$packageName, BrokenLinksPage::class);
+        $adminManager->registerExtensionPage(self::$packageName, SeoAuditPage::class);
+        $adminManager->registerExtensionPage(self::$packageName, SearchRankingsPage::class);
+        $adminManager->registerExtensionPage(self::$packageName, AiDiscoveryPage::class);
         $adminManager->registerExtensionManagementSurface(ExtensionManagementSurfaceData::settings(
-            packageName: static::$packageName,
+            packageName: self::$packageName,
             label: 'capell-seo-suite::generic.seo_settings',
             settingsGroup: 'seo_suite',
             icon: Heroicon::OutlinedMagnifyingGlass,
         ));
-        $adminManager->registerExtensionPage(static::$packageName, TranslationCoveragePage::class);
+        $adminManager->registerExtensionPage(self::$packageName, TranslationCoveragePage::class);
 
         return $this;
     }
@@ -561,7 +561,7 @@ class SeoSuiteServiceProvider extends AbstractPackageServiceProvider
     #[Override]
     protected function isPackageInstalled(): bool
     {
-        return CapellCore::isPackageInstalled(static::$packageName);
+        return CapellCore::isPackageInstalled(self::$packageName);
     }
 
     private function registerLivewireComponents(): void

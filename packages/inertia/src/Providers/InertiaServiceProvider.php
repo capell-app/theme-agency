@@ -18,7 +18,7 @@ use Inertia\ServiceProvider as LaravelInertiaServiceProvider;
 use Override;
 use Spatie\LaravelPackageTools\Package;
 
-class InertiaServiceProvider extends AbstractPackageServiceProvider
+final class InertiaServiceProvider extends AbstractPackageServiceProvider
 {
     public static string $name = 'capell-inertia';
 
@@ -57,7 +57,7 @@ class InertiaServiceProvider extends AbstractPackageServiceProvider
     #[Override]
     protected function isPackageInstalled(): bool
     {
-        return CapellCore::isPackageInstalled(static::$packageName);
+        return CapellCore::isPackageInstalled(self::$packageName);
     }
 
     private function registerRenderer(): void

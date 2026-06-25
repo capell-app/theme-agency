@@ -37,7 +37,7 @@ use Illuminate\Support\Facades\RateLimiter;
 use Override;
 use Spatie\LaravelPackageTools\Package;
 
-class BookingsServiceProvider extends AbstractPackageServiceProvider
+final class BookingsServiceProvider extends AbstractPackageServiceProvider
 {
     /** @var list<string> */
     private const array PROTECTED_TABLES = [
@@ -166,7 +166,7 @@ class BookingsServiceProvider extends AbstractPackageServiceProvider
     #[Override]
     protected function isPackageInstalled(): bool
     {
-        return CapellCore::isPackageInstalled(static::$packageName);
+        return CapellCore::isPackageInstalled(self::$packageName);
     }
 
     private function registerProtectedTables(): self
@@ -245,7 +245,7 @@ class BookingsServiceProvider extends AbstractPackageServiceProvider
                 icon: Heroicon::OutlinedCalendarDays,
                 navigationGroup: 'capell-admin::navigation.group_system',
                 navigationSort: 95,
-                packageName: static::$packageName,
+                packageName: self::$packageName,
             ));
         }
 
@@ -253,7 +253,7 @@ class BookingsServiceProvider extends AbstractPackageServiceProvider
 
         if (class_exists(ExtensionManagementSurfaceData::class)) {
             CapellAdmin::registerExtensionManagementSurface(ExtensionManagementSurfaceData::settings(
-                packageName: static::$packageName,
+                packageName: self::$packageName,
                 label: 'capell-bookings::settings.title',
                 settingsGroup: BookingsSettings::group(),
                 icon: Heroicon::OutlinedCalendarDays,

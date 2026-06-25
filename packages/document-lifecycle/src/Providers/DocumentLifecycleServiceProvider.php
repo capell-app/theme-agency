@@ -25,7 +25,7 @@ use Illuminate\Support\Facades\Gate;
 use Override;
 use Spatie\LaravelPackageTools\Package;
 
-class DocumentLifecycleServiceProvider extends AbstractPackageServiceProvider
+final class DocumentLifecycleServiceProvider extends AbstractPackageServiceProvider
 {
     public static string $name = 'capell-document-lifecycle';
 
@@ -85,7 +85,7 @@ class DocumentLifecycleServiceProvider extends AbstractPackageServiceProvider
     #[Override]
     protected function isPackageInstalled(): bool
     {
-        return CapellCore::isPackageInstalled(static::$packageName);
+        return CapellCore::isPackageInstalled(self::$packageName);
     }
 
     private function registerPolicies(): self

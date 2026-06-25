@@ -31,7 +31,7 @@ use Filament\Support\Icons\Heroicon;
 use Spatie\LaravelPackageTools\Package;
 use Throwable;
 
-class PasswordPolicyServiceProvider extends AbstractPackageServiceProvider
+final class PasswordPolicyServiceProvider extends AbstractPackageServiceProvider
 {
     public static string $name = 'capell-password-policy';
 
@@ -80,7 +80,7 @@ class PasswordPolicyServiceProvider extends AbstractPackageServiceProvider
             icon: Heroicon::OutlinedKey,
             navigationGroup: 'capell-admin::navigation.group_system',
             navigationSort: 93,
-            packageName: static::$packageName,
+            packageName: self::$packageName,
         ));
 
         return $this;
@@ -89,8 +89,8 @@ class PasswordPolicyServiceProvider extends AbstractPackageServiceProvider
     private function registerAdminSurface(): self
     {
         if ($this->supportsAdminBridges()) {
-            CapellAdmin::registerAdminBridge(static::$packageName, PasswordPolicyAdminBridge::class);
-            CapellAdmin::bootAdminBridges(static::$packageName);
+            CapellAdmin::registerAdminBridge(self::$packageName, PasswordPolicyAdminBridge::class);
+            CapellAdmin::bootAdminBridges(self::$packageName);
 
             return $this;
         }

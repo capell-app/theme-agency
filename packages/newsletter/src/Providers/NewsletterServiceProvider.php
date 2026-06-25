@@ -46,7 +46,7 @@ use Illuminate\Support\Facades\RateLimiter;
 use Override;
 use Spatie\LaravelPackageTools\Package;
 
-class NewsletterServiceProvider extends AbstractPackageServiceProvider
+final class NewsletterServiceProvider extends AbstractPackageServiceProvider
 {
     public static string $name = 'capell-newsletter';
 

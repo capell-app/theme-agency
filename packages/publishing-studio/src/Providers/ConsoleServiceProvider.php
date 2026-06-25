@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Schedule;
 use Illuminate\Support\ServiceProvider;
 use Override;
 
-class ConsoleServiceProvider extends ServiceProvider
+final class ConsoleServiceProvider extends ServiceProvider
 {
     #[Override]
     public function register(): void {}
