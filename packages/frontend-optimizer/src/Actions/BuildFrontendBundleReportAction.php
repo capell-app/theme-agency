@@ -38,11 +38,14 @@ final class BuildFrontendBundleReportAction
         $entries = [];
 
         foreach ($manifest as $source => $asset) {
-            if (! is_array($asset) || ! is_string($asset['file'] ?? null)) {
+            if (! is_array($asset)) {
                 continue;
             }
 
-            $file = $asset['file'];
+            $file = $asset['file'] ?? null;
+            if (! is_string($file)) {
+                continue;
+            }
             $absolutePath = $buildPath . '/' . $file;
 
             if (! File::exists($absolutePath)) {
@@ -98,7 +101,7 @@ final class BuildFrontendBundleReportAction
     }
 
     /**
-     * @param  list<array{type: string, entrypoint: string, raw_bytes: int, gzip_bytes: int}>  $entries
+     * @param  list<array{type: string, entrypoint: string, raw_bytes: int, gzip_bytes: int, ...}>  $entries
      * @return array<string, array{raw_bytes: int, gzip_bytes: int, files: int}>
      */
     private function totals(array $entries): array

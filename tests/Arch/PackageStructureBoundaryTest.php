@@ -97,21 +97,30 @@ function capellStructProviderFiles(): array
         $composer = json_decode((string) file_get_contents($composerPath), true, flags: JSON_THROW_ON_ERROR);
         $directory = dirname($composerPath);
 
-        /** @var list<string> $declared */
-        $declared = $composer['extra']['laravel']['providers'] ?? [];
-        /** @var array<string, string> $psr4 */
-        $psr4 = $composer['autoload']['psr-4'] ?? [];
+        $extra = is_array($composer['extra'] ?? null) ? $composer['extra'] : [];
+        $laravel = is_array($extra['laravel'] ?? null) ? $extra['laravel'] : [];
+        $declared = is_array($laravel['providers'] ?? null) ? $laravel['providers'] : [];
+        $autoload = is_array($composer['autoload'] ?? null) ? $composer['autoload'] : [];
+        $psr4 = is_array($autoload['psr-4'] ?? null) ? $autoload['psr-4'] : [];
 
         foreach ($declared as $fqcn) {
+            if (! is_string($fqcn)) {
+                continue;
+            }
+
             foreach ($psr4 as $namespace => $path) {
-                $namespace = rtrim((string) $namespace, '\\');
+                if (! is_string($namespace) || ! is_string($path)) {
+                    continue;
+                }
+
+                $namespace = rtrim($namespace, '\\');
 
                 if (! str_starts_with($fqcn, $namespace . '\\')) {
                     continue;
                 }
 
                 $relative = str_replace('\\', '/', substr($fqcn, mb_strlen($namespace) + 1)) . '.php';
-                $candidate = $directory . '/' . rtrim((string) $path, '/') . '/' . $relative;
+                $candidate = $directory . '/' . rtrim($path, '/') . '/' . $relative;
 
                 if (is_file($candidate)) {
                     $providers[$fqcn] = $candidate;

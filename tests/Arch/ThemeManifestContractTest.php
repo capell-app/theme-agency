@@ -82,7 +82,12 @@ it('theme package manifest follows the shared theme contract', function (string 
     foreach (is_array($screenshots) ? $screenshots : [] as $screenshot) {
         $path = is_array($screenshot) ? ($screenshot['path'] ?? null) : null;
 
-        expect(is_string($path))->toBeTrue("Theme {$slug} has a screenshot entry without a string path.")
-            ->and(is_file($directory . '/' . $path))->toBeTrue("Theme {$slug} screenshot missing on disk: " . (is_string($path) ? $path : ''));
+        if (! is_string($path)) {
+            expect(false)->toBeTrue("Theme {$slug} has a screenshot entry without a string path.");
+
+            continue;
+        }
+
+        expect(is_file($directory . '/' . $path))->toBeTrue("Theme {$slug} screenshot missing on disk: {$path}");
     }
 })->with('conforming_theme_packages');

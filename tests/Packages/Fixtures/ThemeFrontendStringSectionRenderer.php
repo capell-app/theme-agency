@@ -34,7 +34,7 @@ final class ThemeFrontendStringSectionRenderer implements SectionRenderer
             '<section data-theme="%s" data-section="%s"><h2>%s</h2></section>',
             e($this->themeKey),
             e($section->key()),
-            e((string) $heading),
+            e(is_string($heading) ? $heading : $section->key()),
         );
     }
 }

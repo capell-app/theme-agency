@@ -9,6 +9,7 @@ use Capell\FoundationTheme\Providers\FoundationThemeServiceProvider;
 use Capell\LayoutBuilder\Data\LayoutContainerSchemaContextData;
 use Filament\Forms\Components\Select;
 use Filament\Schemas\Schema;
+use RuntimeException;
 
 it('adds foundation theme layout container fields for the foundation theme key', function (): void {
     $theme = Theme::factory()->create(['key' => FoundationThemeServiceProvider::THEME_KEY]);
@@ -18,9 +19,14 @@ it('adds foundation theme layout container fields for the foundation theme key',
 
     $components = $extender->extendContainerComponents(Schema::make()->record($layout), $context);
 
+    $firstComponent = $components[0] ?? null;
+    if (! $firstComponent instanceof Select) {
+        throw new RuntimeException('Expected first component to be a Select');
+    }
+
     expect($extender->supports($context))->toBeTrue()
         ->and($extender->themeKey())->toBe(FoundationThemeServiceProvider::THEME_KEY)
         ->and($components)->toHaveCount(1)
-        ->and($components[0])->toBeInstanceOf(Select::class)
-        ->and($components[0]->getName())->toBe('surface_tone');
+        ->and($firstComponent)->toBeInstanceOf(Select::class)
+        ->and($firstComponent->getName())->toBe('surface_tone');
 });

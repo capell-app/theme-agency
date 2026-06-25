@@ -7,6 +7,7 @@ namespace Capell\Tests\Arch;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use RuntimeException;
+use SplFileInfo;
 
 it('all named classes in the test suite live in their own PSR-4 file', function (): void {
     $testsPath = realpath(__DIR__ . '/..');
@@ -24,6 +25,10 @@ it('all named classes in the test suite live in their own PSR-4 file', function 
     );
 
     foreach ($iterator as $file) {
+        if (! $file instanceof SplFileInfo) {
+            continue;
+        }
+
         if ($file->getExtension() !== 'php') {
             continue;
         }

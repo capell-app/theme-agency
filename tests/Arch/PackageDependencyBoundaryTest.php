@@ -7,6 +7,7 @@ namespace Capell\Tests\Arch;
 use FilesystemIterator;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
+use SplFileInfo;
 
 /*
 |--------------------------------------------------------------------------
@@ -57,7 +58,9 @@ function capellPackageNamespaceToName(): array
             continue;
         }
 
-        foreach (array_keys($composer['autoload']['psr-4'] ?? []) as $namespace) {
+        $autoload = is_array($composer['autoload'] ?? null) ? $composer['autoload'] : [];
+        $psr4 = is_array($autoload['psr-4'] ?? null) ? $autoload['psr-4'] : [];
+        foreach (array_keys($psr4) as $namespace) {
             $map[rtrim((string) $namespace, '\\')] = $name;
         }
     }
@@ -226,15 +229,20 @@ it('feature packages only import Capell namespaces declared in their composer re
         $packageDirectory = basename(dirname($composerPath));
         $composer = capellReadJson($composerPath);
 
+        $autoload = is_array($composer['autoload'] ?? null) ? $composer['autoload'] : [];
+        $autoloadDev = is_array($composer['autoload-dev'] ?? null) ? $composer['autoload-dev'] : [];
+        $psr4Autoload = is_array($autoload['psr-4'] ?? null) ? $autoload['psr-4'] : [];
+        $psr4AutoloadDev = is_array($autoloadDev['psr-4'] ?? null) ? $autoloadDev['psr-4'] : [];
         $ownNamespaces = [];
-        foreach ([$composer['autoload']['psr-4'] ?? [], $composer['autoload-dev']['psr-4'] ?? []] as $psr4) {
+        foreach ([$psr4Autoload, $psr4AutoloadDev] as $psr4) {
             foreach (array_keys($psr4) as $namespace) {
                 $ownNamespaces[] = rtrim((string) $namespace, '\\');
             }
         }
 
         $allowedNamespaces = $ownNamespaces;
-        foreach (array_keys($composer['require'] ?? []) as $requirement) {
+        $require = is_array($composer['require'] ?? null) ? $composer['require'] : [];
+        foreach (array_keys($require) as $requirement) {
             foreach ($nameToNamespaces[$requirement] ?? [] as $namespace) {
                 $allowedNamespaces[] = $namespace;
             }
@@ -252,6 +260,10 @@ it('feature packages only import Capell namespaces declared in their composer re
         );
 
         foreach ($iterator as $file) {
+            if (! $file instanceof SplFileInfo) {
+                continue;
+            }
+
             if (! $file->isFile() || $file->getExtension() !== 'php') {
                 continue;
             }
