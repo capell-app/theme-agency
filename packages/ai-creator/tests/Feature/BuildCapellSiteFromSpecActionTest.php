@@ -110,6 +110,20 @@ it('creates one page per spec page with the right layout and a resolved url', fu
         ->and(PageUrl::query()->where('url', '/about')->exists())->toBeTrue();
 });
 
+it('validates an exported spec whose pages and sections carry empty meta/visibility', function (): void {
+    // Regression: the page/section `meta` + `visibility` arrays default to []
+    // and must validate when a spec round-trips through JSON. Laravel's
+    // `required` rule rejects empty arrays, so the DTOs mark them sometimes|array.
+    $payload = buildSpecFixture()->toArray();
+
+    $spec = CapellSiteSpecData::validateAndCreate($payload);
+
+    expect($spec->pages)->toHaveCount(2)
+        ->and($spec->pages[0]->meta)->toBe([])
+        ->and($spec->pages[0]->visibility)->toBe([])
+        ->and($spec->pages[0]->sections[0]->meta)->toBe([]);
+});
+
 it('concatenates ordered sections into the page translation content', function (): void {
     $site = BuildCapellSiteFromSpecAction::run(buildSpecFixture());
 
