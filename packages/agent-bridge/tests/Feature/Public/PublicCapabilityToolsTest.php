@@ -5,6 +5,7 @@ declare(strict_types=1);
 use Capell\AgentBridge\Data\CapabilityData;
 use Capell\AgentBridge\Enums\CapabilityRiskEnum;
 use Capell\AgentBridge\Enums\CapabilityServerEnum;
+use Capell\AgentBridge\Support\CapellAgentBridgeCapabilityRegistry;
 use Capell\AgentBridge\Tests\Fixtures\FakeCapabilityAction;
 
 /**
@@ -34,4 +35,17 @@ it('defaults public to false and serialises it in the payload', function (): voi
 
     expect($capability->public)->toBeFalse();
     expect($capability->toPayload())->toHaveKey('public');
+});
+
+it('publiclyReadable returns only public Read caps whose package is available', function (): void {
+    $registry = new CapellAgentBridgeCapabilityRegistry;
+    $registry->register(makeCapability('pub.read', risk: CapabilityRiskEnum::Read, public: true));
+    $registry->register(makeCapability('pub.write', risk: CapabilityRiskEnum::High, public: true));
+    $registry->register(makeCapability('priv.read', risk: CapabilityRiskEnum::Read, public: false));
+
+    $keys = $registry->publiclyReadable()->map->key->all();
+
+    expect($keys)->toContain('pub.read')
+        ->and($keys)->not->toContain('pub.write')   // write excluded even if flagged public
+        ->and($keys)->not->toContain('priv.read');  // non-public excluded
 });

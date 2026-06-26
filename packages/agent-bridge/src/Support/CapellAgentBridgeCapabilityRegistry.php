@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Capell\AgentBridge\Support;
 
 use Capell\AgentBridge\Data\CapabilityData;
+use Capell\AgentBridge\Enums\CapabilityRiskEnum;
 use Capell\AgentBridge\Enums\CapabilityServerEnum;
 use Capell\Core\Facades\CapellCore;
 use Capell\Core\Support\CapellCoreManager;
@@ -63,6 +64,21 @@ final class CapellAgentBridgeCapabilityRegistry
     public function all(): Collection
     {
         return collect(array_values($this->capabilities));
+    }
+
+    /**
+     * Capabilities exposed on the tokenless public read endpoint: explicitly
+     * flagged public, pure Read risk, and whose required package is installed.
+     *
+     * @return Collection<int, CapabilityData>
+     */
+    public function publiclyReadable(): Collection
+    {
+        return $this->all()
+            ->filter(fn (CapabilityData $capability): bool => $capability->public === true)
+            ->filter(fn (CapabilityData $capability): bool => $capability->risk === CapabilityRiskEnum::Read)
+            ->filter(fn (CapabilityData $capability): bool => $this->requiredPackageIsAvailable($capability))
+            ->values();
     }
 
     private function requiredPackageIsAvailable(CapabilityData $capability): bool
