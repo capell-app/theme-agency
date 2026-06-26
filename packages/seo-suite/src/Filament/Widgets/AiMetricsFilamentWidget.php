@@ -6,10 +6,10 @@ namespace Capell\SeoSuite\Filament\Widgets;
 
 use Capell\Admin\Contracts\CapellFilamentWidgetContract;
 use Capell\Admin\Filament\Concerns\GatedByRoleAndSettings;
+use Capell\AIOrchestrator\Settings\AIOrchestratorSettings;
 use Capell\SeoSuite\Data\Dashboard\AiMetricsData;
 use Capell\SeoSuite\Data\Dashboard\FeatureUsageData;
 use Capell\SeoSuite\Models\AIGenerationHistory;
-use Capell\SeoSuite\Settings\AIOrchestratorSettings;
 use Capell\SeoSuite\Support\AiRateLimiter;
 use Filament\Widgets\Widget;
 use Illuminate\Support\Collection;

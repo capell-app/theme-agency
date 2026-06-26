@@ -155,7 +155,7 @@
             "type": "setting",
             "class": "Capell\\SeoSuite\\Manifest\\SeoSuiteSettingsContribution",
             "settingsClasses": [
-                "Capell\\SeoSuite\\Settings\\AIOrchestratorSettings",
+                "Capell\\AIOrchestrator\\Settings\\AIOrchestratorSettings",
                 "Capell\\SeoSuite\\Settings\\SeoSuiteSettings"
             ],
             "settingsGroups": ["ai-orchestrator", "seo_suite", "frontend"]
@@ -208,7 +208,7 @@
         "install": "Capell\\SeoSuite\\Actions\\InstallSeoSuitePackageAction"
     },
     "settings": [
-        "Capell\\SeoSuite\\Settings\\AIOrchestratorSettings",
+        "Capell\\AIOrchestrator\\Settings\\AIOrchestratorSettings",
         "Capell\\SeoSuite\\Settings\\SeoSuiteSettings"
     ],
     "permissions": [

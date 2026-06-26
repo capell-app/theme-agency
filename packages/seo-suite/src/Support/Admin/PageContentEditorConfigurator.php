@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Capell\SeoSuite\Support\Admin;
 
+use Capell\AIOrchestrator\Settings\AIOrchestratorSettings;
 use Capell\Core\Models\Site;
 use Capell\Core\Models\Translation;
 use Capell\SeoSuite\Actions\GeneratorPageContentAction;
 use Capell\SeoSuite\Exceptions\OpenAICircuitBreakerOpenException;
-use Capell\SeoSuite\Settings\AIOrchestratorSettings;
 use Capell\SeoSuite\Support\Context\ContentActionContext;
 use Exception;
 use Filament\Actions\Action;
