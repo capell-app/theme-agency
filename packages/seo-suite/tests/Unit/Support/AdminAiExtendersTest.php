@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-use Capell\SeoSuite\Actions\SuggestMetaDescriptionsAction;
-use Capell\SeoSuite\Actions\SuggestPageTitlesAction;
+use Capell\AIOrchestrator\Actions\Ai\SuggestMetaDescriptionsAction;
+use Capell\AIOrchestrator\Actions\Ai\SuggestPageTitlesAction;
+use Capell\AIOrchestrator\Settings\AIOrchestratorSettings;
 use Capell\SeoSuite\Filament\Actions\AiCreatorAction;
-use Capell\SeoSuite\Settings\AIOrchestratorSettings;
 use Capell\SeoSuite\Support\Admin\PageContentEditorConfigurator;
 use Capell\SeoSuite\Support\Admin\PageTitleWithSlugInputExtender;
 use Capell\SeoSuite\Support\Admin\SearchMetaDataSectionExtender;
@@ -16,7 +16,7 @@ use Filament\Schemas\Components\Wizard;
 beforeEach(function (): void {
     test()->registerAndMigrateSettings(
         ['2026_05_10_190871_01_create_ai-orchestrator_settings'],
-        dirname(__DIR__, 3) . '/database/settings',
+        dirname(__DIR__, 4) . '/ai-orchestrator/database/settings',
     );
 });
 

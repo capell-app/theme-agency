@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Capell\SeoSuite\Actions;
 
-use Capell\SeoSuite\Actions\Ai\RecordAiGenerationAction;
+use Capell\AIOrchestrator\Actions\Ai\RecordAiGenerationAction;
+use Capell\AIOrchestrator\Support\Ai\AiRateLimiter;
 use Capell\SeoSuite\DataObjects\AiImageData;
-use Capell\SeoSuite\Support\AiRateLimiter;
 use Lorisleiva\Actions\Concerns\AsAction;
 use Prism\Prism\Enums\Provider;
 use Prism\Prism\Facades\Prism;

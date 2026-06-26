@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Capell\SeoSuite\Models;
 
+use Capell\AIOrchestrator\Models\AIGenerationHistory;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;

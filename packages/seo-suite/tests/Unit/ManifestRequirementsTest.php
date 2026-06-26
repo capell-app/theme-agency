@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use Capell\AIOrchestrator\Models\AIGenerationHistory;
+use Capell\AIOrchestrator\Settings\AIOrchestratorSettings;
 use Capell\Core\Contracts\Extensions\ChecksExtensionHealth;
 use Capell\Core\Contracts\Extensions\ExtensionContribution;
 use Capell\Core\Contracts\Extensions\RegistersExtensionFilamentWidget;
@@ -56,14 +58,12 @@ use Capell\SeoSuite\Models\AiDiscoveryCrawlerRule;
 use Capell\SeoSuite\Models\AiDiscoveryPageProfile;
 use Capell\SeoSuite\Models\AiDiscoverySiteProfile;
 use Capell\SeoSuite\Models\AiDiscoverySnapshot;
-use Capell\SeoSuite\Models\AIGenerationHistory;
 use Capell\SeoSuite\Models\BrokenLink;
 use Capell\SeoSuite\Models\PageSeoSnapshot;
 use Capell\SeoSuite\Models\PageSpeedAuditResult;
 use Capell\SeoSuite\Models\PageSpeedAuditRun;
 use Capell\SeoSuite\Models\SearchConsoleQueryMetric;
 use Capell\SeoSuite\Models\SearchConsoleUrlMetric;
-use Capell\SeoSuite\Settings\AIOrchestratorSettings;
 use Capell\SeoSuite\Settings\SeoSuiteSettings;
 
 it('declares implemented diagnostics commands tables and capabilities', function (): void {

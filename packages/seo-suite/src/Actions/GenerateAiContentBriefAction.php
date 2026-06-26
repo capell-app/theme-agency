@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Capell\SeoSuite\Actions;
 
+use Capell\AIOrchestrator\Support\Ai\AiResponseParser;
+use Capell\AIOrchestrator\Support\Ai\PrismProvider;
+use Capell\AIOrchestrator\Support\Ai\PromptRepository;
 use Capell\Core\Actions\Content\ExtractTextContentAction;
 use Capell\Core\Models\Language;
 use Capell\Core\Models\Page;
@@ -15,9 +18,6 @@ use Capell\SeoSuite\Data\PageSeoReportData;
 use Capell\SeoSuite\Data\SchemaTemplateReportData;
 use Capell\SeoSuite\Data\SearchConsoleInsightData;
 use Capell\SeoSuite\Data\SeoIssueData;
-use Capell\SeoSuite\Support\AiResponseParser;
-use Capell\SeoSuite\Support\PrismProvider;
-use Capell\SeoSuite\Support\PromptRepository;
 use Illuminate\Contracts\Database\Eloquent\Builder as BuilderContract;
 use InvalidArgumentException;
 use Lorisleiva\Actions\Concerns\AsAction;

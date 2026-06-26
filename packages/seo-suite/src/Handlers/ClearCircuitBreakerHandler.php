@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Capell\SeoSuite\Handlers;
 
 use Capell\Admin\Support\AdminEventHandlerInterface;
-use Capell\SeoSuite\Support\PrismProvider;
+use Capell\AIOrchestrator\Support\Ai\PrismProvider;
 use Filament\Notifications\Notification;
 use Livewire\Component;
 

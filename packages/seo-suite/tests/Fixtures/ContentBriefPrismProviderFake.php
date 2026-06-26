@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Capell\SeoSuite\Tests\Fixtures;
 
-use Capell\SeoSuite\Support\AiResponse;
-use Capell\SeoSuite\Support\PrismProvider;
+use Capell\AIOrchestrator\Support\Ai\AiResponse;
+use Capell\AIOrchestrator\Support\Ai\PrismProvider;
 use Override;
 
 final class ContentBriefPrismProviderFake extends PrismProvider

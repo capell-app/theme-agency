@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace Capell\SeoSuite\Actions;
 
 use BadMethodCallException;
+use Capell\AIOrchestrator\Contracts\AiActionContextInterface;
+use Capell\AIOrchestrator\Events\Ai\AiGenerationCompleted;
+use Capell\AIOrchestrator\Events\Ai\AiGenerationFailed;
+use Capell\AIOrchestrator\Events\Ai\AiGenerationStarted;
 use Capell\SeoSuite\Contracts\ActionContract;
-use Capell\SeoSuite\Contracts\AiActionContextInterface;
-use Capell\SeoSuite\Events\AiGenerationCompleted;
-use Capell\SeoSuite\Events\AiGenerationFailed;
-use Capell\SeoSuite\Events\AiGenerationStarted;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Log;
 use InvalidArgumentException;

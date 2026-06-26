@@ -248,7 +248,6 @@ it('publishes the complete seo suite schema and settings migrations during insta
     expect($source)->toContain('PublishPackageMigrationsAction')
         ->and($source)->toContain('RunMigrationsAction')
         ->and($migrationFiles)->toContain('create_ai_creator_contexts_table')
-        ->and($migrationFiles)->toContain('create_ai_generation_histories_table')
         ->and($migrationFiles)->toContain('create_ai_creator_sessions_table')
         ->and($migrationFiles)->toContain('create_ai_discovery_site_profiles_table')
         ->and($migrationFiles)->toContain('create_ai_discovery_page_profiles_table')
@@ -257,7 +256,6 @@ it('publishes the complete seo suite schema and settings migrations during insta
         ->and($migrationFiles)->toContain('create_broken_links_table')
         ->and($migrationFiles)->toContain('create_page_seo_snapshots_table')
         ->and($migrationFiles)->toContain('create_search_console_url_metrics_table')
-        ->and($settingsFiles)->toContain('2026_05_10_190871_01_create_ai-orchestrator_settings')
         ->and($settingsFiles)->toContain('2026_05_10_190871_03_create_seo_suite_settings');
 });
 

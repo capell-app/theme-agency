@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
+use Capell\AIOrchestrator\Models\AIGenerationHistory;
+use Capell\AIOrchestrator\Support\Ai\AiRateLimiter;
+use Capell\AIOrchestrator\Support\Ai\Cache\RateLimitCache;
 use Capell\SeoSuite\Actions\GenerateAiImageAction;
 use Capell\SeoSuite\DataObjects\AiImageData;
-use Capell\SeoSuite\Models\AIGenerationHistory;
-use Capell\SeoSuite\Support\AiRateLimiter;
-use Capell\SeoSuite\Support\Cache\RateLimitCache;
 use Prism\Prism\Enums\Provider;
 
 /**

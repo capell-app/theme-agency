@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Capell\SeoSuite\Console\Commands;
 
-use Capell\SeoSuite\Support\PrismProvider;
+use Capell\AIOrchestrator\Support\Ai\PrismProvider;
 use Illuminate\Console\Command;
 
 class TestOpenAiConnectionCommand extends Command

@@ -90,7 +90,7 @@
             "type": "model",
             "class": "Capell\\SeoSuite\\Manifest\\SeoSuiteModelsContribution",
             "modelClasses": [
-                "Capell\\SeoSuite\\Models\\AIGenerationHistory",
+                "Capell\\AIOrchestrator\\Models\\AIGenerationHistory",
                 "Capell\\SeoSuite\\Models\\AiCreatorContext",
                 "Capell\\SeoSuite\\Models\\AiCreatorSession",
                 "Capell\\SeoSuite\\Models\\AiDiscoverySiteProfile",

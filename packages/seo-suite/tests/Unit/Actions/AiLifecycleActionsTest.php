@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
+use Capell\AIOrchestrator\Contracts\AiActionContextInterface;
+use Capell\AIOrchestrator\Data\Ai\AiGenerationResultData;
+use Capell\AIOrchestrator\Events\Ai\AiGenerationCompleted;
+use Capell\AIOrchestrator\Events\Ai\AiGenerationFailed;
+use Capell\AIOrchestrator\Events\Ai\AiGenerationStarted;
+use Capell\AIOrchestrator\Models\AIGenerationHistory;
+use Capell\AIOrchestrator\Support\Ai\AiResponse;
 use Capell\SeoSuite\Actions\ApplyAiDraftAction;
 use Capell\SeoSuite\Actions\RecordAiGenerationAction;
-use Capell\SeoSuite\Contracts\AiActionContextInterface;
-use Capell\SeoSuite\Data\Ai\AiGenerationResultData;
-use Capell\SeoSuite\Events\AiGenerationCompleted;
-use Capell\SeoSuite\Events\AiGenerationFailed;
-use Capell\SeoSuite\Events\AiGenerationStarted;
-use Capell\SeoSuite\Models\AIGenerationHistory;
-use Capell\SeoSuite\Support\AiResponse;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Log;
 

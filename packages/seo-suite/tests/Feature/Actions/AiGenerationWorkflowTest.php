@@ -2,23 +2,23 @@
 
 declare(strict_types=1);
 
-use Capell\SeoSuite\Actions\Ai\RecordAiGenerationAction as NamespacedRecordAiGenerationAction;
+use Capell\AIOrchestrator\Actions\Ai\GeneratorPageContentAction;
+use Capell\AIOrchestrator\Actions\Ai\RecordAiGenerationAction as NamespacedRecordAiGenerationAction;
+use Capell\AIOrchestrator\Actions\Ai\SuggestMetaDescriptionsAction;
+use Capell\AIOrchestrator\Actions\Ai\SuggestPageTitlesAction;
+use Capell\AIOrchestrator\Contracts\AiActionContextInterface;
+use Capell\AIOrchestrator\Data\Ai\AiGenerationResultData;
+use Capell\AIOrchestrator\Models\AIGenerationHistory;
+use Capell\AIOrchestrator\Support\Ai\AiRateLimiter;
+use Capell\AIOrchestrator\Support\Ai\AiResponse;
+use Capell\AIOrchestrator\Support\Ai\Cache\RateLimitCache;
+use Capell\AIOrchestrator\Support\Ai\PrismProvider;
+use Capell\AIOrchestrator\Support\Ai\PromptRepository;
 use Capell\SeoSuite\Actions\GenerateAiLayoutAction;
-use Capell\SeoSuite\Actions\GeneratorPageContentAction;
-use Capell\SeoSuite\Actions\SuggestMetaDescriptionsAction;
-use Capell\SeoSuite\Actions\SuggestPageTitlesAction;
-use Capell\SeoSuite\Contracts\AiActionContextInterface;
-use Capell\SeoSuite\Data\Ai\AiGenerationResultData;
 use Capell\SeoSuite\DataObjects\AiCreatorData;
 use Capell\SeoSuite\Models\AiCreatorContext;
 use Capell\SeoSuite\Models\AiCreatorSession;
-use Capell\SeoSuite\Models\AIGenerationHistory;
-use Capell\SeoSuite\Support\AiRateLimiter;
-use Capell\SeoSuite\Support\AiResponse;
-use Capell\SeoSuite\Support\Cache\RateLimitCache;
 use Capell\SeoSuite\Support\Pipelines\AiCreatorPipeline;
-use Capell\SeoSuite\Support\PrismProvider;
-use Capell\SeoSuite\Support\PromptRepository;
 use Capell\SeoSuite\Support\SectionRegistry;
 use Illuminate\Support\Facades\Event;
 

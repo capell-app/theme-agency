@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Capell\SeoSuite\Support\Context;
 
+use Capell\AIOrchestrator\Contracts\AiActionContextInterface;
 use Capell\Core\Models\PageTranslation;
-use Capell\SeoSuite\Contracts\AiActionContextInterface;
 
 final readonly class PageTranslationActionContext implements AiActionContextInterface
 {
