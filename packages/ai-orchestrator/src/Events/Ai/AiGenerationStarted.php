@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Capell\SeoSuite\Events;
+namespace Capell\AIOrchestrator\Events\Ai;
 
 class AiGenerationStarted
 {

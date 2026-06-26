@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-use Capell\SeoSuite\Actions\Ai\RecordAiGenerationAction;
-use Capell\SeoSuite\Contracts\AiActionContextInterface;
-use Capell\SeoSuite\Data\Ai\AiGenerationInputData;
-use Capell\SeoSuite\Support\AiRateLimiter;
-use Capell\SeoSuite\Support\AiResponse;
-use Capell\SeoSuite\Support\Cache\RateLimitCache;
-use Capell\SeoSuite\Support\Pipelines\GenerateContentPipeline;
-use Capell\SeoSuite\Support\PrismProvider;
-use Capell\SeoSuite\Support\PromptRepository;
+use Capell\AIOrchestrator\Actions\Ai\RecordAiGenerationAction;
+use Capell\AIOrchestrator\Contracts\AiActionContextInterface;
+use Capell\AIOrchestrator\Data\Ai\AiGenerationInputData;
+use Capell\AIOrchestrator\Support\Ai\AiRateLimiter;
+use Capell\AIOrchestrator\Support\Ai\AiResponse;
+use Capell\AIOrchestrator\Support\Ai\Cache\RateLimitCache;
+use Capell\AIOrchestrator\Support\Ai\Pipelines\GenerateContentPipeline;
+use Capell\AIOrchestrator\Support\Ai\PrismProvider;
+use Capell\AIOrchestrator\Support\Ai\PromptRepository;
 
 function executeGenerateContentPipelineWithHtml(string $html): string
 {

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Capell\SeoSuite\Actions\Ai;
+namespace Capell\AIOrchestrator\Actions\Ai;
 
 use Lorisleiva\Actions\Concerns\AsAction;
 

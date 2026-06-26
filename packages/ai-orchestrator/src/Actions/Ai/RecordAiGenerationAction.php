@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Capell\SeoSuite\Actions\Ai;
+namespace Capell\AIOrchestrator\Actions\Ai;
 
-use Capell\SeoSuite\Data\Ai\AiGenerationResultData;
-use Capell\SeoSuite\Models\AIGenerationHistory;
+use Capell\AIOrchestrator\Data\Ai\AiGenerationResultData;
+use Capell\AIOrchestrator\Models\AIGenerationHistory;
 use Illuminate\Support\Facades\Auth;
 use Lorisleiva\Actions\Concerns\AsAction;
 

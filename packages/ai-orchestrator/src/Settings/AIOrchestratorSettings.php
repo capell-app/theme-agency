@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Capell\SeoSuite\Settings;
+namespace Capell\AIOrchestrator\Settings;
 
 use Capell\Core\Contracts\SettingsContract;
 use Spatie\LaravelSettings\Settings;

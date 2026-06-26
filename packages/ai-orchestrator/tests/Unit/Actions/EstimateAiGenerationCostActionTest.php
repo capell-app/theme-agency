@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Capell\SeoSuite\Actions\Ai\EstimateAiGenerationCostAction;
+use Capell\AIOrchestrator\Actions\Ai\EstimateAiGenerationCostAction;
 
 it('estimates token and flat image costs from configured pricing', function (): void {
     $textCost = EstimateAiGenerationCostAction::run(

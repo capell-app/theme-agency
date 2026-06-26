@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Capell\SeoSuite\Actions;
+namespace Capell\AIOrchestrator\Actions\Ai;
 
-use Capell\SeoSuite\Contracts\AiActionContextInterface;
-use Capell\SeoSuite\Data\Ai\AiGenerationInputData;
-use Capell\SeoSuite\Events\AiGenerationCompleted;
-use Capell\SeoSuite\Events\AiGenerationFailed;
-use Capell\SeoSuite\Events\AiGenerationStarted;
-use Capell\SeoSuite\Support\Pipelines\GenerateContentPipeline;
+use Capell\AIOrchestrator\Contracts\AiActionContextInterface;
+use Capell\AIOrchestrator\Data\Ai\AiGenerationInputData;
+use Capell\AIOrchestrator\Events\Ai\AiGenerationCompleted;
+use Capell\AIOrchestrator\Events\Ai\AiGenerationFailed;
+use Capell\AIOrchestrator\Events\Ai\AiGenerationStarted;
+use Capell\AIOrchestrator\Support\Ai\Pipelines\GenerateContentPipeline;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Log;
 use Lorisleiva\Actions\Concerns\AsAction;

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Capell\SeoSuite\Listeners;
+namespace Capell\AIOrchestrator\Listeners\Ai;
 
-use Capell\SeoSuite\Events\AiGenerationCompleted;
+use Capell\AIOrchestrator\Events\Ai\AiGenerationCompleted;
 use Illuminate\Support\Facades\Log;
 
 class LogAiGeneration

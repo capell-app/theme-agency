@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Capell\SeoSuite\Filament\Settings;
+namespace Capell\AIOrchestrator\Filament\Settings;
 
 use Capell\Admin\Filament\Contracts\HasSchema;
 use Filament\Forms\Components\Checkbox;

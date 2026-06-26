@@ -54,8 +54,6 @@ use Capell\SeoSuite\Contracts\SearchConsoleClientInterface;
 use Capell\SeoSuite\Contracts\SeoPublishReportProvider;
 use Capell\SeoSuite\Enums\MetaSchemaEnum;
 use Capell\SeoSuite\Enums\SchemaTemplateTypeEnum;
-use Capell\SeoSuite\Events\AiGenerationCompleted;
-use Capell\SeoSuite\Events\AiGenerationFailed;
 use Capell\SeoSuite\Filament\Extenders\Page\PageSeoSettingsTabExtender;
 use Capell\SeoSuite\Filament\Extenders\PageSpeed\PageSpeedPageTableExtender;
 use Capell\SeoSuite\Filament\Extenders\Site\SiteDetailsMetaExtender;
@@ -66,7 +64,6 @@ use Capell\SeoSuite\Filament\Pages\NotFoundUrlsPage;
 use Capell\SeoSuite\Filament\Pages\SearchRankingsPage;
 use Capell\SeoSuite\Filament\Pages\SeoAuditPage;
 use Capell\SeoSuite\Filament\Pages\TranslationCoveragePage;
-use Capell\SeoSuite\Filament\Settings\AIOrchestratorSettingsSchema;
 use Capell\SeoSuite\Filament\Settings\Contributors\SeoSuiteDashboardSettingsContributor;
 use Capell\SeoSuite\Filament\Settings\SeoSettingsSchema;
 use Capell\SeoSuite\Filament\Settings\StructuredDataSettingsSchema;
@@ -89,8 +86,6 @@ use Capell\SeoSuite\Http\Controllers\RobotsTxtController;
 use Capell\SeoSuite\Listeners\AiDiscovery\ClearAiDiscoveryCacheOnPageDeleted;
 use Capell\SeoSuite\Listeners\AiDiscovery\ClearAiDiscoveryCacheOnPageSaved;
 use Capell\SeoSuite\Listeners\AiDiscovery\SeedAiCrawlerRulesOnSiteCreated;
-use Capell\SeoSuite\Listeners\LogAiGeneration;
-use Capell\SeoSuite\Listeners\NotifyAiFailure;
 use Capell\SeoSuite\Listeners\RecordBrokenLink;
 use Capell\SeoSuite\Models\AiCreatorContext;
 use Capell\SeoSuite\Models\AiCreatorSession;
@@ -118,10 +113,6 @@ use Capell\SeoSuite\Support\Admin\SeoAuthoringQualityGateValidator;
 use Capell\SeoSuite\Support\AiDiscovery\AiDiscoveryDiscoveryOutputSource;
 use Capell\SeoSuite\Support\AiFeatureRegistry;
 use Capell\SeoSuite\Support\AiRateLimiter;
-use Capell\SeoSuite\Support\AiResponseParser;
-use Capell\SeoSuite\Support\AiTokenCounter;
-use Capell\SeoSuite\Support\Cache\AIGenerationCache;
-use Capell\SeoSuite\Support\Cache\RateLimitCache;
 use Capell\SeoSuite\Support\ContentGraph\BrokenLinkContentGraphExtractor;
 use Capell\SeoSuite\Support\ContentGraph\PageSeoSnapshotContentGraphExtractor;
 use Capell\SeoSuite\Support\ContentTargetResolver;
@@ -180,7 +171,6 @@ final class SeoSuiteServiceProvider extends AbstractPackageServiceProvider
     public static function getSettingMigrations(): array
     {
         return [
-            '2026_05_10_190871_01_create_ai-orchestrator_settings',
             '2026_05_10_190871_03_create_seo_suite_settings',
             '2026_05_29_000001_add_pagespeed_seo_suite_settings',
         ];
@@ -236,27 +226,7 @@ final class SeoSuiteServiceProvider extends AbstractPackageServiceProvider
 
     protected function registerAiServices(): self
     {
-        $this->app->singleton(PrismProvider::class, fn (Application $app): PrismProvider => new PrismProvider(config('capell-ai-orchestrator.prism', [])));
-
-        $this->app->singleton(PromptRepository::class, fn (Application $app): PromptRepository => new PromptRepository(config('capell-ai-orchestrator.prompts', [])));
-
-        $this->app->singleton(AiResponseParser::class, fn (): AiResponseParser => new AiResponseParser);
-
-        $this->app->singleton(AiRateLimiter::class, fn (Application $app): AiRateLimiter => new AiRateLimiter(
-            $app->make(RateLimitCache::class),
-            config('capell-ai-orchestrator.rate_limiting', ['enabled' => false, 'requests_per_minute' => 60]),
-        ));
-
-        $this->app->singleton(AiTokenCounter::class, fn (): AiTokenCounter => new AiTokenCounter);
-
         $this->app->singleton(AiFeatureRegistry::class, fn (Application $app): AiFeatureRegistry => new AiFeatureRegistry(config('capell-ai-orchestrator.features', [])));
-
-        $this->app->singleton(AIGenerationCache::class, fn (Application $app): AIGenerationCache => new AIGenerationCache(
-            config('cache.default'),
-            config('capell-ai-orchestrator.cache.ttl', 86400),
-        ));
-
-        $this->app->singleton(RateLimitCache::class, fn (\Illuminate\Foundation\Application $app): RateLimitCache => new RateLimitCache((string) config('cache.default')));
 
         $this->app->singleton(SectionRegistry::class, fn (): SectionRegistry => new SectionRegistry);
 
@@ -291,21 +261,6 @@ final class SeoSuiteServiceProvider extends AbstractPackageServiceProvider
                 $registry->register($name, $feature);
             }
         }
-
-        return $this;
-    }
-
-    protected function registerAiEventListeners(): self
-    {
-        $events = $this->app->make(Dispatcher::class);
-        $events->listen(
-            AiGenerationFailed::class,
-            NotifyAiFailure::class,
-        );
-        $events->listen(
-            AiGenerationCompleted::class,
-            LogAiGeneration::class,
-        );
 
         return $this;
     }
@@ -391,8 +346,6 @@ final class SeoSuiteServiceProvider extends AbstractPackageServiceProvider
 
     protected function registerSettingsSchema(): self
     {
-        $this->surface()->settingsSchema('ai-orchestrator', AIOrchestratorSettingsSchema::class);
-        $this->surface()->settingsClass('ai-orchestrator', AIOrchestratorSettings::class);
         $this->surface()->settingsClass('seo_suite', SeoSuiteSettings::class);
         $this->surface()->settingsSchema('seo_suite', SeoSettingsSchema::class);
         $this->surface()->settingsSchema('frontend', StructuredDataSettingsSchema::class);
@@ -590,7 +543,6 @@ final class SeoSuiteServiceProvider extends AbstractPackageServiceProvider
             ->registerPageSchemaExtenders()
             ->registerSiteSchemaExtenders()
             ->registerAiServices()
-            ->registerAiEventListeners()
             ->registerAiDiscoveryEventListeners()
             ->registerAiDiscoveryOutputSource()
             ->registerAiDiscoveryGeneratedOutputCoverage()

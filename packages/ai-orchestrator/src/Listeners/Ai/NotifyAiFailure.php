@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Capell\SeoSuite\Listeners;
+namespace Capell\AIOrchestrator\Listeners\Ai;
 
-use Capell\SeoSuite\Events\AiGenerationFailed;
+use Capell\AIOrchestrator\Events\Ai\AiGenerationFailed;
 use Illuminate\Support\Facades\Log;
 
 class NotifyAiFailure

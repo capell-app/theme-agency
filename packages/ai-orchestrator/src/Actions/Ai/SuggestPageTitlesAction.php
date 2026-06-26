@@ -2,24 +2,24 @@
 
 declare(strict_types=1);
 
-namespace Capell\SeoSuite\Actions;
+namespace Capell\AIOrchestrator\Actions\Ai;
 
-use Capell\SeoSuite\Contracts\AiActionContextInterface;
-use Capell\SeoSuite\Data\Ai\AiGenerationInputData;
-use Capell\SeoSuite\Events\AiGenerationCompleted;
-use Capell\SeoSuite\Events\AiGenerationFailed;
-use Capell\SeoSuite\Events\AiGenerationStarted;
-use Capell\SeoSuite\Support\Pipelines\SuggestMetaDescriptionsPipeline;
+use Capell\AIOrchestrator\Contracts\AiActionContextInterface;
+use Capell\AIOrchestrator\Data\Ai\AiGenerationInputData;
+use Capell\AIOrchestrator\Events\Ai\AiGenerationCompleted;
+use Capell\AIOrchestrator\Events\Ai\AiGenerationFailed;
+use Capell\AIOrchestrator\Events\Ai\AiGenerationStarted;
+use Capell\AIOrchestrator\Support\Ai\Pipelines\SuggestTitlesPipeline;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Log;
 use Lorisleiva\Actions\Concerns\AsAction;
 use Throwable;
 
-class SuggestMetaDescriptionsAction
+class SuggestPageTitlesAction
 {
     use AsAction;
 
-    public function __construct(private readonly SuggestMetaDescriptionsPipeline $pipeline) {}
+    public function __construct(private readonly SuggestTitlesPipeline $pipeline) {}
 
     /**
      * @param  array<array-key, mixed>  $options
@@ -31,7 +31,7 @@ class SuggestMetaDescriptionsAction
         Event::dispatch(new AiGenerationStarted(static::class, [$context, $options]));
 
         try {
-            $input = AiGenerationInputData::forContextAction('SuggestMetaDescriptionsAction', $context, $options);
+            $input = AiGenerationInputData::forContextAction('SuggestPageTitlesAction', $context, $options);
             $result = $this->pipeline->execute($input);
 
             $duration = microtime(true) - $startTime;
