@@ -11,6 +11,9 @@ use Capell\Core\Models\Site;
 use Illuminate\Support\Facades\DB;
 use Lorisleiva\Actions\Concerns\AsAction;
 
+/**
+ * @method static AiCreatorSession run(AiCreatorSession $session)
+ */
 final class ApplyAiCreatorSessionAction
 {
     use AsAction;
