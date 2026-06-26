@@ -37,6 +37,22 @@ final class CapellSiteSpecPageData extends Data
     ) {}
 
     /**
+     * The free-form passthrough arrays default to empty and must stay optional:
+     * Laravel's `required` rule (which spatie-data infers for a non-nullable
+     * array property) rejects an empty `[]`, which would otherwise break the
+     * export_site → install-from-spec round-trip for any page without meta.
+     *
+     * @return array<string, array<int, string>>
+     */
+    public static function rules(): array
+    {
+        return [
+            'visibility' => ['sometimes', 'array'],
+            'meta' => ['sometimes', 'array'],
+        ];
+    }
+
+    /**
      * The resolved public path for this page, defaulting to "/{slug}".
      */
     public function resolvedUrl(): string
