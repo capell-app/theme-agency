@@ -81,6 +81,7 @@ final class InteractiveBuilderThemeServiceProvider extends ServiceProvider
         }
 
         $this->loadTranslationsFrom(__DIR__ . '/../resources/lang', 'capell-theme-interactive-builder');
+        $this->loadScreenshotFixtureRoutes();
         $this->loadViewsFrom(__DIR__ . '/../resources/views', 'capell-theme-interactive-builder');
         $this->registerVendorCssAssets();
 
@@ -95,6 +96,15 @@ final class InteractiveBuilderThemeServiceProvider extends ServiceProvider
             ),
             sectionRenderers: array_values($sectionRenderers),
         );
+    }
+
+    private function loadScreenshotFixtureRoutes(): void
+    {
+        if (filter_var(getenv('CAPELL_THEME_INTERACTIVE_BUILDER_SCREENSHOT_FIXTURES_ENABLED'), FILTER_VALIDATE_BOOL) !== true) {
+            return;
+        }
+
+        $this->loadRoutesFrom(__DIR__ . '/../routes/screenshot-fixtures.php');
     }
 
     private function registerVendorCssAssets(): void

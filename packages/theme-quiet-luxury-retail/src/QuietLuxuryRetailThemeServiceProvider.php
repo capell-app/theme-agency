@@ -81,6 +81,7 @@ final class QuietLuxuryRetailThemeServiceProvider extends ServiceProvider
         }
 
         $this->loadTranslationsFrom(__DIR__ . '/../resources/lang', 'capell-theme-quiet-luxury-retail');
+        $this->loadScreenshotFixtureRoutes();
         $this->loadViewsFrom(__DIR__ . '/../resources/views', 'capell-theme-quiet-luxury-retail');
         $this->registerVendorCssAssets();
 
@@ -95,6 +96,15 @@ final class QuietLuxuryRetailThemeServiceProvider extends ServiceProvider
             ),
             sectionRenderers: array_values($sectionRenderers),
         );
+    }
+
+    private function loadScreenshotFixtureRoutes(): void
+    {
+        if (filter_var(getenv('CAPELL_THEME_QUIET_LUXURY_RETAIL_SCREENSHOT_FIXTURES_ENABLED'), FILTER_VALIDATE_BOOL) !== true) {
+            return;
+        }
+
+        $this->loadRoutesFrom(__DIR__ . '/../routes/screenshot-fixtures.php');
     }
 
     private function registerVendorCssAssets(): void

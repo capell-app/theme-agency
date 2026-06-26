@@ -76,13 +76,14 @@ final class PremiumProductStoryThemeServiceProvider extends ServiceProvider
             $this->commands([DemoCommand::class]);
         }
 
+        $this->loadTranslationsFrom(__DIR__ . '/../resources/lang', 'capell-theme-premium-product-story');
+        $this->loadViewsFrom(__DIR__ . '/../resources/views', 'capell-theme-premium-product-story');
+        $this->loadScreenshotFixtureRoutes();
+
         if (! CapellCore::isPackageInstalled(self::$packageName)) {
             return;
         }
 
-        $this->loadTranslationsFrom(__DIR__ . '/../resources/lang', 'capell-theme-premium-product-story');
-        $this->loadViewsFrom(__DIR__ . '/../resources/views', 'capell-theme-premium-product-story');
-        $this->loadScreenshotFixtureRoutes();
         $this->registerVendorCssAssets();
 
         $sectionRenderers = $this->sectionRenderers();

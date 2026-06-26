@@ -81,6 +81,7 @@ final class DevtoolOssThemeServiceProvider extends ServiceProvider
         }
 
         $this->loadTranslationsFrom(__DIR__ . '/../resources/lang', 'capell-theme-devtool-oss');
+        $this->loadScreenshotFixtureRoutes();
         $this->loadViewsFrom(__DIR__ . '/../resources/views', 'capell-theme-devtool-oss');
         $this->registerVendorCssAssets();
 
@@ -95,6 +96,15 @@ final class DevtoolOssThemeServiceProvider extends ServiceProvider
             ),
             sectionRenderers: array_values($sectionRenderers),
         );
+    }
+
+    private function loadScreenshotFixtureRoutes(): void
+    {
+        if (filter_var(getenv('CAPELL_THEME_DEVTOOL_OSS_SCREENSHOT_FIXTURES_ENABLED'), FILTER_VALIDATE_BOOL) !== true) {
+            return;
+        }
+
+        $this->loadRoutesFrom(__DIR__ . '/../routes/screenshot-fixtures.php');
     }
 
     private function registerVendorCssAssets(): void

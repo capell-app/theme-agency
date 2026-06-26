@@ -81,6 +81,7 @@ final class RoboticsHardwareThemeServiceProvider extends ServiceProvider
         }
 
         $this->loadTranslationsFrom(__DIR__ . '/../resources/lang', 'capell-theme-robotics-hardware');
+        $this->loadScreenshotFixtureRoutes();
         $this->loadViewsFrom(__DIR__ . '/../resources/views', 'capell-theme-robotics-hardware');
         $this->registerVendorCssAssets();
 
@@ -95,6 +96,15 @@ final class RoboticsHardwareThemeServiceProvider extends ServiceProvider
             ),
             sectionRenderers: array_values($sectionRenderers),
         );
+    }
+
+    private function loadScreenshotFixtureRoutes(): void
+    {
+        if (filter_var(getenv('CAPELL_THEME_ROBOTICS_HARDWARE_SCREENSHOT_FIXTURES_ENABLED'), FILTER_VALIDATE_BOOL) !== true) {
+            return;
+        }
+
+        $this->loadRoutesFrom(__DIR__ . '/../routes/screenshot-fixtures.php');
     }
 
     private function registerVendorCssAssets(): void
