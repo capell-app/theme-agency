@@ -69,7 +69,7 @@ it('builds a flagged preview site and stores the spec on the session', function 
         ->and($session->theme_plan)->toHaveKey('site')
         ->and($session->theme_plan)->toHaveKey('theme')
         ->and($session->page_plan)->toHaveCount(2)
-        ->and($session->preview_output['site_id'])->toBe($session->site_id);
+        ->and($session->preview_output['site_id'] ?? null)->toBe($session->site_id);
 
     $site = Site::query()->findOrFail($session->site_id);
     expect($site->meta['is_preview'] ?? null)->toBeTrue()

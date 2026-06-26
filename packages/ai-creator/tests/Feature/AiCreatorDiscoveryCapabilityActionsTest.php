@@ -68,8 +68,8 @@ it('lists installed themes and layouts', function (): void {
     $themes = discovery_execute('capell.ai-creator.discovery.list_themes')['themes'];
     $layouts = discovery_execute('capell.ai-creator.discovery.list_layouts')['layouts'];
 
-    expect(collect($themes)->pluck('key'))->toContain('aurora')
-        ->and(collect($layouts)->pluck('key'))->toContain('home', 'default');
+    expect(collect(discovery_array($themes))->pluck('key'))->toContain('aurora')
+        ->and(collect(discovery_array($layouts))->pluck('key'))->toContain('home', 'default');
 });
 
 it('lists page and section blueprints by type', function (): void {
@@ -79,14 +79,14 @@ it('lists page and section blueprints by type', function (): void {
     $pageTypes = discovery_execute('capell.ai-creator.discovery.list_page_types')['page_types'];
     $sectionTypes = discovery_execute('capell.ai-creator.discovery.list_section_types')['section_types'];
 
-    expect(collect($pageTypes)->pluck('key'))->toContain('landing')
-        ->and(collect($pageTypes)->pluck('key'))->not->toContain('hero')
-        ->and(collect($sectionTypes)->pluck('key'))->toContain('hero')
-        ->and(collect($sectionTypes)->pluck('key'))->not->toContain('landing');
+    expect(collect(discovery_array($pageTypes))->pluck('key'))->toContain('landing')
+        ->and(collect(discovery_array($pageTypes))->pluck('key'))->not->toContain('hero')
+        ->and(collect(discovery_array($sectionTypes))->pluck('key'))->toContain('hero')
+        ->and(collect(discovery_array($sectionTypes))->pluck('key'))->not->toContain('landing');
 });
 
 it('returns the site spec schema', function (): void {
-    $schema = discovery_execute('capell.ai-creator.discovery.get_site_spec_schema')['schema'];
+    $schema = discovery_array(discovery_execute('capell.ai-creator.discovery.get_site_spec_schema')['schema']);
 
     expect($schema)->toHaveKey('properties.site')
         ->toHaveKey('properties.theme')
@@ -95,19 +95,19 @@ it('returns the site spec schema', function (): void {
 });
 
 it('returns the interview script with required core, expansion, and rules', function (): void {
-    $interview = discovery_execute('capell.ai-creator.interview.get')['interview'];
+    $interview = discovery_array(discovery_execute('capell.ai-creator.interview.get')['interview']);
 
     expect($interview['version'])->toBe(1)
         ->and($interview['flow'])->toBe(['site_name', 'site_purpose', 'theme', 'pages', 'generate', 'delivery_target'])
-        ->and(collect($interview['required'])->pluck('key'))->toContain('site_name', 'site_purpose', 'delivery_target')
-        ->and(collect($interview['expansion'])->pluck('key'))->toContain('theme', 'pages')
+        ->and(collect(discovery_array($interview['required']))->pluck('key'))->toContain('site_name', 'site_purpose', 'delivery_target')
+        ->and(collect(discovery_array($interview['expansion']))->pluck('key'))->toContain('theme', 'pages')
         ->and($interview['rules'])->not->toBe([]);
 
     // delivery_target is asked at the close and carries the local/cloud follow-ups.
-    $delivery = collect($interview['required'])->firstWhere('key', 'delivery_target');
+    $delivery = discovery_array(collect(discovery_array($interview['required']))->firstWhere('key', 'delivery_target'));
     expect($delivery['ask_at'])->toBe('close')
         ->and($delivery['options'])->toBe(['preview', 'local', 'cloud'])
-        ->and(collect($delivery['follow_ups'])->pluck('when'))->toContain('local', 'cloud');
+        ->and(collect(discovery_array($delivery['follow_ups']))->pluck('when'))->toContain('local', 'cloud');
 });
 
 it('validates a good spec and rejects a malformed one', function (): void {
