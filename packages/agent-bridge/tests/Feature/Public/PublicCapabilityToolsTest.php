@@ -7,6 +7,7 @@ use Capell\AgentBridge\Enums\CapabilityRiskEnum;
 use Capell\AgentBridge\Enums\CapabilityServerEnum;
 use Capell\AgentBridge\Support\CapellAgentBridgeCapabilityRegistry;
 use Capell\AgentBridge\Tests\Fixtures\FakeCapabilityAction;
+use Capell\AgentBridge\Tools\Public\ListPublicCapabilitiesTool;
 
 /**
  * Build a CapabilityData with sane defaults. Leaves requiredPackage null so the
@@ -48,4 +49,19 @@ it('publiclyReadable returns only public Read caps whose package is available', 
     expect($keys)->toContain('pub.read')
         ->and($keys)->not->toContain('pub.write')   // write excluded even if flagged public
         ->and($keys)->not->toContain('priv.read');  // non-public excluded
+});
+
+it('lists only publicly readable capability payloads', function (): void {
+    $registry = new CapellAgentBridgeCapabilityRegistry;
+    $registry->register(makeCapability('pub.read', risk: CapabilityRiskEnum::Read, public: true));
+    $registry->register(makeCapability('priv.read', risk: CapabilityRiskEnum::Read, public: false));
+    app()->instance(CapellAgentBridgeCapabilityRegistry::class, $registry);
+
+    $response = (new ListPublicCapabilitiesTool)->handle($registry);
+    $capabilities = $response->getStructuredContent()['capabilities'] ?? null;
+
+    throw_unless(is_array($capabilities), RuntimeException::class, 'Expected public capabilities list.');
+
+    $keys = array_column($capabilities, 'key');
+    expect($keys)->toContain('pub.read')->and($keys)->not->toContain('priv.read');
 });
