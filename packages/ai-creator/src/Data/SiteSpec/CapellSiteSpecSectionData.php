@@ -28,4 +28,19 @@ final class CapellSiteSpecSectionData extends Data
         public readonly int $order = 0,
         public readonly array $meta = [],
     ) {}
+
+    /**
+     * `meta` defaults to empty and must stay optional: Laravel's `required`
+     * rule (inferred for a non-nullable array property) rejects an empty `[]`,
+     * which would break validating an exported spec whose sections carry no
+     * typed block data.
+     *
+     * @return array<string, array<int, string>>
+     */
+    public static function rules(): array
+    {
+        return [
+            'meta' => ['sometimes', 'array'],
+        ];
+    }
 }
