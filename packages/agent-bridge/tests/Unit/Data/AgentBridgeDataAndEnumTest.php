@@ -48,6 +48,7 @@ it('serializes capability definitions into agent payloads', function (): void {
             'supportsPreview' => false,
             'requiresConfirmation' => false,
             'auditEvent' => 'site.fake',
+            'public' => false,
         ]);
 });
 

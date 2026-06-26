@@ -8,6 +8,9 @@ use Capell\AgentBridge\Enums\CapabilityServerEnum;
 use Capell\AgentBridge\Support\CapellAgentBridgeCapabilityRegistry;
 use Capell\AgentBridge\Tests\Fixtures\FakeCapabilityAction;
 use Capell\AgentBridge\Tools\Public\ListPublicCapabilitiesTool;
+use Capell\AgentBridge\Tools\Public\RunPublicCapabilityTool;
+use Laravel\Mcp\Request;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 /**
  * Build a CapabilityData with sane defaults. Leaves requiredPackage null so the
@@ -65,3 +68,32 @@ it('lists only publicly readable capability payloads', function (): void {
     $keys = array_column($capabilities, 'key');
     expect($keys)->toContain('pub.read')->and($keys)->not->toContain('priv.read');
 });
+
+it('runs a public Read capability with a null client', function (): void {
+    $registry = new CapellAgentBridgeCapabilityRegistry;
+    $registry->register(makeCapability('pub.read', risk: CapabilityRiskEnum::Read, public: true));
+    app()->instance(CapellAgentBridgeCapabilityRegistry::class, $registry);
+
+    $response = (new RunPublicCapabilityTool)->handle(
+        new Request(['capability' => 'pub.read', 'payload' => ['name' => 'Example']]),
+        $registry,
+    );
+
+    $structured = $response->getStructuredContent();
+
+    expect($structured)->toBeArray()
+        ->and($structured['mode'])->toBe('executed')        // executed, no auth required
+        ->and($structured['capability'])->toBe('pub.read');
+});
+
+it('REFUSES a non-public capability even though the action would tolerate a null client', function (): void {
+    $registry = new CapellAgentBridgeCapabilityRegistry;
+    // A genuinely registered, executable write cap — only the allowlist gate stops it.
+    $registry->register(makeCapability('build_preview', risk: CapabilityRiskEnum::High, public: false));
+    app()->instance(CapellAgentBridgeCapabilityRegistry::class, $registry);
+
+    (new RunPublicCapabilityTool)->handle(
+        new Request(['capability' => 'build_preview', 'payload' => []]),
+        $registry,
+    );
+})->throws(HttpException::class);
