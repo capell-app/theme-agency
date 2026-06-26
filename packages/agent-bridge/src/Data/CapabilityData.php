@@ -35,6 +35,7 @@ final class CapabilityData extends Data
         public readonly bool $supportsPreview = true,
         public readonly bool $requiresConfirmation = true,
         public readonly ?string $auditEvent = null,
+        public readonly bool $public = false,
     ) {}
 
     public function needsConfirmation(): bool
@@ -58,7 +59,8 @@ final class CapabilityData extends Data
      *     outputSchema: array<string, mixed>|null,
      *     supportsPreview: bool,
      *     requiresConfirmation: bool,
-     *     auditEvent: string|null
+     *     auditEvent: string|null,
+     *     public: bool
      * }
      */
     public function toPayload(): array
@@ -79,6 +81,7 @@ final class CapabilityData extends Data
             'supportsPreview' => $this->supportsPreview,
             'requiresConfirmation' => $this->requiresConfirmation,
             'auditEvent' => $this->auditEvent,
+            'public' => $this->public,
         ];
     }
 }
