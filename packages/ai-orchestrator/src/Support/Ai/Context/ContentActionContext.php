@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Capell\SeoSuite\Support\Context;
+namespace Capell\AIOrchestrator\Support\Ai\Context;
 
-use Capell\SeoSuite\Contracts\AiActionContextInterface;
+use Capell\AIOrchestrator\Contracts\AiActionContextInterface;
 
 final readonly class ContentActionContext implements AiActionContextInterface
 {

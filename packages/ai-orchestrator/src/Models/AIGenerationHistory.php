@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Capell\SeoSuite\Models;
+namespace Capell\AIOrchestrator\Models;
 
 use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Builder;

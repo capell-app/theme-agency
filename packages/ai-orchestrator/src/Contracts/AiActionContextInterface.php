@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Capell\SeoSuite\Contracts;
+namespace Capell\AIOrchestrator\Contracts;
 
 interface AiActionContextInterface
 {

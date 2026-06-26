@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Capell\SeoSuite\DataObjects;
 
-final readonly class AiCreatorData
+use Capell\AIOrchestrator\Contracts\AiCreatorContextInterface;
+
+final readonly class AiCreatorData implements AiCreatorContextInterface
 {
     public function __construct(
         public int $siteId,
@@ -17,4 +19,14 @@ final readonly class AiCreatorData
         public ?string $brandVoiceNotes = null,
         public ?int $existingSessionId = null,
     ) {}
+
+    public function getSiteId(): int
+    {
+        return $this->siteId;
+    }
+
+    public function getUserId(): int
+    {
+        return $this->userId;
+    }
 }

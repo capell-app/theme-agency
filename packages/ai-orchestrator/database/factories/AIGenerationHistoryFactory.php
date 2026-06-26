@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Capell\SeoSuite\Database\Factories;
+namespace Capell\AIOrchestrator\Database\Factories;
 
-use Capell\SeoSuite\Models\AIGenerationHistory;
+use Capell\AIOrchestrator\Models\AIGenerationHistory;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**

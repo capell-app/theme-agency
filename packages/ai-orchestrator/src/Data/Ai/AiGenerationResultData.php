@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Capell\SeoSuite\Data\Ai;
+namespace Capell\AIOrchestrator\Data\Ai;
 
-use Capell\SeoSuite\Models\AIGenerationHistory;
-use Capell\SeoSuite\Support\AiResponse;
+use Capell\AIOrchestrator\Models\AIGenerationHistory;
+use Capell\AIOrchestrator\Support\Ai\AiResponse;
 use Spatie\LaravelData\Data;
 
 class AiGenerationResultData extends Data

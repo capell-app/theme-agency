@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Capell\SeoSuite\Data\Ai;
+namespace Capell\AIOrchestrator\Data\Ai;
 
-use Capell\SeoSuite\Contracts\AiActionContextInterface;
-use Capell\SeoSuite\DataObjects\AiCreatorData;
-use Capell\SeoSuite\Support\AiResponse;
+use Capell\AIOrchestrator\Contracts\AiActionContextInterface;
+use Capell\AIOrchestrator\Contracts\AiCreatorContextInterface;
+use Capell\AIOrchestrator\Support\Ai\AiResponse;
 use Spatie\LaravelData\Data;
 
 class AiGenerationInputData extends Data
@@ -21,7 +21,7 @@ class AiGenerationInputData extends Data
         public string $actionKey,
         public ?AiActionContextInterface $context = null,
         public array $options = [],
-        public ?AiCreatorData $creatorData = null,
+        public ?AiCreatorContextInterface $creatorData = null,
         public ?array $messages = null,
         public ?array $params = null,
         public ?AiResponse $response = null,
@@ -44,14 +44,14 @@ class AiGenerationInputData extends Data
         );
     }
 
-    public static function forAiCreator(string $actionKey, AiCreatorData $data): self
+    public static function forAiCreator(string $actionKey, AiCreatorContextInterface $data): self
     {
         return new self(
             actionKey: $actionKey,
-            options: ['user_id' => $data->userId],
+            options: ['user_id' => $data->getUserId()],
             creatorData: $data,
-            aiCreatorSiteId: $data->siteId,
-            aiCreatorUserId: $data->userId,
+            aiCreatorSiteId: $data->getSiteId(),
+            aiCreatorUserId: $data->getUserId(),
         );
     }
 }
