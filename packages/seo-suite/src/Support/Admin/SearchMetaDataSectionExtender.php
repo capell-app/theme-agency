@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Capell\SeoSuite\Support\Admin;
 
+use Capell\AIOrchestrator\Actions\Ai\SuggestMetaDescriptionsAction;
+use Capell\AIOrchestrator\Exceptions\OpenAICircuitBreakerOpenException;
+use Capell\AIOrchestrator\Settings\AIOrchestratorSettings;
+use Capell\AIOrchestrator\Support\Ai\Context\ContentActionContext;
 use Capell\Core\Models\Site;
 use Capell\Core\Models\Translation;
-use Capell\SeoSuite\Actions\SuggestMetaDescriptionsAction;
 use Capell\SeoSuite\Contracts\Extenders\SearchMetaDataSectionExtender as SearchMetaDataSectionExtenderContract;
-use Capell\SeoSuite\Exceptions\OpenAICircuitBreakerOpenException;
-use Capell\SeoSuite\Settings\AIOrchestratorSettings;
-use Capell\SeoSuite\Support\Context\ContentActionContext;
 use Exception;
 use Filament\Actions\Action;
 use Filament\Actions\Contracts\HasActions;

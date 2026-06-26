@@ -82,6 +82,7 @@ final class FitnessWellnessThemeServiceProvider extends ServiceProvider
 
         $this->loadTranslationsFrom(__DIR__ . '/../resources/lang', 'capell-theme-fitness-wellness');
         $this->loadViewsFrom(__DIR__ . '/../resources/views', 'capell-theme-fitness-wellness');
+        $this->loadScreenshotFixtureRoutes();
         $this->registerVendorCssAssets();
 
         $sectionRenderers = $this->sectionRenderers();
@@ -95,6 +96,15 @@ final class FitnessWellnessThemeServiceProvider extends ServiceProvider
             ),
             sectionRenderers: array_values($sectionRenderers),
         );
+    }
+
+    private function loadScreenshotFixtureRoutes(): void
+    {
+        if (filter_var(getenv('CAPELL_THEME_FITNESS_WELLNESS_SCREENSHOT_FIXTURES_ENABLED'), FILTER_VALIDATE_BOOL) !== true) {
+            return;
+        }
+
+        $this->loadRoutesFrom(__DIR__ . '/../routes/screenshot-fixtures.php');
     }
 
     private function registerVendorCssAssets(): void

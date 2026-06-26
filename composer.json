@@ -276,6 +276,7 @@
     "autoload": {
         "psr-4": {
             "Capell\\AIOrchestrator\\": "packages/ai-orchestrator/src",
+            "Capell\\AIOrchestrator\\Database\\Factories\\": "packages/ai-orchestrator/database/factories",
             "Capell\\AccessGate\\": "packages/access-gate/src",
             "Capell\\AccessGate\\Database\\Factories\\": "packages/access-gate/database/factories",
             "Capell\\Address\\": "packages/address/src",
@@ -353,7 +354,6 @@
             "Capell\\Search\\": "packages/search/src",
             "Capell\\Search\\Database\\Factories\\": "packages/search/database/factories",
             "Capell\\SeoSuite\\": "packages/seo-suite/src",
-            "Capell\\SeoSuite\\Database\\Factories\\": "packages/seo-suite/database/factories",
             "Capell\\ShopifyCommerce\\": "packages/shopify-commerce/src",
             "Capell\\ShopifyCommerce\\Database\\Factories\\": "packages/shopify-commerce/database/factories",
             "Capell\\SiteDiscovery\\": "packages/site-discovery/src",

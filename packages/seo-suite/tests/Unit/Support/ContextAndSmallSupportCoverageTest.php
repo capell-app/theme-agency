@@ -3,16 +3,16 @@
 declare(strict_types=1);
 
 use Capell\Admin\Enums\PageTranslationSchemaHookEnum;
+use Capell\AIOrchestrator\Settings\AIOrchestratorSettings;
+use Capell\AIOrchestrator\Support\Ai\Context\ContentActionContext;
+use Capell\AIOrchestrator\Support\Ai\PrismProvider;
 use Capell\Core\Models\Page;
 use Capell\Core\Models\Translation;
 use Capell\SeoSuite\Filament\Extenders\Site\SiteTranslationMetaExtender;
 use Capell\SeoSuite\Handlers\ClearCircuitBreakerHandler;
 use Capell\SeoSuite\Policies\AiCreatorPolicy;
-use Capell\SeoSuite\Settings\AIOrchestratorSettings;
 use Capell\SeoSuite\Support\AiFeatureRegistry;
-use Capell\SeoSuite\Support\Context\ContentActionContext;
 use Capell\SeoSuite\Support\Context\TranslationActionContext;
-use Capell\SeoSuite\Support\PrismProvider;
 use Filament\Schemas\Components\Group;
 use Filament\Schemas\Schema;
 use Illuminate\Support\Facades\Cache;

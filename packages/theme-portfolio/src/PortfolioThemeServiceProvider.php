@@ -107,6 +107,7 @@ final class PortfolioThemeServiceProvider extends ServiceProvider
 
         $this->loadViewsFrom(__DIR__ . '/../resources/views', 'capell-theme-portfolio');
         $this->loadTranslationsFrom(__DIR__ . '/../resources/lang', 'capell-theme-portfolio');
+        $this->loadScreenshotFixtureRoutes();
 
         CapellCore::registerVendorAsset(
             VendorAssetData::tailwindImport('resources/css/theme-portfolio.css', self::$packageName),
@@ -136,6 +137,15 @@ final class PortfolioThemeServiceProvider extends ServiceProvider
                 ->values()
                 ->all(),
         );
+    }
+
+    private function loadScreenshotFixtureRoutes(): void
+    {
+        if (filter_var(getenv('CAPELL_THEME_PORTFOLIO_SCREENSHOT_FIXTURES_ENABLED'), FILTER_VALIDATE_BOOL) !== true) {
+            return;
+        }
+
+        $this->loadRoutesFrom(__DIR__ . '/../routes/screenshot-fixtures.php');
     }
 
     /**

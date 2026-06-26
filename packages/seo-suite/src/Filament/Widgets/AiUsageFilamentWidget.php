@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Capell\SeoSuite\Filament\Widgets;
 
-use Capell\SeoSuite\Models\AIGenerationHistory;
+use Capell\AIOrchestrator\Models\AIGenerationHistory;
 use Filament\Widgets\Widget;
 use Override;
 

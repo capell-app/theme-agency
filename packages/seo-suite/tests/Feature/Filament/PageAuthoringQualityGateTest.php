@@ -27,8 +27,12 @@ use Livewire\Livewire;
 uses(CreatesAdminUser::class);
 
 beforeEach(function (): void {
+    test()->registerAndMigrateSettings(
+        ['2026_05_10_190871_01_create_ai-orchestrator_settings'],
+        dirname(__DIR__, 4) . '/ai-orchestrator/database/settings',
+    );
+
     test()->registerAndMigrateSettings([
-        '2026_05_10_190871_01_create_ai-orchestrator_settings',
         '2026_05_10_190871_03_create_seo_suite_settings',
         '2026_06_07_000001_add_seo_authoring_quality_gate_settings',
     ], dirname(__DIR__, 3) . '/database/settings');

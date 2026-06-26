@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Capell\SeoSuite\Actions;
 
-use Capell\SeoSuite\Data\Ai\AiGenerationInputData;
+use Capell\AIOrchestrator\Data\Ai\AiGenerationInputData;
+use Capell\AIOrchestrator\Events\Ai\AiGenerationCompleted;
+use Capell\AIOrchestrator\Events\Ai\AiGenerationFailed;
+use Capell\AIOrchestrator\Events\Ai\AiGenerationStarted;
 use Capell\SeoSuite\DataObjects\AiCreatorData;
-use Capell\SeoSuite\Events\AiGenerationCompleted;
-use Capell\SeoSuite\Events\AiGenerationFailed;
-use Capell\SeoSuite\Events\AiGenerationStarted;
 use Capell\SeoSuite\Support\Pipelines\AiCreatorPipeline;
 use Illuminate\Support\Facades\Event;
 use Lorisleiva\Actions\Concerns\AsAction;

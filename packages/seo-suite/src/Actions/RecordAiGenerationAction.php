@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Capell\SeoSuite\Actions;
 
-use Capell\SeoSuite\Actions\Ai\RecordAiGenerationAction as PersistAiGenerationAction;
-use Capell\SeoSuite\Contracts\AiActionContextInterface;
-use Capell\SeoSuite\Data\Ai\AiGenerationResultData;
-use Capell\SeoSuite\Events\AiGenerationCompleted;
-use Capell\SeoSuite\Events\AiGenerationFailed;
-use Capell\SeoSuite\Events\AiGenerationStarted;
-use Capell\SeoSuite\Models\AIGenerationHistory;
+use Capell\AIOrchestrator\Actions\Ai\RecordAiGenerationAction as PersistAiGenerationAction;
+use Capell\AIOrchestrator\Contracts\AiActionContextInterface;
+use Capell\AIOrchestrator\Data\Ai\AiGenerationResultData;
+use Capell\AIOrchestrator\Events\Ai\AiGenerationCompleted;
+use Capell\AIOrchestrator\Events\Ai\AiGenerationFailed;
+use Capell\AIOrchestrator\Events\Ai\AiGenerationStarted;
+use Capell\AIOrchestrator\Models\AIGenerationHistory;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Log;
 use InvalidArgumentException;

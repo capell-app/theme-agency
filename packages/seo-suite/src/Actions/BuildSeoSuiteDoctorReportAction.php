@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Capell\SeoSuite\Actions;
 
+use Capell\AIOrchestrator\Settings\AIOrchestratorSettings;
 use Capell\Core\Facades\CapellCore;
 use Capell\Core\Models\Language;
 use Capell\Core\Models\Page;
@@ -19,7 +20,6 @@ use Capell\SeoSuite\Models\AiDiscoveryPageProfile;
 use Capell\SeoSuite\Models\AiDiscoverySiteProfile;
 use Capell\SeoSuite\Models\AiDiscoverySnapshot;
 use Capell\SeoSuite\Providers\SeoSuiteServiceProvider;
-use Capell\SeoSuite\Settings\AIOrchestratorSettings;
 use Capell\SeoSuite\Settings\SeoSuiteSettings;
 use Capell\SeoSuite\Support\PublicOutputLeakScanner;
 use Capell\SiteDiscovery\Actions\DiscoverPublicPagesAction;

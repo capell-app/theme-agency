@@ -4,17 +4,18 @@ declare(strict_types=1);
 
 namespace Capell\SeoSuite\Support\Pipelines;
 
-use Capell\SeoSuite\Actions\Ai\RecordAiGenerationAction;
-use Capell\SeoSuite\Data\Ai\AiGenerationInputData;
-use Capell\SeoSuite\Data\Ai\AiGenerationResultData;
+use Capell\AIOrchestrator\Actions\Ai\RecordAiGenerationAction;
+use Capell\AIOrchestrator\Data\Ai\AiGenerationInputData;
+use Capell\AIOrchestrator\Data\Ai\AiGenerationResultData;
+use Capell\AIOrchestrator\Support\Ai\AiRateLimiter;
+use Capell\AIOrchestrator\Support\Ai\AiResponse;
+use Capell\AIOrchestrator\Support\Ai\Concerns\NormalizesAiValues;
+use Capell\AIOrchestrator\Support\Ai\PrismProvider;
+use Capell\AIOrchestrator\Support\Ai\PromptRepository;
 use Capell\SeoSuite\DataObjects\AiCreatorData;
 use Capell\SeoSuite\Models\AiCreatorContext;
 use Capell\SeoSuite\Models\AiCreatorSession;
 use Capell\SeoSuite\Policies\AiCreatorPolicy;
-use Capell\SeoSuite\Support\AiRateLimiter;
-use Capell\SeoSuite\Support\AiResponse;
-use Capell\SeoSuite\Support\PrismProvider;
-use Capell\SeoSuite\Support\PromptRepository;
 use Capell\SeoSuite\Support\SectionRegistry;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Pipeline\Pipeline;
@@ -23,6 +24,8 @@ use InvalidArgumentException;
 
 class AiCreatorPipeline
 {
+    use NormalizesAiValues;
+
     public function __construct(
         private readonly PromptRepository $prompts,
         private readonly PrismProvider $provider,
@@ -274,13 +277,13 @@ class AiCreatorPipeline
             inputText: $data->intent,
             outputText: $response->content,
             response: $response,
-            messages: $payload['ai_messages'] ?? null,
-            params: $payload['ai_params'] ?? null,
+            messages: $this->aiMessages($payload['ai_messages'] ?? null),
+            params: $this->aiParams($payload['ai_params'] ?? null),
             metadata: [
                 'ai_creator_site_id' => $data->siteId,
                 'ai_creator_user_id' => $data->userId,
             ],
-            aiCreatorSessionId: $session->getKey(),
+            aiCreatorSessionId: $this->aiInt($session->getKey()),
         );
 
         $history = $this->recordAiGenerationAction->handle($resultData);

@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
+use Capell\AIOrchestrator\Models\AIGenerationHistory;
+use Capell\AIOrchestrator\Settings\AIOrchestratorSettings;
+use Capell\AIOrchestrator\Support\Ai\AiRateLimiter;
+use Capell\AIOrchestrator\Support\Ai\Cache\RateLimitCache;
 use Capell\SeoSuite\Data\Dashboard\AiMetricsData;
 use Capell\SeoSuite\Data\Dashboard\FeatureUsageData;
 use Capell\SeoSuite\Filament\Widgets\AiMetricsFilamentWidget;
-use Capell\SeoSuite\Models\AIGenerationHistory;
-use Capell\SeoSuite\Settings\AIOrchestratorSettings;
-use Capell\SeoSuite\Support\AiRateLimiter;
-use Capell\SeoSuite\Support\Cache\RateLimitCache;
 
 it('builds ai metrics widget data from history rows, settings, and rate limits', function (): void {
     require_once dirname(__DIR__, 3) . '/src/Data/Dashboard/AiMetricsData.php';
@@ -17,7 +17,7 @@ it('builds ai metrics widget data from history rows, settings, and rate limits',
         [
             '2026_05_10_190871_01_create_ai-orchestrator_settings',
         ],
-        dirname(__DIR__, 3) . '/database/settings',
+        dirname(__DIR__, 4) . '/ai-orchestrator/database/settings',
     );
 
     $settings = resolve(AIOrchestratorSettings::class);

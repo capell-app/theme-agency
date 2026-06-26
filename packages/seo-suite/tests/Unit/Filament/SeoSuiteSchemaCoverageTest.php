@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
+use Capell\AIOrchestrator\Filament\Settings\AIOrchestratorSettingsSchema;
 use Capell\SeoSuite\Enums\AiDiscoveryCrawlerPolicyEnum;
 use Capell\SeoSuite\Enums\AiDiscoveryStatusEnum;
 use Capell\SeoSuite\Filament\Components\Forms\Page\TranslationSeoMetaSchema;
 use Capell\SeoSuite\Filament\Components\Forms\Site\MetaSchema;
 use Capell\SeoSuite\Filament\Components\Forms\Site\TranslationMetaSchema;
-use Capell\SeoSuite\Filament\Settings\AIOrchestratorSettingsSchema;
 use Capell\SeoSuite\Filament\Settings\SeoSettingsSchema;
 use Capell\SeoSuite\Filament\Settings\StructuredDataSettingsSchema;
 use Filament\Forms\Components\Checkbox;

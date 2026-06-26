@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
+use Capell\AIOrchestrator\Models\AIGenerationHistory;
+use Capell\AIOrchestrator\Support\Ai\AiResponseParser;
+use Capell\AIOrchestrator\Support\Ai\PromptRepository;
 use Capell\Core\Database\Factories\LanguageFactory;
 use Capell\Core\Database\Factories\PageFactory;
 use Capell\Core\Database\Factories\SiteFactory;
 use Capell\SeoSuite\Actions\GenerateAiContentBriefAction;
 use Capell\SeoSuite\Data\AiContentBriefData;
-use Capell\SeoSuite\Models\AIGenerationHistory;
-use Capell\SeoSuite\Support\AiResponseParser;
-use Capell\SeoSuite\Support\PromptRepository;
 use Capell\SeoSuite\Tests\Fixtures\ContentBriefPrismProviderFake;
 
 /**

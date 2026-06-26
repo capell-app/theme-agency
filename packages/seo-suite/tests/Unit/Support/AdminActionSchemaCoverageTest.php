@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
+use Capell\AIOrchestrator\Actions\Ai\GeneratorPageContentAction;
+use Capell\AIOrchestrator\Actions\Ai\SuggestMetaDescriptionsAction;
+use Capell\AIOrchestrator\Actions\Ai\SuggestPageTitlesAction;
+use Capell\AIOrchestrator\Contracts\AiActionContextInterface;
+use Capell\AIOrchestrator\Settings\AIOrchestratorSettings;
 use Capell\Core\Models\Language;
 use Capell\Core\Models\Site;
 use Capell\Core\Models\Translation;
-use Capell\SeoSuite\Actions\GeneratorPageContentAction;
-use Capell\SeoSuite\Actions\SuggestMetaDescriptionsAction;
-use Capell\SeoSuite\Actions\SuggestPageTitlesAction;
-use Capell\SeoSuite\Contracts\AiActionContextInterface;
-use Capell\SeoSuite\Settings\AIOrchestratorSettings;
 use Capell\SeoSuite\Support\Admin\PageContentEditorConfigurator;
 use Capell\SeoSuite\Support\Admin\PageTitleWithSlugInputExtender;
 use Capell\SeoSuite\Support\Admin\SearchMetaDataSectionExtender;
@@ -30,7 +30,7 @@ use Filament\Support\Exceptions\Halt;
 beforeEach(function (): void {
     test()->registerAndMigrateSettings(
         ['2026_05_10_190871_01_create_ai-orchestrator_settings'],
-        dirname(__DIR__, 3) . '/database/settings',
+        dirname(__DIR__, 4) . '/ai-orchestrator/database/settings',
     );
 });
 

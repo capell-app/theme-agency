@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Capell\SeoSuite\Policies;
 
-use Capell\SeoSuite\Settings\AIOrchestratorSettings;
+use Capell\AIOrchestrator\Settings\AIOrchestratorSettings;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Facades\Gate;
 

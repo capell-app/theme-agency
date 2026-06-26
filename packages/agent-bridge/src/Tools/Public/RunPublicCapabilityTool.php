@@ -40,7 +40,13 @@ final class RunPublicCapabilityTool extends Tool
             'payload' => ['nullable', 'array'],
         ]);
 
-        $key = (string) $data['capability'];
+        $key = $data['capability'];
+        abort_unless(is_string($key), 422, 'Capability key must be a string.');
+
+        $rawPayload = $data['payload'] ?? [];
+        $payload = is_array($rawPayload)
+            ? array_filter($rawPayload, static fn (int|string $payloadKey): bool => is_string($payloadKey), ARRAY_FILTER_USE_KEY)
+            : [];
 
         // SECURITY GATE — the entire trust boundary for the tokenless endpoint.
         // Reject anything not in the public allowlist BEFORE delegating; the
@@ -53,7 +59,7 @@ final class RunPublicCapabilityTool extends Tool
 
         $result = InvokeAgentBridgeCapabilityPreviewAction::run(
             capabilityKey: $key,
-            payload: $data['payload'] ?? [],
+            payload: $payload,
             client: null,
             token: null,
             user: null,
