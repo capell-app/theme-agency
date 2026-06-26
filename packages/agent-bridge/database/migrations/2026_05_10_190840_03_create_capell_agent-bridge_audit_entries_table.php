@@ -17,7 +17,8 @@ return new class extends Migration
         Schema::create('capell_agent_bridge_audit_entries', function (Blueprint $table): void {
             $table->id();
             $table->foreignId('agent_bridge_token_id')->nullable()->constrained('capell_agent_bridge_tokens')->nullOnDelete();
-            $table->morphs('user');
+            // Nullable: tokenless public-read capabilities are audited without an authenticated user.
+            $table->nullableMorphs('user');
             $table->string('event');
             $table->string('capability_key')->nullable();
             $table->string('scope')->nullable();

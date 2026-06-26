@@ -87,6 +87,7 @@ final class AiCreatorAgentBridgeCapabilityProvider implements CapellAgentBridgeC
                 description: 'List installed themes the spec may select via theme.key.',
                 actionClass: ListThemesCapabilityAction::class,
                 auditEvent: 'ai-creator.discovery.list_themes',
+                public: true,
             ),
             $this->readCapability(
                 key: 'capell.ai-creator.discovery.list_page_types',
@@ -94,6 +95,7 @@ final class AiCreatorAgentBridgeCapabilityProvider implements CapellAgentBridgeC
                 description: 'List page blueprints the spec may reference via pages[].pageType.',
                 actionClass: ListPageTypesCapabilityAction::class,
                 auditEvent: 'ai-creator.discovery.list_page_types',
+                public: true,
             ),
             $this->readCapability(
                 key: 'capell.ai-creator.discovery.list_section_types',
@@ -101,6 +103,7 @@ final class AiCreatorAgentBridgeCapabilityProvider implements CapellAgentBridgeC
                 description: 'List section blueprints the spec may reference via sections[].type.',
                 actionClass: ListSectionTypesCapabilityAction::class,
                 auditEvent: 'ai-creator.discovery.list_section_types',
+                public: true,
             ),
             $this->readCapability(
                 key: 'capell.ai-creator.discovery.list_layouts',
@@ -108,6 +111,7 @@ final class AiCreatorAgentBridgeCapabilityProvider implements CapellAgentBridgeC
                 description: 'List installed layouts the builder assigns to pages.',
                 actionClass: ListLayoutsCapabilityAction::class,
                 auditEvent: 'ai-creator.discovery.list_layouts',
+                public: true,
             ),
             new CapabilityData(
                 key: 'capell.ai-creator.build_preview',
@@ -147,6 +151,7 @@ final class AiCreatorAgentBridgeCapabilityProvider implements CapellAgentBridgeC
                 description: 'Return the deterministic interview script (required core + agent expansion + rules) the agent uses to drive the conversation.',
                 actionClass: GetInterviewCapabilityAction::class,
                 auditEvent: 'ai-creator.interview.get',
+                public: true,
             ),
             $this->readCapability(
                 key: 'capell.ai-creator.discovery.get_site_spec_schema',
@@ -154,6 +159,7 @@ final class AiCreatorAgentBridgeCapabilityProvider implements CapellAgentBridgeC
                 description: 'Return the JSON schema for the Capell site spec the agent assembles.',
                 actionClass: GetSiteSpecSchemaCapabilityAction::class,
                 auditEvent: 'ai-creator.discovery.get_site_spec_schema',
+                public: true,
             ),
             $this->readCapability(
                 key: 'capell.ai-creator.discovery.validate_spec',
@@ -162,6 +168,7 @@ final class AiCreatorAgentBridgeCapabilityProvider implements CapellAgentBridgeC
                 actionClass: ValidateSiteSpecCapabilityAction::class,
                 auditEvent: 'ai-creator.discovery.validate_spec',
                 inputSchema: AiCreatorCapabilitySchemas::validateSiteSpecInput(),
+                public: true,
             ),
         ];
     }
@@ -177,6 +184,7 @@ final class AiCreatorAgentBridgeCapabilityProvider implements CapellAgentBridgeC
         string $actionClass,
         string $auditEvent,
         ?array $inputSchema = null,
+        bool $public = false,
     ): CapabilityData {
         return new CapabilityData(
             key: $key,
@@ -193,6 +201,7 @@ final class AiCreatorAgentBridgeCapabilityProvider implements CapellAgentBridgeC
             supportsPreview: true,
             requiresConfirmation: false,
             auditEvent: $auditEvent,
+            public: $public,
         );
     }
 }
