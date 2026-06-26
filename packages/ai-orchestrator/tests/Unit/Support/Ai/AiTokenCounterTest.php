@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Capell\SeoSuite\Support\AiTokenCounter;
+use Capell\AIOrchestrator\Support\Ai\AiTokenCounter;
 
 it('estimates token usage with model-specific multipliers', function (): void {
     $counter = new AiTokenCounter;

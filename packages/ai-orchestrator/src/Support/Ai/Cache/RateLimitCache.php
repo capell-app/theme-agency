@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Capell\SeoSuite\Support\Cache;
+namespace Capell\AIOrchestrator\Support\Ai\Cache;
 
 use Illuminate\Support\Facades\Cache;
 

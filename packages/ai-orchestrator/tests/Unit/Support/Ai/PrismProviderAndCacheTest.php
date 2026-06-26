@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-use Capell\SeoSuite\Exceptions\OpenAICircuitBreakerOpenException;
-use Capell\SeoSuite\Support\Cache\AIGenerationCache;
-use Capell\SeoSuite\Support\Cache\RateLimitCache;
-use Capell\SeoSuite\Support\PrismProvider;
+use Capell\AIOrchestrator\Exceptions\OpenAICircuitBreakerOpenException;
+use Capell\AIOrchestrator\Support\Ai\AIGenerationCache;
+use Capell\AIOrchestrator\Support\Ai\Cache\RateLimitCache;
+use Capell\AIOrchestrator\Support\Ai\PrismProvider;
 use Illuminate\Support\Facades\Cache;
 use Prism\Prism\Enums\FinishReason;
 use Prism\Prism\Enums\Provider;

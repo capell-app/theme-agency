@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-use Capell\SeoSuite\Support\AiRateLimiter;
-use Capell\SeoSuite\Support\Cache\RateLimitCache;
+use Capell\AIOrchestrator\Support\Ai\AiRateLimiter;
+use Capell\AIOrchestrator\Support\Ai\Cache\RateLimitCache;
 use Illuminate\Support\Facades\Cache;
 
 function makeSeoSuiteRateLimiter(int $requestsPerMinute = 2, int $windowSeconds = 30): AiRateLimiter

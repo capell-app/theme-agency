@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Capell\SeoSuite\Support;
+namespace Capell\AIOrchestrator\Support\Ai;
 
 class AiTokenCounter
 {

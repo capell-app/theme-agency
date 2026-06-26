@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Capell\SeoSuite\Support;
+namespace Capell\AIOrchestrator\Support\Ai;
 
-use Capell\SeoSuite\Support\Cache\RateLimitCache;
+use Capell\AIOrchestrator\Support\Ai\Cache\RateLimitCache;
 use Illuminate\Support\Facades\Log;
 use RuntimeException;
 use Throwable;

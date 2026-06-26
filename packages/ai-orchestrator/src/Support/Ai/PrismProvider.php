@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Capell\SeoSuite\Support;
+namespace Capell\AIOrchestrator\Support\Ai;
 
+use Capell\AIOrchestrator\Exceptions\OpenAICircuitBreakerOpenException;
 use Capell\Core\Contracts\ServiceContract;
-use Capell\SeoSuite\Exceptions\OpenAICircuitBreakerOpenException;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Sleep;

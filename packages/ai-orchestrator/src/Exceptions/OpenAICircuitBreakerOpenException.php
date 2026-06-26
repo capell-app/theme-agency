@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Capell\SeoSuite\Exceptions;
+namespace Capell\AIOrchestrator\Exceptions;
 
 use RuntimeException;
 use Throwable;
