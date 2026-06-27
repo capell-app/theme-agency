@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Capell\AccessGate\Filament\Resources\AccessAreas;
 
 use BackedEnum;
+use Capell\AccessGate\Actions\GetAccessAreaSiteOptionsAction;
 use Capell\AccessGate\Enums\AccessAreaStatus;
 use Capell\AccessGate\Enums\ApprovalStrategy;
 use Capell\AccessGate\Enums\IdentityMode;
@@ -13,10 +14,8 @@ use Capell\AccessGate\Enums\TokenPolicy;
 use Capell\AccessGate\Filament\Resources\AccessAreas\Pages\CreateAccessArea;
 use Capell\AccessGate\Filament\Resources\AccessAreas\Pages\EditAccessArea;
 use Capell\AccessGate\Filament\Resources\AccessAreas\Pages\ListAccessAreas;
-use Capell\AccessGate\Filament\Resources\Concerns\AccessGateFilamentOptions;
 use Capell\AccessGate\Models\Area;
 use Capell\AccessGate\Providers\AccessGateServiceProvider;
-use Capell\AccessGate\Support\AccessGateSiteScope;
 use Capell\AccessGate\Support\AnnouncementLinkUrl;
 use Capell\Admin\Support\SiteScope;
 use Capell\Core\Facades\CapellCore;
@@ -44,8 +43,6 @@ use Override;
 
 final class AccessAreaResource extends Resource
 {
-    use AccessGateFilamentOptions;
-
     protected static ?string $slug = 'access-gate/access-areas';
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedLockClosed;
@@ -73,14 +70,14 @@ final class AccessAreaResource extends Resource
                     ->label(__('capell-access-gate::filament.fields.site'))
                     ->helperText(__('capell-access-gate::filament.fields.site_help'))
                     ->options(fn (): array => self::canScopeToSites()
-                        ? AccessGateSiteScope::applyAreaOptionsScope(Site::query()->select(['name', 'id'])->ordered())->pluck('name', 'id')->all()
+                        ? GetAccessAreaSiteOptionsAction::run()
                         : [])
                     ->searchable()
                     ->preload()
                     ->visible(fn (): bool => self::canScopeToSites()),
                 Select::make('status')
                     ->label(__('capell-access-gate::filament.fields.status'))
-                    ->options(self::enumOptions(AccessAreaStatus::class, 'capell-access-gate::filament.area_status'))
+                    ->options(AccessAreaStatus::class)
                     ->required(),
                 DateTimePicker::make('opens_at')
                     ->label(__('capell-access-gate::filament.fields.opens_at'))
@@ -91,11 +88,11 @@ final class AccessAreaResource extends Resource
                     ->rules(['nullable', 'date', 'after:opens_at']),
                 Select::make('identity_mode')
                     ->label(__('capell-access-gate::filament.fields.identity_mode'))
-                    ->options(self::enumOptions(IdentityMode::class, 'capell-access-gate::filament.identity_mode'))
+                    ->options(IdentityMode::class)
                     ->required(),
                 Select::make('approval_strategy')
                     ->label(__('capell-access-gate::filament.fields.approval_strategy'))
-                    ->options(self::enumOptions(ApprovalStrategy::class, 'capell-access-gate::filament.approval_strategy'))
+                    ->options(ApprovalStrategy::class)
                     ->required(),
                 TextInput::make('approval_limit')
                     ->label(__('capell-access-gate::filament.fields.approval_limit'))
@@ -105,11 +102,11 @@ final class AccessAreaResource extends Resource
                     ->numeric(),
                 Select::make('registration_policy')
                     ->label(__('capell-access-gate::filament.fields.registration_policy'))
-                    ->options(self::enumOptions(RegistrationPolicy::class, 'capell-access-gate::filament.registration_policy'))
+                    ->options(RegistrationPolicy::class)
                     ->required(),
                 Select::make('token_policy')
                     ->label(__('capell-access-gate::filament.fields.token_policy'))
-                    ->options(self::enumOptions(TokenPolicy::class, 'capell-access-gate::filament.token_policy'))
+                    ->options(TokenPolicy::class)
                     ->required(),
                 TagsInput::make('claim_url_hosts')
                     ->label(__('capell-access-gate::filament.fields.claim_url_hosts')),
@@ -212,10 +209,10 @@ final class AccessAreaResource extends Resource
             ->filters([
                 SelectFilter::make('status')
                     ->label(__('capell-access-gate::filament.fields.status'))
-                    ->options(self::enumOptions(AccessAreaStatus::class, 'capell-access-gate::filament.area_status')),
+                    ->options(AccessAreaStatus::class),
                 SelectFilter::make('identity_mode')
                     ->label(__('capell-access-gate::filament.fields.identity_mode'))
-                    ->options(self::enumOptions(IdentityMode::class, 'capell-access-gate::filament.identity_mode')),
+                    ->options(IdentityMode::class),
             ])
             ->recordActions([
                 EditAction::make(),

@@ -24,7 +24,7 @@ final class ListPublicCapabilitiesTool extends Tool
     {
         return Response::structured([
             'capabilities' => $registry->publiclyReadable()
-                ->map(fn (CapabilityData $capability): array => $capability->toPayload())
+                ->map(fn (CapabilityData $capability): array => $capability->publicPayload())
                 ->all(),
         ]);
     }

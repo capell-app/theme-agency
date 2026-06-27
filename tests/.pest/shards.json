@@ -167,7 +167,7 @@
         "packages/blog/tests/Integration/Models/ArticleTest.php": 1,
         "packages/blog/tests/Integration/Models/SiteTest.php": 1,
         "packages/blog/tests/Integration/PublicUrls/BlogPublicUrlContributorTest.php": 1,
-        "packages/blog/tests/Unit/Actions/GenerateArchiveUrlTest.php": 1,
+        "packages/blog/tests/Unit/Actions/GenerateArchiveUrlActionTest.php": 1,
         "packages/blog/tests/Unit/Actions/GetArticleLayoutActionTest.php": 1,
         "packages/blog/tests/Unit/BuildArticleMetaDataActionTest.php": 1,
         "packages/blog/tests/Unit/CacheEnumTest.php": 1,

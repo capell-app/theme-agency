@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Capell\AccessGate\Enums;
 
-enum EventType: string
+use Filament\Support\Contracts\HasLabel;
+
+enum EventType: string implements HasLabel
 {
     case AreaCreated = 'area_created';
     case AreaStatusUpdated = 'area_status_updated';
@@ -25,4 +27,9 @@ enum EventType: string
     case ExternalInviteAccepted = 'external_invite_accepted';
     case UserLoggedIn = 'user_logged_in';
     case AccessDenied = 'access_denied';
+
+    public function getLabel(): string
+    {
+        return __(sprintf('capell-access-gate::filament.event_type.%s', $this->value));
+    }
 }

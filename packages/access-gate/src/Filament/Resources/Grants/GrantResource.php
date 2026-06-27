@@ -8,7 +8,6 @@ use BackedEnum;
 use Capell\AccessGate\Actions\RevokeAccessGateGrantAction;
 use Capell\AccessGate\Enums\GrantStatus;
 use Capell\AccessGate\Enums\GrantSubjectType;
-use Capell\AccessGate\Filament\Resources\Concerns\AccessGateFilamentOptions;
 use Capell\AccessGate\Filament\Resources\Grants\Pages\ListGrants;
 use Capell\AccessGate\Models\Grant;
 use Capell\AccessGate\Providers\AccessGateServiceProvider;
@@ -26,8 +25,6 @@ use Override;
 
 final class GrantResource extends Resource
 {
-    use AccessGateFilamentOptions;
-
     protected static ?string $slug = 'access-gate/grants';
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedKey;
@@ -89,10 +86,10 @@ final class GrantResource extends Resource
                     ->relationship('area', 'key', modifyQueryUsing: fn (Builder $query): Builder => AccessGateSiteScope::applyAreaOptionsScope($query)),
                 SelectFilter::make('status')
                     ->label(__('capell-access-gate::filament.fields.status'))
-                    ->options(self::enumOptions(GrantStatus::class, 'capell-access-gate::filament.grant_status')),
+                    ->options(GrantStatus::class),
                 SelectFilter::make('subject_type')
                     ->label(__('capell-access-gate::filament.fields.subject_type'))
-                    ->options(self::enumOptions(GrantSubjectType::class, 'capell-access-gate::filament.grant_subject_type')),
+                    ->options(GrantSubjectType::class),
             ])
             ->recordActions([
                 Action::make('revoke')

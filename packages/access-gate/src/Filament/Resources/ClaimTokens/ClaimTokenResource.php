@@ -7,7 +7,6 @@ namespace Capell\AccessGate\Filament\Resources\ClaimTokens;
 use BackedEnum;
 use Capell\AccessGate\Enums\ClaimTokenStatus;
 use Capell\AccessGate\Filament\Resources\ClaimTokens\Pages\ListClaimTokens;
-use Capell\AccessGate\Filament\Resources\Concerns\AccessGateFilamentOptions;
 use Capell\AccessGate\Models\ClaimToken;
 use Capell\AccessGate\Providers\AccessGateServiceProvider;
 use Capell\AccessGate\Support\AccessGateSiteScope;
@@ -23,8 +22,6 @@ use Override;
 
 final class ClaimTokenResource extends Resource
 {
-    use AccessGateFilamentOptions;
-
     protected static ?string $slug = 'access-gate/claim-tokens';
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedLink;
@@ -74,7 +71,7 @@ final class ClaimTokenResource extends Resource
                     ->relationship('area', 'key', modifyQueryUsing: fn (Builder $query): Builder => AccessGateSiteScope::applyAreaOptionsScope($query)),
                 SelectFilter::make('status')
                     ->label(__('capell-access-gate::filament.fields.status'))
-                    ->options(self::enumOptions(ClaimTokenStatus::class, 'capell-access-gate::filament.claim_token_status')),
+                    ->options(ClaimTokenStatus::class),
             ]);
     }
 

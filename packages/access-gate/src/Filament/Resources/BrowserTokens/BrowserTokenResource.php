@@ -8,7 +8,6 @@ use BackedEnum;
 use Capell\AccessGate\Actions\RevokeAccessGateBrowserTokenRecordAction;
 use Capell\AccessGate\Enums\BrowserTokenStatus;
 use Capell\AccessGate\Filament\Resources\BrowserTokens\Pages\ListBrowserTokens;
-use Capell\AccessGate\Filament\Resources\Concerns\AccessGateFilamentOptions;
 use Capell\AccessGate\Models\BrowserToken;
 use Capell\AccessGate\Providers\AccessGateServiceProvider;
 use Capell\AccessGate\Support\AccessGateSiteScope;
@@ -25,8 +24,6 @@ use Override;
 
 final class BrowserTokenResource extends Resource
 {
-    use AccessGateFilamentOptions;
-
     protected static ?string $slug = 'access-gate/browser-tokens';
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedComputerDesktop;
@@ -81,7 +78,7 @@ final class BrowserTokenResource extends Resource
                     ->relationship('area', 'key', modifyQueryUsing: fn (Builder $query): Builder => AccessGateSiteScope::applyAreaOptionsScope($query)),
                 SelectFilter::make('status')
                     ->label(__('capell-access-gate::filament.fields.status'))
-                    ->options(self::enumOptions(BrowserTokenStatus::class, 'capell-access-gate::filament.browser_token_status')),
+                    ->options(BrowserTokenStatus::class),
             ])
             ->recordActions([
                 Action::make('revoke')

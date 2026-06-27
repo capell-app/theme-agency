@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Capell\AgentBridge\Data\CapabilityData;
+use Capell\AgentBridge\Data\CapabilityResultData;
 use Capell\AgentBridge\Enums\CapabilityRiskEnum;
 use Capell\AgentBridge\Enums\CapabilityServerEnum;
 use Capell\AgentBridge\Support\CapellAgentBridgeCapabilityRegistry;
@@ -81,8 +82,9 @@ it('runs a public Read capability with a null client', function (): void {
 
     $structured = $response->getStructuredContent();
 
-    expect($structured)->toBeArray()
-        ->and($structured['mode'])->toBe('executed')        // executed, no auth required
+    throw_unless(is_array($structured), RuntimeException::class, 'Expected a structured run response.');
+
+    expect($structured['mode'])->toBe('executed')           // executed, no auth required
         ->and($structured['capability'])->toBe('pub.read');
 });
 
@@ -97,3 +99,52 @@ it('REFUSES a non-public capability even though the action would tolerate a null
         $registry,
     );
 })->throws(HttpException::class);
+
+it('omits internal metadata from publicly listed capability payloads', function (): void {
+    // A public Read cap carrying every field the safety rule forbids leaking.
+    $registry = new CapellAgentBridgeCapabilityRegistry;
+    $registry->register(new CapabilityData(
+        key: 'discovery.list_themes',
+        name: 'List themes',
+        description: 'List installed themes.',
+        scope: 'capell.ai-creator.read',
+        server: CapabilityServerEnum::Site,
+        risk: CapabilityRiskEnum::Read,
+        actionClass: FakeCapabilityAction::class,
+        policyAbility: 'capell.ai-creator.manage',
+        outputDataClass: CapabilityResultData::class,
+        inputSchema: ['type' => 'object', 'properties' => ['secret_field' => ['type' => 'string']]],
+        outputSchema: ['type' => 'object'],
+        requiresConfirmation: false,
+        auditEvent: 'ai-creator.discovery.list_themes',
+        public: true,
+    ));
+    app()->instance(CapellAgentBridgeCapabilityRegistry::class, $registry);
+
+    $response = (new ListPublicCapabilitiesTool)->handle($registry);
+    $capabilities = $response->getStructuredContent()['capabilities'] ?? [];
+
+    throw_unless(
+        is_array($capabilities) && $capabilities !== [],
+        RuntimeException::class,
+        'Expected at least one public capability.',
+    );
+
+    /** @var array<string, mixed> $payload */
+    $payload = $capabilities[0];
+
+    $keys = array_keys($payload);
+    sort($keys);
+
+    // Anonymous callers receive only safe, public-facing fields — nothing else.
+    expect($keys)->toBe(['description', 'key', 'name', 'risk']);
+
+    // No scope, policy ability, class-string, audit event, or schema field path leaks.
+    $serialised = json_encode($payload, JSON_THROW_ON_ERROR);
+    expect($serialised)
+        ->not->toContain('capell.ai-creator.read')
+        ->not->toContain('capell.ai-creator.manage')
+        ->not->toContain('ai-creator.discovery.list_themes')
+        ->not->toContain('secret_field')
+        ->not->toContain('Capell\\');
+});

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Capell\Comments\Livewire;
 
 use Capell\Comments\Actions\CreateCommentAction;
+use Capell\Comments\Actions\ResolveCommentableFromPayloadAction;
 use Capell\Comments\Actions\ResolvePublicCommentableThreadAction;
 use Capell\Comments\Actions\ToggleCommentReactionAction;
 use Capell\Comments\Data\CommentableTypeData;
@@ -15,7 +16,6 @@ use Capell\Comments\Support\CommentSettingsResolver;
 use Capell\Core\Contracts\Extensions\RegistersExtensionFrontendComponent;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Validation\ValidationException;
@@ -255,36 +255,11 @@ class CommentThreadComponent extends Component implements RegistersExtensionFron
             return null;
         }
 
-        $type = $payload['type'] ?? null;
-        $id = $payload['id'] ?? null;
-        $siteId = $payload['site_id'] ?? null;
-        $languageId = $payload['language_id'] ?? null;
-
-        if (! is_string($type) || ! is_numeric($id)) {
+        if (! is_array($payload)) {
             return null;
         }
 
-        $class = Relation::getMorphedModel($type) ?? $type;
-        if (! is_string($class) || ! class_exists($class) || ! is_a($class, Model::class, true)) {
-            return null;
-        }
-
-        /** @var Model|null $model */
-        $model = $class::query()->find((int) $id);
-
-        if (! $model instanceof Model) {
-            return null;
-        }
-
-        if (is_numeric($siteId) && (int) self::optionalAttribute($model, 'site_id') !== (int) $siteId) {
-            return null;
-        }
-
-        if (is_numeric($languageId) && (int) self::optionalAttribute($model, 'language_id') !== (int) $languageId) {
-            return null;
-        }
-
-        $this->resolvedCommentable = $model;
+        $this->resolvedCommentable = ResolveCommentableFromPayloadAction::run($payload);
 
         return $this->resolvedCommentable;
     }

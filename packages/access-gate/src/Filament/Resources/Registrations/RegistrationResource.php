@@ -13,7 +13,6 @@ use Capell\AccessGate\Actions\RejectRegistrationAction;
 use Capell\AccessGate\Actions\ResendAccessGateClaimTokenAction;
 use Capell\AccessGate\Enums\AccessAreaStatus;
 use Capell\AccessGate\Enums\RegistrationStatus;
-use Capell\AccessGate\Filament\Resources\Concerns\AccessGateFilamentOptions;
 use Capell\AccessGate\Filament\Resources\Registrations\Pages\ListRegistrations;
 use Capell\AccessGate\Models\Registration;
 use Capell\AccessGate\Providers\AccessGateServiceProvider;
@@ -35,8 +34,6 @@ use Override;
 
 final class RegistrationResource extends Resource
 {
-    use AccessGateFilamentOptions;
-
     protected static ?string $slug = 'access-gate/registrations';
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedEnvelope;
@@ -105,7 +102,7 @@ final class RegistrationResource extends Resource
                     ->relationship('area', 'key', modifyQueryUsing: fn (Builder $query): Builder => AccessGateSiteScope::applyAreaOptionsScope($query)),
                 SelectFilter::make('status')
                     ->label(__('capell-access-gate::filament.fields.status'))
-                    ->options(self::enumOptions(RegistrationStatus::class, 'capell-access-gate::filament.registration_status')),
+                    ->options(RegistrationStatus::class),
                 SelectFilter::make('requested_host')
                     ->label(__('capell-access-gate::filament.fields.requested_host'))
                     ->options(fn (): array => AccessGateSiteScope::applyAreaScope(Registration::query())

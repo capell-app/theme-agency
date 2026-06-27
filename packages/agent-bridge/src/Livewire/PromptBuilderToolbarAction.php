@@ -6,6 +6,8 @@ namespace Capell\AgentBridge\Livewire;
 
 use Capell\AgentBridge\Actions\BuildAgentBridgePromptAction;
 use Capell\AgentBridge\Actions\DeleteAgentBridgePromptAction;
+use Capell\AgentBridge\Actions\FindSavedPromptForUserAction;
+use Capell\AgentBridge\Actions\ListSavedPromptOptionsAction;
 use Capell\AgentBridge\Actions\SaveAgentBridgePromptAction;
 use Capell\AgentBridge\Data\AgentBridgePromptData;
 use Capell\AgentBridge\Filament\Pages\CapellAgentBridgePromptBuilderPage;
@@ -203,7 +205,7 @@ final class PromptBuilderToolbarAction extends Component
         $this->buildPrompt();
     }
 
-    /** @return array<string, string> */
+    /** @return array<int|string, string> */
     public function savedPromptOptions(): array
     {
         $user = $this->user();
@@ -212,12 +214,7 @@ final class PromptBuilderToolbarAction extends Component
             return [];
         }
 
-        return CapellAgentBridgeSavedPrompt::query()
-            ->forUser($user)
-            ->orderBy('name')
-            ->pluck('name', 'id')
-            ->mapWithKeys(static fn (string $name, int|string $id): array => [(string) $id => $name])
-            ->all();
+        return ListSavedPromptOptionsAction::run($user);
     }
 
     /** @return array<string, string> */
@@ -256,9 +253,7 @@ final class PromptBuilderToolbarAction extends Component
             return null;
         }
 
-        return CapellAgentBridgeSavedPrompt::query()
-            ->forUser($user)
-            ->find($this->selectedSavedPromptId);
+        return FindSavedPromptForUserAction::run($user, $this->selectedSavedPromptId);
     }
 
     private function user(): ?Authenticatable

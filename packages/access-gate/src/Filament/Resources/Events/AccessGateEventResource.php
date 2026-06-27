@@ -6,7 +6,6 @@ namespace Capell\AccessGate\Filament\Resources\Events;
 
 use BackedEnum;
 use Capell\AccessGate\Enums\EventType;
-use Capell\AccessGate\Filament\Resources\Concerns\AccessGateFilamentOptions;
 use Capell\AccessGate\Filament\Resources\Events\Pages\ListAccessGateEvents;
 use Capell\AccessGate\Models\Event;
 use Capell\AccessGate\Providers\AccessGateServiceProvider;
@@ -23,8 +22,6 @@ use Override;
 
 final class AccessGateEventResource extends Resource
 {
-    use AccessGateFilamentOptions;
-
     protected static ?string $slug = 'access-gate/events/access-gate-events';
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedClock;
@@ -74,7 +71,7 @@ final class AccessGateEventResource extends Resource
                     ->relationship('area', 'key', modifyQueryUsing: fn (Builder $query): Builder => AccessGateSiteScope::applyAreaOptionsScope($query)),
                 SelectFilter::make('type')
                     ->label(__('capell-access-gate::filament.fields.type'))
-                    ->options(self::enumOptions(EventType::class, 'capell-access-gate::filament.event_type')),
+                    ->options(EventType::class),
             ]);
     }
 

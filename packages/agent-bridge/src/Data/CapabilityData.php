@@ -84,4 +84,24 @@ final class CapabilityData extends Data
             'public' => $this->public,
         ];
     }
+
+    /**
+     * Anonymous-safe projection for the tokenless public capability surface.
+     *
+     * Deliberately omits scope, policy ability, package name, class-strings,
+     * audit event, and input/output schemas: the public-output-safety rule
+     * forbids exposing any of that to anonymous callers. Use {@see toPayload()}
+     * for the authenticated admin surface.
+     *
+     * @return array{key: string, name: string, description: string, risk: string}
+     */
+    public function publicPayload(): array
+    {
+        return [
+            'key' => $this->key,
+            'name' => $this->name,
+            'description' => $this->description,
+            'risk' => $this->risk->value,
+        ];
+    }
 }
