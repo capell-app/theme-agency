@@ -108,9 +108,7 @@ use Capell\SeoSuite\Policies\AiCreatorPolicy;
 use Capell\SeoSuite\Settings\SeoSuiteSettings;
 use Capell\SeoSuite\Support\Admin\AiCreatorPageExtender;
 use Capell\SeoSuite\Support\Admin\AiCreatorSiteExtender;
-use Capell\SeoSuite\Support\Admin\PageContentEditorConfigurator;
 use Capell\SeoSuite\Support\Admin\PageSeoAuditPageResourceWidgetExtender;
-use Capell\SeoSuite\Support\Admin\PageTitleWithSlugInputExtender;
 use Capell\SeoSuite\Support\Admin\RemoveInlineSeoTranslationComponents;
 use Capell\SeoSuite\Support\Admin\SeoAuthoringQualityGateValidator;
 use Capell\SeoSuite\Support\AiDiscovery\AiDiscoveryDiscoveryOutputSource;
@@ -285,14 +283,6 @@ final class SeoSuiteServiceProvider extends AbstractPackageServiceProvider
 
     protected function registerAdminExtenders(): self
     {
-        $this->app->tag([
-            PageContentEditorConfigurator::class,
-        ], 'capell-admin:page-content-editor');
-
-        $this->app->tag([
-            PageTitleWithSlugInputExtender::class,
-        ], 'capell-admin:page-title-with-slug-input');
-
         $this->app->tag([
             AiCreatorPageExtender::class,
         ], PageHeaderActionExtender::TAG);
