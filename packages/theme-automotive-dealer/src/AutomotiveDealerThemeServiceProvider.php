@@ -119,7 +119,7 @@ final class AutomotiveDealerThemeServiceProvider extends ServiceProvider
     private function sectionRenderers(): array
     {
         return [
-            'navigation' => new ViewSectionRenderer(self::THEME_KEY, 'navigation', 'capell-theme-automotive-dealer::sections.navigation', failLoudly: true),
+            'navigation' => new ViewSectionRenderer(self::THEME_KEY, 'navigation', 'capell-foundation-theme::theme.chrome.navigation', failLoudly: true),
             'hero' => new ViewSectionRenderer(self::THEME_KEY, 'hero', 'capell-theme-automotive-dealer::sections.hero', failLoudly: true),
             'inventory-grid' => new ViewSectionRenderer(self::THEME_KEY, 'inventory-grid', 'capell-theme-automotive-dealer::sections.inventory-grid', failLoudly: true),
             'vehicle-detail' => new ViewSectionRenderer(self::THEME_KEY, 'vehicle-detail', 'capell-theme-automotive-dealer::sections.vehicle-detail', failLoudly: true),
@@ -130,7 +130,7 @@ final class AutomotiveDealerThemeServiceProvider extends ServiceProvider
             'proof' => new ViewSectionRenderer(self::THEME_KEY, 'proof', 'capell-theme-automotive-dealer::sections.proof', failLoudly: true),
             'content-listing' => new ViewSectionRenderer(self::THEME_KEY, 'content-listing', 'capell-theme-automotive-dealer::sections.content-listing', failLoudly: true),
             'cta' => new ViewSectionRenderer(self::THEME_KEY, 'cta', 'capell-theme-automotive-dealer::sections.cta', failLoudly: true),
-            'footer' => new ViewSectionRenderer(self::THEME_KEY, 'footer', 'capell-theme-automotive-dealer::sections.footer', failLoudly: true),
+            'footer' => new ViewSectionRenderer(self::THEME_KEY, 'footer', 'capell-foundation-theme::theme.chrome.footer', failLoudly: true),
         ];
     }
 }

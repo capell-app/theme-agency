@@ -119,7 +119,7 @@ final class BeautySpaThemeServiceProvider extends ServiceProvider
     private function sectionRenderers(): array
     {
         return [
-            'navigation' => new ViewSectionRenderer(self::THEME_KEY, 'navigation', 'capell-theme-beauty-spa::sections.navigation', failLoudly: true),
+            'navigation' => new ViewSectionRenderer(self::THEME_KEY, 'navigation', 'capell-foundation-theme::theme.chrome.navigation', failLoudly: true),
             'hero' => new ViewSectionRenderer(self::THEME_KEY, 'hero', 'capell-theme-beauty-spa::sections.hero', failLoudly: true),
             'treatment-menu' => new ViewSectionRenderer(self::THEME_KEY, 'treatment-menu', 'capell-theme-beauty-spa::sections.treatment-menu', failLoudly: true),
             'therapist-profiles' => new ViewSectionRenderer(self::THEME_KEY, 'therapist-profiles', 'capell-theme-beauty-spa::sections.therapist-profiles', failLoudly: true),
@@ -130,7 +130,7 @@ final class BeautySpaThemeServiceProvider extends ServiceProvider
             'proof' => new ViewSectionRenderer(self::THEME_KEY, 'proof', 'capell-theme-beauty-spa::sections.proof', failLoudly: true),
             'content-listing' => new ViewSectionRenderer(self::THEME_KEY, 'content-listing', 'capell-theme-beauty-spa::sections.content-listing', failLoudly: true),
             'cta' => new ViewSectionRenderer(self::THEME_KEY, 'cta', 'capell-theme-beauty-spa::sections.cta', failLoudly: true),
-            'footer' => new ViewSectionRenderer(self::THEME_KEY, 'footer', 'capell-theme-beauty-spa::sections.footer', failLoudly: true),
+            'footer' => new ViewSectionRenderer(self::THEME_KEY, 'footer', 'capell-foundation-theme::theme.chrome.footer', failLoudly: true),
         ];
     }
 }

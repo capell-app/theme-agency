@@ -119,7 +119,7 @@ final class QuantTradingThemeServiceProvider extends ServiceProvider
     private function sectionRenderers(): array
     {
         return [
-            'navigation' => new ViewSectionRenderer(self::THEME_KEY, 'navigation', 'capell-theme-quant-trading::sections.navigation', failLoudly: true),
+            'navigation' => new ViewSectionRenderer(self::THEME_KEY, 'navigation', 'capell-foundation-theme::theme.chrome.navigation', failLoudly: true),
             'hero' => new ViewSectionRenderer(self::THEME_KEY, 'hero', 'capell-theme-quant-trading::sections.hero', failLoudly: true),
             'performance-chart' => new ViewSectionRenderer(self::THEME_KEY, 'performance-chart', 'capell-theme-quant-trading::sections.performance-chart', failLoudly: true),
             'metric-cards' => new ViewSectionRenderer(self::THEME_KEY, 'metric-cards', 'capell-theme-quant-trading::sections.metric-cards', failLoudly: true),
@@ -130,7 +130,7 @@ final class QuantTradingThemeServiceProvider extends ServiceProvider
             'proof' => new ViewSectionRenderer(self::THEME_KEY, 'proof', 'capell-theme-quant-trading::sections.proof', failLoudly: true),
             'content-listing' => new ViewSectionRenderer(self::THEME_KEY, 'content-listing', 'capell-theme-quant-trading::sections.content-listing', failLoudly: true),
             'cta' => new ViewSectionRenderer(self::THEME_KEY, 'cta', 'capell-theme-quant-trading::sections.cta', failLoudly: true),
-            'footer' => new ViewSectionRenderer(self::THEME_KEY, 'footer', 'capell-theme-quant-trading::sections.footer', failLoudly: true),
+            'footer' => new ViewSectionRenderer(self::THEME_KEY, 'footer', 'capell-foundation-theme::theme.chrome.footer', failLoudly: true),
         ];
     }
 }

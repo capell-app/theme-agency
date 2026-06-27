@@ -73,3 +73,35 @@ it('adds premium demo page surfaces for every prompt-built theme', function (str
     ['recruitment-jobs', 'Recruitment Jobs'],
     ['editorial-serif', 'Editorial Serif'],
 ]);
+
+it('attaches object-form navigation and footer chrome to every base demo surface', function (): void {
+    $installer = new ThemeDemoPageInstaller;
+    $method = new ReflectionMethod($installer, 'definitions');
+
+    /** @var list<ThemeDemoPageDefinition> $definitions */
+    $definitions = $method->invoke($installer, 'api-platform', 'API Platform', 'https://example.test');
+
+    $brandName = 'API Platform Demo';
+    $baseSurfaces = ['homepage', 'directory', 'detail', 'contact', 'empty', 'not-found', 'cta'];
+
+    foreach ($baseSurfaces as $surface) {
+        $definition = collect($definitions)->firstWhere('surface', $surface);
+
+        expect($definition)->not->toBeNull("missing base surface: {$surface}");
+
+        // Object form (assoc, not list) is what the adapter's navigationFrom()/footerFrom()
+        // resolve into a branded nav + footer; a list form or absent key collapses to the
+        // barren defaultNavigation()/defaultFooter() fallback.
+        $navigation = $definition->renderData['navigation'] ?? null;
+        expect($navigation)->toBeArray("{$surface} navigation missing")
+            ->and(array_is_list($navigation))->toBeFalse("{$surface} navigation must be object form")
+            ->and($navigation['brandName'] ?? null)->toBe($brandName)
+            ->and($navigation['items'] ?? null)->toBeArray();
+
+        $footer = $definition->renderData['footer'] ?? null;
+        expect($footer)->toBeArray("{$surface} footer missing")
+            ->and(array_is_list($footer))->toBeFalse("{$surface} footer must be object form")
+            ->and($footer['brandName'] ?? null)->toBe($brandName)
+            ->and($footer['columns'] ?? null)->toBeArray();
+    }
+});

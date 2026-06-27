@@ -119,7 +119,7 @@ final class NewsroomMagazineThemeServiceProvider extends ServiceProvider
     private function sectionRenderers(): array
     {
         return [
-            'navigation' => new ViewSectionRenderer(self::THEME_KEY, 'navigation', 'capell-theme-newsroom-magazine::sections.navigation', failLoudly: true),
+            'navigation' => new ViewSectionRenderer(self::THEME_KEY, 'navigation', 'capell-foundation-theme::theme.chrome.navigation', failLoudly: true),
             'featured-story' => new ViewSectionRenderer(self::THEME_KEY, 'featured-story', 'capell-theme-newsroom-magazine::sections.featured-story', failLoudly: true),
             'category-nav' => new ViewSectionRenderer(self::THEME_KEY, 'category-nav', 'capell-theme-newsroom-magazine::sections.category-nav', failLoudly: true),
             'story-grid' => new ViewSectionRenderer(self::THEME_KEY, 'story-grid', 'capell-theme-newsroom-magazine::sections.story-grid', failLoudly: true),
@@ -130,7 +130,7 @@ final class NewsroomMagazineThemeServiceProvider extends ServiceProvider
             'proof' => new ViewSectionRenderer(self::THEME_KEY, 'proof', 'capell-theme-newsroom-magazine::sections.proof', failLoudly: true),
             'content-listing' => new ViewSectionRenderer(self::THEME_KEY, 'content-listing', 'capell-theme-newsroom-magazine::sections.content-listing', failLoudly: true),
             'cta' => new ViewSectionRenderer(self::THEME_KEY, 'cta', 'capell-theme-newsroom-magazine::sections.cta', failLoudly: true),
-            'footer' => new ViewSectionRenderer(self::THEME_KEY, 'footer', 'capell-theme-newsroom-magazine::sections.footer', failLoudly: true),
+            'footer' => new ViewSectionRenderer(self::THEME_KEY, 'footer', 'capell-foundation-theme::theme.chrome.footer', failLoudly: true),
             'hero' => new ViewSectionRenderer(self::THEME_KEY, 'hero', 'capell-theme-newsroom-magazine::sections.hero', failLoudly: true),
         ];
     }

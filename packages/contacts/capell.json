@@ -110,9 +110,6 @@
     ],
     "capabilities": [
         "contacts",
-        "contacts-identity",
-        "contacts-source-identity",
-        "contacts-source-sync",
         "contacts-access-gate-source-adapter",
         "contacts-campaign-studio-source-adapter",
         "contacts-comments-source-adapter",
@@ -120,10 +117,6 @@
         "contacts-form-builder-source-adapter",
         "contacts-newsletter-source-adapter",
         "contacts-shopify-commerce-source-adapter",
-        "contacts-activity",
-        "contacts-dashboard-widget",
-        "contacts-privacy-export",
-        "contacts-privacy-anonymization",
         "contacts-tags"
     ],
     "security": {

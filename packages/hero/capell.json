@@ -46,13 +46,7 @@
     },
     "settings": [],
     "permissions": [],
-    "capabilities": [
-        "hero-widget",
-        "hero-video-background",
-        "hero-overlay-backgrounds",
-        "hero-carousel",
-        "hero-theme-inheritance"
-    ],
+    "capabilities": [],
     "security": {
         "riskTier": "low",
         "publicSurface": {

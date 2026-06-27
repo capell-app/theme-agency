@@ -91,8 +91,7 @@ it('declares image optimization and media library pairings', function (): void {
     $manifest = frontendOptimizerPackageManifest();
     $dependencies = frontendOptimizerManifestArray($manifest, 'dependencies');
 
-    expect($dependencies['supports'] ?? [])->toContain('capell-app/media-library')
-        ->and($manifest['capabilities'] ?? [])->toContain('frontend-optimizer-images');
+    expect($dependencies['supports'] ?? [])->toContain('capell-app/media-library');
 });
 
 it('declares shipped admin configurator and operational contribution metadata', function (): void {

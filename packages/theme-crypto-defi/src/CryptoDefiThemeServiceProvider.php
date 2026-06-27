@@ -119,7 +119,7 @@ final class CryptoDefiThemeServiceProvider extends ServiceProvider
     private function sectionRenderers(): array
     {
         return [
-            'navigation' => new ViewSectionRenderer(self::THEME_KEY, 'navigation', 'capell-theme-crypto-defi::sections.navigation', failLoudly: true),
+            'navigation' => new ViewSectionRenderer(self::THEME_KEY, 'navigation', 'capell-foundation-theme::theme.chrome.navigation', failLoudly: true),
             'hero' => new ViewSectionRenderer(self::THEME_KEY, 'hero', 'capell-theme-crypto-defi::sections.hero', failLoudly: true),
             'protocol-stats' => new ViewSectionRenderer(self::THEME_KEY, 'protocol-stats', 'capell-theme-crypto-defi::sections.protocol-stats', failLoudly: true),
             'token-metrics' => new ViewSectionRenderer(self::THEME_KEY, 'token-metrics', 'capell-theme-crypto-defi::sections.token-metrics', failLoudly: true),
@@ -130,7 +130,7 @@ final class CryptoDefiThemeServiceProvider extends ServiceProvider
             'proof' => new ViewSectionRenderer(self::THEME_KEY, 'proof', 'capell-theme-crypto-defi::sections.proof', failLoudly: true),
             'content-listing' => new ViewSectionRenderer(self::THEME_KEY, 'content-listing', 'capell-theme-crypto-defi::sections.content-listing', failLoudly: true),
             'cta' => new ViewSectionRenderer(self::THEME_KEY, 'cta', 'capell-theme-crypto-defi::sections.cta', failLoudly: true),
-            'footer' => new ViewSectionRenderer(self::THEME_KEY, 'footer', 'capell-theme-crypto-defi::sections.footer', failLoudly: true),
+            'footer' => new ViewSectionRenderer(self::THEME_KEY, 'footer', 'capell-foundation-theme::theme.chrome.footer', failLoudly: true),
         ];
     }
 }

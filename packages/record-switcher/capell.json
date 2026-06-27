@@ -55,14 +55,7 @@
     "actions": [],
     "settings": [],
     "permissions": [],
-    "capabilities": [
-        "admin-record-switching",
-        "edit-page-searchable-record-navigation",
-        "same-site-sibling-prioritization",
-        "keyboard-tab-suggestion-acceptance",
-        "filament-heading-switcher",
-        "first-party-admin-assets"
-    ],
+    "capabilities": [],
     "security": {
         "riskTier": "low",
         "publicSurface": {

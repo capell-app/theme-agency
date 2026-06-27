@@ -119,7 +119,7 @@ final class RoboticsHardwareThemeServiceProvider extends ServiceProvider
     private function sectionRenderers(): array
     {
         return [
-            'navigation' => new ViewSectionRenderer(self::THEME_KEY, 'navigation', 'capell-theme-robotics-hardware::sections.navigation', failLoudly: true),
+            'navigation' => new ViewSectionRenderer(self::THEME_KEY, 'navigation', 'capell-foundation-theme::theme.chrome.navigation', failLoudly: true),
             'video-hero' => new ViewSectionRenderer(self::THEME_KEY, 'video-hero', 'capell-theme-robotics-hardware::sections.video-hero', failLoudly: true),
             'spec-sheet' => new ViewSectionRenderer(self::THEME_KEY, 'spec-sheet', 'capell-theme-robotics-hardware::sections.spec-sheet', failLoudly: true),
             'capabilities' => new ViewSectionRenderer(self::THEME_KEY, 'capabilities', 'capell-theme-robotics-hardware::sections.capabilities', failLoudly: true),
@@ -129,7 +129,7 @@ final class RoboticsHardwareThemeServiceProvider extends ServiceProvider
             'proof' => new ViewSectionRenderer(self::THEME_KEY, 'proof', 'capell-theme-robotics-hardware::sections.proof', failLoudly: true),
             'content-listing' => new ViewSectionRenderer(self::THEME_KEY, 'content-listing', 'capell-theme-robotics-hardware::sections.content-listing', failLoudly: true),
             'cta' => new ViewSectionRenderer(self::THEME_KEY, 'cta', 'capell-theme-robotics-hardware::sections.cta', failLoudly: true),
-            'footer' => new ViewSectionRenderer(self::THEME_KEY, 'footer', 'capell-theme-robotics-hardware::sections.footer', failLoudly: true),
+            'footer' => new ViewSectionRenderer(self::THEME_KEY, 'footer', 'capell-foundation-theme::theme.chrome.footer', failLoudly: true),
             'hero' => new ViewSectionRenderer(self::THEME_KEY, 'hero', 'capell-theme-robotics-hardware::sections.hero', failLoudly: true),
         ];
     }

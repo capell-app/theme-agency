@@ -119,14 +119,14 @@ final class PersonalDevThemeServiceProvider extends ServiceProvider
     private function sectionRenderers(): array
     {
         return [
-            'navigation' => new ViewSectionRenderer(self::THEME_KEY, 'navigation', 'capell-theme-personal-dev::sections.navigation', failLoudly: true),
+            'navigation' => new ViewSectionRenderer(self::THEME_KEY, 'navigation', 'capell-foundation-theme::theme.chrome.navigation', failLoudly: true),
             'about-intro' => new ViewSectionRenderer(self::THEME_KEY, 'about-intro', 'capell-theme-personal-dev::sections.about-intro', failLoudly: true),
             'writing-index' => new ViewSectionRenderer(self::THEME_KEY, 'writing-index', 'capell-theme-personal-dev::sections.writing-index', failLoudly: true),
             'now' => new ViewSectionRenderer(self::THEME_KEY, 'now', 'capell-theme-personal-dev::sections.now', failLoudly: true),
             'projects' => new ViewSectionRenderer(self::THEME_KEY, 'projects', 'capell-theme-personal-dev::sections.projects', failLoudly: true),
             'newsletter-inline' => new ViewSectionRenderer(self::THEME_KEY, 'newsletter-inline', 'capell-theme-personal-dev::sections.newsletter-inline', failLoudly: true),
             'content-listing' => new ViewSectionRenderer(self::THEME_KEY, 'content-listing', 'capell-theme-personal-dev::sections.content-listing', failLoudly: true),
-            'footer' => new ViewSectionRenderer(self::THEME_KEY, 'footer', 'capell-theme-personal-dev::sections.footer', failLoudly: true),
+            'footer' => new ViewSectionRenderer(self::THEME_KEY, 'footer', 'capell-foundation-theme::theme.chrome.footer', failLoudly: true),
             'hero' => new ViewSectionRenderer(self::THEME_KEY, 'hero', 'capell-theme-personal-dev::sections.hero', failLoudly: true),
             'features' => new ViewSectionRenderer(self::THEME_KEY, 'features', 'capell-theme-personal-dev::sections.features', failLoudly: true),
             'proof' => new ViewSectionRenderer(self::THEME_KEY, 'proof', 'capell-theme-personal-dev::sections.proof', failLoudly: true),

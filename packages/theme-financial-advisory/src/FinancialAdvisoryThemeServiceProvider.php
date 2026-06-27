@@ -119,7 +119,7 @@ final class FinancialAdvisoryThemeServiceProvider extends ServiceProvider
     private function sectionRenderers(): array
     {
         return [
-            'navigation' => new ViewSectionRenderer(self::THEME_KEY, 'navigation', 'capell-theme-financial-advisory::sections.navigation', failLoudly: true),
+            'navigation' => new ViewSectionRenderer(self::THEME_KEY, 'navigation', 'capell-foundation-theme::theme.chrome.navigation', failLoudly: true),
             'hero' => new ViewSectionRenderer(self::THEME_KEY, 'hero', 'capell-theme-financial-advisory::sections.hero', failLoudly: true),
             'services' => new ViewSectionRenderer(self::THEME_KEY, 'services', 'capell-theme-financial-advisory::sections.services', failLoudly: true),
             'advisors' => new ViewSectionRenderer(self::THEME_KEY, 'advisors', 'capell-theme-financial-advisory::sections.advisors', failLoudly: true),
@@ -128,7 +128,7 @@ final class FinancialAdvisoryThemeServiceProvider extends ServiceProvider
             'client-segments' => new ViewSectionRenderer(self::THEME_KEY, 'client-segments', 'capell-theme-financial-advisory::sections.client-segments', failLoudly: true),
             'content-listing' => new ViewSectionRenderer(self::THEME_KEY, 'content-listing', 'capell-theme-financial-advisory::sections.content-listing', failLoudly: true),
             'cta' => new ViewSectionRenderer(self::THEME_KEY, 'cta', 'capell-theme-financial-advisory::sections.cta', failLoudly: true),
-            'footer' => new ViewSectionRenderer(self::THEME_KEY, 'footer', 'capell-theme-financial-advisory::sections.footer', failLoudly: true),
+            'footer' => new ViewSectionRenderer(self::THEME_KEY, 'footer', 'capell-foundation-theme::theme.chrome.footer', failLoudly: true),
             'features' => new ViewSectionRenderer(self::THEME_KEY, 'features', 'capell-theme-financial-advisory::sections.features', failLoudly: true),
             'proof' => new ViewSectionRenderer(self::THEME_KEY, 'proof', 'capell-theme-financial-advisory::sections.proof', failLoudly: true),
         ];

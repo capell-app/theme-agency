@@ -13,8 +13,12 @@ final class PremiumProductStoryScreenshotRenderer
 {
     private const string VIEW_PREFIX = 'capell-theme-premium-product-story::sections.';
 
+    private const string SCREEN_PREFIX = 'premium-product-story-';
+
     public function render(string $screen): View
     {
+        $screen = $this->normalizeScreen($screen);
+
         $sections = $this->sectionsFor($screen);
 
         abort_if($sections === [], 404);
@@ -55,6 +59,13 @@ final class PremiumProductStoryScreenshotRenderer
             'body' => new HtmlString($pageHtml),
             'title' => $this->titleFor($screen),
         ]);
+    }
+
+    private function normalizeScreen(string $screen): string
+    {
+        return str_starts_with($screen, self::SCREEN_PREFIX)
+            ? substr($screen, strlen(self::SCREEN_PREFIX))
+            : $screen;
     }
 
     /**
@@ -114,6 +125,50 @@ final class PremiumProductStoryScreenshotRenderer
                     ],
                 ]),
                 $this->section('spec-comparison'),
+                $this->footer(),
+            ],
+            'homepage' => [
+                $this->navigation(),
+                $this->hero([
+                    'heading' => 'Meet the studio range built for the work you ship',
+                    'summary' => 'A complete product story: launch hero, model family, feature proof, gallery, and the ecosystem around it.',
+                ]),
+                $this->section('product-families'),
+                $this->section('feature-highlights'),
+                $this->section('gallery-strip'),
+                $this->section('spec-comparison'),
+                $this->section('ecosystem-story'),
+                $this->section('cta'),
+                $this->footer(),
+            ],
+            'landing-page' => [
+                $this->navigation(),
+                $this->hero([
+                    'heading' => 'One product. One decisive landing page.',
+                    'summary' => 'A launch-focused landing flow that leads with the hero, then stacks proof and feature storytelling toward the buy.',
+                ]),
+                $this->section('proof'),
+                $this->section('features'),
+                $this->section('cta'),
+                $this->footer(),
+            ],
+            'list-page' => [
+                $this->navigation(),
+                $this->section('content-listing'),
+                $this->section('newsletter'),
+                $this->footer(),
+            ],
+            'search-results' => [
+                $this->navigation(),
+                $this->section('content-listing', [
+                    'heading' => 'Search results',
+                ]),
+                $this->footer(),
+            ],
+            'contact-form' => [
+                $this->navigation(),
+                $this->section('newsletter'),
+                $this->section('cta'),
                 $this->footer(),
             ],
             default => [],

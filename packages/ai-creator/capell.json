@@ -89,11 +89,7 @@
     },
     "settings": [],
     "permissions": [],
-    "capabilities": [
-        "ai-creator",
-        "ai-creator-agent-bridge",
-        "ai-creator-package-recommendations"
-    ],
+    "capabilities": ["ai-creator", "ai-creator-agent-bridge"],
     "security": {
         "riskTier": "standard",
         "publicSurface": {

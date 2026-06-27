@@ -119,7 +119,7 @@ final class RecruitmentJobsThemeServiceProvider extends ServiceProvider
     private function sectionRenderers(): array
     {
         return [
-            'navigation' => new ViewSectionRenderer(self::THEME_KEY, 'navigation', 'capell-theme-recruitment-jobs::sections.navigation', failLoudly: true),
+            'navigation' => new ViewSectionRenderer(self::THEME_KEY, 'navigation', 'capell-foundation-theme::theme.chrome.navigation', failLoudly: true),
             'hero' => new ViewSectionRenderer(self::THEME_KEY, 'hero', 'capell-theme-recruitment-jobs::sections.hero', failLoudly: true),
             'job-board' => new ViewSectionRenderer(self::THEME_KEY, 'job-board', 'capell-theme-recruitment-jobs::sections.job-board', failLoudly: true),
             'employer-services' => new ViewSectionRenderer(self::THEME_KEY, 'employer-services', 'capell-theme-recruitment-jobs::sections.employer-services', failLoudly: true),
@@ -130,7 +130,7 @@ final class RecruitmentJobsThemeServiceProvider extends ServiceProvider
             'proof' => new ViewSectionRenderer(self::THEME_KEY, 'proof', 'capell-theme-recruitment-jobs::sections.proof', failLoudly: true),
             'content-listing' => new ViewSectionRenderer(self::THEME_KEY, 'content-listing', 'capell-theme-recruitment-jobs::sections.content-listing', failLoudly: true),
             'cta' => new ViewSectionRenderer(self::THEME_KEY, 'cta', 'capell-theme-recruitment-jobs::sections.cta', failLoudly: true),
-            'footer' => new ViewSectionRenderer(self::THEME_KEY, 'footer', 'capell-theme-recruitment-jobs::sections.footer', failLoudly: true),
+            'footer' => new ViewSectionRenderer(self::THEME_KEY, 'footer', 'capell-foundation-theme::theme.chrome.footer', failLoudly: true),
         ];
     }
 }

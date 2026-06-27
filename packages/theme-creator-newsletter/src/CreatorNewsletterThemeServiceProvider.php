@@ -119,7 +119,7 @@ final class CreatorNewsletterThemeServiceProvider extends ServiceProvider
     private function sectionRenderers(): array
     {
         return [
-            'navigation' => new ViewSectionRenderer(self::THEME_KEY, 'navigation', 'capell-theme-creator-newsletter::sections.navigation', failLoudly: true),
+            'navigation' => new ViewSectionRenderer(self::THEME_KEY, 'navigation', 'capell-foundation-theme::theme.chrome.navigation', failLoudly: true),
             'subscribe-hero' => new ViewSectionRenderer(self::THEME_KEY, 'subscribe-hero', 'capell-theme-creator-newsletter::sections.subscribe-hero', failLoudly: true),
             'features' => new ViewSectionRenderer(self::THEME_KEY, 'features', 'capell-theme-creator-newsletter::sections.features', failLoudly: true),
             'archive' => new ViewSectionRenderer(self::THEME_KEY, 'archive', 'capell-theme-creator-newsletter::sections.archive', failLoudly: true),
@@ -128,7 +128,7 @@ final class CreatorNewsletterThemeServiceProvider extends ServiceProvider
             'about-author' => new ViewSectionRenderer(self::THEME_KEY, 'about-author', 'capell-theme-creator-newsletter::sections.about-author', failLoudly: true),
             'content-listing' => new ViewSectionRenderer(self::THEME_KEY, 'content-listing', 'capell-theme-creator-newsletter::sections.content-listing', failLoudly: true),
             'cta' => new ViewSectionRenderer(self::THEME_KEY, 'cta', 'capell-theme-creator-newsletter::sections.cta', failLoudly: true),
-            'footer' => new ViewSectionRenderer(self::THEME_KEY, 'footer', 'capell-theme-creator-newsletter::sections.footer', failLoudly: true),
+            'footer' => new ViewSectionRenderer(self::THEME_KEY, 'footer', 'capell-foundation-theme::theme.chrome.footer', failLoudly: true),
             'hero' => new ViewSectionRenderer(self::THEME_KEY, 'hero', 'capell-theme-creator-newsletter::sections.hero', failLoudly: true),
             'proof' => new ViewSectionRenderer(self::THEME_KEY, 'proof', 'capell-theme-creator-newsletter::sections.proof', failLoudly: true),
         ];

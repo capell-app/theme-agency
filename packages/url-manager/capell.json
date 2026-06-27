@@ -107,24 +107,7 @@
         "View:NotFoundOpportunitiesPage",
         "Manage:NotFoundOpportunities"
     ],
-    "capabilities": [
-        "managed-redirects",
-        "changed-url-redirect-detection",
-        "redirect-hit-counts",
-        "redirect-hit-retention",
-        "redirect-priority-ordering",
-        "managed-gone-rules",
-        "redirect-loop-detection",
-        "open-redirect-protection",
-        "canonical-url-management",
-        "redirect-import-export",
-        "not-found-opportunities",
-        "frontend-404-capture",
-        "not-found-redirect-suggestions",
-        "seo-suite-broken-url-import",
-        "frontend-redirect-resolver",
-        "url-manager-admin"
-    ],
+    "capabilities": ["seo-suite-broken-url-import", "url-manager-admin"],
     "security": {
         "riskTier": "sensitive",
         "publicSurface": {

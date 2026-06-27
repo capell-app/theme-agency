@@ -119,7 +119,7 @@ final class TravelTourismThemeServiceProvider extends ServiceProvider
     private function sectionRenderers(): array
     {
         return [
-            'navigation' => new ViewSectionRenderer(self::THEME_KEY, 'navigation', 'capell-theme-travel-tourism::sections.navigation', failLoudly: true),
+            'navigation' => new ViewSectionRenderer(self::THEME_KEY, 'navigation', 'capell-foundation-theme::theme.chrome.navigation', failLoudly: true),
             'hero' => new ViewSectionRenderer(self::THEME_KEY, 'hero', 'capell-theme-travel-tourism::sections.hero', failLoudly: true),
             'destination-grid' => new ViewSectionRenderer(self::THEME_KEY, 'destination-grid', 'capell-theme-travel-tourism::sections.destination-grid', failLoudly: true),
             'itinerary-builder' => new ViewSectionRenderer(self::THEME_KEY, 'itinerary-builder', 'capell-theme-travel-tourism::sections.itinerary-builder', failLoudly: true),
@@ -130,7 +130,7 @@ final class TravelTourismThemeServiceProvider extends ServiceProvider
             'proof' => new ViewSectionRenderer(self::THEME_KEY, 'proof', 'capell-theme-travel-tourism::sections.proof', failLoudly: true),
             'content-listing' => new ViewSectionRenderer(self::THEME_KEY, 'content-listing', 'capell-theme-travel-tourism::sections.content-listing', failLoudly: true),
             'cta' => new ViewSectionRenderer(self::THEME_KEY, 'cta', 'capell-theme-travel-tourism::sections.cta', failLoudly: true),
-            'footer' => new ViewSectionRenderer(self::THEME_KEY, 'footer', 'capell-theme-travel-tourism::sections.footer', failLoudly: true),
+            'footer' => new ViewSectionRenderer(self::THEME_KEY, 'footer', 'capell-foundation-theme::theme.chrome.footer', failLoudly: true),
         ];
     }
 }

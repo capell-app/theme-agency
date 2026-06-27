@@ -408,15 +408,27 @@ function main() {
         }
     }
 
+    // Capture every package that can be captured. A single package whose
+    // demo command fails, or whose runner reports failed entries (e.g.
+    // access-gate's unsupported `frontend-view` entries), must NOT abort the
+    // whole sweep — otherwise one early failing package silently skips every
+    // package after it. Remember that something failed and surface it in the
+    // final exit code instead of returning early.
+    let hadFailure = false
+
     for (const packageName of packageNames) {
         if (!shouldReuseApp) {
+            process.exitCode = 0
             runPackageCommands(repoPath, resolvedAppPath, only, [packageName])
 
             if (process.exitCode) {
-                return
+                hadFailure = true
+
+                continue
             }
         }
 
+        process.exitCode = 0
         runRunner(
             runnerPath,
             runnerArgsForPackage(
@@ -430,9 +442,11 @@ function main() {
         )
 
         if (process.exitCode) {
-            return
+            hadFailure = true
         }
     }
+
+    process.exitCode = hadFailure ? 1 : 0
 }
 
 main()

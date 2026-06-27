@@ -107,12 +107,10 @@ final class PremiumInfrastructureThemeServiceProvider extends ServiceProvider
 
     private function loadScreenshotFixtureRoutes(): void
     {
-        error_log('PREMDEBUG boot reached, console=' . ($this->app->runningInConsole() ? '1' : '0') . ' getenv=' . var_export(getenv('CAPELL_THEME_PREMIUM_INFRASTRUCTURE_SCREENSHOT_FIXTURES_ENABLED'), true));
         if (filter_var(getenv('CAPELL_THEME_PREMIUM_INFRASTRUCTURE_SCREENSHOT_FIXTURES_ENABLED'), FILTER_VALIDATE_BOOL) !== true) {
             return;
         }
 
-        error_log('PREMDEBUG route loaded');
         $this->loadRoutesFrom(__DIR__ . '/../routes/screenshot-fixtures.php');
     }
 

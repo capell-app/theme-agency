@@ -119,7 +119,7 @@ final class ConstructionTradesThemeServiceProvider extends ServiceProvider
     private function sectionRenderers(): array
     {
         return [
-            'navigation' => new ViewSectionRenderer(self::THEME_KEY, 'navigation', 'capell-theme-construction-trades::sections.navigation', failLoudly: true),
+            'navigation' => new ViewSectionRenderer(self::THEME_KEY, 'navigation', 'capell-foundation-theme::theme.chrome.navigation', failLoudly: true),
             'hero' => new ViewSectionRenderer(self::THEME_KEY, 'hero', 'capell-theme-construction-trades::sections.hero', failLoudly: true),
             'project-portfolio' => new ViewSectionRenderer(self::THEME_KEY, 'project-portfolio', 'capell-theme-construction-trades::sections.project-portfolio', failLoudly: true),
             'services' => new ViewSectionRenderer(self::THEME_KEY, 'services', 'capell-theme-construction-trades::sections.services', failLoudly: true),
@@ -128,7 +128,7 @@ final class ConstructionTradesThemeServiceProvider extends ServiceProvider
             'service-areas' => new ViewSectionRenderer(self::THEME_KEY, 'service-areas', 'capell-theme-construction-trades::sections.service-areas', failLoudly: true),
             'quote-cta' => new ViewSectionRenderer(self::THEME_KEY, 'quote-cta', 'capell-theme-construction-trades::sections.quote-cta', failLoudly: true),
             'content-listing' => new ViewSectionRenderer(self::THEME_KEY, 'content-listing', 'capell-theme-construction-trades::sections.content-listing', failLoudly: true),
-            'footer' => new ViewSectionRenderer(self::THEME_KEY, 'footer', 'capell-theme-construction-trades::sections.footer', failLoudly: true),
+            'footer' => new ViewSectionRenderer(self::THEME_KEY, 'footer', 'capell-foundation-theme::theme.chrome.footer', failLoudly: true),
             'features' => new ViewSectionRenderer(self::THEME_KEY, 'features', 'capell-theme-construction-trades::sections.features', failLoudly: true),
             'proof' => new ViewSectionRenderer(self::THEME_KEY, 'proof', 'capell-theme-construction-trades::sections.proof', failLoudly: true),
             'cta' => new ViewSectionRenderer(self::THEME_KEY, 'cta', 'capell-theme-construction-trades::sections.cta', failLoudly: true),

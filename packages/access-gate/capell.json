@@ -160,8 +160,6 @@
         "access-gating",
         "registration-approval",
         "claim-token-management",
-        "paid-gated-access-checkout-creation",
-        "paid-gated-access-fulfillment",
         "access-gate-customer-portal-gated-resource-feed"
     ],
     "security": {

@@ -119,7 +119,7 @@ final class FitnessWellnessThemeServiceProvider extends ServiceProvider
     private function sectionRenderers(): array
     {
         return [
-            'navigation' => new ViewSectionRenderer(self::THEME_KEY, 'navigation', 'capell-theme-fitness-wellness::sections.navigation', failLoudly: true),
+            'navigation' => new ViewSectionRenderer(self::THEME_KEY, 'navigation', 'capell-foundation-theme::theme.chrome.navigation', failLoudly: true),
             'hero' => new ViewSectionRenderer(self::THEME_KEY, 'hero', 'capell-theme-fitness-wellness::sections.hero', failLoudly: true),
             'class-schedule' => new ViewSectionRenderer(self::THEME_KEY, 'class-schedule', 'capell-theme-fitness-wellness::sections.class-schedule', failLoudly: true),
             'coach-profiles' => new ViewSectionRenderer(self::THEME_KEY, 'coach-profiles', 'capell-theme-fitness-wellness::sections.coach-profiles', failLoudly: true),
@@ -130,7 +130,7 @@ final class FitnessWellnessThemeServiceProvider extends ServiceProvider
             'proof' => new ViewSectionRenderer(self::THEME_KEY, 'proof', 'capell-theme-fitness-wellness::sections.proof', failLoudly: true),
             'content-listing' => new ViewSectionRenderer(self::THEME_KEY, 'content-listing', 'capell-theme-fitness-wellness::sections.content-listing', failLoudly: true),
             'cta' => new ViewSectionRenderer(self::THEME_KEY, 'cta', 'capell-theme-fitness-wellness::sections.cta', failLoudly: true),
-            'footer' => new ViewSectionRenderer(self::THEME_KEY, 'footer', 'capell-theme-fitness-wellness::sections.footer', failLoudly: true),
+            'footer' => new ViewSectionRenderer(self::THEME_KEY, 'footer', 'capell-foundation-theme::theme.chrome.footer', failLoudly: true),
         ];
     }
 }

@@ -1,3 +1,5 @@
+@import '../../../foundation-theme/resources/css/theme/chrome.css';
+
 .site-theme-shell {
     background: var(--theme-surface, #f7f6f0);
     color: var(--theme-foreground, #1c2a1f);

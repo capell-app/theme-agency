@@ -119,7 +119,7 @@ final class AiAgentThemeServiceProvider extends ServiceProvider
     private function sectionRenderers(): array
     {
         return [
-            'navigation' => new ViewSectionRenderer(self::THEME_KEY, 'navigation', 'capell-theme-ai-agent::sections.navigation', failLoudly: true),
+            'navigation' => new ViewSectionRenderer(self::THEME_KEY, 'navigation', 'capell-foundation-theme::theme.chrome.navigation', failLoudly: true),
             'hero' => new ViewSectionRenderer(self::THEME_KEY, 'hero', 'capell-theme-ai-agent::sections.hero', failLoudly: true),
             'outcome-metrics' => new ViewSectionRenderer(self::THEME_KEY, 'outcome-metrics', 'capell-theme-ai-agent::sections.outcome-metrics', failLoudly: true),
             'agent-in-action' => new ViewSectionRenderer(self::THEME_KEY, 'agent-in-action', 'capell-theme-ai-agent::sections.agent-in-action', failLoudly: true),
@@ -130,7 +130,7 @@ final class AiAgentThemeServiceProvider extends ServiceProvider
             'proof' => new ViewSectionRenderer(self::THEME_KEY, 'proof', 'capell-theme-ai-agent::sections.proof', failLoudly: true),
             'content-listing' => new ViewSectionRenderer(self::THEME_KEY, 'content-listing', 'capell-theme-ai-agent::sections.content-listing', failLoudly: true),
             'cta' => new ViewSectionRenderer(self::THEME_KEY, 'cta', 'capell-theme-ai-agent::sections.cta', failLoudly: true),
-            'footer' => new ViewSectionRenderer(self::THEME_KEY, 'footer', 'capell-theme-ai-agent::sections.footer', failLoudly: true),
+            'footer' => new ViewSectionRenderer(self::THEME_KEY, 'footer', 'capell-foundation-theme::theme.chrome.footer', failLoudly: true),
         ];
     }
 }

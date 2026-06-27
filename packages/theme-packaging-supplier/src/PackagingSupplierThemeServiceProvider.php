@@ -119,7 +119,7 @@ final class PackagingSupplierThemeServiceProvider extends ServiceProvider
     private function sectionRenderers(): array
     {
         return [
-            'navigation' => new ViewSectionRenderer(self::THEME_KEY, 'navigation', 'capell-theme-packaging-supplier::sections.navigation', failLoudly: true),
+            'navigation' => new ViewSectionRenderer(self::THEME_KEY, 'navigation', 'capell-foundation-theme::theme.chrome.navigation', failLoudly: true),
             'hero' => new ViewSectionRenderer(self::THEME_KEY, 'hero', 'capell-theme-packaging-supplier::sections.hero', failLoudly: true),
             'product-range' => new ViewSectionRenderer(self::THEME_KEY, 'product-range', 'capell-theme-packaging-supplier::sections.product-range', failLoudly: true),
             'materials' => new ViewSectionRenderer(self::THEME_KEY, 'materials', 'capell-theme-packaging-supplier::sections.materials', failLoudly: true),
@@ -130,7 +130,7 @@ final class PackagingSupplierThemeServiceProvider extends ServiceProvider
             'proof' => new ViewSectionRenderer(self::THEME_KEY, 'proof', 'capell-theme-packaging-supplier::sections.proof', failLoudly: true),
             'content-listing' => new ViewSectionRenderer(self::THEME_KEY, 'content-listing', 'capell-theme-packaging-supplier::sections.content-listing', failLoudly: true),
             'cta' => new ViewSectionRenderer(self::THEME_KEY, 'cta', 'capell-theme-packaging-supplier::sections.cta', failLoudly: true),
-            'footer' => new ViewSectionRenderer(self::THEME_KEY, 'footer', 'capell-theme-packaging-supplier::sections.footer', failLoudly: true),
+            'footer' => new ViewSectionRenderer(self::THEME_KEY, 'footer', 'capell-foundation-theme::theme.chrome.footer', failLoudly: true),
         ];
     }
 }

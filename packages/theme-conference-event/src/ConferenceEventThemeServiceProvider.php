@@ -119,7 +119,7 @@ final class ConferenceEventThemeServiceProvider extends ServiceProvider
     private function sectionRenderers(): array
     {
         return [
-            'navigation' => new ViewSectionRenderer(self::THEME_KEY, 'navigation', 'capell-theme-conference-event::sections.navigation', failLoudly: true),
+            'navigation' => new ViewSectionRenderer(self::THEME_KEY, 'navigation', 'capell-foundation-theme::theme.chrome.navigation', failLoudly: true),
             'event-hero' => new ViewSectionRenderer(self::THEME_KEY, 'event-hero', 'capell-theme-conference-event::sections.event-hero', failLoudly: true),
             'agenda' => new ViewSectionRenderer(self::THEME_KEY, 'agenda', 'capell-theme-conference-event::sections.agenda', failLoudly: true),
             'speakers' => new ViewSectionRenderer(self::THEME_KEY, 'speakers', 'capell-theme-conference-event::sections.speakers', failLoudly: true),
@@ -130,7 +130,7 @@ final class ConferenceEventThemeServiceProvider extends ServiceProvider
             'proof' => new ViewSectionRenderer(self::THEME_KEY, 'proof', 'capell-theme-conference-event::sections.proof', failLoudly: true),
             'content-listing' => new ViewSectionRenderer(self::THEME_KEY, 'content-listing', 'capell-theme-conference-event::sections.content-listing', failLoudly: true),
             'cta' => new ViewSectionRenderer(self::THEME_KEY, 'cta', 'capell-theme-conference-event::sections.cta', failLoudly: true),
-            'footer' => new ViewSectionRenderer(self::THEME_KEY, 'footer', 'capell-theme-conference-event::sections.footer', failLoudly: true),
+            'footer' => new ViewSectionRenderer(self::THEME_KEY, 'footer', 'capell-foundation-theme::theme.chrome.footer', failLoudly: true),
             'hero' => new ViewSectionRenderer(self::THEME_KEY, 'hero', 'capell-theme-conference-event::sections.hero', failLoudly: true),
         ];
     }

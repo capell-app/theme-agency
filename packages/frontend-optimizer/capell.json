@@ -89,7 +89,6 @@
         "frontend-optimizer",
         "frontend-optimizer-frontend",
         "frontend-optimizer-console",
-        "frontend-optimizer-images",
         "frontend-assets",
         "cache-blocking"
     ],

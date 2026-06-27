@@ -119,7 +119,7 @@ final class PodcastShowThemeServiceProvider extends ServiceProvider
     private function sectionRenderers(): array
     {
         return [
-            'navigation' => new ViewSectionRenderer(self::THEME_KEY, 'navigation', 'capell-theme-podcast-show::sections.navigation', failLoudly: true),
+            'navigation' => new ViewSectionRenderer(self::THEME_KEY, 'navigation', 'capell-foundation-theme::theme.chrome.navigation', failLoudly: true),
             'hero' => new ViewSectionRenderer(self::THEME_KEY, 'hero', 'capell-theme-podcast-show::sections.hero', failLoudly: true),
             'latest-episode' => new ViewSectionRenderer(self::THEME_KEY, 'latest-episode', 'capell-theme-podcast-show::sections.latest-episode', failLoudly: true),
             'episode-list' => new ViewSectionRenderer(self::THEME_KEY, 'episode-list', 'capell-theme-podcast-show::sections.episode-list', failLoudly: true),
@@ -130,7 +130,7 @@ final class PodcastShowThemeServiceProvider extends ServiceProvider
             'proof' => new ViewSectionRenderer(self::THEME_KEY, 'proof', 'capell-theme-podcast-show::sections.proof', failLoudly: true),
             'content-listing' => new ViewSectionRenderer(self::THEME_KEY, 'content-listing', 'capell-theme-podcast-show::sections.content-listing', failLoudly: true),
             'cta' => new ViewSectionRenderer(self::THEME_KEY, 'cta', 'capell-theme-podcast-show::sections.cta', failLoudly: true),
-            'footer' => new ViewSectionRenderer(self::THEME_KEY, 'footer', 'capell-theme-podcast-show::sections.footer', failLoudly: true),
+            'footer' => new ViewSectionRenderer(self::THEME_KEY, 'footer', 'capell-foundation-theme::theme.chrome.footer', failLoudly: true),
         ];
     }
 }

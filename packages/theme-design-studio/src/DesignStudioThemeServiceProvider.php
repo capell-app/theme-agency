@@ -119,7 +119,7 @@ final class DesignStudioThemeServiceProvider extends ServiceProvider
     private function sectionRenderers(): array
     {
         return [
-            'navigation' => new ViewSectionRenderer(self::THEME_KEY, 'navigation', 'capell-theme-design-studio::sections.navigation', failLoudly: true),
+            'navigation' => new ViewSectionRenderer(self::THEME_KEY, 'navigation', 'capell-foundation-theme::theme.chrome.navigation', failLoudly: true),
             'hero' => new ViewSectionRenderer(self::THEME_KEY, 'hero', 'capell-theme-design-studio::sections.hero', failLoudly: true),
             'project-gallery' => new ViewSectionRenderer(self::THEME_KEY, 'project-gallery', 'capell-theme-design-studio::sections.project-gallery', failLoudly: true),
             'lookbook' => new ViewSectionRenderer(self::THEME_KEY, 'lookbook', 'capell-theme-design-studio::sections.lookbook', failLoudly: true),
@@ -128,7 +128,7 @@ final class DesignStudioThemeServiceProvider extends ServiceProvider
             'studio-statement' => new ViewSectionRenderer(self::THEME_KEY, 'studio-statement', 'capell-theme-design-studio::sections.studio-statement', failLoudly: true),
             'content-listing' => new ViewSectionRenderer(self::THEME_KEY, 'content-listing', 'capell-theme-design-studio::sections.content-listing', failLoudly: true),
             'cta' => new ViewSectionRenderer(self::THEME_KEY, 'cta', 'capell-theme-design-studio::sections.cta', failLoudly: true),
-            'footer' => new ViewSectionRenderer(self::THEME_KEY, 'footer', 'capell-theme-design-studio::sections.footer', failLoudly: true),
+            'footer' => new ViewSectionRenderer(self::THEME_KEY, 'footer', 'capell-foundation-theme::theme.chrome.footer', failLoudly: true),
             'features' => new ViewSectionRenderer(self::THEME_KEY, 'features', 'capell-theme-design-studio::sections.features', failLoudly: true),
             'proof' => new ViewSectionRenderer(self::THEME_KEY, 'proof', 'capell-theme-design-studio::sections.proof', failLoudly: true),
         ];

@@ -40,7 +40,6 @@ describe('record-switcher manifest', function (): void {
 
         expect($product['tier'] ?? null)->toBe('free')
             ->and($product['bundle'] ?? null)->toBe('foundation')
-            ->and($capabilities)->toContain('same-site-sibling-prioritization')
             ->and($commercial['proposedLicense'] ?? null)->toBe('free')
             ->and($commercial['requestedCertification'] ?? null)->toBe('first-party')
             ->and($commercial['supportPolicy'] ?? null)->toBe('capell-first-party')

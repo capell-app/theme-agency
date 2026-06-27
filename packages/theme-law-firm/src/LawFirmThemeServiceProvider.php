@@ -119,7 +119,7 @@ final class LawFirmThemeServiceProvider extends ServiceProvider
     private function sectionRenderers(): array
     {
         return [
-            'navigation' => new ViewSectionRenderer(self::THEME_KEY, 'navigation', 'capell-theme-law-firm::sections.navigation', failLoudly: true),
+            'navigation' => new ViewSectionRenderer(self::THEME_KEY, 'navigation', 'capell-foundation-theme::theme.chrome.navigation', failLoudly: true),
             'hero' => new ViewSectionRenderer(self::THEME_KEY, 'hero', 'capell-theme-law-firm::sections.hero', failLoudly: true),
             'practice-areas' => new ViewSectionRenderer(self::THEME_KEY, 'practice-areas', 'capell-theme-law-firm::sections.practice-areas', failLoudly: true),
             'attorneys' => new ViewSectionRenderer(self::THEME_KEY, 'attorneys', 'capell-theme-law-firm::sections.attorneys', failLoudly: true),
@@ -128,7 +128,7 @@ final class LawFirmThemeServiceProvider extends ServiceProvider
             'consultation-cta' => new ViewSectionRenderer(self::THEME_KEY, 'consultation-cta', 'capell-theme-law-firm::sections.consultation-cta', failLoudly: true),
             'content-listing' => new ViewSectionRenderer(self::THEME_KEY, 'content-listing', 'capell-theme-law-firm::sections.content-listing', failLoudly: true),
             'cta' => new ViewSectionRenderer(self::THEME_KEY, 'cta', 'capell-theme-law-firm::sections.cta', failLoudly: true),
-            'footer' => new ViewSectionRenderer(self::THEME_KEY, 'footer', 'capell-theme-law-firm::sections.footer', failLoudly: true),
+            'footer' => new ViewSectionRenderer(self::THEME_KEY, 'footer', 'capell-foundation-theme::theme.chrome.footer', failLoudly: true),
             'features' => new ViewSectionRenderer(self::THEME_KEY, 'features', 'capell-theme-law-firm::sections.features', failLoudly: true),
             'proof' => new ViewSectionRenderer(self::THEME_KEY, 'proof', 'capell-theme-law-firm::sections.proof', failLoudly: true),
         ];

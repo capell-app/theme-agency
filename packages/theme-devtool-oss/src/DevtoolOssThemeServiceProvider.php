@@ -119,7 +119,7 @@ final class DevtoolOssThemeServiceProvider extends ServiceProvider
     private function sectionRenderers(): array
     {
         return [
-            'navigation' => new ViewSectionRenderer(self::THEME_KEY, 'navigation', 'capell-theme-devtool-oss::sections.navigation', failLoudly: true),
+            'navigation' => new ViewSectionRenderer(self::THEME_KEY, 'navigation', 'capell-foundation-theme::theme.chrome.navigation', failLoudly: true),
             'install-hero' => new ViewSectionRenderer(self::THEME_KEY, 'install-hero', 'capell-theme-devtool-oss::sections.install-hero', failLoudly: true),
             'github-proof' => new ViewSectionRenderer(self::THEME_KEY, 'github-proof', 'capell-theme-devtool-oss::sections.github-proof', failLoudly: true),
             'self-host-vs-cloud' => new ViewSectionRenderer(self::THEME_KEY, 'self-host-vs-cloud', 'capell-theme-devtool-oss::sections.self-host-vs-cloud', failLoudly: true),
@@ -130,7 +130,7 @@ final class DevtoolOssThemeServiceProvider extends ServiceProvider
             'proof' => new ViewSectionRenderer(self::THEME_KEY, 'proof', 'capell-theme-devtool-oss::sections.proof', failLoudly: true),
             'content-listing' => new ViewSectionRenderer(self::THEME_KEY, 'content-listing', 'capell-theme-devtool-oss::sections.content-listing', failLoudly: true),
             'cta' => new ViewSectionRenderer(self::THEME_KEY, 'cta', 'capell-theme-devtool-oss::sections.cta', failLoudly: true),
-            'footer' => new ViewSectionRenderer(self::THEME_KEY, 'footer', 'capell-theme-devtool-oss::sections.footer', failLoudly: true),
+            'footer' => new ViewSectionRenderer(self::THEME_KEY, 'footer', 'capell-foundation-theme::theme.chrome.footer', failLoudly: true),
             'hero' => new ViewSectionRenderer(self::THEME_KEY, 'hero', 'capell-theme-devtool-oss::sections.hero', failLoudly: true),
         ];
     }

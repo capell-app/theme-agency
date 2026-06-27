@@ -84,17 +84,7 @@ it('declares implemented diagnostics commands tables and capabilities', function
             'search_console_url_metrics',
         )
         ->and(data_get($manifest, 'capabilities', []))->toContain(
-            'seo-suite-doctor',
-            'seo-suite-public-output-leak-scanning',
-            'seo-suite-structured-data-audit',
-            'seo-suite-ai-discovery-coverage',
-            'seo-suite-stale-output-regeneration',
             'seo-suite-site-discovery-registry',
-            'seo-suite-marketplace-structured-data-freshness',
-            'seo-suite-crawler-preview-report',
-            'seo-suite-pagespeed-audits',
-            'seo-suite-pagespeed-digest',
-            'seo-suite-search-console-rankings',
         );
 
     expect(data_get($manifest, 'actions', []))

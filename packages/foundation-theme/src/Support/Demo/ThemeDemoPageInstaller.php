@@ -310,6 +310,14 @@ final class ThemeDemoPageInstaller
             ],
         ];
 
+        // Object-form chrome reused across every surface so the adapter's
+        // navigationFrom()/footerFrom() take the brand + CTA + summary branch.
+        // A bare-list form (or an absent key) collapses to
+        // defaultNavigation()/defaultFooter() — brand + a lone "Home" link — which
+        // is what left detail/contact/empty/404/cta rendering barren.
+        $navigation = ['brandName' => $brandName, 'items' => $navigationItems, 'ctaLabel' => 'Contact', 'ctaUrl' => '#contact'];
+        $footer = ['brandName' => $brandName, 'summary' => 'Footer links and copy for preview rendering.', 'columns' => $footerColumns];
+
         $definitions = [
             new ThemeDemoPageDefinition(
                 surface: 'homepage',
@@ -323,7 +331,7 @@ final class ThemeDemoPageInstaller
                 ),
                 renderData: [
                     'summary' => $profile['summary'],
-                    'navigation' => ['brandName' => $brandName, 'items' => $navigationItems, 'ctaLabel' => 'Contact', 'ctaUrl' => '#contact'],
+                    'navigation' => $navigation,
                     'hero' => [
                         'heading' => $profile['heroHeading'],
                         'eyebrow' => $themeName,
@@ -357,7 +365,7 @@ final class ThemeDemoPageInstaller
                         'items' => $this->proof($media['proof'], $profile['proof']),
                     ],
                     'cta' => ['heading' => $profile['ctaHeading'], 'summary' => $profile['ctaSummary'], 'actions' => $actions],
-                    'footer' => ['brandName' => $brandName, 'summary' => 'Footer links and copy for preview rendering.', 'columns' => $footerColumns],
+                    'footer' => $footer,
                     'image_urls' => ThemeDemoMedia::forTheme($themeKey),
                 ],
                 type: PageTypeEnum::Home,
@@ -373,8 +381,8 @@ final class ThemeDemoPageInstaller
                     'summary' => 'Directory data includes cards, summaries, links, and image URLs.',
                     'heading' => 'Browse preview entries',
                     'items' => $this->items($media['listing'], 'Directory item', $basePath),
-                    'navigation' => $navigationItems,
-                    'footer' => $footerColumns,
+                    'navigation' => $navigation,
+                    'footer' => $footer,
                 ],
                 layout: LayoutEnum::Results,
             ),
@@ -386,8 +394,10 @@ final class ThemeDemoPageInstaller
                 content: $this->content('Article-style preview', 'A detail page sample with editorial copy, proof, and a referenced feature image.', $media['detail'][0]),
                 renderData: [
                     'summary' => 'Detail page render data for an article, case study, product story, or service page.',
+                    'navigation' => $navigation,
                     'hero' => ['heading' => 'Detail page story', 'summary' => 'Article-style page data for long-form previews.', 'mediaUrl' => $media['detail'][0]],
                     'related' => $this->items($media['listing'], 'Related item', $basePath),
+                    'footer' => $footer,
                 ],
             ),
             new ThemeDemoPageDefinition(
@@ -398,9 +408,11 @@ final class ThemeDemoPageInstaller
                 content: $this->contactContent(),
                 renderData: [
                     'summary' => 'Contact page render data with routing cards, expectation details, and a static enquiry form.',
+                    'navigation' => $navigation,
                     'hero' => ['heading' => 'Start the right conversation', 'summary' => 'Route project scoping, support, migrations, and partnerships to the right team.', 'mediaUrl' => $media['contact'][0]],
                     'actions' => [['label' => 'Send enquiry', 'url' => '#contact-form', 'style' => 'primary']],
                     'form' => $this->contactFormData(),
+                    'footer' => $footer,
                 ],
                 layout: LayoutEnum::System,
             ),
@@ -412,9 +424,11 @@ final class ThemeDemoPageInstaller
                 content: $this->content('Empty state preview', 'A graceful empty state for searches, filtered directories, catalogs, or resource hubs.', $media['cta'][0]),
                 renderData: [
                     'summary' => 'Empty state data for no-results previews.',
+                    'navigation' => $navigation,
                     'hero' => ['heading' => 'Nothing to show yet', 'summary' => 'Empty states still carry helpful copy and a next action.', 'mediaUrl' => $media['cta'][0]],
                     'actions' => $actions,
                     'items' => [],
+                    'footer' => $footer,
                 ],
             ),
             new ThemeDemoPageDefinition(
@@ -425,8 +439,10 @@ final class ThemeDemoPageInstaller
                 content: $this->content('404 preview', 'A not-found page sample with plain copy and a route back to useful content.', $media['cta'][0]),
                 renderData: [
                     'summary' => '404 page data with recovery links and CTA copy.',
+                    'navigation' => $navigation,
                     'hero' => ['heading' => 'Page not found', 'summary' => 'Help visitors recover with useful links and clear next steps.', 'mediaUrl' => $media['cta'][0]],
                     'actions' => [['label' => 'Return home', 'url' => '/', 'style' => 'primary']],
+                    'footer' => $footer,
                 ],
                 type: PageTypeEnum::NotFound,
                 layout: LayoutEnum::System,
@@ -439,8 +455,10 @@ final class ThemeDemoPageInstaller
                 content: $this->content('CTA preview', 'A focused conversion page sample with semantic copy and action data.', $media['cta'][0]),
                 renderData: [
                     'summary' => 'CTA page data for conversion-focused preview surfaces.',
+                    'navigation' => $navigation,
                     'cta' => ['heading' => 'Ready for the next step?', 'summary' => 'This CTA is data-backed and presentation-agnostic.', 'actions' => $actions],
                     'mediaUrl' => $media['cta'][0],
+                    'footer' => $footer,
                 ],
             ),
         ];

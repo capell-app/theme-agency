@@ -13,8 +13,12 @@ final class PremiumPortfolioCollectionScreenshotRenderer
 {
     private const string VIEW_PREFIX = 'capell-theme-premium-portfolio-collection::sections.';
 
+    private const string SCREEN_PREFIX = 'premium-portfolio-collection-';
+
     public function render(string $screen): View
     {
+        $screen = $this->normalizeScreen($screen);
+
         $sections = $this->sectionsFor($screen);
 
         abort_if($sections === [], 404);
@@ -55,6 +59,13 @@ final class PremiumPortfolioCollectionScreenshotRenderer
             'body' => new HtmlString($pageHtml),
             'title' => $this->titleFor($screen),
         ]);
+    }
+
+    private function normalizeScreen(string $screen): string
+    {
+        return str_starts_with($screen, self::SCREEN_PREFIX)
+            ? substr($screen, strlen(self::SCREEN_PREFIX))
+            : $screen;
     }
 
     /**
@@ -114,6 +125,52 @@ final class PremiumPortfolioCollectionScreenshotRenderer
                     ],
                 ]),
                 $this->section('creator-directory'),
+                $this->footer(),
+            ],
+            'homepage' => [
+                $this->navigation(),
+                $this->hero([
+                    'heading' => 'A curated home for award-winning portfolios',
+                    'summary' => 'Discover featured collections, browse by taxonomy, and follow the creators shaping standout work.',
+                ]),
+                $this->section('featured-portfolios'),
+                $this->section('filter-taxonomies'),
+                $this->section('portfolio-grid'),
+                $this->section('awarded-profiles'),
+                $this->section('creator-directory'),
+                $this->section('education-upsell'),
+                $this->section('newsletter'),
+                $this->footer(),
+            ],
+            'landing-page' => [
+                $this->navigation(),
+                $this->hero([
+                    'heading' => 'Spotlight a single featured portfolio',
+                    'summary' => 'A focused landing layout that pairs a strong hero with proof points and supporting feature sections.',
+                ]),
+                $this->section('proof'),
+                $this->section('featured-portfolios'),
+                $this->section('cta'),
+                $this->footer(),
+            ],
+            'list-page' => [
+                $this->navigation(),
+                $this->section('filter-taxonomies'),
+                $this->section('content-listing'),
+                $this->footer(),
+            ],
+            'search-results' => [
+                $this->navigation(),
+                $this->section('filter-taxonomies'),
+                $this->section('content-listing', [
+                    'heading' => 'Search results',
+                ]),
+                $this->footer(),
+            ],
+            'contact-form' => [
+                $this->navigation(),
+                $this->section('newsletter'),
+                $this->section('cta'),
                 $this->footer(),
             ],
             default => [],
@@ -191,6 +248,11 @@ SVG;
             'hero-looping-video-desktop', 'hero-looping-video-mobile' => 'Premium Portfolio Collection looping video hero',
             'hero-looping-gif-desktop' => 'Premium Portfolio Collection GIF hero',
             'hero-image-only-desktop' => 'Premium Portfolio Collection image hero',
+            'homepage' => 'Premium Portfolio Collection homepage',
+            'landing-page' => 'Premium Portfolio Collection landing page',
+            'list-page' => 'Premium Portfolio Collection list page',
+            'search-results' => 'Premium Portfolio Collection search results',
+            'contact-form' => 'Premium Portfolio Collection contact form',
             default => 'Premium Portfolio Collection base hero',
         };
     }

@@ -56,7 +56,6 @@ it('declares the shipped access gate package manifest surfaces', function (): vo
         ->toHaveKey('namespace', 'Capell\\AccessGate')
         ->and(data_get($manifest, 'surfaces', []))->toContain('admin', 'frontend', 'console')
         ->and(data_get($manifest, 'providers.runtime', []))->toContain('Capell\\AccessGate\\Providers\\AccessGateServiceProvider')
-        ->and(data_get($manifest, 'capabilities', []))->toContain('paid-gated-access-checkout-creation', 'paid-gated-access-fulfillment')
         ->and(data_get($manifest, 'database.migrations'))->toBeTrue()
         ->and(data_get($manifest, 'commands.install'))->toBe('capell:access-gate-install')
         ->and(data_get($manifest, 'commands.setup'))->toBe('capell:access-gate-setup')

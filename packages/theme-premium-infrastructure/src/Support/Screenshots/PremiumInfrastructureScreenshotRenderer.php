@@ -13,8 +13,12 @@ final class PremiumInfrastructureScreenshotRenderer
 {
     private const string VIEW_PREFIX = 'capell-theme-premium-infrastructure::sections.';
 
+    private const string SCREEN_PREFIX = 'premium-infrastructure-';
+
     public function render(string $screen): View
     {
+        $screen = $this->normalizeScreen($screen);
+
         $sections = $this->sectionsFor($screen);
 
         abort_if($sections === [], 404);
@@ -55,6 +59,13 @@ final class PremiumInfrastructureScreenshotRenderer
             'body' => new HtmlString($pageHtml),
             'title' => $this->titleFor($screen),
         ]);
+    }
+
+    private function normalizeScreen(string $screen): string
+    {
+        return str_starts_with($screen, self::SCREEN_PREFIX)
+            ? substr($screen, strlen(self::SCREEN_PREFIX))
+            : $screen;
     }
 
     /**
@@ -114,6 +125,55 @@ final class PremiumInfrastructureScreenshotRenderer
                     ],
                 ]),
                 $this->section('trust-compliance'),
+                $this->footer(),
+            ],
+            'homepage' => [
+                $this->navigation(),
+                $this->hero([
+                    'heading' => 'Infrastructure pages for serious technical buyers',
+                    'summary' => 'A complete homepage composition with product panels, solutions, global scale, developer tools, and trust signals.',
+                ]),
+                $this->section('product-panels'),
+                $this->section('solutions'),
+                $this->section('global-scale'),
+                $this->section('developer-tools'),
+                $this->section('case-studies-news'),
+                $this->section('trust-compliance'),
+                $this->section('newsletter'),
+                $this->footer(),
+            ],
+            'landing-page' => [
+                $this->navigation(),
+                $this->hero([
+                    'heading' => 'Ship infrastructure your enterprise can trust',
+                    'summary' => 'A focused landing page that leads with the platform message and backs it with proof and feature highlights.',
+                ]),
+                $this->section('proof'),
+                $this->section('solutions'),
+                $this->section('cta'),
+                $this->footer(),
+            ],
+            'list-page' => [
+                $this->navigation(),
+                $this->section('content-listing', [
+                    'heading' => 'Product updates and resources',
+                ]),
+                $this->footer(),
+            ],
+            'search-results' => [
+                $this->navigation(),
+                $this->section('content-listing', [
+                    'heading' => 'Search results',
+                ]),
+                $this->footer(),
+            ],
+            'contact-form' => [
+                $this->navigation(),
+                $this->section('cta', [
+                    'heading' => 'Talk to our infrastructure team',
+                    'summary' => 'Reach out about solutions, developer tooling, compliance reviews, or enterprise requests.',
+                ]),
+                $this->section('newsletter'),
                 $this->footer(),
             ],
             default => [],
@@ -191,10 +251,15 @@ SVG;
 
     private function titleFor(string $screen): string
     {
-        return match ($screen) {
+        return match ($this->normalizeScreen($screen)) {
             'hero-looping-video-desktop', 'hero-looping-video-mobile' => 'Premium Infrastructure looping video hero',
             'hero-looping-gif-desktop' => 'Premium Infrastructure GIF hero',
             'hero-image-only-desktop' => 'Premium Infrastructure image hero',
+            'homepage' => 'Premium Infrastructure homepage',
+            'landing-page' => 'Premium Infrastructure landing page',
+            'list-page' => 'Premium Infrastructure list page',
+            'search-results' => 'Premium Infrastructure search results',
+            'contact-form' => 'Premium Infrastructure contact form',
             default => 'Premium Infrastructure base hero',
         };
     }

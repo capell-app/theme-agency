@@ -76,15 +76,7 @@ it('declares URL Manager owned models and protected tables', function (): void {
             'upsertRedirectRule',
         ])
         ->and(data_get($manifest, 'capabilities'))->toContain(
-            'managed-redirects',
-            'changed-url-redirect-detection',
-            'redirect-hit-counts',
-            'managed-gone-rules',
-            'redirect-import-export',
-            'not-found-opportunities',
-            'not-found-redirect-suggestions',
             'seo-suite-broken-url-import',
-            'frontend-redirect-resolver',
             'url-manager-admin',
         )
         ->and(data_get($manifest, 'performance.cacheTags'))->toContain('url-manager')

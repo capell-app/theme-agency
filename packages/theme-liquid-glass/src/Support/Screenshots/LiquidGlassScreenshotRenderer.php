@@ -13,8 +13,12 @@ final class LiquidGlassScreenshotRenderer
 {
     private const string VIEW_PREFIX = 'capell-theme-liquid-glass::sections.';
 
+    private const string SCREEN_PREFIX = 'liquid-glass-';
+
     public function render(string $screen): View
     {
+        $screen = $this->normalizeScreen($screen);
+
         $sections = $this->sectionsFor($screen);
 
         abort_if($sections === [], 404);
@@ -63,7 +67,7 @@ final class LiquidGlassScreenshotRenderer
     private function sectionsFor(string $screen): array
     {
         return match ($screen) {
-            'liquid-glass-homepage' => [
+            'homepage' => [
                 $this->navigation(),
                 $this->hero(),
                 $this->section('features'),
@@ -72,7 +76,7 @@ final class LiquidGlassScreenshotRenderer
                 $this->section('cta'),
                 $this->footer(),
             ],
-            'liquid-glass-sections' => [
+            'landing', 'sections' => [
                 $this->navigation(),
                 $this->hero(),
                 $this->section('features', [
@@ -83,7 +87,7 @@ final class LiquidGlassScreenshotRenderer
                 $this->section('cta'),
                 $this->footer(),
             ],
-            'liquid-glass-directory' => [
+            'listing', 'directory' => [
                 $this->navigation(),
                 $this->section('content-listing', [
                     'heading' => 'Browse content cards without leaving the glass',
@@ -92,7 +96,7 @@ final class LiquidGlassScreenshotRenderer
                 $this->section('cta'),
                 $this->footer(),
             ],
-            'liquid-glass-detail' => [
+            'search', 'detail' => [
                 $this->navigation(),
                 $this->section('content-listing', [
                     'heading' => 'Scan result groups inside clear translucent panels',
@@ -102,7 +106,7 @@ final class LiquidGlassScreenshotRenderer
                 $this->section('cta'),
                 $this->footer(),
             ],
-            'liquid-glass-contact' => [
+            'contact' => [
                 $this->navigation(),
                 $this->section('cta', [
                     'heading' => 'A lead path that stays polished through the glass',
@@ -111,8 +115,36 @@ final class LiquidGlassScreenshotRenderer
                 $this->section('features'),
                 $this->footer(),
             ],
+            'clarity-preset' => [
+                $this->navigation(),
+                $this->hero(),
+                $this->section('features'),
+                $this->section('cta'),
+                $this->footer(),
+            ],
+            'prism-preset' => [
+                $this->navigation(),
+                $this->hero(),
+                $this->section('proof'),
+                $this->section('content-listing'),
+                $this->section('cta'),
+                $this->footer(),
+            ],
+            'graphite-mobile' => [
+                $this->navigation(),
+                $this->hero(),
+                $this->section('features'),
+                $this->footer(),
+            ],
             default => [],
         };
+    }
+
+    private function normalizeScreen(string $screen): string
+    {
+        return str_starts_with($screen, self::SCREEN_PREFIX)
+            ? substr($screen, strlen(self::SCREEN_PREFIX))
+            : $screen;
     }
 
     /**
@@ -275,11 +307,14 @@ final class LiquidGlassScreenshotRenderer
 
     private function titleFor(string $screen): string
     {
-        return match ($screen) {
-            'liquid-glass-sections' => 'Theme Liquid Glass sections',
-            'liquid-glass-directory' => 'Theme Liquid Glass listing',
-            'liquid-glass-detail' => 'Theme Liquid Glass search results',
-            'liquid-glass-contact' => 'Theme Liquid Glass contact',
+        return match ($this->normalizeScreen($screen)) {
+            'landing', 'sections' => 'Theme Liquid Glass landing',
+            'listing', 'directory' => 'Theme Liquid Glass listing',
+            'search', 'detail' => 'Theme Liquid Glass search results',
+            'contact' => 'Theme Liquid Glass contact',
+            'clarity-preset' => 'Theme Liquid Glass Clarity preset',
+            'prism-preset' => 'Theme Liquid Glass Prism preset',
+            'graphite-mobile' => 'Theme Liquid Glass Graphite mobile',
             default => 'Theme Liquid Glass homepage',
         };
     }

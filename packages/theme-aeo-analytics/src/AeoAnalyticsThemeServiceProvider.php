@@ -119,7 +119,7 @@ final class AeoAnalyticsThemeServiceProvider extends ServiceProvider
     private function sectionRenderers(): array
     {
         return [
-            'navigation' => new ViewSectionRenderer(self::THEME_KEY, 'navigation', 'capell-theme-aeo-analytics::sections.navigation', failLoudly: true),
+            'navigation' => new ViewSectionRenderer(self::THEME_KEY, 'navigation', 'capell-foundation-theme::theme.chrome.navigation', failLoudly: true),
             'hero' => new ViewSectionRenderer(self::THEME_KEY, 'hero', 'capell-theme-aeo-analytics::sections.hero', failLoudly: true),
             'dashboard-preview' => new ViewSectionRenderer(self::THEME_KEY, 'dashboard-preview', 'capell-theme-aeo-analytics::sections.dashboard-preview', failLoudly: true),
             'metric-cards' => new ViewSectionRenderer(self::THEME_KEY, 'metric-cards', 'capell-theme-aeo-analytics::sections.metric-cards', failLoudly: true),
@@ -130,7 +130,7 @@ final class AeoAnalyticsThemeServiceProvider extends ServiceProvider
             'proof' => new ViewSectionRenderer(self::THEME_KEY, 'proof', 'capell-theme-aeo-analytics::sections.proof', failLoudly: true),
             'content-listing' => new ViewSectionRenderer(self::THEME_KEY, 'content-listing', 'capell-theme-aeo-analytics::sections.content-listing', failLoudly: true),
             'cta' => new ViewSectionRenderer(self::THEME_KEY, 'cta', 'capell-theme-aeo-analytics::sections.cta', failLoudly: true),
-            'footer' => new ViewSectionRenderer(self::THEME_KEY, 'footer', 'capell-theme-aeo-analytics::sections.footer', failLoudly: true),
+            'footer' => new ViewSectionRenderer(self::THEME_KEY, 'footer', 'capell-foundation-theme::theme.chrome.footer', failLoudly: true),
         ];
     }
 }

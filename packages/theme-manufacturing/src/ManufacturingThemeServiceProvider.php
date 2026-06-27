@@ -119,7 +119,7 @@ final class ManufacturingThemeServiceProvider extends ServiceProvider
     private function sectionRenderers(): array
     {
         return [
-            'navigation' => new ViewSectionRenderer(self::THEME_KEY, 'navigation', 'capell-theme-manufacturing::sections.navigation', failLoudly: true),
+            'navigation' => new ViewSectionRenderer(self::THEME_KEY, 'navigation', 'capell-foundation-theme::theme.chrome.navigation', failLoudly: true),
             'hero' => new ViewSectionRenderer(self::THEME_KEY, 'hero', 'capell-theme-manufacturing::sections.hero', failLoudly: true),
             'capabilities-grid' => new ViewSectionRenderer(self::THEME_KEY, 'capabilities-grid', 'capell-theme-manufacturing::sections.capabilities-grid', failLoudly: true),
             'certifications' => new ViewSectionRenderer(self::THEME_KEY, 'certifications', 'capell-theme-manufacturing::sections.certifications', failLoudly: true),
@@ -131,7 +131,7 @@ final class ManufacturingThemeServiceProvider extends ServiceProvider
             'proof' => new ViewSectionRenderer(self::THEME_KEY, 'proof', 'capell-theme-manufacturing::sections.proof', failLoudly: true),
             'content-listing' => new ViewSectionRenderer(self::THEME_KEY, 'content-listing', 'capell-theme-manufacturing::sections.content-listing', failLoudly: true),
             'cta' => new ViewSectionRenderer(self::THEME_KEY, 'cta', 'capell-theme-manufacturing::sections.cta', failLoudly: true),
-            'footer' => new ViewSectionRenderer(self::THEME_KEY, 'footer', 'capell-theme-manufacturing::sections.footer', failLoudly: true),
+            'footer' => new ViewSectionRenderer(self::THEME_KEY, 'footer', 'capell-foundation-theme::theme.chrome.footer', failLoudly: true),
         ];
     }
 }

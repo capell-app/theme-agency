@@ -83,14 +83,9 @@ it('declares the contacts package manifest contract', function (): void {
             'contacts-campaign-studio-source-adapter',
             'contacts-comments-source-adapter',
             'contacts-events-source-adapter',
-            'contacts-source-identity',
-            'contacts-source-sync',
             'contacts-form-builder-source-adapter',
             'contacts-newsletter-source-adapter',
             'contacts-shopify-commerce-source-adapter',
-            'contacts-dashboard-widget',
-            'contacts-privacy-export',
-            'contacts-privacy-anonymization',
             'contacts-tags',
         )
         ->and($manifest['capabilities'])->not->toContain('contacts-deduplication-rules')
