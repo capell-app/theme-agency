@@ -22,4 +22,54 @@ final class ThemeDemoPageDefinition
         public readonly PageTypeEnum $type = PageTypeEnum::Default,
         public readonly LayoutEnum $layout = LayoutEnum::Default,
     ) {}
+
+    /**
+     * The ordered section payloads this surface seeds, each normalised to a
+     * string-keyed map so callers get a typed list instead of raw `mixed`.
+     *
+     * @return list<array<string, mixed>>
+     */
+    public function sections(): array
+    {
+        $sections = $this->renderData['sections'] ?? [];
+
+        if (! is_array($sections)) {
+            return [];
+        }
+
+        $list = [];
+
+        foreach ($sections as $section) {
+            if (! is_array($section)) {
+                continue;
+            }
+
+            $map = [];
+
+            foreach ($section as $key => $value) {
+                $map[(string) $key] = $value;
+            }
+
+            $list[] = $map;
+        }
+
+        return $list;
+    }
+
+    /**
+     * The ordered list of section `type` keys, coerced to strings.
+     *
+     * @return list<string>
+     */
+    public function sectionTypes(): array
+    {
+        $types = [];
+
+        foreach ($this->sections() as $section) {
+            $type = $section['type'] ?? null;
+            $types[] = is_string($type) ? $type : '';
+        }
+
+        return $types;
+    }
 }
