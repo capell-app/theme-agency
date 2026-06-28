@@ -240,7 +240,7 @@ final class AeoAnalyticsDemoContent implements ProvidesThemeDemoContent
                     ],
                     $this->featuresSection(
                         heading: 'What you get on the first call',
-                        summary: 'A real look at your AI visibility, not a generic pitch.',
+                        summary: 'A real look at how assistants cite you across answer engines, with your live share-of-voice on screen.',
                     ),
                     $this->metricCardsSection(
                         heading: 'The questions we answer for you',
