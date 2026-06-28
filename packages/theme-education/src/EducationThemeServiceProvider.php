@@ -140,7 +140,12 @@ final class EducationThemeServiceProvider extends ServiceProvider
     private function sectionRenderer(string $sectionKey, array $optionalIntegrations): ?ViewSectionRenderer
     {
         if ($this->isFoundationSection($sectionKey)) {
-            return null;
+            return new ViewSectionRenderer(
+                themeKey: self::THEME_KEY,
+                sectionKey: $sectionKey,
+                view: 'capell-foundation-theme::theme.chrome.' . $sectionKey,
+                failLoudly: true,
+            );
         }
 
         $view = 'capell-theme-education::sections.' . $sectionKey;
