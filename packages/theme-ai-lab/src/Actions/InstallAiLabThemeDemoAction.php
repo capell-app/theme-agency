@@ -7,6 +7,7 @@ namespace Capell\ThemeStudio\AiLab\Actions;
 use Capell\FoundationTheme\Contracts\InstallsThemeDemo;
 use Capell\FoundationTheme\Data\ThemeDemoInstallData;
 use Capell\FoundationTheme\Support\Demo\ThemeDemoPageInstaller;
+use Capell\ThemeStudio\AiLab\Support\Demo\AiLabDemoContent;
 use Lorisleiva\Actions\Concerns\AsObject;
 
 final class InstallAiLabThemeDemoAction implements InstallsThemeDemo
@@ -15,6 +16,6 @@ final class InstallAiLabThemeDemoAction implements InstallsThemeDemo
 
     public function handle(ThemeDemoInstallData $data): int
     {
-        return ThemeDemoPageInstaller::run($data, 'ai-lab', 'AI Lab');
+        return ThemeDemoPageInstaller::run($data, 'ai-lab', 'AI Lab', new AiLabDemoContent);
     }
 }

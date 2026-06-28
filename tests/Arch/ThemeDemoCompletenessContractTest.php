@@ -110,25 +110,23 @@ dataset('themes_for_demo_contract', function (): array {
 });
 
 /**
- * Section type keys the theme registers a renderer for (static parse of its provider).
+ * Section types the theme can render — every section blade view it ships.
+ *
+ * Each section renderer maps a type key to a `sections.<key>` view, so the set of
+ * view files is the registration-style-agnostic source of truth for what renders
+ * (works whether a provider registers literally or loops over includedSections).
  *
  * @return list<string>
  */
-function registeredSectionTypes(string $directory, string $studio): array
+function renderableSectionTypes(string $directory): array
 {
-    $providerPath = $directory . '/src/' . $studio . 'ThemeServiceProvider.php';
+    $types = [];
 
-    if (! is_file($providerPath)) {
-        return [];
+    foreach (glob($directory . '/resources/views/sections/*.blade.php') ?: [] as $viewPath) {
+        $types[] = basename($viewPath, '.blade.php');
     }
 
-    preg_match_all(
-        "/new ViewSectionRenderer\(\s*self::THEME_KEY\s*,\s*'([a-z0-9-]+)'/",
-        (string) file_get_contents($providerPath),
-        $matches,
-    );
-
-    return array_values(array_unique($matches[1] ?? []));
+    return array_values(array_unique($types));
 }
 
 /**
@@ -179,7 +177,7 @@ it('theme ships complete, individual demo content for every foundation surface',
     // All seven foundation surfaces present.
     expect(array_keys($bySurface))->toEqualCanonicalizing(FOUNDATION_SURFACES);
 
-    $registered = registeredSectionTypes($directory, $studio);
+    $registered = renderableSectionTypes($directory);
     $brandNames = [];
 
     foreach (FOUNDATION_SURFACES as $surface) {
