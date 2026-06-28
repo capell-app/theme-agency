@@ -17,6 +17,7 @@ use Capell\Core\Models\Site;
 use Capell\Core\Models\Theme;
 use Capell\Core\Support\Creator\BlueprintCreator;
 use Capell\Core\Support\Creator\PageCreator;
+use Capell\FoundationTheme\Contracts\ProvidesThemeDemoContent;
 use Capell\FoundationTheme\Data\ThemeDemoInstallData;
 use Illuminate\Console\Command;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
@@ -24,18 +25,19 @@ use Illuminate\Support\Str;
 use Lorisleiva\Actions\Concerns\AsObject;
 
 /**
- * @method static int run(ThemeDemoInstallData $data, string $themeKey, string $themeName)
+ * @method static int run(ThemeDemoInstallData $data, string $themeKey, string $themeName, ?ProvidesThemeDemoContent $contentProvider = null)
  */
 final class ThemeDemoPageInstaller
 {
     use AsObject;
 
-    public function handle(ThemeDemoInstallData $data, string $themeKey, string $themeName): int
+    public function handle(ThemeDemoInstallData $data, string $themeKey, string $themeName, ?ProvidesThemeDemoContent $contentProvider = null): int
     {
         $theme = $this->ensureTheme($themeKey, $themeName);
         $languages = $this->resolveLanguages($data);
         $sites = $this->resolveSites($data, $theme, $languages);
-        $definitions = $this->definitions($themeKey, $themeName, $data->baseUrl);
+        $definitions = $contentProvider?->definitions($themeKey, $themeName, $data->baseUrl)
+            ?? $this->definitions($themeKey, $themeName, $data->baseUrl);
 
         foreach ($sites as $site) {
             $this->installForSite($site, $languages, $definitions, $themeKey, $data->force);

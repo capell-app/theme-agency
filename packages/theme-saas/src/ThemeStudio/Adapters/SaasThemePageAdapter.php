@@ -13,11 +13,13 @@ use Capell\Core\ThemeStudio\Data\ContentListingSectionData;
 use Capell\Core\ThemeStudio\Data\CtaSectionData;
 use Capell\Core\ThemeStudio\Data\FeatureSectionData;
 use Capell\Core\ThemeStudio\Data\FooterData;
+use Capell\Core\ThemeStudio\Data\GenericSectionData;
 use Capell\Core\ThemeStudio\Data\HeroSectionData;
 use Capell\Core\ThemeStudio\Data\NavigationData;
 use Capell\Core\ThemeStudio\Data\ProofSectionData;
 use Capell\Core\ThemeStudio\Data\ThemePageData;
 use Capell\Frontend\Facades\Frontend;
+use Capell\Frontend\ThemeStudio\Adapters\CapellFrontendThemePageAdapter;
 use Illuminate\Database\Eloquent\Model;
 
 final class SaasThemePageAdapter implements ThemePageAdapter
@@ -69,6 +71,12 @@ final class SaasThemePageAdapter implements ThemePageAdapter
      */
     private function sectionsFrom(array $renderData, string $title, ?Translation $translation): array
     {
+        $ordered = $this->orderedSectionsFrom($renderData, $title);
+
+        if ($ordered !== []) {
+            return $ordered;
+        }
+
         $sections = [];
         $hero = data_get($renderData, 'hero');
 
@@ -134,6 +142,133 @@ final class SaasThemePageAdapter implements ThemePageAdapter
         }
 
         return $sections !== [] ? $sections : [$this->fallbackHero($title, $translation)];
+    }
+
+    /**
+     * Build sections from an explicit ordered list (`render_data['sections']`).
+     *
+     * Mirrors {@see CapellFrontendThemePageAdapter}:
+     * known types map to typed core sections; any other type becomes a
+     * {@see GenericSectionData} resolved against this theme's renderers. Returns
+     * `[]` when no usable ordered list is present, leaving the implicit path intact.
+     *
+     * @param  array<string, mixed>  $renderData
+     * @return array<int, ThemeSection>
+     */
+    private function orderedSectionsFrom(array $renderData, string $title): array
+    {
+        $ordered = data_get($renderData, 'sections');
+
+        if (! is_array($ordered) || ! array_is_list($ordered) || $ordered === []) {
+            return [];
+        }
+
+        $sections = [];
+
+        foreach ($ordered as $entry) {
+            if (! is_array($entry)) {
+                continue;
+            }
+
+            $section = $this->sectionFromEntry($this->stringKeyedArray($entry), $title);
+
+            if ($section instanceof ThemeSection) {
+                $sections[] = $section;
+            }
+        }
+
+        return $sections;
+    }
+
+    /**
+     * @param  array<string, mixed>  $entry
+     */
+    private function sectionFromEntry(array $entry, string $title): ?ThemeSection
+    {
+        $type = data_get($entry, 'type');
+
+        if (! is_string($type) || $type === '') {
+            return null;
+        }
+
+        return match ($type) {
+            'hero' => HeroSectionData::from([
+                'heading' => data_get($entry, 'heading', $title),
+                'eyebrow' => data_get($entry, 'eyebrow'),
+                'summary' => data_get($entry, 'summary'),
+                'actions' => is_array(data_get($entry, 'actions')) ? data_get($entry, 'actions') : [],
+                'mediaUrl' => data_get($entry, 'mediaUrl'),
+                'mediaAlt' => data_get($entry, 'mediaAlt'),
+            ]),
+            'features' => FeatureSectionData::from([
+                'heading' => data_get($entry, 'heading', __('capell-theme-saas::generic.featured_modules_heading')),
+                'summary' => data_get($entry, 'summary'),
+                'features' => $this->entryItems($entry, 'features'),
+            ]),
+            'content-listing' => ContentListingSectionData::from([
+                'heading' => data_get($entry, 'heading', __('capell-theme-saas::generic.browse_entries_heading')),
+                'summary' => data_get($entry, 'summary'),
+                'items' => $this->entryItems($entry, 'items'),
+                'variant' => data_get($entry, 'variant'),
+            ]),
+            'proof' => ProofSectionData::from([
+                'heading' => data_get($entry, 'heading', __('capell-theme-saas::generic.proof_points_heading')),
+                'summary' => data_get($entry, 'summary'),
+                'items' => $this->entryItems($entry, 'items'),
+            ]),
+            'cta' => CtaSectionData::from([
+                'heading' => data_get($entry, 'heading', ''),
+                'summary' => data_get($entry, 'summary'),
+                'actions' => is_array(data_get($entry, 'actions')) ? data_get($entry, 'actions') : [],
+            ]),
+            default => $this->genericSectionFromEntry($type, $entry),
+        };
+    }
+
+    /**
+     * @param  array<string, mixed>  $entry
+     * @return list<array<string, mixed>>
+     */
+    private function entryItems(array $entry, string $key): array
+    {
+        $items = data_get($entry, $key);
+
+        if (! is_array($items)) {
+            return [];
+        }
+
+        return array_values(array_map(
+            fn (array $item): array => $this->stringKeyedArray($item),
+            array_filter($items, 'is_array'),
+        ));
+    }
+
+    /**
+     * @param  array<string, mixed>  $entry
+     */
+    private function genericSectionFromEntry(string $type, array $entry): GenericSectionData
+    {
+        $payload = $entry;
+        unset($payload['type'], $payload['fallback']);
+
+        $fallback = data_get($entry, 'fallback');
+
+        return new GenericSectionData(
+            type: $type,
+            data: $payload,
+            fallback: is_string($fallback) && $fallback !== '' ? $fallback : 'content-listing',
+        );
+    }
+
+    /**
+     * Keep only string keys so JSON-decoded render data narrows to a section payload.
+     *
+     * @param  array<array-key, mixed>  $value
+     * @return array<string, mixed>
+     */
+    private function stringKeyedArray(array $value): array
+    {
+        return array_filter($value, static fn (int|string $key): bool => is_string($key), ARRAY_FILTER_USE_KEY);
     }
 
     /**
