@@ -7,6 +7,7 @@ namespace Capell\ThemeStudio\CryptoDefi\Actions;
 use Capell\FoundationTheme\Contracts\InstallsThemeDemo;
 use Capell\FoundationTheme\Data\ThemeDemoInstallData;
 use Capell\FoundationTheme\Support\Demo\ThemeDemoPageInstaller;
+use Capell\ThemeStudio\CryptoDefi\Support\Demo\CryptoDefiDemoContent;
 use Lorisleiva\Actions\Concerns\AsObject;
 
 final class InstallCryptoDefiThemeDemoAction implements InstallsThemeDemo
@@ -15,6 +16,6 @@ final class InstallCryptoDefiThemeDemoAction implements InstallsThemeDemo
 
     public function handle(ThemeDemoInstallData $data): int
     {
-        return ThemeDemoPageInstaller::run($data, 'crypto-defi', 'Crypto DeFi');
+        return ThemeDemoPageInstaller::run($data, 'crypto-defi', 'Crypto DeFi', new CryptoDefiDemoContent);
     }
 }
