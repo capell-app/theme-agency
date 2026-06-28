@@ -78,7 +78,6 @@ final class PremiumProductStoryThemeServiceProvider extends ServiceProvider
 
         $this->loadTranslationsFrom(__DIR__ . '/../resources/lang', 'capell-theme-premium-product-story');
         $this->loadViewsFrom(__DIR__ . '/../resources/views', 'capell-theme-premium-product-story');
-        $this->loadScreenshotFixtureRoutes();
 
         if (! CapellCore::isPackageInstalled(self::$packageName)) {
             return;
@@ -103,15 +102,6 @@ final class PremiumProductStoryThemeServiceProvider extends ServiceProvider
     {
         CapellCore::registerVendorAsset(VendorAssetData::tailwindImport('resources/css/theme-premium-product-story.css', self::$packageName));
         CapellCore::registerVendorAsset(VendorAssetData::tailwindSource('resources/views/**/*.blade.php', self::$packageName));
-    }
-
-    private function loadScreenshotFixtureRoutes(): void
-    {
-        if (filter_var(getenv('CAPELL_THEME_PREMIUM_PRODUCT_STORY_SCREENSHOT_FIXTURES_ENABLED'), FILTER_VALIDATE_BOOL) !== true) {
-            return;
-        }
-
-        $this->loadRoutesFrom(__DIR__ . '/../routes/screenshot-fixtures.php');
     }
 
     /**

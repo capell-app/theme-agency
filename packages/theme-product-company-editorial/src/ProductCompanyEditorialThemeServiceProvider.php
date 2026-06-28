@@ -81,7 +81,6 @@ final class ProductCompanyEditorialThemeServiceProvider extends ServiceProvider
         }
 
         $this->loadTranslationsFrom(__DIR__ . '/../resources/lang', 'capell-theme-product-company-editorial');
-        $this->loadScreenshotFixtureRoutes();
         $this->loadViewsFrom(__DIR__ . '/../resources/views', 'capell-theme-product-company-editorial');
         $this->registerVendorCssAssets();
 
@@ -96,15 +95,6 @@ final class ProductCompanyEditorialThemeServiceProvider extends ServiceProvider
             ),
             sectionRenderers: array_values($sectionRenderers),
         );
-    }
-
-    private function loadScreenshotFixtureRoutes(): void
-    {
-        if (filter_var(getenv('CAPELL_THEME_PRODUCT_COMPANY_EDITORIAL_SCREENSHOT_FIXTURES_ENABLED'), FILTER_VALIDATE_BOOL) !== true) {
-            return;
-        }
-
-        $this->loadRoutesFrom(__DIR__ . '/../routes/screenshot-fixtures.php');
     }
 
     private function registerVendorCssAssets(): void

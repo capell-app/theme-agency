@@ -14,7 +14,7 @@ use Capell\FoundationTheme\Support\Demo\ThemeDemoPageDefinition;
  * Complete, vertical-authentic demo content for the Education theme.
  *
  * Copy and section payloads are mined verbatim from the theme's screenshot
- * renderer (EducationScreenshotRenderer) and its section Blade views, so each
+ * renderer (the theme marketing preview spec) and its section Blade views, so each
  * seeded surface emits the theme's signature course-first renderers
  * (course-catalog / pathway-comparison / outcomes / instructors / events /
  * enrolment-cta / faculty-directory / admissions-funnel / content-listing)

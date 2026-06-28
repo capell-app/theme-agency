@@ -14,7 +14,7 @@ use Capell\FoundationTheme\Support\Demo\ThemeDemoPageDefinition;
  * Complete, vertical-authentic demo content for the Packaging Supplier theme.
  *
  * The copy, section ordering, and brand tokens mirror the package's own
- * screenshot renderer (PackagingSupplierScreenshotRenderer) so the installed
+ * screenshot renderer (the theme marketing preview spec) so the installed
  * demo and the marketing screenshots read as the same B2B packaging supplier
  * site. Each surface is seeded as an ordered `render_data['sections']` list so
  * the page adapter emits the theme's product-range / materials / sustainability

@@ -81,7 +81,6 @@ final class DogWalkersThemeServiceProvider extends ServiceProvider
 
         $this->loadViewsFrom(__DIR__ . '/../resources/views', 'capell-theme-dog-walkers');
         $this->loadTranslationsFrom(__DIR__ . '/../resources/lang', 'capell-theme-dog-walkers');
-        $this->loadScreenshotFixtureRoutes();
 
         CapellCore::registerVendorAsset(
             VendorAssetData::tailwindImport('resources/css/theme-dog-walkers.css', self::$packageName),
@@ -111,15 +110,6 @@ final class DogWalkersThemeServiceProvider extends ServiceProvider
                 ->values()
                 ->all(),
         );
-    }
-
-    private function loadScreenshotFixtureRoutes(): void
-    {
-        if (filter_var(getenv('CAPELL_THEME_DOG_WALKERS_SCREENSHOT_FIXTURES_ENABLED'), FILTER_VALIDATE_BOOL) !== true) {
-            return;
-        }
-
-        $this->loadRoutesFrom(__DIR__ . '/../routes/screenshot-fixtures.php');
     }
 
     /**

@@ -18,7 +18,7 @@ use Capell\FoundationTheme\Support\Demo\ThemeDemoPageDefinition;
  * coach-profiles / membership-plans / challenge-board / nutrition-guides /
  * features / proof) alongside the standard hero/cta — giving every surface a
  * full studio site rather than the shared five-section skeleton. Copy and
- * brand tokens are mined verbatim from FitnessWellnessScreenshotRenderer.
+ * brand tokens are mined verbatim from the theme marketing preview spec.
  */
 final class FitnessWellnessDemoContent implements ProvidesThemeDemoContent
 {

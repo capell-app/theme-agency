@@ -19,7 +19,7 @@ use Capell\FoundationTheme\Support\Demo\ThemeDemoPageDefinition;
  * alongside the standard hero/cta — giving every surface a full, individual
  * product site rather than the shared five-section skeleton.
  *
- * Copy and section structure are mined verbatim from SaasScreenshotRenderer.
+ * Copy and section structure are mined verbatim from the theme marketing preview spec.
  */
 final class SaasDemoContent implements ProvidesThemeDemoContent
 {

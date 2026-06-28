@@ -20,7 +20,7 @@ use Capell\FoundationTheme\Support\Demo\ThemeDemoPageDefinition;
  * industrial-manufacturer site rather than the shared five-section skeleton.
  *
  * Copy, brand, and section ordering are mined verbatim from the theme's
- * ManufacturingScreenshotRenderer so the seeded demo matches the marketing
+ * the theme marketing preview spec so the seeded demo matches the marketing
  * screenshots key-for-key.
  */
 final class ManufacturingDemoContent implements ProvidesThemeDemoContent

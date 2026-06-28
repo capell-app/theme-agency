@@ -81,7 +81,6 @@ final class KnowledgeThemeServiceProvider extends ServiceProvider
         }
 
         $this->loadTranslationsFrom(__DIR__ . '/../resources/lang', 'capell-theme-knowledge');
-        $this->loadScreenshotFixtureRoutes();
         $this->loadViewsFrom(__DIR__ . '/../resources/views', 'capell-theme-knowledge');
 
         CapellCore::registerVendorAsset(
@@ -112,15 +111,6 @@ final class KnowledgeThemeServiceProvider extends ServiceProvider
                 ->values()
                 ->all(),
         );
-    }
-
-    private function loadScreenshotFixtureRoutes(): void
-    {
-        if (filter_var(getenv('CAPELL_THEME_KNOWLEDGE_SCREENSHOT_FIXTURES_ENABLED'), FILTER_VALIDATE_BOOL) !== true) {
-            return;
-        }
-
-        $this->loadRoutesFrom(__DIR__ . '/../routes/screenshot-fixtures.php');
     }
 
     /**
