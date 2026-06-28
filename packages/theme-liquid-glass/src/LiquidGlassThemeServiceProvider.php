@@ -34,7 +34,7 @@ class LiquidGlassThemeServiceProvider extends ServiceProvider
             previewImage: self::PUBLIC_PREVIEW_IMAGE,
             tags: ['Glass', 'Modern', 'Launch'],
             bestFit: ['Modern service sites', 'Product launches', 'Design-led teams'],
-            includedSections: ['navigation', 'hero', 'features', 'proof', 'content-listing', 'cta', 'footer'],
+            includedSections: ['navigation', 'hero', 'features', 'showcase', 'presets', 'proof', 'content-listing', 'cta', 'footer'],
             presets: [
                 new ThemePresetData(
                     key: 'clarity',
@@ -182,6 +182,8 @@ class LiquidGlassThemeServiceProvider extends ServiceProvider
             'navigation' => new ViewSectionRenderer(self::THEME_KEY, 'navigation', 'capell-theme-liquid-glass::sections.navigation', failLoudly: true),
             'hero' => new ViewSectionRenderer(self::THEME_KEY, 'hero', 'capell-theme-liquid-glass::sections.hero', failLoudly: true),
             'features' => new ViewSectionRenderer(self::THEME_KEY, 'features', 'capell-theme-liquid-glass::sections.features', failLoudly: true),
+            'showcase' => new ViewSectionRenderer(self::THEME_KEY, 'showcase', 'capell-theme-liquid-glass::sections.showcase', failLoudly: true),
+            'presets' => new ViewSectionRenderer(self::THEME_KEY, 'presets', 'capell-theme-liquid-glass::sections.presets', failLoudly: true),
             'proof' => new ViewSectionRenderer(self::THEME_KEY, 'proof', 'capell-theme-liquid-glass::sections.proof', failLoudly: true),
             'content-listing' => new ViewSectionRenderer(self::THEME_KEY, 'content-listing', 'capell-theme-liquid-glass::sections.content-listing', failLoudly: true),
             'cta' => new ViewSectionRenderer(self::THEME_KEY, 'cta', 'capell-theme-liquid-glass::sections.cta', failLoudly: true),
