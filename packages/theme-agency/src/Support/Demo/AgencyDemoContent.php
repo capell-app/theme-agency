@@ -142,6 +142,10 @@ final class AgencyDemoContent implements ProvidesThemeDemoContent
                         summary: 'Smaller engagements, experiments, and collaborations.',
                         media: $media,
                     ),
+                    $this->ctaSection(
+                        heading: 'See a project that fits your brief?',
+                        summary: 'Tell us what you are planning and we will send the most relevant work, with context on scope and timing.',
+                    ),
                 ],
             ],
             layout: LayoutEnum::Results,
@@ -187,6 +191,10 @@ final class AgencyDemoContent implements ProvidesThemeDemoContent
                         heading: 'Related work',
                         summary: 'Other projects in the same neighbourhood.',
                         media: $media,
+                    ),
+                    $this->ctaSection(
+                        heading: 'Want results like these?',
+                        summary: 'Most engagements start with a short paid discovery. Tell us about the work and we will map a path.',
                     ),
                 ],
             ],
