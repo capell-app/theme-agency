@@ -7,6 +7,7 @@ namespace Capell\ThemeStudio\PremiumPortfolioCollection\Actions;
 use Capell\FoundationTheme\Contracts\InstallsThemeDemo;
 use Capell\FoundationTheme\Data\ThemeDemoInstallData;
 use Capell\FoundationTheme\Support\Demo\ThemeDemoPageInstaller;
+use Capell\ThemeStudio\PremiumPortfolioCollection\Support\Demo\PremiumPortfolioCollectionDemoContent;
 use Lorisleiva\Actions\Concerns\AsObject;
 
 final class InstallPremiumPortfolioCollectionThemeDemoAction implements InstallsThemeDemo
@@ -15,6 +16,6 @@ final class InstallPremiumPortfolioCollectionThemeDemoAction implements Installs
 
     public function handle(ThemeDemoInstallData $data): int
     {
-        return ThemeDemoPageInstaller::run($data, 'premium-portfolio-collection', 'Premium Portfolio Collection');
+        return ThemeDemoPageInstaller::run($data, 'premium-portfolio-collection', 'Premium Portfolio Collection', new PremiumPortfolioCollectionDemoContent);
     }
 }

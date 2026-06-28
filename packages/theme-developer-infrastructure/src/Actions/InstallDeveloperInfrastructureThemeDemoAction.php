@@ -7,6 +7,7 @@ namespace Capell\ThemeStudio\DeveloperInfrastructure\Actions;
 use Capell\FoundationTheme\Contracts\InstallsThemeDemo;
 use Capell\FoundationTheme\Data\ThemeDemoInstallData;
 use Capell\FoundationTheme\Support\Demo\ThemeDemoPageInstaller;
+use Capell\ThemeStudio\DeveloperInfrastructure\Support\Demo\DeveloperInfrastructureDemoContent;
 use Lorisleiva\Actions\Concerns\AsObject;
 
 final class InstallDeveloperInfrastructureThemeDemoAction implements InstallsThemeDemo
@@ -15,6 +16,6 @@ final class InstallDeveloperInfrastructureThemeDemoAction implements InstallsThe
 
     public function handle(ThemeDemoInstallData $data): int
     {
-        return ThemeDemoPageInstaller::run($data, 'developer-infrastructure', 'Developer Infrastructure');
+        return ThemeDemoPageInstaller::run($data, 'developer-infrastructure', 'Developer Infrastructure', new DeveloperInfrastructureDemoContent);
     }
 }
