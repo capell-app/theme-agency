@@ -231,6 +231,10 @@ final class ManufacturingDemoContent implements ProvidesThemeDemoContent
                         summary: 'A non-submitting RFQ form proves the contact journey feels like part of the production experience.',
                     ),
                     $this->featuresSection(),
+                    $this->ctaSection(
+                        heading: 'Turn intent into a submitted RFQ',
+                        summary: 'A conversion-focused CTA stack keeps the path to requesting a quote direct and precise.',
+                    ),
                 ],
             ],
             layout: LayoutEnum::System,

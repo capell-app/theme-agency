@@ -266,6 +266,10 @@ final class HealthcareDemoContent implements ProvidesThemeDemoContent
                         heading: 'Start a booking enquiry',
                         summary: 'Tell us the service and a preferred time and the patient team will take it from there.',
                     ),
+                    $this->ctaSection(
+                        heading: 'Ready to book an appointment?',
+                        summary: 'Start an enquiry and the patient team will confirm your appointment within one working day.',
+                    ),
                 ],
             ],
             layout: LayoutEnum::System,

@@ -95,6 +95,12 @@ final class SaasDemoContent implements ProvidesThemeDemoContent
                 'navigation' => $this->navigation(),
                 'footer' => $this->footer(),
                 'sections' => [
+                    $this->heroSection(
+                        $media,
+                        heading: 'A product directory built to be evaluated',
+                        eyebrow: 'Resources',
+                        summary: 'Structured resource cards keep SaaS evaluation paths clear without the theme owning content records.',
+                    ),
                     $this->contentListingSection(
                         heading: 'A product directory built to be evaluated',
                         summary: 'Structured resource cards keep SaaS evaluation paths clear without the theme owning content records.',
@@ -126,9 +132,19 @@ final class SaasDemoContent implements ProvidesThemeDemoContent
                 'navigation' => $this->navigation(),
                 'footer' => $this->footer(),
                 'sections' => [
+                    $this->heroSection(
+                        $media,
+                        heading: 'A product story that reads with momentum',
+                        eyebrow: 'Product story',
+                        summary: 'An article-style product view pairs narrative and proof so evaluators can engage with confidence.',
+                    ),
                     $this->contentListingSection(
                         heading: 'A product story that reads with momentum',
                         summary: 'An article-style product view pairs narrative and proof so evaluators can engage with confidence.',
+                    ),
+                    $this->demoRequestSection(
+                        heading: 'See this workflow in your own data',
+                        summary: 'Book a guided walkthrough mapped to the product story above.',
                     ),
                     $this->proofSection(),
                     $this->ctaSection(),
@@ -156,10 +172,17 @@ final class SaasDemoContent implements ProvidesThemeDemoContent
                 'navigation' => $this->navigation(),
                 'footer' => $this->footer(),
                 'sections' => [
+                    $this->heroSection(
+                        $media,
+                        heading: 'Reach the product team through one focused path',
+                        eyebrow: 'Book a demo',
+                        summary: 'A non-submitting demo-request CTA proves the contact journey stays tied to product workflow.',
+                    ),
                     $this->demoRequestSection(
                         heading: 'Reach the product team through one focused path',
                         summary: 'A non-submitting demo-request CTA proves the contact journey stays tied to product workflow.',
                     ),
+                    $this->ctaSection(),
                     $this->faqSection(),
                 ],
             ],
@@ -186,12 +209,20 @@ final class SaasDemoContent implements ProvidesThemeDemoContent
                 'navigation' => $this->navigation(),
                 'footer' => $this->footer(),
                 'sections' => [
+                    $this->heroSection(
+                        $media,
+                        heading: 'Nothing published here yet',
+                        eyebrow: 'Resources',
+                        summary: 'An empty listing state stays premium and structured while the product prepares its content.',
+                    ),
                     [
                         'type' => 'content-listing',
                         'heading' => 'Nothing published here yet',
                         'summary' => 'An empty listing state stays premium and structured while the product prepares its content.',
                         'items' => [],
                     ],
+                    $this->featuresSection(),
+                    $this->ctaSection(),
                 ],
             ],
         );
@@ -249,6 +280,12 @@ final class SaasDemoContent implements ProvidesThemeDemoContent
                 'navigation' => $this->navigation(),
                 'footer' => $this->footer(),
                 'sections' => [
+                    $this->heroSection(
+                        $media,
+                        heading: 'Turn intent into a booked demo',
+                        eyebrow: 'Enquire',
+                        summary: 'A conversion-focused CTA stack keeps the path to trialling the product direct and premium.',
+                    ),
                     $this->demoRequestSection(),
                     $this->proofSection(),
                     $this->ctaSection(
