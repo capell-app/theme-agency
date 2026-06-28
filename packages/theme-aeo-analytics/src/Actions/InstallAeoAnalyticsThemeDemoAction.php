@@ -7,6 +7,7 @@ namespace Capell\ThemeStudio\AeoAnalytics\Actions;
 use Capell\FoundationTheme\Contracts\InstallsThemeDemo;
 use Capell\FoundationTheme\Data\ThemeDemoInstallData;
 use Capell\FoundationTheme\Support\Demo\ThemeDemoPageInstaller;
+use Capell\ThemeStudio\AeoAnalytics\Support\Demo\AeoAnalyticsDemoContent;
 use Lorisleiva\Actions\Concerns\AsObject;
 
 final class InstallAeoAnalyticsThemeDemoAction implements InstallsThemeDemo
@@ -15,6 +16,6 @@ final class InstallAeoAnalyticsThemeDemoAction implements InstallsThemeDemo
 
     public function handle(ThemeDemoInstallData $data): int
     {
-        return ThemeDemoPageInstaller::run($data, 'aeo-analytics', 'AEO Analytics');
+        return ThemeDemoPageInstaller::run($data, 'aeo-analytics', 'AEO Analytics', new AeoAnalyticsDemoContent);
     }
 }
