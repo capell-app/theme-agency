@@ -7,6 +7,7 @@ namespace Capell\ThemeStudio\MotionArchive\Actions;
 use Capell\FoundationTheme\Contracts\InstallsThemeDemo;
 use Capell\FoundationTheme\Data\ThemeDemoInstallData;
 use Capell\FoundationTheme\Support\Demo\ThemeDemoPageInstaller;
+use Capell\ThemeStudio\MotionArchive\Support\Demo\MotionArchiveDemoContent;
 use Lorisleiva\Actions\Concerns\AsObject;
 
 final class InstallMotionArchiveThemeDemoAction implements InstallsThemeDemo
@@ -15,6 +16,11 @@ final class InstallMotionArchiveThemeDemoAction implements InstallsThemeDemo
 
     public function handle(ThemeDemoInstallData $data): int
     {
-        return ThemeDemoPageInstaller::run($data, 'motion-archive', 'Motion Archive');
+        return ThemeDemoPageInstaller::run(
+            $data,
+            'motion-archive',
+            'Motion Archive',
+            new MotionArchiveDemoContent,
+        );
     }
 }
