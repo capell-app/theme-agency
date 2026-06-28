@@ -7,6 +7,7 @@ namespace Capell\ThemeStudio\PropertyDeveloper\Actions;
 use Capell\FoundationTheme\Contracts\InstallsThemeDemo;
 use Capell\FoundationTheme\Data\ThemeDemoInstallData;
 use Capell\FoundationTheme\Support\Demo\ThemeDemoPageInstaller;
+use Capell\ThemeStudio\PropertyDeveloper\Support\Demo\PropertyDeveloperDemoContent;
 use Lorisleiva\Actions\Concerns\AsObject;
 
 final class InstallPropertyDeveloperThemeDemoAction implements InstallsThemeDemo
@@ -15,6 +16,6 @@ final class InstallPropertyDeveloperThemeDemoAction implements InstallsThemeDemo
 
     public function handle(ThemeDemoInstallData $data): int
     {
-        return ThemeDemoPageInstaller::run($data, 'property-developer', 'Property Developer');
+        return ThemeDemoPageInstaller::run($data, 'property-developer', 'Property Developer', new PropertyDeveloperDemoContent);
     }
 }
