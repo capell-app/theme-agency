@@ -2,7 +2,14 @@
 
 declare(strict_types=1);
 
+use Capell\Core\Facades\CapellCore;
+use Capell\Core\ThemeStudio\Data\BrandProfileData;
+use Capell\Core\ThemeStudio\Data\FooterData;
 use Capell\Core\ThemeStudio\Data\GenericSectionData;
+use Capell\Core\ThemeStudio\Data\NavigationData;
+use Capell\Core\ThemeStudio\Data\ThemePageData;
+use Capell\Core\ThemeStudio\Theme\ThemeRegistry;
+use Capell\ThemeStudio\Agency\AgencyThemeServiceProvider;
 use Capell\ThemeStudio\Agency\Support\Demo\AgencyDemoContent;
 use Illuminate\Contracts\View\Factory as ViewFactory;
 use Illuminate\Support\Facades\Lang;
@@ -93,6 +100,56 @@ it('renders the client-logos view with wordmarks', function (): void {
     expect($html)->toContain('Trusted by teams who sweat the details')
         ->and($html)->toContain('Northwind')
         ->and($html)->not->toContain('client_logos_empty_title');
+});
+
+it('renders the full homepage through the real agency renderer with chrome and complete body', function (): void {
+    CapellCore::clearPackages();
+    CapellCore::forcePackageInstalled(AgencyThemeServiceProvider::$packageName);
+
+    $registry = new ThemeRegistry;
+    (new AgencyThemeServiceProvider($this->app))->boot($registry);
+    app()->instance(ThemeRegistry::class, $registry);
+
+    $homepage = (new AgencyDemoContent)->definitions('agency', 'Agency', 'https://agency.test')[0];
+    $renderData = $homepage->renderData;
+
+    $sections = [];
+
+    foreach ($renderData['sections'] as $entry) {
+        $type = (string) $entry['type'];
+        unset($entry['type']);
+        $sections[] = new GenericSectionData($type, $entry);
+    }
+
+    $page = new ThemePageData(
+        title: 'Fieldwork',
+        brand: new BrandProfileData(primaryColor: '#be123c', surfaceColor: '#09090b', foregroundColor: '#f8fafc'),
+        sections: $sections,
+        navigation: NavigationData::from($renderData['navigation']),
+        footer: FooterData::from($renderData['footer']),
+    );
+
+    $html = $registry->renderer('agency')->render($page);
+
+    // Chrome: the seeded navigation + footer brand both render.
+    expect(substr_count($html, 'Fieldwork'))->toBeGreaterThanOrEqual(2)
+        ->and($html)->toContain('agency-shell')
+        // Signature body across the surface, in order.
+        ->and($html)->toContain('What we do')
+        ->and($html)->toContain('Selected work')
+        ->and($html)->toContain('Rebuilding Meridian')
+        ->and($html)->toContain('Priya Nadkarni')
+        ->and($html)->toContain('Trusted by teams who sweat the details')
+        // No skeleton: no section degraded to its empty state.
+        ->and($html)->not->toContain('_empty_title');
+
+    // Order check: hero/services precede the case study, which precedes the footer.
+    $servicesAt = strpos($html, 'What we do');
+    $caseAt = strpos($html, 'Rebuilding Meridian');
+    $ctaAt = strpos($html, 'Have a project in mind?');
+
+    expect($servicesAt)->toBeLessThan($caseAt)
+        ->and($caseAt)->toBeLessThan($ctaAt);
 });
 
 it('renders every homepage signature section without an empty-state fallback', function (): void {
