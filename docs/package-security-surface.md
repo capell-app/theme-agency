@@ -11,14 +11,14 @@ Cache posture uses three terms: `safe` means public output is expected to avoid 
 
 ## Summary
 
-- Packages: 141
+- Packages: 86
 - Packages with public routes: 30
 - Public routes: 104
 - Webhook routes: 5
 - Throttled routes: 48
 - Signed or tokenized routes: 26
 - Sensitive fields: 131
-- Anonymous-output-safe packages: 131
+- Anonymous-output-safe packages: 76
 
 ## Package Surface
 
@@ -62,7 +62,7 @@ Cache posture uses three terms: `safe` means public output is expected to avoid 
 | capell-app/inertia-react-adapter | low | 0 | - | - | - | - | none | safe; not cacheable; no sensitive output; varies by site, locale |
 | capell-app/inertia-vue-adapter | low | 0 | - | - | - | - | none | safe; not cacheable; no sensitive output; varies by site, locale |
 | capell-app/insights | sensitive | 2 | - | capell-insights.consent<br>capell-insights.events | - | - | permissions; 1 permission | safe; not cacheable; no sensitive output; varies by site, locale |
-| capell-app/knowledge-base | standard | 4 | - | capell-knowledge-base.article.feedback | - | knowledge_base_collections.user_agent_hash<br>knowledge_base_collections.visitor_hash | policies | safe; cacheable; no sensitive output; varies by none |
+| capell-app/knowledge-base | standard | 4 | - | capell-knowledge-base.article.feedback | - | knowledge_base_article_feedback.user_agent_hash<br>knowledge_base_article_feedback.visitor_hash | policies | safe; cacheable; no sensitive output; varies by none |
 | capell-app/layout-builder | standard | 2 | - | - | - | layout_bulk_change_runs.original_container_hash<br>layout_bulk_change_runs.proposed_container_hash | permissions; 13 permissions | safe; cacheable; no sensitive output; varies by site, locale, page |
 | capell-app/live-chat | standard | 9 | - | capell-live-chat.api.conversations.store<br>capell-live-chat.api.handoff.store<br>capell-live-chat.api.messages.store<br>capell-live-chat.api.preflight<br>capell-live-chat.conversations.store<br>capell-live-chat.handoff.store<br>capell-live-chat.messages.store | - | Capell\LiveChat\Models\LiveChatAIRun::$error_message<br>Capell\LiveChat\Models\LiveChatAIRun::$input_payload<br>Capell\LiveChat\Models\LiveChatAIRun::$output_payload<br>Capell\LiveChat\Models\LiveChatAIRun::$refusal_reason<br>Capell\LiveChat\Models\LiveChatAIRun::$source_document_ids<br>Capell\LiveChat\Models\LiveChatConversation::$metadata<br>Capell\LiveChat\Models\LiveChatConversation::$visitor_company<br>Capell\LiveChat\Models\LiveChatConversation::$visitor_email<br>Capell\LiveChat\Models\LiveChatConversation::$visitor_name<br>Capell\LiveChat\Models\LiveChatConversation::$visitor_phone<br>Capell\LiveChat\Models\LiveChatEscalationRule::$metadata<br>Capell\LiveChat\Models\LiveChatInstallation::$allowed_domains<br>Capell\LiveChat\Models\LiveChatInstallation::$metadata<br>Capell\LiveChat\Models\LiveChatInstallation::$widget_settings<br>Capell\LiveChat\Models\LiveChatKnowledgeDocument::$metadata<br>Capell\LiveChat\Models\LiveChatKnowledgeGap::$metadata<br>Capell\LiveChat\Models\LiveChatKnowledgeGap::$question<br>Capell\LiveChat\Models\LiveChatKnowledgeSource::$content<br>Capell\LiveChat\Models\LiveChatKnowledgeSource::$metadata<br>Capell\LiveChat\Models\LiveChatMessage::$attachments<br>Capell\LiveChat\Models\LiveChatMessage::$body<br>Capell\LiveChat\Models\LiveChatMessage::$metadata | permissions; 25 permissions | not safe; not cacheable; sensitive output; varies by site |
 | capell-app/login-audit | sensitive | 0 | - | - | - | - | permissions; 1 permission | safe; not cacheable; no sensitive output; varies by none |
@@ -86,35 +86,25 @@ Cache posture uses three terms: `safe` means public output is expected to avoid 
 | capell-app/social-feeds | sensitive | 0 | - | - | - | Capell\SocialFeeds\Models\SocialFeedConnection::$credentials | permissions; 5 permissions | safe; cacheable; no sensitive output; varies by site, locale |
 | capell-app/structured-content-library | standard | 0 | - | - | - | - | permissions; 5 permissions | safe; cacheable; no sensitive output; varies by site, locale |
 | capell-app/tags | standard | 0 | - | - | - | - | policies | safe; not cacheable; no sensitive output; varies by none |
-| capell-app/theme-bold-sport-commerce | low | 0 | - | - | - | - | none | safe; not cacheable; no sensitive output; varies by site, locale |
 | capell-app/theme-case-study-platform | low | 0 | - | - | - | - | none | safe; not cacheable; no sensitive output; varies by site, locale |
 | capell-app/theme-character-portfolio-index | low | 0 | - | - | - | - | none | safe; not cacheable; no sensitive output; varies by site, locale |
 | capell-app/theme-creative-culture-editorial | low | 0 | - | - | - | - | none | safe; not cacheable; no sensitive output; varies by site, locale |
-| capell-app/theme-creative-marketplace | low | 0 | - | - | - | - | none | safe; not cacheable; no sensitive output; varies by site, locale |
 | capell-app/theme-dark-product-system | low | 0 | - | - | - | - | none | safe; not cacheable; no sensitive output; varies by site, locale |
 | capell-app/theme-dense-news-analysis | low | 0 | - | - | - | - | none | safe; not cacheable; no sensitive output; varies by site, locale |
 | capell-app/theme-design-led-magazine | low | 0 | - | - | - | - | none | safe; not cacheable; no sensitive output; varies by site, locale |
-| capell-app/theme-editorial-crm | low | 0 | - | - | - | - | none | safe; not cacheable; no sensitive output; varies by site, locale |
 | capell-app/theme-editorial-serif | low | 0 | - | - | - | - | none | safe; not cacheable; no sensitive output; varies by site, locale |
 | capell-app/theme-experimental-directory | low | 0 | - | - | - | - | none | safe; not cacheable; no sensitive output; varies by site, locale |
 | capell-app/theme-filter-gallery | low | 0 | - | - | - | - | none | safe; not cacheable; no sensitive output; varies by site, locale |
 | capell-app/theme-global-culture-magazine | low | 0 | - | - | - | - | none | safe; not cacheable; no sensitive output; varies by site, locale |
-| capell-app/theme-interactive-builder | low | 0 | - | - | - | - | none | safe; not cacheable; no sensitive output; varies by site, locale |
 | capell-app/theme-landing-gallery | low | 0 | - | - | - | - | none | safe; not cacheable; no sensitive output; varies by site, locale |
 | capell-app/theme-liquid-glass | low | 0 | - | - | - | - | none | safe; cacheable; no sensitive output; varies by site, locale |
 | capell-app/theme-minimal-curation-feed | low | 0 | - | - | - | - | none | safe; not cacheable; no sensitive output; varies by site, locale |
-| capell-app/theme-minimal-fashion | low | 0 | - | - | - | - | none | safe; not cacheable; no sensitive output; varies by site, locale |
 | capell-app/theme-motion-archive | low | 0 | - | - | - | - | none | safe; not cacheable; no sensitive output; varies by site, locale |
 | capell-app/theme-one-page-showcase | low | 0 | - | - | - | - | none | safe; not cacheable; no sensitive output; varies by site, locale |
-| capell-app/theme-outdoor-mission | low | 0 | - | - | - | - | none | safe; not cacheable; no sensitive output; varies by site, locale |
-| capell-app/theme-premium-infrastructure | low | 0 | - | - | - | - | none | safe; not cacheable; no sensitive output; varies by site, locale |
+| capell-app/theme-portfolio-directory | low | 0 | - | - | - | - | none | safe; not cacheable; no sensitive output; varies by site, locale |
 | capell-app/theme-premium-portfolio-collection | low | 0 | - | - | - | - | none | safe; not cacheable; no sensitive output; varies by site, locale |
-| capell-app/theme-premium-product-story | low | 0 | - | - | - | - | none | safe; not cacheable; no sensitive output; varies by site, locale |
-| capell-app/theme-product-company-editorial | low | 0 | - | - | - | - | none | safe; not cacheable; no sensitive output; varies by site, locale |
-| capell-app/theme-quiet-luxury-retail | low | 0 | - | - | - | - | none | safe; not cacheable; no sensitive output; varies by site, locale |
 | capell-app/theme-quiet-web-gallery | low | 0 | - | - | - | - | none | safe; not cacheable; no sensitive output; varies by site, locale |
 | capell-app/theme-raw-index | low | 0 | - | - | - | - | none | safe; not cacheable; no sensitive output; varies by site, locale |
-| capell-app/theme-resource-hub | low | 0 | - | - | - | - | none | safe; not cacheable; no sensitive output; varies by site, locale |
 | capell-app/theme-scoreboard-showcase | low | 0 | - | - | - | - | none | safe; not cacheable; no sensitive output; varies by site, locale |
 | capell-app/translation-manager | sensitive | 0 | - | - | - | - | panel-auth | safe; not cacheable; no sensitive output; varies by none |
 | capell-app/url-manager | sensitive | 0 | - | - | - | url_manager_not_found_opportunities.source_hash<br>url_manager_redirect_hits.ip_hash<br>url_manager_redirect_hits.user_agent_hash<br>url_manager_redirect_rules.source_hash<br>url_manager_redirect_rules.target_hash | permissions; 4 permissions | safe; not cacheable; no sensitive output; varies by none |

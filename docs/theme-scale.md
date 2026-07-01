@@ -4,9 +4,9 @@ Use this scale when creating a new Capell theme, changing one existing theme, or
 
 ## Theme Tiers
 
-| Tier                   | Packages                                                                                                                                                                                                                                                                                                                                   | Role                                                                                                                                                                                | Expected depth                                                                                                                    |
-| ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| Foundation             | `capell-app/foundation-theme`                                                                                                                                                                                                                                                                                                              | Default frontend runtime, shared renderer conventions, Tailwind asset generation, media URL handling, generic Blade components, and base Layout Builder areas.                      | Boring, stable, shared. Changes here affect every child theme.                                                                    |
+| Tier       | Packages                      | Role                                                                                                                                                           | Expected depth                                                 |
+| ---------- | ----------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------- |
+| Foundation | `capell-app/foundation-theme` | Default frontend runtime, shared renderer conventions, Tailwind asset generation, media URL handling, generic Blade components, and base Layout Builder areas. | Boring, stable, shared. Changes here affect every child theme. |
 
 Foundation is the normal/default theme. Basic and premium Blade themes extend Foundation rather than replacing it unless Foundation's rendering contract is genuinely the wrong base. The Inertia Bookings family is separate because it renders through Inertia and uses React/Vue adapter plugins.
 
@@ -167,23 +167,14 @@ Current lane ownership:
 - `saas`: product, comparison, trial, and documentation journeys.
 - `knowledge`: search-led resource and reading journeys.
 - `local-services`: quote, locality, dispatch, and job-proof journeys.
-- `nonprofit`: campaign, donation, volunteer, impact, and story journeys.
-- `education`: course, cohort, instructor, event, and enrolment journeys.
-- `estate-agents`: property search, featured listings, valuation, local guide, agent proof, and viewing-request journeys.
-- `portfolio`: premium studio/case-study lane for work outcomes, case files, media kits, and audience-building paths.
-- `restaurant`: menu, reservation, private dining, events, opening-hours, location, and venue-proof journeys.
-- `agency`: premium creative/campaign lane with expressive launch-room treatment; do not duplicate Portfolio's deeper outcome-led case-study workflow.
-- `corporate`: basic business/boardroom preset unless it becomes a distinct enterprise workflow.
-- `inertia-bookings`: premium appointment, services, location, and public booking request journey for Inertia installs.
-- `liquid-glass`: free modern glass presentation for launch, service, and design-led sites using the standard section set.
+- `theme-dark-product-system`: dark, interface-led product system for technical and workflow-heavy sites.
+- `theme-editorial-serif`: formal long-form publishing with serif rhythm and restrained editorial hierarchy.
+- `theme-filter-gallery`: high-density, filter-first visual archive for browsing large inspiration libraries.
+- `theme-liquid-glass`: modern translucent presentation for launch, service, and design-led sites using the standard section set.
+- `theme-premium-portfolio-collection`: premium portfolio collection lane for curated work, proof, and case-study depth.
+- `theme-raw-index`: intentionally spare index, directory, and reference-list treatment.
 
-Future local-business verticals should extend this non-overlap standard rather than duplicate `local-services`.
-
-Recommended vertical lanes:
-
-- `theme-equestrian`: riding lessons, clinics, camps, instructor/horse profiles, rider-level paths, and events-calendar journeys.
-- `theme-salon`: treatment menu, stylist profiles, availability, before/after proof, reviews, and appointment-request journeys.
-- `theme-practice`: local professional services for solicitors, accountants, and advisers, centred on practice areas, credentials, consultation intake, resources, and compliance/trust.
+Future theme lanes should extend this non-overlap standard rather than duplicate an existing visual system with different industry copy.
 
 These themes should not own models, migrations, or admin resources by default. If a vertical needs live records or interactive filtering, put the data behaviour in an existing or new companion package and let the theme register a public-safe presentation layer. Examples:
 
@@ -199,6 +190,7 @@ For documentation-only theme changes, check links and terminology against the pa
 For package code changes, start narrow:
 
 ```bash
+
 ```
 
 Then run the affected package suites and any shared Foundation or Layout Builder tests when the contract changes:
