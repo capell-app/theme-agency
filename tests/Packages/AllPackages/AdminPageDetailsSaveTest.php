@@ -34,6 +34,12 @@ it('saves page details from the admin edit form with all package providers boote
     $this->registerAndMigrateSettings(
         [
             '2026_05_10_190871_01_create_ai-orchestrator_settings',
+        ],
+        __DIR__ . '/../../../packages/ai-orchestrator/database/settings',
+    );
+
+    $this->registerAndMigrateSettings(
+        [
             '2026_05_10_190871_03_create_seo_suite_settings',
         ],
         __DIR__ . '/../../../packages/seo-suite/database/settings',

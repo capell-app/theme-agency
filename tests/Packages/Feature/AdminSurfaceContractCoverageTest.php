@@ -25,7 +25,7 @@ use Spatie\LaravelPackageTools\PackageServiceProvider;
 beforeEach(function (): void {
     test()->registerAndMigrateSettings(
         ['2026_05_10_190871_01_create_ai-orchestrator_settings'],
-        dirname(__DIR__, 3) . '/packages/seo-suite/database/settings',
+        dirname(__DIR__, 3) . '/packages/ai-orchestrator/database/settings',
     );
 });
 
