@@ -7,6 +7,7 @@ namespace Capell\ThemeStudio\LiquidGlass\Actions;
 use Capell\FoundationTheme\Contracts\InstallsThemeDemo;
 use Capell\FoundationTheme\Data\ThemeDemoInstallData;
 use Capell\FoundationTheme\Support\Demo\ThemeDemoPageInstaller;
+use Capell\ThemeStudio\LiquidGlass\Support\Demo\LiquidGlassDemoContent;
 use Lorisleiva\Actions\Concerns\AsObject;
 
 final class InstallLiquidGlassThemeDemoAction implements InstallsThemeDemo
@@ -15,6 +16,6 @@ final class InstallLiquidGlassThemeDemoAction implements InstallsThemeDemo
 
     public function handle(ThemeDemoInstallData $data): int
     {
-        return ThemeDemoPageInstaller::run($data, 'liquid-glass', 'Liquid Glass');
+        return ThemeDemoPageInstaller::run($data, 'liquid-glass', 'Liquid Glass', new LiquidGlassDemoContent);
     }
 }

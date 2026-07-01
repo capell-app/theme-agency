@@ -7,6 +7,7 @@ namespace Capell\ThemeStudio\PortfolioDirectory\Actions;
 use Capell\FoundationTheme\Contracts\InstallsThemeDemo;
 use Capell\FoundationTheme\Data\ThemeDemoInstallData;
 use Capell\FoundationTheme\Support\Demo\ThemeDemoPageInstaller;
+use Capell\ThemeStudio\PortfolioDirectory\Support\Demo\PortfolioDirectoryDemoContent;
 use Lorisleiva\Actions\Concerns\AsObject;
 
 final class InstallPortfolioDirectoryThemeDemoAction implements InstallsThemeDemo
@@ -15,6 +16,6 @@ final class InstallPortfolioDirectoryThemeDemoAction implements InstallsThemeDem
 
     public function handle(ThemeDemoInstallData $data): int
     {
-        return ThemeDemoPageInstaller::run($data, 'portfolio-directory', 'Portfolio Directory');
+        return ThemeDemoPageInstaller::run($data, 'portfolio-directory', 'Portfolio Directory', new PortfolioDirectoryDemoContent);
     }
 }

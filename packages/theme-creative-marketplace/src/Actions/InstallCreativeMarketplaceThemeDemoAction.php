@@ -7,6 +7,7 @@ namespace Capell\ThemeStudio\CreativeMarketplace\Actions;
 use Capell\FoundationTheme\Contracts\InstallsThemeDemo;
 use Capell\FoundationTheme\Data\ThemeDemoInstallData;
 use Capell\FoundationTheme\Support\Demo\ThemeDemoPageInstaller;
+use Capell\ThemeStudio\CreativeMarketplace\Support\Demo\CreativeMarketplaceDemoContent;
 use Lorisleiva\Actions\Concerns\AsObject;
 
 final class InstallCreativeMarketplaceThemeDemoAction implements InstallsThemeDemo
@@ -15,6 +16,6 @@ final class InstallCreativeMarketplaceThemeDemoAction implements InstallsThemeDe
 
     public function handle(ThemeDemoInstallData $data): int
     {
-        return ThemeDemoPageInstaller::run($data, 'creative-marketplace', 'Creative Marketplace');
+        return ThemeDemoPageInstaller::run($data, 'creative-marketplace', 'Creative Marketplace', new CreativeMarketplaceDemoContent);
     }
 }

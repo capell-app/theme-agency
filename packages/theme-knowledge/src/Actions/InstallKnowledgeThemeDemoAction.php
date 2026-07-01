@@ -7,6 +7,7 @@ namespace Capell\ThemeStudio\Knowledge\Actions;
 use Capell\FoundationTheme\Contracts\InstallsThemeDemo;
 use Capell\FoundationTheme\Data\ThemeDemoInstallData;
 use Capell\FoundationTheme\Support\Demo\ThemeDemoPageInstaller;
+use Capell\ThemeStudio\Knowledge\Support\Demo\KnowledgeDemoContent;
 use Lorisleiva\Actions\Concerns\AsObject;
 
 final class InstallKnowledgeThemeDemoAction implements InstallsThemeDemo
@@ -15,6 +16,6 @@ final class InstallKnowledgeThemeDemoAction implements InstallsThemeDemo
 
     public function handle(ThemeDemoInstallData $data): int
     {
-        return ThemeDemoPageInstaller::run($data, 'knowledge', 'Knowledge');
+        return ThemeDemoPageInstaller::run($data, 'knowledge', 'Knowledge', new KnowledgeDemoContent);
     }
 }

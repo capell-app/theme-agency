@@ -107,7 +107,6 @@ final class PortfolioThemeServiceProvider extends ServiceProvider
 
         $this->loadViewsFrom(__DIR__ . '/../resources/views', 'capell-theme-portfolio');
         $this->loadTranslationsFrom(__DIR__ . '/../resources/lang', 'capell-theme-portfolio');
-        $this->loadScreenshotFixtureRoutes();
 
         CapellCore::registerVendorAsset(
             VendorAssetData::tailwindImport('resources/css/theme-portfolio.css', self::$packageName),
@@ -139,22 +138,18 @@ final class PortfolioThemeServiceProvider extends ServiceProvider
         );
     }
 
-    private function loadScreenshotFixtureRoutes(): void
-    {
-        if (filter_var(getenv('CAPELL_THEME_PORTFOLIO_SCREENSHOT_FIXTURES_ENABLED'), FILTER_VALIDATE_BOOL) !== true) {
-            return;
-        }
-
-        $this->loadRoutesFrom(__DIR__ . '/../routes/screenshot-fixtures.php');
-    }
-
     /**
      * @param  array<string, array<string, bool|string|null>>  $optionalIntegrations
      */
     private function sectionRenderer(string $sectionKey, array $optionalIntegrations): ?ViewSectionRenderer
     {
         if ($this->isFoundationSection($sectionKey)) {
-            return null;
+            return new ViewSectionRenderer(
+                themeKey: self::THEME_KEY,
+                sectionKey: $sectionKey,
+                view: 'capell-foundation-theme::theme.chrome.' . $sectionKey,
+                failLoudly: true,
+            );
         }
 
         $view = 'capell-theme-portfolio::sections.' . $sectionKey;

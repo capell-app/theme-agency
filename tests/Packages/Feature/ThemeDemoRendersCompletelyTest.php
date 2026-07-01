@@ -11,9 +11,12 @@ use Capell\Core\ThemeStudio\Data\GenericSectionData;
 use Capell\Core\ThemeStudio\Data\NavigationData;
 use Capell\Core\ThemeStudio\Data\ThemePageData;
 use Capell\Core\ThemeStudio\Theme\ThemeRegistry;
+use Capell\FoundationTheme\Contracts\ProvidesThemeDemoContent;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Str;
+use ReflectionMethod;
+use RuntimeException;
 
 /*
 |--------------------------------------------------------------------------
@@ -60,21 +63,28 @@ it('renders a complete homepage through the real theme renderer', function (stri
     Lang::addNamespace("capell-theme-{$slug}", $viewRoot . '/lang');
 
     $registry = new ThemeRegistry;
-    (new $serviceProviderClass(app()))->boot($registry);
+    $serviceProvider = new $serviceProviderClass(app());
+    (new ReflectionMethod($serviceProvider, 'boot'))->invoke($serviceProvider, $registry);
     app()->instance(ThemeRegistry::class, $registry);
 
-    $homepage = (new $providerClass)->definitions($slug, Str::headline($slug), "https://{$slug}.test")[0];
+    $provider = new $providerClass;
+    throw_unless($provider instanceof ProvidesThemeDemoContent, RuntimeException::class, "{$providerClass} must implement ProvidesThemeDemoContent.");
+
+    $homepage = $provider->definitions($slug, Str::headline($slug), "https://{$slug}.test")[0];
     $renderData = $homepage->renderData;
 
     $sections = [];
-    foreach ($renderData['sections'] as $entry) {
-        $type = (string) $entry['type'];
+    foreach ($homepage->sections() as $entry) {
+        $type = $entry['type'] ?? null;
+        $type = is_string($type) ? $type : '';
         unset($entry['type']);
         $sections[] = new GenericSectionData($type, $entry);
     }
 
+    $seededBrand = data_get($renderData, 'navigation.brandName');
+
     $page = new ThemePageData(
-        title: (string) ($renderData['navigation']['brandName'] ?? Str::headline($slug)),
+        title: is_string($seededBrand) ? $seededBrand : Str::headline($slug),
         brand: new BrandProfileData(primaryColor: '#2563eb', surfaceColor: '#0b0b0f', foregroundColor: '#f8fafc'),
         sections: $sections,
         navigation: NavigationData::from($renderData['navigation']),
@@ -91,19 +101,34 @@ it('renders a complete homepage through the real theme renderer', function (stri
     // rendering empty. Views that lead with metrics/media (e.g. some proof
     // views) legitimately omit the heading, so only assert when the view shows
     // it; this self-adjusts per theme and stays strict for bespoke views.
-    foreach ($renderData['sections'] as $entry) {
+    foreach ($homepage->sections() as $entry) {
         $heading = $entry['heading'] ?? null;
+        $sectionType = $entry['type'] ?? null;
 
-        if (! is_string($heading) || $heading === '') {
+        if (! is_string($heading) || $heading === '' || ! is_string($sectionType)) {
             continue;
         }
 
-        $viewFile = $viewRoot . '/views/sections/' . $entry['type'] . '.blade.php';
+        $viewFile = $viewRoot . '/views/sections/' . $sectionType . '.blade.php';
 
         if (! is_file($viewFile) || ! str_contains((string) file_get_contents($viewFile), '->heading')) {
             continue;
         }
 
-        expect(str_contains($html, e($heading)))->toBeTrue("Theme [{$slug}] section [{$entry['type']}] heading did not render: [{$heading}].");
+        expect(str_contains($html, e($heading)))->toBeTrue("Theme [{$slug}] section [{$sectionType}] heading did not render: [{$heading}].");
+    }
+
+    // The seeded navigation brand must reach the rendered nav. Many nav views
+    // read `data_get($section, 'brand', <translation default>)`, but NavigationData
+    // exposes `brandName`; without the `brand` alias these render the generic
+    // default instead of the seeded demo brand. Assert only when this theme's nav
+    // view uses that read-path and a brand was seeded.
+    $brandName = data_get($renderData, 'navigation.brandName');
+    $navView = $viewRoot . '/views/sections/navigation.blade.php';
+
+    if (is_string($brandName) && $brandName !== '' && is_file($navView)
+        && str_contains((string) file_get_contents($navView), "data_get(\$section, 'brand'")
+    ) {
+        expect(str_contains($html, e($brandName)))->toBeTrue("Theme [{$slug}] navigation did not render the seeded brand: [{$brandName}].");
     }
 })->with('themes_with_demo_content');

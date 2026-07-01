@@ -78,7 +78,6 @@ final class PremiumPortfolioCollectionThemeServiceProvider extends ServiceProvid
 
         $this->loadTranslationsFrom(__DIR__ . '/../resources/lang', 'capell-theme-premium-portfolio-collection');
         $this->loadViewsFrom(__DIR__ . '/../resources/views', 'capell-theme-premium-portfolio-collection');
-        $this->loadScreenshotFixtureRoutes();
 
         if (! CapellCore::isPackageInstalled(self::$packageName)) {
             return;
@@ -103,15 +102,6 @@ final class PremiumPortfolioCollectionThemeServiceProvider extends ServiceProvid
     {
         CapellCore::registerVendorAsset(VendorAssetData::tailwindImport('resources/css/theme-premium-portfolio-collection.css', self::$packageName));
         CapellCore::registerVendorAsset(VendorAssetData::tailwindSource('resources/views/**/*.blade.php', self::$packageName));
-    }
-
-    private function loadScreenshotFixtureRoutes(): void
-    {
-        if (filter_var(getenv('CAPELL_THEME_PREMIUM_PORTFOLIO_COLLECTION_SCREENSHOT_FIXTURES_ENABLED'), FILTER_VALIDATE_BOOL) !== true) {
-            return;
-        }
-
-        $this->loadRoutesFrom(__DIR__ . '/../routes/screenshot-fixtures.php');
     }
 
     /**

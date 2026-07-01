@@ -7,6 +7,7 @@ namespace Capell\ThemeStudio\RoboticsHardware\Actions;
 use Capell\FoundationTheme\Contracts\InstallsThemeDemo;
 use Capell\FoundationTheme\Data\ThemeDemoInstallData;
 use Capell\FoundationTheme\Support\Demo\ThemeDemoPageInstaller;
+use Capell\ThemeStudio\RoboticsHardware\Support\Demo\RoboticsHardwareDemoContent;
 use Lorisleiva\Actions\Concerns\AsObject;
 
 final class InstallRoboticsHardwareThemeDemoAction implements InstallsThemeDemo
@@ -15,6 +16,6 @@ final class InstallRoboticsHardwareThemeDemoAction implements InstallsThemeDemo
 
     public function handle(ThemeDemoInstallData $data): int
     {
-        return ThemeDemoPageInstaller::run($data, 'robotics-hardware', 'Robotics Hardware');
+        return ThemeDemoPageInstaller::run($data, 'robotics-hardware', 'Robotics Hardware', new RoboticsHardwareDemoContent);
     }
 }

@@ -96,7 +96,6 @@ final class EstateAgentsThemeServiceProvider extends ServiceProvider
 
         $this->loadViewsFrom(__DIR__ . '/../resources/views', 'capell-theme-estate-agents');
         $this->loadTranslationsFrom(__DIR__ . '/../resources/lang', 'capell-theme-estate-agents');
-        $this->loadScreenshotFixtureRoutes();
         $this->registerVendorCssAssets();
 
         $sectionRenderers = $this->sectionRenderers();
@@ -121,15 +120,6 @@ final class EstateAgentsThemeServiceProvider extends ServiceProvider
         CapellCore::registerVendorAsset(
             VendorAssetData::tailwindSource('resources/views/**/*.blade.php', self::$packageName),
         );
-    }
-
-    private function loadScreenshotFixtureRoutes(): void
-    {
-        if (filter_var(getenv('CAPELL_THEME_ESTATE_AGENTS_SCREENSHOT_FIXTURES_ENABLED'), FILTER_VALIDATE_BOOL) !== true) {
-            return;
-        }
-
-        $this->loadRoutesFrom(__DIR__ . '/../routes/screenshot-fixtures.php');
     }
 
     /**

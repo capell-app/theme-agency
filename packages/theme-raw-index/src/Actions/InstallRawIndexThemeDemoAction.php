@@ -7,6 +7,7 @@ namespace Capell\ThemeStudio\RawIndex\Actions;
 use Capell\FoundationTheme\Contracts\InstallsThemeDemo;
 use Capell\FoundationTheme\Data\ThemeDemoInstallData;
 use Capell\FoundationTheme\Support\Demo\ThemeDemoPageInstaller;
+use Capell\ThemeStudio\RawIndex\Support\Demo\RawIndexDemoContent;
 use Lorisleiva\Actions\Concerns\AsObject;
 
 final class InstallRawIndexThemeDemoAction implements InstallsThemeDemo
@@ -15,6 +16,6 @@ final class InstallRawIndexThemeDemoAction implements InstallsThemeDemo
 
     public function handle(ThemeDemoInstallData $data): int
     {
-        return ThemeDemoPageInstaller::run($data, 'raw-index', 'Raw Index');
+        return ThemeDemoPageInstaller::run($data, 'raw-index', 'Raw Index', new RawIndexDemoContent);
     }
 }

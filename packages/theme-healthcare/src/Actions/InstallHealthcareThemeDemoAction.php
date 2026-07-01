@@ -7,6 +7,7 @@ namespace Capell\ThemeStudio\Healthcare\Actions;
 use Capell\FoundationTheme\Contracts\InstallsThemeDemo;
 use Capell\FoundationTheme\Data\ThemeDemoInstallData;
 use Capell\FoundationTheme\Support\Demo\ThemeDemoPageInstaller;
+use Capell\ThemeStudio\Healthcare\Support\Demo\HealthcareDemoContent;
 use Lorisleiva\Actions\Concerns\AsObject;
 
 final class InstallHealthcareThemeDemoAction implements InstallsThemeDemo
@@ -15,6 +16,6 @@ final class InstallHealthcareThemeDemoAction implements InstallsThemeDemo
 
     public function handle(ThemeDemoInstallData $data): int
     {
-        return ThemeDemoPageInstaller::run($data, 'healthcare', 'Healthcare');
+        return ThemeDemoPageInstaller::run($data, 'healthcare', 'Healthcare', new HealthcareDemoContent);
     }
 }

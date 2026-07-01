@@ -7,6 +7,7 @@ namespace Capell\ThemeStudio\OutdoorMission\Actions;
 use Capell\FoundationTheme\Contracts\InstallsThemeDemo;
 use Capell\FoundationTheme\Data\ThemeDemoInstallData;
 use Capell\FoundationTheme\Support\Demo\ThemeDemoPageInstaller;
+use Capell\ThemeStudio\OutdoorMission\Support\Demo\OutdoorMissionDemoContent;
 use Lorisleiva\Actions\Concerns\AsObject;
 
 final class InstallOutdoorMissionThemeDemoAction implements InstallsThemeDemo
@@ -15,6 +16,6 @@ final class InstallOutdoorMissionThemeDemoAction implements InstallsThemeDemo
 
     public function handle(ThemeDemoInstallData $data): int
     {
-        return ThemeDemoPageInstaller::run($data, 'outdoor-mission', 'Outdoor Mission');
+        return ThemeDemoPageInstaller::run($data, 'outdoor-mission', 'Outdoor Mission', new OutdoorMissionDemoContent);
     }
 }

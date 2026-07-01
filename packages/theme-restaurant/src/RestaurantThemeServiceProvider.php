@@ -96,7 +96,6 @@ final class RestaurantThemeServiceProvider extends ServiceProvider
 
         $this->loadViewsFrom(__DIR__ . '/../resources/views', 'capell-theme-restaurant');
         $this->loadTranslationsFrom(__DIR__ . '/../resources/lang', 'capell-theme-restaurant');
-        $this->loadScreenshotFixtureRoutes();
         $this->registerVendorCssAssets();
 
         $sectionRenderers = $this->sectionRenderers();
@@ -110,15 +109,6 @@ final class RestaurantThemeServiceProvider extends ServiceProvider
             ),
             sectionRenderers: array_values($sectionRenderers),
         );
-    }
-
-    private function loadScreenshotFixtureRoutes(): void
-    {
-        if (filter_var(getenv('CAPELL_THEME_RESTAURANT_SCREENSHOT_FIXTURES_ENABLED'), FILTER_VALIDATE_BOOL) !== true) {
-            return;
-        }
-
-        $this->loadRoutesFrom(__DIR__ . '/../routes/screenshot-fixtures.php');
     }
 
     private function registerVendorCssAssets(): void

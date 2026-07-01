@@ -7,6 +7,7 @@ namespace Capell\ThemeStudio\ExperimentalDirectory\Actions;
 use Capell\FoundationTheme\Contracts\InstallsThemeDemo;
 use Capell\FoundationTheme\Data\ThemeDemoInstallData;
 use Capell\FoundationTheme\Support\Demo\ThemeDemoPageInstaller;
+use Capell\ThemeStudio\ExperimentalDirectory\Support\Demo\ExperimentalDirectoryDemoContent;
 use Lorisleiva\Actions\Concerns\AsObject;
 
 final class InstallExperimentalDirectoryThemeDemoAction implements InstallsThemeDemo
@@ -15,6 +16,6 @@ final class InstallExperimentalDirectoryThemeDemoAction implements InstallsTheme
 
     public function handle(ThemeDemoInstallData $data): int
     {
-        return ThemeDemoPageInstaller::run($data, 'experimental-directory', 'Experimental Directory');
+        return ThemeDemoPageInstaller::run($data, 'experimental-directory', 'Experimental Directory', new ExperimentalDirectoryDemoContent);
     }
 }

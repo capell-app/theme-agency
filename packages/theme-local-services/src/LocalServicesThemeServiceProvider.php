@@ -81,7 +81,6 @@ final class LocalServicesThemeServiceProvider extends ServiceProvider
 
         $this->loadViewsFrom(__DIR__ . '/../resources/views', 'capell-theme-local-services');
         $this->loadTranslationsFrom(__DIR__ . '/../resources/lang', 'capell-theme-local-services');
-        $this->loadScreenshotFixtureRoutes();
 
         CapellCore::registerVendorAsset(
             VendorAssetData::tailwindImport('resources/css/theme-local-services.css', self::$packageName),
@@ -113,22 +112,18 @@ final class LocalServicesThemeServiceProvider extends ServiceProvider
         );
     }
 
-    private function loadScreenshotFixtureRoutes(): void
-    {
-        if (filter_var(getenv('CAPELL_THEME_LOCAL_SERVICES_SCREENSHOT_FIXTURES_ENABLED'), FILTER_VALIDATE_BOOL) !== true) {
-            return;
-        }
-
-        $this->loadRoutesFrom(__DIR__ . '/../routes/screenshot-fixtures.php');
-    }
-
     /**
      * @param  array<string, array<string, bool>>  $optionalIntegrations
      */
     private function sectionRenderer(string $sectionKey, array $optionalIntegrations): ?ViewSectionRenderer
     {
         if ($this->isFoundationSection($sectionKey)) {
-            return null;
+            return new ViewSectionRenderer(
+                themeKey: self::THEME_KEY,
+                sectionKey: $sectionKey,
+                view: 'capell-foundation-theme::theme.chrome.' . $sectionKey,
+                failLoudly: true,
+            );
         }
 
         $view = 'capell-theme-local-services::sections.' . $sectionKey;

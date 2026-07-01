@@ -7,6 +7,7 @@ namespace Capell\ThemeStudio\PackagingSupplier\Actions;
 use Capell\FoundationTheme\Contracts\InstallsThemeDemo;
 use Capell\FoundationTheme\Data\ThemeDemoInstallData;
 use Capell\FoundationTheme\Support\Demo\ThemeDemoPageInstaller;
+use Capell\ThemeStudio\PackagingSupplier\Support\Demo\PackagingSupplierDemoContent;
 use Lorisleiva\Actions\Concerns\AsObject;
 
 final class InstallPackagingSupplierThemeDemoAction implements InstallsThemeDemo
@@ -15,6 +16,6 @@ final class InstallPackagingSupplierThemeDemoAction implements InstallsThemeDemo
 
     public function handle(ThemeDemoInstallData $data): int
     {
-        return ThemeDemoPageInstaller::run($data, 'packaging-supplier', 'Packaging Supplier');
+        return ThemeDemoPageInstaller::run($data, 'packaging-supplier', 'Packaging Supplier', new PackagingSupplierDemoContent);
     }
 }

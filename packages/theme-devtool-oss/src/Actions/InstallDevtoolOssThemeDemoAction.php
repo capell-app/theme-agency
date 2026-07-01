@@ -7,6 +7,7 @@ namespace Capell\ThemeStudio\DevtoolOss\Actions;
 use Capell\FoundationTheme\Contracts\InstallsThemeDemo;
 use Capell\FoundationTheme\Data\ThemeDemoInstallData;
 use Capell\FoundationTheme\Support\Demo\ThemeDemoPageInstaller;
+use Capell\ThemeStudio\DevtoolOss\Support\Demo\DevtoolOssDemoContent;
 use Lorisleiva\Actions\Concerns\AsObject;
 
 final class InstallDevtoolOssThemeDemoAction implements InstallsThemeDemo
@@ -15,6 +16,6 @@ final class InstallDevtoolOssThemeDemoAction implements InstallsThemeDemo
 
     public function handle(ThemeDemoInstallData $data): int
     {
-        return ThemeDemoPageInstaller::run($data, 'devtool-oss', 'Devtool OSS');
+        return ThemeDemoPageInstaller::run($data, 'devtool-oss', 'Devtool OSS', new DevtoolOssDemoContent);
     }
 }
