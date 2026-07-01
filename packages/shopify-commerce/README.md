@@ -105,7 +105,6 @@ Screenshot contract: `docs/screenshots.json`.
 - [Capell content language plan](../../docs/CONTENT_LANGUAGE_PLAN.md)
 - [Capell documentation design system](../../docs/DESIGN_SYSTEM.md)
 - [Capell and package ERD notes](../../docs/erd/capell-and-package-erds.md)
-- Related packages: [Contacts](../contacts/README.md), [Diagnostics](../diagnostics/README.md), [Media Library](../media-library/README.md), [Payments](../payments/README.md), [Search](../search/README.md), [Theme Commerce](../theme-commerce/README.md).
 - Focused tests: `vendor/bin/pest packages/shopify-commerce/tests --configuration=phpunit.xml`.
 
 <!-- prettier-ignore-end -->

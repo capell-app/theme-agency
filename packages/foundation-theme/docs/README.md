@@ -17,4 +17,3 @@ Start at the [package README](../README.md) when deciding whether to install thi
 | ------------------------------------------------------- | ----------------------------------------------------- |
 | [Repository package docs](../../../docs/README.md)      | Cross-package workflow index and install-order notes. |
 | [Layout Builder](../../layout-builder/docs/overview.md) | Neighboring package in the same Capell workflow.      |
-| [Theme Agency](../../theme-agency/docs/overview.md)     | Neighboring package in the same Capell workflow.      |

@@ -21,8 +21,7 @@
             "capell-app/diagnostics",
             "capell-app/media-library",
             "capell-app/payments",
-            "capell-app/search",
-            "capell-app/theme-commerce"
+            "capell-app/search"
         ],
         "conflicts": []
     },

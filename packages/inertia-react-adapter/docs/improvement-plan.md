@@ -4,7 +4,6 @@
 
 ## 1. Snapshot
 
-The React adapter registers the `react` adapter with the shared Capell Inertia bridge, contributes React/Vite NPM dependencies, and exposes a generic React application entrypoint at `resources/js/app.jsx`. It deliberately owns no database tables, admin resources, settings, commands, or routes. When a richer React theme package such as `theme-inertia-bookings-react` is installed, this generic adapter build condition turns off so the theme can provide the concrete component pack.
 
 ## Completed Improvement Slices
 
@@ -28,7 +27,6 @@ The React adapter registers the `react` adapter with the shared Capell Inertia b
 
 ## 4. Risks
 
-1. **Generic adapter suppression is package-name based.** The condition disables the generic build when `capell-app/theme-inertia-bookings-react` is installed. If another full React theme becomes available, either register a broader suppressor contract or add explicit package keys.
 
 2. **React version is a public build contract.** NPM dependency versions are registered as vendor assets. Keep adapter package tests aligned with any React/Vite major bump.
 

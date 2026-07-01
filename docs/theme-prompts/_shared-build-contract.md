@@ -9,8 +9,8 @@ The authoritative engineering guide is [`docs/creating-a-theme.md`](../creating-
 This file is the condensed contract; that file is the source of truth when they
 disagree.
 
-The closest working examples to copy from are `packages/theme-saas`,
-`packages/theme-agency`, and `packages/theme-corporate`.
+The closest working examples to copy from are `packages/theme-liquid-glass`,
+`packages/theme-dark-product-system`, and `packages/theme-editorial-serif`.
 
 ---
 
@@ -69,7 +69,7 @@ Translation namespace: `capell-theme-<key>`.
 
 ## 3. `capell.json` (manifest v3) — required fields
 
-Copy `packages/theme-saas/capell.json` and change the identity. Key fields:
+Copy `packages/theme-liquid-glass/capell.json` and change the identity. Key fields:
 
 - `"manifest-version": 3`, `"kind": "theme"`, `"capellApiVersion": "^4.0"`,
   `"version": "4.x-dev"`.
@@ -192,7 +192,7 @@ Public Blade, CSS, JS, and cached HTML must never contain: the package name,
 must not query the database: no `::query(`, `DB::`, `loadMissing(`,
 `relationLoaded(`, `Frontend::`, `->translation`, `find(`, lazy relations.
 Pass hydrated render data in. Copy `tests/Unit/PublicOutputSafetyTest.php` from
-theme-saas and adapt the namespace.
+theme-liquid-glass and adapt the namespace.
 
 ## 9. Registration in this monorepo
 

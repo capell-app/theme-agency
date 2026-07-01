@@ -15,4 +15,3 @@ Start at the [package README](../README.md) when deciding whether to install thi
 | ----------------------------------------------------------------------- | ------------------------------------------------------------------ |
 | [Inertia React Adapter](../../inertia-react-adapter/docs/overview.md)   | Registers React dependencies and the React application entrypoint. |
 | [Inertia Vue Adapter](../../inertia-vue-adapter/docs/overview.md)       | Registers Vue dependencies and the Vue application entrypoint.     |
-| [Theme Inertia Bookings](../../theme-inertia-bookings/docs/overview.md) | First booking-led theme that uses the shared Inertia runtime.      |

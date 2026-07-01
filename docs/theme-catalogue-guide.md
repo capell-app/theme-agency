@@ -8,8 +8,6 @@ This review covers the first-party theme catalogue in `packages/foundation-theme
 
 The catalogue now includes two additional premium themes chosen from the non-overlap review:
 
-- `theme-restaurant`: a hospitality lane for menu discovery, reservations, private dining, events, opening hours, location guidance, chef story, and venue proof. This avoids Commerce's product-buying lane and Local Services' quote/dispatch lane by centring the visitor workflow on dining intent and table conversion.
-- `theme-estate-agents`: a property lane for public search, featured listings, vendor valuations, local-area guides, agent proof, market evidence, and viewing requests. This avoids Local Services, Portfolio, SaaS, and Commerce by centring the visitor workflow on buyer/vendor property decisions rather than generic lead capture or retail catalogue browsing.
 
 Both new themes are first-party paid themes, extend the built-in default runtime, own no schema, use safe optional-package fallbacks, and include package-local public-output safety, manifest, definition, and health-check tests.
 
@@ -42,7 +40,6 @@ The result is accepted with follow-up items below. No PHP/theme runtime changes 
 
 ### Important Gaps
 
-- [P2] `theme-agency` was documented as basic/free in central theme guidance while its manifest marks it as premium. The manifest and package copy are the stronger source of truth, so central docs should treat Agency as a premium creative/campaign theme.
 - [P2] `docs/creating-a-theme.md` described the old manifest v2 shape and only listed the earlier six theme examples. Theme packages now use manifest v3 and the catalogue includes Education, Knowledge, Local Services, Nonprofit, Portfolio, and the Inertia Bookings family.
 - [P2] `docs/theme-scale.md` described `docs/screenshots.json` as if it used marketplace-gallery fields such as `path`, `description`, `layout`, `editable`, `useful`, and `distinctive`. The committed manifests use the screenshot-runner contract with `entries`, `screenshotPath`, `targetType`, `url`, `required`, and route/browser metadata.
 - [P2] `packages/foundation-theme/docs/screenshots.json` references `packages/foundation-theme/docs/screenshots/foundation-theme-header-area.png`, but that file is not committed. Either add the capture or remove/rename the entry.
@@ -54,28 +51,12 @@ The result is accepted with follow-up items below. No PHP/theme runtime changes 
 - [P3] Education needs a stronger first viewport before it feels as premium as its section set. The package owns good learning-pathway sections, but the committed homepage is sparse and should bring course proof, cohort energy, or instructor/event signals higher.
 - [P3] Nonprofit and Portfolio are professional, but their homepage skeletons are close to Local Services. Nonprofit should lean more into campaign story, donation path, and supporter impact; Portfolio should lean more into work media, case-study artifacts, and creator authority.
 - [P3] Mobile screenshot coverage is uneven. Healthcare and the Inertia booking family have explicit mobile captures; most other premium themes do not. Premium themes should have at least one mobile marketplace capture for the core conversion page.
-- [P3] The Inertia Bookings family needs to be explained as one product family: `theme-inertia-bookings` is the theme, while the React/Vue packages are adapter plugins. Treating the adapters like normal themes creates catalogue confusion.
 
 ## Consistency Matrix
 
 | Package                        | Current role                            | Manifest tier/kind | Extends Foundation | Screenshot-runner entries | Marketplace screenshots | Review verdict                                                                         |
 | ------------------------------ | --------------------------------------- | ------------------ | ------------------ | ------------------------: | ----------------------: | -------------------------------------------------------------------------------------- |
 | `foundation-theme`             | Shared runtime/base theme               | free theme         | n/a                |                        12 |                      11 | Stable baseline; one missing declared screenshot.                                      |
-| `theme-agency`                 | Creative/campaign premium theme         | premium theme      | yes                |                        10 |                       3 | Visually strong and premium; central docs needed tier correction.                      |
-| `theme-commerce`               | Editorial retail/commerce theme         | premium theme      | yes                |                        10 |                       2 | Premium and distinct; marketplace gallery should expose more captures.                 |
-| `theme-corporate`              | Restrained business/public-sector theme | free theme         | yes                |                        10 |                       2 | Professional basic theme; should stay deliberately conservative.                       |
-| `theme-education`              | Course/enrolment theme                  | premium theme      | yes                |                         7 |                       3 | Structurally premium; first viewport needs more confidence and proof.                  |
-| `theme-estate-agents`          | Property search and valuation theme     | premium theme      | yes                |                         5 |                       5 | New premium property lane with search, valuation, local-guide, and viewing proof.      |
-| `theme-healthcare`             | Clinic/service/appointment theme        | premium theme      | yes                |                         6 |                       6 | Strong premium lane with mobile coverage.                                              |
-| `theme-inertia-bookings`       | Inertia booking-business theme          | premium theme      | no                 |                         5 |                       3 | Strong booking product family with promoted desktop/mobile booking proof.              |
-| `theme-inertia-bookings-react` | React booking adapter                   | premium plugin     | no                 |                         5 |                       1 | Adapter plugin, not a standalone theme.                                                |
-| `theme-inertia-bookings-vue`   | Vue booking adapter                     | premium plugin     | no                 |                         5 |                       1 | Adapter plugin, not a standalone theme.                                                |
-| `theme-knowledge`              | Search/resource/documentation theme     | premium theme      | yes                |                         7 |                       3 | Distinct premium lane; make runner captures required when stable.                      |
-| `theme-local-services`         | Quote-led local service theme           | premium theme      | yes                |                         9 |                       4 | Strong premium operational-service theme.                                              |
-| `theme-nonprofit`              | Campaign/donation/volunteer theme       | premium theme      | yes                |                         9 |                       4 | Professional and useful; needs more visual differentiation in hero.                    |
-| `theme-portfolio`              | Creator/consultant case-study theme     | premium theme      | yes                |                         9 |                       4 | Structurally premium; needs stronger media/case-study expression.                      |
-| `theme-restaurant`             | Hospitality menu and reservation theme  | premium theme      | yes                |                         5 |                       5 | New premium hospitality lane with menu, reservation, private dining, and events proof. |
-| `theme-saas`                   | Product-led software/subscription theme | premium theme      | yes                |                         9 |                       8 | Strong premium theme and best current marketplace coverage.                            |
 
 ## Customisation Model
 
@@ -131,7 +112,6 @@ Customise it with service finder data, clinician profiles, care-pathway sections
 
 Inertia Bookings is a premium booking-business theme for appointment-led services, clinics, consultants, classes, and locations. It differs from Foundation child themes because it renders through Inertia and connects to the Bookings public request flow with lazy slot loading.
 
-Customise the base package around service proof, booking CTA placement, location/FAQ sections, and booking flow content. Choose `theme-inertia-bookings-react` or `theme-inertia-bookings-vue` to provide the frontend component adapter. The React/Vue packages are not separate visual themes; they are implementation plugins for the same booking theme family.
 
 ### Theme Knowledge
 
@@ -180,7 +160,6 @@ Useful commands for this review class:
 find packages -maxdepth 2 -name capell.json | rg '/(foundation-theme|theme-)'
 find packages -path '*/docs/screenshots.json' | rg '/(foundation-theme|theme-)' | sort
 find packages -path '*/resources/views/*' -type f | rg '/(foundation-theme|theme-)' | xargs rg -n '(::query\(|DB::|loadMissing\(|signedRoute|filament|admin|editor|authoring|field_path|model_id)'
-vendor/bin/pest packages/foundation-theme/tests packages/theme-agency/tests packages/theme-commerce/tests packages/theme-corporate/tests packages/theme-education/tests packages/theme-healthcare/tests packages/theme-inertia-bookings/tests packages/theme-inertia-bookings-react/tests packages/theme-inertia-bookings-vue/tests packages/theme-knowledge/tests packages/theme-local-services/tests packages/theme-nonprofit/tests packages/theme-portfolio/tests packages/theme-saas/tests --configuration=phpunit.xml
 ```
 
 For browser/route QA, use the screenshot-runner app described in `docs/package-screenshot-automation.md`; this package repo workbench is not a reliable full admin-panel surface.

@@ -103,7 +103,7 @@ Screenshot contract: `docs/screenshots.json`.
 - [Capell content language plan](../../docs/CONTENT_LANGUAGE_PLAN.md)
 - [Capell documentation design system](../../docs/DESIGN_SYSTEM.md)
 - [Capell and package ERD notes](../../docs/erd/capell-and-package-erds.md)
-- Related packages: [Search](../search/README.md), [Seo Suite](../seo-suite/README.md), [Site Discovery](../site-discovery/README.md), [Theme Knowledge](../theme-knowledge/README.md).
+- Related packages: [Search](../search/README.md), [Seo Suite](../seo-suite/README.md), [Site Discovery](../site-discovery/README.md).
 - Focused tests: `vendor/bin/pest packages/knowledge-base/tests --configuration=phpunit.xml`.
 
 <!-- prettier-ignore-end -->

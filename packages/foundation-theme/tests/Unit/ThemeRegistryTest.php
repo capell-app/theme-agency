@@ -18,15 +18,15 @@ use Capell\FoundationTheme\Tests\Fixtures\ThemeRegistryTestStringSectionRenderer
 
 it('registers theme definitions renderers and section renderers by theme key', function (): void {
     $registry = new ThemeRegistry;
-    $sectionRenderer = new ViewSectionRenderer('corporate', 'hero', 'missing-view');
-    $themeRenderer = new BladeThemeRenderer('corporate', 'missing-layout', ['hero' => $sectionRenderer]);
+    $sectionRenderer = new ViewSectionRenderer('liquid-glass', 'hero', 'missing-view');
+    $themeRenderer = new BladeThemeRenderer('liquid-glass', 'missing-layout', ['hero' => $sectionRenderer]);
 
     $registry->register(
         new ThemeDefinitionData(
-            key: 'corporate',
-            name: 'Corporate',
-            description: 'Trust-led',
-            package: 'capell-app/theme-corporate',
+            key: 'liquid-glass',
+            name: 'Liquid Glass',
+            description: 'Translucent visual system',
+            package: 'capell-app/theme-liquid-glass',
             previewImage: '/preview.jpg',
             tags: ['Trust'],
             bestFit: ['B2B'],
@@ -37,10 +37,10 @@ it('registers theme definitions renderers and section renderers by theme key', f
         [$sectionRenderer],
     );
 
-    expect($registry->has('corporate'))->toBeTrue()
-        ->and($registry->definition('corporate')->package)->toBe('capell-app/theme-corporate')
-        ->and($registry->renderer('corporate'))->toBe($themeRenderer)
-        ->and($registry->sectionRenderer('corporate', 'hero'))->toBe($sectionRenderer);
+    expect($registry->has('liquid-glass'))->toBeTrue()
+        ->and($registry->definition('liquid-glass')->package)->toBe('capell-app/theme-liquid-glass')
+        ->and($registry->renderer('liquid-glass'))->toBe($themeRenderer)
+        ->and($registry->sectionRenderer('liquid-glass', 'hero'))->toBe($sectionRenderer);
 });
 
 it('throws for missing registered themes', function (): void {

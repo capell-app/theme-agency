@@ -68,7 +68,7 @@ it('tracks registered inertia adapters and resolves the configured active adapte
     $registry = new InertiaAdapterRegistry;
     $vueAdapter = new InertiaAdapterData(
         key: 'vue',
-        packageName: 'capell-app/theme-inertia-bookings-vue',
+        packageName: 'capell-app/inertia-vue-adapter',
         npmDependencies: ['@inertiajs/vue3' => '^2.0'],
         buildPath: 'resources/js/app.js',
         entrypoint: 'resources/js/app.js',
@@ -76,7 +76,7 @@ it('tracks registered inertia adapters and resolves the configured active adapte
     );
     $reactAdapter = new InertiaAdapterData(
         key: 'react',
-        packageName: 'capell-app/theme-inertia-bookings-react',
+        packageName: 'capell-app/inertia-react-adapter',
         npmDependencies: ['@inertiajs/react' => '^2.0'],
         buildPath: 'resources/js/app.jsx',
         entrypoint: 'resources/js/app.jsx',
@@ -150,7 +150,7 @@ it('uses sanitized root view and component values for public page rendering', fu
 it('reports inertia bridge health from registered renderer and middleware services', function (): void {
     resolve(InertiaAdapterRegistry::class)->register(new InertiaAdapterData(
         key: 'vue',
-        packageName: 'capell-app/theme-inertia-bookings-vue',
+        packageName: 'capell-app/inertia-vue-adapter',
         npmDependencies: ['@inertiajs/vue3' => '^2.0'],
         buildPath: 'resources/js/app.js',
         entrypoint: 'resources/js/app.js',

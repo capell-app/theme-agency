@@ -57,7 +57,7 @@ function baseEntries(pkg, key, name) {
         useCase: `A buyer reviews the ${name} ${titleSuffix.toLowerCase()} surface before selecting ${pkg}.`,
         package: pkg,
         scenario: 'frontend-page',
-        waitFor: '.site-theme-shell',
+        waitFor: surface === 'not-found' ? 'body' : '.site-theme-shell',
         colorSchemes: ['light'],
     }))
 }

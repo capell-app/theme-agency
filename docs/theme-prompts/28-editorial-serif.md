@@ -178,7 +178,7 @@ the long way through them." Button label "Browse the archive".
 
 1. Scaffold `packages/theme-editorial-serif/` per shared-contract §2 (copy
    `packages/theme-liquid-glass` — the closest free style theme — and rename
-   identity; fall back to `theme-saas` for the demo/health plumbing).
+   identity; use retained visual theme packages for any demo/health plumbing).
 2. Write `capell.json` (v3, §3): `themeKey: editorial-serif`,
    `extends: capell-app/foundation-theme`, `product.tier: "free"`,
    `surfaces: ["frontend"]`,

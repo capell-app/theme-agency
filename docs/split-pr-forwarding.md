@@ -46,9 +46,6 @@ The split workflow covers every tracked package manifest under `packages/`. The 
 - `site-monitor`
 - `social-feeds`
 - `structured-content-library`
-- `theme-inertia-bookings`
-- `theme-inertia-bookings-react`
-- `theme-inertia-bookings-vue`
 - `theme-liquid-glass`
 - `url-manager`
 

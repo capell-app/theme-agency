@@ -9,17 +9,12 @@ use Capell\Core\Facades\CapellCore;
 use Capell\Inertia\Providers\InertiaServiceProvider;
 use Capell\LayoutBuilder\LayoutBuilderServiceProvider;
 use Capell\Tests\Packages\PackagesTestCase;
-use Capell\ThemeStudio\InertiaBookings\Manifest\ThemeManagementPageContribution;
 use Composer\Autoload\ClassLoader;
 use Illuminate\Foundation\Application;
 use Inertia\Middleware;
 use Override;
 
 $composerAutoloader = require dirname(__DIR__, 3) . '/vendor/autoload.php';
-
-if (! class_exists(ThemeManagementPageContribution::class, false)) {
-    require_once __DIR__ . '/Fixtures/ThemeInertiaBookingsManifestStub.php';
-}
 
 if ($composerAutoloader instanceof ClassLoader) {
     foreach (glob(dirname(__DIR__, 2) . '/*/composer.json') ?: [] as $packageComposerFile) {

@@ -23,8 +23,7 @@
         "supports": [
             "capell-app/search",
             "capell-app/seo-suite",
-            "capell-app/site-discovery",
-            "capell-app/theme-knowledge"
+            "capell-app/site-discovery"
         ],
         "conflicts": []
     },

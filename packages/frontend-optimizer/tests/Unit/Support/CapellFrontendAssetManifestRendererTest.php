@@ -108,21 +108,21 @@ it('uses manifest optimizer hints for critical eligibility and javascript loadin
     $manifest = new FrontendAssetManifestData(
         css: [
             new HintedFrontendAssetRequirementData(
-                handle: 'theme-commerce:css',
+                handle: 'theme-liquid-glass:css',
                 kind: FrontendAssetRequirementData::KIND_CSS,
-                source: 'vendor/theme-commerce/frontend.css',
+                source: 'vendor/theme-liquid-glass/frontend.css',
                 criticalEligible: true,
                 frontendOptimizerLoadingStrategy: 'deferred',
-                packageName: 'capell-app/theme-commerce',
+                packageName: 'capell-app/theme-liquid-glass',
             ),
         ],
         js: [
             new HintedFrontendAssetRequirementData(
-                handle: 'theme-commerce:runtime',
+                handle: 'theme-liquid-glass:runtime',
                 kind: FrontendAssetRequirementData::KIND_JS,
-                source: 'vendor/theme-commerce/runtime.js',
+                source: 'vendor/theme-liquid-glass/runtime.js',
                 frontendOptimizerLoadingStrategy: 'idle',
-                packageName: 'capell-app/theme-commerce',
+                packageName: 'capell-app/theme-liquid-glass',
             ),
         ],
         inline: [],
@@ -135,17 +135,17 @@ it('uses manifest optimizer hints for critical eligibility and javascript loadin
     $profile = FrontendRenderProfile::query()->sole();
     /** @var list<array{handle: string, critical_eligible?: bool, loading_strategy?: string, package_name?: string}> $assets */
     $assets = $profile->signature['assets'];
-    $stylesheet = collect($assets)->firstWhere('handle', 'theme-commerce:css');
-    $runtime = collect($assets)->firstWhere('handle', 'theme-commerce:runtime');
+    $stylesheet = collect($assets)->firstWhere('handle', 'theme-liquid-glass:css');
+    $runtime = collect($assets)->firstWhere('handle', 'theme-liquid-glass:runtime');
 
     expect($stylesheet)
         ->toBeArray()
         ->and($stylesheet['critical_eligible'] ?? null)->toBeTrue()
         ->and($stylesheet['loading_strategy'] ?? null)->toBe('deferred')
-        ->and($stylesheet['package_name'] ?? null)->toBe('capell-app/theme-commerce')
+        ->and($stylesheet['package_name'] ?? null)->toBe('capell-app/theme-liquid-glass')
         ->and($runtime)->toBeArray()
         ->and($runtime['loading_strategy'] ?? null)->toBe('idle')
-        ->and($runtime['package_name'] ?? null)->toBe('capell-app/theme-commerce')
+        ->and($runtime['package_name'] ?? null)->toBe('capell-app/theme-liquid-glass')
         ->and($html)->toContain('requestIdleCallback');
 
     Bus::assertDispatched(GenerateCriticalCssJob::class);
