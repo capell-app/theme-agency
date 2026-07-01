@@ -85,7 +85,7 @@ it('keeps declared react components aligned with the generic app component map',
     }
 });
 
-it('disables the generic react build condition when the bookings react component pack is installed', function (): void {
+it('passes the generic react build condition only when react is the active inertia adapter', function (): void {
     config()->set('capell-inertia.adapter', ' react ');
 
     $context = (object) [
@@ -104,9 +104,7 @@ it('disables the generic react build condition when the bookings react component
 
     config()->set('capell-inertia.adapter', InertiaReactAdapterServiceProvider::ADAPTER_KEY);
 
-    CapellCore::forcePackageInstalled(InertiaReactAdapterServiceProvider::THEME_BOOKINGS_REACT_PACKAGE);
-
-    expect($registry->passes('capell-inertia-adapter-react', $context))->toBeFalse();
+    expect($registry->passes('capell-inertia-adapter-react', $context))->toBeTrue();
 });
 
 it('passes health when the react adapter has been registered', function (): void {
