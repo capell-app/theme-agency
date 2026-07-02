@@ -28,7 +28,7 @@
             "capell-app/content-sections",
             "capell-app/events",
             "capell-app/form-builder",
-            "capell-app/foundation-theme",
+            "capell-app/theme-foundation",
             "capell-app/frontend-authoring",
             "capell-app/frontend-optimizer",
             "capell-app/ga4-reports",

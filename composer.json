@@ -317,7 +317,7 @@
             "Capell\\FilamentPeek\\": "packages/filament-peek/src",
             "Capell\\FormBuilder\\": "packages/form-builder/src",
             "Capell\\FormBuilder\\Database\\Factories\\": "packages/form-builder/database/factories",
-            "Capell\\FoundationTheme\\": "packages/foundation-theme/src",
+            "Capell\\FoundationTheme\\": "packages/theme-foundation/src",
             "Capell\\FrontendAuthoring\\": "packages/frontend-authoring/src",
             "Capell\\FrontendOptimizer\\": "packages/frontend-optimizer/src",
             "Capell\\GA4Reports\\": "packages/ga4-reports/src",
@@ -390,8 +390,8 @@
             "Capell\\WordPressImporter\\": "packages/wordpress-importer/src"
         },
         "exclude-from-classmap": [
-            "packages/foundation-theme/tests/Unit/FoundationThemeFinalCoverageTest.php",
-            "packages/foundation-theme/tests/Unit/ThemeRegistryTest.php",
+            "packages/theme-foundation/tests/Unit/FoundationThemeFinalCoverageTest.php",
+            "packages/theme-foundation/tests/Unit/ThemeRegistryTest.php",
             "packages/layout-builder/tests/Feature/Livewire/LayoutBuilderContentFirstTest.php",
             "packages/layout-builder/tests/Unit/LayoutBuilderResidualActionCoverageTest.php",
             "packages/layout-builder/tests/Unit/LayoutBuilderThirdRoundResidualCoverageTest.php",
@@ -434,7 +434,7 @@
             "Capell\\Experiments\\Tests\\": "packages/experiments/tests",
             "Capell\\FilamentPeek\\Tests\\": "packages/filament-peek/tests",
             "Capell\\FormBuilder\\Tests\\": "packages/form-builder/tests",
-            "Capell\\FoundationTheme\\Tests\\": "packages/foundation-theme/tests",
+            "Capell\\FoundationTheme\\Tests\\": "packages/theme-foundation/tests",
             "Capell\\FrontendAuthoring\\Tests\\": "packages/frontend-authoring/tests",
             "Capell\\FrontendOptimizer\\Tests\\": "packages/frontend-optimizer/tests",
             "Capell\\GA4Reports\\Tests\\": "packages/ga4-reports/tests",

@@ -996,7 +996,7 @@
             ]
         },
         {
-            "package": "foundation-theme",
+            "package": "theme-foundation",
             "displayName": "Foundation Theme",
             "concept": "Base theme contract",
             "assets": [

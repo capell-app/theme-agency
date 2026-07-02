@@ -8,7 +8,7 @@ Theme Liquid Glass is a free Blade child theme for modern launch, editorial, dir
 
 ## 2. Improvements (existing functionality)
 
-1. **Require Foundation Theme explicitly.** The demo Action and command import `Capell\FoundationTheme\...` classes, and the theme extends the default renderer, but `composer.json` and `capell.json` only require Core and Frontend. Add `capell-app/foundation-theme` to Composer/manifest dependencies and update tests/docs so standalone package installs cannot miss the demo dependency. Evidence: `InstallLiquidGlassThemeDemoAction`, `DemoCommand`, `capell.json dependencies.requires`, `composer.json require`. - **S** - **Shipped**
+1. **Require Foundation Theme explicitly.** The demo Action and command import `Capell\FoundationTheme\...` classes, and the theme extends the default renderer, but `composer.json` and `capell.json` only require Core and Frontend. Add `capell-app/theme-foundation` to Composer/manifest dependencies and update tests/docs so standalone package installs cannot miss the demo dependency. Evidence: `InstallLiquidGlassThemeDemoAction`, `DemoCommand`, `capell.json dependencies.requires`, `composer.json require`. - **S** - **Shipped**
 
 2. **Fix skip/CTA anchor targets.** `page.blade.php` renders a skip link to `#main-content`; current tests pass that id through fixture content, but the package wrapper does not enforce the target. Hero and CTA fallback actions point to `#content`, while `content-listing.blade.php` has no `id="content"`. Add deterministic anchors or adjust fallback links so keyboard users and CTA clicks always land on real public sections. Evidence: `resources/views/page.blade.php`, `sections/hero.blade.php`, `sections/cta.blade.php`, `sections/content-listing.blade.php`. - **S** - **Shipped**
 
@@ -84,7 +84,7 @@ vendor/bin/pest packages/theme-liquid-glass/tests --configuration=phpunit.xml
 For renderer or dependency changes, include:
 
 ```bash
-vendor/bin/pest packages/foundation-theme/tests packages/layout-builder/tests --configuration=phpunit.xml
+vendor/bin/pest packages/theme-foundation/tests packages/layout-builder/tests --configuration=phpunit.xml
 ```
 
 ## 8. Completion Checklist

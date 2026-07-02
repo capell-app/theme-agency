@@ -9742,865 +9742,865 @@ parameters:
 			rawMessage: Anonymous function should return string but returns mixed.
 			identifier: return.type
 			count: 1
-			path: ../packages/foundation-theme/resources/views/components/app/head/tokens.blade.php
+			path: ../packages/theme-foundation/resources/views/components/app/head/tokens.blade.php
 
 		-
 			rawMessage: Cannot access property $content on mixed.
 			identifier: property.nonObject
 			count: 1
-			path: ../packages/foundation-theme/src/Actions/BuildAssetBannerItemsAction.php
+			path: ../packages/theme-foundation/src/Actions/BuildAssetBannerItemsAction.php
 
 		-
 			rawMessage: Cannot access property $full_url on mixed.
 			identifier: property.nonObject
 			count: 2
-			path: ../packages/foundation-theme/src/Actions/BuildAssetBannerItemsAction.php
+			path: ../packages/theme-foundation/src/Actions/BuildAssetBannerItemsAction.php
 
 		-
 			rawMessage: Cannot access property $label on mixed.
 			identifier: property.nonObject
 			count: 1
-			path: ../packages/foundation-theme/src/Actions/BuildAssetBannerItemsAction.php
+			path: ../packages/theme-foundation/src/Actions/BuildAssetBannerItemsAction.php
 
 		-
 			rawMessage: Cannot access property $link_text on mixed.
 			identifier: property.nonObject
 			count: 2
-			path: ../packages/foundation-theme/src/Actions/BuildAssetBannerItemsAction.php
+			path: ../packages/theme-foundation/src/Actions/BuildAssetBannerItemsAction.php
 
 		-
 			rawMessage: Cannot access property $title on mixed.
 			identifier: property.nonObject
 			count: 2
-			path: ../packages/foundation-theme/src/Actions/BuildAssetBannerItemsAction.php
+			path: ../packages/theme-foundation/src/Actions/BuildAssetBannerItemsAction.php
 
 		-
 			rawMessage: Anonymous function should return Capell\FoundationTheme\Data\WidgetAssetRenderData but returns mixed.
 			identifier: return.type
 			count: 1
-			path: ../packages/foundation-theme/src/Actions/BuildHeroRailItemsRenderDataAction.php
+			path: ../packages/theme-foundation/src/Actions/BuildHeroRailItemsRenderDataAction.php
 
 		-
 			rawMessage: Cannot access property $role on mixed.
 			identifier: property.nonObject
 			count: 1
-			path: ../packages/foundation-theme/src/Actions/BuildHeroRailItemsRenderDataAction.php
+			path: ../packages/theme-foundation/src/Actions/BuildHeroRailItemsRenderDataAction.php
 
 		-
 			rawMessage: Cannot cast mixed to string.
 			identifier: cast.string
 			count: 1
-			path: ../packages/foundation-theme/src/Actions/BuildWidgetAssetRenderDataAction.php
+			path: ../packages/theme-foundation/src/Actions/BuildWidgetAssetRenderDataAction.php
 
 		-
 			rawMessage: 'Method Capell\FoundationTheme\Actions\BuildWidgetAssetRenderDataAction::image() should return Capell\Core\Data\ImageSourceData|null but returns mixed.'
 			identifier: return.type
 			count: 1
-			path: ../packages/foundation-theme/src/Actions/BuildWidgetAssetRenderDataAction.php
+			path: ../packages/theme-foundation/src/Actions/BuildWidgetAssetRenderDataAction.php
 
 		-
 			rawMessage: Cannot access offset 'requires' on mixed.
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
-			path: ../packages/foundation-theme/src/Health/FoundationThemeHealthCheck.php
+			path: ../packages/theme-foundation/src/Health/FoundationThemeHealthCheck.php
 
 		-
 			rawMessage: Cannot access offset 'runtime' on mixed.
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
-			path: ../packages/foundation-theme/src/Health/FoundationThemeHealthCheck.php
+			path: ../packages/theme-foundation/src/Health/FoundationThemeHealthCheck.php
 
 		-
 			rawMessage: Cannot access offset 'setup' on mixed.
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
-			path: ../packages/foundation-theme/src/Health/FoundationThemeHealthCheck.php
+			path: ../packages/theme-foundation/src/Health/FoundationThemeHealthCheck.php
 
 		-
 			rawMessage: 'Method Capell\FoundationTheme\Health\FoundationThemeHealthCheck::manifest() should return array<string, mixed>|null but returns array<mixed, mixed>|null.'
 			identifier: return.type
 			count: 1
-			path: ../packages/foundation-theme/src/Health/FoundationThemeHealthCheck.php
+			path: ../packages/theme-foundation/src/Health/FoundationThemeHealthCheck.php
 
 		-
 			rawMessage: 'Parameter #1 $items of method Illuminate\Support\Collection<int,string>::diff() expects Illuminate\Contracts\Support\Arrayable<(int|string), string>|iterable<(int|string), string>, array<mixed, mixed> given.'
 			identifier: argument.type
 			count: 1
-			path: ../packages/foundation-theme/src/Health/FoundationThemeHealthCheck.php
+			path: ../packages/theme-foundation/src/Health/FoundationThemeHealthCheck.php
 
 		-
 			rawMessage: Cannot cast mixed to string.
 			identifier: cast.string
 			count: 1
-			path: ../packages/foundation-theme/src/Livewire/Assets/Table/AbstractAssets.php
+			path: ../packages/theme-foundation/src/Livewire/Assets/Table/AbstractAssets.php
 
 		-
 			rawMessage: Cannot cast mixed to int.
 			identifier: cast.int
 			count: 3
-			path: ../packages/foundation-theme/src/Livewire/Widget/AbstractWidget.php
+			path: ../packages/theme-foundation/src/Livewire/Widget/AbstractWidget.php
 
 		-
 			rawMessage: 'Method Capell\FoundationTheme\Livewire\Widget\AbstractWidget::getWidgetByKey() should return Capell\LayoutBuilder\Models\LayoutWidget|null but returns mixed.'
 			identifier: return.type
 			count: 1
-			path: ../packages/foundation-theme/src/Livewire/Widget/AbstractWidget.php
+			path: ../packages/theme-foundation/src/Livewire/Widget/AbstractWidget.php
 
 		-
 			rawMessage: Cannot cast mixed to int.
 			identifier: cast.int
 			count: 1
-			path: ../packages/foundation-theme/src/Livewire/Widget/Pages.php
+			path: ../packages/theme-foundation/src/Livewire/Widget/Pages.php
 
 		-
 			rawMessage: 'Parameter #1 $alias of static method Illuminate\Database\Eloquent\Relations\Relation<Illuminate\Database\Eloquent\Model,Illuminate\Database\Eloquent\Model,mixed>::getMorphedModel() expects string, mixed given.'
 			identifier: argument.type
 			count: 1
-			path: ../packages/foundation-theme/src/Livewire/Widget/Pages.php
+			path: ../packages/theme-foundation/src/Livewire/Widget/Pages.php
 
 		-
 			rawMessage: 'Parameter #1 $value of static method Capell\Core\Enums\PageOrderEnum::from() expects int|string, mixed given.'
 			identifier: argument.type
 			count: 1
-			path: ../packages/foundation-theme/src/Livewire/Widget/Pages.php
+			path: ../packages/theme-foundation/src/Livewire/Widget/Pages.php
 
 		-
 			rawMessage: 'Parameter $limit of static method Capell\Frontend\Support\Loader\PageLoader::getPages() expects int|null, mixed given.'
 			identifier: argument.type
 			count: 1
-			path: ../packages/foundation-theme/src/Livewire/Widget/Pages.php
+			path: ../packages/theme-foundation/src/Livewire/Widget/Pages.php
 
 		-
 			rawMessage: 'Parameter $pageGroup of static method Capell\Frontend\Support\Loader\PageLoader::getPages() expects BackedEnum|string|null, mixed given.'
 			identifier: argument.type
 			count: 1
-			path: ../packages/foundation-theme/src/Livewire/Widget/Pages.php
+			path: ../packages/theme-foundation/src/Livewire/Widget/Pages.php
 
 		-
 			rawMessage: 'Parameter $withChildrenCount of static method Capell\Frontend\Support\Loader\PageLoader::getPages() expects bool, mixed given.'
 			identifier: argument.type
 			count: 1
-			path: ../packages/foundation-theme/src/Livewire/Widget/Pages.php
+			path: ../packages/theme-foundation/src/Livewire/Widget/Pages.php
 
 		-
 			rawMessage: 'Parameter $withDate of static method Capell\Frontend\Support\Loader\PageLoader::getPages() expects bool, mixed given.'
 			identifier: argument.type
 			count: 1
-			path: ../packages/foundation-theme/src/Livewire/Widget/Pages.php
+			path: ../packages/theme-foundation/src/Livewire/Widget/Pages.php
 
 		-
 			rawMessage: 'Parameter $withImage of static method Capell\Frontend\Support\Loader\PageLoader::getPages() expects bool, mixed given.'
 			identifier: argument.type
 			count: 1
-			path: ../packages/foundation-theme/src/Livewire/Widget/Pages.php
+			path: ../packages/theme-foundation/src/Livewire/Widget/Pages.php
 
 		-
 			rawMessage: 'Parameter $withPagination of static method Capell\Frontend\Support\Loader\PageLoader::getPages() expects bool, mixed given.'
 			identifier: argument.type
 			count: 1
-			path: ../packages/foundation-theme/src/Livewire/Widget/Pages.php
+			path: ../packages/theme-foundation/src/Livewire/Widget/Pages.php
 
 		-
 			rawMessage: 'Parameter $withParent of static method Capell\Frontend\Support\Loader\PageLoader::getPages() expects bool, mixed given.'
 			identifier: argument.type
 			count: 1
-			path: ../packages/foundation-theme/src/Livewire/Widget/Pages.php
+			path: ../packages/theme-foundation/src/Livewire/Widget/Pages.php
 
 		-
 			rawMessage: 'Property Capell\FoundationTheme\Livewire\Widget\Pages::$pages (Illuminate\Contracts\Pagination\LengthAwarePaginator<int, mixed>|Illuminate\Support\Collection<int, mixed>) does not accept Illuminate\Database\Eloquent\Collection<int, Capell\Core\Contracts\Pageable<Illuminate\Database\Eloquent\Model>&Illuminate\Database\Eloquent\Model>|Illuminate\Pagination\LengthAwarePaginator<int, Capell\Core\Contracts\Pageable<Illuminate\Database\Eloquent\Model>&Illuminate\Database\Eloquent\Model>.'
 			identifier: assign.propertyType
 			count: 1
-			path: ../packages/foundation-theme/src/Livewire/Widget/Pages.php
+			path: ../packages/theme-foundation/src/Livewire/Widget/Pages.php
 
 		-
 			rawMessage: 'Parameter #1 $object_or_class of function method_exists expects object|string, mixed given.'
 			identifier: argument.type
 			count: 1
-			path: ../packages/foundation-theme/src/Providers/FoundationThemeServiceProvider.php
+			path: ../packages/theme-foundation/src/Providers/FoundationThemeServiceProvider.php
 
 		-
 			rawMessage: Cannot access offset 'heading' on mixed.
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
-			path: ../packages/foundation-theme/src/Support/Demo/ThemeDemoPageInstaller.php
+			path: ../packages/theme-foundation/src/Support/Demo/ThemeDemoPageInstaller.php
 
 		-
 			rawMessage: Cannot access offset 'summary' on mixed.
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
-			path: ../packages/foundation-theme/src/Support/Demo/ThemeDemoPageInstaller.php
+			path: ../packages/theme-foundation/src/Support/Demo/ThemeDemoPageInstaller.php
 
 		-
 			rawMessage: 'Parameter #2 ...$arrays of function array_merge expects array, mixed given.'
 			identifier: argument.type
 			count: 1
-			path: ../packages/foundation-theme/src/Support/Interceptors/Themes/FoundationThemeInterceptor.php
+			path: ../packages/theme-foundation/src/Support/Interceptors/Themes/FoundationThemeInterceptor.php
 
 		-
 			rawMessage: 'Parameter #2 $base of method Capell\FoundationTheme\Support\Media\CapellUrlGenerator::rewriteOrigin() expects string, mixed given.'
 			identifier: argument.type
 			count: 1
-			path: ../packages/foundation-theme/src/Support/Media/CapellUrlGenerator.php
+			path: ../packages/theme-foundation/src/Support/Media/CapellUrlGenerator.php
 
 		-
 			rawMessage: Cannot cast mixed to int.
 			identifier: cast.int
 			count: 1
-			path: ../packages/foundation-theme/src/Support/ResponsiveAssetLayoutOptions.php
+			path: ../packages/theme-foundation/src/Support/ResponsiveAssetLayoutOptions.php
 
 		-
 			rawMessage: Cannot cast mixed to string.
 			identifier: cast.string
 			count: 1
-			path: ../packages/foundation-theme/src/Support/ResponsiveAssetLayoutOptions.php
+			path: ../packages/theme-foundation/src/Support/ResponsiveAssetLayoutOptions.php
 
 		-
 			rawMessage: 'Argument of an invalid type mixed supplied for foreach, only iterables are supported.'
 			identifier: foreach.nonIterable
 			count: 1
-			path: ../packages/foundation-theme/src/Support/Tailwind/TailwindAssetsGenerator.php
+			path: ../packages/theme-foundation/src/Support/Tailwind/TailwindAssetsGenerator.php
 
 		-
 			rawMessage: Cannot access offset 'imports' on mixed.
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
-			path: ../packages/foundation-theme/src/Support/Tailwind/TailwindAssetsGenerator.php
+			path: ../packages/theme-foundation/src/Support/Tailwind/TailwindAssetsGenerator.php
 
 		-
 			rawMessage: Cannot access offset 'plugins' on mixed.
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
-			path: ../packages/foundation-theme/src/Support/Tailwind/TailwindAssetsGenerator.php
+			path: ../packages/theme-foundation/src/Support/Tailwind/TailwindAssetsGenerator.php
 
 		-
 			rawMessage: Cannot access offset 'sources' on mixed.
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
-			path: ../packages/foundation-theme/src/Support/Tailwind/TailwindAssetsGenerator.php
+			path: ../packages/theme-foundation/src/Support/Tailwind/TailwindAssetsGenerator.php
 
 		-
 			rawMessage: 'Method Capell\FoundationTheme\Support\Tailwind\TailwindAssetsGenerator::shouldValidateSources() should return bool but returns mixed.'
 			identifier: return.type
 			count: 1
-			path: ../packages/foundation-theme/src/Support/Tailwind/TailwindAssetsGenerator.php
+			path: ../packages/theme-foundation/src/Support/Tailwind/TailwindAssetsGenerator.php
 
 		-
 			rawMessage: 'Parameter #1 $imports of method Capell\Core\Support\Tailwind\TailwindAssetsRegistry::registerImports() expects array<int, string>, mixed given.'
 			identifier: argument.type
 			count: 1
-			path: ../packages/foundation-theme/src/Support/Tailwind/TailwindAssetsGenerator.php
+			path: ../packages/theme-foundation/src/Support/Tailwind/TailwindAssetsGenerator.php
 
 		-
 			rawMessage: 'Parameter #1 $plugins of method Capell\Core\Support\Tailwind\TailwindAssetsRegistry::registerPlugins() expects array<int, string>, mixed given.'
 			identifier: argument.type
 			count: 1
-			path: ../packages/foundation-theme/src/Support/Tailwind/TailwindAssetsGenerator.php
+			path: ../packages/theme-foundation/src/Support/Tailwind/TailwindAssetsGenerator.php
 
 		-
 			rawMessage: Cannot cast mixed to int.
 			identifier: cast.int
 			count: 1
-			path: ../packages/foundation-theme/src/View/Components/Actions.php
+			path: ../packages/theme-foundation/src/View/Components/Actions.php
 
 		-
 			rawMessage: Cannot cast mixed to string.
 			identifier: cast.string
 			count: 2
-			path: ../packages/foundation-theme/src/View/Components/Actions.php
+			path: ../packages/theme-foundation/src/View/Components/Actions.php
 
 		-
 			rawMessage: 'Parameter #1 $action of method Capell\FoundationTheme\View\Components\Actions::resolveAction() expects array<string, mixed>, array<mixed, mixed> given.'
 			identifier: argument.type
 			count: 1
-			path: ../packages/foundation-theme/src/View/Components/Actions.php
+			path: ../packages/theme-foundation/src/View/Components/Actions.php
 
 		-
 			rawMessage: 'Cannot call method getMeta() on mixed.'
 			identifier: method.nonObject
 			count: 1
-			path: ../packages/foundation-theme/src/View/Components/Footer/Index.php
+			path: ../packages/theme-foundation/src/View/Components/Footer/Index.php
 
 		-
 			rawMessage: 'Cannot call method isNotEmpty() on mixed.'
 			identifier: method.nonObject
 			count: 1
-			path: ../packages/foundation-theme/src/View/Components/Footer/Index.php
+			path: ../packages/theme-foundation/src/View/Components/Footer/Index.php
 
 		-
 			rawMessage: 'Property Capell\FoundationTheme\View\Components\Footer\Index::$footerDividerColor (string|null) does not accept mixed.'
 			identifier: assign.propertyType
 			count: 1
-			path: ../packages/foundation-theme/src/View/Components/Footer/Index.php
+			path: ../packages/theme-foundation/src/View/Components/Footer/Index.php
 
 		-
 			rawMessage: 'Property Capell\FoundationTheme\View\Components\Footer\Index::$latestFooterPages (Illuminate\Support\Collection<(int|string), mixed>) does not accept Illuminate\Database\Eloquent\Collection<int, Capell\Core\Contracts\Pageable<Illuminate\Database\Eloquent\Model>&Illuminate\Database\Eloquent\Model>.'
 			identifier: assign.propertyType
 			count: 1
-			path: ../packages/foundation-theme/src/View/Components/Footer/Index.php
+			path: ../packages/theme-foundation/src/View/Components/Footer/Index.php
 
 		-
 			rawMessage: 'Property Capell\FoundationTheme\View\Components\Layout\Index::$layoutNeighborLinks (Capell\FoundationTheme\Data\LayoutNeighborLinksData|null) does not accept mixed.'
 			identifier: assign.propertyType
 			count: 1
-			path: ../packages/foundation-theme/src/View/Components/Layout/Index.php
+			path: ../packages/theme-foundation/src/View/Components/Layout/Index.php
 
 		-
 			rawMessage: 'Property Capell\FoundationTheme\View\Components\Layout\Main::$pageContentRenderData (Capell\FoundationTheme\Data\PageContentRenderData) does not accept mixed.'
 			identifier: assign.propertyType
 			count: 1
-			path: ../packages/foundation-theme/src/View/Components/Layout/Main.php
+			path: ../packages/theme-foundation/src/View/Components/Layout/Main.php
 
 		-
 			rawMessage: 'Property Capell\FoundationTheme\View\Components\Widget\Navigation::$headingContent (string|null) does not accept mixed.'
 			identifier: assign.propertyType
 			count: 1
-			path: ../packages/foundation-theme/src/View/Components/Widget/Navigation.php
+			path: ../packages/theme-foundation/src/View/Components/Widget/Navigation.php
 
 		-
 			rawMessage: 'Property Capell\FoundationTheme\View\Components\Widget\Navigation::$headingTitle (string|null) does not accept mixed.'
 			identifier: assign.propertyType
 			count: 1
-			path: ../packages/foundation-theme/src/View/Components/Widget/Navigation.php
+			path: ../packages/theme-foundation/src/View/Components/Widget/Navigation.php
 
 		-
 			rawMessage: 'Property Capell\FoundationTheme\View\Components\Widget\Navigation::$items (Illuminate\Support\Collection<(int|string), mixed>|null) does not accept Illuminate\Support\Collection<int, Capell\Navigation\Data\NavigationItemRenderData>.'
 			identifier: assign.propertyType
 			count: 1
-			path: ../packages/foundation-theme/src/View/Components/Widget/Navigation.php
+			path: ../packages/theme-foundation/src/View/Components/Widget/Navigation.php
 
 		-
 			rawMessage: 'Parameter #1 $items of class Illuminate\Support\Collection constructor expects Illuminate\Contracts\Support\Arrayable<TKey of (int|string), TValue>|iterable<TKey of (int|string), TValue>|null, mixed given.'
 			identifier: argument.type
 			count: 1
-			path: ../packages/foundation-theme/src/View/Components/Widget/Page/Breadcrumbs.php
+			path: ../packages/theme-foundation/src/View/Components/Widget/Page/Breadcrumbs.php
 
 		-
 			rawMessage: 'Parameter $withChildrenCount of static method Capell\Frontend\Support\Loader\PageLoader::getPages() expects bool, mixed given.'
 			identifier: argument.type
 			count: 1
-			path: ../packages/foundation-theme/src/View/Components/Widget/Page/Children.php
+			path: ../packages/theme-foundation/src/View/Components/Widget/Page/Children.php
 
 		-
 			rawMessage: 'Parameter $withDate of static method Capell\Frontend\Support\Loader\PageLoader::getPages() expects bool, mixed given.'
 			identifier: argument.type
 			count: 1
-			path: ../packages/foundation-theme/src/View/Components/Widget/Page/Children.php
+			path: ../packages/theme-foundation/src/View/Components/Widget/Page/Children.php
 
 		-
 			rawMessage: 'Parameter $withImage of static method Capell\Frontend\Support\Loader\PageLoader::getPages() expects bool, mixed given.'
 			identifier: argument.type
 			count: 1
-			path: ../packages/foundation-theme/src/View/Components/Widget/Page/Children.php
+			path: ../packages/theme-foundation/src/View/Components/Widget/Page/Children.php
 
 		-
 			rawMessage: 'Parameter $withParent of static method Capell\Frontend\Support\Loader\PageLoader::getPages() expects bool, mixed given.'
 			identifier: argument.type
 			count: 1
-			path: ../packages/foundation-theme/src/View/Components/Widget/Page/Children.php
+			path: ../packages/theme-foundation/src/View/Components/Widget/Page/Children.php
 
 		-
 			rawMessage: 'Property Capell\FoundationTheme\View\Components\Widget\Page\AbstractPagesWidget::$pages (Illuminate\Pagination\LengthAwarePaginator<(int|string), mixed>|Illuminate\Support\Collection<(int|string), mixed>|null) does not accept Illuminate\Database\Eloquent\Collection<int, Capell\Core\Contracts\Pageable<Illuminate\Database\Eloquent\Model>&Illuminate\Database\Eloquent\Model>.'
 			identifier: assign.propertyType
 			count: 1
-			path: ../packages/foundation-theme/src/View/Components/Widget/Page/Children.php
+			path: ../packages/theme-foundation/src/View/Components/Widget/Page/Children.php
 
 		-
 			rawMessage: 'Parameter #1 $alias of static method Illuminate\Database\Eloquent\Relations\Relation<Illuminate\Database\Eloquent\Model,Illuminate\Database\Eloquent\Model,mixed>::getMorphedModel() expects string, mixed given.'
 			identifier: argument.type
 			count: 1
-			path: ../packages/foundation-theme/src/View/Components/Widget/Page/Latest.php
+			path: ../packages/theme-foundation/src/View/Components/Widget/Page/Latest.php
 
 		-
 			rawMessage: 'Parameter $limit of static method Capell\Frontend\Support\Loader\PageLoader::getPages() expects int|null, mixed given.'
 			identifier: argument.type
 			count: 1
-			path: ../packages/foundation-theme/src/View/Components/Widget/Page/Latest.php
+			path: ../packages/theme-foundation/src/View/Components/Widget/Page/Latest.php
 
 		-
 			rawMessage: 'Parameter $pageGroup of static method Capell\Frontend\Support\Loader\PageLoader::getPages() expects BackedEnum|string|null, mixed given.'
 			identifier: argument.type
 			count: 1
-			path: ../packages/foundation-theme/src/View/Components/Widget/Page/Latest.php
+			path: ../packages/theme-foundation/src/View/Components/Widget/Page/Latest.php
 
 		-
 			rawMessage: 'Parameter $withChildrenCount of static method Capell\Frontend\Support\Loader\PageLoader::getPages() expects bool, mixed given.'
 			identifier: argument.type
 			count: 1
-			path: ../packages/foundation-theme/src/View/Components/Widget/Page/Latest.php
+			path: ../packages/theme-foundation/src/View/Components/Widget/Page/Latest.php
 
 		-
 			rawMessage: 'Parameter $withDate of static method Capell\Frontend\Support\Loader\PageLoader::getPages() expects bool, mixed given.'
 			identifier: argument.type
 			count: 1
-			path: ../packages/foundation-theme/src/View/Components/Widget/Page/Latest.php
+			path: ../packages/theme-foundation/src/View/Components/Widget/Page/Latest.php
 
 		-
 			rawMessage: 'Parameter $withImage of static method Capell\Frontend\Support\Loader\PageLoader::getPages() expects bool, mixed given.'
 			identifier: argument.type
 			count: 1
-			path: ../packages/foundation-theme/src/View/Components/Widget/Page/Latest.php
+			path: ../packages/theme-foundation/src/View/Components/Widget/Page/Latest.php
 
 		-
 			rawMessage: 'Parameter $withParent of static method Capell\Frontend\Support\Loader\PageLoader::getPages() expects bool, mixed given.'
 			identifier: argument.type
 			count: 1
-			path: ../packages/foundation-theme/src/View/Components/Widget/Page/Latest.php
+			path: ../packages/theme-foundation/src/View/Components/Widget/Page/Latest.php
 
 		-
 			rawMessage: 'Property Capell\FoundationTheme\View\Components\Widget\Page\AbstractPagesWidget::$pages (Illuminate\Pagination\LengthAwarePaginator<(int|string), mixed>|Illuminate\Support\Collection<(int|string), mixed>|null) does not accept Illuminate\Database\Eloquent\Collection<int, Capell\Core\Contracts\Pageable<Illuminate\Database\Eloquent\Model>&Illuminate\Database\Eloquent\Model>|Illuminate\Pagination\LengthAwarePaginator<int, Capell\Core\Contracts\Pageable<Illuminate\Database\Eloquent\Model>&Illuminate\Database\Eloquent\Model>.'
 			identifier: assign.propertyType
 			count: 1
-			path: ../packages/foundation-theme/src/View/Components/Widget/Page/Latest.php
+			path: ../packages/theme-foundation/src/View/Components/Widget/Page/Latest.php
 
 		-
 			rawMessage: 'Parameter #1 $alias of static method Illuminate\Database\Eloquent\Relations\Relation<Illuminate\Database\Eloquent\Model,Illuminate\Database\Eloquent\Model,mixed>::getMorphedModel() expects string, mixed given.'
 			identifier: argument.type
 			count: 1
-			path: ../packages/foundation-theme/src/View/Components/Widget/Page/Pages.php
+			path: ../packages/theme-foundation/src/View/Components/Widget/Page/Pages.php
 
 		-
 			rawMessage: 'Parameter #1 $value of static method Capell\Core\Enums\PageOrderEnum::from() expects int|string, mixed given.'
 			identifier: argument.type
 			count: 1
-			path: ../packages/foundation-theme/src/View/Components/Widget/Page/Pages.php
+			path: ../packages/theme-foundation/src/View/Components/Widget/Page/Pages.php
 
 		-
 			rawMessage: 'Parameter $limit of static method Capell\Frontend\Support\Loader\PageLoader::getPages() expects int|null, mixed given.'
 			identifier: argument.type
 			count: 1
-			path: ../packages/foundation-theme/src/View/Components/Widget/Page/Pages.php
+			path: ../packages/theme-foundation/src/View/Components/Widget/Page/Pages.php
 
 		-
 			rawMessage: 'Parameter $pageGroup of static method Capell\Frontend\Support\Loader\PageLoader::getPages() expects BackedEnum|string|null, mixed given.'
 			identifier: argument.type
 			count: 1
-			path: ../packages/foundation-theme/src/View/Components/Widget/Page/Pages.php
+			path: ../packages/theme-foundation/src/View/Components/Widget/Page/Pages.php
 
 		-
 			rawMessage: 'Parameter $withChildrenCount of static method Capell\Frontend\Support\Loader\PageLoader::getPages() expects bool, mixed given.'
 			identifier: argument.type
 			count: 1
-			path: ../packages/foundation-theme/src/View/Components/Widget/Page/Pages.php
+			path: ../packages/theme-foundation/src/View/Components/Widget/Page/Pages.php
 
 		-
 			rawMessage: 'Parameter $withDate of static method Capell\Frontend\Support\Loader\PageLoader::getPages() expects bool, mixed given.'
 			identifier: argument.type
 			count: 1
-			path: ../packages/foundation-theme/src/View/Components/Widget/Page/Pages.php
+			path: ../packages/theme-foundation/src/View/Components/Widget/Page/Pages.php
 
 		-
 			rawMessage: 'Parameter $withImage of static method Capell\Frontend\Support\Loader\PageLoader::getPages() expects bool, mixed given.'
 			identifier: argument.type
 			count: 1
-			path: ../packages/foundation-theme/src/View/Components/Widget/Page/Pages.php
+			path: ../packages/theme-foundation/src/View/Components/Widget/Page/Pages.php
 
 		-
 			rawMessage: 'Parameter $withParent of static method Capell\Frontend\Support\Loader\PageLoader::getPages() expects bool, mixed given.'
 			identifier: argument.type
 			count: 1
-			path: ../packages/foundation-theme/src/View/Components/Widget/Page/Pages.php
+			path: ../packages/theme-foundation/src/View/Components/Widget/Page/Pages.php
 
 		-
 			rawMessage: 'Property Capell\FoundationTheme\View\Components\Widget\Page\AbstractPagesWidget::$pages (Illuminate\Pagination\LengthAwarePaginator<(int|string), mixed>|Illuminate\Support\Collection<(int|string), mixed>|null) does not accept Illuminate\Database\Eloquent\Collection<int, Capell\Core\Contracts\Pageable<Illuminate\Database\Eloquent\Model>&Illuminate\Database\Eloquent\Model>|Illuminate\Pagination\LengthAwarePaginator<int, Capell\Core\Contracts\Pageable<Illuminate\Database\Eloquent\Model>&Illuminate\Database\Eloquent\Model>.'
 			identifier: assign.propertyType
 			count: 1
-			path: ../packages/foundation-theme/src/View/Components/Widget/Page/Pages.php
+			path: ../packages/theme-foundation/src/View/Components/Widget/Page/Pages.php
 
 		-
 			rawMessage: Binary operation "." between 'page-not-' and mixed results in an error.
 			identifier: binaryOp.invalid
 			count: 1
-			path: ../packages/foundation-theme/src/View/Components/Widget/Page/Siblings.php
+			path: ../packages/theme-foundation/src/View/Components/Widget/Page/Siblings.php
 
 		-
 			rawMessage: 'Parameter $withChildrenCount of static method Capell\Frontend\Support\Loader\PageLoader::getPages() expects bool, mixed given.'
 			identifier: argument.type
 			count: 1
-			path: ../packages/foundation-theme/src/View/Components/Widget/Page/Siblings.php
+			path: ../packages/theme-foundation/src/View/Components/Widget/Page/Siblings.php
 
 		-
 			rawMessage: 'Parameter $withDate of static method Capell\Frontend\Support\Loader\PageLoader::getPages() expects bool, mixed given.'
 			identifier: argument.type
 			count: 1
-			path: ../packages/foundation-theme/src/View/Components/Widget/Page/Siblings.php
+			path: ../packages/theme-foundation/src/View/Components/Widget/Page/Siblings.php
 
 		-
 			rawMessage: 'Parameter $withImage of static method Capell\Frontend\Support\Loader\PageLoader::getPages() expects bool, mixed given.'
 			identifier: argument.type
 			count: 1
-			path: ../packages/foundation-theme/src/View/Components/Widget/Page/Siblings.php
+			path: ../packages/theme-foundation/src/View/Components/Widget/Page/Siblings.php
 
 		-
 			rawMessage: 'Parameter $withParent of static method Capell\Frontend\Support\Loader\PageLoader::getPages() expects bool, mixed given.'
 			identifier: argument.type
 			count: 1
-			path: ../packages/foundation-theme/src/View/Components/Widget/Page/Siblings.php
+			path: ../packages/theme-foundation/src/View/Components/Widget/Page/Siblings.php
 
 		-
 			rawMessage: 'Property Capell\FoundationTheme\View\Components\Widget\Page\AbstractPagesWidget::$pages (Illuminate\Pagination\LengthAwarePaginator<(int|string), mixed>|Illuminate\Support\Collection<(int|string), mixed>|null) does not accept Illuminate\Database\Eloquent\Collection<int, Capell\Core\Contracts\Pageable<Illuminate\Database\Eloquent\Model>&Illuminate\Database\Eloquent\Model>.'
 			identifier: assign.propertyType
 			count: 1
-			path: ../packages/foundation-theme/src/View/Components/Widget/Page/Siblings.php
+			path: ../packages/theme-foundation/src/View/Components/Widget/Page/Siblings.php
 
 		-
 			rawMessage: 'Cannot call method assertDontSee() on mixed.'
 			identifier: method.nonObject
 			count: 1
-			path: ../packages/foundation-theme/tests/Feature/FooterLatestPagesTest.php
+			path: ../packages/theme-foundation/tests/Feature/FooterLatestPagesTest.php
 
 		-
 			rawMessage: 'Cannot call method assertSee() on mixed.'
 			identifier: method.nonObject
 			count: 1
-			path: ../packages/foundation-theme/tests/Feature/FooterLatestPagesTest.php
+			path: ../packages/theme-foundation/tests/Feature/FooterLatestPagesTest.php
 
 		-
 			rawMessage: 'Cannot call method getPathname() on mixed.'
 			identifier: method.nonObject
 			count: 2
-			path: ../packages/foundation-theme/tests/Feature/FoundationThemeHealthCheckTest.php
+			path: ../packages/theme-foundation/tests/Feature/FoundationThemeHealthCheckTest.php
 
 		-
 			rawMessage: 'Cannot call method isDir() on mixed.'
 			identifier: method.nonObject
 			count: 1
-			path: ../packages/foundation-theme/tests/Feature/FoundationThemeHealthCheckTest.php
+			path: ../packages/theme-foundation/tests/Feature/FoundationThemeHealthCheckTest.php
 
 		-
 			rawMessage: 'Cannot call method assertSuccessful() on mixed.'
 			identifier: method.nonObject
 			count: 3
-			path: ../packages/foundation-theme/tests/Feature/FoundationThemeSetupCommandTest.php
+			path: ../packages/theme-foundation/tests/Feature/FoundationThemeSetupCommandTest.php
 
 		-
 			rawMessage: 'Function foundationThemeSetupMainContainer() should return array{meta: array<string, mixed>, widgets: array<int, array<string, mixed>>} but returns array{meta: array<mixed>, widgets: array<mixed, mixed>}.'
 			identifier: return.type
 			count: 1
-			path: ../packages/foundation-theme/tests/Feature/FoundationThemeSetupCommandTest.php
+			path: ../packages/theme-foundation/tests/Feature/FoundationThemeSetupCommandTest.php
 
 		-
 			rawMessage: Cannot cast mixed to string.
 			identifier: cast.string
 			count: 3
-			path: ../packages/foundation-theme/tests/Unit/CapellFrontendThemePageAdapterTest.php
+			path: ../packages/theme-foundation/tests/Unit/CapellFrontendThemePageAdapterTest.php
 
 		-
 			rawMessage: Cannot access offset 'default' on mixed.
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
-			path: ../packages/foundation-theme/tests/Unit/FoundationThemeCoveragePushTest.php
+			path: ../packages/theme-foundation/tests/Unit/FoundationThemeCoveragePushTest.php
 
 		-
 			rawMessage: Cannot access property $actions on mixed.
 			identifier: property.nonObject
 			count: 1
-			path: ../packages/foundation-theme/tests/Unit/FoundationThemeCoveragePushTest.php
+			path: ../packages/theme-foundation/tests/Unit/FoundationThemeCoveragePushTest.php
 
 		-
 			rawMessage: Cannot access property $backgroundImage on mixed.
 			identifier: property.nonObject
 			count: 1
-			path: ../packages/foundation-theme/tests/Unit/FoundationThemeCoveragePushTest.php
+			path: ../packages/theme-foundation/tests/Unit/FoundationThemeCoveragePushTest.php
 
 		-
 			rawMessage: Cannot access property $hasContent on mixed.
 			identifier: property.nonObject
 			count: 1
-			path: ../packages/foundation-theme/tests/Unit/FoundationThemeCoveragePushTest.php
+			path: ../packages/theme-foundation/tests/Unit/FoundationThemeCoveragePushTest.php
 
 		-
 			rawMessage: Cannot access property $imageRoundedClass on mixed.
 			identifier: property.nonObject
 			count: 1
-			path: ../packages/foundation-theme/tests/Unit/FoundationThemeCoveragePushTest.php
+			path: ../packages/theme-foundation/tests/Unit/FoundationThemeCoveragePushTest.php
 
 		-
 			rawMessage: Cannot access property $nextPage on mixed.
 			identifier: property.nonObject
 			count: 1
-			path: ../packages/foundation-theme/tests/Unit/FoundationThemeCoveragePushTest.php
+			path: ../packages/theme-foundation/tests/Unit/FoundationThemeCoveragePushTest.php
 
 		-
 			rawMessage: Cannot access property $previousPage on mixed.
 			identifier: property.nonObject
 			count: 1
-			path: ../packages/foundation-theme/tests/Unit/FoundationThemeCoveragePushTest.php
+			path: ../packages/theme-foundation/tests/Unit/FoundationThemeCoveragePushTest.php
 
 		-
 			rawMessage: 'Cannot call method getEagerLoads() on mixed.'
 			identifier: method.nonObject
 			count: 1
-			path: ../packages/foundation-theme/tests/Unit/FoundationThemeCoveragePushTest.php
+			path: ../packages/theme-foundation/tests/Unit/FoundationThemeCoveragePushTest.php
 
 		-
 			rawMessage: 'Cannot call method shouldRender() on mixed.'
 			identifier: method.nonObject
 			count: 1
-			path: ../packages/foundation-theme/tests/Unit/FoundationThemeCoveragePushTest.php
+			path: ../packages/theme-foundation/tests/Unit/FoundationThemeCoveragePushTest.php
 
 		-
 			rawMessage: 'Cannot call method toSql() on mixed.'
 			identifier: method.nonObject
 			count: 1
-			path: ../packages/foundation-theme/tests/Unit/FoundationThemeCoveragePushTest.php
+			path: ../packages/theme-foundation/tests/Unit/FoundationThemeCoveragePushTest.php
 
 		-
 			rawMessage: 'Function foundationThemeCoverageChildComponents() should return array<int, object> but returns mixed.'
 			identifier: return.type
 			count: 1
-			path: ../packages/foundation-theme/tests/Unit/FoundationThemeCoveragePushTest.php
+			path: ../packages/theme-foundation/tests/Unit/FoundationThemeCoveragePushTest.php
 
 		-
 			rawMessage: 'Parameter #1 $component of function foundationThemeCoverageChildComponents expects object, mixed given.'
 			identifier: argument.type
 			count: 2
-			path: ../packages/foundation-theme/tests/Unit/FoundationThemeCoveragePushTest.php
+			path: ../packages/theme-foundation/tests/Unit/FoundationThemeCoveragePushTest.php
 
 		-
 			rawMessage: 'Parameter $pages of class Capell\FoundationTheme\View\Components\Footer\LatestPages constructor expects Illuminate\Support\Collection<int, mixed>|null, Illuminate\Support\Collection<int, Capell\Core\Models\Page> given.'
 			identifier: argument.type
 			count: 1
-			path: ../packages/foundation-theme/tests/Unit/FoundationThemeCoveragePushTest.php
+			path: ../packages/theme-foundation/tests/Unit/FoundationThemeCoveragePushTest.php
 
 		-
 			rawMessage: Cannot access property $nextPage on mixed.
 			identifier: property.nonObject
 			count: 1
-			path: ../packages/foundation-theme/tests/Unit/FoundationThemeFinalCoverageTest.php
+			path: ../packages/theme-foundation/tests/Unit/FoundationThemeFinalCoverageTest.php
 
 		-
 			rawMessage: Cannot access property $previousPage on mixed.
 			identifier: property.nonObject
 			count: 1
-			path: ../packages/foundation-theme/tests/Unit/FoundationThemeFinalCoverageTest.php
+			path: ../packages/theme-foundation/tests/Unit/FoundationThemeFinalCoverageTest.php
 
 		-
 			rawMessage: 'Cannot call method pluck() on mixed.'
 			identifier: method.nonObject
 			count: 1
-			path: ../packages/foundation-theme/tests/Unit/FoundationThemeFinalCoverageTest.php
+			path: ../packages/theme-foundation/tests/Unit/FoundationThemeFinalCoverageTest.php
 
 		-
 			rawMessage: 'Cannot call method shouldRender() on mixed.'
 			identifier: method.nonObject
 			count: 1
-			path: ../packages/foundation-theme/tests/Unit/FoundationThemeFinalCoverageTest.php
+			path: ../packages/theme-foundation/tests/Unit/FoundationThemeFinalCoverageTest.php
 
 		-
 			rawMessage: Cannot access property $brand on mixed.
 			identifier: property.nonObject
 			count: 5
-			path: ../packages/foundation-theme/tests/Unit/ResolveThemeRuntimeActionTest.php
+			path: ../packages/theme-foundation/tests/Unit/ResolveThemeRuntimeActionTest.php
 
 		-
 			rawMessage: Cannot access property $preset on mixed.
 			identifier: property.nonObject
 			count: 1
-			path: ../packages/foundation-theme/tests/Unit/ResolveThemeRuntimeActionTest.php
+			path: ../packages/theme-foundation/tests/Unit/ResolveThemeRuntimeActionTest.php
 
 		-
 			rawMessage: Cannot access property $presetKey on mixed.
 			identifier: property.nonObject
 			count: 1
-			path: ../packages/foundation-theme/tests/Unit/ResolveThemeRuntimeActionTest.php
+			path: ../packages/theme-foundation/tests/Unit/ResolveThemeRuntimeActionTest.php
 
 		-
 			rawMessage: Cannot access property $backgroundImage on mixed.
 			identifier: property.nonObject
 			count: 2
-			path: ../packages/foundation-theme/tests/Unit/SidebarPageWidgetStyleTest.php
+			path: ../packages/theme-foundation/tests/Unit/SidebarPageWidgetStyleTest.php
 
 		-
 			rawMessage: 'Cannot call method first() on mixed.'
 			identifier: method.nonObject
 			count: 3
-			path: ../packages/foundation-theme/tests/Unit/SidebarPageWidgetStyleTest.php
+			path: ../packages/theme-foundation/tests/Unit/SidebarPageWidgetStyleTest.php
 
 		-
 			rawMessage: Cannot cast mixed to int.
 			identifier: cast.int
 			count: 1
-			path: ../packages/foundation-theme/tests/Unit/SidebarPageWidgetStyleTest.php
+			path: ../packages/theme-foundation/tests/Unit/SidebarPageWidgetStyleTest.php
 
 		-
 			rawMessage: 'Property Capell\FoundationTheme\View\Components\Widget\Page\AbstractPagesWidget::$pages (Illuminate\Pagination\LengthAwarePaginator<(int|string), mixed>|Illuminate\Support\Collection<(int|string), mixed>|null) does not accept Illuminate\Support\Collection<int, array{title: string, url: string}>.'
 			identifier: assign.propertyType
 			count: 1
-			path: ../packages/foundation-theme/tests/Unit/SidebarPageWidgetStyleTest.php
+			path: ../packages/theme-foundation/tests/Unit/SidebarPageWidgetStyleTest.php
 
 		-
 			rawMessage: Cannot access offset 'admin' on mixed.
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
-			path: ../packages/foundation-theme/tests/Unit/ThemePackageManifestTest.php
+			path: ../packages/theme-foundation/tests/Unit/ThemePackageManifestTest.php
 
 		-
 			rawMessage: Cannot access offset 'frontend' on mixed.
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
-			path: ../packages/foundation-theme/tests/Unit/ThemePackageManifestTest.php
+			path: ../packages/theme-foundation/tests/Unit/ThemePackageManifestTest.php
 
 		-
 			rawMessage: Cannot access offset 'group' on mixed.
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
-			path: ../packages/foundation-theme/tests/Unit/ThemePackageManifestTest.php
+			path: ../packages/theme-foundation/tests/Unit/ThemePackageManifestTest.php
 
 		-
 			rawMessage: Cannot access offset 'laravel' on mixed.
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
-			path: ../packages/foundation-theme/tests/Unit/ThemePackageManifestTest.php
+			path: ../packages/theme-foundation/tests/Unit/ThemePackageManifestTest.php
 
 		-
 			rawMessage: Cannot access offset 'name' on mixed.
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
-			path: ../packages/foundation-theme/tests/Unit/ThemePackageManifestTest.php
+			path: ../packages/theme-foundation/tests/Unit/ThemePackageManifestTest.php
 
 		-
 			rawMessage: Cannot access offset 'providers' on mixed.
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
-			path: ../packages/foundation-theme/tests/Unit/ThemePackageManifestTest.php
+			path: ../packages/theme-foundation/tests/Unit/ThemePackageManifestTest.php
 
 		-
 			rawMessage: Cannot access offset 'requires' on mixed.
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
-			path: ../packages/foundation-theme/tests/Unit/ThemePackageManifestTest.php
+			path: ../packages/theme-foundation/tests/Unit/ThemePackageManifestTest.php
 
 		-
 			rawMessage: Cannot access offset 'runtime' on mixed.
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
-			path: ../packages/foundation-theme/tests/Unit/ThemePackageManifestTest.php
+			path: ../packages/theme-foundation/tests/Unit/ThemePackageManifestTest.php
 
 		-
 			rawMessage: Cannot access offset 'themeKey' on mixed.
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 2
-			path: ../packages/foundation-theme/tests/Unit/ThemePackageManifestTest.php
+			path: ../packages/theme-foundation/tests/Unit/ThemePackageManifestTest.php
 
 		-
 			rawMessage: 'Function themePackageComposer() should return array<string, mixed> but returns mixed.'
 			identifier: return.type
 			count: 1
-			path: ../packages/foundation-theme/tests/Unit/ThemePackageManifestTest.php
+			path: ../packages/theme-foundation/tests/Unit/ThemePackageManifestTest.php
 
 		-
 			rawMessage: 'Function themePackageManifest() should return array<string, mixed> but returns mixed.'
 			identifier: return.type
 			count: 1
-			path: ../packages/foundation-theme/tests/Unit/ThemePackageManifestTest.php
+			path: ../packages/theme-foundation/tests/Unit/ThemePackageManifestTest.php
 
 		-
 			rawMessage: 'Parameter #1 $themeKey of method Capell\Core\ThemeStudio\Theme\ThemeRegistry::definition() expects string, mixed given.'
 			identifier: argument.type
 			count: 1
-			path: ../packages/foundation-theme/tests/Unit/ThemePackageManifestTest.php
+			path: ../packages/theme-foundation/tests/Unit/ThemePackageManifestTest.php
 
 		-
 			rawMessage: 'Parameter #1 $themeKey of method Capell\Core\ThemeStudio\Theme\ThemeRegistry::has() expects string, mixed given.'
 			identifier: argument.type
 			count: 1
-			path: ../packages/foundation-theme/tests/Unit/ThemePackageManifestTest.php
+			path: ../packages/theme-foundation/tests/Unit/ThemePackageManifestTest.php
 
 		-
 			rawMessage: Possibly invalid array key type mixed.
 			identifier: offsetAccess.invalidOffset
 			count: 1
-			path: ../packages/foundation-theme/tests/Unit/ThemePackageManifestTest.php
+			path: ../packages/theme-foundation/tests/Unit/ThemePackageManifestTest.php
 
 		-
 			rawMessage: Cannot access offset 0 on mixed.
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 3
-			path: ../packages/foundation-theme/tests/Unit/WidgetAssetRenderDataTest.php
+			path: ../packages/theme-foundation/tests/Unit/WidgetAssetRenderDataTest.php
 
 		-
 			rawMessage: Cannot access offset 1 on mixed.
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
-			path: ../packages/foundation-theme/tests/Unit/WidgetAssetRenderDataTest.php
+			path: ../packages/theme-foundation/tests/Unit/WidgetAssetRenderDataTest.php
 
 		-
 			rawMessage: Cannot access property $alt on mixed.
 			identifier: property.nonObject
 			count: 1
-			path: ../packages/foundation-theme/tests/Unit/WidgetAssetRenderDataTest.php
+			path: ../packages/theme-foundation/tests/Unit/WidgetAssetRenderDataTest.php
 
 		-
 			rawMessage: Cannot access property $caption on mixed.
 			identifier: property.nonObject
 			count: 4
-			path: ../packages/foundation-theme/tests/Unit/WidgetAssetRenderDataTest.php
+			path: ../packages/theme-foundation/tests/Unit/WidgetAssetRenderDataTest.php
 
 		-
 			rawMessage: Cannot access property $content on mixed.
 			identifier: property.nonObject
 			count: 2
-			path: ../packages/foundation-theme/tests/Unit/WidgetAssetRenderDataTest.php
+			path: ../packages/theme-foundation/tests/Unit/WidgetAssetRenderDataTest.php
 
 		-
 			rawMessage: Cannot access property $contentStructure on mixed.
 			identifier: property.nonObject
 			count: 1
-			path: ../packages/foundation-theme/tests/Unit/WidgetAssetRenderDataTest.php
+			path: ../packages/theme-foundation/tests/Unit/WidgetAssetRenderDataTest.php
 
 		-
 			rawMessage: Cannot access property $hasContent on mixed.
 			identifier: property.nonObject
 			count: 1
-			path: ../packages/foundation-theme/tests/Unit/WidgetAssetRenderDataTest.php
+			path: ../packages/theme-foundation/tests/Unit/WidgetAssetRenderDataTest.php
 
 		-
 			rawMessage: Cannot access property $hasTitle on mixed.
 			identifier: property.nonObject
 			count: 1
-			path: ../packages/foundation-theme/tests/Unit/WidgetAssetRenderDataTest.php
+			path: ../packages/theme-foundation/tests/Unit/WidgetAssetRenderDataTest.php
 
 		-
 			rawMessage: Cannot access property $icon on mixed.
 			identifier: property.nonObject
 			count: 1
-			path: ../packages/foundation-theme/tests/Unit/WidgetAssetRenderDataTest.php
+			path: ../packages/theme-foundation/tests/Unit/WidgetAssetRenderDataTest.php
 
 		-
 			rawMessage: Cannot access property $image on mixed.
 			identifier: property.nonObject
 			count: 1
-			path: ../packages/foundation-theme/tests/Unit/WidgetAssetRenderDataTest.php
+			path: ../packages/theme-foundation/tests/Unit/WidgetAssetRenderDataTest.php
 
 		-
 			rawMessage: Cannot access property $linkedPage on mixed.
 			identifier: property.nonObject
 			count: 1
-			path: ../packages/foundation-theme/tests/Unit/WidgetAssetRenderDataTest.php
+			path: ../packages/theme-foundation/tests/Unit/WidgetAssetRenderDataTest.php
 
 		-
 			rawMessage: Cannot access property $position on mixed.
 			identifier: property.nonObject
 			count: 1
-			path: ../packages/foundation-theme/tests/Unit/WidgetAssetRenderDataTest.php
+			path: ../packages/theme-foundation/tests/Unit/WidgetAssetRenderDataTest.php
 
 		-
 			rawMessage: Cannot access property $social on mixed.
 			identifier: property.nonObject
 			count: 1
-			path: ../packages/foundation-theme/tests/Unit/WidgetAssetRenderDataTest.php
+			path: ../packages/theme-foundation/tests/Unit/WidgetAssetRenderDataTest.php
 
 		-
 			rawMessage: Cannot access property $tags on mixed.
 			identifier: property.nonObject
 			count: 1
-			path: ../packages/foundation-theme/tests/Unit/WidgetAssetRenderDataTest.php
+			path: ../packages/theme-foundation/tests/Unit/WidgetAssetRenderDataTest.php
 
 		-
 			rawMessage: Cannot access property $title on mixed.
 			identifier: property.nonObject
 			count: 2
-			path: ../packages/foundation-theme/tests/Unit/WidgetAssetRenderDataTest.php
+			path: ../packages/theme-foundation/tests/Unit/WidgetAssetRenderDataTest.php
 
 		-
 			rawMessage: Binary operation "*" between mixed and 60 results in an error.

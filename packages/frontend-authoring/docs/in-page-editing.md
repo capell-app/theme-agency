@@ -49,7 +49,7 @@ composer require \
   capell-app/core \
   capell-app/admin \
   capell-app/frontend \
-  capell-app/foundation-theme \
+  capell-app/theme-foundation \
   capell-app/frontend-authoring
 ```
 

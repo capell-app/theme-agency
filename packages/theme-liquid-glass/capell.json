@@ -17,7 +17,7 @@
     "dependencies": {
         "requires": [
             "capell-app/core",
-            "capell-app/foundation-theme",
+            "capell-app/theme-foundation",
             "capell-app/frontend"
         ],
         "supports": [],

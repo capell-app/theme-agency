@@ -26,9 +26,9 @@ use RuntimeException;
  * deploy, local export). It performs NO inference of any kind: every value
  * originates in the spec the external agent assembled. Sections are
  * concatenated into each page's translation content HTML and rendered by the
- * foundation-theme `page-content` widget — the same guaranteed-render path the
- * foundation-theme demo installer uses. It builds on Capell\Core plus the
- * layout-builder + foundation-theme defaults (no AI/orchestration deps). The
+ * theme-foundation `page-content` widget — the same guaranteed-render path the
+ * theme-foundation demo installer uses. It builds on Capell\Core plus the
+ * layout-builder + theme-foundation defaults (no AI/orchestration deps). The
  * structured sections[] is preserved upstream on the session plan columns;
  * promoting sections to real Section records is a documented multi-region
  * follow-on.

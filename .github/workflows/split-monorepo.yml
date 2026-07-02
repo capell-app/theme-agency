@@ -70,8 +70,8 @@ jobs:
             repository_name: filament-peek
           - package_directory: packages/form-builder
             repository_name: form-builder
-          - package_directory: packages/foundation-theme
-            repository_name: foundation-theme
+          - package_directory: packages/theme-foundation
+            repository_name: theme-foundation
           - package_directory: packages/frontend-authoring
             repository_name: frontend-authoring
           - package_directory: packages/frontend-optimizer
@@ -136,40 +136,8 @@ jobs:
             repository_name: structured-content-library
           - package_directory: packages/tags
             repository_name: tags
-          - package_directory: packages/theme-agency
-            repository_name: theme-agency
-          - package_directory: packages/theme-commerce
-            repository_name: theme-commerce
-          - package_directory: packages/theme-corporate
-            repository_name: theme-corporate
-          - package_directory: packages/theme-education
-            repository_name: theme-education
-          - package_directory: packages/theme-estate-agents
-            repository_name: theme-estate-agents
-          - package_directory: packages/theme-healthcare
-            repository_name: theme-healthcare
-          - package_directory: packages/theme-inertia-bookings
-            repository_name: theme-inertia-bookings
-          - package_directory: packages/theme-inertia-bookings-react
-            repository_name: theme-inertia-bookings-react
-          - package_directory: packages/theme-inertia-bookings-vue
-            repository_name: theme-inertia-bookings-vue
-          - package_directory: packages/theme-knowledge
-            repository_name: theme-knowledge
           - package_directory: packages/theme-liquid-glass
             repository_name: theme-liquid-glass
-          - package_directory: packages/theme-local-services
-            repository_name: theme-local-services
-          - package_directory: packages/theme-dog-walkers
-            repository_name: theme-dog-walkers
-          - package_directory: packages/theme-nonprofit
-            repository_name: theme-nonprofit
-          - package_directory: packages/theme-portfolio
-            repository_name: theme-portfolio
-          - package_directory: packages/theme-restaurant
-            repository_name: theme-restaurant
-          - package_directory: packages/theme-saas
-            repository_name: theme-saas
           - package_directory: packages/translation-manager
             repository_name: translation-manager
           - package_directory: packages/url-manager

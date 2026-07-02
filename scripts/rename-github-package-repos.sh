@@ -18,7 +18,7 @@ site-search search
 seo-tools seo-suite
 authentication-log login-audit
 password-security password-policy
-default-theme foundation-theme
+default-theme theme-foundation
 example-sites demo-kit
 mcp agent-bridge
 assistant ai-orchestrator

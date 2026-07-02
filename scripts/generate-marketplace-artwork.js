@@ -249,7 +249,7 @@ const packageConcepts = {
         ['Build', 'Submit', 'Reply'],
         [palette.emerald, palette.blue, palette.orange],
     ),
-    'foundation-theme': concept(
+    'theme-foundation': concept(
         'theme-base',
         'Base theme contract',
         'Provide layouts, tokens, assets, sections, and sanitizers every child theme builds on.',

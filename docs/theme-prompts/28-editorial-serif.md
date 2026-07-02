@@ -180,7 +180,7 @@ the long way through them." Button label "Browse the archive".
    `packages/theme-liquid-glass` — the closest free style theme — and rename
    identity; use retained visual theme packages for any demo/health plumbing).
 2. Write `capell.json` (v3, §3): `themeKey: editorial-serif`,
-   `extends: capell-app/foundation-theme`, `product.tier: "free"`,
+   `extends: capell-app/theme-foundation`, `product.tier: "free"`,
    `surfaces: ["frontend"]`,
    `requires: ["capell-app/core", "capell-app/frontend"]`, demo command
    `capell:theme-editorial-serif-demo` with

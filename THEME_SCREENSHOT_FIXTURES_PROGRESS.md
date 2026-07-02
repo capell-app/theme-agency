@@ -82,9 +82,9 @@ add `waitFor: .site-theme-shell`. (Curl verification above is independent of thi
 ## Remaining to author (~60; excludes 3 inertia JS themes which use a different mechanism)
 
 Some already render via LEGACY inline routes in the runner's `routes/web.php` (e.g. local-services,
-nonprofit, portfolio, foundation-theme) — confirm with route:list before re-authoring.
+nonprofit, portfolio, theme-foundation) — confirm with route:list before re-authoring.
 List of theme dirs without `routes/screenshot-fixtures.php`: run
-`for d in packages/theme-* packages/foundation-theme; do [ -f "$d/routes/screenshot-fixtures.php" ] || basename "$d"; done`
+`for d in packages/theme-* packages/theme-foundation; do [ -f "$d/routes/screenshot-fixtures.php" ] || basename "$d"; done`
 
 ## Environment state at checkpoint
 

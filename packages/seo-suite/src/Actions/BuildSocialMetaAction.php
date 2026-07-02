@@ -10,12 +10,14 @@ use Capell\Core\Enums\MediaConversionEnum;
 use Capell\Core\Models\Language;
 use Capell\Core\Models\Site;
 use Capell\Core\Models\Translation;
+use Capell\Frontend\Actions\GetPageVariablesAction;
 use Capell\SeoSuite\Data\SocialMetaData;
 use Capell\SeoSuite\Enums\OpenGraphTypeEnum;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Lorisleiva\Actions\Concerns\AsAction;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
+use Stringable;
 
 /**
  * @method static SocialMetaData run(Pageable $page, Site $site, Language $language)
@@ -34,7 +36,7 @@ class BuildSocialMetaAction
         $configuratorType = data_get($pageType, 'meta.schema.type');
         $ogType = OpenGraphTypeEnum::fromSchemaType($configuratorType);
 
-        $socialTitle = $this->resolveSocialTitle($page, $site);
+        $socialTitle = $this->resolveTokens($this->resolveSocialTitle($page, $site), $page, $site);
         $socialDescription = $this->resolveSocialDescription($page);
 
         $image = $this->resolveSocialImage($page, $site);
@@ -89,6 +91,24 @@ class BuildSocialMetaAction
         }
 
         return $title;
+    }
+
+    /**
+     * Resolve template tokens (for example `:site`) the same way the document
+     * `<title>` does, so social meta never leaks raw placeholders.
+     */
+    private function resolveTokens(string $value, Pageable $page, Site $site): string
+    {
+        if ($value === '') {
+            return $value;
+        }
+
+        $variables = collect(GetPageVariablesAction::run($page, $site))
+            ->filter(static fn (mixed $variable): bool => is_scalar($variable) || $variable instanceof Stringable)
+            ->map(static fn (mixed $variable): string => (string) $variable)
+            ->all();
+
+        return (string) trans(strip_tags($value), $variables);
     }
 
     private function resolveSocialDescription(Pageable $page): string

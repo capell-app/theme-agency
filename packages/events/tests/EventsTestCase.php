@@ -90,7 +90,7 @@ class EventsTestCase extends AbstractTestCase
         CapellCore::forcePackageInstalled(NavigationServiceProvider::$packageName);
         CapellCore::forcePackageInstalled(PublishingStudioServiceProvider::$packageName);
         CapellCore::forcePackageInstalled(EventsServiceProvider::$packageName);
-        CapellCore::forcePackageInstalled('capell-app/foundation-theme');
+        CapellCore::forcePackageInstalled('capell-app/theme-foundation');
 
         $app->make(Repository::class)->set('media-library.media_model', Media::class);
         $app->make(Repository::class)->set('media-library.image_optimizers', [

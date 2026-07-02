@@ -35,7 +35,7 @@ parameters:
     configDirectories:
         - packages/access-gate/config
         - packages/migration-assistant/config
-        - packages/foundation-theme/config
+        - packages/theme-foundation/config
         - packages/filament-peek/config
         - packages/ga4-reports/config
         - packages/deployments/config
@@ -73,7 +73,7 @@ parameters:
         - packages/events/resources/views
         - packages/filament-peek/resources/views
         - packages/form-builder/resources/views
-        - packages/foundation-theme/resources/views
+        - packages/theme-foundation/resources/views
         - packages/frontend-authoring/resources/views
         - packages/ga4-reports/resources/views
         - packages/hero/resources/views

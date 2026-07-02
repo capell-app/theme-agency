@@ -1,4 +1,4 @@
-@import '../../../foundation-theme/resources/css/theme/chrome.css';
+@import '../../../theme-foundation/resources/css/theme/chrome.css';
 
 .site-theme-shell {
     background: var(--theme-surface, #faf8f4);

@@ -14,7 +14,7 @@
         : '';
 @endphp
 
-<x-capell-foundation-theme::widget.wrapper
+<x-capell-theme-foundation::widget.wrapper
     class="capell-widget-campaign-lead-form widget-campaign-lead-form"
     :$container
     :$containerKey
@@ -43,4 +43,4 @@
             />
         @endif
     </section>
-</x-capell-foundation-theme::widget.wrapper>
+</x-capell-theme-foundation::widget.wrapper>

@@ -12,7 +12,7 @@ foreach ($packageViewDirectories as $viewDirectory) {
 
 $sharedCapellViewDirectories = [
     __DIR__ . '/../packages/frontend-authoring/resources/views',
-    __DIR__ . '/../packages/foundation-theme/resources/views',
+    __DIR__ . '/../packages/theme-foundation/resources/views',
     __DIR__ . '/../packages/seo-suite/resources/views',
     __DIR__ . '/../packages/site-discovery/resources/views',
 ];

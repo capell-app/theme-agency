@@ -18,7 +18,7 @@ Folding may be enabled only after checking the component does not read global st
 
 - `packages/frontend-authoring/resources/views/authoring/bootstrap-script.blade.php` is returned from the admin-only beacon response, not compiled as a public anonymous component.
 - `packages/publishing-studio/resources/views/components/workspace-preview-pill.blade.php` reads the current request URL.
-- `packages/foundation-theme/resources/views/components/header/index.blade.php` uses `@push`.
+- `packages/theme-foundation/resources/views/components/header/index.blade.php` uses `@push`.
 - Core layout builder hero and widget wrapper components use `@aware`, so parent and child Blaze coverage must stay aligned in the admin/frontend core packages.
 
 ## Rollout

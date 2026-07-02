@@ -6,13 +6,13 @@
 
 Owns Capell's public rendering context: site, language, page, layout, theme key, route params, render hooks, frontend assets, and page cache integration. Frontend resolves the active theme view chain, but does not import concrete premium themes.
 
-### `capell-app/foundation-theme`
+### `capell-app/theme-foundation`
 
 Owns the free theme foundation and shared theme runtime. It provides the baseline Blade/Tailwind rendering surface, theme registry, renderer contracts, preview context, and token CSS support. Premium themes may extend it, but Foundation remains the platform fallback and carries the `default` theme key.
 
 ### First-party theme packages
 
-Theme packages such as `capell-app/theme-liquid-glass`, `capell-app/theme-dark-product-system`, `capell-app/theme-editorial-serif`, and the other first-party visual `theme-*` packages own polished renderers. They register definitions, curated presets, page renderers, section renderers, views, and visual assets. Each theme installs independently and declares `extends: "capell-app/foundation-theme"` in `capell.json`. There is no Studio metapackage bundling them together.
+Theme packages such as `capell-app/theme-liquid-glass`, `capell-app/theme-dark-product-system`, `capell-app/theme-editorial-serif`, and the other first-party visual `theme-*` packages own polished renderers. They register definitions, curated presets, page renderers, section renderers, views, and visual assets. Each theme installs independently and declares `extends: "capell-app/theme-foundation"` in `capell.json`. There is no Studio metapackage bundling them together.
 
 ### `capell-app/layout-builder`
 

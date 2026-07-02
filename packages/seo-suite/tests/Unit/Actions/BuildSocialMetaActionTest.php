@@ -113,6 +113,33 @@ it('falls back to meta title and page title for website social metadata', functi
     expect($metaTitleSocial->title)->toBe('Meta title wins');
 });
 
+it('resolves template tokens such as :site in the social title', function (): void {
+    $language = Language::factory()->create(['code' => 'en']);
+    $site = Site::factory()
+        ->language($language)
+        ->withTranslations($language, ['title' => 'Capell Ruby'])
+        ->create();
+    $page = Page::factory()
+        ->site($site)
+        ->withTranslations($language, [
+            'title' => 'Home',
+            'meta' => ['title' => ':site'],
+        ])
+        ->create();
+
+    $page->refresh()->load(['translation', 'type']);
+    $page->setRelation('translation', $page->translations()->where('language_id', $language->getKey())->first());
+    $page->translation->forceFill(['meta' => ['title' => ':site']]);
+    $siteTranslation = new Translation;
+    $siteTranslation->forceFill(['title' => 'Capell Ruby']);
+    $site->refresh();
+    $site->setRelation('translation', $siteTranslation);
+
+    $social = BuildSocialMetaAction::run($page, $site, $language);
+
+    expect($social->title)->toBe('Capell Ruby');
+});
+
 it('maps schema types to open graph types and labels each case', function (): void {
     expect(OpenGraphTypeEnum::fromSchemaType(null))->toBe(OpenGraphTypeEnum::Website)
         ->and(OpenGraphTypeEnum::fromSchemaType('Product'))->toBe(OpenGraphTypeEnum::Product)

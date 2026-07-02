@@ -33,7 +33,7 @@ it('converts a Capell manifest into a layout scoped optimizer profile', function
     $profile = FrontendRenderProfile::query()->sole();
     /** @var list<array{handle: string, critical_eligible?: bool, loading_strategy?: string, slot?: string}> $assets */
     $assets = $profile->signature['assets'];
-    $runtimeAsset = collect($assets)->firstWhere('handle', 'foundation-theme:runtime');
+    $runtimeAsset = collect($assets)->firstWhere('handle', 'theme-foundation:runtime');
     $firstAsset = $assets[0];
     $signature = $profile->signature;
     throw_unless(is_array($signature), RuntimeException::class, 'Expected render profile signature.');
@@ -54,15 +54,15 @@ it('converts a Capell manifest into a layout scoped optimizer profile', function
         ->toContain('<link rel="stylesheet" href="http://localhost/build/resources/css/capell/frontend.css">')
         ->toContain('<link rel="stylesheet" href="http://localhost/vendor/capell/themes/static.css">')
         ->toContain('requestIdleCallback')
-        ->toContain('capell-foundation-theme')
+        ->toContain('capell-theme-foundation')
         ->toContain('capell-frontend.js')
-        ->not->toContain('capell-app/foundation-theme')
+        ->not->toContain('capell-app/theme-foundation')
         ->and($profile->scope)->toBe('layout')
         ->and($profile->label)->toBe($context->layout?->key . ' / ' . $context->theme?->key)
         ->and($signatureContext)->not->toHaveKey('page')
         ->and($signatureLayout['id'])->toBe($context->layout?->getKey())
         ->and($signatureTheme['id'])->toBe($context->theme?->getKey())
-        ->and($firstAsset['handle'])->toBe('foundation-theme:css')
+        ->and($firstAsset['handle'])->toBe('theme-foundation:css')
         ->and($firstAsset['critical_eligible'])->toBeTrue()
         ->and($firstAsset['loading_strategy'])->toBe('deferred')
         ->and($firstAsset['slot'])->toBe('above_fold')
@@ -161,7 +161,7 @@ it('renders manifest preload resource hints through the optimizer profile', func
     $manifest = new FrontendAssetManifestData(
         css: [
             new FrontendAssetRequirementData(
-                handle: 'foundation-theme:css',
+                handle: 'theme-foundation:css',
                 kind: FrontendAssetRequirementData::KIND_CSS,
                 source: 'resources/css/capell/frontend.css',
                 buildPath: 'build',
@@ -253,7 +253,7 @@ function optimizerRendererManifest(): FrontendAssetManifestData
     return new FrontendAssetManifestData(
         css: [
             new FrontendAssetRequirementData(
-                handle: 'foundation-theme:css',
+                handle: 'theme-foundation:css',
                 kind: FrontendAssetRequirementData::KIND_CSS,
                 source: 'resources/css/capell/frontend.css',
                 buildPath: 'build',
@@ -266,10 +266,10 @@ function optimizerRendererManifest(): FrontendAssetManifestData
         ],
         js: [
             new FrontendAssetRequirementData(
-                handle: 'foundation-theme:runtime',
+                handle: 'theme-foundation:runtime',
                 kind: FrontendAssetRequirementData::KIND_JS,
                 source: 'resources/js/capell-frontend.js',
-                buildPath: 'vendor/capell-foundation-theme',
+                buildPath: 'vendor/capell-theme-foundation',
             ),
         ],
         inline: [],

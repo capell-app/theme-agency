@@ -16,7 +16,7 @@ Free baseline packages:
 | Address            | `capell-app/address`            |
 | Media Library      | `capell-app/media-library`      |
 | Frontend Authoring | `capell-app/frontend-authoring` |
-| Foundation Theme   | `capell-app/foundation-theme`   |
+| Foundation Theme   | `capell-app/theme-foundation`   |
 
 Tags and Media Library are Foundation packages because taxonomy and media management are normal CMS expectations. Redirect management is built into Capell Core/Admin rather than shipped as an add-on package.
 

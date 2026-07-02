@@ -6,7 +6,7 @@ require_once __DIR__ . '/../Support/ThemeFrontendTestSupport.php';
 
 it('keeps public theme blade views free of queries and authoring surface', function (): void {
     $viewRoots = [
-        base_path('packages/foundation-theme/resources/views'),
+        base_path('packages/theme-foundation/resources/views'),
         ...glob(base_path('packages/theme-*/resources/views')) ?: [],
     ];
     $viewPaths = [];

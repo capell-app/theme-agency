@@ -140,23 +140,23 @@ abstract class AbstractTestCase extends TestCase
         $this->loadMigrationsFrom($this->orderedMigrationWorkspacePath());
 
         // Temp fix to ensure components are locatable when run in parallel
-        resolve(ViewFactory::class)->addNamespace('capell-foundation-theme', __DIR__ . '/../packages/foundation-theme/resources/views');
-        resolve(ViewFactory::class)->addNamespace('capell-layout-builder', __DIR__ . '/../packages/foundation-theme/resources/views');
-        resolve(ViewFactory::class)->addNamespace('capell', __DIR__ . '/../packages/foundation-theme/resources/views');
+        resolve(ViewFactory::class)->addNamespace('capell-theme-foundation', __DIR__ . '/../packages/theme-foundation/resources/views');
+        resolve(ViewFactory::class)->addNamespace('capell-layout-builder', __DIR__ . '/../packages/theme-foundation/resources/views');
+        resolve(ViewFactory::class)->addNamespace('capell', __DIR__ . '/../packages/theme-foundation/resources/views');
 
         Blade::componentNamespace('Capell\\Blog\\View\\Components', 'capell-blog');
-        Blade::componentNamespace('Capell\\FoundationTheme\\View\\Components', 'capell-foundation-theme');
+        Blade::componentNamespace('Capell\\FoundationTheme\\View\\Components', 'capell-theme-foundation');
         Blade::componentNamespace('Capell\\FoundationTheme\\View\\Components', 'capell-layout-builder');
         Blade::component(Breadcrumbs::class, 'capell::element.page.breadcrumbs');
         Blade::component(Breadcrumbs::class, 'capell::widget.page.breadcrumbs');
         Blade::component(Breadcrumbs::class, 'capell::widget.page.breadcrumbs');
-        Blade::component('capell-foundation-theme::components.widget.page.breadcrumbs', 'capell-layout-builder-widget-page-breadcrumbs');
+        Blade::component('capell-theme-foundation::components.widget.page.breadcrumbs', 'capell-layout-builder-widget-page-breadcrumbs');
         Blade::component(Content::class, 'capell-element-page-content');
         Blade::component(Content::class, 'capell-widget-page-content');
         Blade::component(Content::class, 'capell-layout-builder-widget-page-content');
-        Blade::component('capell-foundation-theme::components.widget.slot', 'capell-layout-builder-widget-slot');
-        Blade::component('capell-foundation-theme::components.widget.slot', 'capell::widget.slot');
-        Blade::component('capell-foundation-theme::components.widget.wrapper', 'capell-layout-builder::widget.wrapper');
+        Blade::component('capell-theme-foundation::components.widget.slot', 'capell-layout-builder-widget-slot');
+        Blade::component('capell-theme-foundation::components.widget.slot', 'capell::widget.slot');
+        Blade::component('capell-theme-foundation::components.widget.wrapper', 'capell-layout-builder::widget.wrapper');
         Blade::component(Children::class, 'capell::element.page.children');
         Blade::component(Children::class, 'capell::widget.page.children');
         Blade::component(Children::class, 'capell::widget.page.children');

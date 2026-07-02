@@ -124,8 +124,8 @@ function installFoundationThemeDemoScreenshotFixture(): Collection
     $provider->register();
     $provider->boot();
 
-    view()->addNamespace('capell-foundation-theme', themeDemoRepositoryPath('packages/foundation-theme/resources/views'));
-    view()->addNamespace('capell', themeDemoRepositoryPath('packages/foundation-theme/resources/views'));
+    view()->addNamespace('capell-theme-foundation', themeDemoRepositoryPath('packages/theme-foundation/resources/views'));
+    view()->addNamespace('capell', themeDemoRepositoryPath('packages/theme-foundation/resources/views'));
 
     registerFoundationThemeDemoScreenshotRenderer();
     registerThemeDemoScreenshotPageAdapter($themeKey);
@@ -191,7 +191,7 @@ function registerFoundationThemeDemoScreenshotRenderer(): void
                 ],
             ],
             'themeKey' => 'default',
-        ], themeDemoRepositoryPath('packages/foundation-theme')),
+        ], themeDemoRepositoryPath('packages/theme-foundation')),
     ]);
 
     if ($registry->has('default')) {
@@ -662,11 +662,11 @@ function themeDemoScreenshotContactLayoutHtml(Page $page): string
     $page->loadMissing(['translation']);
     $site->loadMissing(['translation', 'defaultDomain', 'siteDomain']);
 
-    view()->addNamespace('capell-foundation-theme', themeDemoRepositoryPath('packages/foundation-theme/resources/views'));
-    view()->addNamespace('capell', themeDemoRepositoryPath('packages/foundation-theme/resources/views'));
+    view()->addNamespace('capell-theme-foundation', themeDemoRepositoryPath('packages/theme-foundation/resources/views'));
+    view()->addNamespace('capell', themeDemoRepositoryPath('packages/theme-foundation/resources/views'));
 
     return '<div data-screenshot-surface="contact">' . Blade::render((string) file_get_contents(
-        themeDemoRepositoryPath('packages/foundation-theme/resources/views/components/demo/contact-page.blade.php'),
+        themeDemoRepositoryPath('packages/theme-foundation/resources/views/components/demo/contact-page.blade.php'),
     ), [
         'page' => $page,
         'site' => $site,
@@ -3277,7 +3277,7 @@ function buildThemeDemoScreenshotCss(string $themeKey): string
 function themeDemoScreenshotTailwindImports(string $themeKey): array
 {
     return collect([
-        themeDemoRepositoryPath('packages/foundation-theme/resources/css/foundation-theme.css'),
+        themeDemoRepositoryPath('packages/theme-foundation/resources/css/theme-foundation.css'),
         themeDemoScreenshotThemeCssPath($themeKey),
     ])
         ->filter(fn (?string $path): bool => is_string($path) && is_file($path))
@@ -3292,7 +3292,7 @@ function themeDemoScreenshotTailwindImports(string $themeKey): array
 function themeDemoScreenshotTailwindSources(string $themeKey, string $htmlSource): array
 {
     return collect([
-        themeDemoRepositoryPath('packages/foundation-theme/resources/views/**/*.blade.php'),
+        themeDemoRepositoryPath('packages/theme-foundation/resources/views/**/*.blade.php'),
         themeDemoRepositoryPath('packages/theme-' . $themeKey . '/resources/views/**/*.blade.php'),
         $htmlSource,
     ])

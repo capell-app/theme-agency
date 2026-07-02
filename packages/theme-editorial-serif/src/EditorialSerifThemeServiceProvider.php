@@ -109,7 +109,7 @@ final class EditorialSerifThemeServiceProvider extends ServiceProvider
     private function sectionRenderers(): array
     {
         return [
-            'navigation' => new ViewSectionRenderer(self::THEME_KEY, 'navigation', 'capell-foundation-theme::theme.chrome.navigation', failLoudly: true),
+            'navigation' => new ViewSectionRenderer(self::THEME_KEY, 'navigation', 'capell-theme-foundation::theme.chrome.navigation', failLoudly: true),
             'hero' => new ViewSectionRenderer(self::THEME_KEY, 'hero', 'capell-theme-editorial-serif::sections.hero', failLoudly: true),
             'essay-index' => new ViewSectionRenderer(self::THEME_KEY, 'essay-index', 'capell-theme-editorial-serif::sections.essay-index', failLoudly: true),
             'issue-archive' => new ViewSectionRenderer(self::THEME_KEY, 'issue-archive', 'capell-theme-editorial-serif::sections.issue-archive', failLoudly: true),
@@ -120,7 +120,7 @@ final class EditorialSerifThemeServiceProvider extends ServiceProvider
             'proof' => new ViewSectionRenderer(self::THEME_KEY, 'proof', 'capell-theme-editorial-serif::sections.proof', failLoudly: true),
             'content-listing' => new ViewSectionRenderer(self::THEME_KEY, 'content-listing', 'capell-theme-editorial-serif::sections.content-listing', failLoudly: true),
             'cta' => new ViewSectionRenderer(self::THEME_KEY, 'cta', 'capell-theme-editorial-serif::sections.cta', failLoudly: true),
-            'footer' => new ViewSectionRenderer(self::THEME_KEY, 'footer', 'capell-foundation-theme::theme.chrome.footer', failLoudly: true),
+            'footer' => new ViewSectionRenderer(self::THEME_KEY, 'footer', 'capell-theme-foundation::theme.chrome.footer', failLoudly: true),
         ];
     }
 }

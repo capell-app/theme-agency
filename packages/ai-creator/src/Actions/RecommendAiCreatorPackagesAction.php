@@ -32,7 +32,7 @@ final class RecommendAiCreatorPackagesAction
 
         if ($this->mentionsAny($normalizedIntent, ['theme', 'client theme', 'visual system', 'brand', 'design'])) {
             $recommendations[] = new AiCreatorPackageRecommendationData(
-                package: 'capell-app/foundation-theme',
+                package: 'capell-app/theme-foundation',
                 level: AiCreatorRecommendationLevel::Required,
                 reason: 'App-local client themes should extend Foundation Theme before premium theme work starts.',
                 consequence: 'Theme work can be previewed as a file bundle, but it should not be applied without the theme baseline.',

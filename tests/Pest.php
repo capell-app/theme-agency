@@ -165,7 +165,7 @@ extendCapellPackageTests(NavigationTestCase::class, 'navigation', 'navigation');
 extendCapellPackageTests(NewsletterTestCase::class, 'newsletter', 'newsletter');
 extendCapellPackageTests(NotesTestCase::class, 'notes', 'notes');
 pest()->extend(PackagesTestCase::class)->in('Packages');
-extendCapellPackageTests(PackagesTestCase::class, 'foundation-theme', 'foundation-theme');
+extendCapellPackageTests(PackagesTestCase::class, 'theme-foundation', 'theme-foundation');
 extendCapellPackageTests(PasswordPolicyTestCase::class, 'password-policy', 'password-policy');
 extendCapellPackageTests(PublishingStudioTestCase::class, 'publishing-studio', 'publishing-studio');
 extendCapellPackageTests(PublicActionsTestCase::class, 'public-actions', 'public-actions');

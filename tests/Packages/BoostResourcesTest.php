@@ -13,7 +13,7 @@ it('ships Laravel Boost guidelines for every package and skills only where usefu
         'backup',
         'blog',
         'campaign-studio',
-        'foundation-theme',
+        'theme-foundation',
         'deployments',
         'diagnostics',
         'form-builder',

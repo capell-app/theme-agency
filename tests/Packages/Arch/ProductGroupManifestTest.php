@@ -134,7 +134,7 @@ it('groups packages into the current product bundles', function (): void {
             'content-sections/capell.json',
             'demo-kit/capell.json',
             'filament-peek/capell.json',
-            'foundation-theme/capell.json',
+            'theme-foundation/capell.json',
             'frontend-authoring/capell.json',
             'frontend-optimizer/capell.json',
             'hero/capell.json',

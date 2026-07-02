@@ -103,7 +103,7 @@ final class CapellFrontendAssetManifestRenderer implements FrontendAssetManifest
             return $hint;
         }
 
-        return $assetRequirement->handle === 'foundation-theme:css';
+        return $assetRequirement->handle === 'theme-foundation:css';
     }
 
     private function cssLoadingStrategy(FrontendAssetRequirementData $assetRequirement, bool $isCriticalEligible): AssetLoadingStrategy
@@ -145,7 +145,7 @@ final class CapellFrontendAssetManifestRenderer implements FrontendAssetManifest
             return AssetLoadingStrategy::Lazy;
         }
 
-        if ($assetRequirement->handle === 'foundation-theme:runtime') {
+        if ($assetRequirement->handle === 'theme-foundation:runtime') {
             return AssetLoadingStrategy::Idle;
         }
 
@@ -175,8 +175,8 @@ final class CapellFrontendAssetManifestRenderer implements FrontendAssetManifest
             return $hint;
         }
 
-        if (Str::startsWith($assetRequirement->handle, 'foundation-theme:')) {
-            return 'capell-app/foundation-theme';
+        if (Str::startsWith($assetRequirement->handle, 'theme-foundation:')) {
+            return 'capell-app/theme-foundation';
         }
 
         return null;

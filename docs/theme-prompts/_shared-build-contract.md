@@ -22,7 +22,7 @@ presentation markup is stored on pages, and the public route renders from
 hydrated, query-free render data.
 
 Most new themes **extend `default` (Foundation Theme)** at runtime and
-`capell-app/foundation-theme` at the package level. Foundation owns the shared
+`capell-app/theme-foundation` at the package level. Foundation owns the shared
 Blade, Tailwind, media, settings, and runtime. A child theme provides: a theme
 definition, presets, a page wrapper, the section views it intentionally
 customises, and demo (beta) data.

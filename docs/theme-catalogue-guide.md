@@ -2,12 +2,11 @@
 
 Last reviewed: 2026-06-13
 
-This review covers the first-party theme catalogue in `packages/foundation-theme` and `packages/theme-*`. It checks theme positioning, manifest/docs consistency, public-output safety signals, screenshot coverage, and whether the premium themes feel professionally differentiated.
+This review covers the first-party theme catalogue in `packages/theme-foundation` and `packages/theme-*`. It checks theme positioning, manifest/docs consistency, public-output safety signals, screenshot coverage, and whether the premium themes feel professionally differentiated.
 
 ## 2026-06-13 Premium Additions
 
 The catalogue now includes two additional premium themes chosen from the non-overlap review:
-
 
 Both new themes are first-party paid themes, extend the built-in default runtime, own no schema, use safe optional-package fallbacks, and include package-local public-output safety, manifest, definition, and health-check tests.
 
@@ -42,7 +41,7 @@ The result is accepted with follow-up items below. No PHP/theme runtime changes 
 
 - [P2] `docs/creating-a-theme.md` described the old manifest v2 shape and only listed the earlier six theme examples. Theme packages now use manifest v3 and the catalogue includes Education, Knowledge, Local Services, Nonprofit, Portfolio, and the Inertia Bookings family.
 - [P2] `docs/theme-scale.md` described `docs/screenshots.json` as if it used marketplace-gallery fields such as `path`, `description`, `layout`, `editable`, `useful`, and `distinctive`. The committed manifests use the screenshot-runner contract with `entries`, `screenshotPath`, `targetType`, `url`, `required`, and route/browser metadata.
-- [P2] `packages/foundation-theme/docs/screenshots.json` references `packages/foundation-theme/docs/screenshots/foundation-theme-header-area.png`, but that file is not committed. Either add the capture or remove/rename the entry.
+- [P2] `packages/theme-foundation/docs/screenshots.json` references `packages/theme-foundation/docs/screenshots/theme-foundation-header-area.png`, but that file is not committed. Either add the capture or remove/rename the entry.
 - [P2] Premium marketplace galleries are uneven in `capell.json`. Several packages have 5+ route-backed screenshot-runner entries but only 1-4 marketplace screenshots in `capell.json`. The admin/marketplace gallery should promote at least five useful buyer-facing screenshots per premium theme.
 - [P2] Screenshot required flags are inconsistent. Newer premium themes such as SaaS, Local Services, Nonprofit, Portfolio, Inertia Bookings, and the React/Vue adapters mark captures as required. Agency, Commerce, Corporate, Education, Healthcare, and Knowledge still have many route captures marked optional. That made sense while the runner was unstable, but it now weakens premium QA.
 
@@ -54,9 +53,9 @@ The result is accepted with follow-up items below. No PHP/theme runtime changes 
 
 ## Consistency Matrix
 
-| Package                        | Current role                            | Manifest tier/kind | Extends Foundation | Screenshot-runner entries | Marketplace screenshots | Review verdict                                                                         |
-| ------------------------------ | --------------------------------------- | ------------------ | ------------------ | ------------------------: | ----------------------: | -------------------------------------------------------------------------------------- |
-| `foundation-theme`             | Shared runtime/base theme               | free theme         | n/a                |                        12 |                      11 | Stable baseline; one missing declared screenshot.                                      |
+| Package            | Current role              | Manifest tier/kind | Extends Foundation | Screenshot-runner entries | Marketplace screenshots | Review verdict                                    |
+| ------------------ | ------------------------- | ------------------ | ------------------ | ------------------------: | ----------------------: | ------------------------------------------------- |
+| `theme-foundation` | Shared runtime/base theme | free theme         | n/a                |                        12 |                      11 | Stable baseline; one missing declared screenshot. |
 
 ## Customisation Model
 
@@ -112,7 +111,6 @@ Customise it with service finder data, clinician profiles, care-pathway sections
 
 Inertia Bookings is a premium booking-business theme for appointment-led services, clinics, consultants, classes, and locations. It differs from Foundation child themes because it renders through Inertia and connects to the Bookings public request flow with lazy slot loading.
 
-
 ### Theme Knowledge
 
 Knowledge is a premium search-led publishing and documentation theme. It is good for knowledge bases, resource hubs, docs, topic hubs, featured content, research libraries, author benches, newsletters, and archive/search workflows. The dark homepage and structured search capture make it one of the more distinct themes.
@@ -146,7 +144,7 @@ Customise it with pricing, comparison, calculators, docs-onboarding content, dem
 ## Recommended Fix Order
 
 1. Align central docs with manifest v3, the current catalogue, Agency's premium tier, and the screenshot-runner contract. Done in this review.
-2. Add or remove the missing Foundation `foundation-theme-header-area.png` screenshot entry.
+2. Add or remove the missing Foundation `theme-foundation-header-area.png` screenshot entry.
 3. Promote at least five useful `capell.json.marketplace.screenshots` entries for every premium theme, using committed route-backed PNGs where available.
 4. Standardise `docs/screenshots.json` `required` flags now that route-backed captures exist for the older themes.
 5. Add one mobile capture for each premium theme's primary conversion route.
@@ -157,9 +155,9 @@ Customise it with pricing, comparison, calculators, docs-onboarding content, dem
 Useful commands for this review class:
 
 ```bash
-find packages -maxdepth 2 -name capell.json | rg '/(foundation-theme|theme-)'
-find packages -path '*/docs/screenshots.json' | rg '/(foundation-theme|theme-)' | sort
-find packages -path '*/resources/views/*' -type f | rg '/(foundation-theme|theme-)' | xargs rg -n '(::query\(|DB::|loadMissing\(|signedRoute|filament|admin|editor|authoring|field_path|model_id)'
+find packages -maxdepth 2 -name capell.json | rg '/(theme-foundation|theme-)'
+find packages -path '*/docs/screenshots.json' | rg '/(theme-foundation|theme-)' | sort
+find packages -path '*/resources/views/*' -type f | rg '/(theme-foundation|theme-)' | xargs rg -n '(::query\(|DB::|loadMissing\(|signedRoute|filament|admin|editor|authoring|field_path|model_id)'
 ```
 
 For browser/route QA, use the screenshot-runner app described in `docs/package-screenshot-automation.md`; this package repo workbench is not a reliable full admin-panel surface.

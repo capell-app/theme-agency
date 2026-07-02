@@ -37,7 +37,7 @@
     $secondaryButtonUrl = is_string($secondaryButtonUrl) ? BuildCampaignUrlAction::run($secondaryButtonUrl, $campaignHeroUtm) : '#';
 @endphp
 
-<x-capell-foundation-theme::widget.wrapper
+<x-capell-theme-foundation::widget.wrapper
     class="capell-widget-campaign-hero widget-campaign-hero"
     :$container
     :$containerKey
@@ -87,4 +87,4 @@
             </div>
         </div>
     </section>
-</x-capell-foundation-theme::widget.wrapper>
+</x-capell-theme-foundation::widget.wrapper>

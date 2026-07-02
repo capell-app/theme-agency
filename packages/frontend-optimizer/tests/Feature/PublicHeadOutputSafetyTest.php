@@ -55,7 +55,7 @@ it('keeps optimized public head output safe for anonymous and non-admin visitors
         ->not->toContain('render_profile_id')
         ->not->toContain('frontend_optimizer')
         ->not->toContain('capell-frontend-optimizer')
-        ->not->toContain('capell-app/foundation-theme')
+        ->not->toContain('capell-app/theme-foundation')
         ->not->toContain('/admin')
         ->not->toContain('signed')
         ->not->toContain('editor')
@@ -73,14 +73,14 @@ function frontendOptimizerPublicHeadAssetManifest(FrontendRuntimeManifestData $r
     return new FrontendAssetManifestData(
         css: [
             new FrontendAssetRequirementData(
-                handle: 'foundation-theme:css',
+                handle: 'theme-foundation:css',
                 kind: FrontendAssetRequirementData::KIND_CSS,
                 source: 'theme.css',
             ),
         ],
         js: [
             new FrontendAssetRequirementData(
-                handle: 'foundation-theme:runtime',
+                handle: 'theme-foundation:runtime',
                 kind: FrontendAssetRequirementData::KIND_JS,
                 source: 'runtime.js',
             ),

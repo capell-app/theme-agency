@@ -56,7 +56,7 @@ const CAPELL_MANIFEST_V3_MIGRATION_GROUPS = [
         'content-sections',
         'demo-kit',
         'filament-peek',
-        'foundation-theme',
+        'theme-foundation',
         'frontend-authoring',
         'frontend-optimizer',
         'hero',

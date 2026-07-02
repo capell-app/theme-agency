@@ -136,7 +136,7 @@ function themeFrontendRegisterFoundationRenderer(): void
 
 function themeFrontendRegisterFoundationPackageManifest(): void
 {
-    $manifestPath = dirname(__DIR__, 3) . '/packages/foundation-theme/capell.json';
+    $manifestPath = dirname(__DIR__, 3) . '/packages/theme-foundation/capell.json';
     $manifest = json_decode((string) file_get_contents($manifestPath), true, flags: JSON_THROW_ON_ERROR);
 
     throw_unless(is_array($manifest), RuntimeException::class, 'Foundation theme manifest must decode to an array.');

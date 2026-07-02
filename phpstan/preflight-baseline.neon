@@ -958,13 +958,13 @@ parameters:
 			rawMessage: 'Cannot call method isEmpty() on Illuminate\Support\Collection<(int|string), mixed>|null.'
 			identifier: method.nonObject
 			count: 1
-			path: ../packages/foundation-theme/src/View/Components/Block/Navigation.php
+			path: ../packages/theme-foundation/src/View/Components/Block/Navigation.php
 
 		-
 			rawMessage: 'Method Capell\FoundationTheme\View\Components\Footer\Index::relatedSites() should return Illuminate\Support\Collection<int, array{description: mixed, primaryColor: mixed, title: mixed, url: mixed}> but returns Illuminate\Support\Collection<int, array{description: mixed, primaryColor: string|null, title: mixed, url: non-empty-string}>.'
 			identifier: return.type
 			count: 1
-			path: ../packages/foundation-theme/src/View/Components/Footer/Index.php
+			path: ../packages/theme-foundation/src/View/Components/Footer/Index.php
 
 		-
 			rawMessage: Access to an undefined property Capell\FrontendOptimizer\Models\FrontendOptimizationRun::$finished_at.

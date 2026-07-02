@@ -7,7 +7,7 @@ declare package metadata in `capell.json`, and optionally extend another theme.
 There is no separate Theme Studio metapackage to install, even though the runtime
 classes currently live under the `Capell\Core\ThemeStudio` namespace.
 
-Most new themes should extend `capell-app/foundation-theme`. Foundation Theme
+Most new themes should extend `capell-app/theme-foundation`. Foundation Theme
 owns the shared Blade, Tailwind, media, settings, and runtime pieces. A child
 theme should mostly provide a theme definition, presets, a page wrapper, and the
 section views it intentionally customises.
@@ -23,14 +23,46 @@ chain, so a child theme can override a few sections and inherit the rest from
 Foundation. Register full section sets only when the theme deliberately owns all
 of those views.
 
+## Before You Start: Check the Catalogue
+
+Every new theme must begin with [docs/themes.json](themes.json), the canonical
+theme catalogue. It records each theme's family, lane, tier, sections, and
+customisation surfaces, and it is the machine-readable record of what the theme
+programme already covers. Do not open an editor for Blade or a service provider
+until the catalogue questions below have answers.
+
+New theme checklist:
+
+1. **Pick a family.** Choose an existing `family` from the catalogue, or write
+   down why a new family is justified before creating one.
+2. **Check the lane.** Confirm the proposed `lane` does not duplicate an
+   existing premium theme's lane, and review the `overlapRisk` of neighbouring
+   entries in the same family. A high-overlap lane needs a merge or a sharper
+   positioning, not another near-identical theme.
+3. **Declare positioning.** Decide free versus premium (`tier`) before
+   implementation, not after the views exist.
+4. **List customisation surfaces.** Fill in the `customisationSurfaces` fields
+   (header, footer, Theme Studio tokens, Layout Builder areas, section
+   variants, page widget assets, optional integrations) before writing any
+   Blade. See [Customisation Contract](#customisation-contract).
+5. **Split inherited from custom.** Identify which sections inherit Foundation
+   chrome and which are custom to the theme, and record them in
+   `standardSections` and `customSections`.
+
+The catalogue entry is a required first artifact:
+`packages/theme-foundation/tests/Unit/ThemeCatalogueTest.php` enforces that no
+theme package can exist without a matching `docs/themes.json` entry, so a theme
+package without one fails the suite. For tiering rules and cross-theme change
+rules, see the [Capell Theme Scale](theme-scale.md).
+
 ## Existing Packages
 
 Use these packages as the working examples:
 
-| Package                                   | Theme key          | Role                                                                                                                               |
-| ----------------------------------------- | ------------------ | ---------------------------------------------------------------------------------------------------------------------------------- |
-| `capell-app/foundation-theme`             | `default`          | Free shared runtime, default Blade components, Tailwind asset generation, settings, media URL handling, and generic beacon client. |
-| `capell-app/theme-liquid-glass`           | `liquid-glass`     | Free modern glass renderer for launch, service, and design-led sites using the standard section set.                               |
+| Package                         | Theme key      | Role                                                                                                                               |
+| ------------------------------- | -------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
+| `capell-app/theme-foundation`   | `default`      | Free shared runtime, default Blade components, Tailwind asset generation, settings, media URL handling, and generic beacon client. |
+| `capell-app/theme-liquid-glass` | `liquid-glass` | Free modern glass renderer for launch, service, and design-led sites using the standard section set.                               |
 
 Theme packages are intentionally thin. They have no migrations, routes, models,
 admin navigation, or settings of their own. They register renderer contracts,
@@ -94,7 +126,7 @@ Use Foundation Theme directly when a site only needs the default look:
 
 ```json
 {
-    "name": "capell-app/foundation-theme",
+    "name": "capell-app/theme-foundation",
     "kind": "theme",
     "themeKey": "default"
 }
@@ -108,9 +140,9 @@ visual treatment:
     "name": "vendor/theme-client",
     "kind": "theme",
     "themeKey": "client",
-    "extends": "capell-app/foundation-theme",
+    "extends": "capell-app/theme-foundation",
     "dependencies": {
-        "requires": ["capell-app/core", "capell-app/foundation-theme"],
+        "requires": ["capell-app/core", "capell-app/theme-foundation"],
         "supports": [],
         "conflicts": []
     }
@@ -142,10 +174,10 @@ manifest v3 shape shown below.
     },
     "namespace": "Vendor\\ClientTheme",
     "themeKey": "client",
-    "extends": "capell-app/foundation-theme",
+    "extends": "capell-app/theme-foundation",
     "surfaces": ["frontend"],
     "dependencies": {
-        "requires": ["capell-app/core", "capell-app/foundation-theme"],
+        "requires": ["capell-app/core", "capell-app/theme-foundation"],
         "supports": [],
         "conflicts": []
     },
@@ -425,6 +457,75 @@ Child themes should stay on Foundation's shared runtime unless they need their
 own section markup. Put branded presentation in the child theme package, not in
 Foundation Theme.
 
+### Own Only What You Customise
+
+Make inheritance the default and ownership the exception. A child theme should
+register a section renderer only for markup it genuinely customises; everything
+else must resolve through the parent chain to Foundation. This keeps chrome
+fixes, accessibility work, and public-safety hardening in one place instead of
+copied across dozens of themes.
+
+`capell-app/theme-editorial-serif` is the reference example: it owns ten
+sections that carry its editorial look, but points `navigation` and `footer`
+at Foundation's chrome views
+(`capell-theme-foundation::theme.chrome.navigation` and
+`capell-theme-foundation::theme.chrome.footer`) instead of duplicating them.
+If a theme's header or footer is not a deliberate visual differentiator,
+inherit the Foundation chrome and record that choice in the catalogue's
+`customisationSurfaces.header` and `customisationSurfaces.footer` fields.
+
+## Customisation Contract
+
+Every theme offers editors a standard set of customisation surfaces. These are
+grounded in what Foundation actually provides, and they map one-to-one onto the
+`customisationSurfaces` object in [docs/themes.json](themes.json) — the
+catalogue is the machine-readable form of this contract, so what you document
+there must match what the theme registers.
+
+**Header** (`customisationSurfaces.header`) — pick one:
+
+- Inherit Foundation navigation chrome by pointing the `navigation` renderer at
+  `capell-theme-foundation::theme.chrome.navigation`.
+- Ship a theme-specific header view when the header is a genuine visual
+  differentiator.
+- Use the editable Layout Builder `header` area that Foundation registers
+  through `LayoutAreaRegistry`, rendered with
+  `<x-capell::layout.area area="header" />`, so editors manage header content
+  with normal Layout Builder elements.
+
+**Footer** (`customisationSurfaces.footer`) — the same three options: inherit
+Foundation footer chrome (`capell-theme-foundation::theme.chrome.footer`), ship
+a theme-specific footer view, or render an editable footer/content area where
+the theme supports one.
+
+**Visual tokens** (`customisationSurfaces.themeStudioTokens`) — the Theme
+Studio customisation surface. Foundation's preset token keys, grouped:
+
+- Colour and surface: `primaryColor`, `accentColor`, `neutralColor`,
+  `surfaceColor`, `foregroundColor`.
+- Typography: `headingFont`, `bodyFont`, `headingScale`.
+- Radius and spacing: `radius`, `spacing`.
+- Cards and density: `cardStyle`, `cardDensity`.
+- Media treatment: `mediaTreatment`.
+- Layout and motion: `layoutPresentation`, `motionIntensity`.
+
+Child themes that also expose `alignment` and `navigationStyle` list those in
+their catalogue entry. Do not invent new token keys per theme; extend the
+shared vocabulary deliberately or use container theme settings instead.
+
+**Page composition** — the remaining catalogue fields:
+
+- Section order and section variants (`sectionVariants`): which sections the
+  theme renders, how many are custom, and any per-section variants.
+- Widgets and page assets (`pageWidgetAssets`): CSS and other assets the theme
+  ships for pages and widgets.
+- CTA placement: where the theme's `cta` section sits in the standard flow.
+- Optional integrations (`optionalIntegrations`): companion packages the theme
+  renders richer states for when installed.
+
+When any of these surfaces changes in code, update the theme's
+`customisationSurfaces` entry in the same change.
+
 ## 7. Register Layout Areas
 
 Layout areas are named places where a theme can render normal Layout Builder
@@ -484,7 +585,7 @@ metadata.
 
 Foundation Theme aggregates Tailwind directives from:
 
-- `capell-foundation-theme.tailwind` config.
+- `capell-theme-foundation.tailwind` config.
 - Registered vendor Tailwind imports, plugins, sources, and theme colors.
 - Service providers implementing Tailwind asset registration.
 - The enabled default `Theme` model's configured colors.
@@ -744,7 +845,7 @@ The manifest still uses the package-level parent:
 {
     "kind": "theme",
     "themeKey": "client",
-    "extends": "capell-app/foundation-theme"
+    "extends": "capell-app/theme-foundation"
 }
 ```
 

@@ -30,7 +30,7 @@ Hero ships the single default home-page hero widget (`capell::widget.hero`) plus
 
 6. **Shipped 2026-06-14: added a safe default widget fallback view.** `AbstractWidget` no longer points at a missing view. The fallback intentionally renders nothing unless a subclass supplies its own widget view, avoiding a public fatal while keeping the base class conservative. — `src/View/Components/Widget/AbstractWidget.php`, `resources/views/components/widget/default.blade.php`, `tests/Feature/HeroWidgetViewTest.php` — M
 
-7. **Shipped 2026-06-14: collapsed duplicated carousel attributes.** The foundation carousel reads the current `data-carousel-*` names and keeps fallback support in JS for older markup, so Hero now emits only the current attributes. The render test asserts the legacy aliases are absent. — `resources/views/components/hero/wrapper.blade.php`, `packages/foundation-theme/resources/js/widgets/widget/carousel.js`, `tests/Feature/HeroWidgetViewTest.php` — S
+7. **Shipped 2026-06-14: collapsed duplicated carousel attributes.** The foundation carousel reads the current `data-carousel-*` names and keeps fallback support in JS for older markup, so Hero now emits only the current attributes. The render test asserts the legacy aliases are absent. — `resources/views/components/hero/wrapper.blade.php`, `packages/theme-foundation/resources/js/widgets/widget/carousel.js`, `tests/Feature/HeroWidgetViewTest.php` — S
 
 ## 3. Missing Features (gaps)
 

@@ -41,7 +41,7 @@ describe('frontend authoring capell.json manifest', function (): void {
         expect($manifest['composerRequires'])->toContain('capell-app/core')
             ->and($manifest['composerRequires'])->toContain('capell-app/admin')
             ->and($manifest['composerRequires'])->toContain('capell-app/frontend')
-            ->and($manifest['composerRequires'])->toContain('capell-app/foundation-theme')
+            ->and($manifest['composerRequires'])->toContain('capell-app/theme-foundation')
             ->and($manifest['composerRequires'])->toContain('capell-app/frontend-authoring');
     });
 

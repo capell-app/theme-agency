@@ -172,9 +172,9 @@ class PackagesTestCase extends AbstractTestCase
             __DIR__ . '/../../packages/blog/resources/views/components/footer',
             __DIR__ . '/../../packages/blog/resources/views/components/page',
             __DIR__ . '/../../packages/blog/resources/views/components/tag.blade.php',
-            __DIR__ . '/../../packages/foundation-theme/resources/views/layout-builder/components',
+            __DIR__ . '/../../packages/theme-foundation/resources/views/layout-builder/components',
             __DIR__ . '/../../packages/seo-suite/resources/views/components/schema',
-            __DIR__ . '/../../packages/foundation-theme/resources/views/components',
+            __DIR__ . '/../../packages/theme-foundation/resources/views/components',
         ] as $path) {
             RegisterBlazeOptimizedViewsAction::run($path);
         }

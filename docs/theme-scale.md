@@ -6,7 +6,7 @@ Use this scale when creating a new Capell theme, changing one existing theme, or
 
 | Tier       | Packages                      | Role                                                                                                                                                           | Expected depth                                                 |
 | ---------- | ----------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------- |
-| Foundation | `capell-app/foundation-theme` | Default frontend runtime, shared renderer conventions, Tailwind asset generation, media URL handling, generic Blade components, and base Layout Builder areas. | Boring, stable, shared. Changes here affect every child theme. |
+| Foundation | `capell-app/theme-foundation` | Default frontend runtime, shared renderer conventions, Tailwind asset generation, media URL handling, generic Blade components, and base Layout Builder areas. | Boring, stable, shared. Changes here affect every child theme. |
 
 Foundation is the normal/default theme. Basic and premium Blade themes extend Foundation rather than replacing it unless Foundation's rendering contract is genuinely the wrong base. The Inertia Bookings family is separate because it renders through Inertia and uses React/Vue adapter plugins.
 
@@ -79,8 +79,8 @@ Public renderers should use `BuildPublicLayoutGraphAction` or existing renderer 
 Start with Foundation unless there is a strong reason not to.
 
 1. Create a Composer package under `packages/theme-client`.
-2. Add `capell.json` with `manifest-version: 3`, `kind: "theme"`, a stable `themeKey`, `extends: "capell-app/foundation-theme"`, and runtime provider metadata.
-3. Require `capell-app/core` and `capell-app/foundation-theme`. Add supported optional packages only when renderers actually integrate with them.
+2. Add `capell.json` with `manifest-version: 3`, `kind: "theme"`, a stable `themeKey`, `extends: "capell-app/theme-foundation"`, and runtime provider metadata.
+3. Require `capell-app/core` and `capell-app/theme-foundation`. Add supported optional packages only when renderers actually integrate with them.
 4. Register the package with `CapellCore::registerPackage()` in `register()`.
 5. In `boot()`, stop early when the package is not installed, load views, and register the theme definition, page wrapper, and section renderers.
 6. Add the standard section set first: `navigation`, `hero`, `features`, `proof`, `content-listing`, `search`, `pagination`, `form`, `cta`, and `footer`.
@@ -196,7 +196,7 @@ For package code changes, start narrow:
 Then run the affected package suites and any shared Foundation or Layout Builder tests when the contract changes:
 
 ```bash
-vendor/bin/pest packages/foundation-theme/tests packages/layout-builder/tests --configuration=phpunit.xml
+vendor/bin/pest packages/theme-foundation/tests packages/layout-builder/tests --configuration=phpunit.xml
 ```
 
 Use `COMPOSER=composer.local.json composer preflight` before committing broader theme/runtime changes.

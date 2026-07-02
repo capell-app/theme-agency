@@ -124,7 +124,7 @@ return [
         'button' => 'Start with Dense News Analysis',
     ],
     'footer' => [
-        'video' => 'Sections',
+        'shop' => 'Sections',
         'models' => 'World',
         'accessories' => 'Politics',
         'compare' => 'Business',
