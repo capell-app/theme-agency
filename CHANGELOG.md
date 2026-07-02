@@ -1,5 +1,9 @@
 # Changelog
 
+## v2.0.64 - 2026-07-02
+
+Release v2.0.64 for Capell package library 4.x.
+
 ## v2.0.63 - 2026-07-02
 
 Release v2.0.63 for Capell package library 4.x.
