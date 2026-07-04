@@ -1,23 +1,26 @@
 @php
+    $heading = data_get($section, 'heading', __('capell-theme-case-study-platform::sections.proof.heading'));
     $items = data_get($section, 'items', [
-        ['value' => __('capell-theme-case-study-platform::sections.proof.care_value'), 'label' => __('capell-theme-case-study-platform::sections.proof.care_label')],
-        ['value' => __('capell-theme-case-study-platform::sections.proof.materials_value'), 'label' => __('capell-theme-case-study-platform::sections.proof.materials_label')],
-        ['value' => __('capell-theme-case-study-platform::sections.proof.stores_value'), 'label' => __('capell-theme-case-study-platform::sections.proof.stores_label')],
+        ['value' => __('capell-theme-case-study-platform::sections.proof.case_studies_value'), 'label' => __('capell-theme-case-study-platform::sections.proof.case_studies_label')],
+        ['value' => __('capell-theme-case-study-platform::sections.proof.readers_value'), 'label' => __('capell-theme-case-study-platform::sections.proof.readers_label')],
+        ['value' => __('capell-theme-case-study-platform::sections.proof.reply_value'), 'label' => __('capell-theme-case-study-platform::sections.proof.reply_label')],
     ]);
 @endphp
 
-<section class="editorial-section">
-    <div class="editorial-section-inner">
-        <p class="editorial-kicker">
+<section class="csp-section csp-section-field">
+    <div class="csp-section-inner">
+        <p class="csp-kicker">
             {{ __('capell-theme-case-study-platform::sections.proof.kicker') }}
         </p>
-        <div class="editorial-grid">
+        <h2>{{ $heading }}</h2>
+
+        <div class="csp-proof-grid">
             @foreach ($items as $item)
-                <article class="editorial-card">
-                    <h3>
+                <article>
+                    <p class="csp-proof-value">
                         {{ data_get($item, 'value', data_get($item, 'title', '')) }}
-                    </h3>
-                    <p>
+                    </p>
+                    <p class="csp-proof-label">
                         {{ data_get($item, 'label', data_get($item, 'summary', '')) }}
                     </p>
                 </article>

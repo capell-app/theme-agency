@@ -32,19 +32,19 @@ jobs:
       fail-fast: true
       matrix:
         include:
-          - php: 8.3
+          - php: 8.4
             laravel: 11.*
             testbench: 9.*
             livewire: ^3.7
             db: sqlite
             shard: 1
-          - php: 8.3
+          - php: 8.4
             laravel: 11.*
             testbench: 9.*
             livewire: ^3.7
             db: sqlite
             shard: 2
-          - php: 8.3
+          - php: 8.4
             laravel: 11.*
             testbench: 9.*
             livewire: ^3.7

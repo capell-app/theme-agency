@@ -1,22 +1,24 @@
 @php
-    $items = data_get($section, 'items', [
-        ['value' => __('capell-theme-motion-archive::sections.proof.care_value'), 'label' => __('capell-theme-motion-archive::sections.proof.care_label')],
-        ['value' => __('capell-theme-motion-archive::sections.proof.materials_value'), 'label' => __('capell-theme-motion-archive::sections.proof.materials_label')],
-        ['value' => __('capell-theme-motion-archive::sections.proof.stores_value'), 'label' => __('capell-theme-motion-archive::sections.proof.stores_label')],
-    ]);
+    $items = data_get($section, 'items', []);
 @endphp
 
-<section class="editorial-section">
-    <div class="editorial-section-inner">
-        <p class="editorial-kicker">
+<section class="mva-section">
+    <div class="mva-section-inner">
+        <p class="mva-kicker">
             {{ __('capell-theme-motion-archive::sections.proof.kicker') }}
         </p>
-        <div class="editorial-grid">
+        <h2>
+            {{ data_get($section, 'heading', __('capell-theme-motion-archive::sections.proof.heading')) }}
+        </h2>
+        <div
+            class="mva-proof-grid"
+            style="margin-top: 2rem"
+        >
             @foreach ($items as $item)
-                <article class="editorial-card">
-                    <h3>
+                <article class="mva-proof-item">
+                    <p class="mva-proof-value">
                         {{ data_get($item, 'value', data_get($item, 'title', '')) }}
-                    </h3>
+                    </p>
                     <p>
                         {{ data_get($item, 'label', data_get($item, 'summary', '')) }}
                     </p>

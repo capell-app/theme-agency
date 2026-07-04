@@ -7,7 +7,7 @@ Nearly all new Capell packages should be added to this packages repo under `pack
 ## Non-negotiables
 
 - `declare(strict_types=1);` in every PHP file.
-- PHP 8.3 minimum. Use PHP 8.3 features deliberately, but do not introduce syntax that requires a newer runtime.
+- PHP 8.4 minimum. Use PHP 8.4 features deliberately, but do not introduce syntax that requires a newer runtime.
 - No single-letter or cryptic variable names — closures, migrations, example prose included.
 - All closures must declare parameter and return types explicitly.
 - No `php artisan` in this repo — use `vendor/bin/pest` directly.
@@ -104,8 +104,8 @@ Any model in draft/publish must implement `Capell\Core\Contracts\Draftable` and 
 
 ## Commands
 
-| Command                                    | Purpose                                                                             |
-| ------------------------------------------ | ----------------------------------------------------------------------------------- |
+| Command                                               | Purpose                                                                             |
+| ----------------------------------------------------- | ----------------------------------------------------------------------------------- |
 | `COMPOSER=composer.local.json composer test`          | Pest tests (parallel)                                                               |
 | `COMPOSER=composer.local.json composer preflight`     | Changed-file formatting plus full PHPStan via `../capell-4/scripts/lint-changed.sh` |
 | `COMPOSER=composer.local.json composer preflight:all` | Rector + full Pint + PHPStan + tests                                                |
@@ -113,7 +113,7 @@ Any model in draft/publish must implement `Capell\Core\Contracts\Draftable` and 
 | `COMPOSER=composer.local.json composer analyze`       | PHPStan only                                                                        |
 | `COMPOSER=composer.local.json composer prepare`       | Seed demo workbench                                                                 |
 | `COMPOSER=composer.local.json composer serve`         | Build + serve localhost:8000                                                        |
-| `vendor/bin/pest packages/{package}/tests` | Single package tests                                                                |
+| `vendor/bin/pest packages/{package}/tests`            | Single package tests                                                                |
 
 ## Package Workbench Browser QA
 

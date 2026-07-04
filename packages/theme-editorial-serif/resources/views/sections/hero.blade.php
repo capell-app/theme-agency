@@ -1,32 +1,64 @@
 @php
-    $items = data_get($section, 'items', data_get($section, 'features', []));
-    $heading = data_get($section, 'heading', data_get($section, 'title', ''));
-    $summary = data_get($section, 'summary', data_get($section, 'description', ''));
+    $eyebrow = data_get($section, 'eyebrow', data_get($section, 'kicker', __('capell-theme-editorial-serif::sections.hero.eyebrow')));
+    $heading = data_get($section, 'heading', data_get($section, 'title', __('capell-theme-editorial-serif::sections.hero.heading')));
+    $summary = data_get($section, 'summary', data_get($section, 'description', __('capell-theme-editorial-serif::sections.hero.summary')));
+    $actions = collect(data_get($section, 'actions', []))
+        ->filter(fn (mixed $action): bool => filled(data_get($action, 'label')))
+        ->values();
+
+    if ($actions->isEmpty()) {
+        $actions = collect([
+            [
+                'label' => data_get($section, 'primary_label', __('capell-theme-editorial-serif::sections.hero.primary_label')),
+                'url' => data_get($section, 'primary_url', data_get($section, 'primary.href', '/')),
+                'style' => 'primary',
+            ],
+            [
+                'label' => data_get($section, 'secondary_label', __('capell-theme-editorial-serif::sections.hero.secondary_label')),
+                'url' => data_get($section, 'secondary_url', data_get($section, 'secondary.href', '/')),
+                'style' => 'secondary',
+            ],
+        ]);
+    }
+
+    $mediaUrl = data_get($section, 'mediaUrl', data_get($section, 'media_url'));
+    $mediaAlt = data_get($section, 'mediaAlt', data_get($section, 'media_alt'));
 @endphp
 
-<section class="theme-section theme-section-generic">
-    <div class="theme-section-inner">
-        @if ($heading !== '')
-            <h2>{{ $heading }}</h2>
-        @endif
+<section class="eser-section eser-hero">
+    <div class="eser-section-inner">
+        <p class="eser-eyebrow">{{ $eyebrow }}</p>
+        <h1>{{ $heading }}</h1>
+        <hr class="eser-heading-rule eser-heading-rule-accent" />
+        <p class="eser-summary">{{ $summary }}</p>
 
-        @if ($summary !== '')
-            <p>{{ $summary }}</p>
-        @endif
+        <div class="eser-actions">
+            @foreach ($actions as $action)
+                <a
+                    class="eser-button {{ data_get($action, 'style') === 'secondary' ? 'eser-button-quiet' : '' }}"
+                    href="{{ data_get($action, 'url', '/') }}"
+                >
+                    {{ data_get($action, 'label') }}
+                </a>
+            @endforeach
+        </div>
 
-        @if (is_iterable($items))
-            <div class="theme-card-grid">
-                @foreach ($items as $item)
-                    <article class="theme-card">
-                        <h3>
-                            {{ data_get($item, 'title', data_get($item, 'name', '')) }}
-                        </h3>
-                        <p>
-                            {{ data_get($item, 'summary', data_get($item, 'quote', '')) }}
-                        </p>
-                    </article>
-                @endforeach
-            </div>
+        @if (filled($mediaUrl))
+            <figure class="eser-hero-figure">
+                <img
+                    src="{{ $mediaUrl }}"
+                    alt="{{ $mediaAlt ?? $heading }}"
+                    width="1600"
+                    height="900"
+                    loading="eager"
+                    fetchpriority="high"
+                    decoding="async"
+                    class="eser-hero-media"
+                />
+                <figcaption class="eser-hero-caption">
+                    {{ $mediaAlt ?? __('capell-theme-editorial-serif::sections.hero.caption') }}
+                </figcaption>
+            </figure>
         @endif
     </div>
 </section>

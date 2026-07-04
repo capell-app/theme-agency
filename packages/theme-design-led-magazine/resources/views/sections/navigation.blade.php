@@ -7,29 +7,48 @@
         ['label' => __('capell-theme-design-led-magazine::sections.navigation.fashion'), 'url' => '/'],
         ['label' => __('capell-theme-design-led-magazine::sections.navigation.art'), 'url' => '/'],
     ]);
+    $ctaLabel = data_get($section, 'ctaLabel', data_get($section, 'cta_label'));
+    $ctaUrl = data_get($section, 'ctaUrl', data_get($section, 'cta_url', '/'));
 @endphp
 
-<nav class="editorial-section">
-    <div
-        class="editorial-section-inner"
-        style="padding-block: 1rem"
-    >
-        <div
-            class="editorial-grid"
-            style="align-items: center"
+<nav
+    class="dlm-masthead"
+    aria-label="{{ __('capell-theme-design-led-magazine::sections.navigation.aria_label') }}"
+>
+    <div class="dlm-masthead-inner">
+        <a
+            class="dlm-masthead-brand"
+            href="/"
         >
-            <strong>
+            <span class="dlm-masthead-wordmark">
                 {{ data_get($section, 'brand', __('capell-theme-design-led-magazine::sections.navigation.brand')) }}
-            </strong>
-            <div class="editorial-grid">
-                @foreach ($links as $link)
+            </span>
+            <span class="dlm-masthead-tagline">
+                {{ data_get($section, 'tagline', __('capell-theme-design-led-magazine::sections.navigation.tagline')) }}
+            </span>
+        </a>
+
+        <ul class="dlm-masthead-nav">
+            @foreach ($links as $link)
+                <li>
                     <a
                         href="{{ data_get($link, 'url', data_get($link, 'href', '/')) }}"
                     >
                         {{ data_get($link, 'label', data_get($link, 'title', '')) }}
                     </a>
-                @endforeach
-            </div>
-        </div>
+                </li>
+            @endforeach
+
+            @if (filled($ctaLabel))
+                <li>
+                    <a
+                        class="dlm-masthead-cta"
+                        href="{{ $ctaUrl }}"
+                    >
+                        {{ $ctaLabel }}
+                    </a>
+                </li>
+            @endif
+        </ul>
     </div>
 </nav>

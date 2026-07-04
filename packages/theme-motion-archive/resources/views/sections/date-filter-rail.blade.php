@@ -1,29 +1,58 @@
 @php
-    $items = data_get($section, 'items', [
-        ['title' => __('capell-theme-motion-archive::sections.topics.product_title'), 'summary' => __('capell-theme-motion-archive::sections.topics.product_summary')],
-        ['title' => __('capell-theme-motion-archive::sections.topics.design_title'), 'summary' => __('capell-theme-motion-archive::sections.topics.design_summary')],
-        ['title' => __('capell-theme-motion-archive::sections.topics.advice_title'), 'summary' => __('capell-theme-motion-archive::sections.topics.advice_summary')],
-        ['title' => __('capell-theme-motion-archive::sections.topics.culture_title'), 'summary' => __('capell-theme-motion-archive::sections.topics.culture_summary')],
-    ]);
+    $heading = data_get($section, 'heading', __('capell-theme-motion-archive::sections.date_filter_rail.heading'));
+    $summary = data_get($section, 'summary', __('capell-theme-motion-archive::sections.date_filter_rail.summary'));
+    $items = data_get($section, 'items', []);
 @endphp
 
-<section class="editorial-section">
-    <div class="editorial-section-inner">
-        <p class="editorial-kicker">
-            {{ __('capell-theme-motion-archive::sections.topics.kicker') }}
+<section
+    id="date-filter-rail"
+    class="mva-section mva-section-raised"
+>
+    <div class="mva-section-inner">
+        <p class="mva-kicker">
+            {{ __('capell-theme-motion-archive::sections.date_filter_rail.kicker') }}
         </p>
-        <h2>
-            {{ data_get($section, 'heading', __('capell-theme-motion-archive::sections.topics.heading')) }}
-        </h2>
-        <div class="editorial-grid">
-            @foreach ($items as $item)
-                <article class="editorial-card">
-                    <h3>
-                        {{ data_get($item, 'title', data_get($item, 'name', '')) }}
-                    </h3>
-                    <p>{{ data_get($item, 'summary', '') }}</p>
-                </article>
-            @endforeach
+        <h2>{{ $heading }}</h2>
+        <p class="mva-lede">{{ $summary }}</p>
+
+        <div
+            class="mva-rail-layout"
+            style="margin-top: 2rem"
+        >
+            <nav
+                class="mva-rail"
+                aria-label="{{ __('capell-theme-motion-archive::sections.date_filter_rail.kicker') }}"
+            >
+                @foreach ($items as $item)
+                    @php
+                        $itemUrl = data_get($item, 'url', data_get($item, 'href', '#winner-list'));
+                    @endphp
+
+                    <a
+                        class="mva-rail-link"
+                        href="{{ $itemUrl }}"
+                    >
+                        <strong>
+                            {{ data_get($item, 'title', data_get($item, 'name', '')) }}
+                        </strong>
+                        <span>
+                            {{ data_get($item, 'summary', data_get($item, 'description', '')) }}
+                        </span>
+                    </a>
+                @endforeach
+            </nav>
+
+            <div class="mva-rail-panel">
+                <p class="mva-kicker">
+                    {{ __('capell-theme-motion-archive::sections.date_filter_rail.panel_kicker') }}
+                </p>
+                <p
+                    class="mva-lede"
+                    style="margin: 0"
+                >
+                    {{ __('capell-theme-motion-archive::sections.date_filter_rail.panel_note') }}
+                </p>
+            </div>
         </div>
     </div>
 </section>

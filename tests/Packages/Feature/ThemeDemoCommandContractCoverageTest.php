@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 use Capell\FoundationTheme\Data\ThemeDemoInstallData;
 use Capell\Tests\Packages\Fixtures\ThemeDemoCommandRecorder;
-use Capell\ThemeStudio\Education\Actions\InstallEducationThemeDemoAction;
-use Capell\ThemeStudio\Education\Console\Commands\DemoCommand;
-use Capell\ThemeStudio\Knowledge\Actions\InstallKnowledgeThemeDemoAction;
-use Capell\ThemeStudio\LocalServices\Actions\InstallLocalServicesThemeDemoAction;
-use Capell\ThemeStudio\Nonprofit\Actions\InstallNonprofitThemeDemoAction;
+use Capell\ThemeStudio\CaseStudyPlatform\Actions\InstallCaseStudyPlatformThemeDemoAction;
+use Capell\ThemeStudio\CaseStudyPlatform\Console\Commands\DemoCommand;
+use Capell\ThemeStudio\DenseNewsAnalysis\Actions\InstallDenseNewsAnalysisThemeDemoAction;
+use Capell\ThemeStudio\ExperimentalDirectory\Actions\InstallExperimentalDirectoryThemeDemoAction;
+use Capell\ThemeStudio\PremiumPortfolioCollection\Actions\InstallPremiumPortfolioCollectionThemeDemoAction;
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Tester\CommandTester;
 
@@ -47,8 +47,8 @@ it('passes theme demo command options into the package demo install action', fun
         ->and($recorder->records[0]->siteNames)->toBe(['Main site', 'Knowledge base'])
         ->and($recorder->records[0]->force)->toBeTrue();
 })->with([
-    'education' => [DemoCommand::class, InstallEducationThemeDemoAction::class],
-    'knowledge' => [Capell\ThemeStudio\Knowledge\Console\Commands\DemoCommand::class, InstallKnowledgeThemeDemoAction::class],
-    'local services' => [Capell\ThemeStudio\LocalServices\Console\Commands\DemoCommand::class, InstallLocalServicesThemeDemoAction::class],
-    'nonprofit' => [Capell\ThemeStudio\Nonprofit\Console\Commands\DemoCommand::class, InstallNonprofitThemeDemoAction::class],
+    'case study platform' => [DemoCommand::class, InstallCaseStudyPlatformThemeDemoAction::class],
+    'dense news analysis' => [Capell\ThemeStudio\DenseNewsAnalysis\Console\Commands\DemoCommand::class, InstallDenseNewsAnalysisThemeDemoAction::class],
+    'experimental directory' => [Capell\ThemeStudio\ExperimentalDirectory\Console\Commands\DemoCommand::class, InstallExperimentalDirectoryThemeDemoAction::class],
+    'premium portfolio collection' => [Capell\ThemeStudio\PremiumPortfolioCollection\Console\Commands\DemoCommand::class, InstallPremiumPortfolioCollectionThemeDemoAction::class],
 ]);

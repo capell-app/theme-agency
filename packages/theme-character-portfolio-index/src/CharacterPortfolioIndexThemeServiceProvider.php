@@ -6,13 +6,15 @@ namespace Capell\ThemeStudio\CharacterPortfolioIndex;
 
 use Capell\Core\Data\VendorAssetData;
 use Capell\Core\Enums\FrontendRuntime;
+use Capell\Core\Enums\VendorAssetEnum;
 use Capell\Core\Facades\CapellCore;
 use Capell\Core\ThemeStudio\Contracts\SectionRenderer;
 use Capell\Core\ThemeStudio\Data\ThemeDefinitionData;
 use Capell\Core\ThemeStudio\Data\ThemePresetData;
-use Capell\Core\ThemeStudio\Rendering\BladeThemeRenderer;
 use Capell\Core\ThemeStudio\Rendering\ViewSectionRenderer;
 use Capell\Core\ThemeStudio\Theme\ThemeRegistry;
+use Capell\FoundationTheme\Rendering\ChromeSplitBladeThemeRenderer;
+use Capell\FoundationTheme\Support\Editor\StandardThemeEditorSchema;
 use Capell\ThemeStudio\CharacterPortfolioIndex\Console\Commands\DemoCommand;
 use Illuminate\Support\ServiceProvider;
 use Override;
@@ -64,6 +66,9 @@ final class CharacterPortfolioIndexThemeServiceProvider extends ServiceProvider
             assets: ['css' => 'vendor/capell/themes/character-portfolio-index.css'],
             runtime: FrontendRuntime::Blade,
             extends: 'default',
+            frontend: [
+                'editor' => StandardThemeEditorSchema::definition(),
+            ],
         );
     }
 
@@ -88,7 +93,7 @@ final class CharacterPortfolioIndexThemeServiceProvider extends ServiceProvider
 
         $registry->register(
             definition: self::definition(),
-            themeRenderer: new BladeThemeRenderer(
+            themeRenderer: new ChromeSplitBladeThemeRenderer(
                 themeKey: self::THEME_KEY,
                 layoutView: 'capell-theme-character-portfolio-index::page',
                 sectionRenderers: $sectionRenderers,
@@ -99,7 +104,12 @@ final class CharacterPortfolioIndexThemeServiceProvider extends ServiceProvider
 
     private function registerVendorCssAssets(): void
     {
-        CapellCore::registerVendorAsset(VendorAssetData::tailwindImport('resources/css/theme-character-portfolio-index.css', self::$packageName));
+        CapellCore::registerVendorAsset(new VendorAssetData(
+            type: VendorAssetEnum::TailwindImport,
+            value: 'resources/css/theme-character-portfolio-index.css',
+            packageName: self::$packageName,
+            condition: 'theme-css:character-portfolio-index',
+        ));
         CapellCore::registerVendorAsset(VendorAssetData::tailwindSource('resources/views/**/*.blade.php', self::$packageName));
     }
 

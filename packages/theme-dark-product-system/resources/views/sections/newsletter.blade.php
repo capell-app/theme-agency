@@ -1,39 +1,44 @@
 <section
-    class="editorial-section"
-    style="background: var(--editorial-field)"
+    id="newsletter"
+    class="dps-section dps-section-field"
 >
-    <div class="editorial-section-inner editorial-split">
+    <div class="dps-section-inner dps-split">
         <div>
-            <p class="editorial-kicker">
+            <p class="dps-eyebrow">
                 {{ __('capell-theme-dark-product-system::sections.newsletter.kicker') }}
             </p>
             <h2>
                 {{ data_get($section, 'heading', __('capell-theme-dark-product-system::sections.newsletter.heading')) }}
             </h2>
-            <p class="editorial-lede">
+            <p class="dps-lede">
                 {{ data_get($section, 'summary', __('capell-theme-dark-product-system::sections.newsletter.summary')) }}
             </p>
         </div>
         <form
-            method="post"
-            action="{{ data_get($section, 'action', '/') }}"
-            class="editorial-card"
+            method="get"
+            action="{{ data_get($section, 'action', '#newsletter') }}"
+            class="dps-form"
         >
-            <label for="editorial-newsletter-email">
-                {{ __('capell-theme-dark-product-system::sections.newsletter.email_label') }}
+            <label for="dps-newsletter-email">
+                {{ data_get($section, 'email_label', __('capell-theme-dark-product-system::sections.newsletter.email_label')) }}
             </label>
             <input
-                id="editorial-newsletter-email"
+                id="dps-newsletter-email"
                 name="email"
                 type="email"
+                autocomplete="email"
+                placeholder="{{ __('capell-theme-dark-product-system::sections.newsletter.placeholder') }}"
                 required
             />
             <button
-                class="editorial-button"
+                class="dps-button"
                 type="submit"
             >
-                {{ __('capell-theme-dark-product-system::sections.newsletter.button') }}
+                {{ data_get($section, 'button', __('capell-theme-dark-product-system::sections.newsletter.button')) }}
             </button>
+            <p class="dps-form-note">
+                {{ __('capell-theme-dark-product-system::sections.newsletter.note') }}
+            </p>
         </form>
     </div>
 </section>

@@ -6,13 +6,15 @@ namespace Capell\ThemeStudio\QuietWebGallery;
 
 use Capell\Core\Data\VendorAssetData;
 use Capell\Core\Enums\FrontendRuntime;
+use Capell\Core\Enums\VendorAssetEnum;
 use Capell\Core\Facades\CapellCore;
 use Capell\Core\ThemeStudio\Contracts\SectionRenderer;
 use Capell\Core\ThemeStudio\Data\ThemeDefinitionData;
 use Capell\Core\ThemeStudio\Data\ThemePresetData;
-use Capell\Core\ThemeStudio\Rendering\BladeThemeRenderer;
 use Capell\Core\ThemeStudio\Rendering\ViewSectionRenderer;
 use Capell\Core\ThemeStudio\Theme\ThemeRegistry;
+use Capell\FoundationTheme\Rendering\ChromeSplitBladeThemeRenderer;
+use Capell\FoundationTheme\Support\Editor\StandardThemeEditorSchema;
 use Capell\ThemeStudio\QuietWebGallery\Console\Commands\DemoCommand;
 use Illuminate\Support\ServiceProvider;
 use Override;
@@ -60,9 +62,37 @@ final class QuietWebGalleryThemeServiceProvider extends ServiceProvider
                         'cardDensity' => 'balanced',
                     ],
                 ),
+                new ThemePresetData(
+                    key: 'hushed-clay',
+                    name: 'Hushed Clay',
+                    description: 'A softer counterpart preset that trades sage-on-stone for a muted dusty-blue and clay palette, keeping the same calm, understated gallery mood at a slightly airier density.',
+                    previewImage: '/vendor/capell/themes/quiet-web-gallery.jpg',
+                    values: [
+                        'primaryColor' => '#2f2b28',
+                        'accentColor' => '#8c7b6a',
+                        'neutralColor' => '#7a7570',
+                        'surfaceColor' => '#f2ede6',
+                        'foregroundColor' => '#2f2b28',
+                        'headingFont' => 'sora',
+                        'bodyFont' => 'inter',
+                        'spacing' => 'relaxed',
+                        'alignment' => 'left',
+                        'cardStyle' => 'understated',
+                        'navigationStyle' => 'prominent',
+                        'layoutPresentation' => 'editorial',
+                        'motionIntensity' => 'minimal',
+                        'mediaTreatment' => 'quiet-image-grid',
+                        'radius' => 'lg',
+                        'headingScale' => 'balanced',
+                        'cardDensity' => 'airy',
+                    ],
+                ),
             ],
             assets: ['css' => 'vendor/capell/themes/quiet-web-gallery.css'],
             runtime: FrontendRuntime::Blade,
+            frontend: [
+                'editor' => StandardThemeEditorSchema::definition(),
+            ],
             extends: 'default',
         );
     }
@@ -88,7 +118,7 @@ final class QuietWebGalleryThemeServiceProvider extends ServiceProvider
 
         $registry->register(
             definition: self::definition(),
-            themeRenderer: new BladeThemeRenderer(
+            themeRenderer: new ChromeSplitBladeThemeRenderer(
                 themeKey: self::THEME_KEY,
                 layoutView: 'capell-theme-quiet-web-gallery::page',
                 sectionRenderers: $sectionRenderers,
@@ -99,7 +129,12 @@ final class QuietWebGalleryThemeServiceProvider extends ServiceProvider
 
     private function registerVendorCssAssets(): void
     {
-        CapellCore::registerVendorAsset(VendorAssetData::tailwindImport('resources/css/theme-quiet-web-gallery.css', self::$packageName));
+        CapellCore::registerVendorAsset(new VendorAssetData(
+            type: VendorAssetEnum::TailwindImport,
+            value: 'resources/css/theme-quiet-web-gallery.css',
+            packageName: self::$packageName,
+            condition: 'theme-css:quiet-web-gallery',
+        ));
         CapellCore::registerVendorAsset(VendorAssetData::tailwindSource('resources/views/**/*.blade.php', self::$packageName));
     }
 

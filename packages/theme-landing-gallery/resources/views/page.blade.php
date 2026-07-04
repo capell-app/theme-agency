@@ -1,14 +1,19 @@
 <a
     href="#main-content"
-    class="editorial-skip-link"
+    class="lga-skip-link"
 >
     {{ __('capell-theme-landing-gallery::generic.skip_to_content') }}
 </a>
 
-<main
-    id="main-content"
+<div
     style="{{ collect($brand->tokens())->map(fn (mixed $value, string $token): string => $token . ':' . $value)->implode(';') }}"
-    class="editorial-shell min-h-screen antialiased"
+    class="lga-shell min-h-screen antialiased"
 >
-    {!! $content !!}
-</main>
+    @if (isset($chromeHeader) || isset($chromeFooter))
+        {!! $chromeHeader ?? '' !!}
+        <main id="main-content">{!! $mainContent ?? $content !!}</main>
+        {!! $chromeFooter ?? '' !!}
+    @else
+        <main id="main-content">{!! $content !!}</main>
+    @endif
+</div>

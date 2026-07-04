@@ -19,6 +19,11 @@ use Capell\FoundationTheme\Support\Demo\ThemeDemoPageDefinition;
  * newsletter) alongside the standard hero/proof/content-listing/cta — giving
  * every surface a full, individual landing-page gallery rather than the shared
  * skeleton.
+ *
+ * Anchor discipline: navigation and footer are rendered on every surface, so
+ * their links point at real page paths, never section anchors. Hero and CTA
+ * anchors are chosen per surface to only reference sections that actually
+ * render on that surface.
  */
 final class LandingGalleryDemoContent implements ProvidesThemeDemoContent
 {
@@ -58,35 +63,51 @@ final class LandingGalleryDemoContent implements ProvidesThemeDemoContent
             ),
             renderData: [
                 'summary' => 'Galleria is a curated gallery of high-converting landing pages, paid templates, and partner work for SaaS, ecommerce, and startup teams.',
-                'navigation' => $this->navigation(),
-                'footer' => $this->footer(),
+                'navigation' => $this->navigation($themeKey),
+                'footer' => $this->footer($themeKey),
                 'sections' => [
                     [
                         'type' => 'hero',
                         'eyebrow' => 'Landing-page inspiration gallery',
                         'heading' => 'A landing-page gallery worth saving',
                         'summary' => 'Browse hundreds of high-converting SaaS, ecommerce, and startup landing pages. Save the ones that inspire you, grab the template, and ship your next launch faster.',
-                        'primary_label' => 'Browse the gallery',
-                        'primary_url' => '#website-examples',
-                        'secondary_label' => 'Explore templates',
-                        'secondary_url' => '#paid-templates',
+                        'actions' => [
+                            ['label' => 'Browse the gallery', 'url' => '#website-examples', 'style' => 'primary'],
+                            ['label' => 'Explore templates', 'url' => '#paid-templates', 'style' => 'secondary'],
+                        ],
+                        'mediaUrl' => $media['hero'][0] ?? null,
+                        'mediaAlt' => 'A SaaS landing page captured in the Galleria gallery',
                     ],
                     $this->categoryNavigationSection(
                         heading: 'Browse by what you are building',
                         summary: 'Jump straight to the pages that match your launch — by industry, page type, or conversion goal.',
+                        categoryUrl: '#website-examples',
                     ),
+                    [
+                        'type' => 'utility-hero',
+                        'heading' => 'Search the gallery by industry or page type',
+                        'summary' => 'Search hundreds of captures, or submit your own landing page for the next weekly drop.',
+                        'searchUrl' => '#website-examples',
+                        'linkLabel' => 'Submit your landing page',
+                        'linkUrl' => '/theme-' . $themeKey . '-contact',
+                    ],
                     $this->websiteExamplesSection(
                         heading: 'Latest landing pages, freshly captured',
                         summary: 'New screenshots every week from real products shipping real launches across SaaS, ecommerce, and startups.',
                         media: $media,
+                        detailUrl: '/theme-' . $themeKey . '-detail',
+                        templateUrl: '#paid-templates',
                     ),
                     $this->paidTemplatesSection(
                         heading: 'Paid templates ready to ship',
                         summary: 'Production-ready landing pages you can buy once, customise, and launch this week.',
+                        browseUrl: '#website-examples',
+                        purchaseUrl: '/theme-' . $themeKey . '-contact',
                     ),
                     $this->partnerBlocksSection(
                         heading: 'Featured studios & partners',
                         summary: 'The agencies and freelancers behind the work — available to build your next landing page.',
+                        contactUrl: '/theme-' . $themeKey . '-contact',
                     ),
                     $this->gallerySystemSection(
                         heading: 'Built to be browsed, saved, and shared',
@@ -99,6 +120,8 @@ final class LandingGalleryDemoContent implements ProvidesThemeDemoContent
                     $this->ctaSection(
                         heading: 'Find your next landing page in minutes',
                         summary: 'Start browsing the curated gallery free. Save the pages you love and grab a template when you are ready to ship.',
+                        label: 'Browse the gallery',
+                        url: '#website-examples',
                     ),
                 ],
             ],
@@ -123,30 +146,37 @@ final class LandingGalleryDemoContent implements ProvidesThemeDemoContent
             ),
             renderData: [
                 'summary' => 'A structured archive of landing pages, paid templates, and components — filterable by industry, goal, and style.',
-                'navigation' => $this->navigation(),
-                'footer' => $this->footer(),
+                'navigation' => $this->navigation($themeKey),
+                'footer' => $this->footer($themeKey),
                 'sections' => [
                     [
                         'type' => 'hero',
                         'eyebrow' => 'Landing-page archive',
                         'heading' => 'The full landing-page archive',
                         'summary' => 'Hundreds of curated references kept easy to scan. Filter by industry, page type, or conversion goal, then save what fits your next launch.',
-                        'primary_label' => 'Browse all pages',
-                        'primary_url' => '#content-listing',
-                        'secondary_label' => 'View categories',
-                        'secondary_url' => '#category-navigation',
+                        'actions' => [
+                            ['label' => 'Browse all pages', 'url' => '#content-listing', 'style' => 'primary'],
+                            ['label' => 'View categories', 'url' => '#category-navigation', 'style' => 'secondary'],
+                        ],
+                        'mediaUrl' => $media['listing'][0] ?? null,
+                        'mediaAlt' => 'A grid of captured landing pages in the Galleria archive',
                     ],
                     $this->contentListingSection(
                         heading: 'Recently added to the gallery',
                         summary: 'The newest landing pages captured across SaaS, ecommerce, and startup teams.',
+                        media: $media,
+                        detailUrl: '/theme-' . $themeKey . '-detail',
                     ),
                     $this->categoryNavigationSection(
                         heading: 'Narrow it down by category',
                         summary: 'Pick a lane and the archive filters to the references that match it.',
+                        categoryUrl: '#content-listing',
                     ),
                     $this->ctaSection(
                         heading: 'Save the pages worth revisiting',
                         summary: 'Create a free account to build collections, track prices, and get notified when new pages land.',
+                        label: 'Browse the archive',
+                        url: '#content-listing',
                     ),
                 ],
             ],
@@ -170,23 +200,27 @@ final class LandingGalleryDemoContent implements ProvidesThemeDemoContent
             ),
             renderData: [
                 'summary' => 'A detailed breakdown of the Northwind SaaS launch page — what works, why, and the template behind it.',
-                'navigation' => $this->navigation(),
-                'footer' => $this->footer(),
+                'navigation' => $this->navigation($themeKey),
+                'footer' => $this->footer($themeKey),
                 'sections' => [
                     [
                         'type' => 'hero',
                         'eyebrow' => 'Landing page breakdown',
                         'heading' => 'Northwind — a SaaS launch page that converts',
                         'summary' => 'A renewables platform that pairs a confident hero with a tight feature grid and a single, repeated call to action. Saved 4,200 times and counting.',
-                        'primary_label' => 'Get the template',
-                        'primary_url' => '#paid-templates',
-                        'secondary_label' => 'Back to gallery',
-                        'secondary_url' => '#website-examples',
+                        'actions' => [
+                            ['label' => 'See more like this', 'url' => '#website-examples', 'style' => 'primary'],
+                            ['label' => 'What the gallery tracks', 'url' => '#gallery-system', 'style' => 'secondary'],
+                        ],
+                        'mediaUrl' => $media['detail'][0] ?? null,
+                        'mediaAlt' => 'The Northwind SaaS landing page hero section',
                     ],
                     $this->websiteExamplesSection(
                         heading: 'More pages in this style',
                         summary: 'Other SaaS launch pages that share Northwind\'s structure and pace.',
                         media: $media,
+                        detailUrl: '/theme-' . $themeKey . '-detail',
+                        templateUrl: '/theme-' . $themeKey . '-contact',
                     ),
                     $this->gallerySystemSection(
                         heading: 'What the gallery tracks for this page',
@@ -195,6 +229,8 @@ final class LandingGalleryDemoContent implements ProvidesThemeDemoContent
                     $this->ctaSection(
                         heading: 'Ship a page like Northwind',
                         summary: 'Buy the template once, swap in your copy and brand, and launch this week.',
+                        label: 'See more landing pages',
+                        url: '#website-examples',
                     ),
                 ],
             ],
@@ -217,18 +253,20 @@ final class LandingGalleryDemoContent implements ProvidesThemeDemoContent
             ),
             renderData: [
                 'summary' => 'Submit a landing page, pitch a paid template, or subscribe to the weekly gallery digest.',
-                'navigation' => $this->navigation(),
-                'footer' => $this->footer(),
+                'navigation' => $this->navigation($themeKey),
+                'footer' => $this->footer($themeKey),
                 'sections' => [
                     [
                         'type' => 'hero',
                         'eyebrow' => 'Submit & subscribe',
                         'heading' => 'Get your work into the gallery',
                         'summary' => 'Submit a live landing page, pitch a template for the marketplace, or join the weekly digest of fresh captures. We review every submission within two working days.',
-                        'primary_label' => 'Subscribe for updates',
-                        'primary_url' => '#newsletter',
-                        'secondary_label' => 'See the gallery',
-                        'secondary_url' => '#website-examples',
+                        'actions' => [
+                            ['label' => 'Subscribe for updates', 'url' => '#newsletter', 'style' => 'primary'],
+                            ['label' => 'What happens next', 'url' => '#proof', 'style' => 'secondary'],
+                        ],
+                        'mediaUrl' => $media['contact'][0] ?? null,
+                        'mediaAlt' => 'A designer reviewing a landing page submission',
                     ],
                     $this->newsletterSection(
                         heading: 'One path to submit, pitch, or subscribe',
@@ -241,6 +279,8 @@ final class LandingGalleryDemoContent implements ProvidesThemeDemoContent
                     $this->ctaSection(
                         heading: 'Have a page ready to show?',
                         summary: 'Send us the URL and we will capture, tag, and feature it in the next weekly drop.',
+                        label: 'Subscribe for updates',
+                        url: '#newsletter',
                     ),
                 ],
             ],
@@ -264,18 +304,20 @@ final class LandingGalleryDemoContent implements ProvidesThemeDemoContent
             ),
             renderData: [
                 'summary' => 'No landing pages match that filter yet — but the gallery can still point you somewhere useful.',
-                'navigation' => $this->navigation(),
-                'footer' => $this->footer(),
+                'navigation' => $this->navigation($themeKey),
+                'footer' => $this->footer($themeKey),
                 'sections' => [
                     [
                         'type' => 'hero',
                         'eyebrow' => 'Gallery search',
                         'heading' => 'No pages match that filter — yet',
                         'summary' => 'We have not captured a landing page for this combination. Clear the filter to see everything, or browse a category instead.',
-                        'primary_label' => 'Clear filters',
-                        'primary_url' => '#website-examples',
-                        'secondary_label' => 'Browse categories',
-                        'secondary_url' => '#category-navigation',
+                        'actions' => [
+                            ['label' => 'Clear filters', 'url' => '#content-listing', 'style' => 'primary'],
+                            ['label' => 'Browse categories', 'url' => '#category-navigation', 'style' => 'secondary'],
+                        ],
+                        'mediaUrl' => $media['proof'][0] ?? null,
+                        'mediaAlt' => 'An empty gallery filter view',
                     ],
                     [
                         'type' => 'content-listing',
@@ -286,10 +328,13 @@ final class LandingGalleryDemoContent implements ProvidesThemeDemoContent
                     $this->categoryNavigationSection(
                         heading: 'Try a category instead',
                         summary: 'Pick a lane and the gallery filters to references that match it.',
+                        categoryUrl: '#content-listing',
                     ),
                     $this->ctaSection(
                         heading: 'Looking for a specific page?',
                         summary: 'Tell us what you are building and we will surface the closest captures in the gallery.',
+                        label: 'Browse categories',
+                        url: '#category-navigation',
                     ),
                 ],
             ],
@@ -301,6 +346,8 @@ final class LandingGalleryDemoContent implements ProvidesThemeDemoContent
      */
     private function notFound(string $themeKey, array $media): ThemeDemoPageDefinition
     {
+        $homeUrl = '/theme-' . $themeKey;
+
         return new ThemeDemoPageDefinition(
             surface: 'not-found',
             name: self::BRAND . ' 404',
@@ -312,22 +359,26 @@ final class LandingGalleryDemoContent implements ProvidesThemeDemoContent
             ),
             renderData: [
                 'summary' => 'That page has moved or never existed — here is the way back into the gallery.',
-                'navigation' => $this->navigation(),
-                'footer' => $this->footer(),
+                'navigation' => $this->navigation($themeKey),
+                'footer' => $this->footer($themeKey),
                 'sections' => [
                     [
                         'type' => 'hero',
                         'eyebrow' => '404',
                         'heading' => 'This page wandered off the gallery wall',
-                        'summary' => 'The link is broken or the page has moved. Head back to the curated gallery, or jump into the template marketplace.',
-                        'primary_label' => 'Back to the gallery',
-                        'primary_url' => '#website-examples',
-                        'secondary_label' => 'Explore templates',
-                        'secondary_url' => '#paid-templates',
+                        'summary' => 'The link is broken or the page has moved. Head back to the homepage, or tell us what you were looking for.',
+                        'actions' => [
+                            ['label' => 'Back to the homepage', 'url' => $homeUrl, 'style' => 'primary'],
+                            ['label' => 'Browse the full archive', 'url' => '/theme-' . $themeKey . '-directory', 'style' => 'secondary'],
+                        ],
+                        'mediaUrl' => $media['cta'][0] ?? null,
+                        'mediaAlt' => 'A blank gallery wall where a landing page used to hang',
                     ],
                     $this->ctaSection(
                         heading: 'Still looking for something?',
                         summary: 'Tell us the page you wanted and we will point you to the right capture.',
+                        label: 'Back to the homepage',
+                        url: $homeUrl,
                     ),
                 ],
             ],
@@ -352,18 +403,20 @@ final class LandingGalleryDemoContent implements ProvidesThemeDemoContent
             ),
             renderData: [
                 'summary' => 'Upgrade to Galleria Pro for unlimited saves, full-resolution captures, and early access to new templates.',
-                'navigation' => $this->navigation(),
-                'footer' => $this->footer(),
+                'navigation' => $this->navigation($themeKey),
+                'footer' => $this->footer($themeKey),
                 'sections' => [
                     [
                         'type' => 'hero',
                         'eyebrow' => 'Galleria Pro',
                         'heading' => 'Unlock the full gallery with Pro',
                         'summary' => 'Unlimited saved collections, full-resolution screenshots, advanced filters, and early access to every new template the day it lands.',
-                        'primary_label' => 'Upgrade to Pro',
-                        'primary_url' => '#paid-templates',
-                        'secondary_label' => 'Keep browsing free',
-                        'secondary_url' => '#website-examples',
+                        'actions' => [
+                            ['label' => 'Start your Pro trial', 'url' => '#cta', 'style' => 'primary'],
+                            ['label' => 'Why teams go Pro', 'url' => '#proof', 'style' => 'secondary'],
+                        ],
+                        'mediaUrl' => $media['hero'][0] ?? null,
+                        'mediaAlt' => 'A Galleria Pro saved collection of landing pages',
                     ],
                     $this->proofSection(
                         heading: 'Why teams go Pro',
@@ -372,6 +425,8 @@ final class LandingGalleryDemoContent implements ProvidesThemeDemoContent
                     $this->ctaSection(
                         heading: 'Start your Pro trial today',
                         summary: 'Fourteen days free, no card required. Cancel any time and keep the collections you built.',
+                        label: 'Start your Pro trial',
+                        url: '#cta',
                     ),
                 ],
             ],
@@ -381,17 +436,17 @@ final class LandingGalleryDemoContent implements ProvidesThemeDemoContent
     /**
      * @return array<string, mixed>
      */
-    private function categoryNavigationSection(string $heading, string $summary): array
+    private function categoryNavigationSection(string $heading, string $summary, string $categoryUrl): array
     {
         return [
             'type' => 'category-navigation',
             'heading' => $heading,
             'summary' => $summary,
             'items' => [
-                ['title' => 'SaaS & software', 'summary' => 'Product launches, pricing pages, and free-trial flows from B2B and B2C software.'],
-                ['title' => 'Ecommerce & DTC', 'summary' => 'Storefronts, product pages, and seasonal drops built to convert browsers into buyers.'],
-                ['title' => 'Startups & fundraising', 'summary' => 'Pre-launch teasers, waitlists, and investor-ready one-pagers.'],
-                ['title' => 'Mobile & app', 'summary' => 'App-store landing pages and onboarding flows tuned for installs.'],
+                ['title' => 'SaaS & software', 'summary' => 'Product launches, pricing pages, and free-trial flows from B2B and B2C software.', 'url' => $categoryUrl],
+                ['title' => 'Ecommerce & DTC', 'summary' => 'Storefronts, product pages, and seasonal drops built to convert browsers into buyers.', 'url' => $categoryUrl],
+                ['title' => 'Startups & fundraising', 'summary' => 'Pre-launch teasers, waitlists, and investor-ready one-pagers.', 'url' => $categoryUrl],
+                ['title' => 'Mobile & app', 'summary' => 'App-store landing pages and onboarding flows tuned for installs.', 'url' => $categoryUrl],
             ],
         ];
     }
@@ -400,7 +455,7 @@ final class LandingGalleryDemoContent implements ProvidesThemeDemoContent
      * @param  array{hero: list<string>, listing: list<string>, detail: list<string>, proof: list<string>, contact: list<string>, cta: list<string>}  $media
      * @return array<string, mixed>
      */
-    private function websiteExamplesSection(string $heading, string $summary, array $media): array
+    private function websiteExamplesSection(string $heading, string $summary, array $media, string $detailUrl, string $templateUrl): array
     {
         $pool = array_values(array_unique(array_merge(
             $media['listing'],
@@ -424,7 +479,8 @@ final class LandingGalleryDemoContent implements ProvidesThemeDemoContent
             $image = $pool[$index % max(count($pool), 1)] ?? null;
             $items[] = [
                 ...$example,
-                'url' => '#page-' . ($index + 1),
+                'url' => $detailUrl,
+                'templateUrl' => $templateUrl,
                 'image' => $image,
                 'imageUrl' => $image,
                 'imageAlt' => $example['title'] . ' landing page',
@@ -442,17 +498,18 @@ final class LandingGalleryDemoContent implements ProvidesThemeDemoContent
     /**
      * @return array<string, mixed>
      */
-    private function paidTemplatesSection(string $heading, string $summary): array
+    private function paidTemplatesSection(string $heading, string $summary, string $browseUrl, string $purchaseUrl): array
     {
         return [
             'type' => 'paid-templates',
             'heading' => $heading,
             'summary' => $summary,
-            'label' => 'Browse all templates',
-            'url' => '#content-listing',
+            'label' => 'Keep browsing free',
+            'url' => $browseUrl,
             'items' => [
-                ['title' => 'Launch Kit — SaaS', 'summary' => 'A six-section SaaS launch page with pricing table, FAQ, and trial CTA. $79 one-time.'],
-                ['title' => 'Storefront — Ecommerce', 'summary' => 'A product-led DTC page with gallery, reviews, and sticky buy bar. $59 one-time.'],
+                ['title' => 'Launch Kit — SaaS', 'summary' => 'A six-section SaaS launch page with pricing table, FAQ, and trial CTA.', 'price' => '$79', 'framework' => 'Webflow', 'url' => $purchaseUrl],
+                ['title' => 'Storefront — Ecommerce', 'summary' => 'A product-led DTC page with gallery, reviews, and sticky buy bar.', 'price' => '$59', 'framework' => 'Shopify', 'url' => $purchaseUrl],
+                ['title' => 'Waitlist — Startup', 'summary' => 'A single-screen teaser page with countdown, email capture, and social proof.', 'free' => true, 'framework' => 'HTML', 'url' => $purchaseUrl],
             ],
         ];
     }
@@ -460,16 +517,16 @@ final class LandingGalleryDemoContent implements ProvidesThemeDemoContent
     /**
      * @return array<string, mixed>
      */
-    private function partnerBlocksSection(string $heading, string $summary): array
+    private function partnerBlocksSection(string $heading, string $summary, string $contactUrl): array
     {
         return [
             'type' => 'partner-blocks',
             'heading' => $heading,
             'summary' => $summary,
             'items' => [
-                ['meta' => 'Brand & web studio', 'title' => 'Fieldwork', 'summary' => 'An independent studio shipping brand-led landing pages for funded startups.'],
-                ['meta' => 'Conversion freelancer', 'title' => 'Priya Nadkarni', 'summary' => 'A landing-page specialist who turns rough copy into pages that convert.'],
-                ['meta' => 'Ecommerce agency', 'title' => 'Harbour Collective', 'summary' => 'A DTC team building storefronts and drop pages for growing retail brands.'],
+                ['meta' => 'Brand & web studio', 'title' => 'Fieldwork', 'summary' => 'An independent studio shipping brand-led landing pages for funded startups.', 'url' => $contactUrl],
+                ['meta' => 'Conversion freelancer', 'title' => 'Priya Nadkarni', 'summary' => 'A landing-page specialist who turns rough copy into pages that convert.', 'url' => $contactUrl],
+                ['meta' => 'Ecommerce agency', 'title' => 'Harbour Collective', 'summary' => 'A DTC team building storefronts and drop pages for growing retail brands.', 'url' => $contactUrl],
             ],
         ];
     }
@@ -509,20 +566,38 @@ final class LandingGalleryDemoContent implements ProvidesThemeDemoContent
     }
 
     /**
+     * @param  array{hero: list<string>, listing: list<string>, detail: list<string>, proof: list<string>, contact: list<string>, cta: list<string>}  $media
      * @return array<string, mixed>
      */
-    private function contentListingSection(string $heading, string $summary): array
+    private function contentListingSection(string $heading, string $summary, array $media, string $detailUrl): array
     {
+        $pool = array_values(array_unique(array_merge($media['listing'], $media['detail'], $media['proof'])));
+
+        $rows = [
+            ['category' => 'SaaS', 'title' => 'Northwind — renewables platform', 'summary' => 'A confident hero, a tight feature grid, and one repeated call to action.'],
+            ['category' => 'Ecommerce', 'title' => 'Harbour Goods — coffee drop', 'summary' => 'A single-product drop page built around bold photography.'],
+            ['category' => 'Startup', 'title' => 'Atlas Studio — waitlist', 'summary' => 'A teaser page that converted a launch into 9,000 signups.'],
+            ['category' => 'Mobile', 'title' => 'Lumen Health — app landing', 'summary' => 'A one-screen install page for a health-tracking app.'],
+        ];
+
+        $items = [];
+
+        foreach ($rows as $index => $row) {
+            $image = $pool[$index % max(count($pool), 1)] ?? null;
+            $items[] = [
+                ...$row,
+                'url' => $detailUrl,
+                'image' => $image,
+                'imageUrl' => $image,
+                'imageAlt' => $row['title'],
+            ];
+        }
+
         return [
             'type' => 'content-listing',
             'heading' => $heading,
             'summary' => $summary,
-            'items' => [
-                ['category' => 'SaaS', 'title' => 'Northwind — renewables platform', 'summary' => 'A confident hero, a tight feature grid, and one repeated call to action.'],
-                ['category' => 'Ecommerce', 'title' => 'Harbour Goods — coffee drop', 'summary' => 'A single-product drop page built around bold photography.'],
-                ['category' => 'Startup', 'title' => 'Atlas Studio — waitlist', 'summary' => 'A teaser page that converted a launch into 9,000 signups.'],
-                ['category' => 'Mobile', 'title' => 'Lumen Health — app landing', 'summary' => 'A one-screen install page for a health-tracking app.'],
-            ],
+            'items' => $items,
         ];
     }
 
@@ -542,69 +617,74 @@ final class LandingGalleryDemoContent implements ProvidesThemeDemoContent
     /**
      * @return array<string, mixed>
      */
-    private function ctaSection(string $heading, string $summary): array
+    private function ctaSection(string $heading, string $summary, string $label, string $url): array
     {
         return [
             'type' => 'cta',
             'heading' => $heading,
             'summary' => $summary,
-            'label' => 'Browse the gallery',
-            'url' => '#website-examples',
+            'label' => $label,
+            'url' => $url,
         ];
     }
 
     /**
      * @return array<string, mixed>
      */
-    private function navigation(): array
+    private function navigation(string $themeKey): array
     {
+        $homeUrl = '/theme-' . $themeKey;
+
         return [
             'brandName' => self::BRAND,
             'brand' => self::BRAND,
             'items' => [
-                ['label' => 'Websites', 'url' => '#website-examples'],
-                ['label' => 'Templates', 'url' => '#paid-templates'],
-                ['label' => 'Categories', 'url' => '#category-navigation'],
-                ['label' => 'Partners', 'url' => '#partner-blocks'],
-                ['label' => 'Pro', 'url' => '#gallery-system'],
+                ['label' => 'Websites', 'url' => $homeUrl . '-directory'],
+                ['label' => 'Templates', 'url' => $homeUrl . '-directory'],
+                ['label' => 'Categories', 'url' => $homeUrl . '-directory'],
+                ['label' => 'Partners', 'url' => $homeUrl],
+                ['label' => 'Pro', 'url' => $homeUrl . '-cta'],
             ],
             'ctaLabel' => 'Submit a page',
-            'ctaUrl' => '#newsletter',
+            'ctaUrl' => $homeUrl . '-contact',
         ];
     }
 
     /**
      * @return array<string, mixed>
      */
-    private function footer(): array
+    private function footer(string $themeKey): array
     {
+        $homeUrl = '/theme-' . $themeKey;
+
         return [
             'brandName' => self::BRAND,
+            'brand' => self::BRAND,
             'summary' => 'A curated gallery of high-converting landing pages, templates, and partner work.',
             'columns' => [
                 [
                     'heading' => 'Gallery',
                     'title' => 'Gallery',
                     'links' => [
-                        ['label' => 'Latest pages', 'url' => '#website-examples'],
-                        ['label' => 'Categories', 'url' => '#category-navigation'],
-                        ['label' => 'Partners', 'url' => '#partner-blocks'],
+                        ['label' => 'Latest pages', 'url' => $homeUrl . '-directory'],
+                        ['label' => 'Categories', 'url' => $homeUrl . '-directory'],
+                        ['label' => 'Partners', 'url' => $homeUrl],
                     ],
                 ],
                 [
                     'heading' => 'Marketplace',
                     'title' => 'Marketplace',
                     'links' => [
-                        ['label' => 'Paid templates', 'url' => '#paid-templates'],
-                        ['label' => 'Submit a page', 'url' => '#newsletter'],
-                        ['label' => 'Go Pro', 'url' => '#gallery-system'],
+                        ['label' => 'Paid templates', 'url' => $homeUrl],
+                        ['label' => 'Submit a page', 'url' => $homeUrl . '-contact'],
+                        ['label' => 'Go Pro', 'url' => $homeUrl . '-cta'],
                     ],
                 ],
                 [
                     'heading' => 'Galleria',
                     'title' => 'Galleria',
                     'links' => [
-                        ['label' => 'Weekly digest', 'url' => '#newsletter'],
+                        ['label' => 'Weekly digest', 'url' => $homeUrl . '-contact'],
                         ['label' => 'studio@galleria.example', 'url' => 'mailto:studio@galleria.example'],
                     ],
                 ],

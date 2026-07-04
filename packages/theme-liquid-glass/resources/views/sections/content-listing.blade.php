@@ -6,6 +6,9 @@
         'people' => __('capell-theme-liquid-glass::generic.variant_people'),
         default => __('capell-theme-liquid-glass::generic.variant_editorial'),
     };
+    $heading ??= '';
+    $summary ??= null;
+    $items ??= [];
 @endphp
 
 <section class="liquid-glass-section px-5 py-16 sm:px-6 lg:px-8">
@@ -71,10 +74,10 @@
                                             href="{{ $item['url'] }}"
                                             class="hover:text-[var(--theme-primary)]"
                                         >
-                                            {{ $item['title'] }}
+                                            {{ $item['title'] ?? '' }}
                                         </a>
                                     @else
-                                        {{ $item['title'] }}
+                                        {{ $item['title'] ?? '' }}
                                     @endif
                                 </h3>
 

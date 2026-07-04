@@ -1,56 +1,118 @@
-/* Design-Led Magazine — oversized display type, generous whitespace, dramatic media blocks. */
+/* Design-Led Magazine — large-format art-book: oversized display type, generous whitespace, framed plates. */
 
-.editorial-shell {
-    --editorial-ink: var(--theme-foreground, #111111);
-    --editorial-muted: color-mix(
-        in srgb,
-        var(--editorial-ink) 56%,
-        transparent
+.dlm-shell {
+    container: dlm-tokens / normal;
+    color-scheme: light dark;
+    /* Base values converted from #141210/#a1301f/#f7f4ee/#191512 to OKLCH; light-dark()
+       consolidates the paired overrides that previously lived only in the
+       prefers-color-scheme: dark block below. */
+    --dlm-ink: var(
+        --theme-foreground,
+        light-dark(oklch(0.184 0.005 67.497), oklch(0.926 0.017 84.588))
     );
-    --editorial-line: color-mix(in srgb, var(--editorial-ink) 12%, transparent);
-    --editorial-accent: var(--theme-accent, #7c5cff);
-    --editorial-field: color-mix(
-        in srgb,
-        var(--editorial-accent) 6%,
-        var(--theme-surface, #fbfaf7)
+    --dlm-muted: color-mix(in srgb, var(--dlm-ink) 62%, transparent);
+    --dlm-line: color-mix(in srgb, var(--dlm-ink) 14%, transparent);
+    --dlm-accent: var(
+        --theme-accent,
+        light-dark(oklch(0.478 0.152 31.452), oklch(0.624 0.15 37.51))
     );
-    --editorial-night: #0c0c0e;
-    --editorial-paper: var(--theme-surface, #fbfaf7);
-    background: var(--editorial-paper);
-    color: var(--editorial-ink);
+    --dlm-field: color-mix(
+        in srgb,
+        var(--dlm-accent) 5%,
+        var(--theme-surface, #f7f4ee)
+    );
+    --dlm-night: light-dark(
+        oklch(0.199 0.009 59.12),
+        oklch(0.152 0.004 48.377)
+    );
+    --dlm-paper: var(
+        --theme-surface,
+        light-dark(oklch(0.968 0.009 84.573), oklch(0.193 0.011 80.515))
+    );
+    --dlm-night-text: color-mix(in srgb, #ffffff 78%, transparent);
+    --dlm-night-muted: color-mix(in srgb, #ffffff 64%, transparent);
+    --dlm-night-line: color-mix(in srgb, #ffffff 22%, transparent);
+    --dlm-accent-bright: color-mix(in srgb, var(--dlm-accent) 55%, #ffffff);
+    --dlm-plate-pad: clamp(0.85rem, 1.4vw, 1.35rem);
+    --dlm-ease: cubic-bezier(0.33, 0, 0.15, 1);
+    --dlm-speed: 200ms;
+    background: var(--dlm-paper);
+    color: var(--dlm-ink);
     font-family: var(--theme-body-font, inter), system-ui, sans-serif;
     font-size: 1.0625rem;
     line-height: 1.65;
 }
 
-.editorial-shell h1,
-.editorial-shell h2,
-.editorial-shell h3 {
-    color: var(--editorial-ink);
+.dlm-shell h1,
+.dlm-shell h2,
+.dlm-shell h3 {
+    color: var(--dlm-ink);
     font-family: var(--theme-heading-font, sora), system-ui, sans-serif;
     font-weight: 800;
+    letter-spacing: -0.03em;
+    text-wrap: balance;
+}
+
+.dlm-shell h1 {
+    font-size: clamp(3.2rem, 8.5vw, 7.5rem);
     letter-spacing: -0.04em;
-}
-
-.editorial-shell h1 {
-    font-size: clamp(3.6rem, 10vw, 8.5rem);
-    line-height: 0.92;
-    margin-block: 0;
+    line-height: 0.94;
+    margin-block: 1.25rem 0;
     text-transform: uppercase;
+    /* Oversized masthead display type: trim phantom leading so the cap-height
+       sits flush against the section edge. */
+    text-box: trim-both cap alphabetic;
+}
+
+.dlm-shell h2 {
+    font-size: clamp(2.4rem, 5vw, 4.5rem);
+    line-height: 0.98;
+    margin-block: 1rem 0;
     text-wrap: balance;
 }
 
-.editorial-shell h2 {
-    font-size: clamp(2.6rem, 5.5vw, 5rem);
-    line-height: 0.96;
-    margin-block: 0;
-    text-wrap: balance;
+.dlm-shell a:focus-visible,
+.dlm-shell button:focus-visible,
+.dlm-shell input:focus-visible,
+.dlm-shell [tabindex]:focus-visible {
+    box-shadow:
+        0 0 0 3px var(--dlm-paper),
+        0 0 0 5px var(--dlm-accent);
+    outline: 2px solid transparent;
+    outline-offset: 4px;
 }
 
-.editorial-skip-link {
-    background: var(--editorial-night, #0c0c0e);
+.dlm-shell ::selection {
+    background: var(--dlm-accent);
+    color: var(--dlm-paper);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: view()) {
+        @keyframes dlm-section-develop {
+            from {
+                opacity: 0;
+                transform: translateY(1.5rem);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .dlm-section {
+            animation: dlm-section-develop linear both;
+            animation-range: entry 0% cover 30%;
+            animation-timeline: view();
+        }
+    }
+}
+
+.dlm-skip-link {
+    background: var(--dlm-night, #191512);
     color: #ffffff;
-    left: 1rem;
+    inset-inline-start: 1rem;
     padding: 0.75rem 1rem;
     position: fixed;
     top: 1rem;
@@ -58,105 +120,486 @@
     z-index: 50;
 }
 
-.editorial-skip-link:focus {
+.dlm-skip-link:focus {
     transform: translateY(0);
 }
 
-.editorial-section {
+/* ---------------------------------------------------------------- sections */
+
+.dlm-section {
     border-top: 0;
 }
 
-.editorial-section + .editorial-section {
-    border-top: 1px solid var(--editorial-line);
+.dlm-section + .dlm-section {
+    border-top: 1px solid var(--dlm-line);
 }
 
-.editorial-section-dark {
-    background: var(--editorial-night);
+/* Adjacent night sections need a night-visible rule, not the ink hairline. */
+.dlm-section-dark + .dlm-section-dark {
+    border-top-color: var(--dlm-night-line);
+}
+
+.dlm-section-dark {
+    background: var(--dlm-night);
+    color: var(--dlm-night-text);
+}
+
+.dlm-section-field {
+    background: var(--dlm-field);
+}
+
+.dlm-section-dark h1,
+.dlm-section-dark h2,
+.dlm-section-dark h3 {
     color: #ffffff;
 }
 
-.editorial-section-dark h1,
-.editorial-section-dark h2,
-.editorial-section-dark h3 {
-    color: #ffffff;
-}
-
-.editorial-section-inner {
+.dlm-section-inner {
     margin-inline: auto;
-    max-width: 96rem;
-    padding: clamp(6rem, 14vw, 13rem) clamp(1.5rem, 4vw, 4rem);
+    max-width: 90rem;
+    padding: clamp(4.5rem, 9vw, 9rem) clamp(1.5rem, 4vw, 4rem);
 }
 
-.editorial-kicker {
-    color: var(--editorial-accent);
-    font-size: 0.85rem;
+.dlm-kicker {
+    color: var(--dlm-accent);
+    font-size: 0.8rem;
     font-weight: 800;
     letter-spacing: 0.32em;
+    margin: 0;
     text-transform: uppercase;
 }
 
-.editorial-lede {
-    color: var(--editorial-muted);
-    font-size: clamp(1.25rem, 1.4vw + 1rem, 1.7rem);
+.dlm-section-dark .dlm-kicker {
+    color: var(--dlm-accent-bright);
+}
+
+.dlm-lede {
+    color: var(--dlm-muted);
+    font-size: clamp(1.2rem, 1.2vw + 1rem, 1.55rem);
     line-height: 1.55;
-    max-width: 52rem;
+    margin-block: 1.5rem 0;
+    max-width: 46rem;
+    text-wrap: pretty;
 }
 
-.editorial-grid {
+.dlm-section-dark .dlm-lede {
+    color: var(--dlm-night-text);
+}
+
+.dlm-actions {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-top: 2.75rem;
+}
+
+/* ---------------------------------------------------------------- masthead */
+
+.dlm-masthead {
+    background: var(--dlm-paper);
+    border-bottom: 3px double var(--dlm-ink);
+}
+
+.dlm-masthead-inner {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.25rem 3rem;
+    justify-content: space-between;
+    margin-inline: auto;
+    max-width: 90rem;
+    padding: clamp(1.5rem, 3vw, 2.5rem) clamp(1.5rem, 4vw, 4rem);
+}
+
+.dlm-masthead-brand {
+    color: var(--dlm-ink);
     display: grid;
-    gap: clamp(2.5rem, 5vw, 4.5rem);
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 26rem), 1fr));
+    gap: 0.35rem;
+    text-decoration: none;
 }
 
-.editorial-card {
-    background: transparent;
-    border: 0;
-    border-top: 4px solid var(--editorial-ink);
-    border-radius: 0;
-    box-shadow: none;
-    min-height: 100%;
-    padding: clamp(1.75rem, 3vw, 2.75rem) 0 0;
+.dlm-masthead-wordmark {
+    font-family: var(--theme-heading-font, sora), system-ui, sans-serif;
+    font-size: clamp(1.65rem, 2.4vw, 2.4rem);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1;
+    text-transform: uppercase;
 }
 
-.editorial-section-dark .editorial-card {
-    background: transparent;
-    border-color: #ffffff;
-    box-shadow: none;
-    color: #ffffff;
+.dlm-masthead-tagline {
+    color: var(--dlm-muted);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
 }
 
-.editorial-section-dark .editorial-card p {
-    color: color-mix(in srgb, #ffffff 68%, transparent);
+.dlm-masthead-nav {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 2.25rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
 }
 
-.editorial-card h3 {
-    font-size: clamp(1.4rem, 2vw, 1.9rem);
-    letter-spacing: -0.02em;
-    line-height: 1.05;
+.dlm-shell nav a {
+    color: var(--dlm-ink);
+    font-size: 0.85rem;
+    font-weight: 800;
+    letter-spacing: 0.16em;
+    padding-block: 0.5rem;
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-decoration-color: transparent;
+    text-transform: uppercase;
+    text-underline-offset: 0.5rem;
+    transition:
+        color var(--dlm-speed) var(--dlm-ease),
+        text-decoration-color var(--dlm-speed) var(--dlm-ease);
+}
+
+.dlm-shell nav a:hover {
+    color: var(--dlm-accent);
+    text-decoration-color: currentcolor;
+}
+
+.dlm-masthead-cta {
+    border: 2px solid var(--dlm-ink);
+    padding: 0.55rem 1.25rem;
+    transition:
+        background-color var(--dlm-speed) var(--dlm-ease),
+        border-color var(--dlm-speed) var(--dlm-ease),
+        color var(--dlm-speed) var(--dlm-ease);
+}
+
+.dlm-masthead-cta:hover {
+    background: var(--dlm-ink);
+    color: var(--dlm-paper);
+}
+
+/* ------------------------------------------------------------------ plates */
+
+.dlm-plate {
+    display: grid;
+    gap: 1rem;
     margin: 0;
 }
 
-.editorial-card p,
-.editorial-meta {
-    color: var(--editorial-muted);
-    line-height: 1.6;
+.dlm-plate-frame {
+    background: var(--dlm-paper);
+    border: 1px solid var(--dlm-line);
+    box-shadow:
+        0 1px 2px color-mix(in srgb, var(--dlm-night) 10%, transparent),
+        0 18px 44px -20px color-mix(in srgb, var(--dlm-night) 26%, transparent);
+    padding: var(--dlm-plate-pad);
 }
 
-.editorial-meta {
-    font-size: 0.8rem;
+.dlm-section-dark .dlm-plate-frame {
+    border-color: var(--dlm-night-line);
+}
+
+.dlm-plate-media {
+    aspect-ratio: 3 / 2;
+    background-color: color-mix(
+        in srgb,
+        var(--dlm-accent) 58%,
+        var(--dlm-night)
+    );
+    display: block;
+    object-fit: cover;
+    width: 100%;
+}
+
+.dlm-plate-media-tall {
+    aspect-ratio: 4 / 5;
+}
+
+.dlm-plate-media-wide {
+    aspect-ratio: 16 / 9;
+}
+
+/* Composed field when a plate ships without photography: flat duotone
+   ground, a single drawn form, and fine print rules. Deliberate, not blurry. */
+.dlm-plate-media-empty {
+    background-blend-mode: normal;
+    background-color: color-mix(
+        in srgb,
+        var(--dlm-accent) 10%,
+        var(--dlm-paper)
+    );
+    background-image: repeating-linear-gradient(
+        0deg,
+        transparent 0,
+        transparent 7px,
+        color-mix(in srgb, var(--dlm-ink) 5%, transparent) 7px,
+        color-mix(in srgb, var(--dlm-ink) 5%, transparent) 8px
+    );
+    display: grid;
+    place-items: center;
+    position: relative;
+}
+
+.dlm-plate-media-empty::before {
+    aspect-ratio: 3 / 4;
+    background: color-mix(in srgb, var(--dlm-accent) 82%, var(--dlm-night));
+    border: 2px solid var(--dlm-ink);
+    content: '';
+    display: block;
+    max-height: 72%;
+    width: 34%;
+}
+
+.dlm-plate-media-empty::after {
+    border-top: 2px solid var(--dlm-ink);
+    bottom: 12%;
+    content: '';
+    inset-inline-start: 14%;
+    position: absolute;
+    inset-inline-end: 14%;
+}
+
+.dlm-plate-arch::before {
+    border-radius: 50% 50% 0 0 / 42% 42% 0 0;
+}
+
+.dlm-plate-disc::before {
+    aspect-ratio: 1;
+    border-radius: 50%;
+    width: 38%;
+}
+
+.dlm-plate-column::before {
+    aspect-ratio: 1 / 3;
+    background: var(--dlm-ink);
+    border: 0;
+    width: 14%;
+}
+
+.dlm-plate-caption {
+    align-items: baseline;
+    color: var(--dlm-muted);
+    display: flex;
+    font-size: 0.85rem;
+    gap: 1rem;
+    line-height: 1.5;
+}
+
+.dlm-section-dark .dlm-plate-caption {
+    color: var(--dlm-night-muted);
+}
+
+.dlm-plate-caption strong {
+    color: var(--dlm-ink);
     font-weight: 700;
-    letter-spacing: 0.2em;
+}
+
+.dlm-section-dark .dlm-plate-caption strong {
+    color: #ffffff;
+}
+
+.dlm-gallery-plates {
+    align-content: center;
+    display: grid;
+    gap: clamp(2rem, 4vw, 3rem);
+}
+
+.dlm-plate-number {
+    color: var(--dlm-accent);
+    flex-shrink: 0;
+    font-size: 0.75rem;
+    font-variant-numeric: tabular-nums;
+    font-weight: 800;
+    letter-spacing: 0.24em;
     text-transform: uppercase;
 }
 
-.editorial-button {
+.dlm-section-dark .dlm-plate-number {
+    color: var(--dlm-accent-bright);
+}
+
+/* ------------------------------------------------------------------- grids */
+
+.dlm-grid {
+    container-name: dlm-grid;
+    container-type: inline-size;
+    display: grid;
+    gap: clamp(2.5rem, 5vw, 4rem);
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 19rem), 1fr));
+    margin-top: clamp(2.5rem, 5vw, 4.5rem);
+}
+
+.dlm-card {
+    background: transparent;
+    border: 0;
+    border-top: 4px solid var(--dlm-ink);
+    border-radius: 0;
+    box-shadow: none;
+    display: grid;
+    gap: 1rem;
+    align-content: start;
+    padding: clamp(1.5rem, 2.5vw, 2.25rem) 0 0;
+}
+
+/* Container-query refinement: once a card's own inline space is wide enough
+   (the grid has resolved to a wide track, not just a wide viewport), open the
+   plate and copy into a two-column layout and step up the heading. Viewport
+   @media rules elsewhere remain the fallback for browsers without container
+   query support. */
+@container dlm-grid (min-width: 26rem) {
+    .dlm-card {
+        grid-template-columns: minmax(11rem, 0.8fr) minmax(0, 1.2fr);
+        padding-top: clamp(1.5rem, 2vw, 2rem);
+    }
+
+    .dlm-card h3 {
+        font-size: clamp(1.5rem, 2vw, 2rem);
+    }
+
+    .dlm-card .dlm-plate {
+        grid-column: 1;
+        grid-row: 1 / span 3;
+    }
+}
+
+.dlm-section-dark .dlm-card {
+    border-color: #ffffff;
+    color: var(--dlm-night-text);
+}
+
+.dlm-section-dark .dlm-card p {
+    color: var(--dlm-night-muted);
+}
+
+.dlm-card h3 {
+    font-size: clamp(1.35rem, 1.8vw, 1.8rem);
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    margin: 0;
+}
+
+.dlm-card p {
+    color: var(--dlm-muted);
+    line-height: 1.6;
+    margin: 0;
+    text-wrap: pretty;
+}
+
+.dlm-meta {
+    color: var(--dlm-muted);
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    margin: 0;
+    text-transform: uppercase;
+}
+
+.dlm-section-dark .dlm-meta {
+    color: var(--dlm-night-muted);
+}
+
+.dlm-numeral {
+    color: var(--dlm-accent);
+    font-family: var(--theme-heading-font, sora), system-ui, sans-serif;
+    font-size: clamp(2.4rem, 3.2vw, 3.4rem);
+    font-variant-numeric: tabular-nums;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1;
+}
+
+.dlm-section-dark .dlm-numeral {
+    color: var(--dlm-accent-bright);
+}
+
+/* ------------------------------------------------------------- title links */
+
+.dlm-title-link {
+    color: inherit;
+    text-decoration: underline;
+    text-decoration-thickness: 3px;
+    text-decoration-color: transparent;
+    text-underline-offset: 0.35rem;
+    transition:
+        color var(--dlm-speed) var(--dlm-ease),
+        text-decoration-color var(--dlm-speed) var(--dlm-ease);
+}
+
+.dlm-title-link:hover {
+    color: var(--dlm-accent);
+    text-decoration-color: currentcolor;
+}
+
+.dlm-section-dark .dlm-title-link:hover {
+    color: var(--dlm-accent-bright);
+}
+
+/* -------------------------------------------------------------- index list */
+
+.dlm-index {
+    border-top: 4px solid var(--dlm-ink);
+    display: grid;
+    margin-top: clamp(2.5rem, 5vw, 4rem);
+}
+
+.dlm-index-row {
+    border-bottom: 1px solid var(--dlm-line);
+    display: grid;
+    gap: 0.75rem 3rem;
+    padding-block: clamp(1.75rem, 3vw, 2.75rem);
+}
+
+.dlm-index-row h3 {
+    font-size: clamp(1.7rem, 3vw, 2.8rem);
+    line-height: 1.02;
+    margin: 0;
+}
+
+.dlm-index-row p {
+    color: var(--dlm-muted);
+    margin: 0;
+    max-width: 38rem;
+    text-wrap: pretty;
+}
+
+.dlm-index-thumb {
+    aspect-ratio: 3 / 2;
+    background-color: color-mix(
+        in srgb,
+        var(--dlm-accent) 58%,
+        var(--dlm-night)
+    );
+    border: 1px solid var(--dlm-line);
+    max-width: 14rem;
+    object-fit: cover;
+    width: 100%;
+}
+
+@media (min-width: 768px) {
+    .dlm-index-row {
+        align-items: start;
+        grid-template-columns: 5rem minmax(0, 1.2fr) minmax(0, 1fr);
+    }
+
+    .dlm-index-row-media {
+        grid-template-columns: 5rem 9rem minmax(0, 1.2fr) minmax(0, 1fr);
+    }
+}
+
+/* ----------------------------------------------------------------- buttons */
+
+.dlm-button {
     align-items: center;
-    background: var(--theme-primary, #111111);
-    border: 2px solid var(--theme-primary, #111111);
+    background: var(--theme-primary, #141210);
+    border: 2px solid var(--theme-primary, #141210);
     border-radius: 0;
     color: #ffffff;
+    cursor: pointer;
     display: inline-flex;
-    font-size: 1rem;
+    font-size: 0.95rem;
     font-weight: 800;
     gap: 0.75rem;
     letter-spacing: 0.08em;
@@ -164,114 +607,504 @@
     padding: 1rem 2rem;
     text-decoration: none;
     text-transform: uppercase;
+    transition:
+        background-color var(--dlm-speed) var(--dlm-ease),
+        border-color var(--dlm-speed) var(--dlm-ease),
+        color var(--dlm-speed) var(--dlm-ease);
 }
 
-.editorial-button:hover,
-.editorial-button:focus-visible {
-    background: var(--editorial-accent);
-    border-color: var(--editorial-accent);
-    outline: 4px solid
-        color-mix(in srgb, var(--editorial-accent) 36%, transparent);
-    outline-offset: 4px;
+.dlm-button:hover {
+    background: var(--dlm-accent);
+    border-color: var(--dlm-accent);
 }
 
-.editorial-button-secondary {
+.dlm-section-dark .dlm-button {
+    background: var(--dlm-paper);
+    border-color: var(--dlm-paper);
+    color: var(--dlm-ink);
+}
+
+.dlm-section-dark .dlm-button:hover {
+    background: var(--dlm-accent-bright);
+    border-color: var(--dlm-accent-bright);
+}
+
+.dlm-button-secondary {
     background: transparent;
-    border-color: var(--editorial-ink);
-    color: var(--editorial-ink);
+    border-color: var(--dlm-ink);
+    color: var(--dlm-ink);
 }
 
-.editorial-section-dark .editorial-button-secondary {
-    color: #ffffff;
-    border-color: #ffffff;
+.dlm-button-secondary:hover {
+    background: transparent;
+    border-color: var(--dlm-accent);
+    color: var(--dlm-accent);
 }
 
-.editorial-showcase-card {
-    display: grid;
-    gap: 1.75rem;
-}
-
-.editorial-showcase-card::before {
-    aspect-ratio: 21 / 9;
-    background:
-        conic-gradient(
-            from 210deg at 70% 20%,
-            color-mix(in srgb, var(--editorial-accent) 65%, transparent),
-            transparent 40%
-        ),
-        radial-gradient(
-            circle at 15% 85%,
-            color-mix(in srgb, var(--editorial-accent) 40%, black),
-            transparent 55%
-        ),
-        linear-gradient(
-            120deg,
-            var(--editorial-night),
-            color-mix(
-                in srgb,
-                var(--editorial-accent) 30%,
-                var(--editorial-night)
-            )
-        );
-    border-radius: 0;
-    content: '';
-    display: block;
-}
-
-.editorial-showcase-specs {
-    border-top: 4px solid var(--editorial-ink);
-    display: grid;
-    gap: 0.65rem;
-    padding-top: 1.25rem;
-}
-
-.editorial-section-dark .editorial-showcase-specs {
-    border-top-color: #ffffff;
-}
-
-.editorial-showcase-specs span {
-    color: var(--editorial-muted);
-    font-size: 1rem;
-}
-
-.editorial-showcase-specs span:first-child {
-    color: var(--editorial-ink);
-    font-size: 1.3rem;
-    font-weight: 800;
-    letter-spacing: -0.02em;
-}
-
-.editorial-section-dark .editorial-showcase-specs span:first-child {
+.dlm-section-dark .dlm-button-secondary {
+    background: transparent;
+    border-color: var(--dlm-night-line);
     color: #ffffff;
 }
 
-.editorial-shell nav a {
-    color: var(--editorial-ink);
-    font-size: 0.95rem;
+.dlm-section-dark .dlm-button-secondary:hover {
+    background: transparent;
+    border-color: var(--dlm-accent-bright);
+    color: var(--dlm-accent-bright);
+}
+
+/* -------------------------------------------------------------------- hero */
+
+.dlm-hero-grid {
+    display: grid;
+    gap: clamp(3rem, 6vw, 5.5rem);
+}
+
+.dlm-hero-rule {
+    border: 0;
+    border-top: 1px solid var(--dlm-night-line);
+    margin-block: 2rem 0;
+    max-width: 40rem;
+}
+
+@media (min-width: 900px) {
+    .dlm-hero-grid {
+        align-items: center;
+        grid-template-columns: minmax(0, 1.35fr) minmax(20rem, 0.85fr);
+    }
+}
+
+/* ------------------------------------------------------------------- split */
+
+.dlm-split {
+    display: grid;
+    gap: clamp(3rem, 6vw, 6rem);
+}
+
+@media (min-width: 900px) {
+    .dlm-split {
+        align-items: center;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+    }
+}
+
+/* -------------------------------------------------------------- newsletter */
+
+.dlm-form {
+    background: var(--dlm-paper);
+    border: 1px solid var(--dlm-line);
+    display: grid;
+    gap: 1.5rem;
+    padding: clamp(2rem, 4vw, 3rem);
+}
+
+.dlm-form label {
+    font-size: 0.8rem;
     font-weight: 800;
-    letter-spacing: 0.12em;
-    text-decoration: none;
+    letter-spacing: 0.24em;
     text-transform: uppercase;
 }
 
-.editorial-shell nav a:focus-visible,
-.editorial-shell nav a:hover {
-    color: var(--editorial-accent);
-    outline: 2px solid
-        color-mix(in srgb, var(--editorial-accent) 42%, transparent);
-    outline-offset: 0.35rem;
+.dlm-form input {
+    background: transparent;
+    border: 0;
+    border-bottom: 2px solid var(--dlm-ink);
+    border-radius: 0;
+    caret-color: var(--dlm-accent);
+    color: var(--dlm-ink);
+    font-size: 1.2rem;
+    padding: 0.75rem 0;
+    transition: border-bottom-color var(--dlm-speed) var(--dlm-ease);
+    width: 100%;
 }
 
-@media (min-width: 768px) {
-    .editorial-hero-grid,
-    .editorial-split {
-        display: grid;
-        gap: clamp(3rem, 6vw, 6rem);
-        grid-template-columns: minmax(0, 1.6fr) minmax(20rem, 1fr);
+.dlm-form input::placeholder {
+    color: var(--dlm-muted);
+}
+
+/* Designed validation states: the form has no dedicated success/error tokens,
+   so these are derived inline from oklch() hues consistent with --dlm-accent's
+   warm-red family (error) and a complementary green (valid), rather than
+   introducing new persisted design tokens for a single field. */
+.dlm-form input:user-invalid {
+    border-bottom-color: oklch(0.55 0.19 25.3);
+    outline: none;
+}
+
+.dlm-form input:user-valid {
+    border-bottom-color: oklch(0.6 0.14 152);
+    outline: none;
+}
+
+.dlm-form .dlm-button {
+    justify-self: start;
+}
+
+/* ------------------------------------------------------------------ footer */
+
+.dlm-footer-grid {
+    display: grid;
+    gap: clamp(2.5rem, 5vw, 4.5rem);
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+}
+
+.dlm-footer-brand {
+    display: grid;
+    gap: 1rem;
+}
+
+.dlm-footer-wordmark {
+    color: #ffffff;
+    font-family: var(--theme-heading-font, sora), system-ui, sans-serif;
+    font-size: clamp(1.6rem, 2.2vw, 2.2rem);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1;
+    text-transform: uppercase;
+}
+
+.dlm-footer-summary {
+    color: var(--dlm-night-text);
+    margin: 0;
+    max-width: 24rem;
+    text-wrap: pretty;
+}
+
+.dlm-footer-heading {
+    border-top: 2px solid var(--dlm-night-line);
+    color: var(--dlm-accent-bright);
+    font-size: 0.78rem;
+    font-weight: 800;
+    letter-spacing: 0.28em;
+    margin: 0 0 1.25rem;
+    padding-top: 1.25rem;
+    text-transform: uppercase;
+}
+
+.dlm-footer-links {
+    display: grid;
+    gap: 0.75rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.dlm-footer-links a {
+    color: var(--dlm-night-text);
+    text-decoration: underline;
+    text-decoration-color: transparent;
+    text-underline-offset: 0.35rem;
+    transition:
+        color var(--dlm-speed) var(--dlm-ease),
+        text-decoration-color var(--dlm-speed) var(--dlm-ease);
+}
+
+.dlm-footer-links a:hover {
+    color: #ffffff;
+    text-decoration-color: currentcolor;
+}
+
+/* ------------------------------------------------------------- empty state */
+
+.dlm-empty {
+    border-top: 4px solid var(--dlm-ink);
+    display: grid;
+    gap: 1.25rem;
+    justify-items: start;
+    margin-top: clamp(2.5rem, 5vw, 4rem);
+    padding-top: clamp(2rem, 4vw, 3rem);
+}
+
+.dlm-section-dark .dlm-empty {
+    border-color: #ffffff;
+}
+
+.dlm-empty-mark {
+    color: var(--dlm-accent);
+    font-family: var(--theme-heading-font, sora), system-ui, sans-serif;
+    font-size: clamp(2.4rem, 3.2vw, 3.4rem);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1;
+}
+
+.dlm-section-dark .dlm-empty-mark {
+    color: var(--dlm-accent-bright);
+}
+
+.dlm-empty-note {
+    color: var(--dlm-muted);
+    line-height: 1.6;
+    margin: 0;
+    max-width: 34rem;
+    text-wrap: pretty;
+}
+
+.dlm-section-dark .dlm-empty-note {
+    color: var(--dlm-night-muted);
+}
+
+.dlm-empty .dlm-button {
+    justify-self: start;
+}
+
+/* --------------------------------------------------------- preset tokens */
+
+/* Container style queries: read the brand-token custom properties injected
+   inline on .dlm-shell (--theme-spacing, --theme-card-style, etc.) and adapt
+   the primary grid, cards and headings to match. Progressive enhancement —
+   browsers without container style query support keep the unconditioned
+   defaults declared above, which already match the `design-led-magazine`
+   preset (balanced spacing, bordered cards, airy density). */
+
+@container dlm-tokens style(--theme-spacing: spacious) {
+    .dlm-grid {
+        gap: 2rem;
+    }
+}
+
+/* --theme-card-style: bordered is today's look (dlm-plate-frame border +
+   dlm-card border-top), so it stays the unconditioned default. flat drops
+   both rules for the Showroom-style flat counterpart. */
+@container dlm-tokens style(--theme-card-style: flat) {
+    .dlm-plate-frame {
+        border: 0;
+        box-shadow: none;
     }
 
-    .editorial-hero-grid {
-        align-items: end;
-        grid-template-columns: minmax(0, 1.8fr) minmax(20rem, 0.9fr);
+    .dlm-card {
+        border-top: 0;
+    }
+}
+
+/* --theme-layout-presentation: editorial keeps the existing asymmetric
+   magazine grid (the current .dlm-grid auto-fit tracks already read as
+   editorial); structured is the fallback for a calmer, evenly-spaced grid. */
+@container dlm-tokens style(--theme-layout-presentation: structured) {
+    .dlm-grid {
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr));
+    }
+}
+
+/* --theme-heading-scale: applied to a secondary heading only (listing / section
+   title), never the hero clamp(). Defensive default of 1 keeps behaviour
+   unchanged until the CMS sanitiser emits compact or expressive. */
+.dlm-index-row h3 {
+    --dlm-heading-scale: 1;
+
+    font-size: clamp(
+        calc(1.7rem * var(--dlm-heading-scale)),
+        3vw,
+        calc(2.8rem * var(--dlm-heading-scale))
+    );
+}
+
+@container dlm-tokens style(--theme-heading-scale: compact) {
+    .dlm-index-row h3 {
+        --dlm-heading-scale: 0.92;
+    }
+}
+
+@container dlm-tokens style(--theme-heading-scale: expressive) {
+    .dlm-index-row h3 {
+        --dlm-heading-scale: 1.15;
+    }
+}
+
+/* --theme-card-density: airy (today's default) keeps the existing comfortable
+   padding; spacious steps the card padding up for a looser, gallery-like
+   rhythm. */
+@container dlm-tokens style(--theme-card-density: spacious) {
+    .dlm-card {
+        padding: clamp(1.75rem, 3vw, 2rem) 0 0;
+    }
+
+    @container dlm-grid (min-width: 26rem) {
+        .dlm-card {
+            padding-top: clamp(1.75rem, 2.5vw, 2rem);
+        }
+    }
+}
+
+/* --theme-overlay-treatment: gate a scrim over plate photography. subtle is
+   the default (matches today's rendering); none removes it and strong deepens
+   it for high-contrast photo captions. */
+.dlm-plate-frame {
+    overflow: hidden;
+    position: relative;
+}
+
+.dlm-plate-frame::after {
+    background: linear-gradient(to top, var(--dlm-night) 0%, transparent 45%);
+    content: '';
+    inset: var(--dlm-plate-pad);
+    opacity: 0.3;
+    pointer-events: none;
+    position: absolute;
+}
+
+.dlm-plate-frame:has(> .dlm-plate-media-empty)::after {
+    content: none;
+}
+
+@container dlm-tokens style(--theme-overlay-treatment: none) {
+    .dlm-plate-frame::after {
+        opacity: 0;
+    }
+}
+
+@container dlm-tokens style(--theme-overlay-treatment: strong) {
+    .dlm-plate-frame::after {
+        opacity: 0.65;
+    }
+}
+
+/* ------------------------------------------------------------ dark scheme */
+
+@media (prefers-color-scheme: dark) {
+    .dlm-shell {
+        /* --dlm-night, --dlm-paper, --dlm-ink and --dlm-accent are now resolved via
+           light-dark() on the base declaration above; only tokens whose dark-mode
+           mix ratio genuinely differs from light mode (not just a color swap)
+           remain overridden here. */
+        --dlm-muted: color-mix(in srgb, var(--dlm-ink) 62%, transparent);
+        --dlm-line: color-mix(in srgb, var(--dlm-ink) 18%, transparent);
+        --dlm-accent-bright: color-mix(in srgb, var(--dlm-accent) 55%, #ffffff);
+        --dlm-field: color-mix(in srgb, var(--dlm-accent) 8%, var(--dlm-paper));
+        --dlm-night-text: color-mix(in srgb, #ffffff 78%, transparent);
+        --dlm-night-line: color-mix(in srgb, #ffffff 22%, transparent);
+    }
+}
+
+/* ------------------------------------------------------------------- print */
+
+@media print {
+    .dlm-shell {
+        background: #ffffff;
+        color: #000000;
+        font-family: var(--theme-body-font, georgia), 'Times New Roman', serif;
+        font-size: 11pt;
+        line-height: 1.45;
+    }
+
+    .dlm-shell .dlm-masthead,
+    .dlm-shell .dlm-masthead-nav,
+    .dlm-shell .dlm-masthead-cta,
+    .dlm-shell .dlm-actions,
+    .dlm-shell .dlm-button,
+    .dlm-shell .dlm-form,
+    .dlm-shell footer,
+    .dlm-shell .dlm-skip-link {
+        display: none !important;
+    }
+
+    .dlm-shell h1,
+    .dlm-shell h2,
+    .dlm-shell h3 {
+        color: #000000;
+        font-family:
+            var(--theme-heading-font, georgia), 'Times New Roman', serif;
+        text-shadow: none;
+    }
+
+    .dlm-shell h1 {
+        font-size: 24pt;
+    }
+
+    .dlm-shell h2 {
+        font-size: 18pt;
+    }
+
+    .dlm-shell .dlm-section-dark {
+        background: #ffffff;
+        color: #000000;
+    }
+
+    .dlm-shell .dlm-section-dark h1,
+    .dlm-shell .dlm-section-dark h2,
+    .dlm-shell .dlm-section-dark h3,
+    .dlm-shell .dlm-section-dark p,
+    .dlm-shell .dlm-section-dark .dlm-meta,
+    .dlm-shell .dlm-section-dark .dlm-plate-caption,
+    .dlm-shell .dlm-section-dark .dlm-numeral,
+    .dlm-shell .dlm-section-dark .dlm-kicker {
+        color: #000000;
+    }
+
+    .dlm-shell .dlm-section,
+    .dlm-shell .dlm-card,
+    .dlm-shell .dlm-plate,
+    .dlm-shell .dlm-index-row {
+        break-inside: avoid;
+    }
+
+    .dlm-shell .dlm-section + .dlm-section {
+        border-top-color: #000000;
+    }
+
+    .dlm-shell .dlm-plate-frame {
+        border-color: #000000;
+    }
+
+    .dlm-shell .dlm-plate-media,
+    .dlm-shell .dlm-index-thumb {
+        background: #e5e5e5 !important;
+        filter: grayscale(100%);
+    }
+
+    .dlm-shell a {
+        color: #000000;
+        text-decoration: underline;
+    }
+}
+
+/* Forced-colors (Wave 11.5): High Contrast mode strips box-shadow but keeps
+   outline, and flattens backgrounds — so re-assert focus with outline and give
+   cards a transparent border the OS repaints, and protect swatches whose
+   colour IS the content. */
+@media (forced-colors: active) {
+    .dlm-shell a:focus-visible,
+    .dlm-shell button:focus-visible,
+    .dlm-shell input:focus-visible,
+    .dlm-shell [tabindex]:focus-visible {
+        outline: 2px solid;
+        outline-offset: 2px;
+    }
+
+    .dlm-card {
+        border: 1px solid transparent;
+    }
+}
+
+/* High contrast preference (Wave 11.5): thicken hairline rules and lift the
+   dimmed/muted text one step so the quiet layer stays legible. */
+@media (prefers-contrast: more) {
+    .dlm-card {
+        border-color: var(--dlm-ink);
+    }
+
+    .dlm-meta,
+    .dlm-kicker {
+        color: var(--dlm-ink);
+    }
+}
+
+/* View Transitions (Wave 6.5): opt every same-origin navigation into a smooth
+   cross-document transition where supported; a static fallback everywhere else.
+   Reduced-motion users still navigate — just without the animation. */
+@view-transition {
+    navigation: auto;
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+    animation-duration: 360ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    ::view-transition-group(*),
+    ::view-transition-old(*),
+    ::view-transition-new(*) {
+        animation: none !important;
     }
 }

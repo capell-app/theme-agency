@@ -1,33 +1,51 @@
 @php
+    $heading = data_get($section, 'heading', __('capell-theme-character-portfolio-index::sections.featured.heading'));
+    $summary = data_get($section, 'summary', __('capell-theme-character-portfolio-index::sections.featured.summary'));
     $items = data_get($section, 'items', [
-        ['title' => __('capell-theme-character-portfolio-index::sections.featured.product_title'), 'summary' => __('capell-theme-character-portfolio-index::sections.featured.product_summary')],
-        ['title' => __('capell-theme-character-portfolio-index::sections.featured.design_title'), 'summary' => __('capell-theme-character-portfolio-index::sections.featured.design_summary')],
-        ['title' => __('capell-theme-character-portfolio-index::sections.featured.advice_title'), 'summary' => __('capell-theme-character-portfolio-index::sections.featured.advice_summary')],
+        ['title' => __('capell-theme-character-portfolio-index::sections.featured.launch_title'), 'summary' => __('capell-theme-character-portfolio-index::sections.featured.launch_summary')],
+        ['title' => __('capell-theme-character-portfolio-index::sections.featured.essay_title'), 'summary' => __('capell-theme-character-portfolio-index::sections.featured.essay_summary')],
+        ['title' => __('capell-theme-character-portfolio-index::sections.featured.template_title'), 'summary' => __('capell-theme-character-portfolio-index::sections.featured.template_summary')],
     ]);
+    $mediaUrl = data_get($section, 'mediaUrl', data_get($section, 'media_url'));
+    $mediaAlt = data_get($section, 'mediaAlt', $heading);
 @endphp
 
-<section class="editorial-section">
-    <div class="editorial-section-inner editorial-split">
+<section
+    id="showcase-headline"
+    class="cpi-section"
+>
+    <div class="cpi-section-inner cpi-split">
         <div>
-            <p class="editorial-kicker">
+            <p class="cpi-kicker">
                 {{ __('capell-theme-character-portfolio-index::sections.featured.kicker') }}
             </p>
-            <h2>
-                {{ data_get($section, 'heading', __('capell-theme-character-portfolio-index::sections.featured.heading')) }}
-            </h2>
-            <p class="editorial-lede">
-                {{ data_get($section, 'summary', __('capell-theme-character-portfolio-index::sections.featured.summary')) }}
-            </p>
+            <h2>{{ $heading }}</h2>
+            <p class="cpi-lede">{{ $summary }}</p>
+
+            <div class="cpi-grid">
+                @foreach ($items as $item)
+                    <article class="cpi-card">
+                        <h3>
+                            {{ data_get($item, 'title', data_get($item, 'name', '')) }}
+                        </h3>
+                        <p>{{ data_get($item, 'summary', '') }}</p>
+                    </article>
+                @endforeach
+            </div>
         </div>
-        <div class="editorial-grid">
-            @foreach ($items as $item)
-                <article class="editorial-card">
-                    <h3>
-                        {{ data_get($item, 'title', data_get($item, 'name', '')) }}
-                    </h3>
-                    <p>{{ data_get($item, 'summary', '') }}</p>
-                </article>
-            @endforeach
-        </div>
+
+        @if (filled($mediaUrl))
+            <figure class="cpi-plate">
+                <div class="cpi-plate-frame">
+                    <img
+                        src="{{ $mediaUrl }}"
+                        alt="{{ $mediaAlt }}"
+                        loading="lazy"
+                        decoding="async"
+                        class="cpi-plate-media cpi-plate-media-wide"
+                    />
+                </div>
+            </figure>
+        @endif
     </div>
 </section>

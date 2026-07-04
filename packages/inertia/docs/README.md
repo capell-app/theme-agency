@@ -11,7 +11,7 @@ Start at the [package README](../README.md) when deciding whether to install thi
 
 ## Related Packages
 
-| Package                                                                 | Why it matters                                                     |
-| ----------------------------------------------------------------------- | ------------------------------------------------------------------ |
-| [Inertia React Adapter](../../inertia-react-adapter/docs/overview.md)   | Registers React dependencies and the React application entrypoint. |
-| [Inertia Vue Adapter](../../inertia-vue-adapter/docs/overview.md)       | Registers Vue dependencies and the Vue application entrypoint.     |
+| Package                                                               | Why it matters                                                     |
+| --------------------------------------------------------------------- | ------------------------------------------------------------------ |
+| [Inertia React Adapter](../../inertia-react-adapter/docs/overview.md) | Registers React dependencies and the React application entrypoint. |
+| [Inertia Vue Adapter](../../inertia-vue-adapter/docs/overview.md)     | Registers Vue dependencies and the Vue application entrypoint.     |

@@ -103,7 +103,8 @@ class BuildSocialMetaAction
             return $value;
         }
 
-        $variables = collect(GetPageVariablesAction::run($page, $site))
+        $pageVariables = GetPageVariablesAction::run($page, $site);
+        $variables = collect(is_array($pageVariables) ? $pageVariables : [])
             ->filter(static fn (mixed $variable): bool => is_scalar($variable) || $variable instanceof Stringable)
             ->map(static fn (mixed $variable): string => (string) $variable)
             ->all();

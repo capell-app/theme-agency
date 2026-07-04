@@ -1,31 +1,55 @@
 @php
-    $stories = data_get($section, 'items', data_get($section, 'stories', [
-        ['title' => __('capell-theme-portfolio-directory::sections.events.planning_title'), 'summary' => __('capell-theme-portfolio-directory::sections.events.planning_summary')],
-        ['title' => __('capell-theme-portfolio-directory::sections.events.workshop_title'), 'summary' => __('capell-theme-portfolio-directory::sections.events.workshop_summary')],
-        ['title' => __('capell-theme-portfolio-directory::sections.events.systems_title'), 'summary' => __('capell-theme-portfolio-directory::sections.events.systems_summary')],
+    $heading = data_get($section, 'heading', __('capell-theme-portfolio-directory::sections.lists.heading'));
+    $summary = data_get($section, 'summary', __('capell-theme-portfolio-directory::sections.lists.summary'));
+    $collections = data_get($section, 'items', data_get($section, 'stories', [
+        ['title' => __('capell-theme-portfolio-directory::sections.lists.motion_title'), 'summary' => __('capell-theme-portfolio-directory::sections.lists.motion_summary'), 'meta' => __('capell-theme-portfolio-directory::sections.lists.motion_meta')],
+        ['title' => __('capell-theme-portfolio-directory::sections.lists.frontend_title'), 'summary' => __('capell-theme-portfolio-directory::sections.lists.frontend_summary'), 'meta' => __('capell-theme-portfolio-directory::sections.lists.frontend_meta')],
+        ['title' => __('capell-theme-portfolio-directory::sections.lists.studios_title'), 'summary' => __('capell-theme-portfolio-directory::sections.lists.studios_summary'), 'meta' => __('capell-theme-portfolio-directory::sections.lists.studios_meta')],
     ]));
 @endphp
 
-<section class="editorial-section">
-    <div class="editorial-section-inner">
-        <p class="editorial-kicker">
-            {{ __('capell-theme-portfolio-directory::sections.events.kicker') }}
+<section
+    id="curated-lists"
+    class="pfd-section"
+>
+    <div class="pfd-section-inner">
+        <p class="pfd-eyebrow">
+            {{ data_get($section, 'eyebrow', __('capell-theme-portfolio-directory::sections.lists.eyebrow')) }}
         </p>
-        <h2>
-            {{ data_get($section, 'heading', __('capell-theme-portfolio-directory::sections.events.heading')) }}
-        </h2>
-        <div class="editorial-grid">
-            @foreach ($stories as $story)
-                <article class="editorial-card">
-                    <p class="editorial-meta">
-                        {{ data_get($story, 'meta', data_get($story, 'category', '')) }}
-                    </p>
+        <h2>{{ $heading }}</h2>
+        <p class="pfd-lede">{{ $summary }}</p>
+
+        <div class="pfd-collections">
+            @foreach ($collections as $collection)
+                @php
+                    $collectionUrl = data_get($collection, 'url', data_get($collection, 'href'));
+                @endphp
+
+                <article class="pfd-collection">
                     <h3>
-                        {{ data_get($story, 'title', data_get($story, 'name', '')) }}
+                        @if (filled($collectionUrl))
+                            <a
+                                class="pfd-title-link"
+                                href="{{ $collectionUrl }}"
+                            >
+                                {{ data_get($collection, 'title', data_get($collection, 'name', '')) }}
+                            </a>
+                        @else
+                            {{ data_get($collection, 'title', data_get($collection, 'name', '')) }}
+                        @endif
                     </h3>
                     <p>
-                        {{ data_get($story, 'summary', data_get($story, 'description', '')) }}
+                        {{ data_get($collection, 'summary', data_get($collection, 'description', '')) }}
                     </p>
+                    <span class="pfd-rail-meta">
+                        {{ data_get($collection, 'meta', data_get($collection, 'category', '')) }}
+                    </span>
+                    <span
+                        class="pfd-collection-arrow"
+                        aria-hidden="true"
+                    >
+                        &rarr;
+                    </span>
                 </article>
             @endforeach
         </div>

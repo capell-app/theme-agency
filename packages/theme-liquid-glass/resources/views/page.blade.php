@@ -6,10 +6,24 @@
 </a>
 
 <div
-    id="main-content"
-    tabindex="-1"
     style="{{ collect($brand->tokens())->map(fn (mixed $value, string $token): string => $token . ':' . $value)->implode(';') }}"
     class="site-theme-shell liquid-glass-shell min-h-screen antialiased"
 >
-    {!! $content !!}
+    @if (isset($chromeHeader) || isset($chromeFooter))
+        {!! $chromeHeader ?? '' !!}
+        <main
+            id="main-content"
+            tabindex="-1"
+        >
+            {!! $mainContent ?? $content !!}
+        </main>
+        {!! $chromeFooter ?? '' !!}
+    @else
+        <main
+            id="main-content"
+            tabindex="-1"
+        >
+            {!! $content !!}
+        </main>
+    @endif
 </div>

@@ -29,7 +29,7 @@ it('defines the minimal-curation-feed renderer contract', function (): void {
             'cta',
             'footer',
         )
-        ->and($definition->presets)->toHaveCount(1)
+        ->and($definition->presets)->toHaveCount(2)
         ->and($definition->presets[0]->key)->toBe('minimal-curation-feed')
         ->and($definition->runtime->value)->toBe('blade')
         ->and($definition->extends)->toBe('default')

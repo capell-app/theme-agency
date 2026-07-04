@@ -6,13 +6,15 @@ namespace Capell\ThemeStudio\ExperimentalDirectory;
 
 use Capell\Core\Data\VendorAssetData;
 use Capell\Core\Enums\FrontendRuntime;
+use Capell\Core\Enums\VendorAssetEnum;
 use Capell\Core\Facades\CapellCore;
 use Capell\Core\ThemeStudio\Contracts\SectionRenderer;
 use Capell\Core\ThemeStudio\Data\ThemeDefinitionData;
 use Capell\Core\ThemeStudio\Data\ThemePresetData;
-use Capell\Core\ThemeStudio\Rendering\BladeThemeRenderer;
 use Capell\Core\ThemeStudio\Rendering\ViewSectionRenderer;
 use Capell\Core\ThemeStudio\Theme\ThemeRegistry;
+use Capell\FoundationTheme\Rendering\ChromeSplitBladeThemeRenderer;
+use Capell\FoundationTheme\Support\Editor\StandardThemeEditorSchema;
 use Capell\ThemeStudio\ExperimentalDirectory\Console\Commands\DemoCommand;
 use Illuminate\Support\ServiceProvider;
 use Override;
@@ -60,10 +62,38 @@ final class ExperimentalDirectoryThemeServiceProvider extends ServiceProvider
                         'cardDensity' => 'dense',
                     ],
                 ),
+                new ThemePresetData(
+                    key: 'jury-panel',
+                    name: 'Jury Panel',
+                    description: 'Jury Panel visual preset for a deep-ink shortlist review room with a plum-teal accent, chalk-white surface, tighter grid rules, oversized project titles, compact uppercase metadata, status badges, large image feature blocks, latest submissions, winners, collections, profiles, resources, sponsor modules, and brisk hover reveals.',
+                    previewImage: '/vendor/capell/themes/experimental-directory.jpg',
+                    values: [
+                        'primaryColor' => '#161821',
+                        'accentColor' => '#5b3b6b',
+                        'neutralColor' => '#6f6a72',
+                        'surfaceColor' => '#f6f4f0',
+                        'foregroundColor' => '#161821',
+                        'headingFont' => 'condensed',
+                        'bodyFont' => 'system',
+                        'spacing' => 'tight',
+                        'alignment' => 'left',
+                        'cardStyle' => 'sharp',
+                        'navigationStyle' => 'prominent',
+                        'layoutPresentation' => 'editorial',
+                        'motionIntensity' => 'energetic',
+                        'mediaTreatment' => 'feature-slab',
+                        'radius' => 'none',
+                        'headingScale' => 'oversized',
+                        'cardDensity' => 'dense',
+                    ],
+                ),
             ],
             assets: ['css' => 'vendor/capell/themes/experimental-directory.css'],
             runtime: FrontendRuntime::Blade,
             extends: 'default',
+            frontend: [
+                'editor' => StandardThemeEditorSchema::definition(),
+            ],
         );
     }
 
@@ -88,7 +118,7 @@ final class ExperimentalDirectoryThemeServiceProvider extends ServiceProvider
 
         $registry->register(
             definition: self::definition(),
-            themeRenderer: new BladeThemeRenderer(
+            themeRenderer: new ChromeSplitBladeThemeRenderer(
                 themeKey: self::THEME_KEY,
                 layoutView: 'capell-theme-experimental-directory::page',
                 sectionRenderers: $sectionRenderers,
@@ -99,7 +129,12 @@ final class ExperimentalDirectoryThemeServiceProvider extends ServiceProvider
 
     private function registerVendorCssAssets(): void
     {
-        CapellCore::registerVendorAsset(VendorAssetData::tailwindImport('resources/css/theme-experimental-directory.css', self::$packageName));
+        CapellCore::registerVendorAsset(new VendorAssetData(
+            type: VendorAssetEnum::TailwindImport,
+            value: 'resources/css/theme-experimental-directory.css',
+            packageName: self::$packageName,
+            condition: 'theme-css:experimental-directory',
+        ));
         CapellCore::registerVendorAsset(VendorAssetData::tailwindSource('resources/views/**/*.blade.php', self::$packageName));
     }
 

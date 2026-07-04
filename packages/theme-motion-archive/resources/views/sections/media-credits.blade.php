@@ -1,32 +1,32 @@
 @php
-    $items = data_get($section, 'items', [
-        ['title' => __('capell-theme-motion-archive::sections.authors.product_title'), 'summary' => __('capell-theme-motion-archive::sections.authors.product_summary')],
-        ['title' => __('capell-theme-motion-archive::sections.authors.advice_title'), 'summary' => __('capell-theme-motion-archive::sections.authors.advice_summary')],
-        ['title' => __('capell-theme-motion-archive::sections.authors.company_title'), 'summary' => __('capell-theme-motion-archive::sections.authors.company_summary')],
-    ]);
+    $heading = data_get($section, 'heading', __('capell-theme-motion-archive::sections.media_credits.heading'));
+    $summary = data_get($section, 'summary', __('capell-theme-motion-archive::sections.media_credits.summary'));
+    $items = data_get($section, 'items', []);
 @endphp
 
 <section
-    class="editorial-section"
-    style="background: var(--editorial-field)"
+    id="media-credits"
+    class="mva-section"
 >
-    <div class="editorial-section-inner">
-        <p class="editorial-kicker">
-            {{ __('capell-theme-motion-archive::sections.authors.kicker') }}
+    <div class="mva-section-inner">
+        <p class="mva-kicker">
+            {{ __('capell-theme-motion-archive::sections.media_credits.kicker') }}
         </p>
-        <h2>
-            {{ data_get($section, 'heading', __('capell-theme-motion-archive::sections.authors.heading')) }}
-        </h2>
-        <p class="editorial-lede">
-            {{ data_get($section, 'summary', __('capell-theme-motion-archive::sections.authors.summary')) }}
-        </p>
-        <div class="editorial-grid">
+        <h2>{{ $heading }}</h2>
+        <p class="mva-lede">{{ $summary }}</p>
+
+        <div
+            class="mva-credit-grid"
+            style="margin-top: 2rem"
+        >
             @foreach ($items as $item)
-                <article class="editorial-card">
+                <article class="mva-credit-card">
                     <h3>
                         {{ data_get($item, 'title', data_get($item, 'name', '')) }}
                     </h3>
-                    <p>{{ data_get($item, 'summary', '') }}</p>
+                    <p>
+                        {{ data_get($item, 'summary', data_get($item, 'description', '')) }}
+                    </p>
                 </article>
             @endforeach
         </div>

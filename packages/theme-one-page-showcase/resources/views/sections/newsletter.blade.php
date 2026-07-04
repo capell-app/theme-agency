@@ -1,39 +1,44 @@
 <section
-    class="editorial-section"
-    style="background: var(--editorial-field)"
+    id="newsletter"
+    class="ops-section ops-section-field"
 >
-    <div class="editorial-section-inner editorial-split">
+    <div class="ops-section-inner ops-split">
         <div>
-            <p class="editorial-kicker">
+            <p class="ops-kicker">
                 {{ __('capell-theme-one-page-showcase::sections.newsletter.kicker') }}
             </p>
             <h2>
                 {{ data_get($section, 'heading', __('capell-theme-one-page-showcase::sections.newsletter.heading')) }}
             </h2>
-            <p class="editorial-lede">
+            <p class="ops-lede">
                 {{ data_get($section, 'summary', __('capell-theme-one-page-showcase::sections.newsletter.summary')) }}
             </p>
         </div>
         <form
-            method="post"
-            action="{{ data_get($section, 'action', '/') }}"
-            class="editorial-card"
+            method="get"
+            action="{{ data_get($section, 'action', '#') }}"
+            class="ops-form"
         >
-            <label for="editorial-newsletter-email">
+            <label for="ops-newsletter-email">
                 {{ __('capell-theme-one-page-showcase::sections.newsletter.email_label') }}
             </label>
             <input
-                id="editorial-newsletter-email"
+                id="ops-newsletter-email"
                 name="email"
                 type="email"
+                autocomplete="email"
+                placeholder="{{ __('capell-theme-one-page-showcase::sections.newsletter.placeholder') }}"
                 required
             />
             <button
-                class="editorial-button"
+                class="ops-button"
                 type="submit"
             >
-                {{ __('capell-theme-one-page-showcase::sections.newsletter.button') }}
+                {{ data_get($section, 'button', __('capell-theme-one-page-showcase::sections.newsletter.button')) }}
             </button>
+            <p class="ops-meta">
+                {{ __('capell-theme-one-page-showcase::sections.newsletter.note') }}
+            </p>
         </form>
     </div>
 </section>

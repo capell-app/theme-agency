@@ -1,40 +1,93 @@
 @php
-    $heading = data_get($section, 'heading', __('capell-theme-case-study-platform::sections.stories.heading'));
-    $summary = data_get($section, 'summary', __('capell-theme-case-study-platform::sections.stories.summary'));
-    $items = data_get($section, 'items', [
-        ['title' => __('capell-theme-case-study-platform::sections.stories.product_title'), 'summary' => __('capell-theme-case-study-platform::sections.stories.product_summary'), 'meta' => __('capell-theme-case-study-platform::sections.stories.product_meta')],
-        ['title' => __('capell-theme-case-study-platform::sections.stories.design_title'), 'summary' => __('capell-theme-case-study-platform::sections.stories.design_summary'), 'meta' => __('capell-theme-case-study-platform::sections.stories.design_meta')],
-        ['title' => __('capell-theme-case-study-platform::sections.stories.advice_title'), 'summary' => __('capell-theme-case-study-platform::sections.stories.advice_summary'), 'meta' => __('capell-theme-case-study-platform::sections.stories.advice_meta')],
-    ]);
+    $heading = data_get($section, 'heading', __('capell-theme-case-study-platform::sections.project_feed.heading'));
+    $summary = data_get($section, 'summary', __('capell-theme-case-study-platform::sections.project_feed.summary'));
+    $items = data_get($section, 'items', []);
 @endphp
 
-<section class="editorial-section">
-    <div class="editorial-section-inner">
-        <p class="editorial-kicker">
-            {{ __('capell-theme-case-study-platform::sections.stories.kicker') }}
+<section
+    id="project-feed"
+    class="csp-section"
+>
+    <div class="csp-section-inner">
+        <p class="csp-kicker">
+            {{ __('capell-theme-case-study-platform::sections.project_feed.heading') }}
         </p>
         <h2>{{ $heading }}</h2>
-        <p class="editorial-lede">{{ $summary }}</p>
+        <p class="csp-lede">{{ $summary }}</p>
 
-        <div class="editorial-grid">
-            @foreach ($items as $item)
-                <article class="editorial-card editorial-showcase-card">
-                    <h3>
-                        {{ data_get($item, 'title', data_get($item, 'name', '')) }}
-                    </h3>
-                    <p>
-                        {{ data_get($item, 'summary', data_get($item, 'description', '')) }}
-                    </p>
-                    <div class="editorial-showcase-specs">
-                        <span>
-                            {{ data_get($item, 'meta', data_get($item, 'category', __('capell-theme-case-study-platform::sections.stories.default_meta'))) }}
-                        </span>
-                        <span>
-                            {{ data_get($item, 'care_note', __('capell-theme-case-study-platform::sections.stories.care_note')) }}
-                        </span>
-                    </div>
-                </article>
-            @endforeach
-        </div>
+        @if (is_iterable($items) && collect($items)->isNotEmpty())
+            <div class="csp-project-grid">
+                @foreach ($items as $item)
+                    @php
+                        $itemImage = data_get($item, 'image', data_get($item, 'imageUrl'));
+                        $itemAlt = data_get($item, 'imageAlt', data_get($item, 'title', ''));
+                        $itemUrl = data_get($item, 'url', data_get($item, 'href'));
+                        $title = data_get($item, 'title', data_get($item, 'name', ''));
+                    @endphp
+
+                    <article>
+                        @if (filled($itemUrl))
+                            <a
+                                class="csp-project-card"
+                                href="{{ $itemUrl }}"
+                            >
+                                @if (filled($itemImage))
+                                    <img
+                                        src="{{ $itemImage }}"
+                                        alt="{{ $itemAlt }}"
+                                        loading="lazy"
+                                        decoding="async"
+                                        class="csp-cover"
+                                    />
+                                @else
+                                    <div
+                                        class="csp-cover csp-cover-empty"
+                                        aria-hidden="true"
+                                    ></div>
+                                @endif
+                                <p class="csp-project-meta">
+                                    {{ data_get($item, 'meta', __('capell-theme-case-study-platform::sections.project_feed.default_meta')) }}
+                                </p>
+                                <h3>{{ $title }}</h3>
+                                <p>
+                                    {{ data_get($item, 'summary', data_get($item, 'description', '')) }}
+                                </p>
+                                <span class="csp-project-stat">
+                                    {{ data_get($item, 'care_note', __('capell-theme-case-study-platform::sections.project_feed.default_stat')) }}
+                                </span>
+                            </a>
+                        @else
+                            <div class="csp-project-card">
+                                @if (filled($itemImage))
+                                    <img
+                                        src="{{ $itemImage }}"
+                                        alt="{{ $itemAlt }}"
+                                        loading="lazy"
+                                        decoding="async"
+                                        class="csp-cover"
+                                    />
+                                @else
+                                    <div
+                                        class="csp-cover csp-cover-empty"
+                                        aria-hidden="true"
+                                    ></div>
+                                @endif
+                                <p class="csp-project-meta">
+                                    {{ data_get($item, 'meta', __('capell-theme-case-study-platform::sections.project_feed.default_meta')) }}
+                                </p>
+                                <h3>{{ $title }}</h3>
+                                <p>
+                                    {{ data_get($item, 'summary', data_get($item, 'description', '')) }}
+                                </p>
+                            </div>
+                        @endif
+                    </article>
+                @endforeach
+            </div>
+        @else
+            <p class="csp-lede">
+                {{ __('capell-theme-case-study-platform::sections.project_feed.empty') }}
+            </p>
+        @endif
     </div>
 </section>

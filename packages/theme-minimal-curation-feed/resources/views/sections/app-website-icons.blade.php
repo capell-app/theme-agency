@@ -1,33 +1,79 @@
 @php
-    $stories = data_get($section, 'items', data_get($section, 'stories', [
-        ['title' => __('capell-theme-minimal-curation-feed::sections.events.planning_title'), 'summary' => __('capell-theme-minimal-curation-feed::sections.events.planning_summary')],
-        ['title' => __('capell-theme-minimal-curation-feed::sections.events.workshop_title'), 'summary' => __('capell-theme-minimal-curation-feed::sections.events.workshop_summary')],
-        ['title' => __('capell-theme-minimal-curation-feed::sections.events.systems_title'), 'summary' => __('capell-theme-minimal-curation-feed::sections.events.systems_summary')],
-    ]));
+    $items = collect(data_get($section, 'items', []))
+        ->filter(fn (mixed $item): bool => filled(data_get($item, 'title', data_get($item, 'name'))))
+        ->values();
 @endphp
 
-<section class="editorial-section">
-    <div class="editorial-section-inner">
-        <p class="editorial-kicker">
-            {{ __('capell-theme-minimal-curation-feed::sections.events.kicker') }}
+<section
+    id="app-website-icons"
+    class="mcf-section"
+>
+    <div class="mcf-section-inner">
+        <p class="mcf-kicker">
+            {{ data_get($section, 'kicker', __('capell-theme-minimal-curation-feed::sections.icons.kicker')) }}
         </p>
         <h2>
-            {{ data_get($section, 'heading', __('capell-theme-minimal-curation-feed::sections.events.heading')) }}
+            {{ data_get($section, 'heading', __('capell-theme-minimal-curation-feed::sections.icons.heading')) }}
         </h2>
-        <div class="editorial-grid">
-            @foreach ($stories as $story)
-                <article class="editorial-card">
-                    <p class="editorial-meta">
-                        {{ data_get($story, 'meta', data_get($story, 'category', '')) }}
-                    </p>
-                    <h3>
-                        {{ data_get($story, 'title', data_get($story, 'name', '')) }}
-                    </h3>
-                    <p>
-                        {{ data_get($story, 'summary', data_get($story, 'description', '')) }}
-                    </p>
-                </article>
-            @endforeach
-        </div>
+        @if (filled(data_get($section, 'summary')))
+            <p class="mcf-lede">{{ data_get($section, 'summary') }}</p>
+        @endif
+
+        @if ($items->isNotEmpty())
+            <div class="mcf-icon-grid">
+                @foreach ($items as $item)
+                    @php
+                        $itemTitle = data_get($item, 'title', data_get($item, 'name', ''));
+                        $itemUrl = data_get($item, 'url', data_get($item, 'href'));
+                        $itemImage = data_get($item, 'image', data_get($item, 'imageUrl'));
+                        $itemInitial = mb_strtoupper(mb_substr(trim($itemTitle), 0, 1));
+                    @endphp
+
+                    <article class="mcf-icon-card">
+                        @if (filled($itemImage))
+                            <img
+                                src="{{ $itemImage }}"
+                                alt="{{ data_get($item, 'imageAlt', $itemTitle) }}"
+                                width="48"
+                                height="48"
+                                loading="lazy"
+                                decoding="async"
+                                class="mcf-icon-tile"
+                            />
+                        @else
+                            <span
+                                class="mcf-icon-tile"
+                                aria-hidden="true"
+                            >
+                                {{ $itemInitial }}
+                            </span>
+                        @endif
+                        @if (filled(data_get($item, 'meta', data_get($item, 'category'))))
+                            <p class="mcf-meta">
+                                {{ data_get($item, 'meta', data_get($item, 'category')) }}
+                            </p>
+                        @endif
+
+                        <h3>
+                            @if (filled($itemUrl))
+                                <a
+                                    class="mcf-title-link"
+                                    href="{{ $itemUrl }}"
+                                >
+                                    {{ $itemTitle }}
+                                </a>
+                            @else
+                                {{ $itemTitle }}
+                            @endif
+                        </h3>
+                        @if (filled(data_get($item, 'summary', data_get($item, 'description'))))
+                            <p>
+                                {{ data_get($item, 'summary', data_get($item, 'description')) }}
+                            </p>
+                        @endif
+                    </article>
+                @endforeach
+            </div>
+        @endif
     </div>
 </section>

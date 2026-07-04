@@ -1,24 +1,70 @@
 @php
-    $columns = data_get($section, 'items', [
-        ['title' => __('capell-theme-motion-archive::sections.footer.shop'), 'links' => [__('capell-theme-motion-archive::sections.footer.models'), __('capell-theme-motion-archive::sections.footer.accessories'), __('capell-theme-motion-archive::sections.footer.compare')]],
-        ['title' => __('capell-theme-motion-archive::sections.footer.service'), 'links' => [__('capell-theme-motion-archive::sections.footer.support'), __('capell-theme-motion-archive::sections.footer.trade_in'), __('capell-theme-motion-archive::sections.footer.financing')]],
-        ['title' => __('capell-theme-motion-archive::sections.footer.editorial'), 'links' => [__('capell-theme-motion-archive::sections.footer.stories'), __('capell-theme-motion-archive::sections.footer.updates'), __('capell-theme-motion-archive::sections.footer.newsletter')]],
-    ]);
+    $brandName = data_get($section, 'brandName', data_get($section, 'brand', __('capell-theme-motion-archive::sections.navigation.brand')));
+    $summary = data_get($section, 'summary', __('capell-theme-motion-archive::sections.footer.tagline'));
+    $columns = data_get($section, 'columns', data_get($section, 'items', [
+        [
+            'heading' => __('capell-theme-motion-archive::sections.footer.archive'),
+            'links' => [
+                ['label' => __('capell-theme-motion-archive::sections.footer.browse_by_year'), 'url' => '/#archive'],
+                ['label' => __('capell-theme-motion-archive::sections.footer.winners'), 'url' => '/#winner-list'],
+                ['label' => __('capell-theme-motion-archive::sections.footer.categories'), 'url' => '/#date-filter-rail'],
+                ['label' => __('capell-theme-motion-archive::sections.footer.earlier_cycles'), 'url' => '/theme-motion-archive-directory'],
+            ],
+        ],
+        [
+            'heading' => __('capell-theme-motion-archive::sections.footer.the_awards'),
+            'links' => [
+                ['label' => __('capell-theme-motion-archive::sections.footer.jury_scoring'), 'url' => '/#jury-score-explainer'],
+                ['label' => __('capell-theme-motion-archive::sections.footer.how_to_submit'), 'url' => '/theme-motion-archive-cta'],
+                ['label' => __('capell-theme-motion-archive::sections.footer.credits_policy'), 'url' => '/#media-credits'],
+            ],
+        ],
+        [
+            'heading' => __('capell-theme-motion-archive::sections.footer.connect'),
+            'links' => [
+                ['label' => __('capell-theme-motion-archive::sections.footer.submit_work'), 'url' => '/theme-motion-archive-contact'],
+                ['label' => 'archive@frameindex.example', 'url' => 'mailto:archive@frameindex.example'],
+            ],
+        ],
+    ]));
 @endphp
 
-<footer class="editorial-section editorial-section-dark">
-    <div class="editorial-section-inner">
-        <div class="editorial-grid">
+<footer class="mva-section mva-footer">
+    <div class="mva-section-inner">
+        <div class="mva-footer-grid">
+            <div>
+                <h3>{{ $brandName }}</h3>
+                <p
+                    style="
+                        color: var(--mva-muted);
+                        line-height: 1.6;
+                        max-width: 20rem;
+                    "
+                >
+                    {{ $summary }}
+                </p>
+            </div>
             @foreach ($columns as $column)
-                <section>
-                    <h3>{{ data_get($column, 'title', '') }}</h3>
+                <div>
+                    <h3>
+                        {{ data_get($column, 'heading', data_get($column, 'title', '')) }}
+                    </h3>
                     @foreach (data_get($column, 'links', []) as $link)
-                        <p>
-                            {{ is_array($link) ? data_get($link, 'label', data_get($link, 'title', '')) : $link }}
-                        </p>
+                        @if (is_array($link))
+                            <a
+                                href="{{ data_get($link, 'url', data_get($link, 'href', '/')) }}"
+                            >
+                                {{ data_get($link, 'label', data_get($link, 'title', '')) }}
+                            </a>
+                        @else
+                            <span>{{ $link }}</span>
+                        @endif
                     @endforeach
-                </section>
+                </div>
             @endforeach
         </div>
+        <p class="mva-footer-bottom">
+            {{ $brandName }} &copy; {{ date('Y') }}
+        </p>
     </div>
 </footer>

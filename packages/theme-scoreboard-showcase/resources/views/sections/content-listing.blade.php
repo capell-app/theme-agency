@@ -2,24 +2,66 @@
     $items = data_get($section, 'items', data_get($section, 'posts', []));
 @endphp
 
-<section class="editorial-section">
-    <div class="editorial-section-inner">
-        <p class="editorial-kicker">
+<section
+    id="content-listing"
+    class="sbs-section"
+>
+    <div class="sbs-section-inner">
+        <p class="sbs-kicker">
             {{ __('capell-theme-scoreboard-showcase::sections.listing.kicker') }}
         </p>
         <h2>
             {{ data_get($section, 'heading', __('capell-theme-scoreboard-showcase::sections.listing.heading')) }}
         </h2>
+        @if (filled(data_get($section, 'summary')))
+            <p class="sbs-lede">{{ data_get($section, 'summary') }}</p>
+        @endif
+
         @if (is_iterable($items) && collect($items)->isNotEmpty())
-            <div class="editorial-grid">
+            <div class="sbs-index">
                 @foreach ($items as $item)
-                    <article class="editorial-card">
-                        <p class="editorial-meta">
-                            {{ data_get($item, 'category', data_get($item, 'meta', '')) }}
-                        </p>
-                        <h3>
-                            {{ data_get($item, 'title', data_get($item, 'name', '')) }}
-                        </h3>
+                    @php
+                        $itemUrl = data_get($item, 'url', data_get($item, 'href'));
+                        $itemImage = data_get($item, 'image', data_get($item, 'imageUrl'));
+                        $itemAlt = data_get($item, 'imageAlt', data_get($item, 'title', ''));
+                    @endphp
+
+                    <article
+                        class="sbs-index-row {{ filled($itemImage) ? 'sbs-index-row-media' : '' }}"
+                    >
+                        <span
+                            class="sbs-index-numeral"
+                            aria-hidden="true"
+                        >
+                            {{ str_pad((string) $loop->iteration, 2, '0', STR_PAD_LEFT) }}
+                        </span>
+                        @if (filled($itemImage))
+                            <img
+                                src="{{ $itemImage }}"
+                                alt="{{ $itemAlt }}"
+                                loading="lazy"
+                                decoding="async"
+                                class="sbs-index-thumb"
+                            />
+                        @endif
+
+                        <div>
+                            <p class="sbs-nominee-meta">
+                                {{ data_get($item, 'category', data_get($item, 'meta', '')) }}
+                            </p>
+                            <h3>
+                                @if (filled($itemUrl))
+                                    <a
+                                        class="sbs-title-link"
+                                        href="{{ $itemUrl }}"
+                                    >
+                                        {{ data_get($item, 'title', data_get($item, 'name', '')) }}
+                                    </a>
+                                @else
+                                    {{ data_get($item, 'title', data_get($item, 'name', '')) }}
+                                @endif
+                            </h3>
+                        </div>
                         <p>
                             {{ data_get($item, 'summary', data_get($item, 'description', '')) }}
                         </p>
@@ -27,7 +69,7 @@
                 @endforeach
             </div>
         @else
-            <p class="editorial-lede">
+            <p class="sbs-lede">
                 {{ __('capell-theme-scoreboard-showcase::sections.listing.empty') }}
             </p>
         @endif

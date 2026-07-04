@@ -1,22 +1,39 @@
 @php
-    $columns = data_get($section, 'items', [
-        ['title' => __('capell-theme-minimal-curation-feed::sections.footer.shop'), 'links' => [__('capell-theme-minimal-curation-feed::sections.footer.models'), __('capell-theme-minimal-curation-feed::sections.footer.accessories'), __('capell-theme-minimal-curation-feed::sections.footer.compare')]],
-        ['title' => __('capell-theme-minimal-curation-feed::sections.footer.service'), 'links' => [__('capell-theme-minimal-curation-feed::sections.footer.support'), __('capell-theme-minimal-curation-feed::sections.footer.trade_in'), __('capell-theme-minimal-curation-feed::sections.footer.financing')]],
-        ['title' => __('capell-theme-minimal-curation-feed::sections.footer.editorial'), 'links' => [__('capell-theme-minimal-curation-feed::sections.footer.stories'), __('capell-theme-minimal-curation-feed::sections.footer.updates'), __('capell-theme-minimal-curation-feed::sections.footer.newsletter')]],
-    ]);
+    $columns = data_get($section, 'items', data_get($section, 'columns', []));
+    $brand = data_get($section, 'brand', data_get($section, 'brandName', __('capell-theme-minimal-curation-feed::sections.navigation.brand')));
+    $brandSummary = data_get($section, 'summary');
 @endphp
 
-<footer class="editorial-section editorial-section-dark">
-    <div class="editorial-section-inner">
-        <div class="editorial-grid">
+<footer class="mcf-footer">
+    <div class="mcf-section-inner">
+        <div class="mcf-footer-grid">
+            <div class="mcf-footer-brand">
+                <p class="mcf-footer-wordmark">{{ $brand }}</p>
+                @if (filled($brandSummary))
+                    <p class="mcf-footer-summary">{{ $brandSummary }}</p>
+                @endif
+            </div>
+
             @foreach ($columns as $column)
                 <section>
-                    <h3>{{ data_get($column, 'title', '') }}</h3>
-                    @foreach (data_get($column, 'links', []) as $link)
-                        <p>
-                            {{ is_array($link) ? data_get($link, 'label', data_get($link, 'title', '')) : $link }}
-                        </p>
-                    @endforeach
+                    <h3 class="mcf-footer-heading">
+                        {{ data_get($column, 'title', data_get($column, 'heading', '')) }}
+                    </h3>
+                    <ul class="mcf-footer-links">
+                        @foreach (data_get($column, 'links', []) as $link)
+                            <li>
+                                @if (is_array($link) && filled(data_get($link, 'url', data_get($link, 'href'))))
+                                    <a
+                                        href="{{ data_get($link, 'url', data_get($link, 'href')) }}"
+                                    >
+                                        {{ data_get($link, 'label', data_get($link, 'title', '')) }}
+                                    </a>
+                                @else
+                                    {{ is_array($link) ? data_get($link, 'label', data_get($link, 'title', '')) : $link }}
+                                @endif
+                            </li>
+                        @endforeach
+                    </ul>
                 </section>
             @endforeach
         </div>

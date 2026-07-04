@@ -6,13 +6,15 @@ namespace Capell\ThemeStudio\DesignLedMagazine;
 
 use Capell\Core\Data\VendorAssetData;
 use Capell\Core\Enums\FrontendRuntime;
+use Capell\Core\Enums\VendorAssetEnum;
 use Capell\Core\Facades\CapellCore;
 use Capell\Core\ThemeStudio\Contracts\SectionRenderer;
 use Capell\Core\ThemeStudio\Data\ThemeDefinitionData;
 use Capell\Core\ThemeStudio\Data\ThemePresetData;
-use Capell\Core\ThemeStudio\Rendering\BladeThemeRenderer;
 use Capell\Core\ThemeStudio\Rendering\ViewSectionRenderer;
 use Capell\Core\ThemeStudio\Theme\ThemeRegistry;
+use Capell\FoundationTheme\Rendering\ChromeSplitBladeThemeRenderer;
+use Capell\FoundationTheme\Support\Editor\StandardThemeEditorSchema;
 use Capell\ThemeStudio\DesignLedMagazine\Console\Commands\DemoCommand;
 use Illuminate\Support\ServiceProvider;
 use Override;
@@ -55,15 +57,43 @@ final class DesignLedMagazineThemeServiceProvider extends ServiceProvider
                         'layoutPresentation' => 'editorial',
                         'motionIntensity' => 'subtle',
                         'mediaTreatment' => 'photographic',
-                        'radius' => 'md',
+                        'radius' => 'none',
                         'headingScale' => 'balanced',
                         'cardDensity' => 'airy',
+                    ],
+                ),
+                new ThemePresetData(
+                    key: 'showroom',
+                    name: 'Showroom',
+                    description: 'A cooler, gallery-white counterpart with graphite ink and a slate accent for design portfolios that read like a showroom walkthrough rather than a warm print magazine.',
+                    previewImage: '/vendor/capell/themes/design-led-magazine.jpg',
+                    values: [
+                        'primaryColor' => '#1a1a1e',
+                        'accentColor' => '#3d5a73',
+                        'neutralColor' => '#2c2c30',
+                        'surfaceColor' => '#f4f5f7',
+                        'foregroundColor' => '#1a1a1e',
+                        'headingFont' => 'sora',
+                        'bodyFont' => 'inter',
+                        'spacing' => 'spacious',
+                        'alignment' => 'left',
+                        'cardStyle' => 'flat',
+                        'navigationStyle' => 'prominent',
+                        'layoutPresentation' => 'editorial',
+                        'motionIntensity' => 'minimal',
+                        'mediaTreatment' => 'photographic',
+                        'radius' => 'small',
+                        'headingScale' => 'balanced',
+                        'cardDensity' => 'spacious',
                     ],
                 ),
             ],
             assets: ['css' => 'vendor/capell/themes/design-led-magazine.css'],
             runtime: FrontendRuntime::Blade,
             extends: 'default',
+            frontend: [
+                'editor' => StandardThemeEditorSchema::definition(),
+            ],
         );
     }
 
@@ -88,7 +118,7 @@ final class DesignLedMagazineThemeServiceProvider extends ServiceProvider
 
         $registry->register(
             definition: self::definition(),
-            themeRenderer: new BladeThemeRenderer(
+            themeRenderer: new ChromeSplitBladeThemeRenderer(
                 themeKey: self::THEME_KEY,
                 layoutView: 'capell-theme-design-led-magazine::page',
                 sectionRenderers: $sectionRenderers,
@@ -99,7 +129,12 @@ final class DesignLedMagazineThemeServiceProvider extends ServiceProvider
 
     private function registerVendorCssAssets(): void
     {
-        CapellCore::registerVendorAsset(VendorAssetData::tailwindImport('resources/css/theme-design-led-magazine.css', self::$packageName));
+        CapellCore::registerVendorAsset(new VendorAssetData(
+            type: VendorAssetEnum::TailwindImport,
+            value: 'resources/css/theme-design-led-magazine.css',
+            packageName: self::$packageName,
+            condition: 'theme-css:design-led-magazine',
+        ));
         CapellCore::registerVendorAsset(VendorAssetData::tailwindSource('resources/views/**/*.blade.php', self::$packageName));
     }
 

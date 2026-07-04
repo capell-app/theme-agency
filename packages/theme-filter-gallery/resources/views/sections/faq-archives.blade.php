@@ -1,33 +1,40 @@
 @php
-    $items = data_get($section, 'items', [
-        ['title' => __('capell-theme-filter-gallery::sections.authors.product_title'), 'summary' => __('capell-theme-filter-gallery::sections.authors.product_summary')],
-        ['title' => __('capell-theme-filter-gallery::sections.authors.advice_title'), 'summary' => __('capell-theme-filter-gallery::sections.authors.advice_summary')],
-        ['title' => __('capell-theme-filter-gallery::sections.authors.company_title'), 'summary' => __('capell-theme-filter-gallery::sections.authors.company_summary')],
-    ]);
+    $heading = data_get($section, 'heading', __('capell-theme-filter-gallery::sections.faq.heading'));
+    $summary = data_get($section, 'summary', __('capell-theme-filter-gallery::sections.faq.summary'));
+    $fallbackItems = __('capell-theme-filter-gallery::sections.faq.items');
+    $items = collect(data_get($section, 'items', is_array($fallbackItems) ? $fallbackItems : []))
+        ->filter(fn (mixed $item): bool => filled(data_get($item, 'title', data_get($item, 'name'))))
+        ->values();
 @endphp
 
 <section
-    class="editorial-section"
-    style="background: var(--editorial-field)"
+    id="faq-archives"
+    class="fga-section fga-section-panel"
 >
-    <div class="editorial-section-inner">
-        <p class="editorial-kicker">
-            {{ __('capell-theme-filter-gallery::sections.authors.kicker') }}
-        </p>
-        <h2>
-            {{ data_get($section, 'heading', __('capell-theme-filter-gallery::sections.authors.heading')) }}
-        </h2>
-        <p class="editorial-lede">
-            {{ data_get($section, 'summary', __('capell-theme-filter-gallery::sections.authors.summary')) }}
-        </p>
-        <div class="editorial-grid">
+    <div class="fga-section-inner">
+        <div class="fga-section-head">
+            <div class="fga-section-head-copy">
+                <p class="fga-kicker">
+                    {{ __('capell-theme-filter-gallery::sections.faq.kicker') }}
+                </p>
+                <h2>{{ $heading }}</h2>
+                <p class="fga-lede">{{ $summary }}</p>
+            </div>
+        </div>
+
+        <div class="fga-faq">
             @foreach ($items as $item)
-                <article class="editorial-card">
-                    <h3>
+                <details
+                    name="fga-faq"
+                    @if ($loop->first) open @endif
+                >
+                    <summary>
                         {{ data_get($item, 'title', data_get($item, 'name', '')) }}
-                    </h3>
-                    <p>{{ data_get($item, 'summary', '') }}</p>
-                </article>
+                    </summary>
+                    <p>
+                        {{ data_get($item, 'summary', data_get($item, 'description', '')) }}
+                    </p>
+                </details>
             @endforeach
         </div>
     </div>

@@ -1,34 +1,42 @@
 @php
-    $items = data_get($section, 'items', [
-        ['title' => __('capell-theme-case-study-platform::sections.authors.product_title'), 'summary' => __('capell-theme-case-study-platform::sections.authors.product_summary')],
-        ['title' => __('capell-theme-case-study-platform::sections.authors.advice_title'), 'summary' => __('capell-theme-case-study-platform::sections.authors.advice_summary')],
-        ['title' => __('capell-theme-case-study-platform::sections.authors.company_title'), 'summary' => __('capell-theme-case-study-platform::sections.authors.company_summary')],
-    ]);
+    $heading = data_get($section, 'heading', __('capell-theme-case-study-platform::sections.credits_tools.heading'));
+    $summary = data_get($section, 'summary', __('capell-theme-case-study-platform::sections.credits_tools.summary'));
+    $items = data_get($section, 'items', []);
+
+    $credits = collect(data_get($section, 'credits', []));
+    $tools = collect(data_get($section, 'tools', []));
+
+    if ($credits->isEmpty() && $tools->isEmpty() && is_iterable($items)) {
+        $credits = collect([
+            ['role' => __('capell-theme-case-study-platform::sections.credits_tools.default_role'), 'name' => data_get(collect($items)->first(), 'summary', '')],
+        ]);
+    }
 @endphp
 
 <section
-    class="editorial-section"
-    style="background: var(--editorial-field)"
+    id="credits-tools"
+    class="csp-section"
 >
-    <div class="editorial-section-inner">
-        <p class="editorial-kicker">
-            {{ __('capell-theme-case-study-platform::sections.authors.kicker') }}
+    <div class="csp-section-inner">
+        <p class="csp-kicker">
+            {{ __('capell-theme-case-study-platform::sections.credits_tools.heading') }}
         </p>
-        <h2>
-            {{ data_get($section, 'heading', __('capell-theme-case-study-platform::sections.authors.heading')) }}
-        </h2>
-        <p class="editorial-lede">
-            {{ data_get($section, 'summary', __('capell-theme-case-study-platform::sections.authors.summary')) }}
-        </p>
-        <div class="editorial-grid">
-            @foreach ($items as $item)
-                <article class="editorial-card">
-                    <h3>
-                        {{ data_get($item, 'title', data_get($item, 'name', '')) }}
-                    </h3>
-                    <p>{{ data_get($item, 'summary', '') }}</p>
-                </article>
-            @endforeach
-        </div>
+        <h2>{{ $heading }}</h2>
+        <p class="csp-lede">{{ $summary }}</p>
+
+        @if (is_iterable($items) && collect($items)->isNotEmpty())
+            <div class="csp-credits-grid">
+                @foreach ($items as $item)
+                    <article class="csp-credits-card">
+                        <h3>
+                            {{ data_get($item, 'title', data_get($item, 'name', '')) }}
+                        </h3>
+                        <p style="margin: 0; color: var(--csp-muted)">
+                            {{ data_get($item, 'summary', data_get($item, 'description', '')) }}
+                        </p>
+                    </article>
+                @endforeach
+            </div>
+        @endif
     </div>
 </section>

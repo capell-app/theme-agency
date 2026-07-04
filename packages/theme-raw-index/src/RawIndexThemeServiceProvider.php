@@ -6,13 +6,15 @@ namespace Capell\ThemeStudio\RawIndex;
 
 use Capell\Core\Data\VendorAssetData;
 use Capell\Core\Enums\FrontendRuntime;
+use Capell\Core\Enums\VendorAssetEnum;
 use Capell\Core\Facades\CapellCore;
 use Capell\Core\ThemeStudio\Contracts\SectionRenderer;
 use Capell\Core\ThemeStudio\Data\ThemeDefinitionData;
 use Capell\Core\ThemeStudio\Data\ThemePresetData;
-use Capell\Core\ThemeStudio\Rendering\BladeThemeRenderer;
 use Capell\Core\ThemeStudio\Rendering\ViewSectionRenderer;
 use Capell\Core\ThemeStudio\Theme\ThemeRegistry;
+use Capell\FoundationTheme\Rendering\ChromeSplitBladeThemeRenderer;
+use Capell\FoundationTheme\Support\Editor\StandardThemeEditorSchema;
 use Capell\ThemeStudio\RawIndex\Console\Commands\DemoCommand;
 use Illuminate\Support\ServiceProvider;
 use Override;
@@ -38,15 +40,15 @@ final class RawIndexThemeServiceProvider extends ServiceProvider
                 new ThemePresetData(
                     key: self::THEME_KEY,
                     name: 'Raw Index',
-                    description: 'Raw Index visual preset for deliberately raw archive pages with monospace type, plain grey or white backgrounds, stark black and blue links, visible focus outlines, irregular-but-controlled media, submission markers, interview labels, archive dates, language notes, and zine annotations.',
+                    description: 'Raw Index visual preset for a brutalist zine archive: monospace type, high-contrast black and white surfaces, one harsh accent, hard borders, visible focus outlines, irregular-but-controlled media, submission markers, interview labels, archive dates, language notes, and zine annotations.',
                     previewImage: '/vendor/capell/themes/raw-index.jpg',
                     values: [
-                        'primaryColor' => '#000000',
-                        'accentColor' => '#0000ee',
+                        'primaryColor' => '#0a0a0a',
+                        'accentColor' => '#ff2b00',
                         'neutralColor' => '#4b4b4b',
-                        'surfaceColor' => '#eeeeee',
-                        'foregroundColor' => '#000000',
-                        'headingFont' => 'mono',
+                        'surfaceColor' => '#f4f3ef',
+                        'foregroundColor' => '#0a0a0a',
+                        'headingFont' => 'sans',
                         'bodyFont' => 'mono',
                         'spacing' => 'balanced',
                         'alignment' => 'left',
@@ -60,9 +62,37 @@ final class RawIndexThemeServiceProvider extends ServiceProvider
                         'cardDensity' => 'dense',
                     ],
                 ),
+                new ThemePresetData(
+                    key: 'negative',
+                    name: 'Negative',
+                    description: 'Negative visual preset for an inverted photocopy-of-a-photocopy zine archive: near-black surfaces, bone-white foreground, a single hyperlink-blue accent, monospace type throughout, zero radius, and tighter, denser spacing for a scanned-in-the-dark reading room mood.',
+                    previewImage: '/vendor/capell/themes/raw-index.jpg',
+                    values: [
+                        'primaryColor' => '#f2f0e8',
+                        'accentColor' => '#3355ff',
+                        'neutralColor' => '#8a8a86',
+                        'surfaceColor' => '#0d0d0c',
+                        'foregroundColor' => '#f2f0e8',
+                        'headingFont' => 'mono',
+                        'bodyFont' => 'mono',
+                        'spacing' => 'tight',
+                        'alignment' => 'left',
+                        'cardStyle' => 'raw',
+                        'navigationStyle' => 'prominent',
+                        'layoutPresentation' => 'editorial',
+                        'motionIntensity' => 'none',
+                        'mediaTreatment' => 'irregular-index',
+                        'radius' => 'none',
+                        'headingScale' => 'compact',
+                        'cardDensity' => 'dense',
+                    ],
+                ),
             ],
             assets: ['css' => 'vendor/capell/themes/raw-index.css'],
             runtime: FrontendRuntime::Blade,
+            frontend: [
+                'editor' => StandardThemeEditorSchema::definition(),
+            ],
             extends: 'default',
         );
     }
@@ -88,7 +118,7 @@ final class RawIndexThemeServiceProvider extends ServiceProvider
 
         $registry->register(
             definition: self::definition(),
-            themeRenderer: new BladeThemeRenderer(
+            themeRenderer: new ChromeSplitBladeThemeRenderer(
                 themeKey: self::THEME_KEY,
                 layoutView: 'capell-theme-raw-index::page',
                 sectionRenderers: $sectionRenderers,
@@ -99,7 +129,12 @@ final class RawIndexThemeServiceProvider extends ServiceProvider
 
     private function registerVendorCssAssets(): void
     {
-        CapellCore::registerVendorAsset(VendorAssetData::tailwindImport('resources/css/theme-raw-index.css', self::$packageName));
+        CapellCore::registerVendorAsset(new VendorAssetData(
+            type: VendorAssetEnum::TailwindImport,
+            value: 'resources/css/theme-raw-index.css',
+            packageName: self::$packageName,
+            condition: 'theme-css:raw-index',
+        ));
         CapellCore::registerVendorAsset(VendorAssetData::tailwindSource('resources/views/**/*.blade.php', self::$packageName));
     }
 

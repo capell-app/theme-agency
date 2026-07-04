@@ -7,22 +7,36 @@
     ]);
 @endphp
 
-<section class="editorial-section">
-    <div class="editorial-section-inner">
-        <p class="editorial-kicker">
+<section
+    id="category-tabs"
+    class="ops-section"
+>
+    <div class="ops-section-inner">
+        <p class="ops-kicker">
             {{ __('capell-theme-one-page-showcase::sections.topics.kicker') }}
         </p>
         <h2>
             {{ data_get($section, 'heading', __('capell-theme-one-page-showcase::sections.topics.heading')) }}
         </h2>
-        <div class="editorial-grid">
+        @if (filled(data_get($section, 'summary')))
+            <p class="ops-lede">{{ data_get($section, 'summary') }}</p>
+        @endif
+
+        <div class="ops-tab-row">
             @foreach ($items as $item)
-                <article class="editorial-card">
-                    <h3>
+                @php
+                    $itemUrl = data_get($item, 'url', data_get($item, 'href', '/#one-page-grid'));
+                @endphp
+
+                <a
+                    class="ops-tab"
+                    href="{{ $itemUrl }}"
+                >
+                    <strong>
                         {{ data_get($item, 'title', data_get($item, 'name', '')) }}
-                    </h3>
-                    <p>{{ data_get($item, 'summary', '') }}</p>
-                </article>
+                    </strong>
+                    <span>{{ data_get($item, 'summary', '') }}</span>
+                </a>
             @endforeach
         </div>
     </div>

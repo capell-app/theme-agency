@@ -6,20 +6,30 @@
     ]);
 @endphp
 
-<section class="editorial-section">
-    <div class="editorial-section-inner">
-        <p class="editorial-kicker">
+<section class="exd-section">
+    <div class="exd-section-inner">
+        <p class="exd-kicker">
             {{ __('capell-theme-experimental-directory::sections.proof.kicker') }}
         </p>
-        <div class="editorial-grid">
+        @if (filled(data_get($section, 'heading')))
+            <h2>{{ data_get($section, 'heading') }}</h2>
+        @endif
+
+        @if (filled(data_get($section, 'summary')))
+            <p class="exd-lede">{{ data_get($section, 'summary') }}</p>
+        @endif
+
+        <div class="exd-grid">
             @foreach ($items as $item)
-                <article class="editorial-card">
-                    <h3>
-                        {{ data_get($item, 'value', data_get($item, 'title', '')) }}
-                    </h3>
-                    <p>
-                        {{ data_get($item, 'label', data_get($item, 'summary', '')) }}
-                    </p>
+                <article class="exd-card">
+                    <div class="exd-card-body">
+                        <h3>
+                            {{ data_get($item, 'value', data_get($item, 'title', '')) }}
+                        </h3>
+                        <p>
+                            {{ data_get($item, 'label', data_get($item, 'summary', '')) }}
+                        </p>
+                    </div>
                 </article>
             @endforeach
         </div>

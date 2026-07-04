@@ -7,17 +7,31 @@
     ]);
 @endphp
 
-<section class="editorial-section">
-    <div class="editorial-section-inner">
-        <p class="editorial-kicker">
-            {{ __('capell-theme-dark-product-system::sections.topics.kicker') }}
-        </p>
-        <h2>
-            {{ data_get($section, 'heading', __('capell-theme-dark-product-system::sections.topics.heading')) }}
-        </h2>
-        <div class="editorial-grid">
+<section
+    id="workflow-rails"
+    class="dps-section dps-section-raised"
+>
+    <div class="dps-section-inner">
+        <div class="dps-heading-row">
+            <div>
+                <p class="dps-eyebrow">
+                    {{ __('capell-theme-dark-product-system::sections.topics.kicker') }}
+                </p>
+                <h2>
+                    {{ data_get($section, 'heading', __('capell-theme-dark-product-system::sections.topics.heading')) }}
+                </h2>
+            </div>
+        </div>
+
+        <div class="dps-rail">
             @foreach ($items as $item)
-                <article class="editorial-card">
+                <article class="dps-rail-row">
+                    <span
+                        class="dps-rail-icon"
+                        aria-hidden="true"
+                    >
+                        {{ str_pad((string) $loop->iteration, 2, '0', STR_PAD_LEFT) }}
+                    </span>
                     <h3>
                         {{ data_get($item, 'title', data_get($item, 'name', '')) }}
                     </h3>

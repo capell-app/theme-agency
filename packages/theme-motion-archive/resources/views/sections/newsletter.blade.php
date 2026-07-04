@@ -1,39 +1,43 @@
 <section
-    class="editorial-section"
-    style="background: var(--editorial-field)"
+    id="newsletter"
+    class="mva-section mva-section-raised"
 >
-    <div class="editorial-section-inner editorial-split">
+    <div class="mva-section-inner mva-newsletter-grid">
         <div>
-            <p class="editorial-kicker">
+            <p class="mva-kicker">
                 {{ __('capell-theme-motion-archive::sections.newsletter.kicker') }}
             </p>
             <h2>
                 {{ data_get($section, 'heading', __('capell-theme-motion-archive::sections.newsletter.heading')) }}
             </h2>
-            <p class="editorial-lede">
+            <p class="mva-lede">
                 {{ data_get($section, 'summary', __('capell-theme-motion-archive::sections.newsletter.summary')) }}
             </p>
         </div>
         <form
-            method="post"
-            action="{{ data_get($section, 'action', '/') }}"
-            class="editorial-card"
+            method="get"
+            action="{{ data_get($section, 'action', '/#newsletter') }}"
+            class="mva-form"
         >
-            <label for="editorial-newsletter-email">
+            <label for="mva-newsletter-email">
                 {{ __('capell-theme-motion-archive::sections.newsletter.email_label') }}
             </label>
             <input
-                id="editorial-newsletter-email"
+                id="mva-newsletter-email"
                 name="email"
                 type="email"
+                placeholder="{{ __('capell-theme-motion-archive::sections.newsletter.placeholder') }}"
                 required
             />
             <button
-                class="editorial-button"
+                class="mva-button"
                 type="submit"
             >
                 {{ __('capell-theme-motion-archive::sections.newsletter.button') }}
             </button>
+            <p class="mva-form-note">
+                {{ __('capell-theme-motion-archive::sections.newsletter.note') }}
+            </p>
         </form>
     </div>
 </section>

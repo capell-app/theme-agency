@@ -5,7 +5,7 @@
     "license": "proprietary",
     "homepage": "https://github.com/capell-app/privacy-center",
     "require": {
-        "php": "^8.3",
+        "php": "^8.4",
         "capell-app/admin": "^4.0 || 4.x-dev",
         "capell-app/core": "^4.0 || 4.x-dev",
         "filament/filament": "^4.0|^5.0",

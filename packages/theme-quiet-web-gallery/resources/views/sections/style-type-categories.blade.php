@@ -1,26 +1,50 @@
 @php
     $items = data_get($section, 'items', [
-        ['title' => __('capell-theme-quiet-web-gallery::sections.topics.product_title'), 'summary' => __('capell-theme-quiet-web-gallery::sections.topics.product_summary')],
-        ['title' => __('capell-theme-quiet-web-gallery::sections.topics.design_title'), 'summary' => __('capell-theme-quiet-web-gallery::sections.topics.design_summary')],
-        ['title' => __('capell-theme-quiet-web-gallery::sections.topics.advice_title'), 'summary' => __('capell-theme-quiet-web-gallery::sections.topics.advice_summary')],
-        ['title' => __('capell-theme-quiet-web-gallery::sections.topics.culture_title'), 'summary' => __('capell-theme-quiet-web-gallery::sections.topics.culture_summary')],
+        ['title' => __('capell-theme-quiet-web-gallery::sections.categories.minimal_title'), 'summary' => __('capell-theme-quiet-web-gallery::sections.categories.minimal_summary'), 'count' => __('capell-theme-quiet-web-gallery::sections.categories.minimal_count')],
+        ['title' => __('capell-theme-quiet-web-gallery::sections.categories.editorial_title'), 'summary' => __('capell-theme-quiet-web-gallery::sections.categories.editorial_summary'), 'count' => __('capell-theme-quiet-web-gallery::sections.categories.editorial_count')],
+        ['title' => __('capell-theme-quiet-web-gallery::sections.categories.portfolio_title'), 'summary' => __('capell-theme-quiet-web-gallery::sections.categories.portfolio_summary'), 'count' => __('capell-theme-quiet-web-gallery::sections.categories.portfolio_count')],
     ]);
 @endphp
 
-<section class="editorial-section">
-    <div class="editorial-section-inner">
-        <p class="editorial-kicker">
-            {{ __('capell-theme-quiet-web-gallery::sections.topics.kicker') }}
+<section
+    id="style-type-categories"
+    class="qwg-section qwg-section-field"
+>
+    <div class="qwg-section-inner">
+        <p class="qwg-kicker">
+            {{ __('capell-theme-quiet-web-gallery::sections.categories.kicker') }}
         </p>
         <h2>
-            {{ data_get($section, 'heading', __('capell-theme-quiet-web-gallery::sections.topics.heading')) }}
+            {{ data_get($section, 'heading', __('capell-theme-quiet-web-gallery::sections.categories.heading')) }}
         </h2>
-        <div class="editorial-grid">
+        <p class="qwg-lede">
+            {{ data_get($section, 'summary', __('capell-theme-quiet-web-gallery::sections.categories.summary')) }}
+        </p>
+
+        <div class="qwg-index">
             @foreach ($items as $item)
-                <article class="editorial-card">
-                    <h3>
-                        {{ data_get($item, 'title', data_get($item, 'name', '')) }}
-                    </h3>
+                @php
+                    $itemUrl = data_get($item, 'url', data_get($item, 'href'));
+                @endphp
+
+                <article class="qwg-index-row">
+                    <div>
+                        <h3>
+                            @if (filled($itemUrl))
+                                <a
+                                    class="qwg-title-link"
+                                    href="{{ $itemUrl }}"
+                                >
+                                    {{ data_get($item, 'title', data_get($item, 'name', '')) }}
+                                </a>
+                            @else
+                                {{ data_get($item, 'title', data_get($item, 'name', '')) }}
+                            @endif
+                        </h3>
+                        <p class="qwg-meta">
+                            {{ data_get($item, 'count', '') }}
+                        </p>
+                    </div>
                     <p>{{ data_get($item, 'summary', '') }}</p>
                 </article>
             @endforeach

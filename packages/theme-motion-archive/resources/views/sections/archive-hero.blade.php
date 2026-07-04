@@ -1,33 +1,45 @@
 @php
-    $items = data_get($section, 'items', [
-        ['title' => __('capell-theme-motion-archive::sections.featured.product_title'), 'summary' => __('capell-theme-motion-archive::sections.featured.product_summary')],
-        ['title' => __('capell-theme-motion-archive::sections.featured.design_title'), 'summary' => __('capell-theme-motion-archive::sections.featured.design_summary')],
-        ['title' => __('capell-theme-motion-archive::sections.featured.advice_title'), 'summary' => __('capell-theme-motion-archive::sections.featured.advice_summary')],
-    ]);
+    $heading = data_get($section, 'heading', __('capell-theme-motion-archive::sections.archive_hero.heading'));
+    $summary = data_get($section, 'summary', __('capell-theme-motion-archive::sections.archive_hero.summary'));
+    $mediaUrl = data_get($section, 'image', data_get($section, 'imageUrl'));
+    $mediaAlt = data_get($section, 'imageAlt', __('capell-theme-motion-archive::sections.archive_hero.still_alt'));
+    $items = data_get($section, 'items', []);
 @endphp
 
-<section class="editorial-section">
-    <div class="editorial-section-inner editorial-split">
-        <div>
-            <p class="editorial-kicker">
-                {{ __('capell-theme-motion-archive::sections.featured.kicker') }}
-            </p>
-            <h2>
-                {{ data_get($section, 'heading', __('capell-theme-motion-archive::sections.featured.heading')) }}
-            </h2>
-            <p class="editorial-lede">
-                {{ data_get($section, 'summary', __('capell-theme-motion-archive::sections.featured.summary')) }}
-            </p>
+<section
+    id="archive"
+    class="mva-section mva-archive-hero"
+>
+    <div class="mva-section-inner">
+        <h2>{{ $heading }}</h2>
+        <p class="mva-lede">{{ $summary }}</p>
+
+        <div class="mva-archive-still">
+            @if (filled($mediaUrl))
+                <img
+                    src="{{ $mediaUrl }}"
+                    alt="{{ $mediaAlt }}"
+                    loading="eager"
+                    fetchpriority="high"
+                    decoding="async"
+                    class="mva-archive-still-image"
+                />
+            @endif
         </div>
-        <div class="editorial-grid">
-            @foreach ($items as $item)
-                <article class="editorial-card">
-                    <h3>
-                        {{ data_get($item, 'title', data_get($item, 'name', '')) }}
-                    </h3>
-                    <p>{{ data_get($item, 'summary', '') }}</p>
-                </article>
-            @endforeach
-        </div>
+
+        @if (is_iterable($items) && collect($items)->isNotEmpty())
+            <div class="mva-archive-rows">
+                @foreach ($items as $item)
+                    <article class="mva-archive-row">
+                        <h3>
+                            {{ data_get($item, 'title', data_get($item, 'name', '')) }}
+                        </h3>
+                        <p>
+                            {{ data_get($item, 'summary', data_get($item, 'description', '')) }}
+                        </p>
+                    </article>
+                @endforeach
+            </div>
+        @endif
     </div>
 </section>

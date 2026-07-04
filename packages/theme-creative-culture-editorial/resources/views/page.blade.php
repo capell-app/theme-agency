@@ -1,14 +1,19 @@
 <a
     href="#main-content"
-    class="editorial-skip-link"
+    class="cce-skip-link"
 >
     {{ __('capell-theme-creative-culture-editorial::generic.skip_to_content') }}
 </a>
 
-<main
-    id="main-content"
+<div
     style="{{ collect($brand->tokens())->map(fn (mixed $value, string $token): string => $token . ':' . $value)->implode(';') }}"
-    class="editorial-shell min-h-screen antialiased"
+    class="cce-shell min-h-screen antialiased"
 >
-    {!! $content !!}
-</main>
+    @if (isset($chromeHeader) || isset($chromeFooter))
+        {!! $chromeHeader ?? '' !!}
+        <main id="main-content">{!! $mainContent ?? $content !!}</main>
+        {!! $chromeFooter ?? '' !!}
+    @else
+        <main id="main-content">{!! $content !!}</main>
+    @endif
+</div>

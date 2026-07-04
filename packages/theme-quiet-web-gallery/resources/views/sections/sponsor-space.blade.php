@@ -1,36 +1,37 @@
 @php
-    $heading = data_get($section, 'heading', __('capell-theme-quiet-web-gallery::sections.updates.heading'));
-    $summary = data_get($section, 'summary', __('capell-theme-quiet-web-gallery::sections.updates.summary'));
-    $actions = data_get($section, 'items', [
-        ['title' => __('capell-theme-quiet-web-gallery::sections.updates.release_title'), 'summary' => __('capell-theme-quiet-web-gallery::sections.updates.release_summary')],
-        ['title' => __('capell-theme-quiet-web-gallery::sections.updates.beta_title'), 'summary' => __('capell-theme-quiet-web-gallery::sections.updates.beta_summary')],
+    $item = data_get($section, 'items.0', [
+        'title' => __('capell-theme-quiet-web-gallery::sections.sponsor.card_title'),
+        'summary' => __('capell-theme-quiet-web-gallery::sections.sponsor.card_summary'),
     ]);
 @endphp
 
-<section class="editorial-section editorial-section-dark">
-    <div class="editorial-section-inner editorial-split">
+<section
+    id="sponsor-space"
+    class="qwg-section"
+>
+    <div class="qwg-section-inner qwg-split">
         <div>
-            <p class="editorial-kicker">
-                {{ __('capell-theme-quiet-web-gallery::sections.updates.kicker') }}
+            <p class="qwg-kicker">
+                {{ __('capell-theme-quiet-web-gallery::sections.sponsor.kicker') }}
             </p>
-            <h2>{{ $heading }}</h2>
-            <p class="editorial-lede">{{ $summary }}</p>
-            <a
-                class="editorial-button"
-                href="{{ data_get($section, 'url', '/') }}"
-            >
-                {{ data_get($section, 'label', __('capell-theme-quiet-web-gallery::sections.updates.button')) }}
-            </a>
+            <h2>
+                {{ data_get($section, 'heading', __('capell-theme-quiet-web-gallery::sections.sponsor.heading')) }}
+            </h2>
+            <p class="qwg-lede">
+                {{ data_get($section, 'summary', __('capell-theme-quiet-web-gallery::sections.sponsor.summary')) }}
+            </p>
         </div>
-        <div class="editorial-grid">
-            @foreach ($actions as $action)
-                <article class="editorial-card">
-                    <h3>
-                        {{ data_get($action, 'title', data_get($action, 'name', '')) }}
-                    </h3>
-                    <p>{{ data_get($action, 'summary', '') }}</p>
-                </article>
-            @endforeach
-        </div>
+
+        <article class="qwg-card">
+            <p class="qwg-meta">
+                {{ __('capell-theme-quiet-web-gallery::sections.sponsor.label') }}
+            </p>
+            <h3>
+                {{ data_get($item, 'title', data_get($item, 'name', '')) }}
+            </h3>
+            <p>
+                {{ data_get($item, 'summary', '') }}
+            </p>
+        </article>
     </div>
 </section>

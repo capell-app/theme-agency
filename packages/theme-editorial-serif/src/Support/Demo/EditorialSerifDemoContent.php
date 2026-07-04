@@ -18,10 +18,16 @@ use Capell\FoundationTheme\Support\Demo\ThemeDemoPageDefinition;
  * issue-archive / author-profiles / editorial-statement / subscription-panel)
  * alongside the standard hero/proof/cta — giving every surface a full,
  * print-grade editorial site rather than the shared skeleton.
+ *
+ * Anchors are kept surface-local: a CTA only points at a section id that
+ * actually renders on the same page, a real theme route, or a mailto link —
+ * never a same-page hash that only exists on the homepage.
  */
 final class EditorialSerifDemoContent implements ProvidesThemeDemoContent
 {
     private const string BRAND = 'The Quire Review';
+
+    private const string EDITORS_EMAIL = 'editors@quire.example';
 
     /**
      * @return array<int, ThemeDemoPageDefinition>
@@ -64,10 +70,15 @@ final class EditorialSerifDemoContent implements ProvidesThemeDemoContent
                         eyebrow: 'Quarterly essays in print',
                         heading: 'A publication a reader can settle into',
                         summary: 'Considered essays, a browsable archive of past issues, and the writers behind the work — gathered into one quiet, print-grade home.',
+                        primaryLabel: 'Subscribe',
+                        primaryUrl: '#subscription-panel',
+                        secondaryLabel: 'Read the essays',
+                        secondaryUrl: '#essay-index',
                     ),
                     $this->essayIndexSection(
                         heading: 'Essays from the current issue',
                         summary: 'The pieces our editors are reading this season, set in type built for the long form.',
+                        media: $media,
                     ),
                     $this->issueArchiveSection(
                         heading: 'Issues from the archive',
@@ -76,6 +87,7 @@ final class EditorialSerifDemoContent implements ProvidesThemeDemoContent
                     $this->authorProfilesSection(
                         heading: 'The writers behind the work',
                         summary: 'Essayists, critics, and reporters who write for the Review.',
+                        media: $media,
                     ),
                     $this->editorialStatementSection(
                         heading: 'Why we publish slowly',
@@ -92,6 +104,10 @@ final class EditorialSerifDemoContent implements ProvidesThemeDemoContent
                     $this->ctaSection(
                         heading: 'Start reading the current issue',
                         summary: 'Subscribe today and the latest issue lands in your hands and your inbox.',
+                        primaryLabel: 'Subscribe',
+                        primaryUrl: '#subscription-panel',
+                        secondaryLabel: 'Read the essays',
+                        secondaryUrl: '#essay-index',
                     ),
                 ],
             ],
@@ -123,18 +139,29 @@ final class EditorialSerifDemoContent implements ProvidesThemeDemoContent
                         eyebrow: 'The essay index',
                         heading: 'An index of essays built to be read',
                         summary: 'The full run of the Review, from the current issue back to our first. Filter by subject, or start at the top and read down.',
+                        primaryLabel: 'Browse the index',
+                        primaryUrl: '#essay-index',
+                        secondaryLabel: 'More from the archive',
+                        secondaryUrl: '#content-listing',
                     ),
                     $this->essayIndexSection(
                         heading: 'Featured essays',
                         summary: 'The pieces our editors return to most often.',
+                        media: $media,
                     ),
                     $this->contentListingSection(
                         heading: 'More from the archive',
                         summary: 'Shorter notes, reviews, and dispatches from past issues.',
+                        media: $media,
                     ),
                     $this->ctaSection(
                         heading: 'Found an essay worth keeping?',
                         summary: 'Subscribers get every essay in print and the full searchable archive online.',
+                        primaryLabel: 'Subscribe',
+                        primaryUrl: 'theme-' . $themeKey . '-contact',
+                        primaryIsPath: true,
+                        secondaryLabel: 'Back to the index',
+                        secondaryUrl: '#essay-index',
                     ),
                 ],
             ],
@@ -165,14 +192,23 @@ final class EditorialSerifDemoContent implements ProvidesThemeDemoContent
                         eyebrow: 'Essay · Issue 41',
                         heading: 'The Patience of Print',
                         summary: 'By Eleanor Vance. A reflection on slowness as a feature, not a flaw — and on the writing that only reveals itself when nobody is rushing.',
+                        primaryLabel: 'Read on in this issue',
+                        primaryUrl: '#essay-index',
+                        secondaryLabel: 'About the author',
+                        secondaryUrl: '#author-profiles',
+                        media: $media,
+                        mediaKey: 'detail',
+                        mediaAlt: 'A hand-set tray of metal type beside a printed proof',
                     ),
                     $this->essayIndexSection(
                         heading: 'Read on in this issue',
                         summary: 'Essays published alongside this one in Issue 41.',
+                        media: $media,
                     ),
                     $this->authorProfilesSection(
                         heading: 'About the author',
                         summary: 'The writer behind this essay, and others in the Review.',
+                        media: $media,
                     ),
                     $this->proofSection(
                         heading: 'Why readers stay with the Review',
@@ -181,6 +217,11 @@ final class EditorialSerifDemoContent implements ProvidesThemeDemoContent
                     $this->ctaSection(
                         heading: 'Keep reading the Review',
                         summary: 'Subscribe to receive every essay, in print and online, four times a year.',
+                        primaryLabel: 'Subscribe',
+                        primaryUrl: 'theme-' . $themeKey . '-contact',
+                        primaryIsPath: true,
+                        secondaryLabel: 'Read on in this issue',
+                        secondaryUrl: '#essay-index',
                     ),
                 ],
             ],
@@ -209,7 +250,11 @@ final class EditorialSerifDemoContent implements ProvidesThemeDemoContent
                     $this->heroSection(
                         eyebrow: 'Subscribe & contact',
                         heading: 'Reach the publication through one quiet path',
-                        summary: 'Write to editors@quire.example to pitch an essay or ask about a subscription. We read everything and reply within a week.',
+                        summary: 'Write to ' . self::EDITORS_EMAIL . ' to pitch an essay or ask about a subscription. We read everything and reply within a week.',
+                        primaryLabel: 'Choose how you read',
+                        primaryUrl: '#subscription-panel',
+                        secondaryLabel: 'Email the editors',
+                        secondaryUrl: 'mailto:' . self::EDITORS_EMAIL,
                     ),
                     $this->subscriptionPanelSection(
                         heading: 'Choose how you read',
@@ -221,7 +266,11 @@ final class EditorialSerifDemoContent implements ProvidesThemeDemoContent
                     ),
                     $this->ctaSection(
                         heading: 'Have a piece you want us to read?',
-                        summary: 'Send a short pitch to editors@quire.example. We commission from the slush pile every issue.',
+                        summary: 'Send a short pitch to ' . self::EDITORS_EMAIL . '. We commission from the slush pile every issue.',
+                        primaryLabel: 'Pitch an essay',
+                        primaryUrl: 'mailto:' . self::EDITORS_EMAIL,
+                        secondaryLabel: 'Choose how you read',
+                        secondaryUrl: '#subscription-panel',
                     ),
                 ],
             ],
@@ -252,6 +301,11 @@ final class EditorialSerifDemoContent implements ProvidesThemeDemoContent
                         eyebrow: 'The essay index',
                         heading: 'Nothing published here yet',
                         summary: 'No essays match that subject in this issue. Clear the filter to read the full run, or wander into the archive below.',
+                        primaryLabel: 'Browse a past issue',
+                        primaryUrl: '#issue-archive',
+                        secondaryLabel: 'Back to the homepage',
+                        secondaryUrl: 'theme-' . $themeKey,
+                        secondaryIsPath: true,
                     ),
                     $this->issueArchiveSection(
                         heading: 'Browse a past issue instead',
@@ -260,6 +314,10 @@ final class EditorialSerifDemoContent implements ProvidesThemeDemoContent
                     $this->ctaSection(
                         heading: 'Looking for a particular essay?',
                         summary: 'Subscribers can search the full archive by author, subject, and issue.',
+                        primaryLabel: 'Browse the archive',
+                        primaryUrl: '#issue-archive',
+                        secondaryLabel: 'Email the editors',
+                        secondaryUrl: 'mailto:' . self::EDITORS_EMAIL,
                     ),
                 ],
             ],
@@ -289,10 +347,22 @@ final class EditorialSerifDemoContent implements ProvidesThemeDemoContent
                         eyebrow: '404',
                         heading: 'That page could not be found',
                         summary: 'The link is broken or the page has moved. Head back to the current issue, or pick up an essay from the archive.',
+                        primaryLabel: 'Back to the homepage',
+                        primaryUrl: 'theme-' . $themeKey,
+                        primaryIsPath: true,
+                        secondaryLabel: 'Browse the essays',
+                        secondaryUrl: 'theme-' . $themeKey . '-directory',
+                        secondaryIsPath: true,
                     ),
                     $this->ctaSection(
                         heading: 'Find your way back to the writing',
                         summary: 'Return to the current issue, or subscribe to receive every essay the Review publishes.',
+                        primaryLabel: 'Back to the homepage',
+                        primaryUrl: 'theme-' . $themeKey,
+                        primaryIsPath: true,
+                        secondaryLabel: 'Subscribe',
+                        secondaryUrl: 'theme-' . $themeKey . '-contact',
+                        secondaryIsPath: true,
                     ),
                 ],
             ],
@@ -324,6 +394,11 @@ final class EditorialSerifDemoContent implements ProvidesThemeDemoContent
                         eyebrow: 'Join the Review',
                         heading: 'Turn a reader into a subscriber',
                         summary: 'Four issues a year, in print and online, with the full archive and members-only essays. One subscription, every word.',
+                        primaryLabel: 'Pick a subscription',
+                        primaryUrl: '#subscription-panel',
+                        secondaryLabel: 'Back to the homepage',
+                        secondaryUrl: 'theme-' . $themeKey,
+                        secondaryIsPath: true,
                     ),
                     $this->subscriptionPanelSection(
                         heading: 'Pick the subscription that fits',
@@ -336,6 +411,11 @@ final class EditorialSerifDemoContent implements ProvidesThemeDemoContent
                     $this->ctaSection(
                         heading: 'Subscribe today',
                         summary: 'Join now and the current issue ships within the week, with full archive access from the moment you sign up.',
+                        primaryLabel: 'Subscribe',
+                        primaryUrl: '#subscription-panel',
+                        secondaryLabel: 'Read the essays first',
+                        secondaryUrl: 'theme-' . $themeKey . '-directory',
+                        secondaryIsPath: true,
                     ),
                 ],
             ],
@@ -343,36 +423,65 @@ final class EditorialSerifDemoContent implements ProvidesThemeDemoContent
     }
 
     /**
+     * @param  array{hero: list<string>, listing: list<string>, detail: list<string>, proof: list<string>, contact: list<string>, cta: list<string>}  $media
      * @return array<string, mixed>
      */
-    private function heroSection(string $eyebrow, string $heading, string $summary): array
-    {
-        return [
+    private function heroSection(
+        string $eyebrow,
+        string $heading,
+        string $summary,
+        string $primaryLabel,
+        string $primaryUrl,
+        string $secondaryLabel,
+        string $secondaryUrl,
+        bool $primaryIsPath = false,
+        bool $secondaryIsPath = false,
+        ?array $media = null,
+        ?string $mediaKey = null,
+        ?string $mediaAlt = null,
+    ): array {
+        $section = [
             'type' => 'hero',
             'eyebrow' => $eyebrow,
             'heading' => $heading,
             'summary' => $summary,
             'actions' => [
-                ['label' => 'Subscribe', 'url' => '#subscribe', 'style' => 'primary'],
-                ['label' => 'Read the essays', 'url' => '#essays', 'style' => 'secondary'],
+                ['label' => $primaryLabel, 'url' => $primaryIsPath ? '/' . $primaryUrl : $primaryUrl, 'style' => 'primary'],
+                ['label' => $secondaryLabel, 'url' => $secondaryIsPath ? '/' . $secondaryUrl : $secondaryUrl, 'style' => 'secondary'],
             ],
         ];
+
+        if (is_array($media) && is_string($mediaKey)) {
+            $section['mediaUrl'] = $media[$mediaKey][0] ?? $media['hero'][0];
+            $section['mediaAlt'] = $mediaAlt;
+        }
+
+        return $section;
     }
 
     /**
+     * @param  array{hero: list<string>, listing: list<string>, detail: list<string>, proof: list<string>, contact: list<string>, cta: list<string>}  $media
      * @return array<string, mixed>
      */
-    private function essayIndexSection(string $heading, string $summary): array
+    private function essayIndexSection(string $heading, string $summary, array $media): array
     {
+        $featuredImage = $media['detail'][0] ?? $media['hero'][0];
+
         return [
             'type' => 'essay-index',
             'heading' => $heading,
             'summary' => $summary,
             'items' => [
-                ['title' => 'The Patience of Print', 'summary' => 'Eleanor Vance on slowness as a feature of reading, not a flaw — and the ideas that only land at the pace of a page.'],
-                ['title' => 'Margins & Marginalia', 'summary' => 'A history of reading in the margins, from medieval scribes to the dog-eared paperbacks on a critic\'s nightstand.'],
-                ['title' => 'The Last Letterpress', 'summary' => 'A reporter spends a season with the printers keeping a dying craft alive, one tray of metal type at a time.'],
-                ['title' => 'On Re-reading', 'summary' => 'Why the books we return to change while standing still, and what a second reading asks of an older self.'],
+                [
+                    'title' => 'The Patience of Print',
+                    'author' => 'Eleanor Vance',
+                    'summary' => 'Eleanor Vance on slowness as a feature of reading, not a flaw — and the ideas that only land at the pace of a page.',
+                    'image' => $featuredImage,
+                    'imageAlt' => 'A hand-set tray of metal type beside a printed proof',
+                ],
+                ['title' => 'Margins & Marginalia', 'author' => 'Marcus Whitfield', 'summary' => 'A history of reading in the margins, from medieval scribes to the dog-eared paperbacks on a critic\'s nightstand.'],
+                ['title' => 'The Last Letterpress', 'author' => 'Priya Anand', 'summary' => 'A reporter spends a season with the printers keeping a dying craft alive, one tray of metal type at a time.'],
+                ['title' => 'On Re-reading', 'author' => 'Tomás Reyes', 'summary' => 'Why the books we return to change while standing still, and what a second reading asks of an older self.'],
             ],
         ];
     }
@@ -396,20 +505,35 @@ final class EditorialSerifDemoContent implements ProvidesThemeDemoContent
     }
 
     /**
+     * @param  array{hero: list<string>, listing: list<string>, detail: list<string>, proof: list<string>, contact: list<string>, cta: list<string>}  $media
      * @return array<string, mixed>
      */
-    private function authorProfilesSection(string $heading, string $summary): array
+    private function authorProfilesSection(string $heading, string $summary, array $media): array
     {
+        $images = array_values(array_unique(array_merge($media['listing'], $media['proof'], $media['contact'])));
+
+        $authors = [
+            ['title' => 'Eleanor Vance', 'summary' => 'Contributing essayist. Writes on reading, craft, and the quiet life of ideas. Author of three collections.'],
+            ['title' => 'Marcus Whitfield', 'summary' => 'Critic at large. Twenty years reviewing fiction and the occasional dictionary for the love of a well-set sentence.'],
+            ['title' => 'Priya Anand', 'summary' => 'Reporter. Files long-form dispatches on the people keeping old crafts and slow trades alive.'],
+            ['title' => 'Tomás Reyes', 'summary' => 'Poetry editor. Reads everything aloud at least once before it goes to print.'],
+        ];
+
+        $items = [];
+
+        foreach ($authors as $index => $author) {
+            $items[] = [
+                ...$author,
+                'image' => $images[$index % max(count($images), 1)] ?? null,
+                'imageAlt' => $author['title'] . ' portrait',
+            ];
+        }
+
         return [
             'type' => 'author-profiles',
             'heading' => $heading,
             'summary' => $summary,
-            'items' => [
-                ['title' => 'Eleanor Vance', 'summary' => 'Contributing essayist. Writes on reading, craft, and the quiet life of ideas. Author of three collections.'],
-                ['title' => 'Marcus Whitfield', 'summary' => 'Critic at large. Twenty years reviewing fiction and the occasional dictionary for the love of a well-set sentence.'],
-                ['title' => 'Priya Anand', 'summary' => 'Reporter. Files long-form dispatches on the people keeping old crafts and slow trades alive.'],
-                ['title' => 'Tomás Reyes', 'summary' => 'Poetry editor. Reads everything aloud at least once before it goes to print.'],
-            ],
+            'items' => $items,
         ];
     }
 
@@ -439,6 +563,7 @@ final class EditorialSerifDemoContent implements ProvidesThemeDemoContent
             'type' => 'subscription-panel',
             'heading' => $heading,
             'summary' => $summary,
+            'action' => '/subscribe',
             'items' => [
                 ['title' => 'Print & online — £60 / year', 'summary' => 'Four issues mailed to your door, plus full online access and the complete searchable archive.'],
                 ['title' => 'Online only — £36 / year', 'summary' => 'Every essay the day it publishes, the full archive, and members-only pieces between issues.'],
@@ -460,25 +585,39 @@ final class EditorialSerifDemoContent implements ProvidesThemeDemoContent
                 ['title' => 'Four print issues', 'summary' => 'Mailed the week each issue goes to press, on paper chosen to last on a shelf for years.'],
                 ['title' => 'The full archive', 'summary' => 'Every essay since Issue 1, searchable by author, subject, and season.'],
                 ['title' => 'Members-only essays', 'summary' => 'Shorter pieces between issues, sent only to subscribers.'],
-                ['title' => 'A say in the Review', 'summary' => 'Subscribers vote on the theme of one issue each year.'],
             ],
         ];
     }
 
     /**
+     * @param  array{hero: list<string>, listing: list<string>, detail: list<string>, proof: list<string>, contact: list<string>, cta: list<string>}  $media
      * @return array<string, mixed>
      */
-    private function contentListingSection(string $heading, string $summary): array
+    private function contentListingSection(string $heading, string $summary, array $media): array
     {
+        $images = array_values(array_unique(array_merge($media['listing'], $media['proof'])));
+
+        $entries = [
+            ['title' => 'A Note on Footnotes', 'summary' => 'A short defence of the aside, the digression, and the line of type that runs along the bottom of the page.'],
+            ['title' => 'Reviewed: Three Slim Novels', 'summary' => 'Marcus Whitfield on a season of books that say more in two hundred pages than most do in five.'],
+            ['title' => 'Dispatch: The Paper Mill', 'summary' => 'Priya Anand reports from a mill that still makes paper by hand for a handful of stubborn publishers.'],
+        ];
+
+        $items = [];
+
+        foreach ($entries as $index => $entry) {
+            $items[] = [
+                ...$entry,
+                'image' => $images[$index % max(count($images), 1)] ?? null,
+                'imageAlt' => $entry['title'],
+            ];
+        }
+
         return [
             'type' => 'content-listing',
             'heading' => $heading,
             'summary' => $summary,
-            'items' => [
-                ['title' => 'A Note on Footnotes', 'summary' => 'A short defence of the aside, the digression, and the line of type that runs along the bottom of the page.'],
-                ['title' => 'Reviewed: Three Slim Novels', 'summary' => 'Marcus Whitfield on a season of books that say more in two hundred pages than most do in five.'],
-                ['title' => 'Dispatch: The Paper Mill', 'summary' => 'Priya Anand reports from a mill that still makes paper by hand for a handful of stubborn publishers.'],
-            ],
+            'items' => $items,
         ];
     }
 
@@ -502,15 +641,23 @@ final class EditorialSerifDemoContent implements ProvidesThemeDemoContent
     /**
      * @return array<string, mixed>
      */
-    private function ctaSection(string $heading, string $summary): array
-    {
+    private function ctaSection(
+        string $heading,
+        string $summary,
+        string $primaryLabel,
+        string $primaryUrl,
+        string $secondaryLabel,
+        string $secondaryUrl,
+        bool $primaryIsPath = false,
+        bool $secondaryIsPath = false,
+    ): array {
         return [
             'type' => 'cta',
             'heading' => $heading,
             'summary' => $summary,
             'actions' => [
-                ['label' => 'Subscribe', 'url' => '#subscribe', 'style' => 'primary'],
-                ['label' => 'Read the essays', 'url' => '#essays', 'style' => 'secondary'],
+                ['label' => $primaryLabel, 'url' => $primaryIsPath ? '/' . $primaryUrl : $primaryUrl, 'style' => 'primary'],
+                ['label' => $secondaryLabel, 'url' => $secondaryIsPath ? '/' . $secondaryUrl : $secondaryUrl, 'style' => 'secondary'],
             ],
         ];
     }
@@ -523,14 +670,13 @@ final class EditorialSerifDemoContent implements ProvidesThemeDemoContent
         return [
             'brandName' => self::BRAND,
             'items' => [
-                ['label' => 'Essays', 'url' => '#essays'],
-                ['label' => 'Archive', 'url' => '#archive'],
-                ['label' => 'Authors', 'url' => '#authors'],
-                ['label' => 'About', 'url' => '#about'],
-                ['label' => 'Subscribe', 'url' => '#subscribe'],
+                ['label' => 'Essays', 'url' => '/'],
+                ['label' => 'Archive', 'url' => '/'],
+                ['label' => 'Authors', 'url' => '/'],
+                ['label' => 'Subscribe', 'url' => '/'],
             ],
             'ctaLabel' => 'Subscribe',
-            'ctaUrl' => '#subscribe',
+            'ctaUrl' => '/',
         ];
     }
 
@@ -546,25 +692,15 @@ final class EditorialSerifDemoContent implements ProvidesThemeDemoContent
                 [
                     'heading' => 'Read',
                     'links' => [
-                        ['label' => 'Current issue', 'url' => '#essays'],
-                        ['label' => 'The archive', 'url' => '#archive'],
-                        ['label' => 'Authors', 'url' => '#authors'],
-                        ['label' => 'About the Review', 'url' => '#about'],
-                    ],
-                ],
-                [
-                    'heading' => 'Subscribe',
-                    'links' => [
-                        ['label' => 'Print & online', 'url' => '#subscribe'],
-                        ['label' => 'Online only', 'url' => '#subscribe'],
-                        ['label' => 'Gift a subscription', 'url' => '#subscribe'],
+                        ['label' => 'Homepage', 'url' => '/'],
+                        ['label' => 'About the Review', 'url' => '/'],
                     ],
                 ],
                 [
                     'heading' => 'Contact',
                     'links' => [
-                        ['label' => 'Pitch an essay', 'url' => 'mailto:editors@quire.example'],
-                        ['label' => 'editors@quire.example', 'url' => 'mailto:editors@quire.example'],
+                        ['label' => 'Pitch an essay', 'url' => 'mailto:' . self::EDITORS_EMAIL],
+                        ['label' => self::EDITORS_EMAIL, 'url' => 'mailto:' . self::EDITORS_EMAIL],
                     ],
                 ],
             ],

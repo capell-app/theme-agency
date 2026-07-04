@@ -16,9 +16,10 @@ use Capell\FoundationTheme\Support\Demo\ThemeDemoPageDefinition;
  * Each surface is seeded as an ordered `render_data['sections']` list so the
  * page adapter emits the theme's signature renderers (filter-hero /
  * taxonomy-navigation / editor-picks / latest-designs / blog-mission /
- * faq-archives / newsletter) alongside the standard hero/proof/cta — giving
- * every surface a full inspiration-library site rather than the shared
- * five-section skeleton.
+ * faq-archives / newsletter) alongside the standard hero/proof/cta. Every
+ * capture card carries a real photograph from the role-grouped theme media
+ * plus type/style/colour/industry facet tags, so each surface reads as a
+ * dense, image-first reference library rather than the shared skeleton.
  */
 final class FilterGalleryDemoContent implements ProvidesThemeDemoContent
 {
@@ -50,45 +51,46 @@ final class FilterGalleryDemoContent implements ProvidesThemeDemoContent
         return new ThemeDemoPageDefinition(
             surface: 'homepage',
             name: self::BRAND . ' Home',
-            title: self::BRAND . ' — Filterable Design Inspiration Library',
+            title: self::BRAND . ' — A Filterable Reference Library of Web Captures',
             slug: 'theme-' . $themeKey,
             content: $this->prose(
-                'A filter-rich inspiration library',
-                'Galleria Index is a browsable archive of thousands of designs, searchable by industry, style, color, platform, and technology.',
+                'Every capture tagged four ways',
+                'Galleria Index files screenshots of live sites under type, style, colour, and industry — stack the filters and the reference you half-remember surfaces in seconds.',
             ),
             renderData: [
-                'summary' => 'Galleria Index is a filterable inspiration library. Search thousands of curated designs by industry, style, color, platform, and technology.',
-                'navigation' => $this->navigation(),
-                'footer' => $this->footer(),
+                'summary' => 'Galleria Index is a filterable reference library of web capture screenshots, filed by type, style, colour, and industry.',
+                'navigation' => $this->navigation($themeKey),
+                'footer' => $this->footer($themeKey),
                 'sections' => [
                     $this->heroSection(
-                        eyebrow: 'Filter-rich inspiration library',
-                        heading: 'Search thousands of designs by industry, style, color, platform, and technology',
-                        summary: 'A dense, scalable gallery for taxonomy filters, selected-filter chips, saved views, editor picks, and latest designs — built for discovery-led browsing at scale.',
-                        primaryLabel: 'Browse the gallery',
+                        eyebrow: 'Reference library',
+                        heading: 'Every capture tagged four ways, so the search you repeat takes seconds',
+                        summary: 'Galleria Index files screenshots of live sites under type, style, colour, and industry. Stack the filters, save the view, and get back to the reference you half-remember.',
+                        primaryLabel: 'Browse the index',
                         primaryUrl: '#latest-designs',
-                        secondaryLabel: 'Explore filters',
-                        secondaryUrl: '#industries',
+                        secondaryLabel: 'Open the filters',
+                        secondaryUrl: '#taxonomy-navigation',
                         mediaUrl: $media['hero'][0] ?? null,
-                        mediaAlt: 'Filter Gallery inspiration grid',
+                        mediaAlt: 'Most-saved capture this week: a dark fintech pricing page',
                     ),
-                    $this->filterHeroSection(
-                        heading: 'Put search and selected filters above the grid',
-                        summary: 'Prominent keyword search, saved views, removable selected-filter chips, and quick routes into the highest-volume categories.',
-                    ),
-                    $this->taxonomyNavigationSection(),
-                    $this->editorPicksSection(),
-                    $this->latestDesignsSection(),
+                    $this->filterHeroSection(),
+                    $this->taxonomyNavigationSection('#latest-designs'),
+                    $this->editorPicksSection($media, $this->pagePath($themeKey, 'detail')),
+                    $this->latestDesignsSection($media, $this->pagePath($themeKey, 'detail'), $this->pagePath($themeKey, 'directory')),
                     $this->blogMissionSection(),
                     $this->faqArchivesSection(),
                     $this->proofSection(),
                     $this->newsletterSection(
-                        heading: 'Send fresh designs, saved views, and category roundups',
-                        summary: 'A weekly digest of editor picks, latest designs, new taxonomies, and filter guides.',
+                        heading: 'The week in captures, once',
+                        summary: 'Every Friday: the new intake batch, the pinned picks, and one tag worth exploring. Nothing else.',
                     ),
                     $this->ctaSection(
-                        heading: 'Launch a filter-rich inspiration archive that can scale',
-                        summary: 'Start browsing, save a view, or submit a design for the next editor-picks roundup.',
+                        heading: 'Seen a site the index should hold?',
+                        summary: 'Submissions go through the same intake as everything else — captured, tagged four ways, and filed with its source.',
+                        primaryLabel: 'Submit a site',
+                        primaryUrl: $this->pagePath($themeKey, 'contact'),
+                        secondaryLabel: 'Browse the index',
+                        secondaryUrl: '#latest-designs',
                     ),
                 ],
             ],
@@ -105,37 +107,44 @@ final class FilterGalleryDemoContent implements ProvidesThemeDemoContent
         return new ThemeDemoPageDefinition(
             surface: 'directory',
             name: self::BRAND . ' Archive',
-            title: 'Design archive — ' . self::BRAND,
+            title: 'The archive — ' . self::BRAND,
             slug: 'theme-' . $themeKey . '-directory',
             content: $this->prose(
-                'A filter archive built to be scanned',
-                'Dense taxonomy navigation and a consistent thumbnail grid keep large libraries legible.',
+                'The full archive, filtered your way',
+                'Twelve thousand captures behind four facets — the grid stays tight so you can compare a dozen references without scrolling.',
             ),
             renderData: [
-                'summary' => 'Editor picks, latest designs, category pages, saved views, and taxonomy archives across the whole library.',
-                'navigation' => $this->navigation(),
-                'footer' => $this->footer(),
+                'summary' => 'The full Galleria Index archive — every capture behind the type, style, colour, and industry filter board.',
+                'navigation' => $this->navigation($themeKey),
+                'footer' => $this->footer($themeKey),
                 'sections' => [
                     $this->heroSection(
-                        eyebrow: 'Design archive',
-                        heading: 'A filter archive built to be scanned',
-                        summary: 'Dense taxonomy navigation and a consistent thumbnail grid keep thousands of entries legible — filter by industry, style, color, platform, or technology.',
-                        primaryLabel: 'Open filters',
-                        primaryUrl: '#industries',
-                        secondaryLabel: 'View latest',
+                        eyebrow: 'The archive',
+                        heading: 'Twelve thousand captures behind four facets',
+                        summary: 'Start from a facet or a keyword. Counts on every chip show where the archive runs deep before you commit to a filter stack.',
+                        primaryLabel: 'Open the filter board',
+                        primaryUrl: '#taxonomy-navigation',
+                        secondaryLabel: 'Newest captures',
                         secondaryUrl: '#latest-designs',
                         mediaUrl: $media['listing'][0] ?? $media['hero'][0] ?? null,
-                        mediaAlt: 'Filter Gallery archive grid',
+                        mediaAlt: 'Archive view filtered to editorial ecommerce captures',
                     ),
-                    $this->taxonomyNavigationSection(),
+                    $this->filterHeroSection(),
+                    $this->taxonomyNavigationSection('#latest-designs'),
                     $this->contentListingSection(
-                        heading: 'Editor picks, latest designs, and taxonomy archives',
+                        heading: 'Captures matching this view',
+                        summary: 'A saved view: dark palettes across fintech and SaaS, newest first.',
                         media: $media,
+                        detailUrl: $this->pagePath($themeKey, 'detail'),
                     ),
-                    $this->latestDesignsSection(),
+                    $this->latestDesignsSection($media, $this->pagePath($themeKey, 'detail'), '#content-listing'),
                     $this->ctaSection(
-                        heading: 'Save a view for the searches you repeat',
-                        summary: 'Track competitor categories, campaign references, technology stacks, or visual styles in one saved view.',
+                        heading: 'Save this filter stack as a view',
+                        summary: 'Any combination of chips can be kept and revisited — saved views update as new captures match.',
+                        primaryLabel: 'Submit a site',
+                        primaryUrl: $this->pagePath($themeKey, 'contact'),
+                        secondaryLabel: 'Newest captures',
+                        secondaryUrl: '#latest-designs',
                     ),
                 ],
             ],
@@ -150,38 +159,44 @@ final class FilterGalleryDemoContent implements ProvidesThemeDemoContent
     {
         return new ThemeDemoPageDefinition(
             surface: 'detail',
-            name: self::BRAND . ' Design Detail',
-            title: 'Fintech homepage — ' . self::BRAND,
+            name: self::BRAND . ' Capture Detail',
+            title: 'Capture #12401: fintech pricing page — ' . self::BRAND,
             slug: 'theme-' . $themeKey . '-detail',
             content: $this->prose(
-                'Fintech homepage with crisp trust hierarchy',
-                'A single design entry with its industry, style, color, platform, and technology metadata.',
+                'Capture #12401 — a pricing page that earns its density',
+                'One capture with its full facet record: type, style, colour, industry, source domain, and the curator\'s intake note.',
             ),
             renderData: [
-                'summary' => 'A single design entry with full taxonomy metadata, a consistent thumbnail, and related editor picks.',
-                'navigation' => $this->navigation(),
-                'footer' => $this->footer(),
+                'summary' => 'Capture #12401 — a fintech pricing page filed under pricing, minimal, dark, and fintech, with the curator\'s intake note.',
+                'navigation' => $this->navigation($themeKey),
+                'footer' => $this->footer($themeKey),
                 'sections' => [
                     $this->heroSection(
-                        eyebrow: 'Design detail',
-                        heading: 'Fintech homepage with crisp trust hierarchy',
-                        summary: 'Industry: Fintech. Style: Minimal. Platform: React. A selected card for industry, style, color, platform, technology, content type, source, and quick save.',
-                        primaryLabel: 'Visit design',
-                        primaryUrl: '#visit',
-                        secondaryLabel: 'Save to view',
-                        secondaryUrl: '#saved-views',
+                        eyebrow: 'Capture #12401',
+                        heading: 'A pricing page that earns its density',
+                        summary: 'Filed under pricing, minimal, dark, and fintech. Intake note: three tiers, one anchor, and a comparison table that stays readable at every breakpoint.',
+                        primaryLabel: 'More like this',
+                        primaryUrl: '#content-listing',
+                        secondaryLabel: 'Back to the archive',
+                        secondaryUrl: $this->pagePath($themeKey, 'directory'),
                         mediaUrl: $media['detail'][0] ?? null,
-                        mediaAlt: 'Fintech homepage design thumbnail',
+                        mediaAlt: 'Capture #12401: dark fintech pricing page',
                     ),
-                    $this->editorPicksSection(),
-                    $this->taxonomyNavigationSection(),
                     $this->contentListingSection(
-                        heading: 'Related designs in the same taxonomy',
+                        heading: 'Captures sharing these tags',
+                        summary: 'Same filter stack — pricing, minimal, dark, fintech — ranked by saves.',
                         media: $media,
+                        detailUrl: $this->pagePath($themeKey, 'detail'),
                     ),
+                    $this->editorPicksSection($media, $this->pagePath($themeKey, 'detail')),
+                    $this->taxonomyNavigationSection('#content-listing'),
                     $this->ctaSection(
-                        heading: 'Find more designs like this one',
-                        summary: 'Filter by the same industry, style, color, platform, or technology to keep browsing.',
+                        heading: 'Keep this filter stack',
+                        summary: 'Save the view and new captures matching pricing, minimal, dark, and fintech will file themselves into it.',
+                        primaryLabel: 'Submit a site',
+                        primaryUrl: $this->pagePath($themeKey, 'contact'),
+                        secondaryLabel: 'Browse the archive',
+                        secondaryUrl: $this->pagePath($themeKey, 'directory'),
                     ),
                 ],
             ],
@@ -196,36 +211,40 @@ final class FilterGalleryDemoContent implements ProvidesThemeDemoContent
         return new ThemeDemoPageDefinition(
             surface: 'contact',
             name: self::BRAND . ' Submit',
-            title: 'Submit a design — ' . self::BRAND,
+            title: 'Submit a site — ' . self::BRAND,
             slug: 'theme-' . $themeKey . '-contact',
             content: $this->prose(
-                'Submit a design to the library',
-                'Convert interest through one confident path — newsletter signup and a submission CTA.',
+                'Submit a site to the index',
+                'Send a URL and a curator will capture it, file it under all four facets, and queue it for the next weekly intake batch.',
             ),
             renderData: [
-                'summary' => 'Submit a design, subscribe to the weekly digest, or ask about taxonomy and submission rules.',
-                'navigation' => $this->navigation(),
-                'footer' => $this->footer(),
+                'summary' => 'Submit a URL for intake, subscribe to the Friday digest, or read the archive rules first.',
+                'navigation' => $this->navigation($themeKey),
+                'footer' => $this->footer($themeKey),
                 'sections' => [
                     $this->heroSection(
-                        eyebrow: 'Submit & subscribe',
-                        heading: 'Convert interest through one confident path',
-                        summary: 'Subscribe to the weekly digest or submit a design for review. We confirm submissions and publish accepted entries with full taxonomy metadata.',
-                        primaryLabel: 'Submit a design',
-                        primaryUrl: '#submit',
-                        secondaryLabel: 'Read submission rules',
-                        secondaryUrl: '#faq',
+                        eyebrow: 'Intake desk',
+                        heading: 'Send a URL, we do the filing',
+                        summary: 'A curator captures the page, checks all four facets by hand, records the source, and queues it for the Friday batch. You get a note either way.',
+                        primaryLabel: 'Submit a site',
+                        primaryUrl: '#cta',
+                        secondaryLabel: 'Read the archive rules',
+                        secondaryUrl: '#faq-archives',
                         mediaUrl: $media['contact'][0] ?? null,
-                        mediaAlt: 'Submit a design to the gallery',
+                        mediaAlt: 'The intake queue at the curation desk',
                     ),
                     $this->faqArchivesSection(),
                     $this->newsletterSection(
-                        heading: 'Get fresh designs in your inbox each week',
-                        summary: 'Editor picks, latest designs, new categories, and filter guides — one focused email.',
+                        heading: 'Watch the intake batches land',
+                        summary: 'The Friday digest lists every capture that entered the index that week, tagged and counted.',
                     ),
                     $this->ctaSection(
-                        heading: 'Have a design worth featuring?',
-                        summary: 'Submit your work and we will review it against our thumbnail, taxonomy, and quality rules.',
+                        heading: 'Your reference could be someone\'s answer',
+                        summary: 'Submit the site you keep showing people — intake takes a minute and the archive keeps the credit with the source.',
+                        primaryLabel: 'Subscribe to the digest',
+                        primaryUrl: '#newsletter',
+                        secondaryLabel: 'Browse the index',
+                        secondaryUrl: $this->pagePath($themeKey),
                     ),
                 ],
             ],
@@ -241,37 +260,43 @@ final class FilterGalleryDemoContent implements ProvidesThemeDemoContent
         return new ThemeDemoPageDefinition(
             surface: 'empty',
             name: self::BRAND . ' No Results',
-            title: 'No matching designs — ' . self::BRAND,
+            title: 'No matching captures — ' . self::BRAND,
             slug: 'theme-' . $themeKey . '-empty',
             content: $this->prose(
-                'No designs match those filters yet',
-                'A graceful empty state for a filtered archive with no matching entries.',
+                'No captures match this filter stack',
+                'A graceful empty state for a filtered archive with no matching entries — remove a chip or widen a facet.',
             ),
             renderData: [
-                'summary' => 'No designs match that filter combination yet — clear a chip or browse a broader taxonomy.',
-                'navigation' => $this->navigation(),
-                'footer' => $this->footer(),
+                'summary' => 'No captures match that filter stack yet — remove a chip, widen a facet, or clear the view.',
+                'navigation' => $this->navigation($themeKey),
+                'footer' => $this->footer($themeKey),
                 'sections' => [
                     $this->heroSection(
-                        eyebrow: 'Search results',
-                        heading: 'No designs match those filters yet',
-                        summary: 'Remove a selected-filter chip, widen the taxonomy, or clear all filters to see the full library again.',
-                        primaryLabel: 'Clear all filters',
-                        primaryUrl: '#latest-designs',
-                        secondaryLabel: 'Browse industries',
-                        secondaryUrl: '#industries',
+                        eyebrow: 'Filtered view',
+                        heading: 'This filter stack came back empty',
+                        summary: 'Nothing is filed under this exact combination yet. Remove the narrowest chip, widen a facet, or clear the view to browse the full index.',
+                        primaryLabel: 'Clear the view',
+                        primaryUrl: $this->pagePath($themeKey, 'directory'),
+                        secondaryLabel: 'Open the filter board',
+                        secondaryUrl: '#taxonomy-navigation',
                         mediaUrl: null,
                         mediaAlt: null,
                     ),
                     $this->contentListingSection(
-                        heading: 'Nothing to show for this filter combination',
+                        heading: 'Nothing filed under this stack yet',
+                        summary: null,
                         media: $media,
+                        detailUrl: $this->pagePath($themeKey, 'detail'),
                         items: [],
                     ),
-                    $this->taxonomyNavigationSection(),
+                    $this->taxonomyNavigationSection($this->pagePath($themeKey, 'directory') . '#content-listing'),
                     $this->ctaSection(
-                        heading: 'Try a broader taxonomy',
-                        summary: 'Start from an industry or style and narrow down with chips from there.',
+                        heading: 'Want to be told when this stack fills up?',
+                        summary: 'Save the empty view — the moment a capture matches, it appears there and in your Friday digest.',
+                        primaryLabel: 'Get the Friday digest',
+                        primaryUrl: $this->pagePath($themeKey, 'cta'),
+                        secondaryLabel: 'Browse the full index',
+                        secondaryUrl: $this->pagePath($themeKey, 'directory'),
                     ),
                 ],
             ],
@@ -289,29 +314,33 @@ final class FilterGalleryDemoContent implements ProvidesThemeDemoContent
             title: 'Page not found — ' . self::BRAND,
             slug: 'theme-' . $themeKey . '-404',
             content: $this->prose(
-                'Page not found',
-                'A not-found page that routes visitors back into the gallery and its filters.',
+                'This capture has been retired',
+                'A not-found page that routes visitors back into the filter board and the latest intake batch.',
             ),
             renderData: [
-                'summary' => 'That page has moved or never existed — here is the way back into the library.',
-                'navigation' => $this->navigation(),
-                'footer' => $this->footer(),
+                'summary' => 'That page has moved, or the capture was retired when its source went offline — here is the way back in.',
+                'navigation' => $this->navigation($themeKey),
+                'footer' => $this->footer($themeKey),
                 'sections' => [
                     $this->heroSection(
                         eyebrow: '404',
-                        heading: 'That design has been filtered out',
-                        summary: 'The link is broken or the entry was removed. Head back to the latest designs, or start a new filter from an industry or style.',
-                        primaryLabel: 'Back to home',
-                        primaryUrl: '/',
-                        secondaryLabel: 'View latest designs',
-                        secondaryUrl: '#latest-designs',
+                        heading: 'This capture has been retired',
+                        summary: 'The link is broken, or the source went offline and the capture was archived with a note. The rest of the index is where you left it.',
+                        primaryLabel: 'Back to the index',
+                        primaryUrl: $this->pagePath($themeKey),
+                        secondaryLabel: 'Newest captures',
+                        secondaryUrl: $this->pagePath($themeKey) . '#latest-designs',
                         mediaUrl: null,
                         mediaAlt: null,
                     ),
-                    $this->taxonomyNavigationSection(),
+                    $this->taxonomyNavigationSection($this->pagePath($themeKey) . '#latest-designs'),
                     $this->ctaSection(
-                        heading: 'Looking for a specific design?',
-                        summary: 'Search by keyword or pick a taxonomy to find your way back.',
+                        heading: 'Looking for a capture you saved?',
+                        summary: 'Search by keyword or source domain — retired captures keep their record even after the screenshot is archived.',
+                        primaryLabel: 'Search the index',
+                        primaryUrl: $this->pagePath($themeKey) . '#filter-hero',
+                        secondaryLabel: 'Submit a site',
+                        secondaryUrl: $this->pagePath($themeKey, 'contact'),
                     ),
                 ],
             ],
@@ -327,37 +356,41 @@ final class FilterGalleryDemoContent implements ProvidesThemeDemoContent
     {
         return new ThemeDemoPageDefinition(
             surface: 'cta',
-            name: self::BRAND . ' Get Started',
-            title: 'Launch your library — ' . self::BRAND,
+            name: self::BRAND . ' Subscribe',
+            title: 'Follow the intake — ' . self::BRAND,
             slug: 'theme-' . $themeKey . '-cta',
             content: $this->prose(
-                'Launch a filter-rich inspiration archive',
-                'A focused conversion page inviting teams to start their own scalable design library.',
+                'Follow the index as it grows',
+                'A focused conversion page for the Friday digest — every new capture, pick, and tag, once a week.',
             ),
             renderData: [
-                'summary' => 'Launch a filter-rich inspiration archive that scales to thousands of curated designs.',
-                'navigation' => $this->navigation(),
-                'footer' => $this->footer(),
+                'summary' => 'Follow the index as it grows — the Friday digest lists every new capture, pinned pick, and tag worth exploring.',
+                'navigation' => $this->navigation($themeKey),
+                'footer' => $this->footer($themeKey),
                 'sections' => [
                     $this->heroSection(
-                        eyebrow: 'Library ready',
-                        heading: 'Launch a filter-rich inspiration archive that can scale',
-                        summary: 'Dense filters, prominent search, saved views, editor picks, latest designs, category mega menus, FAQ, and pagination — ready for thousands of entries.',
-                        primaryLabel: 'Start with Filter Gallery',
-                        primaryUrl: '#submit',
-                        secondaryLabel: 'Browse the gallery',
-                        secondaryUrl: '#latest-designs',
+                        eyebrow: 'The Friday digest',
+                        heading: 'Follow the index as it grows',
+                        summary: 'One email a week: the full intake batch, the desk\'s pinned picks, and one tag worth exploring. The archive does the remembering.',
+                        primaryLabel: 'Subscribe',
+                        primaryUrl: '#newsletter',
+                        secondaryLabel: 'Browse first',
+                        secondaryUrl: $this->pagePath($themeKey, 'directory'),
                         mediaUrl: $media['cta'][0] ?? null,
-                        mediaAlt: 'Filter Gallery library overview',
+                        mediaAlt: 'A week of intake captures laid out for the digest',
                     ),
                     $this->proofSection(),
                     $this->newsletterSection(
-                        heading: 'Stay close to the library as it grows',
-                        summary: 'A weekly digest of new designs, taxonomies, and saved-view ideas.',
+                        heading: 'The week in captures, once',
+                        summary: 'Every Friday: the new intake batch, the pinned picks, and one tag worth exploring. Nothing else.',
                     ),
                     $this->ctaSection(
-                        heading: 'Ready when you are',
-                        summary: 'Subscribe, save a view, or submit your first design to get started.',
+                        heading: 'Or send the index something first',
+                        summary: 'Submit the site you keep showing people — it goes through intake and lands in the same Friday digest.',
+                        primaryLabel: 'Submit a site',
+                        primaryUrl: $this->pagePath($themeKey, 'contact'),
+                        secondaryLabel: 'Browse the index',
+                        secondaryUrl: $this->pagePath($themeKey, 'directory'),
                     ),
                 ],
             ],
@@ -381,6 +414,7 @@ final class FilterGalleryDemoContent implements ProvidesThemeDemoContent
         return [
             'type' => 'hero',
             'eyebrow' => $eyebrow,
+            'kicker' => $eyebrow,
             'heading' => $heading,
             'summary' => $summary,
             'primary_label' => $primaryLabel,
@@ -391,29 +425,31 @@ final class FilterGalleryDemoContent implements ProvidesThemeDemoContent
                 ['label' => $primaryLabel, 'url' => $primaryUrl, 'style' => 'primary'],
                 ['label' => $secondaryLabel, 'url' => $secondaryUrl, 'style' => 'secondary'],
             ],
-            'notes' => [
-                'Filter hero, taxonomy navigation, editor picks, latest designs, and listing sections stay modular.',
-                'Cards carry thumbnail, title, industry, style, color, platform, technology, saved state, and quick actions.',
-                'Weekly editor picks, saved views, and new taxonomy collections keep the library useful.',
-            ],
             'mediaUrl' => $mediaUrl,
             'mediaAlt' => $mediaAlt,
         ];
     }
 
+    private function pagePath(string $themeKey, string $surfaceSuffix = ''): string
+    {
+        return '/theme-' . $themeKey . ($surfaceSuffix === '' ? '' : '-' . $surfaceSuffix);
+    }
+
     /**
      * @return array<string, mixed>
      */
-    private function filterHeroSection(string $heading, string $summary): array
+    private function filterHeroSection(): array
     {
         return [
             'type' => 'filter-hero',
-            'heading' => $heading,
-            'summary' => $summary,
+            'heading' => 'Type what you remember — we file the rest',
+            'summary' => 'Keyword search runs across titles, tags, and source domains. Combine it with any facet chip to narrow twelve thousand captures to a shortlist.',
             'items' => [
-                ['title' => 'Selected filters stay visible', 'summary' => 'Active industry, style, color, platform, content type, and technology filters appear as compact removable chips.'],
-                ['title' => 'Saved views for repeated research', 'summary' => 'Teams track competitor categories, campaign references, technology stacks, or visual styles in a saved view.'],
-                ['title' => 'Search that feels useful at scale', 'summary' => 'Keyword search pairs with expandable filter groups, result counts, sort, pagination, and quick reset actions.'],
+                ['label' => 'Docs', 'count' => '388', 'facet' => 'type', 'url' => '#taxonomy-navigation'],
+                ['label' => 'Monochrome', 'count' => '241', 'facet' => 'colour', 'url' => '#taxonomy-navigation'],
+                ['label' => 'Playful', 'count' => '199', 'facet' => 'style', 'url' => '#taxonomy-navigation'],
+                ['label' => 'Health', 'count' => '354', 'facet' => 'industry', 'url' => '#taxonomy-navigation'],
+                ['label' => 'Onboarding', 'count' => '167', 'facet' => 'type', 'url' => '#taxonomy-navigation'],
             ],
         ];
     }
@@ -421,52 +457,231 @@ final class FilterGalleryDemoContent implements ProvidesThemeDemoContent
     /**
      * @return array<string, mixed>
      */
-    private function taxonomyNavigationSection(): array
+    private function taxonomyNavigationSection(string $chipUrl): array
     {
+        $withChipUrls = fn (array $chips): array => array_map(
+            fn (array $chip): array => [...$chip, 'url' => $chipUrl],
+            $chips,
+        );
+
         return [
             'type' => 'taxonomy-navigation',
-            'heading' => 'Make dense categories scannable without feeling like admin',
+            'heading' => 'Four facets, one board',
+            'summary' => 'Every capture is filed under all four facets at intake. Chips show live counts, so you can see where the archive runs deep before you commit to a filter.',
             'items' => [
-                ['title' => 'Industry and content type', 'summary' => 'SaaS, ecommerce, fintech, health, education, agency, portfolio, nonprofit, pricing, blog, docs, and landing pages.'],
-                ['title' => 'Style and color', 'summary' => 'Minimal, bold, editorial, playful, brutalist, dark, light, monochrome, colorful, pastel, neon, and neutral systems.'],
-                ['title' => 'Platform and technology', 'summary' => 'Webflow, Shopify, Framer, WordPress, Laravel, React, Vue, static sites, CMS pages, AI tools, and analytics stacks.'],
-                ['title' => 'Alphabetized mega menus', 'summary' => 'Long category lists stay practical with alphabetized grouping, counts, popular links, and compact mobile drawers.'],
+                [
+                    'title' => 'Type',
+                    'facet' => 'type',
+                    'summary' => 'What the page is for.',
+                    'chips' => $withChipUrls([
+                        ['label' => 'Landing page', 'count' => '1,204'],
+                        ['label' => 'Pricing', 'count' => '743'],
+                        ['label' => 'Docs', 'count' => '388'],
+                        ['label' => 'Blog', 'count' => '652'],
+                        ['label' => 'Onboarding', 'count' => '167'],
+                        ['label' => 'Changelog', 'count' => '94'],
+                    ]),
+                ],
+                [
+                    'title' => 'Style',
+                    'facet' => 'style',
+                    'summary' => 'How it carries itself.',
+                    'chips' => $withChipUrls([
+                        ['label' => 'Minimal', 'count' => '1,038'],
+                        ['label' => 'Brutalist', 'count' => '317'],
+                        ['label' => 'Editorial', 'count' => '265'],
+                        ['label' => 'Playful', 'count' => '199'],
+                        ['label' => 'Retro', 'count' => '142'],
+                        ['label' => 'Motion-led', 'count' => '176'],
+                    ]),
+                ],
+                [
+                    'title' => 'Colour',
+                    'facet' => 'colour',
+                    'summary' => 'The palette that leads.',
+                    'chips' => $withChipUrls([
+                        ['label' => 'Dark', 'count' => '892'],
+                        ['label' => 'Monochrome', 'count' => '241'],
+                        ['label' => 'Pastel', 'count' => '203'],
+                        ['label' => 'Warm neutral', 'count' => '318'],
+                        ['label' => 'Neon', 'count' => '87'],
+                        ['label' => 'High contrast', 'count' => '264'],
+                    ]),
+                ],
+                [
+                    'title' => 'Industry',
+                    'facet' => 'industry',
+                    'summary' => 'Who shipped it.',
+                    'chips' => $withChipUrls([
+                        ['label' => 'Fintech', 'count' => '486'],
+                        ['label' => 'SaaS', 'count' => '1,167'],
+                        ['label' => 'Ecommerce', 'count' => '731'],
+                        ['label' => 'Health', 'count' => '354'],
+                        ['label' => 'Agency', 'count' => '412'],
+                        ['label' => 'Nonprofit', 'count' => '128'],
+                    ]),
+                ],
             ],
         ];
     }
 
     /**
+     * @param  array{hero: list<string>, listing: list<string>, detail: list<string>, proof: list<string>, contact: list<string>, cta: list<string>}  $media
      * @return array<string, mixed>
      */
-    private function editorPicksSection(): array
+    private function editorPicksSection(array $media, string $detailUrl): array
     {
+        $images = array_values(array_unique(array_merge($media['listing'], $media['proof'], $media['contact'])));
+
+        $picks = [
+            [
+                'title' => 'Fintech pricing with one anchor tier',
+                'summary' => 'Three tiers, one anchor, and a comparison table that stays readable at every breakpoint — the intake note called it the calmest pricing page of the quarter.',
+                'meta' => 'ledgerline.example · saved 214 times',
+                'tags' => [
+                    ['label' => 'Pricing', 'facet' => 'type'],
+                    ['label' => 'Minimal', 'facet' => 'style'],
+                    ['label' => 'Dark', 'facet' => 'colour'],
+                    ['label' => 'Fintech', 'facet' => 'industry'],
+                ],
+            ],
+            [
+                'title' => 'Ecommerce catalogue that merchandises with type',
+                'summary' => 'No lifestyle photography above the fold — the catalogue sells with a price grid and a single warm neutral palette.',
+                'meta' => 'formandstock.example · saved 178 times',
+                'tags' => [
+                    ['label' => 'Landing page', 'facet' => 'type'],
+                    ['label' => 'Editorial', 'facet' => 'style'],
+                    ['label' => 'Warm neutral', 'facet' => 'colour'],
+                    ['label' => 'Ecommerce', 'facet' => 'industry'],
+                ],
+            ],
+            [
+                'title' => 'Agency site that treats the case study as a feed',
+                'summary' => 'Work is filed reverse-chronologically like a changelog — each project entry carries its own tags and a one-line brief.',
+                'meta' => 'studiofell.example · saved 131 times',
+                'tags' => [
+                    ['label' => 'Blog', 'facet' => 'type'],
+                    ['label' => 'Motion-led', 'facet' => 'style'],
+                    ['label' => 'High contrast', 'facet' => 'colour'],
+                    ['label' => 'Agency', 'facet' => 'industry'],
+                ],
+            ],
+            [
+                'title' => 'Docs hub with a search-first front door',
+                'summary' => 'The homepage is a search field and six counted categories — the same pattern this index uses, which is exactly why the desk pinned it.',
+                'meta' => 'plainmanual.example · saved 96 times',
+                'tags' => [
+                    ['label' => 'Docs', 'facet' => 'type'],
+                    ['label' => 'Minimal', 'facet' => 'style'],
+                    ['label' => 'Monochrome', 'facet' => 'colour'],
+                    ['label' => 'SaaS', 'facet' => 'industry'],
+                ],
+            ],
+        ];
+
+        $items = [];
+
+        foreach ($picks as $index => $pick) {
+            $items[] = [
+                ...$pick,
+                'url' => $detailUrl,
+                'image' => $images[$index % max(count($images), 1)] ?? null,
+                'imageAlt' => $pick['title'],
+            ];
+        }
+
         return [
             'type' => 'editor-picks',
-            'heading' => 'Consistent thumbnail cards with clear labels and quick actions',
-            'summary' => 'Thumbnail-led cards with stable aspect ratios, labels, quick save, visit buttons, and source metadata — enough context to compare many entries quickly.',
-            'items' => [
-                ['title' => 'Fintech homepage with crisp trust hierarchy', 'summary' => 'A selected card for industry, style, color, platform, technology, content type, source, and quick save.', 'meta' => 'Fintech. Minimal. React. Saved view.'],
-                ['title' => 'Ecommerce product page with strong merchandising', 'summary' => 'A card for color palette, platform, content type, commerce stack, thumbnail, and visit action.', 'meta' => 'Ecommerce. Shopify. Warm neutral.'],
-                ['title' => 'Agency site with motion-led case study flow', 'summary' => 'A card for industry, style, motion, platform, technology tags, and editor note.', 'meta' => 'Agency. Motion. Webflow.'],
-            ],
+            'heading' => 'Pinned by the curation desk this week',
+            'summary' => 'A short stack of captures the desk kept coming back to — each one filed with full tags and a note on why it earned the pin.',
+            'items' => $items,
         ];
     }
 
     /**
+     * @param  array{hero: list<string>, listing: list<string>, detail: list<string>, proof: list<string>, contact: list<string>, cta: list<string>}  $media
      * @return array<string, mixed>
      */
-    private function latestDesignsSection(): array
+    private function latestDesignsSection(array $media, string $detailUrl, string $buttonUrl): array
     {
+        $images = array_values(array_unique(array_merge($media['detail'], $media['listing'], $media['hero'], $media['cta'])));
+
+        $captures = [
+            [
+                'title' => 'Health onboarding in four quiet steps',
+                'meta' => 'today',
+                'tags' => [
+                    ['label' => 'Onboarding', 'facet' => 'type'],
+                    ['label' => 'Pastel', 'facet' => 'colour'],
+                    ['label' => 'Health', 'facet' => 'industry'],
+                ],
+            ],
+            [
+                'title' => 'Brutalist changelog for a build tool',
+                'meta' => 'today',
+                'tags' => [
+                    ['label' => 'Changelog', 'facet' => 'type'],
+                    ['label' => 'Brutalist', 'facet' => 'style'],
+                    ['label' => 'SaaS', 'facet' => 'industry'],
+                ],
+            ],
+            [
+                'title' => 'Nonprofit annual report as a single page',
+                'meta' => '2 days ago',
+                'tags' => [
+                    ['label' => 'Landing page', 'facet' => 'type'],
+                    ['label' => 'Editorial', 'facet' => 'style'],
+                    ['label' => 'Nonprofit', 'facet' => 'industry'],
+                ],
+            ],
+            [
+                'title' => 'Neon portfolio with a keyboard-first index',
+                'meta' => '3 days ago',
+                'tags' => [
+                    ['label' => 'Landing page', 'facet' => 'type'],
+                    ['label' => 'Neon', 'facet' => 'colour'],
+                    ['label' => 'Agency', 'facet' => 'industry'],
+                ],
+            ],
+            [
+                'title' => 'Retro blog with a hand-set masthead',
+                'meta' => '4 days ago',
+                'tags' => [
+                    ['label' => 'Blog', 'facet' => 'type'],
+                    ['label' => 'Retro', 'facet' => 'style'],
+                    ['label' => 'Warm neutral', 'facet' => 'colour'],
+                ],
+            ],
+            [
+                'title' => 'Ecommerce size guide that reads like docs',
+                'meta' => '5 days ago',
+                'tags' => [
+                    ['label' => 'Docs', 'facet' => 'type'],
+                    ['label' => 'Minimal', 'facet' => 'style'],
+                    ['label' => 'Ecommerce', 'facet' => 'industry'],
+                ],
+            ],
+        ];
+
+        $items = [];
+
+        foreach ($captures as $index => $capture) {
+            $items[] = [
+                ...$capture,
+                'url' => $detailUrl,
+                'image' => $images[$index % max(count($images), 1)] ?? null,
+                'imageAlt' => $capture['title'],
+            ];
+        }
+
         return [
             'type' => 'latest-designs',
-            'heading' => 'Keep fresh entries dense, comparable, and paginated',
-            'summary' => 'Compact cards with result counts, pagination, sort order, selected chips, and quick actions for high-volume browsing.',
-            'url' => '#latest-designs',
-            'label' => 'View latest',
-            'items' => [
-                ['title' => 'High-density grid rows', 'summary' => 'Stable thumbnail ratios, source labels, industry and style tags, color swatches, platform labels, and save buttons.'],
-                ['title' => 'Saved-view workflows', 'summary' => 'Return to filter combinations such as AI SaaS, dark fintech, Shopify product pages, or editorial portfolios.'],
-            ],
+            'heading' => 'Fresh into the index',
+            'summary' => 'Newest captures first, tagged at intake. The grid stays tight on purpose — compare a dozen references without scrolling.',
+            'url' => $buttonUrl,
+            'label' => 'View all latest',
+            'items' => $items,
         ];
     }
 
@@ -477,11 +692,12 @@ final class FilterGalleryDemoContent implements ProvidesThemeDemoContent
     {
         return [
             'type' => 'blog-mission',
-            'heading' => 'Explain the curation without slowing down browsing',
+            'heading' => 'Curation notes',
+            'summary' => 'A reference is only useful if you can find it again. We tag every capture four ways at intake so the archive answers questions instead of collecting screenshots.',
             'items' => [
-                ['meta' => 'Mission', 'title' => 'Why the library exists', 'summary' => 'Compact editorial modules cover why the archive exists, how picks are reviewed, and what good submissions include.'],
-                ['meta' => 'Blog', 'title' => 'Trends, roundups, and filter guides', 'summary' => 'Trend posts, category roundups, filter guides, design teardowns, and workflow notes sit beside the archive.'],
-                ['meta' => 'Menus', 'title' => 'Mega-menu support', 'summary' => 'Alphabetized category groups, popular taxonomies, saved views, and mobile drawers handle broad navigation.'],
+                ['meta' => 'Intake', 'title' => 'Every capture is filed by hand', 'summary' => 'No auto-scraping. A curator captures the page, checks the tags, and records the source before anything is published.'],
+                ['meta' => 'Notes', 'title' => 'Teardowns and tag guides', 'summary' => 'Short write-ups on what a tag actually means, plus teardowns of captures that keep getting saved.'],
+                ['meta' => 'Retirement', 'title' => 'Dead sites leave the index', 'summary' => 'Captures are re-checked quarterly. When a source goes offline, the capture is archived with a note, not silently kept.'],
             ],
         ];
     }
@@ -493,12 +709,13 @@ final class FilterGalleryDemoContent implements ProvidesThemeDemoContent
     {
         return [
             'type' => 'faq-archives',
-            'heading' => 'Support thousands of entries with calm archive patterns',
-            'summary' => 'Archive-ready modules for FAQ, selected filters, result counts, pagination, category pages, saved views, and submission rules.',
+            'heading' => 'How the archive works',
+            'summary' => 'The rules the curation desk works to — intake, tagging, retirement, and what happens to your submission.',
             'items' => [
-                ['title' => 'FAQ for browsing and submissions', 'summary' => 'Explains taxonomy rules, submission quality, thumbnail requirements, saved views, moderation, and update cadence.'],
-                ['title' => 'Archive pages by taxonomy', 'summary' => 'Dedicated archives for industry, style, color, platform, content type, technology, editor picks, latest, and saved views.'],
-                ['title' => 'Pagination that stays useful', 'summary' => 'Result counts, page ranges, sort controls, selected chips, reset actions, and quick filters keep large archives approachable.'],
+                ['title' => 'How does a site get into the index?', 'summary' => 'Submit a URL. A curator captures it, files it under all four facets, records the source, and queues it for the next weekly batch.'],
+                ['title' => 'What do the four facets mean?', 'summary' => 'Type is what the page is for, style is how it carries itself, colour is the palette that leads, and industry is who shipped it. Every capture gets one or more tags in each.'],
+                ['title' => 'How fresh are the counts?', 'summary' => 'Tag counts are recalculated on every intake batch, so the numbers on the filter board reflect the live archive.'],
+                ['title' => 'Can I keep a filter combination?', 'summary' => 'Yes — any stack of chips can be saved as a view and revisited from the topbar. Saved views update as new captures match.'],
             ],
         ];
     }
@@ -510,11 +727,11 @@ final class FilterGalleryDemoContent implements ProvidesThemeDemoContent
     {
         return [
             'type' => 'proof',
-            'heading' => 'Built to stay browsable at scale',
+            'heading' => 'The archive, counted',
             'items' => [
-                ['value' => '12k+', 'label' => 'Design entries stay browsable through search, filters, saved views, selected chips, and pagination.'],
-                ['value' => '6 axes', 'label' => 'Industry, style, color, platform, content type, and technology taxonomies structure the archive.'],
-                ['value' => 'Fast', 'label' => 'Consistent thumbnails, compact metadata, and quick actions keep the interface practical without feeling like admin.'],
+                ['value' => '12,482', 'label' => 'Captures in the index, each filed under all four facets with its source domain on record.'],
+                ['value' => '96', 'label' => 'Tags across type, style, colour, and industry — counts recalculated on every intake batch.'],
+                ['value' => 'Fri', 'label' => 'Intake day. New captures land in one weekly batch, so the digest and the counts move together.'],
             ],
         ];
     }
@@ -524,15 +741,52 @@ final class FilterGalleryDemoContent implements ProvidesThemeDemoContent
      * @param  list<array<string, mixed>>|null  $items
      * @return array<string, mixed>
      */
-    private function contentListingSection(string $heading, array $media, ?array $items = null): array
+    private function contentListingSection(string $heading, ?string $summary, array $media, string $detailUrl, ?array $items = null): array
     {
         if ($items === null) {
-            $images = array_values(array_unique(array_merge($media['listing'], $media['proof'])));
+            $images = array_values(array_unique(array_merge($media['listing'], $media['proof'], $media['detail'])));
 
             $entries = [
-                ['title' => 'SaaS dashboard with dense data layout', 'category' => 'SaaS. Dark. React.', 'summary' => 'A product dashboard entry tagged by industry, style, color, platform, and technology.'],
-                ['title' => 'Editorial portfolio with generous type', 'category' => 'Portfolio. Editorial. Framer.', 'summary' => 'A portfolio entry showing thumbnail, labels, source, and quick save metadata.'],
-                ['title' => 'Pastel landing page for a wellbeing app', 'category' => 'Health. Pastel. Webflow.', 'summary' => 'A landing-page entry with colour swatch, platform label, and content-type tag.'],
+                [
+                    'title' => 'SaaS dashboard that survives real data',
+                    'category' => 'grainmetrics.example',
+                    'summary' => 'Dense tables, sticky filters, and a legend that never leaves the viewport.',
+                    'tags' => [
+                        ['label' => 'Landing page', 'facet' => 'type'],
+                        ['label' => 'Dark', 'facet' => 'colour'],
+                        ['label' => 'SaaS', 'facet' => 'industry'],
+                    ],
+                ],
+                [
+                    'title' => 'Editorial portfolio set entirely in one serif',
+                    'category' => 'annaleighton.example',
+                    'summary' => 'Case studies read like magazine features, with captures inline as figures.',
+                    'tags' => [
+                        ['label' => 'Blog', 'facet' => 'type'],
+                        ['label' => 'Editorial', 'facet' => 'style'],
+                        ['label' => 'Monochrome', 'facet' => 'colour'],
+                    ],
+                ],
+                [
+                    'title' => 'Pastel onboarding for a sleep app',
+                    'category' => 'lullhealth.example',
+                    'summary' => 'Four steps, one illustration style, and a progress bar that behaves.',
+                    'tags' => [
+                        ['label' => 'Onboarding', 'facet' => 'type'],
+                        ['label' => 'Pastel', 'facet' => 'colour'],
+                        ['label' => 'Health', 'facet' => 'industry'],
+                    ],
+                ],
+                [
+                    'title' => 'Fintech docs with runnable examples',
+                    'category' => 'ledgerline.example',
+                    'summary' => 'Every endpoint page pairs the reference table with a live request panel.',
+                    'tags' => [
+                        ['label' => 'Docs', 'facet' => 'type'],
+                        ['label' => 'Minimal', 'facet' => 'style'],
+                        ['label' => 'Fintech', 'facet' => 'industry'],
+                    ],
+                ],
             ];
 
             $items = [];
@@ -541,9 +795,10 @@ final class FilterGalleryDemoContent implements ProvidesThemeDemoContent
                 $image = $images[$index % max(count($images), 1)] ?? null;
                 $items[] = [
                     ...$entry,
-                    'url' => '#design-' . ($index + 1),
+                    'url' => $detailUrl,
                     'image' => $image,
                     'imageUrl' => $image,
+                    'imageAlt' => $entry['title'],
                 ];
             }
         }
@@ -551,6 +806,7 @@ final class FilterGalleryDemoContent implements ProvidesThemeDemoContent
         return [
             'type' => 'content-listing',
             'heading' => $heading,
+            'summary' => $summary,
             'items' => $items,
         ];
     }
@@ -565,23 +821,31 @@ final class FilterGalleryDemoContent implements ProvidesThemeDemoContent
             'heading' => $heading,
             'summary' => $summary,
             'action' => '#newsletter',
+            'email_label' => 'Email address',
+            'button' => 'Subscribe',
         ];
     }
 
     /**
      * @return array<string, mixed>
      */
-    private function ctaSection(string $heading, string $summary): array
-    {
+    private function ctaSection(
+        string $heading,
+        string $summary,
+        string $primaryLabel,
+        string $primaryUrl,
+        string $secondaryLabel,
+        string $secondaryUrl,
+    ): array {
         return [
             'type' => 'cta',
             'heading' => $heading,
             'summary' => $summary,
-            'url' => '#submit',
-            'label' => 'Start with Filter Gallery',
+            'url' => $primaryUrl,
+            'label' => $primaryLabel,
             'actions' => [
-                ['label' => 'Start with Filter Gallery', 'url' => '#submit', 'style' => 'primary'],
-                ['label' => 'Browse the gallery', 'url' => '#latest-designs', 'style' => 'secondary'],
+                ['label' => $primaryLabel, 'url' => $primaryUrl, 'style' => 'primary'],
+                ['label' => $secondaryLabel, 'url' => $secondaryUrl, 'style' => 'secondary'],
             ],
         ];
     }
@@ -589,62 +853,68 @@ final class FilterGalleryDemoContent implements ProvidesThemeDemoContent
     /**
      * @return array<string, mixed>
      */
-    private function navigation(): array
+    private function navigation(string $themeKey): array
     {
+        $homePath = $this->pagePath($themeKey);
+
         return [
             'brand' => self::BRAND,
             'brandName' => self::BRAND,
             'items' => [
-                ['label' => 'Industries', 'url' => '#industries'],
-                ['label' => 'Styles', 'url' => '#styles'],
-                ['label' => 'Colors', 'url' => '#colors'],
-                ['label' => 'Editor picks', 'url' => '#editor-picks'],
-                ['label' => 'Latest designs', 'url' => '#latest-designs'],
+                ['label' => 'Types', 'url' => $homePath . '#taxonomy-navigation'],
+                ['label' => 'Styles', 'url' => $homePath . '#taxonomy-navigation'],
+                ['label' => 'Colours', 'url' => $homePath . '#taxonomy-navigation'],
+                ['label' => 'Industries', 'url' => $homePath . '#taxonomy-navigation'],
+                ['label' => 'Editor picks', 'url' => $homePath . '#editor-picks'],
+                ['label' => 'Latest', 'url' => $homePath . '#latest-designs'],
             ],
-            'ctaLabel' => 'Submit a design',
-            'ctaUrl' => '#submit',
+            'ctaLabel' => 'Submit a site',
+            'ctaUrl' => $this->pagePath($themeKey, 'contact'),
         ];
     }
 
     /**
      * @return array<string, mixed>
      */
-    private function footer(): array
+    private function footer(string $themeKey): array
     {
+        $homePath = $this->pagePath($themeKey);
+
         $columns = [
             [
-                'heading' => 'Browse',
-                'title' => 'Browse',
+                'heading' => 'Facets',
+                'title' => 'Facets',
                 'links' => [
-                    ['label' => 'Industries', 'url' => '#industries'],
-                    ['label' => 'Styles', 'url' => '#styles'],
-                    ['label' => 'Colors', 'url' => '#colors'],
-                    ['label' => 'Platforms', 'url' => '#platforms'],
+                    ['label' => 'Types', 'url' => $homePath . '#taxonomy-navigation'],
+                    ['label' => 'Styles', 'url' => $homePath . '#taxonomy-navigation'],
+                    ['label' => 'Colours', 'url' => $homePath . '#taxonomy-navigation'],
+                    ['label' => 'Industries', 'url' => $homePath . '#taxonomy-navigation'],
                 ],
             ],
             [
                 'heading' => 'Library',
                 'title' => 'Library',
                 'links' => [
-                    ['label' => 'Editor picks', 'url' => '#editor-picks'],
-                    ['label' => 'Latest designs', 'url' => '#latest-designs'],
-                    ['label' => 'Saved views', 'url' => '#saved-views'],
-                    ['label' => 'Technology', 'url' => '#technology'],
+                    ['label' => 'Editor picks', 'url' => $homePath . '#editor-picks'],
+                    ['label' => 'Latest captures', 'url' => $homePath . '#latest-designs'],
+                    ['label' => 'Archive FAQ', 'url' => $homePath . '#faq-archives'],
+                    ['label' => 'Curation notes', 'url' => $homePath . '#blog-mission'],
                 ],
             ],
             [
                 'heading' => 'Contribute',
                 'title' => 'Contribute',
                 'links' => [
-                    ['label' => 'Submit a design', 'url' => '#submit'],
-                    ['label' => 'Newsletter', 'url' => '#newsletter'],
+                    ['label' => 'Submit a site', 'url' => $this->pagePath($themeKey, 'contact')],
+                    ['label' => 'Weekly digest', 'url' => $this->pagePath($themeKey, 'cta')],
                 ],
             ],
         ];
 
         return [
+            'brand' => self::BRAND,
             'brandName' => self::BRAND,
-            'summary' => 'A filterable inspiration library for thousands of curated designs.',
+            'summary' => 'A filterable reference library of web capture screenshots, filed by type, style, colour, and industry.',
             'items' => $columns,
             'columns' => $columns,
         ];

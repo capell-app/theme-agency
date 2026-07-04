@@ -16,12 +16,20 @@ use Capell\FoundationTheme\Support\Demo\ThemeDemoPageDefinition;
  * Each surface is seeded as an ordered `render_data['sections']` list so the page
  * adapter emits the theme's signature directory renderers (featured-today /
  * metadata-filters / latest-submissions / winners-collections / profiles-resources /
- * sponsor-modules / newsletter) alongside the standard hero/cta — giving every
+ * sponsor-modules / newsletter) alongside the shared hero/cta — giving every
  * surface a full, individual creative-directory site rather than a shared skeleton.
+ *
+ * Anchors are scoped per surface: navigation and footer render on every surface,
+ * so they only ever link to real page paths (home-relative) or mailto: — never a
+ * same-page hash that would be a dead click off the homepage. In-page hashes
+ * (e.g. `#latest-submissions`) are only used from hero/cta actions on a surface
+ * that actually renders that section.
  */
 final class ExperimentalDirectoryDemoContent implements ProvidesThemeDemoContent
 {
-    private const BRAND = 'Index of Practice';
+    private const string BRAND = 'Index of Practice';
+
+    private const string CURATORS_EMAIL = 'curators@indexofpractice.example';
 
     /**
      * @return array<int, ThemeDemoPageDefinition>
@@ -49,33 +57,29 @@ final class ExperimentalDirectoryDemoContent implements ProvidesThemeDemoContent
         return new ThemeDemoPageDefinition(
             surface: 'homepage',
             name: self::BRAND . ' Home',
-            title: self::BRAND . ' — A Directory of Creative Practice',
+            title: self::BRAND . ' — A Directory of Experimental Creative Practice',
             slug: 'theme-' . $themeKey,
             content: $this->prose(
-                'A directory creative work can stand behind',
-                'Index of Practice is a curated directory of studios, projects, and submissions across the creative industries.',
+                'A directory experimental creative work can stand behind',
+                'Index of Practice is a curated directory of studios, projects, and submissions across the creative industries — featured daily, filtered by metadata, never buried.',
             ),
             renderData: [
-                'summary' => 'Index of Practice is a curated directory of studios, projects, and submissions across the creative industries — featured work, latest entries, winners, and collections in one tight index.',
+                'summary' => 'Index of Practice is a curated directory of studios, projects, and submissions across the creative industries — featured work, latest entries, winners, and collections in one confident index.',
                 'navigation' => $this->navigation(),
                 'footer' => $this->footer(),
                 'sections' => [
-                    [
-                        'type' => 'hero',
-                        'eyebrow' => 'Index of Practice',
-                        'heading' => 'A directory creative work can stand behind',
-                        'summary' => 'A pale, grid-ruled index of featured projects, latest submissions, winners, collections, profiles, and resources — discovery built for oversized titles and image-led work.',
-                        'primary_label' => 'Browse submissions',
-                        'primary_url' => '#latest-submissions',
-                        'secondary_label' => 'View winners',
-                        'secondary_url' => '#winners-collections',
-                        'actions' => [
-                            ['label' => 'Browse submissions', 'url' => '#latest-submissions', 'style' => 'primary'],
-                            ['label' => 'View winners', 'url' => '#winners-collections', 'style' => 'secondary'],
-                        ],
-                        'mediaUrl' => $media['hero'][0],
-                        'mediaAlt' => 'Featured creative project',
-                    ],
+                    $this->heroSection(
+                        eyebrow: 'Featured today',
+                        heading: 'The directory where experimental creative work gets seen',
+                        summary: 'A curated index of submissions, winners, and studio profiles across brand, motion, type, and interactive work — featured daily, filtered by metadata, never buried in a scoreboard.',
+                        media: $media,
+                        mediaKey: 'hero',
+                        mediaAlt: 'Tidal Atlas identity system, the current featured project',
+                        primaryLabel: 'Browse submissions',
+                        primaryUrl: '#latest-submissions',
+                        secondaryLabel: 'View winners',
+                        secondaryUrl: '#winners-collections',
+                    ),
                     $this->featuredTodaySection($media),
                     $this->metadataFiltersSection(),
                     $this->latestSubmissionsSection(
@@ -89,6 +93,10 @@ final class ExperimentalDirectoryDemoContent implements ProvidesThemeDemoContent
                     $this->ctaSection(
                         heading: 'Submit your studio to the index',
                         summary: 'Add a project, claim a profile, or put your work in front of the curators who watch this directory daily.',
+                        primaryLabel: 'Submit a project',
+                        primaryUrl: '/theme-' . $themeKey . '-contact',
+                        secondaryLabel: 'Browse submissions',
+                        secondaryUrl: '#latest-submissions',
                     ),
                 ],
             ],
@@ -116,31 +124,36 @@ final class ExperimentalDirectoryDemoContent implements ProvidesThemeDemoContent
                 'navigation' => $this->navigation(),
                 'footer' => $this->footer(),
                 'sections' => [
-                    [
-                        'type' => 'hero',
-                        'eyebrow' => 'Project archive',
-                        'heading' => 'An archive of submissions built to be scanned',
-                        'summary' => 'Every project in the index, filterable by medium, status, country, and category. Compact metadata up front, full credits one click away.',
-                        'primary_label' => 'Filter the archive',
-                        'primary_url' => '#metadata-filters',
-                        'secondary_label' => 'View winners',
-                        'secondary_url' => '#winners-collections',
-                        'actions' => [
-                            ['label' => 'Filter the archive', 'url' => '#metadata-filters', 'style' => 'primary'],
-                        ],
-                        'mediaUrl' => $media['listing'][0] ?? $media['hero'][0],
-                        'mediaAlt' => 'Project archive grid',
-                    ],
+                    $this->heroSection(
+                        eyebrow: 'Project archive',
+                        heading: 'An archive of submissions built to be scanned',
+                        summary: 'Every project in the index, filterable by medium, status, country, and category. Compact metadata up front, full credits one click away.',
+                        media: $media,
+                        mediaKey: 'listing',
+                        mediaAlt: 'The project archive, rendered as a filterable grid',
+                        primaryLabel: 'Filter the archive',
+                        primaryUrl: '#metadata-filters',
+                        secondaryLabel: 'View latest',
+                        secondaryUrl: '#latest-submissions',
+                    ),
                     $this->metadataFiltersSection(),
                     $this->latestSubmissionsSection(
                         heading: 'Recently indexed',
                         summary: 'The newest entries to clear curation, in submission order.',
                         media: $media,
                     ),
-                    $this->contentListingSection($media),
+                    $this->contentListingSection(
+                        heading: 'More from the archive',
+                        summary: 'Smaller entries, experiments, and collaborations across the index.',
+                        media: $media,
+                    ),
                     $this->ctaSection(
                         heading: 'Cannot find the project you wanted?',
                         summary: 'Tell us what you are looking for, or submit the work yourself and we will get it into the index.',
+                        primaryLabel: 'Submit a project',
+                        primaryUrl: '/theme-' . $themeKey . '-contact',
+                        secondaryLabel: 'Browse latest',
+                        secondaryUrl: '#latest-submissions',
                     ),
                 ],
             ],
@@ -167,21 +180,18 @@ final class ExperimentalDirectoryDemoContent implements ProvidesThemeDemoContent
                 'navigation' => $this->navigation(),
                 'footer' => $this->footer(),
                 'sections' => [
-                    [
-                        'type' => 'hero',
-                        'eyebrow' => 'Project · Winner 2025',
-                        'heading' => 'Tidal Atlas — an identity for a coastal research network',
-                        'summary' => 'Studio Meridian · Brand & Editorial · United Kingdom · Awarded in the 2025 collection. A flexible identity system for a network mapping the changing coastline.',
-                        'primary_label' => 'View the studio profile',
-                        'primary_url' => '#profiles-resources',
-                        'secondary_label' => 'Back to submissions',
-                        'secondary_url' => '#latest-submissions',
-                        'actions' => [
-                            ['label' => 'View the studio profile', 'url' => '#profiles-resources', 'style' => 'primary'],
-                        ],
-                        'mediaUrl' => $media['detail'][0],
-                        'mediaAlt' => 'Tidal Atlas project imagery',
-                    ],
+                    $this->heroSection(
+                        eyebrow: 'Project · Winner 2025',
+                        heading: 'Tidal Atlas — an identity for a coastal research network',
+                        summary: 'Studio Meridian · Brand & Editorial · United Kingdom · Awarded in the 2025 collection. A flexible identity system for a network mapping the changing coastline.',
+                        media: $media,
+                        mediaKey: 'detail',
+                        mediaAlt: 'Tidal Atlas project imagery',
+                        primaryLabel: 'View studio & credits',
+                        primaryUrl: '#profiles-resources',
+                        secondaryLabel: 'See related work',
+                        secondaryUrl: '#latest-submissions',
+                    ),
                     $this->featuredTodaySection($media, heading: 'Inside the project'),
                     $this->profilesResourcesSection(heading: 'Credits & studio'),
                     $this->latestSubmissionsSection(
@@ -192,6 +202,10 @@ final class ExperimentalDirectoryDemoContent implements ProvidesThemeDemoContent
                     $this->ctaSection(
                         heading: 'Run a studio like Meridian?',
                         summary: 'Claim your profile and submit your projects to the index so your work shows up alongside work like this.',
+                        primaryLabel: 'Submit a project',
+                        primaryUrl: '/theme-' . $themeKey . '-contact',
+                        secondaryLabel: 'Back to the index',
+                        secondaryUrl: '/',
                     ),
                 ],
             ],
@@ -217,27 +231,27 @@ final class ExperimentalDirectoryDemoContent implements ProvidesThemeDemoContent
                 'navigation' => $this->navigation(),
                 'footer' => $this->footer(),
                 'sections' => [
-                    [
-                        'type' => 'hero',
-                        'eyebrow' => 'Submit & subscribe',
-                        'heading' => 'Reach the directory through one confident path',
-                        'summary' => 'Studios submit work for curation; readers subscribe to the weekly index. Email curators@indexofpractice.example or use the form below.',
-                        'primary_label' => 'Subscribe to the index',
-                        'primary_url' => '#newsletter',
-                        'secondary_label' => 'Email the curators',
-                        'secondary_url' => 'mailto:curators@indexofpractice.example',
-                        'actions' => [
-                            ['label' => 'Subscribe to the index', 'url' => '#newsletter', 'style' => 'primary'],
-                            ['label' => 'Email the curators', 'url' => 'mailto:curators@indexofpractice.example', 'style' => 'secondary'],
-                        ],
-                        'mediaUrl' => $media['contact'][0],
-                        'mediaAlt' => 'Submit work to the directory',
-                    ],
+                    $this->heroSection(
+                        eyebrow: 'Submit & subscribe',
+                        heading: 'Reach the directory through one confident path',
+                        summary: 'Studios submit work for curation; readers subscribe to the weekly index. Email ' . self::CURATORS_EMAIL . ' or use the form below.',
+                        media: $media,
+                        mediaKey: 'contact',
+                        mediaAlt: 'Submit work to the directory',
+                        primaryLabel: 'Subscribe to the index',
+                        primaryUrl: '#newsletter',
+                        secondaryLabel: 'Email the curators',
+                        secondaryUrl: 'mailto:' . self::CURATORS_EMAIL,
+                    ),
                     $this->newsletterSection(),
                     $this->metadataFiltersSection(heading: 'What we curate'),
                     $this->ctaSection(
                         heading: 'Ready to submit your project?',
                         summary: 'Send the work, the credits, and one strong image. We review submissions every Thursday and reply either way.',
+                        primaryLabel: 'Email the curators',
+                        primaryUrl: 'mailto:' . self::CURATORS_EMAIL,
+                        secondaryLabel: 'Subscribe instead',
+                        secondaryUrl: '#newsletter',
                     ),
                 ],
             ],
@@ -264,20 +278,18 @@ final class ExperimentalDirectoryDemoContent implements ProvidesThemeDemoContent
                 'navigation' => $this->navigation(),
                 'footer' => $this->footer(),
                 'sections' => [
-                    [
-                        'type' => 'hero',
-                        'eyebrow' => 'Project archive',
-                        'heading' => 'No projects match that filter — yet',
-                        'summary' => 'Nothing in the index fits that combination of medium, status, and country. Clear the filter to see everything, or browse the latest entries.',
-                        'primary_label' => 'Clear the filter',
-                        'primary_url' => '#metadata-filters',
-                        'secondary_label' => 'Browse latest',
-                        'secondary_url' => '#latest-submissions',
-                        'actions' => [
-                            ['label' => 'Clear the filter', 'url' => '#metadata-filters', 'style' => 'primary'],
-                            ['label' => 'Browse latest', 'url' => '#latest-submissions', 'style' => 'secondary'],
-                        ],
-                    ],
+                    $this->heroSection(
+                        eyebrow: 'Project archive',
+                        heading: 'No projects match that filter — yet',
+                        summary: 'Nothing in the index fits that combination of medium, status, and country. Clear the filter to see everything, or browse the latest entries.',
+                        media: $media,
+                        mediaKey: 'listing',
+                        mediaAlt: null,
+                        primaryLabel: 'Clear the filter',
+                        primaryUrl: '#metadata-filters',
+                        secondaryLabel: 'Browse latest',
+                        secondaryUrl: '#latest-submissions',
+                    ),
                     $this->metadataFiltersSection(),
                     $this->latestSubmissionsSection(
                         heading: 'While you are here',
@@ -287,6 +299,10 @@ final class ExperimentalDirectoryDemoContent implements ProvidesThemeDemoContent
                     $this->ctaSection(
                         heading: 'Looking for a specific project?',
                         summary: 'Tell us the studio or the title and we will point you to it — or add it to the index if it is missing.',
+                        primaryLabel: 'Email the curators',
+                        primaryUrl: 'mailto:' . self::CURATORS_EMAIL,
+                        secondaryLabel: 'Back to the index',
+                        secondaryUrl: '/',
                     ),
                 ],
             ],
@@ -312,24 +328,26 @@ final class ExperimentalDirectoryDemoContent implements ProvidesThemeDemoContent
                 'navigation' => $this->navigation(),
                 'footer' => $this->footer(),
                 'sections' => [
-                    [
-                        'type' => 'hero',
-                        'eyebrow' => '404',
-                        'heading' => 'That page is not in the index',
-                        'summary' => 'The link is broken or the project has been unpublished. Head back to the latest submissions or browse the winners.',
-                        'primary_label' => 'Back to home',
-                        'primary_url' => '/',
-                        'secondary_label' => 'Browse submissions',
-                        'secondary_url' => '#latest-submissions',
-                        'actions' => [
-                            ['label' => 'Back to home', 'url' => '/', 'style' => 'primary'],
-                            ['label' => 'Browse submissions', 'url' => '#latest-submissions', 'style' => 'secondary'],
-                        ],
-                    ],
+                    $this->heroSection(
+                        eyebrow: '404',
+                        heading: 'That page is not in the index',
+                        summary: 'The link is broken or the project has been unpublished. Head back to the directory home, or browse the winners.',
+                        media: $media,
+                        mediaKey: 'hero',
+                        mediaAlt: null,
+                        primaryLabel: 'Back to home',
+                        primaryUrl: '/',
+                        secondaryLabel: 'View winners',
+                        secondaryUrl: '#winners-collections',
+                    ),
                     $this->winnersCollectionsSection(),
                     $this->ctaSection(
                         heading: 'Still looking for a project?',
                         summary: 'Tell us the studio or title and we will point you to the right entry in the index.',
+                        primaryLabel: 'Email the curators',
+                        primaryUrl: 'mailto:' . self::CURATORS_EMAIL,
+                        secondaryLabel: 'Back to home',
+                        secondaryUrl: '/',
                     ),
                 ],
             ],
@@ -357,31 +375,69 @@ final class ExperimentalDirectoryDemoContent implements ProvidesThemeDemoContent
                 'navigation' => $this->navigation(),
                 'footer' => $this->footer(),
                 'sections' => [
-                    [
-                        'type' => 'hero',
-                        'eyebrow' => 'Submit to the index',
-                        'heading' => 'Put your work in front of the people who curate',
-                        'summary' => 'One project, one profile, one weekly index seen by editors, studios, and award juries. Submitting takes ten minutes.',
-                        'primary_label' => 'Submit a project',
-                        'primary_url' => '#newsletter',
-                        'secondary_label' => 'View winners',
-                        'secondary_url' => '#winners-collections',
-                        'actions' => [
-                            ['label' => 'Submit a project', 'url' => '#newsletter', 'style' => 'primary'],
-                            ['label' => 'View winners', 'url' => '#winners-collections', 'style' => 'secondary'],
-                        ],
-                        'mediaUrl' => $media['cta'][0],
-                        'mediaAlt' => 'Submit your studio work',
-                    ],
+                    $this->heroSection(
+                        eyebrow: 'Submit to the index',
+                        heading: 'Put your work in front of the people who curate',
+                        summary: 'One project, one profile, one weekly index seen by editors, studios, and award juries. Submitting takes ten minutes.',
+                        media: $media,
+                        mediaKey: 'cta',
+                        mediaAlt: 'Submit your studio work',
+                        primaryLabel: 'Subscribe to the index',
+                        primaryUrl: '#newsletter',
+                        secondaryLabel: 'View winners',
+                        secondaryUrl: '#winners-collections',
+                    ),
                     $this->winnersCollectionsSection(),
                     $this->sponsorModulesSection(),
+                    $this->newsletterSection(),
                     $this->ctaSection(
                         heading: 'One submission away',
                         summary: 'Send the work and the credits. We review every Thursday and the strongest entries land in next week’s index.',
+                        primaryLabel: 'Email the curators',
+                        primaryUrl: 'mailto:' . self::CURATORS_EMAIL,
+                        secondaryLabel: 'Subscribe instead',
+                        secondaryUrl: '#newsletter',
                     ),
                 ],
             ],
         );
+    }
+
+    /**
+     * @param  array{hero: list<string>, listing: list<string>, detail: list<string>, proof: list<string>, contact: list<string>, cta: list<string>}  $media
+     * @return array<string, mixed>
+     */
+    private function heroSection(
+        string $eyebrow,
+        string $heading,
+        string $summary,
+        array $media,
+        string $mediaKey,
+        ?string $mediaAlt,
+        string $primaryLabel,
+        string $primaryUrl,
+        string $secondaryLabel,
+        string $secondaryUrl,
+    ): array {
+        $mediaUrl = $media[$mediaKey][0] ?? $media['hero'][0];
+
+        return [
+            'type' => 'hero',
+            'eyebrow' => $eyebrow,
+            'kicker' => $eyebrow,
+            'heading' => $heading,
+            'summary' => $summary,
+            'primary_label' => $primaryLabel,
+            'primary_url' => $primaryUrl,
+            'secondary_label' => $secondaryLabel,
+            'secondary_url' => $secondaryUrl,
+            'actions' => [
+                ['label' => $primaryLabel, 'url' => $primaryUrl, 'style' => 'primary'],
+                ['label' => $secondaryLabel, 'url' => $secondaryUrl, 'style' => 'secondary'],
+            ],
+            'mediaUrl' => $mediaUrl,
+            'mediaAlt' => $mediaAlt,
+        ];
     }
 
     /**
@@ -393,33 +449,68 @@ final class ExperimentalDirectoryDemoContent implements ProvidesThemeDemoContent
         $pool = array_values(array_unique(array_merge($media['detail'], $media['listing'], $media['proof'])));
 
         $items = [
-            ['title' => 'Tidal Atlas', 'meta' => 'Studio Meridian · Brand & Editorial · UK', 'summary' => 'A flexible identity for a coastal research network mapping the changing shoreline.'],
+            ['title' => 'Tidal Atlas', 'meta' => 'Studio Meridian · Brand & Editorial · United Kingdom', 'summary' => 'A flexible identity for a coastal research network mapping the changing shoreline.'],
             ['title' => 'Northwind Type', 'meta' => 'Foundry Verda · Typeface · Germany', 'summary' => 'A grotesque type family drawn for renewable-energy interfaces in the field.'],
             ['title' => 'Harbour Sessions', 'meta' => 'Atlas Studio · Motion · United States', 'summary' => 'A motion identity for a dockside music series, built to read at festival scale.'],
         ];
 
         return [
             'type' => 'featured-today',
+            'kicker' => 'Featured today',
             'heading' => $heading,
             'summary' => 'Hand-picked projects the curators put at the top of the index today.',
-            'items' => $this->withImages($items, $pool, 'Featured project'),
+            'items' => $this->withImages($items, $pool, 'Featured project', 'theme-experimental-directory-detail'),
         ];
     }
 
     /**
      * @return array<string, mixed>
      */
-    private function metadataFiltersSection(string $heading = 'Discovery across projects, studios, and categories'): array
+    private function metadataFiltersSection(string $heading = 'Filter by medium, status, country, and category'): array
     {
         return [
             'type' => 'metadata-filters',
+            'kicker' => 'Metadata filters',
             'heading' => $heading,
             'summary' => 'Compact metadata filters keep results across statuses, mediums, and countries fast and legible.',
             'items' => [
-                ['title' => 'Medium', 'summary' => 'Brand · Editorial · Type · Motion · Product · Spatial'],
-                ['title' => 'Status', 'summary' => 'Submitted · Shortlisted · Winner · Collected'],
-                ['title' => 'Country', 'summary' => 'United Kingdom · Germany · United States · Japan'],
-                ['title' => 'Category', 'summary' => 'Identity · Packaging · Campaign · Design system'],
+                [
+                    'title' => 'Medium',
+                    'chips' => [
+                        ['label' => 'Brand', 'count' => 42],
+                        ['label' => 'Editorial', 'count' => 27],
+                        ['label' => 'Type', 'count' => 15],
+                        ['label' => 'Motion', 'count' => 33],
+                        ['label' => 'Product', 'count' => 19],
+                    ],
+                ],
+                [
+                    'title' => 'Status',
+                    'chips' => [
+                        ['label' => 'Submitted', 'count' => 58],
+                        ['label' => 'Shortlisted', 'count' => 21],
+                        ['label' => 'Winner', 'count' => 12],
+                        ['label' => 'Collected', 'count' => 34],
+                    ],
+                ],
+                [
+                    'title' => 'Country',
+                    'chips' => [
+                        ['label' => 'United Kingdom', 'count' => 24],
+                        ['label' => 'Germany', 'count' => 18],
+                        ['label' => 'United States', 'count' => 31],
+                        ['label' => 'Japan', 'count' => 14],
+                    ],
+                ],
+                [
+                    'title' => 'Category',
+                    'chips' => [
+                        ['label' => 'Identity', 'count' => 29],
+                        ['label' => 'Packaging', 'count' => 11],
+                        ['label' => 'Campaign', 'count' => 17],
+                        ['label' => 'Design system', 'count' => 9],
+                    ],
+                ],
             ],
         ];
     }
@@ -441,9 +532,10 @@ final class ExperimentalDirectoryDemoContent implements ProvidesThemeDemoContent
 
         return [
             'type' => 'latest-submissions',
+            'kicker' => 'Latest submissions',
             'heading' => $heading,
             'summary' => $summary,
-            'items' => $this->withImages($items, $pool, 'Recent submission'),
+            'items' => $this->withImages($items, $pool, 'Recent submission', 'theme-experimental-directory-detail'),
         ];
     }
 
@@ -454,12 +546,13 @@ final class ExperimentalDirectoryDemoContent implements ProvidesThemeDemoContent
     {
         return [
             'type' => 'winners-collections',
+            'kicker' => 'Winners & collections',
             'heading' => 'Winners & collections',
             'summary' => 'The standout entries from this cycle, grouped into the curators’ named collections.',
-            'label' => 'See every winner',
-            'url' => '#latest-submissions',
-            'actions' => [
-                ['title' => 'Winner · Identity', 'summary' => 'Tidal Atlas by Studio Meridian — best in the brand & editorial medium.'],
+            'label' => 'See the current project',
+            'url' => '/theme-experimental-directory-detail',
+            'items' => [
+                ['title' => 'Winner · Identity', 'summary' => 'Tidal Atlas by Studio Meridian — best in the brand & editorial medium.', 'url' => '/theme-experimental-directory-detail'],
                 ['title' => 'Winner · Type', 'summary' => 'Northwind Type by Foundry Verda — best original typeface of the cycle.'],
                 ['title' => 'Collection · Coastal', 'summary' => 'Twelve projects from studios working on coastline and climate themes.'],
                 ['title' => 'Collection · In Motion', 'summary' => 'A set of motion identities the jury kept returning to.'],
@@ -474,12 +567,13 @@ final class ExperimentalDirectoryDemoContent implements ProvidesThemeDemoContent
     {
         return [
             'type' => 'profiles-resources',
+            'kicker' => 'Profiles & resources',
             'heading' => $heading,
             'summary' => 'Studio profiles, credits, and the field guides curators recommend.',
-            'stories' => [
-                ['title' => 'Studio Meridian', 'meta' => 'Profile · Bristol, UK', 'summary' => 'A six-person identity and editorial studio behind three winning entries this cycle.'],
+            'items' => [
+                ['title' => 'Studio Meridian', 'meta' => 'Profile · Bristol, UK', 'summary' => 'A six-person identity and editorial studio behind three winning entries this cycle.', 'url' => '/theme-experimental-directory-detail'],
                 ['title' => 'Foundry Verda', 'meta' => 'Profile · Berlin, DE', 'summary' => 'An independent type foundry drawing faces for screens and signage.'],
-                ['title' => 'Submitting work', 'meta' => 'Resource · Guide', 'summary' => 'How to prepare credits, imagery, and metadata so your project clears curation first time.'],
+                ['title' => 'Submitting work', 'meta' => 'Resource · Guide', 'summary' => 'How to prepare credits, imagery, and metadata so your project clears curation first time.', 'url' => '/theme-experimental-directory-contact'],
             ],
         ];
     }
@@ -491,6 +585,7 @@ final class ExperimentalDirectoryDemoContent implements ProvidesThemeDemoContent
     {
         return [
             'type' => 'sponsor-modules',
+            'kicker' => 'Sponsor modules',
             'heading' => 'Supported by the studios who back the index',
             'summary' => 'Sponsor modules keep the directory free for readers and open for submissions.',
             'items' => [
@@ -509,8 +604,9 @@ final class ExperimentalDirectoryDemoContent implements ProvidesThemeDemoContent
     {
         return [
             'type' => 'newsletter',
-            'heading' => 'Subscribe to the weekly index',
-            'summary' => 'One email each Friday with the week’s featured projects, new winners, and freshly added collections.',
+            'kicker' => 'Directory digest',
+            'heading' => 'Get featured projects and new winners by email',
+            'summary' => 'One weekly email with the featured-today project, new submissions, and any winners the jury just named.',
             'action' => '#newsletter',
         ];
     }
@@ -519,7 +615,7 @@ final class ExperimentalDirectoryDemoContent implements ProvidesThemeDemoContent
      * @param  array{hero: list<string>, listing: list<string>, detail: list<string>, proof: list<string>, contact: list<string>, cta: list<string>}  $media
      * @return array<string, mixed>
      */
-    private function contentListingSection(array $media): array
+    private function contentListingSection(string $heading, string $summary, array $media): array
     {
         $pool = array_values(array_unique(array_merge($media['listing'], $media['proof'])));
 
@@ -531,26 +627,34 @@ final class ExperimentalDirectoryDemoContent implements ProvidesThemeDemoContent
 
         return [
             'type' => 'content-listing',
-            'heading' => 'More from the archive',
-            'summary' => 'Smaller entries, experiments, and collaborations across the index.',
-            'items' => $this->withImages($items, $pool, 'Archive entry'),
+            'kicker' => 'Archive',
+            'heading' => $heading,
+            'summary' => $summary,
+            'items' => $this->withImages($items, $pool, 'Archive entry', 'theme-experimental-directory-detail'),
         ];
     }
 
     /**
      * @return array<string, mixed>
      */
-    private function ctaSection(string $heading, string $summary): array
-    {
+    private function ctaSection(
+        string $heading,
+        string $summary,
+        string $primaryLabel,
+        string $primaryUrl,
+        string $secondaryLabel,
+        string $secondaryUrl,
+    ): array {
         return [
             'type' => 'cta',
+            'kicker' => 'Submit to the index',
             'heading' => $heading,
             'summary' => $summary,
-            'label' => 'Submit a project',
-            'url' => '#newsletter',
+            'label' => $primaryLabel,
+            'url' => $primaryUrl,
             'actions' => [
-                ['label' => 'Submit a project', 'url' => '#newsletter', 'style' => 'primary'],
-                ['label' => 'Browse submissions', 'url' => '#latest-submissions', 'style' => 'secondary'],
+                ['label' => $primaryLabel, 'url' => $primaryUrl, 'style' => 'primary'],
+                ['label' => $secondaryLabel, 'url' => $secondaryUrl, 'style' => 'secondary'],
             ],
         ];
     }
@@ -560,7 +664,7 @@ final class ExperimentalDirectoryDemoContent implements ProvidesThemeDemoContent
      * @param  list<string>  $pool
      * @return list<array<string, mixed>>
      */
-    private function withImages(array $items, array $pool, string $altPrefix): array
+    private function withImages(array $items, array $pool, string $altPrefix, ?string $linkSlug = null): array
     {
         $withImages = [];
 
@@ -568,10 +672,10 @@ final class ExperimentalDirectoryDemoContent implements ProvidesThemeDemoContent
             $image = $pool[$index % max(count($pool), 1)] ?? null;
             $withImages[] = [
                 ...$item,
-                'url' => '#project-' . ($index + 1),
+                'url' => filled($linkSlug) ? '/' . $linkSlug : null,
                 'image' => $image,
                 'imageUrl' => $image,
-                'imageAlt' => $altPrefix,
+                'imageAlt' => $altPrefix . ': ' . data_get($item, 'title', ''),
             ];
         }
 
@@ -587,15 +691,14 @@ final class ExperimentalDirectoryDemoContent implements ProvidesThemeDemoContent
             'brand' => self::BRAND,
             'brandName' => self::BRAND,
             'items' => [
-                ['label' => 'Submissions', 'url' => '#latest-submissions'],
-                ['label' => 'Winners', 'url' => '#winners-collections'],
-                ['label' => 'Collections', 'url' => '#winners-collections'],
-                ['label' => 'Profiles', 'url' => '#profiles-resources'],
-                ['label' => 'Submit', 'url' => '#newsletter'],
+                ['label' => 'Today', 'url' => '/'],
+                ['label' => 'Submissions', 'url' => '/theme-experimental-directory-directory'],
+                ['label' => 'Winners', 'url' => '/theme-experimental-directory-cta'],
+                ['label' => 'Profiles', 'url' => '/theme-experimental-directory-detail'],
             ],
             'ctaLabel' => 'Submit a project',
-            'ctaUrl' => '#newsletter',
-            'consultationUrl' => '#newsletter',
+            'ctaUrl' => '/theme-experimental-directory-contact',
+            'consultationUrl' => '/theme-experimental-directory-contact',
         ];
     }
 
@@ -604,45 +707,41 @@ final class ExperimentalDirectoryDemoContent implements ProvidesThemeDemoContent
      */
     private function footer(): array
     {
+        $columns = [
+            [
+                'title' => 'Index',
+                'heading' => 'Index',
+                'links' => [
+                    ['label' => 'Today', 'url' => '/'],
+                    ['label' => 'Submissions', 'url' => '/theme-experimental-directory-directory'],
+                    ['label' => 'Winners', 'url' => '/theme-experimental-directory-cta'],
+                    ['label' => 'Project archive', 'url' => '/theme-experimental-directory-directory'],
+                ],
+            ],
+            [
+                'title' => 'Studios',
+                'heading' => 'Studios',
+                'links' => [
+                    ['label' => 'Profiles', 'url' => '/theme-experimental-directory-detail'],
+                    ['label' => 'Submit work', 'url' => '/theme-experimental-directory-contact'],
+                ],
+            ],
+            [
+                'title' => 'Connect',
+                'heading' => 'Connect',
+                'links' => [
+                    ['label' => 'Subscribe & submit', 'url' => '/theme-experimental-directory-contact'],
+                    ['label' => self::CURATORS_EMAIL, 'url' => 'mailto:' . self::CURATORS_EMAIL],
+                ],
+            ],
+        ];
+
         return [
             'brand' => self::BRAND,
             'brandName' => self::BRAND,
-            'summary' => 'A curated directory of creative practice. Submissions reviewed every week.',
-            'items' => [
-                ['label' => 'Submissions', 'url' => '#latest-submissions'],
-                ['label' => 'Winners', 'url' => '#winners-collections'],
-                ['label' => 'Profiles', 'url' => '#profiles-resources'],
-                ['label' => 'Newsletter', 'url' => '#newsletter'],
-            ],
-            'columns' => [
-                [
-                    'title' => 'Index',
-                    'heading' => 'Index',
-                    'links' => [
-                        ['label' => 'Latest submissions', 'url' => '#latest-submissions'],
-                        ['label' => 'Winners', 'url' => '#winners-collections'],
-                        ['label' => 'Collections', 'url' => '#winners-collections'],
-                        ['label' => 'Project archive', 'url' => '#content-listing'],
-                    ],
-                ],
-                [
-                    'title' => 'Studios',
-                    'heading' => 'Studios',
-                    'links' => [
-                        ['label' => 'Profiles', 'url' => '#profiles-resources'],
-                        ['label' => 'Resources', 'url' => '#profiles-resources'],
-                        ['label' => 'Submit work', 'url' => '#newsletter'],
-                    ],
-                ],
-                [
-                    'title' => 'Connect',
-                    'heading' => 'Connect',
-                    'links' => [
-                        ['label' => 'Subscribe', 'url' => '#newsletter'],
-                        ['label' => 'curators@indexofpractice.example', 'url' => 'mailto:curators@indexofpractice.example'],
-                    ],
-                ],
-            ],
+            'summary' => 'A curated directory of experimental creative practice. Submissions reviewed every week.',
+            'items' => $columns,
+            'columns' => $columns,
         ];
     }
 

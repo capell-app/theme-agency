@@ -6,13 +6,15 @@ namespace Capell\ThemeStudio\OnePageShowcase;
 
 use Capell\Core\Data\VendorAssetData;
 use Capell\Core\Enums\FrontendRuntime;
+use Capell\Core\Enums\VendorAssetEnum;
 use Capell\Core\Facades\CapellCore;
 use Capell\Core\ThemeStudio\Contracts\SectionRenderer;
 use Capell\Core\ThemeStudio\Data\ThemeDefinitionData;
 use Capell\Core\ThemeStudio\Data\ThemePresetData;
-use Capell\Core\ThemeStudio\Rendering\BladeThemeRenderer;
 use Capell\Core\ThemeStudio\Rendering\ViewSectionRenderer;
 use Capell\Core\ThemeStudio\Theme\ThemeRegistry;
+use Capell\FoundationTheme\Rendering\ChromeSplitBladeThemeRenderer;
+use Capell\FoundationTheme\Support\Editor\StandardThemeEditorSchema;
 use Capell\ThemeStudio\OnePageShowcase\Console\Commands\DemoCommand;
 use Illuminate\Support\ServiceProvider;
 use Override;
@@ -60,6 +62,34 @@ final class OnePageShowcaseThemeServiceProvider extends ServiceProvider
                         'cardDensity' => 'airy',
                     ],
                 ),
+                new ThemePresetData(
+                    key: 'blueprint',
+                    name: 'Blueprint',
+                    description: 'Blueprint visual preset for stark ink-black text on paper-white surfaces with a single acid-lime accent, tight grids, and dense one-pager listings.',
+                    previewImage: '/vendor/capell/themes/one-page-showcase.jpg',
+                    values: [
+                        'primaryColor' => '#0a0a0a',
+                        'accentColor' => '#c6ff2f',
+                        'neutralColor' => '#1c1c1c',
+                        'surfaceColor' => '#ffffff',
+                        'foregroundColor' => '#0a0a0a',
+                        'headingFont' => 'sora',
+                        'bodyFont' => 'inter',
+                        'spacing' => 'compact',
+                        'alignment' => 'left',
+                        'cardStyle' => 'outlined',
+                        'navigationStyle' => 'minimal',
+                        'layoutPresentation' => 'grid',
+                        'motionIntensity' => 'none',
+                        'mediaTreatment' => 'illustrated',
+                        'radius' => 'none',
+                        'headingScale' => 'condensed',
+                        'cardDensity' => 'dense',
+                    ],
+                ),
+            ],
+            frontend: [
+                'editor' => StandardThemeEditorSchema::definition(),
             ],
             assets: ['css' => 'vendor/capell/themes/one-page-showcase.css'],
             runtime: FrontendRuntime::Blade,
@@ -88,7 +118,7 @@ final class OnePageShowcaseThemeServiceProvider extends ServiceProvider
 
         $registry->register(
             definition: self::definition(),
-            themeRenderer: new BladeThemeRenderer(
+            themeRenderer: new ChromeSplitBladeThemeRenderer(
                 themeKey: self::THEME_KEY,
                 layoutView: 'capell-theme-one-page-showcase::page',
                 sectionRenderers: $sectionRenderers,
@@ -99,7 +129,12 @@ final class OnePageShowcaseThemeServiceProvider extends ServiceProvider
 
     private function registerVendorCssAssets(): void
     {
-        CapellCore::registerVendorAsset(VendorAssetData::tailwindImport('resources/css/theme-one-page-showcase.css', self::$packageName));
+        CapellCore::registerVendorAsset(new VendorAssetData(
+            type: VendorAssetEnum::TailwindImport,
+            value: 'resources/css/theme-one-page-showcase.css',
+            packageName: self::$packageName,
+            condition: 'theme-css:one-page-showcase',
+        ));
         CapellCore::registerVendorAsset(VendorAssetData::tailwindSource('resources/views/**/*.blade.php', self::$packageName));
     }
 

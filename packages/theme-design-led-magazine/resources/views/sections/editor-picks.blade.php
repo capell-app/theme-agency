@@ -6,33 +6,75 @@
         ['title' => __('capell-theme-design-led-magazine::sections.picks.chair_title'), 'summary' => __('capell-theme-design-led-magazine::sections.picks.chair_summary'), 'meta' => __('capell-theme-design-led-magazine::sections.picks.chair_meta')],
         ['title' => __('capell-theme-design-led-magazine::sections.picks.gallery_title'), 'summary' => __('capell-theme-design-led-magazine::sections.picks.gallery_summary'), 'meta' => __('capell-theme-design-led-magazine::sections.picks.gallery_meta')],
     ]);
+    $plateShapes = ['dlm-plate-arch', 'dlm-plate-disc', 'dlm-plate-column'];
 @endphp
 
-<section class="editorial-section">
-    <div class="editorial-section-inner">
-        <p class="editorial-kicker">
+<section
+    id="editor-picks"
+    class="dlm-section"
+>
+    <div class="dlm-section-inner">
+        <p class="dlm-kicker">
             {{ __('capell-theme-design-led-magazine::sections.picks.kicker') }}
         </p>
         <h2>{{ $heading }}</h2>
-        <p class="editorial-lede">{{ $summary }}</p>
+        <p class="dlm-lede">{{ $summary }}</p>
 
-        <div class="editorial-grid">
+        <div class="dlm-grid">
             @foreach ($items as $item)
-                <article class="editorial-card editorial-showcase-card">
+                @php
+                    $itemImage = data_get($item, 'image', data_get($item, 'imageUrl'));
+                    $itemAlt = data_get($item, 'imageAlt', data_get($item, 'title', ''));
+                    $itemUrl = data_get($item, 'url', data_get($item, 'href'));
+                    $plateShape = $plateShapes[($loop->index) % count($plateShapes)];
+                @endphp
+
+                <article class="dlm-card">
+                    <figure class="dlm-plate">
+                        <div class="dlm-plate-frame">
+                            @if (filled($itemImage))
+                                <img
+                                    src="{{ $itemImage }}"
+                                    alt="{{ $itemAlt }}"
+                                    loading="lazy"
+                                    decoding="async"
+                                    class="dlm-plate-media"
+                                />
+                            @else
+                                <div
+                                    class="dlm-plate-media dlm-plate-media-empty {{ $plateShape }}"
+                                    aria-hidden="true"
+                                ></div>
+                            @endif
+                        </div>
+                        <figcaption class="dlm-plate-caption">
+                            <span class="dlm-plate-number">
+                                {{ __('capell-theme-design-led-magazine::sections.plate.pick') }}
+                                {{ str_pad((string) $loop->iteration, 2, '0', STR_PAD_LEFT) }}
+                            </span>
+                            <span>
+                                {{ data_get($item, 'meta', data_get($item, 'category', __('capell-theme-design-led-magazine::sections.picks.default_meta'))) }}
+                            </span>
+                        </figcaption>
+                    </figure>
                     <h3>
-                        {{ data_get($item, 'title', data_get($item, 'name', '')) }}
+                        @if (filled($itemUrl))
+                            <a
+                                class="dlm-title-link"
+                                href="{{ $itemUrl }}"
+                            >
+                                {{ data_get($item, 'title', data_get($item, 'name', '')) }}
+                            </a>
+                        @else
+                            {{ data_get($item, 'title', data_get($item, 'name', '')) }}
+                        @endif
                     </h3>
                     <p>
                         {{ data_get($item, 'summary', data_get($item, 'description', '')) }}
                     </p>
-                    <div class="editorial-showcase-specs">
-                        <span>
-                            {{ data_get($item, 'meta', data_get($item, 'category', __('capell-theme-design-led-magazine::sections.picks.default_meta'))) }}
-                        </span>
-                        <span>
-                            {{ data_get($item, 'care_note', __('capell-theme-design-led-magazine::sections.picks.care_note')) }}
-                        </span>
-                    </div>
+                    <p class="dlm-meta">
+                        {{ data_get($item, 'care_note', __('capell-theme-design-led-magazine::sections.picks.care_note')) }}
+                    </p>
                 </article>
             @endforeach
         </div>

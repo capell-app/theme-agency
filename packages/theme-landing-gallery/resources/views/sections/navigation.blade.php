@@ -1,35 +1,44 @@
 @php
     $links = data_get($section, 'items', [
-        ['label' => __('capell-theme-landing-gallery::sections.navigation.latest'), 'url' => '/'],
-        ['label' => __('capell-theme-landing-gallery::sections.navigation.product'), 'url' => '/'],
-        ['label' => __('capell-theme-landing-gallery::sections.navigation.design'), 'url' => '/'],
-        ['label' => __('capell-theme-landing-gallery::sections.navigation.advice'), 'url' => '/'],
-        ['label' => __('capell-theme-landing-gallery::sections.navigation.events'), 'url' => '/'],
-        ['label' => __('capell-theme-landing-gallery::sections.navigation.company'), 'url' => '/'],
+        ['label' => __('capell-theme-landing-gallery::sections.navigation.websites'), 'url' => '/'],
+        ['label' => __('capell-theme-landing-gallery::sections.navigation.templates'), 'url' => '/'],
+        ['label' => __('capell-theme-landing-gallery::sections.navigation.categories'), 'url' => '/'],
+        ['label' => __('capell-theme-landing-gallery::sections.navigation.partners'), 'url' => '/'],
+        ['label' => __('capell-theme-landing-gallery::sections.navigation.pro'), 'url' => '/'],
     ]);
+    $brandName = data_get($section, 'brandName', data_get($section, 'brand', __('capell-theme-landing-gallery::sections.navigation.brand')));
+    $ctaLabel = data_get($section, 'ctaLabel', __('capell-theme-landing-gallery::sections.navigation.cta'));
+    $ctaUrl = data_get($section, 'ctaUrl', '/');
 @endphp
 
-<nav class="editorial-section">
-    <div
-        class="editorial-section-inner"
-        style="padding-block: 1rem"
-    >
-        <div
-            class="editorial-grid"
-            style="align-items: center"
+<nav class="lga-nav">
+    <div class="lga-nav-inner">
+        <a
+            class="lga-brand"
+            href="/"
         >
-            <strong>
-                {{ data_get($section, 'brand', __('capell-theme-landing-gallery::sections.navigation.brand')) }}
-            </strong>
-            <div class="editorial-grid">
-                @foreach ($links as $link)
+            <span
+                class="lga-brand-mark"
+                aria-hidden="true"
+            ></span>
+            {{ $brandName }}
+        </a>
+        <ul class="lga-nav-links">
+            @foreach ($links as $link)
+                <li>
                     <a
                         href="{{ data_get($link, 'url', data_get($link, 'href', '/')) }}"
                     >
                         {{ data_get($link, 'label', data_get($link, 'title', '')) }}
                     </a>
-                @endforeach
-            </div>
-        </div>
+                </li>
+            @endforeach
+        </ul>
+        <a
+            class="lga-button lga-button-small"
+            href="{{ $ctaUrl }}"
+        >
+            {{ $ctaLabel }}
+        </a>
     </div>
 </nav>

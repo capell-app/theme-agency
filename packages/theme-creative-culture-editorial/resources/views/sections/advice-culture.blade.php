@@ -7,22 +7,22 @@
 @endphp
 
 <section
-    class="editorial-section"
-    style="background: var(--editorial-field)"
+    id="advice-culture"
+    class="cce-section cce-section-field"
 >
-    <div class="editorial-section-inner">
-        <p class="editorial-kicker">
+    <div class="cce-section-inner">
+        <p class="cce-kicker">
             {{ __('capell-theme-creative-culture-editorial::sections.authors.kicker') }}
         </p>
         <h2>
             {{ data_get($section, 'heading', __('capell-theme-creative-culture-editorial::sections.authors.heading')) }}
         </h2>
-        <p class="editorial-lede">
+        <p class="cce-lede">
             {{ data_get($section, 'summary', __('capell-theme-creative-culture-editorial::sections.authors.summary')) }}
         </p>
-        <div class="editorial-grid">
+        <div class="cce-grid">
             @foreach ($items as $item)
-                <article class="editorial-card">
+                <article class="cce-card">
                     <h3>
                         {{ data_get($item, 'title', data_get($item, 'name', '')) }}
                     </h3>

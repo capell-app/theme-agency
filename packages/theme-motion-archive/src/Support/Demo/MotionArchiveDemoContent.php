@@ -18,11 +18,15 @@ use Capell\FoundationTheme\Support\Demo\ThemeDemoPageDefinition;
  * date-filter-rail / winner-list / featured-project / jury-score-explainer /
  * media-credits / newsletter) alongside the shared hero / proof / cta — giving
  * every surface a full, individual digital-awards archive rather than the
- * shared five-section skeleton.
+ * shared five-section skeleton. Every winner, featured project, and archive
+ * still carries a real photograph via ThemeDemoMedia so the archive reads as
+ * a cinematic motion catalogue rather than a placeholder grid.
  */
 final class MotionArchiveDemoContent implements ProvidesThemeDemoContent
 {
     private const string BRAND = 'Frame Index';
+
+    private const string ARCHIVE_EMAIL = 'archive@frameindex.example';
 
     /**
      * @return array<int, ThemeDemoPageDefinition>
@@ -68,10 +72,10 @@ final class MotionArchiveDemoContent implements ProvidesThemeDemoContent
                         'summary' => 'A date-led record of motion, interactive, and digital craft. Browse winners by year and jury cycle, read the scores behind each verdict, and trace the credits and technology stacks that made the work.',
                         'actions' => [
                             ['label' => 'Browse the archive', 'url' => '#archive', 'style' => 'primary'],
-                            ['label' => 'View this cycle\'s winners', 'url' => '#winners', 'style' => 'secondary'],
+                            ['label' => 'View this cycle\'s winners', 'url' => '#winner-list', 'style' => 'secondary'],
                         ],
                         'mediaUrl' => $media['hero'][0],
-                        'mediaAlt' => 'Frame Index motion archive wall',
+                        'mediaAlt' => 'A still from the current cycle\'s Grand Prix title sequence',
                     ],
                     $this->dateFilterRailSection(
                         heading: 'Filter the archive by period and discipline',
@@ -80,10 +84,13 @@ final class MotionArchiveDemoContent implements ProvidesThemeDemoContent
                     $this->winnerListSection(
                         heading: 'Winners of the current cycle',
                         summary: 'Gold, silver, and jury commendations from the 2025 cycle, newest verdicts first.',
+                        media: $media,
                     ),
                     $this->featuredProjectSection(
                         heading: 'Featured project: Tidal States',
                         summary: 'A long-form title sequence that took the 2025 Grand Prix for motion direction.',
+                        media: $media,
+                        mediaKey: 'detail',
                     ),
                     $this->juryScoreSection(
                         heading: 'How the jury scored it',
@@ -100,10 +107,12 @@ final class MotionArchiveDemoContent implements ProvidesThemeDemoContent
                     $this->newsletterSection(
                         heading: 'New verdicts, when they land',
                         summary: 'A short note each cycle when fresh winners, scores, and credits are filed into the archive.',
+                        action: '/#newsletter',
                     ),
                     $this->ctaSection(
                         heading: 'Submit work to the next cycle',
                         summary: 'Entries for the 2026 cycle open this autumn. Get your studio on the record.',
+                        url: '/theme-' . $themeKey . '-cta',
                     ),
                 ],
             ],
@@ -137,10 +146,10 @@ final class MotionArchiveDemoContent implements ProvidesThemeDemoContent
                         'heading' => 'The winner archive, built to be scanned by year',
                         'summary' => 'Nine cycles of award-winning motion and digital work in one date-led record. Filter by period, category, or jury cycle and open any verdict in full.',
                         'actions' => [
-                            ['label' => 'Submit to the next cycle', 'url' => '#submit', 'style' => 'primary'],
+                            ['label' => 'Submit to the next cycle', 'url' => '/theme-' . $themeKey . '-cta', 'style' => 'primary'],
                         ],
                         'mediaUrl' => $media['listing'][0] ?? $media['hero'][0],
-                        'mediaAlt' => 'Winner archive grid',
+                        'mediaAlt' => 'A grid of stills from the winner archive',
                     ],
                     $this->dateFilterRailSection(
                         heading: 'Filter winners by year and category',
@@ -149,14 +158,22 @@ final class MotionArchiveDemoContent implements ProvidesThemeDemoContent
                     $this->winnerListSection(
                         heading: 'Featured winners',
                         summary: 'The verdicts the jury keeps returning to across recent cycles.',
+                        media: $media,
+                    ),
+                    $this->contentListingSection(
+                        heading: 'The full winner archive',
+                        summary: 'Every gold, silver, and commendation filed since the first cycle, newest first.',
+                        media: $media,
                     ),
                     $this->archiveHeroSection(
                         heading: 'Earlier cycles, still on the record',
                         summary: 'Winners from the founding cycles, kept legible with their original scores and credits intact.',
+                        media: $media,
                     ),
                     $this->ctaSection(
                         heading: 'Looking for a specific verdict?',
                         summary: 'Tell us the studio, project, or cycle and we will point you straight to its archive entry.',
+                        url: '/theme-' . $themeKey . '-contact',
                     ),
                 ],
             ],
@@ -189,14 +206,16 @@ final class MotionArchiveDemoContent implements ProvidesThemeDemoContent
                         'heading' => 'Tidal States — a project record',
                         'summary' => 'A four-minute title sequence for a coastal documentary, awarded the 2025 Grand Prix for motion direction. Read it the way the jury did.',
                         'actions' => [
-                            ['label' => 'Back to winners', 'url' => '#winners', 'style' => 'secondary'],
+                            ['label' => 'Back to winners', 'url' => '/theme-' . $themeKey . '-directory#winner-list', 'style' => 'secondary'],
                         ],
                         'mediaUrl' => $media['detail'][0],
-                        'mediaAlt' => 'Tidal States title sequence still',
+                        'mediaAlt' => 'Tidal States title sequence still, coastal storm front over water',
                     ],
                     $this->featuredProjectSection(
                         heading: 'A record that reads like an archive entry',
                         summary: 'Synopsis, credits, technology stack, and awards stay structured so a single project sits inside the historical record.',
+                        media: $media,
+                        mediaKey: 'detail',
                     ),
                     $this->mediaCreditsSection(
                         heading: 'Credits & technology stack',
@@ -209,6 +228,7 @@ final class MotionArchiveDemoContent implements ProvidesThemeDemoContent
                     $this->ctaSection(
                         heading: 'Want your work on the record?',
                         summary: 'Entries for the next cycle open this autumn. Put your studio in front of the jury.',
+                        url: '/theme-' . $themeKey . '-cta',
                     ),
                 ],
             ],
@@ -238,17 +258,18 @@ final class MotionArchiveDemoContent implements ProvidesThemeDemoContent
                         'type' => 'hero',
                         'eyebrow' => 'Submit & contact',
                         'heading' => 'Reach the archive through one restrained path',
-                        'summary' => 'Entries, credit corrections, and press enquiries all run through the same desk. Email archive@frameindex.example or use the form below — we answer within two working days.',
+                        'summary' => 'Entries, credit corrections, and press enquiries all run through the same desk. Email ' . self::ARCHIVE_EMAIL . ' or use the form below — we answer within two working days.',
                         'actions' => [
-                            ['label' => 'Email the archive', 'url' => 'mailto:archive@frameindex.example', 'style' => 'primary'],
-                            ['label' => 'Browse the archive', 'url' => '#archive', 'style' => 'secondary'],
+                            ['label' => 'Email the archive', 'url' => 'mailto:' . self::ARCHIVE_EMAIL, 'style' => 'primary'],
+                            ['label' => 'Join the newsletter', 'url' => '#newsletter', 'style' => 'secondary'],
                         ],
                         'mediaUrl' => $media['contact'][0],
-                        'mediaAlt' => 'Frame Index archive desk',
+                        'mediaAlt' => 'The Frame Index archive submission desk',
                     ],
                     $this->newsletterSection(
                         heading: 'Stay on the cycle',
                         summary: 'A short note each cycle when new winners, scores, and credits are filed. No more than that.',
+                        action: '#newsletter',
                     ),
                     $this->mediaCreditsSection(
                         heading: 'How submissions are credited',
@@ -257,6 +278,7 @@ final class MotionArchiveDemoContent implements ProvidesThemeDemoContent
                     $this->ctaSection(
                         heading: 'Ready to submit?',
                         summary: 'Send the project details and we will confirm your entry and its archive slug within two working days.',
+                        url: 'mailto:' . self::ARCHIVE_EMAIL,
                     ),
                 ],
             ],
@@ -289,8 +311,8 @@ final class MotionArchiveDemoContent implements ProvidesThemeDemoContent
                         'heading' => 'No entries match that filter — yet',
                         'summary' => 'No winners are filed for that period and category combination. Clear the filter to see the full record, or tell us what you are tracing.',
                         'actions' => [
-                            ['label' => 'Clear the filter', 'url' => '#archive', 'style' => 'primary'],
-                            ['label' => 'Submit work', 'url' => '#submit', 'style' => 'secondary'],
+                            ['label' => 'Back to the archive', 'url' => '/', 'style' => 'primary'],
+                            ['label' => 'Submit work', 'url' => '/theme-' . $themeKey . '-cta', 'style' => 'secondary'],
                         ],
                     ],
                     [
@@ -306,6 +328,7 @@ final class MotionArchiveDemoContent implements ProvidesThemeDemoContent
                     $this->ctaSection(
                         heading: 'Tracing a specific winner?',
                         summary: 'Tell us the studio or project and we will point you to its archive entry directly.',
+                        url: '/theme-' . $themeKey . '-contact',
                     ),
                 ],
             ],
@@ -338,12 +361,13 @@ final class MotionArchiveDemoContent implements ProvidesThemeDemoContent
                         'summary' => 'The archive slug is broken or the entry has been re-filed. Head back to the winner archive, or reach the submission desk.',
                         'actions' => [
                             ['label' => 'Back to home', 'url' => '/', 'style' => 'primary'],
-                            ['label' => 'Browse the archive', 'url' => '#archive', 'style' => 'secondary'],
+                            ['label' => 'Browse the archive', 'url' => '/theme-' . $themeKey . '-directory', 'style' => 'secondary'],
                         ],
                     ],
                     $this->ctaSection(
                         heading: 'Still tracing something?',
                         summary: 'Tell us the project or cycle you were after and we will route you to the right archive entry.',
+                        url: '/theme-' . $themeKey . '-contact',
                     ),
                 ],
             ],
@@ -377,11 +401,11 @@ final class MotionArchiveDemoContent implements ProvidesThemeDemoContent
                         'heading' => 'Put your work on the record',
                         'summary' => 'Whether it is a title sequence, an interactive piece, or a full campaign, the jury reads every entry against the same scoring axes — and winners stay archived for good.',
                         'actions' => [
-                            ['label' => 'Submit work', 'url' => '#submit', 'style' => 'primary'],
-                            ['label' => 'Email the archive', 'url' => 'mailto:archive@frameindex.example', 'style' => 'secondary'],
+                            ['label' => 'Email the archive', 'url' => 'mailto:' . self::ARCHIVE_EMAIL, 'style' => 'primary'],
+                            ['label' => 'Back to the archive', 'url' => '/', 'style' => 'secondary'],
                         ],
                         'mediaUrl' => $media['cta'][0],
-                        'mediaAlt' => 'Frame Index submission desk',
+                        'mediaAlt' => 'A still from a recent submission to Frame Index',
                     ],
                     $this->juryScoreSection(
                         heading: 'How the jury reads an entry',
@@ -394,6 +418,7 @@ final class MotionArchiveDemoContent implements ProvidesThemeDemoContent
                     $this->ctaSection(
                         heading: 'One entry away from the archive',
                         summary: 'Send the project over and we will confirm your entry and its archive slug within two working days.',
+                        url: 'mailto:' . self::ARCHIVE_EMAIL,
                     ),
                 ],
             ],
@@ -401,14 +426,19 @@ final class MotionArchiveDemoContent implements ProvidesThemeDemoContent
     }
 
     /**
+     * @param  array{hero: list<string>, listing: list<string>, detail: list<string>, proof: list<string>, contact: list<string>, cta: list<string>}  $media
      * @return array<string, mixed>
      */
-    private function archiveHeroSection(string $heading, string $summary): array
+    private function archiveHeroSection(string $heading, string $summary, array $media): array
     {
+        $image = $media['proof'][0] ?? $media['listing'][0] ?? $media['hero'][0];
+
         return [
             'type' => 'archive-hero',
             'heading' => $heading,
             'summary' => $summary,
+            'image' => $image,
+            'imageAlt' => 'A still from the founding cycle of the archive',
             'items' => [
                 ['title' => '2021 · Founding cycle', 'summary' => 'The first verdicts on the record, awarded across motion, interactive, and craft categories.'],
                 ['title' => '2022 · Second cycle', 'summary' => 'The cycle that introduced jury-score transparency and the four published axes.'],
@@ -427,57 +457,81 @@ final class MotionArchiveDemoContent implements ProvidesThemeDemoContent
             'heading' => $heading,
             'summary' => $summary,
             'items' => [
-                ['title' => '2025 cycle', 'summary' => 'The current jury cycle — 41 winners across nine categories, scores published.'],
-                ['title' => 'Motion direction', 'summary' => 'Title sequences, idents, and broadcast craft, filtered to direction-led entries.'],
-                ['title' => 'Interactive & real-time', 'summary' => 'Web, installation, and real-time pieces, sorted by the period they shipped.'],
-                ['title' => 'Craft & technique', 'summary' => 'Compositing, type, and sound design recognised on their own terms.'],
+                ['title' => '2025 cycle', 'summary' => 'The current jury cycle — 41 winners across nine categories, scores published.', 'url' => '#winner-list'],
+                ['title' => 'Motion direction', 'summary' => 'Title sequences, idents, and broadcast craft, filtered to direction-led entries.', 'url' => '#winner-list'],
+                ['title' => 'Interactive & real-time', 'summary' => 'Web, installation, and real-time pieces, sorted by the period they shipped.', 'url' => '#winner-list'],
+                ['title' => 'Craft & technique', 'summary' => 'Compositing, type, and sound design recognised on their own terms.', 'url' => '#winner-list'],
             ],
         ];
     }
 
     /**
+     * @param  array{hero: list<string>, listing: list<string>, detail: list<string>, proof: list<string>, contact: list<string>, cta: list<string>}  $media
      * @return array<string, mixed>
      */
-    private function winnerListSection(string $heading, string $summary): array
+    private function winnerListSection(string $heading, string $summary, array $media): array
     {
+        $images = array_values(array_unique(array_merge($media['detail'], $media['listing'], $media['proof'])));
+
+        $winners = [
+            [
+                'title' => 'Tidal States',
+                'summary' => 'A four-minute documentary title sequence pairing hand-drawn cels with photographed water — the 2025 Grand Prix for motion direction.',
+                'meta' => 'Gold · Motion direction · 2025',
+                'tier' => 'gold',
+                'care_note' => 'Atlas Motion · 94.2 jury score',
+            ],
+            [
+                'title' => 'Signal Drift',
+                'summary' => 'A real-time generative ident for a public broadcaster, rendered live on air across a full season.',
+                'meta' => 'Gold · Interactive & real-time · 2025',
+                'tier' => 'gold',
+                'care_note' => 'Studio Halftone · 91.7 jury score',
+            ],
+            [
+                'title' => 'Paper Cities',
+                'summary' => 'A stop-motion campaign built from folded architectural models, scored for craft and technique.',
+                'meta' => 'Silver · Craft & technique · 2025',
+                'tier' => 'silver',
+                'care_note' => 'Workshop Nine · 88.4 jury score',
+            ],
+        ];
+
+        $items = [];
+
+        foreach ($winners as $index => $winner) {
+            $items[] = [
+                ...$winner,
+                'url' => '#winner-' . ($index + 1),
+                'image' => $images[$index % max(count($images), 1)] ?? null,
+                'imageAlt' => $winner['title'] . ' award still',
+            ];
+        }
+
         return [
             'type' => 'winner-list',
             'heading' => $heading,
             'summary' => $summary,
-            'items' => [
-                [
-                    'title' => 'Tidal States',
-                    'summary' => 'A four-minute documentary title sequence pairing hand-drawn cels with photographed water — the 2025 Grand Prix for motion direction.',
-                    'meta' => 'Gold · Motion direction · 2025',
-                    'care_note' => 'Atlas Motion · 94.2 jury score',
-                ],
-                [
-                    'title' => 'Signal Drift',
-                    'summary' => 'A real-time generative ident for a public broadcaster, rendered live on air across a full season.',
-                    'meta' => 'Gold · Interactive & real-time · 2025',
-                    'care_note' => 'Studio Halftone · 91.7 jury score',
-                ],
-                [
-                    'title' => 'Paper Cities',
-                    'summary' => 'A stop-motion campaign built from folded architectural models, scored for craft and technique.',
-                    'meta' => 'Silver · Craft & technique · 2025',
-                    'care_note' => 'Workshop Nine · 88.4 jury score',
-                ],
-            ],
+            'items' => $items,
         ];
     }
 
     /**
+     * @param  array{hero: list<string>, listing: list<string>, detail: list<string>, proof: list<string>, contact: list<string>, cta: list<string>}  $media
      * @return array<string, mixed>
      */
-    private function featuredProjectSection(string $heading, string $summary): array
+    private function featuredProjectSection(string $heading, string $summary, array $media, string $mediaKey): array
     {
+        $image = $media[$mediaKey][0] ?? $media['hero'][0];
+
         return [
             'type' => 'featured-project',
             'heading' => $heading,
             'summary' => $summary,
             'url' => '#tidal-states',
             'label' => 'Open the full project record',
+            'image' => $image,
+            'imageAlt' => 'Tidal States cover still, storm front over water',
             'items' => [
                 ['title' => 'Synopsis', 'summary' => 'A coastal documentary opener that moves from charcoal storm fronts into photographed tidal footage across four minutes.'],
                 ['title' => 'Technology stack', 'summary' => 'Hand-drawn cels composited over plate photography, finished in a Nuke and Houdini pipeline with a bespoke grain pass.'],
@@ -522,15 +576,37 @@ final class MotionArchiveDemoContent implements ProvidesThemeDemoContent
     }
 
     /**
+     * @param  array{hero: list<string>, listing: list<string>, detail: list<string>, proof: list<string>, contact: list<string>, cta: list<string>}  $media
      * @return array<string, mixed>
      */
-    private function newsletterSection(string $heading, string $summary): array
+    private function contentListingSection(string $heading, string $summary, array $media): array
     {
+        $images = array_values(array_unique(array_merge($media['listing'], $media['proof'], $media['detail'])));
+
+        $entries = [
+            ['title' => 'Glasshouse', 'category' => 'Gold · Craft & technique · 2024', 'summary' => 'A macro-photography title sequence for a botanical documentary, praised for its restraint.'],
+            ['title' => 'Concrete Choir', 'category' => 'Silver · Motion direction · 2024', 'summary' => 'An architectural ident built entirely from drone plates of brutalist civic buildings.'],
+            ['title' => 'Loom', 'category' => 'Gold · Interactive & real-time · 2023', 'summary' => 'A generative installation piece that redraws itself from live weather data.'],
+            ['title' => 'Night Freight', 'category' => 'Silver · Craft & technique · 2023', 'summary' => 'A sound-led title sequence for a logistics documentary, scored for its audio layer.'],
+        ];
+
+        $items = [];
+
+        foreach ($entries as $index => $entry) {
+            $image = $images[$index % max(count($images), 1)] ?? null;
+            $items[] = [
+                ...$entry,
+                'url' => '#archive-' . ($index + 1),
+                'image' => $image,
+                'imageAlt' => $entry['title'] . ' archive still',
+            ];
+        }
+
         return [
-            'type' => 'newsletter',
+            'type' => 'content-listing',
             'heading' => $heading,
             'summary' => $summary,
-            'action' => '#subscribe',
+            'items' => $items,
         ];
     }
 
@@ -554,14 +630,27 @@ final class MotionArchiveDemoContent implements ProvidesThemeDemoContent
     /**
      * @return array<string, mixed>
      */
-    private function ctaSection(string $heading, string $summary): array
+    private function newsletterSection(string $heading, string $summary, string $action): array
+    {
+        return [
+            'type' => 'newsletter',
+            'heading' => $heading,
+            'summary' => $summary,
+            'action' => $action,
+        ];
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function ctaSection(string $heading, string $summary, string $url): array
     {
         return [
             'type' => 'cta',
             'heading' => $heading,
             'summary' => $summary,
-            'url' => '#submit',
-            'label' => 'Submit work',
+            'url' => $url,
+            'label' => str_starts_with($url, 'mailto:') ? 'Email the archive' : 'Submit work',
         ];
     }
 
@@ -573,14 +662,13 @@ final class MotionArchiveDemoContent implements ProvidesThemeDemoContent
         return [
             'brandName' => self::BRAND,
             'items' => [
-                ['label' => 'Archive', 'url' => '#archive'],
-                ['label' => 'Winners', 'url' => '#winners'],
-                ['label' => 'Jury scores', 'url' => '#jury-scores'],
-                ['label' => 'Credits', 'url' => '#credits'],
-                ['label' => 'Submit', 'url' => '#submit'],
+                ['label' => 'Archive', 'url' => '/#archive'],
+                ['label' => 'Winners', 'url' => '/#winner-list'],
+                ['label' => 'Jury scores', 'url' => '/#jury-score-explainer'],
+                ['label' => 'Credits', 'url' => '/#media-credits'],
             ],
             'ctaLabel' => 'Submit work',
-            'ctaUrl' => '#submit',
+            'ctaUrl' => '/#newsletter',
         ];
     }
 
@@ -596,26 +684,25 @@ final class MotionArchiveDemoContent implements ProvidesThemeDemoContent
                 [
                     'heading' => 'Archive',
                     'links' => [
-                        ['label' => 'Browse by year', 'url' => '#archive'],
-                        ['label' => 'Winners', 'url' => '#winners'],
-                        ['label' => 'Categories', 'url' => '#categories'],
-                        ['label' => 'Earlier cycles', 'url' => '#archive'],
+                        ['label' => 'Browse by year', 'url' => '/#archive'],
+                        ['label' => 'Winners', 'url' => '/#winner-list'],
+                        ['label' => 'Categories', 'url' => '/#date-filter-rail'],
+                        ['label' => 'Earlier cycles', 'url' => '/theme-motion-archive-directory'],
                     ],
                 ],
                 [
                     'heading' => 'The awards',
                     'links' => [
-                        ['label' => 'Jury & scoring', 'url' => '#jury-scores'],
-                        ['label' => 'How to submit', 'url' => '#submit'],
-                        ['label' => 'Credits policy', 'url' => '#credits'],
-                        ['label' => 'Press', 'url' => '#press'],
+                        ['label' => 'Jury & scoring', 'url' => '/#jury-score-explainer'],
+                        ['label' => 'How to submit', 'url' => '/theme-motion-archive-cta'],
+                        ['label' => 'Credits policy', 'url' => '/#media-credits'],
                     ],
                 ],
                 [
                     'heading' => 'Connect',
                     'links' => [
-                        ['label' => 'Submit work', 'url' => '#submit'],
-                        ['label' => 'archive@frameindex.example', 'url' => 'mailto:archive@frameindex.example'],
+                        ['label' => 'Submit work', 'url' => '/theme-motion-archive-contact'],
+                        ['label' => self::ARCHIVE_EMAIL, 'url' => 'mailto:' . self::ARCHIVE_EMAIL],
                     ],
                 ],
             ],

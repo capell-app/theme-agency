@@ -14,14 +14,20 @@ use Capell\FoundationTheme\Support\Demo\ThemeDemoPageDefinition;
  * Complete, vertical-authentic demo content for the Premium Portfolio Collection theme.
  *
  * Each surface is seeded as an ordered `render_data['sections']` list so the page
- * adapter emits the theme's signature editorial renderers (featured-portfolios /
+ * adapter emits the theme's signature awards-index renderers (featured-portfolios /
  * filter-taxonomies / portfolio-grid / awarded-profiles / creator-directory /
  * education-upsell / newsletter) alongside the standard hero/proof/cta — giving
- * every surface a full, curated gallery site rather than a sparse skeleton.
+ * every surface a full, curated award-gallery site rather than a sparse skeleton.
+ *
+ * Navigation and footer render on every surface, so their links only ever point
+ * at the homepage (where every anchored section actually renders) or at real
+ * page paths — never at a same-page hash that would dead-click on another surface.
  */
 final class PremiumPortfolioCollectionDemoContent implements ProvidesThemeDemoContent
 {
-    private const BRAND = 'Index Gallery';
+    private const string BRAND = 'Index Gallery';
+
+    private const string EDITORS_EMAIL = 'editors@indexgallery.example';
 
     /**
      * @return array<int, ThemeDemoPageDefinition>
@@ -62,12 +68,15 @@ final class PremiumPortfolioCollectionDemoContent implements ProvidesThemeDemoCo
                 'sections' => [
                     [
                         'type' => 'hero',
+                        'kicker' => __('capell-theme-premium-portfolio-collection::sections.hero.kicker'),
                         'heading' => 'The portfolios worth studying, in one curated index',
                         'summary' => 'Every entry is hand-picked and award-vetted. Browse featured collections, filter by craft, and follow the designers, studios, and engineers shaping standout work.',
-                        'primary_label' => 'Browse the collection',
-                        'primary_url' => '#portfolios',
-                        'secondary_label' => 'See this year\'s winners',
-                        'secondary_url' => '#winners',
+                        'actions' => [
+                            ['label' => 'Browse the collection', 'url' => '#featured', 'style' => 'primary'],
+                            ['label' => "See this year's winners", 'url' => '#awards', 'style' => 'secondary'],
+                        ],
+                        'mediaUrl' => $media['hero'][0],
+                        'mediaAlt' => 'Editorial spread of featured portfolio covers',
                         'header_image_url' => $media['hero'][0],
                         'header_image_alt' => 'Editorial spread of featured portfolio covers',
                         'notes' => [
@@ -76,11 +85,11 @@ final class PremiumPortfolioCollectionDemoContent implements ProvidesThemeDemoCo
                             'New featured work lands every Thursday morning.',
                         ],
                     ],
-                    $this->featuredPortfoliosSection(),
+                    $this->featuredPortfoliosSection($media),
                     $this->filterTaxonomiesSection(),
-                    $this->portfolioGridSection(),
-                    $this->awardedProfilesSection(),
-                    $this->creatorDirectorySection(),
+                    $this->portfolioGridSection($media),
+                    $this->awardedProfilesSection($media),
+                    $this->creatorDirectorySection($media),
                     $this->educationUpsellSection(),
                     $this->proofSection(),
                     $this->newsletterSection(),
@@ -88,7 +97,7 @@ final class PremiumPortfolioCollectionDemoContent implements ProvidesThemeDemoCo
                         heading: 'Made something worth indexing?',
                         summary: 'Submit a portfolio for editorial review. We read every submission and reply within five working days.',
                         label: 'Submit your work',
-                        url: '#submit',
+                        url: 'mailto:' . self::EDITORS_EMAIL,
                     ),
                 ],
             ],
@@ -118,17 +127,20 @@ final class PremiumPortfolioCollectionDemoContent implements ProvidesThemeDemoCo
                 'sections' => [
                     [
                         'type' => 'hero',
+                        'kicker' => __('capell-theme-premium-portfolio-collection::sections.hero.kicker'),
                         'heading' => 'Every featured portfolio, filtered your way',
                         'summary' => 'Sixty-plus curated collections across product, brand, motion, and craft. Narrow by discipline and award, or open an entry for the full editorial note.',
-                        'primary_label' => 'Clear filters',
-                        'primary_url' => '#portfolios',
-                        'secondary_label' => 'Sort by latest',
-                        'secondary_url' => '#latest',
+                        'actions' => [
+                            ['label' => 'Clear filters', 'url' => '#filters', 'style' => 'primary'],
+                            ['label' => 'Sort by latest', 'url' => '#portfolio-grid', 'style' => 'secondary'],
+                        ],
+                        'mediaUrl' => $media['listing'][0] ?? $media['hero'][0],
+                        'mediaAlt' => 'Grid of curated portfolio thumbnails',
                         'header_image_url' => $media['listing'][0] ?? $media['hero'][0],
                         'header_image_alt' => 'Grid of curated portfolio thumbnails',
                     ],
                     $this->filterTaxonomiesSection(),
-                    $this->portfolioGridSection(),
+                    $this->portfolioGridSection($media),
                     $this->contentListingSection(
                         heading: 'More from the archive',
                         media: $media,
@@ -137,7 +149,7 @@ final class PremiumPortfolioCollectionDemoContent implements ProvidesThemeDemoCo
                         heading: 'Want the weekly shortlist instead?',
                         summary: 'Subscribers get the five most notable new portfolios each Thursday, with the editor\'s note on why each one made the cut.',
                         label: 'Get the weekly shortlist',
-                        url: '#subscribe',
+                        url: '/#newsletter',
                     ),
                 ],
             ],
@@ -166,12 +178,15 @@ final class PremiumPortfolioCollectionDemoContent implements ProvidesThemeDemoCo
                 'sections' => [
                     [
                         'type' => 'hero',
+                        'kicker' => __('capell-theme-premium-portfolio-collection::sections.hero.kicker'),
                         'heading' => 'Marlow Reade — a portfolio built around the work',
                         'summary' => 'An independent product designer whose case studies read like a magazine. Five shipped projects, two industry awards, and a through-line of clarity under constraint.',
-                        'primary_label' => 'Visit the live portfolio',
-                        'primary_url' => '#live',
-                        'secondary_label' => 'Back to the collection',
-                        'secondary_url' => '#portfolios',
+                        'actions' => [
+                            ['label' => 'Back to the collection', 'url' => '/theme-' . $themeKey . '-directory', 'style' => 'primary'],
+                            ['label' => 'See awarded work', 'url' => '#awards', 'style' => 'secondary'],
+                        ],
+                        'mediaUrl' => $media['detail'][0],
+                        'mediaAlt' => 'Cover image from the Marlow Reade portfolio',
                         'header_image_url' => $media['detail'][0],
                         'header_image_alt' => 'Cover image from the Marlow Reade portfolio',
                         'notes' => [
@@ -181,14 +196,17 @@ final class PremiumPortfolioCollectionDemoContent implements ProvidesThemeDemoCo
                         ],
                     ],
                     $this->awardedProfilesSection(
+                        media: $media,
                         heading: 'Awarded work in this portfolio',
                         summary: 'The three projects that earned this entry its place in the index.',
                     ),
                     $this->featuredPortfoliosSection(
+                        media: $media,
                         heading: 'Why the editors picked it',
                         summary: 'What this portfolio does that most do not.',
                     ),
                     $this->creatorDirectorySection(
+                        media: $media,
                         heading: 'Studios that have hired Marlow',
                         summary: 'A short list of the teams behind the shipped work.',
                     ),
@@ -196,7 +214,7 @@ final class PremiumPortfolioCollectionDemoContent implements ProvidesThemeDemoCo
                         heading: 'Following Marlow\'s work?',
                         summary: 'Subscribe to the index and we will tell you when this creator publishes a new project or moves studios.',
                         label: 'Follow this creator',
-                        url: '#follow',
+                        url: '/#newsletter',
                     ),
                 ],
             ],
@@ -224,16 +242,20 @@ final class PremiumPortfolioCollectionDemoContent implements ProvidesThemeDemoCo
                 'sections' => [
                     [
                         'type' => 'hero',
+                        'kicker' => __('capell-theme-premium-portfolio-collection::sections.hero.kicker'),
                         'heading' => 'Submit your portfolio for review',
                         'summary' => 'No fees, no open feed. Send a link and our editors read every submission, weigh it against the live collection, and reply within five working days.',
-                        'primary_label' => 'Email the editors',
-                        'primary_url' => 'mailto:editors@indexgallery.example',
-                        'secondary_label' => 'Read the criteria',
-                        'secondary_url' => '#criteria',
+                        'actions' => [
+                            ['label' => 'Email the editors', 'url' => 'mailto:' . self::EDITORS_EMAIL, 'style' => 'primary'],
+                            ['label' => 'See what we look for', 'url' => '#featured', 'style' => 'secondary'],
+                        ],
+                        'mediaUrl' => $media['contact'][0],
+                        'mediaAlt' => 'The Index Gallery editorial desk',
                         'header_image_url' => $media['contact'][0],
                         'header_image_alt' => 'The Index Gallery editorial desk',
                     ],
                     $this->featuredPortfoliosSection(
+                        media: $media,
                         heading: 'What we look for',
                         summary: 'Three things every featured portfolio gets right.',
                     ),
@@ -245,7 +267,7 @@ final class PremiumPortfolioCollectionDemoContent implements ProvidesThemeDemoCo
                         heading: 'Ready to submit?',
                         summary: 'Send the link and a one-line note on what you are most proud of. We take it from there.',
                         label: 'Send your portfolio',
-                        url: 'mailto:editors@indexgallery.example',
+                        url: 'mailto:' . self::EDITORS_EMAIL,
                     ),
                 ],
             ],
@@ -274,17 +296,19 @@ final class PremiumPortfolioCollectionDemoContent implements ProvidesThemeDemoCo
                 'sections' => [
                     [
                         'type' => 'hero',
+                        'kicker' => __('capell-theme-premium-portfolio-collection::sections.hero.kicker'),
                         'heading' => 'No portfolios match that filter — yet',
                         'summary' => 'Nothing in the index fits that exact combination of discipline and award. Clear a filter to widen the search, or browse this week\'s featured picks below.',
-                        'primary_label' => 'Clear all filters',
-                        'primary_url' => '#portfolios',
-                        'secondary_label' => 'Browse featured',
-                        'secondary_url' => '#featured',
+                        'actions' => [
+                            ['label' => 'Clear all filters', 'url' => '#filters', 'style' => 'primary'],
+                            ['label' => 'Browse featured', 'url' => '#featured', 'style' => 'secondary'],
+                        ],
                     ],
                     $this->filterTaxonomiesSection(
                         heading: 'Try a broader discipline',
                     ),
                     $this->featuredPortfoliosSection(
+                        media: $media,
                         heading: 'While you are here',
                         summary: 'Three featured portfolios the editors keep returning to.',
                     ),
@@ -292,7 +316,7 @@ final class PremiumPortfolioCollectionDemoContent implements ProvidesThemeDemoCo
                         heading: 'Looking for something specific?',
                         summary: 'Tell us the discipline or studio you have in mind and we will surface the closest entries from the archive.',
                         label: 'Ask the editors',
-                        url: 'mailto:editors@indexgallery.example',
+                        url: 'mailto:' . self::EDITORS_EMAIL,
                     ),
                 ],
             ],
@@ -320,14 +344,16 @@ final class PremiumPortfolioCollectionDemoContent implements ProvidesThemeDemoCo
                 'sections' => [
                     [
                         'type' => 'hero',
+                        'kicker' => __('capell-theme-premium-portfolio-collection::sections.hero.kicker'),
                         'heading' => 'That entry is no longer in the index',
                         'summary' => 'The link is broken or the portfolio has been retired from the collection. Head back to the featured work, or browse the full index.',
-                        'primary_label' => 'Back to home',
-                        'primary_url' => '/',
-                        'secondary_label' => 'Browse the collection',
-                        'secondary_url' => '#portfolios',
+                        'actions' => [
+                            ['label' => 'Back to home', 'url' => '/', 'style' => 'primary'],
+                            ['label' => 'Browse the collection', 'url' => '/theme-' . $themeKey . '-directory', 'style' => 'secondary'],
+                        ],
                     ],
                     $this->featuredPortfoliosSection(
+                        media: $media,
                         heading: 'Featured instead',
                         summary: 'Three entries the editors are championing this week.',
                     ),
@@ -335,7 +361,7 @@ final class PremiumPortfolioCollectionDemoContent implements ProvidesThemeDemoCo
                         heading: 'Still looking for a particular portfolio?',
                         summary: 'Tell us the creator or studio and we will point you to the right entry, or let you know if it has moved on.',
                         label: 'Ask the editors',
-                        url: 'mailto:editors@indexgallery.example',
+                        url: 'mailto:' . self::EDITORS_EMAIL,
                     ),
                 ],
             ],
@@ -365,12 +391,15 @@ final class PremiumPortfolioCollectionDemoContent implements ProvidesThemeDemoCo
                 'sections' => [
                     [
                         'type' => 'hero',
+                        'kicker' => __('capell-theme-premium-portfolio-collection::sections.hero.kicker'),
                         'heading' => 'Get the work worth studying, every week',
                         'summary' => 'Membership unlocks the full creator profiles, the weekly editor\'s shortlist, and early access to award announcements — for the price of a coffee a month.',
-                        'primary_label' => 'Start membership',
-                        'primary_url' => '#join',
-                        'secondary_label' => 'See what\'s included',
-                        'secondary_url' => '#included',
+                        'actions' => [
+                            ['label' => 'Start membership', 'url' => '#newsletter', 'style' => 'primary'],
+                            ['label' => "See what's included", 'url' => '#learn', 'style' => 'secondary'],
+                        ],
+                        'mediaUrl' => $media['cta'][0],
+                        'mediaAlt' => 'Index Gallery membership preview',
                         'header_image_url' => $media['cta'][0],
                         'header_image_alt' => 'Index Gallery membership preview',
                     ],
@@ -378,11 +407,9 @@ final class PremiumPortfolioCollectionDemoContent implements ProvidesThemeDemoCo
                     $this->proofSection(
                         heading: 'Why readers join',
                     ),
-                    $this->ctaSection(
+                    $this->newsletterSection(
                         heading: 'One membership, the whole index',
                         summary: 'Cancel anytime. Keep every saved portfolio and creator you follow if you do.',
-                        label: 'Start membership',
-                        url: '#join',
                     ),
                 ],
             ],
@@ -390,21 +417,27 @@ final class PremiumPortfolioCollectionDemoContent implements ProvidesThemeDemoCo
     }
 
     /**
+     * @param  array{hero: list<string>, listing: list<string>, detail: list<string>, proof: list<string>, contact: list<string>, cta: list<string>}  $media
      * @return array<string, mixed>
      */
     private function featuredPortfoliosSection(
+        array $media,
         string $heading = 'This week\'s featured collections',
         string $summary = 'Three portfolios our editors are championing right now, across product, brand, and motion.',
     ): array {
+        $images = array_values(array_unique(array_merge($media['listing'], $media['detail'], $media['proof'])));
+
+        $entries = [
+            ['title' => 'Halden Studio — product design', 'summary' => 'A systems-first portfolio that shows the thinking behind every shipped screen, not just the final frame.', 'award' => 'Awwwards SOTD'],
+            ['title' => 'Ren Okabe — brand & type', 'summary' => 'Identity work for cultural institutions, presented as a quiet, confident editorial sequence.', 'award' => 'D&AD Pencil'],
+            ['title' => 'Field Notes Motion — animation', 'summary' => 'A motion reel that earns its loops, with breakdowns of the rigs and timing behind each cut.', 'award' => 'FWA of the Day'],
+        ];
+
         return [
             'type' => 'featured-portfolios',
             'heading' => $heading,
             'summary' => $summary,
-            'items' => [
-                ['title' => 'Halden Studio — product design', 'summary' => 'A systems-first portfolio that shows the thinking behind every shipped screen, not just the final frame.'],
-                ['title' => 'Ren Okabe — brand & type', 'summary' => 'Identity work for cultural institutions, presented as a quiet, confident editorial sequence.'],
-                ['title' => 'Field Notes Motion — animation', 'summary' => 'A motion reel that earns its loops, with breakdowns of the rigs and timing behind each cut.'],
-            ],
+            'items' => $this->withImages($entries, $images, 'featured'),
         ];
     }
 
@@ -418,70 +451,88 @@ final class PremiumPortfolioCollectionDemoContent implements ProvidesThemeDemoCo
             'type' => 'filter-taxonomies',
             'heading' => $heading,
             'items' => [
-                ['title' => 'Product design', 'summary' => 'App and web interfaces, design systems, and the case studies behind them.'],
-                ['title' => 'Brand & identity', 'summary' => 'Logos, type, and visual systems for studios, startups, and cultural work.'],
-                ['title' => 'Motion & 3D', 'summary' => 'Reels, rigs, and rendered work with the breakdowns that explain them.'],
-                ['title' => 'Engineering & craft', 'summary' => 'Creative developers and the interaction work that lives in the browser.'],
+                ['title' => 'Product design', 'summary' => 'App and web interfaces, design systems, and the case studies behind them.', 'count' => '24', 'url' => '#filters'],
+                ['title' => 'Brand & identity', 'summary' => 'Logos, type, and visual systems for studios, startups, and cultural work.', 'count' => '16', 'url' => '#filters'],
+                ['title' => 'Motion & 3D', 'summary' => 'Reels, rigs, and rendered work with the breakdowns that explain them.', 'count' => '12', 'url' => '#filters'],
+                ['title' => 'Engineering & craft', 'summary' => 'Creative developers and the interaction work that lives in the browser.', 'count' => '9', 'url' => '#filters'],
             ],
         ];
     }
 
     /**
+     * @param  array{hero: list<string>, listing: list<string>, detail: list<string>, proof: list<string>, contact: list<string>, cta: list<string>}  $media
      * @return array<string, mixed>
      */
     private function portfolioGridSection(
+        array $media,
         string $heading = 'Recently added to the index',
         string $summary = 'The latest entries to clear editorial review, newest first.',
     ): array {
+        $images = array_values(array_unique(array_merge($media['listing'], $media['proof'], $media['detail'])));
+
+        $entries = [
+            ['title' => 'Lume — design systems lead', 'summary' => 'A portfolio organised around tokens and outcomes rather than screenshots.', 'meta' => 'Product design', 'care_note' => 'Added 2 days ago'],
+            ['title' => 'Atelier Voss — brand', 'summary' => 'Heritage identity work for a third-generation furniture maker.', 'meta' => 'Brand & identity', 'care_note' => 'Added 4 days ago'],
+            ['title' => 'Nori Tanaka — interaction', 'summary' => 'WebGL experiments that ship as production marketing sites.', 'meta' => 'Engineering & craft', 'care_note' => 'Added 6 days ago'],
+            ['title' => 'Studio Bask — motion', 'summary' => 'Broadcast-grade title sequences for independent film.', 'meta' => 'Motion & 3D', 'care_note' => 'Added last week'],
+        ];
+
         return [
             'type' => 'portfolio-grid',
             'heading' => $heading,
             'summary' => $summary,
-            'items' => [
-                ['title' => 'Lume — design systems lead', 'summary' => 'A portfolio organised around tokens and outcomes rather than screenshots.', 'meta' => 'Product design', 'care_note' => 'Added 2 days ago'],
-                ['title' => 'Atelier Voss — brand', 'summary' => 'Heritage identity work for a third-generation furniture maker.', 'meta' => 'Brand & identity', 'care_note' => 'Added 4 days ago'],
-                ['title' => 'Nori Tanaka — interaction', 'summary' => 'WebGL experiments that ship as production marketing sites.', 'meta' => 'Engineering & craft', 'care_note' => 'Added 6 days ago'],
-                ['title' => 'Studio Bask — motion', 'summary' => 'Broadcast-grade title sequences for independent film.', 'meta' => 'Motion & 3D', 'care_note' => 'Added last week'],
-            ],
+            'items' => $this->withImages($entries, $images, 'grid'),
         ];
     }
 
     /**
+     * @param  array{hero: list<string>, listing: list<string>, detail: list<string>, proof: list<string>, contact: list<string>, cta: list<string>}  $media
      * @return array<string, mixed>
      */
     private function awardedProfilesSection(
+        array $media,
         string $heading = 'This year\'s award winners',
         string $summary = 'Portfolios recognised by D&AD, Awwwards, and the FWA, now indexed in full.',
     ): array {
+        $images = array_values(array_unique(array_merge($media['detail'], $media['hero'], $media['proof'])));
+
+        $entries = [
+            ['title' => 'Meridian rebrand — D&AD Yellow Pencil', 'summary' => 'A fintech identity that scaled from pitch deck to product without losing its nerve.', 'award' => 'D&AD Yellow Pencil'],
+            ['title' => 'Northwind platform — Awwwards Site of the Year', 'summary' => 'A renewables tool field engineers actually enjoy opening every morning.', 'award' => 'Awwwards SOTY'],
+        ];
+
         return [
             'type' => 'awarded-profiles',
             'heading' => $heading,
             'summary' => $summary,
             'label' => 'See all winners',
-            'url' => '#winners',
-            'items' => [
-                ['title' => 'Meridian rebrand — D&AD Yellow Pencil', 'summary' => 'A fintech identity that scaled from pitch deck to product without losing its nerve.'],
-                ['title' => 'Northwind platform — Awwwards Site of the Year', 'summary' => 'A renewables tool field engineers actually enjoy opening every morning.'],
-            ],
+            'url' => '#awards',
+            'items' => $this->withImages($entries, $images, 'awards'),
         ];
     }
 
     /**
+     * @param  array{hero: list<string>, listing: list<string>, detail: list<string>, proof: list<string>, contact: list<string>, cta: list<string>}  $media
      * @return array<string, mixed>
      */
     private function creatorDirectorySection(
+        array $media,
         string $heading = 'Creators worth following',
         string $summary = 'The designers, studios, and developers whose new work we surface the moment it lands.',
     ): array {
+        $images = array_values(array_unique(array_merge($media['proof'], $media['contact'], $media['listing'])));
+
+        $entries = [
+            ['meta' => 'Product design', 'title' => 'Halden Studio', 'summary' => 'A two-person studio shipping systems work for health and finance teams.', 'stat_value' => '12', 'stat_label' => 'featured projects'],
+            ['meta' => 'Brand & type', 'title' => 'Ren Okabe', 'summary' => 'Independent identity designer for museums, festivals, and small presses.', 'stat_value' => '8', 'stat_label' => 'featured projects'],
+            ['meta' => 'Motion & 3D', 'title' => 'Field Notes Motion', 'summary' => 'A motion collective with a reputation for breakdowns as good as the work.', 'stat_value' => '15', 'stat_label' => 'featured projects'],
+        ];
+
         return [
             'type' => 'creator-directory',
             'heading' => $heading,
             'summary' => $summary,
-            'items' => [
-                ['meta' => 'Product design', 'title' => 'Halden Studio', 'summary' => 'A two-person studio shipping systems work for health and finance teams.'],
-                ['meta' => 'Brand & type', 'title' => 'Ren Okabe', 'summary' => 'Independent identity designer for museums, festivals, and small presses.'],
-                ['meta' => 'Motion & 3D', 'title' => 'Field Notes Motion', 'summary' => 'A motion collective with a reputation for breakdowns as good as the work.'],
-            ],
+            'items' => $this->withImages($entries, $images, 'creators'),
         ];
     }
 
@@ -495,9 +546,9 @@ final class PremiumPortfolioCollectionDemoContent implements ProvidesThemeDemoCo
             'heading' => 'Learn from the portfolios you admire',
             'summary' => 'Members get the long-form interviews and process teardowns behind the featured work.',
             'items' => [
-                ['title' => 'Process teardowns', 'summary' => 'Step-by-step breakdowns of how a featured project moved from brief to launch.'],
-                ['title' => 'Creator interviews', 'summary' => 'Honest conversations about pricing, rejection, and the projects that did not work out.'],
-                ['title' => 'Portfolio clinics', 'summary' => 'Monthly live reviews where editors critique reader submissions on the record.'],
+                ['title' => 'Process teardowns', 'summary' => 'Step-by-step breakdowns of how a featured project moved from brief to launch.', 'url' => '#learn'],
+                ['title' => 'Creator interviews', 'summary' => 'Honest conversations about pricing, rejection, and the projects that did not work out.', 'url' => '#learn'],
+                ['title' => 'Portfolio clinics', 'summary' => 'Monthly live reviews where editors critique reader submissions on the record.', 'url' => '#learn'],
             ],
         ];
     }
@@ -505,13 +556,15 @@ final class PremiumPortfolioCollectionDemoContent implements ProvidesThemeDemoCo
     /**
      * @return array<string, mixed>
      */
-    private function newsletterSection(): array
-    {
+    private function newsletterSection(
+        string $heading = 'The Thursday shortlist',
+        string $summary = 'Five notable new portfolios in your inbox every week, with the editor\'s note on why each one earned its place.',
+    ): array {
         return [
             'type' => 'newsletter',
-            'heading' => 'The Thursday shortlist',
-            'summary' => 'Five notable new portfolios in your inbox every week, with the editor\'s note on why each one earned its place.',
-            'action' => '#subscribe',
+            'heading' => $heading,
+            'summary' => $summary,
+            'action' => '#newsletter',
         ];
     }
 
@@ -552,9 +605,9 @@ final class PremiumPortfolioCollectionDemoContent implements ProvidesThemeDemoCo
             $image = $images[$index % max(count($images), 1)] ?? null;
             $items[] = [
                 ...$entry,
-                'url' => '#archive-' . ($index + 1),
+                'url' => '#content-listing',
                 'image' => $image,
-                'imageUrl' => $image,
+                'imageAlt' => $entry['title'],
             ];
         }
 
@@ -574,9 +627,35 @@ final class PremiumPortfolioCollectionDemoContent implements ProvidesThemeDemoCo
             'type' => 'cta',
             'heading' => $heading,
             'summary' => $summary,
-            'label' => $label,
-            'url' => $url,
+            'actions' => [
+                ['label' => $label, 'url' => $url, 'style' => 'primary'],
+            ],
         ];
+    }
+
+    /**
+     * Assign images (and generated anchor URLs) to a flat list of item arrays,
+     * cycling the supplied image pool so every card carries real photography.
+     *
+     * @param  list<array<string, mixed>>  $entries
+     * @param  list<string>  $images
+     * @return list<array<string, mixed>>
+     */
+    private function withImages(array $entries, array $images, string $anchorPrefix): array
+    {
+        $items = [];
+
+        foreach ($entries as $index => $entry) {
+            $image = $images[$index % max(count($images), 1)] ?? null;
+            $items[] = [
+                ...$entry,
+                'url' => '#' . $anchorPrefix . '-' . ($index + 1),
+                'image' => $image,
+                'imageAlt' => data_get($entry, 'title', ''),
+            ];
+        }
+
+        return $items;
     }
 
     /**
@@ -587,15 +666,16 @@ final class PremiumPortfolioCollectionDemoContent implements ProvidesThemeDemoCo
         return [
             'brandName' => self::BRAND,
             'brand' => self::BRAND,
+            'tagline' => 'Premium Portfolio Collection',
             'items' => [
-                ['label' => 'Collection', 'url' => '#portfolios'],
-                ['label' => 'Winners', 'url' => '#winners'],
-                ['label' => 'Creators', 'url' => '#creators'],
-                ['label' => 'Learn', 'url' => '#learn'],
-                ['label' => 'Submit', 'url' => '#submit'],
+                ['label' => 'Collection', 'url' => '/'],
+                ['label' => 'Featured', 'url' => '/#featured'],
+                ['label' => 'Winners', 'url' => '/#awards'],
+                ['label' => 'Creators', 'url' => '/#creators'],
+                ['label' => 'Learn', 'url' => '/#learn'],
             ],
-            'ctaLabel' => 'Join membership',
-            'ctaUrl' => '#join',
+            'ctaLabel' => 'Submit',
+            'ctaUrl' => 'mailto:' . self::EDITORS_EMAIL,
         ];
     }
 
@@ -613,29 +693,27 @@ final class PremiumPortfolioCollectionDemoContent implements ProvidesThemeDemoCo
                     'heading' => 'Browse',
                     'title' => 'Browse',
                     'links' => [
-                        ['label' => 'The collection', 'url' => '#portfolios'],
-                        ['label' => 'Award winners', 'url' => '#winners'],
-                        ['label' => 'Creators', 'url' => '#creators'],
-                        ['label' => 'Latest entries', 'url' => '#latest'],
+                        ['label' => 'The collection', 'url' => '/'],
+                        ['label' => 'Award winners', 'url' => '/#awards'],
+                        ['label' => 'Creators', 'url' => '/#creators'],
+                        ['label' => 'Latest entries', 'url' => '/#portfolio-grid'],
                     ],
                 ],
                 [
                     'heading' => 'Members',
                     'title' => 'Members',
                     'links' => [
-                        ['label' => 'Join membership', 'url' => '#join'],
-                        ['label' => 'Process teardowns', 'url' => '#learn'],
-                        ['label' => 'Portfolio clinics', 'url' => '#clinics'],
-                        ['label' => 'The Thursday shortlist', 'url' => '#subscribe'],
+                        ['label' => 'Join membership', 'url' => '/#newsletter'],
+                        ['label' => 'Process teardowns', 'url' => '/#learn'],
+                        ['label' => 'The Thursday shortlist', 'url' => '/#newsletter'],
                     ],
                 ],
                 [
                     'heading' => 'Index Gallery',
                     'title' => 'Index Gallery',
                     'links' => [
-                        ['label' => 'Submit your work', 'url' => '#submit'],
-                        ['label' => 'Editorial criteria', 'url' => '#criteria'],
-                        ['label' => 'editors@indexgallery.example', 'url' => 'mailto:editors@indexgallery.example'],
+                        ['label' => 'Submit your work', 'url' => 'mailto:' . self::EDITORS_EMAIL],
+                        ['label' => self::EDITORS_EMAIL, 'url' => 'mailto:' . self::EDITORS_EMAIL],
                     ],
                 ],
             ],

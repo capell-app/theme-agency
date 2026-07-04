@@ -8,16 +8,12 @@ use function Pest\Laravel\get;
 
 dataset('first party frontend themes', [
     'default' => ['default'],
-    'agency' => ['agency'],
-    'corporate' => ['corporate'],
-    'commerce' => ['commerce'],
-    'healthcare' => ['healthcare'],
-    'saas' => ['saas'],
-    'education' => ['education'],
-    'knowledge' => ['knowledge'],
-    'local-services' => ['local-services'],
-    'nonprofit' => ['nonprofit'],
-    'portfolio' => ['portfolio'],
+    'case-study-platform' => ['case-study-platform'],
+    'dark-product-system' => ['dark-product-system'],
+    'dense-news-analysis' => ['dense-news-analysis'],
+    'experimental-directory' => ['experimental-directory'],
+    'premium-portfolio-collection' => ['premium-portfolio-collection'],
+    'raw-index' => ['raw-index'],
 ]);
 
 it('renders first-party themes through the real frontend page route', function (string $themeKey): void {

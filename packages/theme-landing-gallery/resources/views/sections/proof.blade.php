@@ -6,17 +6,27 @@
     ]);
 @endphp
 
-<section class="editorial-section">
-    <div class="editorial-section-inner">
-        <p class="editorial-kicker">
+<section
+    id="proof"
+    class="lga-section"
+>
+    <div class="lga-section-inner">
+        <p class="lga-eyebrow">
             {{ __('capell-theme-landing-gallery::sections.proof.kicker') }}
         </p>
-        <div class="editorial-grid">
+        <h2>
+            {{ data_get($section, 'heading', __('capell-theme-landing-gallery::sections.proof.heading')) }}
+        </h2>
+        <p class="lga-lede">
+            {{ data_get($section, 'summary', __('capell-theme-landing-gallery::sections.proof.summary')) }}
+        </p>
+
+        <div class="lga-grid">
             @foreach ($items as $item)
-                <article class="editorial-card">
-                    <h3>
+                <article class="lga-card">
+                    <span class="lga-stat-value">
                         {{ data_get($item, 'value', data_get($item, 'title', '')) }}
-                    </h3>
+                    </span>
                     <p>
                         {{ data_get($item, 'label', data_get($item, 'summary', '')) }}
                     </p>

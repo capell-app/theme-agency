@@ -1,32 +1,39 @@
 @php
-    $stories = data_get($section, 'items', data_get($section, 'stories', [
-        ['title' => __('capell-theme-raw-index::sections.events.planning_title'), 'summary' => __('capell-theme-raw-index::sections.events.planning_summary')],
-        ['title' => __('capell-theme-raw-index::sections.events.workshop_title'), 'summary' => __('capell-theme-raw-index::sections.events.workshop_summary')],
-        ['title' => __('capell-theme-raw-index::sections.events.systems_title'), 'summary' => __('capell-theme-raw-index::sections.events.systems_summary')],
-    ]));
+    $items = data_get($section, 'items', data_get($section, 'stories', []));
 @endphp
 
-<section class="editorial-section">
-    <div class="editorial-section-inner">
-        <p class="editorial-kicker">
-            {{ __('capell-theme-raw-index::sections.events.kicker') }}
+<section
+    id="archive-dates"
+    class="rwi-section"
+>
+    <div class="rwi-section-inner">
+        <span class="rwi-index-tag">05</span>
+        <p class="rwi-kicker">
+            {{ __('capell-theme-raw-index::sections.dates.kicker') }}
         </p>
         <h2>
-            {{ data_get($section, 'heading', __('capell-theme-raw-index::sections.events.heading')) }}
+            {{ data_get($section, 'heading', __('capell-theme-raw-index::sections.dates.heading')) }}
         </h2>
-        <div class="editorial-grid">
-            @foreach ($stories as $story)
-                <article class="editorial-card">
-                    <p class="editorial-meta">
-                        {{ data_get($story, 'meta', data_get($story, 'category', '')) }}
+        <p class="rwi-lede">
+            {{ data_get($section, 'summary', __('capell-theme-raw-index::sections.dates.summary')) }}
+        </p>
+
+        <div
+            class="rwi-ledger"
+            style="margin-top: 2rem"
+        >
+            @foreach ($items as $item)
+                <div class="rwi-ledger-row">
+                    <span class="rwi-ledger-date">
+                        {{ data_get($item, 'title', data_get($item, 'name', '')) }}
+                    </span>
+                    <p class="rwi-meta">
+                        {{ data_get($item, 'meta', data_get($item, 'category', '')) }}
                     </p>
-                    <h3>
-                        {{ data_get($story, 'title', data_get($story, 'name', '')) }}
-                    </h3>
                     <p>
-                        {{ data_get($story, 'summary', data_get($story, 'description', '')) }}
+                        {{ data_get($item, 'summary', data_get($item, 'description', '')) }}
                     </p>
-                </article>
+                </div>
             @endforeach
         </div>
     </div>

@@ -24,7 +24,7 @@
         }
     },
     "require": {
-        "php": "^8.3",
+        "php": "^8.4",
         "capell-app/address": "^4.0 || 4.x-dev",
         "capell-app/bookings": "^4.0 || 4.x-dev",
         "capell-app/core": "^4.0 || 4.x-dev",

@@ -1,33 +1,56 @@
 @php
-    $stories = data_get($section, 'items', data_get($section, 'stories', [
-        ['title' => __('capell-theme-scoreboard-showcase::sections.events.planning_title'), 'summary' => __('capell-theme-scoreboard-showcase::sections.events.planning_summary')],
-        ['title' => __('capell-theme-scoreboard-showcase::sections.events.workshop_title'), 'summary' => __('capell-theme-scoreboard-showcase::sections.events.workshop_summary')],
-        ['title' => __('capell-theme-scoreboard-showcase::sections.events.systems_title'), 'summary' => __('capell-theme-scoreboard-showcase::sections.events.systems_summary')],
-    ]));
+    $heading = data_get($section, 'heading', __('capell-theme-scoreboard-showcase::sections.voting.heading'));
+    $summary = data_get($section, 'summary', __('capell-theme-scoreboard-showcase::sections.voting.summary'));
+    $items = data_get($section, 'items', []);
 @endphp
 
-<section class="editorial-section">
-    <div class="editorial-section-inner">
-        <p class="editorial-kicker">
-            {{ __('capell-theme-scoreboard-showcase::sections.events.kicker') }}
+<section
+    id="voting-status"
+    class="sbs-section"
+>
+    <div class="sbs-section-inner">
+        <p class="sbs-kicker">
+            {{ __('capell-theme-scoreboard-showcase::sections.voting.kicker') }}
         </p>
-        <h2>
-            {{ data_get($section, 'heading', __('capell-theme-scoreboard-showcase::sections.events.heading')) }}
-        </h2>
-        <div class="editorial-grid">
-            @foreach ($stories as $story)
-                <article class="editorial-card">
-                    <p class="editorial-meta">
-                        {{ data_get($story, 'meta', data_get($story, 'category', '')) }}
-                    </p>
-                    <h3>
-                        {{ data_get($story, 'title', data_get($story, 'name', '')) }}
-                    </h3>
-                    <p>
-                        {{ data_get($story, 'summary', data_get($story, 'description', '')) }}
-                    </p>
-                </article>
-            @endforeach
+        <h2>{{ $heading }}</h2>
+        <p class="sbs-lede">{{ $summary }}</p>
+
+        <div class="sbs-vote-panel">
+            <div class="sbs-vote-status-bar">
+                <span class="sbs-vote-status-pill">
+                    {{ __('capell-theme-scoreboard-showcase::sections.voting.status_open') }}
+                </span>
+            </div>
+
+            <div class="sbs-vote-rows">
+                @foreach ($items as $item)
+                    @php
+                        $itemMeta = (string) data_get($item, 'meta', '');
+                        $tally = null;
+
+                        if (preg_match('/\d[\d,]*/', $itemMeta, $matches) === 1) {
+                            $tally = $matches[0];
+                        }
+                    @endphp
+
+                    <div class="sbs-vote-row">
+                        <span class="sbs-vote-position">
+                            {{ str_pad((string) $loop->iteration, 2, '0', STR_PAD_LEFT) }}
+                        </span>
+                        <div>
+                            <p class="sbs-vote-title">
+                                {{ data_get($item, 'title', data_get($item, 'name', '')) }}
+                            </p>
+                            <p class="sbs-vote-meta">
+                                {{ data_get($item, 'summary', data_get($item, 'description', '')) }}
+                            </p>
+                        </div>
+                        <span class="sbs-vote-tally">
+                            {{ $tally ?? $itemMeta }}
+                        </span>
+                    </div>
+                @endforeach
+            </div>
         </div>
     </div>
 </section>

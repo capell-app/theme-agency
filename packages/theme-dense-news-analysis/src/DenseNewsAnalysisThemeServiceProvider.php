@@ -6,13 +6,15 @@ namespace Capell\ThemeStudio\DenseNewsAnalysis;
 
 use Capell\Core\Data\VendorAssetData;
 use Capell\Core\Enums\FrontendRuntime;
+use Capell\Core\Enums\VendorAssetEnum;
 use Capell\Core\Facades\CapellCore;
 use Capell\Core\ThemeStudio\Contracts\SectionRenderer;
 use Capell\Core\ThemeStudio\Data\ThemeDefinitionData;
 use Capell\Core\ThemeStudio\Data\ThemePresetData;
-use Capell\Core\ThemeStudio\Rendering\BladeThemeRenderer;
 use Capell\Core\ThemeStudio\Rendering\ViewSectionRenderer;
 use Capell\Core\ThemeStudio\Theme\ThemeRegistry;
+use Capell\FoundationTheme\Rendering\ChromeSplitBladeThemeRenderer;
+use Capell\FoundationTheme\Support\Editor\StandardThemeEditorSchema;
 use Capell\ThemeStudio\DenseNewsAnalysis\Console\Commands\DemoCommand;
 use Illuminate\Support\ServiceProvider;
 use Override;
@@ -41,11 +43,11 @@ final class DenseNewsAnalysisThemeServiceProvider extends ServiceProvider
                     description: 'Dense News Analysis visual preset for serious news hierarchy, compact story grids, live labels, topic navigation, opinion blocks, video rows, missed-it recaps, and newsletter inserts.',
                     previewImage: '/vendor/capell/themes/dense-news-analysis.jpg',
                     values: [
-                        'primaryColor' => '#111111',
-                        'accentColor' => '#b21f2d',
-                        'neutralColor' => '#111111',
-                        'surfaceColor' => '#ffffff',
-                        'foregroundColor' => '#111111',
+                        'primaryColor' => '#17140f',
+                        'accentColor' => '#b3261e',
+                        'neutralColor' => '#17140f',
+                        'surfaceColor' => '#faf7f1',
+                        'foregroundColor' => '#17140f',
                         'headingFont' => 'sora',
                         'bodyFont' => 'inter',
                         'spacing' => 'balanced',
@@ -54,16 +56,44 @@ final class DenseNewsAnalysisThemeServiceProvider extends ServiceProvider
                         'navigationStyle' => 'prominent',
                         'layoutPresentation' => 'editorial',
                         'motionIntensity' => 'subtle',
-                        'mediaTreatment' => 'photographic',
-                        'radius' => 'md',
-                        'headingScale' => 'balanced',
-                        'cardDensity' => 'airy',
+                        'mediaTreatment' => 'illustrated',
+                        'radius' => 'none',
+                        'headingScale' => 'compact',
+                        'cardDensity' => 'compact',
+                    ],
+                ),
+                new ThemePresetData(
+                    key: 'wire-desk',
+                    name: 'Wire Desk',
+                    description: 'Starker teletype-inspired preset with a colder ink palette, tighter grids, and near-static motion for high-density wire and analysis desks.',
+                    previewImage: '/vendor/capell/themes/dense-news-analysis.jpg',
+                    values: [
+                        'primaryColor' => '#0b0d10',
+                        'accentColor' => '#1f6feb',
+                        'neutralColor' => '#0b0d10',
+                        'surfaceColor' => '#eef1f4',
+                        'foregroundColor' => '#0b0d10',
+                        'headingFont' => 'sora',
+                        'bodyFont' => 'inter',
+                        'spacing' => 'tight',
+                        'alignment' => 'left',
+                        'cardStyle' => 'bordered',
+                        'navigationStyle' => 'prominent',
+                        'layoutPresentation' => 'editorial',
+                        'motionIntensity' => 'none',
+                        'mediaTreatment' => 'illustrated',
+                        'radius' => 'none',
+                        'headingScale' => 'compact',
+                        'cardDensity' => 'tight',
                     ],
                 ),
             ],
             assets: ['css' => 'vendor/capell/themes/dense-news-analysis.css'],
             runtime: FrontendRuntime::Blade,
             extends: 'default',
+            frontend: [
+                'editor' => StandardThemeEditorSchema::definition(),
+            ],
         );
     }
 
@@ -88,7 +118,7 @@ final class DenseNewsAnalysisThemeServiceProvider extends ServiceProvider
 
         $registry->register(
             definition: self::definition(),
-            themeRenderer: new BladeThemeRenderer(
+            themeRenderer: new ChromeSplitBladeThemeRenderer(
                 themeKey: self::THEME_KEY,
                 layoutView: 'capell-theme-dense-news-analysis::page',
                 sectionRenderers: $sectionRenderers,
@@ -99,7 +129,12 @@ final class DenseNewsAnalysisThemeServiceProvider extends ServiceProvider
 
     private function registerVendorCssAssets(): void
     {
-        CapellCore::registerVendorAsset(VendorAssetData::tailwindImport('resources/css/theme-dense-news-analysis.css', self::$packageName));
+        CapellCore::registerVendorAsset(new VendorAssetData(
+            type: VendorAssetEnum::TailwindImport,
+            value: 'resources/css/theme-dense-news-analysis.css',
+            packageName: self::$packageName,
+            condition: 'theme-css:dense-news-analysis',
+        ));
         CapellCore::registerVendorAsset(VendorAssetData::tailwindSource('resources/views/**/*.blade.php', self::$packageName));
     }
 

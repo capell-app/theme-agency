@@ -6,13 +6,15 @@ namespace Capell\ThemeStudio\EditorialSerif;
 
 use Capell\Core\Data\VendorAssetData;
 use Capell\Core\Enums\FrontendRuntime;
+use Capell\Core\Enums\VendorAssetEnum;
 use Capell\Core\Facades\CapellCore;
 use Capell\Core\ThemeStudio\Contracts\SectionRenderer;
 use Capell\Core\ThemeStudio\Data\ThemeDefinitionData;
 use Capell\Core\ThemeStudio\Data\ThemePresetData;
-use Capell\Core\ThemeStudio\Rendering\BladeThemeRenderer;
 use Capell\Core\ThemeStudio\Rendering\ViewSectionRenderer;
 use Capell\Core\ThemeStudio\Theme\ThemeRegistry;
+use Capell\FoundationTheme\Rendering\ChromeSplitBladeThemeRenderer;
+use Capell\FoundationTheme\Support\Editor\StandardThemeEditorSchema;
 use Capell\ThemeStudio\EditorialSerif\Console\Commands\DemoCommand;
 use Illuminate\Support\ServiceProvider;
 use Override;
@@ -60,10 +62,38 @@ final class EditorialSerifThemeServiceProvider extends ServiceProvider
                         'cardDensity' => 'comfortable',
                     ],
                 ),
+                new ThemePresetData(
+                    key: 'midnight',
+                    name: 'Midnight Edition',
+                    description: 'A warm, inverted counterpart for late-night reading — cream ink on near-black with a warmed ember accent, keeping the serif, dramatic, airy, flat-card identity intact.',
+                    previewImage: '/vendor/capell/themes/editorial-serif.jpg',
+                    values: [
+                        'primaryColor' => '#e6b17a',
+                        'accentColor' => '#c2703d',
+                        'neutralColor' => '#d9d2c7',
+                        'surfaceColor' => '#141110',
+                        'foregroundColor' => '#f3ede2',
+                        'headingFont' => 'fraunces',
+                        'bodyFont' => 'newsreader',
+                        'spacing' => 'airy',
+                        'alignment' => 'left',
+                        'cardStyle' => 'flat',
+                        'navigationStyle' => 'minimal',
+                        'layoutPresentation' => 'editorial',
+                        'motionIntensity' => 'subtle',
+                        'mediaTreatment' => 'framed',
+                        'radius' => 'none',
+                        'headingScale' => 'dramatic',
+                        'cardDensity' => 'comfortable',
+                    ],
+                ),
             ],
             assets: ['css' => 'vendor/capell/themes/editorial-serif.css'],
             runtime: FrontendRuntime::Blade,
             extends: 'default',
+            frontend: [
+                'editor' => StandardThemeEditorSchema::definition(),
+            ],
         );
     }
 
@@ -88,7 +118,7 @@ final class EditorialSerifThemeServiceProvider extends ServiceProvider
 
         $registry->register(
             definition: self::definition(),
-            themeRenderer: new BladeThemeRenderer(
+            themeRenderer: new ChromeSplitBladeThemeRenderer(
                 themeKey: self::THEME_KEY,
                 layoutView: 'capell-theme-editorial-serif::page',
                 sectionRenderers: $sectionRenderers,
@@ -99,7 +129,12 @@ final class EditorialSerifThemeServiceProvider extends ServiceProvider
 
     private function registerVendorCssAssets(): void
     {
-        CapellCore::registerVendorAsset(VendorAssetData::tailwindImport('resources/css/theme-editorial-serif.css', self::$packageName));
+        CapellCore::registerVendorAsset(new VendorAssetData(
+            type: VendorAssetEnum::TailwindImport,
+            value: 'resources/css/theme-editorial-serif.css',
+            packageName: self::$packageName,
+            condition: 'theme-css:editorial-serif',
+        ));
         CapellCore::registerVendorAsset(VendorAssetData::tailwindSource('resources/views/**/*.blade.php', self::$packageName));
     }
 

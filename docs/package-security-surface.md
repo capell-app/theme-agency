@@ -52,7 +52,6 @@ Cache posture uses three terms: `safe` means public output is expected to avoid 
 | capell-app/experiments | standard | 0 | - | - | - | - | permissions; 16 permissions | safe; not cacheable; no sensitive output; varies by site, visitor |
 | capell-app/filament-peek | standard | 1 | - | - | capell-filament-peek.preview | - | panel-auth | not safe; not cacheable; sensitive output; varies by admin-user, snapshot-token |
 | capell-app/form-builder | sensitive | 0 | - | - | - | - | policies | safe; not cacheable; no sensitive output; varies by none |
-| capell-app/theme-foundation | low | 0 | - | - | - | - | panel-auth | safe; not cacheable; no sensitive output; varies by site, locale |
 | capell-app/frontend-authoring | critical | 2 | - | capell-frontend.beacon | capell-frontend.authoring.edit | - | permissions; 1 permission | safe; not cacheable; no sensitive output; varies by site, locale |
 | capell-app/frontend-optimizer | standard | 0 | - | - | - | frontend_render_profiles.hash | panel-auth | safe; not cacheable; no sensitive output; varies by site, locale |
 | capell-app/ga4-reports | sensitive | 0 | - | - | - | - | panel-auth | safe; cacheable; no sensitive output; varies by property_id, date_range, limit |
@@ -95,6 +94,7 @@ Cache posture uses three terms: `safe` means public output is expected to avoid 
 | capell-app/theme-editorial-serif | low | 0 | - | - | - | - | none | safe; not cacheable; no sensitive output; varies by site, locale |
 | capell-app/theme-experimental-directory | low | 0 | - | - | - | - | none | safe; not cacheable; no sensitive output; varies by site, locale |
 | capell-app/theme-filter-gallery | low | 0 | - | - | - | - | none | safe; not cacheable; no sensitive output; varies by site, locale |
+| capell-app/theme-foundation | low | 0 | - | - | - | - | panel-auth | safe; not cacheable; no sensitive output; varies by site, locale |
 | capell-app/theme-global-culture-magazine | low | 0 | - | - | - | - | none | safe; not cacheable; no sensitive output; varies by site, locale |
 | capell-app/theme-landing-gallery | low | 0 | - | - | - | - | none | safe; not cacheable; no sensitive output; varies by site, locale |
 | capell-app/theme-liquid-glass | low | 0 | - | - | - | - | none | safe; cacheable; no sensitive output; varies by site, locale |

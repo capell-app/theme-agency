@@ -33,16 +33,12 @@ use Capell\Core\ThemeStudio\Theme\ThemeRegistry;
 use Capell\FoundationTheme\Providers\FoundationThemeServiceProvider;
 use Capell\Frontend\Facades\Frontend;
 use Capell\Tests\Packages\Fixtures\ThemeFrontendStringSectionRenderer;
-use Capell\ThemeStudio\Agency\AgencyThemeServiceProvider;
-use Capell\ThemeStudio\Commerce\CommerceThemeServiceProvider;
-use Capell\ThemeStudio\Corporate\CorporateThemeServiceProvider;
-use Capell\ThemeStudio\Education\EducationThemeServiceProvider;
-use Capell\ThemeStudio\Healthcare\HealthcareThemeServiceProvider;
-use Capell\ThemeStudio\Knowledge\KnowledgeThemeServiceProvider;
-use Capell\ThemeStudio\LocalServices\LocalServicesThemeServiceProvider;
-use Capell\ThemeStudio\Nonprofit\NonprofitThemeServiceProvider;
-use Capell\ThemeStudio\Portfolio\PortfolioThemeServiceProvider;
-use Capell\ThemeStudio\Saas\SaasThemeServiceProvider;
+use Capell\ThemeStudio\CaseStudyPlatform\CaseStudyPlatformThemeServiceProvider;
+use Capell\ThemeStudio\DarkProductSystem\DarkProductSystemThemeServiceProvider;
+use Capell\ThemeStudio\DenseNewsAnalysis\DenseNewsAnalysisThemeServiceProvider;
+use Capell\ThemeStudio\ExperimentalDirectory\ExperimentalDirectoryThemeServiceProvider;
+use Capell\ThemeStudio\PremiumPortfolioCollection\PremiumPortfolioCollectionThemeServiceProvider;
+use Capell\ThemeStudio\RawIndex\RawIndexThemeServiceProvider;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
@@ -57,16 +53,12 @@ function themeFrontendFirstPartyThemes(): array
 {
     return [
         'default' => ['provider' => FoundationThemeServiceProvider::class, 'package' => FoundationThemeServiceProvider::$packageName],
-        'agency' => ['provider' => AgencyThemeServiceProvider::class, 'package' => AgencyThemeServiceProvider::$packageName],
-        'corporate' => ['provider' => CorporateThemeServiceProvider::class, 'package' => CorporateThemeServiceProvider::$packageName],
-        'commerce' => ['provider' => CommerceThemeServiceProvider::class, 'package' => CommerceThemeServiceProvider::$packageName],
-        'healthcare' => ['provider' => HealthcareThemeServiceProvider::class, 'package' => HealthcareThemeServiceProvider::$packageName],
-        'saas' => ['provider' => SaasThemeServiceProvider::class, 'package' => SaasThemeServiceProvider::$packageName],
-        'education' => ['provider' => EducationThemeServiceProvider::class, 'package' => EducationThemeServiceProvider::$packageName],
-        'knowledge' => ['provider' => KnowledgeThemeServiceProvider::class, 'package' => KnowledgeThemeServiceProvider::$packageName],
-        'local-services' => ['provider' => LocalServicesThemeServiceProvider::class, 'package' => LocalServicesThemeServiceProvider::$packageName],
-        'nonprofit' => ['provider' => NonprofitThemeServiceProvider::class, 'package' => NonprofitThemeServiceProvider::$packageName],
-        'portfolio' => ['provider' => PortfolioThemeServiceProvider::class, 'package' => PortfolioThemeServiceProvider::$packageName],
+        'case-study-platform' => ['provider' => CaseStudyPlatformThemeServiceProvider::class, 'package' => CaseStudyPlatformThemeServiceProvider::$packageName],
+        'dark-product-system' => ['provider' => DarkProductSystemThemeServiceProvider::class, 'package' => DarkProductSystemThemeServiceProvider::$packageName],
+        'dense-news-analysis' => ['provider' => DenseNewsAnalysisThemeServiceProvider::class, 'package' => DenseNewsAnalysisThemeServiceProvider::$packageName],
+        'experimental-directory' => ['provider' => ExperimentalDirectoryThemeServiceProvider::class, 'package' => ExperimentalDirectoryThemeServiceProvider::$packageName],
+        'premium-portfolio-collection' => ['provider' => PremiumPortfolioCollectionThemeServiceProvider::class, 'package' => PremiumPortfolioCollectionThemeServiceProvider::$packageName],
+        'raw-index' => ['provider' => RawIndexThemeServiceProvider::class, 'package' => RawIndexThemeServiceProvider::$packageName],
     ];
 }
 

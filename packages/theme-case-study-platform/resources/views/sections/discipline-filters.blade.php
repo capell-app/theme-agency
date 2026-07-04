@@ -1,28 +1,40 @@
 @php
+    $heading = data_get($section, 'heading', __('capell-theme-case-study-platform::sections.discipline_filters.heading'));
+    $summary = data_get($section, 'summary', __('capell-theme-case-study-platform::sections.discipline_filters.summary'));
     $items = data_get($section, 'items', [
-        ['title' => __('capell-theme-case-study-platform::sections.topics.product_title'), 'summary' => __('capell-theme-case-study-platform::sections.topics.product_summary')],
-        ['title' => __('capell-theme-case-study-platform::sections.topics.design_title'), 'summary' => __('capell-theme-case-study-platform::sections.topics.design_summary')],
-        ['title' => __('capell-theme-case-study-platform::sections.topics.advice_title'), 'summary' => __('capell-theme-case-study-platform::sections.topics.advice_summary')],
-        ['title' => __('capell-theme-case-study-platform::sections.topics.culture_title'), 'summary' => __('capell-theme-case-study-platform::sections.topics.culture_summary')],
+        ['title' => __('capell-theme-case-study-platform::sections.discipline_filters.product_title'), 'summary' => __('capell-theme-case-study-platform::sections.discipline_filters.product_summary')],
+        ['title' => __('capell-theme-case-study-platform::sections.discipline_filters.brand_title'), 'summary' => __('capell-theme-case-study-platform::sections.discipline_filters.brand_summary')],
+        ['title' => __('capell-theme-case-study-platform::sections.discipline_filters.motion_title'), 'summary' => __('capell-theme-case-study-platform::sections.discipline_filters.motion_summary')],
+        ['title' => __('capell-theme-case-study-platform::sections.discipline_filters.engineering_title'), 'summary' => __('capell-theme-case-study-platform::sections.discipline_filters.engineering_summary')],
     ]);
 @endphp
 
-<section class="editorial-section">
-    <div class="editorial-section-inner">
-        <p class="editorial-kicker">
-            {{ __('capell-theme-case-study-platform::sections.topics.kicker') }}
+<section
+    id="discipline-filters"
+    class="csp-section"
+>
+    <div class="csp-section-inner">
+        <p class="csp-kicker">
+            {{ __('capell-theme-case-study-platform::sections.discipline_filters.heading') }}
         </p>
-        <h2>
-            {{ data_get($section, 'heading', __('capell-theme-case-study-platform::sections.topics.heading')) }}
-        </h2>
-        <div class="editorial-grid">
+        <h2>{{ $heading }}</h2>
+        <p class="csp-lede">{{ $summary }}</p>
+
+        <div class="csp-pill-row">
             @foreach ($items as $item)
-                <article class="editorial-card">
-                    <h3>
-                        {{ data_get($item, 'title', data_get($item, 'name', '')) }}
-                    </h3>
-                    <p>{{ data_get($item, 'summary', '') }}</p>
-                </article>
+                @php
+                    $itemUrl = data_get($item, 'url', data_get($item, 'href', '#project-feed'));
+                @endphp
+
+                <a
+                    class="csp-pill"
+                    href="{{ $itemUrl }}"
+                >
+                    {{ data_get($item, 'title', data_get($item, 'name', '')) }}
+                    <span class="csp-pill-summary">
+                        {{ data_get($item, 'summary', '') }}
+                    </span>
+                </a>
             @endforeach
         </div>
     </div>

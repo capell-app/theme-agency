@@ -6,14 +6,29 @@
     ]);
 @endphp
 
-<section class="editorial-section">
-    <div class="editorial-section-inner">
-        <p class="editorial-kicker">
-            {{ __('capell-theme-dense-news-analysis::sections.proof.kicker') }}
-        </p>
-        <div class="editorial-grid">
+<section class="dnews-section">
+    <div class="dnews-section-inner">
+        <div class="dnews-section-head">
+            <p class="dnews-kicker">
+                {{ __('capell-theme-dense-news-analysis::sections.proof.kicker') }}
+            </p>
+            @if (data_get($section, 'heading') !== null)
+                <h2>{{ data_get($section, 'heading') }}</h2>
+            @endif
+
+            @if (data_get($section, 'summary') !== null)
+                <p class="dnews-lede">
+                    {{ data_get($section, 'summary') }}
+                </p>
+            @endif
+        </div>
+
+        <div class="dnews-desk">
             @foreach ($items as $item)
-                <article class="editorial-card">
+                <article>
+                    <p class="dnews-meta">
+                        {{ str_pad((string) $loop->iteration, 2, '0', STR_PAD_LEFT) }}
+                    </p>
                     <h3>
                         {{ data_get($item, 'value', data_get($item, 'title', '')) }}
                     </h3>

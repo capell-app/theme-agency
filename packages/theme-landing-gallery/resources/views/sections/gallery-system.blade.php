@@ -1,28 +1,29 @@
 @php
     $items = data_get($section, 'items', [
-        ['title' => __('capell-theme-landing-gallery::sections.authors.product_title'), 'summary' => __('capell-theme-landing-gallery::sections.authors.product_summary')],
-        ['title' => __('capell-theme-landing-gallery::sections.authors.advice_title'), 'summary' => __('capell-theme-landing-gallery::sections.authors.advice_summary')],
-        ['title' => __('capell-theme-landing-gallery::sections.authors.company_title'), 'summary' => __('capell-theme-landing-gallery::sections.authors.company_summary')],
+        ['title' => 'Saved collections', 'summary' => 'Group the pages you love into named boards and share them with the whole team.'],
+        ['title' => 'Votes & comments', 'summary' => 'See what the community rates highest and read the notes on what makes each page work.'],
+        ['title' => 'Live template prices', 'summary' => 'Every paid template shows its current price so you can budget the build before you start.'],
     ]);
 @endphp
 
 <section
-    class="editorial-section"
-    style="background: var(--editorial-field)"
+    id="gallery-system"
+    class="lga-section lga-section-dark"
 >
-    <div class="editorial-section-inner">
-        <p class="editorial-kicker">
-            {{ __('capell-theme-landing-gallery::sections.authors.kicker') }}
+    <div class="lga-section-inner">
+        <p class="lga-eyebrow">
+            {{ __('capell-theme-landing-gallery::sections.gallery_system.kicker') }}
         </p>
         <h2>
-            {{ data_get($section, 'heading', __('capell-theme-landing-gallery::sections.authors.heading')) }}
+            {{ data_get($section, 'heading', __('capell-theme-landing-gallery::sections.gallery_system.heading')) }}
         </h2>
-        <p class="editorial-lede">
-            {{ data_get($section, 'summary', __('capell-theme-landing-gallery::sections.authors.summary')) }}
+        <p class="lga-lede">
+            {{ data_get($section, 'summary', __('capell-theme-landing-gallery::sections.gallery_system.summary')) }}
         </p>
-        <div class="editorial-grid">
+
+        <div class="lga-grid">
             @foreach ($items as $item)
-                <article class="editorial-card">
+                <article class="lga-card">
                     <h3>
                         {{ data_get($item, 'title', data_get($item, 'name', '')) }}
                     </h3>

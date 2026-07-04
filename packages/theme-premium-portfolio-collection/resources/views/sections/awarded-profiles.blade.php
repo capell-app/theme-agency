@@ -1,34 +1,77 @@
 @php
     $heading = data_get($section, 'heading', __('capell-theme-premium-portfolio-collection::sections.updates.heading'));
     $summary = data_get($section, 'summary', __('capell-theme-premium-portfolio-collection::sections.updates.summary'));
-    $actions = data_get($section, 'items', [
+    $items = data_get($section, 'items', [
         ['title' => __('capell-theme-premium-portfolio-collection::sections.updates.release_title'), 'summary' => __('capell-theme-premium-portfolio-collection::sections.updates.release_summary')],
         ['title' => __('capell-theme-premium-portfolio-collection::sections.updates.beta_title'), 'summary' => __('capell-theme-premium-portfolio-collection::sections.updates.beta_summary')],
     ]);
+    $ctaLabel = data_get($section, 'label', __('capell-theme-premium-portfolio-collection::sections.updates.button'));
+    $ctaUrl = data_get($section, 'url', '#awards');
 @endphp
 
-<section class="editorial-section editorial-section-dark">
-    <div class="editorial-section-inner editorial-split">
+<section
+    id="awards"
+    class="ppc-section ppc-section-dark"
+>
+    <div class="ppc-section-inner ppc-split">
         <div>
-            <p class="editorial-kicker">
+            <p class="ppc-kicker">
                 {{ __('capell-theme-premium-portfolio-collection::sections.updates.kicker') }}
             </p>
             <h2>{{ $heading }}</h2>
-            <p class="editorial-lede">{{ $summary }}</p>
+            <p class="ppc-lede">{{ $summary }}</p>
             <a
-                class="editorial-button"
-                href="{{ data_get($section, 'url', '/') }}"
+                class="ppc-button"
+                href="{{ $ctaUrl }}"
             >
-                {{ data_get($section, 'label', __('capell-theme-premium-portfolio-collection::sections.updates.button')) }}
+                {{ $ctaLabel }}
             </a>
         </div>
-        <div class="editorial-grid">
-            @foreach ($actions as $action)
-                <article class="editorial-card">
+        <div class="ppc-grid">
+            @foreach ($items as $item)
+                @php
+                    $itemImage = data_get($item, 'image', data_get($item, 'imageUrl'));
+                    $itemAlt = data_get($item, 'imageAlt', data_get($item, 'title', ''));
+                    $itemUrl = data_get($item, 'url', data_get($item, 'href'));
+                    $award = data_get($item, 'award', __('capell-theme-premium-portfolio-collection::sections.updates.default_award'));
+                @endphp
+
+                <article class="ppc-card">
+                    <figure class="ppc-plate">
+                        <div class="ppc-plate-frame">
+                            <span class="ppc-badge">{{ $award }}</span>
+
+                            @if (filled($itemImage))
+                                <img
+                                    src="{{ $itemImage }}"
+                                    alt="{{ $itemAlt }}"
+                                    loading="lazy"
+                                    decoding="async"
+                                    width="400"
+                                    height="300"
+                                    class="ppc-plate-media"
+                                />
+                            @else
+                                <div
+                                    class="ppc-plate-media ppc-plate-media-empty"
+                                    aria-hidden="true"
+                                ></div>
+                            @endif
+                        </div>
+                    </figure>
                     <h3>
-                        {{ data_get($action, 'title', data_get($action, 'name', '')) }}
+                        @if (filled($itemUrl))
+                            <a
+                                class="ppc-title-link"
+                                href="{{ $itemUrl }}"
+                            >
+                                {{ data_get($item, 'title', data_get($item, 'name', '')) }}
+                            </a>
+                        @else
+                            {{ data_get($item, 'title', data_get($item, 'name', '')) }}
+                        @endif
                     </h3>
-                    <p>{{ data_get($action, 'summary', '') }}</p>
+                    <p>{{ data_get($item, 'summary', '') }}</p>
                 </article>
             @endforeach
         </div>

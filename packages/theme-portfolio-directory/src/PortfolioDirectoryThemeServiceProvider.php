@@ -6,13 +6,15 @@ namespace Capell\ThemeStudio\PortfolioDirectory;
 
 use Capell\Core\Data\VendorAssetData;
 use Capell\Core\Enums\FrontendRuntime;
+use Capell\Core\Enums\VendorAssetEnum;
 use Capell\Core\Facades\CapellCore;
 use Capell\Core\ThemeStudio\Contracts\SectionRenderer;
 use Capell\Core\ThemeStudio\Data\ThemeDefinitionData;
 use Capell\Core\ThemeStudio\Data\ThemePresetData;
-use Capell\Core\ThemeStudio\Rendering\BladeThemeRenderer;
 use Capell\Core\ThemeStudio\Rendering\ViewSectionRenderer;
 use Capell\Core\ThemeStudio\Theme\ThemeRegistry;
+use Capell\FoundationTheme\Rendering\ChromeSplitBladeThemeRenderer;
+use Capell\FoundationTheme\Support\Editor\StandardThemeEditorSchema;
 use Capell\ThemeStudio\PortfolioDirectory\Console\Commands\DemoCommand;
 use Illuminate\Support\ServiceProvider;
 use Override;
@@ -60,9 +62,37 @@ final class PortfolioDirectoryThemeServiceProvider extends ServiceProvider
                         'cardDensity' => 'airy',
                     ],
                 ),
+                new ThemePresetData(
+                    key: 'studio-noir',
+                    name: 'Studio Noir',
+                    description: 'Studio Noir visual preset for a professional dark gallery with deep-teal accents, compact filters, dense preview tiles, and a confident, understated career-resources section.',
+                    previewImage: '/vendor/capell/themes/portfolio-directory.jpg',
+                    values: [
+                        'primaryColor' => '#e6f2f0',
+                        'accentColor' => '#0f766e',
+                        'neutralColor' => '#0b1615',
+                        'surfaceColor' => '#0f1e1c',
+                        'foregroundColor' => '#e6f2f0',
+                        'headingFont' => 'sora',
+                        'bodyFont' => 'inter',
+                        'spacing' => 'compact',
+                        'alignment' => 'left',
+                        'cardStyle' => 'flat',
+                        'navigationStyle' => 'minimal',
+                        'layoutPresentation' => 'editorial',
+                        'motionIntensity' => 'none',
+                        'mediaTreatment' => 'illustrated',
+                        'radius' => 'sm',
+                        'headingScale' => 'compact',
+                        'cardDensity' => 'dense',
+                    ],
+                ),
             ],
             assets: ['css' => 'vendor/capell/themes/portfolio-directory.css'],
             runtime: FrontendRuntime::Blade,
+            frontend: [
+                'editor' => StandardThemeEditorSchema::definition(),
+            ],
             extends: 'default',
         );
     }
@@ -88,7 +118,7 @@ final class PortfolioDirectoryThemeServiceProvider extends ServiceProvider
 
         $registry->register(
             definition: self::definition(),
-            themeRenderer: new BladeThemeRenderer(
+            themeRenderer: new ChromeSplitBladeThemeRenderer(
                 themeKey: self::THEME_KEY,
                 layoutView: 'capell-theme-portfolio-directory::page',
                 sectionRenderers: $sectionRenderers,
@@ -99,7 +129,12 @@ final class PortfolioDirectoryThemeServiceProvider extends ServiceProvider
 
     private function registerVendorCssAssets(): void
     {
-        CapellCore::registerVendorAsset(VendorAssetData::tailwindImport('resources/css/theme-portfolio-directory.css', self::$packageName));
+        CapellCore::registerVendorAsset(new VendorAssetData(
+            type: VendorAssetEnum::TailwindImport,
+            value: 'resources/css/theme-portfolio-directory.css',
+            packageName: self::$packageName,
+            condition: 'theme-css:portfolio-directory',
+        ));
         CapellCore::registerVendorAsset(VendorAssetData::tailwindSource('resources/views/**/*.blade.php', self::$packageName));
     }
 

@@ -1,34 +1,41 @@
 @php
     $heading = data_get($section, 'heading', __('capell-theme-creative-culture-editorial::sections.updates.heading'));
     $summary = data_get($section, 'summary', __('capell-theme-creative-culture-editorial::sections.updates.summary'));
-    $actions = data_get($section, 'items', [
+    $quotes = data_get($section, 'items', [
         ['title' => __('capell-theme-creative-culture-editorial::sections.updates.release_title'), 'summary' => __('capell-theme-creative-culture-editorial::sections.updates.release_summary')],
         ['title' => __('capell-theme-creative-culture-editorial::sections.updates.beta_title'), 'summary' => __('capell-theme-creative-culture-editorial::sections.updates.beta_summary')],
     ]);
+    $url = data_get($section, 'url', '/');
+    $label = data_get($section, 'label', __('capell-theme-creative-culture-editorial::sections.updates.button'));
 @endphp
 
-<section class="editorial-section editorial-section-dark">
-    <div class="editorial-section-inner editorial-split">
+<section
+    id="opinion-block"
+    class="cce-section cce-section-dark"
+>
+    <div class="cce-section-inner cce-split">
         <div>
-            <p class="editorial-kicker">
+            <p class="cce-kicker">
                 {{ __('capell-theme-creative-culture-editorial::sections.updates.kicker') }}
             </p>
             <h2>{{ $heading }}</h2>
-            <p class="editorial-lede">{{ $summary }}</p>
-            <a
-                class="editorial-button"
-                href="{{ data_get($section, 'url', '/') }}"
-            >
-                {{ data_get($section, 'label', __('capell-theme-creative-culture-editorial::sections.updates.button')) }}
-            </a>
+            <p class="cce-lede">{{ $summary }}</p>
+            @if (filled($url))
+                <a
+                    class="cce-button"
+                    href="{{ $url }}"
+                >
+                    {{ $label }}
+                </a>
+            @endif
         </div>
-        <div class="editorial-grid">
-            @foreach ($actions as $action)
-                <article class="editorial-card">
+        <div class="cce-grid">
+            @foreach ($quotes as $quote)
+                <article class="cce-card">
                     <h3>
-                        {{ data_get($action, 'title', data_get($action, 'name', '')) }}
+                        {{ data_get($quote, 'title', data_get($quote, 'name', '')) }}
                     </h3>
-                    <p>{{ data_get($action, 'summary', '') }}</p>
+                    <p>{{ data_get($quote, 'summary', '') }}</p>
                 </article>
             @endforeach
         </div>

@@ -1,48 +1,64 @@
 @php
     $heading = data_get($section, 'heading', data_get($section, 'title', __('capell-theme-raw-index::sections.hero.heading')));
     $summary = data_get($section, 'summary', data_get($section, 'description', __('capell-theme-raw-index::sections.hero.summary')));
-    $primaryLabel = data_get($section, 'primary_label', __('capell-theme-raw-index::sections.hero.primary_label'));
-    $primaryUrl = data_get($section, 'primary_url', data_get($section, 'primary.href', '/'));
-    $secondaryLabel = data_get($section, 'secondary_label', __('capell-theme-raw-index::sections.hero.secondary_label'));
-    $secondaryUrl = data_get($section, 'secondary_url', data_get($section, 'secondary.href', '/'));
-    $notes = data_get($section, 'notes', [
-        __('capell-theme-raw-index::sections.hero.note_featured'),
-        __('capell-theme-raw-index::sections.hero.note_metadata'),
-        __('capell-theme-raw-index::sections.hero.note_newsletter'),
-    ]);
+    $actions = collect(data_get($section, 'actions', []))
+        ->filter(fn (mixed $action): bool => filled(data_get($action, 'label')))
+        ->values();
+
+    if ($actions->isEmpty()) {
+        $actions = collect([
+            [
+                'label' => data_get($section, 'primary_label', __('capell-theme-raw-index::sections.hero.primary_label')),
+                'url' => data_get($section, 'primary_url', data_get($section, 'primary.href', '/')),
+                'style' => 'primary',
+            ],
+            [
+                'label' => data_get($section, 'secondary_label', __('capell-theme-raw-index::sections.hero.secondary_label')),
+                'url' => data_get($section, 'secondary_url', data_get($section, 'secondary.href', '/')),
+                'style' => 'secondary',
+            ],
+        ]);
+    }
+
+    $kicker = data_get($section, 'kicker', data_get($section, 'eyebrow', __('capell-theme-raw-index::sections.hero.kicker')));
+    $mediaUrl = data_get($section, 'mediaUrl', data_get($section, 'media_url'));
+    $mediaAlt = data_get($section, 'mediaAlt', data_get($section, 'media_alt'));
 @endphp
 
-<section class="editorial-section editorial-section-dark">
-    <div class="editorial-section-inner editorial-hero-grid">
+<section class="rwi-section rwi-section-dark">
+    <div class="rwi-section-inner rwi-hero-grid">
         <div>
-            <p class="editorial-kicker">
-                {{ __('capell-theme-raw-index::sections.hero.kicker') }}
-            </p>
+            <p class="rwi-kicker">{{ $kicker }}</p>
             <h1>{{ $heading }}</h1>
-            <p class="editorial-lede">{{ $summary }}</p>
-            <div class="editorial-grid">
-                <a
-                    class="editorial-button"
-                    href="{{ $primaryUrl }}"
-                >
-                    {{ $primaryLabel }}
-                </a>
-                <a
-                    class="editorial-button editorial-button-secondary"
-                    href="{{ $secondaryUrl }}"
-                >
-                    {{ $secondaryLabel }}
-                </a>
+            <hr class="rwi-rule" />
+            <p class="rwi-lede">{{ $summary }}</p>
+            <div class="rwi-actions">
+                @foreach ($actions as $action)
+                    <a
+                        class="rwi-button {{ data_get($action, 'style') === 'secondary' ? 'rwi-button-secondary' : '' }}"
+                        href="{{ data_get($action, 'url', '/') }}"
+                    >
+                        {{ data_get($action, 'label') }}
+                    </a>
+                @endforeach
             </div>
         </div>
 
-        <aside class="editorial-card">
-            <p class="editorial-kicker">
-                {{ __('capell-theme-raw-index::sections.hero.panel_kicker') }}
-            </p>
-            @foreach ($notes as $note)
-                <p>{{ $note }}</p>
-            @endforeach
-        </aside>
+        @if (filled($mediaUrl))
+            <figure class="rwi-hero-plate">
+                <img
+                    src="{{ $mediaUrl }}"
+                    alt="{{ $mediaAlt ?: $heading }}"
+                    loading="eager"
+                    fetchpriority="high"
+                    decoding="async"
+                    class="rwi-hero-plate-media"
+                />
+                <figcaption>
+                    {{ __('capell-theme-raw-index::sections.plate.fig') }} 01 —
+                    {{ $mediaAlt ?? __('capell-theme-raw-index::sections.plate.caption') }}
+                </figcaption>
+            </figure>
+        @endif
     </div>
 </section>

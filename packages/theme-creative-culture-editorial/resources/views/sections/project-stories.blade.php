@@ -8,31 +8,62 @@
     ]);
 @endphp
 
-<section class="editorial-section">
-    <div class="editorial-section-inner">
-        <p class="editorial-kicker">
+<section
+    id="project-stories"
+    class="cce-section"
+>
+    <div class="cce-section-inner">
+        <p class="cce-kicker">
             {{ __('capell-theme-creative-culture-editorial::sections.stories.kicker') }}
         </p>
         <h2>{{ $heading }}</h2>
-        <p class="editorial-lede">{{ $summary }}</p>
+        <p class="cce-lede">{{ $summary }}</p>
 
-        <div class="editorial-grid">
+        <div class="cce-grid">
             @foreach ($items as $item)
-                <article class="editorial-card editorial-showcase-card">
+                @php
+                    $itemImage = data_get($item, 'image', data_get($item, 'imageUrl'));
+                    $itemAlt = data_get($item, 'imageAlt', data_get($item, 'title', ''));
+                    $itemUrl = data_get($item, 'url', data_get($item, 'href'));
+                    $itemInitial = mb_substr(trim((string) data_get($item, 'title', '')), 0, 1);
+                @endphp
+
+                <article class="cce-card">
+                    @if (filled($itemImage))
+                        <img
+                            src="{{ $itemImage }}"
+                            alt="{{ $itemAlt }}"
+                            loading="lazy"
+                            decoding="async"
+                            class="cce-media"
+                        />
+                    @else
+                        <div
+                            class="cce-media cce-media-empty"
+                            data-initial="{{ $itemInitial }}"
+                            aria-hidden="true"
+                        ></div>
+                    @endif
                     <h3>
-                        {{ data_get($item, 'title', data_get($item, 'name', '')) }}
+                        @if (filled($itemUrl))
+                            <a
+                                class="cce-title-link"
+                                href="{{ $itemUrl }}"
+                            >
+                                {{ data_get($item, 'title', data_get($item, 'name', '')) }}
+                            </a>
+                        @else
+                            {{ data_get($item, 'title', data_get($item, 'name', '')) }}
+                        @endif
                     </h3>
                     <p>
                         {{ data_get($item, 'summary', data_get($item, 'description', '')) }}
                     </p>
-                    <div class="editorial-showcase-specs">
-                        <span>
-                            {{ data_get($item, 'meta', data_get($item, 'category', __('capell-theme-creative-culture-editorial::sections.stories.default_meta'))) }}
-                        </span>
-                        <span>
-                            {{ data_get($item, 'care_note', __('capell-theme-creative-culture-editorial::sections.stories.care_note')) }}
-                        </span>
-                    </div>
+                    <p class="cce-meta">
+                        {{ data_get($item, 'meta', data_get($item, 'category', __('capell-theme-creative-culture-editorial::sections.stories.default_meta'))) }}
+                        &middot;
+                        {{ data_get($item, 'care_note', __('capell-theme-creative-culture-editorial::sections.stories.care_note')) }}
+                    </p>
                 </article>
             @endforeach
         </div>

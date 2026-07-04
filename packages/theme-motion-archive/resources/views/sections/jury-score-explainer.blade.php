@@ -1,32 +1,55 @@
 @php
-    $stories = data_get($section, 'items', data_get($section, 'stories', [
-        ['title' => __('capell-theme-motion-archive::sections.events.planning_title'), 'summary' => __('capell-theme-motion-archive::sections.events.planning_summary')],
-        ['title' => __('capell-theme-motion-archive::sections.events.workshop_title'), 'summary' => __('capell-theme-motion-archive::sections.events.workshop_summary')],
-        ['title' => __('capell-theme-motion-archive::sections.events.systems_title'), 'summary' => __('capell-theme-motion-archive::sections.events.systems_summary')],
-    ]));
+    $heading = data_get($section, 'heading', __('capell-theme-motion-archive::sections.jury_score_explainer.heading'));
+    $summary = data_get($section, 'summary', __('capell-theme-motion-archive::sections.jury_score_explainer.summary'));
+    $items = data_get($section, 'items', []);
 @endphp
 
-<section class="editorial-section">
-    <div class="editorial-section-inner">
-        <p class="editorial-kicker">
-            {{ __('capell-theme-motion-archive::sections.events.kicker') }}
+<section
+    id="jury-score-explainer"
+    class="mva-section mva-section-raised"
+>
+    <div class="mva-section-inner">
+        <p class="mva-kicker">
+            {{ __('capell-theme-motion-archive::sections.jury_score_explainer.kicker') }}
         </p>
-        <h2>
-            {{ data_get($section, 'heading', __('capell-theme-motion-archive::sections.events.heading')) }}
-        </h2>
-        <div class="editorial-grid">
-            @foreach ($stories as $story)
-                <article class="editorial-card">
-                    <p class="editorial-meta">
-                        {{ data_get($story, 'meta', data_get($story, 'category', '')) }}
-                    </p>
-                    <h3>
-                        {{ data_get($story, 'title', data_get($story, 'name', '')) }}
-                    </h3>
-                    <p>
-                        {{ data_get($story, 'summary', data_get($story, 'description', '')) }}
-                    </p>
+        <h2>{{ $heading }}</h2>
+        <p class="mva-lede">{{ $summary }}</p>
+
+        <div
+            class="mva-axes"
+            style="margin-top: 2rem"
+        >
+            @foreach ($items as $item)
+                @php
+                    $meta = data_get($item, 'meta', '');
+                    preg_match('/(\d+)\s*%/', (string) $meta, $matches);
+                    $weight = isset($matches[1]) ? (int) $matches[1] : 25;
+                @endphp
+
+                <article class="mva-axis">
+                    <div>
+                        <p class="mva-axis-name">
+                            {{ data_get($item, 'title', data_get($item, 'name', '')) }}
+                        </p>
+                        <p class="mva-axis-weight">{{ $meta }}</p>
+                    </div>
+                    <div
+                        class="mva-axis-track"
+                        role="presentation"
+                    >
+                        <div
+                            class="mva-axis-fill"
+                            style="--mva-axis-score: {{ $weight }}%"
+                        ></div>
+                    </div>
+                    <p class="mva-axis-score">{{ $weight }}%</p>
                 </article>
+                <p
+                    class="mva-lede"
+                    style="margin-top: -0.5rem"
+                >
+                    {{ data_get($item, 'summary', data_get($item, 'description', '')) }}
+                </p>
             @endforeach
         </div>
     </div>

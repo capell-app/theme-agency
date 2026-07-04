@@ -49,49 +49,48 @@ final class MinimalCurationFeedDemoContent implements ProvidesThemeDemoContent
         return new ThemeDemoPageDefinition(
             surface: 'homepage',
             name: self::BRAND . ' Home',
-            title: self::BRAND . ' — Daily Curated Screenshots & References',
+            title: self::BRAND . ' — One Good Screenshot a Day',
             slug: 'theme-' . $themeKey,
             content: $this->prose(
-                'A daily feed of curated screenshots and references',
-                'Curation Daily is a calm white feed for daily curated links, screenshots, apps, websites, icons, and product references.',
+                'One good screenshot a day, carefully chosen',
+                'Curation Daily collects the best app screens, website details, and icon systems — one calm column, big captures, tiny captions.',
             ),
             renderData: [
-                'summary' => 'Curation Daily is a calm daily feed for curated links, screenshots, apps, websites, icons, and product references with category tabs, search, and a newsletter signup.',
+                'summary' => 'Curation Daily publishes one carefully chosen app screen, website detail, or icon system every day — big captures, tiny captions, no noise.',
                 'navigation' => $this->navigation(),
                 'footer' => $this->footer(),
                 'sections' => [
                     [
                         'type' => 'hero',
-                        'eyebrow' => 'Minimal curation feed',
-                        'heading' => 'A daily feed of curated screenshots and references',
-                        'summary' => 'A calm white feed for daily curated links, screenshots, apps, websites, icons, and product references with category tabs, search, a live update indicator, and a compact newsletter signup.',
+                        'eyebrow' => 'A daily reference feed',
+                        'heading' => 'One good screenshot a day, carefully chosen',
+                        'summary' => 'The best app screens, website details, and icon systems — published one per day in a single calm column, each with its maker, source, and one short note.',
                         'actions' => [
-                            ['label' => 'Browse latest', 'url' => '#curation-feed', 'style' => 'primary'],
-                            ['label' => 'Join newsletter', 'url' => '#newsletter', 'style' => 'secondary'],
+                            ['label' => 'Browse the latest', 'url' => '#curation-feed', 'style' => 'primary'],
+                            ['label' => 'Get the daily email', 'url' => '#newsletter', 'style' => 'secondary'],
                         ],
                         'mediaUrl' => $media['hero'][0],
-                        'mediaAlt' => 'Curation Daily live feed',
+                        'mediaAlt' => 'Today\'s capture — an onboarding screen worth studying',
                     ],
-                    $this->feedHeroSection($media),
                     $this->categoryTabsSection(),
                     $this->curationFeedSection(
-                        heading: 'Today\'s picks, with just enough metadata',
-                        summary: 'Airy but compact cards for screenshot, title, maker, source, rating, platform, topic tags, and saved state.',
+                        heading: 'This week in the feed',
+                        summary: 'Seven days, seven captures — each with its maker, source, platform, and the one thing worth stealing.',
                         media: $media,
                     ),
+                    $this->bestOfViewsSection($media),
                     $this->appWebsiteIconsSection(),
-                    $this->sourceMetadataSection(),
                     $this->proofSection(
-                        heading: 'Why the feed stays calm',
-                        summary: 'A live update indicator, compact cards, and tiny labels keep browsing fast.',
+                        heading: 'A feed you can actually keep up with',
+                        summary: 'One capture a day, every credit intact, and an archive that stays fast.',
                     ),
                     $this->newsletterSection(
-                        heading: 'Send useful references without clutter',
-                        summary: 'A compact signup for daily links, weekly best-of lists, apps, websites, icons, and product references.',
+                        heading: 'One capture in your inbox, every morning',
+                        summary: 'The day\'s pick with its source and a one-line note. No roundups, no sponsors, unsubscribe any time.',
                     ),
                     $this->ctaSection(
-                        heading: 'Launch a calm curation feed that stays fast',
-                        summary: 'Use the theme for daily curated links, screenshots, apps, websites, icons, and product reference libraries.',
+                        heading: 'Tomorrow\'s capture is already queued',
+                        summary: 'Follow along in the feed, or let the daily email bring the next reference to you.',
                     ),
                 ],
             ],
@@ -107,39 +106,45 @@ final class MinimalCurationFeedDemoContent implements ProvidesThemeDemoContent
     {
         return new ThemeDemoPageDefinition(
             surface: 'directory',
-            name: self::BRAND . ' Latest',
-            title: 'Latest feed — ' . self::BRAND,
+            name: self::BRAND . ' Archive',
+            title: 'The Archive — ' . self::BRAND,
             slug: 'theme-' . $themeKey . '-directory',
             content: $this->prose(
-                'The latest feed, archived and legible',
-                'An archive view for latest, best of, apps, websites, icons, makers, sources, and topic tags.',
+                'Every capture we have saved',
+                'The full archive of daily picks — apps, websites, and icon systems, newest first.',
             ),
             renderData: [
-                'summary' => 'An archive view for latest, best of, apps, websites, icons, makers, sources, and topic tags — fast and legible.',
+                'summary' => 'The full Curation Daily archive — every app screen, website detail, and icon system we have saved, newest first.',
                 'navigation' => $this->navigation(),
                 'footer' => $this->footer(),
                 'sections' => [
                     [
                         'type' => 'hero',
-                        'eyebrow' => 'Latest references',
-                        'heading' => 'The latest feed, archived and legible',
-                        'summary' => 'Daily curated links, screenshots, apps, websites, icons, product references, and best-of lists kept fast with white pages, hairline borders, and tiny labels.',
+                        'eyebrow' => 'The archive',
+                        'heading' => 'Every capture we have saved',
+                        'summary' => 'Hundreds of daily picks, browsable by kind, maker, or source — the same calm column all the way down.',
                         'actions' => [
-                            ['label' => 'Join newsletter', 'url' => '#newsletter', 'style' => 'primary'],
+                            ['label' => 'Browse the archive', 'url' => '#content-listing', 'style' => 'primary'],
+                            ['label' => 'Get the daily email', 'url' => '#newsletter', 'style' => 'secondary'],
                         ],
                         'mediaUrl' => $media['listing'][0] ?? $media['hero'][0],
-                        'mediaAlt' => 'Latest curated feed archive',
+                        'mediaAlt' => 'The most recent capture in the archive',
                     ],
                     $this->categoryTabsSection(),
                     $this->curationFeedSection(
-                        heading: 'Screenshot cards with just enough metadata',
-                        summary: 'Compact cards for screenshot, title, maker, source, rating, platform, and saved state.',
+                        heading: 'Recently added',
+                        summary: 'The newest captures in the archive, each with its maker, source, and note.',
                         media: $media,
                     ),
-                    $this->bestOfViewsSection(),
+                    $this->contentListingSection(
+                        heading: 'Deeper in the archive',
+                        summary: 'Older picks that still hold up — the entries readers keep linking back to.',
+                        media: $media,
+                    ),
+                    $this->bestOfViewsSection($media),
                     $this->ctaSection(
-                        heading: 'Want this archive on your own feed?',
-                        summary: 'Use the theme for daily curated links, apps, websites, icons, and product reference libraries.',
+                        heading: 'Found something worth keeping?',
+                        summary: 'The daily email delivers the next capture before it reaches the archive.',
                     ),
                 ],
             ],
@@ -154,39 +159,40 @@ final class MinimalCurationFeedDemoContent implements ProvidesThemeDemoContent
     {
         return new ThemeDemoPageDefinition(
             surface: 'detail',
-            name: self::BRAND . ' Reference',
-            title: 'Productivity app with excellent empty states — ' . self::BRAND,
+            name: self::BRAND . ' Capture',
+            title: 'Driftwork\'s empty states — ' . self::BRAND,
             slug: 'theme-' . $themeKey . '-detail',
             content: $this->prose(
-                'Productivity app with excellent empty states',
-                'A feed card for screenshot, maker, source, rating, platform, and compact topic tags.',
+                'Driftwork\'s empty states teach before they ask',
+                'A single saved capture with its screenshot, maker, source, platform, and one short note on why it earned a place in the feed.',
             ),
             renderData: [
-                'summary' => 'A single saved reference with screenshot, maker, source, rating, platform, topic tags, and a short editorial note.',
+                'summary' => 'Driftwork\'s empty states, saved to the feed — screenshot, maker, source, platform, and one note on why it matters.',
                 'navigation' => $this->navigation(),
                 'footer' => $this->footer(),
                 'sections' => [
                     [
                         'type' => 'hero',
-                        'eyebrow' => 'Saved reference',
-                        'heading' => 'Productivity app with excellent empty states',
-                        'summary' => 'A screenshot entry with title, maker, source, rating, platform, category, topic tags, and one short note — App, iOS, 4.8 rating.',
+                        'eyebrow' => 'Saved capture · 14 June',
+                        'heading' => 'Driftwork\'s empty states teach before they ask',
+                        'summary' => 'Every blank screen in this productivity app demonstrates the gesture it wants — the whole product onboards itself one empty state at a time. App, iOS, by Driftwork.',
                         'actions' => [
-                            ['label' => 'Browse latest', 'url' => '#curation-feed', 'style' => 'secondary'],
+                            ['label' => 'Visit the source', 'url' => '#source-metadata', 'style' => 'primary'],
+                            ['label' => 'Back to the feed', 'url' => '#curation-feed', 'style' => 'secondary'],
                         ],
                         'mediaUrl' => $media['detail'][0],
-                        'mediaAlt' => 'Saved app reference screenshot',
+                        'mediaAlt' => 'Driftwork\'s empty state screen, captured on iOS',
                     ],
                     $this->sourceMetadataSection(),
-                    $this->appWebsiteIconsSection(),
                     $this->curationFeedSection(
-                        heading: 'More from this maker and topic',
-                        summary: 'Related screenshot cards with the same minimal metadata language.',
+                        heading: 'More like this one',
+                        summary: 'Other captures filed under onboarding and empty states.',
                         media: $media,
                     ),
+                    $this->appWebsiteIconsSection(),
                     $this->ctaSection(
-                        heading: 'Save references like this in your own feed',
-                        summary: 'Screenshot, title, maker, source, rating, platform, tags, and saved state are all supported.',
+                        heading: 'One capture like this, every day',
+                        summary: 'The daily email delivers the next screen worth studying before it reaches the archive.',
                     ),
                 ],
             ],
@@ -204,37 +210,37 @@ final class MinimalCurationFeedDemoContent implements ProvidesThemeDemoContent
             title: 'Submit & subscribe — ' . self::BRAND,
             slug: 'theme-' . $themeKey . '-contact',
             content: $this->prose(
-                'Stay close to the feed in one calm step',
-                'A non-submitting newsletter, link submission, and source suggestion prompt that feels native to the feed.',
+                'Send us the screen you can\'t stop thinking about',
+                'Submit a capture, suggest a source, or join the daily email — everything sent to the feed gets looked at.',
             ),
             renderData: [
-                'summary' => 'Subscribe to daily picks, suggest a source, or submit a link — without clutter and without leaving the feed.',
+                'summary' => 'Submit a capture, suggest a source, or join the daily email — everything sent to Curation Daily gets looked at.',
                 'navigation' => $this->navigation(),
                 'footer' => $this->footer(),
                 'sections' => [
                     [
                         'type' => 'hero',
-                        'eyebrow' => 'Weekly picks',
-                        'heading' => 'Stay close to the feed in one calm step',
-                        'summary' => 'Subscribe for daily links and weekly best-of lists, suggest a source, or submit a link — a tiny signup block that keeps the feed fast.',
+                        'eyebrow' => 'Submit & subscribe',
+                        'heading' => 'Send us the screen you can\'t stop thinking about',
+                        'summary' => 'A screenshot and a source link is all it takes. If it earns a place in the feed, it runs with full credit to the maker and to you.',
                         'actions' => [
-                            ['label' => 'Subscribe', 'url' => '#newsletter', 'style' => 'primary'],
-                            ['label' => 'Browse latest', 'url' => '#curation-feed', 'style' => 'secondary'],
+                            ['label' => 'Join the daily email', 'url' => '#newsletter', 'style' => 'primary'],
+                            ['label' => 'Browse the latest', 'url' => '#curation-feed', 'style' => 'secondary'],
                         ],
                         'mediaUrl' => $media['contact'][0],
-                        'mediaAlt' => 'Newsletter and link submission',
+                        'mediaAlt' => 'A reader submission being reviewed for the feed',
                     ],
                     $this->newsletterSection(
-                        heading: 'Send useful references without clutter',
-                        summary: 'A compact signup module for daily links, weekly best-of lists, apps, websites, icons, and product references.',
+                        heading: 'One capture in your inbox, every morning',
+                        summary: 'The day\'s pick with its source and a one-line note — the same feed, delivered.',
                     ),
                     $this->proofSection(
-                        heading: 'What you can expect',
-                        summary: 'How the feed treats your inbox and your attention.',
+                        heading: 'What happens to a submission',
+                        summary: 'Every capture sent to the feed is opened, considered, and answered.',
                     ),
                     $this->ctaSection(
-                        heading: 'Prefer to start your own feed?',
-                        summary: 'Use the theme for daily curated links, screenshots, apps, websites, icons, and product reference libraries.',
+                        heading: 'Not ready to submit yet?',
+                        summary: 'Read along for a while — the feed is the best brief for what belongs in it.',
                     ),
                 ],
             ],
@@ -253,29 +259,30 @@ final class MinimalCurationFeedDemoContent implements ProvidesThemeDemoContent
             title: 'No matches — ' . self::BRAND,
             slug: 'theme-' . $themeKey . '-empty',
             content: $this->prose(
-                'Nothing in the feed for that filter yet',
-                'A calm empty state for a filtered curation feed with no matching references.',
+                'Nothing saved under that filter yet',
+                'A calm empty state for a filtered feed with no matching captures.',
             ),
             renderData: [
-                'summary' => 'No screenshots, apps, websites, or icons match that filter yet — clear it or browse the latest feed.',
+                'summary' => 'No captures match that filter yet — clear it, browse the latest, or suggest the source we are missing.',
                 'navigation' => $this->navigation(),
                 'footer' => $this->footer(),
                 'sections' => [
                     [
                         'type' => 'hero',
-                        'eyebrow' => 'Search across the whole curated feed',
-                        'heading' => 'Nothing in the feed for that filter yet',
-                        'summary' => 'No screenshots, apps, websites, icons, makers, or sources match that search. Clear the filter to see the latest, or suggest a source to add.',
+                        'eyebrow' => 'The archive',
+                        'heading' => 'Nothing saved under that filter yet',
+                        'summary' => 'No apps, websites, or icon systems match that search. Clear the filter to see the latest, or tell us what we are missing.',
                         'actions' => [
-                            ['label' => 'Browse latest', 'url' => '#curation-feed', 'style' => 'primary'],
+                            ['label' => 'Browse the latest', 'url' => '#curation-feed', 'style' => 'primary'],
                             ['label' => 'Suggest a source', 'url' => '#newsletter', 'style' => 'secondary'],
                         ],
                     ],
                     $this->categoryTabsSection(),
-                    $this->appWebsiteIconsSection(),
+                    $this->feedHeroSection($media),
+                    $this->bestOfViewsSection($media),
                     $this->ctaSection(
-                        heading: 'Looking for a specific reference?',
-                        summary: 'Suggest a source and it can join the latest, best of, apps, websites, or icons views.',
+                        heading: 'Looking for something specific?',
+                        summary: 'Suggest the source and it can join tomorrow\'s feed with full credit.',
                     ),
                 ],
             ],
@@ -293,8 +300,8 @@ final class MinimalCurationFeedDemoContent implements ProvidesThemeDemoContent
             title: 'Page not found — ' . self::BRAND,
             slug: 'theme-' . $themeKey . '-404',
             content: $this->prose(
-                'That reference has moved',
-                'A not-found page that routes visitors back into the latest feed and newsletter.',
+                'That capture has moved',
+                'A not-found page that routes visitors back into the latest feed and the daily email.',
             ),
             renderData: [
                 'summary' => 'That page has moved or never existed — here is the way back into the feed.',
@@ -304,17 +311,17 @@ final class MinimalCurationFeedDemoContent implements ProvidesThemeDemoContent
                     [
                         'type' => 'hero',
                         'eyebrow' => '404',
-                        'heading' => 'That reference has moved',
-                        'summary' => 'The link is broken or the entry has been unsaved. Head back to the latest feed, or join the newsletter for daily picks.',
+                        'heading' => 'That capture has moved',
+                        'summary' => 'The link is broken or the entry was retired from the archive. The latest feed is one tap away.',
                         'actions' => [
-                            ['label' => 'Back to home', 'url' => '/', 'style' => 'primary'],
-                            ['label' => 'Browse latest', 'url' => '#curation-feed', 'style' => 'secondary'],
+                            ['label' => 'Back to the feed', 'url' => '/', 'style' => 'primary'],
+                            ['label' => 'Browse the archive', 'url' => '#curation-feed', 'style' => 'secondary'],
                         ],
                     ],
                     $this->categoryTabsSection(),
                     $this->ctaSection(
-                        heading: 'Still looking for a reference?',
-                        summary: 'Browse the latest feed or suggest a source to add to apps, websites, or icons.',
+                        heading: 'Still looking for a capture?',
+                        summary: 'Browse the latest feed, or tell us what you were after and we will dig it out of the archive.',
                     ),
                 ],
             ],
@@ -330,38 +337,38 @@ final class MinimalCurationFeedDemoContent implements ProvidesThemeDemoContent
     {
         return new ThemeDemoPageDefinition(
             surface: 'cta',
-            name: self::BRAND . ' Start',
-            title: 'Start your feed — ' . self::BRAND,
+            name: self::BRAND . ' Subscribe',
+            title: 'Get the daily email — ' . self::BRAND,
             slug: 'theme-' . $themeKey . '-cta',
             content: $this->prose(
-                'Launch a calm curation feed that stays fast',
-                'A focused page inviting makers and curators to start their own minimal feed.',
+                'The feed, delivered one capture at a time',
+                'A focused page inviting readers to receive the daily pick by email.',
             ),
             renderData: [
-                'summary' => 'Launch a calm curation feed that stays fast — daily links, screenshots, apps, websites, icons, and product references.',
+                'summary' => 'The feed, delivered — one carefully chosen capture in your inbox every morning.',
                 'navigation' => $this->navigation(),
                 'footer' => $this->footer(),
                 'sections' => [
                     [
                         'type' => 'hero',
-                        'eyebrow' => 'Feed ready',
-                        'heading' => 'Launch a calm curation feed that stays fast',
-                        'summary' => 'Use the theme for daily curated links, screenshots, apps, websites, icons, and product reference libraries — best of, latest, apps, websites, and icons in one minimal card language.',
+                        'eyebrow' => 'The daily email',
+                        'heading' => 'The feed, delivered one capture at a time',
+                        'summary' => 'Every morning: one screenshot, its maker and source, and a single line on why it is worth your attention. That is the whole email.',
                         'actions' => [
-                            ['label' => 'Start with Minimal Curation Feed', 'url' => '#newsletter', 'style' => 'primary'],
-                            ['label' => 'Browse latest', 'url' => '#curation-feed', 'style' => 'secondary'],
+                            ['label' => 'Subscribe', 'url' => '#newsletter', 'style' => 'primary'],
+                            ['label' => 'Browse the feed first', 'url' => '#curation-feed', 'style' => 'secondary'],
                         ],
                         'mediaUrl' => $media['cta'][0],
-                        'mediaAlt' => 'Curation Daily feed ready to launch',
+                        'mediaAlt' => 'This morning\'s capture, as it appears in the daily email',
                     ],
-                    $this->bestOfViewsSection(),
+                    $this->bestOfViewsSection($media),
                     $this->proofSection(
-                        heading: 'Built to stay calm and quick',
-                        summary: 'White pages, hairline borders, tiny labels, and simple metadata.',
+                        heading: 'Why readers stay subscribed',
+                        summary: 'What one email a day actually delivers.',
                     ),
                     $this->ctaSection(
-                        heading: 'One signup away from a fresh feed',
-                        summary: 'Daily picks, best-of lists, apps, websites, icons, and product references keep the feed fresh.',
+                        heading: 'Tomorrow\'s capture is already queued',
+                        summary: 'Subscribe now and it lands in your inbox with the morning coffee.',
                     ),
                 ],
             ],
@@ -376,15 +383,13 @@ final class MinimalCurationFeedDemoContent implements ProvidesThemeDemoContent
     {
         return [
             'type' => 'feed-hero',
-            'kicker' => 'Live feed',
-            'heading' => 'Open with one useful sentence and immediate discovery',
-            'summary' => 'A short description, a live update indicator, category tabs, a search input, and a compact newsletter signup — updated daily.',
-            'mediaUrl' => $media['hero'][0] ?? null,
-            'mediaAlt' => 'Live curation feed hero',
+            'heading' => 'Meanwhile, today in the feed',
+            'summary' => 'While you search, this morning\'s capture is already up — Driftwork\'s empty states, credited and annotated.',
+            'mediaUrl' => $media['detail'][0],
+            'mediaAlt' => 'This morning\'s capture — Driftwork\'s empty states on iOS',
             'notes' => [
-                ['title' => 'Updated daily', 'summary' => 'A small live indicator shows freshness without turning the page into a dashboard.'],
-                ['title' => 'Search and tabs stay close', 'summary' => 'Latest, best of, apps, websites, and icons remain one tap away on mobile and desktop.'],
-                ['title' => 'Newsletter without a heavy CTA', 'summary' => 'A tiny signup block supports daily or weekly picks while keeping the feed fast.'],
+                ['title' => 'Maker', 'summary' => 'Driftwork — an independent two-person studio shipping on iOS.'],
+                ['title' => 'Why it ran', 'summary' => 'Every blank screen teaches the gesture it wants — restraint doing the onboarding.'],
             ],
         ];
     }
@@ -396,14 +401,12 @@ final class MinimalCurationFeedDemoContent implements ProvidesThemeDemoContent
     {
         return [
             'type' => 'category-tabs',
-            'kicker' => 'Category tabs',
-            'heading' => 'Keep the navigation tiny and predictable',
-            'summary' => 'Latest, best of, apps, websites, and icons stay one tap away in a tiny, predictable tab row.',
+            'kicker' => 'Browse',
             'tabs' => [
-                ['title' => 'Best of', 'summary' => 'Handpicked collections for useful apps, homepage patterns, icon sets, product details, and reference boards.'],
-                ['title' => 'Apps', 'summary' => 'Mobile apps, desktop tools, AI products, productivity utilities, design tools, and developer apps.'],
-                ['title' => 'Websites', 'summary' => 'Product pages, portfolios, launch pages, docs, ecommerce pages, dashboards, and marketing references.'],
-                ['title' => 'Icons', 'summary' => 'Icon systems, app icons, favicons, pictograms, UI symbols, and small visual references.'],
+                ['title' => 'Best of', 'url' => '#best-of-views', 'summary' => 'The captures readers return to most — apps, website details, and icon systems that keep earning their place.'],
+                ['title' => 'Apps', 'url' => '#app-website-icons', 'summary' => 'Onboarding flows, empty states, settings screens, and the small interactions that make software feel considered.'],
+                ['title' => 'Websites', 'url' => '#app-website-icons', 'summary' => 'Pricing pages, product sections, portfolios, and docs that solve a layout problem worth remembering.'],
+                ['title' => 'Icons', 'url' => '#app-website-icons', 'summary' => 'Icon systems, app icons, favicons, and pictograms with a constraint worth studying.'],
             ],
         ];
     }
@@ -421,31 +424,31 @@ final class MinimalCurationFeedDemoContent implements ProvidesThemeDemoContent
             $media['cta'],
         )));
 
-        $cards = [
-            ['title' => 'Productivity app with excellent empty states', 'summary' => 'A feed card for screenshot, maker, source, rating, platform, and compact topic tags.', 'maker' => 'Driftwork', 'source' => 'driftwork.example', 'meta' => 'App. iOS. 4.8 rating.', 'tags' => ['Apps', 'Productivity', 'iOS']],
-            ['title' => 'Website reference with calm product sections', 'summary' => 'A screenshot entry with title, maker, source, platform, category, and one short note.', 'maker' => 'Studio Verda', 'source' => 'verda.example', 'meta' => 'Website. SaaS. Editor pick.', 'tags' => ['Websites', 'SaaS', 'Landing']],
-            ['title' => 'Icon set with useful visual constraints', 'summary' => 'A compact card for icon preview, maker, source, license note, platform, and tags.', 'maker' => 'Northline', 'source' => 'northline.example', 'meta' => 'Icons. SVG. Saved.', 'tags' => ['Icons', 'SVG', 'Open source']],
-            ['title' => 'Onboarding flow that earns the first tap', 'summary' => 'A screenshot entry with maker, source, platform, rating, and a short editorial note.', 'maker' => 'Harbour', 'source' => 'harbour.example', 'meta' => 'App. Android. 4.6 rating.', 'tags' => ['Apps', 'Onboarding', 'Android']],
-            ['title' => 'Pricing page that stays honest and scannable', 'summary' => 'A website card with title, maker, source, category, platform, and saved state.', 'maker' => 'Lumen', 'source' => 'lumen.example', 'meta' => 'Website. Pricing. Saved.', 'tags' => ['Websites', 'Pricing', 'Marketing']],
-            ['title' => 'Favicon and app-icon system done right', 'summary' => 'An icon card for app icon, favicon, maker, source, license, and small tags.', 'maker' => 'Foundry', 'source' => 'foundry.example', 'meta' => 'Icons. App icon. Editor pick.', 'tags' => ['Icons', 'Branding', 'Favicon']],
+        $entries = [
+            ['title' => 'Driftwork\'s empty states teach before they ask', 'summary' => 'Every blank screen demonstrates the gesture it wants — the whole app onboards itself one empty state at a time.', 'maker' => 'Driftwork', 'source' => 'driftwork.example', 'meta' => 'App · iOS · 14 Jun', 'tags' => ['Apps', 'Empty states', 'Onboarding']],
+            ['title' => 'Verda\'s product page trusts one column', 'summary' => 'No feature grid, no carousel — a single narrow column that reads top to bottom like a good argument.', 'maker' => 'Studio Verda', 'source' => 'verda.example', 'meta' => 'Website · SaaS · 13 Jun', 'tags' => ['Websites', 'Product pages']],
+            ['title' => 'Northline draws every icon on a 12px grid', 'summary' => 'One stroke weight, one corner radius, four hundred icons — the constraint is the whole system.', 'maker' => 'Northline', 'source' => 'northline.example', 'meta' => 'Icons · SVG · 12 Jun', 'tags' => ['Icons', 'Systems', 'Open source']],
+            ['title' => 'Harbour earns the first tap in three screens', 'summary' => 'The onboarding asks for nothing until it has shown the payoff — a full trip planned before the account exists.', 'maker' => 'Harbour', 'source' => 'harbour.example', 'meta' => 'App · Android · 11 Jun', 'tags' => ['Apps', 'Onboarding']],
+            ['title' => 'Lumen prices three tiers without a comparison table', 'summary' => 'Each plan is a sentence, not a checklist — you know which one you are before you scroll.', 'maker' => 'Lumen', 'source' => 'lumen.example', 'meta' => 'Website · Pricing · 10 Jun', 'tags' => ['Websites', 'Pricing']],
+            ['title' => 'Foundry ships one mark that survives every size', 'summary' => 'The same shape reads as an app icon, a favicon, and a wordmark — nothing redrawn, only reweighted.', 'maker' => 'Foundry', 'source' => 'foundry.example', 'meta' => 'Icons · Branding · 9 Jun', 'tags' => ['Icons', 'App icons', 'Favicon']],
         ];
 
         $items = [];
 
-        foreach ($cards as $index => $card) {
+        foreach ($entries as $index => $entry) {
             $image = $pool[$index % max(count($pool), 1)] ?? null;
             $items[] = [
-                ...$card,
+                ...$entry,
                 'url' => '#entry-' . ($index + 1),
                 'image' => $image,
                 'imageUrl' => $image,
-                'imageAlt' => $card['title'],
+                'imageAlt' => $entry['title'],
             ];
         }
 
         return [
             'type' => 'curation-feed',
-            'kicker' => 'Curation feed',
+            'kicker' => 'Latest',
             'heading' => $heading,
             'summary' => $summary,
             'items' => $items,
@@ -453,22 +456,77 @@ final class MinimalCurationFeedDemoContent implements ProvidesThemeDemoContent
     }
 
     /**
+     * @param  array{hero: list<string>, listing: list<string>, detail: list<string>, proof: list<string>, contact: list<string>, cta: list<string>}  $media
      * @return array<string, mixed>
      */
-    private function bestOfViewsSection(): array
+    private function bestOfViewsSection(array $media): array
     {
+        $pool = array_values(array_unique(array_merge($media['proof'], $media['listing'], $media['hero'])));
+
+        $entries = [
+            ['title' => 'Driftwork\'s empty states', 'summary' => 'The capture readers send each other most — onboarding through blank screens.', 'meta' => '18.2k views'],
+            ['title' => 'Lumen\'s three-sentence pricing', 'summary' => 'Proof that a pricing page can skip the comparison table entirely.', 'meta' => '14.9k views'],
+            ['title' => 'Northline\'s 12px icon grid', 'summary' => 'Four hundred icons from one constraint — the most-saved icon system in the archive.', 'meta' => '11.4k views'],
+        ];
+
+        $items = [];
+
+        foreach ($entries as $index => $entry) {
+            $image = $pool[$index % max(count($pool), 1)] ?? null;
+            $items[] = [
+                ...$entry,
+                'url' => '#best-' . ($index + 1),
+                'image' => $image,
+                'imageUrl' => $image,
+                'imageAlt' => $entry['title'],
+            ];
+        }
+
         return [
             'type' => 'best-of-views',
-            'kicker' => 'Best-of views',
-            'heading' => 'Give evergreen collections a quieter rhythm',
-            'summary' => 'Best-of modules collect apps, websites, icons, product details, references, and editor picks without breaking the feed.',
-            'button' => 'Browse best of',
-            'buttonUrl' => '#best-of-views',
-            'items' => [
-                ['title' => 'Best apps this month', 'summary' => 'Apps grouped by category, platform, maker, rating, source, and editor note.'],
-                ['title' => 'Best website details', 'summary' => 'Pricing sections, signup flows, empty states, icon treatments, product cards, and navigation details.'],
-                ['title' => 'Best icon systems', 'summary' => 'Icon systems, app icons, symbols, and downloadable references worth keeping.'],
-            ],
+            'kicker' => 'Most viewed',
+            'heading' => 'What readers keep coming back to',
+            'summary' => 'The three captures with the most repeat visits this month.',
+            'button' => 'Browse all best-of picks',
+            'buttonUrl' => '#curation-feed',
+            'items' => $items,
+        ];
+    }
+
+    /**
+     * @param  array{hero: list<string>, listing: list<string>, detail: list<string>, proof: list<string>, contact: list<string>, cta: list<string>}  $media
+     * @return array<string, mixed>
+     */
+    private function contentListingSection(string $heading, string $summary, array $media): array
+    {
+        $pool = array_values(array_unique(array_merge($media['listing'], $media['detail'], $media['contact'])));
+
+        $entries = [
+            ['title' => 'A settings screen that reads like a table of contents', 'category' => 'App · iOS', 'summary' => 'Every row is a destination, every destination is one tap deep — filed in May.'],
+            ['title' => 'The docs page that answers before you search', 'category' => 'Website · Docs', 'summary' => 'The five most-asked questions sit above the search box, in plain language.'],
+            ['title' => 'A favicon set that survives the browser tab', 'category' => 'Icons · Favicon', 'summary' => 'Sixteen pixels, two colours, still unmistakable — filed in April.'],
+            ['title' => 'Checkout in a single screen, honestly', 'category' => 'Website · Commerce', 'summary' => 'Address, payment, and confirmation on one page without feeling crowded.'],
+        ];
+
+        $items = [];
+
+        foreach ($entries as $index => $entry) {
+            $image = $pool[$index % max(count($pool), 1)] ?? null;
+            $items[] = [
+                ...$entry,
+                'url' => '#archive-' . ($index + 1),
+                'image' => $image,
+                'imageUrl' => $image,
+                'imageAlt' => $entry['title'],
+            ];
+        }
+
+        return [
+            'type' => 'content-listing',
+            'kicker' => 'Archive',
+            'heading' => $heading,
+            'summary' => $summary,
+            'items' => $items,
         ];
     }
 
@@ -479,13 +537,13 @@ final class MinimalCurationFeedDemoContent implements ProvidesThemeDemoContent
     {
         return [
             'type' => 'app-website-icons',
-            'kicker' => 'Apps, websites, and icons',
-            'heading' => 'Separate common views without changing the feed model',
-            'summary' => 'Apps, websites, and icons each get a tuned view while sharing one minimal card language.',
+            'kicker' => 'Apps, websites & icons',
+            'heading' => 'Browse by kind',
+            'summary' => 'Three views, one card language — pick the shelf you came for.',
             'items' => [
-                ['title' => 'Apps view', 'summary' => 'Compact app cards with platform labels, maker names, rating, source, and topic tags.', 'meta' => 'Apps'],
-                ['title' => 'Websites view', 'summary' => 'Screenshot-first website cards with source, maker, category, and a short note.', 'meta' => 'Websites'],
-                ['title' => 'Icons view', 'summary' => 'Small visual cards for icon systems, app icons, symbols, and downloadable references.', 'meta' => 'Icons'],
+                ['title' => 'Apps', 'summary' => 'Onboarding, empty states, settings, and the interactions that make software feel considered.', 'meta' => '214 saved', 'url' => '#curation-feed'],
+                ['title' => 'Websites', 'summary' => 'Pricing pages, product sections, docs, and portfolios that solve a layout problem.', 'meta' => '186 saved', 'url' => '#curation-feed'],
+                ['title' => 'Icons', 'summary' => 'Icon systems, app icons, and favicons with a constraint worth studying.', 'meta' => '97 saved', 'url' => '#curation-feed'],
             ],
         ];
     }
@@ -497,13 +555,14 @@ final class MinimalCurationFeedDemoContent implements ProvidesThemeDemoContent
     {
         return [
             'type' => 'source-metadata',
-            'kicker' => 'Source metadata',
-            'heading' => 'Keep every reference useful without overexplaining',
-            'summary' => 'Source links, makers, platform, rating, topic tags, category, date, saved state, and short editorial notes.',
+            'kicker' => 'Source notes',
+            'heading' => 'Every capture, credited',
+            'summary' => 'Each entry in the feed carries the same small set of facts — enough to follow the reference home.',
             'items' => [
-                ['title' => 'Maker and source', 'summary' => 'Show who made the reference, where it came from, platform, category, and why it was saved.'],
-                ['title' => 'Rating and topic tags', 'summary' => 'Rating, platform, topic tags, and source labels help visitors scan without making the card dense.'],
-                ['title' => 'Infinite-feed friendly archives', 'summary' => 'Archives for latest, best of, apps, websites, icons, topics, sources, makers, and saved views stay fast.'],
+                ['title' => 'Maker', 'summary' => 'Driftwork — an independent two-person studio; the capture links straight to their release notes.'],
+                ['title' => 'Source', 'summary' => 'driftwork.example, captured from the shipping iOS build on 14 June, unedited.'],
+                ['title' => 'Filed under', 'summary' => 'Apps · Empty states · Onboarding — three tags, no more, so the archive stays browsable.'],
+                ['title' => 'Editor\'s note', 'summary' => 'Saved because every blank screen teaches the gesture it wants — restraint doing the onboarding.'],
             ],
         ];
     }
@@ -515,7 +574,7 @@ final class MinimalCurationFeedDemoContent implements ProvidesThemeDemoContent
     {
         return [
             'type' => 'newsletter',
-            'kicker' => 'Weekly picks',
+            'kicker' => 'Daily email',
             'heading' => $heading,
             'summary' => $summary,
             'emailLabel' => 'Email address',
@@ -530,13 +589,13 @@ final class MinimalCurationFeedDemoContent implements ProvidesThemeDemoContent
     {
         return [
             'type' => 'proof',
-            'kicker' => 'Feed proof',
+            'kicker' => 'The feed in numbers',
             'heading' => $heading,
             'summary' => $summary,
             'items' => [
-                ['metric' => 'Daily', 'name' => 'Live update indicator', 'quote' => 'Compact cards and category tabs keep the feed current without noise.'],
-                ['metric' => '5 views', 'name' => 'Best of, latest, apps, websites, icons', 'quote' => 'All supported with the same minimal card language.'],
-                ['metric' => 'Fast', 'name' => 'Calm and quick to browse', 'quote' => 'White pages, hairline borders, tiny labels, and simple metadata.'],
+                ['value' => '1 / day', 'name' => 'Publishing rhythm', 'label' => 'One capture every morning — never a backlog dump, never a quiet week.'],
+                ['value' => '497', 'name' => 'Captures in the archive', 'label' => 'Apps, websites, and icon systems, every one credited to its maker and source.'],
+                ['value' => '0', 'name' => 'Sponsored placements', 'label' => 'Nothing in the feed is paid for — a capture earns its place or it does not run.'],
             ],
         ];
     }
@@ -548,12 +607,12 @@ final class MinimalCurationFeedDemoContent implements ProvidesThemeDemoContent
     {
         return [
             'type' => 'cta',
-            'kicker' => 'Feed ready',
+            'kicker' => 'Keep browsing',
             'heading' => $heading,
             'summary' => $summary,
             'actions' => [
-                ['label' => 'Start with Minimal Curation Feed', 'url' => '#newsletter', 'style' => 'primary'],
-                ['label' => 'Browse latest', 'url' => '#curation-feed', 'style' => 'secondary'],
+                ['label' => 'Get the daily email', 'url' => '#newsletter', 'style' => 'primary'],
+                ['label' => 'Browse the latest', 'url' => '#curation-feed', 'style' => 'secondary'],
             ],
         ];
     }
@@ -567,7 +626,6 @@ final class MinimalCurationFeedDemoContent implements ProvidesThemeDemoContent
             ['label' => 'Latest', 'url' => '#curation-feed'],
             ['label' => 'Best of', 'url' => '#best-of-views'],
             ['label' => 'Apps & icons', 'url' => '#app-website-icons'],
-            ['label' => 'Newsletter', 'url' => '#newsletter'],
         ];
 
         return [
@@ -592,7 +650,7 @@ final class MinimalCurationFeedDemoContent implements ProvidesThemeDemoContent
                 'links' => [
                     ['label' => 'Latest', 'url' => '#curation-feed'],
                     ['label' => 'Best of', 'url' => '#best-of-views'],
-                    ['label' => 'Archive', 'url' => '#curation-feed'],
+                    ['label' => 'Archive', 'url' => '#content-listing'],
                 ],
             ],
             [
@@ -608,9 +666,9 @@ final class MinimalCurationFeedDemoContent implements ProvidesThemeDemoContent
                 'heading' => 'Contribute',
                 'title' => 'Contribute',
                 'links' => [
-                    ['label' => 'Submit a link', 'url' => '#newsletter'],
+                    ['label' => 'Submit a capture', 'url' => '#newsletter'],
                     ['label' => 'Suggest a source', 'url' => '#newsletter'],
-                    ['label' => 'Newsletter', 'url' => '#newsletter'],
+                    ['label' => 'Daily email', 'url' => '#newsletter'],
                 ],
             ],
         ];
@@ -618,7 +676,7 @@ final class MinimalCurationFeedDemoContent implements ProvidesThemeDemoContent
         return [
             'brand' => self::BRAND,
             'brandName' => self::BRAND,
-            'summary' => 'A calm daily feed of curated screenshots, apps, websites, icons, and product references.',
+            'summary' => 'One good screenshot a day — app screens, website details, and icon systems, each credited to its maker and source.',
             'items' => $columns,
             'columns' => $columns,
         ];

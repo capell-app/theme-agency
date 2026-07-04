@@ -8,30 +8,72 @@
     ]);
 @endphp
 
-<section class="editorial-section">
-    <div class="editorial-section-inner">
-        <p class="editorial-kicker">
+<section
+    id="one-page-grid"
+    class="ops-section"
+>
+    <div class="ops-section-inner">
+        <p class="ops-kicker">
             {{ __('capell-theme-one-page-showcase::sections.stories.kicker') }}
         </p>
         <h2>{{ $heading }}</h2>
-        <p class="editorial-lede">{{ $summary }}</p>
+        <p class="ops-lede">{{ $summary }}</p>
 
-        <div class="editorial-grid">
+        <div class="ops-grid ops-grid-captures">
             @foreach ($items as $item)
-                <article class="editorial-card editorial-showcase-card">
-                    <h3>
-                        {{ data_get($item, 'title', data_get($item, 'name', '')) }}
-                    </h3>
-                    <p>
-                        {{ data_get($item, 'summary', data_get($item, 'description', '')) }}
-                    </p>
-                    <div class="editorial-showcase-specs">
-                        <span>
-                            {{ data_get($item, 'meta', data_get($item, 'category', __('capell-theme-one-page-showcase::sections.stories.default_meta'))) }}
-                        </span>
-                        <span>
-                            {{ data_get($item, 'care_note', __('capell-theme-one-page-showcase::sections.stories.care_note')) }}
-                        </span>
+                @php
+                    $itemImage = data_get($item, 'image', data_get($item, 'imageUrl'));
+                    $itemAlt = data_get($item, 'imageAlt', data_get($item, 'title', ''));
+                    $itemUrl = data_get($item, 'url', data_get($item, 'href'));
+                @endphp
+
+                <article class="ops-capture-frame">
+                    <div
+                        class="ops-capture-chrome"
+                        aria-hidden="true"
+                    >
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+
+                    @if (filled($itemImage))
+                        <img
+                            src="{{ $itemImage }}"
+                            alt="{{ $itemAlt }}"
+                            width="900"
+                            height="1400"
+                            loading="lazy"
+                            decoding="async"
+                            class="ops-capture-media ops-capture-media-tall"
+                        />
+                    @else
+                        <div
+                            class="ops-capture-media ops-capture-media-tall ops-capture-media-empty"
+                            aria-hidden="true"
+                        ></div>
+                    @endif
+                    <div class="ops-capture-body">
+                        <h3>
+                            @if (filled($itemUrl))
+                                <a
+                                    class="ops-title-link"
+                                    href="{{ $itemUrl }}"
+                                >
+                                    {{ data_get($item, 'title', data_get($item, 'name', '')) }}
+                                </a>
+                            @else
+                                {{ data_get($item, 'title', data_get($item, 'name', '')) }}
+                            @endif
+                        </h3>
+                        <p>
+                            {{ data_get($item, 'summary', data_get($item, 'description', '')) }}
+                        </p>
+                        <div class="ops-tag-row">
+                            <span class="ops-tag">
+                                {{ data_get($item, 'meta', data_get($item, 'category', __('capell-theme-one-page-showcase::sections.stories.default_meta'))) }}
+                            </span>
+                        </div>
                     </div>
                 </article>
             @endforeach

@@ -12,7 +12,7 @@ it('defines the editorial-serif renderer contract', function (): void {
         ->and($definition->key)->toBe(EditorialSerifThemeServiceProvider::THEME_KEY)
         ->and($definition->name)->toBe('Editorial Serif')
         ->and($definition->includedSections)->toContain('navigation', 'hero', 'features', 'proof', 'content-listing', 'cta', 'footer')
-        ->and($definition->presets)->toHaveCount(1)
+        ->and($definition->presets)->toHaveCount(2)
         ->and($definition->presets[0]->key)->toBe('editorial-serif')
         ->and($definition->runtime->value)->toBe('blade')
         ->and($definition->extends)->toBe('default')

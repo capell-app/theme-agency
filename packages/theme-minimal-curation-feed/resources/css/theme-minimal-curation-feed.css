@@ -1,235 +1,1072 @@
-.editorial-shell {
-    --editorial-ink: var(--theme-foreground, #111111);
-    --editorial-muted: color-mix(
-        in srgb,
-        var(--editorial-ink) 56%,
-        transparent
+/* Minimal Curation Feed — a calm daily screenshot feed: near-monochrome paper,
+   huge captures, tiny meta type, one narrow column, and a lot of air. */
+
+.mcf-shell {
+    color-scheme: light dark;
+    /* Named containment so the preset tokens below can be read back with
+       CSS container style queries — no JS, progressive enhancement only. */
+    container: mcf-tokens / normal;
+    /* Consolidated with the dark-mode block below via light-dark(): ink, paper,
+       and accent are the load-bearing tokens shared between the two schemes. */
+    --mcf-ink: var(
+        --theme-foreground,
+        light-dark(oklch(17.76% 0 89.88), oklch(97.02% 0 89.88))
     );
-    --editorial-line: color-mix(in srgb, var(--editorial-ink) 10%, transparent);
-    --editorial-accent: var(--theme-accent, #2563eb);
-    --editorial-field: color-mix(
-        in srgb,
-        var(--editorial-accent) 5%,
-        var(--theme-surface, #ffffff)
+    --mcf-paper: var(
+        --theme-surface,
+        light-dark(oklch(100% 0 89.88), oklch(15.05% 0.0042 285.88))
     );
-    --editorial-night: #111111;
-    --editorial-paper: var(--theme-surface, #ffffff);
-    background: var(--editorial-paper);
-    color: var(--editorial-ink);
-    font-family: var(--theme-body-font, inter), system-ui, sans-serif;
+    --mcf-muted: color-mix(in srgb, var(--mcf-ink) 70%, transparent);
+    --mcf-faint: color-mix(in srgb, var(--mcf-ink) 62%, transparent);
+    --mcf-line: color-mix(in srgb, var(--mcf-ink) 12%, transparent);
+    --mcf-line-soft: color-mix(in srgb, var(--mcf-ink) 7%, transparent);
+    --mcf-field: color-mix(in srgb, var(--mcf-ink) 3%, var(--mcf-paper));
+    --mcf-accent: var(
+        --theme-accent,
+        light-dark(oklch(54.61% 0.2152 262.88), oklch(71.37% 0.1434 254.62))
+    );
+    --mcf-ease: cubic-bezier(0.33, 0, 0.2, 1);
+    background: var(--mcf-paper);
+    color: var(--mcf-ink);
+    font-family: var(--theme-body-font, system-ui), system-ui, sans-serif;
+    font-optical-sizing: auto;
+    font-size: 0.9375rem;
+    line-height: 1.65;
 }
 
-.editorial-shell h1,
-.editorial-shell h2,
-.editorial-shell h3 {
-    color: var(--editorial-ink);
-    font-family: var(--theme-heading-font, sora), system-ui, sans-serif;
-    letter-spacing: 0;
+.mcf-shell h1,
+.mcf-shell h2,
+.mcf-shell h3 {
+    color: var(--mcf-ink);
+    font-family: var(--theme-heading-font, system-ui), system-ui, sans-serif;
+    font-weight: 600;
 }
 
-.editorial-shell h1 {
-    font-size: clamp(2.8rem, 6vw, 5.8rem);
-    line-height: 0.98;
-    margin-block: 0;
+.mcf-shell h1 {
+    font-size: clamp(1.7rem, 3.4vw, 2.5rem);
+    letter-spacing: -0.022em;
+    line-height: 1.15;
+    margin-block: 0.9rem 0;
     text-wrap: balance;
 }
 
-.editorial-shell h2 {
-    font-size: clamp(2rem, 3.4vw, 3.6rem);
-    line-height: 1.02;
-    margin-block: 0;
-    text-wrap: balance;
-}
-
-.editorial-skip-link {
-    background: var(--editorial-night, #11170f);
-    color: #ffffff;
-    left: 1rem;
-    padding: 0.75rem 1rem;
-    position: fixed;
-    top: 1rem;
-    transform: translateY(-150%);
-    z-index: 50;
-}
-
-.editorial-skip-link:focus {
-    transform: translateY(0);
-}
-
-.editorial-section {
-    border-top: 1px solid var(--editorial-line);
-}
-
-.editorial-section-dark {
-    background: var(--editorial-night);
-    color: #ffffff;
-}
-
-.editorial-section-dark h1,
-.editorial-section-dark h2,
-.editorial-section-dark h3 {
-    color: #ffffff;
-}
-
-.editorial-section-inner {
-    margin-inline: auto;
-    max-width: 82rem;
-    padding: clamp(4.5rem, 9vw, 8rem) 1.25rem;
-}
-
-.editorial-kicker {
-    color: var(--editorial-accent);
-    font-size: 0.78rem;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-}
-
-.editorial-lede {
-    color: var(--editorial-muted);
-    font-size: clamp(1.05rem, 1vw + 0.9rem, 1.35rem);
-    line-height: 1.6;
-    max-width: 46rem;
-}
-
-.editorial-grid {
-    display: grid;
-    gap: 1.25rem;
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
-}
-
-.editorial-card {
-    background: #ffffff;
-    border: 1px solid var(--editorial-line);
-    border-radius: max(var(--theme-radius, 0.75rem), 0.75rem);
-    box-shadow: 0 0.75rem 2rem
-        color-mix(in srgb, var(--editorial-ink) 6%, transparent);
-    min-height: 100%;
-    padding: clamp(1.25rem, 2vw, 2rem);
-}
-
-.editorial-section-dark .editorial-card {
-    background: #ffffff;
-    border-color: color-mix(in srgb, #ffffff 16%, transparent);
-    box-shadow: none;
-    color: var(--editorial-ink);
-}
-
-.editorial-card h3 {
-    font-size: 1.05rem;
+.mcf-shell h2 {
+    font-size: clamp(1.25rem, 2.2vw, 1.6rem);
+    letter-spacing: -0.015em;
     line-height: 1.25;
+    margin-block: 0.75rem 0;
+    text-wrap: balance;
+}
+
+.mcf-shell h3 {
+    font-size: 0.9375rem;
+    letter-spacing: 0;
+    line-height: 1.4;
     margin: 0;
+    text-wrap: balance;
 }
 
-.editorial-card p,
-.editorial-meta {
-    color: var(--editorial-muted);
-    line-height: 1.55;
-}
-
-.editorial-button {
-    align-items: center;
-    background: var(--theme-primary, #111111);
-    border: 1px solid var(--theme-primary, #111111);
-    border-radius: 999px;
-    color: #ffffff;
-    display: inline-flex;
-    font-weight: 700;
-    gap: 0.5rem;
-    min-height: 2.75rem;
-    padding: 0.75rem 1rem;
-    text-decoration: none;
-}
-
-.editorial-button:hover,
-.editorial-button:focus-visible {
-    background: var(--editorial-accent);
-    border-color: var(--editorial-accent);
-    outline: 3px solid
-        color-mix(in srgb, var(--editorial-accent) 36%, transparent);
+.mcf-shell a:focus-visible,
+.mcf-shell button:focus-visible,
+.mcf-shell input:focus-visible,
+.mcf-shell [tabindex]:focus-visible {
+    box-shadow:
+        0 0 0 3px var(--mcf-paper),
+        0 0 0 5px var(--mcf-accent);
+    outline: 1px solid var(--mcf-accent);
     outline-offset: 3px;
 }
 
-.editorial-button-secondary {
+.mcf-shell ::selection {
+    background: var(--mcf-accent);
+    color: var(--mcf-paper);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: view()) {
+        @keyframes mcf-feed-settle {
+            from {
+                opacity: 0;
+                transform: translateY(0.75rem);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .mcf-section {
+            animation: mcf-feed-settle 0.4s ease-out both;
+            animation-range: entry 0% cover 30%;
+            animation-timeline: view();
+        }
+    }
+}
+
+.mcf-skip-link {
+    background: var(--mcf-ink);
+    color: var(--mcf-paper);
+    inset-inline-start: 1rem;
+    padding: 0.65rem 1rem;
+    position: fixed;
+    top: 1rem;
+    transform: translateY(-180%);
+    z-index: 50;
+}
+
+.mcf-skip-link:focus {
+    transform: translateY(0);
+}
+
+/* ---------------------------------------------------------------- sections */
+
+.mcf-section + .mcf-section {
+    border-top: 1px solid var(--mcf-line-soft);
+}
+
+@media (min-resolution: 2dppx) {
+    .mcf-section + .mcf-section,
+    .mcf-entry + .mcf-entry,
+    .mcf-tab-note + .mcf-tab-note,
+    .mcf-rank-row + .mcf-rank-row,
+    .mcf-meta-row + .mcf-meta-row {
+        border-top-width: 0.5px;
+    }
+}
+
+.mcf-section-inner {
+    margin-inline: auto;
+    max-width: 46rem;
+    padding: clamp(3.25rem, 7vw, 5.5rem) clamp(1.25rem, 4vw, 2rem);
+}
+
+.mcf-kicker {
+    color: var(--mcf-faint);
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    margin: 0;
+    text-transform: uppercase;
+}
+
+.mcf-lede {
+    color: var(--mcf-muted);
+    font-size: 1rem;
+    font-variant-numeric: oldstyle-nums;
+    line-height: 1.7;
+    margin-block: 0.9rem 0;
+    max-width: 38rem;
+    text-wrap: pretty;
+}
+
+.mcf-tiny {
+    color: var(--mcf-muted);
+    font-size: 0.75rem;
+    line-height: 1.6;
+    margin: 0;
+    text-wrap: pretty;
+}
+
+.mcf-meta {
+    color: var(--mcf-faint);
+    font-size: 0.6875rem;
+    font-variant-numeric: tabular-nums;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    margin: 0;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.mcf-actions {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 1.75rem;
+}
+
+/* --------------------------------------------------------------- live pulse */
+
+.mcf-live {
+    align-items: center;
+    color: var(--mcf-muted);
+    display: inline-flex;
+    font-size: 0.75rem;
+    gap: 0.5rem;
+    letter-spacing: 0.02em;
+}
+
+.mcf-live-dot {
+    background: var(--mcf-accent);
+    border-radius: 50%;
+    display: inline-block;
+    flex-shrink: 0;
+    height: 0.4rem;
+    width: 0.4rem;
+}
+
+/* ----------------------------------------------------------------- buttons */
+
+.mcf-button {
+    align-items: center;
+    background: var(--mcf-ink);
+    border: 1px solid var(--mcf-ink);
+    border-radius: 999px;
+    color: var(--mcf-paper);
+    cursor: pointer;
+    display: inline-flex;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    gap: 0.5rem;
+    min-height: 2.4rem;
+    padding: 0.45rem 1.1rem;
+    text-decoration: none;
+    transition:
+        background-color 160ms var(--mcf-ease),
+        border-color 160ms var(--mcf-ease);
+}
+
+.mcf-button:hover {
+    background: color-mix(in oklch, var(--mcf-ink) 78%, var(--mcf-paper));
+    border-color: color-mix(in oklch, var(--mcf-ink) 78%, var(--mcf-paper));
+}
+
+.mcf-button-secondary {
     background: transparent;
-    color: var(--editorial-ink);
+    border-color: var(--mcf-line);
+    color: var(--mcf-ink);
 }
 
-.editorial-section-dark .editorial-button-secondary {
-    color: #ffffff;
-    border-color: color-mix(in srgb, #ffffff 55%, transparent);
+.mcf-button-secondary:hover {
+    background: transparent;
+    border-color: var(--mcf-ink);
 }
 
-.editorial-feed-card {
-    display: grid;
-    gap: 1rem;
+/* ------------------------------------------------------------------ topbar */
+
+.mcf-topbar {
+    background: var(--mcf-paper);
+    border-bottom: 1px solid var(--mcf-line-soft);
 }
 
-.editorial-feed-card::before {
-    aspect-ratio: 4 / 3;
-    background:
-        linear-gradient(#ffffff 0 0) padding-box,
-        linear-gradient(
-                180deg,
-                color-mix(in srgb, var(--editorial-accent) 18%, white),
-                #e5e7eb
-            )
-            border-box;
-    border: 1px solid transparent;
-    border-radius: max(var(--theme-radius, 1rem), 1.25rem);
-    content: '';
-    display: block;
+.mcf-topbar-inner {
+    align-items: baseline;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem 1.75rem;
+    justify-content: space-between;
+    margin-inline: auto;
+    max-width: 46rem;
+    padding: 1.1rem clamp(1.25rem, 4vw, 2rem);
 }
 
-.editorial-feed-card:nth-child(2)::before {
-    aspect-ratio: 16 / 9;
-}
-
-.editorial-feed-card:nth-child(3)::before {
-    aspect-ratio: 1 / 1;
-}
-
-.editorial-feed-specs {
-    border-top: 1px solid var(--editorial-line);
-    display: grid;
-    gap: 0.45rem;
-    padding-top: 0.9rem;
-}
-
-.editorial-feed-specs span {
-    color: var(--editorial-muted);
-    font-size: 0.9rem;
-}
-
-.editorial-feed-specs span:first-child {
-    color: var(--editorial-ink);
-    font-weight: 800;
-}
-
-.editorial-shell nav a {
-    color: var(--editorial-ink);
-    font-weight: 700;
+.mcf-topbar-brand {
+    color: var(--mcf-ink);
+    font-size: 0.9375rem;
+    font-weight: 650;
+    letter-spacing: -0.01em;
     text-decoration: none;
 }
 
-.editorial-shell nav a:focus-visible,
-.editorial-shell nav a:hover {
-    color: var(--editorial-accent);
-    outline: 2px solid
-        color-mix(in srgb, var(--editorial-accent) 42%, transparent);
-    outline-offset: 0.25rem;
+.mcf-topbar-nav {
+    align-items: baseline;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem 1.4rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
 }
 
-@media (min-width: 768px) {
-    .editorial-hero-grid,
-    .editorial-split {
-        display: grid;
-        gap: 2rem;
-        grid-template-columns: minmax(0, 1fr) minmax(18rem, 0.82fr);
+.mcf-shell nav a {
+    color: var(--mcf-muted);
+    font-size: 0.8125rem;
+    text-decoration: none;
+    transition: color 160ms var(--mcf-ease);
+}
+
+.mcf-shell nav a:hover {
+    color: var(--mcf-ink);
+}
+
+.mcf-topbar-cta {
+    border-bottom: 1px solid var(--mcf-line);
+    padding-bottom: 0.1rem;
+}
+
+/* ---------------------------------------------------------------- captures */
+
+.mcf-capture {
+    display: grid;
+    gap: 0.75rem;
+    margin: 0;
+}
+
+.mcf-capture-media {
+    aspect-ratio: 16 / 10;
+    background-color: var(--mcf-field);
+    border: 1px solid var(--mcf-line);
+    border-radius: 10px;
+    display: block;
+    object-fit: cover;
+    width: 100%;
+}
+
+/* A quiet dotted field when an entry ships without its screenshot. */
+.mcf-capture-media-empty {
+    background-image: radial-gradient(
+        color-mix(in srgb, var(--mcf-ink) 14%, transparent) 1px,
+        transparent 1px
+    );
+    background-position: center;
+    background-size: 14px 14px;
+    display: grid;
+    place-items: center;
+}
+
+.mcf-capture-media-empty::before {
+    background: var(--mcf-paper);
+    border: 1px solid var(--mcf-line);
+    border-radius: 8px;
+    content: '';
+    display: block;
+    height: 38%;
+    width: 30%;
+}
+
+.mcf-capture-caption {
+    align-items: baseline;
+    color: var(--mcf-muted);
+    display: flex;
+    flex-wrap: wrap;
+    font-size: 0.75rem;
+    gap: 0.35rem 1rem;
+    justify-content: space-between;
+    line-height: 1.5;
+}
+
+/* -------------------------------------------------------------------- feed */
+
+.mcf-feed {
+    display: grid;
+    margin-top: clamp(1.5rem, 3vw, 2.5rem);
+}
+
+.mcf-entry {
+    display: grid;
+    gap: 0.9rem;
+    padding-block: clamp(2.25rem, 5vw, 3.5rem);
+}
+
+.mcf-entry + .mcf-entry {
+    border-top: 1px solid var(--mcf-line-soft);
+}
+
+.mcf-entry-caption {
+    align-items: baseline;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem 1.25rem;
+    justify-content: space-between;
+}
+
+.mcf-entry-source {
+    color: var(--mcf-muted);
+    font-size: 0.75rem;
+    font-variant-numeric: tabular-nums;
+    margin: 0.15rem 0 0;
+}
+
+.mcf-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    list-style: none;
+    margin: 0.25rem 0 0;
+    padding: 0;
+}
+
+.mcf-tag {
+    border: 1px solid var(--mcf-line);
+    border-radius: 999px;
+    color: var(--mcf-muted);
+    font-size: 0.6875rem;
+    line-height: 1;
+    padding: 0.3rem 0.65rem;
+}
+
+/* -------------------------------------------------------------------- tabs */
+
+.mcf-tabs {
+    border-bottom: 1px solid var(--mcf-line);
+    display: flex;
+    gap: 1.6rem;
+    list-style: none;
+    margin: clamp(1.5rem, 3vw, 2.25rem) 0 0;
+    overflow-x: auto;
+    padding: 0;
+}
+
+.mcf-tab {
+    border-bottom: 1px solid transparent;
+    color: var(--mcf-muted);
+    display: inline-block;
+    font-size: 0.8125rem;
+    margin-bottom: -1px;
+    padding-block: 0.7rem;
+    text-decoration: none;
+    transition: color 160ms var(--mcf-ease);
+    white-space: nowrap;
+}
+
+.mcf-tab:hover {
+    color: var(--mcf-ink);
+}
+
+.mcf-tab-active {
+    border-bottom-color: var(--mcf-ink);
+    color: var(--mcf-ink);
+    font-weight: 550;
+}
+
+.mcf-tab-notes {
+    display: grid;
+    margin-top: 0.5rem;
+}
+
+.mcf-tab-note {
+    align-items: baseline;
+    display: grid;
+    gap: 0.2rem 1.5rem;
+    padding-block: 0.9rem;
+}
+
+.mcf-tab-note + .mcf-tab-note {
+    border-top: 1px solid var(--mcf-line-soft);
+}
+
+@media (min-width: 640px) {
+    .mcf-tab-note {
+        grid-template-columns: 8rem minmax(0, 1fr);
+    }
+}
+
+/* --------------------------------------------------------------- rank list */
+
+.mcf-rank {
+    display: grid;
+    margin-top: clamp(1.5rem, 3vw, 2.25rem);
+}
+
+.mcf-rank-row {
+    align-items: center;
+    display: grid;
+    gap: 0.35rem 1.1rem;
+    grid-template-columns: 1.6rem minmax(0, 1fr);
+    padding-block: 1rem;
+}
+
+.mcf-rank-row + .mcf-rank-row {
+    border-top: 1px solid var(--mcf-line-soft);
+}
+
+.mcf-rank-number {
+    color: var(--mcf-faint);
+    font-size: 0.75rem;
+    font-variant-numeric: tabular-nums;
+}
+
+.mcf-rank-thumb {
+    aspect-ratio: 16 / 10;
+    background-color: var(--mcf-field);
+    border: 1px solid var(--mcf-line);
+    border-radius: 6px;
+    display: none;
+    object-fit: cover;
+    width: 5.5rem;
+}
+
+.mcf-rank-body {
+    display: grid;
+    gap: 0.1rem;
+}
+
+.mcf-rank-body p {
+    color: var(--mcf-muted);
+    font-size: 0.8125rem;
+    font-variant-numeric: oldstyle-nums;
+    margin: 0;
+    text-wrap: pretty;
+}
+
+@media (min-width: 640px) {
+    .mcf-rank-row {
+        grid-template-columns: 1.6rem 5.5rem minmax(0, 1fr) auto;
     }
 
-    .editorial-hero-grid {
-        align-items: center;
-        grid-template-columns: minmax(0, 1.2fr) minmax(18rem, 0.8fr);
+    .mcf-rank-thumb {
+        display: block;
+    }
+}
+
+/* --------------------------------------------------------------- icon grid */
+
+.mcf-icon-grid {
+    container-type: inline-size;
+    display: grid;
+    gap: clamp(1.25rem, 3vw, 2rem);
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 12rem), 1fr));
+    margin-top: clamp(1.75rem, 3.5vw, 2.5rem);
+}
+
+/* Container-query re-expression: when this grid lands in a narrow Layout
+   Builder column (e.g. a sidebar) rather than a narrow viewport, degrade the
+   column count and spacing based on the container's own inline size. The
+   auto-fill rule above remains as a fallback for contexts without container
+   query support. */
+@supports (container-type: inline-size) {
+    @container (max-width: 28rem) {
+        .mcf-icon-grid {
+            gap: clamp(1rem, 6cqi, 1.5rem);
+            grid-template-columns: repeat(
+                auto-fill,
+                minmax(min(100%, 36cqi), 1fr)
+            );
+        }
+    }
+
+    @container (max-width: 20rem) {
+        .mcf-icon-grid {
+            gap: 4cqi;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+    }
+
+    @container (max-width: 12rem) {
+        .mcf-icon-grid {
+            gap: 3cqi;
+            grid-template-columns: minmax(0, 1fr);
+        }
+    }
+}
+
+.mcf-icon-card {
+    display: grid;
+    gap: 0.6rem;
+    justify-items: start;
+}
+
+.mcf-icon-tile {
+    align-items: center;
+    aspect-ratio: 1 / 1;
+    background: var(--mcf-field);
+    border: 1px solid var(--mcf-line);
+    border-radius: 22%;
+    color: var(--mcf-ink);
+    display: flex;
+    font-size: 1.1rem;
+    font-weight: 600;
+    height: 3rem;
+    justify-content: center;
+    object-fit: cover;
+    width: 3rem;
+}
+
+.mcf-icon-card p {
+    color: var(--mcf-muted);
+    font-size: 0.8125rem;
+    line-height: 1.55;
+    margin: 0;
+    text-wrap: pretty;
+}
+
+/* --------------------------------------------------------------- meta rows */
+
+.mcf-meta-rows {
+    display: grid;
+    margin-top: clamp(1.5rem, 3vw, 2.25rem);
+}
+
+.mcf-meta-row {
+    display: grid;
+    gap: 0.2rem 1.5rem;
+    padding-block: 0.95rem;
+}
+
+.mcf-meta-row + .mcf-meta-row {
+    border-top: 1px solid var(--mcf-line-soft);
+}
+
+.mcf-meta-row p {
+    color: var(--mcf-muted);
+    font-size: 0.8125rem;
+    margin: 0;
+}
+
+@media (min-width: 640px) {
+    .mcf-meta-row {
+        grid-template-columns: 11rem minmax(0, 1fr);
+    }
+}
+
+/* ------------------------------------------------------------------- stats */
+
+.mcf-stats {
+    display: grid;
+    gap: clamp(1.5rem, 3vw, 2.25rem);
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 11rem), 1fr));
+    margin-top: clamp(1.75rem, 3.5vw, 2.5rem);
+}
+
+.mcf-stat {
+    border-top: 1px solid var(--mcf-line);
+    display: grid;
+    gap: 0.4rem;
+    padding-top: 1rem;
+}
+
+.mcf-stat-value {
+    font-size: 1.2rem;
+    font-variant-numeric: tabular-nums;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    line-height: 1.2;
+    margin: 0;
+}
+
+.mcf-stat p {
+    color: var(--mcf-muted);
+    font-size: 0.8125rem;
+    margin: 0;
+    text-wrap: pretty;
+}
+
+/* ------------------------------------------------------------- title links */
+
+.mcf-title-link {
+    color: inherit;
+    text-decoration: underline;
+    text-decoration-color: transparent;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.25rem;
+    transition: text-decoration-color 160ms var(--mcf-ease);
+}
+
+.mcf-title-link:hover {
+    text-decoration-color: var(--mcf-faint);
+}
+
+/* -------------------------------------------------------------- newsletter */
+
+.mcf-form {
+    align-items: end;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem 0.75rem;
+    margin-top: 1.75rem;
+}
+
+.mcf-form-field {
+    display: grid;
+    flex: 1 1 14rem;
+    gap: 0.35rem;
+}
+
+.mcf-form label {
+    color: var(--mcf-faint);
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+.mcf-form input {
+    background: transparent;
+    border: 0;
+    border-bottom: 1px solid var(--mcf-line);
+    border-radius: 0;
+    color: var(--mcf-ink);
+    font-size: 0.9375rem;
+    padding: 0.5rem 0;
+    width: 100%;
+}
+
+.mcf-form input:focus {
+    border-bottom-color: var(--mcf-ink);
+    outline: none;
+}
+
+.mcf-form input:user-invalid {
+    border-bottom-color: oklch(58% 0.19 25);
+}
+
+.mcf-form input:user-valid {
+    border-bottom-color: oklch(64% 0.15 155);
+}
+
+.mcf-form input::placeholder {
+    color: var(--mcf-faint);
+    font-style: italic;
+}
+
+.mcf-form input[type='checkbox'],
+.mcf-form input[type='radio'] {
+    accent-color: var(--mcf-accent);
+}
+
+.mcf-form-note {
+    flex-basis: 100%;
+}
+
+/* ------------------------------------------------------------------ footer */
+
+.mcf-footer {
+    border-top: 1px solid var(--mcf-line);
+}
+
+.mcf-footer-grid {
+    display: grid;
+    gap: clamp(2rem, 4vw, 3rem);
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 10rem), 1fr));
+}
+
+.mcf-footer-brand {
+    display: grid;
+    gap: 0.6rem;
+}
+
+.mcf-footer-wordmark {
+    font-size: 0.9375rem;
+    font-weight: 650;
+    letter-spacing: -0.01em;
+    margin: 0;
+}
+
+.mcf-footer-summary {
+    color: var(--mcf-muted);
+    font-size: 0.8125rem;
+    font-variant-numeric: oldstyle-nums;
+    line-height: 1.6;
+    margin: 0;
+    max-width: 18rem;
+    text-wrap: pretty;
+}
+
+.mcf-footer-heading {
+    color: var(--mcf-faint);
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    margin: 0 0 0.9rem;
+    text-transform: uppercase;
+}
+
+.mcf-footer-links {
+    display: grid;
+    gap: 0.55rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.mcf-footer-links a {
+    color: var(--mcf-muted);
+    font-size: 0.8125rem;
+    text-decoration: none;
+    transition: color 160ms var(--mcf-ease);
+}
+
+.mcf-footer-links a:hover {
+    color: var(--mcf-ink);
+}
+
+/* -------------------------------------------------------------- empty state */
+
+.mcf-empty {
+    border-top: 1px dashed var(--mcf-line);
+    display: grid;
+    gap: 0.35rem;
+    justify-items: start;
+    margin-top: clamp(1.5rem, 3vw, 2.25rem);
+    padding-block: clamp(2rem, 5vw, 3rem);
+}
+
+.mcf-empty-heading {
+    color: var(--mcf-ink);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+.mcf-empty-note {
+    color: var(--mcf-faint);
+    font-size: 0.8125rem;
+    line-height: 1.6;
+    margin: 0;
+    max-width: 30rem;
+    text-wrap: pretty;
+}
+
+/* --------------------------------------------------------- automatic dark mode */
+
+/* System-preference dark mode for visitors who have not manually chosen the
+   "Night Feed" preset. --mcf-ink, --mcf-paper, and --mcf-accent now switch
+   automatically via light-dark() on color-scheme above, so this block is kept
+   only as an explicit fallback/override path for the derived --mcf-* tokens
+   and to pin color-scheme: dark once the OS preference is known. The manual
+   preset toggle mechanism is untouched and continues to take precedence
+   wherever it sets these properties. */
+@media (prefers-color-scheme: dark) {
+    .mcf-shell {
+        --mcf-muted: color-mix(in srgb, var(--mcf-ink) 70%, transparent);
+        --mcf-faint: color-mix(in srgb, var(--mcf-ink) 62%, transparent);
+        --mcf-line: color-mix(in srgb, var(--mcf-ink) 12%, transparent);
+        --mcf-line-soft: color-mix(in srgb, var(--mcf-ink) 7%, transparent);
+        --mcf-field: color-mix(in srgb, var(--mcf-ink) 3%, var(--mcf-paper));
+        color-scheme: dark;
+    }
+}
+
+/* -------------------------------------------------------- preset tokens */
+
+/* The six brand-token presets below are declared on the shell wrapper as
+   inline custom properties (see ThemeDefinitionData::definition()->presets)
+   but were previously unread by this stylesheet. Container style queries
+   read them back from `.mcf-shell`'s named container (see `container:
+   mcf-tokens / normal;` above) without any JavaScript — Baseline 2024+,
+   with the unconditioned rules above standing in as the fallback for
+   browsers that lack style-query support. */
+
+/* --theme-spacing: tightens the primary feed rhythm for readers who prefer
+   a denser scan. Balanced (1.25rem, the default gap already in .mcf-feed's
+   clamp) needs no override; compact only nudges the entry gap down. */
+@container mcf-tokens style(--theme-spacing: compact) {
+    .mcf-feed {
+        gap: 0.875rem;
+    }
+}
+
+/* --theme-card-style: "hairline" is the identity default for this theme's
+   presets, but the unconditioned .mcf-capture-media border above stays a
+   plain, slightly heavier line so the hairline read is a genuine step down
+   in weight rather than a no-op duplicate. */
+@container mcf-tokens style(--theme-card-style: hairline) {
+    .mcf-capture-media,
+    .mcf-entry .mcf-capture-media {
+        border-color: color-mix(in oklch, var(--mcf-ink) 8%, transparent);
+        box-shadow: none;
+    }
+}
+
+/* --theme-layout-presentation: "editorial" breaks the single-column feed
+   into an asymmetric two-track layout on wide viewports — a large lead
+   capture beside a narrower rail of notes. "structured" (or anything else)
+   keeps the plain single-column .mcf-feed defined earlier. */
+@container mcf-tokens style(--theme-layout-presentation: editorial) {
+    @media (min-width: 900px) {
+        .mcf-feed {
+            align-items: start;
+            grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+        }
+
+        .mcf-entry:first-child {
+            grid-column: 1 / -1;
+        }
+    }
+}
+
+/* --theme-heading-scale: CMS-sanitised to compact | balanced | expressive.
+   Deliberately left off the hero clamp (h1); applied only to the feed
+   item's own heading via a dedicated custom property so a defensive
+   default of 1 covers any unrecognised or absent value. */
+.mcf-entry h3 {
+    --mcf-heading-scale: 1;
+    font-size: clamp(0.875rem, calc(0.875rem * var(--mcf-heading-scale)), 1rem);
+}
+
+@container mcf-tokens style(--theme-heading-scale: compact) {
+    .mcf-entry h3 {
+        --mcf-heading-scale: 0.92;
+    }
+}
+
+@container mcf-tokens style(--theme-heading-scale: expressive) {
+    .mcf-entry h3 {
+        --mcf-heading-scale: 1.15;
+    }
+}
+
+/* --theme-card-density: sanitised "dense" today collapses to "comfortable"
+   (the existing padding-block above), but both the canonical "compact"
+   value and the literal "dense" preset string are wired so the tighter
+   rhythm is available the moment either reaches the page. */
+@container mcf-tokens style(--theme-card-density: compact) {
+    .mcf-entry {
+        padding-block: 0.75rem;
+    }
+}
+
+@container mcf-tokens style(--theme-card-density: dense) {
+    .mcf-entry {
+        padding-block: 0.625rem;
+    }
+}
+
+/* --theme-overlay-treatment: a minimal scrim over the feed capture, kept
+   restrained even at its strongest step. "subtle" is the default weight;
+   "none" removes it and "strong" deepens it without losing the photo. */
+.mcf-capture {
+    position: relative;
+}
+
+.mcf-capture::after {
+    aspect-ratio: 16 / 10;
+    background: linear-gradient(
+        to top,
+        color-mix(in oklch, var(--mcf-ink) 45%, transparent),
+        transparent 40%
+    );
+    border-radius: 10px;
+    content: '';
+    inset: 0 0 auto 0;
+    height: auto;
+    opacity: 0.2;
+    pointer-events: none;
+    position: absolute;
+}
+
+@container mcf-tokens style(--theme-overlay-treatment: none) {
+    .mcf-capture::after {
+        opacity: 0;
+    }
+}
+
+@container mcf-tokens style(--theme-overlay-treatment: strong) {
+    .mcf-capture::after {
+        opacity: 0.5;
+    }
+}
+
+/* ------------------------------------------------------------------ print */
+
+@media print {
+    .mcf-shell .mcf-topbar,
+    .mcf-shell .mcf-footer,
+    .mcf-shell .mcf-actions,
+    .mcf-shell .mcf-button,
+    .mcf-shell .mcf-skip-link,
+    .mcf-shell .mcf-form,
+    .mcf-shell #newsletter,
+    .mcf-shell #cta {
+        display: none !important;
+    }
+
+    .mcf-shell {
+        background: #ffffff;
+        color: #000000;
+    }
+
+    .mcf-shell,
+    .mcf-shell h1,
+    .mcf-shell h2,
+    .mcf-shell h3,
+    .mcf-shell p,
+    .mcf-shell .mcf-kicker,
+    .mcf-shell .mcf-lede,
+    .mcf-shell .mcf-tiny,
+    .mcf-shell .mcf-meta,
+    .mcf-shell .mcf-entry-source,
+    .mcf-shell .mcf-rank-body p,
+    .mcf-shell .mcf-empty-note {
+        color: #000000;
+    }
+
+    .mcf-shell .mcf-section-inner {
+        max-width: 100%;
+        padding: 0.5rem 0;
+    }
+
+    .mcf-shell .mcf-section + .mcf-section {
+        border-top: 1px solid #000000;
+    }
+
+    .mcf-shell a {
+        color: #000000;
+        text-decoration: underline;
+    }
+
+    .mcf-shell a[href]::after {
+        content: '';
+    }
+
+    .mcf-shell .mcf-entry,
+    .mcf-shell .mcf-rank-row,
+    .mcf-shell .mcf-icon-card,
+    .mcf-shell .mcf-tab-note,
+    .mcf-shell .mcf-meta-row,
+    .mcf-shell .mcf-stat {
+        break-inside: avoid;
+        page-break-inside: avoid;
+    }
+
+    .mcf-shell .mcf-capture-media,
+    .mcf-shell .mcf-rank-thumb,
+    .mcf-shell .mcf-icon-tile {
+        border: 1px solid #000000;
+    }
+}
+
+/* Forced-colors (Wave 11.5): High Contrast mode strips box-shadow but keeps
+   outline, and flattens backgrounds — so re-assert focus with outline and give
+   cards a transparent border the OS repaints. */
+@media (forced-colors: active) {
+    .mcf-shell a:focus-visible,
+    .mcf-shell button:focus-visible,
+    .mcf-shell input:focus-visible,
+    .mcf-shell [tabindex]:focus-visible {
+        outline: 2px solid;
+        outline-offset: 2px;
+    }
+
+    .mcf-capture-media,
+    .mcf-icon-tile,
+    .mcf-tag {
+        border: 1px solid transparent;
+    }
+}
+
+/* High contrast preference (Wave 11.5): thicken hairline rules and lift the
+   dimmed/muted text one step so the quiet layer stays legible. */
+@media (prefers-contrast: more) {
+    .mcf-capture-media,
+    .mcf-tag,
+    .mcf-tabs,
+    .mcf-stat {
+        border-color: var(--mcf-ink);
+    }
+
+    .mcf-muted,
+    .mcf-faint,
+    .mcf-lede,
+    .mcf-tiny,
+    .mcf-meta {
+        color: var(--mcf-ink);
+    }
+}
+
+/* View Transitions (Wave 6.5): opt every same-origin navigation into a smooth
+   cross-document transition where supported; static fallback everywhere else.
+   Reduced-motion users still navigate — just without the animation. */
+@view-transition {
+    navigation: auto;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    ::view-transition-group(*),
+    ::view-transition-old(*),
+    ::view-transition-new(*) {
+        animation: none !important;
     }
 }

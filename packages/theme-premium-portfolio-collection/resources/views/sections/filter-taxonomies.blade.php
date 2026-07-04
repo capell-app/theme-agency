@@ -7,17 +7,40 @@
     ]);
 @endphp
 
-<section class="editorial-section">
-    <div class="editorial-section-inner">
-        <p class="editorial-kicker">
+<section
+    id="filters"
+    class="ppc-section"
+>
+    <div class="ppc-section-inner">
+        <p class="ppc-kicker">
             {{ __('capell-theme-premium-portfolio-collection::sections.topics.kicker') }}
         </p>
         <h2>
             {{ data_get($section, 'heading', __('capell-theme-premium-portfolio-collection::sections.topics.heading')) }}
         </h2>
-        <div class="editorial-grid">
+
+        <div class="ppc-filters">
             @foreach ($items as $item)
-                <article class="editorial-card">
+                @php
+                    $filterUrl = data_get($item, 'url', data_get($item, 'href', '#filters'));
+                    $count = data_get($item, 'count');
+                @endphp
+
+                <a
+                    class="ppc-filter-chip"
+                    href="{{ $filterUrl }}"
+                >
+                    {{ data_get($item, 'title', data_get($item, 'name', '')) }}
+                    @if (filled($count))
+                        <span class="ppc-filter-chip-count">{{ $count }}</span>
+                    @endif
+                </a>
+            @endforeach
+        </div>
+
+        <div class="ppc-grid">
+            @foreach ($items as $item)
+                <article class="ppc-card">
                     <h3>
                         {{ data_get($item, 'title', data_get($item, 'name', '')) }}
                     </h3>

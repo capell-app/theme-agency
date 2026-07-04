@@ -56,9 +56,9 @@ class ForcePackagesUninstalledServiceProvider extends ServiceProvider
             TagsServiceProvider::$packageName,
             FrontendAuthoringServiceProvider::$packageName,
             PublishingStudioServiceProvider::$packageName,
-            'capell-app/theme-agency',
-            'capell-app/theme-corporate',
-            'capell-app/theme-saas',
+            'capell-app/theme-case-study-platform',
+            'capell-app/theme-dark-product-system',
+            'capell-app/theme-dense-news-analysis',
         ];
     }
 }

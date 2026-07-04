@@ -1,35 +1,35 @@
 <section
-    class="editorial-section"
-    style="background: var(--editorial-field)"
+    id="newsletter"
+    class="csp-section csp-section-field"
 >
-    <div class="editorial-section-inner editorial-split">
+    <div class="csp-section-inner csp-split">
         <div>
-            <p class="editorial-kicker">
+            <p class="csp-kicker">
                 {{ __('capell-theme-case-study-platform::sections.newsletter.kicker') }}
             </p>
             <h2>
                 {{ data_get($section, 'heading', __('capell-theme-case-study-platform::sections.newsletter.heading')) }}
             </h2>
-            <p class="editorial-lede">
+            <p class="csp-lede">
                 {{ data_get($section, 'summary', __('capell-theme-case-study-platform::sections.newsletter.summary')) }}
             </p>
         </div>
         <form
-            method="post"
-            action="{{ data_get($section, 'action', '/') }}"
-            class="editorial-card"
+            method="get"
+            action="{{ data_get($section, 'action', '#newsletter') }}"
+            class="csp-form"
         >
-            <label for="editorial-newsletter-email">
+            <label for="csp-newsletter-email">
                 {{ __('capell-theme-case-study-platform::sections.newsletter.email_label') }}
             </label>
             <input
-                id="editorial-newsletter-email"
+                id="csp-newsletter-email"
                 name="email"
                 type="email"
                 required
             />
             <button
-                class="editorial-button"
+                class="csp-button"
                 type="submit"
             >
                 {{ __('capell-theme-case-study-platform::sections.newsletter.button') }}

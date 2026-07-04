@@ -13,17 +13,20 @@ use Capell\FoundationTheme\Support\Demo\ThemeDemoPageDefinition;
 /**
  * Complete, vertical-authentic demo content for the Raw Index theme.
  *
- * Raw Index is a deliberately raw independent-archive theme: monospace type,
- * plain grey surfaces, stark underlined links, and rough metadata. Each surface
- * is seeded as an ordered `render_data['sections']` list so the page adapter
- * emits the theme's signature renderers (archive-wall / irregular-index /
- * rough-links / submission-markers / archive-dates / zine-annotations) alongside
- * the standard hero / proof / cta, giving every surface a full archive page
- * rather than the shared five-section skeleton.
+ * Raw Index is a brutalist zine / experimental-archive theme: monospace type,
+ * high-contrast black-and-white surfaces with one harsh accent, and visibly
+ * off-grid layout. Each surface is seeded as an ordered `render_data['sections']`
+ * list so the page adapter emits the theme's signature renderers (archive-wall /
+ * irregular-index / rough-links / submission-markers / archive-dates /
+ * zine-annotations) alongside the shared hero/proof/cta/newsletter, giving every
+ * surface a full archive page rather than the shared skeleton. Every archived
+ * capture is wired to a real photograph from `ThemeDemoMedia`.
  */
 final class RawIndexDemoContent implements ProvidesThemeDemoContent
 {
-    private const BRAND = 'Raw Index';
+    private const string BRAND = 'Raw Index';
+
+    private const string INTAKE_EMAIL = 'intake@rawindex.zine';
 
     /**
      * @return array<int, ThemeDemoPageDefinition>
@@ -51,29 +54,29 @@ final class RawIndexDemoContent implements ProvidesThemeDemoContent
         return new ThemeDemoPageDefinition(
             surface: 'homepage',
             name: self::BRAND . ' Home',
-            title: self::BRAND . ' — Independent culture archive',
+            title: self::BRAND . ' — A brutalist wall for independent culture',
             slug: 'theme-' . $themeKey,
             content: $this->prose(
-                'A fast archive wall for culture, art, music, and zines',
-                'Raw Index is a deliberately raw archive: monospace type, plain surfaces, stark underlined links, and rough metadata that keeps long irregular indexes legible.',
+                'A wall for what got left off the shelf',
+                'Raw Index is a photocopied-zine archive of posters, tapes, interviews, and field notes — pinned up raw, dated, and linked out.',
             ),
             renderData: [
-                'summary' => 'A raw independent index for art, music, zines, interviews, and experiments. Plain type, blue underlined links, visible metadata, fast pages.',
+                'summary' => 'Raw Index is a brutalist archive for underground culture — posters, tape rips, interviews, and field notes, pinned up raw and dated on intake.',
                 'navigation' => $this->navigation(),
                 'footer' => $this->footer(),
                 'sections' => [
-                    [
-                        'type' => 'hero',
-                        'kicker' => 'Raw independent index',
-                        'heading' => 'A fast archive wall for culture, art, music, zines, and experiments',
-                        'summary' => 'No polish, no chrome. Just a long, controlled wall of entries with dates, language notes, interview markers, and plain links you can actually follow.',
-                        'primary_label' => 'Open the index',
-                        'primary_url' => '#index',
-                        'secondary_label' => 'Submit work',
-                        'secondary_url' => '#submit',
-                        'mediaUrl' => $media['hero'][0],
-                        'mediaAlt' => 'Raw archive wall',
-                    ],
+                    $this->heroSection(
+                        eyebrow: 'Issue 09. Xeroxed.',
+                        heading: 'A wall for what got left off the shelf',
+                        summary: 'Photocopied posters, tape rips, interview transcripts, and field notes — pinned up raw, dated, and linked out. No polish, no gatekeeping.',
+                        media: $media,
+                        mediaKey: 'hero',
+                        mediaAlt: 'A basement show poster torn and pinned to the archive wall',
+                        primaryLabel: 'Open the wall',
+                        primaryUrl: '#archive-wall',
+                        secondaryLabel: 'Submit a scan',
+                        secondaryUrl: '#submission-markers',
+                    ),
                     $this->archiveWallSection($media),
                     $this->irregularIndexSection($media),
                     $this->roughLinksSection(),
@@ -83,8 +86,10 @@ final class RawIndexDemoContent implements ProvidesThemeDemoContent
                     $this->proofSection(),
                     $this->newsletterSection(),
                     $this->ctaSection(
-                        heading: 'Add a link to the index',
-                        summary: 'Submissions stay open. Send a URL, a date, a language note, and a marker — we keep the formatting raw.',
+                        heading: 'Got a scan, a link, or a correction?',
+                        summary: 'Send it raw. We keep the formatting rough and the credit exact.',
+                        primaryUrl: '#submission-markers',
+                        secondaryUrl: '#archive-wall',
                     ),
                 ],
             ],
@@ -100,36 +105,39 @@ final class RawIndexDemoContent implements ProvidesThemeDemoContent
     {
         return new ThemeDemoPageDefinition(
             surface: 'directory',
-            name: self::BRAND . ' Index',
-            title: 'The index — ' . self::BRAND,
+            name: self::BRAND . ' Wall',
+            title: 'The full wall — ' . self::BRAND,
             slug: 'theme-' . $themeKey . '-directory',
             content: $this->prose(
-                'The full index',
-                'Every entry in one long wall — posters, releases, interviews, zines, and field notes, newest first, with dates and language labels.',
+                'Every scan, newest first',
+                'Posters, tapes, interviews, and field notes filed in one long wall, newest first, with dates and markers intact.',
             ),
             renderData: [
-                'summary' => 'The complete archive wall: posters, releases, interviews, zines, and field notes, newest first, with rough metadata on every row.',
+                'summary' => 'The complete Raw Index wall: posters, tapes, interviews, and field notes, newest first, with dates and markers on every entry.',
                 'navigation' => $this->navigation(),
                 'footer' => $this->footer(),
                 'sections' => [
-                    [
-                        'type' => 'hero',
-                        'kicker' => 'The index',
-                        'heading' => 'Every entry, newest first',
-                        'summary' => 'Scroll the whole wall or jump by archive year. Each row keeps its date, language note, marker, and a plain underlined link.',
-                        'primary_label' => 'Submit work',
-                        'primary_url' => '#submit',
-                        'secondary_label' => 'Browse by year',
-                        'secondary_url' => '#years',
-                        'mediaUrl' => $media['listing'][0] ?? $media['hero'][0],
-                        'mediaAlt' => 'The full archive index',
-                    ],
+                    $this->heroSection(
+                        eyebrow: 'The full wall',
+                        heading: 'Every scan filed, nothing smoothed over',
+                        summary: 'Browse the whole wall or scan the irregular index below. Rows stay dated, marked, and linked — never rewritten.',
+                        media: $media,
+                        mediaKey: 'listing',
+                        mediaAlt: 'A dense wall of pinned archive scans',
+                        primaryLabel: 'Browse the index',
+                        primaryUrl: '#irregular-index',
+                        secondaryLabel: 'Submit a scan',
+                        secondaryUrl: '/theme-' . $themeKey . '-contact',
+                    ),
                     $this->archiveWallSection($media),
-                    $this->contentListingSection(),
+                    $this->irregularIndexSection($media),
                     $this->archiveDatesSection(),
+                    $this->contentListingSection($media),
                     $this->ctaSection(
-                        heading: 'Spotted a gap in the index?',
-                        summary: 'Send the missing link with a date and a marker. We add it to the wall, raw.',
+                        heading: 'Spotted a gap in the wall?',
+                        summary: 'Send the missing scan with a date and a marker. We file it, raw.',
+                        primaryUrl: '/theme-' . $themeKey . '-contact',
+                        secondaryUrl: '#archive-wall',
                     ),
                 ],
             ],
@@ -145,35 +153,37 @@ final class RawIndexDemoContent implements ProvidesThemeDemoContent
         return new ThemeDemoPageDefinition(
             surface: 'detail',
             name: self::BRAND . ' Entry',
-            title: 'Interview — Issue 08 — ' . self::BRAND,
+            title: 'Interview with an experimental publisher — ' . self::BRAND,
             slug: 'theme-' . $themeKey . '-detail',
             content: $this->prose(
                 'Interview with an experimental publisher',
-                'A text-forward entry with an interview marker, issue note, related archive date, and a language label.',
+                'A text-forward entry carrying an interview marker, an issue note, a related archive date, and a language label.',
             ),
             renderData: [
                 'summary' => 'A single archive entry: interview marker, issue note, language label, related dates, and the plain links that go with it.',
                 'navigation' => $this->navigation(),
                 'footer' => $this->footer(),
                 'sections' => [
-                    [
-                        'type' => 'hero',
-                        'kicker' => 'Interview. Issue 08. FR.',
-                        'heading' => 'Interview with an experimental publisher',
-                        'summary' => 'A long-form entry kept raw: no decoration, just the text, the date stamp, the language note, and links out to the related archive.',
-                        'primary_label' => 'Back to the index',
-                        'primary_url' => '#index',
-                        'secondary_label' => 'RSS',
-                        'secondary_url' => '#rss',
-                        'mediaUrl' => $media['detail'][0],
-                        'mediaAlt' => 'Interview entry',
-                    ],
+                    $this->heroSection(
+                        eyebrow: 'Interview. Issue 08. FR.',
+                        heading: 'Interview with an experimental publisher',
+                        summary: 'A long-form entry kept raw: no decoration, just the transcript, the date stamp, the language note, and links out to the related archive.',
+                        media: $media,
+                        mediaKey: 'detail',
+                        mediaAlt: 'The publisher photographed at their print studio',
+                        primaryLabel: 'Back to the wall',
+                        primaryUrl: '/#archive-wall',
+                        secondaryLabel: 'Read the margin notes',
+                        secondaryUrl: '#zine-annotations',
+                    ),
                     $this->zineAnnotationsSection(),
                     $this->archiveDatesSection(),
                     $this->roughLinksSection(),
                     $this->ctaSection(
                         heading: 'Run an interview we should index?',
-                        summary: 'Send the link with a date and a language note. We archive it with an interview marker.',
+                        summary: 'Send the link with a date and a language note. We file it with an interview marker.',
+                        primaryUrl: '/theme-' . $themeKey . '-contact',
+                        secondaryUrl: '/#archive-wall',
                     ),
                 ],
             ],
@@ -188,35 +198,37 @@ final class RawIndexDemoContent implements ProvidesThemeDemoContent
         return new ThemeDemoPageDefinition(
             surface: 'contact',
             name: self::BRAND . ' Submit',
-            title: 'Submit a link — ' . self::BRAND,
+            title: 'Submit a scan — ' . self::BRAND,
             slug: 'theme-' . $themeKey . '-contact',
             content: $this->prose(
-                'Submit a link to the index',
+                'Submit a scan to the wall',
                 'Send a URL, a title, a date, a language note, and a marker. We keep the formatting raw and the link plain.',
             ),
             renderData: [
-                'summary' => 'Submissions stay open. Send a URL, a title, a date, a language note, and a marker — corrections and updates welcome.',
+                'summary' => 'Submissions stay open. Send a URL, a title, a date, a language note, and a marker — corrections welcome.',
                 'navigation' => $this->navigation(),
                 'footer' => $this->footer(),
                 'sections' => [
-                    [
-                        'type' => 'hero',
-                        'kicker' => 'Submission markers',
-                        'heading' => 'Submit a link to the index',
-                        'summary' => 'One plain form, no account needed. Email index@rawindex.example or use the route below. We log submissions, accepted links, and corrections in the open.',
-                        'primary_label' => 'Email a submission',
-                        'primary_url' => 'mailto:index@rawindex.example',
-                        'secondary_label' => 'Read the archive rules',
-                        'secondary_url' => '#rules',
-                        'mediaUrl' => $media['contact'][0],
-                        'mediaAlt' => 'Submission desk',
-                    ],
+                    $this->heroSection(
+                        eyebrow: 'Submission markers',
+                        heading: 'Submit a scan to the wall',
+                        summary: 'One plain form, no account needed. Email ' . self::INTAKE_EMAIL . ' or use the form below. We log submissions, accepted scans, and corrections in the open.',
+                        media: $media,
+                        mediaKey: 'contact',
+                        mediaAlt: 'The intake tray where submitted scans are sorted',
+                        primaryLabel: 'Email a submission',
+                        primaryUrl: 'mailto:' . self::INTAKE_EMAIL,
+                        secondaryLabel: 'Read the intake stamps',
+                        secondaryUrl: '#submission-markers',
+                    ),
                     $this->submissionMarkersSection(),
                     $this->roughLinksSection(),
                     $this->newsletterSection(),
                     $this->ctaSection(
-                        heading: 'Ready to send a link?',
-                        summary: 'Include a date and a marker. We reply in the open and add accepted links to the wall.',
+                        heading: 'Ready to send a scan?',
+                        summary: 'Include a date and a marker. We reply in the open and pin accepted scans to the wall.',
+                        primaryUrl: 'mailto:' . self::INTAKE_EMAIL,
+                        secondaryUrl: '#newsletter',
                     ),
                 ],
             ],
@@ -232,38 +244,42 @@ final class RawIndexDemoContent implements ProvidesThemeDemoContent
         return new ThemeDemoPageDefinition(
             surface: 'empty',
             name: self::BRAND . ' No Entries',
-            title: 'No entries — ' . self::BRAND,
+            title: 'No entries for that filter — ' . self::BRAND,
             slug: 'theme-' . $themeKey . '-empty',
             content: $this->prose(
                 'No entries for that filter',
                 'A graceful empty state for a filtered archive wall with no matching rows.',
             ),
             renderData: [
-                'summary' => 'No rows match that filter yet — clear it to see the whole wall, or submit the missing link.',
+                'summary' => 'No rows match that filter yet — clear it to see the whole wall, or submit the missing scan.',
                 'navigation' => $this->navigation(),
                 'footer' => $this->footer(),
                 'sections' => [
-                    [
-                        'type' => 'hero',
-                        'kicker' => 'Filtered index',
-                        'heading' => 'No entries match that filter — yet',
-                        'summary' => 'Nothing has been archived under this year, language, or marker. Clear the filter to see everything, or submit the link yourself.',
-                        'primary_label' => 'Clear the filter',
-                        'primary_url' => '#index',
-                        'secondary_label' => 'Submit work',
-                        'secondary_url' => '#submit',
-                    ],
+                    $this->heroSection(
+                        eyebrow: 'Filtered wall',
+                        heading: 'No entries match that filter — yet',
+                        summary: 'Nothing has been filed under this year, language, or marker. Clear the filter to see everything, or submit the scan yourself.',
+                        media: $media,
+                        mediaKey: 'listing',
+                        mediaAlt: null,
+                        primaryLabel: 'Back to the wall',
+                        primaryUrl: '/',
+                        secondaryLabel: 'Submit a scan',
+                        secondaryUrl: '/theme-' . $themeKey . '-contact',
+                    ),
                     [
                         'type' => 'archive-wall',
-                        'heading' => 'Nothing pinned here',
-                        'summary' => 'When entries land under this filter they appear on the wall, newest first, with their dates and markers.',
+                        'heading' => 'Nothing pinned under this filter',
+                        'summary' => 'When entries land here they appear on the wall, newest first, with dates and markers intact.',
                         'items' => [],
                     ],
                     $this->roughLinksSection(),
                     $this->submissionMarkersSection(),
                     $this->ctaSection(
-                        heading: 'Know a link that belongs here?',
-                        summary: 'Send the URL with a date and a marker and we add it to the wall, raw.',
+                        heading: 'Know a scan that belongs here?',
+                        summary: 'Send the URL with a date and a marker and we pin it to the wall, raw.',
+                        primaryUrl: '/theme-' . $themeKey . '-contact',
+                        secondaryUrl: '/',
                     ),
                 ],
             ],
@@ -278,31 +294,35 @@ final class RawIndexDemoContent implements ProvidesThemeDemoContent
         return new ThemeDemoPageDefinition(
             surface: 'not-found',
             name: self::BRAND . ' 404',
-            title: 'Page not found — ' . self::BRAND,
+            title: 'That link rotted — ' . self::BRAND,
             slug: 'theme-' . $themeKey . '-404',
             content: $this->prose(
-                'Page not found',
-                'A not-found page that routes visitors back into the index and the submission route.',
+                'That link rotted',
+                'A not-found page that routes visitors back into the wall and the submission form.',
             ),
             renderData: [
-                'summary' => 'That link is broken or the entry has moved — here is the way back into the index.',
+                'summary' => 'That link is broken or the entry has moved — here is the way back into the wall.',
                 'navigation' => $this->navigation(),
                 'footer' => $this->footer(),
                 'sections' => [
-                    [
-                        'type' => 'hero',
-                        'kicker' => '404. Dead link.',
-                        'heading' => 'That link rotted',
-                        'summary' => 'The entry has moved or never existed. Even raw archives lose links — head back to the index or submit a working one.',
-                        'primary_label' => 'Back to home',
-                        'primary_url' => '/',
-                        'secondary_label' => 'Open the index',
-                        'secondary_url' => '#index',
-                    ],
+                    $this->heroSection(
+                        eyebrow: '404. Dead link.',
+                        heading: 'That link rotted',
+                        summary: 'The entry has moved or never existed. Even raw archives lose links — head back to the wall or submit a working one.',
+                        media: $media,
+                        mediaKey: 'hero',
+                        mediaAlt: null,
+                        primaryLabel: 'Back to home',
+                        primaryUrl: '/',
+                        secondaryLabel: 'Submit a working link',
+                        secondaryUrl: '/theme-' . $themeKey . '-contact',
+                    ),
                     $this->roughLinksSection(),
                     $this->ctaSection(
                         heading: 'Looking for a specific entry?',
                         summary: 'Send us the title or date and we point you at the right row on the wall.',
+                        primaryUrl: '/theme-' . $themeKey . '-contact',
+                        secondaryUrl: '/',
                     ),
                 ],
             ],
@@ -319,34 +339,36 @@ final class RawIndexDemoContent implements ProvidesThemeDemoContent
         return new ThemeDemoPageDefinition(
             surface: 'cta',
             name: self::BRAND . ' Submit Work',
-            title: 'Submit work — ' . self::BRAND,
+            title: 'Keep the wall alive — ' . self::BRAND,
             slug: 'theme-' . $themeKey . '-cta',
             content: $this->prose(
-                'Keep the archive alive',
+                'Keep the wall alive',
                 'A focused page inviting new submissions, interviews, and corrections.',
             ),
             renderData: [
-                'summary' => 'Keep the archive alive — submit links, interviews, and corrections that belong on the wall.',
+                'summary' => 'Keep the wall alive — submit scans, interviews, and corrections that belong on it.',
                 'navigation' => $this->navigation(),
                 'footer' => $this->footer(),
                 'sections' => [
-                    [
-                        'type' => 'hero',
-                        'kicker' => 'Submit work',
-                        'heading' => 'Keep the archive alive',
-                        'summary' => 'New submissions, interviews, date archives, and zine annotations keep the index moving without adding polish.',
-                        'primary_label' => 'Submit a link',
-                        'primary_url' => '#submit',
-                        'secondary_label' => 'Open the index',
-                        'secondary_url' => '#index',
-                        'mediaUrl' => $media['cta'][0],
-                        'mediaAlt' => 'Submission queue',
-                    ],
+                    $this->heroSection(
+                        eyebrow: 'Submit work',
+                        heading: 'Keep the wall alive',
+                        summary: 'New submissions, interviews, date archives, and margin notes keep the index moving without adding polish.',
+                        media: $media,
+                        mediaKey: 'cta',
+                        mediaAlt: 'A stack of submitted scans waiting for intake',
+                        primaryLabel: 'Submit a scan',
+                        primaryUrl: '/theme-' . $themeKey . '-contact',
+                        secondaryLabel: 'Read the intake stamps',
+                        secondaryUrl: '#submission-markers',
+                    ),
                     $this->proofSection(),
                     $this->submissionMarkersSection(),
                     $this->ctaSection(
-                        heading: 'One link away from the wall',
-                        summary: 'Send the URL with a date and a marker. We reply in the open and add accepted links, raw.',
+                        heading: 'One scan away from the wall',
+                        summary: 'Send the URL with a date and a marker. We reply in the open and pin accepted scans, raw.',
+                        primaryUrl: '/theme-' . $themeKey . '-contact',
+                        secondaryUrl: '#submission-markers',
                     ),
                 ],
             ],
@@ -357,9 +379,46 @@ final class RawIndexDemoContent implements ProvidesThemeDemoContent
      * @param  array{hero: list<string>, listing: list<string>, detail: list<string>, proof: list<string>, contact: list<string>, cta: list<string>}  $media
      * @return array<string, mixed>
      */
+    private function heroSection(
+        string $eyebrow,
+        string $heading,
+        string $summary,
+        array $media,
+        string $mediaKey,
+        ?string $mediaAlt,
+        string $primaryLabel,
+        string $primaryUrl,
+        string $secondaryLabel,
+        string $secondaryUrl,
+    ): array {
+        $mediaUrl = $media[$mediaKey][0] ?? $media['hero'][0];
+
+        return [
+            'type' => 'hero',
+            'eyebrow' => $eyebrow,
+            'kicker' => $eyebrow,
+            'heading' => $heading,
+            'summary' => $summary,
+            'primary_label' => $primaryLabel,
+            'primary_url' => $primaryUrl,
+            'secondary_label' => $secondaryLabel,
+            'secondary_url' => $secondaryUrl,
+            'actions' => [
+                ['label' => $primaryLabel, 'url' => $primaryUrl, 'style' => 'primary'],
+                ['label' => $secondaryLabel, 'url' => $secondaryUrl, 'style' => 'secondary'],
+            ],
+            'mediaUrl' => $mediaUrl,
+            'mediaAlt' => $mediaAlt,
+        ];
+    }
+
+    /**
+     * @param  array{hero: list<string>, listing: list<string>, detail: list<string>, proof: list<string>, contact: list<string>, cta: list<string>}  $media
+     * @return array<string, mixed>
+     */
     private function archiveWallSection(array $media): array
     {
-        $pool = array_values(array_unique(array_merge(
+        $images = array_values(array_unique(array_merge(
             $media['listing'],
             $media['detail'],
             $media['proof'],
@@ -367,18 +426,18 @@ final class RawIndexDemoContent implements ProvidesThemeDemoContent
         )));
 
         $entries = [
-            ['title' => 'Poster archive from an independent venue', 'meta' => '2026-04-12. Poster. EN.', 'summary' => 'A rough entry with poster crop, date, city, language note, and a plain archive link.'],
-            ['title' => 'Music release page with field annotation', 'meta' => 'Release. 2026. Annotated.', 'summary' => 'A compact row with image, release date, a handwritten-style note, and a direct link.'],
-            ['title' => 'Interview marker without decoration', 'meta' => 'Interview. Issue 08. FR.', 'summary' => 'A text-forward entry carrying an interview marker, issue note, and language label.'],
+            ['title' => 'Poster tear from a basement show', 'meta' => '2026-04-12. Poster. EN.', 'summary' => 'Photocopied crop, hand-dated, city noted, link out to the source scan.'],
+            ['title' => 'Tape rip with a field annotation', 'meta' => 'Release. 2026. Annotated.', 'summary' => 'A compact row with cover scan, release date, a handwritten-style note, and a direct link.'],
+            ['title' => 'Interview marker, no decoration', 'meta' => 'Interview. Issue 08. FR.', 'summary' => 'A text-forward entry carrying an interview marker, issue note, and language label.'],
             ['title' => 'Zine scan with edition note', 'meta' => 'Zine. Edition 3. DE.', 'summary' => 'A scan entry with edition number, language note, and an underlined archive link.'],
-            ['title' => 'Field note from a one-night show', 'meta' => 'Field note. 2025. EN.', 'summary' => 'A short text row stamped with a date and a marker, no image, no polish.'],
+            ['title' => 'Field note from a one-night show', 'meta' => 'Field note. 2025. EN.', 'summary' => 'A short text row stamped with a date and a marker, no image gloss, no polish.'],
             ['title' => 'Sponsored mix flagged in the open', 'meta' => 'Mix. Sponsor. 2025.', 'summary' => 'A mix entry with a visible sponsor marker and a plain link out to the source.'],
         ];
 
         $items = [];
 
         foreach ($entries as $index => $entry) {
-            $image = $pool[$index % max(count($pool), 1)] ?? null;
+            $image = $images[$index % max(count($images), 1)] ?? null;
             $items[] = [
                 ...$entry,
                 'url' => '#entry-' . ($index + 1),
@@ -390,8 +449,8 @@ final class RawIndexDemoContent implements ProvidesThemeDemoContent
 
         return [
             'type' => 'archive-wall',
-            'heading' => 'The wall, newest first',
-            'summary' => 'A controlled wall of entries with irregular media sizes, visible metadata, and plain underlined links.',
+            'heading' => 'Pinned newest first',
+            'summary' => 'Posters, tapes, interviews, and one-night flyers — a controlled mess of sizes, kept legible on purpose.',
             'items' => $items,
         ];
     }
@@ -402,18 +461,18 @@ final class RawIndexDemoContent implements ProvidesThemeDemoContent
      */
     private function irregularIndexSection(array $media): array
     {
-        $pool = array_values(array_unique(array_merge($media['listing'], $media['proof'])));
+        $images = array_values(array_unique(array_merge($media['listing'], $media['proof'])));
 
         $entries = [
             ['title' => 'Poster archive from an independent venue', 'meta' => '2026-04-12. Poster. EN.', 'summary' => 'A rough entry with poster crop, date, city, language note, sponsor marker, and archive link.', 'care_note' => 'Title, date, marker, language, image size, and link supported'],
             ['title' => 'Interview with an experimental publisher', 'meta' => 'Interview. Issue 08. FR.', 'summary' => 'A text-forward entry with interview marker, issue note, related archive date, and language label.', 'care_note' => 'Interview marker, issue note, and language label supported'],
-            ['title' => 'Music release page with field annotation', 'meta' => 'Release. 2026. Annotated.', 'summary' => 'A compact entry with image, release date, note, direct link, and optional sponsor marker.', 'care_note' => 'Image, release date, annotation, and direct link supported'],
+            ['title' => 'Tape rip with a field annotation', 'meta' => 'Release. 2026. Annotated.', 'summary' => 'A compact entry with cover scan, release date, note, direct link, and optional sponsor marker.', 'care_note' => 'Image, release date, annotation, and direct link supported'],
         ];
 
         $items = [];
 
         foreach ($entries as $index => $entry) {
-            $image = $pool[$index % max(count($pool), 1)] ?? null;
+            $image = $images[$index % max(count($images), 1)] ?? null;
             $items[] = [
                 ...$entry,
                 'url' => '#irregular-' . ($index + 1),
@@ -425,8 +484,8 @@ final class RawIndexDemoContent implements ProvidesThemeDemoContent
 
         return [
             'type' => 'irregular-index',
-            'heading' => 'Controlled inconsistency keeps the wall alive',
-            'summary' => 'Entries with varied but bounded media sizes, long text rows, interview markers, date stamps, sponsor labels, and direct links.',
+            'heading' => 'Controlled inconsistency keeps a wall alive',
+            'summary' => 'Long rows, short rows, a thumbnail here and none there — the sizes stay uneven, the metadata stays exact.',
             'items' => $items,
         ];
     }
@@ -438,13 +497,13 @@ final class RawIndexDemoContent implements ProvidesThemeDemoContent
     {
         return [
             'type' => 'rough-links',
-            'heading' => 'Keep navigation plain, obvious, and fast',
+            'heading' => 'Outbound, plain, underlined',
             'summary' => 'Familiar link treatment for submission routes, archive years, language filters, interviews, and RSS.',
             'items' => [
-                ['title' => 'Blue underlined links', 'summary' => 'Plain link treatment for submission routes, archive years, language filters, interviews, and RSS.'],
-                ['title' => 'Visible focus outlines', 'summary' => 'Keyboard focus is unmistakable, with rough borders and no hidden interactive states.'],
+                ['title' => 'Underlined outbound links', 'summary' => 'Plain link treatment for submission routes, archive years, language filters, interviews, and RSS.'],
+                ['title' => 'Visible focus outlines', 'summary' => 'Keyboard focus is unmistakable, with hard borders and no hidden interactive states.'],
                 ['title' => 'Language and zine notes', 'summary' => 'Optional language labels, edition notes, issue numbers, and rough captions on every row.'],
-                ['title' => 'Responsive fallbacks', 'summary' => 'The archive collapses to one readable column on small screens, metadata and link order intact.'],
+                ['title' => 'Single-column fallback', 'summary' => 'The wall collapses to one readable column on small screens, metadata and link order intact.'],
             ],
         ];
     }
@@ -456,8 +515,8 @@ final class RawIndexDemoContent implements ProvidesThemeDemoContent
     {
         return [
             'type' => 'archive-dates',
-            'heading' => 'Date archives should feel like a real index',
-            'summary' => 'Browse the wall by month and year. Each archive keeps its dates, markers, and language notes.',
+            'heading' => 'The ledger, by month',
+            'summary' => 'Browse the wall by month and year. Each entry keeps its date, marker, and language note.',
             'items' => [
                 ['title' => 'April 2026', 'meta' => 'Posters. Releases. EN / FR.', 'summary' => 'Eleven entries: venue posters, two releases, and an interview marker.'],
                 ['title' => 'March 2026', 'meta' => 'Zines. Interviews. DE.', 'summary' => 'Nine entries: zine scans with edition notes and one long interview.'],
@@ -474,14 +533,14 @@ final class RawIndexDemoContent implements ProvidesThemeDemoContent
     {
         return [
             'type' => 'submission-markers',
-            'heading' => 'Make submissions, ads, and interviews legible',
-            'summary' => 'Markers for submitted, accepted, interview, sponsor, ad, language, correction, archive, and update states.',
-            'label' => 'Submit a link',
-            'url' => '#submit',
+            'heading' => 'How to get a scan on the wall',
+            'summary' => 'Three stamps cover the whole intake: what we take, how we credit it, what we reject.',
+            'label' => 'Submit a scan',
+            'url' => 'mailto:' . self::INTAKE_EMAIL,
             'items' => [
-                ['title' => 'Submission queue', 'summary' => 'Clear labels for submitted links, review notes, archive placement, and correction status.'],
-                ['title' => 'Interview and sponsor markers', 'summary' => 'Interview and sponsor entries stay obvious through text labels rather than decorative badges.'],
-                ['title' => 'Corrections logged in the open', 'summary' => 'Every correction keeps a visible note so the archive stays honest about what changed.'],
+                ['title' => 'Submission queue', 'summary' => 'Clear labels for submitted scans, review notes, archive placement, and correction status.', 'stamp' => 'Submitted'],
+                ['title' => 'Interview and sponsor markers', 'summary' => 'Interview and sponsor entries stay obvious through text labels rather than decorative badges.', 'stamp' => 'Marked'],
+                ['title' => 'Corrections logged in the open', 'summary' => 'Every correction keeps a visible note so the archive stays honest about what changed.', 'stamp' => 'Corrected'],
             ],
         ];
     }
@@ -493,7 +552,7 @@ final class RawIndexDemoContent implements ProvidesThemeDemoContent
     {
         return [
             'type' => 'zine-annotations',
-            'heading' => 'Annotations stay handwritten, not polished',
+            'heading' => 'Written in the gutter, kept as-is',
             'summary' => 'Rough captions, edition notes, and field annotations sit beside entries without smoothing them out.',
             'items' => [
                 ['title' => 'Edition 3, hand-numbered', 'summary' => 'A short annotation noting the print run, the language, and where the scan came from.'],
@@ -510,7 +569,7 @@ final class RawIndexDemoContent implements ProvidesThemeDemoContent
     {
         return [
             'type' => 'proof',
-            'heading' => 'What keeps the index fast',
+            'heading' => 'What keeps the wall fast',
             'summary' => 'The numbers behind a deliberately raw archive.',
             'items' => [
                 ['value' => '20ms', 'label' => 'Public render budget per page'],
@@ -521,19 +580,37 @@ final class RawIndexDemoContent implements ProvidesThemeDemoContent
     }
 
     /**
+     * @param  array{hero: list<string>, listing: list<string>, detail: list<string>, proof: list<string>, contact: list<string>, cta: list<string>}  $media
      * @return array<string, mixed>
      */
-    private function contentListingSection(): array
+    private function contentListingSection(array $media): array
     {
+        $images = array_values(array_unique(array_merge($media['listing'], $media['proof'])));
+
+        $entries = [
+            ['title' => 'Reissue of a lost cassette label', 'category' => 'Release. 2025.', 'summary' => 'A direct link to a reissue with original dates and a language note.'],
+            ['title' => 'Walking interview, recorded on tape', 'category' => 'Interview. EN.', 'summary' => 'A long interview entry with a transcript link and an archive date.'],
+            ['title' => 'Photocopied flyer index', 'category' => 'Poster. Archive.', 'summary' => 'A scanned set of flyers with rough crops and per-image notes.'],
+        ];
+
+        $items = [];
+
+        foreach ($entries as $index => $entry) {
+            $image = $images[$index % max(count($images), 1)] ?? null;
+            $items[] = [
+                ...$entry,
+                'url' => '#archive-' . ($index + 1),
+                'image' => $image,
+                'imageUrl' => $image,
+                'imageAlt' => $entry['title'],
+            ];
+        }
+
         return [
             'type' => 'content-listing',
-            'heading' => 'More from the archive',
-            'summary' => 'Smaller rows, experiments, and corrections that still earn a place on the wall.',
-            'items' => [
-                ['title' => 'Reissue of a lost cassette label', 'category' => 'Release. 2025.', 'summary' => 'A direct link to a reissue with original dates and a language note.'],
-                ['title' => 'Walking interview, recorded on tape', 'category' => 'Interview. EN.', 'summary' => 'A long interview entry with a transcript link and an archive date.'],
-                ['title' => 'Photocopied flyer index', 'category' => 'Poster. Archive.', 'summary' => 'A scanned set of flyers with rough crops and per-image notes.'],
-            ],
+            'heading' => 'Smaller entries still worth a link',
+            'summary' => 'Experiments and corrections that still earn a place on the wall.',
+            'items' => $items,
         ];
     }
 
@@ -544,8 +621,8 @@ final class RawIndexDemoContent implements ProvidesThemeDemoContent
     {
         return [
             'type' => 'newsletter',
-            'heading' => 'New entries, no noise',
-            'summary' => 'A plain email digest of new submissions, interviews, and corrections. No tracking, no design.',
+            'heading' => 'New scans, no design, no tracking',
+            'summary' => 'One plain email when the wall changes. Unsubscribe by replying "out".',
             'action' => '#newsletter',
         ];
     }
@@ -553,14 +630,18 @@ final class RawIndexDemoContent implements ProvidesThemeDemoContent
     /**
      * @return array<string, mixed>
      */
-    private function ctaSection(string $heading, string $summary): array
+    private function ctaSection(string $heading, string $summary, string $primaryUrl, string $secondaryUrl): array
     {
         return [
             'type' => 'cta',
             'heading' => $heading,
             'summary' => $summary,
-            'label' => 'Submit a link',
-            'url' => '#submit',
+            'label' => 'Submit a scan',
+            'url' => $primaryUrl,
+            'actions' => [
+                ['label' => 'Submit a scan', 'url' => $primaryUrl, 'style' => 'primary'],
+                ['label' => 'Back to the wall', 'url' => $secondaryUrl, 'style' => 'secondary'],
+            ],
         ];
     }
 
@@ -572,15 +653,16 @@ final class RawIndexDemoContent implements ProvidesThemeDemoContent
         return [
             'brand' => self::BRAND,
             'brandName' => self::BRAND,
+            'tagline' => 'Zine / archive / signal',
             'items' => [
-                ['label' => 'Index', 'url' => '#index'],
-                ['label' => 'Submit', 'url' => '#submit'],
-                ['label' => 'Interviews', 'url' => '#interviews'],
-                ['label' => 'Archive', 'url' => '#archive'],
-                ['label' => 'RSS', 'url' => '#rss'],
+                ['label' => 'Wall', 'url' => '/#archive-wall'],
+                ['label' => 'Index', 'url' => '/#irregular-index'],
+                ['label' => 'Submit', 'url' => 'mailto:' . self::INTAKE_EMAIL],
+                ['label' => 'Dates', 'url' => '/#archive-dates'],
+                ['label' => 'Digest', 'url' => '/#newsletter'],
             ],
-            'ctaLabel' => 'Submit a link',
-            'ctaUrl' => '#submit',
+            'ctaLabel' => 'Submit a scan',
+            'ctaUrl' => 'mailto:' . self::INTAKE_EMAIL,
         ];
     }
 
@@ -591,30 +673,29 @@ final class RawIndexDemoContent implements ProvidesThemeDemoContent
     {
         $columns = [
             [
-                'title' => 'Editorial',
-                'heading' => 'Editorial',
+                'title' => 'The wall',
+                'heading' => 'The wall',
                 'links' => [
-                    ['label' => 'Index', 'url' => '#index'],
-                    ['label' => 'Interviews', 'url' => '#interviews'],
-                    ['label' => 'Newsletter', 'url' => '#newsletter'],
+                    ['label' => 'Wall', 'url' => '/#archive-wall'],
+                    ['label' => 'Interviews', 'url' => '/#zine-annotations'],
+                    ['label' => 'Digest', 'url' => '/#newsletter'],
                 ],
             ],
             [
                 'title' => 'Archive',
                 'heading' => 'Archive',
                 'links' => [
-                    ['label' => 'Browse by year', 'url' => '#archive'],
-                    ['label' => 'Language notes', 'url' => '#languages'],
-                    ['label' => 'Corrections', 'url' => '#corrections'],
+                    ['label' => 'By year', 'url' => '/#archive-dates'],
+                    ['label' => 'Language notes', 'url' => '/#irregular-index'],
+                    ['label' => 'Corrections', 'url' => '/#zine-annotations'],
                 ],
             ],
             [
                 'title' => 'Submit',
                 'heading' => 'Submit',
                 'links' => [
-                    ['label' => 'Submit a link', 'url' => '#submit'],
-                    ['label' => 'index@rawindex.example', 'url' => 'mailto:index@rawindex.example'],
-                    ['label' => 'RSS', 'url' => '#rss'],
+                    ['label' => 'Submit a scan', 'url' => '/#submission-markers'],
+                    ['label' => self::INTAKE_EMAIL, 'url' => 'mailto:' . self::INTAKE_EMAIL],
                 ],
             ],
         ];
@@ -622,7 +703,7 @@ final class RawIndexDemoContent implements ProvidesThemeDemoContent
         return [
             'brand' => self::BRAND,
             'brandName' => self::BRAND,
-            'summary' => 'A raw independent index for art, music, zines, and experiments. Plain type, fast pages.',
+            'summary' => 'A brutalist archive for underground culture. Plain type, hard borders, fast pages.',
             'items' => $columns,
             'columns' => $columns,
         ];

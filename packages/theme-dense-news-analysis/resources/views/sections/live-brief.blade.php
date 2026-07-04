@@ -1,34 +1,49 @@
 @php
     $heading = data_get($section, 'heading', __('capell-theme-dense-news-analysis::sections.live.heading'));
     $summary = data_get($section, 'summary', __('capell-theme-dense-news-analysis::sections.live.summary'));
-    $actions = data_get($section, 'items', [
+    $updates = data_get($section, 'items', [
         ['title' => __('capell-theme-dense-news-analysis::sections.live.sequence_title'), 'summary' => __('capell-theme-dense-news-analysis::sections.live.sequence_summary')],
         ['title' => __('capell-theme-dense-news-analysis::sections.live.caption_title'), 'summary' => __('capell-theme-dense-news-analysis::sections.live.caption_summary')],
     ]);
 @endphp
 
-<section class="editorial-section editorial-section-dark">
-    <div class="editorial-section-inner editorial-split">
+<section
+    id="live-brief"
+    class="dnews-section dnews-section-dark"
+>
+    <div class="dnews-section-inner dnews-split">
         <div>
-            <p class="editorial-kicker">
-                {{ __('capell-theme-dense-news-analysis::sections.live.kicker') }}
-            </p>
-            <h2>{{ $heading }}</h2>
-            <p class="editorial-lede">{{ $summary }}</p>
-            <a
-                class="editorial-button"
-                href="{{ data_get($section, 'url', '/') }}"
-            >
-                {{ data_get($section, 'label', __('capell-theme-dense-news-analysis::sections.live.button')) }}
-            </a>
+            <div class="dnews-section-head dnews-section-head-flush">
+                <p class="dnews-kicker">
+                    {{ __('capell-theme-dense-news-analysis::sections.live.kicker') }}
+                </p>
+                <h2>{{ $heading }}</h2>
+                <p class="dnews-lede">{{ $summary }}</p>
+            </div>
+            <div class="dnews-actions">
+                <a
+                    class="dnews-button"
+                    href="{{ data_get($section, 'url', '#live-brief') }}"
+                >
+                    {{ data_get($section, 'label', __('capell-theme-dense-news-analysis::sections.live.button')) }}
+                </a>
+            </div>
         </div>
-        <div class="editorial-grid">
-            @foreach ($actions as $action)
-                <article class="editorial-card">
+
+        <div class="dnews-feed">
+            @foreach ($updates as $update)
+                <article class="dnews-feed-item">
+                    <span
+                        class="dnews-feed-marker"
+                        aria-hidden="true"
+                    ></span>
                     <h3>
-                        {{ data_get($action, 'title', data_get($action, 'name', '')) }}
+                        {{ data_get($update, 'title', data_get($update, 'name', '')) }}
                     </h3>
-                    <p>{{ data_get($action, 'summary', '') }}</p>
+                    <p>{{ data_get($update, 'summary', '') }}</p>
+                    <p class="dnews-meta">
+                        {{ data_get($update, 'meta', data_get($update, 'time', __('capell-theme-dense-news-analysis::sections.live.update_label'))) }}
+                    </p>
                 </article>
             @endforeach
         </div>

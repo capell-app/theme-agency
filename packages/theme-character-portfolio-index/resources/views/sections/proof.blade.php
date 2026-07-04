@@ -6,14 +6,25 @@
     ]);
 @endphp
 
-<section class="editorial-section">
-    <div class="editorial-section-inner">
-        <p class="editorial-kicker">
+<section
+    id="proof"
+    class="cpi-section"
+>
+    <div class="cpi-section-inner">
+        <p class="cpi-kicker">
             {{ __('capell-theme-character-portfolio-index::sections.proof.kicker') }}
         </p>
-        <div class="editorial-grid">
+        @if (filled(data_get($section, 'heading')))
+            <h2>{{ data_get($section, 'heading') }}</h2>
+        @endif
+
+        @if (filled(data_get($section, 'summary')))
+            <p class="cpi-lede">{{ data_get($section, 'summary') }}</p>
+        @endif
+
+        <div class="cpi-grid">
             @foreach ($items as $item)
-                <article class="editorial-card">
+                <article class="cpi-card">
                     <h3>
                         {{ data_get($item, 'value', data_get($item, 'title', '')) }}
                     </h3>

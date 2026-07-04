@@ -1,35 +1,53 @@
 @php
     $links = data_get($section, 'items', [
-        ['label' => __('capell-theme-scoreboard-showcase::sections.navigation.latest'), 'url' => '/'],
-        ['label' => __('capell-theme-scoreboard-showcase::sections.navigation.product'), 'url' => '/'],
-        ['label' => __('capell-theme-scoreboard-showcase::sections.navigation.design'), 'url' => '/'],
-        ['label' => __('capell-theme-scoreboard-showcase::sections.navigation.advice'), 'url' => '/'],
-        ['label' => __('capell-theme-scoreboard-showcase::sections.navigation.events'), 'url' => '/'],
-        ['label' => __('capell-theme-scoreboard-showcase::sections.navigation.company'), 'url' => '/'],
+        ['label' => __('capell-theme-scoreboard-showcase::sections.navigation.winners'), 'url' => '/'],
+        ['label' => __('capell-theme-scoreboard-showcase::sections.navigation.nominees'), 'url' => '/'],
+        ['label' => __('capell-theme-scoreboard-showcase::sections.navigation.scores'), 'url' => '/'],
+        ['label' => __('capell-theme-scoreboard-showcase::sections.navigation.vote'), 'url' => '/'],
+        ['label' => __('capell-theme-scoreboard-showcase::sections.navigation.submit'), 'url' => '/'],
     ]);
+    $ctaLabel = data_get($section, 'ctaLabel', data_get($section, 'cta_label'));
+    $ctaUrl = data_get($section, 'ctaUrl', data_get($section, 'cta_url', '/'));
 @endphp
 
-<nav class="editorial-section">
-    <div
-        class="editorial-section-inner"
-        style="padding-block: 1rem"
-    >
-        <div
-            class="editorial-grid"
-            style="align-items: center"
+<nav
+    class="sbs-masthead"
+    aria-label="{{ __('capell-theme-scoreboard-showcase::sections.navigation.aria_label') }}"
+>
+    <div class="sbs-masthead-inner">
+        <a
+            class="sbs-masthead-brand"
+            href="/"
         >
-            <strong>
-                {{ data_get($section, 'brand', __('capell-theme-scoreboard-showcase::sections.navigation.brand')) }}
-            </strong>
-            <div class="editorial-grid">
-                @foreach ($links as $link)
+            <span class="sbs-masthead-wordmark">
+                {{ data_get($section, 'brand', data_get($section, 'brandName', __('capell-theme-scoreboard-showcase::sections.navigation.brand'))) }}
+            </span>
+            <span class="sbs-masthead-tagline">
+                {{ data_get($section, 'tagline', __('capell-theme-scoreboard-showcase::sections.navigation.tagline')) }}
+            </span>
+        </a>
+
+        <ul class="sbs-masthead-nav">
+            @foreach ($links as $link)
+                <li>
                     <a
                         href="{{ data_get($link, 'url', data_get($link, 'href', '/')) }}"
                     >
                         {{ data_get($link, 'label', data_get($link, 'title', '')) }}
                     </a>
-                @endforeach
-            </div>
-        </div>
+                </li>
+            @endforeach
+
+            @if (filled($ctaLabel))
+                <li>
+                    <a
+                        class="sbs-masthead-cta"
+                        href="{{ $ctaUrl }}"
+                    >
+                        {{ $ctaLabel }}
+                    </a>
+                </li>
+            @endif
+        </ul>
     </div>
 </nav>

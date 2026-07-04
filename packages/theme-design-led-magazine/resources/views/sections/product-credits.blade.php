@@ -1,23 +1,26 @@
 @php
     $stories = data_get($section, 'items', data_get($section, 'stories', [
-        ['title' => __('capell-theme-design-led-magazine::sections.credits.lighting_title'), 'summary' => __('capell-theme-design-led-magazine::sections.credits.lighting_summary')],
-        ['title' => __('capell-theme-design-led-magazine::sections.credits.materials_title'), 'summary' => __('capell-theme-design-led-magazine::sections.credits.materials_summary')],
-        ['title' => __('capell-theme-design-led-magazine::sections.credits.books_title'), 'summary' => __('capell-theme-design-led-magazine::sections.credits.books_summary')],
+        ['title' => __('capell-theme-design-led-magazine::sections.credits.lighting_title'), 'summary' => __('capell-theme-design-led-magazine::sections.credits.lighting_summary'), 'meta' => __('capell-theme-design-led-magazine::sections.credits.lighting_meta')],
+        ['title' => __('capell-theme-design-led-magazine::sections.credits.materials_title'), 'summary' => __('capell-theme-design-led-magazine::sections.credits.materials_summary'), 'meta' => __('capell-theme-design-led-magazine::sections.credits.materials_meta')],
+        ['title' => __('capell-theme-design-led-magazine::sections.credits.books_title'), 'summary' => __('capell-theme-design-led-magazine::sections.credits.books_summary'), 'meta' => __('capell-theme-design-led-magazine::sections.credits.books_meta')],
     ]));
 @endphp
 
-<section class="editorial-section">
-    <div class="editorial-section-inner">
-        <p class="editorial-kicker">
+<section
+    id="product-credits"
+    class="dlm-section"
+>
+    <div class="dlm-section-inner">
+        <p class="dlm-kicker">
             {{ __('capell-theme-design-led-magazine::sections.credits.kicker') }}
         </p>
         <h2>
             {{ data_get($section, 'heading', __('capell-theme-design-led-magazine::sections.credits.heading')) }}
         </h2>
-        <div class="editorial-grid">
+        <div class="dlm-grid">
             @foreach ($stories as $story)
-                <article class="editorial-card">
-                    <p class="editorial-meta">
+                <article class="dlm-card">
+                    <p class="dlm-meta">
                         {{ data_get($story, 'meta', data_get($story, 'category', '')) }}
                     </p>
                     <h3>

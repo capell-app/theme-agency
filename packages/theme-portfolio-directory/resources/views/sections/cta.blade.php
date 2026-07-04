@@ -1,19 +1,41 @@
-<section class="editorial-section editorial-section-dark">
-    <div class="editorial-section-inner">
-        <p class="editorial-kicker">
-            {{ __('capell-theme-portfolio-directory::sections.cta.kicker') }}
+@php
+    $actions = collect(data_get($section, 'actions', []))
+        ->filter(fn (mixed $action): bool => filled(data_get($action, 'label')))
+        ->values();
+@endphp
+
+<section
+    id="cta"
+    class="pfd-section pfd-section-night"
+>
+    <div class="pfd-section-inner">
+        <p class="pfd-eyebrow">
+            {{ data_get($section, 'eyebrow', __('capell-theme-portfolio-directory::sections.cta.eyebrow')) }}
         </p>
         <h2>
             {{ data_get($section, 'heading', __('capell-theme-portfolio-directory::sections.cta.heading')) }}
         </h2>
-        <p class="editorial-lede">
+        <p class="pfd-lede">
             {{ data_get($section, 'summary', __('capell-theme-portfolio-directory::sections.cta.summary')) }}
         </p>
-        <a
-            class="editorial-button"
-            href="{{ data_get($section, 'url', '/') }}"
-        >
-            {{ data_get($section, 'label', __('capell-theme-portfolio-directory::sections.cta.button')) }}
-        </a>
+        <div class="pfd-actions">
+            @if ($actions->isNotEmpty())
+                @foreach ($actions as $action)
+                    <a
+                        class="pfd-button {{ data_get($action, 'style') === 'secondary' ? 'pfd-button-secondary' : '' }}"
+                        href="{{ data_get($action, 'url', '/') }}"
+                    >
+                        {{ data_get($action, 'label') }}
+                    </a>
+                @endforeach
+            @else
+                <a
+                    class="pfd-button"
+                    href="{{ data_get($section, 'url', '/') }}"
+                >
+                    {{ data_get($section, 'label', __('capell-theme-portfolio-directory::sections.cta.button')) }}
+                </a>
+            @endif
+        </div>
     </div>
 </section>

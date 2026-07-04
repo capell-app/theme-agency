@@ -11,7 +11,7 @@
     "homepage": "https://github.com/capell-app/login-audit",
     "license": "proprietary",
     "require": {
-        "php": "^8.3",
+        "php": "^8.4",
         "capell-app/admin": "^4.0 || 4.x-dev",
         "rappasoft/laravel-authentication-log": "^6.0|^5.0",
         "tapp/filament-authentication-log": "^4.0|^5.0"

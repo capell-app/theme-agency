@@ -13,27 +13,27 @@ use Illuminate\Support\Facades\Route;
 use function Pest\Laravel\get;
 
 it('uses the selected database theme key and preset on a real route', function (): void {
-    $pageUrl = themeFrontendCreatePage('saas', 'saas');
+    $pageUrl = themeFrontendCreatePage('dark-product-system', 'dark-product-system');
 
     $response = get($pageUrl->full_url);
 
     $response->assertOk();
 
     expect($response->getContent())
-        ->toContain('data-theme="saas"')
+        ->toContain('data-theme="dark-product-system"')
         ->toContain('Theme route smoke CTA');
 
     assertThemeFrontendPublicHtmlIsSafe($response);
 });
 
 it('lets database brand and token overrides beat package preset defaults on a real route', function (): void {
-    $pageUrl = themeFrontendCreatePage('saas', 'saas');
+    $pageUrl = themeFrontendCreatePage('dark-product-system', 'dark-product-system');
 
     themeFrontendConfigureRuntime(
-        themeKey: 'saas',
-        presetKey: 'saas',
+        themeKey: 'dark-product-system',
+        presetKey: 'dark-product-system',
         brandProfile: ['primaryColor' => '#111827'],
-        themeOverrides: ['saas' => ['primaryColor' => '#dc2626', 'accentColor' => '#16a34a']],
+        themeOverrides: ['dark-product-system' => ['primaryColor' => '#dc2626', 'accentColor' => '#16a34a']],
     );
 
     $response = get($pageUrl->full_url);
@@ -43,21 +43,21 @@ it('lets database brand and token overrides beat package preset defaults on a re
     expect($response->getContent())
         ->toContain('#dc2626')
         ->toContain('#16a34a')
-        ->not->toContain('#2563eb');
+        ->not->toContain('#07080d');
 
     assertThemeFrontendPublicHtmlIsSafe($response);
 });
 
 it('falls back to the selected theme default preset when saved preset settings are stale on a real route', function (): void {
-    $pageUrl = themeFrontendCreatePage('saas', 'boardroom');
+    $pageUrl = themeFrontendCreatePage('dark-product-system', 'boardroom');
 
     $response = get($pageUrl->full_url);
 
     $response->assertOk();
 
     expect($response->getContent())
-        ->toContain('data-theme="saas"')
-        ->toContain('#2563eb');
+        ->toContain('data-theme="dark-product-system"')
+        ->toContain('#07080d');
 
     assertThemeFrontendPublicHtmlIsSafe($response);
 });
@@ -100,7 +100,7 @@ it('caches public theme route output without authoring surface', function (): vo
         }
     });
 
-    $pageUrl = themeFrontendCreatePage('saas', 'saas');
+    $pageUrl = themeFrontendCreatePage('dark-product-system', 'dark-product-system');
 
     $firstResponse = get($pageUrl->full_url);
     $secondResponse = get($pageUrl->full_url);

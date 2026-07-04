@@ -7,24 +7,45 @@
 @endphp
 
 <section
-    class="editorial-section"
-    style="background: var(--editorial-field)"
+    id="missed-it"
+    class="dnews-section dnews-section-tint"
 >
-    <div class="editorial-section-inner">
-        <p class="editorial-kicker">
-            {{ __('capell-theme-dense-news-analysis::sections.recap.kicker') }}
-        </p>
-        <h2>
-            {{ data_get($section, 'heading', __('capell-theme-dense-news-analysis::sections.recap.heading')) }}
-        </h2>
-        <p class="editorial-lede">
-            {{ data_get($section, 'summary', __('capell-theme-dense-news-analysis::sections.recap.summary')) }}
-        </p>
-        <div class="editorial-grid">
+    <div class="dnews-section-inner">
+        <div class="dnews-section-head">
+            <p class="dnews-kicker">
+                {{ __('capell-theme-dense-news-analysis::sections.recap.kicker') }}
+            </p>
+            <h2>
+                {{ data_get($section, 'heading', __('capell-theme-dense-news-analysis::sections.recap.heading')) }}
+            </h2>
+            <p class="dnews-lede">
+                {{ data_get($section, 'summary', __('capell-theme-dense-news-analysis::sections.recap.summary')) }}
+            </p>
+        </div>
+
+        <div class="dnews-grid">
             @foreach ($items as $item)
-                <article class="editorial-card">
+                @php
+                    $itemUrl = data_get($item, 'url', data_get($item, 'href'));
+                @endphp
+
+                <article class="dnews-card">
+                    <p class="dnews-meta">
+                        {{ str_pad((string) $loop->iteration, 2, '0', STR_PAD_LEFT) }}
+                        ·
+                        {{ __('capell-theme-dense-news-analysis::sections.recap.item_label') }}
+                    </p>
                     <h3>
-                        {{ data_get($item, 'title', data_get($item, 'name', '')) }}
+                        @if ($itemUrl !== null)
+                            <a
+                                class="dnews-title-link"
+                                href="{{ $itemUrl }}"
+                            >
+                                {{ data_get($item, 'title', data_get($item, 'name', '')) }}
+                            </a>
+                        @else
+                            {{ data_get($item, 'title', data_get($item, 'name', '')) }}
+                        @endif
                     </h3>
                     <p>{{ data_get($item, 'summary', '') }}</p>
                 </article>

@@ -6,14 +6,22 @@
     ]);
 @endphp
 
-<section class="editorial-section">
-    <div class="editorial-section-inner">
-        <p class="editorial-kicker">
+<section class="ppc-section">
+    <div class="ppc-section-inner">
+        <p class="ppc-kicker">
             {{ __('capell-theme-premium-portfolio-collection::sections.proof.kicker') }}
         </p>
-        <div class="editorial-grid">
+        @if (filled(data_get($section, 'heading')))
+            <h2>{{ data_get($section, 'heading') }}</h2>
+        @endif
+
+        @if (filled(data_get($section, 'summary')))
+            <p class="ppc-lede">{{ data_get($section, 'summary') }}</p>
+        @endif
+
+        <div class="ppc-grid">
             @foreach ($items as $item)
-                <article class="editorial-card">
+                <article class="ppc-card">
                     <h3>
                         {{ data_get($item, 'value', data_get($item, 'title', '')) }}
                     </h3>

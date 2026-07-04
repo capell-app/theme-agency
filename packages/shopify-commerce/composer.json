@@ -25,7 +25,7 @@
         }
     },
     "require": {
-        "php": "^8.3",
+        "php": "^8.4",
         "capell-app/admin": "^4.0 || 4.x-dev",
         "capell-app/core": "^4.0 || 4.x-dev",
         "laravel/framework": "^11.45.3|^12.41.1|^13.0",

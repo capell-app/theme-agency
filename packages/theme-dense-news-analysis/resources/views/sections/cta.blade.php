@@ -1,19 +1,35 @@
-<section class="editorial-section editorial-section-dark">
-    <div class="editorial-section-inner">
-        <p class="editorial-kicker">
-            {{ __('capell-theme-dense-news-analysis::sections.cta.kicker') }}
-        </p>
-        <h2>
-            {{ data_get($section, 'heading', __('capell-theme-dense-news-analysis::sections.cta.heading')) }}
-        </h2>
-        <p class="editorial-lede">
-            {{ data_get($section, 'summary', __('capell-theme-dense-news-analysis::sections.cta.summary')) }}
-        </p>
-        <a
-            class="editorial-button"
-            href="{{ data_get($section, 'url', '/') }}"
-        >
-            {{ data_get($section, 'label', __('capell-theme-dense-news-analysis::sections.cta.button')) }}
-        </a>
+@php
+    $actions = data_get($section, 'actions', [
+        [
+            'label' => data_get($section, 'label', __('capell-theme-dense-news-analysis::sections.cta.button')),
+            'url' => data_get($section, 'url', '/'),
+            'style' => 'primary',
+        ],
+    ]);
+@endphp
+
+<section class="dnews-section dnews-section-dark">
+    <div class="dnews-section-inner">
+        <div class="dnews-section-head dnews-section-head-flush">
+            <p class="dnews-kicker">
+                {{ __('capell-theme-dense-news-analysis::sections.cta.kicker') }}
+            </p>
+            <h2>
+                {{ data_get($section, 'heading', __('capell-theme-dense-news-analysis::sections.cta.heading')) }}
+            </h2>
+            <p class="dnews-lede">
+                {{ data_get($section, 'summary', __('capell-theme-dense-news-analysis::sections.cta.summary')) }}
+            </p>
+        </div>
+        <div class="dnews-actions">
+            @foreach ($actions as $action)
+                <a
+                    class="dnews-button {{ data_get($action, 'style') === 'secondary' ? 'dnews-button-secondary' : '' }}"
+                    href="{{ data_get($action, 'url', '/') }}"
+                >
+                    {{ data_get($action, 'label', '') }}
+                </a>
+            @endforeach
+        </div>
     </div>
 </section>

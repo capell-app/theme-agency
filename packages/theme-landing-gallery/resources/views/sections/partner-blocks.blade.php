@@ -1,31 +1,42 @@
 @php
-    $stories = data_get($section, 'items', data_get($section, 'stories', [
-        ['title' => __('capell-theme-landing-gallery::sections.events.planning_title'), 'summary' => __('capell-theme-landing-gallery::sections.events.planning_summary')],
-        ['title' => __('capell-theme-landing-gallery::sections.events.workshop_title'), 'summary' => __('capell-theme-landing-gallery::sections.events.workshop_summary')],
-        ['title' => __('capell-theme-landing-gallery::sections.events.systems_title'), 'summary' => __('capell-theme-landing-gallery::sections.events.systems_summary')],
-    ]));
+    $items = data_get($section, 'items', []);
 @endphp
 
-<section class="editorial-section">
-    <div class="editorial-section-inner">
-        <p class="editorial-kicker">
-            {{ __('capell-theme-landing-gallery::sections.events.kicker') }}
+<section
+    id="partner-blocks"
+    class="lga-section"
+>
+    <div class="lga-section-inner">
+        <p class="lga-eyebrow">
+            {{ __('capell-theme-landing-gallery::sections.partner_blocks.kicker') }}
         </p>
         <h2>
-            {{ data_get($section, 'heading', __('capell-theme-landing-gallery::sections.events.heading')) }}
+            {{ data_get($section, 'heading', __('capell-theme-landing-gallery::sections.partner_blocks.heading')) }}
         </h2>
-        <div class="editorial-grid">
-            @foreach ($stories as $story)
-                <article class="editorial-card">
-                    <p class="editorial-meta">
-                        {{ data_get($story, 'meta', data_get($story, 'category', '')) }}
+        <p class="lga-lede">
+            {{ data_get($section, 'summary', __('capell-theme-landing-gallery::sections.partner_blocks.summary')) }}
+        </p>
+
+        <div class="lga-grid">
+            @foreach ($items as $item)
+                @php
+                    $partnerUrl = data_get($item, 'url', '#newsletter');
+                @endphp
+
+                <article class="lga-card">
+                    <p class="lga-gallery-meta">
+                        {{ data_get($item, 'meta', __('capell-theme-landing-gallery::sections.partner_blocks.default_meta')) }}
                     </p>
                     <h3>
-                        {{ data_get($story, 'title', data_get($story, 'name', '')) }}
+                        {{ data_get($item, 'title', data_get($item, 'name', '')) }}
                     </h3>
-                    <p>
-                        {{ data_get($story, 'summary', data_get($story, 'description', '')) }}
-                    </p>
+                    <p>{{ data_get($item, 'summary', '') }}</p>
+                    <a
+                        class="lga-button lga-button-small lga-button-secondary"
+                        href="{{ $partnerUrl }}"
+                    >
+                        {{ __('capell-theme-landing-gallery::sections.partner_blocks.contact_label') }}
+                    </a>
                 </article>
             @endforeach
         </div>

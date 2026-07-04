@@ -6,13 +6,15 @@ namespace Capell\ThemeStudio\ScoreboardShowcase;
 
 use Capell\Core\Data\VendorAssetData;
 use Capell\Core\Enums\FrontendRuntime;
+use Capell\Core\Enums\VendorAssetEnum;
 use Capell\Core\Facades\CapellCore;
 use Capell\Core\ThemeStudio\Contracts\SectionRenderer;
 use Capell\Core\ThemeStudio\Data\ThemeDefinitionData;
 use Capell\Core\ThemeStudio\Data\ThemePresetData;
-use Capell\Core\ThemeStudio\Rendering\BladeThemeRenderer;
 use Capell\Core\ThemeStudio\Rendering\ViewSectionRenderer;
 use Capell\Core\ThemeStudio\Theme\ThemeRegistry;
+use Capell\FoundationTheme\Rendering\ChromeSplitBladeThemeRenderer;
+use Capell\FoundationTheme\Support\Editor\StandardThemeEditorSchema;
 use Capell\ThemeStudio\ScoreboardShowcase\Console\Commands\DemoCommand;
 use Illuminate\Support\ServiceProvider;
 use Override;
@@ -60,9 +62,37 @@ final class ScoreboardShowcaseThemeServiceProvider extends ServiceProvider
                         'cardDensity' => 'compact',
                     ],
                 ),
+                new ThemePresetData(
+                    key: 'nightcast',
+                    name: 'Nightcast',
+                    description: 'Nightcast visual preset for a cool night-broadcast scoreboard with deep navy surfaces, cyan scoring accents, tightly packed criteria cards, and a charged after-dark jury-room mood.',
+                    previewImage: '/vendor/capell/themes/scoreboard-showcase.jpg',
+                    values: [
+                        'primaryColor' => '#e8f3ff',
+                        'accentColor' => '#22d3ee',
+                        'neutralColor' => '#7d8ba1',
+                        'surfaceColor' => '#0b1220',
+                        'foregroundColor' => '#e8f3ff',
+                        'headingFont' => 'sora',
+                        'bodyFont' => 'inter',
+                        'spacing' => 'snug',
+                        'alignment' => 'left',
+                        'cardStyle' => 'scoreboard',
+                        'navigationStyle' => 'prominent',
+                        'layoutPresentation' => 'editorial',
+                        'motionIntensity' => 'energetic',
+                        'mediaTreatment' => 'score-media',
+                        'radius' => 'sm',
+                        'headingScale' => 'compact',
+                        'cardDensity' => 'compact',
+                    ],
+                ),
             ],
             assets: ['css' => 'vendor/capell/themes/scoreboard-showcase.css'],
             runtime: FrontendRuntime::Blade,
+            frontend: [
+                'editor' => StandardThemeEditorSchema::definition(),
+            ],
             extends: 'default',
         );
     }
@@ -88,7 +118,7 @@ final class ScoreboardShowcaseThemeServiceProvider extends ServiceProvider
 
         $registry->register(
             definition: self::definition(),
-            themeRenderer: new BladeThemeRenderer(
+            themeRenderer: new ChromeSplitBladeThemeRenderer(
                 themeKey: self::THEME_KEY,
                 layoutView: 'capell-theme-scoreboard-showcase::page',
                 sectionRenderers: $sectionRenderers,
@@ -99,7 +129,12 @@ final class ScoreboardShowcaseThemeServiceProvider extends ServiceProvider
 
     private function registerVendorCssAssets(): void
     {
-        CapellCore::registerVendorAsset(VendorAssetData::tailwindImport('resources/css/theme-scoreboard-showcase.css', self::$packageName));
+        CapellCore::registerVendorAsset(new VendorAssetData(
+            type: VendorAssetEnum::TailwindImport,
+            value: 'resources/css/theme-scoreboard-showcase.css',
+            packageName: self::$packageName,
+            condition: 'theme-css:scoreboard-showcase',
+        ));
         CapellCore::registerVendorAsset(VendorAssetData::tailwindSource('resources/views/**/*.blade.php', self::$packageName));
     }
 

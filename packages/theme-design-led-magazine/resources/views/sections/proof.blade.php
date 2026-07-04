@@ -6,14 +6,28 @@
     ]);
 @endphp
 
-<section class="editorial-section">
-    <div class="editorial-section-inner">
-        <p class="editorial-kicker">
+<section class="dlm-section">
+    <div class="dlm-section-inner">
+        <p class="dlm-kicker">
             {{ __('capell-theme-design-led-magazine::sections.proof.kicker') }}
         </p>
-        <div class="editorial-grid">
+        @if (filled(data_get($section, 'heading')))
+            <h2>{{ data_get($section, 'heading') }}</h2>
+        @endif
+
+        @if (filled(data_get($section, 'summary')))
+            <p class="dlm-lede">{{ data_get($section, 'summary') }}</p>
+        @endif
+
+        <div class="dlm-grid">
             @foreach ($items as $item)
-                <article class="editorial-card">
+                <article class="dlm-card">
+                    <span
+                        class="dlm-numeral"
+                        aria-hidden="true"
+                    >
+                        {{ str_pad((string) $loop->iteration, 2, '0', STR_PAD_LEFT) }}
+                    </span>
                     <h3>
                         {{ data_get($item, 'value', data_get($item, 'title', '')) }}
                     </h3>

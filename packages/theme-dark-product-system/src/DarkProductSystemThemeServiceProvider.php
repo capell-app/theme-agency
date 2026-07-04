@@ -6,13 +6,15 @@ namespace Capell\ThemeStudio\DarkProductSystem;
 
 use Capell\Core\Data\VendorAssetData;
 use Capell\Core\Enums\FrontendRuntime;
+use Capell\Core\Enums\VendorAssetEnum;
 use Capell\Core\Facades\CapellCore;
 use Capell\Core\ThemeStudio\Contracts\SectionRenderer;
 use Capell\Core\ThemeStudio\Data\ThemeDefinitionData;
 use Capell\Core\ThemeStudio\Data\ThemePresetData;
-use Capell\Core\ThemeStudio\Rendering\BladeThemeRenderer;
 use Capell\Core\ThemeStudio\Rendering\ViewSectionRenderer;
 use Capell\Core\ThemeStudio\Theme\ThemeRegistry;
+use Capell\FoundationTheme\Rendering\ChromeSplitBladeThemeRenderer;
+use Capell\FoundationTheme\Support\Editor\StandardThemeEditorSchema;
 use Capell\ThemeStudio\DarkProductSystem\Console\Commands\DemoCommand;
 use Illuminate\Support\ServiceProvider;
 use Override;
@@ -60,10 +62,38 @@ final class DarkProductSystemThemeServiceProvider extends ServiceProvider
                         'cardDensity' => 'airy',
                     ],
                 ),
+                new ThemePresetData(
+                    key: 'ember',
+                    name: 'Ember',
+                    description: 'Ember visual preset for warm charcoal surfaces, molten amber accents, and a denser, high-energy operations console for automation, incident response, and security workflows.',
+                    previewImage: '/vendor/capell/themes/dark-product-system.jpg',
+                    values: [
+                        'primaryColor' => '#0d0906',
+                        'accentColor' => '#ff9d5c',
+                        'neutralColor' => '#1c140d',
+                        'surfaceColor' => '#0f0a07',
+                        'foregroundColor' => '#fdf1e6',
+                        'headingFont' => 'sora',
+                        'bodyFont' => 'inter',
+                        'spacing' => 'compact',
+                        'alignment' => 'left',
+                        'cardStyle' => 'flat',
+                        'navigationStyle' => 'prominent',
+                        'layoutPresentation' => 'editorial',
+                        'motionIntensity' => 'energetic',
+                        'mediaTreatment' => 'illustrated',
+                        'radius' => 'sm',
+                        'headingScale' => 'bold',
+                        'cardDensity' => 'dense',
+                    ],
+                ),
             ],
             assets: ['css' => 'vendor/capell/themes/dark-product-system.css'],
             runtime: FrontendRuntime::Blade,
             extends: 'default',
+            frontend: [
+                'editor' => StandardThemeEditorSchema::definition(),
+            ],
         );
     }
 
@@ -88,7 +118,7 @@ final class DarkProductSystemThemeServiceProvider extends ServiceProvider
 
         $registry->register(
             definition: self::definition(),
-            themeRenderer: new BladeThemeRenderer(
+            themeRenderer: new ChromeSplitBladeThemeRenderer(
                 themeKey: self::THEME_KEY,
                 layoutView: 'capell-theme-dark-product-system::page',
                 sectionRenderers: $sectionRenderers,
@@ -99,7 +129,12 @@ final class DarkProductSystemThemeServiceProvider extends ServiceProvider
 
     private function registerVendorCssAssets(): void
     {
-        CapellCore::registerVendorAsset(VendorAssetData::tailwindImport('resources/css/theme-dark-product-system.css', self::$packageName));
+        CapellCore::registerVendorAsset(new VendorAssetData(
+            type: VendorAssetEnum::TailwindImport,
+            value: 'resources/css/theme-dark-product-system.css',
+            packageName: self::$packageName,
+            condition: 'theme-css:dark-product-system',
+        ));
         CapellCore::registerVendorAsset(VendorAssetData::tailwindSource('resources/views/**/*.blade.php', self::$packageName));
     }
 

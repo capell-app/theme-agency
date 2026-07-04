@@ -8,31 +8,41 @@
     ]);
 @endphp
 
-<section class="editorial-section">
-    <div class="editorial-section-inner">
-        <p class="editorial-kicker">
+<section
+    id="agents-automation"
+    class="dps-section"
+>
+    <div class="dps-section-inner">
+        <p class="dps-eyebrow">
             {{ __('capell-theme-dark-product-system::sections.stories.kicker') }}
         </p>
         <h2>{{ $heading }}</h2>
-        <p class="editorial-lede">{{ $summary }}</p>
+        <p class="dps-lede">{{ $summary }}</p>
 
-        <div class="editorial-grid">
+        <div
+            class="dps-grid dps-grid-2"
+            style="margin-top: clamp(2rem, 4vw, 3rem)"
+        >
             @foreach ($items as $item)
-                <article class="editorial-card editorial-showcase-card">
+                <article class="dps-card">
+                    <span
+                        class="dps-card-icon"
+                        aria-hidden="true"
+                    >
+                        &#8776;
+                    </span>
                     <h3>
                         {{ data_get($item, 'title', data_get($item, 'name', '')) }}
                     </h3>
                     <p>
                         {{ data_get($item, 'summary', data_get($item, 'description', '')) }}
                     </p>
-                    <div class="editorial-showcase-specs">
-                        <span>
-                            {{ data_get($item, 'meta', data_get($item, 'category', __('capell-theme-dark-product-system::sections.stories.default_meta'))) }}
-                        </span>
-                        <span>
-                            {{ data_get($item, 'care_note', __('capell-theme-dark-product-system::sections.stories.care_note')) }}
-                        </span>
-                    </div>
+                    <p class="dps-meta">
+                        {{ data_get($item, 'meta', data_get($item, 'category', __('capell-theme-dark-product-system::sections.stories.default_meta'))) }}
+                    </p>
+                    <p class="dps-meta">
+                        {{ data_get($item, 'care_note', __('capell-theme-dark-product-system::sections.stories.care_note')) }}
+                    </p>
                 </article>
             @endforeach
         </div>

@@ -1,39 +1,44 @@
 <section
-    class="editorial-section"
-    style="background: var(--editorial-field)"
+    id="newsletter"
+    class="ppc-section ppc-section-field"
 >
-    <div class="editorial-section-inner editorial-split">
+    <div class="ppc-section-inner ppc-split">
         <div>
-            <p class="editorial-kicker">
+            <p class="ppc-kicker">
                 {{ __('capell-theme-premium-portfolio-collection::sections.newsletter.kicker') }}
             </p>
             <h2>
                 {{ data_get($section, 'heading', __('capell-theme-premium-portfolio-collection::sections.newsletter.heading')) }}
             </h2>
-            <p class="editorial-lede">
+            <p class="ppc-lede">
                 {{ data_get($section, 'summary', __('capell-theme-premium-portfolio-collection::sections.newsletter.summary')) }}
             </p>
         </div>
         <form
-            method="post"
-            action="{{ data_get($section, 'action', '/') }}"
-            class="editorial-card"
+            method="get"
+            action="{{ data_get($section, 'action', '#newsletter') }}"
+            class="ppc-form"
         >
-            <label for="editorial-newsletter-email">
-                {{ __('capell-theme-premium-portfolio-collection::sections.newsletter.email_label') }}
+            <label for="ppc-newsletter-email">
+                {{ data_get($section, 'email_label', __('capell-theme-premium-portfolio-collection::sections.newsletter.email_label')) }}
             </label>
             <input
-                id="editorial-newsletter-email"
+                id="ppc-newsletter-email"
                 name="email"
                 type="email"
+                autocomplete="email"
+                placeholder="{{ __('capell-theme-premium-portfolio-collection::sections.newsletter.placeholder') }}"
                 required
             />
             <button
-                class="editorial-button"
+                class="ppc-button"
                 type="submit"
             >
-                {{ __('capell-theme-premium-portfolio-collection::sections.newsletter.button') }}
+                {{ data_get($section, 'button', __('capell-theme-premium-portfolio-collection::sections.newsletter.button')) }}
             </button>
+            <p class="ppc-meta">
+                {{ __('capell-theme-premium-portfolio-collection::sections.newsletter.note') }}
+            </p>
         </form>
     </div>
 </section>

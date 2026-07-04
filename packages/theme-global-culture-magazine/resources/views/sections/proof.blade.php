@@ -1,19 +1,29 @@
 @php
     $items = data_get($section, 'items', [
-        ['value' => __('capell-theme-global-culture-magazine::sections.proof.care_value'), 'label' => __('capell-theme-global-culture-magazine::sections.proof.care_label')],
-        ['value' => __('capell-theme-global-culture-magazine::sections.proof.materials_value'), 'label' => __('capell-theme-global-culture-magazine::sections.proof.materials_label')],
-        ['value' => __('capell-theme-global-culture-magazine::sections.proof.stores_value'), 'label' => __('capell-theme-global-culture-magazine::sections.proof.stores_label')],
+        ['value' => __('capell-theme-global-culture-magazine::sections.proof.reach_value'), 'label' => __('capell-theme-global-culture-magazine::sections.proof.reach_label')],
+        ['value' => __('capell-theme-global-culture-magazine::sections.proof.desks_value'), 'label' => __('capell-theme-global-culture-magazine::sections.proof.desks_label')],
+        ['value' => __('capell-theme-global-culture-magazine::sections.proof.daily_value'), 'label' => __('capell-theme-global-culture-magazine::sections.proof.daily_label')],
     ]);
 @endphp
 
-<section class="editorial-section">
-    <div class="editorial-section-inner">
-        <p class="editorial-kicker">
-            {{ __('capell-theme-global-culture-magazine::sections.proof.kicker') }}
-        </p>
-        <div class="editorial-grid">
+<section class="gcm-section">
+    <div class="gcm-section-inner">
+        <div class="gcm-intro">
+            <p class="gcm-kicker">
+                {{ __('capell-theme-global-culture-magazine::sections.proof.kicker') }}
+            </p>
+            <h2>
+                {{ data_get($section, 'heading', __('capell-theme-global-culture-magazine::sections.proof.heading')) }}
+            </h2>
+            @if (data_get($section, 'summary', '') !== '')
+                <p class="gcm-lede">
+                    {{ data_get($section, 'summary') }}
+                </p>
+            @endif
+        </div>
+        <div class="gcm-stats">
             @foreach ($items as $item)
-                <article class="editorial-card">
+                <article class="gcm-stat">
                     <h3>
                         {{ data_get($item, 'value', data_get($item, 'title', '')) }}
                     </h3>

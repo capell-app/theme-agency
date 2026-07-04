@@ -1,34 +1,37 @@
 @php
-    $items = data_get($section, 'items', [
-        ['title' => __('capell-theme-minimal-curation-feed::sections.authors.product_title'), 'summary' => __('capell-theme-minimal-curation-feed::sections.authors.product_summary')],
-        ['title' => __('capell-theme-minimal-curation-feed::sections.authors.advice_title'), 'summary' => __('capell-theme-minimal-curation-feed::sections.authors.advice_summary')],
-        ['title' => __('capell-theme-minimal-curation-feed::sections.authors.company_title'), 'summary' => __('capell-theme-minimal-curation-feed::sections.authors.company_summary')],
-    ]);
+    $items = collect(data_get($section, 'items', []))
+        ->filter(fn (mixed $item): bool => filled(data_get($item, 'title', data_get($item, 'name'))))
+        ->values();
 @endphp
 
 <section
-    class="editorial-section"
-    style="background: var(--editorial-field)"
+    id="source-metadata"
+    class="mcf-section"
 >
-    <div class="editorial-section-inner">
-        <p class="editorial-kicker">
-            {{ __('capell-theme-minimal-curation-feed::sections.authors.kicker') }}
+    <div class="mcf-section-inner">
+        <p class="mcf-kicker">
+            {{ data_get($section, 'kicker', __('capell-theme-minimal-curation-feed::sections.metadata.kicker')) }}
         </p>
         <h2>
-            {{ data_get($section, 'heading', __('capell-theme-minimal-curation-feed::sections.authors.heading')) }}
+            {{ data_get($section, 'heading', __('capell-theme-minimal-curation-feed::sections.metadata.heading')) }}
         </h2>
-        <p class="editorial-lede">
-            {{ data_get($section, 'summary', __('capell-theme-minimal-curation-feed::sections.authors.summary')) }}
-        </p>
-        <div class="editorial-grid">
-            @foreach ($items as $item)
-                <article class="editorial-card">
-                    <h3>
-                        {{ data_get($item, 'title', data_get($item, 'name', '')) }}
-                    </h3>
-                    <p>{{ data_get($item, 'summary', '') }}</p>
-                </article>
-            @endforeach
-        </div>
+        @if (filled(data_get($section, 'summary')))
+            <p class="mcf-lede">{{ data_get($section, 'summary') }}</p>
+        @endif
+
+        @if ($items->isNotEmpty())
+            <div class="mcf-meta-rows">
+                @foreach ($items as $item)
+                    <div class="mcf-meta-row">
+                        <p class="mcf-meta">
+                            {{ data_get($item, 'title', data_get($item, 'name', '')) }}
+                        </p>
+                        <p>
+                            {{ data_get($item, 'summary', data_get($item, 'description', '')) }}
+                        </p>
+                    </div>
+                @endforeach
+            </div>
+        @endif
     </div>
 </section>

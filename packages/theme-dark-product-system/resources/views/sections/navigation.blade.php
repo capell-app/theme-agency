@@ -1,35 +1,59 @@
 @php
     $links = data_get($section, 'items', [
-        ['label' => __('capell-theme-dark-product-system::sections.navigation.latest'), 'url' => '/'],
-        ['label' => __('capell-theme-dark-product-system::sections.navigation.product'), 'url' => '/'],
-        ['label' => __('capell-theme-dark-product-system::sections.navigation.design'), 'url' => '/'],
-        ['label' => __('capell-theme-dark-product-system::sections.navigation.advice'), 'url' => '/'],
-        ['label' => __('capell-theme-dark-product-system::sections.navigation.events'), 'url' => '/'],
-        ['label' => __('capell-theme-dark-product-system::sections.navigation.company'), 'url' => '/'],
+        ['label' => __('capell-theme-dark-product-system::sections.navigation.product'), 'url' => '/#workflow-rails'],
+        ['label' => __('capell-theme-dark-product-system::sections.navigation.automation'), 'url' => '/#agents-automation'],
+        ['label' => __('capell-theme-dark-product-system::sections.navigation.roadmap'), 'url' => '/#planning-roadmap'],
+        ['label' => __('capell-theme-dark-product-system::sections.navigation.security'), 'url' => '/#security-proof'],
     ]);
+    $ctaLabel = data_get($section, 'ctaLabel', data_get($section, 'cta_label'));
+    $ctaUrl = data_get($section, 'ctaUrl', data_get($section, 'cta_url', '/'));
 @endphp
 
-<nav class="editorial-section">
-    <div
-        class="editorial-section-inner"
-        style="padding-block: 1rem"
-    >
-        <div
-            class="editorial-grid"
-            style="align-items: center"
+<nav
+    class="dps-navbar"
+    aria-label="{{ __('capell-theme-dark-product-system::sections.navigation.aria_label') }}"
+>
+    <div class="dps-navbar-inner">
+        <a
+            class="dps-navbar-brand"
+            href="/"
         >
-            <strong>
+            <span
+                class="dps-navbar-mark"
+                aria-hidden="true"
+            ></span>
+            <span class="dps-navbar-wordmark">
                 {{ data_get($section, 'brand', __('capell-theme-dark-product-system::sections.navigation.brand')) }}
-            </strong>
-            <div class="editorial-grid">
-                @foreach ($links as $link)
+            </span>
+        </a>
+
+        <ul class="dps-navbar-links">
+            @foreach ($links as $link)
+                <li>
                     <a
                         href="{{ data_get($link, 'url', data_get($link, 'href', '/')) }}"
                     >
                         {{ data_get($link, 'label', data_get($link, 'title', '')) }}
                     </a>
-                @endforeach
-            </div>
+                </li>
+            @endforeach
+        </ul>
+
+        <div class="dps-navbar-actions">
+            <a
+                class="dps-navbar-signin"
+                href="/#security-proof"
+            >
+                {{ __('capell-theme-dark-product-system::sections.navigation.signin') }}
+            </a>
+            @if (filled($ctaLabel))
+                <a
+                    class="dps-button"
+                    href="{{ $ctaUrl }}"
+                >
+                    {{ $ctaLabel }}
+                </a>
+            @endif
         </div>
     </div>
 </nav>

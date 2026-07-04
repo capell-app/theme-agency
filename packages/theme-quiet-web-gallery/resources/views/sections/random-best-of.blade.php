@@ -1,33 +1,57 @@
 @php
-    $stories = data_get($section, 'items', data_get($section, 'stories', [
-        ['title' => __('capell-theme-quiet-web-gallery::sections.events.planning_title'), 'summary' => __('capell-theme-quiet-web-gallery::sections.events.planning_summary')],
-        ['title' => __('capell-theme-quiet-web-gallery::sections.events.workshop_title'), 'summary' => __('capell-theme-quiet-web-gallery::sections.events.workshop_summary')],
-        ['title' => __('capell-theme-quiet-web-gallery::sections.events.systems_title'), 'summary' => __('capell-theme-quiet-web-gallery::sections.events.systems_summary')],
-    ]));
+    $item = data_get($section, 'items.0', [
+        'title' => __('capell-theme-quiet-web-gallery::sections.spotlight.pick_title'),
+        'summary' => __('capell-theme-quiet-web-gallery::sections.spotlight.pick_summary'),
+    ]);
+    $itemImage = data_get($item, 'image', data_get($item, 'imageUrl'));
+    $itemAlt = data_get($item, 'imageAlt', data_get($item, 'title', ''));
 @endphp
 
-<section class="editorial-section">
-    <div class="editorial-section-inner">
-        <p class="editorial-kicker">
-            {{ __('capell-theme-quiet-web-gallery::sections.events.kicker') }}
-        </p>
-        <h2>
-            {{ data_get($section, 'heading', __('capell-theme-quiet-web-gallery::sections.events.heading')) }}
-        </h2>
-        <div class="editorial-grid">
-            @foreach ($stories as $story)
-                <article class="editorial-card">
-                    <p class="editorial-meta">
-                        {{ data_get($story, 'meta', data_get($story, 'category', '')) }}
-                    </p>
-                    <h3>
-                        {{ data_get($story, 'title', data_get($story, 'name', '')) }}
-                    </h3>
-                    <p>
-                        {{ data_get($story, 'summary', data_get($story, 'description', '')) }}
-                    </p>
-                </article>
-            @endforeach
+<section
+    id="random-best-of"
+    class="qwg-section qwg-section-dark"
+>
+    <div class="qwg-section-inner qwg-split">
+        <figure class="qwg-frame">
+            <div class="qwg-frame-mat">
+                @if (filled($itemImage))
+                    <img
+                        src="{{ $itemImage }}"
+                        alt="{{ $itemAlt }}"
+                        loading="lazy"
+                        decoding="async"
+                        class="qwg-frame-media qwg-frame-media-wide"
+                    />
+                @else
+                    <div
+                        class="qwg-frame-media qwg-frame-media-wide"
+                        aria-hidden="true"
+                    ></div>
+                @endif
+            </div>
+            <figcaption class="qwg-frame-caption">
+                <span class="qwg-frame-number">
+                    {{ __('capell-theme-quiet-web-gallery::sections.spotlight.label') }}
+                </span>
+                <span>
+                    {{ data_get($item, 'title', data_get($item, 'name', '')) }}
+                </span>
+            </figcaption>
+        </figure>
+
+        <div>
+            <p class="qwg-kicker">
+                {{ __('capell-theme-quiet-web-gallery::sections.spotlight.kicker') }}
+            </p>
+            <h2>
+                {{ data_get($section, 'heading', __('capell-theme-quiet-web-gallery::sections.spotlight.heading')) }}
+            </h2>
+            <p class="qwg-lede">
+                {{ data_get($section, 'summary', __('capell-theme-quiet-web-gallery::sections.spotlight.summary')) }}
+            </p>
+            <p class="qwg-lede">
+                {{ data_get($item, 'summary', '') }}
+            </p>
         </div>
     </div>
 </section>

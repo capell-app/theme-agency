@@ -5,7 +5,7 @@
     "license": "proprietary",
     "homepage": "https://github.com/capell-app/live-chat",
     "require": {
-        "php": "^8.3",
+        "php": "^8.4",
         "capell-app/admin": "^4.0 || 4.x-dev",
         "capell-app/contacts": "^4.0 || 4.x-dev",
         "capell-app/core": "^4.0 || 4.x-dev",

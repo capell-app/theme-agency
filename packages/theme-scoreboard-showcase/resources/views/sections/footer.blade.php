@@ -1,22 +1,51 @@
 @php
-    $columns = data_get($section, 'items', [
-        ['title' => __('capell-theme-scoreboard-showcase::sections.footer.shop'), 'links' => [__('capell-theme-scoreboard-showcase::sections.footer.models'), __('capell-theme-scoreboard-showcase::sections.footer.accessories'), __('capell-theme-scoreboard-showcase::sections.footer.compare')]],
-        ['title' => __('capell-theme-scoreboard-showcase::sections.footer.service'), 'links' => [__('capell-theme-scoreboard-showcase::sections.footer.support'), __('capell-theme-scoreboard-showcase::sections.footer.trade_in'), __('capell-theme-scoreboard-showcase::sections.footer.financing')]],
-        ['title' => __('capell-theme-scoreboard-showcase::sections.footer.editorial'), 'links' => [__('capell-theme-scoreboard-showcase::sections.footer.stories'), __('capell-theme-scoreboard-showcase::sections.footer.updates'), __('capell-theme-scoreboard-showcase::sections.footer.newsletter')]],
-    ]);
+    $columns = data_get($section, 'items', data_get($section, 'columns', [
+        ['title' => __('capell-theme-scoreboard-showcase::sections.footer.awards'), 'links' => [
+            ['label' => __('capell-theme-scoreboard-showcase::sections.footer.winner_of_day'), 'url' => '/'],
+            ['label' => __('capell-theme-scoreboard-showcase::sections.footer.newest_nominees'), 'url' => '/'],
+            ['label' => __('capell-theme-scoreboard-showcase::sections.footer.previous_winners'), 'url' => '/'],
+        ]],
+        ['title' => __('capell-theme-scoreboard-showcase::sections.footer.participate'), 'links' => [
+            ['label' => __('capell-theme-scoreboard-showcase::sections.footer.submit_work'), 'url' => '/'],
+            ['label' => __('capell-theme-scoreboard-showcase::sections.footer.cast_vote'), 'url' => '/'],
+        ]],
+    ]));
+    $brand = data_get($section, 'brand', data_get($section, 'brandName'));
+    $brandSummary = data_get($section, 'summary');
 @endphp
 
-<footer class="editorial-section editorial-section-dark">
-    <div class="editorial-section-inner">
-        <div class="editorial-grid">
+<footer class="sbs-section sbs-section-dark">
+    <div class="sbs-section-inner">
+        <div class="sbs-footer-grid">
+            @if (filled($brand))
+                <div class="sbs-footer-brand">
+                    <p class="sbs-footer-wordmark">{{ $brand }}</p>
+                    @if (filled($brandSummary))
+                        <p class="sbs-footer-summary">{{ $brandSummary }}</p>
+                    @endif
+                </div>
+            @endif
+
             @foreach ($columns as $column)
                 <section>
-                    <h3>{{ data_get($column, 'title', '') }}</h3>
-                    @foreach (data_get($column, 'links', []) as $link)
-                        <p>
-                            {{ is_array($link) ? data_get($link, 'label', data_get($link, 'title', '')) : $link }}
-                        </p>
-                    @endforeach
+                    <h3 class="sbs-footer-heading">
+                        {{ data_get($column, 'title', data_get($column, 'heading', '')) }}
+                    </h3>
+                    <ul class="sbs-footer-links">
+                        @foreach (data_get($column, 'links', []) as $link)
+                            <li>
+                                @if (is_array($link) && filled(data_get($link, 'url', data_get($link, 'href'))))
+                                    <a
+                                        href="{{ data_get($link, 'url', data_get($link, 'href')) }}"
+                                    >
+                                        {{ data_get($link, 'label', data_get($link, 'title', '')) }}
+                                    </a>
+                                @else
+                                    {{ is_array($link) ? data_get($link, 'label', data_get($link, 'title', '')) : $link }}
+                                @endif
+                            </li>
+                        @endforeach
+                    </ul>
                 </section>
             @endforeach
         </div>

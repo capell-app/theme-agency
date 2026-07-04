@@ -1,10 +1,19 @@
 @php
+    $eyebrow = data_get($section, 'eyebrow', data_get($section, 'kicker', __('capell-theme-dense-news-analysis::sections.hero.kicker')));
     $heading = data_get($section, 'heading', data_get($section, 'title', __('capell-theme-dense-news-analysis::sections.hero.heading')));
     $summary = data_get($section, 'summary', data_get($section, 'description', __('capell-theme-dense-news-analysis::sections.hero.summary')));
-    $primaryLabel = data_get($section, 'primary_label', __('capell-theme-dense-news-analysis::sections.hero.primary_label'));
-    $primaryUrl = data_get($section, 'primary_url', data_get($section, 'primary.href', '/'));
-    $secondaryLabel = data_get($section, 'secondary_label', __('capell-theme-dense-news-analysis::sections.hero.secondary_label'));
-    $secondaryUrl = data_get($section, 'secondary_url', data_get($section, 'secondary.href', '/'));
+    $dateline = data_get($section, 'dateline', __('capell-theme-dense-news-analysis::sections.hero.dateline'));
+    $actions = collect(data_get($section, 'actions', []))
+        ->filter(static fn (mixed $action): bool => is_array($action) && data_get($action, 'label') !== null)
+        ->values();
+
+    if ($actions->isEmpty()) {
+        $actions = collect([
+            ['label' => __('capell-theme-dense-news-analysis::sections.hero.primary_label'), 'url' => '#', 'style' => 'primary'],
+            ['label' => __('capell-theme-dense-news-analysis::sections.hero.secondary_label'), 'url' => '#', 'style' => 'secondary'],
+        ]);
+    }
+
     $notes = data_get($section, 'notes', [
         __('capell-theme-dense-news-analysis::sections.hero.note_lead'),
         __('capell-theme-dense-news-analysis::sections.hero.note_photo'),
@@ -12,37 +21,70 @@
     ]);
 @endphp
 
-<section class="editorial-section editorial-section-dark">
-    <div class="editorial-section-inner editorial-hero-grid">
+<section class="dnews-section dnews-section-dark">
+    <div class="dnews-section-inner dnews-hero-grid">
         <div>
-            <p class="editorial-kicker">
-                {{ __('capell-theme-dense-news-analysis::sections.hero.kicker') }}
-            </p>
+            <p class="dnews-kicker">{{ $eyebrow }}</p>
             <h1>{{ $heading }}</h1>
-            <p class="editorial-lede">{{ $summary }}</p>
-            <div class="editorial-grid">
-                <a
-                    class="editorial-button"
-                    href="{{ $primaryUrl }}"
-                >
-                    {{ $primaryLabel }}
-                </a>
-                <a
-                    class="editorial-button editorial-button-secondary"
-                    href="{{ $secondaryUrl }}"
-                >
-                    {{ $secondaryLabel }}
-                </a>
+            <p class="dnews-hero-standfirst">{{ $summary }}</p>
+            <p class="dnews-hero-dateline dnews-meta">
+                <span>{{ $dateline }}</span>
+            </p>
+            <div class="dnews-actions">
+                @foreach ($actions as $action)
+                    <a
+                        class="dnews-button {{ data_get($action, 'style') === 'secondary' ? 'dnews-button-secondary' : '' }}"
+                        href="{{ data_get($action, 'url', data_get($action, 'href', '#')) }}"
+                    >
+                        {{ data_get($action, 'label', '') }}
+                    </a>
+                @endforeach
             </div>
         </div>
 
-        <aside class="editorial-card">
-            <p class="editorial-kicker">
-                {{ __('capell-theme-dense-news-analysis::sections.hero.panel_kicker') }}
-            </p>
-            @foreach ($notes as $note)
-                <p>{{ $note }}</p>
-            @endforeach
+        <aside
+            class="dnews-wire-panel"
+            aria-label="{{ __('capell-theme-dense-news-analysis::sections.hero.panel_kicker') }}"
+        >
+            <div class="dnews-wire-panel-head">
+                <p class="dnews-meta">
+                    {{ __('capell-theme-dense-news-analysis::sections.hero.panel_kicker') }}
+                </p>
+                <p class="dnews-meta dnews-masthead-live">
+                    {{ __('capell-theme-dense-news-analysis::sections.hero.panel_live') }}
+                </p>
+            </div>
+            <div class="dnews-wire-ticker">
+                <div class="dnews-wire-ticker-track">
+                    @foreach ($notes as $note)
+                        <div class="dnews-wire-item">
+                            <span
+                                class="dnews-wire-index"
+                                aria-hidden="true"
+                            >
+                                {{ str_pad((string) $loop->iteration, 2, '0', STR_PAD_LEFT) }}
+                            </span>
+                            <p>{{ $note }}</p>
+                        </div>
+                    @endforeach
+                </div>
+                <div
+                    class="dnews-wire-ticker-track"
+                    aria-hidden="true"
+                >
+                    @foreach ($notes as $note)
+                        <div class="dnews-wire-item">
+                            <span
+                                class="dnews-wire-index"
+                                aria-hidden="true"
+                            >
+                                {{ str_pad((string) $loop->iteration, 2, '0', STR_PAD_LEFT) }}
+                            </span>
+                            <p>{{ $note }}</p>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
         </aside>
     </div>
 </section>

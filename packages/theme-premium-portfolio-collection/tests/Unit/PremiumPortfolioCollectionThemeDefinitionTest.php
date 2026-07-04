@@ -29,7 +29,7 @@ it('defines the premium-portfolio-collection renderer contract', function (): vo
             'cta',
             'footer',
         )
-        ->and($definition->presets)->toHaveCount(1)
+        ->and($definition->presets)->toHaveCount(2)
         ->and($definition->presets[0]->key)->toBe('premium-portfolio-collection')
         ->and($definition->runtime->value)->toBe('blade')
         ->and($definition->extends)->toBe('default')

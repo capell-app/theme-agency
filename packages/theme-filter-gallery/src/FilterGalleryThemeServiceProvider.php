@@ -6,13 +6,15 @@ namespace Capell\ThemeStudio\FilterGallery;
 
 use Capell\Core\Data\VendorAssetData;
 use Capell\Core\Enums\FrontendRuntime;
+use Capell\Core\Enums\VendorAssetEnum;
 use Capell\Core\Facades\CapellCore;
 use Capell\Core\ThemeStudio\Contracts\SectionRenderer;
 use Capell\Core\ThemeStudio\Data\ThemeDefinitionData;
 use Capell\Core\ThemeStudio\Data\ThemePresetData;
-use Capell\Core\ThemeStudio\Rendering\BladeThemeRenderer;
 use Capell\Core\ThemeStudio\Rendering\ViewSectionRenderer;
 use Capell\Core\ThemeStudio\Theme\ThemeRegistry;
+use Capell\FoundationTheme\Rendering\ChromeSplitBladeThemeRenderer;
+use Capell\FoundationTheme\Support\Editor\StandardThemeEditorSchema;
 use Capell\ThemeStudio\FilterGallery\Console\Commands\DemoCommand;
 use Illuminate\Support\ServiceProvider;
 use Override;
@@ -60,6 +62,34 @@ final class FilterGalleryThemeServiceProvider extends ServiceProvider
                         'cardDensity' => 'dense',
                     ],
                 ),
+                new ThemePresetData(
+                    key: 'archive-noir',
+                    name: 'Archive Noir',
+                    description: 'Archive Noir visual preset for the same high-density inspiration library reimagined as a moody after-hours archive, with a charcoal canvas, ember-orange accents, tighter card rhythm, and punchier motion for browsing at night.',
+                    previewImage: '/vendor/capell/themes/filter-gallery.jpg',
+                    values: [
+                        'primaryColor' => '#f8fafc',
+                        'accentColor' => '#fb923c',
+                        'neutralColor' => '#94a3b8',
+                        'surfaceColor' => '#0b1120',
+                        'foregroundColor' => '#e2e8f0',
+                        'headingFont' => 'sora',
+                        'bodyFont' => 'inter',
+                        'spacing' => 'compact',
+                        'alignment' => 'left',
+                        'cardStyle' => 'flat',
+                        'navigationStyle' => 'prominent',
+                        'layoutPresentation' => 'editorial',
+                        'motionIntensity' => 'energetic',
+                        'mediaTreatment' => 'thumbnail-grid',
+                        'radius' => 'sm',
+                        'headingScale' => 'bold',
+                        'cardDensity' => 'dense',
+                    ],
+                ),
+            ],
+            frontend: [
+                'editor' => StandardThemeEditorSchema::definition(),
             ],
             assets: ['css' => 'vendor/capell/themes/filter-gallery.css'],
             runtime: FrontendRuntime::Blade,
@@ -88,7 +118,7 @@ final class FilterGalleryThemeServiceProvider extends ServiceProvider
 
         $registry->register(
             definition: self::definition(),
-            themeRenderer: new BladeThemeRenderer(
+            themeRenderer: new ChromeSplitBladeThemeRenderer(
                 themeKey: self::THEME_KEY,
                 layoutView: 'capell-theme-filter-gallery::page',
                 sectionRenderers: $sectionRenderers,
@@ -99,7 +129,12 @@ final class FilterGalleryThemeServiceProvider extends ServiceProvider
 
     private function registerVendorCssAssets(): void
     {
-        CapellCore::registerVendorAsset(VendorAssetData::tailwindImport('resources/css/theme-filter-gallery.css', self::$packageName));
+        CapellCore::registerVendorAsset(new VendorAssetData(
+            type: VendorAssetEnum::TailwindImport,
+            value: 'resources/css/theme-filter-gallery.css',
+            packageName: self::$packageName,
+            condition: 'theme-css:filter-gallery',
+        ));
         CapellCore::registerVendorAsset(VendorAssetData::tailwindSource('resources/views/**/*.blade.php', self::$packageName));
     }
 

@@ -864,4 +864,13 @@ For first-party and marketplace-ready themes, include enough metadata for produc
 
 Admin UI strings must stay in `capell-admin::*`; package public Blade must remain free of package names, authoring controls, signed URLs, model IDs, field paths, permissions, and database queries.
 
+## CSS Diet: Utilities vs. Bespoke CSS
+
+Every first-party theme's Blade views are already registered as a `tailwindSource` glob, so Tailwind utility classes are available for free. For new or refactored sections:
+
+- Use Tailwind utilities for generic layout, spacing, and typography — the same rules any Tailwind project would reach for.
+- Reserve prefixed bespoke CSS (`.{prefix}-*`) for what utilities can't express: design tokens, signature ornaments, interaction states, and motion.
+
+A theme's own stylesheet is guarded by a per-theme line-count budget (`ThemeCssIsolationTest`) so bespoke CSS can't silently balloon back toward the pre-utility era. If a change would push a theme over budget, look for utility-class opportunities before raising the ceiling.
+
 ## Current First-Party Child Themes

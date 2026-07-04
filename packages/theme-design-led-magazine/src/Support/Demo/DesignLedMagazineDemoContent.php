@@ -63,9 +63,9 @@ final class DesignLedMagazineDemoContent implements ProvidesThemeDemoContent
                 'footer' => $this->footer(),
                 'sections' => [
                     $this->heroSection(
-                        eyebrow: 'Design Led Magazine',
+                        eyebrow: 'The current issue',
                         heading: 'A design magazine that reads like an exhibition',
-                        summary: 'Photography-led lead stories, editor picks, vertical categories, gallery features, and product credits — paced with editorial restraint across architecture, interiors, fashion, and art.',
+                        summary: 'Homes, studios, collections, and exhibitions across architecture, interiors, fashion, and art — photographed slowly, edited carefully, and published one considered issue at a time.',
                         media: $media,
                         mediaKey: 'hero',
                         mediaAlt: 'A light-filled coastal house photographed for the lead feature',
@@ -75,9 +75,9 @@ final class DesignLedMagazineDemoContent implements ProvidesThemeDemoContent
                         secondaryUrl: '#gallery-feature',
                     ),
                     $this->leadStorySection($media),
-                    $this->editorPicksSection(),
+                    $this->editorPicksSection($media),
                     $this->verticalCategoriesSection(),
-                    $this->galleryFeatureSection(),
+                    $this->galleryFeatureSection($media),
                     $this->productCreditsSection(),
                     $this->trendListSection(
                         heading: 'Direction worth studying',
@@ -124,14 +124,14 @@ final class DesignLedMagazineDemoContent implements ProvidesThemeDemoContent
                         media: $media,
                         mediaKey: 'listing',
                         mediaAlt: 'An interiors feature laid out across the archive index',
-                        primaryLabel: 'Read the lead story',
-                        primaryUrl: '#lead-story',
-                        secondaryLabel: 'Browse galleries',
-                        secondaryUrl: '#gallery-feature',
+                        primaryLabel: 'Browse the archive',
+                        primaryUrl: '#content-listing',
+                        secondaryLabel: 'Follow the threads',
+                        secondaryUrl: '#trend-list',
                     ),
                     $this->contentListingSection(
                         heading: 'Architecture, interiors, design, fashion, and art',
-                        summary: 'Structured listing cards keep every vertical scannable without bespoke search records.',
+                        summary: 'Every feature we have published, newest first — from building studies to studio profiles to the gallery rehang of the season.',
                         media: $media,
                     ),
                     $this->verticalCategoriesSection(),
@@ -180,9 +180,9 @@ final class DesignLedMagazineDemoContent implements ProvidesThemeDemoContent
                         secondaryLabel: 'See product credits',
                         secondaryUrl: '#product-credits',
                     ),
-                    $this->galleryFeatureSection(),
+                    $this->galleryFeatureSection($media),
                     $this->productCreditsSection(),
-                    $this->editorPicksSection(),
+                    $this->editorPicksSection($media),
                     $this->newsletterSection(
                         heading: 'Follow the architecture desk',
                         summary: 'Get the next building study, studio profile, and materials note as soon as it runs.',
@@ -208,10 +208,10 @@ final class DesignLedMagazineDemoContent implements ProvidesThemeDemoContent
             slug: 'theme-' . $themeKey . '-contact',
             content: $this->prose(
                 'Reach the desk',
-                'Pitch a story, send product credits, or join the newsletter — one calm conversion path that feels like part of the magazine.',
+                'Pitch a story, send product credits, or join the newsletter — the desk reads everything that arrives.',
             ),
             renderData: [
-                'summary' => 'Pitch a feature, send product credits, or subscribe — reach the Atrium & Field desk through one calm, editorial path.',
+                'summary' => 'Pitch a feature, send product credits, or subscribe — the Atrium & Field desk reads every message.',
                 'navigation' => $this->navigation(),
                 'footer' => $this->footer(),
                 'sections' => [
@@ -224,20 +224,16 @@ final class DesignLedMagazineDemoContent implements ProvidesThemeDemoContent
                         mediaAlt: 'The Atrium & Field editorial desk',
                         primaryLabel: 'Email the desk',
                         primaryUrl: 'mailto:' . self::DESK_EMAIL,
-                        secondaryLabel: 'Read the lead story',
-                        secondaryUrl: '#lead-story',
-                    ),
-                    $this->newsletterSection(
-                        heading: 'Reach the desk through one calm conversion path',
-                        summary: 'A single newsletter and inquiry path keeps the contact journey part of the editorial experience.',
+                        secondaryLabel: 'Join the newsletter',
+                        secondaryUrl: '#newsletter',
                     ),
                     $this->proofSection(
                         heading: 'How the desk works',
                         summary: 'What to expect once your pitch or credit lands in our inbox.',
                     ),
-                    $this->ctaSection(
-                        heading: 'Working on something we should see?',
-                        summary: 'Send the feature, the gallery, or the product credit. We reply to every pitch within a week.',
+                    $this->newsletterSection(
+                        heading: 'Or just read along with us',
+                        summary: 'Not pitching yet? Join the weekly edition and see what the desk publishes first.',
                     ),
                 ],
             ],
@@ -271,13 +267,13 @@ final class DesignLedMagazineDemoContent implements ProvidesThemeDemoContent
                         media: $media,
                         mediaKey: 'listing',
                         mediaAlt: null,
-                        primaryLabel: 'Read the lead story',
-                        primaryUrl: '#lead-story',
-                        secondaryLabel: 'Browse galleries',
-                        secondaryUrl: '#gallery-feature',
+                        primaryLabel: 'Back to the magazine',
+                        primaryUrl: '/',
+                        secondaryLabel: 'Browse editor picks',
+                        secondaryUrl: '#editor-picks',
                     ),
                     $this->verticalCategoriesSection(),
-                    $this->editorPicksSection(),
+                    $this->editorPicksSection($media),
                     $this->ctaSection(
                         heading: 'Looking for a particular vertical?',
                         summary: 'Subscribe and we will tell you the moment we publish in the category you came here for.',
@@ -315,8 +311,8 @@ final class DesignLedMagazineDemoContent implements ProvidesThemeDemoContent
                         mediaAlt: null,
                         primaryLabel: 'Back to the magazine',
                         primaryUrl: '/',
-                        secondaryLabel: 'Read the lead story',
-                        secondaryUrl: '#lead-story',
+                        secondaryLabel: 'Browse the verticals',
+                        secondaryUrl: '#vertical-categories',
                     ),
                     $this->verticalCategoriesSection(),
                     $this->ctaSection(
@@ -358,8 +354,8 @@ final class DesignLedMagazineDemoContent implements ProvidesThemeDemoContent
                         mediaAlt: 'A gallery feature spread from the current issue',
                         primaryLabel: 'Subscribe to the magazine',
                         primaryUrl: '#newsletter',
-                        secondaryLabel: 'Read the lead story',
-                        secondaryUrl: '#lead-story',
+                        secondaryLabel: 'Back to the magazine',
+                        secondaryUrl: '/',
                     ),
                     $this->proofSection(
                         heading: 'Why readers stay subscribed',
@@ -411,7 +407,7 @@ final class DesignLedMagazineDemoContent implements ProvidesThemeDemoContent
                 ['label' => $secondaryLabel, 'url' => $secondaryUrl, 'style' => 'secondary'],
             ],
             'mediaUrl' => $mediaUrl,
-            'mediaAlt' => $mediaAlt ?? $heading,
+            'mediaAlt' => $mediaAlt,
         ];
     }
 
@@ -426,15 +422,15 @@ final class DesignLedMagazineDemoContent implements ProvidesThemeDemoContent
         $stories = [
             [
                 'title' => 'A coastal house shaped by light and restraint',
-                'summary' => 'A long-form architecture lead with landscape photography, a short standfirst, and links to materials and credits.',
+                'summary' => 'On a windswept headland, a young practice trades square metres for daylight and proves restraint is the hardest brief.',
             ],
             [
                 'title' => 'Inside a studio making objects with patience',
-                'summary' => 'A maker profile pairing portrait photography with material notes and full product credits.',
+                'summary' => 'Two makers, one kiln, and a decade of refusing to scale — a profile in doing less, better.',
             ],
             [
                 'title' => 'The city guide as a design document',
-                'summary' => 'A travel and culture feature with precise categories, captions, and practical context.',
+                'summary' => 'Twelve addresses in Porto that explain how the city thinks about material, craft, and reuse.',
             ],
         ];
 
@@ -452,42 +448,58 @@ final class DesignLedMagazineDemoContent implements ProvidesThemeDemoContent
         return [
             'type' => 'lead-story',
             'kicker' => 'Lead story',
-            'heading' => 'Photography first, hierarchy second, clutter last',
-            'summary' => 'A strong lead package for an architecture home, interior profile, design launch, fashion editorial, or art feature.',
+            'heading' => 'Three features from the current issue',
+            'summary' => 'A coastal house, a patient studio, and a city read as a design document — the stories our editors keep returning to.',
             'items' => $items,
         ];
     }
 
     /**
+     * @param  array{hero: list<string>, listing: list<string>, detail: list<string>, proof: list<string>, contact: list<string>, cta: list<string>}  $media
      * @return array<string, mixed>
      */
-    private function editorPicksSection(): array
+    private function editorPicksSection(array $media): array
     {
+        $images = array_values(array_unique(array_merge($media['listing'], $media['proof'], $media['contact'])));
+
+        $picks = [
+            [
+                'title' => 'The apartment with a working library at its centre',
+                'summary' => 'A collector rebuilds her flat around eleven metres of shelving — and the rooms fall into place behind it.',
+                'meta' => 'Interiors. 7 min read.',
+                'care_note' => 'Photographed by Mara Lindqvist',
+            ],
+            [
+                'title' => 'A chair collection with architectural discipline',
+                'summary' => 'A furniture maker borrows the logic of load-bearing walls and produces the calmest seating of the year.',
+                'meta' => 'Design. Editor pick.',
+                'care_note' => 'Credits: Halden Workshop, oak and wool',
+            ],
+            [
+                'title' => 'Five exhibitions to see this month',
+                'summary' => 'From a ceramics retrospective to a photography survey — the shows worth crossing town for.',
+                'meta' => 'Art. City guide.',
+                'care_note' => 'Updated weekly by the culture desk',
+            ],
+        ];
+
+        $items = [];
+
+        foreach ($picks as $index => $pick) {
+            $items[] = [
+                ...$pick,
+                'url' => '#pick-' . ($index + 1),
+                'image' => $images[$index % max(count($images), 1)] ?? null,
+                'imageAlt' => $pick['title'],
+            ];
+        }
+
         return [
             'type' => 'editor-picks',
             'kicker' => 'Editor picks',
-            'heading' => 'Varied story cards for a magazine rhythm',
-            'summary' => 'Cards carry image-led features, compact captions, category labels, author, and product-credit notes.',
-            'items' => [
-                [
-                    'title' => 'The apartment with a working library at its centre',
-                    'summary' => 'An interiors feature with image, caption, category, and product-source context.',
-                    'meta' => 'Interiors. 7 min read.',
-                    'care_note' => 'Photographed by Mara Lindqvist',
-                ],
-                [
-                    'title' => 'A chair collection with architectural discipline',
-                    'summary' => 'A design story carrying product credits, designer notes, and related reading.',
-                    'meta' => 'Design. Editor pick.',
-                    'care_note' => 'Credits: Halden Workshop, oak and wool',
-                ],
-                [
-                    'title' => 'Five exhibitions to see this month',
-                    'summary' => 'A culture list with dates, location notes, and gallery links.',
-                    'meta' => 'Art. City guide.',
-                    'care_note' => 'Updated weekly by the culture desk',
-                ],
-            ],
+            'heading' => 'What the desk is reading this week',
+            'summary' => 'Three stories our editors keep sending each other — an apartment, a chair, and a month of exhibitions.',
+            'items' => $items,
         ];
     }
 
@@ -499,7 +511,7 @@ final class DesignLedMagazineDemoContent implements ProvidesThemeDemoContent
         return [
             'type' => 'vertical-categories',
             'kicker' => 'Verticals',
-            'heading' => 'Clear sections for broad cultural coverage',
+            'heading' => 'Four desks, one magazine',
             'items' => [
                 [
                     'title' => 'Architecture',
@@ -522,27 +534,42 @@ final class DesignLedMagazineDemoContent implements ProvidesThemeDemoContent
     }
 
     /**
+     * @param  array{hero: list<string>, listing: list<string>, detail: list<string>, proof: list<string>, contact: list<string>, cta: list<string>}  $media
      * @return array<string, mixed>
      */
-    private function galleryFeatureSection(): array
+    private function galleryFeatureSection(array $media): array
     {
+        $images = array_values(array_unique(array_merge($media['detail'], $media['cta'], $media['hero'])));
+
+        $plates = [
+            [
+                'title' => 'The approach from the headland',
+                'summary' => 'Photographed at first light, before the fog lifts off the water.',
+            ],
+            [
+                'title' => 'The corridor of glazing',
+                'summary' => 'Photograph by Mara Lindqvist. Joinery by Halden Workshop.',
+            ],
+        ];
+
+        $items = [];
+
+        foreach ($plates as $index => $plate) {
+            $items[] = [
+                ...$plate,
+                'image' => $images[$index % max(count($images), 1)] ?? null,
+                'imageAlt' => $plate['title'],
+            ];
+        }
+
         return [
             'type' => 'gallery-feature',
             'kicker' => 'Gallery feature',
-            'heading' => 'Image sequences with enough editorial control',
-            'summary' => 'A dark feature band for image galleries, portrait crops, installation views, room tours, and photo essays.',
+            'heading' => 'The coastal house, plate by plate',
+            'summary' => 'A photo essay from our lead feature — the headland at dusk, the long corridor of glazing, and the rooms that hold the light.',
             'label' => 'View the full gallery',
             'url' => '#feature-1',
-            'items' => [
-                [
-                    'title' => 'Landscape lead with detail crops',
-                    'summary' => 'A wide hero photograph paired with secondary crops, captions, and credit lines.',
-                ],
-                [
-                    'title' => 'Captions that matter',
-                    'summary' => 'Photographer, stylist, location, product, architect, and material notes carried in full.',
-                ],
-            ],
+            'items' => $items,
         ];
     }
 
@@ -554,21 +581,21 @@ final class DesignLedMagazineDemoContent implements ProvidesThemeDemoContent
         return [
             'type' => 'product-credits',
             'kicker' => 'Product credits',
-            'heading' => 'Editorial commerce without shouting',
+            'heading' => 'Sourced from this issue',
             'items' => [
                 [
                     'title' => 'Lighting and objects',
-                    'summary' => 'A compact module for sourced items, designers, makers, materials, and stockist links.',
+                    'summary' => 'The brass pendant, the turned-oak bowls, and the reading lamp from the library apartment.',
                     'meta' => 'Product credits',
                 ],
                 [
                     'title' => 'Material notes',
-                    'summary' => 'Finishes, fabrics, stone, timber, ceramics, glass, and craft processes, explained.',
+                    'summary' => 'Lime plaster, fumed oak, and the Portuguese granite that anchors the coastal house.',
                     'meta' => 'Materials',
                 ],
                 [
                     'title' => 'Books and references',
-                    'summary' => 'A row for books, exhibitions, venues, studios, and related editorial resources.',
+                    'summary' => 'The monographs, exhibition catalogues, and studio visits behind this month\'s features.',
                     'meta' => 'References',
                 ],
             ],
@@ -588,15 +615,15 @@ final class DesignLedMagazineDemoContent implements ProvidesThemeDemoContent
             'items' => [
                 [
                     'title' => 'Colour and material direction',
-                    'summary' => 'Short, useful trend copy with evidence from features, products, and spaces.',
+                    'summary' => 'Warm minerals and unbleached fibres keep appearing — in plaster, upholstery, and glaze.',
                 ],
                 [
                     'title' => 'Rooms worth studying',
-                    'summary' => 'A list format for recurring interior ideas, details, and design decisions.',
+                    'summary' => 'The working kitchen, the borrowed view, and the corridor treated as a gallery.',
                 ],
                 [
                     'title' => 'Objects with staying power',
-                    'summary' => 'A curated row for furniture, lighting, tabletop, books, and art editions.',
+                    'summary' => 'The pieces our editors would still buy in ten years — chairs, lamps, and one very good teapot.',
                 ],
             ],
         ];
@@ -661,13 +688,13 @@ final class DesignLedMagazineDemoContent implements ProvidesThemeDemoContent
     {
         return [
             'type' => 'proof',
-            'kicker' => 'Editorial control',
+            'kicker' => 'From the desk',
             'heading' => $heading,
             'summary' => $summary,
             'items' => [
-                ['value' => 'Photo-led', 'label' => 'Lead photography, galleries, captions, and precise crops carry every story.'],
-                ['value' => 'Credit ready', 'label' => 'Product credits, materials, designers, makers, and references have clear modules.'],
-                ['value' => 'Archive ready', 'label' => 'Categories, editor picks, trend lists, and archives stay scannable at any depth.'],
+                ['value' => 'Photo-led', 'label' => 'Every feature is commissioned with its photography — no story runs without its pictures.'],
+                ['value' => 'Fully credited', 'label' => 'Designers, makers, materials, and stockists are named in every feature we publish.'],
+                ['value' => 'Weekly edition', 'label' => 'One considered email a week — lead stories, galleries, and credits, nothing else.'],
             ],
         ];
     }
@@ -679,7 +706,7 @@ final class DesignLedMagazineDemoContent implements ProvidesThemeDemoContent
     {
         return [
             'type' => 'cta',
-            'kicker' => 'Magazine ready',
+            'kicker' => 'Keep reading',
             'heading' => $heading,
             'summary' => $summary,
             'label' => 'Subscribe to the magazine',

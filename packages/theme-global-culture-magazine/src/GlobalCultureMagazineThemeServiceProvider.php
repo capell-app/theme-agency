@@ -6,13 +6,15 @@ namespace Capell\ThemeStudio\GlobalCultureMagazine;
 
 use Capell\Core\Data\VendorAssetData;
 use Capell\Core\Enums\FrontendRuntime;
+use Capell\Core\Enums\VendorAssetEnum;
 use Capell\Core\Facades\CapellCore;
 use Capell\Core\ThemeStudio\Contracts\SectionRenderer;
 use Capell\Core\ThemeStudio\Data\ThemeDefinitionData;
 use Capell\Core\ThemeStudio\Data\ThemePresetData;
-use Capell\Core\ThemeStudio\Rendering\BladeThemeRenderer;
 use Capell\Core\ThemeStudio\Rendering\ViewSectionRenderer;
 use Capell\Core\ThemeStudio\Theme\ThemeRegistry;
+use Capell\FoundationTheme\Rendering\ChromeSplitBladeThemeRenderer;
+use Capell\FoundationTheme\Support\Editor\StandardThemeEditorSchema;
 use Capell\ThemeStudio\GlobalCultureMagazine\Console\Commands\DemoCommand;
 use Illuminate\Support\ServiceProvider;
 use Override;
@@ -38,28 +40,56 @@ final class GlobalCultureMagazineThemeServiceProvider extends ServiceProvider
                 new ThemePresetData(
                     key: self::THEME_KEY,
                     name: 'Global Culture Magazine',
-                    description: 'Global Culture Magazine visual preset for black-and-white editorial structure, lead dispatches, compact audio rows, city guides, travel and culture sections, books, shop cards, columnists, and newsletter signup.',
+                    description: 'Warm paper-and-ink editorial preset with serif display headlines, gilded plate artwork, lead dispatches, compact audio rows, city guides, travel and culture sections, books, shop cards, columnists, and newsletter signup.',
                     previewImage: '/vendor/capell/themes/global-culture-magazine.jpg',
                     values: [
-                        'primaryColor' => '#111111',
+                        'primaryColor' => '#241d17',
                         'accentColor' => '#b88a2e',
-                        'neutralColor' => '#111111',
+                        'neutralColor' => '#241d17',
                         'surfaceColor' => '#f6f1e7',
-                        'foregroundColor' => '#111111',
-                        'headingFont' => 'sora',
-                        'bodyFont' => 'inter',
+                        'foregroundColor' => '#241d17',
+                        'headingFont' => 'playfair',
+                        'bodyFont' => 'newsreader',
                         'spacing' => 'balanced',
                         'alignment' => 'left',
                         'cardStyle' => 'bordered',
                         'navigationStyle' => 'prominent',
                         'layoutPresentation' => 'editorial',
                         'motionIntensity' => 'subtle',
-                        'mediaTreatment' => 'photographic',
+                        'mediaTreatment' => 'framed',
                         'radius' => 'md',
                         'headingScale' => 'balanced',
                         'cardDensity' => 'airy',
                     ],
                 ),
+                new ThemePresetData(
+                    key: 'nightflight',
+                    name: 'Nightflight',
+                    description: 'Deep indigo night-travel preset with brass-gold accents against ink-blue surfaces, built for red-eye dispatches, late-night radio, and after-dark city guides.',
+                    previewImage: '/vendor/capell/themes/global-culture-magazine.jpg',
+                    values: [
+                        'primaryColor' => '#e8e2d4',
+                        'accentColor' => '#c79a3d',
+                        'neutralColor' => '#9aa3b5',
+                        'surfaceColor' => '#161b2c',
+                        'foregroundColor' => '#e8e2d4',
+                        'headingFont' => 'playfair',
+                        'bodyFont' => 'newsreader',
+                        'spacing' => 'compact',
+                        'alignment' => 'left',
+                        'cardStyle' => 'flat',
+                        'navigationStyle' => 'prominent',
+                        'layoutPresentation' => 'editorial',
+                        'motionIntensity' => 'expressive',
+                        'mediaTreatment' => 'framed',
+                        'radius' => 'sm',
+                        'headingScale' => 'dramatic',
+                        'cardDensity' => 'dense',
+                    ],
+                ),
+            ],
+            frontend: [
+                'editor' => StandardThemeEditorSchema::definition(),
             ],
             assets: ['css' => 'vendor/capell/themes/global-culture-magazine.css'],
             runtime: FrontendRuntime::Blade,
@@ -88,7 +118,7 @@ final class GlobalCultureMagazineThemeServiceProvider extends ServiceProvider
 
         $registry->register(
             definition: self::definition(),
-            themeRenderer: new BladeThemeRenderer(
+            themeRenderer: new ChromeSplitBladeThemeRenderer(
                 themeKey: self::THEME_KEY,
                 layoutView: 'capell-theme-global-culture-magazine::page',
                 sectionRenderers: $sectionRenderers,
@@ -99,7 +129,12 @@ final class GlobalCultureMagazineThemeServiceProvider extends ServiceProvider
 
     private function registerVendorCssAssets(): void
     {
-        CapellCore::registerVendorAsset(VendorAssetData::tailwindImport('resources/css/theme-global-culture-magazine.css', self::$packageName));
+        CapellCore::registerVendorAsset(new VendorAssetData(
+            type: VendorAssetEnum::TailwindImport,
+            value: 'resources/css/theme-global-culture-magazine.css',
+            packageName: self::$packageName,
+            condition: 'theme-css:global-culture-magazine',
+        ));
         CapellCore::registerVendorAsset(VendorAssetData::tailwindSource('resources/views/**/*.blade.php', self::$packageName));
     }
 

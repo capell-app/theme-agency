@@ -6,13 +6,16 @@ namespace Capell\ThemeStudio\CaseStudyPlatform;
 
 use Capell\Core\Data\VendorAssetData;
 use Capell\Core\Enums\FrontendRuntime;
+use Capell\Core\Enums\VendorAssetEnum;
 use Capell\Core\Facades\CapellCore;
 use Capell\Core\ThemeStudio\Contracts\SectionRenderer;
 use Capell\Core\ThemeStudio\Data\ThemeDefinitionData;
 use Capell\Core\ThemeStudio\Data\ThemePresetData;
-use Capell\Core\ThemeStudio\Rendering\BladeThemeRenderer;
 use Capell\Core\ThemeStudio\Rendering\ViewSectionRenderer;
 use Capell\Core\ThemeStudio\Theme\ThemeRegistry;
+use Capell\FoundationTheme\Rendering\ChromeSplitBladeThemeRenderer;
+use Capell\FoundationTheme\Rendering\VariantViewSectionRenderer;
+use Capell\FoundationTheme\Support\Editor\StandardThemeEditorSchema;
 use Capell\ThemeStudio\CaseStudyPlatform\Console\Commands\DemoCommand;
 use Illuminate\Support\ServiceProvider;
 use Override;
@@ -60,9 +63,40 @@ final class CaseStudyPlatformThemeServiceProvider extends ServiceProvider
                         'cardDensity' => 'airy',
                     ],
                 ),
+                new ThemePresetData(
+                    key: 'midnight-atelier',
+                    name: 'Midnight Atelier',
+                    description: 'A darker, quieter counterpart for studios who want their case-study feed to feel like a late-night design atelier rather than a bright editorial wall.',
+                    previewImage: '/vendor/capell/themes/case-study-platform.jpg',
+                    values: [
+                        'primaryColor' => '#f5f2ea',
+                        'accentColor' => '#e8853e',
+                        'neutralColor' => '#d8d2c4',
+                        'surfaceColor' => '#14120f',
+                        'foregroundColor' => '#f5f2ea',
+                        'headingFont' => 'sora',
+                        'bodyFont' => 'inter',
+                        'spacing' => 'compact',
+                        'alignment' => 'left',
+                        'cardStyle' => 'bordered',
+                        'navigationStyle' => 'prominent',
+                        'layoutPresentation' => 'editorial',
+                        'motionIntensity' => 'none',
+                        'mediaTreatment' => 'illustrated',
+                        'radius' => 'sm',
+                        'headingScale' => 'balanced',
+                        'cardDensity' => 'compact',
+                    ],
+                ),
             ],
             assets: ['css' => 'vendor/capell/themes/case-study-platform.css'],
             runtime: FrontendRuntime::Blade,
+            frontend: [
+                'sectionVariants' => [
+                    'hero' => ['default', 'split'],
+                ],
+                'editor' => StandardThemeEditorSchema::definition(),
+            ],
             extends: 'default',
         );
     }
@@ -88,7 +122,7 @@ final class CaseStudyPlatformThemeServiceProvider extends ServiceProvider
 
         $registry->register(
             definition: self::definition(),
-            themeRenderer: new BladeThemeRenderer(
+            themeRenderer: new ChromeSplitBladeThemeRenderer(
                 themeKey: self::THEME_KEY,
                 layoutView: 'capell-theme-case-study-platform::page',
                 sectionRenderers: $sectionRenderers,
@@ -99,7 +133,12 @@ final class CaseStudyPlatformThemeServiceProvider extends ServiceProvider
 
     private function registerVendorCssAssets(): void
     {
-        CapellCore::registerVendorAsset(VendorAssetData::tailwindImport('resources/css/theme-case-study-platform.css', self::$packageName));
+        CapellCore::registerVendorAsset(new VendorAssetData(
+            type: VendorAssetEnum::TailwindImport,
+            value: 'resources/css/theme-case-study-platform.css',
+            packageName: self::$packageName,
+            condition: 'theme-css:case-study-platform',
+        ));
         CapellCore::registerVendorAsset(VendorAssetData::tailwindSource('resources/views/**/*.blade.php', self::$packageName));
     }
 
@@ -110,7 +149,13 @@ final class CaseStudyPlatformThemeServiceProvider extends ServiceProvider
     {
         return [
             'navigation' => new ViewSectionRenderer(self::THEME_KEY, 'navigation', 'capell-theme-case-study-platform::sections.navigation', failLoudly: true),
-            'hero' => new ViewSectionRenderer(self::THEME_KEY, 'hero', 'capell-theme-case-study-platform::sections.hero', failLoudly: true),
+            'hero' => new VariantViewSectionRenderer(
+                themeKey: self::THEME_KEY,
+                sectionKey: 'hero',
+                baseView: 'capell-theme-case-study-platform::sections.hero',
+                variantViews: ['split' => 'capell-theme-case-study-platform::sections.hero--split'],
+                failLoudly: true,
+            ),
             'creator-hero' => new ViewSectionRenderer(self::THEME_KEY, 'creator-hero', 'capell-theme-case-study-platform::sections.creator-hero', failLoudly: true),
             'discipline-filters' => new ViewSectionRenderer(self::THEME_KEY, 'discipline-filters', 'capell-theme-case-study-platform::sections.discipline-filters', failLoudly: true),
             'project-feed' => new ViewSectionRenderer(self::THEME_KEY, 'project-feed', 'capell-theme-case-study-platform::sections.project-feed', failLoudly: true),

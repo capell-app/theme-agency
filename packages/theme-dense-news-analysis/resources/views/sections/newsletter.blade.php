@@ -1,35 +1,46 @@
 <section
-    class="editorial-section"
-    style="background: var(--editorial-field)"
+    id="subscribe"
+    class="dnews-section dnews-section-tint"
 >
-    <div class="editorial-section-inner editorial-split">
+    <div class="dnews-section-inner dnews-split">
         <div>
-            <p class="editorial-kicker">
-                {{ __('capell-theme-dense-news-analysis::sections.newsletter.kicker') }}
-            </p>
-            <h2>
-                {{ data_get($section, 'heading', __('capell-theme-dense-news-analysis::sections.newsletter.heading')) }}
-            </h2>
-            <p class="editorial-lede">
-                {{ data_get($section, 'summary', __('capell-theme-dense-news-analysis::sections.newsletter.summary')) }}
-            </p>
+            <div class="dnews-section-head dnews-section-head-flush">
+                <p class="dnews-kicker">
+                    {{ __('capell-theme-dense-news-analysis::sections.newsletter.kicker') }}
+                </p>
+                <h2>
+                    {{ data_get($section, 'heading', __('capell-theme-dense-news-analysis::sections.newsletter.heading')) }}
+                </h2>
+                <p class="dnews-lede">
+                    {{ data_get($section, 'summary', __('capell-theme-dense-news-analysis::sections.newsletter.summary')) }}
+                </p>
+            </div>
         </div>
+
+        {{--
+            GET with a safe default action: Capell ships no newsletter endpoint,
+            so a POST here would 419/405 on a real install.
+        --}}
         <form
-            method="post"
-            action="{{ data_get($section, 'action', '/') }}"
-            class="editorial-card"
+            method="get"
+            action="{{ data_get($section, 'action', '#') }}"
+            class="dnews-form"
         >
-            <label for="editorial-newsletter-email">
+            <p class="dnews-meta">
+                {{ __('capell-theme-dense-news-analysis::sections.newsletter.form_note') }}
+            </p>
+            <label for="dnews-newsletter-email">
                 {{ __('capell-theme-dense-news-analysis::sections.newsletter.email_label') }}
             </label>
             <input
-                id="editorial-newsletter-email"
+                id="dnews-newsletter-email"
                 name="email"
                 type="email"
+                autocomplete="email"
                 required
             />
             <button
-                class="editorial-button"
+                class="dnews-button"
                 type="submit"
             >
                 {{ __('capell-theme-dense-news-analysis::sections.newsletter.button') }}

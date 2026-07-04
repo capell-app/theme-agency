@@ -6,13 +6,15 @@ namespace Capell\ThemeStudio\PremiumPortfolioCollection;
 
 use Capell\Core\Data\VendorAssetData;
 use Capell\Core\Enums\FrontendRuntime;
+use Capell\Core\Enums\VendorAssetEnum;
 use Capell\Core\Facades\CapellCore;
 use Capell\Core\ThemeStudio\Contracts\SectionRenderer;
 use Capell\Core\ThemeStudio\Data\ThemeDefinitionData;
 use Capell\Core\ThemeStudio\Data\ThemePresetData;
-use Capell\Core\ThemeStudio\Rendering\BladeThemeRenderer;
 use Capell\Core\ThemeStudio\Rendering\ViewSectionRenderer;
 use Capell\Core\ThemeStudio\Theme\ThemeRegistry;
+use Capell\FoundationTheme\Rendering\ChromeSplitBladeThemeRenderer;
+use Capell\FoundationTheme\Support\Editor\StandardThemeEditorSchema;
 use Capell\ThemeStudio\PremiumPortfolioCollection\Console\Commands\DemoCommand;
 use Illuminate\Support\ServiceProvider;
 use Override;
@@ -60,9 +62,37 @@ final class PremiumPortfolioCollectionThemeServiceProvider extends ServiceProvid
                         'cardDensity' => 'airy',
                     ],
                 ),
+                new ThemePresetData(
+                    key: 'gilded-archive',
+                    name: 'Gilded Archive',
+                    description: 'A charcoal-and-gold counterpart evoking a private awards archive, with denser bordered cards and a slower, more ceremonial motion feel.',
+                    previewImage: '/vendor/capell/themes/premium-portfolio-collection.jpg',
+                    values: [
+                        'primaryColor' => '#f5f0e6',
+                        'accentColor' => '#c9a24b',
+                        'neutralColor' => '#1b1815',
+                        'surfaceColor' => '#161311',
+                        'foregroundColor' => '#f5f0e6',
+                        'headingFont' => 'sora',
+                        'bodyFont' => 'inter',
+                        'spacing' => 'generous',
+                        'alignment' => 'left',
+                        'cardStyle' => 'bordered',
+                        'navigationStyle' => 'prominent',
+                        'layoutPresentation' => 'editorial',
+                        'motionIntensity' => 'minimal',
+                        'mediaTreatment' => 'illustrated',
+                        'radius' => 'sm',
+                        'headingScale' => 'dramatic',
+                        'cardDensity' => 'compact',
+                    ],
+                ),
             ],
             assets: ['css' => 'vendor/capell/themes/premium-portfolio-collection.css'],
             runtime: FrontendRuntime::Blade,
+            frontend: [
+                'editor' => StandardThemeEditorSchema::definition(),
+            ],
             extends: 'default',
         );
     }
@@ -89,7 +119,7 @@ final class PremiumPortfolioCollectionThemeServiceProvider extends ServiceProvid
 
         $registry->register(
             definition: self::definition(),
-            themeRenderer: new BladeThemeRenderer(
+            themeRenderer: new ChromeSplitBladeThemeRenderer(
                 themeKey: self::THEME_KEY,
                 layoutView: 'capell-theme-premium-portfolio-collection::page',
                 sectionRenderers: $sectionRenderers,
@@ -100,7 +130,12 @@ final class PremiumPortfolioCollectionThemeServiceProvider extends ServiceProvid
 
     private function registerVendorCssAssets(): void
     {
-        CapellCore::registerVendorAsset(VendorAssetData::tailwindImport('resources/css/theme-premium-portfolio-collection.css', self::$packageName));
+        CapellCore::registerVendorAsset(new VendorAssetData(
+            type: VendorAssetEnum::TailwindImport,
+            value: 'resources/css/theme-premium-portfolio-collection.css',
+            packageName: self::$packageName,
+            condition: 'theme-css:premium-portfolio-collection',
+        ));
         CapellCore::registerVendorAsset(VendorAssetData::tailwindSource('resources/views/**/*.blade.php', self::$packageName));
     }
 

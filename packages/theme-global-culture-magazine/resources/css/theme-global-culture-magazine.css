@@ -1,277 +1,1299 @@
-/* Global Culture Magazine — warm worldly long-read: soft surfaces, serif-leaning headings, gentle radii. */
+/* Global Culture Magazine — warm worldly long-read: serif display, paper surfaces, calm editorial rhythm. */
 
-.editorial-shell {
-    --editorial-ink: var(--theme-foreground, #2b2420);
-    --editorial-muted: color-mix(
-        in srgb,
-        var(--editorial-ink) 58%,
-        transparent
+.gcm-shell {
+    /* Core tokens migrated to OKLCH and consolidated with light-dark() so the
+       single declaration serves both color schemes; the older
+       prefers-color-scheme block below still overrides --gcm-field/--gcm-plate
+       and the remaining hex tokens, since those depend on --gcm-accent in ways
+       that don't reduce to one light-dark() pair without losing the tuned
+       mix ratios. */
+    --gcm-ink: var(
+        --theme-foreground,
+        light-dark(oklch(23.69% 0.0156 62.57), oklch(91.37% 0.0198 87.52))
     );
-    --editorial-line: color-mix(in srgb, var(--editorial-ink) 12%, transparent);
-    --editorial-accent: var(--theme-accent, #b0603a);
-    --editorial-field: color-mix(
-        in srgb,
-        var(--editorial-accent) 7%,
-        var(--theme-surface, #faf5ec)
+    --gcm-paper: var(
+        --theme-surface,
+        light-dark(oklch(95.93% 0.0143 84.58), oklch(22.6% 0.0341 270.96))
     );
-    --editorial-night: #2a2320;
-    --editorial-paper: var(--theme-surface, #faf5ec);
-    background: color-mix(
-        in srgb,
-        var(--editorial-accent) 3%,
-        var(--editorial-paper)
+    --gcm-accent: var(
+        --theme-accent,
+        light-dark(oklch(66.18% 0.1192 80.83), oklch(71.14% 0.1211 82.46))
     );
-    color: var(--editorial-ink);
-    font-family: var(--theme-body-font, inter), georgia, system-ui, sans-serif;
-    font-size: 1.03125rem;
-    line-height: 1.7;
+    --gcm-muted: color-mix(in srgb, var(--gcm-ink) 72%, var(--gcm-paper));
+    --gcm-line: color-mix(in srgb, var(--gcm-ink) 16%, transparent);
+    --gcm-accent-ink: color-mix(in srgb, var(--gcm-accent) 55%, #46320f);
+    --gcm-field: color-mix(in srgb, var(--gcm-accent) 6%, var(--gcm-paper));
+    --gcm-plate: color-mix(in srgb, var(--gcm-accent) 11%, var(--gcm-paper));
+    --gcm-night: light-dark(
+        oklch(24.11% 0.0155 62.59),
+        oklch(18.2% 0.0315 271.62)
+    );
+    --gcm-night-heading: light-dark(
+        oklch(95.96% 0.0212 85.94),
+        oklch(95.96% 0.0212 85.94)
+    );
+    --gcm-night-body: #d8cab2;
+    --gcm-night-line: rgba(246, 237, 224, 0.18);
+    --gcm-night-accent: oklch(75.63% 0.1054 72.49);
+    --gcm-display-font: var(
+        --theme-display-font,
+        'Playfair Display',
+        'Iowan Old Style',
+        'Palatino Linotype',
+        georgia,
+        serif
+    );
+    --gcm-radius: var(--theme-radius-value, 0.5rem);
+    background: var(--gcm-paper);
+    color: var(--gcm-ink);
+    container: gcm-tokens / normal;
+    font-family:
+        var(--theme-body-font, georgia), 'Iowan Old Style', georgia, serif;
+    font-size: 1.0625rem;
+    line-height: 1.72;
 }
 
-.editorial-shell h1,
-.editorial-shell h2,
-.editorial-shell h3 {
-    color: var(--editorial-ink);
-    font-family: var(--theme-heading-font, 'Playfair Display'), georgia, serif;
+.gcm-shell h1,
+.gcm-shell h2,
+.gcm-shell h3 {
+    color: var(--gcm-ink);
+    font-family: var(--gcm-display-font);
     font-weight: 500;
     letter-spacing: 0.005em;
-}
-
-.editorial-shell h1 {
-    font-size: clamp(2.5rem, 5vw, 4.6rem);
-    font-style: italic;
-    line-height: 1.08;
-    margin-block: 0;
     text-wrap: balance;
 }
 
-.editorial-shell h2 {
-    font-size: clamp(1.85rem, 3vw, 3rem);
+.gcm-shell h1 {
+    font-size: clamp(2.6rem, 4.6vw, 4.35rem);
+    letter-spacing: -0.015em;
+    line-height: 1.06;
+    margin-block: 1rem 0;
+}
+
+.gcm-shell h2 {
+    font-size: clamp(1.9rem, 3vw, 2.9rem);
     line-height: 1.12;
-    margin-block: 0;
-    text-wrap: balance;
+    margin-block: 0.75rem 0;
 }
 
-.editorial-skip-link {
-    background: var(--editorial-night, #2a2320);
+.gcm-skip-link {
+    background: var(--gcm-night);
     color: #fff9ef;
-    left: 1rem;
-    padding: 0.75rem 1rem;
+    inset-inline-start: 1rem;
+    padding: 0.75rem 1.1rem;
     position: fixed;
     top: 1rem;
     transform: translateY(-150%);
     z-index: 50;
 }
 
-.editorial-skip-link:focus {
+.gcm-skip-link:focus {
     transform: translateY(0);
 }
 
-.editorial-section {
-    border-top: 0;
+.gcm-shell a:focus-visible,
+.gcm-shell button:focus-visible,
+.gcm-shell input:focus-visible,
+.gcm-shell [tabindex]:focus-visible {
+    border-radius: calc(var(--gcm-radius) / 2);
+    box-shadow:
+        0 0 0 3px var(--gcm-paper),
+        0 0 0 5px var(--gcm-accent-ink, #8a6423),
+        0 2px 6px color-mix(in srgb, var(--gcm-accent) 45%, transparent);
+    outline: 2px solid var(--gcm-accent);
+    outline-offset: 3px;
+}
+
+/* Accent-ink sits under 3:1 against the night canvas; the night accent clears it. */
+.gcm-section-dark :focus-visible {
+    outline-color: var(--gcm-night-accent);
+}
+
+/* Story and card title links: quiet at rest, unmistakable on hover/focus. */
+.gcm-title-link {
+    color: inherit;
+    text-decoration: none;
+    transition:
+        color 180ms ease,
+        background-color 180ms ease,
+        border-color 180ms ease;
+}
+
+.gcm-title-link:hover,
+.gcm-title-link:focus-visible {
+    color: var(--gcm-accent-ink, #8a6423);
+    text-decoration: underline;
+    text-decoration-style: dotted;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.3em;
+}
+
+.gcm-section-dark .gcm-title-link:hover,
+.gcm-section-dark .gcm-title-link:focus-visible {
+    color: var(--gcm-night-accent);
+}
+
+/* ---------------------------------------------------------------- sections */
+
+.gcm-section {
     position: relative;
 }
 
-.editorial-section + .editorial-section::before {
-    background: color-mix(in srgb, var(--editorial-accent) 45%, transparent);
+.gcm-section + .gcm-section:not(.gcm-section-dark)::before {
+    background: color-mix(in srgb, var(--gcm-accent) 55%, transparent);
     content: '';
     display: block;
     height: 1px;
     margin-inline: auto;
-    max-width: 9rem;
+    max-width: 8rem;
 }
 
-.editorial-section-dark {
-    background: var(--editorial-night);
-    color: #f6ede0;
-}
-
-.editorial-section-dark h1,
-.editorial-section-dark h2,
-.editorial-section-dark h3 {
-    color: #fbf3e4;
-}
-
-.editorial-section-inner {
+.gcm-section-inner {
     margin-inline: auto;
-    max-width: 74rem;
-    padding: clamp(4rem, 8vw, 7rem) clamp(1.25rem, 3vw, 2.5rem);
+    max-width: 72rem;
+    padding: clamp(3.5rem, 7vw, 6.5rem) clamp(1.25rem, 3vw, 2.5rem);
 }
 
-.editorial-kicker {
-    color: var(--editorial-accent);
-    font-size: 0.8rem;
-    font-style: italic;
-    font-weight: 600;
-    letter-spacing: 0.18em;
+.gcm-section-dark {
+    background: var(--gcm-night);
+    color: var(--gcm-night-body);
+}
+
+.gcm-section-dark h1,
+.gcm-section-dark h2,
+.gcm-section-dark h3 {
+    color: var(--gcm-night-heading);
+}
+
+.gcm-section-tinted {
+    background: linear-gradient(
+        180deg,
+        color-mix(in srgb, var(--gcm-accent) 9%, var(--gcm-paper)),
+        var(--gcm-field) 40%
+    );
+    border-block: 1px solid var(--gcm-line);
+}
+
+/* Consecutive dark sections share one canvas: trim the doubled padding and
+   mark the boundary with a hairline instead of a void. */
+.gcm-section-dark + .gcm-section-dark .gcm-section-inner {
+    border-top: 1px solid var(--gcm-night-line);
+    padding-top: clamp(2rem, 4vw, 3.25rem);
+}
+
+.gcm-section-dark:has(+ .gcm-section-dark) .gcm-section-inner {
+    padding-bottom: clamp(2rem, 4vw, 3.25rem);
+}
+
+.gcm-kicker {
+    color: var(--gcm-accent-ink, #8a6423);
+    font-family: var(--theme-body-font, georgia), georgia, serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    margin-block: 0 0.25rem;
     text-transform: uppercase;
 }
 
-.editorial-lede {
-    color: var(--editorial-muted);
-    font-size: clamp(1.15rem, 0.8vw + 1rem, 1.45rem);
-    line-height: 1.7;
-    max-width: 44rem;
+.gcm-section-dark .gcm-kicker {
+    color: var(--gcm-night-accent);
 }
 
-.editorial-grid {
+.gcm-shell p {
+    font-variant-numeric: oldstyle-nums;
+}
+
+.gcm-lede {
+    color: var(--gcm-muted);
+    font-size: clamp(1.15rem, 0.7vw + 1rem, 1.4rem);
+    font-variant-numeric: oldstyle-nums;
+    line-height: 1.68;
+    max-width: 42rem;
+    text-wrap: pretty;
+}
+
+.gcm-section-dark .gcm-lede {
+    color: var(--gcm-night-body);
+}
+
+.gcm-intro {
+    max-width: 46rem;
+}
+
+/* ------------------------------------------------------------------ layout */
+
+.gcm-grid {
+    container-type: inline-size;
     display: grid;
-    gap: clamp(1.5rem, 3vw, 2.5rem);
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr));
+    gap: clamp(1.5rem, 3vw, 2.25rem);
+    margin-top: clamp(2rem, 4vw, 3rem);
 }
 
-.editorial-card {
-    background: color-mix(in srgb, #ffffff 55%, var(--editorial-paper));
-    border: 1px solid
-        color-mix(in srgb, var(--editorial-accent) 14%, transparent);
-    border-radius: max(var(--theme-radius, 1.25rem), 1.25rem);
-    box-shadow: 0 0.5rem 1.75rem
-        color-mix(in srgb, var(--editorial-accent) 9%, transparent);
-    min-height: 100%;
-    padding: clamp(1.5rem, 2.5vw, 2.25rem);
+@media (min-width: 640px) {
+    .gcm-grid-2 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .gcm-grid-3 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .gcm-grid-4 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
 }
 
-.editorial-section-dark .editorial-card {
-    background: color-mix(in srgb, var(--editorial-night) 72%, #f6ede0);
-    border-color: color-mix(in srgb, #f6ede0 18%, transparent);
-    box-shadow: none;
-    color: #f6ede0;
+@media (min-width: 1024px) {
+    .gcm-grid-3 {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .gcm-grid-3 > :nth-child(3n + 2) {
+        margin-top: 2.5rem;
+    }
 }
 
-.editorial-card h3 {
-    font-size: 1.3rem;
+@media (min-width: 1280px) {
+    .gcm-grid-4 {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+}
+
+@media (min-width: 900px) {
+    .gcm-hero-grid,
+    .gcm-split {
+        align-items: start;
+        display: grid;
+        gap: clamp(2.5rem, 5vw, 4.5rem);
+        grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+    }
+
+    .gcm-hero-grid {
+        align-items: center;
+    }
+}
+
+.gcm-actions {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.85rem;
+    margin-top: clamp(1.75rem, 3vw, 2.5rem);
+}
+
+.gcm-centered {
+    text-align: center;
+}
+
+.gcm-centered h2 {
+    margin-inline: auto;
+    max-width: 34ch;
+}
+
+.gcm-centered .gcm-lede {
+    margin-inline: auto;
+}
+
+.gcm-centered .gcm-actions {
+    justify-content: center;
+}
+
+/* ------------------------------------------------------------------- cards */
+
+.gcm-card {
+    background: color-mix(in srgb, #ffffff 45%, var(--gcm-paper));
+    border: 1px solid var(--gcm-line);
+    border-radius: var(--gcm-radius);
+    display: grid;
+    gap: 0.6rem;
+    padding: clamp(1.5rem, 2.5vw, 2rem);
+}
+
+.gcm-card h3 {
+    font-size: 1.35rem;
     line-height: 1.25;
     margin: 0;
 }
 
-.editorial-card p,
-.editorial-meta {
-    color: var(--editorial-muted);
-    line-height: 1.65;
+.gcm-card p {
+    color: var(--gcm-muted);
+    line-height: 1.62;
+    margin: 0;
+    text-wrap: pretty;
 }
 
-.editorial-section-dark .editorial-card p {
-    color: color-mix(in srgb, #f6ede0 72%, transparent);
+/* Container-query re-expression: card padding/type scale respond to the grid
+   track's own inline size, not the viewport, so cards stay legible when the
+   grid sits in a narrow split column at a wide viewport (and vice versa).
+   Viewport media queries above remain as the fallback for browsers without
+   container query support. */
+@container (min-width: 22rem) {
+    .gcm-card {
+        gap: 0.75rem;
+        padding: clamp(1.5rem, 5cqi, 2.25rem);
+    }
+
+    .gcm-card h3 {
+        font-size: clamp(1.35rem, 5.5cqi, 1.55rem);
+    }
 }
 
-.editorial-meta {
-    font-size: 0.85rem;
-    font-style: italic;
-    letter-spacing: 0.03em;
+@container (max-width: 21.99rem) {
+    .gcm-card {
+        gap: 0.5rem;
+        padding: clamp(1.1rem, 6cqi, 1.5rem);
+    }
+
+    .gcm-card h3 {
+        font-size: clamp(1.15rem, 6cqi, 1.3rem);
+    }
 }
 
-.editorial-button {
+.gcm-meta {
+    color: var(--gcm-accent-ink, #8a6423);
+    font-family: var(--theme-body-font, georgia), georgia, serif;
+    font-size: 0.72rem;
+    font-variant-numeric: tabular-nums;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    margin: 0;
+    text-transform: uppercase;
+}
+
+/* ----------------------------------------------------------------- buttons */
+
+.gcm-button {
     align-items: center;
-    background: var(--theme-primary, #2b2420);
-    border: 1px solid var(--theme-primary, #2b2420);
+    background: var(--theme-primary, #241d17);
+    border: 1px solid var(--theme-primary, #241d17);
     border-radius: 999px;
     color: #fff9ef;
     display: inline-flex;
-    font-weight: 600;
+    font-family: var(--theme-body-font, georgia), georgia, serif;
+    font-size: 0.82rem;
+    font-weight: 700;
     gap: 0.5rem;
-    letter-spacing: 0.03em;
+    letter-spacing: 0.1em;
     min-height: 2.9rem;
-    padding: 0.8rem 1.6rem;
+    padding: 0.75rem 1.7rem;
     text-decoration: none;
+    text-transform: uppercase;
+    transition:
+        color 180ms ease,
+        background-color 180ms ease,
+        border-color 180ms ease;
 }
 
-.editorial-button:hover,
-.editorial-button:focus-visible {
-    background: var(--editorial-accent);
-    border-color: var(--editorial-accent);
-    outline: 3px solid
-        color-mix(in srgb, var(--editorial-accent) 32%, transparent);
-    outline-offset: 3px;
+.gcm-button:hover,
+.gcm-button:focus-visible {
+    background: var(--gcm-accent-ink, #8a6423);
+    border-color: var(--gcm-accent-ink, #8a6423);
 }
 
-.editorial-button-secondary {
+.gcm-button-secondary {
     background: transparent;
-    border-color: color-mix(in srgb, var(--editorial-ink) 35%, transparent);
-    color: var(--editorial-ink);
+    border-color: color-mix(in srgb, var(--gcm-ink) 40%, transparent);
+    color: var(--gcm-ink);
 }
 
-.editorial-section-dark .editorial-button-secondary {
-    color: #f6ede0;
-    border-color: color-mix(in srgb, #f6ede0 45%, transparent);
+.gcm-button-secondary:hover,
+.gcm-button-secondary:focus-visible {
+    background: transparent;
+    border-color: var(--gcm-accent-ink, #8a6423);
+    color: var(--gcm-accent-ink, #8a6423);
 }
 
-.editorial-showcase-card {
-    display: grid;
-    gap: 1.25rem;
+.gcm-section-dark .gcm-button {
+    background: var(--gcm-night-heading);
+    border-color: var(--gcm-night-heading);
+    color: var(--gcm-night);
 }
 
-.editorial-showcase-card::before {
-    aspect-ratio: 5 / 4;
-    background:
-        radial-gradient(
-            ellipse at 30% 25%,
-            color-mix(in srgb, var(--editorial-accent) 30%, #fff6e6),
-            transparent 55%
-        ),
-        radial-gradient(
-            ellipse at 78% 80%,
-            color-mix(in srgb, var(--editorial-accent) 45%, #d9a05b),
-            transparent 60%
-        ),
-        linear-gradient(
-            160deg,
-            #fdf7ea,
-            color-mix(in srgb, var(--editorial-paper) 60%, #e8c99a)
-        );
-    border-radius: max(var(--theme-radius, 1.5rem), 1.75rem);
-    box-shadow: inset 0 0 0 1px
-        color-mix(in srgb, var(--editorial-accent) 18%, transparent);
-    content: '';
-    display: block;
+.gcm-section-dark .gcm-button:hover,
+.gcm-section-dark .gcm-button:focus-visible {
+    background: var(--gcm-night-accent);
+    border-color: var(--gcm-night-accent);
 }
 
-.editorial-showcase-specs {
-    border-top: 1px dotted
-        color-mix(in srgb, var(--editorial-accent) 50%, transparent);
-    display: grid;
-    gap: 0.5rem;
-    padding-top: 1rem;
+.gcm-section-dark .gcm-button-secondary {
+    background: transparent;
+    border-color: rgba(246, 237, 224, 0.45);
+    color: var(--gcm-night-heading);
 }
 
-.editorial-showcase-specs span {
-    color: var(--editorial-muted);
-    font-size: 0.92rem;
+.gcm-section-dark .gcm-button-secondary:hover,
+.gcm-section-dark .gcm-button-secondary:focus-visible {
+    background: transparent;
+    border-color: var(--gcm-night-accent);
+    color: var(--gcm-night-accent);
 }
 
-.editorial-showcase-specs span:first-child {
-    color: var(--editorial-ink);
-    font-family: var(--theme-heading-font, 'Playfair Display'), georgia, serif;
-    font-size: 1.1rem;
+/* ---------------------------------------------------------------- masthead */
+
+.gcm-masthead {
+    background: var(--gcm-paper);
+    border-bottom: 3px double var(--gcm-line);
+}
+
+.gcm-masthead-inner {
+    margin-inline: auto;
+    max-width: 72rem;
+    padding-inline: clamp(1.25rem, 3vw, 2.5rem);
+}
+
+.gcm-masthead-top {
+    align-items: baseline;
+    border-bottom: 1px solid var(--gcm-line);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.5rem;
+    justify-content: space-between;
+    padding-block: 0.6rem;
+}
+
+.gcm-masthead-edition,
+.gcm-masthead-tagline {
+    color: var(--gcm-muted);
+    font-size: 0.72rem;
     font-weight: 600;
+    letter-spacing: 0.2em;
+    margin: 0;
+    text-transform: uppercase;
 }
 
-.editorial-shell nav a {
-    color: var(--editorial-ink);
-    font-weight: 600;
-    letter-spacing: 0.02em;
+.gcm-masthead-edition {
+    font-variant-numeric: tabular-nums;
+}
+
+.gcm-masthead-tagline {
+    font-style: italic;
+    letter-spacing: 0.08em;
+    text-transform: none;
+}
+
+.gcm-masthead-brand {
+    margin: 0;
+    padding-block: clamp(1.1rem, 2.5vw, 1.75rem);
+    text-align: center;
+}
+
+.gcm-masthead-brand a {
+    color: var(--gcm-ink);
+    font-family: var(--gcm-display-font);
+    font-size: clamp(1.9rem, 3.4vw, 2.9rem);
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    line-height: 1.1;
     text-decoration: none;
 }
 
-.editorial-shell nav a:focus-visible,
-.editorial-shell nav a:hover {
-    color: var(--editorial-accent);
-    outline: 2px solid
-        color-mix(in srgb, var(--editorial-accent) 42%, transparent);
-    outline-offset: 0.3rem;
+.gcm-masthead-nav {
+    border-top: 1px solid var(--gcm-line);
+    padding-block: 0.8rem;
+}
+
+.gcm-masthead-nav ul {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 2rem;
+    justify-content: center;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.gcm-masthead-nav a {
+    color: var(--gcm-ink);
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-decoration: none;
+    text-transform: uppercase;
+    transition:
+        color 180ms ease,
+        background-color 180ms ease,
+        border-color 180ms ease;
+}
+
+.gcm-masthead-nav a:hover,
+.gcm-masthead-nav a:focus-visible {
+    color: var(--gcm-accent-ink, #8a6423);
+    text-decoration: underline;
+    text-decoration-style: dotted;
+    text-underline-offset: 0.45em;
+}
+
+.gcm-masthead-nav .gcm-masthead-cta {
+    border: 1px solid color-mix(in srgb, var(--gcm-ink) 40%, transparent);
+    border-radius: 999px;
+    padding: 0.35rem 1.1rem;
+}
+
+/* -------------------------------------------------------------------- hero */
+
+.gcm-hero-standfirst {
+    border-top: 1px solid var(--gcm-night-line);
+    margin-top: 1.75rem;
+    padding-top: 1.5rem;
+}
+
+.gcm-hero-grid .gcm-plate {
+    box-shadow:
+        0 2px 4px color-mix(in srgb, var(--gcm-ink) 8%, transparent),
+        0 24px 48px -20px color-mix(in srgb, var(--gcm-ink) 22%, transparent);
+}
+
+.gcm-section-dark .gcm-hero-grid .gcm-plate {
+    box-shadow:
+        0 2px 4px rgba(0, 0, 0, 0.4),
+        0 26px 52px -18px rgba(0, 0, 0, 0.55);
+}
+
+/* ------------------------------------------------------------------ plates */
+
+.gcm-plate {
+    background: var(--gcm-plate);
+    border: 1px solid color-mix(in srgb, var(--gcm-accent) 34%, transparent);
+    border-radius: var(--gcm-radius);
+    box-shadow:
+        0 1px 2px color-mix(in srgb, var(--gcm-ink) 7%, transparent),
+        0 14px 32px -14px color-mix(in srgb, var(--gcm-ink) 16%, transparent);
+    display: grid;
+    gap: 0;
+    margin: 0;
+    padding: 0.85rem;
+}
+
+.gcm-plate-frame {
+    align-items: center;
+    aspect-ratio: 4 / 3;
+    background-color: color-mix(
+        in srgb,
+        var(--gcm-accent) 16%,
+        var(--gcm-paper)
+    );
+    background-image:
+        repeating-linear-gradient(
+            0deg,
+            rgba(37, 30, 24, 0.035) 0,
+            rgba(37, 30, 24, 0.035) 1px,
+            transparent 1px,
+            transparent 4px
+        ),
+        repeating-linear-gradient(
+            90deg,
+            rgba(37, 30, 24, 0.025) 0,
+            rgba(37, 30, 24, 0.025) 1px,
+            transparent 1px,
+            transparent 4px
+        );
+    border: 1px solid color-mix(in srgb, var(--gcm-accent) 38%, transparent);
+    box-shadow: inset 0 0 0 1px
+        color-mix(in srgb, var(--gcm-ink) 10%, transparent);
+    display: grid;
+    justify-items: center;
+    overflow: hidden;
+    position: relative;
+}
+
+.gcm-plate-frame img {
+    display: block;
+    filter: sepia(0.22) saturate(0.92) contrast(0.98);
+    height: 100%;
+    object-fit: cover;
+    transition:
+        filter 500ms ease,
+        transform 700ms cubic-bezier(0.2, 0.6, 0.2, 1);
+    width: 100%;
+}
+
+a:hover .gcm-plate-frame img,
+.gcm-plate:hover .gcm-plate-frame img {
+    filter: sepia(0) saturate(1) contrast(1);
+    transform: scale(1.025);
+}
+
+.gcm-plate-initial {
+    color: color-mix(in srgb, var(--gcm-accent) 62%, var(--gcm-paper));
+    font-family: var(--gcm-display-font);
+    font-size: clamp(4.5rem, 8vw, 7rem);
+    font-style: italic;
+    font-weight: 500;
+    line-height: 1;
+}
+
+.gcm-plate-caption {
+    color: var(--gcm-muted);
+    display: flex;
+    flex-wrap: wrap;
+    font-size: 0.78rem;
+    font-variant-caps: all-small-caps;
+    gap: 0.35rem 1rem;
+    justify-content: space-between;
+    letter-spacing: 0.08em;
+    padding-top: 0.7rem;
+    text-transform: none;
+}
+
+.gcm-plate-caption .gcm-meta {
+    font-size: 0.68rem;
+}
+
+.gcm-plate-tall .gcm-plate-frame {
+    aspect-ratio: 4 / 5;
+}
+
+.gcm-plate-offset {
+    margin-top: 2rem;
+}
+
+.gcm-story-title {
+    margin-top: 1.1rem;
+}
+
+.gcm-story-summary {
+    color: var(--gcm-muted);
+    margin-top: 0.4rem;
+    text-wrap: pretty;
+}
+
+.gcm-section-dark .gcm-plate {
+    background: color-mix(in srgb, var(--gcm-night) 55%, #4a3a28);
+    border-color: rgba(217, 165, 97, 0.4);
+    box-shadow:
+        0 1px 2px rgba(0, 0, 0, 0.35),
+        0 16px 36px -14px rgba(0, 0, 0, 0.5);
+}
+
+.gcm-section-dark .gcm-plate-frame {
+    background-color: color-mix(in srgb, var(--gcm-night) 35%, #6b5433);
+    border-color: rgba(217, 165, 97, 0.45);
+}
+
+.gcm-section-dark .gcm-plate-initial {
+    color: rgba(248, 241, 226, 0.8);
+}
+
+.gcm-section-dark .gcm-plate-caption {
+    color: var(--gcm-night-body);
+}
+
+/* -------------------------------------------------------------- index rows */
+
+.gcm-index {
+    border-top: 1px solid var(--gcm-line);
+    display: grid;
+    list-style: none;
+    margin: clamp(2rem, 4vw, 3rem) 0 0;
+    padding: 0;
+}
+
+.gcm-index-row {
+    border-bottom: 1px solid var(--gcm-line);
+    display: grid;
+    gap: 0.35rem 1.75rem;
+    padding-block: 1.35rem;
+}
+
+@media (min-width: 760px) {
+    .gcm-index-row {
+        grid-template-columns: 3.25rem 11rem minmax(0, 1fr);
+    }
+}
+
+/* Inside the narrow half of a split the fixed 11rem meta column starves the
+   title even on wide desktops (the right column is only ~455px at 1200px+),
+   so the split keeps the stacked two-track layout at every width: number
+   beside content, meta above the title. */
+@media (min-width: 900px) {
+    .gcm-split .gcm-index-row {
+        grid-template-columns: 3.25rem minmax(0, 1fr);
+    }
+
+    .gcm-split .gcm-index-row > div {
+        grid-column: 2;
+    }
+}
+
+.gcm-index-number {
+    color: color-mix(in srgb, var(--gcm-accent) 70%, var(--gcm-ink));
+    font-family: var(--gcm-display-font);
+    font-size: 1.15rem;
+    font-style: italic;
+}
+
+.gcm-index-row h3 {
+    font-size: 1.3rem;
+    line-height: 1.3;
+    margin: 0;
+}
+
+.gcm-index-row p {
+    color: var(--gcm-muted);
+    margin: 0.2rem 0 0;
+    text-wrap: pretty;
+}
+
+.gcm-section-dark .gcm-index {
+    border-color: var(--gcm-night-line);
+}
+
+.gcm-section-dark .gcm-index-row {
+    border-color: var(--gcm-night-line);
+}
+
+.gcm-section-dark .gcm-index-number {
+    color: var(--gcm-night-accent);
+}
+
+.gcm-section-dark .gcm-index-row p {
+    color: var(--gcm-night-body);
+}
+
+.gcm-section-dark .gcm-index-row .gcm-meta {
+    color: var(--gcm-night-accent);
+}
+
+/* ------------------------------------------------------------------- stats */
+
+.gcm-stats {
+    display: grid;
+    gap: clamp(1.5rem, 3vw, 2.5rem);
+    margin-top: clamp(2rem, 4vw, 3rem);
+}
+
+@media (min-width: 640px) {
+    .gcm-stats {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+.gcm-stat {
+    border-top: 2px solid color-mix(in srgb, var(--gcm-accent) 62%, transparent);
+    padding-top: 1.1rem;
+}
+
+.gcm-stat h3 {
+    font-size: clamp(2.1rem, 3.4vw, 2.9rem);
+    font-style: italic;
+    font-variant-numeric: tabular-nums;
+    line-height: 1;
+    margin: 0;
+}
+
+.gcm-stat p {
+    color: var(--gcm-muted);
+    margin: 0.6rem 0 0;
+}
+
+/* --------------------------------------------------------------- columnist */
+
+.gcm-byline-mark {
+    align-items: center;
+    border: 1px solid color-mix(in srgb, var(--gcm-accent) 55%, transparent);
+    border-radius: 999px;
+    color: var(--gcm-accent-ink, #8a6423);
+    display: inline-flex;
+    font-family: var(--gcm-display-font);
+    font-size: 1.35rem;
+    font-style: italic;
+    height: 3rem;
+    justify-content: center;
+    width: 3rem;
+}
+
+/* -------------------------------------------------------------- newsletter */
+
+.gcm-form {
+    background: color-mix(in srgb, #ffffff 45%, var(--gcm-paper));
+    border: 1px solid var(--gcm-line);
+    border-radius: var(--gcm-radius);
+    display: grid;
+    gap: 0.9rem;
+    padding: clamp(1.5rem, 3vw, 2.25rem);
+}
+
+.gcm-form label {
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+}
+
+.gcm-form input {
+    accent-color: var(--gcm-accent);
+    background: var(--gcm-paper);
+    border: 1px solid color-mix(in srgb, var(--gcm-ink) 30%, transparent);
+    border-radius: calc(var(--gcm-radius) / 1.5);
+    color: var(--gcm-ink);
+    font: inherit;
+    min-height: 2.9rem;
+    padding: 0.55rem 0.9rem;
+    transition:
+        color 180ms ease,
+        background-color 180ms ease,
+        border-color 180ms ease;
+    width: 100%;
+}
+
+.gcm-form input::placeholder {
+    color: color-mix(in srgb, var(--gcm-ink) 45%, transparent);
+    font-style: italic;
+}
+
+.gcm-form input:focus-visible {
+    border-color: var(--gcm-accent-ink, #8a6423);
+}
+
+/* :user-invalid/:user-valid fire only after the reader has interacted with
+   the field, so an empty required input doesn't greet them with an error
+   before they've typed anything. */
+.gcm-form input:user-invalid {
+    background: color-mix(in srgb, #b3261e 8%, var(--gcm-paper));
+    border-color: #b3261e;
+}
+
+.gcm-form input:user-valid {
+    border-color: color-mix(in srgb, var(--gcm-accent) 70%, var(--gcm-ink));
+}
+
+.gcm-form .gcm-button {
+    justify-content: center;
+}
+
+.gcm-form-note {
+    color: var(--gcm-muted);
+    font-size: 0.85rem;
+    font-style: italic;
+    margin: 0;
+}
+
+/* ------------------------------------------------------------------ footer */
+
+.gcm-footer-brand {
+    border-bottom: 1px solid var(--gcm-night-line);
+    margin-bottom: clamp(1.75rem, 3vw, 2.5rem);
+    padding-bottom: clamp(1.75rem, 3vw, 2.5rem);
+}
+
+.gcm-footer-brand strong {
+    color: var(--gcm-night-heading);
+    display: block;
+    font-family: var(--gcm-display-font);
+    font-size: clamp(1.6rem, 2.6vw, 2.2rem);
+    font-weight: 500;
+}
+
+.gcm-footer-brand p {
+    color: var(--gcm-night-body);
+    margin: 0.6rem 0 0;
+    max-width: 34rem;
+}
+
+.gcm-footer-columns {
+    display: grid;
+    gap: clamp(1.75rem, 3vw, 2.5rem);
+}
+
+@media (min-width: 640px) {
+    .gcm-footer-columns {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+.gcm-footer-columns h3 {
+    font-size: 0.78rem;
+    font-family: var(--theme-body-font, georgia), georgia, serif;
+    color: var(--gcm-night-accent);
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    margin: 0 0 0.9rem;
+    text-transform: uppercase;
+}
+
+.gcm-footer-columns ul {
+    display: grid;
+    gap: 0.55rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.gcm-footer-columns a {
+    color: var(--gcm-night-body);
+    text-decoration: none;
+    transition:
+        color 180ms ease,
+        background-color 180ms ease,
+        border-color 180ms ease;
+}
+
+.gcm-footer-columns a:hover,
+.gcm-footer-columns a:focus-visible {
+    color: var(--gcm-night-heading);
     text-decoration: underline;
     text-decoration-style: dotted;
     text-underline-offset: 0.35em;
 }
 
-@media (min-width: 768px) {
-    .editorial-hero-grid,
-    .editorial-split {
-        display: grid;
-        gap: clamp(2rem, 4vw, 3.5rem);
-        grid-template-columns: minmax(0, 1fr) minmax(19rem, 0.9fr);
+.gcm-footer-rule {
+    border-top: 3px double var(--gcm-night-line);
+    color: var(--gcm-night-body);
+    font-size: 0.8rem;
+    font-style: italic;
+    letter-spacing: 0.06em;
+    margin-top: clamp(2rem, 4vw, 3rem);
+    padding-top: 1.1rem;
+}
+
+/* --------------------------------------------------------------- selection */
+
+.gcm-shell ::selection {
+    background: var(--gcm-accent);
+    color: var(--gcm-night);
+}
+
+/* ------------------------------------------------------------------ motion */
+
+@media (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: view()) {
+        @keyframes gcm-dispatch-arrive {
+            from {
+                filter: sepia(28%) saturate(78%);
+                opacity: 0;
+                transform: translateX(-2.5%);
+            }
+
+            to {
+                filter: sepia(0%) saturate(100%);
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .gcm-section {
+            animation: gcm-dispatch-arrive linear both;
+            animation-range: entry 0% cover 30%;
+            animation-timeline: view();
+        }
+    }
+}
+
+/* ------------------------------------------------------------- print media */
+
+@media print {
+    .gcm-shell {
+        background: #ffffff;
+        color: #000000;
+        font-family: 'Iowan Old Style', 'Times New Roman', georgia, serif;
+        font-size: 11pt;
+        line-height: 1.5;
     }
 
-    .editorial-hero-grid {
-        align-items: center;
-        grid-template-columns: minmax(0, 1.1fr) minmax(19rem, 0.95fr);
+    .gcm-shell .gcm-masthead-nav,
+    .gcm-shell .gcm-masthead-cta,
+    .gcm-shell .gcm-actions,
+    .gcm-shell .gcm-button,
+    .gcm-shell .gcm-form,
+    .gcm-shell .gcm-skip-link,
+    .gcm-shell footer.gcm-section {
+        display: none !important;
+    }
+
+    .gcm-shell h1,
+    .gcm-shell h2,
+    .gcm-shell h3 {
+        color: #000000;
+        font-family: 'Iowan Old Style', 'Times New Roman', georgia, serif;
+    }
+
+    .gcm-shell .gcm-section-inner {
+        max-width: none;
+        padding: 0.5cm 0;
+    }
+
+    .gcm-shell .gcm-section-dark {
+        background: #ffffff;
+        color: #000000;
+    }
+
+    .gcm-shell .gcm-section-dark h1,
+    .gcm-shell .gcm-section-dark h2,
+    .gcm-shell .gcm-section-dark h3 {
+        color: #000000;
+    }
+
+    .gcm-shell .gcm-lede,
+    .gcm-shell .gcm-card p,
+    .gcm-shell .gcm-index-row p,
+    .gcm-shell .gcm-plate-caption,
+    .gcm-shell .gcm-section-dark .gcm-card p,
+    .gcm-shell .gcm-section-dark .gcm-index-row p {
+        color: #1a1a1a;
+    }
+
+    .gcm-shell .gcm-card,
+    .gcm-shell .gcm-index-row,
+    .gcm-shell .gcm-plate {
+        border: 1px solid #999999;
+        break-inside: avoid;
+        page-break-inside: avoid;
+    }
+
+    .gcm-shell .gcm-section-dark .gcm-card,
+    .gcm-shell .gcm-section-dark .gcm-plate {
+        background: #ffffff;
+        border-color: #999999;
+        color: #000000;
+    }
+
+    .gcm-shell .gcm-plate-frame {
+        background: #eeeeee;
+        print-color-adjust: exact;
+        -webkit-print-color-adjust: exact;
+    }
+
+    .gcm-shell .gcm-plate-frame img {
+        filter: none;
+    }
+
+    .gcm-shell .gcm-title-link,
+    .gcm-shell a {
+        color: #000000;
+        text-decoration: underline;
+    }
+
+    .gcm-shell .gcm-title-link[href]::after {
+        content: ' (' attr(href) ')';
+        font-size: 0.85em;
+        font-weight: 400;
+    }
+}
+
+/* ------------------------------------------------------------- dark scheme */
+
+/* Night counterpart echoes the "Nightflight" preset (deep indigo-black
+   surface, brass-gold accent) so system dark mode gets the same considered
+   pairing as the curated preset, without requiring the reader to pick it. */
+@media (prefers-color-scheme: dark) {
+    .gcm-shell {
+        color-scheme: dark;
+
+        /* --gcm-ink, --gcm-paper, --gcm-accent, --gcm-night, --gcm-night-heading
+           and --gcm-night-accent now resolve via light-dark() on their base
+           declaration above and need no override here. --gcm-muted/--gcm-line
+           recompute automatically from --gcm-ink/--gcm-paper. The remaining
+           tokens keep their dark override because their light-mode mix ratio
+           (accent-ink's #46320f anchor, field/plate's tint percentage) was
+           tuned against the light accent and doesn't hold once dark mode's
+           cooler, higher-chroma accent and paper are substituted in. */
+        --gcm-accent-ink: color-mix(in srgb, var(--gcm-accent) 65%, #f8f1e2);
+        --gcm-field: color-mix(in srgb, var(--gcm-accent) 8%, var(--gcm-paper));
+        --gcm-plate: color-mix(
+            in srgb,
+            var(--gcm-accent) 14%,
+            var(--gcm-paper)
+        );
+    }
+
+    .gcm-masthead {
+        border-bottom-color: var(--gcm-line);
+    }
+}
+
+/* ------------------------------------------------------------ brand tokens */
+
+/* The shell exposes --theme-spacing, --theme-card-style,
+   --theme-layout-presentation, --theme-heading-scale, --theme-card-density
+   and --theme-overlay-treatment as inline custom properties (see the preset
+   catalogue in ThemeDefinitionData::definition()->presets). Style queries
+   read the live value straight off .gcm-shell's own container, no JS and no
+   duplicate class list — the wrapper declares "container: gcm-tokens /
+   normal" above and every rule below targets that same container. Baseline
+   2024+; browsers without style-query support simply keep the defaults
+   already set elsewhere in this file. */
+
+/* --theme-spacing: balanced (1.25rem, the .gcm-grid default) is left alone;
+   compact tightens the primary listing/grid gap for readers who chose the
+   denser preset. */
+@container gcm-tokens style(--theme-spacing: compact) {
+    .gcm-grid {
+        gap: 0.875rem;
+    }
+}
+
+/* --theme-card-style: bordered matches today's .gcm-card look (hairline +
+   paper fill), so it's a no-op restated for clarity; flat drops the frame
+   for mastheads/dispatches that want the card to read as plain text blocks
+   set into the page rather than a distinct tile. */
+@container gcm-tokens style(--theme-card-style: bordered) {
+    .gcm-card {
+        background: color-mix(in srgb, #ffffff 45%, var(--gcm-paper));
+        border-color: var(--gcm-line);
+    }
+}
+
+@container gcm-tokens style(--theme-card-style: flat) {
+    .gcm-card {
+        background: transparent;
+        border-color: transparent;
+        padding-inline: 0;
+    }
+}
+
+/* --theme-layout-presentation: editorial breaks the grid into an asymmetric
+   global-culture spread (one wide lead column, one narrow companion column)
+   echoing the .gcm-hero-grid/.gcm-split ratio elsewhere in this file;
+   structured falls back to the even .gcm-grid-3 columns already defined
+   under the plain media queries above. */
+@container gcm-tokens style(--theme-layout-presentation: structured) {
+    @media (min-width: 900px) {
+        .gcm-grid-3 {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+    }
+}
+
+@container gcm-tokens style(--theme-layout-presentation: editorial) {
+    @media (min-width: 900px) {
+        .gcm-grid-3 {
+            grid-template-columns: minmax(0, 1.6fr) repeat(2, minmax(0, 0.7fr));
+        }
+    }
+}
+
+/* --theme-heading-scale: the CMS sanitiser coerces raw "dramatic" down to
+   "balanced" today, but the canonical bucket for an intentionally bigger
+   scale is "expressive"; wire both the canonical value and the literal
+   legacy value so this keeps working whichever the sanitiser settles on.
+   Applied to a secondary heading (story/listing title), not the h1 hero
+   clamp, which stays untouched. */
+@container gcm-tokens style(--theme-heading-scale: expressive) {
+    .gcm-story-title,
+    .gcm-index-row h3 {
+        --gcm-heading-scale: 1.2;
+
+        font-size: clamp(
+            calc(1.3rem * var(--gcm-heading-scale)),
+            calc(1vw + 1rem * var(--gcm-heading-scale)),
+            calc(1.55rem * var(--gcm-heading-scale))
+        );
+    }
+}
+
+@container gcm-tokens style(--theme-heading-scale: dramatic) {
+    .gcm-story-title,
+    .gcm-index-row h3 {
+        --gcm-heading-scale: 1.2;
+
+        font-size: clamp(
+            calc(1.3rem * var(--gcm-heading-scale)),
+            calc(1vw + 1rem * var(--gcm-heading-scale)),
+            calc(1.55rem * var(--gcm-heading-scale))
+        );
+    }
+}
+
+/* --theme-card-density: today's sanitiser coerces both "airy" and "dense" to
+   "comfortable", which keeps the existing .gcm-card padding untouched below.
+   The canonical "compact" bucket and the literal legacy "dense" value both
+   tighten the tile; the literal "airy" value is wired ahead of the
+   sanitiser ever letting it through, so the preset isn't silently inert the
+   day that changes. */
+@container gcm-tokens style(--theme-card-density: compact) {
+    .gcm-card {
+        padding: 0.75rem;
+    }
+}
+
+@container gcm-tokens style(--theme-card-density: dense) {
+    .gcm-card {
+        padding: 0.75rem;
+    }
+}
+
+@container gcm-tokens style(--theme-card-density: airy) {
+    .gcm-card {
+        padding: 1.4rem;
+    }
+}
+
+/* --theme-overlay-treatment: gates the plate frame's sepia scrim, which
+   otherwise sits at the "subtle" default already baked into
+   .gcm-plate-frame's background-image above. None clears it for a flatter,
+   modern archive look; strong deepens it for a moodier dispatch-photo
+   treatment. */
+.gcm-plate-frame::after {
+    background: var(--gcm-night);
+    content: '';
+    inset: 0;
+    opacity: 0.18;
+    pointer-events: none;
+    position: absolute;
+}
+
+@container gcm-tokens style(--theme-overlay-treatment: none) {
+    .gcm-plate-frame::after {
+        opacity: 0;
+    }
+}
+
+@container gcm-tokens style(--theme-overlay-treatment: strong) {
+    .gcm-plate-frame::after {
+        opacity: 0.6;
+    }
+}
+
+/* Forced-colors (Wave 11.5): High Contrast mode strips box-shadow but keeps
+   outline, and flattens backgrounds — so re-assert focus with outline and give
+   cards a transparent border the OS repaints. */
+@media (forced-colors: active) {
+    .gcm-shell a:focus-visible,
+    .gcm-shell button:focus-visible,
+    .gcm-shell input:focus-visible,
+    .gcm-shell [tabindex]:focus-visible {
+        outline: 2px solid;
+        outline-offset: 2px;
+    }
+
+    .gcm-card,
+    .gcm-plate,
+    .gcm-index-row {
+        border: 1px solid transparent;
+    }
+}
+
+/* High contrast preference (Wave 11.5): thicken hairline rules and lift the
+   dimmed/muted text one step so the quiet layer stays legible. */
+@media (prefers-contrast: more) {
+    .gcm-card,
+    .gcm-plate,
+    .gcm-index,
+    .gcm-index-row {
+        border-color: var(--gcm-ink);
+    }
+
+    .gcm-muted,
+    .gcm-lede,
+    .gcm-story-summary,
+    .gcm-card p,
+    .gcm-index-row p {
+        color: var(--gcm-ink);
+    }
+}
+
+/* View Transitions (Wave 6.5): opt every same-origin navigation into a smooth
+   cross-document transition where supported; static fallback everywhere else.
+   Reduced-motion users still navigate — just without the animation. */
+@view-transition {
+    navigation: auto;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    ::view-transition-group(*),
+    ::view-transition-old(*),
+    ::view-transition-new(*) {
+        animation: none !important;
     }
 }

@@ -1,28 +1,29 @@
 @php
-    $items = data_get($section, 'items', [
-        ['title' => __('capell-theme-raw-index::sections.authors.product_title'), 'summary' => __('capell-theme-raw-index::sections.authors.product_summary')],
-        ['title' => __('capell-theme-raw-index::sections.authors.advice_title'), 'summary' => __('capell-theme-raw-index::sections.authors.advice_summary')],
-        ['title' => __('capell-theme-raw-index::sections.authors.company_title'), 'summary' => __('capell-theme-raw-index::sections.authors.company_summary')],
-    ]);
+    $items = data_get($section, 'items', []);
 @endphp
 
 <section
-    class="editorial-section"
-    style="background: var(--editorial-field)"
+    id="zine-annotations"
+    class="rwi-section rwi-section-field"
 >
-    <div class="editorial-section-inner">
-        <p class="editorial-kicker">
-            {{ __('capell-theme-raw-index::sections.authors.kicker') }}
+    <div class="rwi-section-inner">
+        <span class="rwi-index-tag">06</span>
+        <p class="rwi-kicker">
+            {{ __('capell-theme-raw-index::sections.annotations.kicker') }}
         </p>
         <h2>
-            {{ data_get($section, 'heading', __('capell-theme-raw-index::sections.authors.heading')) }}
+            {{ data_get($section, 'heading', __('capell-theme-raw-index::sections.annotations.heading')) }}
         </h2>
-        <p class="editorial-lede">
-            {{ data_get($section, 'summary', __('capell-theme-raw-index::sections.authors.summary')) }}
+        <p class="rwi-lede">
+            {{ data_get($section, 'summary', __('capell-theme-raw-index::sections.annotations.summary')) }}
         </p>
-        <div class="editorial-grid">
+
+        <div
+            class="rwi-annotation-grid"
+            style="margin-top: 2rem"
+        >
             @foreach ($items as $item)
-                <article class="editorial-card">
+                <article class="rwi-annotation">
                     <h3>
                         {{ data_get($item, 'title', data_get($item, 'name', '')) }}
                     </h3>

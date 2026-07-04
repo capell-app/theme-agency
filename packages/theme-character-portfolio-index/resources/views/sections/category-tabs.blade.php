@@ -7,22 +7,29 @@
     ]);
 @endphp
 
-<section class="editorial-section">
-    <div class="editorial-section-inner">
-        <p class="editorial-kicker">
+<section
+    id="category-tabs"
+    class="cpi-section"
+>
+    <div class="cpi-section-inner">
+        <p class="cpi-kicker">
             {{ __('capell-theme-character-portfolio-index::sections.topics.kicker') }}
         </p>
         <h2>
             {{ data_get($section, 'heading', __('capell-theme-character-portfolio-index::sections.topics.heading')) }}
         </h2>
-        <div class="editorial-grid">
+        @if (filled(data_get($section, 'summary')))
+            <p class="cpi-lede">{{ data_get($section, 'summary') }}</p>
+        @endif
+
+        <div class="cpi-tab-strip">
             @foreach ($items as $item)
-                <article class="editorial-card">
-                    <h3>
+                <span class="cpi-tab">
+                    <strong>
                         {{ data_get($item, 'title', data_get($item, 'name', '')) }}
-                    </h3>
-                    <p>{{ data_get($item, 'summary', '') }}</p>
-                </article>
+                    </strong>
+                    <span>{{ data_get($item, 'summary', '') }}</span>
+                </span>
             @endforeach
         </div>
     </div>

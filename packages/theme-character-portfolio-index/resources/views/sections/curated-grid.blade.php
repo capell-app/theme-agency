@@ -8,31 +8,65 @@
     ]);
 @endphp
 
-<section class="editorial-section">
-    <div class="editorial-section-inner">
-        <p class="editorial-kicker">
+<section
+    id="curated-grid"
+    class="cpi-section"
+>
+    <div class="cpi-section-inner">
+        <p class="cpi-kicker">
             {{ __('capell-theme-character-portfolio-index::sections.stories.kicker') }}
         </p>
         <h2>{{ $heading }}</h2>
-        <p class="editorial-lede">{{ $summary }}</p>
+        <p class="cpi-lede">{{ $summary }}</p>
 
-        <div class="editorial-grid">
+        <div class="cpi-grid">
             @foreach ($items as $item)
-                <article class="editorial-card editorial-showcase-card">
+                @php
+                    $itemImage = data_get($item, 'image', data_get($item, 'imageUrl'));
+                    $itemAlt = data_get($item, 'imageAlt', data_get($item, 'title', ''));
+                    $itemUrl = data_get($item, 'url', data_get($item, 'href'));
+                @endphp
+
+                <article class="cpi-card">
+                    <figure class="cpi-plate">
+                        <div class="cpi-plate-frame">
+                            @if (filled($itemImage))
+                                <img
+                                    src="{{ $itemImage }}"
+                                    alt="{{ $itemAlt }}"
+                                    loading="lazy"
+                                    decoding="async"
+                                    class="cpi-plate-media"
+                                />
+                            @else
+                                <div
+                                    class="cpi-plate-media cpi-plate-media-empty"
+                                    aria-hidden="true"
+                                ></div>
+                            @endif
+                        </div>
+                    </figure>
                     <h3>
-                        {{ data_get($item, 'title', data_get($item, 'name', '')) }}
+                        @if (filled($itemUrl))
+                            <a
+                                class="cpi-title-link"
+                                href="{{ $itemUrl }}"
+                            >
+                                {{ data_get($item, 'title', data_get($item, 'name', '')) }}
+                            </a>
+                        @else
+                            {{ data_get($item, 'title', data_get($item, 'name', '')) }}
+                        @endif
                     </h3>
+                    <p class="cpi-meta">
+                        {{ data_get($item, 'meta', data_get($item, 'category', __('capell-theme-character-portfolio-index::sections.stories.default_meta'))) }}
+                    </p>
                     <p>
                         {{ data_get($item, 'summary', data_get($item, 'description', '')) }}
                     </p>
-                    <div class="editorial-showcase-specs">
-                        <span>
-                            {{ data_get($item, 'meta', data_get($item, 'category', __('capell-theme-character-portfolio-index::sections.stories.default_meta'))) }}
-                        </span>
-                        <span>
-                            {{ data_get($item, 'care_note', __('capell-theme-character-portfolio-index::sections.stories.care_note')) }}
-                        </span>
-                    </div>
+                    <span class="cpi-care-note">
+                        {{ data_get($item, 'care_note', __('capell-theme-character-portfolio-index::sections.stories.care_note')) }}
+                    </span>
                 </article>
             @endforeach
         </div>

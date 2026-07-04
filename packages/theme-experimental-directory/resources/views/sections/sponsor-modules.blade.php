@@ -1,32 +1,36 @@
 @php
     $items = data_get($section, 'items', [
-        ['title' => __('capell-theme-experimental-directory::sections.authors.product_title'), 'summary' => __('capell-theme-experimental-directory::sections.authors.product_summary')],
-        ['title' => __('capell-theme-experimental-directory::sections.authors.advice_title'), 'summary' => __('capell-theme-experimental-directory::sections.authors.advice_summary')],
-        ['title' => __('capell-theme-experimental-directory::sections.authors.company_title'), 'summary' => __('capell-theme-experimental-directory::sections.authors.company_summary')],
+        ['title' => __('capell-theme-experimental-directory::sections.sponsors.entry_title'), 'summary' => __('capell-theme-experimental-directory::sections.sponsors.entry_summary')],
     ]);
 @endphp
 
 <section
-    class="editorial-section"
-    style="background: var(--editorial-field)"
+    id="sponsor-modules"
+    class="exd-section exd-section-raised"
 >
-    <div class="editorial-section-inner">
-        <p class="editorial-kicker">
-            {{ __('capell-theme-experimental-directory::sections.authors.kicker') }}
+    <div class="exd-section-inner">
+        <p class="exd-kicker">
+            {{ __('capell-theme-experimental-directory::sections.sponsors.kicker') }}
         </p>
         <h2>
-            {{ data_get($section, 'heading', __('capell-theme-experimental-directory::sections.authors.heading')) }}
+            {{ data_get($section, 'heading', __('capell-theme-experimental-directory::sections.sponsors.heading')) }}
         </h2>
-        <p class="editorial-lede">
-            {{ data_get($section, 'summary', __('capell-theme-experimental-directory::sections.authors.summary')) }}
-        </p>
-        <div class="editorial-grid">
+        @if (filled(data_get($section, 'summary')))
+            <p class="exd-lede">{{ data_get($section, 'summary') }}</p>
+        @endif
+
+        <div class="exd-grid exd-grid-tight">
             @foreach ($items as $item)
-                <article class="editorial-card">
-                    <h3>
-                        {{ data_get($item, 'title', data_get($item, 'name', '')) }}
-                    </h3>
-                    <p>{{ data_get($item, 'summary', '') }}</p>
+                <article class="exd-card">
+                    <div class="exd-card-body">
+                        <span class="exd-badge">
+                            {{ __('capell-theme-experimental-directory::sections.sponsors.badge') }}
+                        </span>
+                        <h3>
+                            {{ data_get($item, 'title', data_get($item, 'name', '')) }}
+                        </h3>
+                        <p>{{ data_get($item, 'summary', '') }}</p>
+                    </div>
                 </article>
             @endforeach
         </div>

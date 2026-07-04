@@ -6,13 +6,15 @@ namespace Capell\ThemeStudio\LandingGallery;
 
 use Capell\Core\Data\VendorAssetData;
 use Capell\Core\Enums\FrontendRuntime;
+use Capell\Core\Enums\VendorAssetEnum;
 use Capell\Core\Facades\CapellCore;
 use Capell\Core\ThemeStudio\Contracts\SectionRenderer;
 use Capell\Core\ThemeStudio\Data\ThemeDefinitionData;
 use Capell\Core\ThemeStudio\Data\ThemePresetData;
-use Capell\Core\ThemeStudio\Rendering\BladeThemeRenderer;
 use Capell\Core\ThemeStudio\Rendering\ViewSectionRenderer;
 use Capell\Core\ThemeStudio\Theme\ThemeRegistry;
+use Capell\FoundationTheme\Rendering\ChromeSplitBladeThemeRenderer;
+use Capell\FoundationTheme\Support\Editor\StandardThemeEditorSchema;
 use Capell\ThemeStudio\LandingGallery\Console\Commands\DemoCommand;
 use Illuminate\Support\ServiceProvider;
 use Override;
@@ -60,6 +62,34 @@ final class LandingGalleryThemeServiceProvider extends ServiceProvider
                         'cardDensity' => 'airy',
                     ],
                 ),
+                new ThemePresetData(
+                    key: 'voltage',
+                    name: 'Voltage',
+                    description: 'Voltage visual preset for a high-contrast cool-slate gallery with electric-blue accents, denser cards, and a sharper, faster-feeling motion profile suited to startup and dev-tool template showcases.',
+                    previewImage: '/vendor/capell/themes/landing-gallery.jpg',
+                    values: [
+                        'primaryColor' => '#0b1220',
+                        'accentColor' => '#2563eb',
+                        'neutralColor' => '#475569',
+                        'surfaceColor' => '#f1f5f9',
+                        'foregroundColor' => '#0b1220',
+                        'headingFont' => 'sora',
+                        'bodyFont' => 'inter',
+                        'spacing' => 'compact',
+                        'alignment' => 'left',
+                        'cardStyle' => 'bordered',
+                        'navigationStyle' => 'prominent',
+                        'layoutPresentation' => 'editorial',
+                        'motionIntensity' => 'energetic',
+                        'mediaTreatment' => 'rounded-screenshot',
+                        'radius' => 'sm',
+                        'headingScale' => 'bold',
+                        'cardDensity' => 'compact',
+                    ],
+                ),
+            ],
+            frontend: [
+                'editor' => StandardThemeEditorSchema::definition(),
             ],
             assets: ['css' => 'vendor/capell/themes/landing-gallery.css'],
             runtime: FrontendRuntime::Blade,
@@ -88,7 +118,7 @@ final class LandingGalleryThemeServiceProvider extends ServiceProvider
 
         $registry->register(
             definition: self::definition(),
-            themeRenderer: new BladeThemeRenderer(
+            themeRenderer: new ChromeSplitBladeThemeRenderer(
                 themeKey: self::THEME_KEY,
                 layoutView: 'capell-theme-landing-gallery::page',
                 sectionRenderers: $sectionRenderers,
@@ -99,7 +129,12 @@ final class LandingGalleryThemeServiceProvider extends ServiceProvider
 
     private function registerVendorCssAssets(): void
     {
-        CapellCore::registerVendorAsset(VendorAssetData::tailwindImport('resources/css/theme-landing-gallery.css', self::$packageName));
+        CapellCore::registerVendorAsset(new VendorAssetData(
+            type: VendorAssetEnum::TailwindImport,
+            value: 'resources/css/theme-landing-gallery.css',
+            packageName: self::$packageName,
+            condition: 'theme-css:landing-gallery',
+        ));
         CapellCore::registerVendorAsset(VendorAssetData::tailwindSource('resources/views/**/*.blade.php', self::$packageName));
     }
 

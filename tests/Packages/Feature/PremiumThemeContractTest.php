@@ -2,15 +2,6 @@
 
 declare(strict_types=1);
 
-use Capell\ThemeStudio\Commerce\CommerceThemeServiceProvider;
-use Capell\ThemeStudio\Education\EducationThemeServiceProvider;
-use Capell\ThemeStudio\Healthcare\HealthcareThemeServiceProvider;
-use Capell\ThemeStudio\Knowledge\KnowledgeThemeServiceProvider;
-use Capell\ThemeStudio\LocalServices\LocalServicesThemeServiceProvider;
-use Capell\ThemeStudio\Nonprofit\NonprofitThemeServiceProvider;
-use Capell\ThemeStudio\Portfolio\PortfolioThemeServiceProvider;
-use Capell\ThemeStudio\Saas\SaasThemeServiceProvider;
-
 require_once __DIR__ . '/../Support/ThemeManifestContracts.php';
 
 function premiumThemePackagePath(string $path): string
@@ -23,11 +14,33 @@ function premiumThemeKeyFromPath(string $path): string
     return str_replace('theme-', '', basename($path));
 }
 
+/**
+ * Foundation's shared base wrapper class, carried by some child themes
+ * alongside their own unique `<prefix>-shell` — not itself the prefix.
+ */
+const PREMIUM_THEME_SHARED_SHELL_CLASS = 'site-theme-shell';
+
 function premiumThemeShellClass(string $path): string
 {
-    $themeKey = premiumThemeKeyFromPath($path);
+    $themeDirectory = premiumThemePackagePath($path);
+    $page = (string) file_get_contents($themeDirectory . '/resources/views/page.blade.php');
 
-    return $themeKey === 'commerce' ? 'retail-shell' : $themeKey . '-shell';
+    preg_match_all('/\b([a-z][a-z0-9-]*-shell)\b/', $page, $matches);
+
+    $shellClasses = array_values(array_unique(array_diff(
+        $matches[1],
+        [PREMIUM_THEME_SHARED_SHELL_CLASS],
+    )));
+
+    if (count($shellClasses) !== 1) {
+        throw new RuntimeException(sprintf(
+            'Expected exactly one unique <prefix>-shell class in %s/resources/views/page.blade.php, found: %s',
+            $path,
+            $shellClasses === [] ? 'none' : implode(', ', $shellClasses),
+        ));
+    }
+
+    return $shellClasses[0];
 }
 
 it('treats every documented premium lane theme as a premium theme package', function (string $path, string $providerClass): void {
@@ -43,26 +56,32 @@ it('treats every documented premium lane theme as a premium theme package', func
 })->with('premium themes');
 
 it('keeps premium theme preset customization keys consistent', function (string $path, string $providerClass): void {
-    $preset = $providerClass::definition()->presets[0];
+    $presets = $providerClass::definition()->presets;
 
-    expect(array_keys($preset->values))->toContain(
-        'primaryColor',
-        'accentColor',
-        'neutralColor',
-        'surfaceColor',
-        'foregroundColor',
-        'headingFont',
-        'bodyFont',
-        'spacing',
-        'cardStyle',
-        'navigationStyle',
-        'layoutPresentation',
-        'motionIntensity',
-        'mediaTreatment',
-        'radius',
-        'headingScale',
-        'cardDensity',
-    );
+    expect($presets)->not->toBeEmpty();
+
+    foreach ($presets as $preset) {
+        expect(array_keys($preset->values))->toContain(
+            'primaryColor',
+            'accentColor',
+            'neutralColor',
+            'surfaceColor',
+            'foregroundColor',
+            'headingFont',
+            'bodyFont',
+            'spacing',
+            'cardStyle',
+            'navigationStyle',
+            'layoutPresentation',
+            'motionIntensity',
+            'mediaTreatment',
+            'radius',
+            'headingScale',
+            'cardDensity',
+        );
+    }
+
+    expect(count($presets))->toBeGreaterThanOrEqual(2);
 })->with('premium themes');
 
 it('declares the planned premium layout sections', function (string $path, string $providerClass, array $sections): void {
@@ -124,13 +143,55 @@ it('keeps premium theme stylesheets aligned with their public shell wrappers', f
         ->not->toContain($themeKey . '-theme-shell');
 })->with('premium themes');
 
-dataset('premium themes', [
-    'commerce' => ['packages/theme-commerce', CommerceThemeServiceProvider::class, ['lookbook', 'promotion', 'buying-guide']],
-    'education' => ['packages/theme-education', EducationThemeServiceProvider::class, ['pathway-comparison', 'outcomes', 'admissions-checklist']],
-    'healthcare' => ['packages/theme-healthcare', HealthcareThemeServiceProvider::class, ['care-pathway', 'locations', 'insurance-trust']],
-    'knowledge' => ['packages/theme-knowledge', KnowledgeThemeServiceProvider::class, ['reading-path', 'source-map', 'topic-index']],
-    'local-services' => ['packages/theme-local-services', LocalServicesThemeServiceProvider::class, ['quote-estimator', 'service-packages', 'locality-proof']],
-    'nonprofit' => ['packages/theme-nonprofit', NonprofitThemeServiceProvider::class, ['donation-impact', 'volunteer-shifts', 'annual-report-proof']],
-    'portfolio' => ['packages/theme-portfolio', PortfolioThemeServiceProvider::class, ['case-study-detail', 'process', 'availability']],
-    'saas' => ['packages/theme-saas', SaasThemeServiceProvider::class, ['pricing', 'docs-onboarding', 'demo-request']],
-]);
+dataset('premium themes', function (): array {
+    $root = dirname(__DIR__, 3);
+    $catalogue = capell_json_file_array($root . '/docs/themes.json');
+    $manifestsByPath = capell_theme_manifest_entries($root);
+    $cases = [];
+
+    $themes = $catalogue['themes'] ?? [];
+
+    if (! is_array($themes)) {
+        throw new RuntimeException('docs/themes.json is missing a "themes" array.');
+    }
+
+    foreach ($themes as $theme) {
+        if (! is_array($theme)) {
+            throw new RuntimeException('docs/themes.json contains a theme entry that is not an object.');
+        }
+
+        if (($theme['tier'] ?? null) !== 'premium') {
+            continue;
+        }
+
+        $themeKey = $theme['themeKey'] ?? null;
+
+        if (! is_string($themeKey) || $themeKey === '') {
+            throw new RuntimeException('A premium theme entry in docs/themes.json is missing its themeKey.');
+        }
+
+        $manifestRelativePath = "packages/theme-{$themeKey}/capell.json";
+        $manifestEntry = $manifestsByPath[$manifestRelativePath] ?? null;
+
+        if ($manifestEntry === null) {
+            throw new RuntimeException("Premium theme [{$themeKey}] is missing a manifest at {$manifestRelativePath}.");
+        }
+
+        $providerClasses = capell_theme_manifest_provider_classes($manifestEntry['manifest']);
+        $providerClass = $providerClasses[0] ?? null;
+
+        if ($providerClass === null) {
+            throw new RuntimeException("Premium theme [{$themeKey}] declares no runtime provider in its manifest.");
+        }
+
+        $customSections = $theme['customSections'] ?? [];
+
+        $cases[$themeKey] = [
+            "packages/theme-{$themeKey}",
+            $providerClass,
+            is_array($customSections) ? $customSections : [],
+        ];
+    }
+
+    return $cases;
+});

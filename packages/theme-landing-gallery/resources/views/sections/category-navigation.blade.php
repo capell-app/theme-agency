@@ -1,28 +1,42 @@
 @php
     $items = data_get($section, 'items', [
-        ['title' => __('capell-theme-landing-gallery::sections.topics.product_title'), 'summary' => __('capell-theme-landing-gallery::sections.topics.product_summary')],
-        ['title' => __('capell-theme-landing-gallery::sections.topics.design_title'), 'summary' => __('capell-theme-landing-gallery::sections.topics.design_summary')],
-        ['title' => __('capell-theme-landing-gallery::sections.topics.advice_title'), 'summary' => __('capell-theme-landing-gallery::sections.topics.advice_summary')],
-        ['title' => __('capell-theme-landing-gallery::sections.topics.culture_title'), 'summary' => __('capell-theme-landing-gallery::sections.topics.culture_summary')],
+        ['title' => 'SaaS & software', 'summary' => 'Product launches, pricing pages, and free-trial flows.'],
+        ['title' => 'Ecommerce & DTC', 'summary' => 'Storefronts and product drops built to convert.'],
+        ['title' => 'Startups & fundraising', 'summary' => 'Waitlists and investor-ready one-pagers.'],
+        ['title' => 'Mobile & app', 'summary' => 'App-store landing pages tuned for installs.'],
     ]);
 @endphp
 
-<section class="editorial-section">
-    <div class="editorial-section-inner">
-        <p class="editorial-kicker">
-            {{ __('capell-theme-landing-gallery::sections.topics.kicker') }}
+<section
+    id="category-navigation"
+    class="lga-section"
+>
+    <div class="lga-section-inner">
+        <p class="lga-eyebrow">
+            {{ __('capell-theme-landing-gallery::sections.category_navigation.kicker') }}
         </p>
         <h2>
-            {{ data_get($section, 'heading', __('capell-theme-landing-gallery::sections.topics.heading')) }}
+            {{ data_get($section, 'heading', __('capell-theme-landing-gallery::sections.category_navigation.heading')) }}
         </h2>
-        <div class="editorial-grid">
+        <p class="lga-lede">
+            {{ data_get($section, 'summary', __('capell-theme-landing-gallery::sections.category_navigation.summary')) }}
+        </p>
+
+        <div class="lga-chip-row">
             @foreach ($items as $item)
-                <article class="editorial-card">
-                    <h3>
-                        {{ data_get($item, 'title', data_get($item, 'name', '')) }}
-                    </h3>
-                    <p>{{ data_get($item, 'summary', '') }}</p>
-                </article>
+                @php
+                    $chipUrl = data_get($item, 'url', '#website-examples');
+                @endphp
+
+                <a
+                    class="lga-chip"
+                    href="{{ $chipUrl }}"
+                >
+                    {{ data_get($item, 'title', data_get($item, 'name', '')) }}
+                    <span>
+                        {{ data_get($item, 'summary', __('capell-theme-landing-gallery::sections.category_navigation.default_summary')) }}
+                    </span>
+                </a>
             @endforeach
         </div>
     </div>

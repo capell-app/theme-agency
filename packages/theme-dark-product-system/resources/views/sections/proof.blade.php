@@ -6,17 +6,31 @@
     ]);
 @endphp
 
-<section class="editorial-section">
-    <div class="editorial-section-inner">
-        <p class="editorial-kicker">
+<section
+    id="proof"
+    class="dps-section"
+>
+    <div class="dps-section-inner">
+        <p class="dps-eyebrow">
             {{ __('capell-theme-dark-product-system::sections.proof.kicker') }}
         </p>
-        <div class="editorial-grid">
+        @if (filled(data_get($section, 'heading')))
+            <h2>{{ data_get($section, 'heading') }}</h2>
+        @endif
+
+        @if (filled(data_get($section, 'summary')))
+            <p class="dps-lede">{{ data_get($section, 'summary') }}</p>
+        @endif
+
+        <div
+            class="dps-grid"
+            style="margin-top: clamp(2rem, 4vw, 3rem)"
+        >
             @foreach ($items as $item)
-                <article class="editorial-card">
-                    <h3>
+                <article class="dps-card">
+                    <span class="dps-stat-value">
                         {{ data_get($item, 'value', data_get($item, 'title', '')) }}
-                    </h3>
+                    </span>
                     <p>
                         {{ data_get($item, 'label', data_get($item, 'summary', '')) }}
                     </p>

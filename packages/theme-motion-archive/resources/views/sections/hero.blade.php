@@ -1,48 +1,72 @@
 @php
     $heading = data_get($section, 'heading', data_get($section, 'title', __('capell-theme-motion-archive::sections.hero.heading')));
     $summary = data_get($section, 'summary', data_get($section, 'description', __('capell-theme-motion-archive::sections.hero.summary')));
-    $primaryLabel = data_get($section, 'primary_label', __('capell-theme-motion-archive::sections.hero.primary_label'));
-    $primaryUrl = data_get($section, 'primary_url', data_get($section, 'primary.href', '/'));
-    $secondaryLabel = data_get($section, 'secondary_label', __('capell-theme-motion-archive::sections.hero.secondary_label'));
-    $secondaryUrl = data_get($section, 'secondary_url', data_get($section, 'secondary.href', '/'));
-    $notes = data_get($section, 'notes', [
-        __('capell-theme-motion-archive::sections.hero.note_featured'),
-        __('capell-theme-motion-archive::sections.hero.note_metadata'),
-        __('capell-theme-motion-archive::sections.hero.note_newsletter'),
-    ]);
+    $actions = collect(data_get($section, 'actions', []))
+        ->filter(fn (mixed $action): bool => filled(data_get($action, 'label')))
+        ->values();
+
+    if ($actions->isEmpty()) {
+        $actions = collect([
+            [
+                'label' => data_get($section, 'primary_label', __('capell-theme-motion-archive::sections.hero.primary_label')),
+                'url' => data_get($section, 'primary_url', data_get($section, 'primary.href', '/')),
+                'style' => 'primary',
+            ],
+            [
+                'label' => data_get($section, 'secondary_label', __('capell-theme-motion-archive::sections.hero.secondary_label')),
+                'url' => data_get($section, 'secondary_url', data_get($section, 'secondary.href', '/')),
+                'style' => 'secondary',
+            ],
+        ]);
+    }
+
+    $eyebrow = data_get($section, 'eyebrow', data_get($section, 'kicker', __('capell-theme-motion-archive::sections.hero.kicker')));
+    $mediaUrl = data_get($section, 'mediaUrl', data_get($section, 'media_url'));
+    $mediaAlt = data_get($section, 'mediaAlt', data_get($section, 'media_alt', __('capell-theme-motion-archive::sections.hero.still_alt')));
 @endphp
 
-<section class="editorial-section editorial-section-dark">
-    <div class="editorial-section-inner editorial-hero-grid">
+<section class="mva-section mva-hero">
+    <div class="mva-section-inner mva-hero-grid">
         <div>
-            <p class="editorial-kicker">
-                {{ __('capell-theme-motion-archive::sections.hero.kicker') }}
-            </p>
+            <p class="mva-kicker">{{ $eyebrow }}</p>
             <h1>{{ $heading }}</h1>
-            <p class="editorial-lede">{{ $summary }}</p>
-            <div class="editorial-grid">
-                <a
-                    class="editorial-button"
-                    href="{{ $primaryUrl }}"
-                >
-                    {{ $primaryLabel }}
-                </a>
-                <a
-                    class="editorial-button editorial-button-secondary"
-                    href="{{ $secondaryUrl }}"
-                >
-                    {{ $secondaryLabel }}
-                </a>
+            <p class="mva-lede">{{ $summary }}</p>
+            <div class="mva-actions">
+                @foreach ($actions as $action)
+                    <a
+                        class="mva-button {{ data_get($action, 'style') === 'secondary' ? 'mva-button-secondary' : '' }}"
+                        href="{{ data_get($action, 'url', '/') }}"
+                    >
+                        {{ data_get($action, 'label') }}
+                    </a>
+                @endforeach
             </div>
         </div>
 
-        <aside class="editorial-card">
-            <p class="editorial-kicker">
-                {{ __('capell-theme-motion-archive::sections.hero.panel_kicker') }}
-            </p>
-            @foreach ($notes as $note)
-                <p>{{ $note }}</p>
-            @endforeach
-        </aside>
+        <div class="mva-hero-still">
+            @if (filled($mediaUrl))
+                <img
+                    src="{{ $mediaUrl }}"
+                    alt="{{ $mediaAlt }}"
+                    loading="eager"
+                    fetchpriority="high"
+                    decoding="async"
+                    class="mva-hero-still-image"
+                />
+            @endif
+
+            <span
+                class="mva-play"
+                aria-hidden="true"
+            ></span>
+            <div class="mva-hero-meta">
+                <span>
+                    {{ __('capell-theme-motion-archive::sections.plate.still') }}
+                </span>
+                <span>
+                    {{ __('capell-theme-motion-archive::sections.plate.from_archive') }}
+                </span>
+            </div>
+        </div>
     </div>
 </section>

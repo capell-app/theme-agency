@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Capell\Tests\Arch;
 
 use Capell\FoundationTheme\Contracts\ProvidesThemeDemoContent;
-use Capell\FoundationTheme\Support\Demo\ThemeDemoPageDefinition;
 use Illuminate\Support\Str;
+use RuntimeException;
 
 /*
 |--------------------------------------------------------------------------
@@ -165,8 +165,8 @@ it('theme ships complete, individual demo content for every foundation surface',
 
     $provider = new $providerClass;
     expect($provider)->toBeInstanceOf(ProvidesThemeDemoContent::class);
+    throw_unless($provider instanceof ProvidesThemeDemoContent, RuntimeException::class, "Theme [{$slug}] demo content provider must implement ProvidesThemeDemoContent.");
 
-    /** @var array<int, ThemeDemoPageDefinition> $definitions */
     $definitions = $provider->definitions($slug, Str::headline($slug), "https://{$slug}.test");
 
     $bySurface = [];
@@ -188,8 +188,13 @@ it('theme ships complete, individual demo content for every foundation surface',
         expect(is_array($sections) && array_is_list($sections) && $sections !== [])->toBeTrue(
             "Theme [{$slug}] surface [{$surface}] must carry an ordered render_data['sections'] list.",
         );
+        throw_unless(is_array($sections), RuntimeException::class, "Theme [{$slug}] surface [{$surface}] sections must be an array.");
 
-        $types = array_map(static fn (array $s): string => (string) ($s['type'] ?? ''), $sections);
+        $types = [];
+
+        foreach ($sections as $section) {
+            $types[] = is_array($section) && is_string($section['type'] ?? null) ? $section['type'] : '';
+        }
 
         // Opens with a hero, contains a cta.
         expect($types[0])->toBe('hero', "Theme [{$slug}] surface [{$surface}] must open with a hero.");
@@ -219,15 +224,23 @@ it('theme ships complete, individual demo content for every foundation surface',
         }
 
         // Chrome.
-        $navItems = $renderData['navigation']['items'] ?? [];
-        $brandName = $renderData['navigation']['brandName'] ?? null;
-        $footerColumns = $renderData['footer']['columns'] ?? [];
+        $navigation = $renderData['navigation'] ?? [];
+        $footer = $renderData['footer'] ?? [];
+
+        throw_unless(is_array($navigation), RuntimeException::class, "Theme [{$slug}] surface [{$surface}] navigation must be an array.");
+        throw_unless(is_array($footer), RuntimeException::class, "Theme [{$slug}] surface [{$surface}] footer must be an array.");
+
+        $navItems = $navigation['items'] ?? [];
+        $brandName = $navigation['brandName'] ?? null;
+        $footerColumns = $footer['columns'] ?? [];
 
         expect(is_string($brandName) && $brandName !== '')->toBeTrue("Theme [{$slug}] surface [{$surface}] needs a navigation brandName.");
         expect(count(is_array($navItems) ? $navItems : []))->toBeGreaterThanOrEqual(3, "Theme [{$slug}] surface [{$surface}] needs at least 3 navigation items.");
         expect(count(is_array($footerColumns) ? $footerColumns : []))->toBeGreaterThanOrEqual(2, "Theme [{$slug}] surface [{$surface}] needs at least 2 footer columns.");
 
-        $brandNames[$brandName] = true;
+        if (is_string($brandName)) {
+            $brandNames[$brandName] = true;
+        }
 
         // No placeholder copy.
         $haystack = mb_strtolower(implode("\n", collectStrings($sections)));

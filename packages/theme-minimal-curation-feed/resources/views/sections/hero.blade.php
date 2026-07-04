@@ -1,48 +1,69 @@
 @php
     $heading = data_get($section, 'heading', data_get($section, 'title', __('capell-theme-minimal-curation-feed::sections.hero.heading')));
     $summary = data_get($section, 'summary', data_get($section, 'description', __('capell-theme-minimal-curation-feed::sections.hero.summary')));
-    $primaryLabel = data_get($section, 'primary_label', __('capell-theme-minimal-curation-feed::sections.hero.primary_label'));
-    $primaryUrl = data_get($section, 'primary_url', data_get($section, 'primary.href', '/'));
-    $secondaryLabel = data_get($section, 'secondary_label', __('capell-theme-minimal-curation-feed::sections.hero.secondary_label'));
-    $secondaryUrl = data_get($section, 'secondary_url', data_get($section, 'secondary.href', '/'));
-    $notes = data_get($section, 'notes', [
-        __('capell-theme-minimal-curation-feed::sections.hero.note_featured'),
-        __('capell-theme-minimal-curation-feed::sections.hero.note_metadata'),
-        __('capell-theme-minimal-curation-feed::sections.hero.note_newsletter'),
-    ]);
+    $eyebrow = data_get($section, 'eyebrow', data_get($section, 'kicker', __('capell-theme-minimal-curation-feed::sections.hero.eyebrow')));
+    $actions = collect(data_get($section, 'actions', []))
+        ->filter(fn (mixed $action): bool => filled(data_get($action, 'label')))
+        ->values();
+
+    if ($actions->isEmpty()) {
+        $actions = collect([
+            [
+                'label' => data_get($section, 'primary_label', __('capell-theme-minimal-curation-feed::sections.hero.primary_label')),
+                'url' => data_get($section, 'primary_url', data_get($section, 'primary.href', '#curation-feed')),
+                'style' => 'primary',
+            ],
+            [
+                'label' => data_get($section, 'secondary_label', __('capell-theme-minimal-curation-feed::sections.hero.secondary_label')),
+                'url' => data_get($section, 'secondary_url', data_get($section, 'secondary.href', '#newsletter')),
+                'style' => 'secondary',
+            ],
+        ]);
+    }
+
+    $mediaUrl = data_get($section, 'mediaUrl', data_get($section, 'media_url'));
+    $mediaAlt = data_get($section, 'mediaAlt', data_get($section, 'media_alt'));
 @endphp
 
-<section class="editorial-section editorial-section-dark">
-    <div class="editorial-section-inner editorial-hero-grid">
-        <div>
-            <p class="editorial-kicker">
-                {{ __('capell-theme-minimal-curation-feed::sections.hero.kicker') }}
-            </p>
-            <h1>{{ $heading }}</h1>
-            <p class="editorial-lede">{{ $summary }}</p>
-            <div class="editorial-grid">
+<section class="mcf-section">
+    <div class="mcf-section-inner">
+        <p class="mcf-kicker">{{ $eyebrow }}</p>
+        <h1>{{ $heading }}</h1>
+        <p class="mcf-lede">{{ $summary }}</p>
+
+        <div class="mcf-actions">
+            @foreach ($actions as $action)
                 <a
-                    class="editorial-button"
-                    href="{{ $primaryUrl }}"
+                    class="mcf-button {{ data_get($action, 'style') === 'secondary' ? 'mcf-button-secondary' : '' }}"
+                    href="{{ data_get($action, 'url', '/') }}"
                 >
-                    {{ $primaryLabel }}
+                    {{ data_get($action, 'label') }}
                 </a>
-                <a
-                    class="editorial-button editorial-button-secondary"
-                    href="{{ $secondaryUrl }}"
-                >
-                    {{ $secondaryLabel }}
-                </a>
-            </div>
+            @endforeach
         </div>
 
-        <aside class="editorial-card">
-            <p class="editorial-kicker">
-                {{ __('capell-theme-minimal-curation-feed::sections.hero.panel_kicker') }}
-            </p>
-            @foreach ($notes as $note)
-                <p>{{ $note }}</p>
-            @endforeach
-        </aside>
+        @if (filled($mediaUrl))
+            <figure
+                class="mcf-capture"
+                style="margin-top: clamp(2.25rem, 5vw, 3.5rem)"
+            >
+                <img
+                    src="{{ $mediaUrl }}"
+                    alt="{{ $mediaAlt ?? $heading }}"
+                    width="1200"
+                    height="750"
+                    loading="eager"
+                    fetchpriority="high"
+                    decoding="async"
+                    class="mcf-capture-media"
+                />
+                <figcaption class="mcf-capture-caption">
+                    <span>{{ $mediaAlt ?? $heading }}</span>
+                    <span class="mcf-meta">
+                        {{ __('capell-theme-minimal-curation-feed::sections.hero.capture_meta') }}
+                    </span>
+                </figcaption>
+            </figure>
+        @endif
     </div>
 </section>

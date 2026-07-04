@@ -1,33 +1,50 @@
 @php
-    $stories = data_get($section, 'items', data_get($section, 'stories', [
-        ['title' => __('capell-theme-filter-gallery::sections.events.planning_title'), 'summary' => __('capell-theme-filter-gallery::sections.events.planning_summary')],
-        ['title' => __('capell-theme-filter-gallery::sections.events.workshop_title'), 'summary' => __('capell-theme-filter-gallery::sections.events.workshop_summary')],
-        ['title' => __('capell-theme-filter-gallery::sections.events.systems_title'), 'summary' => __('capell-theme-filter-gallery::sections.events.systems_summary')],
-    ]));
+    $heading = data_get($section, 'heading', __('capell-theme-filter-gallery::sections.mission.heading'));
+    $statement = data_get($section, 'summary', data_get($section, 'statement', __('capell-theme-filter-gallery::sections.mission.statement')));
+    $fallbackItems = __('capell-theme-filter-gallery::sections.mission.items');
+    $items = collect(data_get($section, 'items', data_get($section, 'stories', is_array($fallbackItems) ? $fallbackItems : [])))
+        ->filter(fn (mixed $item): bool => filled(data_get($item, 'title', data_get($item, 'name'))))
+        ->values();
 @endphp
 
-<section class="editorial-section">
-    <div class="editorial-section-inner">
-        <p class="editorial-kicker">
-            {{ __('capell-theme-filter-gallery::sections.events.kicker') }}
-        </p>
-        <h2>
-            {{ data_get($section, 'heading', __('capell-theme-filter-gallery::sections.events.heading')) }}
-        </h2>
-        <div class="editorial-grid">
-            @foreach ($stories as $story)
-                <article class="editorial-card">
-                    <p class="editorial-meta">
-                        {{ data_get($story, 'meta', data_get($story, 'category', '')) }}
-                    </p>
-                    <h3>
-                        {{ data_get($story, 'title', data_get($story, 'name', '')) }}
-                    </h3>
-                    <p>
-                        {{ data_get($story, 'summary', data_get($story, 'description', '')) }}
-                    </p>
-                </article>
-            @endforeach
+<section
+    id="blog-mission"
+    class="fga-section"
+>
+    <div class="fga-section-inner">
+        <div class="fga-mission-grid">
+            <div class="fga-section-head-copy">
+                <p class="fga-kicker">
+                    {{ __('capell-theme-filter-gallery::sections.mission.kicker') }}
+                </p>
+                <h2>{{ $heading }}</h2>
+                <p class="fga-mission-statement">{{ $statement }}</p>
+            </div>
+
+            <div class="fga-mission-list">
+                @foreach ($items as $item)
+                    <article class="fga-mission-row">
+                        <p class="fga-mono-note">
+                            {{ data_get($item, 'meta', data_get($item, 'category', str_pad((string) $loop->iteration, 2, '0', STR_PAD_LEFT))) }}
+                        </p>
+                        <h3>
+                            @if (filled(data_get($item, 'url', data_get($item, 'href'))))
+                                <a
+                                    class="fga-title-link"
+                                    href="{{ data_get($item, 'url', data_get($item, 'href')) }}"
+                                >
+                                    {{ data_get($item, 'title', data_get($item, 'name', '')) }}
+                                </a>
+                            @else
+                                {{ data_get($item, 'title', data_get($item, 'name', '')) }}
+                            @endif
+                        </h3>
+                        <p>
+                            {{ data_get($item, 'summary', data_get($item, 'description', '')) }}
+                        </p>
+                    </article>
+                @endforeach
+            </div>
         </div>
     </div>
 </section>

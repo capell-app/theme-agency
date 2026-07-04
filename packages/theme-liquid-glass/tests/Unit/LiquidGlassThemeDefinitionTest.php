@@ -22,7 +22,7 @@ it('defines the Liquid Glass free renderer contract', function (): void {
     expect($definition->package)->toBe('capell-app/theme-liquid-glass')
         ->and($definition->key)->toBe(LiquidGlassThemeServiceProvider::THEME_KEY)
         ->and($definition->assets)->toBe(['css' => 'vendor/capell/themes/liquid-glass.css'])
-        ->and($definition->includedSections)->toBe(['navigation', 'hero', 'features', 'proof', 'content-listing', 'cta', 'footer'])
+        ->and($definition->includedSections)->toBe(['navigation', 'hero', 'features', 'showcase', 'presets', 'proof', 'content-listing', 'cta', 'footer'])
         ->and($definition->presets)->toHaveCount(3)
         ->and($definition->presetOptions())->toBe([
             'clarity' => 'Clarity',
@@ -68,6 +68,8 @@ it('declares renderers for every included Liquid Glass section', function (): vo
         'navigation',
         'hero',
         'features',
+        'showcase',
+        'presets',
         'proof',
         'content-listing',
         'cta',
@@ -155,7 +157,7 @@ it('drives the Liquid Glass shell and card surfaces from theme tokens', function
 
     expect($css)
         ->toContain('--liquid-glass-panel')
-        ->toContain('backdrop-filter: blur(18px)')
+        ->toContain('backdrop-filter: var(--liquid-glass-depth-2)')
         ->toContain('.liquid-glass-panel')
         ->toContain('.liquid-glass-card')
         ->toContain('.liquid-glass-cta');

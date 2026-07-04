@@ -78,6 +78,7 @@ final class OnePageShowcaseDemoContent implements ProvidesThemeDemoContent
                     $this->showcaseHeroSection(
                         heading: 'This week\'s featured one-pagers',
                         summary: 'Hand-picked launches that nail the single-scroll story — strong hero, honest proof, one clear call to action.',
+                        media: $media,
                     ),
                     $this->categoryTabsSection(
                         heading: 'Browse by what you are building',
@@ -91,6 +92,7 @@ final class OnePageShowcaseDemoContent implements ProvidesThemeDemoContent
                     $this->templatesSectionsSection(
                         heading: 'Templates & sections to remix',
                         summary: 'Start from a proven layout instead of a blank canvas. Every template ships the sections that made the original work.',
+                        media: $media,
                     ),
                     $this->toolsSponsorsSection(
                         heading: 'Tools the makers actually used',
@@ -143,9 +145,9 @@ final class OnePageShowcaseDemoContent implements ProvidesThemeDemoContent
                         heading: 'An archive of one-pagers built to be scanned',
                         summary: 'Hundreds of curated single-page sites, organised by category and intent. Filter, scan, and open the ones that fit your brief.',
                         primaryLabel: 'Submit a one-pager',
-                        primaryUrl: '#newsletter',
+                        primaryUrl: '/#newsletter',
                         secondaryLabel: 'Browse templates',
-                        secondaryUrl: '#templates-sections',
+                        secondaryUrl: '/#templates-sections',
                         mediaUrl: $media['listing'][0] ?? $media['hero'][0] ?? null,
                         mediaAlt: 'A grid of curated one-page websites',
                     ),
@@ -199,17 +201,20 @@ final class OnePageShowcaseDemoContent implements ProvidesThemeDemoContent
                         primaryLabel: 'Use this template',
                         primaryUrl: '#templates-sections',
                         secondaryLabel: 'Back to the gallery',
-                        secondaryUrl: '#one-page-grid',
+                        secondaryUrl: '/#one-page-grid',
                         mediaUrl: $media['detail'][0] ?? null,
                         mediaAlt: 'The Harbor launch one-pager',
                     ),
                     $this->showcaseHeroSection(
                         heading: 'How the Harbor scroll is built',
                         summary: 'Each block earns its place: a hero that states the promise, proof that backs it, and one undeniable call to action.',
+                        media: $media,
                     ),
                     $this->templatesSectionsSection(
                         heading: 'The sections Harbor uses',
                         summary: 'Remix the exact blocks behind this one-pager for your own launch.',
+                        media: $media,
+                        url: '/#templates-sections',
                     ),
                     $this->toolsSponsorsSection(
                         heading: 'What built Harbor',
@@ -300,9 +305,9 @@ final class OnePageShowcaseDemoContent implements ProvidesThemeDemoContent
                         heading: 'No one-pagers match that filter — yet',
                         summary: 'Nothing has landed in this category so far. Clear the filter to see everything, or tell us what you are hunting for.',
                         primaryLabel: 'View the whole gallery',
-                        primaryUrl: '#one-page-grid',
+                        primaryUrl: '/#one-page-grid',
                         secondaryLabel: 'Submit a one-pager',
-                        secondaryUrl: '#newsletter',
+                        secondaryUrl: '/#newsletter',
                         mediaUrl: $media['listing'][0] ?? null,
                         mediaAlt: 'An empty gallery filter',
                     ),
@@ -349,7 +354,7 @@ final class OnePageShowcaseDemoContent implements ProvidesThemeDemoContent
                         primaryLabel: 'Back to home',
                         primaryUrl: '/',
                         secondaryLabel: 'Browse the gallery',
-                        secondaryUrl: '#one-page-grid',
+                        secondaryUrl: '/#one-page-grid',
                         mediaUrl: $media['hero'][0] ?? null,
                         mediaAlt: 'A missing page in the gallery',
                     ),
@@ -390,7 +395,7 @@ final class OnePageShowcaseDemoContent implements ProvidesThemeDemoContent
                         primaryLabel: 'Join the weekly drop',
                         primaryUrl: '#newsletter',
                         secondaryLabel: 'Browse the gallery',
-                        secondaryUrl: '#one-page-grid',
+                        secondaryUrl: '/#one-page-grid',
                         mediaUrl: $media['cta'][0] ?? null,
                         mediaAlt: 'The weekly gallery drop',
                     ),
@@ -444,19 +449,37 @@ final class OnePageShowcaseDemoContent implements ProvidesThemeDemoContent
     }
 
     /**
+     * @param  array{hero: list<string>, listing: list<string>, detail: list<string>, proof: list<string>, contact: list<string>, cta: list<string>}  $media
      * @return array<string, mixed>
      */
-    private function showcaseHeroSection(string $heading, string $summary): array
+    private function showcaseHeroSection(string $heading, string $summary, array $media): array
     {
+        $pool = array_values(array_unique(array_merge($media['hero'], $media['detail'], $media['cta'])));
+
+        $entries = [
+            ['title' => 'Harbor', 'summary' => 'A weekend launch one-pager for a solo founder — promise, proof, one button.'],
+            ['title' => 'Northpine Studio', 'summary' => 'A single-scroll portfolio that lets three case studies carry the whole story.'],
+            ['title' => 'Cadence', 'summary' => 'A waitlist one-pager that turned a vague idea into 4,000 early signups.'],
+        ];
+
+        $items = [];
+
+        foreach ($entries as $index => $entry) {
+            $image = $pool[$index % max(count($pool), 1)] ?? null;
+            $items[] = [
+                ...$entry,
+                'url' => '/#one-page-grid',
+                'image' => $image,
+                'imageUrl' => $image,
+                'imageAlt' => $entry['title'] . ' one-pager',
+            ];
+        }
+
         return [
             'type' => 'showcase-hero',
             'heading' => $heading,
             'summary' => $summary,
-            'items' => [
-                ['title' => 'Harbor', 'summary' => 'A weekend launch one-pager for a solo founder — promise, proof, one button.'],
-                ['title' => 'Northpine Studio', 'summary' => 'A single-scroll portfolio that lets three case studies carry the whole story.'],
-                ['title' => 'Cadence', 'summary' => 'A waitlist one-pager that turned a vague idea into 4,000 early signups.'],
-            ],
+            'items' => $items,
         ];
     }
 
@@ -470,10 +493,10 @@ final class OnePageShowcaseDemoContent implements ProvidesThemeDemoContent
             'heading' => $heading,
             'summary' => $summary,
             'items' => [
-                ['title' => 'Launch pages', 'summary' => 'Single-scroll sites built to ship a product on day one.'],
-                ['title' => 'Portfolios', 'summary' => 'One-pagers that let the work do the talking.'],
-                ['title' => 'Waitlists', 'summary' => 'Pre-launch pages tuned to capture early interest.'],
-                ['title' => 'Events', 'summary' => 'Single-page sites for conferences, meetups, and drops.'],
+                ['title' => 'Launch pages', 'summary' => 'Single-scroll sites built to ship a product on day one.', 'url' => '/#one-page-grid'],
+                ['title' => 'Portfolios', 'summary' => 'One-pagers that let the work do the talking.', 'url' => '/#one-page-grid'],
+                ['title' => 'Waitlists', 'summary' => 'Pre-launch pages tuned to capture early interest.', 'url' => '/#one-page-grid'],
+                ['title' => 'Events', 'summary' => 'Single-page sites for conferences, meetups, and drops.', 'url' => '/#one-page-grid'],
             ],
         ];
     }
@@ -522,22 +545,39 @@ final class OnePageShowcaseDemoContent implements ProvidesThemeDemoContent
     }
 
     /**
+     * @param  array{hero: list<string>, listing: list<string>, detail: list<string>, proof: list<string>, contact: list<string>, cta: list<string>}  $media
      * @return array<string, mixed>
      */
-    private function templatesSectionsSection(string $heading, string $summary): array
+    private function templatesSectionsSection(string $heading, string $summary, array $media, string $url = '#one-page-grid'): array
     {
+        $pool = array_values(array_unique(array_merge($media['listing'], $media['proof'])));
+
+        $entries = [
+            ['title' => 'Launch starter', 'summary' => 'Hero, feature trio, proof, and a closing CTA — the bones of a converting launch page.'],
+            ['title' => 'Portfolio scroll', 'summary' => 'A case-study-first layout that puts three projects front and centre.'],
+            ['title' => 'Waitlist capture', 'summary' => 'A focused single-field signup with proof and a clear promise above the fold.'],
+            ['title' => 'Event single-page', 'summary' => 'Schedule, speakers, venue, and tickets stacked into one clean scroll.'],
+        ];
+
+        $items = [];
+
+        foreach ($entries as $index => $entry) {
+            $image = $pool[$index % max(count($pool), 1)] ?? null;
+            $items[] = [
+                ...$entry,
+                'image' => $image,
+                'imageUrl' => $image,
+                'imageAlt' => $entry['title'] . ' template preview',
+            ];
+        }
+
         return [
             'type' => 'templates-sections',
             'heading' => $heading,
             'summary' => $summary,
             'label' => 'Browse all templates',
-            'url' => '#one-page-grid',
-            'items' => [
-                ['title' => 'Launch starter', 'summary' => 'Hero, feature trio, proof, and a closing CTA — the bones of a converting launch page.'],
-                ['title' => 'Portfolio scroll', 'summary' => 'A case-study-first layout that puts three projects front and centre.'],
-                ['title' => 'Waitlist capture', 'summary' => 'A focused single-field signup with proof and a clear promise above the fold.'],
-                ['title' => 'Event single-page', 'summary' => 'Schedule, speakers, venue, and tickets stacked into one clean scroll.'],
-            ],
+            'url' => $url,
+            'items' => $items,
         ];
     }
 
@@ -650,10 +690,10 @@ final class OnePageShowcaseDemoContent implements ProvidesThemeDemoContent
             'heading' => $heading,
             'summary' => $summary,
             'label' => 'Browse the gallery',
-            'url' => '#one-page-grid',
+            'url' => '/#one-page-grid',
             'actions' => [
-                ['label' => 'Browse the gallery', 'url' => '#one-page-grid', 'style' => 'primary'],
-                ['label' => 'Submit a one-pager', 'url' => '#newsletter', 'style' => 'secondary'],
+                ['label' => 'Browse the gallery', 'url' => '/#one-page-grid', 'style' => 'primary'],
+                ['label' => 'Submit a one-pager', 'url' => '/#newsletter', 'style' => 'secondary'],
             ],
         ];
     }
@@ -664,20 +704,19 @@ final class OnePageShowcaseDemoContent implements ProvidesThemeDemoContent
     private function navigation(): array
     {
         $items = [
-            ['label' => 'One-pagers', 'url' => '#one-page-grid'],
-            ['label' => 'Templates', 'url' => '#templates-sections'],
-            ['label' => 'Tools', 'url' => '#tools-sponsors'],
-            ['label' => 'Resources', 'url' => '#build-resources'],
-            ['label' => 'Submit', 'url' => '#newsletter'],
+            ['label' => 'One-pagers', 'url' => '/#one-page-grid'],
+            ['label' => 'Templates', 'url' => '/#templates-sections'],
+            ['label' => 'Tools', 'url' => '/#tools-sponsors'],
+            ['label' => 'Resources', 'url' => '/#build-resources'],
         ];
 
         return [
             'brand' => self::BRAND,
             'brandName' => self::BRAND,
             'items' => $items,
-            'consultationUrl' => '#newsletter',
+            'consultationUrl' => '/#newsletter',
             'ctaLabel' => 'Submit a one-pager',
-            'ctaUrl' => '#newsletter',
+            'ctaUrl' => '/#newsletter',
         ];
     }
 
@@ -691,26 +730,26 @@ final class OnePageShowcaseDemoContent implements ProvidesThemeDemoContent
                 'title' => 'Gallery',
                 'heading' => 'Gallery',
                 'links' => [
-                    ['label' => 'All one-pagers', 'url' => '#one-page-grid'],
-                    ['label' => 'Categories', 'url' => '#category-tabs'],
-                    ['label' => 'This week', 'url' => '#showcase-hero'],
+                    ['label' => 'All one-pagers', 'url' => '/#one-page-grid'],
+                    ['label' => 'Categories', 'url' => '/#category-tabs'],
+                    ['label' => 'This week', 'url' => '/#showcase-hero'],
                 ],
             ],
             [
                 'title' => 'Build',
                 'heading' => 'Build',
                 'links' => [
-                    ['label' => 'Templates', 'url' => '#templates-sections'],
-                    ['label' => 'Tools', 'url' => '#tools-sponsors'],
-                    ['label' => 'Resources', 'url' => '#build-resources'],
+                    ['label' => 'Templates', 'url' => '/#templates-sections'],
+                    ['label' => 'Tools', 'url' => '/#tools-sponsors'],
+                    ['label' => 'Resources', 'url' => '/#build-resources'],
                 ],
             ],
             [
                 'title' => 'Connect',
                 'heading' => 'Connect',
                 'links' => [
-                    ['label' => 'Submit a one-pager', 'url' => '#newsletter'],
-                    ['label' => 'Weekly drop', 'url' => '#newsletter'],
+                    ['label' => 'Submit a one-pager', 'url' => '/#newsletter'],
+                    ['label' => 'Weekly drop', 'url' => '/#newsletter'],
                 ],
             ],
         ];

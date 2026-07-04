@@ -6,12 +6,14 @@ namespace Capell\ThemeStudio\LiquidGlass;
 
 use Capell\Core\Data\VendorAssetData;
 use Capell\Core\Enums\FrontendRuntime;
+use Capell\Core\Enums\VendorAssetEnum;
 use Capell\Core\Facades\CapellCore;
 use Capell\Core\ThemeStudio\Data\ThemeDefinitionData;
 use Capell\Core\ThemeStudio\Data\ThemePresetData;
-use Capell\Core\ThemeStudio\Rendering\BladeThemeRenderer;
 use Capell\Core\ThemeStudio\Rendering\ViewSectionRenderer;
 use Capell\Core\ThemeStudio\Theme\ThemeRegistry;
+use Capell\FoundationTheme\Rendering\ChromeSplitBladeThemeRenderer;
+use Capell\FoundationTheme\Support\Editor\StandardThemeEditorSchema;
 use Capell\ThemeStudio\LiquidGlass\Console\Commands\DemoCommand;
 use Illuminate\Support\ServiceProvider;
 use Override;
@@ -112,6 +114,9 @@ class LiquidGlassThemeServiceProvider extends ServiceProvider
                     ],
                 ),
             ],
+            frontend: [
+                'editor' => StandardThemeEditorSchema::definition(),
+            ],
             assets: ['css' => 'vendor/capell/themes/liquid-glass.css'],
             runtime: FrontendRuntime::Blade,
             extends: 'default',
@@ -143,7 +148,7 @@ class LiquidGlassThemeServiceProvider extends ServiceProvider
 
         $registry->register(
             definition: self::definition(),
-            themeRenderer: new BladeThemeRenderer(
+            themeRenderer: new ChromeSplitBladeThemeRenderer(
                 themeKey: self::THEME_KEY,
                 layoutView: 'capell-theme-liquid-glass::page',
                 sectionRenderers: $sectionRenderers,
@@ -155,7 +160,12 @@ class LiquidGlassThemeServiceProvider extends ServiceProvider
     private function registerVendorCssAssets(): void
     {
         CapellCore::registerVendorAsset(
-            VendorAssetData::tailwindImport('resources/css/theme-liquid-glass.css', self::$packageName),
+            new VendorAssetData(
+                type: VendorAssetEnum::TailwindImport,
+                value: 'resources/css/theme-liquid-glass.css',
+                packageName: self::$packageName,
+                condition: 'theme-css:liquid-glass',
+            ),
         );
 
         CapellCore::registerVendorAsset(

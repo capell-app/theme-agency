@@ -20,7 +20,7 @@ Targets Capell core API ^4.0.
 
 ### What's Changed
 
-* feat: site discovery URL registry updates by @howdu in https://github.com/capell-app/capell-packages/pull/86
+- feat: site discovery URL registry updates by @howdu in https://github.com/capell-app/capell-packages/pull/86
 
 **Full Changelog**: https://github.com/capell-app/capell-packages/compare/v2.0.16...v2.0.17
 
@@ -36,7 +36,7 @@ Targets Capell core API ^4.0.
 
 ### What's Changed
 
-* chore(deps): bump danharrin/monorepo-split-github-action from 2.4.4 to 2.4.5 by @dependabot[bot] in https://github.com/capell-app/packages/pull/80
+- chore(deps): bump danharrin/monorepo-split-github-action from 2.4.4 to 2.4.5 by @dependabot[bot] in https://github.com/capell-app/packages/pull/80
 
 **Full Changelog**: https://github.com/capell-app/packages/compare/v2.0.12...v2.0.13
 
@@ -61,12 +61,11 @@ Targets Capell core API ^4.0.
 ### Upstream changes
 
 - The `Capell\Core\ContentSync` feature in `capell-app/capell` has been renamed to `Capell\Core\Exchanger` ([capell#73](https://github.com/capell-app/capell/pull/73)). No packages in this repo referenced the old namespace, but host apps that bump both monorepos together should update:
-  - `Capell\Core\ContentSync\*` imports → `Capell\Core\Exchanger\*`
-  - `config('content-sync.*')` → `config('exchanger.*')`
-  - `trans('content_sync.*')` → `trans('exchanger.*')`
-  - Queue name `content-sync` → `exchanger` (drain old queue before deploy)
-  - Storage paths under `content-sync/` → `exchanger/`
-  
+    - `Capell\Core\ContentSync\*` imports → `Capell\Core\Exchanger\*`
+    - `config('content-sync.*')` → `config('exchanger.*')`
+    - `trans('content_sync.*')` → `trans('exchanger.*')`
+    - Queue name `content-sync` → `exchanger` (drain old queue before deploy)
+    - Storage paths under `content-sync/` → `exchanger/`
 
 ## v2.0.4 - 2025-12-12
 

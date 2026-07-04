@@ -18,10 +18,17 @@ use Capell\FoundationTheme\Support\Demo\ThemeDemoPageDefinition;
  * project-stories / opinion-block / advice-culture / events-tags /
  * discipline-browsing / newsletter) alongside the standard hero/proof/cta — giving
  * every surface a full art-directed publication rather than the shared skeleton.
+ *
+ * Anchors are surface-scoped: every in-page `#id` link only appears on pages
+ * where that section id actually renders. Global nav/footer links use
+ * homepage-relative `/#id` anchors or real page paths so they resolve from any
+ * surface.
  */
 final class CreativeCultureEditorialDemoContent implements ProvidesThemeDemoContent
 {
     private const string BRAND = 'Maker & Margin';
+
+    private const string DESK_EMAIL = 'hello@makerandmargin.example';
 
     /**
      * @return array<int, ThemeDemoPageDefinition>
@@ -60,31 +67,23 @@ final class CreativeCultureEditorialDemoContent implements ProvidesThemeDemoCont
                 'navigation' => $this->navigation(),
                 'footer' => $this->footer(),
                 'sections' => [
-                    [
-                        'type' => 'hero',
-                        'eyebrow' => 'This week',
-                        'heading' => 'Culture, projects, and opinion worth your attention',
-                        'summary' => 'An independent publication for designers, makers, and the curious — long reads on the work, the people behind it, and the decisions that shaped it.',
-                        'primary_label' => 'Read the latest projects',
-                        'primary_url' => '#project-stories',
-                        'secondary_label' => 'Join the newsletter',
-                        'secondary_url' => '#newsletter',
-                        'notes' => [
-                            'New issue every Thursday, free to read',
-                            'Long-form features, no listicles',
-                            '12,000 readers across studios and schools',
-                        ],
-                        'actions' => [
-                            ['label' => 'Read the latest projects', 'url' => '#project-stories', 'style' => 'primary'],
-                            ['label' => 'Join the newsletter', 'url' => '#newsletter', 'style' => 'secondary'],
-                        ],
-                        'mediaUrl' => $media['hero'][0],
-                        'mediaAlt' => 'Maker & Margin cover feature',
-                    ],
-                    $this->mustReadsSection(),
+                    $this->heroSection(
+                        eyebrow: 'This week',
+                        heading: 'Culture, projects, and opinion worth your attention',
+                        summary: 'An independent publication for designers, makers, and the curious — long reads on the work, the people behind it, and the decisions that shaped it.',
+                        media: $media,
+                        mediaKey: 'hero',
+                        mediaAlt: 'A ceramics studio workbench mid-glaze, from this week\'s lead feature',
+                        primaryLabel: 'Read the latest projects',
+                        primaryUrl: '#project-stories',
+                        secondaryLabel: 'Join the newsletter',
+                        secondaryUrl: '#newsletter',
+                    ),
+                    $this->mustReadsSection($media),
                     $this->projectStoriesSection(
                         heading: 'Project stories',
                         summary: 'Long features on the work and the working lives behind it — process, false starts, and the call that made it land.',
+                        media: $media,
                     ),
                     $this->opinionSection(),
                     $this->adviceCultureSection(
@@ -104,6 +103,9 @@ final class CreativeCultureEditorialDemoContent implements ProvidesThemeDemoCont
                     $this->ctaSection(
                         heading: 'Read the magazine that respects your attention',
                         summary: 'Free to read, no walls. Start with this week\'s issue or browse the archive.',
+                        primaryUrl: '#newsletter',
+                        secondaryUrl: '#project-stories',
+                        secondaryLabel: 'Read the lead story',
                     ),
                 ],
             ],
@@ -131,35 +133,29 @@ final class CreativeCultureEditorialDemoContent implements ProvidesThemeDemoCont
                 'navigation' => $this->navigation(),
                 'footer' => $this->footer(),
                 'sections' => [
-                    [
-                        'type' => 'hero',
-                        'eyebrow' => 'The archive',
-                        'heading' => 'An archive built to be browsed',
-                        'summary' => 'Structured listing cards keep projects, opinion, advice, and culture stories scannable — filter by discipline or follow a tag.',
-                        'primary_label' => 'Browse disciplines',
-                        'primary_url' => '#discipline-browsing',
-                        'secondary_label' => 'Popular tags',
-                        'secondary_url' => '#events-tags',
-                        'notes' => [
-                            'Four years of features',
-                            'Sorted by discipline and tag',
-                            'New stories added weekly',
-                        ],
-                        'actions' => [
-                            ['label' => 'Browse disciplines', 'url' => '#discipline-browsing', 'style' => 'primary'],
-                        ],
-                        'mediaUrl' => $media['listing'][0] ?? $media['hero'][0],
-                        'mediaAlt' => 'Maker & Margin archive grid',
-                    ],
+                    $this->heroSection(
+                        eyebrow: 'The archive',
+                        heading: 'An archive built to be browsed',
+                        summary: 'Structured listing cards keep projects, opinion, advice, and culture stories scannable — filter by discipline or follow a tag.',
+                        media: $media,
+                        mediaKey: 'listing',
+                        mediaAlt: 'The archive index, laid out across disciplines',
+                        primaryLabel: 'Browse disciplines',
+                        primaryUrl: '#discipline-browsing',
+                        secondaryLabel: 'Popular tags',
+                        secondaryUrl: '#events-tags',
+                    ),
                     $this->contentListingSection(
                         heading: 'Recent from the archive',
                         summary: 'The latest features across every section of the magazine.',
+                        media: $media,
                     ),
                     $this->disciplineBrowsingSection(),
                     $this->eventsTagsSection(),
                     $this->ctaSection(
                         heading: 'Found a thread worth following?',
                         summary: 'Subscribe and the next story in that discipline lands in your inbox first.',
+                        primaryUrl: '#newsletter',
                     ),
                 ],
             ],
@@ -186,29 +182,22 @@ final class CreativeCultureEditorialDemoContent implements ProvidesThemeDemoCont
                 'navigation' => $this->navigation(),
                 'footer' => $this->footer(),
                 'sections' => [
-                    [
-                        'type' => 'hero',
-                        'eyebrow' => 'Feature',
-                        'heading' => 'The Kiln Room: a studio that rebuilt itself around its waste',
-                        'summary' => 'A feature page art-directed to be read — image-led storytelling paired with opinion and advice, so a project reads as culture, not just a record.',
-                        'primary_label' => 'Read more features',
-                        'primary_url' => '#project-stories',
-                        'secondary_label' => 'Join the newsletter',
-                        'secondary_url' => '#newsletter',
-                        'notes' => [
-                            'A 3,000-word read',
-                            'Photography by the studio',
-                            'Part of the Craft & Margin series',
-                        ],
-                        'actions' => [
-                            ['label' => 'Read more features', 'url' => '#project-stories', 'style' => 'secondary'],
-                        ],
-                        'mediaUrl' => $media['detail'][0],
-                        'mediaAlt' => 'Inside the Kiln Room studio',
-                    ],
+                    $this->heroSection(
+                        eyebrow: 'Feature',
+                        heading: 'The Kiln Room: a studio that rebuilt itself around its waste',
+                        summary: 'A feature page art-directed to be read — image-led storytelling paired with opinion and advice, so a project reads as culture, not just a record.',
+                        media: $media,
+                        mediaKey: 'detail',
+                        mediaAlt: 'Inside the Kiln Room studio, glazed seconds drying on a shelf',
+                        primaryLabel: 'Read more features',
+                        primaryUrl: '#project-stories',
+                        secondaryLabel: 'Read the opinion column',
+                        secondaryUrl: '#opinion-block',
+                    ),
                     $this->projectStoriesSection(
                         heading: 'How the piece came together',
                         summary: 'The process behind the feature, told in the maker\'s own order — material first, market second.',
+                        media: $media,
                     ),
                     $this->opinionSection(),
                     $this->adviceCultureSection(
@@ -218,10 +207,13 @@ final class CreativeCultureEditorialDemoContent implements ProvidesThemeDemoCont
                     $this->contentListingSection(
                         heading: 'Keep reading',
                         summary: 'More features in the same neighbourhood.',
+                        media: $media,
                     ),
                     $this->ctaSection(
                         heading: 'Stories like this, every Thursday',
                         summary: 'Subscribe for one long read a week from studios you have not heard of yet.',
+                        primaryUrl: '#project-stories',
+                        primaryLabel: 'Read more features',
                     ),
                 ],
             ],
@@ -247,27 +239,18 @@ final class CreativeCultureEditorialDemoContent implements ProvidesThemeDemoCont
                 'navigation' => $this->navigation(),
                 'footer' => $this->footer(),
                 'sections' => [
-                    [
-                        'type' => 'hero',
-                        'eyebrow' => 'Get involved',
-                        'heading' => 'Turn readers into subscribers and contributors',
-                        'summary' => 'Whether you want the weekly letter, a pitch read, or a partnership for an event — write to hello@makerandmargin.example and a real editor replies.',
-                        'primary_label' => 'Join the newsletter',
-                        'primary_url' => '#newsletter',
-                        'secondary_label' => 'Pitch a story',
-                        'secondary_url' => 'mailto:hello@makerandmargin.example',
-                        'notes' => [
-                            'Edited in London, read everywhere',
-                            'We answer every pitch',
-                            'Contributors paid on acceptance',
-                        ],
-                        'actions' => [
-                            ['label' => 'Join the newsletter', 'url' => '#newsletter', 'style' => 'primary'],
-                            ['label' => 'Pitch a story', 'url' => 'mailto:hello@makerandmargin.example', 'style' => 'secondary'],
-                        ],
-                        'mediaUrl' => $media['contact'][0],
-                        'mediaAlt' => 'The Maker & Margin editorial desk',
-                    ],
+                    $this->heroSection(
+                        eyebrow: 'Get involved',
+                        heading: 'Turn readers into subscribers and contributors',
+                        summary: 'Whether you want the weekly letter, a pitch read, or a partnership for an event — write to ' . self::DESK_EMAIL . ' and a real editor replies.',
+                        media: $media,
+                        mediaKey: 'contact',
+                        mediaAlt: 'The Maker & Margin editorial desk',
+                        primaryLabel: 'Join the newsletter',
+                        primaryUrl: '#newsletter',
+                        secondaryLabel: 'Pitch a story',
+                        secondaryUrl: 'mailto:' . self::DESK_EMAIL,
+                    ),
                     $this->newsletterSection(
                         heading: 'A letter worth opening',
                         summary: 'A non-submitting signup that proves the subscribe journey feels like part of the editorial experience.',
@@ -279,7 +262,11 @@ final class CreativeCultureEditorialDemoContent implements ProvidesThemeDemoCont
                     ),
                     $this->ctaSection(
                         heading: 'Have a story the magazine should tell?',
-                        summary: 'Send a paragraph to hello@makerandmargin.example. We read everything and reply within a week.',
+                        summary: 'Send a paragraph to ' . self::DESK_EMAIL . '. We read everything and reply within a week.',
+                        primaryUrl: 'mailto:' . self::DESK_EMAIL,
+                        primaryLabel: 'Pitch a story',
+                        secondaryUrl: '#newsletter',
+                        secondaryLabel: 'Join the newsletter',
                     ),
                 ],
             ],
@@ -306,36 +293,33 @@ final class CreativeCultureEditorialDemoContent implements ProvidesThemeDemoCont
                 'navigation' => $this->navigation(),
                 'footer' => $this->footer(),
                 'sections' => [
-                    [
-                        'type' => 'hero',
-                        'eyebrow' => 'The archive',
-                        'heading' => 'No stories match that filter — yet',
-                        'summary' => 'We have not published in this corner of the archive. Clear the filter to see everything, or follow a tag and we will tell you when one lands.',
-                        'primary_label' => 'Browse all stories',
-                        'primary_url' => '#content-listing',
-                        'secondary_label' => 'Popular tags',
-                        'secondary_url' => '#events-tags',
-                        'notes' => [
-                            'Nothing in this filter right now',
-                            'New features added weekly',
-                            'Follow a tag to be notified',
-                        ],
-                        'actions' => [
-                            ['label' => 'Browse all stories', 'url' => '#content-listing', 'style' => 'primary'],
-                            ['label' => 'Popular tags', 'url' => '#events-tags', 'style' => 'secondary'],
-                        ],
-                    ],
+                    $this->heroSection(
+                        eyebrow: 'The archive',
+                        heading: 'No stories match that filter — yet',
+                        summary: 'We have not published in this corner of the archive. Clear the filter to see everything, or browse the must-reads below.',
+                        media: $media,
+                        mediaKey: 'listing',
+                        mediaAlt: null,
+                        primaryLabel: 'Browse all stories',
+                        primaryUrl: '#content-listing',
+                        secondaryLabel: 'Must-reads',
+                        secondaryUrl: '#must-reads',
+                    ),
                     [
                         'type' => 'content-listing',
+                        'id' => 'content-listing',
                         'heading' => 'Nothing to show here',
                         'summary' => 'When features land in this filter they will appear here, newest first.',
                         'items' => [],
                     ],
-                    $this->mustReadsSection(),
-                    $this->eventsTagsSection(),
+                    $this->mustReadsSection($media),
                     $this->ctaSection(
                         heading: 'Looking for something specific?',
                         summary: 'Tell us the subject and we will point you to the closest features in the archive.',
+                        primaryUrl: 'mailto:' . self::DESK_EMAIL,
+                        primaryLabel: 'Email the desk',
+                        secondaryUrl: '#must-reads',
+                        secondaryLabel: 'Browse must-reads',
                     ),
                 ],
             ],
@@ -361,29 +345,26 @@ final class CreativeCultureEditorialDemoContent implements ProvidesThemeDemoCont
                 'navigation' => $this->navigation(),
                 'footer' => $this->footer(),
                 'sections' => [
-                    [
-                        'type' => 'hero',
-                        'eyebrow' => '404',
-                        'heading' => 'This page slipped past the editors',
-                        'summary' => 'The link is broken or the story has moved. Head back to the latest features, or start with the newsletter.',
-                        'primary_label' => 'Back to home',
-                        'primary_url' => '/',
-                        'secondary_label' => 'Read the latest',
-                        'secondary_url' => '#project-stories',
-                        'notes' => [
-                            'The link may be out of date',
-                            'Every issue stays in the archive',
-                            'Search is on the archive page',
-                        ],
-                        'actions' => [
-                            ['label' => 'Back to home', 'url' => '/', 'style' => 'primary'],
-                            ['label' => 'Read the latest', 'url' => '#project-stories', 'style' => 'secondary'],
-                        ],
-                    ],
-                    $this->mustReadsSection(),
+                    $this->heroSection(
+                        eyebrow: '404',
+                        heading: 'This page slipped past the editors',
+                        summary: 'The link is broken or the story has moved. Head back to the homepage, or read a must-read below.',
+                        media: $media,
+                        mediaKey: 'hero',
+                        mediaAlt: null,
+                        primaryLabel: 'Back to home',
+                        primaryUrl: '/',
+                        secondaryLabel: 'Read a must-read',
+                        secondaryUrl: '#must-reads',
+                    ),
+                    $this->mustReadsSection($media),
                     $this->ctaSection(
                         heading: 'Still looking for something?',
                         summary: 'Tell us what you needed and we will point you to the right feature.',
+                        primaryUrl: 'mailto:' . self::DESK_EMAIL,
+                        primaryLabel: 'Email the desk',
+                        secondaryUrl: '/',
+                        secondaryLabel: 'Back to home',
                     ),
                 ],
             ],
@@ -411,27 +392,18 @@ final class CreativeCultureEditorialDemoContent implements ProvidesThemeDemoCont
                 'navigation' => $this->navigation(),
                 'footer' => $this->footer(),
                 'sections' => [
-                    [
-                        'type' => 'hero',
-                        'eyebrow' => 'Subscribe',
-                        'heading' => 'One long read a week, from makers worth knowing',
-                        'summary' => 'No walls, no spam — a single considered email each Thursday with the issue and the cuts that did not make it.',
-                        'primary_label' => 'Join the newsletter',
-                        'primary_url' => '#newsletter',
-                        'secondary_label' => 'Read a sample issue',
-                        'secondary_url' => '#project-stories',
-                        'notes' => [
-                            'Free, every Thursday',
-                            'Unsubscribe in one click',
-                            '12,000 readers and counting',
-                        ],
-                        'actions' => [
-                            ['label' => 'Join the newsletter', 'url' => '#newsletter', 'style' => 'primary'],
-                            ['label' => 'Read a sample issue', 'url' => '#project-stories', 'style' => 'secondary'],
-                        ],
-                        'mediaUrl' => $media['cta'][0],
-                        'mediaAlt' => 'Maker & Margin issue spread',
-                    ],
+                    $this->heroSection(
+                        eyebrow: 'Subscribe',
+                        heading: 'One long read a week, from makers worth knowing',
+                        summary: 'No walls, no spam — a single considered email each Thursday with the issue and the cuts that did not make it.',
+                        media: $media,
+                        mediaKey: 'cta',
+                        mediaAlt: 'A finished issue spread from Maker & Margin',
+                        primaryLabel: 'Join the newsletter',
+                        primaryUrl: '#newsletter',
+                        secondaryLabel: 'Why readers subscribe',
+                        secondaryUrl: '#proof',
+                    ),
                     $this->proofSection(
                         heading: 'Why readers subscribe',
                         summary: 'The case for one more email in your week.',
@@ -443,6 +415,7 @@ final class CreativeCultureEditorialDemoContent implements ProvidesThemeDemoCont
                     $this->ctaSection(
                         heading: 'Ready when you are',
                         summary: 'Join the letter and the next long read is on its way.',
+                        primaryUrl: '#newsletter',
                     ),
                 ],
             ],
@@ -450,36 +423,107 @@ final class CreativeCultureEditorialDemoContent implements ProvidesThemeDemoCont
     }
 
     /**
+     * @param  array{hero: list<string>, listing: list<string>, detail: list<string>, proof: list<string>, contact: list<string>, cta: list<string>}  $media
      * @return array<string, mixed>
      */
-    private function mustReadsSection(): array
-    {
+    private function heroSection(
+        string $eyebrow,
+        string $heading,
+        string $summary,
+        array $media,
+        string $mediaKey,
+        ?string $mediaAlt,
+        string $primaryLabel,
+        string $primaryUrl,
+        string $secondaryLabel,
+        string $secondaryUrl,
+    ): array {
+        $mediaUrl = $media[$mediaKey][0] ?? $media['hero'][0];
+
         return [
-            'type' => 'must-reads',
-            'heading' => 'Must-reads this month',
-            'summary' => 'The features readers kept coming back to — start here if you are new to the magazine.',
-            'items' => [
-                ['title' => 'The studio that priced its time and survived', 'summary' => 'A two-person practice rebuilt its rate card around honesty and stopped dreading invoices.'],
-                ['title' => 'Why we still photograph the seconds', 'summary' => 'An essay on flaws, offcuts, and the quiet case for showing the work that did not sell.'],
-                ['title' => 'The week a font ate a brand', 'summary' => 'How one typographic decision rippled across a packaging launch — and what it taught the team.'],
+            'type' => 'hero',
+            'eyebrow' => $eyebrow,
+            'kicker' => $eyebrow,
+            'heading' => $heading,
+            'summary' => $summary,
+            'primary_label' => $primaryLabel,
+            'primary_url' => $primaryUrl,
+            'secondary_label' => $secondaryLabel,
+            'secondary_url' => $secondaryUrl,
+            'actions' => [
+                ['label' => $primaryLabel, 'url' => $primaryUrl, 'style' => 'primary'],
+                ['label' => $secondaryLabel, 'url' => $secondaryUrl, 'style' => 'secondary'],
             ],
+            'mediaUrl' => $mediaUrl,
+            'mediaAlt' => $mediaAlt,
         ];
     }
 
     /**
+     * @param  array{hero: list<string>, listing: list<string>, detail: list<string>, proof: list<string>, contact: list<string>, cta: list<string>}  $media
      * @return array<string, mixed>
      */
-    private function projectStoriesSection(string $heading, string $summary): array
+    private function mustReadsSection(array $media): array
     {
+        $images = array_values(array_unique(array_merge($media['listing'], $media['proof'], $media['contact'])));
+
+        $reads = [
+            ['title' => 'The studio that priced its time and survived', 'summary' => 'A two-person practice rebuilt its rate card around honesty and stopped dreading invoices.', 'meta' => 'Advice. 6 min read.'],
+            ['title' => 'Why we still photograph the seconds', 'summary' => 'An essay on flaws, offcuts, and the quiet case for showing the work that did not sell.', 'meta' => 'Opinion. 5 min read.'],
+            ['title' => 'The week a font ate a brand', 'summary' => 'How one typographic decision rippled across a packaging launch — and what it taught the team.', 'meta' => 'Project story. 8 min read.'],
+        ];
+
+        $items = [];
+
+        foreach ($reads as $index => $read) {
+            $items[] = [
+                ...$read,
+                'url' => '#must-read-' . ($index + 1),
+                'image' => $images[$index % max(count($images), 1)] ?? null,
+                'imageAlt' => $read['title'],
+            ];
+        }
+
+        return [
+            'type' => 'must-reads',
+            'id' => 'must-reads',
+            'heading' => 'Must-reads this month',
+            'summary' => 'The features readers kept coming back to — start here if you are new to the magazine.',
+            'items' => $items,
+        ];
+    }
+
+    /**
+     * @param  array{hero: list<string>, listing: list<string>, detail: list<string>, proof: list<string>, contact: list<string>, cta: list<string>}  $media
+     * @return array<string, mixed>
+     */
+    private function projectStoriesSection(string $heading, string $summary, array $media): array
+    {
+        $images = array_values(array_unique(array_merge($media['detail'], $media['listing'], $media['proof'])));
+
+        $stories = [
+            ['title' => 'The Kiln Room', 'meta' => 'Ceramics · London', 'care_note' => '3,000-word read', 'summary' => 'A ceramics studio turned its offcuts and seconds into the centre of its practice — and its margin.'],
+            ['title' => 'Press & Fold', 'meta' => 'Bookbinding · Glasgow', 'care_note' => 'Photo essay', 'summary' => 'A bindery that teaches by daylight and ships by candlelight, on keeping a craft slow on purpose.'],
+            ['title' => 'Counterweight Type', 'meta' => 'Type design · Berlin', 'care_note' => 'Process diary', 'summary' => 'Two designers drawing a typeface for signage no one will read up close — and getting it perfect anyway.'],
+        ];
+
+        $items = [];
+
+        foreach ($stories as $index => $story) {
+            $items[] = [
+                ...$story,
+                'url' => '#project-' . ($index + 1),
+                'image' => $images[$index % max(count($images), 1)] ?? null,
+                'imageAlt' => $story['title'],
+            ];
+        }
+
         return [
             'type' => 'project-stories',
+            'id' => 'project-stories',
             'heading' => $heading,
             'summary' => $summary,
-            'items' => [
-                ['title' => 'The Kiln Room', 'meta' => 'Ceramics · London', 'care_note' => '3,000-word read', 'summary' => 'A ceramics studio turned its offcuts and seconds into the centre of its practice — and its margin.'],
-                ['title' => 'Press & Fold', 'meta' => 'Bookbinding · Glasgow', 'care_note' => 'Photo essay', 'summary' => 'A bindery that teaches by daylight and ships by candlelight, on keeping a craft slow on purpose.'],
-                ['title' => 'Counterweight Type', 'meta' => 'Type design · Berlin', 'care_note' => 'Process diary', 'summary' => 'Two designers drawing a typeface for signage no one will read up close — and getting it perfect anyway.'],
-            ],
+            'items' => $items,
         ];
     }
 
@@ -490,6 +534,7 @@ final class CreativeCultureEditorialDemoContent implements ProvidesThemeDemoCont
     {
         return [
             'type' => 'opinion-block',
+            'id' => 'opinion-block',
             'heading' => 'Opinion',
             'summary' => 'Sharp, signed arguments from people doing the work — the column readers reply to.',
             'url' => '#content-listing',
@@ -508,6 +553,7 @@ final class CreativeCultureEditorialDemoContent implements ProvidesThemeDemoCont
     {
         return [
             'type' => 'advice-culture',
+            'id' => 'advice-culture',
             'heading' => $heading,
             'summary' => $summary,
             'items' => [
@@ -525,6 +571,7 @@ final class CreativeCultureEditorialDemoContent implements ProvidesThemeDemoCont
     {
         return [
             'type' => 'events-tags',
+            'id' => 'events-tags',
             'heading' => 'Events & popular tags',
             'summary' => 'Where the community is gathering, and the threads readers are following.',
             'items' => [
@@ -532,6 +579,7 @@ final class CreativeCultureEditorialDemoContent implements ProvidesThemeDemoCont
                 ['meta' => 'Workshop · 28 Mar', 'title' => 'Photographing your own work, badly then well', 'summary' => 'A hands-on session on lighting the things you make with what you already own.'],
                 ['meta' => 'Tag · #margin', 'title' => 'Following the money behind the making', 'summary' => 'Every feature where the numbers, not just the craft, take centre stage.'],
             ],
+            'tags' => ['Typography', 'Portfolios', 'Criticism', 'Motion', 'Books', 'Posters'],
         ];
     }
 
@@ -542,13 +590,14 @@ final class CreativeCultureEditorialDemoContent implements ProvidesThemeDemoCont
     {
         return [
             'type' => 'discipline-browsing',
+            'id' => 'discipline-browsing',
             'heading' => 'Browse by discipline',
             'summary' => 'Follow the craft you care about — every section is its own running story.',
             'items' => [
-                ['title' => 'Ceramics & material', 'summary' => 'Clay, glaze, and the studios betting their margin on doing it the hard way.'],
-                ['title' => 'Type & graphic design', 'summary' => 'Letterforms, identities, and the arguments behind the kerning.'],
-                ['title' => 'Print & binding', 'summary' => 'Paper, ink, and the slow trades keeping the physical object alive.'],
-                ['title' => 'Studio & practice', 'summary' => 'Rates, rest, and the business of staying independent.'],
+                ['title' => 'Ceramics & material', 'summary' => 'Clay, glaze, and the studios betting their margin on doing it the hard way.', 'url' => '#discipline-browsing'],
+                ['title' => 'Type & graphic design', 'summary' => 'Letterforms, identities, and the arguments behind the kerning.', 'url' => '#discipline-browsing'],
+                ['title' => 'Print & binding', 'summary' => 'Paper, ink, and the slow trades keeping the physical object alive.', 'url' => '#discipline-browsing'],
+                ['title' => 'Studio & practice', 'summary' => 'Rates, rest, and the business of staying independent.', 'url' => '#discipline-browsing'],
             ],
         ];
     }
@@ -560,9 +609,12 @@ final class CreativeCultureEditorialDemoContent implements ProvidesThemeDemoCont
     {
         return [
             'type' => 'newsletter',
+            'id' => 'newsletter',
             'heading' => $heading,
             'summary' => $summary,
             'action' => '#newsletter',
+            'email_label' => 'Email address',
+            'button' => 'Subscribe',
         ];
     }
 
@@ -573,6 +625,8 @@ final class CreativeCultureEditorialDemoContent implements ProvidesThemeDemoCont
     {
         return [
             'type' => 'proof',
+            'id' => 'proof',
+            'kicker' => 'From the desk',
             'heading' => $heading,
             'summary' => $summary,
             'items' => [
@@ -584,38 +638,68 @@ final class CreativeCultureEditorialDemoContent implements ProvidesThemeDemoCont
     }
 
     /**
+     * @param  array{hero: list<string>, listing: list<string>, detail: list<string>, proof: list<string>, contact: list<string>, cta: list<string>}  $media
      * @return array<string, mixed>
      */
-    private function contentListingSection(string $heading, string $summary): array
+    private function contentListingSection(string $heading, string $summary, array $media): array
     {
+        $images = array_values(array_unique(array_merge($media['listing'], $media['proof'])));
+
+        $entries = [
+            ['title' => 'The Kiln Room', 'category' => 'Project story', 'summary' => 'A ceramics studio that built its practice around its waste.'],
+            ['title' => 'Stop apologising for charging properly', 'category' => 'Opinion', 'summary' => 'Undercharging is not humility — it is a tax on the next maker.'],
+            ['title' => 'Raising your rates without losing your nerve', 'category' => 'Advice', 'summary' => 'The conversation every freelancer dreads, scripted by people who have had it.'],
+            ['title' => 'The reading list behind the work', 'category' => 'Culture', 'summary' => 'What this month\'s makers are reading, watching, and arguing about.'],
+        ];
+
+        $items = [];
+
+        foreach ($entries as $index => $entry) {
+            $image = $images[$index % max(count($images), 1)] ?? null;
+            $items[] = [
+                ...$entry,
+                'url' => '#content-listing',
+                'image' => $image,
+                'imageUrl' => $image,
+            ];
+        }
+
         return [
             'type' => 'content-listing',
+            'id' => 'content-listing',
+            'kicker' => 'Latest',
             'heading' => $heading,
             'summary' => $summary,
-            'items' => [
-                ['category' => 'Project story', 'title' => 'The Kiln Room', 'summary' => 'A ceramics studio that built its practice around its waste.'],
-                ['category' => 'Opinion', 'title' => 'Stop apologising for charging properly', 'summary' => 'Undercharging is not humility — it is a tax on the next maker.'],
-                ['category' => 'Advice', 'title' => 'Raising your rates without losing your nerve', 'summary' => 'The conversation every freelancer dreads, scripted by people who have had it.'],
-                ['category' => 'Culture', 'title' => 'The reading list behind the work', 'summary' => 'What this month\'s makers are reading, watching, and arguing about.'],
-            ],
+            'items' => $items,
         ];
     }
 
     /**
      * @return array<string, mixed>
      */
-    private function ctaSection(string $heading, string $summary): array
-    {
+    private function ctaSection(
+        string $heading,
+        string $summary,
+        string $primaryUrl = '#newsletter',
+        string $primaryLabel = 'Join the newsletter',
+        ?string $secondaryUrl = null,
+        ?string $secondaryLabel = null,
+    ): array {
+        $actions = [
+            ['label' => $primaryLabel, 'url' => $primaryUrl, 'style' => 'primary'],
+        ];
+
+        if ($secondaryUrl !== null && $secondaryLabel !== null) {
+            $actions[] = ['label' => $secondaryLabel, 'url' => $secondaryUrl, 'style' => 'secondary'];
+        }
+
         return [
             'type' => 'cta',
             'heading' => $heading,
             'summary' => $summary,
-            'url' => '#newsletter',
-            'label' => 'Join the newsletter',
-            'actions' => [
-                ['label' => 'Join the newsletter', 'url' => '#newsletter', 'style' => 'primary'],
-                ['label' => 'Browse the archive', 'url' => '#content-listing', 'style' => 'secondary'],
-            ],
+            'url' => $primaryUrl,
+            'label' => $primaryLabel,
+            'actions' => $actions,
         ];
     }
 
@@ -628,16 +712,15 @@ final class CreativeCultureEditorialDemoContent implements ProvidesThemeDemoCont
             'brand' => self::BRAND,
             'brandName' => self::BRAND,
             'items' => [
-                ['label' => 'Projects', 'url' => '#project-stories'],
-                ['label' => 'Opinion', 'url' => '#opinion-block'],
-                ['label' => 'Advice', 'url' => '#advice-culture'],
-                ['label' => 'Culture', 'url' => '#advice-culture'],
-                ['label' => 'Events', 'url' => '#events-tags'],
-                ['label' => 'Archive', 'url' => '#content-listing'],
+                ['label' => 'Projects', 'url' => '/#project-stories'],
+                ['label' => 'Opinion', 'url' => '/#opinion-block'],
+                ['label' => 'Advice', 'url' => '/#advice-culture'],
+                ['label' => 'Events', 'url' => '/#events-tags'],
+                ['label' => 'Archive', 'url' => '/theme-creative-culture-editorial-directory'],
             ],
             'ctaLabel' => 'Join the newsletter',
-            'ctaUrl' => '#newsletter',
-            'consultationUrl' => '#newsletter',
+            'ctaUrl' => '/#newsletter',
+            'consultationUrl' => '/#newsletter',
         ];
     }
 
@@ -646,69 +729,43 @@ final class CreativeCultureEditorialDemoContent implements ProvidesThemeDemoCont
      */
     private function footer(): array
     {
+        $columns = [
+            [
+                'title' => 'Read',
+                'heading' => 'Read',
+                'links' => [
+                    ['label' => 'Project stories', 'url' => '/#project-stories'],
+                    ['label' => 'Opinion', 'url' => '/#opinion-block'],
+                    ['label' => 'Advice & culture', 'url' => '/#advice-culture'],
+                    ['label' => 'The archive', 'url' => '/theme-creative-culture-editorial-directory'],
+                ],
+            ],
+            [
+                'title' => 'Discover',
+                'heading' => 'Discover',
+                'links' => [
+                    ['label' => 'Browse disciplines', 'url' => '/theme-creative-culture-editorial-directory#discipline-browsing'],
+                    ['label' => 'Events & tags', 'url' => '/#events-tags'],
+                    ['label' => 'Must-reads', 'url' => '/#must-reads'],
+                ],
+            ],
+            [
+                'title' => 'The magazine',
+                'heading' => 'The magazine',
+                'links' => [
+                    ['label' => 'Newsletter', 'url' => '/#newsletter'],
+                    ['label' => 'Pitch a story', 'url' => 'mailto:' . self::DESK_EMAIL],
+                    ['label' => self::DESK_EMAIL, 'url' => 'mailto:' . self::DESK_EMAIL],
+                ],
+            ],
+        ];
+
         return [
             'brand' => self::BRAND,
             'brandName' => self::BRAND,
             'summary' => 'An independent magazine about design, craft, and the working lives behind the work. Edited in London, read everywhere.',
-            'items' => [
-                [
-                    'title' => 'Read',
-                    'heading' => 'Read',
-                    'links' => [
-                        ['label' => 'Project stories', 'url' => '#project-stories'],
-                        ['label' => 'Opinion', 'url' => '#opinion-block'],
-                        ['label' => 'Advice & culture', 'url' => '#advice-culture'],
-                        ['label' => 'The archive', 'url' => '#content-listing'],
-                    ],
-                ],
-                [
-                    'title' => 'Discover',
-                    'heading' => 'Discover',
-                    'links' => [
-                        ['label' => 'Browse disciplines', 'url' => '#discipline-browsing'],
-                        ['label' => 'Events', 'url' => '#events-tags'],
-                        ['label' => 'Popular tags', 'url' => '#events-tags'],
-                        ['label' => 'Must-reads', 'url' => '#must-reads'],
-                    ],
-                ],
-                [
-                    'title' => 'The magazine',
-                    'heading' => 'The magazine',
-                    'links' => [
-                        ['label' => 'Newsletter', 'url' => '#newsletter'],
-                        ['label' => 'Pitch a story', 'url' => 'mailto:hello@makerandmargin.example'],
-                        ['label' => 'hello@makerandmargin.example', 'url' => 'mailto:hello@makerandmargin.example'],
-                    ],
-                ],
-            ],
-            'columns' => [
-                [
-                    'heading' => 'Read',
-                    'links' => [
-                        ['label' => 'Project stories', 'url' => '#project-stories'],
-                        ['label' => 'Opinion', 'url' => '#opinion-block'],
-                        ['label' => 'Advice & culture', 'url' => '#advice-culture'],
-                        ['label' => 'The archive', 'url' => '#content-listing'],
-                    ],
-                ],
-                [
-                    'heading' => 'Discover',
-                    'links' => [
-                        ['label' => 'Browse disciplines', 'url' => '#discipline-browsing'],
-                        ['label' => 'Events', 'url' => '#events-tags'],
-                        ['label' => 'Popular tags', 'url' => '#events-tags'],
-                        ['label' => 'Must-reads', 'url' => '#must-reads'],
-                    ],
-                ],
-                [
-                    'heading' => 'The magazine',
-                    'links' => [
-                        ['label' => 'Newsletter', 'url' => '#newsletter'],
-                        ['label' => 'Pitch a story', 'url' => 'mailto:hello@makerandmargin.example'],
-                        ['label' => 'hello@makerandmargin.example', 'url' => 'mailto:hello@makerandmargin.example'],
-                    ],
-                ],
-            ],
+            'items' => $columns,
+            'columns' => $columns,
         ];
     }
 

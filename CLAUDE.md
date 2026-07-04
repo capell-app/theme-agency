@@ -7,7 +7,7 @@ Frontend authoring safety is mandatory: non-admin frontend users must never rece
 ## Non-negotiables
 
 - `declare(strict_types=1);` in every PHP file.
-- PHP 8.3 minimum. Use PHP 8.3 features deliberately, but do not introduce syntax that requires a newer runtime.
+- PHP 8.4 minimum. Use PHP 8.4 features deliberately, but do not introduce syntax that requires a newer runtime.
 - No single-letter or cryptic variable names — closures, migrations, example prose included.
 - All closures must declare parameter and return types explicitly.
 - No `php artisan` in this repo — use `vendor/bin/pest` directly.

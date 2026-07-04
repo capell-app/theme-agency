@@ -1,28 +1,46 @@
 @php
-    $items = data_get($section, 'items', [
-        ['title' => __('capell-theme-raw-index::sections.topics.product_title'), 'summary' => __('capell-theme-raw-index::sections.topics.product_summary')],
-        ['title' => __('capell-theme-raw-index::sections.topics.design_title'), 'summary' => __('capell-theme-raw-index::sections.topics.design_summary')],
-        ['title' => __('capell-theme-raw-index::sections.topics.advice_title'), 'summary' => __('capell-theme-raw-index::sections.topics.advice_summary')],
-        ['title' => __('capell-theme-raw-index::sections.topics.culture_title'), 'summary' => __('capell-theme-raw-index::sections.topics.culture_summary')],
-    ]);
+    $items = data_get($section, 'items', []);
 @endphp
 
-<section class="editorial-section">
-    <div class="editorial-section-inner">
-        <p class="editorial-kicker">
-            {{ __('capell-theme-raw-index::sections.topics.kicker') }}
+<section
+    id="rough-links"
+    class="rwi-section"
+>
+    <div class="rwi-section-inner">
+        <span class="rwi-index-tag">03</span>
+        <p class="rwi-kicker">
+            {{ __('capell-theme-raw-index::sections.links.kicker') }}
         </p>
         <h2>
-            {{ data_get($section, 'heading', __('capell-theme-raw-index::sections.topics.heading')) }}
+            {{ data_get($section, 'heading', __('capell-theme-raw-index::sections.links.heading')) }}
         </h2>
-        <div class="editorial-grid">
+        <p class="rwi-lede">
+            {{ data_get($section, 'summary', __('capell-theme-raw-index::sections.links.summary')) }}
+        </p>
+
+        <div
+            class="rwi-link-list"
+            style="margin-top: 2rem"
+        >
             @foreach ($items as $item)
-                <article class="editorial-card">
-                    <h3>
-                        {{ data_get($item, 'title', data_get($item, 'name', '')) }}
-                    </h3>
-                    <p>{{ data_get($item, 'summary', '') }}</p>
-                </article>
+                @php
+                    $itemUrl = data_get($item, 'url', data_get($item, 'href'));
+                @endphp
+
+                <div class="rwi-link-row">
+                    @if (filled($itemUrl))
+                        <a href="{{ $itemUrl }}">
+                            {{ data_get($item, 'title', data_get($item, 'name', '')) }}
+                        </a>
+                    @else
+                        <strong>
+                            {{ data_get($item, 'title', data_get($item, 'name', '')) }}
+                        </strong>
+                    @endif
+                    <p>
+                        {{ data_get($item, 'summary', data_get($item, 'description', '')) }}
+                    </p>
+                </div>
             @endforeach
         </div>
     </div>

@@ -1,39 +1,45 @@
+@php
+    $heading = data_get($section, 'heading', __('capell-theme-filter-gallery::sections.newsletter.heading'));
+    $summary = data_get($section, 'summary', __('capell-theme-filter-gallery::sections.newsletter.summary'));
+@endphp
+
 <section
-    class="editorial-section"
-    style="background: var(--editorial-field)"
+    id="newsletter"
+    class="fga-section fga-section-panel"
 >
-    <div class="editorial-section-inner editorial-split">
-        <div>
-            <p class="editorial-kicker">
+    <div class="fga-section-inner fga-newsletter-grid">
+        <div class="fga-section-head-copy">
+            <p class="fga-kicker">
                 {{ __('capell-theme-filter-gallery::sections.newsletter.kicker') }}
             </p>
-            <h2>
-                {{ data_get($section, 'heading', __('capell-theme-filter-gallery::sections.newsletter.heading')) }}
-            </h2>
-            <p class="editorial-lede">
-                {{ data_get($section, 'summary', __('capell-theme-filter-gallery::sections.newsletter.summary')) }}
-            </p>
+            <h2>{{ $heading }}</h2>
+            <p class="fga-lede">{{ $summary }}</p>
         </div>
+
         <form
-            method="post"
-            action="{{ data_get($section, 'action', '/') }}"
-            class="editorial-card"
+            class="fga-form"
+            method="get"
+            action="{{ data_get($section, 'action', '#newsletter') }}"
         >
-            <label for="editorial-newsletter-email">
-                {{ __('capell-theme-filter-gallery::sections.newsletter.email_label') }}
+            <label for="fga-newsletter-email">
+                {{ data_get($section, 'email_label', __('capell-theme-filter-gallery::sections.newsletter.email_label')) }}
             </label>
             <input
-                id="editorial-newsletter-email"
+                id="fga-newsletter-email"
                 name="email"
                 type="email"
+                placeholder="{{ __('capell-theme-filter-gallery::sections.newsletter.email_placeholder') }}"
                 required
             />
             <button
-                class="editorial-button"
+                class="fga-button"
                 type="submit"
             >
-                {{ __('capell-theme-filter-gallery::sections.newsletter.button') }}
+                {{ data_get($section, 'button', __('capell-theme-filter-gallery::sections.newsletter.button')) }}
             </button>
+            <p class="fga-mono-note">
+                {{ __('capell-theme-filter-gallery::sections.newsletter.note') }}
+            </p>
         </form>
     </div>
 </section>

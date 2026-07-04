@@ -6,14 +6,22 @@
     ]);
 @endphp
 
-<section class="editorial-section">
-    <div class="editorial-section-inner">
-        <p class="editorial-kicker">
+<section class="cce-section">
+    <div class="cce-section-inner">
+        <p class="cce-kicker">
             {{ __('capell-theme-creative-culture-editorial::sections.proof.kicker') }}
         </p>
-        <div class="editorial-grid">
+        @if (filled(data_get($section, 'heading')))
+            <h2>{{ data_get($section, 'heading') }}</h2>
+        @endif
+
+        @if (filled(data_get($section, 'summary')))
+            <p class="cce-lede">{{ data_get($section, 'summary') }}</p>
+        @endif
+
+        <div class="cce-grid">
             @foreach ($items as $item)
-                <article class="editorial-card">
+                <article class="cce-card">
                     <h3>
                         {{ data_get($item, 'value', data_get($item, 'title', '')) }}
                     </h3>

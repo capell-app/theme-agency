@@ -1,5 +1,5 @@
 @php
-    $actions = $section->actions !== []
+    $actions = is_array($section->actions) && $section->actions !== []
         ? $section->actions
         : [
             ['label' => __('capell-theme-liquid-glass::generic.cta_primary_action'), 'url' => '#main-content', 'style' => 'primary'],

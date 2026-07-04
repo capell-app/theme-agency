@@ -1,28 +1,54 @@
 @php
-    $items = data_get($section, 'items', [
-        ['title' => __('capell-theme-scoreboard-showcase::sections.topics.product_title'), 'summary' => __('capell-theme-scoreboard-showcase::sections.topics.product_summary')],
-        ['title' => __('capell-theme-scoreboard-showcase::sections.topics.design_title'), 'summary' => __('capell-theme-scoreboard-showcase::sections.topics.design_summary')],
-        ['title' => __('capell-theme-scoreboard-showcase::sections.topics.advice_title'), 'summary' => __('capell-theme-scoreboard-showcase::sections.topics.advice_summary')],
-        ['title' => __('capell-theme-scoreboard-showcase::sections.topics.culture_title'), 'summary' => __('capell-theme-scoreboard-showcase::sections.topics.culture_summary')],
-    ]);
+    $heading = data_get($section, 'heading', __('capell-theme-scoreboard-showcase::sections.criteria.heading'));
+    $summary = data_get($section, 'summary', __('capell-theme-scoreboard-showcase::sections.criteria.summary'));
+    $items = collect(data_get($section, 'items', []))
+        ->filter(fn (mixed $item): bool => filled(data_get($item, 'title', data_get($item, 'name'))))
+        ->values();
+
+    $defaultWeights = [40, 30, 20, 10];
 @endphp
 
-<section class="editorial-section">
-    <div class="editorial-section-inner">
-        <p class="editorial-kicker">
-            {{ __('capell-theme-scoreboard-showcase::sections.topics.kicker') }}
+<section
+    id="score-criteria"
+    class="sbs-section"
+>
+    <div class="sbs-section-inner">
+        <p class="sbs-kicker">
+            {{ __('capell-theme-scoreboard-showcase::sections.criteria.kicker') }}
         </p>
-        <h2>
-            {{ data_get($section, 'heading', __('capell-theme-scoreboard-showcase::sections.topics.heading')) }}
-        </h2>
-        <div class="editorial-grid">
+        <h2>{{ $heading }}</h2>
+        <p class="sbs-lede">{{ $summary }}</p>
+
+        <div class="sbs-criteria-list">
             @foreach ($items as $item)
-                <article class="editorial-card">
-                    <h3>
-                        {{ data_get($item, 'title', data_get($item, 'name', '')) }}
-                    </h3>
-                    <p>{{ data_get($item, 'summary', '') }}</p>
-                </article>
+                @php
+                    $weight = data_get($item, 'weight', $defaultWeights[$loop->index] ?? 25);
+                @endphp
+
+                <div class="sbs-criteria-row">
+                    <div class="sbs-criteria-head">
+                        <span class="sbs-criteria-name">
+                            {{ data_get($item, 'title', data_get($item, 'name', '')) }}
+                        </span>
+                        <span class="sbs-criteria-weight">
+                            {{ __('capell-theme-scoreboard-showcase::sections.criteria.weight_label') }}
+                            {{ $weight }}%
+                        </span>
+                    </div>
+                    <div
+                        class="sbs-criteria-bar-track"
+                        role="img"
+                        aria-label="{{ $weight }}%"
+                    >
+                        <span
+                            class="sbs-criteria-bar-fill"
+                            style="--sbs-bar-value: {{ $weight }}%"
+                        ></span>
+                    </div>
+                    <p>
+                        {{ data_get($item, 'summary', data_get($item, 'description', '')) }}
+                    </p>
+                </div>
             @endforeach
         </div>
     </div>
