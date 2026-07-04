@@ -1,5 +1,11 @@
 # Changelog
 
+## v2.0.67 - 2026-07-04
+
+Release v2.0.67 for Capell package library 4.x.
+
+Targets Capell core API ^4.0.
+
 ## v2.0.66 - 2026-07-04
 
 ### What's Changed
