@@ -1,5 +1,13 @@
 # Changelog
 
+## v2.0.66 - 2026-07-04
+
+### What's Changed
+
+* Feat/theme catalogue differentiation by @howdu in https://github.com/capell-app/capell-packages/pull/128
+
+**Full Changelog**: https://github.com/capell-app/capell-packages/compare/v2.0.65...v2.0.66
+
 ## v2.0.65 - 2026-07-04
 
 Release v2.0.65 for Capell package library 4.x.
@@ -61,11 +69,12 @@ Targets Capell core API ^4.0.
 ### Upstream changes
 
 - The `Capell\Core\ContentSync` feature in `capell-app/capell` has been renamed to `Capell\Core\Exchanger` ([capell#73](https://github.com/capell-app/capell/pull/73)). No packages in this repo referenced the old namespace, but host apps that bump both monorepos together should update:
-    - `Capell\Core\ContentSync\*` imports → `Capell\Core\Exchanger\*`
-    - `config('content-sync.*')` → `config('exchanger.*')`
-    - `trans('content_sync.*')` → `trans('exchanger.*')`
-    - Queue name `content-sync` → `exchanger` (drain old queue before deploy)
-    - Storage paths under `content-sync/` → `exchanger/`
+  - `Capell\Core\ContentSync\*` imports → `Capell\Core\Exchanger\*`
+  - `config('content-sync.*')` → `config('exchanger.*')`
+  - `trans('content_sync.*')` → `trans('exchanger.*')`
+  - Queue name `content-sync` → `exchanger` (drain old queue before deploy)
+  - Storage paths under `content-sync/` → `exchanger/`
+  
 
 ## v2.0.4 - 2025-12-12
 
