@@ -94,7 +94,7 @@ What the baseline is missing, and what the prompts add:
 | 25  | `automotive-dealer`   | Legalshowplates (automotive niche) / recommended | Niche vertical  |
 | 26  | `property-developer`  | Recommended (complements estate-agents)          | Niche vertical  |
 | 27  | `recruitment-jobs`    | Recommended                                      | New vertical    |
-| 28  | `editorial-serif`     | Sketch / Groth / emilkowal.ski refinement        | Style theme     |
+| 28  | `quiet-type`          | Sketch / Groth / emilkowal.ski refinement        | Style theme     |
 
 Each row links to its prompt file `NN-<key>.md` in this folder.
 

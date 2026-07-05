@@ -29,14 +29,27 @@ Status details:
 
 Screenshot contract: `docs/screenshots.json`.
 
-- Liquid Glass homepage (frontend, required).
-- Liquid Glass landing page (frontend, required).
-- Liquid Glass listing page (frontend, required).
-- Liquid Glass search results (frontend, required).
-- Liquid Glass contact page (frontend, required).
-- Liquid Glass Clarity preset proof (frontend, required).
-- Liquid Glass Prism preset proof (frontend, required).
-- Liquid Glass Graphite mobile proof (frontend, required).
+- Liquid Glass Homepage (frontend, optional).
+- Liquid Glass Homepage - Tablet (frontend, optional).
+- Liquid Glass Homepage - Mobile (frontend, optional).
+- Liquid Glass Directory (frontend, optional).
+- Liquid Glass Directory - Tablet (frontend, optional).
+- Liquid Glass Directory - Mobile (frontend, optional).
+- Liquid Glass Detail Article (frontend, optional).
+- Liquid Glass Detail Article - Tablet (frontend, optional).
+- Liquid Glass Detail Article - Mobile (frontend, optional).
+- Liquid Glass Contact (frontend, optional).
+- Liquid Glass Contact - Tablet (frontend, optional).
+- Liquid Glass Contact - Mobile (frontend, optional).
+- Liquid Glass Empty State (frontend, optional).
+- Liquid Glass Empty State - Tablet (frontend, optional).
+- Liquid Glass Empty State - Mobile (frontend, optional).
+- Liquid Glass Page Not Found (frontend, optional).
+- Liquid Glass Page Not Found - Tablet (frontend, optional).
+- Liquid Glass Page Not Found - Mobile (frontend, optional).
+- Liquid Glass Call To Action (frontend, optional).
+- Liquid Glass Call To Action - Tablet (frontend, optional).
+- Liquid Glass Call To Action - Mobile (frontend, optional).
 
 ## Technical Shape
 
@@ -46,7 +59,7 @@ Screenshot contract: `docs/screenshots.json`.
 - Console command classes: `DemoCommand`.
 - Manifest contributions: `admin-page: Capell\ThemeStudio\LiquidGlass\Manifest\ThemeManagementPageContribution`.
 - Health checks: `Capell\ThemeStudio\LiquidGlass\Health\ThemeLiquidGlassHealthCheck`.
-- Blade views: `packages/theme-liquid-glass/resources/views/livewire/page/page.blade.php`, `packages/theme-liquid-glass/resources/views/page.blade.php`, `packages/theme-liquid-glass/resources/views/sections/content-listing.blade.php`, `packages/theme-liquid-glass/resources/views/sections/cta.blade.php`, `packages/theme-liquid-glass/resources/views/sections/features.blade.php`, `packages/theme-liquid-glass/resources/views/sections/footer.blade.php`, `packages/theme-liquid-glass/resources/views/sections/hero.blade.php`, `packages/theme-liquid-glass/resources/views/sections/navigation.blade.php`, `packages/theme-liquid-glass/resources/views/sections/proof.blade.php`.
+- Blade views: `packages/theme-liquid-glass/resources/views/livewire/page/page.blade.php`, `packages/theme-liquid-glass/resources/views/page.blade.php`, `packages/theme-liquid-glass/resources/views/sections/content-listing.blade.php`, `packages/theme-liquid-glass/resources/views/sections/cta.blade.php`, `packages/theme-liquid-glass/resources/views/sections/features.blade.php`, `packages/theme-liquid-glass/resources/views/sections/footer.blade.php`, `packages/theme-liquid-glass/resources/views/sections/hero.blade.php`, `packages/theme-liquid-glass/resources/views/sections/navigation.blade.php`, `packages/theme-liquid-glass/resources/views/sections/presets.blade.php`, `packages/theme-liquid-glass/resources/views/sections/proof.blade.php`, `packages/theme-liquid-glass/resources/views/sections/showcase.blade.php`.
 - Cache tags: `theme-liquid-glass`.
 
 ## Data Model
@@ -92,7 +105,7 @@ This theme has no schema impact. It relies on core Capell site, page, locale, an
 - [Capell content language plan](../../docs/CONTENT_LANGUAGE_PLAN.md)
 - [Capell documentation design system](../../docs/DESIGN_SYSTEM.md)
 - [Capell and package ERD notes](../../docs/erd/capell-and-package-erds.md)
-- Related packages: [Foundation Theme](../theme-foundation/README.md).
+- Related packages: [Theme Foundation](../theme-foundation/README.md).
 - Focused tests: `vendor/bin/pest packages/theme-liquid-glass/tests --configuration=phpunit.xml`.
 
 <!-- prettier-ignore-end -->

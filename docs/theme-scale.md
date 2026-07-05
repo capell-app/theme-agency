@@ -167,12 +167,12 @@ Current lane ownership:
 - `saas`: product, comparison, trial, and documentation journeys.
 - `knowledge`: search-led resource and reading journeys.
 - `local-services`: quote, locality, dispatch, and job-proof journeys.
-- `theme-dark-product-system`: dark, interface-led product system for technical and workflow-heavy sites.
-- `theme-editorial-serif`: formal long-form publishing with serif rhythm and restrained editorial hierarchy.
-- `theme-filter-gallery`: high-density, filter-first visual archive for browsing large inspiration libraries.
+- `theme-night-shift`: dark, interface-led product system for technical and workflow-heavy sites.
+- `theme-quiet-type`: formal long-form publishing with serif rhythm and restrained editorial hierarchy.
+- `theme-field-guide`: high-density, filter-first visual archive for browsing large inspiration libraries.
 - `theme-liquid-glass`: modern translucent presentation for launch, service, and design-led sites using the standard section set.
-- `theme-premium-portfolio-collection`: premium portfolio collection lane for curated work, proof, and case-study depth.
-- `theme-raw-index`: intentionally spare index, directory, and reference-list treatment.
+- `theme-front-row`: awarded-portfolio and design-education lane for curated work, proof, and case-study depth.
+- `theme-off-grid`: intentionally spare index, directory, and reference-list treatment.
 
 Future theme lanes should extend this non-overlap standard rather than duplicate an existing visual system with different industry copy.
 

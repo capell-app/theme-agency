@@ -1,0 +1,185 @@
+{
+    "manifest-version": 3,
+    "name": "capell-app/theme-quiet-type",
+    "slug": "theme-quiet-type",
+    "displayName": "Theme Quiet Type",
+    "kind": "theme",
+    "capellApiVersion": "^4.0",
+    "version": "4.x-dev",
+    "description": "Print-voice serif typography, generous measure, nothing shouting. For essayists and journals where the words are the design.",
+    "product": {
+        "group": "Capell Themes",
+        "tier": "premium",
+        "bundle": "themes"
+    },
+    "namespace": "Capell\\ThemeStudio\\QuietType",
+    "surfaces": ["frontend"],
+    "dependencies": {
+        "requires": ["capell-app/core", "capell-app/frontend"],
+        "supports": [],
+        "conflicts": []
+    },
+    "providers": {
+        "metadata": [],
+        "install": [],
+        "runtime": [
+            "Capell\\ThemeStudio\\QuietType\\QuietTypeThemeServiceProvider"
+        ],
+        "admin": [],
+        "frontend": []
+    },
+    "contributes": [
+        {
+            "type": "admin-page",
+            "class": "Capell\\ThemeStudio\\QuietType\\Manifest\\ThemeManagementPageContribution",
+            "pageClass": "Capell\\Marketplace\\Filament\\Pages\\ThemeExtensionPage",
+            "pageParameters": {
+                "themeKey": "quiet-type"
+            },
+            "labelKey": "capell-marketplace::marketplace.theme_extension.management_entry_label"
+        }
+    ],
+    "database": {
+        "migrations": false,
+        "settings": false,
+        "requiredTables": []
+    },
+    "commands": {
+        "install": null,
+        "setup": null,
+        "demo": "capell:theme-quiet-type-demo",
+        "demoParams": ["url", "languages", "sites"],
+        "doctor": null
+    },
+    "settings": [],
+    "permissions": [],
+    "capabilities": ["theme-quiet-type", "theme-quiet-type-frontend"],
+    "security": {
+        "riskTier": "low",
+        "publicSurface": {
+            "routeNames": [],
+            "auth": "none",
+            "csrfExemptRoutes": [],
+            "signedRoutes": [],
+            "tokenizedRoutes": [],
+            "webhookRoutes": [],
+            "throttledRoutes": []
+        },
+        "sensitiveData": {
+            "encryptedFields": [],
+            "hashedTokenFields": [],
+            "redactedOutputClasses": [],
+            "plaintextJustifications": []
+        },
+        "publicOutput": {
+            "cacheSafe": true,
+            "forbidAuthoringSurface": true,
+            "forbidSecrets": true,
+            "forbidPublicBladeQueries": true
+        },
+        "externalHttpClients": {
+            "requiresTimeouts": false,
+            "requiresSecretRedaction": false,
+            "clients": []
+        },
+        "adminSurface": {
+            "authorization": "none",
+            "permissions": []
+        }
+    },
+    "performance": {
+        "criticalCss": {
+            "required": true,
+            "parityViewports": ["mobile", "tablet", "desktop"]
+        },
+        "frontendRenderBudgetMs": 20,
+        "adminQueryBudget": 0,
+        "cacheTags": ["theme-quiet-type"],
+        "cacheSafety": {
+            "cacheable": false,
+            "variesBy": ["site", "locale"],
+            "sensitiveOutput": false,
+            "invalidationSources": [],
+            "queueInvalidation": false
+        }
+    },
+    "healthChecks": [
+        {
+            "key": "theme-quiet-type.package-health",
+            "label": "Quiet Type package surfaces, providers, and install health are discoverable by Diagnostics.",
+            "class": "Capell\\ThemeStudio\\QuietType\\Health\\ThemeQuietTypeHealthCheck",
+            "severity": "critical",
+            "surface": "frontend"
+        }
+    ],
+    "commercial": {
+        "proposedLicense": "paid",
+        "requestedCertification": "first-party",
+        "supportPolicy": "priority",
+        "privateDocsRequested": true
+    },
+    "marketplace": {
+        "summary": "Print-voice serif typography, generous measure, nothing shouting — for essayists and journals where the words are the design.",
+        "description": "Quiet Type provides a distinct theme definition, demo command, marketplace metadata, and public-safe Blade views for essayists, journals, and newsletter-to-site writers who want a reading experience people finish.",
+        "screenshots": [
+            {
+                "path": "docs/assets/marketplace/extension-card.jpg",
+                "alt": "Quiet Type marketplace card preview",
+                "caption": "Quiet Type premium theme card"
+            },
+            {
+                "path": "docs/screenshots/quiet-type-homepage.png",
+                "alt": "Quiet Type Homepage demo page screenshot",
+                "caption": "Quiet Type Homepage page"
+            },
+            {
+                "path": "docs/screenshots/quiet-type-directory.png",
+                "alt": "Quiet Type Directory demo page screenshot",
+                "caption": "Quiet Type Directory page"
+            },
+            {
+                "path": "docs/screenshots/quiet-type-detail.png",
+                "alt": "Quiet Type Detail demo page screenshot",
+                "caption": "Quiet Type Detail page"
+            },
+            {
+                "path": "docs/screenshots/quiet-type-contact.png",
+                "alt": "Quiet Type Contact demo page screenshot",
+                "caption": "Quiet Type Contact page"
+            },
+            {
+                "path": "docs/screenshots/quiet-type-empty.png",
+                "alt": "Quiet Type Empty State demo page screenshot",
+                "caption": "Quiet Type Empty State page"
+            },
+            {
+                "path": "docs/screenshots/quiet-type-not-found.png",
+                "alt": "Quiet Type 404 State demo page screenshot",
+                "caption": "Quiet Type 404 State page"
+            },
+            {
+                "path": "docs/screenshots/quiet-type-cta.png",
+                "alt": "Quiet Type Conversion CTA demo page screenshot",
+                "caption": "Quiet Type Conversion CTA page"
+            },
+            {
+                "path": "docs/screenshots/quiet-type-essays.png",
+                "alt": "Quiet Type Essays demo page screenshot",
+                "caption": "Quiet Type Essays page"
+            },
+            {
+                "path": "docs/screenshots/quiet-type-archive.png",
+                "alt": "Quiet Type Archive demo page screenshot",
+                "caption": "Quiet Type Archive page"
+            },
+            {
+                "path": "docs/screenshots/quiet-type-about.png",
+                "alt": "Quiet Type About the Publication demo page screenshot",
+                "caption": "Quiet Type About the Publication page"
+            }
+        ],
+        "categories": ["frontend", "themes"]
+    },
+    "extends": "default",
+    "themeKey": "quiet-type"
+}

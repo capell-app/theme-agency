@@ -1,0 +1,160 @@
+{
+    "manifest-version": 3,
+    "name": "capell-app/theme-field-guide",
+    "slug": "theme-field-guide",
+    "displayName": "Theme Field Guide",
+    "kind": "theme",
+    "capellApiVersion": "^4.0",
+    "version": "4.x-dev",
+    "description": "A reference library you can actually navigate: multi-taxonomy filters, dense grids, thousands of entries kept findable. Inspiration at catalogue scale.",
+    "product": {
+        "group": "Capell Themes",
+        "tier": "premium",
+        "bundle": "themes"
+    },
+    "namespace": "Capell\\ThemeStudio\\FieldGuide",
+    "surfaces": ["frontend"],
+    "dependencies": {
+        "requires": ["capell-app/core", "capell-app/frontend"],
+        "supports": [
+            "capell-app/blog",
+            "capell-app/form-builder",
+            "capell-app/newsletter",
+            "capell-app/shopify-commerce"
+        ],
+        "conflicts": []
+    },
+    "providers": {
+        "metadata": [],
+        "install": [],
+        "runtime": [
+            "Capell\\ThemeStudio\\FieldGuide\\FieldGuideThemeServiceProvider"
+        ],
+        "admin": [],
+        "frontend": []
+    },
+    "contributes": [
+        {
+            "type": "admin-page",
+            "class": "Capell\\ThemeStudio\\FieldGuide\\Manifest\\ThemeManagementPageContribution",
+            "pageClass": "Capell\\Marketplace\\Filament\\Pages\\ThemeExtensionPage",
+            "pageParameters": {
+                "themeKey": "field-guide"
+            },
+            "labelKey": "capell-marketplace::marketplace.theme_extension.management_entry_label"
+        }
+    ],
+    "database": {
+        "migrations": false,
+        "settings": false,
+        "requiredTables": []
+    },
+    "commands": {
+        "install": null,
+        "setup": null,
+        "demo": "capell:theme-field-guide-demo",
+        "demoParams": ["url", "languages", "sites"],
+        "doctor": null
+    },
+    "settings": [],
+    "permissions": [],
+    "capabilities": ["theme-field-guide", "theme-field-guide-frontend"],
+    "security": {
+        "riskTier": "low",
+        "publicSurface": {
+            "routeNames": [],
+            "auth": "none",
+            "csrfExemptRoutes": [],
+            "signedRoutes": [],
+            "tokenizedRoutes": [],
+            "webhookRoutes": [],
+            "throttledRoutes": []
+        },
+        "sensitiveData": {
+            "encryptedFields": [],
+            "hashedTokenFields": [],
+            "redactedOutputClasses": [],
+            "plaintextJustifications": []
+        },
+        "publicOutput": {
+            "cacheSafe": true,
+            "forbidAuthoringSurface": true,
+            "forbidSecrets": true,
+            "forbidPublicBladeQueries": true
+        },
+        "externalHttpClients": {
+            "requiresTimeouts": false,
+            "requiresSecretRedaction": false,
+            "clients": []
+        },
+        "adminSurface": {
+            "authorization": "none",
+            "permissions": []
+        }
+    },
+    "performance": {
+        "criticalCss": {
+            "required": true,
+            "parityViewports": ["mobile", "tablet", "desktop"]
+        },
+        "frontendRenderBudgetMs": 20,
+        "adminQueryBudget": 0,
+        "cacheTags": ["theme-field-guide"],
+        "cacheSafety": {
+            "cacheable": false,
+            "variesBy": ["site", "locale"],
+            "sensitiveOutput": false,
+            "invalidationSources": [],
+            "queueInvalidation": false
+        }
+    },
+    "healthChecks": [
+        {
+            "key": "theme-field-guide.package-health",
+            "label": "Field Guide package surfaces, providers, and install health are discoverable by Diagnostics.",
+            "class": "Capell\\ThemeStudio\\FieldGuide\\Health\\ThemeFieldGuideHealthCheck",
+            "severity": "critical",
+            "surface": "frontend"
+        }
+    ],
+    "commercial": {
+        "proposedLicense": "paid",
+        "requestedCertification": "first-party",
+        "supportPolicy": "priority",
+        "privateDocsRequested": true
+    },
+    "marketplace": {
+        "summary": "A reference library you can actually navigate: multi-taxonomy filters, dense grids, and thousands of entries kept findable at catalogue scale.",
+        "description": "Field Guide provides a distinct theme definition, demo command, marketplace metadata, and public-safe Blade views for broad inspiration libraries that need prominent search, expandable taxonomy groups, selected-filter chips, saved views, editor picks, latest-design grids, blog modules, mission content, FAQ, alphabetized category mega menus, consistent thumbnails, quick actions, result counts, and pagination that scales to thousands of entries.",
+        "screenshots": [
+            {
+                "path": "docs/screenshots/field-guide-homepage.png",
+                "alt": "Field Guide homepage preview",
+                "caption": "Field Guide Homepage"
+            },
+            {
+                "path": "docs/screenshots/field-guide-landing.png",
+                "alt": "Field Guide landing page preview",
+                "caption": "Field Guide Landing page"
+            },
+            {
+                "path": "docs/screenshots/field-guide-listing.png",
+                "alt": "Field Guide list page preview",
+                "caption": "Field Guide Filter archive"
+            },
+            {
+                "path": "docs/screenshots/field-guide-search.png",
+                "alt": "Field Guide search results preview",
+                "caption": "Field Guide Search results"
+            },
+            {
+                "path": "docs/screenshots/field-guide-contact.png",
+                "alt": "Field Guide contact form preview",
+                "caption": "Field Guide Contact form"
+            }
+        ],
+        "categories": ["frontend", "themes"]
+    },
+    "extends": "default",
+    "themeKey": "field-guide"
+}

@@ -63,9 +63,9 @@
             "notes": "Shared runtime and base theme that every child theme extends; owns the canonical navigation and footer chrome."
         },
         {
-            "package": "capell-app/theme-case-study-platform",
-            "themeKey": "case-study-platform",
-            "displayName": "Case Study Platform",
+            "package": "capell-app/theme-open-studio",
+            "themeKey": "open-studio",
+            "displayName": "Open Studio",
             "tier": "premium",
             "family": "portfolio-gallery",
             "lane": "creative case-study and talent-discovery platforms",
@@ -135,162 +135,12 @@
             ],
             "overlapRisk": "high",
             "priorityPhase": 3,
-            "notes": "Token set is identical to the other illustrated-media portfolio premiums (character-portfolio-index, portfolio-directory, premium-portfolio-collection, one-page-showcase); differentiation lives almost entirely in section names and accent colour."
+            "notes": "Token set is identical to the other illustrated-media portfolio premiums (deep-bench, front-row, one-take); differentiation lives almost entirely in section names and accent colour."
         },
         {
-            "package": "capell-app/theme-character-portfolio-index",
-            "themeKey": "character-portfolio-index",
-            "displayName": "Character Portfolio Index",
-            "tier": "candidate-for-merge",
-            "family": "portfolio-gallery",
-            "lane": "curated creator and portfolio recommendation indexes",
-            "audience": [
-                "Portfolio indexes",
-                "Creator directories",
-                "Design inspiration sites",
-                "Personal site galleries",
-                "Studio recommendation lists"
-            ],
-            "status": "review",
-            "extends": "default",
-            "standardSections": [],
-            "customSections": [
-                "navigation",
-                "hero",
-                "showcase-headline",
-                "category-tabs",
-                "curated-grid",
-                "standout-notes",
-                "related-recommendations",
-                "creator-summary",
-                "proof",
-                "content-listing",
-                "newsletter",
-                "cta",
-                "footer"
-            ],
-            "customisationSurfaces": {
-                "header": "theme-specific header",
-                "footer": "theme-specific footer",
-                "themeStudioTokens": [
-                    "primaryColor",
-                    "accentColor",
-                    "neutralColor",
-                    "surfaceColor",
-                    "foregroundColor",
-                    "headingFont",
-                    "bodyFont",
-                    "spacing",
-                    "alignment",
-                    "cardStyle",
-                    "navigationStyle",
-                    "layoutPresentation",
-                    "motionIntensity",
-                    "mediaTreatment",
-                    "radius",
-                    "headingScale",
-                    "cardDensity"
-                ],
-                "layoutBuilderAreas": [],
-                "sectionVariants": "13 sections, 13 custom",
-                "pageWidgetAssets": ["css"],
-                "optionalIntegrations": [
-                    "capell-app/blog",
-                    "capell-app/form-builder",
-                    "capell-app/newsletter",
-                    "capell-app/shopify-commerce"
-                ]
-            },
-            "visualDifferentiators": [
-                "violet accent on lilac surface",
-                "sora/inter type pairing",
-                "bordered cards",
-                "illustrated media treatment",
-                "airy card density"
-            ],
-            "overlapRisk": "high",
-            "priorityPhase": 3,
-            "notes": "Thin variant of portfolio-directory / premium-portfolio-collection: same token values except accent and surface colours, and the same curated-grid concept; merge candidate."
-        },
-        {
-            "package": "capell-app/theme-creative-culture-editorial",
-            "themeKey": "creative-culture-editorial",
-            "displayName": "Creative Culture Editorial",
-            "tier": "candidate-for-merge",
-            "family": "editorial-publishing",
-            "lane": "creative culture magazines and studio journals",
-            "audience": [
-                "Creative magazines",
-                "Design journals",
-                "Culture publishers",
-                "Arts organisations",
-                "Studio blogs"
-            ],
-            "status": "review",
-            "extends": "default",
-            "standardSections": [],
-            "customSections": [
-                "navigation",
-                "hero",
-                "must-reads",
-                "discipline-browsing",
-                "project-stories",
-                "opinion-block",
-                "events-tags",
-                "advice-culture",
-                "proof",
-                "content-listing",
-                "newsletter",
-                "cta",
-                "footer"
-            ],
-            "customisationSurfaces": {
-                "header": "theme-specific header",
-                "footer": "theme-specific footer",
-                "themeStudioTokens": [
-                    "primaryColor",
-                    "accentColor",
-                    "neutralColor",
-                    "surfaceColor",
-                    "foregroundColor",
-                    "headingFont",
-                    "bodyFont",
-                    "spacing",
-                    "alignment",
-                    "cardStyle",
-                    "navigationStyle",
-                    "layoutPresentation",
-                    "motionIntensity",
-                    "mediaTreatment",
-                    "radius",
-                    "headingScale",
-                    "cardDensity"
-                ],
-                "layoutBuilderAreas": [],
-                "sectionVariants": "13 sections, 13 custom",
-                "pageWidgetAssets": ["css"],
-                "optionalIntegrations": [
-                    "capell-app/blog",
-                    "capell-app/form-builder",
-                    "capell-app/newsletter",
-                    "capell-app/shopify-commerce"
-                ]
-            },
-            "visualDifferentiators": [
-                "vermilion accent on cream surface",
-                "sora/inter type pairing",
-                "bordered cards",
-                "illustrated media treatment",
-                "airy card density"
-            ],
-            "overlapRisk": "high",
-            "priorityPhase": 3,
-            "notes": "Differs from design-led-magazine only by accent/surface colours, illustrated vs photographic media, and section labels; strongest merge candidate in the magazine cluster."
-        },
-        {
-            "package": "capell-app/theme-dark-product-system",
-            "themeKey": "dark-product-system",
-            "displayName": "Dark Product System",
+            "package": "capell-app/theme-night-shift",
+            "themeKey": "night-shift",
+            "displayName": "Night Shift",
             "tier": "premium",
             "family": "product-saas",
             "lane": "dark-mode product-led SaaS and workflow platforms",
@@ -304,21 +154,7 @@
             "status": "active",
             "extends": "default",
             "standardSections": [],
-            "customSections": [
-                "navigation",
-                "hero",
-                "system-hero",
-                "workflow-rails",
-                "agents-automation",
-                "planning-roadmap",
-                "changelog-integrations",
-                "security-proof",
-                "proof",
-                "content-listing",
-                "newsletter",
-                "cta",
-                "footer"
-            ],
+            "customSections": [],
             "customisationSurfaces": {
                 "header": "theme-specific header",
                 "footer": "theme-specific footer",
@@ -342,7 +178,7 @@
                     "cardDensity"
                 ],
                 "layoutBuilderAreas": [],
-                "sectionVariants": "13 sections, 13 custom",
+                "sectionVariants": "layout-native: renders through layout-builder containers, not section renderers",
                 "pageWidgetAssets": ["css"],
                 "optionalIntegrations": [
                     "capell-app/blog",
@@ -360,12 +196,12 @@
             ],
             "overlapRisk": "low",
             "priorityPhase": 2,
-            "notes": "Only dark theme and only SaaS-lane theme in the catalogue; unique surface/foreground inversion despite sharing the common token schema."
+            "notes": "Only dark theme and only SaaS-lane theme in the catalogue; unique surface/foreground inversion despite sharing the common token schema. Converted to layout-native rendering: it registers no ThemeRenderer or section renderers and renders through the shared x-capell::layout + layout-builder container pipeline instead — customSections/standardSections are empty because the legacy section classification no longer applies. The changelog/integrations, workflow-rails, and security-proof sections became real bespoke capell.widget.night-shift.* layout-builder widgets; the remaining sections are preserved as inert copy pending a future per-theme widget-view override seam."
         },
         {
-            "package": "capell-app/theme-dense-news-analysis",
-            "themeKey": "dense-news-analysis",
-            "displayName": "Dense News Analysis",
+            "package": "capell-app/theme-ink-press",
+            "themeKey": "ink-press",
+            "displayName": "Ink Press",
             "tier": "premium",
             "family": "editorial-publishing",
             "lane": "news publishers and analysis desks",
@@ -435,12 +271,12 @@
             ],
             "overlapRisk": "high",
             "priorityPhase": 3,
-            "notes": "News lane is the clearest of the magazine cluster, but tokens are identical to design-led-magazine and global-culture-magazine bar colours; needs denser layout tokens to earn its name."
+            "notes": "News lane is the clearest of the magazine cluster, but tokens are identical to art-paper and far-field bar colours; needs denser layout tokens to earn its name."
         },
         {
-            "package": "capell-app/theme-design-led-magazine",
-            "themeKey": "design-led-magazine",
-            "displayName": "Design Led Magazine",
+            "package": "capell-app/theme-art-paper",
+            "themeKey": "art-paper",
+            "displayName": "Art Paper",
             "tier": "premium",
             "family": "editorial-publishing",
             "lane": "design, architecture and interiors magazines",
@@ -510,12 +346,12 @@
             ],
             "overlapRisk": "high",
             "priorityPhase": 3,
-            "notes": "Overlaps heavily with global-culture-magazine and creative-culture-editorial; sections differ but token values are colour-swaps of the same preset."
+            "notes": "Overlaps heavily with far-field; sections differ but token values are colour-swaps of the same preset. creative-culture-editorial has been folded into it as the warm-ink preset."
         },
         {
-            "package": "capell-app/theme-editorial-serif",
-            "themeKey": "editorial-serif",
-            "displayName": "Editorial Serif",
+            "package": "capell-app/theme-quiet-type",
+            "themeKey": "quiet-type",
+            "displayName": "Quiet Type",
             "tier": "premium",
             "family": "editorial-publishing",
             "lane": "long-form print-voice publications and essayists",
@@ -581,9 +417,9 @@
             "notes": "Only child theme that reuses foundation navigation/footer chrome and the only serif-first token set; strong distinct print-editorial lane within the publishing family."
         },
         {
-            "package": "capell-app/theme-experimental-directory",
-            "themeKey": "experimental-directory",
-            "displayName": "Experimental Directory",
+            "package": "capell-app/theme-wild-card",
+            "themeKey": "wild-card",
+            "displayName": "Wild Card",
             "tier": "premium",
             "family": "archive-directory",
             "lane": "award-style creative-industry directories and submission galleries",
@@ -653,12 +489,12 @@
             ],
             "overlapRisk": "medium",
             "priorityPhase": 3,
-            "notes": "Shares its condensed/sharp/dense token skeleton and awards vocabulary with motion-archive; distinct media treatment but the two lanes should be pulled further apart."
+            "notes": "Shares its condensed/sharp/dense token skeleton and awards vocabulary with reel-room; distinct media treatment but the two lanes should be pulled further apart."
         },
         {
-            "package": "capell-app/theme-filter-gallery",
-            "themeKey": "filter-gallery",
-            "displayName": "Filter Gallery",
+            "package": "capell-app/theme-field-guide",
+            "themeKey": "field-guide",
+            "displayName": "Field Guide",
             "tier": "premium",
             "family": "portfolio-gallery",
             "lane": "large multi-taxonomy inspiration and reference libraries",
@@ -728,12 +564,12 @@
             ],
             "overlapRisk": "medium",
             "priorityPhase": 3,
-            "notes": "Filter/taxonomy lane is distinct within the gallery cluster, but competes directly with landing-gallery and quiet-web-gallery for the same inspiration-library buyer."
+            "notes": "Filter/taxonomy lane is distinct within the gallery cluster, but competes directly with launch-pad and soft-focus for the same inspiration-library buyer."
         },
         {
-            "package": "capell-app/theme-global-culture-magazine",
-            "themeKey": "global-culture-magazine",
-            "displayName": "Global Culture Magazine",
+            "package": "capell-app/theme-far-field",
+            "themeKey": "far-field",
+            "displayName": "Far Field",
             "tier": "premium",
             "family": "editorial-publishing",
             "lane": "global affairs, travel and culture magazines with audio",
@@ -803,12 +639,12 @@
             ],
             "overlapRisk": "high",
             "priorityPhase": 3,
-            "notes": "Audio/travel sections give it a real lane, but the visual preset is a colour-swap of design-led-magazine and dense-news-analysis; needs distinct typography or density."
+            "notes": "Audio/travel sections give it a real lane, but the visual preset is a colour-swap of art-paper and ink-press; needs distinct typography or density."
         },
         {
-            "package": "capell-app/theme-landing-gallery",
-            "themeKey": "landing-gallery",
-            "displayName": "Landing Gallery",
+            "package": "capell-app/theme-launch-pad",
+            "themeKey": "launch-pad",
+            "displayName": "Launch Pad",
             "tier": "premium",
             "family": "portfolio-gallery",
             "lane": "landing-page and SaaS template showcase galleries",
@@ -878,7 +714,7 @@
             ],
             "overlapRisk": "medium",
             "priorityPhase": 3,
-            "notes": "Screenshot-first treatment and paid-templates sections distinguish it, but it overlaps one-page-showcase's template-gallery lane almost exactly at the audience level."
+            "notes": "Screenshot-first treatment and paid-templates sections distinguish it, but it overlaps one-take's template-gallery lane almost exactly at the audience level."
         },
         {
             "package": "capell-app/theme-liquid-glass",
@@ -895,17 +731,7 @@
             "status": "active",
             "extends": "default",
             "standardSections": [],
-            "customSections": [
-                "navigation",
-                "hero",
-                "features",
-                "showcase",
-                "presets",
-                "proof",
-                "content-listing",
-                "cta",
-                "footer"
-            ],
+            "customSections": [],
             "customisationSurfaces": {
                 "header": "theme-specific header",
                 "footer": "theme-specific footer",
@@ -929,7 +755,7 @@
                     "overlayTreatment"
                 ],
                 "layoutBuilderAreas": [],
-                "sectionVariants": "9 sections, 9 custom",
+                "sectionVariants": "layout-native: renders through layout-builder containers, not section renderers",
                 "pageWidgetAssets": ["css"],
                 "optionalIntegrations": []
             },
@@ -942,12 +768,12 @@
             ],
             "overlapRisk": "low",
             "priorityPhase": 1,
-            "notes": "The free showcase theme; only theme with an overlayTreatment token and a presets section, giving it a clear glass identity distinct from foundation."
+            "notes": "The free showcase theme; only theme with an overlayTreatment token. Converted to layout-native rendering (Phase C pilot): it registers no ThemeRenderer or section renderers and renders through the shared x-capell::layout + layout-builder container pipeline instead — customSections/standardSections are empty because the legacy section classification no longer applies."
         },
         {
-            "package": "capell-app/theme-minimal-curation-feed",
-            "themeKey": "minimal-curation-feed",
-            "displayName": "Minimal Curation Feed",
+            "package": "capell-app/theme-first-light",
+            "themeKey": "first-light",
+            "displayName": "First Light",
             "tier": "premium",
             "family": "portfolio-gallery",
             "lane": "daily screenshot and app-reference curation feeds",
@@ -1017,12 +843,12 @@
             ],
             "overlapRisk": "medium",
             "priorityPhase": 3,
-            "notes": "System-font hairline minimalism reads genuinely different from the gallery-cluster siblings, but the curation-feed lane still competes with filter-gallery and quiet-web-gallery."
+            "notes": "System-font hairline minimalism reads genuinely different from the gallery-cluster siblings, but the curation-feed lane still competes with field-guide and soft-focus."
         },
         {
-            "package": "capell-app/theme-motion-archive",
-            "themeKey": "motion-archive",
-            "displayName": "Motion Archive",
+            "package": "capell-app/theme-reel-room",
+            "themeKey": "reel-room",
+            "displayName": "Reel Room",
             "tier": "premium",
             "family": "archive-directory",
             "lane": "digital awards archives with motion previews and jury scores",
@@ -1092,12 +918,12 @@
             ],
             "overlapRisk": "medium",
             "priorityPhase": 3,
-            "notes": "Shares the condensed/sharp/dense skeleton with experimental-directory and the awards vocabulary with scoreboard-showcase; motion-preview treatment is its main differentiator."
+            "notes": "Shares the condensed/sharp/dense skeleton with wild-card and the awards vocabulary with gold-rush; motion-preview treatment is its main differentiator."
         },
         {
-            "package": "capell-app/theme-one-page-showcase",
-            "themeKey": "one-page-showcase",
-            "displayName": "One Page Showcase",
+            "package": "capell-app/theme-one-take",
+            "themeKey": "one-take",
+            "displayName": "One Take",
             "tier": "premium",
             "family": "portfolio-gallery",
             "lane": "one-page website and template galleries",
@@ -1167,12 +993,12 @@
             ],
             "overlapRisk": "high",
             "priorityPhase": 3,
-            "notes": "Token-identical to the illustrated portfolio group and audience-adjacent to landing-gallery; the one-page angle is the thinnest differentiator in the gallery cluster."
+            "notes": "Token-identical to the illustrated portfolio group and audience-adjacent to launch-pad; the one-page angle is the thinnest differentiator in the gallery cluster."
         },
         {
-            "package": "capell-app/theme-portfolio-directory",
-            "themeKey": "portfolio-directory",
-            "displayName": "Portfolio Directory",
+            "package": "capell-app/theme-deep-bench",
+            "themeKey": "deep-bench",
+            "displayName": "Deep Bench",
             "tier": "premium",
             "family": "portfolio-gallery",
             "lane": "designer and developer portfolio directories with career resources",
@@ -1242,12 +1068,12 @@
             ],
             "overlapRisk": "high",
             "priorityPhase": 3,
-            "notes": "Career-resources angle is useful, but tokens and structure mirror premium-portfolio-collection and character-portfolio-index; the three should be differentiated or consolidated."
+            "notes": "Career-resources angle is useful, but tokens and structure mirror front-row; the two should be differentiated or consolidated."
         },
         {
-            "package": "capell-app/theme-premium-portfolio-collection",
-            "themeKey": "premium-portfolio-collection",
-            "displayName": "Premium Portfolio Collection",
+            "package": "capell-app/theme-front-row",
+            "themeKey": "front-row",
+            "displayName": "Front Row",
             "tier": "premium",
             "family": "portfolio-gallery",
             "lane": "awarded portfolio directories and design education hubs",
@@ -1317,12 +1143,12 @@
             ],
             "overlapRisk": "high",
             "priorityPhase": 3,
-            "notes": "Anchor of the illustrated portfolio group; portfolio-directory and character-portfolio-index are near-clones of it, differing mainly in accent colour and section labels."
+            "notes": "Anchor of the illustrated portfolio group; deep-bench is a near-clone of it, differing mainly in accent colour and section labels. character-portfolio-index has been folded into it as the hand-picked preset."
         },
         {
-            "package": "capell-app/theme-quiet-web-gallery",
-            "themeKey": "quiet-web-gallery",
-            "displayName": "Quiet Web Gallery",
+            "package": "capell-app/theme-soft-focus",
+            "themeKey": "soft-focus",
+            "displayName": "Soft Focus",
             "tier": "premium",
             "family": "portfolio-gallery",
             "lane": "calm, understated web design inspiration galleries",
@@ -1392,12 +1218,12 @@
             ],
             "overlapRisk": "medium",
             "priorityPhase": 3,
-            "notes": "The calm/muted styling gives it a tone-of-voice niche, but it serves the same inspiration-gallery buyer as filter-gallery and minimal-curation-feed."
+            "notes": "The calm/muted styling gives it a tone-of-voice niche, but it serves the same inspiration-gallery buyer as field-guide and first-light."
         },
         {
-            "package": "capell-app/theme-raw-index",
-            "themeKey": "raw-index",
-            "displayName": "Raw Index",
+            "package": "capell-app/theme-off-grid",
+            "themeKey": "off-grid",
+            "displayName": "Off Grid",
             "tier": "premium",
             "family": "archive-directory",
             "lane": "underground culture zines and experimental archives",
@@ -1470,9 +1296,9 @@
             "notes": "Only mono/brutalist token set in the catalogue; unmistakable zine identity keeps it clear of the other archive-directory themes despite similar section anatomy."
         },
         {
-            "package": "capell-app/theme-scoreboard-showcase",
-            "themeKey": "scoreboard-showcase",
-            "displayName": "Scoreboard Showcase",
+            "package": "capell-app/theme-gold-rush",
+            "themeKey": "gold-rush",
+            "displayName": "Gold Rush",
             "tier": "premium",
             "family": "archive-directory",
             "lane": "design awards, nominations and judged voting galleries",
@@ -1542,7 +1368,7 @@
             ],
             "overlapRisk": "medium",
             "priorityPhase": 3,
-            "notes": "Live-voting/scoring mechanics distinguish it from motion-archive's historical-awards lane, but the two awards themes court the same buyer and warrant coordinated positioning."
+            "notes": "Live-voting/scoring mechanics distinguish it from reel-room's historical-awards lane, but the two awards themes court the same buyer and warrant coordinated positioning."
         }
     ]
 }

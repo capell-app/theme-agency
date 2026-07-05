@@ -465,7 +465,7 @@ else must resolve through the parent chain to Foundation. This keeps chrome
 fixes, accessibility work, and public-safety hardening in one place instead of
 copied across dozens of themes.
 
-`capell-app/theme-editorial-serif` is the reference example: it owns ten
+`capell-app/theme-quiet-type` is the reference example: it owns ten
 sections that carry its editorial look, but points `navigation` and `footer`
 at Foundation's chrome views
 (`capell-theme-foundation::theme.chrome.navigation` and
@@ -745,7 +745,7 @@ IDs, field paths, or permissions:
 @endphp
 
 <section
-    @class([
+    @class ([
         'layout-band',
         'layout-band-muted' => $surfaceTone === 'muted',
         'layout-band-contrast' => $surfaceTone === 'contrast',

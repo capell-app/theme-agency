@@ -33,12 +33,12 @@ use Capell\Core\ThemeStudio\Theme\ThemeRegistry;
 use Capell\FoundationTheme\Providers\FoundationThemeServiceProvider;
 use Capell\Frontend\Facades\Frontend;
 use Capell\Tests\Packages\Fixtures\ThemeFrontendStringSectionRenderer;
-use Capell\ThemeStudio\CaseStudyPlatform\CaseStudyPlatformThemeServiceProvider;
-use Capell\ThemeStudio\DarkProductSystem\DarkProductSystemThemeServiceProvider;
-use Capell\ThemeStudio\DenseNewsAnalysis\DenseNewsAnalysisThemeServiceProvider;
-use Capell\ThemeStudio\ExperimentalDirectory\ExperimentalDirectoryThemeServiceProvider;
-use Capell\ThemeStudio\PremiumPortfolioCollection\PremiumPortfolioCollectionThemeServiceProvider;
-use Capell\ThemeStudio\RawIndex\RawIndexThemeServiceProvider;
+use Capell\ThemeStudio\FrontRow\FrontRowThemeServiceProvider;
+use Capell\ThemeStudio\InkPress\InkPressThemeServiceProvider;
+use Capell\ThemeStudio\NightShift\NightShiftThemeServiceProvider;
+use Capell\ThemeStudio\OffGrid\OffGridThemeServiceProvider;
+use Capell\ThemeStudio\OpenStudio\OpenStudioThemeServiceProvider;
+use Capell\ThemeStudio\WildCard\WildCardThemeServiceProvider;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
@@ -53,12 +53,12 @@ function themeFrontendFirstPartyThemes(): array
 {
     return [
         'default' => ['provider' => FoundationThemeServiceProvider::class, 'package' => FoundationThemeServiceProvider::$packageName],
-        'case-study-platform' => ['provider' => CaseStudyPlatformThemeServiceProvider::class, 'package' => CaseStudyPlatformThemeServiceProvider::$packageName],
-        'dark-product-system' => ['provider' => DarkProductSystemThemeServiceProvider::class, 'package' => DarkProductSystemThemeServiceProvider::$packageName],
-        'dense-news-analysis' => ['provider' => DenseNewsAnalysisThemeServiceProvider::class, 'package' => DenseNewsAnalysisThemeServiceProvider::$packageName],
-        'experimental-directory' => ['provider' => ExperimentalDirectoryThemeServiceProvider::class, 'package' => ExperimentalDirectoryThemeServiceProvider::$packageName],
-        'premium-portfolio-collection' => ['provider' => PremiumPortfolioCollectionThemeServiceProvider::class, 'package' => PremiumPortfolioCollectionThemeServiceProvider::$packageName],
-        'raw-index' => ['provider' => RawIndexThemeServiceProvider::class, 'package' => RawIndexThemeServiceProvider::$packageName],
+        'ink-press' => ['provider' => InkPressThemeServiceProvider::class, 'package' => InkPressThemeServiceProvider::$packageName],
+        'night-shift' => ['provider' => NightShiftThemeServiceProvider::class, 'package' => NightShiftThemeServiceProvider::$packageName],
+        'front-row' => ['provider' => FrontRowThemeServiceProvider::class, 'package' => FrontRowThemeServiceProvider::$packageName],
+        'off-grid' => ['provider' => OffGridThemeServiceProvider::class, 'package' => OffGridThemeServiceProvider::$packageName],
+        'open-studio' => ['provider' => OpenStudioThemeServiceProvider::class, 'package' => OpenStudioThemeServiceProvider::$packageName],
+        'wild-card' => ['provider' => WildCardThemeServiceProvider::class, 'package' => WildCardThemeServiceProvider::$packageName],
     ];
 }
 

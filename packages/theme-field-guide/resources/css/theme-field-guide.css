@@ -1,0 +1,1474 @@
+/* Field Guide — dense, faceted inspiration library: sticky utility chrome, tag chips with counts, tight grids, mono labels. */
+
+.fga-shell {
+    /* 8.2: tokens as oklch(); ink/paper/panel/night via light-dark() below. */
+    --fga-ink: var(
+        --theme-foreground,
+        light-dark(oklch(20.9% 0.01 268.2), oklch(97.2% 0.003 247.9))
+    );
+    --fga-muted: color-mix(in oklch, var(--fga-ink) 66%, transparent);
+    --fga-faint: color-mix(in oklch, var(--fga-ink) 54%, transparent);
+    --fga-line: light-dark(
+        color-mix(in oklch, var(--fga-ink) 12%, transparent),
+        color-mix(in oklch, #ffffff 14%, transparent)
+    );
+    --fga-line-strong: light-dark(
+        color-mix(in oklch, var(--fga-ink) 22%, transparent),
+        color-mix(in oklch, #ffffff 26%, transparent)
+    );
+    /* Accent identical in both modes — single oklch(), no light-dark() needed. */
+    --fga-accent: var(--theme-accent, oklch(68.5% 0.148 237.3));
+    --fga-paper: light-dark(
+        color-mix(in oklch, var(--fga-ink) 3%, var(--theme-surface, #ffffff)),
+        oklch(18.5% 0.009 255.6)
+    );
+    --fga-panel: light-dark(
+        var(--theme-surface, #ffffff),
+        oklch(22.1% 0.013 258.4)
+    );
+    --fga-night: light-dark(
+        color-mix(in oklch, var(--fga-ink) 94%, #000000),
+        oklch(12.2% 0.006 261.6)
+    );
+    --fga-night-text: color-mix(in oklch, #ffffff 76%, transparent);
+    --fga-night-line: color-mix(in oklch, #ffffff 16%, transparent);
+    /* Fixed dark hue for card shadows — --fga-ink flips near-white in dark mode. */
+    --fga-shadow-tint: light-dark(oklch(20.9% 0.01 268.2), oklch(0% 0 0));
+    --fga-accent-bright: color-mix(in oklch, var(--fga-accent) 60%, #ffffff);
+    --fga-facet-type: color-mix(
+        in oklch,
+        var(--fga-accent) 82%,
+        var(--fga-ink)
+    );
+    /* Facet hues: distinct reassignments per mode, kept as plain OKLCH. */
+    --fga-facet-style: oklch(52% 0.176 296.5);
+    --fga-facet-colour: oklch(58.5% 0.145 55.9);
+    --fga-facet-industry: oklch(51.8% 0.116 155.8);
+    /* Validation-state tokens for :user-invalid/:user-valid (8.5). */
+    --fga-danger: oklch(56% 0.19 25);
+    --fga-success: oklch(58% 0.14 155);
+    /* Shared hover/focus curve so chips, buttons and cards decelerate the same way. */
+    --fga-ease: cubic-bezier(0.33, 1, 0.68, 1);
+    --fga-mono:
+        ui-monospace, 'SFMono-Regular', 'Menlo', 'Consolas', 'Liberation Mono',
+        monospace;
+    background: var(--fga-paper);
+    color: var(--fga-ink);
+    color-scheme: light dark;
+    container: fga-tokens / normal;
+    font-family: var(--theme-body-font, inter), system-ui, sans-serif;
+    font-size: 0.9375rem;
+    line-height: 1.55;
+}
+
+.fga-shell h1,
+.fga-shell h2,
+.fga-shell h3 {
+    color: var(--fga-ink);
+    font-family: var(--theme-heading-font, sora), system-ui, sans-serif;
+    font-weight: 700;
+    letter-spacing: -0.015em;
+}
+
+.fga-shell h1 {
+    font-size: clamp(1.9rem, 1.4rem + 2.4vw, 3.1rem);
+    line-height: 1.08;
+    margin: 0;
+    text-wrap: balance;
+}
+
+.fga-shell h2 {
+    font-size: clamp(1.35rem, 1.1rem + 1.2vw, 2rem);
+    line-height: 1.15;
+    margin: 0;
+    text-wrap: balance;
+}
+
+.fga-shell h3 {
+    font-size: 0.95rem;
+    line-height: 1.35;
+    margin: 0;
+    text-wrap: balance;
+}
+
+.fga-shell a:focus-visible,
+.fga-shell button:focus-visible,
+.fga-shell input:focus-visible,
+.fga-shell [tabindex]:focus-visible {
+    box-shadow:
+        0 0 0 2px var(--fga-paper),
+        0 0 0 4px var(--fga-accent),
+        0 0 0 6px color-mix(in srgb, var(--fga-facet-type) 45%, transparent);
+    outline: none;
+}
+
+/* Dark mode: accent stays as authored; paper/panel invert via light-dark() above. */
+@media (prefers-color-scheme: dark) {
+    .fga-shell {
+        /* ink/paper/panel/night authored via light-dark() above; muted/faint derive from ink. */
+        --fga-accent-bright: color-mix(
+            in oklch,
+            var(--fga-accent) 60%,
+            #ffffff
+        );
+        --fga-facet-type: color-mix(in oklch, var(--fga-accent) 70%, #ffffff);
+        --fga-facet-style: oklch(72% 0.135 296.5);
+        --fga-facet-colour: oklch(75% 0.135 55.9);
+        --fga-facet-industry: oklch(72% 0.135 155.8);
+    }
+
+    .fga-capture:hover {
+        box-shadow:
+            inset 0 1px 0 color-mix(in srgb, #ffffff 7%, transparent),
+            0 14px 28px color-mix(in srgb, #000000 45%, transparent);
+    }
+}
+
+.fga-shell summary:focus-visible {
+    box-shadow:
+        0 0 0 2px var(--fga-paper),
+        0 0 0 4px var(--fga-accent),
+        0 0 0 6px color-mix(in srgb, var(--fga-facet-type) 45%, transparent);
+    outline: none;
+}
+
+.fga-shell ::selection {
+    background: var(--fga-accent);
+    color: #ffffff;
+}
+
+.fga-skip-link {
+    background: var(--fga-night);
+    color: #ffffff;
+    inset-inline-start: 1rem;
+    padding: 0.75rem 1rem;
+    position: fixed;
+    top: 1rem;
+    transform: translateY(-150%);
+    z-index: 60;
+}
+
+.fga-skip-link:focus {
+    transform: translateY(0);
+}
+
+/* ---------------------------------------------------------------- sections */
+
+.fga-section {
+    border-top: 1px solid var(--fga-line);
+}
+
+.fga-section-dark {
+    background: var(--fga-night);
+    border-top-color: var(--fga-night);
+    color: var(--fga-night-text);
+}
+
+.fga-section-dark h1,
+.fga-section-dark h2,
+.fga-section-dark h3 {
+    color: #ffffff;
+}
+
+.fga-section-panel {
+    background: var(--fga-panel);
+}
+
+.fga-section-inner {
+    margin-inline: auto;
+    max-width: 96rem;
+    padding: clamp(2.5rem, 4.5vw, 4.5rem) clamp(1rem, 3vw, 2.5rem);
+}
+
+.fga-section-inner-tight {
+    padding-block: clamp(1.75rem, 3vw, 2.75rem);
+}
+
+/* Scroll-driven entrance; progressive enhancement only. */
+@media (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: view()) {
+        .fga-section {
+            animation: fga-tile-populate 0.6s var(--fga-ease) both;
+            animation-range: entry 0% cover 30%;
+            animation-timeline: view();
+        }
+
+        @keyframes fga-tile-populate {
+            from {
+                opacity: 0;
+                scale: 0.94;
+                translate: 0 1.5rem;
+            }
+
+            to {
+                opacity: 1;
+                scale: 1;
+                translate: 0 0;
+            }
+        }
+    }
+}
+
+.fga-section-head {
+    align-items: end;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem 2rem;
+    justify-content: space-between;
+    margin-bottom: clamp(1.25rem, 2.5vw, 2rem);
+}
+
+.fga-section-head-copy {
+    display: grid;
+    gap: 0.6rem;
+    max-width: 46rem;
+}
+
+.fga-kicker {
+    color: var(--fga-muted);
+    font-family: var(--fga-mono);
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    margin: 0;
+    text-transform: uppercase;
+}
+
+.fga-kicker::before {
+    color: var(--fga-accent);
+    content: '/ ';
+}
+
+.fga-section-dark .fga-kicker {
+    color: var(--fga-night-text);
+}
+
+.fga-section-dark .fga-kicker::before {
+    color: var(--fga-accent-bright);
+}
+
+.fga-lede {
+    color: var(--fga-muted);
+    font-size: 0.9875rem;
+    line-height: 1.6;
+    margin: 0;
+    max-width: 44rem;
+    text-wrap: pretty;
+}
+
+.fga-section-dark .fga-lede {
+    color: var(--fga-night-text);
+}
+
+.fga-mono-note {
+    color: var(--fga-muted);
+    font-family: var(--fga-mono);
+    font-size: 0.7rem;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.05em;
+    margin: 0;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.fga-section-dark .fga-mono-note {
+    color: var(--fga-night-text);
+}
+
+/* ------------------------------------------------------------------- chips */
+
+.fga-chip-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.375rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.fga-chip {
+    align-items: baseline;
+    background: color-mix(in srgb, var(--fga-ink) 4%, var(--fga-panel));
+    border: 1px solid var(--fga-line);
+    border-radius: 0.25rem;
+    color: var(--fga-ink);
+    display: inline-flex;
+    font-size: 0.75rem;
+    font-weight: 600;
+    gap: 0.4rem;
+    line-height: 1;
+    padding: 0.35rem 0.55rem;
+    text-decoration: none;
+    transition:
+        border-color 160ms var(--fga-ease),
+        color 160ms var(--fga-ease),
+        background-color 160ms var(--fga-ease);
+    white-space: nowrap;
+}
+
+a.fga-chip:hover {
+    border-color: var(--fga-line-strong);
+    color: var(--fga-ink);
+}
+
+.fga-chip-count {
+    color: var(--fga-muted);
+    font-family: var(--fga-mono);
+    font-size: 0.65rem;
+    font-variant-numeric: tabular-nums;
+    font-weight: 500;
+}
+
+.fga-chip-type {
+    background: color-mix(in srgb, var(--fga-facet-type) 8%, var(--fga-panel));
+    border-color: color-mix(in srgb, var(--fga-facet-type) 30%, transparent);
+    color: color-mix(in srgb, var(--fga-facet-type) 80%, var(--fga-ink));
+}
+
+.fga-chip-style {
+    background: color-mix(in srgb, var(--fga-facet-style) 8%, var(--fga-panel));
+    border-color: color-mix(in srgb, var(--fga-facet-style) 30%, transparent);
+    color: color-mix(in srgb, var(--fga-facet-style) 80%, var(--fga-ink));
+}
+
+.fga-chip-colour {
+    background: color-mix(
+        in srgb,
+        var(--fga-facet-colour) 8%,
+        var(--fga-panel)
+    );
+    border-color: color-mix(in srgb, var(--fga-facet-colour) 30%, transparent);
+    color: color-mix(in srgb, var(--fga-facet-colour) 80%, var(--fga-ink));
+}
+
+.fga-chip-industry {
+    background: color-mix(
+        in srgb,
+        var(--fga-facet-industry) 8%,
+        var(--fga-panel)
+    );
+    border-color: color-mix(
+        in srgb,
+        var(--fga-facet-industry) 30%,
+        transparent
+    );
+    color: color-mix(in srgb, var(--fga-facet-industry) 80%, var(--fga-ink));
+}
+
+a.fga-chip-type:hover {
+    border-color: var(--fga-facet-type);
+    color: var(--fga-facet-type);
+}
+
+a.fga-chip-style:hover {
+    border-color: var(--fga-facet-style);
+    color: var(--fga-facet-style);
+}
+
+a.fga-chip-colour:hover {
+    border-color: var(--fga-facet-colour);
+    color: var(--fga-facet-colour);
+}
+
+a.fga-chip-industry:hover {
+    border-color: var(--fga-facet-industry);
+    color: var(--fga-facet-industry);
+}
+
+/* Blade emits aria-current/.is-active on the applied chip; inverted to fill. */
+.fga-chip[aria-current],
+.fga-chip.is-active {
+    background: var(--fga-ink);
+    border-color: var(--fga-ink);
+    color: var(--fga-paper);
+}
+
+.fga-chip[aria-current] .fga-chip-count,
+.fga-chip.is-active .fga-chip-count {
+    color: color-mix(in srgb, var(--fga-paper) 70%, transparent);
+}
+
+.fga-chip-type[aria-current],
+.fga-chip-type.is-active {
+    background: var(--fga-facet-type);
+    border-color: var(--fga-facet-type);
+    color: #ffffff;
+}
+
+.fga-chip-style[aria-current],
+.fga-chip-style.is-active {
+    background: var(--fga-facet-style);
+    border-color: var(--fga-facet-style);
+    color: #ffffff;
+}
+
+.fga-chip-colour[aria-current],
+.fga-chip-colour.is-active {
+    background: var(--fga-facet-colour);
+    border-color: var(--fga-facet-colour);
+    color: #ffffff;
+}
+
+.fga-chip-industry[aria-current],
+.fga-chip-industry.is-active {
+    background: var(--fga-facet-industry);
+    border-color: var(--fga-facet-industry);
+    color: #ffffff;
+}
+
+/* ----------------------------------------------------------------- buttons */
+
+.fga-button {
+    align-items: center;
+    background: var(--theme-primary, #16181d);
+    border: 1px solid var(--theme-primary, #16181d);
+    border-radius: 0.25rem;
+    color: #ffffff;
+    cursor: pointer;
+    display: inline-flex;
+    font-size: 0.75rem;
+    font-weight: 700;
+    gap: 0.5rem;
+    letter-spacing: 0.08em;
+    min-height: 2.5rem;
+    padding: 0.6rem 1.1rem;
+    text-decoration: none;
+    text-transform: uppercase;
+    transition:
+        border-color 160ms var(--fga-ease),
+        color 160ms var(--fga-ease),
+        background-color 160ms var(--fga-ease);
+}
+
+.fga-button:hover {
+    background: var(--fga-accent);
+    border-color: var(--fga-accent);
+}
+
+.fga-button-secondary {
+    background: transparent;
+    border-color: var(--fga-line-strong);
+    color: var(--fga-ink);
+}
+
+.fga-button-secondary:hover {
+    background: transparent;
+    border-color: var(--fga-accent);
+    color: var(--fga-accent);
+}
+
+.fga-section-dark .fga-button {
+    background: #ffffff;
+    border-color: #ffffff;
+    color: var(--fga-night);
+}
+
+.fga-section-dark .fga-button:hover {
+    background: var(--fga-accent-bright);
+    border-color: var(--fga-accent-bright);
+}
+
+.fga-section-dark .fga-button-secondary {
+    background: transparent;
+    border-color: var(--fga-night-line);
+    color: #ffffff;
+}
+
+.fga-section-dark .fga-button-secondary:hover {
+    border-color: var(--fga-accent-bright);
+    color: var(--fga-accent-bright);
+}
+
+.fga-actions {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin-top: 1.5rem;
+}
+
+/* --------------------------------------------------------- sticky top bar */
+
+.fga-topbar {
+    background: var(--fga-panel);
+    border-bottom: 1px solid var(--fga-line);
+    position: sticky;
+    top: 0;
+    z-index: 40;
+}
+
+@supports (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)) {
+    .fga-topbar {
+        -webkit-backdrop-filter: blur(10px) saturate(140%);
+        backdrop-filter: blur(10px) saturate(140%);
+        background: color-mix(in srgb, var(--fga-panel) 88%, transparent);
+    }
+}
+
+.fga-topbar-inner {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem 1.75rem;
+    margin-inline: auto;
+    max-width: 96rem;
+    padding: 0.7rem clamp(1rem, 3vw, 2.5rem);
+}
+
+.fga-topbar-brand {
+    align-items: baseline;
+    color: var(--fga-ink);
+    display: inline-flex;
+    gap: 0.6rem;
+    text-decoration: none;
+}
+
+.fga-topbar-wordmark {
+    font-family: var(--theme-heading-font, sora), system-ui, sans-serif;
+    font-size: 1.05rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+}
+
+.fga-topbar-index-count {
+    color: var(--fga-faint);
+    font-family: var(--fga-mono);
+    font-size: 0.65rem;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.fga-topbar-nav {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.1rem 1.1rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.fga-shell nav a {
+    color: var(--fga-muted);
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding-block: 0.35rem;
+    text-decoration: none;
+    transition: color 160ms var(--fga-ease);
+}
+
+.fga-shell nav a:hover {
+    color: var(--fga-ink);
+}
+
+.fga-topbar-cta {
+    margin-inline-start: auto;
+}
+
+/* -------------------------------------------------------------------- hero */
+
+.fga-hero-grid {
+    align-items: center;
+    display: grid;
+    gap: clamp(2rem, 4vw, 3.5rem);
+}
+
+.fga-hero-facet-strip {
+    border-top: 1px solid var(--fga-line);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.375rem;
+    margin-top: 1.75rem;
+    padding-top: 1.25rem;
+}
+
+@media (min-width: 900px) {
+    .fga-hero-grid {
+        grid-template-columns: minmax(0, 1.05fr) minmax(20rem, 0.95fr);
+    }
+}
+
+/* ---------------------------------------------------------- capture cards */
+
+.fga-capture {
+    background: var(--fga-panel);
+    border: 1px solid var(--fga-line);
+    border-radius: 0.375rem;
+    display: grid;
+    gap: 0;
+    overflow: hidden;
+    transition:
+        border-color 220ms var(--fga-ease),
+        transform 220ms var(--fga-ease),
+        box-shadow 220ms var(--fga-ease);
+}
+
+.fga-capture:hover {
+    border-color: var(--fga-line-strong);
+    box-shadow:
+        0 1px 2px color-mix(in srgb, var(--fga-shadow-tint) 7%, transparent),
+        0 4px 10px color-mix(in srgb, var(--fga-shadow-tint) 6%, transparent),
+        0 14px 28px color-mix(in srgb, var(--fga-shadow-tint) 8%, transparent);
+    transform: translateY(-2px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .fga-capture,
+    .fga-capture:hover {
+        transform: none;
+        transition: none;
+    }
+
+    .fga-capture:hover .fga-capture-media {
+        scale: none;
+    }
+
+    .fga-section {
+        animation: none;
+    }
+}
+
+.fga-capture-media {
+    aspect-ratio: 4 / 3;
+    background-color: color-mix(in srgb, var(--fga-ink) 8%, var(--fga-paper));
+    border-bottom: 1px solid var(--fga-line);
+    display: block;
+    object-fit: cover;
+    transition: scale 400ms var(--fga-ease);
+    width: 100%;
+}
+
+.fga-capture:hover .fga-capture-media {
+    scale: 1.03;
+}
+
+.fga-capture-media-wide {
+    aspect-ratio: 16 / 10;
+}
+
+.fga-capture-media-tall {
+    aspect-ratio: 4 / 5;
+}
+
+.fga-capture-media-empty {
+    background-image: linear-gradient(
+        color-mix(in srgb, var(--fga-ink) 9%, transparent) 1.35rem,
+        transparent 1.35rem
+    );
+    position: relative;
+}
+
+.fga-capture-media-empty::before {
+    border: 1px solid color-mix(in srgb, var(--fga-ink) 22%, transparent);
+    border-radius: 0.2rem;
+    content: '';
+    inset: 2.1rem 12% 18% 12%;
+    position: absolute;
+}
+
+.fga-capture-media-empty::after {
+    background: color-mix(in srgb, var(--fga-accent) 55%, var(--fga-paper));
+    content: '';
+    height: 22%;
+    inset-inline-start: calc(12% + 1px);
+    position: absolute;
+    top: calc(2.1rem + 1px);
+    width: calc(76% - 2px);
+}
+
+.fga-capture-body {
+    display: grid;
+    gap: 0.55rem;
+    padding: 0.8rem 0.9rem 0.9rem;
+}
+
+.fga-capture-title-row {
+    align-items: baseline;
+    display: flex;
+    gap: 0.75rem;
+    justify-content: space-between;
+}
+
+.fga-capture-index {
+    color: var(--fga-faint);
+    flex-shrink: 0;
+    font-family: var(--fga-mono);
+    font-size: 0.65rem;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.08em;
+}
+
+.fga-capture-source {
+    border-top: 1px dashed var(--fga-line);
+    color: var(--fga-muted);
+    font-family: var(--fga-mono);
+    font-size: 0.675rem;
+    letter-spacing: 0.03em;
+    margin: 0;
+    padding-top: 0.55rem;
+}
+
+.fga-capture p {
+    color: var(--fga-muted);
+    font-size: 0.8125rem;
+    line-height: 1.5;
+    margin: 0;
+    text-wrap: pretty;
+}
+
+.fga-title-link {
+    color: inherit;
+    text-decoration: none;
+    transition: color 160ms var(--fga-ease);
+}
+
+.fga-title-link:hover {
+    color: var(--fga-accent);
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 0.2rem;
+}
+
+/* --------------------------------------------------------------- dense grid */
+
+/* container-type makes this a query boundary "fga-grid" so columns respond to Layout Builder's actual width, not the viewport. */
+.fga-dense-grid {
+    container-name: fga-grid;
+    container-type: inline-size;
+    display: grid;
+    gap: 0.875rem;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 14rem), 1fr));
+}
+
+/* Without @container support the auto-fill above still works; supporting browsers get explicit column counts. */
+@container fga-grid (min-width: 26rem) {
+    .fga-dense-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@container fga-grid (min-width: 40rem) {
+    .fga-dense-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+@container fga-grid (min-width: 56rem) {
+    .fga-dense-grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+}
+
+/* -------------------------------------------------------- brand token wiring */
+
+@container fga-tokens style(--theme-spacing: compact) {
+    .fga-dense-grid {
+        gap: 0.625rem;
+    }
+}
+
+@container fga-tokens style(--theme-card-style: bordered) {
+    .fga-capture {
+        border-width: 1px;
+        box-shadow: none;
+    }
+}
+
+@container fga-tokens style(--theme-layout-presentation: editorial) {
+    .fga-dense-grid > :first-child {
+        grid-column: span 2;
+    }
+}
+
+@container fga-tokens style(--theme-heading-scale: expressive) or style(--theme-heading-scale: bold) {
+    .fga-shell h3 {
+        font-size: clamp(
+            0.95rem,
+            0.9rem + 0.2vw,
+            calc(0.95rem * var(--fga-heading-scale, 1.15))
+        );
+    }
+}
+
+@container fga-tokens style(--theme-card-density: compact) or style(--theme-card-density: dense) {
+    .fga-capture-body {
+        padding: 0.75rem;
+    }
+}
+
+@container fga-tokens style(--theme-overlay-treatment: strong) {
+    .fga-capture-media-empty::after {
+        background: color-mix(in srgb, var(--fga-accent) 60%, transparent);
+        opacity: 0.6;
+    }
+}
+
+/* ----------------------------------------------------------------- masonry */
+
+.fga-masonry {
+    column-gap: 0.875rem;
+    columns: 4 14rem;
+}
+
+.fga-masonry > * {
+    break-inside: avoid;
+    margin-bottom: 0.875rem;
+}
+
+/* ------------------------------------------------------------- filter hero */
+
+.fga-search-band {
+    display: grid;
+    gap: 1.25rem;
+    max-width: 62rem;
+}
+
+.fga-search-form {
+    background: var(--fga-panel);
+    border: 1px solid var(--fga-line-strong);
+    border-radius: 0.375rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    padding: 0.45rem;
+    transition:
+        border-color 160ms var(--fga-ease),
+        box-shadow 160ms var(--fga-ease);
+}
+
+.fga-search-form:focus-within {
+    border-color: var(--fga-accent);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--fga-accent) 25%, transparent);
+}
+
+.fga-search-form input[type='search'] {
+    background: transparent;
+    border: 0;
+    color: var(--fga-ink);
+    field-sizing: content;
+    flex: 1 1 14rem;
+    font-family: var(--fga-mono);
+    font-size: 0.9rem;
+    min-height: 2.5rem;
+    padding: 0.4rem 0.65rem;
+}
+
+.fga-search-form input[type='search']::placeholder {
+    color: var(--fga-faint);
+    opacity: 1;
+}
+
+.fga-search-form input[type='search']:user-invalid {
+    box-shadow: inset 0 -2px 0 var(--fga-danger);
+}
+
+.fga-search-form input[type='search']:user-valid {
+    box-shadow: inset 0 -2px 0 var(--fga-success);
+}
+
+.fga-search-form input[type='search']:focus-visible {
+    box-shadow: none;
+    outline: none;
+}
+
+.fga-search-form input[type='search']:focus-visible:user-invalid {
+    box-shadow: inset 0 -2px 0 var(--fga-danger);
+}
+
+.fga-search-form input[type='search']:focus-visible:user-valid {
+    box-shadow: inset 0 -2px 0 var(--fga-success);
+}
+
+.fga-shell input[type='checkbox'],
+.fga-shell input[type='radio'] {
+    accent-color: var(--fga-accent);
+}
+
+.fga-search-hints {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+/* ------------------------------------------------------------ filter board */
+
+.fga-facet-board {
+    border: 1px solid var(--fga-line);
+    border-radius: 0.375rem;
+    display: grid;
+    overflow: hidden;
+}
+
+.fga-facet-group {
+    background: var(--fga-panel);
+    border-top: 1px solid var(--fga-line);
+    display: grid;
+    gap: 0.7rem;
+    padding: 1.1rem 1.2rem 1.3rem;
+}
+
+.fga-facet-board > .fga-facet-group:first-child {
+    border-top: 0;
+}
+
+.fga-facet-group-head {
+    align-items: baseline;
+    display: flex;
+    gap: 0.75rem;
+    justify-content: space-between;
+}
+
+.fga-facet-group-head h3 {
+    font-size: 0.8rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.fga-facet-group p {
+    color: var(--fga-muted);
+    font-size: 0.78rem;
+    line-height: 1.5;
+    margin: 0;
+    text-wrap: pretty;
+}
+
+@media (min-width: 720px) {
+    .fga-facet-board {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .fga-facet-board > .fga-facet-group:nth-child(2) {
+        border-top: 0;
+    }
+
+    .fga-facet-board > .fga-facet-group:nth-child(even) {
+        border-inline-start: 1px solid var(--fga-line);
+    }
+}
+
+@media (min-width: 1100px) {
+    .fga-facet-board {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .fga-facet-board > .fga-facet-group {
+        border-top: 0;
+    }
+
+    .fga-facet-board > .fga-facet-group + .fga-facet-group {
+        border-inline-start: 1px solid var(--fga-line);
+    }
+}
+
+/* -------------------------------------------------------------- empty state */
+
+.fga-empty-state {
+    border: 1px dashed var(--fga-line-strong);
+    border-radius: 0.375rem;
+    display: grid;
+    gap: 0.65rem;
+    justify-items: start;
+    margin-inline: auto;
+    max-width: 32rem;
+    padding: clamp(2.5rem, 5vw, 3.5rem) clamp(1.5rem, 4vw, 2.5rem);
+    text-align: start;
+}
+
+.fga-empty-state-kicker {
+    color: var(--fga-faint);
+    font-family: var(--fga-mono);
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    margin: 0;
+    text-transform: uppercase;
+}
+
+.fga-empty-state-kicker::before {
+    color: var(--fga-accent);
+    content: '/ ';
+}
+
+.fga-empty-state-heading {
+    color: var(--fga-ink);
+    font-family: var(--theme-heading-font, sora), system-ui, sans-serif;
+    font-size: 1.15rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    margin: 0;
+}
+
+.fga-empty-state-body {
+    color: var(--fga-muted);
+    font-size: 0.875rem;
+    line-height: 1.6;
+    margin: 0;
+    max-width: 28rem;
+    text-wrap: pretty;
+}
+
+.fga-empty-state-reset {
+    color: var(--fga-accent);
+    font-size: 0.8rem;
+    font-weight: 600;
+    margin-top: 0.4rem;
+    text-decoration: underline;
+    text-underline-offset: 0.2rem;
+}
+
+.fga-empty-state-reset:hover {
+    color: var(--fga-ink);
+}
+
+/* ----------------------------------------------------------- results rail */
+
+.fga-results-bar {
+    align-items: center;
+    border: 1px solid var(--fga-line);
+    border-radius: 0.375rem;
+    background: var(--fga-panel);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem 1.25rem;
+    margin-bottom: 1rem;
+    padding: 0.6rem 0.9rem;
+}
+
+.fga-results-bar .fga-chip-row {
+    flex: 1 1 auto;
+}
+
+/* ----------------------------------------------------------------- mission */
+
+.fga-mission-grid {
+    display: grid;
+    gap: clamp(1.5rem, 3vw, 3rem);
+}
+
+.fga-mission-statement {
+    font-size: clamp(1.1rem, 1rem + 0.8vw, 1.5rem);
+    line-height: 1.45;
+    margin: 0;
+    max-width: 34rem;
+    text-wrap: balance;
+}
+
+.fga-mission-list {
+    display: grid;
+}
+
+.fga-mission-row {
+    border-top: 1px solid var(--fga-line);
+    display: grid;
+    gap: 0.35rem;
+    padding-block: 1rem;
+}
+
+.fga-mission-row:last-child {
+    border-bottom: 1px solid var(--fga-line);
+}
+
+.fga-mission-row p {
+    color: var(--fga-muted);
+    font-size: 0.85rem;
+    margin: 0;
+    max-width: 40rem;
+    text-wrap: pretty;
+}
+
+@media (min-width: 900px) {
+    .fga-mission-grid {
+        grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+    }
+}
+
+/* --------------------------------------------------------------- accordion */
+
+.fga-faq {
+    border-top: 1px solid var(--fga-line-strong);
+    display: grid;
+}
+
+.fga-faq details {
+    border-bottom: 1px solid var(--fga-line);
+}
+
+.fga-faq summary {
+    align-items: baseline;
+    cursor: pointer;
+    display: flex;
+    font-weight: 700;
+    gap: 1rem;
+    justify-content: space-between;
+    list-style: none;
+    padding: 1rem 0.25rem;
+}
+
+.fga-faq summary::-webkit-details-marker {
+    display: none;
+}
+
+.fga-faq summary::after {
+    color: var(--fga-faint);
+    content: '+';
+    flex-shrink: 0;
+    font-family: var(--fga-mono);
+    font-size: 1rem;
+}
+
+.fga-faq details[open] summary::after {
+    content: '\2212';
+}
+
+.fga-faq details > p {
+    color: var(--fga-muted);
+    margin: 0;
+    max-width: 46rem;
+    padding: 0 0.25rem 1.1rem;
+    text-wrap: pretty;
+}
+
+/* Exclusive, animated accordion (Wave 8.1): name="fga-faq" on each <details>
+   makes opening one answer close the others with zero JavaScript, and
+   interpolate-size + ::details-content animate the reveal from height 0 to
+   auto — the one expand/collapse CSS historically couldn't do without
+   measuring scrollHeight in script. Non-supporting browsers get a plain
+   expand/collapse; reduced-motion users skip the animation entirely. */
+@media (prefers-reduced-motion: no-preference) {
+    .fga-faq {
+        interpolate-size: allow-keywords;
+    }
+
+    .fga-faq details::details-content {
+        block-size: 0;
+        opacity: 0;
+        overflow: hidden;
+        transition:
+            block-size 0.3s ease,
+            content-visibility 0.3s allow-discrete,
+            opacity 0.3s ease;
+    }
+
+    .fga-faq details[open]::details-content {
+        block-size: auto;
+        opacity: 1;
+    }
+}
+
+/* ------------------------------------------------------------------- stats */
+
+.fga-stat-strip {
+    display: grid;
+    gap: 1px;
+    background: var(--fga-line);
+    border: 1px solid var(--fga-line);
+    border-radius: 0.375rem;
+    overflow: hidden;
+}
+
+.fga-stat {
+    background: var(--fga-panel);
+    display: grid;
+    gap: 0.5rem;
+    padding: 1.4rem 1.3rem;
+}
+
+.fga-stat-value {
+    color: var(--fga-ink);
+    font-family: var(--fga-mono);
+    font-size: clamp(1.6rem, 1.3rem + 1.2vw, 2.4rem);
+    font-variant-numeric: tabular-nums;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1;
+}
+
+.fga-stat p {
+    color: var(--fga-muted);
+    font-size: 0.8125rem;
+    line-height: 1.5;
+    margin: 0;
+    text-wrap: pretty;
+}
+
+@media (min-width: 720px) {
+    .fga-stat-strip {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+/* -------------------------------------------------------------- newsletter */
+
+.fga-newsletter-grid {
+    align-items: center;
+    display: grid;
+    gap: clamp(1.5rem, 3vw, 3rem);
+}
+
+.fga-form {
+    background: var(--fga-panel);
+    border: 1px solid var(--fga-line);
+    border-radius: 0.375rem;
+    display: grid;
+    gap: 0.9rem;
+    padding: clamp(1.25rem, 2.5vw, 2rem);
+}
+
+.fga-form label {
+    font-family: var(--fga-mono);
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+.fga-form input[type='email'] {
+    background: var(--fga-paper);
+    border: 1px solid var(--fga-line-strong);
+    border-radius: 0.25rem;
+    color: var(--fga-ink);
+    field-sizing: content;
+    font-family: var(--fga-mono);
+    font-size: 0.9rem;
+    min-height: 2.75rem;
+    padding: 0.6rem 0.75rem;
+    width: 100%;
+}
+
+.fga-form input[type='email']::placeholder {
+    color: var(--fga-faint);
+    opacity: 1;
+}
+
+.fga-form input[type='email']:user-invalid {
+    border-color: var(--fga-danger);
+}
+
+.fga-form input[type='email']:user-valid {
+    border-color: var(--fga-success);
+}
+
+.fga-form .fga-button {
+    justify-self: start;
+}
+
+@media (min-width: 900px) {
+    .fga-newsletter-grid {
+        grid-template-columns: minmax(0, 1.1fr) minmax(20rem, 0.9fr);
+    }
+}
+
+/* ------------------------------------------------------------------ footer */
+
+.fga-footer-grid {
+    display: grid;
+    gap: clamp(2rem, 4vw, 3.5rem);
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 13rem), 1fr));
+}
+
+.fga-footer-brand {
+    display: grid;
+    gap: 0.75rem;
+}
+
+.fga-footer-wordmark {
+    color: #ffffff;
+    font-family: var(--theme-heading-font, sora), system-ui, sans-serif;
+    font-size: 1.3rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+}
+
+.fga-footer-summary {
+    color: var(--fga-night-text);
+    font-size: 0.85rem;
+    margin: 0;
+    max-width: 22rem;
+}
+
+.fga-footer-heading {
+    border-top: 1px solid var(--fga-night-line);
+    color: var(--fga-night-text);
+    font-family: var(--fga-mono);
+    font-size: 0.675rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    margin: 0 0 0.9rem;
+    padding-top: 0.9rem;
+    text-transform: uppercase;
+}
+
+.fga-footer-links {
+    display: grid;
+    gap: 0.5rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.fga-footer-links a {
+    color: var(--fga-night-text);
+    font-size: 0.85rem;
+    text-decoration: none;
+}
+
+.fga-footer-links a:hover {
+    color: #ffffff;
+    text-decoration: underline;
+    text-underline-offset: 0.25rem;
+}
+
+.fga-footer-colophon {
+    border-top: 1px solid var(--fga-night-line);
+    color: color-mix(in srgb, #ffffff 58%, transparent);
+    font-family: var(--fga-mono);
+    font-size: 0.675rem;
+    letter-spacing: 0.06em;
+    margin-top: clamp(2rem, 4vw, 3rem);
+    padding-top: 1.1rem;
+    text-transform: uppercase;
+}
+
+/* --------------------------------------------------------------------- print */
+
+/* Read as a printed reference sheet: strip sticky chrome/CTAs/dark footer, fall back to black-on-white. */
+@media print {
+    .fga-shell .fga-topbar,
+    .fga-shell .fga-actions,
+    .fga-shell .fga-button,
+    .fga-shell #cta,
+    .fga-shell #newsletter,
+    .fga-shell footer,
+    .fga-shell .fga-skip-link {
+        display: none !important;
+    }
+
+    .fga-shell {
+        background: #ffffff;
+        color: #000000;
+        font-family: 'Georgia', 'Times New Roman', serif;
+        font-size: 11pt;
+        line-height: 1.4;
+    }
+
+    .fga-shell,
+    .fga-shell * {
+        background-image: none !important;
+        box-shadow: none !important;
+        text-shadow: none !important;
+    }
+
+    .fga-shell .fga-section,
+    .fga-shell .fga-section-dark,
+    .fga-shell .fga-section-panel {
+        background: #ffffff;
+        border-top-color: #cccccc;
+        color: #000000;
+    }
+
+    .fga-shell h1,
+    .fga-shell h2,
+    .fga-shell h3,
+    .fga-shell .fga-section-dark h1,
+    .fga-shell .fga-section-dark h2,
+    .fga-shell .fga-section-dark h3 {
+        color: #000000;
+    }
+
+    .fga-shell .fga-kicker,
+    .fga-shell .fga-lede,
+    .fga-shell .fga-mono-note,
+    .fga-shell .fga-capture p,
+    .fga-shell .fga-capture-source,
+    .fga-shell .fga-section-dark .fga-lede,
+    .fga-shell .fga-section-dark .fga-kicker,
+    .fga-shell .fga-section-dark .fga-mono-note {
+        color: #333333;
+    }
+
+    .fga-shell .fga-kicker::before {
+        color: #000000;
+    }
+
+    .fga-shell .fga-capture,
+    .fga-shell .fga-mission-row,
+    .fga-shell .fga-facet-group,
+    .fga-shell .fga-stat {
+        break-inside: avoid;
+        page-break-inside: avoid;
+    }
+
+    .fga-shell .fga-capture {
+        border: 1px solid #999999;
+    }
+
+    .fga-shell .fga-capture-media-empty::before,
+    .fga-shell .fga-capture-media-empty::after {
+        display: none;
+    }
+
+    .fga-shell .fga-chip {
+        background: transparent;
+        border-color: #999999;
+        color: #000000;
+    }
+}
+
+/* Forced-colors (Wave 11.5): High Contrast mode strips box-shadow but keeps
+   outline, and flattens backgrounds — so re-assert focus with outline and give
+   cards a transparent border the OS repaints, and protect swatches whose
+   colour IS the content. */
+@media (forced-colors: active) {
+    .fga-shell a:focus-visible,
+    .fga-shell button:focus-visible,
+    .fga-shell input:focus-visible,
+    .fga-shell [tabindex]:focus-visible,
+    .fga-shell summary:focus-visible {
+        outline: 2px solid;
+        outline-offset: 2px;
+    }
+
+    .fga-capture,
+    .fga-facet-group,
+    .fga-stat {
+        border: 1px solid transparent;
+    }
+
+    .fga-capture-media-empty::after {
+        forced-color-adjust: none;
+    }
+}
+
+/* High contrast preference (Wave 11.5): thicken hairline rules and lift the
+   dimmed/muted text one step so the quiet layer stays legible. */
+@media (prefers-contrast: more) {
+    .fga-section,
+    .fga-capture,
+    .fga-chip {
+        border-color: var(--fga-ink);
+    }
+
+    .fga-muted,
+    .fga-lede,
+    .fga-mono-note,
+    .fga-chip-count {
+        color: var(--fga-ink);
+    }
+}
+
+/* View Transitions (Wave 6.5): opt every same-origin navigation into a smooth
+   cross-document transition where supported; static fallback everywhere else.
+   Reduced-motion users still navigate — just without the animation. */
+@view-transition {
+    navigation: auto;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    ::view-transition-group(*),
+    ::view-transition-old(*),
+    ::view-transition-new(*) {
+        animation: none !important;
+    }
+}

@@ -15,8 +15,13 @@ use Capell\FoundationTheme\Contracts\ProvidesThemeDemoContent;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Str;
+
+use function Pest\Laravel\get;
+
 use ReflectionMethod;
 use RuntimeException;
+
+require_once __DIR__ . '/../Support/ThemeLayoutNativeSupport.php';
 
 /*
 |--------------------------------------------------------------------------
@@ -66,6 +71,16 @@ it('renders a complete homepage through the real theme renderer', function (stri
     $serviceProvider = new $serviceProviderClass(app());
     (new ReflectionMethod($serviceProvider, 'boot'))->invoke($serviceProvider, $registry);
     app()->instance(ThemeRegistry::class, $registry);
+
+    // Layout-native themes (converted to render through x-capell::layout +
+    // layout-builder) register no ThemeRenderer, so this legacy-renderer
+    // completeness check does not apply — see the dedicated
+    // "layout-native theme demo renders completely" test below instead.
+    if (themeIsLayoutNative($slug)) {
+        expect(true)->toBeTrue();
+
+        return;
+    }
 
     $provider = new $providerClass;
     throw_unless($provider instanceof ProvidesThemeDemoContent, RuntimeException::class, "{$providerClass} must implement ProvidesThemeDemoContent.");
@@ -132,3 +147,43 @@ it('renders a complete homepage through the real theme renderer', function (stri
         expect(str_contains($html, e($brandName)))->toBeTrue("Theme [{$slug}] navigation did not render the seeded brand: [{$brandName}].");
     }
 })->with('themes_with_demo_content');
+
+/*
+|--------------------------------------------------------------------------
+| Layout-native theme demo renders completely (Phase C)
+|--------------------------------------------------------------------------
+|
+| Themes converted to render through x-capell::layout + layout-builder no
+| longer register a legacy ThemeRenderer, so the real-renderer completeness
+| check above does not apply to them. Instead this seeds each converted
+| theme's demo content (which supplies layout-builder containers, per
+| ThemeDemoPageInstaller) and asserts the demo homepage actually serves a 200
+| over HTTP with no `data-section=` markers left over from the legacy
+| section-rendering pipeline.
+|
+| themesConvertedToLayoutBuilder() is empty today, so this dataset has zero
+| live cases until Phase C converts its first theme — that is expected.
+|
+| PHPUnit 12 treats an empty data provider as a hard error rather than a
+| silent no-op, so the dataset() and it()->with() registration below is
+| skipped entirely while the exemption list is empty; Phase C's first entry
+| makes this block register the real dataset test again.
+|
+*/
+
+if (themesConvertedToLayoutBuilder() !== []) {
+    dataset('themes_converted_to_layout_builder', fn (): array => array_combine(
+        themesConvertedToLayoutBuilder(),
+        array_map(static fn (string $themeKey): array => [$themeKey], themesConvertedToLayoutBuilder()),
+    ));
+
+    it('renders a layout-native theme demo homepage with no legacy section markers', function (string $themeKey): void {
+        [$pageUrl] = layoutNativeThemeCreatePage($themeKey, 'Layout Native Demo');
+
+        $response = get($pageUrl->full_url);
+
+        $response->assertOk();
+
+        expect($response->getContent())->not->toContain('data-section=');
+    })->with('themes_converted_to_layout_builder');
+}

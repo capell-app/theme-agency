@@ -1,0 +1,160 @@
+{
+    "manifest-version": 3,
+    "name": "capell-app/theme-gold-rush",
+    "slug": "theme-gold-rush",
+    "displayName": "Theme Gold Rush",
+    "kind": "theme",
+    "capellApiVersion": "^4.0",
+    "version": "4.x-dev",
+    "description": "Numeric scores, segmented judging, winner-of-the-day, public votes — an awards scoreboard with the tension left in. May the best entry win.",
+    "product": {
+        "group": "Capell Themes",
+        "tier": "premium",
+        "bundle": "themes"
+    },
+    "namespace": "Capell\\ThemeStudio\\GoldRush",
+    "surfaces": ["frontend"],
+    "dependencies": {
+        "requires": ["capell-app/core", "capell-app/frontend"],
+        "supports": [
+            "capell-app/blog",
+            "capell-app/form-builder",
+            "capell-app/newsletter",
+            "capell-app/shopify-commerce"
+        ],
+        "conflicts": []
+    },
+    "providers": {
+        "metadata": [],
+        "install": [],
+        "runtime": [
+            "Capell\\ThemeStudio\\GoldRush\\GoldRushThemeServiceProvider"
+        ],
+        "admin": [],
+        "frontend": []
+    },
+    "contributes": [
+        {
+            "type": "admin-page",
+            "class": "Capell\\ThemeStudio\\GoldRush\\Manifest\\ThemeManagementPageContribution",
+            "pageClass": "Capell\\Marketplace\\Filament\\Pages\\ThemeExtensionPage",
+            "pageParameters": {
+                "themeKey": "gold-rush"
+            },
+            "labelKey": "capell-marketplace::marketplace.theme_extension.management_entry_label"
+        }
+    ],
+    "database": {
+        "migrations": false,
+        "settings": false,
+        "requiredTables": []
+    },
+    "commands": {
+        "install": null,
+        "setup": null,
+        "demo": "capell:theme-gold-rush-demo",
+        "demoParams": ["url", "languages", "sites"],
+        "doctor": null
+    },
+    "settings": [],
+    "permissions": [],
+    "capabilities": ["theme-gold-rush", "theme-gold-rush-frontend"],
+    "security": {
+        "riskTier": "low",
+        "publicSurface": {
+            "routeNames": [],
+            "auth": "none",
+            "csrfExemptRoutes": [],
+            "signedRoutes": [],
+            "tokenizedRoutes": [],
+            "webhookRoutes": [],
+            "throttledRoutes": []
+        },
+        "sensitiveData": {
+            "encryptedFields": [],
+            "hashedTokenFields": [],
+            "redactedOutputClasses": [],
+            "plaintextJustifications": []
+        },
+        "publicOutput": {
+            "cacheSafe": true,
+            "forbidAuthoringSurface": true,
+            "forbidSecrets": true,
+            "forbidPublicBladeQueries": true
+        },
+        "externalHttpClients": {
+            "requiresTimeouts": false,
+            "requiresSecretRedaction": false,
+            "clients": []
+        },
+        "adminSurface": {
+            "authorization": "none",
+            "permissions": []
+        }
+    },
+    "performance": {
+        "criticalCss": {
+            "required": true,
+            "parityViewports": ["mobile", "tablet", "desktop"]
+        },
+        "frontendRenderBudgetMs": 20,
+        "adminQueryBudget": 0,
+        "cacheTags": ["theme-gold-rush"],
+        "cacheSafety": {
+            "cacheable": false,
+            "variesBy": ["site", "locale"],
+            "sensitiveOutput": false,
+            "invalidationSources": [],
+            "queueInvalidation": false
+        }
+    },
+    "healthChecks": [
+        {
+            "key": "theme-gold-rush.package-health",
+            "label": "Gold Rush package surfaces, providers, and install health are discoverable by Diagnostics.",
+            "class": "Capell\\ThemeStudio\\GoldRush\\Health\\ThemeGoldRushHealthCheck",
+            "severity": "critical",
+            "surface": "frontend"
+        }
+    ],
+    "commercial": {
+        "proposedLicense": "paid",
+        "requestedCertification": "first-party",
+        "supportPolicy": "priority",
+        "privateDocsRequested": true
+    },
+    "marketplace": {
+        "summary": "Numeric scores, segmented judging, winner-of-the-day, public votes — an awards scoreboard with the tension left in.",
+        "description": "Gold Rush provides a distinct theme definition, demo command, marketplace metadata, and public-safe Blade views for awards sites that need winner-of-the-day heroes, newest nominees, previous winners, UI/UX/innovation/overall score breakdowns, numeric score cards, compact uppercase labels, date/country/category metadata, public voting CTAs, status states, creator credits, related winners, and precise archive pages.",
+        "screenshots": [
+            {
+                "path": "docs/screenshots/gold-rush-homepage.png",
+                "alt": "Gold Rush homepage preview",
+                "caption": "Gold Rush Homepage"
+            },
+            {
+                "path": "docs/screenshots/gold-rush-landing.png",
+                "alt": "Gold Rush landing page preview",
+                "caption": "Gold Rush Landing page"
+            },
+            {
+                "path": "docs/screenshots/gold-rush-listing.png",
+                "alt": "Gold Rush list page preview",
+                "caption": "Gold Rush Awards archive"
+            },
+            {
+                "path": "docs/screenshots/gold-rush-search.png",
+                "alt": "Gold Rush search results preview",
+                "caption": "Gold Rush Search results"
+            },
+            {
+                "path": "docs/screenshots/gold-rush-contact.png",
+                "alt": "Gold Rush contact form preview",
+                "caption": "Gold Rush Contact form"
+            }
+        ],
+        "categories": ["frontend", "themes"]
+    },
+    "extends": "default",
+    "themeKey": "gold-rush"
+}

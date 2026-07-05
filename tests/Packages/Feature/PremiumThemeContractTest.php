@@ -92,7 +92,14 @@ it('defines every premium theme translation key referenced by Blade views', func
     $themeDirectory = premiumThemePackagePath($path);
     $translationPath = $themeDirectory . '/resources/lang/en/generic.php';
     $viewsDirectory = $themeDirectory . '/resources/views';
-    $translations = require $translationPath;
+
+    // Most premium themes no longer ship a per-theme generic.php: their only
+    // shared key, skip_to_content, now resolves from the capell-frontend
+    // package (see capell-app/frontend resources/lang/en/generic.php) via
+    // `__('capell-frontend::generic.skip_to_content')`. Themes that still
+    // hold theme-specific keys (e.g. theme-foundation, theme-liquid-glass)
+    // keep their own generic.php alongside that shared key.
+    $translations = file_exists($translationPath) ? require $translationPath : [];
     $missingKeys = [];
 
     $files = new RecursiveIteratorIterator(

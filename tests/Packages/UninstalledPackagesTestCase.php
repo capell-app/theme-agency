@@ -29,9 +29,9 @@ use Capell\SeoSuite\Providers\SeoSuiteServiceProvider;
 use Capell\Tags\Providers\TagsServiceProvider;
 use Capell\Tests\AbstractTestCase;
 use Capell\Tests\Packages\Support\ForcePackagesUninstalledServiceProvider;
-use Capell\ThemeStudio\CaseStudyPlatform\CaseStudyPlatformThemeServiceProvider;
-use Capell\ThemeStudio\DarkProductSystem\DarkProductSystemThemeServiceProvider;
-use Capell\ThemeStudio\DenseNewsAnalysis\DenseNewsAnalysisThemeServiceProvider;
+use Capell\ThemeStudio\InkPress\InkPressThemeServiceProvider;
+use Capell\ThemeStudio\NightShift\NightShiftThemeServiceProvider;
+use Capell\ThemeStudio\OpenStudio\OpenStudioThemeServiceProvider;
 use Illuminate\Foundation\Application;
 use Livewire\LivewireServiceProvider;
 use Override;
@@ -71,9 +71,9 @@ class UninstalledPackagesTestCase extends AbstractTestCase
             PublishingStudioServiceProvider::class,
             MediaLibraryServiceProvider::class,
             AgentBridgeServiceProvider::class,
-            CaseStudyPlatformThemeServiceProvider::class,
-            DarkProductSystemThemeServiceProvider::class,
-            DenseNewsAnalysisThemeServiceProvider::class,
+            InkPressThemeServiceProvider::class,
+            NightShiftThemeServiceProvider::class,
+            OpenStudioThemeServiceProvider::class,
             FrontendServiceProvider::class,
             CapellServiceProvider::class,
             AdminPanelProvider::class,

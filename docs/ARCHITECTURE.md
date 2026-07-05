@@ -12,7 +12,7 @@ Owns the free theme foundation and shared theme runtime. It provides the baselin
 
 ### First-party theme packages
 
-Theme packages such as `capell-app/theme-liquid-glass`, `capell-app/theme-dark-product-system`, `capell-app/theme-editorial-serif`, and the other first-party visual `theme-*` packages own polished renderers. They register definitions, curated presets, page renderers, section renderers, views, and visual assets. Each theme installs independently and declares `extends: "capell-app/theme-foundation"` in `capell.json`. There is no Studio metapackage bundling them together.
+Theme packages such as `capell-app/theme-liquid-glass`, `capell-app/theme-night-shift`, `capell-app/theme-quiet-type`, and the other first-party visual `theme-*` packages own polished renderers. They register definitions, curated presets, page renderers, section renderers, views, and visual assets. Each theme installs independently and declares `extends: "capell-app/theme-foundation"` in `capell.json`. There is no Studio metapackage bundling them together.
 
 ### `capell-app/layout-builder`
 

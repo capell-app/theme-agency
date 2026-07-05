@@ -1,0 +1,1157 @@
+/* One Take — a curated "one-page love" gallery: warm editorial cream and ink,
+   tall scrolling-site captures framed like browser windows, a coral accent used sparingly.
+   Different register from the bright violet/mint conversion-marketplace sibling
+   (theme-launch-pad): this reads as taste-led inspiration, not a pricing catalog. */
+
+.ops-shell {
+    /* Named containment lets brand-token presets (--theme-spacing,
+       --theme-card-style, --theme-layout-presentation, --theme-heading-scale,
+       --theme-card-density, --theme-overlay-treatment) drive real CSS via
+       container style queries below, progressively enhancing shells whose
+       browser supports it (Baseline 2024+) with no JS required. */
+    container: ops-tokens / normal;
+
+    /* OKLCH tokens (8.2): light-dark() pairs the light/dark values that used
+       to live in the separate prefers-color-scheme block below, so the
+       ink/accent/paper/night tokens now resolve per color-scheme from a
+       single declaration. --ops-muted/--ops-line/--ops-night-text/
+       --ops-night-line stay as color-mix() derivations of --ops-ink because
+       they are computed relations, not standalone swatches — mixing them
+       into light-dark() as well would require duplicating the color-mix()
+       recipe per scheme with no gain in clarity. */
+    --ops-ink: var(
+        --theme-foreground,
+        light-dark(oklch(24% 0.035 45), oklch(94% 0.02 70))
+    );
+    --ops-muted: color-mix(in srgb, var(--ops-ink) 72%, transparent);
+    --ops-line: color-mix(in srgb, var(--ops-ink) 12%, transparent);
+    --ops-accent: var(
+        --theme-accent,
+        light-dark(oklch(66% 0.19 40), oklch(70% 0.19 40))
+    );
+    --ops-accent-bright: color-mix(in srgb, var(--ops-accent) 60%, #ffffff);
+    --ops-field: color-mix(
+        in srgb,
+        var(--ops-accent) 5%,
+        var(--theme-surface, #fbf5ea)
+    );
+    --ops-paper: var(
+        --theme-surface,
+        light-dark(oklch(96% 0.02 85), oklch(20% 0.015 60))
+    );
+    --ops-night: light-dark(oklch(16% 0.02 55), oklch(9% 0.012 55));
+    --ops-night-text: color-mix(in srgb, #ffffff 80%, transparent);
+    --ops-night-line: color-mix(in srgb, #ffffff 16%, transparent);
+    --ops-card-shadow:
+        0 1px 1px color-mix(in srgb, var(--ops-ink) 7%, transparent),
+        0 0.4rem 0.9rem color-mix(in srgb, var(--ops-ink) 5%, transparent),
+        0 1.1rem 2.4rem color-mix(in srgb, var(--ops-ink) 8%, transparent);
+    --ops-card-shadow-hover:
+        0 1px 1px color-mix(in srgb, var(--ops-ink) 7%, transparent),
+        0 0.4rem 0.9rem color-mix(in srgb, var(--ops-ink) 5%, transparent),
+        0 1.5rem 3rem color-mix(in srgb, var(--ops-ink) 12%, transparent);
+    --ops-ease: cubic-bezier(0.33, 1, 0.68, 1);
+    background: var(--ops-paper);
+    color: var(--ops-ink);
+    color-scheme: light dark;
+    font-family: var(--theme-body-font, inter), system-ui, sans-serif;
+    font-size: 1.0625rem;
+    line-height: 1.6;
+}
+
+.ops-shell h1,
+.ops-shell h2,
+.ops-shell h3 {
+    color: var(--ops-ink);
+    font-family: var(--theme-heading-font, sora), system-ui, sans-serif;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+}
+
+.ops-shell h1 {
+    font-size: clamp(2.6rem, 6vw, 5rem);
+    line-height: 1;
+    margin-block: 0;
+    text-wrap: balance;
+}
+
+.ops-shell h2 {
+    font-size: clamp(1.9rem, 3.4vw, 3rem);
+    line-height: 1.05;
+    margin-block: 0;
+    text-wrap: balance;
+}
+
+.ops-shell a:focus-visible,
+.ops-shell button:focus-visible,
+.ops-shell input:focus-visible,
+.ops-shell [tabindex]:focus-visible {
+    box-shadow:
+        0 0 0 3px var(--ops-paper),
+        0 0 0 6px var(--ops-accent),
+        0 0 0 9px color-mix(in srgb, var(--ops-ink) 24%, transparent);
+    outline: 2px solid var(--ops-ink);
+    outline-offset: 3px;
+}
+
+.ops-shell ::selection {
+    background: var(--ops-accent);
+    color: var(--ops-paper);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    @keyframes ops-settle-in {
+        from {
+            opacity: 0;
+            transform: translateY(2.5rem);
+        }
+
+        70% {
+            opacity: 1;
+            transform: translateY(-0.35rem);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @supports (animation-timeline: view()) {
+        .ops-section {
+            animation: ops-settle-in linear both;
+            animation-range: entry 0% cover 30%;
+            animation-timeline: view();
+        }
+
+        .ops-capture-frame,
+        .ops-card {
+            animation: ops-settle-in linear both;
+            animation-range: entry 5% cover 35%;
+            animation-timeline: view();
+        }
+    }
+}
+
+.ops-skip-link {
+    background: var(--ops-night);
+    color: #ffffff;
+    inset-inline-start: 1rem;
+    padding: 0.75rem 1rem;
+    position: fixed;
+    top: 1rem;
+    transform: translateY(-150%);
+    z-index: 50;
+}
+
+.ops-skip-link:focus {
+    transform: translateY(0);
+}
+
+/* ---------------------------------------------------------------- sections */
+
+.ops-section {
+    border-top: 0;
+}
+
+.ops-section + .ops-section {
+    border-top: 1px solid var(--ops-line);
+}
+
+.ops-section-dark + .ops-section-dark {
+    border-top-color: var(--ops-night-line);
+}
+
+.ops-section-dark {
+    background: var(--ops-night);
+    color: var(--ops-night-text);
+}
+
+.ops-section-field {
+    background: var(--ops-field);
+}
+
+.ops-section-dark h1,
+.ops-section-dark h2,
+.ops-section-dark h3 {
+    color: #ffffff;
+}
+
+.ops-section-inner {
+    margin-inline: auto;
+    max-width: 78rem;
+    padding: clamp(3.5rem, 7vw, 6.5rem) clamp(1.25rem, 4vw, 3rem);
+}
+
+.ops-kicker {
+    color: color-mix(in srgb, var(--ops-accent) 72%, var(--ops-ink));
+    font-size: 0.78rem;
+    font-weight: 800;
+    letter-spacing: 0.18em;
+    margin: 0;
+    text-transform: uppercase;
+}
+
+.ops-section-dark .ops-kicker {
+    color: var(--ops-accent-bright);
+}
+
+.ops-lede {
+    color: var(--ops-muted);
+    font-size: clamp(1.05rem, 1vw + 0.9rem, 1.3rem);
+    line-height: 1.6;
+    margin-block: 1.1rem 0;
+    max-width: 42rem;
+    text-wrap: pretty;
+}
+
+.ops-section-dark .ops-lede {
+    color: var(--ops-night-text);
+}
+
+.ops-actions {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.9rem;
+    margin-top: 2rem;
+}
+
+/* -------------------------------------------------------------- navigation */
+
+.ops-nav {
+    background: color-mix(in srgb, var(--ops-paper) 94%, transparent);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--ops-line);
+    position: sticky;
+    top: 0;
+    z-index: 30;
+}
+
+.ops-nav-inner {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem 2rem;
+    justify-content: space-between;
+    margin-inline: auto;
+    max-width: 78rem;
+    padding: 1rem 1.25rem;
+}
+
+.ops-brand {
+    align-items: center;
+    color: var(--ops-ink);
+    display: inline-flex;
+    font-family: var(--theme-heading-font, sora), system-ui, sans-serif;
+    font-size: 1.1rem;
+    font-weight: 800;
+    gap: 0.55rem;
+    text-decoration: none;
+}
+
+.ops-brand-mark {
+    background: var(--ops-accent);
+    border-radius: 0.45rem;
+    display: inline-block;
+    height: 1.5rem;
+    width: 1.5rem;
+}
+
+.ops-nav-links {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem 1.6rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.ops-shell nav a {
+    color: var(--ops-ink);
+    font-size: 0.92rem;
+    font-weight: 700;
+    text-decoration: none;
+    transition: color 0.18s var(--ops-ease);
+}
+
+.ops-shell nav a:hover,
+.ops-shell nav a:focus-visible {
+    color: var(--ops-accent);
+}
+
+.ops-nav-cta {
+    background: var(--ops-ink);
+    border-radius: 999px;
+    box-shadow: inset 0 1px 0 color-mix(in srgb, #ffffff 22%, transparent);
+    color: var(--ops-paper);
+    font-size: 0.85rem;
+    font-weight: 800;
+    padding: 0.55rem 1.1rem;
+    transition: background-color 0.18s var(--ops-ease);
+}
+
+.ops-nav-cta:hover,
+.ops-nav-cta:focus-visible {
+    background: var(--ops-accent);
+    color: #ffffff;
+}
+
+/* ----------------------------------------------------------------- buttons */
+
+.ops-button {
+    align-items: center;
+    background: var(--theme-primary, #241a12);
+    border: 2px solid var(--theme-primary, #241a12);
+    border-radius: 999px;
+    box-shadow:
+        inset 0 1px 0 color-mix(in srgb, #ffffff 22%, transparent),
+        0 1px 2px color-mix(in srgb, var(--ops-ink) 18%, transparent);
+    color: #ffffff;
+    cursor: pointer;
+    display: inline-flex;
+    font-size: 0.95rem;
+    font-weight: 700;
+    gap: 0.6rem;
+    min-height: 3.1rem;
+    padding: 0.85rem 1.6rem;
+    text-decoration: none;
+    transition:
+        background-color 0.18s var(--ops-ease),
+        border-color 0.18s var(--ops-ease),
+        box-shadow 0.25s var(--ops-ease),
+        translate 0.25s var(--ops-ease);
+}
+
+.ops-button:hover,
+.ops-button:focus-visible {
+    background: var(--ops-accent);
+    border-color: var(--ops-accent);
+    box-shadow:
+        inset 0 1px 0 color-mix(in srgb, #ffffff 28%, transparent),
+        0 0.55rem 1.25rem color-mix(in srgb, var(--ops-accent) 35%, transparent);
+    translate: 0 -2px;
+}
+
+.ops-button-secondary {
+    background: transparent;
+    color: var(--ops-ink);
+}
+
+.ops-button-secondary:hover,
+.ops-button-secondary:focus-visible {
+    background: transparent;
+    border-color: var(--ops-accent);
+    color: var(--ops-accent);
+}
+
+.ops-section-dark .ops-button {
+    background: var(--ops-paper);
+    border-color: var(--ops-paper);
+    color: var(--ops-ink);
+}
+
+.ops-section-dark .ops-button:hover,
+.ops-section-dark .ops-button:focus-visible {
+    background: var(--ops-accent-bright);
+    border-color: var(--ops-accent-bright);
+    color: var(--ops-night);
+}
+
+.ops-section-dark .ops-button-secondary {
+    border-color: var(--ops-night-line);
+    color: #ffffff;
+}
+
+.ops-section-dark .ops-button-secondary:hover,
+.ops-section-dark .ops-button-secondary:focus-visible {
+    border-color: var(--ops-accent-bright);
+    color: var(--ops-accent-bright);
+}
+
+/* -------------------------------------------------------------------- hero */
+
+.ops-hero-grid {
+    display: grid;
+    gap: clamp(2.5rem, 5vw, 4rem);
+}
+
+@media (min-width: 900px) {
+    .ops-hero-grid {
+        align-items: center;
+        grid-template-columns: minmax(0, 1.1fr) minmax(18rem, 0.9fr);
+    }
+}
+
+/* --------------------------------------------------------------- captures */
+/* A "capture" is a tall single-page-site screenshot, framed like a slim
+   browser chrome so it reads as a real site, not a generic photo card. */
+
+.ops-capture-frame {
+    background: var(--ops-paper);
+    border: 1px solid var(--ops-line);
+    border-radius: max(var(--theme-radius, 1rem), 1rem);
+    box-shadow: var(--ops-card-shadow);
+    overflow: hidden;
+    transition:
+        translate 0.3s var(--ops-ease),
+        box-shadow 0.3s var(--ops-ease);
+}
+
+.ops-capture-frame:hover {
+    box-shadow: var(--ops-card-shadow-hover);
+    translate: 0 -4px;
+}
+
+.ops-capture-chrome {
+    align-items: center;
+    background: color-mix(in srgb, var(--ops-ink) 5%, var(--ops-paper));
+    border-bottom: 1px solid var(--ops-line);
+    display: flex;
+    gap: 0.35rem;
+    padding: 0.6rem 0.85rem;
+    position: relative;
+    z-index: 1;
+}
+
+.ops-capture-chrome span {
+    background: color-mix(in srgb, var(--ops-ink) 22%, transparent);
+    border-radius: 50%;
+    display: block;
+    height: 0.55rem;
+    width: 0.55rem;
+}
+
+.ops-capture-media {
+    aspect-ratio: 3 / 4;
+    background-color: color-mix(
+        in srgb,
+        var(--ops-accent) 45%,
+        var(--ops-night)
+    );
+    display: block;
+    object-fit: cover;
+    width: 100%;
+}
+
+.ops-capture-media-tall {
+    aspect-ratio: 9 / 14;
+}
+
+.ops-capture-media-wide {
+    aspect-ratio: 16 / 10;
+}
+
+.ops-capture-media-empty {
+    align-items: flex-end;
+    background: linear-gradient(
+        165deg,
+        color-mix(in srgb, var(--ops-accent) 22%, var(--ops-paper)),
+        color-mix(in srgb, var(--ops-ink) 10%, var(--ops-paper))
+    );
+    display: flex;
+    justify-content: flex-start;
+    padding: 1rem;
+}
+
+.ops-capture-media-empty::before {
+    background: #ffffff;
+    border-radius: 0.4rem;
+    box-shadow: 0 0.5rem 1.5rem
+        color-mix(in srgb, var(--ops-ink) 16%, transparent);
+    content: '';
+    display: block;
+    height: 0.55rem;
+    width: 55%;
+}
+
+.ops-capture-body {
+    background: var(--ops-paper);
+    display: grid;
+    gap: 0.45rem;
+    padding: 1.1rem 1.25rem 1.35rem;
+    position: relative;
+    z-index: 1;
+}
+
+.ops-capture-body h3 {
+    font-size: 1.1rem;
+    line-height: 1.25;
+    margin: 0;
+}
+
+.ops-capture-body p {
+    color: var(--ops-muted);
+    line-height: 1.55;
+    margin: 0;
+}
+
+/* ------------------------------------------------------------------- tags */
+
+.ops-tag-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-top: 0.35rem;
+}
+
+.ops-tag {
+    background: color-mix(in srgb, var(--ops-accent) 12%, transparent);
+    border-radius: 999px;
+    color: color-mix(in srgb, var(--ops-accent) 72%, var(--ops-ink));
+    font-size: 0.74rem;
+    font-weight: 700;
+    padding: 0.28rem 0.7rem;
+}
+
+.ops-section-dark .ops-tag {
+    background: color-mix(in srgb, #ffffff 14%, transparent);
+    color: var(--ops-accent-bright);
+}
+
+/* ------------------------------------------------------------------- grid */
+
+.ops-grid {
+    container-type: inline-size;
+    display: grid;
+    gap: clamp(1.5rem, 3vw, 2.25rem);
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
+    margin-top: clamp(2rem, 4vw, 3.25rem);
+}
+
+.ops-grid-captures {
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+}
+
+/* ------------------------------------------------------------------ cards */
+
+.ops-card {
+    background: var(--ops-paper);
+    border: 1px solid var(--ops-line);
+    border-radius: max(var(--theme-radius, 1rem), 0.9rem);
+    box-shadow: var(--ops-card-shadow);
+    display: grid;
+    gap: 0.75rem;
+    padding: clamp(1.35rem, 2.2vw, 1.85rem);
+    transition:
+        translate 0.3s var(--ops-ease),
+        box-shadow 0.3s var(--ops-ease);
+}
+
+/* Container-query refinement: once a card's own inline space is tight
+   (stacked to a single grid column on narrow shells), tighten the card's
+   internal rhythm using container query length units instead of relying
+   solely on the viewport breakpoints above. */
+@container (max-width: 22rem) {
+    .ops-card {
+        gap: 0.55rem;
+        padding: clamp(1.1rem, 6cqi, 1.5rem);
+    }
+
+    .ops-card h3 {
+        font-size: clamp(1rem, 5.5cqi, 1.2rem);
+    }
+}
+
+.ops-section-dark .ops-card {
+    background: color-mix(in srgb, #ffffff 6%, var(--ops-night));
+    border-color: var(--ops-night-line);
+    box-shadow: inset 0 1px 0 color-mix(in srgb, #ffffff 8%, transparent);
+    color: var(--ops-night-text);
+}
+
+.ops-section-dark .ops-card h3 {
+    color: #ffffff;
+}
+
+.ops-card h3 {
+    font-size: 1.08rem;
+    line-height: 1.25;
+    margin: 0;
+    text-wrap: balance;
+}
+
+.ops-card p {
+    color: var(--ops-muted);
+    line-height: 1.55;
+    margin: 0;
+    text-wrap: pretty;
+}
+
+.ops-section-dark .ops-card p {
+    color: var(--ops-night-text);
+}
+
+.ops-meta {
+    color: var(--ops-muted);
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    margin: 0;
+    text-transform: uppercase;
+}
+
+.ops-section-dark .ops-meta {
+    color: var(--ops-night-text);
+}
+
+/* --------------------------------------------------------------- tab row */
+
+.ops-tab-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin-top: clamp(1.75rem, 3vw, 2.5rem);
+}
+
+.ops-tab {
+    background: var(--ops-paper);
+    border: 1px solid var(--ops-line);
+    border-radius: 999px;
+    display: grid;
+    gap: 0.1rem;
+    padding: 0.7rem 1.15rem;
+    text-decoration: none;
+    transition:
+        color 0.18s var(--ops-ease),
+        border-color 0.18s var(--ops-ease);
+}
+
+.ops-tab strong {
+    color: var(--ops-ink);
+    font-size: 0.92rem;
+    font-weight: 800;
+}
+
+.ops-tab span {
+    color: var(--ops-muted);
+    font-size: 0.78rem;
+    line-height: 1.35;
+    max-width: 16rem;
+}
+
+.ops-tab:hover,
+.ops-tab:focus-visible {
+    border-color: var(--ops-accent);
+}
+
+.ops-tab:hover strong,
+.ops-tab:focus-visible strong {
+    color: var(--ops-accent);
+}
+
+/* ------------------------------------------------------------- title link */
+
+.ops-title-link {
+    color: inherit;
+    text-decoration: none;
+    transition: color 0.18s var(--ops-ease);
+}
+
+.ops-title-link:hover,
+.ops-title-link:focus-visible {
+    color: var(--ops-accent);
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 0.3rem;
+}
+
+.ops-section-dark .ops-title-link:hover,
+.ops-section-dark .ops-title-link:focus-visible {
+    color: var(--ops-accent-bright);
+}
+
+/* -------------------------------------------------------------- index row */
+
+.ops-index {
+    border-top: 1px solid var(--ops-line);
+    display: grid;
+    margin-top: clamp(2rem, 4vw, 3.25rem);
+}
+
+.ops-section-dark .ops-index {
+    border-top-color: var(--ops-night-line);
+}
+
+.ops-index-row {
+    border-bottom: 1px solid var(--ops-line);
+    display: grid;
+    gap: 0.6rem 2rem;
+    padding-block: clamp(1.25rem, 2.5vw, 2rem);
+}
+
+.ops-section-dark .ops-index-row {
+    border-bottom-color: var(--ops-night-line);
+}
+
+.ops-index-row h3 {
+    font-size: clamp(1.25rem, 2vw, 1.75rem);
+    line-height: 1.15;
+    margin: 0;
+}
+
+.ops-index-row p {
+    color: var(--ops-muted);
+    margin: 0;
+    max-width: 34rem;
+}
+
+.ops-section-dark .ops-index-row p {
+    color: var(--ops-night-text);
+}
+
+.ops-index-thumb {
+    aspect-ratio: 3 / 4;
+    background-color: color-mix(
+        in srgb,
+        var(--ops-accent) 45%,
+        var(--ops-night)
+    );
+    border: 1px solid var(--ops-line);
+    border-radius: 0.6rem;
+    max-width: 8rem;
+    object-fit: cover;
+    width: 100%;
+}
+
+@media (min-width: 768px) {
+    .ops-index-row {
+        align-items: start;
+        grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+    }
+
+    .ops-index-row-media {
+        grid-template-columns: 6rem minmax(0, 1.2fr) minmax(0, 1fr);
+    }
+}
+
+/* -------------------------------------------------------------- newsletter */
+
+.ops-split {
+    display: grid;
+    gap: clamp(2.5rem, 5vw, 4rem);
+}
+
+@media (min-width: 900px) {
+    .ops-split {
+        align-items: center;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    }
+}
+
+.ops-form {
+    background: var(--ops-paper);
+    border: 1px solid var(--ops-line);
+    border-radius: max(var(--theme-radius, 1rem), 1rem);
+    box-shadow: var(--ops-card-shadow);
+    display: grid;
+    gap: 1.1rem;
+    padding: clamp(1.75rem, 3vw, 2.5rem);
+}
+
+.ops-form label {
+    font-size: 0.8rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.ops-form input {
+    accent-color: var(--ops-accent);
+    background: color-mix(in srgb, var(--ops-ink) 4%, transparent);
+    border: 1px solid var(--ops-line);
+    border-radius: 0.65rem;
+    color: var(--ops-ink);
+    font-size: 1rem;
+    padding: 0.85rem 1rem;
+    transition:
+        border-color 0.15s ease,
+        box-shadow 0.15s ease;
+    width: 100%;
+}
+
+.ops-form input::placeholder {
+    color: var(--ops-muted);
+    opacity: 0.75;
+}
+
+.ops-form input:user-invalid {
+    border-color: color-mix(in srgb, #d9483a 65%, var(--ops-line));
+    box-shadow: 0 0 0 3px color-mix(in srgb, #d9483a 16%, transparent);
+}
+
+.ops-form input:user-valid {
+    border-color: color-mix(in srgb, var(--ops-accent) 55%, var(--ops-line));
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--ops-accent) 14%, transparent);
+}
+
+.ops-form .ops-button {
+    justify-self: start;
+}
+
+/* ------------------------------------------------------------------ footer */
+
+.ops-footer-grid {
+    display: grid;
+    gap: clamp(2rem, 4vw, 3.5rem);
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr));
+}
+
+.ops-footer-brand {
+    display: grid;
+    gap: 0.85rem;
+}
+
+.ops-footer-wordmark {
+    color: #ffffff;
+    font-family: var(--theme-heading-font, sora), system-ui, sans-serif;
+    font-size: 1.35rem;
+    font-weight: 800;
+    line-height: 1;
+}
+
+.ops-footer-summary {
+    color: var(--ops-night-text);
+    margin: 0;
+    max-width: 22rem;
+    text-wrap: pretty;
+}
+
+.ops-footer-heading {
+    color: var(--ops-accent-bright);
+    font-size: 0.78rem;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+    margin: 0 0 1rem;
+    text-transform: uppercase;
+}
+
+.ops-footer-links {
+    display: grid;
+    gap: 0.65rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.ops-footer-links a {
+    color: var(--ops-night-text);
+    text-decoration: none;
+}
+
+.ops-footer-links a:hover,
+.ops-footer-links a:focus-visible {
+    color: #ffffff;
+    text-decoration: underline;
+    text-underline-offset: 0.3rem;
+}
+
+/* ------------------------------------------------------------- print media */
+
+@media print {
+    .ops-shell {
+        background: #ffffff;
+        color: #000000;
+        font-family: var(--theme-body-font, inter), system-ui, sans-serif;
+        font-size: 11pt;
+        line-height: 1.5;
+    }
+
+    .ops-shell .ops-nav,
+    .ops-shell .ops-nav-cta,
+    .ops-shell .ops-actions,
+    .ops-shell .ops-button,
+    .ops-shell .ops-form,
+    .ops-shell .ops-skip-link,
+    .ops-shell footer.ops-section {
+        display: none !important;
+    }
+
+    .ops-shell h1,
+    .ops-shell h2,
+    .ops-shell h3 {
+        color: #000000;
+    }
+
+    .ops-shell .ops-section-inner {
+        max-width: none;
+        padding: 0.5cm 0;
+    }
+
+    .ops-shell .ops-section-dark {
+        background: #ffffff;
+        color: #000000;
+    }
+
+    .ops-shell .ops-section-dark h1,
+    .ops-shell .ops-section-dark h2,
+    .ops-shell .ops-section-dark h3 {
+        color: #000000;
+    }
+
+    .ops-shell .ops-lede,
+    .ops-shell .ops-card p,
+    .ops-shell .ops-capture-body p,
+    .ops-shell .ops-index-row p,
+    .ops-shell .ops-section-dark .ops-card p {
+        color: #1a1a1a;
+    }
+
+    .ops-shell .ops-card,
+    .ops-shell .ops-capture-frame,
+    .ops-shell .ops-index-row,
+    .ops-shell .ops-tab {
+        border: 1px solid #999999;
+        box-shadow: none;
+        break-inside: avoid;
+        page-break-inside: avoid;
+    }
+
+    .ops-shell .ops-section-dark .ops-card {
+        background: #ffffff;
+        border-color: #999999;
+        color: #000000;
+    }
+
+    .ops-shell .ops-capture-media,
+    .ops-shell .ops-capture-media-empty,
+    .ops-shell .ops-index-thumb {
+        background: #eeeeee;
+        print-color-adjust: exact;
+        -webkit-print-color-adjust: exact;
+    }
+
+    .ops-shell .ops-title-link,
+    .ops-shell a {
+        color: #000000;
+        text-decoration: underline;
+    }
+
+    .ops-shell .ops-title-link[href]::after {
+        content: ' (' attr(href) ')';
+        font-size: 0.85em;
+        font-weight: 400;
+    }
+}
+
+/* ------------------------------------------------------------- dark scheme */
+
+/* --ops-ink/--ops-accent/--ops-paper/--ops-night now resolve per scheme via
+   light-dark() on their single declaration in .ops-shell above (8.2), and
+   --ops-muted/--ops-line/--ops-night-text/--ops-night-line are color-mix()
+   derivations of --ops-ink so they update automatically — this block only
+   keeps the overrides that are genuine per-scheme design decisions rather
+   than mechanical light/dark swaps: the accent-bright mix ratio/target and
+   the shadow tint. */
+@media (prefers-color-scheme: dark) {
+    .ops-shell {
+        --ops-accent-bright: color-mix(in srgb, var(--ops-accent) 55%, #ffd9a8);
+        --ops-field: color-mix(in srgb, var(--ops-accent) 8%, var(--ops-paper));
+        --ops-card-shadow:
+            0 1px 1px color-mix(in srgb, #000000 35%, transparent),
+            0 0.4rem 0.9rem color-mix(in srgb, #000000 25%, transparent),
+            0 1.1rem 2.4rem color-mix(in srgb, #000000 40%, transparent);
+        --ops-card-shadow-hover:
+            0 1px 1px color-mix(in srgb, #000000 35%, transparent),
+            0 0.4rem 0.9rem color-mix(in srgb, #000000 25%, transparent),
+            0 1.5rem 3rem color-mix(in srgb, #000000 55%, transparent);
+    }
+}
+
+/* -------------------------------------------------------- brand token wiring */
+/* Each Capell theme preset token below is consumed here through a container
+   style query on the named `ops-tokens` container declared on .ops-shell,
+   rather than left as an inert inline custom property. Style queries are a
+   progressive enhancement: browsers without support simply keep the
+   defaults already set above. */
+
+/* --theme-spacing: shared rhythm scale for the primary showcase grid. The
+   default gap already matches "balanced" (clamp topping out near 2.25rem);
+   "compact" tightens it. */
+@container ops-tokens style(--theme-spacing: compact) {
+    .ops-grid {
+        gap: 0.875rem;
+    }
+}
+
+/* --theme-card-style: "bordered" and "outlined" are wired as genuinely
+   distinct treatments on the primary card/tile selector, not synonyms.
+   Bordered keeps a crisp hairline border and drops the ambient shadow;
+   outlined uses a heavier offset double-border look instead. */
+@container ops-tokens style(--theme-card-style: bordered) {
+    .ops-card,
+    .ops-capture-frame {
+        border: 1px solid var(--ops-line);
+        box-shadow: none;
+    }
+}
+
+@container ops-tokens style(--theme-card-style: outlined) {
+    .ops-card,
+    .ops-capture-frame {
+        border: 1.5px solid var(--ops-ink);
+        box-shadow:
+            0 0 0 3px var(--ops-paper),
+            0 0 0 4.5px var(--ops-line);
+    }
+}
+
+/* --theme-layout-presentation: "editorial" keeps an asymmetric rhythm where
+   the lead showcase item spans two tracks; "grid" replaces it with a plain,
+   uniform auto-fit grid that is tighter and more even than editorial. Both
+   values are genuinely used across this theme's two presets. */
+@container ops-tokens style(--theme-layout-presentation: editorial) {
+    .ops-grid-captures > :first-child {
+        grid-column: span 2;
+    }
+}
+
+@container ops-tokens style(--theme-layout-presentation: grid) {
+    .ops-grid-captures {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    }
+
+    .ops-grid-captures > :first-child {
+        grid-column: auto;
+    }
+}
+
+/* --theme-heading-scale: the CMS sanitises the raw literal "condensed" down
+   to the "balanced" default bucket today, but the canonical smaller bucket
+   is "compact". Both the canonical bucket and the literal value are wired
+   here to the same tighter multiplier so the token has real effect however
+   it eventually reaches the page. Deliberately smaller than the standard
+   0.92 compact multiplier used elsewhere, since "condensed" implies more
+   compression. Targets the secondary showcase item title, not the hero. */
+.ops-capture-body h3 {
+    --ops-heading-scale: 1;
+    font-size: clamp(
+        0.95rem,
+        calc(1.1rem * var(--ops-heading-scale)),
+        calc(1.1rem * var(--ops-heading-scale))
+    );
+}
+
+@container ops-tokens style(--theme-heading-scale: compact) {
+    .ops-capture-body h3 {
+        --ops-heading-scale: 0.88;
+    }
+}
+
+@container ops-tokens style(--theme-heading-scale: condensed) {
+    .ops-capture-body h3 {
+        --ops-heading-scale: 0.88;
+    }
+}
+
+/* --theme-card-density: canonical "compact" (covers the literal "dense")
+   tightens card padding; canonical "comfortable" (covers the default
+   literal "airy") keeps the existing padding, so only the tightened branch
+   needs an explicit rule. */
+@container ops-tokens style(--theme-card-density: compact) {
+    .ops-card {
+        padding: 0.75rem;
+    }
+}
+
+@container ops-tokens style(--theme-card-density: dense) {
+    .ops-card {
+        padding: 0.75rem;
+    }
+}
+
+/* --theme-overlay-treatment: always present, sanitised to none|subtle|
+   strong. ops-capture-media is frequently an <img> (a replaced element, so
+   ::after never paints on it directly), so the overlay is layered on the
+   ops-capture-frame wrapper instead, positioned over the media area. */
+.ops-capture-frame {
+    position: relative;
+}
+
+.ops-capture-frame::after {
+    background: linear-gradient(
+        180deg,
+        transparent 35%,
+        color-mix(in srgb, var(--ops-night) 80%, transparent)
+    );
+    content: '';
+    inset: 0;
+    opacity: 0.35;
+    pointer-events: none;
+    position: absolute;
+}
+
+@container ops-tokens style(--theme-overlay-treatment: none) {
+    .ops-capture-frame::after {
+        opacity: 0;
+    }
+}
+
+@container ops-tokens style(--theme-overlay-treatment: strong) {
+    .ops-capture-frame::after {
+        opacity: 0.6;
+    }
+}
+
+/* Forced-colors (Wave 11.5): High Contrast mode strips box-shadow but keeps
+   outline, and flattens backgrounds — so re-assert focus with outline and give
+   cards a transparent border the OS repaints, and protect swatches whose
+   colour IS the content. */
+@media (forced-colors: active) {
+    .ops-shell a:focus-visible,
+    .ops-shell button:focus-visible,
+    .ops-shell input:focus-visible,
+    .ops-shell [tabindex]:focus-visible {
+        outline: 2px solid;
+        outline-offset: 2px;
+    }
+
+    .ops-card,
+    .ops-capture-frame,
+    .ops-tab,
+    .ops-index-row {
+        border: 1px solid transparent;
+    }
+
+    .ops-brand-mark {
+        forced-color-adjust: none;
+    }
+}
+
+/* High contrast preference (Wave 11.5): thicken hairline rules and lift the
+   dimmed/muted text one step so the quiet layer stays legible. */
+@media (prefers-contrast: more) {
+    .ops-card,
+    .ops-capture-frame,
+    .ops-tab,
+    .ops-index-row,
+    .ops-index {
+        border-color: var(--ops-ink);
+    }
+
+    .ops-muted,
+    .ops-lede,
+    .ops-card p,
+    .ops-capture-body p,
+    .ops-index-row p,
+    .ops-meta {
+        color: var(--ops-ink);
+    }
+}
+
+/* View Transitions (Wave 6.5): opt every same-origin navigation into a smooth
+   cross-document transition where supported; static fallback everywhere else.
+   Reduced-motion users still navigate — just without the animation. */
+@view-transition {
+    navigation: auto;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    ::view-transition-group(*),
+    ::view-transition-old(*),
+    ::view-transition-new(*) {
+        animation: none !important;
+    }
+}

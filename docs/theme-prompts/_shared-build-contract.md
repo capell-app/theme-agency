@@ -10,7 +10,7 @@ This file is the condensed contract; that file is the source of truth when they
 disagree.
 
 The closest working examples to copy from are `packages/theme-liquid-glass`,
-`packages/theme-dark-product-system`, and `packages/theme-editorial-serif`.
+`packages/theme-night-shift`, and `packages/theme-quiet-type`.
 
 ---
 

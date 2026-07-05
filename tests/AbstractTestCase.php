@@ -69,6 +69,7 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Testing\PendingCommand;
+use Illuminate\View\DynamicComponent;
 use Illuminate\View\Factory as ViewFactory;
 use LaraZeus\SpatieTranslatable\SpatieTranslatableServiceProvider;
 use Livewire\Blaze\BlazeServiceProvider;
@@ -79,6 +80,7 @@ use Orchestra\Testbench\Concerns\WithWorkbench;
 use Orchestra\Testbench\TestCase;
 use Orchestra\Workbench\WorkbenchServiceProvider;
 use Override;
+use ReflectionClass;
 use RuntimeException;
 use Saade\FilamentAdjacencyList\FilamentAdjacencyListServiceProvider;
 use Sinnbeck\DomAssertions\DomAssertionsServiceProvider;
@@ -208,6 +210,7 @@ abstract class AbstractTestCase extends TestCase
         try {
             $this->cleanupOrderedMigrationWorkspace();
             Model::clearBootedModels();
+            $this->resetDynamicComponentStaticCaches();
         } finally {
             parent::tearDown();
         }
@@ -441,6 +444,57 @@ abstract class AbstractTestCase extends TestCase
             }
 
             $migration->up();
+        }
+    }
+
+    /**
+     * Resets `Illuminate\View\DynamicComponent`'s two `protected static`
+     * caches (`$componentClasses` and `$compiler`) between tests.
+     *
+     * These are genuine PHP-process-level statics — never rebuilt per test,
+     * unlike everything resolved through the container — yet
+     * `<x-dynamic-component :component="...">` (the real chrome-override
+     * seam every layout-native theme's `Theme::meta.header_file` /
+     * `footer_file` resolves through; see
+     * `RegistersLayoutNativeThemeDefaults`) is compiled through exactly this
+     * class. Once any real HTTP hit in this process resolves one dynamic
+     * component name, `$componentClasses` permanently caches the resolved
+     * class/view for that exact string, and `$compiler` permanently caches a
+     * `ComponentTagCompiler` snapshotting whichever single Laravel
+     * application instance happened to build it first — including that
+     * app's Blade component aliases and anonymous-component namespaces.
+     * Every subsequent test in the same process (a fresh Testbench
+     * application, with its own freshly re-registered theme view
+     * namespaces) then silently resolves dynamic components against that
+     * first, stale snapshot instead of its own current registrations.
+     *
+     * Confirmed by reproduction: any two layout-native themes' real-HTTP
+     * chrome tests (e.g. LiquidGlassBespokeWidgetsTest and
+     * NightShiftBespokeWidgetsTest's "renders real header and footer
+     * chrome..." tests) fail in whichever order runs second, each with
+     * "Unable to locate a class or view for component" naming the OTHER
+     * theme's `header_file`/widget component — never the one actually under
+     * test — when the first theme's test is left to permanently populate
+     * these statics. Resetting them here, in the shared base test case,
+     * fixes it for every current and future layout-native theme's tests
+     * rather than requiring each one to independently discover and work
+     * around this framework-level footgun.
+     */
+    private function resetDynamicComponentStaticCaches(): void
+    {
+        if (! class_exists(DynamicComponent::class)) {
+            return;
+        }
+
+        $reflectedClass = new ReflectionClass(DynamicComponent::class);
+
+        foreach (['componentClasses', 'compiler'] as $staticPropertyName) {
+            if (! $reflectedClass->hasProperty($staticPropertyName)) {
+                continue;
+            }
+
+            $reflectedProperty = $reflectedClass->getProperty($staticPropertyName);
+            $reflectedProperty->setValue(null, $staticPropertyName === 'componentClasses' ? [] : null);
         }
     }
 

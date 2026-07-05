@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 return [
-    'skip_to_content' => 'Skip to content',
     'main_navigation' => 'Main navigation',
     'menu' => 'Menu',
     'footer' => 'Footer',

@@ -16,15 +16,21 @@ final class ThemeLiquidGlassHealthCheck implements ChecksExtensionHealth
      * @var list<string>
      */
     private const array REQUIRED_VIEW_FILES = [
-        'resources/views/page.blade.php',
-        'resources/views/livewire/page/page.blade.php',
         'resources/views/sections/navigation.blade.php',
         'resources/views/sections/hero.blade.php',
         'resources/views/sections/features.blade.php',
+        'resources/views/sections/showcase.blade.php',
+        'resources/views/sections/presets.blade.php',
         'resources/views/sections/proof.blade.php',
         'resources/views/sections/content-listing.blade.php',
         'resources/views/sections/cta.blade.php',
         'resources/views/sections/footer.blade.php',
+        // Task C2: layout-builder-native chrome and bespoke widget views.
+        'resources/views/header/index.blade.php',
+        'resources/views/footer.blade.php',
+        'resources/views/widget/cta.blade.php',
+        'resources/views/widget/showcase.blade.php',
+        'resources/views/widget/presets.blade.php',
     ];
 
     /**

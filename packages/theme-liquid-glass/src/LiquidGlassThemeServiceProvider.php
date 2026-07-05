@@ -4,22 +4,28 @@ declare(strict_types=1);
 
 namespace Capell\ThemeStudio\LiquidGlass;
 
+use Capell\Core\Data\RenderableDefinitionData;
 use Capell\Core\Data\VendorAssetData;
 use Capell\Core\Enums\FrontendRuntime;
 use Capell\Core\Enums\VendorAssetEnum;
 use Capell\Core\Facades\CapellCore;
+use Capell\Core\Models\Theme;
+use Capell\Core\Support\Renderables\RenderableRegistry;
 use Capell\Core\ThemeStudio\Data\ThemeDefinitionData;
 use Capell\Core\ThemeStudio\Data\ThemePresetData;
-use Capell\Core\ThemeStudio\Rendering\ViewSectionRenderer;
 use Capell\Core\ThemeStudio\Theme\ThemeRegistry;
-use Capell\FoundationTheme\Rendering\ChromeSplitBladeThemeRenderer;
 use Capell\FoundationTheme\Support\Editor\StandardThemeEditorSchema;
+use Capell\FoundationTheme\Support\Providers\RegistersLayoutNativeThemeDefaults;
 use Capell\ThemeStudio\LiquidGlass\Console\Commands\DemoCommand;
+use Capell\ThemeStudio\LiquidGlass\Enums\WidgetComponentEnum;
+use Capell\ThemeStudio\LiquidGlass\Support\Interceptors\Themes\LiquidGlassThemeInterceptor;
 use Illuminate\Support\ServiceProvider;
 use Override;
 
 class LiquidGlassThemeServiceProvider extends ServiceProvider
 {
+    use RegistersLayoutNativeThemeDefaults;
+
     public const string THEME_KEY = 'liquid-glass';
 
     public const string PUBLIC_PREVIEW_IMAGE = '/vendor/capell/themes/liquid-glass.svg';
@@ -36,7 +42,6 @@ class LiquidGlassThemeServiceProvider extends ServiceProvider
             previewImage: self::PUBLIC_PREVIEW_IMAGE,
             tags: ['Glass', 'Modern', 'Launch'],
             bestFit: ['Modern service sites', 'Product launches', 'Design-led teams'],
-            includedSections: ['navigation', 'hero', 'features', 'showcase', 'presets', 'proof', 'content-listing', 'cta', 'footer'],
             presets: [
                 new ThemePresetData(
                     key: 'clarity',
@@ -141,20 +146,28 @@ class LiquidGlassThemeServiceProvider extends ServiceProvider
         }
 
         $this->loadTranslationsFrom(__DIR__ . '/../resources/lang', 'capell-theme-liquid-glass');
-        $this->loadViewsFrom(__DIR__ . '/../resources/views', 'capell-theme-liquid-glass');
+
+        // See RegistersLayoutNativeThemeDefaults::registerThemeViewNamespace()'s
+        // docblock for why this theme needs both a plain view namespace AND
+        // an anonymous-component namespace registered for the same views —
+        // in short, the `Theme::meta.header_file` / `footer_file`
+        // chrome-override seam (documented further below, at
+        // registerLayoutAreas()'s docblock) resolves through
+        // `<x-dynamic-component>`, which only consults the component
+        // namespace, not the plain view namespace.
+        $this->registerThemeViewNamespace('capell-theme-liquid-glass', __DIR__ . '/../resources/views');
+
         $this->registerVendorCssAssets();
+        $this->registerLayoutAreas();
+        $this->registerBespokeWidgetRenderables();
+        $this->registerModelInterceptors();
 
-        $sectionRenderers = $this->sectionRenderers();
-
-        $registry->register(
-            definition: self::definition(),
-            themeRenderer: new ChromeSplitBladeThemeRenderer(
-                themeKey: self::THEME_KEY,
-                layoutView: 'capell-theme-liquid-glass::page',
-                sectionRenderers: $sectionRenderers,
-            ),
-            sectionRenderers: array_values($sectionRenderers),
-        );
+        // Definition-only registration: Liquid Glass no longer ships a
+        // ThemeRenderer or section renderers. Public pages render through
+        // the shared `x-capell::layout` + layout-builder container pipeline
+        // instead of this package's own page shell, so
+        // ThemeRegistry::hasRenderer(self::THEME_KEY) is false from here on.
+        $registry->register(definition: self::definition());
     }
 
     private function registerVendorCssAssets(): void
@@ -174,20 +187,130 @@ class LiquidGlassThemeServiceProvider extends ServiceProvider
     }
 
     /**
-     * @return array<string, ViewSectionRenderer>
+     * Registers this theme's layout-builder areas: `header` and `footer`,
+     * via `RegistersLayoutNativeThemeDefaults::registerStandardLayoutAreas()`,
+     * which mirrors `FoundationThemeServiceProvider::registerLayoutAreas()`
+     * exactly (global scope — omitting `$themeKey` — since these are the
+     * same two areas every theme shares, not a Liquid-Glass-only region).
+     *
+     * These areas are rendered by this package's own
+     * `resources/views/header/index.blade.php` and
+     * `resources/views/footer.blade.php`, wired in as the active `Theme`
+     * row's `meta.header_file` / `meta.footer_file` (see
+     * `x-capell::layout.index`'s `<x-dynamic-component>` fallback — the
+     * real, already-built per-theme chrome override seam, not a Blade
+     * view-chain override of the `capell::header.index` / `capell::footer.index`
+     * component tags, which are registered as *class-aliased* components
+     * (`Blade::component(...)`) and therefore cannot be overridden by
+     * placing a same-named view earlier in a namespace's view-chain: Laravel's
+     * `ComponentTagCompiler::componentClass()` resolves a registered class
+     * alias unconditionally, before any anonymous-view/namespace guessing
+     * ever runs).
+     *
+     * `meta.header_file` / `meta.footer_file` are set by
+     * {@see LiquidGlassThemeInterceptor} whenever a `liquid-glass`-keyed
+     * `Theme` row is created (see {@see registerModelInterceptors()}), not
+     * here — this method only makes the `header` / `footer` areas
+     * selectable by LayoutAreaRegistry so an admin can place widgets (e.g. a
+     * navigation widget) into them, exactly like Foundation's own
+     * header/footer areas.
+     *
+     * NOTE on scope (deliberately deferred, not overlooked): the `hero`,
+     * `features`, `proof`, and `content-listing` sections are NOT given
+     * bespoke Liquid Glass treatment in this pilot. Those four map to
+     * *shared* foundation widget views (`capell.widget.hero`,
+     * `capell.widget.asset.features`, `capell.widget.asset.testimonials`,
+     * `capell.widget.page.latest`) resolved through the single, global,
+     * theme-unaware `Capell\LayoutBuilder\Models\Widget::getComponent()` ->
+     * `RenderableRegistry` lookup — there is no per-theme scoping anywhere in
+     * that resolution path today. Re-registering those same keys here would
+     * silently change hero/features/testimonials/latest-pages rendering for
+     * every other currently-active theme, not just Liquid Glass; inventing a
+     * new theme-scoped override seam inside `Widget::getComponent()` /
+     * `RenderableRegistry` is a real, separate, cross-cutting design decision
+     * that needs its own review, not something to bolt on inside a single
+     * theme's pilot conversion. Liquid Glass intentionally uses Foundation's
+     * shared views verbatim for these four sections for now. Raise per-theme
+     * widget-view override support explicitly before the next themes in this
+     * program need bespoke hero/feature/proof/listing treatment of their own.
      */
-    private function sectionRenderers(): array
+    private function registerLayoutAreas(): void
     {
-        return [
-            'navigation' => new ViewSectionRenderer(self::THEME_KEY, 'navigation', 'capell-theme-liquid-glass::sections.navigation', failLoudly: true),
-            'hero' => new ViewSectionRenderer(self::THEME_KEY, 'hero', 'capell-theme-liquid-glass::sections.hero', failLoudly: true),
-            'features' => new ViewSectionRenderer(self::THEME_KEY, 'features', 'capell-theme-liquid-glass::sections.features', failLoudly: true),
-            'showcase' => new ViewSectionRenderer(self::THEME_KEY, 'showcase', 'capell-theme-liquid-glass::sections.showcase', failLoudly: true),
-            'presets' => new ViewSectionRenderer(self::THEME_KEY, 'presets', 'capell-theme-liquid-glass::sections.presets', failLoudly: true),
-            'proof' => new ViewSectionRenderer(self::THEME_KEY, 'proof', 'capell-theme-liquid-glass::sections.proof', failLoudly: true),
-            'content-listing' => new ViewSectionRenderer(self::THEME_KEY, 'content-listing', 'capell-theme-liquid-glass::sections.content-listing', failLoudly: true),
-            'cta' => new ViewSectionRenderer(self::THEME_KEY, 'cta', 'capell-theme-liquid-glass::sections.cta', failLoudly: true),
-            'footer' => new ViewSectionRenderer(self::THEME_KEY, 'footer', 'capell-theme-liquid-glass::sections.footer', failLoudly: true),
+        $this->registerStandardLayoutAreas();
+    }
+
+    /**
+     * Registers Liquid Glass's own bespoke layout-builder widget component
+     * keys (`capell.widget.liquid-glass.{cta,showcase,presets}`) against the
+     * shared `RenderableRegistry`, mirroring the established pattern
+     * `Capell\Blog\Providers\BlogServiceProvider::registerWidgetRenderables()`
+     * and `Capell\LayoutBuilder\Support\LayoutBuilderCoreRegistrar` already
+     * use for their own widget component enums.
+     *
+     * These three keys are new and owned solely by Liquid Glass — unlike the
+     * shared `capell.widget.hero` / `asset.features` / `asset.testimonials` /
+     * `page.latest` keys documented in {@see registerLayoutAreas()}'s
+     * "NOTE on scope", registering brand-new keys here is additive and
+     * cannot collide with or change any other theme's rendering.
+     *
+     * Defensive registration, NOT graceful degradation at render time: each
+     * blade target is only registered if `view()->exists()` for it,
+     * mirroring the same defensive check
+     * `Capell\ContentSections\Support\SectionPublicLayoutWidgetPayloadContributor::renderSection()`
+     * already uses before trusting a dynamically-resolved component view.
+     * This only prevents registering a *dangling* renderable (one whose
+     * blade view does not exist) during this package's own boot.
+     *
+     * It does NOT protect a stale `Widget` row that still references one of
+     * these keys after this package's views are removed (e.g. mid-uninstall,
+     * or after a downgrade). That row's `Widget::getComponent()` call goes
+     * through `Capell\Core\Actions\Renderables\ResolveRenderableComponentAction`
+     * to `RenderableRegistry::get()`, which throws `InvalidArgumentException`
+     * naming the missing key when nothing was ever registered for it.
+     * `Capell\LayoutBuilder`'s `container.blade.php` has no catch for this —
+     * its `if (! $component) continue;` null-skip is unreachable via this
+     * path, since `getComponent()` never returns null on a miss; it throws
+     * first. In practice a stale bespoke-widget key therefore causes a 500 on
+     * the public page, not a silent skip. Changing that shared
+     * throw-vs-catch-and-skip behaviour in `RenderableRegistry` /
+     * `container.blade.php` is a separate, cross-cutting layout-builder
+     * decision affecting every widget type, not just this theme's three
+     * bespoke ones — out of scope here.
+     */
+    private function registerBespokeWidgetRenderables(): void
+    {
+        $registry = resolve(RenderableRegistry::class);
+
+        $blade = [
+            WidgetComponentEnum::Cta->value => 'capell-theme-liquid-glass::widget.cta',
+            WidgetComponentEnum::Showcase->value => 'capell-theme-liquid-glass::widget.showcase',
+            WidgetComponentEnum::Presets->value => 'capell-theme-liquid-glass::widget.presets',
         ];
+
+        foreach (WidgetComponentEnum::cases() as $widgetComponent) {
+            $bladeView = $blade[$widgetComponent->value];
+
+            if (! view()->exists($bladeView)) {
+                continue;
+            }
+
+            $registry->register(new RenderableDefinitionData(
+                key: $widgetComponent->value,
+                type: 'layout-widget',
+                blade: $bladeView,
+            ));
+        }
+    }
+
+    /**
+     * Registers {@see LiquidGlassThemeInterceptor}, scoped to
+     * `self::THEME_KEY` so it only fires for a Theme row keyed
+     * `liquid-glass` — see that class's docblock for why this is scoped
+     * (unlike `FoundationThemeInterceptor`, which is unscoped) and for the
+     * `header_file` / `footer_file` defaults it sets.
+     */
+    private function registerModelInterceptors(): void
+    {
+        CapellCore::registerModelInterceptor(Theme::class, interceptorClass: LiquidGlassThemeInterceptor::class, key: self::THEME_KEY);
     }
 }

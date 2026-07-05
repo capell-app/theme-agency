@@ -1,0 +1,160 @@
+{
+    "manifest-version": 3,
+    "name": "capell-app/theme-one-take",
+    "slug": "theme-one-take",
+    "displayName": "Theme One Take",
+    "kind": "theme",
+    "capellApiVersion": "^4.0",
+    "version": "4.x-dev",
+    "description": "Everything in one continuous take — showcase grid, story, CTA on a single confident page — for galleries and templates that don't need a second click.",
+    "product": {
+        "group": "Capell Themes",
+        "tier": "premium",
+        "bundle": "themes"
+    },
+    "namespace": "Capell\\ThemeStudio\\OneTake",
+    "surfaces": ["frontend"],
+    "dependencies": {
+        "requires": ["capell-app/core", "capell-app/frontend"],
+        "supports": [
+            "capell-app/blog",
+            "capell-app/form-builder",
+            "capell-app/newsletter",
+            "capell-app/shopify-commerce"
+        ],
+        "conflicts": []
+    },
+    "providers": {
+        "metadata": [],
+        "install": [],
+        "runtime": [
+            "Capell\\ThemeStudio\\OneTake\\OneTakeThemeServiceProvider"
+        ],
+        "admin": [],
+        "frontend": []
+    },
+    "contributes": [
+        {
+            "type": "admin-page",
+            "class": "Capell\\ThemeStudio\\OneTake\\Manifest\\ThemeManagementPageContribution",
+            "pageClass": "Capell\\Marketplace\\Filament\\Pages\\ThemeExtensionPage",
+            "pageParameters": {
+                "themeKey": "one-take"
+            },
+            "labelKey": "capell-marketplace::marketplace.theme_extension.management_entry_label"
+        }
+    ],
+    "database": {
+        "migrations": false,
+        "settings": false,
+        "requiredTables": []
+    },
+    "commands": {
+        "install": null,
+        "setup": null,
+        "demo": "capell:theme-one-take-demo",
+        "demoParams": ["url", "languages", "sites"],
+        "doctor": null
+    },
+    "settings": [],
+    "permissions": [],
+    "capabilities": ["theme-one-take", "theme-one-take-frontend"],
+    "security": {
+        "riskTier": "low",
+        "publicSurface": {
+            "routeNames": [],
+            "auth": "none",
+            "csrfExemptRoutes": [],
+            "signedRoutes": [],
+            "tokenizedRoutes": [],
+            "webhookRoutes": [],
+            "throttledRoutes": []
+        },
+        "sensitiveData": {
+            "encryptedFields": [],
+            "hashedTokenFields": [],
+            "redactedOutputClasses": [],
+            "plaintextJustifications": []
+        },
+        "publicOutput": {
+            "cacheSafe": true,
+            "forbidAuthoringSurface": true,
+            "forbidSecrets": true,
+            "forbidPublicBladeQueries": true
+        },
+        "externalHttpClients": {
+            "requiresTimeouts": false,
+            "requiresSecretRedaction": false,
+            "clients": []
+        },
+        "adminSurface": {
+            "authorization": "none",
+            "permissions": []
+        }
+    },
+    "performance": {
+        "criticalCss": {
+            "required": true,
+            "parityViewports": ["mobile", "tablet", "desktop"]
+        },
+        "frontendRenderBudgetMs": 20,
+        "adminQueryBudget": 0,
+        "cacheTags": ["theme-one-take"],
+        "cacheSafety": {
+            "cacheable": false,
+            "variesBy": ["site", "locale"],
+            "sensitiveOutput": false,
+            "invalidationSources": [],
+            "queueInvalidation": false
+        }
+    },
+    "healthChecks": [
+        {
+            "key": "theme-one-take.package-health",
+            "label": "One Take package surfaces, providers, and install health are discoverable by Diagnostics.",
+            "class": "Capell\\ThemeStudio\\OneTake\\Health\\ThemeOneTakeHealthCheck",
+            "severity": "critical",
+            "surface": "frontend"
+        }
+    ],
+    "commercial": {
+        "proposedLicense": "paid",
+        "requestedCertification": "first-party",
+        "supportPolicy": "priority",
+        "privateDocsRequested": true
+    },
+    "marketplace": {
+        "summary": "A friendly Capell theme for one-page website galleries, landing page showcases, template directories, startup inspiration sites, and practical marketing resources.",
+        "description": "One Take provides a distinct theme definition, demo command, marketplace metadata, and public-safe Blade views for one-page website galleries, landing page showcases, template directories, startup inspiration sites, resource hubs, and makers that need screenshots, titles, types, stacks, platforms, compact tags, short notes, templates, page sections, tools, sponsor recommendations, and build resources.",
+        "screenshots": [
+            {
+                "path": "docs/screenshots/one-take-homepage.png",
+                "alt": "One Take homepage preview",
+                "caption": "One Take Homepage"
+            },
+            {
+                "path": "docs/screenshots/one-take-landing.png",
+                "alt": "One Take landing page preview",
+                "caption": "One Take Landing page"
+            },
+            {
+                "path": "docs/screenshots/one-take-listing.png",
+                "alt": "One Take list page preview",
+                "caption": "One Take List page"
+            },
+            {
+                "path": "docs/screenshots/one-take-search.png",
+                "alt": "One Take search results preview",
+                "caption": "One Take Search results"
+            },
+            {
+                "path": "docs/screenshots/one-take-contact.png",
+                "alt": "One Take contact form preview",
+                "caption": "One Take Contact form"
+            }
+        ],
+        "categories": ["frontend", "themes"]
+    },
+    "extends": "default",
+    "themeKey": "one-take"
+}

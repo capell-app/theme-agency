@@ -1,0 +1,1312 @@
+@property --mva-accent {
+    syntax: '<color>';
+    inherits: true;
+    initial-value: oklch(79% 0.16 78);
+}
+
+.mva-shell {
+    /* Wave 8.2: core tokens migrated to OKLCH. The dark-mode preset (below) actually
+       raises void/panel lightness relative to this "light" set — Reel Room's
+       Night Signal preset is not a strict light/dark inverse of these values, so
+       void/panel/ink stay as separate declarations rather than single light-dark()
+       calls; the accent token (the one animated by the projector-flicker and
+       cross-dissolve motion work) is consolidated below since its two states are a
+       true light/dark pair. */
+    --mva-void: oklch(11% 0.005 260);
+    --mva-panel: oklch(15% 0.005 260);
+    --mva-panel-raised: oklch(19% 0.006 260);
+    --mva-line: color-mix(in srgb, oklch(88% 0.005 260) 14%, transparent);
+    --mva-line-strong: color-mix(
+        in srgb,
+        oklch(88% 0.005 260) 26%,
+        transparent
+    );
+    --mva-ink: oklch(94% 0.003 260);
+    --mva-muted: color-mix(in srgb, oklch(94% 0.003 260) 62%, transparent);
+    --mva-faint: color-mix(in srgb, oklch(94% 0.003 260) 52%, transparent);
+    --mva-accent: var(
+        --theme-accent,
+        light-dark(oklch(79% 0.16 78), oklch(90% 0.24 141))
+    );
+    --mva-gold: oklch(76% 0.11 83);
+    --mva-silver: oklch(78% 0.006 260);
+    --mva-reel: color-mix(in srgb, var(--mva-accent) 45%, transparent);
+    --mva-ease-out: cubic-bezier(0.19, 1, 0.22, 1);
+    --mva-dur-fast: 140ms;
+    --mva-dur-slow: 260ms;
+    background: var(--mva-void);
+    color: var(--mva-ink);
+    color-scheme: light dark;
+    container: mva-tokens / normal;
+    font-family: var(--theme-body-font, inter), system-ui, sans-serif;
+}
+
+.mva-shell h1,
+.mva-shell h2,
+.mva-shell h3 {
+    color: var(--mva-ink);
+    font-family: var(--theme-heading-font, sora), system-ui, sans-serif;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+}
+
+.mva-shell h1 {
+    font-size: clamp(2.6rem, 5.6vw, 5.2rem);
+    line-height: 1;
+    margin-block: 0;
+    text-wrap: balance;
+}
+
+.mva-shell h2 {
+    font-size: clamp(1.8rem, 3.2vw, 3rem);
+    line-height: 1.06;
+    margin-block: 0;
+    text-wrap: balance;
+}
+
+.mva-shell h3 {
+    font-size: 1.15rem;
+    line-height: 1.3;
+    margin: 0;
+    text-wrap: balance;
+}
+
+.mva-skip-link {
+    background: var(--mva-accent);
+    color: var(--mva-void);
+    font-weight: 700;
+    inset-inline-start: 1rem;
+    padding: 0.75rem 1rem;
+    position: fixed;
+    top: 1rem;
+    transform: translateY(-150%);
+    z-index: 50;
+}
+
+.mva-skip-link:focus {
+    transform: translateY(0);
+}
+
+.mva-section {
+    border-top: 1px solid var(--mva-line);
+    position: relative;
+}
+
+.mva-section-raised {
+    background: var(--mva-panel);
+}
+
+.mva-section-inner {
+    margin-inline: auto;
+    max-width: 78rem;
+    padding: clamp(4rem, 8vw, 7rem) 1.25rem;
+}
+
+.mva-kicker {
+    align-items: center;
+    color: var(--mva-accent);
+    display: flex;
+    font-size: 0.72rem;
+    font-weight: 700;
+    gap: 0.55rem;
+    letter-spacing: 0.14em;
+    margin: 0 0 1rem;
+    text-transform: uppercase;
+}
+
+.mva-kicker::before {
+    background: var(--mva-accent);
+    border-radius: 999px;
+    content: '';
+    display: inline-block;
+    height: 0.4rem;
+    width: 0.4rem;
+}
+
+.mva-lede {
+    color: var(--mva-muted);
+    font-size: clamp(1.02rem, 1vw + 0.85rem, 1.25rem);
+    line-height: 1.65;
+    max-width: 42rem;
+    text-wrap: pretty;
+}
+
+.mva-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.85rem;
+    margin-top: 2rem;
+}
+
+.mva-button {
+    align-items: center;
+    background: var(--mva-accent);
+    border: 1px solid var(--mva-accent);
+    border-radius: 999px;
+    color: var(--mva-void);
+    display: inline-flex;
+    font-weight: 700;
+    font-size: 0.95rem;
+    gap: 0.5rem;
+    min-height: 2.85rem;
+    padding: 0.7rem 1.4rem;
+    text-decoration: none;
+    transition: box-shadow var(--mva-dur-slow) var(--mva-ease-out);
+}
+
+.mva-button:hover,
+.mva-button:focus-visible {
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--mva-accent) 30%, transparent);
+    outline: none;
+    transition-duration: var(--mva-dur-fast);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    .mva-button {
+        transition:
+            transform var(--mva-dur-slow) var(--mva-ease-out),
+            box-shadow var(--mva-dur-slow) var(--mva-ease-out);
+    }
+
+    .mva-button:hover,
+    .mva-button:focus-visible {
+        transform: translateY(-1px);
+        transition-duration: var(--mva-dur-fast);
+    }
+
+    @keyframes mva-cross-dissolve {
+        from {
+            opacity: 0;
+        }
+
+        to {
+            opacity: 1;
+        }
+    }
+
+    @supports (animation-timeline: view()) {
+        .mva-section {
+            animation: mva-cross-dissolve linear both;
+            animation-range: entry 0% cover 30%;
+            animation-timeline: view();
+        }
+    }
+}
+
+.mva-button-secondary {
+    background: transparent;
+    border-color: var(--mva-line-strong);
+    color: var(--mva-ink);
+    transition: border-color var(--mva-dur-fast) var(--mva-ease-out);
+}
+
+.mva-button-secondary:hover,
+.mva-button-secondary:focus-visible {
+    border-color: var(--mva-accent);
+    box-shadow: none;
+}
+
+/* Hero — cinematic still with play affordance */
+.mva-hero {
+    background: var(--mva-void);
+}
+
+.mva-hero-grid {
+    align-items: end;
+    display: grid;
+    gap: 2.5rem;
+}
+
+.mva-hero-still {
+    aspect-ratio: 16 / 10;
+    background-color: #05070a;
+    background-image: linear-gradient(
+        180deg,
+        transparent 45%,
+        color-mix(in srgb, var(--mva-void) 92%, transparent) 100%
+    );
+    border: 1px solid var(--mva-line);
+    border-radius: var(--theme-radius, 0.9rem);
+    overflow: hidden;
+    position: relative;
+}
+
+.mva-hero-still-image {
+    aspect-ratio: 16 / 10;
+    height: 100%;
+    inset: 0;
+    object-fit: cover;
+    position: absolute;
+    width: 100%;
+}
+
+.mva-hero-still::after {
+    background: color-mix(in srgb, var(--mva-void) 30%, transparent);
+    content: '';
+    inset: 0;
+    position: absolute;
+}
+
+.mva-play {
+    align-items: center;
+    background: color-mix(in srgb, var(--mva-void) 55%, transparent);
+    border: 1px solid color-mix(in srgb, var(--mva-ink) 40%, transparent);
+    border-radius: 999px;
+    color: var(--mva-ink);
+    display: flex;
+    height: 3.75rem;
+    justify-content: center;
+    inset-inline-start: 50%;
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 3.75rem;
+    z-index: 1;
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+}
+
+@supports not (
+    (backdrop-filter: blur(6px)) or (-webkit-backdrop-filter: blur(6px))
+) {
+    .mva-play {
+        background: color-mix(in srgb, var(--mva-void) 85%, transparent);
+    }
+}
+
+.mva-play::before {
+    border-bottom: 0.55rem solid transparent;
+    border-left: 0.85rem solid var(--mva-ink);
+    border-top: 0.55rem solid transparent;
+    content: '';
+    margin-left: 0.25rem;
+}
+
+.mva-hero-meta {
+    bottom: 1.1rem;
+    color: var(--mva-ink);
+    display: flex;
+    font-size: 0.82rem;
+    font-weight: 600;
+    gap: 0.75rem;
+    inset-inline-start: 1.1rem;
+    position: absolute;
+    z-index: 1;
+}
+
+.mva-hero-meta span {
+    background: color-mix(in srgb, var(--mva-void) 60%, transparent);
+    border-radius: 999px;
+    padding: 0.3rem 0.7rem;
+}
+
+/* Winner list */
+.mva-winners {
+    container-name: mva-winners;
+    container-type: inline-size;
+    display: grid;
+    gap: 1.5rem;
+}
+
+.mva-winner {
+    background: var(--mva-panel);
+    border: 1px solid var(--mva-line);
+    border-radius: var(--theme-radius, 0.85rem);
+    display: grid;
+    gap: 0;
+    overflow: hidden;
+}
+
+@media (min-width: 720px) {
+    .mva-winner {
+        grid-template-columns: minmax(0, 15rem) minmax(0, 1fr);
+    }
+}
+
+@container mva-winners (min-width: 32cqi) {
+    .mva-winner {
+        grid-template-columns: minmax(0, 15cqi) minmax(0, 1fr);
+    }
+}
+
+@container mva-winners (min-width: 55cqi) {
+    .mva-winner {
+        grid-template-columns: minmax(0, 22cqi) minmax(0, 1fr);
+    }
+}
+
+.mva-winner-still {
+    aspect-ratio: 16 / 10;
+    background-color: #05070a;
+    position: relative;
+}
+
+.mva-winner-still-image {
+    aspect-ratio: 16 / 10;
+    height: 100%;
+    inset: 0;
+    object-fit: cover;
+    position: absolute;
+    width: 100%;
+}
+
+.mva-winner-still::after {
+    background: linear-gradient(
+        135deg,
+        transparent 60%,
+        color-mix(in srgb, var(--mva-void) 45%, transparent)
+    );
+    content: '';
+    inset: 0;
+    position: absolute;
+}
+
+.mva-winner-body {
+    display: grid;
+    gap: 0.65rem;
+    padding: clamp(1.25rem, 2vw, 1.85rem);
+}
+
+.mva-winner-body p {
+    color: var(--mva-muted);
+    line-height: 1.6;
+    margin: 0;
+    text-wrap: pretty;
+}
+
+.mva-winner-title-link {
+    color: var(--mva-ink);
+    text-decoration: none;
+    transition: color var(--mva-dur-fast) var(--mva-ease-out);
+}
+
+.mva-winner-title-link:hover,
+.mva-winner-title-link:focus-visible {
+    color: var(--mva-accent);
+}
+
+.mva-score-row {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+}
+
+.mva-badge {
+    align-items: center;
+    border-radius: 999px;
+    display: inline-flex;
+    font-size: 0.72rem;
+    font-weight: 700;
+    gap: 0.35rem;
+    letter-spacing: 0.04em;
+    padding: 0.28rem 0.65rem;
+    text-transform: uppercase;
+}
+
+.mva-badge-gold {
+    background: color-mix(in srgb, var(--mva-gold) 22%, transparent);
+    color: var(--mva-gold);
+}
+
+.mva-badge-silver {
+    background: color-mix(in srgb, var(--mva-silver) 20%, transparent);
+    color: var(--mva-silver);
+}
+
+.mva-badge-score {
+    background: color-mix(in srgb, var(--mva-accent) 18%, transparent);
+    color: var(--mva-accent);
+    font-variant-numeric: tabular-nums;
+}
+
+.mva-winner-credit {
+    color: var(--mva-faint);
+    font-size: 0.85rem;
+}
+
+/* Date filter rail */
+.mva-rail-layout {
+    display: grid;
+    gap: 2rem;
+}
+
+@media (min-width: 860px) {
+    .mva-rail-layout {
+        grid-template-columns: minmax(14rem, 16rem) minmax(0, 1fr);
+    }
+}
+
+.mva-rail {
+    display: grid;
+    gap: 0.5rem;
+}
+
+.mva-rail-link {
+    background: var(--mva-panel);
+    border: 1px solid var(--mva-line);
+    border-radius: 0.6rem;
+    color: var(--mva-ink);
+    display: block;
+    padding: 0.85rem 1rem;
+    text-decoration: none;
+    transition: border-color var(--mva-dur-fast) var(--mva-ease-out);
+}
+
+.mva-rail-link:hover,
+.mva-rail-link:focus-visible {
+    border-color: var(--mva-accent);
+}
+
+.mva-rail-link strong {
+    display: block;
+    font-size: 0.95rem;
+}
+
+.mva-rail-link span {
+    color: var(--mva-faint);
+    font-size: 0.82rem;
+}
+
+.mva-rail-panel {
+    background: var(--mva-panel);
+    border: 1px solid var(--mva-line);
+    border-radius: var(--theme-radius, 0.85rem);
+    padding: clamp(1.25rem, 2vw, 1.85rem);
+}
+
+/* Featured project spotlight */
+.mva-spotlight {
+    background: var(--mva-void);
+}
+
+.mva-spotlight-grid {
+    display: grid;
+    gap: 2.5rem;
+}
+
+@media (min-width: 860px) {
+    .mva-spotlight-grid {
+        align-items: start;
+        grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+    }
+}
+
+.mva-spotlight-still {
+    aspect-ratio: 4 / 3;
+    background-color: #05070a;
+    border: 1px solid var(--mva-line);
+    border-radius: var(--theme-radius, 0.9rem);
+    overflow: hidden;
+    position: relative;
+}
+
+.mva-spotlight-still-image {
+    aspect-ratio: 4 / 3;
+    height: 100%;
+    inset: 0;
+    object-fit: cover;
+    position: absolute;
+    width: 100%;
+}
+
+.mva-spotlight-still::after {
+    background: linear-gradient(
+        0deg,
+        color-mix(in srgb, var(--mva-void) 55%, transparent),
+        transparent 55%
+    );
+    border-radius: inherit;
+    content: '';
+    inset: 0;
+    position: absolute;
+}
+
+.mva-spotlight-breakdown {
+    display: grid;
+    gap: 1rem;
+}
+
+.mva-spotlight-item {
+    border-bottom: 1px solid var(--mva-line);
+    padding-block: 0.9rem;
+}
+
+.mva-spotlight-item:first-child {
+    padding-top: 0;
+}
+
+.mva-spotlight-item:last-child {
+    border-bottom: none;
+}
+
+.mva-spotlight-item h3 {
+    font-size: 1rem;
+    margin-bottom: 0.35rem;
+}
+
+.mva-spotlight-item p {
+    color: var(--mva-muted);
+    line-height: 1.6;
+    margin: 0;
+    text-wrap: pretty;
+}
+
+/* Jury score explainer */
+.mva-axes {
+    display: grid;
+    gap: 1.1rem;
+}
+
+.mva-axis {
+    background: var(--mva-panel);
+    border: 1px solid var(--mva-line);
+    border-radius: 0.75rem;
+    display: grid;
+    gap: 0.6rem;
+    padding: clamp(1.1rem, 1.6vw, 1.5rem);
+}
+
+@media (min-width: 720px) {
+    .mva-axis {
+        align-items: center;
+        grid-template-columns: minmax(9rem, 12rem) minmax(0, 1fr) minmax(
+                4.5rem,
+                auto
+            );
+    }
+}
+
+.mva-axis-name {
+    font-weight: 700;
+}
+
+.mva-axis-weight {
+    color: var(--mva-faint);
+    font-size: 0.8rem;
+}
+
+.mva-axis-track {
+    background: color-mix(in srgb, var(--mva-ink) 12%, transparent);
+    border-radius: 999px;
+    height: 0.4rem;
+    overflow: hidden;
+}
+
+.mva-axis-fill {
+    background: var(--mva-accent);
+    border-radius: inherit;
+    height: 100%;
+    width: var(--mva-axis-score, 0%);
+}
+
+.mva-axis-score {
+    color: var(--mva-accent);
+    font-variant-numeric: tabular-nums;
+    font-weight: 700;
+    text-align: end;
+}
+
+/* Media credits */
+.mva-credit-grid {
+    display: grid;
+    gap: 1.25rem;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr));
+}
+
+.mva-credit-card {
+    border-inline-start: 2px solid var(--mva-accent);
+    padding-inline-start: 1.1rem;
+}
+
+.mva-credit-card p {
+    color: var(--mva-muted);
+    line-height: 1.6;
+    text-wrap: pretty;
+}
+
+/* Content listing (archive index) */
+.mva-index {
+    display: grid;
+    gap: 0;
+}
+
+.mva-index-row {
+    align-items: center;
+    border-bottom: 1px solid var(--mva-line);
+    display: grid;
+    gap: 0.5rem 1.25rem;
+    padding-block: 1.5rem;
+}
+
+@media (min-width: 720px) {
+    .mva-index-row {
+        grid-template-columns: 3rem minmax(0, 1fr) minmax(0, 1fr);
+    }
+
+    .mva-index-row-media {
+        grid-template-columns: 3rem 6rem minmax(0, 1fr) minmax(0, 1fr);
+    }
+}
+
+.mva-numeral {
+    color: var(--mva-faint);
+    font-size: 0.85rem;
+    font-variant-numeric: tabular-nums;
+    font-weight: 700;
+}
+
+.mva-index-thumb {
+    aspect-ratio: 16 / 10;
+    background-color: #05070a;
+    border-radius: 0.4rem;
+    display: block;
+    height: 100%;
+    object-fit: cover;
+    width: 100%;
+}
+
+.mva-index-row p {
+    color: var(--mva-muted);
+    line-height: 1.5;
+    margin: 0;
+}
+
+/* Archive hero (moody intro) */
+.mva-archive-hero {
+    background: var(--mva-void);
+}
+
+.mva-archive-still {
+    aspect-ratio: 21 / 9;
+    background-color: #05070a;
+    background-image: linear-gradient(
+        180deg,
+        transparent 30%,
+        color-mix(in srgb, var(--mva-void) 88%, transparent) 100%
+    );
+    border: 1px solid var(--mva-line);
+    border-radius: var(--theme-radius, 0.9rem);
+    margin-top: 2rem;
+    overflow: hidden;
+    position: relative;
+}
+
+.mva-archive-still-image {
+    aspect-ratio: 21 / 9;
+    height: 100%;
+    inset: 0;
+    object-fit: cover;
+    position: absolute;
+    width: 100%;
+}
+
+.mva-archive-rows {
+    display: grid;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.mva-archive-row {
+    border-top: 1px solid var(--mva-line);
+    display: grid;
+    gap: 0.4rem;
+    padding-top: 1rem;
+}
+
+.mva-archive-row p {
+    color: var(--mva-muted);
+    line-height: 1.55;
+    margin: 0;
+}
+
+/* Proof strip */
+.mva-proof-grid {
+    display: grid;
+    gap: 1.5rem;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr));
+}
+
+.mva-proof-item .mva-proof-value {
+    color: var(--mva-accent);
+    font-family: var(--theme-heading-font, sora), system-ui, sans-serif;
+    font-size: clamp(2rem, 4vw, 2.8rem);
+    font-weight: 700;
+    line-height: 1;
+}
+
+.mva-proof-item p {
+    color: var(--mva-muted);
+    line-height: 1.5;
+    margin-top: 0.5rem;
+    text-wrap: pretty;
+}
+
+/* Newsletter */
+.mva-newsletter-grid {
+    align-items: center;
+    display: grid;
+    gap: 2rem;
+}
+
+@media (min-width: 720px) {
+    .mva-newsletter-grid {
+        grid-template-columns: minmax(0, 1fr) minmax(18rem, 0.7fr);
+    }
+}
+
+.mva-form {
+    display: grid;
+    gap: 0.75rem;
+}
+
+.mva-form label {
+    color: var(--mva-muted);
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.mva-form input {
+    accent-color: var(--mva-accent);
+    background: var(--mva-panel-raised);
+    border: 1px solid var(--mva-line-strong);
+    border-radius: 0.55rem;
+    color: var(--mva-ink);
+    field-sizing: content;
+    min-height: 2.85rem;
+    padding: 0 0.9rem;
+    transition:
+        border-color var(--mva-dur-fast) var(--mva-ease-out),
+        box-shadow var(--mva-dur-fast) var(--mva-ease-out);
+}
+
+.mva-form input::placeholder {
+    color: var(--mva-faint);
+    font-style: italic;
+}
+
+.mva-form input:focus-visible {
+    border-color: var(--mva-accent);
+    outline: none;
+}
+
+.mva-form input:user-invalid {
+    border-color: color-mix(in srgb, var(--mva-gold) 70%, oklch(60% 0.2 25));
+    box-shadow: 0 0 0 3px color-mix(in srgb, oklch(60% 0.2 25) 22%, transparent);
+}
+
+.mva-form input:user-valid {
+    border-color: var(--mva-accent);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--mva-accent) 18%, transparent);
+}
+
+.mva-form-note {
+    color: var(--mva-faint);
+    font-size: 0.8rem;
+    margin: 0;
+}
+
+/* Navigation */
+.mva-nav {
+    background: color-mix(in srgb, var(--mva-void) 92%, transparent);
+    border-top: none;
+}
+
+.mva-nav-inner {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: space-between;
+    margin-inline: auto;
+    max-width: 78rem;
+    padding: 1.1rem 1.25rem;
+}
+
+.mva-brand {
+    color: var(--mva-ink);
+    font-family: var(--theme-heading-font, sora), system-ui, sans-serif;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    text-decoration: none;
+}
+
+.mva-nav-links {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+}
+
+.mva-nav-links a {
+    color: var(--mva-muted);
+    font-size: 0.92rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: color var(--mva-dur-fast) var(--mva-ease-out);
+}
+
+.mva-nav-links a:hover,
+.mva-nav-links a:focus-visible {
+    color: var(--mva-ink);
+}
+
+/* Footer */
+.mva-footer {
+    background: var(--mva-panel);
+}
+
+.mva-footer-grid {
+    display: grid;
+    gap: 2.5rem;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr));
+}
+
+.mva-footer-grid h3 {
+    color: var(--mva-faint);
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    margin-bottom: 0.9rem;
+    text-transform: uppercase;
+}
+
+.mva-footer-grid a {
+    color: var(--mva-muted);
+    display: block;
+    line-height: 2;
+    text-decoration: none;
+    transition: color var(--mva-dur-fast) var(--mva-ease-out);
+}
+
+.mva-footer-grid a:hover,
+.mva-footer-grid a:focus-visible {
+    color: var(--mva-ink);
+}
+
+.mva-footer-bottom {
+    border-top: 1px solid var(--mva-line);
+    color: var(--mva-faint);
+    font-size: 0.82rem;
+    margin-top: 2.5rem;
+    padding-top: 1.5rem;
+}
+
+/* Signature focus ring — motion-preview frame with archive grid corner */
+.mva-shell a:focus-visible,
+.mva-shell button:focus-visible,
+.mva-shell input:focus-visible,
+.mva-shell [tabindex]:focus-visible {
+    outline: 2px solid var(--mva-accent);
+    outline-offset: 3px;
+    box-shadow: 0 0 0 6px color-mix(in srgb, var(--mva-accent) 20%, transparent);
+}
+
+.mva-shell ::selection {
+    background: var(--mva-accent);
+    color: var(--mva-void);
+}
+
+/* Projector flicker — signature light-leak on still/thumbnail hover */
+.mva-hero-still,
+.mva-winner-still,
+.mva-spotlight-still,
+.mva-archive-still {
+    box-shadow: inset 0 0 3.5rem
+        color-mix(in srgb, var(--mva-void) 45%, transparent);
+}
+
+.mva-hero-still::before,
+.mva-winner-still::before,
+.mva-spotlight-still::before,
+.mva-archive-still::before {
+    background: radial-gradient(
+        circle at 30% 20%,
+        color-mix(in srgb, var(--mva-ink) 35%, transparent) 0%,
+        transparent 55%
+    );
+    content: '';
+    inset: 0;
+    opacity: 0;
+    pointer-events: none;
+    position: absolute;
+    z-index: 1;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    .mva-hero-still:hover::before,
+    .mva-hero-still:focus-within::before,
+    .mva-winner-still:hover::before,
+    .mva-winner-still:focus-within::before,
+    .mva-spotlight-still:hover::before,
+    .mva-spotlight-still:focus-within::before,
+    .mva-archive-still:hover::before,
+    .mva-archive-still:focus-within::before {
+        animation: mva-projector-flicker 0.8s steps(4) infinite;
+    }
+
+    @keyframes mva-projector-flicker {
+        0% {
+            background-position: 0 0;
+            opacity: 0.18;
+        }
+
+        25% {
+            background-position: 4% -2%;
+            opacity: 0.32;
+        }
+
+        50% {
+            background-position: -3% 3%;
+            opacity: 0.12;
+        }
+
+        75% {
+            background-position: 2% 4%;
+            opacity: 0.28;
+        }
+
+        100% {
+            background-position: 0 0;
+            opacity: 0.18;
+        }
+    }
+}
+
+.mva-index-thumb {
+    box-shadow: inset 0 0 1.75rem
+        color-mix(in srgb, var(--mva-void) 55%, transparent);
+    transition: box-shadow var(--mva-dur-fast) var(--mva-ease-out);
+}
+
+.mva-index-row:hover .mva-index-thumb,
+.mva-index-row:focus-within .mva-index-thumb {
+    box-shadow: inset 0 0 1.75rem
+        color-mix(in srgb, var(--mva-accent) 35%, transparent);
+}
+
+/* Designed empty state — blank marquee for an unfiled reel */
+.mva-archive-empty {
+    border: 1px dashed var(--mva-line-strong);
+    border-radius: var(--theme-radius, 0.85rem);
+    display: grid;
+    justify-items: start;
+    padding: clamp(2.25rem, 4vw, 3.5rem);
+    text-align: start;
+}
+
+.mva-archive-empty-reel {
+    background: radial-gradient(
+        circle at center,
+        transparent 38%,
+        var(--mva-line-strong) 40%,
+        var(--mva-line-strong) 44%,
+        transparent 46%
+    );
+    display: block;
+    height: 2.75rem;
+    margin-bottom: 1.25rem;
+    width: 2.75rem;
+}
+
+.mva-archive-empty-title {
+    color: var(--mva-ink);
+    font-family: var(--theme-heading-font, sora), system-ui, sans-serif;
+    font-size: 1.15rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    margin: 0 0 0.5rem;
+}
+
+.mva-archive-empty-body {
+    color: var(--mva-muted);
+    line-height: 1.6;
+    margin: 0;
+    max-width: 34rem;
+    text-wrap: pretty;
+}
+
+/* System dark-mode counterpart — mirrors the Night Signal manual preset values.
+   --mva-accent is intentionally absent here: it is already consolidated onto a
+   single light-dark() declaration above, so the user-agent resolves its dark
+   value from this same @media query without a duplicate override. */
+@media (prefers-color-scheme: dark) {
+    .mva-shell {
+        --mva-void: oklch(20% 0.01 260);
+        --mva-panel: oklch(24% 0.01 260);
+        --mva-panel-raised: oklch(28% 0.01 260);
+        --mva-ink: oklch(97% 0.003 130);
+        --mva-muted: color-mix(in srgb, oklch(97% 0.003 130) 62%, transparent);
+        --mva-faint: color-mix(in srgb, oklch(97% 0.003 130) 52%, transparent);
+        color-scheme: dark;
+    }
+}
+
+/* Preset-driven token wiring — brand-token custom properties land as inline
+   styles on .mva-shell (see ThemeDefinitionData presets); container style
+   queries read them back and re-cut the frame without any JS. Falls back
+   silently to the declarations above on engines without style() support. */
+
+/* --theme-spacing: the archive grid and hero frame tighten for a denser
+   contact-sheet read; balanced (default) keeps the wider projection gap. */
+@container mva-tokens style(--theme-spacing: compact) {
+    .mva-hero-grid,
+    .mva-spotlight-grid,
+    .mva-archive-rows,
+    .mva-winners {
+        gap: 0.875rem;
+    }
+}
+
+/* --theme-card-style: sharp trims the winner card and rail panel down to a
+   hard-edged film-frame cut — no radius, no soft shadow, just the cel border. */
+@container mva-tokens style(--theme-card-style: sharp) {
+    .mva-winner,
+    .mva-rail-panel,
+    .mva-axis {
+        border-radius: 0;
+        border-width: 2px;
+        box-shadow: none;
+    }
+}
+
+/* --theme-layout-presentation: editorial breaks the winner list out of its
+   even grid into an asymmetric archive-reel run; structured is the even
+   fallback already declared on .mva-winner above. */
+@container mva-tokens style(--theme-layout-presentation: editorial) {
+    .mva-winners {
+        grid-template-columns: repeat(auto-fill, minmax(min(100%, 22rem), 1fr));
+    }
+
+    .mva-winners .mva-winner:nth-child(3n + 1) {
+        grid-column: span 2;
+    }
+}
+
+@container mva-tokens style(--theme-layout-presentation: structured) {
+    .mva-winners {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+/* --theme-heading-scale: compact pulls in the archive entry title (a
+   secondary heading, not the hero clamp) by the canonical 0.92x multiplier. */
+.mva-winner-title-link {
+    --mva-heading-scale: 1;
+    font-size: clamp(
+        calc(0.98rem * var(--mva-heading-scale)),
+        calc(0.35vw + 0.9rem) * var(--mva-heading-scale),
+        calc(1.2rem * var(--mva-heading-scale))
+    );
+    font-weight: 700;
+}
+
+@container mva-tokens style(--theme-heading-scale: compact) {
+    .mva-winner-title-link {
+        --mva-heading-scale: 0.92;
+    }
+}
+
+/* --theme-card-density: dense (the raw preset value) and compact (the
+   sanitised canonical form) both cinch the winner body and rail panel
+   padding down to a contact-sheet tightness; comfortable is the default
+   already set on those selectors. */
+@container mva-tokens style(--theme-card-density: dense) {
+    .mva-winner-body,
+    .mva-rail-panel,
+    .mva-axis {
+        padding: 0.75rem;
+    }
+}
+
+@container mva-tokens style(--theme-card-density: compact) {
+    .mva-winner-body,
+    .mva-rail-panel,
+    .mva-axis {
+        padding: 0.75rem;
+    }
+}
+
+/* --theme-overlay-treatment: gates the projector light-leak already declared
+   on the still/thumbnail ::before layer. none switches the leak off entirely;
+   strong pushes the resting opacity up for a heavier, more dramatic flicker
+   before any hover interaction; subtle matches today's default. */
+@container mva-tokens style(--theme-overlay-treatment: none) {
+    .mva-hero-still::before,
+    .mva-winner-still::before,
+    .mva-spotlight-still::before,
+    .mva-archive-still::before {
+        display: none;
+    }
+}
+
+@container mva-tokens style(--theme-overlay-treatment: strong) {
+    .mva-hero-still::before,
+    .mva-winner-still::before,
+    .mva-spotlight-still::before,
+    .mva-archive-still::before {
+        opacity: 0.3;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .mva-hero-still:hover::before,
+        .mva-hero-still:focus-within::before,
+        .mva-winner-still:hover::before,
+        .mva-winner-still:focus-within::before,
+        .mva-spotlight-still:hover::before,
+        .mva-spotlight-still:focus-within::before,
+        .mva-archive-still:hover::before,
+        .mva-archive-still:focus-within::before {
+            animation: mva-projector-flicker-strong 0.8s steps(4) infinite;
+        }
+
+        @keyframes mva-projector-flicker-strong {
+            0% {
+                background-position: 0 0;
+                opacity: 0.3;
+            }
+
+            25% {
+                background-position: 6% -3%;
+                opacity: 0.52;
+            }
+
+            50% {
+                background-position: -5% 5%;
+                opacity: 0.22;
+            }
+
+            75% {
+                background-position: 3% 6%;
+                opacity: 0.46;
+            }
+
+            100% {
+                background-position: 0 0;
+                opacity: 0.3;
+            }
+        }
+    }
+}
+
+/* Print */
+@media print {
+    .mva-shell {
+        background: #fff !important;
+        color: #000 !important;
+    }
+
+    .mva-shell .mva-nav,
+    .mva-shell .mva-cta,
+    .mva-shell .mva-actions,
+    .mva-shell .mva-button,
+    .mva-shell .mva-footer {
+        display: none !important;
+    }
+
+    .mva-shell,
+    .mva-shell .mva-section,
+    .mva-shell .mva-section-raised,
+    .mva-shell .mva-panel,
+    .mva-shell .mva-winner,
+    .mva-shell .mva-winner-still,
+    .mva-shell .mva-archive-still,
+    .mva-shell .mva-spotlight-still,
+    .mva-shell .mva-hero-still,
+    .mva-shell .mva-index-thumb,
+    .mva-shell .mva-archive-empty {
+        background: transparent !important;
+        background-image: none !important;
+        box-shadow: none !important;
+        color: #000 !important;
+    }
+
+    .mva-shell h1,
+    .mva-shell h2,
+    .mva-shell h3,
+    .mva-shell p,
+    .mva-shell .mva-lede,
+    .mva-shell .mva-winner-body p,
+    .mva-shell .mva-winner-credit,
+    .mva-shell .mva-archive-empty-title,
+    .mva-shell .mva-archive-empty-body {
+        color: #000 !important;
+    }
+
+    .mva-shell .mva-winner,
+    .mva-shell .mva-axis,
+    .mva-shell .mva-archive-empty {
+        border: 1px solid #000 !important;
+        break-inside: avoid;
+        page-break-inside: avoid;
+    }
+
+    .mva-shell .mva-hero-still::before,
+    .mva-shell .mva-winner-still::before,
+    .mva-shell .mva-spotlight-still::before,
+    .mva-shell .mva-archive-still::before,
+    .mva-shell .mva-index-thumb {
+        animation: none !important;
+        transition: none !important;
+    }
+}
+
+/* Forced-colors (Wave 11.5): High Contrast mode strips box-shadow but keeps
+   outline, and flattens backgrounds — so re-assert focus with outline and give
+   cards a transparent border the OS repaints, and protect swatches whose
+   colour IS the content. */
+@media (forced-colors: active) {
+    .mva-shell a:focus-visible,
+    .mva-shell button:focus-visible,
+    .mva-shell input:focus-visible,
+    .mva-shell [tabindex]:focus-visible {
+        outline: 2px solid;
+        outline-offset: 2px;
+    }
+
+    .mva-winner,
+    .mva-axis,
+    .mva-rail-panel,
+    .mva-index-row {
+        border: 1px solid transparent;
+    }
+
+    .mva-badge,
+    .mva-axis-fill {
+        forced-color-adjust: none;
+    }
+}
+
+/* High contrast preference (Wave 11.5): thicken hairline rules and lift the
+   dimmed/muted text one step so the quiet layer stays legible. */
+@media (prefers-contrast: more) {
+    .mva-section,
+    .mva-winner,
+    .mva-axis,
+    .mva-rail-panel {
+        border-color: var(--mva-ink);
+    }
+
+    .mva-muted,
+    .mva-faint,
+    .mva-lede,
+    .mva-winner-body p,
+    .mva-winner-credit {
+        color: var(--mva-ink);
+    }
+}
+
+/* View Transitions (Wave 6.5): opt every same-origin navigation into a smooth
+   cross-document transition where supported; static fallback everywhere else.
+   Reduced-motion users still navigate — just without the animation. */
+@view-transition {
+    navigation: auto;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    ::view-transition-group(*),
+    ::view-transition-old(*),
+    ::view-transition-new(*) {
+        animation: none !important;
+    }
+}

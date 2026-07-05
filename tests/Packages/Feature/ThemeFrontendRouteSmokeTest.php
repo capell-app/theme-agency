@@ -8,12 +8,12 @@ use function Pest\Laravel\get;
 
 dataset('first party frontend themes', [
     'default' => ['default'],
-    'case-study-platform' => ['case-study-platform'],
-    'dark-product-system' => ['dark-product-system'],
-    'dense-news-analysis' => ['dense-news-analysis'],
-    'experimental-directory' => ['experimental-directory'],
-    'premium-portfolio-collection' => ['premium-portfolio-collection'],
-    'raw-index' => ['raw-index'],
+    'open-studio' => ['open-studio'],
+    'front-row' => ['front-row'],
+    'ink-press' => ['ink-press'],
+    'night-shift' => ['night-shift'],
+    'off-grid' => ['off-grid'],
+    'wild-card' => ['wild-card'],
 ]);
 
 it('renders first-party themes through the real frontend page route', function (string $themeKey): void {

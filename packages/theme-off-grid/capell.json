@@ -1,0 +1,160 @@
+{
+    "manifest-version": 3,
+    "name": "capell-app/theme-off-grid",
+    "slug": "theme-off-grid",
+    "displayName": "Theme Off Grid",
+    "kind": "theme",
+    "capellApiVersion": "^4.0",
+    "version": "4.x-dev",
+    "description": "Monospace type, stark links, visible focus rings, deliberately unpolished. A zine-grade archive for culture that lives outside the mainstream and distrusts gloss.",
+    "product": {
+        "group": "Capell Themes",
+        "tier": "premium",
+        "bundle": "themes"
+    },
+    "namespace": "Capell\\ThemeStudio\\OffGrid",
+    "surfaces": ["frontend"],
+    "dependencies": {
+        "requires": ["capell-app/core", "capell-app/frontend"],
+        "supports": [
+            "capell-app/blog",
+            "capell-app/form-builder",
+            "capell-app/newsletter",
+            "capell-app/shopify-commerce"
+        ],
+        "conflicts": []
+    },
+    "providers": {
+        "metadata": [],
+        "install": [],
+        "runtime": [
+            "Capell\\ThemeStudio\\OffGrid\\OffGridThemeServiceProvider"
+        ],
+        "admin": [],
+        "frontend": []
+    },
+    "contributes": [
+        {
+            "type": "admin-page",
+            "class": "Capell\\ThemeStudio\\OffGrid\\Manifest\\ThemeManagementPageContribution",
+            "pageClass": "Capell\\Marketplace\\Filament\\Pages\\ThemeExtensionPage",
+            "pageParameters": {
+                "themeKey": "off-grid"
+            },
+            "labelKey": "capell-marketplace::marketplace.theme_extension.management_entry_label"
+        }
+    ],
+    "database": {
+        "migrations": false,
+        "settings": false,
+        "requiredTables": []
+    },
+    "commands": {
+        "install": null,
+        "setup": null,
+        "demo": "capell:theme-off-grid-demo",
+        "demoParams": ["url", "languages", "sites"],
+        "doctor": null
+    },
+    "settings": [],
+    "permissions": [],
+    "capabilities": ["theme-off-grid", "theme-off-grid-frontend"],
+    "security": {
+        "riskTier": "low",
+        "publicSurface": {
+            "routeNames": [],
+            "auth": "none",
+            "csrfExemptRoutes": [],
+            "signedRoutes": [],
+            "tokenizedRoutes": [],
+            "webhookRoutes": [],
+            "throttledRoutes": []
+        },
+        "sensitiveData": {
+            "encryptedFields": [],
+            "hashedTokenFields": [],
+            "redactedOutputClasses": [],
+            "plaintextJustifications": []
+        },
+        "publicOutput": {
+            "cacheSafe": true,
+            "forbidAuthoringSurface": true,
+            "forbidSecrets": true,
+            "forbidPublicBladeQueries": true
+        },
+        "externalHttpClients": {
+            "requiresTimeouts": false,
+            "requiresSecretRedaction": false,
+            "clients": []
+        },
+        "adminSurface": {
+            "authorization": "none",
+            "permissions": []
+        }
+    },
+    "performance": {
+        "criticalCss": {
+            "required": true,
+            "parityViewports": ["mobile", "tablet", "desktop"]
+        },
+        "frontendRenderBudgetMs": 20,
+        "adminQueryBudget": 0,
+        "cacheTags": ["theme-off-grid"],
+        "cacheSafety": {
+            "cacheable": false,
+            "variesBy": ["site", "locale"],
+            "sensitiveOutput": false,
+            "invalidationSources": [],
+            "queueInvalidation": false
+        }
+    },
+    "healthChecks": [
+        {
+            "key": "theme-off-grid.package-health",
+            "label": "Off Grid package surfaces, providers, and install health are discoverable by Diagnostics.",
+            "class": "Capell\\ThemeStudio\\OffGrid\\Health\\ThemeOffGridHealthCheck",
+            "severity": "critical",
+            "surface": "frontend"
+        }
+    ],
+    "commercial": {
+        "proposedLicense": "paid",
+        "requestedCertification": "first-party",
+        "supportPolicy": "priority",
+        "privateDocsRequested": true
+    },
+    "marketplace": {
+        "summary": "Monospace type, stark links, visible focus rings, deliberately unpolished.",
+        "description": "Off Grid provides a distinct theme definition, demo command, marketplace metadata, and public-safe Blade views for independent archives that need long irregular indexes, controlled media sizes, blue underlined links, submission routes, interview markers, sponsor and ad labels, archive dates, language notes, correction logs, zine annotations, visible focus outlines, and responsive single-column fallbacks.",
+        "screenshots": [
+            {
+                "path": "docs/screenshots/off-grid-homepage.png",
+                "alt": "Off Grid homepage preview",
+                "caption": "Off Grid Homepage"
+            },
+            {
+                "path": "docs/screenshots/off-grid-landing.png",
+                "alt": "Off Grid landing page preview",
+                "caption": "Off Grid Landing page"
+            },
+            {
+                "path": "docs/screenshots/off-grid-listing.png",
+                "alt": "Off Grid list page preview",
+                "caption": "Off Grid Archive"
+            },
+            {
+                "path": "docs/screenshots/off-grid-search.png",
+                "alt": "Off Grid search results preview",
+                "caption": "Off Grid Search results"
+            },
+            {
+                "path": "docs/screenshots/off-grid-contact.png",
+                "alt": "Off Grid contact form preview",
+                "caption": "Off Grid Contact form"
+            }
+        ],
+        "categories": ["frontend", "themes"]
+    },
+    "extends": "default",
+    "themeKey": "off-grid"
+}

@@ -13,27 +13,27 @@ use Illuminate\Support\Facades\Route;
 use function Pest\Laravel\get;
 
 it('uses the selected database theme key and preset on a real route', function (): void {
-    $pageUrl = themeFrontendCreatePage('dark-product-system', 'dark-product-system');
+    $pageUrl = themeFrontendCreatePage('night-shift', 'night-shift');
 
     $response = get($pageUrl->full_url);
 
     $response->assertOk();
 
     expect($response->getContent())
-        ->toContain('data-theme="dark-product-system"')
+        ->toContain('data-theme="night-shift"')
         ->toContain('Theme route smoke CTA');
 
     assertThemeFrontendPublicHtmlIsSafe($response);
 });
 
 it('lets database brand and token overrides beat package preset defaults on a real route', function (): void {
-    $pageUrl = themeFrontendCreatePage('dark-product-system', 'dark-product-system');
+    $pageUrl = themeFrontendCreatePage('night-shift', 'night-shift');
 
     themeFrontendConfigureRuntime(
-        themeKey: 'dark-product-system',
-        presetKey: 'dark-product-system',
+        themeKey: 'night-shift',
+        presetKey: 'night-shift',
         brandProfile: ['primaryColor' => '#111827'],
-        themeOverrides: ['dark-product-system' => ['primaryColor' => '#dc2626', 'accentColor' => '#16a34a']],
+        themeOverrides: ['night-shift' => ['primaryColor' => '#dc2626', 'accentColor' => '#16a34a']],
     );
 
     $response = get($pageUrl->full_url);
@@ -49,14 +49,14 @@ it('lets database brand and token overrides beat package preset defaults on a re
 });
 
 it('falls back to the selected theme default preset when saved preset settings are stale on a real route', function (): void {
-    $pageUrl = themeFrontendCreatePage('dark-product-system', 'boardroom');
+    $pageUrl = themeFrontendCreatePage('night-shift', 'boardroom');
 
     $response = get($pageUrl->full_url);
 
     $response->assertOk();
 
     expect($response->getContent())
-        ->toContain('data-theme="dark-product-system"')
+        ->toContain('data-theme="night-shift"')
         ->toContain('#07080d');
 
     assertThemeFrontendPublicHtmlIsSafe($response);
@@ -100,7 +100,7 @@ it('caches public theme route output without authoring surface', function (): vo
         }
     });
 
-    $pageUrl = themeFrontendCreatePage('dark-product-system', 'dark-product-system');
+    $pageUrl = themeFrontendCreatePage('night-shift', 'night-shift');
 
     $firstResponse = get($pageUrl->full_url);
     $secondResponse = get($pageUrl->full_url);

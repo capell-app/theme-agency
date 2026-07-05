@@ -535,9 +535,9 @@ function capell_docs_screens_and_workflow(string $packagePath, array $manifest, 
                 continue;
             }
 
-            $title = capell_docs_string($entry['title'] ?? null)
+            $title = capell_docs_normalize_screenshot_label(capell_docs_string($entry['title'] ?? null)
                 ?? capell_docs_string($entry['id'] ?? null)
-                ?? 'Untitled screenshot';
+                ?? 'Untitled screenshot');
             $surface = capell_docs_string($entry['surface'] ?? null);
             $required = ($entry['required'] ?? true) === false ? 'optional' : 'required';
             $suffix = $surface !== null ? ' (' . $surface . ', ' . $required . ')' : ' (' . $required . ')';
@@ -560,10 +560,10 @@ function capell_docs_screens_and_workflow(string $packagePath, array $manifest, 
                 continue;
             }
 
-            $caption = capell_docs_string($screenshot['caption'] ?? null)
+            $caption = capell_docs_normalize_screenshot_label(capell_docs_string($screenshot['caption'] ?? null)
                 ?? capell_docs_string($screenshot['alt'] ?? null)
                 ?? capell_docs_string($screenshot['path'] ?? null)
-                ?? 'Marketplace screenshot';
+                ?? 'Marketplace screenshot');
             $lines[] = '- ' . rtrim($caption, '.') . '.';
         }
 
@@ -1094,6 +1094,17 @@ function capell_docs_clean_sentence(string $text): string
 function capell_docs_finish_sentence(string $text): string
 {
     return preg_match('/[.!?]$/', $text) === 1 ? $text : $text . '.';
+}
+
+/**
+ * Normalize a short screenshot title or caption pulled verbatim from screenshots.json
+ * or capell.json marketplace data. These values are not full sentences, so this only
+ * strips banned punctuation (e.g. em dashes from "Homepage — Tablet" viewport suffixes)
+ * and collapses the resulting whitespace, without adding trailing punctuation.
+ */
+function capell_docs_normalize_screenshot_label(string $text): string
+{
+    return trim(preg_replace('/\s+/', ' ', capell_docs_normalize_copy($text)) ?? $text);
 }
 
 function capell_docs_normalize_copy(string $text): string

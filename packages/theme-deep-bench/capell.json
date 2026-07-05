@@ -1,0 +1,160 @@
+{
+    "manifest-version": 3,
+    "name": "capell-app/theme-deep-bench",
+    "slug": "theme-deep-bench",
+    "displayName": "Theme Deep Bench",
+    "kind": "theme",
+    "capellApiVersion": "^4.0",
+    "version": "4.x-dev",
+    "description": "A who's-who of designers and developers: browsable portfolio listings plus career resources. The roster people check before they hire.",
+    "product": {
+        "group": "Capell Themes",
+        "tier": "premium",
+        "bundle": "themes"
+    },
+    "namespace": "Capell\\ThemeStudio\\DeepBench",
+    "surfaces": ["frontend"],
+    "dependencies": {
+        "requires": ["capell-app/core", "capell-app/frontend"],
+        "supports": [
+            "capell-app/blog",
+            "capell-app/form-builder",
+            "capell-app/newsletter",
+            "capell-app/shopify-commerce"
+        ],
+        "conflicts": []
+    },
+    "providers": {
+        "metadata": [],
+        "install": [],
+        "runtime": [
+            "Capell\\ThemeStudio\\DeepBench\\DeepBenchThemeServiceProvider"
+        ],
+        "admin": [],
+        "frontend": []
+    },
+    "contributes": [
+        {
+            "type": "admin-page",
+            "class": "Capell\\ThemeStudio\\DeepBench\\Manifest\\ThemeManagementPageContribution",
+            "pageClass": "Capell\\Marketplace\\Filament\\Pages\\ThemeExtensionPage",
+            "pageParameters": {
+                "themeKey": "deep-bench"
+            },
+            "labelKey": "capell-marketplace::marketplace.theme_extension.management_entry_label"
+        }
+    ],
+    "database": {
+        "migrations": false,
+        "settings": false,
+        "requiredTables": []
+    },
+    "commands": {
+        "install": null,
+        "setup": null,
+        "demo": "capell:theme-deep-bench-demo",
+        "demoParams": ["url", "languages", "sites"],
+        "doctor": null
+    },
+    "settings": [],
+    "permissions": [],
+    "capabilities": ["theme-deep-bench", "theme-deep-bench-frontend"],
+    "security": {
+        "riskTier": "low",
+        "publicSurface": {
+            "routeNames": [],
+            "auth": "none",
+            "csrfExemptRoutes": [],
+            "signedRoutes": [],
+            "tokenizedRoutes": [],
+            "webhookRoutes": [],
+            "throttledRoutes": []
+        },
+        "sensitiveData": {
+            "encryptedFields": [],
+            "hashedTokenFields": [],
+            "redactedOutputClasses": [],
+            "plaintextJustifications": []
+        },
+        "publicOutput": {
+            "cacheSafe": true,
+            "forbidAuthoringSurface": true,
+            "forbidSecrets": true,
+            "forbidPublicBladeQueries": true
+        },
+        "externalHttpClients": {
+            "requiresTimeouts": false,
+            "requiresSecretRedaction": false,
+            "clients": []
+        },
+        "adminSurface": {
+            "authorization": "none",
+            "permissions": []
+        }
+    },
+    "performance": {
+        "criticalCss": {
+            "required": true,
+            "parityViewports": ["mobile", "tablet", "desktop"]
+        },
+        "frontendRenderBudgetMs": 20,
+        "adminQueryBudget": 0,
+        "cacheTags": ["theme-deep-bench"],
+        "cacheSafety": {
+            "cacheable": false,
+            "variesBy": ["site", "locale"],
+            "sensitiveOutput": false,
+            "invalidationSources": [],
+            "queueInvalidation": false
+        }
+    },
+    "healthChecks": [
+        {
+            "key": "theme-deep-bench.package-health",
+            "label": "Deep Bench package surfaces, providers, and install health are discoverable by Diagnostics.",
+            "class": "Capell\\ThemeStudio\\DeepBench\\Health\\ThemeDeepBenchHealthCheck",
+            "severity": "critical",
+            "surface": "frontend"
+        }
+    ],
+    "commercial": {
+        "proposedLicense": "paid",
+        "requestedCertification": "first-party",
+        "supportPolicy": "priority",
+        "privateDocsRequested": true
+    },
+    "marketplace": {
+        "summary": "A who's-who of designers and developers: browsable portfolio listings plus career resources.",
+        "description": "Deep Bench provides a distinct theme definition, demo command, marketplace metadata, and public-safe Blade views for designers, developers, studios, career-stage collections, portfolio resources, article libraries, and curated showcase directories that need large preview tiles, creator names, disciplines, short editorial notes, tags, resume links, social links, case-study links, galleries, and related portfolios.",
+        "screenshots": [
+            {
+                "path": "docs/screenshots/deep-bench-homepage.png",
+                "alt": "Deep Bench homepage preview",
+                "caption": "Deep Bench Homepage"
+            },
+            {
+                "path": "docs/screenshots/deep-bench-landing.png",
+                "alt": "Deep Bench landing page preview",
+                "caption": "Deep Bench Landing page"
+            },
+            {
+                "path": "docs/screenshots/deep-bench-listing.png",
+                "alt": "Deep Bench list page preview",
+                "caption": "Deep Bench List page"
+            },
+            {
+                "path": "docs/screenshots/deep-bench-search.png",
+                "alt": "Deep Bench search results preview",
+                "caption": "Deep Bench Search results"
+            },
+            {
+                "path": "docs/screenshots/deep-bench-contact.png",
+                "alt": "Deep Bench contact form preview",
+                "caption": "Deep Bench Contact form"
+            }
+        ],
+        "categories": ["frontend", "themes"]
+    },
+    "extends": "default",
+    "themeKey": "deep-bench"
+}

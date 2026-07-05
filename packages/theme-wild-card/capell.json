@@ -1,0 +1,163 @@
+{
+    "manifest-version": 3,
+    "name": "capell-app/theme-wild-card",
+    "slug": "theme-wild-card",
+    "displayName": "Theme Wild Card",
+    "kind": "theme",
+    "capellApiVersion": "^4.0",
+    "version": "4.x-dev",
+    "description": "An award-show directory with an experimental streak — submission galleries, bold type, rules made to bend. For creative industries that hate looking corporate.",
+    "product": {
+        "group": "Capell Themes",
+        "tier": "premium",
+        "bundle": "themes"
+    },
+    "namespace": "Capell\\ThemeStudio\\WildCard",
+    "surfaces": ["frontend"],
+    "dependencies": {
+        "requires": ["capell-app/core", "capell-app/frontend"],
+        "supports": [
+            "capell-app/blog",
+            "capell-app/form-builder",
+            "capell-app/newsletter",
+            "capell-app/shopify-commerce"
+        ],
+        "conflicts": []
+    },
+    "providers": {
+        "metadata": [],
+        "install": [],
+        "runtime": [
+            "Capell\\ThemeStudio\\WildCard\\WildCardThemeServiceProvider"
+        ],
+        "admin": [],
+        "frontend": []
+    },
+    "contributes": [
+        {
+            "type": "admin-page",
+            "class": "Capell\\ThemeStudio\\WildCard\\Manifest\\ThemeManagementPageContribution",
+            "pageClass": "Capell\\Marketplace\\Filament\\Pages\\ThemeExtensionPage",
+            "pageParameters": {
+                "themeKey": "wild-card"
+            },
+            "labelKey": "capell-marketplace::marketplace.theme_extension.management_entry_label"
+        }
+    ],
+    "database": {
+        "migrations": false,
+        "settings": false,
+        "requiredTables": []
+    },
+    "commands": {
+        "install": null,
+        "setup": null,
+        "demo": "capell:theme-wild-card-demo",
+        "demoParams": ["url", "languages", "sites"],
+        "doctor": null
+    },
+    "settings": [],
+    "permissions": [],
+    "capabilities": [
+        "theme-wild-card",
+        "theme-wild-card-frontend"
+    ],
+    "security": {
+        "riskTier": "low",
+        "publicSurface": {
+            "routeNames": [],
+            "auth": "none",
+            "csrfExemptRoutes": [],
+            "signedRoutes": [],
+            "tokenizedRoutes": [],
+            "webhookRoutes": [],
+            "throttledRoutes": []
+        },
+        "sensitiveData": {
+            "encryptedFields": [],
+            "hashedTokenFields": [],
+            "redactedOutputClasses": [],
+            "plaintextJustifications": []
+        },
+        "publicOutput": {
+            "cacheSafe": true,
+            "forbidAuthoringSurface": true,
+            "forbidSecrets": true,
+            "forbidPublicBladeQueries": true
+        },
+        "externalHttpClients": {
+            "requiresTimeouts": false,
+            "requiresSecretRedaction": false,
+            "clients": []
+        },
+        "adminSurface": {
+            "authorization": "none",
+            "permissions": []
+        }
+    },
+    "performance": {
+        "criticalCss": {
+            "required": true,
+            "parityViewports": ["mobile", "tablet", "desktop"]
+        },
+        "frontendRenderBudgetMs": 20,
+        "adminQueryBudget": 0,
+        "cacheTags": ["theme-wild-card"],
+        "cacheSafety": {
+            "cacheable": false,
+            "variesBy": ["site", "locale"],
+            "sensitiveOutput": false,
+            "invalidationSources": [],
+            "queueInvalidation": false
+        }
+    },
+    "healthChecks": [
+        {
+            "key": "theme-wild-card.package-health",
+            "label": "Wild Card package surfaces, providers, and install health are discoverable by Diagnostics.",
+            "class": "Capell\\ThemeStudio\\WildCard\\Health\\ThemeWildCardHealthCheck",
+            "severity": "critical",
+            "surface": "frontend"
+        }
+    ],
+    "commercial": {
+        "proposedLicense": "paid",
+        "requestedCertification": "first-party",
+        "supportPolicy": "priority",
+        "privateDocsRequested": true
+    },
+    "marketplace": {
+        "summary": "An award-show directory with an experimental streak — submission galleries, bold type, rules made to bend. For creative industries that hate looking corporate.",
+        "description": "Wild Card provides a distinct theme definition, demo command, marketplace metadata, and public-safe Blade views for creative directories that need a featured-today hero, latest submissions, winners, collections, profiles, resources, sponsor modules, oversized project titles, compact metadata, status badges, country and category labels, score chips, quick filters, image slabs, list rows, profile tiles, hover metadata reveals, and detail pages with galleries and related projects.",
+        "screenshots": [
+            {
+                "path": "docs/screenshots/wild-card-homepage.png",
+                "alt": "Wild Card homepage preview",
+                "caption": "Wild Card Homepage"
+            },
+            {
+                "path": "docs/screenshots/wild-card-landing.png",
+                "alt": "Wild Card landing page preview",
+                "caption": "Wild Card Landing page"
+            },
+            {
+                "path": "docs/screenshots/wild-card-listing.png",
+                "alt": "Wild Card list page preview",
+                "caption": "Wild Card Project archive"
+            },
+            {
+                "path": "docs/screenshots/wild-card-search.png",
+                "alt": "Wild Card search results preview",
+                "caption": "Wild Card Search results"
+            },
+            {
+                "path": "docs/screenshots/wild-card-contact.png",
+                "alt": "Wild Card contact form preview",
+                "caption": "Wild Card Contact form"
+            }
+        ],
+        "categories": ["frontend", "themes"]
+    },
+    "extends": "default",
+    "themeKey": "wild-card"
+}

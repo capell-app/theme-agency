@@ -11,14 +11,14 @@ Cache posture uses three terms: `safe` means public output is expected to avoid 
 
 ## Summary
 
-- Packages: 86
+- Packages: 84
 - Packages with public routes: 30
 - Public routes: 104
 - Webhook routes: 5
 - Throttled routes: 48
 - Signed or tokenized routes: 26
 - Sensitive fields: 131
-- Anonymous-output-safe packages: 76
+- Anonymous-output-safe packages: 74
 
 ## Package Surface
 
@@ -85,27 +85,25 @@ Cache posture uses three terms: `safe` means public output is expected to avoid 
 | capell-app/social-feeds | sensitive | 0 | - | - | - | Capell\SocialFeeds\Models\SocialFeedConnection::$credentials | permissions; 5 permissions | safe; cacheable; no sensitive output; varies by site, locale |
 | capell-app/structured-content-library | standard | 0 | - | - | - | - | permissions; 5 permissions | safe; cacheable; no sensitive output; varies by site, locale |
 | capell-app/tags | standard | 0 | - | - | - | - | policies | safe; not cacheable; no sensitive output; varies by none |
-| capell-app/theme-case-study-platform | low | 0 | - | - | - | - | none | safe; not cacheable; no sensitive output; varies by site, locale |
-| capell-app/theme-character-portfolio-index | low | 0 | - | - | - | - | none | safe; not cacheable; no sensitive output; varies by site, locale |
-| capell-app/theme-creative-culture-editorial | low | 0 | - | - | - | - | none | safe; not cacheable; no sensitive output; varies by site, locale |
-| capell-app/theme-dark-product-system | low | 0 | - | - | - | - | none | safe; not cacheable; no sensitive output; varies by site, locale |
-| capell-app/theme-dense-news-analysis | low | 0 | - | - | - | - | none | safe; not cacheable; no sensitive output; varies by site, locale |
-| capell-app/theme-design-led-magazine | low | 0 | - | - | - | - | none | safe; not cacheable; no sensitive output; varies by site, locale |
-| capell-app/theme-editorial-serif | low | 0 | - | - | - | - | none | safe; not cacheable; no sensitive output; varies by site, locale |
-| capell-app/theme-experimental-directory | low | 0 | - | - | - | - | none | safe; not cacheable; no sensitive output; varies by site, locale |
-| capell-app/theme-filter-gallery | low | 0 | - | - | - | - | none | safe; not cacheable; no sensitive output; varies by site, locale |
+| capell-app/theme-art-paper | low | 0 | - | - | - | - | none | safe; not cacheable; no sensitive output; varies by site, locale |
+| capell-app/theme-deep-bench | low | 0 | - | - | - | - | none | safe; not cacheable; no sensitive output; varies by site, locale |
+| capell-app/theme-far-field | low | 0 | - | - | - | - | none | safe; not cacheable; no sensitive output; varies by site, locale |
+| capell-app/theme-field-guide | low | 0 | - | - | - | - | none | safe; not cacheable; no sensitive output; varies by site, locale |
+| capell-app/theme-first-light | low | 0 | - | - | - | - | none | safe; not cacheable; no sensitive output; varies by site, locale |
 | capell-app/theme-foundation | low | 0 | - | - | - | - | panel-auth | safe; not cacheable; no sensitive output; varies by site, locale |
-| capell-app/theme-global-culture-magazine | low | 0 | - | - | - | - | none | safe; not cacheable; no sensitive output; varies by site, locale |
-| capell-app/theme-landing-gallery | low | 0 | - | - | - | - | none | safe; not cacheable; no sensitive output; varies by site, locale |
+| capell-app/theme-front-row | low | 0 | - | - | - | - | none | safe; not cacheable; no sensitive output; varies by site, locale |
+| capell-app/theme-gold-rush | low | 0 | - | - | - | - | none | safe; not cacheable; no sensitive output; varies by site, locale |
+| capell-app/theme-ink-press | low | 0 | - | - | - | - | none | safe; not cacheable; no sensitive output; varies by site, locale |
+| capell-app/theme-launch-pad | low | 0 | - | - | - | - | none | safe; not cacheable; no sensitive output; varies by site, locale |
 | capell-app/theme-liquid-glass | low | 0 | - | - | - | - | none | safe; cacheable; no sensitive output; varies by site, locale |
-| capell-app/theme-minimal-curation-feed | low | 0 | - | - | - | - | none | safe; not cacheable; no sensitive output; varies by site, locale |
-| capell-app/theme-motion-archive | low | 0 | - | - | - | - | none | safe; not cacheable; no sensitive output; varies by site, locale |
-| capell-app/theme-one-page-showcase | low | 0 | - | - | - | - | none | safe; not cacheable; no sensitive output; varies by site, locale |
-| capell-app/theme-portfolio-directory | low | 0 | - | - | - | - | none | safe; not cacheable; no sensitive output; varies by site, locale |
-| capell-app/theme-premium-portfolio-collection | low | 0 | - | - | - | - | none | safe; not cacheable; no sensitive output; varies by site, locale |
-| capell-app/theme-quiet-web-gallery | low | 0 | - | - | - | - | none | safe; not cacheable; no sensitive output; varies by site, locale |
-| capell-app/theme-raw-index | low | 0 | - | - | - | - | none | safe; not cacheable; no sensitive output; varies by site, locale |
-| capell-app/theme-scoreboard-showcase | low | 0 | - | - | - | - | none | safe; not cacheable; no sensitive output; varies by site, locale |
+| capell-app/theme-night-shift | low | 0 | - | - | - | - | none | safe; not cacheable; no sensitive output; varies by site, locale |
+| capell-app/theme-off-grid | low | 0 | - | - | - | - | none | safe; not cacheable; no sensitive output; varies by site, locale |
+| capell-app/theme-one-take | low | 0 | - | - | - | - | none | safe; not cacheable; no sensitive output; varies by site, locale |
+| capell-app/theme-open-studio | low | 0 | - | - | - | - | none | safe; not cacheable; no sensitive output; varies by site, locale |
+| capell-app/theme-quiet-type | low | 0 | - | - | - | - | none | safe; not cacheable; no sensitive output; varies by site, locale |
+| capell-app/theme-reel-room | low | 0 | - | - | - | - | none | safe; not cacheable; no sensitive output; varies by site, locale |
+| capell-app/theme-soft-focus | low | 0 | - | - | - | - | none | safe; not cacheable; no sensitive output; varies by site, locale |
+| capell-app/theme-wild-card | low | 0 | - | - | - | - | none | safe; not cacheable; no sensitive output; varies by site, locale |
 | capell-app/translation-manager | sensitive | 0 | - | - | - | - | panel-auth | safe; not cacheable; no sensitive output; varies by none |
 | capell-app/url-manager | sensitive | 0 | - | - | - | url_manager_not_found_opportunities.source_hash<br>url_manager_redirect_hits.ip_hash<br>url_manager_redirect_hits.user_agent_hash<br>url_manager_redirect_rules.source_hash<br>url_manager_redirect_rules.target_hash | permissions; 4 permissions | safe; not cacheable; no sensitive output; varies by none |
 | capell-app/welcome-tour | standard | 0 | - | - | - | - | panel-auth | safe; not cacheable; no sensitive output; varies by user |

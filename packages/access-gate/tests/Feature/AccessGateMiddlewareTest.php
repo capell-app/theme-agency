@@ -752,6 +752,7 @@ function defineAccessGateSiteTables(): void
         Schema::create('sites', function (Blueprint $table): void {
             $table->id();
             $table->string('name');
+            $table->json('meta')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

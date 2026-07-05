@@ -1,0 +1,160 @@
+{
+    "manifest-version": 3,
+    "name": "capell-app/theme-launch-pad",
+    "slug": "theme-launch-pad",
+    "displayName": "Theme Launch Pad",
+    "kind": "theme",
+    "capellApiVersion": "^4.0",
+    "version": "4.x-dev",
+    "description": "A showcase gallery for landing pages and templates — rounded screenshot cards, votes, prices, and pro upsells on warm near-white. Where SaaS goes window-shopping.",
+    "product": {
+        "group": "Capell Themes",
+        "tier": "premium",
+        "bundle": "themes"
+    },
+    "namespace": "Capell\\ThemeStudio\\LaunchPad",
+    "surfaces": ["frontend"],
+    "dependencies": {
+        "requires": ["capell-app/core", "capell-app/frontend"],
+        "supports": [
+            "capell-app/blog",
+            "capell-app/form-builder",
+            "capell-app/newsletter",
+            "capell-app/shopify-commerce"
+        ],
+        "conflicts": []
+    },
+    "providers": {
+        "metadata": [],
+        "install": [],
+        "runtime": [
+            "Capell\\ThemeStudio\\LaunchPad\\LaunchPadThemeServiceProvider"
+        ],
+        "admin": [],
+        "frontend": []
+    },
+    "contributes": [
+        {
+            "type": "admin-page",
+            "class": "Capell\\ThemeStudio\\LaunchPad\\Manifest\\ThemeManagementPageContribution",
+            "pageClass": "Capell\\Marketplace\\Filament\\Pages\\ThemeExtensionPage",
+            "pageParameters": {
+                "themeKey": "launch-pad"
+            },
+            "labelKey": "capell-marketplace::marketplace.theme_extension.management_entry_label"
+        }
+    ],
+    "database": {
+        "migrations": false,
+        "settings": false,
+        "requiredTables": []
+    },
+    "commands": {
+        "install": null,
+        "setup": null,
+        "demo": "capell:theme-launch-pad-demo",
+        "demoParams": ["url", "languages", "sites"],
+        "doctor": null
+    },
+    "settings": [],
+    "permissions": [],
+    "capabilities": ["theme-launch-pad", "theme-launch-pad-frontend"],
+    "security": {
+        "riskTier": "low",
+        "publicSurface": {
+            "routeNames": [],
+            "auth": "none",
+            "csrfExemptRoutes": [],
+            "signedRoutes": [],
+            "tokenizedRoutes": [],
+            "webhookRoutes": [],
+            "throttledRoutes": []
+        },
+        "sensitiveData": {
+            "encryptedFields": [],
+            "hashedTokenFields": [],
+            "redactedOutputClasses": [],
+            "plaintextJustifications": []
+        },
+        "publicOutput": {
+            "cacheSafe": true,
+            "forbidAuthoringSurface": true,
+            "forbidSecrets": true,
+            "forbidPublicBladeQueries": true
+        },
+        "externalHttpClients": {
+            "requiresTimeouts": false,
+            "requiresSecretRedaction": false,
+            "clients": []
+        },
+        "adminSurface": {
+            "authorization": "none",
+            "permissions": []
+        }
+    },
+    "performance": {
+        "criticalCss": {
+            "required": true,
+            "parityViewports": ["mobile", "tablet", "desktop"]
+        },
+        "frontendRenderBudgetMs": 20,
+        "adminQueryBudget": 0,
+        "cacheTags": ["theme-launch-pad"],
+        "cacheSafety": {
+            "cacheable": false,
+            "variesBy": ["site", "locale"],
+            "sensitiveOutput": false,
+            "invalidationSources": [],
+            "queueInvalidation": false
+        }
+    },
+    "healthChecks": [
+        {
+            "key": "theme-launch-pad.package-health",
+            "label": "Launch Pad package surfaces, providers, and install health are discoverable by Diagnostics.",
+            "class": "Capell\\ThemeStudio\\LaunchPad\\Health\\ThemeLaunchPadHealthCheck",
+            "severity": "critical",
+            "surface": "frontend"
+        }
+    ],
+    "commercial": {
+        "proposedLicense": "paid",
+        "requestedCertification": "first-party",
+        "supportPolicy": "priority",
+        "privateDocsRequested": true
+    },
+    "marketplace": {
+        "summary": "A showcase gallery for landing pages and templates — rounded screenshot cards, votes, prices, and pro upsells on warm near-white.",
+        "description": "Launch Pad provides a distinct theme definition, demo command, marketplace metadata, and public-safe Blade views for landing-page galleries that need a concise value proposition, immediate search, category shortcuts, pro and template upsell blocks, rounded screenshot cards, latest-site grids, paid templates, partner blocks, curated category rows, votes, comments, prices, saved-state actions, newsletter capture, and strong archive pages.",
+        "screenshots": [
+            {
+                "path": "docs/screenshots/launch-pad-homepage.png",
+                "alt": "Launch Pad homepage preview",
+                "caption": "Launch Pad Homepage"
+            },
+            {
+                "path": "docs/screenshots/launch-pad-landing.png",
+                "alt": "Launch Pad landing page preview",
+                "caption": "Launch Pad Landing page"
+            },
+            {
+                "path": "docs/screenshots/launch-pad-listing.png",
+                "alt": "Launch Pad list page preview",
+                "caption": "Launch Pad Archive page"
+            },
+            {
+                "path": "docs/screenshots/launch-pad-search.png",
+                "alt": "Launch Pad search results preview",
+                "caption": "Launch Pad Search results"
+            },
+            {
+                "path": "docs/screenshots/launch-pad-contact.png",
+                "alt": "Launch Pad contact form preview",
+                "caption": "Launch Pad Contact form"
+            }
+        ],
+        "categories": ["frontend", "themes"]
+    },
+    "extends": "default",
+    "themeKey": "launch-pad"
+}

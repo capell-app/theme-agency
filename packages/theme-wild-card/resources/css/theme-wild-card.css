@@ -1,0 +1,1280 @@
+/* Wild Card — an FWA/Awwwards-register creative-submission
+   showcase: acid-bright accent on near-black, oversized kinetic type,
+   metadata chips, and a tight editorial grid. Bold and curated, not raw. */
+
+.exd-shell {
+    container: exd-tokens / normal;
+    /* 8.2: core tokens migrated hex -> oklch(); void/void-raised/accent-ink
+       fold their earlier prefers-color-scheme override into light-dark()
+       on a single declaration. --exd-accent keeps its theme-driven fallback
+       chain (var(--theme-accent, ...)) rather than light-dark(), because the
+       fallback itself is already the dark-mode brand value in the wild —
+       consolidating it would drop the theme-token override path. */
+    --exd-ink: var(--theme-foreground, oklch(96.46% 0.0057 84.57));
+    --exd-void: light-dark(
+        oklch(14.57% 0.0043 285.86),
+        oklch(13.54% 0.0047 285.76)
+    );
+    --exd-void-raised: light-dark(
+        oklch(18.81% 0.006 285.81),
+        oklch(20.59% 0.0059 285.87)
+    );
+    --exd-paper: var(--theme-surface, oklch(96.46% 0.0057 84.57));
+    --exd-paper-dim: color-mix(in oklch, var(--exd-paper) 92%, #000000);
+    --exd-muted: color-mix(in oklch, var(--exd-ink) 62%, transparent);
+    --exd-muted-on-paper: color-mix(
+        in oklch,
+        oklch(14.57% 0.0043 285.86) 72%,
+        transparent
+    );
+    --exd-line: color-mix(in oklch, var(--exd-ink) 16%, transparent);
+    --exd-line-on-paper: color-mix(
+        in oklch,
+        oklch(14.57% 0.0043 285.86) 12%,
+        transparent
+    );
+    --exd-accent: var(--theme-accent, oklch(93.07% 0.2286 123.09));
+    --exd-accent-ink: oklch(14.57% 0.0043 285.86);
+    --exd-accent-soft: color-mix(in oklch, var(--exd-accent) 16%, transparent);
+    --exd-signal: oklch(66.3% 0.2292 12.65);
+    --exd-snap: cubic-bezier(0.7, 0, 0.16, 1);
+    background: var(--exd-void);
+    color: var(--exd-ink);
+    color-scheme: light dark;
+    font-family: var(--theme-body-font, inter), system-ui, sans-serif;
+    font-size: 1.0625rem;
+    line-height: 1.6;
+}
+
+.exd-shell h1,
+.exd-shell h2,
+.exd-shell h3 {
+    color: var(--exd-ink);
+    font-family: var(--theme-heading-font, sora), system-ui, sans-serif;
+    font-weight: 800;
+}
+
+.exd-shell h1 {
+    font-size: clamp(3rem, 7.5vw, 6.75rem);
+    letter-spacing: -0.035em;
+    line-height: 0.92;
+    margin-block: 0;
+    text-box-trim: trim-both cap alphabetic;
+    text-transform: uppercase;
+    text-wrap: balance;
+}
+
+.exd-shell h2 {
+    font-size: clamp(2.1rem, 4.2vw, 3.75rem);
+    letter-spacing: -0.025em;
+    line-height: 0.98;
+    margin-block: 0;
+    text-box-trim: trim-both cap alphabetic;
+    text-transform: uppercase;
+    text-wrap: balance;
+}
+
+.exd-shell h3 {
+    font-size: 1.15rem;
+    letter-spacing: -0.01em;
+    line-height: 1.2;
+    margin: 0;
+    text-wrap: balance;
+}
+
+.exd-shell a:focus-visible,
+.exd-shell button:focus-visible,
+.exd-shell input:focus-visible,
+.exd-shell [tabindex]:focus-visible {
+    box-shadow:
+        0 0 0 2px var(--exd-void),
+        0 0 0 4px var(--exd-accent);
+    outline: 2px solid transparent;
+}
+
+.exd-shell ::selection {
+    background: var(--exd-accent);
+    color: var(--exd-accent-ink);
+}
+
+.exd-skip-link {
+    background: var(--exd-accent);
+    color: var(--exd-accent-ink);
+    font-weight: 800;
+    inset-inline-start: 1rem;
+    padding: 0.75rem 1rem;
+    position: fixed;
+    top: 1rem;
+    transform: translateY(-150%);
+    z-index: 50;
+}
+
+.exd-skip-link:focus {
+    transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    .exd-skip-link {
+        transition: transform 0.2s var(--exd-snap);
+    }
+}
+
+/* ---------------------------------------------------------------- sections */
+
+.exd-section {
+    background: var(--exd-void);
+    border-top: 1px solid var(--exd-line);
+}
+
+.exd-section-paper {
+    background: var(--exd-paper);
+    color: var(--exd-void);
+}
+
+.exd-section-paper h1,
+.exd-section-paper h2,
+.exd-section-paper h3 {
+    color: var(--exd-void);
+}
+
+.exd-section-paper + .exd-section-paper {
+    border-top-color: var(--exd-line-on-paper);
+}
+
+.exd-section-raised {
+    background: var(--exd-void-raised);
+}
+
+.exd-section-inner {
+    margin-inline: auto;
+    max-width: 86rem;
+    padding: clamp(4rem, 8vw, 7.5rem) clamp(1.25rem, 4vw, 3.5rem);
+}
+
+.exd-kicker {
+    align-items: center;
+    color: var(--exd-accent);
+    display: inline-flex;
+    font-size: 0.75rem;
+    font-weight: 800;
+    gap: 0.5rem;
+    letter-spacing: 0.28em;
+    margin: 0;
+    text-transform: uppercase;
+}
+
+.exd-kicker::before {
+    background: var(--exd-accent);
+    border-radius: 999px;
+    content: '';
+    display: inline-block;
+    height: 0.5rem;
+    width: 0.5rem;
+}
+
+.exd-section-paper .exd-kicker {
+    color: color-mix(in srgb, var(--exd-accent) 70%, #0a0a0c);
+}
+
+.exd-lede {
+    color: var(--exd-muted);
+    font-size: clamp(1.05rem, 1vw + 0.9rem, 1.4rem);
+    line-height: 1.6;
+    margin-block: 1.25rem 0;
+    max-width: 44rem;
+    text-wrap: pretty;
+}
+
+.exd-section-paper .exd-lede {
+    color: var(--exd-muted-on-paper);
+}
+
+.exd-heading-row {
+    align-items: end;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem 3rem;
+    justify-content: space-between;
+    margin-top: 0.75rem;
+}
+
+.exd-actions {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-top: 2.25rem;
+}
+
+/* ---------------------------------------------------------------- masthead */
+
+.exd-masthead {
+    background: var(--exd-void);
+    border-bottom: 1px solid var(--exd-line);
+    position: sticky;
+    top: 0;
+    z-index: 40;
+}
+
+.exd-masthead-inner {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem 2rem;
+    justify-content: space-between;
+    margin-inline: auto;
+    max-width: 86rem;
+    padding: 1.15rem clamp(1.25rem, 4vw, 3.5rem);
+}
+
+.exd-masthead-brand {
+    color: var(--exd-ink);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-family: var(--theme-heading-font, sora), system-ui, sans-serif;
+    font-size: 1.1rem;
+    font-weight: 800;
+    letter-spacing: -0.01em;
+    text-decoration: none;
+    text-transform: uppercase;
+}
+
+.exd-masthead-brand::before {
+    background: var(--exd-accent);
+    border-radius: 999px;
+    content: '';
+    display: inline-block;
+    height: 0.65rem;
+    width: 0.65rem;
+}
+
+.exd-masthead-nav {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem 1.85rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.exd-shell nav a {
+    color: var(--exd-ink);
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    padding-block: 0.4rem;
+    text-decoration: none;
+    text-transform: uppercase;
+}
+
+.exd-shell nav a:hover {
+    color: var(--exd-accent);
+}
+
+.exd-masthead-cta {
+    background: var(--exd-accent);
+    border-radius: 999px;
+    color: var(--exd-accent-ink) !important;
+    padding: 0.6rem 1.15rem !important;
+}
+
+.exd-masthead-cta:hover {
+    background: color-mix(in srgb, var(--exd-accent) 80%, #ffffff) !important;
+    color: var(--exd-accent-ink) !important;
+}
+
+/* ----------------------------------------------------------------- badges */
+
+.exd-badge {
+    background: var(--exd-accent-soft);
+    border: 1px solid color-mix(in srgb, var(--exd-accent) 45%, transparent);
+    border-radius: 999px;
+    color: var(--exd-accent);
+    display: inline-block;
+    font-size: 0.68rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    padding: 0.3rem 0.75rem;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.exd-section-paper .exd-badge {
+    color: color-mix(in srgb, var(--exd-accent) 60%, #0a0a0c);
+}
+
+.exd-badge-signal {
+    background: color-mix(in srgb, var(--exd-signal) 16%, transparent);
+    border-color: color-mix(in srgb, var(--exd-signal) 45%, transparent);
+    color: var(--exd-signal);
+}
+
+/* ------------------------------------------------------------ chips/filters */
+
+.exd-chip-groups {
+    display: grid;
+    gap: 1.75rem;
+    margin-top: clamp(2rem, 4vw, 3rem);
+}
+
+.exd-chip-group-label {
+    color: var(--exd-muted);
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.2em;
+    margin: 0 0 0.75rem;
+    text-transform: uppercase;
+}
+
+.exd-chip-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+}
+
+.exd-chip {
+    align-items: center;
+    background: var(--exd-void-raised);
+    border: 1px solid var(--exd-line);
+    border-radius: 999px;
+    color: var(--exd-ink);
+    display: inline-flex;
+    font-size: 0.82rem;
+    font-weight: 600;
+    gap: 0.4rem;
+    padding: 0.5rem 1rem;
+}
+
+.exd-chip-count {
+    color: var(--exd-muted);
+    font-size: 0.76rem;
+    font-variant-numeric: tabular-nums;
+    font-weight: 700;
+}
+
+/* ------------------------------------------------------------------- media */
+
+.exd-media {
+    aspect-ratio: 4 / 3;
+    background-color: var(--exd-void-raised);
+    display: block;
+    object-fit: cover;
+    width: 100%;
+}
+
+.exd-media-wide {
+    aspect-ratio: 16 / 9;
+}
+
+.exd-media-tall {
+    aspect-ratio: 3 / 4;
+}
+
+.exd-media-square {
+    aspect-ratio: 1 / 1;
+}
+
+.exd-media-empty {
+    background-image: repeating-linear-gradient(
+        135deg,
+        transparent 0,
+        transparent 10px,
+        color-mix(in srgb, var(--exd-accent) 14%, transparent) 10px,
+        color-mix(in srgb, var(--exd-accent) 14%, transparent) 11px
+    );
+    display: grid;
+    place-items: center;
+    position: relative;
+}
+
+.exd-media-empty::after {
+    background: var(--exd-accent);
+    border-radius: 999px;
+    content: '';
+    display: block;
+    height: 0.85rem;
+    width: 0.85rem;
+}
+
+/* -------------------------------------------------------------- feature slab */
+
+.exd-feature-slab {
+    display: grid;
+    gap: clamp(2rem, 4vw, 3.5rem);
+    margin-top: clamp(2.5rem, 5vw, 4rem);
+}
+
+@media (min-width: 900px) {
+    .exd-feature-slab {
+        align-items: center;
+        grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+    }
+}
+
+.exd-feature-frame {
+    border: 1px solid var(--exd-line);
+    border-radius: max(var(--theme-radius, 1rem), 1rem);
+    overflow: hidden;
+    position: relative;
+}
+
+.exd-feature-frame .exd-media {
+    aspect-ratio: 5 / 4;
+}
+
+.exd-feature-tag {
+    background: var(--exd-accent);
+    border-radius: 999px;
+    color: var(--exd-accent-ink);
+    font-size: 0.68rem;
+    font-weight: 800;
+    inset-inline-start: 1rem;
+    letter-spacing: 0.1em;
+    padding: 0.35rem 0.85rem;
+    position: absolute;
+    text-transform: uppercase;
+    top: 1rem;
+}
+
+.exd-feature-meta {
+    color: var(--exd-muted);
+    font-size: 0.85rem;
+    font-variant-numeric: tabular-nums;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    margin: 0 0 0.5rem;
+}
+
+.exd-feature-title {
+    font-size: clamp(1.9rem, 3.2vw, 2.9rem);
+    letter-spacing: -0.02em;
+    line-height: 1;
+    margin: 0 0 0.75rem;
+    text-transform: none;
+}
+
+/* ------------------------------------------------------------------- grids */
+
+.exd-grid {
+    container-type: inline-size;
+    display: grid;
+    gap: 1.5rem;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 19rem), 1fr));
+    margin-top: clamp(2.25rem, 4.5vw, 3.5rem);
+}
+
+.exd-grid-tight {
+    gap: 1rem;
+}
+
+/* Container-query fallback is the auto-fit rule above; once the grid's own
+   inline size is known, re-express the card body rhythm in container units
+   so cards stay legible even when the grid sits in a narrower rail/aside
+   context than the viewport would suggest. */
+@container (min-width: 28rem) {
+    .exd-grid .exd-card-body {
+        gap: clamp(0.55rem, 1cqi, 0.8rem);
+        padding: clamp(1.1rem, 2.2cqi, 1.65rem) clamp(1.1rem, 2.2cqi, 1.65rem)
+            clamp(1.35rem, 2.6cqi, 1.9rem);
+    }
+
+    .exd-grid .exd-card h3 {
+        font-size: clamp(1.1rem, 4.5cqi, 1.35rem);
+    }
+}
+
+.exd-card {
+    background: var(--exd-void-raised);
+    border: 1px solid var(--exd-line);
+    border-radius: max(var(--theme-radius, 0.9rem), 0.9rem);
+    box-shadow: inset 0 1px 0
+        color-mix(in oklch, var(--exd-ink) 7%, transparent);
+    color: var(--exd-ink);
+    display: grid;
+    gap: 1rem;
+    align-content: start;
+    overflow: hidden;
+    padding: 0;
+    text-decoration: none;
+    transition: border-color 0.18s var(--exd-snap);
+}
+
+a.exd-card:hover,
+a.exd-card:focus-visible {
+    border-color: var(--exd-accent);
+    box-shadow:
+        inset 0 1px 0 color-mix(in oklch, var(--exd-ink) 7%, transparent),
+        0 14px 36px -16px
+            color-mix(in oklch, var(--exd-accent) 30%, transparent);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    .exd-card {
+        transition:
+            border-color 0.18s var(--exd-snap),
+            transform 0.18s var(--exd-snap),
+            box-shadow 0.18s var(--exd-snap);
+    }
+
+    a.exd-card:hover,
+    a.exd-card:focus-visible {
+        transform: translateY(-2px);
+    }
+
+    @keyframes exd-section-snap {
+        0% {
+            opacity: 0;
+            transform: translateY(2.5rem) scaleY(0.94);
+            clip-path: inset(0 0 100% 0);
+        }
+
+        60% {
+            opacity: 1;
+            transform: translateY(0) scaleY(1);
+            clip-path: inset(0 0 0 0);
+        }
+
+        100% {
+            opacity: 1;
+            transform: translateY(0) scaleY(1);
+            clip-path: inset(0 0 0 0);
+        }
+    }
+
+    .exd-section {
+        animation: exd-section-snap 1ms steps(2, jump-end) both;
+        animation-timeline: view();
+        animation-range: entry 0% cover 30%;
+        transform-origin: top;
+    }
+
+    @supports (animation-timeline: scroll()) {
+        @keyframes exd-masthead-condense {
+            to {
+                background: var(--exd-void-raised);
+                border-bottom-color: color-mix(
+                    in oklch,
+                    var(--exd-ink) 28%,
+                    transparent
+                );
+            }
+        }
+
+        .exd-masthead {
+            animation: exd-masthead-condense linear both;
+            animation-timeline: scroll();
+            animation-range: 0 8rem;
+        }
+    }
+}
+
+.exd-section-paper .exd-card {
+    background: #ffffff;
+    border-color: var(--exd-line-on-paper);
+    color: var(--exd-void);
+}
+
+.exd-card-body {
+    display: grid;
+    gap: 0.65rem;
+    padding: 1.35rem 1.35rem 1.5rem;
+}
+
+.exd-card h3 {
+    --exd-heading-scale: 1;
+    font-size: clamp(
+        1.1rem,
+        1.05rem + 0.2vw,
+        calc(1.1rem * var(--exd-heading-scale))
+    );
+    line-height: 1.25;
+    margin: 0;
+}
+
+.exd-card p {
+    color: var(--exd-muted);
+    line-height: 1.55;
+    margin: 0;
+    text-wrap: pretty;
+}
+
+.exd-section-paper .exd-card p {
+    color: var(--exd-muted-on-paper);
+}
+
+.exd-meta {
+    color: var(--exd-muted);
+    font-size: 0.78rem;
+    font-variant-numeric: tabular-nums;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    margin: 0;
+}
+
+.exd-section-paper .exd-meta {
+    color: var(--exd-muted-on-paper);
+}
+
+.exd-title-link {
+    color: inherit;
+    text-decoration: none;
+}
+
+.exd-title-link:hover {
+    color: var(--exd-accent);
+}
+
+/* ------------------------------------------------------------- profile row */
+
+.exd-profile-card {
+    align-items: start;
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: 4rem 1fr;
+}
+
+.exd-profile-mark {
+    align-items: center;
+    aspect-ratio: 1;
+    background: var(--exd-accent-soft);
+    border: 1px solid color-mix(in srgb, var(--exd-accent) 45%, transparent);
+    border-radius: 999px;
+    color: var(--exd-accent);
+    display: flex;
+    font-size: 1.1rem;
+    font-weight: 800;
+    justify-content: center;
+}
+
+/* ---------------------------------------------------------------- buttons */
+
+.exd-button {
+    align-items: center;
+    background: var(--exd-accent);
+    border: 1px solid var(--exd-accent);
+    border-radius: 999px;
+    color: var(--exd-accent-ink);
+    cursor: pointer;
+    display: inline-flex;
+    font-size: 0.85rem;
+    font-weight: 800;
+    gap: 0.6rem;
+    letter-spacing: 0.04em;
+    min-height: 3.1rem;
+    padding: 0.85rem 1.75rem;
+    text-decoration: none;
+    text-transform: uppercase;
+}
+
+.exd-button:hover {
+    background: color-mix(in srgb, var(--exd-accent) 82%, #ffffff);
+    border-color: color-mix(in srgb, var(--exd-accent) 82%, #ffffff);
+}
+
+.exd-button:active,
+.exd-masthead-cta:active {
+    transform: translateY(1px);
+}
+
+.exd-button-secondary {
+    background: transparent;
+    border-color: var(--exd-line);
+    color: var(--exd-ink);
+}
+
+.exd-button-secondary:hover {
+    background: transparent;
+    border-color: var(--exd-accent);
+    color: var(--exd-accent);
+}
+
+.exd-section-paper .exd-button-secondary {
+    border-color: var(--exd-line-on-paper);
+    color: var(--exd-void);
+}
+
+.exd-section-paper .exd-button-secondary:hover {
+    border-color: color-mix(in srgb, var(--exd-accent) 70%, #0a0a0c);
+    color: color-mix(in srgb, var(--exd-accent) 70%, #0a0a0c);
+}
+
+/* -------------------------------------------------------------------- hero */
+
+.exd-hero-grid {
+    display: grid;
+    gap: clamp(2.5rem, 5vw, 4rem);
+}
+
+.exd-hero-eyebrow-row {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-bottom: 1.25rem;
+}
+
+@media (min-width: 960px) {
+    .exd-hero-grid {
+        align-items: center;
+        grid-template-columns: minmax(0, 1.2fr) minmax(20rem, 0.8fr);
+    }
+}
+
+.exd-hero-frame {
+    border: 1px solid var(--exd-line);
+    border-radius: max(var(--theme-radius, 1.25rem), 1.25rem);
+    overflow: hidden;
+    position: relative;
+}
+
+.exd-hero-frame .exd-media {
+    aspect-ratio: 4 / 5;
+}
+
+/* Overlay scrim sits above the hero media; opacity is gated per-preset by
+   the container style query below (default renders it at "subtle"). */
+.exd-hero-frame::after {
+    background: linear-gradient(180deg, transparent 55%, var(--exd-void) 100%);
+    content: '';
+    inset: 0;
+    opacity: 0.35;
+    pointer-events: none;
+    position: absolute;
+}
+
+/* ------------------------------------------------------------------- split */
+
+.exd-split {
+    display: grid;
+    gap: clamp(2.5rem, 5vw, 4.5rem);
+}
+
+@media (min-width: 900px) {
+    .exd-split {
+        align-items: start;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    }
+}
+
+/* -------------------------------------------------------------- newsletter */
+
+.exd-form {
+    background: var(--exd-void-raised);
+    border: 1px solid var(--exd-line);
+    border-radius: max(var(--theme-radius, 1rem), 1rem);
+    display: grid;
+    gap: 1.25rem;
+    padding: clamp(1.75rem, 3.5vw, 2.5rem);
+}
+
+.exd-form label {
+    color: var(--exd-muted);
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+}
+
+/* No checkbox/radio or search inputs exist in this theme's markup (only the
+   newsletter email field in sections/newsletter.blade.php), so accent-color
+   is applied here for forward-compatibility and field-sizing: content is
+   intentionally omitted -- this field is deliberately full-width
+   (width: 100%) and content-based sizing would fight that layout. */
+.exd-form input {
+    accent-color: var(--exd-accent);
+    background: var(--exd-void);
+    border: 1px solid var(--exd-line);
+    border-radius: 0.6rem;
+    color: var(--exd-ink);
+    font-size: 1rem;
+    padding: 0.9rem 1rem;
+    transition:
+        border-color 0.18s var(--exd-snap),
+        box-shadow 0.18s var(--exd-snap);
+    width: 100%;
+}
+
+.exd-form input::placeholder {
+    color: var(--exd-muted);
+    font-style: italic;
+    opacity: 0.85;
+}
+
+.exd-form input:user-valid {
+    border-color: var(--exd-accent);
+}
+
+.exd-form input:user-invalid {
+    border-color: var(--exd-signal);
+    box-shadow: 0 0 0 1px var(--exd-signal);
+}
+
+.exd-form .exd-button {
+    justify-self: start;
+}
+
+/* ------------------------------------------------------------------ footer */
+
+.exd-footer-grid {
+    display: grid;
+    gap: clamp(2rem, 4vw, 3.5rem);
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr));
+}
+
+.exd-footer-brand {
+    display: grid;
+    gap: 0.85rem;
+}
+
+.exd-footer-wordmark {
+    align-items: center;
+    color: var(--exd-ink);
+    display: inline-flex;
+    font-family: var(--theme-heading-font, sora), system-ui, sans-serif;
+    font-size: 1.2rem;
+    font-weight: 800;
+    gap: 0.5rem;
+    letter-spacing: -0.01em;
+    text-transform: uppercase;
+}
+
+.exd-footer-wordmark::before {
+    background: var(--exd-accent);
+    border-radius: 999px;
+    content: '';
+    display: inline-block;
+    height: 0.65rem;
+    width: 0.65rem;
+}
+
+.exd-footer-summary {
+    color: var(--exd-muted);
+    margin: 0;
+    max-width: 22rem;
+    text-wrap: pretty;
+}
+
+.exd-footer-heading {
+    color: var(--exd-accent);
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.2em;
+    margin: 0 0 1rem;
+    text-transform: uppercase;
+}
+
+.exd-footer-links {
+    display: grid;
+    gap: 0.65rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.exd-footer-links a {
+    color: var(--exd-muted);
+    text-decoration: none;
+}
+
+.exd-footer-links a:hover {
+    color: var(--exd-ink);
+}
+
+/* ------------------------------------------------------------- empty state */
+
+.exd-empty {
+    align-items: start;
+    background: var(--exd-void-raised);
+    border: 1px dashed var(--exd-line);
+    border-radius: max(var(--theme-radius, 0.9rem), 0.9rem);
+    display: grid;
+    gap: 0.65rem;
+    margin-top: clamp(2.25rem, 4.5vw, 3.5rem);
+    padding: clamp(2rem, 4vw, 3rem);
+    position: relative;
+}
+
+.exd-section-paper .exd-empty {
+    background: #ffffff;
+    border-color: var(--exd-line-on-paper);
+}
+
+.exd-empty-mark {
+    color: var(--exd-accent);
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.24em;
+    margin: 0;
+    text-transform: uppercase;
+}
+
+.exd-section-paper .exd-empty-mark {
+    color: color-mix(in srgb, var(--exd-accent) 70%, #0a0a0c);
+}
+
+.exd-empty-title {
+    color: var(--exd-ink);
+    font-family: var(--theme-heading-font, sora), system-ui, sans-serif;
+    font-size: clamp(1.35rem, 2.4vw, 1.85rem);
+    font-weight: 800;
+    line-height: 1.1;
+    margin: 0;
+    text-transform: uppercase;
+}
+
+.exd-section-paper .exd-empty-title {
+    color: var(--exd-void);
+}
+
+.exd-empty-note {
+    color: var(--exd-muted);
+    margin: 0;
+    max-width: 34rem;
+    text-wrap: pretty;
+}
+
+.exd-section-paper .exd-empty-note {
+    color: var(--exd-muted-on-paper);
+}
+
+/* ---------------------------------------------------------- dark preference */
+
+@media (prefers-color-scheme: dark) {
+    /* --exd-void, --exd-void-raised and --exd-accent-ink are declared once
+       above via light-dark() and are intentionally absent here. The tokens
+       below stay as an explicit override because they derive from
+       --exd-ink/--theme-foreground, a theme-supplied custom property whose
+       dark-mode value this shell cannot know in advance -- light-dark()
+       needs both branches to be literal at the point of declaration. */
+    .exd-shell {
+        --exd-ink: oklch(95.5% 0.0083 91.48);
+        --exd-paper: oklch(18.31% 0.004 285.99);
+        --exd-paper-dim: color-mix(in oklch, var(--exd-paper) 88%, #000000);
+        --exd-muted: color-mix(in oklch, var(--exd-ink) 58%, transparent);
+        --exd-muted-on-paper: color-mix(
+            in oklch,
+            var(--exd-ink) 58%,
+            transparent
+        );
+        --exd-line: color-mix(in oklch, var(--exd-ink) 18%, transparent);
+        --exd-line-on-paper: color-mix(
+            in oklch,
+            var(--exd-ink) 14%,
+            transparent
+        );
+        --exd-accent: oklch(72.36% 0.1868 48.9);
+        --exd-accent-soft: color-mix(
+            in oklch,
+            var(--exd-accent) 18%,
+            transparent
+        );
+    }
+
+    .exd-shell .exd-section-paper {
+        background: var(--exd-paper);
+        color: var(--exd-ink);
+    }
+
+    .exd-shell .exd-section-paper h1,
+    .exd-shell .exd-section-paper h2,
+    .exd-shell .exd-section-paper h3 {
+        color: var(--exd-ink);
+    }
+
+    .exd-shell .exd-section-paper .exd-card {
+        background: var(--exd-void-raised);
+        border-color: var(--exd-line);
+        color: var(--exd-ink);
+    }
+
+    .exd-shell .exd-section-paper .exd-card p,
+    .exd-shell .exd-section-paper .exd-meta {
+        color: var(--exd-muted);
+    }
+
+    .exd-shell .exd-section-paper .exd-empty {
+        background: var(--exd-void-raised);
+        border-color: var(--exd-line);
+    }
+
+    .exd-shell .exd-section-paper .exd-empty-title {
+        color: var(--exd-ink);
+    }
+
+    .exd-shell .exd-section-paper .exd-empty-note {
+        color: var(--exd-muted);
+    }
+}
+
+/* ---------------------------------------------------- brand token wiring ---
+   ThemeDefinitionData::definition()->presets declares six brand tokens as
+   inline custom properties on .exd-shell (--theme-spacing, --theme-card-
+   style, --theme-layout-presentation, --theme-heading-scale, --theme-card-
+   density, --theme-overlay-treatment). Progressive enhancement via CSS
+   container style queries: unsupporting browsers keep the defaults set
+   above/inline; supporting browsers re-express the shell's own preset as
+   layout/typographic rhythm. No JS. */
+
+/* --theme-spacing: raw passthrough, shared scale. "balanced" is already the
+   file's existing default rhythm (.exd-grid gap: 1.5rem / .exd-grid-tight
+   gap: 1rem); "tight" pulls the primary listing grid in further still. */
+@container exd-tokens style(--theme-spacing: tight) {
+    .exd-grid {
+        gap: 0.5rem;
+    }
+}
+
+/* --theme-card-style: this theme's identity token. Unconditioned default
+   above is a plain 1px hairline border with no shadow -- deliberately
+   unremarkable, so the gated "sharp" treatment below reads as a genuine
+   step up: a hard 2px edge, square corners, zero shadow. */
+@container exd-tokens style(--theme-card-style: sharp) {
+    .exd-card {
+        border-radius: 0;
+        border-width: 2px;
+        box-shadow: none;
+    }
+
+    a.exd-card:hover,
+    a.exd-card:focus-visible {
+        box-shadow: none;
+    }
+
+    .exd-feature-frame,
+    .exd-hero-frame {
+        border-radius: 0;
+        border-width: 2px;
+    }
+}
+
+/* --theme-layout-presentation: only "editorial" is declared by presets.
+   Gate the primary grid's column rhythm -- editorial breaks the tidy
+   auto-fit rows into an asymmetric, unruly directory layout; "structured"
+   (the CMS default/fallback) keeps the even auto-fit columns already set
+   above. */
+@container exd-tokens style(--theme-layout-presentation: editorial) {
+    @media (min-width: 900px) {
+        .exd-grid {
+            grid-template-columns: repeat(6, minmax(0, 1fr));
+        }
+
+        .exd-grid > * {
+            grid-column: span 3;
+        }
+
+        .exd-grid > *:nth-child(4n + 1) {
+            grid-column: span 4;
+        }
+
+        .exd-grid > *:nth-child(4n + 2) {
+            grid-column: span 2;
+        }
+
+        .exd-grid > *:nth-child(4n + 3) {
+            grid-column: span 2;
+        }
+
+        .exd-grid > *:nth-child(4n) {
+            grid-column: span 4;
+        }
+    }
+}
+
+@container exd-tokens style(--theme-layout-presentation: structured) {
+    .exd-grid {
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 19rem), 1fr));
+    }
+}
+
+/* --theme-heading-scale: CMS sanitises raw preset values to
+   compact | balanced | expressive, coercing the literal "oversized" preset
+   value down to "balanced" today -- so both the canonical "expressive"
+   bucket and the literal "oversized" value are wired to the same
+   multiplier here, ready for whichever the shell actually emits. Applied to
+   the secondary (card/listing) heading only; the h1 hero clamp() is left
+   untouched per spec. */
+@container exd-tokens style(--theme-heading-scale: expressive) {
+    .exd-card h3 {
+        --exd-heading-scale: 1.2;
+    }
+}
+
+@container exd-tokens style(--theme-heading-scale: oversized) {
+    .exd-card h3 {
+        --exd-heading-scale: 1.2;
+    }
+}
+
+/* --theme-card-density: CMS sanitises to compact | comfortable | spacious,
+   coercing the literal "dense" preset value down to "comfortable" today --
+   both the canonical "compact" bucket and the literal "dense" value get the
+   same tight padding here, fitting this theme's dense/unruly directory
+   grid. */
+@container exd-tokens style(--theme-card-density: compact) {
+    .exd-card-body {
+        padding: 0.625rem 0.625rem 0.8rem;
+    }
+}
+
+@container exd-tokens style(--theme-card-density: dense) {
+    .exd-card-body {
+        padding: 0.625rem 0.625rem 0.8rem;
+    }
+}
+
+/* --theme-overlay-treatment: sanitised to none | subtle | strong. Gates the
+   hero frame scrim declared above (default renders at "subtle" strength). */
+@container exd-tokens style(--theme-overlay-treatment: none) {
+    .exd-hero-frame::after {
+        opacity: 0;
+    }
+}
+
+@container exd-tokens style(--theme-overlay-treatment: strong) {
+    .exd-hero-frame::after {
+        opacity: 0.6;
+    }
+}
+
+/* --------------------------------------------------------------------- print */
+
+@media print {
+    .exd-shell {
+        background: #ffffff;
+        color: #0a0a0c;
+        font-size: 11pt;
+        line-height: 1.4;
+    }
+
+    .exd-masthead,
+    .exd-skip-link,
+    .exd-masthead-cta,
+    .exd-actions,
+    .exd-form,
+    .exd-shell nav,
+    .exd-shell footer,
+    .exd-feature-tag {
+        display: none !important;
+    }
+
+    .exd-shell h1,
+    .exd-shell h2,
+    .exd-shell h3,
+    .exd-section-paper h1,
+    .exd-section-paper h2,
+    .exd-section-paper h3 {
+        color: #0a0a0c;
+        font-family: Georgia, 'Times New Roman', serif;
+        text-transform: none;
+    }
+
+    .exd-shell,
+    .exd-shell p,
+    .exd-shell .exd-lede,
+    .exd-shell .exd-meta,
+    .exd-shell .exd-card p {
+        font-family: Georgia, 'Times New Roman', serif;
+    }
+
+    .exd-section,
+    .exd-section-paper,
+    .exd-section-raised {
+        background: #ffffff !important;
+        border-top-color: #cccccc;
+        color: #0a0a0c !important;
+    }
+
+    .exd-grid {
+        display: block;
+    }
+
+    .exd-card {
+        background: #ffffff !important;
+        border: 1px solid #999999;
+        break-inside: avoid;
+        color: #0a0a0c !important;
+        margin-bottom: 1rem;
+        page-break-inside: avoid;
+    }
+
+    .exd-card p,
+    .exd-meta {
+        color: #333333 !important;
+    }
+
+    .exd-media-empty {
+        background-image: none;
+    }
+
+    .exd-badge,
+    .exd-chip {
+        background: #ffffff;
+        border: 1px solid #999999;
+        color: #0a0a0c;
+    }
+
+    .exd-empty {
+        background: #ffffff !important;
+        border: 1px dashed #999999;
+    }
+
+    .exd-empty-title,
+    .exd-empty-note,
+    .exd-empty-mark {
+        color: #0a0a0c !important;
+    }
+}
+
+/* Forced-colors (Wave 11.5): High Contrast mode strips box-shadow but keeps
+   outline, and flattens backgrounds — so re-assert focus with outline and give
+   cards a transparent border the OS repaints, and protect swatches whose
+   colour IS the content. */
+@media (forced-colors: active) {
+    .exd-shell a:focus-visible,
+    .exd-shell button:focus-visible,
+    .exd-shell input:focus-visible,
+    .exd-shell [tabindex]:focus-visible,
+    a.exd-card:focus-visible {
+        outline: 2px solid;
+        outline-offset: 2px;
+    }
+
+    .exd-card {
+        border: 1px solid transparent;
+    }
+}
+
+/* High contrast preference (Wave 11.5): thicken hairline rules and lift the
+   dimmed/muted text one step so the quiet layer stays legible. */
+@media (prefers-contrast: more) {
+    .exd-card {
+        border-color: var(--exd-ink);
+    }
+
+    .exd-meta,
+    .exd-kicker {
+        color: var(--exd-ink);
+    }
+}
+
+/* View Transitions (Wave 6.5): opt every same-origin navigation into a smooth
+   cross-document transition where supported; a static fallback everywhere else.
+   Reduced-motion users still navigate — just without the animation. */
+@view-transition {
+    navigation: auto;
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+    animation-duration: 140ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    ::view-transition-group(*),
+    ::view-transition-old(*),
+    ::view-transition-new(*) {
+        animation: none !important;
+    }
+}

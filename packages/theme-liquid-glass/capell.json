@@ -6,7 +6,7 @@
     "kind": "theme",
     "capellApiVersion": "^4.0",
     "version": "4.x-dev",
-    "description": "Theme Liquid Glass gives Capell sites a free modern glass interface with translucent panels, crisp typography, warm accent actions, and polished standard sections. Three presets cover bright product launches, editorial glass pages, and darker graphite surfaces while staying fully driven by Theme Studio tokens. It extends the default frontend runtime, keeps public output cache-safe and editor-free, and adds a polished alternative to the Foundation and Corporate free lanes.",
+    "description": "Theme Liquid Glass gives Capell sites a free modern glass interface with translucent panels, crisp typography, and warm accent actions. Three presets cover bright product launches, editorial glass pages, and darker graphite surfaces while staying fully driven by Theme Studio tokens. It renders through the shared layout-builder container pipeline, keeps public output cache-safe and editor-free, and adds a polished alternative to the Foundation and Corporate free lanes.",
     "product": {
         "group": "Capell Foundation",
         "tier": "free",
@@ -18,7 +18,8 @@
         "requires": [
             "capell-app/core",
             "capell-app/theme-foundation",
-            "capell-app/frontend"
+            "capell-app/frontend",
+            "capell-app/layout-builder"
         ],
         "supports": [],
         "conflicts": []
@@ -119,6 +120,14 @@
                 {
                     "model": "Capell\\Core\\Models\\Translation",
                     "events": ["saved", "deleted"]
+                },
+                {
+                    "model": "Capell\\Core\\Models\\Layout",
+                    "events": ["saved", "deleted"]
+                },
+                {
+                    "model": "Capell\\LayoutBuilder\\Models\\Widget",
+                    "events": ["saved", "deleted"]
                 }
             ],
             "queueInvalidation": false
@@ -141,7 +150,7 @@
     },
     "marketplace": {
         "summary": "A free glass interface theme for modern Capell sites with translucent panels, sharp content rhythm, and three token-driven presets.",
-        "description": "Theme Liquid Glass gives Capell sites a free modern glass interface with translucent panels, crisp typography, warm accent actions, and polished standard sections. Three presets cover bright product launches, editorial glass pages, and darker graphite surfaces while staying fully driven by Theme Studio tokens. It extends the default frontend runtime, keeps public output cache-safe and editor-free, and adds a polished alternative to the Foundation and Corporate free lanes.",
+        "description": "Theme Liquid Glass gives Capell sites a free modern glass interface with translucent panels, crisp typography, and warm accent actions. Three presets cover bright product launches, editorial glass pages, and darker graphite surfaces while staying fully driven by Theme Studio tokens. It renders through the shared layout-builder container pipeline, keeps public output cache-safe and editor-free, and adds a polished alternative to the Foundation and Corporate free lanes.",
         "screenshots": [
             {
                 "path": "docs/assets/marketplace/extension-card.svg",

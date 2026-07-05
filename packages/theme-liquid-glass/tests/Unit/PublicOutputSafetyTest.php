@@ -2,6 +2,24 @@
 
 declare(strict_types=1);
 
+/*
+ * The `sections/*.blade.php` views (still shipped, unchanged, per C2's
+ * scope) receive fully pre-resolved DTOs (HeroSectionData, etc.) and must
+ * never touch live Frontend::/DB/getMeta() APIs directly — that rule is
+ * asserted below.
+ *
+ * `header/index.blade.php`, `footer.blade.php`, and `widget/*.blade.php` are
+ * new, C2-introduced views that render through the *live* layout-builder /
+ * frontend pipeline instead — exactly like theme-foundation's own
+ * `components/header/index.blade.php`, `components/footer/index.blade.php`,
+ * and `components/widget/asset/features.blade.php` already do (calling
+ * `Frontend::theme()`, `Frontend::site()`, `$widget->getMeta()`, etc. is the
+ * normal, safe, public-facing contract for this class of view — it is not
+ * an authoring/admin-internal leak, which is what this file's rules guard
+ * against). They are intentionally excluded from the DB/live-API check
+ * below; the "no authoring/package metadata" and "no inline scripts" checks
+ * still cover them.
+ */
 function liquidGlassThemeBladeViews(): string
 {
     $rootViews = glob(__DIR__ . '/../../resources/views/*.blade.php') ?: [];
@@ -10,6 +28,16 @@ function liquidGlassThemeBladeViews(): string
     return implode("\n", array_map(
         static fn (string $path): string => file_get_contents($path) ?: '',
         [...$rootViews, ...$sectionViews],
+    ));
+}
+
+function liquidGlassThemeLegacySectionBladeViews(): string
+{
+    $sectionViews = glob(__DIR__ . '/../../resources/views/sections/*.blade.php') ?: [];
+
+    return implode("\n", array_map(
+        static fn (string $path): string => file_get_contents($path) ?: '',
+        $sectionViews,
     ));
 }
 
@@ -49,8 +77,8 @@ it('keeps public Blade free of inline scripts', function (): void {
         ->not->toContain('</script>');
 });
 
-it('keeps public Blade free of database query calls', function (): void {
-    $blade = liquidGlassThemeBladeViews();
+it('keeps legacy section Blade free of database query calls', function (): void {
+    $blade = liquidGlassThemeLegacySectionBladeViews();
 
     expect($blade)
         ->not->toContain('::query(')

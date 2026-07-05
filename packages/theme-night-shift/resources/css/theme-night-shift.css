@@ -1,0 +1,1264 @@
+/* Night Shift — Linear/Vercel/Raycast register: near-black surfaces,
+   monospace system labels, soft accent glows, crisp bordered product windows. */
+
+/*
+ * Layout-native conversion note (mirrors Liquid Glass's task C2): Night
+ * Shift no longer ships a `ThemeRenderer`/`page.blade.php` page shell (see
+ * `NightShiftThemeServiceProvider`), so nothing renders a single
+ * page-level `.dps-shell` wrapper any more. `--theme-*` preset tokens are
+ * already injected at `:root` by the frontend package's head-token
+ * component (not scoped to any per-theme shell element), so `.dps-shell`
+ * remains valid wherever it is applied — it has just moved from a
+ * page-level wrapper onto each of this theme's real, still-rendered chrome
+ * and widget roots instead: `resources/views/header/index.blade.php`,
+ * `resources/views/footer.blade.php`, and the three bespoke
+ * `resources/views/widget/{changelog-integrations,workflow-rails,security-proof}.blade.php`
+ * views. The inert `resources/views/sections/*.blade.php` views (no longer
+ * registered with any renderer) still carry `.dps-shell`-free markup and
+ * are preserved as-is for a future follow-up design decision — see
+ * `NightShiftThemeServiceProvider::registerLayoutAreas()`'s "NOTE on
+ * scope".
+ *
+ * `.dps-shell` is intentionally NOT repointed at the shared
+ * `.site-theme-shell` wrapper class (`packages/theme-foundation`'s
+ * `theme/page.blade.php`, used only by Foundation's own legacy
+ * `BladeThemeRenderer` pipeline, not by the `x-capell::layout` +
+ * layout-builder pipeline this theme now renders through): that class is
+ * shared across every layout-native theme's real page wrapper, so Night
+ * Shift's own `--dps-*` background/token declarations would otherwise leak
+ * onto every other active theme's pages, not just this one's.
+ */
+.dps-shell {
+    --dps-ink: var(--theme-foreground, oklch(97.42% 0.0122 276.1));
+    --dps-muted: color-mix(in srgb, var(--dps-ink) 64%, transparent);
+    --dps-faint: color-mix(in srgb, var(--dps-ink) 48%, transparent);
+    --dps-line: color-mix(in srgb, var(--dps-ink) 12%, transparent);
+    --dps-line-soft: color-mix(in srgb, var(--dps-ink) 7%, transparent);
+    --dps-accent: var(--theme-accent, oklch(72.17% 0.1449 274.81));
+    --dps-accent-soft: color-mix(in srgb, var(--dps-accent) 16%, transparent);
+    --dps-accent-line: color-mix(in srgb, var(--dps-accent) 42%, transparent);
+    --dps-paper: var(--theme-surface, oklch(13.57% 0.0115 274.62));
+    --dps-panel: color-mix(in srgb, var(--dps-paper) 82%, #ffffff 6%);
+    --dps-panel-raised: color-mix(in srgb, var(--dps-paper) 70%, #ffffff 10%);
+    --dps-field: color-mix(in srgb, var(--dps-accent) 4%, var(--dps-paper));
+    --dps-positive: oklch(79.68% 0.1636 159.69);
+    --dps-warning: oklch(82.64% 0.1481 73.8);
+    --dps-heading-scale: 1;
+    --dps-overlay-opacity: 0.32;
+    --dps-ease: cubic-bezier(0.2, 0.9, 0.25, 1);
+    container: dps-tokens / normal;
+    background:
+        radial-gradient(
+            ellipse 60rem 30rem at 15% -10%,
+            color-mix(in srgb, var(--dps-accent) 14%, transparent),
+            transparent 60%
+        ),
+        var(--dps-paper);
+    color: var(--dps-ink);
+    font-family: var(--theme-body-font, inter), system-ui, sans-serif;
+    font-size: 1rem;
+    line-height: 1.6;
+}
+
+.dps-shell h1,
+.dps-shell h2,
+.dps-shell h3 {
+    color: var(--dps-ink);
+    font-family: var(--theme-heading-font, sora), system-ui, sans-serif;
+    font-weight: 650;
+    letter-spacing: -0.02em;
+}
+
+.dps-shell h1 {
+    font-size: clamp(2.6rem, 5.2vw, 4.6rem);
+    letter-spacing: -0.028em;
+    line-height: 1.04;
+    margin-block: 0;
+    text-box-trim: trim-both cap alphabetic;
+    text-wrap: balance;
+}
+
+.dps-shell h2 {
+    font-size: clamp(1.85rem, 3vw, 2.75rem);
+    line-height: 1.08;
+    margin-block: 0;
+    text-wrap: balance;
+}
+
+.dps-shell h3 {
+    font-size: 1.05rem;
+    letter-spacing: -0.01em;
+    line-height: 1.3;
+    margin: 0;
+    text-wrap: balance;
+}
+
+.dps-shell a:focus-visible,
+.dps-shell button:focus-visible,
+.dps-shell input:focus-visible,
+.dps-shell [tabindex]:focus-visible {
+    box-shadow:
+        0 0 0 2px var(--dps-paper),
+        0 0 0 4px var(--dps-accent),
+        0 0 0.9rem 1px var(--dps-accent-soft);
+    outline: 2px solid transparent;
+    outline-offset: 3px;
+}
+
+.dps-shell ::selection {
+    background: color-mix(in srgb, var(--dps-accent) 30%, transparent);
+    color: var(--dps-ink);
+}
+
+.dps-skip-link {
+    background: var(--dps-accent);
+    border-radius: 0.5rem;
+    color: #05060a;
+    font-weight: 700;
+    inset-inline-start: 1rem;
+    padding: 0.75rem 1.1rem;
+    position: fixed;
+    top: 1rem;
+    transform: translateY(-150%);
+    z-index: 50;
+}
+
+.dps-skip-link:focus {
+    transform: translateY(0);
+}
+
+/* ---------------------------------------------------------------- sections */
+
+.dps-section {
+    border-top: 1px solid var(--dps-line-soft);
+    position: relative;
+}
+
+.dps-section-raised {
+    background: var(--dps-panel);
+}
+
+.dps-section-field {
+    background: var(--dps-field);
+}
+
+.dps-section-inner {
+    margin-inline: auto;
+    max-width: 78rem;
+    padding: clamp(4rem, 8vw, 7rem) clamp(1.5rem, 4vw, 3rem);
+}
+
+.dps-eyebrow {
+    align-items: center;
+    color: var(--dps-accent);
+    display: inline-flex;
+    font-family:
+        var(--theme-mono-font, 'JetBrains Mono'), ui-monospace, monospace;
+    font-size: 0.78rem;
+    font-weight: 600;
+    gap: 0.55rem;
+    letter-spacing: 0.02em;
+    margin: 0 0 1.1rem;
+}
+
+.dps-eyebrow::before {
+    background: var(--dps-accent);
+    border-radius: 999px;
+    box-shadow: 0 0 0 4px var(--dps-accent-soft);
+    content: '';
+    display: inline-block;
+    height: 0.4rem;
+    width: 0.4rem;
+}
+
+.dps-lede {
+    color: var(--dps-muted);
+    font-size: clamp(1rem, 0.4vw + 0.95rem, 1.2rem);
+    line-height: 1.65;
+    margin-block: 1rem 0;
+    max-width: 42rem;
+    text-wrap: pretty;
+}
+
+.dps-heading-row {
+    align-items: end;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem 3rem;
+    justify-content: space-between;
+    margin-bottom: clamp(2.25rem, 4vw, 3.25rem);
+}
+
+.dps-heading-row .dps-lede {
+    margin-top: 0.75rem;
+}
+
+.dps-link-quiet {
+    color: var(--dps-muted);
+    flex-shrink: 0;
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.dps-link-quiet:hover,
+.dps-link-quiet:focus-visible {
+    color: var(--dps-accent);
+    text-decoration: underline;
+    text-underline-offset: 0.3rem;
+}
+
+.dps-actions {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.85rem;
+    margin-top: clamp(1.75rem, 3vw, 2.5rem);
+}
+
+/* ----------------------------------------------------------------- navbar */
+
+.dps-navbar {
+    background: color-mix(in srgb, var(--dps-paper) 88%, transparent);
+    backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--dps-line-soft);
+    position: sticky;
+    top: 0;
+    z-index: 30;
+}
+
+.dps-navbar-inner {
+    align-items: center;
+    display: flex;
+    gap: 1.5rem;
+    justify-content: space-between;
+    margin-inline: auto;
+    max-width: 78rem;
+    padding: 0.9rem clamp(1.5rem, 4vw, 3rem);
+}
+
+.dps-navbar-brand {
+    align-items: center;
+    color: var(--dps-ink);
+    display: inline-flex;
+    gap: 0.55rem;
+    text-decoration: none;
+}
+
+.dps-navbar-mark {
+    background: linear-gradient(
+        145deg,
+        var(--dps-accent),
+        color-mix(in srgb, var(--dps-accent) 40%, #ffffff)
+    );
+    border-radius: 0.4rem;
+    display: inline-block;
+    height: 1.35rem;
+    width: 1.35rem;
+}
+
+.dps-navbar-wordmark {
+    font-family: var(--theme-heading-font, sora), system-ui, sans-serif;
+    font-size: 1.02rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+}
+
+.dps-navbar-links {
+    align-items: center;
+    display: flex;
+    gap: 0.35rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.dps-shell .dps-navbar-links a {
+    border-radius: 0.5rem;
+    color: var(--dps-muted);
+    font-size: 0.88rem;
+    font-weight: 550;
+    padding: 0.5rem 0.75rem;
+    text-decoration: none;
+}
+
+.dps-shell .dps-navbar-links a:hover,
+.dps-shell .dps-navbar-links a:focus-visible {
+    background: var(--dps-panel-raised);
+    color: var(--dps-ink);
+    outline: none;
+}
+
+.dps-navbar-actions {
+    align-items: center;
+    display: flex;
+    gap: 0.75rem;
+}
+
+.dps-navbar-signin {
+    color: var(--dps-muted);
+    font-size: 0.88rem;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.dps-navbar-signin:hover {
+    color: var(--dps-ink);
+}
+
+/* ----------------------------------------------------------------- grids */
+
+.dps-grid {
+    container-name: dps-card-grid;
+    container-type: inline-size;
+    display: grid;
+    gap: 1.1rem;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr));
+}
+
+.dps-grid-2 {
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr));
+}
+
+.dps-card {
+    background: var(--dps-panel);
+    border: 1px solid var(--dps-line);
+    border-radius: max(var(--theme-radius, 0.75rem), 0.75rem);
+    box-shadow: inset 0 1px 0 color-mix(in srgb, #ffffff 6%, transparent);
+    display: grid;
+    gap: 0.65rem;
+    padding: clamp(1.1rem, 4cqi, 1.75rem);
+    transition:
+        background-color 0.15s var(--dps-ease),
+        border-color 0.15s var(--dps-ease);
+}
+
+.dps-card:has(a:hover),
+.dps-card:has(a:focus-visible) {
+    background: var(--dps-panel-raised);
+    border-color: var(--dps-accent-line);
+}
+
+.dps-card-icon {
+    align-items: center;
+    background: var(--dps-accent-soft);
+    border-radius: 0.55rem;
+    color: var(--dps-accent);
+    display: inline-flex;
+    font-family:
+        var(--theme-mono-font, 'JetBrains Mono'), ui-monospace, monospace;
+    font-size: 0.85rem;
+    font-weight: 700;
+    height: 2.1rem;
+    justify-content: center;
+    width: 2.1rem;
+}
+
+.dps-card p {
+    color: var(--dps-muted);
+    line-height: 1.6;
+    margin: 0;
+    text-wrap: pretty;
+}
+
+/* Container-query enhancement: when a Layout Builder column squeezes the grid
+   track narrower than a viewport-based breakpoint would ever catch, drop the
+   card icon down to a compact size so it doesn't crowd the heading. Existing
+   viewport media queries elsewhere in this file remain as the fallback for
+   browsers without container query support. */
+@container dps-card-grid (max-width: 22rem) {
+    .dps-card {
+        gap: 0.5rem;
+        padding: 1.1rem;
+    }
+
+    .dps-card-icon {
+        height: 1.85rem;
+        width: 1.85rem;
+    }
+}
+
+.dps-meta {
+    color: var(--dps-faint);
+    font-family:
+        var(--theme-mono-font, 'JetBrains Mono'), ui-monospace, monospace;
+    font-size: 0.74rem;
+    letter-spacing: 0.02em;
+    margin: 0;
+    text-transform: uppercase;
+}
+
+.dps-title-link {
+    color: inherit;
+    text-decoration: none;
+}
+
+.dps-title-link:hover,
+.dps-title-link:focus-visible {
+    color: var(--dps-accent);
+}
+
+/* ------------------------------------------------------------------ chip */
+
+.dps-chip {
+    background: var(--dps-accent-soft);
+    border-radius: 999px;
+    color: var(--dps-accent);
+    display: inline-flex;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    padding: 0.2rem 0.6rem;
+    text-transform: uppercase;
+    width: fit-content;
+}
+
+.dps-chip-positive {
+    background: color-mix(in srgb, var(--dps-positive) 16%, transparent);
+    color: var(--dps-positive);
+}
+
+/* --------------------------------------------------------------- buttons */
+
+.dps-button {
+    align-items: center;
+    background: var(--dps-ink);
+    border: 1px solid var(--dps-ink);
+    border-radius: 0.6rem;
+    color: var(--dps-paper);
+    cursor: pointer;
+    display: inline-flex;
+    font-size: 0.92rem;
+    font-weight: 650;
+    gap: 0.5rem;
+    min-height: 2.6rem;
+    padding: 0 1.1rem;
+    text-decoration: none;
+    transition: box-shadow 0.12s var(--dps-ease);
+}
+
+.dps-button:hover,
+.dps-button:focus-visible {
+    box-shadow:
+        0 0 0 3px var(--dps-accent-soft),
+        0 4px 24px -4px color-mix(in srgb, var(--dps-accent) 35%, transparent);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    .dps-button {
+        transition:
+            transform 0.12s var(--dps-ease),
+            box-shadow 0.12s var(--dps-ease);
+    }
+
+    .dps-button:hover,
+    .dps-button:focus-visible {
+        transform: translateY(-1px);
+    }
+
+    .dps-card {
+        transition:
+            background-color 0.15s var(--dps-ease),
+            border-color 0.15s var(--dps-ease),
+            transform 0.15s var(--dps-ease);
+    }
+
+    .dps-card:has(a:hover),
+    .dps-card:has(a:focus-visible) {
+        transform: translateY(-1px);
+    }
+
+    @keyframes dps-boot-reveal {
+        from {
+            clip-path: inset(0 100% 0 0);
+            filter: brightness(1.9);
+            opacity: 0;
+        }
+
+        40% {
+            filter: brightness(1.9);
+            opacity: 1;
+        }
+
+        to {
+            clip-path: inset(0 0 0 0);
+            filter: brightness(1);
+            opacity: 1;
+        }
+    }
+
+    @supports (animation-timeline: view()) {
+        .dps-section {
+            animation: dps-boot-reveal linear both;
+            animation-range: entry 0% cover 30%;
+            animation-timeline: view();
+        }
+    }
+}
+
+.dps-button-secondary {
+    background: transparent;
+    border-color: var(--dps-line);
+    color: var(--dps-ink);
+}
+
+.dps-button-secondary:hover,
+.dps-button-secondary:focus-visible {
+    background: var(--dps-panel-raised);
+    border-color: var(--dps-accent-line);
+    box-shadow: none;
+}
+
+/* ------------------------------------------------------------------- hero */
+
+.dps-hero {
+    background: radial-gradient(
+        ellipse 50rem 26rem at 82% -18%,
+        color-mix(
+            in srgb,
+            var(--dps-accent) calc(var(--dps-overlay-opacity) * 62%),
+            transparent
+        ),
+        transparent 62%
+    );
+    overflow: hidden;
+    position: relative;
+}
+
+.dps-hero::after {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    content: '';
+    inset: 0;
+    mix-blend-mode: overlay;
+    opacity: 0.025;
+    pointer-events: none;
+    position: absolute;
+}
+
+.dps-hero-grid {
+    display: grid;
+    gap: clamp(2.5rem, 5vw, 4rem);
+}
+
+.dps-hero-kicker-row {
+    align-items: center;
+    display: flex;
+    gap: 0.6rem;
+}
+
+@media (min-width: 960px) {
+    .dps-hero-grid {
+        align-items: center;
+        grid-template-columns: minmax(0, 1.05fr) minmax(20rem, 0.95fr);
+    }
+}
+
+/* ------------------------------------------------------------- product-window */
+
+.dps-window {
+    background: var(--dps-panel);
+    border: 1px solid var(--dps-line);
+    border-radius: 0.9rem;
+    box-shadow:
+        0 2rem 4rem -1.5rem color-mix(in srgb, #000000 70%, transparent),
+        0 0 0 1px color-mix(in srgb, var(--dps-accent) 8%, transparent),
+        inset 0 1px 0 color-mix(in srgb, #ffffff 6%, transparent);
+    overflow: hidden;
+}
+
+.dps-window-chrome {
+    align-items: center;
+    background: var(--dps-panel-raised);
+    border-bottom: 1px solid var(--dps-line);
+    display: flex;
+    gap: 0.4rem;
+    padding: 0.65rem 0.85rem;
+}
+
+.dps-window-dot {
+    background: var(--dps-line);
+    border-radius: 999px;
+    height: 0.6rem;
+    width: 0.6rem;
+}
+
+.dps-window-media {
+    aspect-ratio: 16 / 10;
+    background-color: var(--dps-field);
+    display: block;
+    object-fit: cover;
+    width: 100%;
+}
+
+.dps-window-media-empty {
+    align-items: center;
+    background: linear-gradient(
+        145deg,
+        var(--dps-panel-raised),
+        var(--dps-field)
+    );
+    display: grid;
+    justify-items: center;
+}
+
+.dps-window-media-empty::before {
+    background: var(--dps-accent-soft);
+    border: 1px solid var(--dps-accent-line);
+    border-radius: 0.75rem;
+    content: '';
+    height: 2.6rem;
+    width: 2.6rem;
+}
+
+.dps-window-caption {
+    border-top: 1px solid var(--dps-line);
+    color: var(--dps-faint);
+    display: flex;
+    font-family:
+        var(--theme-mono-font, 'JetBrains Mono'), ui-monospace, monospace;
+    font-size: 0.76rem;
+    gap: 0.75rem;
+    padding: 0.7rem 0.9rem;
+}
+
+/* --------------------------------------------------------- system surfaces */
+
+.dps-system-split {
+    display: grid;
+    gap: clamp(2.5rem, 5vw, 4rem);
+}
+
+@media (min-width: 960px) {
+    .dps-system-split {
+        align-items: start;
+        grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+    }
+}
+
+.dps-surface-card {
+    background: var(--dps-panel);
+    border: 1px solid var(--dps-line);
+    border-radius: 0.85rem;
+    box-shadow: inset 0 1px 0 color-mix(in srgb, #ffffff 6%, transparent);
+    display: grid;
+    gap: 0.75rem;
+    padding: clamp(1.4rem, 2vw, 1.9rem);
+}
+
+.dps-surface-index {
+    color: var(--dps-faint);
+    font-family:
+        var(--theme-mono-font, 'JetBrains Mono'), ui-monospace, monospace;
+    font-size: 0.76rem;
+    letter-spacing: 0.04em;
+}
+
+/* ------------------------------------------------------------------- rail */
+
+.dps-rail {
+    border-top: 1px solid var(--dps-line);
+    display: grid;
+}
+
+.dps-rail-row {
+    align-items: start;
+    border-bottom: 1px solid var(--dps-line-soft);
+    display: grid;
+    gap: 0.35rem 1.5rem;
+    padding-block: clamp(1.4rem, 2.4vw, 1.9rem);
+}
+
+.dps-rail-row:hover {
+    background: var(--dps-line-soft);
+}
+
+.dps-rail-icon {
+    align-items: center;
+    background: var(--dps-accent-soft);
+    border-radius: 0.55rem;
+    color: var(--dps-accent);
+    display: inline-flex;
+    font-family:
+        var(--theme-mono-font, 'JetBrains Mono'), ui-monospace, monospace;
+    font-size: 0.85rem;
+    font-weight: 700;
+    height: 2.35rem;
+    justify-content: center;
+    width: 2.35rem;
+}
+
+.dps-rail-row p {
+    color: var(--dps-muted);
+    margin: 0;
+    text-wrap: pretty;
+}
+
+@media (min-width: 768px) {
+    .dps-rail-row {
+        grid-template-columns: 3rem minmax(0, 1fr) minmax(0, 1.3fr);
+    }
+}
+
+/* ------------------------------------------------------------ roadmap lanes */
+
+.dps-lanes {
+    display: grid;
+    gap: 1.1rem;
+    margin-top: clamp(2rem, 4vw, 3rem);
+}
+
+@media (min-width: 860px) {
+    .dps-lanes {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+.dps-lane {
+    background: var(--dps-panel);
+    border: 1px solid var(--dps-line);
+    border-radius: 0.85rem;
+    box-shadow: inset 0 1px 0 color-mix(in srgb, #ffffff 6%, transparent);
+    display: grid;
+    gap: 0.65rem;
+    padding: clamp(1.3rem, 2vw, 1.6rem);
+}
+
+.dps-lane-label {
+    color: var(--dps-accent);
+    font-family:
+        var(--theme-mono-font, 'JetBrains Mono'), ui-monospace, monospace;
+    font-size: 0.76rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+/* ---------------------------------------------------------------- changelog */
+
+.dps-changelog {
+    display: grid;
+    gap: 0;
+}
+
+.dps-changelog-row {
+    border-bottom: 1px solid var(--dps-line-soft);
+    display: grid;
+    gap: 0.5rem 2rem;
+    padding-block: clamp(1.3rem, 2vw, 1.7rem);
+}
+
+.dps-changelog-date {
+    color: var(--dps-faint);
+    font-family:
+        var(--theme-mono-font, 'JetBrains Mono'), ui-monospace, monospace;
+    font-size: 0.78rem;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+}
+
+@media (min-width: 768px) {
+    .dps-changelog-row {
+        align-items: baseline;
+        grid-template-columns: 8rem minmax(0, 1fr);
+    }
+}
+
+.dps-integration-thumb {
+    aspect-ratio: 1;
+    background-color: var(--dps-field);
+    border: 1px solid var(--dps-line);
+    border-radius: 0.6rem;
+    display: block;
+    object-fit: cover;
+    width: 2.75rem;
+}
+
+/* ------------------------------------------------------------------ badges */
+
+.dps-badge-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin-top: clamp(1.75rem, 3vw, 2.5rem);
+}
+
+.dps-badge {
+    align-items: center;
+    background: var(--dps-panel);
+    border: 1px solid var(--dps-line);
+    border-radius: 0.55rem;
+    color: var(--dps-muted);
+    display: inline-flex;
+    font-family:
+        var(--theme-mono-font, 'JetBrains Mono'), ui-monospace, monospace;
+    font-size: 0.78rem;
+    gap: 0.45rem;
+    padding: 0.5rem 0.85rem;
+}
+
+.dps-badge::before {
+    background: var(--dps-positive);
+    border-radius: 999px;
+    content: '';
+    height: 0.42rem;
+    width: 0.42rem;
+}
+
+/* ------------------------------------------------------------------- proof */
+
+.dps-stat-value {
+    color: var(--dps-ink);
+    font-family: var(--theme-heading-font, sora), system-ui, sans-serif;
+    font-size: clamp(2.1rem, 3vw, 2.9rem);
+    font-variant-numeric: tabular-nums;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1;
+    text-box-trim: trim-both cap alphabetic;
+}
+
+/* -------------------------------------------------------------- listing */
+
+.dps-listing-card {
+    display: grid;
+    gap: 0;
+    overflow: hidden;
+    padding: 0;
+}
+
+.dps-listing-media {
+    aspect-ratio: 16 / 9;
+    background-color: var(--dps-field);
+    display: block;
+    object-fit: cover;
+    width: 100%;
+}
+
+.dps-listing-body {
+    display: grid;
+    gap: 0.5rem;
+    padding: clamp(1.2rem, 2vw, 1.5rem);
+}
+
+/* -------------------------------------------------------------- newsletter */
+
+.dps-form {
+    background: var(--dps-panel);
+    border: 1px solid var(--dps-line);
+    border-radius: 0.9rem;
+    display: grid;
+    gap: 1rem;
+    padding: clamp(1.75rem, 3vw, 2.25rem);
+}
+
+.dps-form label {
+    color: var(--dps-faint);
+    font-family:
+        var(--theme-mono-font, 'JetBrains Mono'), ui-monospace, monospace;
+    font-size: 0.76rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.dps-form input {
+    accent-color: var(--dps-accent);
+    background: var(--dps-field);
+    border: 1px solid var(--dps-line);
+    border-radius: 0.55rem;
+    color: var(--dps-ink);
+    font-size: 0.95rem;
+    padding: 0.75rem 0.9rem;
+    transition:
+        border-color 0.15s var(--dps-ease),
+        box-shadow 0.15s var(--dps-ease);
+    width: 100%;
+}
+
+.dps-form input:focus-visible {
+    border-color: var(--dps-accent-line);
+    border-radius: 0.55rem;
+    box-shadow: 0 0 0 3px var(--dps-accent-soft);
+}
+
+.dps-form input[type='checkbox'],
+.dps-form input[type='radio'] {
+    width: auto;
+}
+
+.dps-form input[type='search'] {
+    field-sizing: content;
+}
+
+.dps-form input::placeholder {
+    color: var(--dps-faint);
+    opacity: 1;
+}
+
+.dps-form input:user-invalid {
+    border-color: var(--dps-warning);
+    box-shadow: 0 0 0 3px
+        color-mix(in srgb, var(--dps-warning) 18%, transparent);
+}
+
+.dps-form input:user-valid {
+    border-color: var(--dps-positive);
+    box-shadow: 0 0 0 3px
+        color-mix(in srgb, var(--dps-positive) 16%, transparent);
+}
+
+.dps-form .dps-button {
+    justify-self: start;
+}
+
+.dps-form-note {
+    color: var(--dps-faint);
+    font-size: 0.82rem;
+    margin: 0;
+}
+
+.dps-split {
+    display: grid;
+    gap: clamp(2.5rem, 5vw, 4rem);
+}
+
+@media (min-width: 900px) {
+    .dps-split {
+        align-items: center;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 0.9fr);
+    }
+}
+
+/* ------------------------------------------------------------------ footer */
+
+.dps-footer {
+    background: var(--dps-panel);
+}
+
+.dps-footer-grid {
+    display: grid;
+    gap: clamp(2.25rem, 4vw, 3.5rem);
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr));
+}
+
+.dps-footer-brand {
+    display: grid;
+    gap: 0.85rem;
+}
+
+.dps-footer-wordmark {
+    color: var(--dps-ink);
+    font-family: var(--theme-heading-font, sora), system-ui, sans-serif;
+    font-size: 1.15rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+}
+
+.dps-footer-summary {
+    color: var(--dps-muted);
+    margin: 0;
+    max-width: 22rem;
+    text-wrap: pretty;
+}
+
+.dps-footer-heading {
+    color: var(--dps-faint);
+    font-family:
+        var(--theme-mono-font, 'JetBrains Mono'), ui-monospace, monospace;
+    font-size: 0.74rem;
+    letter-spacing: 0.06em;
+    margin: 0 0 1rem;
+    text-transform: uppercase;
+}
+
+.dps-footer-links {
+    display: grid;
+    gap: 0.65rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.dps-footer-links a {
+    color: var(--dps-muted);
+    text-decoration: none;
+}
+
+.dps-footer-links a:hover,
+.dps-footer-links a:focus-visible {
+    color: var(--dps-ink);
+}
+
+.dps-footer-base {
+    align-items: center;
+    border-top: 1px solid var(--dps-line-soft);
+    color: var(--dps-faint);
+    display: flex;
+    flex-wrap: wrap;
+    font-size: 0.82rem;
+    gap: 1rem;
+    justify-content: space-between;
+    margin-top: clamp(2.5rem, 4vw, 3.5rem);
+    padding-top: clamp(1.75rem, 3vw, 2.25rem);
+}
+
+/* ------------------------------------------------------------- brand tokens */
+
+/* Brand-token container style queries. The shell wraps in a `dps-tokens`
+   style-query container (declared on `.dps-shell` above) so these presets
+   can react to inline custom properties injected by the CMS without any
+   JS: --theme-spacing, --theme-card-style, --theme-layout-presentation,
+   --theme-heading-scale, --theme-card-density, --theme-overlay-treatment. */
+
+/* --theme-spacing: shared fleet scale. `balanced` (1.25rem) is already the
+   grid's unconditioned default; only `compact` needs an explicit rule. */
+@container dps-tokens style(--theme-spacing: compact) {
+    .dps-grid {
+        gap: 0.875rem;
+    }
+}
+
+/* --theme-card-style: `flat` matches the current unconditioned look (a
+   soft panel with a hairline border reads closer to flat than bordered in
+   this dark register), so it stays the default. `bordered` is gated to
+   thicken the line into a visible accent-toned border with no shadow. */
+@container dps-tokens style(--theme-card-style: flat) {
+    .dps-card {
+        border-color: transparent;
+        box-shadow: none;
+    }
+}
+
+@container dps-tokens style(--theme-card-style: bordered) {
+    .dps-card {
+        border-color: var(--dps-accent-line);
+        box-shadow: none;
+    }
+}
+
+/* --theme-layout-presentation: `editorial` breaks the grid into an
+   asymmetric feature + rail split; `structured` falls back to the even
+   auto-fit track already defined on `.dps-grid`. */
+@container dps-tokens style(--theme-layout-presentation: editorial) {
+    .dps-grid-2 {
+        grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+    }
+}
+
+@container dps-tokens style(--theme-layout-presentation: structured) {
+    .dps-grid-2 {
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr));
+    }
+}
+
+/* --theme-heading-scale: sanitised to compact | balanced | expressive, with
+   the literal declared values (`balanced`, `bold`) also wired defensively.
+   Drives a secondary heading — the card title — via a multiplier, leaving
+   the hero h1 clamp() untouched. */
+@container dps-tokens style(--theme-heading-scale: compact) {
+    .dps-shell {
+        --dps-heading-scale: 0.92;
+    }
+}
+
+@container dps-tokens style(--theme-heading-scale: expressive) {
+    .dps-shell {
+        --dps-heading-scale: 1.15;
+    }
+}
+
+@container dps-tokens style(--theme-heading-scale: bold) {
+    .dps-shell {
+        --dps-heading-scale: 1.15;
+    }
+}
+
+.dps-card h3 {
+    font-size: clamp(
+        calc(1.05rem * var(--dps-heading-scale) * 0.95),
+        1rem + 0.2vw,
+        calc(1.05rem * var(--dps-heading-scale))
+    );
+}
+
+/* --theme-card-density: `comfortable` (covers the declared `airy`) matches
+   the card's existing clamp() padding, so it stays the default; `compact`
+   (covers the declared `dense`) and `spacious` are gated explicitly. */
+@container dps-tokens style(--theme-card-density: compact) {
+    .dps-card {
+        padding: 0.75rem;
+    }
+}
+
+@container dps-tokens style(--theme-card-density: dense) {
+    .dps-card {
+        padding: 0.75rem;
+    }
+}
+
+@container dps-tokens style(--theme-card-density: comfortable) {
+    .dps-card {
+        padding: clamp(1.1rem, 4cqi, 1.75rem);
+    }
+}
+
+@container dps-tokens style(--theme-card-density: airy) {
+    .dps-card {
+        padding: clamp(1.1rem, 4cqi, 1.75rem);
+    }
+}
+
+@container dps-tokens style(--theme-card-density: spacious) {
+    .dps-card {
+        padding: 1.75rem;
+    }
+}
+
+/* --theme-overlay-treatment: always present, sanitised to none | subtle |
+   strong. Drives the hero glow's intensity via --dps-overlay-opacity,
+   consumed by `.dps-hero`'s radial-gradient above. `subtle` matches the
+   existing unconditioned glow. */
+@container dps-tokens style(--theme-overlay-treatment: none) {
+    .dps-shell {
+        --dps-overlay-opacity: 0;
+    }
+}
+
+@container dps-tokens style(--theme-overlay-treatment: subtle) {
+    .dps-shell {
+        --dps-overlay-opacity: 0.32;
+    }
+}
+
+@container dps-tokens style(--theme-overlay-treatment: strong) {
+    .dps-shell {
+        --dps-overlay-opacity: 0.68;
+    }
+}
+
+/* ------------------------------------------------------------------ print */
+
+/* This theme is dark-native on screen, but a printed page that reproduces
+   a near-black background wastes ink and is hard to read. Invert to
+   ink-on-paper specifically for print: light surface, dark text, chrome
+   (nav, CTAs, footer) stripped, and cards kept from splitting across a
+   page break. */
+@media print {
+    .dps-shell {
+        background: #ffffff;
+        color: #111318;
+        font-size: 11pt;
+        line-height: 1.5;
+    }
+
+    .dps-skip-link,
+    .dps-navbar,
+    .dps-actions,
+    .dps-footer {
+        display: none !important;
+    }
+
+    .dps-shell h1,
+    .dps-shell h2,
+    .dps-shell h3 {
+        color: #111318;
+    }
+
+    .dps-lede,
+    .dps-card p,
+    .dps-meta,
+    .dps-eyebrow {
+        color: #333844;
+    }
+
+    .dps-section {
+        border-top-color: #cccccc;
+    }
+
+    .dps-card,
+    .dps-surface-card,
+    .dps-listing-card,
+    .dps-window {
+        background: #ffffff;
+        border: 1px solid #cccccc;
+        box-shadow: none;
+    }
+
+    .dps-card,
+    .dps-surface-card,
+    .dps-listing-card,
+    .dps-window,
+    .dps-grid > * {
+        break-inside: avoid;
+    }
+
+    .dps-card-icon {
+        background: #eeeeee;
+        color: #111318;
+    }
+
+    .dps-chip {
+        background: #eeeeee;
+        color: #111318;
+    }
+
+    .dps-window-media,
+    .dps-window-media-empty {
+        background-image: none !important;
+    }
+}
+
+/* Forced-colors (Wave 11.5): High Contrast mode strips box-shadow but keeps
+   outline, and flattens backgrounds — so re-assert focus with outline and give
+   cards a transparent border the OS repaints, and protect swatches whose
+   colour IS the content. */
+@media (forced-colors: active) {
+    .dps-shell a:focus-visible,
+    .dps-shell button:focus-visible,
+    .dps-shell input:focus-visible,
+    .dps-shell [tabindex]:focus-visible,
+    .dps-link-quiet:focus-visible {
+        outline: 2px solid;
+        outline-offset: 2px;
+    }
+
+    .dps-card {
+        border: 1px solid transparent;
+    }
+
+    .dps-chip-positive {
+        forced-color-adjust: none;
+    }
+}
+
+/* High contrast preference (Wave 11.5): thicken hairline rules and lift the
+   dimmed/muted text one step so the quiet layer stays legible. */
+@media (prefers-contrast: more) {
+    .dps-card {
+        border-color: var(--dps-ink);
+    }
+
+    .dps-meta {
+        color: var(--dps-ink);
+    }
+}
+
+/* View Transitions (Wave 6.5): opt every same-origin navigation into a smooth
+   cross-document transition where supported; a static fallback everywhere else.
+   Reduced-motion users still navigate — just without the animation. */
+@view-transition {
+    navigation: auto;
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+    animation-duration: 240ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    ::view-transition-group(*),
+    ::view-transition-old(*),
+    ::view-transition-new(*) {
+        animation: none !important;
+    }
+}

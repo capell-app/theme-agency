@@ -21,9 +21,9 @@ it('creates the unsaved preview snapshot when the header action is clicked', fun
     $this->app->register(CuratorServiceProvider::class);
     $this->registerAndMigrateSettings(
         ['2026_05_10_190871_01_create_ai-orchestrator_settings'],
-        __DIR__ . '/../../../seo-suite/database/settings',
+        __DIR__ . '/../../../ai-orchestrator/database/settings',
     );
-    config()->set('settings.migrations_paths.capell-seo-suite', __DIR__ . '/../../../seo-suite/database/settings');
+    config()->set('settings.migrations_paths.capell-ai-orchestrator', __DIR__ . '/../../../ai-orchestrator/database/settings');
 
     $language = Language::factory()->create();
     $site = Site::factory()->withTranslations($language)->language($language)->create();

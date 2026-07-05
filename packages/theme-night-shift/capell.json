@@ -1,0 +1,174 @@
+{
+    "manifest-version": 3,
+    "name": "capell-app/theme-night-shift",
+    "slug": "theme-night-shift",
+    "displayName": "Theme Night Shift",
+    "kind": "theme",
+    "capellApiVersion": "^4.0",
+    "version": "4.x-dev",
+    "description": "Near-black surfaces, refined borders, and product-UI shells for SaaS that works after dark. Roadmaps, changelogs, and security proof — all glowing quietly. Renders through the shared layout-builder container pipeline.",
+    "product": {
+        "group": "Capell Themes",
+        "tier": "premium",
+        "bundle": "themes"
+    },
+    "namespace": "Capell\\ThemeStudio\\NightShift",
+    "surfaces": ["frontend"],
+    "dependencies": {
+        "requires": [
+            "capell-app/core",
+            "capell-app/theme-foundation",
+            "capell-app/frontend",
+            "capell-app/layout-builder"
+        ],
+        "supports": [
+            "capell-app/blog",
+            "capell-app/form-builder",
+            "capell-app/newsletter",
+            "capell-app/shopify-commerce"
+        ],
+        "conflicts": []
+    },
+    "providers": {
+        "metadata": [],
+        "install": [],
+        "runtime": [
+            "Capell\\ThemeStudio\\NightShift\\NightShiftThemeServiceProvider"
+        ],
+        "admin": [],
+        "frontend": []
+    },
+    "contributes": [
+        {
+            "type": "admin-page",
+            "class": "Capell\\ThemeStudio\\NightShift\\Manifest\\ThemeManagementPageContribution",
+            "pageClass": "Capell\\Marketplace\\Filament\\Pages\\ThemeExtensionPage",
+            "pageParameters": {
+                "themeKey": "night-shift"
+            },
+            "labelKey": "capell-marketplace::marketplace.theme_extension.management_entry_label"
+        }
+    ],
+    "database": {
+        "migrations": false,
+        "settings": false,
+        "requiredTables": []
+    },
+    "commands": {
+        "install": null,
+        "setup": null,
+        "demo": "capell:theme-night-shift-demo",
+        "demoParams": ["url", "languages", "sites"],
+        "doctor": null
+    },
+    "settings": [],
+    "permissions": [],
+    "capabilities": ["theme-night-shift", "theme-night-shift-frontend"],
+    "security": {
+        "riskTier": "low",
+        "publicSurface": {
+            "routeNames": [],
+            "auth": "none",
+            "csrfExemptRoutes": [],
+            "signedRoutes": [],
+            "tokenizedRoutes": [],
+            "webhookRoutes": [],
+            "throttledRoutes": []
+        },
+        "sensitiveData": {
+            "encryptedFields": [],
+            "hashedTokenFields": [],
+            "redactedOutputClasses": [],
+            "plaintextJustifications": []
+        },
+        "publicOutput": {
+            "cacheSafe": true,
+            "forbidAuthoringSurface": true,
+            "forbidSecrets": true,
+            "forbidPublicBladeQueries": true
+        },
+        "externalHttpClients": {
+            "requiresTimeouts": false,
+            "requiresSecretRedaction": false,
+            "clients": []
+        },
+        "adminSurface": {
+            "authorization": "none",
+            "permissions": []
+        }
+    },
+    "performance": {
+        "criticalCss": {
+            "required": true,
+            "parityViewports": ["mobile", "tablet", "desktop"]
+        },
+        "frontendRenderBudgetMs": 20,
+        "adminQueryBudget": 0,
+        "cacheTags": ["theme-night-shift"],
+        "cacheSafety": {
+            "cacheable": false,
+            "variesBy": ["site", "locale"],
+            "sensitiveOutput": false,
+            "invalidationSources": [
+                {
+                    "model": "Capell\\Core\\Models\\Layout",
+                    "events": ["saved", "deleted"]
+                },
+                {
+                    "model": "Capell\\LayoutBuilder\\Models\\Widget",
+                    "events": ["saved", "deleted"]
+                }
+            ],
+            "queueInvalidation": false
+        }
+    },
+    "healthChecks": [
+        {
+            "key": "theme-night-shift.package-health",
+            "label": "Night Shift package surfaces, providers, and install health are discoverable by Diagnostics.",
+            "class": "Capell\\ThemeStudio\\NightShift\\Health\\ThemeNightShiftHealthCheck",
+            "severity": "critical",
+            "surface": "frontend"
+        }
+    ],
+    "commercial": {
+        "proposedLicense": "paid",
+        "requestedCertification": "first-party",
+        "supportPolicy": "priority",
+        "privateDocsRequested": true
+    },
+    "marketplace": {
+        "summary": "Near-black surfaces, refined borders, and product-UI shells for SaaS that works after dark.",
+        "description": "Night Shift provides a distinct theme definition, demo command, marketplace metadata, and public-safe Blade views for product-led SaaS, workflow platforms, technical operations tools, AI-assisted work products, and security-conscious teams that need inboxes, issues, roadmaps, reviews, automation, activity, integrations, customer proof, and security modules.",
+        "screenshots": [
+            {
+                "path": "docs/screenshots/night-shift-homepage.png",
+                "alt": "Night Shift homepage preview",
+                "caption": "Night Shift Homepage"
+            },
+            {
+                "path": "docs/screenshots/night-shift-landing.png",
+                "alt": "Night Shift landing page preview",
+                "caption": "Night Shift Landing page"
+            },
+            {
+                "path": "docs/screenshots/night-shift-listing.png",
+                "alt": "Night Shift list page preview",
+                "caption": "Night Shift List page"
+            },
+            {
+                "path": "docs/screenshots/night-shift-search.png",
+                "alt": "Night Shift search results preview",
+                "caption": "Night Shift Search results"
+            },
+            {
+                "path": "docs/screenshots/night-shift-contact.png",
+                "alt": "Night Shift contact form preview",
+                "caption": "Night Shift Contact form"
+            }
+        ],
+        "categories": ["frontend", "themes"]
+    },
+    "extends": "default",
+    "themeKey": "night-shift"
+}

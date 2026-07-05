@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 use Capell\FoundationTheme\Data\ThemeDemoInstallData;
 use Capell\Tests\Packages\Fixtures\ThemeDemoCommandRecorder;
-use Capell\ThemeStudio\CaseStudyPlatform\Actions\InstallCaseStudyPlatformThemeDemoAction;
-use Capell\ThemeStudio\CaseStudyPlatform\Console\Commands\DemoCommand;
-use Capell\ThemeStudio\DenseNewsAnalysis\Actions\InstallDenseNewsAnalysisThemeDemoAction;
-use Capell\ThemeStudio\ExperimentalDirectory\Actions\InstallExperimentalDirectoryThemeDemoAction;
-use Capell\ThemeStudio\PremiumPortfolioCollection\Actions\InstallPremiumPortfolioCollectionThemeDemoAction;
+use Capell\ThemeStudio\FrontRow\Actions\InstallFrontRowThemeDemoAction;
+use Capell\ThemeStudio\InkPress\Actions\InstallInkPressThemeDemoAction;
+use Capell\ThemeStudio\OpenStudio\Actions\InstallOpenStudioThemeDemoAction;
+use Capell\ThemeStudio\WildCard\Actions\InstallWildCardThemeDemoAction;
+use Capell\ThemeStudio\WildCard\Console\Commands\DemoCommand;
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Tester\CommandTester;
 
@@ -47,8 +47,8 @@ it('passes theme demo command options into the package demo install action', fun
         ->and($recorder->records[0]->siteNames)->toBe(['Main site', 'Knowledge base'])
         ->and($recorder->records[0]->force)->toBeTrue();
 })->with([
-    'case study platform' => [DemoCommand::class, InstallCaseStudyPlatformThemeDemoAction::class],
-    'dense news analysis' => [Capell\ThemeStudio\DenseNewsAnalysis\Console\Commands\DemoCommand::class, InstallDenseNewsAnalysisThemeDemoAction::class],
-    'experimental directory' => [Capell\ThemeStudio\ExperimentalDirectory\Console\Commands\DemoCommand::class, InstallExperimentalDirectoryThemeDemoAction::class],
-    'premium portfolio collection' => [Capell\ThemeStudio\PremiumPortfolioCollection\Console\Commands\DemoCommand::class, InstallPremiumPortfolioCollectionThemeDemoAction::class],
+    'front row' => [Capell\ThemeStudio\FrontRow\Console\Commands\DemoCommand::class, InstallFrontRowThemeDemoAction::class],
+    'ink press' => [Capell\ThemeStudio\InkPress\Console\Commands\DemoCommand::class, InstallInkPressThemeDemoAction::class],
+    'open studio' => [Capell\ThemeStudio\OpenStudio\Console\Commands\DemoCommand::class, InstallOpenStudioThemeDemoAction::class],
+    'wild card' => [DemoCommand::class, InstallWildCardThemeDemoAction::class],
 ]);

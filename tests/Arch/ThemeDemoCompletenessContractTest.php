@@ -8,6 +8,8 @@ use Capell\FoundationTheme\Contracts\ProvidesThemeDemoContent;
 use Illuminate\Support\Str;
 use RuntimeException;
 
+require_once dirname(__DIR__) . '/Packages/Support/ThemeLayoutNativeSupport.php';
+
 /*
 |--------------------------------------------------------------------------
 | Theme demo completeness contract (dataset-driven, boot-free)
@@ -30,6 +32,14 @@ use RuntimeException;
 |
 | Pure static instantiation (the providers only read static demo media), so
 | this runs in the Arch suite without booting the application container.
+|
+| Phase C: a theme converted to render through x-capell::layout +
+| layout-builder (see themesConvertedToLayoutBuilder() in
+| tests/Packages/Support/ThemeLayoutNativeSupport.php) seeds `containers`
+| instead of an ordered `render_data['sections']` list, so the section-shape
+| assertions below do not apply to it — this test is boot-free (no
+| ThemeRegistry), so it uses the static declared list directly rather than
+| the live ThemeRegistry::hasRenderer()-backed themeIsLayoutNative() helper.
 |
 */
 
@@ -176,6 +186,23 @@ it('theme ships complete, individual demo content for every foundation surface',
 
     // All seven foundation surfaces present.
     expect(array_keys($bySurface))->toEqualCanonicalizing(FOUNDATION_SURFACES);
+
+    // Layout-native themes seed layout-builder `containers` instead of an
+    // ordered `render_data['sections']` list — the section-shape contract
+    // below does not apply to them (see the file-level comment above).
+    if (in_array($slug, themesConvertedToLayoutBuilder(), true)) {
+        foreach (FOUNDATION_SURFACES as $surface) {
+            expect($bySurface[$surface]->hasContainers())->toBeTrue(
+                "Theme [{$slug}] surface [{$surface}] is layout-native and must carry layout-builder containers instead of render_data['sections'].",
+            );
+
+            expect(array_key_exists('sections', $bySurface[$surface]->renderData))->toBeFalse(
+                "Theme [{$slug}] surface [{$surface}] is layout-native and must not also carry a legacy render_data['sections'] list.",
+            );
+        }
+
+        return;
+    }
 
     $registered = renderableSectionTypes($directory);
     $brandNames = [];

@@ -19,6 +19,8 @@ use ReflectionMethod;
 use RuntimeException;
 use Throwable;
 
+require_once __DIR__ . '/../Support/ThemeLayoutNativeSupport.php';
+
 /*
 |--------------------------------------------------------------------------
 | Cross-theme render matrix (Wave 11.1 theme-switch resilience)
@@ -81,6 +83,13 @@ it('renders every theme\'s demo homepage under every other theme\'s renderer wit
         $serviceProvider = new $serviceProviderClass(app());
         (new ReflectionMethod($serviceProvider, 'boot'))->invoke($serviceProvider, $registry);
 
+        // Layout-native themes (converted to render through x-capell::layout
+        // + layout-builder) register no ThemeRenderer, so they have nothing
+        // for this legacy section-render matrix to exercise — skip them.
+        if (themeIsLayoutNative($slug)) {
+            continue;
+        }
+
         $provider = new $providerClass;
         throw_unless($provider instanceof ProvidesThemeDemoContent, RuntimeException::class, "{$providerClass} must implement ProvidesThemeDemoContent.");
 
@@ -107,9 +116,10 @@ it('renders every theme\'s demo homepage under every other theme\'s renderer wit
     }
 
     $failures = [];
+    $rendererBackedSlugs = array_values(array_filter($slugs, static fn (string $slug): bool => ! themeIsLayoutNative($slug)));
 
     foreach ($pages as $sourceSlug => $page) {
-        foreach ($slugs as $targetSlug) {
+        foreach ($rendererBackedSlugs as $targetSlug) {
             if ($targetSlug === $sourceSlug) {
                 continue;
             }

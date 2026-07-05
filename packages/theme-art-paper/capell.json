@@ -1,0 +1,160 @@
+{
+    "manifest-version": 3,
+    "name": "capell-app/theme-art-paper",
+    "slug": "theme-art-paper",
+    "displayName": "Theme Art Paper",
+    "kind": "theme",
+    "capellApiVersion": "^4.0",
+    "version": "4.x-dev",
+    "description": "Art Paper puts photography-led features on a gallery-white page — editor picks, trend lists, and product credits. Two presets: cool photographic gloss, or the warm illustrated \"Warm Ink\" voice.",
+    "product": {
+        "group": "Capell Themes",
+        "tier": "premium",
+        "bundle": "themes"
+    },
+    "namespace": "Capell\\ThemeStudio\\ArtPaper",
+    "surfaces": ["frontend"],
+    "dependencies": {
+        "requires": ["capell-app/core", "capell-app/frontend"],
+        "supports": [
+            "capell-app/blog",
+            "capell-app/form-builder",
+            "capell-app/newsletter",
+            "capell-app/shopify-commerce"
+        ],
+        "conflicts": []
+    },
+    "providers": {
+        "metadata": [],
+        "install": [],
+        "runtime": [
+            "Capell\\ThemeStudio\\ArtPaper\\ArtPaperThemeServiceProvider"
+        ],
+        "admin": [],
+        "frontend": []
+    },
+    "contributes": [
+        {
+            "type": "admin-page",
+            "class": "Capell\\ThemeStudio\\ArtPaper\\Manifest\\ThemeManagementPageContribution",
+            "pageClass": "Capell\\Marketplace\\Filament\\Pages\\ThemeExtensionPage",
+            "pageParameters": {
+                "themeKey": "art-paper"
+            },
+            "labelKey": "capell-marketplace::marketplace.theme_extension.management_entry_label"
+        }
+    ],
+    "database": {
+        "migrations": false,
+        "settings": false,
+        "requiredTables": []
+    },
+    "commands": {
+        "install": null,
+        "setup": null,
+        "demo": "capell:theme-art-paper-demo",
+        "demoParams": ["url", "languages", "sites"],
+        "doctor": null
+    },
+    "settings": [],
+    "permissions": [],
+    "capabilities": ["theme-art-paper", "theme-art-paper-frontend"],
+    "security": {
+        "riskTier": "low",
+        "publicSurface": {
+            "routeNames": [],
+            "auth": "none",
+            "csrfExemptRoutes": [],
+            "signedRoutes": [],
+            "tokenizedRoutes": [],
+            "webhookRoutes": [],
+            "throttledRoutes": []
+        },
+        "sensitiveData": {
+            "encryptedFields": [],
+            "hashedTokenFields": [],
+            "redactedOutputClasses": [],
+            "plaintextJustifications": []
+        },
+        "publicOutput": {
+            "cacheSafe": true,
+            "forbidAuthoringSurface": true,
+            "forbidSecrets": true,
+            "forbidPublicBladeQueries": true
+        },
+        "externalHttpClients": {
+            "requiresTimeouts": false,
+            "requiresSecretRedaction": false,
+            "clients": []
+        },
+        "adminSurface": {
+            "authorization": "none",
+            "permissions": []
+        }
+    },
+    "performance": {
+        "criticalCss": {
+            "required": true,
+            "parityViewports": ["mobile", "tablet", "desktop"]
+        },
+        "frontendRenderBudgetMs": 20,
+        "adminQueryBudget": 0,
+        "cacheTags": ["theme-art-paper"],
+        "cacheSafety": {
+            "cacheable": false,
+            "variesBy": ["site", "locale"],
+            "sensitiveOutput": false,
+            "invalidationSources": [],
+            "queueInvalidation": false
+        }
+    },
+    "healthChecks": [
+        {
+            "key": "theme-art-paper.package-health",
+            "label": "Art Paper package surfaces, providers, and install health are discoverable by Diagnostics.",
+            "class": "Capell\\ThemeStudio\\ArtPaper\\Health\\ThemeArtPaperHealthCheck",
+            "severity": "critical",
+            "surface": "frontend"
+        }
+    ],
+    "commercial": {
+        "proposedLicense": "paid",
+        "requestedCertification": "first-party",
+        "supportPolicy": "priority",
+        "privateDocsRequested": true
+    },
+    "marketplace": {
+        "summary": "A premium Capell theme for design and architecture magazines — photography-led features on a gallery-white page, with a warm illustrated preset for creative-culture voices.",
+        "description": "Art Paper provides a distinct theme definition, demo command, marketplace metadata, and public-safe Blade views for visual publishers that need refined story hierarchy, large photography, vertical categories, gallery rows, and newsletter growth. Includes the Warm Ink preset for illustrated, creative-culture editorial voices.",
+        "screenshots": [
+            {
+                "path": "docs/screenshots/art-paper-homepage.png",
+                "alt": "Art Paper homepage preview",
+                "caption": "Art Paper Homepage"
+            },
+            {
+                "path": "docs/screenshots/art-paper-landing.png",
+                "alt": "Art Paper landing page preview",
+                "caption": "Art Paper Landing page"
+            },
+            {
+                "path": "docs/screenshots/art-paper-listing.png",
+                "alt": "Art Paper list page preview",
+                "caption": "Art Paper List page"
+            },
+            {
+                "path": "docs/screenshots/art-paper-search.png",
+                "alt": "Art Paper search results preview",
+                "caption": "Art Paper Search results"
+            },
+            {
+                "path": "docs/screenshots/art-paper-contact.png",
+                "alt": "Art Paper contact form preview",
+                "caption": "Art Paper Contact form"
+            }
+        ],
+        "categories": ["frontend", "themes"]
+    },
+    "extends": "default",
+    "themeKey": "art-paper"
+}

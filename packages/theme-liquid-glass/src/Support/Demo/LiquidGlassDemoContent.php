@@ -9,20 +9,64 @@ use Capell\Core\Enums\PageTypeEnum;
 use Capell\FoundationTheme\Contracts\ProvidesThemeDemoContent;
 use Capell\FoundationTheme\Support\Demo\ThemeDemoMedia;
 use Capell\FoundationTheme\Support\Demo\ThemeDemoPageDefinition;
+use Capell\ThemeStudio\LiquidGlass\Enums\WidgetComponentEnum;
+use Capell\ThemeStudio\LiquidGlass\LiquidGlassThemeServiceProvider;
 
 /**
  * Complete, vertical-authentic demo content for the Liquid Glass theme.
  *
- * Each surface is seeded as an ordered `render_data['sections']` list so the
- * page adapter emits the theme's signature renderers (showcase / presets)
- * alongside the standard hero/features/proof/content-listing/cta — giving every
- * surface a full translucent "glass" site rather than the shared skeleton. Copy
- * is mined verbatim from the screenshot renderer so the demo matches the
- * marketing previews.
+ * Liquid Glass is definition-only (see LiquidGlassThemeServiceProvider): it
+ * registers no ThemeRenderer or section renderers, so every surface renders
+ * through the shared `x-capell::layout` + layout-builder container pipeline
+ * instead of the legacy section-rendering pipeline. Each surface below seeds
+ * a `containers` payload (a 'main' container carrying a `page-content`
+ * widget plus one bespoke Liquid Glass widget instance per `cta` /
+ * `showcase` / `presets` entry in that surface's {@see sectionCopy()})
+ * plus the matching `widgets` blueprint `ThemeDemoPageInstaller` dispatches
+ * through `Capell\LayoutBuilder\Support\Creator\WidgetCreator` before
+ * writing the containers onto the page's Layout. The page's own
+ * `content`/`title` (kept verbatim per surface) is what the page-content
+ * widget renders — copy is mined verbatim from the previous screenshot
+ * renderer so the demo still reads like a real "glass" site.
+ *
+ * WIDGET WIRING SCOPE (task "C2"): {@see sectionCopy()}, {@see heroCopy()},
+ * and {@see emptyStateListingCopy()} recover the real, previously-authored
+ * per-surface copy that the section-builder→layout-builder conversion
+ * stopped rendering. Of the seven section types that copy covers, three —
+ * `cta`, `showcase`, `presets` — are Liquid Glass's own bespoke, signature
+ * sections and are wired below into real
+ * `capell.widget.liquid-glass.{cta,showcase,presets}` widget instances (one
+ * per occurrence per surface, via `WidgetCreator::bespokeContentWidget()`,
+ * since each surface's copy differs and a single shared `Widget` row per
+ * type would have one surface clobber another's copy — the same singleton
+ * constraint `page-content` has, worked around here with per-surface keys
+ * instead). `navigation` / `footer` are wired separately, through
+ * `LiquidGlassThemeInterceptor`'s `header_file` / `footer_file` Theme
+ * defaults, not through this class. `hero` / `features` / `proof` /
+ * `content-listing` are NOT wired to bespoke widgets in this pilot — see
+ * `LiquidGlassThemeServiceProvider::registerLayoutAreas()`'s "NOTE on scope"
+ * for why (no per-theme override seam exists yet for the shared foundation
+ * widget views those four sections would otherwise map to). `heroCopy()`
+ * and `emptyStateListingCopy()` remain intentionally inert for the same
+ * reason and are preserved here for whenever that follow-up design decision
+ * lands.
  */
 final class LiquidGlassDemoContent implements ProvidesThemeDemoContent
 {
     private const string BRAND = 'Liquid Glass';
+
+    /**
+     * Bespoke Liquid Glass section types that {@see sectionCopy()} may
+     * contain and that this class turns into real, seeded
+     * `capell.widget.liquid-glass.*` widget instances (see class docblock).
+     *
+     * @var array<string, WidgetComponentEnum>
+     */
+    private const array BESPOKE_SECTION_WIDGETS = [
+        'cta' => WidgetComponentEnum::Cta,
+        'showcase' => WidgetComponentEnum::Showcase,
+        'presets' => WidgetComponentEnum::Presets,
+    ];
 
     /**
      * @return array<int, ThemeDemoPageDefinition>
@@ -39,6 +83,225 @@ final class LiquidGlassDemoContent implements ProvidesThemeDemoContent
             $this->empty($themeKey, $media),
             $this->notFound($themeKey, $media),
             $this->cta($themeKey, $media),
+        ];
+    }
+
+    /**
+     * The real, previously-authored per-surface section copy that the
+     * section-builder→layout-builder conversion stopped rendering. Recovered
+     * here verbatim, keyed by `surface`, in the same order it used to appear
+     * in `render_data['sections']`.
+     *
+     * {@see bespokeSectionsForSurface()} reads this to seed real
+     * `capell.widget.liquid-glass.{cta,showcase,presets}` widgets (see class
+     * docblock "WIDGET WIRING SCOPE"); the `hero`, `features`, `proof`, and
+     * `content-listing` entries this method also returns are not consumed by
+     * anything yet, for the reason documented there.
+     *
+     * @return list<array<string, mixed>>
+     */
+    public function sectionCopy(string $surface): array
+    {
+        $media = ThemeDemoMedia::groupedForTheme(LiquidGlassThemeServiceProvider::THEME_KEY);
+
+        return match ($surface) {
+            'homepage' => [
+                $this->featuresSection(),
+                $this->showcaseSection($media),
+                $this->presetsSection(),
+                $this->proofSection(),
+                $this->contentListingSection(
+                    heading: 'Browse content cards without leaving the glass',
+                    summary: 'Translucent result cards keep listings legible and structured while the theme stays free of content records.',
+                    media: $media,
+                ),
+                $this->ctaSection(
+                    heading: 'Bring your pages onto the glass',
+                    summary: 'A warm, focused call to action that stays native to the translucent theme.',
+                ),
+            ],
+            'directory' => [
+                $this->contentListingSection(
+                    heading: 'Browse content cards without leaving the glass',
+                    summary: 'Translucent result cards keep listings legible and structured while the theme stays free of content records.',
+                    media: $media,
+                ),
+                $this->showcaseSection($media),
+                $this->ctaSection(
+                    heading: 'Bring your pages onto the glass',
+                    summary: 'A warm, focused call to action that stays native to the translucent theme.',
+                ),
+            ],
+            'detail' => [
+                $this->showcaseSection($media),
+                $this->proofSection(),
+                $this->contentListingSection(
+                    heading: 'Scan result groups inside clear translucent panels',
+                    summary: 'A content-detail review pairs grouped cards and proof so visitors can evaluate without losing the glass system.',
+                    media: $media,
+                ),
+                $this->ctaSection(
+                    heading: 'Bring your pages onto the glass',
+                    summary: 'A warm, focused call to action that stays native to the translucent theme.',
+                ),
+            ],
+            'contact' => [
+                $this->featuresSection(),
+                $this->proofSection(),
+                $this->ctaSection(
+                    heading: 'Bring your pages onto the glass',
+                    summary: 'A warm, focused call to action that stays native to the translucent theme.',
+                ),
+            ],
+            'empty' => [
+                $this->featuresSection(),
+                $this->ctaSection(
+                    heading: 'Bring your pages onto the glass',
+                    summary: 'A warm, focused call to action that stays native to the translucent theme.',
+                ),
+            ],
+            'not-found' => [
+                $this->ctaSection(
+                    heading: 'Bring your pages onto the glass',
+                    summary: 'A warm, focused call to action that stays native to the translucent theme.',
+                ),
+            ],
+            'cta' => [
+                $this->presetsSection(),
+                $this->proofSection(),
+                $this->ctaSection(
+                    heading: 'Bring your pages onto the glass',
+                    summary: 'A warm, focused call to action that stays native to the translucent theme.',
+                ),
+            ],
+            default => [],
+        };
+    }
+
+    /**
+     * The real, previously-authored per-surface hero copy that the
+     * section-builder→layout-builder conversion stopped rendering. Each
+     * surface's hero carried unique eyebrow/action/media fields (and, for
+     * `empty`, `not-found`, and `cta`, a hero summary that differs from the
+     * page's `render_data['summary']`) that {@see sectionCopy()} does not
+     * capture, since it only recovers the six shared section-builder bodies.
+     * Recovered here, verbatim.
+     *
+     * Still not consumed by anything: `hero` is one of the sections C2
+     * deliberately did not wire to a bespoke widget (see class docblock
+     * "WIDGET WIRING SCOPE"). Preserved here for whenever a per-theme
+     * override seam for `capell.widget.hero` exists.
+     *
+     * @return array<string, mixed>
+     */
+    public function heroCopy(string $surface): array
+    {
+        $media = ThemeDemoMedia::groupedForTheme(LiquidGlassThemeServiceProvider::THEME_KEY);
+
+        return match ($surface) {
+            'homepage' => [
+                'type' => 'hero',
+                'eyebrow' => 'Liquid Glass',
+                'heading' => 'A modern glass surface for launch and service pages',
+                'summary' => 'A free modern theme with translucent panels, crisp content rhythm, and warm accent actions for launch, listing, and lead journeys.',
+                'actions' => [
+                    ['label' => 'View features', 'url' => '#features', 'style' => 'primary'],
+                    ['label' => 'Get in touch', 'url' => '#contact', 'style' => 'secondary'],
+                ],
+                'mediaUrl' => $media['hero'][0],
+                'mediaAlt' => 'Layered translucent glass panels',
+            ],
+            'directory' => [
+                'type' => 'hero',
+                'eyebrow' => 'Listing',
+                'heading' => 'Browse content cards without leaving the glass',
+                'summary' => 'Translucent result cards keep listings legible and structured while the theme stays free of content records.',
+                'actions' => [
+                    ['label' => 'View features', 'url' => '#features', 'style' => 'primary'],
+                ],
+                'mediaUrl' => $media['listing'][0] ?? $media['hero'][0],
+                'mediaAlt' => 'Translucent content cards in a glass listing',
+            ],
+            'detail' => [
+                'type' => 'hero',
+                'eyebrow' => 'Story',
+                'heading' => 'Scan result groups inside clear translucent panels',
+                'summary' => 'A content-detail review pairs grouped cards and proof so visitors can evaluate without losing the glass system.',
+                'actions' => [
+                    ['label' => 'View features', 'url' => '#features', 'style' => 'secondary'],
+                ],
+                'mediaUrl' => $media['detail'][0],
+                'mediaAlt' => 'A launch page rebuilt on the glass section rhythm',
+            ],
+            'contact' => [
+                'type' => 'hero',
+                'eyebrow' => 'Contact',
+                'heading' => 'A lead path that stays polished through the glass',
+                'summary' => 'A non-submitting contact CTA proves the lead journey feels native to the theme while using ordinary public page data.',
+                'actions' => [
+                    ['label' => 'Get in touch', 'url' => 'mailto:studio@liquidglass.example', 'style' => 'primary'],
+                    ['label' => 'View features', 'url' => '#features', 'style' => 'secondary'],
+                ],
+                'mediaUrl' => $media['contact'][0],
+                'mediaAlt' => 'A polished glass lead journey',
+            ],
+            'empty' => [
+                'type' => 'hero',
+                'eyebrow' => 'Listing',
+                'heading' => 'No content cards match that filter yet',
+                'summary' => 'Nothing matches the current filter. Clear it to see every card on the glass, or jump straight to the features.',
+                'actions' => [
+                    ['label' => 'View features', 'url' => '#features', 'style' => 'primary'],
+                    ['label' => 'Get in touch', 'url' => '#contact', 'style' => 'secondary'],
+                ],
+            ],
+            'not-found' => [
+                'type' => 'hero',
+                'eyebrow' => '404',
+                'heading' => 'This page slipped through the glass',
+                'summary' => 'The link is broken or the page has moved. Head back to the features, or start a conversation.',
+                'actions' => [
+                    ['label' => 'Back to home', 'url' => '/', 'style' => 'primary'],
+                    ['label' => 'View features', 'url' => '#features', 'style' => 'secondary'],
+                ],
+            ],
+            'cta' => [
+                'type' => 'hero',
+                'eyebrow' => 'Get started',
+                'heading' => 'Bring your pages onto the glass',
+                'summary' => 'Move launch, listing, and lead pages onto translucent panels with a section rhythm that stays crisp from first view to conversion.',
+                'actions' => [
+                    ['label' => 'View features', 'url' => '#features', 'style' => 'primary'],
+                    ['label' => 'Get in touch', 'url' => '#contact', 'style' => 'secondary'],
+                ],
+                'mediaUrl' => $media['cta'][0],
+                'mediaAlt' => 'Translucent glass panels for launch pages',
+            ],
+            default => [],
+        };
+    }
+
+    /**
+     * The `empty` surface's real, previously-authored inline content-listing
+     * empty-state copy (distinct from the shared {@see contentListingSection()}
+     * builder used by other surfaces) that the section-builder→layout-builder
+     * conversion stopped rendering. Recovered here, verbatim.
+     *
+     * Still not consumed by anything: `content-listing` is one of the
+     * sections C2 deliberately did not wire to a bespoke widget (see class
+     * docblock "WIDGET WIRING SCOPE"). Preserved here for whenever a
+     * per-theme override seam for `capell.widget.page.latest` exists.
+     *
+     * @return array<string, mixed>
+     */
+    public function emptyStateListingCopy(): array
+    {
+        return [
+            'type' => 'content-listing',
+            'heading' => 'Nothing to show on the glass here',
+            'summary' => 'When content lands in this group it appears here as translucent cards, newest first.',
+            'variant' => 'editorial',
+            'items' => [],
         ];
     }
 
@@ -60,36 +323,11 @@ final class LiquidGlassDemoContent implements ProvidesThemeDemoContent
                 'summary' => 'A free modern theme with translucent panels, crisp content rhythm, and warm accent actions for launch, listing, and lead journeys.',
                 'navigation' => $this->navigation(),
                 'footer' => $this->footer(),
-                'sections' => [
-                    [
-                        'type' => 'hero',
-                        'eyebrow' => 'Liquid Glass',
-                        'heading' => 'A modern glass surface for launch and service pages',
-                        'summary' => 'A free modern theme with translucent panels, crisp content rhythm, and warm accent actions for launch, listing, and lead journeys.',
-                        'actions' => [
-                            ['label' => 'View features', 'url' => '#features', 'style' => 'primary'],
-                            ['label' => 'Get in touch', 'url' => '#contact', 'style' => 'secondary'],
-                        ],
-                        'mediaUrl' => $media['hero'][0],
-                        'mediaAlt' => 'Layered translucent glass panels',
-                    ],
-                    $this->featuresSection(),
-                    $this->showcaseSection($media),
-                    $this->presetsSection(),
-                    $this->proofSection(),
-                    $this->contentListingSection(
-                        heading: 'Browse content cards without leaving the glass',
-                        summary: 'Translucent result cards keep listings legible and structured while the theme stays free of content records.',
-                        media: $media,
-                    ),
-                    $this->ctaSection(
-                        heading: 'Bring your pages onto the glass',
-                        summary: 'A warm, focused call to action that stays native to the translucent theme.',
-                    ),
-                ],
             ],
             type: PageTypeEnum::Home,
             layout: LayoutEnum::Home,
+            containers: $this->containers('homepage'),
+            widgets: $this->widgets('homepage'),
         );
     }
 
@@ -111,31 +349,10 @@ final class LiquidGlassDemoContent implements ProvidesThemeDemoContent
                 'summary' => 'Translucent result cards keep listings legible and structured while the theme stays free of content records.',
                 'navigation' => $this->navigation(),
                 'footer' => $this->footer(),
-                'sections' => [
-                    [
-                        'type' => 'hero',
-                        'eyebrow' => 'Listing',
-                        'heading' => 'Browse content cards without leaving the glass',
-                        'summary' => 'Translucent result cards keep listings legible and structured while the theme stays free of content records.',
-                        'actions' => [
-                            ['label' => 'View features', 'url' => '#features', 'style' => 'primary'],
-                        ],
-                        'mediaUrl' => $media['listing'][0] ?? $media['hero'][0],
-                        'mediaAlt' => 'Translucent content cards in a glass listing',
-                    ],
-                    $this->contentListingSection(
-                        heading: 'Browse content cards without leaving the glass',
-                        summary: 'Translucent result cards keep listings legible and structured while the theme stays free of content records.',
-                        media: $media,
-                    ),
-                    $this->showcaseSection($media),
-                    $this->ctaSection(
-                        heading: 'Bring your pages onto the glass',
-                        summary: 'A warm, focused call to action that stays native to the translucent theme.',
-                    ),
-                ],
             ],
             layout: LayoutEnum::Results,
+            containers: $this->containers('directory'),
+            widgets: $this->widgets('directory'),
         );
     }
 
@@ -157,31 +374,9 @@ final class LiquidGlassDemoContent implements ProvidesThemeDemoContent
                 'summary' => 'A content-detail review pairs grouped cards and proof so visitors can evaluate without losing the glass system.',
                 'navigation' => $this->navigation(),
                 'footer' => $this->footer(),
-                'sections' => [
-                    [
-                        'type' => 'hero',
-                        'eyebrow' => 'Story',
-                        'heading' => 'Scan result groups inside clear translucent panels',
-                        'summary' => 'A content-detail review pairs grouped cards and proof so visitors can evaluate without losing the glass system.',
-                        'actions' => [
-                            ['label' => 'View features', 'url' => '#features', 'style' => 'secondary'],
-                        ],
-                        'mediaUrl' => $media['detail'][0],
-                        'mediaAlt' => 'A launch page rebuilt on the glass section rhythm',
-                    ],
-                    $this->showcaseSection($media),
-                    $this->proofSection(),
-                    $this->contentListingSection(
-                        heading: 'Scan result groups inside clear translucent panels',
-                        summary: 'A content-detail review pairs grouped cards and proof so visitors can evaluate without losing the glass system.',
-                        media: $media,
-                    ),
-                    $this->ctaSection(
-                        heading: 'Bring your pages onto the glass',
-                        summary: 'A warm, focused call to action that stays native to the translucent theme.',
-                    ),
-                ],
             ],
+            containers: $this->containers('detail'),
+            widgets: $this->widgets('detail'),
         );
     }
 
@@ -203,28 +398,10 @@ final class LiquidGlassDemoContent implements ProvidesThemeDemoContent
                 'summary' => 'A non-submitting contact CTA proves the lead journey feels native to the theme while using ordinary public page data.',
                 'navigation' => $this->navigation(),
                 'footer' => $this->footer(),
-                'sections' => [
-                    [
-                        'type' => 'hero',
-                        'eyebrow' => 'Contact',
-                        'heading' => 'A lead path that stays polished through the glass',
-                        'summary' => 'A non-submitting contact CTA proves the lead journey feels native to the theme while using ordinary public page data.',
-                        'actions' => [
-                            ['label' => 'Get in touch', 'url' => 'mailto:studio@liquidglass.example', 'style' => 'primary'],
-                            ['label' => 'View features', 'url' => '#features', 'style' => 'secondary'],
-                        ],
-                        'mediaUrl' => $media['contact'][0],
-                        'mediaAlt' => 'A polished glass lead journey',
-                    ],
-                    $this->featuresSection(),
-                    $this->proofSection(),
-                    $this->ctaSection(
-                        heading: 'Bring your pages onto the glass',
-                        summary: 'A warm, focused call to action that stays native to the translucent theme.',
-                    ),
-                ],
             ],
             layout: LayoutEnum::System,
+            containers: $this->containers('contact'),
+            widgets: $this->widgets('contact'),
         );
     }
 
@@ -246,31 +423,9 @@ final class LiquidGlassDemoContent implements ProvidesThemeDemoContent
                 'summary' => 'No content cards match that filter yet — the glass listing stays calm and points somewhere useful.',
                 'navigation' => $this->navigation(),
                 'footer' => $this->footer(),
-                'sections' => [
-                    [
-                        'type' => 'hero',
-                        'eyebrow' => 'Listing',
-                        'heading' => 'No content cards match that filter yet',
-                        'summary' => 'Nothing matches the current filter. Clear it to see every card on the glass, or jump straight to the features.',
-                        'actions' => [
-                            ['label' => 'View features', 'url' => '#features', 'style' => 'primary'],
-                            ['label' => 'Get in touch', 'url' => '#contact', 'style' => 'secondary'],
-                        ],
-                    ],
-                    [
-                        'type' => 'content-listing',
-                        'heading' => 'Nothing to show on the glass here',
-                        'summary' => 'When content lands in this group it appears here as translucent cards, newest first.',
-                        'variant' => 'editorial',
-                        'items' => [],
-                    ],
-                    $this->featuresSection(),
-                    $this->ctaSection(
-                        heading: 'Bring your pages onto the glass',
-                        summary: 'A warm, focused call to action that stays native to the translucent theme.',
-                    ),
-                ],
             ],
+            containers: $this->containers('empty'),
+            widgets: $this->widgets('empty'),
         );
     }
 
@@ -292,25 +447,11 @@ final class LiquidGlassDemoContent implements ProvidesThemeDemoContent
                 'summary' => 'That page has moved or never existed — here is the way back onto the glass.',
                 'navigation' => $this->navigation(),
                 'footer' => $this->footer(),
-                'sections' => [
-                    [
-                        'type' => 'hero',
-                        'eyebrow' => '404',
-                        'heading' => 'This page slipped through the glass',
-                        'summary' => 'The link is broken or the page has moved. Head back to the features, or start a conversation.',
-                        'actions' => [
-                            ['label' => 'Back to home', 'url' => '/', 'style' => 'primary'],
-                            ['label' => 'View features', 'url' => '#features', 'style' => 'secondary'],
-                        ],
-                    ],
-                    $this->ctaSection(
-                        heading: 'Bring your pages onto the glass',
-                        summary: 'A warm, focused call to action that stays native to the translucent theme.',
-                    ),
-                ],
             ],
             type: PageTypeEnum::NotFound,
             layout: LayoutEnum::System,
+            containers: $this->containers('not-found'),
+            widgets: $this->widgets('not-found'),
         );
     }
 
@@ -332,28 +473,174 @@ final class LiquidGlassDemoContent implements ProvidesThemeDemoContent
                 'summary' => 'Bring your launch, listing, and lead pages onto the glass.',
                 'navigation' => $this->navigation(),
                 'footer' => $this->footer(),
-                'sections' => [
-                    [
-                        'type' => 'hero',
-                        'eyebrow' => 'Get started',
-                        'heading' => 'Bring your pages onto the glass',
-                        'summary' => 'Move launch, listing, and lead pages onto translucent panels with a section rhythm that stays crisp from first view to conversion.',
-                        'actions' => [
-                            ['label' => 'View features', 'url' => '#features', 'style' => 'primary'],
-                            ['label' => 'Get in touch', 'url' => '#contact', 'style' => 'secondary'],
-                        ],
-                        'mediaUrl' => $media['cta'][0],
-                        'mediaAlt' => 'Translucent glass panels for launch pages',
+            ],
+            containers: $this->containers('cta'),
+            widgets: $this->widgets('cta'),
+        );
+    }
+
+    /**
+     * The layout-builder container payload for a Liquid Glass demo surface: a
+     * single 'main' container carrying the shared `page-content` widget
+     * (so the seeded page's own title/content, kept per-surface above,
+     * renders through `x-capell::layout`) followed by one bespoke Liquid
+     * Glass widget instance per `cta` / `showcase` / `presets` entry in this
+     * surface's {@see sectionCopy()}, in the same order that copy used to
+     * render in `render_data['sections']`.
+     *
+     * @return array<string, array<string, mixed>>
+     */
+    private function containers(string $surface): array
+    {
+        $widgets = [
+            ['widget_key' => 'page-content', 'occurrence' => 1],
+        ];
+
+        foreach ($this->bespokeSectionsForSurface($surface) as $bespokeSection) {
+            $widgets[] = [
+                'widget_key' => $bespokeSection['key'],
+                'occurrence' => 1,
+            ];
+        }
+
+        return [
+            'main' => [
+                'widgets' => $widgets,
+            ],
+        ];
+    }
+
+    /**
+     * Widget blueprints `ThemeDemoPageInstaller::createDefinitionWidgets()`
+     * dispatches through `WidgetCreator` before `containers()` above is
+     * written onto the page's Layout, so every referenced `widget_key`
+     * exists: the shared `page-content` widget, plus one
+     * `WidgetCreator::bespokeContentWidget()` call per bespoke Liquid Glass
+     * section this surface's {@see sectionCopy()} carries, each with its own
+     * surface-scoped `key` and real seeded copy as `meta` (so, e.g.,
+     * `homepage`'s `cta` widget and `contact`'s `cta` widget are distinct
+     * `Widget` rows with distinct copy, not one shared row that would have
+     * one surface's copy clobber another's).
+     *
+     * @return list<array{method: string, args?: array<array-key, mixed>}>
+     */
+    private function widgets(string $surface): array
+    {
+        $widgets = [
+            ['method' => 'pageContentWidget'],
+        ];
+
+        foreach ($this->bespokeSectionsForSurface($surface) as $bespokeSection) {
+            $widgets[] = [
+                'method' => 'bespokeContentWidget',
+                'args' => [
+                    $bespokeSection['key'],
+                    $bespokeSection['name'],
+                    $bespokeSection['component'],
+                    $bespokeSection['meta'],
+                ],
+            ];
+        }
+
+        return $widgets;
+    }
+
+    /**
+     * The ordered list of this surface's `cta` / `showcase` / `presets`
+     * section-copy entries (see {@see BESPOKE_SECTION_WIDGETS}), each
+     * resolved to the widget key, display name, component, and meta
+     * {@see containers()} and {@see widgets()} need. Surface-scoped,
+     * 1-indexed-occurrence widget keys (e.g. `liquid-glass-cta-homepage-1`)
+     * keep each surface's copy on its own `Widget` row even though several
+     * surfaces reuse the same section type.
+     *
+     * @return list<array{key: string, name: string, component: string, meta: array<string, mixed>}>
+     */
+    private function bespokeSectionsForSurface(string $surface): array
+    {
+        $bespokeSections = [];
+        $occurrenceByType = [];
+
+        foreach ($this->sectionCopy($surface) as $section) {
+            $type = $section['type'] ?? null;
+
+            if (! is_string($type) || ! array_key_exists($type, self::BESPOKE_SECTION_WIDGETS)) {
+                continue;
+            }
+
+            $occurrenceByType[$type] = ($occurrenceByType[$type] ?? 0) + 1;
+            $occurrence = $occurrenceByType[$type];
+            $component = self::BESPOKE_SECTION_WIDGETS[$type];
+
+            $bespokeSections[] = [
+                'key' => sprintf('liquid-glass-%s-%s-%d', $type, $surface, $occurrence),
+                'name' => sprintf('Liquid Glass %s (%s)', ucfirst($type), $surface),
+                'component' => $component->value,
+                'meta' => $section,
+            ];
+        }
+
+        return $bespokeSections;
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function navigation(): array
+    {
+        return [
+            'brandName' => self::BRAND,
+            'brand' => self::BRAND,
+            'items' => [
+                ['label' => 'Features', 'url' => '#features'],
+                ['label' => 'Proof', 'url' => '#proof'],
+                ['label' => 'Listing', 'url' => '#content-listing'],
+                ['label' => 'Contact', 'url' => '#contact'],
+            ],
+            'ctaLabel' => 'Get in touch',
+            'ctaUrl' => '#contact',
+            'consultationUrl' => '#contact',
+        ];
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function footer(): array
+    {
+        return [
+            'brandName' => self::BRAND,
+            'brand' => self::BRAND,
+            'summary' => 'A free modern theme of translucent panels for launch, listing, and lead pages.',
+            'columns' => [
+                [
+                    'heading' => 'Product',
+                    'links' => [
+                        ['label' => 'Features', 'url' => '#features'],
+                        ['label' => 'Proof', 'url' => '#proof'],
                     ],
-                    $this->presetsSection(),
-                    $this->proofSection(),
-                    $this->ctaSection(
-                        heading: 'Bring your pages onto the glass',
-                        summary: 'A warm, focused call to action that stays native to the translucent theme.',
-                    ),
+                ],
+                [
+                    'heading' => 'Browse',
+                    'links' => [
+                        ['label' => 'Listing', 'url' => '#content-listing'],
+                        ['label' => 'Detail', 'url' => '#content-listing'],
+                    ],
+                ],
+                [
+                    'heading' => 'Company',
+                    'links' => [
+                        ['label' => 'Contact', 'url' => '#contact'],
+                        ['label' => 'Get in touch', 'url' => '#contact'],
+                    ],
                 ],
             ],
-        );
+        ];
+    }
+
+    private function prose(string $heading, string $summary): string
+    {
+        return sprintf('<h2>%s</h2><p>%s</p>', e($heading), e($summary));
     }
 
     /**
@@ -534,65 +821,5 @@ final class LiquidGlassDemoContent implements ProvidesThemeDemoContent
                 ['label' => 'Get in touch', 'url' => '#contact', 'style' => 'secondary'],
             ],
         ];
-    }
-
-    /**
-     * @return array<string, mixed>
-     */
-    private function navigation(): array
-    {
-        return [
-            'brandName' => self::BRAND,
-            'brand' => self::BRAND,
-            'items' => [
-                ['label' => 'Features', 'url' => '#features'],
-                ['label' => 'Proof', 'url' => '#proof'],
-                ['label' => 'Listing', 'url' => '#content-listing'],
-                ['label' => 'Contact', 'url' => '#contact'],
-            ],
-            'ctaLabel' => 'Get in touch',
-            'ctaUrl' => '#contact',
-            'consultationUrl' => '#contact',
-        ];
-    }
-
-    /**
-     * @return array<string, mixed>
-     */
-    private function footer(): array
-    {
-        return [
-            'brandName' => self::BRAND,
-            'brand' => self::BRAND,
-            'summary' => 'A free modern theme of translucent panels for launch, listing, and lead pages.',
-            'columns' => [
-                [
-                    'heading' => 'Product',
-                    'links' => [
-                        ['label' => 'Features', 'url' => '#features'],
-                        ['label' => 'Proof', 'url' => '#proof'],
-                    ],
-                ],
-                [
-                    'heading' => 'Browse',
-                    'links' => [
-                        ['label' => 'Listing', 'url' => '#content-listing'],
-                        ['label' => 'Detail', 'url' => '#content-listing'],
-                    ],
-                ],
-                [
-                    'heading' => 'Company',
-                    'links' => [
-                        ['label' => 'Contact', 'url' => '#contact'],
-                        ['label' => 'Get in touch', 'url' => '#contact'],
-                    ],
-                ],
-            ],
-        ];
-    }
-
-    private function prose(string $heading, string $summary): string
-    {
-        return sprintf('<h2>%s</h2><p>%s</p>', e($heading), e($summary));
     }
 }

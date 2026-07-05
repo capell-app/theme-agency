@@ -93,3 +93,4 @@ temp/
 /docs/*harness*.md
 /packages/*/docs/*implementation-plan*.md
 /packages/*/docs/*foundation-plan*.md
+.worktrees/

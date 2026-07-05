@@ -7,7 +7,8 @@
         "php": "^8.4",
         "capell-app/core": "^4.0 || 4.x-dev",
         "capell-app/theme-foundation": "^4.0 || 4.x-dev",
-        "capell-app/frontend": "^4.0 || 4.x-dev"
+        "capell-app/frontend": "^4.0 || 4.x-dev",
+        "capell-app/layout-builder": "^4.0 || 4.x-dev"
     },
     "require-dev": {
         "pestphp/pest": "^3.0|^4.0",
