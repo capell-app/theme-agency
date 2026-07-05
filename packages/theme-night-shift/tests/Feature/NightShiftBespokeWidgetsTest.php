@@ -5,6 +5,7 @@ declare(strict_types=1);
 use Capell\Core\Facades\CapellCore;
 use Capell\Core\Models\Layout;
 use Capell\Core\Models\Page;
+use Capell\Core\Models\PageUrl;
 use Capell\Core\Models\Theme;
 use Capell\Core\Support\Renderables\RenderableRegistry;
 use Capell\Core\ThemeStudio\Theme\ThemeRegistry;
@@ -44,6 +45,19 @@ function bootNightShiftThemeForBespokeWidgetTests(): void
     $provider = new NightShiftThemeServiceProvider(app());
     $provider->register();
     $provider->boot($registry);
+}
+
+/**
+ * @param  list<array<string, mixed>>  $sections
+ * @return array<string, mixed>
+ */
+function nightShiftSectionOfType(array $sections, string $type): array
+{
+    $section = collect($sections)->firstWhere('type', $type);
+
+    throw_unless(is_array($section), RuntimeException::class, sprintf('Expected a [%s] section in the demo copy under test.', $type));
+
+    return $section;
 }
 
 it('sets header_file and footer_file defaults on a seeded Night Shift Theme via NightShiftThemeInterceptor', function (): void {
@@ -90,7 +104,11 @@ it('renders real header and footer chrome on the seeded homepage through the hea
 
     $homepage->loadMissing(['pageUrl.siteDomain', 'translations']);
 
-    $response = get($homepage->pageUrl->full_url);
+    $pageUrl = $homepage->pageUrl;
+
+    throw_unless($pageUrl instanceof PageUrl, RuntimeException::class, 'Expected the seeded homepage to have a PageUrl.');
+
+    $response = get($pageUrl->full_url);
 
     $response->assertOk();
 
@@ -115,9 +133,9 @@ it('renders each bespoke widget view with real seeded copy and expected content 
 
     $demoContent = new NightShiftDemoContent;
     $homepageCopy = $demoContent->sectionCopy('homepage');
-    $changelogSection = collect($homepageCopy)->firstWhere('type', 'changelog-integrations');
-    $workflowRailsSection = collect($homepageCopy)->firstWhere('type', 'workflow-rails');
-    $securityProofSection = collect($homepageCopy)->firstWhere('type', 'security-proof');
+    $changelogSection = nightShiftSectionOfType($homepageCopy, 'changelog-integrations');
+    $workflowRailsSection = nightShiftSectionOfType($homepageCopy, 'workflow-rails');
+    $securityProofSection = nightShiftSectionOfType($homepageCopy, 'security-proof');
 
     $changelogWidget = resolve(WidgetCreator::class)->bespokeContentWidget(
         key: 'night-shift-changelog-integrations-render-test-1',
@@ -186,12 +204,10 @@ it('creates distinctly-keyed security-proof widgets per surface so copy does not
     // surface that both carries a bespoke `security-proof` section and runs
     // before `not-found` (its only System-layout sibling, which carries no
     // bespoke widgets), so it reliably gets its own widgets seeded.
-    $homepageSecurityProof = Widget::query()->firstWhere('key', 'night-shift-security-proof-homepage-1');
-    $contactSecurityProof = Widget::query()->firstWhere('key', 'night-shift-security-proof-contact-1');
+    $homepageSecurityProof = Widget::query()->where('key', 'night-shift-security-proof-homepage-1')->firstOrFail();
+    $contactSecurityProof = Widget::query()->where('key', 'night-shift-security-proof-contact-1')->firstOrFail();
 
-    expect($homepageSecurityProof)->toBeInstanceOf(Widget::class)
-        ->and($contactSecurityProof)->toBeInstanceOf(Widget::class)
-        ->and($homepageSecurityProof->meta['heading'] ?? null)->toBe('Security and trust, proven not promised')
+    expect($homepageSecurityProof->meta['heading'] ?? null)->toBe('Security and trust, proven not promised')
         ->and($contactSecurityProof->meta['heading'] ?? null)->toBe('The security questions, answered first')
         ->and($homepageSecurityProof->getKey())->not->toBe($contactSecurityProof->getKey());
 
@@ -230,44 +246,40 @@ it('seeds real Layout containers and a page-content Widget through ThemeDemoPage
     $homepage = Page::query()
         ->where('meta->theme_demo->theme_key', NightShiftThemeServiceProvider::THEME_KEY)
         ->where('meta->theme_demo->surface', 'homepage')
-        ->first();
-
-    expect($homepage)->toBeInstanceOf(Page::class);
+        ->firstOrFail();
 
     $layout = $homepage->layout;
 
-    expect($layout)->toBeInstanceOf(Layout::class)
-        ->and($layout->containers)->toBe([
-            'main' => [
-                'widgets' => [
-                    ['widget_key' => 'page-content', 'occurrence' => 1],
-                    ['widget_key' => 'night-shift-workflow-rails-homepage-1', 'occurrence' => 1],
-                    ['widget_key' => 'night-shift-changelog-integrations-homepage-1', 'occurrence' => 1],
-                    ['widget_key' => 'night-shift-security-proof-homepage-1', 'occurrence' => 1],
-                ],
+    throw_unless($layout instanceof Layout, RuntimeException::class, 'Expected the seeded homepage to have a Layout.');
+
+    expect($layout->containers)->toBe([
+        'main' => [
+            'widgets' => [
+                ['widget_key' => 'page-content', 'occurrence' => 1],
+                ['widget_key' => 'night-shift-workflow-rails-homepage-1', 'occurrence' => 1],
+                ['widget_key' => 'night-shift-changelog-integrations-homepage-1', 'occurrence' => 1],
+                ['widget_key' => 'night-shift-security-proof-homepage-1', 'occurrence' => 1],
             ],
-        ]);
+        ],
+    ]);
 
     $widget = Widget::query()->firstWhere('key', 'page-content');
 
     expect($widget)->toBeInstanceOf(Widget::class);
 
-    $workflowRailsWidget = Widget::query()->firstWhere('key', 'night-shift-workflow-rails-homepage-1');
+    $workflowRailsWidget = Widget::query()->where('key', 'night-shift-workflow-rails-homepage-1')->firstOrFail();
 
-    expect($workflowRailsWidget)->toBeInstanceOf(Widget::class)
-        ->and($workflowRailsWidget->component)->toBe('capell.widget.night-shift.workflow-rails')
+    expect($workflowRailsWidget->component)->toBe('capell.widget.night-shift.workflow-rails')
         ->and($workflowRailsWidget->meta['heading'] ?? null)->toBe('Workflows that move work without the busywork');
 
-    $changelogWidget = Widget::query()->firstWhere('key', 'night-shift-changelog-integrations-homepage-1');
+    $changelogWidget = Widget::query()->where('key', 'night-shift-changelog-integrations-homepage-1')->firstOrFail();
 
-    expect($changelogWidget)->toBeInstanceOf(Widget::class)
-        ->and($changelogWidget->component)->toBe('capell.widget.night-shift.changelog-integrations')
+    expect($changelogWidget->component)->toBe('capell.widget.night-shift.changelog-integrations')
         ->and($changelogWidget->meta['heading'] ?? null)->toBe('Changelog and integrations, always in sync');
 
-    $securityProofWidget = Widget::query()->firstWhere('key', 'night-shift-security-proof-homepage-1');
+    $securityProofWidget = Widget::query()->where('key', 'night-shift-security-proof-homepage-1')->firstOrFail();
 
-    expect($securityProofWidget)->toBeInstanceOf(Widget::class)
-        ->and($securityProofWidget->component)->toBe('capell.widget.night-shift.security-proof')
+    expect($securityProofWidget->component)->toBe('capell.widget.night-shift.security-proof')
         ->and($securityProofWidget->meta['heading'] ?? null)->toBe('Security and trust, proven not promised');
 
     CapellCore::clearPackages();

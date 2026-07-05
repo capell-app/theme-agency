@@ -19,6 +19,8 @@ use Capell\ThemeStudio\NightShift\Support\Demo\NightShiftDemoContent;
  * This test asserts every one of those literals still appears, byte-for-byte,
  * in the post-conversion class source. If a future edit accidentally drops
  * or rewords a recovered string, this test fails.
+ *
+ * @return list<string>
  */
 function nightShiftPreConversionCopyLiterals(): array
 {
