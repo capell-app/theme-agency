@@ -16,7 +16,7 @@ Status details:
 - Tier: premium
 - Bundle: themes
 - Composer package: `capell-app/theme-agency`
-- Namespace: `Capell\ThemeStudio\Agency`
+- Namespace: `Capell\ThemeAgency`
 - Theme key: `agency`
 
 ## Why It Matters
@@ -47,12 +47,12 @@ Screenshot contract: `docs/screenshots.json`.
 
 ## Technical Shape
 
-- Service providers: `Capell\ThemeStudio\Agency\AgencyThemeServiceProvider`.
+- Service providers: `Capell\ThemeAgency\AgencyThemeServiceProvider`.
 - Actions: `InstallAgencyThemeDemoAction`.
 - Command signatures: `capell:theme-agency-demo`.
 - Console command classes: `DemoCommand`.
-- Manifest contributions: `admin-page: Capell\ThemeStudio\Agency\Manifest\ThemeManagementPageContribution`.
-- Health checks: `Capell\ThemeStudio\Agency\Health\ThemeAgencyHealthCheck`.
+- Manifest contributions: `admin-page: Capell\ThemeAgency\Manifest\ThemeManagementPageContribution`.
+- Health checks: `Capell\ThemeAgency\Health\ThemeAgencyHealthCheck`.
 - Blade views: `packages/theme-agency/resources/views/livewire/page/page.blade.php`, `packages/theme-agency/resources/views/page.blade.php`, `packages/theme-agency/resources/views/sections/awarded-profiles.blade.php`, `packages/theme-agency/resources/views/sections/content-listing.blade.php`, `packages/theme-agency/resources/views/sections/creator-directory.blade.php`, `packages/theme-agency/resources/views/sections/cta.blade.php`, `packages/theme-agency/resources/views/sections/education-upsell.blade.php`, `packages/theme-agency/resources/views/sections/featured-portfolios.blade.php`, `packages/theme-agency/resources/views/sections/filter-taxonomies.blade.php`, `packages/theme-agency/resources/views/sections/footer.blade.php`, `packages/theme-agency/resources/views/sections/hero.blade.php`, `packages/theme-agency/resources/views/sections/navigation.blade.php`, `and 3 more`.
 - Cache tags: `theme-agency`.
 

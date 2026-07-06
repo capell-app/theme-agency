@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Capell\ThemeStudio\Agency\Console\Commands;
+namespace Capell\ThemeAgency\Console\Commands;
 
 use Capell\FoundationTheme\Data\ThemeDemoInstallData;
-use Capell\ThemeStudio\Agency\Actions\InstallAgencyThemeDemoAction;
+use Capell\ThemeAgency\Actions\InstallAgencyThemeDemoAction;
 use Illuminate\Console\Command;
 
 final class DemoCommand extends Command

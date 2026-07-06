@@ -13,13 +13,13 @@ Start at the [package README](../README.md) when deciding whether to install thi
 
 ## Developer Starting Points
 
-| Need                   | Start here                                             |
-| ---------------------- | ------------------------------------------------------ |
-| Theme service provider | `Capell\ThemeStudio\Agency\AgencyThemeServiceProvider` |
-| Demo content install   | `capell:theme-agency-demo`                             |
-| Theme management entry | `src/Manifest/ThemeManagementPageContribution.php`     |
-| Health diagnostics     | `src/Health`                                           |
-| Public output checks   | `tests/Unit/PublicOutputSafetyTest.php`                |
+| Need                   | Start here                                         |
+| ---------------------- | -------------------------------------------------- |
+| Theme service provider | `Capell\ThemeAgency\AgencyThemeServiceProvider`    |
+| Demo content install   | `capell:theme-agency-demo`                         |
+| Theme management entry | `src/Manifest/ThemeManagementPageContribution.php` |
+| Health diagnostics     | `src/Health`                                       |
+| Public output checks   | `tests/Unit/PublicOutputSafetyTest.php`            |
 
 ## Read Next
 

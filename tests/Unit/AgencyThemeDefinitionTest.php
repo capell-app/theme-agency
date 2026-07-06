@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-use Capell\ThemeStudio\Agency\AgencyThemeServiceProvider;
-use Capell\ThemeStudio\Agency\Health\ThemeAgencyHealthCheck;
+use Capell\ThemeAgency\AgencyThemeServiceProvider;
+use Capell\ThemeAgency\Health\ThemeAgencyHealthCheck;
 
 it('defines the agency renderer contract', function (): void {
     $definition = AgencyThemeServiceProvider::definition();

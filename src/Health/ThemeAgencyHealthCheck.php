@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Capell\ThemeStudio\Agency\Health;
+namespace Capell\ThemeAgency\Health;
 
 use Capell\Core\Contracts\Extensions\ChecksExtensionHealth;
 use Capell\Core\Data\Diagnostics\DoctorCheckResultData;
 use Capell\Core\ThemeStudio\Theme\ThemeRegistry;
-use Capell\ThemeStudio\Agency\AgencyThemeServiceProvider;
+use Capell\ThemeAgency\AgencyThemeServiceProvider;
 use Illuminate\Support\Collection;
 
 final class ThemeAgencyHealthCheck implements ChecksExtensionHealth

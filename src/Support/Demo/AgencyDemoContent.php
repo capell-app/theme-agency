@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Capell\ThemeStudio\Agency\Support\Demo;
+namespace Capell\ThemeAgency\Support\Demo;
 
 use Capell\Core\Enums\LayoutEnum;
 use Capell\Core\Enums\PageTypeEnum;

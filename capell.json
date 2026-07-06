@@ -12,10 +12,14 @@
         "tier": "premium",
         "bundle": "themes"
     },
-    "namespace": "Capell\\ThemeStudio\\Agency",
+    "namespace": "Capell\\ThemeAgency",
     "surfaces": ["frontend"],
     "dependencies": {
-        "requires": ["capell-app/core", "capell-app/theme-foundation", "capell-app/frontend"],
+        "requires": [
+            "capell-app/core",
+            "capell-app/theme-foundation",
+            "capell-app/frontend"
+        ],
         "supports": [
             "capell-app/blog",
             "capell-app/form-builder",
@@ -27,14 +31,14 @@
     "providers": {
         "metadata": [],
         "install": [],
-        "runtime": ["Capell\\ThemeStudio\\Agency\\AgencyThemeServiceProvider"],
+        "runtime": ["Capell\\ThemeAgency\\AgencyThemeServiceProvider"],
         "admin": [],
         "frontend": []
     },
     "contributes": [
         {
             "type": "admin-page",
-            "class": "Capell\\ThemeStudio\\Agency\\Manifest\\ThemeManagementPageContribution",
+            "class": "Capell\\ThemeAgency\\Manifest\\ThemeManagementPageContribution",
             "pageClass": "Capell\\Marketplace\\Filament\\Pages\\ThemeExtensionPage",
             "pageParameters": {
                 "themeKey": "agency"
@@ -110,7 +114,7 @@
         {
             "key": "theme-agency.package-health",
             "label": "Agency package surfaces, providers, and install health are discoverable by Diagnostics.",
-            "class": "Capell\\ThemeStudio\\Agency\\Health\\ThemeAgencyHealthCheck",
+            "class": "Capell\\ThemeAgency\\Health\\ThemeAgencyHealthCheck",
             "severity": "critical",
             "surface": "frontend"
         }

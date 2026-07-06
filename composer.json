@@ -15,18 +15,18 @@
     },
     "autoload": {
         "psr-4": {
-            "Capell\\ThemeStudio\\Agency\\": "src/"
+            "Capell\\ThemeAgency\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Capell\\ThemeStudio\\Agency\\Tests\\": "tests/"
+            "Capell\\ThemeAgency\\Tests\\": "tests/"
         }
     },
     "extra": {
         "laravel": {
             "providers": [
-                "Capell\\ThemeStudio\\Agency\\AgencyThemeServiceProvider"
+                "Capell\\ThemeAgency\\AgencyThemeServiceProvider"
             ]
         },
         "branch-alias": {

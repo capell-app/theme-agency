@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Capell\ThemeStudio\Agency;
+namespace Capell\ThemeAgency;
 
 use Capell\Core\Data\VendorAssetData;
 use Capell\Core\Enums\FrontendRuntime;
@@ -16,7 +16,7 @@ use Capell\Core\ThemeStudio\Theme\ThemeRegistry;
 use Capell\FoundationTheme\Rendering\ChromeSplitBladeThemeRenderer;
 use Capell\FoundationTheme\Rendering\VariantViewSectionRenderer;
 use Capell\FoundationTheme\Support\Editor\StandardThemeEditorSchema;
-use Capell\ThemeStudio\Agency\Console\Commands\DemoCommand;
+use Capell\ThemeAgency\Console\Commands\DemoCommand;
 use Illuminate\Support\ServiceProvider;
 use Override;
 

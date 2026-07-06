@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Capell\ThemeStudio\Agency\Actions;
+namespace Capell\ThemeAgency\Actions;
 
 use Capell\FoundationTheme\Contracts\InstallsThemeDemo;
 use Capell\FoundationTheme\Data\ThemeDemoInstallData;
 use Capell\FoundationTheme\Support\Demo\ThemeDemoPageInstaller;
-use Capell\ThemeStudio\Agency\Support\Demo\AgencyDemoContent;
+use Capell\ThemeAgency\Support\Demo\AgencyDemoContent;
 use Lorisleiva\Actions\Concerns\AsObject;
 
 final class InstallAgencyThemeDemoAction implements InstallsThemeDemo
