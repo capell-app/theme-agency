@@ -1054,6 +1054,90 @@
     }
 }
 
+/* --------------------------------------------------- stagger launch sequence
+   Wave 4c headline mechanic: scroll-staged reveal + momentum scroll-snap.
+   Every `.lga-sequence-step` carries a `--lga-step` custom property set by
+   the Blade view from its payload position (never Math.random() -- §0.1).
+   Motion tiers (Wave 2.3): `motionIntensity` resolves
+   `--foundation-motion-duration`/`--foundation-motion-ease`; "none" renders
+   every step visible immediately via the reduced-motion guard below so the
+   composition still reads as intentional rather than absent (§0.6). */
+@media (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: view()) {
+        .lga-sequence-hero .lga-sequence-step,
+        .lga-sequence-step {
+            animation: lga-stagger-reveal
+                var(--foundation-motion-duration, 480ms)
+                var(--foundation-motion-ease, cubic-bezier(0.22, 1, 0.36, 1))
+                both;
+            animation-delay: calc(var(--lga-step, 0) * 60ms);
+            animation-range: entry 0% cover 25%;
+            animation-timeline: view();
+        }
+
+        @keyframes lga-stagger-reveal {
+            from {
+                opacity: 0;
+                transform: translateY(1.25rem);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .lga-sequence-step {
+        animation: none;
+        opacity: 1;
+        transform: none;
+    }
+}
+
+/* Momentum scroll-snap rails: no JS scroll-hijacking library (§0.4), pure
+   CSS scroll-snap-type/scroll-snap-align with native momentum scrolling. */
+.lga-chip-rail {
+    -webkit-overflow-scrolling: touch;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding-block: 0.25rem;
+    scroll-padding-inline: 1.5rem;
+    scroll-snap-type: x proximity;
+}
+
+.lga-chip-rail .lga-chip {
+    flex: 0 0 auto;
+    scroll-snap-align: start;
+}
+
+.lga-grid-rail {
+    display: flex;
+    gap: 1.5rem;
+    grid-template-columns: unset;
+    overflow-x: auto;
+    padding-block: 0.25rem;
+    scroll-padding-inline: 1.5rem;
+    scroll-snap-type: x mandatory;
+}
+
+.lga-rail-card {
+    flex: 0 0 min(85%, 22rem);
+    scroll-snap-align: start;
+}
+
+@media (min-width: 900px) {
+    .lga-grid-rail {
+        flex: 0 0 auto;
+    }
+
+    .lga-rail-card {
+        flex-basis: min(60%, 24rem);
+    }
+}
+
 /* View Transitions (Wave 6.5): opt every same-origin navigation into a smooth
    cross-document transition where supported; static fallback everywhere else.
    Reduced-motion users still navigate — just without the animation. */

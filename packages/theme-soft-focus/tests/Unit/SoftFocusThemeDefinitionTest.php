@@ -29,6 +29,13 @@ it('defines the soft-focus renderer contract', function (): void {
             'cta',
             'footer',
         )
+        ->and($definition->frontend['sectionVariants'] ?? [])->toBe([
+            'browse-panels' => ['default', 'scatter'],
+            'style-type-categories' => ['default', 'scattered'],
+            'latest-showcase' => ['default', 'organic'],
+            'sponsor-space' => ['default', 'floating'],
+            'random-best-of' => ['default', 'seeded-rotation'],
+        ])
         ->and($definition->presets)->toHaveCount(2)
         ->and($definition->presets[0]->key)->toBe('soft-focus')
         ->and($definition->runtime->value)->toBe('blade')

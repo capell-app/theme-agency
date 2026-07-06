@@ -14,15 +14,16 @@ use Capell\FoundationTheme\Support\Demo\ThemeDemoPageDefinition;
  * Complete, vertical-authentic demo content for the Wild Card theme.
  *
  * Each surface is seeded as an ordered `render_data['sections']` list so the page
- * adapter emits the theme's signature directory renderers (featured-today /
- * metadata-filters / latest-submissions / winners-collections / profiles-resources /
- * sponsor-modules / newsletter) alongside the shared hero/cta — giving every
- * surface a full, individual creative-directory site rather than a shared skeleton.
+ * adapter emits the theme's signature directory renderers (featured-today-banner /
+ * metadata-facet-wall / card-shuffle-grid / winners-ledger-table / submission-pulse /
+ * infinite-scroll-depth-pressure / profiles-resources / sponsor-modules / newsletter)
+ * alongside the shared hero/cta — giving every surface a full, individual
+ * creative-directory site rather than a shared skeleton.
  *
  * Anchors are scoped per surface: navigation and footer render on every surface,
  * so they only ever link to real page paths (home-relative) or mailto: — never a
  * same-page hash that would be a dead click off the homepage. In-page hashes
- * (e.g. `#latest-submissions`) are only used from hero/cta actions on a surface
+ * (e.g. `#card-shuffle-grid`) are only used from hero/cta actions on a surface
  * that actually renders that section.
  */
 final class WildCardDemoContent implements ProvidesThemeDemoContent
@@ -76,18 +77,20 @@ final class WildCardDemoContent implements ProvidesThemeDemoContent
                         mediaKey: 'hero',
                         mediaAlt: 'Tidal Atlas identity system, the current featured project',
                         primaryLabel: 'Browse submissions',
-                        primaryUrl: '#latest-submissions',
+                        primaryUrl: '#card-shuffle-grid',
                         secondaryLabel: 'View winners',
-                        secondaryUrl: '#winners-collections',
+                        secondaryUrl: '#winners-ledger-table',
                     ),
                     $this->featuredTodaySection($media),
                     $this->metadataFiltersSection(),
-                    $this->latestSubmissionsSection(
+                    $this->cardShuffleGridSection(
                         heading: 'Latest submissions',
-                        summary: 'New work added to the index this week, newest first.',
+                        summary: 'New work added to the index this week — dealt into a fresh shuffle each cycle.',
                         media: $media,
+                        pageSeed: 'theme-' . $themeKey,
                     ),
-                    $this->winnersCollectionsSection(),
+                    $this->winnersLedgerSection(),
+                    $this->submissionPulseSection(),
                     $this->profilesResourcesSection(),
                     $this->sponsorModulesSection(),
                     $this->ctaSection(
@@ -96,7 +99,7 @@ final class WildCardDemoContent implements ProvidesThemeDemoContent
                         primaryLabel: 'Submit a project',
                         primaryUrl: '/theme-' . $themeKey . '-contact',
                         secondaryLabel: 'Browse submissions',
-                        secondaryUrl: '#latest-submissions',
+                        secondaryUrl: '#card-shuffle-grid',
                     ),
                 ],
             ],
@@ -132,16 +135,18 @@ final class WildCardDemoContent implements ProvidesThemeDemoContent
                         mediaKey: 'listing',
                         mediaAlt: 'The project archive, rendered as a filterable grid',
                         primaryLabel: 'Filter the archive',
-                        primaryUrl: '#metadata-filters',
+                        primaryUrl: '#metadata-facet-wall',
                         secondaryLabel: 'View latest',
-                        secondaryUrl: '#latest-submissions',
+                        secondaryUrl: '#card-shuffle-grid',
                     ),
                     $this->metadataFiltersSection(),
-                    $this->latestSubmissionsSection(
+                    $this->cardShuffleGridSection(
                         heading: 'Recently indexed',
-                        summary: 'The newest entries to clear curation, in submission order.',
+                        summary: 'The newest entries to clear curation, dealt into a fresh shuffle.',
                         media: $media,
+                        pageSeed: 'theme-' . $themeKey . '-directory',
                     ),
+                    $this->submissionPulseSection(),
                     $this->contentListingSection(
                         heading: 'More from the archive',
                         summary: 'Smaller entries, experiments, and collaborations across the index.',
@@ -153,7 +158,7 @@ final class WildCardDemoContent implements ProvidesThemeDemoContent
                         primaryLabel: 'Submit a project',
                         primaryUrl: '/theme-' . $themeKey . '-contact',
                         secondaryLabel: 'Browse latest',
-                        secondaryUrl: '#latest-submissions',
+                        secondaryUrl: '#card-shuffle-grid',
                     ),
                 ],
             ],
@@ -190,15 +195,17 @@ final class WildCardDemoContent implements ProvidesThemeDemoContent
                         primaryLabel: 'View studio & credits',
                         primaryUrl: '#profiles-resources',
                         secondaryLabel: 'See related work',
-                        secondaryUrl: '#latest-submissions',
+                        secondaryUrl: '#card-shuffle-grid',
                     ),
                     $this->featuredTodaySection($media, heading: 'Inside the project'),
                     $this->profilesResourcesSection(heading: 'Credits & studio'),
-                    $this->latestSubmissionsSection(
+                    $this->cardShuffleGridSection(
                         heading: 'Related work',
-                        summary: 'Other projects in the same medium and collection.',
+                        summary: 'Other projects in the same medium and collection, dealt into a fresh shuffle.',
                         media: $media,
+                        pageSeed: 'theme-' . $themeKey . '-detail',
                     ),
+                    $this->infiniteScrollDepthPressureSection($media),
                     $this->ctaSection(
                         heading: 'Run a studio like Meridian?',
                         summary: 'Claim your profile and submit your projects to the index so your work shows up alongside work like this.',
@@ -286,15 +293,16 @@ final class WildCardDemoContent implements ProvidesThemeDemoContent
                         mediaKey: 'listing',
                         mediaAlt: null,
                         primaryLabel: 'Clear the filter',
-                        primaryUrl: '#metadata-filters',
+                        primaryUrl: '#metadata-facet-wall',
                         secondaryLabel: 'Browse latest',
-                        secondaryUrl: '#latest-submissions',
+                        secondaryUrl: '#card-shuffle-grid',
                     ),
                     $this->metadataFiltersSection(),
-                    $this->latestSubmissionsSection(
+                    $this->cardShuffleGridSection(
                         heading: 'While you are here',
-                        summary: 'A few recently indexed projects across every medium.',
+                        summary: 'A few recently indexed projects across every medium, dealt into a fresh shuffle.',
                         media: $media,
+                        pageSeed: 'theme-' . $themeKey . '-empty',
                     ),
                     $this->ctaSection(
                         heading: 'Looking for a specific project?',
@@ -338,9 +346,9 @@ final class WildCardDemoContent implements ProvidesThemeDemoContent
                         primaryLabel: 'Back to home',
                         primaryUrl: '/',
                         secondaryLabel: 'View winners',
-                        secondaryUrl: '#winners-collections',
+                        secondaryUrl: '#winners-ledger-table',
                     ),
-                    $this->winnersCollectionsSection(),
+                    $this->winnersLedgerSection(),
                     $this->ctaSection(
                         heading: 'Still looking for a project?',
                         summary: 'Tell us the studio or title and we will point you to the right entry in the index.',
@@ -385,9 +393,9 @@ final class WildCardDemoContent implements ProvidesThemeDemoContent
                         primaryLabel: 'Subscribe to the index',
                         primaryUrl: '#newsletter',
                         secondaryLabel: 'View winners',
-                        secondaryUrl: '#winners-collections',
+                        secondaryUrl: '#winners-ledger-table',
                     ),
-                    $this->winnersCollectionsSection(),
+                    $this->winnersLedgerSection(),
                     $this->sponsorModulesSection(),
                     $this->newsletterSection(),
                     $this->ctaSection(
@@ -453,13 +461,17 @@ final class WildCardDemoContent implements ProvidesThemeDemoContent
             ['title' => 'Northwind Type', 'meta' => 'Foundry Verda · Typeface · Germany', 'summary' => 'A grotesque type family drawn for renewable-energy interfaces in the field.'],
             ['title' => 'Harbour Sessions', 'meta' => 'Atlas Studio · Motion · United States', 'summary' => 'A motion identity for a dockside music series, built to read at festival scale.'],
         ];
+        $itemsWithImages = $this->withImages($items, $pool, 'Featured project', 'theme-wild-card-detail');
 
         return [
-            'type' => 'featured-today',
+            'type' => 'featured-today-banner',
             'kicker' => 'Featured today',
             'heading' => $heading,
-            'summary' => 'Hand-picked projects the curators put at the top of the index today.',
-            'items' => $this->withImages($items, $pool, 'Featured project', 'theme-wild-card-detail'),
+            'summary' => 'The curators put a single submission at the top of the index today — the pick rotates on a fixed schedule, not by chance.',
+            'pick' => $itemsWithImages[0] ?? null,
+            'upNext' => $itemsWithImages,
+            'items' => $itemsWithImages,
+            'nextRotationAt' => now()->addHours(18)->toIso8601String(),
         ];
     }
 
@@ -469,7 +481,7 @@ final class WildCardDemoContent implements ProvidesThemeDemoContent
     private function metadataFiltersSection(string $heading = 'Filter by medium, status, country, and category'): array
     {
         return [
-            'type' => 'metadata-filters',
+            'type' => 'metadata-facet-wall',
             'kicker' => 'Metadata filters',
             'heading' => $heading,
             'summary' => 'Compact metadata filters keep results across statuses, mediums, and countries fast and legible.',
@@ -519,22 +531,23 @@ final class WildCardDemoContent implements ProvidesThemeDemoContent
      * @param  array{hero: list<string>, listing: list<string>, detail: list<string>, proof: list<string>, contact: list<string>, cta: list<string>}  $media
      * @return array<string, mixed>
      */
-    private function latestSubmissionsSection(string $heading, string $summary, array $media): array
+    private function cardShuffleGridSection(string $heading, string $summary, array $media, string $pageSeed): array
     {
         $pool = array_values(array_unique(array_merge($media['listing'], $media['proof'], $media['detail'])));
 
         $items = [
-            ['title' => 'Verda Field System', 'meta' => 'Foundry Verda · Design system', 'summary' => 'A component library unifying four renewable-energy product teams on one visual language.'],
-            ['title' => 'Lumen Refresh', 'meta' => 'Studio Kindred · Identity', 'summary' => 'A lighter, warmer identity for a health-tech startup finding its public voice.'],
-            ['title' => 'Coastline Report', 'meta' => 'Studio Meridian · Editorial', 'summary' => 'An annual print and web report for a marine conservation network.'],
-            ['title' => 'Kindred Campaign', 'meta' => 'Atlas Studio · Campaign', 'summary' => 'A social-first launch campaign for a community lending app.'],
+            ['id' => 'verda-field-system', 'title' => 'Verda Field System', 'meta' => 'Foundry Verda · Design system', 'summary' => 'A component library unifying four renewable-energy product teams on one visual language.'],
+            ['id' => 'lumen-refresh', 'title' => 'Lumen Refresh', 'meta' => 'Studio Kindred · Identity', 'summary' => 'A lighter, warmer identity for a health-tech startup finding its public voice.'],
+            ['id' => 'coastline-report', 'title' => 'Coastline Report', 'meta' => 'Studio Meridian · Editorial', 'summary' => 'An annual print and web report for a marine conservation network.'],
+            ['id' => 'kindred-campaign', 'title' => 'Kindred Campaign', 'meta' => 'Atlas Studio · Campaign', 'summary' => 'A social-first launch campaign for a community lending app.'],
         ];
 
         return [
-            'type' => 'latest-submissions',
-            'kicker' => 'Latest submissions',
+            'type' => 'card-shuffle-grid',
+            'kicker' => 'The deck',
             'heading' => $heading,
             'summary' => $summary,
+            'pageSeed' => $pageSeed,
             'items' => $this->withImages($items, $pool, 'Recent submission', 'theme-wild-card-detail'),
         ];
     }
@@ -542,21 +555,72 @@ final class WildCardDemoContent implements ProvidesThemeDemoContent
     /**
      * @return array<string, mixed>
      */
-    private function winnersCollectionsSection(): array
+    private function winnersLedgerSection(): array
     {
         return [
-            'type' => 'winners-collections',
+            'type' => 'winners-ledger-table',
             'kicker' => 'Winners & collections',
             'heading' => 'Winners & collections',
-            'summary' => 'The standout entries from this cycle, grouped into the curators’ named collections.',
+            'summary' => 'The standout entries from this cycle, ranked in the ledger the curators keep returning to.',
             'label' => 'See the current project',
             'url' => '/theme-wild-card-detail',
             'items' => [
-                ['title' => 'Winner · Identity', 'summary' => 'Tidal Atlas by Studio Meridian — best in the brand & editorial medium.', 'url' => '/theme-wild-card-detail'],
-                ['title' => 'Winner · Type', 'summary' => 'Northwind Type by Foundry Verda — best original typeface of the cycle.'],
-                ['title' => 'Collection · Coastal', 'summary' => 'Twelve projects from studios working on coastline and climate themes.'],
-                ['title' => 'Collection · In Motion', 'summary' => 'A set of motion identities the jury kept returning to.'],
+                ['title' => 'Tidal Atlas', 'studio' => 'Studio Meridian', 'category' => 'Brand & Editorial', 'cycle' => '2025'],
+                ['title' => 'Northwind Type', 'studio' => 'Foundry Verda', 'category' => 'Type', 'cycle' => '2025'],
+                ['title' => 'Coastal collection', 'studio' => 'Twelve studios', 'category' => 'Collection · Coastal', 'cycle' => '2024'],
+                ['title' => 'In Motion collection', 'studio' => 'Nine studios', 'category' => 'Collection · Motion', 'cycle' => '2024'],
             ],
+        ];
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function submissionPulseSection(): array
+    {
+        return [
+            'type' => 'submission-pulse',
+            'kicker' => 'Submission pulse',
+            'heading' => 'How the index has moved this week',
+            'summary' => 'A historical read on submission activity — new entries over the last 24 hours and across the last seven days.',
+            'stats' => [
+                ['value' => '12', 'label' => 'Submitted in the last 24 hours'],
+                ['value' => '64', 'label' => 'Submitted in the last 7 days'],
+                ['value' => '9', 'label' => 'Cleared curation this week'],
+            ],
+            'bars' => [
+                ['label' => 'Mon', 'value' => 6],
+                ['label' => 'Tue', 'value' => 9],
+                ['label' => 'Wed', 'value' => 12],
+                ['label' => 'Thu', 'value' => 8],
+                ['label' => 'Fri', 'value' => 14],
+                ['label' => 'Sat', 'value' => 7],
+                ['label' => 'Sun', 'value' => 8],
+            ],
+        ];
+    }
+
+    /**
+     * @param  array{hero: list<string>, listing: list<string>, detail: list<string>, proof: list<string>, contact: list<string>, cta: list<string>}  $media
+     * @return array<string, mixed>
+     */
+    private function infiniteScrollDepthPressureSection(array $media): array
+    {
+        $pool = array_values(array_unique(array_merge($media['detail'], $media['listing'])));
+
+        $items = [
+            ['title' => 'Atlas Festival rebrand', 'meta' => 'Campaign · Shortlisted', 'summary' => 'A launch campaign and motion toolkit that took a regional arts festival national.'],
+            ['title' => 'Studio Verda portfolio', 'meta' => 'Website · Winner', 'summary' => 'An editorial portfolio site for an architecture practice that lets the buildings speak.'],
+            ['title' => 'Foundry catalogue', 'meta' => 'Editorial · Collected', 'summary' => 'A print and web specimen catalogue for a forty-face type library.'],
+            ['title' => 'Harbour Sessions reel', 'meta' => 'Motion · Shortlisted', 'summary' => 'A motion identity for a dockside music series, built to read at festival scale.'],
+        ];
+
+        return [
+            'type' => 'infinite-scroll-depth-pressure',
+            'kicker' => 'Deeper into the archive',
+            'heading' => 'The archive, given room to breathe',
+            'summary' => 'Cards pick up weight the further you read into the collection — a visual cue for how deep the archive runs, not a loading trick.',
+            'items' => $this->withImages($items, $pool, 'Archive entry', 'theme-wild-card-detail'),
         ];
     }
 

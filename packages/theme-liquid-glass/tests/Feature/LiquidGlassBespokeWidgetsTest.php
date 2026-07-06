@@ -236,6 +236,208 @@ it('throws a clear error naming the missing key when a widget references an unre
     CapellCore::clearPackages();
 });
 
+it('renders the glass-feature-card widget with real payload and both variant states', function (): void {
+    bootLiquidGlassThemeForBespokeWidgetTests();
+
+    $items = [
+        ['eyebrow' => 'Surface', 'title' => 'Frosted panels with depth', 'summary' => 'Layered translucency keeps headings crisp on any backdrop.', 'metric' => '99%', 'metricLabel' => 'Legibility score'],
+        ['eyebrow' => 'Rhythm', 'title' => 'A steady section cadence', 'summary' => 'Every panel shares spacing so pages read with calm momentum.', 'variant' => 'spotlight'],
+    ];
+
+    $widget = resolve(WidgetCreator::class)->bespokeContentWidget(
+        key: 'liquid-glass-glass-feature-card-render-test-1',
+        name: 'Glass feature card render test',
+        component: WidgetComponentEnum::GlassFeatureCard->value,
+        meta: ['heading' => 'A feature card built from layered light', 'items' => $items],
+    );
+
+    $html = view('capell-theme-liquid-glass::widget.glass-feature-card', ['widget' => $widget])->render();
+
+    expect($html)
+        ->toContain('A feature card built from layered light')
+        ->toContain('Frosted panels with depth')
+        ->toContain('data-variant="standard"')
+        ->toContain('data-variant="spotlight"')
+        ->toContain('glass-feature-card--spotlight')
+        ->not->toContain('capell-app/theme-liquid-glass');
+
+    CapellCore::clearPackages();
+});
+
+it('renders the translucent-stat-band widget with the count-up-stat primitive and both variants', function (): void {
+    bootLiquidGlassThemeForBespokeWidgetTests();
+
+    $stats = [
+        ['value' => 4200, 'label' => 'Glass panels shipped', 'suffix' => '+'],
+        ['value' => 98, 'label' => 'Legibility score', 'suffix' => '%'],
+        ['value' => 3, 'label' => 'Token-driven presets'],
+    ];
+
+    $bandWidget = resolve(WidgetCreator::class)->bespokeContentWidget(
+        key: 'liquid-glass-translucent-stat-band-render-test-1',
+        name: 'Translucent stat band render test',
+        component: WidgetComponentEnum::TranslucentStatBand->value,
+        meta: ['stats' => $stats],
+    );
+    $panelWidget = resolve(WidgetCreator::class)->bespokeContentWidget(
+        key: 'liquid-glass-translucent-stat-band-render-test-2',
+        name: 'Translucent stat band panel render test',
+        component: WidgetComponentEnum::TranslucentStatBand->value,
+        meta: ['stats' => $stats, 'variant' => 'panel'],
+    );
+
+    $bandHtml = view('capell-theme-liquid-glass::widget.translucent-stat-band', ['widget' => $bandWidget])->render();
+    $panelHtml = view('capell-theme-liquid-glass::widget.translucent-stat-band', ['widget' => $panelWidget])->render();
+
+    expect($bandHtml)
+        ->toContain('data-count-up="4200"')
+        ->toContain('Glass panels shipped')
+        ->toContain('data-variant="band"')
+        ->not->toContain('capell-app/theme-liquid-glass');
+
+    expect($panelHtml)
+        ->toContain('data-variant="panel"')
+        ->toContain('glass-surface-card');
+
+    CapellCore::clearPackages();
+});
+
+it('renders the layered-depth-hero widget with a static resting depth stack and both variants', function (): void {
+    bootLiquidGlassThemeForBespokeWidgetTests();
+
+    $panes = [
+        ['label' => 'Backdrop', 'image' => 'https://example.test/backdrop.jpg', 'imageAlt' => 'Backdrop pane'],
+        ['label' => 'Midground', 'image' => 'https://example.test/midground.jpg', 'imageAlt' => 'Midground pane'],
+        ['label' => 'Foreground', 'image' => 'https://example.test/foreground.jpg', 'imageAlt' => 'Foreground pane'],
+    ];
+
+    $layeredWidget = resolve(WidgetCreator::class)->bespokeContentWidget(
+        key: 'liquid-glass-layered-depth-hero-render-test-1',
+        name: 'Layered depth hero render test',
+        component: WidgetComponentEnum::LayeredDepthHero->value,
+        meta: ['heading' => 'A composition with real z-depth', 'panes' => $panes],
+    );
+    $flatWidget = resolve(WidgetCreator::class)->bespokeContentWidget(
+        key: 'liquid-glass-layered-depth-hero-render-test-2',
+        name: 'Layered depth hero flat render test',
+        component: WidgetComponentEnum::LayeredDepthHero->value,
+        meta: ['heading' => 'A composition with real z-depth', 'panes' => $panes, 'variant' => 'flat-fallback'],
+    );
+
+    $layeredHtml = view('capell-theme-liquid-glass::widget.layered-depth-hero', ['widget' => $layeredWidget])->render();
+    $flatHtml = view('capell-theme-liquid-glass::widget.layered-depth-hero', ['widget' => $flatWidget])->render();
+
+    expect($layeredHtml)
+        ->toContain('A composition with real z-depth')
+        ->toContain('data-pane-depth="0"')
+        ->toContain('data-pane-depth="2"')
+        ->toContain('data-variant="layered"')
+        ->not->toContain('pointermove')
+        ->not->toContain('<script')
+        ->not->toContain('capell-app/theme-liquid-glass');
+
+    expect($flatHtml)
+        ->toContain('data-variant="flat-fallback"')
+        ->toContain('layered-depth-hero--flat');
+
+    CapellCore::clearPackages();
+});
+
+it('renders the refraction-grid widget with backdrop-filter treatment and both variants', function (): void {
+    bootLiquidGlassThemeForBespokeWidgetTests();
+
+    $tiles = [
+        ['title' => 'Marlow Studio launch', 'summary' => 'A service launch rebuilt on the glass rhythm.', 'image' => 'https://example.test/one.jpg'],
+        ['title' => 'Tideline Labs', 'summary' => 'Faster page builds on translucent panels.', 'image' => 'https://example.test/two.jpg'],
+        ['title' => 'Northglass', 'summary' => 'Bespoke brand tints across every panel.', 'image' => 'https://example.test/three.jpg'],
+    ];
+
+    $evenWidget = resolve(WidgetCreator::class)->bespokeContentWidget(
+        key: 'liquid-glass-refraction-grid-render-test-1',
+        name: 'Refraction grid render test',
+        component: WidgetComponentEnum::RefractionGrid->value,
+        meta: ['tiles' => $tiles],
+    );
+    $featuredWidget = resolve(WidgetCreator::class)->bespokeContentWidget(
+        key: 'liquid-glass-refraction-grid-render-test-2',
+        name: 'Refraction grid featured render test',
+        component: WidgetComponentEnum::RefractionGrid->value,
+        meta: ['tiles' => $tiles, 'variant' => 'featured'],
+    );
+
+    $evenHtml = view('capell-theme-liquid-glass::widget.refraction-grid', ['widget' => $evenWidget])->render();
+    $featuredHtml = view('capell-theme-liquid-glass::widget.refraction-grid', ['widget' => $featuredWidget])->render();
+
+    expect($evenHtml)
+        ->toContain('Marlow Studio launch')
+        ->toContain('data-variant="even"')
+        ->not->toContain('capell-app/theme-liquid-glass');
+
+    expect($featuredHtml)
+        ->toContain('data-variant="featured"')
+        ->toContain('refraction-grid-tile--lead');
+
+    CapellCore::clearPackages();
+});
+
+it('renders the floating-glass-nav widget as a plain anchor list with both variants', function (): void {
+    bootLiquidGlassThemeForBespokeWidgetTests();
+
+    $items = [
+        ['label' => 'Features', 'url' => '#features'],
+        ['label' => 'Proof', 'url' => '#proof'],
+        ['label' => 'Contact', 'url' => '#contact'],
+    ];
+
+    $pillWidget = resolve(WidgetCreator::class)->bespokeContentWidget(
+        key: 'liquid-glass-floating-glass-nav-render-test-1',
+        name: 'Floating glass nav render test',
+        component: WidgetComponentEnum::FloatingGlassNav->value,
+        meta: ['items' => $items],
+    );
+    $barWidget = resolve(WidgetCreator::class)->bespokeContentWidget(
+        key: 'liquid-glass-floating-glass-nav-render-test-2',
+        name: 'Floating glass nav bar render test',
+        component: WidgetComponentEnum::FloatingGlassNav->value,
+        meta: ['items' => $items, 'variant' => 'bar'],
+    );
+
+    $pillHtml = view('capell-theme-liquid-glass::widget.floating-glass-nav', ['widget' => $pillWidget])->render();
+    $barHtml = view('capell-theme-liquid-glass::widget.floating-glass-nav', ['widget' => $barWidget])->render();
+
+    expect($pillHtml)
+        ->toContain('href="#features"')
+        ->toContain('data-variant="pill"')
+        ->toContain('<nav')
+        ->not->toContain('<script')
+        ->not->toContain('capell-app/theme-liquid-glass');
+
+    expect($barHtml)
+        ->toContain('data-variant="bar"')
+        ->toContain('floating-glass-nav--bar');
+
+    CapellCore::clearPackages();
+});
+
+it('registers all five Wave 4c signature widget keys against RenderableRegistry', function (): void {
+    bootLiquidGlassThemeForBespokeWidgetTests();
+
+    $registry = resolve(RenderableRegistry::class);
+
+    expect($registry->get('layout-widget', WidgetComponentEnum::GlassFeatureCard->value)->blade)
+        ->toBe('capell-theme-liquid-glass::widget.glass-feature-card')
+        ->and($registry->get('layout-widget', WidgetComponentEnum::TranslucentStatBand->value)->blade)
+        ->toBe('capell-theme-liquid-glass::widget.translucent-stat-band')
+        ->and($registry->get('layout-widget', WidgetComponentEnum::LayeredDepthHero->value)->blade)
+        ->toBe('capell-theme-liquid-glass::widget.layered-depth-hero')
+        ->and($registry->get('layout-widget', WidgetComponentEnum::RefractionGrid->value)->blade)
+        ->toBe('capell-theme-liquid-glass::widget.refraction-grid')
+        ->and($registry->get('layout-widget', WidgetComponentEnum::FloatingGlassNav->value)->blade)
+        ->toBe('capell-theme-liquid-glass::widget.floating-glass-nav');
+
+    CapellCore::clearPackages();
+});
+
 it('creates a bespoke content widget through WidgetCreator with caller-supplied key, component, and meta', function (): void {
     bootLiquidGlassThemeForBespokeWidgetTests();
 

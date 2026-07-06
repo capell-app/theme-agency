@@ -36,7 +36,7 @@ final class OpenStudioThemeServiceProvider extends ServiceProvider
             previewImage: '/vendor/capell/themes/open-studio.jpg',
             tags: ['Case Studies', 'Portfolio', 'Creative Talent', 'Project Feed', 'Hiring'],
             bestFit: ['Creative portfolio platforms', 'Case study archives', 'Talent discovery sites', 'Agency project libraries', 'Multidiscipline creator networks'],
-            includedSections: ['navigation', 'hero', 'creator-hero', 'discipline-filters', 'project-feed', 'process-notes', 'related-projects', 'credits-tools', 'proof', 'content-listing', 'newsletter', 'cta', 'footer'],
+            includedSections: ['navigation', 'hero', 'creator-hero', 'discipline-filters', 'project-feed', 'process-notes', 'related-projects', 'credits-tools', 'proof', 'content-listing', 'newsletter', 'cta', 'footer', 'filmstrip-project-showcase', 'discipline-carousel-browse', 'process-notes-timeline', 'credits-grid-roster', 'next-project-cta'],
             presets: [
                 new ThemePresetData(
                     key: self::THEME_KEY,
@@ -94,6 +94,11 @@ final class OpenStudioThemeServiceProvider extends ServiceProvider
             frontend: [
                 'sectionVariants' => [
                     'hero' => ['default', 'split'],
+                    'filmstrip-project-showcase' => ['default', 'compact'],
+                    'discipline-carousel-browse' => ['default', 'sticky'],
+                    'process-notes-timeline' => ['default', 'compact'],
+                    'credits-grid-roster' => ['default', 'rows'],
+                    'next-project-cta' => ['default', 'stacked'],
                 ],
                 'editor' => StandardThemeEditorSchema::definition(),
             ],
@@ -167,6 +172,41 @@ final class OpenStudioThemeServiceProvider extends ServiceProvider
             'newsletter' => new ViewSectionRenderer(self::THEME_KEY, 'newsletter', 'capell-theme-open-studio::sections.newsletter', failLoudly: true),
             'cta' => new ViewSectionRenderer(self::THEME_KEY, 'cta', 'capell-theme-open-studio::sections.cta', failLoudly: true),
             'footer' => new ViewSectionRenderer(self::THEME_KEY, 'footer', 'capell-theme-open-studio::sections.footer', failLoudly: true),
+            'filmstrip-project-showcase' => new VariantViewSectionRenderer(
+                themeKey: self::THEME_KEY,
+                sectionKey: 'filmstrip-project-showcase',
+                baseView: 'capell-theme-open-studio::sections.filmstrip-project-showcase',
+                variantViews: ['compact' => 'capell-theme-open-studio::sections.filmstrip-project-showcase--compact'],
+                failLoudly: true,
+            ),
+            'discipline-carousel-browse' => new VariantViewSectionRenderer(
+                themeKey: self::THEME_KEY,
+                sectionKey: 'discipline-carousel-browse',
+                baseView: 'capell-theme-open-studio::sections.discipline-carousel-browse',
+                variantViews: ['sticky' => 'capell-theme-open-studio::sections.discipline-carousel-browse--sticky'],
+                failLoudly: true,
+            ),
+            'process-notes-timeline' => new VariantViewSectionRenderer(
+                themeKey: self::THEME_KEY,
+                sectionKey: 'process-notes-timeline',
+                baseView: 'capell-theme-open-studio::sections.process-notes-timeline',
+                variantViews: ['compact' => 'capell-theme-open-studio::sections.process-notes-timeline--compact'],
+                failLoudly: true,
+            ),
+            'credits-grid-roster' => new VariantViewSectionRenderer(
+                themeKey: self::THEME_KEY,
+                sectionKey: 'credits-grid-roster',
+                baseView: 'capell-theme-open-studio::sections.credits-grid-roster',
+                variantViews: ['rows' => 'capell-theme-open-studio::sections.credits-grid-roster--rows'],
+                failLoudly: true,
+            ),
+            'next-project-cta' => new VariantViewSectionRenderer(
+                themeKey: self::THEME_KEY,
+                sectionKey: 'next-project-cta',
+                baseView: 'capell-theme-open-studio::sections.next-project-cta',
+                variantViews: ['stacked' => 'capell-theme-open-studio::sections.next-project-cta--stacked'],
+                failLoudly: true,
+            ),
         ];
     }
 }

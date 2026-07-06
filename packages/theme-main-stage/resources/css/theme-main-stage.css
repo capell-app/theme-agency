@@ -1,0 +1,815 @@
+/* Main Stage — poster-bold events/conference register: saturated accent,
+   oversized display type, countdown FOMO, and multi-colour ticket/sponsor
+   tiers. Layout-native: `.mst-shell` is carried on every real, rendered
+   chrome/widget root (header, footer, and the eight bespoke
+   `resources/views/widget/*.blade.php` views) rather than a page-level
+   wrapper, mirroring Night Shift's and Liquid Glass's identical conversion
+   note — `--theme-*` preset tokens are injected at `:root` by the frontend
+   package's head-token component, so `.mst-shell` resolves correctly
+   wherever it is applied. */
+
+.mst-shell {
+    --mst-ink: var(--theme-foreground, oklch(97.42% 0.0122 276.1));
+    --mst-muted: color-mix(in srgb, var(--mst-ink) 64%, transparent);
+    --mst-faint: color-mix(in srgb, var(--mst-ink) 48%, transparent);
+    --mst-line: color-mix(in srgb, var(--mst-ink) 14%, transparent);
+    --mst-line-soft: color-mix(in srgb, var(--mst-ink) 8%, transparent);
+    --mst-accent: var(--theme-accent, oklch(63.98% 0.2223 12.53));
+    --mst-accent-soft: color-mix(in srgb, var(--mst-accent) 18%, transparent);
+    --mst-accent-line: color-mix(in srgb, var(--mst-accent) 46%, transparent);
+    --mst-paper: var(--theme-surface, oklch(15.94% 0.0292 302.34));
+    --mst-panel: color-mix(in srgb, var(--mst-paper) 84%, #ffffff 6%);
+    --mst-panel-raised: color-mix(in srgb, var(--mst-paper) 70%, #ffffff 11%);
+    --mst-heading-scale: 1;
+
+    /* Multi-colour ticket/sponsor tier tokens (never literal hex in Blade —
+       see ticket-tier-comparison.blade.php / sponsor-tier-walls.blade.php).
+       Named tiers resolve to one of these tokens by `colorToken`; unknown
+       tokens fall back to `--mst-accent` at the call site. */
+    --mst-tier-general: oklch(70.1% 0.14 250);
+    --mst-tier-pro: oklch(72.7% 0.19 300);
+    --mst-tier-vip: oklch(74.9% 0.19 55);
+    --mst-tier-headline: oklch(63.98% 0.2223 12.53);
+    --mst-tier-supporting: oklch(68.4% 0.09 230);
+
+    container: mst-tokens / normal;
+    background: var(--mst-paper);
+    color: var(--mst-ink);
+    font-family: var(--theme-body-font, inter), system-ui, sans-serif;
+    font-size: 1rem;
+    line-height: 1.6;
+}
+
+/* --theme-card-style: `flat` drops the border on card-shaped surfaces for
+   operators who prefer a quieter, borderless look. */
+@container mst-tokens style(--theme-card-style: flat) {
+    :is(.mst-speaker-card, .mst-ticket-card) {
+        border-color: transparent;
+    }
+}
+
+/* --theme-layout-presentation: `full-bleed` lets a section run edge to edge
+   instead of Main Stage's default contained max-width column. */
+@container mst-tokens style(--theme-layout-presentation: full-bleed) {
+    .mst-section-inner {
+        max-width: none;
+    }
+}
+
+/* --theme-card-density: `compact` tightens the gap between stacked cards. */
+@container mst-tokens style(--theme-card-density: compact) {
+    .mst-ticket-cards {
+        gap: 0.75rem;
+    }
+}
+
+/* --theme-heading-scale: `expressive` enlarges section headings for an even
+   more poster-bold register. */
+@container mst-tokens style(--theme-heading-scale: expressive) {
+    .mst-shell h2 {
+        font-size: 3rem;
+    }
+}
+
+/* --theme-overlay-treatment: `strong` deepens the accent overlay used behind
+   the countdown band and live-now state banner. */
+@container mst-tokens style(--theme-overlay-treatment: strong) {
+    .mst-shell {
+        --mst-accent-soft: color-mix(
+            in srgb,
+            var(--mst-accent) 32%,
+            transparent
+        );
+    }
+}
+
+.mst-shell h1,
+.mst-shell h2,
+.mst-shell h3,
+.mst-shell h4 {
+    color: var(--mst-ink);
+    font-family: var(--theme-heading-font, sora), system-ui, sans-serif;
+    font-weight: 750;
+    letter-spacing: -0.02em;
+}
+
+.mst-shell h1 {
+    font-size: clamp(2.8rem, 6vw, 5.4rem);
+    letter-spacing: -0.03em;
+    line-height: 1;
+    margin-block: 0;
+    text-wrap: balance;
+}
+
+.mst-shell h2 {
+    font-size: clamp(
+        calc(1.9rem * var(--mst-heading-scale)),
+        3.4vw,
+        calc(3rem * var(--mst-heading-scale))
+    );
+    line-height: 1.06;
+    margin-block: 0;
+    text-wrap: balance;
+}
+
+.mst-shell h3 {
+    font-size: 1.15rem;
+    line-height: 1.3;
+    margin: 0;
+}
+
+.mst-shell a:focus-visible,
+.mst-shell button:focus-visible,
+.mst-shell [tabindex]:focus-visible {
+    outline: 2px solid transparent;
+    outline-offset: 3px;
+    box-shadow:
+        0 0 0 2px var(--mst-paper),
+        0 0 0 4px var(--mst-accent);
+}
+
+/* -------------------------------------------------------------- sections */
+
+.mst-section {
+    border-top: 1px solid var(--mst-line-soft);
+    position: relative;
+}
+
+.mst-section-raised {
+    background: var(--mst-panel);
+}
+
+.mst-section-inner {
+    display: grid;
+    gap: var(--theme-spacing, 1.5rem);
+    margin-inline: auto;
+    max-width: 80rem;
+    padding: clamp(4rem, 8vw, 7rem) clamp(1.5rem, 4vw, 3rem);
+}
+
+.mst-eyebrow {
+    align-items: center;
+    color: var(--mst-accent);
+    display: inline-flex;
+    font-size: 0.8rem;
+    font-weight: 700;
+    gap: 0.5rem;
+    letter-spacing: 0.06em;
+    margin: 0 0 1rem;
+    text-transform: uppercase;
+}
+
+.mst-lede {
+    color: var(--mst-muted);
+    font-size: clamp(1rem, 0.4vw + 0.95rem, 1.2rem);
+    line-height: 1.6;
+    margin-block: 0.9rem 0;
+    max-width: 42rem;
+    text-wrap: pretty;
+}
+
+.mst-heading-row {
+    margin-bottom: clamp(2.25rem, 4vw, 3.25rem);
+}
+
+.mst-link-quiet {
+    color: var(--mst-accent);
+    font-size: 0.9rem;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.mst-link-quiet:hover,
+.mst-link-quiet:focus-visible {
+    text-decoration: underline;
+    text-underline-offset: 0.3rem;
+}
+
+/* --------------------------------------------------------------- navbar */
+
+.mst-navbar {
+    background: color-mix(in srgb, var(--mst-paper) 90%, transparent);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--mst-line-soft);
+    position: sticky;
+    top: 0;
+    z-index: 30;
+}
+
+.mst-navbar-inner {
+    align-items: center;
+    display: flex;
+    gap: 1.5rem;
+    justify-content: space-between;
+    margin-inline: auto;
+    max-width: 80rem;
+    padding: 0.9rem clamp(1.5rem, 4vw, 3rem);
+}
+
+.mst-navbar-brand {
+    align-items: center;
+    color: var(--mst-ink);
+    display: inline-flex;
+    gap: 0.6rem;
+    text-decoration: none;
+}
+
+.mst-navbar-mark {
+    background: linear-gradient(
+        135deg,
+        var(--mst-accent),
+        color-mix(in srgb, var(--mst-accent) 35%, #ffffff)
+    );
+    border-radius: 0.4rem;
+    display: inline-block;
+    height: 1.4rem;
+    width: 1.4rem;
+}
+
+.mst-navbar-wordmark {
+    font-family: var(--theme-heading-font, sora), system-ui, sans-serif;
+    font-size: 1.08rem;
+    font-weight: 800;
+    letter-spacing: -0.01em;
+    text-transform: uppercase;
+}
+
+/* --------------------------------------------------------------- button */
+
+.mst-button {
+    align-items: center;
+    background: var(--mst-accent);
+    border: 1px solid var(--mst-accent);
+    border-radius: max(var(--theme-radius, 0.6rem), 0.4rem);
+    color: var(--mst-paper);
+    cursor: pointer;
+    display: inline-flex;
+    font-size: 0.95rem;
+    font-weight: 750;
+    gap: 0.5rem;
+    justify-content: center;
+    min-height: 2.75rem;
+    padding: 0 1.3rem;
+    text-decoration: none;
+    transition:
+        transform 0.12s ease,
+        box-shadow 0.12s ease;
+}
+
+.mst-button:hover,
+.mst-button:focus-visible {
+    box-shadow: 0 8px 24px -8px var(--mst-accent-line);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    .mst-button:hover,
+    .mst-button:focus-visible {
+        transform: translateY(-1px);
+    }
+}
+
+/* ---------------------------------------------------------------- agenda */
+
+.mst-agenda-day {
+    margin-block-end: clamp(2rem, 4vw, 3rem);
+}
+
+.mst-agenda-day-heading {
+    color: var(--mst-accent);
+    font-size: 1.3rem;
+    margin-block-end: 1.25rem;
+}
+
+.mst-agenda-tracks {
+    display: grid;
+    gap: 1.25rem;
+}
+
+/* `grid` variant: CSS subgrid so each track's session cards line up on a
+   shared row-track across rooms/columns wherever the browser supports
+   subgrid; `@supports` fallback below degrades gracefully to an even
+   auto-fit grid with no shared row alignment (still fully readable). */
+.mst-agenda--grid .mst-agenda-tracks {
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+}
+
+@supports (grid-template-rows: subgrid) {
+    .mst-agenda--grid .mst-agenda-tracks {
+        grid-template-rows: subgrid;
+    }
+}
+
+.mst-agenda--list .mst-agenda-tracks {
+    grid-template-columns: 1fr;
+}
+
+.mst-agenda-track {
+    display: grid;
+    gap: 0.75rem;
+}
+
+.mst-agenda-track-label {
+    color: var(--mst-faint);
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.mst-agenda-session {
+    background: var(--mst-panel);
+    border: 1px solid var(--mst-line);
+    border-radius: 0.6rem;
+    display: grid;
+    gap: 0.35rem;
+    padding: 1rem 1.15rem;
+    position: relative;
+}
+
+.mst-agenda-session--now {
+    border-color: var(--mst-accent-line);
+    box-shadow: 0 0 0 1px var(--mst-accent-line);
+}
+
+.mst-agenda-session-time {
+    color: var(--mst-accent);
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+}
+
+.mst-agenda-session-speaker {
+    color: var(--mst-muted);
+    font-size: 0.88rem;
+}
+
+.mst-agenda-now-badge {
+    background: var(--mst-accent);
+    border-radius: 999px;
+    color: var(--mst-paper);
+    font-size: 0.68rem;
+    font-weight: 800;
+    inset-block-start: -0.6rem;
+    inset-inline-end: 0.9rem;
+    letter-spacing: 0.04em;
+    padding: 0.2rem 0.6rem;
+    position: absolute;
+    text-transform: uppercase;
+}
+
+/* Narrow-container fallback: a `grid` variant squeezed into a narrow column
+   (mobile, or a tight Layout Builder container) reads as a single-column
+   list, matching the `list` variant's layout without a duplicate markup
+   path. */
+@container mst-tokens (max-width: 30rem) {
+    .mst-agenda--grid .mst-agenda-tracks {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ------------------------------------------------------------ speaker wall */
+
+.mst-speaker-wall--wall {
+    display: grid;
+    gap: 1.25rem;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+}
+
+.mst-speaker-wall--carousel {
+    display: flex;
+    gap: 1.25rem;
+    overflow-x: auto;
+    padding-block-end: 0.5rem;
+    scroll-snap-type: x mandatory;
+}
+
+.mst-speaker-wall--carousel .mst-speaker-card {
+    flex: 0 0 min(80vw, 16rem);
+    scroll-snap-align: start;
+}
+
+.mst-speaker-card {
+    background: var(--mst-panel);
+    border: 1px solid var(--mst-line);
+    border-radius: 0.75rem;
+    overflow: hidden;
+    position: relative;
+}
+
+.mst-speaker-photo {
+    aspect-ratio: 3 / 4;
+    display: block;
+    object-fit: cover;
+    width: 100%;
+}
+
+.mst-speaker-photo-empty {
+    background: linear-gradient(
+        140deg,
+        var(--mst-panel-raised),
+        var(--mst-accent-soft)
+    );
+}
+
+.mst-speaker-card-base {
+    padding: 0.9rem 1rem;
+}
+
+.mst-speaker-role {
+    color: var(--mst-muted);
+    font-size: 0.85rem;
+    margin: 0.15rem 0 0;
+}
+
+/* Hover/focus-reveal bio: keyboard-reachable via native tab order (the card
+   itself is `tabindex="0"`), so `:focus-within`/`:hover` both trigger the
+   same reveal — no JS. */
+.mst-speaker-bio {
+    background: color-mix(in srgb, var(--mst-paper) 92%, transparent);
+    inset: 0;
+    opacity: 0;
+    overflow-y: auto;
+    padding: 1rem;
+    position: absolute;
+    transition: opacity 0.18s ease;
+}
+
+.mst-speaker-card:hover .mst-speaker-bio,
+.mst-speaker-card:focus-within .mst-speaker-bio,
+.mst-speaker-card:focus-visible .mst-speaker-bio {
+    opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .mst-speaker-bio {
+        transition: none;
+    }
+}
+
+/* ------------------------------------------------------------ ticket tiers */
+
+.mst-ticket-table {
+    display: grid;
+    gap: 1rem;
+}
+
+.mst-ticket-row {
+    align-items: start;
+    background: var(--mst-panel);
+    border-inline-start: 0.3rem solid var(--mst-tier-color);
+    border-radius: 0.6rem;
+    display: grid;
+    gap: 1rem 1.5rem;
+    padding: 1.25rem 1.5rem;
+}
+
+@container mst-tokens (min-width: 48rem) {
+    .mst-ticket-row {
+        grid-template-columns: 1fr auto 2fr auto;
+    }
+}
+
+.mst-ticket-swatch {
+    background: var(--mst-tier-color);
+    border-radius: 999px;
+    display: inline-block;
+    height: 0.6rem;
+    inset-inline-start: -1.05rem;
+    position: relative;
+    width: 0.6rem;
+}
+
+.mst-ticket-cell-price {
+    color: var(--mst-tier-color);
+    font-size: 1.3rem;
+    font-weight: 800;
+}
+
+.mst-ticket-cell-features ul {
+    display: grid;
+    gap: 0.35rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.mst-ticket-cell-features li {
+    color: var(--mst-muted);
+    font-size: 0.88rem;
+}
+
+.mst-ticket-cards {
+    display: grid;
+    gap: 1.25rem;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+}
+
+.mst-ticket-card {
+    background: var(--mst-panel);
+    border-block-start: 0.35rem solid var(--mst-tier-color);
+    border-radius: 0.75rem;
+    display: grid;
+    gap: 0.65rem;
+    padding: 1.5rem;
+}
+
+.mst-ticket-card-price {
+    color: var(--mst-tier-color);
+    font-size: 1.6rem;
+    font-weight: 800;
+    margin: 0;
+}
+
+.mst-ticket-card ul {
+    display: grid;
+    gap: 0.35rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.mst-ticket-card li {
+    color: var(--mst-muted);
+    font-size: 0.88rem;
+}
+
+/* ------------------------------------------------------------- countdown */
+
+.mst-countdown {
+    background: radial-gradient(
+        ellipse 50rem 26rem at 50% -20%,
+        var(--mst-accent-soft),
+        transparent 62%
+    );
+}
+
+.mst-countdown-inner {
+    align-items: center;
+    display: grid;
+    gap: 1.75rem;
+    justify-items: center;
+    text-align: center;
+}
+
+.mst-countdown-clock {
+    display: flex;
+    gap: clamp(1rem, 3vw, 2.5rem);
+}
+
+.mst-countdown--compact .mst-countdown-clock {
+    gap: 0.75rem;
+}
+
+.mst-countdown-unit {
+    display: grid;
+    justify-items: center;
+}
+
+.mst-countdown-value {
+    color: var(--mst-accent);
+    font-family: var(--theme-heading-font, sora), system-ui, sans-serif;
+    font-size: clamp(2rem, 5vw, 3.6rem);
+    font-variant-numeric: tabular-nums;
+    font-weight: 800;
+    line-height: 1;
+}
+
+.mst-countdown--compact .mst-countdown-value {
+    font-size: 1.4rem;
+}
+
+.mst-countdown-label {
+    color: var(--mst-faint);
+    font-size: 0.72rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+/* -------------------------------------------------------------- venue */
+
+.mst-venue-panels--panels {
+    display: grid;
+    gap: 1.25rem;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+}
+
+.mst-venue-panels--map-list {
+    display: grid;
+    gap: 1.25rem;
+}
+
+.mst-venue-panel {
+    background: var(--mst-panel);
+    border: 1px solid var(--mst-line);
+    border-radius: 0.75rem;
+    display: grid;
+    gap: 0.5rem;
+    padding: 1.5rem;
+}
+
+.mst-venue-panel-icon {
+    font-size: 1.6rem;
+    margin: 0;
+}
+
+/* ------------------------------------------------------------- sponsors */
+
+.mst-sponsor-tier {
+    border-inline-start: 0.3rem solid var(--mst-tier-color);
+    margin-block-end: 1.75rem;
+    padding-inline-start: 1.25rem;
+}
+
+.mst-sponsor-tier-label {
+    color: var(--mst-tier-color);
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    margin: 0 0 0.9rem;
+    text-transform: uppercase;
+}
+
+.mst-sponsor-logo-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+}
+
+.mst-sponsor-walls--single-row .mst-sponsor-tier {
+    border-inline-start: none;
+    padding-inline-start: 0;
+}
+
+.mst-sponsor-logo {
+    align-items: center;
+    color: var(--mst-muted);
+    display: inline-flex;
+    font-weight: 700;
+    height: 2.75rem;
+    text-decoration: none;
+}
+
+.mst-sponsor-logo img {
+    height: 100%;
+    object-fit: contain;
+    width: auto;
+}
+
+/* ---------------------------------------------------------------- live-state */
+
+.mst-live-state-inner {
+    display: grid;
+    gap: 0.75rem;
+    text-align: center;
+}
+
+.mst-live-state--inline .mst-live-state-inner {
+    display: inline-grid;
+    text-align: start;
+}
+
+.mst-live-state-badge {
+    align-items: center;
+    color: var(--mst-accent);
+    display: inline-flex;
+    font-size: 0.82rem;
+    font-weight: 700;
+    gap: 0.5rem;
+    justify-content: center;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.mst-live-state-dot {
+    background: var(--mst-faint);
+    border-radius: 999px;
+    display: inline-block;
+    height: 0.55rem;
+    width: 0.55rem;
+}
+
+/* Editorially-set state colour — payload-driven, never detected (§0.2). */
+.mst-live-state-live .mst-live-state-dot {
+    background: var(--mst-tier-vip);
+}
+
+.mst-live-state-replay .mst-live-state-dot {
+    background: var(--mst-tier-general);
+}
+
+.mst-live-state-upcoming .mst-live-state-dot {
+    background: var(--mst-accent);
+}
+
+/* --------------------------------------------------------------- archive */
+
+.mst-archive--timeline {
+    border-inline-start: 2px solid var(--mst-line);
+    display: grid;
+    gap: 2rem;
+    padding-inline-start: 1.75rem;
+}
+
+.mst-archive--grid {
+    display: grid;
+    gap: 1.25rem;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+}
+
+.mst-archive-edition {
+    display: grid;
+    gap: 0.35rem;
+    position: relative;
+}
+
+.mst-archive--timeline .mst-archive-edition::before {
+    background: var(--mst-accent);
+    border-radius: 999px;
+    content: '';
+    height: 0.65rem;
+    inset-inline-start: -2.05rem;
+    position: absolute;
+    top: 0.3rem;
+    width: 0.65rem;
+}
+
+.mst-archive--grid .mst-archive-edition {
+    background: var(--mst-panel);
+    border: 1px solid var(--mst-line);
+    border-radius: 0.65rem;
+    padding: 1.25rem;
+}
+
+.mst-archive-year {
+    color: var(--mst-accent);
+    font-weight: 800;
+    margin: 0;
+}
+
+.mst-archive-stat {
+    color: var(--mst-muted);
+    font-size: 0.85rem;
+    margin: 0;
+}
+
+/* ---------------------------------------------------------------- footer */
+
+.mst-footer {
+    background: var(--mst-panel);
+}
+
+.mst-footer-brand {
+    display: grid;
+    gap: 0.6rem;
+}
+
+.mst-footer-wordmark {
+    color: var(--mst-ink);
+    font-family: var(--theme-heading-font, sora), system-ui, sans-serif;
+    font-size: 1.15rem;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+/* ------------------------------------------------------------- reduced motion */
+
+@media (prefers-reduced-motion: reduce) {
+    .mst-button,
+    .mst-shell * {
+        animation-duration: 0.001ms !important;
+        transition-duration: 0.001ms !important;
+    }
+}
+
+/* -------------------------------------------------------- forced-colors */
+
+@media (forced-colors: active) {
+    .mst-shell a:focus-visible,
+    .mst-shell button:focus-visible,
+    .mst-shell [tabindex]:focus-visible {
+        outline: 2px solid;
+        outline-offset: 2px;
+    }
+
+    .mst-agenda-session,
+    .mst-speaker-card,
+    .mst-venue-panel,
+    .mst-archive--grid .mst-archive-edition {
+        border: 1px solid transparent;
+    }
+}
+
+/* ------------------------------------------------------------------ print */
+
+@media print {
+    .mst-shell {
+        background: #ffffff;
+        color: #111318;
+    }
+
+    .mst-navbar,
+    .mst-footer,
+    .mst-button {
+        display: none !important;
+    }
+}

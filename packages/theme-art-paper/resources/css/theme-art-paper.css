@@ -1108,3 +1108,333 @@
         animation: none !important;
     }
 }
+
+/* --------------------------------------- kinetic-image-sequence (Wave 4a) */
+/* Bento grid driven by each plate's --dlm-kinetic-col-span/row-span custom
+   properties (set in Blade from the deterministic layout seed — never
+   Math.random()). CSS masonry is not required: auto-fit/auto-flow with
+   explicit spans reflows safely on every browser (guardrail §0.8). */
+
+.dlm-kinetic-grid {
+    display: grid;
+    gap: clamp(0.75rem, 1.5vw, 1.25rem);
+    grid-auto-flow: dense;
+    grid-auto-rows: minmax(9rem, auto);
+    grid-template-columns: repeat(4, 1fr);
+    margin-top: clamp(2rem, 4vw, 3rem);
+}
+
+.dlm-kinetic-plate {
+    grid-column: span var(--dlm-kinetic-col-span, 1);
+    grid-row: span var(--dlm-kinetic-row-span, 1);
+    margin: 0;
+}
+
+.dlm-kinetic-frame {
+    height: 100%;
+    padding: 0;
+}
+
+.dlm-kinetic-media {
+    aspect-ratio: auto;
+    height: 100%;
+}
+
+@media (max-width: 48rem) {
+    .dlm-kinetic-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* Scroll-driven "bloom" reveal: CSS scroll-timeline/view-timeline first, no
+   IntersectionObserver fallback needed — the plate is fully visible (just
+   unanimated) in browsers without support, and .dlm-section already applies
+   the equivalent develop-in-place animation as a page-level fallback. */
+@media (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: view()) {
+        @keyframes dlm-kinetic-bloom {
+            from {
+                opacity: 0;
+                scale: 0.94;
+            }
+
+            to {
+                opacity: 1;
+                scale: 1;
+            }
+        }
+
+        .dlm-kinetic-plate {
+            animation: dlm-kinetic-bloom
+                var(--foundation-motion-duration, 420ms)
+                var(--foundation-motion-ease, ease-out) both;
+            animation-range: entry 0% cover 35%;
+            animation-timeline: view();
+        }
+    }
+}
+
+/* -------------------------------- designer-profile-card-cluster (Wave 4a) */
+
+.dlm-designer-cluster {
+    display: grid;
+    gap: clamp(1.5rem, 3vw, 2.5rem);
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+    margin-top: clamp(2rem, 4vw, 3rem);
+}
+
+.dlm-designer-card {
+    display: grid;
+    gap: 0.65rem;
+    text-align: start;
+}
+
+.dlm-designer-portrait {
+    aspect-ratio: 1;
+    background: color-mix(in srgb, var(--dlm-accent) 12%, var(--dlm-paper));
+    border: 1px solid var(--dlm-night-line);
+    border-radius: 50%;
+    overflow: hidden;
+    width: clamp(5rem, 12vw, 7rem);
+}
+
+.dlm-designer-portrait img {
+    display: block;
+    height: 100%;
+    object-fit: cover;
+    width: 100%;
+}
+
+.dlm-designer-portrait .dlm-plate-media-empty {
+    height: 100%;
+}
+
+.dlm-designer-card h3 {
+    font-size: 1.15rem;
+    margin: 0;
+}
+
+.dlm-designer-card p {
+    color: var(--dlm-night-muted);
+    margin: 0;
+}
+
+/* ---------------------------------------- material-swatch-studies (Wave 4a) */
+/* Finish/weight render entirely from CSS custom properties set in Blade —
+   token-driven, no per-finish bespoke markup. */
+
+.dlm-swatch-grid {
+    display: grid;
+    gap: clamp(1.5rem, 3vw, 2.5rem);
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+    margin-top: clamp(2rem, 4vw, 3rem);
+}
+
+.dlm-swatch-card {
+    display: grid;
+    gap: 0.5rem;
+}
+
+.dlm-swatch-tile {
+    aspect-ratio: 4 / 3;
+    background: color-mix(
+        in srgb,
+        var(--dlm-swatch-color, var(--dlm-accent)) 55%,
+        var(--dlm-paper)
+    );
+    border: 1px solid var(--dlm-line);
+}
+
+.dlm-swatch-card[data-finish='gloss'] .dlm-swatch-tile {
+    background-image: linear-gradient(
+        135deg,
+        color-mix(in srgb, #ffffff 35%, transparent) 0%,
+        transparent 55%
+    );
+}
+
+.dlm-swatch-card[data-weight='heavy'] .dlm-swatch-tile {
+    border-width: 3px;
+}
+
+.dlm-swatch-specs {
+    color: var(--dlm-muted);
+    display: flex;
+    font-size: 0.78rem;
+    font-weight: 700;
+    gap: 0.4rem;
+    letter-spacing: 0.14em;
+    margin: 0;
+    text-transform: uppercase;
+}
+
+/* Before/after comparison reuses the shared Wave 2.6 compare-slider.js
+   contract verbatim: the module only writes --compare-slider-position, this
+   theme owns the clip-path visual and handle styling. */
+
+.dlm-swatch-compare {
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    position: relative;
+}
+
+.dlm-swatch-compare-layer {
+    display: block;
+    height: 100%;
+    inset: 0;
+    object-fit: cover;
+    position: absolute;
+    width: 100%;
+}
+
+.dlm-swatch-compare-layer-after {
+    clip-path: inset(0 calc(100% - var(--compare-slider-position, 50%)) 0 0);
+}
+
+.dlm-swatch-compare-handle {
+    background: var(--dlm-paper);
+    border: 2px solid var(--dlm-ink);
+    border-radius: 50%;
+    cursor: ew-resize;
+    height: 2rem;
+    inset-block-start: 50%;
+    inset-inline-start: var(--compare-slider-position, 50%);
+    position: absolute;
+    translate: -50% -50%;
+    width: 2rem;
+}
+
+.dlm-swatch-compare-handle:focus-visible {
+    box-shadow:
+        0 0 0 3px var(--dlm-paper),
+        0 0 0 5px var(--dlm-accent);
+    outline: 2px solid transparent;
+    outline-offset: 2px;
+}
+
+/* -------------------------------------- trend-forecast-infographic (Wave 4a) */
+
+.dlm-trend-forecast {
+    display: grid;
+    gap: clamp(1.25rem, 2.5vw, 2rem);
+    list-style: none;
+    margin: clamp(2rem, 4vw, 3rem) 0 0;
+    padding: 0;
+}
+
+.dlm-trend-forecast-row {
+    align-items: center;
+    border-top: 1px solid var(--dlm-line);
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: auto 1fr auto;
+    padding-block-start: 1.25rem;
+}
+
+.dlm-trend-forecast-palette {
+    display: flex;
+}
+
+.dlm-trend-forecast-palette span {
+    background: var(--dlm-trend-swatch, var(--dlm-accent));
+    border: 1px solid var(--dlm-line);
+    display: block;
+    height: 1.5rem;
+    margin-inline-start: -0.5rem;
+    width: 1.5rem;
+}
+
+.dlm-trend-forecast-palette span:first-child {
+    margin-inline-start: 0;
+}
+
+.dlm-trend-forecast-copy h3 {
+    font-size: 1.1rem;
+    margin: 0;
+}
+
+.dlm-trend-forecast-copy p {
+    color: var(--dlm-muted);
+    margin: 0.15rem 0 0;
+}
+
+.dlm-trend-forecast-share {
+    display: grid;
+    gap: 0.35rem;
+    justify-items: end;
+    min-width: 6rem;
+}
+
+.dlm-trend-forecast-bar {
+    background: var(--dlm-line);
+    block-size: 0.4rem;
+    inline-size: 100%;
+    position: relative;
+}
+
+.dlm-trend-forecast-bar::after {
+    background: var(--dlm-accent);
+    block-size: 100%;
+    content: '';
+    display: block;
+    inline-size: var(--dlm-trend-share, 0%);
+}
+
+/* --------------------------------- process-documentation-timeline (Wave 4a) */
+/* Mirrors the shared numbered-step timeline shape (see theme-foundation
+   resources/views/components/widget/modern/process-steps.blade.php) with a
+   catalogue-plate visual skin: figure numerals instead of icon roundels. */
+
+.dlm-process-timeline {
+    display: grid;
+    gap: clamp(1.5rem, 3vw, 2.5rem);
+    list-style: none;
+    margin: clamp(2rem, 4vw, 3rem) 0 0;
+    padding: 0;
+}
+
+.dlm-process-step {
+    border-inline-start: 2px solid var(--dlm-line);
+    display: grid;
+    gap: 0.35rem;
+    padding-inline-start: clamp(1.25rem, 2.5vw, 2rem);
+}
+
+.dlm-process-plate-number {
+    color: var(--dlm-accent);
+    font-size: 0.75rem;
+    font-variant-numeric: tabular-nums;
+    font-weight: 800;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+}
+
+.dlm-process-step-body h3 {
+    font-size: 1.2rem;
+    margin: 0;
+}
+
+.dlm-process-step-body p {
+    color: var(--dlm-muted);
+    margin: 0.25rem 0 0;
+}
+
+.dlm-process-timeline-compact {
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(12rem, 1fr);
+    overflow-x: auto;
+}
+
+.dlm-process-step-compact {
+    border-inline-start: 0;
+    border-top: 2px solid var(--dlm-line);
+    padding-block-start: 1rem;
+    padding-inline-start: 0;
+}
+
+@media (max-width: 48rem) {
+    .dlm-process-timeline-compact {
+        grid-auto-flow: row;
+        overflow-x: visible;
+    }
+}

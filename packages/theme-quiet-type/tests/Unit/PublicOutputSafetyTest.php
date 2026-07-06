@@ -2,40 +2,21 @@
 
 declare(strict_types=1);
 
-function quietTypeThemeBladeViews(): string
-{
-    $paths = array_values(array_unique(array_merge(
-        glob(__DIR__ . '/../../resources/views/*.blade.php') ?: [],
-        glob(__DIR__ . '/../../resources/views/**/*.blade.php') ?: [],
-    )));
+use Capell\FoundationTheme\Testing\AssertsPublicThemeOutputSafety;
 
-    return implode(PHP_EOL, array_map(static fn (string $path): string => file_get_contents($path) ?: '', $paths));
-}
+uses(AssertsPublicThemeOutputSafety::class);
 
-it('keeps public Blade free of authoring or package metadata', function (): void {
-    $publicOutput = quietTypeThemeBladeViews();
-
-    expect($publicOutput)
-        ->not->toContain('capell-app/theme-quiet-type')
-        ->not->toContain('authoring')
-        ->not->toContain('data-theme-key')
-        ->not->toContain('Filament')
-        ->not->toContain('Livewire')
-        ->not->toContain('signed')
-        ->not->toContain('wire:')
-        ->not->toContain('data-field')
-        ->not->toContain('data-model')
-        ->not->toContain('field_path')
-        ->not->toContain('model_id')
-        ->not->toContain('permission');
+it('keeps public Blade free of authoring, package metadata, and database access', function (): void {
+    $this->assertClassicThemeOutputIsSafe(__DIR__ . '/../../resources/views', 'capell-app/theme-quiet-type');
 });
 
-it('keeps public Blade free of database query calls', function (): void {
-    expect(quietTypeThemeBladeViews())
-        ->not->toContain('::query(')
-        ->not->toContain('DB::')
-        ->not->toContain('loadMissing(')
-        ->not->toContain('relationLoaded(')
-        ->not->toContain('Frontend::')
-        ->not->toContain('find(');
+it('keeps the @php block count within the frozen baseline and static calls whitelisted', function (): void {
+    // Baseline raised from 15 to 37 in Wave 4a: seven new signature sections
+    // (essay-index--marginalia, author-profiles--bibliography,
+    // serialized-chapters + its compact variant, issue-contents + its
+    // numbered variant, quote-context + its medallion-left variant,
+    // contextual-glossary + its compact variant, scroll-position-menu + its
+    // left-rail variant) each carry the same defaulting/prep @php blocks as
+    // every existing quiet-type section.
+    $this->assertPhpBlockPolicy(__DIR__ . '/../../resources/views', 37);
 });

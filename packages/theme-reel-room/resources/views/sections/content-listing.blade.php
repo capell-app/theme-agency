@@ -1,10 +1,18 @@
 @php
-    $items = data_get($section, 'items', data_get($section, 'posts', []));
+    /**
+     * video-preview-grid (Wave 4b signature widget): the cinema-archive index
+     * of every filed project, each thumbnail a shared hover-video-poster
+     * primitive (Wave 2.7) so a still swaps to a muted, looping preview on
+     * hover/tap rather than reinventing hover-video swap logic per theme.
+     * Payload cap §0.3: content-listing grids are capped at 50 items.
+     */
+    $items = collect(data_get($section, 'items', data_get($section, 'posts', [])))->take(50);
 @endphp
 
 <section
     id="content-listing"
     class="mva-section"
+    data-widget="video-preview-grid"
 >
     <div class="mva-section-inner">
         <p class="mva-kicker">
@@ -17,57 +25,63 @@
             <p class="mva-lede">{{ data_get($section, 'summary') }}</p>
         @endif
 
-        @if (is_iterable($items) && collect($items)->isNotEmpty())
+        @if ($items->isNotEmpty())
             <div
-                class="mva-index"
+                class="mva-preview-grid"
                 style="margin-top: 2rem"
             >
                 @foreach ($items as $item)
                     @php
                         $itemUrl = data_get($item, 'url', data_get($item, 'href'));
                         $itemImage = data_get($item, 'image', data_get($item, 'imageUrl'));
+                        $itemVideo = data_get($item, 'videoSrc', data_get($item, 'video'));
                         $itemAlt = data_get($item, 'imageAlt', data_get($item, 'title', ''));
                     @endphp
 
-                    <article
-                        class="mva-index-row {{ filled($itemImage) ? 'mva-index-row-media' : '' }}"
-                    >
-                        <span
-                            class="mva-numeral"
-                            aria-hidden="true"
+                    <article class="mva-preview-card">
+                        <a
+                            href="{{ $itemUrl ?? '#' }}"
+                            class="mva-preview-card-link"
                         >
-                            {{ str_pad((string) $loop->iteration, 2, '0', STR_PAD_LEFT) }}
-                        </span>
-                        @if (filled($itemImage))
-                            <img
-                                src="{{ $itemImage }}"
-                                alt="{{ $itemAlt }}"
-                                loading="lazy"
-                                decoding="async"
-                                class="mva-index-thumb"
-                            />
-                        @endif
+                            @if (filled($itemImage) && filled($itemVideo))
+                                <x-capell-theme-foundation::display.hover-video-poster
+                                    :poster="$itemImage"
+                                    :video-src="$itemVideo"
+                                    :alt="$itemAlt"
+                                    aspect-ratio="16/10"
+                                    class="mva-preview-frame"
+                                />
+                            @elseif (filled($itemImage))
+                                <span class="mva-preview-frame">
+                                    <img
+                                        src="{{ $itemImage }}"
+                                        alt="{{ $itemAlt }}"
+                                        loading="lazy"
+                                        decoding="async"
+                                        class="mva-preview-frame-image"
+                                    />
+                                </span>
+                            @endif
 
-                        <div>
-                            <p>
-                                {{ data_get($item, 'category', data_get($item, 'meta', '')) }}
-                            </p>
-                            <h3>
-                                @if (filled($itemUrl))
-                                    <a
-                                        class="mva-winner-title-link"
-                                        href="{{ $itemUrl }}"
-                                    >
-                                        {{ data_get($item, 'title', data_get($item, 'name', '')) }}
-                                    </a>
-                                @else
+                            <span
+                                class="mva-preview-numeral"
+                                aria-hidden="true"
+                            >
+                                {{ str_pad((string) $loop->iteration, 2, '0', STR_PAD_LEFT) }}
+                            </span>
+
+                            <span class="mva-preview-body">
+                                <span class="mva-preview-meta">
+                                    {{ data_get($item, 'category', data_get($item, 'meta', '')) }}
+                                </span>
+                                <span class="mva-preview-title">
                                     {{ data_get($item, 'title', data_get($item, 'name', '')) }}
-                                @endif
-                            </h3>
-                        </div>
-                        <p>
-                            {{ data_get($item, 'summary', data_get($item, 'description', '')) }}
-                        </p>
+                                </span>
+                                <span class="mva-preview-summary">
+                                    {{ data_get($item, 'summary', data_get($item, 'description', '')) }}
+                                </span>
+                            </span>
+                        </a>
                     </article>
                 @endforeach
             </div>

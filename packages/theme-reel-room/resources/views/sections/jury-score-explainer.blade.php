@@ -1,4 +1,9 @@
 @php
+    /**
+     * jury-score-matrix (Wave 4b signature widget, default variant): a
+     * single project's scoring breakdown across the jury's weighted axes.
+     * See the --matrix variant for the multi-project comparison layout.
+     */
     $heading = data_get($section, 'heading', __('capell-theme-reel-room::sections.jury_score_explainer.heading'));
     $summary = data_get($section, 'summary', __('capell-theme-reel-room::sections.jury_score_explainer.summary'));
     $items = data_get($section, 'items', []);
@@ -7,6 +12,7 @@
 <section
     id="jury-score-explainer"
     class="mva-section mva-section-raised"
+    data-widget="jury-score-matrix"
 >
     <div class="mva-section-inner">
         <p class="mva-kicker">

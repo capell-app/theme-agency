@@ -17,10 +17,12 @@ it('defines the wild-card renderer contract', function (): void {
         ->and($definition->includedSections)->toContain(
             'navigation',
             'hero',
-            'featured-today',
-            'metadata-filters',
-            'latest-submissions',
-            'winners-collections',
+            'featured-today-banner',
+            'metadata-facet-wall',
+            'card-shuffle-grid',
+            'winners-ledger-table',
+            'submission-pulse',
+            'infinite-scroll-depth-pressure',
             'profiles-resources',
             'sponsor-modules',
             'proof',
@@ -29,6 +31,14 @@ it('defines the wild-card renderer contract', function (): void {
             'cta',
             'footer',
         )
+        ->and($definition->frontend['sectionVariants'])->toBe([
+            'card-shuffle-grid' => ['default', 'compact'],
+            'metadata-facet-wall' => ['default', 'dense'],
+            'featured-today-banner' => ['default', 'split'],
+            'winners-ledger-table' => ['default', 'collections'],
+            'submission-pulse' => ['default', 'compact'],
+            'infinite-scroll-depth-pressure' => ['default', 'rows'],
+        ])
         ->and($definition->presets)->toHaveCount(2)
         ->and($definition->presets[0]->key)->toBe('wild-card')
         ->and($definition->runtime->value)->toBe('blade')

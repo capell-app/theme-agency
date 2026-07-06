@@ -14,6 +14,7 @@ use Capell\Core\ThemeStudio\Data\ThemePresetData;
 use Capell\Core\ThemeStudio\Rendering\ViewSectionRenderer;
 use Capell\Core\ThemeStudio\Theme\ThemeRegistry;
 use Capell\FoundationTheme\Rendering\ChromeSplitBladeThemeRenderer;
+use Capell\FoundationTheme\Rendering\VariantViewSectionRenderer;
 use Capell\FoundationTheme\Support\Editor\StandardThemeEditorSchema;
 use Capell\ThemeStudio\QuietType\Console\Commands\DemoCommand;
 use Illuminate\Support\ServiceProvider;
@@ -35,7 +36,7 @@ final class QuietTypeThemeServiceProvider extends ServiceProvider
             previewImage: '/vendor/capell/themes/quiet-type.jpg',
             tags: ['Editorial', 'Serif', 'Typography', 'Style', 'Print'],
             bestFit: ['Publications & journals', 'Writers & essayists', 'Design studios', 'Editorial brands', 'Any site wanting a print-grade serif voice'],
-            includedSections: ['navigation', 'hero', 'essay-index', 'issue-archive', 'author-profiles', 'subscription-panel', 'editorial-statement', 'features', 'proof', 'content-listing', 'cta', 'footer'],
+            includedSections: ['navigation', 'hero', 'essay-index', 'issue-archive', 'author-profiles', 'subscription-panel', 'editorial-statement', 'serialized-chapters', 'issue-contents', 'quote-context', 'contextual-glossary', 'scroll-position-menu', 'features', 'proof', 'content-listing', 'cta', 'footer'],
             presets: [
                 new ThemePresetData(
                     key: self::THEME_KEY,
@@ -92,6 +93,15 @@ final class QuietTypeThemeServiceProvider extends ServiceProvider
             runtime: FrontendRuntime::Blade,
             extends: 'default',
             frontend: [
+                'sectionVariants' => [
+                    'essay-index' => ['default', 'marginalia'],
+                    'author-profiles' => ['default', 'bibliography'],
+                    'serialized-chapters' => ['default', 'compact'],
+                    'issue-contents' => ['default', 'numbered'],
+                    'quote-context' => ['default', 'medallion-left'],
+                    'contextual-glossary' => ['default', 'compact'],
+                    'scroll-position-menu' => ['default', 'left-rail'],
+                ],
                 'editor' => StandardThemeEditorSchema::definition(),
             ],
         );
@@ -146,11 +156,58 @@ final class QuietTypeThemeServiceProvider extends ServiceProvider
         return [
             'navigation' => new ViewSectionRenderer(self::THEME_KEY, 'navigation', 'capell-theme-foundation::theme.chrome.navigation', failLoudly: true),
             'hero' => new ViewSectionRenderer(self::THEME_KEY, 'hero', 'capell-theme-quiet-type::sections.hero', failLoudly: true),
-            'essay-index' => new ViewSectionRenderer(self::THEME_KEY, 'essay-index', 'capell-theme-quiet-type::sections.essay-index', failLoudly: true),
+            'essay-index' => new VariantViewSectionRenderer(
+                themeKey: self::THEME_KEY,
+                sectionKey: 'essay-index',
+                baseView: 'capell-theme-quiet-type::sections.essay-index',
+                variantViews: ['marginalia' => 'capell-theme-quiet-type::sections.essay-index--marginalia'],
+                failLoudly: true,
+            ),
             'issue-archive' => new ViewSectionRenderer(self::THEME_KEY, 'issue-archive', 'capell-theme-quiet-type::sections.issue-archive', failLoudly: true),
-            'author-profiles' => new ViewSectionRenderer(self::THEME_KEY, 'author-profiles', 'capell-theme-quiet-type::sections.author-profiles', failLoudly: true),
+            'author-profiles' => new VariantViewSectionRenderer(
+                themeKey: self::THEME_KEY,
+                sectionKey: 'author-profiles',
+                baseView: 'capell-theme-quiet-type::sections.author-profiles',
+                variantViews: ['bibliography' => 'capell-theme-quiet-type::sections.author-profiles--bibliography'],
+                failLoudly: true,
+            ),
             'subscription-panel' => new ViewSectionRenderer(self::THEME_KEY, 'subscription-panel', 'capell-theme-quiet-type::sections.subscription-panel', failLoudly: true),
             'editorial-statement' => new ViewSectionRenderer(self::THEME_KEY, 'editorial-statement', 'capell-theme-quiet-type::sections.editorial-statement', failLoudly: true),
+            'serialized-chapters' => new VariantViewSectionRenderer(
+                themeKey: self::THEME_KEY,
+                sectionKey: 'serialized-chapters',
+                baseView: 'capell-theme-quiet-type::sections.serialized-chapters',
+                variantViews: ['compact' => 'capell-theme-quiet-type::sections.serialized-chapters--compact'],
+                failLoudly: true,
+            ),
+            'issue-contents' => new VariantViewSectionRenderer(
+                themeKey: self::THEME_KEY,
+                sectionKey: 'issue-contents',
+                baseView: 'capell-theme-quiet-type::sections.issue-contents',
+                variantViews: ['numbered' => 'capell-theme-quiet-type::sections.issue-contents--numbered'],
+                failLoudly: true,
+            ),
+            'quote-context' => new VariantViewSectionRenderer(
+                themeKey: self::THEME_KEY,
+                sectionKey: 'quote-context',
+                baseView: 'capell-theme-quiet-type::sections.quote-context',
+                variantViews: ['medallion-left' => 'capell-theme-quiet-type::sections.quote-context--medallion-left'],
+                failLoudly: true,
+            ),
+            'contextual-glossary' => new VariantViewSectionRenderer(
+                themeKey: self::THEME_KEY,
+                sectionKey: 'contextual-glossary',
+                baseView: 'capell-theme-quiet-type::sections.contextual-glossary',
+                variantViews: ['compact' => 'capell-theme-quiet-type::sections.contextual-glossary--compact'],
+                failLoudly: true,
+            ),
+            'scroll-position-menu' => new VariantViewSectionRenderer(
+                themeKey: self::THEME_KEY,
+                sectionKey: 'scroll-position-menu',
+                baseView: 'capell-theme-quiet-type::sections.scroll-position-menu',
+                variantViews: ['left-rail' => 'capell-theme-quiet-type::sections.scroll-position-menu--left-rail'],
+                failLoudly: true,
+            ),
             'features' => new ViewSectionRenderer(self::THEME_KEY, 'features', 'capell-theme-quiet-type::sections.features', failLoudly: true),
             'proof' => new ViewSectionRenderer(self::THEME_KEY, 'proof', 'capell-theme-quiet-type::sections.proof', failLoudly: true),
             'content-listing' => new ViewSectionRenderer(self::THEME_KEY, 'content-listing', 'capell-theme-quiet-type::sections.content-listing', failLoudly: true),

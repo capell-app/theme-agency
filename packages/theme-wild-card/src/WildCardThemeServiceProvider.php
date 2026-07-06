@@ -14,6 +14,7 @@ use Capell\Core\ThemeStudio\Data\ThemePresetData;
 use Capell\Core\ThemeStudio\Rendering\ViewSectionRenderer;
 use Capell\Core\ThemeStudio\Theme\ThemeRegistry;
 use Capell\FoundationTheme\Rendering\ChromeSplitBladeThemeRenderer;
+use Capell\FoundationTheme\Rendering\VariantViewSectionRenderer;
 use Capell\FoundationTheme\Support\Editor\StandardThemeEditorSchema;
 use Capell\ThemeStudio\WildCard\Console\Commands\DemoCommand;
 use Illuminate\Support\ServiceProvider;
@@ -35,7 +36,7 @@ final class WildCardThemeServiceProvider extends ServiceProvider
             previewImage: '/vendor/capell/themes/wild-card.jpg',
             tags: ['Wild Card', 'Creative Awards', 'Portfolio', 'Collections', 'Submissions'],
             bestFit: ['Creative industry directories', 'Agency and studio showcases', 'Portfolio-heavy CMS sites', 'Architecture and artist indexes', 'Award-style submission galleries'],
-            includedSections: ['navigation', 'hero', 'featured-today', 'metadata-filters', 'latest-submissions', 'winners-collections', 'profiles-resources', 'sponsor-modules', 'proof', 'content-listing', 'newsletter', 'cta', 'footer'],
+            includedSections: ['navigation', 'hero', 'featured-today-banner', 'metadata-facet-wall', 'card-shuffle-grid', 'winners-ledger-table', 'submission-pulse', 'infinite-scroll-depth-pressure', 'profiles-resources', 'sponsor-modules', 'proof', 'content-listing', 'newsletter', 'cta', 'footer'],
             presets: [
                 new ThemePresetData(
                     key: self::THEME_KEY,
@@ -93,6 +94,14 @@ final class WildCardThemeServiceProvider extends ServiceProvider
             extends: 'default',
             frontend: [
                 'editor' => StandardThemeEditorSchema::definition(),
+                'sectionVariants' => [
+                    'card-shuffle-grid' => ['default', 'compact'],
+                    'metadata-facet-wall' => ['default', 'dense'],
+                    'featured-today-banner' => ['default', 'split'],
+                    'winners-ledger-table' => ['default', 'collections'],
+                    'submission-pulse' => ['default', 'compact'],
+                    'infinite-scroll-depth-pressure' => ['default', 'rows'],
+                ],
             ],
         );
     }
@@ -146,10 +155,48 @@ final class WildCardThemeServiceProvider extends ServiceProvider
         return [
             'navigation' => new ViewSectionRenderer(self::THEME_KEY, 'navigation', 'capell-theme-wild-card::sections.navigation', failLoudly: true),
             'hero' => new ViewSectionRenderer(self::THEME_KEY, 'hero', 'capell-theme-wild-card::sections.hero', failLoudly: true),
-            'featured-today' => new ViewSectionRenderer(self::THEME_KEY, 'featured-today', 'capell-theme-wild-card::sections.featured-today', failLoudly: true),
-            'metadata-filters' => new ViewSectionRenderer(self::THEME_KEY, 'metadata-filters', 'capell-theme-wild-card::sections.metadata-filters', failLoudly: true),
-            'latest-submissions' => new ViewSectionRenderer(self::THEME_KEY, 'latest-submissions', 'capell-theme-wild-card::sections.latest-submissions', failLoudly: true),
-            'winners-collections' => new ViewSectionRenderer(self::THEME_KEY, 'winners-collections', 'capell-theme-wild-card::sections.winners-collections', failLoudly: true),
+            'featured-today-banner' => new VariantViewSectionRenderer(
+                themeKey: self::THEME_KEY,
+                sectionKey: 'featured-today-banner',
+                baseView: 'capell-theme-wild-card::sections.featured-today-banner',
+                variantViews: ['split' => 'capell-theme-wild-card::sections.featured-today-banner--split'],
+                failLoudly: true,
+            ),
+            'metadata-facet-wall' => new VariantViewSectionRenderer(
+                themeKey: self::THEME_KEY,
+                sectionKey: 'metadata-facet-wall',
+                baseView: 'capell-theme-wild-card::sections.metadata-facet-wall',
+                variantViews: ['dense' => 'capell-theme-wild-card::sections.metadata-facet-wall--dense'],
+                failLoudly: true,
+            ),
+            'card-shuffle-grid' => new VariantViewSectionRenderer(
+                themeKey: self::THEME_KEY,
+                sectionKey: 'card-shuffle-grid',
+                baseView: 'capell-theme-wild-card::sections.card-shuffle-grid',
+                variantViews: ['compact' => 'capell-theme-wild-card::sections.card-shuffle-grid--compact'],
+                failLoudly: true,
+            ),
+            'winners-ledger-table' => new VariantViewSectionRenderer(
+                themeKey: self::THEME_KEY,
+                sectionKey: 'winners-ledger-table',
+                baseView: 'capell-theme-wild-card::sections.winners-ledger-table',
+                variantViews: ['collections' => 'capell-theme-wild-card::sections.winners-ledger-table--collections'],
+                failLoudly: true,
+            ),
+            'submission-pulse' => new VariantViewSectionRenderer(
+                themeKey: self::THEME_KEY,
+                sectionKey: 'submission-pulse',
+                baseView: 'capell-theme-wild-card::sections.submission-pulse',
+                variantViews: ['compact' => 'capell-theme-wild-card::sections.submission-pulse--compact'],
+                failLoudly: true,
+            ),
+            'infinite-scroll-depth-pressure' => new VariantViewSectionRenderer(
+                themeKey: self::THEME_KEY,
+                sectionKey: 'infinite-scroll-depth-pressure',
+                baseView: 'capell-theme-wild-card::sections.infinite-scroll-depth-pressure',
+                variantViews: ['rows' => 'capell-theme-wild-card::sections.infinite-scroll-depth-pressure--rows'],
+                failLoudly: true,
+            ),
             'profiles-resources' => new ViewSectionRenderer(self::THEME_KEY, 'profiles-resources', 'capell-theme-wild-card::sections.profiles-resources', failLoudly: true),
             'sponsor-modules' => new ViewSectionRenderer(self::THEME_KEY, 'sponsor-modules', 'capell-theme-wild-card::sections.sponsor-modules', failLoudly: true),
             'proof' => new ViewSectionRenderer(self::THEME_KEY, 'proof', 'capell-theme-wild-card::sections.proof', failLoudly: true),

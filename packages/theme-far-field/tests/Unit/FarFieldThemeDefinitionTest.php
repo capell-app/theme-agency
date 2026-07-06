@@ -20,6 +20,8 @@ it('defines the far-field renderer contract', function (): void {
             'lead-dispatch',
             'radio-audio',
             'city-guides',
+            'photo-essay',
+            'cultural-dispatch-timeline',
             'travel-culture',
             'shop-books',
             'columnists',
@@ -29,6 +31,13 @@ it('defines the far-field renderer contract', function (): void {
             'cta',
             'footer',
         )
+        ->and($definition->frontend['sectionVariants'])->toBe([
+            'radio-audio' => ['default', 'immersive'],
+            'city-guides' => ['default', 'tabs'],
+            'photo-essay' => ['default', 'reveal'],
+            'cultural-dispatch-timeline' => ['default', 'compact'],
+            'columnists' => ['default', 'roster'],
+        ])
         ->and($definition->presets)->toHaveCount(2)
         ->and($definition->presets[0]->key)->toBe('far-field')
         ->and($definition->runtime->value)->toBe('blade')

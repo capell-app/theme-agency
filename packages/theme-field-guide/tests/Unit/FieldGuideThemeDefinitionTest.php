@@ -19,6 +19,7 @@ it('defines the field-guide renderer contract', function (): void {
             'hero',
             'filter-hero',
             'taxonomy-navigation',
+            'taxonomy-grid-browser',
             'editor-picks',
             'latest-designs',
             'blog-mission',
@@ -29,6 +30,13 @@ it('defines the field-guide renderer contract', function (): void {
             'cta',
             'footer',
         )
+        ->and($definition->frontend['sectionVariants'] ?? [])->toBe([
+            'taxonomy-grid-browser' => ['default', 'compact'],
+            'latest-designs' => ['default', 'showcase-wide'],
+            'editor-picks' => ['default', 'alternating'],
+            'faq-archives' => ['default', 'two-column'],
+            'cta' => ['default', 'browse'],
+        ])
         ->and($definition->presets)->toHaveCount(2)
         ->and($definition->presets[0]->key)->toBe('field-guide')
         ->and($definition->runtime->value)->toBe('blade')

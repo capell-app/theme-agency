@@ -14,6 +14,7 @@ use Capell\Core\ThemeStudio\Data\ThemePresetData;
 use Capell\Core\ThemeStudio\Rendering\ViewSectionRenderer;
 use Capell\Core\ThemeStudio\Theme\ThemeRegistry;
 use Capell\FoundationTheme\Rendering\ChromeSplitBladeThemeRenderer;
+use Capell\FoundationTheme\Rendering\VariantViewSectionRenderer;
 use Capell\FoundationTheme\Support\Editor\StandardThemeEditorSchema;
 use Capell\ThemeStudio\FirstLight\Console\Commands\DemoCommand;
 use Illuminate\Support\ServiceProvider;
@@ -35,7 +36,7 @@ final class FirstLightThemeServiceProvider extends ServiceProvider
             previewImage: '/vendor/capell/themes/first-light.jpg',
             tags: ['Curation Feed', 'Minimal', 'Screenshots', 'Apps', 'References'],
             bestFit: ['Daily inspiration feeds', 'Product reference libraries', 'Screenshot curation sites', 'App and website directories', 'Icon inspiration archives'],
-            includedSections: ['navigation', 'hero', 'feed-hero', 'category-tabs', 'curation-feed', 'best-of-views', 'app-website-icons', 'source-metadata', 'proof', 'content-listing', 'newsletter', 'cta', 'footer'],
+            includedSections: ['navigation', 'hero', 'feed-hero', 'category-tabs', 'curation-feed', 'curation-feed-grid', 'lightbox-carousel-viewer', 'best-of-views', 'app-website-icons', 'source-metadata', 'proof', 'content-listing', 'newsletter', 'cta', 'footer'],
             presets: [
                 new ThemePresetData(
                     key: self::THEME_KEY,
@@ -90,6 +91,17 @@ final class FirstLightThemeServiceProvider extends ServiceProvider
             ],
             frontend: [
                 'editor' => StandardThemeEditorSchema::definition(),
+                // Wave 4c signature-widget variants (theme-bar criterion 3: each
+                // signature widget declares >= 2 variants). Guarded by
+                // SectionVariantDeclarationTest, which resolves every declared
+                // variant to a real sidecar Blade view on disk.
+                'sectionVariants' => [
+                    'curation-feed-grid' => ['default', 'compact'],
+                    'lightbox-carousel-viewer' => ['default', 'minimal'],
+                    'best-of-views' => ['default', 'carousel'],
+                    'source-metadata' => ['default', 'credits'],
+                    'cta' => ['default', 'lightbox-preview'],
+                ],
             ],
             assets: ['css' => 'vendor/capell/themes/first-light.css'],
             runtime: FrontendRuntime::Blade,
@@ -149,13 +161,45 @@ final class FirstLightThemeServiceProvider extends ServiceProvider
             'feed-hero' => new ViewSectionRenderer(self::THEME_KEY, 'feed-hero', 'capell-theme-first-light::sections.feed-hero', failLoudly: true),
             'category-tabs' => new ViewSectionRenderer(self::THEME_KEY, 'category-tabs', 'capell-theme-first-light::sections.category-tabs', failLoudly: true),
             'curation-feed' => new ViewSectionRenderer(self::THEME_KEY, 'curation-feed', 'capell-theme-first-light::sections.curation-feed', failLoudly: true),
-            'best-of-views' => new ViewSectionRenderer(self::THEME_KEY, 'best-of-views', 'capell-theme-first-light::sections.best-of-views', failLoudly: true),
+            'curation-feed-grid' => new VariantViewSectionRenderer(
+                themeKey: self::THEME_KEY,
+                sectionKey: 'curation-feed-grid',
+                baseView: 'capell-theme-first-light::sections.curation-feed-grid',
+                variantViews: ['compact' => 'capell-theme-first-light::sections.curation-feed-grid--compact'],
+                failLoudly: true,
+            ),
+            'lightbox-carousel-viewer' => new VariantViewSectionRenderer(
+                themeKey: self::THEME_KEY,
+                sectionKey: 'lightbox-carousel-viewer',
+                baseView: 'capell-theme-first-light::sections.lightbox-carousel-viewer',
+                variantViews: ['minimal' => 'capell-theme-first-light::sections.lightbox-carousel-viewer--minimal'],
+                failLoudly: true,
+            ),
+            'best-of-views' => new VariantViewSectionRenderer(
+                themeKey: self::THEME_KEY,
+                sectionKey: 'best-of-views',
+                baseView: 'capell-theme-first-light::sections.best-of-views',
+                variantViews: ['carousel' => 'capell-theme-first-light::sections.best-of-views--carousel'],
+                failLoudly: true,
+            ),
             'app-website-icons' => new ViewSectionRenderer(self::THEME_KEY, 'app-website-icons', 'capell-theme-first-light::sections.app-website-icons', failLoudly: true),
-            'source-metadata' => new ViewSectionRenderer(self::THEME_KEY, 'source-metadata', 'capell-theme-first-light::sections.source-metadata', failLoudly: true),
+            'source-metadata' => new VariantViewSectionRenderer(
+                themeKey: self::THEME_KEY,
+                sectionKey: 'source-metadata',
+                baseView: 'capell-theme-first-light::sections.source-metadata',
+                variantViews: ['credits' => 'capell-theme-first-light::sections.source-metadata--credits'],
+                failLoudly: true,
+            ),
             'proof' => new ViewSectionRenderer(self::THEME_KEY, 'proof', 'capell-theme-first-light::sections.proof', failLoudly: true),
             'content-listing' => new ViewSectionRenderer(self::THEME_KEY, 'content-listing', 'capell-theme-first-light::sections.content-listing', failLoudly: true),
             'newsletter' => new ViewSectionRenderer(self::THEME_KEY, 'newsletter', 'capell-theme-first-light::sections.newsletter', failLoudly: true),
-            'cta' => new ViewSectionRenderer(self::THEME_KEY, 'cta', 'capell-theme-first-light::sections.cta', failLoudly: true),
+            'cta' => new VariantViewSectionRenderer(
+                themeKey: self::THEME_KEY,
+                sectionKey: 'cta',
+                baseView: 'capell-theme-first-light::sections.cta',
+                variantViews: ['lightbox-preview' => 'capell-theme-first-light::sections.cta--lightbox-preview'],
+                failLoudly: true,
+            ),
             'footer' => new ViewSectionRenderer(self::THEME_KEY, 'footer', 'capell-theme-first-light::sections.footer', failLoudly: true),
         ];
     }

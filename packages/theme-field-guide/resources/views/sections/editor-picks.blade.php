@@ -10,6 +10,7 @@
 <section
     id="editor-picks"
     class="fga-section fga-section-panel"
+    data-widget="editor-picks-curated"
 >
     <div class="fga-section-inner">
         <div class="fga-section-head">

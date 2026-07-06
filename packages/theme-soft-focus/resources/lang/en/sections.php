@@ -71,6 +71,7 @@ return [
         'summary' => 'Each visit surfaces a single spotlighted site from the best-of wall, given room to be looked at properly.',
         'pick_title' => 'Northglass',
         'pick_summary' => 'A quiet product page that trusts whitespace over noise.',
+        'rail_label' => 'Today\'s rotation of best-of candidates',
     ],
     'journal' => [
         'kicker' => 'Editorial posts',

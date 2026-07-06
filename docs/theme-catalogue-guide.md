@@ -2,6 +2,10 @@
 
 Last reviewed: 2026-06-13
 
+## Review cadence
+
+`docs/themes.json` is re-tiered and overlap-scored quarterly, alongside any wave of the active theme improvement programme (currently `docs/theme-improvement-programme-2026-h2.md`) that changes a theme's section set, headline mechanic, or token surface. Each review bumps `lastReviewed`, re-scores `overlapRisk` for any theme whose differentiation changed, and records the assigned Part 2 headline mechanic (or equivalent) in that theme's `notes`. `ThemeCatalogueTest` and `ThemeCatalogueRenderingTest` in `packages/theme-foundation/tests/Unit/` gate the schema; a theme entry that drifts from its package manifest or registered `ThemeDefinitionData` fails the suite.
+
 This review covers the first-party theme catalogue in `packages/theme-foundation` and `packages/theme-*`. It checks theme positioning, manifest/docs consistency, public-output safety signals, screenshot coverage, and whether the premium themes feel professionally differentiated.
 
 ## 2026-06-13 Premium Additions

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Capell\Tests\Arch;
 
 use Capell\FoundationTheme\Contracts\ProvidesThemeDemoContent;
+use Capell\FoundationTheme\Support\Demo\FoundationDemoContent;
 use Illuminate\Support\Str;
 use RuntimeException;
 
@@ -132,8 +133,20 @@ function renderableSectionTypes(string $directory): array
 {
     $types = [];
 
-    foreach (glob($directory . '/resources/views/sections/*.blade.php') ?: [] as $viewPath) {
-        $types[] = basename($viewPath, '.blade.php');
+    // Child themes ship section views at `resources/views/sections/`;
+    // theme-foundation itself (predating that convention) ships its own
+    // standard sections at `resources/views/theme/sections/` — both are
+    // scanned so the "seeded type has a real renderer" check works for
+    // either layout.
+    $globs = [
+        $directory . '/resources/views/sections/*.blade.php',
+        $directory . '/resources/views/theme/sections/*.blade.php',
+    ];
+
+    foreach ($globs as $glob) {
+        foreach (glob($glob) ?: [] as $viewPath) {
+            $types[] = basename($viewPath, '.blade.php');
+        }
     }
 
     return array_values(array_unique($types));
@@ -165,9 +178,21 @@ function collectStrings(mixed $value): array
     return $strings;
 }
 
+/**
+ * Foundation predates the `Capell\ThemeStudio\<Studio>\` PSR-4 convention
+ * every child theme uses — it keeps its own long-standing
+ * `Capell\FoundationTheme\` namespace root, so its demo content provider
+ * doesn't follow the generic derived class name below.
+ *
+ * @var array<string, class-string>
+ */
+const DEMO_CONTRACT_PROVIDER_CLASS_OVERRIDES = [
+    'foundation' => FoundationDemoContent::class,
+];
+
 it('theme ships complete, individual demo content for every foundation surface', function (string $slug, string $directory): void {
     $studio = Str::studly($slug);
-    $providerClass = "Capell\\ThemeStudio\\{$studio}\\Support\\Demo\\{$studio}DemoContent";
+    $providerClass = DEMO_CONTRACT_PROVIDER_CLASS_OVERRIDES[$slug] ?? "Capell\\ThemeStudio\\{$studio}\\Support\\Demo\\{$studio}DemoContent";
 
     expect(class_exists($providerClass))->toBeTrue(
         "Theme [{$slug}] has no demo content provider. Expected {$providerClass} implementing ProvidesThemeDemoContent.",

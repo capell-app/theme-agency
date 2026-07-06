@@ -627,6 +627,32 @@ signed Filament editor URLs.
 Use stable selectors that already exist for presentation. Do not add hidden
 authoring-only markers to theme markup.
 
+## `@php` Block Policy
+
+`@php ... @endphp` blocks in public theme Blade are allowed only for
+defaulting and value prep — null-coalescing assignment (`??=`), `data_get()`
+lookups, and `@class` array prep. They are banned for database or model
+queries, facade calls (`DB::`, `Frontend::`, `PageLoader::`, and similar), and
+side-effectful conditionals.
+
+`Capell\FoundationTheme\Testing\AssertsPublicThemeOutputSafety::assertPhpBlockPolicy()`
+enforces this automatically for every theme package:
+
+- It counts `@php` block occurrences under the theme's `resources/views` and
+  asserts the count is at or below that theme's frozen baseline recorded in
+  `packages/theme-foundation/tests/Feature/PhpBlockPolicyTest.php`. The
+  baseline is a ratchet — counts may only decrease over time, never increase.
+- Inside every `@php` block body, it flags any static call (`Something::`)
+  whose class-like prefix is not on a small whitelist of pure defaulting/prep
+  helpers (`data_get`, `collect`, `trans`, `__`, `Str`, `Arr`). Any other
+  static call — including queries and facades — fails the test with the
+  offending call named in the failure message.
+
+Every per-theme `tests/Unit/PublicOutputSafetyTest.php` calls
+`assertPhpBlockPolicy()` alongside the authoring/metadata safety checks, so a
+new `@php` block added to a theme's views is graded against that theme's
+existing baseline the moment its test suite runs.
+
 ## 10. Install And Select The Theme
 
 The CLI and web installer both understand theme selection:

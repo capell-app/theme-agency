@@ -14,6 +14,7 @@ use Capell\Core\ThemeStudio\Data\ThemePresetData;
 use Capell\Core\ThemeStudio\Rendering\ViewSectionRenderer;
 use Capell\Core\ThemeStudio\Theme\ThemeRegistry;
 use Capell\FoundationTheme\Rendering\ChromeSplitBladeThemeRenderer;
+use Capell\FoundationTheme\Rendering\VariantViewSectionRenderer;
 use Capell\FoundationTheme\Support\Editor\StandardThemeEditorSchema;
 use Capell\ThemeStudio\OneTake\Console\Commands\DemoCommand;
 use Illuminate\Support\ServiceProvider;
@@ -89,6 +90,13 @@ final class OneTakeThemeServiceProvider extends ServiceProvider
                 ),
             ],
             frontend: [
+                'sectionVariants' => [
+                    'showcase-hero' => ['default', 'paginated'],
+                    'category-tabs' => ['default', 'tablist'],
+                    'one-page-grid' => ['default', 'dense'],
+                    'tools-sponsors' => ['default', 'rail'],
+                    'build-resources' => ['default', 'split'],
+                ],
                 'editor' => StandardThemeEditorSchema::definition(),
             ],
             assets: ['css' => 'vendor/capell/themes/one-take.css'],
@@ -146,12 +154,42 @@ final class OneTakeThemeServiceProvider extends ServiceProvider
         return [
             'navigation' => new ViewSectionRenderer(self::THEME_KEY, 'navigation', 'capell-theme-one-take::sections.navigation', failLoudly: true),
             'hero' => new ViewSectionRenderer(self::THEME_KEY, 'hero', 'capell-theme-one-take::sections.hero', failLoudly: true),
-            'showcase-hero' => new ViewSectionRenderer(self::THEME_KEY, 'showcase-hero', 'capell-theme-one-take::sections.showcase-hero', failLoudly: true),
-            'category-tabs' => new ViewSectionRenderer(self::THEME_KEY, 'category-tabs', 'capell-theme-one-take::sections.category-tabs', failLoudly: true),
-            'one-page-grid' => new ViewSectionRenderer(self::THEME_KEY, 'one-page-grid', 'capell-theme-one-take::sections.one-page-grid', failLoudly: true),
+            'showcase-hero' => new VariantViewSectionRenderer(
+                themeKey: self::THEME_KEY,
+                sectionKey: 'showcase-hero',
+                baseView: 'capell-theme-one-take::sections.showcase-hero',
+                variantViews: ['paginated' => 'capell-theme-one-take::sections.showcase-hero--paginated'],
+                failLoudly: true,
+            ),
+            'category-tabs' => new VariantViewSectionRenderer(
+                themeKey: self::THEME_KEY,
+                sectionKey: 'category-tabs',
+                baseView: 'capell-theme-one-take::sections.category-tabs',
+                variantViews: ['tablist' => 'capell-theme-one-take::sections.category-tabs--tablist'],
+                failLoudly: true,
+            ),
+            'one-page-grid' => new VariantViewSectionRenderer(
+                themeKey: self::THEME_KEY,
+                sectionKey: 'one-page-grid',
+                baseView: 'capell-theme-one-take::sections.one-page-grid',
+                variantViews: ['dense' => 'capell-theme-one-take::sections.one-page-grid--dense'],
+                failLoudly: true,
+            ),
             'templates-sections' => new ViewSectionRenderer(self::THEME_KEY, 'templates-sections', 'capell-theme-one-take::sections.templates-sections', failLoudly: true),
-            'tools-sponsors' => new ViewSectionRenderer(self::THEME_KEY, 'tools-sponsors', 'capell-theme-one-take::sections.tools-sponsors', failLoudly: true),
-            'build-resources' => new ViewSectionRenderer(self::THEME_KEY, 'build-resources', 'capell-theme-one-take::sections.build-resources', failLoudly: true),
+            'tools-sponsors' => new VariantViewSectionRenderer(
+                themeKey: self::THEME_KEY,
+                sectionKey: 'tools-sponsors',
+                baseView: 'capell-theme-one-take::sections.tools-sponsors',
+                variantViews: ['rail' => 'capell-theme-one-take::sections.tools-sponsors--rail'],
+                failLoudly: true,
+            ),
+            'build-resources' => new VariantViewSectionRenderer(
+                themeKey: self::THEME_KEY,
+                sectionKey: 'build-resources',
+                baseView: 'capell-theme-one-take::sections.build-resources',
+                variantViews: ['split' => 'capell-theme-one-take::sections.build-resources--split'],
+                failLoudly: true,
+            ),
             'proof' => new ViewSectionRenderer(self::THEME_KEY, 'proof', 'capell-theme-one-take::sections.proof', failLoudly: true),
             'content-listing' => new ViewSectionRenderer(self::THEME_KEY, 'content-listing', 'capell-theme-one-take::sections.content-listing', failLoudly: true),
             'newsletter' => new ViewSectionRenderer(self::THEME_KEY, 'newsletter', 'capell-theme-one-take::sections.newsletter', failLoudly: true),

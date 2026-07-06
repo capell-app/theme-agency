@@ -14,6 +14,7 @@ use Capell\Core\ThemeStudio\Data\ThemePresetData;
 use Capell\Core\ThemeStudio\Rendering\ViewSectionRenderer;
 use Capell\Core\ThemeStudio\Theme\ThemeRegistry;
 use Capell\FoundationTheme\Rendering\ChromeSplitBladeThemeRenderer;
+use Capell\FoundationTheme\Rendering\VariantViewSectionRenderer;
 use Capell\FoundationTheme\Support\Editor\StandardThemeEditorSchema;
 use Capell\ThemeStudio\ArtPaper\Console\Commands\DemoCommand;
 use Illuminate\Support\ServiceProvider;
@@ -35,7 +36,7 @@ final class ArtPaperThemeServiceProvider extends ServiceProvider
             previewImage: '/vendor/capell/themes/art-paper.jpg',
             tags: ['Magazine', 'Design', 'Architecture', 'Interiors', 'Culture'],
             bestFit: ['Design magazines', 'Architecture publishers', 'Interiors studios', 'Art and culture journals', 'Fashion editorial teams'],
-            includedSections: ['navigation', 'hero', 'lead-story', 'vertical-categories', 'editor-picks', 'gallery-feature', 'product-credits', 'trend-list', 'proof', 'content-listing', 'newsletter', 'cta', 'footer'],
+            includedSections: ['navigation', 'hero', 'lead-story', 'vertical-categories', 'editor-picks', 'gallery-feature', 'product-credits', 'trend-list', 'process-documentation-timeline', 'proof', 'content-listing', 'newsletter', 'cta', 'footer'],
             presets: [
                 new ThemePresetData(
                     key: self::THEME_KEY,
@@ -118,6 +119,15 @@ final class ArtPaperThemeServiceProvider extends ServiceProvider
             extends: 'default',
             frontend: [
                 'editor' => StandardThemeEditorSchema::definition(),
+                // Wave 4a signature-widget variants (theme-bar criterion 3: each
+                // signature widget declares >= 2 variants). Guarded by
+                // SectionVariantDeclarationTest, which resolves every declared
+                // variant to a real sidecar Blade view on disk.
+                'sectionVariants' => [
+                    'gallery-feature' => ['default', 'cluster'],
+                    'product-credits' => ['default', 'trend-forecast'],
+                    'process-documentation-timeline' => ['default', 'compact'],
+                ],
             ],
         );
     }
@@ -174,9 +184,28 @@ final class ArtPaperThemeServiceProvider extends ServiceProvider
             'lead-story' => new ViewSectionRenderer(self::THEME_KEY, 'lead-story', 'capell-theme-art-paper::sections.lead-story', failLoudly: true),
             'vertical-categories' => new ViewSectionRenderer(self::THEME_KEY, 'vertical-categories', 'capell-theme-art-paper::sections.vertical-categories', failLoudly: true),
             'editor-picks' => new ViewSectionRenderer(self::THEME_KEY, 'editor-picks', 'capell-theme-art-paper::sections.editor-picks', failLoudly: true),
-            'gallery-feature' => new ViewSectionRenderer(self::THEME_KEY, 'gallery-feature', 'capell-theme-art-paper::sections.gallery-feature', failLoudly: true),
-            'product-credits' => new ViewSectionRenderer(self::THEME_KEY, 'product-credits', 'capell-theme-art-paper::sections.product-credits', failLoudly: true),
+            'gallery-feature' => new VariantViewSectionRenderer(
+                themeKey: self::THEME_KEY,
+                sectionKey: 'gallery-feature',
+                baseView: 'capell-theme-art-paper::sections.gallery-feature',
+                variantViews: ['cluster' => 'capell-theme-art-paper::sections.gallery-feature--cluster'],
+                failLoudly: true,
+            ),
+            'product-credits' => new VariantViewSectionRenderer(
+                themeKey: self::THEME_KEY,
+                sectionKey: 'product-credits',
+                baseView: 'capell-theme-art-paper::sections.product-credits',
+                variantViews: ['trend-forecast' => 'capell-theme-art-paper::sections.product-credits--trend-forecast'],
+                failLoudly: true,
+            ),
             'trend-list' => new ViewSectionRenderer(self::THEME_KEY, 'trend-list', 'capell-theme-art-paper::sections.trend-list', failLoudly: true),
+            'process-documentation-timeline' => new VariantViewSectionRenderer(
+                themeKey: self::THEME_KEY,
+                sectionKey: 'process-documentation-timeline',
+                baseView: 'capell-theme-art-paper::sections.process-documentation-timeline',
+                variantViews: ['compact' => 'capell-theme-art-paper::sections.process-documentation-timeline--compact'],
+                failLoudly: true,
+            ),
             'proof' => new ViewSectionRenderer(self::THEME_KEY, 'proof', 'capell-theme-art-paper::sections.proof', failLoudly: true),
             'content-listing' => new ViewSectionRenderer(self::THEME_KEY, 'content-listing', 'capell-theme-art-paper::sections.content-listing', failLoudly: true),
             'newsletter' => new ViewSectionRenderer(self::THEME_KEY, 'newsletter', 'capell-theme-art-paper::sections.newsletter', failLoudly: true),

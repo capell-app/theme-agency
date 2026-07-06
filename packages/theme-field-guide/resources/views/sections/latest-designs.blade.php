@@ -11,6 +11,7 @@
 <section
     id="latest-designs"
     class="fga-section"
+    data-widget="latest-designs-showcase"
 >
     <div class="fga-section-inner">
         <div class="fga-section-head">

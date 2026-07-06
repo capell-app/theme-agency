@@ -194,6 +194,9 @@ extendCapellPackageTests(PackagesTestCase::class, 'theme-soft-focus', 'theme-sof
 extendCapellPackageTests(PackagesTestCase::class, 'theme-off-grid', 'theme-off-grid');
 extendCapellPackageTests(PackagesTestCase::class, 'theme-gold-rush', 'theme-gold-rush');
 extendCapellPackageTests(PackagesTestCase::class, 'theme-wild-card', 'theme-wild-card');
+extendCapellPackageTests(PackagesTestCase::class, 'theme-main-stage', 'theme-main-stage');
+extendCapellPackageTests(PackagesTestCase::class, 'theme-reading-room', 'theme-reading-room');
+extendCapellPackageTests(PackagesTestCase::class, 'theme-call-out', 'theme-call-out');
 pest()->extend(UninstalledPackagesTestCase::class)->in('UninstalledPackages');
 extendCapellPackageTests(WelcomeTourTestCase::class, 'welcome-tour', 'welcome-tour');
 extendCapellPackageTests(WordPressImporterTestCase::class, 'wordpress-importer', 'wordpress-importer');

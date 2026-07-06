@@ -14,6 +14,7 @@ use Capell\Core\ThemeStudio\Data\ThemePresetData;
 use Capell\Core\ThemeStudio\Rendering\ViewSectionRenderer;
 use Capell\Core\ThemeStudio\Theme\ThemeRegistry;
 use Capell\FoundationTheme\Rendering\ChromeSplitBladeThemeRenderer;
+use Capell\FoundationTheme\Rendering\VariantViewSectionRenderer;
 use Capell\FoundationTheme\Support\Editor\StandardThemeEditorSchema;
 use Capell\ThemeStudio\SoftFocus\Console\Commands\DemoCommand;
 use Illuminate\Support\ServiceProvider;
@@ -92,6 +93,13 @@ final class SoftFocusThemeServiceProvider extends ServiceProvider
             runtime: FrontendRuntime::Blade,
             frontend: [
                 'editor' => StandardThemeEditorSchema::definition(),
+                'sectionVariants' => [
+                    'browse-panels' => ['default', 'scatter'],
+                    'style-type-categories' => ['default', 'scattered'],
+                    'latest-showcase' => ['default', 'organic'],
+                    'sponsor-space' => ['default', 'floating'],
+                    'random-best-of' => ['default', 'seeded-rotation'],
+                ],
             ],
             extends: 'default',
         );
@@ -146,11 +154,41 @@ final class SoftFocusThemeServiceProvider extends ServiceProvider
         return [
             'navigation' => new ViewSectionRenderer(self::THEME_KEY, 'navigation', 'capell-theme-soft-focus::sections.navigation', failLoudly: true),
             'hero' => new ViewSectionRenderer(self::THEME_KEY, 'hero', 'capell-theme-soft-focus::sections.hero', failLoudly: true),
-            'browse-panels' => new ViewSectionRenderer(self::THEME_KEY, 'browse-panels', 'capell-theme-soft-focus::sections.browse-panels', failLoudly: true),
-            'style-type-categories' => new ViewSectionRenderer(self::THEME_KEY, 'style-type-categories', 'capell-theme-soft-focus::sections.style-type-categories', failLoudly: true),
-            'latest-showcase' => new ViewSectionRenderer(self::THEME_KEY, 'latest-showcase', 'capell-theme-soft-focus::sections.latest-showcase', failLoudly: true),
-            'sponsor-space' => new ViewSectionRenderer(self::THEME_KEY, 'sponsor-space', 'capell-theme-soft-focus::sections.sponsor-space', failLoudly: true),
-            'random-best-of' => new ViewSectionRenderer(self::THEME_KEY, 'random-best-of', 'capell-theme-soft-focus::sections.random-best-of', failLoudly: true),
+            'browse-panels' => new VariantViewSectionRenderer(
+                themeKey: self::THEME_KEY,
+                sectionKey: 'browse-panels',
+                baseView: 'capell-theme-soft-focus::sections.browse-panels',
+                variantViews: ['scatter' => 'capell-theme-soft-focus::sections.browse-panels--scatter'],
+                failLoudly: true,
+            ),
+            'style-type-categories' => new VariantViewSectionRenderer(
+                themeKey: self::THEME_KEY,
+                sectionKey: 'style-type-categories',
+                baseView: 'capell-theme-soft-focus::sections.style-type-categories',
+                variantViews: ['scattered' => 'capell-theme-soft-focus::sections.style-type-categories--scattered'],
+                failLoudly: true,
+            ),
+            'latest-showcase' => new VariantViewSectionRenderer(
+                themeKey: self::THEME_KEY,
+                sectionKey: 'latest-showcase',
+                baseView: 'capell-theme-soft-focus::sections.latest-showcase',
+                variantViews: ['organic' => 'capell-theme-soft-focus::sections.latest-showcase--organic'],
+                failLoudly: true,
+            ),
+            'sponsor-space' => new VariantViewSectionRenderer(
+                themeKey: self::THEME_KEY,
+                sectionKey: 'sponsor-space',
+                baseView: 'capell-theme-soft-focus::sections.sponsor-space',
+                variantViews: ['floating' => 'capell-theme-soft-focus::sections.sponsor-space--floating'],
+                failLoudly: true,
+            ),
+            'random-best-of' => new VariantViewSectionRenderer(
+                themeKey: self::THEME_KEY,
+                sectionKey: 'random-best-of',
+                baseView: 'capell-theme-soft-focus::sections.random-best-of',
+                variantViews: ['seeded-rotation' => 'capell-theme-soft-focus::sections.random-best-of--seeded-rotation'],
+                failLoudly: true,
+            ),
             'editorial-posts' => new ViewSectionRenderer(self::THEME_KEY, 'editorial-posts', 'capell-theme-soft-focus::sections.editorial-posts', failLoudly: true),
             'proof' => new ViewSectionRenderer(self::THEME_KEY, 'proof', 'capell-theme-soft-focus::sections.proof', failLoudly: true),
             'content-listing' => new ViewSectionRenderer(self::THEME_KEY, 'content-listing', 'capell-theme-soft-focus::sections.content-listing', failLoudly: true),

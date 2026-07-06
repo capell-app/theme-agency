@@ -14,6 +14,7 @@ use Capell\Core\ThemeStudio\Data\ThemePresetData;
 use Capell\Core\ThemeStudio\Rendering\ViewSectionRenderer;
 use Capell\Core\ThemeStudio\Theme\ThemeRegistry;
 use Capell\FoundationTheme\Rendering\ChromeSplitBladeThemeRenderer;
+use Capell\FoundationTheme\Rendering\VariantViewSectionRenderer;
 use Capell\FoundationTheme\Support\Editor\StandardThemeEditorSchema;
 use Capell\ThemeStudio\FrontRow\Console\Commands\DemoCommand;
 use Illuminate\Support\ServiceProvider;
@@ -116,6 +117,13 @@ final class FrontRowThemeServiceProvider extends ServiceProvider
             assets: ['css' => 'vendor/capell/themes/front-row.css'],
             runtime: FrontendRuntime::Blade,
             frontend: [
+                'sectionVariants' => [
+                    'featured-portfolios' => ['default', 'parallax'],
+                    'filter-taxonomies' => ['default', 'grid'],
+                    'portfolio-grid' => ['default', 'gallery-wall'],
+                    'awarded-profiles' => ['default', 'spotlight'],
+                    'education-upsell' => ['default', 'cta'],
+                ],
                 'editor' => StandardThemeEditorSchema::definition(),
             ],
             extends: 'default',
@@ -172,12 +180,42 @@ final class FrontRowThemeServiceProvider extends ServiceProvider
         return [
             'navigation' => new ViewSectionRenderer(self::THEME_KEY, 'navigation', 'capell-theme-front-row::sections.navigation', failLoudly: true),
             'hero' => new ViewSectionRenderer(self::THEME_KEY, 'hero', 'capell-theme-front-row::sections.hero', failLoudly: true),
-            'featured-portfolios' => new ViewSectionRenderer(self::THEME_KEY, 'featured-portfolios', 'capell-theme-front-row::sections.featured-portfolios', failLoudly: true),
-            'filter-taxonomies' => new ViewSectionRenderer(self::THEME_KEY, 'filter-taxonomies', 'capell-theme-front-row::sections.filter-taxonomies', failLoudly: true),
-            'portfolio-grid' => new ViewSectionRenderer(self::THEME_KEY, 'portfolio-grid', 'capell-theme-front-row::sections.portfolio-grid', failLoudly: true),
-            'awarded-profiles' => new ViewSectionRenderer(self::THEME_KEY, 'awarded-profiles', 'capell-theme-front-row::sections.awarded-profiles', failLoudly: true),
+            'featured-portfolios' => new VariantViewSectionRenderer(
+                themeKey: self::THEME_KEY,
+                sectionKey: 'featured-portfolios',
+                baseView: 'capell-theme-front-row::sections.featured-portfolios',
+                variantViews: ['parallax' => 'capell-theme-front-row::sections.featured-portfolios--parallax'],
+                failLoudly: true,
+            ),
+            'filter-taxonomies' => new VariantViewSectionRenderer(
+                themeKey: self::THEME_KEY,
+                sectionKey: 'filter-taxonomies',
+                baseView: 'capell-theme-front-row::sections.filter-taxonomies',
+                variantViews: ['grid' => 'capell-theme-front-row::sections.filter-taxonomies--grid'],
+                failLoudly: true,
+            ),
+            'portfolio-grid' => new VariantViewSectionRenderer(
+                themeKey: self::THEME_KEY,
+                sectionKey: 'portfolio-grid',
+                baseView: 'capell-theme-front-row::sections.portfolio-grid',
+                variantViews: ['gallery-wall' => 'capell-theme-front-row::sections.portfolio-grid--gallery-wall'],
+                failLoudly: true,
+            ),
+            'awarded-profiles' => new VariantViewSectionRenderer(
+                themeKey: self::THEME_KEY,
+                sectionKey: 'awarded-profiles',
+                baseView: 'capell-theme-front-row::sections.awarded-profiles',
+                variantViews: ['spotlight' => 'capell-theme-front-row::sections.awarded-profiles--spotlight'],
+                failLoudly: true,
+            ),
             'creator-directory' => new ViewSectionRenderer(self::THEME_KEY, 'creator-directory', 'capell-theme-front-row::sections.creator-directory', failLoudly: true),
-            'education-upsell' => new ViewSectionRenderer(self::THEME_KEY, 'education-upsell', 'capell-theme-front-row::sections.education-upsell', failLoudly: true),
+            'education-upsell' => new VariantViewSectionRenderer(
+                themeKey: self::THEME_KEY,
+                sectionKey: 'education-upsell',
+                baseView: 'capell-theme-front-row::sections.education-upsell',
+                variantViews: ['cta' => 'capell-theme-front-row::sections.education-upsell--cta'],
+                failLoudly: true,
+            ),
             'proof' => new ViewSectionRenderer(self::THEME_KEY, 'proof', 'capell-theme-front-row::sections.proof', failLoudly: true),
             'content-listing' => new ViewSectionRenderer(self::THEME_KEY, 'content-listing', 'capell-theme-front-row::sections.content-listing', failLoudly: true),
             'newsletter' => new ViewSectionRenderer(self::THEME_KEY, 'newsletter', 'capell-theme-front-row::sections.newsletter', failLoudly: true),

@@ -50,6 +50,21 @@ return [
         'kicker' => 'Archive dates',
         'heading' => 'The ledger, by month',
         'summary' => 'Every entry is dated on intake and never silently edited — corrections get their own line.',
+        'week' => [
+            'mon' => 'Mon',
+            'tue' => 'Tue',
+            'wed' => 'Wed',
+            'thu' => 'Thu',
+            'fri' => 'Fri',
+            'sat' => 'Sat',
+            'sun' => 'Sun',
+        ],
+    ],
+    'capsules' => [
+        'kicker' => 'Time capsule browser',
+        'heading' => 'Eras of the wall, stacked in depth',
+        'summary' => 'Each era is a sealed capsule — hover to preview what is inside, open one at a time to read the full row.',
+        'expand_label' => 'Open the :era capsule',
     ],
     'annotations' => [
         'kicker' => 'Margin notes',

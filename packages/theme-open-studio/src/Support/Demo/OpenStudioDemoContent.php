@@ -103,6 +103,11 @@ final class OpenStudioDemoContent implements ProvidesThemeDemoContent
                         url: '#project-feed',
                         label: 'Browse the projects behind these notes',
                     ),
+                    $this->disciplineCarouselBrowseSection(
+                        heading: 'Browse the whole directory by discipline',
+                        summary: 'A sticky filter for scanning every case study one discipline at a time.',
+                        media: $media,
+                    ),
                     $this->relatedProjectsSection(
                         heading: 'Related projects to study next',
                         summary: 'Builds that share a discipline, a constraint, or a creator with this week\'s feature.',
@@ -243,6 +248,11 @@ final class OpenStudioDemoContent implements ProvidesThemeDemoContent
                         'mediaUrl' => $media['detail'][0],
                         'mediaAlt' => 'Atlas Ledger onboarding case study cover',
                     ],
+                    $this->filmstripProjectShowcaseSection(
+                        heading: 'Scrub through the Atlas Ledger rebuild',
+                        summary: 'Drag the scrub bar or pick a thumbnail to move through the build sequentially, from the original nine-screen flow to the shipped four-step version.',
+                        media: $media,
+                    ),
                     $this->creatorHeroSection(
                         heading: 'The team behind Atlas Ledger',
                         summary: 'A four-person crew owned the rebuild end to end — research, design, and the front-end build.',
@@ -256,9 +266,18 @@ final class OpenStudioDemoContent implements ProvidesThemeDemoContent
                         url: '#credits-tools',
                         label: 'See who shipped it',
                     ),
+                    $this->processNotesTimelineSection(
+                        heading: 'The build, one decision at a time',
+                        summary: 'A chronological spine of the calls the team made, from constraint to shipped result.',
+                    ),
                     $this->creditsToolsSection(
                         heading: 'Credits & tools',
                         summary: 'Everyone who shipped Atlas Ledger, and the stack they built it on.',
+                    ),
+                    $this->creditsGridRosterSection(
+                        heading: 'Everyone who shipped this build',
+                        summary: 'The full roster behind Atlas Ledger, credited in full.',
+                        media: $media,
                     ),
                     $this->relatedProjectsSection(
                         heading: 'Related case studies',
@@ -276,6 +295,9 @@ final class OpenStudioDemoContent implements ProvidesThemeDemoContent
                     $this->newsletterSection(
                         heading: 'Follow more builds like this',
                         summary: 'Get the next onboarding, brand, or systems case study the moment it is published.',
+                    ),
+                    $this->nextProjectCtaSection(
+                        media: $media,
                     ),
                 ],
             ],
@@ -540,6 +562,150 @@ final class OpenStudioDemoContent implements ProvidesThemeDemoContent
                 ['title' => 'Motion & Film', 'summary' => 'Launch films, product motion, and the toolkits that scale across channels.', 'url' => $itemUrl],
                 ['title' => 'Engineering & Systems', 'summary' => 'Design systems, performance rebuilds, and the architecture under the surface.', 'url' => $itemUrl],
             ],
+        ];
+    }
+
+    /**
+     * @param  array{hero: list<string>, listing: list<string>, detail: list<string>, proof: list<string>, contact: list<string>, cta: list<string>}  $media
+     * @return array<string, mixed>
+     */
+    private function filmstripProjectShowcaseSection(string $heading, string $summary, array $media): array
+    {
+        $images = array_values(array_unique(array_merge($media['detail'], $media['hero'], $media['proof'])));
+
+        $frames = [
+            ['title' => 'The original flow', 'caption' => 'Nine screens, three of them redundant compliance checks.'],
+            ['title' => 'Mapping the drop-off', 'caption' => 'Session recordings showed exactly where applicants gave up.'],
+            ['title' => 'Collapsing the steps', 'caption' => 'Verification moved to the background; the flow fell to four steps.'],
+            ['title' => 'The shipped version', 'caption' => 'A four-step account opening flow, live in production.'],
+        ];
+
+        $items = [];
+
+        foreach ($frames as $index => $frame) {
+            $items[] = [
+                ...$frame,
+                'image' => $images[$index % max(count($images), 1)] ?? null,
+                'imageAlt' => $frame['title'],
+            ];
+        }
+
+        return [
+            'type' => 'filmstrip-project-showcase',
+            'heading' => $heading,
+            'summary' => $summary,
+            'frames' => $items,
+        ];
+    }
+
+    /**
+     * @param  array{hero: list<string>, listing: list<string>, detail: list<string>, proof: list<string>, contact: list<string>, cta: list<string>}  $media
+     * @return array<string, mixed>
+     */
+    private function disciplineCarouselBrowseSection(string $heading, string $summary, array $media): array
+    {
+        $images = array_values(array_unique(array_merge($media['listing'], $media['detail'])));
+
+        $groups = [
+            'Product & UX' => [
+                ['title' => 'Atlas Ledger — onboarding rebuild', 'meta' => 'Product & UX'],
+                ['title' => 'Harbour — KYC in three taps', 'meta' => 'Product & UX'],
+            ],
+            'Brand & Identity' => [
+                ['title' => 'Verde — coffee brand system', 'meta' => 'Brand & Identity'],
+                ['title' => 'Kindred — lending rebrand', 'meta' => 'Brand & Identity'],
+            ],
+            'Motion & Film' => [
+                ['title' => 'Atlas Festival — launch film', 'meta' => 'Motion & Film'],
+            ],
+            'Engineering & Systems' => [
+                ['title' => 'Northwind — field engineer UI', 'meta' => 'Engineering & Systems'],
+                ['title' => 'Lumen — design system reset', 'meta' => 'Engineering & Systems'],
+            ],
+        ];
+
+        $disciplines = [];
+        $imageIndex = 0;
+
+        foreach ($groups as $title => $projects) {
+            $groupItems = [];
+
+            foreach ($projects as $project) {
+                $groupItems[] = [
+                    ...$project,
+                    'url' => '#project-feed',
+                    'image' => $images[$imageIndex % max(count($images), 1)] ?? null,
+                    'imageAlt' => $project['title'],
+                ];
+                $imageIndex++;
+            }
+
+            $disciplines[] = [
+                'title' => $title,
+                'items' => $groupItems,
+            ];
+        }
+
+        return [
+            'type' => 'discipline-carousel-browse',
+            'heading' => $heading,
+            'summary' => $summary,
+            'disciplines' => $disciplines,
+        ];
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function processNotesTimelineSection(string $heading, string $summary): array
+    {
+        return [
+            'type' => 'process-notes-timeline',
+            'heading' => $heading,
+            'summary' => $summary,
+            'items' => [
+                ['meta' => 'Week 1', 'title' => 'The constraint', 'summary' => 'Account opening leaked users at every step — nine screens, three of them redundant compliance checks.'],
+                ['meta' => 'Week 3', 'title' => 'The research', 'summary' => 'Session recordings and support tickets pinpointed where applicants abandoned the flow.'],
+                ['meta' => 'Week 6', 'title' => 'The call', 'summary' => 'Move verification to the background and collapse the flow to four steps, accepting a slower first deposit.'],
+                ['meta' => 'Week 10', 'title' => 'The build', 'summary' => 'Engineering shipped the new flow behind a flag, tested against the compliance contract.'],
+                ['meta' => 'Week 12', 'title' => 'The result', 'summary' => 'Drop-off fell 51%, and support tickets about account setup dropped with it.'],
+            ],
+        ];
+    }
+
+    /**
+     * @param  array{hero: list<string>, listing: list<string>, detail: list<string>, proof: list<string>, contact: list<string>, cta: list<string>}  $media
+     * @return array<string, mixed>
+     */
+    private function creditsGridRosterSection(string $heading, string $summary, array $media): array
+    {
+        return [
+            'type' => 'credits-grid-roster',
+            'heading' => $heading,
+            'summary' => $summary,
+            'items' => [
+                ['name' => 'Mara Devlin', 'role' => 'Product Lead', 'image' => $media['proof'][0] ?? null],
+                ['name' => 'Theo Park', 'role' => 'Staff Engineer'],
+                ['name' => 'Aisha Roy', 'role' => 'Researcher'],
+                ['name' => 'Sam Okonkwo', 'role' => 'Design Systems'],
+            ],
+        ];
+    }
+
+    /**
+     * @param  array{hero: list<string>, listing: list<string>, detail: list<string>, proof: list<string>, contact: list<string>, cta: list<string>}  $media
+     * @return array<string, mixed>
+     */
+    private function nextProjectCtaSection(array $media): array
+    {
+        return [
+            'type' => 'next-project-cta',
+            'kicker' => 'Next project',
+            'title' => 'Verde — a coffee brand system for a first three-site rollout',
+            'summary' => 'Naming, identity, and packaging for an independent roaster opening its first three sites.',
+            'url' => '#project-feed',
+            'label' => 'View next project',
+            'image' => $media['listing'][0] ?? $media['hero'][0],
         ];
     }
 

@@ -14,6 +14,7 @@ use Capell\Core\ThemeStudio\Data\ThemePresetData;
 use Capell\Core\ThemeStudio\Rendering\ViewSectionRenderer;
 use Capell\Core\ThemeStudio\Theme\ThemeRegistry;
 use Capell\FoundationTheme\Rendering\ChromeSplitBladeThemeRenderer;
+use Capell\FoundationTheme\Rendering\VariantViewSectionRenderer;
 use Capell\FoundationTheme\Support\Editor\StandardThemeEditorSchema;
 use Capell\ThemeStudio\ReelRoom\Console\Commands\DemoCommand;
 use Illuminate\Support\ServiceProvider;
@@ -35,7 +36,7 @@ final class ReelRoomThemeServiceProvider extends ServiceProvider
             previewImage: '/vendor/capell/themes/reel-room.jpg',
             tags: ['Reel Room', 'Awards', 'Digital Projects', 'Video', 'Credits'],
             bestFit: ['Digital awards archives', 'Motion preview galleries', 'Interactive project directories', 'Jury score showcases', 'Historical winner archives'],
-            includedSections: ['navigation', 'hero', 'archive-hero', 'date-filter-rail', 'winner-list', 'featured-project', 'jury-score-explainer', 'media-credits', 'proof', 'content-listing', 'newsletter', 'cta', 'footer'],
+            includedSections: ['navigation', 'hero', 'archive-hero', 'date-filter-rail', 'winner-list', 'featured-project', 'jury-score-explainer', 'media-credits', 'proof', 'content-listing', 'archive-wall-index', 'time-capsule-browser', 'newsletter', 'cta', 'footer'],
             presets: [
                 new ThemePresetData(
                     key: self::THEME_KEY,
@@ -90,6 +91,18 @@ final class ReelRoomThemeServiceProvider extends ServiceProvider
             ],
             frontend: [
                 'editor' => StandardThemeEditorSchema::definition(),
+                // Wave 4b signature-widget variants (theme-bar criterion 3: each
+                // signature widget declares >= 2 variants). Guarded by
+                // SectionVariantDeclarationTest, which resolves every declared
+                // variant to a real sidecar Blade view on disk.
+                'sectionVariants' => [
+                    'content-listing' => ['default', 'rows'],
+                    'date-filter-rail' => ['default', 'compact'],
+                    'featured-project' => ['default', 'stacked'],
+                    'jury-score-explainer' => ['default', 'matrix'],
+                    'archive-wall-index' => ['default', 'compact'],
+                    'time-capsule-browser' => ['default', 'void'],
+                ],
             ],
             assets: ['css' => 'vendor/capell/themes/reel-room.css'],
             runtime: FrontendRuntime::Blade,
@@ -147,13 +160,51 @@ final class ReelRoomThemeServiceProvider extends ServiceProvider
             'navigation' => new ViewSectionRenderer(self::THEME_KEY, 'navigation', 'capell-theme-reel-room::sections.navigation', failLoudly: true),
             'hero' => new ViewSectionRenderer(self::THEME_KEY, 'hero', 'capell-theme-reel-room::sections.hero', failLoudly: true),
             'archive-hero' => new ViewSectionRenderer(self::THEME_KEY, 'archive-hero', 'capell-theme-reel-room::sections.archive-hero', failLoudly: true),
-            'date-filter-rail' => new ViewSectionRenderer(self::THEME_KEY, 'date-filter-rail', 'capell-theme-reel-room::sections.date-filter-rail', failLoudly: true),
+            'date-filter-rail' => new VariantViewSectionRenderer(
+                themeKey: self::THEME_KEY,
+                sectionKey: 'date-filter-rail',
+                baseView: 'capell-theme-reel-room::sections.date-filter-rail',
+                variantViews: ['compact' => 'capell-theme-reel-room::sections.date-filter-rail--compact'],
+                failLoudly: true,
+            ),
             'winner-list' => new ViewSectionRenderer(self::THEME_KEY, 'winner-list', 'capell-theme-reel-room::sections.winner-list', failLoudly: true),
-            'featured-project' => new ViewSectionRenderer(self::THEME_KEY, 'featured-project', 'capell-theme-reel-room::sections.featured-project', failLoudly: true),
-            'jury-score-explainer' => new ViewSectionRenderer(self::THEME_KEY, 'jury-score-explainer', 'capell-theme-reel-room::sections.jury-score-explainer', failLoudly: true),
+            'featured-project' => new VariantViewSectionRenderer(
+                themeKey: self::THEME_KEY,
+                sectionKey: 'featured-project',
+                baseView: 'capell-theme-reel-room::sections.featured-project',
+                variantViews: ['stacked' => 'capell-theme-reel-room::sections.featured-project--stacked'],
+                failLoudly: true,
+            ),
+            'jury-score-explainer' => new VariantViewSectionRenderer(
+                themeKey: self::THEME_KEY,
+                sectionKey: 'jury-score-explainer',
+                baseView: 'capell-theme-reel-room::sections.jury-score-explainer',
+                variantViews: ['matrix' => 'capell-theme-reel-room::sections.jury-score-explainer--matrix'],
+                failLoudly: true,
+            ),
             'media-credits' => new ViewSectionRenderer(self::THEME_KEY, 'media-credits', 'capell-theme-reel-room::sections.media-credits', failLoudly: true),
             'proof' => new ViewSectionRenderer(self::THEME_KEY, 'proof', 'capell-theme-reel-room::sections.proof', failLoudly: true),
-            'content-listing' => new ViewSectionRenderer(self::THEME_KEY, 'content-listing', 'capell-theme-reel-room::sections.content-listing', failLoudly: true),
+            'content-listing' => new VariantViewSectionRenderer(
+                themeKey: self::THEME_KEY,
+                sectionKey: 'content-listing',
+                baseView: 'capell-theme-reel-room::sections.content-listing',
+                variantViews: ['rows' => 'capell-theme-reel-room::sections.content-listing--rows'],
+                failLoudly: true,
+            ),
+            'archive-wall-index' => new VariantViewSectionRenderer(
+                themeKey: self::THEME_KEY,
+                sectionKey: 'archive-wall-index',
+                baseView: 'capell-theme-reel-room::sections.archive-wall-index',
+                variantViews: ['compact' => 'capell-theme-reel-room::sections.archive-wall-index--compact'],
+                failLoudly: true,
+            ),
+            'time-capsule-browser' => new VariantViewSectionRenderer(
+                themeKey: self::THEME_KEY,
+                sectionKey: 'time-capsule-browser',
+                baseView: 'capell-theme-reel-room::sections.time-capsule-browser',
+                variantViews: ['void' => 'capell-theme-reel-room::sections.time-capsule-browser--void'],
+                failLoudly: true,
+            ),
             'newsletter' => new ViewSectionRenderer(self::THEME_KEY, 'newsletter', 'capell-theme-reel-room::sections.newsletter', failLoudly: true),
             'cta' => new ViewSectionRenderer(self::THEME_KEY, 'cta', 'capell-theme-reel-room::sections.cta', failLoudly: true),
             'footer' => new ViewSectionRenderer(self::THEME_KEY, 'footer', 'capell-theme-reel-room::sections.footer', failLoudly: true),

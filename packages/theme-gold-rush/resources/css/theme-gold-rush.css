@@ -728,6 +728,401 @@
     white-space: nowrap;
 }
 
+/* Voting-status gauge (conic-gradient, computed server-side from payload
+   percentages — see voting-status.blade.php's @php block). The four swatch
+   slots cycle for as many nominees as the payload carries. */
+
+.sbs-vote-gauge-row {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.75rem;
+    padding: 1.25rem;
+}
+
+.sbs-vote-gauge {
+    --sbs-gauge-0: var(--sbs-accent);
+    --sbs-gauge-1: var(--sbs-gold);
+    --sbs-gauge-2: color-mix(in srgb, var(--sbs-accent) 55%, var(--sbs-ink));
+    --sbs-gauge-3: var(--sbs-muted);
+    aspect-ratio: 1;
+    background: conic-gradient(
+        var(--sbs-gauge-gradient, var(--sbs-line) 0deg 360deg)
+    );
+    border-radius: 50%;
+    display: grid;
+    flex-shrink: 0;
+    place-items: center;
+    text-align: center;
+    width: clamp(7rem, 4rem + 8vw, 10rem);
+}
+
+.sbs-vote-gauge::before {
+    background: var(--sbs-paper);
+    border-radius: 50%;
+    content: '';
+    inset: 18%;
+    position: absolute;
+}
+
+.sbs-vote-gauge-value,
+.sbs-vote-gauge-caption {
+    position: relative;
+}
+
+.sbs-vote-gauge-value {
+    display: block;
+    font-family: var(--sbs-mono);
+    font-size: 1.6rem;
+    font-variant-numeric: tabular-nums;
+    font-weight: 800;
+}
+
+.sbs-vote-gauge-caption {
+    color: var(--sbs-muted);
+    display: block;
+    font-size: 0.62rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+.sbs-vote-gauge-small {
+    width: clamp(4.5rem, 3.5rem + 3vw, 5.5rem);
+}
+
+.sbs-vote-gauge-small .sbs-vote-gauge-value {
+    font-size: 1.1rem;
+}
+
+.sbs-vote-gauge-legend {
+    display: grid;
+    gap: 0.6rem;
+    list-style: none;
+    margin: 0;
+    min-width: 14rem;
+    padding: 0;
+}
+
+.sbs-vote-gauge-legend-item {
+    align-items: center;
+    display: flex;
+    gap: 0.6rem;
+    font-size: 0.88rem;
+}
+
+.sbs-vote-gauge-swatch {
+    --sbs-swatch-0: var(--sbs-accent);
+    --sbs-swatch-1: var(--sbs-gold);
+    --sbs-swatch-2: color-mix(in srgb, var(--sbs-accent) 55%, var(--sbs-ink));
+    --sbs-swatch-3: var(--sbs-muted);
+    background: var(--sbs-swatch-0);
+    border-radius: 999px;
+    display: inline-block;
+    flex-shrink: 0;
+    height: 0.65rem;
+    width: 0.65rem;
+}
+
+.sbs-vote-gauge-swatch[style*='--sbs-swatch-index: 1'] {
+    background: var(--sbs-swatch-1);
+}
+
+.sbs-vote-gauge-swatch[style*='--sbs-swatch-index: 2'] {
+    background: var(--sbs-swatch-2);
+}
+
+.sbs-vote-gauge-swatch[style*='--sbs-swatch-index: 3'] {
+    background: var(--sbs-swatch-3);
+}
+
+.sbs-vote-gauge-legend-value {
+    color: var(--sbs-muted);
+    font-family: var(--sbs-mono);
+    font-variant-numeric: tabular-nums;
+    margin-inline-start: auto;
+}
+
+.sbs-vote-compact-inner {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+}
+
+/* Countdown (award-countdown-ticker + voting-status's `data-deadline` target):
+   server-rendered target, client-ticked only — see partials/countdown-script. */
+
+.sbs-countdown {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 0.6rem;
+}
+
+.sbs-countdown-label {
+    color: var(--sbs-muted);
+    font-size: 0.8rem;
+}
+
+.sbs-countdown-value {
+    font-family: var(--sbs-mono);
+    font-variant-numeric: tabular-nums;
+    font-weight: 700;
+}
+
+.sbs-countdown-ticker-inner {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+    justify-content: space-between;
+}
+
+.sbs-countdown-ticker {
+    align-items: center;
+    display: grid;
+    justify-items: center;
+    text-align: center;
+}
+
+.sbs-countdown-value-large {
+    font-size: clamp(2.2rem, 1.6rem + 2vw, 3.4rem);
+    letter-spacing: -0.01em;
+}
+
+.sbs-countdown-ticker-closed .sbs-countdown-value-large {
+    color: var(--sbs-muted);
+}
+
+.sbs-countdown-compact-inner {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem 1.25rem;
+}
+
+.sbs-countdown-inline {
+    display: inline-flex;
+}
+
+/* Nominee heat map: deterministic colour intensity from a payload score
+   value via the `--sbs-heat-intensity` custom property, no client
+   randomness. */
+
+.sbs-heat-grid {
+    display: grid;
+    gap: 0.6rem;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 6.5rem), 1fr));
+}
+
+.sbs-heat-cell {
+    aspect-ratio: 1;
+    background: color-mix(
+        in oklch,
+        var(--sbs-accent) calc(var(--sbs-heat-intensity, 0) * 100%),
+        var(--sbs-line)
+    );
+    border-radius: max(var(--theme-radius, 0.4rem), 0.2rem);
+    display: grid;
+    gap: 0.15rem;
+    padding: 0.6rem;
+    place-content: center;
+    text-align: center;
+}
+
+.sbs-heat-score {
+    font-family: var(--sbs-mono);
+    font-size: 1.1rem;
+    font-variant-numeric: tabular-nums;
+    font-weight: 800;
+}
+
+.sbs-heat-title {
+    font-size: 0.68rem;
+    font-weight: 700;
+    line-height: 1.2;
+    text-wrap: balance;
+}
+
+.sbs-heat-meta {
+    color: color-mix(in srgb, currentColor 66%, transparent);
+    font-size: 0.6rem;
+}
+
+.sbs-heat-grid-compact {
+    grid-template-columns: repeat(auto-fill, minmax(2.5rem, 1fr));
+}
+
+.sbs-heat-cell-compact {
+    padding: 0.35rem;
+}
+
+.sbs-heat-cell-compact .sbs-heat-score {
+    font-size: 0.8rem;
+}
+
+/* Nominee carousel (shared carousel.js — Wave 2.6 `data-carousel-*` contract) */
+
+.sbs-nominee-carousel-controls {
+    align-items: center;
+    display: flex;
+    gap: 0.5rem;
+}
+
+.sbs-carousel-arrow {
+    align-items: center;
+    background: transparent;
+    border: 1px solid var(--sbs-line);
+    border-radius: 999px;
+    color: var(--sbs-ink);
+    cursor: pointer;
+    display: inline-flex;
+    height: 2.6rem;
+    justify-content: center;
+    width: 2.6rem;
+}
+
+.sbs-carousel-arrow::after {
+    content: '\2192';
+}
+
+.swiper-button-prev.sbs-carousel-arrow::after {
+    content: '\2190';
+}
+
+.sbs-carousel-arrow:hover,
+.sbs-carousel-arrow:focus-visible {
+    border-color: var(--sbs-accent);
+    color: var(--sbs-accent);
+    outline: none;
+}
+
+.swiper-button-disabled.sbs-carousel-arrow {
+    opacity: 0.35;
+    pointer-events: none;
+}
+
+.sbs-nominee-carousel {
+    overflow: hidden;
+}
+
+.sbs-leaderboard-track .sbs-nominee-card {
+    height: auto;
+}
+
+.sbs-nominee-carousel-pagination {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: center;
+    margin-top: 1.5rem;
+}
+
+.sbs-nominee-carousel-pagination .swiper-pagination-bullet {
+    background: var(--sbs-line);
+    border: none;
+    border-radius: 999px;
+    height: 0.5rem;
+    width: 0.5rem;
+}
+
+.sbs-nominee-carousel-pagination .swiper-pagination-bullet-active {
+    background: var(--sbs-accent);
+}
+
+/* Winners ledger (table-to-cards primitive, previous-winners--compact) */
+
+.sbs-winners-ledger th[scope='col'] {
+    color: var(--sbs-accent);
+}
+
+/* Time-capsule browser (cross-archive mechanic, gold-rush skin): archive
+   eras as perspective-tilted capsules; native <details> gives every browser
+   a working expand/collapse fallback even without :has()/perspective
+   support (§0.8). */
+
+.sbs-capsule-rail {
+    display: grid;
+    gap: 1.1rem;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 14rem), 1fr));
+    perspective: 60rem;
+}
+
+.sbs-capsule {
+    background: var(--sbs-paper);
+    border: 1px solid var(--sbs-line);
+    transform: rotateY(calc((var(--sbs-capsule-depth, 0) - 1) * 1.5deg))
+        translateZ(0);
+    transition: transform 0.3s var(--sbs-ease);
+}
+
+@media (hover: hover) {
+    .sbs-capsule:hover {
+        transform: rotateY(0deg) translateZ(1.5rem);
+    }
+}
+
+.sbs-capsule-face {
+    cursor: pointer;
+    display: grid;
+    gap: 0.3rem;
+    list-style: none;
+    padding: 1.1rem;
+}
+
+.sbs-capsule-face::-webkit-details-marker {
+    display: none;
+}
+
+.sbs-capsule-year {
+    font-family: var(--sbs-mono);
+    font-size: 1.15rem;
+    font-weight: 800;
+}
+
+.sbs-capsule-meta {
+    color: var(--sbs-muted);
+    font-size: 0.82rem;
+}
+
+.sbs-capsule-contents {
+    border-top: 1px solid var(--sbs-line);
+    padding: 0.9rem 1.1rem 1.1rem;
+}
+
+.sbs-capsule-preview-list {
+    display: grid;
+    gap: 0.45rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.sbs-capsule-preview-item {
+    align-items: baseline;
+    display: flex;
+    font-size: 0.85rem;
+    gap: 0.5rem;
+    justify-content: space-between;
+}
+
+.sbs-capsule-preview-meta {
+    color: var(--sbs-muted);
+    font-size: 0.75rem;
+    white-space: nowrap;
+}
+
+.sbs-capsule-small {
+    font-size: 0.85rem;
+}
+
+/* :has() progressive enhancement: only one capsule's contents highlighted
+   open at a time when the browser supports it; every browser still gets the
+   native <details> expand/collapse above regardless (§0.8 fallback). */
+@supports selector(:has(*)) {
+    .sbs-capsule-rail:has(.sbs-capsule[open]) .sbs-capsule:not([open]) {
+        opacity: 0.7;
+    }
+}
+
 /* Creator credits */
 
 .sbs-credit-grid {
@@ -1318,5 +1713,18 @@
     ::view-transition-old(*),
     ::view-transition-new(*) {
         animation: none !important;
+    }
+
+    /* Time-capsule browser: the conic-gradient voting gauge is already a
+       static render with no motion to disable; the capsule rail's hover
+       tilt/lift is the only motion here, so flatten it to a plain stacked
+       card under reduced motion (§0.5). */
+    .sbs-capsule {
+        transform: none;
+        transition: none;
+    }
+
+    .sbs-capsule:hover {
+        transform: none;
     }
 }

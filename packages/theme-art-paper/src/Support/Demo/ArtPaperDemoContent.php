@@ -79,6 +79,7 @@ final class ArtPaperDemoContent implements ProvidesThemeDemoContent
                     $this->verticalCategoriesSection(),
                     $this->galleryFeatureSection($media),
                     $this->productCreditsSection(),
+                    $this->processDocumentationTimelineSection(),
                     $this->trendListSection(
                         heading: 'Direction worth studying',
                         summary: 'Edited trend rows drawn from features, products, and the spaces we have photographed this season.',
@@ -181,7 +182,10 @@ final class ArtPaperDemoContent implements ProvidesThemeDemoContent
                         secondaryUrl: '#product-credits',
                     ),
                     $this->galleryFeatureSection($media),
+                    $this->designerProfileClusterSection($media),
                     $this->productCreditsSection(),
+                    $this->trendForecastSection(),
+                    $this->processDocumentationTimelineSection(),
                     $this->editorPicksSection($media),
                     $this->newsletterSection(
                         heading: 'Follow the architecture desk',
@@ -234,6 +238,10 @@ final class ArtPaperDemoContent implements ProvidesThemeDemoContent
                     $this->newsletterSection(
                         heading: 'Or just read along with us',
                         summary: 'Not pitching yet? Join the weekly edition and see what the desk publishes first.',
+                    ),
+                    $this->ctaSection(
+                        heading: 'Ready to pitch the desk?',
+                        summary: 'Send your feature, gallery, or product credit to ' . self::DESK_EMAIL . ' — the desk replies within the week.',
                     ),
                 ],
             ],
@@ -574,6 +582,41 @@ final class ArtPaperDemoContent implements ProvidesThemeDemoContent
     }
 
     /**
+     * @param  array{hero: list<string>, listing: list<string>, detail: list<string>, proof: list<string>, contact: list<string>, cta: list<string>}  $media
+     * @return array<string, mixed>
+     */
+    private function designerProfileClusterSection(array $media): array
+    {
+        $images = array_values(array_unique(array_merge($media['contact'], $media['proof'])));
+
+        $designers = [
+            ['name' => 'Mara Lindqvist', 'discipline' => 'Photography', 'summary' => 'Shoots every lead feature on location, always at first or last light.'],
+            ['name' => 'Halden Workshop', 'discipline' => 'Joinery & materials', 'summary' => 'The oak, granite, and lime plaster credited across this issue.'],
+            ['name' => 'Ines Coutinho', 'discipline' => 'Design editor', 'summary' => 'Commissions the architecture and interiors desks from Lisbon.'],
+        ];
+
+        $items = [];
+
+        foreach ($designers as $index => $designer) {
+            $items[] = [
+                ...$designer,
+                'url' => '#designer-' . ($index + 1),
+                'image' => $images[$index % max(count($images), 1)] ?? null,
+                'imageAlt' => $designer['name'],
+            ];
+        }
+
+        return [
+            'type' => 'gallery-feature',
+            'variant' => 'cluster',
+            'kicker' => 'Gallery feature',
+            'heading' => 'Who made this issue',
+            'summary' => 'The photographer, the makers, and the editor behind the coastal house feature.',
+            'items' => $items,
+        ];
+    }
+
+    /**
      * @return array<string, mixed>
      */
     private function productCreditsSection(): array
@@ -587,17 +630,81 @@ final class ArtPaperDemoContent implements ProvidesThemeDemoContent
                     'title' => 'Lighting and objects',
                     'summary' => 'The brass pendant, the turned-oak bowls, and the reading lamp from the library apartment.',
                     'meta' => 'Product credits',
+                    'finish' => 'gloss',
+                    'weight' => 'light',
+                    'swatchColor' => '#b08d57',
                 ],
                 [
                     'title' => 'Material notes',
                     'summary' => 'Lime plaster, fumed oak, and the Portuguese granite that anchors the coastal house.',
                     'meta' => 'Materials',
+                    'finish' => 'matte',
+                    'weight' => 'heavy',
+                    'swatchColor' => '#8a7a63',
+                    'beforeImage' => null,
+                    'afterImage' => null,
                 ],
                 [
                     'title' => 'Books and references',
                     'summary' => 'The monographs, exhibition catalogues, and studio visits behind this month\'s features.',
                     'meta' => 'References',
+                    'finish' => 'matte',
+                    'weight' => 'medium',
+                    'swatchColor' => '#3d3a35',
                 ],
+            ],
+        ];
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function trendForecastSection(): array
+    {
+        return [
+            'type' => 'product-credits',
+            'variant' => 'trend-forecast',
+            'kicker' => 'Product credits',
+            'heading' => 'The season in swatches',
+            'items' => [
+                [
+                    'title' => 'Warm mineral plaster',
+                    'summary' => 'Lime and clay renders in ochre and terracotta ranges, seen across four features this issue.',
+                    'palette' => ['#b08d57', '#8a5a3c', '#d7bd93'],
+                    'share' => 42,
+                ],
+                [
+                    'title' => 'Fumed and reclaimed oak',
+                    'summary' => 'Darker, smoke-treated timber replacing the pale oak of the last two seasons.',
+                    'palette' => ['#3d2f24', '#5c4630', '#7a6248'],
+                    'share' => 33,
+                ],
+                [
+                    'title' => 'Unbleached fibre upholstery',
+                    'summary' => 'Undyed wool and linen blends, kept deliberately close to raw material colour.',
+                    'palette' => ['#d9d0bf', '#c7bba5', '#a89a80'],
+                    'share' => 25,
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function processDocumentationTimelineSection(): array
+    {
+        return [
+            'type' => 'process-documentation-timeline',
+            'kicker' => 'Process documentation',
+            'heading' => 'How the plate reaches the page',
+            'summary' => 'From first location visit to the finished spread — the stages every feature passes through before it runs.',
+            'items' => [
+                ['title' => 'Location scouting', 'summary' => 'The architecture desk visits every building at least twice before commissioning photography.'],
+                ['title' => 'Photography', 'summary' => 'Mara Lindqvist shoots on location, timed to first or last light for the lead plates.'],
+                ['title' => 'Credits and materials review', 'summary' => 'Every material, maker, and product is confirmed directly with the studio or workshop.'],
+                ['title' => 'Layout and plate sequencing', 'summary' => 'Plates are sequenced for pacing before a single word of copy is set.'],
+                ['title' => 'Desk edit', 'summary' => 'A final pass by the editor for tone, accuracy, and the print-page rhythm.'],
             ],
         ];
     }

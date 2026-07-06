@@ -372,6 +372,19 @@
     margin-top: 0.45rem;
 }
 
+/* archive-wall "stacked" variant: single-column, full-width rows, no
+   masonry columns or per-item rotation -- for narrower placements. */
+.rwi-wall-stacked {
+    columns: 1;
+    display: grid;
+    gap: 1.1rem;
+}
+
+.rwi-wall-item-stacked {
+    margin-block-end: 0;
+    transform: none;
+}
+
 .rwi-title-link {
     color: inherit;
     text-decoration-color: var(--rwi-accent);
@@ -435,6 +448,27 @@
     margin-inline-start: clamp(0px, 4vw, 2.5rem);
 }
 
+/*
+ * irregular-index-grid seeded stagger (§0.1): --rwi-seed-shift/--rwi-seed-rotate
+ * arrive as inline custom properties computed server-side from a hash of the
+ * section's own payload (see irregular-index.blade.php) -- never randomised
+ * at render, so html-cache always serves an identical stagger. The base rule
+ * only nudges the inline-start margin; rotation is opt-in per motion tier
+ * below so a "none" preset still reads as deliberate composition rather than
+ * a flat list (programme §0.6).
+ */
+.rwi-index-row {
+    margin-inline-start: var(--rwi-seed-shift, 0rem);
+}
+
+.rwi-index-list-scattered .rwi-index-row {
+    background: var(--rwi-paper);
+    border: 1px solid var(--rwi-line-soft);
+    box-shadow: 0.3rem 0.3rem 0 var(--rwi-line-soft);
+    margin-block-end: 0.75rem;
+    padding-inline: 1rem;
+}
+
 .rwi-index-numeral {
     color: var(--rwi-accent);
     font-size: 1.6rem;
@@ -449,9 +483,10 @@
     background-color: var(--rwi-line-soft);
     border: 3px solid var(--rwi-line);
     filter: grayscale(1) contrast(1.1);
-    float: right;
+    float: inline-end;
     height: 5rem;
-    margin: 0 0 0.5rem 1rem;
+    margin-block-end: 0.5rem;
+    margin-inline-start: 1rem;
     object-fit: cover;
     width: 5rem;
 }
@@ -516,6 +551,18 @@
     line-height: 1.45;
 }
 
+/* rough-links "annotated" variant: a leading index numeral (shared with
+   irregular-index-grid) turns the plain link row into a counted directory. */
+.rwi-link-row-annotated {
+    align-items: start;
+    display: grid;
+    grid-template-columns: 3.5rem 1fr;
+}
+
+.rwi-link-row-annotated .rwi-index-numeral {
+    font-size: 1.2rem;
+}
+
 /* ---------- submission markers ---------- */
 
 .rwi-marker-grid {
@@ -528,6 +575,21 @@
     border: 3px solid var(--rwi-paper-on-night);
     padding: 1.1rem;
     position: relative;
+}
+
+.rwi-marker-grid-compact {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.rwi-marker-compact {
+    flex: 1 1 12rem;
+    padding: 0.65rem 0.85rem;
+}
+
+.rwi-marker-compact h3 {
+    font-size: 0.92rem;
 }
 
 .rwi-marker::before {
@@ -591,6 +653,77 @@
     line-height: 1.45;
 }
 
+/* ---------- archive dates (calendar variant) ---------- */
+
+.rwi-calendar {
+    border-top: 3px solid var(--rwi-line);
+    display: grid;
+    gap: 0.25rem;
+}
+
+.rwi-calendar-week {
+    display: grid;
+    gap: 0.25rem;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    padding-block: 0.6rem;
+}
+
+.rwi-calendar-weekday {
+    color: var(--rwi-accent);
+    font-size: 0.68rem;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+.rwi-calendar-grid {
+    display: grid;
+    gap: 0.25rem;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+}
+
+.rwi-calendar-cell {
+    background: var(--rwi-paper);
+    border: 1px solid var(--rwi-line-soft);
+    grid-column: var(--rwi-calendar-cell, auto);
+    min-height: 6.5rem;
+    padding: 0.5rem;
+}
+
+.rwi-calendar-date {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 800;
+}
+
+.rwi-calendar-cell .rwi-meta {
+    color: var(--rwi-accent);
+    display: block;
+    font-size: 0.62rem;
+    font-weight: 800;
+    letter-spacing: 0.03em;
+    margin-block: 0.25rem;
+    text-transform: uppercase;
+}
+
+.rwi-calendar-cell p:last-child {
+    color: var(--rwi-muted);
+    font-size: 0.78rem;
+    line-height: 1.35;
+}
+
+@media (max-width: 719.98px) {
+    .rwi-calendar-week,
+    .rwi-calendar-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .rwi-calendar-cell {
+        grid-column: auto;
+    }
+}
+
 /* ---------- zine annotations (margin notes) ---------- */
 
 .rwi-annotation-grid {
@@ -618,6 +751,25 @@
     font-size: 0.9rem;
     line-height: 1.5;
     margin-top: 0.4rem;
+}
+
+/* zine-annotations "spine" variant: a single vertical marginalia rail rather
+   than the default grid -- each note keeps its own border-inline-start rule,
+   the grid collapses to one column and the rows sit flush against a shared
+   spine rule down the inline-start edge. */
+.rwi-annotation-spine {
+    border-inline-start: 1px dashed var(--rwi-line-soft);
+    display: grid;
+    gap: 1.5rem;
+    padding-inline-start: 1.5rem;
+}
+
+.rwi-annotation-spine-item {
+    transform: none;
+}
+
+.rwi-annotation-spine-item:nth-child(even) {
+    transform: none;
 }
 
 /* ---------- generic card grid (proof / content-listing) ---------- */
@@ -1305,4 +1457,184 @@
     ::view-transition-new(*) {
         animation: none !important;
     }
+}
+
+/*
+ * ---------- time-capsule-browser (cross-archive signature widget) ----------
+ * Archive eras as 3D-perspective capsules: `perspective` on the rack,
+ * `rotateY` + `translateZ` on each face gives the "sealed capsule" depth
+ * read. Expand-one-at-a-time is a radio input (keyboard-reachable, no JS)
+ * paired with a `:has()` selector -- enhancement-only per §0.8, wrapped in
+ * `@supports selector(:has(*))` so unsupported browsers simply render every
+ * capsule's preview list already visible (nothing is ever hidden behind
+ * unsupported CSS). Payload cap §0.3: 6 eras, 5 preview items each.
+ */
+
+.rwi-capsule-rack {
+    display: grid;
+    gap: 1.5rem;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+    perspective: 60rem;
+}
+
+.rwi-capsule {
+    position: relative;
+}
+
+.rwi-capsule-toggle {
+    height: 1px;
+    inset-inline-start: -9999px;
+    position: absolute;
+    width: 1px;
+}
+
+.rwi-capsule-toggle:focus-visible + .rwi-capsule-face {
+    outline: 3px solid var(--rwi-accent);
+    outline-offset: 3px;
+}
+
+.rwi-capsule-face {
+    background: var(--rwi-paper);
+    border: 3px solid var(--rwi-line);
+    box-shadow:
+        0.4rem 0.4rem 0 var(--rwi-line-soft),
+        0.8rem 0.8rem 0
+            color-mix(in srgb, var(--rwi-line-soft) 55%, transparent);
+    padding: 1.1rem;
+    transform: rotateY(calc(var(--rwi-capsule-depth, 0) * -1.5deg))
+        translateZ(calc(var(--rwi-capsule-depth, 0) * -0.4rem));
+    transform-style: preserve-3d;
+    transition:
+        transform var(--foundation-motion-duration, 260ms)
+            var(--foundation-motion-ease, ease-out),
+        box-shadow var(--foundation-motion-duration, 260ms)
+            var(--foundation-motion-ease, ease-out);
+}
+
+.rwi-capsule-label {
+    align-items: center;
+    cursor: pointer;
+    display: flex;
+    gap: 0.75rem;
+}
+
+.rwi-capsule-title {
+    font-size: 1.05rem;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+.rwi-capsule-face .rwi-meta {
+    color: var(--rwi-muted);
+    font-size: 0.85rem;
+    line-height: 1.4;
+    margin-top: 0.5rem;
+}
+
+.rwi-capsule-preview {
+    border-top: 1px dashed var(--rwi-line-soft);
+    display: grid;
+    gap: 0.35rem;
+    list-style: none;
+    margin-top: 0.75rem;
+    max-height: 0;
+    overflow: hidden;
+    padding: 0;
+    transition: max-height var(--foundation-motion-duration, 260ms)
+        var(--foundation-motion-ease, ease-out);
+}
+
+.rwi-capsule-preview li {
+    color: var(--rwi-muted);
+    font-size: 0.8rem;
+    padding-top: 0.6rem;
+}
+
+/* Hover/focus always previews 3-5 items regardless of expand state. */
+.rwi-capsule:hover .rwi-capsule-preview,
+.rwi-capsule:focus-within .rwi-capsule-preview {
+    max-height: 20rem;
+}
+
+/* Expand-one-at-a-time via :has() -- enhancement-only (§0.8). Without
+   :has() support every capsule's preview stays visible via the max-height
+   fallback rule below, so nothing is ever unreadable. */
+@supports selector(:has(*)) {
+    .rwi-capsule-preview {
+        max-height: 0;
+    }
+
+    .rwi-capsule:has(.rwi-capsule-toggle:checked) .rwi-capsule-preview {
+        max-height: 20rem;
+    }
+
+    .rwi-capsule:has(.rwi-capsule-toggle:checked) .rwi-capsule-face {
+        box-shadow:
+            0.55rem 0.55rem 0 var(--rwi-accent),
+            1rem 1rem 0
+                color-mix(in srgb, var(--rwi-line-soft) 55%, transparent);
+        transform: rotateY(0deg) translateZ(0.5rem);
+    }
+}
+
+@supports not selector(:has(*)) {
+    .rwi-capsule-preview {
+        max-height: 20rem;
+    }
+}
+
+/* time-capsule-browser "stacked" variant: flat single-column list, no
+   perspective rack -- the expand mechanic is unchanged. */
+.rwi-capsule-rack-stacked {
+    grid-template-columns: 1fr;
+    perspective: none;
+}
+
+.rwi-capsule-rack-stacked .rwi-capsule-face {
+    transform: none;
+}
+
+@supports selector(:has(*)) {
+    .rwi-capsule-rack-stacked
+        .rwi-capsule:has(.rwi-capsule-toggle:checked)
+        .rwi-capsule-face {
+        transform: none;
+    }
+}
+
+/*
+ * motionIntensity: none composed-depth guarantee (programme §0.6): the
+ * "none" tier must still look intentional via depth/scale/composition, not
+ * absence. Rather than dropping the perspective tilt and layered shadow to
+ * flat/invisible, this tier bakes the depth in as a static, non-animated
+ * state: every capsule keeps its seeded rotateY/translateZ offset and its
+ * double drop-shadow, and the expand/hover transitions become instant
+ * (0ms) rather than eased -- the composition stays, only the motion goes.
+ * Honoured both via the theme's own resolved token (data-motion-intensity,
+ * set on <html>/<body> by Foundation's ResolveFoundationThemeTokensAction)
+ * and via the user's OS-level prefers-reduced-motion, whichever applies.
+ */
+[data-motion-intensity='none'] .rwi-capsule-face,
+[data-motion-intensity='none'] .rwi-capsule-preview {
+    transition-duration: 0ms;
+}
+
+[data-motion-intensity='none'] .rwi-index-row {
+    transform: rotate(var(--rwi-seed-rotate, 0deg));
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .rwi-capsule-face,
+    .rwi-capsule-preview {
+        transition-duration: 0ms;
+    }
+}
+
+/* The seeded rotation itself is available at every motion tier (it is
+   layout composition, not an animation) but is only visually asserted
+   under "none" above and "energetic"/"subtle" below -- "minimal" keeps the
+   flatter default read while still shifting inline-start per row. */
+[data-motion-intensity='subtle'] .rwi-index-row,
+[data-motion-intensity='energetic'] .rwi-index-row {
+    transform: rotate(calc(var(--rwi-seed-rotate, 0deg) * 0.6));
 }

@@ -80,6 +80,7 @@ final class GoldRushDemoContent implements ProvidesThemeDemoContent
                     ),
                     $this->winnerHeroSection($media, imageIndex: 0),
                     $this->scoreCriteriaSection(),
+                    $this->nomineeHeatMapSection(),
                     $this->newestNomineesSection(
                         heading: 'Newest nominees',
                         summary: 'Fresh work entered the scoreboard in the last twenty-four hours, scored and ready for the public vote.',
@@ -87,6 +88,7 @@ final class GoldRushDemoContent implements ProvidesThemeDemoContent
                     ),
                     $this->previousWinnersSection($media, url: 'theme-' . $themeKey . '-directory'),
                     $this->votingStatusSection(),
+                    $this->awardCountdownTickerSection(),
                     $this->creatorCreditsSection(),
                     $this->proofSection(),
                     $this->ctaSection(
@@ -138,13 +140,15 @@ final class GoldRushDemoContent implements ProvidesThemeDemoContent
                         heading: 'Newest nominees',
                         summary: 'The most recent work to enter the scoreboard, newest first.',
                         media: $media,
+                        variant: 'carousel',
                     ),
                     $this->contentListingSection(
                         heading: 'More from the archive',
                         summary: 'Older nominees and category runners-up, with scores and judging notes.',
                         media: $media,
                     ),
-                    $this->previousWinnersSection($media, url: null),
+                    $this->timeCapsuleBrowserSection(),
+                    $this->previousWinnersSection($media, url: null, variant: 'compact'),
                     $this->ctaSection(
                         heading: 'Looking for a specific category?',
                         summary: 'Filter the archive by product, interface, or craft — or submit work for the next judging round.',
@@ -481,7 +485,7 @@ final class GoldRushDemoContent implements ProvidesThemeDemoContent
      * @param  array{hero: list<string>, listing: list<string>, detail: list<string>, proof: list<string>, contact: list<string>, cta: list<string>}  $media
      * @return array<string, mixed>
      */
-    private function newestNomineesSection(string $heading, string $summary, array $media): array
+    private function newestNomineesSection(string $heading, string $summary, array $media, ?string $variant = null): array
     {
         $pool = array_values(array_unique(array_merge($media['listing'], $media['detail'], $media['proof'])));
 
@@ -509,6 +513,7 @@ final class GoldRushDemoContent implements ProvidesThemeDemoContent
             'heading' => $heading,
             'summary' => $summary,
             'items' => $items,
+            'variant' => $variant,
         ];
     }
 
@@ -516,7 +521,7 @@ final class GoldRushDemoContent implements ProvidesThemeDemoContent
      * @param  array{hero: list<string>, listing: list<string>, detail: list<string>, proof: list<string>, contact: list<string>, cta: list<string>}  $media
      * @return array<string, mixed>
      */
-    private function previousWinnersSection(array $media, ?string $url): array
+    private function previousWinnersSection(array $media, ?string $url, ?string $variant = null): array
     {
         $pool = array_values(array_unique(array_merge($media['proof'], $media['listing'], $media['cta'])));
 
@@ -544,6 +549,84 @@ final class GoldRushDemoContent implements ProvidesThemeDemoContent
             'label' => $url !== null ? 'Browse every past winner' : null,
             'url' => $url !== null ? '/' . $url : null,
             'items' => $items,
+            'variant' => $variant,
+        ];
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function nomineeHeatMapSection(): array
+    {
+        return [
+            'type' => 'nominee-heat-map',
+            'heading' => 'Every nominee, ranked by heat',
+            'summary' => 'Darker cells scored higher with the judging panel — scan the full field of nominees at a glance.',
+            'items' => [
+                ['title' => 'Meridian Console', 'meta' => 'Interface', 'score' => 9.4],
+                ['title' => 'Harbour Atlas', 'meta' => 'Product', 'score' => 9.0],
+                ['title' => 'Northwind Field', 'meta' => 'Experience', 'score' => 8.8],
+                ['title' => 'Lumen Dashboard', 'meta' => 'Interface', 'score' => 8.9],
+                ['title' => 'Kindred Lending', 'meta' => 'Product', 'score' => 8.7],
+                ['title' => 'Foundry System', 'meta' => 'Craft', 'score' => 8.6],
+                ['title' => 'Studio Verda', 'meta' => 'Craft', 'score' => 9.3],
+                ['title' => 'Atlas Festival', 'meta' => 'Experience', 'score' => 9.1],
+            ],
+        ];
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function awardCountdownTickerSection(): array
+    {
+        return [
+            'type' => 'award-countdown-ticker',
+            'heading' => 'Today\'s judging round closes soon',
+            'summary' => 'Submit your work or cast a public vote before the window shuts for tomorrow\'s round.',
+            // Server-rendered target only — ticked client-side, never polled (§0.2).
+            'deadline' => now()->addHours(6)->toIso8601String(),
+            'closed' => false,
+        ];
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function timeCapsuleBrowserSection(): array
+    {
+        return [
+            'type' => 'time-capsule-browser',
+            'heading' => 'Browse the scoreboard through the years',
+            'summary' => 'Each capsule holds one judging era — open one to preview its winners before diving into the full archive.',
+            'items' => [
+                [
+                    'title' => '2024',
+                    'meta' => '412 entries scored',
+                    'items' => [
+                        ['title' => 'Meridian Console', 'meta' => '9.4'],
+                        ['title' => 'Lumen Dashboard', 'meta' => '8.9'],
+                        ['title' => 'Kindred Lending', 'meta' => '8.7'],
+                    ],
+                ],
+                [
+                    'title' => '2023',
+                    'meta' => '388 entries scored',
+                    'items' => [
+                        ['title' => 'Foundry System', 'meta' => '8.6'],
+                        ['title' => 'Studio Verda', 'meta' => '9.3'],
+                        ['title' => 'Atlas Festival', 'meta' => '9.1'],
+                    ],
+                ],
+                [
+                    'title' => '2022',
+                    'meta' => '341 entries scored',
+                    'items' => [
+                        ['title' => 'Harbour Atlas', 'meta' => '9.0'],
+                        ['title' => 'Northwind Field', 'meta' => '8.8'],
+                    ],
+                ],
+            ],
         ];
     }
 
@@ -556,6 +639,9 @@ final class GoldRushDemoContent implements ProvidesThemeDemoContent
             'type' => 'voting-status',
             'heading' => 'Today\'s vote is open',
             'summary' => 'The public vote runs alongside the judges. Cast yours before midnight to shape the people\'s pick.',
+            // Server-rendered target only — ticked client-side, never polled (§0.2).
+            'deadline' => now()->endOfDay()->toIso8601String(),
+            'closed' => false,
             'items' => [
                 ['meta' => '2,481 votes', 'title' => 'Meridian Console', 'summary' => 'Leading the public vote with a comfortable margin going into the evening.'],
                 ['meta' => '1,940 votes', 'title' => 'Harbour Atlas', 'summary' => 'Second on the public vote, gaining ground on interface clarity.'],

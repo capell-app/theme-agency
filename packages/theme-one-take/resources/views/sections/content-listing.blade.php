@@ -20,19 +20,13 @@
         @if (is_iterable($items) && collect($items)->isNotEmpty())
             <div class="ops-index">
                 @foreach ($items as $item)
-                    @php
-                        $itemUrl = data_get($item, 'url', data_get($item, 'href'));
-                        $itemImage = data_get($item, 'image', data_get($item, 'imageUrl'));
-                        $itemAlt = data_get($item, 'imageAlt', data_get($item, 'title', ''));
-                    @endphp
-
                     <article
-                        class="ops-index-row {{ filled($itemImage) ? 'ops-index-row-media' : '' }}"
+                        class="ops-index-row {{ filled(data_get($item, 'image', data_get($item, 'imageUrl'))) ? 'ops-index-row-media' : '' }}"
                     >
-                        @if (filled($itemImage))
+                        @if (filled(data_get($item, 'image', data_get($item, 'imageUrl'))))
                             <img
-                                src="{{ $itemImage }}"
-                                alt="{{ $itemAlt }}"
+                                src="{{ data_get($item, 'image', data_get($item, 'imageUrl')) }}"
+                                alt="{{ data_get($item, 'imageAlt', data_get($item, 'title', '')) }}"
                                 width="128"
                                 height="171"
                                 loading="lazy"
@@ -46,10 +40,10 @@
                                 {{ data_get($item, 'category', data_get($item, 'meta', '')) }}
                             </p>
                             <h3>
-                                @if (filled($itemUrl))
+                                @if (filled(data_get($item, 'url', data_get($item, 'href'))))
                                     <a
                                         class="ops-title-link"
-                                        href="{{ $itemUrl }}"
+                                        href="{{ data_get($item, 'url', data_get($item, 'href')) }}"
                                     >
                                         {{ data_get($item, 'title', data_get($item, 'name', '')) }}
                                     </a>

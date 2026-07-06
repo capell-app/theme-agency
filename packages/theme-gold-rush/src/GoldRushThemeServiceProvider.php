@@ -14,6 +14,7 @@ use Capell\Core\ThemeStudio\Data\ThemePresetData;
 use Capell\Core\ThemeStudio\Rendering\ViewSectionRenderer;
 use Capell\Core\ThemeStudio\Theme\ThemeRegistry;
 use Capell\FoundationTheme\Rendering\ChromeSplitBladeThemeRenderer;
+use Capell\FoundationTheme\Rendering\VariantViewSectionRenderer;
 use Capell\FoundationTheme\Support\Editor\StandardThemeEditorSchema;
 use Capell\ThemeStudio\GoldRush\Console\Commands\DemoCommand;
 use Illuminate\Support\ServiceProvider;
@@ -35,7 +36,7 @@ final class GoldRushThemeServiceProvider extends ServiceProvider
             previewImage: '/vendor/capell/themes/gold-rush.jpg',
             tags: ['Awards', 'Scoreboard', 'Nominations', 'Judging', 'Showcase'],
             bestFit: ['Design awards sites', 'Nominee showcases', 'Voting galleries', 'Judged portfolio directories', 'Creative rankings'],
-            includedSections: ['navigation', 'hero', 'winner-hero', 'score-criteria', 'newest-nominees', 'previous-winners', 'voting-status', 'creator-credits', 'proof', 'content-listing', 'newsletter', 'cta', 'footer'],
+            includedSections: ['navigation', 'hero', 'winner-hero', 'score-criteria', 'newest-nominees', 'previous-winners', 'voting-status', 'nominee-heat-map', 'award-countdown-ticker', 'time-capsule-browser', 'creator-credits', 'proof', 'content-listing', 'newsletter', 'cta', 'footer'],
             presets: [
                 new ThemePresetData(
                     key: self::THEME_KEY,
@@ -91,6 +92,15 @@ final class GoldRushThemeServiceProvider extends ServiceProvider
             assets: ['css' => 'vendor/capell/themes/gold-rush.css'],
             runtime: FrontendRuntime::Blade,
             frontend: [
+                'sectionVariants' => [
+                    'score-criteria' => ['default', 'compact'],
+                    'voting-status' => ['default', 'compact'],
+                    'newest-nominees' => ['default', 'carousel'],
+                    'previous-winners' => ['default', 'compact'],
+                    'nominee-heat-map' => ['default', 'compact'],
+                    'award-countdown-ticker' => ['default', 'compact'],
+                    'time-capsule-browser' => ['default', 'compact'],
+                ],
                 'editor' => StandardThemeEditorSchema::definition(),
             ],
             extends: 'default',
@@ -147,10 +157,55 @@ final class GoldRushThemeServiceProvider extends ServiceProvider
             'navigation' => new ViewSectionRenderer(self::THEME_KEY, 'navigation', 'capell-theme-gold-rush::sections.navigation', failLoudly: true),
             'hero' => new ViewSectionRenderer(self::THEME_KEY, 'hero', 'capell-theme-gold-rush::sections.hero', failLoudly: true),
             'winner-hero' => new ViewSectionRenderer(self::THEME_KEY, 'winner-hero', 'capell-theme-gold-rush::sections.winner-hero', failLoudly: true),
-            'score-criteria' => new ViewSectionRenderer(self::THEME_KEY, 'score-criteria', 'capell-theme-gold-rush::sections.score-criteria', failLoudly: true),
-            'newest-nominees' => new ViewSectionRenderer(self::THEME_KEY, 'newest-nominees', 'capell-theme-gold-rush::sections.newest-nominees', failLoudly: true),
-            'previous-winners' => new ViewSectionRenderer(self::THEME_KEY, 'previous-winners', 'capell-theme-gold-rush::sections.previous-winners', failLoudly: true),
-            'voting-status' => new ViewSectionRenderer(self::THEME_KEY, 'voting-status', 'capell-theme-gold-rush::sections.voting-status', failLoudly: true),
+            'score-criteria' => new VariantViewSectionRenderer(
+                themeKey: self::THEME_KEY,
+                sectionKey: 'score-criteria',
+                baseView: 'capell-theme-gold-rush::sections.score-criteria',
+                variantViews: ['compact' => 'capell-theme-gold-rush::sections.score-criteria--compact'],
+                failLoudly: true,
+            ),
+            'newest-nominees' => new VariantViewSectionRenderer(
+                themeKey: self::THEME_KEY,
+                sectionKey: 'newest-nominees',
+                baseView: 'capell-theme-gold-rush::sections.newest-nominees',
+                variantViews: ['carousel' => 'capell-theme-gold-rush::sections.newest-nominees--carousel'],
+                failLoudly: true,
+            ),
+            'previous-winners' => new VariantViewSectionRenderer(
+                themeKey: self::THEME_KEY,
+                sectionKey: 'previous-winners',
+                baseView: 'capell-theme-gold-rush::sections.previous-winners',
+                variantViews: ['compact' => 'capell-theme-gold-rush::sections.previous-winners--compact'],
+                failLoudly: true,
+            ),
+            'voting-status' => new VariantViewSectionRenderer(
+                themeKey: self::THEME_KEY,
+                sectionKey: 'voting-status',
+                baseView: 'capell-theme-gold-rush::sections.voting-status',
+                variantViews: ['compact' => 'capell-theme-gold-rush::sections.voting-status--compact'],
+                failLoudly: true,
+            ),
+            'nominee-heat-map' => new VariantViewSectionRenderer(
+                themeKey: self::THEME_KEY,
+                sectionKey: 'nominee-heat-map',
+                baseView: 'capell-theme-gold-rush::sections.nominee-heat-map',
+                variantViews: ['compact' => 'capell-theme-gold-rush::sections.nominee-heat-map--compact'],
+                failLoudly: true,
+            ),
+            'award-countdown-ticker' => new VariantViewSectionRenderer(
+                themeKey: self::THEME_KEY,
+                sectionKey: 'award-countdown-ticker',
+                baseView: 'capell-theme-gold-rush::sections.award-countdown-ticker',
+                variantViews: ['compact' => 'capell-theme-gold-rush::sections.award-countdown-ticker--compact'],
+                failLoudly: true,
+            ),
+            'time-capsule-browser' => new VariantViewSectionRenderer(
+                themeKey: self::THEME_KEY,
+                sectionKey: 'time-capsule-browser',
+                baseView: 'capell-theme-gold-rush::sections.time-capsule-browser',
+                variantViews: ['compact' => 'capell-theme-gold-rush::sections.time-capsule-browser--compact'],
+                failLoudly: true,
+            ),
             'creator-credits' => new ViewSectionRenderer(self::THEME_KEY, 'creator-credits', 'capell-theme-gold-rush::sections.creator-credits', failLoudly: true),
             'proof' => new ViewSectionRenderer(self::THEME_KEY, 'proof', 'capell-theme-gold-rush::sections.proof', failLoudly: true),
             'content-listing' => new ViewSectionRenderer(self::THEME_KEY, 'content-listing', 'capell-theme-gold-rush::sections.content-listing', failLoudly: true),

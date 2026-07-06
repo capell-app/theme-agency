@@ -27,6 +27,7 @@ return [
         'launch_title' => 'Tidal Atlas by Studio Meridian',
         'launch_summary' => 'A flexible brand and editorial identity for a coastal research network mapping the changing shoreline.',
         'launch_meta' => 'Studio Meridian · Brand & Editorial · United Kingdom',
+        'rotation_label' => 'Next pick rotates in',
     ],
     'filters' => [
         'kicker' => 'Metadata filters',
@@ -45,6 +46,14 @@ return [
         'entry_meta' => 'Foundry Verda · Design system',
         'default_meta' => 'Submitted to the index',
     ],
+    'shuffle' => [
+        'kicker' => 'The deck',
+        'heading' => 'This cycle, shuffled fresh',
+        'summary' => 'Every card in the deck, dealt into a new order for this cycle — the same order every visitor sees, drawn from the page itself rather than left to chance on your screen.',
+        'entry_title' => 'Verda Field System',
+        'entry_summary' => 'A component library unifying four renewable-energy product teams on one visual language.',
+        'entry_meta' => 'Foundry Verda · Design system',
+    ],
     'winners' => [
         'kicker' => 'Winners & collections',
         'heading' => 'The standout entries, grouped into named collections',
@@ -52,6 +61,21 @@ return [
         'badge' => 'Winner',
         'entry_title' => 'Tidal Atlas — Best in Brand & Editorial',
         'entry_summary' => 'Studio Meridian takes the medium award for its coastal research identity system.',
+        'column_project' => 'Project',
+        'column_studio' => 'Studio',
+        'column_category' => 'Category',
+        'column_cycle' => 'Cycle',
+    ],
+    'pulse' => [
+        'kicker' => 'Submission pulse',
+        'heading' => 'How the index has moved this week',
+        'summary' => 'A historical read on submission activity — new entries over the last 24 hours and across the last seven days.',
+        'chart_label' => 'Submissions per day over the last seven days',
+    ],
+    'depth' => [
+        'kicker' => 'Deeper into the archive',
+        'heading' => 'The archive, given room to breathe',
+        'summary' => 'Cards pick up weight the further you read into the collection — a visual cue for how deep the archive runs, not a loading trick.',
     ],
     'profiles' => [
         'kicker' => 'Profiles & resources',

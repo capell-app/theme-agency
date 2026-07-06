@@ -83,6 +83,11 @@ return [
         'books_summary' => 'The monographs, exhibition catalogues, and studio visits behind this month\'s features.',
         'books_meta' => 'References',
     ],
+    'process' => [
+        'kicker' => 'Process documentation',
+        'heading' => 'How the plate reaches the page',
+        'summary' => 'From first location visit to the finished spread — the stages every feature passes through before it runs.',
+    ],
     'trends' => [
         'kicker' => 'Trend list',
         'heading' => 'Direction worth studying',

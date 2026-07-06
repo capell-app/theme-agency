@@ -2,40 +2,21 @@
 
 declare(strict_types=1);
 
-function farFieldThemeBladeViews(): string
-{
-    $paths = array_values(array_unique(array_merge(
-        glob(__DIR__ . '/../../resources/views/*.blade.php') ?: [],
-        glob(__DIR__ . '/../../resources/views/**/*.blade.php') ?: [],
-    )));
+use Capell\FoundationTheme\Testing\AssertsPublicThemeOutputSafety;
 
-    return implode(PHP_EOL, array_map(static fn (string $path): string => file_get_contents($path) ?: '', $paths));
-}
+uses(AssertsPublicThemeOutputSafety::class);
 
-it('keeps public Blade free of authoring or package metadata', function (): void {
-    $publicOutput = farFieldThemeBladeViews();
-
-    expect($publicOutput)
-        ->not->toContain('capell-app/theme-far-field')
-        ->not->toContain('authoring')
-        ->not->toContain('data-theme-key')
-        ->not->toContain('Filament')
-        ->not->toContain('Livewire')
-        ->not->toContain('signed')
-        ->not->toContain('wire:')
-        ->not->toContain('data-field')
-        ->not->toContain('data-model')
-        ->not->toContain('field_path')
-        ->not->toContain('model_id')
-        ->not->toContain('permission');
+it('keeps public Blade free of authoring, package metadata, and database access', function (): void {
+    $this->assertClassicThemeOutputIsSafe(__DIR__ . '/../../resources/views', 'capell-app/theme-far-field');
 });
 
-it('keeps public Blade free of database query calls', function (): void {
-    expect(farFieldThemeBladeViews())
-        ->not->toContain('::query(')
-        ->not->toContain('DB::')
-        ->not->toContain('loadMissing(')
-        ->not->toContain('relationLoaded(')
-        ->not->toContain('Frontend::')
-        ->not->toContain('find(');
+it('keeps the @php block count within the frozen baseline and static calls whitelisted', function (): void {
+    // Wave 4a raised the baseline from 19 to 34: five new signature-widget
+    // views (radio-audio's rewrite, city-guides' rewrite, the new
+    // photo-essay and cultural-dispatch-timeline sections, and columnists'
+    // rewrite) each added one or two @php blocks, all pure data_get()/
+    // collect() defaulting/prep per the §1.2 policy -- no queries, facades,
+    // or side-effectful conditionals. The ratchet still holds: this count
+    // may only decrease from here.
+    $this->assertPhpBlockPolicy(__DIR__ . '/../../resources/views', 34);
 });

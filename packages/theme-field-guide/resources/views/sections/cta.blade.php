@@ -24,6 +24,7 @@
 <section
     id="cta"
     class="fga-section fga-section-dark"
+    data-widget="collection-cta-browse"
 >
     <div class="fga-section-inner">
         <div class="fga-section-head-copy">

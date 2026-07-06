@@ -78,10 +78,15 @@ final class DeepBenchDemoContent implements ProvidesThemeDemoContent
                         secondaryUrl: '#role-filters',
                     ),
                     $this->directoryHeroSection($media),
+                    $this->directoryHeroRosterSection(),
                     $this->roleFiltersSection(),
+                    $this->roleFiltersToolbarSection(),
                     $this->portfolioGridSection($media),
+                    $this->portfolioGridCardsSection($media),
                     $this->resumeResourcesSection(),
+                    $this->resumeResourcesSidebarSection(),
                     $this->curatedListsSection(),
+                    $this->curatedListsCtaSection(),
                     $this->profileDetailSection($media),
                     $this->proofSection(),
                     $this->newsletterSection(
@@ -131,9 +136,12 @@ final class DeepBenchDemoContent implements ProvidesThemeDemoContent
                         secondaryUrl: '#curated-lists',
                     ),
                     $this->roleFiltersSection(),
+                    $this->roleFiltersToolbarSection(),
                     $this->portfolioGridSection($media),
+                    $this->portfolioGridCardsSection($media),
                     $this->curatedListsSection(),
                     $this->resumeResourcesSection(),
+                    $this->resumeResourcesSidebarSection(),
                     $this->newsletterSection(
                         heading: 'New creators in your inbox, every Friday',
                         summary: 'Five hand-picked additions to the directory plus one career resource — straight from the editors.',
@@ -580,6 +588,172 @@ final class DeepBenchDemoContent implements ProvidesThemeDemoContent
             'heading' => 'Creators currently listed in the index',
             'summary' => 'Name, discipline, city, and a live link to the work — everything you need to shortlist someone in under a minute.',
             'items' => $items,
+        ];
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function directoryHeroRosterSection(): array
+    {
+        return [
+            'type' => 'directory-hero-roster',
+            'eyebrow' => 'The roster at a glance',
+            'heading' => 'A directory that proves itself in numbers',
+            'summary' => 'Every figure below reflects the current index — hand-reviewed profiles, disciplines covered, curated lists, and how fast the editors respond.',
+            'stats' => [
+                ['value' => 1200, 'label' => 'profiles listed', 'suffix' => '+'],
+                ['value' => 6, 'label' => 'disciplines covered'],
+                ['value' => 30, 'label' => 'curated lists'],
+                ['value' => 48, 'label' => 'average review response', 'suffix' => 'h'],
+            ],
+        ];
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function roleFiltersToolbarSection(): array
+    {
+        return [
+            'type' => 'role-filters-toolbar',
+            'eyebrow' => 'Sort the roster',
+            'heading' => 'Narrow the roster to the creators you need',
+            'summary' => 'Tick a discipline, tick availability, and the roster below updates instantly — no accounts, no search syntax, no page reload.',
+            'target' => 'portfolio-grid-cards',
+            'facets' => [
+                ['key' => 'product', 'label' => 'Product', 'meta' => '324'],
+                ['key' => 'brand', 'label' => 'Brand', 'meta' => '287'],
+                ['key' => 'motion', 'label' => 'Motion', 'meta' => '142'],
+                ['key' => 'frontend', 'label' => 'Frontend', 'meta' => '253'],
+                ['key' => 'illustration', 'label' => 'Illustration', 'meta' => '96'],
+                ['key' => 'studios', 'label' => 'Studios', 'meta' => '98'],
+            ],
+        ];
+    }
+
+    /**
+     * @param  array{hero: list<string>, listing: list<string>, detail: list<string>, proof: list<string>, contact: list<string>, cta: list<string>}  $media
+     * @return array<string, mixed>
+     */
+    private function portfolioGridCardsSection(array $media): array
+    {
+        $images = array_values(array_unique(array_merge($media['listing'], $media['proof'], $media['detail'], $media['contact'])));
+
+        $creators = [
+            [
+                'title' => 'Aria Wells',
+                'meta' => 'Product Designer',
+                'summary' => 'Interface and systems work for fintech and health products.',
+                'location' => 'Amsterdam, NL',
+                'discipline' => 'product',
+                'available' => true,
+                'url' => '#profile-detail',
+            ],
+            [
+                'title' => 'Mira Sol',
+                'meta' => 'Frontend Engineer',
+                'summary' => 'Accessible, fast interfaces built with care and craft.',
+                'location' => 'Lisbon, PT',
+                'discipline' => 'frontend',
+                'available' => true,
+                'url' => '#profile-detail',
+            ],
+            [
+                'title' => 'Devon Park Studio',
+                'meta' => 'Brand Studio',
+                'summary' => 'Identities and websites for culture-led organisations.',
+                'location' => 'Glasgow, UK',
+                'discipline' => 'brand',
+                'available' => false,
+                'url' => '#profile-detail',
+            ],
+            [
+                'title' => 'Jonas Reff',
+                'meta' => 'Motion Designer',
+                'summary' => 'Title sequences and product film for teams that ship.',
+                'location' => 'Copenhagen, DK',
+                'discipline' => 'motion',
+                'available' => true,
+                'url' => '#profile-detail',
+            ],
+            [
+                'title' => 'Lena Okafor',
+                'meta' => 'Illustrator',
+                'summary' => 'Editorial and brand illustration with a printmaker\'s hand.',
+                'location' => 'Berlin, DE',
+                'discipline' => 'illustration',
+                'available' => false,
+                'url' => '#profile-detail',
+            ],
+            [
+                'title' => 'Halvard & Co',
+                'meta' => 'Product Studio',
+                'summary' => 'End-to-end product work for founders on their second act.',
+                'location' => 'Oslo, NO',
+                'discipline' => 'studios',
+                'available' => true,
+                'url' => '#profile-detail',
+            ],
+        ];
+
+        $items = [];
+
+        foreach ($creators as $index => $creator) {
+            $items[] = [
+                ...$creator,
+                'image' => $images[$index % max(count($images), 1)] ?? null,
+                'imageAlt' => 'Portrait of ' . $creator['title'],
+            ];
+        }
+
+        return [
+            'type' => 'portfolio-grid-cards',
+            'eyebrow' => 'The roster',
+            'heading' => 'Creators matching your filters',
+            'summary' => 'Every card updates live as you sort the roster above — name, discipline, city, and a link straight to the work.',
+            'items' => $items,
+        ];
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function resumeResourcesSidebarSection(): array
+    {
+        return [
+            'type' => 'resume-resources-sidebar',
+            'eyebrow' => 'Career resources',
+            'heading' => 'Everything you need before you apply',
+            'summary' => 'A compact rail of the same templates and guides the editors send creators before their profile goes live.',
+            'label' => 'Browse all resources',
+            'url' => '#resume-resources-sidebar',
+            'items' => [
+                ['title' => 'The one-page resume that gets read', 'meta' => 'Template', 'url' => '#resume-resources-sidebar'],
+                ['title' => 'Writing a case study that closes', 'meta' => 'Guide', 'url' => '#resume-resources-sidebar'],
+                ['title' => 'Freelance day-rate report', 'meta' => 'Data', 'url' => '#resume-resources-sidebar'],
+                ['title' => 'Negotiating your first retainer', 'meta' => 'Guide', 'url' => '#resume-resources-sidebar'],
+            ],
+        ];
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function curatedListsCtaSection(): array
+    {
+        return [
+            'type' => 'curated-lists-cta',
+            'eyebrow' => 'Curated lists',
+            'heading' => 'Start from a shortlist, then sort the roster your way',
+            'summary' => 'Curated lists give you a strong starting point; the roster filters above let you refine it down to the exact person you need.',
+            'label' => 'Submit your portfolio',
+            'url' => '#newsletter',
+            'featuredList' => [
+                'title' => 'Frontend craftspeople',
+                'summary' => 'Engineers whose public work is a masterclass in detail — the list hiring managers bookmark first.',
+                'meta' => '9 profiles',
+            ],
         ];
     }
 
