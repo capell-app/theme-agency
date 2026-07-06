@@ -90,6 +90,7 @@ final class WildCardDemoContent implements ProvidesThemeDemoContent
                         pageSeed: 'theme-' . $themeKey,
                     ),
                     $this->winnersLedgerSection(),
+                    $this->timeCapsuleBrowserSection(),
                     $this->submissionPulseSection(),
                     $this->profilesResourcesSection(),
                     $this->sponsorModulesSection(),
@@ -521,6 +522,45 @@ final class WildCardDemoContent implements ProvidesThemeDemoContent
                         ['label' => 'Packaging', 'count' => 11],
                         ['label' => 'Campaign', 'count' => 17],
                         ['label' => 'Design system', 'count' => 9],
+                    ],
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function timeCapsuleBrowserSection(string $heading = 'Every cycle, kept on the shelf'): array
+    {
+        return [
+            'type' => 'time-capsule-browser',
+            'kicker' => 'Past cycles',
+            'heading' => $heading,
+            'summary' => 'Each past cycle is a cartridge you can load — open one to see the entries the curators kept from that year, without leaving the index.',
+            'items' => [
+                [
+                    'title' => '2025 cycle',
+                    'summary' => 'The current cycle — 41 winners across nine categories, still open for collection.',
+                    'previewItems' => [
+                        ['title' => 'Tidal Atlas'],
+                        ['title' => 'Northwind Type'],
+                        ['title' => 'Harbour Sessions'],
+                    ],
+                ],
+                [
+                    'title' => '2023 cycle',
+                    'summary' => 'A record year for interactive work, with the index\'s first real-time pipeline Grand Prix.',
+                    'previewItems' => [
+                        ['title' => 'Verda Field System'],
+                        ['title' => 'Lumen Refresh'],
+                    ],
+                ],
+                [
+                    'title' => '2021 · Founding cycle',
+                    'summary' => 'The first verdicts on the record, awarded across brand, motion, and craft categories.',
+                    'previewItems' => [
+                        ['title' => 'Coastline Report'],
                     ],
                 ],
             ],
