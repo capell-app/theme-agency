@@ -165,6 +165,15 @@ final class ReelRoomDemoContent implements ProvidesThemeDemoContent
                         summary: 'Every gold, silver, and commendation filed since the first cycle, newest first.',
                         media: $media,
                     ),
+                    $this->archiveWallIndexSection(
+                        heading: 'The archive wall',
+                        summary: 'Every filed still in one contact-sheet grid, oldest cycles mixed with the newest.',
+                        media: $media,
+                    ),
+                    $this->timeCapsuleBrowserSection(
+                        heading: 'Step into an earlier cycle',
+                        summary: 'Each award cycle is filed as its own capsule — open one to preview the projects it holds.',
+                    ),
                     $this->archiveHeroSection(
                         heading: 'Earlier cycles, still on the record',
                         summary: 'Winners from the founding cycles, kept legible with their original scores and credits intact.',
@@ -537,6 +546,12 @@ final class ReelRoomDemoContent implements ProvidesThemeDemoContent
                 ['title' => 'Technology stack', 'summary' => 'Hand-drawn cels composited over plate photography, finished in a Nuke and Houdini pipeline with a bespoke grain pass.'],
                 ['title' => 'Awards carried', 'summary' => '2025 Grand Prix for motion direction, plus a craft commendation for the sound design partnership.'],
             ],
+            'credits' => [
+                ['role' => 'Direction', 'name' => 'Mara Quinteros'],
+                ['role' => 'Studio', 'name' => 'Atlas Motion'],
+                ['role' => 'Pipeline & finish', 'name' => 'Northroom'],
+                ['role' => 'Sound & score', 'name' => 'Field Recordings Ltd'],
+            ],
         ];
     }
 
@@ -606,7 +621,88 @@ final class ReelRoomDemoContent implements ProvidesThemeDemoContent
             'type' => 'content-listing',
             'heading' => $heading,
             'summary' => $summary,
+            // Note: `videoSrc` is intentionally omitted here — this demo
+            // catalogue has no hosted stock video pool yet, and the
+            // video-preview-grid widget (Wave 4b) is designed to fall back
+            // to a static poster whenever an item has no `videoSrc`, so the
+            // widget still renders a complete, honest archive rather than
+            // guessing at a placeholder video URL.
             'items' => $items,
+        ];
+    }
+
+    /**
+     * @param  array{hero: list<string>, listing: list<string>, detail: list<string>, proof: list<string>, contact: list<string>, cta: list<string>}  $media
+     * @return array<string, mixed>
+     */
+    private function archiveWallIndexSection(string $heading, string $summary, array $media): array
+    {
+        $images = array_values(array_unique(array_merge($media['proof'], $media['listing'], $media['detail'])));
+
+        $entries = [
+            ['title' => 'Tidal States', 'url' => '#tidal-states'],
+            ['title' => 'Signal Drift', 'url' => '#winner-2'],
+            ['title' => 'Paper Cities', 'url' => '#winner-3'],
+            ['title' => 'Glasshouse', 'url' => '#archive-1'],
+            ['title' => 'Concrete Choir', 'url' => '#archive-2'],
+            ['title' => 'Loom', 'url' => '#archive-3'],
+            ['title' => 'Night Freight', 'url' => '#archive-4'],
+            ['title' => 'Founding cycle reel', 'url' => '#archive'],
+        ];
+
+        $items = [];
+
+        foreach ($entries as $index => $entry) {
+            $items[] = [
+                ...$entry,
+                'image' => $images[$index % max(count($images), 1)] ?? null,
+                'imageAlt' => $entry['title'] . ' archive still',
+            ];
+        }
+
+        return [
+            'type' => 'archive-wall-index',
+            'heading' => $heading,
+            'summary' => $summary,
+            'items' => $items,
+        ];
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function timeCapsuleBrowserSection(string $heading, string $summary): array
+    {
+        return [
+            'type' => 'time-capsule-browser',
+            'heading' => $heading,
+            'summary' => $summary,
+            'items' => [
+                [
+                    'title' => '2025 cycle',
+                    'summary' => 'The current jury cycle — 41 winners across nine categories.',
+                    'previewItems' => [
+                        ['title' => 'Tidal States'],
+                        ['title' => 'Signal Drift'],
+                        ['title' => 'Paper Cities'],
+                    ],
+                ],
+                [
+                    'title' => '2023 cycle',
+                    'summary' => 'A record year for interactive work, with the first real-time pipeline Grand Prix.',
+                    'previewItems' => [
+                        ['title' => 'Loom'],
+                        ['title' => 'Night Freight'],
+                    ],
+                ],
+                [
+                    'title' => '2021 · Founding cycle',
+                    'summary' => 'The first verdicts on the record, awarded across motion, interactive, and craft categories.',
+                    'previewItems' => [
+                        ['title' => 'Founding cycle reel'],
+                    ],
+                ],
+            ],
         ];
     }
 

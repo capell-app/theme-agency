@@ -1,11 +1,19 @@
+{{--
+    one-page-grid-showcase (Wave 4c signature widget, mechanic: dossier
+    pages). The gallery's main index page: every entry carries its own
+    dossier folio number so the grid reads as consecutive document pages
+    rather than a generic card wall. Capped at 50 items (§0.3) — beyond that,
+    a theme should paginate or curate rather than grow the payload.
+--}}
 @php
     $heading = data_get($section, 'heading', __('capell-theme-one-take::sections.stories.heading'));
     $summary = data_get($section, 'summary', __('capell-theme-one-take::sections.stories.summary'));
-    $items = data_get($section, 'items', [
+    $items = collect(data_get($section, 'items', [
         ['title' => __('capell-theme-one-take::sections.stories.product_title'), 'summary' => __('capell-theme-one-take::sections.stories.product_summary'), 'meta' => __('capell-theme-one-take::sections.stories.product_meta')],
         ['title' => __('capell-theme-one-take::sections.stories.design_title'), 'summary' => __('capell-theme-one-take::sections.stories.design_summary'), 'meta' => __('capell-theme-one-take::sections.stories.design_meta')],
         ['title' => __('capell-theme-one-take::sections.stories.advice_title'), 'summary' => __('capell-theme-one-take::sections.stories.advice_summary'), 'meta' => __('capell-theme-one-take::sections.stories.advice_meta')],
-    ]);
+    ]))->take(50);
+    $startingFolio = (int) data_get($section, 'startingFolio', 1);
 @endphp
 
 <section
@@ -19,15 +27,12 @@
         <h2>{{ $heading }}</h2>
         <p class="ops-lede">{{ $summary }}</p>
 
-        <div class="ops-grid ops-grid-captures">
-            @foreach ($items as $item)
-                @php
-                    $itemImage = data_get($item, 'image', data_get($item, 'imageUrl'));
-                    $itemAlt = data_get($item, 'imageAlt', data_get($item, 'title', ''));
-                    $itemUrl = data_get($item, 'url', data_get($item, 'href'));
-                @endphp
-
-                <article class="ops-capture-frame">
+        <div class="ops-grid ops-grid-captures ops-dossier-spread">
+            @foreach ($items as $index => $item)
+                <article
+                    class="ops-capture-frame ops-dossier-page"
+                    style="--ops-folio: {{ $startingFolio + $index }}"
+                >
                     <div
                         class="ops-capture-chrome"
                         aria-hidden="true"
@@ -37,10 +42,10 @@
                         <span></span>
                     </div>
 
-                    @if (filled($itemImage))
+                    @if (filled(data_get($item, 'image', data_get($item, 'imageUrl'))))
                         <img
-                            src="{{ $itemImage }}"
-                            alt="{{ $itemAlt }}"
+                            src="{{ data_get($item, 'image', data_get($item, 'imageUrl')) }}"
+                            alt="{{ data_get($item, 'imageAlt', data_get($item, 'title', '')) }}"
                             width="900"
                             height="1400"
                             loading="lazy"
@@ -54,11 +59,17 @@
                         ></div>
                     @endif
                     <div class="ops-capture-body">
+                        <p
+                            class="ops-dossier-folio"
+                            aria-hidden="true"
+                        >
+                            {{ __('capell-theme-one-take::sections.stories.folio', ['number' => str_pad((string) ($startingFolio + $index), 2, '0', STR_PAD_LEFT)]) }}
+                        </p>
                         <h3>
-                            @if (filled($itemUrl))
+                            @if (filled(data_get($item, 'url', data_get($item, 'href'))))
                                 <a
                                     class="ops-title-link"
-                                    href="{{ $itemUrl }}"
+                                    href="{{ data_get($item, 'url', data_get($item, 'href')) }}"
                                 >
                                     {{ data_get($item, 'title', data_get($item, 'name', '')) }}
                                 </a>

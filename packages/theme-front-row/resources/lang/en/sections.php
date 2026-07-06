@@ -102,6 +102,13 @@ return [
         'company_title' => 'Portfolio clinics',
         'company_summary' => 'Monthly live reviews where editors critique reader submissions on the record.',
     ],
+    'spotlight' => [
+        'tier_gold' => 'Gold',
+        'tier_silver' => 'Silver',
+        'tier_bronze' => 'Bronze',
+        'upsell_lead_label' => 'Start here',
+        'upsell_cta_label' => 'Read the teardown',
+    ],
     'proof' => [
         'kicker' => 'A collection readers trust',
         'care_value' => '420+',

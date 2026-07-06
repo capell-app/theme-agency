@@ -15,9 +15,11 @@ use Capell\FoundationTheme\Support\Demo\ThemeDemoPageDefinition;
  *
  * Each surface is seeded as an ordered `render_data['sections']` list so the
  * page adapter emits the theme's signature newsroom renderers (top-stories /
- * live-brief / topic-navigation / opinion-analysis / video-row / missed-it /
- * newsletter) alongside the shared hero/proof/cta — giving every surface a
- * full, individual publisher site rather than the shared five-section skeleton.
+ * breaking-news-ribbon / live-event-timeline / reading-progress-with-markers /
+ * topic-navigation / news-web-topology / author-credibility-inline /
+ * opinion-grid-with-bylines / video-row / missed-it / newsletter) alongside
+ * the shared hero/proof/cta — giving every surface a full, individual
+ * publisher site rather than the shared five-section skeleton.
  *
  * Navigation seeds both `brand` (blade payload key) and `brandName` (contract
  * key); footer seeds both `items` (blade payload key) and `columns` (contract
@@ -57,7 +59,7 @@ final class InkPressDemoContent implements ProvidesThemeDemoContent
      */
     private function homepage(string $themeKey, array $media): ThemeDemoPageDefinition
     {
-        $anchors = ['top-stories', 'live-brief', 'topic-navigation', 'opinion-analysis', 'video-row', 'missed-it', 'subscribe'];
+        $anchors = ['top-stories', 'live-event-timeline', 'topic-navigation', 'news-web-topology', 'author-credibility-inline', 'opinion-grid-with-bylines', 'video-row', 'missed-it', 'subscribe'];
 
         return new ThemeDemoPageDefinition(
             surface: 'homepage',
@@ -81,10 +83,13 @@ final class InkPressDemoContent implements ProvidesThemeDemoContent
                         mediaAlt: 'The Meridian Review newsroom',
                         anchors: $anchors,
                     ),
+                    $this->breakingNewsRibbonSection(),
                     $this->topStoriesSection(),
-                    $this->liveBriefSection(),
+                    $this->liveEventTimelineSection(),
                     $this->topicNavigationSection(),
-                    $this->opinionAnalysisSection(),
+                    $this->newsWebTopologySection(),
+                    $this->authorCredibilityInlineSection(),
+                    $this->opinionGridWithBylinesSection(),
                     $this->videoRowSection(),
                     $this->missedItSection(),
                     $this->proofSection(),
@@ -152,7 +157,7 @@ final class InkPressDemoContent implements ProvidesThemeDemoContent
      */
     private function detail(string $themeKey, array $media): ThemeDemoPageDefinition
     {
-        $anchors = ['live-brief', 'opinion-analysis', 'video-row'];
+        $anchors = ['live-event-timeline', 'news-web-topology', 'author-credibility-inline', 'opinion-grid-with-bylines', 'video-row'];
 
         return new ThemeDemoPageDefinition(
             surface: 'detail',
@@ -176,8 +181,11 @@ final class InkPressDemoContent implements ProvidesThemeDemoContent
                         mediaAlt: 'Talks enter their final day',
                         anchors: $anchors,
                     ),
-                    $this->liveBriefSection(),
-                    $this->opinionAnalysisSection(),
+                    $this->readingProgressWithMarkersSection(),
+                    $this->liveEventTimelineSection(),
+                    $this->newsWebTopologySection(),
+                    $this->authorCredibilityInlineSection(),
+                    $this->opinionGridWithBylinesSection(),
                     $this->videoRowSection(),
                     $this->contentListingSection(
                         heading: 'Related coverage',
@@ -375,7 +383,7 @@ final class InkPressDemoContent implements ProvidesThemeDemoContent
             'summary' => $summary,
             'actions' => [
                 ['label' => 'Read top stories', 'url' => $this->linkTo('top-stories', $anchors), 'style' => 'primary'],
-                ['label' => 'Follow live coverage', 'url' => $this->linkTo('live-brief', $anchors), 'style' => 'secondary'],
+                ['label' => 'Follow live coverage', 'url' => $this->linkTo('live-event-timeline', $anchors), 'style' => 'secondary'],
             ],
             'mediaUrl' => $mediaUrl,
             'mediaAlt' => $mediaAlt,
@@ -400,20 +408,55 @@ final class InkPressDemoContent implements ProvidesThemeDemoContent
     }
 
     /**
+     * §0.2 live-state policy: `state` is set editorially in this demo
+     * payload (never polled/detected) — 'active' here because the front
+     * page is mid-story; a quieter surface would set 'hidden'.
+     *
      * @return array<string, mixed>
      */
-    private function liveBriefSection(): array
+    private function breakingNewsRibbonSection(): array
     {
         return [
-            'type' => 'live-brief',
+            'type' => 'breaking-news-ribbon',
+            'state' => 'active',
+            'heading' => 'Officials confirm a joint statement is being finalised',
+            'summary' => 'Both delegations have returned to the table; a signing could come within the hour.',
+            'label' => 'Follow live',
+            'url' => '#live-event-timeline',
+        ];
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function liveEventTimelineSection(): array
+    {
+        return [
+            'type' => 'live-event-timeline',
             'heading' => 'Live: talks reach their final hours',
             'summary' => 'Rolling updates from the negotiating room, with analysis from the political desk as the deadline approaches.',
             'label' => 'Follow updates',
-            'url' => '#live-brief',
+            'url' => '#live-event-timeline',
             'items' => [
                 ['title' => 'Key decisions expected this afternoon', 'summary' => 'Officials say a joint statement is being drafted, though two sticking points remain unresolved after the morning session.', 'meta' => '14:32'],
                 ['title' => 'Explainer: why the vote matters', 'summary' => 'The background to the deadlock in three short paragraphs, for readers joining the story late.', 'meta' => '13:05'],
                 ['title' => 'Delegations break for private consultations', 'summary' => 'Both sides withdrew to separate rooms shortly before midday. A spokesperson called the pause "procedural, not political".', 'meta' => '11:47'],
+            ],
+        ];
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function readingProgressWithMarkersSection(): array
+    {
+        return [
+            'type' => 'reading-progress-with-markers',
+            'markers' => [
+                ['label' => 'Live coverage', 'anchor' => 'live-event-timeline'],
+                ['label' => 'How this connects', 'anchor' => 'news-web-topology'],
+                ['label' => 'About the reporter', 'anchor' => 'author-credibility-inline'],
+                ['label' => 'Opinion', 'anchor' => 'opinion-grid-with-bylines'],
             ],
         ];
     }
@@ -437,18 +480,60 @@ final class InkPressDemoContent implements ProvidesThemeDemoContent
     }
 
     /**
+     * §0.1 determinism: relevance scores are fixed demo payload values, the
+     * same for every render of this page — the Blade view derives satellite
+     * position purely from these numbers via CSS calc(), never at random.
+     *
      * @return array<string, mixed>
      */
-    private function opinionAnalysisSection(): array
+    private function newsWebTopologySection(): array
     {
         return [
-            'type' => 'opinion-analysis',
+            'type' => 'news-web-topology',
+            'heading' => 'How this story connects',
+            'center' => [
+                'title' => 'Government faces pressure as talks enter final day',
+                'summary' => 'Negotiators returned to the table this morning with both sides signalling that a deal remains possible but far from certain.',
+            ],
+            'satellites' => [
+                ['title' => 'What the new figures mean for households', 'relevance' => 82, 'meta' => 'Analysis', 'url' => $this->pageUrl('detail')],
+                ['title' => 'The coalition maths behind the deal', 'relevance' => 64, 'meta' => 'Analysis', 'url' => $this->pageUrl('detail')],
+                ['title' => 'Court ruling narrows options before the spending review', 'relevance' => 47, 'meta' => 'Politics', 'url' => $this->pageUrl('detail')],
+                ['title' => 'Five developments you may have missed', 'relevance' => 33, 'meta' => 'World', 'url' => $this->pageUrl('directory')],
+            ],
+        ];
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function authorCredibilityInlineSection(): array
+    {
+        return [
+            'type' => 'author-credibility-inline',
+            'name' => 'Priya Nair',
+            'role' => 'Political correspondent',
+            'bio' => 'Priya has covered Westminster and Whitehall for twelve years, with a focus on the machinery behind major policy settlements.',
+            'credentials' => [
+                'Reporting on this desk since 2014',
+                'Twice shortlisted, Political Journalist of the Year',
+            ],
+        ];
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function opinionGridWithBylinesSection(): array
+    {
+        return [
+            'type' => 'opinion-grid-with-bylines',
             'heading' => 'Beyond the headlines',
             'summary' => 'Columnists and the editorial board on the week\'s defining arguments.',
             'items' => [
-                ['title' => 'The policy argument beneath the headline', 'summary' => 'The negotiation is not really about the deadline — it is about who carries the cost of the last decade\'s decisions.', 'meta' => 'Analysis', 'care_note' => 'Priya Nair · 8 min read', 'url' => $this->pageUrl('detail')],
-                ['title' => 'A test of public trust', 'summary' => 'This settlement will be judged not by the signing ceremony but by what happens after the cameras leave.', 'meta' => 'Opinion', 'care_note' => 'The editorial board', 'url' => $this->pageUrl('detail')],
-                ['title' => 'Institutions move slowly until they do not', 'summary' => 'On the sudden collapse of a long consensus, and what history suggests comes next.', 'meta' => 'Column', 'care_note' => 'Amara Osei · Every Tuesday', 'url' => $this->pageUrl('detail')],
+                ['title' => 'The policy argument beneath the headline', 'summary' => 'The negotiation is not really about the deadline — it is about who carries the cost of the last decade\'s decisions.', 'meta' => 'Analysis', 'byline' => 'Priya Nair · 8 min read', 'url' => $this->pageUrl('detail')],
+                ['title' => 'A test of public trust', 'summary' => 'This settlement will be judged not by the signing ceremony but by what happens after the cameras leave.', 'meta' => 'Opinion', 'byline' => 'The editorial board', 'url' => $this->pageUrl('detail')],
+                ['title' => 'Institutions move slowly until they do not', 'summary' => 'On the sudden collapse of a long consensus, and what history suggests comes next.', 'meta' => 'Column', 'byline' => 'Amara Osei · Every Tuesday', 'url' => $this->pageUrl('detail')],
             ],
         ];
     }
@@ -567,8 +652,8 @@ final class InkPressDemoContent implements ProvidesThemeDemoContent
             'brandName' => self::BRAND,
             'items' => [
                 ['label' => 'Top stories', 'url' => $this->linkTo('top-stories', $anchors)],
-                ['label' => 'Live brief', 'url' => $this->linkTo('live-brief', $anchors)],
-                ['label' => 'Opinion', 'url' => $this->linkTo('opinion-analysis', $anchors)],
+                ['label' => 'Live brief', 'url' => $this->linkTo('live-event-timeline', $anchors)],
+                ['label' => 'Opinion', 'url' => $this->linkTo('opinion-grid-with-bylines', $anchors)],
                 ['label' => 'Video', 'url' => $this->linkTo('video-row', $anchors)],
                 ['label' => 'Topics', 'url' => $this->linkTo('topic-navigation', $anchors)],
             ],
@@ -598,8 +683,8 @@ final class InkPressDemoContent implements ProvidesThemeDemoContent
                 'heading' => 'Formats',
                 'title' => 'Formats',
                 'links' => [
-                    ['label' => 'Live coverage', 'url' => $this->linkTo('live-brief', $anchors)],
-                    ['label' => 'Opinion', 'url' => $this->linkTo('opinion-analysis', $anchors)],
+                    ['label' => 'Live coverage', 'url' => $this->linkTo('live-event-timeline', $anchors)],
+                    ['label' => 'Opinion', 'url' => $this->linkTo('opinion-grid-with-bylines', $anchors)],
                     ['label' => 'Video', 'url' => $this->linkTo('video-row', $anchors)],
                     ['label' => 'Newsletters', 'url' => $this->linkTo('subscribe', $anchors)],
                 ],
@@ -650,7 +735,7 @@ final class InkPressDemoContent implements ProvidesThemeDemoContent
 
         return match ($anchor) {
             'top-stories' => '/theme-' . $this->themeKey,
-            'live-brief', 'opinion-analysis', 'video-row' => '/theme-' . $this->themeKey . '-detail',
+            'live-event-timeline', 'news-web-topology', 'author-credibility-inline', 'opinion-grid-with-bylines', 'video-row' => '/theme-' . $this->themeKey . '-detail',
             'topic-navigation', 'missed-it' => '/theme-' . $this->themeKey . '-directory',
             'subscribe' => '/theme-' . $this->themeKey . '-contact',
             default => '/',

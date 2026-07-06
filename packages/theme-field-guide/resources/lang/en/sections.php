@@ -115,6 +115,7 @@ return [
         'count_note' => 'Reviewed weekly',
         'pick_label' => 'Pick',
         'default_source' => 'Source on file',
+        'curator_byline' => 'Curation desk',
     ],
     'latest' => [
         'kicker' => 'Latest captures',
@@ -123,6 +124,16 @@ return [
         'button' => 'View all latest',
         'count_note' => 'Newest first',
         'added_label' => 'Added',
+        'showcase_label' => 'Newest',
+    ],
+    'grid_browser' => [
+        'kicker' => 'Tessellation grid',
+        'heading' => 'Browse the index, filtered your way',
+        'summary' => 'A dense reflow grid: pick a facet and the same 12,482 captures reflow around it, deterministically, without a single page reload.',
+        'count_note' => 'Reflows on facet click',
+        'filter_label' => 'Filter the grid by facet',
+        'all_label' => 'All',
+        'no_matches' => 'No captures match that facet yet — try another, or clear the filter to see the full grid.',
     ],
     'mission' => [
         'kicker' => 'Why the index exists',
@@ -173,6 +184,10 @@ return [
         'summary' => 'Submissions go through the same intake as everything else — captured, tagged four ways, and filed with its source.',
         'primary_label' => 'Submit a site',
         'secondary_label' => 'Browse the index',
+        'browse_type' => 'Browse by type',
+        'browse_style' => 'Browse by style',
+        'browse_colour' => 'Browse by colour',
+        'browse_industry' => 'Browse by industry',
     ],
     'footer' => [
         'brand' => 'Galleria Index',

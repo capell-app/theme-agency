@@ -646,6 +646,135 @@
     border: 1px solid color-mix(in srgb, var(--ppc-accent) 30%, var(--ppc-line));
 }
 
+/* education-upsell-cta (Wave 4c signature widget): the first payload item is
+   promoted into a wide lead banner ahead of the remaining course grid. */
+.ppc-course-lead {
+    align-items: start;
+    display: grid;
+    gap: 0.75rem;
+    grid-column: 1 / -1;
+    margin-bottom: clamp(1.5rem, 3vw, 2.25rem);
+    padding: clamp(1.75rem, 3vw, 2.5rem);
+}
+
+.ppc-course-lead .ppc-button {
+    justify-self: start;
+}
+
+/* -------------------------------------------------------- salon gallery wall
+   Front Row's headline mechanic (§A): a curated hang with varied
+   deterministic grid spans and a featured plate that floats above the rest
+   on scroll. Three widgets share this block: featured-portfolios-hero
+   (parallax float), portfolio-grid-gallery-wall (varied spans), and
+   awarded-profiles-spotlight (gold/silver/bronze tiers). */
+
+.ppc-wall {
+    container-type: inline-size;
+    display: grid;
+    gap: 1.5rem;
+    grid-auto-flow: dense;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+    margin-top: clamp(2.25rem, 4vw, 3.5rem);
+}
+
+.ppc-wall-card {
+    grid-column: span var(--ppc-wall-col-span, 1);
+    grid-row: span var(--ppc-wall-row-span, 1);
+}
+
+.ppc-wall-card-media {
+    height: 100%;
+}
+
+/* Row-span-2 tiles read taller than the standard 4:3 plate, so their media
+   fills the tile height rather than the shorter default ratio. The
+   attribute selector reads the inline custom property set by the Blade
+   view; browsers that do not match it simply keep the default aspect-ratio
+   -- a harmless fallback since object-fit: cover already fills the frame. */
+.ppc-wall-card[style*='--ppc-wall-row-span: 2'] .ppc-plate-media {
+    aspect-ratio: 4 / 5;
+}
+
+/* Featured hero float grid: uses the same base grid rhythm as the standard
+   ppc-grid, plus the per-card float depth custom property consumed by the
+   scroll-driven animation below. */
+.ppc-wall-float-grid {
+    align-items: start;
+}
+
+.ppc-wall-float-card {
+    will-change: transform;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: scroll()) {
+        .ppc-wall-float-card {
+            animation: ppc-wall-float linear both;
+            animation-range: entry 0% cover 50%;
+            animation-timeline: scroll(nearest block);
+        }
+
+        @keyframes ppc-wall-float {
+            from {
+                transform: translateY(var(--ppc-float-depth, 0px));
+            }
+
+            to {
+                transform: translateY(0);
+            }
+        }
+    }
+}
+
+/* filter-taxonomies-grid: chip-weighted tile spans, capped at two columns so
+   the wall never overflows its track (§0.1). */
+.ppc-wall-taxonomy-grid {
+    grid-auto-flow: dense;
+}
+
+.ppc-wall-taxonomy-tile {
+    grid-column: span var(--ppc-taxonomy-col-span, 1);
+}
+
+/* awarded-profiles-spotlight: gold/silver/bronze tier row, gold plate reads
+   larger than its runners-up. */
+.ppc-spotlight-row {
+    container-type: inline-size;
+    display: grid;
+    gap: 1.5rem;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
+    margin-top: clamp(2.25rem, 4vw, 3.5rem);
+}
+
+.ppc-spotlight-gold {
+    grid-column: span 2;
+}
+
+@container (max-width: 36rem) {
+    .ppc-spotlight-gold {
+        grid-column: span 1;
+    }
+}
+
+.ppc-spotlight-gold .ppc-plate-media {
+    aspect-ratio: 16 / 9;
+}
+
+.ppc-spotlight-badge-gold {
+    background: color-mix(in srgb, #c9a24b 70%, var(--ppc-night));
+    border-color: color-mix(in srgb, #f5d78e 60%, transparent);
+}
+
+.ppc-spotlight-badge-silver {
+    background: color-mix(in srgb, #a8adb4 65%, var(--ppc-night));
+    border-color: color-mix(in srgb, #e4e7ea 55%, transparent);
+}
+
+.ppc-spotlight-badge-bronze {
+    background: color-mix(in srgb, #a3672f 60%, var(--ppc-night));
+    border-color: color-mix(in srgb, #d99a5f 55%, transparent);
+}
+
 /* -------------------------------------------------------------- index list */
 
 .ppc-index {

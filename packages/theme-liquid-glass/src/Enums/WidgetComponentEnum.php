@@ -23,10 +23,22 @@ use Capell\ThemeStudio\LiquidGlass\LiquidGlassThemeServiceProvider;
  * showcase, presets) — see LiquidGlassThemeServiceProvider's widget mapping
  * docblock for why navigation/footer/hero/features/proof/content-listing do
  * not need bespoke component keys of their own.
+ *
+ * Wave 4c (§D "Free pair", programme headline "glassmorphism showcase") adds
+ * five signature widgets on top of the original three: GlassFeatureCard,
+ * TranslucentStatBand, LayeredDepthHero, RefractionGrid, and
+ * FloatingGlassNav — see each one's own Blade view for its variant/payload
+ * contract and `LiquidGlassThemeServiceProvider::registerBespokeWidgetRenderables()`
+ * for how they are registered.
  */
 enum WidgetComponentEnum: string
 {
     case Cta = 'capell.widget.liquid-glass.cta';
     case Showcase = 'capell.widget.liquid-glass.showcase';
     case Presets = 'capell.widget.liquid-glass.presets';
+    case GlassFeatureCard = 'capell.widget.liquid-glass.glass-feature-card';
+    case TranslucentStatBand = 'capell.widget.liquid-glass.translucent-stat-band';
+    case LayeredDepthHero = 'capell.widget.liquid-glass.layered-depth-hero';
+    case RefractionGrid = 'capell.widget.liquid-glass.refraction-grid';
+    case FloatingGlassNav = 'capell.widget.liquid-glass.floating-glass-nav';
 }

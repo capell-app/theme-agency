@@ -316,6 +316,12 @@ final class SoftFocusDemoContent implements ProvidesThemeDemoContent
                         secondaryLabel: 'Write to the curator',
                         secondaryUrl: 'mailto:' . self::CURATOR_EMAIL,
                     ),
+                    $this->ctaSection(
+                        heading: 'Keep browsing while you\'re here',
+                        summary: 'The gallery adds new captures every week — start back at the homepage to see what\'s current.',
+                        primaryUrl: '/',
+                        secondaryUrl: 'mailto:' . self::CURATOR_EMAIL,
+                    ),
                 ],
             ],
             type: PageTypeEnum::NotFound,

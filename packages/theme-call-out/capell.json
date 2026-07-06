@@ -1,0 +1,125 @@
+{
+    "manifest-version": 3,
+    "name": "capell-app/theme-call-out",
+    "slug": "theme-call-out",
+    "displayName": "Call Out",
+    "kind": "theme",
+    "capellApiVersion": "^4.0",
+    "version": "4.x-dev",
+    "description": "Call Out is a conversion-led theme for quote-driven trades and local-service businesses: state-driven emergency-availability urgency, before/after proof, and a clear path to a quote.",
+    "product": {
+        "group": "Capell Themes",
+        "tier": "premium",
+        "bundle": "themes"
+    },
+    "namespace": "Capell\\ThemeStudio\\CallOut",
+    "surfaces": ["frontend"],
+    "dependencies": {
+        "requires": [
+            "capell-app/core",
+            "capell-app/theme-foundation",
+            "capell-app/frontend",
+            "capell-app/layout-builder"
+        ],
+        "supports": ["capell-app/blog", "capell-app/form-builder"],
+        "conflicts": []
+    },
+    "providers": {
+        "metadata": [],
+        "install": [],
+        "runtime": [
+            "Capell\\ThemeStudio\\CallOut\\CallOutThemeServiceProvider"
+        ],
+        "admin": [],
+        "frontend": []
+    },
+    "contributes": [],
+    "database": {
+        "migrations": false,
+        "settings": false,
+        "requiredTables": []
+    },
+    "commands": {
+        "install": null,
+        "setup": null,
+        "demo": "capell:theme-call-out-demo",
+        "demoParams": ["url", "languages", "sites"],
+        "doctor": null
+    },
+    "settings": [],
+    "permissions": [],
+    "capabilities": ["theme-call-out", "theme-call-out-frontend"],
+    "security": {
+        "riskTier": "low",
+        "publicSurface": {
+            "routeNames": [],
+            "auth": "none",
+            "csrfExemptRoutes": [],
+            "signedRoutes": [],
+            "tokenizedRoutes": [],
+            "webhookRoutes": [],
+            "throttledRoutes": []
+        },
+        "sensitiveData": {
+            "encryptedFields": [],
+            "hashedTokenFields": [],
+            "redactedOutputClasses": [],
+            "plaintextJustifications": []
+        },
+        "publicOutput": {
+            "cacheSafe": true,
+            "forbidAuthoringSurface": true,
+            "forbidSecrets": true,
+            "forbidPublicBladeQueries": true
+        },
+        "externalHttpClients": {
+            "requiresTimeouts": false,
+            "requiresSecretRedaction": false,
+            "clients": []
+        },
+        "adminSurface": {
+            "authorization": "none",
+            "permissions": []
+        }
+    },
+    "performance": {
+        "criticalCss": {
+            "required": true,
+            "parityViewports": ["mobile", "tablet", "desktop"]
+        },
+        "frontendRenderBudgetMs": 20,
+        "adminQueryBudget": 0,
+        "cacheTags": ["theme-call-out"],
+        "cacheSafety": {
+            "cacheable": false,
+            "variesBy": ["site", "locale"],
+            "sensitiveOutput": false,
+            "invalidationSources": [
+                {
+                    "model": "Capell\\Core\\Models\\Layout",
+                    "events": ["saved", "deleted"]
+                },
+                {
+                    "model": "Capell\\LayoutBuilder\\Models\\Widget",
+                    "events": ["saved", "deleted"]
+                }
+            ],
+            "queueInvalidation": false
+        }
+    },
+    "healthChecks": [],
+    "commercial": {
+        "proposedLicense": "paid",
+        "requestedCertification": "first-party",
+        "supportPolicy": "priority",
+        "privateDocsRequested": true
+    },
+    "marketplace": {
+        "summary": "Conversion-first theme for plumbers, electricians, and local-service trades.",
+        "description": "Call Out gives quote-led trades and local-service businesses a bold, high-visibility site: state-driven emergency-availability banner, before/after proof, a numbered quote path, accreditation strips, and a review wall.",
+        "screenshots": [],
+        "categories": ["frontend", "themes"]
+    },
+    "extends": "default",
+    "themeKey": "call-out"
+}

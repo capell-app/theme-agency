@@ -31,10 +31,15 @@ namespace Capell\Tests\Arch;
  * therefore keep (or omit) their own bespoke test instead of being covered here:
  *   - inertia-bookings-react / -vue: kind="plugin" Inertia component packs.
  *   - inertia-bookings: theme base without the standard extends/frontend shape.
+ *   - foundation: the base theme every other theme extends — `themeKey` is
+ *     `default` (not the slug `foundation`) and `extends` is legitimately
+ *     null since it has no parent; covered instead by
+ *     `packages/theme-foundation/tests/Unit/ThemePackageManifestTest.php`.
  *
  * @var list<string>
  */
 const CAPELL_THEME_CONTRACT_EXCLUSIONS = [
+    'foundation',
     'inertia-bookings',
     'inertia-bookings-react',
     'inertia-bookings-vue',

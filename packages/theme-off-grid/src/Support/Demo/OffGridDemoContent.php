@@ -83,6 +83,7 @@ final class OffGridDemoContent implements ProvidesThemeDemoContent
                     $this->archiveDatesSection(),
                     $this->submissionMarkersSection(),
                     $this->zineAnnotationsSection(),
+                    $this->timeCapsuleBrowserSection(),
                     $this->proofSection(),
                     $this->newsletterSection(),
                     $this->ctaSection(
@@ -132,6 +133,7 @@ final class OffGridDemoContent implements ProvidesThemeDemoContent
                     $this->archiveWallSection($media),
                     $this->irregularIndexSection($media),
                     $this->archiveDatesSection(),
+                    $this->timeCapsuleBrowserSection(variant: 'stacked'),
                     $this->contentListingSection($media),
                     $this->ctaSection(
                         heading: 'Spotted a gap in the wall?',
@@ -559,6 +561,53 @@ final class OffGridDemoContent implements ProvidesThemeDemoContent
                 ['title' => 'Field note from the show', 'summary' => 'A raw caption stamped with a date and a city, left exactly as it was written.'],
                 ['title' => 'Correction added in margin', 'summary' => 'A visible margin note recording a fixed date and the reason it changed.'],
             ],
+        ];
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function timeCapsuleBrowserSection(?string $variant = null): array
+    {
+        $eras = [
+            [
+                'title' => 'Founding issues, 2018-2020',
+                'summary' => 'The first photocopied runs — hand-collated, stapled, distributed at shows.',
+                'items' => [
+                    ['title' => 'Issue 01: the founding manifesto'],
+                    ['title' => 'Issue 02: basement show poster set'],
+                    ['title' => 'Issue 03: first mail-order tape rip'],
+                ],
+            ],
+            [
+                'title' => 'Expansion years, 2021-2023',
+                'summary' => 'Submissions opened up. Interviews, corrections, and language notes entered the wall.',
+                'items' => [
+                    ['title' => 'First open submission window'],
+                    ['title' => 'Interview marker introduced'],
+                    ['title' => 'Language notes added to the index'],
+                    ['title' => 'Correction log opened to the public'],
+                ],
+            ],
+            [
+                'title' => 'Current wall, 2024-present',
+                'summary' => 'The irregular index, archive dates, and zine annotations settle into their current shape.',
+                'items' => [
+                    ['title' => 'Irregular index grid seeded'],
+                    ['title' => 'Archive calendar view added'],
+                    ['title' => 'Zine annotations moved to the margin'],
+                    ['title' => 'Time capsule browser opened'],
+                    ['title' => 'Submission markers re-stamped'],
+                ],
+            ],
+        ];
+
+        return [
+            'type' => 'time-capsule-browser',
+            'variant' => $variant,
+            'heading' => 'Eras of the wall, stacked in depth',
+            'summary' => 'Each era is a sealed capsule — hover to preview what is inside, open one at a time to read the full row.',
+            'items' => $eras,
         ];
     }
 

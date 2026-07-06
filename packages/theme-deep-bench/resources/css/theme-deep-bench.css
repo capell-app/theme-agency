@@ -1291,6 +1291,252 @@
     }
 }
 
+/* --------------------------------------------- roster sorting (Wave 4c) */
+/* Signature mechanic: directory-hero-roster (count-up stats),
+   role-filters-toolbar (multi-select facet checkboxes), portfolio-grid-cards
+   (the filter target), resume-resources-sidebar, curated-lists-cta. All
+   filtering is client-side `hidden` toggling driven by the inline script in
+   role-filters-toolbar(--sticky).blade.php against [data-roster-card] --
+   no drag-reorder, no fuzzy-search library, no server round-trip. */
+
+.pfd-roster-stats {
+    display: grid;
+    gap: clamp(1.25rem, 3vw, 2rem);
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 10rem), 1fr));
+    margin-top: clamp(2rem, 4vw, 3rem);
+}
+
+.pfd-roster-stat {
+    background: var(--pfd-field);
+    border: 1px solid var(--pfd-line);
+    border-radius: var(--pfd-radius);
+    padding: clamp(1.25rem, 2.5vw, 1.75rem) 1rem;
+}
+
+.pfd-roster-compact-head {
+    max-width: 42rem;
+}
+
+.pfd-roster-stats-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.pfd-roster-stat-row {
+    flex: 1 1 9rem;
+    padding: 1rem 0.85rem;
+}
+
+.pfd-roster-toolbar {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.25rem 1.75rem;
+    margin-top: clamp(1.75rem, 3vw, 2.5rem);
+}
+
+.pfd-roster-toolbar-sticky-section {
+    background: var(--pfd-paper);
+    inset-block-start: 0;
+    position: sticky;
+    z-index: 5;
+}
+
+.pfd-roster-toolbar-sticky {
+    margin-top: clamp(1rem, 2vw, 1.5rem);
+}
+
+.pfd-roster-toolbar-group {
+    border: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem 0.85rem;
+    margin: 0;
+    padding: 0;
+}
+
+.pfd-roster-toolbar-legend {
+    color: var(--pfd-faint);
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    padding-inline-end: 0.5rem;
+    text-transform: uppercase;
+    width: 100%;
+}
+
+.pfd-roster-toolbar-option {
+    align-items: center;
+    display: inline-flex;
+    gap: 0.4rem;
+}
+
+.pfd-roster-toolbar-checkbox {
+    accent-color: var(--pfd-accent);
+    block-size: 1.05rem;
+    inline-size: 1.05rem;
+}
+
+.pfd-roster-toolbar-label {
+    color: var(--pfd-ink);
+    cursor: pointer;
+    font-size: 0.92rem;
+    font-weight: 600;
+}
+
+.pfd-roster-toolbar-meta {
+    color: var(--pfd-faint);
+    font-size: 0.8rem;
+    font-weight: 700;
+    margin-inline-start: 0.3rem;
+}
+
+.pfd-roster-toolbar-clear {
+    background: transparent;
+    border: 1px solid var(--pfd-line);
+    border-radius: 999px;
+    color: var(--pfd-muted);
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-weight: 600;
+    padding: 0.4rem 0.95rem;
+    transition: border-color 200ms var(--pfd-ease);
+}
+
+.pfd-roster-toolbar-clear:hover {
+    border-color: var(--pfd-accent);
+    color: var(--pfd-accent-ink);
+}
+
+.pfd-roster-toolbar-status {
+    color: var(--pfd-faint);
+    font-size: 0.82rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+.pfd-grid-cards-empty {
+    color: var(--pfd-muted);
+    margin-top: clamp(1.5rem, 3vw, 2rem);
+}
+
+.pfd-resources-sidebar-inner {
+    align-items: start;
+    display: grid;
+    gap: clamp(1.75rem, 3vw, 2.5rem);
+    grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+}
+
+.pfd-resources-sidebar {
+    background: var(--pfd-field);
+    border: 1px solid var(--pfd-line);
+    border-radius: var(--pfd-radius);
+    padding: clamp(1.25rem, 2.5vw, 1.75rem);
+}
+
+.pfd-resources-sidebar-stacked {
+    margin-top: clamp(1.75rem, 3vw, 2.5rem);
+}
+
+.pfd-resources-sidebar-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    list-style: none;
+    margin: 0 0 1.25rem;
+    padding: 0;
+}
+
+.pfd-resources-sidebar-list-stacked {
+    display: grid;
+    gap: 0.5rem;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+}
+
+.pfd-resources-sidebar-item + .pfd-resources-sidebar-item {
+    border-top: 1px solid var(--pfd-line);
+}
+
+.pfd-resources-sidebar-link {
+    align-items: center;
+    color: var(--pfd-ink);
+    display: flex;
+    font-weight: 600;
+    justify-content: space-between;
+    padding: 0.85rem 0.1rem;
+    text-decoration: none;
+}
+
+.pfd-resources-sidebar-link:hover {
+    color: var(--pfd-accent-ink);
+}
+
+.pfd-resources-sidebar-meta {
+    color: var(--pfd-faint);
+    font-size: 0.78rem;
+    font-weight: 700;
+}
+
+.pfd-lists-cta-inner {
+    align-items: center;
+    display: grid;
+    gap: clamp(1.75rem, 3vw, 2.5rem);
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+}
+
+.pfd-lists-cta-band {
+    background: var(--pfd-field);
+}
+
+.pfd-lists-cta-card {
+    background: color-mix(in oklch, var(--pfd-night) 92%, transparent);
+    border: 1px solid var(--pfd-night-line);
+    border-radius: var(--pfd-radius);
+    padding: clamp(1.25rem, 2.5vw, 1.75rem);
+}
+
+.pfd-section-night .pfd-lists-cta-card {
+    background: color-mix(in oklch, #ffffff 6%, transparent);
+}
+
+.pfd-lists-cta-card h3 {
+    color: var(--pfd-night-text);
+    margin: 0 0 0.5rem;
+}
+
+.pfd-lists-cta-card p {
+    color: color-mix(in srgb, var(--pfd-night-text) 88%, transparent);
+    margin: 0 0 0.75rem;
+}
+
+.pfd-lists-cta-band .pfd-lists-cta-card {
+    background: var(--pfd-paper);
+    border-color: var(--pfd-line);
+}
+
+.pfd-lists-cta-band .pfd-lists-cta-card h3 {
+    color: var(--pfd-ink);
+}
+
+.pfd-lists-cta-band .pfd-lists-cta-card p {
+    color: var(--pfd-muted);
+}
+
+@media (width <= 720px) {
+    .pfd-resources-sidebar-inner,
+    .pfd-lists-cta-inner {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .pfd-roster-toolbar-clear,
+    .pfd-roster-toolbar-checkbox {
+        transition: none;
+    }
+}
+
 /* Forced-colors (Wave 11.5): High Contrast mode strips box-shadow but keeps
    outline, and flattens backgrounds — so re-assert focus with outline and give
    cards a transparent border the OS repaints, and protect swatches whose

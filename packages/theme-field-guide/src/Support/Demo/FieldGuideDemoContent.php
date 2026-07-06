@@ -75,6 +75,7 @@ final class FieldGuideDemoContent implements ProvidesThemeDemoContent
                     ),
                     $this->filterHeroSection(),
                     $this->taxonomyNavigationSection('#latest-designs'),
+                    $this->taxonomyGridBrowserSection($themeKey . '-home', $media, $this->pagePath($themeKey, 'detail')),
                     $this->editorPicksSection($media, $this->pagePath($themeKey, 'detail')),
                     $this->latestDesignsSection($media, $this->pagePath($themeKey, 'detail'), $this->pagePath($themeKey, 'directory')),
                     $this->blogMissionSection(),
@@ -131,6 +132,7 @@ final class FieldGuideDemoContent implements ProvidesThemeDemoContent
                     ),
                     $this->filterHeroSection(),
                     $this->taxonomyNavigationSection('#latest-designs'),
+                    $this->taxonomyGridBrowserSection($themeKey . '-directory', $media, $this->pagePath($themeKey, 'detail'), compact: true),
                     $this->contentListingSection(
                         heading: 'Captures matching this view',
                         summary: 'A saved view: dark palettes across fintech and SaaS, newest first.',
@@ -391,6 +393,7 @@ final class FieldGuideDemoContent implements ProvidesThemeDemoContent
                         primaryUrl: $this->pagePath($themeKey, 'contact'),
                         secondaryLabel: 'Browse the index',
                         secondaryUrl: $this->pagePath($themeKey, 'directory'),
+                        variant: 'browse',
                     ),
                 ],
             ],
@@ -522,6 +525,53 @@ final class FieldGuideDemoContent implements ProvidesThemeDemoContent
                     ]),
                 ],
             ],
+        ];
+    }
+
+    /**
+     * @param  array{hero: list<string>, listing: list<string>, detail: list<string>, proof: list<string>, contact: list<string>, cta: list<string>}  $media
+     * @return array<string, mixed>
+     */
+    private function taxonomyGridBrowserSection(string $pageSeed, array $media, string $detailUrl, bool $compact = false): array
+    {
+        $images = array_values(array_unique(array_merge($media['listing'], $media['detail'], $media['hero'])));
+
+        $entries = [
+            ['title' => 'Fintech pricing with one anchor tier', 'summary' => 'Three tiers, one anchor, and a comparison table.', 'tags' => [['label' => 'Pricing', 'facet' => 'type'], ['label' => 'Dark', 'facet' => 'colour'], ['label' => 'Fintech', 'facet' => 'industry']]],
+            ['title' => 'Health onboarding in four quiet steps', 'summary' => 'Four steps, one illustration style, no dead ends.', 'tags' => [['label' => 'Onboarding', 'facet' => 'type'], ['label' => 'Pastel', 'facet' => 'colour'], ['label' => 'Health', 'facet' => 'industry']]],
+            ['title' => 'Ecommerce catalogue that merchandises with type', 'summary' => 'A price grid and a single warm neutral palette.', 'tags' => [['label' => 'Landing page', 'facet' => 'type'], ['label' => 'Warm neutral', 'facet' => 'colour'], ['label' => 'Ecommerce', 'facet' => 'industry']]],
+            ['title' => 'Brutalist changelog for a build tool', 'summary' => 'Monospace headings and a strict two-column rule.', 'tags' => [['label' => 'Changelog', 'facet' => 'type'], ['label' => 'Brutalist', 'facet' => 'style'], ['label' => 'SaaS', 'facet' => 'industry']]],
+            ['title' => 'Docs hub with a search-first front door', 'summary' => 'A search field and six counted categories.', 'tags' => [['label' => 'Docs', 'facet' => 'type'], ['label' => 'Minimal', 'facet' => 'style'], ['label' => 'SaaS', 'facet' => 'industry']]],
+            ['title' => 'Agency site that treats the case study as a feed', 'summary' => 'Work filed reverse-chronologically, tagged per entry.', 'tags' => [['label' => 'Blog', 'facet' => 'type'], ['label' => 'Motion-led', 'facet' => 'style'], ['label' => 'Agency', 'facet' => 'industry']]],
+            ['title' => 'Neon portfolio with a keyboard-first index', 'summary' => 'Every project reachable without touching a mouse.', 'tags' => [['label' => 'Landing page', 'facet' => 'type'], ['label' => 'Neon', 'facet' => 'colour'], ['label' => 'Agency', 'facet' => 'industry']]],
+            ['title' => 'Retro blog with a hand-set masthead', 'summary' => 'A hand-drawn wordmark above a plain text column.', 'tags' => [['label' => 'Blog', 'facet' => 'type'], ['label' => 'Retro', 'facet' => 'style'], ['label' => 'Warm neutral', 'facet' => 'colour']]],
+        ];
+
+        $items = [];
+
+        foreach ($entries as $index => $entry) {
+            $items[] = [
+                ...$entry,
+                'id' => 'grid-browser-' . $index,
+                'url' => $detailUrl,
+                'image' => $images[$index % max(count($images), 1)] ?? null,
+                'imageAlt' => $entry['title'],
+            ];
+        }
+
+        return [
+            'type' => 'taxonomy-grid-browser',
+            'variant' => $compact ? 'compact' : null,
+            'pageSeed' => $pageSeed,
+            'heading' => 'Browse the index, filtered your way',
+            'summary' => 'A dense reflow grid: pick a facet and the same captures reflow around it, deterministically, without a single page reload.',
+            'facets' => [
+                ['facet' => 'type', 'label' => 'Type'],
+                ['facet' => 'style', 'label' => 'Style'],
+                ['facet' => 'colour', 'label' => 'Colour'],
+                ['facet' => 'industry', 'label' => 'Industry'],
+            ],
+            'items' => $items,
         ];
     }
 
@@ -836,9 +886,11 @@ final class FieldGuideDemoContent implements ProvidesThemeDemoContent
         string $primaryUrl,
         string $secondaryLabel,
         string $secondaryUrl,
+        ?string $variant = null,
     ): array {
         return [
             'type' => 'cta',
+            'variant' => $variant,
             'heading' => $heading,
             'summary' => $summary,
             'url' => $primaryUrl,

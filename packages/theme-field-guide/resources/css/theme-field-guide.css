@@ -816,6 +816,263 @@ a.fga-chip-industry:hover {
     margin-bottom: 0.875rem;
 }
 
+/* ------------------------------------------------------- tessellation grid */
+
+/* taxonomy-grid-browser (Wave 4c signature #1): CSS grid auto-fit reflow —
+   deliberately NOT `columns` (CSS masonry-style) per guardrail §0.8, so
+   there is no masonry fallback to maintain. The facet toolbar toggles
+   `[hidden]` on non-matching tiles client-side; the tile order itself never
+   changes at runtime, keeping the deterministic server-seeded order intact. */
+.fga-grid-browser-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1.25rem;
+}
+
+.fga-grid-browser-filter {
+    background: var(--fga-panel);
+    border: 1px solid var(--fga-line);
+    border-radius: 999px;
+    color: var(--fga-muted);
+    cursor: pointer;
+    font-family: var(--fga-mono);
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    padding: 0.4rem 0.85rem;
+    text-transform: uppercase;
+    transition:
+        background-color 160ms var(--fga-ease),
+        border-color 160ms var(--fga-ease),
+        color 160ms var(--fga-ease);
+}
+
+.fga-grid-browser-filter:hover {
+    border-color: var(--fga-line-strong);
+    color: var(--fga-ink);
+}
+
+.fga-grid-browser-filter.is-active {
+    background: var(--fga-ink);
+    border-color: var(--fga-ink);
+    color: var(--fga-paper);
+}
+
+.fga-tessellation-grid {
+    container-name: fga-tessellation;
+    container-type: inline-size;
+    display: grid;
+    gap: 0.875rem;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 13rem), 1fr));
+}
+
+.fga-tessellation-grid-compact {
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 11rem), 1fr));
+}
+
+.fga-tessellation-tile {
+    order: var(--fga-tile-order, 0);
+}
+
+.fga-tessellation-tile[hidden] {
+    display: none;
+}
+
+.fga-grid-browser-empty {
+    padding-block: 1.5rem;
+    text-align: center;
+}
+
+.fga-grid-browser-empty:not([hidden]) {
+    display: block;
+}
+
+/* ---------------------------------------------------------- showcase grid */
+
+/* latest-designs-showcase (Wave 4c signature #2): the lead capture spans two
+   tessellation columns on wider containers so it reads as featured, not just
+   first in a plain grid. */
+.fga-showcase-lead {
+    grid-column: span 1;
+}
+
+@container fga-grid (min-width: 40rem) {
+    .fga-showcase-grid .fga-showcase-lead {
+        grid-column: span 2;
+    }
+}
+
+/* ------------------------------------------------------------ curator row */
+
+/* editor-picks-curated (Wave 4c signature #3, alternating variant): curator
+   notes alternate from the end rail to the start rail down the stack. */
+.fga-curator-stack {
+    display: grid;
+    gap: clamp(1.5rem, 3vw, 2.5rem);
+}
+
+.fga-curator-row {
+    display: grid;
+    gap: clamp(1rem, 2.5vw, 2rem);
+}
+
+@media (min-width: 800px) {
+    .fga-curator-row {
+        align-items: center;
+        grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+    }
+
+    .fga-curator-row-note-end .fga-curator-media-col {
+        order: 1;
+    }
+
+    .fga-curator-row-note-end .fga-curator-note-col {
+        order: 2;
+    }
+
+    .fga-curator-row-note-start .fga-curator-media-col {
+        order: 2;
+    }
+
+    .fga-curator-row-note-start .fga-curator-note-col {
+        order: 1;
+    }
+}
+
+.fga-curator-note-col {
+    display: grid;
+    gap: 0.6rem;
+}
+
+.fga-curator-note {
+    border-inline-start: 2px solid var(--fga-accent);
+    margin: 0.4rem 0 0;
+    padding-inline-start: 0.9rem;
+}
+
+.fga-curator-note p {
+    color: var(--fga-muted);
+    font-size: 0.875rem;
+    font-style: italic;
+    line-height: 1.55;
+    margin: 0;
+    text-wrap: pretty;
+}
+
+.fga-curator-note cite {
+    color: var(--fga-faint);
+    display: block;
+    font-family: var(--fga-mono);
+    font-size: 0.675rem;
+    font-style: normal;
+    letter-spacing: 0.08em;
+    margin-top: 0.4rem;
+    text-transform: uppercase;
+}
+
+/* --------------------------------------------------------------- fga-faq */
+
+/* faq-archives-accordion (Wave 4c signature #4): markup driven by the shared
+   Foundation accordion-toggle.js module. This theme owns styling only — the
+   `hidden` attribute and `aria-expanded` state are set by that module. */
+.fga-faq-item {
+    border-bottom: 1px solid var(--fga-line);
+}
+
+.fga-faq-heading {
+    margin: 0;
+}
+
+.fga-faq-trigger {
+    align-items: baseline;
+    background: none;
+    border: 0;
+    color: var(--fga-ink);
+    cursor: pointer;
+    display: flex;
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 700;
+    gap: 1rem;
+    justify-content: space-between;
+    padding: 1rem 0.25rem;
+    text-align: start;
+    width: 100%;
+}
+
+.fga-faq-trigger-icon {
+    color: var(--fga-faint);
+    flex-shrink: 0;
+    font-family: var(--fga-mono);
+    font-size: 1rem;
+}
+
+.fga-faq-trigger-icon::before {
+    content: '+';
+}
+
+.fga-faq-trigger[aria-expanded='true'] .fga-faq-trigger-icon::before {
+    content: '\2212';
+}
+
+.fga-faq-panel {
+    padding: 0 0.25rem 1.1rem;
+}
+
+.fga-faq-panel p {
+    color: var(--fga-muted);
+    margin: 0;
+    max-width: 46rem;
+    text-wrap: pretty;
+}
+
+.fga-faq-columns {
+    display: grid;
+    gap: clamp(1.5rem, 3vw, 2.5rem);
+}
+
+@media (min-width: 800px) {
+    .fga-faq-columns {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+/* ------------------------------------------------------ collection cta row */
+
+/* collection-cta-browse (Wave 4c signature #5): a row of facet shortcuts
+   under the closing CTA actions, so the conversion moment also routes back
+   into the grid instead of dead-ending. */
+.fga-cta-browse-row {
+    border-top: 1px solid var(--fga-night-line);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.25rem;
+    list-style: none;
+    margin: 1.5rem 0 0;
+    padding: 1.1rem 0 0;
+}
+
+.fga-cta-browse-link {
+    color: var(--fga-night-text);
+    font-family: var(--fga-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.04em;
+    text-decoration: underline;
+    text-transform: uppercase;
+    text-underline-offset: 0.2rem;
+}
+
+.fga-cta-browse-link:hover {
+    color: #ffffff;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .fga-tessellation-tile {
+        transition: none;
+    }
+}
+
 /* ------------------------------------------------------------- filter hero */
 
 .fga-search-band {

@@ -35,3 +35,23 @@ it('defines the one-take renderer contract', function (): void {
         ->and($definition->extends)->toBe('default')
         ->and(ThemeOneTakeHealthCheck::compatibleCapellApiVersion())->toBe('^4.0');
 });
+
+it('declares two variants each for the dossier-pages signature widgets', function (): void {
+    $definition = OneTakeThemeServiceProvider::definition();
+    $sectionVariants = $definition->frontend['sectionVariants'] ?? [];
+
+    expect($sectionVariants)->toBe([
+        'showcase-hero' => ['default', 'paginated'],
+        'category-tabs' => ['default', 'tablist'],
+        'one-page-grid' => ['default', 'dense'],
+        'tools-sponsors' => ['default', 'rail'],
+        'build-resources' => ['default', 'split'],
+    ]);
+
+    expect(is_array($sectionVariants))->toBeTrue();
+
+    /** @var array<string, array<int, string>> $sectionVariants */
+    foreach ($sectionVariants as $variants) {
+        expect($variants)->toHaveCount(2);
+    }
+});

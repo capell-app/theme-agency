@@ -23,6 +23,7 @@ it('defines the art-paper renderer contract', function (): void {
             'gallery-feature',
             'product-credits',
             'trend-list',
+            'process-documentation-timeline',
             'proof',
             'content-listing',
             'newsletter',
@@ -35,4 +36,14 @@ it('defines the art-paper renderer contract', function (): void {
         ->and($definition->runtime->value)->toBe('blade')
         ->and($definition->extends)->toBe('default')
         ->and(ThemeArtPaperHealthCheck::compatibleCapellApiVersion())->toBe('^4.0');
+});
+
+it('declares at least two variants for each Wave 4a signature widget section', function (): void {
+    $definition = ArtPaperThemeServiceProvider::definition();
+    $sectionVariants = $definition->frontend['sectionVariants'] ?? [];
+
+    expect($sectionVariants)->toBeArray()
+        ->and($sectionVariants['gallery-feature'] ?? [])->toHaveCount(2)
+        ->and($sectionVariants['product-credits'] ?? [])->toHaveCount(2)
+        ->and($sectionVariants['process-documentation-timeline'] ?? [])->toHaveCount(2);
 });

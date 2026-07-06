@@ -241,13 +241,16 @@ class LiquidGlassThemeServiceProvider extends ServiceProvider
 
     /**
      * Registers Liquid Glass's own bespoke layout-builder widget component
-     * keys (`capell.widget.liquid-glass.{cta,showcase,presets}`) against the
-     * shared `RenderableRegistry`, mirroring the established pattern
-     * `Capell\Blog\Providers\BlogServiceProvider::registerWidgetRenderables()`
+     * keys (`capell.widget.liquid-glass.{cta,showcase,presets,glass-feature-card,
+     * translucent-stat-band,layered-depth-hero,refraction-grid,floating-glass-nav}`)
+     * against the shared `RenderableRegistry`, mirroring the established
+     * pattern `Capell\Blog\Providers\BlogServiceProvider::registerWidgetRenderables()`
      * and `Capell\LayoutBuilder\Support\LayoutBuilderCoreRegistrar` already
-     * use for their own widget component enums.
+     * use for their own widget component enums. The last five keys are Wave
+     * 4c's (§D "glassmorphism showcase") signature widgets, added on top of
+     * the original three.
      *
-     * These three keys are new and owned solely by Liquid Glass — unlike the
+     * These keys are new and owned solely by Liquid Glass — unlike the
      * shared `capell.widget.hero` / `asset.features` / `asset.testimonials` /
      * `page.latest` keys documented in {@see registerLayoutAreas()}'s
      * "NOTE on scope", registering brand-new keys here is additive and
@@ -285,6 +288,11 @@ class LiquidGlassThemeServiceProvider extends ServiceProvider
             WidgetComponentEnum::Cta->value => 'capell-theme-liquid-glass::widget.cta',
             WidgetComponentEnum::Showcase->value => 'capell-theme-liquid-glass::widget.showcase',
             WidgetComponentEnum::Presets->value => 'capell-theme-liquid-glass::widget.presets',
+            WidgetComponentEnum::GlassFeatureCard->value => 'capell-theme-liquid-glass::widget.glass-feature-card',
+            WidgetComponentEnum::TranslucentStatBand->value => 'capell-theme-liquid-glass::widget.translucent-stat-band',
+            WidgetComponentEnum::LayeredDepthHero->value => 'capell-theme-liquid-glass::widget.layered-depth-hero',
+            WidgetComponentEnum::RefractionGrid->value => 'capell-theme-liquid-glass::widget.refraction-grid',
+            WidgetComponentEnum::FloatingGlassNav->value => 'capell-theme-liquid-glass::widget.floating-glass-nav',
         ];
 
         foreach (WidgetComponentEnum::cases() as $widgetComponent) {

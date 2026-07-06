@@ -28,7 +28,20 @@ it('defines the open-studio renderer contract', function (): void {
             'newsletter',
             'cta',
             'footer',
+            'filmstrip-project-showcase',
+            'discipline-carousel-browse',
+            'process-notes-timeline',
+            'credits-grid-roster',
+            'next-project-cta',
         )
+        ->and($definition->frontend['sectionVariants'])->toBe([
+            'hero' => ['default', 'split'],
+            'filmstrip-project-showcase' => ['default', 'compact'],
+            'discipline-carousel-browse' => ['default', 'sticky'],
+            'process-notes-timeline' => ['default', 'compact'],
+            'credits-grid-roster' => ['default', 'rows'],
+            'next-project-cta' => ['default', 'stacked'],
+        ])
         ->and($definition->presets)->toHaveCount(2)
         ->and($definition->presets[0]->key)->toBe('open-studio')
         ->and($definition->runtime->value)->toBe('blade')

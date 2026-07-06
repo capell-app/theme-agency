@@ -14,6 +14,7 @@ use Capell\Core\ThemeStudio\Data\ThemePresetData;
 use Capell\Core\ThemeStudio\Rendering\ViewSectionRenderer;
 use Capell\Core\ThemeStudio\Theme\ThemeRegistry;
 use Capell\FoundationTheme\Rendering\ChromeSplitBladeThemeRenderer;
+use Capell\FoundationTheme\Rendering\VariantViewSectionRenderer;
 use Capell\FoundationTheme\Support\Editor\StandardThemeEditorSchema;
 use Capell\ThemeStudio\OffGrid\Console\Commands\DemoCommand;
 use Illuminate\Support\ServiceProvider;
@@ -35,7 +36,7 @@ final class OffGridThemeServiceProvider extends ServiceProvider
             previewImage: '/vendor/capell/themes/off-grid.jpg',
             tags: ['Off Grid', 'Archive', 'Experimental', 'Culture', 'Monospace'],
             bestFit: ['Independent culture archives', 'Experimental publishing sites', 'Art and music indexes', 'Underground zines', 'Submission-led directories'],
-            includedSections: ['navigation', 'hero', 'archive-wall', 'rough-links', 'irregular-index', 'submission-markers', 'archive-dates', 'zine-annotations', 'proof', 'content-listing', 'newsletter', 'cta', 'footer'],
+            includedSections: ['navigation', 'hero', 'archive-wall', 'rough-links', 'irregular-index', 'submission-markers', 'archive-dates', 'zine-annotations', 'time-capsule-browser', 'proof', 'content-listing', 'newsletter', 'cta', 'footer'],
             presets: [
                 new ThemePresetData(
                     key: self::THEME_KEY,
@@ -92,6 +93,19 @@ final class OffGridThemeServiceProvider extends ServiceProvider
             runtime: FrontendRuntime::Blade,
             frontend: [
                 'editor' => StandardThemeEditorSchema::definition(),
+                // Wave 4b signature-widget variants (theme-bar criterion 3: each
+                // signature widget declares >= 2 variants). Guarded by
+                // SectionVariantDeclarationTest, which resolves every declared
+                // variant to a real sidecar Blade view on disk.
+                'sectionVariants' => [
+                    'archive-wall' => ['default', 'stacked'],
+                    'irregular-index' => ['default', 'scattered'],
+                    'rough-links' => ['default', 'annotated'],
+                    'submission-markers' => ['default', 'compact'],
+                    'archive-dates' => ['default', 'calendar'],
+                    'zine-annotations' => ['default', 'spine'],
+                    'time-capsule-browser' => ['default', 'stacked'],
+                ],
             ],
             extends: 'default',
         );
@@ -146,12 +160,55 @@ final class OffGridThemeServiceProvider extends ServiceProvider
         return [
             'navigation' => new ViewSectionRenderer(self::THEME_KEY, 'navigation', 'capell-theme-off-grid::sections.navigation', failLoudly: true),
             'hero' => new ViewSectionRenderer(self::THEME_KEY, 'hero', 'capell-theme-off-grid::sections.hero', failLoudly: true),
-            'archive-wall' => new ViewSectionRenderer(self::THEME_KEY, 'archive-wall', 'capell-theme-off-grid::sections.archive-wall', failLoudly: true),
-            'rough-links' => new ViewSectionRenderer(self::THEME_KEY, 'rough-links', 'capell-theme-off-grid::sections.rough-links', failLoudly: true),
-            'irregular-index' => new ViewSectionRenderer(self::THEME_KEY, 'irregular-index', 'capell-theme-off-grid::sections.irregular-index', failLoudly: true),
-            'submission-markers' => new ViewSectionRenderer(self::THEME_KEY, 'submission-markers', 'capell-theme-off-grid::sections.submission-markers', failLoudly: true),
-            'archive-dates' => new ViewSectionRenderer(self::THEME_KEY, 'archive-dates', 'capell-theme-off-grid::sections.archive-dates', failLoudly: true),
-            'zine-annotations' => new ViewSectionRenderer(self::THEME_KEY, 'zine-annotations', 'capell-theme-off-grid::sections.zine-annotations', failLoudly: true),
+            'archive-wall' => new VariantViewSectionRenderer(
+                themeKey: self::THEME_KEY,
+                sectionKey: 'archive-wall',
+                baseView: 'capell-theme-off-grid::sections.archive-wall',
+                variantViews: ['stacked' => 'capell-theme-off-grid::sections.archive-wall--stacked'],
+                failLoudly: true,
+            ),
+            'rough-links' => new VariantViewSectionRenderer(
+                themeKey: self::THEME_KEY,
+                sectionKey: 'rough-links',
+                baseView: 'capell-theme-off-grid::sections.rough-links',
+                variantViews: ['annotated' => 'capell-theme-off-grid::sections.rough-links--annotated'],
+                failLoudly: true,
+            ),
+            'irregular-index' => new VariantViewSectionRenderer(
+                themeKey: self::THEME_KEY,
+                sectionKey: 'irregular-index',
+                baseView: 'capell-theme-off-grid::sections.irregular-index',
+                variantViews: ['scattered' => 'capell-theme-off-grid::sections.irregular-index--scattered'],
+                failLoudly: true,
+            ),
+            'submission-markers' => new VariantViewSectionRenderer(
+                themeKey: self::THEME_KEY,
+                sectionKey: 'submission-markers',
+                baseView: 'capell-theme-off-grid::sections.submission-markers',
+                variantViews: ['compact' => 'capell-theme-off-grid::sections.submission-markers--compact'],
+                failLoudly: true,
+            ),
+            'archive-dates' => new VariantViewSectionRenderer(
+                themeKey: self::THEME_KEY,
+                sectionKey: 'archive-dates',
+                baseView: 'capell-theme-off-grid::sections.archive-dates',
+                variantViews: ['calendar' => 'capell-theme-off-grid::sections.archive-dates--calendar'],
+                failLoudly: true,
+            ),
+            'zine-annotations' => new VariantViewSectionRenderer(
+                themeKey: self::THEME_KEY,
+                sectionKey: 'zine-annotations',
+                baseView: 'capell-theme-off-grid::sections.zine-annotations',
+                variantViews: ['spine' => 'capell-theme-off-grid::sections.zine-annotations--spine'],
+                failLoudly: true,
+            ),
+            'time-capsule-browser' => new VariantViewSectionRenderer(
+                themeKey: self::THEME_KEY,
+                sectionKey: 'time-capsule-browser',
+                baseView: 'capell-theme-off-grid::sections.time-capsule-browser',
+                variantViews: ['stacked' => 'capell-theme-off-grid::sections.time-capsule-browser--stacked'],
+                failLoudly: true,
+            ),
             'proof' => new ViewSectionRenderer(self::THEME_KEY, 'proof', 'capell-theme-off-grid::sections.proof', failLoudly: true),
             'content-listing' => new ViewSectionRenderer(self::THEME_KEY, 'content-listing', 'capell-theme-off-grid::sections.content-listing', failLoudly: true),
             'newsletter' => new ViewSectionRenderer(self::THEME_KEY, 'newsletter', 'capell-theme-off-grid::sections.newsletter', failLoudly: true),

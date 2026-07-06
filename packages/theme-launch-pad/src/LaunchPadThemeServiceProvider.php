@@ -14,6 +14,7 @@ use Capell\Core\ThemeStudio\Data\ThemePresetData;
 use Capell\Core\ThemeStudio\Rendering\ViewSectionRenderer;
 use Capell\Core\ThemeStudio\Theme\ThemeRegistry;
 use Capell\FoundationTheme\Rendering\ChromeSplitBladeThemeRenderer;
+use Capell\FoundationTheme\Rendering\VariantViewSectionRenderer;
 use Capell\FoundationTheme\Support\Editor\StandardThemeEditorSchema;
 use Capell\ThemeStudio\LaunchPad\Console\Commands\DemoCommand;
 use Illuminate\Support\ServiceProvider;
@@ -89,6 +90,13 @@ final class LaunchPadThemeServiceProvider extends ServiceProvider
                 ),
             ],
             frontend: [
+                'sectionVariants' => [
+                    'hero' => ['default', 'sequence'],
+                    'category-navigation' => ['default', 'sequence'],
+                    'website-examples' => ['default', 'sequence'],
+                    'paid-templates' => ['default', 'sequence'],
+                    'cta' => ['default', 'sequence'],
+                ],
                 'editor' => StandardThemeEditorSchema::definition(),
             ],
             assets: ['css' => 'vendor/capell/themes/launch-pad.css'],
@@ -145,17 +153,47 @@ final class LaunchPadThemeServiceProvider extends ServiceProvider
     {
         return [
             'navigation' => new ViewSectionRenderer(self::THEME_KEY, 'navigation', 'capell-theme-launch-pad::sections.navigation', failLoudly: true),
-            'hero' => new ViewSectionRenderer(self::THEME_KEY, 'hero', 'capell-theme-launch-pad::sections.hero', failLoudly: true),
+            'hero' => new VariantViewSectionRenderer(
+                themeKey: self::THEME_KEY,
+                sectionKey: 'hero',
+                baseView: 'capell-theme-launch-pad::sections.hero',
+                variantViews: ['sequence' => 'capell-theme-launch-pad::sections.hero--sequence'],
+                failLoudly: true,
+            ),
             'utility-hero' => new ViewSectionRenderer(self::THEME_KEY, 'utility-hero', 'capell-theme-launch-pad::sections.utility-hero', failLoudly: true),
-            'category-navigation' => new ViewSectionRenderer(self::THEME_KEY, 'category-navigation', 'capell-theme-launch-pad::sections.category-navigation', failLoudly: true),
-            'website-examples' => new ViewSectionRenderer(self::THEME_KEY, 'website-examples', 'capell-theme-launch-pad::sections.website-examples', failLoudly: true),
-            'paid-templates' => new ViewSectionRenderer(self::THEME_KEY, 'paid-templates', 'capell-theme-launch-pad::sections.paid-templates', failLoudly: true),
+            'category-navigation' => new VariantViewSectionRenderer(
+                themeKey: self::THEME_KEY,
+                sectionKey: 'category-navigation',
+                baseView: 'capell-theme-launch-pad::sections.category-navigation',
+                variantViews: ['sequence' => 'capell-theme-launch-pad::sections.category-navigation--sequence'],
+                failLoudly: true,
+            ),
+            'website-examples' => new VariantViewSectionRenderer(
+                themeKey: self::THEME_KEY,
+                sectionKey: 'website-examples',
+                baseView: 'capell-theme-launch-pad::sections.website-examples',
+                variantViews: ['sequence' => 'capell-theme-launch-pad::sections.website-examples--sequence'],
+                failLoudly: true,
+            ),
+            'paid-templates' => new VariantViewSectionRenderer(
+                themeKey: self::THEME_KEY,
+                sectionKey: 'paid-templates',
+                baseView: 'capell-theme-launch-pad::sections.paid-templates',
+                variantViews: ['sequence' => 'capell-theme-launch-pad::sections.paid-templates--sequence'],
+                failLoudly: true,
+            ),
             'partner-blocks' => new ViewSectionRenderer(self::THEME_KEY, 'partner-blocks', 'capell-theme-launch-pad::sections.partner-blocks', failLoudly: true),
             'gallery-system' => new ViewSectionRenderer(self::THEME_KEY, 'gallery-system', 'capell-theme-launch-pad::sections.gallery-system', failLoudly: true),
             'proof' => new ViewSectionRenderer(self::THEME_KEY, 'proof', 'capell-theme-launch-pad::sections.proof', failLoudly: true),
             'content-listing' => new ViewSectionRenderer(self::THEME_KEY, 'content-listing', 'capell-theme-launch-pad::sections.content-listing', failLoudly: true),
             'newsletter' => new ViewSectionRenderer(self::THEME_KEY, 'newsletter', 'capell-theme-launch-pad::sections.newsletter', failLoudly: true),
-            'cta' => new ViewSectionRenderer(self::THEME_KEY, 'cta', 'capell-theme-launch-pad::sections.cta', failLoudly: true),
+            'cta' => new VariantViewSectionRenderer(
+                themeKey: self::THEME_KEY,
+                sectionKey: 'cta',
+                baseView: 'capell-theme-launch-pad::sections.cta',
+                variantViews: ['sequence' => 'capell-theme-launch-pad::sections.cta--sequence'],
+                failLoudly: true,
+            ),
             'footer' => new ViewSectionRenderer(self::THEME_KEY, 'footer', 'capell-theme-launch-pad::sections.footer', failLoudly: true),
         ];
     }

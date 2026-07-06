@@ -1265,3 +1265,381 @@
         animation: none !important;
     }
 }
+
+/* --------------------------------------------------- filmstrip-project-showcase (Wave 4c)
+   Headline mechanic: filmstrip scrubbing. The stage shows one frame at a
+   time; the range input and thumbnail rail below it are the scrub control.
+   Frame cross-fade only runs when the visitor allows motion; the frame swap
+   itself (via [hidden]) is instant either way so the control stays usable
+   with motion off. */
+
+.csp-filmstrip {
+    margin-top: clamp(2rem, 4vw, 3rem);
+}
+
+.csp-filmstrip-stage {
+    position: relative;
+}
+
+.csp-filmstrip-frame {
+    display: grid;
+    gap: 1rem;
+}
+
+.csp-filmstrip-frame figcaption {
+    display: grid;
+    gap: 0.35rem;
+}
+
+.csp-filmstrip-frame-title {
+    font-weight: 800;
+    margin: 0;
+}
+
+.csp-filmstrip-frame-caption {
+    color: var(--csp-muted);
+    margin: 0;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    .csp-filmstrip-frame {
+        animation: csp-filmstrip-frame-in
+            var(--foundation-motion-duration, 260ms)
+            var(--foundation-motion-ease, ease-out) both;
+    }
+
+    @keyframes csp-filmstrip-frame-in {
+        from {
+            opacity: 0;
+        }
+
+        to {
+            opacity: 1;
+        }
+    }
+}
+
+.csp-filmstrip-scrub-row {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.csp-filmstrip-scrub-label {
+    font-size: 0.78rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+.csp-filmstrip-scrub {
+    accent-color: var(--csp-accent);
+    flex: 1 1 16rem;
+    min-inline-size: 12rem;
+}
+
+.csp-filmstrip-position {
+    color: var(--csp-muted);
+    font-variant-numeric: tabular-nums;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.csp-filmstrip-thumbs {
+    display: flex;
+    gap: 0.75rem;
+    list-style: none;
+    margin: 1.25rem 0 0;
+    overflow-x: auto;
+    padding: 0 0 0.5rem;
+    scroll-snap-type: x proximity;
+}
+
+.csp-filmstrip-thumb {
+    background: none;
+    border: 2px solid transparent;
+    border-radius: max(var(--theme-radius, 1rem), 0.5rem);
+    cursor: pointer;
+    display: block;
+    flex: 0 0 auto;
+    inline-size: 5.5rem;
+    overflow: hidden;
+    padding: 0;
+    scroll-snap-align: start;
+}
+
+.csp-filmstrip-thumb img,
+.csp-filmstrip-thumb-empty {
+    aspect-ratio: 4 / 3;
+    display: block;
+    inline-size: 100%;
+    object-fit: cover;
+}
+
+.csp-filmstrip-thumb-empty {
+    background: color-mix(in srgb, var(--csp-accent) 45%, var(--csp-night));
+}
+
+.csp-filmstrip-thumb[aria-current='true'] {
+    border-color: var(--csp-accent);
+}
+
+.csp-filmstrip-compact .csp-filmstrip-thumbs-rail {
+    flex-direction: column;
+    overflow-x: visible;
+    overflow-y: auto;
+    scroll-snap-type: y proximity;
+}
+
+@media (min-width: 900px) {
+    .csp-filmstrip-compact {
+        display: grid;
+        gap: clamp(1.5rem, 3vw, 2.5rem);
+        grid-template-columns: 8rem minmax(0, 1fr);
+    }
+
+    .csp-filmstrip-compact .csp-filmstrip-thumbs-rail {
+        max-block-size: 32rem;
+    }
+}
+
+/* ----------------------------------------------------- discipline-carousel-browse (Wave 4c)
+   Sticky tab filter. Markup/keyboard contract mirrors the shared Wave 2.6
+   tabs.js module (role="tablist"/"tab"/"tabpanel", Left/Right/Home/End),
+   re-implemented inline since per-theme JS cannot import across a package
+   boundary without a shared bundler entry. */
+
+.csp-discipline-browse {
+    margin-top: clamp(2rem, 4vw, 3rem);
+}
+
+.csp-discipline-tablist {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.csp-discipline-browse-sticky .csp-discipline-tablist-sticky {
+    background: var(--csp-paper);
+    padding-block: 0.75rem;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
+.csp-discipline-tab {
+    background: transparent;
+    border: 1px solid var(--csp-line);
+    border-radius: 999px;
+    color: var(--csp-ink);
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-weight: 700;
+    padding: 0.55rem 1.1rem;
+    transition:
+        background-color var(--csp-dur) var(--csp-ease),
+        border-color var(--csp-dur) var(--csp-ease),
+        color var(--csp-dur) var(--csp-ease);
+}
+
+.csp-discipline-tab[aria-selected='true'] {
+    background: var(--csp-ink);
+    border-color: var(--csp-ink);
+    color: #ffffff;
+}
+
+.csp-discipline-tab:hover {
+    border-color: var(--csp-accent);
+}
+
+.csp-discipline-panel-grid {
+    display: grid;
+    gap: clamp(1.5rem, 3vw, 2.5rem);
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+}
+
+.csp-discipline-panel-card {
+    color: inherit;
+    display: grid;
+    gap: 0.6rem;
+    text-decoration: none;
+}
+
+/* ------------------------------------------------------- process-notes-timeline (Wave 4c)
+   Scroll-drawn spine: the vertical rule reveals top-to-bottom via
+   `animation-timeline: view()` where supported (§0.8 enhancement-only); the
+   spine renders fully drawn as a static fallback with no JS dependency
+   either way, so the content is never gated behind the animation. */
+
+.csp-process-spine {
+    border-inline-start: 2px solid var(--csp-line);
+    display: grid;
+    gap: clamp(2rem, 4vw, 3rem);
+    list-style: none;
+    margin: clamp(2rem, 4vw, 3rem) 0 0;
+    padding-inline-start: clamp(1.5rem, 3vw, 2.5rem);
+    position: relative;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: view()) {
+        .csp-process-spine {
+            border-image: linear-gradient(
+                    to bottom,
+                    var(--csp-accent) var(--csp-spine-progress, 100%),
+                    var(--csp-line) 0
+                )
+                1 100%;
+            animation: csp-spine-draw linear both;
+            animation-timeline: view();
+            animation-range: entry 0% cover 90%;
+        }
+
+        @keyframes csp-spine-draw {
+            from {
+                --csp-spine-progress: 0%;
+            }
+
+            to {
+                --csp-spine-progress: 100%;
+            }
+        }
+    }
+}
+
+.csp-process-spine-item {
+    position: relative;
+}
+
+.csp-process-spine-marker {
+    background: var(--csp-accent);
+    block-size: 0.85rem;
+    border-radius: 999px;
+    inline-size: 0.85rem;
+    inset-inline-start: calc(clamp(1.5rem, 3vw, 2.5rem) * -1 - 0.42rem);
+    position: absolute;
+    top: 0.3rem;
+}
+
+.csp-process-spine-body {
+    display: grid;
+    gap: 0.35rem;
+}
+
+.csp-process-spine-meta {
+    color: var(--csp-accent);
+    font-size: 0.78rem;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    margin: 0;
+    text-transform: uppercase;
+}
+
+.csp-process-spine-body p:not(.csp-process-spine-meta) {
+    color: var(--csp-muted);
+    margin: 0;
+}
+
+.csp-process-spine-compact {
+    border-inline-start: 0;
+    gap: 1.5rem;
+    padding-inline-start: 0;
+}
+
+.csp-process-spine-item-compact {
+    border-top: 1px solid var(--csp-line);
+    padding-top: 1.25rem;
+}
+
+/* ------------------------------------------------------------- credits-grid-roster (Wave 4c) */
+
+.csp-roster-grid {
+    display: grid;
+    gap: clamp(1.5rem, 3vw, 2.5rem);
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr));
+    margin-top: clamp(2rem, 4vw, 3rem);
+}
+
+.csp-roster-card {
+    display: grid;
+    gap: 0.65rem;
+    text-align: center;
+}
+
+.csp-roster-photo {
+    aspect-ratio: 1;
+    border-radius: 999px;
+    inline-size: 5rem;
+    justify-self: center;
+    object-fit: cover;
+}
+
+.csp-roster-photo-empty {
+    align-items: center;
+    background: color-mix(in srgb, var(--csp-accent) 45%, var(--csp-night));
+    color: #ffffff;
+    display: flex;
+    font-size: 1.75rem;
+    font-weight: 800;
+    justify-content: center;
+}
+
+.csp-roster-card h3 {
+    font-size: 0.98rem;
+    margin: 0;
+}
+
+.csp-roster-role {
+    color: var(--csp-muted);
+    font-size: 0.85rem;
+    margin: 0;
+}
+
+.csp-roster-rows {
+    border-top: 1px solid var(--csp-line);
+    display: grid;
+    list-style: none;
+    margin: clamp(2rem, 4vw, 3rem) 0 0;
+    padding: 0;
+}
+
+.csp-roster-row {
+    border-bottom: 1px solid var(--csp-line);
+    display: flex;
+    gap: 1rem;
+    justify-content: space-between;
+    padding-block: 0.85rem;
+}
+
+/* ---------------------------------------------------------------- next-project-cta (Wave 4c) */
+
+.csp-next-project {
+    align-items: center;
+    color: inherit;
+    display: grid;
+    gap: clamp(2rem, 4vw, 3rem);
+    text-decoration: none;
+}
+
+@media (min-width: 900px) {
+    .csp-next-project {
+        grid-template-columns: minmax(0, 1.1fr) minmax(20rem, 0.9fr);
+    }
+
+    .csp-next-project-stacked {
+        grid-template-columns: 1fr;
+    }
+}
+
+.csp-next-project-copy {
+    display: grid;
+    gap: 1rem;
+    justify-items: start;
+}
+
+.csp-next-project-cover {
+    aspect-ratio: 16 / 10;
+}

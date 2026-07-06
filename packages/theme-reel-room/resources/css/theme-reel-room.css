@@ -1296,6 +1296,364 @@
     }
 }
 
+/* Wave 4b: video-preview-grid — hover-video-poster cards, cinema archive index */
+.mva-preview-grid {
+    display: grid;
+    gap: 1.5rem;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
+}
+
+.mva-preview-card-link {
+    color: inherit;
+    display: block;
+    text-decoration: none;
+}
+
+.mva-preview-frame {
+    aspect-ratio: 16 / 10;
+    background-color: #05070a;
+    border: 1px solid var(--mva-line);
+    border-radius: var(--theme-radius, 0.6rem);
+    display: block;
+    overflow: hidden;
+    position: relative;
+}
+
+.mva-preview-frame-image {
+    height: 100%;
+    object-fit: cover;
+    width: 100%;
+}
+
+.mva-preview-numeral {
+    color: var(--mva-faint);
+    display: block;
+    font-size: 0.78rem;
+    font-variant-numeric: tabular-nums;
+    font-weight: 700;
+    margin-top: 0.85rem;
+}
+
+.mva-preview-body {
+    display: block;
+    margin-top: 0.35rem;
+}
+
+.mva-preview-meta {
+    color: var(--mva-accent);
+    display: block;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+.mva-preview-title {
+    display: block;
+    font-family: var(--theme-heading-font, sora), system-ui, sans-serif;
+    font-size: 1.05rem;
+    font-weight: 700;
+    margin-top: 0.3rem;
+}
+
+.mva-preview-summary {
+    color: var(--mva-muted);
+    display: block;
+    line-height: 1.55;
+    margin-top: 0.35rem;
+    text-wrap: pretty;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    .mva-preview-frame {
+        transition: box-shadow var(--mva-dur-fast) var(--mva-ease-out);
+    }
+
+    .mva-preview-card-link:hover .mva-preview-frame,
+    .mva-preview-card-link:focus-visible .mva-preview-frame {
+        box-shadow: 0 0 0 3px
+            color-mix(in srgb, var(--mva-accent) 35%, transparent);
+    }
+}
+
+/* Wave 4b: date-filter-rail --compact chip variant */
+.mva-rail-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.65rem;
+}
+
+.mva-rail-chip {
+    background: var(--mva-panel);
+    border: 1px solid var(--mva-line);
+    border-radius: 999px;
+    color: var(--mva-ink);
+    font-size: 0.85rem;
+    font-weight: 600;
+    padding: 0.5rem 1rem;
+    text-decoration: none;
+    transition: border-color var(--mva-dur-fast) var(--mva-ease-out);
+}
+
+.mva-rail-chip:hover,
+.mva-rail-chip:focus-visible {
+    border-color: var(--mva-accent);
+}
+
+/* Wave 4b: featured-project-showcase inline credits + stacked variant */
+.mva-spotlight-credits {
+    border-top: 1px solid var(--mva-line);
+    padding-top: 1rem;
+}
+
+.mva-spotlight-credits-heading {
+    color: var(--mva-faint);
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    margin: 0 0 0.6rem;
+    text-transform: uppercase;
+}
+
+.mva-spotlight-credits-list {
+    display: grid;
+    gap: 0.45rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.mva-spotlight-credits-list li {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: space-between;
+}
+
+.mva-spotlight-credit-role {
+    color: var(--mva-muted);
+    font-size: 0.85rem;
+}
+
+.mva-spotlight-credit-name {
+    color: var(--mva-ink);
+    font-weight: 600;
+    text-align: end;
+}
+
+.mva-spotlight-still-stacked,
+.mva-spotlight-breakdown-stacked {
+    margin-inline: 0;
+}
+
+/* Wave 4b: jury-score-matrix table variant */
+.mva-visually-hidden {
+    border: 0;
+    clip: rect(0, 0, 0, 0);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    width: 1px;
+}
+
+.mva-matrix-scroll {
+    overflow-x: auto;
+}
+
+.mva-matrix {
+    border-collapse: collapse;
+    min-width: 100%;
+    width: max-content;
+}
+
+.mva-matrix th,
+.mva-matrix td {
+    border-bottom: 1px solid var(--mva-line);
+    padding: 0.75rem 1rem;
+    text-align: start;
+    white-space: nowrap;
+}
+
+.mva-matrix thead th {
+    color: var(--mva-faint);
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+.mva-matrix tbody th {
+    color: var(--mva-ink);
+    font-weight: 700;
+}
+
+.mva-matrix-cell {
+    color: var(--mva-accent);
+    font-variant-numeric: tabular-nums;
+    font-weight: 700;
+}
+
+/* Wave 4b: archive-wall-index deterministic contact-sheet wall */
+.mva-wall {
+    display: grid;
+    gap: 0.75rem;
+    grid-auto-flow: dense;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr));
+}
+
+.mva-wall-compact {
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 9rem), 1fr));
+}
+
+.mva-wall-tile {
+    background-color: #05070a;
+    border-radius: var(--theme-radius, 0.5rem);
+    color: var(--mva-ink);
+    display: block;
+    grid-column: span var(--mva-wall-col-span, 1);
+    grid-row: span var(--mva-wall-row-span, 1);
+    overflow: hidden;
+    position: relative;
+    text-decoration: none;
+}
+
+.mva-wall-tile-image {
+    aspect-ratio: 4 / 3;
+    height: 100%;
+    inset: 0;
+    object-fit: cover;
+    position: absolute;
+    width: 100%;
+}
+
+.mva-wall-tile-caption {
+    background: linear-gradient(
+        0deg,
+        color-mix(in srgb, var(--mva-void) 78%, transparent),
+        transparent
+    );
+    bottom: 0;
+    display: block;
+    font-size: 0.78rem;
+    font-weight: 600;
+    inset-inline-start: 0;
+    padding: 0.6rem;
+    position: absolute;
+    width: 100%;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    .mva-wall-tile {
+        transition: box-shadow var(--mva-dur-fast) var(--mva-ease-out);
+    }
+
+    .mva-wall-tile:hover,
+    .mva-wall-tile:focus-visible {
+        box-shadow: 0 0 0 3px
+            color-mix(in srgb, var(--mva-accent) 35%, transparent);
+    }
+}
+
+/* Wave 4b: time-capsule-browser — cross-archive mechanic, Reel Room skin.
+   3D-perspective capsule rack; expand-one-at-a-time is driven by the hidden
+   radio inputs plus :has() where supported (guardrail §0.8: enhancement
+   only — every capsule stays fully readable, just not visually enlarged,
+   on engines without :has()). */
+.mva-capsule-rack {
+    display: grid;
+    gap: 1.25rem;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+    perspective: 1400px;
+}
+
+.mva-capsule {
+    position: relative;
+}
+
+.mva-capsule-toggle {
+    height: 1px;
+    inset-inline-start: -9999px;
+    position: absolute;
+    width: 1px;
+}
+
+.mva-capsule-shell {
+    background: var(--mva-panel);
+    border: 1px solid var(--mva-line);
+    border-radius: var(--theme-radius, 0.85rem);
+    cursor: pointer;
+    display: grid;
+    gap: 0.5rem;
+    padding: clamp(1.1rem, 1.8vw, 1.6rem);
+    transform-style: preserve-3d;
+}
+
+.mva-capsule-rack-void .mva-capsule-shell {
+    background: var(--mva-void);
+}
+
+.mva-capsule-era {
+    color: var(--mva-accent);
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+.mva-capsule-summary {
+    color: var(--mva-muted);
+    line-height: 1.55;
+}
+
+.mva-capsule-preview {
+    display: none;
+    flex-direction: column;
+    gap: 0.35rem;
+}
+
+.mva-capsule-preview-item {
+    border-top: 1px solid var(--mva-line);
+    color: var(--mva-faint);
+    font-size: 0.85rem;
+    padding-top: 0.35rem;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    .mva-capsule-shell {
+        transition:
+            transform var(--mva-dur-slow) var(--mva-ease-out),
+            box-shadow var(--mva-dur-slow) var(--mva-ease-out);
+    }
+
+    .mva-capsule-shell:hover,
+    .mva-capsule-shell:focus-within {
+        transform: rotateY(-4deg) translateZ(6px);
+    }
+
+    .mva-capsule-shell:hover .mva-capsule-preview,
+    .mva-capsule-shell:focus-within .mva-capsule-preview {
+        display: flex;
+    }
+}
+
+/* :has() expand-one-at-a-time (§0.8 progressive enhancement; the base rack
+   above is already a complete, legible browser without this rule). */
+@supports selector(:has(*)) {
+    .mva-capsule-rack:has(.mva-capsule-toggle:checked) .mva-capsule-shell {
+        opacity: 0.75;
+    }
+
+    .mva-capsule:has(.mva-capsule-toggle:checked) .mva-capsule-shell {
+        box-shadow: 0 0 0 3px
+            color-mix(in srgb, var(--mva-accent) 40%, transparent);
+        opacity: 1;
+    }
+
+    .mva-capsule:has(.mva-capsule-toggle:checked) .mva-capsule-preview {
+        display: flex;
+    }
+}
+
 /* View Transitions (Wave 6.5): opt every same-origin navigation into a smooth
    cross-document transition where supported; static fallback everywhere else.
    Reduced-motion users still navigate — just without the animation. */

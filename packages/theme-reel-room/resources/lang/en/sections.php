@@ -45,11 +45,23 @@ return [
         'summary' => 'A long-form title sequence that took the 2025 Grand Prix for motion direction.',
         'open_label' => 'Open the full project record',
         'still_alt' => 'The featured project\'s cover still',
+        'credits_heading' => 'Credits',
     ],
     'jury_score_explainer' => [
         'kicker' => 'Jury & scoring',
         'heading' => 'How the jury scored it',
         'summary' => 'Every winner carries the panel\'s reasoning across four scoring axes, kept on the record.',
+        'matrix_project_column' => 'Project',
+    ],
+    'archive_wall_index' => [
+        'kicker' => 'Archive wall',
+        'heading' => 'The archive wall',
+        'summary' => 'Every filed still in one contact-sheet grid, oldest cycles mixed with the newest.',
+    ],
+    'time_capsule_browser' => [
+        'kicker' => 'Time capsules',
+        'heading' => 'Step into an earlier cycle',
+        'summary' => 'Each award cycle is filed as its own capsule — open one to preview the projects it holds.',
     ],
     'media_credits' => [
         'kicker' => 'Credits & technology',

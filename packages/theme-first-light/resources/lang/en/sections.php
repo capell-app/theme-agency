@@ -40,6 +40,21 @@ return [
     'best_of' => [
         'kicker' => 'Most viewed',
         'heading' => 'What readers keep coming back to',
+        'carousel_prev' => 'Previous best-of capture',
+        'carousel_next' => 'Next best-of capture',
+    ],
+    'grid' => [
+        'kicker' => 'Contact sheet',
+        'heading' => 'Every capture, at a glance',
+        'open_lightbox' => 'Open :title in the lightbox reel',
+        'empty_heading' => 'Nothing saved to the reel yet.',
+        'empty' => 'The next contact sheet lands with tomorrow\'s edition.',
+    ],
+    'lightbox' => [
+        'aria_label' => 'Capture viewer',
+        'close' => 'Close',
+        'previous' => 'Previous capture',
+        'next' => 'Next capture',
     ],
     'icons' => [
         'kicker' => 'Apps, websites & icons',
@@ -72,5 +87,7 @@ return [
         'heading' => 'Tomorrow\'s capture is already queued',
         'summary' => 'Follow along in the feed, or let the daily email bring the next reference to you.',
         'button' => 'Get the daily email',
+        'next_title' => 'Tomorrow\'s capture',
+        'next_aria' => 'Preview :title in the lightbox reel',
     ],
 ];

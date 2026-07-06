@@ -14,6 +14,7 @@ use Capell\Core\ThemeStudio\Data\ThemePresetData;
 use Capell\Core\ThemeStudio\Rendering\ViewSectionRenderer;
 use Capell\Core\ThemeStudio\Theme\ThemeRegistry;
 use Capell\FoundationTheme\Rendering\ChromeSplitBladeThemeRenderer;
+use Capell\FoundationTheme\Rendering\VariantViewSectionRenderer;
 use Capell\FoundationTheme\Support\Editor\StandardThemeEditorSchema;
 use Capell\ThemeStudio\DeepBench\Console\Commands\DemoCommand;
 use Illuminate\Support\ServiceProvider;
@@ -35,7 +36,7 @@ final class DeepBenchThemeServiceProvider extends ServiceProvider
             previewImage: '/vendor/capell/themes/deep-bench.jpg',
             tags: ['Portfolio', 'Directory', 'Designers', 'Developers', 'Resources'],
             bestFit: ['Portfolio directories', 'Designer galleries', 'Developer portfolios', 'Studio showcases', 'Career resource hubs'],
-            includedSections: ['navigation', 'hero', 'directory-hero', 'role-filters', 'portfolio-grid', 'resume-resources', 'curated-lists', 'profile-detail', 'proof', 'content-listing', 'newsletter', 'cta', 'footer'],
+            includedSections: ['navigation', 'hero', 'directory-hero', 'role-filters', 'portfolio-grid', 'resume-resources', 'curated-lists', 'profile-detail', 'proof', 'content-listing', 'newsletter', 'cta', 'footer', 'directory-hero-roster', 'role-filters-toolbar', 'portfolio-grid-cards', 'resume-resources-sidebar', 'curated-lists-cta'],
             presets: [
                 new ThemePresetData(
                     key: self::THEME_KEY,
@@ -91,6 +92,13 @@ final class DeepBenchThemeServiceProvider extends ServiceProvider
             assets: ['css' => 'vendor/capell/themes/deep-bench.css'],
             runtime: FrontendRuntime::Blade,
             frontend: [
+                'sectionVariants' => [
+                    'directory-hero-roster' => ['default', 'compact'],
+                    'role-filters-toolbar' => ['default', 'sticky'],
+                    'portfolio-grid-cards' => ['default', 'rows'],
+                    'resume-resources-sidebar' => ['default', 'stacked'],
+                    'curated-lists-cta' => ['default', 'band'],
+                ],
                 'editor' => StandardThemeEditorSchema::definition(),
             ],
             extends: 'default',
@@ -157,6 +165,41 @@ final class DeepBenchThemeServiceProvider extends ServiceProvider
             'newsletter' => new ViewSectionRenderer(self::THEME_KEY, 'newsletter', 'capell-theme-deep-bench::sections.newsletter', failLoudly: true),
             'cta' => new ViewSectionRenderer(self::THEME_KEY, 'cta', 'capell-theme-deep-bench::sections.cta', failLoudly: true),
             'footer' => new ViewSectionRenderer(self::THEME_KEY, 'footer', 'capell-theme-deep-bench::sections.footer', failLoudly: true),
+            'directory-hero-roster' => new VariantViewSectionRenderer(
+                themeKey: self::THEME_KEY,
+                sectionKey: 'directory-hero-roster',
+                baseView: 'capell-theme-deep-bench::sections.directory-hero-roster',
+                variantViews: ['compact' => 'capell-theme-deep-bench::sections.directory-hero-roster--compact'],
+                failLoudly: true,
+            ),
+            'role-filters-toolbar' => new VariantViewSectionRenderer(
+                themeKey: self::THEME_KEY,
+                sectionKey: 'role-filters-toolbar',
+                baseView: 'capell-theme-deep-bench::sections.role-filters-toolbar',
+                variantViews: ['sticky' => 'capell-theme-deep-bench::sections.role-filters-toolbar--sticky'],
+                failLoudly: true,
+            ),
+            'portfolio-grid-cards' => new VariantViewSectionRenderer(
+                themeKey: self::THEME_KEY,
+                sectionKey: 'portfolio-grid-cards',
+                baseView: 'capell-theme-deep-bench::sections.portfolio-grid-cards',
+                variantViews: ['rows' => 'capell-theme-deep-bench::sections.portfolio-grid-cards--rows'],
+                failLoudly: true,
+            ),
+            'resume-resources-sidebar' => new VariantViewSectionRenderer(
+                themeKey: self::THEME_KEY,
+                sectionKey: 'resume-resources-sidebar',
+                baseView: 'capell-theme-deep-bench::sections.resume-resources-sidebar',
+                variantViews: ['stacked' => 'capell-theme-deep-bench::sections.resume-resources-sidebar--stacked'],
+                failLoudly: true,
+            ),
+            'curated-lists-cta' => new VariantViewSectionRenderer(
+                themeKey: self::THEME_KEY,
+                sectionKey: 'curated-lists-cta',
+                baseView: 'capell-theme-deep-bench::sections.curated-lists-cta',
+                variantViews: ['band' => 'capell-theme-deep-bench::sections.curated-lists-cta--band'],
+                failLoudly: true,
+            ),
         ];
     }
 }

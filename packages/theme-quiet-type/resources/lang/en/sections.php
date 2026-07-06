@@ -15,6 +15,7 @@ return [
         'eyebrow' => 'The current issue',
         'heading' => 'Essays from the current issue',
         'summary' => 'The pieces our editors are reading this season, set in type built for the long form.',
+        'marginalia_label' => "Editors' marginalia",
     ],
     'issue_archive' => [
         'eyebrow' => 'Back issues',
@@ -59,5 +60,29 @@ return [
         'heading' => 'Start reading the current issue',
         'summary' => 'Subscribe today and the latest issue lands in your hands and your inbox.',
         'primary_label' => 'Subscribe',
+    ],
+    'serialized_chapters' => [
+        'eyebrow' => 'Serialized',
+        'heading' => 'Continue the serialized run',
+        'summary' => 'Published a chapter at a time. Jump ahead, catch up, or read straight through the contents below.',
+        'pager_label' => 'Chapter navigation',
+        'previous' => 'Previous',
+        'next' => 'Next',
+        'none' => 'None',
+    ],
+    'issue_contents' => [
+        'eyebrow' => 'Table of contents',
+        'heading' => 'Inside this issue',
+        'summary' => 'Every piece in this issue, grouped the way it runs in print.',
+        'ungrouped' => 'This issue',
+    ],
+    'contextual_glossary' => [
+        'eyebrow' => 'Reading notes',
+        'heading' => 'Terms used in this issue',
+        'summary' => 'Hover or press a defined term for a short gloss without leaving the page.',
+    ],
+    'scroll_position_menu' => [
+        'heading' => 'On this page',
+        'aria_label' => 'Page section navigation',
     ],
 ];

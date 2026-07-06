@@ -78,7 +78,8 @@ final class FirstLightDemoContent implements ProvidesThemeDemoContent
                         summary: 'Seven days, seven captures — each with its maker, source, platform, and the one thing worth stealing.',
                         media: $media,
                     ),
-                    $this->bestOfViewsSection($media),
+                    $this->curationFeedGridSection($media),
+                    $this->bestOfViewsCarouselSection($media),
                     $this->appWebsiteIconsSection(),
                     $this->proofSection(
                         heading: 'A feed you can actually keep up with',
@@ -88,10 +89,8 @@ final class FirstLightDemoContent implements ProvidesThemeDemoContent
                         heading: 'One capture in your inbox, every morning',
                         summary: 'The day\'s pick with its source and a one-line note. No roundups, no sponsors, unsubscribe any time.',
                     ),
-                    $this->ctaSection(
-                        heading: 'Tomorrow\'s capture is already queued',
-                        summary: 'Follow along in the feed, or let the daily email bring the next reference to you.',
-                    ),
+                    $this->lightboxViewerSection(),
+                    $this->nextItemLightboxCtaSection($media),
                 ],
             ],
             type: PageTypeEnum::Home,
@@ -136,12 +135,14 @@ final class FirstLightDemoContent implements ProvidesThemeDemoContent
                         summary: 'The newest captures in the archive, each with its maker, source, and note.',
                         media: $media,
                     ),
+                    $this->curationFeedGridSection($media, variant: 'compact'),
                     $this->contentListingSection(
                         heading: 'Deeper in the archive',
                         summary: 'Older picks that still hold up — the entries readers keep linking back to.',
                         media: $media,
                     ),
                     $this->bestOfViewsSection($media),
+                    $this->lightboxViewerSection(),
                     $this->ctaSection(
                         heading: 'Found something worth keeping?',
                         summary: 'The daily email delivers the next capture before it reaches the archive.',
@@ -183,14 +184,16 @@ final class FirstLightDemoContent implements ProvidesThemeDemoContent
                         'mediaUrl' => $media['detail'][0],
                         'mediaAlt' => 'Driftwork\'s empty state screen, captured on iOS',
                     ],
-                    $this->sourceMetadataSection(),
+                    $this->sourceMetadataCreditsSection(),
+                    $this->lightboxViewerSection(variant: 'minimal'),
                     $this->curationFeedSection(
                         heading: 'More like this one',
                         summary: 'Other captures filed under onboarding and empty states.',
                         media: $media,
                     ),
                     $this->appWebsiteIconsSection(),
-                    $this->ctaSection(
+                    $this->nextItemLightboxCtaSection(
+                        media: $media,
                         heading: 'One capture like this, every day',
                         summary: 'The daily email delivers the next screen worth studying before it reaches the archive.',
                     ),
@@ -497,6 +500,100 @@ final class FirstLightDemoContent implements ProvidesThemeDemoContent
      * @param  array{hero: list<string>, listing: list<string>, detail: list<string>, proof: list<string>, contact: list<string>, cta: list<string>}  $media
      * @return array<string, mixed>
      */
+    private function bestOfViewsCarouselSection(array $media): array
+    {
+        return [
+            ...$this->bestOfViewsSection($media),
+            'variant' => 'carousel',
+            'heading' => 'What readers keep coming back to, in order',
+            'summary' => 'Swipe through the most-viewed captures this month — every slide opens in the same lightbox reel as the feed above.',
+        ];
+    }
+
+    /**
+     * @param  array{hero: list<string>, listing: list<string>, detail: list<string>, proof: list<string>, contact: list<string>, cta: list<string>}  $media
+     * @return array<string, mixed>
+     */
+    private function curationFeedGridSection(array $media, string $variant = 'default'): array
+    {
+        $pool = array_values(array_unique(array_merge(
+            $media['listing'],
+            $media['detail'],
+            $media['proof'],
+            $media['hero'],
+            $media['cta'],
+        )));
+
+        $entries = [
+            ['title' => 'Driftwork\'s empty states', 'meta' => 'App · iOS'],
+            ['title' => 'Verda\'s product page', 'meta' => 'Website · SaaS'],
+            ['title' => 'Northline\'s icon grid', 'meta' => 'Icons · SVG'],
+            ['title' => 'Harbour\'s onboarding', 'meta' => 'App · Android'],
+            ['title' => 'Lumen\'s pricing page', 'meta' => 'Website · Pricing'],
+            ['title' => 'Foundry\'s wordmark system', 'meta' => 'Icons · Branding'],
+            ['title' => 'Almanac\'s settings screen', 'meta' => 'App · iOS'],
+            ['title' => 'Portside\'s docs search', 'meta' => 'Website · Docs'],
+        ];
+
+        $items = [];
+
+        foreach ($entries as $index => $entry) {
+            $image = $pool[$index % max(count($pool), 1)] ?? null;
+            $items[] = [
+                ...$entry,
+                'url' => '#entry-' . ($index + 1),
+                'image' => $image,
+                'imageUrl' => $image,
+                'imageAlt' => $entry['title'],
+            ];
+        }
+
+        return [
+            'type' => 'curation-feed-grid',
+            'variant' => $variant,
+            'kicker' => 'Contact sheet',
+            'heading' => 'Every capture, at a glance',
+            'summary' => 'The same reel as the feed above, laid out as a contact sheet — open any capture in the shared lightbox and step through the rest with Next and Previous.',
+            'items' => $items,
+        ];
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function lightboxViewerSection(string $variant = 'default'): array
+    {
+        return [
+            'type' => 'lightbox-carousel-viewer',
+            'variant' => $variant,
+        ];
+    }
+
+    /**
+     * @param  array{hero: list<string>, listing: list<string>, detail: list<string>, proof: list<string>, contact: list<string>, cta: list<string>}  $media
+     * @return array<string, mixed>
+     */
+    private function nextItemLightboxCtaSection(array $media, ?string $heading = null, ?string $summary = null): array
+    {
+        return [
+            'type' => 'cta',
+            'variant' => 'lightbox-preview',
+            'kicker' => 'Keep browsing',
+            'heading' => $heading ?? 'Tomorrow\'s capture is already queued',
+            'summary' => $summary ?? 'Follow along in the feed, or let the daily email bring the next reference to you.',
+            'actions' => [
+                ['label' => 'Get the daily email', 'url' => '#newsletter', 'style' => 'primary'],
+                ['label' => 'Browse the latest', 'url' => '#curation-feed', 'style' => 'secondary'],
+            ],
+            'nextImage' => $media['cta'][0] ?? $media['hero'][0],
+            'nextTitle' => 'Tomorrow\'s capture, queued for the morning edition',
+        ];
+    }
+
+    /**
+     * @param  array{hero: list<string>, listing: list<string>, detail: list<string>, proof: list<string>, contact: list<string>, cta: list<string>}  $media
+     * @return array<string, mixed>
+     */
     private function contentListingSection(string $heading, string $summary, array $media): array
     {
         $pool = array_values(array_unique(array_merge($media['listing'], $media['detail'], $media['contact'])));
@@ -564,6 +661,17 @@ final class FirstLightDemoContent implements ProvidesThemeDemoContent
                 ['title' => 'Filed under', 'summary' => 'Apps · Empty states · Onboarding — three tags, no more, so the archive stays browsable.'],
                 ['title' => 'Editor\'s note', 'summary' => 'Saved because every blank screen teaches the gesture it wants — restraint doing the onboarding.'],
             ],
+        ];
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function sourceMetadataCreditsSection(): array
+    {
+        return [
+            ...$this->sourceMetadataSection(),
+            'variant' => 'credits',
         ];
     }
 

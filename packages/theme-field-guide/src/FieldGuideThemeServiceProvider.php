@@ -14,6 +14,7 @@ use Capell\Core\ThemeStudio\Data\ThemePresetData;
 use Capell\Core\ThemeStudio\Rendering\ViewSectionRenderer;
 use Capell\Core\ThemeStudio\Theme\ThemeRegistry;
 use Capell\FoundationTheme\Rendering\ChromeSplitBladeThemeRenderer;
+use Capell\FoundationTheme\Rendering\VariantViewSectionRenderer;
 use Capell\FoundationTheme\Support\Editor\StandardThemeEditorSchema;
 use Capell\ThemeStudio\FieldGuide\Console\Commands\DemoCommand;
 use Illuminate\Support\ServiceProvider;
@@ -35,7 +36,7 @@ final class FieldGuideThemeServiceProvider extends ServiceProvider
             previewImage: '/vendor/capell/themes/field-guide.jpg',
             tags: ['Inspiration Library', 'Filters', 'Gallery', 'Taxonomies', 'Search'],
             bestFit: ['Large website inspiration libraries', 'Design reference archives', 'Template discovery sites', 'Multi-taxonomy galleries', 'Curated product directories'],
-            includedSections: ['navigation', 'hero', 'filter-hero', 'taxonomy-navigation', 'editor-picks', 'latest-designs', 'blog-mission', 'faq-archives', 'proof', 'content-listing', 'newsletter', 'cta', 'footer'],
+            includedSections: ['navigation', 'hero', 'filter-hero', 'taxonomy-navigation', 'taxonomy-grid-browser', 'editor-picks', 'latest-designs', 'blog-mission', 'faq-archives', 'proof', 'content-listing', 'newsletter', 'cta', 'footer'],
             presets: [
                 new ThemePresetData(
                     key: self::THEME_KEY,
@@ -90,6 +91,13 @@ final class FieldGuideThemeServiceProvider extends ServiceProvider
             ],
             frontend: [
                 'editor' => StandardThemeEditorSchema::definition(),
+                'sectionVariants' => [
+                    'taxonomy-grid-browser' => ['default', 'compact'],
+                    'latest-designs' => ['default', 'showcase-wide'],
+                    'editor-picks' => ['default', 'alternating'],
+                    'faq-archives' => ['default', 'two-column'],
+                    'cta' => ['default', 'browse'],
+                ],
             ],
             assets: ['css' => 'vendor/capell/themes/field-guide.css'],
             runtime: FrontendRuntime::Blade,
@@ -148,14 +156,45 @@ final class FieldGuideThemeServiceProvider extends ServiceProvider
             'hero' => new ViewSectionRenderer(self::THEME_KEY, 'hero', 'capell-theme-field-guide::sections.hero', failLoudly: true),
             'filter-hero' => new ViewSectionRenderer(self::THEME_KEY, 'filter-hero', 'capell-theme-field-guide::sections.filter-hero', failLoudly: true),
             'taxonomy-navigation' => new ViewSectionRenderer(self::THEME_KEY, 'taxonomy-navigation', 'capell-theme-field-guide::sections.taxonomy-navigation', failLoudly: true),
-            'editor-picks' => new ViewSectionRenderer(self::THEME_KEY, 'editor-picks', 'capell-theme-field-guide::sections.editor-picks', failLoudly: true),
-            'latest-designs' => new ViewSectionRenderer(self::THEME_KEY, 'latest-designs', 'capell-theme-field-guide::sections.latest-designs', failLoudly: true),
+            'taxonomy-grid-browser' => new VariantViewSectionRenderer(
+                themeKey: self::THEME_KEY,
+                sectionKey: 'taxonomy-grid-browser',
+                baseView: 'capell-theme-field-guide::sections.taxonomy-grid-browser',
+                variantViews: ['compact' => 'capell-theme-field-guide::sections.taxonomy-grid-browser--compact'],
+                failLoudly: true,
+            ),
+            'editor-picks' => new VariantViewSectionRenderer(
+                themeKey: self::THEME_KEY,
+                sectionKey: 'editor-picks',
+                baseView: 'capell-theme-field-guide::sections.editor-picks',
+                variantViews: ['alternating' => 'capell-theme-field-guide::sections.editor-picks--alternating'],
+                failLoudly: true,
+            ),
+            'latest-designs' => new VariantViewSectionRenderer(
+                themeKey: self::THEME_KEY,
+                sectionKey: 'latest-designs',
+                baseView: 'capell-theme-field-guide::sections.latest-designs',
+                variantViews: ['showcase-wide' => 'capell-theme-field-guide::sections.latest-designs--showcase-wide'],
+                failLoudly: true,
+            ),
             'blog-mission' => new ViewSectionRenderer(self::THEME_KEY, 'blog-mission', 'capell-theme-field-guide::sections.blog-mission', failLoudly: true),
-            'faq-archives' => new ViewSectionRenderer(self::THEME_KEY, 'faq-archives', 'capell-theme-field-guide::sections.faq-archives', failLoudly: true),
+            'faq-archives' => new VariantViewSectionRenderer(
+                themeKey: self::THEME_KEY,
+                sectionKey: 'faq-archives',
+                baseView: 'capell-theme-field-guide::sections.faq-archives',
+                variantViews: ['two-column' => 'capell-theme-field-guide::sections.faq-archives--two-column'],
+                failLoudly: true,
+            ),
             'proof' => new ViewSectionRenderer(self::THEME_KEY, 'proof', 'capell-theme-field-guide::sections.proof', failLoudly: true),
             'content-listing' => new ViewSectionRenderer(self::THEME_KEY, 'content-listing', 'capell-theme-field-guide::sections.content-listing', failLoudly: true),
             'newsletter' => new ViewSectionRenderer(self::THEME_KEY, 'newsletter', 'capell-theme-field-guide::sections.newsletter', failLoudly: true),
-            'cta' => new ViewSectionRenderer(self::THEME_KEY, 'cta', 'capell-theme-field-guide::sections.cta', failLoudly: true),
+            'cta' => new VariantViewSectionRenderer(
+                themeKey: self::THEME_KEY,
+                sectionKey: 'cta',
+                baseView: 'capell-theme-field-guide::sections.cta',
+                variantViews: ['browse' => 'capell-theme-field-guide::sections.cta--browse'],
+                failLoudly: true,
+            ),
             'footer' => new ViewSectionRenderer(self::THEME_KEY, 'footer', 'capell-theme-field-guide::sections.footer', failLoudly: true),
         ];
     }

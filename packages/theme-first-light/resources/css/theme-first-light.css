@@ -949,6 +949,339 @@
     }
 }
 
+/* ------------------------------------------------------------ heading row */
+
+.mcf-heading-row {
+    align-items: end;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem 1.75rem;
+    justify-content: space-between;
+}
+
+.mcf-section-inner-wide {
+    max-width: 64rem;
+}
+
+/* ------------------------------------------------------ lightbox reel: grid */
+
+/* curation-feed-grid: the contact-sheet half of the "lightbox reel"
+   mechanic -- a dense grid (auto-fit, masonry-safe; no true CSS masonry) of
+   capture thumbnails whose anchors are `.lightbox` triggers for the shared
+   Foundation lightbox.js contract. */
+.mcf-contact-sheet {
+    display: grid;
+    gap: clamp(1rem, 2.5vw, 1.5rem);
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 11rem), 1fr));
+    margin-top: clamp(1.75rem, 3.5vw, 2.5rem);
+}
+
+.mcf-contact-frame {
+    display: grid;
+    gap: 0.5rem;
+    margin: 0;
+}
+
+.mcf-contact-trigger {
+    display: block;
+}
+
+.mcf-contact-media {
+    aspect-ratio: 4 / 3;
+    background-color: var(--mcf-field);
+    border: 1px solid var(--mcf-line);
+    border-radius: 8px;
+    display: block;
+    object-fit: cover;
+    transition: border-color 160ms var(--mcf-ease);
+    width: 100%;
+}
+
+.mcf-contact-trigger:hover .mcf-contact-media,
+.mcf-contact-trigger:focus-visible .mcf-contact-media {
+    border-color: var(--mcf-accent);
+}
+
+.mcf-contact-caption {
+    display: grid;
+    gap: 0.15rem;
+}
+
+/* compact variant: tighter tiles, caption collapses to a hover/focus-only
+   overlay instead of a permanent line under each frame. */
+.mcf-contact-sheet-compact {
+    gap: clamp(0.5rem, 1.5vw, 0.85rem);
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 7rem), 1fr));
+}
+
+.mcf-contact-frame-compact {
+    position: relative;
+}
+
+.mcf-contact-caption-overlay {
+    background: linear-gradient(
+        to top,
+        color-mix(in oklch, var(--mcf-ink) 82%, transparent),
+        transparent
+    );
+    bottom: 0;
+    color: var(--mcf-paper);
+    font-size: 0.6875rem;
+    inset-inline: 0;
+    line-height: 1.3;
+    opacity: 0;
+    padding: 1.25rem 0.5rem 0.4rem;
+    position: absolute;
+    transition: opacity 160ms var(--mcf-ease);
+}
+
+.mcf-contact-trigger:hover .mcf-contact-caption-overlay,
+.mcf-contact-trigger:focus-visible .mcf-contact-caption-overlay {
+    opacity: 1;
+}
+
+/* ---------------------------------------------------- lightbox reel: dialog */
+
+/* lightbox-carousel-viewer: skins the shared lightbox.js Alpine contract
+   (`x-data="lightbox"`) in First Light's own paper/hairline tokens rather
+   than the Foundation default dialog chrome. */
+.mcf-lightbox-dialog {
+    align-items: center;
+    background: color-mix(in oklch, var(--mcf-ink) 88%, transparent);
+    display: flex;
+    inset: 0;
+    justify-content: center;
+    padding: clamp(1rem, 4vw, 3rem);
+    position: fixed;
+    z-index: 60;
+}
+
+.mcf-lightbox-frame {
+    background: var(--mcf-paper);
+    border-radius: 12px;
+    display: grid;
+    gap: 0.75rem;
+    max-width: min(90vw, 60rem);
+    padding: 1rem;
+    position: relative;
+}
+
+.mcf-lightbox-close {
+    align-items: center;
+    background: var(--mcf-ink);
+    border: 0;
+    border-radius: 999px;
+    color: var(--mcf-paper);
+    cursor: pointer;
+    display: flex;
+    font-size: 1.25rem;
+    height: 2.25rem;
+    justify-content: center;
+    inset-block-start: -0.75rem;
+    inset-inline-end: -0.75rem;
+    line-height: 1;
+    position: absolute;
+    width: 2.25rem;
+}
+
+.mcf-lightbox-media {
+    background-color: var(--mcf-field);
+    border-radius: 8px;
+    display: block;
+    max-height: 75vh;
+    object-fit: contain;
+    width: 100%;
+}
+
+.mcf-lightbox-controls {
+    align-items: center;
+    display: flex;
+    gap: 1rem;
+    justify-content: space-between;
+}
+
+.mcf-lightbox-nav {
+    background: transparent;
+    border: 1px solid var(--mcf-line);
+    border-radius: 999px;
+    color: var(--mcf-ink);
+    cursor: pointer;
+    font-size: 1.1rem;
+    height: 2.25rem;
+    line-height: 1;
+    width: 2.25rem;
+}
+
+.mcf-lightbox-caption {
+    color: var(--mcf-muted);
+    font-size: 0.8125rem;
+    text-align: center;
+}
+
+/* minimal variant: frameless, edge-to-edge -- the capture is the whole
+   screen, with only close/Next/Previous chrome floating over it. */
+.mcf-lightbox-dialog-minimal {
+    background: color-mix(in oklch, var(--mcf-ink) 94%, transparent);
+    padding: 0;
+}
+
+.mcf-lightbox-media-minimal {
+    border-radius: 0;
+    max-height: 100vh;
+    max-width: 100vw;
+}
+
+.mcf-lightbox-close-minimal {
+    inset-block-start: 1rem;
+    inset-inline-end: 1rem;
+    position: fixed;
+}
+
+.mcf-lightbox-controls-minimal {
+    inset-block-end: 1.25rem;
+    inset-inline: 0;
+    justify-content: center;
+    position: fixed;
+}
+
+.mcf-lightbox-controls-minimal .mcf-lightbox-caption {
+    color: var(--mcf-paper);
+}
+
+.mcf-lightbox-controls-minimal .mcf-lightbox-nav {
+    background: color-mix(in oklch, var(--mcf-ink) 60%, transparent);
+    border-color: transparent;
+    color: var(--mcf-paper);
+}
+
+/* ------------------------------------------------- best-of-views carousel */
+
+/* best-of-views-carousel: the ranked list re-expressed as a Swiper carousel
+   (shared carousel.js contract) whose slides are also `.lightbox` triggers
+   in the same `curation-feed` reel group. */
+.mcf-carousel-controls {
+    align-items: center;
+    display: flex;
+    gap: 0.5rem;
+}
+
+.mcf-carousel-arrow {
+    background: transparent;
+    border: 1px solid var(--mcf-line);
+    border-radius: 999px;
+    color: var(--mcf-ink);
+    cursor: pointer;
+    height: 2.25rem;
+    width: 2.25rem;
+}
+
+.mcf-carousel-arrow.swiper-button-disabled {
+    opacity: 0.35;
+    pointer-events: none;
+}
+
+.mcf-best-of-carousel {
+    margin-top: clamp(1.5rem, 3vw, 2.25rem);
+}
+
+.mcf-best-of-slide {
+    display: grid;
+    gap: 0.6rem;
+    height: auto;
+}
+
+.mcf-best-of-media {
+    aspect-ratio: 16 / 10;
+    background-color: var(--mcf-field);
+    border: 1px solid var(--mcf-line);
+    border-radius: 10px;
+    display: block;
+    object-fit: cover;
+    width: 100%;
+}
+
+.mcf-best-of-body p {
+    color: var(--mcf-muted);
+    font-size: 0.8125rem;
+    margin: 0.2rem 0 0;
+    text-wrap: pretty;
+}
+
+.mcf-best-of-pagination {
+    margin-top: 1rem;
+    text-align: center;
+}
+
+/* ------------------------------------------------- source-metadata-credits */
+
+/* source-metadata-credits: the same maker/source/filed-under facts as the
+   default label/value rows, laid out as a compact inline credit strip. */
+.mcf-credit-strip {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 1.5rem;
+    list-style: none;
+    margin-top: clamp(1.5rem, 3vw, 2.25rem);
+    padding: 0;
+}
+
+.mcf-credit-item {
+    align-items: baseline;
+    display: flex;
+    gap: 0.4rem;
+}
+
+/* --------------------------------------------------- next-item-lightbox-cta */
+
+/* next-item-lightbox-cta: pairs the standard CTA copy with a small "next
+   capture" thumbnail that opens straight into the shared lightbox reel. */
+.mcf-cta-lightbox-row {
+    align-items: center;
+    display: grid;
+    gap: clamp(1.5rem, 3vw, 2.5rem);
+}
+
+@media (min-width: 720px) {
+    .mcf-cta-lightbox-row {
+        grid-template-columns: minmax(0, 1fr) 12rem;
+    }
+}
+
+.mcf-cta-next-trigger {
+    display: grid;
+    gap: 0.4rem;
+    justify-items: start;
+}
+
+.mcf-cta-next-media {
+    aspect-ratio: 4 / 3;
+    background-color: var(--mcf-field);
+    border: 1px solid var(--mcf-line);
+    border-radius: 8px;
+    object-fit: cover;
+    transition: border-color 160ms var(--mcf-ease);
+    width: 100%;
+}
+
+.mcf-cta-next-trigger:hover .mcf-cta-next-media,
+.mcf-cta-next-trigger:focus-visible .mcf-cta-next-media {
+    border-color: var(--mcf-accent);
+}
+
+.mcf-cta-next-caption {
+    color: var(--mcf-muted);
+}
+
+/* --------------------------------------------------- lightbox reel: motion */
+
+@media (prefers-reduced-motion: reduce) {
+    .mcf-contact-media,
+    .mcf-cta-next-media,
+    .mcf-contact-caption-overlay {
+        transition: none;
+    }
+}
+
 /* ------------------------------------------------------------------ print */
 
 @media print {
@@ -959,7 +1292,8 @@
     .mcf-shell .mcf-skip-link,
     .mcf-shell .mcf-form,
     .mcf-shell #newsletter,
-    .mcf-shell #cta {
+    .mcf-shell #cta,
+    .mcf-shell .mcf-lightbox-section {
         display: none !important;
     }
 

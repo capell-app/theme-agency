@@ -18,9 +18,13 @@ it('defines the ink-press renderer contract', function (): void {
             'navigation',
             'hero',
             'top-stories',
-            'live-brief',
+            'breaking-news-ribbon',
+            'live-event-timeline',
+            'reading-progress-with-markers',
             'topic-navigation',
-            'opinion-analysis',
+            'news-web-topology',
+            'author-credibility-inline',
+            'opinion-grid-with-bylines',
             'video-row',
             'missed-it',
             'proof',
@@ -34,4 +38,29 @@ it('defines the ink-press renderer contract', function (): void {
         ->and($definition->runtime->value)->toBe('blade')
         ->and($definition->extends)->toBe('default')
         ->and(ThemeInkPressHealthCheck::compatibleCapellApiVersion())->toBe('^4.0');
+});
+
+it('declares at least two variants for each Wave 4a signature widget', function (): void {
+    $definition = InkPressThemeServiceProvider::definition();
+    $rawSectionVariants = $definition->frontend['sectionVariants'] ?? [];
+
+    expect($rawSectionVariants)->toBeArray();
+
+    /** @var array<string, array<int, string>> $sectionVariants */
+    $sectionVariants = is_array($rawSectionVariants) ? $rawSectionVariants : [];
+
+    foreach ([
+        'breaking-news-ribbon',
+        'live-event-timeline',
+        'reading-progress-with-markers',
+        'news-web-topology',
+        'author-credibility-inline',
+        'opinion-grid-with-bylines',
+    ] as $signatureSection) {
+        $variants = $sectionVariants[$signatureSection] ?? null;
+
+        expect($sectionVariants)->toHaveKey($signatureSection)
+            ->and($variants)->toBeArray()
+            ->and(count($variants ?? []))->toBeGreaterThanOrEqual(2);
+    }
 });

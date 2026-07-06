@@ -1206,6 +1206,445 @@
     }
 }
 
+/* ---------------------------------------------------------------- breaking-news-ribbon
+   Editorially pinned alert strip. `state` is a payload value (active|hidden)
+   resolved server-side in Blade with an @if — this CSS only styles the
+   active markup, it never toggles visibility itself (§0.2 live-state policy:
+   no client-side detection). */
+
+.dnews-ribbon {
+    background: var(--dnews-accent);
+    border-top: none;
+}
+
+.dnews-ribbon-inner {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1rem;
+    padding-block: 0.6rem;
+}
+
+.dnews-ribbon-tag {
+    background: #ffffff;
+    color: var(--dnews-accent);
+    font-size: 0.68rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    padding: 0.15rem 0.5rem;
+    text-transform: uppercase;
+}
+
+.dnews-ribbon-link {
+    color: #ffffff;
+    display: inline-flex;
+    flex: 1;
+    flex-wrap: wrap;
+    gap: 0.4rem 0.75rem;
+    font-size: 0.85rem;
+    text-decoration: none;
+}
+
+.dnews-ribbon-link strong {
+    font-weight: 800;
+}
+
+.dnews-ribbon-link span {
+    opacity: 0.9;
+}
+
+.dnews-ribbon-link:hover,
+.dnews-ribbon-link:focus-visible {
+    text-decoration: underline;
+    text-underline-offset: var(--dnews-underline-offset);
+}
+
+.dnews-ribbon-cta {
+    color: #ffffff;
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.dnews-ribbon-compact .dnews-ribbon-cta {
+    display: none;
+}
+
+/* ---------------------------------------------------------------- live-event-timeline
+   Chronological dispatch feed with a scroll-progress rail. The fill uses
+   `animation-timeline: scroll()` where supported (§0.8 enhancement-only);
+   the rail renders as a plain static line everywhere else — never blank. */
+
+.dnews-timeline {
+    border-top: 1px solid var(--dnews-night-line);
+    position: relative;
+}
+
+.dnews-timeline-progress {
+    background: var(--dnews-accent);
+    height: 2px;
+    inset-inline-start: 0;
+    position: sticky;
+    top: 0;
+    transform-origin: left;
+    transform: scaleX(0);
+    width: 100%;
+    z-index: 1;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: scroll()) {
+        .dnews-timeline-progress {
+            animation: dnews-timeline-fill linear both;
+            animation-timeline: scroll(nearest block);
+        }
+
+        @keyframes dnews-timeline-fill {
+            from {
+                transform: scaleX(0);
+            }
+
+            to {
+                transform: scaleX(1);
+            }
+        }
+    }
+}
+
+.dnews-timeline-feed {
+    display: grid;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.dnews-timeline-item {
+    border-bottom: 1px solid var(--dnews-night-line);
+    display: grid;
+    gap: 0.35rem 0.85rem;
+    grid-template-columns: auto 1fr;
+    padding-block: 1rem;
+}
+
+.dnews-timeline-marker {
+    background: var(--dnews-accent);
+    border-radius: 50%;
+    height: 0.55rem;
+    margin-top: 0.4rem;
+    width: 0.55rem;
+}
+
+.dnews-timeline-item h3 {
+    font-size: 1rem;
+    grid-column: 2;
+    letter-spacing: -0.005em;
+    line-height: 1.3;
+    margin: 0;
+    max-width: 38ch;
+}
+
+.dnews-timeline-item p {
+    color: var(--dnews-night-muted);
+    font-size: 0.85rem;
+    grid-column: 2;
+    line-height: 1.5;
+    margin: 0;
+    max-width: 60ch;
+}
+
+.dnews-timeline-compact .dnews-timeline-item h3 {
+    max-width: none;
+}
+
+/* ---------------------------------------------------------------- reading-progress-with-markers
+   Chapter-jump article progress bar. The fill is CSS `animation-timeline:
+   scroll()` where supported; scroll-spy.js (Wave 2.6 shared module) supplies
+   the accessible `aria-current` bookkeeping on the marker links either way. */
+
+.dnews-reading-progress {
+    background: var(--dnews-paper);
+    border-bottom: 1px solid var(--dnews-line);
+    display: grid;
+    gap: 0.5rem;
+    padding-block: 0.6rem;
+    position: sticky;
+    top: 0;
+    z-index: 2;
+}
+
+.dnews-reading-progress-track {
+    background: var(--dnews-line);
+    height: 3px;
+    overflow: hidden;
+    width: 100%;
+}
+
+.dnews-reading-progress-fill {
+    background: var(--dnews-accent);
+    height: 100%;
+    transform-origin: left;
+    transform: scaleX(0);
+    width: 100%;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: scroll()) {
+        .dnews-reading-progress-fill {
+            animation: dnews-timeline-fill linear both;
+            animation-timeline: scroll(root block);
+        }
+    }
+}
+
+.dnews-reading-progress-markers {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 1rem;
+    list-style: none;
+    margin: 0;
+    padding: 0 1.25rem;
+}
+
+.dnews-reading-progress-markers a,
+.dnews-reading-progress-next {
+    color: var(--dnews-muted);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    padding-inline: 1.25rem;
+    text-decoration: none;
+    text-transform: uppercase;
+}
+
+.dnews-reading-progress-markers a[aria-current='true'] {
+    color: var(--dnews-accent);
+    text-decoration: underline;
+    text-underline-offset: var(--dnews-underline-offset);
+}
+
+.dnews-reading-progress-minimal .dnews-reading-progress-next {
+    display: block;
+    padding-inline: 1.25rem;
+}
+
+/* ---------------------------------------------------------------- news-web-topology
+   Orbital graph: satellite angle/radius derive purely from CSS custom
+   properties set from payload data (--dnews-topology-index / -relevance /
+   -count) via calc() — deterministic, no Math.random(), no client
+   re-layout (§0.1). A `@media` breakpoint swaps to the plain vertical list
+   fallback on touch/narrow viewports (§0.8), never JS device detection. */
+
+.dnews-topology {
+    container-type: inline-size;
+    display: grid;
+    justify-items: center;
+    min-height: 22rem;
+    padding-block: 2rem;
+    place-items: center;
+    position: relative;
+}
+
+.dnews-topology-center {
+    background: var(--dnews-paper);
+    border: 2px solid var(--dnews-ink);
+    display: grid;
+    gap: 0.4rem;
+    max-width: 20rem;
+    padding: 1.1rem 1.25rem;
+    position: relative;
+    text-align: center;
+    z-index: 2;
+}
+
+.dnews-topology-center-flush {
+    margin-bottom: 1.5rem;
+    max-width: none;
+    text-align: start;
+}
+
+.dnews-topology-orbit {
+    inset: 0;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    position: absolute;
+}
+
+.dnews-topology-satellite {
+    --dnews-topology-angle: calc(
+        (360deg / var(--dnews-topology-count, 4)) *
+            var(--dnews-topology-index, 0)
+    );
+    --dnews-topology-radius: calc(
+        6rem + (100 - var(--dnews-topology-relevance, 50)) * 0.06rem
+    );
+
+    inset-block-start: 50%;
+    inset-inline-start: 50%;
+    position: absolute;
+    transform: rotate(var(--dnews-topology-angle))
+        translate(var(--dnews-topology-radius))
+        rotate(calc(-1 * var(--dnews-topology-angle)));
+    width: min(14rem, 60cqi);
+}
+
+.dnews-topology-thread {
+    background: var(--dnews-line);
+    height: 1px;
+    inset-block-start: 50%;
+    inset-inline-start: -6rem;
+    position: absolute;
+    width: 6rem;
+}
+
+.dnews-topology-satellite article {
+    background: var(--dnews-field);
+    border: 1px solid var(--dnews-line);
+    display: grid;
+    gap: 0.25rem;
+    padding: 0.65rem 0.8rem;
+}
+
+.dnews-topology-satellite h4 {
+    font-size: 0.85rem;
+    line-height: 1.25;
+    margin: 0;
+}
+
+.dnews-topology-fallback-list {
+    display: none;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.dnews-topology-fallback-list li {
+    border-top: 1px solid var(--dnews-line);
+    display: grid;
+    gap: 0.25rem;
+    padding-block: 0.75rem;
+}
+
+.dnews-topology-fallback-list li:first-child {
+    border-top: none;
+}
+
+.dnews-topology-fallback-list-always {
+    display: grid;
+}
+
+@media (max-width: 42rem), (pointer: coarse) {
+    .dnews-topology {
+        display: none;
+    }
+
+    .dnews-topology-fallback-list {
+        display: grid;
+    }
+}
+
+/* ---------------------------------------------------------------- author-credibility-inline
+   Author credentials reveal inline at a narrative scroll point via a
+   scroll-driven bloom (CSS `animation-timeline: view()`, §0.8
+   enhancement-only) or instantly via `:target` — never a sticky sidebar. */
+
+.dnews-credibility {
+    background: var(--dnews-field);
+    border-inline-start: 3px solid var(--dnews-accent);
+    display: grid;
+    gap: 0.5rem;
+    margin-block: 1.5rem;
+    padding: 1rem 1.25rem;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: view()) {
+        .dnews-credibility {
+            animation: dnews-column-snap-in 0.4s cubic-bezier(0.2, 0.9, 0.3, 1)
+                both;
+            animation-timeline: view();
+            animation-range: entry 0% cover 25%;
+        }
+    }
+}
+
+.dnews-credibility:target {
+    outline: 2px solid var(--dnews-accent);
+    outline-offset: 4px;
+}
+
+.dnews-credibility-row {
+    align-items: baseline;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 0.75rem;
+}
+
+.dnews-credibility-name {
+    font-family: var(--theme-heading-font, sora), system-ui, sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+.dnews-credibility-bio {
+    color: var(--dnews-muted);
+    font-size: 0.85rem;
+    line-height: 1.5;
+    margin: 0;
+    max-width: 46rem;
+}
+
+.dnews-credibility-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem 1rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.dnews-credibility-list li {
+    color: var(--dnews-muted);
+    font-size: 0.75rem;
+    letter-spacing: 0.02em;
+}
+
+.dnews-credibility-list li::before {
+    content: '— ';
+}
+
+.dnews-credibility-byline-line {
+    align-items: baseline;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem 0.6rem;
+    margin: 0;
+}
+
+/* ---------------------------------------------------------------- opinion-grid-with-bylines */
+
+.dnews-opinion-byline {
+    color: var(--dnews-accent);
+    font-weight: 700;
+}
+
+.dnews-opinion-compact-list {
+    border-top: 1px solid var(--dnews-line);
+    display: grid;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.dnews-opinion-compact-list li {
+    border-bottom: 1px solid var(--dnews-line);
+    display: grid;
+    gap: 0.3rem;
+    padding-block: 0.85rem;
+}
+
 /* ---------------------------------------------------------------- print */
 
 @media print {
@@ -1214,7 +1653,10 @@
     .dnews-form,
     .dnews-shell footer,
     .dnews-wire-ticker,
-    .dnews-tile-play {
+    .dnews-tile-play,
+    .dnews-ribbon,
+    .dnews-reading-progress,
+    .dnews-timeline-progress {
         display: none !important;
     }
 

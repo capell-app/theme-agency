@@ -68,7 +68,7 @@ final class FrontRowDemoContent implements ProvidesThemeDemoContent
                 'sections' => [
                     [
                         'type' => 'hero',
-                        'kicker' => __('capell-theme-front-row::sections.hero.kicker'),
+                        'kicker' => 'Index Gallery — Front Row',
                         'heading' => 'The portfolios worth studying, in one curated index',
                         'summary' => 'Every entry is hand-picked and award-vetted. Browse featured collections, filter by craft, and follow the designers, studios, and engineers shaping standout work.',
                         'actions' => [
@@ -127,7 +127,7 @@ final class FrontRowDemoContent implements ProvidesThemeDemoContent
                 'sections' => [
                     [
                         'type' => 'hero',
-                        'kicker' => __('capell-theme-front-row::sections.hero.kicker'),
+                        'kicker' => 'Index Gallery — Front Row',
                         'heading' => 'Every featured portfolio, filtered your way',
                         'summary' => 'Sixty-plus curated collections across product, brand, motion, and craft. Narrow by discipline and award, or open an entry for the full editorial note.',
                         'actions' => [
@@ -178,7 +178,7 @@ final class FrontRowDemoContent implements ProvidesThemeDemoContent
                 'sections' => [
                     [
                         'type' => 'hero',
-                        'kicker' => __('capell-theme-front-row::sections.hero.kicker'),
+                        'kicker' => 'Index Gallery — Front Row',
                         'heading' => 'Marlow Reade — a portfolio built around the work',
                         'summary' => 'An independent product designer whose case studies read like a magazine. Five shipped projects, two industry awards, and a through-line of clarity under constraint.',
                         'actions' => [
@@ -242,7 +242,7 @@ final class FrontRowDemoContent implements ProvidesThemeDemoContent
                 'sections' => [
                     [
                         'type' => 'hero',
-                        'kicker' => __('capell-theme-front-row::sections.hero.kicker'),
+                        'kicker' => 'Index Gallery — Front Row',
                         'heading' => 'Submit your portfolio for review',
                         'summary' => 'No fees, no open feed. Send a link and our editors read every submission, weigh it against the live collection, and reply within five working days.',
                         'actions' => [
@@ -296,7 +296,7 @@ final class FrontRowDemoContent implements ProvidesThemeDemoContent
                 'sections' => [
                     [
                         'type' => 'hero',
-                        'kicker' => __('capell-theme-front-row::sections.hero.kicker'),
+                        'kicker' => 'Index Gallery — Front Row',
                         'heading' => 'No portfolios match that filter — yet',
                         'summary' => 'Nothing in the index fits that exact combination of discipline and award. Clear a filter to widen the search, or browse this week\'s featured picks below.',
                         'actions' => [
@@ -344,7 +344,7 @@ final class FrontRowDemoContent implements ProvidesThemeDemoContent
                 'sections' => [
                     [
                         'type' => 'hero',
-                        'kicker' => __('capell-theme-front-row::sections.hero.kicker'),
+                        'kicker' => 'Index Gallery — Front Row',
                         'heading' => 'That entry is no longer in the index',
                         'summary' => 'The link is broken or the portfolio has been retired from the collection. Head back to the featured work, or browse the full index.',
                         'actions' => [
@@ -391,7 +391,7 @@ final class FrontRowDemoContent implements ProvidesThemeDemoContent
                 'sections' => [
                     [
                         'type' => 'hero',
-                        'kicker' => __('capell-theme-front-row::sections.hero.kicker'),
+                        'kicker' => 'Index Gallery — Front Row',
                         'heading' => 'Get the work worth studying, every week',
                         'summary' => 'Membership unlocks the full creator profiles, the weekly editor\'s shortlist, and early access to award announcements — for the price of a coffee a month.',
                         'actions' => [
@@ -410,6 +410,12 @@ final class FrontRowDemoContent implements ProvidesThemeDemoContent
                     $this->newsletterSection(
                         heading: 'One membership, the whole index',
                         summary: 'Cancel anytime. Keep every saved portfolio and creator you follow if you do.',
+                    ),
+                    $this->ctaSection(
+                        heading: 'Start membership today',
+                        summary: 'Join now and unlock the full creator profiles, weekly shortlist, and early award access immediately.',
+                        label: 'Start membership',
+                        url: '#newsletter',
                     ),
                 ],
             ],

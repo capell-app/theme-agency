@@ -1155,3 +1155,283 @@
         animation: none !important;
     }
 }
+
+/* ============================================================ dossier pages
+   Wave 4c signature mechanic: One Take reads as a bound document rather
+   than a generic showcase wall — running folio (page) numbers, margin
+   notes, an appendix rail for credited tools, and a colophon-style closing
+   chapter list for build resources. Scroll-snap "page" navigation and view
+   transitions are additive on top of this shared styling (see the
+   ops-dossier-track rules below); every element here works identically
+   with neither enhancement present. */
+
+.ops-dossier-folio {
+    color: color-mix(in srgb, var(--ops-accent) 72%, var(--ops-ink));
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    margin: 0 0 0.35rem;
+    text-transform: uppercase;
+}
+
+.ops-section-dark .ops-dossier-folio {
+    color: var(--ops-accent-bright);
+}
+
+.ops-dossier-margin-note {
+    border-inline-start: 2px solid var(--ops-line);
+    color: var(--ops-muted);
+    font-size: 0.82rem;
+    font-style: italic;
+    line-height: 1.5;
+    margin: 0.65rem 0 0;
+    padding-inline-start: 0.75rem;
+}
+
+.ops-section-dark .ops-dossier-margin-note {
+    border-inline-start-color: var(--ops-night-line);
+    color: var(--ops-night-text);
+}
+
+.ops-dossier-page {
+    counter-increment: ops-dossier-folio;
+    position: relative;
+}
+
+/* --------------------------------------------------- pagination "tabs" */
+/* category-tabs-pagination: page-range tabs, styled and behaving as if
+   each category owns a run of dossier pages. */
+
+.ops-dossier-tab-range {
+    color: color-mix(in srgb, var(--ops-accent) 78%, var(--ops-ink));
+    font-size: 0.68rem;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+.ops-dossier-tablist {
+    flex-wrap: wrap;
+}
+
+.ops-dossier-tab[aria-selected='true'] {
+    background: color-mix(in srgb, var(--ops-accent) 10%, var(--ops-paper));
+    border-color: var(--ops-accent);
+}
+
+.ops-dossier-tab[aria-selected='true'] strong {
+    color: var(--ops-accent);
+}
+
+.ops-dossier-tabpanel {
+    border-top: 1px solid var(--ops-line);
+    margin-top: clamp(1.5rem, 3vw, 2.25rem);
+    padding-top: clamp(1.25rem, 2.5vw, 1.75rem);
+}
+
+.ops-dossier-tabpanel[hidden] {
+    display: none;
+}
+
+/* -------------------------------------------------------- dossier index */
+/* one-page-grid-showcase "--dense" variant + build-resources-cta colophon:
+   a running numbered index rather than a card wall. */
+
+.ops-dossier-index,
+.ops-dossier-colophon {
+    border-top: 1px solid var(--ops-line);
+    display: grid;
+    list-style: none;
+    margin: clamp(2rem, 4vw, 3.25rem) 0 0;
+    padding: 0;
+}
+
+.ops-section-dark .ops-dossier-index,
+.ops-section-dark .ops-dossier-colophon {
+    border-top-color: var(--ops-night-line);
+}
+
+.ops-dossier-index-row {
+    align-items: baseline;
+    border-bottom: 1px solid var(--ops-line);
+    display: grid;
+    gap: 0.35rem 1.25rem;
+    grid-template-columns: 3.5rem minmax(0, 1fr);
+    padding-block: clamp(1.1rem, 2.2vw, 1.6rem);
+}
+
+.ops-section-dark .ops-dossier-index-row {
+    border-bottom-color: var(--ops-night-line);
+}
+
+.ops-dossier-index-row .ops-dossier-folio {
+    font-size: 0.85rem;
+    margin: 0;
+}
+
+.ops-dossier-index-body h3 {
+    font-size: clamp(1.05rem, 1.6vw, 1.35rem);
+    line-height: 1.2;
+    margin: 0;
+}
+
+.ops-dossier-index-body p {
+    color: var(--ops-muted);
+    margin: 0.3rem 0 0;
+}
+
+.ops-section-dark .ops-dossier-index-body p {
+    color: var(--ops-night-text);
+}
+
+.ops-dossier-index-tag {
+    color: var(--ops-muted);
+    font-size: 0.74rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+@media (min-width: 700px) {
+    .ops-dossier-index-row {
+        grid-template-columns: 3.5rem minmax(0, 1fr) auto;
+    }
+}
+
+/* ----------------------------------------------------- dossier appendix */
+/* tools-sponsors-sidebar: credited tools read as a bound appendix list. */
+
+.ops-dossier-appendix {
+    display: grid;
+    gap: clamp(1.25rem, 2.5vw, 1.75rem);
+    list-style: none;
+    margin: clamp(2rem, 4vw, 3.25rem) 0 0;
+    padding: 0;
+}
+
+.ops-dossier-appendix-entry {
+    border: 1px solid var(--ops-line);
+    border-radius: max(var(--theme-radius, 1rem), 0.75rem);
+    display: grid;
+    gap: 0.85rem;
+    grid-template-columns: 2.5rem minmax(0, 1fr);
+    padding: clamp(1.1rem, 2vw, 1.5rem);
+}
+
+.ops-dossier-appendix-mark {
+    align-items: center;
+    background: color-mix(in srgb, var(--ops-accent) 14%, transparent);
+    border-radius: 999px;
+    color: color-mix(in srgb, var(--ops-accent) 78%, var(--ops-ink));
+    display: flex;
+    font-size: 0.72rem;
+    font-weight: 800;
+    height: 2.5rem;
+    justify-content: center;
+    letter-spacing: 0.04em;
+    text-align: center;
+    width: 2.5rem;
+}
+
+.ops-dossier-appendix-entry h3 {
+    font-size: 1.05rem;
+    margin: 0.2rem 0 0;
+}
+
+.ops-dossier-appendix-entry p {
+    color: var(--ops-muted);
+    margin: 0.25rem 0 0;
+}
+
+.ops-section-dark .ops-dossier-appendix-entry p {
+    color: var(--ops-night-text);
+}
+
+.ops-dossier-rail-grid {
+    display: grid;
+    gap: clamp(2rem, 4vw, 3rem);
+}
+
+@media (min-width: 900px) {
+    .ops-dossier-rail-grid {
+        align-items: start;
+        grid-template-columns: minmax(0, 1fr) minmax(18rem, 0.85fr);
+    }
+
+    .ops-dossier-appendix-rail {
+        position: sticky;
+        top: 6rem;
+    }
+}
+
+/* ------------------------------------------------------- colophon split */
+/* build-resources-cta "--split" variant: lead colophon card beside the
+   running chapter index. */
+
+.ops-dossier-colophon-split {
+    align-items: start;
+}
+
+.ops-dossier-colophon-lead {
+    display: grid;
+    gap: 1rem;
+}
+
+.ops-dossier-colophon-lead-card {
+    margin-top: 0.5rem;
+}
+
+.ops-dossier-colophon-cta {
+    margin-top: clamp(1.5rem, 3vw, 2.25rem);
+}
+
+/* ------------------------------------------------------- dossier spread */
+/* showcase-hero-dossier + one-page-grid-showcase default variants: the
+   flat "spread" grid where each capture carries its own folio + margin
+   note, read left-to-right like an open dossier. */
+
+.ops-dossier-spread {
+    counter-reset: ops-dossier-folio;
+}
+
+/* ------------------------------------------------ scroll-snap dossier track
+   showcase-hero-dossier "--paginated" variant: pure CSS scroll-snap page
+   navigation (§0.1 — no JS scroll-hijacking). Each page is one viewport-tall
+   track item; the browser's native scroll handles the "turn". View
+   transitions (below) are a progressive enhancement layered on top: without
+   support, `view-transition-name` on ops-dossier-track-page is inert and the
+   snap-scroll fallback is the entire experience (§0.8). */
+
+.ops-dossier-track {
+    display: grid;
+    gap: 1px;
+    max-height: 42rem;
+    overflow-y: auto;
+    scroll-snap-type: y mandatory;
+}
+
+.ops-dossier-track-page {
+    padding-block: clamp(1.5rem, 3vw, 2.5rem);
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .ops-dossier-track {
+        scroll-behavior: auto;
+    }
+}
+
+@supports (view-transition-name: none) {
+    @media (prefers-reduced-motion: no-preference) {
+        .ops-dossier-track-page {
+            view-transition-class: ops-dossier-page-transition;
+        }
+
+        ::view-transition-old(.ops-dossier-page-transition),
+        ::view-transition-new(.ops-dossier-page-transition) {
+            animation-duration: var(--foundation-motion-duration, 0.3s);
+            animation-timing-function: var(--foundation-motion-ease, ease);
+        }
+    }
+}

@@ -295,3 +295,200 @@
         animation: none !important;
     }
 }
+
+/*
+ * Wave 4c (§D "glassmorphism showcase") signature widgets:
+ * glass-feature-card, translucent-stat-band, layered-depth-hero,
+ * refraction-grid, floating-glass-nav. See each widget's own Blade view for
+ * its variant contract and payload shape; this block is the CSS these five
+ * views cannot express as Tailwind utility classes (the same three reasons
+ * documented in this file's header apply again here: the backdrop-filter
+ * refraction stack, prefers-reduced-motion-gated pointer-parallax, and
+ * `@container style(...)` token consumption).
+ *
+ * Dark-mode inversion (programme doc: "Dark mode inverts the effect — less
+ * blur, more contrast"): every rule below reads `--theme-surface` /
+ * `--theme-foreground` custom properties, never a hardcoded hex, so
+ * Foundation's shared `:root.dark` token swap (ResolveFoundationThemeTokensAction
+ * / tokens.blade.php) is what actually inverts the effect — no separate
+ * dark-specific widget or duplicated rule set is needed. The one
+ * genuinely-different-under-dark declaration is `--liquid-glass-refraction-blur`
+ * below, which theme-foundation's dark-mode media query overrides to a
+ * smaller value (less blur) while `.glass-surface-card::before`'s existing
+ * `--liquid-glass-overlay-opacity` token (declared above) already provides
+ * "more contrast" once dark tokens are active, since the same scrim reads
+ * darker against light dark-mode text.
+ */
+@layer components {
+    /* glass-feature-card: `.glass-surface-card` already provides the base
+       treatment (see file header); the `--spotlight` modifier only needs a
+       stronger overlay and a larger heading — reusing the existing
+       `--liquid-glass-overlay-opacity` token rather than inventing a new one. */
+    .glass-feature-card--spotlight {
+        --liquid-glass-overlay-opacity: 0.28;
+        grid-column: span 1;
+    }
+    @media (min-width: 768px) {
+        .glass-feature-card--spotlight {
+            grid-column: span 3;
+        }
+        .glass-feature-card--spotlight h3 {
+            font-size: calc(2rem * var(--heading-scale-factor, 1));
+        }
+    }
+
+    /* translucent-stat-band: the `band` variant keeps the shared
+       `.glass-surface` blur but deliberately skips `.glass-surface-card`'s
+       card-shaped defaults (no radius/scrim) so a full-bleed strip reads as
+       a band, not a card; the `panel` variant opts back into
+       `.glass-surface-card` via its own Blade class list instead. */
+    .translucent-stat-band {
+        border-radius: var(--theme-radius-value, 1rem);
+    }
+    .translucent-stat-band-figure {
+        padding-inline: 0.5rem;
+    }
+
+    /* layered-depth-hero: the three-pane depth stack. Each pane's *resting*
+       translate/scale comes from `--layered-depth-hero-pane-index` (0, 1, 2
+       — set inline per pane in the Blade view), so the stack reads as real
+       depth even statically, satisfying §0.6's "none/minimal/subtle must
+       still look composed" requirement without any motion at all. */
+    .layered-depth-hero-stack {
+        grid-template-areas: 'stack';
+        perspective: 1200px;
+    }
+    .layered-depth-hero-pane {
+        grid-area: stack;
+        border-radius: var(--theme-radius-value, 1rem);
+        transform: translate3d(
+                calc(var(--layered-depth-hero-pane-index, 0) * 1.5rem),
+                calc(var(--layered-depth-hero-pane-index, 0) * 1.25rem),
+                calc(var(--layered-depth-hero-pane-index, 0) * -40px)
+            )
+            scale(calc(1 - (var(--layered-depth-hero-pane-index, 0) * 0.04)));
+        z-index: calc(10 - var(--layered-depth-hero-pane-index, 0));
+        --layered-depth-hero-parallax-x: 0px;
+        --layered-depth-hero-parallax-y: 0px;
+    }
+    .layered-depth-hero--flat .layered-depth-hero-pane {
+        position: relative;
+        transform: none;
+    }
+    .layered-depth-hero-pane-label {
+        padding: 0.75rem 1rem;
+        font-weight: 800;
+        color: var(--theme-foreground, #10202a);
+    }
+
+    /* Pointer-parallax, energetic tier ONLY (§0.6), double-gated (§0.5): both
+       `[data-motion-intensity="energetic"]` (Wave 2.3's data-attribute
+       contract, set on <html> by theme-foundation/resources/views/app.blade.php)
+       AND `prefers-reduced-motion: no-preference` must hold before any
+       non-zero parallax offset is ever assigned — a reduced-motion visitor
+       gets the static resting transform above regardless of motion tier,
+       and every other motion tier gets the static resting transform
+       regardless of prefers-reduced-motion. No JS pointer-tracking exists in
+       this theme at all (see the Blade view's doc block); the offset is a
+       pure `:hover`/`:focus-within` CSS state on the section itself, capped
+       at 40px (within the programme's 30-50px energetic-tier parallax
+       range). `@supports` guards browsers without custom-property-driven
+       transforms from getting a jarring partial effect. */
+    @media (prefers-reduced-motion: no-preference) {
+        @supports (transform: translate3d(var(--x, 0px), var(--y, 0px), 0)) {
+            [data-motion-intensity='energetic']
+                .layered-depth-hero:hover
+                .layered-depth-hero-pane,
+            [data-motion-intensity='energetic']
+                .layered-depth-hero:focus-within
+                .layered-depth-hero-pane {
+                --layered-depth-hero-parallax-x: calc(
+                    var(--layered-depth-hero-pane-index, 0) * 18px
+                );
+                --layered-depth-hero-parallax-y: calc(
+                    var(--layered-depth-hero-pane-index, 0) * -14px
+                );
+                transform: translate3d(
+                        calc(
+                            (var(--layered-depth-hero-pane-index, 0) * 1.5rem) +
+                                var(--layered-depth-hero-parallax-x, 0px)
+                        ),
+                        calc(
+                            (
+                                    var(--layered-depth-hero-pane-index, 0) *
+                                        1.25rem
+                                ) +
+                                var(--layered-depth-hero-parallax-y, 0px)
+                        ),
+                        calc(var(--layered-depth-hero-pane-index, 0) * -40px)
+                    )
+                    scale(
+                        calc(
+                            1 - (var(--layered-depth-hero-pane-index, 0) * 0.04)
+                        )
+                    );
+                transition: transform 200ms
+                    var(--foundation-motion-ease, ease-out);
+            }
+        }
+    }
+
+    /* refraction-grid: backdrop-filter blur/saturate (the shared glass
+       stack) plus a subtle `filter` blur/saturate combination on the tile
+       itself — the "refraction" read comes from stacking both filter
+       mechanisms rather than either alone. */
+    .refraction-grid-tile {
+        border-radius: var(--theme-radius-value, 1rem);
+        backdrop-filter: blur(var(--liquid-glass-refraction-blur, 6px))
+            saturate(140%);
+        -webkit-backdrop-filter: blur(var(--liquid-glass-refraction-blur, 6px))
+            saturate(140%);
+        background-color: color-mix(
+            in srgb,
+            var(--theme-surface, #f3fbfa) 82%,
+            transparent
+        );
+    }
+    .refraction-grid-tile img {
+        filter: blur(0.4px) saturate(112%);
+    }
+    @supports not (backdrop-filter: blur(1px)) {
+        .refraction-grid-tile {
+            background-color: var(--theme-surface, #f3fbfa);
+        }
+    }
+    .refraction-grid-tile-body {
+        padding: 1rem 1.25rem 1.25rem;
+    }
+    .refraction-grid--featured .refraction-grid-tile--lead {
+        grid-column: span 1;
+    }
+    @media (min-width: 640px) {
+        .refraction-grid--featured .refraction-grid-tile--lead {
+            grid-column: span 2;
+            grid-row: span 2;
+        }
+    }
+
+    /* floating-glass-nav: `.glass-surface` already provides the blur stack
+       (see file header); only the sticky-pill positioning and the `--bar`
+       modifier's full-width flat shape are new here. */
+    .floating-glass-nav {
+        border-radius: 999px;
+    }
+    .floating-glass-nav--bar {
+        border-radius: var(--theme-radius-value, 1rem);
+    }
+}
+
+/* Dark-mode inversion for the refraction treatment ("less blur, more
+   contrast" per the programme doc): Foundation's shared dark-mode toggle
+   sets `.dark` on the root html element (see
+   theme-foundation/resources/views/components/app/head/tokens.blade.php);
+   reduce the refraction blur radius under it so the grid reads crisper and
+   higher-contrast in dark mode, while `--theme-surface`/`--theme-foreground`
+   (already token-driven everywhere above) supply the contrast change via
+   Foundation's existing dark token swap. */
+.dark {
+    --liquid-glass-refraction-blur: 3px;
+}

@@ -528,6 +528,123 @@
     text-transform: uppercase;
 }
 
+/* -------------------------------------------------------------- scatter */
+
+/*
+ * Wave 4c signature mechanic "scatter light table": browse-panels-scatter,
+ * style-type-categories-scattered, latest-showcase-organic and
+ * sponsor-space-floating all share this block. Every tile's rotation/
+ * inline-offset/block-offset/stacking-order arrives as inline custom
+ * properties computed server-side from a crc32 hash of the page seed plus
+ * the item's own identity (see the Blade views) — nothing here ever reads
+ * Math.random(), so html-cache serves the same scattered layout to every
+ * visitor and the same payload always scatters identically.
+ *
+ * Click-to-front is CSS-only: every tile is a native tab stop
+ * (tabindex="0" or an <a>), and :focus-within/:focus-visible raises the
+ * tile above its scattered siblings via a z-index well above the highest
+ * seeded value (10-29), so the mechanic works with keyboard-only
+ * navigation and the visual overlap never removes a tile from the normal
+ * DOM tab order.
+ */
+.qwg-scatter-table {
+    display: grid;
+    gap: clamp(2.5rem, 5vw, 4rem);
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+    margin-top: clamp(3rem, 6vw, 5rem);
+}
+
+@media (min-width: 720px) {
+    .qwg-scatter-table {
+        gap: clamp(3.5rem, 7vw, 6rem);
+    }
+}
+
+.qwg-scatter-tile {
+    position: relative;
+    rotate: var(--qwg-scatter-rotate, 0deg);
+    transform: translate(var(--qwg-scatter-x, 0px), var(--qwg-scatter-y, 0px));
+    transition:
+        rotate 0.2s cubic-bezier(0.33, 0, 0.2, 1),
+        transform 0.2s cubic-bezier(0.33, 0, 0.2, 1),
+        box-shadow 0.2s cubic-bezier(0.33, 0, 0.2, 1);
+    z-index: var(--qwg-scatter-z, 1);
+}
+
+.qwg-scatter-tile:hover,
+.qwg-scatter-tile:focus-within {
+    box-shadow: 0 1rem 2.5rem
+        color-mix(in srgb, var(--qwg-ink) 16%, transparent);
+    /* Click-to-front: 40 is comfortably above every seeded z-index
+       (10-29), so the raised tile always sits above its scattered
+       siblings without needing to read or recompute their values. */
+    z-index: 40;
+}
+
+.qwg-scatter-tile:focus-visible {
+    outline: 2px solid var(--qwg-accent);
+    outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .qwg-scatter-tile {
+        /* The seeded scatter positions are static composition, not motion,
+           and stay in place; only the hover/focus settle transition (the
+           smooth rotate/translate/box-shadow tween above) is removed. */
+        transition: none;
+    }
+}
+
+.qwg-scatter-table-categories {
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
+}
+
+.qwg-scatter-table-showcase {
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr));
+}
+
+.qwg-scatter-tile-floating {
+    align-self: start;
+}
+
+/* -------------------------------------------------------- rotation rail */
+
+/* random-best-of-cta's seeded-rotation variant: a small dot rail naming the
+   other candidates in today's deterministic rotation, so the mechanic
+   (day-of-year modulo candidate count, or an editorial featuredIndex) is
+   visible rather than just swapping one spotlighted card silently. */
+.qwg-rotation-rail {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem 1.1rem;
+    list-style: none;
+    margin: 1.75rem 0 0;
+    padding: 0;
+}
+
+.qwg-rotation-rail li {
+    align-items: center;
+    display: flex;
+    gap: 0.45rem;
+}
+
+.qwg-rotation-dot {
+    background: var(--qwg-wall-line);
+    border-radius: 999px;
+    display: inline-block;
+    height: 0.5rem;
+    width: 0.5rem;
+}
+
+.qwg-rotation-dot.is-active {
+    background: var(--qwg-accent);
+}
+
+.qwg-rotation-label {
+    color: var(--qwg-wall-muted);
+    font-size: 0.78rem;
+}
+
 /* -------------------------------------------------------------- panels */
 
 .qwg-panels {

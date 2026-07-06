@@ -14,6 +14,7 @@ use Capell\Core\ThemeStudio\Data\ThemePresetData;
 use Capell\Core\ThemeStudio\Rendering\ViewSectionRenderer;
 use Capell\Core\ThemeStudio\Theme\ThemeRegistry;
 use Capell\FoundationTheme\Rendering\ChromeSplitBladeThemeRenderer;
+use Capell\FoundationTheme\Rendering\VariantViewSectionRenderer;
 use Capell\FoundationTheme\Support\Editor\StandardThemeEditorSchema;
 use Capell\ThemeStudio\FarField\Console\Commands\DemoCommand;
 use Illuminate\Support\ServiceProvider;
@@ -35,7 +36,7 @@ final class FarFieldThemeServiceProvider extends ServiceProvider
             previewImage: '/vendor/capell/themes/far-field.jpg',
             tags: ['Magazine', 'Global Affairs', 'Travel', 'Culture', 'Audio'],
             bestFit: ['Global magazines', 'Culture publishers', 'Travel editorial teams', 'City guide brands', 'Premium media shops'],
-            includedSections: ['navigation', 'hero', 'lead-dispatch', 'radio-audio', 'city-guides', 'travel-culture', 'shop-books', 'columnists', 'proof', 'content-listing', 'newsletter', 'cta', 'footer'],
+            includedSections: ['navigation', 'hero', 'lead-dispatch', 'radio-audio', 'city-guides', 'photo-essay', 'cultural-dispatch-timeline', 'travel-culture', 'shop-books', 'columnists', 'proof', 'content-listing', 'newsletter', 'cta', 'footer'],
             presets: [
                 new ThemePresetData(
                     key: self::THEME_KEY,
@@ -90,6 +91,13 @@ final class FarFieldThemeServiceProvider extends ServiceProvider
             ],
             frontend: [
                 'editor' => StandardThemeEditorSchema::definition(),
+                'sectionVariants' => [
+                    'radio-audio' => ['default', 'immersive'],
+                    'city-guides' => ['default', 'tabs'],
+                    'photo-essay' => ['default', 'reveal'],
+                    'cultural-dispatch-timeline' => ['default', 'compact'],
+                    'columnists' => ['default', 'roster'],
+                ],
             ],
             assets: ['css' => 'vendor/capell/themes/far-field.css'],
             runtime: FrontendRuntime::Blade,
@@ -147,11 +155,53 @@ final class FarFieldThemeServiceProvider extends ServiceProvider
             'navigation' => new ViewSectionRenderer(self::THEME_KEY, 'navigation', 'capell-theme-far-field::sections.navigation', failLoudly: true),
             'hero' => new ViewSectionRenderer(self::THEME_KEY, 'hero', 'capell-theme-far-field::sections.hero', failLoudly: true),
             'lead-dispatch' => new ViewSectionRenderer(self::THEME_KEY, 'lead-dispatch', 'capell-theme-far-field::sections.lead-dispatch', failLoudly: true),
-            'radio-audio' => new ViewSectionRenderer(self::THEME_KEY, 'radio-audio', 'capell-theme-far-field::sections.radio-audio', failLoudly: true),
-            'city-guides' => new ViewSectionRenderer(self::THEME_KEY, 'city-guides', 'capell-theme-far-field::sections.city-guides', failLoudly: true),
+            'radio-audio' => new VariantViewSectionRenderer(
+                themeKey: self::THEME_KEY,
+                sectionKey: 'radio-audio',
+                baseView: 'capell-theme-far-field::sections.radio-audio',
+                variantViews: [
+                    'immersive' => 'capell-theme-far-field::sections.radio-audio--immersive',
+                ],
+                failLoudly: true,
+            ),
+            'city-guides' => new VariantViewSectionRenderer(
+                themeKey: self::THEME_KEY,
+                sectionKey: 'city-guides',
+                baseView: 'capell-theme-far-field::sections.city-guides',
+                variantViews: [
+                    'tabs' => 'capell-theme-far-field::sections.city-guides--tabs',
+                ],
+                failLoudly: true,
+            ),
+            'photo-essay' => new VariantViewSectionRenderer(
+                themeKey: self::THEME_KEY,
+                sectionKey: 'photo-essay',
+                baseView: 'capell-theme-far-field::sections.photo-essay',
+                variantViews: [
+                    'reveal' => 'capell-theme-far-field::sections.photo-essay--reveal',
+                ],
+                failLoudly: true,
+            ),
+            'cultural-dispatch-timeline' => new VariantViewSectionRenderer(
+                themeKey: self::THEME_KEY,
+                sectionKey: 'cultural-dispatch-timeline',
+                baseView: 'capell-theme-far-field::sections.cultural-dispatch-timeline',
+                variantViews: [
+                    'compact' => 'capell-theme-far-field::sections.cultural-dispatch-timeline--compact',
+                ],
+                failLoudly: true,
+            ),
             'travel-culture' => new ViewSectionRenderer(self::THEME_KEY, 'travel-culture', 'capell-theme-far-field::sections.travel-culture', failLoudly: true),
             'shop-books' => new ViewSectionRenderer(self::THEME_KEY, 'shop-books', 'capell-theme-far-field::sections.shop-books', failLoudly: true),
-            'columnists' => new ViewSectionRenderer(self::THEME_KEY, 'columnists', 'capell-theme-far-field::sections.columnists', failLoudly: true),
+            'columnists' => new VariantViewSectionRenderer(
+                themeKey: self::THEME_KEY,
+                sectionKey: 'columnists',
+                baseView: 'capell-theme-far-field::sections.columnists',
+                variantViews: [
+                    'roster' => 'capell-theme-far-field::sections.columnists--roster',
+                ],
+                failLoudly: true,
+            ),
             'proof' => new ViewSectionRenderer(self::THEME_KEY, 'proof', 'capell-theme-far-field::sections.proof', failLoudly: true),
             'content-listing' => new ViewSectionRenderer(self::THEME_KEY, 'content-listing', 'capell-theme-far-field::sections.content-listing', failLoudly: true),
             'newsletter' => new ViewSectionRenderer(self::THEME_KEY, 'newsletter', 'capell-theme-far-field::sections.newsletter', failLoudly: true),

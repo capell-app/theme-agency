@@ -14,6 +14,7 @@ use Capell\Core\ThemeStudio\Data\ThemePresetData;
 use Capell\Core\ThemeStudio\Rendering\ViewSectionRenderer;
 use Capell\Core\ThemeStudio\Theme\ThemeRegistry;
 use Capell\FoundationTheme\Rendering\ChromeSplitBladeThemeRenderer;
+use Capell\FoundationTheme\Rendering\VariantViewSectionRenderer;
 use Capell\FoundationTheme\Support\Editor\StandardThemeEditorSchema;
 use Capell\ThemeStudio\InkPress\Console\Commands\DemoCommand;
 use Illuminate\Support\ServiceProvider;
@@ -35,7 +36,25 @@ final class InkPressThemeServiceProvider extends ServiceProvider
             previewImage: '/vendor/capell/themes/ink-press.jpg',
             tags: ['News', 'Analysis', 'Opinion', 'Video', 'Live'],
             bestFit: ['News publishers', 'Policy journals', 'Analysis desks', 'Regional newspapers', 'Editorial membership sites'],
-            includedSections: ['navigation', 'hero', 'top-stories', 'live-brief', 'topic-navigation', 'opinion-analysis', 'video-row', 'missed-it', 'proof', 'content-listing', 'newsletter', 'cta', 'footer'],
+            includedSections: [
+                'navigation',
+                'hero',
+                'top-stories',
+                'breaking-news-ribbon',
+                'live-event-timeline',
+                'reading-progress-with-markers',
+                'topic-navigation',
+                'news-web-topology',
+                'author-credibility-inline',
+                'opinion-grid-with-bylines',
+                'video-row',
+                'missed-it',
+                'proof',
+                'content-listing',
+                'newsletter',
+                'cta',
+                'footer',
+            ],
             presets: [
                 new ThemePresetData(
                     key: self::THEME_KEY,
@@ -92,6 +111,14 @@ final class InkPressThemeServiceProvider extends ServiceProvider
             runtime: FrontendRuntime::Blade,
             extends: 'default',
             frontend: [
+                'sectionVariants' => [
+                    'breaking-news-ribbon' => ['default', 'compact'],
+                    'live-event-timeline' => ['default', 'compact'],
+                    'reading-progress-with-markers' => ['default', 'minimal'],
+                    'news-web-topology' => ['default', 'list'],
+                    'author-credibility-inline' => ['default', 'byline'],
+                    'opinion-grid-with-bylines' => ['default', 'compact'],
+                ],
                 'editor' => StandardThemeEditorSchema::definition(),
             ],
         );
@@ -147,9 +174,49 @@ final class InkPressThemeServiceProvider extends ServiceProvider
             'navigation' => new ViewSectionRenderer(self::THEME_KEY, 'navigation', 'capell-theme-ink-press::sections.navigation', failLoudly: true),
             'hero' => new ViewSectionRenderer(self::THEME_KEY, 'hero', 'capell-theme-ink-press::sections.hero', failLoudly: true),
             'top-stories' => new ViewSectionRenderer(self::THEME_KEY, 'top-stories', 'capell-theme-ink-press::sections.top-stories', failLoudly: true),
-            'live-brief' => new ViewSectionRenderer(self::THEME_KEY, 'live-brief', 'capell-theme-ink-press::sections.live-brief', failLoudly: true),
+            'breaking-news-ribbon' => new VariantViewSectionRenderer(
+                themeKey: self::THEME_KEY,
+                sectionKey: 'breaking-news-ribbon',
+                baseView: 'capell-theme-ink-press::sections.breaking-news-ribbon',
+                variantViews: ['compact' => 'capell-theme-ink-press::sections.breaking-news-ribbon--compact'],
+                failLoudly: true,
+            ),
+            'live-event-timeline' => new VariantViewSectionRenderer(
+                themeKey: self::THEME_KEY,
+                sectionKey: 'live-event-timeline',
+                baseView: 'capell-theme-ink-press::sections.live-event-timeline',
+                variantViews: ['compact' => 'capell-theme-ink-press::sections.live-event-timeline--compact'],
+                failLoudly: true,
+            ),
+            'reading-progress-with-markers' => new VariantViewSectionRenderer(
+                themeKey: self::THEME_KEY,
+                sectionKey: 'reading-progress-with-markers',
+                baseView: 'capell-theme-ink-press::sections.reading-progress-with-markers',
+                variantViews: ['minimal' => 'capell-theme-ink-press::sections.reading-progress-with-markers--minimal'],
+                failLoudly: true,
+            ),
             'topic-navigation' => new ViewSectionRenderer(self::THEME_KEY, 'topic-navigation', 'capell-theme-ink-press::sections.topic-navigation', failLoudly: true),
-            'opinion-analysis' => new ViewSectionRenderer(self::THEME_KEY, 'opinion-analysis', 'capell-theme-ink-press::sections.opinion-analysis', failLoudly: true),
+            'news-web-topology' => new VariantViewSectionRenderer(
+                themeKey: self::THEME_KEY,
+                sectionKey: 'news-web-topology',
+                baseView: 'capell-theme-ink-press::sections.news-web-topology',
+                variantViews: ['list' => 'capell-theme-ink-press::sections.news-web-topology--list'],
+                failLoudly: true,
+            ),
+            'author-credibility-inline' => new VariantViewSectionRenderer(
+                themeKey: self::THEME_KEY,
+                sectionKey: 'author-credibility-inline',
+                baseView: 'capell-theme-ink-press::sections.author-credibility-inline',
+                variantViews: ['byline' => 'capell-theme-ink-press::sections.author-credibility-inline--byline'],
+                failLoudly: true,
+            ),
+            'opinion-grid-with-bylines' => new VariantViewSectionRenderer(
+                themeKey: self::THEME_KEY,
+                sectionKey: 'opinion-grid-with-bylines',
+                baseView: 'capell-theme-ink-press::sections.opinion-grid-with-bylines',
+                variantViews: ['compact' => 'capell-theme-ink-press::sections.opinion-grid-with-bylines--compact'],
+                failLoudly: true,
+            ),
             'video-row' => new ViewSectionRenderer(self::THEME_KEY, 'video-row', 'capell-theme-ink-press::sections.video-row', failLoudly: true),
             'missed-it' => new ViewSectionRenderer(self::THEME_KEY, 'missed-it', 'capell-theme-ink-press::sections.missed-it', failLoudly: true),
             'proof' => new ViewSectionRenderer(self::THEME_KEY, 'proof', 'capell-theme-ink-press::sections.proof', failLoudly: true),

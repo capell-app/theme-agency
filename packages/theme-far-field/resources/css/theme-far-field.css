@@ -1297,3 +1297,406 @@ a:hover .gcm-plate-frame img,
         animation: none !important;
     }
 }
+
+/* ---------------------------------------------------- audio + transcript */
+/* Signature widget: audio-embedded-with-transcript (Wave 4a). */
+
+.gcm-audio-widget {
+    margin-top: clamp(1.5rem, 3vw, 2.25rem);
+}
+
+.gcm-audio-player {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem 1.25rem;
+}
+
+.gcm-audio-element {
+    max-width: 100%;
+    width: 100%;
+}
+
+.gcm-audio-now-playing {
+    margin: 0;
+}
+
+.gcm-transcript {
+    border-top: 1px solid var(--gcm-night-line);
+    display: grid;
+    gap: 0;
+    list-style: none;
+    margin: 1.25rem 0 0;
+    max-height: 22rem;
+    overflow-y: auto;
+    padding: 0;
+}
+
+.gcm-transcript-wide {
+    max-height: none;
+}
+
+.gcm-transcript-line {
+    border-bottom: 1px solid var(--gcm-night-line);
+    display: grid;
+    gap: 0.3rem;
+    padding-block: 0.85rem;
+    transition: background-color 200ms ease;
+}
+
+.gcm-transcript-line p {
+    color: var(--gcm-night-body);
+    margin: 0;
+}
+
+.gcm-transcript-speaker {
+    color: var(--gcm-night-accent);
+}
+
+/* Highlight-follow: toggled purely by the small inline script listening to
+   the audio element's `timeupdate` event (see radio-audio.blade.php); no
+   polling, no external sync library. */
+.gcm-transcript-line[data-active] {
+    background: color-mix(in srgb, var(--gcm-night-accent) 16%, transparent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .gcm-transcript-line {
+        transition: none;
+    }
+}
+
+/* ------------------------------------------------------- destination-atlas */
+/* Signature widget: destination-atlas (Wave 4a) — inline SVG map, pin hover
+   syncs the adjacent card rail via a pure-CSS :has() selector; browsers
+   without :has() support keep a fully readable static map + rail (§0.8:
+   modern-CSS enhancement-only, no widget may require it). */
+
+.gcm-atlas {
+    display: grid;
+    gap: clamp(1.75rem, 3vw, 2.5rem);
+    margin-top: clamp(2rem, 4vw, 3rem);
+}
+
+@media (min-width: 900px) {
+    .gcm-atlas {
+        grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
+    }
+}
+
+.gcm-atlas-map {
+    background: var(--gcm-field);
+    border: 1px solid var(--gcm-line);
+    border-radius: var(--gcm-radius);
+    overflow: hidden;
+    position: relative;
+}
+
+.gcm-atlas-map svg {
+    display: block;
+    height: auto;
+    width: 100%;
+}
+
+.gcm-atlas-frame {
+    fill: none;
+    stroke: color-mix(in srgb, var(--gcm-accent) 40%, transparent);
+    stroke-width: 0.4;
+}
+
+.gcm-atlas-route {
+    fill: none;
+    stroke: color-mix(in srgb, var(--gcm-accent) 55%, transparent);
+    stroke-dasharray: 2 2;
+    stroke-width: 0.5;
+}
+
+.gcm-atlas-pin {
+    align-items: center;
+    display: flex;
+    inset-inline-start: var(--gcm-pin-x, 50%);
+    inset-block-start: var(--gcm-pin-y, 50%);
+    justify-content: center;
+    position: absolute;
+    transform: translate(-50%, -50%);
+}
+
+.gcm-atlas-pin span {
+    background: var(--gcm-accent);
+    border: 2px solid var(--gcm-paper);
+    border-radius: 999px;
+    box-shadow: 0 2px 6px color-mix(in srgb, var(--gcm-ink) 30%, transparent);
+    display: block;
+    height: 0.85rem;
+    transition:
+        background-color 180ms ease,
+        transform 180ms ease;
+    width: 0.85rem;
+}
+
+.gcm-atlas-pin:hover span,
+.gcm-atlas-pin:focus-visible span {
+    background: var(--gcm-accent-ink, #8a6423);
+    transform: scale(1.35);
+}
+
+.gcm-atlas-rail {
+    display: grid;
+    gap: 1rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.gcm-atlas-card {
+    background: color-mix(in srgb, #ffffff 45%, var(--gcm-paper));
+    border: 1px solid var(--gcm-line);
+    border-radius: var(--gcm-radius);
+    display: grid;
+    gap: 0.5rem;
+    padding: 1.1rem 1.35rem;
+    scroll-margin-top: 6rem;
+    transition:
+        border-color 180ms ease,
+        background-color 180ms ease;
+}
+
+.gcm-atlas-card h3 {
+    font-size: 1.2rem;
+    margin: 0;
+}
+
+.gcm-atlas-card p {
+    color: var(--gcm-muted);
+    margin: 0;
+}
+
+/* Pin-hover syncs the matching card in the rail. :has() is used only as a
+   progressive enhancement on top of the pin's own :hover/:focus-visible
+   highlight above — without :has() support the map still highlights its own
+   pin, it just doesn't also highlight the paired card. */
+@supports selector(:has(*)) {
+    .gcm-atlas:has(.gcm-atlas-pin[data-pin-index='0']:hover)
+        .gcm-atlas-card[data-card-index='0'],
+    .gcm-atlas:has(.gcm-atlas-pin[data-pin-index='0']:focus-visible)
+        .gcm-atlas-card[data-card-index='0'],
+    .gcm-atlas:has(.gcm-atlas-pin[data-pin-index='1']:hover)
+        .gcm-atlas-card[data-card-index='1'],
+    .gcm-atlas:has(.gcm-atlas-pin[data-pin-index='1']:focus-visible)
+        .gcm-atlas-card[data-card-index='1'],
+    .gcm-atlas:has(.gcm-atlas-pin[data-pin-index='2']:hover)
+        .gcm-atlas-card[data-card-index='2'],
+    .gcm-atlas:has(.gcm-atlas-pin[data-pin-index='2']:focus-visible)
+        .gcm-atlas-card[data-card-index='2'],
+    .gcm-atlas:has(.gcm-atlas-pin[data-pin-index='3']:hover)
+        .gcm-atlas-card[data-card-index='3'],
+    .gcm-atlas:has(.gcm-atlas-pin[data-pin-index='3']:focus-visible)
+        .gcm-atlas-card[data-card-index='3'] {
+        background: color-mix(in srgb, var(--gcm-accent) 12%, var(--gcm-paper));
+        border-color: var(--gcm-accent);
+    }
+}
+
+/* destination-atlas / tabs variant: map/list tabs for mobile, markup follows
+   the shared Foundation tabs.js contract (role="tablist"/"tab"/"tabpanel"). */
+.gcm-atlas-tablist {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: clamp(1.5rem, 3vw, 2rem);
+}
+
+.gcm-atlas-tab {
+    background: transparent;
+    border: 1px solid var(--gcm-line);
+    border-radius: 999px;
+    color: var(--gcm-ink);
+    cursor: pointer;
+    font: inherit;
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    padding: 0.5rem 1.2rem;
+    text-transform: uppercase;
+    transition:
+        background-color 180ms ease,
+        color 180ms ease;
+}
+
+.gcm-atlas-tab[aria-selected='true'] {
+    background: var(--gcm-accent);
+    border-color: var(--gcm-accent);
+    color: var(--gcm-paper);
+}
+
+/* -------------------------------------------------------------- photo essay */
+/* Signature widget: photo-essay-with-lazy-captions (Wave 4a). Caption reveal
+   is CSS scroll-driven where supported; the fallback (always-visible
+   caption) is already the fully accessible default state, so no JS ships. */
+
+.gcm-photo-essay {
+    display: grid;
+    gap: clamp(2.5rem, 5vw, 4rem);
+    margin-top: clamp(2rem, 4vw, 3rem);
+}
+
+.gcm-photo-essay-frame {
+    margin: 0;
+}
+
+.gcm-photo-essay-media {
+    aspect-ratio: 16 / 9;
+    background: color-mix(in srgb, var(--gcm-accent) 16%, var(--gcm-paper));
+    border-radius: var(--gcm-radius);
+    display: grid;
+    overflow: hidden;
+    place-items: center;
+}
+
+.gcm-photo-essay-media img {
+    display: block;
+    height: 100%;
+    object-fit: cover;
+    width: 100%;
+}
+
+.gcm-photo-essay-caption {
+    display: grid;
+    gap: 0.35rem;
+    margin-top: 0.85rem;
+    max-width: 42rem;
+}
+
+.gcm-photo-essay-caption p {
+    color: var(--gcm-muted);
+    margin: 0;
+}
+
+.gcm-photo-essay-alternating
+    .gcm-photo-essay-frame-reverse
+    .gcm-photo-essay-caption {
+    margin-inline-start: auto;
+    text-align: end;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: view()) {
+        @keyframes gcm-photo-essay-caption-reveal {
+            from {
+                opacity: 0;
+                transform: translateY(0.75rem);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .gcm-photo-essay-caption {
+            animation: gcm-photo-essay-caption-reveal linear both;
+            animation-range: entry 0% cover 25%;
+            animation-timeline: view();
+        }
+    }
+}
+
+/* ------------------------------------------------------ dispatch timeline */
+/* Signature widget: cultural-dispatch-timeline (Wave 4a). Self-contained
+   far-field skin pending Foundation's own timeline primitive extraction
+   (see the base view's provenance note). */
+
+.gcm-dispatch-timeline {
+    display: grid;
+    gap: 0;
+    list-style: none;
+    margin: clamp(2rem, 4vw, 3rem) 0 0;
+    padding: 0;
+    position: relative;
+}
+
+.gcm-dispatch-timeline::before {
+    background: var(--gcm-line);
+    content: '';
+    inset-block: 0.5rem;
+    inset-inline-start: 0.3rem;
+    position: absolute;
+    width: 1px;
+}
+
+.gcm-dispatch-timeline-entry {
+    display: grid;
+    gap: 0.35rem 1.25rem;
+    grid-template-columns: 0.6rem minmax(0, 1fr);
+    padding-block: 1.35rem;
+    position: relative;
+}
+
+.gcm-dispatch-timeline-marker {
+    background: var(--gcm-accent);
+    border: 2px solid var(--gcm-paper);
+    border-radius: 999px;
+    height: 0.6rem;
+    margin-top: 0.4rem;
+    position: relative;
+    width: 0.6rem;
+    z-index: 1;
+}
+
+.gcm-dispatch-timeline-content h3 {
+    font-size: 1.3rem;
+    margin: 0.2rem 0 0;
+}
+
+.gcm-dispatch-timeline-content p {
+    margin: 0;
+}
+
+.gcm-dispatch-timeline-content > p:last-child {
+    color: var(--gcm-muted);
+    margin-top: 0.3rem;
+}
+
+.gcm-dispatch-timeline-compact .gcm-dispatch-timeline-entry {
+    padding-block: 0.85rem;
+}
+
+.gcm-dispatch-timeline-inline-heading {
+    align-items: baseline;
+    display: flex;
+    flex-wrap: wrap;
+    font-size: 1.05rem;
+    gap: 0.6rem;
+    margin: 0;
+}
+
+.gcm-dispatch-timeline-inline-heading time {
+    color: var(--gcm-accent-ink, #8a6423);
+    font-size: 0.72rem;
+    font-variant-numeric: tabular-nums;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+/* --------------------------------------------------- columnist essay preview */
+/* Signature widget: columnists-with-latest-essay-preview (Wave 4a). */
+
+.gcm-columnist-latest {
+    border-top: 1px solid var(--gcm-line);
+    display: grid;
+    gap: 0.3rem;
+    margin-top: 0.5rem;
+    padding-top: 0.75rem;
+}
+
+.gcm-columnist-latest-title {
+    font-weight: 600;
+    margin: 0;
+}
+
+.gcm-columnist-latest-inline {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 0.6rem;
+    margin: 0.4rem 0 0;
+}

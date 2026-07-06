@@ -2,40 +2,20 @@
 
 declare(strict_types=1);
 
-function inkPressThemeBladeViews(): string
-{
-    $paths = array_values(array_unique(array_merge(
-        glob(__DIR__ . '/../../resources/views/*.blade.php') ?: [],
-        glob(__DIR__ . '/../../resources/views/**/*.blade.php') ?: [],
-    )));
+use Capell\FoundationTheme\Testing\AssertsPublicThemeOutputSafety;
 
-    return implode(PHP_EOL, array_map(static fn (string $path): string => file_get_contents($path) ?: '', $paths));
-}
+uses(AssertsPublicThemeOutputSafety::class);
 
-it('keeps public Blade free of authoring or package metadata', function (): void {
-    $publicOutput = inkPressThemeBladeViews();
-
-    expect($publicOutput)
-        ->not->toContain('capell-app/theme-ink-press')
-        ->not->toContain('authoring')
-        ->not->toContain('data-theme-key')
-        ->not->toContain('Filament')
-        ->not->toContain('Livewire')
-        ->not->toContain('signed')
-        ->not->toContain('wire:')
-        ->not->toContain('data-field')
-        ->not->toContain('data-model')
-        ->not->toContain('field_path')
-        ->not->toContain('model_id')
-        ->not->toContain('permission');
+it('keeps public Blade free of authoring, package metadata, and database access', function (): void {
+    $this->assertClassicThemeOutputIsSafe(__DIR__ . '/../../resources/views', 'capell-app/theme-ink-press');
 });
 
-it('keeps public Blade free of database query calls', function (): void {
-    expect(inkPressThemeBladeViews())
-        ->not->toContain('::query(')
-        ->not->toContain('DB::')
-        ->not->toContain('loadMissing(')
-        ->not->toContain('relationLoaded(')
-        ->not->toContain('Frontend::')
-        ->not->toContain('find(');
+it('keeps the @php block count within the frozen baseline and static calls whitelisted', function (): void {
+    // Baseline raised from 18 to 32 by Wave 4a: six new signature widgets
+    // (breaking-news-ribbon, live-event-timeline, reading-progress-with-markers,
+    // news-web-topology, author-credibility-inline, opinion-grid-with-bylines)
+    // each ship a base view plus a sidecar variant view, all using @php only
+    // for defaulting/prep (data_get/collect), never queries or facades — see
+    // the static-call whitelist assertion below. May only decrease from here.
+    $this->assertPhpBlockPolicy(__DIR__ . '/../../resources/views', 32);
 });

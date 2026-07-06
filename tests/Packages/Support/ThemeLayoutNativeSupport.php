@@ -47,7 +47,7 @@ function themeIsLayoutNative(string $themeKey): bool
  */
 function themesConvertedToLayoutBuilder(): array
 {
-    return ['liquid-glass', 'night-shift'];
+    return ['liquid-glass', 'night-shift', 'reading-room', 'main-stage', 'call-out'];
 }
 
 /**
