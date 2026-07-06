@@ -8,7 +8,7 @@
 @endphp
 
 <x-filament-panels::page class="capell-pages-compare">
-    @livewire('capell-publishing-studio::diff-panel', ['workspaceId' => $workspace->id])
+    @livewire ('capell-publishing-studio::diff-panel', ['workspaceId' => $workspace->id])
 
     @if ($checkResults)
         <div class="mt-6">

@@ -11,7 +11,7 @@
         @else
             @if ($this->data->healthCheckDeclaredCount > 0)
                 <div
-                    @class([
+                    @class ([
                         'mb-4 rounded border px-3 py-2 text-sm',
                         'border-success-200 bg-success-50 text-success-800 dark:border-success-900/50 dark:bg-success-950/30 dark:text-success-300' => $this->data->healthCheckStubCount === 0 && $this->data->healthCheckBrokenCount === 0,
                         'border-warning-200 bg-warning-50 text-warning-800 dark:border-warning-900/50 dark:bg-warning-950/30 dark:text-warning-300' => $this->data->healthCheckStubCount > 0 && $this->data->healthCheckBrokenCount === 0,
@@ -141,7 +141,7 @@
                                     @if ($package->healthCheckDeclaredCount > 0)
                                         <div class="space-y-1">
                                             <span
-                                                @class([
+                                                @class ([
                                                     'rounded px-1.5 py-0.5 text-xs',
                                                     'bg-success-100 text-success-700 dark:bg-success-900/30 dark:text-success-400' => $package->healthCheckStubCount === 0 && $package->healthCheckBrokenCount === 0,
                                                     'bg-warning-100 text-warning-700 dark:bg-warning-900/30 dark:text-warning-400' => $package->healthCheckStubCount > 0 && $package->healthCheckBrokenCount === 0,

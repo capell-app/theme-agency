@@ -53,8 +53,7 @@
                     <span
                         class="truncate font-mono text-gray-700 dark:text-gray-200"
                     >
-                        {{ class_basename($target['target_type']) }}
-                        #{{ $target['target_id'] }}
+                        {{ class_basename($target['target_type']) }} #{{ $target['target_id'] }}
                     </span>
                     <span
                         class="rounded-full bg-gray-100 px-2 py-0.5 text-gray-600 dark:bg-gray-800 dark:text-gray-300"

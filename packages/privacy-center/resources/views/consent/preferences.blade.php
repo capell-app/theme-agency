@@ -8,9 +8,7 @@
     class="privacy-consent"
     data-privacy-consent
 >
-    <h1>
-        {{ __('capell-privacy-center::privacy.public.preferences.title') }}
-    </h1>
+    <h1>{{ __('capell-privacy-center::privacy.public.preferences.title') }}</h1>
     <p>{{ __('capell-privacy-center::privacy.public.preferences.intro') }}</p>
 
     @if (session('capell_privacy_center_consent_saved') === true)
@@ -31,8 +29,8 @@
                     type="checkbox"
                     name="categories[]"
                     value="{{ $category->value }}"
-                    @checked($category === CookieCategory::Essential)
-                    @disabled($category === CookieCategory::Essential)
+                    @checked ($category === CookieCategory::Essential)
+                    @disabled ($category === CookieCategory::Essential)
                 />
                 <span>{{ $category->getLabel() }}</span>
                 <span>

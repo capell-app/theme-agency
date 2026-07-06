@@ -12,7 +12,7 @@
         </div>
     @endif
 
-    @include('capell-comments::livewire.partials.comment-list', [
+    @include ('capell-comments::livewire.partials.comment-list', [
         'comments' => $comments,
     ])
 
@@ -62,7 +62,7 @@
                     aria-describedby="comments-author-name-error"
                 />
             </label>
-            @error('authorName')
+            @error ('authorName')
                 <p
                     id="comments-author-name-error"
                     role="alert"
@@ -80,7 +80,7 @@
                     aria-describedby="comments-author-email-error"
                 />
             </label>
-            @error('authorEmail')
+            @error ('authorEmail')
                 <p
                     id="comments-author-email-error"
                     role="alert"
@@ -98,7 +98,7 @@
                 aria-describedby="comments-body-error"
             ></textarea>
         </label>
-        @error('body')
+        @error ('body')
             <p
                 id="comments-body-error"
                 role="alert"
@@ -107,15 +107,15 @@
             </p>
         @enderror
 
-        @error('parent')
+        @error ('parent')
             <p role="alert">{{ $message }}</p>
         @enderror
 
-        @error('commentable')
+        @error ('commentable')
             <p role="alert">{{ $message }}</p>
         @enderror
 
-        @error('author')
+        @error ('author')
             <p role="alert">{{ $message }}</p>
         @enderror
 

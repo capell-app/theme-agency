@@ -5,7 +5,7 @@
 @endphp
 
 <x-filament-panels::page>
-    @include('capell-experiments::filament.experiments.results', [
+    @include ('capell-experiments::filament.experiments.results', [
         'experiment' => $this->record,
         'report' => $this->getReport(),
     ])

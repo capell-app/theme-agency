@@ -1,6 +1,6 @@
 <x-filament-panels::page>
     <div class="space-y-6">
-        @php($connection = $this->getManageableConnection())
+        @php ($connection = $this->getManageableConnection())
 
         @if (session('status'))
             <div
@@ -12,7 +12,7 @@
         @endif
 
         @if ($errors->any() && ! $errors->has('shop'))
-            @php($messages = $errors->all())
+            @php ($messages = $errors->all())
 
             <div
                 role="alert"
@@ -59,7 +59,7 @@
                     />
                 </label>
 
-                @error('shop')
+                @error ('shop')
                     <p
                         id="shop-error"
                         class="text-danger-600 dark:text-danger-400 text-sm"
@@ -94,12 +94,10 @@
                             {{ $connection->shop_domain }}
                         </p>
                         <p class="text-sm text-gray-500 dark:text-gray-400">
-                            {{ __('capell-shopify-commerce::capell-shopify-commerce.connection.granted_scopes') }}:
-                            {{ implode(', ', $connection->scopes ?? []) }}
+                            {{ __('capell-shopify-commerce::capell-shopify-commerce.connection.granted_scopes') }}: {{ implode(', ', $connection->scopes ?? []) }}
                         </p>
                         <p class="text-sm text-gray-500 dark:text-gray-400">
-                            {{ __('capell-shopify-commerce::capell-shopify-commerce.connection.last_sync') }}:
-                            {{ $connection->last_synced_at?->toDayDateTimeString() ?? __('capell-shopify-commerce::capell-shopify-commerce.connection.never_synced') }}
+                            {{ __('capell-shopify-commerce::capell-shopify-commerce.connection.last_sync') }}: {{ $connection->last_synced_at?->toDayDateTimeString() ?? __('capell-shopify-commerce::capell-shopify-commerce.connection.never_synced') }}
                         </p>
                         @if ($connection->status === ShopifyConnectionStatus::Error)
                             <p
@@ -128,7 +126,7 @@
                             wire:click="syncNow"
                             wire:loading.attr="disabled"
                             wire:target="syncNow"
-                            @disabled($this->isSyncBusy($connection))
+                            @disabled ($this->isSyncBusy($connection))
                             class="fi-btn fi-btn-size-sm fi-color-primary fi-btn-color-primary"
                         >
                             {{ __('capell-shopify-commerce::capell-shopify-commerce.connection.sync_now') }}

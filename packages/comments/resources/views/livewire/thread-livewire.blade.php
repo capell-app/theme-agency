@@ -2,4 +2,4 @@
     use Capell\Comments\Livewire\CommentThreadComponent;
 @endphp
 
-@livewire(CommentThreadComponent::class, ['threadKey' => $threadKey])
+@livewire (CommentThreadComponent::class, ['threadKey' => $threadKey])

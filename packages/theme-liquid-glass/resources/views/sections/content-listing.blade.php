@@ -49,7 +49,7 @@
                                 />
                             @endif
 
-                            <div @class(['pt-5' => ! empty($item['image'])])>
+                            <div @class (['pt-5' => ! empty($item['image'])])>
                                 <div
                                     class="flex flex-wrap gap-2 text-xs font-bold tracking-wide text-[color-mix(in_srgb,var(--liquid-glass-foreground)_58%,transparent)] uppercase"
                                 >

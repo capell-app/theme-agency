@@ -56,12 +56,8 @@
                                         {{ $merge->name }}
                                     </span>
                                     <div class="mt-0.5 text-xs text-gray-500">
-                                        {{ $merge->actorName }}
-                                        &middot;
-                                        {{ $merge->pageCount }}
-                                        {{ Str::plural('page', $merge->pageCount) }}
-                                        &middot;
-                                        {{ $merge->durationOpenHours }}h open
+                                        {{ $merge->actorName }} &middot; {{ $merge->pageCount }} {{ Str::plural('page', $merge->pageCount) }} &middot; {{ $merge->durationOpenHours }}h
+                                        open
                                     </div>
                                 </div>
                                 <time

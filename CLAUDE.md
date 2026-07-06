@@ -79,6 +79,17 @@ Any model in draft/publish must implement `Capell\Core\Contracts\Draftable` and 
 - Common issue: if a package test case class is not found, check `composer.local.json` as well as `composer.json`. The local overlay often needs matching `autoload` and `autoload-dev` PSR-4 entries for package namespaces, then regenerate with `COMPOSER=composer.local.json composer dump-autoload --no-scripts`.
 - When changing `composer.json`, update `composer.local.json` in the same change unless the difference is deliberately local-only.
 
+### Bootstrapping a worktree's `vendor/`
+
+Do not whole-directory-symlink `vendor/` entries from the primary checkout into a worktree, even excluding `vendor/composer` and `vendor/autoload.php`. Several packages (`pestphp/pest`, `rector/rector`, `brianium/paratest`) resolve their own install root at runtime via `__DIR__`/`dirname(__DIR__, N)` rather than through Composer's generated `autoload_real.php` `$baseDir`. PHP resolves `__DIR__` through symlinks to the real filesystem path, so a symlinked `vendor/pestphp` run from the worktree actually bootstraps the **primary checkout's** `vendor/composer/*` autoloader — causing "Cannot redeclare class" fatals whenever a test file exists in both checkouts.
+
+Use one of instead:
+
+1. Run a full `COMPOSER=composer.local.json composer install` in the worktree. Slower, but fully correct and isolated.
+2. If speed matters, only symlink individual package directories confirmed to be leaf packages with no self-locating runtime logic (no `__DIR__`/`dirname(__DIR__, N)` install-root resolution). Always leave `vendor/bin` as a real directory, never a whole-directory symlink, so bin proxies regenerate fresh and scoped to the worktree.
+
+Never run plain `composer` (without `COMPOSER=composer.local.json`) from inside a worktree that has any `vendor/*` symlinks pointing at the primary checkout — it can write straight through those symlinks into the primary checkout's real `vendor/bin/*` proxies and `vendor/composer/*` files, silently corrupting the primary checkout's local vendor state (its git-tracked state is unaffected, since `vendor/` is gitignored).
+
 ## Commands
 
 | Command                                               | Purpose                                                                         |

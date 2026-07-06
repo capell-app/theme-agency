@@ -164,7 +164,7 @@
                             @elseif ($variantReport->meetsSampleSize)
                                 {{ __('capell-experiments::generic.results.sample_ready') }}
                             @else
-                                    -
+                                -
                             @endif
                         </td>
                     </tr>

@@ -27,7 +27,7 @@
                 </button>
 
                 @if ($comment->children !== [])
-                    @include('capell-comments::livewire.partials.comment-list', [
+                    @include ('capell-comments::livewire.partials.comment-list', [
                         'comments' => $comment->children,
                     ])
                 @endif

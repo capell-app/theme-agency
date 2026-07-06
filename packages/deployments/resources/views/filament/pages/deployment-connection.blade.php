@@ -70,8 +70,7 @@
                         <h3
                             class="fi-section-header-heading text-base font-semibold"
                         >
-                            {{ $connection->provider->getLabel() }}:
-                            {{ $connection->repoCoordinate() }}
+                            {{ $connection->provider->getLabel() }}: {{ $connection->repoCoordinate() }}
                         </h3>
                         <p class="text-sm text-gray-500">
                             {{ $connection->install_policy->getLabel() }}
@@ -88,7 +87,7 @@
                     @endif
                 </div>
 
-                @php($recentPublications = $this->getRecentPublications($connection))
+                @php ($recentPublications = $this->getRecentPublications($connection))
 
                 <div
                     class="mt-6 border-t border-gray-950/10 pt-4 dark:border-white/10"

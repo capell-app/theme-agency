@@ -1,4 +1,4 @@
-@props([
+@props ([
     'key',
     'total',
     'carouselAlign' => 'center',
@@ -48,15 +48,13 @@
         --swiper-pagination-bottom: 1.5rem;
         --swiper-pagination-bullet-inactive-color: #fff;
     "
-    @class([
+    @class ([
         'capell-wrapper',
         'grid min-h-full w-full',
         'swiper relative' => $total > 1,
     ])
 >
-    <div class="swiper-wrapper min-h-full w-full">
-        {{ $slot }}
-    </div>
+    <div class="swiper-wrapper min-h-full w-full">{{ $slot }}</div>
     @if ($total > 1)
         <div
             class="swiper-controls"
@@ -67,13 +65,13 @@
                     class="{{ $carouselButtonClass ?? $carouselArrowClass }} swiper-button-prev left-6"
                     aria-label="{{ __('generic.previous') }}"
                 >
-                    @svg('heroicon-o-chevron-left', 'swiper-button-svg')
+                    @svg ('heroicon-o-chevron-left', 'swiper-button-svg')
                 </button>
                 <button
                     class="{{ $carouselButtonClass ?? $carouselArrowClass }} swiper-button-next right-6"
                     aria-label="{{ __('generic.next') }}"
                 >
-                    @svg('heroicon-o-chevron-right', 'swiper-button-svg')
+                    @svg ('heroicon-o-chevron-right', 'swiper-button-svg')
                 </button>
             @endif
 

@@ -15,7 +15,7 @@ $beacon = [
 
 <div wire:ignore>
     <script>
-        window.beaconData = @json($beacon)
+        window.beaconData = @json ($beacon)
         ;(function (beacon) {
             if (!beacon || !beacon.url || beacon.error) {
                 return

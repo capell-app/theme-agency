@@ -50,8 +50,7 @@
 
                     <div class="mt-1 flex items-center gap-2">
                         <span class="text-xs text-gray-500 dark:text-gray-400">
-                            {{ $authorName }} ·
-                            {{ $comment->created_at?->diffForHumans() }}
+                            {{ $authorName }} · {{ $comment->created_at?->diffForHumans() }}
                         </span>
 
                         @if ($comment->isResolved())

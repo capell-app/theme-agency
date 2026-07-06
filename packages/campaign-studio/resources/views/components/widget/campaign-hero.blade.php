@@ -1,4 +1,4 @@
-@props([
+@props ([
     'title' => $widget->translation?->title,
     'content' => $widget->translation?->content,
     'eyebrow' => $widget->getMeta('eyebrow'),

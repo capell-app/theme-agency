@@ -14,13 +14,10 @@
                     class="flex items-center gap-2 rounded-md bg-green-50 px-3 py-2 text-sm text-green-700 dark:bg-green-900/20 dark:text-green-400"
                 >
                     <span class="font-medium">
-                        &#10003;
-                        {{ __('capell-diagnostics::package.widget_config_drift_none') }}
+                        &#10003; {{ __('capell-diagnostics::package.widget_config_drift_none') }}
                     </span>
                     <span class="text-green-500 dark:text-green-600">
-                        ({{ $data->packagesChecked }}
-                        {{ Str::plural('package', $data->packagesChecked) }}
-                        {{ __('capell-diagnostics::package.widget_config_drift_checked') }})
+                        ({{ $data->packagesChecked }} {{ Str::plural('package', $data->packagesChecked) }} {{ __('capell-diagnostics::package.widget_config_drift_checked') }})
                     </span>
                 </div>
             @else
@@ -29,12 +26,10 @@
                     <span
                         class="rounded-full bg-red-100 px-2.5 py-0.5 text-xs font-semibold text-red-700 dark:bg-red-900/40 dark:text-red-300"
                     >
-                        {{ $data->totalDriftCount }}
-                        {{ trans_choice('capell-diagnostics::package.widget_config_drift_drift', $data->totalDriftCount) }}
+                        {{ $data->totalDriftCount }} {{ trans_choice('capell-diagnostics::package.widget_config_drift_drift', $data->totalDriftCount) }}
                     </span>
                     <span class="text-xs text-gray-500 dark:text-gray-400">
-                        {{ __('capell-diagnostics::package.widget_config_drift_across', ['count' => $data->packagesChecked]) }}
-                        {{ Str::plural('package', $data->packagesChecked) }}
+                        {{ __('capell-diagnostics::package.widget_config_drift_across', ['count' => $data->packagesChecked]) }} {{ Str::plural('package', $data->packagesChecked) }}
                     </span>
                 </div>
 

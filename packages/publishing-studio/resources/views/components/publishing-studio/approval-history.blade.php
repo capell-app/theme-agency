@@ -45,9 +45,7 @@
                             {{ $approval->action->getLabel() }}
                         </span>
                         <span class="text-xs text-gray-500 dark:text-gray-400">
-                            {{ __('capell-admin::workspace.approval_history.by') }}
-                            {{ $actorName }} ·
-                            {{ $approval->created_at?->diffForHumans() }}
+                            {{ __('capell-admin::workspace.approval_history.by') }} {{ $actorName }} · {{ $approval->created_at?->diffForHumans() }}
                         </span>
                     </div>
 

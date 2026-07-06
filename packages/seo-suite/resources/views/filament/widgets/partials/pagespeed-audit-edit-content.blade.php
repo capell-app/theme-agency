@@ -96,8 +96,7 @@
                                     <span
                                         class="rounded-md bg-gray-100 px-2 py-1 text-xs text-gray-700 dark:bg-gray-800 dark:text-gray-200"
                                     >
-                                        {{ __('capell-seo-suite::generic.pagespeed_metric_' . str_replace('-', '_', $metricKey)) }}:
-                                        {{ $metric['display_value'] ?? '-' }}
+                                        {{ __('capell-seo-suite::generic.pagespeed_metric_' . str_replace('-', '_', $metricKey)) }}: {{ $metric['display_value'] ?? '-' }}
                                     </span>
                                 @endforeach
                             </div>

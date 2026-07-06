@@ -2,7 +2,7 @@
     use Capell\Frontend\Facades\Frontend;
 @endphp
 
-@props([
+@props ([
     'backgroundAttachment' => '',
     'backgroundColor' => '',
     'backgroundImage' => null,

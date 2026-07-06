@@ -101,23 +101,23 @@ Keywords/tags:
 
 ## Prioritized Roadmap
 
-| Priority | Item | Effort | Impact | Notes |
-| --- | --- | --- | --- | --- |
-| P0 | Align docs, changelog, manifest language, screenshot contract, and current feature map | S | High | Fix stale "planned" wording before new implementation. |
-| P0 | Add missing template/theme screenshots or mark runner blockers | S | High | Marketplace evidence currently trails the required screenshot contract. |
-| P1 | Encrypt/redact `EmailProfile.provider_settings` secrets or document plaintext justification | M | High | Sensitive package tier needs a deliberate secret boundary. |
-| P1 | Require strong provider-event recipient correlation before mutating recipient state | M | High | Prevent wrong-recipient status changes for repeated sends. |
-| P1 | Add auth provider hook tests for verification/reset replacements and optional lifecycle emails | M | High | Protects default auth behavior and fallback paths. |
-| P1 | Make profile default selection deterministic and constrained | S-M | Med | Avoid accidental provider drift in multi-profile installs. |
-| P1 | Resolve `CheckEmailSuppressionAction` through the container inside `SendEmailAction` | S | Med | Keeps Action boundaries fakeable and consistent. |
-| P2 | Add delivery profile admin management with redacted secret handling | M-L | High | Closes the biggest operator workflow gap. |
-| P2 | Add suppression admin management and audit-safe release workflow | M | High | Needed for support teams before high-volume use. |
-| P2 | Add one-click unsubscribe plus `List-Unsubscribe` headers | M | High | Important for compliance and bulk-adjacent transactional sends. |
-| P2 | Build inbound reply ingestion route/action | M | Med | Existing data and adapter contracts are ready for this slice. |
-| P2 | Build native Postmark API adapter or relabel current adapter | M | Med | Avoids provider overclaiming and improves webhook semantics. |
-| P3 | Add idempotency keys and delayed send support | M | Med | Reduces duplicate sends and enables scheduled workflows. |
-| P3 | Add aggregate delivery/open/click dashboard or Insights contribution | L | Med | Turns audit records into operator reporting. |
-| P3 | Add variant split testing and winner selection | L | Low-Med | Useful after template usage volume grows. |
+| Priority | Item                                                                                           | Effort | Impact  | Notes                                                                   |
+| -------- | ---------------------------------------------------------------------------------------------- | ------ | ------- | ----------------------------------------------------------------------- |
+| P0       | Align docs, changelog, manifest language, screenshot contract, and current feature map         | S      | High    | Fix stale "planned" wording before new implementation.                  |
+| P0       | Add missing template/theme screenshots or mark runner blockers                                 | S      | High    | Marketplace evidence currently trails the required screenshot contract. |
+| P1       | Encrypt/redact `EmailProfile.provider_settings` secrets or document plaintext justification    | M      | High    | Sensitive package tier needs a deliberate secret boundary.              |
+| P1       | Require strong provider-event recipient correlation before mutating recipient state            | M      | High    | Prevent wrong-recipient status changes for repeated sends.              |
+| P1       | Add auth provider hook tests for verification/reset replacements and optional lifecycle emails | M      | High    | Protects default auth behavior and fallback paths.                      |
+| P1       | Make profile default selection deterministic and constrained                                   | S-M    | Med     | Avoid accidental provider drift in multi-profile installs.              |
+| P1       | Resolve `CheckEmailSuppressionAction` through the container inside `SendEmailAction`           | S      | Med     | Keeps Action boundaries fakeable and consistent.                        |
+| P2       | Add delivery profile admin management with redacted secret handling                            | M-L    | High    | Closes the biggest operator workflow gap.                               |
+| P2       | Add suppression admin management and audit-safe release workflow                               | M      | High    | Needed for support teams before high-volume use.                        |
+| P2       | Add one-click unsubscribe plus `List-Unsubscribe` headers                                      | M      | High    | Important for compliance and bulk-adjacent transactional sends.         |
+| P2       | Build inbound reply ingestion route/action                                                     | M      | Med     | Existing data and adapter contracts are ready for this slice.           |
+| P2       | Build native Postmark API adapter or relabel current adapter                                   | M      | Med     | Avoids provider overclaiming and improves webhook semantics.            |
+| P3       | Add idempotency keys and delayed send support                                                  | M      | Med     | Reduces duplicate sends and enables scheduled workflows.                |
+| P3       | Add aggregate delivery/open/click dashboard or Insights contribution                           | L      | Med     | Turns audit records into operator reporting.                            |
+| P3       | Add variant split testing and winner selection                                                 | L      | Low-Med | Useful after template usage volume grows.                               |
 
 ## Verification
 

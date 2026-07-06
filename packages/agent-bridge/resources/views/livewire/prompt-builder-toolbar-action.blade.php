@@ -244,7 +244,11 @@
                             x-on:click="
                                 $wire
                                     .refreshPromptForCopy()
-                                    .then(() => navigator.clipboard.writeText($wire.preparedPrompt))
+                                    .then(() =>
+                                        navigator.clipboard.writeText(
+                                            $wire.preparedPrompt,
+                                        ),
+                                    )
                             "
                             class="rounded-md border border-gray-300 px-3 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:text-gray-200 dark:hover:bg-gray-800"
                         >
@@ -289,8 +293,7 @@
                             readonly
                             rows="10"
                             class="block w-full rounded-lg border border-gray-300 bg-gray-50 px-3 py-2 font-mono text-sm text-gray-800 shadow-sm dark:border-gray-700 dark:bg-gray-950 dark:text-gray-200"
-                        >
-{{ $preparedPrompt }}</textarea
+                            >{{ $preparedPrompt }}</textarea
                         >
                     </label>
                 </div>

@@ -4,7 +4,7 @@
     </p>
 @else
     <div
-        @class([
+        @class ([
             'grid grid-cols-1 gap-2',
             'sm:grid-cols-2' => $this->checks->count() > 1,
             'lg:grid-cols-3' => $this->checks->count() > 2,

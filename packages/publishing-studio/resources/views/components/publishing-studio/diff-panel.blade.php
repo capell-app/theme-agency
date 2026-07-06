@@ -275,7 +275,7 @@
                                         colspan="{{ $mode === 'side-by-side' ? 3 : 2 }}"
                                         class="pt-0 pb-2"
                                     >
-                                        @livewire('capell-publishing-studio::field-comment-thread',
+                                        @livewire ('capell-publishing-studio::field-comment-thread',
                                             [
                                                 'workspaceId' => $workspaceId,
                                                 'entityType' => $diff['model'],

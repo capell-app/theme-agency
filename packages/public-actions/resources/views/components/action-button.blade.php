@@ -1,4 +1,4 @@
-@props([
+@props ([
     'actionKey',
     'label',
     'payload' => [],

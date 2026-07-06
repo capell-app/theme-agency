@@ -48,7 +48,7 @@ $profile = ResolveRenderProfileAction::run(
 Render stored assets from Blade after the manifest has been persisted:
 
 ```blade
-@frontendOptimizerAssets($profileHash)
+@frontendOptimizerAssets ($profileHash)
 ```
 
 ## Config Keys

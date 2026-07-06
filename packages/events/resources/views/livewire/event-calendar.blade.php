@@ -48,20 +48,15 @@
                                     <span>{{ $occurrence->title }}</span>
                                 @endif
 
-                                <time
-                                    datetime="{{ $occurrence->isoStartsAt }}"
-                                >
-                                    {{ $occurrence->displayStartsAt }}
-                                    {{ $occurrence->eventTimezone }}
+                                <time datetime="{{ $occurrence->isoStartsAt }}">
+                                    {{ $occurrence->displayStartsAt }} {{ $occurrence->eventTimezone }}
                                 </time>
 
                                 @if ($occurrence->viewerDisplayStartsAt && $occurrence->viewerTimezone !== $occurrence->eventTimezone)
                                     <time
                                         datetime="{{ $occurrence->isoStartsAt }}"
                                     >
-                                        {{ __('capell-events::generic.your_time') }}:
-                                        {{ $occurrence->viewerDisplayStartsAt }}
-                                        {{ $occurrence->viewerTimezone }}
+                                        {{ __('capell-events::generic.your_time') }}: {{ $occurrence->viewerDisplayStartsAt }} {{ $occurrence->viewerTimezone }}
                                     </time>
                                 @endif
                             </article>
