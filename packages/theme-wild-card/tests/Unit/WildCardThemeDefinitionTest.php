@@ -38,6 +38,7 @@ it('defines the wild-card renderer contract', function (): void {
             'winners-ledger-table' => ['default', 'collections'],
             'submission-pulse' => ['default', 'compact'],
             'infinite-scroll-depth-pressure' => ['default', 'rows'],
+            'time-capsule-browser' => ['default', 'cabinet'],
         ])
         ->and($definition->presets)->toHaveCount(2)
         ->and($definition->presets[0]->key)->toBe('wild-card')

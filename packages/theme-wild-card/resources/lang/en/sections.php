@@ -77,6 +77,11 @@ return [
         'heading' => 'The archive, given room to breathe',
         'summary' => 'Cards pick up weight the further you read into the collection — a visual cue for how deep the archive runs, not a loading trick.',
     ],
+    'time_capsule' => [
+        'kicker' => 'Past cycles',
+        'heading' => 'Every cycle, kept on the shelf',
+        'summary' => 'Each past cycle is a cartridge you can load — open one to see the entries the curators kept from that year, without leaving the index.',
+    ],
     'profiles' => [
         'kicker' => 'Profiles & resources',
         'heading' => 'Studio profiles, credits, and field guides',

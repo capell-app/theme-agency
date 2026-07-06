@@ -36,7 +36,7 @@ final class WildCardThemeServiceProvider extends ServiceProvider
             previewImage: '/vendor/capell/themes/wild-card.jpg',
             tags: ['Wild Card', 'Creative Awards', 'Portfolio', 'Collections', 'Submissions'],
             bestFit: ['Creative industry directories', 'Agency and studio showcases', 'Portfolio-heavy CMS sites', 'Architecture and artist indexes', 'Award-style submission galleries'],
-            includedSections: ['navigation', 'hero', 'featured-today-banner', 'metadata-facet-wall', 'card-shuffle-grid', 'winners-ledger-table', 'submission-pulse', 'infinite-scroll-depth-pressure', 'profiles-resources', 'sponsor-modules', 'proof', 'content-listing', 'newsletter', 'cta', 'footer'],
+            includedSections: ['navigation', 'hero', 'featured-today-banner', 'metadata-facet-wall', 'card-shuffle-grid', 'winners-ledger-table', 'submission-pulse', 'infinite-scroll-depth-pressure', 'time-capsule-browser', 'profiles-resources', 'sponsor-modules', 'proof', 'content-listing', 'newsletter', 'cta', 'footer'],
             presets: [
                 new ThemePresetData(
                     key: self::THEME_KEY,
@@ -101,6 +101,7 @@ final class WildCardThemeServiceProvider extends ServiceProvider
                     'winners-ledger-table' => ['default', 'collections'],
                     'submission-pulse' => ['default', 'compact'],
                     'infinite-scroll-depth-pressure' => ['default', 'rows'],
+                    'time-capsule-browser' => ['default', 'cabinet'],
                 ],
             ],
         );
@@ -195,6 +196,13 @@ final class WildCardThemeServiceProvider extends ServiceProvider
                 sectionKey: 'infinite-scroll-depth-pressure',
                 baseView: 'capell-theme-wild-card::sections.infinite-scroll-depth-pressure',
                 variantViews: ['rows' => 'capell-theme-wild-card::sections.infinite-scroll-depth-pressure--rows'],
+                failLoudly: true,
+            ),
+            'time-capsule-browser' => new VariantViewSectionRenderer(
+                themeKey: self::THEME_KEY,
+                sectionKey: 'time-capsule-browser',
+                baseView: 'capell-theme-wild-card::sections.time-capsule-browser',
+                variantViews: ['cabinet' => 'capell-theme-wild-card::sections.time-capsule-browser--cabinet'],
                 failLoudly: true,
             ),
             'profiles-resources' => new ViewSectionRenderer(self::THEME_KEY, 'profiles-resources', 'capell-theme-wild-card::sections.profiles-resources', failLoudly: true),

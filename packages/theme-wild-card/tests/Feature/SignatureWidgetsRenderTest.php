@@ -162,3 +162,30 @@ it('renders infinite-scroll-depth-pressure as a static grid with no pagination l
 
     expect($rows)->toContain('exd-depth-rows');
 });
+
+it('renders time-capsule-browser as cartridges with :has()-expandable previews, capped at twenty cycles and five entries', function (): void {
+    $cycles = collect(range(1, 25))->map(static fn (int $index): array => [
+        'title' => "Cycle {$index}",
+        'summary' => "Summary {$index}",
+        'previewItems' => collect(range(1, 7))->map(static fn (int $entry): array => ['title' => "Cycle {$index} entry {$entry}"])->all(),
+    ])->all();
+
+    $html = view('capell-theme-wild-card::sections.time-capsule-browser', [
+        'section' => ['heading' => 'Past cycles', 'items' => $cycles],
+    ])->render();
+
+    expect($html)->toContain('data-time-capsule-browser')
+        ->and($html)->toContain('type="radio"')
+        ->and($html)->toContain('Cycle 1')
+        ->and($html)->not->toContain('Cycle 21')
+        ->and($html)->toContain('Cycle 1 entry 5')
+        ->and($html)->not->toContain('Cycle 1 entry 6')
+        ->and($html)->not->toContain('IntersectionObserver')
+        ->and($html)->not->toContain('wire:poll');
+
+    $cabinet = view('capell-theme-wild-card::sections.time-capsule-browser--cabinet', [
+        'section' => ['heading' => 'Past cycles', 'items' => $cycles],
+    ])->render();
+
+    expect($cabinet)->toContain('exd-time-capsule-cabinet');
+});

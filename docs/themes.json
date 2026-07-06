@@ -468,6 +468,7 @@
                 "winners-ledger-table",
                 "submission-pulse",
                 "infinite-scroll-depth-pressure",
+                "time-capsule-browser",
                 "profiles-resources",
                 "sponsor-modules",
                 "proof",
@@ -499,7 +500,7 @@
                     "cardDensity"
                 ],
                 "layoutBuilderAreas": [],
-                "sectionVariants": "15 sections, 15 custom; 6 sections declare a second variant (card-shuffle-grid, metadata-facet-wall, featured-today-banner, winners-ledger-table, submission-pulse, infinite-scroll-depth-pressure)",
+                "sectionVariants": "16 sections, 16 custom; 7 sections declare a second variant (card-shuffle-grid, metadata-facet-wall, featured-today-banner, winners-ledger-table, submission-pulse, infinite-scroll-depth-pressure, time-capsule-browser)",
                 "pageWidgetAssets": ["css"],
                 "optionalIntegrations": [
                     "capell-app/blog",
