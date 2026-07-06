@@ -5,9 +5,11 @@ declare(strict_types=1);
 use Capell\Core\Facades\CapellCore;
 use Capell\Core\Models\Layout;
 use Capell\Core\Models\Page;
+use Capell\Core\Models\PageUrl;
 use Capell\Core\Support\Renderables\RenderableRegistry;
 use Capell\Core\ThemeStudio\Theme\ThemeRegistry;
 use Capell\FoundationTheme\Data\ThemeDemoInstallData;
+use Capell\FoundationTheme\Providers\FoundationThemeServiceProvider;
 use Capell\FoundationTheme\Support\Demo\ThemeDemoPageInstaller;
 use Capell\LayoutBuilder\Models\Widget;
 use Capell\LayoutBuilder\Support\Creator\WidgetCreator;
@@ -26,9 +28,15 @@ use function Pest\Laravel\get;
 |
 | Mirrors NightShiftBespokeWidgetsTest's structure. Call Out renders through
 | Foundation's own shared header/footer chrome (no bespoke Theme
-| interceptor), so this file disables theme chrome the same way the shared
-| `layoutNativeThemeCreatePage()` helper does, rather than exercising a
-| bespoke header/footer seam this theme does not have.
+| interceptor), via CallOutThemeInterceptor's header_file/footer_file
+| defaults pointing at Foundation's `capell::header.index` /
+| `capell::footer.index`. The "renders the real" test below still uses the
+| shared `layoutNativeThemeCreatePage()` helper (which disables theme chrome
+| via `layoutNativeDisableThemeChrome()`, same as every other layout-native
+| theme's smoke test) for its own unrelated reasons; the dedicated
+| `'renders real header, footer, and nav chrome'` test further down does NOT
+| disable chrome, exercising Foundation's default chrome for real the same
+| way NightShiftBespokeWidgetsTest exercises its own bespoke chrome.
 |
 */
 
@@ -37,6 +45,22 @@ require_once dirname(__DIR__, 4) . '/tests/Packages/Support/ThemeLayoutNativeSup
 function bootCallOutThemeForBespokeWidgetTests(): void
 {
     CapellCore::forcePackageInstalled(CallOutThemeServiceProvider::$packageName);
+
+    // Call Out declares `capell-app/theme-foundation` as a real dependency
+    // in its capell.json, so a normal install would mark Foundation
+    // installed too. `PackagesTestCase` doesn't force that globally (most
+    // theme packages under it don't need Foundation's runtime data prep),
+    // and forcing it here alone would be too late -- Foundation's provider
+    // already ran `packageBooted()` once during the initial app boot,
+    // before this function's `forcePackageInstalled` call, so its
+    // `registerPublicRuntimeData()` (gated behind `isPackageInstalled()`)
+    // was skipped then. Re-registering + re-booting a fresh instance here,
+    // now that the flag is set, mirrors the exact `register()`/`boot()`
+    // re-run already used below for Call Out's own provider.
+    CapellCore::forcePackageInstalled(FoundationThemeServiceProvider::$packageName);
+    $foundationProvider = new FoundationThemeServiceProvider(app());
+    $foundationProvider->register();
+    $foundationProvider->boot();
 
     View::addNamespace('capell-theme-call-out', dirname(__DIR__, 2) . '/resources/views');
     Lang::addNamespace('capell-theme-call-out', dirname(__DIR__, 2) . '/resources/lang');
@@ -71,19 +95,60 @@ it('renders the real, seeded homepage through the shared layout-builder pipeline
 
     expect($html)->toBeString();
 
-    // Known gap (flagged, not fixed here): Foundation's shared header/footer
-    // chrome fallback for a layout-native theme without bespoke header_file/
-    // footer_file views does not render <header>/<footer>/<nav> markup on
-    // this pipeline as of this commit -- CallOutThemeInterceptor sets
-    // header_file/footer_file explicitly and it still does not resolve them,
-    // which looks like a Foundation-level gap in x-capell::layout.index's
-    // default-chrome fallback for themes with no bespoke chrome views,
-    // rather than anything specific to Call Out's own widgets. This
-    // assertion is scoped to what's actually verified: the real seeded page
-    // renders successfully with real widget/brand content and no
-    // authoring/package leak.
+    // This test uses the shared `layoutNativeThemeCreatePage()` helper,
+    // which disables theme chrome via `layoutNativeDisableThemeChrome()` for
+    // every layout-native theme it seeds (see that helper's own docblock).
+    // <header>/<footer>/<nav> are therefore not expected here -- that's not
+    // a gap, it's this test deliberately exercising the widget pipeline in
+    // isolation from chrome. Foundation's default chrome rendering for real
+    // is covered by the dedicated 'renders real header, footer, and nav
+    // chrome' test below, which does not disable it.
     expect($html)
         ->toContain('Rapid Response Plumbing')
+        ->not->toContain('capell-app/theme-call-out')
+        ->not->toContain('authoring');
+
+    CapellCore::clearPackages();
+    resolve(ThemeRegistry::class)->reset();
+});
+
+it('renders real header, footer, and nav chrome on the seeded homepage through Foundation\'s default chrome seam', function (): void {
+    bootCallOutThemeForBespokeWidgetTests();
+
+    ThemeDemoPageInstaller::run(
+        data: new ThemeDemoInstallData(
+            siteNames: ['Call Out Chrome Render Test'],
+            languageCodes: ['en'],
+            baseUrl: 'https://call-out.chrome-render-test.test',
+        ),
+        themeKey: CallOutThemeServiceProvider::THEME_KEY,
+        themeName: 'Call Out',
+        contentProvider: new CallOutDemoContent,
+    );
+
+    $homepage = Page::query()
+        ->where('meta->theme_demo->theme_key', CallOutThemeServiceProvider::THEME_KEY)
+        ->where('meta->theme_demo->surface', 'homepage')
+        ->firstOrFail();
+
+    $homepage->loadMissing(['pageUrl.siteDomain', 'translations']);
+
+    $pageUrl = $homepage->pageUrl;
+
+    throw_unless($pageUrl instanceof PageUrl, RuntimeException::class, 'Expected the seeded homepage to have a PageUrl.');
+
+    $response = get($pageUrl->full_url);
+
+    $response->assertOk();
+
+    $html = $response->getContent();
+
+    expect($html)->toBeString();
+
+    expect($html)
+        ->toContain('<header')
+        ->toContain('<footer')
+        ->toContain('Call Out Chrome Render Test')
         ->not->toContain('capell-app/theme-call-out')
         ->not->toContain('authoring');
 
