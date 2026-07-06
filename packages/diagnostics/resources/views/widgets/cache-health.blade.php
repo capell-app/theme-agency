@@ -45,8 +45,7 @@
                     <span
                         class="shrink-0 text-sm font-medium text-gray-700 tabular-nums dark:text-gray-300"
                     >
-                        {{ $data->cachedCount }} / {{ $total }} &mdash;
-                        {{ $pct }}%
+                        {{ $data->cachedCount }} / {{ $total }} &mdash; {{ $pct }}%
                     </span>
                 </div>
             @endif

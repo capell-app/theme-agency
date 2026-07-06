@@ -1,4 +1,4 @@
-@props([
+@props ([
     'background' => null,
     'instanceKey' => null,
 ])
@@ -20,7 +20,7 @@
 
     <div
         aria-hidden="true"
-        @class([
+        @class ([
             'hero-background pointer-events-none absolute inset-0 overflow-hidden',
             'hero-background--' . $background->overlayStyle,
         ])

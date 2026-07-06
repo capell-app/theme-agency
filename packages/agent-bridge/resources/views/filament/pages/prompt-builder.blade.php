@@ -25,8 +25,7 @@
             <textarea
                 class="block min-h-96 w-full resize-y rounded-lg border-gray-300 font-mono text-sm shadow-sm dark:border-gray-700 dark:bg-gray-900"
                 readonly
-            >
-{{ $preparedPrompt }}</textarea
+                >{{ $preparedPrompt }}</textarea
             >
         </x-filament::section>
     </div>

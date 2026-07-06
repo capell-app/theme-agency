@@ -43,10 +43,9 @@
             <ol>
                 @foreach ($comment->moderationEvents as $event)
                     <li>
-                        {{ $event->occurred_at?->diffForHumans() }}:
-                        {{ $event->action }}
+                        {{ $event->occurred_at?->diffForHumans() }}: {{ $event->action }}
                         @if ($event->note !== null)
-                                - {{ $event->note }}
+                            - {{ $event->note }}
                         @endif
                     </li>
                 @endforeach

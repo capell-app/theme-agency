@@ -1,6 +1,6 @@
-@aware(['carouselArrows'])
+@aware (['carouselArrows'])
 
-@props([
+@props ([
     'color',
     'content_class' => 'hero-content prose w-full max-w-[min(62rem,100%)]',
     'headingSize' => 'h1',

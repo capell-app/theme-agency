@@ -3,43 +3,43 @@ window.CapellFrontendAuthoring = window.CapellFrontendAuthoring || (function ()
 null; let modalLoadTimer = null; let modalIsDirty = false; let activeMenu =
 null; let activeMenuTrigger = null; let bottomOffsetFrame = null; let
 originalBodyPaddingBottom = null; const labels = { adminEditing:
-@json(__('capell-frontend-authoring::authoring.admin_editing'))
+@json (__('capell-frontend-authoring::authoring.admin_editing'))
 , cached:
-@json(__('capell-frontend-authoring::authoring.cached'))
+@json (__('capell-frontend-authoring::authoring.cached'))
 , closeEditor:
-@json(__('capell-frontend-authoring::authoring.close_editor'))
+@json (__('capell-frontend-authoring::authoring.close_editor'))
 , discardChanges:
-@json(__('capell-frontend-authoring::authoring.discard_changes'))
+@json (__('capell-frontend-authoring::authoring.discard_changes'))
 , edit:
-@json(__('capell-frontend-authoring::authoring.edit'))
+@json (__('capell-frontend-authoring::authoring.edit'))
 , editorLoading:
-@json(__('capell-frontend-authoring::authoring.editor_loading'))
+@json (__('capell-frontend-authoring::authoring.editor_loading'))
 , editorLoadError:
-@json(__('capell-frontend-authoring::authoring.editor_load_error'))
+@json (__('capell-frontend-authoring::authoring.editor_load_error'))
 , editableArea:
-@json(__('capell-frontend-authoring::authoring.editable_area'))
+@json (__('capell-frontend-authoring::authoring.editable_area'))
 , editableAreas:
-@json(__('capell-frontend-authoring::authoring.editable_areas'))
+@json (__('capell-frontend-authoring::authoring.editable_areas'))
 , editingVisible:
-@json(__('capell-frontend-authoring::authoring.editing_visible'))
+@json (__('capell-frontend-authoring::authoring.editing_visible'))
 , hideEditAreas:
-@json(__('capell-frontend-authoring::authoring.hide_edit_areas'))
+@json (__('capell-frontend-authoring::authoring.hide_edit_areas'))
 , notCached:
-@json(__('capell-frontend-authoring::authoring.not_cached'))
+@json (__('capell-frontend-authoring::authoring.not_cached'))
 , publishedStatus:
-@json(__('capell-frontend-authoring::authoring.published_status'))
+@json (__('capell-frontend-authoring::authoring.published_status'))
 , savedDraftStatus:
-@json(__('capell-frontend-authoring::authoring.saved_draft_status'))
+@json (__('capell-frontend-authoring::authoring.saved_draft_status'))
 , savedPublishedStatus:
-@json(__('capell-frontend-authoring::authoring.saved_published_status'))
+@json (__('capell-frontend-authoring::authoring.saved_published_status'))
 , showEditAreas:
-@json(__('capell-frontend-authoring::authoring.show_edit_areas'))
+@json (__('capell-frontend-authoring::authoring.show_edit_areas'))
 , updated:
-@json(__('capell-frontend-authoring::authoring.updated'))
+@json (__('capell-frontend-authoring::authoring.updated'))
 , updatedBy:
-@json(__('capell-frontend-authoring::authoring.updated_by'))
+@json (__('capell-frontend-authoring::authoring.updated_by'))
 , }; const bannerContext =
-@json($banner)
+@json ($banner)
 ; function editableAreaCountLabel(count) { return count === 1 ?
 labels.editableArea : labels.editableAreas.replace(':count', String(count)); }
 function escapeHtml(value) { return String(value || '').replace(/[&<>"']/g,
@@ -238,11 +238,13 @@ sans-serif; gap: 12px; justify-content: center; min-height: 320px; padding:
 24px; text-align: center; } .capell-authoring-modal__spinner { animation:
 capellAuthoringSpin .8s linear infinite; border: 3px solid #dbeafe;
 border-top-color: #2563eb; border-radius: 999px; display: inline-block; height:
-28px; width: 28px; } @keyframes capellAuthoringSpin { to { transform:
-rotate(360deg); } } .capell-authoring-modal__frame { border: 0; height: 100%;
-width: 100%; } @media (max-width: 640px) { .capell-authoring-toolbar {
-align-items: stretch; grid-template-columns: 1fr; }
-.capell-authoring-toolbar__actions { justify-content: stretch; }
+28px; width: 28px; }
+@keyframes
+capellAuthoringSpin { to { transform: rotate(360deg); } }
+.capell-authoring-modal__frame { border: 0; height: 100%; width: 100%; }
+@media (max-width: 640px)
+{ .capell-authoring-toolbar { align-items: stretch; grid-template-columns: 1fr;
+} .capell-authoring-toolbar__actions { justify-content: stretch; }
 .capell-authoring-toolbar__toggle { justify-content: center; width: 100%; }
 .capell-authoring-control { right: 0; top: 0; } .capell-authoring-modal__panel {
 border-radius: 0; height: 100%; max-width: 100vw; width: 100vw; } } `;
@@ -387,5 +389,5 @@ labels.savedDraftStatus : labels.savedPublishedStatus; closeModal({ force: true
 window.location.assign(redirectUrl); return; } window.location.reload(); },
 1200); } }); return { renderRegions }; })();
 window.CapellFrontendAuthoring.renderRegions(
-@json($regions)
+@json ($regions)
 );

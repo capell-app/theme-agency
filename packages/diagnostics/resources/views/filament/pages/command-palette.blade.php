@@ -68,7 +68,7 @@
                 class="rounded-lg border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-800 dark:bg-gray-950"
             >
                 @if ($this->selectedCommand)
-                    @php($command = $this->selectedCommand)
+                    @php ($command = $this->selectedCommand)
 
                     <form
                         class="space-y-4"
@@ -142,7 +142,7 @@
                                     </span>
                                 @endif
 
-                                @error($parameter->name)
+                                @error ($parameter->name)
                                     <span
                                         class="text-danger-600 dark:text-danger-400 block text-xs"
                                     >

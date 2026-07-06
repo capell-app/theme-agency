@@ -25,7 +25,7 @@
     @endif
 
     @foreach ($collection['children'] as $childCollection)
-        @include('capell-knowledge-base::partials.collection-navigation', [
+        @include ('capell-knowledge-base::partials.collection-navigation', [
             'collection' => $childCollection,
             'headingLevel' => $headingLevel + 1,
         ])

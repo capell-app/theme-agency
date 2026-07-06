@@ -26,7 +26,7 @@ per-family widget/section specs) when building or leveling up a theme.
 
 ## 2. Composer package (`composer.json`)
 
-- PSR-4 root: `Capell\ThemeStudio\QuietType\` → `src/` (every *child* theme
+- PSR-4 root: `Capell\ThemeStudio\QuietType\` → `src/` (every _child_ theme
   uses this `Capell\ThemeStudio\<Studio>\` convention — only
   `theme-foundation` itself keeps the older `Capell\FoundationTheme\` root,
   since it predates the convention).
@@ -85,7 +85,7 @@ per Foundation surface (`homepage`, `directory`, `detail`, `contact`,
 5. Carries real `navigation`/`footer` chrome (`brandName` + ≥3 nav items,
    ≥2 footer columns).
 6. Contains no placeholder/weak demo copy (`lorem`, `placeholder`, `"demo
-   content"`, etc. — see `WEAK_COPY_PATTERNS` in the Arch test).
+content"`, etc. — see `WEAK_COPY_PATTERNS` in the Arch test).
 7. Uses one consistent brand name (`"The Quire Review"`) across all seven
    surfaces.
 

@@ -10,7 +10,7 @@
         <div
             class="border-warning-500/30 bg-warning-50 text-warning-800 dark:bg-warning-950/50 dark:text-warning-200 sticky top-0 z-30 flex items-center gap-3 border-b px-4 py-2 text-sm"
         >
-            @svg(Heroicon::OutlinedBeaker->getIconForSize(IconSize::Small), 'h-4 w-4 flex-shrink-0')
+            @svg (Heroicon::OutlinedBeaker->getIconForSize(IconSize::Small), 'h-4 w-4 flex-shrink-0')
 
             <span class="flex-1 truncate">
                 {{ __('capell-admin::workspace.banner.editing_in', ['name' => $workspace->name]) }}

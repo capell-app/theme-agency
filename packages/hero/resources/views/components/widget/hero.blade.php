@@ -1,4 +1,4 @@
-@props([
+@props ([
     'hero',
     'containerKey',
     'widgetIndex',
@@ -8,7 +8,7 @@
 
 @if ($hero?->shouldRender)
     <section
-        @class([
+        @class ([
             'capell-widget',
             'widget-hero relative z-10 grid w-full',
             'mb-10' => ! $loop->last,
@@ -17,7 +17,7 @@
             'bg-gray-800 dark:bg-gray-900' => $hero->color === 'dark',
             'min-h-[calc(100vh-var(--header-height))]' => $hero->height === 'full',
         ])
-        @style([
+        @style ([
             "min-height: {$hero->height}" => filled($hero->height) && $hero->height !== 'full',
         ])
     >
@@ -62,13 +62,13 @@
                         :class="$hero->slideClass"
                     >
                         <div
-                            @class([
+                            @class ([
                                 '@container grid max-w-full min-w-0 gap-4 gap-x-10 gap-y-8 py-14 select-text lg:gap-x-16 lg:py-24',
                                 'lg:grid-cols-12' => $slide->images?->isNotEmpty(),
                             ])
                         >
                             <div
-                                @class([
+                                @class ([
                                     'flex max-w-full min-w-0 flex-col justify-center',
                                     $hero->contentAlignmentClass => ! $slide->images?->isNotEmpty(),
                                     'items-start text-left' => $slide->images?->isNotEmpty(),
@@ -94,7 +94,7 @@
                                             href="{{ $slide->url }}"
                                             wire:navigate
                                         >
-                                            @svg('heroicon-s-chevron-right', 'mr-2 inline-block h-6 w-6')
+                                            @svg ('heroicon-s-chevron-right', 'mr-2 inline-block h-6 w-6')
                                             {{ $slide->linkText }}
                                         </a>
                                     @endif
@@ -137,7 +137,7 @@
 
                             @if ($slide->images?->isNotEmpty())
                                 <div
-                                    @class([
+                                    @class ([
                                         'relative z-30 flex w-full max-w-full min-w-0 items-center overflow-hidden',
                                         'lg:col-span-6 xl:col-span-5' => $hero->mediaSize !== 'compact',
                                         'lg:col-span-5 xl:col-span-4' => $hero->mediaSize === 'compact',

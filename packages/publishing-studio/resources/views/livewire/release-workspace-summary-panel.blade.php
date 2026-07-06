@@ -26,18 +26,15 @@
                                 </span>
                                 <span class="block text-gray-500">
                                     <span>
-                                        {{ __('capell-admin::workspace.release.item_source') }}:
-                                        {{ $item->source }}
+                                        {{ __('capell-admin::workspace.release.item_source') }}: {{ $item->source }}
                                     </span>
                                     <span aria-hidden="true">&middot;</span>
                                     <span>
-                                        {{ __('capell-admin::workspace.release.item_change_type') }}:
-                                        {{ __("capell-admin::workspace.release.change_type.{$item->changeType}") }}
+                                        {{ __('capell-admin::workspace.release.item_change_type') }}: {{ __("capell-admin::workspace.release.change_type.{$item->changeType}") }}
                                     </span>
                                     <span aria-hidden="true">&middot;</span>
                                     <span>
-                                        {{ __('capell-admin::workspace.release.item_status') }}:
-                                        {{ __("capell-admin::workspace.release.item_statuses.{$item->status}") }}
+                                        {{ __('capell-admin::workspace.release.item_status') }}: {{ __("capell-admin::workspace.release.item_statuses.{$item->status}") }}
                                     </span>
                                 </span>
                             </li>
@@ -66,8 +63,7 @@
                 </h3>
 
                 <p class="text-sm text-gray-500">
-                    {{ $readiness->wouldPublish ? __('capell-admin::workspace.release.ready') : __('capell-admin::workspace.release.blocked') }}
-                    {{ trans_choice('capell-admin::workspace.release.blocking_count', $readiness->blockingIssueCount, ['count' => $readiness->blockingIssueCount]) }}
+                    {{ $readiness->wouldPublish ? __('capell-admin::workspace.release.ready') : __('capell-admin::workspace.release.blocked') }} {{ trans_choice('capell-admin::workspace.release.blocking_count', $readiness->blockingIssueCount, ['count' => $readiness->blockingIssueCount]) }}
                 </p>
 
                 @if ($readiness->blockingIssueCount > 0)

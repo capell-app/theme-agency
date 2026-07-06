@@ -55,8 +55,7 @@
                     class="rwi-hero-plate-media"
                 />
                 <figcaption>
-                    {{ __('capell-theme-off-grid::sections.plate.fig') }} 01 —
-                    {{ $mediaAlt ?? __('capell-theme-off-grid::sections.plate.caption') }}
+                    {{ __('capell-theme-off-grid::sections.plate.fig') }} 01 — {{ $mediaAlt ?? __('capell-theme-off-grid::sections.plate.caption') }}
                 </figcaption>
             </figure>
         @endif

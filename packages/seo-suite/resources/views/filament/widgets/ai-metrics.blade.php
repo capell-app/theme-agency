@@ -38,8 +38,7 @@
                     <div
                         class="mt-1 text-2xl font-bold text-gray-900 dark:text-white"
                     >
-                        {{ $data->currency }}
-                        {{ number_format($data->totalCostMicros / 1000000, 2) }}
+                        {{ $data->currency }} {{ number_format($data->totalCostMicros / 1000000, 2) }}
                     </div>
                 </div>
                 <div class="rounded-lg bg-red-50 p-4 dark:bg-red-900/20">
@@ -217,13 +216,11 @@
                                     class="flex items-center justify-between text-xs text-gray-600 dark:text-gray-400"
                                 >
                                     <span>
-                                        {{ number_format($feature->tokens) }}
-                                        tokens (Ø
-                                        {{ number_format($feature->averageTokensPerRequest, 1) }}/req)
+                                        {{ number_format($feature->tokens) }} tokens
+                                        (Ø {{ number_format($feature->averageTokensPerRequest, 1) }}/req)
                                     </span>
                                     <span>
-                                        {{ $data->currency }}
-                                        {{ number_format($feature->costMicros / 1000000, 2) }}
+                                        {{ $data->currency }} {{ number_format($feature->costMicros / 1000000, 2) }}
                                     </span>
                                 </div>
                             </div>

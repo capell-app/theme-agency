@@ -32,7 +32,7 @@
 
             <div class="text-center">
                 <div
-                    @class([
+                    @class ([
                         'text-2xl font-bold',
                         'text-warning-600 dark:text-warning-400' => $totals['missingDescription'] > 0,
                         'text-success-600 dark:text-success-400' => $totals['missingDescription'] === 0,
@@ -60,7 +60,7 @@
 
             <div class="text-center">
                 <div
-                    @class([
+                    @class ([
                         'text-2xl font-bold',
                         'text-warning-600 dark:text-warning-400' => $totals['titleIssues'] > 0,
                         'text-success-600 dark:text-success-400' => $totals['titleIssues'] === 0,
@@ -88,7 +88,7 @@
 
             <div class="text-center">
                 <div
-                    @class([
+                    @class ([
                         'text-2xl font-bold',
                         'text-warning-600 dark:text-warning-400' => $totals['duplicateTitles'] > 0,
                         'text-success-600 dark:text-success-400' => $totals['duplicateTitles'] === 0,

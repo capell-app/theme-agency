@@ -23,7 +23,7 @@
         && Route::has($beaconRouteName);
 @endphp
 
-@push('styles')
+@push ('styles')
     <x-inertia::head />
 @endpush
 

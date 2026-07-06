@@ -1,4 +1,4 @@
-@props([
+@props ([
     'area',
     'publicActionKey' => null,
     'action' => null,
@@ -45,7 +45,5 @@
         />
     @endif
 
-    <button type="submit">
-        {{ $label }}
-    </button>
+    <button type="submit">{{ $label }}</button>
 </form>

@@ -1,4 +1,4 @@
-@props([
+@props ([
     'related',
     'key',
 ])
@@ -19,7 +19,7 @@
                 class="flex flex-wrap items-center gap-x-4 gap-y-3 @2xs/item:flex-nowrap"
             >
                 <div
-                    class="prose prose-sm dark:prose-invert grid h-full grow [&>:first-child]:mt-0 [&>:last-child]:mb-0"
+                    class="prose prose-sm dark:prose-invert [&>:first-child]:mt-0 [&>:last-child]:mb-0 grid h-full grow"
                 >
                     @if ($feature['title'])
                         <p class="text-md mb-1 leading-6 @2xs/item:text-lg">

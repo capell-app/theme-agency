@@ -24,11 +24,7 @@
                                 <div
                                     class="mt-0.5 text-xs text-gray-500 dark:text-gray-400"
                                 >
-                                    {{ $entry->actorName }}
-                                    &middot;
-                                    {{ $entry->pageCount }}
-                                    {{ Str::plural('page', $entry->pageCount) }}
-                                    &middot; {{ $entry->durationOpenHours }}h
+                                    {{ $entry->actorName }} &middot; {{ $entry->pageCount }} {{ Str::plural('page', $entry->pageCount) }} &middot; {{ $entry->durationOpenHours }}h
                                     open
                                 </div>
                             </div>

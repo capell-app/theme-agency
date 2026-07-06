@@ -1,4 +1,4 @@
-@props([
+@props ([
     'alt' => '',
     'media' => null,
 ])
@@ -69,15 +69,15 @@
         >
             <span
                 data-hero-video-pause-icon
-                @class(['hidden' => ! $media->autoplay])
+                @class (['hidden' => ! $media->autoplay])
             >
-                @svg('heroicon-o-pause', 'h-5 w-5')
+                @svg ('heroicon-o-pause', 'h-5 w-5')
             </span>
             <span
                 data-hero-video-play-icon
-                @class(['hidden' => $media->autoplay])
+                @class (['hidden' => $media->autoplay])
             >
-                @svg('heroicon-o-play', 'h-5 w-5')
+                @svg ('heroicon-o-play', 'h-5 w-5')
             </span>
         </button>
     @endif

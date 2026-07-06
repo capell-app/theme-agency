@@ -58,10 +58,7 @@
     },
     "settings": [],
     "permissions": [],
-    "capabilities": [
-        "theme-wild-card",
-        "theme-wild-card-frontend"
-    ],
+    "capabilities": ["theme-wild-card", "theme-wild-card-frontend"],
     "security": {
         "riskTier": "low",
         "publicSurface": {

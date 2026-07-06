@@ -13,7 +13,7 @@
     <div
         class="flex items-center gap-3 border-b border-gray-100 px-4 py-3 dark:border-gray-800"
     >
-        @svg(Heroicon::OutlinedDocumentText->getIconForSize(IconSize::Small), 'h-4 w-4 text-gray-400', ['aria-hidden' => 'true'])
+        @svg (Heroicon::OutlinedDocumentText->getIconForSize(IconSize::Small), 'h-4 w-4 text-gray-400', ['aria-hidden' => 'true'])
         <h3
             id="publish-status-panel-title"
             class="text-sm font-semibold text-gray-700 dark:text-gray-300"
@@ -23,7 +23,7 @@
     </div>
 
     <div class="space-y-3 px-4 py-3 text-sm">
-        @include('capell-admin::livewire.partials.publish-status-rows', [
+        @include ('capell-admin::livewire.partials.publish-status-rows', [
             'dateFormat' => $dateFormat,
             'state' => $state,
         ])
@@ -37,7 +37,7 @@
                     rel="noopener"
                     target="_blank"
                 >
-                    @svg(Heroicon::OutlinedArrowTopRightOnSquare->getIconForSize(IconSize::Small), 'h-3.5 w-3.5', ['aria-hidden' => 'true'])
+                    @svg (Heroicon::OutlinedArrowTopRightOnSquare->getIconForSize(IconSize::Small), 'h-3.5 w-3.5', ['aria-hidden' => 'true'])
                     {{ __('capell-admin::publish_panel.preview') }}
                 </a>
             </div>

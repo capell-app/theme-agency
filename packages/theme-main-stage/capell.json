@@ -13,9 +13,7 @@
         "bundle": "themes"
     },
     "namespace": "Capell\\ThemeStudio\\MainStage",
-    "surfaces": [
-        "frontend"
-    ],
+    "surfaces": ["frontend"],
     "dependencies": {
         "requires": [
             "capell-app/core",
@@ -23,10 +21,7 @@
             "capell-app/frontend",
             "capell-app/layout-builder"
         ],
-        "supports": [
-            "capell-app/blog",
-            "capell-app/form-builder"
-        ],
+        "supports": ["capell-app/blog", "capell-app/form-builder"],
         "conflicts": []
     },
     "providers": {
@@ -58,19 +53,12 @@
         "install": null,
         "setup": null,
         "demo": "capell:theme-main-stage-demo",
-        "demoParams": [
-            "url",
-            "languages",
-            "sites"
-        ],
+        "demoParams": ["url", "languages", "sites"],
         "doctor": null
     },
     "settings": [],
     "permissions": [],
-    "capabilities": [
-        "theme-main-stage",
-        "theme-main-stage-frontend"
-    ],
+    "capabilities": ["theme-main-stage", "theme-main-stage-frontend"],
     "security": {
         "riskTier": "low",
         "publicSurface": {
@@ -107,38 +95,23 @@
     "performance": {
         "criticalCss": {
             "required": true,
-            "parityViewports": [
-                "mobile",
-                "tablet",
-                "desktop"
-            ]
+            "parityViewports": ["mobile", "tablet", "desktop"]
         },
         "frontendRenderBudgetMs": 20,
         "adminQueryBudget": 0,
-        "cacheTags": [
-            "theme-main-stage"
-        ],
+        "cacheTags": ["theme-main-stage"],
         "cacheSafety": {
             "cacheable": false,
-            "variesBy": [
-                "site",
-                "locale"
-            ],
+            "variesBy": ["site", "locale"],
             "sensitiveOutput": false,
             "invalidationSources": [
                 {
                     "model": "Capell\\Core\\Models\\Layout",
-                    "events": [
-                        "saved",
-                        "deleted"
-                    ]
+                    "events": ["saved", "deleted"]
                 },
                 {
                     "model": "Capell\\LayoutBuilder\\Models\\Widget",
-                    "events": [
-                        "saved",
-                        "deleted"
-                    ]
+                    "events": ["saved", "deleted"]
                 }
             ],
             "queueInvalidation": false
@@ -163,10 +136,7 @@
         "summary": "Poster-bold surfaces for conferences and live events, with countdown FOMO and multi-colour ticket tiers.",
         "description": "Main Stage provides a distinct theme definition, demo command, marketplace metadata, and public-safe Blade views for conferences, summits, and live-event organisers that need agenda grids, speaker walls, ticket tiers, countdowns, venue and travel information, sponsor walls, live/replay states, and past-editions archives.",
         "screenshots": [],
-        "categories": [
-            "frontend",
-            "themes"
-        ]
+        "categories": ["frontend", "themes"]
     },
     "extends": "default",
     "themeKey": "main-stage"

@@ -42,18 +42,20 @@
 <section class="lga-section lga-section-dark lga-sequence-hero">
     <div class="lga-section-inner lga-hero-grid">
         <div class="lga-sequence-stage">
-            <p class="lga-eyebrow lga-sequence-step" style="
-                    --lga-step: 0;
-                ">{{ $kicker }}</p>
+            <p
+                class="lga-eyebrow lga-sequence-step"
+                style="--lga-step: 0"
+            >{{ $kicker }}</p>
             <h1
                 class="lga-sequence-step"
                 style="--lga-step: 1"
             >
                 {{ $heading }}
             </h1>
-            <p class="lga-lede lga-sequence-step" style="
-                    --lga-step: 2;
-                ">{{ $summary }}</p>
+            <p
+                class="lga-lede lga-sequence-step"
+                style="--lga-step: 2"
+            >{{ $summary }}</p>
             <div
                 class="lga-actions lga-sequence-step"
                 style="--lga-step: 3"

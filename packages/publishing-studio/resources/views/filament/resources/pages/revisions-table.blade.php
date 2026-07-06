@@ -36,7 +36,7 @@
                     {{ $copy->updated_at?->diffForHumans() }}
                 </td>
                 <td class="space-x-2 px-4 py-2 text-right">
-                    @php($previewUrl = rescue(fn (): ?string => $copy->pageUrl?->full_url, null, false))
+                    @php ($previewUrl = rescue(fn (): ?string => $copy->pageUrl?->full_url, null, false))
                     @if ($previewUrl)
                         <a
                             href="{{ $previewUrl }}"

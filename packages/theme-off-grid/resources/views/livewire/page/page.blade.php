@@ -1,3 +1,1 @@
-<div>
-    {!! RenderCurrentThemePageAction::run($page ?? null) !!}
-</div>
+<div>{!! RenderCurrentThemePageAction::run($page ?? null) !!}</div>

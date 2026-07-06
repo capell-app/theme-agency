@@ -30,7 +30,7 @@
                 @foreach ($actions as $action)
                     <a
                         href="{{ $action['url'] }}"
-                        @class([
+                        @class ([
                             'liquid-glass-button' => ($action['style'] ?? 'primary') === 'primary',
                             'liquid-glass-button-secondary' => ($action['style'] ?? 'primary') !== 'primary',
                         ])

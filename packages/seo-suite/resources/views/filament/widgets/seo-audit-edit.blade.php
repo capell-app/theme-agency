@@ -5,9 +5,9 @@
             icon="heroicon-o-magnifying-glass"
             :collapsible="true"
         >
-            @include('capell-seo-suite::filament.widgets.partials.seo-audit-edit-content')
+            @include ('capell-seo-suite::filament.widgets.partials.seo-audit-edit-content')
         </x-filament::section>
     </x-filament-widgets::widget>
 @else
-    @include('capell-seo-suite::filament.widgets.partials.seo-audit-edit-content')
+    @include ('capell-seo-suite::filament.widgets.partials.seo-audit-edit-content')
 @endif

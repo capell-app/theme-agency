@@ -21,9 +21,7 @@
                 <div class="exd-footer-brand">
                     <p class="exd-footer-wordmark">{{ $brand }}</p>
                     @if (filled($brandSummary))
-                        <p class="exd-footer-summary">
-                            {{ $brandSummary }}
-                        </p>
+                        <p class="exd-footer-summary">{{ $brandSummary }}</p>
                     @endif
                 </div>
             @endif

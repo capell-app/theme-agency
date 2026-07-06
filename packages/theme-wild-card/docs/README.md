@@ -13,13 +13,13 @@ Start at the [package README](../README.md) when deciding whether to install thi
 
 ## Developer Starting Points
 
-| Need                   | Start here                                                                           |
-| ---------------------- | ------------------------------------------------------------------------------------ |
+| Need                   | Start here                                                 |
+| ---------------------- | ---------------------------------------------------------- |
 | Theme service provider | `Capell\ThemeStudio\WildCard\WildCardThemeServiceProvider` |
-| Demo content install   | `capell:theme-wild-card-demo`                                           |
-| Theme management entry | `src/Manifest/ThemeManagementPageContribution.php`                                   |
-| Health diagnostics     | `src/Health`                                                                         |
-| Public output checks   | `tests/Unit/PublicOutputSafetyTest.php`                                              |
+| Demo content install   | `capell:theme-wild-card-demo`                              |
+| Theme management entry | `src/Manifest/ThemeManagementPageContribution.php`         |
+| Health diagnostics     | `src/Health`                                               |
+| Public output checks   | `tests/Unit/PublicOutputSafetyTest.php`                    |
 
 ## Read Next
 
