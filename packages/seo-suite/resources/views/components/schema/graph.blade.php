@@ -1,1 +1,0 @@
-{!! isset($graphData) ? $graphData?->toJsonLdScript() ?? '' : '' !!}

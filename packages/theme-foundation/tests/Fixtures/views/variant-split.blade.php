@@ -1,1 +1,0 @@
-<p>split: {{ $heading ?? '' }}</p>
