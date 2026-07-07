@@ -28,7 +28,7 @@
             </span>
         </a>
 
-        <ul class="ppc-masthead-nav">
+        <ul class="ppc-masthead-nav capell-desktop-nav">
             @foreach ($links as $link)
                 <li>
                     <a
@@ -50,5 +50,11 @@
                 </li>
             @endif
         </ul>
+
+        {!! view('capell-theme-foundation::theme.partials.mobile-navigation', [
+            'links' => $links,
+            'ctaLabel' => $ctaLabel,
+            'ctaUrl' => $ctaUrl,
+        ])->render() !!}
     </div>
 </nav>
