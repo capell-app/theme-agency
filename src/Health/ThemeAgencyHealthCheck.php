@@ -15,7 +15,6 @@ final class ThemeAgencyHealthCheck implements ChecksExtensionHealth
     /** @var list<string> */
     private const array REQUIRED_VIEW_FILES = [
         'resources/views/page.blade.php',
-        'resources/views/livewire/page/page.blade.php',
         'resources/views/sections/navigation.blade.php',
         'resources/views/sections/hero.blade.php',
         'resources/views/sections/featured-portfolios.blade.php',
