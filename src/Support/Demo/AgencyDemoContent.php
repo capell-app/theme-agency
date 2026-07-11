@@ -37,7 +37,7 @@ final class AgencyDemoContent implements ProvidesThemeDemoContent
     {
         $media = ThemeDemoMedia::groupedForTheme($themeKey);
 
-        return [
+        $definitions = [
             $this->homepage($themeKey, $media),
             $this->directory($themeKey, $media),
             $this->detail($themeKey, $media),
@@ -46,6 +46,56 @@ final class AgencyDemoContent implements ProvidesThemeDemoContent
             $this->notFound($themeKey, $media),
             $this->cta($themeKey, $media),
         ];
+
+        return array_map($this->toLayoutNativeDefinition(...), $definitions);
+    }
+
+    private function toLayoutNativeDefinition(ThemeDemoPageDefinition $definition): ThemeDemoPageDefinition
+    {
+        $sections = $definition->sections();
+        $navigation = $definition->renderData['navigation'] ?? null;
+        $footer = $definition->renderData['footer'] ?? null;
+
+        if (is_array($navigation)) {
+            array_unshift($sections, ['type' => 'navigation', ...$navigation]);
+        }
+
+        if (is_array($footer)) {
+            $sections[] = ['type' => 'footer', ...$footer];
+        }
+
+        $widgets = [['method' => 'pageContentWidget']];
+        $containerWidgets = [['widget_key' => 'page-content', 'occurrence' => 1]];
+        $occurrences = [];
+
+        foreach ($sections as $section) {
+            $type = $section['type'] ?? null;
+
+            if (! is_string($type) || $type === 'form') {
+                continue;
+            }
+
+            $occurrences[$type] = ($occurrences[$type] ?? 0) + 1;
+            $key = sprintf('agency-%s-%s-%d', $type, $definition->surface, $occurrences[$type]);
+            $widgets[] = [
+                'method' => 'bespokeContentWidget',
+                'args' => [$key, sprintf('Agency %s (%s)', ucfirst($type), $definition->surface), "capell.widget.agency.{$type}", $section],
+            ];
+            $containerWidgets[] = ['widget_key' => $key, 'occurrence' => 1];
+        }
+
+        return new ThemeDemoPageDefinition(
+            surface: $definition->surface,
+            name: $definition->name,
+            title: $definition->title,
+            slug: $definition->slug,
+            content: $definition->content,
+            renderData: $definition->renderData,
+            type: $definition->type,
+            layout: $definition->layout,
+            containers: ['main' => ['widgets' => $containerWidgets]],
+            widgets: $widgets,
+        );
     }
 
     /**
