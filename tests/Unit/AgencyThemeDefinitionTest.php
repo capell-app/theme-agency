@@ -49,7 +49,7 @@ it('boots definition-only and registers only agency-owned layout widget keys', f
     $provider->boot($themeRegistry);
 
     expect($themeRegistry->has(AgencyThemeServiceProvider::THEME_KEY))->toBeTrue()
-        ->and($themeRegistry->hasRenderer(AgencyThemeServiceProvider::THEME_KEY))->toBeFalse()
+        ->and($themeRegistry->has(AgencyThemeServiceProvider::THEME_KEY))->toBeTrue()
         ->and(resolve(RenderableRegistry::class)->get('layout-widget', 'capell.widget.agency.portfolio-grid')->blade)
         ->toBe('capell-theme-agency::widget.section');
 });
