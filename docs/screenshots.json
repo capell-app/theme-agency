@@ -19,7 +19,7 @@
             "useCase": "Premium portfolio collection marketplace preview",
             "package": "theme-agency",
             "scenario": "frontend-page",
-            "waitFor": ".ppc-shell",
+            "waitFor": "#main",
             "colorSchemes": ["light", "dark"],
             "viewport": "desktop",
             "fullPage": true
@@ -38,7 +38,7 @@
             "useCase": "Premium portfolio collection marketplace preview",
             "package": "theme-agency",
             "scenario": "frontend-page",
-            "waitFor": ".ppc-shell",
+            "waitFor": "#main",
             "colorSchemes": ["light", "dark"],
             "viewport": "tablet",
             "fullPage": true
@@ -57,7 +57,7 @@
             "useCase": "Premium portfolio collection marketplace preview",
             "package": "theme-agency",
             "scenario": "frontend-page",
-            "waitFor": ".ppc-shell",
+            "waitFor": "#main",
             "colorSchemes": ["light", "dark"],
             "viewport": "mobile",
             "fullPage": true
@@ -76,7 +76,7 @@
             "useCase": "Premium portfolio feature preview",
             "package": "theme-agency",
             "scenario": "frontend-page",
-            "waitFor": ".ppc-shell",
+            "waitFor": "#main",
             "colorSchemes": ["light", "dark"],
             "viewport": "desktop",
             "fullPage": true
@@ -95,7 +95,7 @@
             "useCase": "Premium portfolio feature preview",
             "package": "theme-agency",
             "scenario": "frontend-page",
-            "waitFor": ".ppc-shell",
+            "waitFor": "#main",
             "colorSchemes": ["light", "dark"],
             "viewport": "tablet",
             "fullPage": true
@@ -114,7 +114,7 @@
             "useCase": "Premium portfolio feature preview",
             "package": "theme-agency",
             "scenario": "frontend-page",
-            "waitFor": ".ppc-shell",
+            "waitFor": "#main",
             "colorSchemes": ["light", "dark"],
             "viewport": "mobile",
             "fullPage": true
@@ -133,7 +133,7 @@
             "useCase": "Agency archive preview",
             "package": "theme-agency",
             "scenario": "frontend-page",
-            "waitFor": ".ppc-shell",
+            "waitFor": "#main",
             "colorSchemes": ["light", "dark"],
             "viewport": "desktop",
             "fullPage": true
@@ -152,7 +152,7 @@
             "useCase": "Agency archive preview",
             "package": "theme-agency",
             "scenario": "frontend-page",
-            "waitFor": ".ppc-shell",
+            "waitFor": "#main",
             "colorSchemes": ["light", "dark"],
             "viewport": "tablet",
             "fullPage": true
@@ -171,7 +171,7 @@
             "useCase": "Agency archive preview",
             "package": "theme-agency",
             "scenario": "frontend-page",
-            "waitFor": ".ppc-shell",
+            "waitFor": "#main",
             "colorSchemes": ["light", "dark"],
             "viewport": "mobile",
             "fullPage": true
@@ -191,7 +191,7 @@
             "useCase": "Agency discovery preview",
             "package": "theme-agency",
             "scenario": "frontend-page",
-            "waitFor": ".ppc-shell",
+            "waitFor": "#main",
             "colorSchemes": ["light", "dark"],
             "viewport": "desktop",
             "fullPage": true
@@ -211,7 +211,7 @@
             "useCase": "Agency discovery preview",
             "package": "theme-agency",
             "scenario": "frontend-page",
-            "waitFor": ".ppc-shell",
+            "waitFor": "#main",
             "colorSchemes": ["light", "dark"],
             "viewport": "tablet",
             "fullPage": true
@@ -231,7 +231,7 @@
             "useCase": "Agency discovery preview",
             "package": "theme-agency",
             "scenario": "frontend-page",
-            "waitFor": ".ppc-shell",
+            "waitFor": "#main",
             "colorSchemes": ["light", "dark"],
             "viewport": "mobile",
             "fullPage": true
@@ -250,7 +250,7 @@
             "useCase": "Agency conversion preview",
             "package": "theme-agency",
             "scenario": "frontend-page",
-            "waitFor": ".ppc-shell",
+            "waitFor": "#main",
             "colorSchemes": ["light", "dark"],
             "viewport": "desktop",
             "fullPage": true
@@ -269,7 +269,7 @@
             "useCase": "Agency conversion preview",
             "package": "theme-agency",
             "scenario": "frontend-page",
-            "waitFor": ".ppc-shell",
+            "waitFor": "#main",
             "colorSchemes": ["light", "dark"],
             "viewport": "tablet",
             "fullPage": true
@@ -288,7 +288,7 @@
             "useCase": "Agency conversion preview",
             "package": "theme-agency",
             "scenario": "frontend-page",
-            "waitFor": ".ppc-shell",
+            "waitFor": "#main",
             "colorSchemes": ["light", "dark"],
             "viewport": "mobile",
             "fullPage": true
@@ -307,7 +307,7 @@
             "useCase": "Agency error-state preview",
             "package": "theme-agency",
             "scenario": "frontend-page",
-            "waitFor": "body",
+            "waitFor": "#main",
             "colorSchemes": ["light", "dark"],
             "viewport": "desktop",
             "fullPage": true
@@ -326,7 +326,7 @@
             "useCase": "Agency error-state preview",
             "package": "theme-agency",
             "scenario": "frontend-page",
-            "waitFor": "body",
+            "waitFor": "#main",
             "colorSchemes": ["light", "dark"],
             "viewport": "tablet",
             "fullPage": true
@@ -345,7 +345,7 @@
             "useCase": "Agency error-state preview",
             "package": "theme-agency",
             "scenario": "frontend-page",
-            "waitFor": "body",
+            "waitFor": "#main",
             "colorSchemes": ["light", "dark"],
             "viewport": "mobile",
             "fullPage": true
@@ -364,7 +364,7 @@
             "useCase": "Agency call-to-action preview",
             "package": "theme-agency",
             "scenario": "frontend-page",
-            "waitFor": ".ppc-shell",
+            "waitFor": "#main",
             "colorSchemes": ["light", "dark"],
             "viewport": "desktop",
             "fullPage": true
@@ -383,7 +383,7 @@
             "useCase": "Agency call-to-action preview",
             "package": "theme-agency",
             "scenario": "frontend-page",
-            "waitFor": ".ppc-shell",
+            "waitFor": "#main",
             "colorSchemes": ["light", "dark"],
             "viewport": "tablet",
             "fullPage": true
@@ -402,7 +402,7 @@
             "useCase": "Agency call-to-action preview",
             "package": "theme-agency",
             "scenario": "frontend-page",
-            "waitFor": ".ppc-shell",
+            "waitFor": "#main",
             "colorSchemes": ["light", "dark"],
             "viewport": "mobile",
             "fullPage": true
