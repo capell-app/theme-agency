@@ -4,32 +4,36 @@
     "slug": "theme-agency",
     "displayName": "Theme Agency",
     "kind": "theme",
-    "capellApiVersion": "^4.0",
-    "version": "4.x-dev",
-    "description": "Theme Agency turns a Capell site into a confident creative portfolio. It ships an expressive page system — full-bleed launch hero, animated proof wall, project showcase, and a conversion-focused brief CTA — built to make studio and agency work look like the work, not a template. Three presets (Signal, Gallery, Atelier) re-skin every section from energetic high-contrast to refined editorial neutrals, all driven by Theme Studio tokens with zero code. Built on the built-in default frontend contracts, it stays fast, cache-aware, and safe for public output, so it drops into the standard Capell theme workflow.",
+    "capellApiVersion": "^1.0",
+    "version": "1.x-dev",
+    "description": "Awarded portfolios and design-education picks with a best-seat-in-the-house presentation. Includes the playful curated \"Hand Picked\" preset for lighter, taste-led indexes.",
     "product": {
         "group": "Capell Themes",
         "tier": "premium",
         "bundle": "themes"
     },
-    "namespace": "Capell\\ThemeStudio\\Agency",
+    "namespace": "Capell\\ThemeAgency",
     "surfaces": ["frontend"],
     "dependencies": {
-        "requires": ["capell-app/core", "capell-app/frontend"],
-        "supports": [],
+        "requires": [
+            "capell-app/core",
+            "capell-app/theme-foundation",
+            "capell-app/frontend"
+        ],
+        "supports": ["capell-app/form-builder", "capell-app/newsletter"],
         "conflicts": []
     },
     "providers": {
         "metadata": [],
         "install": [],
-        "runtime": ["Capell\\ThemeStudio\\Agency\\AgencyThemeServiceProvider"],
+        "runtime": ["Capell\\ThemeAgency\\AgencyThemeServiceProvider"],
         "admin": [],
         "frontend": []
     },
     "contributes": [
         {
             "type": "admin-page",
-            "class": "Capell\\ThemeStudio\\Agency\\Manifest\\ThemeManagementPageContribution",
+            "class": "Capell\\ThemeAgency\\Manifest\\ThemeManagementPageContribution",
             "pageClass": "Capell\\Marketplace\\Filament\\Pages\\ThemeExtensionPage",
             "pageParameters": {
                 "themeKey": "agency"
@@ -98,14 +102,14 @@
             "variesBy": ["site", "locale"],
             "sensitiveOutput": false,
             "invalidationSources": [],
-            "queueInvalidation": true
+            "queueInvalidation": false
         }
     },
     "healthChecks": [
         {
             "key": "theme-agency.package-health",
-            "label": "Theme Agency package surfaces, providers, and install health are discoverable by Diagnostics.",
-            "class": "Capell\\ThemeStudio\\Agency\\Health\\ThemeAgencyHealthCheck",
+            "label": "Agency package surfaces, providers, and install health are discoverable by Diagnostics.",
+            "class": "Capell\\ThemeAgency\\Health\\ThemeAgencyHealthCheck",
             "severity": "critical",
             "surface": "frontend"
         }
@@ -117,41 +121,39 @@
         "privateDocsRequested": true
     },
     "marketplace": {
-        "summary": "A bold, motion-led theme for creative studios and marketing agencies — campaign hero, case-study proof, and a filterable work showcase, with three presets from high-contrast Signal to editorial Atelier.",
-        "description": "Theme Agency turns a Capell site into a confident creative portfolio. It ships an expressive page system — full-bleed launch hero, animated proof wall, project showcase, and a conversion-focused brief CTA — built to make studio and agency work look like the work, not a template. Three presets (Signal, Gallery, Atelier) re-skin every section from energetic high-contrast to refined editorial neutrals, all driven by Theme Studio tokens with zero code. Built on the built-in default frontend contracts, it stays fast, cache-aware, and safe for public output, so it drops into the standard Capell theme workflow.",
+        "summary": "Awarded portfolios and design-education picks with a best-seat-in-the-house presentation.",
+        "description": "Agency provides a distinct theme definition, demo command, marketplace metadata, and public-safe Blade views for portfolio collections that need large previews, award labels, creator metadata, taxonomy filters, and educational upsells.",
         "screenshots": [
             {
-                "path": "docs/assets/marketplace/extension-card.jpg",
-                "alt": "Theme Agency marketplace card.",
-                "caption": "Theme Agency premium theme card."
+                "path": "docs/screenshots/agency-homepage.png",
+                "alt": "Agency homepage preview",
+                "caption": "Agency Homepage"
             },
             {
-                "path": "docs/screenshots/agency-campaign-layout.png",
-                "alt": "Theme Agency Agency Campaign Layout screenshot",
-                "caption": "Agency Campaign Layout rendered with the Theme Agency theme."
+                "path": "docs/screenshots/agency-landing.png",
+                "alt": "Agency landing page preview",
+                "caption": "Agency Landing page"
             },
             {
-                "path": "docs/screenshots/agency-case-study-layout.png",
-                "alt": "Theme Agency Agency Case Study Layout screenshot",
-                "caption": "Agency Case Study Layout rendered with the Theme Agency theme."
+                "path": "docs/screenshots/agency-listing.png",
+                "alt": "Agency list page preview",
+                "caption": "Agency List page"
             },
             {
-                "path": "docs/screenshots/agency-event-landing-layout.png",
-                "alt": "Theme Agency Agency Event Landing Layout screenshot",
-                "caption": "Agency Event Landing Layout rendered with the Theme Agency theme."
+                "path": "docs/screenshots/agency-search.png",
+                "alt": "Agency search results preview",
+                "caption": "Agency Search results"
             },
             {
-                "path": "docs/screenshots/agency-homepage-layout.png",
-                "alt": "Theme Agency Agency Homepage Layout screenshot",
-                "caption": "Agency Homepage Layout rendered with the Theme Agency theme."
-            },
-            {
-                "path": "docs/screenshots/agency-insights-layout.png",
-                "alt": "Theme Agency Agency Insights Layout screenshot",
-                "caption": "Agency Insights Layout rendered with the Theme Agency theme."
+                "path": "docs/screenshots/agency-contact.png",
+                "alt": "Agency contact form preview",
+                "caption": "Agency Contact form"
             }
         ],
         "categories": ["frontend", "themes"]
+    },
+    "contributionTraceability": {
+        "deferredContributions": ["route"]
     },
     "extends": "default",
     "themeKey": "agency"

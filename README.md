@@ -2,11 +2,11 @@
 
 <!-- prettier-ignore-start -->
 
-## What This Plugin Adds
+## What This Extension Adds
 
 Theme Agency is an **Available**, **No schema impact** Capell theme in the **Capell Themes** product group. It ships as `capell-app/theme-agency` and extends these surfaces: frontend.
 
-Theme Agency turns a Capell site into a confident creative portfolio. It ships an expressive page system - full-bleed launch hero, animated proof wall, project showcase, and a conversion-focused brief CTA - built to make studio and agency work look like the work, not a template. Three presets (Signal, Gallery, Atelier) re-skin every section from energetic high-contrast to refined editorial neutrals, all driven by Theme Studio tokens with zero code. Built on the built-in default frontend contracts, it stays fast, cache-aware, and safe for public output, so it drops into the standard Capell theme workflow.
+Awarded portfolios and design-education picks with a best-seat-in-the-house presentation. Includes the playful curated "Hand Picked" preset for lighter, taste-led indexes.
 
 After install, admins can select the theme through the core theme management surface. Editors keep using normal Capell content workflows while the package controls public presentation.
 
@@ -16,46 +16,45 @@ Status details:
 - Tier: premium
 - Bundle: themes
 - Composer package: `capell-app/theme-agency`
-- Namespace: `Capell\ThemeStudio\Agency`
+- Namespace: `Capell\ThemeAgency`
 - Theme key: `agency`
 
 ## Why It Matters
 
 **For developers:** The package gives developers package-owned service providers, Actions, and Blade views instead of pushing this behaviour into core or application code.
 
-**For teams:** A bold, motion-led theme for creative studios and marketing agencies - campaign hero, case-study proof, and a filterable work showcase, with three presets from high-contrast Signal to editorial Atelier.
+**For teams:** Awarded portfolios and design-education picks with a best-seat-in-the-house presentation.
 
 ## Screens And Workflow
 
 Screenshot contract: `docs/screenshots.json`.
 
-- Frontend page rendered with Agency theme (frontend, optional).
-- Agency homepage (frontend, optional).
-- Services page (frontend, optional).
-- Campaign work board (frontend, optional).
-- Launch recap detail (frontend, optional).
-- Insights article (frontend, optional).
-- Event landing page (frontend, optional).
-- Lead generation page (frontend, optional).
-- Campaign page (frontend, optional).
-- Search results page (frontend, optional).
+- Agency Homepage (frontend, optional).
+- Agency Homepage - Tablet (frontend, optional).
+- Agency Homepage - Mobile (frontend, optional).
+- Agency Landing page (frontend, optional).
+- Agency Landing page - Tablet (frontend, optional).
+- Agency Landing page - Mobile (frontend, optional).
+- Agency List page (frontend, optional).
+- Agency List page - Tablet (frontend, optional).
+- Agency List page - Mobile (frontend, optional).
+- Agency Search results (frontend, optional).
+- Agency Search results - Tablet (frontend, optional).
+- Agency Search results - Mobile (frontend, optional).
+- Agency Contact form (frontend, optional).
+- Agency Contact form - Tablet (frontend, optional).
+- Agency Contact form - Mobile (frontend, optional).
 
 ## Technical Shape
 
-- Service providers: `Capell\ThemeStudio\Agency\AgencyThemeServiceProvider`.
+- Service providers: `Capell\ThemeAgency\AgencyThemeServiceProvider`.
 - Actions: `InstallAgencyThemeDemoAction`.
 - Command signatures: `capell:theme-agency-demo`.
 - Console command classes: `DemoCommand`.
-- Manifest contributions: `admin-page: Capell\ThemeStudio\Agency\Manifest\ThemeManagementPageContribution`.
-- Health checks: `Capell\ThemeStudio\Agency\Health\ThemeAgencyHealthCheck`.
-- Blade views: `packages/theme-agency/resources/views/livewire/page/page.blade.php`, `packages/theme-agency/resources/views/page.blade.php`, `packages/theme-agency/resources/views/sections/case-study.blade.php`, `packages/theme-agency/resources/views/sections/client-logos.blade.php`, `packages/theme-agency/resources/views/sections/content-listing.blade.php`, `packages/theme-agency/resources/views/sections/cta.blade.php`, `packages/theme-agency/resources/views/sections/features.blade.php`, `packages/theme-agency/resources/views/sections/footer.blade.php`, `packages/theme-agency/resources/views/sections/hero.blade.php`, `packages/theme-agency/resources/views/sections/navigation.blade.php`, `packages/theme-agency/resources/views/sections/partials/hero-canvas.blade.php`, `packages/theme-agency/resources/views/sections/project-showcase.blade.php`, `and 3 more`.
+- Manifest contributions: `admin-page: Capell\ThemeAgency\Manifest\ThemeManagementPageContribution`.
+- Health checks: `Capell\ThemeAgency\Health\ThemeAgencyHealthCheck`.
+- Blade views: `packages/theme-agency/resources/views/page.blade.php`, `packages/theme-agency/resources/views/sections/awarded-profiles.blade.php`, `packages/theme-agency/resources/views/sections/content-listing.blade.php`, `packages/theme-agency/resources/views/sections/creator-directory.blade.php`, `packages/theme-agency/resources/views/sections/cta.blade.php`, `packages/theme-agency/resources/views/sections/education-upsell.blade.php`, `packages/theme-agency/resources/views/sections/featured-portfolios.blade.php`, `packages/theme-agency/resources/views/sections/filter-taxonomies.blade.php`, `packages/theme-agency/resources/views/sections/footer.blade.php`, `packages/theme-agency/resources/views/sections/hero.blade.php`, `packages/theme-agency/resources/views/sections/navigation.blade.php`, `and 3 more`.
 - Cache tags: `theme-agency`.
-
-## Marketplace Classification
-
-Tier: **premium**
-
-Product group: **Capell Themes**
 
 ## Data Model
 
@@ -96,10 +95,10 @@ This theme has no schema impact. It relies on core Capell site, page, locale, an
 - [Package docs](docs/README.md)
 - [Overview](docs/overview.md)
 - [Screenshot contract](docs/screenshots.json)
-- [Marketplace assets](docs/assets/marketplace/)
 - [Capell content language plan](../../docs/CONTENT_LANGUAGE_PLAN.md)
 - [Capell documentation design system](../../docs/DESIGN_SYSTEM.md)
 - [Capell and package ERD notes](../../docs/erd/capell-and-package-erds.md)
+- Related packages: [Blog](../blog/README.md), [Form Builder](../form-builder/README.md), [Newsletter](../newsletter/README.md), [Shopify Commerce](../shopify-commerce/README.md).
 - Focused tests: `vendor/bin/pest packages/theme-agency/tests --configuration=phpunit.xml`.
 
 <!-- prettier-ignore-end -->

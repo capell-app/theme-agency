@@ -1,20 +1,28 @@
 # Theme Agency Docs
 
-Theme Agency registers the agency theme key and expressive renderer views for studio, portfolio, and brand-led sites.
+A premium Capell theme for portfolio directories, award-style collections, creator profiles, filters, galleries, and portfolio education.
 
 Start at the [package README](../README.md) when deciding whether to install this package. Use the docs below for setup, extension, debugging, and verification details.
 
 ## Guides
 
-| Doc                                                             | Use it for                                                                         |
-| --------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
-| [Credits And Acknowledgements](credits-and-acknowledgements.md) | Upstream services, dependencies, and acknowledgements.                             |
-| [Overview](overview.md)                                         | Package boundary, runtime surfaces, install notes, and first troubleshooting path. |
+| Doc                                     | Use it for                                                                         |
+| --------------------------------------- | ---------------------------------------------------------------------------------- |
+| [Overview](overview.md)                 | Package boundary, runtime surfaces, install notes, and first troubleshooting path. |
+| [Screenshot contract](screenshots.json) | Required admin and frontend captures for marketplace and documentation visibility. |
+
+## Developer Starting Points
+
+| Need                   | Start here                                         |
+| ---------------------- | -------------------------------------------------- |
+| Theme service provider | `Capell\ThemeAgency\AgencyThemeServiceProvider`    |
+| Demo content install   | `capell:theme-agency-demo`                         |
+| Theme management entry | `src/Manifest/ThemeManagementPageContribution.php` |
+| Health diagnostics     | `src/Health`                                       |
+| Public output checks   | `tests/Unit/PublicOutputSafetyTest.php`            |
 
 ## Read Next
 
-| Related doc                                               | Why                                                   |
-| --------------------------------------------------------- | ----------------------------------------------------- |
-| [Repository package docs](../../../docs/README.md)        | Cross-package workflow index and install-order notes. |
-| [Capell Frontend](https://github.com/capell-app/frontend) | Neighboring package in the same Capell workflow.      |
-| [Theme Corporate](../../theme-corporate/docs/overview.md) | Neighboring package in the same Capell workflow.      |
+- [Package README](../README.md)
+- [Creating a Capell theme](../../../docs/creating-a-theme.md)
+- [Package Screenshot Automation](../../../docs/package-screenshot-automation.md)

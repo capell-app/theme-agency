@@ -2,21 +2,21 @@
 
 declare(strict_types=1);
 
-namespace Capell\ThemeStudio\Agency\Console\Commands;
+namespace Capell\ThemeAgency\Console\Commands;
 
 use Capell\FoundationTheme\Data\ThemeDemoInstallData;
-use Capell\ThemeStudio\Agency\Actions\InstallAgencyThemeDemoAction;
+use Capell\ThemeAgency\Actions\InstallAgencyThemeDemoAction;
 use Illuminate\Console\Command;
 
 final class DemoCommand extends Command
 {
     protected $signature = 'capell:theme-agency-demo {--url=} {--languages=} {--sites=} {--force}';
 
-    protected $description = 'Install agency theme demo content.';
+    protected $description = 'Install Agency theme demo content.';
 
     public function handle(): int
     {
-        return InstallAgencyThemeDemoAction::run(new ThemeDemoInstallData(
+        return app(InstallAgencyThemeDemoAction::class)->handle(new ThemeDemoInstallData(
             siteNames: $this->parseCsvOption('sites'),
             languageCodes: $this->parseCsvOption('languages'),
             baseUrl: $this->resolveBaseUrl(),
@@ -24,28 +24,20 @@ final class DemoCommand extends Command
         ));
     }
 
-    /**
-     * @return array<int, string>
-     */
+    /** @return array<int, string> */
     private function parseCsvOption(string $option): array
     {
         $value = $this->option($option);
 
         if (is_array($value)) {
-            return array_values(array_filter(
-                array_map(static fn (mixed $item): string => trim((string) $item), $value),
-                static fn (string $item): bool => $item !== '',
-            ));
+            return array_values(array_filter(array_map(static fn (mixed $item): string => is_scalar($item) ? trim((string) $item) : '', $value), static fn (string $item): bool => $item !== ''));
         }
 
         if (! is_string($value) || $value === '') {
             return [];
         }
 
-        return array_values(array_filter(
-            array_map(trim(...), explode(',', $value)),
-            static fn (string $item): bool => $item !== '',
-        ));
+        return array_values(array_filter(array_map(trim(...), explode(',', $value)), static fn (string $item): bool => $item !== ''));
     }
 
     private function resolveBaseUrl(): string
@@ -56,6 +48,8 @@ final class DemoCommand extends Command
             return $url;
         }
 
-        return (string) config('app.url');
+        $configuredUrl = config('app.url');
+
+        return is_string($configuredUrl) ? $configuredUrl : '';
     }
 }

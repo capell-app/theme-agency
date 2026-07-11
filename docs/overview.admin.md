@@ -1,22 +1,22 @@
 ## What this theme gives you
 
-A confident, expressive look for creative studios and agencies, built to make your work look like the work, not a template. Three presets (Signal, Gallery, Atelier) reskin every section from high-contrast and energetic to refined editorial neutrals.
+An awards-style portfolio directory look. It gives your site a curated, recognition-led direction for featured work.
 
 ## How to use it
 
 1. Go to **Appearance > Themes** (or **Settings > Theme**).
-2. Choose **Theme Agency** and **Activate**.
-3. Open **Theme settings** to set your logo, colours, and fonts, and pick a preset.
+2. Choose **Agency** and **Activate**.
+3. Open **Theme settings** to set your logo, colours, and fonts.
 4. **Preview** before making it live.
 
 ## What it adds
 
-- A full page system: launch hero, proof wall, project showcase, and a brief call-to-action.
-- Three presets that restyle every section with no code.
-- Portable demo content to start from.
+- Featured portfolios, newest entries, and winner labels.
+- Taxonomy filters, creator profiles, and educational resources.
+- Newsletter sections and portable demo content.
 
 ## Good to know
 
 - Built on **Foundation Theme** - install that first.
-- Pick a preset in **Theme settings** to change the whole feel at once.
 - **Preview** to see it before visitors do.
+- Your text and images stay yours; the theme only changes the design.

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Capell\ThemeStudio\Agency\Manifest;
+namespace Capell\ThemeAgency\Manifest;
 
 use Capell\Core\Contracts\Extensions\ExtensionContribution;
 

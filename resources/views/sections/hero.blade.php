@@ -1,78 +1,119 @@
 @php
-    $heroStats = collect(
-        $section->stats ?? [
+    $heading = data_get($section, 'heading', data_get($section, 'title', __('capell-theme-agency::sections.hero.heading')));
+    $summary = data_get($section, 'summary', data_get($section, 'description', __('capell-theme-agency::sections.hero.summary')));
+    $actions = collect(data_get($section, 'actions', []))
+        ->filter(fn (mixed $action): bool => filled(data_get($action, 'label')))
+        ->values();
+
+    if ($actions->isEmpty()) {
+        $actions = collect([
             [
-                'label' => __('capell-theme-agency::generic.hero_status_label'),
-                'value' => __('capell-theme-agency::generic.live_signal'),
-                'accent' => true,
+                'label' => data_get($section, 'primary_label', __('capell-theme-agency::sections.hero.primary_label')),
+                'url' => data_get($section, 'primary_url', data_get($section, 'primary.href', '/')),
+                'style' => 'primary',
             ],
             [
-                'label' => __('capell-theme-agency::generic.hero_channels_label'),
-                'value' => __('capell-theme-agency::generic.hero_channels_value'),
+                'label' => data_get($section, 'secondary_label', __('capell-theme-agency::sections.hero.secondary_label')),
+                'url' => data_get($section, 'secondary_url', data_get($section, 'secondary.href', '/')),
+                'style' => 'secondary',
             ],
-            [
-                'label' => __('capell-theme-agency::generic.hero_calendar_label'),
-                'value' => __('capell-theme-agency::generic.hero_calendar_value'),
-            ],
-        ],
-    )->take(3);
+        ]);
+    }
+
+    $kicker = data_get($section, 'kicker', data_get($section, 'eyebrow', __('capell-theme-agency::sections.hero.kicker')));
+    $mediaUrl = data_get($section, 'mediaUrl', data_get($section, 'media_url'));
+    $mediaAlt = data_get($section, 'mediaAlt', data_get($section, 'media_alt'));
+
+    $previewVideoUrl = data_get($section, 'preview_video_url', data_get($section, 'media.preview_video_url'));
+    $previewGifUrl = data_get($section, 'preview_gif_url', data_get($section, 'media.preview_gif_url'));
+    $previewImageUrl = data_get($section, 'preview_image_url', data_get($section, 'media.preview_image_url', $mediaUrl));
+    $previewAlt = data_get($section, 'preview_alt', data_get($section, 'media.preview_alt', $mediaAlt ?? __('capell-theme-agency::sections.hero.preview_alt')));
+    $headerImageUrl = data_get($section, 'header_image_url', data_get($section, 'media.header_image_url'));
+    $headerImageAlt = data_get($section, 'header_image_alt', data_get($section, 'media.header_image_alt', __('capell-theme-agency::sections.hero.header_image_alt')));
+    $notes = data_get($section, 'notes', [
+        __('capell-theme-agency::sections.hero.note_featured'),
+        __('capell-theme-agency::sections.hero.note_metadata'),
+        __('capell-theme-agency::sections.hero.note_newsletter'),
+    ]);
 @endphp
 
-<section class="theme-hero overflow-hidden bg-zinc-950 text-white">
-    <div
-        class="mx-auto grid max-w-7xl gap-10 px-6 py-20 lg:grid-cols-[0.86fr_1.14fr] lg:items-center lg:py-24"
-    >
+<section class="ppc-section ppc-section-dark">
+    <div class="ppc-section-inner ppc-hero-grid">
         <div>
-            @if ($section->eyebrow)
-                <p
-                    class="mb-6 text-sm font-semibold tracking-[0.14em] text-[var(--theme-accent)] uppercase"
-                >
-                    {{ $section->eyebrow }}
-                </p>
-            @endif
-
-            <h1
-                class="max-w-4xl text-5xl leading-[1.02] font-extrabold tracking-tight md:text-6xl"
-            >
-                {{ $section->heading }}
-            </h1>
-            @if ($section->summary)
-                <p class="mt-6 max-w-xl text-lg leading-8 text-white/85">
-                    {{ $section->summary }}
-                </p>
-            @endif
-
-            <div class="mt-8 flex flex-wrap gap-3">
-                @foreach ($section->actions as $action)
+            <p class="ppc-kicker">{{ $kicker }}</p>
+            <h1>{{ $heading }}</h1>
+            <p class="ppc-lede">{{ $summary }}</p>
+            <div class="ppc-actions">
+                @foreach ($actions as $action)
                     <a
-                        href="{{ $action['url'] }}"
-                        class="{{ ($action['style'] ?? 'primary') === 'secondary' ? 'border border-white/25 text-white' : 'bg-[var(--theme-primary)] text-white' }} rounded-full px-6 py-3 text-sm font-bold"
+                        class="ppc-button {{ data_get($action, 'style') === 'secondary' ? 'ppc-button-secondary' : '' }}"
+                        href="{{ data_get($action, 'url', '/') }}"
                     >
-                        {{ $action['label'] }}
+                        {{ data_get($action, 'label') }}
                     </a>
-                @endforeach
-            </div>
-
-            <div
-                class="mt-10 grid max-w-xl grid-cols-3 gap-3 text-xs font-semibold tracking-[0.08em] uppercase"
-            >
-                @foreach ($heroStats as $stat)
-                    <div
-                        class="rounded-2xl border border-white/10 bg-white/5 p-4"
-                    >
-                        <p class="text-white/75">
-                            {{ $stat['label'] ?? '' }}
-                        </p>
-                        <p
-                            class="{{ $stat['accent'] ?? false ? 'text-[var(--theme-accent)]' : 'text-white' }} mt-2"
-                        >
-                            {{ $stat['value'] ?? '' }}
-                        </p>
-                    </div>
                 @endforeach
             </div>
         </div>
 
-        @include('capell-theme-agency::sections.partials.hero-canvas', ['section' => $section])
+        <aside class="ppc-plate">
+            <p class="ppc-kicker">
+                {{ __('capell-theme-agency::sections.hero.panel_kicker') }}
+            </p>
+            <div class="ppc-plate-frame">
+                <span class="ppc-badge">
+                    {{ __('capell-theme-agency::sections.hero.badge') }}
+                </span>
+                @if ($previewVideoUrl)
+                    <video
+                        autoplay
+                        loop
+                        muted
+                        playsinline
+                        class="ppc-plate-media"
+                        @if ($previewImageUrl) poster="{{ $previewImageUrl }}" @endif
+                        aria-label="{{ $previewAlt }}"
+                    >
+                        <source
+                            src="{{ $previewVideoUrl }}"
+                            type="video/mp4"
+                        />
+                    </video>
+                @elseif ($previewGifUrl || $previewImageUrl)
+                    <img
+                        src="{{ $previewGifUrl ?: $previewImageUrl }}"
+                        alt="{{ $previewAlt }}"
+                        loading="eager"
+                        fetchpriority="high"
+                        decoding="async"
+                        class="ppc-plate-media"
+                    />
+                @else
+                    <div
+                        class="ppc-plate-media ppc-plate-media-empty"
+                        aria-hidden="true"
+                    ></div>
+                @endif
+            </div>
+
+            @foreach ($notes as $note)
+                <p class="ppc-meta">{{ $note }}</p>
+            @endforeach
+        </aside>
     </div>
+
+    @if ($headerImageUrl)
+        <figure
+            class="ppc-section-inner"
+            style="padding-top: 0"
+        >
+            <img
+                src="{{ $headerImageUrl }}"
+                alt="{{ $headerImageAlt }}"
+                loading="eager"
+                fetchpriority="high"
+                decoding="async"
+                class="ppc-plate-frame ppc-plate-frame-header"
+            />
+        </figure>
+    @endif
 </section>

@@ -1,7 +1,0 @@
-{
-    "resources/js/theme-agency.js": {
-        "file": "assets/theme-agency.js",
-        "src": "resources/js/theme-agency.js",
-        "isEntry": true
-    }
-}

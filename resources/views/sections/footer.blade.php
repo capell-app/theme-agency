@@ -1,35 +1,46 @@
-<footer class="theme-footer bg-zinc-950 text-white">
-    <h2 class="sr-only">{{ __('capell-theme-agency::generic.footer') }}</h2>
-    <div
-        class="mx-auto grid max-w-7xl gap-8 px-6 py-14 md:grid-cols-[1.3fr_2fr]"
-    >
-        <div>
-            <p class="text-2xl font-black">{{ $section->brandName }}</p>
-            @if ($section->summary)
-                <p class="mt-3 text-sm text-white/75">
-                    {{ $section->summary }}
-                </p>
+@php
+    $columns = data_get($section, 'items', data_get($section, 'columns', [
+        ['title' => __('capell-theme-agency::sections.footer.browse_heading'), 'links' => [__('capell-theme-agency::sections.footer.models'), __('capell-theme-agency::sections.footer.accessories'), __('capell-theme-agency::sections.footer.compare')]],
+        ['title' => __('capell-theme-agency::sections.footer.members_heading'), 'links' => [__('capell-theme-agency::sections.footer.support'), __('capell-theme-agency::sections.footer.trade_in'), __('capell-theme-agency::sections.footer.financing')]],
+        ['title' => __('capell-theme-agency::sections.footer.brand_heading'), 'links' => [__('capell-theme-agency::sections.footer.stories'), __('capell-theme-agency::sections.footer.updates'), __('capell-theme-agency::sections.footer.newsletter')]],
+    ]));
+    $brand = data_get($section, 'brand', data_get($section, 'brandName'));
+    $brandSummary = data_get($section, 'summary');
+@endphp
+
+<footer class="ppc-section ppc-section-dark">
+    <div class="ppc-section-inner">
+        <div class="ppc-footer-grid">
+            @if (filled($brand))
+                <div class="ppc-footer-brand">
+                    <p class="ppc-footer-wordmark">{{ $brand }}</p>
+                    @if (filled($brandSummary))
+                        <p class="ppc-footer-summary">{{ $brandSummary }}</p>
+                    @endif
+                </div>
             @endif
-        </div>
-        <div class="grid gap-6 sm:grid-cols-3">
-            @foreach ($section->columns as $column)
-                <div>
-                    <h3 class="text-sm font-bold text-[var(--theme-accent)]">
-                        {{ $column['heading'] }}
+
+            @foreach ($columns as $column)
+                <section>
+                    <h3 class="ppc-footer-heading">
+                        {{ data_get($column, 'title', data_get($column, 'heading', '')) }}
                     </h3>
-                    <ul class="mt-3 space-y-2 text-sm text-white/80">
-                        @foreach ($column['links'] as $link)
+                    <ul class="ppc-footer-links">
+                        @foreach (data_get($column, 'links', []) as $link)
                             <li>
-                                <a
-                                    href="{{ $link['url'] }}"
-                                    class="hover:text-white"
-                                >
-                                    {{ $link['label'] }}
-                                </a>
+                                @if (is_array($link) && filled(data_get($link, 'url', data_get($link, 'href'))))
+                                    <a
+                                        href="{{ data_get($link, 'url', data_get($link, 'href')) }}"
+                                    >
+                                        {{ data_get($link, 'label', data_get($link, 'title', '')) }}
+                                    </a>
+                                @else
+                                    {{ is_array($link) ? data_get($link, 'label', data_get($link, 'title', '')) : $link }}
+                                @endif
                             </li>
                         @endforeach
                     </ul>
-                </div>
+                </section>
             @endforeach
         </div>
     </div>

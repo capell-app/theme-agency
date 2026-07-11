@@ -2,35 +2,25 @@
 
 declare(strict_types=1);
 
-namespace Capell\ThemeStudio\Agency;
+namespace Capell\ThemeAgency;
 
-use Capell\Core\Data\VendorAssetData;
+use Capell\Core\Data\RenderableDefinitionData;
 use Capell\Core\Enums\FrontendRuntime;
-use Capell\Core\Facades\CapellCore;
+use Capell\Core\Support\Renderables\RenderableRegistry;
 use Capell\Core\ThemeStudio\Data\ThemeDefinitionData;
 use Capell\Core\ThemeStudio\Data\ThemePresetData;
-use Capell\Core\ThemeStudio\Rendering\BladeThemeRenderer;
-use Capell\Core\ThemeStudio\Rendering\ViewSectionRenderer;
 use Capell\Core\ThemeStudio\Theme\ThemeRegistry;
-use Capell\ThemeStudio\Agency\Console\Commands\DemoCommand;
+use Capell\FoundationTheme\Support\Editor\StandardThemeEditorSchema;
+use Capell\FoundationTheme\Support\Providers\RegistersLayoutNativeThemeDefaults;
+use Capell\ThemeAgency\Console\Commands\DemoCommand;
 use Illuminate\Support\ServiceProvider;
 use Override;
 
-class AgencyThemeServiceProvider extends ServiceProvider
+final class AgencyThemeServiceProvider extends ServiceProvider
 {
+    use RegistersLayoutNativeThemeDefaults;
+
     public const string THEME_KEY = 'agency';
-
-    public const string GENERATED_FRONTEND_CSS = 'resources/css/capell/frontend.css';
-
-    public const string PUBLIC_PREVIEW_IMAGE = '/vendor/capell/themes/agency.jpg';
-
-    public const string TAILWIND_IMPORT = 'resources/css/theme-agency.css';
-
-    public const string TAILWIND_SOURCE = 'resources/views/**/*.blade.php';
-
-    public const string BUILD_ASSET_PATH = 'vendor/capell-theme-agency';
-
-    public const string BUILD_ASSET_FILE = 'resources/js/theme-agency.js';
 
     public static string $packageName = 'capell-app/theme-agency';
 
@@ -39,146 +29,101 @@ class AgencyThemeServiceProvider extends ServiceProvider
         return new ThemeDefinitionData(
             key: self::THEME_KEY,
             name: 'Agency',
-            description: 'Expressive layouts with bold rhythm, immersive media, and confident calls to action.',
+            description: 'Awarded portfolios and design-education picks with a best-seat-in-the-house presentation. Includes the playful curated "Hand Picked" preset for lighter, taste-led indexes.',
             package: self::$packageName,
-            previewImage: self::PUBLIC_PREVIEW_IMAGE,
-            tags: ['Expressive', 'Portfolio', 'Creative'],
-            bestFit: ['Studios', 'Agencies', 'Brand-led teams'],
-            includedSections: ['navigation', 'hero', 'features', 'proof', 'content-listing', 'project-showcase', 'case-study', 'team', 'services', 'client-logos', 'cta', 'footer'],
+            previewImage: '/vendor/capell/themes/agency.png',
+            tags: ['Portfolio', 'Directory', 'Awards', 'Creators', 'Gallery'],
+            bestFit: ['Portfolio directories', 'Creative award sites', 'Freelancer showcases', 'Studio indexes', 'Design education hubs'],
+            includedSections: ['navigation', 'hero', 'featured-portfolios', 'filter-taxonomies', 'portfolio-grid', 'awarded-profiles', 'creator-directory', 'education-upsell', 'proof', 'content-listing', 'form', 'newsletter', 'cta', 'footer'],
             presets: [
                 new ThemePresetData(
-                    key: 'signal',
-                    name: 'Signal',
-                    description: 'Sharp contrast, strong statements, and energetic section pacing.',
-                    previewImage: self::PUBLIC_PREVIEW_IMAGE,
+                    key: self::THEME_KEY,
+                    name: 'Agency',
+                    description: 'Agency visual preset for awards-style grids, large preview cards, filters, status labels, creator metadata, newest entries, awarded profiles, and education modules.',
+                    previewImage: '/vendor/capell/themes/agency.png',
                     values: [
-                        'primaryColor' => '#be123c',
-                        'accentColor' => '#3b82f6',
-                        'neutralColor' => '#09090b',
-                        'surfaceColor' => '#09090b',
-                        'foregroundColor' => '#f8fafc',
+                        'primaryColor' => '#111111',
+                        'accentColor' => '#1f6feb',
+                        'neutralColor' => '#121212',
+                        'surfaceColor' => '#f7f7f2',
+                        'foregroundColor' => '#111111',
                         'headingFont' => 'sora',
                         'bodyFont' => 'inter',
-                        'spacing' => 'spacious',
-                        'cardStyle' => 'layered',
-                        'layoutPresentation' => 'immersive',
-                        'motionIntensity' => 'expressive',
-                    ],
-                ),
-                new ThemePresetData(
-                    key: 'gallery',
-                    name: 'Gallery',
-                    description: 'Media-forward presentation with calmer motion and framed project surfaces.',
-                    previewImage: self::PUBLIC_PREVIEW_IMAGE,
-                    values: [
-                        'primaryColor' => '#7c3aed',
-                        'accentColor' => '#fb7185',
-                        'neutralColor' => '#111827',
-                        'surfaceColor' => '#111827',
-                        'foregroundColor' => '#f8fafc',
-                        'headingFont' => 'manrope',
-                        'bodyFont' => 'inter',
-                        'spacing' => 'spacious',
-                        'cardStyle' => 'elevated',
-                        'mediaTreatment' => 'framed',
-                        'layoutPresentation' => 'editorial',
-                    ],
-                ),
-                new ThemePresetData(
-                    key: 'atelier',
-                    name: 'Atelier',
-                    description: 'Editorial studio feel with soft neutrals and refined proof.',
-                    previewImage: self::PUBLIC_PREVIEW_IMAGE,
-                    values: [
-                        'primaryColor' => '#be123c',
-                        'accentColor' => '#f97316',
-                        'neutralColor' => '#2c2e2b',
-                        'surfaceColor' => '#fafaf5',
-                        'foregroundColor' => '#1a1c19',
-                        'headingFont' => 'playfair',
-                        'bodyFont' => 'inter',
                         'spacing' => 'balanced',
-                        'cardStyle' => 'subtle',
+                        'alignment' => 'left',
+                        'cardStyle' => 'bordered',
+                        'navigationStyle' => 'prominent',
                         'layoutPresentation' => 'editorial',
                         'motionIntensity' => 'subtle',
-                    ],
-                ),
-                new ThemePresetData(
-                    key: 'zenith',
-                    name: 'Zenith',
-                    description: 'Wellness editorial direction from the Stitch Zenith Yoga concept, with quiet space and organic imagery.',
-                    previewImage: self::PUBLIC_PREVIEW_IMAGE,
-                    values: [
-                        'primaryColor' => '#516447',
-                        'accentColor' => '#bb957f',
-                        'neutralColor' => '#2c2e2b',
-                        'surfaceColor' => '#fafaf5',
-                        'foregroundColor' => '#1a1c19',
-                        'headingFont' => 'playfair',
-                        'bodyFont' => 'inter',
-                        'spacing' => 'spacious',
-                        'cardStyle' => 'subtle',
-                        'navigationStyle' => 'minimal',
-                        'layoutPresentation' => 'editorial',
-                        'motionIntensity' => 'subtle',
-                        'mediaTreatment' => 'natural',
-                        'radius' => 'xl',
-                        'headingScale' => 'expressive',
+                        'mediaTreatment' => 'illustrated',
+                        'radius' => 'md',
+                        'headingScale' => 'balanced',
                         'cardDensity' => 'spacious',
                     ],
                 ),
                 new ThemePresetData(
-                    key: 'northstar',
-                    name: 'Northstar',
-                    description: 'Polished consultancy and brand-lab direction from the Stitch Northstar homepage.',
-                    previewImage: self::PUBLIC_PREVIEW_IMAGE,
+                    key: 'gilded-archive',
+                    name: 'Gilded Archive',
+                    description: 'A charcoal-and-gold counterpart evoking a private awards archive, with denser bordered cards and a slower, more ceremonial motion feel.',
+                    previewImage: '/vendor/capell/themes/agency.png',
                     values: [
-                        'primaryColor' => '#155e75',
-                        'accentColor' => '#f97316',
-                        'neutralColor' => '#111827',
-                        'surfaceColor' => '#f8fafc',
-                        'foregroundColor' => '#111827',
+                        'primaryColor' => '#f5f0e6',
+                        'accentColor' => '#c9a24b',
+                        'neutralColor' => '#1b1815',
+                        'surfaceColor' => '#161311',
+                        'foregroundColor' => '#f5f0e6',
                         'headingFont' => 'sora',
                         'bodyFont' => 'inter',
-                        'spacing' => 'spacious',
-                        'cardStyle' => 'layered',
+                        'spacing' => 'generous',
+                        'alignment' => 'left',
+                        'cardStyle' => 'bordered',
                         'navigationStyle' => 'prominent',
-                        'layoutPresentation' => 'immersive',
-                        'motionIntensity' => 'expressive',
-                        'mediaTreatment' => 'framed',
-                        'radius' => 'lg',
+                        'layoutPresentation' => 'editorial',
+                        'motionIntensity' => 'minimal',
+                        'mediaTreatment' => 'illustrated',
+                        'radius' => 'sm',
                         'headingScale' => 'expressive',
-                        'cardDensity' => 'comfortable',
+                        'cardDensity' => 'compact',
                     ],
                 ),
                 new ThemePresetData(
-                    key: 'motion-studio',
-                    name: 'Motion Studio',
-                    description: 'High-contrast portfolio rhythm for the more visual Stitch agency concepts.',
-                    previewImage: self::PUBLIC_PREVIEW_IMAGE,
+                    key: 'hand-picked',
+                    name: 'Hand Picked',
+                    description: 'A playful, curated counterpart with a violet accent on a soft lilac surface — for lighter, taste-led indexes.',
+                    previewImage: '/vendor/capell/themes/agency.png',
                     values: [
-                        'primaryColor' => '#e11d48',
-                        'accentColor' => '#22d3ee',
-                        'neutralColor' => '#09090b',
-                        'surfaceColor' => '#fafafa',
-                        'foregroundColor' => '#18181b',
+                        'primaryColor' => '#111111',
+                        'accentColor' => '#7b4ee6',
+                        'neutralColor' => '#21182b',
+                        'surfaceColor' => '#f7f2ff',
+                        'foregroundColor' => '#111111',
                         'headingFont' => 'sora',
                         'bodyFont' => 'inter',
-                        'spacing' => 'spacious',
-                        'cardStyle' => 'layered',
+                        'spacing' => 'balanced',
+                        'alignment' => 'left',
+                        'cardStyle' => 'bordered',
                         'navigationStyle' => 'prominent',
-                        'layoutPresentation' => 'immersive',
-                        'motionIntensity' => 'expressive',
-                        'mediaTreatment' => 'framed',
-                        'radius' => 'xl',
-                        'headingScale' => 'expressive',
+                        'layoutPresentation' => 'editorial',
+                        'motionIntensity' => 'subtle',
+                        'mediaTreatment' => 'illustrated',
+                        'radius' => 'md',
+                        'headingScale' => 'balanced',
                         'cardDensity' => 'spacious',
                     ],
                 ),
             ],
-            assets: ['css' => self::GENERATED_FRONTEND_CSS],
+            assets: ['css' => 'vendor/capell/themes/agency.css'],
             runtime: FrontendRuntime::Blade,
-            // Theme Studio inherits section fallbacks from the runtime default; capell.json no longer declares package-level inheritance because the default fallback lives in capell-app/frontend.
+            frontend: [
+                'sectionVariants' => [
+                    'featured-portfolios' => ['default', 'parallax'],
+                    'filter-taxonomies' => ['default', 'grid'],
+                    'portfolio-grid' => ['default', 'gallery-wall'],
+                    'awarded-profiles' => ['default', 'spotlight'],
+                    'education-upsell' => ['default', 'cta'],
+                ],
+                'editor' => StandardThemeEditorSchema::definition(),
+            ],
             extends: 'default',
         );
     }
@@ -190,80 +135,44 @@ class AgencyThemeServiceProvider extends ServiceProvider
     {
         if ($this->app->runningInConsole()) {
             $this->commands([DemoCommand::class]);
-
-            $this->publishes([
-                __DIR__ . '/../docs/assets/marketplace/extension-card.jpg' => public_path(ltrim(self::PUBLIC_PREVIEW_IMAGE, '/')),
-            ], 'capell-theme-agency-assets');
         }
 
-        if (! CapellCore::isPackageInstalled(self::$packageName)) {
-            return;
-        }
-
-        $this->loadTranslationsFrom(__DIR__ . '/../resources/lang', 'capell-theme-agency');
-        $this->loadScreenshotFixtureRoutes();
-        $this->loadViewsFrom(__DIR__ . '/../resources/views', 'capell-theme-agency');
-        $this->registerVendorCssAssets();
-
-        $sectionRenderers = $this->sectionRenderers();
-
-        $registry->register(
+        $this->bootLayoutNativeThemeDefaults(
+            registry: $registry,
+            packageName: self::$packageName,
+            translationNamespace: 'capell-theme-agency',
+            translationsPath: __DIR__ . '/../resources/lang',
+            viewNamespace: 'capell-theme-agency',
+            viewsPath: __DIR__ . '/../resources/views',
+            cssSource: 'resources/css/theme-agency.css',
+            cssCondition: 'theme-css:agency',
             definition: self::definition(),
-            themeRenderer: new BladeThemeRenderer(
-                themeKey: self::THEME_KEY,
-                layoutView: 'capell-theme-agency::page',
-                sectionRenderers: $sectionRenderers,
-            ),
-            sectionRenderers: array_values($sectionRenderers),
-        );
-    }
-
-    private function loadScreenshotFixtureRoutes(): void
-    {
-        if (filter_var(getenv('CAPELL_THEME_AGENCY_SCREENSHOT_FIXTURES_ENABLED'), FILTER_VALIDATE_BOOL) !== true) {
-            return;
-        }
-
-        $this->loadRoutesFrom(__DIR__ . '/../routes/screenshot-fixtures.php');
-    }
-
-    private function registerVendorCssAssets(): void
-    {
-        CapellCore::registerVendorAsset(
-            VendorAssetData::buildAsset(
-                path: self::BUILD_ASSET_PATH,
-                file: self::BUILD_ASSET_FILE,
-                packageName: self::$packageName,
-            ),
-        );
-
-        CapellCore::registerVendorAsset(
-            VendorAssetData::tailwindImport(self::TAILWIND_IMPORT, self::$packageName),
-        );
-
-        CapellCore::registerVendorAsset(
-            VendorAssetData::tailwindSource(self::TAILWIND_SOURCE, self::$packageName),
+            registerThemeRenderables: function (): void {
+                $this->registerThemeRenderables();
+            },
         );
     }
 
     /**
-     * @return array<string, ViewSectionRenderer>
+     * Register only Agency-owned component keys. Shared widget keys remain
+     * untouched, so booting Agency cannot change another theme's output.
      */
-    private function sectionRenderers(): array
+    private function registerThemeRenderables(): void
     {
-        return [
-            'navigation' => new ViewSectionRenderer(self::THEME_KEY, 'navigation', 'capell-theme-agency::sections.navigation', failLoudly: true),
-            'hero' => new ViewSectionRenderer(self::THEME_KEY, 'hero', 'capell-theme-agency::sections.hero', failLoudly: true),
-            'features' => new ViewSectionRenderer(self::THEME_KEY, 'features', 'capell-theme-agency::sections.features', failLoudly: true),
-            'proof' => new ViewSectionRenderer(self::THEME_KEY, 'proof', 'capell-theme-agency::sections.proof', failLoudly: true),
-            'content-listing' => new ViewSectionRenderer(self::THEME_KEY, 'content-listing', 'capell-theme-agency::sections.content-listing', failLoudly: true),
-            'project-showcase' => new ViewSectionRenderer(self::THEME_KEY, 'project-showcase', 'capell-theme-agency::sections.project-showcase', failLoudly: true),
-            'case-study' => new ViewSectionRenderer(self::THEME_KEY, 'case-study', 'capell-theme-agency::sections.case-study', failLoudly: true),
-            'team' => new ViewSectionRenderer(self::THEME_KEY, 'team', 'capell-theme-agency::sections.team', failLoudly: true),
-            'services' => new ViewSectionRenderer(self::THEME_KEY, 'services', 'capell-theme-agency::sections.services', failLoudly: true),
-            'client-logos' => new ViewSectionRenderer(self::THEME_KEY, 'client-logos', 'capell-theme-agency::sections.client-logos', failLoudly: true),
-            'cta' => new ViewSectionRenderer(self::THEME_KEY, 'cta', 'capell-theme-agency::sections.cta', failLoudly: true),
-            'footer' => new ViewSectionRenderer(self::THEME_KEY, 'footer', 'capell-theme-agency::sections.footer', failLoudly: true),
+        $views = [
+            'navigation', 'hero', 'featured-portfolios', 'filter-taxonomies',
+            'portfolio-grid', 'awarded-profiles', 'creator-directory',
+            'education-upsell', 'proof', 'content-listing', 'newsletter', 'cta', 'footer',
         ];
+
+        $registry = resolve(RenderableRegistry::class);
+
+        foreach ($views as $section) {
+            $registry->register(new RenderableDefinitionData(
+                key: "capell.widget.agency.{$section}",
+                type: 'layout-widget',
+                blade: 'capell-theme-agency::widget.section',
+            ));
+        }
     }
 }

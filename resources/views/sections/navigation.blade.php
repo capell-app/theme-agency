@@ -1,56 +1,60 @@
+@php
+    $links = data_get($section, 'items', [
+        ['label' => __('capell-theme-agency::sections.navigation.latest'), 'url' => '/'],
+        ['label' => __('capell-theme-agency::sections.navigation.product'), 'url' => '/'],
+        ['label' => __('capell-theme-agency::sections.navigation.design'), 'url' => '/'],
+        ['label' => __('capell-theme-agency::sections.navigation.advice'), 'url' => '/'],
+        ['label' => __('capell-theme-agency::sections.navigation.events'), 'url' => '/'],
+        ['label' => __('capell-theme-agency::sections.navigation.company'), 'url' => '/'],
+    ]);
+    $ctaLabel = data_get($section, 'ctaLabel', data_get($section, 'cta_label'));
+    $ctaUrl = data_get($section, 'ctaUrl', data_get($section, 'cta_url', '/'));
+@endphp
+
 <nav
-    class="theme-navigation bg-zinc-950 text-white"
-    aria-label="{{ __('capell-theme-agency::generic.main_navigation') }}"
+    class="ppc-masthead"
+    aria-label="{{ __('capell-theme-agency::sections.navigation.aria_label') }}"
 >
-    <div class="mx-auto flex max-w-7xl items-center justify-between px-6 py-5">
+    <div class="ppc-masthead-inner">
         <a
+            class="ppc-masthead-brand"
             href="/"
-            class="text-2xl font-black tracking-tight"
         >
-            {{ $section->brandName }}
+            <span class="ppc-masthead-wordmark">
+                {{ data_get($section, 'brand', __('capell-theme-agency::sections.navigation.brand')) }}
+            </span>
+            <span class="ppc-masthead-tagline">
+                {{ data_get($section, 'tagline', __('capell-theme-agency::sections.navigation.tagline')) }}
+            </span>
         </a>
-        <div
-            class="hidden items-center gap-6 text-sm font-semibold tracking-wide text-white/80 uppercase md:flex"
-        >
-            @foreach ($section->items as $item)
-                <a
-                    href="{{ $item['url'] }}"
-                    class="hover:text-[var(--theme-accent)]"
-                >
-                    {{ $item['label'] }}
-                </a>
-            @endforeach
-        </div>
-        <details class="relative md:hidden">
-            <summary
-                class="cursor-pointer list-none rounded-full border border-white/20 px-4 py-2 text-sm font-bold text-white marker:hidden"
-            >
-                {{ __('capell-theme-agency::generic.menu') }}
-            </summary>
-            <div
-                class="absolute right-0 z-30 mt-3 grid min-w-48 gap-3 rounded-lg bg-zinc-900 p-4 text-sm font-semibold tracking-wide text-white/80 uppercase shadow-xl"
-            >
-                @foreach ($section->items as $item)
+
+        <ul class="ppc-masthead-nav capell-desktop-nav">
+            @foreach ($links as $link)
+                <li>
                     <a
-                        href="{{ $item['url'] }}"
-                        class="hover:text-[var(--theme-accent)]"
+                        href="{{ data_get($link, 'url', data_get($link, 'href', '/')) }}"
                     >
-                        {{ $item['label'] }}
+                        {{ data_get($link, 'label', data_get($link, 'title', '')) }}
                     </a>
-                @endforeach
-            </div>
-        </details>
-        @if ($section->ctaLabel && $section->ctaUrl)
-            <a
-                href="{{ $section->ctaUrl }}"
-                class="rounded-full bg-[var(--theme-primary)] px-5 py-2 text-sm font-bold text-white"
-            >
-                {{ $section->ctaLabel }}
-            </a>
-        @endif
+                </li>
+            @endforeach
+
+            @if (filled($ctaLabel))
+                <li>
+                    <a
+                        class="ppc-masthead-cta"
+                        href="{{ $ctaUrl }}"
+                    >
+                        {{ $ctaLabel }}
+                    </a>
+                </li>
+            @endif
+        </ul>
+
+        {!! view('capell-theme-foundation::theme.partials.mobile-navigation', [
+            'links' => $links,
+            'ctaLabel' => $ctaLabel,
+            'ctaUrl' => $ctaUrl,
+        ])->render() !!}
     </div>
 </nav>
-<span
-    id="main-content"
-    tabindex="-1"
-></span>
