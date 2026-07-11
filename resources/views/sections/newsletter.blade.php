@@ -14,9 +14,8 @@
                 {{ data_get($section, 'summary', __('capell-theme-agency::sections.newsletter.summary')) }}
             </p>
         </div>
-        <form
-            method="get"
-            action="{{ data_get($section, 'action', '#newsletter') }}"
+        <x-capell::newsletter-form
+            :fallback-action="(string) data_get($section, 'action', '#newsletter')"
             class="ppc-form"
         >
             <label for="ppc-newsletter-email">
@@ -39,6 +38,6 @@
             <p class="ppc-meta">
                 {{ __('capell-theme-agency::sections.newsletter.note') }}
             </p>
-        </form>
+        </x-capell::newsletter-form>
     </div>
 </section>

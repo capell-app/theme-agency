@@ -20,12 +20,7 @@
             "capell-app/theme-foundation",
             "capell-app/frontend"
         ],
-        "supports": [
-            "capell-app/blog",
-            "capell-app/form-builder",
-            "capell-app/newsletter",
-            "capell-app/shopify-commerce"
-        ],
+        "supports": ["capell-app/form-builder", "capell-app/newsletter"],
         "conflicts": []
     },
     "providers": {

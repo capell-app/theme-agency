@@ -102,15 +102,6 @@
 @media (prefers-color-scheme: dark) {
     .ppc-shell {
         color-scheme: dark;
-        --ppc-ink: oklch(95.5% 0.03 85);
-        --ppc-accent: oklch(72% 0.12 78);
-        --ppc-field: color-mix(
-            in oklch,
-            var(--ppc-accent) 6%,
-            oklch(19% 0.01 40)
-        );
-        --ppc-night: oklch(19.5% 0.008 40);
-        --ppc-paper: oklch(19% 0.01 40);
     }
 }
 
