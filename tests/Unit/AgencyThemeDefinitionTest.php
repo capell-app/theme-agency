@@ -2,10 +2,13 @@
 
 declare(strict_types=1);
 
+use Capell\Core\Facades\CapellCore;
+use Capell\Core\Support\Renderables\RenderableRegistry;
+use Capell\Core\ThemeStudio\Theme\ThemeRegistry;
 use Capell\ThemeAgency\AgencyThemeServiceProvider;
 use Capell\ThemeAgency\Health\ThemeAgencyHealthCheck;
 
-it('defines the agency renderer contract', function (): void {
+it('defines the agency layout-native contract', function (): void {
     $definition = AgencyThemeServiceProvider::definition();
 
     expect($definition->package)->toBe('capell-app/theme-agency')
@@ -35,6 +38,20 @@ it('defines the agency renderer contract', function (): void {
         ->and($definition->runtime->value)->toBe('blade')
         ->and($definition->extends)->toBe('default')
         ->and(ThemeAgencyHealthCheck::compatibleCapellApiVersion())->toBe('^4.0');
+});
+
+it('boots definition-only and registers only agency-owned layout widget keys', function (): void {
+    CapellCore::forcePackageInstalled(AgencyThemeServiceProvider::$packageName);
+
+    $themeRegistry = resolve(ThemeRegistry::class);
+    $provider = new AgencyThemeServiceProvider(app());
+    $provider->register();
+    $provider->boot($themeRegistry);
+
+    expect($themeRegistry->has(AgencyThemeServiceProvider::THEME_KEY))->toBeTrue()
+        ->and($themeRegistry->hasRenderer(AgencyThemeServiceProvider::THEME_KEY))->toBeFalse()
+        ->and(resolve(RenderableRegistry::class)->get('layout-widget', 'capell.widget.agency.portfolio-grid')->blade)
+        ->toBe('capell-theme-agency::widget.section');
 });
 
 it('renders looping hero video media with a large header image', function (): void {
