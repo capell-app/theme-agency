@@ -36,7 +36,7 @@ final class AgencyThemeServiceProvider extends ServiceProvider
             previewImage: '/vendor/capell/themes/agency.png',
             tags: ['Portfolio', 'Directory', 'Awards', 'Creators', 'Gallery'],
             bestFit: ['Portfolio directories', 'Creative award sites', 'Freelancer showcases', 'Studio indexes', 'Design education hubs'],
-            includedSections: ['navigation', 'hero', 'featured-portfolios', 'filter-taxonomies', 'portfolio-grid', 'awarded-profiles', 'creator-directory', 'education-upsell', 'proof', 'content-listing', 'newsletter', 'cta', 'footer'],
+            includedSections: ['navigation', 'hero', 'featured-portfolios', 'filter-taxonomies', 'portfolio-grid', 'awarded-profiles', 'creator-directory', 'education-upsell', 'proof', 'content-listing', 'form', 'newsletter', 'cta', 'footer'],
             presets: [
                 new ThemePresetData(
                     key: self::THEME_KEY,
@@ -139,13 +139,12 @@ final class AgencyThemeServiceProvider extends ServiceProvider
             $this->commands([DemoCommand::class]);
         }
 
-        $this->loadTranslationsFrom(__DIR__ . '/../resources/lang', 'capell-theme-agency');
-        $this->loadViewsFrom(__DIR__ . '/../resources/views', 'capell-theme-agency');
-
         if (! CapellCore::isPackageInstalled(self::$packageName)) {
             return;
         }
 
+        $this->loadTranslationsFrom(__DIR__ . '/../resources/lang', 'capell-theme-agency');
+        $this->loadViewsFrom(__DIR__ . '/../resources/views', 'capell-theme-agency');
         $this->registerVendorCssAssets();
 
         $sectionRenderers = $this->sectionRenderers();

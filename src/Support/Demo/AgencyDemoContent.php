@@ -6,6 +6,7 @@ namespace Capell\ThemeAgency\Support\Demo;
 
 use Capell\Core\Enums\LayoutEnum;
 use Capell\Core\Enums\PageTypeEnum;
+use Capell\FoundationTheme\Actions\BuildThemeDemoFormSectionAction;
 use Capell\FoundationTheme\Contracts\ProvidesThemeDemoContent;
 use Capell\FoundationTheme\Support\Demo\ThemeDemoMedia;
 use Capell\FoundationTheme\Support\Demo\ThemeDemoPageDefinition;
@@ -258,6 +259,14 @@ final class AgencyDemoContent implements ProvidesThemeDemoContent
                         media: $media,
                         heading: 'What we look for',
                         summary: 'Three things every featured portfolio gets right.',
+                    ),
+                    BuildThemeDemoFormSectionAction::run(
+                        themeKey: $themeKey,
+                        heading: 'Send your portfolio to the editors',
+                        summary: 'Share the live link, your role, and the part of the work you want the review desk to notice first.',
+                        fallbackUrl: 'mailto:' . self::EDITORS_EMAIL,
+                        fallbackLabel: 'Email the editors',
+                        successMessage: 'Thanks — the editors will review your portfolio and reply with a decision.',
                     ),
                     $this->newsletterSection(),
                     $this->proofSection(
