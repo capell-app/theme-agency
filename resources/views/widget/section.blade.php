@@ -1,6 +1,6 @@
 @php
-    $section = is_object($widget) && method_exists($widget, 'getMeta')
-        ? (array) $widget->getMeta()
+    $section = is_object($widget) && method_exists($widget, 'getAttribute')
+        ? (array) $widget->getAttribute('meta')
         : [];
     $type = is_string($section['type'] ?? null) ? $section['type'] : '';
     $variant = is_string($section['variant'] ?? null) ? $section['variant'] : '';
@@ -15,5 +15,5 @@
 @endphp
 
 @if ($view !== '' && view()->exists('capell-theme-agency::sections.' . $view))
-    @include('capell-theme-agency::sections.' . $view, ['section' => $section])
+    @include ('capell-theme-agency::sections.' . $view, ['section' => $section])
 @endif
