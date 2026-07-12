@@ -4,24 +4,22 @@ declare(strict_types=1);
 
 namespace Capell\ThemeAgency;
 
-use Capell\Core\Data\VendorAssetData;
+use Capell\Core\Data\RenderableDefinitionData;
 use Capell\Core\Enums\FrontendRuntime;
-use Capell\Core\Enums\VendorAssetEnum;
-use Capell\Core\Facades\CapellCore;
-use Capell\Core\ThemeStudio\Contracts\SectionRenderer;
+use Capell\Core\Support\Renderables\RenderableRegistry;
 use Capell\Core\ThemeStudio\Data\ThemeDefinitionData;
 use Capell\Core\ThemeStudio\Data\ThemePresetData;
-use Capell\Core\ThemeStudio\Rendering\ViewSectionRenderer;
 use Capell\Core\ThemeStudio\Theme\ThemeRegistry;
-use Capell\FoundationTheme\Rendering\ChromeSplitBladeThemeRenderer;
-use Capell\FoundationTheme\Rendering\VariantViewSectionRenderer;
 use Capell\FoundationTheme\Support\Editor\StandardThemeEditorSchema;
+use Capell\FoundationTheme\Support\Providers\RegistersLayoutNativeThemeDefaults;
 use Capell\ThemeAgency\Console\Commands\DemoCommand;
 use Illuminate\Support\ServiceProvider;
 use Override;
 
 final class AgencyThemeServiceProvider extends ServiceProvider
 {
+    use RegistersLayoutNativeThemeDefaults;
+
     public const string THEME_KEY = 'agency';
 
     public static string $packageName = 'capell-app/theme-agency';
@@ -139,87 +137,42 @@ final class AgencyThemeServiceProvider extends ServiceProvider
             $this->commands([DemoCommand::class]);
         }
 
-        if (! CapellCore::isPackageInstalled(self::$packageName)) {
-            return;
-        }
-
-        $this->loadTranslationsFrom(__DIR__ . '/../resources/lang', 'capell-theme-agency');
-        $this->loadViewsFrom(__DIR__ . '/../resources/views', 'capell-theme-agency');
-        $this->registerVendorCssAssets();
-
-        $sectionRenderers = $this->sectionRenderers();
-
-        $registry->register(
+        $this->bootLayoutNativeThemeDefaults(
+            registry: $registry,
+            packageName: self::$packageName,
+            translationNamespace: 'capell-theme-agency',
+            translationsPath: __DIR__ . '/../resources/lang',
+            viewNamespace: 'capell-theme-agency',
+            viewsPath: __DIR__ . '/../resources/views',
+            cssSource: 'resources/css/theme-agency.css',
+            cssCondition: 'theme-css:agency',
             definition: self::definition(),
-            themeRenderer: new ChromeSplitBladeThemeRenderer(
-                themeKey: self::THEME_KEY,
-                layoutView: 'capell-theme-agency::page',
-                sectionRenderers: $sectionRenderers,
-            ),
-            sectionRenderers: array_values($sectionRenderers),
+            registerThemeRenderables: function (): void {
+                $this->registerThemeRenderables();
+            },
         );
     }
 
-    private function registerVendorCssAssets(): void
-    {
-        CapellCore::registerVendorAsset(new VendorAssetData(
-            type: VendorAssetEnum::TailwindImport,
-            value: 'resources/css/theme-agency.css',
-            packageName: self::$packageName,
-            condition: 'theme-css:agency',
-        ));
-        CapellCore::registerVendorAsset(VendorAssetData::tailwindSource('resources/views/**/*.blade.php', self::$packageName));
-    }
-
     /**
-     * @return array<string, SectionRenderer>
+     * Register only Agency-owned component keys. Shared widget keys remain
+     * untouched, so booting Agency cannot change another theme's output.
      */
-    private function sectionRenderers(): array
+    private function registerThemeRenderables(): void
     {
-        return [
-            'navigation' => new ViewSectionRenderer(self::THEME_KEY, 'navigation', 'capell-theme-agency::sections.navigation', failLoudly: true),
-            'hero' => new ViewSectionRenderer(self::THEME_KEY, 'hero', 'capell-theme-agency::sections.hero', failLoudly: true),
-            'featured-portfolios' => new VariantViewSectionRenderer(
-                themeKey: self::THEME_KEY,
-                sectionKey: 'featured-portfolios',
-                baseView: 'capell-theme-agency::sections.featured-portfolios',
-                variantViews: ['parallax' => 'capell-theme-agency::sections.featured-portfolios--parallax'],
-                failLoudly: true,
-            ),
-            'filter-taxonomies' => new VariantViewSectionRenderer(
-                themeKey: self::THEME_KEY,
-                sectionKey: 'filter-taxonomies',
-                baseView: 'capell-theme-agency::sections.filter-taxonomies',
-                variantViews: ['grid' => 'capell-theme-agency::sections.filter-taxonomies--grid'],
-                failLoudly: true,
-            ),
-            'portfolio-grid' => new VariantViewSectionRenderer(
-                themeKey: self::THEME_KEY,
-                sectionKey: 'portfolio-grid',
-                baseView: 'capell-theme-agency::sections.portfolio-grid',
-                variantViews: ['gallery-wall' => 'capell-theme-agency::sections.portfolio-grid--gallery-wall'],
-                failLoudly: true,
-            ),
-            'awarded-profiles' => new VariantViewSectionRenderer(
-                themeKey: self::THEME_KEY,
-                sectionKey: 'awarded-profiles',
-                baseView: 'capell-theme-agency::sections.awarded-profiles',
-                variantViews: ['spotlight' => 'capell-theme-agency::sections.awarded-profiles--spotlight'],
-                failLoudly: true,
-            ),
-            'creator-directory' => new ViewSectionRenderer(self::THEME_KEY, 'creator-directory', 'capell-theme-agency::sections.creator-directory', failLoudly: true),
-            'education-upsell' => new VariantViewSectionRenderer(
-                themeKey: self::THEME_KEY,
-                sectionKey: 'education-upsell',
-                baseView: 'capell-theme-agency::sections.education-upsell',
-                variantViews: ['cta' => 'capell-theme-agency::sections.education-upsell--cta'],
-                failLoudly: true,
-            ),
-            'proof' => new ViewSectionRenderer(self::THEME_KEY, 'proof', 'capell-theme-agency::sections.proof', failLoudly: true),
-            'content-listing' => new ViewSectionRenderer(self::THEME_KEY, 'content-listing', 'capell-theme-agency::sections.content-listing', failLoudly: true),
-            'newsletter' => new ViewSectionRenderer(self::THEME_KEY, 'newsletter', 'capell-theme-agency::sections.newsletter', failLoudly: true),
-            'cta' => new ViewSectionRenderer(self::THEME_KEY, 'cta', 'capell-theme-agency::sections.cta', failLoudly: true),
-            'footer' => new ViewSectionRenderer(self::THEME_KEY, 'footer', 'capell-theme-agency::sections.footer', failLoudly: true),
+        $views = [
+            'navigation', 'hero', 'featured-portfolios', 'filter-taxonomies',
+            'portfolio-grid', 'awarded-profiles', 'creator-directory',
+            'education-upsell', 'proof', 'content-listing', 'newsletter', 'cta', 'footer',
         ];
+
+        $registry = resolve(RenderableRegistry::class);
+
+        foreach ($views as $section) {
+            $registry->register(new RenderableDefinitionData(
+                key: "capell.widget.agency.{$section}",
+                type: 'layout-widget',
+                blade: 'capell-theme-agency::widget.section',
+            ));
+        }
     }
 }

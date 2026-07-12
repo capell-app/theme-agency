@@ -2,12 +2,12 @@
     "name": "capell-app/theme-agency",
     "description": "Agency is a first-party Capell theme for portfolio directories, award-style collections, creator profiles, filters, galleries, and portfolio education.",
     "type": "library",
-    "license": "MIT",
+    "license": "proprietary",
     "require": {
         "php": "^8.4",
-        "capell-app/core": "^0.0 || 0.0.x-dev",
-        "capell-app/theme-foundation": "^0.0 || 0.0.x-dev",
-        "capell-app/frontend": "^0.0 || 0.0.x-dev"
+        "capell-app/core": "^0.0",
+        "capell-app/theme-foundation": "^0.0",
+        "capell-app/frontend": "^0.0"
     },
     "require-dev": {
         "pestphp/pest": "^3.0|^4.0",
