@@ -253,7 +253,7 @@
             "target": "/theme-agency-contact",
             "url": "/theme-agency-contact",
             "screenshotPath": "packages/theme-agency/docs/screenshots/agency-contact.png",
-            "required": true,
+            "required": false,
             "user": false,
             "notes": "Newsletter, portfolio submission, profile claim, resource signup, or contact conversion form.",
             "useCase": "Agency conversion preview",
