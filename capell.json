@@ -1,0 +1,160 @@
+{
+    "manifest-version": 3,
+    "name": "capell-app/theme-agency",
+    "slug": "theme-agency",
+    "displayName": "Theme Agency",
+    "kind": "theme",
+    "capellApiVersion": "^0.0.1",
+    "version": "0.0.x-dev",
+    "description": "Awarded portfolios and design-education picks with a best-seat-in-the-house presentation. Includes the playful curated \"Hand Picked\" preset for lighter, taste-led indexes.",
+    "product": {
+        "group": "Capell Themes",
+        "tier": "premium",
+        "bundle": "themes"
+    },
+    "namespace": "Capell\\ThemeAgency",
+    "surfaces": ["frontend"],
+    "dependencies": {
+        "requires": [
+            "capell-app/core",
+            "capell-app/theme-foundation",
+            "capell-app/frontend"
+        ],
+        "supports": ["capell-app/form-builder", "capell-app/newsletter"],
+        "conflicts": []
+    },
+    "providers": {
+        "metadata": [],
+        "install": [],
+        "runtime": ["Capell\\ThemeAgency\\AgencyThemeServiceProvider"],
+        "admin": [],
+        "frontend": []
+    },
+    "contributes": [
+        {
+            "type": "admin-page",
+            "class": "Capell\\ThemeAgency\\Manifest\\ThemeManagementPageContribution",
+            "pageClass": "Capell\\Marketplace\\Filament\\Pages\\ThemeExtensionPage",
+            "pageParameters": {
+                "themeKey": "agency"
+            },
+            "labelKey": "capell-marketplace::marketplace.theme_extension.management_entry_label"
+        }
+    ],
+    "database": {
+        "migrations": false,
+        "settings": false,
+        "requiredTables": []
+    },
+    "commands": {
+        "install": null,
+        "setup": null,
+        "demo": "capell:theme-agency-demo",
+        "demoParams": ["url", "languages", "sites"],
+        "doctor": null
+    },
+    "settings": [],
+    "permissions": [],
+    "capabilities": ["theme-agency", "theme-agency-frontend"],
+    "security": {
+        "riskTier": "low",
+        "publicSurface": {
+            "routeNames": [],
+            "auth": "none",
+            "csrfExemptRoutes": [],
+            "signedRoutes": [],
+            "tokenizedRoutes": [],
+            "webhookRoutes": [],
+            "throttledRoutes": []
+        },
+        "sensitiveData": {
+            "encryptedFields": [],
+            "hashedTokenFields": [],
+            "redactedOutputClasses": [],
+            "plaintextJustifications": []
+        },
+        "publicOutput": {
+            "cacheSafe": true,
+            "forbidAuthoringSurface": true,
+            "forbidSecrets": true,
+            "forbidPublicBladeQueries": true
+        },
+        "externalHttpClients": {
+            "requiresTimeouts": false,
+            "requiresSecretRedaction": false,
+            "clients": []
+        },
+        "adminSurface": {
+            "authorization": "none",
+            "permissions": []
+        }
+    },
+    "performance": {
+        "criticalCss": {
+            "required": true,
+            "parityViewports": ["mobile", "tablet", "desktop"]
+        },
+        "frontendRenderBudgetMs": 20,
+        "adminQueryBudget": 0,
+        "cacheTags": ["theme-agency"],
+        "cacheSafety": {
+            "cacheable": false,
+            "variesBy": ["site", "locale"],
+            "sensitiveOutput": false,
+            "invalidationSources": [],
+            "queueInvalidation": false
+        }
+    },
+    "healthChecks": [
+        {
+            "key": "theme-agency.package-health",
+            "label": "Agency package surfaces, providers, and install health are discoverable by Diagnostics.",
+            "class": "Capell\\ThemeAgency\\Health\\ThemeAgencyHealthCheck",
+            "severity": "critical",
+            "surface": "frontend"
+        }
+    ],
+    "commercial": {
+        "proposedLicense": "paid",
+        "requestedCertification": "first-party",
+        "supportPolicy": "priority",
+        "privateDocsRequested": true
+    },
+    "marketplace": {
+        "summary": "Awarded portfolios and design-education picks with a best-seat-in-the-house presentation.",
+        "description": "Agency provides a distinct theme definition, demo command, marketplace metadata, and public-safe Blade views for portfolio collections that need large previews, award labels, creator metadata, taxonomy filters, and educational upsells.",
+        "screenshots": [
+            {
+                "path": "docs/screenshots/agency-homepage.png",
+                "alt": "Agency homepage preview",
+                "caption": "Agency Homepage"
+            },
+            {
+                "path": "docs/screenshots/agency-landing.png",
+                "alt": "Agency landing page preview",
+                "caption": "Agency Landing page"
+            },
+            {
+                "path": "docs/screenshots/agency-listing.png",
+                "alt": "Agency list page preview",
+                "caption": "Agency List page"
+            },
+            {
+                "path": "docs/screenshots/agency-search.png",
+                "alt": "Agency search results preview",
+                "caption": "Agency Search results"
+            },
+            {
+                "path": "docs/screenshots/agency-contact.png",
+                "alt": "Agency contact form preview",
+                "caption": "Agency Contact form"
+            }
+        ],
+        "categories": ["frontend", "themes"]
+    },
+    "contributionTraceability": {
+        "deferredContributions": ["route"]
+    },
+    "extends": "default",
+    "themeKey": "agency"
+}
