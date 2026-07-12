@@ -5,9 +5,9 @@
     "license": "MIT",
     "require": {
         "php": "^8.4",
-        "capell-app/core": "^1.0 || 1.x-dev",
-        "capell-app/theme-foundation": "^1.0 || 1.x-dev",
-        "capell-app/frontend": "^1.0 || 1.x-dev"
+        "capell-app/core": "^0.0 || 0.0.x-dev",
+        "capell-app/theme-foundation": "^0.0 || 0.0.x-dev",
+        "capell-app/frontend": "^0.0 || 0.0.x-dev"
     },
     "require-dev": {
         "pestphp/pest": "^3.0|^4.0",
@@ -30,7 +30,7 @@
             ]
         },
         "branch-alias": {
-            "dev-main": "1.x-dev"
+            "dev-main": "0.0.x-dev"
         }
     },
     "homepage": "https://github.com/capell-app/theme-agency",
