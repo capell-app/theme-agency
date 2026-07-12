@@ -32,7 +32,7 @@ final class ThemeAgencyHealthCheck implements ChecksExtensionHealth
 
     public static function compatibleCapellApiVersion(): string
     {
-        return '^0.0';
+        return '^4.0';
     }
 
     /** @return Collection<int, DoctorCheckResultData> */
