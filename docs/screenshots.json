@@ -22,7 +22,8 @@
             "waitFor": ".ppc-shell",
             "colorSchemes": ["light", "dark"],
             "viewport": "desktop",
-            "fullPage": true
+            "fullPage": true,
+            "surfaceName": "homepage"
         },
         {
             "id": "agency-homepage-tablet",
@@ -41,7 +42,8 @@
             "waitFor": ".ppc-shell",
             "colorSchemes": ["light", "dark"],
             "viewport": "tablet",
-            "fullPage": true
+            "fullPage": true,
+            "surfaceName": "homepage"
         },
         {
             "id": "agency-homepage-mobile",
@@ -60,7 +62,8 @@
             "waitFor": ".ppc-shell",
             "colorSchemes": ["light", "dark"],
             "viewport": "mobile",
-            "fullPage": true
+            "fullPage": true,
+            "surfaceName": "homepage"
         },
         {
             "id": "agency-landing-page",
@@ -79,7 +82,8 @@
             "waitFor": ".ppc-shell",
             "colorSchemes": ["light", "dark"],
             "viewport": "desktop",
-            "fullPage": true
+            "fullPage": true,
+            "surfaceName": "detail"
         },
         {
             "id": "agency-landing-page-tablet",
@@ -98,7 +102,8 @@
             "waitFor": ".ppc-shell",
             "colorSchemes": ["light", "dark"],
             "viewport": "tablet",
-            "fullPage": true
+            "fullPage": true,
+            "surfaceName": "detail"
         },
         {
             "id": "agency-landing-page-mobile",
@@ -117,7 +122,8 @@
             "waitFor": ".ppc-shell",
             "colorSchemes": ["light", "dark"],
             "viewport": "mobile",
-            "fullPage": true
+            "fullPage": true,
+            "surfaceName": "detail"
         },
         {
             "id": "agency-list-page",
@@ -136,7 +142,8 @@
             "waitFor": ".ppc-shell",
             "colorSchemes": ["light", "dark"],
             "viewport": "desktop",
-            "fullPage": true
+            "fullPage": true,
+            "surfaceName": "directory"
         },
         {
             "id": "agency-list-page-tablet",
@@ -155,7 +162,8 @@
             "waitFor": ".ppc-shell",
             "colorSchemes": ["light", "dark"],
             "viewport": "tablet",
-            "fullPage": true
+            "fullPage": true,
+            "surfaceName": "directory"
         },
         {
             "id": "agency-list-page-mobile",
@@ -174,7 +182,8 @@
             "waitFor": ".ppc-shell",
             "colorSchemes": ["light", "dark"],
             "viewport": "mobile",
-            "fullPage": true
+            "fullPage": true,
+            "surfaceName": "directory"
         },
         {
             "id": "agency-search-results",
@@ -253,7 +262,8 @@
             "waitFor": ".ppc-shell",
             "colorSchemes": ["light", "dark"],
             "viewport": "desktop",
-            "fullPage": true
+            "fullPage": true,
+            "surfaceName": "contact"
         },
         {
             "id": "agency-contact-form-tablet",
@@ -272,7 +282,8 @@
             "waitFor": ".ppc-shell",
             "colorSchemes": ["light", "dark"],
             "viewport": "tablet",
-            "fullPage": true
+            "fullPage": true,
+            "surfaceName": "contact"
         },
         {
             "id": "agency-contact-form-mobile",
@@ -291,7 +302,8 @@
             "waitFor": ".ppc-shell",
             "colorSchemes": ["light", "dark"],
             "viewport": "mobile",
-            "fullPage": true
+            "fullPage": true,
+            "surfaceName": "contact"
         },
         {
             "id": "agency-not-found",
@@ -310,7 +322,8 @@
             "waitFor": "body",
             "colorSchemes": ["light", "dark"],
             "viewport": "desktop",
-            "fullPage": true
+            "fullPage": true,
+            "surfaceName": "not-found"
         },
         {
             "id": "agency-not-found-tablet",
@@ -329,7 +342,8 @@
             "waitFor": "body",
             "colorSchemes": ["light", "dark"],
             "viewport": "tablet",
-            "fullPage": true
+            "fullPage": true,
+            "surfaceName": "not-found"
         },
         {
             "id": "agency-not-found-mobile",
@@ -348,7 +362,8 @@
             "waitFor": "body",
             "colorSchemes": ["light", "dark"],
             "viewport": "mobile",
-            "fullPage": true
+            "fullPage": true,
+            "surfaceName": "not-found"
         },
         {
             "id": "agency-cta",
@@ -367,7 +382,8 @@
             "waitFor": ".ppc-shell",
             "colorSchemes": ["light", "dark"],
             "viewport": "desktop",
-            "fullPage": true
+            "fullPage": true,
+            "surfaceName": "cta"
         },
         {
             "id": "agency-cta-tablet",
@@ -386,7 +402,8 @@
             "waitFor": ".ppc-shell",
             "colorSchemes": ["light", "dark"],
             "viewport": "tablet",
-            "fullPage": true
+            "fullPage": true,
+            "surfaceName": "cta"
         },
         {
             "id": "agency-cta-mobile",
@@ -405,7 +422,8 @@
             "waitFor": ".ppc-shell",
             "colorSchemes": ["light", "dark"],
             "viewport": "mobile",
-            "fullPage": true
+            "fullPage": true,
+            "surfaceName": "cta"
         }
     ],
     "visualProof": {
