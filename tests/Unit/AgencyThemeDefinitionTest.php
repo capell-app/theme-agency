@@ -34,7 +34,7 @@ it('defines the agency renderer contract', function (): void {
         ->and($definition->presets[2]->key)->toBe('hand-picked')
         ->and($definition->runtime->value)->toBe('blade')
         ->and($definition->extends)->toBe('default')
-        ->and(ThemeAgencyHealthCheck::compatibleCapellApiVersion())->toBe('^0.0');
+        ->and(ThemeAgencyHealthCheck::compatibleCapellApiVersion())->toBe('^4.0');
 });
 
 it('renders looping hero video media with a large header image', function (): void {
