@@ -29,6 +29,10 @@ Status details:
 
 Screenshot contract: `docs/screenshots.json`.
 
+![Agency Homepage](docs/screenshots/agency-homepage.png)
+
+![Agency Landing page](docs/screenshots/agency-landing.png)
+
 - Agency Homepage (frontend, required).
 - Agency Homepage - Tablet (frontend, optional).
 - Agency Homepage - Mobile (frontend, optional).
@@ -41,7 +45,7 @@ Screenshot contract: `docs/screenshots.json`.
 - Agency Search results (frontend, required).
 - Agency Search results - Tablet (frontend, optional).
 - Agency Search results - Mobile (frontend, optional).
-- Agency Contact form (frontend, required).
+- Agency Contact form (frontend, optional).
 - Agency Contact form - Tablet (frontend, optional).
 - Agency Contact form - Mobile (frontend, optional).
 - Agency Page Not Found (frontend, optional).
@@ -59,7 +63,7 @@ Screenshot contract: `docs/screenshots.json`.
 - Console command classes: `DemoCommand`.
 - Manifest contributions: `admin-page: Capell\ThemeAgency\Manifest\ThemeManagementPageContribution`.
 - Health checks: `Capell\ThemeAgency\Health\ThemeAgencyHealthCheck`.
-- Blade views: `packages/theme-agency/resources/views/page.blade.php`, `packages/theme-agency/resources/views/sections/awarded-profiles--spotlight.blade.php`, `packages/theme-agency/resources/views/sections/awarded-profiles.blade.php`, `packages/theme-agency/resources/views/sections/content-listing.blade.php`, `packages/theme-agency/resources/views/sections/creator-directory.blade.php`, `packages/theme-agency/resources/views/sections/cta.blade.php`, `packages/theme-agency/resources/views/sections/education-upsell--cta.blade.php`, `packages/theme-agency/resources/views/sections/education-upsell.blade.php`, `packages/theme-agency/resources/views/sections/featured-portfolios--parallax.blade.php`, `packages/theme-agency/resources/views/sections/featured-portfolios.blade.php`, `packages/theme-agency/resources/views/sections/filter-taxonomies--grid.blade.php`, `packages/theme-agency/resources/views/sections/filter-taxonomies.blade.php`, `and 7 more`.
+- Blade views: `packages/theme-agency/resources/views/page.blade.php`, `packages/theme-agency/resources/views/sections/awarded-profiles--spotlight.blade.php`, `packages/theme-agency/resources/views/sections/awarded-profiles.blade.php`, `packages/theme-agency/resources/views/sections/content-listing.blade.php`, `packages/theme-agency/resources/views/sections/creator-directory.blade.php`, `packages/theme-agency/resources/views/sections/cta.blade.php`, `packages/theme-agency/resources/views/sections/education-upsell--cta.blade.php`, `packages/theme-agency/resources/views/sections/education-upsell.blade.php`, `packages/theme-agency/resources/views/sections/featured-portfolios--parallax.blade.php`, `packages/theme-agency/resources/views/sections/featured-portfolios.blade.php`, `packages/theme-agency/resources/views/sections/filter-taxonomies--grid.blade.php`, `packages/theme-agency/resources/views/sections/filter-taxonomies.blade.php`, `and 8 more`.
 - Cache tags: `theme-agency`.
 
 ## Marketplace Classification
