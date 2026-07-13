@@ -5,12 +5,12 @@
     "license": "proprietary",
     "require": {
         "php": "^8.4",
-        "capell-app/core": "^4.0",
-        "capell-app/theme-foundation": "^4.0",
-        "capell-app/frontend": "^4.0"
+        "capell-app/core": "^1.0",
+        "capell-app/theme-foundation": "^1.0",
+        "capell-app/frontend": "^1.0"
     },
     "require-dev": {
-        "pestphp/pest": "^3.0|^4.0",
+        "pestphp/pest": "^3.0|^1.0",
         "phpunit/phpunit": "^10.0"
     },
     "autoload": {
