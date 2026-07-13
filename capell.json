@@ -13,27 +13,20 @@
         "bundle": "themes"
     },
     "namespace": "Capell\\ThemeAgency",
-    "surfaces": [
-        "frontend"
-    ],
+    "surfaces": ["frontend"],
     "dependencies": {
         "requires": [
             "capell-app/core",
             "capell-app/theme-foundation",
             "capell-app/frontend"
         ],
-        "supports": [
-            "capell-app/form-builder",
-            "capell-app/newsletter"
-        ],
+        "supports": ["capell-app/form-builder", "capell-app/newsletter"],
         "conflicts": []
     },
     "providers": {
         "metadata": [],
         "install": [],
-        "runtime": [
-            "Capell\\ThemeAgency\\AgencyThemeServiceProvider"
-        ],
+        "runtime": ["Capell\\ThemeAgency\\AgencyThemeServiceProvider"],
         "admin": [],
         "frontend": []
     },
@@ -57,19 +50,12 @@
         "install": null,
         "setup": null,
         "demo": "capell:theme-agency-demo",
-        "demoParams": [
-            "url",
-            "languages",
-            "sites"
-        ],
+        "demoParams": ["url", "languages", "sites"],
         "doctor": null
     },
     "settings": [],
     "permissions": [],
-    "capabilities": [
-        "theme-agency",
-        "theme-agency-frontend"
-    ],
+    "capabilities": ["theme-agency", "theme-agency-frontend"],
     "security": {
         "riskTier": "low",
         "publicSurface": {
@@ -106,23 +92,14 @@
     "performance": {
         "criticalCss": {
             "required": true,
-            "parityViewports": [
-                "mobile",
-                "tablet",
-                "desktop"
-            ]
+            "parityViewports": ["mobile", "tablet", "desktop"]
         },
         "frontendRenderBudgetMs": 20,
         "adminQueryBudget": 0,
-        "cacheTags": [
-            "theme-agency"
-        ],
+        "cacheTags": ["theme-agency"],
         "cacheSafety": {
             "cacheable": false,
-            "variesBy": [
-                "site",
-                "locale"
-            ],
+            "variesBy": ["site", "locale"],
             "sensitiveOutput": false,
             "invalidationSources": [],
             "queueInvalidation": false
@@ -168,15 +145,10 @@
                 "caption": "Agency Search results"
             }
         ],
-        "categories": [
-            "frontend",
-            "themes"
-        ]
+        "categories": ["frontend", "themes"]
     },
     "contributionTraceability": {
-        "deferredContributions": [
-            "route"
-        ]
+        "deferredContributions": ["route"]
     },
     "extends": "default",
     "themeKey": "agency"
