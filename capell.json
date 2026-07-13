@@ -4,7 +4,7 @@
     "slug": "theme-agency",
     "displayName": "Theme Agency",
     "kind": "theme",
-    "capellApiVersion": "^4.0",
+    "capellApiVersion": "^1.0",
     "version": "1.x-dev",
     "description": "Awarded portfolios and design-education picks with a best-seat-in-the-house presentation. Includes the playful curated \"Hand Picked\" preset for lighter, taste-led indexes.",
     "product": {

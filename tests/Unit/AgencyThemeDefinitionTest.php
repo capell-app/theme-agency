@@ -37,7 +37,7 @@ it('defines the agency layout-native contract', function (): void {
         ->and($definition->presets[2]->key)->toBe('hand-picked')
         ->and($definition->runtime->value)->toBe('blade')
         ->and($definition->extends)->toBe('default')
-        ->and(ThemeAgencyHealthCheck::compatibleCapellApiVersion())->toBe('^4.0');
+        ->and(ThemeAgencyHealthCheck::compatibleCapellApiVersion())->toBe('^1.0');
 });
 
 it('boots definition-only and registers only agency-owned layout widget keys', function (): void {
