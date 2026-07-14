@@ -239,7 +239,7 @@
 .ppc-masthead-inner {
     align-items: center;
     display: flex;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     gap: 1.25rem 2.5rem;
     justify-content: space-between;
     margin-inline: auto;
@@ -273,7 +273,7 @@
 .ppc-masthead-nav {
     align-items: center;
     display: flex;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     gap: 0.4rem 1.75rem;
     list-style: none;
     margin: 0;
@@ -289,8 +289,15 @@
 }
 
 .ppc-shell nav a:hover,
-.ppc-shell nav a:focus-visible {
+.ppc-shell nav a:focus-visible,
+.ppc-shell nav a[aria-current='page'] {
     color: var(--ppc-accent-bright);
+}
+
+.ppc-shell nav a[aria-current='page'] {
+    text-decoration: underline;
+    text-decoration-thickness: 0.15rem;
+    text-underline-offset: 0.35rem;
 }
 
 .ppc-masthead-cta {

@@ -97,3 +97,20 @@ it('renders looping hero gif media without requiring a video source', function (
         ->toContain('alt="Animated portfolio loop"')
         ->not->toContain('<video');
 });
+
+it('keeps portfolio navigation stable and exposes the current page', function (): void {
+    $themeRoot = dirname(__DIR__, 2);
+    $navigation = file_get_contents($themeRoot . '/resources/views/sections/navigation.blade.php');
+    $styles = file_get_contents($themeRoot . '/resources/css/theme-agency.css');
+
+    expect($navigation)
+        ->toContain('->filter(')
+        ->toContain("'active' =>")
+        ->toContain('aria-current="page"')
+        ->toContain("'links' => \$links");
+
+    expect($styles)
+        ->toContain('flex-wrap: nowrap')
+        ->toContain(".ppc-shell nav a[aria-current='page']")
+        ->toContain('text-decoration-thickness: 0.15rem');
+});
