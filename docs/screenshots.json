@@ -63,7 +63,7 @@
             "fullPage": true
         },
         {
-            "id": "agency-landing-page",
+            "id": "agency-detail",
             "title": "Agency Landing page",
             "surface": "frontend",
             "targetType": "frontend-url",
@@ -82,7 +82,7 @@
             "fullPage": true
         },
         {
-            "id": "agency-landing-page-tablet",
+            "id": "agency-detail-tablet",
             "title": "Agency Landing page — Tablet",
             "surface": "frontend",
             "targetType": "frontend-url",
@@ -101,7 +101,7 @@
             "fullPage": true
         },
         {
-            "id": "agency-landing-page-mobile",
+            "id": "agency-detail-mobile",
             "title": "Agency Landing page — Mobile",
             "surface": "frontend",
             "targetType": "frontend-url",
@@ -120,7 +120,7 @@
             "fullPage": true
         },
         {
-            "id": "agency-list-page",
+            "id": "agency-directory",
             "title": "Agency List page",
             "surface": "frontend",
             "targetType": "frontend-url",
@@ -139,7 +139,7 @@
             "fullPage": true
         },
         {
-            "id": "agency-list-page-tablet",
+            "id": "agency-directory-tablet",
             "title": "Agency List page — Tablet",
             "surface": "frontend",
             "targetType": "frontend-url",
@@ -158,7 +158,7 @@
             "fullPage": true
         },
         {
-            "id": "agency-list-page-mobile",
+            "id": "agency-directory-mobile",
             "title": "Agency List page — Mobile",
             "surface": "frontend",
             "targetType": "frontend-url",
@@ -177,7 +177,7 @@
             "fullPage": true
         },
         {
-            "id": "agency-search-results",
+            "id": "agency-empty",
             "title": "Agency Search results",
             "surfaceName": "empty",
             "surface": "frontend",
@@ -197,7 +197,7 @@
             "fullPage": true
         },
         {
-            "id": "agency-search-results-tablet",
+            "id": "agency-empty-tablet",
             "title": "Agency Search results — Tablet",
             "surfaceName": "empty",
             "surface": "frontend",
@@ -217,7 +217,7 @@
             "fullPage": true
         },
         {
-            "id": "agency-search-results-mobile",
+            "id": "agency-empty-mobile",
             "title": "Agency Search results — Mobile",
             "surfaceName": "empty",
             "surface": "frontend",
@@ -237,7 +237,7 @@
             "fullPage": true
         },
         {
-            "id": "agency-contact-form",
+            "id": "agency-contact",
             "title": "Agency Contact form",
             "surface": "frontend",
             "targetType": "frontend-url",
@@ -256,7 +256,7 @@
             "fullPage": true
         },
         {
-            "id": "agency-contact-form-tablet",
+            "id": "agency-contact-tablet",
             "title": "Agency Contact form — Tablet",
             "surface": "frontend",
             "targetType": "frontend-url",
@@ -275,7 +275,7 @@
             "fullPage": true
         },
         {
-            "id": "agency-contact-form-mobile",
+            "id": "agency-contact-mobile",
             "title": "Agency Contact form — Mobile",
             "surface": "frontend",
             "targetType": "frontend-url",
