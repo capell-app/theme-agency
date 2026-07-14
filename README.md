@@ -6,9 +6,11 @@
 
 Theme Agency is an **Available**, **No schema impact** Capell theme in the **Capell Themes** product group. It ships as `capell-app/theme-agency` and extends these surfaces: frontend.
 
-Awarded portfolios and design-education picks with a best-seat-in-the-house presentation. Includes the playful curated "Hand Picked" preset for lighter, taste-led indexes.
+Theme Agency provides a Blade presentation for curated portfolios, creator profiles, winner labels, taxonomy filters, resources, and newsletter sections.
 
-After install, admins can select the theme through the core theme management surface. Editors keep using normal Capell content workflows while the package controls public presentation.
+Admins select Agency through theme management, preview it, and adjust shared theme settings. Public pages use its portfolio-focused presets and package-owned widgets.
+
+Evidence: [`src/AgencyThemeServiceProvider.php`](src/AgencyThemeServiceProvider.php), [`src/Support/Demo/AgencyDemoContent.php`](src/Support/Demo/AgencyDemoContent.php), [`tests/Feature/SignatureWidgetsRenderTest.php`](tests/Feature/SignatureWidgetsRenderTest.php), [`capell.json`](capell.json), [`src/Manifest/ThemeManagementPageContribution.php`](src/Manifest/ThemeManagementPageContribution.php), [`tests/Unit/AgencyThemeDefinitionTest.php`](tests/Unit/AgencyThemeDefinitionTest.php), [`docs/overview.admin.md`](docs/overview.admin.md).
 
 Status details:
 
@@ -21,9 +23,11 @@ Status details:
 
 ## Why It Matters
 
-**For developers:** The package gives developers package-owned service providers, Actions, and Blade views instead of pushing this behaviour into core or application code.
+**For developers:** The provider extends the Foundation default theme and registers Agency definitions, presets, assets, and layout-widget renderables through shared registries.
 
-**For teams:** Awarded portfolios and design-education picks with a best-seat-in-the-house presentation.
+**For teams:** Portfolio and design-education teams get a recognition-led public structure while editors keep their normal Capell content workflow.
+
+Evidence: [`src/AgencyThemeServiceProvider.php`](src/AgencyThemeServiceProvider.php), [`tests/Unit/AgencyThemeDefinitionTest.php`](tests/Unit/AgencyThemeDefinitionTest.php), [`tests/Unit/PublicOutputSafetyTest.php`](tests/Unit/PublicOutputSafetyTest.php), [`docs/overview.admin.md`](docs/overview.admin.md), [`src/Support/Demo/AgencyDemoContent.php`](src/Support/Demo/AgencyDemoContent.php), [`tests/Feature/SignatureWidgetsRenderTest.php`](tests/Feature/SignatureWidgetsRenderTest.php).
 
 ## Screens And Workflow
 
@@ -33,27 +37,15 @@ Screenshot contract: `docs/screenshots.json`.
 
 ![Agency Landing page](docs/screenshots/agency-landing.png)
 
+Desktop, tablet, and mobile variants remain defined in the screenshot contract; this list groups them by workflow.
+
 - Agency Homepage (frontend, required).
-- Agency Homepage - Tablet (frontend, optional).
-- Agency Homepage - Mobile (frontend, optional).
 - Agency Landing page (frontend, required).
-- Agency Landing page - Tablet (frontend, optional).
-- Agency Landing page - Mobile (frontend, optional).
 - Agency List page (frontend, required).
-- Agency List page - Tablet (frontend, optional).
-- Agency List page - Mobile (frontend, optional).
 - Agency Search results (frontend, required).
-- Agency Search results - Tablet (frontend, optional).
-- Agency Search results - Mobile (frontend, optional).
 - Agency Contact form (frontend, optional).
-- Agency Contact form - Tablet (frontend, optional).
-- Agency Contact form - Mobile (frontend, optional).
 - Agency Page Not Found (frontend, optional).
-- Agency Page Not Found - Tablet (frontend, optional).
-- Agency Page Not Found - Mobile (frontend, optional).
 - Agency Call To Action (frontend, optional).
-- Agency Call To Action - Tablet (frontend, optional).
-- Agency Call To Action - Mobile (frontend, optional).
 
 ## Technical Shape
 
@@ -78,38 +70,42 @@ This theme has no schema impact. It relies on core Capell site, page, locale, an
 
 ## Install Impact
 
-- Admin navigation: contributes admin extension points through `capell.json`.
+- Required packages: `capell-app/core`, `capell-app/theme-foundation`, `capell-app/frontend`.
+- Admin navigation: declares `admin-page: ThemeManagementPageContribution`; each Filament page or resource controls its own navigation visibility.
+- Admin/editor extensions: none declared.
 - Permissions: none declared in `capell.json`.
-- Public routes: none detected in package route files.
+- Public routes: none declared.
 - Database changes: no package migrations declared.
+- Config: no package config files.
 - Settings: no package settings declared.
-- Queues or schedules: none detected in standard package paths.
+- Queues or schedules: none declared.
 - Cache tags: `theme-agency`.
 - Commands: `capell:theme-agency-demo`.
 
 ## Common Pitfalls
 
+- Keep required Capell packages on compatible v4 releases: `capell-app/core`, `capell-app/theme-foundation`, `capell-app/frontend`.
 - Keep public Blade and cached HTML free of authoring markers, model IDs, permissions, signed editor URLs, and lazy database queries.
-- Keep `composer.json`, `composer.local.json`, `capell.json`, docs, screenshots, and tests aligned when the package surface changes.
+- Custom write integrations must preserve invalidation for `theme-agency` cache tags.
 
 ## Troubleshooting
 
 | Symptom | Likely cause | Check | Fix |
 | --- | --- | --- | --- |
 | Package surface is missing after install | Provider or manifest is not loaded | Confirm `capell.json`, package `composer.json`, and provider registration | Reinstall the package, refresh Composer autoload, and clear host caches |
-| Background work does not run | Queue worker or scheduled command is not active | Check package jobs, commands, and host scheduler configuration | Start the queue or scheduler, then run the focused command or package test |
 | Public output leaks unexpected state | Render data, cache variation, or authoring boundary has regressed | Check public Blade, cache tags, and public-output safety tests | Move data loading out of Blade and rerun the package public-output tests |
 
 ## Quick Start
 
 1. Install the package: `composer require capell-app/theme-agency`.
-2. Run the required setup: `php artisan capell:theme-agency-demo`.
-3. Verify the package provider is registered and the related frontend, command, or extension point is active.
+2. No package-specific setup command or migrations are declared.
+3. Open the Agency Homepage and confirm the public output renders without admin state.
 
 ## Next Steps
 
 - [Package docs](docs/README.md)
 - [Overview](docs/overview.md)
+- [Troubleshooting](#troubleshooting)
 - [Screenshot contract](docs/screenshots.json)
 - [Marketplace assets](docs/assets/marketplace/)
 - [Capell content language plan](../../docs/CONTENT_LANGUAGE_PLAN.md)
