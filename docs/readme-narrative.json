@@ -1,0 +1,38 @@
+{
+    "whatThisPluginAdds": {
+        "text": "Theme Agency provides a Blade presentation for curated portfolios, creator profiles, winner labels, taxonomy filters, resources, and newsletter sections.",
+        "evidence": [
+            "src/AgencyThemeServiceProvider.php",
+            "src/Support/Demo/AgencyDemoContent.php",
+            "tests/Feature/SignatureWidgetsRenderTest.php",
+            "capell.json"
+        ]
+    },
+    "surfaceOutcome": {
+        "text": "Admins select Agency through theme management, preview it, and adjust shared theme settings. Public pages use its portfolio-focused presets and package-owned widgets.",
+        "evidence": [
+            "src/Manifest/ThemeManagementPageContribution.php",
+            "src/AgencyThemeServiceProvider.php",
+            "tests/Unit/AgencyThemeDefinitionTest.php",
+            "docs/overview.admin.md"
+        ]
+    },
+    "whyItMatters": {
+        "developers": {
+            "text": "The provider extends the Foundation default theme and registers Agency definitions, presets, assets, and layout-widget renderables through shared registries.",
+            "evidence": [
+                "src/AgencyThemeServiceProvider.php",
+                "tests/Unit/AgencyThemeDefinitionTest.php",
+                "tests/Unit/PublicOutputSafetyTest.php"
+            ]
+        },
+        "teams": {
+            "text": "Portfolio and design-education teams get a recognition-led public structure while editors keep their normal Capell content workflow.",
+            "evidence": [
+                "docs/overview.admin.md",
+                "src/Support/Demo/AgencyDemoContent.php",
+                "tests/Feature/SignatureWidgetsRenderTest.php"
+            ]
+        }
+    }
+}
