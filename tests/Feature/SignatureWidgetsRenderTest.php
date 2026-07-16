@@ -30,7 +30,7 @@ it('renders featured-portfolios-hero with deterministic per-card float depths, n
         'heading' => "This week's featured collections",
         'summary' => 'Three portfolios our editors are championing right now.',
         'items' => [
-            ['title' => 'Halden Studio', 'summary' => 'Systems-first product design.', 'award' => 'Awwwards SOTD'],
+            ['id' => 'featured-1', 'title' => 'Halden Studio', 'summary' => 'Systems-first product design.', 'award' => 'Awwwards SOTD'],
             ['title' => 'Ren Okabe', 'summary' => 'Identity work for cultural institutions.', 'award' => 'D&AD Pencil'],
         ],
     ];
@@ -38,6 +38,7 @@ it('renders featured-portfolios-hero with deterministic per-card float depths, n
     $html = view('capell-theme-agency::sections.featured-portfolios--parallax', ['section' => $section])->render();
 
     expect($html)->toContain('ppc-wall-float-card')
+        ->and($html)->toContain('id="featured-1"')
         ->and($html)->toContain('--ppc-float-depth:')
         ->and($html)->toContain('Halden Studio')
         ->and($html)->not->toContain('Math.random');

@@ -16,7 +16,7 @@ final class DemoCommand extends Command
 
     public function handle(): int
     {
-        return app(InstallAgencyThemeDemoAction::class)->handle(new ThemeDemoInstallData(
+        return InstallAgencyThemeDemoAction::run(new ThemeDemoInstallData(
             siteNames: $this->parseCsvOption('sites'),
             languageCodes: $this->parseCsvOption('languages'),
             baseUrl: $this->resolveBaseUrl(),

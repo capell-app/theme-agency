@@ -51,6 +51,7 @@
                 @endphp
 
                 <article
+                    @if (filled(data_get($item, 'id'))) id="{{ data_get($item, 'id') }}" @endif
                     class="ppc-card ppc-wall-float-card"
                     style="--ppc-float-depth: {{ $floatDepth }}px"
                 >

@@ -29,7 +29,10 @@
                     $award = data_get($item, 'award');
                 @endphp
 
-                <article class="ppc-card">
+                <article
+                    @if (filled(data_get($item, 'id'))) id="{{ data_get($item, 'id') }}" @endif
+                    class="ppc-card"
+                >
                     <figure class="ppc-plate">
                         <div class="ppc-plate-frame">
                             @if (filled($award))

@@ -57,6 +57,7 @@
                 @endphp
 
                 <article
+                    @if (filled(data_get($item, 'id'))) id="{{ data_get($item, 'id') }}" @endif
                     class="ppc-card ppc-spotlight-card ppc-spotlight-{{ $tier }}"
                     role="listitem"
                 >

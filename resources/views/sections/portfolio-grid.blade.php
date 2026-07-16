@@ -27,7 +27,10 @@
                     $itemUrl = data_get($item, 'url', data_get($item, 'href'));
                 @endphp
 
-                <article class="ppc-card">
+                <article
+                    @if (filled(data_get($item, 'id'))) id="{{ data_get($item, 'id') }}" @endif
+                    class="ppc-card"
+                >
                     <figure class="ppc-plate">
                         <div class="ppc-plate-frame">
                             @if (filled($itemImage))

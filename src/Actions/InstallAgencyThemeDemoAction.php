@@ -8,10 +8,12 @@ use Capell\FoundationTheme\Contracts\InstallsThemeDemo;
 use Capell\FoundationTheme\Data\ThemeDemoInstallData;
 use Capell\FoundationTheme\Support\Demo\ThemeDemoPageInstaller;
 use Capell\ThemeAgency\Support\Demo\AgencyDemoContent;
+use Lorisleiva\Actions\Concerns\AsFake;
 use Lorisleiva\Actions\Concerns\AsObject;
 
 final class InstallAgencyThemeDemoAction implements InstallsThemeDemo
 {
+    use AsFake;
     use AsObject;
 
     public function handle(ThemeDemoInstallData $data): int

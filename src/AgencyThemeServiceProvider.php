@@ -112,7 +112,7 @@ final class AgencyThemeServiceProvider extends ServiceProvider
                     ],
                 ),
             ],
-            assets: ['css' => 'vendor/capell/themes/agency.css'],
+            assets: [],
             runtime: FrontendRuntime::Blade,
             frontend: [
                 'sectionVariants' => [

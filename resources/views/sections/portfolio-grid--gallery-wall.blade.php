@@ -55,6 +55,7 @@
                 @endphp
 
                 <article
+                    @if (filled(data_get($item, 'id'))) id="{{ data_get($item, 'id') }}" @endif
                     class="ppc-card ppc-wall-card"
                     style="--ppc-wall-col-span: {{ $columnSpan }}; --ppc-wall-row-span: {{ $rowSpan }};"
                     role="listitem"

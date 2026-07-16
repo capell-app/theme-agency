@@ -7,6 +7,7 @@ use Capell\Core\Support\Renderables\RenderableRegistry;
 use Capell\Core\ThemeStudio\Theme\ThemeRegistry;
 use Capell\ThemeAgency\AgencyThemeServiceProvider;
 use Capell\ThemeAgency\Health\ThemeAgencyHealthCheck;
+use Capell\ThemeAgency\Support\Demo\AgencyDemoContent;
 
 it('defines the agency layout-native contract', function (): void {
     $definition = AgencyThemeServiceProvider::definition();
@@ -36,8 +37,21 @@ it('defines the agency layout-native contract', function (): void {
         ->and($definition->presets[0]->key)->toBe('agency')
         ->and($definition->presets[2]->key)->toBe('hand-picked')
         ->and($definition->runtime->value)->toBe('blade')
+        ->and($definition->assets)->toBe([])
         ->and($definition->extends)->toBe('default')
         ->and(ThemeAgencyHealthCheck::compatibleCapellApiVersion())->toBe('^1.0');
+});
+
+it('places owned navigation and hero before portable copy inside the agency shell', function (): void {
+    $definition = (new AgencyDemoContent)->definitions('agency', 'Agency', 'https://agency.test')[0];
+    $main = data_get($definition->containers, 'main');
+    $widgetKeys = array_column(data_get($main, 'widgets', []), 'widget_key');
+
+    expect(data_get($main, 'meta.html_class'))->toBe('ppc-shell')
+        ->and($widgetKeys[0] ?? null)->toBe('agency-navigation-homepage-1')
+        ->and($widgetKeys[1] ?? null)->toBe('agency-hero-homepage-1')
+        ->and($widgetKeys[2] ?? null)->toBe('page-content')
+        ->and(data_get($main, 'widgets.2.meta.page_content'))->toBe(['content']);
 });
 
 it('boots definition-only and registers only agency-owned layout widget keys', function (): void {
@@ -112,5 +126,8 @@ it('keeps portfolio navigation stable and exposes the current page', function ()
     expect($styles)
         ->toContain('flex-wrap: nowrap')
         ->toContain(".ppc-shell nav a[aria-current='page']")
+        ->toContain('--ppc-paper: color-mix(')
+        ->toContain('var(--theme-surface, oklch(97.2% 0.005 85)) 15%')
+        ->toContain('background: var(--ppc-accent)')
         ->toContain('text-decoration-thickness: 0.15rem');
 });

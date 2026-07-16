@@ -25,7 +25,10 @@
                     $storyUrl = data_get($story, 'url', data_get($story, 'href'));
                 @endphp
 
-                <article class="ppc-card">
+                <article
+                    @if (filled(data_get($story, 'id'))) id="{{ data_get($story, 'id') }}" @endif
+                    class="ppc-card"
+                >
                     <div class="ppc-creator-head">
                         @if (filled($storyImage))
                             <img

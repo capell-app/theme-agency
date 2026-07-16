@@ -102,6 +102,31 @@
 @media (prefers-color-scheme: dark) {
     .ppc-shell {
         color-scheme: dark;
+        --ppc-ink: color-mix(
+            in oklch,
+            var(--theme-foreground, oklch(15% 0.005 285)) 12%,
+            white
+        );
+        --ppc-muted: color-mix(in oklch, var(--ppc-ink) 78%, transparent);
+        --ppc-line: color-mix(in oklch, #ffffff 14%, transparent);
+        --ppc-accent: color-mix(
+            in oklch,
+            var(--theme-accent, oklch(66% 0.13 75)) 78%,
+            white
+        );
+        --ppc-accent-bright: color-mix(in oklch, var(--ppc-accent) 70%, white);
+        --ppc-field: color-mix(
+            in oklch,
+            var(--theme-surface, oklch(97.2% 0.005 85)) 18%,
+            black
+        );
+        --ppc-night: oklch(14% 0.008 40);
+        --ppc-night-text: color-mix(in oklch, var(--ppc-ink) 90%, transparent);
+        --ppc-paper: color-mix(
+            in oklch,
+            var(--theme-surface, oklch(97.2% 0.005 85)) 15%,
+            black
+        );
     }
 }
 
@@ -850,10 +875,10 @@
 
 .ppc-button {
     align-items: center;
-    background: var(--theme-primary, #111111);
-    border: 1px solid var(--theme-primary, #111111);
+    background: var(--ppc-accent);
+    border: 1px solid var(--ppc-accent);
     border-radius: 999px;
-    color: #ffffff;
+    color: #16130a;
     cursor: pointer;
     display: inline-flex;
     font-weight: 700;

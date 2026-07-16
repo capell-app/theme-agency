@@ -65,8 +65,9 @@ final class AgencyDemoContent implements ProvidesThemeDemoContent
         }
 
         $widgets = [['method' => 'pageContentWidget']];
-        $containerWidgets = [['widget_key' => 'page-content', 'occurrence' => 1]];
+        $containerWidgets = [];
         $occurrences = [];
+        $pageContentInserted = false;
 
         foreach ($sections as $section) {
             $type = $section['type'] ?? null;
@@ -82,6 +83,15 @@ final class AgencyDemoContent implements ProvidesThemeDemoContent
                 'args' => [$key, sprintf('Agency %s (%s)', ucfirst($type), $definition->surface), "capell.widget.agency.{$type}", $section],
             ];
             $containerWidgets[] = ['widget_key' => $key, 'occurrence' => 1];
+
+            if ($type === 'hero') {
+                $containerWidgets[] = $this->pageContentWidgetReference();
+                $pageContentInserted = true;
+            }
+        }
+
+        if (! $pageContentInserted) {
+            array_unshift($containerWidgets, $this->pageContentWidgetReference());
         }
 
         return new ThemeDemoPageDefinition(
@@ -93,9 +103,29 @@ final class AgencyDemoContent implements ProvidesThemeDemoContent
             renderData: $definition->renderData,
             type: $definition->type,
             layout: $definition->layout,
-            containers: ['main' => ['widgets' => $containerWidgets]],
+            containers: [
+                'main' => [
+                    'meta' => ['html_class' => 'ppc-shell'],
+                    'widgets' => $containerWidgets,
+                ],
+            ],
             widgets: $widgets,
         );
+    }
+
+    /**
+     * Keep portable page copy after the owned hero without repeating its
+     * primary heading.
+     *
+     * @return array{widget_key: string, occurrence: int, meta: array{page_content: list<string>}}
+     */
+    private function pageContentWidgetReference(): array
+    {
+        return [
+            'widget_key' => 'page-content',
+            'occurrence' => 1,
+            'meta' => ['page_content' => ['content']],
+        ];
     }
 
     /**
@@ -714,6 +744,7 @@ final class AgencyDemoContent implements ProvidesThemeDemoContent
             $image = $images[$index % max(count($images), 1)] ?? null;
             $items[] = [
                 ...$entry,
+                'id' => $anchorPrefix . '-' . ($index + 1),
                 'url' => '#' . $anchorPrefix . '-' . ($index + 1),
                 'image' => $image,
                 'imageAlt' => data_get($entry, 'title', ''),
