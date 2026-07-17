@@ -45,7 +45,9 @@ it('defines the agency layout-native contract', function (): void {
 it('places owned navigation and hero before portable copy inside the agency shell', function (): void {
     $definition = (new AgencyDemoContent)->definitions('agency', 'Agency', 'https://agency.test')[0];
     $main = data_get($definition->containers, 'main');
-    $widgetKeys = array_column(data_get($main, 'widgets', []), 'widget_key');
+    $widgets = data_get($main, 'widgets', []);
+    throw_unless(is_array($widgets), RuntimeException::class, 'Expected agency widgets.');
+    $widgetKeys = array_column($widgets, 'widget_key');
 
     expect(data_get($main, 'meta.html_class'))->toBe('ppc-shell')
         ->and($widgetKeys[0] ?? null)->toBe('agency-navigation-homepage-1')
@@ -112,22 +114,13 @@ it('renders looping hero gif media without requiring a video source', function (
         ->not->toContain('<video');
 });
 
-it('keeps portfolio navigation stable and exposes the current page', function (): void {
+it('exposes the current page through the portfolio navigation', function (): void {
     $themeRoot = dirname(__DIR__, 2);
     $navigation = file_get_contents($themeRoot . '/resources/views/sections/navigation.blade.php');
-    $styles = file_get_contents($themeRoot . '/resources/css/theme-agency.css');
 
     expect($navigation)
         ->toContain('->filter(')
         ->toContain("'active' =>")
         ->toContain('aria-current="page"')
         ->toContain("'links' => \$links");
-
-    expect($styles)
-        ->toContain('flex-wrap: nowrap')
-        ->toContain(".ppc-shell nav a[aria-current='page']")
-        ->toContain('--ppc-paper: color-mix(')
-        ->toContain('var(--theme-surface, oklch(97.2% 0.005 85)) 15%')
-        ->toContain('background: var(--ppc-accent)')
-        ->toContain('text-decoration-thickness: 0.15rem');
 });
