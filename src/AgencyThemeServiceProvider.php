@@ -8,6 +8,7 @@ use Capell\Core\Data\RenderableDefinitionData;
 use Capell\Core\Enums\FrontendRuntime;
 use Capell\Core\Support\Renderables\RenderableRegistry;
 use Capell\Core\ThemeStudio\Data\ThemeDefinitionData;
+use Capell\Core\ThemeStudio\Data\ThemeFrontendBuildAssetsData;
 use Capell\Core\ThemeStudio\Data\ThemePresetData;
 use Capell\Core\ThemeStudio\Theme\ThemeRegistry;
 use Capell\FoundationTheme\Support\Editor\StandardThemeEditorSchema;
@@ -21,6 +22,12 @@ final class AgencyThemeServiceProvider extends ServiceProvider
     use RegistersLayoutNativeThemeDefaults;
 
     public const string THEME_KEY = 'agency';
+
+    public const string CSS_SOURCE = 'resources/css/theme-agency.css';
+
+    public const string CSS_BUILD_INPUT = 'resources/css/capell/themes/agency.css';
+
+    public const string CSS_CONDITION = 'theme-css:agency';
 
     public static string $packageName = 'capell-app/theme-agency';
 
@@ -123,6 +130,11 @@ final class AgencyThemeServiceProvider extends ServiceProvider
                     'education-upsell' => ['default', 'cta'],
                 ],
                 'editor' => StandardThemeEditorSchema::definition(),
+                'assets' => new ThemeFrontendBuildAssetsData(
+                    cssSource: self::CSS_SOURCE,
+                    cssBuildInput: self::CSS_BUILD_INPUT,
+                    condition: self::CSS_CONDITION,
+                ),
             ],
             extends: 'default',
         );
@@ -144,8 +156,8 @@ final class AgencyThemeServiceProvider extends ServiceProvider
             translationsPath: __DIR__ . '/../resources/lang',
             viewNamespace: 'capell-theme-agency',
             viewsPath: __DIR__ . '/../resources/views',
-            cssSource: 'resources/css/theme-agency.css',
-            cssCondition: 'theme-css:agency',
+            cssSource: self::CSS_SOURCE,
+            cssCondition: self::CSS_CONDITION,
             definition: self::definition(),
             registerThemeRenderables: function (): void {
                 $this->registerThemeRenderables();

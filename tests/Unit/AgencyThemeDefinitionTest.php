@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use Capell\Core\Facades\CapellCore;
 use Capell\Core\Support\Renderables\RenderableRegistry;
+use Capell\Core\ThemeStudio\Data\ThemeFrontendBuildAssetsData;
 use Capell\Core\ThemeStudio\Theme\ThemeRegistry;
 use Capell\ThemeAgency\AgencyThemeServiceProvider;
 use Capell\ThemeAgency\Health\ThemeAgencyHealthCheck;
@@ -38,6 +39,10 @@ it('defines the agency layout-native contract', function (): void {
         ->and($definition->presets[2]->key)->toBe('hand-picked')
         ->and($definition->runtime->value)->toBe('blade')
         ->and($definition->assets)->toBe([])
+        ->and($definition->frontendBuildAssets())->toBeInstanceOf(ThemeFrontendBuildAssetsData::class)
+        ->and($definition->frontendBuildAssets()?->cssSource)->toBe('resources/css/theme-agency.css')
+        ->and($definition->frontendBuildAssets()?->cssBuildInput)->toBe('resources/css/capell/themes/agency.css')
+        ->and($definition->frontendBuildAssets()?->condition)->toBe('theme-css:agency')
         ->and($definition->extends)->toBe('default')
         ->and(ThemeAgencyHealthCheck::compatibleCapellApiVersion())->toBe('^1.0');
 });
