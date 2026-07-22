@@ -123,6 +123,13 @@ return [
         'heading' => 'More from the archive',
         'empty' => 'Nothing in the archive matches yet — check back after the next editorial pass.',
     ],
+    'form' => [
+        'kicker' => 'Send your work',
+        'heading' => 'Submit a portfolio for editorial review',
+        'summary' => 'Share the live link, your role, and the part of the work you want the editors to notice first.',
+        'fallback_message' => 'The submission form is unavailable right now. Contact the editors directly instead.',
+        'fallback_label' => 'Email the editors',
+    ],
     'newsletter' => [
         'kicker' => 'The Thursday shortlist',
         'heading' => 'Five notable new portfolios, every week',

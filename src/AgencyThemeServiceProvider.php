@@ -13,6 +13,7 @@ use Capell\Core\ThemeStudio\Data\ThemePresetData;
 use Capell\Core\ThemeStudio\Theme\ThemeRegistry;
 use Capell\FoundationTheme\Support\Editor\StandardThemeEditorSchema;
 use Capell\FoundationTheme\Support\Providers\RegistersLayoutNativeThemeDefaults;
+use Capell\FoundationTheme\Support\Providers\RegistersOptionalThemeSectionAvailability;
 use Capell\ThemeAgency\Console\Commands\DemoCommand;
 use Illuminate\Support\ServiceProvider;
 use Override;
@@ -20,6 +21,7 @@ use Override;
 final class AgencyThemeServiceProvider extends ServiceProvider
 {
     use RegistersLayoutNativeThemeDefaults;
+    use RegistersOptionalThemeSectionAvailability;
 
     public const string THEME_KEY = 'agency';
 
@@ -149,6 +151,14 @@ final class AgencyThemeServiceProvider extends ServiceProvider
             $this->commands([DemoCommand::class]);
         }
 
+        $this->registerOptionalThemeSectionAvailability(
+            viewName: 'capell-theme-agency::widget.section',
+            packageBySection: [
+                'form' => 'capell-app/form-builder',
+                'newsletter' => 'capell-app/newsletter',
+            ],
+        );
+
         $this->bootLayoutNativeThemeDefaults(
             registry: $registry,
             packageName: self::$packageName,
@@ -174,7 +184,7 @@ final class AgencyThemeServiceProvider extends ServiceProvider
         $views = [
             'navigation', 'hero', 'featured-portfolios', 'filter-taxonomies',
             'portfolio-grid', 'awarded-profiles', 'creator-directory',
-            'education-upsell', 'proof', 'content-listing', 'newsletter', 'cta', 'footer',
+            'education-upsell', 'proof', 'content-listing', 'form', 'newsletter', 'cta', 'footer',
         ];
 
         $registry = resolve(RenderableRegistry::class);

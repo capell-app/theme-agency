@@ -72,7 +72,7 @@ final class AgencyDemoContent implements ProvidesThemeDemoContent
         foreach ($sections as $section) {
             $type = $section['type'] ?? null;
 
-            if (! is_string($type) || $type === 'form') {
+            if (! is_string($type)) {
                 continue;
             }
 

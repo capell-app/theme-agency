@@ -25,6 +25,7 @@ final class ThemeAgencyHealthCheck implements ChecksExtensionHealth
         'resources/views/sections/education-upsell.blade.php',
         'resources/views/sections/proof.blade.php',
         'resources/views/sections/content-listing.blade.php',
+        'resources/views/sections/form.blade.php',
         'resources/views/sections/newsletter.blade.php',
         'resources/views/sections/cta.blade.php',
         'resources/views/sections/footer.blade.php',

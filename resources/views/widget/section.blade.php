@@ -14,6 +14,6 @@
     $view = $variantViews[$type . ':' . $variant] ?? $type;
 @endphp
 
-@if ($view !== '' && view()->exists('capell-theme-agency::sections.' . $view))
+@if (($optionalSectionAvailable ?? true) && $view !== '' && view()->exists('capell-theme-agency::sections.' . $view))
     @include ('capell-theme-agency::sections.' . $view, ['section' => $section])
 @endif
