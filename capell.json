@@ -125,24 +125,14 @@
         "description": "Agency provides a distinct theme definition, demo command, marketplace metadata, and public-safe Blade views for portfolio collections that need large previews, award labels, creator metadata, taxonomy filters, and educational upsells.",
         "screenshots": [
             {
-                "path": "docs/screenshots/agency-homepage.png",
-                "alt": "Agency homepage preview",
-                "caption": "Agency Homepage"
+                "path": "docs/assets/marketplace/hero-desktop.jpg",
+                "alt": "Agency theme desktop preview",
+                "caption": "Agency desktop preview"
             },
             {
-                "path": "docs/screenshots/agency-landing.png",
-                "alt": "Agency landing page preview",
-                "caption": "Agency Landing page"
-            },
-            {
-                "path": "docs/screenshots/agency-listing.png",
-                "alt": "Agency list page preview",
-                "caption": "Agency List page"
-            },
-            {
-                "path": "docs/screenshots/agency-search.png",
-                "alt": "Agency search results preview",
-                "caption": "Agency Search results"
+                "path": "docs/assets/marketplace/hero-mobile.jpg",
+                "alt": "Agency theme mobile preview",
+                "caption": "Agency mobile preview"
             }
         ],
         "categories": ["frontend", "themes"]
