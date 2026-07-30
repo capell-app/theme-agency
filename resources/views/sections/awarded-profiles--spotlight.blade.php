@@ -25,9 +25,7 @@
     data-widget="awarded-profiles-spotlight"
 >
     <div class="ppc-section-inner">
-        <p class="ppc-kicker">
-            {{ __('capell-theme-agency::sections.updates.kicker') }}
-        </p>
+        <p class="ppc-kicker">{{ __('capell-theme-agency::sections.updates.kicker') }}</p>
         <h2>{{ $heading }}</h2>
         <p class="ppc-lede">{{ $summary }}</p>
         <a

@@ -25,9 +25,7 @@
     data-widget="education-upsell-cta"
 >
     <div class="ppc-section-inner">
-        <p class="ppc-kicker">
-            {{ __('capell-theme-agency::sections.authors.kicker') }}
-        </p>
+        <p class="ppc-kicker">{{ __('capell-theme-agency::sections.authors.kicker') }}</p>
         <h2>{{ $heading }}</h2>
         <p class="ppc-lede">{{ $summary }}</p>
 
@@ -37,9 +35,7 @@
             @endphp
 
             <article class="ppc-card ppc-course-card ppc-course-lead">
-                <p class="ppc-chip">
-                    {{ __('capell-theme-agency::sections.spotlight.upsell_lead_label') }}
-                </p>
+                <p class="ppc-chip">{{ __('capell-theme-agency::sections.spotlight.upsell_lead_label') }}</p>
                 <h3>
                     <a
                         class="ppc-title-link"

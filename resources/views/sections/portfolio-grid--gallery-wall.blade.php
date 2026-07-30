@@ -34,9 +34,7 @@
     data-widget="portfolio-grid-gallery-wall"
 >
     <div class="ppc-section-inner">
-        <p class="ppc-kicker">
-            {{ __('capell-theme-agency::sections.stories.kicker') }}
-        </p>
+        <p class="ppc-kicker">{{ __('capell-theme-agency::sections.stories.kicker') }}</p>
         <h2>{{ $heading }}</h2>
         <p class="ppc-lede">{{ $summary }}</p>
 
@@ -92,9 +90,7 @@
                             {{ data_get($item, 'title', data_get($item, 'name', '')) }}
                         @endif
                     </h3>
-                    <p>
-                        {{ data_get($item, 'summary', data_get($item, 'description', '')) }}
-                    </p>
+                    <p>{{ data_get($item, 'summary', data_get($item, 'description', '')) }}</p>
                     <div class="ppc-card-meta-row">
                         <span class="ppc-chip">
                             {{ data_get($item, 'meta', data_get($item, 'category', __('capell-theme-agency::sections.stories.default_meta'))) }}

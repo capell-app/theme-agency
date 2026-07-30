@@ -7,9 +7,7 @@
     class="ppc-section"
 >
     <div class="ppc-section-inner">
-        <p class="ppc-kicker">
-            {{ __('capell-theme-agency::sections.listing.kicker') }}
-        </p>
+        <p class="ppc-kicker">{{ __('capell-theme-agency::sections.listing.kicker') }}</p>
         <h2>
             {{ data_get($section, 'heading', __('capell-theme-agency::sections.listing.heading')) }}
         </h2>
@@ -38,9 +36,7 @@
                         @endif
 
                         <div>
-                            <p class="ppc-meta">
-                                {{ data_get($item, 'category', data_get($item, 'meta', '')) }}
-                            </p>
+                            <p class="ppc-meta">{{ data_get($item, 'category', data_get($item, 'meta', '')) }}</p>
                             <h3>
                                 @if (filled($itemUrl))
                                     <a
@@ -54,16 +50,12 @@
                                 @endif
                             </h3>
                         </div>
-                        <p>
-                            {{ data_get($item, 'summary', data_get($item, 'description', '')) }}
-                        </p>
+                        <p>{{ data_get($item, 'summary', data_get($item, 'description', '')) }}</p>
                     </article>
                 @endforeach
             </div>
         @else
-            <p class="ppc-lede">
-                {{ __('capell-theme-agency::sections.listing.empty') }}
-            </p>
+            <p class="ppc-lede">{{ __('capell-theme-agency::sections.listing.empty') }}</p>
         @endif
     </div>
 </section>

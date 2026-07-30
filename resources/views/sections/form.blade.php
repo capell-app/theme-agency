@@ -4,9 +4,7 @@
 >
     <div class="ppc-section-inner ppc-split">
         <div>
-            <p class="ppc-kicker">
-                {{ __('capell-theme-agency::sections.form.kicker') }}
-            </p>
+            <p class="ppc-kicker">{{ __('capell-theme-agency::sections.form.kicker') }}</p>
             <h2>
                 {{ data_get($section, 'heading', __('capell-theme-agency::sections.form.heading')) }}
             </h2>

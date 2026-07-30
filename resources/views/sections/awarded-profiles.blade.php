@@ -15,9 +15,7 @@
 >
     <div class="ppc-section-inner ppc-split">
         <div>
-            <p class="ppc-kicker">
-                {{ __('capell-theme-agency::sections.updates.kicker') }}
-            </p>
+            <p class="ppc-kicker">{{ __('capell-theme-agency::sections.updates.kicker') }}</p>
             <h2>{{ $heading }}</h2>
             <p class="ppc-lede">{{ $summary }}</p>
             <a

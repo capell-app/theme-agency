@@ -27,9 +27,7 @@
     data-widget="filter-taxonomies-grid"
 >
     <div class="ppc-section-inner">
-        <p class="ppc-kicker">
-            {{ __('capell-theme-agency::sections.topics.kicker') }}
-        </p>
+        <p class="ppc-kicker">{{ __('capell-theme-agency::sections.topics.kicker') }}</p>
         <h2>{{ $heading }}</h2>
 
         <div

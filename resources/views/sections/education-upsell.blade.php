@@ -11,15 +11,11 @@
     class="ppc-section ppc-section-field"
 >
     <div class="ppc-section-inner">
-        <p class="ppc-kicker">
-            {{ __('capell-theme-agency::sections.authors.kicker') }}
-        </p>
+        <p class="ppc-kicker">{{ __('capell-theme-agency::sections.authors.kicker') }}</p>
         <h2>
             {{ data_get($section, 'heading', __('capell-theme-agency::sections.authors.heading')) }}
         </h2>
-        <p class="ppc-lede">
-            {{ data_get($section, 'summary', __('capell-theme-agency::sections.authors.summary')) }}
-        </p>
+        <p class="ppc-lede">{{ data_get($section, 'summary', __('capell-theme-agency::sections.authors.summary')) }}</p>
         <div class="ppc-grid">
             @foreach ($items as $item)
                 @php

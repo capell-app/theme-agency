@@ -78,10 +78,12 @@
             @endif
         </ul>
 
-        {!! view('capell-theme-foundation::theme.partials.mobile-navigation', [
-            'links' => $links,
-            'ctaLabel' => $ctaLabel,
-            'ctaUrl' => $ctaUrl,
-        ])->render() !!}
+        {!!
+            view('capell-theme-foundation::theme.partials.mobile-navigation', [
+                'links' => $links,
+                'ctaLabel' => $ctaLabel,
+                'ctaUrl' => $ctaUrl,
+            ])->render()
+        !!}
     </div>
 </nav>

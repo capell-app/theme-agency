@@ -8,9 +8,7 @@
 
 <section class="ppc-section">
     <div class="ppc-section-inner">
-        <p class="ppc-kicker">
-            {{ __('capell-theme-agency::sections.proof.kicker') }}
-        </p>
+        <p class="ppc-kicker">{{ __('capell-theme-agency::sections.proof.kicker') }}</p>
         @if (filled(data_get($section, 'heading')))
             <h2>{{ data_get($section, 'heading') }}</h2>
         @endif
@@ -25,9 +23,7 @@
                     <h3>
                         {{ data_get($item, 'value', data_get($item, 'title', '')) }}
                     </h3>
-                    <p>
-                        {{ data_get($item, 'label', data_get($item, 'summary', '')) }}
-                    </p>
+                    <p>{{ data_get($item, 'label', data_get($item, 'summary', '')) }}</p>
                 </article>
             @endforeach
         </div>

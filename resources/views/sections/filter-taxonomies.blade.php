@@ -12,9 +12,7 @@
     class="ppc-section"
 >
     <div class="ppc-section-inner">
-        <p class="ppc-kicker">
-            {{ __('capell-theme-agency::sections.topics.kicker') }}
-        </p>
+        <p class="ppc-kicker">{{ __('capell-theme-agency::sections.topics.kicker') }}</p>
         <h2>
             {{ data_get($section, 'heading', __('capell-theme-agency::sections.topics.heading')) }}
         </h2>

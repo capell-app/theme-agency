@@ -33,9 +33,7 @@
     data-widget="featured-portfolios-hero"
 >
     <div class="ppc-section-inner">
-        <p class="ppc-kicker">
-            {{ __('capell-theme-agency::sections.featured.kicker') }}
-        </p>
+        <p class="ppc-kicker">{{ __('capell-theme-agency::sections.featured.kicker') }}</p>
         <h2>{{ $heading }}</h2>
         <p class="ppc-lede">{{ $summary }}</p>
 

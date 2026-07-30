@@ -56,9 +56,7 @@
         </div>
 
         <aside class="ppc-plate">
-            <p class="ppc-kicker">
-                {{ __('capell-theme-agency::sections.hero.panel_kicker') }}
-            </p>
+            <p class="ppc-kicker">{{ __('capell-theme-agency::sections.hero.panel_kicker') }}</p>
             <div class="ppc-plate-frame">
                 <span class="ppc-badge">
                     {{ __('capell-theme-agency::sections.hero.badge') }}

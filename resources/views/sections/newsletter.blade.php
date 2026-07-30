@@ -4,9 +4,7 @@
 >
     <div class="ppc-section-inner ppc-split">
         <div>
-            <p class="ppc-kicker">
-                {{ __('capell-theme-agency::sections.newsletter.kicker') }}
-            </p>
+            <p class="ppc-kicker">{{ __('capell-theme-agency::sections.newsletter.kicker') }}</p>
             <h2>
                 {{ data_get($section, 'heading', __('capell-theme-agency::sections.newsletter.heading')) }}
             </h2>
@@ -35,9 +33,7 @@
             >
                 {{ data_get($section, 'button', __('capell-theme-agency::sections.newsletter.button')) }}
             </button>
-            <p class="ppc-meta">
-                {{ __('capell-theme-agency::sections.newsletter.note') }}
-            </p>
+            <p class="ppc-meta">{{ __('capell-theme-agency::sections.newsletter.note') }}</p>
         </x-capell::newsletter-form>
     </div>
 </section>

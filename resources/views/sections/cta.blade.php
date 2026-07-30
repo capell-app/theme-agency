@@ -6,15 +6,11 @@
 
 <section class="ppc-section ppc-section-dark">
     <div class="ppc-section-inner">
-        <p class="ppc-kicker">
-            {{ data_get($section, 'kicker', __('capell-theme-agency::sections.cta.kicker')) }}
-        </p>
+        <p class="ppc-kicker">{{ data_get($section, 'kicker', __('capell-theme-agency::sections.cta.kicker')) }}</p>
         <h2>
             {{ data_get($section, 'heading', __('capell-theme-agency::sections.cta.heading')) }}
         </h2>
-        <p class="ppc-lede">
-            {{ data_get($section, 'summary', __('capell-theme-agency::sections.cta.summary')) }}
-        </p>
+        <p class="ppc-lede">{{ data_get($section, 'summary', __('capell-theme-agency::sections.cta.summary')) }}</p>
         <div class="ppc-actions">
             @if ($actions->isNotEmpty())
                 @foreach ($actions as $action)

@@ -11,9 +11,7 @@
     class="ppc-section"
 >
     <div class="ppc-section-inner">
-        <p class="ppc-kicker">
-            {{ __('capell-theme-agency::sections.events.kicker') }}
-        </p>
+        <p class="ppc-kicker">{{ __('capell-theme-agency::sections.events.kicker') }}</p>
         <h2>
             {{ data_get($section, 'heading', __('capell-theme-agency::sections.events.heading')) }}
         </h2>
@@ -47,9 +45,7 @@
                             ></div>
                         @endif
                         <div>
-                            <p class="ppc-meta">
-                                {{ data_get($story, 'meta', data_get($story, 'category', '')) }}
-                            </p>
+                            <p class="ppc-meta">{{ data_get($story, 'meta', data_get($story, 'category', '')) }}</p>
                             <h3>
                                 @if (filled($storyUrl))
                                     <a
@@ -64,9 +60,7 @@
                             </h3>
                         </div>
                     </div>
-                    <p>
-                        {{ data_get($story, 'summary', data_get($story, 'description', '')) }}
-                    </p>
+                    <p>{{ data_get($story, 'summary', data_get($story, 'description', '')) }}</p>
                     @if (filled(data_get($story, 'stat_label')))
                         <div class="ppc-stat-row">
                             <span>

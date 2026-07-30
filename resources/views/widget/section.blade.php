@@ -15,5 +15,5 @@
 @endphp
 
 @if (($optionalSectionAvailable ?? true) && $view !== '' && view()->exists('capell-theme-agency::sections.' . $view))
-    @include ('capell-theme-agency::sections.' . $view, ['section' => $section])
+    @include('capell-theme-agency::sections.' . $view, ['section' => $section])
 @endif
