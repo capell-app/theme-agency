@@ -39,13 +39,13 @@ Screenshot contract: `docs/screenshots.json`.
 
 Desktop, tablet, and mobile variants remain defined in the screenshot contract; this list groups them by workflow.
 
-- Agency Homepage (frontend, required).
-- Agency Landing page (frontend, required).
-- Agency List page (frontend, required).
-- Agency Search results (frontend, required).
-- Agency Contact form (frontend, optional).
-- Agency Page Not Found (frontend, optional).
-- Agency Call To Action (frontend, optional).
+- Agency Homepage (frontend, required evidence).
+- Agency Landing page (frontend, required evidence).
+- Agency List page (frontend, required evidence).
+- Agency Search results (frontend, required evidence).
+- Agency Contact form (frontend, supplementary evidence).
+- Agency Page Not Found (frontend, supplementary evidence).
+- Agency Call To Action (frontend, supplementary evidence).
 
 ## Technical Shape
 
@@ -55,7 +55,7 @@ Desktop, tablet, and mobile variants remain defined in the screenshot contract; 
 - Console command classes: `DemoCommand`.
 - Manifest contributions: `admin-page: Capell\ThemeAgency\Manifest\ThemeManagementPageContribution`.
 - Health checks: `Capell\ThemeAgency\Health\ThemeAgencyHealthCheck`.
-- Blade views: `packages/theme-agency/resources/views/page.blade.php`, `packages/theme-agency/resources/views/sections/awarded-profiles--spotlight.blade.php`, `packages/theme-agency/resources/views/sections/awarded-profiles.blade.php`, `packages/theme-agency/resources/views/sections/content-listing.blade.php`, `packages/theme-agency/resources/views/sections/creator-directory.blade.php`, `packages/theme-agency/resources/views/sections/cta.blade.php`, `packages/theme-agency/resources/views/sections/education-upsell--cta.blade.php`, `packages/theme-agency/resources/views/sections/education-upsell.blade.php`, `packages/theme-agency/resources/views/sections/featured-portfolios--parallax.blade.php`, `packages/theme-agency/resources/views/sections/featured-portfolios.blade.php`, `packages/theme-agency/resources/views/sections/filter-taxonomies--grid.blade.php`, `packages/theme-agency/resources/views/sections/filter-taxonomies.blade.php`, `and 8 more`.
+- Blade views: `packages/theme-agency/resources/views/page.blade.php`, `packages/theme-agency/resources/views/sections/awarded-profiles--spotlight.blade.php`, `packages/theme-agency/resources/views/sections/awarded-profiles.blade.php`, `packages/theme-agency/resources/views/sections/content-listing.blade.php`, `packages/theme-agency/resources/views/sections/creator-directory.blade.php`, `packages/theme-agency/resources/views/sections/cta.blade.php`, `packages/theme-agency/resources/views/sections/education-upsell--cta.blade.php`, `packages/theme-agency/resources/views/sections/education-upsell.blade.php`, `packages/theme-agency/resources/views/sections/featured-portfolios--parallax.blade.php`, `packages/theme-agency/resources/views/sections/featured-portfolios.blade.php`, `packages/theme-agency/resources/views/sections/filter-taxonomies--grid.blade.php`, `packages/theme-agency/resources/views/sections/filter-taxonomies.blade.php`, `and 9 more`.
 - Cache tags: `theme-agency`.
 
 ## Marketplace Classification
@@ -99,7 +99,7 @@ This theme has no schema impact. It relies on core Capell site, page, locale, an
 
 1. Install the package: `composer require capell-app/theme-agency`.
 2. No package-specific setup command or migrations are declared.
-3. Open the Agency Homepage and confirm the public output renders without admin state.
+3. Open `/theme-agency` and confirm the public output renders without admin state.
 
 ## Next Steps
 
