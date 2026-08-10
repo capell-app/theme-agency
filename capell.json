@@ -6,7 +6,7 @@
     "kind": "theme",
     "capellApiVersion": "^1.0",
     "version": "1.0.0",
-    "description": "Awarded portfolios and design-education picks with a best-seat-in-the-house presentation. Includes the playful curated \"Hand Picked\" preset for lighter, taste-led indexes.",
+    "description": "Award-style portfolios and design-education picks with a best-seat-in-the-house presentation. Includes the playful curated \"Hand Picked\" preset for lighter, taste-led indexes.",
     "product": {
         "group": "Capell Themes",
         "tier": "premium",
@@ -121,7 +121,7 @@
         "privateDocsRequested": true
     },
     "marketplace": {
-        "summary": "Awarded portfolios and design-education picks with a best-seat-in-the-house presentation.",
+        "summary": "Award-style portfolios and design-education picks with a best-seat-in-the-house presentation.",
         "description": "Agency provides a distinct theme definition, demo command, marketplace metadata, and public-safe Blade views for portfolio collections that need large previews, award labels, creator metadata, taxonomy filters, and educational upsells.",
         "screenshots": [
             {
