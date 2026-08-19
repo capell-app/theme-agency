@@ -44,4 +44,6 @@
             @endforeach
         </div>
     </div>
+
+    <x-capell::layout.area area="footer" />
 </footer>
