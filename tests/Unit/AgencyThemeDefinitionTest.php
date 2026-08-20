@@ -129,3 +129,29 @@ it('exposes the current page through the portfolio navigation', function (): voi
         ->toContain('aria-current="page"')
         ->toContain("'links' => \$links");
 });
+
+it('exposes the agency identity control and consumes it in CSS', function (): void {
+    $definition = AgencyThemeServiceProvider::definition();
+    $schema = $definition->frontend['editor'];
+
+    expect($schema['groups']['identity'])->toBe(['plateCrop'])
+        ->and($schema['tokens']['plateCrop']['options'])->toBe(['contained', 'panoramic', 'cinematic']);
+
+    foreach ($definition->presets as $preset) {
+        expect($preset->values['plateCrop'] ?? null)->toBe('contained');
+    }
+
+    $css = (string) file_get_contents(dirname(__DIR__, 2) . '/resources/css/theme-agency.css');
+
+    foreach (['contained', 'panoramic', 'cinematic'] as $option) {
+        $block = 'style(--theme-plate-crop: ' . $option . ')';
+
+        if ($option === 'contained') {
+            expect($css)->not->toContain($block);
+
+            continue;
+        }
+
+        expect($css)->toContain($block);
+    }
+});

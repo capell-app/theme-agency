@@ -1431,3 +1431,53 @@
         display: block;
     }
 }
+
+/* --theme-plate-crop (Theme Studio identity control, this theme only).
+   Agency is a portfolio-award theme: the award plate is the whole product, so
+   the one thing a buyer actually re-tunes is how much of the page each work
+   preview claims. Options are contained | panoramic | cinematic, and
+   `contained` is the unconditioned default (4/3 media, 16/6 plate header) so
+   an unset value renders exactly as before. */
+@container ppc-tokens style(--theme-plate-crop: panoramic) {
+    .ppc-shell .ppc-plate-frame-header {
+        aspect-ratio: 16 / 5;
+    }
+
+    .ppc-shell .ppc-plate-media {
+        aspect-ratio: 16 / 10;
+    }
+
+    .ppc-shell .ppc-plate-media-tall {
+        aspect-ratio: 4 / 5;
+    }
+
+    .ppc-shell .ppc-plate-media-wide {
+        aspect-ratio: 21 / 9;
+    }
+}
+
+@container ppc-tokens style(--theme-plate-crop: cinematic) {
+    .ppc-shell .ppc-plate-frame-header {
+        aspect-ratio: 16 / 4;
+    }
+
+    .ppc-shell .ppc-plate-media {
+        aspect-ratio: 21 / 9;
+    }
+
+    .ppc-shell .ppc-plate-media-tall {
+        aspect-ratio: 1 / 1;
+    }
+
+    .ppc-shell .ppc-plate-media-wide {
+        aspect-ratio: 2.4 / 1;
+    }
+
+    .ppc-shell .ppc-plate-frame:hover .ppc-plate-media {
+        transform: scale(1.06);
+    }
+
+    .ppc-shell .ppc-grid {
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 24rem), 1fr));
+    }
+}

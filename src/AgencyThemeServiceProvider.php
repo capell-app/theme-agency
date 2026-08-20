@@ -68,6 +68,7 @@ final class AgencyThemeServiceProvider extends ServiceProvider
                         'radius' => 'md',
                         'headingScale' => 'balanced',
                         'cardDensity' => 'spacious',
+                        'plateCrop' => 'contained',
                     ],
                 ),
                 new ThemePresetData(
@@ -93,6 +94,7 @@ final class AgencyThemeServiceProvider extends ServiceProvider
                         'radius' => 'sm',
                         'headingScale' => 'expressive',
                         'cardDensity' => 'compact',
+                        'plateCrop' => 'contained',
                     ],
                 ),
                 new ThemePresetData(
@@ -118,6 +120,7 @@ final class AgencyThemeServiceProvider extends ServiceProvider
                         'radius' => 'md',
                         'headingScale' => 'balanced',
                         'cardDensity' => 'spacious',
+                        'plateCrop' => 'contained',
                     ],
                 ),
             ],
@@ -131,7 +134,10 @@ final class AgencyThemeServiceProvider extends ServiceProvider
                     'awarded-profiles' => ['default', 'spotlight'],
                     'education-upsell' => ['default', 'cta'],
                 ],
-                'editor' => StandardThemeEditorSchema::definition(),
+                'editor' => StandardThemeEditorSchema::withExtraTokens(
+                    groups: ['identity' => ['plateCrop']],
+                    tokens: ['plateCrop' => ['options' => ['contained', 'panoramic', 'cinematic']]],
+                ),
                 'assets' => new ThemeFrontendBuildAssetsData(
                     cssSource: self::CSS_SOURCE,
                     cssBuildInput: self::CSS_BUILD_INPUT,
