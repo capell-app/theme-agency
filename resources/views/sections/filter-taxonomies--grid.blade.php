@@ -1,4 +1,6 @@
 @php
+    use Capell\Core\Support\Security\PublicUrlSanitizer;
+
     /**
      * filter-taxonomies-grid (Wave 4c signature widget): the discipline
      * filters double as a small salon wall of their own -- each chip sits
@@ -36,7 +38,7 @@
         >
             @foreach ($items as $item)
                 @php
-                    $filterUrl = data_get($item, 'url', data_get($item, 'href', '#filters'));
+                    $filterUrl = PublicUrlSanitizer::sanitize(data_get($item, 'url', data_get($item, 'href', '#filters'))) ?? '#filters';
                     $count = data_get($item, 'count');
                 @endphp
 

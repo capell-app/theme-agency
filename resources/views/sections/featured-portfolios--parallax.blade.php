@@ -1,4 +1,6 @@
 @php
+    use Capell\Core\Support\Security\PublicUrlSanitizer;
+
     /**
      * featured-portfolios-hero (Wave 4c signature widget), `parallax` variant:
      * the salon-wall float treatment for the theme's headline mechanic --
@@ -40,9 +42,9 @@
         <div class="ppc-grid ppc-wall-float-grid">
             @foreach ($items as $item)
                 @php
-                    $itemImage = data_get($item, 'image', data_get($item, 'imageUrl'));
+                    $itemImage = PublicUrlSanitizer::sanitize(data_get($item, 'image', data_get($item, 'imageUrl')));
                     $itemAlt = data_get($item, 'imageAlt', data_get($item, 'title', ''));
-                    $itemUrl = data_get($item, 'url', data_get($item, 'href'));
+                    $itemUrl = PublicUrlSanitizer::sanitize(data_get($item, 'url', data_get($item, 'href')));
                     $award = data_get($item, 'award');
                     $depthIndex = $loop->index % $depthCount;
                     $floatDepth = $floatDepths[$depthIndex];

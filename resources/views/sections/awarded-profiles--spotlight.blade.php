@@ -1,4 +1,6 @@
 @php
+    use Capell\Core\Support\Security\PublicUrlSanitizer;
+
     /**
      * awarded-profiles-spotlight (Wave 4c signature widget): gold/silver/
      * bronze tiers for the year's top awarded profiles, presented as a
@@ -11,7 +13,7 @@
     $heading = data_get($section, 'heading', __('capell-theme-agency::sections.updates.heading'));
     $summary = data_get($section, 'summary', __('capell-theme-agency::sections.updates.summary'));
     $ctaLabel = data_get($section, 'label', __('capell-theme-agency::sections.updates.button'));
-    $ctaUrl = data_get($section, 'url', '#awards');
+    $ctaUrl = PublicUrlSanitizer::sanitize(data_get($section, 'url', '#awards')) ?? '#awards';
     $tierOrder = ['gold', 'silver', 'bronze'];
     $items = collect(data_get($section, 'items', [
         ['title' => __('capell-theme-agency::sections.updates.release_title'), 'summary' => __('capell-theme-agency::sections.updates.release_summary')],
@@ -43,9 +45,9 @@
                 @php
                     $tier = data_get($item, 'tier');
                     $tier = in_array($tier, $tierOrder, true) ? $tier : ($tierOrder[$loop->index] ?? 'bronze');
-                    $itemImage = data_get($item, 'image', data_get($item, 'imageUrl'));
+                    $itemImage = PublicUrlSanitizer::sanitize(data_get($item, 'image', data_get($item, 'imageUrl')));
                     $itemAlt = data_get($item, 'imageAlt', data_get($item, 'title', ''));
-                    $itemUrl = data_get($item, 'url', data_get($item, 'href'));
+                    $itemUrl = PublicUrlSanitizer::sanitize(data_get($item, 'url', data_get($item, 'href')));
                     $award = data_get($item, 'award', __('capell-theme-agency::sections.updates.default_award'));
                     $tierLabel = match ($tier) {
                         'gold' => __('capell-theme-agency::sections.spotlight.tier_gold'),

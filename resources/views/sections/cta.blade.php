@@ -1,7 +1,10 @@
 @php
+    use Capell\Core\Support\Security\PublicUrlSanitizer;
+
     $actions = collect(data_get($section, 'actions', []))
         ->filter(fn (mixed $action): bool => filled(data_get($action, 'label')))
         ->values();
+    $sectionUrl = PublicUrlSanitizer::sanitize(data_get($section, 'url', '/')) ?? '/';
 @endphp
 
 <section class="ppc-section ppc-section-dark">
@@ -14,9 +17,13 @@
         <div class="ppc-actions">
             @if ($actions->isNotEmpty())
                 @foreach ($actions as $action)
+                    @php
+                        $safeActionUrl = PublicUrlSanitizer::sanitize(data_get($action, 'url', '/')) ?? '/';
+                    @endphp
+
                     <a
                         class="ppc-button {{ data_get($action, 'style') === 'secondary' ? 'ppc-button-secondary' : '' }}"
-                        href="{{ data_get($action, 'url', '/') }}"
+                        href="{{ $safeActionUrl }}"
                     >
                         {{ data_get($action, 'label') }}
                     </a>
@@ -24,7 +31,7 @@
             @else
                 <a
                     class="ppc-button"
-                    href="{{ data_get($section, 'url', '/') }}"
+                    href="{{ $sectionUrl }}"
                 >
                     {{ data_get($section, 'label', __('capell-theme-agency::sections.cta.button')) }}
                 </a>

@@ -1,4 +1,6 @@
 @php
+    use Capell\Core\Support\Security\PublicUrlSanitizer;
+
     $items = data_get($section, 'items', [
         ['title' => __('capell-theme-agency::sections.featured.launch_title'), 'summary' => __('capell-theme-agency::sections.featured.launch_summary')],
         ['title' => __('capell-theme-agency::sections.featured.essay_title'), 'summary' => __('capell-theme-agency::sections.featured.essay_summary')],
@@ -21,9 +23,9 @@
         <div class="ppc-grid">
             @foreach ($items as $item)
                 @php
-                    $itemImage = data_get($item, 'image', data_get($item, 'imageUrl'));
+                    $itemImage = PublicUrlSanitizer::sanitize(data_get($item, 'image', data_get($item, 'imageUrl')));
                     $itemAlt = data_get($item, 'imageAlt', data_get($item, 'title', ''));
-                    $itemUrl = data_get($item, 'url', data_get($item, 'href'));
+                    $itemUrl = PublicUrlSanitizer::sanitize(data_get($item, 'url', data_get($item, 'href')));
                     $award = data_get($item, 'award');
                 @endphp
 

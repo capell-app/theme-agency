@@ -1,4 +1,6 @@
 @php
+    use Capell\Core\Support\Security\PublicUrlSanitizer;
+
     /**
      * education-upsell-cta (Wave 4c signature widget): the course/teardown
      * list rendered with a single lead card promoted into a wide conversion
@@ -31,7 +33,7 @@
 
         @if ($leadItem !== null)
             @php
-                $leadUrl = data_get($leadItem, 'url', data_get($leadItem, 'href', '#learn'));
+                $leadUrl = PublicUrlSanitizer::sanitize(data_get($leadItem, 'url', data_get($leadItem, 'href', '#learn'))) ?? '#learn';
             @endphp
 
             <article class="ppc-card ppc-course-card ppc-course-lead">
@@ -58,7 +60,7 @@
             <div class="ppc-grid">
                 @foreach ($restItems as $item)
                     @php
-                        $itemUrl = data_get($item, 'url', data_get($item, 'href'));
+                        $itemUrl = PublicUrlSanitizer::sanitize(data_get($item, 'url', data_get($item, 'href')));
                     @endphp
 
                     <article class="ppc-card ppc-course-card">

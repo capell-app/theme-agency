@@ -1,4 +1,6 @@
 @php
+    use Capell\Core\Support\Security\PublicUrlSanitizer;
+
     /**
      * portfolio-grid-gallery-wall (Wave 4c signature widget): the theme's
      * headline mechanic in full -- a curated "salon hang" wall where some
@@ -45,9 +47,9 @@
         >
             @foreach ($items as $item)
                 @php
-                    $itemImage = data_get($item, 'image', data_get($item, 'imageUrl'));
+                    $itemImage = PublicUrlSanitizer::sanitize(data_get($item, 'image', data_get($item, 'imageUrl')));
                     $itemAlt = data_get($item, 'imageAlt', data_get($item, 'title', ''));
-                    $itemUrl = data_get($item, 'url', data_get($item, 'href'));
+                    $itemUrl = PublicUrlSanitizer::sanitize(data_get($item, 'url', data_get($item, 'href')));
                     $spanIndex = ($layoutSeed + $loop->index) % $spanCount;
                     [$columnSpan, $rowSpan] = $wallSpans[$spanIndex];
                 @endphp

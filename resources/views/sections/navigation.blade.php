@@ -1,4 +1,6 @@
 @php
+    use Capell\Core\Support\Security\PublicUrlSanitizer;
+
     $currentPath = '/' . ltrim(request()->path(), '/');
     $normalisePath = static function (mixed $url): string {
         if (! is_string($url) || trim($url) === '') {
@@ -24,17 +26,20 @@
         )
         ->map(function (array $link) use ($currentPath, $normalisePath): array {
             $url = data_get($link, 'url', data_get($link, 'href', ''));
+            $safeUrl = PublicUrlSanitizer::sanitize($url) ?? '/';
 
             return [
                 ...$link,
+                'url' => $safeUrl,
+                'href' => $safeUrl,
                 'active' => (bool) data_get($link, 'active', false)
                     || $normalisePath($url) === $currentPath,
             ];
         })
         ->values();
     $ctaLabel = data_get($section, 'ctaLabel', data_get($section, 'cta_label'));
-    $ctaUrl = data_get($section, 'ctaUrl', data_get($section, 'cta_url', '/'));
-    $brandUrl = data_get($section, 'brandUrl', '/');
+    $ctaUrl = PublicUrlSanitizer::sanitize(data_get($section, 'ctaUrl', data_get($section, 'cta_url', '/'))) ?? '/';
+    $brandUrl = PublicUrlSanitizer::sanitize(data_get($section, 'brandUrl', '/')) ?? '/';
 @endphp
 
 <nav

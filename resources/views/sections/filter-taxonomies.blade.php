@@ -1,4 +1,6 @@
 @php
+    use Capell\Core\Support\Security\PublicUrlSanitizer;
+
     $items = data_get($section, 'items', [
         ['title' => __('capell-theme-agency::sections.topics.product_title'), 'summary' => __('capell-theme-agency::sections.topics.product_summary')],
         ['title' => __('capell-theme-agency::sections.topics.design_title'), 'summary' => __('capell-theme-agency::sections.topics.design_summary')],
@@ -20,7 +22,7 @@
         <div class="ppc-filters">
             @foreach ($items as $item)
                 @php
-                    $filterUrl = data_get($item, 'url', data_get($item, 'href', '#filters'));
+                    $filterUrl = PublicUrlSanitizer::sanitize(data_get($item, 'url', data_get($item, 'href', '#filters'))) ?? '#filters';
                     $count = data_get($item, 'count');
                 @endphp
 

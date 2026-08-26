@@ -1,4 +1,6 @@
 @php
+    use Capell\Core\Support\Security\PublicUrlSanitizer;
+
     $items = data_get($section, 'items', data_get($section, 'posts', []));
 @endphp
 
@@ -15,8 +17,8 @@
             <div class="ppc-index">
                 @foreach ($items as $item)
                     @php
-                        $itemUrl = data_get($item, 'url', data_get($item, 'href'));
-                        $itemImage = data_get($item, 'image', data_get($item, 'imageUrl'));
+                        $itemUrl = PublicUrlSanitizer::sanitize(data_get($item, 'url', data_get($item, 'href')));
+                        $itemImage = PublicUrlSanitizer::sanitize(data_get($item, 'image', data_get($item, 'imageUrl')));
                         $itemAlt = data_get($item, 'imageAlt', data_get($item, 'title', ''));
                     @endphp
 

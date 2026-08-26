@@ -1,4 +1,6 @@
 @php
+    use Capell\Core\Support\Security\PublicUrlSanitizer;
+
     $heading = data_get($section, 'heading', data_get($section, 'title', __('capell-theme-agency::sections.hero.heading')));
     $summary = data_get($section, 'summary', data_get($section, 'description', __('capell-theme-agency::sections.hero.summary')));
     $actions = collect(data_get($section, 'actions', []))
@@ -21,14 +23,14 @@
     }
 
     $kicker = data_get($section, 'kicker', data_get($section, 'eyebrow', __('capell-theme-agency::sections.hero.kicker')));
-    $mediaUrl = data_get($section, 'mediaUrl', data_get($section, 'media_url'));
+    $mediaUrl = PublicUrlSanitizer::sanitize(data_get($section, 'mediaUrl', data_get($section, 'media_url')));
     $mediaAlt = data_get($section, 'mediaAlt', data_get($section, 'media_alt'));
 
-    $previewVideoUrl = data_get($section, 'preview_video_url', data_get($section, 'media.preview_video_url'));
-    $previewGifUrl = data_get($section, 'preview_gif_url', data_get($section, 'media.preview_gif_url'));
-    $previewImageUrl = data_get($section, 'preview_image_url', data_get($section, 'media.preview_image_url', $mediaUrl));
+    $previewVideoUrl = PublicUrlSanitizer::sanitize(data_get($section, 'preview_video_url', data_get($section, 'media.preview_video_url')));
+    $previewGifUrl = PublicUrlSanitizer::sanitize(data_get($section, 'preview_gif_url', data_get($section, 'media.preview_gif_url')));
+    $previewImageUrl = PublicUrlSanitizer::sanitize(data_get($section, 'preview_image_url', data_get($section, 'media.preview_image_url', $mediaUrl)));
     $previewAlt = data_get($section, 'preview_alt', data_get($section, 'media.preview_alt', $mediaAlt ?? __('capell-theme-agency::sections.hero.preview_alt')));
-    $headerImageUrl = data_get($section, 'header_image_url', data_get($section, 'media.header_image_url'));
+    $headerImageUrl = PublicUrlSanitizer::sanitize(data_get($section, 'header_image_url', data_get($section, 'media.header_image_url')));
     $headerImageAlt = data_get($section, 'header_image_alt', data_get($section, 'media.header_image_alt', __('capell-theme-agency::sections.hero.header_image_alt')));
     $notes = data_get($section, 'notes', [
         __('capell-theme-agency::sections.hero.note_featured'),
@@ -45,9 +47,13 @@
             <p class="ppc-lede">{{ $summary }}</p>
             <div class="ppc-actions">
                 @foreach ($actions as $action)
+                    @php
+                        $safeActionUrl = PublicUrlSanitizer::sanitize(data_get($action, 'url', '/')) ?? '/';
+                    @endphp
+
                     <a
                         class="ppc-button {{ data_get($action, 'style') === 'secondary' ? 'ppc-button-secondary' : '' }}"
-                        href="{{ data_get($action, 'url', '/') }}"
+                        href="{{ $safeActionUrl }}"
                     >
                         {{ data_get($action, 'label') }}
                     </a>

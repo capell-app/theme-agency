@@ -1,4 +1,6 @@
 @php
+    use Capell\Core\Support\Security\PublicUrlSanitizer;
+
     $columns = data_get($section, 'items', data_get($section, 'columns', [
         ['title' => __('capell-theme-agency::sections.footer.browse_heading'), 'links' => [__('capell-theme-agency::sections.footer.models'), __('capell-theme-agency::sections.footer.accessories'), __('capell-theme-agency::sections.footer.compare')]],
         ['title' => __('capell-theme-agency::sections.footer.members_heading'), 'links' => [__('capell-theme-agency::sections.footer.support'), __('capell-theme-agency::sections.footer.trade_in'), __('capell-theme-agency::sections.footer.financing')]],
@@ -27,11 +29,15 @@
                     </h3>
                     <ul class="ppc-footer-links">
                         @foreach (data_get($column, 'links', []) as $link)
+                            @php
+                                $safeFooterLinkUrl = is_array($link)
+                                    ? PublicUrlSanitizer::sanitize(data_get($link, 'url', data_get($link, 'href')))
+                                    : null;
+                            @endphp
+
                             <li>
-                                @if (is_array($link) && filled(data_get($link, 'url', data_get($link, 'href'))))
-                                    <a
-                                        href="{{ data_get($link, 'url', data_get($link, 'href')) }}"
-                                    >
+                                @if (filled($safeFooterLinkUrl))
+                                    <a href="{{ $safeFooterLinkUrl }}">
                                         {{ data_get($link, 'label', data_get($link, 'title', '')) }}
                                     </a>
                                 @else

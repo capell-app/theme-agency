@@ -1,4 +1,6 @@
 @php
+    use Capell\Core\Support\Security\PublicUrlSanitizer;
+
     $heading = data_get($section, 'heading', __('capell-theme-agency::sections.updates.heading'));
     $summary = data_get($section, 'summary', __('capell-theme-agency::sections.updates.summary'));
     $items = data_get($section, 'items', [
@@ -6,7 +8,7 @@
         ['title' => __('capell-theme-agency::sections.updates.beta_title'), 'summary' => __('capell-theme-agency::sections.updates.beta_summary')],
     ]);
     $ctaLabel = data_get($section, 'label', __('capell-theme-agency::sections.updates.button'));
-    $ctaUrl = data_get($section, 'url', '#awards');
+    $ctaUrl = PublicUrlSanitizer::sanitize(data_get($section, 'url', '#awards')) ?? '#awards';
 @endphp
 
 <section
@@ -28,9 +30,9 @@
         <div class="ppc-grid">
             @foreach ($items as $item)
                 @php
-                    $itemImage = data_get($item, 'image', data_get($item, 'imageUrl'));
+                    $itemImage = PublicUrlSanitizer::sanitize(data_get($item, 'image', data_get($item, 'imageUrl')));
                     $itemAlt = data_get($item, 'imageAlt', data_get($item, 'title', ''));
-                    $itemUrl = data_get($item, 'url', data_get($item, 'href'));
+                    $itemUrl = PublicUrlSanitizer::sanitize(data_get($item, 'url', data_get($item, 'href')));
                     $award = data_get($item, 'award', __('capell-theme-agency::sections.updates.default_award'));
                 @endphp
 
