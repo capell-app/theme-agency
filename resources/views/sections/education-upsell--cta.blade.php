@@ -32,16 +32,12 @@
         <p class="ppc-lede">{{ $summary }}</p>
 
         @if ($leadItem !== null)
-            @php
-                $leadUrl = PublicUrlSanitizer::sanitize(data_get($leadItem, 'url', data_get($leadItem, 'href', '#learn'))) ?? '#learn';
-            @endphp
-
             <article class="ppc-card ppc-course-card ppc-course-lead">
                 <p class="ppc-chip">{{ __('capell-theme-agency::sections.spotlight.upsell_lead_label') }}</p>
                 <h3>
                     <a
                         class="ppc-title-link"
-                        href="{{ $leadUrl }}"
+                        href="{{ PublicUrlSanitizer::sanitize(data_get($leadItem, 'url', data_get($leadItem, 'href', '#learn'))) ?? '#learn' }}"
                     >
                         {{ data_get($leadItem, 'title', data_get($leadItem, 'name', '')) }}
                     </a>
@@ -49,7 +45,7 @@
                 <p>{{ data_get($leadItem, 'summary', '') }}</p>
                 <a
                     class="ppc-button"
-                    href="{{ $leadUrl }}"
+                    href="{{ PublicUrlSanitizer::sanitize(data_get($leadItem, 'url', data_get($leadItem, 'href', '#learn'))) ?? '#learn' }}"
                 >
                     {{ $ctaLabel }}
                 </a>
@@ -59,16 +55,12 @@
         @if ($restItems->isNotEmpty())
             <div class="ppc-grid">
                 @foreach ($restItems as $item)
-                    @php
-                        $itemUrl = PublicUrlSanitizer::sanitize(data_get($item, 'url', data_get($item, 'href')));
-                    @endphp
-
                     <article class="ppc-card ppc-course-card">
                         <h3>
-                            @if (filled($itemUrl))
+                            @if (filled(PublicUrlSanitizer::sanitize(data_get($item, 'url', data_get($item, 'href')))))
                                 <a
                                     class="ppc-title-link"
-                                    href="{{ $itemUrl }}"
+                                    href="{{ PublicUrlSanitizer::sanitize(data_get($item, 'url', data_get($item, 'href'))) }}"
                                 >
                                     {{ data_get($item, 'title', data_get($item, 'name', '')) }}
                                 </a>

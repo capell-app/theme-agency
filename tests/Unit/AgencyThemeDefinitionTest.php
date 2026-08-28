@@ -132,10 +132,11 @@ it('exposes the current page through the portfolio navigation', function (): voi
 
 it('exposes the agency identity control and consumes it in CSS', function (): void {
     $definition = AgencyThemeServiceProvider::definition();
-    $schema = $definition->frontend['editor'];
+    $groups = $definition->frontendEditorGroups();
+    $tokens = $definition->frontendEditorTokens();
 
-    expect($schema['groups']['identity'])->toBe(['plateCrop'])
-        ->and($schema['tokens']['plateCrop']['options'])->toBe(['contained', 'panoramic', 'cinematic']);
+    expect($groups['identity'])->toBe(['plateCrop'])
+        ->and($tokens['plateCrop']['options'])->toBe(['contained', 'panoramic', 'cinematic']);
 
     foreach ($definition->presets as $preset) {
         expect($preset->values['plateCrop'] ?? null)->toBe('contained');

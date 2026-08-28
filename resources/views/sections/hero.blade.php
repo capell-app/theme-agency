@@ -47,13 +47,9 @@
             <p class="ppc-lede">{{ $summary }}</p>
             <div class="ppc-actions">
                 @foreach ($actions as $action)
-                    @php
-                        $safeActionUrl = PublicUrlSanitizer::sanitize(data_get($action, 'url', '/')) ?? '/';
-                    @endphp
-
                     <a
                         class="ppc-button {{ data_get($action, 'style') === 'secondary' ? 'ppc-button-secondary' : '' }}"
-                        href="{{ $safeActionUrl }}"
+                        href="{{ PublicUrlSanitizer::sanitize(data_get($action, 'url', '/')) ?? '/' }}"
                     >
                         {{ data_get($action, 'label') }}
                     </a>
