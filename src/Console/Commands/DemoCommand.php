@@ -5,12 +5,15 @@ declare(strict_types=1);
 namespace Capell\ThemeAgency\Console\Commands;
 
 use Capell\FoundationTheme\Data\ThemeDemoInstallData;
+use Capell\FoundationTheme\Support\Demo\InteractsWithThemeDemoProfile;
 use Capell\ThemeAgency\Actions\InstallAgencyThemeDemoAction;
 use Illuminate\Console\Command;
 
 final class DemoCommand extends Command
 {
-    protected $signature = 'capell:theme-agency-demo {--url=} {--languages=} {--sites=} {--force}';
+    use InteractsWithThemeDemoProfile;
+
+    protected $signature = 'capell:theme-agency-demo {--url=} {--languages=} {--sites=} {--force} {--profile=}';
 
     protected $description = 'Install Agency theme demo content.';
 
@@ -21,6 +24,7 @@ final class DemoCommand extends Command
             languageCodes: $this->parseCsvOption('languages'),
             baseUrl: $this->resolveBaseUrl(),
             force: (bool) $this->option('force'),
+            profile: $this->profileOption(),
         ));
     }
 
