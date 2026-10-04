@@ -10,8 +10,6 @@ Theme Agency provides a Blade presentation for curated portfolios, creator profi
 
 Admins select Agency through theme management, preview it, and adjust shared theme settings. Public pages use its portfolio-focused presets and package-owned widgets.
 
-Evidence: [`src/AgencyThemeServiceProvider.php`](src/AgencyThemeServiceProvider.php), [`src/Support/Demo/AgencyDemoContent.php`](src/Support/Demo/AgencyDemoContent.php), [`tests/Feature/SignatureWidgetsRenderTest.php`](tests/Feature/SignatureWidgetsRenderTest.php), [`capell.json`](capell.json), [`src/Manifest/ThemeManagementPageContribution.php`](src/Manifest/ThemeManagementPageContribution.php), [`tests/Unit/AgencyThemeDefinitionTest.php`](tests/Unit/AgencyThemeDefinitionTest.php), [`docs/overview.admin.md`](docs/overview.admin.md).
-
 Status details:
 
 - Status: Available
@@ -26,8 +24,6 @@ Status details:
 **For developers:** The provider extends the Foundation default theme and registers Agency definitions, presets, assets, and layout-widget renderables through shared registries.
 
 **For teams:** Portfolio and design-education teams get a recognition-led public structure while editors keep their normal Capell content workflow.
-
-Evidence: [`src/AgencyThemeServiceProvider.php`](src/AgencyThemeServiceProvider.php), [`tests/Unit/AgencyThemeDefinitionTest.php`](tests/Unit/AgencyThemeDefinitionTest.php), [`tests/Unit/PublicOutputSafetyTest.php`](tests/Unit/PublicOutputSafetyTest.php), [`docs/overview.admin.md`](docs/overview.admin.md), [`src/Support/Demo/AgencyDemoContent.php`](src/Support/Demo/AgencyDemoContent.php), [`tests/Feature/SignatureWidgetsRenderTest.php`](tests/Feature/SignatureWidgetsRenderTest.php).
 
 ## Screens And Workflow
 
@@ -156,6 +152,5 @@ This theme has no schema impact. It relies on core Capell site, page, locale, an
 - [Capell documentation design system](../../docs/DESIGN_SYSTEM.md)
 - [Capell and package ERD notes](../../docs/erd/capell-and-package-erds.md)
 - Related packages: [Theme Foundation](../theme-foundation/README.md), [Form Builder](../form-builder/README.md), [Newsletter](../newsletter/README.md).
-- Focused tests: `vendor/bin/pest packages/theme-agency/tests --configuration=phpunit.xml`.
 
 <!-- prettier-ignore-end -->
