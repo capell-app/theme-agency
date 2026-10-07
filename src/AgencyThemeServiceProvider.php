@@ -12,13 +12,13 @@ use Capell\Core\ThemeStudio\Data\ThemeFrontendBuildAssetsData;
 use Capell\Core\ThemeStudio\Data\ThemePresetData;
 use Capell\Core\ThemeStudio\Theme\ThemeRegistry;
 use Capell\FoundationTheme\Support\Editor\StandardThemeEditorSchema;
+use Capell\FoundationTheme\Support\Providers\AbstractThemeServiceProvider;
 use Capell\FoundationTheme\Support\Providers\RegistersLayoutNativeThemeDefaults;
 use Capell\FoundationTheme\Support\Providers\RegistersOptionalThemeSectionAvailability;
-use Capell\ThemeAgency\Console\Commands\DemoCommand;
-use Illuminate\Support\ServiceProvider;
+use Capell\ThemeAgency\Providers\ConsoleServiceProvider;
 use Override;
 
-final class AgencyThemeServiceProvider extends ServiceProvider
+final class AgencyThemeServiceProvider extends AbstractThemeServiceProvider
 {
     use RegistersLayoutNativeThemeDefaults;
     use RegistersOptionalThemeSectionAvailability;
@@ -43,7 +43,6 @@ final class AgencyThemeServiceProvider extends ServiceProvider
             previewImage: '/vendor/capell/themes/agency.webp',
             tags: ['Portfolio', 'Directory', 'Awards', 'Creators', 'Gallery'],
             bestFit: ['Portfolio directories', 'Creative award sites', 'Freelancer showcases', 'Studio indexes', 'Design education hubs'],
-            includedSections: ['navigation', 'hero', 'featured-portfolios', 'filter-taxonomies', 'portfolio-grid', 'awarded-profiles', 'creator-directory', 'education-upsell', 'proof', 'content-listing', 'form', 'newsletter', 'cta', 'footer'],
             presets: [
                 new ThemePresetData(
                     key: self::THEME_KEY,
@@ -124,6 +123,7 @@ final class AgencyThemeServiceProvider extends ServiceProvider
                     ],
                 ),
             ],
+            includedSections: ['navigation', 'hero', 'featured-portfolios', 'filter-taxonomies', 'portfolio-grid', 'awarded-profiles', 'creator-directory', 'education-upsell', 'proof', 'content-listing', 'form', 'newsletter', 'cta', 'footer'],
             assets: [],
             runtime: FrontendRuntime::Blade,
             frontend: [
@@ -149,14 +149,16 @@ final class AgencyThemeServiceProvider extends ServiceProvider
     }
 
     #[Override]
-    public function register(): void {}
-
-    public function boot(ThemeRegistry $registry): void
+    public function register(): void
     {
-        if ($this->app->runningInConsole()) {
-            $this->commands([DemoCommand::class]);
-        }
+        parent::register();
 
+        $this->app->register(ConsoleServiceProvider::class);
+    }
+
+    #[Override]
+    protected function bootTheme(ThemeRegistry $registry): void
+    {
         $this->registerOptionalThemeSectionAvailability(
             viewName: 'capell-theme-agency::widget.section',
             packageBySection: [

@@ -24,8 +24,8 @@
         "conflicts": []
     },
     "providers": {
-        "metadata": [],
-        "install": [],
+        "metadata": ["Capell\\ThemeAgency\\AgencyThemeServiceProvider"],
+        "install": ["Capell\\ThemeAgency\\Providers\\ConsoleServiceProvider"],
         "runtime": ["Capell\\ThemeAgency\\AgencyThemeServiceProvider"],
         "admin": [],
         "frontend": []

@@ -48,6 +48,7 @@ Desktop, tablet, and mobile variants remain defined in the screenshot contract; 
 ### Service providers
 
 - `Capell\ThemeAgency\AgencyThemeServiceProvider`
+- `Capell\ThemeAgency\Providers\ConsoleServiceProvider`
 
 ### Actions
 
