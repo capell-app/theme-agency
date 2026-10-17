@@ -13,7 +13,7 @@ Admins select Agency through theme management, preview it, and adjust shared the
 Status details:
 
 - Status: Available
-- Tier: premium
+- Tier: free
 - Bundle: themes
 - Composer package: `capell-app/theme-agency`
 - Namespace: `Capell\ThemeAgency`
@@ -101,7 +101,7 @@ Desktop, tablet, and mobile variants remain defined in the screenshot contract; 
 
 ## Marketplace Classification
 
-Tier: **premium**
+Tier: **free**
 
 Product group: **Capell Themes**
 

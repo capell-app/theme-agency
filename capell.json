@@ -9,7 +9,7 @@
     "description": "Award-style portfolios and design-education picks with a best-seat-in-the-house presentation. Includes the playful curated \"Hand Picked\" preset for lighter, taste-led indexes.",
     "product": {
         "group": "Capell Themes",
-        "tier": "premium",
+        "tier": "free",
         "bundle": "themes"
     },
     "namespace": "Capell\\ThemeAgency",
@@ -115,10 +115,10 @@
         }
     ],
     "commercial": {
-        "proposedLicense": "paid",
+        "proposedLicense": "free",
         "requestedCertification": "first-party",
-        "supportPolicy": "priority",
-        "privateDocsRequested": true
+        "supportPolicy": "capell-first-party",
+        "privateDocsRequested": false
     },
     "marketplace": {
         "summary": "Award-style portfolios and design-education picks with a best-seat-in-the-house presentation.",

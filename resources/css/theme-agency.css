@@ -303,7 +303,7 @@
     padding: 0;
 }
 
-.ppc-shell nav a {
+:where(.ppc-shell nav a) {
     color: var(--ppc-night-text);
     font-size: 0.85rem;
     font-weight: 600;
@@ -311,13 +311,13 @@
     transition: var(--ppc-hover-transition);
 }
 
-.ppc-shell nav a:hover,
-.ppc-shell nav a:focus-visible,
-.ppc-shell nav a[aria-current='page'] {
+:where(.ppc-shell nav a:hover),
+:where(.ppc-shell nav a:focus-visible),
+:where(.ppc-shell nav a[aria-current='page']) {
     color: var(--ppc-accent-bright);
 }
 
-.ppc-shell nav a[aria-current='page'] {
+:where(.ppc-shell nav a[aria-current='page']) {
     text-decoration: underline;
     text-decoration-thickness: 0.15rem;
     text-underline-offset: 0.35rem;

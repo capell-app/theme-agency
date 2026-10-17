@@ -124,7 +124,7 @@ final class AgencyThemeServiceProvider extends AbstractThemeServiceProvider
                 ),
             ],
             includedSections: ['navigation', 'hero', 'featured-portfolios', 'filter-taxonomies', 'portfolio-grid', 'awarded-profiles', 'creator-directory', 'education-upsell', 'proof', 'content-listing', 'form', 'newsletter', 'cta', 'footer'],
-            assets: [],
+            assets: ['css' => 'vendor/capell/themes/agency.css'],
             runtime: FrontendRuntime::Blade,
             frontend: [
                 'sectionVariants' => [

@@ -4,8 +4,14 @@ declare(strict_types=1);
 
 use Capell\Core\Facades\CapellCore;
 use Capell\Core\Support\Renderables\RenderableRegistry;
+use Capell\Core\ThemeStudio\Actions\ResolveBrandProfileAction;
+use Capell\Core\ThemeStudio\Assets\ThemeTokenRenderer;
+use Capell\Core\ThemeStudio\Data\BrandProfileData;
 use Capell\Core\ThemeStudio\Data\ThemeFrontendBuildAssetsData;
+use Capell\Core\ThemeStudio\Data\ThemeOverrideData;
 use Capell\Core\ThemeStudio\Theme\ThemeRegistry;
+use Capell\LayoutBuilder\Models\Widget;
+use Capell\Tests\Support\RenderedHtml;
 use Capell\ThemeAgency\AgencyThemeServiceProvider;
 use Capell\ThemeAgency\Health\ThemeAgencyHealthCheck;
 use Capell\ThemeAgency\Support\Demo\AgencyDemoContent;
@@ -38,7 +44,7 @@ it('defines the agency layout-native contract', function (): void {
         ->and($definition->presets[0]->key)->toBe('agency')
         ->and($definition->presets[2]->key)->toBe('hand-picked')
         ->and($definition->runtime->value)->toBe('blade')
-        ->and($definition->assets)->toBe([])
+        ->and($definition->assets)->toBe(['css' => 'vendor/capell/themes/agency.css'])
         ->and($definition->frontendBuildAssets())->toBeInstanceOf(ThemeFrontendBuildAssetsData::class)
         ->and($definition->frontendBuildAssets()?->cssSource)->toBe('resources/css/theme-agency.css')
         ->and($definition->frontendBuildAssets()?->cssBuildInput)->toBe('resources/css/capell/themes/agency.css')
@@ -61,7 +67,8 @@ it('places owned navigation and hero before portable copy inside the agency shel
         ->and(data_get($main, 'widgets.2.meta.page_content'))->toBe(['content']);
 });
 
-it('boots definition-only and registers only agency-owned layout widget keys', function (): void {
+it('renders editor copy through the registered agency widget handlers', function (): void {
+    CapellCore::forcePackageInstalled('capell-app/theme-foundation');
     CapellCore::forcePackageInstalled(AgencyThemeServiceProvider::$packageName);
 
     $themeRegistry = resolve(ThemeRegistry::class);
@@ -69,10 +76,23 @@ it('boots definition-only and registers only agency-owned layout widget keys', f
     $provider->register();
     $provider->boot($themeRegistry);
 
-    expect($themeRegistry->has(AgencyThemeServiceProvider::THEME_KEY))->toBeTrue()
-        ->and($themeRegistry->has(AgencyThemeServiceProvider::THEME_KEY))->toBeTrue()
-        ->and(resolve(RenderableRegistry::class)->get('layout-widget', 'capell.widget.agency.portfolio-grid')->blade)
-        ->toBe('capell-theme-agency::widget.section');
+    expect($themeRegistry->has(AgencyThemeServiceProvider::THEME_KEY))->toBeTrue();
+
+    foreach (['portfolio-grid'] as $type) {
+        $entry = resolve(RenderableRegistry::class)->get('layout-widget', 'capell.widget.agency.' . $type);
+        $widget = new Widget(['meta' => [
+            'type' => $type,
+            'heading' => 'An editor-owned section',
+            'summary' => 'Visible copy from the registered widget.',
+            'items' => [],
+        ]]);
+        $viewName = $entry->blade;
+        throw_unless(is_string($viewName) && view()->exists($viewName), RuntimeException::class, 'Expected a renderable widget view.');
+        $document = new RenderedHtml(view($viewName, ['widget' => $widget])->render());
+
+        expect($document->count('//*[self::h1 or self::h2][normalize-space(.)="An editor-owned section"]'))->toBe(1)
+            ->and($document->count('//p[normalize-space(.)="Visible copy from the registered widget."]'))->toBe(1);
+    }
 });
 
 it('renders looping hero video media with a large header image', function (): void {
@@ -119,18 +139,13 @@ it('renders looping hero gif media without requiring a video source', function (
         ->not->toContain('<video');
 });
 
-it('exposes the current page through the portfolio navigation', function (): void {
-    $themeRoot = dirname(__DIR__, 2);
-    $navigation = file_get_contents($themeRoot . '/resources/views/sections/navigation.blade.php');
+require_once __DIR__ . '/../../../theme-foundation/tests/Support/ThemeNavigationAssertions.php';
 
-    expect($navigation)
-        ->toContain('->filter(')
-        ->toContain("'active' =>")
-        ->toContain('aria-current="page"')
-        ->toContain("'links' => \$links");
+it('exposes the current page through the portfolio navigation', function (): void {
+    assertThemeNavigationOutcomes('agency');
 });
 
-it('exposes the agency identity control and consumes it in CSS', function (): void {
+it('renders each agency identity choice and rejects unsupported choices', function (): void {
     $definition = AgencyThemeServiceProvider::definition();
     $groups = $definition->frontendEditorGroups();
     $tokens = $definition->frontendEditorTokens();
@@ -142,6 +157,28 @@ it('exposes the agency identity control and consumes it in CSS', function (): vo
         expect($preset->values['plateCrop'] ?? null)->toBe('contained');
     }
 
+    foreach ($tokens['plateCrop']['options'] as $option) {
+        $profile = ResolveBrandProfileAction::run(
+            new BrandProfileData,
+            $definition,
+            new ThemeOverrideData(themeKey: $definition->key, values: ['plateCrop' => $option]),
+        );
+        $rendered = (new ThemeTokenRenderer)->css($profile);
+        preg_match('/--theme-plate-crop\s*:\s*([^;]+);/', $rendered, $declaration);
+
+        expect($declaration[1] ?? null)->toBe($option);
+    }
+
+    $invalid = ResolveBrandProfileAction::run(
+        new BrandProfileData,
+        $definition,
+        new ThemeOverrideData(themeKey: $definition->key, values: ['plateCrop' => 'unsupported-choice']),
+    );
+
+    expect((new ThemeTokenRenderer)->css($invalid))->not->toContain('--theme-plate-crop');
+});
+
+it('consumes the agency identity options in the theme stylesheet', function (): void {
     $css = (string) file_get_contents(dirname(__DIR__, 2) . '/resources/css/theme-agency.css');
 
     foreach (['contained', 'panoramic', 'cinematic'] as $option) {

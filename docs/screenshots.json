@@ -22,7 +22,14 @@
             "waitFor": "#main",
             "colorSchemes": ["light", "dark"],
             "viewport": "desktop",
-            "fullPage": true
+            "fullPage": true,
+            "beforeWait": [
+                {
+                    "type": "scrollIntoView",
+                    "selector": "footer",
+                    "block": "end"
+                }
+            ]
         },
         {
             "id": "agency-homepage-tablet",
@@ -41,7 +48,14 @@
             "waitFor": "#main",
             "colorSchemes": ["light", "dark"],
             "viewport": "tablet",
-            "fullPage": true
+            "fullPage": true,
+            "beforeWait": [
+                {
+                    "type": "scrollIntoView",
+                    "selector": "footer",
+                    "block": "end"
+                }
+            ]
         },
         {
             "id": "agency-homepage-mobile",
@@ -60,7 +74,14 @@
             "waitFor": "#main",
             "colorSchemes": ["light", "dark"],
             "viewport": "mobile",
-            "fullPage": true
+            "fullPage": true,
+            "beforeWait": [
+                {
+                    "type": "scrollIntoView",
+                    "selector": "footer",
+                    "block": "end"
+                }
+            ]
         },
         {
             "id": "agency-detail",
@@ -79,7 +100,14 @@
             "waitFor": "#main",
             "colorSchemes": ["light", "dark"],
             "viewport": "desktop",
-            "fullPage": true
+            "fullPage": true,
+            "beforeWait": [
+                {
+                    "type": "scrollIntoView",
+                    "selector": "footer",
+                    "block": "end"
+                }
+            ]
         },
         {
             "id": "agency-detail-tablet",
@@ -98,7 +126,14 @@
             "waitFor": "#main",
             "colorSchemes": ["light", "dark"],
             "viewport": "tablet",
-            "fullPage": true
+            "fullPage": true,
+            "beforeWait": [
+                {
+                    "type": "scrollIntoView",
+                    "selector": "footer",
+                    "block": "end"
+                }
+            ]
         },
         {
             "id": "agency-detail-mobile",
@@ -117,7 +152,14 @@
             "waitFor": "#main",
             "colorSchemes": ["light", "dark"],
             "viewport": "mobile",
-            "fullPage": true
+            "fullPage": true,
+            "beforeWait": [
+                {
+                    "type": "scrollIntoView",
+                    "selector": "footer",
+                    "block": "end"
+                }
+            ]
         },
         {
             "id": "agency-directory",
@@ -136,7 +178,14 @@
             "waitFor": "#main",
             "colorSchemes": ["light", "dark"],
             "viewport": "desktop",
-            "fullPage": true
+            "fullPage": true,
+            "beforeWait": [
+                {
+                    "type": "scrollIntoView",
+                    "selector": "footer",
+                    "block": "end"
+                }
+            ]
         },
         {
             "id": "agency-directory-tablet",
@@ -155,7 +204,14 @@
             "waitFor": "#main",
             "colorSchemes": ["light", "dark"],
             "viewport": "tablet",
-            "fullPage": true
+            "fullPage": true,
+            "beforeWait": [
+                {
+                    "type": "scrollIntoView",
+                    "selector": "footer",
+                    "block": "end"
+                }
+            ]
         },
         {
             "id": "agency-directory-mobile",
@@ -174,7 +230,14 @@
             "waitFor": "#main",
             "colorSchemes": ["light", "dark"],
             "viewport": "mobile",
-            "fullPage": true
+            "fullPage": true,
+            "beforeWait": [
+                {
+                    "type": "scrollIntoView",
+                    "selector": "footer",
+                    "block": "end"
+                }
+            ]
         },
         {
             "id": "agency-empty",
@@ -194,7 +257,15 @@
             "waitFor": "#main",
             "colorSchemes": ["light", "dark"],
             "viewport": "desktop",
-            "fullPage": true
+            "fullPage": true,
+            "beforeWait": [
+                {
+                    "type": "scrollIntoView",
+                    "selector": "footer",
+                    "block": "end"
+                }
+            ],
+            "expectedState": "empty"
         },
         {
             "id": "agency-empty-tablet",
@@ -214,7 +285,15 @@
             "waitFor": "#main",
             "colorSchemes": ["light", "dark"],
             "viewport": "tablet",
-            "fullPage": true
+            "fullPage": true,
+            "beforeWait": [
+                {
+                    "type": "scrollIntoView",
+                    "selector": "footer",
+                    "block": "end"
+                }
+            ],
+            "expectedState": "empty"
         },
         {
             "id": "agency-empty-mobile",
@@ -234,7 +313,15 @@
             "waitFor": "#main",
             "colorSchemes": ["light", "dark"],
             "viewport": "mobile",
-            "fullPage": true
+            "fullPage": true,
+            "beforeWait": [
+                {
+                    "type": "scrollIntoView",
+                    "selector": "footer",
+                    "block": "end"
+                }
+            ],
+            "expectedState": "empty"
         },
         {
             "id": "agency-contact",
@@ -253,7 +340,14 @@
             "waitFor": "#main",
             "colorSchemes": ["light", "dark"],
             "viewport": "desktop",
-            "fullPage": true
+            "fullPage": true,
+            "beforeWait": [
+                {
+                    "type": "scrollIntoView",
+                    "selector": "footer",
+                    "block": "end"
+                }
+            ]
         },
         {
             "id": "agency-contact-tablet",
@@ -272,7 +366,14 @@
             "waitFor": "#main",
             "colorSchemes": ["light", "dark"],
             "viewport": "tablet",
-            "fullPage": true
+            "fullPage": true,
+            "beforeWait": [
+                {
+                    "type": "scrollIntoView",
+                    "selector": "footer",
+                    "block": "end"
+                }
+            ]
         },
         {
             "id": "agency-contact-mobile",
@@ -291,7 +392,14 @@
             "waitFor": "#main",
             "colorSchemes": ["light", "dark"],
             "viewport": "mobile",
-            "fullPage": true
+            "fullPage": true,
+            "beforeWait": [
+                {
+                    "type": "scrollIntoView",
+                    "selector": "footer",
+                    "block": "end"
+                }
+            ]
         },
         {
             "id": "agency-not-found",
@@ -310,7 +418,15 @@
             "waitFor": "#main",
             "colorSchemes": ["light", "dark"],
             "viewport": "desktop",
-            "fullPage": true
+            "fullPage": true,
+            "beforeWait": [
+                {
+                    "type": "scrollIntoView",
+                    "selector": "footer",
+                    "block": "end"
+                }
+            ],
+            "expectedState": "not-found"
         },
         {
             "id": "agency-not-found-tablet",
@@ -329,7 +445,15 @@
             "waitFor": "#main",
             "colorSchemes": ["light", "dark"],
             "viewport": "tablet",
-            "fullPage": true
+            "fullPage": true,
+            "beforeWait": [
+                {
+                    "type": "scrollIntoView",
+                    "selector": "footer",
+                    "block": "end"
+                }
+            ],
+            "expectedState": "not-found"
         },
         {
             "id": "agency-not-found-mobile",
@@ -348,7 +472,15 @@
             "waitFor": "#main",
             "colorSchemes": ["light", "dark"],
             "viewport": "mobile",
-            "fullPage": true
+            "fullPage": true,
+            "beforeWait": [
+                {
+                    "type": "scrollIntoView",
+                    "selector": "footer",
+                    "block": "end"
+                }
+            ],
+            "expectedState": "not-found"
         },
         {
             "id": "agency-cta",
@@ -367,7 +499,14 @@
             "waitFor": "#main",
             "colorSchemes": ["light", "dark"],
             "viewport": "desktop",
-            "fullPage": true
+            "fullPage": true,
+            "beforeWait": [
+                {
+                    "type": "scrollIntoView",
+                    "selector": "footer",
+                    "block": "end"
+                }
+            ]
         },
         {
             "id": "agency-cta-tablet",
@@ -386,7 +525,14 @@
             "waitFor": "#main",
             "colorSchemes": ["light", "dark"],
             "viewport": "tablet",
-            "fullPage": true
+            "fullPage": true,
+            "beforeWait": [
+                {
+                    "type": "scrollIntoView",
+                    "selector": "footer",
+                    "block": "end"
+                }
+            ]
         },
         {
             "id": "agency-cta-mobile",
@@ -405,7 +551,14 @@
             "waitFor": "#main",
             "colorSchemes": ["light", "dark"],
             "viewport": "mobile",
-            "fullPage": true
+            "fullPage": true,
+            "beforeWait": [
+                {
+                    "type": "scrollIntoView",
+                    "selector": "footer",
+                    "block": "end"
+                }
+            ]
         }
     ],
     "visualProof": {
