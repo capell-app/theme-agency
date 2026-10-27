@@ -54,10 +54,11 @@ final class ThemeAgencyHealthCheck implements ChecksExtensionHealth
         $registered = app()->bound(ThemeRegistry::class) && resolve(ThemeRegistry::class)->has(AgencyThemeServiceProvider::THEME_KEY);
 
         return new DoctorCheckResultData(
-            label: 'Theme Agency Studio definition',
+            label: 'Theme Agency: theme registered',
             passed: $registered,
             message: $registered ? 'The theme definition is registered and available for rendering.' : 'The theme definition is not registered.',
             remediation: $registered ? null : 'Ensure AgencyThemeServiceProvider boots and registers the theme with ThemeRegistry.',
+            id: 'legacy.theme.agency.studio.definition',
         );
     }
 
@@ -67,10 +68,11 @@ final class ThemeAgencyHealthCheck implements ChecksExtensionHealth
         $missingViewFiles = $this->missingRequiredViewFiles($requiredViewFiles);
 
         return new DoctorCheckResultData(
-            label: 'Theme Agency Blade views',
+            label: 'Theme Agency: page templates available',
             passed: $missingViewFiles === [],
             message: $missingViewFiles === [] ? 'All required theme Blade views are present.' : 'Missing theme Blade views: ' . implode(', ', $missingViewFiles) . '.',
             remediation: $missingViewFiles === [] ? null : 'Restore the missing package Blade files before enabling the theme.',
+            id: 'legacy.theme.agency.blade.views',
         );
     }
 
@@ -80,10 +82,11 @@ final class ThemeAgencyHealthCheck implements ChecksExtensionHealth
         $missingScreenshotFiles = $this->missingMarketplaceScreenshotFiles($screenshotPaths);
 
         return new DoctorCheckResultData(
-            label: 'Theme Agency marketplace screenshots',
+            label: 'Theme Agency: marketplace screenshots present',
             passed: $missingScreenshotFiles === [],
             message: $missingScreenshotFiles === [] ? 'Every marketplace screenshot path points at a committed package file.' : 'Missing marketplace screenshots: ' . implode(', ', $missingScreenshotFiles) . '.',
             remediation: $missingScreenshotFiles === [] ? null : 'Update capell.json to reference committed screenshots or add the missing media files.',
+            id: 'legacy.theme.agency.marketplace.screenshots',
         );
     }
 
