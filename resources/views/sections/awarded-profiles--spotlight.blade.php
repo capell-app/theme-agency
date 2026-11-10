@@ -70,8 +70,8 @@
                             </span>
 
                             @if (filled($itemImage))
-                                <img
-                                    src="{{ $itemImage }}"
+                                <x-capell::image-source
+                                    :image="$itemImage"
                                     alt="{{ $itemAlt }}"
                                     loading="lazy"
                                     decoding="async"

@@ -31,8 +31,8 @@
                 >
                     <div class="ppc-creator-head">
                         @if (filled($storyImage))
-                            <img
-                                src="{{ $storyImage }}"
+                            <x-capell::image-source
+                                :image="$storyImage"
                                 alt="{{ $storyAlt }}"
                                 loading="lazy"
                                 decoding="async"

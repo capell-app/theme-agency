@@ -79,8 +79,8 @@
                         />
                     </video>
                 @elseif ($previewGifUrl || $previewImageUrl)
-                    <img
-                        src="{{ $previewGifUrl ?: $previewImageUrl }}"
+                    <x-capell::image-source
+                        :image="$previewGifUrl ?: $previewImageUrl"
                         alt="{{ $previewAlt }}"
                         loading="eager"
                         fetchpriority="high"
@@ -106,8 +106,8 @@
             class="ppc-section-inner"
             style="padding-top: 0"
         >
-            <img
-                src="{{ $headerImageUrl }}"
+            <x-capell::image-source
+                :image="$headerImageUrl"
                 alt="{{ $headerImageAlt }}"
                 loading="eager"
                 fetchpriority="high"

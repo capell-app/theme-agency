@@ -123,6 +123,22 @@
     "marketplace": {
         "summary": "Award-style portfolios and design-education picks with a best-seat-in-the-house presentation.",
         "description": "Agency provides a distinct theme definition, demo command, marketplace metadata, and public-safe Blade views for portfolio collections that need large previews, award labels, creator metadata, taxonomy filters, and educational upsells.",
+        "problem": "Design educators find it difficult to present portfolios and recognition together on their site.",
+        "outcome": "A portfolio site presents creative work alongside its makers and recognition.",
+        "faq": [
+            {
+                "question": "How does Agency show creative work?",
+                "answer": "It presents curated portfolios alongside creator profiles and winner labels."
+            },
+            {
+                "question": "Can Agency be previewed before applying it?",
+                "answer": "Yes. Preview the theme on existing content before applying it to the selected site."
+            },
+            {
+                "question": "Will Agency let me restore the previous theme?",
+                "answer": "Reapply the site’s previous theme to restore its selection. Shared Theme Studio settings saves can affect public pages."
+            }
+        ],
         "screenshots": [
             {
                 "path": "docs/screenshots/agency-homepage.webp",
