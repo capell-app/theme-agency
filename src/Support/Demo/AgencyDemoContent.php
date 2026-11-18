@@ -156,6 +156,8 @@ final class AgencyDemoContent implements ProvidesThemeDemoContent
                             ['label' => 'Browse the collection', 'url' => '#featured', 'style' => 'primary'],
                             ['label' => "See this year's winners", 'url' => '#awards', 'style' => 'secondary'],
                         ],
+                        'panel_kicker' => 'This week in the index',
+                        'badge' => 'Editors\' pick',
                         'mediaUrl' => $media['hero'][0],
                         'mediaAlt' => 'Editorial spread of featured portfolio covers',
                         'header_image_url' => $media['hero'][0],
@@ -530,6 +532,7 @@ final class AgencyDemoContent implements ProvidesThemeDemoContent
 
         return [
             'type' => 'featured-portfolios',
+            'kicker' => 'Featured portfolios',
             'heading' => $heading,
             'summary' => $summary,
             'items' => $this->withImages($entries, $images, 'featured'),
@@ -544,6 +547,7 @@ final class AgencyDemoContent implements ProvidesThemeDemoContent
     ): array {
         return [
             'type' => 'filter-taxonomies',
+            'kicker' => 'Browse by discipline',
             'heading' => $heading,
             'items' => [
                 ['title' => 'Product design', 'summary' => 'App and web interfaces, design systems, and the case studies behind them.', 'count' => '24', 'url' => '#filters'],
@@ -574,6 +578,7 @@ final class AgencyDemoContent implements ProvidesThemeDemoContent
 
         return [
             'type' => 'portfolio-grid',
+            'kicker' => 'Portfolio grid',
             'heading' => $heading,
             'summary' => $summary,
             'items' => $this->withImages($entries, $images, 'grid'),
@@ -598,6 +603,7 @@ final class AgencyDemoContent implements ProvidesThemeDemoContent
 
         return [
             'type' => 'awarded-profiles',
+            'kicker' => 'This year\'s award winners',
             'heading' => $heading,
             'summary' => $summary,
             'label' => 'See all winners',
@@ -625,6 +631,7 @@ final class AgencyDemoContent implements ProvidesThemeDemoContent
 
         return [
             'type' => 'creator-directory',
+            'kicker' => 'Creators worth following',
             'heading' => $heading,
             'summary' => $summary,
             'items' => $this->withImages($entries, $images, 'creators'),
@@ -638,6 +645,9 @@ final class AgencyDemoContent implements ProvidesThemeDemoContent
     {
         return [
             'type' => 'education-upsell',
+            'kicker' => 'For members',
+            'lead_label' => 'Start here',
+            'cta_label' => 'Read the teardown',
             'heading' => 'Learn from the portfolios you admire',
             'summary' => 'Members get the long-form interviews and process teardowns behind the featured work.',
             'items' => [
@@ -657,8 +667,10 @@ final class AgencyDemoContent implements ProvidesThemeDemoContent
     ): array {
         return [
             'type' => 'newsletter',
+            'kicker' => 'The Thursday shortlist',
             'heading' => $heading,
             'summary' => $summary,
+            'note' => 'One email a week. Unsubscribe anytime.',
             'action' => '#newsletter',
         ];
     }
@@ -671,11 +683,12 @@ final class AgencyDemoContent implements ProvidesThemeDemoContent
     ): array {
         return [
             'type' => 'proof',
+            'kicker' => 'A collection readers trust',
             'heading' => $heading,
             'items' => [
-                ['value' => '420+', 'label' => 'Portfolios indexed since 2019'],
-                ['value' => '5 days', 'label' => 'Average review turnaround'],
-                ['value' => '38k', 'label' => 'Readers on the Thursday shortlist'],
+                ['value' => 'Indexed', 'label' => 'Every portfolio is reviewed by an editor before it is listed'],
+                ['value' => 'Prompt', 'label' => 'Reviews are answered in days, not weeks'],
+                ['value' => 'Weekly', 'label' => 'The Thursday shortlist goes to every reader'],
             ],
         ];
     }
@@ -708,6 +721,7 @@ final class AgencyDemoContent implements ProvidesThemeDemoContent
 
         return [
             'type' => 'content-listing',
+            'kicker' => 'More from the archive',
             'heading' => $heading,
             'items' => $items,
         ];

@@ -6,10 +6,10 @@ Start at the [package README](../README.md) when deciding whether to install thi
 
 ## Guides
 
-| Doc                                     | Use it for                                                                         |
-| --------------------------------------- | ---------------------------------------------------------------------------------- |
-| [Overview](overview.md)                 | Package boundary, runtime surfaces, install notes, and first troubleshooting path. |
-| [Screenshot contract](screenshots.json) | Required admin and frontend captures for marketplace and documentation visibility. |
+| Doc                             | Use it for                                                                         |
+| ------------------------------- | ---------------------------------------------------------------------------------- |
+| [Overview](overview.md)         | Package boundary, runtime surfaces, install notes, and first troubleshooting path. |
+| [Screenshots](screenshots.json) | Required admin and frontend captures for marketplace and documentation visibility. |
 
 ## Developer Starting Points
 

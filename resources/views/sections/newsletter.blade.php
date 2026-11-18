@@ -4,16 +4,20 @@
 >
     <div class="ppc-section-inner ppc-split">
         <div>
-            <p class="ppc-kicker">{{ __('capell-theme-agency::sections.newsletter.kicker') }}</p>
-            <h2>
-                {{ data_get($section, 'heading', __('capell-theme-agency::sections.newsletter.heading')) }}
-            </h2>
-            <p class="ppc-lede">
-                {{ data_get($section, 'summary', __('capell-theme-agency::sections.newsletter.summary')) }}
-            </p>
+            @if (filled(data_get($section, 'kicker')))
+                <p class="ppc-kicker">{{ data_get($section, 'kicker') }}</p>
+            @endif
+
+            @if (filled(data_get($section, 'heading')))
+                <h2>{{ data_get($section, 'heading') }}</h2>
+            @endif
+
+            @if (filled(data_get($section, 'summary')))
+                <p class="ppc-lede">{{ data_get($section, 'summary') }}</p>
+            @endif
         </div>
         <x-capell::newsletter-form
-            :fallback-action="(string) data_get($section, 'action', '#newsletter')"
+            :fallback-action="(string) data_get($section, 'action', '')"
             class="ppc-form"
         >
             <label for="ppc-newsletter-email">
@@ -33,7 +37,9 @@
             >
                 {{ data_get($section, 'button', __('capell-theme-agency::sections.newsletter.button')) }}
             </button>
-            <p class="ppc-meta">{{ __('capell-theme-agency::sections.newsletter.note') }}</p>
+            @if (filled(data_get($section, 'note')))
+                <p class="ppc-meta">{{ data_get($section, 'note') }}</p>
+            @endif
         </x-capell::newsletter-form>
     </div>
 </section>

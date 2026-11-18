@@ -1,31 +1,39 @@
 @php
-    $items = data_get($section, 'items', [
-        ['value' => __('capell-theme-agency::sections.proof.care_value'), 'label' => __('capell-theme-agency::sections.proof.care_label')],
-        ['value' => __('capell-theme-agency::sections.proof.materials_value'), 'label' => __('capell-theme-agency::sections.proof.materials_label')],
-        ['value' => __('capell-theme-agency::sections.proof.stores_value'), 'label' => __('capell-theme-agency::sections.proof.stores_label')],
-    ]);
+    $items = collect(data_get($section, 'items', []))
+        ->filter(fn (mixed $item): bool => filled(data_get($item, 'value', data_get($item, 'title'))) || filled(data_get($item, 'label', data_get($item, 'summary'))))
+        ->values();
 @endphp
 
-<section class="ppc-section">
-    <div class="ppc-section-inner">
-        <p class="ppc-kicker">{{ __('capell-theme-agency::sections.proof.kicker') }}</p>
-        @if (filled(data_get($section, 'heading')))
-            <h2>{{ data_get($section, 'heading') }}</h2>
-        @endif
+@if ($items->isNotEmpty())
+    <section class="ppc-section">
+        <div class="ppc-section-inner">
+            @if (filled(data_get($section, 'kicker')))
+                <p class="ppc-kicker">{{ data_get($section, 'kicker') }}</p>
+            @endif
 
-        @if (filled(data_get($section, 'summary')))
-            <p class="ppc-lede">{{ data_get($section, 'summary') }}</p>
-        @endif
+            @if (filled(data_get($section, 'heading')))
+                <h2>{{ data_get($section, 'heading') }}</h2>
+            @endif
 
-        <div class="ppc-grid">
-            @foreach ($items as $item)
-                <article class="ppc-card">
-                    <h3>
-                        {{ data_get($item, 'value', data_get($item, 'title', '')) }}
-                    </h3>
-                    <p>{{ data_get($item, 'label', data_get($item, 'summary', '')) }}</p>
-                </article>
-            @endforeach
+            @if (filled(data_get($section, 'summary')))
+                <p class="ppc-lede">{{ data_get($section, 'summary') }}</p>
+            @endif
+
+            <div class="ppc-grid">
+                @foreach ($items as $item)
+                    <article class="ppc-card">
+                        @if (filled(data_get($item, 'value', data_get($item, 'title'))))
+                            <h3>
+                                {{ data_get($item, 'value', data_get($item, 'title')) }}
+                            </h3>
+                        @endif
+
+                        @if (filled(data_get($item, 'label', data_get($item, 'summary'))))
+                            <p>{{ data_get($item, 'label', data_get($item, 'summary')) }}</p>
+                        @endif
+                    </article>
+                @endforeach
+            </div>
         </div>
-    </div>
-</section>
+    </section>
+@endif

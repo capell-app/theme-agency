@@ -47,7 +47,7 @@ final class AgencyThemeServiceProvider extends AbstractThemeServiceProvider
                 new ThemePresetData(
                     key: self::THEME_KEY,
                     name: 'Agency',
-                    description: 'Agency visual preset for awards-style grids, large preview cards, filters, status labels, creator metadata, newest entries, awarded profiles, and education modules.',
+                    description: 'Agency visual preset for awards-style grids, large preview cards, filters, award badges, creator metadata, newest entries, awarded profiles, and education modules.',
                     previewImage: '/vendor/capell/themes/agency.webp',
                     values: [
                         'primaryColor' => '#111111',

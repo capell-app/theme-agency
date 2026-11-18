@@ -127,44 +127,116 @@
         "outcome": "A portfolio site presents creative work alongside its makers and recognition.",
         "faq": [
             {
-                "question": "How does Agency show creative work?",
-                "answer": "It presents curated portfolios alongside creator profiles and winner labels."
+                "question": "What kind of site is Agency for?",
+                "answer": "Portfolio and design-education sites. It brings featured portfolios, newest entries, winner labels, creator profiles and newsletter sections, and your text and images stay yours."
             },
             {
-                "question": "Can Agency be previewed before applying it?",
-                "answer": "Yes. Preview the theme on existing content before applying it to the selected site."
+                "question": "Can I preview Agency before applying it?",
+                "answer": "Yes. Preview the theme on existing content before applying it to the selected site, and its current theme stays selected until you choose Apply."
             },
             {
-                "question": "Will Agency let me restore the previous theme?",
-                "answer": "Reapply the site’s previous theme to restore its selection. Shared Theme Studio settings saves can affect public pages."
+                "question": "Can I go back to my old theme after applying Agency?",
+                "answer": "Yes. Reapply the site's previous theme to restore its selection. Saving shared Theme Studio settings can still change public pages that use the theme, so treat those edits as live."
             }
         ],
         "screenshots": [
             {
                 "path": "docs/screenshots/agency-homepage.webp",
-                "alt": "Agency homepage preview",
-                "caption": "Agency homepage"
+                "alt": "Portfolio homepage with a dark opening, featured collections, discipline filters, award winners and a newsletter panel",
+                "caption": "A homepage built from featured portfolios, award winners and a weekly shortlist."
             },
             {
                 "path": "docs/screenshots/agency-landing.webp",
-                "alt": "Agency project detail preview",
-                "caption": "Agency project detail"
+                "alt": "Page for one designer's portfolio with a large photo, award winner cards, featured work and studios they have worked with",
+                "caption": "A single portfolio page shows its award wins, picks and the studios that hired the designer."
             },
             {
                 "path": "docs/screenshots/agency-listing.webp",
-                "alt": "Agency directory preview",
-                "caption": "Agency directory"
+                "alt": "Portfolio index page with discipline filters, a grid of recently added entries and a list of older ones below",
+                "caption": "Browse by discipline and see the newest entries first."
             },
             {
                 "path": "docs/screenshots/agency-search.webp",
-                "alt": "Agency empty-search preview",
-                "caption": "Agency empty search"
+                "alt": "Page for a filter with no matches, showing a blank image panel, discipline links and three featured portfolios",
+                "caption": "When nothing matches, visitors are pointed to broader disciplines and featured work."
             }
         ],
         "categories": ["frontend", "themes"]
     },
     "contributionTraceability": {
-        "deferredContributions": ["route"]
+        "deferredContributions": ["route"],
+        "contributions": [
+            {
+                "type": "content-widget",
+                "key": "renderable:layout-widget:capell.widget.agency.awarded-profiles",
+                "providerBucket": "runtime"
+            },
+            {
+                "type": "content-widget",
+                "key": "renderable:layout-widget:capell.widget.agency.content-listing",
+                "providerBucket": "runtime"
+            },
+            {
+                "type": "content-widget",
+                "key": "renderable:layout-widget:capell.widget.agency.creator-directory",
+                "providerBucket": "runtime"
+            },
+            {
+                "type": "content-widget",
+                "key": "renderable:layout-widget:capell.widget.agency.cta",
+                "providerBucket": "runtime"
+            },
+            {
+                "type": "content-widget",
+                "key": "renderable:layout-widget:capell.widget.agency.education-upsell",
+                "providerBucket": "runtime"
+            },
+            {
+                "type": "content-widget",
+                "key": "renderable:layout-widget:capell.widget.agency.featured-portfolios",
+                "providerBucket": "runtime"
+            },
+            {
+                "type": "content-widget",
+                "key": "renderable:layout-widget:capell.widget.agency.filter-taxonomies",
+                "providerBucket": "runtime"
+            },
+            {
+                "type": "content-widget",
+                "key": "renderable:layout-widget:capell.widget.agency.footer",
+                "providerBucket": "runtime"
+            },
+            {
+                "type": "content-widget",
+                "key": "renderable:layout-widget:capell.widget.agency.form",
+                "providerBucket": "runtime"
+            },
+            {
+                "type": "content-widget",
+                "key": "renderable:layout-widget:capell.widget.agency.hero",
+                "providerBucket": "runtime"
+            },
+            {
+                "type": "content-widget",
+                "key": "renderable:layout-widget:capell.widget.agency.navigation",
+                "providerBucket": "runtime"
+            },
+            {
+                "type": "content-widget",
+                "key": "renderable:layout-widget:capell.widget.agency.newsletter",
+                "providerBucket": "runtime"
+            },
+            {
+                "type": "content-widget",
+                "key": "renderable:layout-widget:capell.widget.agency.portfolio-grid",
+                "providerBucket": "runtime"
+            },
+            {
+                "type": "content-widget",
+                "key": "renderable:layout-widget:capell.widget.agency.proof",
+                "providerBucket": "runtime"
+            }
+        ]
     },
     "extends": "default",
     "themeKey": "agency"

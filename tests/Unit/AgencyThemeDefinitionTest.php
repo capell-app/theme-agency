@@ -84,7 +84,7 @@ it('renders editor copy through the registered agency widget handlers', function
             'type' => $type,
             'heading' => 'An editor-owned section',
             'summary' => 'Visible copy from the registered widget.',
-            'items' => [],
+            'items' => [['title' => 'Owner portfolio']],
         ]]);
         $viewName = $entry->blade;
         throw_unless(is_string($viewName) && view()->exists($viewName), RuntimeException::class, 'Expected a renderable widget view.');
@@ -100,6 +100,7 @@ it('renders looping hero video media with a large header image', function (): vo
 
     $html = view('capell-theme-agency::sections.hero', [
         'section' => [
+            'heading' => 'Owner headline',
             'preview_video_url' => '/media/portfolio-demo.mp4',
             'preview_image_url' => '/media/portfolio-poster.jpg',
             'preview_alt' => 'Portfolio gallery walkthrough',
@@ -126,6 +127,7 @@ it('renders looping hero gif media without requiring a video source', function (
 
     $html = view('capell-theme-agency::sections.hero', [
         'section' => [
+            'heading' => 'Owner headline',
             'media' => [
                 'preview_gif_url' => '/media/portfolio-loop.gif',
                 'preview_alt' => 'Animated portfolio loop',

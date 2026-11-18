@@ -28,6 +28,7 @@ To recover the previous design, reopen the previous theme's management entry, se
 - Built on **Foundation Theme** - install that first.
 - Private theme preview keeps the current site theme selected until you choose **Apply**.
 - Your text and images stay yours; the theme only changes the design.
+- Sections show only the content you add. A section placed without its items stays hidden from visitors, and a button without a link is left out.
 
 ## Try fictional demo content safely
 

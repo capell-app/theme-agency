@@ -8,70 +8,95 @@
      * than three equal cards -- the promoted item is always the first item
      * in the payload (deterministic; §0.1).
      */
-    $heading = data_get($section, 'heading', 'Learn from the portfolios you admire');
-    $summary = data_get($section, 'summary', 'Members get the long-form interviews and process teardowns behind the featured work.');
-    $items = collect(data_get($section, 'items', [
-        ['title' => __('capell-theme-agency::sections.authors.design_title'), 'summary' => __('capell-theme-agency::sections.authors.design_summary')],
-        ['title' => __('capell-theme-agency::sections.authors.advice_title'), 'summary' => __('capell-theme-agency::sections.authors.advice_summary')],
-        ['title' => __('capell-theme-agency::sections.authors.company_title'), 'summary' => __('capell-theme-agency::sections.authors.company_summary')],
-    ]))->take(50)->values();
+    $kicker = data_get($section, 'kicker');
+    $heading = data_get($section, 'heading');
+    $summary = data_get($section, 'summary');
+    $items = collect(data_get($section, 'items', []))
+        ->filter(fn (mixed $item): bool => filled(data_get($item, 'title', data_get($item, 'name'))))
+        ->take(50)
+        ->values();
 
     $leadItem = $items->first();
     $restItems = $items->slice(1)->values();
-    $ctaLabel = data_get($section, 'cta_label', __('capell-theme-agency::sections.spotlight.upsell_cta_label'));
+    $leadUrl = PublicUrlSanitizer::sanitize(data_get($leadItem, 'url', data_get($leadItem, 'href')));
+    $ctaLabel = data_get($leadItem, 'cta_label', data_get($section, 'cta_label'));
+    $leadLabel = data_get($section, 'lead_label');
 @endphp
 
-<section
-    id="learn"
-    class="ppc-section ppc-section-field"
-    data-widget="education-upsell-cta"
->
-    <div class="ppc-section-inner">
-        <p class="ppc-kicker">{{ __('capell-theme-agency::sections.authors.kicker') }}</p>
-        <h2>{{ $heading }}</h2>
-        <p class="ppc-lede">{{ $summary }}</p>
+@if ($items->isNotEmpty())
+    <section
+        id="learn"
+        class="ppc-section ppc-section-field"
+        data-widget="education-upsell-cta"
+    >
+        <div class="ppc-section-inner">
+            @if (filled($kicker))
+                <p class="ppc-kicker">{{ $kicker }}</p>
+            @endif
 
-        @if ($leadItem !== null)
-            <article class="ppc-card ppc-course-card ppc-course-lead">
-                <p class="ppc-chip">{{ __('capell-theme-agency::sections.spotlight.upsell_lead_label') }}</p>
-                <h3>
-                    <a
-                        class="ppc-title-link"
-                        href="{{ PublicUrlSanitizer::sanitize(data_get($leadItem, 'url', data_get($leadItem, 'href', '#learn'))) ?? '#learn' }}"
-                    >
-                        {{ data_get($leadItem, 'title', data_get($leadItem, 'name', '')) }}
-                    </a>
-                </h3>
-                <p>{{ data_get($leadItem, 'summary', '') }}</p>
-                <a
-                    class="ppc-button"
-                    href="{{ PublicUrlSanitizer::sanitize(data_get($leadItem, 'url', data_get($leadItem, 'href', '#learn'))) ?? '#learn' }}"
-                >
-                    {{ $ctaLabel }}
-                </a>
-            </article>
-        @endif
+            @if (filled($heading))
+                <h2>{{ $heading }}</h2>
+            @endif
 
-        @if ($restItems->isNotEmpty())
-            <div class="ppc-grid">
-                @foreach ($restItems as $item)
-                    <article class="ppc-card ppc-course-card">
-                        <h3>
-                            @if (filled(PublicUrlSanitizer::sanitize(data_get($item, 'url', data_get($item, 'href')))))
-                                <a
-                                    class="ppc-title-link"
-                                    href="{{ PublicUrlSanitizer::sanitize(data_get($item, 'url', data_get($item, 'href'))) }}"
-                                >
+            @if (filled($summary))
+                <p class="ppc-lede">{{ $summary }}</p>
+            @endif
+
+            @if ($leadItem !== null)
+                <article class="ppc-card ppc-course-card ppc-course-lead">
+                    @if (filled($leadLabel))
+                        <p class="ppc-chip">{{ $leadLabel }}</p>
+                    @endif
+                    <h3>
+                        @if (filled($leadUrl))
+                            <a
+                                class="ppc-title-link"
+                                href="{{ $leadUrl }}"
+                            >
+                                {{ data_get($leadItem, 'title', data_get($leadItem, 'name', '')) }}
+                            </a>
+                        @else
+                            {{ data_get($leadItem, 'title', data_get($leadItem, 'name', '')) }}
+                        @endif
+                    </h3>
+                    @if (filled(data_get($leadItem, 'summary')))
+                        <p>{{ data_get($leadItem, 'summary') }}</p>
+                    @endif
+
+                    @if (filled($ctaLabel) && filled($leadUrl))
+                        <a
+                            class="ppc-button"
+                            href="{{ $leadUrl }}"
+                        >
+                            {{ $ctaLabel }}
+                        </a>
+                    @endif
+                </article>
+            @endif
+
+            @if ($restItems->isNotEmpty())
+                <div class="ppc-grid">
+                    @foreach ($restItems as $item)
+                        <article class="ppc-card ppc-course-card">
+                            <h3>
+                                @if (filled(PublicUrlSanitizer::sanitize(data_get($item, 'url', data_get($item, 'href')))))
+                                    <a
+                                        class="ppc-title-link"
+                                        href="{{ PublicUrlSanitizer::sanitize(data_get($item, 'url', data_get($item, 'href'))) }}"
+                                    >
+                                        {{ data_get($item, 'title', data_get($item, 'name', '')) }}
+                                    </a>
+                                @else
                                     {{ data_get($item, 'title', data_get($item, 'name', '')) }}
-                                </a>
-                            @else
-                                {{ data_get($item, 'title', data_get($item, 'name', '')) }}
+                                @endif
+                            </h3>
+                            @if (filled(data_get($item, 'summary')))
+                                <p>{{ data_get($item, 'summary') }}</p>
                             @endif
-                        </h3>
-                        <p>{{ data_get($item, 'summary', '') }}</p>
-                    </article>
-                @endforeach
-            </div>
-        @endif
-    </div>
-</section>
+                        </article>
+                    @endforeach
+                </div>
+            @endif
+        </div>
+    </section>
+@endif

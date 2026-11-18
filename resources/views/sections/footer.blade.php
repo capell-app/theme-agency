@@ -1,55 +1,76 @@
 @php
     use Capell\Core\Support\Security\PublicUrlSanitizer;
+    use Illuminate\Support\Facades\Blade;
 
-    $columns = data_get($section, 'items', data_get($section, 'columns', [
-        ['title' => __('capell-theme-agency::sections.footer.browse_heading'), 'links' => [__('capell-theme-agency::sections.footer.models'), __('capell-theme-agency::sections.footer.accessories'), __('capell-theme-agency::sections.footer.compare')]],
-        ['title' => __('capell-theme-agency::sections.footer.members_heading'), 'links' => [__('capell-theme-agency::sections.footer.support'), __('capell-theme-agency::sections.footer.trade_in'), __('capell-theme-agency::sections.footer.financing')]],
-        ['title' => __('capell-theme-agency::sections.footer.brand_heading'), 'links' => [__('capell-theme-agency::sections.footer.stories'), __('capell-theme-agency::sections.footer.updates'), __('capell-theme-agency::sections.footer.newsletter')]],
-    ]));
+    $columns = collect(data_get($section, 'items', data_get($section, 'columns', [])))
+        ->map(function (mixed $column): array {
+            $links = collect(data_get($column, 'links', []))
+                ->map(fn (mixed $link): array => [
+                    'label' => is_array($link) ? data_get($link, 'label', data_get($link, 'title')) : $link,
+                    'url' => is_array($link) ? PublicUrlSanitizer::sanitize(data_get($link, 'url', data_get($link, 'href'))) : null,
+                ])
+                ->filter(fn (array $link): bool => is_string($link['label']) && filled($link['label']))
+                ->values();
+
+            return [
+                'title' => data_get($column, 'title', data_get($column, 'heading')),
+                'links' => $links,
+            ];
+        })
+        ->filter(fn (array $column): bool => $column['links']->isNotEmpty())
+        ->values();
     $brand = data_get($section, 'brand', data_get($section, 'brandName'));
     $brandSummary = data_get($section, 'summary');
+
+    // Footer-area widgets are configured in the Layout Builder independently of this
+    // section's own chrome, so they render even when no brand, summary or links exist.
+    $footerArea = trim(Blade::render('<x-capell::layout.area area="footer" />'));
 @endphp
 
-<footer class="ppc-section ppc-section-dark">
-    <div class="ppc-section-inner">
-        <div class="ppc-footer-grid">
-            @if (filled($brand))
-                <div class="ppc-footer-brand">
-                    <p class="ppc-footer-wordmark">{{ $brand }}</p>
-                    @if (filled($brandSummary))
-                        <p class="ppc-footer-summary">{{ $brandSummary }}</p>
-                    @endif
-                </div>
-            @endif
+@if (filled($brand) || filled($brandSummary) || $columns->isNotEmpty())
+    <footer class="ppc-section ppc-section-dark">
+        <div class="ppc-section-inner">
+            <div class="ppc-footer-grid">
+                @if (filled($brand) || filled($brandSummary))
+                    <div class="ppc-footer-brand">
+                        @if (filled($brand))
+                            <p class="ppc-footer-wordmark">{{ $brand }}</p>
+                        @endif
 
-            @foreach ($columns as $column)
-                <section>
-                    <h3 class="ppc-footer-heading">
-                        {{ data_get($column, 'title', data_get($column, 'heading', '')) }}
-                    </h3>
-                    <ul class="ppc-footer-links">
-                        @foreach (data_get($column, 'links', []) as $link)
-                            @php
-                                $safeFooterLinkUrl = is_array($link)
-                                    ? PublicUrlSanitizer::sanitize(data_get($link, 'url', data_get($link, 'href')))
-                                    : null;
-                            @endphp
+                        @if (filled($brandSummary))
+                            <p class="ppc-footer-summary">{{ $brandSummary }}</p>
+                        @endif
+                    </div>
+                @endif
 
-                            <li>
-                                @if (filled($safeFooterLinkUrl))
-                                    <a href="{{ $safeFooterLinkUrl }}">
-                                        {{ data_get($link, 'label', data_get($link, 'title', '')) }}
-                                    </a>
-                                @else
-                                    {{ is_array($link) ? data_get($link, 'label', data_get($link, 'title', '')) : $link }}
-                                @endif
-                            </li>
-                        @endforeach
-                    </ul>
-                </section>
-            @endforeach
+                @foreach ($columns as $column)
+                    <section>
+                        @if (filled($column['title']))
+                            <h3 class="ppc-footer-heading">
+                                {{ $column['title'] }}
+                            </h3>
+                        @endif
+
+                        <ul class="ppc-footer-links">
+                            @foreach ($column['links'] as $link)
+                                <li>
+                                    @if (filled($link['url']))
+                                        <a href="{{ $link['url'] }}">
+                                            {{ $link['label'] }}
+                                        </a>
+                                    @else
+                                        {{ $link['label'] }}
+                                    @endif
+                                </li>
+                            @endforeach
+                        </ul>
+                    </section>
+                @endforeach
+            </div>
         </div>
-    </div>
 
-    <x-capell::layout.area area="footer" />
-</footer>
+        {!! $footerArea !!}
+    </footer>
+@elseif (filled($footerArea))
+    <footer class="ppc-section ppc-section-dark">{!! $footerArea !!}</footer>
+@endif

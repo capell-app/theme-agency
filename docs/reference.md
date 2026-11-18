@@ -6,7 +6,7 @@ Developer reference for `capell-app/theme-agency`. Start with the [README](../RE
 
 ## Package Details
 
-Theme Agency is an **Available**, **No schema impact** Capell theme in the **Capell Themes** product group. It ships as `capell-app/theme-agency` and extends these surfaces: frontend.
+Theme Agency is an **Available** Capell theme in the **Capell Themes** product group. It ships as `capell-app/theme-agency` and extends these surfaces: frontend.
 
 - Status: Available
 - Tier: free

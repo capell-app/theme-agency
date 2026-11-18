@@ -4,13 +4,17 @@
 >
     <div class="ppc-section-inner ppc-split">
         <div>
-            <p class="ppc-kicker">{{ __('capell-theme-agency::sections.form.kicker') }}</p>
-            <h2>
-                {{ data_get($section, 'heading', __('capell-theme-agency::sections.form.heading')) }}
-            </h2>
-            <p class="ppc-lede">
-                {{ data_get($section, 'summary', __('capell-theme-agency::sections.form.summary')) }}
-            </p>
+            @if (filled(data_get($section, 'kicker')))
+                <p class="ppc-kicker">{{ data_get($section, 'kicker') }}</p>
+            @endif
+
+            @if (filled(data_get($section, 'heading')))
+                <h2>{{ data_get($section, 'heading') }}</h2>
+            @endif
+
+            @if (filled(data_get($section, 'summary')))
+                <p class="ppc-lede">{{ data_get($section, 'summary') }}</p>
+            @endif
         </div>
 
         <x-capell::form-embed

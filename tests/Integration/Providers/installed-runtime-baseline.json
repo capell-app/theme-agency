@@ -4,10 +4,10 @@
     "scenarios": {
         "default": {
             "source": {
-                "ref": "HEAD",
-                "commit": "adac26b4ce1e9e1de545f68a1ff272ff73111696",
+                "ref": "a6931e60ff901ee9a0ff072979ce1cdaf7771066",
+                "commit": "a6931e60ff901ee9a0ff072979ce1cdaf7771066",
                 "providers": {
-                    "AgencyThemeServiceProvider.php": "9c80f9758323b8a67000a02d4179d166787811c6d13154e24ba759bbae39e6f0",
+                    "AgencyThemeServiceProvider.php": "1a5b7c506e6bf7068afb597589dfb55ba8aa4e2740e59a0c7ac5cbd6b86a02cd",
                     "Providers/ConsoleServiceProvider.php": "4b84bf2f960ed596dd43b242868892676eef074c89992ab550ee617f3dad865f"
                 },
                 "configure": null
@@ -593,10 +593,13 @@
                                         [
                                             "Capell\\Core\\ThemeStudio\\Data\\ThemePresetData",
                                             {
-                                                "description": "Agency visual preset for awards-style grids, large preview cards, filters, status labels, creator metadata, newest entries, awarded profiles, and education modules.",
+                                                "description": "Agency visual preset for awards-style grids, large preview cards, filters, award badges, creator metadata, newest entries, awarded profiles, and education modules.",
                                                 "key": "agency",
+                                                "layout": null,
                                                 "name": "Agency",
                                                 "previewImage": "/vendor/capell/themes/agency.webp",
+                                                "sectionVariants": [],
+                                                "typePairing": null,
                                                 "values": {
                                                     "accentColor": "#1f6feb",
                                                     "alignment": "left",
@@ -616,7 +619,8 @@
                                                     "radius": "md",
                                                     "spacing": "balanced",
                                                     "surfaceColor": "#f7f7f2"
-                                                }
+                                                },
+                                                "version": 1
                                             }
                                         ],
                                         [
@@ -624,8 +628,11 @@
                                             {
                                                 "description": "A charcoal-and-gold counterpart evoking a private awards archive, with denser bordered cards and a slower, more ceremonial motion feel.",
                                                 "key": "gilded-archive",
+                                                "layout": null,
                                                 "name": "Gilded Archive",
                                                 "previewImage": "/vendor/capell/themes/agency.webp",
+                                                "sectionVariants": [],
+                                                "typePairing": null,
                                                 "values": {
                                                     "accentColor": "#c9a24b",
                                                     "alignment": "left",
@@ -645,7 +652,8 @@
                                                     "radius": "sm",
                                                     "spacing": "generous",
                                                     "surfaceColor": "#161311"
-                                                }
+                                                },
+                                                "version": 1
                                             }
                                         ],
                                         [
@@ -653,8 +661,11 @@
                                             {
                                                 "description": "A playful, curated counterpart with a violet accent on a soft lilac surface \u2014 for lighter, taste-led indexes.",
                                                 "key": "hand-picked",
+                                                "layout": null,
                                                 "name": "Hand Picked",
                                                 "previewImage": "/vendor/capell/themes/agency.webp",
+                                                "sectionVariants": [],
+                                                "typePairing": null,
                                                 "values": {
                                                     "accentColor": "#7b4ee6",
                                                     "alignment": "left",
@@ -674,7 +685,8 @@
                                                     "radius": "md",
                                                     "spacing": "balanced",
                                                     "surfaceColor": "#f7f2ff"
-                                                }
+                                                },
+                                                "version": 1
                                             }
                                         ]
                                     ],
@@ -899,7 +911,7 @@
                     ]
                 ],
                 "views": {
-                    "capell-theme-agency": ["<package>/src/../resources/views"]
+                    "capell-theme-agency": ["<package>/resources/views"]
                 }
             },
             "uninstalledSurfaces": {

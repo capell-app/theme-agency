@@ -1,37 +1,50 @@
 @php
     use Capell\Core\Support\Security\PublicUrlSanitizer;
 
-    $actions = collect(data_get($section, 'actions', []))
-        ->filter(fn (mixed $action): bool => filled(data_get($action, 'label')))
+    $heading = data_get($section, 'heading');
+    $actions = collect(data_get($section, 'actions', []));
+
+    if ($actions->isEmpty()) {
+        $actions = collect([['label' => data_get($section, 'label'), 'url' => data_get($section, 'url')]]);
+    }
+
+    $actions = $actions
+        ->map(fn (mixed $action): array => [
+            'label' => data_get($action, 'label'),
+            'url' => PublicUrlSanitizer::sanitize(data_get($action, 'url', data_get($action, 'href'))),
+            'style' => data_get($action, 'style'),
+        ])
+        ->filter(fn (array $action): bool => filled($action['label']) && filled($action['url']))
         ->values();
-    $sectionUrl = PublicUrlSanitizer::sanitize(data_get($section, 'url', '/')) ?? '/';
 @endphp
 
-<section class="ppc-section ppc-section-dark">
-    <div class="ppc-section-inner">
-        <p class="ppc-kicker">{{ data_get($section, 'kicker', __('capell-theme-agency::sections.cta.kicker')) }}</p>
-        <h2>
-            {{ data_get($section, 'heading', __('capell-theme-agency::sections.cta.heading')) }}
-        </h2>
-        <p class="ppc-lede">{{ data_get($section, 'summary', __('capell-theme-agency::sections.cta.summary')) }}</p>
-        <div class="ppc-actions">
+@if (filled($heading) || $actions->isNotEmpty())
+    <section class="ppc-section ppc-section-dark">
+        <div class="ppc-section-inner">
+            @if (filled(data_get($section, 'kicker')))
+                <p class="ppc-kicker">{{ data_get($section, 'kicker') }}</p>
+            @endif
+
+            @if (filled($heading))
+                <h2>{{ $heading }}</h2>
+            @endif
+
+            @if (filled(data_get($section, 'summary')))
+                <p class="ppc-lede">{{ data_get($section, 'summary') }}</p>
+            @endif
+
             @if ($actions->isNotEmpty())
-                @foreach ($actions as $action)
-                    <a
-                        class="ppc-button {{ data_get($action, 'style') === 'secondary' ? 'ppc-button-secondary' : '' }}"
-                        href="{{ PublicUrlSanitizer::sanitize(data_get($action, 'url', '/')) ?? '/' }}"
-                    >
-                        {{ data_get($action, 'label') }}
-                    </a>
-                @endforeach
-            @else
-                <a
-                    class="ppc-button"
-                    href="{{ $sectionUrl }}"
-                >
-                    {{ data_get($section, 'label', __('capell-theme-agency::sections.cta.button')) }}
-                </a>
+                <div class="ppc-actions">
+                    @foreach ($actions as $action)
+                        <a
+                            class="ppc-button {{ $action['style'] === 'secondary' ? 'ppc-button-secondary' : '' }}"
+                            href="{{ $action['url'] }}"
+                        >
+                            {{ $action['label'] }}
+                        </a>
+                    @endforeach
+                </div>
             @endif
         </div>
-    </div>
-</section>
+    </section>
+@endif
