@@ -47,28 +47,6 @@ function agencySectionDocument(string $view, array $section): HTMLDocument
     return HTMLDocument::createFromString(agencySectionHtml($view, $section), LIBXML_NOERROR);
 }
 
-it('renders nothing for a content section placed without content', function (string $view): void {
-    expect(trim(agencySectionHtml($view, [])))->toBe('');
-})->with([
-    'hero',
-    'cta',
-    'proof',
-    'awarded-profiles',
-    'awarded-profiles--spotlight',
-    'content-listing',
-    'creator-directory',
-    'education-upsell',
-    'education-upsell--cta',
-    'featured-portfolios',
-    'featured-portfolios--parallax',
-    'filter-taxonomies',
-    'filter-taxonomies--grid',
-    'portfolio-grid',
-    'portfolio-grid--gallery-wall',
-    'navigation',
-    'footer',
-]);
-
 it('renders nothing for an item section whose items are empty, even with a heading', function (string $view): void {
     expect(trim(agencySectionHtml($view, ['heading' => 'Owner heading', 'items' => []])))->toBe('');
 })->with([
@@ -280,8 +258,6 @@ it('renders the content listing heading only when supplied and an empty state wi
 });
 
 it('renders navigation without invented links, brand or tagline', function (): void {
-    expect(trim(agencySectionHtml('navigation', [])))->toBe('');
-
     expect(agencySectionDocument('navigation', ['brandName' => 'Owner brand name'])->querySelector('.ppc-masthead-wordmark')?->textContent)->toContain('Owner brand name');
 
     $branded = agencySectionDocument('navigation', ['brand' => 'Owner studio']);
@@ -310,9 +286,8 @@ it('renders navigation links only when they have a label and a safe URL', functi
     expect($withCta->querySelector('a.ppc-masthead-cta')?->getAttribute('href'))->toBe('/submit');
 });
 
-it('renders no footer at all when the owner supplies no brand, summary or columns', function (): void {
-    expect(trim(agencySectionHtml('footer', [])))->toBe('')
-        ->and(trim(agencySectionHtml('footer', ['columns' => [['title' => 'Empty column', 'links' => []]]])))->toBe('');
+it('renders no footer when the owner supplies only an empty column', function (): void {
+    expect(trim(agencySectionHtml('footer', ['columns' => [['title' => 'Empty column', 'links' => []]]])))->toBe('');
 });
 
 it('renders footer columns without invented links and without an empty heading', function (): void {
@@ -438,11 +413,26 @@ it('keeps an action-only hero without inventing a heading', function (): void {
 });
 
 $unfilled = UnfilledThemeSections::for(dirname(__DIR__, 2));
+$sectionsWithoutMarkup = [
+    'awarded-profiles',
+    'awarded-profiles--spotlight',
+    'content-listing',
+    'creator-directory',
+    'cta',
+    'education-upsell',
+    'education-upsell--cta',
+    'featured-portfolios',
+    'featured-portfolios--parallax',
+    'filter-taxonomies',
+    'filter-taxonomies--grid',
+    'footer',
+    'hero',
+    'navigation',
+    'portfolio-grid',
+    'portfolio-grid--gallery-wall',
+    'proof',
+];
 
-it('publishes nothing for a content section placed without content', function (string $view) use ($unfilled): void {
-    expect($unfilled->published($view))->toBe(['text' => '', 'links' => [], 'media' => 0, 'controls' => 0]);
-})->with($unfilled->contentViews());
-
-it('publishes no placeholder or demo-page link, and no functional-section link or media, when unfilled', function (string $view) use ($unfilled): void {
-    expect($unfilled->violations($view))->toBe([]);
+it('publishes only allowed output when the section is unfilled', function (string $view) use ($unfilled, $sectionsWithoutMarkup): void {
+    $unfilled->assertUnfilledOutput($view, $sectionsWithoutMarkup);
 })->with($unfilled->views());
