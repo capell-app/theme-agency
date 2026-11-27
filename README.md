@@ -6,8 +6,8 @@
 
 Theme Agency provides a Blade presentation for curated portfolios, creator profiles, winner labels, taxonomy filters, resources, and newsletter sections.
 
-- **Price and availability:** Check current availability and price on the [Capell Marketplace listing](https://capell.app/marketplace/extensions/theme-agency).
-- **Licence:** Check the licence terms on the [Capell Marketplace listing](https://capell.app/marketplace/extensions/theme-agency).
+- **Price and availability:** Not yet listed on the Capell Marketplace; price and availability are published with the listing.
+- **Licence:** Published with the Marketplace listing.
 - **Requires:** `PHP ^8.4`, `capell-app/core ^1.0.79`, `capell-app/theme-foundation ^1.0`, `capell-app/frontend ^1.0.79`.
 - **Install:** `composer require capell-app/theme-agency`.
 
